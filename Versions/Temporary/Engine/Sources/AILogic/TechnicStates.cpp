@@ -102,14 +102,18 @@ CMechUnitEntrenchSelfState::CMechUnitEntrenchSelfState( class CAIUnit *_pUnit )
 		pUnit->Stop();
 	}
 	else
+	{
 		pUnit->Stop();
+	}
 }
 
 bool CMechUnitEntrenchSelfState::CheckInfantry( const CAIUnit *pUnit, const SRect &rect ) const
 {
 	const CFormation *pFormation = 0;
 	if ( pUnit->GetStats()->IsArtillery() )
+	{
 		pFormation = checked_cast<const CArtillery *>( pUnit )->GetCrew();
+	}
 
 	for ( CUnitsIter<0, 1> iter( 0, ANY_PARTY, pUnit->GetCenterPlain(), rect.width + rect.lengthAhead + rect.lengthBack );
 	      !iter.IsFinished();
@@ -120,7 +124,9 @@ bool CMechUnitEntrenchSelfState::CheckInfantry( const CAIUnit *pUnit, const SRec
 		if ( pSoldier->IsFree() && pSoldier->GetStats()->IsInfantry() && rect.IsPointInside( pSoldier->GetCenterPlain() ) )
 		{
 			if ( pFormation != pSoldier->GetFormation() )
+			{
 				return false;
+			}
 		}
 	}
 	return true;
@@ -145,35 +151,51 @@ void CMechUnitEntrenchSelfState::GetTilesNextToRect( const SRect &rect, const ui
 
 	CSVectorHash tilesUnderRect1;
 	for ( std::list<SVector>::iterator i = tilesUnderRect.begin(); i != tilesUnderRect.end(); ++i )
+	{
 		tilesUnderRect1[*i] = true;
+	}
 
 	CSVectorHash adjustedTiles;
 	for ( std::list<SVector>::iterator i = tilesUnderRect.begin(); i != tilesUnderRect.end(); ++i )
 	{
 		if ( tilesUnderRect1.find( SVector( i->x + 1, i->y ) ) == tilesUnderRect1.end() )
+		{
 			adjustedTiles[SVector( i->x + 1, i->y )];
+		}
 
 		if ( tilesUnderRect1.find( SVector( i->x - 1, i->y ) ) == tilesUnderRect1.end() )
+		{
 			adjustedTiles[SVector( i->x - 1, i->y )];
+		}
 
 		if ( tilesUnderRect1.find( SVector( i->x, i->y + 1 ) ) == tilesUnderRect1.end() )
+		{
 			adjustedTiles[SVector( i->x, i->y + 1 )];
+		}
 
 		if ( tilesUnderRect1.find( SVector( i->x, i->y - 1 ) ) == tilesUnderRect1.end() )
+		{
 			adjustedTiles[SVector( i->x, i->y - 1 )];
+		}
 	}
 
 	for ( CSVectorHash::iterator i = adjustedTiles.begin(); i != adjustedTiles.end(); ++i )
+	{
 		tiles.push_back( i->first );
+	}
 
 	for ( std::list<SObjTileInfo>::iterator it = tiles.begin(); it != tiles.end(); )
 	{
 		const CVec2 vec = GetAIMap()->GetPointByTile( *it );
 		const uint16_t wDirToTile = GetDirectionByVector( vec - rect.center );
 		if ( DirsDifference( wDirToTile, wDirExclude ) < ( 65535 / 8 ) )
+		{
 			it = tiles.erase( it );
+		}
 		else
+		{
 			++it;
+		}
 	}
 }
 
@@ -187,9 +209,13 @@ void CMechUnitEntrenchSelfState::Segment()
 			break;
 		case ESHD_WAIT_FOR_INSTALL:
 			if ( !pUnit->IsOperable() )
+			{
 				eState = ESHD_END;
+			}
 			else if ( pUnit->IsInstalled() )
+			{
 				eState = ESHD_ESTIMATE;
+			}
 
 			break;
 		case ESHD_ESTIMATE:
@@ -245,9 +271,13 @@ void CMechUnitEntrenchSelfState::Segment()
 			}
 
 			if ( bCanAdd ) // проверить, нет ли под TankPit окопов
+			{
 				bCanAdd = CheckTrenches( pUnit, rectToCheck );
+			}
 			if ( bCanAdd )
+			{
 				bCanAdd = CheckInfantry( pUnit, rectToCheck );
+			}
 
 			if ( bCanAdd )
 			{
@@ -275,14 +305,18 @@ void CMechUnitEntrenchSelfState::Segment()
 					const NDb::SUnitSpecialAblityDesc *pSA = pUnit->GetStats()->GetActions()->specialAbilities[i];
 					NI_ASSERT( pSA, "Ability desc (Mobile Fortress) not found" );
 					if ( pSA )
+					{
 						fCoeff = pSA->fParameter;
+					}
 				}
 				else if ( nAbility == NDb::ABILITY_ENTRENCH_SELF )
 				{
 					const NDb::SUnitSpecialAblityDesc *pSA = pUnit->GetStats()->GetActions()->specialAbilities[i];
 					NI_ASSERT( pSA, "Ability desc (Entrench Self) not found" );
 					if ( pSA )
+					{
 						nDefaultTime = pSA->nSwitchOnTime;
+					}
 				}
 			}
 			timeEndBuild = curTime + fCoeff * nDefaultTime;
@@ -341,7 +375,9 @@ void CMechUnitEntrenchSelfState::Segment()
 ETryStateInterruptResult CMechUnitEntrenchSelfState::TryInterruptState( class CAICommand *pCommand )
 {
 	if ( eState != ESHD_ESTIMATE ) //  UNLOCK LoCKED TILES
+	{
 		GetTerrain()->RemoveStaticObjectTiles( tiles );
+	}
 
 	if ( pUnit && pUnit->IsAlive() )
 	{
@@ -412,7 +448,9 @@ CMechUnitInsideMechUnitState::CMechUnitInsideMechUnitState( class CAIUnit *_pUni
 	{
 		pTransport->AddBoardingMechUnit( pUnit );
 		if ( bImmidiate )
+		{
 			BoardNow();
+		}
 		else
 		{
 			// will start to move to unit
@@ -440,7 +478,9 @@ void CMechUnitInsideMechUnitState::SendToEntrance()
 	vEntrancePoint = pTransport->GetEntrancePoint();
 	CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vEntrancePoint, VNULL2, pUnit, true, GetAIMap() );
 	if ( pPath != 0 )
+	{
 		pUnit->SendAlongPath( pPath, VNULL2, true );
+	}
 	else
 	{
 		//CRAP{
@@ -486,7 +526,9 @@ bool CMechUnitInsideMechUnitState::WillUnitIntersectOtherUnits( CAIUnit *pUnit,
 		{
 			const SRect rect = ( *iter )->GetUnitRect();
 			if ( unitRect.IsIntersected( rect ) )
+			{
 				return true;
+			}
 		}
 	}
 	return false;
@@ -510,14 +552,18 @@ void CMechUnitInsideMechUnitState::Segment()
 				BoardNow();
 			}
 			else if ( !pTransport->CanBoard( pUnit ) ) // cannot board
+			{
 				TryInterruptState( 0 );
+			}
 			else if ( timeNextCheck > curTime && pTransport->GetEntrancePoint() != vEntrancePoint ) // transport moved
 			{
 				timeNextCheck = curTime + CHECK_PERIOID;
 				SendToEntrance();
 			}
 			else if ( pUnit->IsIdle() ) // unit idle - resent again
+			{
 				SendToEntrance();
+			}
 
 			break;
 		case EMEM_REST_INSIDE:
@@ -532,13 +578,19 @@ void CMechUnitInsideMechUnitState::Segment()
 				if ( pGun )
 				{
 					if ( !pGun->IsFiring() && pGun->GetRestTimeOfRelax() == 0 )
+					{
 						pGun->StartEnemyBurst( pEnemy, true );
+					}
 				}
 				else
+				{
 					eState = EMEM_REST_INSIDE;
+				}
 			}
 			else
+			{
 				eState = EMEM_REST_INSIDE;
+			}
 
 			break;
 		case EMEM_EXITTING:
@@ -576,7 +628,9 @@ void CMechUnitInsideMechUnitState::Segment()
 			break;
 	}
 	if ( pPath )
+	{
 		pPath->Advance();
+	}
 }
 
 void CMechUnitInsideMechUnitState::SendToDestination( const CVec2 &vDropPoint, const CVec2 &vDir )
@@ -592,7 +646,9 @@ void CMechUnitInsideMechUnitState::SendToDestination( const CVec2 &vDropPoint, c
 	CVec2 vSendTo = vDropPoint + 200 * vDir;
 
 	if ( vDestination != VNULL2 )
+	{
 		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_MOVE_TO, vDestination ), pUnit, true );
+	}
 
 	//if ( vDestination == VNULL2 || fabs2( vDropPoint - vSendTo ) < fabs2( vDropPoint - vDestination ) )
 	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_MOVE_TO, vSendTo ), pUnit, true );
@@ -651,13 +707,19 @@ ETryStateInterruptResult CMechUnitInsideMechUnitState::TryInterruptState( class 
 		return TSIR_YES_MANAGED_ALREADY;
 	}
 	if ( pUnit->GetCurCmd() != 0 )
+	{
 		pUnit->GetCurCmd()->ToUnitCmd().fNumber = 1;
+	}
 
 	pUnit->SetCommandFinished();
 	if ( pCommand && pCommand->ToUnitCmd().nCmdType != ACTION_MOVE_ONBOARD_ATTACK_UNIT )
+	{
 		pUnit->SetRestInside( false, 0 );
+	}
 	if ( IsValidObj( pTransport ) && pUnit->IsAlive() )
+	{
 		pTransport->RemoveBoardingMechUnit( pUnit );
+	}
 	return TSIR_YES_IMMIDIATELY;
 }
 

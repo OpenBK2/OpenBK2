@@ -34,20 +34,26 @@ CInterfaceMPCreateCustomGame::CInterfaceMPCreateCustomGame()
 CInterfaceMPCreateCustomGame::~CInterfaceMPCreateCustomGame()
 {
 	if ( pScreen )
+	{
 		Scene()->RemoveScreen( pScreen );
+	}
 }
 
 bool CInterfaceMPCreateCustomGame::Init()
 {
 	if ( CInterfaceScreenBase::Init() == false )
+	{
 		return false;
+	}
 
 	RegisterObservers();
 
 	// load screen
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
 	if ( AddUIScreen( pScreen, "MPCreateCustomGame", this ) == false )
+	{
 		return false;
+	}
 
 	pMain = GetChildChecked<IWindow>( pScreen, "Main", true );
 	NI_VERIFY( pMain, "No main window found", return false );
@@ -70,7 +76,9 @@ void CInterfaceMPCreateCustomGame::FillMapData()
 		SMPMapInfo tmpInfo;
 		const NDb::SMultiplayerMap *pMPMap = NDb::Get<NDb::SMultiplayerMap>( mpMapDBIDs[i] );
 		if ( !pMPMap )
+		{
 			continue;
+		}
 
 		tmpInfo.wszMapName = GET_TEXT_PRE( pMPMap->, MapName );
 		tmpInfo.wszGameType = L"";
@@ -104,14 +112,18 @@ void CInterfaceMPCreateCustomGame::InitControls()
 	pAdvancedPassword = GetChildChecked<IEditLine>( pAdvancedPopup, "AdvancedPassword", true );
 	pChecksumPWL = GetChildChecked<IWindow>( pMain, "ChecksumPWL", true );
 	if ( pChecksumPWL )
+	{
 		pChecksumPWL->ShowWindow( false );
+	}
 	SetControls();
 }
 
 void CInterfaceMPCreateCustomGame::SetControls()
 {
 	if ( pButtonCreateGame )
+	{
 		pButtonCreateGame->Enable( false );
+	}
 	CPtr<CTextData> pData;
 	CPtr<CTextDataViewer> pViewer;
 	if ( pTechLevelBox )
@@ -123,9 +135,13 @@ void CInterfaceMPCreateCustomGame::SetControls()
 		for ( int i = 0; i < pMPConsts->techLevels.size(); ++i )
 		{
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( pMPConsts->techLevels[i]., Name ) )
+			{
 				pData = new CTextData( GET_TEXT_PRE( pMPConsts->techLevels[i]., Name ) );
+			}
 			else
+			{
 				pData = new CTextData( NStr::ToUnicode( fmt::format( "!Level{}!", i ) ) );
+			}
 			pTechLevelBox->AddItem( pData );
 		}
 		pTechLevelBox->Select( 0 );
@@ -143,10 +159,14 @@ void CInterfaceMPCreateCustomGame::SetControls()
 	}
 
 	if ( pTimeLimit )
+	{
 		pTimeLimit->SetText( L"60" );
+	}
 
 	if ( pCaptureTime )
+	{
 		pCaptureTime->SetText( L"30" );
+	}
 
 	if ( pSliderGameSpeed )
 	{
@@ -158,19 +178,29 @@ void CInterfaceMPCreateCustomGame::SetControls()
 	}
 
 	if ( pPicture )
+	{
 		pPicture->SetTexture( 0 );
+	}
 
 	if ( pSessionName )
+	{
 		pSessionName->SetText( L"" );
+	}
 
 	if ( pButtonUnitExperience )
+	{
 		pButtonUnitExperience->SetState( 1 );
+	}
 
 	if ( pButtonStartPosition )
+	{
 		pButtonStartPosition->SetState( 1 );
+	}
 
 	if ( pAdvancedPassword )
+	{
 		pAdvancedPassword->SetText( L"" );
+	}
 
 	FillMapData();
 }
@@ -178,7 +208,9 @@ void CInterfaceMPCreateCustomGame::SetControls()
 void CInterfaceMPCreateCustomGame::SliderPosition( const float fPosition, CWindow *pWho )
 {
 	if ( !pGameSpeedText )
+	{
 		return;
+	}
 	int nPos = fPosition; //
 	int nShown = nPos - pSliderGameSpeed->GetNSpecialPositions() / 2;
 	std::wstring newtext = pGameSpeedText->GetDBText() + NStr::ToUnicode( fmt::format( "  {:+d}", nShown ) );
@@ -242,25 +274,39 @@ void CInterfaceMPCreateCustomGame::OnGetFocus( bool bFocus )
 bool CInterfaceMPCreateCustomGame::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_session_name_change" )
+	{
 		return CheckEnableCreateButton();
+	}
 
 	if ( szReaction == "react_on_back" )
+	{
 		return OnBackReaction( szSender );
+	}
 
 	if ( szReaction == "react_on_create" )
+	{
 		return OnCreateGameReaction( szSender );
+	}
 
 	if ( szReaction == "react_on_select_map" )
+	{
 		return OnSelectMapReaction();
+	}
 
 	if ( szReaction == "session_enter" )
+	{
 		return OnSessionEnter();
+	}
 
 	if ( szReaction == "react_on_open_advanced" )
+	{
 		return OnShowAdvanced( true );
+	}
 
 	if ( szReaction == "react_on_close_advanced" )
+	{
 		return OnShowAdvanced( false );
+	}
 
 	return false;
 }
@@ -285,7 +331,9 @@ bool CInterfaceMPCreateCustomGame::OnBackReaction( const std::string &szSender )
 bool CInterfaceMPCreateCustomGame::OnCreateGameReaction( const std::string &szSender )
 {
 	if ( !pSelected )
+	{
 		return true;
+	}
 
 	if ( pChecksumPWL )
 	{
@@ -296,7 +344,9 @@ bool CInterfaceMPCreateCustomGame::OnCreateGameReaction( const std::string &szSe
 	SMPUICreateGameMessage *pCreateMsg = new SMPUICreateGameMessage;
 
 	if ( pSessionName )
+	{
 		pCreateMsg->info.szSessionName = NStr::ToMBCS( pSessionName->GetText() );
+	}
 
 	pCreateMsg->info.szMapName = NStr::ToMBCS( GET_TEXT_PRE( pSelected->, MapName ) );
 	pCreateMsg->specificInfo.pMPMap = pSelected;
@@ -304,7 +354,9 @@ bool CInterfaceMPCreateCustomGame::OnCreateGameReaction( const std::string &szSe
 
 	std::wstring wszTime = L"???";
 	if ( pTimeLimit )
+	{
 		wszTime = pTimeLimit->GetText();
+	}
 	int nTime = NStr::ToInt( NStr::ToMBCS( wszTime ) );
 	pCreateMsg->specificInfo.nTimeLimit = (std::max)( nTime, 5 );
 
@@ -318,10 +370,14 @@ bool CInterfaceMPCreateCustomGame::OnCreateGameReaction( const std::string &szSe
 	bool bUnitExp = false;
 	CPtr<IButton> pUnitExperience = GetChildChecked<IButton>( pMain, "UnitExperience", true );
 	if ( pUnitExperience )
+	{
 		pCreateMsg->specificInfo.bUnitExp = ( pUnitExperience->GetState() == 1 );
+	}
 
 	if ( pButtonStartPosition )
+	{
 		pCreateMsg->specificInfo.bRandomPlacement = ( pButtonStartPosition->GetState() == 1 );
+	}
 
 	wszTime = pCaptureTime->GetText();
 	int nCaptureTime = NStr::ToInt( NStr::ToMBCS( wszTime ) );
@@ -344,7 +400,9 @@ bool CInterfaceMPCreateCustomGame::OnSelectMapReaction()
 	IListControlItem *pItem = pList->GetSelectedListItem();
 	CDynamicCast<CCustomGameListData> pInfo = pItem->GetUserData();
 	if ( pInfo )
+	{
 		pSelected = pInfo->info.pMPMap;
+	}
 
 	bool bEnableCreate = false;
 	bool bEnableGameType = false;
@@ -387,7 +445,9 @@ bool CInterfaceMPCreateCustomGame::OnSelectMapReaction()
 	NMPSetData::SetText( pMapName, wszName );
 
 	if ( pPicture )
+	{
 		pPicture->SetTexture( pMiniMapTexture );
+	}
 
 	CheckEnableCreateButton();
 
@@ -398,7 +458,9 @@ bool CInterfaceMPCreateCustomGame::OnSelectMapReaction()
 	}*/
 
 	if ( pNumPlayersBox )
+	{
 		pNumPlayersBox->Enable( bEnableNumPlayers );
+	}
 	if ( pNumPlayersBox )
 	{
 		pNumPlayersBox->RemoveAllItems();

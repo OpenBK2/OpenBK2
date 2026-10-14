@@ -114,10 +114,14 @@ inline void CGameLobby::GetUpdate( TInPacket *pInPacket, TOutPacket *, TGetInfo 
 {
 	SUpdateInfo updateInfo;
 	if ( bClientsUpdate )
+	{
 		clientsVersions.GetDiff( 0, pInPacket->dwVersion, &updateInfo );
+	}
 	//		clientsVersions.GetDiff( pInPacket->nClientID, pInPacket->dwVersion, &updateInfo );
 	else
+	{
 		gamesVersions.GetDiff( -1, pInPacket->dwVersion, &updateInfo );
+	}
 
 	TOutPacket *pOutPacket = new TOutPacket( pInPacket->nClientID );
 	pOutPacket->dwVersion = updateInfo.dwVersion;
@@ -127,7 +131,9 @@ inline void CGameLobby::GetUpdate( TInPacket *pInPacket, TOutPacket *, TGetInfo 
 	{
 		pOutPacket->added.emplace_back();
 		if ( !GetInfoFunc( *iter, &( pOutPacket->added.back() ) ) )
+		{
 			pOutPacket->added.pop_back();
+		}
 	}
 
 	if ( !pOutPacket->bFullUpdate )
@@ -137,7 +143,9 @@ inline void CGameLobby::GetUpdate( TInPacket *pInPacket, TOutPacket *, TGetInfo 
 		{
 			pOutPacket->changed.emplace_back();
 			if ( !GetInfoFunc( *iter, &( pOutPacket->changed.back() ) ) )
+			{
 				pOutPacket->changed.pop_back();
+			}
 		}
 	}
 

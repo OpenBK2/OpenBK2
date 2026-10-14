@@ -72,7 +72,9 @@ void CMessageReactions::InitByDesc( const NDb::SMessageReactionsDesc &desc )
 		reactions[it->szName] = CUIFactory::MakeReaction( it->pReaction );
 	}
 	if ( !desc.szScriptFileRef.empty() )
+	{
 		InitScript( desc.szScriptFileRef );
+	}
 }
 
 void CMessageReactions::RunScriptText( const std::string &szScriptBody )
@@ -82,7 +84,9 @@ void CMessageReactions::RunScriptText( const std::string &szScriptBody )
 	pScript->AddRegFunctions( reglist );
 
 	if ( pScript->RunScript( szScriptBody.c_str() ) != 0 )
+	{
 		pScript = 0;
+	}
 }
 void CMessageReactions::InitScript( const std::string &szScriptFileName )
 {
@@ -119,12 +123,16 @@ bool CMessageReactions::Execute( const std::string &szSender,
 {
 	if ( pProg && ( pProg->NeedFlags() ? pProg->Execute( szSender, szReactionKey, wKeyboardFlags )
 	                                   : pProg->Execute( szSender, szReactionKey ) ) )
+	{
 		return true;
+	}
 
 	CReactions::iterator it = reactions.find( szReactionKey );
 	NI_ASSERT( it != reactions.end(), fmt::format( "unregistered reaction \"{}\"", szReactionKey ) );
 	if ( it != reactions.end() )
+	{
 		return it->second->Execute( pScreen, pScript, pProg, wKeyboardFlags );
+	}
 	return false;
 }
 

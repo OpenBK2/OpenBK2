@@ -23,8 +23,10 @@ TEST_P( BallisticOffset, ZeroOffsetKeepsLegacyTrajectory )
 	EXPECT_EQ( legacy->GetExplTime(), zero->GetExplTime() );
 	EXPECT_EQ( legacy->GetInitialVelocity(), zero->GetInitialVelocity() );
 	for ( const unsigned elapsed : { 0u, 100u, 500u, 1000u } )
+	{
 		EXPECT_EQ( legacy->GetCoordinatesAtTime( legacy->GetStartTime() + elapsed ),
 		           zero->GetCoordinatesAtTime( zero->GetStartTime() + elapsed ) );
+	}
 	// The unmodified shot still arrives at the target (time is quantized to milliseconds).
 	const CVec3 impact = legacy->GetCoordinatesAtTime( legacy->GetExplTime() );
 	EXPECT_NEAR( impact.x, target.x, speed );
@@ -103,8 +105,10 @@ TEST_P( BallisticOffset, SaveLoadPreservesOffsetTrajectory )
 	EXPECT_EQ( loaded->GetExplTime(), original->GetExplTime() );
 	EXPECT_EQ( loaded->GetInitialVelocity(), original->GetInitialVelocity() );
 	for ( const unsigned elapsed : { 0u, 100u, 500u, 1000u } )
+	{
 		EXPECT_EQ( loaded->GetCoordinatesAtTime( loaded->GetStartTime() + elapsed ),
 		           original->GetCoordinatesAtTime( original->GetStartTime() + elapsed ) );
+	}
 }
 
 INSTANTIATE_TEST_SUITE_P( ArtilleryTrajectories,

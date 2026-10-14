@@ -26,7 +26,9 @@ CSoundSample::~CSoundSample()
 void CSoundSample::Close()
 {
 	if ( sample )
+	{
 		FSOUND_Sample_Free( sample );
+	}
 	sample = 0;
 }
 
@@ -35,7 +37,9 @@ void CSoundSample::SetSample( FSOUND_SAMPLE *_sample )
 	Close();
 	sample = _sample;
 	if ( sample )
+	{
 		FSOUND_Sample_SetMinMaxDistance( sample, 45, 1000000000.0f );
+	}
 }
 
 FSOUND_SAMPLE *CSoundSample::GetInternalContainer()
@@ -46,7 +50,9 @@ FSOUND_SAMPLE *CSoundSample::GetInternalContainer()
 void CSoundSample::SetLoop( bool bEnable )
 {
 	if ( sample )
+	{
 		FSOUND_Sample_SetMode( sample, bEnable ? FSOUND_LOOP_NORMAL : FSOUND_LOOP_OFF );
+	}
 }
 
 void CSoundSample::SetKey( const CDBID &dbid )

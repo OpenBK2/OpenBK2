@@ -14,7 +14,9 @@ namespace original
 static void MultiplyOnColor( std::vector<uint32_t> *pRes, const std::vector<uint32_t> &mult )
 {
 	if ( mult.empty() )
+	{
 		return;
+	}
 	uint32_t *pDst = &( *pRes )[0], *pDstEnd = pDst + pRes->size();
 	const uint32_t *pSrc = &mult[0];
 	for ( ; pDst < pDstEnd; ++pDst, ++pSrc )
@@ -450,16 +452,24 @@ static void SampleWarFog( const std::vector<CVec3> &srcPos,
                           const CArray2D<unsigned char> &fog2 )
 {
 	if ( srcPos.empty() )
+	{
 		return;
+	}
 	int nVertices = srcPos.size();
 	if ( _pRes1->size() < nVertices )
+	{
 		_pRes1->resize( nVertices );
+	}
 	if ( _pRes2 && _pRes2->size() < nVertices )
+	{
 		_pRes2->resize( nVertices );
+	}
 
 	static std::vector<int> tmp;
 	if ( tmp.size() < nVertices * 2 )
+	{
 		tmp.resize( nVertices * 2 );
+	}
 
 	// calc integer x & y
 	{
@@ -487,7 +497,9 @@ static void SampleWarFog( const std::vector<CVec3> &srcPos,
 
 	SampleWarFogInt( tmp, fog1, _pRes1, nVertices );
 	if ( _pRes2 )
+	{
 		SampleWarFogInt( tmp, fog2, _pRes2, nVertices );
+	}
 	_m_empty();
 }
 
@@ -717,7 +729,9 @@ static void ScaleColors( std::vector<uint32_t> *pRes,
 {
 	int nSize = posIndices.size();
 	if ( pRes->size() < nSize )
+	{
 		pRes->resize( nSize );
+	}
 	uint32_t *p = &( *pRes )[0], *pEnd = p + nSize;
 	const uint32_t *pSrc = _pSrc;
 	ASSERT( sizeof( uint32_t ) == sizeof( transp[0] ) );

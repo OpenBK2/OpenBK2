@@ -15,7 +15,9 @@ static std::vector<STriangle> universalRectsBuffer;
 static void RefreshUniversalRectTrisBuffer()
 {
 	if ( !universalRectsBuffer.empty() )
+	{
 		return;
+	}
 	universalRectsBuffer.resize( N_MAX_RECTANGLES * 2 );
 	for ( int i = 0; i < N_MAX_RECTANGLES; ++i )
 	{
@@ -29,7 +31,9 @@ static CObj<CTexture> pWhiteTexture;
 static CTexture *GetWhiteTexture()
 {
 	if ( IsValid( pWhiteTexture ) )
+	{
 		return pWhiteTexture;
+	}
 	if ( Is16BitTextures() )
 	{
 		pWhiteTexture = MakeTexture( 3, 3, 1, SPixel4444::ID, TEXTURE_2D, CLAMP );
@@ -37,7 +41,9 @@ static CTexture *GetWhiteTexture()
 		for ( int y = 0; y < lock.GetSizeY(); ++y )
 		{
 			for ( int x = 0; x < lock.GetSizeX(); ++x )
+			{
 				lock[y][x] = SPixel4444( 15, 15, 15, 15 );
+			}
 		}
 	}
 	else
@@ -47,7 +53,9 @@ static CTexture *GetWhiteTexture()
 		for ( int y = 0; y < lock.GetSizeY(); ++y )
 		{
 			for ( int x = 0; x < lock.GetSizeX(); ++x )
+			{
 				lock[y][x] = SPixel8888( 255, 255, 255, 255 );
+			}
 		}
 	}
 	return pWhiteTexture;
@@ -108,7 +116,9 @@ void C2DQuadsRenderer::SetTarget( NGfx::CTexture *pTarget, const CVec2 &vSize, i
 	rc.SetAlphaCombine( NGfx::COMBINE_NONE );
 	rc.SetStencil( NGfx::STENCIL_NONE );
 	if ( pTarget )
+	{
 		rc.SetTextureRT( pTarget );
+	}
 	SetupRC( vSize );
 }
 
@@ -160,7 +170,9 @@ const int N_UV_PER_TEXEL_STEPS = 8;
 S2DRectInfoLock *C2DQuadsRenderer::GetRectInfoLock( CTexture *pContainer, const STexturePlaceInfo &region )
 {
 	if ( pContainer != pPrevContainer || ( pLock && pLock->IsFull() ) )
+	{
 		Flush();
+	}
 	if ( pLock == 0 )
 	{
 		if ( IsTnLDevice() )
@@ -373,7 +385,9 @@ void C2DQuadsRenderer::AddRect(
 void C2DQuadsRenderer::Flush()
 {
 	if ( !pLock )
+	{
 		return;
+	}
 	ASSERT( pPrevContainer || ( dm & QRM_RENDER_MASK ) == QRM_SOLID );
 	rc.Use();
 	if ( IsTnLDevice() )
@@ -436,7 +450,9 @@ void C2DQuadsRenderer::Flush()
 			{
 				ASSERT( IsValid( pUserEffect ) );
 				if ( IsValid( pUserEffect ) )
+				{
 					pUserEffect->SetEffect( &rc, pPrevContainer, fScaleU, fScaleV );
+				}
 			}
 			break;
 			default:

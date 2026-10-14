@@ -32,7 +32,9 @@ int SPartAndSkeletonKeyHash::operator()( const SPartAndSkeletonKey &k ) const
 CGrannyFile::~CGrannyFile()
 {
 	if ( pFile )
+	{
 		GrannyFreeFile( pFile );
+	}
 	pFile = 0;
 }
 
@@ -46,7 +48,9 @@ void CGrannyMemFileLoader::RecalcValue( CFileRequest *p )
 	try
 	{
 		if ( pValue == 0 )
+		{
 			pValue = new CGrannyFile;
+		}
 		granny_int32 nBufferSize = req.GetStream()->GetSize();
 		CMemoryStream memoStream;
 		req.GetStream()->ReadTo( &memoStream, nBufferSize );
@@ -79,14 +83,18 @@ void CGrannyMeshLoader::SetKey( const SPartAndSkeletonKey &_key )
 	{
 		// A GLTF geometry may still bind to a legacy GR2 skeleton by bone name.
 		if ( key.pSkeleton && key.pSkeleton->szModelFileRef.empty() )
+		{
 			pSkeletonFileInfo = NAnimation::GetSkeletonFileInfo( key.pSkeleton );
+		}
 		return;
 	}
 	SResKey<SGrannyFileLoaderInfo> uidKey( _key.pGeometry->uid,
 	                                       SGrannyFileLoaderInfo( "Geometries", _key.pGeometry->GetRecordID(), false ) );
 	pGrannyFile = shareGrannyFiles.Get( uidKey );
 	if ( key.pSkeleton )
+	{
 		pSkeletonFileInfo = NAnimation::GetSkeletonFileInfo( key.pSkeleton );
+	}
 }
 
 bool CGrannyMeshLoader::NeedUpdate()
@@ -95,11 +103,15 @@ bool CGrannyMeshLoader::NeedUpdate()
 	if ( key.pGeometry && !key.pGeometry->szModelFileRef.empty() )
 	{
 		if ( pSkeletonFileInfo )
+		{
 			return bParentChanged | pSkeletonFileInfo.Refresh();
+		}
 		return bParentChanged || pValue == 0;
 	}
 	if ( pSkeletonFileInfo )
+	{
 		return pGrannyFile.Refresh() | pSkeletonFileInfo.Refresh();
+	}
 	return pGrannyFile.Refresh();
 }
 
@@ -109,7 +121,9 @@ static int CalcGrannyTypedefOffset( granny_data_type_definition *pType, const ch
 	while ( pType && pType->Type != GrannyEndMember )
 	{
 		if ( strcmp( name, pType->Name ) == 0 )
+		{
 			return nRet;
+		}
 		nRet += GrannyGetMemberTypeSize( pType );
 		++pType;
 	}
@@ -121,7 +135,9 @@ static int CalcGrannyMemberArraySize( granny_data_type_definition *pType, const 
 	while ( pType && pType->Type != GrannyEndMember )
 	{
 		if ( strcmp( name, pType->Name ) == 0 )
+		{
 			return GrannyGetMemberTypeSize( pType );
+		}
 		++pType;
 	}
 	return 0;
@@ -154,10 +170,14 @@ void ConvertAIGeomTrisFromGranny( granny_mesh *pMesh, std::vector<STriangle> *pR
 	// int nTriCount = pTopol->Groups->TriCount;
 	int nTriCount = 0;
 	for ( int i = 0; i < pTopol->GroupCount; ++i )
+	{
 		nTriCount += pTopol->Groups[i].TriCount;
+	}
 	pRes->resize( nTriCount );
 	if ( nTriCount == 0 )
+	{
 		return;
+	}
 	int ind = 0;
 	for ( int i = 0; i < nTriCount; ++i )
 	{
@@ -185,11 +205,15 @@ void ConvertVerticesFromGranny( granny_mesh *pMesh, int nMaterialIndex, std::vec
 	nTexVOffset = CalcGrannyTypedefOffset( pMesh->PrimaryVertexData->VertexType, GrannyVertexBinormalName );
 	nTexOffset = CalcGrannyTypedefOffset( pMesh->PrimaryVertexData->VertexType, GrannyVertexTextureCoordinatesName );
 	if ( nTexOffset < 0 )
+	{
 		nTexOffset =
 				CalcGrannyTypedefOffset( pMesh->PrimaryVertexData->VertexType, GrannyVertexTextureCoordinatesName "0" );
+	}
 
 	if ( nTexUOffset < 0 || nTexVOffset < 0 || nTexOffset < 0 || nNormalOffset < 0 )
+	{
 		ASSERT( 0 );
+	}
 	/**
 	// Commented this out to still copy the whole set of vertices
 	// relying on further optimization phase which must optimize redundant ones out.
@@ -241,7 +265,9 @@ void ConvertVerticesFromGranny( granny_mesh *pMesh, int nMaterialIndex, std::vec
 
 		memcpy( &dst.pos, pVertex + nPosOffset, 3 * sizeof( float ) );
 		if ( nPosOffset >= 0 )
+		{
 			memcpy( &dst.tex, pVertex + nTexOffset, 2 * sizeof( float ) );
+		}
 		CVec3 vLoad;
 		if ( nNormalOffset >= 0 )
 		{
@@ -272,7 +298,9 @@ const char *ConvertWeightsFromGrannyEx( const granny_skeleton *pSkeleton,
 	const char *res = 0;
 
 	if ( pMesh->BoneBindingCount <= 0 )
+	{
 		return "Error";
+	}
 
 	// A vertex may carry fewer than four influences. Clear unused slots even when
 	// reusing an existing output vector, since render and collision skinning read them.
@@ -316,7 +344,9 @@ const char *ConvertWeightsFromGrannyEx( const granny_skeleton *pSkeleton,
 				                        pszBoneName ) );
 			}
 			else
+			{
 				ASSERT( 0 && "Vertex was binded to non-present bone" );
+			}
 			return "Vertex was binded to non-present bone/n";
 		}
 	}
@@ -335,7 +365,9 @@ const char *ConvertWeightsFromGrannyEx( const granny_skeleton *pSkeleton,
 		ASSERT( nIndicesCount <= 4 && nWeightsCount <= 4 && "Unsupported number of vertice-to-bone bindings in mesh!" );
 		ASSERT( nIndicesCount > 0 && nWeightsCount > 0 && "Unsupported number of vertice-to-bone bindings in mesh!" );
 		if ( nWeightsCount <= 0 || nIndicesCount <= 0 || nIndicesCount != nWeightsCount )
+		{
 			return "Error";
+		}
 		nWeightsCount = (std::min)( 4, nWeightsCount );
 		nIndicesCount = (std::min)( 4, nIndicesCount );
 
@@ -399,12 +431,18 @@ const char *ConvertWeightsFromGrannyEx( const granny_skeleton *pSkeleton,
 				// Unused bindings can contain an exporter sentinel. Do not look them
 				// up, or read uninitialized indices beyond the declared array width.
 				if ( weights[j] == 0 )
+				{
 					continue;
+				}
 				if ( indices[j] >= index2bone.size() )
+				{
 					return "Vertex bone binding index is out of range";
+				}
 				const int nBone = index2bone[indices[j]];
 				if ( !pSkeleton || nBone < 0 || nBone >= pSkeleton->BoneCount || nBone > 0xff )
+				{
 					return "Vertex skeleton bone index is out of range";
+				}
 				wData.cBoneIndices[j] = static_cast<uint8_t>( nBone );
 				wData.fWeights[j] = weights[j] / 255.0f;
 			}
@@ -445,7 +483,9 @@ void ConvertGeometryFromGranny( granny_mesh *pMesh, int nMaterialIndex, std::vec
 		// int nTriCount = pTopol->Groups->TriCount;
 		int nTriCount = 0;
 		for ( int i = 0; i < pTopology->GroupCount; ++i )
+		{
 			nTriCount += pTopology->Groups[i].TriCount;
+		}
 		pGeometry->resize( nTriCount );
 		int ind = 0;
 		for ( int i = 0; i < nTriCount; ++i )
@@ -467,7 +507,9 @@ granny_model *FindFirstAppropriateModel( granny_file_info *pData, granny_mesh *p
 		for ( int nMB = 0; nMB < pM->MeshBindingCount; ++nMB )
 		{
 			if ( pM->MeshBindings[nMB].Mesh == pMesh )
+			{
 				return pM;
+			}
 		}
 	}
 	return 0;
@@ -477,7 +519,9 @@ bool EndsWith( const char *pszA, const char *pszB )
 {
 	int nA = strlen( pszA ), nB = strlen( pszB );
 	if ( nA < nB )
+	{
 		return false;
+	}
 	return strcmp( pszA + nA - nB, pszB ) == 0;
 }
 
@@ -490,11 +534,15 @@ namespace
 	{
 		std::vector<TValue> result;
 		if ( accessorIndex >= asset.accessors.size() )
+		{
 			return result;
+		}
 		const fastgltf::Accessor &accessor = asset.accessors[accessorIndex];
 		result.reserve( accessor.count );
 		for ( const TValue &value : fastgltf::iterateAccessor<TValue>( asset, accessor ) )
+		{
 			result.push_back( value );
+		}
 		return result;
 	}
 
@@ -509,7 +557,9 @@ namespace
 		const CVec3 helper = fabsf( normal.z ) < 0.9f ? CVec3( 0, 0, 1 ) : CVec3( 0, 1, 0 );
 		*pTangent = helper ^ normal;
 		if ( !Normalize( pTangent ) )
+		{
 			*pTangent = CVec3( 1, 0, 0 );
+		}
 		*pBinormal = normal ^ *pTangent;
 		Normalize( pBinormal );
 	}
@@ -526,7 +576,9 @@ namespace
 			const NGltf::TGltfFilePtr file = NGltf::LoadFile( key.pSkeleton, key.pSkeleton->szModelFileRef );
 			NGltf::SSkeletonDefinition skeleton;
 			if ( !NGltf::BuildSkeleton( file, key.pSkeleton->szRootJoint, key.nSkeletonPart, &skeleton ) )
+			{
 				return false;
+			}
 			*pResult = skeleton.boneByName;
 			return true;
 		}
@@ -534,9 +586,13 @@ namespace
 		{
 			const granny_skeleton *pSkeleton = NAnimation::GetSkeleton( pGrannySkeletonFile, key.nSkeletonPart );
 			if ( !pSkeleton || pSkeleton->BoneCount > 256 )
+			{
 				return false;
+			}
 			for ( int i = 0; i < pSkeleton->BoneCount; ++i )
+			{
 				( *pResult )[pSkeleton->Bones[i].Name] = i;
+			}
 			return true;
 		}
 		NGltf::SSkeletonDefinition skeleton;
@@ -620,10 +676,14 @@ namespace
 		if ( primitive.type != fastgltf::PrimitiveType::Triangles &&
 		     primitive.type != fastgltf::PrimitiveType::TriangleStrip &&
 		     primitive.type != fastgltf::PrimitiveType::TriangleFan )
+		{
 			return;
+		}
 		const std::size_t positionAccessor = FindAttribute( primitive, "POSITION" );
 		if ( positionAccessor == static_cast<std::size_t>( -1 ) )
+		{
 			return;
+		}
 
 		const fastgltf::Asset &asset = file->asset;
 		const fastgltf::Node &node = asset.nodes[nodeIndex];
@@ -665,7 +725,9 @@ namespace
 				Normalize( &binormal );
 			}
 			else
+			{
 				MakeFallbackBasis( normal, &tangent, &binormal );
+			}
 
 			if ( !bSkinned )
 			{
@@ -692,7 +754,9 @@ namespace
 
 		std::vector<std::uint32_t> indices;
 		if ( primitive.indicesAccessor.has_value() )
+		{
 			indices = ReadGltfAccessor<std::uint32_t>( asset, *primitive.indicesAccessor );
+		}
 		if ( primitive.type == fastgltf::PrimitiveType::Triangles )
 		{
 			for ( std::size_t i = 0; i + 2 < indices.size(); i += 3 )
@@ -712,7 +776,9 @@ namespace
 				const std::uint32_t b = indices[i - 1];
 				const std::uint32_t c = indices[i];
 				if ( a == b || b == c || a == c )
+				{
 					continue;
+				}
 				STriangle &triangle = pData->geometry.emplace_back();
 				// A strip alternates its source winding; preserve each source triangle.
 				triangle.i1 = static_cast<int>( vertexOffset + ( i & 1 ? b : a ) );
@@ -760,7 +826,9 @@ namespace
 		}
 		if ( !node.skinIndex.has_value() || jointsAccessor == static_cast<std::size_t>( -1 ) ||
 		     weightsAccessor == static_cast<std::size_t>( -1 ) || *node.skinIndex >= asset.skins.size() )
+		{
 			return;
+		}
 
 		const fastgltf::Skin &sourceSkin = asset.skins[*node.skinIndex];
 		const std::unordered_map<std::string, int> *pTargetBoneMap = pTargetBones->Get();
@@ -785,13 +853,19 @@ namespace
 			for ( int influence = 0; influence < 4 && targetInfluence < 4; ++influence )
 			{
 				if ( weights[i][influence] <= 0.0f )
+				{
 					continue;
+				}
 				const std::size_t joint = joints[i][influence];
 				if ( joint >= sourceSkin.joints.size() )
+				{
 					continue;
+				}
 				const std::size_t sourceNodeIndex = sourceSkin.joints[joint];
 				if ( sourceNodeIndex >= asset.nodes.size() )
+				{
 					continue;
+				}
 				const fastgltf::Node &sourceNode = asset.nodes[sourceNodeIndex];
 				const std::string name = GetGltfNodeName( sourceNode, sourceNodeIndex );
 				const auto found = pTargetBoneMap->find( name );
@@ -804,10 +878,16 @@ namespace
 				totalWeight += target.fWeights[targetInfluence++];
 			}
 			if ( totalWeight > FP_EPSILON )
+			{
 				for ( int influence = 0; influence < targetInfluence; ++influence )
+				{
 					target.fWeights[influence] /= totalWeight;
+				}
+			}
 			else
+			{
 				target.fWeights[0] = 1.0f;
+			}
 		}
 	}
 
@@ -819,11 +899,15 @@ namespace
 		std::vector<std::size_t> meshNodes;
 		if ( !NGltf::GetMeshNodes( file, key.pGeometry->szRootMesh, &meshNodes ) || key.nGeometryPart < 0 ||
 		     key.nGeometryPart >= static_cast<int>( meshNodes.size() ) )
+		{
 			return false;
+		}
 		const std::size_t nodeIndex = meshNodes[key.nGeometryPart];
 		const fastgltf::Node &node = file->asset.nodes[nodeIndex];
 		if ( !node.meshIndex.has_value() || *node.meshIndex >= file->asset.meshes.size() )
+		{
 			return false;
+		}
 		const fastgltf::Mesh &mesh = file->asset.meshes[*node.meshIndex];
 		// Every primitive below belongs to this one node, so they all resolve their bones
 		// against the same skeleton. Build that mapping at most once for the whole mesh.
@@ -857,7 +941,9 @@ void CGrannyMeshLoader::Recalc()
 	if ( key.pGeometry && !key.pGeometry->szModelFileRef.empty() )
 	{
 		if ( pSkeletonFileInfo )
+		{
 			pSkeletonFileInfo.Refresh();
+		}
 		CObjectInfo::SData data;
 		if ( !LoadGltfMesh( key, pSkeletonFileInfo ? pSkeletonFileInfo->GetValue() : 0, &data ) )
 		{
@@ -865,7 +951,9 @@ void CGrannyMeshLoader::Recalc()
 			return;
 		}
 		if ( !pValue )
+		{
 			pValue = new CObjectInfo;
+		}
 		pValue->Assign( &data, true );
 		pValue->SetLightmappable( false );
 		bLightMapped = false;
@@ -905,7 +993,9 @@ void CGrannyMeshLoader::Recalc()
 		if ( stream.IsOk() )
 		{
 			if ( pValue == 0 )
+			{
 				pValue = new CObjectInfo;
+			}
 
 			NGScene::CObjectInfo::SBinData sBinD;
 			CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_READ );
@@ -928,7 +1018,9 @@ void CGrannyMeshLoader::Recalc()
 		granny_file *pFile = pGrannyFile->GetValue()->pFile;
 
 		if ( pValue == 0 )
+		{
 			pValue = new CObjectInfo;
+		}
 
 		granny_file_info *pData = GrannyGetFileInfo( pFile );
 		granny_model *pModel = pData->Models[0];
@@ -946,9 +1038,13 @@ void CGrannyMeshLoader::Recalc()
 
 				const granny_skeleton *pSkeleton = 0;
 				if ( key.pSkeleton )
+				{
 					pSkeleton = NAnimation::GetSkeleton( pSkeletonFileInfo->GetValue(), key.nSkeletonPart );
+				}
 				else
+				{
 					pSkeleton = FindFirstAppropriateModel( pData, pMesh )->Skeleton;
+				}
 
 				ConvertWeightsFromGrannyEx( pSkeleton, pMesh, key.nMaterialPart, &objData.weights, objData.verts.size() );
 				pValue->Assign( &objData, true );

@@ -59,9 +59,13 @@ CVec2 FindPositionForUnit( const CVec2 &vDefaultPos, const int nBoundTileRadius,
 			std::vector<SObjTileInfo> tempTiles;
 			const SUnitProfile &profile = pUnit->GetUnitProfile();
 			if ( profile.bRect )
+			{
 				GetAIMap()->GetTilesCoveredByRect( profile.rect, &tempTiles );
+			}
 			else
+			{
 				GetAIMap()->GetTilesCoveredByCircle( profile.circle.center, profile.circle.r, &tempTiles );
+			}
 			tiles.insert( tiles.end(), tempTiles.begin(), tempTiles.end() );
 		}
 	}
@@ -109,7 +113,9 @@ void PlaceReinforcement( EReinforcementType eType,
 	{
 		updater.AddUpdate( EFB_REINFORCEMENT_ARRIVED );
 		if ( nPlayer == theDipl.GetMyNumber() )
+		{
 			updater.AddUpdate( EFB_REINFORCEMENT_CENTER_LOCAL_PLAYER, MAKELONG( vPosition.x, vPosition.y ) );
+		}
 	}
 
 	LinkInfo links;
@@ -139,7 +145,9 @@ void PlaceReinforcement( EReinforcementType eType,
 				NI_ASSERT( pStats, fmt::format( "Null entry {} in reinforcement (no mech, no squad)", i ) );
 
 				if ( !pStats )
+				{
 					continue;
+				}
 			}
 			else
 			{
@@ -231,7 +239,9 @@ void PlaceReinforcement( EReinforcementType eType,
 
 	// send acknowledgement
 	if ( units.begin() != units.end() && nPlayer == theDipl.GetMyNumber() )
+	{
 		( *units.begin() )->SendAcknowledgement( NDb::ACK_REINFORCEMENT_ARRIVED, true );
+	}
 
 	if ( theDipl.GetNParty( nPlayer ) != theDipl.GetMyParty() &&
 	     ( eType == NDb::RT_BOMBERS || eType == NDb::RT_FIGHTERS || eType == NDb::RT_GROUND_ATTACK_PLANES ||
@@ -243,10 +253,14 @@ void PlaceReinforcement( EReinforcementType eType,
 	{
 		CPtr<SFeedBackUnitsArray> pParam = new SFeedBackUnitsArray;
 		for ( std::list<CCommonUnit *>::iterator it = units.begin(); it != units.end(); ++it )
+		{
 			pParam->unitIDs.push_back( ( *it )->GetUniqueID() );
+		}
 
 		if ( !bDisableUpdates )
+		{
 			updater.AddUpdate( EFB_ENEMY_AVIATION_CALLED, MAKELONG( vPosition.x, vPosition.y ), pParam );
+		}
 	}
 
 	dynamic_cast<CAILogic *>( Singleton<IAILogic>() )->InitLinks( links );
@@ -278,14 +292,18 @@ void PlaceSingleLandReinforcement( const int nPlayer,
 	CDBPtr<NDb::SDeployTemplate> pFinalTemplate = pTemplate;
 
 	if ( pReinf->pTemplateOverride )
+	{
 		pFinalTemplate = pReinf->pTemplateOverride;
+	}
 
 	NI_ASSERT( pFinalTemplate != 0,
 	           fmt::format( "Map design error: No deploy template for player = {} reinforcement type = {}",
 	                        nPlayer,
 	                        int( pReinf->eType ) ) );
 	if ( pFinalTemplate == 0 )
+	{
 		return;
+	}
 
 	std::list<std::pair<int, CObjectBase *>> objects;
 	std::list<std::pair<int, CObjectBase *>> *pObjectsLocal = pObjects == 0 ? &objects : pObjects;
@@ -329,7 +347,9 @@ void PlaceSingleSeaReinforcement( const int nPlayer,
 	for ( int i = 0; i < pReinf->entries.size(); ++i )
 	{
 		if ( pReinf->entries[i].nLinkIndex >= nMinLink )
+		{
 			nMinLink = pReinf->entries[i].nLinkIndex;
+		}
 	}
 
 	for ( int i = 0; i < pReinf->transports.size(); ++i )

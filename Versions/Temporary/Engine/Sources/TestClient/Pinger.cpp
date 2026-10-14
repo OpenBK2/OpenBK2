@@ -34,7 +34,9 @@ bool CPinger::Segment()
 
 		CPtr<CNetPacket> pPacket;
 		while ( pPacket = pServerClient->GetPacket() )
+		{
 			ProcessPacket( pPacket );
+		}
 	}
 
 	if ( GetLongTickCount() > nLastConnectTime + nConnectPeriod || bConnectNow )
@@ -53,7 +55,9 @@ bool CPinger::ProcessConnectServerResult( CConnectServerPacket *pPacket )
 	{
 		--nAttemptsLeft;
 		if ( nAttemptsLeft > 0 )
+		{
 			bConnectNow = true;
+		}
 		else
 		{
 			CFileStream stream( "server_is_down", CFileStream::WIN_CREATE );

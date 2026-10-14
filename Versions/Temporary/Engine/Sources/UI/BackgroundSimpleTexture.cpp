@@ -11,7 +11,9 @@ REGISTER_SAVELOAD_CLASS( UI, 0x11075B41, CBackgroundSimpleTexture )
 void CBackgroundSimpleTexture::Visit( IUIVisitor *pVisitor )
 {
 	if ( pos.IsEmpty() || !pStats )
+	{
 		return;
+	}
 
 	CTPoint<int> size;
 	CTRect<float> mem;
@@ -60,7 +62,9 @@ void CBackgroundSimpleTexture::Visit( IUIVisitor *pVisitor )
 		pos = mem;
 	}
 	else
+	{
 		pVisitor->VisitUIRect( pTexture, 3, rects );
+	}
 }
 
 void CBackgroundSimpleTexture::InitByDesc( const struct NDb::SUIDesc *_pDesc )
@@ -85,9 +89,13 @@ void CBackgroundSimpleTexture::SetPos( const CVec2 &vPos, const CVec2 &vSize )
 void CBackgroundSimpleTexture::SetTexture( const struct NDb::STexture *_pDesc )
 {
 	if ( pTexture != 0 )
+	{
 		pTexture = 0;
+	}
 	if ( _pDesc != 0 )
+	{
 		pTexture = checked_cast<const NDb::STexture *>( _pDesc );
+	}
 #ifndef _FINALRELEASE
 	if ( CHECK_UI_TEXTURES_INSTANT_LOAD != 0 )
 	{
@@ -99,7 +107,9 @@ void CBackgroundSimpleTexture::SetTexture( const struct NDb::STexture *_pDesc )
 void CBackgroundSimpleTexture::SetOutline( const CDBID &nOutlineType )
 {
 	if ( !pTexture )
+	{
 		return;
+	}
 
 	if ( !pIcon )
 	{

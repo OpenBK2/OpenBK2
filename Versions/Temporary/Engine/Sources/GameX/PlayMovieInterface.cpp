@@ -50,13 +50,17 @@ int CICPlayMovie::operator&( IBinSaver &saver )
 void CICPlayMovie::Configure( const char *pszConfig )
 {
 	if ( !pszConfig )
+	{
 		return;
+	}
 	// split string
 	std::vector<std::string> szStrings;
 	NStr::SplitStringWithMultipleBrackets( pszConfig, szStrings, ';' );
 	// movie sequence name
 	if ( szStrings.size() >= 1 )
+	{
 		szSequenceName = szStrings[0];
+	}
 	// next interface type ID
 	if ( szStrings.size() >= 2 )
 	{
@@ -69,7 +73,9 @@ void CICPlayMovie::PostCreate( IInterface *pInterface )
 {
 	std::string szMovie = szSequenceName;
 	if ( szSequenceName.size() >= 4 && szSequenceName.compare( szSequenceName.size() - 4, 4, ".xml" ) != 0 )
+	{
 		szMovie += ".xml";
+	}
 	pInterface->LoadMovieSequence( szMovie );
 	pInterface->SetNextInterface( szNextCommand );
 	NMainLoop::PushInterface( pInterface );
@@ -126,7 +132,9 @@ void CPlayMovieInterface::LoadMovieSequence( const std::string &_szFileName )
 			bFadeIn = false;
 			bFadeOut = false;
 			if ( pBackground )
+			{
 				pBackground->ShowWindow( false );
+			}
 		}
 		else
 		{
@@ -142,7 +150,9 @@ void CPlayMovieInterface::LoadMovieSequence( const std::string &_szFileName )
 	if ( bDemo )
 	{
 		if ( !pPlayerControl || !pPlayerControl->IsPlaying() )
+		{
 			NGlobal::SetVar( "DEMO_MODE_CONTINUE_MOVIE", 0 );
+		}
 	}
 }
 
@@ -163,30 +173,44 @@ void CPlayMovieInterface::MsgSkipSequence( const SGameMessage &msg )
 {
 	const bool bDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
 	if ( bDemo )
+	{
 		NGlobal::SetVar( "DEMO_MODE_CONTINUE_MOVIE", 0 );
+	}
 
 	if ( bProlog )
+	{
 		return;
+	}
 	if ( pPlayerControl )
+	{
 		pPlayerControl->SkipSequence();
+	}
 }
 void CPlayMovieInterface::MsgSkipMovie( const SGameMessage &msg )
 {
 	const bool bDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
 	if ( bDemo )
+	{
 		NGlobal::SetVar( "DEMO_MODE_CONTINUE_MOVIE", 0 );
+	}
 
 	if ( bProlog )
+	{
 		return;
+	}
 	if ( pPlayerControl )
+	{
 		pPlayerControl->SkipMovie();
+	}
 }
 
 bool CPlayMovieInterface::StepLocal( bool bAppActive )
 {
 	const bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );
 	if ( !bAppActive )
+	{
 		return false;
+	}
 
 	if ( bProlog )
 	{
@@ -194,7 +218,9 @@ bool CPlayMovieInterface::StepLocal( bool bAppActive )
 		{
 			IFullScreenFader *pFader = Scene()->GetScreenFader();
 			if ( pFader && pFader->IsInProgress() )
+			{
 				return bResult;
+			}
 
 			if ( pPlayerControl )
 			{
@@ -208,12 +234,18 @@ bool CPlayMovieInterface::StepLocal( bool bAppActive )
 		{
 			IFullScreenFader *pFader = Scene()->GetScreenFader();
 			if ( pFader && pFader->IsInProgress() )
+			{
 				return bResult;
+			}
 
 			if ( pFader )
+			{
 				pFader->Start( 0.0f, SCREEN_FADER_CLEAR, SCREEN_FADER_CLEAR, false );
+			}
 			if ( pBackground )
+			{
 				pBackground->ShowWindow( true );
+			}
 			bFadeIn = false;
 			bFadeOut = true;
 		}
@@ -221,14 +253,18 @@ bool CPlayMovieInterface::StepLocal( bool bAppActive )
 		{
 			IFullScreenFader *pFader = Scene()->GetScreenFader();
 			if ( pFader )
+			{
 				pFader->Start( fFadeIn, SCREEN_FADER_CLEAR, SCREEN_FADER_BLACK, true );
+			}
 			bFadeIn = true;
 		}
 		return bResult;
 	}
 
 	if ( !pPlayerControl || !pPlayerControl->IsPlaying() )
+	{
 		StartNextInterface(); // exit this screen...
+	}
 	return bResult;
 }
 
@@ -241,7 +277,9 @@ void CPlayMovieInterface::StartNextInterface()
 		NGlobal::ProcessCommand( wszNextCommand );
 	}
 	else
+	{
 		NMainLoop::Command( CreateICExitGame() );
+	}
 }
 
 void CPlayMovieInterface::OnGetFocus( bool bFocus )
@@ -249,7 +287,9 @@ void CPlayMovieInterface::OnGetFocus( bool bFocus )
 	CInterfaceScreenBase::OnGetFocus( bFocus );
 
 	if ( !bFocus )
+	{
 		PauseIntermission( true );
+	}
 }
 
 void PlayMovieSequence( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
@@ -261,7 +301,9 @@ void PlayMovieSequence( const std::string &szID, const std::vector<std::wstring>
 	}
 	std::string szSeqName = NStr::ToMBCS( paramsSet[0] );
 	if ( paramsSet.size() > 1 )
+	{
 		szSeqName += ";" + NStr::ToMBCS( paramsSet[1] );
+	}
 	NMainLoop::Command( ML_COMMAND_PLAY_MOVIE, szSeqName.c_str() );
 }
 

@@ -24,11 +24,15 @@ TCursor LoadCursor( const std::string &szFileName )
 	{
 		CFileStream file( NVFS::GetMainVFS(), szFileName );
 		if ( !file.IsOk() )
+		{
 			return 0;
+		}
 
 		CFileStream tempFile( szTempFile, CFileStream::WIN_CREATE );
 		if ( !tempFile.IsOk() )
+		{
 			return 0;
+		}
 
 		file.ReadTo( &tempFile, file.GetSize() );
 	}

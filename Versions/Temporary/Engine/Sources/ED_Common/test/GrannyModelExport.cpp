@@ -26,8 +26,12 @@ TEST( GrannyModelExport, ExportsRepositoryModelsInAllTextureModesWithoutChanging
 	// Mines and Units are omitted. Check the actual fixtures before opening
 	// the database; a missing model is otherwise a failure (or a Debug assert).
 	for ( const char *path : { "index.bin", "types.xml", modelPaths[0], modelPaths[1], modelPaths[2] } )
+	{
 		if ( !std::filesystem::is_regular_file( dataRoot / path ) )
+		{
 			GTEST_SKIP() << "Optional Granny model fixture is unavailable: " << path;
+		}
+	}
 	// Force the stats module to load, so AnimB2 is registered just as in the editor.
 	EXPECT_EQ( GetCommandByAction( NDb::USER_ACTION_MOVE ), ACTION_COMMAND_MOVE_TO );
 	CObj<NVFS::IVFS> saved = NVFS::GetMainVFS();
@@ -73,7 +77,9 @@ TEST( GrannyModelExport, ExportsRepositoryModelsInAllTextureModesWithoutChanging
 					[]( simdjson::dom::object *extras, size_t, fastgltf::Category category, void *user )
 					{
 						if ( category != fastgltf::Category::Animations )
+						{
 							return;
+						}
 						uint64_t fps = 0;
 						ASSERT_FALSE( ( *extras )["framesPerSecond"].get( fps ) );
 						EXPECT_EQ( fps, 30u );
@@ -139,15 +145,23 @@ TEST( GrannyModelExport, ExportsRepositoryModelsInAllTextureModesWithoutChanging
 			std::vector<std::string> expectedClips;
 			std::set<std::string> seen;
 			for ( const auto &clip : model->animations )
+			{
 				if ( clip )
 				{
 					expectedClips.push_back( NDb::GetFileName( clip->GetDBID() ) );
 					seen.insert( expectedClips.back() );
 				}
+			}
 			if ( model->pSkeleton )
+			{
 				for ( const auto &clip : model->pSkeleton->animations )
+				{
 					if ( clip && seen.insert( NDb::GetFileName( clip->GetDBID() ) ).second )
+					{
 						expectedClips.push_back( NDb::GetFileName( clip->GetDBID() ) );
+					}
+				}
+			}
 			EXPECT_EQ( clipNames, expectedClips );
 			EXPECT_EQ( asset->animations.size(), expectedClips.empty() ? 0u : 1u );
 		}

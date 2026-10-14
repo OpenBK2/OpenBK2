@@ -23,7 +23,9 @@ inline int AddUniqueTerraSpotVertex( std::vector<NGScene::SVertex> &arr,
 	for ( std::vector<NGScene::SVertex>::const_iterator it = arr.begin(); it != arr.end(); ++it, ++nCount )
 	{
 		if ( ( fabs2( it->pos.x - vert.x ) + fabs2( it->pos.y - vert.y ) + fabs2( it->pos.z - vert.z ) ) < DEF_FLOAT_EPS2 )
+		{
 			return nCount;
+		}
 	}
 	templ.pos = vert;
 	templ.tex.Set( vTex.x * fUsedTexSizeX, vTex.y * fUsedTexSizeY );
@@ -39,7 +41,9 @@ inline int AddUniqueTerraSpotVertex( std::vector<NGScene::SVertex> &arr,
 void CTerraGen::CreateTerraSpotGfx( STerrainInfo::STerraSpot *pSpot, const NDb::STerrainSpotInstance *pInstance )
 {
 	if ( pInstance->pDescriptor == 0 )
+	{
 		return;
+	}
 	CVec3 v1( pInstance->points[0].x, pInstance->points[0].y, 0.0f );
 	CVec3 v2( pInstance->points[1].x, pInstance->points[1].y, 0.0f );
 	CVec3 v3( pInstance->points[2].x, pInstance->points[2].y, 0.0f );
@@ -166,11 +170,17 @@ void CTerraGen::CreateTerraSpotGfx( STerrainInfo::STerraSpot *pSpot, const NDb::
 				{
 					points.resize( 0 );
 					if ( bFlag1 )
+					{
 						points.push_back( vert1 );
+					}
 					if ( bFlag2 )
+					{
 						points.push_back( vert2 );
+					}
 					if ( bFlag3 )
+					{
 						points.push_back( vert3 );
+					}
 
 					GetBaryCoords( v1, vert1, vert2, vert3, &bary );
 					if ( ( bary.x >= 0.0f ) && ( bary.y >= 0.0f ) && ( ( bary.x + bary.y ) <= 1.0f ) )
@@ -213,7 +223,9 @@ void CTerraGen::CreateTerraSpotGfx( STerrainInfo::STerraSpot *pSpot, const NDb::
 					AddIntersection( &points, v4, v1, vert3, vert1 );
 
 					if ( points.size() < 3 )
+					{
 						continue;
+					}
 
 					tempPoints.resize( 0 );
 					for ( std::vector<CVec3>::const_iterator it = points.begin(); it != points.end(); ++it )
@@ -222,7 +234,9 @@ void CTerraGen::CreateTerraSpotGfx( STerrainInfo::STerraSpot *pSpot, const NDb::
 						for ( ; itTemp != tempPoints.end(); ++itTemp )
 						{
 							if ( ( fabs2( it->x - itTemp->x ) + fabs2( it->y - itTemp->y ) ) < DEF_FLOAT_EPS2 )
+							{
 								break;
+							}
 						}
 						if ( itTemp == tempPoints.end() )
 						{
@@ -231,7 +245,9 @@ void CTerraGen::CreateTerraSpotGfx( STerrainInfo::STerraSpot *pSpot, const NDb::
 					}
 
 					if ( tempPoints.size() < 3 )
+					{
 						continue;
+					}
 
 					CreateConvexHull( &resPoints, tempPoints );
 
@@ -284,9 +300,13 @@ void CTerraGen::CreateTerraSpotGfx( STerrainInfo::STerraSpot *pSpot, const NDb::
 						if ( IsCCW( gfxInfo.data.vertices[nInd0].pos,
 						            gfxInfo.data.vertices[nPrevInd].pos,
 						            gfxInfo.data.vertices[nInd].pos ) )
+						{
 							gfxInfo.data.triangles.push_back( STriangle( nInd0, nPrevInd, nInd ) );
+						}
 						else
+						{
 							gfxInfo.data.triangles.push_back( STriangle( nInd0, nInd, nPrevInd ) );
+						}
 
 						nPrevInd = nInd;
 					}
@@ -298,7 +318,9 @@ void CTerraGen::CreateTerraSpotGfx( STerrainInfo::STerraSpot *pSpot, const NDb::
 	terrainGfxInfo.terraspots.push_back( gfxInfo );
 
 	if ( pGfxObserver )
+	{
 		pGfxObserver->AddTerraSpot( &gfxInfo );
+	}
 }
 
 void CTerraGen::AddTerraSpot( const NDb::STerrainSpotInstance *pInstance )
@@ -383,7 +405,9 @@ void CTerraGen::RemoveTerraSpot( const int nSpotID )
 	}
 
 	if ( pGfxObserver )
+	{
 		pGfxObserver->RemoveTerraSpot( nSpotID );
+	}
 }
 
 const NDb::STerrainSpotInstance *CTerraGen::FindTerraSpot( int nID ) const
@@ -392,7 +416,9 @@ const NDb::STerrainSpotInstance *CTerraGen::FindTerraSpot( int nID ) const
 	      ++it )
 	{
 		if ( it->nSpotID == nID )
+		{
 			return &( *it );
+		}
 	}
 	return 0;
 }

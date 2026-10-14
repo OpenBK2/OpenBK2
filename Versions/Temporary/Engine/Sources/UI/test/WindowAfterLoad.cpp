@@ -18,9 +18,13 @@ class CButtonStateSaver : public IBinSaver
 	{
 		ASSERT_EQ( size, sizeof( T ) );
 		if ( reading )
+		{
 			memcpy( data, &value, sizeof( T ) );
+		}
 		else
+		{
 			memcpy( &value, data, sizeof( T ) );
+		}
 	}
 
 	bool StartChunk( chunk_id id, int number ) override
@@ -41,17 +45,23 @@ class CButtonStateSaver : public IBinSaver
 			int count = substates.size();
 			Transfer( data, size, count );
 			if ( !reading )
+			{
 				substates.resize( count );
+			}
 		}
 		else if ( chunks.size() == 2 && id == 5 )
+		{
 			Transfer( data, size, substates[chunks[1].second - 1] );
+		}
 		else if ( chunks.empty() && id == 10 )
 		{
 			bool effect = false;
 			Transfer( data, size, effect );
 		}
 		else if ( chunks.empty() && id == 12 )
+		{
 			Transfer( data, size, originalSubstate );
+		}
 	}
 	void DataChunkString( std::string & ) override {}
 	void DataChunkString( std::wstring & ) override {}

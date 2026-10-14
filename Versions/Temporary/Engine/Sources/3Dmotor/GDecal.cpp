@@ -19,7 +19,9 @@ CDecal::CDecal( CDecalsManager *_pOwner, CDecalTarget *_pTarget, IMaterial *_pMa
 		{
 			ISomePart *pPart = parts[k];
 			if ( !IsValid( pPart ) )
+			{
 				continue;
+			}
 			const SFullGroupInfo &fg = pPart->GetFullGroupInfo();
 			SDecalTargetPart tp( fg.pUser, fg.nUserID );
 			// calc source position
@@ -33,11 +35,15 @@ CDecal::CDecal( CDecalsManager *_pOwner, CDecalTarget *_pTarget, IMaterial *_pMa
 					SSrcPosInfo srcPos( tp.pUser, tp.nUserID, pSource );
 					TransformPart( pPart, &pTarget->srcPositions[srcPos], 0 );
 					if ( !OnCreate( pOwner->GetScene(), pPart, srcPos ) )
+					{
 						bAddToTargets = false;
+					}
 				}
 			}
 			if ( bAddToTargets )
+			{
 				pTarget->targetParts.push_back( tp );
+			}
 		}
 		parts.clear();
 	}
@@ -47,7 +53,9 @@ CDecal::CDecal( CDecalsManager *_pOwner, CDecalTarget *_pTarget, IMaterial *_pMa
 CDecal::~CDecal()
 {
 	if ( IsValid( pOwner ) )
+	{
 		pOwner->Unregister( this, pTarget );
+	}
 }
 
 template <class T>
@@ -59,9 +67,13 @@ static void WalkVector( std::vector<T> *pRes )
 		if ( IsValid( ( *pRes )[k] ) )
 		{
 			if ( nRes != k )
+			{
 				( *pRes )[nRes++] = ( *pRes )[k];
+			}
 			else
+			{
 				++nRes;
+			}
 		}
 	}
 	pRes->resize( nRes );
@@ -72,13 +84,21 @@ bool CDecal::OnCreate( IDecalQuery *pScene, ISomePart *pNew, const SSrcPosInfo &
 	CDecalTarget::CSrcPosHash::iterator i = pTarget->srcPositions.find( tp );
 	CObjectBase *pRes;
 	if ( i != pTarget->srcPositions.end() )
+	{
 		pRes = pScene->CreateDecal( pNew, i->second, pTarget->mapInfo, pMaterial );
+	}
 	else
+	{
 		pRes = pScene->CreateDecal( pNew, std::vector<CVec3>(), pTarget->mapInfo, pMaterial );
+	}
 	if ( !pRes )
+	{
 		return false;
+	}
 	if ( ( pNew->decals.size() & 31 ) == 0 )
+	{
 		WalkVector( &pNew->decals );
+	}
 	pNew->decals.push_back( pRes );
 	decals.push_back( pRes );
 	return true;
@@ -105,7 +125,9 @@ void CDecalsManager::OnCreate( ISomePart *pNew )
 		{
 			ASSERT( IsValid( decals[k] ) );
 			if ( IsValid( decals[k] ) )
+			{
 				decals[k]->OnCreate( pScene, pNew, srcPos );
+			}
 		}
 	}
 }
@@ -116,7 +138,9 @@ CDecalTarget *CDecalsManager::CreateDecalTarget( const std::vector<CObjectBase *
 	CDecalTarget *pRes = new CDecalTarget( _info );
 	CObjectBaseSet targets;
 	for ( int k = 0; k < _targets.size(); ++k )
+	{
 		targets[_targets[k]] = 1;
+	}
 	pScene->GetPartsList( _info, targets, &pRes->parts );
 	return pRes;
 }
@@ -148,7 +172,9 @@ void CDecalsManager::Register( CDecal *pDecal, CDecalTarget *pTarget )
 			}
 		}
 		if ( !bFound )
+		{
 			decals.push_back( pDecal );
+		}
 	}
 }
 
@@ -160,18 +186,26 @@ void CDecalsManager::Unregister( CDecal *pDecal, CDecalTarget *pTarget )
 	{
 		CPerUserHash::iterator i = decalsPerUser.find( targetParts[k] );
 		if ( i == decalsPerUser.end() )
+		{
 			continue;
+		}
 		std::vector<CPtr<CDecal>> &d = i->second;
 		int nRes = 0;
 		for ( int m = 0; m < d.size(); ++m )
 		{
 			if ( d[m] != pDecal )
+			{
 				d[nRes++] = d[m];
+			}
 		}
 		if ( nRes == 0 )
+		{
 			decalsPerUser.erase( i );
+		}
 		else
+		{
 			d.resize( nRes );
+		}
 	}
 }
 
@@ -183,9 +217,13 @@ void CDecalsManager::Walk()
 		for ( int k = 0; k < r.size(); ++k )
 		{
 			if ( IsValid( r[k] ) )
+			{
 				r[k]->Walk();
+			}
 			else
+			{
 				ASSERT( 0 );
+			}
 		}
 	}
 }

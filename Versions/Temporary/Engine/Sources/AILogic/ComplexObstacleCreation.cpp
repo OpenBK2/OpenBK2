@@ -25,7 +25,9 @@ CCreations creations;
 void CComplexObstacleCreation::CreateObjects( SAIObjectsUnderConstructionUpdate *pUpdate )
 {
 	if ( !pFenceCreation )
+	{
 		return;
+	}
 	pFenceCreation->CreateObjects( pUpdate );
 
 	const int nFormerInd = pUpdate->objects.size();
@@ -34,14 +36,18 @@ void CComplexObstacleCreation::CreateObjects( SAIObjectsUnderConstructionUpdate 
 	for ( int i = 0; i < antitanks.size(); ++i )
 	{
 		if ( !antitanks[i] )
+		{
 			continue;
+		}
 		std::list<SVector> tiles;
 		antitanks[i]->GetCoveredTiles( &tiles );
 		bool bCanBuildCurrent = true;
 		for ( std::list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 		{
 			if ( !GetAIMap()->IsTileInside( *it ) || 0 != ( EAC_TERRAIN & GetTerrain()->GetTileLockInfo( *it ) ) )
+			{
 				pUpdate->impossibleToBuildTiles.push_back( CVec2( it->x, it->y ) );
+			}
 			else
 			{
 				pUpdate->buildTiles.push_back( CVec2( it->x, it->y ) );
@@ -84,7 +90,9 @@ bool CComplexObstacleCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, 
 			pAntitank = new CSimpleStaticObject(
 					pStats, CVec3( vDesiredPoint, 0 ), wDir, pStats->fMaxHP, 0, ESOT_COMMON, GetPlayer(), true );
 			if ( IsAIModificationAllowed() )
+			{
 				pAntitank->Mem2UniqueIdObjs();
+			}
 			pAntitank->Init();
 		}
 		antitanks.push_back( pAntitank.GetPtr() ); // yes, antitank can be NULL
@@ -175,7 +183,9 @@ bool CComplexObstacleCreation::IsAnyUnitPrevent() const
 		return CLongObjectCreation::IsAnyUnitPrevent( r1 );
 	}
 	else
+	{
 		return pFenceCreation->IsAnyUnitPrevent();
+	}
 }
 
 bool CComplexObstacleCreation::CanBuildNext() const
@@ -189,14 +199,18 @@ bool CComplexObstacleCreation::CanBuildNext() const
 			for ( std::list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 			{
 				if ( !GetAIMap()->IsTileInside( *it ) || 0 != ( EAC_TERRAIN & GetTerrain()->GetTileLockInfo( *it ) ) )
+				{
 					return false;
+				}
 			}
 			return true;
 		}
 		return false;
 	}
 	else
+	{
 		return pFenceCreation->CanBuildNext();
+	}
 }
 
 void CComplexObstacleCreation::LockCannotBuild()
@@ -215,9 +229,13 @@ CLine2 CComplexObstacleCreation::GetCurLine()
 float CComplexObstacleCreation::GetPrice()
 {
 	if ( IsAntitank( nCurIndex ) )
+	{
 		return SConsts::ANTITANK_RU_PRICE;
+	}
 	else
+	{
 		return SConsts::FENCE_SEGMENT_RU_PRICE;
+	}
 }
 
 bool CComplexObstacleCreation::IsCheatPath() const
@@ -233,16 +251,24 @@ bool CComplexObstacleCreation::CannotFinish() const
 void CComplexObstacleCreation::AddWork( const float fAdd )
 {
 	if ( IsAntitank( nCurIndex ) )
+	{
 		CLongObjectCreation::AddWork( fAdd );
+	}
 	else
+	{
 		pFenceCreation->AddWork( fAdd );
+	}
 }
 
 float CComplexObstacleCreation::GetWorkDone() const
 {
 	if ( IsAntitank( nCurIndex ) )
+	{
 		return CLongObjectCreation::GetWorkDone();
+	}
 	else
+	{
 		return pFenceCreation->GetWorkDone();
+	}
 }
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11147C00, CComplexObstacleCreation );

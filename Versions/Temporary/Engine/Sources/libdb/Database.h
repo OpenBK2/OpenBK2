@@ -48,16 +48,22 @@ public:
 	{
 		COldTypesMap::iterator posType = oldTypesMap.find( nTypeID );
 		if ( posType != oldTypesMap.end() )
+		{
 			posType->second.erase( nRecordID );
+		}
 	}
 	const CDBID *GetDBID( const int nTypeID, const int nRecordID ) const
 	{
 		COldTypesMap::const_iterator posType = oldTypesMap.find( nTypeID );
 		if ( posType == oldTypesMap.end() )
+		{
 			return 0;
+		}
 		std::unordered_map<int, CDBID>::const_iterator posDBID = posType->second.find( nRecordID );
 		if ( posDBID == posType->second.end() )
+		{
 			return 0;
+		}
 		return &( posDBID->second );
 	}
 };

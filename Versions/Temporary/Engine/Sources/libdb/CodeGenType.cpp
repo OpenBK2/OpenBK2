@@ -104,7 +104,9 @@ static void GenerateEnum( ICode::SCodeStreams *pCode,
 		const NDb::NTypeDef::STypeEnum::SEnumEntry &entry = pEnum->entries[i];
 		pCode->h << szTabs << tab << entry.szName;
 		if ( entry.nVal != -1 )
+		{
 			pCode->h << " = " << entry.nVal;
+		}
 		pCode->h << "," << endl;
 	}
 	pCode->h << szTabs + "};" << endl;
@@ -117,7 +119,9 @@ static void GenerateEnum( ICode::SCodeStreams *pCode,
 	while ( i < szUnderlinedName.size() )
 	{
 		if ( szUnderlinedName[i] != ':' )
+		{
 			szUnderlinedName[nCnt++] = szUnderlinedName[i];
+		}
 		else
 		{
 			szUnderlinedName[nCnt++] = '_';
@@ -200,10 +204,14 @@ static void GenerateMetaInfoFunc( ICode::SCodeStreams *pCode,
 {
 	const std::string szQualifiedName = szFullQualifiedName.substr( 5, szFullQualifiedName.size() );
 	if ( eType != EST_STRUCT )
+	{
 		pCode->cpp << "void " << szQualifiedName << "::ReportMetaInfo() const" << endl;
+	}
 	else
+	{
 		pCode->cpp << "void " << szQualifiedName << "::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const"
 							 << endl;
+	}
 
 	pCode->cpp << "{" << endl;
 	bool bPrintEndL = false;
@@ -217,19 +225,27 @@ static void GenerateMetaInfoFunc( ICode::SCodeStreams *pCode,
 	if ( pStructBase->pBaseType != 0 )
 	{
 		if ( eType != EST_STRUCT )
+		{
 			pCode->cpp << tab << NHungarian::GetTypeNameInCode( pStructBase->pBaseType, 0 ) << "::ReportMetaInfo();" << endl;
+		}
 		else
+		{
 			pCode->cpp << tab << NHungarian::GetTypeNameInCode( pStructBase->pBaseType, 0 )
 								 << "::ReportMetaInfo( szAddName, pThis );" << endl;
+		}
 
 		bPrintEndL = true;
 	}
 
 	if ( bPrintEndL )
+	{
 		pCode->cpp << endl;
+	}
 
 	if ( eType != EST_STRUCT )
+	{
 		pCode->cpp << tab << "uint8_t *pThis = (uint8_t*)this;" << endl;
+	}
 
 	for ( NDb::NTypeDef::STypeClass::CFieldsList::iterator iter = pStructBase->fields.begin();
 	      iter != pStructBase->fields.end();
@@ -238,7 +254,9 @@ static void GenerateMetaInfoFunc( ICode::SCodeStreams *pCode,
 		NDb::NTypeDef::STypeClass::SField &field = *iter;
 
 		if ( IsNoCode( field ) )
+		{
 			continue;
+		}
 
 		NDb::NTypeDef::STypeDef *pFieldType = field.pType;
 		const std::string szCodeFieldName = NHungarian::GetFieldNameInCode( field );
@@ -251,11 +269,15 @@ static void GenerateMetaInfoFunc( ICode::SCodeStreams *pCode,
 				NDb::NTypeDef::STypeDef *pArrayType = pArray->field.pType;
 				if ( pArrayType->eType == NDb::NTypeDef::TYPE_TYPE_CLASS ||
 				     pArrayType->eType == NDb::NTypeDef::TYPE_TYPE_STRUCT )
+				{
 					pCode->cpp << tab << "NMetaInfo::ReportStructArrayMetaInfo( " << szParamsPrefix << qcomma << field.szName
 										 << qcomma << ", &" << szCodeFieldName << ", pThis );" << endl;
+				}
 				else
+				{
 					pCode->cpp << tab << "NMetaInfo::ReportSimpleArrayMetaInfo( " << szParamsPrefix << qcomma << field.szName
 										 << qcomma << ", &" << szCodeFieldName << ", pThis );" << endl;
+				}
 			}
 			break;
 
@@ -276,7 +298,9 @@ static void GenerateMetaInfoFunc( ICode::SCodeStreams *pCode,
 	}
 
 	if ( eType == EST_CLASS_TERMINAL )
+	{
 		pCode->cpp << tab << "NMetaInfo::FinishMetaInfoReport();" << endl;
+	}
 
 	pCode->cpp << "}" << endl;
 }
@@ -291,11 +315,15 @@ static void GenerateXMLSaveFunc( ICode::SCodeStreams *pCode,
 	pCode->cpp << "{" << endl;
 
 	if ( eType == EST_CLASS_TERMINAL )
+	{
 		pCode->cpp << tab << "NMetaInfo::STerminalClassReporter reporter( this, saver );" << endl;
+	}
 
 	if ( pStructBase->pBaseType != 0 )
+	{
 		pCode->cpp << tab << "saver.AddTypedSuper( (" << NHungarian::GetTypeNameInCode( pStructBase->pBaseType, 0 )
 							 << "*)(this) );" << endl;
+	}
 
 	for ( NDb::NTypeDef::STypeClass::CFieldsList::iterator iter = pStructBase->fields.begin();
 	      iter != pStructBase->fields.end();
@@ -303,7 +331,9 @@ static void GenerateXMLSaveFunc( ICode::SCodeStreams *pCode,
 	{
 		NDb::NTypeDef::STypeClass::SField &field = *iter;
 		if ( IsNoCode( field ) )
+		{
 			continue;
+		}
 
 		const std::string szCodeFieldName = NHungarian::GetFieldNameInCode( field );
 		pCode->cpp << tab << "saver.Add( " << qcomma << field.szName << qcomma << ", &" << szCodeFieldName << " );" << endl;
@@ -323,8 +353,10 @@ static void GenerateBinSaveFunc( ICode::SCodeStreams *pCode,
 	pCode->cpp << "{" << endl;
 
 	if ( pStructBase->pBaseType != 0 )
+	{
 		pCode->cpp << tab << "saver.Add( 1, (" << NHungarian::GetTypeNameInCode( pStructBase->pBaseType, 0 ) << "*)this );"
 							 << endl;
+	}
 
 	// In the order the fields are declared, which is also id order for every
 	// field numbered automatically; a field pinned with [chunkID] stays where it
@@ -337,7 +369,9 @@ static void GenerateBinSaveFunc( ICode::SCodeStreams *pCode,
 	{
 		NDb::NTypeDef::STypeClass::SField &field = *iter;
 		if ( IsNoCode( field ) )
+		{
 			continue;
+		}
 
 		const std::string szCodeFieldName = NHungarian::GetFieldNameInCode( field );
 		// a GUID field is a boost::uuids::uuid, whose bytes AddUuidChunk
@@ -366,23 +400,31 @@ static bool IsNoCheckSum( NDb::NTypeDef::SAttributes *pAttr )
 static bool IsNoCheckSum( NDb::NTypeDef::STypeDef *pType )
 {
 	if ( !pType )
+	{
 		return true;
+	}
 
 	if ( IsNoCheckSum( pType->GetAttributes() ) )
+	{
 		return true;
+	}
 
 	if ( pType->eType == NDb::NTypeDef::TYPE_TYPE_REF )
 	{
 		CDynamicCast<NDb::NTypeDef::STypeRef> pRefType = pType;
 		if ( pRefType && pRefType->pRefType && IsNoCheckSum( pRefType->pRefType->GetAttributes() ) )
+		{
 			return true;
+		}
 	}
 
 	if ( pType->eType == NDb::NTypeDef::TYPE_TYPE_ARRAY )
 	{
 		CDynamicCast<NDb::NTypeDef::STypeArray> pArrayType = pType;
 		if ( pArrayType && IsNoCheckSum( pArrayType->field.pAttributes ) )
+		{
 			return true;
+		}
 	}
 
 	return false;
@@ -420,15 +462,23 @@ static void GenerateCheckSumFunc( ICode::SCodeStreams *pCode,
 	{
 		const NDb::NTypeDef::STypeStructBase::SField &field = pStructBase->fields[i];
 		if ( IsNoCode( field ) )
+		{
 			continue;
+		}
 
 		if ( IsNoCheckSum( field.pAttributes ) )
+		{
 			continue;
+		}
 		if ( IsNoCheckSum( field.pType->GetAttributes() ) )
+		{
 			continue;
+		}
 
 		if ( IsNoCheckSum( field.pType ) )
+		{
 			continue;
+		}
 
 		if ( !bStartedWriteCheckSum )
 		{
@@ -502,7 +552,9 @@ static void GenerateStructBaseConstructor( ICode::SCodeStreams *pCode,
 	pCode->h << szTabs << tab << NHungarian::GetTypeNameInCode( pStructBase, 0 ) << "() ";
 	// Empty schema records still own a checksum cache that must start uncached.
 	if ( pStructBase->fields.empty() && IsNoCheckSum( pStructBase ) )
+	{
 		pCode->h << "{ }" << endl;
+	}
 	else
 	{
 		bool bFirst = true;
@@ -517,7 +569,9 @@ static void GenerateStructBaseConstructor( ICode::SCodeStreams *pCode,
 		{
 			const NDb::NTypeDef::STypeStructBase::SField &field = *iter;
 			if ( IsNoCode( field ) )
+			{
 				continue;
+			}
 
 			if ( field.defaultValue.IsNull() && field.complexDefaultValue.IsNull() )
 			{
@@ -533,7 +587,9 @@ static void GenerateStructBaseConstructor( ICode::SCodeStreams *pCode,
 						pCode->h << ":" << endl;
 					}
 					else
+					{
 						pCode->h << "," << endl;
+					}
 
 					std::string szValue;
 					if ( field.pType->eType == NDb::NTypeDef::TYPE_TYPE_ENUM )
@@ -542,7 +598,9 @@ static void GenerateStructBaseConstructor( ICode::SCodeStreams *pCode,
 						szValue = pEnum->entries[0].szName;
 					}
 					else
+					{
 						szValue = defaultValues[szFieldTypeName];
+					}
 
 					pCode->h << szTabs << tab << tab << szCodeFieldName << "( " << szValue << " )";
 				}
@@ -554,9 +612,13 @@ static void GenerateStructBaseConstructor( ICode::SCodeStreams *pCode,
 				if ( value.GetType() == CVariant::VT_STR )
 				{
 					if ( field.pType->eType == NDb::NTypeDef::TYPE_TYPE_ENUM || field.defaultValue.IsNull() )
+					{
 						szValue = value.GetStr();
+					}
 					else
+					{
 						szValue = std::string( "\"" ) + value.GetStr() + "\"";
+					}
 				}
 				else if ( value.GetType() == CVariant::VT_WSTR )
 				{
@@ -568,10 +630,14 @@ static void GenerateStructBaseConstructor( ICode::SCodeStreams *pCode,
 					szValue = FormatFloatDefault( value );
 				}
 				else
+				{
 					value.ToText( &szValue );
+				}
 
 				if ( field.pType->eType == NDb::NTypeDef::TYPE_TYPE_REF )
+				{
 					szValue = "NDb::Get(CDBID(" + szValue + "))";
+				}
 
 				const std::string szCodeFieldName = NHungarian::GetFieldNameInCode( field );
 				if ( bFirst )
@@ -580,14 +646,18 @@ static void GenerateStructBaseConstructor( ICode::SCodeStreams *pCode,
 					pCode->h << ":" << endl;
 				}
 				else
+				{
 					pCode->h << "," << endl;
+				}
 
 				pCode->h << szTabs << tab << tab << szCodeFieldName << "( " << szValue << " )";
 			}
 		}
 
 		if ( bFirst )
+		{
 			pCode->h << "{ }" << endl;
+		}
 		else if ( !bFirst )
 		{
 			pCode->h << endl;
@@ -600,18 +670,24 @@ static void
 GenereateTypeDefs( ICode::SCodeStreams *pCode, NDb::NTypeDef::SAttributes *pAttr, const std::string &szTabs )
 {
 	if ( pAttr == 0 )
+	{
 		return;
+	}
 
 	std::map<std::string, CVariant> &attr = pAttr->attributes;
 	std::map<std::string, CVariant>::iterator iter = attr.find( "type_defs" );
 	if ( iter == attr.end() )
+	{
 		return;
+	}
 
 	const std::string szTypeDefs = iter->second.GetStr();
 	std::vector<std::string> typedefs;
 	NStr::SplitString( szTypeDefs, &typedefs, ';' );
 	for ( int i = 0; i < typedefs.size() - 1; i += 2 )
+	{
 		pCode->h << szTabs << "typedef " << typedefs[i] << " " << typedefs[i + 1] << ";" << endl;
+	}
 }
 
 static void GenerateStructHFileAndNestedTypes( ICode::SCodeStreams *pCode,
@@ -624,7 +700,9 @@ static void GenerateStructHFileAndNestedTypes( ICode::SCodeStreams *pCode,
 
 	pCode->h << szTabs << "struct " << GetExportMacro( pCode, pStruct ) << NHungarian::GetTypeNameInCode( pStruct, 0 );
 	if ( pStruct->pBaseType != 0 )
+	{
 		pCode->h << " : public " << NHungarian::GetTypeNameInCode( pStruct->pBaseType, 0 );
+	}
 	pCode->h << endl;
 
 	pCode->h << szTabs << "{" << endl;
@@ -648,9 +726,13 @@ static void GenerateStructHFileAndNestedTypes( ICode::SCodeStreams *pCode,
 	pCode->h << szTabs << tab << "int operator&( IBinSaver &saver );" << endl;
 	pCode->h << szTabs << tab << "int operator&( IXmlSaver &saver );" << endl;
 	if ( !bNoCheckSum )
+	{
 		pCode->h << szTabs << tab << "uint32_t CalcCheckSum() const;" << endl;
+	}
 	else
+	{
 		pCode->h << szTabs << tab << "uint32_t CalcCheckSum() const { return 0; }" << endl;
+	}
 
 	pCode->h << szTabs << "};" << endl;
 }
@@ -677,9 +759,13 @@ static void GenerateClassHFileAndNestedTypes( ICode::SCodeStreams *pCode,
 
 	pCode->h << szTabs << "struct " << GetExportMacro( pCode, pClass ) << NHungarian::GetTypeNameInCode( pClass, 0 );
 	if ( pClass->pBaseType != 0 )
+	{
 		pCode->h << " : public " << NHungarian::GetTypeNameInCode( pClass->pBaseType, 0 );
+	}
 	else
+	{
 		pCode->h << " : public CResource";
+	}
 	pCode->h << endl;
 
 	pCode->h << szTabs << "{" << endl;
@@ -687,10 +773,14 @@ static void GenerateClassHFileAndNestedTypes( ICode::SCodeStreams *pCode,
 	GenereateTypeDefs( pCode, pClass->pAttributes, szTabs + "\t" );
 
 	if ( bTerminal )
+	{
 		pCode->h << szTabs << tab << "OBJECT_BASIC_METHODS( " << NHungarian::GetTypeNameInCode( pClass, 0 ) << " )" << endl;
+	}
 	pCode->h << szTabs << "public:" << endl;
 	if ( bTerminal )
+	{
 		pCode->h << szTabs << tab << "enum { typeID = " << FormatTypeID( pClass->nClassTypeID ) << " };" << endl;
+	}
 
 	const bool bNoCheckSum = IsNoCheckSum( pClass );
 	if ( !bNoCheckSum )
@@ -716,9 +806,13 @@ static void GenerateClassHFileAndNestedTypes( ICode::SCodeStreams *pCode,
 	pCode->h << szTabs << tab << "int operator&( IBinSaver &saver );" << endl;
 	pCode->h << szTabs << tab << "int operator&( IXmlSaver &saver );" << endl;
 	if ( !bNoCheckSum )
+	{
 		pCode->h << szTabs << tab << "uint32_t CalcCheckSum() const;" << endl;
+	}
 	else
+	{
 		pCode->h << szTabs << tab << "uint32_t CalcCheckSum() const { return 0; }" << endl;
+	}
 
 	pCode->h << szTabs << "};" << endl;
 }
@@ -756,22 +850,34 @@ void CTypeDefinition::GenerateCode( SCodeStreams *pCode,
                                     const std::string &szQualifiedName )
 {
 	if ( IsNoCode( pType->GetAttributes() ) )
+	{
 		return;
+	}
 
 	if ( NDb::NTypeDef::SAttributes *pAttr = pType->GetAttributes() )
 	{
 		if ( pAttr->attributes.find( "noHeader" ) != pAttr->attributes.end() )
+		{
 			return;
+		}
 	}
 
 	if ( CDynamicCast<NDb::NTypeDef::STypeEnum> pTypeEnum = pType )
+	{
 		GenerateEnum( pCode, pTypeEnum, szTabs, szQualifiedName );
+	}
 	else if ( CDynamicCast<NDb::NTypeDef::STypeStruct> pTypeStruct = pType )
+	{
 		GenerateStruct( pCode, pTypeStruct, szTabs, pNamespace, szQualifiedName );
+	}
 	else if ( CDynamicCast<NDb::NTypeDef::STypeClass> pTypeClass = pType )
+	{
 		GenerateClass( pCode, pTypeClass, szTabs, pNamespace, bTerminal, szQualifiedName );
+	}
 	else
+	{
 		NI_ASSERT( false, fmt::format( "can't generate type definition of type {}", typeid( *pType ).name() ) );
+	}
 }
 
 }

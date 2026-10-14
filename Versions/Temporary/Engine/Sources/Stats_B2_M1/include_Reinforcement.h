@@ -22,9 +22,13 @@ const bool HasPlanes() const
 	{
 		const SReinforcementEntry &entry = *it;
 		if ( !entry.pMechUnit )
+		{
 			continue;
+		}
 		if ( entry.pMechUnit->IsAviation() )
+		{
 			return true;
+		}
 	}
 	return false;
 }

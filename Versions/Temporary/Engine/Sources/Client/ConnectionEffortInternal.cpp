@@ -61,12 +61,16 @@ bool CSimpleClientEffort::Segment()
 		while ( eState == ES_CONNECTING && ( pPacket = pConnet2PlayersNet->ReceivePacket() ) )
 		{
 			if ( !pConnectServerProcessor->ProcessPacket( pPacket ) )
+			{
 				ProcessPacket( pPacket );
+			}
 
 			while ( CPtr<CNetPacket> pConnPacket = pConnectServerProcessor->GetPacket() )
 			{
 				if ( CConnectServerPacket *pConnectPacket = dynamic_cast_ptr<CConnectServerPacket *>( pConnPacket ) )
+				{
 					ProcessConnectServerPacket( pConnectPacket );
+				}
 			}
 		}
 	}
@@ -75,7 +79,9 @@ bool CSimpleClientEffort::Segment()
 	{
 		const float fCurTime = GetCurrentTimeMilliseconds();
 		if ( fStartConnectClientTime + 1000 * pConnet2PlayersNet->GetTimeOut() < fCurTime )
+		{
 			eState = ES_FAILED;
+		}
 		else if ( fPredBreakThroughSend + 3000 < fCurTime )
 		{
 			fPredBreakThroughSend = fCurTime;
@@ -96,7 +102,9 @@ bool CSimpleClientEffort::ProcessClientAccepted( CGameConnectingClientAccepted *
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 bool CSimpleClientEffort::ProcessClientConnectInfo( CClientGameConnectInfo *pPacket )
@@ -129,13 +137,17 @@ bool CSimpleClientEffort::ProcessClientConnectInfo( CClientGameConnectInfo *pPac
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 void CSimpleClientEffort::ProcessConnectServerPacket( CConnectServerPacket *pPacket )
 {
 	if ( pPacket->eConnectionState == CConnectServerPacket::ECS_FAILED )
+	{
 		eState = ES_FAILED;
+	}
 	else
 	{
 		if ( eSubState == ECONNECT_SERVER )
@@ -192,7 +204,9 @@ bool CSimpleServerEffort::Segment()
 	{
 		const float fCurTime = GetCurrentTimeMilliseconds();
 		if ( fStartConnectClientTime + 1000 * pAcceptGamersNet->GetTimeOut() < fCurTime )
+		{
 			eState = ES_FAILED;
+		}
 		else if ( fPredBreakThroughSend + 3000 < fCurTime )
 		{
 			fPredBreakThroughSend = fCurTime;
@@ -216,7 +230,9 @@ bool CSimpleServerEffort::ProcessClientIdentity( CIndentityPacket *pPacket )
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 IConnection *CSimpleServerEffort::CreateConnection() const

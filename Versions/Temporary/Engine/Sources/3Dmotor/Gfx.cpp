@@ -86,9 +86,13 @@ static HRESULT UpdateWindowSwapChain()
 {
 	RECT client = {};
 	if ( !GetClientRect( hWnd, &client ) || client.right <= 0 || client.bottom <= 0 )
+	{
 		return D3DERR_DEVICELOST;
+	}
 	if ( pWindowSwapChain && nPresentWidth == client.right && nPresentHeight == client.bottom )
+	{
 		return D3D_OK;
+	}
 
 	pWindowSwapChain = 0;
 	D3DPRESENT_PARAMETERS windowPP = pp;
@@ -111,26 +115,36 @@ static HRESULT PresentWindow()
 {
 	HRESULT hr = UpdateWindowSwapChain();
 	if ( FAILED( hr ) )
+	{
 		return hr;
+	}
 	NWin32Helper::com_ptr<IDirect3DSurface9> pSource, pDestination;
 	hr = pDevice->GetBackBuffer( 0, 0, D3DBACKBUFFER_TYPE_MONO, pSource.GetAddr() );
 	if ( FAILED( hr ) )
+	{
 		return hr;
+	}
 	hr = pWindowSwapChain->GetBackBuffer( 0, D3DBACKBUFFER_TYPE_MONO, pDestination.GetAddr() );
 	if ( FAILED( hr ) )
+	{
 		return hr;
+	}
 	if ( pResolvedScreen )
 	{
 		// D3D9 MSAA resolve must precede resizing: resolve at game resolution,
 		// then stretch the non-multisampled image to the presentation rectangle.
 		hr = pDevice->StretchRect( pSource, 0, pResolvedScreen, 0, D3DTEXF_NONE );
 		if ( FAILED( hr ) )
+		{
 			return hr;
+		}
 		pSource = pResolvedScreen;
 	}
 	hr = pDevice->ColorFill( pDestination, 0, D3DCOLOR_XRGB( 0, 0, 0 ) );
 	if ( FAILED( hr ) )
+	{
 		return hr;
+	}
 	const auto viewport =
 			NWinFrame::SWindowViewport::Fit( pp.BackBufferWidth, pp.BackBufferHeight, nPresentWidth, nPresentHeight );
 	const RECT dest = { viewport.x, viewport.y, viewport.x + viewport.width, viewport.y + viewport.height };
@@ -139,7 +153,9 @@ static HRESULT PresentWindow()
 			( devCaps.StretchRectFilterCaps & linearCaps ) == linearCaps ? D3DTEXF_LINEAR : D3DTEXF_NONE;
 	hr = pDevice->StretchRect( pSource, 0, pDestination, &dest, filter );
 	if ( FAILED( hr ) )
+	{
 		return hr;
+	}
 	return pWindowSwapChain->Present( 0, 0, hWnd, 0, 0 );
 }
 
@@ -171,14 +187,18 @@ static HRESULT InitDXObjects()
 	++nDeviceCreationID;
 	// init itself
 	if ( !InitZBuffer( GetZBufferFormat( pp.BackBufferFormat ) ) )
+	{
 		bInitOk = false;
+	}
 	InitBuffers();
 	InitRender();
 	if ( IsBorderlessGame() )
 	{
 		HRESULT hr = UpdateWindowSwapChain();
 		if ( FAILED( hr ) )
+		{
 			return hr;
+		}
 		if ( pp.MultiSampleType != D3DMULTISAMPLE_NONE )
 		{
 			hr = pDevice->CreateRenderTarget( pp.BackBufferWidth,
@@ -190,7 +210,9 @@ static HRESULT InitDXObjects()
 			                                  pResolvedScreen.GetAddr(),
 			                                  0 );
 			if ( FAILED( hr ) )
+			{
 				return hr;
+			}
 		}
 	}
 	return bInitOk ? D3D_OK : D3DERR_NOTAVAILABLE;
@@ -239,9 +261,13 @@ static HRESULT CreateDevice( NWin32Helper::com_ptr<IDirect3DDevice9> *pRes, D3DP
 	hr = -1;
 	bool bUseHWVP = !bUseSWVP;
 	if ( !bTnLDevice && ( devCaps.VertexShaderVersion & 0xFFFF ) == 0 )
+	{
 		bUseHWVP = false;
+	}
 	if ( ( devCaps.DevCaps & D3DDEVCAPS_PUREDEVICE ) == 0 )
+	{
 		bUseHWVP = false;
+	}
 	//
 	if ( bUseHWVP )
 	{
@@ -298,7 +324,9 @@ static HRESULT ResetDevice()
 {
 	HRESULT hr;
 	if ( !bDeviceCreated )
+	{
 		hr = CreateDevice( &pDevice, &pp, !bHardwareVP );
+	}
 	else
 	{
 		DestroyLostableDXObjects();
@@ -310,7 +338,9 @@ static HRESULT ResetDevice()
 	// Device creation/reset can fail during an alt-tab or display-mode change.
 	// Do not query a missing/lost device or recreate presentation resources yet.
 	if ( FAILED( hr ) )
+	{
 		return hr;
+	}
 	{
 		D3DDEVINFO_VCACHE vcache;
 		Zero( vcache );
@@ -320,10 +350,14 @@ static HRESULT ResetDevice()
 		{
 			pQ->Issue( D3DISSUE_BEGIN );
 			while ( pQ->GetData( &vcache, sizeof( vcache ), D3DGETDATA_FLUSH ) != S_OK )
+			{
 				std::this_thread::yield();
+			}
 			pQ->Release();
 			if ( vcache.Pattern == 0x48434143 )
+			{
 				nVCacheSize = vcache.CacheSize;
+			}
 		}
 	}
 	bGammaIsSet = false;
@@ -343,7 +377,9 @@ static HRESULT ResetDevice()
 			SetWindowPos( hWnd, HWND_NOTOPMOST, nWinXPos, 0, pp.BackBufferWidth, pp.BackBufferHeight, SWP_SHOWWINDOW );
 		}
 	if ( NWinFrame::IsGameWindow( hWnd ) )
+	{
 		NWinFrame::SetRenderSize( pp.BackBufferWidth, pp.BackBufferHeight );
+	}
 	if ( hr == D3D_OK )
 	{
 		hr = InitDXObjects();
@@ -443,7 +479,9 @@ static bool TestZBufferFormat( D3DFORMAT screen, D3DFORMAT rTarget, D3DFORMAT zB
 {
 	if ( D3D_OK != pD3D->CheckDeviceFormat(
 										 GetAdapterToUse(), DEVICE_TYPE, screen, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, zBuf ) )
+	{
 		return false;
+	}
 	return D3D_OK == pD3D->CheckDepthStencilMatch( GetAdapterToUse(), DEVICE_TYPE, screen, rTarget, zBuf );
 }
 
@@ -451,7 +489,9 @@ static bool TestRTargetFormat( D3DFORMAT screen, D3DFORMAT rTarget )
 {
 	if ( D3D_OK != pD3D->CheckDeviceFormat(
 										 GetAdapterToUse(), DEVICE_TYPE, screen, D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, rTarget ) )
+	{
 		return false;
+	}
 	return true;
 }
 
@@ -460,16 +500,26 @@ static D3DFORMAT GetZBufferFormat( D3DFORMAT screen, D3DFORMAT rTarget )
 	if ( GetBpp( rTarget ) > 16 )
 	{
 		if ( TestZBufferFormat( screen, rTarget, D3DFMT_D24S8 ) )
+		{
 			return D3DFMT_D24S8;
+		}
 		if ( TestZBufferFormat( screen, rTarget, D3DFMT_D24X4S4 ) )
+		{
 			return D3DFMT_D24X4S4;
+		}
 		if ( TestZBufferFormat( screen, rTarget, D3DFMT_D32 ) )
+		{
 			return D3DFMT_D32;
+		}
 		if ( TestZBufferFormat( screen, rTarget, D3DFMT_D24X8 ) )
+		{
 			return D3DFMT_D24X8;
+		}
 	}
 	if ( TestZBufferFormat( screen, rTarget, D3DFMT_D16 ) )
+	{
 		return D3DFMT_D16;
+	}
 	ASSERT( 0 );
 	return D3DFMT_UNKNOWN;
 }
@@ -483,7 +533,9 @@ static D3DFORMAT GetZBufferFormat( D3DFORMAT rTarget )
 static void GetBackBufferSize()
 {
 	if ( IsBorderlessGame() )
+	{
 		return; // Desktop resizing must not overwrite the chosen game resolution.
+	}
 	RECT windowPos;
 	GetClientRect( pp.hDeviceWindow, &windowPos );
 	pp.BackBufferWidth = windowPos.right;
@@ -493,14 +545,20 @@ static void GetBackBufferSize()
 void CheckBackBufferSize()
 {
 	if ( IsBorderlessGame() )
+	{
 		return; // PresentWindow resizes only the presentation swap chain.
+	}
 	RECT windowPos;
 	GetClientRect( pp.hDeviceWindow, &windowPos );
 
 	if ( !IsWindowVisible( pp.hDeviceWindow ) )
+	{
 		return;
+	}
 	if ( windowPos.bottom == 0 || windowPos.right == 0 )
+	{
 		return;
+	}
 	if ( pp.BackBufferHeight != windowPos.bottom || pp.BackBufferWidth != windowPos.right )
 	{
 		pp.BackBufferWidth = windowPos.right;
@@ -530,7 +588,9 @@ static void FillFSAA( D3DPRESENT_PARAMETERS *pRes )
 			pRes->MultiSampleType = D3DMULTISAMPLE_NONMASKABLE;
 			pRes->MultiSampleQuality = (std::min)( (std::min)( nFront, nDepth ), nFSAA );
 			if ( pRes->MultiSampleQuality > 0 )
+			{
 				--pRes->MultiSampleQuality;
+			}
 		}
 	}
 }
@@ -541,7 +601,9 @@ bool Is16BitDesktop()
 	D3DDISPLAYMODE desktop;
 	hr = pD3D->GetAdapterDisplayMode( GetAdapterToUse(), &desktop );
 	if ( FAILED( hr ) )
+	{
 		return false;
+	}
 	return GetBpp( desktop.Format ) == 16;
 }
 
@@ -554,14 +616,20 @@ static bool FillPresent( const SVideoMode &m, D3DPRESENT_PARAMETERS *pRes )
 	D3DDISPLAYMODE desktop;
 	hr = pD3D->GetAdapterDisplayMode( GetAdapterToUse(), &desktop );
 	if ( FAILED( hr ) )
+	{
 		return false;
+	}
 
 	pp.MultiSampleType = D3DMULTISAMPLE_NONE;
 	pp.SwapEffect = D3DSWAPEFFECT_DISCARD;
 	if ( bVSync )
+	{
 		pp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
+	}
 	else
+	{
 		pp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
+	}
 	if ( FULL_SCREEN == m.fullScreen )
 	{
 		// search through modes to find fitting
@@ -580,7 +648,9 @@ static bool FillPresent( const SVideoMode &m, D3DPRESENT_PARAMETERS *pRes )
 			}
 		}
 		if ( !bFound )
+		{
 			return false;
+		}
 		// fill structure
 		pp.BackBufferWidth = m.nXSize;
 		pp.BackBufferHeight = m.nYSize;
@@ -602,7 +672,9 @@ static bool FillPresent( const SVideoMode &m, D3DPRESENT_PARAMETERS *pRes )
 	// ensure that our back buffer bit depth is the same as that of
 	// windowed display depth to work in windowed mode
 	if ( GetBpp( desktop.Format ) != m.nBpp )
+	{
 		return false;
+	}
 	pp.BackBufferWidth = m.nXSize;
 	pp.BackBufferHeight = m.nYSize;
 	pp.BackBufferFormat = desktop.Format; //D3DFMT_UNKNOWN;//D3DFMT_X8R8G8B8;// D3DFMT_UNKNOWN;//D3DFMT_UNKNOWN_D24S8;
@@ -629,7 +701,9 @@ static void DetectModes( D3DFORMAT format, int nBpp )
 		D3DDISPLAYMODE mode;
 		pD3D->EnumAdapterModes( GetAdapterToUse(), format, i, &mode );
 		if ( mode.Height > desktop.Height || mode.RefreshRate != desktop.RefreshRate )
+		{
 			mode.RefreshRate = D3DPRESENT_RATE_DEFAULT;
+		}
 		SVideoMode info( mode.Width, mode.Height, nBpp, FULL_SCREEN, mode.RefreshRate );
 		// replace with better mode
 		bool bFound = false;
@@ -648,7 +722,9 @@ static void DetectModes( D3DFORMAT format, int nBpp )
 			}
 		}
 		if ( !bFound )
+		{
 			videoModes.push_back( SVideoModeInfo( mode, info ) );
+		}
 	}
 }
 
@@ -658,9 +734,13 @@ static void SelectDeviceType()
 	bTnLDevice = true;
 	if ( nForceTnLDevice == 1 || ( devCaps.VertexShaderVersion & 0xFFFF ) == 0 ||
 	     ( devCaps.PixelShaderVersion & 0xFFFF ) == 0 )
+	{
 		bTnLDevice = true;
+	}
 	else
+	{
 		bTnLDevice = false;
+	}
 }
 
 static void DetectModes()
@@ -682,7 +762,9 @@ static bool CheckDeviceCaps()
 	bNVHackNP2 = bNVHackNP2Cfg;
 	nMaxFSAA = 0;
 	if ( devCaps.MaxTextureWidth < 1024 || devCaps.MaxTextureHeight < 1024 )
+	{
 		return false;
+	}
 
 	if ( FAILED( pD3D->CheckDeviceType( GetAdapterToUse(), DEVICE_TYPE, D3DFMT_X8R8G8B8, D3DFMT_X8R8G8B8, false ) ) )
 	{
@@ -699,9 +781,13 @@ static bool CheckDeviceCaps()
 		if ( id.VendorId == 0x10de )
 		{
 			if ( ( id.DeviceId & 0xf00 ) == 0x100 )
+			{
 				devCaps.VertexShaderVersion = 0; // ban hwvp on 4mxs
+			}
 			if ( ( id.DeviceId & 0xf00 ) != 0x200 )
+			{
 				bNVHackNP2 = false;
+			}
 		}
 		else
 		{
@@ -710,17 +796,29 @@ static bool CheckDeviceCaps()
 		bCanDoFastScreenshot = id.VendorId == 0x1002;
 	}
 	if ( bForbidPS )
+	{
 		devCaps.PixelShaderVersion = 0;
+	}
 	if ( ( devCaps.PixelShaderVersion & 0xFFFF ) >= 0x0101 )
+	{
 		bHardwarePixelShaders = true;
+	}
 	if ( ( devCaps.PixelShaderVersion & 0xFFFF ) >= 0x0104 )
+	{
 		bHardwarePixelShaders14 = true;
+	}
 	if ( ( devCaps.PixelShaderVersion & 0xFFFF ) >= 0x0200 )
+	{
 		bHardwarePixelShaders20 = true;
+	}
 	if ( ( devCaps.PixelShaderVersion & 0xFFFF ) >= 0x0201 )
+	{
 		bHardwarePixelShaders20a = true;
+	}
 	if ( ( devCaps.TextureCaps & D3DPTEXTURECAPS_MIPCUBEMAP ) == 0 )
+	{
 		bNoCubeMapMipLevels = true;
+	}
 
 	// determine device class
 	SelectDeviceType();
@@ -730,9 +828,13 @@ static bool CheckDeviceCaps()
 	D3DPRESENT_PARAMETERS tpp;
 	SVideoMode tm;
 	if ( b16BitModeOnly )
+	{
 		tm = SVideoMode( 640, 480, D3DFMT_R5G6B5, FULL_SCREEN );
+	}
 	else
+	{
 		tm = SVideoMode( 640, 480, GetBpp( desktop.Format ), WINDOWED );
+	}
 	if ( !FillPresent( tm, &tpp ) )
 	{
 		ASSERT( 0 );
@@ -747,7 +849,9 @@ static bool CheckDeviceCaps()
 	}
 
 	if ( pTestDevice->GetAvailableTextureMem() < 45000000 )
+	{
 		bHardwareVP = false;
+	}
 
 	// detect D3D debug dll
 	NWin32Helper::com_ptr<IDirect3DVertexBuffer9> pTestBuffer;
@@ -756,7 +860,9 @@ static bool CheckDeviceCaps()
 	hr = pTestBuffer->Lock( 0, 1024, &pTest, D3DLOCK_NOOVERWRITE );
 	bIsDebugRuntime = FAILED( hr );
 	if ( SUCCEEDED( hr ) )
+	{
 		pTestBuffer->Unlock();
+	}
 
 	systemInfo.nDesktopWidth = desktop.Width;
 	systemInfo.nDesktopHeight = desktop.Height;
@@ -781,7 +887,9 @@ static bool CheckDeviceCaps()
 			SUCCEEDED( pD3D->CheckDeviceFormat(
 					GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A4R4G4B4 ) );
 	if ( !bRequiredTextureFormatsAreSupported )
+	{
 		return false;
+	}
 	bDXTSupported = SUCCEEDED( pD3D->CheckDeviceFormat(
 											GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT1 ) ) &&
 	                SUCCEEDED( pD3D->CheckDeviceFormat(
@@ -800,7 +908,9 @@ static bool CheckDeviceCaps()
 					 GetAdapterToUse(), DEVICE_TYPE, D3DFMT_X8R8G8B8, FALSE, D3DMULTISAMPLE_NONMASKABLE, &nFrontFSAA ) ) &&
 	     SUCCEEDED( pD3D->CheckDeviceMultiSampleType(
 					 GetAdapterToUse(), DEVICE_TYPE, D3DFMT_D24S8, FALSE, D3DMULTISAMPLE_NONMASKABLE, &nDepthFSAA ) ) )
+	{
 		nMaxFSAA = (std::min)( nFrontFSAA, nDepthFSAA );
+	}
 
 	return true;
 }
@@ -837,7 +947,9 @@ static bool InitD3D()
 		return false;
 	}
 	if ( !CheckDeviceCaps() )
+	{
 		return false;
+	}
 	return true;
 }
 
@@ -851,7 +963,9 @@ bool SetMode( const SVideoMode &m, const SRenderTargetsInfo &_rtInfo )
 	}
 	D3DPRESENT_PARAMETERS newPP;
 	if ( !FillPresent( m, &newPP ) )
+	{
 		return false;
+	}
 	pp = newPP;
 	rtInfo = _rtInfo;
 	videoMode = m;
@@ -863,14 +977,20 @@ bool SetMode( const SVideoMode &m, const SRenderTargetsInfo &_rtInfo )
 void GetModesList( std::vector<SVideoMode> *pRes, int nBpp )
 {
 	if ( b16BitModeOnly )
+	{
 		nBpp = 16;
+	}
 	if ( videoModes.empty() )
+	{
 		return;
+	}
 	pRes->clear();
 	for ( int k = 0; k < videoModes.size(); ++k )
 	{
 		if ( videoModes[k].info.nBpp == nBpp )
+		{
 			pRes->push_back( videoModes[k].info );
+		}
 	}
 }
 
@@ -933,7 +1053,9 @@ void MakeScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma )
 		pSrc += lr.Pitch;
 	}
 	if ( bCorrectGamma )
+	{
 		CorrectGamma( pRes );
+	}
 }
 
 void MakeFast32BitScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma )
@@ -953,10 +1075,14 @@ void MakeFast32BitScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma )
 	hr = pDevice->CreateOffscreenPlainSurface(
 			pp.BackBufferWidth, pp.BackBufferHeight, pp.BackBufferFormat, D3DPOOL_SYSTEMMEM, pSurface.GetAddr(), 0 );
 	if ( FAILED( hr ) )
+	{
 		return;
+	}
 	hr = pDevice->GetBackBuffer( 0, 0, D3DBACKBUFFER_TYPE_MONO, pBackBuffer.GetAddr() );
 	if ( FAILED( hr ) )
+	{
 		return;
+	}
 	if ( pResolvedScreen )
 	{
 		// Screenshots can be requested between frames while BeginScene is active.
@@ -964,16 +1090,22 @@ void MakeFast32BitScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma )
 		hr = pDevice->StretchRect( pBackBuffer, 0, pResolvedScreen, 0, D3DTEXF_NONE );
 		pDevice->BeginScene();
 		if ( FAILED( hr ) )
+		{
 			return;
+		}
 		pBackBuffer = pResolvedScreen;
 	}
 	hr = pDevice->GetRenderTargetData( pBackBuffer, pSurface );
 	if ( FAILED( hr ) )
+	{
 		return;
+	}
 	D3DLOCKED_RECT lr;
 	hr = pSurface->LockRect( &lr, 0, D3DLOCK_READONLY );
 	if ( FAILED( hr ) )
+	{
 		return;
+	}
 	pRes->SetSizes( pp.BackBufferWidth, pp.BackBufferHeight );
 	const char *pSrc = (const char *)lr.pBits;
 	for ( int y = 0; y < pRes->GetSizeY(); ++y )
@@ -994,14 +1126,20 @@ void MakeFast32BitScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma )
 			}
 		}
 		else
+		{
 			memcpy( &( ( *pRes )[y][0] ), pSrc, 4 * pRes->GetSizeX() );
+		}
 		pSrc += lr.Pitch;
 	}
 	hr = pSurface->UnlockRect();
 	if ( FAILED( hr ) )
+	{
 		return;
+	}
 	if ( bCorrectGamma )
+	{
 		CorrectGamma( pRes );
+	}
 }
 
 bool bOutputFPS = false;
@@ -1021,7 +1159,9 @@ void Flip()
 	//
 	hr = IsBorderlessGame() ? PresentWindow() : pDevice->Present( 0, 0, hWnd, 0 );
 	if ( FAILED( hr ) && hr != D3DERR_DEVICELOST )
+	{
 		D3DASSERT( hr, "Present failed" );
+	}
 	//
 	double fFrameTime = NHPTimer::GetTimePassed( &timeFrameStart );
 	++nTotalFrames;
@@ -1067,7 +1207,9 @@ void Flip()
 		nLastTexCheckFrame = 0;
 	}
 	else
+	{
 		++nLastTexCheckFrame;
+	}
 	//
 	hr = pDevice->BeginScene();
 	ASSERT( D3D_OK == hr );
@@ -1084,9 +1226,13 @@ static D3DGAMMARAMP keptGamma;
 void SetGamma( bool bGamma )
 {
 	if ( !pDevice )
+	{
 		return;
+	}
 	if ( ( bGammaIsSet == bGamma ) && ( fGamma == fLastGamma ) && !bChangedGammaRamp )
+	{
 		return;
+	}
 
 	// set gamma
 	D3DGAMMARAMP gamma;
@@ -1143,7 +1289,9 @@ void SetGamma( bool bGamma )
 			// for some reason gamma returned by GetGammaRamp is in different range then it is expected in SetGammaRamp
 			int nShift = 0;
 			while ( ( nMax << nShift ) < 32768 )
+			{
 				++nShift;
+			}
 			for ( int k = 0; k < 256; ++k )
 			{
 				uint16_t wRes = k << 8;
@@ -1169,19 +1317,27 @@ bool Is3DActive()
 {
 	HRESULT hr = pDevice->TestCooperativeLevel();
 	if ( hr == D3DERR_DEVICELOST )
+	{
 		return false;
+	}
 	if ( hr == D3D_OK )
+	{
 		return true;
+	}
 	if ( pp.Windowed )
 	{
 		GetBackBufferSize();
 		if ( !FillPresent( videoMode, &pp ) )
+		{
 			return false;
+		}
 	}
 	ResetDevice();
 	hr = pDevice->TestCooperativeLevel();
 	if ( hr == D3DERR_DEVICELOST )
+	{
 		return false;
+	}
 	ASSERT( hr == D3D_OK );
 	return hr == D3D_OK;
 }
@@ -1207,7 +1363,9 @@ void D3DAssertFailed( HRESULT hRes, fmt::string_view fmtStr, fmt::printf_args ar
 	// Only ever reached with a failed hRes, so under a debugger the assert always
 	// fires, which is what the old unconditional test amounted to.
 	if ( is_debugger_present() )
+	{
 		ASSERT( hRes == D3D_OK );
+	}
 	////
 	const std::string buff = fmt::vsprintf( fmtStr, args );
 	////

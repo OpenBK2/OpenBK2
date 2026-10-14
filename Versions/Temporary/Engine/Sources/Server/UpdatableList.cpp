@@ -46,7 +46,9 @@ void CUpdatableList::GetFullUpdate( const int nNoIncludeID, SUpdateInfo *pUpdate
 	for ( std::unordered_set<int>::iterator iter = now.begin(); iter != now.end(); ++iter )
 	{
 		if ( *iter != nNoIncludeID )
+		{
 			pUpdate->added.push_back( *iter );
+		}
 	}
 }
 
@@ -77,16 +79,22 @@ void CUpdatableList::GetUpdate( const int nNoIncludeID, const uint32_t dwOldVers
 				{
 					std::unordered_set<int>::iterator iter = added.find( nID );
 					if ( iter == added.end() )
+					{
 						pUpdate->removed.push_back( nID );
+					}
 					else
+					{
 						added.erase( iter );
+					}
 
 					changed.erase( nID );
 				}
 				break;
 				case EC_CHANGED:
 					if ( added.find( nID ) == added.end() )
+					{
 						changed.insert( nID );
+					}
 
 					break;
 			}
@@ -96,9 +104,13 @@ void CUpdatableList::GetUpdate( const int nNoIncludeID, const uint32_t dwOldVers
 	}
 
 	for ( std::unordered_set<int>::iterator iter = added.begin(); iter != added.end(); ++iter )
+	{
 		pUpdate->added.push_back( *iter );
+	}
 	for ( std::unordered_set<int>::iterator iter = changed.begin(); iter != changed.end(); ++iter )
+	{
 		pUpdate->changed.push_back( *iter );
+	}
 }
 
 void CUpdatableList::GetDiff( const int nNoIncludeID, const uint32_t dwOldVersion, SUpdateInfo *pUpdate )
@@ -106,12 +118,16 @@ void CUpdatableList::GetDiff( const int nNoIncludeID, const uint32_t dwOldVersio
 	const uint32_t dwDiff = dwVersion - dwOldVersion;
 
 	if ( dwDiff > changes.size() || dwOldVersion == 0 )
+	{
 		GetFullUpdate( nNoIncludeID, pUpdate );
+	}
 	else
 	{
 		GetUpdate( nNoIncludeID, dwOldVersion, pUpdate );
 
 		if ( pUpdate->added.size() + pUpdate->changed.size() >= now.size() )
+		{
 			GetFullUpdate( nNoIncludeID, pUpdate );
+		}
 	}
 }

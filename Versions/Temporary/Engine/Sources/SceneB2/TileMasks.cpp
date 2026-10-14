@@ -36,11 +36,15 @@ static void BlurTileMask( CArray2D<uint8_t> *pDstMask,
 
 	const int nLastColumn = srcMask.GetSizeX() - 1;
 	for ( int g = 0; g < ( srcMask.GetSizeY() - 1 ); ++g )
+	{
 		( *pDstMask )[g][nLastColumn] = ( (int)srcMask[g][nLastColumn] + srcMask[g + 1][nLastColumn] ) >> 1;
+	}
 
 	const int nLastRow = srcMask.GetSizeY() - 1;
 	for ( int i = 0; i < ( srcMask.GetSizeX() - 1 ); ++i )
+	{
 		( *pDstMask )[nLastRow][i] = ( (int)srcMask[nLastRow][i] + srcMask[nLastRow][i + 1] ) >> 1;
+	}
 
 	( *pDstMask )[nLastRow][nLastColumn] = srcMask[nLastRow][nLastColumn];
 }
@@ -310,7 +314,9 @@ void CTerraGen::UpdateTileMasks(
 
 	NI_ASSERT( tileTerraMasks.size() == pDesc->pTerraSet->terraTypes.size(), "Wrong tiles mask" );
 	if ( tileTerraMasks.size() != pDesc->pTerraSet->terraTypes.size() )
+	{
 		return;
+	}
 
 	for ( int k = 0; k < tilesOrder.size(); ++k )
 	{
@@ -441,9 +447,13 @@ void CTerraGen::UpdateTileAreaType( const float fXo,
 			else
 			{
 				if ( terraBrushUpdate == NTerraBrush::TERRA_BRUSH_ADD )
+				{
 					terrainInfo.tileTerraMap[g][i] += mask[nIndY][nIndX];
+				}
 				else
+				{
 					terrainInfo.tileTerraMap[g][i] -= mask[nIndY][nIndX];
+				}
 			}
 		}
 	}
@@ -510,9 +520,13 @@ void CTerraGen::GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArr
 				}
 			}
 			if ( bFlag )
+			{
 				++nDiffTileX1;
+			}
 			else
+			{
 				break;
+			}
 		}
 
 		while ( nDiffTileX2 >= nDiffTileX1 )
@@ -527,9 +541,13 @@ void CTerraGen::GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArr
 				}
 			}
 			if ( bFlag )
+			{
 				--nDiffTileX2;
+			}
 			else
+			{
 				break;
+			}
 		}
 
 		while ( nDiffTileY1 <= nDiffTileY2 )
@@ -544,9 +562,13 @@ void CTerraGen::GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArr
 				}
 			}
 			if ( bFlag )
+			{
 				++nDiffTileY1;
+			}
 			else
+			{
 				break;
+			}
 		}
 
 		while ( nDiffTileY2 >= nDiffTileY1 )
@@ -561,9 +583,13 @@ void CTerraGen::GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArr
 				}
 			}
 			if ( bFlag )
+			{
 				--nDiffTileY2;
+			}
 			else
+			{
 				break;
+			}
 		}
 
 		if ( ( nDiffTileX1 <= nDiffTileX2 ) && ( nDiffTileY1 <= nDiffTileY2 ) )

@@ -46,7 +46,9 @@ void CWindow1LvlTreeControl::Expand( CWindow1LvlTreeControl::SItem *pContainer )
 			--it;
 			InsertAfter( pContainer->pItem, *it, true );
 			if ( it == pContainer->subitems.begin() )
+			{
 				break;
+			}
 		}
 	}
 	/*
@@ -66,7 +68,9 @@ void CWindow1LvlTreeControl::Collapse( CWindow1LvlTreeControl::SItem *pContainer
 			--it;
 			Remove( *it );
 			if ( it == pContainer->subitems.begin() )
+			{
 				break;
+			}
 		}
 	}
 	/*
@@ -92,7 +96,9 @@ void CWindow1LvlTreeControl::Released( class CWindow *pWho )
 {
 	SItem *pCont = GetContainer( pWho );
 	if ( pCont )
+	{
 		pCont->bCollapsed ? Expand( pCont ) : Collapse( pCont );
+	}
 }
 
 void CWindow1LvlTreeControl::Init()
@@ -110,15 +116,21 @@ IWindow *CWindow1LvlTreeControl::AddSubItem( IWindow *pItem )
 	{
 		IWindow *pPrev;
 		if ( !pCont->subitems.empty() )
+		{
 			pPrev = pCont->subitems.back();
+		}
 		else
+		{
 			pPrev = pCont->pItem;
+		}
 		CPtr<CWindow> pInsert = dynamic_cast<CWindow *>( CUIFactory::MakeWindow( pShared->pSubItemSample ) );
 		pInsert->Init();
 		pCont->subitems.push_back( pInsert.GetPtr() );
 		pInsert->ShowWindow( true );
 		if ( !pCont->bCollapsed )
+		{
 			InsertAfter( pPrev, pInsert, 0 );
+		}
 		return pInsert;
 	}
 	return 0;

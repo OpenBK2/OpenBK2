@@ -14,7 +14,9 @@ namespace NGScene
 bool CSkyAdapter::NeedUpdate()
 {
 	if ( !pTex )
+	{
 		return false;
+	}
 	return pTex.Refresh();
 }
 
@@ -22,7 +24,9 @@ void CSkyAdapter::Recalc()
 {
 	pValue = 0;
 	if ( pTex )
+	{
 		pValue = pTex->GetValue();
+	}
 }
 
 void CSkyAdapter::SetSource( CPtrFuncBase<NGfx::CCubeTexture> *_pTex )
@@ -38,7 +42,9 @@ extern CBasicShare<STextureKey, CFileTexture, STextureKeyHash> shareTextures;
 static CPtrFuncBase<NGfx::CTexture> *GetTexture( const NDb::STexture *pTex )
 {
 	if ( !pTex )
+	{
 		return 0;
+	}
 	CPtrFuncBase<NGfx::CTexture> *pRes;
 	pRes = shareTextures.Get( GetKey( pTex ) );
 	return pRes;
@@ -49,7 +55,9 @@ void CMaterialShare::FillCreateMaterialInfo( const NDb::SMaterial *_pMaterial, S
 	SMaterialCreateInfo &mc = *pRes;
 	mc.pTexture = GetTexture( _pMaterial->pTexture );
 	if ( _pMaterial->pTexture )
+	{
 		mc.vAvrgTexColor = NGfx::GetCVec4Color( _pMaterial->pTexture->nAverageColor );
+	}
 	//pBump = shareTextures.Get( 13 );
 	mc.pBump = GetTexture( _pMaterial->pBump );
 	mc.pMirrorTexture = GetTexture( _pMaterial->pMirror );
@@ -163,7 +171,9 @@ IMaterial *CMaterialShare::CreateMaterial( const NDb::SMaterial *pMaterial )
 	{
 		CMatHashmap::iterator i = materials.find( pMaterial );
 		if ( i != materials.end() && IsValid( i->second ) )
+		{
 			return i->second;
+		}
 		FillCreateMaterialInfo( pMaterial, &mc );
 		IMaterial *pRes = NGScene::CreateMaterial( mc );
 		materials[pMaterial] = pRes;
@@ -182,7 +192,9 @@ IMaterial *CColorMaterialShare::CreateMaterial( const CVec3 &color )
 {
 	CMatHashmap::iterator i = materials.find( color );
 	if ( i != materials.end() && IsValid( i->second ) )
+	{
 		return i->second;
+	}
 	SMaterialCreateInfo mc;
 	mc.pColor = new CCVec4( CVec4( color, 1 ) );
 	IMaterial *pRes = NGScene::CreateMaterial( mc );
@@ -200,13 +212,17 @@ IMaterial *CTransparentMaterialShare::CreateMaterial( const CVec4 &cr, bool bDoe
 	{
 		CMatHashmap::iterator i = materials.find( color );
 		if ( i != materials.end() && IsValid( i->second ) )
+		{
 			return i->second;
+		}
 	}
 	else
 	{
 		CMatHashmap::iterator i = noShadowMaterials.find( color );
 		if ( i != noShadowMaterials.end() && IsValid( i->second ) )
+		{
 			return i->second;
+		}
 	}
 	CObj<CPtrFuncBase<NGfx::CTexture>> pTexture = new CColorTexture( color ); //shareTextures.Get( 1724 );
 	SMaterialCreateInfo mc;

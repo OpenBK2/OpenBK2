@@ -146,7 +146,9 @@ void CTerraGen::ReGenerate()
 bool CTerraGen::LoadTerrainInfo( CDataStream *pStream )
 {
 	if ( !pStream || !pStream->IsOk() )
+	{
 		return false;
+	}
 
 	if ( CPtr<IBinSaver> pSaver = CreateBinSaver( pStream, SAVER_MODE_READ ) )
 	{
@@ -179,7 +181,9 @@ void CTerraGen::SaveTerrainInfo( CDataStream *pStream )
 		OptimizeTerrainInfo();
 		//
 		if ( CPtr<IBinSaver> pSaver = CreateBinSaver( pStream, SAVER_MODE_WRITE ) )
+		{
 			pSaver->Add( 1, &terrainInfo );
+		}
 		//
 		RestoreTerrainInfoAfterOptimizing();
 	}
@@ -199,9 +203,13 @@ void CTerraGen::InitTileMasks()
 	{
 		tileTerraMasks[i].SetSizes( terrainInfo.tileTerraMap.GetSizeX(), terrainInfo.tileTerraMap.GetSizeY() );
 		if ( i == 0 )
+		{
 			tileTerraMasks[i].FillEvery( 255 );
+		}
 		else
+		{
 			tileTerraMasks[i].FillZero();
+		}
 	}
 
 	UpdateTileMasks( 0, 0, pDesc->nNumPatchesX * DEF_PATCH_SIZE - 1, pDesc->nNumPatchesY * DEF_PATCH_SIZE - 1, false );
@@ -220,10 +228,14 @@ void CTerraGen::UpdateArea(
 	const int nPatchY2 = Clamp( nTileY2 >> DEF_PATCH_SIZE_BITS, 0, terrainInfo.nNumPatchesY - 1 );
 
 	if ( dwUpdateFlags & TERRAIN_UPDATE_GFX )
+	{
 		UpdateGfxInfo( nPatchX1, nPatchY1, nPatchX2 + 1, nPatchY2 + 1 );
+	}
 
 	if ( dwUpdateFlags & TERRAIN_UPDATE_AI )
+	{
 		UpdateAIInfo( nTileX1, nTileY1, nTileX2, nTileY2 );
+	}
 }
 
 void CTerraGen::RestoreFromHistory()
@@ -232,12 +244,16 @@ void CTerraGen::RestoreFromHistory()
 	for ( std::vector<SEntrenchmentHistory>::const_iterator it = entrenchmentsHistory.begin();
 	      it != entrenchmentsHistory.end();
 	      ++it )
+	{
 		AddEntrenchment( it->ctrlPoints, it->fWidth, false );
+	}
 
 	// restore explosions
 	for ( std::vector<SExplosionHistory>::const_iterator it = explosionsHistory.begin(); it != explosionsHistory.end();
 	      ++it )
+	{
 		AddExplosion( it->vMin, it->vMax, it->pMaterial, false );
+	}
 }
 
 void CTerraGen::SetGfxObserver( ITerraGfxObserver *_pGfxObserver )

@@ -117,7 +117,9 @@ public:
 		}
 		//простой поиск
 		while ( nWeight >= weights[nMinIndex] )
+		{
 			++nMinIndex;
+		}
 		return nMinIndex;
 	}
 

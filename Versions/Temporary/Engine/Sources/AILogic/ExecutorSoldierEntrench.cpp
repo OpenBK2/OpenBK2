@@ -25,7 +25,9 @@ CExecutorSoldierEntrench::CExecutorSoldierEntrench( CAIUnit *_pUnit )
 			const NDb::SUnitSpecialAblityDesc *pSA = pUnit->GetStats()->GetActions()->specialAbilities[i];
 			NI_ASSERT( pSA, "Ability desc (Mobile Fortress) not found" );
 			if ( pSA )
+			{
 				SetSpeedCoeff( pSA->fParameter );
+			}
 			break;
 		}
 	}
@@ -37,14 +39,18 @@ float CExecutorSoldierEntrench::OnAbilityActive()
 {
 	// check if unit is entrenched, if not - switch off ability
 	if ( !pUnit->IsInTankPit() && !pUnit->IsVirtualTankPit() )
+	{
 		return 1.0f;
+	}
 	return 0.0f;
 }
 
 const bool CExecutorSoldierEntrench::IsEntrenchAllowed() const
 {
 	if ( !pUnit->IsInfantry() )
+	{
 		return true;
+	}
 	const SVector tile( pUnit->GetCenterTile() );
 	return GetTerrain()->CanDigEntrenchment( tile.x, tile.y );
 }
@@ -55,9 +61,13 @@ float CExecutorSoldierEntrench::OnAbilityOff()
 	const bool bAllowEntrenchNow = IsEntrenchAllowed();
 
 	if ( bAllowEntrenchNow && GetState() == EASS_DISABLE )
+	{
 		NotifyEvent( SExecutorEventParam( EID_ABILITY_ENABLE, 0, pUnit->GetUniqueId() ) );
+	}
 	else if ( !bAllowEntrenchNow && GetState() != EASS_DISABLE )
+	{
 		NotifyEvent( SExecutorEventParam( EID_ABILITY_DISABLE, 0, pUnit->GetUniqueId() ) );
+	}
 
 	return 0.0f;
 }
@@ -95,7 +105,9 @@ const bool CExecutorSoldierEntrench::IsValidInternal() const
 int CExecutorSoldierEntrench::Segment()
 {
 	if ( !IsValidInternal() )
+	{
 		return -1;
+	}
 
 	return CExecutorUnitBase::Segment();
 }
@@ -103,17 +115,23 @@ int CExecutorSoldierEntrench::Segment()
 bool CExecutorSoldierEntrench::NotifyEvent( const CExecutorEvent &event )
 {
 	if ( pUnit->GetUniqueId() != event.GetParam().nUnitID )
+	{
 		return false;
+	}
 
 	// Commands and the internal enable/disable notifications have no ability payload.
 	if ( event.GetParam().eEventID == EID_NEW_COMMAND_RECIEVED || event.GetParam().eEventID == EID_ABILITY_ENABLE ||
 	     event.GetParam().eEventID == EID_ABILITY_DISABLE )
+	{
 		return CExecutorUnitBase::NotifyEvent( event );
+	}
 	if ( event.GetParam().eEventID == EID_ABILITY_ACTIVATE || event.GetParam().eEventID == EID_ABILITY_DEACTIVATE )
 	{
 		const CExecutorEventSpecialAbility &abilityEvent = static_cast<const CExecutorEventSpecialAbility &>( event );
 		if ( abilityEvent.GetAbility() == GetAbility() )
+		{
 			return CExecutorUnitBase::NotifyEvent( event );
+		}
 	}
 
 	return false;

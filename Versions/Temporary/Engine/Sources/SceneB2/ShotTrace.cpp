@@ -16,7 +16,9 @@ static bool s_bDisableTracers = false;
 void CShotTraceObj::Recalc()
 {
 	if ( pValue == 0 )
+	{
 		pValue = new NGScene::CObjectInfo;
+	}
 
 	NGScene::CObjectInfo::SData data;
 
@@ -36,7 +38,9 @@ void CShotTraceObj::Recalc()
 	float fAlpha1 = ( fTimeCurr - timeStart ) / fTimeTotal;
 	float fAlpha2 = ( fTimeCurr - timeStart - fTimeQuant ) / fTimeTotal;
 	if ( fAlpha2 < 0 )
+	{
 		fAlpha2 = 0;
+	}
 
 	const float fHead = Clamp( fAlpha1, 0.0f, 1.0f );
 	const float fTail = Clamp( fAlpha2, 0.0f, 1.0f );

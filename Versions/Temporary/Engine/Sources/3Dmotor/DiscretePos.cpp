@@ -37,13 +37,17 @@ void SDiscretePos::MakeMatrix( SFBTransform *pRes ) const
 			break;
 	}
 	if ( pTransform ) //->IsValid() ) // CRAP - not enough ref counts for building DiscretePos
+	{
 		*pRes = pTransform->pos * *pRes;
+	}
 }
 
 CFBTransform *SDiscretePos::GetTransform() const
 {
 	if ( pTransform ) //->IsValid() ) // CRAP - not enough ref counts for building DiscretePos
+	{
 		return pTransform;
+	}
 	return pIdentity;
 }
 

@@ -45,16 +45,22 @@ CCameraMapIterator::CCameraMapIterator(
 	//
 	nNumStepsX = rcBigRect.GetSizeX() / fStepX + 1;
 	if ( fmod( rcBigRect.GetSizeX(), fStepX ) > fStepX * 0.5f )
+	{
 		nNumStepsX += 1;
+	}
 	nNumStepsY = rcBigRect.GetSizeY() / fStepY + 1;
 	if ( fmod( rcBigRect.GetSizeY(), fStepY ) > fStepY * 0.5f )
+	{
 		nNumStepsY += 1;
+	}
 }
 
 bool CCameraMapIterator::Next()
 {
 	if ( nCurrY >= nNumStepsY )
+	{
 		return false;
+	}
 	if ( ++nCurrX < nNumStepsX )
 	{
 		CalcCurrAnchor();

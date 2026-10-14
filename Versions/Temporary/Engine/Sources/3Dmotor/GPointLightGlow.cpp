@@ -31,7 +31,9 @@ void CPointGlowEffect::AddParticles( IParticleOutput *pRender )
 	CVec3 vNearPos( vPos - orientation.vBasic[3] );
 	float fLeng = vNearPos * orientation.vBasic[2];
 	if ( fLeng <= F_NEAR_CLIP )
+	{
 		return;
+	}
 	vNearPos = vPos;  //orientation.vBasic[3] + vNearPos * ( F_NEAR_CLIP / fLeng );
 	float fS = fSize; // * F_NEAR_CLIP / fLeng;
 	vRes[0] = vNearPos - orientation.vBasic[0] * fS - orientation.vBasic[1] * fS;
@@ -40,7 +42,9 @@ void CPointGlowEffect::AddParticles( IParticleOutput *pRender )
 	vRes[3] = vNearPos - orientation.vBasic[0] * fS + orientation.vBasic[1] * fS;
 	CDGPtr<CPtrFuncBase<NGfx::CTexture>> pTex( textures[0] );
 	if ( !IsValid( pTex ) )
+	{
 		return;
+	}
 	pTex.Refresh();
 	STransparentTexturePlace tPlace;
 	GetTransparentTexturePlace( &tPlace, pTex->GetValue() );
@@ -76,7 +80,9 @@ void CPointGlowAnimator::CalcSize()
 	}
 	STime tCur = pTime->GetValue();
 	if ( bShortInterval )
+	{
 		tNextCheck = (std::min)( tNextCheck, tCur + 150 );
+	}
 	if ( tCur > tNextCheck )
 	{
 		CVec4 vCamera4 = pCamera->GetValue();
@@ -88,13 +94,21 @@ void CPointGlowAnimator::CalcSize()
 		CVec3 vNormal;
 		mask.nMaskEvery |= N_MASK_CAST_SHADOW;
 		if ( pScene->TraceScene( mask, r, &f, &vNormal, SPS_STATIC ) )
+		{
 			bIsVisible = f > 1;
+		}
 		else
+		{
 			bIsVisible = true;
+		}
 		if ( bShortInterval )
+		{
 			tNextCheck = tCur + randomGen.Get( 80, 150 );
+		}
 		else
+		{
 			tNextCheck = tCur + randomGen.Get( 500, 1000 );
+		}
 	}
 	expFader.Update( tCur, bIsVisible ? 1 : 0 );
 

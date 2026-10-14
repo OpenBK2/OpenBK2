@@ -28,7 +28,9 @@ class CWindowScrollableContainerBase : public CWindow,
 				: szName( _pChild->GetName() ), bSelectable( _bSelectable ), nPos( _nPos )
 		{
 			if ( pNegativeSelecion )
+			{
 				szNegativeSelection = pNegativeSelecion->GetName();
+			}
 		}
 		int operator&( IBinSaver &saver )
 		{

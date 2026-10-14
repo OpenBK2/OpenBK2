@@ -47,7 +47,9 @@ int CExecutorPlaneDropBombsObject::Segment()
 	}
 
 	if ( bBombsOnBoard )
+	{
 		return CExecutorUnitBase::Segment();
+	}
 	else
 	{
 		Disable();
@@ -59,7 +61,9 @@ int CExecutorPlaneDropBombsObject::Segment()
 bool CExecutorPlaneDropBombsObject::NotifyEvent( const CExecutorEvent &event )
 {
 	if ( pUnit->GetUniqueId() != event.GetParam().nUnitID )
+	{
 		return false;
+	}
 
 	const CExecutorEventSpecialAbility *pEv( static_cast<const CExecutorEventSpecialAbility *>( &event ) );
 
@@ -79,7 +83,9 @@ bool CExecutorPlaneDropBombsObject::NotifyEvent( const CExecutorEvent &event )
 	}
 
 	if ( pEv->GetAbility() == GetAbility() )
+	{
 		return CExecutorUnitBase::NotifyEvent( event );
+	}
 	return false;
 }
 
@@ -123,9 +129,13 @@ void CExecutorPlaneDropBombsObject::SwitchOnStart( const class CAICommand *pComm
 	{
 		const SAIUnitCmd &cmd = pCommand->ToUnitCmd();
 		if ( cmd.nObjectID != 0 )
+		{
 			theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_DROP_BOMBS_TO_TARGET, cmd.nObjectID, 0.0f ), pUnit, false );
+		}
 		else
+		{
 			theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_DROP_BOMBS_TO_POINT, cmd.vPos ), pUnit, false );
+		}
 	}
 	ForceRecharge();
 }

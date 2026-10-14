@@ -10,7 +10,9 @@ void ToAIUnits( bool bInEditor )
 	if ( !bInEditor && bVisibilitySrink )
 	{
 		if ( passability.GetSizeX() > 2 && passability.GetSizeY() > 2 )
+		{
 			visibility.SetSizes( passability.GetSizeX() - 2, passability.GetSizeY() - 2 );
+		}
 		for ( int x = 0; x < visibility.GetSizeX(); ++x )
 		{
 			for ( int y = 0; y < visibility.GetSizeY(); ++y )
@@ -30,7 +32,9 @@ void ToAIUnits( bool bInEditor )
 	FOR_EACH_VAL( slots, ToAIUnits, bInEditor );
 	int nAISlots = 0;
 	for ( int i = 0; i < slots.size(); ++i )
+	{
 		nAISlots += slots[i].nNumFirePlaces;
+	}
 	aiSlots.resize( nAISlots );
 	aiSlotToSlot.resize( nAISlots );
 	int nAISlot = 0;

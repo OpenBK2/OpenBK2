@@ -150,7 +150,9 @@ void CTestClient::CommandChatLobby( const SCommand &cmd )
 		pServerClient->SendPacket( pPacket );
 	}
 	else
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
+	}
 }
 
 void CTestClient::CommandChatPrivate( const SCommand &cmd )
@@ -162,7 +164,9 @@ void CTestClient::CommandChatPrivate( const SCommand &cmd )
 		pServerClient->SendPacket( pPacket );
 	}
 	else
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
+	}
 }
 
 void CTestClient::CommandAFK( const SCommand &cmd )
@@ -173,7 +177,9 @@ void CTestClient::CommandAFK( const SCommand &cmd )
 		pServerClient->SendPacket( pPacket );
 	}
 	else
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
+	}
 }
 
 void CTestClient::CommandChatJoin( const SCommand &cmd )
@@ -184,7 +190,9 @@ void CTestClient::CommandChatJoin( const SCommand &cmd )
 		pServerClient->SendPacket( pPacket );
 	}
 	else
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
+	}
 }
 
 void CTestClient::CommandChatChannels( const SCommand &cmd )
@@ -196,7 +204,9 @@ void CTestClient::CommandChatChannels( const SCommand &cmd )
 		pServerClient->SendPacket( pPacket );
 	}
 	else
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
+	}
 }
 
 void CTestClient::CommandChatIgnore( const SCommand &cmd )
@@ -213,7 +223,9 @@ void CTestClient::CommandChatIgnore( const SCommand &cmd )
 		pServerClient->SendPacket( pPacket );
 	}
 	else
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
+	}
 }
 
 void CTestClient::CommandChatFriend( const SCommand &cmd )
@@ -230,7 +242,9 @@ void CTestClient::CommandChatFriend( const SCommand &cmd )
 		pServerClient->SendPacket( pPacket );
 	}
 	else
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
+	}
 }
 
 void CTestClient::CommandChatWhere( const SCommand &cmd )
@@ -241,7 +255,9 @@ void CTestClient::CommandChatWhere( const SCommand &cmd )
 		pServerClient->SendPacket( pPacket );
 	}
 	else
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
+	}
 }
 
 void CTestClient::CommandEnterLobby( const SCommand &cmd )
@@ -250,16 +266,22 @@ void CTestClient::CommandEnterLobby( const SCommand &cmd )
 	{
 		CNetPacket *pPacket;
 		if ( cmd.GetStr( 0 ) == std::string( "custom" ) )
+		{
 			pPacket = new CEnterLobbyPacket( 0, ERID_CUSTOM );
+		}
 		else
+		{
 			pPacket = new CEnterLobbyPacket( 0, ERID_LADDER );
+		}
 
 		pServerClient->SendPacket( pPacket );
 
 		consoleCommandPackets.push_back( new CEnteredLobby() );
 	}
 	else
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
+	}
 }
 
 void CTestClient::CommandLeaveLobby( const SCommand &cmd )
@@ -270,7 +292,9 @@ void CTestClient::CommandLeaveLobby( const SCommand &cmd )
 		pServerClient->SendPacket( pPacket );
 	}
 	else
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
+	}
 }
 
 void CTestClient::CommandClientState( const SCommand &cmd )
@@ -281,15 +305,21 @@ void CTestClient::CommandClientState( const SCommand &cmd )
 		pServerClient->SendPacket( pPacket );
 	}
 	else
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
+	}
 }
 
 void CTestClient::CommandGetLobbyClients( const SCommand &cmd )
 {
 	if ( pServerClient )
+	{
 		consoleCommandPackets.push_back( new CGetLobbyClientsPacket( 0, 0 ) );
+	}
 	else
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
+	}
 }
 
 void CTestClient::CommandCreateGame( const SCommand &cmd )
@@ -306,9 +336,13 @@ void CTestClient::CommandKillGame( const SCommand &cmd )
 	if ( pServerClient )
 	{
 		if ( cmd.params.size() == 0 )
+		{
 			consoleCommandPackets.push_back( new CKillGamePacket( 0, -1 ) );
+		}
 		else
+		{
 			consoleCommandPackets.push_back( new CKillGamePacket( 0, cmd.GetInt( 0 ) ) );
+		}
 	}
 }
 
@@ -329,19 +363,25 @@ void CTestClient::CommandSendGameInfo( const SCommand &cmd )
 void CTestClient::CommandGetLobbyGames( const SCommand &cmd )
 {
 	if ( pServerClient )
+	{
 		consoleCommandPackets.push_back( new CGetLobbyGamesPacket( 0, 0 ) );
+	}
 }
 
 void CTestClient::CommandLeaveGame( const SCommand &cmd )
 {
 	if ( pServerClient )
+	{
 		consoleCommandPackets.push_back( new CLeaveGamePacket( 0, 0 ) );
+	}
 }
 
 void CTestClient::CommandConnectGame( const SCommand &cmd )
 {
 	if ( pServerClient )
+	{
 		consoleCommandPackets.push_back( new CConnectGamePacket( 0, cmd.GetInt( 0 ), cmd.GetStr( 1 ) ) );
+	}
 }
 
 void CTestClient::CommandGameBroadcastMsg( const SCommand &cmd )
@@ -365,49 +405,65 @@ void CTestClient::CommandGameDirectMsg( const SCommand &cmd )
 void CTestClient::CommandGameKickClient( const SCommand &cmd )
 {
 	if ( pServerClient )
+	{
 		consoleCommandPackets.push_back( new CGameKickClient( 0, 0, cmd.GetInt( 0 ) ) );
+	}
 }
 
 void CTestClient::CommandDirectMsg( const SCommand &cmd )
 {
 	if ( pServerClient )
+	{
 		pServerClient->SendPacket( new CTestDirectPacket( cmd.GetInt( 0 ) ) );
+	}
 }
 
 void CTestClient::CommandShowGameClients( const SCommand &cmd )
 {
 	if ( pServerClient )
+	{
 		consoleCommandPackets.push_back( new CTestShowGameClients() );
+	}
 }
 
 void CTestClient::CommandSendSpecGameInfo( const SCommand &cmd )
 {
 	if ( pServerClient )
+	{
 		consoleCommandPackets.push_back( new CTestSpecGameInfo( cmd.GetStr( 0 ) ) );
+	}
 }
 
 void CTestClient::CommandPauseServerConn( const SCommand &cmd )
 {
 	if ( pServerClient )
+	{
 		pServerClient->TogglePauseServerConnection( cmd.GetInt( 0 ) );
+	}
 }
 
 void CTestClient::CommandPauseAccept( const SCommand &cmd )
 {
 	if ( pServerClient )
+	{
 		pServerClient->TogglePauseAcceptGamers( cmd.GetInt( 0 ) );
+	}
 }
 
 void CTestClient::CommandPauseConnect( const SCommand &cmd )
 {
 	if ( pServerClient )
+	{
 		pServerClient->TogglePauseConnectGamer( cmd.GetInt( 0 ), cmd.GetInt( 1 ) );
+	}
 }
 
 void CTestClient::CommandPauseClient( const SCommand &cmd )
 {
 	if ( pServerClient )
+	{
 		pServerClient->TogglePause( cmd.GetInt( 0 ) );
+	}
 }
 
 void RandomizeList( std::list<int> *pList )
@@ -417,7 +473,9 @@ void RandomizeList( std::list<int> *pList )
 	int nMaxRand = nSize - 1;
 	uint32_t dwTime = GetCurrentTimeMilliseconds();
 	for ( int i = 0; i < dwTime % 100; ++i )
+	{
 		NRandom::Random( 0, nMaxRand );
+	}
 	for ( std::list<int>::iterator it = pList->begin(); it != pList->end(); ++it )
 	{
 		int nRandNum = NRandom::Random( 0, nMaxRand );
@@ -574,7 +632,9 @@ void CTestClient::ProcessCommands()
 		//		NI_ASSERT( iter != processCmdsFuncs.end(), fmt::format( "Can't process cmd {}", cmd.nCmd ) );
 
 		if ( iter == processCmdsFuncs.end() )
+		{
 			continue;
+		}
 
 		PROCESS_CMD_FUNC pfnFunc = iter->second;
 		( this->*pfnFunc )( cmd );
@@ -599,11 +659,15 @@ void CTestClient::Segment()
 		pServerClient->Segment();
 
 		while ( CPtr<CNetPacket> pPacket = pServerClient->GetPacket() )
+		{
 			pTestClientProcessor->ProcessPacket( pPacket );
+		}
 	}
 
 	if ( pPinger )
+	{
 		pPinger->Segment();
+	}
 
 	bool bCanCreateTester = ( GetCurrentTimeMilliseconds() > ( TESTER_CREATION_TIMEOUT + dwLastTesterCreationTime ) );
 	if ( !testers.empty() )

@@ -33,7 +33,9 @@ void CTrack::PlayTrack( int nTrackTime )
 void CTrack::OpenTrack()
 {
 	if ( pTrackStream )
+	{
 		delete pTrackStream;
+	}
 
 	pTrackStream = new CFileStream( NVFS::GetMainVFS(), pTrack->szMusicFileName );
 	pStreamingSound = NMusicSystem::OpenTrack( pTrackStream );
@@ -46,7 +48,9 @@ void CTrack::Segment()
 		case ETS_NOT_STARTED:
 			OpenTrack();
 			if ( pStreamingSound )
+			{
 				PlayTrack( 0 );
+			}
 			timeLastCall = GetAbsTime();
 			eState = pStreamingSound ? ETS_PLAYING : ETS_FINISHED;
 
@@ -71,7 +75,9 @@ void CTrack::Segment()
 				{
 					int nTime = FSOUND_Stream_GetLengthMs( pStreamingSound );
 					if ( nTime == 0 )
+					{
 						break;
+					}
 					int nTrackTime = timePlayed % nTime;
 					PlayTrack( nTrackTime );
 				}
@@ -130,7 +136,9 @@ int CTrack::operator&( IBinSaver &f )
 	f.Add( 6, &eState );
 	f.Add( 7, &pTrack );
 	if ( f.IsReading() )
+	{
 		OpenTrack();
+	}
 
 	return 0;
 }

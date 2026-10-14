@@ -71,12 +71,16 @@ void CreateStaticObjectLockedTilesInfo( std::list<SObjTileInfo> *pTiles,
 				{
 					const SVector tile( AICellsTiles::GetTile( x, y ) );
 					if ( !access.IsTileInside( tile ) )
+					{
 						continue;
+					}
 
 					const uint8_t tileInfo = access.GetTileLockInfo( tile );
 					uint8_t lock = ~tileInfo & ePassClass & EAC_ANY;
 					if ( entranceTiles.find( tile ) != entranceTiles.end() )
+					{
 						lock &= ~EAC_HUMAN;
+					}
 					lockInfo.lockInfo[tile.y - vStartTile.y][tile.x - vStartTile.x] = lock;
 					pTiles->push_back( SObjTileInfo( tile, lock ) );
 				}
@@ -90,12 +94,16 @@ void CreateStaticObjectLockedTilesInfo( std::list<SObjTileInfo> *pTiles,
 		for ( int i = 0; i < tiles.size(); ++i )
 		{
 			if ( !access.IsTileInside( tiles[i] ) )
+			{
 				continue;
+			}
 
 			const uint8_t tileInfo = access.GetTileLockInfo( tiles[i] );
 			uint8_t lock = ~tileInfo & ePassClass & EAC_ANY;
 			if ( entranceTiles.find( tiles[i] ) != entranceTiles.end() )
+			{
 				lock &= ~EAC_HUMAN;
+			}
 
 			lockInfo.lockedTiles.push_back( SObjTileInfo( tiles[i], lock ) );
 		}

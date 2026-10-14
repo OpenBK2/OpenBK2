@@ -62,7 +62,9 @@ void CMapSounds::CMapSoundCell::RemoveSound( CMapSounds::CMapSoundCell::CellSoun
 				snds.instanceIDs.erase( wInstanceID );
 				--snds.nCount;
 				if ( 0 == snds.nCount )
+				{
 					pCellSounds->erase( it );
+				}
 				break;
 			}
 		}
@@ -155,11 +157,15 @@ void CMapSounds::InitSizes( const int nSizeX, const int nSizeY )
 void CMapSounds::RemoveSound( const uint16_t wInstanceID )
 {
 	if ( 0 == wInstanceID )
+	{
 		return;
+	}
 	std::unordered_map<uint16_t, SIntThree>::iterator pos = cells.find( wInstanceID );
 	NI_ASSERT( pos != cells.end(), "wrong instace deleted" );
 	if ( pos == cells.end() )
+	{
 		return;
+	}
 	const SIntThree &vPos = pos->second;
 	;
 	mapCells[vPos.y][vPos.x].RemoveSound( wInstanceID, pSoundScene );
@@ -175,9 +181,13 @@ uint16_t CMapSounds::AddSound( const CVec3 &vPos, const NDb::SComplexSoundDesc *
 	                          vPos.z / SSoundSceneConsts::MAP_SOUND_CELL );
 	// check, can we add this sound, or it out of bounds
 	if ( vCellPos.x < 0 || vCellPos.x >= mapCells.GetSizeX() )
+	{
 		return 0;
+	}
 	if ( vCellPos.y < 0 || vCellPos.y >= mapCells.GetSizeY() )
+	{
 		return 0;
+	}
 	// зарегистрировать звук
 	if ( !registeredSounds.IsPresent( pStats ) )
 	{
@@ -220,8 +230,12 @@ void CMapSounds::Update( const CVec3 &vListener, const float fViewRadius )
 
 		//scan only through cells near screen
 		for ( int x = nMinX; x <= nMaxX; ++x )
+		{
 			for ( int y = nMinY; y <= nMaxY; ++y )
+			{
 				mapCells[y][x].Update( pSoundScene, registeredSounds );
+			}
+		}
 		timeNextUpdate = CSoundScene2D::GetCurTime() + SSoundSceneConsts::SS_MAP_SOUND_PERIOND;
 	}
 }

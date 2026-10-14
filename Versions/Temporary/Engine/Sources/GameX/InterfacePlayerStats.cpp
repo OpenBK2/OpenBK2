@@ -18,7 +18,9 @@ CInterfacePlayerStats::CInterfacePlayerStats() : CInterfaceScreenBase( "PlayerSt
 bool CInterfacePlayerStats::Init()
 {
 	if ( !CInterfaceScreenBase::Init() )
+	{
 		return false;
+	}
 
 	AddScreen( this );
 
@@ -57,7 +59,9 @@ void CInterfacePlayerStats::InitInteriorView()
 	pMedalCont = GetChildChecked<IScrollableContainer>( pMedalListPanel, "MedalCont", true );
 	pMedalItem = GetChildChecked<IWindow>( pMedalListPanel, "MedalListItem", true );
 	if ( pMedalItem )
+	{
 		pMedalItem->ShowWindow( false );
+	}
 }
 
 void CInterfacePlayerStats::MakeInterior()
@@ -65,7 +69,9 @@ void CInterfacePlayerStats::MakeInterior()
 	InitInteriorView();
 
 	if ( pPlayerNameView )
+	{
 		pPlayerNameView->SetText( pPlayerNameView->GetDBText() + NProfile::GetCurrentProfileName() );
+	}
 
 	const int nLocalPlayer = 0;
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
@@ -74,26 +80,38 @@ void CInterfacePlayerStats::MakeInterior()
 	if ( pRank )
 	{
 		if ( pPlayerRankPicture )
+		{
 			pPlayerRankPicture->SetTexture( pRank->pStrap );
+		}
 
 		std::wstring wszRank;
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pRank->, RankName ) )
+		{
 			wszRank = GET_TEXT_PRE( pRank->, RankName );
+		}
 		if ( pRankNameView )
+		{
 			pRankNameView->SetText( pRankNameView->GetDBText() + wszRank );
+		}
 	}
 
 	int nKilled = pST->GetStatistics( nLocalPlayer, IScenarioTracker::ESK_CAMPAIGN_UNITS_KILLED );
 	int nLost = pST->GetStatistics( nLocalPlayer, IScenarioTracker::ESK_CAMPAIGN_UNITS_LOST );
 	if ( pUnitsKilledView )
+	{
 		pUnitsKilledView->SetText( pUnitsKilledView->GetDBText() + NStr::ToUnicode( std::to_string( nKilled ) ) );
+	}
 	if ( pUnitsLostView )
+	{
 		pUnitsLostView->SetText( pUnitsLostView->GetDBText() + NStr::ToUnicode( std::to_string( nLost ) ) );
+	}
 
 	int nMissionsPassed = pST->GetStatistics( nLocalPlayer, IScenarioTracker::ESK_CAMPAIGN_MISSIONS_PASSED );
 	if ( pMissionsPassedView )
+	{
 		pMissionsPassedView->SetText( pMissionsPassedView->GetDBText() +
 		                              NStr::ToUnicode( std::to_string( nMissionsPassed ) ) );
+	}
 
 	int nInGameTime = pST->GetStatistics( nLocalPlayer, IScenarioTracker::ESK_CAMPAIGN_TIME );
 	int nSec = nInGameTime % 60;
@@ -111,7 +129,9 @@ void CInterfacePlayerStats::MakeInterior()
 		wszInGameTime += pScreen->GetTextEntry( "T_MINUTE" );
 	}
 	if ( pInGameTimeView )
+	{
 		pInGameTimeView->SetText( pInGameTimeView->GetDBText() + wszInGameTime );
+	}
 
 	pST->GetLastVisiblePlayerStatsExp( &fLastVisiblePlayerStatsExpCareer, &fLastVisiblePlayerStatsExpNextRank );
 
@@ -132,7 +152,9 @@ void CInterfacePlayerStats::MakeInterior()
 	                                  (int)( expProgressRank.fTarget - expProgressRank.fTargetLevelExp ),
 	                                  (int)( expProgressRank.fTargetNextLevelExp - expProgressRank.fTargetLevelExp ) ) );
 	if ( pNextRankProgressView )
+	{
 		pNextRankProgressView->SetText( pNextRankProgressView->GetDBText() + wszRankHP );
+	}
 
 	std::vector<const IScenarioTracker::SMissionStats *> missions;
 	pST->GetAllMissionStats( &missions );
@@ -145,49 +167,73 @@ void CInterfacePlayerStats::MakeInterior()
 		{
 			const NDb::SMedal *pMedal = *it;
 			if ( !pMedal )
+			{
 				continue;
+			}
 
 			medals.push_back( SMedal() );
 			SMedal &medal = medals.back();
 
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( pMedal->, LocalizedName ) )
+			{
 				medal.wszName = GET_TEXT_PRE( pMedal->, LocalizedName );
+			}
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( pMedal->, LocalizedDesc ) )
+			{
 				medal.wszDesc = GET_TEXT_PRE( pMedal->, LocalizedDesc );
+			}
 			medal.pIcon = pMedal->pIconTexture;
 			medal.pPicture = pMedal->pPictureTexture;
 
 			IWindow *pWnd = AddWindowCopy( pMedalCont, pMedalItem );
 			if ( !pWnd )
+			{
 				continue;
+			}
 
 			if ( pMedalCont )
+			{
 				pMedalCont->PushBack( pWnd, true );
+			}
 
 			medal.pWnd = pWnd;
 			medal.pIconWnd = GetChildChecked<IWindow>( pWnd, "Icon", true );
 			medal.pNameView = GetChildChecked<ITextView>( pWnd, "Name", true );
 
 			if ( medal.pWnd )
+			{
 				medal.pWnd->ShowWindow( true );
+			}
 			if ( medal.pIconWnd )
+			{
 				medal.pIconWnd->SetTexture( medal.pIcon );
+			}
 			if ( medal.pNameView )
+			{
 				medal.pNameView->SetText( medal.pNameView->GetDBText() + medal.wszName );
+			}
 		}
 	}
 
 	std::wstring wszFavoriteReinf;
 	if ( IScreen *pScreen = GetScreen() )
+	{
 		wszFavoriteReinf = pScreen->GetTextEntry( "T_NO_FAVORITE_REINF" );
+	}
 	NDb::EReinforcementType eType = pST->GetFavoriteReinf();
 	if ( eType != NDb::_RT_NONE )
+	{
 		wszFavoriteReinf = pST->GetReinfName( eType );
+	}
 	if ( pFavoriteReinfView )
+	{
 		pFavoriteReinfView->SetText( pFavoriteReinfView->GetDBText() + wszFavoriteReinf );
+	}
 
 	if ( GetScreen() )
+	{
 		GetScreen()->SetTexture( InterfaceState()->GetMenuBackgroundTexture() );
+	}
 
 	SelectMedal( 0, true );
 }
@@ -198,18 +244,26 @@ void CInterfacePlayerStats::ExpProgressStep()
 	{
 		expProgressCareer.Step( false );
 		if ( pBaseCareerBar )
+		{
 			pBaseCareerBar->SetPosition( expProgressCareer.fProgress );
+		}
 		if ( pNewCareerBar )
+		{
 			pNewCareerBar->SetPosition( expProgressCareer.fNewProgress );
+		}
 	}
 
 	if ( !expProgressRank.bFinal )
 	{
 		expProgressRank.Step( false );
 		if ( pBaseNextRankBar )
+		{
 			pBaseNextRankBar->SetPosition( expProgressRank.fProgress );
+		}
 		if ( pNewNextRankBar )
+		{
 			pNewNextRankBar->SetPosition( expProgressRank.fNewProgress );
+		}
 	}
 
 	fLastVisiblePlayerStatsExpCareer = expProgressCareer.fCur;
@@ -228,9 +282,13 @@ bool CInterfacePlayerStats::StepLocal( bool bAppActive )
 bool CInterfacePlayerStats::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "menu_back" )
+	{
 		return OnMenuBack();
+	}
 	if ( szReaction == "select_medal" )
+	{
 		return OnSelectMedal();
+	}
 
 	return false;
 }
@@ -264,21 +322,31 @@ bool CInterfacePlayerStats::OnSelectMedal()
 void CInterfacePlayerStats::SelectMedal( int nIndex, bool bForce )
 {
 	if ( pMedalNameView )
+	{
 		pMedalNameView->ShowWindow( false );
+	}
 	if ( pMedalPicture )
+	{
 		pMedalPicture->ShowWindow( false );
+	}
 	if ( pMedalDescView )
+	{
 		pMedalDescView->ShowWindow( false );
+	}
 
 	if ( nIndex < 0 || nIndex >= medals.size() )
+	{
 		return;
+	}
 
 	SMedal &medal = medals[nIndex];
 
 	if ( bForce )
 	{
 		if ( pMedalCont )
+		{
 			pMedalCont->Select( medal.pWnd );
+		}
 		return;
 	}
 

@@ -13,7 +13,9 @@ extern CDifficultyLevel theDifficultyLevel;
 void CDiplomacy::Load( const std::vector<int> &_playerParty )
 {
 	if ( !GetScenarioTracker() )
+	{
 		return;
+	}
 	playerParty = _playerParty;
 	isPlayerExist.clear();
 	isPlayerExist.resize( playerParty.size(), 0 );
@@ -27,9 +29,13 @@ void CDiplomacy::Load( const std::vector<int> &_playerParty )
 
 			// If the numbers from Scenario Tracker are valid, use them, otherwise use passed values (or neutral if these are invalid)
 			if ( nScenarioParty >= 0 && nScenarioParty <= 2 )
+			{
 				playerParty[i] = nScenarioParty;
+			}
 			else if ( playerParty[i] < 0 || playerParty[i] > 2 )
+			{
 				playerParty[i] = 2;
+			}
 		}
 	}
 
@@ -61,9 +67,13 @@ int CDiplomacy::operator&( IBinSaver &saver )
 bool CDiplomacy::IsPlayerExist( const int nPlayer ) const
 {
 	if ( nPlayer >= GetNPlayers() )
+	{
 		return false;
+	}
 	else
+	{
 		return isPlayerExist[nPlayer];
+	}
 }
 
 void CDiplomacy::SetNetGame( bool _bNetGame )
@@ -71,5 +81,7 @@ void CDiplomacy::SetNetGame( bool _bNetGame )
 	bNetGame = _bNetGame;
 
 	if ( bNetGame )
+	{
 		theDifficultyLevel.SetLevel( 1 );
+	}
 }

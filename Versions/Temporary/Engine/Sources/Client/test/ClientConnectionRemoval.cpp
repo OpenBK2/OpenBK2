@@ -102,7 +102,9 @@ public:
 	bool GetMessage( EMessage *type, int *clientID, std::vector<int> *, CMemoryStream *packet ) override
 	{
 		if ( received.empty() )
+		{
 			return false;
+		}
 		*type = DIRECT;
 		*clientID = 0;
 		*packet = received.front();

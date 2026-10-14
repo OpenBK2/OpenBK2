@@ -72,10 +72,14 @@ inline void AddUniquePrecipiceVertex( STerrainInfo::SPrecipiceNode *pNode, const
 		if ( fabs( pNode->verts[nInd].z - fHeight ) < DEF_EPS )
 		{
 			if ( ( nInd == 0 ) || ( nInd == ( pNode->verts.size() - 1 ) ) )
+			{
 				return;
+			}
 			if ( ( fabs( pNode->verts[nInd].x - pNode->vPos.x ) < DEF_EPS ) &&
 			     ( fabs( pNode->verts[nInd].y - pNode->vPos.y ) < DEF_EPS ) )
+			{
 				return;
+			}
 		}
 	}
 	// add new vertex
@@ -83,7 +87,9 @@ inline void AddUniquePrecipiceVertex( STerrainInfo::SPrecipiceNode *pNode, const
 	for ( ; itFind != pNode->verts.end(); ++itFind )
 	{
 		if ( itFind->z < fHeight )
+		{
 			break;
+		}
 	}
 	pNode->verts.insert( itFind, CVec3( pNode->vPos.x, pNode->vPos.y, fHeight ) );
 }
@@ -97,11 +103,15 @@ void CTerraGen::CreateVerticesInPrecipiceNode( STerrainInfo::SPrecipiceNode *pNo
 	}
 
 	if ( pNode->nCount == 0 )
+	{
 		return;
+	}
 
 	NI_ASSERT( pNode->nCount > 0, "Unused precipice node was found" );
 	if ( pNode->fMinHeight > pNode->fMaxHeight )
+	{
 		return;
+	}
 
 	const CVec3 vNorm = GetSmoothPrecipiceNorm( pNode->vPos );
 
@@ -159,7 +169,9 @@ void CTerraGen::CreateVerticesInPrecipiceNode( STerrainInfo::SPrecipiceNode *pNo
 	{
 		const STerrainInfo::SPrecipice *pPrec = FindPrecipice( *itUsePrecID );
 		if ( !pPrec )
+		{
 			continue;
+		}
 		for ( int i = 0; i < pPrec->nodes.size(); ++i )
 		{
 			if ( pPrec->nodes[i] == nNodeInd )
@@ -178,7 +190,9 @@ void CTerraGen::CheckPrecipiceIntersectionWithRivers( STerrainInfo::SPrecipice *
 		if ( IsPointInsideRivers(
 						 CVec3( terrainInfo.precNodes[pPrec->nodes[i]].vPos.x, terrainInfo.precNodes[pPrec->nodes[i]].vPos.y, 0 ),
 						 pPrec->nExcludeRiverID ) )
+		{
 			pPrec->visibles[i] = 0;
+		}
 	}
 }
 
@@ -195,7 +209,9 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 	float fTexX;
 
 	if ( bNeedRiversClamping )
+	{
 		CheckPrecipiceIntersectionWithRivers( pCurPrec );
+	}
 
 	gfxInfo.nID = pCurPrec->nID;
 	gfxInfo.pMaterial = pCurPrec->pMaterial;
@@ -252,7 +268,9 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 			      ( pCurPrec->maxHeights[i + 1] <= ( pCurPrec->minHeights[i + 1] + DEF_MIN_PRECIPICE_HEIGHT ) ) ) )
 			{
 				if ( peakPoints.size() >= 2 )
+				{
 					peak.points.push_back( peakPoints );
+				}
 				peakPoints.resize( 0 );
 				nPrevVertsNum = nCurVertsNum;
 				nPrevVertsOffset = nVertsOffsetBeforeAdded;
@@ -344,8 +362,10 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 
 				///if ( (fBottomHeight < node.verts[nFind2 - 1].z) && (fabs(fBottomHeight - vPos.z) < DEF_STAYED_ON_TERRAIN_ERROR) )
 				if ( fabs( fBottomHeight - vPos.z ) < DEF_STAYED_ON_TERRAIN_ERROR )
+				{
 
 					vPos.z = fBottomHeight;
+				}
 			}
 
 			if ( ( nPrevVertsNum > 0 ) && ( nCurVertsNum > 0 ) )
@@ -371,7 +391,9 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 			{
 				const int nCurVertInd = nCurColVertsOffs + k - nFind1;
 				if ( k < nFind2 )
+				{
 					fCurPrecTexY += fabs( vertices[nCurVertInd + 1].pos - vertices[nCurVertInd].pos ) * fTexScaleY;
+				}
 				vertices[nCurVertInd].tex.x = fTexX;
 				vertices[nCurVertInd].tex.y = fCurPrecTexY;
 			}
@@ -411,7 +433,9 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 			     ( fMaxH <= ( fMinH + DEF_MIN_PRECIPICE_HEIGHT ) ) )
 			{
 				if ( peakPoints.size() >= 2 )
+				{
 					peak.points.push_back( peakPoints );
+				}
 				peakPoints.resize( 0 );
 			}
 
@@ -430,7 +454,9 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 				itPeak->vNorm = node.nCount > 0 ? ( node.vNorm / node.nCount ) : node.vNorm;
 			}
 			else
+			{
 				peakPoints.resize( 0 );
+			}
 			/*	//peakPoints.push_back( NDb::SVSOPoint() );
 				//peakPoints.back().vPos = node.verts[nFind1];
 				//peakPoints.back().vNorm = node.nCount > 0 ? ( node.vNorm / node.nCount ) : node.vNorm;
@@ -449,7 +475,9 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 		else
 		{
 			if ( peakPoints.size() >= 2 )
+			{
 				peak.points.push_back( peakPoints );
+			}
 			peakPoints.resize( 0 );
 			nPrevVertsNum = nCurVertsNum;
 			nPrevVertsOffset = nVertsOffsetBeforeAdded;
@@ -464,7 +492,9 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 	}
 
 	if ( peakPoints.size() >= 2 )
+	{
 		peak.points.push_back( peakPoints );
+	}
 	peakPoints.resize( 0 );
 
 	if ( !peak.points.empty() )
@@ -516,7 +546,9 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 			if ( fabs2( vNorm ) > DEF_EPS )
 			{
 				if ( fabs( fabs2( vNorm ) - 1.0f ) > DEF_EPS )
+				{
 					Normalize( &vNorm );
+				}
 				CalcCompactVector( &( vertices[k].normal ), vNorm );
 				UpdateAlphaByPosition( &( vertices[k] ) );
 			}
@@ -543,12 +575,16 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 		const int nFirstNode = i * DEF_PRECIPICE_SAMPLES_PER_PATCH;
 		const int nLastNode = (std::min<size_t>)( ( i + 1 ) * DEF_PRECIPICE_SAMPLES_PER_PATCH, pCurPrec->nodes.size() - 1 );
 		if ( i > 0 )
+		{
 			nVertsOffs -= nodeVertsNum[nFirstNode];
+		}
 		nLastOffs = nVertsOffs;
 		for ( int g = nFirstNode; g <= nLastNode; ++g )
 		{
 			for ( int k = 0; k < nodeVertsNum[g]; ++k )
+			{
 				gfxInfo.patches[i].vertices.push_back( vertices[nLastOffs++] );
+			}
 		}
 		for ( int g = nFirstNode; g < nLastNode; ++g )
 		{
@@ -567,7 +603,9 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 
 	terrainGfxInfo.precipices.push_back( gfxInfo );
 	if ( pGfxObserver )
+	{
 		pGfxObserver->AddPrecipice( &gfxInfo );
+	}
 }
 
 void CTerraGen::RemovePrecipiceFromCollector( const int nID, const bool bFast )
@@ -639,7 +677,9 @@ void CTerraGen::RemovePrecipiceFromCollector( const int nID, const bool bFast )
 		{
 			std::vector<int>::iterator itFind = find( itPrec->intersectors.begin(), itPrec->intersectors.end(), nID );
 			if ( itFind != itPrec->intersectors.end() )
+			{
 				itPrec->intersectors.erase( itFind );
+			}
 		}
 	}
 }

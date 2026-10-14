@@ -24,21 +24,29 @@ CInterfaceMPWaitPlayers::CInterfaceMPWaitPlayers() : CInterfaceMPScreenBase( "MP
 bool CInterfaceMPWaitPlayers::Init()
 {
 	if ( CInterfaceMPScreenBase::Init() == false )
+	{
 		return false;
+	}
 	RegisterObservers();
 	AddScreen( this );
 	pResumeButton = GetChildChecked<IButton>( GetScreen(), "ResumeButton", true );
 	if ( pResumeButton )
+	{
 		pResumeButton->ShowWindow( false );
+	}
 	bOwnLag = false;
 	pOwnTimeLabel = GetChildChecked<ITextView>( GetScreen(), "LabelTimeLeft", true );
 	pOwnTime = GetChildChecked<ITextView>( GetScreen(), "TimeLeft", true );
 	pPlayerList = GetChildChecked<IScrollableContainer>( GetScreen(), "PlayerList", true );
 	if ( pPlayerList )
+	{
 		pPlayerList->ShowWindow( false );
+	}
 	pPlayerListItem = GetChildChecked<IWindow>( pPlayerList, "PlayerListItem", true );
 	if ( pPlayerListItem )
+	{
 		pPlayerListItem->ShowWindow( false );
+	}
 	bOwnLag = false;
 
 	return true;
@@ -54,7 +62,9 @@ bool CInterfaceMPWaitPlayers::Execute( const std::string &szSender, const std::s
 	if ( szReaction == "react_interrupt" )
 	{
 		if ( bOwnLag )
+		{
 			Singleton<IMPToUIManager>()->AddUIMessage( EMUI_MP_PAUSE );
+		}
 		return true;
 	}
 
@@ -75,20 +85,30 @@ bool CInterfaceMPWaitPlayers::OnLagInfoMessage( SMPUILagInfoMessage *pMsg )
 {
 	bOwnLag = pMsg->bOwnLag;
 	if ( pResumeButton )
+	{
 		pResumeButton->ShowWindow( bOwnLag );
+	}
 	if ( pOwnTimeLabel )
+	{
 		pOwnTimeLabel->ShowWindow( bOwnLag );
+	}
 	if ( pOwnTime )
+	{
 		pOwnTime->ShowWindow( bOwnLag );
+	}
 	if ( pPlayerList )
+	{
 		pPlayerList->ShowWindow( !bOwnLag );
+	}
 
 	if ( bOwnLag )
 	{
 		std::wstring wszTime =
 				NStr::ToUnicode( fmt::format( "{}:{:02d}", pMsg->nOwnTimeLeft / 60, pMsg->nOwnTimeLeft % 60 ) );
 		if ( pOwnTime )
+		{
 			pOwnTime->SetText( pOwnTime->GetDBText() + wszTime );
+		}
 	}
 	else if ( pPlayerList )
 	{
@@ -108,7 +128,9 @@ bool CInterfaceMPWaitPlayers::OnLagInfoMessage( SMPUILagInfoMessage *pMsg )
 void CInterfaceMPWaitPlayers::AddPlayerLine( const std::string &szName, const int nTime )
 {
 	if ( !pPlayerListItem )
+	{
 		return;
+	}
 
 	IWindow *pItemWnd = AddWindowCopy( pPlayerList, pPlayerListItem );
 	pItemWnd->ShowWindow( true );
@@ -116,7 +138,9 @@ void CInterfaceMPWaitPlayers::AddPlayerLine( const std::string &szName, const in
 	ITextView *pTime = GetChildChecked<ITextView>( pItemWnd, "ItemTime", true );
 
 	if ( pName )
+	{
 		pName->SetText( pName->GetDBText() + NStr::ToUnicode( szName ) );
+	}
 	if ( pTime )
 	{
 		if ( nTime >= 0 )

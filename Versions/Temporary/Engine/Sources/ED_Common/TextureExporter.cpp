@@ -35,12 +35,16 @@ namespace
 std::string TextureSourcePath( IManipulator *pManipulator, const std::string &source )
 {
 	if ( source.empty() )
+	{
 		return source;
+	}
 	// SrcName may be absolute, relative to the configured source directory,
 	// or beside its XDB in the mounted game/mod data.
 	const auto path = std::filesystem::u8path( source );
 	if ( path.is_absolute() )
+	{
 		return source;
+	}
 	const std::string local =
 			NFile::JoinPath( NFile::GetFilePath( NDb::GetFileName( pManipulator->GetDBID() ) ), source );
 	for ( const std::string &candidate :
@@ -50,7 +54,9 @@ std::string TextureSourcePath( IManipulator *pManipulator, const std::string &so
 	{
 		CFileStream stream( NVFS::GetMainVFS(), candidate );
 		if ( stream.IsOk() && stream.CanRead() )
+		{
 			return candidate;
+		}
 	}
 	return source;
 }
@@ -74,7 +80,9 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator *pManipulator,
 	bool bStandardExport = true;
 	CManipulatorManager::GetValue( &bStandardExport, pManipulator, "StandardExport" );
 	if ( !bStandardExport )
+	{
 		return ER_SUCCESS;
+	}
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	ILogger *pLogger = NLog::GetLogger();
 	//
@@ -129,17 +137,29 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator *pManipulator,
 		NGfx::EPixelFormat ePixelFormat = NGfx::CF_A8R8G8B8;
 		// process params
 		if ( szType == "CONVERT_ORDINARY" )
+		{
 			eImageType = NImage::IMAGE_TYPE_PICTURE;
+		}
 		else if ( szType == "CONVERT_ORDINARY_FASTMIP" )
+		{
 			eImageType = NImage::IMAGE_TYPE_PICTURE_FASTMIP;
+		}
 		else if ( szType == "CONVERT_LINEAR_PICTURE" )
+		{
 			eImageType = NImage::IMAGE_TYPE_PICTURE;
+		}
 		else if ( szType == "CONVERT_TRANSPARENT" )
+		{
 			eImageType = NImage::IMAGE_TYPE_TRANSPARENT;
+		}
 		else if ( szType == "CONVERT_TRANSPARENT_ADD" )
+		{
 			eImageType = NImage::IMAGE_TYPE_TRANSPARENT_ADD;
+		}
 		else if ( szType == "CONVERT_BUMP" )
+		{
 			eImageType = NImage::IMAGE_TYPE_BUMP;
+		}
 		//
 		if ( szAddrType == "CLAMP" )
 		{
@@ -163,23 +183,41 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator *pManipulator,
 		}
 		//
 		if ( szFormat == "TF_565" )
+		{
 			ePixelFormat = NGfx::CF_R5G6B5;
+		}
 		if ( szFormat == "TF_1555" )
+		{
 			ePixelFormat = NGfx::CF_A1R5G5B5;
+		}
 		if ( szFormat == "TF_4444" )
+		{
 			ePixelFormat = NGfx::CF_A4R4G4B4;
+		}
 		if ( szFormat == "TF_8888" )
+		{
 			ePixelFormat = NGfx::CF_A8R8G8B8;
+		}
 		else if ( szFormat == "TF_DXT1" )
+		{
 			ePixelFormat = NGfx::CF_DXT1;
+		}
 		else if ( szFormat == "TF_DXT2" )
+		{
 			ePixelFormat = NGfx::CF_DXT2;
+		}
 		else if ( szFormat == "TF_DXT3" )
+		{
 			ePixelFormat = NGfx::CF_DXT3;
+		}
 		else if ( szFormat == "TF_DXT4" )
+		{
 			ePixelFormat = NGfx::CF_DXT4;
+		}
 		else if ( szFormat == "TF_DXT5" )
+		{
 			ePixelFormat = NGfx::CF_DXT5;
+		}
 
 		{
 			CArray2D<uint32_t> image;
@@ -199,7 +237,9 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator *pManipulator,
 				{
 					int nRes = NImage::RecognizeFormatPSD( &stream );
 					if ( nRes == 1 )
+					{
 						NImage::LoadImagePSD( image, &stream );
+					}
 					else
 					{
 						if ( nRes == 2 )
@@ -251,15 +291,21 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator *pManipulator,
 						NLog::Log( LT_ERROR, "\tObject name: %s\n", rszObjectName.c_str() );
 						NLog::Log( LT_ERROR, "\tSource image: %s\n", szSource.c_str() );
 						if ( image.GetSizeX() != GetNextPow2( image.GetSizeX() ) )
+						{
 							NLog::Log( LT_ERROR, "\tWidth: %d\n", image.GetSizeX() );
+						}
 						if ( image.GetSizeY() != GetNextPow2( image.GetSizeY() ) )
+						{
 							NLog::Log( LT_ERROR, "\tHeight: %d\n", image.GetSizeY() );
+						}
 						return ER_FAIL;
 					}
 				}
 
 				if ( bFlipY )
+				{
 					NImage::FlipY( image );
+				}
 				szDestination = NFile::GetTempFileName();
 				// No device: compression is a CPU pass over the pixels now.
 				bResult = NImage::ConvertAndSaveAsDDS(
@@ -302,9 +348,13 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator *pManipulator,
 			// set IsDXT
 			if ( ( szFormat == "TF_DXT1" ) || ( szFormat == "TF_DXT2" ) || ( szFormat == "TF_DXT3" ) ||
 			     ( szFormat == "TF_DXT4" ) || ( szFormat == "TF_DXT5" ) )
+			{
 				pManipulator->SetValue( "IsDXT", true );
+			}
 			else
+			{
 				pManipulator->SetValue( "IsDXT", false );
+			}
 		}
 
 		// reload all textures to apply changes
@@ -317,7 +367,9 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator *pManipulator,
 		return ER_SUCCESS;
 	}
 	else
+	{
 		NFile::RemoveFile( szDestination.c_str() );
+	}
 	//
 	//
 	NLog::Log( LT_ERROR, "Texture export failed (most probable reason - source was not loaded correctly)\n" );
@@ -328,11 +380,17 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator *pManipulator,
 int GetDDSBPP( const SDDSHeader &hdr )
 {
 	if ( hdr.ddspf.dwFlags & DDS_FOURCC )
+	{
 		return hdr.ddspf.dwFourCC == MAKEFOURCC( 'D', 'X', 'T', '1' ) ? 4 : 8;
+	}
 	else if ( ( hdr.ddspf.dwFlags & DDS_RGB ) == DDS_RGB )
+	{
 		return hdr.ddspf.dwRGBBitCount;
+	}
 	else
+	{
 		return 8;
+	}
 }
 
 EXPORT_RESULT CTextureExporter::CheckObject( IManipulator *pManipulator,
@@ -380,7 +438,9 @@ EXPORT_RESULT CTextureExporter::CheckObject( IManipulator *pManipulator,
 	const std::string szDstFileName =
 			Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szDestValue;
 	if ( CheckDestination( szDstFileName, rszObjectName ) == false )
+	{
 		return ER_FAIL;
+	}
 	//
 	return ER_SUCCESS;
 }
@@ -413,12 +473,16 @@ bool CTextureExporter::CheckDestination( const std::string &szFileName, const st
 
 		//BUGFIX{ : The DX DDS-saver sets nMips=0, but non-DX one sets nMips=1
 		if ( 0 == nNumMipLevels )
+		{
 			++nNumMipLevels;
+		}
 		//BUGFIX}
 
 		if ( fhdr.header.dwSize != sizeof( SDDSHeader ) || fhdr.header.ddspf.dwSize != sizeof( SDDSPixelFormat ) ||
 		     fhdr.header.dwWidth == 0 || fhdr.header.dwHeight == 0 || nNumMipLevels > 32 )
+		{
 			return false;
+		}
 		// DXT stores a whole 4x4 block even for the small mip levels; rectangular
 		// images also stop halving each dimension once it reaches one pixel.
 		uint64_t width = fhdr.header.dwWidth, height = fhdr.header.dwHeight;
@@ -426,10 +490,14 @@ bool CTextureExporter::CheckDestination( const std::string &szFileName, const st
 		for ( int i = 0; i < nNumMipLevels; ++i )
 		{
 			if ( fhdr.header.ddspf.dwFlags & DDS_FOURCC )
+			{
 				nTotalSize += ( ( width + 3 ) / 4 ) * ( ( height + 3 ) / 4 ) *
 				              ( fhdr.header.ddspf.dwFourCC == MAKEFOURCC( 'D', 'X', 'T', '1' ) ? 8 : 16 );
+			}
 			else
+			{
 				nTotalSize += width * height * GetDDSBPP( fhdr.header ) / 8;
+			}
 			width = (std::max)( uint64_t( 1 ), width / 2 );
 			height = (std::max)( uint64_t( 1 ), height / 2 );
 		}

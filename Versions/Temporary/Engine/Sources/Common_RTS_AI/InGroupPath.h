@@ -87,9 +87,13 @@ public:
 	virtual bool IsFinished() const
 	{
 		if ( bGoByOwnPath )
+		{
 			return pUnitOwnPath->IsFinished();
+		}
 		else
+		{
 			return pSmoothGroupPath->IsFinished() || bFinished;
+		}
 	}
 
 	virtual void Stop();

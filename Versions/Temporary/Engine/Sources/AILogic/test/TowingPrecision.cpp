@@ -99,13 +99,17 @@ TEST( TowingPrecision, AtDestinationFinishesFacingTheTruckDirection )
 		CObj<CPresizePath> path = new CPresizePath( &truck, truck.GetCenterPlain(), finalDirection, truck.GetSmoothPath() );
 		truck.SetSmoothPath( path );
 		for ( int step = 0; step < 50 && !path->IsFinished(); ++step )
+		{
 			path->Segment( 50 );
+		}
 		ASSERT_TRUE( path->IsFinished() );
 		EXPECT_TRUE( truck.IsGoForward() );
 		EXPECT_EQ( truck.GetFrontDirection(), GetDirectionByVector( finalDirection ) );
 		const uint16_t facing = truck.GetFrontDirection();
 		for ( int step = 0; step < 10; ++step )
+		{
 			path->Segment( 50 );
+		}
 		EXPECT_EQ( truck.GetFrontDirection(), facing );
 	}
 }

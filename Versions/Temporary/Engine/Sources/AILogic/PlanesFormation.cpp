@@ -31,9 +31,13 @@ int CPlanesFormation::operator&( IBinSaver &saver )
 		// Old saves omitted IDs. Assign them in serialized object order; new saves
 		// keep the IDs used by the maneuver builder's saved attack allocations.
 		if ( nID <= 0 )
+		{
 			nID = nIDSoFar++;
+		}
 		else
+		{
 			nIDSoFar = (std::max)( nIDSoFar, nID + 1 );
+		}
 		existence[nID] = true;
 	}
 	return 0;
@@ -65,7 +69,9 @@ IManuver *CPlaneManuverHistory::GetCurManuver() const
 {
 	//NI_ASSERT( !pathHistory.empty(), "unitialized path" );
 	if ( pathHistory.empty() )
+	{
 		return 0;
+	}
 	return *pathHistory.begin();
 }
 
@@ -85,7 +91,9 @@ void CPlaneManuverHistory::ClearUnised()
 			return;
 		}
 		else
+		{
 			pathHistory.pop_back();
+		}
 	} while ( true );
 }
 

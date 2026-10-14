@@ -22,19 +22,27 @@ public:
 	{
 		CMapEditorFactoryNewFuncsMap::const_iterator posList = newFuncs.find( szType );
 		if ( posList == newFuncs.end() )
+		{
 			return;
+		}
 		for ( CMapEditorFactoryNewFuncsList::const_iterator it = posList->second.begin(); it != posList->second.end();
 		      ++it )
+		{
 			( *pfnRegistrator )( it->first, it->second );
+		}
 	}
 	void UnRegisterTypes( const std::string &szType, UnRegisterEditorType pfnUnRegistrator ) const
 	{
 		CMapEditorFactoryNewFuncsMap::const_iterator posList = newFuncs.find( szType );
 		if ( posList == newFuncs.end() )
+		{
 			return;
+		}
 		for ( CMapEditorFactoryNewFuncsList::const_iterator it = posList->second.begin(); it != posList->second.end();
 		      ++it )
+		{
 			( *pfnUnRegistrator )( it->first );
+		}
 	}
 };
 

@@ -7,10 +7,14 @@ GetHeight( const CVec2 &p, const CVec3fEx &p0, const CVec3fEx &p1, const CVec3fE
 	CVec2 vBary;
 	GetBaryCoords( p, p0, p1, p2, &vBary );
 	if ( ( vBary.x > -DEF_EPS ) && ( vBary.y > -DEF_EPS ) && ( ( vBary.x + vBary.y ) < ( 1.0f + DEF_EPS ) ) )
+	{
 		return ( ( p1.z - p0.z ) * vBary.x + ( p2.z - p0.z ) * vBary.y + p0.z ) * heightCalc( vBary.x );
+	}
 	else
+	{
 		//return 0.0f;
 		return -1.0f;
+	}
 }
 
 template <class THeightCalc>
@@ -20,10 +24,14 @@ inline float GetHeightInv(
 	CVec2 vBary;
 	GetBaryCoords( p, p0, p1, p2, &vBary );
 	if ( ( vBary.x > -DEF_EPS ) && ( vBary.y > -DEF_EPS ) && ( ( vBary.x + vBary.y ) < ( 1.0f + DEF_EPS ) ) )
+	{
 		return ( ( p1.z - p0.z ) * vBary.x + ( p2.z - p0.z ) * vBary.y + p0.z ) * heightCalc( 1.0f - vBary.x );
+	}
 	else
+	{
 		//return 0.0f;
 		return -1.0f;
+	}
 }
 
 template <class THeightCalc>
@@ -110,7 +118,9 @@ inline bool GetIncRidgeHeightMinLaw( const CVec2 &v,
 		}
 	}
 	if ( !bFlag )
+	{
 		*pIncHeight = 0.0f;
+	}
 	return bFlag;
 }
 
@@ -134,7 +144,9 @@ inline void FindNormalsInTile( const STerrainInfo::STile &tile, const CVec3 &ver
 		{
 			GetTrueNormal( &vNorm, v1, v2, v3 );
 			if ( vNorm.z < 0.0f )
+			{
 				vNorm = -vNorm;
+			}
 			vResNorm += vNorm;
 			++nNormsCount;
 		}

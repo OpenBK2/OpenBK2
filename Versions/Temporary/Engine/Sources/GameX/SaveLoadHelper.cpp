@@ -80,7 +80,9 @@ void SSaveInfo::Write( const std::string &szFullFileName,
                        bool _bFromChapter )
 {
 	if ( _bQuickSave )
+	{
 		InterfaceState()->GetScreenShotTexture()->Generate( true );
+	}
 
 	bQuickSave = _bQuickSave;
 	wszSaveName = _wszSaveName;
@@ -93,7 +95,9 @@ void SSaveInfo::Write( const std::string &szFullFileName,
 	CFileStream stream( szFullFileName, CFileStream::WIN_CREATE );
 	CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
 	if ( pSaver )
+	{
 		pSaver->Add( 1, this );
+	}
 }
 
 void SSaveInfo::GenerateInfo()
@@ -126,15 +130,23 @@ void SSaveInfo::GenerateInfo()
 
 			image1.SetSizes( nChapterMapSizeX, nChapterMapSizeY );
 			for ( int y = 0; y < image1.GetSizeY(); ++y )
+			{
 				for ( int x = 0; x < image1.GetSizeX(); ++x )
+				{
 					image1[y][x] = tmpScreenShot[y + nScreenShotOffsetY][x + nScreenShotOffsetX].dwColor;
+				}
+			}
 		}
 		else
 		{
 			image1.SetSizes( tmpScreenShot.GetSizeX(), tmpScreenShot.GetSizeY() );
 			for ( int y = 0; y < tmpScreenShot.GetSizeY(); ++y )
+			{
 				for ( int x = 0; x < tmpScreenShot.GetSizeX(); ++x )
+				{
 					image1[y][x] = tmpScreenShot[y][x].dwColor;
+				}
+			}
 		}
 
 		CArray2D<uint32_t> image2;
@@ -143,8 +155,12 @@ void SSaveInfo::GenerateInfo()
 
 		screenShot.SetSizes( nScreenShotSizeX, nScreenShotSizeY );
 		for ( int y = 0; y < screenShot.GetSizeY(); ++y )
+		{
 			for ( int x = 0; x < screenShot.GetSizeX(); ++x )
+			{
 				screenShot[y][x].dwColor = image2[y][x];
+			}
+		}
 	}
 
 	//Fill info
@@ -154,10 +170,14 @@ void SSaveInfo::GenerateInfo()
 	const NDb::SChapter *pChapterDB = Singleton<IScenarioTracker>()->GetCurrentChapter();
 	const NDb::SMapInfo *pMapInfoDB = Singleton<IScenarioTracker>()->GetCurrentMission();
 	if ( pCampaignDB )
+	{
 		pFlagTexture = pCampaignDB->pSaveLoadFlag;
+	}
 
 	if ( pCampaignDB )
+	{
 		wszCampaignName = GET_TEXT_PRE( pCampaignDB->, LocalizedName );
+	}
 	if ( pChapterDB )
 	{
 		wszChapterName = GET_TEXT_PRE( pChapterDB->, LocalizedNameSaveLoad );
@@ -172,12 +192,16 @@ void SSaveInfo::GenerateInfo()
 	if ( bFromChapter )
 	{
 		if ( pChapterDB )
+		{
 			pPicture = pChapterDB->pMapPicture;
+		}
 	}
 	else
 	{
 		if ( pMapInfoDB )
+		{
 			pPicture = pMapInfoDB->pLoadingPicture;
+		}
 	}
 
 	if ( NMOD::DoesAnyMODAttached() )
@@ -205,7 +229,9 @@ void SSaveInfo::Rename( const std::string &szFullFileName, const std::wstring &w
 		CFileStream stream( szFullFileName, CFileStream::WIN_CREATE );
 		CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
 		if ( pSaver )
+		{
 			pSaver->Add( 1, this );
+		}
 	}
 }
 
@@ -231,20 +257,28 @@ void SSaveInfo::SetLoadInfo()
 {
 	std::wstring wszDesc;
 	if ( bFromChapter )
+	{
 		wszDesc = wszChapterDesc;
+	}
 	else
+	{
 		wszDesc = wszMissionLoadingDesc;
+	}
 	g_WaitLoadData.Set( pPicture, wszDesc, bFromChapter );
 
 	if ( szMODPath.empty() )
 	{
 		if ( NMOD::DoesAnyMODAttached() )
+		{
 			NMOD::DetachAllMODs();
+		}
 	}
 	else
 	{
 		if ( !NMOD::DoesMODAttached( szMODPath ) )
+		{
 			NMOD::AttachMOD( szMODPath );
+		}
 	}
 }
 
@@ -292,7 +326,9 @@ void GetSaveList( CSaveList *pSaves, int *pnLastID )
 
 		sg.info.Read( sg.szInfoFileName );
 		if ( !sg.info.wszSaveName.empty() )
+		{
 			sg.wszName = sg.info.wszSaveName;
+		}
 
 		pSaves->push_back( sg );
 	}
@@ -379,7 +415,9 @@ bool SerializeReplayInfo( SMultiplayerReplayInfo *pMultiplayerReplayInfo,
 	                  bRead ? CFileStream::WIN_READ_ONLY : CFileStream::WIN_CREATE );
 	CPtr<IBinSaver> pSaver = CreateBinSaver( &file, bRead ? SAVER_MODE_READ : SAVER_MODE_WRITE );
 	if ( !IsValid( pSaver ) )
+	{
 		return false;
+	}
 	pSaver->Add( 2, pMultiplayerReplayInfo );
 	return true;
 }
@@ -387,7 +425,9 @@ bool SerializeReplayInfo( SMultiplayerReplayInfo *pMultiplayerReplayInfo,
 void GetReplayList( CReplays *pReplays )
 {
 	if ( !pReplays )
+	{
 		return;
+	}
 
 	const std::string szPath = GetReplayPath();
 
@@ -414,7 +454,9 @@ void GetReplayList( CReplays *pReplays )
 				if ( timeWrite != 0 && GetLocalSystemTime( &replay.timeFile, timeWrite ) )
 				{
 					if ( SerializeReplayInfo( &replay.replayInfo, replay.szFileName, true ) )
+					{
 						pReplays->push_back( replay );
+					}
 				}
 			}
 		}

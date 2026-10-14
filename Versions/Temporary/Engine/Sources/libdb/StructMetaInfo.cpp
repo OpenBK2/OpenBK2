@@ -91,7 +91,9 @@ namespace NMetaInfo
 	void SStructMetaInfo::SField::ConstructBinary( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn ) const
 	{
 		if ( pTypeDef == 0 )
+		{
 			return;
+		}
 		const int nOwnValueIndex = GetOwnValueIndex();
 		if ( nOwnValueIndex != -1 )
 		{
@@ -121,13 +123,17 @@ namespace NMetaInfo
 		}
 		//
 		if ( !bOnlyOwn && GetBinaryShift() != 0x0000ffff )
+		{
 			NMetaInfo::ConstructBinary( pThis + GetBinaryShift(), GetType(), main.size );
+		}
 	}
 
 	void SStructMetaInfo::SField::DestructBinary( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn ) const
 	{
 		if ( pTypeDef == 0 )
+		{
 			return;
+		}
 		const int nOwnValueIndex = GetOwnValueIndex();
 		if ( nOwnValueIndex != -1 )
 		{
@@ -161,13 +167,17 @@ namespace NMetaInfo
 		}
 		//
 		if ( !bOnlyOwn && GetBinaryShift() != 0x0000ffff )
+		{
 			NMetaInfo::DestructBinary( pThis + GetBinaryShift(), GetType(), int( main.size ) );
+		}
 	}
 
 	void SStructMetaInfo::ConstructStruct( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn )
 	{
 		if ( fields.empty() )
+		{
 			singleField.ConstructBinary( pThis, values, bOnlyOwn );
+		}
 		else
 		{
 			for ( CFieldsMap::iterator it = fields.begin(); it != fields.end(); )
@@ -175,9 +185,13 @@ namespace NMetaInfo
 				it->second.ConstructBinary( pThis, values, bOnlyOwn );
 				//
 				if ( it->second.pTypeDef == 0 )
+				{
 					fields.erase( it++ );
+				}
 				else
+				{
 					++it;
+				}
 			}
 		}
 	}
@@ -185,11 +199,15 @@ namespace NMetaInfo
 	void SStructMetaInfo::DestructStruct( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn )
 	{
 		if ( fields.empty() )
+		{
 			singleField.DestructBinary( pThis, values, bOnlyOwn );
+		}
 		else
 		{
 			for ( CFieldsMap::iterator it = fields.begin(); it != fields.end(); ++it )
+			{
 				it->second.DestructBinary( pThis, values, bOnlyOwn );
+			}
 		}
 	}
 
@@ -236,7 +254,9 @@ namespace NMetaInfo
 		field.szFieldName = szName;
 #endif
 		if ( eContainedType == NTypeDef::TYPE_TYPE_STRUCT )
+		{
 			AddOnStack( pContained );
+		}
 		else
 		{
 			//		pContained->singleField.nShift = 0;
@@ -461,7 +481,9 @@ namespace NMetaInfo
 				          pTypeArray->field.pType->GetTypeSize(),
 				          pTypeArray->field.pType->eType );
 				if ( pTypeArray->field.pType->eType == NTypeDef::TYPE_TYPE_STRUCT )
+				{
 					FinishMetaInfoReport();
+				}
 				posField = fields.find( szFullFieldName );
 				//
 				if ( pTypeArray->field.pType->eType == NTypeDef::TYPE_TYPE_STRUCT )
@@ -519,10 +541,14 @@ namespace NMetaInfo
 	void SStructMetaInfo::LinkWithTypeDef( const std::string &szAddName, NTypeDef::STypeStructBase *pType )
 	{
 		if ( pType->pBaseType )
+		{
 			LinkWithTypeDef( szAddName, pType->pBaseType );
+		}
 		//
 		for ( NTypeDef::STypeStructBase::CFieldsList::iterator it = pType->fields.begin(); it != pType->fields.end(); ++it )
+		{
 			LinkField( szAddName, it->szName, it->pType );
+		}
 		//
 		pStructTypeDef = pType;
 	}

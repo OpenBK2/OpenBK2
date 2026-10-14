@@ -23,7 +23,9 @@ CSmokeTrailEffect::CSmokeTrailEffect( const SHMatrix &_mLocalPos,
 void CSmokeTrailEffect::CreateEffect( const CVec3 &vPos, const CQuat &qRot, NTimer::STime time, bool bVisible )
 {
 	if ( !bVisible )
+	{
 		return;
+	}
 	SHMatrix mResultPos;
 	Multiply( &mResultPos, SHMatrix( vPos, qRot ), mLocalPos );
 	PlayComplexEffect( OBJECT_ID_FORGET, pEffect, time, mResultPos );
@@ -37,7 +39,9 @@ void CSmokeTrailEffect::UpdatePlacement( const CVec3 &vPos, const CQuat &qRot, N
 	CVec3 vDir( vPos - vLastVisPos );
 	const float fDist2 = fabs2( vDir );
 	if ( fDist2 < fInterval2 )
+	{
 		return;
+	}
 	//
 	Normalize( &vDir );
 	vDir *= fInterval;
@@ -83,7 +87,9 @@ void CalcRelativePos( SHMatrix *pmRelativePos,
 
 	SHMatrix mRealEffectPos;
 	if ( !pAnimator->GetBonePosition( szBoneName.c_str(), &mRealEffectPos ) )
+	{
 		return;
+	}
 
 	SHMatrix mInvCalculated;
 	Invert( &mInvCalculated, mCalculatedEffectPos );

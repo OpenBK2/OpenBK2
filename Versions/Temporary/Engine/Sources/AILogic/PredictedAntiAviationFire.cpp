@@ -33,14 +33,18 @@ void CPredictedAntiAviationFire::OnSerialize( IBinSaver &saver )
 void CPredictedAntiAviationFire::StopFire()
 {
 	for ( Guns::iterator it = nGuns.begin(); it != nGuns.end(); ++it )
+	{
 		pUnit->GetGun( *it )->StopFire();
+	}
 }
 
 bool CPredictedAntiAviationFire::IsFinishedFire()
 {
 	bool bFiring = false;
 	for ( Guns::iterator it = nGuns.begin(); it != nGuns.end(); ++it )
+	{
 		bFiring |= pUnit->GetGun( *it )->IsFiring();
+	}
 	return !bFiring;
 }
 
@@ -75,7 +79,9 @@ void CPredictedAntiAviationFire::Segment()
 	}
 
 	if ( nGuns.empty() )
+	{
 		return;
+	}
 
 	switch ( eState )
 	{
@@ -87,7 +93,9 @@ void CPredictedAntiAviationFire::Segment()
 				timeLastAimUpdate = curTime;
 			}
 			else
+			{
 				eState = SAAS_FINISHED_TASK;
+			}
 		}
 
 		break;
@@ -95,7 +103,9 @@ void CPredictedAntiAviationFire::Segment()
 			break;
 		case SAAS_FINISH:
 			if ( IsFinishedFire() )
+			{
 				eState = SAAS_FINISHED_TASK;
+			}
 			else
 			{
 				StopFire();
@@ -114,7 +124,9 @@ void CPredictedAntiAviationFire::Segment()
 		case SAAS_START_AIMING_TO_PREDICTED_POINT:
 		{
 			if ( curTime - timeLastAimUpdate > SConsts::AA_BEH_UPDATE_DURATION )
+			{
 				CalcAimPoint();
+			}
 
 			if ( fabs( CVec2( aimPoint.GetPt().x, aimPoint.GetPt().y ) - pUnit->GetCenterPlain() ) <= aimPoint.GetRange() )
 			{
@@ -125,14 +137,18 @@ void CPredictedAntiAviationFire::Segment()
 				timeOfStartBurst = curTime;
 			}
 			else
+			{
 				eState = SAAS_FINISH;
+			}
 		}
 
 		break;
 		case SAAS_AIM_TO_PREDICTED_POINT:
 
 			if ( aimPoint.GetPt().z <= 0 ) // don't want to shoot to the ground.
+			{
 				eState = SAAS_ESITMATING;
+			}
 			else
 			{
 				Aim();
@@ -146,7 +162,9 @@ void CPredictedAntiAviationFire::Segment()
 			break;
 		case SAAS_FIRING_TO_PREDICTED_POINT:
 			if ( IsFinishedFire() )
+			{
 				eState = SAAS_ESITMATING;
+			}
 
 			break;
 	}
@@ -175,7 +193,9 @@ void CPredictedAntiAviationFire::Aim()
 void CPredictedAntiAviationFire::Stop()
 {
 	if ( nGuns.empty() )
+	{
 		return;
+	}
 	CBasicGun *pGun = pUnit->GetGun( *nGuns.begin() );
 	if ( CTurret *pTurret = pGun->GetTurret() )
 	{
@@ -186,7 +206,9 @@ void CPredictedAntiAviationFire::Stop()
 bool CPredictedAntiAviationFire::CalcAimPoint()
 {
 	if ( !IsValidObj( pPlane ) )
+	{
 		return false;
+	}
 	timeLastAimUpdate = curTime;
 
 	float fRange = 0;
@@ -221,7 +243,9 @@ bool CPredictedAntiAviationFire::CalcAimPoint()
 			vPredict = pPlane->GetPosB2() + pPlane->GetSpeedB2() * float( nTime );
 		}
 		else
+		{
 			vPredict = pPlane->GetManuver()->GetProspectivePoint( nTime );
+		}
 	}
 
 	const int nTimeToShoot = nTime / SConsts::AI_SEGMENT_DURATION * SConsts::AI_SEGMENT_DURATION;

@@ -15,9 +15,13 @@ CExecutorThrowGrenade::CExecutorThrowGrenade( CAIUnit *_pUnit, NDb::EUnitSpecial
 		: CExecutor( TID_THROW_GRENADE, 1000 / SConsts::AI_SEGMENT_DURATION ), pUnit( _pUnit ), eAbility( _eAbility )
 {
 	if ( HasGrenades() )
+	{
 		state.eState = EASS_READY_TO_ON;
+	}
 	else
+	{
 		state.eState = EASS_DISABLE;
+	}
 
 	state.bAutocast = false;
 	secondaryState.eState = EASS_READY_TO_ON;
@@ -44,7 +48,9 @@ const bool CExecutorThrowGrenade::HasGrenades()
 int CExecutorThrowGrenade::Segment()
 {
 	if ( !IsExecutorValid() )
+	{
 		return -1;
+	}
 
 	if ( state.eState != EASS_DISABLE )
 	{
@@ -81,14 +87,20 @@ bool CExecutorThrowGrenade::NotifyEvent( const CExecutorEvent &event )
 {
 	const CExecutorEventSpecialAbility *pEv = static_cast<const CExecutorEventSpecialAbility *>( &event );
 	if ( pEv == 0 )
+	{
 		return false;
+	}
 
 	if ( pEv->GetAbility() != NDb::ABILITY_THROW_GRENADE && pEv->GetAbility() != NDb::ABILITY_THROW_ANTITANK_GRENADE )
+	{
 		return false;
+	}
 
 	CSoldier *pSoldier = checked_cast<CSoldier *>( pUnit.GetPtr() );
 	if ( pSoldier->GetUniqueId() != event.GetParam().nUnitID )
+	{
 		return false;
+	}
 
 	switch ( event.GetParam().eEventID )
 	{

@@ -49,18 +49,24 @@ class CLogSaver : public IBinSaver
 			std::string szObj = typeid( *pObject ).name();
 			const std::string szBegin( szObj.begin(), szObj.begin() + 5 );
 			if ( szBegin == "class" )
+			{
 				szObj.erase( szObj.begin(), szObj.begin() + 7 );
+			}
 
 			*pszLog += " ";
 			*pszLog += szObj + "(";
 
 			if ( NObjectFactory::GetObjectTypeID( pObject ) != UNKNOWN_PACKET_TYPE_ID )
+			{
 				pObject->operator&( *this );
+			}
 
 			*pszLog += " )";
 		}
 		else
+		{
 			*pszLog += " null";
+		}
 	}
 
 	virtual CObjectBase *LoadObject() { return 0; }

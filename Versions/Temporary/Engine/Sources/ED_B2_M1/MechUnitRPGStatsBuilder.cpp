@@ -77,45 +77,73 @@ static bool CopyModel( const std::string &szOldModelName,
 	std::string szGeometry = "";
 	std::string szGeometryType = "";
 	if ( !CManipulatorManager::GetParamsFromReference( "Geometry", pModel, &szGeometryType, &szGeometry, 0 ) )
+	{
 		return false;
+	}
 	if ( szNewName != szGeometry && !pFolderCallback->CopyObject( szGeometryType, szNewName, szGeometry ) )
+	{
 		return false;
+	}
 	CPtr<IManipulator> pGeometry = Singleton<IResourceManager>()->CreateObjectManipulator( szGeometryType, szNewName );
 	if ( !pGeometry )
+	{
 		return false;
+	}
 	if ( !CManipulatorManager::SetValue( szRootMesh, pGeometry, "RootMesh", true ) )
+	{
 		return false;
+	}
 	if ( !CManipulatorManager::SetValue( szRootMesh, pGeometry, "RootJoint", true ) )
+	{
 		return false;
+	}
 	if ( !CManipulatorManager::SetValue( "", pGeometry, "AIGeometry", true ) )
+	{
 		return false;
+	}
 	if ( !CManipulatorManager::SetValue( szNewName, pModel, "Geometry", true ) )
+	{
 		return false;
+	}
 
 	//копировать скелет
 	std::string szSkeleton = "";
 	std::string szSkeletonType = "";
 	if ( !CManipulatorManager::GetParamsFromReference( "Skeleton", pModel, &szSkeletonType, &szSkeleton, 0 ) )
+	{
 		return false;
+	}
 	if ( szNewName != szSkeleton && !pFolderCallback->CopyObject( szSkeletonType, szNewName, szSkeleton ) )
+	{
 		return false;
+	}
 	CPtr<IManipulator> pSkeleton = Singleton<IResourceManager>()->CreateObjectManipulator( szSkeletonType, szNewName );
 	if ( !pSkeleton )
+	{
 		return false;
+	}
 	if ( !CManipulatorManager::SetValue( szRootMesh, pSkeleton, "RootJoint", true ) )
+	{
 		return false;
+	}
 	if ( !CManipulatorManager::SetValue( szNewName, pModel, "Skeleton", true ) )
+	{
 		return false;
+	}
 	pSkeleton->RemoveNode( "Animations", NODE_REMOVEALL_INDEX );
 
 	//добавляем новую анимацию
 	const std::string szAnimationName = szNewName + " Rotation";
 	if ( pFolderCallback->IsUniqueName( "AnimB2", szAnimationName ) &&
 	     !pFolderCallback->InsertObject( "AnimB2", szAnimationName ) )
+	{
 		return false;
+	}
 	CPtr<IManipulator> pAnimation = Singleton<IResourceManager>()->CreateObjectManipulator( "AnimB2", szAnimationName );
 	if ( !pAnimation )
+	{
 		return false;
+	}
 
 	std::string szSrcName = "";
 	CManipulatorManager::GetValue( &szSrcName, pSkeleton, "SrcName" );
@@ -135,18 +163,24 @@ static bool CopyModel( const std::string &szOldModelName,
 	std::string szTypeAndName;
 	CStringManager::GetRefValueFromTypeAndName( &szTypeAndName, "AnimB2", szAnimationName, TYPE_SEPARATOR_CHAR );
 	if ( !CManipulatorManager::SetValue( szTypeAndName, pModel, "Animations.[0]", true ) )
+	{
 		return false;
+	}
 
 	//выставляем материал
 	CPtr<IManipulator> pOldModel = Singleton<IResourceManager>()->CreateObjectManipulator( "Model", szOldModelName );
 	if ( !pOldModel )
+	{
 		return false;
+	}
 
 	std::string szMaterialName;
 	std::string szTextureName;
 	int nMaterialsCount = 0;
 	if ( !CManipulatorManager::GetValue( &nMaterialsCount, pOldModel, "Materials" ) )
+	{
 		return false;
+	}
 
 	bool bFound = false;
 	bool bNeedCopy = false;
@@ -157,15 +191,21 @@ static bool CopyModel( const std::string &szOldModelName,
 		CPtr<IManipulator> pMaterial = CManipulatorManager::CreateManipulatorFromReference(
 				fmt::format( "Materials.[{}]", i ), pOldModel, 0, &szMaterial, 0 );
 		if ( !pMaterial )
+		{
 			return false;
+		}
 		std::string szTexture;
 		CPtr<IManipulator> pTexture =
 				CManipulatorManager::CreateManipulatorFromReference( "Texture", pMaterial, 0, &szTexture, 0 );
 		if ( !pTexture )
+		{
 			return false;
+		}
 		std::string szFileName;
 		if ( !CManipulatorManager::GetValue( &szFileName, pTexture, "SrcName" ) )
+		{
 			return false;
+		}
 		// Was stricmp over substr( length() - 5, 5 ), which threw on a name
 		// shorter than the suffix: length() is unsigned, so that position wrapped.
 		if ( NStr::IEndsWith( szFileName, "1.tga" ) )
@@ -179,7 +219,9 @@ static bool CopyModel( const std::string &szOldModelName,
 			bFound = true;
 			std::string szAlphaMode;
 			if ( !CManipulatorManager::GetValue( &szAlphaMode, pMaterial, "AlphaMode" ) )
+			{
 				return false;
+			}
 			bNeedCopy = szAlphaMode != "AM_TRANSPARENT";
 			if ( !bNeedCopy )
 			{
@@ -197,15 +239,23 @@ static bool CopyModel( const std::string &szOldModelName,
 		if ( pFolderCallback->IsUniqueName( "Material", szMaterialName ) )
 		{
 			if ( !pFolderCallback->CopyObject( "Material", szMaterialName, szOldMaterialName ) )
+			{
 				return false;
+			}
 			CPtr<IManipulator> pMaterial =
 					Singleton<IResourceManager>()->CreateObjectManipulator( "Material", szMaterialName );
 			if ( !pMaterial )
+			{
 				return false;
+			}
 			if ( !CManipulatorManager::SetValue( szTextureName, pMaterial, "Texture", true ) )
+			{
 				return false;
+			}
 			if ( !CManipulatorManager::SetValue( "AM_TRANSPARENT", pMaterial, "AlphaMode", false ) )
+			{
 				return false;
+			}
 		}
 	}
 
@@ -214,7 +264,9 @@ static bool CopyModel( const std::string &szOldModelName,
 	{
 		pModel->InsertNode( "Materials", NODE_ADD_INDEX );
 		if ( !CManipulatorManager::SetValue( szMaterialName, pModel, "Materials.[0]", true ) )
+		{
 			return false;
+		}
 	}
 
 	return true;
@@ -240,12 +292,16 @@ static bool CreateVisObj( IManipulator *pManipulator,
 	}
 	CPtr<IManipulator> pVisObj = Singleton<IResourceManager>()->CreateObjectManipulator( "VisObj", szObjectName );
 	if ( !pVisObj )
+	{
 		return false;
+	}
 
 	//делаем копии моделей, если в оригинальном объекте модель для сезона новая, в новом объекте также будет новая
 	int nModelCount = 0;
 	if ( !CManipulatorManager::GetValue( &nModelCount, pVisObj, "Models" ) )
+	{
 		return false;
+	}
 
 	std::unordered_map<std::string, int> models; // ID модели - на индекс имени в names
 	std::vector<std::string> names;              // новые имена моделей
@@ -255,25 +311,33 @@ static bool CreateVisObj( IManipulator *pManipulator,
 		const std::string szModelPath = fmt::format( "Models.[{}].", i );
 		std::string szModelName;
 		if ( !CManipulatorManager::GetParamsFromReference( szModelPath + "Model", pVisObj, 0, &szModelName, 0 ) )
+		{
 			continue;
+		}
 		std::unordered_map<std::string, int>::const_iterator pos = models.find( szModelName );
 		int nNameIndex = -1;
 		if ( pos == models.end() )
 		{
 			std::string szSeason;
 			if ( !CManipulatorManager::GetValue( &szSeason, pVisObj, szModelPath + "Season" ) )
+			{
 				continue;
+			}
 			const std::string szNewModelName = szObjectName + " (" + szSeason + ")";
 
 			if ( !CopyModel( szModelName, szNewModelName, szRootMesh, nStartFrame, nEndFrame, fSpeed ) )
+			{
 				continue;
+			}
 
 			nNameIndex = names.size();
 			names.push_back( szNewModelName );
 			models[szModelName] = nNameIndex;
 		}
 		else
+		{
 			nNameIndex = pos->second;
+		}
 
 		CManipulatorManager::SetValue( names[nNameIndex], pVisObj, szModelPath + "Model", true );
 		CManipulatorManager::SetValue( true, pVisObj, "ForceAnimated" );
@@ -302,21 +366,29 @@ TryBuildHelicopter( const std::string &rszObjectName, IManipulator *pManipulator
 	CPtr<IManipulator> pVisObjectManipulator =
 			CManipulatorManager::CreateManipulatorFromReference( "visualObject", pManipulator, 0, &szVisObjName, 0 );
 	if ( !pVisObjectManipulator )
+	{
 		return false;
+	}
 	const int nPathSeparator = szVisObjName.rfind( PATH_SEPARATOR_CHAR );
 	if ( nPathSeparator != std::string::npos )
+	{
 		szVisObjName = szVisObjName.substr( 0, nPathSeparator );
+	}
 
 	// получает манипулятор на model
 	CPtr<IManipulator> pItModel = CreateModelManipulatorFromVisObj( pVisObjectManipulator, 0 );
 	if ( !pItModel )
+	{
 		return false;
+	}
 
 	// получаем манипулятор на geometry
 	CPtr<IManipulator> pGeomManipulator =
 			CManipulatorManager::CreateManipulatorFromReference( "Geometry", pItModel, 0, 0, 0 );
 	if ( !pGeomManipulator )
+	{
 		return false;
+	}
 
 	// вытаскиваем информацию о пропеллерах
 	CGrannyBoneAttributesList attribs;
@@ -338,20 +410,26 @@ TryBuildHelicopter( const std::string &rszObjectName, IManipulator *pManipulator
 		}
 	}
 	if ( propellers.empty() )
+	{
 		return false;
+	}
 
 	// перебираем всю анимацию, смотрим какая из них для пропеллера
 	attribs.clear();
 	std::string szModelFileName;
 	if ( !CManipulatorManager::GetValue( &szModelFileName, pGeomManipulator, "SrcName" ) )
+	{
 		return false;
+	}
 	const SUserData *pUD = Singleton<IUserDataContainer>()->Get();
 	if ( !ReadAttributes(
 					 &attribs,
 					 NMEGeomAttribs::GetAttribs( pUD->constUserData.szExportSourceFolder + szModelFileName, "Animations", "" ),
 					 "",
 					 true ) )
+	{
 		return false;
+	}
 	for ( CGrannyBoneAttributesList::const_iterator it = attribs.begin(); it != attribs.end(); ++it )
 	{
 		if ( PatMat( it->szBoneName.c_str(), "rotate_axis??_scaled" ) )
@@ -361,7 +439,9 @@ TryBuildHelicopter( const std::string &rszObjectName, IManipulator *pManipulator
 				const int nIndex = NStr::ToInt( it->szBoneName.substr( 11, 2 ) );
 				std::unordered_map<int, SPropellerInfo>::iterator pos = propellers.find( nIndex );
 				if ( pos == propellers.end() )
+				{
 					return false;
+				}
 				it->GetAttribute( "starttime", &( pos->second.nScaledStart ) );
 				it->GetAttribute( "endtime", &( pos->second.nScaledEnd ) );
 				it->GetAttribute( "speed", &( pos->second.fScaledSpeed ) );
@@ -375,7 +455,9 @@ TryBuildHelicopter( const std::string &rszObjectName, IManipulator *pManipulator
 				const int nIndex = NStr::ToInt( it->szBoneName.substr( 11, 2 ) );
 				std::unordered_map<int, SPropellerInfo>::iterator pos = propellers.find( nIndex );
 				if ( pos == propellers.end() )
+				{
 					return false;
+				}
 				it->GetAttribute( "starttime", &( pos->second.nDynamicStart ) );
 				it->GetAttribute( "endtime", &( pos->second.nDynamicEnd ) );
 				it->GetAttribute( "speed", &( pos->second.fDynamicSpeed ) );
@@ -389,9 +471,13 @@ TryBuildHelicopter( const std::string &rszObjectName, IManipulator *pManipulator
 	{
 		std::unordered_map<int, SPropellerInfo>::const_iterator pos = propellers.find( i );
 		if ( pos == propellers.end() )
+		{
 			return false;
+		}
 		if ( !pos->second.IsDefined() )
+		{
 			return false;
+		}
 	}
 
 	// похоже что моделька от вертолета ...
@@ -422,7 +508,9 @@ TryBuildHelicopter( const std::string &rszObjectName, IManipulator *pManipulator
 		                    pos->second.nScaledStart,
 		                    pos->second.nScaledEnd,
 		                    pos->second.fScaledSpeed ) )
+		{
 			return false;
+		}
 		CManipulatorManager::SetValue( szScaledVisObj, pHelicopterStats, szNodePrefix + "Scaled", true );
 		const std::string szDynamicVisObj = szVisObjName + PATH_SEPARATOR_CHAR + fmt::format( "Axis{:02d}_Dynamic", i );
 		if ( !CreateVisObj( pManipulator,
@@ -431,7 +519,9 @@ TryBuildHelicopter( const std::string &rszObjectName, IManipulator *pManipulator
 		                    pos->second.nDynamicStart,
 		                    pos->second.nDynamicEnd,
 		                    pos->second.fDynamicSpeed ) )
+		{
 			return false;
+		}
 		CManipulatorManager::SetValue( szDynamicVisObj, pHelicopterStats, szNodePrefix + "Dynamic", true );
 
 		CManipulatorManager::SetValue( 0.4f, pHelicopterStats, szNodePrefix + "StartScaleSpeed" );

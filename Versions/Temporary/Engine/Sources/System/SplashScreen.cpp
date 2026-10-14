@@ -70,7 +70,9 @@ LRESULT CALLBACK SplashScreenWndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, L
 				HDC hDC = ::BeginPaint( hWnd, &ps );
 
 				if ( pSplashScreen )
+				{
 					pSplashScreen->Draw( &hDC );
+				}
 
 				::EndPaint( hWnd, &ps );
 				::ValidateRect( hWnd, 0 );
@@ -119,7 +121,9 @@ bool CSplashScreen::CBitmap::Load( const std::string &rszImageFileName )
 	hBitmap = ( HBITMAP )::LoadImage(
 			0, rszImageFileName.c_str(), IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE );
 	if ( hBitmap == 0 )
+	{
 		return false;
+	}
 
 	//Get the color depth of the DIBSection
 	::GetObject( hBitmap, sizeof( BITMAP ), &bitmapInfo );
@@ -163,7 +167,9 @@ bool CSplashScreen::CBitmap::Load( const std::string &rszImageFileName )
 bool CSplashScreen::CBitmap::Draw( HDC *pHDC )
 {
 	if ( ( hBitmap == 0 ) || ( hPalette == 0 ) )
+	{
 		return false;
+	}
 
 	HDC hMemDC = ::CreateCompatibleDC( *pHDC );
 	HBITMAP hOldBitmap = ( HBITMAP )::SelectObject( hMemDC, hBitmap );
@@ -185,7 +191,9 @@ CSplashScreen::CSplashScreen() : hWnd( 0 ) {}
 CSplashScreen::~CSplashScreen()
 {
 	if ( ::IsWindow( hWnd ) )
+	{
 		Destroy();
+	}
 }
 
 bool CSplashScreen::Draw( HDC *pHDC )
@@ -198,10 +206,14 @@ bool CSplashScreen::Create( const std::string &_szImageFileName, bool bTopMost )
 	szImageFileName = _szImageFileName;
 
 	if ( ::IsWindow( hWnd ) )
+	{
 		Destroy();
+	}
 
 	if ( !bitmap.Load( szImageFileName ) )
+	{
 		return false;
+	}
 
 	WNDCLASSEX wcex;
 
@@ -218,7 +230,9 @@ bool CSplashScreen::Create( const std::string &_szImageFileName, bool bTopMost )
 	wcex.lpszClassName = pszSplashScreenWindowClass;
 	wcex.hIconSm = 0;
 	if ( !::RegisterClassEx( &wcex ) )
+	{
 		return false;
+	}
 
 	hWnd = CreateWindowEx( WS_EX_TOOLWINDOW | ( bTopMost ? WS_EX_TOPMOST : 0 ),
 	                       pszSplashScreenWindowClass,
@@ -276,7 +290,9 @@ bool CSplashScreen::UpdateWindow()
 void CSplashScreen::Destroy()
 {
 	if ( ::IsWindow( hWnd ) )
+	{
 		DestroyWindow( hWnd );
+	}
 	hWnd = 0;
 	UnregisterClass( pszSplashScreenWindowClass, ::GetModuleHandle( 0 ) );
 }

@@ -73,10 +73,14 @@ inline int RoundToGood( int n )
 	for ( int nRes = 2; nRes != 0; nRes <<= 1 )
 	{
 		if ( nRes >= n )
+		{
 			return nRes;
+		}
 		int nTest = nRes + ( nRes >> 1 );
 		if ( nTest >= n )
+		{
 			return nTest;
+		}
 	}
 	ASSERT( 0 );
 	return n;
@@ -134,7 +138,9 @@ void CSquarePacker::PushTriangle( int n1, int n2, int n3, char nFirst )
 		return;
 	}
 	if ( nXSize != nYSize )
+	{
 		std::swap( edge.nU, edge.nV );
+	}
 	edgesInfo[edge] = squares.size();
 	squares.push_back( STriInfo( n1, n2, n3, bInverse, nFirst, nXSize, nYSize ) );
 }
@@ -151,16 +157,24 @@ void CSquarePacker::AddTriangle( int n1, int n2, int n3 )
 	if ( f2 > f1 )
 	{
 		if ( f2 > f3 )
+		{
 			PushTriangle( n2, n3, n1, 2 );
+		}
 		else
+		{
 			PushTriangle( n3, n1, n2, 3 );
+		}
 	}
 	else
 	{
 		if ( f3 > f1 )
+		{
 			PushTriangle( n3, n1, n2, 3 );
+		}
 		else
+		{
 			PushTriangle( n1, n2, n3, 1 );
+		}
 	}
 }
 
@@ -179,13 +193,17 @@ void CSquarePacker::Build( SLMLOD *pLMLOD, std::vector<SLightmapInfo> *pLMaps )
 		res.n3 = tri.n3;
 		res.nOrder1 = tri.nFirst;
 		if ( tri.bInverse )
+		{
 			res.nOrder1 |= 4;
+		}
 		if ( tri.nFirst1 )
 		{
 			res.n4 = tri.n4;
 			res.nOrder2 = tri.nFirst1;
 			if ( tri.bInverse1 )
+			{
 				res.nOrder2 |= 4;
+			}
 		}
 		else
 		{
@@ -269,7 +287,9 @@ static void GenVertices( std::vector<SVertex> *pRes,
 				CalcMirroredVector( &v4.texV, v2.texV, v3.texV, v1.texV );
 			}
 			else
+			{
 				v4 = src[lm.n4];
+			}
 			const NRectPacker::SRect &lmmap = lmLOD.lmaps[k];
 			float fU = ( lmmap.nXShift + nShiftX ) * fLMSize1;
 			float fV = ( lmmap.nYShift + nShiftY ) * fLMSize1;
@@ -296,7 +316,9 @@ static void BuildLM(
 	std::vector<STriangle> tris = src.geometry;
 	CSquarePacker packer( nLMSize, src, fLMResolution );
 	for ( int k = 0; k < tris.size(); ++k )
+	{
 		packer.AddTriangle( tris[k].i1, tris[k].i2, tris[k].i3 );
+	}
 
 	packer.Build( &lmLOD, &lmaps );
 }
@@ -318,15 +340,25 @@ void MakeLMGeometry( CObjectInfo::SData *pRes,
 		int nOffset = k * 4;
 		const SLightmapInfo &lm = lmaps[k];
 		if ( lm.nOrder1 & 4 )
+		{
 			lmTris.push_back( STriangle( nOffset + 0, nOffset + 2, nOffset + 1 ) );
+		}
 		else
+		{
 			lmTris.push_back( STriangle( nOffset + 0, nOffset + 1, nOffset + 2 ) );
+		}
 		if ( lm.nOrder2 == 0 )
+		{
 			continue;
+		}
 		if ( lm.nOrder2 & 4 )
+		{
 			lmTris.push_back( STriangle( nOffset + 3, nOffset + 2, nOffset + 1 ) );
+		}
 		else
+		{
 			lmTris.push_back( STriangle( nOffset + 3, nOffset + 1, nOffset + 2 ) );
+		}
 	}
 	pRes->geometry = lmTris;
 
@@ -401,7 +433,9 @@ void MakeSData( CObjectInfo::SData *pRes, const CObjectInfo &src )
 	}
 	pRes->weights.resize( verts.size() );
 	if ( weights.empty() )
+	{
 		return;
+	}
 	for ( int k = 0; k < verts.size(); ++k )
 	{
 		const SRealVertexWeight &w = weights[posIndices[k]];

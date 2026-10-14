@@ -39,9 +39,13 @@ static CDataStream *OpenWinFileDirect( const std::string &szPath, bool bRead )
 {
 	CMemoryMappedFile *p;
 	if ( bRead )
+	{
 		p = new CMemoryMappedFile( szPath.c_str(), STREAM_ACCESS_READ );
+	}
 	else
+	{
 		p = new CMemoryMappedFile( szPath.c_str(), STREAM_ACCESS_READ_WRITE );
+	}
 	if ( !p->IsOk() )
 	{
 		delete p;
@@ -104,10 +108,14 @@ bool GetWinFileStats( struct SFileStats *pStats, const std::string &szPath )
 	boost::system::error_code ec;
 	const boost::uintmax_t nSize = boost::filesystem::file_size( szPath, ec );
 	if ( ec )
+	{
 		return false;
+	}
 	const std::time_t mtime = boost::filesystem::last_write_time( szPath, ec );
 	if ( ec )
+	{
 		return false;
+	}
 	pStats->nSize = int( nSize );
 	pStats->mtime = PackFileTime( mtime );
 	return true;
@@ -155,30 +163,42 @@ CWinVFS::CWinVFS( const std::string &_szBasePath ) : bAllWinFilesChecked( false 
 		{
 			szExt = szDir.substr( nPos + 1 );
 			if ( !szExt.empty() )
+			{
 				szDir = szDir.substr( 0, nPos + 1 );
+			}
 			else
+			{
 				szExt = "*.pak";
+			}
 		}
 		else
+		{
 			szExt = "*.pak";
+		}
 	}
 	//
 	// The platform's own separator, and any separator counts as one already
 	// being there. Forcing a backslash off Windows appended one to a path that
 	// already ended in a slash, and every lookup below concatenates onto this.
 	if ( !NFile::IsFolderSeparator( szDir[szDir.size() - 1] ) )
+	{
 		szDir += NFile::PATH_SEPARATOR;
+	}
 	//
 	szBasePath = szDir;
 	// enumerate all ZIP files and retrieve packed files from them
 	for ( NFile::CFileIterator it( ( szDir + szExt ).c_str() ); !it.IsEnd(); ++it )
 	{
 		if ( it.IsDirectory() )
+		{
 			continue;
+		}
 		// open ZIP file
 		CObj<CZipFile> pArch = new CZipFile( it.GetFullName().c_str() );
 		if ( !pArch->IsOk() )
+		{
 			continue;
+		}
 		zipFiles.push_back( pArch );
 		// add this ZIP file to the common list of opened ZIP files
 		CZipFile &zip = *pArch;
@@ -187,10 +207,14 @@ CWinVFS::CWinVFS( const std::string &_szBasePath ) : bAllWinFilesChecked( false 
 		{
 			// check for non-directory
 			if ( zip.GetFileAttribs( i ) & CZipFile::DOS_ATTR_DIRECTORY )
+			{
 				continue;
+			}
 			// check for non-zero file length
 			if ( zip.GetFileLen( i ) <= 0 )
+			{
 				continue;
+			}
 			// add this entry
 			const uint32_t dwCheckTime = zip.GetModDateTime( i );
 			NFile::CFilePath szFileName;
@@ -198,7 +222,9 @@ CWinVFS::CWinVFS( const std::string &_szBasePath ) : bAllWinFilesChecked( false 
 			NStr::ReplaceAllChars( &szFileName, '/', '\\' );
 			CStreamEntriesMap::iterator pos = streamEntriesMap.find( szFileName );
 			if ( pos == streamEntriesMap.end() )
+			{
 				streamEntriesMap[szFileName] = new CZipFileEntry( dwCheckTime, zip, i );
+			}
 			else
 			{
 				if ( pos->second->GetCheckTime() < dwCheckTime )
@@ -282,10 +308,14 @@ CDataStream *CWinVFS::OpenFileDirect( const std::string &_szPath )
 	if ( ePath == STREAM_PATH_RELATIVE )
 	{
 		if ( CFileEntry *pEntry = UpdateFileEntry( szPath ) )
+		{
 			return pEntry->OpenStream( szPath );
+		}
 	}
 	else
+	{
 		return OpenWinFileDirect( szPath, true );
+	}
 	//
 	return 0;
 }
@@ -337,7 +367,9 @@ void VFSSegmentProfiler()
 		const uint32_t dwSegmentMs = dwBigTimeForLoadMs.exchange( 0, std::memory_order_relaxed );
 		const int nSegmentCalls = nCallsNumber.exchange( 0, std::memory_order_relaxed );
 		if ( dwSegmentMs != 0 )
+		{
 			DbgTrc( "DoesFileExist: %f sec in segment, %d calls", float( dwSegmentMs ) / 1000.0f, nSegmentCalls );
+		}
 
 		dwLastProfilerSegment = dwTime;
 	}
@@ -352,9 +384,13 @@ bool CWinVFS::DoesFileExist( const std::string &_szPath )
 	PreprocessPath( &szPath, &ePath, _szPath, szBasePath );
 	//
 	if ( ePath == STREAM_PATH_RELATIVE )
+	{
 		return UpdateFileEntry( szPath ) != 0;
+	}
 	else
+	{
 		return NFile::DoesFileExist( szPath );
+	}
 }
 
 bool CWinVFS::GetFileStats( SFileStats *pStats, const std::string &_szPath )
@@ -366,10 +402,14 @@ bool CWinVFS::GetFileStats( SFileStats *pStats, const std::string &_szPath )
 	if ( ePath == STREAM_PATH_RELATIVE )
 	{
 		if ( CFileEntry *pEntry = UpdateFileEntry( szPath ) )
+		{
 			return pEntry->GetStats( pStats, szPath );
+		}
 	}
 	else
+	{
 		return GetWinFileStats( pStats, szPath );
+	}
 	//
 	return false;
 }
@@ -386,7 +426,9 @@ void CWinVFS::GetAllFileNames( std::vector<std::string> *pFileNames, const std::
 			NFile::EnumerateFiles( szBasePath + rszFolder, "*.*", adder, true );
 			// all files checked only then getallfiles called with empty start folder name!
 			if ( rszFolder.empty() )
+			{
 				bAllWinFilesChecked = true;
+			}
 		}
 	}
 	//
@@ -396,7 +438,9 @@ void CWinVFS::GetAllFileNames( std::vector<std::string> *pFileNames, const std::
 	for ( CStreamEntriesMap::const_iterator it = streamEntriesMap.begin(); it != streamEntriesMap.end(); ++it )
 	{
 		if ( folderPath.empty() )
+		{
 			pFileNames->push_back( it->first );
+		}
 		else if ( it->first.size() > folderPath.size() &&
 		          NFile::ComparePathEq( 0, folderPath.size(), folderPath, 0, folderPath.size(), it->first ) != false )
 		{
@@ -425,7 +469,9 @@ std::string CWinFileCreator::GetFullPath( const std::string &_szPath ) const
 	// Resolve existing parents even for a new file, avoiding a second "custom"
 	// beside "Custom" on Linux. Absolute paths must not be appended to the root.
 	if ( NFile::ResolveDataPathCase( &realPath, path.root_path().u8string(), path.relative_path().u8string(), true ) )
+	{
 		fullPath = path.root_path().u8string() + realPath;
+	}
 	return fullPath;
 }
 
@@ -443,11 +489,15 @@ CDataStream *CWinFileCreator::CreateFile( const std::string &_szPath )
 {
 	const std::string szFullFilePath = GetFullPath( _szPath );
 	if ( IsForeignDrivePath( szFullFilePath ) || !NFile::CreatePath( NFile::GetFilePath( szFullFilePath ) ) )
+	{
 		return nullptr;
+	}
 	//
 	CDataStream *pRes = OpenWinFileDirect( szFullFilePath, false );
 	if ( !pRes )
+	{
 		return 0;
+	}
 	pRes->Trunc();
 	return pRes;
 }
@@ -456,7 +506,9 @@ bool CWinFileCreator::RemoveFile( const std::string &_szPath )
 {
 	const std::string szFullFilePath = GetFullPath( _szPath );
 	if ( IsForeignDrivePath( szFullFilePath ) )
+	{
 		return false;
+	}
 	//
 	// remove reports false both when the file was not there and when it could not be
 	// removed, which is what DeleteFile returning FALSE meant to this caller.
@@ -476,20 +528,30 @@ bool WriteFile( IFileCreator *pCreator, const std::string &path, const CDataStre
 	const auto Fail = [&]( const std::string &reason )
 	{
 		if ( pError )
+		{
 			*pError = destination + "\n" + reason;
+		}
 		return false;
 	};
 	if ( pError )
+	{
 		pError->clear();
+	}
 	if ( !pCreator || !data.IsOk() )
+	{
 		return Fail( "No writable storage or serialization failed." );
+	}
 	if ( IsForeignDrivePath( destination ) )
+	{
 		return Fail( "This Windows drive path is unavailable on this platform. Reopen the mod from its local folder." );
+	}
 	if ( !dynamic_cast<CWinFileCreator *>( pCreator ) )
 	{
 		CFileStream stream( pCreator, path );
 		if ( !stream.IsOk() )
+		{
 			return Fail( "Cannot open the output stream." );
+		}
 		stream.Write( data.GetBuffer(), data.GetSize() );
 		stream.Flush();
 		return stream.IsOk() || Fail( "Writing the output stream failed." );
@@ -503,7 +565,9 @@ bool WriteFile( IFileCreator *pCreator, const std::string &path, const CDataStre
 		auto target = std::filesystem::u8path( destination );
 		// Preserve the old writer's behaviour for symlinked data files.
 		if ( std::filesystem::is_symlink( target, ec ) )
+		{
 			target = std::filesystem::canonical( target );
+		}
 		if ( std::filesystem::exists( target ) )
 		{
 			// Replacement must still respect a read-only destination, just as
@@ -514,19 +578,25 @@ bool WriteFile( IFileCreator *pCreator, const std::string &path, const CDataStre
 			writable.close();
 		}
 		if ( !target.parent_path().empty() )
+		{
 			std::filesystem::create_directories( target.parent_path() );
+		}
 		temporary = target;
 		temporary += "." + boost::uuids::to_string( boost::uuids::random_generator()() ) + ".tmp";
 		std::ofstream output;
 		output.exceptions( std::ios::badbit | std::ios::failbit );
 		output.open( temporary, std::ios::binary | std::ios::trunc );
 		if ( data.GetSize() )
+		{
 			output.write( reinterpret_cast<const char *>( data.GetBuffer() ), data.GetSize() );
+		}
 		output.flush();
 		output.close();
 		const auto status = std::filesystem::status( target, ec );
 		if ( !ec && std::filesystem::exists( status ) )
+		{
 			std::filesystem::permissions( temporary, status.permissions() );
+		}
 		std::filesystem::rename( temporary, target );
 		return true;
 	}
@@ -537,7 +607,9 @@ bool WriteFile( IFileCreator *pCreator, const std::string &path, const CDataStre
 				std::string( error.what() ) + ( code ? "\n" + std::generic_category().message( code ) : "" );
 		std::error_code ignored;
 		if ( !temporary.empty() )
+		{
 			std::filesystem::remove( temporary, ignored );
+		}
 		return Fail( reason );
 	}
 }

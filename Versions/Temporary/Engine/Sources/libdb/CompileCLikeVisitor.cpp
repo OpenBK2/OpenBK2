@@ -88,7 +88,9 @@ void CVisitor::Visit( NLang::CBaseTypeNode *pBaseTypeNode )
 	pCreatedType = 0;
 
 	if ( nodes2TypeDefs.find( pBaseTypeNode ) != nodes2TypeDefs.end() )
+	{
 		pCreatedType = nodes2TypeDefs[pBaseTypeNode];
+	}
 	else
 	{
 		std::unordered_map<std::string, SSimpleType>::iterator iter = simpleTypes.find( pBaseTypeNode->GetName() );
@@ -115,8 +117,10 @@ void CVisitor::ParseImportantStructBaseAttr( NDb::NTypeDef::STypeStructBase *pSt
 				pClass->nClassTypeID = nTypeID;
 			}
 			else
+			{
 				NErrors::ShowWarningNoLine(
 						fmt::format( "warning: attribute \"typeID\" in struct {} found, skipping", pStruct->szTypeName ) );
+			}
 
 			attr.erase( "typeID" );
 			attr.erase( "comments" );
@@ -125,16 +129,22 @@ void CVisitor::ParseImportantStructBaseAttr( NDb::NTypeDef::STypeStructBase *pSt
 		attr.erase( "noKey" );
 
 		if ( attr.empty() )
+		{
 			pStruct->pAttributes = 0;
+		}
 	}
 }
 
 void CVisitor::Visit( NLang::CComplexTypeNode *pComplexTypeNode )
 {
 	if ( pComplexTypeNode->IsForward() )
+	{
 		pComplexTypeNode->GetRealType()->Visit( this );
+	}
 	else if ( nodes2TypeDefs.find( pComplexTypeNode ) != nodes2TypeDefs.end() )
+	{
 		pCreatedType = nodes2TypeDefs[pComplexTypeNode];
+	}
 	else
 	{
 		CPtr<NDb::NTypeDef::STypeStructBase> pStruct;
@@ -142,42 +152,58 @@ void CVisitor::Visit( NLang::CComplexTypeNode *pComplexTypeNode )
 		{
 			pStruct = new NDb::NTypeDef::STypeClass( pComplexTypeNode->GetName() );
 			if ( pStruct->szTypeName[0] == 'S' )
+			{
 				pStruct->szTypeName[0] = 'C';
+			}
 
 			if ( pStruct->szTypeName[0] != 'C' )
+			{
 				NErrors::ShowWarningNoLine( fmt::format( "{}({}) warning: wrong class {}, prefix \"C\" expected",
 				                                         pComplexTypeNode->GetFile(),
 				                                         pComplexTypeNode->GetLine(),
 				                                         pStruct->szTypeName ) );
+			}
 			else if ( pStruct->szTypeName.size() == 1 )
+			{
 				NErrors::ShowWarningNoLine(
 						fmt::format( "{}({}) warning: wrong class {} name, no symbols after standart prefix",
 				                 pComplexTypeNode->GetFile(),
 				                 pComplexTypeNode->GetLine(),
 				                 pStruct->szTypeName ) );
+			}
 			else
+			{
 				pStruct->szTypeName.erase( 0, 1 );
+			}
 		}
 		else
 		{
 			pStruct = new NDb::NTypeDef::STypeStruct( pComplexTypeNode->GetName() );
 
 			if ( pStruct->szTypeName[0] == 'C' )
+			{
 				pStruct->szTypeName[0] = 'S';
+			}
 
 			if ( pStruct->szTypeName[0] != 'S' )
+			{
 				NErrors::ShowWarningNoLine( fmt::format( "{}({}) warning: wrong struct {}, prefix \"S\" expected",
 				                                         pComplexTypeNode->GetFile(),
 				                                         pComplexTypeNode->GetLine(),
 				                                         pStruct->szTypeName.c_str() ) );
+			}
 			else if ( pStruct->szTypeName.size() == 1 )
+			{
 				NErrors::ShowWarningNoLine(
 						fmt::format( "{}({}) warning: wrong struct {} name, no symbols after standart prefix",
 				                 pComplexTypeNode->GetFile(),
 				                 pComplexTypeNode->GetLine(),
 				                 pStruct->szTypeName.c_str() ) );
+			}
 			else
+			{
 				pStruct->szTypeName.erase( 0, 1 );
+			}
 		}
 
 		pCreatedType = pStruct;
@@ -281,7 +307,9 @@ void CVisitor::Visit( NLang::CTypeDefNode *pTypeDefNode )
 			NI_ASSERT( pCreatedTypeDef->pRealType != 0, "NULL type" );
 			pTypedef->pRealType = pCreatedTypeDef->pRealType;
 			if ( pCreatedTypeDef->pAttributes )
+			{
 				pTypedef->pAttributes = new NDb::NTypeDef::SAttributes( pCreatedTypeDef->pAttributes->attributes );
+			}
 		}
 		else
 		{
@@ -292,7 +320,9 @@ void CVisitor::Visit( NLang::CTypeDefNode *pTypeDefNode )
 		if ( pTypeDefNode->AttrBegin() != pTypeDefNode->AttrEnd() )
 		{
 			if ( pTypedef->pAttributes == 0 )
+			{
 				pTypedef->pAttributes = new NDb::NTypeDef::SAttributes();
+			}
 			FillAttributes( pTypedef->pAttributes, pTypeDefNode->AttrBegin(), pTypeDefNode->AttrEnd() );
 		}
 
@@ -300,13 +330,17 @@ void CVisitor::Visit( NLang::CTypeDefNode *pTypeDefNode )
 		{
 			CPtr<NDb::NTypeDef::STypeBinary> pBinaryType = new NDb::NTypeDef::STypeBinary( pTypedef->GetTypeName() );
 			if ( pTypedef->pAttributes )
+			{
 				pBinaryType->pAttributes = new NDb::NTypeDef::SAttributes( pTypedef->pAttributes->attributes );
+			}
 
 			if ( pBinaryType->pAttributes != 0 )
 			{
 				std::map<std::string, CVariant> &attr = pTypedef->pAttributes->attributes;
 				if ( attr.find( "numBytes" ) != attr.end() )
+				{
 					pBinaryType->nBinaryObjectSize = attr["numBytes"];
+				}
 
 				attr.erase( "numBytes" );
 			}
@@ -334,27 +368,37 @@ void CVisitor::Visit( NLang::CEnumEntryNode *pEnumEntryNode )
 void CVisitor::Visit( NLang::CEnumNode *pEnumNode )
 {
 	if ( pEnumNode->IsForward() )
+	{
 		pEnumNode->GetRealType()->Visit( this );
+	}
 	else
 	{
 		pCreatedType = 0;
 		if ( nodes2TypeDefs.find( pEnumNode ) != nodes2TypeDefs.end() )
+		{
 			pCreatedType = nodes2TypeDefs[pEnumNode];
+		}
 		else
 		{
 			CPtr<NDb::NTypeDef::STypeEnum> pTypeEnum = new NDb::NTypeDef::STypeEnum( pEnumNode->GetName() );
 			if ( pTypeEnum->szTypeName[0] != 'E' )
+			{
 				NErrors::ShowWarningNoLine( fmt::format( "{}({}) warning: wrong enum {}, prefix \"E\" expected",
 				                                         pEnumNode->GetFile(),
 				                                         pEnumNode->GetLine(),
 				                                         pTypeEnum->szTypeName ) );
+			}
 			else if ( pTypeEnum->szTypeName.size() == 1 )
+			{
 				NErrors::ShowWarningNoLine( fmt::format( "{}({}) warning: wrong enum {} name, no symbols after standart prefix",
 				                                         pEnumNode->GetFile(),
 				                                         pEnumNode->GetLine(),
 				                                         pTypeEnum->szTypeName ) );
+			}
 			else
+			{
 				pTypeEnum->szTypeName.erase( 0, 1 );
+			}
 
 			pCreatedType = pTypeEnum;
 			nodes2TypeDefs[pEnumNode] = pCreatedType;
@@ -388,7 +432,9 @@ static void ParseImportantFieldAttr( NDb::NTypeDef::STypeStructBase::SField *pFi
 		}
 
 		if ( attr.empty() )
+		{
 			pField->pAttributes = 0;
+		}
 	}
 }
 
@@ -407,9 +453,13 @@ void CVisitor::VisitVariable( NLang::CVariable *pVariableNode, const bool bArray
 		if ( pTypeDefCreated->pAttributes )
 		{
 			if ( bArray )
+			{
 				pFromFieldTypeDefAttr = new NDb::NTypeDef::SAttributes( pTypeDefCreated->pAttributes->attributes );
+			}
 			else
+			{
 				field.pAttributes = new NDb::NTypeDef::SAttributes( pTypeDefCreated->pAttributes->attributes );
+			}
 		}
 	}
 	else
@@ -427,21 +477,29 @@ void CVisitor::VisitVariable( NLang::CVariable *pVariableNode, const bool bArray
 			field.pType = pRefType;
 		}
 		else
+		{
 			field.pType = classes2Refs[field.pType];
+		}
 	}
 
 	if ( pVariableNode->AttrBegin() != pVariableNode->AttrEnd() )
 	{
 		if ( !field.pAttributes )
+		{
 			field.pAttributes = new NDb::NTypeDef::SAttributes();
+		}
 		FillAttributes( field.pAttributes, pVariableNode->AttrBegin(), pVariableNode->AttrEnd() );
 	}
 
 	if ( pVariableNode->HasDefault() )
+	{
 		field.defaultValue = Val2Variant( pVariableNode->GetDefault() );
+	}
 
 	if ( pVariableNode->HasComplexDefault() )
+	{
 		field.complexDefaultValue = CVariant( pVariableNode->GetComplexDefault() );
+	}
 
 	ParseImportantFieldAttr( &field );
 }
@@ -480,8 +538,10 @@ void CVisitor::Visit( NLang::CVectorNode *pVectorNode )
 	field.pType = pArrayType;
 
 	if ( pVectorNode->GetMinAmount() != 0 || pVectorNode->GetMaxAmount() != -1 )
+	{
 		field.constraints.push_back(
 				new NDb::NTypeDef::SConstraintsArrayMinMax( pVectorNode->GetMinAmount(), pVectorNode->GetMaxAmount() ) );
+	}
 
 	nodes2TypeDefs[pVectorNode] = field.pType;
 }
@@ -510,7 +570,9 @@ void CVisitor::NamespaceNodeVisited( NLang::CLangNode *pNode, NDb::NTypeDef::STy
 		pUpperType->nestedTypes.push_back( pCreatedType.GetPtr() );
 	}
 	else if ( CDynamicCast<NLang::CEnumNode> pEnumNode = pNode )
+	{
 		pUpperType->nestedTypes.push_back( pCreatedType.GetPtr() );
+	}
 	else if ( CDynamicCast<NLang::CVariable> pVariableNode = pNode )
 	{
 		// Binary chunk ids. A field marked [chunkID = N] gets N, which is how a
@@ -579,7 +641,9 @@ void CVisitor::NamespaceNodeVisited( NLang::CLangNode *pNode, NDb::NTypeDef::STy
 void CVisitor::Visit( NLang::CNamespace *pNM )
 {
 	if ( namespaces.empty() )
+	{
 		namespaces.push_back( new NDb::NTypeDef::STypeStruct() );
+	}
 	NDb::NTypeDef::STypeStructBase *pUpperType = namespaces.back();
 
 	if ( namespaces.size() == 1 )

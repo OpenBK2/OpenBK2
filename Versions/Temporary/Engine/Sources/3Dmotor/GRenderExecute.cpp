@@ -17,23 +17,41 @@ struct SCompareOps
 	bool operator()( const CRenderCmdList::SOperation *pA, const CRenderCmdList::SOperation *pB )
 	{
 		if ( pA->nPass != pB->nPass )
+		{
 			return pA->nPass < pB->nPass;
+		}
 		if ( pA->nDestRegister != pB->nDestRegister )
+		{
 			return pA->nDestRegister < pB->nDestRegister;
+		}
 		if ( pA->op != pB->op )
+		{
 			return pA->op < pB->op;
+		}
 		if ( pA->nStencilBlendMode != pB->nStencilBlendMode )
+		{
 			return pA->nStencilBlendMode < pB->nStencilBlendMode;
+		}
 		if ( pA->p1.pVec3 != pB->p1.pVec3 )
+		{
 			return pA->p1.pVec3 < pB->p1.pVec3;
+		}
 		if ( pA->p2.pVec3 != pB->p2.pVec3 )
+		{
 			return pA->p2.pVec3 < pB->p2.pVec3;
+		}
 		if ( pA->p3.pVec3 != pB->p3.pVec3 )
+		{
 			return pA->p3.pVec3 < pB->p3.pVec3;
+		}
 		if ( pA->nPartPriority != pB->nPartPriority )
+		{
 			return pA->nPartPriority < pB->nPartPriority;
+		}
 		if ( pA->pFrag != pB->pFrag )
+		{
 			return pA->pFrag < pB->pFrag;
+		}
 		//ASSERT(0);
 		return false;
 	}
@@ -50,11 +68,15 @@ static void InitGeomDepths( NGfx::CRenderContext *pRC, const CSceneFragments &sc
 {
 	int nGeometries = scene.GetGeometriesNum();
 	if ( geomDepths.size() < nGeometries )
+	{
 		geomDepths.resize( nGeometries );
+	}
 	CVec4 vW = pRC->GetTransform().forward.w();
 	CVec3 wDir( vW.x, vW.y, vW.z );
 	for ( int k = 0; k < nGeometries; ++k )
+	{
 		geomDepths[k] = scene.GetStaticInfo( k ).bv.s.ptCenter * wDir;
+	}
 }
 
 static void AddTriangles( NGfx::CRenderContext *pRC,
@@ -66,14 +88,18 @@ static void AddTriangles( NGfx::CRenderContext *pRC,
 	int nElements = fragment.elements.size();
 	indices.resize( nElements );
 	for ( int k = 0; k < nElements; ++k )
+	{
 		indices[k] = k;
+	}
 	std::sort( indices.begin(), indices.end(), SDepthCompare( fragment.elements ) );
 	for ( int k = 0; k < nElements; ++k )
 	{
 		const SRenderFragmentInfo::SElement &element = fragment.elements[indices[k]];
 		EFragmentsSplit filter = scene.GetGeometryFlags( element.nGeometry );
 		if ( filter == FST_REJECT )
+		{
 			continue;
+		}
 		SRenderGeometryInfo *pGeometryInfo = scene.GetGeometryInfo( element.nGeometry );
 		pGeometryInfo->pTriLists[triListType].Refresh();
 		pGeometryInfo->pVertices.Refresh();
@@ -82,7 +108,9 @@ static void AddTriangles( NGfx::CRenderContext *pRC,
 		int nBase = element.nBlock * 32;
 		int nFlags = element.nFlags;
 		if ( filter == FST_SPLIT )
+		{
 			nFlags &= scene.GetGeometryParts( element.nGeometry ).GetBlock( element.nBlock );
+		}
 		pRC->AddPrimitive(
 				pGeometryInfo->pVertices->GetValue(), &tris[0] + nBase, (std::min)( 32, int( tris.size() - nBase ) ), nFlags );
 	}
@@ -117,9 +145,13 @@ static ETrilistType
 ExecuteRenderOp( NGfx::CRenderContext *pRC, const CRenderCmdList::SOperation &op, const SLightInfo &lightInfo )
 {
 	if ( pRC->HasRegisters() )
+	{
 		pRC->SetRegister( op.nDestRegister );
+	}
 	else
+	{
 		ASSERT( op.nDestRegister == 0 );
+	}
 
 	// set fog
 	switch ( op.nStencilBlendMode & FOG_MASK )
@@ -241,17 +273,27 @@ ExecuteRenderOp( NGfx::CRenderContext *pRC, const CRenderCmdList::SOperation &op
 				// TnL path
 			case RO_TNL_LIT_TEXTURE:
 				if ( op.p1.pFastInfo->pTexture2 )
+				{
 					pRC->SetPixelShader( psTnLLitTexture2 );
+				}
 				else
+				{
 					pRC->SetPixelShader( psTnLLitTexture );
+				}
 				if ( op.p1.pFastInfo->bPreferPerVertexTransp )
+				{
 					pRC->SetVertexShader( NGfx::TNLVS_VERTEX_COLOR_AND_ALPHA );
+				}
 				else
+				{
 					pRC->SetVertexShader( NGfx::TNLVS_VERTEX_COLOR );
+				}
 				pRC->SetTnlVertexColor( op.p1.pFastInfo->vColor );
 				pRC->SetTexture( 0, op.p1.pFastInfo->pTexture, NGfx::FILTER_BEST );
 				if ( op.p1.pFastInfo->pTexture2 )
+				{
 					pRC->SetTexture( 1, op.p1.pFastInfo->pTexture2, NGfx::FILTER_BEST );
+				}
 				pRC->SetAlphaRef( op.p1.pFastInfo->nAlphaTest );
 				break;
 			case RO_TNL_SOLID_COLOR:
@@ -312,9 +354,13 @@ ExecuteRenderOp( NGfx::CRenderContext *pRC, const CRenderCmdList::SOperation &op
 				break;
 			case RO_DIR_DEPTH:
 				if ( op.nStencilBlendMode & SHADOW_CULL_CCW )
+				{
 					pRC->SetCulling( NGfx::CULL_CCW );
+				}
 				else
+				{
 					pRC->SetCulling( NGfx::CULL_CW );
+				}
 
 				pRC->SetPixelShader( psDiffuse );
 				pRC->SetVertexShader( bNewShadows ? vsDepthLP : vsDepth );
@@ -377,7 +423,9 @@ ExecuteRenderOp( NGfx::CRenderContext *pRC, const CRenderCmdList::SOperation &op
 					pRC->SetPSConst( 10, *op.p2.pVec3 );
 				}
 				else
+				{
 					pRC->SetPixelShader( psCLSkyLight3 );
+				}
 				pRC->SetVertexShader( vsCLSkyLight3 );
 				pRC->SetVSConst( 16, op.p1.pSkyDepth3->channels[0]->vDepth + CVec4( 0, 0, 0, 1.0f / 255 ) );
 				pRC->SetVSConst( 17, op.p1.pSkyDepth3->channels[0]->vVecU );
@@ -453,13 +501,17 @@ static void ExecOps( NGfx::CRenderContext *pRC,
                      const SLightInfo &lightInfo )
 {
 	if ( ops.empty() )
+	{
 		return;
+	}
 
 	InitGeomDepths( pRC, scene );
 
 	std::vector<const CRenderCmdList::SOperation *> renderThem;
 	for ( std::vector<CRenderCmdList::SOperation>::const_iterator i = ops.begin(); i != ops.end(); ++i )
+	{
 		renderThem.push_back( &( *i ) );
+	}
 
 	sort( renderThem.begin(), renderThem.end(), SCompareOps() );
 	//renderThem.sort( SCompareOps() );
@@ -472,7 +524,9 @@ static void ExecOps( NGfx::CRenderContext *pRC,
 	{
 		const CRenderCmdList::SOperation &op = *( *i );
 		if ( op.op == RO_NOP )
+		{
 			continue;
+		}
 		if ( pPrevOp )
 		{
 			if ( op.IsSame( *pPrevOp ) )
@@ -481,7 +535,9 @@ static void ExecOps( NGfx::CRenderContext *pRC,
 				continue;
 			}
 			else
+			{
 				pRC->Flush();
+			}
 		}
 		pPrevOp = &op;
 
@@ -489,11 +545,15 @@ static void ExecOps( NGfx::CRenderContext *pRC,
 
 		// prevent TLT_POSITION from being used to reduce memory usage
 		if ( bLowRAM )
+		{
 			triListType = TLT_GEOM;
+		}
 		AddTriangles( pRC, *op.pFrag, scene, triListType );
 	}
 	if ( pPrevOp )
+	{
 		pRC->Flush();
+	}
 }
 
 void Execute( IRender *pRender,

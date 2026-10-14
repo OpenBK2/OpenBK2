@@ -30,9 +30,13 @@ void DrawWhiteCross( const CVec3 &vPoint )
 void CPathFractionArcLine3D::GetSimplePath( CPathList *pPaths )
 {
 	if ( pArc )
+	{
 		pPaths->push_back( pArc.GetPtr() );
+	}
 	if ( pLine )
+	{
 		pPaths->push_back( pLine.GetPtr() );
+	}
 }
 
 CPathFractionArc3D *CPathFractionArcLine3D::GetArc()
@@ -74,9 +78,13 @@ void CPathFractionArcLine3D::Init( const CVec3 &x0,
 	if ( fabs( v0 - vDir ) > 0.05f ) // the circle is needed
 	{
 		if ( TryCircle( x0, v0, x1, fR, 1, &vT1 ) )
+		{
 			pArc1 = pArc;
+		}
 		if ( TryCircle( x0, v0, x1, fR, -1, &vT2 ) )
+		{
 			pArc2 = pArc;
+		}
 	}
 
 	if ( !pArc1 && !pArc2 )
@@ -105,7 +113,9 @@ void CPathFractionArcLine3D::Init( const CVec3 &x0,
 	}
 
 	if ( pArc && pLine->GetLength() < 10 )
+	{
 		pLine = 0;
+	}
 }
 
 bool CPathFractionArcLine3D::TryCircle(
@@ -132,7 +142,9 @@ bool CPathFractionArcLine3D::TryCircle(
 			return true;
 		}
 		else
+		{
 			k.z = 1;
+		}
 	}
 
 	Normalize( &k );
@@ -157,7 +169,9 @@ bool CPathFractionArcLine3D::TryCircle(
 		CVec2 t1t, t2t; // tangent points to find (in new coordinate system)
 		const bool bFound = FindTangentPoints( x1t, circle, &t1t, &t2t );
 		if ( !bFound )
+		{
 			return false;
+		}
 		// choose needed tangent point
 
 		const CVec2 vR1t( t1t - circle.center ); // transformed radius to tangent point 1

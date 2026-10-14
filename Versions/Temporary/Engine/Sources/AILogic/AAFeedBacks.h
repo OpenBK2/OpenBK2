@@ -13,7 +13,9 @@ public:
 	int operator&( IBinSaver &f )
 	{
 		if ( !f.IsChecksum() )
+		{
 			f.Add( 2, &feedbacks );
+		}
 		return 0;
 	}
 

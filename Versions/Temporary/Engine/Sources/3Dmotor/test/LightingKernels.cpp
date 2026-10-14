@@ -63,9 +63,13 @@ std::vector<SKernelSet> Candidates()
 {
 	std::vector<SKernelSet> sets;
 	if ( NGScene::IsSSE2Present() )
+	{
 		sets.push_back( { "sse2", &NGScene::sse2LightingKernels } );
+	}
 	if ( NGScene::IsAVX2Present() )
+	{
 		sets.push_back( { "avx2", &NGScene::avx2LightingKernels } );
+	}
 	return sets;
 }
 
@@ -96,7 +100,9 @@ std::vector<NGfx::SCompactVector> RandomNormals( int n )
 {
 	std::vector<NGfx::SCompactVector> v( n );
 	for ( int k = 0; k < n; ++k )
+	{
 		v[k].dw = random_uint32();
+	}
 	return v;
 }
 
@@ -136,7 +142,9 @@ TEST( LightingKernels, SampleWarFogCoords )
 		{
 			std::vector<CVec3> pos( n );
 			for ( int k = 0; k < n; ++k )
+			{
 				pos[k] = CVec3( random_float(), random_float(), random_float() );
+			}
 			const float fScale = random_float();
 
 			std::vector<int> ref( n * 2, 0 ), got( n * 2, 0 );
@@ -160,10 +168,14 @@ TEST( LightingKernels, SampleWarFogInt )
 		{
 			std::vector<unsigned char> fog( fogSize * fogSize );
 			for ( size_t k = 0; k < fog.size(); ++k )
+			{
 				fog[k] = random_uint8();
+			}
 			std::vector<int> coords( n * 2 );
 			for ( int k = 0; k < n * 2; ++k )
+			{
 				coords[k] = static_cast<int>( random_uint32() & 0x000fffff );
+			}
 
 			std::vector<unsigned char> ref( n, 0 ), got( n, 0 );
 			Ref().pSampleWarFogInt( &coords[0], &fog[0], fogSize, &ref[0], n );
@@ -190,7 +202,9 @@ TEST( LightingKernels, CalcPointLightAttenuation )
 		{
 			std::vector<CVec3> pos( n );
 			for ( int k = 0; k < n; ++k )
+			{
 				pos[k] = CVec3( random_float(), random_float(), random_float() );
+			}
 			const CVec3 vCenter( random_float(), random_float(), random_float() );
 			const float fRadius = 1.0f + fabsf( random_float() ) * 8.0f;
 
@@ -206,7 +220,9 @@ TEST( LightingKernels, CalcPointLightAttenuation )
 				{
 					const int d = abs( v[c] - g[c] );
 					if ( d > nWorst )
+					{
 						nWorst = d;
+					}
 					// rcp and rsqrt are each accurate to about 1.5 * 2^-12 relative, and
 					// the result is scaled by N_PL_ATTENUATION_SCALE before it is packed
 					// into a short, so the absolute error grows with the value. Allow
@@ -242,7 +258,9 @@ TEST( LightingKernels, CalcPointLightColorsIndexed )
 
 			std::vector<NGfx::SMMXWord> ref( n ), got( n );
 			for ( int k = 0; k < n; ++k )
+			{
 				ref[k] = got[k] = RandomWord(); // the kernels accumulate into pRes
+			}
 
 			Ref().pCalcPointLightColorsIndexed( &ref[0], &attenuation[0], &posIndices[0], &normals[0], n, lightColor );
 			set.pKernels->pCalcPointLightColorsIndexed(
@@ -270,7 +288,9 @@ TEST( LightingKernels, CalcPointLightColorsUniform )
 
 			std::vector<NGfx::SMMXWord> ref( n ), got( n );
 			for ( int k = 0; k < n; ++k )
+			{
 				ref[k] = got[k] = RandomWord();
+			}
 
 			const int nStride = sizeof( NGfx::SCompactVector );
 			Ref().pCalcPointLightColorsUniform( &ref[0], attenuation, &normals[0], nStride, n, lightColor );
@@ -329,7 +349,9 @@ TEST( LightingKernels, ScaleColors )
 					posIndices[k] = static_cast<uint16_t>( random_uint32() );
 				}
 				for ( int k = 0; k < 256; ++k )
+				{
 					scale[k] = random_uint8();
+				}
 
 				std::vector<uint32_t> ref( n, 0 ), got( n, 0 );
 				const int nStride = sizeof( uint32_t );

@@ -644,9 +644,13 @@ public:
 		for ( int nAnimSpeedIndex = -10; nAnimSpeedIndex <= 10; ++nAnimSpeedIndex )
 		{
 			if ( nAnimSpeedIndex > 0 )
+			{
 				speeds.push_back( fmt::format( "+{}", nAnimSpeedIndex ) );
+			}
 			else
+			{
 				speeds.push_back( std::to_string( nAnimSpeedIndex ) );
+			}
 		}
 		NWxEditParameter::WriteChoice( pSpeedCombo, speeds, 10, true, true );
 		return true;

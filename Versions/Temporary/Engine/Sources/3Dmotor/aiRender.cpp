@@ -93,7 +93,9 @@ void CFastRenderer::GetPoints( std::vector<CVec3> *pEnters, std::vector<CVec3> *
 	for ( int y = 0; y < resGrid.GetSizeY(); ++y )
 	{
 		for ( int x = 0; x < resGrid.GetSizeX(); ++x )
+		{
 			GetPoints( pEnters, pExits, x, y );
+		}
 	}
 }
 
@@ -118,7 +120,9 @@ void CFastRenderer::CalcDistMul()
 		}
 	}
 	else
+	{
 		distMult.FillEvery( 1 );
+	}
 }
 
 void CFastRenderer::Init( const CTransformStack &transformStack, int nHalfSize )
@@ -268,7 +272,9 @@ void CFastRenderer::RealTraceEntity( const SConvexHull &e )
 	if ( bPerspective )
 	{
 		if ( e.points.size() > projected.size() )
+		{
 			projected.resize( e.points.size() );
+		}
 		//projectedP.resize( e.points.size() );
 		SHMatrix xform;
 		Multiply( &xform, transform, e.trans );
@@ -290,21 +296,31 @@ void CFastRenderer::RealTraceEntity( const SConvexHull &e )
 			{
 				SProjectedPoint &dst = projected[i];
 				if ( dst.res.x < vMiddle.x )
+				{
 					dst.res.x -= 1.0f;
+				}
 				else
+				{
 					dst.res.x += 1.0f;
+				}
 
 				if ( dst.res.y < vMiddle.y )
+				{
 					dst.res.y -= 1.0f;
+				}
 				else
+				{
 					dst.res.y += 1.0f;
+				}
 			}
 		}
 	}
 	else
 	{
 		if ( e.points.size() > flatProjected.size() )
+		{
 			flatProjected.resize( e.points.size() );
+		}
 		//projected.resize( e.points.size() );
 		SHMatrix xform;
 		Multiply( &xform, transform, e.trans );
@@ -333,22 +349,32 @@ void CFastRenderer::RealTraceEntity( const SConvexHull &e )
 			i2 = edges[t.i1 & 0x7fff].wFinish;
 		}
 		if ( t.i2 & 0x8000 )
+		{
 			i3 = edges[t.i2 & 0x7fff].wStart;
+		}
 		else
+		{
 			i3 = edges[t.i2 & 0x7fff].wFinish;
+		}
 		//
 		if ( bPerspective )
 		{
 			if ( ( projected[i3].res.y - projected[i1].res.y ) * ( projected[i2].res.x - projected[i1].res.x ) >
 			     ( projected[i2].res.y - projected[i1].res.y ) * ( projected[i3].res.x - projected[i1].res.x ) )
+			{
 				Raster( projected[i1], projected[i3], projected[i2] );
+			}
 		}
 		else
 		{
 			if ( bUseInvertOrder )
+			{
 				RasterNoClip( flatProjected[i1], flatProjected[i2], flatProjected[i3] );
+			}
 			else
+			{
 				RasterNoClip( flatProjected[i1], flatProjected[i3], flatProjected[i2] );
+			}
 		}
 	}
 }
@@ -457,14 +483,18 @@ void CFastRenderer::ConvertResults( bool bTerrain )
 static bool WalkChain( CFastRenderer::SResult **p )
 {
 	if ( !*p )
+	{
 		return false;
+	}
 	bool bRet = false;
 	for ( ;; )
 	{
 		CFastRenderer::SResult *pCur = *p;
 		CFastRenderer::SResult *pTest = pCur->pNext;
 		if ( !pTest )
+		{
 			break;
+		}
 		if ( pCur->fEnter > pTest->fEnter )
 		{
 			pCur->pNext = pTest->pNext;
@@ -499,7 +529,9 @@ void CFastRenderer::ReduceTerrain()
 			for ( CFastRenderer::SResult *p = resGrid[y][x]; p; p = p->pNext )
 			{
 				if ( p->pObject == 0 ) // terrain
+				{
 					p->fEnter = p->fExit - 0.01f;
+				}
 			}
 		}
 	}
@@ -513,7 +545,9 @@ void CFastRenderer::TraceEntity( const SConvexHull &e, bool bTerrain )
 	ASSERT( bTerrain || e.tris.bClosed );
 	RealTraceEntity( e );
 	if ( objectStart == TPool::SIterator( &res ) )
+	{
 		int aaa = 0;
+	}
 }
 
 }

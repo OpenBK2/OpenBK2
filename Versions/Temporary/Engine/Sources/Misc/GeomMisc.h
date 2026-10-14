@@ -130,7 +130,9 @@ void BresenhamCircle( int nCenterX, int nCenterY, int nRadius, TFunctional &func
 	do
 	{
 		if ( d < 0 )
+		{
 			d += 4 * x + 6;
+		}
 		else
 		{
 			d += 4 * ( x - y ) + 10;
@@ -165,7 +167,9 @@ void BresenhamFilledCircle( int nCenterX, int nCenterY, int nRadius, TFunctional
 	do
 	{
 		if ( d < 0 )
+		{
 			d += 4 * x + 6;
+		}
 		else
 		{
 			d += 4 * ( x - y ) + 10;
@@ -217,7 +221,9 @@ void BresenhamEllipse( int nCenterX, int nCenterY, int nXRadius, float fY2XRatio
 	do
 	{
 		if ( d < 0 )
+		{
 			d += 4 * x + 6;
+		}
 		else
 		{
 			d += 4 * ( x - y ) + 10;

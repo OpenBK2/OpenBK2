@@ -191,9 +191,13 @@ void CAIMap::RecreateCircles()
 		do
 		{
 			if ( i % 2 == 0 )
+			{
 				AddLinesEven( vOffset, tiles, mask, nMaxRadius );
+			}
 			else
+			{
 				AddLinesOdd( vOffset, tiles, mask, nMaxRadius );
+			}
 
 			const SVector vPrevOffset = vOffset;
 			do
@@ -212,9 +216,13 @@ std::vector<SVector> &CAIMap::GetTilesForCircle( const float fRadius )
 	const int nDiameter = 2.0f * fRadius / GetTileSize();
 
 	if ( nDiameter >= circleTiles.size() )
+	{
 		return circleTiles[0];
+	}
 	else
+	{
 		return circleTiles[nDiameter];
+	}
 }
 
 bool CAIMap::IsRectOnLockedTiles( const SRect &rect, const EAIClasses aiClass )

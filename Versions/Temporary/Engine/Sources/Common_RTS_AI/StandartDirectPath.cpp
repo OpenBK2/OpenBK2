@@ -6,7 +6,9 @@ void CStandartDirectPath::Init( const std::vector<SVector> &_tiles, const int nT
 	tiles.clear();
 
 	for ( std::vector<SVector>::const_iterator it = _tiles.begin(); it != _tiles.end(); ++it )
+	{
 		tiles.push_back( *it );
+	}
 
 	nCurrentTile = 0;
 	fTileSize = (float)nTileSize;
@@ -22,7 +24,9 @@ void CStandartDirectPath::InsertTiles( const std::list<SVector> &_tiles )
 	tiles.clear();
 
 	for ( std::list<SVector>::const_iterator it = _tiles.begin(); it != _tiles.end(); ++it )
+	{
 		tiles.push_back( *it );
+	}
 
 	nCurrentTile = 0;
 	if ( tiles.size() > 0 )

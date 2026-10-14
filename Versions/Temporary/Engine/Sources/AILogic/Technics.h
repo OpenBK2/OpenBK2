@@ -243,7 +243,9 @@ public:
 	virtual const NTimer::STime GetBehUpdateDuration() const
 	{
 		if ( RPG_TYPE_SPG_AAGUN == GetStats()->etype )
+		{
 			return SConsts::AA_BEH_UPDATE_DURATION;
+		}
 		return SConsts::BEH_UPDATE_DURATION;
 	}
 

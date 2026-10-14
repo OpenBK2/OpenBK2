@@ -19,7 +19,9 @@ bool CMOEntrenchmentPart::CreateSceneObject( const int nUniqueID,
 			( pUpdate != 0 ) ? CVec3( pUpdate->info.center.x, pUpdate->info.center.y, pUpdate->info.z + 5.0f ) : VNULL3;
 
 	if ( pUpdate != 0 )
+	{
 		DeriveTransform( vPos, pUpdate->info.dir ); //Fill cache
+	}
 
 	SetPlacement( vPos, cached.qRot );
 
@@ -76,7 +78,9 @@ void CMOEntrenchmentPart::AIUpdatePlacement( const SAINotifyPlacement &placement
 void CMOEntrenchmentPart::DeriveTransform( const CVec3 &_vPos, const uint16_t _wDir )
 {
 	if ( cached.vPos == _vPos && cached.wDir == _wDir )
+	{
 		return; //Same matrix, no need to recompute
+	}
 
 	SHMatrix mTransform;
 	SHMatrix mShear;
@@ -257,9 +261,13 @@ void CMOEntrenchment::AddPart( CMOEntrenchmentPart *pPart, const bool bLast, con
 					float fEndDiff = fabs2( vCenter2 - vEnd );
 
 					if ( fStartDiff > fEndDiff )
+					{
 						pts[0].Set( vStart.x, vStart.y );
+					}
 					else
+					{
 						pts[0].Set( vEnd.x, vEnd.y );
+					}
 				}
 				else
 				{
@@ -318,7 +326,9 @@ NDb::EUserAction
 CMOEntrenchment::GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const
 {
 	if ( bAltMode && pActionsWith->HasAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN ) )
+	{
 		return NDb::USER_ACTION_MOVE_LIKE_TERRAIN;
+	}
 
 	return CMapObj::GetBestAutoAction( actionsBy, pActionsWith, bAltMode );
 }

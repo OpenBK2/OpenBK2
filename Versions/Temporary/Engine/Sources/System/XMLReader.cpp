@@ -11,10 +11,14 @@ namespace NXml
 static const char *FindNodeStart( const char *p )
 {
 	while ( *p && *p != '<' )
+	{
 		++p;
+	}
 
 	if ( *p )
+	{
 		++p;
+	}
 
 	return p;
 }
@@ -22,10 +26,14 @@ static const char *FindNodeStart( const char *p )
 static const char *FindNodeEnd( const char *p )
 {
 	while ( *p && *p != '>' )
+	{
 		++p;
+	}
 
 	if ( *p )
+	{
 		++p;
+	}
 
 	return p;
 }
@@ -38,7 +46,9 @@ static bool IsWhiteSpace( const char chr )
 static const char *FindNotText( const char *p )
 {
 	while ( *p && !IsWhiteSpace( *p ) && *p != '>' && *p != '/' && *p != '=' && *p != '<' )
+	{
 		++p;
+	}
 
 	return p;
 }
@@ -46,7 +56,9 @@ static const char *FindNotText( const char *p )
 static const char *FindEndOfNodeText( const char *p )
 {
 	while ( *p && *p != '<' )
+	{
 		++p;
+	}
 
 	return p;
 }
@@ -54,7 +66,9 @@ static const char *FindEndOfNodeText( const char *p )
 static const char *SkipWhiteSpace( const char *p )
 {
 	while ( *p != 0 && IsWhiteSpace( *p ) )
+	{
 		++p;
+	}
 	//
 	return p;
 }
@@ -64,13 +78,17 @@ static const char *SkipComments( const char *p )
 	while ( true )
 	{
 		if ( *p != '!' )
+		{
 			return p;
+		}
 
 		++p;
 		while ( true )
 		{
 			if ( !( *p ) || !( *( p + 1 ) ) || !( *( p + 2 ) ) )
+			{
 				break;
+			}
 
 			if ( *p == '-' && *( p + 1 ) == '-' && *( p + 2 ) == '>' )
 			{
@@ -82,7 +100,9 @@ static const char *SkipComments( const char *p )
 		}
 		p = SkipWhiteSpace( p );
 		if ( !( *p ) )
+		{
 			return p;
+		}
 
 		++p;
 	}
@@ -94,10 +114,14 @@ const char *CXmlNode::ParseNodeAttributes( const char *p )
 	{
 		p = SkipWhiteSpace( p );
 		if ( !*p )
+		{
 			return p;
+		}
 
 		if ( *p == '>' || *p == '/' )
+		{
 			return p;
+		}
 
 		SXmlAttribute *pAttr = pPool->attrPool.Alloc();
 
@@ -107,25 +131,37 @@ const char *CXmlNode::ParseNodeAttributes( const char *p )
 
 		p = SkipWhiteSpace( p );
 		if ( !*p || *p != '=' )
+		{
 			return p;
+		}
 
 		++p;
 		p = SkipWhiteSpace( p );
 		if ( *p != '"' )
+		{
 			return p;
+		}
 
 		++p;
 		pAttr->value.pszBegin = p;
 		while ( *p && *p != '"' )
+		{
 			++p;
+		}
 		pAttr->value.nSize = p - pAttr->value.pszBegin;
 		if ( *p )
+		{
 			++p;
+		}
 
 		if ( pAttr->name == HREF_ATTRIBUTE_NAME )
+		{
 			pHRefAttr = pAttr;
+		}
 		if ( pAttr->name == DATA_ATTRIBUTE_NAME )
+		{
 			pHDataAttr = pAttr;
+		}
 
 		attributes.push_back( pAttr );
 	}
@@ -137,7 +173,9 @@ const char *CXmlNode::ParseNodeInternal( const char *p )
 	{
 		p = SkipWhiteSpace( p );
 		if ( !*p )
+		{
 			return p;
+		}
 
 		if ( *p == '<' )
 		{
@@ -188,7 +226,9 @@ const char *CXmlNode::Parse( const char *p, SPool *_pPool )
 	p = SkipComments( p );
 	p = SkipWhiteSpace( p );
 	if ( !*p )
+	{
 		return p;
+	}
 
 	name.pszBegin = p;
 	p = FindNotText( p );
@@ -197,23 +237,31 @@ const char *CXmlNode::Parse( const char *p, SPool *_pPool )
 	p = SkipWhiteSpace( p );
 
 	if ( *p == '>' )
+	{
 		p = ParseNodeInternal( p + 1 );
+	}
 	else if ( *p == '/' )
 	{
 		++p;
 		if ( *p )
+		{
 			++p;
+		}
 	}
 	else
 	{
 		p = ParseNodeAttributes( p );
 		if ( *p == '>' )
+		{
 			p = ParseNodeInternal( p + 1 );
+		}
 		else if ( *p == '/' )
 		{
 			++p;
 			if ( *p )
+			{
 				++p;
+			}
 		}
 	}
 
@@ -223,17 +271,23 @@ const char *CXmlNode::Parse( const char *p, SPool *_pPool )
 const CXmlNode *CXmlNode::FindChild( const char *pszChild ) const
 {
 	if ( nodes.empty() )
+	{
 		return 0;
+	}
 
 	nBestNodeToRead %= nodes.size();
 	if ( nodes[nBestNodeToRead]->GetName() == pszChild )
+	{
 		return nodes[nBestNodeToRead++];
+	}
 
 	const int nMemBestNodeToRead = ++nBestNodeToRead;
 	while ( nBestNodeToRead < nodes.size() )
 	{
 		if ( nodes[nBestNodeToRead]->GetName() == pszChild )
+		{
 			return nodes[nBestNodeToRead++];
+		}
 
 		++nBestNodeToRead;
 	}
@@ -242,7 +296,9 @@ const CXmlNode *CXmlNode::FindChild( const char *pszChild ) const
 	while ( nBestNodeToRead < nMemBestNodeToRead )
 	{
 		if ( nodes[nBestNodeToRead]->GetName() == pszChild )
+		{
 			return nodes[nBestNodeToRead++];
+		}
 
 		++nBestNodeToRead;
 	}
@@ -263,17 +319,23 @@ const SXmlAttribute *CXmlNode::GetDataAttribute() const
 const SXmlAttribute *CXmlNode::GetAttribute( const char *pszAttr ) const
 {
 	if ( attributes.empty() )
+	{
 		return 0;
+	}
 
 	nBestAttrToRead %= attributes.size();
 	if ( attributes[nBestAttrToRead]->name == pszAttr )
+	{
 		return attributes[nBestAttrToRead++];
+	}
 
 	const int nMemBestAttrToRead = ++nBestAttrToRead;
 	while ( nBestAttrToRead < attributes.size() )
 	{
 		if ( attributes[nBestAttrToRead]->name == pszAttr )
+		{
 			return attributes[nBestAttrToRead++];
+		}
 
 		++nBestAttrToRead;
 	}
@@ -282,7 +344,9 @@ const SXmlAttribute *CXmlNode::GetAttribute( const char *pszAttr ) const
 	while ( nBestAttrToRead < nMemBestAttrToRead )
 	{
 		if ( attributes[nBestAttrToRead]->name == pszAttr )
+		{
 			return attributes[nBestAttrToRead++];
+		}
 
 		++nBestAttrToRead;
 	}
@@ -293,7 +357,9 @@ const SXmlAttribute *CXmlNode::GetAttribute( const char *pszAttr ) const
 CXmlReader::CXmlReader( const char *pszBegin, const char *pszEnd )
 {
 	if ( !pszBegin || !*pszBegin )
+	{
 		return;
+	}
 
 	buf = new char[pszEnd - pszBegin + 1];
 	memcpy( buf, pszBegin, pszEnd - pszBegin );
@@ -301,9 +367,13 @@ CXmlReader::CXmlReader( const char *pszBegin, const char *pszEnd )
 
 	const char *p = FindNodeStart( buf );
 	if ( *p == '?' )
+	{
 		p = FindNodeStart( p );
+	}
 	if ( !*p )
+	{
 		return;
+	}
 
 	rootNode.Parse( p, &pool );
 }

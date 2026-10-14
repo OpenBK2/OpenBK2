@@ -57,7 +57,9 @@ void CBridgeHeightRemover::RemoveHeight( const int nHeightID )
 void CBridgeHeightRemover::Segment()
 {
 	if ( heightToRemove.empty() )
+	{
 		return;
+	}
 
 	for ( CHeightsOrder::iterator it = heightsOrder.begin(); it != heightsOrder.end(); ++it )
 	{
@@ -66,7 +68,9 @@ void CBridgeHeightRemover::Segment()
 			SVector tileUp, tileDown;
 			GetHeights()->RestoreHeights( *it );
 			if ( GetHeights()->GetLocalHeightsInfo( &tileUp, &tileDown, *it ) )
+			{
 				theWarFog.SynchronizeHeights( tileUp, tileDown );
+			}
 		}
 	}
 	heightToRemove.clear();
@@ -117,9 +121,13 @@ void CBridgeSpan::GetTilesForVisibilityInternal( CTilesSet *pTiles ) const
 void CBridgeSpan::GetTilesForVisibility( CTilesSet *pTiles ) const
 {
 	if ( pFullBridge == 0 )
+	{
 		GetTilesForVisibilityInternal( pTiles );
+	}
 	else
+	{
 		pFullBridge->GetTilesForVisibility( pTiles );
+	}
 }
 
 void CBridgeSpan::GetCoveredTiles( std::list<SVector> *pTiles ) const
@@ -197,7 +205,9 @@ void CBridgeSpan::SetHeights()
 			GetHeights()->UpdateLocalHeights( tileLeftDown.x, tileLeftDown.y, newHeightsInfo, pStats->fHeight + fBridgeZ );
 	SVector tileUp, tileDown;
 	if ( GetHeights()->GetLocalHeightsInfo( &tileUp, &tileDown, nOldHeightsID ) )
+	{
 		theWarFog.SynchronizeHeights( tileUp, tileDown );
+	}
 
 	const CVec3 vCenter( GetCenter() );
 	for ( CUnitsIter<0, 0> iter( 0,
@@ -209,7 +219,9 @@ void CBridgeSpan::SetHeights()
 	{
 		CAIUnit *pUnit = *iter;
 		if ( IsValidObj( pUnit ) && !pUnit->GetStats()->IsAviation() )
+		{
 			updater.AddUpdate( 0, ACTION_NOTIFY_PLACEMENT, pUnit, -1 );
+		}
 	}
 
 	theBridgeHeightsRemover.RegisterOrder( nOldHeightsID );
@@ -241,7 +253,9 @@ void CBridgeSpan::DisplayBridgeTiles()
 	}
 
 	if ( NGlobal::GetVar( "bridge_tile_markers", 0 ) )
+	{
 		nTilesMarkerID = DebugInfoManager()->CreateMarker( nTilesMarkerID, tiles, DebugInfoManager()->GetCycleColor() );
+	}
 }
 #endif
 
@@ -262,12 +276,18 @@ void CBridgeSpan::CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles )
 			{
 				EAIClasses aiClassLock = EAC_NONE;
 				if ( val & 0x01 )
+				{
 					aiClassLock = (EAIClasses)( aiClassLock | EAC_TERRAIN );
+				}
 				if ( val & 0x10 )
+				{
 					aiClassLock = (EAIClasses)( aiClassLock | EAC_WATER );
+				}
 
 				if ( aiClassLock != EAC_NONE )
+				{
 					pTiles->push_back( SObjTileInfo( tile, aiClassLock ) );
+				}
 			}
 		}
 	}
@@ -276,7 +296,9 @@ void CBridgeSpan::CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles )
 void CBridgeSpan::LockTiles()
 {
 	if ( !oldTilesInfo.empty() )
+	{
 		return;
+	}
 
 	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> pass;
 	GetPassability( &pass );
@@ -300,7 +322,9 @@ void CBridgeSpan::LockTiles()
 void CBridgeSpan::RealLockTiles()
 {
 	if ( fHP <= 0 || bLocked )
+	{
 		return;
+	}
 
 	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> pass;
 	GetPassability( &pass );
@@ -321,10 +345,14 @@ void CBridgeSpan::RealLockTiles()
 			{
 				EAIClasses aiClassUnlock = EAC_NONE;
 				if ( val & 0x02 )
+				{
 					aiClassUnlock = aiClass;
+				}
 
 				if ( aiClassUnlock != EAC_NONE )
+				{
 					unlockTiles.push_back( SObjTileInfo( tile, aiClassUnlock ) );
+				}
 			}
 		}
 	}
@@ -338,18 +366,24 @@ void CBridgeSpan::RealLockTiles()
 void CBridgeSpan::UnlockTiles()
 {
 	if ( fHP < 0 || !bLocked )
+	{
 		return;
+	}
 	bLocked = false;
 
 	if ( fHP == 0.0 )
 	{
 		if ( IsValid( pFullBridge ) )
+		{
 			pFullBridge->NeedRepair();
+		}
 	}
 
 	std::list<SObjTileInfo> unlockTiles;
 	for ( std::list<SObjTileInfo>::iterator it = oldTilesInfo.begin(); it != oldTilesInfo.end(); ++it )
+	{
 		unlockTiles.push_back( SObjTileInfo( it->tile, EAC_ANY ) );
+	}
 
 	GetTerrain()->RemoveStaticObjectTiles( unlockTiles );
 	GetTerrain()->AddStaticObjectTiles( oldTilesInfo );
@@ -372,9 +406,13 @@ void CBridgeSpan::RemoveHeights()
 void CBridgeSpan::SetHitPoints( const float fNewHP )
 {
 	if ( fHP < GetStats()->fMaxHP && fNewHP == GetStats()->fMaxHP )
+	{
 		LockTiles();
+	}
 	else if ( fHP > 0 && fNewHP == 0 )
+	{
 		UnlockTiles();
+	}
 
 	if ( fHP != fNewHP )
 	{
@@ -387,7 +425,9 @@ void CBridgeSpan::SetHitPoints( const float fNewHP )
 void CBridgeSpan::Die( const float fDamage )
 {
 	if ( bDeletingAround )
+	{
 		return;
+	}
 
 	SRect boundRect;
 	GetBoundRect( &boundRect );
@@ -420,7 +460,9 @@ void CBridgeSpan::Die( const float fDamage )
 			{
 				const SRect unitRect( pUnit->GetUnitRect() );
 				if ( boundRect.IsIntersected( unitRect ) )
+				{
 					deadUnits.push_back( pUnit );
+				}
 			}
 		}
 
@@ -435,7 +477,9 @@ void CBridgeSpan::Die( const float fDamage )
 				if ( boundRect.IsIntersected( objectRect ) ||
 				     GetTerrain()->IsLocked( GetAIMap()->GetTile( CVec2( pObj->GetCenter().x, pObj->GetCenter().y ) ),
 				                             EAC_TERRAIN ) )
+				{
 					deadObjects.push_back( pObj );
+				}
 			}
 		}
 	}
@@ -452,7 +496,9 @@ void CBridgeSpan::Die( const float fDamage )
 	{
 		CExistingObject *pObj = *it;
 		if ( pObj->IsAlive() )
+		{
 			pObj->Die( 0 );
+		}
 	}
 	bDeletingAround = false;
 }
@@ -468,10 +514,14 @@ void CBridgeSpan::TakeDamage( const float fDamage,
 		fHP = (std::max)( 0.0f, fHP - fDamage );
 
 		if ( theCheats.GetFirstShoot( theDipl.GetNParty( nPlayerOfShoot ) ) == 1 )
+		{
 			fHP = 0;
+		}
 
 		if ( fHP == 0 )
+		{
 			Die( fDamage );
+		}
 		else
 		{
 			WasHit();
@@ -524,7 +574,9 @@ public:
 	void operator()( const int x, const int y )
 	{
 		if ( GetAIMap()->IsTileInside( x, y ) )
+		{
 			pTiles->push_back( SVector( x, y ) );
+		}
 	}
 };
 
@@ -598,7 +650,9 @@ CFullBridge::SSpanLock::SSpanLock( CBridgeSpan *pSpan, const uint16_t wDir ) : p
 
 	// залокать для всех
 	for ( std::list<SObjTileInfo>::iterator iter = tilesInfo.begin(); iter != tilesInfo.end(); ++iter )
+	{
 		iter->lockInfo = EAC_TERRAIN;
+	}
 	GetTerrain()->AddStaticObjectTiles( tilesInfo );
 }
 
@@ -607,7 +661,9 @@ void CFullBridge::SSpanLock::Unlock()
 	// разлокать для всех
 	std::list<SObjTileInfo> tilesInfo;
 	for ( std::list<SVector>::iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
+	{
 		tilesInfo.push_back( SObjTileInfo( *iter, EAC_TERRAIN ) );
+	}
 	GetTerrain()->RemoveStaticObjectTiles( tilesInfo );
 
 	// залокать как было
@@ -635,7 +691,9 @@ void CFullBridge::SSpanLock::Unlock()
 void CFullBridge::AddSpan( CBridgeSpan *pSpan )
 {
 	if ( pSpan->GetHitPoints() < 0.0f )
+	{
 		projectedSpans.push_back( pSpan );
+	}
 	else
 	{
 		spans.push_back( pSpan );
@@ -723,7 +781,9 @@ void CFullBridge::UnlockSpan( CBridgeSpan *pSpan )
 			it = lockedSpans.erase( it );
 		}
 		else
+		{
 			++it;
+		}
 	}
 }
 
@@ -735,9 +795,13 @@ const int CFullBridge::GetNSpans() const
 void CFullBridge::EnumSpans( std::vector<CObj<CBridgeSpan>> *pSpans )
 {
 	for ( std::list<CBridgeSpan *>::iterator it = spans.begin(); it != spans.end(); ++it )
+	{
 		pSpans->push_back( *it );
+	}
 	for ( std::list<CBridgeSpan *>::iterator it = projectedSpans.begin(); it != projectedSpans.end(); ++it )
+	{
 		pSpans->push_back( *it );
+	}
 }
 
 const bool CFullBridge::IsVisible( const uint8_t cParty ) const
@@ -748,7 +812,9 @@ const bool CFullBridge::IsVisible( const uint8_t cParty ) const
 	for ( CTilesSet::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
 	{
 		if ( theWarFog.IsTileVisible( *iter, cParty ) )
+		{
 			return true;
+		}
 	}
 
 	return false;
@@ -757,19 +823,25 @@ const bool CFullBridge::IsVisible( const uint8_t cParty ) const
 void CFullBridge::GetTilesForVisibility( CTilesSet *pTiles ) const
 {
 	for ( std::list<CBridgeSpan *>::const_iterator it = spans.begin(); it != spans.end(); ++it )
+	{
 		( *it )->GetTilesForVisibilityInternal( pTiles );
+	}
 }
 
 void CFullBridge::InitEntireBridge()
 {
 	det_set<int> ids;
 	for ( std::list<CBridgeSpan *>::const_iterator it = spans.begin(); it != spans.end(); ++it )
+	{
 		ids.insert( ( *it )->GetUniqueId() );
+	}
 	theWarFog.ReplaceStaticObjects( GetUniqueId(), ids );
 
 	if ( bLockingBridge )
 	{
 		for ( std::list<CBridgeSpan *>::const_iterator it = spans.begin(); it != spans.end(); ++it )
+		{
 			( *it )->RealLockTiles();
+		}
 	}
 }

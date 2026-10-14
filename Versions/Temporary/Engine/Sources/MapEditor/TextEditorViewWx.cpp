@@ -76,7 +76,9 @@ wxColour ReadableColour( const wxColour &colour, const wxColour &background, con
 		const wxColour candidate = BlendColour( colour, foreground, step / 20.0 );
 		const double light = Luminance( candidate );
 		if ( ( (std::max)( light, back ) + 0.05 ) / ( (std::min)( light, back ) + 0.05 ) >= 4.5 )
+		{
 			return candidate;
+		}
 	}
 	return foreground;
 }
@@ -88,9 +90,13 @@ void ApplyTextAppearance( wxStyledTextCtrl *editor, bool monospace )
 	wxFont font = wxSystemSettings::GetFont( wxSYS_DEFAULT_GUI_FONT );
 	const int points = (std::max)( 12, font.GetPointSize() );
 	if ( monospace )
+	{
 		font = wxFont( wxFontInfo( points ).Family( wxFONTFAMILY_TELETYPE ) );
+	}
 	else
+	{
 		font.SetPointSize( points );
+	}
 	// Scintilla does not inherit the native control's palette. Clear all
 	// styles from a themed default, including every character background.
 	editor->StyleResetDefault();
@@ -395,7 +401,9 @@ private:
 		{
 			pEditor->SetKeyWords( it->nSet, wxString::FromUTF8( it->szWords.c_str() ) );
 			if ( it->nSet == 1 )
+			{
 				szFileKeywords = it->szWords;
+			}
 		}
 
 		pEditor->SetIndentationGuides( 1 );
@@ -413,17 +421,25 @@ private:
 		const wxColour background = pEditor->StyleGetBackground( wxSTC_STYLE_DEFAULT );
 		const wxColour foreground = pEditor->StyleGetForeground( wxSTC_STYLE_DEFAULT );
 		for ( const auto &set : keywords.sets )
+		{
 			if ( set.bHasColor )
+			{
 				pEditor->StyleSetForeground( wxSTC_LUA_WORD2 - 1 + set.nSet,
 				                             ReadableColour( FromColorRef( set.nColor ), background, foreground ) );
+			}
+		}
 		// Keep the existing syntax groups, but inherit the native font and
 		// paper. The old 9-point Courier and per-character fills are unsuitable
 		// for dark themes and override the user's desktop font settings.
 		for ( const auto &style : NTextEditor::LuaStyles() )
+		{
 			if ( style.nFore >= 0 && style.nStyle != wxSTC_LUA_DEFAULT )
+			{
 				pEditor->StyleSetForeground(
 						style.nStyle,
 						style.nFore == 0 ? foreground : ReadableColour( FromColorRef( style.nFore ), background, foreground ) );
+			}
+		}
 		// Lexilla styles a comment that opens with "---" as a doc comment,
 		// style 3. The 2005 lexer never used style 3 and painted the same line
 		// as the line comment, style 2 -- the scripts are full of "-----"

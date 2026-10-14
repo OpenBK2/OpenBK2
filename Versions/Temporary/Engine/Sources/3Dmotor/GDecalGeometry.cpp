@@ -46,11 +46,15 @@ struct SQuadProjection
 		float fV = fV0 + ptCenter * vVecV;
 		float fDV = fRadius * fVleng;
 		if ( fV - fDV > 1 || fV + fDV < 0 )
+		{
 			return false;
+		}
 		float fU = fU0 + ptCenter * vVecU;
 		float fDU = fRadius * fUleng;
 		if ( fU - fDU > 1 || fU + fDU < 0 )
+		{
 			return false;
+		}
 		return true;
 	}
 	void Setup( const CVec3 &_vOrigin, const CVec3 &_vNormal, const CVec2 &vSize, float fRotation, const CVec2 &_vShift )
@@ -163,13 +167,17 @@ static void Split( SShadowPoly *pRes, const SShadowPoly &src, const std::vector<
 		if ( fCur >= 0 )
 		{
 			if ( fPrev < 0 && fCur > 0 )
+			{
 				CalcMiddlePoint( src.points[nPrev], src.points[k], &pRes->points[nRes++], fPrev, fCur );
+			}
 			pRes->points[nRes++] = src.points[k];
 		}
 		else
 		{
 			if ( fPrev > 0 )
+			{
 				CalcMiddlePoint( src.points[nPrev], src.points[k], &pRes->points[nRes++], fPrev, fCur );
+			}
 		}
 	}
 	pRes->points.resize( nRes );
@@ -180,7 +188,9 @@ static bool DoSplit( SShadowPoly *pRes, const SShadowPoly &src, const CVec3 &vUV
 {
 	fPlaneOffsets.resize( src.points.size() );
 	for ( int k = 0; k < src.points.size(); ++k )
+	{
 		fPlaneOffsets[k] = src.points[k].uv[0] * vUV.x + src.points[k].uv[1] * vUV.y + vUV.z;
+	}
 	Split( pRes, src, fPlaneOffsets );
 	return pRes->points.size() > 2;
 }
@@ -219,12 +229,16 @@ void CShadowBuilder::AddShadowTriangle( SShadowPoly *pTri )
 	{
 		DoSplit( pTDst, *pTSrc, CVec3( fClipPlanes[k][0], fClipPlanes[k][1], fClipPlanes[k][2] ) );
 		if ( pTDst->points.size() < 3 )
+		{
 			return;
+		}
 		std::swap( pTSrc, pTDst );
 	}
 	STriangleCreator tc( &info.geometry );
 	for ( int k = 0; k < pTSrc->points.size(); ++k )
+	{
 		tc.AddVertex( AddPoint( pTSrc->points[k] ) );
+	}
 }
 
 void CShadowBuilder::AddObject( const CObjectInfo &info, const SDiscretePos &_srcPos )
@@ -270,7 +284,9 @@ void CShadowBuilder::AddObject( const CObjectInfo &info, const SDiscretePos &_sr
 			{
 				float fTest = vTriNormal * projection.vProjectDirection;
 				if ( fTest >= fNormalEdge * fLeng ) //-0.01f
+				{
 					continue;
+				}
 			}
 		}
 		tri.points.resize( 3 );
@@ -292,7 +308,9 @@ void CShadowBuilder::AddObject( const CObjectInfo &info, const SDiscretePos &_sr
 				fDepthMax = (std::max)( fDepth, fDepthMax );
 			}
 			if ( fDepthMin > fDepthMargin || fDepthMax < -fDepthMargin )
+			{
 				continue;
+			}
 		}
 		AddShadowTriangle( &tri );
 	}
@@ -326,7 +344,9 @@ void CDecalGeometry::Recalc()
 {
 	pSource.Refresh();
 	if ( !pSource->GetValue() )
+	{
 		return;
+	}
 	pValue = new CObjectInfo;
 	CShadowBuilder sb( pValue, fNormalEdge, fDepthMargin );
 	sb.Setup( vOrigin, vNormal, vSize, fRotation, vShift );
@@ -352,7 +372,9 @@ void CPerPolyDecal::Recalc()
 		return;
 	}
 	if ( !pPart->HasLoadedObjectInfo() )
+	{
 		return;
+	}
 	CDGPtr<CPtrFuncBase<CObjectInfo>> pSource( pPart->GetObjectInfoNode() );
 	pSource.Refresh();
 	if ( !pSource->GetValue() )
@@ -362,7 +384,9 @@ void CPerPolyDecal::Recalc()
 	}
 
 	if ( srcPositions.empty() || srcPositions.size() != pSource->GetValue()->GetPositions().size() )
+	{
 		TransformPart( pPart, &srcPositions, 0 );
+	}
 
 	Recalc( &data, *pSource->GetValue(), srcPositions );
 
@@ -436,11 +460,15 @@ public:
 				nRes = info.verts.size();
 				info.verts.push_back( poly.polygon[i] );
 				if ( !srcWeights.empty() )
+				{
 					info.weights.push_back( GetWeight( srcWeights[posIndices[nIdx]] ) );
+				}
 				vertMap[nIdx] = nRes;
 			}
 			else
+			{
 				nRes = GetResIndex( nIdx );
+			}
 			tc.AddVertex( nRes );
 		}
 	}
@@ -485,7 +513,9 @@ CExplosionShadowBuilder::CExplosionShadowBuilder( CObjectInfo::SData *pInfo,
 			Normalize( &vXNormal );
 			vXTexU = vXNormal ^ CVec3( 0.5f, 0.23f, 0 );
 			if ( fabs2( vXTexU ) == 0 )
+			{
 				vXTexU = vXNormal ^ CVec3( 0, 0, 1 );
+			}
 			Normalize( &vXTexU );
 			vXTexV = vXNormal ^ vXTexU;
 			Normalize( &vXTexV );
@@ -523,10 +553,14 @@ CExplosionShadowBuilder::CExplosionShadowBuilder( CObjectInfo::SData *pInfo,
 				AddVertex( &poly, nIdx, res );
 			}
 			else
+			{
 				AddVertex( &poly, nIdx );
+			}
 		}
 		if ( IsOutside( poly ) )
+		{
 			continue;
+		}
 		AddPolygon( poly );
 	}
 }
@@ -610,12 +644,16 @@ CPerPolyDecalBuilder::CPerPolyDecalBuilder( CObjectInfo::SData *pInfo,
 				AddVertex( &poly, nIdx, res );
 			}
 			else
+			{
 				AddVertex( &poly, nIdx );
+			}
 		}
 		//if ( fDepthMin > F_DEPTH_WINDOW || fDepthMax < -F_DEPTH_WINDOW )
 		//	continue;
 		if ( IsOutside( poly ) )
+		{
 			continue;
+		}
 
 		AddPolygon( poly );
 	}

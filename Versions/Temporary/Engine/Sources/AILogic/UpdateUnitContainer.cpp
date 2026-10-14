@@ -30,11 +30,17 @@ void CUpdateUnitContainer::Push( const int nID, const EUpdateWarFogUnitInfoFlag 
 			nNewLevel = 2;
 		case UPD_UPDATE_POSITION:
 			if ( fDist > f2MaxRadius )
+			{
 				nNewLevel = 3;
+			}
 			else if ( fDist > fMaxRadius2 )
+			{
 				nNewLevel = 4;
+			}
 			else if ( fDist > 0 )
+			{
 				nNewLevel = 5;
+			}
 	}
 
 	for ( int nLevel = 0; nLevel < updateLists.size(); ++nLevel )
@@ -45,17 +51,23 @@ void CUpdateUnitContainer::Push( const int nID, const EUpdateWarFogUnitInfoFlag 
 			if ( nLevel < nNewLevel )
 			{
 				if ( updateFlag == UPD_UPDATE_POSITION )
+				{
 					pos->second.fDist = fDist;
+				}
 				return;
 			}
 			else if ( nLevel == nNewLevel )
 			{
 				if ( updateFlag == UPD_DELETE_UNIT && pos->second.updateFlag == UPD_CREATE_NEW_UNIT )
+				{
 					updateLists[nLevel].erase( pos );
+				}
 				else
 				{
 					if ( updateFlag == UPD_UPDATE_POSITION )
+					{
 						pos->second.fDist = fDist;
+					}
 					pos->second.updateFlag = updateFlag;
 				}
 				return;
@@ -68,7 +80,9 @@ void CUpdateUnitContainer::Push( const int nID, const EUpdateWarFogUnitInfoFlag 
 		}
 	}
 	if ( nNewLevel >= 0 )
+	{
 		updateLists[nNewLevel][nID] = SUpdateUnitInfo( updateFlag, fDist );
+	}
 }
 
 int CUpdateUnitContainer::Pop()
@@ -81,10 +95,16 @@ int CUpdateUnitContainer::Pop()
 			// CUpdateUnitList::iterator pos = updateLists[i].begin();
 			CUpdateUnitList::iterator pos = updateLists[i].end();
 			for ( CUpdateUnitList::iterator it = updateLists[i].begin(); it != updateLists[i].end(); ++it )
+			{
 				if ( pos == updateLists[i].end() )
+				{
 					pos = it;
+				}
 				else if ( pos->first > it->first )
+				{
 					pos = it;
+				}
+			}
 
 			const int nResult = pos->first;
 			updateLists[i].erase( pos );
@@ -99,7 +119,9 @@ bool CUpdateUnitContainer::IsEmpty()
 	for ( int i = 0; i < updateLists.size(); ++i )
 	{
 		if ( !updateLists[i].empty() )
+		{
 			return false;
+		}
 	}
 	return true;
 }

@@ -17,7 +17,9 @@ float CParticleAnimator::GetRealTime( const STime &time )
 void CParticleAnimator::CheckFirstTime()
 {
 	if ( IsValid( pValue ) )
+	{
 		return;
+	}
 	CStandardParticleEffect *pRealValue = new CStandardParticleEffect( pInstance->nPriority );
 	pValue = pRealValue;
 	CStandardParticleEffect &value = *pRealValue;
@@ -47,7 +49,9 @@ void CParticleAnimator::Recalc()
 	value.frames.clear();
 	value.vWrap = CVec2( 0, 0 );
 	if ( pInstance && pInstance->pParticle )
+	{
 		value.vWrap = pInstance->pParticle->vWrapSize;
+	}
 
 	STime time = pTime->GetValue();
 	if ( time < stBeginTime )
@@ -89,9 +93,13 @@ void CParticleAnimator::Recalc()
 		int nCurCycle = int( fTObject / pInstance->fEndCycle ) + 1;
 		int nCycleCount = pInstance->nCycleCount;
 		if ( value.nStopCycle >= 0 )
+		{
 			nCycleCount = value.nStopCycle;
+		}
 		if ( nCycleCount && nCurCycle > nCycleCount )
+		{
 			nCurCycle = nCycleCount;
+		}
 		float fT = fTObject - ( nCurCycle - 1 ) * pInstance->fEndCycle;
 		for ( int i = 0; i < nCurCycle && fT < pEffect->fTEnd; ++i )
 		{
@@ -99,7 +107,9 @@ void CParticleAnimator::Recalc()
 			fT += pInstance->fEndCycle;
 		}
 		if ( nCycleCount == 0 || fTObject < pEffect->fTEnd + ( nCycleCount - 1 ) * pInstance->fEndCycle )
+		{
 			value.bEnd = false;
+		}
 	}
 
 	for ( int i = 0; i < fTimes.size(); ++i )
@@ -118,21 +128,29 @@ void CParticleAnimator::StopParticlesGeneration( const STime &tStop )
 	CheckFirstTime();
 	ASSERT( IsValid( pValue ) );
 	if ( !IsValid( pValue ) )
+	{
 		return;
+	}
 	pInfo.Refresh();
 	CParticlesInfo *pEffect = pInfo->GetValue();
 	if ( !pEffect )
+	{
 		return;
+	}
 	CDynamicCast<CStandardParticleEffect> pRealValue( pValue );
 	CStandardParticleEffect &value = *pRealValue;
 	float fT = GetRealTime( tStop );
 	if ( pInstance->fEndCycle == 0 )
+	{
 		value.fTStopGeneration = fT * pEffect->fFrameRate;
+	}
 	else
 	{
 		int nCycle = int( fT / pInstance->fEndCycle ) + 1;
 		if ( pInstance->nCycleCount && nCycle > pInstance->nCycleCount )
+		{
 			nCycle = pInstance->nCycleCount;
+		}
 		float fTTruncated = fT - ( nCycle - 1 ) * pInstance->fEndCycle;
 		value.fTStopGeneration = fTTruncated * pEffect->fFrameRate;
 		value.nStopCycle = nCycle;

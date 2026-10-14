@@ -46,7 +46,9 @@ bool CInterfaceSingleStatistic::Init()
 	}
 
 	if ( !CInterfaceScreenBase::Init() )
+	{
 		return false;
+	}
 
 	AddScreen( this );
 
@@ -69,15 +71,25 @@ void CInterfaceSingleStatistic::MakeInterior()
 	pPopupBgWnd = GetChildChecked<IWindow>( GetScreen(), "DlgBg", false );
 	pBlackBgWnd = GetChildChecked<IWindow>( GetScreen(), "BlackBg", true );
 	if ( pNewRankDlg )
+	{
 		pNewRankDlg->ShowWindow( false );
+	}
 	if ( pNewMedalDlg )
+	{
 		pNewMedalDlg->ShowWindow( false );
+	}
 	if ( pChapterReinfDescWnd )
+	{
 		pChapterReinfDescWnd->ShowWindow( false );
+	}
 	if ( pPopupBgWnd )
+	{
 		pPopupBgWnd->ShowWindow( false );
+	}
 	if ( pBlackBgWnd )
+	{
 		pBlackBgWnd->ShowWindow( false );
+	}
 
 	pInfoPanel = GetChildChecked<IWindow>( pMain, "InfoPanel", true );
 	pRewardPanel = GetChildChecked<IWindow>( pMain, "RewardPanel", true );
@@ -93,9 +105,13 @@ void CInterfaceSingleStatistic::MakeInterior()
 	pMissionTimeView = GetChildChecked<ITextView>( pInfoPanel, "MissionTimeView", true );
 	pCampaignTimeView = GetChildChecked<ITextView>( pInfoPanel, "TotalCampaignTimeView", true );
 	if ( pMissionSuccessLabel )
+	{
 		pMissionSuccessLabel->ShowWindow( false );
+	}
 	if ( pMissionFailedLabel )
+	{
 		pMissionFailedLabel->ShowWindow( false );
+	}
 
 	if ( pInfoPanel )
 	{
@@ -103,7 +119,9 @@ void CInterfaceSingleStatistic::MakeInterior()
 		{
 			IWindow *pWnd = pInfoPanel->GetChild( fmt::format( "Line{:02d}", i ), true );
 			if ( !pWnd )
+			{
 				break;
+			}
 
 			pWnd->ShowWindow( false );
 
@@ -125,7 +143,9 @@ void CInterfaceSingleStatistic::MakeInterior()
 		{
 			IWindow *pWnd = pRewardPanel->GetChild( fmt::format( "Line{:02d}", i ), true );
 			if ( !pWnd )
+			{
 				break;
+			}
 
 			pWnd->ShowWindow( false );
 
@@ -136,7 +156,9 @@ void CInterfaceSingleStatistic::MakeInterior()
 			reinf.pNameView = GetChildChecked<ITextView>( pWnd, "NameView", true );
 			reinf.szButtonName = fmt::format( "BlockBtn{:02d}", i );
 			if ( reinf.pBtn )
+			{
 				reinf.pBtn->SetName( reinf.szButtonName );
+			}
 			reinfs.push_back( reinf );
 		}
 	}
@@ -164,21 +186,35 @@ void CInterfaceSingleStatistic::MakeInterior()
 
 	bool bMissionWon = pST->IsMissionWon();
 	if ( pMissionSuccessLabel )
+	{
 		pMissionSuccessLabel->ShowWindow( bMissionWon );
+	}
 	if ( pMissionFailedLabel )
+	{
 		pMissionFailedLabel->ShowWindow( !bMissionWon );
+	}
 
 	bool bCustomMission = pST->IsCustomMission();
 	if ( pNextBtn )
+	{
 		pNextBtn->ShowWindow( bMissionWon );
+	}
 	if ( pRestartBtn )
+	{
 		pRestartBtn->ShowWindow( !bMissionWon );
+	}
 	if ( pExitToMainMenuBtn )
+	{
 		pExitToMainMenuBtn->ShowWindow( !bMissionWon && bCustomMission );
+	}
 	if ( pExitToChapterBtn )
+	{
 		pExitToChapterBtn->ShowWindow( !bMissionWon && !bCustomMission );
+	}
 	if ( pLoadBtn )
+	{
 		pLoadBtn->ShowWindow( !bMissionWon );
+	}
 	//	if ( pExitToWindowsBtn )
 	//		pExitToWindowsBtn->ShowWindow( false );
 
@@ -187,49 +223,73 @@ void CInterfaceSingleStatistic::MakeInterior()
 	pNewReinfLabel = GetChildChecked<ITextView>( pRewardPanel, "NewReinfLabel", true );
 
 	if ( pCareerExpNAView )
+	{
 		pCareerExpNAView->ShowWindow( bCustomMission );
+	}
 	if ( pMissionExpNAView )
+	{
 		pMissionExpNAView->ShowWindow( bCustomMission );
+	}
 	if ( pCareerProgress )
+	{
 		pCareerProgress->ShowWindow( !bCustomMission );
+	}
 	if ( pRankProgress )
+	{
 		pRankProgress->ShowWindow( !bCustomMission );
+	}
 	if ( pNewReinfLabel )
+	{
 		pNewReinfLabel->ShowWindow( !bCustomMission );
+	}
 
 	if ( pMain )
+	{
 		SetMainWindowTexture( pMain, InterfaceState()->GetMenuBackgroundTexture() );
+	}
 
 	pChapterReinfUpgrade = new SChapterReinfUpgrade();
 	pChapterReinfUpgrade->InitControls( pChapterReinfDescWnd );
 
 	if ( bCustomMission )
+	{
 		MakeCustomMissionStatistics();
+	}
 	else
+	{
 		MakeCampaignStatistics();
+	}
 
 	IFullScreenFader *pFader = Scene()->GetScreenFader();
 	if ( pFader )
+	{
 		pFader->Start( UNFADE_TIME, SCREEN_FADER_CLEAR, SCREEN_FADER_CLEAR, true );
+	}
 
 	const NDb::SCampaign *pCampaign = Singleton<IScenarioTracker>()->GetCurrentCampaign();
 	if ( pCampaign )
 	{
 		if ( pCampaign->pIntermissionMusic )
+		{
 			Singleton<IMusicSystem>()->Init( pCampaign->pIntermissionMusic, 0 );
+		}
 	}
 	else
 	{
 		const NDb::SGameRoot *pGameRoot = InterfaceState()->GetGameRoot();
 		if ( pGameRoot && pGameRoot->pMainMenuMusic )
+		{
 			Singleton<IMusicSystem>()->Init( pGameRoot->pMainMenuMusic, 0 );
+		}
 	}
 
 	const bool bDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
 	if ( bDemo )
 	{
 		if ( pExitToChapterBtn )
+		{
 			pExitToChapterBtn->ShowWindow( false );
+		}
 	}
 }
 
@@ -241,9 +301,13 @@ void CInterfaceSingleStatistic::MakeCustomMissionStatistics()
 	int nTime = pST->GetStatistics( nLocalPlayer, IScenarioTracker::ESK_TIME );
 	std::wstring wszTime = GetFormattedTime( nTime );
 	if ( pMissionTimeView )
+	{
 		pMissionTimeView->SetText( pMissionTimeView->GetDBText() + wszTime );
+	}
 	if ( pCampaignTimeView )
+	{
 		pCampaignTimeView->SetText( pCampaignTimeView->GetDBText() + wszTime );
+	}
 
 	MakePlayerStatistics( false );
 
@@ -265,17 +329,23 @@ void CInterfaceSingleStatistic::MakeCampaignStatistics()
 	                                  (int)( expProgressRank.fTarget - expProgressRank.fTargetLevelExp ),
 	                                  (int)( expProgressRank.fTargetNextLevelExp - expProgressRank.fTargetLevelExp ) ) );
 	if ( pExpView )
+	{
 		pExpView->SetText( pExpView->GetDBText() + wszRankHP );
+	}
 
 	int nTime = pST->GetStatistics( nLocalPlayer, IScenarioTracker::ESK_TIME );
 	std::wstring wszTime = GetFormattedTime( nTime );
 	if ( pMissionTimeView )
+	{
 		pMissionTimeView->SetText( pMissionTimeView->GetDBText() + wszTime );
+	}
 
 	int nCampaignTime = pST->GetStatistics( nLocalPlayer, IScenarioTracker::ESK_CAMPAIGN_TIME );
 	std::wstring wszCampaignTime = GetFormattedTime( nCampaignTime );
 	if ( pCampaignTimeView )
+	{
 		pCampaignTimeView->SetText( pCampaignTimeView->GetDBText() + wszCampaignTime );
+	}
 
 	MakePlayerStatistics( true );
 	MakeReinf();
@@ -298,16 +368,22 @@ void CInterfaceSingleStatistic::MakePlayerStatistics( bool bChapter )
 
 	const NDb::SMapInfo *pMission = pST->GetLastMission();
 	if ( !pMission )
+	{
 		return;
+	}
 
 	int nIndex = 0;
 	for ( int i = 0; i < pMission->players.size(); ++i )
 	{
 		const NDb::SMapPlayerInfo &dbPlayer = pMission->players[i];
 		if ( dbPlayer.nDiplomacySide == 2 )
+		{
 			break;
+		}
 		if ( nIndex >= players.size() )
+		{
 			break;
+		}
 
 		SPlayer &player = players[nIndex];
 		nIndex++;
@@ -316,28 +392,40 @@ void CInterfaceSingleStatistic::MakePlayerStatistics( bool bChapter )
 		const NDb::SPartyDependentInfo *pPartyInfo = pST->GetPlayerParty( i );
 		NI_ASSERT( pPartyInfo, "Designers: empty party info detected" );
 		if ( !pPartyInfo )
+		{
 			continue;
+		}
 
 		if ( player.pWnd )
+		{
 			player.pWnd->ShowWindow( true );
+		}
 
 		if ( player.pIconWnd )
+		{
 			player.pIconWnd->SetTexture( pPartyInfo->pStatisticsIcon );
+		}
 
 		MakePlayerName( player, dbPlayer, i == nLocalPlayer, bChapter );
 
 		int nUnitsLost = pST->GetStatistics( i, IScenarioTracker::ESK_UNITS_LOST );
 		if ( player.pLostView )
+		{
 			player.pLostView->SetText( player.pLostView->GetDBText() + NStr::ToUnicode( std::to_string( nUnitsLost ) ) );
+		}
 
 		int nUnitsKilled = pST->GetStatistics( i, IScenarioTracker::ESK_UNITS_KILLED );
 		if ( player.pKilledView )
+		{
 			player.pKilledView->SetText( player.pKilledView->GetDBText() +
 			                             NStr::ToUnicode( std::to_string( nUnitsKilled ) ) );
+		}
 
 		int nReinfCalled = pST->GetStatistics( i, IScenarioTracker::ESK_REINFORCEMENTS_CALLED );
 		if ( player.pReinfView )
+		{
 			player.pReinfView->SetText( player.pReinfView->GetDBText() + NStr::ToUnicode( std::to_string( nReinfCalled ) ) );
+		}
 	}
 }
 
@@ -348,7 +436,9 @@ void CInterfaceSingleStatistic::MakePlayerName( const SPlayer &player,
 {
 	std::wstring wszPlayerName;
 	if ( CHECK_TEXT_NOT_EMPTY_PRE( dbPlayer., LocalizedPlayerName ) )
+	{
 		wszPlayerName = GET_TEXT_PRE( dbPlayer., LocalizedPlayerName );
+	}
 	if ( bPlayer && wszPlayerName.empty() )
 	{
 		// GetString, not the conversion operator: assigning a CValue to an existing
@@ -366,12 +456,16 @@ void CInterfaceSingleStatistic::MakePlayerName( const SPlayer &player,
 		if ( pRank )
 		{
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( pRank->, RankName ) )
+			{
 				wszPlayerRank = GET_TEXT_PRE( pRank->, RankName );
+			}
 		}
 		if ( !wszPlayerRank.empty() )
 		{
 			if ( IScreen *pScreen = GetScreen() )
+			{
 				wszRankTag = pScreen->GetTextEntry( "T_PLAYER_NAME_AND_RANK_TAG" );
+			}
 		}
 	}
 	if ( !wszRankTag.empty() )
@@ -381,12 +475,16 @@ void CInterfaceSingleStatistic::MakePlayerName( const SPlayer &player,
 		params.push_back( std::pair<std::wstring, std::wstring>( DYNAMIC_TAG_PLAYER_RANK, wszPlayerRank ) );
 		SetDynamicTextView( player.pNameView, params );
 		if ( player.pNameView )
+		{
 			player.pNameView->SetText( wszRankTag );
+		}
 	}
 	else
 	{
 		if ( player.pNameView )
+		{
 			player.pNameView->SetText( player.pNameView->GetDBText() + wszPlayerName );
+		}
 	}
 }
 
@@ -397,29 +495,41 @@ void CInterfaceSingleStatistic::MakeReinf()
 
 	const NDb::SMapInfo *pMission = pST->GetLastMission();
 	if ( !pMission )
+	{
 		return;
+	}
 	const IScenarioTracker::SMissionStats *pMissionStats = pST->GetMissionStats( pMission );
 	if ( !pMissionStats )
+	{
 		return;
+	}
 
 	for ( int i = 0; i < reinfs.size(); ++i )
 	{
 		SReinf &reinf = reinfs[i];
 		if ( i >= pMissionStats->bonusReinforcements.size() )
+		{
 			break;
+		}
 		const NDb::SReinforcement *pReinf = pMissionStats->bonusReinforcements[i];
 		if ( !pReinf )
+		{
 			continue;
+		}
 
 		bool bUpgrade = false;
 		for ( int j = 0; j < pMissionStats->oldReinfs.size(); ++j )
 		{
 			const IScenarioTracker::SMissionStats::SOldReinf &oldReinf = pMissionStats->oldReinfs[j];
 			if ( !oldReinf.pDBReinf )
+			{
 				continue;
+			}
 
 			if ( oldReinf.pDBReinf->eType != pReinf->eType || oldReinf.eState != IScenarioTracker::ERS_ENABLED )
+			{
 				continue;
+			}
 
 			bUpgrade = true;
 			break;
@@ -427,20 +537,30 @@ void CInterfaceSingleStatistic::MakeReinf()
 
 		reinf.pReinf = pReinf;
 		if ( reinf.pWnd )
+		{
 			reinf.pWnd->ShowWindow( true );
+		}
 
 		if ( reinf.pIconWnd )
+		{
 			reinf.pIconWnd->SetTexture( pReinf->pIconTexture );
+		}
 		if ( reinf.pBtn )
 		{
 			std::wstring wszTooltip;
 			if ( bUpgrade )
+			{
 				wszTooltip = GetScreen()->GetTextEntry( "TOOLTIP_PREFIX_UPGRADE" );
+			}
 			else
+			{
 				wszTooltip = GetScreen()->GetTextEntry( "TOOLTIP_PREFIX_NEW_REINF" );
+			}
 
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( pReinf->, Tooltip ) )
+			{
 				wszTooltip += GET_TEXT_PRE( pReinf->, Tooltip );
+			}
 			reinf.pBtn->SetTooltip( wszTooltip );
 		}
 
@@ -448,15 +568,23 @@ void CInterfaceSingleStatistic::MakeReinf()
 		{
 			std::wstring wszName;
 			if ( bUpgrade )
+			{
 				wszName = GetScreen()->GetTextEntry( "T_PREFIX_UPGRADE" );
+			}
 			else
+			{
 				wszName = GetScreen()->GetTextEntry( "T_PREFIX_NEW_REINF" );
+			}
 
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( pReinf->, LocalizedName ) )
+			{
 				wszName += GET_TEXT_PRE( pReinf->, LocalizedName );
+			}
 
 			if ( reinf.pNameView )
+			{
 				reinf.pNameView->SetText( reinf.pNameView->GetDBText() + wszName );
+			}
 		}
 	}
 }
@@ -464,32 +592,56 @@ void CInterfaceSingleStatistic::MakeReinf()
 bool CInterfaceSingleStatistic::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "menu_next" )
+	{
 		return OnMenuNext();
+	}
 	if ( szReaction == "medal_dialog_close" )
+	{
 		return OnMedalDialogClose();
+	}
 	if ( szReaction == "new_rank_close" )
+	{
 		return OnNewRankDialogClose();
+	}
 
 	if ( szReaction == "reinf_click" )
+	{
 		return OnReinfClick( szSender );
+	}
 
 	if ( szReaction == "reinf_upgrade_dialog_close" )
+	{
 		return OnChapterReinfClose();
+	}
 	if ( szReaction == "reinf_upgrade_unit_btn" )
+	{
 		return OnChapterReinfUnitBtn( szSender );
+	}
 
 	if ( szReaction == "menu_next_on_enter" )
+	{
 		return OnMenuNextOnEnter();
+	}
 	if ( szReaction == "restart_mission" )
+	{
 		return OnRestartMission();
+	}
 	if ( szReaction == "exit_to_main_menu" )
+	{
 		return OnExitToMainMenu();
+	}
 	if ( szReaction == "exit_to_chapter" )
+	{
 		return OnExitToChapter();
+	}
 	if ( szReaction == "load" )
+	{
 		return OnLoad();
+	}
 	if ( szReaction == "exit_to_windows" )
+	{
 		return OnExitToWindows();
+	}
 
 	return false;
 }
@@ -517,11 +669,15 @@ void CInterfaceSingleStatistic::OnGetFocus( bool bFocus )
 	if ( bFocus )
 	{
 		if ( pBlackBgWnd )
+		{
 			pBlackBgWnd->ShowWindow( false );
+		}
 		if ( pLoadBtn )
 		{
 			if ( pLoadBtn->IsVisible() )
+			{
 				pLoadBtn->Enable( !NSaveLoad::IsSaveListEmpty() );
+			}
 		}
 	}
 }
@@ -532,7 +688,9 @@ void CInterfaceSingleStatistic::ShowReinf( const NDb::SReinforcement *pReinf )
 	const int nLocalPlayer = pST->GetLocalPlayer();
 
 	if ( pChapterReinfDescWnd )
+	{
 		pChapterReinfDescWnd->ShowWindow( true );
+	}
 
 	IScenarioTracker::EReinforcementState eState = IScenarioTracker::ERS_DISABLED;
 	const NDb::SReinforcement *pOldReinf = 0;
@@ -553,9 +711,13 @@ void CInterfaceSingleStatistic::ShowReinf( const NDb::SReinforcement *pReinf )
 	}
 
 	if ( eState == IScenarioTracker::ERS_ENABLED )
+	{
 		pChapterReinfUpgrade->ShowReinf( pOldReinf, pReinf );
+	}
 	else
+	{
 		pChapterReinfUpgrade->ShowReinf( 0, pReinf );
+	}
 }
 
 bool CInterfaceSingleStatistic::OnMenuNext()
@@ -569,7 +731,9 @@ bool CInterfaceSingleStatistic::OnMenuNextOnEnter()
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	if ( pST->IsMissionWon() )
+	{
 		NextMenu();
+	}
 
 	return true;
 }
@@ -578,7 +742,9 @@ bool CInterfaceSingleStatistic::OnRestartMission()
 {
 	const NDb::SMapInfo *pMapInfo = Singleton<IScenarioTracker>()->GetCurrentMission();
 	if ( !pMapInfo )
+	{
 		pMapInfo = Singleton<IScenarioTracker>()->GetLastMission();
+	}
 	NI_VERIFY( pMapInfo, "Wrong mission info", return true );
 
 	Singleton<IScenarioTracker>()->MissionStart( pMapInfo );
@@ -613,7 +779,9 @@ bool CInterfaceSingleStatistic::OnExitToChapter()
 bool CInterfaceSingleStatistic::OnLoad()
 {
 	if ( pBlackBgWnd )
+	{
 		pBlackBgWnd->ShowWindow( true );
+	}
 
 	NMainLoop::Command( ML_COMMAND_SAVE_LOAD_MENU, "load_from_single_statistics" );
 
@@ -646,9 +814,13 @@ void CInterfaceSingleStatistic::MsgTryExitWindows( const SGameMessage &msg )
 bool CInterfaceSingleStatistic::OnMedalDialogClose()
 {
 	if ( pNewMedalDlg )
+	{
 		pNewMedalDlg->ShowWindow( false );
+	}
 	if ( pPopupBgWnd )
+	{
 		pPopupBgWnd->ShowWindow( true );
+	}
 
 	timePrevPopup = Singleton<IGameTimer>()->GetAbsTime();
 
@@ -660,9 +832,13 @@ bool CInterfaceSingleStatistic::OnMedalDialogClose()
 bool CInterfaceSingleStatistic::OnNewRankDialogClose()
 {
 	if ( pNewRankDlg )
+	{
 		pNewRankDlg->ShowWindow( false );
+	}
 	if ( pPopupBgWnd )
+	{
 		pPopupBgWnd->ShowWindow( true );
+	}
 
 	timePrevPopup = Singleton<IGameTimer>()->GetAbsTime();
 
@@ -689,7 +865,9 @@ bool CInterfaceSingleStatistic::OnReinfClick( const std::string &szSender )
 bool CInterfaceSingleStatistic::OnChapterReinfClose()
 {
 	if ( pChapterReinfDescWnd )
+	{
 		pChapterReinfDescWnd->ShowWindow( false );
+	}
 
 	pChapterReinfUpgrade->Hide();
 
@@ -731,9 +909,13 @@ void CInterfaceSingleStatistic::NextMenu()
 		NMainLoop::Command( ML_COMMAND_MISSION_BACKGROUND, "" );
 
 		if ( Singleton<IScenarioTracker>()->IsTutorialMission() )
+		{
 			NMainLoop::Command( ML_COMMAND_SELECT_TUTORIAL, "" );
+		}
 		else
+		{
 			NMainLoop::Command( ML_COMMAND_CUSTOM_MISSIONS, "" );
+		}
 
 		InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_NONE );
 	}
@@ -774,19 +956,27 @@ void CInterfaceSingleStatistic::CheckNextPopup()
 	if ( bPopup )
 	{
 		if ( pNewRankDlg && pNewRankDlg->IsVisible() )
+		{
 			return;
+		}
 		if ( pNewMedalDlg && pNewMedalDlg->IsVisible() )
+		{
 			return;
+		}
 
 		if ( pNewPlayerRank || !medals.empty() )
 		{
 			NTimer::STime timeCur = Singleton<IGameTimer>()->GetAbsTime();
 			if ( timeCur < timePrevPopup + PAUSE_BETWEEN_MEDALS )
+			{
 				return;
+			}
 		}
 
 		if ( pPopupBgWnd )
+		{
 			pPopupBgWnd->ShowWindow( false );
+		}
 		bPopup = false;
 	}
 
@@ -811,39 +1001,61 @@ void CInterfaceSingleStatistic::CheckNextPopup()
 void CInterfaceSingleStatistic::ShowNewRank( const NDb::SPlayerRank *pRank )
 {
 	if ( pNewRankDlg )
+	{
 		pNewRankDlg->ShowWindow( true );
+	}
 
 	if ( pNewRankIconWnd )
+	{
 		pNewRankIconWnd->SetTexture( pRank ? pRank->pStrap : 0 );
+	}
 
 	std::wstring wszRank;
 	if ( pRank && CHECK_TEXT_NOT_EMPTY_PRE( pRank->, RankName ) )
+	{
 		wszRank = GET_TEXT_PRE( pRank->, RankName );
+	}
 	if ( pNewRankView )
+	{
 		pNewRankView->SetText( pNewRankView->GetDBText() + wszRank );
+	}
 }
 
 void CInterfaceSingleStatistic::ShowMedal( const NDb::SMedal *pMedal )
 {
 	if ( pNewMedalDlg )
+	{
 		pNewMedalDlg->ShowWindow( true );
+	}
 
 	if ( pMedalIconWnd )
+	{
 		pMedalIconWnd->SetTexture( pMedal ? pMedal->pPictureTexture : 0 );
+	}
 
 	std::wstring wszName;
 	if ( pMedal && CHECK_TEXT_NOT_EMPTY_PRE( pMedal->, LocalizedName ) )
+	{
 		wszName = GET_TEXT_PRE( pMedal->, LocalizedName );
+	}
 	if ( pMedalNameView )
+	{
 		pMedalNameView->SetText( pMedalNameView->GetDBText() + wszName );
+	}
 
 	std::wstring wszDesc;
 	if ( pMedal && CHECK_TEXT_NOT_EMPTY_PRE( pMedal->, LocalizedDesc ) )
+	{
 		wszDesc = GET_TEXT_PRE( pMedal->, LocalizedDesc );
+	}
 	if ( pMedalDescView )
+	{
 		pMedalDescView->SetText( pMedalDescView->GetDBText() + wszDesc );
+	}
 	if ( pMedalDescCont )
+	{
 		pMedalDescCont->Update();
+	}
 }
 
 void CInterfaceSingleStatistic::ExpProgressStep()
@@ -852,18 +1064,26 @@ void CInterfaceSingleStatistic::ExpProgressStep()
 	{
 		expProgressCareer.Step( false );
 		if ( pCareerProgress )
+		{
 			pCareerProgress->SetPosition( expProgressCareer.fProgress );
+		}
 		if ( pNewCareerProgress )
+		{
 			pNewCareerProgress->SetPosition( expProgressCareer.fNewProgress );
+		}
 	}
 
 	if ( !expProgressRank.bFinal )
 	{
 		expProgressRank.Step( false );
 		if ( pRankProgress )
+		{
 			pRankProgress->SetPosition( expProgressRank.fProgress );
+		}
 		if ( pNewRankProgress )
+		{
 			pNewRankProgress->SetPosition( expProgressRank.fNewProgress );
+		}
 	}
 }
 

@@ -37,7 +37,9 @@ struct SCheckTurnIterateUnitsCallback : public SIterateUnitsCallback
 			for ( int i = 0; i < mediateRects.size(); ++i )
 			{
 				if ( profile.IsIntersected( mediateRects[i] ) )
+				{
 					return false;
+				}
 			}
 		}
 		return true;
@@ -167,13 +169,17 @@ const SRect CBasePathUnit::GetUnitModifiedRect( const float fCompress ) const
 	SRect result;
 	const SUnitProfile profile( GetUnitProfile() );
 	if ( profile.bRect )
+	{
 		result = profile.rect;
+	}
 	else
+	{
 		result.InitRect( profile.circle.center,
 		                 GetVectorByDirection( GetFrontDirection() ),
 		                 profile.circle.r,
 		                 profile.circle.r,
 		                 2.0f * profile.circle.r );
+	}
 
 	result.Compress( fCompress );
 	return result;
@@ -185,18 +191,24 @@ void CBasePathUnit::SetDirection( const uint16_t _wDirection, const bool bNeedUp
 	if ( wDirection != _wDirection /*wNewDirection != GetDirection() */ )
 	{
 		if ( !bPlacementUpdated && bNeedUpdate )
+		{
 			bPlacementUpdated = true;
+		}
 
 		bTurning = true;
 		const bool bNeedLockTiles = IsLockingTiles();
 		if ( bNeedLockTiles )
+		{
 			UnlockTiles();
+		}
 
 		wDirection = _wDirection;
 		wFrontDirection = IsGoForward() ? uint16_t( wDirection ) : wDirection + 32768;
 
 		if ( bNeedLockTiles )
+		{
 			LockTiles();
+		}
 	}
 }
 
@@ -213,7 +225,9 @@ void CBasePathUnit::SetCenter( const CVec3 &_vCenter, const bool bNeedUpdate )
 
 	const bool bNeedLockTiles = IsLockingTiles();
 	if ( !bPlacementUpdated && bNeedUpdate )
+	{
 		bPlacementUpdated = true;
+	}
 
 	const CVec3 vOldCenter = GetCenter();
 	vCenter = _vCenter;
@@ -223,7 +237,9 @@ void CBasePathUnit::SetCenter( const CVec3 &_vCenter, const bool bNeedUpdate )
 		UpdateTile();
 
 		if ( bNeedLockTiles )
+		{
 			UnlockTiles();
+		}
 
 		const EMovementPlane newPlane =
 				( pAIMap->GetTerrain()->GetTerrainType( vNewTile ) == ETT_WATER_TERRAIN ) ? PLANE_WATER : PLANE_TERRAIN;
@@ -232,19 +248,27 @@ void CBasePathUnit::SetCenter( const CVec3 &_vCenter, const bool bNeedUpdate )
 			if ( newPlane != eMovementPlane )
 			{
 				if ( eMovementPlane != PLANE_WATER || !pAIMap->GetTerrain()->IsBridge( vNewTile ) )
+				{
 					eMovementPlane = newPlane;
+				}
 			}
 		}
 		else
+		{
 			eMovementPlane = newPlane;
+		}
 		vTile = vNewTile;
 
 		STerrainModeSetter modeSetter( ELM_STATIC, pAIMap->GetTerrain() );
 		if ( pAIMap->GetTerrain()->CanUnitGo( GetBoundTileRadius(), vNewTile, GetAIPassabilityClass() ) != FREE_NONE )
+		{
 			vLastKnownGoodTile = vNewTile;
+		}
 
 		if ( bNeedLockTiles )
+		{
 			LockTiles();
+		}
 	}
 
 	if ( !bNeedUpdate )
@@ -268,9 +292,13 @@ void CBasePathUnit::SetGoForward( const bool _bGoForward )
 		const float maxSpeedHere = GetMaxSpeedHere();
 
 		if ( _bGoForward )
+		{
 			fSpeed = maxSpeedHere;
+		}
 		else
+		{
 			fSpeed = (std::min)( fSpeed, maxSpeedHere );
+		}
 	}
 }
 
@@ -324,13 +352,19 @@ const bool CBasePathUnit::TurnToDirection( const uint16_t _wDirection, const boo
 			if ( bCanBackward && bCanForward )
 			{
 				if ( GetSmoothPath()->CanGoBackward() || bOnLockedTiles )
+				{
 					SetGoForward( DirsDifference( GetFrontDirection(), _wDirection ) <=
 					              DirsDifference( GetFrontDirection() + 32768, _wDirection ) );
+				}
 				else
+				{
 					SetGoForward( true );
+				}
 			}
 			else
+			{
 				SetGoForward( bCanForward || !CanGoBackward() );
+			}
 
 			wLastDirection = _wDirection;
 		}
@@ -348,7 +382,9 @@ const bool CBasePathUnit::TurnToTarget( const CVec2 &vTarget )
 bool CBasePathUnit::CanMake180DegreesTurn( SRect rect ) const
 {
 	if ( IsRound() )
+	{
 		return true;
+	}
 
 	CTemporaryUnitProfileUnlocker unlocker(
 			GetUniqueID(), GetUnitProfile(), IsLockingTiles(), false, pAIMap->GetTerrain() );
@@ -359,7 +395,9 @@ bool CBasePathUnit::CanMake180DegreesTurn( SRect rect ) const
 		rect.InitRect( rect.center, rect.dir ^ vRotateAngle, rect.lengthAhead, rect.lengthBack, rect.width );
 
 		if ( IsOnLockedTiles( rect ) )
+		{
 			return false;
+		}
 	}
 
 	return true;
@@ -368,11 +406,15 @@ bool CBasePathUnit::CanMake180DegreesTurn( SRect rect ) const
 const bool CBasePathUnit::CanTurnTo( const uint16_t wNewDir, const bool bCanRebuildPath )
 {
 	if ( IsRound() )
+	{
 		return true;
+	}
 
 	const SUnitProfile profile( GetUnitProfile() );
 	if ( profile.IsCircle() )
+	{
 		return true;
+	}
 
 	const SRect rect( profile.rect );
 	const CVec2 vUnitCenter( GetCenterPlain() );
@@ -435,7 +477,9 @@ const bool CBasePathUnit::CanTurnTo( const uint16_t wNewDir, const bool bCanRebu
 			bResult = false;
 		}
 		else
+		{
 			bResult = true;
+		}
 	}
 
 	if ( !bResult && bCanRebuildPath && vBestPoint.x != -1.0f )
@@ -466,9 +510,13 @@ const bool CBasePathUnit::CheckTurn( const float fRectCoeff,
                                      const bool bCanGoBackward ) const
 {
 	if ( IsRound() )
+	{
 		return true;
+	}
 	if ( GetFrontDirection() != GetDirectionByVector( vDir ) && !CanRotate() )
+	{
 		return false;
+	}
 
 	const SRect rect( GetUnitModifiedRect( fRectCoeff ) );
 
@@ -482,7 +530,9 @@ const bool CBasePathUnit::CheckTurn( const float fRectCoeff,
 	// если выгоднее ехать задом
 	if ( bCanGoBackward &&
 	     DirsDifference( GetFrontDirection(), wFinalDirBack ) < DirsDifference( GetFrontDirection(), wFinalDir ) )
+	{
 		wFinalDir = wFinalDirBack;
+	}
 
 	const uint16_t wClockWise = wFinalDir - GetFrontDirection();
 	const uint16_t wAntiClockWise = GetFrontDirection() - wFinalDir;
@@ -502,11 +552,15 @@ const bool CBasePathUnit::CheckTurn( const float fRectCoeff,
 	for ( int i = 0; i < nParts; ++i )
 	{
 		if ( pAIMap->IsRectOnLockedTiles( mediateRects[i], GetAIPassabilityClass() ) )
+		{
 			return false;
+		}
 	}
 
 	if ( bWithUnits )
+	{
 		return IterateUnits( rect.center, rect.lengthAhead, false, SCheckTurnIterateUnitsCallback( mediateRects ) );
+	}
 	return true;
 }
 
@@ -570,11 +624,19 @@ void CBasePathUnit::StaticLockTiles() const
 			pAIMap->GetTilesCoveredByCircle( circle.center, circle.r, &tiles );
 		}
 		if ( GetMovementPlane() == PLANE_WATER )
+		{
 			for ( std::list<SObjTileInfo>::iterator it = tiles.begin(); it != tiles.end(); ++it )
+			{
 				it->lockInfo = EAC_WATER;
+			}
+		}
 		else
+		{
 			for ( std::list<SObjTileInfo>::iterator it = tiles.begin(); it != tiles.end(); ++it )
+			{
 				it->lockInfo = EAC_TERRAIN;
+			}
+		}
 		pAIMap->GetTerrain()->AddStaticObjectTiles( tiles );
 	}
 }
@@ -585,9 +647,13 @@ const bool CBasePathUnit::IsOnLockedTiles( const SUnitProfile &profile ) const
 			GetUniqueID(), GetUnitProfile(), IsLockingTiles(), GetMovementPlane() == PLANE_WATER, pAIMap->GetTerrain() );
 
 	if ( profile.bRect )
+	{
 		return pAIMap->IsRectOnLockedTiles( profile.rect, GetAIPassabilityClass() );
+	}
 	else
+	{
 		return pAIMap->IsCircleOnLockedTiles( profile.circle, GetAIPassabilityClass() );
+	}
 }
 
 void CBasePathUnit::Stop()
@@ -607,7 +673,9 @@ void CBasePathUnit::Stop()
 	fSpeed = 0;
 	StopTurning();
 	if ( IsInfantry() )
+	{
 		UnlockTiles();
+	}
 
 	CalculateIdle();
 }
@@ -622,14 +690,22 @@ void CBasePathUnit::AdjustSpeed()
 		float maxSpeedHere = GetMaxSpeedHere();
 
 		if ( maxSpeed < maxSpeedHere )
+		{
 			fSpeed = maxSpeed;
+		}
 		else if ( minSpeed > maxSpeedHere )
+		{
 			fSpeed = minSpeed;
+		}
 		else
+		{
 			fSpeed = maxSpeedHere;
+		}
 	}
 	else if ( IsInfantry() )
+	{
 		fSpeed = GetMaxSpeedHere();
+	}
 }
 
 void CBasePathUnit::FirstSegment( const NTimer::STime timeDiff )
@@ -669,10 +745,14 @@ void CBasePathUnit::FirstSegment( const NTimer::STime timeDiff )
 		}
 
 		if ( !pCurrentCollision->IsSolved() )
+		{
 			pCurrentCollision->FindCandidates( pCollisionsCollector );
+		}
 
 		if ( IsMoving() && pCurrentCollision->IsSolved() )
+		{
 			Stop();
+		}
 	}
 }
 
@@ -690,7 +770,9 @@ void CBasePathUnit::CallUpdatePlacement()
 void CBasePathUnit::SecondSegment( const NTimer::STime timeDiff )
 {
 	if ( bTurning && !bTurnCalled )
+	{
 		bTurning = false;
+	}
 
 	bTurnCalled = false;
 
@@ -709,19 +791,27 @@ void CBasePathUnit::SecondSegment( const NTimer::STime timeDiff )
 			pSmoothPath->Segment( timeDiff );
 			fSpeed = GetSmoothPath()->GetSpeed();
 			if ( fSpeed < 0.0f )
+			{
 				fSpeed = fabs( GetCenterPlain() - vOldCenter ) / timeDiff;
+			}
 		}
 		bNotified = bMaxSlowed = bMinSlowed = false;
 
 		// сдвинулись
 		if ( GetCenterPlain() != vOldCenter || GetFrontDirection() != oldDir )
+		{
 			stayTime = 0;
+		}
 		else
+		{
 			stayTime += timeDiff;
+		}
 
 		if ( GetCenterTile() != vOldTile && fabs( vCenter.z - pAIMap->GetHeights()->GetZ( GetCenter() ) ) < 0.001f &&
 		     !IsInfantry() )
+		{
 			CheckForDestroyedObjects( GetCenterPlain() );
+		}
 
 		if ( checkOnLockedTime < timeDiff && !IsInfantry() && !IsAviation() )
 		{
@@ -729,10 +819,14 @@ void CBasePathUnit::SecondSegment( const NTimer::STime timeDiff )
 			checkOnLockedTime = 2 * timeDiff;
 		}
 		else
+		{
 			checkOnLockedTime -= timeDiff;
+		}
 
 		if ( !bPathIsFinished && pSmoothPath->IsFinished() )
+		{
 			NullSegmTime();
+		}
 
 		SetNextSecondPathSegmTime( 0 );
 	}
@@ -741,7 +835,9 @@ void CBasePathUnit::SecondSegment( const NTimer::STime timeDiff )
 		if ( bTurningToDirContinuesly )
 		{
 			if ( TurnToDirection( wDirToContinueslyTurn, false, true ) )
+			{
 				bTurningToDirContinuesly = false;
+			}
 		}
 
 		fSpeed = 0.0f;
@@ -754,10 +850,14 @@ void CBasePathUnit::SecondSegment( const NTimer::STime timeDiff )
 	CalculateIdle();
 
 	if ( !IsIdle() || IsTurning() )
+	{
 		SetNextSecondPathSegmTime( 0 );
+	}
 
 	if ( bPlacementUpdated )
+	{
 		bStoppedSent = false;
+	}
 	else if ( !bStoppedSent )
 	{
 		OnStopped();
@@ -771,7 +871,9 @@ const float CBasePathUnit::GetMaxSpeedHere( const CVec2 &vPosition, const bool b
 	const float fMapPass = pAIMap->GetTerrain()->GetPass( vPosition );
 	float fSpeed = GetMaxPossibleSpeed() * ( fMapPass + ( 1 - fMapPass ) * GetPassability() );
 	if ( bAdjust && GetDesiredSpeed() > 0.0f )
+	{
 		fSpeed = (std::min)( fSpeed, GetDesiredSpeed() );
+	}
 
 	return fSpeed;
 }
@@ -782,7 +884,9 @@ CBasePathUnit::CreateBigStaticPath( const CVec2 &vStartPoint, const CVec2 &vFini
 	CPtr<IStaticPath> pPath = 0;
 	const bool bNeedRelock = IsLockingTiles();
 	if ( bNeedRelock )
+	{
 		UnlockTiles();
+	}
 	{
 		STerrainModeSetter modeSetter( ELM_STATIC, pAIMap->GetTerrain() );
 		pPathFinder->SetCheckingPathParameters( GetBoundTileRadius(),
@@ -815,12 +919,16 @@ CBasePathUnit::CreateBigStaticPath( const CVec2 &vStartPoint, const CVec2 &vFini
 					bEmptyPathFound = false;
 				}
 				else
+				{
 					bEmptyPathFound = true;
+				}
 			}
 		}
 	}
 	if ( bNeedRelock )
+	{
 		LockTiles();
+	}
 
 	return pPath.Extract();
 }
@@ -856,10 +964,14 @@ const bool CBasePathUnit::SendAlongPath( IStaticPath *pStaticPath, const CVec2 &
 		}
 	}
 	else
+	{
 		bResult = false;
+	}
 
 	if ( bResult )
+	{
 		CalculateIdle();
+	}
 	/*
 	else
 		OnIdle();
@@ -891,9 +1003,13 @@ const bool CBasePathUnit::SendAlongPath( IPath *pPath )
 	}
 
 	if ( bResult )
+	{
 		CalculateIdle();
+	}
 	else
+	{
 		OnIdle();
+	}
 
 	return bResult;
 }
@@ -924,7 +1040,9 @@ void CBasePathUnit::CalculateIdle()
 	const bool bOldIdle = bIdle;
 	bIdle = ( pInterruptedCollision == 0 ) && GetCollision()->IsSolved();
 	if ( !bOldIdle && bIdle )
+	{
 		OnIdle();
+	}
 }
 
 void CBasePathUnit::TurnToDirectionContinuesly( const uint16_t _wDirection )
@@ -936,9 +1054,13 @@ void CBasePathUnit::TurnToDirectionContinuesly( const uint16_t _wDirection )
 void CBasePathUnit::SetCollision( ICollision *pCollision, IPath *pPath )
 {
 	if ( pCollision->GetName() == NCollision::ECN_GIVE_PLACE )
+	{
 		pLastPusherUnit = pCollision->GetPushUnit();
+	}
 	else
+	{
 		pLastPusherUnit = 0;
+	}
 
 	if ( pInterruptedCollision == 0 && !bNoCollision )
 	{
@@ -951,9 +1073,13 @@ void CBasePathUnit::SetCollision( ICollision *pCollision, IPath *pPath )
 	{
 		pSmoothPath = pDefaultPath;
 		if ( pPath == 0 )
+		{
 			GetSmoothPath()->Stop();
+		}
 		else
+		{
 			GetSmoothPath()->Init( this, pPath, true, true, pAIMap );
+		}
 	}
 
 	pCurrentCollision = pCollision;
@@ -977,7 +1103,9 @@ void CBasePathUnit::NotifyAboutClosestThreat( const CBasePathUnit *pUnit, const 
 			else
 			{
 				if ( !bMinSlowed && !bMaxSlowed )
+				{
 					fSpeed = fSpeed + maxPossibleSpeed / 40;
+				}
 			}
 		}
 		else if ( fDistance >= pAIMap->GetTileSize() )
@@ -985,16 +1113,22 @@ void CBasePathUnit::NotifyAboutClosestThreat( const CBasePathUnit *pUnit, const 
 			if ( fSpeed >= maxSpeedHere / 2 && !bMaxSlowed )
 			{
 				if ( bMinSlowed )
+				{
 					fSpeed = fSpeed - maxPossibleSpeed / 40;
+				}
 				else
+				{
 					fSpeed = fSpeed - maxPossibleSpeed / 20;
+				}
 
 				bMaxSlowed = true;
 			}
 			else
 			{
 				if ( !bMinSlowed && !bMaxSlowed )
+				{
 					fSpeed = fSpeed + maxPossibleSpeed / 20;
+				}
 			}
 		}
 		else
@@ -1015,14 +1149,22 @@ const EMovementPlane CBasePathUnit::GetProbablePlane( const SVector &vPos ) cons
 	{
 		const EAIClasses aiClass = GetAIPassabilityClass();
 		if ( aiClass & EAC_TERRAIN && aiClass & EAC_WATER )
+		{
 			result = GetMovementPlane();
+		}
 		else if ( aiClass & EAC_TERRAIN )
+		{
 			result = PLANE_TERRAIN;
+		}
 		else
+		{
 			result = PLANE_WATER;
+		}
 	}
 	else
+	{
 		result = ( pAIMap->GetTerrain()->GetTerrainType( vPos ) == ETT_WATER_TERRAIN ) ? PLANE_WATER : PLANE_TERRAIN;
+	}
 
 	//Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW, StrFmt( "%d x %d = %d ", vPos.x, vPos.y, result ), 0xFFFFFFFF, true );
 
@@ -1109,7 +1251,9 @@ const CVec2 CBasePathUnit::GetMoveDirection() const
 {
 	CVec2 vResult = pSmoothPath->PeekPathPoint( 0 ) - GetCenterPlain();
 	if ( !Normalize( &vResult ) )
+	{
 		vResult = GetDirectionVector();
+	}
 	return vResult;
 }
 
@@ -1120,7 +1264,9 @@ void CBasePathUnit::OnSerialize( IBinSaver &f )
 
 	// CRAP{ for compatibility with legacy saves
 	if ( pPathFinder == 0 )
+	{
 		pPathFinder = Singleton<CCommonPathFinder>();
+	}
 }
 
 void SerializeBasePathUnit( IBinSaver &saver, const int nChunkID, CBasePathUnit **pUnit )

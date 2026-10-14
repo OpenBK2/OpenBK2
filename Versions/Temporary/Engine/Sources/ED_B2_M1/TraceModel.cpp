@@ -35,7 +35,9 @@ int IntersectTriangle( float *t,
 	float fDet = vEdge1 * vPvec;
 
 	if ( fDet > -FLT_EPSILON && fDet < FLT_EPSILON )
+	{
 		return 0;
+	}
 
 	float fInvDet = 1.0 / fDet;
 
@@ -45,7 +47,9 @@ int IntersectTriangle( float *t,
 	/* calculate U parameter and test bounds */
 	*pU = ( vTvec * vPvec ) * fInvDet;
 	if ( *pU < 0.0 || *pU > 1.0 )
+	{
 		return 0;
+	}
 
 	/* prepare to test V parameter */
 	CVec3 vQvec = vTvec ^ vEdge1;
@@ -53,7 +57,9 @@ int IntersectTriangle( float *t,
 	/* calculate V parameter and test bounds */
 	*pV = ( rvDir * vQvec ) * fInvDet;
 	if ( *pV < 0.0 || *pU + *pV > 1.0 )
+	{
 		return 0;
+	}
 
 	/* calculate t, ray intersects triangle */
 	*t = ( vEdge2 * vQvec ) * fInvDet;
@@ -202,13 +208,19 @@ void TraceTriangles( std::vector<SModelSurfacePoint> *pSurfacePoints,
 				if ( nRes )
 				{
 					if ( nRes & 1 )
+					{
 						pSurfacePoints->push_back( sp0 );
+					}
 					if ( nRes & 2 )
+					{
 						pSurfacePoints->push_back( sp1 );
+					}
 
 					++nNumPointsFound;
 					if ( nNumPointsFound >= nNumPointsPerCell )
+					{
 						break;
+					}
 				}
 			}
 		}
@@ -239,13 +251,19 @@ void TraceTriangles( std::vector<SModelSurfacePoint> *pSurfacePoints,
 				if ( nRes )
 				{
 					if ( nRes & 1 )
+					{
 						pSurfacePoints->push_back( sp0 );
+					}
 					if ( nRes & 2 )
+					{
 						pSurfacePoints->push_back( sp1 );
+					}
 
 					++nNumPointsFound;
 					if ( nNumPointsFound >= nNumPointsPerCell )
+					{
 						break;
+					}
 				}
 			}
 		}
@@ -256,13 +274,19 @@ void TraceTriangles( std::vector<SModelSurfacePoint> *pSurfacePoints,
 int TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, granny_file_info *pFile )
 {
 	if ( !pSurfacePoints )
+	{
 		return -1;
+	}
 	//
 	if ( !pFile )
+	{
 		return -1;
+	}
 	//
 	if ( pFile->ModelCount < 1 )
+	{
 		return -1;
+	}
 	//
 	CVec3 vMin, vMax;
 	if ( !GetGrannyMeshBoundingBox( &vMin, &vMax, pFile ) )
@@ -325,12 +349,15 @@ int TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, granny_file_inf
 bool TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, const std::string &rszGeometryResourceName )
 {
 	if ( !pSurfacePoints )
+	{
 		return false;
+	}
 
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	if ( !pUserData )
+	{
 		return false;
-	;
+	};
 
 	const std::string szGeometriesFolder =
 			Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Geometries\\";
@@ -346,7 +373,9 @@ bool TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, const std::str
 		CVec3 minimum, maximum;
 		if ( !NGltf::GetMeshNodes( file, pGeometry->szRootMesh, &nodes ) ||
 		     !NGltf::GetMeshBoundingBox( file, pGeometry->szRootMesh, false, &minimum, &maximum ) )
+		{
 			return false;
+		}
 		std::vector<STriangleForTrace> triangles;
 		for ( size_t index : nodes )
 		{
@@ -355,22 +384,34 @@ bool TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, const std::str
 			{
 				const auto position = primitive.findAttribute( "POSITION" );
 				if ( position == primitive.attributes.end() )
+				{
 					continue;
+				}
 				const auto &positions = file->Vec3Accessor( position->accessorIndex );
 				std::vector<uint32_t> indices;
 				if ( primitive.indicesAccessor )
+				{
 					fastgltf::iterateAccessor<uint32_t>( file->asset,
 					                                     file->asset.accessors[*primitive.indicesAccessor],
 					                                     [&]( uint32_t vertex ) { indices.push_back( vertex ); } );
+				}
 				else
+				{
 					for ( size_t i = 0; i < positions.size(); ++i )
+					{
 						indices.push_back( static_cast<uint32_t>( i ) );
+					}
+				}
 				auto triangle = [&]( uint32_t a, uint32_t b, uint32_t c )
 				{
 					if ( a >= positions.size() || b >= positions.size() || c >= positions.size() )
+					{
 						return false;
+					}
 					if ( a == b || b == c || a == c )
+					{
 						return true;
+					}
 					STriangleForTrace result;
 					result.szBodyPart = std::string( node.name );
 					// X mirroring plus the Y/Z swap preserves winding, as in rendering.
@@ -379,9 +420,13 @@ bool TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, const std::str
 					{
 						const CVec3 point = NGltf::ConvertPosition( positions[vertices[v]] );
 						if ( node.skinIndex )
+						{
 							result.vertices[v] = point;
+						}
 						else
+						{
 							file->nodeWorldTransforms[index].RotateHVector( &result.vertices[v], point );
+						}
 					}
 					triangles.push_back( result );
 					return true;
@@ -389,27 +434,43 @@ bool TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, const std::str
 				if ( primitive.type == fastgltf::PrimitiveType::Triangles )
 				{
 					if ( indices.size() % 3 )
+					{
 						return false;
+					}
 					for ( size_t i = 0; i + 2 < indices.size(); i += 3 )
+					{
 						if ( !triangle( indices[i], indices[i + 1], indices[i + 2] ) )
+						{
 							return false;
+						}
+					}
 				}
 				else if ( primitive.type == fastgltf::PrimitiveType::TriangleStrip )
 				{
 					for ( size_t i = 2; i < indices.size(); ++i )
+					{
 						if ( !triangle( indices[i - 2 + ( i % 2 )], indices[i - 1 - ( i % 2 )], indices[i] ) )
+						{
 							return false;
+						}
+					}
 				}
 				else if ( primitive.type == fastgltf::PrimitiveType::TriangleFan )
 				{
 					for ( size_t i = 2; i < indices.size(); ++i )
+					{
 						if ( !triangle( indices[0], indices[i - 1], indices[i] ) )
+						{
 							return false;
+						}
+					}
 				}
 			}
 		}
 		if ( triangles.empty() )
+		{
 			return false;
+		}
 		TraceTriangles( pSurfacePoints, triangles, minimum, maximum, 1 );
 		return true;
 	}
@@ -419,11 +480,15 @@ bool TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, const std::str
 	WaitForFile( szFilePath, 10000 );
 	granny_file *pFile = GrannyReadEntireFile( szFilePath.c_str() );
 	if ( !pFile )
+	{
 		return false;
+	}
 
 	granny_file_info *pInfo = GrannyGetFileInfo( pFile );
 	if ( !pInfo )
+	{
 		return false;
+	}
 
 	bool bRes = TraceModel( pSurfacePoints, pInfo );
 

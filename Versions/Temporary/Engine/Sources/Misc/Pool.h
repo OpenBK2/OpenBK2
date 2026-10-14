@@ -45,7 +45,9 @@ public:
 				pBlockStart = &i->data[-1];
 			}
 			else
+			{
 				pBlockStart = 0;
+			}
 			p = pPool->pCurrent;
 		}
 		void operator--()
@@ -72,7 +74,9 @@ public:
 	T *Alloc()
 	{
 		if ( pCurrent == pLast )
+		{
 			AllocNewBlock();
+		}
 		return ++pCurrent;
 	}
 	void Clear()

@@ -76,7 +76,9 @@ private:
 		bool bData = *pData;
 		const bool bRetVal = DataChunk( idChunk, &bData, nChunkNumber );
 		if ( IsReading() && bRetVal )
+		{
 			*pData = TYPE( bData );
+		}
 	}
 	// add integer built-in types
 	template <class TYPE>
@@ -85,7 +87,9 @@ private:
 		int nData = *pData;
 		const bool bRetVal = DataChunk( idChunk, &nData, nChunkNumber );
 		if ( IsReading() && bRetVal )
+		{
 			*pData = TYPE( nData );
+		}
 	}
 	// add fp built-in types
 	template <class TYPE>
@@ -94,14 +98,18 @@ private:
 		float fData = *pData;
 		const bool bRetVal = DataChunk( idChunk, &fData, nChunkNumber );
 		if ( IsReading() && bRetVal )
+		{
 			*pData = TYPE( fData );
+		}
 	}
 	//
 	template <class T>
 	void PORT_CDECL CallObjectSerialize( const chunk_id idChunk, int nChunkNumber, T *p, ... )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		p->operator&( *this );
 		FinishChunk();
 	}
@@ -150,7 +158,9 @@ private:
 	void AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, NFile::CFilePath *pData )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		DataChunkFilePath( pData );
 		FinishChunk();
 	}
@@ -158,7 +168,9 @@ private:
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::basic_string<T1> *pStr )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		DataChunkString( *pStr );
 		FinishChunk();
 	}
@@ -166,18 +178,26 @@ private:
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, CArray2D<T1> *pArr )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		if ( sizeof( TestDataPath( &( *pArr )[0][0] ) ) == 1 && sizeof( ( *pArr )[0][0] & ( *this ) ) == 1 )
+		{
 			Do2DArrayData( *pArr );
+		}
 		else
+		{
 			Do2DArray( *pArr );
+		}
 		FinishChunk();
 	}
 	template <class T, class T1>
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::vector<T1> *pVec )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		/*
 			if ( sizeof( TestDataPath(&(*pVec)[0]) ) == 1 && sizeof( (*pVec)[0]&(*this) ) == 1 )
 				DoDataVector( *p );
@@ -190,7 +210,9 @@ private:
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::list<T1> *pList )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		std::list<T1> &data = *pList;
 		if ( IsReading() )
 		{
@@ -199,14 +221,18 @@ private:
 		}
 		int i = 1;
 		for ( typename std::list<T1>::iterator it = data.begin(); it != data.end(); ++it, ++i )
+		{
 			Add( "Item", &( *it ), i );
+		}
 		FinishChunk();
 	}
 	template <class T, class T1, class T2, class T3>
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::unordered_map<T1, T2, T3> *pHash )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		DoHashMap( *pHash );
 		FinishChunk();
 	}
@@ -214,7 +240,9 @@ private:
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::map<T1, T2, T3, T4> *pMap )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		DoMap( *pMap );
 		FinishChunk();
 	}
@@ -222,7 +250,9 @@ private:
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::unordered_set<T1, T2> *pHash )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		DoHashSet( *pHash );
 		FinishChunk();
 	}
@@ -230,7 +260,9 @@ private:
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::pair<T1, T2> *pData )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		Add( "First", &( pData->first ) );
 		Add( "Second", &( pData->second ) );
 		FinishChunk();
@@ -239,7 +271,9 @@ private:
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, CVec2 *pData )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		Add( "x", &( pData->x ) );
 		Add( "y", &( pData->y ) );
 		FinishChunk();
@@ -248,7 +282,9 @@ private:
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, CVec3 *pData )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		Add( "x", &( pData->x ) );
 		Add( "y", &( pData->y ) );
 		Add( "z", &( pData->z ) );
@@ -258,7 +294,9 @@ private:
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, CVec4 *pData )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		Add( "x", &( pData->x ) );
 		Add( "y", &( pData->y ) );
 		Add( "z", &( pData->z ) );
@@ -274,7 +312,9 @@ private:
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, CTRect<T1> *pData )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		Add( "x1", &( pData->x1 ) );
 		Add( "y1", &( pData->y1 ) );
 		Add( "x2", &( pData->x2 ) );
@@ -285,7 +325,9 @@ private:
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, CTPoint<T1> *pData )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		Add( "x", &( pData->x ) );
 		Add( "y", &( pData->y ) );
 		FinishChunk();
@@ -296,12 +338,18 @@ private:
 	void AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, CPtrBase<T1, T2> *pData )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		//
 		if ( IsReading() )
+		{
 			pData->Set( CastToUserObject( LoadObject(), (T1 *)0 ) );
+		}
 		else
+		{
 			StoreObject( pData->GetBarePtr() );
+		}
 		//
 		FinishChunk();
 	}
@@ -310,7 +358,9 @@ private:
 	void AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, CDBPtr<T1, T2> *pData )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		if ( IsReading() )
 		{
 			CDBID dbid;
@@ -321,7 +371,9 @@ private:
 		{
 			CDBID dbid;
 			if ( *pData )
+			{
 				dbid = CastToDBResource( pData->GetPtr() )->GetDBID();
+			}
 			DataChunkDBID( &dbid );
 		}
 		FinishChunk();
@@ -331,7 +383,9 @@ private:
 	void AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, CDBID *pData )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		DataChunkDBID( pData );
 		FinishChunk();
 	}
@@ -346,9 +400,13 @@ private:
 			data.resize( nSize = CountChunks() );
 		}
 		else
+		{
 			nSize = data.size();
+		}
 		for ( i = 0; i < nSize; ++i )
+		{
 			Add( "Item", &data[i], i + 1 );
+		}
 	}
 	template <class T>
 	void DoDataVector( std::vector<T> &data )
@@ -361,7 +419,9 @@ private:
 			data.resize( nSize );
 		}
 		if ( nSize > 0 )
+		{
 			DataChunk( "Data", &data[0], sizeof( T ) * nSize, 0 );
+		}
 	}
 	template <class T1, class T2>
 	void DoHashSet( std::unordered_set<T1, T2> &data )
@@ -461,10 +521,14 @@ private:
 		if ( StartChunk( "Data", 0 ) )
 		{
 			if ( IsReading() )
+			{
 				a.SetSizes( nSizeY, nSizeY );
+			}
 			//
 			for ( int i = 0; i < nSizeX * nSizeY; i++ )
+			{
 				Add( "Item", &a[i / nSizeX][i % nSizeX], i + 1 );
+			}
 			FinishChunk();
 		}
 	}
@@ -475,9 +539,13 @@ private:
 		Add( "SizeX", &nSizeX );
 		Add( "SizeY", &nSizeY );
 		if ( IsReading() )
+		{
 			a.SetSizes( nSizeX, nSizeY );
+		}
 		if ( nSizeX * nSizeY > 0 )
+		{
 			DataChunk( "Data", &a[0][0], sizeof( T ) * nSizeX * nSizeY, 0 );
+		}
 	}
 	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber ) = 0;
 	virtual void FinishChunk() = 0;
@@ -523,7 +591,9 @@ public:
 	void AddTypedSuper( T *pData )
 	{
 		if ( !StartChunk( 0, 0 ) )
+		{
 			return;
+		}
 		pData->T::operator&( *this );
 		FinishChunk();
 	}
@@ -531,7 +601,9 @@ public:
 	void AddPolymorphicBase( const chunk_id idChunk, T *pData, int nChunkNumber = 0 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		pData->operator&( *this );
 		FinishChunk();
 	}
@@ -539,14 +611,18 @@ public:
 	void AddInPlace( const chunk_id idChunk, CPtrBase<TUserObj, TRef> *pData, int nChunkNumber = 0 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		if ( IsReading() )
 		{
 			int nTypeID = -1;
 			Add( "__ClassTypeID", &nTypeID );
 			pData->Set( CastToUserObject( NObjectFactory::MakeObject( nTypeID ), (TUserObj *)0 ) );
 			if ( pData->GetPtr() != 0 )
+			{
 				Add( "__ObjectData", pData->GetPtr() );
+			}
 		}
 		else
 		{

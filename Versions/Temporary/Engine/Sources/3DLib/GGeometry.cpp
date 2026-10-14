@@ -54,7 +54,9 @@ void MergePositions( std::vector<uint16_t> *pMatches, std::vector<CVec3> *pPosit
 			posHash[positions[k]] = nRes;
 		}
 		else
+		{
 			nRes = i->second;
+		}
 		posIndices[k] = nRes;
 	}
 	positions = mergedPositions;
@@ -70,7 +72,9 @@ struct SRefTracker
 	{
 		temp.resize( n );
 		for ( int k = 0; k < temp.size(); ++k )
+		{
 			temp[k] = -1;
+		}
 	}
 	int GetRef( int nIndex, int nPos )
 	{
@@ -90,7 +94,9 @@ void CObjectInfo::EstablishRefs()
 	rt.SetSize( positions.size() );
 	vertRefPositions.resize( verts.size() );
 	for ( int k = 0; k < vertRefPositions.size(); ++k )
+	{
 		vertRefPositions[k] = rt.GetRef( posIndices[k], k );
+	}
 }
 
 struct SCompoundPosKey
@@ -138,7 +144,9 @@ void CObjectInfo::MergePositions()
 			posHash[key] = nRes;
 		}
 		else
+		{
 			nRes = i->second;
+		}
 		posIndices[k] = nRes;
 	}
 	positions = mergedPositions;
@@ -174,7 +182,9 @@ void CObjectInfo::AssignGeometry( const SData &data, std::vector<STriangle> *pGe
 					std::swap( res.cBoneIndices[k], res.cBoneIndices[k + 1] );
 				}
 				else
+				{
 					break;
+				}
 			}
 		}
 		ASSERT( res.fWeights[0] >= res.fWeights[1] && res.fWeights[1] >= res.fWeights[2] &&
@@ -210,7 +220,9 @@ static void Reorder( std::vector<T> *pRes, const std::vector<int> &newPlaces )
 {
 	std::vector<T> tmp( pRes->size() );
 	for ( int k = 0; k < tmp.size(); ++k )
+	{
 		tmp[k] = ( *pRes )[newPlaces[k]];
+	}
 	*pRes = tmp;
 }
 
@@ -238,7 +250,9 @@ const std::vector<uint32_t> &CObjectInfo::GetAttribute( int nID )
 	for ( int k = 0; k < attributes.size(); ++k )
 	{
 		if ( attributes[k].nID == nID )
+		{
 			return attributes[k].data;
+		}
 	}
 	return emptyAttribute;
 }
@@ -267,7 +281,9 @@ Shuffle( std::vector<T> *pRes, const std::vector<T> &src, const std::vector<uint
 	for ( int k = 0; k < vxReorder.size(); ++k )
 	{
 		if ( vxReorder[k] < nResVertices )
+		{
 			( *pRes )[vxReorder[k]] = src[k];
+		}
 	}
 }
 void CObjectInfo::Assign( const SData &data, std::vector<STriangle> *pGeom, bool bOptimizeVCache )
@@ -314,7 +330,9 @@ void CObjectInfo::Assign( const SData &data, std::vector<STriangle> *pGeom, bool
 		AssignGeometry( optimizedData, &optimizedData.geometry );
 	}
 	else
+	{
 		AssignGeometry( data, pGeom );
+	}
 	MergePositions();
 	nTris = geometry.size();
 	EstablishRefs();
@@ -338,7 +356,9 @@ void CObjectInfo::AssignFast( SData *pData )
 	nTris = geometry.size();
 	posIndices.resize( verts.size() );
 	for ( int k = 0; k < posIndices.size(); ++k )
+	{
 		posIndices[k] = k;
+	}
 	fAverageTriArea = 0;
 }
 
@@ -346,22 +366,30 @@ void CObjectInfo::GetVxPositionTriangles( std::vector<STriangle> *pRes ) const
 {
 	*pRes = geometry;
 	if ( !vertRefPositions.empty() )
+	{
 		FilterTrinagles( pRes, vertRefPositions );
+	}
 }
 
 void CObjectInfo::GetPosTriangles( std::vector<STriangle> *pRes ) const
 {
 	*pRes = geometry;
 	if ( !posIndices.empty() )
+	{
 		FilterTrinagles( pRes, posIndices );
+	}
 }
 
 void CObjectInfo::CalcBound( SBound *pRes )
 {
 	if ( verts.empty() )
+	{
 		pRes->BoxInit( VNULL3, VNULL3 );
+	}
 	else
+	{
 		::CalcBound( pRes, positions, SGetSelf<CVec3>() );
+	}
 }
 
 void CObjectInfo::CalcBound( SSphere *pRes )
@@ -398,19 +426,27 @@ static int GetVertex( CObjectInfo::SData *pData,
                       TGetTex f )
 {
 	if ( _nXShift == 0 && _nYShift == 0 )
+	{
 		return _nVertex;
+	}
 	SVertexShift idx( _nVertex, _nXShift, _nYShift );
 	std::unordered_map<SVertexShift, int, SVertexShiftHash>::iterator i = pShifted->find( idx );
 	if ( i != pShifted->end() )
+	{
 		return i->second;
+	}
 	int nRes = pData->verts.size();
 	( *pShifted )[idx] = nRes;
 	SVertex v = pData->verts[_nVertex];
 	pData->verts.push_back( v );
 	if ( !pData->weights.empty() )
+	{
 		pData->weights.push_back( pData->weights[_nVertex] );
+	}
 	if ( !pData->secondTex.empty() )
+	{
 		pData->secondTex.push_back( pData->secondTex[_nVertex] );
+	}
 	CVec2 &tex = f.GetTex( pData, pData->verts.size() - 1 );
 	tex.u -= _nXShift;
 	tex.v -= _nYShift;
@@ -426,9 +462,13 @@ static int GetShift( float fX1, float fX2, float fX3 )
 	int nXMax = (std::max)( (std::max)( nX1, nX2 ), nX3 );
 	int nDif = nXMax - nXMin;
 	if ( nDif < N_MAX_TEX_WRAP )
+	{
 		return ( nXMin & ~( N_MAX_TEX_WRAP - 1 ) ) + N_MAX_TEX_WRAP; // ;
+	}
 	else if ( nDif < N_MAX_TEX_WRAP * 2 )
+	{
 		return nXMin + N_MAX_TEX_WRAP;
+	}
 	ASSERT( 0 );
 	return nXMin + N_MAX_TEX_WRAP * 2 - 1;
 }
@@ -450,7 +490,9 @@ void SplitWrapping( CObjectInfo::SData *pData, TGetTex f )
 		}
 	}
 	if ( !bHasLargeUV )
+	{
 		return;
+	}
 	// "noramlize" to resolve simple cases
 	float fXMin = 1e30f, fYMin = 1e30f, fXMax = -1e30f, fYMax = -1e30f;
 	for ( int k = 0; k < pData->verts.size(); ++k )
@@ -512,14 +554,18 @@ struct SGetTex2
 void SplitWrapping( CObjectInfo::SData *pData )
 {
 	if ( pData->verts.empty() )
+	{
 		return;
+	}
 	SplitWrapping( pData, SGetTex() );
 }
 
 void SplitWrapping2( CObjectInfo::SData *pData )
 {
 	if ( pData->secondTex.empty() )
+	{
 		return;
+	}
 	SplitWrapping( pData, SGetTex2() );
 }
 }

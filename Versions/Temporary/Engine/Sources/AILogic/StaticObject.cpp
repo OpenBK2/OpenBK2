@@ -72,7 +72,9 @@ const bool CStaticObject::IsVisible( const uint8_t cParty ) const
 	for ( CTilesSet::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
 	{
 		if ( theWarFog.IsTileVisible( *iter, cParty ) )
+		{
 			return true;
+		}
 	}
 
 	return false;
@@ -111,13 +113,17 @@ extern bool bShowUnderConstruction;
 void CExistingObject::UpdateGlobalMark()
 {
 	if ( !CExistingObjectModifyAI::IsProhibited() )
+	{
 		++globalMark;
+	}
 }
 
 void CExistingObject::SetGlobalUpdated()
 {
 	if ( !CExistingObjectModifyAI::IsProhibited() )
+	{
 		mark = globalMark;
+	}
 }
 
 void CExistingObject::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff )
@@ -155,7 +161,9 @@ void CExistingObject::SetNewPlacement( const CVec3 &center, const uint16_t dir )
 void CExistingObject::Delete()
 {
 	if ( !IsTrampled() )
+	{
 		updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
+	}
 
 	theStatObjs.DeleteInternalObjectInfo( this );
 	theFeedBackSystem.RemovedAllFeedbacks( nUniqueID );
@@ -214,7 +222,9 @@ bool CExistingObject::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmor
 			pExpl->AddHitToSend( new CHitInfo( pExpl, this, SAINotifyHitInfo::EHT_HIT, vExpl ) );
 		}
 		else
+		{
 			pExpl->AddHitToSend( new CHitInfo( pExpl, this, SAINotifyHitInfo::EHT_REFLECT, vExpl ) );
+		}
 
 		return true;
 	}
@@ -233,7 +243,9 @@ bool CExistingObject::ProcessBurstExpl( CExplosion *pExpl,
 		return false;
 	}
 	else
+	{
 		return IsPointInside( CVec2( pExpl->GetExplCoordinates().x, pExpl->GetExplCoordinates().y ) );
+	}
 }
 
 void CExistingObject::BurnSegment()
@@ -242,12 +254,16 @@ void CExistingObject::BurnSegment()
 	fHP = (std::max)( GetMinHP(), fHP - fDamage );
 	SetAlive( GetHitPoints() > 0.0f );
 	if ( fHP <= 0 )
+	{
 		Die( fDamage );
+	}
 
 	updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
 
 	if ( curTime >= burningEnd )
+	{
 		theStatObjs.EndBurning( this );
+	}
 }
 
 void CExistingObject::WasHit()
@@ -280,7 +296,9 @@ bool CGivenPassabilityStObject::CheckStaticObject( const SObjectBaseRPGStats *pS
 				const CVec2 vTileCenter( AICellsTiles::GetCenterOfTile( x, y ) );
 				const SVector tile( AICellsTiles::GetTile( x, y ) );
 				if ( pass.GetVal( vTileCenter ) && GetTerrain()->IsLocked( tile, EAC_TERRAIN ) )
+				{
 					return false;
+				}
 			}
 		}
 	}
@@ -293,7 +311,9 @@ bool CGivenPassabilityStObject::CheckStaticObject( const SObjectBaseRPGStats *pS
 		for ( int i = 0; i < tiles.size(); ++i )
 		{
 			if ( GetTerrain()->IsLocked( tiles[i], EAC_TERRAIN ) )
+			{
 				return false;
+			}
 		}
 	}
 
@@ -363,9 +383,13 @@ void CGivenPassabilityStObject::GetPassability(
 int CGivenPassabilityStObject::GetHeight() const
 {
 	if ( const SObjectBaseRPGStats *pStats = dynamic_cast<const SObjectBaseRPGStats *>( GetStats() ) )
+	{
 		return pStats->nObjectHeight;
+	}
 	else
+	{
 		return 32;
+	}
 }
 const EAIClasses CGivenPassabilityStObject::GetPassabilityClass() const
 {
@@ -386,7 +410,9 @@ void CGivenPassabilityStObject::CreateLockedTilesInfo( std::list<SObjTileInfo> *
 	int nEntrances = GetNEntrancePoints();
 	entrances.resize( nEntrances );
 	for ( int i = 0; i < nEntrances; ++i )
+	{
 		GetEntranceData( &entrances[i].vPos, &entrances[i].wDir, i );
+	}
 
 	CTerrainAccess access;
 	NLock::SStaticObjectLockInfo info( lockInfo, lockedTiles );
@@ -429,7 +455,9 @@ void CGivenPassabilityStObject::UnlockTiles()
 		// object lock mast changed since save created
 		if ( pass.GetMaxX() - pass.GetMinX() >= lockInfo.GetSizeX() ||
 		     pass.GetMaxY() - pass.GetMinY() >= lockInfo.GetSizeY() )
+		{
 			return;
+		}
 
 		for ( int x = pass.GetMinX(); x < pass.GetMaxX(); x += SConsts::TILE_SIZE )
 		{
@@ -440,7 +468,9 @@ void CGivenPassabilityStObject::UnlockTiles()
 				{
 					const SVector tile( AICellsTiles::GetTile( x, y ) );
 					if ( !GetAIMap()->IsTileInside( tile ) )
+					{
 						continue;
+					}
 					tiles.push_back( SObjTileInfo( tile, lockInfo[tile.y - vStartTile.y][tile.x - vStartTile.x] ) );
 				}
 			}
@@ -448,7 +478,9 @@ void CGivenPassabilityStObject::UnlockTiles()
 		GetTerrain()->RemoveStaticObjectTiles( tiles );
 	}
 	else if ( GetPassProfile() != 0 )
+	{
 		GetTerrain()->RemoveStaticObjectTiles( lockedTiles );
+	}
 
 #if !defined( _FINALRELEASE )
 	NAIVisInfo::RemoveProfile( GetUniqueId() );
@@ -459,7 +491,9 @@ void CGivenPassabilityStObject::SetTransparenciesInt( const int nUniqueID )
 {
 	if ( !GetStats() || GetStats()->GetTypeID() != NDb::SBuildingRPGStats::typeID &&
 	                        GetStats()->GetTypeID() != NDb::SBridgeRPGStats::typeID )
+	{
 		return;
+	}
 	//special for (c) Alexander Vinnikov's method of visibility
 	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> pass;
 	GetVisibility( &pass );
@@ -475,7 +509,9 @@ void CGivenPassabilityStObject::SetTransparenciesInt( const int nUniqueID )
 			const SVector tile( AICellsTiles::GetTile( x, y ) );
 
 			if ( GetAIMap()->IsTileInside( tile ) && pass.GetVal( vTileCenter ) )
+			{
 				theWarFog.AddStaticObjectTile( tile, nUniqueID, GetHeight() );
+			}
 		}
 	}
 
@@ -484,14 +520,18 @@ void CGivenPassabilityStObject::SetTransparenciesInt( const int nUniqueID )
 	// and drained by an executor that draws from the shared generator, so the
 	// count of these two is what two runs were found to disagree about.
 	if ( NAsyncTrace::IsEnabled() )
+	{
 		NAsyncTrace::Write( "transp", fmt::format( "set uid={}", nUniqueID ) );
+	}
 }
 
 void CGivenPassabilityStObject::RemoveTransparenciesInt( const int nUniqueID )
 {
 	if ( !GetStats() || GetStats()->GetTypeID() != NDb::SBuildingRPGStats::typeID &&
 	                        GetStats()->GetTypeID() != NDb::SBridgeRPGStats::typeID )
+	{
 		return;
+	}
 	//special for (c) Alexander Vinnikov's method of visibility
 	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> pass;
 	GetVisibility( &pass );
@@ -519,14 +559,18 @@ void CGivenPassabilityStObject::RemoveTransparenciesInt( const int nUniqueID )
 	SExecutorEventParam param( EID_ADD_TO_RESTORE_TRANSPARENCY_QUEUE, 0, 0 );
 	CExecutorEventAddToRestoreTransparencyQueue event( param, GetUniqueId() );
 	if ( NAsyncTrace::IsEnabled() )
+	{
 		NAsyncTrace::Write( "transp", fmt::format( "remove uid={}", nUniqueID ) );
+	}
 	theExecutorContainer.RaiseEvent( event );
 }
 
 void CGivenPassabilityStObject::RestoreTransparenciesImmidiately()
 {
 	if ( bTransparencySet )
+	{
 		SetTransparencies();
+	}
 }
 
 bool CGivenPassabilityStObject::IsPointInside( const CVec2 &point ) const
@@ -535,9 +579,13 @@ bool CGivenPassabilityStObject::IsPointInside( const CVec2 &point ) const
 	{
 		const SHPObjectRPGStats *pStats = GetStats();
 		if ( pStats == 0 )
+		{
 			return false;
+		}
 		else if ( checked_cast<const SStaticObjectRPGStats *>( pStats )->GetPassability( GetFrameIndex() ).IsEmpty() )
+		{
 			return true;
+		}
 		else
 		{
 			bool bRet = false;
@@ -548,7 +596,9 @@ bool CGivenPassabilityStObject::IsPointInside( const CVec2 &point ) const
 				bRet = pass.GetVal( point );
 			}
 			else
+			{
 				bRet = GetPassProfile()->IsPointInside( point );
+			}
 
 			if ( bRet )
 			{
@@ -589,7 +639,9 @@ void CGivenPassabilityStObject::GetCoveredTiles( std::list<SVector> *pTiles ) co
 				{
 					const SVector tile( AICellsTiles::GetTile( x, y ) );
 					if ( !GetAIMap()->IsTileInside( tile ) )
+					{
 						continue;
+					}
 					pTiles->push_back( tile );
 				}
 			}
@@ -611,7 +663,9 @@ const CVec2 CGivenPassabilityStObject::GetAttackCenter( const CVec2 &vPoint ) co
 	CVec2 vMidPoint( 0, 0 );
 
 	if ( tiles.empty() )
+	{
 		vBestPoint = boundRect.center;
+	}
 	else
 	{
 		float fMinDist2 = -1.0f;
@@ -682,7 +736,9 @@ bool CCommonStaticObject::ProcessAreaDamage( const class CExplosion *pExpl,
                                              const float fSmallRadius )
 {
 	if ( bFallen )
+	{
 		return false;
+	}
 	SRect boundRect;
 	GetBoundRect( &boundRect );
 	const CVec3 vExpl( pExpl->GetExplCoordinates() );
@@ -703,7 +759,9 @@ void CCommonStaticObject::AnimateFalling( const CVec2 &vFallTo )
 {
 	NI_ASSERT( CanFall(), "This object cannot fall!" );
 	if ( bFallen )
+	{
 		return;
+	}
 	bFallen = true;
 	CVec2 vIt = CVec2( GetCenter().x, GetCenter().y );
 	const float fStartHeight = GetHeights()->GetVisZ( vIt.x, vIt.y );
@@ -715,7 +773,9 @@ void CCommonStaticObject::AnimateFalling( const CVec2 &vFallTo )
 		vIt = CVec2( GetCenter().x, GetCenter().y ) + vFallTo * i;
 		float fNewTG = ( GetHeights()->GetVisZ( vIt.x, vIt.y ) - fStartHeight ) / i;
 		if ( fNewTG > fMaxTG )
+		{
 			fMaxTG = fNewTG;
+		}
 	}
 	SAITreeBrokenUpdate *pUpdate = new SAITreeBrokenUpdate;
 	pUpdate->fTg = fMaxTG;
@@ -742,9 +802,13 @@ bool CSimpleStaticObject::ShouldSuspendAction( const EActionNotify &eAction ) co
 bool CSimpleStaticObject::CanFall()
 {
 	if ( const SObjectBaseRPGStats *pLocalStats = dynamic_cast_ptr<const SObjectBaseRPGStats *>( pStats ) )
+	{
 		return pLocalStats->bCanFall;
+	}
 	else
+	{
 		return false;
+	}
 }
 
 //*******************************************************************
@@ -771,7 +835,11 @@ void CTerraMeshStaticObject::GetPlacement( SAINotifyPlacement *pPlacement, const
 bool CTerraMeshStaticObject::CanFall()
 {
 	if ( const SObjectBaseRPGStats *pLocalStats = dynamic_cast_ptr<const SObjectBaseRPGStats *>( pStats ) )
+	{
 		return pLocalStats->bCanFall;
+	}
 	else
+	{
 		return false;
+	}
 }

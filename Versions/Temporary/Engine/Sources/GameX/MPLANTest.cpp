@@ -67,7 +67,9 @@ void CLANTester::Start()
 void CLANTester::NewGameFound( const int nID, const std::string &szName )
 {
 	if ( bIsServer )
+	{
 		return;
+	}
 
 	if ( szName == NStr::ToMBCS( NGlobal::GetVar( "LANTEST.SessionName", L"LANTEST" ) ) )
 	{
@@ -84,14 +86,18 @@ void CLANTester::ClientInfoChanged( const int nSlot, const bool bReady )
 	if ( !bAcceptSent )
 	{
 		if ( gameClientsReady.size() < nPlayersToWait )
+		{
 			return;
+		}
 		if ( !bIsServer )
 		{
 			for ( int i = 1; i < nMySlot; ++i ) // Потому что слот 0 - это создатель игры. Он всегда готов:)
 			{
 				std::unordered_map<int, bool>::iterator it = gameClientsReady.find( i );
 				if ( it == gameClientsReady.end() || !it->second )
+				{
 					return;
+				}
 			}
 			CPtr<SMPUIUpdateSlotMessage> pMsg = new SMPUIUpdateSlotMessage;
 			pMsg->nSlot = nMySlot;
@@ -112,7 +118,9 @@ void CLANTester::ClientInfoChanged( const int nSlot, const bool bReady )
 			for ( std::unordered_map<int, bool>::iterator it = gameClientsReady.begin(); it != gameClientsReady.end(); ++it )
 			{
 				if ( !it->second )
+				{
 					return;
+				}
 			}
 			pMPManager->AddUIMessage( EMUI_START_GAME );
 			bAcceptSent = true;

@@ -20,7 +20,9 @@ void CPlayList::NextComposition()
 		// pick random song
 		float fTotal = 0;
 		for ( int i = 0; i < pList->randomOrder.size(); ++i )
+		{
 			fTotal += pList->randomOrder[i].fWeight == 0.0f ? 1.0f : pList->randomOrder[i].fWeight;
+		}
 		const float fRandom = NWin32Random::RandomCheck( 0.0f, fTotal );
 
 		float fCurrent = 0;
@@ -54,7 +56,9 @@ void CPlayList::LaunchComposition( const NDb::SComposition *_pComposition )
 	elements.clear();
 
 	if ( _pComposition == 0 || _pComposition->pTrack == 0 )
+	{
 		return;
+	}
 
 	CTrack *pTrack = new CTrack( _pComposition->pTrack, _pComposition->pPlayTime, EST_MUSIC );
 	elements.push_back( pTrack );
@@ -64,9 +68,13 @@ void CPlayList::LaunchComposition( const NDb::SComposition *_pComposition )
 	fades.clear();
 	const NTimer::STime curTime = GetAbsTime();
 	if ( _pComposition->pFadeIn )
+	{
 		fades.push_back( new CFade( _pComposition->pFadeIn, EMS_MUSIC_FADE_SELF, 0 ) );
+	}
 	if ( _pComposition->pFadeOut )
+	{
 		fades.push_back( new CFade( _pComposition->pFadeOut, EMS_MUSIC_FADE_SELF, pTrack ) );
+	}
 
 	fades.Update();
 	pTrack->Segment();
@@ -76,7 +84,9 @@ void CPlayList::Init( const NDb::SPlayList *_pList )
 {
 	pList = _pList;
 	if ( eState != EPSS_OUT )
+	{
 		NextComposition();
+	}
 }
 
 void CPlayList::Segment()
@@ -95,7 +105,9 @@ void CPlayList::Segment()
 					eState = EPSS_OUT;
 					CElements::iterator pos = elements.begin();
 					if ( pos != elements.end() )
+					{
 						( *pos )->Stop();
+					}
 				}
 				break;
 				case EPSS_FADING_IN:
@@ -108,7 +120,9 @@ void CPlayList::Segment()
 	}
 
 	if ( eState == EPSS_OUT )
+	{
 		return;
+	}
 
 	fades.Update();
 
@@ -116,7 +130,9 @@ void CPlayList::Segment()
 	for ( CElements::iterator it = elements.begin(); it != elements.end(); )
 	{
 		if ( ( *it )->IsFinished() )
+		{
 			it = elements.erase( it );
+		}
 		else
 		{
 			( *it )->Segment();
@@ -124,7 +140,9 @@ void CPlayList::Segment()
 		}
 	}
 	if ( elements.empty() )
+	{
 		NextComposition();
+	}
 }
 
 void CPlayList::FadeOut()
@@ -143,7 +161,9 @@ void CPlayList::FadeOut()
 			eState = EPSS_OUT;
 			CElements::iterator pos = elements.begin();
 			if ( pos != elements.end() )
+			{
 				( *pos )->Stop();
+			}
 		}
 	}
 }
@@ -151,7 +171,9 @@ void CPlayList::FadeOut()
 void CPlayList::FadeIn()
 {
 	if ( !pList )
+	{
 		return;
+	}
 
 	NI_ASSERT( eState == EPSS_OUT, "wrong playlist state" );
 	if ( eState == EPSS_OUT )
@@ -163,12 +185,18 @@ void CPlayList::FadeIn()
 			pPlaylistFade->Segment();
 		}
 		else
+		{
 			eState = EPSS_IN;
+		}
 		if ( elements.empty() )
+		{
 			NextComposition();
+		}
 		CElements::iterator pos = elements.begin();
 		if ( pos != elements.end() )
+		{
 			( *pos )->Play();
+		}
 	}
 }
 
@@ -177,7 +205,9 @@ void CPlayList::OnResetTimer()
 	for ( CElements::iterator it = elements.begin(); it != elements.end(); )
 	{
 		if ( ( *it )->IsFinished() )
+		{
 			it = elements.erase( it );
+		}
 		else
 		{
 			( *it )->OnResetTimer();

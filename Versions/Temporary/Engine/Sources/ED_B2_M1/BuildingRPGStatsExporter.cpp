@@ -125,42 +125,60 @@ static void CreateDestructionDustPoints( IManipulator *pBuildingRPGStatsManipula
 		{
 			bool bPassable = Passable( passability, x, y );
 			if ( bPassable )
+			{
 				continue;
+			}
 
 			if ( Passable( passability, x - 1, y ) )
+			{
 				direction[y][x] |= ESD_180;
+			}
 
 			if ( Passable( passability, x + 1, y ) )
+			{
 				direction[y][x] |= ESD_0;
+			}
 
 			if ( Passable( passability, x, y - 1 ) )
+			{
 				direction[y][x] |= ESD_90;
+			}
 
 			if ( Passable( passability, x, y + 1 ) )
+			{
 				direction[y][x] |= ESD_270;
+			}
 
 			if ( Passable( passability, x - 1, y - 1 ) )
 			{
 				if ( Passable( passability, x - 1, y ) && Passable( passability, x, y - 1 ) )
+				{
 					direction[y][x] |= ESD_135;
+				}
 			}
 
 			if ( Passable( passability, x - 1, y + 1 ) )
 			{
 				if ( Passable( passability, x - 1, y ) && Passable( passability, x, y + 1 ) )
+				{
 					direction[y][x] |= ESD_225;
+				}
 			}
 
 			if ( Passable( passability, x + 1, y - 1 ) )
 			{
 				if ( Passable( passability, x, y - 1 ) && Passable( passability, x + 1, y ) )
+				{
 					direction[y][x] |= ESD_45;
+				}
 			}
 
 			if ( Passable( passability, x + 1, y + 1 ) )
 			{
 				if ( Passable( passability, x, y + 1 ) && Passable( passability, x + 1, y ) )
+				{
 					direction[y][x] |= ESD_315;
+				}
 			}
 		}
 	}
@@ -205,17 +223,27 @@ static void CreateDestructionDustPoints( IManipulator *pBuildingRPGStatsManipula
 		for ( int y = 0; y < nSizeY; ++y )
 		{
 			if ( visDirection[y][x] == ESD_NONE )
+			{
 				continue;
+			}
 
 			// углы
 			if ( ( visDirection[y][x] & ESD_0 ) && ( visDirection[y][x] & ESD_90 ) )
+			{
 				visDirection[y][x] = ESD_45;
+			}
 			if ( ( visDirection[y][x] & ESD_90 ) && ( visDirection[y][x] & ESD_180 ) )
+			{
 				visDirection[y][x] = ESD_135;
+			}
 			if ( ( visDirection[y][x] & ESD_180 ) && ( visDirection[y][x] & ESD_270 ) )
+			{
 				visDirection[y][x] = ESD_225;
+			}
 			if ( ( visDirection[y][x] & ESD_270 ) && ( visDirection[y][x] & ESD_0 ) )
+			{
 				visDirection[y][x] = ESD_315;
+			}
 			//
 
 			for ( int h = 0; h <= 7; ++h )
@@ -269,7 +297,9 @@ float QuatToDirection( const CQuat &qRot )
 
 	// угол возвращается в AI системе отчсчета (отсчитывается против часовой стрелки от (0,1,0))
 	if ( fAngle < 0 ) // 0..2pi
+	{
 		fAngle += FP_2PI;
+	}
 
 	if ( fAngle <= FP_PI2 )
 	{
@@ -339,7 +369,9 @@ const bool CBuildingRPGStatsExporter::UpdateVisObj( IManipulator *pManipulator,
 		CPtr<IManipulator> pSkeleton =
 				CManipulatorManager::CreateManipulatorFromReference( "Skeleton", pModel, 0, &szSkeletonName, 0 );
 		if ( !pSkeleton )
+		{
 			continue;
+		}
 
 		pSkeleton->RemoveNode( "Animations", NODE_REMOVEALL_INDEX );
 
@@ -351,7 +383,9 @@ const bool CBuildingRPGStatsExporter::UpdateVisObj( IManipulator *pManipulator,
 
 			// Canonicalize before creating animations in a different XDB folder.
 			if ( !NEditorGltf::Export( pSkeleton, "Skeleton", true ) )
+			{
 				return false;
+			}
 			CManipulatorManager::GetValue( &szModelFileRef, pSkeleton, "ModelFileRef" );
 			CManipulatorManager::GetValue( &szRootJoint, pSkeleton, "RootJoint" );
 
@@ -388,13 +422,17 @@ const bool CBuildingRPGStatsExporter::UpdateVisObj( IManipulator *pManipulator,
 			CManipulatorManager::SetValue( "", pAnimation, "AABBDName", false );
 			CManipulatorManager::SetValue( 1.0f, pAnimation, "MoveSpeed" );
 			if ( !NEditorGltf::Export( pAnimation, "AnimB2", true ) )
+			{
 				return false;
+			}
 
 			const std::string szAnimationPath = fmt::format( "Animations.[{}]", nAnimationIndex );
 			std::string szTypeAndName;
 			CStringManager::GetRefValueFromTypeAndName( &szTypeAndName, "AnimB2", szAnimationName, TYPE_SEPARATOR_CHAR );
 			if ( !CManipulatorManager::SetValue( szTypeAndName, pSkeleton, szAnimationPath, true ) )
+			{
 				return false;
+			}
 		}
 	}
 	return true;
@@ -408,17 +446,25 @@ const bool CBuildingRPGStatsExporter::CopyModel( const std::string &szOldModelNa
 	auto *folders = Singleton<IFolderCallback>();
 	CPtr<IManipulator> source = Singleton<IResourceManager>()->CreateObjectManipulator( "Model", szOldModelName );
 	if ( !source )
+	{
 		return false;
+	}
 	CPtr<IManipulator> geometry = CManipulatorManager::CreateManipulatorFromReference( "Geometry", source, 0, 0, 0 );
 	CPtr<IManipulator> skeleton = CManipulatorManager::CreateManipulatorFromReference( "Skeleton", source, 0, 0, 0 );
 	if ( !geometry || !skeleton || !NEditorGltf::Export( geometry, "Geometry", true ) ||
 	     !NEditorGltf::Export( skeleton, "Skeleton", true ) )
+	{
 		return false;
+	}
 	if ( szOldModelName != szNewName && !folders->CopyObject( "Model", szNewName, szOldModelName ) )
+	{
 		return false;
+	}
 	CPtr<IManipulator> model = Singleton<IResourceManager>()->CreateObjectManipulator( "Model", szNewName );
 	if ( !model )
+	{
 		return false;
+	}
 	model->RemoveNode( "Animations", NODE_REMOVEALL_INDEX );
 	const std::string prefix = NFile::CutFileExt( szNewName, ".xdb" );
 	for ( const auto &type : { std::string( "Geometry" ), std::string( "Skeleton" ) } )
@@ -426,20 +472,30 @@ const bool CBuildingRPGStatsExporter::CopyModel( const std::string &szOldModelNa
 		IManipulator *original = type == "Geometry" ? geometry.GetPtr() : skeleton.GetPtr();
 		const std::string name = prefix + "_" + type + ".xdb";
 		if ( !folders->CopyObject( type, name, NDb::GetFileName( original->GetDBID() ) ) )
+		{
 			return false;
+		}
 		CPtr<IManipulator> copy = Singleton<IResourceManager>()->CreateObjectManipulator( type, name );
 		if ( !copy || !CManipulatorManager::SetValue( szRoot, copy, "RootJoint" ) )
+		{
 			return false;
+		}
 		if ( type == "Geometry" )
 		{
 			if ( !CManipulatorManager::SetValue( szRoot, copy, "RootMesh" ) ||
 			     !CManipulatorManager::SetValue( "", copy, "AIGeometry", true ) )
+			{
 				return false;
+			}
 		}
 		else
+		{
 			copy->RemoveNode( "Animations", NODE_REMOVEALL_INDEX );
+		}
 		if ( !NEditorGltf::Export( copy, type, true ) || !CManipulatorManager::SetValue( name, model, type, true ) )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -452,19 +508,27 @@ const bool CBuildingRPGStatsExporter::CreateVisObj( IManipulator *pManipulator,
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	std::string szName;
 	if ( !CManipulatorManager::GetParamsFromReference( "visualObject", pManipulator, 0, &szName, 0 ) )
+	{
 		return false;
+	}
 
 	if ( !pFolderCallback->CopyObject( "VisObj", szObjectName, szName ) )
+	{
 		return false;
+	}
 
 	CPtr<IManipulator> pVisObj = Singleton<IResourceManager>()->CreateObjectManipulator( "VisObj", szObjectName );
 	if ( !pVisObj )
+	{
 		return false;
+	}
 
 	//делаем копии моделей, если в оригинальном объекте модель для сезона новая, в новом объекте также будет новая
 	int nModelCount = 0;
 	if ( !CManipulatorManager::GetValue( &nModelCount, pVisObj, "Models" ) )
+	{
 		return false;
+	}
 
 	std::unordered_map<std::string, int> models; // имя модели - на индекс имени в names
 	std::vector<std::string> names;              // новые имена моделей
@@ -488,7 +552,9 @@ const bool CBuildingRPGStatsExporter::CreateVisObj( IManipulator *pManipulator,
 			}
 			const std::string szNewModelName = NFile::CutFileExt( szObjectName, ".xdb" ) + "_" + szSeason + "_Model.xdb";
 			if ( !CopyModel( szModelName, szNewModelName, szRoot ) )
+			{
 				return false;
+			}
 			nNameIndex = names.size();
 			names.push_back( szNewModelName );
 			models[szModelName] = nNameIndex;
@@ -515,7 +581,9 @@ const bool CBuildingRPGStatsExporter::ProcessVisObj( IManipulator *pManipulator,
 	{
 		szVisObjName = szNewName;
 		if ( !CreateVisObj( pManipulator, szVisObjName, szRoot ) )
+		{
 			return false;
+		}
 		CManipulatorManager::SetValue( szVisObjName, pManipulator, szRefName, true );
 	}
 	return UpdateVisObj( pManipulator, szRefName, frames, nStage );
@@ -547,36 +615,52 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 	CPtr<IManipulator> pVisObjectManipulator =
 			CManipulatorManager::CreateManipulatorFromReference( "visualObject", pManipulator, 0, 0, 0 );
 	if ( !pVisObjectManipulator )
+	{
 		return false;
+	}
 
 	// Get Model manipulator
 	CPtr<IManipulator> pItModel = CreateModelManipulatorFromVisObj( pVisObjectManipulator, 0 );
 	if ( !pItModel )
+	{
 		return false;
+	}
 
 	// Get Geometry manipulator
 	CPtr<IManipulator> pGeomManipulator =
 			CManipulatorManager::CreateManipulatorFromReference( "Geometry", pItModel, 0, 0, 0 );
 	if ( !pGeomManipulator )
+	{
 		return false;
+	}
 
 	// Get all attributes from model
 	{
 		CGrannyBoneAttributesList attribs;
 		if ( !NEditorGltf::ReadAttributes( pGeomManipulator, &attribs ) )
+		{
 			return false;
+		}
 		{
 			// Export light properties to DB if successful
 			for ( CGrannyBoneAttributesList::const_iterator it = attribs.begin(); it != attribs.end(); ++it )
 			{
 				if ( PatMat( it->szBoneName.c_str(), "lwindow??" ) ) // Process window slot
+				{
 					nSlotType = SLOT_WINDOW;
+				}
 				else if ( PatMat( it->szBoneName.c_str(), "ldoor??" ) ) // Process door slot
+				{
 					nSlotType = SLOT_DOOR;
+				}
 				else if ( PatMat( it->szBoneName.c_str(), "lsection??" ) ) // Process section slot
+				{
 					nSlotType = SLOT_SECTION;
+				}
 				else
+				{
 					continue;
+				}
 
 				it->GetAttribute( "translatex", &vPos.x );
 				it->GetAttribute( "translatey", &vPos.y );
@@ -616,9 +700,13 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 					it->GetAttribute( "windowscalex", &info.vWindowScale.x );
 					it->GetAttribute( "windowscaley", &info.vWindowScale.y );
 					if ( info.vWindowScale.x == 0.0f ) // if any of the scales is 0, make default
+					{
 						info.vWindowScale.x = 1.0f;
+					}
 					if ( info.vWindowScale.y == 0.0f )
+					{
 						info.vWindowScale.y = 1.0f;
+					}
 
 					// Search for according entry
 					info.szLocatorName = it->szRealName;
@@ -655,7 +743,9 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 	for ( CLocalDoors::iterator it = doors.begin(); it != doors.end(); ++it )
 	{
 		if ( !pManipulator->InsertNode( "entrances" ) )
+		{
 			continue;
+		}
 
 		const std::string szNodePrefix = fmt::format( "entrances.[{}].", nEntranceIndex );
 
@@ -685,13 +775,17 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 		if ( it->nFound == -1 )
 		{
 			if ( !pManipulator->InsertNode( "slots" ) )
+			{
 				continue;
+			}
 
 			nCurrentSlot = nSlotNodes;
 			++nSlotNodes;
 		}
 		else
+		{
 			nCurrentSlot = it->nFound;
+		}
 
 		const std::string szNodePrefix = fmt::format( "slots.[{}].", nCurrentSlot );
 
@@ -709,13 +803,21 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 		if ( it->nFound == -1 && !it->bSection )
 		{
 			if ( szDefaultWindowDay != "" )
+			{
 				pManipulator->SetValue( szNodePrefix + "Window.DayObj", szDefaultWindowDay );
+			}
 			if ( szDefaultWindowNight != "" )
+			{
 				pManipulator->SetValue( szNodePrefix + "Window.NightObj", szDefaultWindowNight );
+			}
 			if ( szDefaultWindowDestroyed != "" )
+			{
 				pManipulator->SetValue( szNodePrefix + "Window.DestroyedObj", szDefaultWindowDestroyed );
+			}
 			if ( szDefaultWindowEffect != "" )
+			{
 				pManipulator->SetValue( szNodePrefix + "Window.DestroyEffect", szDefaultWindowEffect );
+			}
 		}
 
 		if ( it->bSection )
@@ -725,7 +827,9 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 			szSectionName.erase( 0, 1 );
 			// GLTF custom node properties replace Maya attributes. Filter each section's descendants.
 			if ( !NEditorGltf::ReadAttributes( pGeomManipulator, &attribs, szSectionName ) )
+			{
 				return false;
+			}
 
 			{
 				pManipulator->RemoveNode( szNodePrefix + "Window.NightDamageLevels", NODE_REMOVEALL_INDEX );
@@ -734,19 +838,25 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 				for ( CGrannyBoneAttributesList::const_iterator itAttr = attribs.begin(); itAttr != attribs.end(); ++itAttr )
 				{
 					if ( PatMat( itAttr->szBoneName.c_str(), "*lstage??" ) ) // Process destruction stages
+					{
 						++nStageCount;
+					}
 				}
 				int nLevelsCount = 0;
 				CManipulatorManager::GetValue( &nLevelsCount, pManipulator, szNodePrefix + "Window.DayDamageLevels" );
 				if ( nLevelsCount < nStageCount )
 				{
 					for ( int i = nLevelsCount; i < nStageCount; ++i )
+					{
 						pManipulator->InsertNode( szNodePrefix + "Window.DayDamageLevels", NODE_ADD_INDEX );
+					}
 				}
 				else if ( nLevelsCount > nStageCount )
 				{
 					for ( int i = nLevelsCount - 1; i >= nStageCount; --i )
+					{
 						pManipulator->RemoveNode( szNodePrefix + "Window.DayDamageLevels", i );
+					}
 				}
 				// заполнение информации об анимациях
 				std::vector<SAnimationInfo> vFrames;
@@ -784,8 +894,12 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 
 				// Every numbered stage must exist before any animations are generated.
 				for ( const auto &frame : vFrames )
+				{
 					if ( frame.nStartTime < 0 )
+					{
 						return false;
+					}
+				}
 				// создание необходимой структуры
 				for ( CGrannyBoneAttributesList::const_iterator itAttr = attribs.begin(); itAttr != attribs.end(); ++itAttr )
 				{
@@ -799,7 +913,9 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 						const std::string szVisObjPath =
 								szNodePrefix + "Window.DayDamageLevels" + fmt::format( ".[{}].VisObj", nStageNumber );
 						if ( !ProcessVisObj( pManipulator, szVisObjPath, szVisObjName, szSectionName, vFrames, nStageNumber ) )
+						{
 							return false;
+						}
 					}
 				}
 				{ // DayObj - целый объект
@@ -807,7 +923,9 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 							NFile::CutFileExt( szObjectName, ".xdb" ) + "_sections/" + szSectionName + "/whole.xdb";
 					const std::string szVisObjPath = szNodePrefix + "Window.DayObj";
 					if ( !ProcessVisObj( pManipulator, szVisObjPath, szVisObjName, szSectionName, vFrames, -1 ) )
+					{
 						return false;
+					}
 				}
 				/*
 				{ // DestroyedObj - разрушенный объект
@@ -824,7 +942,9 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 	for ( int i = nExistingSlots - 1; i >= 0; --i )
 	{
 		if ( !slotsUsed[i] )
+		{
 			pManipulator->RemoveNode( "slots", i );
+		}
 	}
 
 	return true;
@@ -835,15 +955,21 @@ const bool CBuildingRPGStatsExporter::CreateTexture( const std::string &szTextur
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	if ( pFolderCallback->IsUniqueName( "Texture", szTextureName ) &&
 	     !pFolderCallback->InsertObject( "Texture", szTextureName ) )
+	{
 		return false;
+	}
 
 	CPtr<IManipulator> pTexture = Singleton<IResourceManager>()->CreateObjectManipulator( "Texture", szTextureName );
 	if ( !pTexture )
+	{
 		return false;
+	}
 
 	CPtr<IManipulator> pTextureFolder = Singleton<IResourceManager>()->CreateFolderManipulator( "Texture" );
 	if ( !pTextureFolder )
+	{
 		return false;
+	}
 
 	CManipulatorManager::SetValue( szFileName, pTexture, "SrcName", false );
 	CManipulatorManager::SetValue( std::string( "REGULAR" ), pTexture, "Type", false );
@@ -876,17 +1002,25 @@ const std::string CBuildingRPGStatsExporter::GetMaterial( const std::string &szM
 		const std::string szMaterialNamePrefix = szModelName + fmt::format( " ({}.tga", nMaterial );
 		std::string szMaterialName = szMaterialNamePrefix;
 		if ( bTransparent )
+		{
 			szMaterialName += ", transp";
+		}
 		if ( bReflective )
+		{
 			szMaterialName += ", mirror";
+		}
 		szMaterialName += ")_Material.xdb";
 
 		if ( pFolderCallback->IsUniqueName( "Material", szMaterialName ) &&
 		     !pFolderCallback->InsertObject( "Material", szMaterialName ) )
+		{
 			return "";
+		}
 		CPtr<IManipulator> pMaterial = Singleton<IResourceManager>()->CreateObjectManipulator( "Material", szMaterialName );
 		if ( !pMaterial )
+		{
 			return "";
+		}
 
 		std::string szTexture = "";
 		std::string szMirrorTexture = "";
@@ -894,19 +1028,25 @@ const std::string CBuildingRPGStatsExporter::GetMaterial( const std::string &szM
 		{
 			szMirrorTexture = szMaterialNamePrefix + ", mirror)_Texture.xdb";
 			if ( !CreateTexture( szMirrorTexture, szModelPath + fmt::format( "{}_m.tga", nMaterial ) ) )
+			{
 				return "";
+			}
 		}
 		if ( bTransparent )
 		{
 			szTexture = szMaterialNamePrefix + ", transp)_Texture.xdb";
 			if ( !CreateTexture( szTexture, szModelPath + fmt::format( "{}t.tga", nMaterial ) ) )
+			{
 				return "";
+			}
 		}
 		else
 		{
 			szTexture = szMaterialNamePrefix + ")_Texture.xdb";
 			if ( !CreateTexture( szTexture, szModelPath + fmt::format( "{}.tga", nMaterial ) ) )
+			{
 				return "";
+			}
 		}
 
 		CManipulatorManager::SetValue( szTexture, pMaterial, "Texture", true );
@@ -919,7 +1059,9 @@ const std::string CBuildingRPGStatsExporter::GetMaterial( const std::string &szM
 		return szMaterialName;
 	}
 	else
+	{
 		return pos->second;
+	}
 }
 
 const bool CBuildingRPGStatsExporter::UpdateModels( IManipulator *pManipulator,
@@ -929,7 +1071,9 @@ const bool CBuildingRPGStatsExporter::UpdateModels( IManipulator *pManipulator,
 {
 	CPtr<IManipulator> pVisObj = CManipulatorManager::CreateManipulatorFromReference( szRefName, pManipulator, 0, 0, 0 );
 	if ( !pVisObj )
+	{
 		return false;
+	}
 
 	int nModelsCount = 0;
 	CManipulatorManager::GetValue( &nModelsCount, pVisObj, "Models" );
@@ -958,16 +1102,22 @@ const bool CBuildingRPGStatsExporter::UpdateModels( IManipulator *pManipulator,
 		}
 		CPtr<IManipulator> geometry = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pModel, 0, 0, 0 );
 		if ( !geometry )
+		{
 			return false;
+		}
 		const auto file = NEditorGltf::Load( geometry );
 		std::string root;
 		CManipulatorManager::GetValue( &root, geometry, "RootMesh" );
 		std::vector<size_t> nodes;
 		if ( !NGltf::GetMeshNodes( file, root, &nodes ) )
+		{
 			return false;
+		}
 		CGrannyBoneAttributesList attributes;
 		if ( !NEditorGltf::ReadAttributes( geometry, &attributes ) )
+		{
 			return false;
+		}
 		// Texture sources remain independent of ModelFileRef, including imported models.
 		CPtr<IManipulator> material =
 				CManipulatorManager::CreateManipulatorFromReference( "Materials.[0]", pModel, 0, 0, 0 );
@@ -975,7 +1125,9 @@ const bool CBuildingRPGStatsExporter::UpdateModels( IManipulator *pManipulator,
 				material ? CManipulatorManager::CreateManipulatorFromReference( "Texture", material, 0, 0, 0 ) : nullptr;
 		std::string source;
 		if ( !texture || !CManipulatorManager::GetValue( &source, texture, "SrcName" ) || source.empty() )
+		{
 			return false;
+		}
 		const std::string textureFolder = NFile::GetFilePath( source );
 		std::vector<std::string> materialNames;
 		for ( size_t node : nodes )
@@ -985,7 +1137,9 @@ const bool CBuildingRPGStatsExporter::UpdateModels( IManipulator *pManipulator,
 			attributes[node].GetAttribute( "reflective", &reflective );
 			const auto name = GetMaterial( *itModel, textureFolder, nMaterial, transparent, reflective );
 			if ( name.empty() )
+			{
 				return false;
+			}
 			materialNames.push_back( name );
 		}
 		// Publish only after every numbered texture has exported successfully.
@@ -994,7 +1148,9 @@ const bool CBuildingRPGStatsExporter::UpdateModels( IManipulator *pManipulator,
 		{
 			if ( !pModel->InsertNode( "Materials", NODE_ADD_INDEX ) ||
 			     !CManipulatorManager::SetValue( materialNames[i], pModel, fmt::format( "Materials.[{}]", i ), true ) )
+			{
 				return false;
+			}
 		}
 	}
 	return true;
@@ -1005,7 +1161,9 @@ const bool CBuildingRPGStatsExporter::UpdateSectionMaterials( IManipulator *pMan
 {
 	int nSlotsCount = 0;
 	if ( !CManipulatorManager::GetValue( &nSlotsCount, pManipulator, "slots" ) )
+	{
 		return false;
+	}
 
 	for ( int i = 0; i < nSlotsCount; ++i )
 	{
@@ -1014,25 +1172,35 @@ const bool CBuildingRPGStatsExporter::UpdateSectionMaterials( IManipulator *pMan
 		CManipulatorManager::GetValue( &szLocatorName, pManipulator, szSlotPrefix + "LocatorName" );
 		NStr::ToLowerASCII( &szLocatorName );
 		if ( PatMat( szLocatorName.c_str(), "lsection??" ) == 0 )
+		{
 			continue;
+		}
 
 		if ( !UpdateModels( pManipulator, szSlotPrefix + "Window.DayObj", szObjectName, 1 ) )
+		{
 			return false;
+		}
 		std::string destroyed;
 		if ( CManipulatorManager::GetParamsFromReference(
 						 szSlotPrefix + "Window.DestroyedObj", pManipulator, 0, &destroyed, 0 ) &&
 		     !destroyed.empty() && !UpdateModels( pManipulator, szSlotPrefix + "Window.DestroyedObj", szObjectName, 2 ) )
+		{
 			return false;
+		}
 
 		int nStageCount = 0;
 		if ( CManipulatorManager::GetValue( &nStageCount, pManipulator, szSlotPrefix + "Window.DayDamageLevels" ) )
 		{
 			for ( int n = 0; n < nStageCount; ++n )
+			{
 				if ( !UpdateModels( pManipulator,
 				                    szSlotPrefix + fmt::format( "Window.DayDamageLevels.[{}].VisObj", n ),
 				                    szObjectName,
 				                    n + 3 ) )
+				{
 					return false;
+				}
+			}
 		}
 	}
 
@@ -1048,7 +1216,9 @@ EXPORT_RESULT CBuildingRPGStatsExporter::ExportObject( IManipulator *pManipulato
 	const auto result =
 			CObjectBaseRPGStatsExporter::ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, exportType );
 	if ( result != ER_SUCCESS )
+	{
 		return result;
+	}
 	if ( exportType != ET_AFTER_REF )
 	{
 		// Build section resources before recursive export and also support direct export.
@@ -1065,6 +1235,8 @@ EXPORT_RESULT CBuildingRPGStatsExporter::ExportObject( IManipulator *pManipulato
 		}
 	}
 	if ( exportType != ET_BEFORE_REF )
+	{
 		CreateDestructionDustPoints( pManipulator );
+	}
 	return ER_SUCCESS;
 }

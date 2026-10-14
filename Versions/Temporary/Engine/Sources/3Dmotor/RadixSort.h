@@ -26,7 +26,9 @@ inline void RadixSortStage( int shift, const int *pDepths, std::vector<int> *pRe
 			for ( int i = 0; i < 256; i++ )
 			{
 				for ( int nIdx = lists[i]; nIdx >= 0; nIdx = temp[nIdx] )
+				{
 					*pOut++ = nIdx;
+				}
 			}
 			ASSERT( pOut == pFinal + 1 );
 			break;
@@ -34,7 +36,9 @@ inline void RadixSortStage( int shift, const int *pDepths, std::vector<int> *pRe
 			for ( int i = 255; i >= 0; i-- )
 			{
 				for ( int nIdx = lists[i]; nIdx >= 0; nIdx = temp[nIdx] )
+				{
 					*pOut++ = nIdx;
+				}
 			}
 			ASSERT( pOut == pFinal + 1 );
 			break;
@@ -42,12 +46,16 @@ inline void RadixSortStage( int shift, const int *pDepths, std::vector<int> *pRe
 			for ( int i = 255; i >= 128; i-- )
 			{
 				for ( int nIdx = lists[i]; nIdx >= 0; nIdx = temp[nIdx] )
+				{
 					*pOut++ = nIdx;
+				}
 			}
 			for ( int i = 127; i >= 0; i-- )
 			{
 				for ( int nIdx = lists[i]; nIdx >= 0; nIdx = temp[nIdx] )
+				{
 					*pFinal-- = nIdx;
+				}
 			}
 			break;
 	}
@@ -57,9 +65,13 @@ inline void DoRadixSort( const float *pSrc, int nSize, std::vector<int> *pRes )
 {
 	pRes->resize( nSize );
 	if ( nSize <= 0 )
+	{
 		return;
+	}
 	for ( int k = 0; k < pRes->size(); ++k )
+	{
 		( *pRes )[k] = k;
+	}
 	//RadixSortStage( 0, pSort, pSort1, nElem, 1 );
 	RadixSortStage( 8, (const int *)pSrc, pRes, RF_BACK );
 	RadixSortStage( 16, (const int *)pSrc, pRes, RF_NORMAL );
@@ -70,9 +82,13 @@ inline void DoRadixSort( const unsigned int *pSrc, int nSize, std::vector<int> *
 {
 	pRes->resize( nSize );
 	if ( nSize <= 0 )
+	{
 		return;
+	}
 	for ( int k = 0; k < pRes->size(); ++k )
+	{
 		( *pRes )[k] = k;
+	}
 	RadixSortStage( 0, (const int *)pSrc, pRes, RF_BACK );
 	RadixSortStage( 8, (const int *)pSrc, pRes, RF_NORMAL );
 	RadixSortStage( 16, (const int *)pSrc, pRes, RF_BACK );

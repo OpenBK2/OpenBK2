@@ -491,7 +491,9 @@ EXPORT_RESULT CInfantryExporter::CheckObject( IManipulator *pManipulator,
                                               EXPORT_TYPE exportType )
 {
 	if ( exportType == ET_BEFORE_REF )
+	{
 		return ER_SUCCESS;
+	}
 	//
 	ILogger *pLogger = NLog::GetLogger();
 	std::string szArmJointName;

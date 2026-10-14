@@ -6,31 +6,57 @@
 NDb::NTypeDef::ETypeType StringToEnum_NDb_NTypeDef_ETypeType( const std::string &szName )
 {
 	if ( szName == "TYPE_TYPE_UNKNOWN" )
+	{
 		return NDb::NTypeDef::TYPE_TYPE_UNKNOWN;
+	}
 	if ( szName == "TYPE_TYPE_INT" )
+	{
 		return NDb::NTypeDef::TYPE_TYPE_INT;
+	}
 	if ( szName == "TYPE_TYPE_FLOAT" )
+	{
 		return NDb::NTypeDef::TYPE_TYPE_FLOAT;
+	}
 	if ( szName == "TYPE_TYPE_BOOL" )
+	{
 		return NDb::NTypeDef::TYPE_TYPE_BOOL;
+	}
 	if ( szName == "TYPE_TYPE_GUID" )
+	{
 		return NDb::NTypeDef::TYPE_TYPE_GUID;
+	}
 	if ( szName == "TYPE_TYPE_STRING" )
+	{
 		return NDb::NTypeDef::TYPE_TYPE_STRING;
+	}
 	if ( szName == "TYPE_TYPE_WSTRING" )
+	{
 		return NDb::NTypeDef::TYPE_TYPE_WSTRING;
+	}
 	if ( szName == "TYPE_TYPE_BINARY" )
+	{
 		return NDb::NTypeDef::TYPE_TYPE_BINARY;
+	}
 	if ( szName == "TYPE_TYPE_ENUM" )
+	{
 		return NDb::NTypeDef::TYPE_TYPE_ENUM;
+	}
 	if ( szName == "TYPE_TYPE_STRUCT" )
+	{
 		return NDb::NTypeDef::TYPE_TYPE_STRUCT;
+	}
 	if ( szName == "TYPE_TYPE_CLASS" )
+	{
 		return NDb::NTypeDef::TYPE_TYPE_CLASS;
+	}
 	if ( szName == "TYPE_TYPE_REF" )
+	{
 		return NDb::NTypeDef::TYPE_TYPE_REF;
+	}
 	if ( szName == "TYPE_TYPE_ARRAY" )
+	{
 		return NDb::NTypeDef::TYPE_TYPE_ARRAY;
+	}
 
 	NI_ASSERT( false, fmt::format( "unknown enum {}", szName ) );
 	return NDb::NTypeDef::TYPE_TYPE_UNKNOWN;

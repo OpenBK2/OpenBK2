@@ -15,20 +15,26 @@ EXPORT_RESULT CCampaignExporter::ExportObject( IManipulator *pManipulator,
                                                EXPORT_TYPE exportType )
 {
 	if ( ( exportType != ET_BEFORE_REF ) && ( exportType != ET_NO_REF ) )
+	{
 		return ER_SUCCESS;
+	}
 	// intro movie
 	std::string szIntroMovie;
 	if ( CManipulatorManager::GetValue( &szIntroMovie, pManipulator, "IntroMovie" ) != false && !szIntroMovie.empty() )
 	{
 		if ( ExportFilesList( szIntroMovie, bForce, "Movies" ) == false )
+		{
 			return ER_FAIL;
+		}
 	}
 	// outro movie
 	std::string szOutroMovie;
 	if ( CManipulatorManager::GetValue( &szIntroMovie, pManipulator, "OutroMovie" ) != false && !szOutroMovie.empty() )
 	{
 		if ( ExportFilesList( szOutroMovie, bForce, "Movies" ) == false )
+		{
 			return ER_FAIL;
+		}
 	}
 	//
 	return ER_SUCCESS;

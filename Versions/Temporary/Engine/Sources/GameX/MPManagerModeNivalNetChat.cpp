@@ -30,7 +30,9 @@ bool CMPManagerModeNivalNet::OnChatMessage( SMPUIChatMessage *pMsg )
 			PushMessage( new SMPUIChatMessage( szMPName, wszFilteredText ) );
 		}
 		else
+		{
 			pClient->SendPacket( new CChatPacket( 0, wszFilteredText, "", 0, true ) );
+		}
 	}
 	else if ( eState == EGS_GAME_ROOM )
 	{
@@ -89,17 +91,25 @@ bool CMPManagerModeNivalNet::OnChatChannelsListPacket( class CChatChannelsListPa
 {
 	//DebugTrace( "+++ ChatChannelsList" );
 	if ( pPacket->bIsFullUpdate )
+	{
 		chatChannels.clear();
+	}
 
 	for ( std::list<std::string>::iterator it = pPacket->added.begin(); it != pPacket->added.end(); ++it )
+	{
 		chatChannels.insert( *it );
+	}
 
 	for ( std::list<std::string>::iterator it = pPacket->removed.begin(); it != pPacket->removed.end(); ++it )
+	{
 		chatChannels.erase( *it );
+	}
 
 	SMPUIChatChannelListMessage *pChannelsMsg = new SMPUIChatChannelListMessage;
 	for ( std::unordered_set<std::string>::iterator it = chatChannels.begin(); it != chatChannels.end(); ++it )
+	{
 		pChannelsMsg->channels.push_back( *it );
+	}
 
 	PushMessage( pChannelsMsg );
 	updateChannels.dwVersion = pPacket->dwVersion;

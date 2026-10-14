@@ -29,7 +29,9 @@ NTimer::STime GetAbsTime()
 FSOUND_STREAM *OpenTrack( CDataStream *pTrack )
 {
 	if ( pTrack == 0 || !pTrack->IsOk() )
+	{
 		return 0;
+	}
 
 	FSOUND_STREAM *pStreamingSound = FSOUND_Stream_Open(
 			(const char *)( pTrack->GetBuffer() ), FSOUND_2D | FSOUND_LOOP_OFF | FSOUND_LOADMEMORY, 0, pTrack->GetSize() );
@@ -39,16 +41,22 @@ FSOUND_STREAM *OpenTrack( CDataStream *pTrack )
 bool CMusicSystem::IsPaused( EStreamType eType ) const
 {
 	if ( eType == EST_MUSIC )
+	{
 		return pauses[EMS_MASTER] + pauses[EMS_MUSIC_MASTER] + pauses[EMS_MUSIC_FADE_SELF] +
 		       pauses[EMS_MUSIC_FADE_FROM_VOICE];
+	}
 	else
+	{
 		return pauses[EMS_MASTER] + pauses[EMS_VOICE_MASTER] + pauses[EMS_VOICE_SELF];
+	}
 }
 
 void CMusicSystem::OnResetTimer()
 {
 	for ( int i = 0; i < playlists.size(); ++i )
+	{
 		playlists[i]->OnResetTimer();
+	}
 }
 
 void CMusicSystem::Update()
@@ -57,14 +65,20 @@ void CMusicSystem::Update()
 
 	UpdatePlayListChange();
 	for ( int i = 0; i < playlists.size(); ++i )
+	{
 		playlists[i]->Segment();
+	}
 
 	if ( pVoiceTrack )
 	{
 		if ( pVoiceTrack->IsFinished() )
+		{
 			pVoiceTrack = 0;
+		}
 		else
+		{
 			pVoiceTrack->Segment();
+		}
 	}
 
 	fades.Update();
@@ -76,17 +90,25 @@ void CMusicSystem::Update()
 	if ( channels[EST_MUSIC] > 0 )
 	{
 		if ( int( fMusicVolume * 255 ) != FSOUND_GetVolume( channels[EST_MUSIC] ) )
+		{
 			FSOUND_SetVolume( channels[EST_MUSIC], fMusicVolume * 255 );
+		}
 		if ( bool( FSOUND_GetPaused( channels[EST_MUSIC] ) ) != IsPaused( EST_MUSIC ) )
+		{
 			FSOUND_SetPaused( channels[EST_MUSIC], IsPaused( EST_MUSIC ) );
+		}
 	}
 
 	if ( channels[EST_VOICE] > 0 )
 	{
 		if ( int( fVoiceVolume * 255 ) != FSOUND_GetVolume( channels[EST_VOICE] ) )
+		{
 			FSOUND_SetVolume( channels[EST_VOICE], fVoiceVolume * 255 );
+		}
 		if ( bool( FSOUND_GetPaused( channels[EST_VOICE] ) ) != IsPaused( EST_VOICE ) )
+		{
 			FSOUND_SetPaused( channels[EST_VOICE], IsPaused( EST_VOICE ) );
+		}
 	}
 }
 
@@ -118,13 +140,21 @@ void CMusicSystem::PlayVoice( const NDb::SVoice *pVoice )
 	pVoiceTrack = new CTrack( pVoice->pTrack, pVoice->pPlayTime, EST_VOICE );
 
 	if ( pVoice->pMusicStreamFadeOut )
+	{
 		fades.push_back( new CFade( pVoice->pMusicStreamFadeOut, EMS_MUSIC_FADE_FROM_VOICE, 0 ) );
+	}
 	if ( pVoice->pMusicStreamFadeIn )
+	{
 		fades.push_back( new CFade( pVoice->pMusicStreamFadeIn, EMS_MUSIC_FADE_FROM_VOICE, pVoiceTrack ) );
+	}
 	if ( pVoice->pFadeIn )
+	{
 		fades.push_back( new CFade( pVoice->pFadeIn, EMS_VOICE_SELF, 0 ) );
+	}
 	if ( pVoice->pFadeOut )
+	{
 		fades.push_back( new CFade( pVoice->pFadeOut, EMS_VOICE_SELF, pVoiceTrack ) );
+	}
 
 	fades.Update();
 
@@ -135,14 +165,18 @@ void CMusicSystem::Init( const NDb::SMapMusic *pMapMusic, int nActivePlayList )
 {
 	// just don't do anything if already all is ok
 	if ( pMapMusic == pCurrentMapMusic && nActivePlayList == nPlayList )
+	{
 		return;
+	}
 
 	pCurrentMapMusic = pMapMusic;
 	if ( pMapMusic )
 	{
 		playlists.resize( pMapMusic->playLists.size() );
 		for ( int i = 0; i < playlists.size(); ++i )
+		{
 			playlists[i] = new CPlayList( pMapMusic->playLists[i] );
+		}
 		nPlayList = 0;
 		nDesiredPlayList = 0;
 		ChangePlayList( nActivePlayList );
@@ -198,10 +232,14 @@ int CMusicSystem::GetPlayList() const
 void CMusicSystem::ChangePlayList( int _nPlayList )
 {
 	if ( _nPlayList >= playlists.size() || _nPlayList < 0 )
+	{
 		return;
+	}
 
 	if ( CanChangePlayList() )
+	{
 		nDesiredPlayList = _nPlayList;
+	}
 }
 
 void CMusicSystem::UpdatePlayListChange()

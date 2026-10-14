@@ -48,7 +48,9 @@ bool CMessageReactionB2::Execute( struct IScreen *pScreen,
 		NI_ASSERT( it != branches.end(), fmt::format( "branche \"{}\" not found", nCustomCheckReturn ) );
 
 		if ( !it->second.empty() )
+		{
 			bRes &= Execute( &it->second, pScreen, pScript, pProg, wKeyboardFlags );
+		}
 	}
 
 	if ( !commonAfter.empty() )
@@ -75,7 +77,9 @@ void CMessageReactionB2::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	for ( std::vector<NDb::SMessageSequienceEntry>::const_iterator it = pDesc->branches.begin();
 	      it != pDesc->branches.end();
 	      ++it )
+	{
 		InitSequienceByDesc( &branches[it->nCustomCheckReturn], it->sequience.data );
+	}
 
 	pCheck = CUIFactory::MakeCheck( pDesc->pConditionCheck );
 
@@ -101,12 +105,16 @@ bool CMessageReactionB2::Execute( const CMessageSequence *pToExecute,
                                   uint16_t wKeyboardFlags ) const
 {
 	if ( pToExecute->empty() )
+	{
 		return false;
+	}
 	//execute other sections
 	for ( CMessageSequence::const_iterator reaction = pToExecute->begin(); reaction != pToExecute->end(); ++reaction )
 	{
 		if ( !( *reaction )->Execute( pScreen, pScript, pProg, wKeyboardFlags ) )
+		{
 			return false;
+		}
 	}
 	return true;
 }

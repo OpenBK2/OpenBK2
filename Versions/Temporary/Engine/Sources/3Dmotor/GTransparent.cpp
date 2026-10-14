@@ -79,9 +79,13 @@ STransparentInfo *CTransparentRenderer::AddFragment()
 void CTransparentRenderer::AllocParticlesWriteBuffer()
 {
 	if ( bTnLMode )
+	{
 		pParticlesGeometry = pTnLParticlesGeometry = new CTnLParticlesGeometry( this, orientation );
+	}
 	else
+	{
 		pParticlesGeometry = pShaderParticlesGeometry = new CShaderParticlesGeometry( this, orientation, vNormal );
+	}
 	pParticlesTrilist = new CParticlesTriList;
 	nTargetParticle = 0;
 }
@@ -89,7 +93,9 @@ void CTransparentRenderer::AllocParticlesWriteBuffer()
 void CTransparentRenderer::FinishParticles()
 {
 	if ( IsValid( pParticlesGeometry ) )
+	{
 		pParticlesGeometry->FreeWriteBuffer();
+	}
 	pParticlesGeometry = 0;
 	pTnLParticlesGeometry = 0;
 	pShaderParticlesGeometry = 0;
@@ -131,7 +137,9 @@ void CTransparentRenderer::AddParticles( IParticles *pParticles,
 	if ( pCurrentEffect->IsEmpty() )
 	{
 		if ( pCurrentEffect->bEnd )
+		{
 			pParticles->Unlink();
+		}
 		return;
 	}
 	pReportParticles = pStore;
@@ -147,7 +155,9 @@ void CTransparentRenderer::AddParticles( IParticles *pParticles,
 		pLMAlloc = &kernel;
 	}
 	if ( !IsValid( pParticlesGeometry ) )
+	{
 		AllocParticlesWriteBuffer();
+	}
 	else if ( pParticlesGeometry->GetPartsNum() == PF_MAX_PARTS_PER_COMBINER )
 	{
 		pParticlesGeometry->FreeWriteBuffer();
@@ -161,7 +171,9 @@ void CTransparentRenderer::AddParticles( IParticles *pParticles,
 	FinishParticlesPiece();
 	nTotalParticles += nTargetParticle - nTargetStart;
 	if ( bIsLit )
+	{
 		nLitParticles += nTargetParticle - nTargetStart;
+	}
 	bc.Add( bv );
 }
 
@@ -172,9 +184,13 @@ void CTransparentRenderer::AddParticleOverflow( const CVec3 vPos[4],
 {
 	// buffer is full, start a new one
 	if ( bTnLMode )
+	{
 		pTnLParticlesGeometry->RealAddParticle( vPos, dwColor, tPlace, fDepth );
+	}
 	else
+	{
 		pShaderParticlesGeometry->RealAddParticle( vPos, dwColor, tPlace, fDepth );
+	}
 	FinishParticlesPiece();
 	pParticlesGeometry->FreeWriteBuffer();
 
@@ -199,12 +215,18 @@ void CTransparentRenderer::AddParticle( const CVec3 vPos[4],
 	if ( nTargetParticle < N_PARTICLES_BUFFER_SIZE / 4 )
 	{
 		if ( bTnLMode )
+		{
 			pTnLParticlesGeometry->RealAddParticle( vPos, dwColor, tPlace, fDepth ); // to enable tail call optimization
+		}
 		else
+		{
 			pShaderParticlesGeometry->RealAddParticle( vPos, dwColor, tPlace, fDepth ); // to enable tail call optimization
+		}
 	}
 	else
+	{
 		AddParticleOverflow( vPos, dwColor, tPlace, fDepth );
+	}
 }
 
 void CTransparentRenderer::SampleWarFog( const std::vector<CVec3> &vPos, std::vector<float> *pRes )
@@ -237,13 +259,17 @@ void CTransparentRenderer::AddElement(
 static void DoRadixSort( const std::vector<float> &src, std::vector<int> *pRes )
 {
 	if ( !src.empty() )
+	{
 		::DoRadixSort( &src[0], src.size(), pRes );
+	}
 }
 
 static void SetObjectEffect( const STransparentRenderContext &trc, const SMaterialParams &material )
 {
 	if ( trc.renderPath == RP_SHOWOVERDRAW )
+	{
 		return;
+	}
 	IMaterial *pMaterial = material.pMaterial;
 	if ( !pMaterial->IsTransparent() )
 	{
@@ -256,7 +282,9 @@ static void SetObjectEffect( const STransparentRenderContext &trc, const SMateri
 static void SetParticlesEffect( const STransparentRenderContext &trc )
 {
 	if ( trc.renderPath == RP_SHOWOVERDRAW )
+	{
 		return;
+	}
 	trc.pRC->SetAlphaCombine( NGfx::COMBINE_SMART_ALPHA );
 	if ( trc.bTnLMode )
 	{
@@ -343,7 +371,9 @@ class CPreciseTranspRender
 	void Flush()
 	{
 		if ( nCurrentSrc == N_UNUSED_SRC_PTR )
+		{
 			return;
+		}
 		NGfx::STriangleList triList;
 		triList.pTri = &tris[0];
 		triList.nTris = tris.size();
@@ -360,7 +390,9 @@ class CPreciseTranspRender
 		for ( int k = sorted.size() - 1; k >= 0; --k )
 		{
 			if ( depths[sorted[k]] != F_PARTICLE_OVER )
+			{
 				break;
+			}
 			unsigned int *pnSrcPtr = (unsigned int *)&sourcePtrs[sorted[k]];
 			*pnSrcPtr |= N_PARTICLE_OVER_FLAG;
 		}
@@ -426,9 +458,13 @@ public:
 					{
 						pRC->Flush();
 						if ( nSrc & N_OVER_SRC_INFO )
+						{
 							pRC->SetDepth( NGfx::DEPTH_NONE );
+						}
 						else
+						{
 							pRC->SetDepth( NGfx::DEPTH_TESTONLY );
+						}
 						SetParticlesEffect( trc );
 						currentMaterial.Clear();
 					}
@@ -479,7 +515,9 @@ void CTransparentRenderer::RealRender( const STransparentRenderContext &trc )
 		std::vector<int> fragments;
 		fragments.resize( infos.size() );
 		for ( int k = 0; k < fragments.size(); ++k )
+		{
 			fragments[k] = k;
+		}
 		std::sort( fragments.begin(), fragments.end(), SCmpFragments( infos ) );
 		for ( int k = 0; k < fragments.size(); ++k )
 		{
@@ -513,16 +551,24 @@ void CTransparentRenderer::RealRender( const STransparentRenderContext &trc )
 				int nParticles = nFinish - nStart;
 				nParticles = (std::min)( nParticles, NGfx::N_MAX_RECTANGLES ); // CRAP
 				if ( nParticles == 0 )
+				{
 					continue;
+				}
 
 				if ( depths[nStart] == F_PARTICLE_OVER )
+				{
 					rc.SetDepth( NGfx::DEPTH_NONE );
+				}
 				else
+				{
 					rc.SetDepth( NGfx::DEPTH_TESTONLY );
+				}
 
 				std::vector<int> particles( nParticles );
 				for ( int i = 0; i < particles.size(); ++i )
+				{
 					particles[i] = i;
+				}
 				::DoRadixSort( &depths[nStart], nParticles, &particles );
 				CObj<NGfx::CTriList> pTriList;
 				{
@@ -550,7 +596,9 @@ void CTransparentRenderer::Render( const STransparentRenderContext &trc )
 	sourcePtrs.resize( nElementPtr );
 	infoStartIdx.push_back( nElementPtr );
 	if ( sourcePtrs.empty() )
+	{
 		return;
+	}
 	StartRenderExecute( trc.pRC, trc.lightInfo );
 	RealRender( trc );
 	infoStartIdx.pop_back();

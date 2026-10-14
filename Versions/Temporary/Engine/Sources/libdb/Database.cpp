@@ -36,12 +36,16 @@ static struct SDatabaseAutoMagic
 void SetDatabaseDataChanged()
 {
 	if ( s_pMainDatabase )
+	{
 		s_pMainDatabase->SetDataChanged();
+	}
 }
 void SetDatabaseDataChanged( const CDBID &dbid )
 {
 	if ( s_pMainDatabase )
+	{
 		s_pMainDatabase->SetDataChanged( dbid );
+	}
 }
 
 bool OpenDatabase( NVFS::IVFS *pVFS, NVFS::IFileCreator *pFileCreator, EDatabaseMode eMode )
@@ -71,7 +75,9 @@ void CloseDatabase()
 void SetLoadDepth( int nLoadDepth )
 {
 	if ( s_pMainDatabase )
+	{
 		s_pMainDatabase->SetLoadDepth( nLoadDepth );
+	}
 }
 
 bool RegisterResourceFile( const std::string &szFileName )
@@ -137,7 +143,9 @@ void MarkChanged( const CDBID &dbid )
 void SaveChanges()
 {
 	if ( s_pMainDatabase )
+	{
 		s_pMainDatabase->SaveChanges();
+	}
 }
 
 bool SaveChangedIndex()
@@ -148,7 +156,9 @@ bool SaveChangedIndex()
 void DropCachedResources()
 {
 	if ( s_pMainDatabase )
+	{
 		s_pMainDatabase->DropCachedResources();
+	}
 }
 
 bool GetClassesList( std::vector<NTypeDef::STypeClass *> *pRes )
@@ -185,7 +195,9 @@ bool CBasicDatabase::ReadResourceHeader( STypeObjectHeader *pHeader, const CDBID
 		// The header visitor stops early by design, so require an actual root name.
 		unsigned char prefix[3] = {};
 		if ( stream.GetSize() >= 3 )
+		{
 			stream.Read( prefix, 3 );
+		}
 		stream.Seek( prefix[0] == 0xef && prefix[1] == 0xbb && prefix[2] == 0xbf ? 3 : 0 );
 		pHeader->szClassTypeName.clear();
 		CObj<NLXML::IXmlSaxVisitor> pVisitor = new CObjectHeaderXmlSaxVisitor( pHeader );
@@ -204,10 +216,14 @@ bool CBasicDatabase::LoadIndex()
 	{
 		// register all objects from index
 		for ( std::vector<SFullTypeHeader>::iterator it = objectsIndex.begin(); it != objectsIndex.end(); ++it )
+		{
 			RegisterObject( *it );
+		}
 	}
 	else
+	{
 		return false;
+	}
 	return true;
 }
 
@@ -236,19 +252,25 @@ void NormalizeDBID( CDBID *pRes, const CDBID &dbid )
 void CResourceHelper::SetDBID( CResource *pRes, const CDBID &_dbid )
 {
 	if ( pRes )
+	{
 		pRes->dbid = _dbid;
+	}
 }
 
 void CResourceHelper::SetLoaded( CResource *pRes )
 {
 	if ( pRes )
+	{
 		pRes->bLoaded = true;
+	}
 }
 
 void CResourceHelper::CallPostLoad( CResource *pRes, bool bInEditor )
 {
 	if ( pRes )
+	{
 		pRes->PostLoad( bInEditor );
+	}
 }
 
 bool IsDBIDValid( const CDBID &dbid )
@@ -260,16 +282,22 @@ bool IsDBIDValid( const CDBID &dbid )
 	{
 		const std::string &szFileName = parts.back();
 		if ( szFileName.size() < 4 )
+		{
 			return false;
+		}
 		if ( NFile::ComparePathEq( szFileName.size() - 4, 4, szFileName, 0, 4, ".xdb" ) == false )
+		{
 			return false;
+		}
 	}
 	parts.pop_back();
 	// check each file path directory entry - must not contain .xdb at the end
 	for ( std::list<std::string>::const_iterator it = parts.begin(); it != parts.end(); ++it )
 	{
 		if ( it->size() >= 4 && NFile::ComparePathEq( it->size() - 4, 4, *it, 0, 4, ".xdb" ) != false )
+		{
 			return false;
+		}
 	}
 	//
 	return true;

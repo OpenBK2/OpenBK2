@@ -29,7 +29,9 @@ void CTreeFallingMutator::Setup( ISkeletonAnimator *pAnimator,
 		leafBones.back().fMaxRotAngle = NWin32Random::Random( -1.0f, 1.0f ) * FP_PI * 0.25f;
 		leafBones.back().fNormalRotAngle = fEndAngle + NWin32Random::Random( -1.0f, 1.0f ) * FP_PI * 0.125f;
 		if ( leafBones.back().fNormalRotAngle > FP_PI * 0.5f )
+		{
 			leafBones.back().fNormalRotAngle = FP_PI * 0.5f;
+		}
 	}
 	pTimer = Singleton<IGameTimer>();
 	nStartTime = timeStart;
@@ -50,7 +52,9 @@ void CTreeFallingMutator::Setup( ISkeletonAnimator *pAnimator,
 float CTreeFallingMutator::GetCoeffForTime( int nTime )
 {
 	if ( bFinished )
+	{
 		return 1.0f;
+	}
 	const float fTimeCoeff = ( FP_PI * fCycles * 0.5f ) / fAnimLength;
 	float fCoeff = ( fAnimLength - nTime ) / fAnimLength;
 	if ( fCoeff < 0.0f )
@@ -112,7 +116,9 @@ void CTreeFallingMutator::MutateSkeletonPose( NAnimation::SSkeletonPose *pPose )
 	for ( std::list<SLeafMutatorData>::const_iterator it = leafBones.begin(); it != leafBones.end(); ++it )
 	{
 		if ( it->nBoneIndex == -1 )
+		{
 			continue;
+		}
 		CQuat qInverseRot( -fCoeff * it->fNormalRotAngle, vRotAxis );
 		CQuat qRndRot( fCoeff * it->fMaxRotAngle, 0.0f, 0.0f, 1.0f );
 		pTransform = pPose->GetBone( it->nBoneIndex );

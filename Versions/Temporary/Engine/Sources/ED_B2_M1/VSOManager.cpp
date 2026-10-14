@@ -287,10 +287,14 @@ int CVSOManager::SliceSpline( const CAnalyticBSpline2 &rSpline,
 			vPos = rSpline.Get( fT );
 			fLen += fabs( vLastPos - vPos );
 			if ( fT > 1 )
+			{
 				break;
+			}
 		}
 		if ( ( fT > 1 ) || ( fLen < fStep ) )
+		{
 			break;
+		}
 		//
 		NDb::SVSOPoint point;
 		point.vPos = CVec3( rSpline( fT ), 0.0f );

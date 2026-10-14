@@ -20,15 +20,21 @@ bool CBridgeCreation::SBridgeSpanSort::operator()( const CObj<CBridgeSpan> &s1, 
 	const CVec2 v2 = CVec2( s2->GetCenter().x, s2->GetCenter().y );
 
 	if ( s1->GetBridgeStats()->edirection == NDb::SBridgeRPGStats::VERTICAL )
+	{
 		return v1.y > v2.y;
+	}
 	else
+	{
 		return v1.x > v2.x;
+	}
 }
 
 CVec2 CBridgeCreation::SortBridgeSpans( std::vector<CObj<CBridgeSpan>> *spans, class CCommonUnit *pUnit )
 {
 	if ( 1 >= spans->size() )
+	{
 		return VNULL2;
+	}
 
 	SBridgeSpanSort pr;
 	std::sort( spans->begin(), spans->end(), pr );
@@ -73,7 +79,9 @@ CVec2 CBridgeCreation::SortBridgeSpans( std::vector<CObj<CBridgeSpan>> *spans, c
 		return v2;
 	}
 	else
+	{
 		return VNULL2;
+	}
 }
 
 bool CBridgeCreation::IsFirstSegmentBuilt() const
@@ -96,7 +104,9 @@ CBridgeCreation::CBridgeCreation( class CFullBridge *pBridge,
 	for ( nCurIndex = 0; nCurIndex < spans.size(); ++nCurIndex )
 	{
 		if ( spans[nCurIndex]->GetHitPoints() < 0.0f )
+		{
 			break;
+		}
 	}
 	line = CLine2( vStartPoint, CVec2( spans[spans.size() - 1]->GetCenter().x, spans[spans.size() - 1]->GetCenter().y ) );
 

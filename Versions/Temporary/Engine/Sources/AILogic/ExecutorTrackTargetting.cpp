@@ -70,7 +70,9 @@ int CExecutorTrackTargetting::Segment()
 void CExecutorTrackTargetting::UpdateProgress( const SAbilitySwitchState _state, const float fParam )
 {
 	if ( !pUpdate )
+	{
 		pUpdate = new SAISpecialAbilityUpdate;
+	}
 
 	pUpdate->info.nAbilityType = NDb::ABILITY_TRACK_TARGETING;
 	pUpdate->info.state = state;
@@ -107,14 +109,20 @@ bool CExecutorTrackTargetting::NotifyEvent( const CExecutorEvent &event )
 {
 	//Filter out wrong calls
 	if ( pUnit->GetUniqueId() != event.GetParam().nUnitID )
+	{
 		return false;
+	}
 
 	const CExecutorEventSpecialAbility *pEv = static_cast<const CExecutorEventSpecialAbility *>( &event );
 	if ( pEv == 0 )
+	{
 		return false;
+	}
 
 	if ( pEv->GetAbility() != NDb::ABILITY_TRACK_TARGETING )
+	{
 		return false;
+	}
 	//end - Filter out wrong calls
 
 	switch ( event.GetParam().eEventID )

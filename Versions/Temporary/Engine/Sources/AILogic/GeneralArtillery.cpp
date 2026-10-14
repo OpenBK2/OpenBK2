@@ -40,9 +40,13 @@ bool CanUnitBombardRegion( CAIUnit *pUnit, const CVec2 &vRegionCenter )
 {
 	CVec2 vBattlePos;
 	if ( ( HasTruck( pUnit ) || pUnit->CanMove() ) && pUnit->DoesReservePosExist() )
+	{
 		vBattlePos = pUnit->GetBattlePos();
+	}
 	else
+	{
 		vBattlePos = pUnit->GetCenterPlain();
+	}
 
 	const float fDistToRegion2 = fabs2( vRegionCenter - vBattlePos );
 	const float fFireRange2 = sqr( pUnit->GetFirstArtilleryGun()->GetFireRange( 0 ) );
@@ -83,10 +87,14 @@ void CGeneralArtillery::Segment()
 				it = trucks.erase( it );
 			}
 			else
+			{
 				++it;
+			}
 		}
 		else
+		{
 			++it;
+		}
 	}
 
 	//
@@ -97,21 +105,29 @@ void CGeneralArtillery::Segment()
 		if ( !bValidUnit || theDipl.GetDiplStatusForParties( pUnit->GetParty(), pOwner->GetParty() ) == EDI_ENEMY )
 		{
 			if ( bValidUnit )
+			{
 				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP ), pUnit, false );
+			}
 
 			iter = freeUnits.erase( iter );
 		}
 		else
+		{
 			++iter;
+		}
 	}
 
 	std::list<CGeneralArtilleryTask>::iterator iter = tasks.begin();
 	while ( iter != tasks.end() )
 	{
 		if ( iter->IsTaskFinished() )
+		{
 			iter = tasks.erase( iter );
+		}
 		else
+		{
 			( iter++ )->Segment();
+		}
 	}
 }
 
@@ -126,7 +142,9 @@ bool CGeneralArtillery::CanBombardRegion( const CVec2 &vRegionCenter )
 		// сдвинуть центр дальше
 		const CVec2 vNewCenter = vRegionCenter + vDir * 10 * SConsts::TILE_SIZE;
 		if ( CanUnitBombardRegion( pUnit, vNewCenter ) )
+		{
 			return true;
+		}
 	}
 
 	return false;
@@ -153,11 +171,15 @@ int CGeneralArtillery::RequestForSupport( const CVec2 &vCenter,
 			++cnt;
 		}
 		else
+		{
 			++iter;
+		}
 	}
 
 	if ( bombardmentUnits.empty() )
+	{
 		return 0;
+	}
 	else
 	{
 		tasks.push_back(
@@ -214,9 +236,13 @@ void CGeneralArtilleryGoToPosition::StartState()
 	{
 		eState = EBS_MOVING;
 		if ( pUnit->CanCommandBeExecutedByStats( ACTION_COMMAND_SWARM_TO ) )
+		{
 			theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_SWARM_TO, vPos ), pUnit, false );
+		}
 		else
+		{
 			theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_MOVE_TO, vPos ), pUnit, false );
+		}
 	}
 	else
 	{
@@ -230,28 +256,40 @@ void CGeneralArtilleryGoToPosition::StartState()
 void CGeneralArtilleryGoToPosition::WaitForTruck()
 {
 	if ( !HasTruck( pUnit ) )
+	{
 		eState = EBS_START;
+	}
 	else if ( IsArtilleryFree( pUnit->GetTruck() ) && pUnit->GetState() && IsArtilleryBeingTowed( pUnit ) )
 	{
 		eState = EBS_MOVING_WITH_TRUCK;
 		if ( DoesGoToReservePosition() )
+		{
 			theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_MOVE_TO, vPos ), pUnit->GetTruck(), false );
+		}
 		else
+		{
 			theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_DEPLOY_ARTILLERY, vPos ), pUnit->GetTruck(), false );
+		}
 	}
 	else if ( startTime + 2000 < curTime && pUnit->GetTruck()->GetState() &&
 	          pUnit->GetTruck()->GetState()->IsRestState() )
+	{
 		bFinished = true;
+	}
 }
 
 void CGeneralArtilleryGoToPosition::MovingWithTruck()
 {
 	if ( !HasTruck( pUnit ) )
+	{
 		eState = EBS_START;
+	}
 	else if ( IsArtilleryFree( pUnit ) || IsArtilleryFree( pUnit->GetTruck() ) )
 	{
 		if ( DoesGoToReservePosition() || !pUnit->NeedDeinstall() )
+		{
 			bFinished = true;
+		}
 		else
 		{
 			eState = EBS_FINISHING;
@@ -268,7 +306,9 @@ void CGeneralArtilleryGoToPosition::Finishing()
 		CArtillery *pArtillery = checked_cast_ptr<CArtillery *>( pUnit );
 
 		if ( !pArtillery->IsInInstallAction() )
+		{
 			bFinished = true;
+		}
 	}
 }
 
@@ -284,7 +324,9 @@ void CGeneralArtilleryGoToPosition::Segment()
 				break;
 			case EBS_MOVING:
 				if ( IsArtilleryFree( pUnit ) )
+				{
 					bFinished = true;
+				}
 
 				break;
 			case EBS_WAIT_FOR_TRUCK:
@@ -355,10 +397,14 @@ void CGeneralArtilleryTask::CheckEscapingUnits()
 				iter = bombardmentUnits.erase( iter );
 			}
 			else
+			{
 				++iter;
+			}
 		}
 		else
+		{
 			++iter;
+		}
 	}
 }
 
@@ -375,15 +421,23 @@ void CGeneralArtilleryTask::StartBombardment()
 		CAIUnit *pUnit = iter->pUnit;
 
 		if ( CanUnitBombardRegion( pUnit, vCenter ) )
+		{
 			iter->vAttackPos = vCenter;
+		}
 		else
+		{
 			iter->vAttackPos = vBombardmentCenter;
+		}
 
 		CVec2 vBattlePos;
 		if ( ( HasTruck( pUnit ) || pUnit->CanMove() ) && pUnit->DoesReservePosExist() )
+		{
 			vBattlePos = pUnit->GetBattlePos();
+		}
 		else
+		{
 			vBattlePos = pUnit->GetCenterPlain();
+		}
 
 		iter->pGoToPosition = new CGeneralArtilleryGoToPosition( pUnit, vBattlePos, false );
 	}
@@ -406,7 +460,9 @@ void CGeneralArtilleryTask::GoingToBattle()
 
 				// не смогла отцепиться
 				if ( IsArtilleryBeingTowed( pUnit ) )
+				{
 					iter->pGoToPosition = new CGeneralArtilleryGoToPosition( pUnit, iter->vReservePosition, true );
+				}
 				else
 				{
 					const CVec2 vCenter = pUnit->GetCenterPlain();
@@ -415,15 +471,21 @@ void CGeneralArtilleryTask::GoingToBattle()
 
 					// не достреливает
 					if ( fFireRange2 <= fDistToAttackPos2 )
+					{
 						iter->pGoToPosition = new CGeneralArtilleryGoToPosition( pUnit, iter->vReservePosition, true );
+					}
 					else
+					{
 						iter->pGoToPosition = 0;
+					}
 				}
 			}
 		}
 
 		if ( iter->pGoToPosition && !iter->pGoToPosition->DoesGoToReservePosition() )
+		{
 			bFinished = false;
+		}
 	}
 
 	if ( bFinished )
@@ -468,7 +530,9 @@ void CGeneralArtilleryTask::Rotating()
 				{
 					CAIUnit *pUnit = iter->pUnit;
 					if ( !pUnit->GetFirstArtilleryGun()->CanShootToPointWOMove( iter->vAttackPos, 0 ) )
+					{
 						theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_ROTATE_TO, iter->vAttackPos ), pUnit, false );
+					}
 				}
 			}
 		}
@@ -481,9 +545,13 @@ void CGeneralArtilleryTask::Rotating()
 				{
 					CAIUnit *pUnit = iter->pUnit;
 					if ( pUnit->GetState() && pUnit->GetState()->GetName() == EUSN_TURN_TO_POINT )
+					{
 						return;
+					}
 					if ( !pUnit->IsInstalled() )
+					{
 						return;
+					}
 				}
 			}
 
@@ -503,7 +571,9 @@ void CGeneralArtilleryTask::Rotating()
 					const NTimer::STime timeToShoot = pGun->GetAimTime( false ) + pGun->GetRelaxTime( false );
 
 					if ( timeToShoot > maxTimeToShoot )
+					{
 						maxTimeToShoot = timeToShoot;
+					}
 				}
 			}
 
@@ -524,7 +594,9 @@ void CGeneralArtilleryTask::Firing()
 		      ++iter )
 		{
 			if ( !iter->pGoToPosition )
+			{
 				iter->pGoToPosition = new CGeneralArtilleryGoToPosition( iter->pUnit, iter->vReservePosition, true );
+			}
 		}
 	}
 }
@@ -548,7 +620,9 @@ void CGeneralArtilleryTask::Escaping()
 	}
 
 	if ( bFinished )
+	{
 		SetBombardmentFinished();
+	}
 }
 
 void CGeneralArtilleryTask::CalculateTimeToSendAntiArtilleryAck()
@@ -573,16 +647,22 @@ void CGeneralArtilleryTask::CalculateTimeToSendAntiArtilleryAck()
 				                                      2 * ( pGun->GetAimTime( false ) + pGun->GetRelaxTime( false ) );
 
 				if ( localTimeToWait > maxTimeToWait )
+				{
 					maxTimeToWait = localTimeToWait;
+				}
 			}
 		}
 	}
 
 	vAntiArtilleryAckCenter /= float( cnt );
 	if ( maxTimeToWait != 0 )
+	{
 		timeToSendAntiArtilleryAck = curTime + maxTimeToWait;
+	}
 	else
+	{
 		timeToSendAntiArtilleryAck = 0;
+	}
 }
 
 void CGeneralArtilleryTask::Segment()
@@ -593,21 +673,29 @@ void CGeneralArtilleryTask::Segment()
 
 		bool bWrongParty = false;
 		if ( IsValidObj( pUnit ) )
+		{
 			bWrongParty = !IsArtilleryBeingTowed( pUnit ) && pUnit->GetParty() == theDipl.GetMyParty();
+		}
 
 		if ( !IsValidObj( pUnit ) || bWrongParty )
 		{
 			if ( bWrongParty )
+			{
 				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP ), pUnit, false );
+			}
 
 			iter = bombardmentUnits.erase( iter );
 		}
 		else
+		{
 			++iter;
+		}
 	}
 
 	if ( bombardmentUnits.empty() )
+	{
 		SetBombardmentFinished();
+	}
 	else
 	{
 		switch ( eState )

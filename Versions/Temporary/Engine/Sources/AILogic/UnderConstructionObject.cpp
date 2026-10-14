@@ -51,7 +51,9 @@ public:
 			}
 		}
 		else
+		{
 			entries1[nEntry] = ulChecksum;
+		}
 		return true;
 	}
 };

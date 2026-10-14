@@ -63,7 +63,9 @@ bool HasConfiguredGunners() const
 	for ( int nMode = 0; nMode < gunners.size(); ++nMode )
 	{
 		if ( !gunners[nMode].gunners.empty() )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -83,7 +85,9 @@ virtual const int GetGunsSize( const int nUniqueID, const int nPlatform ) const
 	{
 		const std::vector<CConstructorInfo::SUnitPlatform> *pPlatforms = 0;
 		if ( ConstructorInfo()->GetUnitPlatforms( nUniqueID, &pPlatforms ) )
+		{
 			return ( *pPlatforms )[nPlatform].gunIndexes.size();
+		}
 	}
 	return platforms[nPlatform].guns.size();
 }
@@ -94,7 +98,9 @@ const SPlatform &GetPlatform( const int nUniqueID, const int nPlatform ) const
 	{
 		const std::vector<CConstructorInfo::SUnitPlatform> *pPlatforms = 0;
 		if ( ConstructorInfo()->GetUnitPlatforms( nUniqueID, &pPlatforms ) )
+		{
 			return platforms[( *pPlatforms )[nPlatform].nPlatformIndex];
+		}
 	}
 	return nPlatform < platforms.size() ? platforms[nPlatform] : platforms[0];
 }
@@ -105,7 +111,9 @@ const int GetPlatformsSize( const int nUniqueID ) const
 	{
 		const std::vector<CConstructorInfo::SUnitPlatform> *pPlatforms = 0;
 		if ( ConstructorInfo()->GetUnitPlatforms( nUniqueID, &pPlatforms ) )
+		{
 			return pPlatforms->size();
+		}
 	}
 	return platforms.size();
 }

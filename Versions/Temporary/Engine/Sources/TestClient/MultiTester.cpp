@@ -98,7 +98,9 @@ void CMultiTester::Activate()
 bool CMultiTester::Segment()
 {
 	if ( bCancelled || !pServerClient )
+	{
 		return false;
+	}
 
 	pServerClient->Segment();
 
@@ -109,12 +111,16 @@ bool CMultiTester::Segment()
 	}
 
 	if ( bCancelled )
+	{
 		return false;
+	}
 
 	// В режиме ожидания ответа сервера только обрабатываем пакеты
 	uint32_t dwTime = GetCurrentTimeMilliseconds();
 	if ( !IsActive() )
+	{
 		return true;
+	}
 
 	switch ( nStage )
 	{
@@ -216,7 +222,9 @@ void CMultiTester::MainStage()
 {
 	uint32_t dwTime = GetCurrentTimeMilliseconds();
 	if ( dwTime < dwLastSegmentTime + SEGMENT_DURATION )
+	{
 		return;
+	}
 	dwLastSegmentTime = dwTime;
 	if ( nTestMode & MTM_CHAT )
 	{
@@ -311,18 +319,26 @@ bool CMultiTester::ProcessLadderInvitePacket( CLadderInvitePacket *pPacket )
 	{
 		const int nPlayerID = *it;
 		if ( nPlayerID != nMyID )
+		{
 			playersToWait.insert( nPlayerID );
+		}
 		if ( nWinTeam == 0 )
+		{
 			winnersSet.insert( nPlayerID );
+		}
 		playersRaces[nPlayerID] = 0;
 	}
 	for ( std::list<int>::const_iterator it = pPacket->team2.begin(); it != pPacket->team2.end(); ++it )
 	{
 		const int nPlayerID = *it;
 		if ( nPlayerID != nMyID )
+		{
 			playersToWait.insert( nPlayerID );
+		}
 		if ( nWinTeam == 1 )
+		{
 			winnersSet.insert( nPlayerID );
+		}
 		playersRaces[nPlayerID] = 1;
 	}
 

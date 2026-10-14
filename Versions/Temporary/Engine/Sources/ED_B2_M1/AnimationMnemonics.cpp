@@ -121,7 +121,9 @@ CMayaAnimationMnemonics::Get( const std::string &rszMnemonicType, std::string *p
 					}
 				}
 				else
+				{
 					*pnNumber = 0;
+				}
 			}
 			if ( pszMnemonicLabel )
 			{
@@ -130,7 +132,9 @@ CMayaAnimationMnemonics::Get( const std::string &rszMnemonicType, std::string *p
 			return animationType;
 		}
 		if ( nPos != std::string::npos )
+		{
 			++nPos;
+		}
 	}
 	//
 	return NDb::ANIMATION_UNKNOWN;

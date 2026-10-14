@@ -19,7 +19,9 @@ void CQuat::DecompEulerAngles( float *pfYaw, float *pfPitch, float *pfRoll )
 const uint16_t GetDirectionByVector( float x, float y )
 {
 	if ( IsAlmostZero( x, y ) )
+	{
 		return 0;
+	}
 
 	float add = 49152.0f;
 
@@ -47,12 +49,18 @@ const uint16_t GetDirectionByVector( float x, float y )
 
 	//NI_VERIFY( (x >= 0) && (y >= 0), StrFmt("Wrong vector {%g, %g}", x, y), return 0 );
 	if ( x < 0 || y < 0 )
+	{
 		return 0;
+	}
 
 	if ( x + y != 0 )
+	{
 		return 16384.0f * y / ( x + y ) + add;
+	}
 	else
+	{
 		return 0;
+	}
 }
 
 const uint16_t GetDirectionByVector( const CVec2 &vec )
@@ -281,7 +289,9 @@ bool SRect::IsPointInside( const CVec2 &point ) const
 
 	// вырожденный прямоугольник
 	if ( rightSign == 0 )
+	{
 		return fabs2( point - center ) < 0.001f;
+	}
 
 	return boost::math::sign( TriangleAAA( v1(), v2(), point ) ) == rightSign &&
 	       boost::math::sign( TriangleAAA( v2(), v3(), point ) ) == rightSign &&
@@ -292,7 +302,9 @@ bool SRect::IsPointInside( const CVec2 &point ) const
 bool SRect::IsIntersectCircle( const CVec2 &circleCenter, const float r ) const
 {
 	if ( IsPointInside( circleCenter ) )
+	{
 		return true;
+	}
 
 	const CVec2 vNewCenter = circleCenter - center;
 	const CVec2 vLocalCoordCenter( vNewCenter.x * dir.x + vNewCenter.y * dir.y,
@@ -301,14 +313,22 @@ bool SRect::IsIntersectCircle( const CVec2 &circleCenter, const float r ) const
 	float fDist = 0;
 
 	if ( vLocalCoordCenter.x < -lengthBack )
+	{
 		fDist += sqr( vLocalCoordCenter.x - ( -lengthBack ) );
+	}
 	else if ( vLocalCoordCenter.x > lengthAhead )
+	{
 		fDist += sqr( vLocalCoordCenter.x - lengthAhead );
+	}
 
 	if ( vLocalCoordCenter.y < -width )
+	{
 		fDist += sqr( vLocalCoordCenter.y - ( -width ) );
+	}
 	else if ( vLocalCoordCenter.y > width )
+	{
 		fDist += sqr( vLocalCoordCenter.y - width );
+	}
 
 	return fDist <= sqr( r );
 }
@@ -317,19 +337,27 @@ bool SRect::IsIntersectTriangle( const CVec2 &vTr1, const CVec2 &vTr2, const CVe
 {
 	if ( IsPointInsideTriangle( vTr1, vTr2, vTr3, v1() ) || IsPointInsideTriangle( vTr1, vTr2, vTr3, v2() ) ||
 	     IsPointInsideTriangle( vTr1, vTr2, vTr3, v3() ) || IsPointInsideTriangle( vTr1, vTr2, vTr3, v4() ) )
+	{
 		return true;
+	}
 
 	CSegment segment1( vTr1, vTr2 );
 	if ( IsIntersected( segment1 ) )
+	{
 		return true;
+	}
 
 	CSegment segment2( vTr1, vTr3 );
 	if ( IsIntersected( segment2 ) )
+	{
 		return true;
+	}
 
 	CSegment segment3( vTr2, vTr3 );
 	if ( IsIntersected( segment3 ) )
+	{
 		return true;
+	}
 
 	return false;
 }
@@ -340,15 +368,25 @@ const int SRect::GetSide( const uint16_t dirFromRectCenter ) const
 	const uint16_t diff = dirFromRectCenter - GetDirectionByVector( dir );
 
 	if ( diff <= 8192 )
+	{
 		return SIDE_FRONT;
+	}
 	else if ( diff > 8192 && diff <= 24576 )
+	{
 		return SIDE_LEFT;
+	}
 	else if ( diff > 24576 && diff <= 40960 )
+	{
 		return SIDE_BACK;
+	}
 	else if ( diff > 40960 && diff <= 57344 )
+	{
 		return SIDE_RIGHT;
+	}
 	else
+	{
 		return SIDE_FRONT;
+	}
 }
 
 const int SRect::GetSide( const CVec2 &point ) const
@@ -389,15 +427,21 @@ const float fabs( const SRect rect1, const SRect rect2 )
 
 	// не пересекаются
 	if ( segm1Max < segm2Min || segm2Max < segm1Min )
+	{
 		return (std::min)( fabs( segm1Max - segm2Min ), fabs( segm2Max - segm1Min ) );
+	}
 	else
+	{
 		return 0;
+	}
 }
 
 const bool GetRectBeamIntersection( CVec2 *pvResult, const CVec2 &vPoint, const CVec2 &vDir, const SRect &rect )
 {
 	if ( pvResult )
+	{
 		*pvResult = VNULL2;
+	}
 
 	int nNearestPoint = 0;
 	float fNearestDist2 = fabs2( vPoint - rect.v[0] );
@@ -414,13 +458,17 @@ const bool GetRectBeamIntersection( CVec2 *pvResult, const CVec2 &vPoint, const 
 	if ( fNearestDist2 == 0.0f )
 	{
 		if ( pvResult )
+		{
 			*pvResult = rect.v[nNearestPoint];
+		}
 		return true;
 	}
 
 	CVec2 vDirNorm( vDir );
 	if ( !Normalize( &vDirNorm ) )
+	{
 		return false;
+	}
 
 	const int nPrevPoint = nNearestPoint == 0 ? 3 : nNearestPoint - 1;
 	const int nNextPoint = nNearestPoint == 3 ? 0 : nNearestPoint + 1;
@@ -434,7 +482,9 @@ const bool GetRectBeamIntersection( CVec2 *pvResult, const CVec2 &vPoint, const 
 		if ( tr >= 0.0f && tr <= 1.0f )
 		{
 			if ( pvResult )
+			{
 				*pvResult = rect.v[nPrevPoint] + ( rect.v[nNearestPoint] - rect.v[nPrevPoint] ) * tr;
+			}
 			return true;
 		}
 	}
@@ -448,7 +498,9 @@ const bool GetRectBeamIntersection( CVec2 *pvResult, const CVec2 &vPoint, const 
 		if ( tr >= 0.0f && tr <= 1.0f )
 		{
 			if ( pvResult )
+			{
 				*pvResult = rect.v[nNextPoint] + ( rect.v[nNearestPoint] - rect.v[nNextPoint] ) * tr;
+			}
 			return true;
 		}
 	}

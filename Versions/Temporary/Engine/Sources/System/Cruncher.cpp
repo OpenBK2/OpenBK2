@@ -137,7 +137,9 @@ void CNetCompressor::EmitBlock( int nStart )
 	nBlockStart = -1;
 
 	if ( nBlockLength <= 34 )
+	{
 		data.WriteBits( nLengthBits[nBlockLength - 1], nLengthBitsNum[nBlockLength - 1] );
+	}
 	else
 	{
 		if ( nBlockLength <= 34 + 64 )
@@ -151,10 +153,14 @@ void CNetCompressor::EmitBlock( int nStart )
 			data.WriteBits( ( nBlockLength - 99 ), 7 );
 		}
 		else
+		{
 			ASSERT( 0 );
+		}
 	}
 	if ( nShift < 34 )
+	{
 		data.WriteBits( nShiftBits[nShift], nShiftBitsNum[nShift] );
+	}
 	else
 	{
 		if ( nShift < 34 + 64 )
@@ -234,9 +240,13 @@ void CNetCompressor::EmitChar()
 void CNetCompressor::FinishPack()
 {
 	if ( nBlockStart >= 0 )
+	{
 		EmitBlock( nBlockStart - 1 );
+	}
 	else
+	{
 		EmitChar();
+	}
 }
 
 void CNetCompressor::StartPack( unsigned char c )
@@ -352,7 +362,9 @@ void CNetCompressor::Pack( CDataStream &src, CDataStream &appendTo )
 			if ( nBlockLength < N_COMPRESS_MAX_BLOCK )
 			{
 				if ( cBuffer[nBlockLength + nBlockStart] == c )
+				{
 					nBlockLength++;
+				}
 				else
 				{
 					int nRelStart, nShift, nShift1;
@@ -365,9 +377,13 @@ void CNetCompressor::Pack( CDataStream &src, CDataStream &appendTo )
 					while ( nShift < N_COMPRESS_HISTORY - N_COMPRESS_MAX_BLOCK - 1 )
 					{
 						while ( nShift > nShift1 )
+						{
 							nShift1 += nNext[( nPrevious - nShift1 ) & ( N_COMPRESS_HISTORY - 1 )];
+						}
 						if ( nShift < nShift1 )
+						{
 							nShift += nNext[( nRelStart - nShift ) & ( N_COMPRESS_HISTORY - 1 )];
+						}
 						else
 						{
 							int nNextCandidate = ( nRelStart - nShift ) & ( N_COMPRESS_HISTORY - 1 );
@@ -386,7 +402,9 @@ void CNetCompressor::Pack( CDataStream &src, CDataStream &appendTo )
 				}
 			}
 			else
+			{
 				EmitBlock( nBlockStart );
+			}
 		}
 	}
 	FinishPack();
@@ -420,57 +438,85 @@ void CNetCompressor::Unpack( CDataStream &src, CDataStream &appendTo )
 						if ( load.ReadBit() )
 						{
 							if ( load.ReadBit() )
+							{
 								nBlockLength = 99 + load.ReadBits( 7 ); // <=34+64+128
+							}
 							else
+							{
 								nBlockLength = 19 + load.ReadBits( 4 ); // <=34
+							}
 						}
 						else
+						{
 							nBlockLength = 6;
+						}
 					}
 					else
 					{
 						if ( load.ReadBit() )
+						{
 							nBlockLength = 35 + load.ReadBits( 6 ); // <=34+64
+						}
 						else
+						{
 							nBlockLength = 5;
+						}
 					}
 				}
 				else
 				{
 					if ( load.ReadBit() )
+					{
 						nBlockLength = 7 + load.ReadBits( 2 ); // <=10
+					}
 					else
 					{
 						if ( load.ReadBit() )
+						{
 							nBlockLength = 11 + load.ReadBits( 3 ); // <=18
+						}
 						else
+						{
 							nBlockLength = 3;
+						}
 					}
 				}
 			}
 			else
 			{
 				if ( load.ReadBit() )
+				{
 					nBlockLength = 4;
+				}
 				else
+				{
 					nBlockLength = 2;
+				}
 			}
 			// shift load
 			if ( load.ReadBit() )
 			{
 				if ( load.ReadBit() )
+				{
 					nShift = 34 + 64 + 256 + load.ReadBits( 10 );
+				}
 				else
+				{
 					nShift = 34 + 64 + 256 + 1024 + load.ReadBits( 12 );
+				}
 			}
 			else
 			{
 				if ( load.ReadBit() )
 				{
 					if ( load.ReadBit() )
+					{
 						nShift = 34 + 64 + load.ReadBits( 8 );
+					}
 					else
+					{
 						nShift = 34 + load.ReadBits( 6 );
+					}
 				}
 				else
 				{
@@ -479,19 +525,29 @@ void CNetCompressor::Unpack( CDataStream &src, CDataStream &appendTo )
 						if ( load.ReadBit() )
 						{
 							if ( load.ReadBit() )
+							{
 								nShift = 0 + load.ReadBits( 1 ); // <2
+							}
 							else
+							{
 								nShift = 18 + load.ReadBits( 4 ); // <34
+							}
 						}
 						else
+						{
 							nShift = 6 + load.ReadBits( 2 ); // <10
+						}
 					}
 					else
 					{
 						if ( load.ReadBit() )
+						{
 							nShift = 2 + load.ReadBits( 2 ); // <6
+						}
 						else
+						{
 							nShift = 10 + load.ReadBits( 3 ); // <18
+						}
 					}
 				}
 			}

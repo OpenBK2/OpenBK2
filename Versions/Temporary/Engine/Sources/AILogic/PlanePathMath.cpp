@@ -36,7 +36,9 @@ uint16_t DirectedDirsDifference( const uint16_t wStart, const uint16_t wFinish, 
 bool GetInternalTangentPoints( const CCircle &c1, const CCircle &c2, CVec2 *v11, CVec2 *v21, CVec2 *v12, CVec2 *v22 )
 {
 	if ( fabs( c1.center - c2.center ) <= c1.r + c2.r )
+	{
 		return false;
+	}
 
 	// for test;
 
@@ -90,7 +92,9 @@ static bool
 GetExternalTangentPoints( const CCircle &c1, const CCircle &c2, CVec2 *v11, CVec2 *v21, CVec2 *v12, CVec2 *v22 )
 {
 	if ( !c1.r || !c2.r || c1.center == c2.center )
+	{
 		return false;
+	}
 
 	if ( c1.r == c2.r )
 	{
@@ -107,9 +111,13 @@ GetExternalTangentPoints( const CCircle &c1, const CCircle &c2, CVec2 *v11, CVec
 		*v22 = c2.center - vPerp;
 	}
 	else if ( c1.r > c2.r )
+	{
 		GetExternalTangentPointsFirstGreater( c1, c2, v11, v21, v12, v22 );
+	}
 	else //if ( c2.r > c1.r )
+	{
 		GetExternalTangentPointsFirstGreater( c2, c1, v21, v11, v22, v12 );
+	}
 
 	return true;
 }
@@ -118,17 +126,23 @@ GetExternalTangentPoints( const CCircle &c1, const CCircle &c2, CVec2 *v11, CVec
 bool GetDirectedCirclesTangentPoints( const CDirectedCircle &from, const CDirectedCircle &to, CVec2 *v1, CVec2 *v2 )
 {
 	if ( from.center == to.center )
+	{
 		return false;
+	}
 
 	CVec2 v11, v12, v21, v22;
 
 	if ( from.nDir == to.nDir )
 	{
 		if ( !GetExternalTangentPoints( from, to, &v11, &v21, &v12, &v22 ) )
+		{
 			return false;
+		}
 	}
 	else if ( !GetInternalTangentPoints( from, to, &v11, &v21, &v12, &v22 ) )
+	{
 		return false;
+	}
 
 	const CVec2 vRadius( v11 - from.center );
 	const CVec2 vTangent( v21 - v11 );

@@ -52,7 +52,9 @@ bool CPresizePath::InitByFormationPath( CFormation *pFormation, CBasePathUnit *_
 {
 	pUnit = _pUnit;
 	if ( eState == EPPS_APPROACH_BY_STANDART )
+	{
 		pPathStandart->InitByFormationPath( pFormation, pUnit );
+	}
 
 	return true;
 }
@@ -62,7 +64,9 @@ bool CPresizePath::Init( IMemento *pMemento, CBasePathUnit *_pUnit, CAIMap *pAIM
 	CPtr<IMemento> p = pMemento;
 	pUnit = _pUnit;
 	if ( eState == EPPS_APPROACH_BY_STANDART && pMemento )
+	{
 		pPathStandart->Init( pMemento, pUnit, GetAIMap() );
+	}
 
 	return true;
 }
@@ -90,7 +94,9 @@ void CPresizePath::Segment( const NTimer::STime timeDiff )
 				return;
 			}
 			else
+			{
 				eState = EPPS_TURN_TO_DESIRED_POINT;
+			}
 
 			break;
 		case EPPS_TURN_TO_DESIRED_POINT:
@@ -117,13 +123,17 @@ void CPresizePath::Segment( const NTimer::STime timeDiff )
 				return;
 			}
 			else
+			{
 				eState = EPPS_TURN_TO_DESIRED_DIR;
+			}
 
 			break;
 		case EPPS_TURN_TO_DESIRED_DIR:
 			// This is the truck's final facing, not an interchangeable forward/reverse heading.
 			if ( pUnit->TurnToDirection( wDesiredDir, false, true ) )
+			{
 				eState = EPPS_FINISHED;
+			}
 
 			break;
 	}
@@ -133,7 +143,9 @@ void CPresizePath::Segment( const NTimer::STime timeDiff )
 void CPresizePath::Stop()
 {
 	if ( eState == EPPS_APPROACH_BY_STANDART )
+	{
 		pPathStandart->Stop();
+	}
 }
 
 /*
@@ -166,14 +178,18 @@ void CPresizePath::SlowDown()
 const bool CPresizePath::CanGoBackward() const
 {
 	if ( eState == EPPS_APPROACH_BY_STANDART )
+	{
 		return pPathStandart->CanGoBackward();
+	}
 	return false;
 }
 
 const bool CPresizePath::CanGoForward() const
 {
 	if ( eState == EPPS_APPROACH_BY_STANDART )
+	{
 		return pPathStandart->CanGoForward();
+	}
 	return false;
 }
 
@@ -188,14 +204,18 @@ void CPresizePath::GetNextTiles( list<SVector> *pTiles )
 const CVec2 CPresizePath::PeekPathPoint( const int nToShift ) const
 {
 	if ( eState == EPPS_APPROACH_BY_STANDART )
+	{
 		return pPathStandart->PeekPathPoint( nToShift );
+	}
 	return VNULL2;
 }
 
 IMemento *CPresizePath::CreateMemento() const
 {
 	if ( eState == EPPS_APPROACH_BY_STANDART )
+	{
 		return pPathStandart->CreateMemento();
+	}
 	return 0;
 }
 

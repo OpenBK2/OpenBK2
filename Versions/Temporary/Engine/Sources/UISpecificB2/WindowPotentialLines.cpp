@@ -37,13 +37,17 @@ static int s_nBorderWidth = 10;
 void CWindowChapterMapLayer::Recalc()
 {
 	if ( !IsValid( pValue ) )
+	{
 		pValue = NGfx::MakeTexture(
 				GetNextPow2( nWidth ), GetNextPow2( nHeight ), 1, NGfx::SPixel8888::ID, NGfx::DYNAMIC_TEXTURE, NGfx::CLAMP );
+	}
 
 	NGfx::CTextureLock<NGfx::SPixel8888> lock( pValue, 0, NGfx::INPLACE );
 	const int nSize = sizeof( NGfx::SPixel8888 ) * nWidth;
 	for ( int y = 0; y < nHeight; ++y )
+	{
 		memcpy( lock[y], &points[y][0], nSize );
+	}
 	bNeedUpdate = false;
 }
 
@@ -59,28 +63,38 @@ void CWindowChapterMapLayer::SetSize( const int _nWidth, const int _nHeight )
 void CWindowChapterMapLayer::SetPixelAlpha( const int x, const int y, const uint8_t &nAlpha )
 {
 	if ( y >= 0 && y < nHeight && x >= 0 && x < nWidth )
+	{
 		points[y][x].a = nAlpha;
+	}
 }
 
 uint8_t CWindowChapterMapLayer::GetPixelAlpha( const int x, const int y )
 {
 	if ( y >= 0 && y < nHeight && x >= 0 && x < nWidth )
+	{
 		return points[y][x].a;
+	}
 	return 0;
 }
 
 void CWindowChapterMapLayer::PutPixel( const int x, const int y, const NGfx::SPixel8888 &color )
 {
 	if ( y >= 0 && y < nHeight && x >= 0 && x < nWidth )
+	{
 		points[y][x] = color;
+	}
 }
 
 const NGfx::SPixel8888 CWindowChapterMapLayer::GetPixel( const int x, const int y )
 {
 	if ( x >= 0 && y >= 0 && x < nWidth && y < nHeight )
+	{
 		return points[y][x];
+	}
 	else
+	{
 		return NGfx::SPixel8888( 0, 0, 0, 0 );
+	}
 }
 
 void CWindowChapterMapLayer::Clear()
@@ -164,7 +178,9 @@ void CWindowPotentialLines::Visit( IUIVisitor *pVisitor )
 	Recalculate();
 
 	if ( !IsVisible() )
+	{
 		return;
+	}
 
 	CWindow::Visit( pVisitor );
 
@@ -202,7 +218,9 @@ void CWindowPotentialLines::InitByDesc( const struct NDb::SUIDesc *pDesc )
 void CWindowPotentialLines::Recalculate()
 {
 	if ( bValid )
+	{
 		return;
+	}
 
 	if ( !bLayerInit )
 	{
@@ -257,16 +275,24 @@ void CWindowPotentialLines::Recalculate()
 				float fValues[4] = { pts[i][j].fValue, pts[i - 1][j].fValue, pts[i - 1][j - 1].fValue, pts[i][j - 1].fValue };
 				uint8_t nType = 0;
 				if ( fValues[0] > 0 )
+				{
 					nType |= 1;
+				}
 				nType <<= 1;
 				if ( fValues[1] > 0 )
+				{
 					nType |= 1;
+				}
 				nType <<= 1;
 				if ( fValues[2] > 0 )
+				{
 					nType |= 1;
+				}
 				nType <<= 1;
 				if ( fValues[3] > 0 )
+				{
 					nType |= 1;
+				}
 
 				// Set Dark layer values (needs to be done before lines
 				for ( int nDarkX = nX; nDarkX < nX + s_nPotentialGridSize; ++nDarkX )
@@ -276,21 +302,35 @@ void CWindowPotentialLines::Recalculate()
 						bool bUse1 = false;
 
 						if ( nType == 0 ) // All < 0
+						{
 							bUse1 = false;
+						}
 						else if ( nType == 15 ) // All > 0
+						{
 							bUse1 = true;
+						}
 						else // Intersection, compare
 							if ( GetValue( nDarkX, nDarkY ) > 0.0f )
+							{
 								bUse1 = true;
+							}
 							else
+							{
 								bUse1 = false;
+							}
 
 						if ( seaMask.IsEmpty() )
+						{
 							pTerritoryLayer->SetPixelAlpha( nDarkX, nDarkY, 255 );
+						}
 						else if ( bUse1 || seaMask.GetData( nDarkX, nDarkY ) )
+						{
 							pTerritoryLayer->SetPixelAlpha( nDarkX, nDarkY, 0 );
+						}
 						else
+						{
 							pTerritoryLayer->SetPixelAlpha( nDarkX, nDarkY, 255 );
+						}
 
 						//if ( nDarkX == nX || nDarkY == nY )
 						//pLinesLayer->PutPixel( nDarkX, nDarkY, 0xffffffff );
@@ -384,7 +424,9 @@ const float CWindowPotentialLines::GetValue( int nX, int nY ) const
 {
 	float fResult = 0.0f;
 	if ( nX >= 0 && nX < noise.GetSizeX() && nY >= 0 && nY < noise.GetSizeY() )
+	{
 		fResult = noise[nY][nX];
+	}
 
 	for ( CNodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it )
 	{
@@ -401,9 +443,13 @@ float CWindowPotentialLines::GetSquaredDistanceToSegment( const SNodeDesc &node,
 	float fT = node.nEndOffsetX * ( nX - node.nX ) + node.nEndOffsetY * ( nY - node.nY );
 
 	if ( node.nEndOffsetX == 0 && node.nEndOffsetY == 0 )
+	{
 		fT = 0.0f;
+	}
 	else
+	{
 		fT /= node.nEndOffsetX * node.nEndOffsetX + node.nEndOffsetY * node.nEndOffsetY;
+	}
 
 	fT = Clamp( fT, 0.0f, 1.0f );
 	float fDX = ( node.nX + node.nEndOffsetX * fT ) - nX;
@@ -466,7 +512,9 @@ void CWindowPotentialLines::AddArrow( const std::vector<CVec2> &arrowTraj,
                                       uint32_t dwArrowColour )
 {
 	if ( pArrowTexture->IsRefInvalid() )
+	{
 		return;
+	}
 
 	SArrowDesc newDesc;
 	newDesc.pts = arrowTraj;
@@ -659,9 +707,13 @@ void CWindowPotentialLines::SetupNoise()
 				{
 					NGfx::SPixel8888 v( noiseMask[i][j] );
 					if ( v.a == 0xFF )
+					{
 						seaMask.SetData( j, i );
+					}
 					else if ( v.a == 0x00 )
+					{
 						noise[i][j] = 0.0f;
+					}
 					else
 					{
 						float fValue = ( float( v.a ) - 127.0f ) * s_fWeightMaskNoise; // 1 / 500000.0f;
@@ -691,7 +743,9 @@ void CWindowPotentialLines::SetupNoise()
 			for ( int i = 0; i < noiseMask.GetSizeX(); ++i )
 			{
 				for ( int j = 0; j < noiseMask.GetSizeY(); ++j )
+				{
 					pTerritoryLayer->PutPixel( i, j, NGfx::SPixel8888( noiseMask[j][i] ) );
+				}
 			}
 		}
 		else

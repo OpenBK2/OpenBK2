@@ -110,7 +110,9 @@ struct SSSEResultVertex
 inline void SSETransformAndProject( const SHMatrix &m, const CVec3 *vin, SSSEResultVertex *vout, int len )
 {
 	if ( len <= 0 )
+	{
 		return;
+	}
 
 	glm::mat4 matrix = LoadMatrix( m );
 

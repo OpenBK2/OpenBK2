@@ -79,7 +79,9 @@ static uint32_t CalcDebugChecksum( const uint32_t *pValues, const int nCount )
 void GetDebugState( SDebugState *pState )
 {
 	if ( pState == 0 )
+	{
 		return;
+	}
 
 	pState->randcnt = rnd.randcnt;
 	pState->randa = rnd.randa;
@@ -219,7 +221,9 @@ void NRandom::SetRandomSeed( IRandomSeed *pSeed )
 	nRandomCalls = 0;
 #endif
 	if ( CRandomGenSeed *pRGS = checked_cast<CRandomGenSeed *>( pSeed ) )
+	{
 		rnd = pRGS->GetRandData();
+	}
 	else
 	{
 		NI_ASSERT( false, "Wrong class as a random seed" );
@@ -249,7 +253,9 @@ void CRandomGenSeed::SFLB0_InitVariables()
 	a = b = c = d = e = f = g = h = 0x9e3779b9; // the golden ratio
 	// scramble it
 	for ( int i = 0; i < 4; ++i )
+	{
 		mix( a, b, c, d, e, f, g, h );
+	}
 	// initialize using the contents of r[] as the seed
 	for ( int i = 0; i < RANDSIZ; i += 8 )
 	{

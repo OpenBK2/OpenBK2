@@ -87,14 +87,22 @@ int CCheckIsWindowEnabled::Check( struct IScreen *pScreen,
 	{
 		IWindow *pParentWnd = checked_cast<IWindow *>( pScreen->GetVisibleElement( pDesc->szParentWindowName, true ) );
 		if ( pParentWnd )
+		{
 			pWnd = checked_cast<IWindow *>( pParentWnd->GetVisibleChild( pDesc->szWindowName, true ) );
+		}
 	}
 	if ( !pWnd )
+	{
 		pWnd = checked_cast<IWindow *>( pScreen->GetVisibleElement( pDesc->szWindowName, true ) );
+	}
 	if ( !pWnd || !( pWnd->IsEnabled() ) || !( pWnd->IsVisible() ) )
+	{
 		return 0;
+	}
 	else
+	{
 		return 1;
+	}
 }
 
 // CCheckIsWindowVisible ::
@@ -117,14 +125,22 @@ int CCheckIsWindowVisible::Check( struct IScreen *pScreen,
 	{
 		IWindow *pParentWnd = checked_cast<IWindow *>( pScreen->GetVisibleElement( pDesc->szParentWindowName, true ) );
 		if ( pParentWnd )
+		{
 			pWnd = checked_cast<IWindow *>( pParentWnd->GetVisibleChild( pDesc->szWindowName, true ) );
+		}
 	}
 	if ( !pWnd )
+	{
 		pWnd = checked_cast<IWindow *>( pScreen->GetVisibleElement( pDesc->szWindowName, true ) );
+	}
 	if ( !pWnd || !( pWnd->IsVisible() ) )
+	{
 		return 0;
+	}
 	else
+	{
 		return 1;
+	}
 }
 
 void CCheckIsWindowVisible::InitByDesc( const struct NDb::SUIDesc *_pDesc )
@@ -149,11 +165,15 @@ int CCheckIsTabActive::Check( struct IScreen *pScreen,
 	DebugTrace( "Check tab active %s (%d)", pDesc->szTabControlName.c_str(), pDesc->nTab );
 	IWindow *pWnd = checked_cast<IWindow *>( pScreen->GetVisibleElement( pDesc->szTabControlName, true ) );
 	if ( !pWnd || !( pWnd->IsVisible() ) )
+	{
 		return 0;
+	}
 	ITabControl *pTab = dynamic_cast<ITabControl *>( pScreen->GetElement( pDesc->szTabControlName, true ) );
 	NI_ASSERT( pTab != 0, fmt::format( "tab control with name \"{}\" not found", pDesc->szTabControlName ) );
 	if ( pTab->GetActive() != pDesc->nTab )
+	{
 		return 0;
+	}
 	return 1;
 }
 

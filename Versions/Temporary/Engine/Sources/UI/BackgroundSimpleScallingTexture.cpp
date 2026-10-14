@@ -26,9 +26,13 @@ void CBackgroundSimpleScallingTexture::InitByDesc( const struct NDb::SUIDesc *_p
 void CBackgroundSimpleScallingTexture::SetTexture( const struct NDb::STexture *_pDesc )
 {
 	if ( pTexture != 0 )
+	{
 		pTexture = 0;
+	}
 	if ( _pDesc != 0 )
+	{
 		pTexture = checked_cast<const NDb::STexture *>( _pDesc );
+	}
 #ifndef _FINALRELEASE
 	if ( CHECK_UI_TEXTURES_INSTANT_LOAD != 0 )
 	{
@@ -40,7 +44,9 @@ void CBackgroundSimpleScallingTexture::SetTexture( const struct NDb::STexture *_
 void CBackgroundSimpleScallingTexture::Visit( struct IUIVisitor *pVisitor )
 {
 	if ( pos.IsEmpty() || !pStats )
+	{
 		return;
+	}
 
 	CRectLayout rects;
 	const CTRect<float> rectTexture = ( pTexture == 0 ) ? CTRect<float>( 0.0f, 0.0f, 0.0f, 0.0f )

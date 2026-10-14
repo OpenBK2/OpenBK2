@@ -454,9 +454,13 @@ public:
 	{
 		det_map<NDb::EDesignUnitType, int, SEnumHash>::const_iterator pos = PRIORITIES.find( unitType );
 		if ( pos == PRIORITIES.end() )
+		{
 			return 0;
+		}
 		else
+		{
 			return pos->second;
+		}
 	}
 	static void InitPriorities( const std::vector<NDb::SUnitTypePriority> &priorities );
 };

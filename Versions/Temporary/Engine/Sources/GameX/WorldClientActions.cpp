@@ -51,7 +51,9 @@ bool CWorldClient::PerformGroupAction( EActionCommand eActionCommand, float fPar
 bool CWorldClient::PerformGroupAction( EActionCommand eActionCommand, const CVec2 &vPos, bool bPlaceInQueue )
 {
 	if ( !IsInsideAIMap( vPos ) )
+	{
 		return false;
+	}
 
 	SAIUnitCmd command( eActionCommand );
 	command.vPos = vPos;
@@ -64,7 +66,9 @@ bool CWorldClient::PerformGroupAction( EActionCommand eActionCommand,
                                        bool bPlaceInQueue )
 {
 	if ( !IsInsideAIMap( vPos ) )
+	{
 		return false;
+	}
 
 	SAIUnitCmd command( eActionCommand );
 	command.vPos = vPos;
@@ -78,7 +82,9 @@ bool CWorldClient::PerformGroupAction( EActionCommand eActionCommand,
                                        bool bPlaceInQueue )
 {
 	if ( !IsInsideAIMap( vPos ) )
+	{
 		return false;
+	}
 
 	SAIUnitCmd command( eActionCommand );
 	command.vPos = vPos;
@@ -180,7 +186,9 @@ bool CWorldClient::ActionFollow( const CVec2 &vPos, const CMapObj *pMO, bool bFo
 {
 	if ( pMO && ( ( pMO->GetTypeID() == NDb::SMechUnitRPGStats::typeID ) ||
 	              ( pMO->GetTypeID() == NDb::SInfantryRPGStats::typeID ) ) )
+	{
 		return PerformGroupAction( ACTION_COMMAND_FOLLOW, vPos, pMO->GetID(), GetPlaceInQueue() );
+	}
 	return false;
 }
 
@@ -192,7 +200,9 @@ bool CWorldClient::ActionStandGround( const CVec2 &vPos, const CMapObj *pMO, boo
 bool CWorldClient::ActionBoard( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
 	if ( !pMO )
+	{
 		return false;
+	}
 
 	switch ( pMO->GetTypeID() )
 	{
@@ -217,7 +227,9 @@ bool CWorldClient::ActionBoard( const CVec2 &vPos, const CMapObj *pMO, bool bFor
 				std::vector<int> squad;
 				const IMOUnit *pUnit = dynamic_cast<const IMOUnit *>( pMO );
 				if ( !pUnit )
+				{
 					return false;
+				}
 				squad.push_back( pUnit->GetSquad()->GetID() );
 
 				const int groupID = pCommandsSender->CommandRegisterGroup( squad );
@@ -239,7 +251,9 @@ bool CWorldClient::ActionBoard( const CVec2 &vPos, const CMapObj *pMO, bool bFor
 bool CWorldClient::ActionMechBoard( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
 	if ( !pMO )
+	{
 		return false;
+	}
 
 	if ( pMO->GetTypeID() == NDb::SMechUnitRPGStats::typeID )
 	{
@@ -283,7 +297,9 @@ bool CWorldClient::ActionLeave( const CVec2 &vPos, const CMapObj *pMO, bool bFor
 		return true;
 	}
 	else
+	{
 		return PerformGroupAction( ACTION_COMMAND_UNLOAD, vPos, GetPlaceInQueue() );
+	}
 }
 
 // unload only one squad
@@ -300,7 +316,9 @@ bool CWorldClient::ActionLeaveOneSquad( const int nIndex )
 			std::vector<CMOSelectable *> passangers;
 			pContainer->GetPassangers( &passangers );
 			if ( nIndex < 0 || nIndex >= passangers.size() )
+			{
 				return false;
+			}
 			const int nUnitIndex = passangers[nIndex]->GetID();
 
 			std::vector<int> units;
@@ -331,7 +349,9 @@ bool CWorldClient::ActionLeaveOneSquad( const int nIndex )
 			std::vector<CMOSelectable *> passangers;
 			pContainer->GetPassangers( &passangers );
 			if ( nIndex < 0 || nIndex >= passangers.size() )
+			{
 				return false;
+			}
 
 			const int nUnitIndex = passangers[nIndex]->GetID();
 
@@ -365,16 +385,22 @@ bool CWorldClient::ActionUnInstall( const CVec2 &vPos, const CMapObj *pMO, bool 
 bool CWorldClient::ActionCaptureArtillery( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
 	if ( pMO && pMO->IsAlive() && pMO->IsNeutral() )
+	{
 		return PerformGroupAction( ACTION_COMMAND_CATCH_ARTILLERY, pMO->GetID(), 1.1f, GetPlaceInQueue() );
+	}
 	return false;
 }
 
 bool CWorldClient::ActionHookArtillery( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
 	if ( pMO )
+	{
 		return PerformGroupAction( ACTION_COMMAND_TAKE_ARTILLERY, pMO->GetID(), GetPlaceInQueue() );
+	}
 	else
+	{
 		return PerformGroupAction( ACTION_COMMAND_TAKE_ARTILLERY, vPos, 0.0f, GetPlaceInQueue() );
+	}
 	return false;
 }
 
@@ -483,7 +509,9 @@ bool CWorldClient::ActionRepair( const CVec2 &vPos, const CMapObj *pMO, bool bFo
 		return false;
 	}
 	else
+	{
 		return PerformGroupAction( ACTION_COMMAND_REPAIR, vPos, GetPlaceInQueue() );
+	}
 }
 
 bool CWorldClient::ActionResupply( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
@@ -493,11 +521,15 @@ bool CWorldClient::ActionResupply( const CVec2 &vPos, const CMapObj *pMO, bool b
 		CUserActions actions;
 		pMO->GetActions( &actions, ACTIONS_WITH );
 		if ( actions.HasAction( NDb::USER_ACTION_SUPPORT_RESUPPLY ) )
+		{
 			return PerformGroupAction( ACTION_COMMAND_RESUPPLY, pMO->GetID(), GetPlaceInQueue() );
+		}
 		return false;
 	}
 	else
+	{
 		return PerformGroupAction( ACTION_COMMAND_RESUPPLY, vPos, GetPlaceInQueue() );
+	}
 }
 
 bool CWorldClient::ActionChangeFormation0( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
@@ -814,7 +846,9 @@ bool CWorldClient::ActionSupressFire( const CVec2 &vPos, const CMapObj *pMO, boo
 bool CWorldClient::ActionFireRockets( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
 	if ( pMO )
+	{
 		return false;
+	}
 
 	// Unlike suppressive fire, this command always completes after one burst/salvo.
 	return PerformGroupAction( ACTION_COMMAND_FIRE_ROCKETS, vPos, GetPlaceInQueue() );
@@ -823,7 +857,9 @@ bool CWorldClient::ActionFireRockets( const CVec2 &vPos, const CMapObj *pMO, boo
 bool CWorldClient::ActionUseFlamethrower( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
 	if ( pMO )
+	{
 		return false;
+	}
 
 	// The ground point supplies a direction even when there is no target object there.
 	return PerformGroupAction( ACTION_COMMAND_USE_FLAMETHROWER, vPos, GetPlaceInQueue() );
@@ -942,7 +978,9 @@ bool CWorldClient::ActionFirstAid( const CVec2 &vPos, const CMapObj *pMO, bool b
 bool CWorldClient::ActionFillRU( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
 	if ( pMO )
+	{
 		return PerformGroupAction( ACTION_COMMAND_FILL_RU, pMO->GetID(), GetPlaceInQueue() );
+	}
 	return false;
 }
 
@@ -950,7 +988,9 @@ bool CWorldClient::ActionGlobeBombMission( const CVec2 &vPos, const CMapObj *pMO
 {
 	NI_ASSERT( pForcedActionParam != 0, "Can't find bomb mission param" );
 	if ( pForcedActionParam == 0 )
+	{
 		return false;
+	}
 
 	NInput::PostEvent( "game_reset_forced_action", 0, 0 );
 

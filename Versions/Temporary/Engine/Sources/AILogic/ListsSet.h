@@ -62,9 +62,13 @@ public:
 	const int GetSize( const int nList ) const
 	{
 		if ( nList >= sizes.size() )
+		{
 			return 0;
+		}
 		else
+		{
 			return sizes[nList];
+		}
 	}
 
 	void IncreaseListsNum( const int nSize )
@@ -88,9 +92,13 @@ public:
 	const int begin( const int listNum ) const
 	{
 		if ( listNum >= fronts.size() )
+		{
 			return 0;
+		}
 		else
+		{
 			return fronts[listNum];
+		}
 	}
 	const int end() const { return 0; }
 	const int GetNext( const tEnumerator pos ) const { return nexts[pos]; }
@@ -120,7 +128,9 @@ public:
 
 			sizes[listNum] = 0;
 			for ( int iter = begin( listNum ); iter != end(); iter = GetNext( iter ) )
+			{
 				++sizes[listNum];
+			}
 		}
 	}
 
@@ -171,7 +181,9 @@ const int CListsSet<T>::Add( int listNum, const T &value )
 #ifdef _DEBUG
 	int cnt = 0;
 	for ( int i = begin( listNum ); i != end(); i = GetNext( i ) )
+	{
 		++cnt;
+	}
 
 	NI_ASSERT( cnt == GetSize( listNum ), fmt::format( "Wrong size of list {}", listNum ) );
 #endif
@@ -196,7 +208,9 @@ int CListsSet<T>::InsertAfter( const int listNum, const int nPos, const T &value
 #ifdef _DEBUG
 	int cnt = 0;
 	for ( int i = begin( listNum ); i != end(); i = GetNext( i ) )
+	{
 		++cnt;
+	}
 
 	NI_ASSERT( cnt == GetSize( listNum ), fmt::format( "Wrong size of list {}", listNum ) );
 #endif
@@ -213,7 +227,9 @@ int CListsSet<T>::InsertAfter( const int listNum, const int nPos, const T &value
 	{
 		nexts[newPos] = fronts[listNum];
 		if ( fronts[listNum] != 0 )
+		{
 			preds[fronts[listNum]] = newPos;
+		}
 		fronts[listNum] = newPos;
 	}
 	++sizes[listNum];
@@ -234,7 +250,9 @@ const int CListsSet<T>::Erase( int listNum, tEnumerator pos )
 
 	int cnt = 0;
 	for ( int i = begin( listNum ); i != end(); i = GetNext( i ) )
+	{
 		++cnt;
+	}
 
 	NI_ASSERT( cnt == GetSize( listNum ), fmt::format( "Wrong size of list {}", listNum ) );
 #endif
@@ -243,7 +261,9 @@ const int CListsSet<T>::Erase( int listNum, tEnumerator pos )
 	preds[nexts[pos]] = preds[pos];
 
 	if ( fronts[listNum] == pos )
+	{
 		fronts[listNum] = nexts[pos];
+	}
 
 	AddToFree( pos );
 
@@ -274,7 +294,9 @@ int CListsSet<T>::GetFreePos()
 		}
 	}
 	else
+	{
 		freePtr = nexts[freePtr];
+	}
 
 	return result;
 }
@@ -306,9 +328,13 @@ void CListsSet<T>::CheckSizes() const
 		if ( !bTwice )
 		{
 			if ( nCount != GetSize( nListNum ) )
+			{
 				strResult = strResult + fmt::format( "ERROR: Wrong size. Real size = {}", nCount );
+			}
 			else
+			{
 				strResult = strResult + "OK";
+			}
 		}
 		DebugTrace( strResult.c_str() );
 		//NI_ASSERT( nCount == GetSize( nListNum ), StrFmt( "Wrong size of list %d", nListNum ) );
@@ -347,7 +373,9 @@ public:
 		NI_ASSERT( currentPos.size() == cListsSet.GetListsNum(), "Wrong sizes" );
 		cListsSet.IncreaseListsNum( nSize );
 		if ( cListsSet.GetListsNum() != currentPos.size() )
+		{
 			currentPos.resize( cListsSet.GetListsNum(), 0 );
+		}
 	}
 	const int GetQueuesNum() const { return cListsSet.GetListsNum(); }
 
@@ -399,7 +427,9 @@ inline int CQueuesSet<T>::Push( const int queueNum, const T &el )
 
 	// pos is the head of this queue
 	if ( cListsSet.GetNext( pos ) == cListsSet.end() )
+	{
 		currentPos[queueNum] = pos;
+	}
 
 	return pos;
 }
@@ -427,9 +457,13 @@ inline void CQueuesSet<T>::Erase( const int queueNum, const int nPos )
 	NI_ASSERT( !IsEmpty( queueNum ), "The queue is empty" );
 
 	if ( currentPos[queueNum] == nPos )
+	{
 		currentPos[queueNum] = cListsSet.Erase( queueNum, nPos );
+	}
 	else
+	{
 		cListsSet.Erase( queueNum, nPos );
+	}
 }
 
 template <class T>

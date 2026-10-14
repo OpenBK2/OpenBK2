@@ -47,7 +47,9 @@ public:
 	{
 		xSize = size;
 		if ( !IsEmpty() )
+		{
 			array.resize( ( ( size - 1 ) >> 3 ) + 1 );
+		}
 	}
 	void Clear()
 	{
@@ -57,7 +59,9 @@ public:
 	void FillZero()
 	{
 		if ( !IsEmpty() )
+		{
 			memset( &( array[0] ), 0, array.size() );
+		}
 	}
 
 	//
@@ -73,13 +77,21 @@ public:
 	bool operator==( const CArray1Bit &a ) const
 	{
 		if ( a.xSize != xSize )
+		{
 			return false;
+		}
 		if ( xSize == 0 )
+		{
 			return true;
+		}
 		const int nSize = ( xSize - 1 ) >> 3;
 		for ( int i = 0; i < nSize; ++i )
+		{
 			if ( array[i] != a.array[i] )
+			{
 				return false;
+			}
+		}
 		const int nLastSizeMask = GetByteMask( xSize & 0x00000007 );
 		return ( array[nSize] & nLastSizeMask ) == ( a.array[nSize] & nLastSizeMask );
 	}
@@ -87,9 +99,13 @@ public:
 	bool operator>( const CArray1Bit &a ) const
 	{
 		if ( IsEmpty() )
+		{
 			return false;
+		}
 		if ( a.IsEmpty() )
+		{
 			return true;
+		}
 		const int nSize = ( xSize - 1 ) >> 3;
 		int nLastSizeMask = GetByteMask( xSize & 0x00000007 );
 		const int nSizeA = ( a.xSize - 1 ) >> 3;
@@ -98,35 +114,57 @@ public:
 		if ( nSize > nSizeA )
 		{
 			if ( ( array[nSize] & nLastSizeMask ) > 0 )
+			{
 				return true;
+			}
 			for ( i = nSize - 1; i > nSizeA; --i )
+			{
 				if ( array[i] > 0 )
+				{
 					return true;
+				}
+			}
 			nLastSizeMask = 0xFF;
 		}
 		else if ( nSize < nSizeA )
 		{
 			if ( ( a.array[nSizeA] & nLastSizeAMask ) > 0 )
+			{
 				return false;
+			}
 			for ( i = nSizeA - 1; i > nSize; --i )
+			{
 				if ( a.array[i] > 0 )
+				{
 					return false;
+				}
+			}
 			nLastSizeAMask = 0xFF;
 		}
 		if ( ( array[i] & nLastSizeMask ) > ( a.array[i] & nLastSizeAMask ) )
+		{
 			return true;
+		}
 		for ( --i; i >= 0; --i )
+		{
 			if ( array[i] > a.array[i] )
+			{
 				return true;
+			}
+		}
 		return false;
 	}
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool operator<( const CArray1Bit &a ) const
 	{
 		if ( a.IsEmpty() )
+		{
 			return false;
+		}
 		if ( IsEmpty() )
+		{
 			return true;
+		}
 		const int nSize = ( xSize - 1 ) >> 3;
 		int nLastSizeMask = GetByteMask( xSize & 0x00000007 );
 		const int nSizeA = ( a.xSize - 1 ) >> 3;
@@ -135,26 +173,44 @@ public:
 		if ( nSize > nSizeA )
 		{
 			if ( ( array[nSize] & nLastSizeMask ) > 0 )
+			{
 				return false;
+			}
 			for ( i = nSize - 1; i > nSizeA; --i )
+			{
 				if ( array[i] > 0 )
+				{
 					return false;
+				}
+			}
 			nLastSizeMask = 0xFF;
 		}
 		else if ( nSize < nSizeA )
 		{
 			if ( ( a.array[nSizeA] & nLastSizeAMask ) > 0 )
+			{
 				return true;
+			}
 			for ( i = nSizeA - 1; i > nSize; --i )
+			{
 				if ( a.array[i] > 0 )
+				{
 					return true;
+				}
+			}
 			nLastSizeAMask = 0xFF;
 		}
 		if ( ( array[i] & nLastSizeMask ) < ( a.array[i] & nLastSizeAMask ) )
+		{
 			return true;
+		}
 		for ( --i; i >= 0; --i )
+		{
 			if ( array[i] < a.array[i] )
+			{
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -162,24 +218,34 @@ public:
 	void operator|=( const CArray1Bit &a )
 	{
 		if ( a.IsEmpty() )
+		{
 			return;
+		}
 		const int nSizeA = ( a.xSize - 1 ) >> 3;
 		if ( nSizeA + 1 > array.size() )
+		{
 			array.resize( nSizeA + 1, 0 );
+		}
 		const int nLastSizeA = a.xSize & 0x00000007;
 		for ( int i = 0; i < nSizeA; ++i )
+		{
 			array[i] |= a.array[i];
+		}
 		array[nSizeA] |= ( a.array[nSizeA] & GetByteMask( nLastSizeA ) );
 	}
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	int operator&=( const CArray1Bit &a )
 	{
 		if ( IsEmpty() && a.IsEmpty() )
+		{
 			return 0;
+		}
 		const int nMinSize = ( xSize < a.xSize ) ? ( xSize - 1 ) >> 3 : ( a.xSize - 1 ) >> 3;
 		const int nMinLastSize = ( xSize < a.xSize ) ? xSize & 0x00000007 : a.xSize & 0x00000007;
 		for ( int i = 0; i < nMinSize; ++i )
+		{
 			array[i] &= a.array[i];
+		}
 		array[nMinSize] &= ( a.array[nMinSize] | ~GetByteMask( nMinLastSize ) );
 		return 0;
 	}
@@ -189,12 +255,16 @@ public:
 		CArray1Bit a;
 		a.xSize = xSize;
 		if ( IsEmpty() )
+		{
 			return a;
+		}
 		const int nSize = ( xSize - 1 ) >> 3;
 		a.array.resize( nSize + 1 );
 		int nLastSize = xSize & 0x00000007;
 		for ( int i = 0; i < nSize; ++i )
+		{
 			a.array[i] = ~array[i];
+		}
 		a.array[nSize] = ( ~array[nSize] ) & GetByteMask( nLastSize );
 		return a;
 	}
@@ -204,7 +274,9 @@ public:
 		for ( int i = 0; i < array.size(); ++i )
 		{
 			if ( array[i] != 0 )
+			{
 				return false;
+			}
 		}
 		return true;
 	}
@@ -245,9 +317,13 @@ public:
 	{
 		nSize = size;
 		if ( size == 0 )
+		{
 			array.clear();
+		}
 		else
+		{
 			array.resize( ( ( size - 1 ) >> 1 ) + 1 );
+		}
 	}
 	void Clear()
 	{
@@ -257,7 +333,9 @@ public:
 	void FillZero()
 	{
 		if ( !IsEmpty() )
+		{
 			memset( &( array[0] ), 0, array.size() );
+		}
 	}
 	//
 	int GetSize() const { return nSize; }

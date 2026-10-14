@@ -74,7 +74,9 @@ static void GenerateZoomQuads1( NGfx::C2DQuadsRenderer &quadsRenderer,
 			color.a = nAlpha;
 		}
 		else
+		{
 			quadsRenderer.AddRect( scrRect, pTex, imgRect, color );
+		}
 	}
 }
 
@@ -118,7 +120,9 @@ bool IsFrameTransitionComplete()
 void RenderFrameTransition()
 {
 	if ( IsFrameTransitionComplete() )
+	{
 		return;
+	}
 
 	if ( bStartTimeInvalid )
 	{
@@ -185,7 +189,9 @@ inline void InitFrameTransitionParams()
 	bComplete = false;
 	const float fAngle = NWin32Random::Random( 0.0f, FP_PI * 2 );
 	if ( B_RANDOM_DIR )
+	{
 		V_TRANSITION_DIR.Set( cos( fAngle ), sin( fAngle ) );
+	}
 }
 
 CRTPtr *GetFrameTransitionCapture2()

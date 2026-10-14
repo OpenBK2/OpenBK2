@@ -25,9 +25,13 @@ void CEntrenchmentCreation::OnSerialize( IBinSaver &saver )
 	if ( saver.IsReading() )
 	{
 		if ( pEntrenchmentStats == 0 )
+		{
 			InitConsts();
+		}
 		else
+		{
 			nTermInd = pEntrenchmentStats->GetTerminatorIndex();
+		}
 	}
 }
 
@@ -57,7 +61,9 @@ bool CEntrenchmentCreation::SearchTrenches( const CVec2 &vCenter, const SRect &r
 			SRect objRect;
 			pObj->GetBoundRect( &objRect );
 			if ( rectToTest.IsIntersected( objRect ) )
+			{
 				return true;
+			}
 		}
 	}
 	return false;
@@ -71,7 +77,9 @@ int CEntrenchmentCreation::GetEntrenchmentID() const
 void CEntrenchmentCreation::CreateObjects( SAIObjectsUnderConstructionUpdate *pUpdate )
 {
 	if ( vPoints.empty() )
+	{
 		return;
+	}
 	// add all objects, check if tiles are locked and mark objects and tiles.
 	pUpdate->objects.resize( parts.size() + 2 );
 
@@ -94,7 +102,9 @@ void CEntrenchmentCreation::CreateObjects( SAIObjectsUnderConstructionUpdate *pU
 		for ( std::list<SVector>::iterator it = tiles.begin(); it != tiles.end(); ++it )
 		{
 			if ( !CanDigTile( *it ) )
+			{
 				pUpdate->impossibleToBuildTiles.push_back( CVec2( it->x, it->y ) );
+			}
 			else
 			{
 				pUpdate->buildTiles.push_back( CVec2( it->x, it->y ) );
@@ -108,7 +118,9 @@ void CEntrenchmentCreation::CreateObjects( SAIObjectsUnderConstructionUpdate *pU
 		pUpdate->bCanBuild |= pUpdate->objects[i].bCanBuild;
 	}
 	if ( !pUpdate->objects[0].bCanBuild )
+	{
 		pUpdate->bCanBuild = false;
+	}
 }
 
 bool CEntrenchmentCreation::CanDigTile( const SVector &tile ) const
@@ -137,7 +149,9 @@ bool CEntrenchmentCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, con
 	wAngle = GetLineAngle( vFrom, vTo );
 
 	if ( vPoints.size() <= 1 )
+	{
 		return false;
+	}
 
 	//lines and fireplaces
 	bool switcher = false;
@@ -150,13 +164,19 @@ bool CEntrenchmentCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, con
 		const CVec2 pt = ( vPoints[i] + vPoints[i + 1] ) / 2.0f;
 		//
 		if ( !bCheckLock || CanDig( pRPG, pt, wAngle, nFrameIndex ) )
+		{
 			parts.push_back( AddElement( pRPG, CVec3( pt, 0.0f ), wAngle, nFrameIndex, GetPlayer() ) );
+		}
 		else
+		{
 			parts.push_back( 0 );
+		}
 		//
 	}
 	if ( parts.empty() )
+	{
 		return false;
+	}
 
 	if ( IsAIModificationAllowed() )
 	{
@@ -168,11 +188,15 @@ bool CEntrenchmentCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, con
 
 	nStartIndex = nCurIndex;
 	if ( nStartIndex >= parts.size() )
+	{
 		return false;
+	}
 
 	pBeginTerminator = AddElement( pRPG, CVec3( vPoints[nCurIndex], 0.0f ), wAngle + 65535 / 2, nTermInd, GetPlayer() );
 	if ( !bCheckLock )
+	{
 		pEndTerminator = AddElement( pRPG, CVec3( vPoints[vPoints.size() - 1], 0.0f ), wAngle, nTermInd, GetPlayer() );
+	}
 	CreateNewEndTerminator();
 	CalcTilesUnder();
 	return true;
@@ -223,7 +247,9 @@ void CEntrenchmentCreation::BuildNext()
 {
 	CLongObjectCreation::BuildNext();
 	if ( nStartIndex == nCurIndex )
+	{
 		theStatObjs.AddEntrencmentPart( pBeginTerminator, true );
+	}
 	theStatObjs.AddEntrencmentPart( parts[nCurIndex], true );
 
 	//
@@ -250,13 +276,17 @@ void CEntrenchmentCreation::BuildNext()
 	vEntr.push_back( pEndTerminator );
 
 	for ( int i = nStartIndex; i < nCurIndex; ++i )
+	{
 		vEntr.push_back( parts[i] );
+	}
 
 	pFullEntrenchment =
 			checked_cast<CEntrenchment *>( theStatObjs.AddNewEntrencment( &vEntr[0], vEntr.size(), 0, true ) );
 
 	if ( GetCurIndex() < GetMaxIndex() )
+	{
 		CalcTilesUnder();
+	}
 }
 
 void CEntrenchmentCreation::BuildAll( const int _nMinIndex, const int _nMaxIndex )
@@ -265,7 +295,9 @@ void CEntrenchmentCreation::BuildAll( const int _nMinIndex, const int _nMaxIndex
 	const int nMaxIndex = _nMaxIndex + nStartIndex;
 
 	if ( nMinIndex == nStartIndex )
+	{
 		theStatObjs.AddEntrencmentPart( pBeginTerminator, false );
+	}
 
 	for ( int nIndex = nMinIndex; nIndex < nMaxIndex; ++nIndex )
 	{
@@ -310,7 +342,9 @@ void CEntrenchmentCreation::GetTilesUnderForIndex( std::list<SVector> *pTiles, c
 {
 	const int nIndex = _nIndex + nStartIndex;
 	if ( parts[nIndex] )
+	{
 		parts[nIndex]->GetCoveredTiles( pTiles );
+	}
 }
 
 void CEntrenchmentCreation::CreateNewEndTerminator()
@@ -320,9 +354,13 @@ void CEntrenchmentCreation::CreateNewEndTerminator()
 	int nTermInd = pRPG->GetTerminatorIndex( 0 );
 
 	if ( nCurIndex + 1 < vPoints.size() )
+	{
 		pNewEndTerminator = AddElement( pRPG, CVec3( vPoints[nCurIndex + 1], 0.0f ), wAngle, nTermInd, GetPlayer() );
+	}
 	else
+	{
 		pNewEndTerminator = 0;
+	}
 }
 
 void CEntrenchmentCreation::GetUnitsPreventing( std::list<CPtr<CAIUnit>> *units )
@@ -337,7 +375,9 @@ void CEntrenchmentCreation::GetUnitsPreventingByIndex( std::list<CPtr<CAIUnit>> 
 	parts[nIndex]->GetBoundRect( &r1 );
 	pNewEndTerminator->GetBoundRect( &r2 );
 	if ( nStartIndex == nIndex )
+	{
 		pBeginTerminator->GetBoundRect( &r3 );
+	}
 
 	const float fRadius =
 			r1.lengthAhead + r1.lengthBack + r1.width + r2.lengthAhead + r2.lengthBack + r2.width + SConsts::TILE_SIZE * 5;
@@ -348,7 +388,9 @@ void CEntrenchmentCreation::GetUnitsPreventingByIndex( std::list<CPtr<CAIUnit>> 
 			const SRect rect = ( *iter )->GetUnitRect();
 			if ( r1.IsIntersected( rect ) || r2.IsIntersected( rect ) ||
 			     ( nStartIndex == nIndex ? r3.IsIntersected( rect ) : false ) )
+			{
 				units->push_back( *iter );
+			}
 		}
 	}
 }
@@ -365,7 +407,9 @@ bool CEntrenchmentCreation::IsAnyUnitPreventByIndex( const int _nIndex ) const
 	parts[nIndex]->GetBoundRect( &r1 );
 	pNewEndTerminator->GetBoundRect( &r2 );
 	if ( nStartIndex == nIndex )
+	{
 		pBeginTerminator->GetBoundRect( &r3 );
+	}
 
 	const float fRadius =
 			r1.lengthAhead + r1.lengthBack + r1.width + r2.lengthAhead + r2.lengthBack + r2.width + SConsts::TILE_SIZE * 5;
@@ -376,7 +420,9 @@ bool CEntrenchmentCreation::IsAnyUnitPreventByIndex( const int _nIndex ) const
 			const SRect rect = ( *iter )->GetUnitRect();
 			if ( r1.IsIntersected( rect ) || r2.IsIntersected( rect ) ||
 			     ( nStartIndex == nIndex ? r3.IsIntersected( rect ) : false ) )
+			{
 				return true;
+			}
 		}
 	}
 	return false;
@@ -385,7 +431,9 @@ bool CEntrenchmentCreation::IsAnyUnitPreventByIndex( const int _nIndex ) const
 bool CEntrenchmentCreation::CanBuildNext() const
 {
 	if ( bCannot || !pNewEndTerminator )
+	{
 		return false;
+	}
 
 	return CanBuildNextInner();
 }
@@ -393,7 +441,9 @@ bool CEntrenchmentCreation::CanBuildNext() const
 bool CEntrenchmentCreation::CanBuildByIndexSlow( const int _nIndex ) const
 {
 	if ( bCannot || !pNewEndTerminator )
+	{
 		return false;
+	}
 
 	return CanBuildNextInnerSlow( _nIndex + nStartIndex );
 }
@@ -401,12 +451,16 @@ bool CEntrenchmentCreation::CanBuildByIndexSlow( const int _nIndex ) const
 bool CEntrenchmentCreation::CanBuildNextInner() const
 {
 	if ( !parts[nCurIndex] )
+	{
 		return false;
+	}
 
 	SRect r1;
 	parts[nCurIndex]->GetBoundRect( &r1 );
 	if ( !GetAIMap()->IsRectInside( r1 ) )
+	{
 		return false;
+	}
 
 	const float fRadius = r1.lengthAhead + r1.lengthBack + r1.width + SConsts::TILE_SIZE * 5;
 	// пробежаться по юнитам, все разлокать.
@@ -425,7 +479,9 @@ bool CEntrenchmentCreation::CanBuildNextInner() const
 			if ( r1.IsIntersected( rect ) )
 			{
 				if ( pUnit->GetPlayer() == GetPlayer() && EUSN_REST == pUnit->GetState()->GetName() && pUnit->CanMove() )
+				{
 					( *iter )->UnlockTiles();
+				}
 			}
 		}
 	}
@@ -434,7 +490,9 @@ bool CEntrenchmentCreation::CanBuildNextInner() const
 	for ( std::list<SVector>::const_iterator it = tilesUnder.begin(); it != tilesUnder.end(); ++it )
 	{
 		if ( !CanDigTile( *it ) )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -442,12 +500,16 @@ bool CEntrenchmentCreation::CanBuildNextInner() const
 bool CEntrenchmentCreation::CanBuildNextInnerSlow( const int nIndex ) const
 {
 	if ( !parts[nIndex] )
+	{
 		return false;
+	}
 
 	SRect r1;
 	parts[nIndex]->GetBoundRect( &r1 );
 	if ( !GetAIMap()->IsRectInside( r1 ) )
+	{
 		return false;
+	}
 
 	const float fRadius = r1.lengthAhead + r1.lengthBack + r1.width + SConsts::TILE_SIZE * 5;
 	// пробежаться по юнитам, все разлокать.
@@ -466,7 +528,9 @@ bool CEntrenchmentCreation::CanBuildNextInnerSlow( const int nIndex ) const
 			if ( r1.IsIntersected( rect ) )
 			{
 				if ( pUnit->GetPlayer() == GetPlayer() && EUSN_REST == pUnit->GetState()->GetName() && pUnit->CanMove() )
+				{
 					( *iter )->UnlockTiles();
+				}
 			}
 		}
 	}
@@ -478,7 +542,9 @@ bool CEntrenchmentCreation::CanBuildNextInnerSlow( const int nIndex ) const
 	for ( std::list<SVector>::const_iterator it = tilesUnder.begin(); it != tilesUnder.end(); ++it )
 	{
 		if ( !CanDigTile( *it ) )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -493,7 +559,9 @@ void CEntrenchmentCreation::LockNext()
 	parts[nCurIndex]->LockTiles();
 	pNewEndTerminator->LockTiles();
 	if ( nStartIndex == nCurIndex )
+	{
 		pBeginTerminator->LockTiles();
+	}
 }
 
 CEntrenchmentPart *CEntrenchmentCreation::AddElement(
@@ -502,7 +570,9 @@ CEntrenchmentPart *CEntrenchmentCreation::AddElement(
 	//create entrenchments
 	CEntrenchmentPart *ptr = new CEntrenchmentPart( pRPG, pt, angle, nFrameIndex, pRPG->fMaxHP, nPlayer, true );
 	if ( IsAIModificationAllowed() )
+	{
 		ptr->Mem2UniqueIdObjs();
+	}
 
 	ptr->Init();
 	return ptr;
@@ -511,7 +581,9 @@ CEntrenchmentPart *CEntrenchmentCreation::AddElement(
 bool CEntrenchmentCreation::CanDigBecauseOfOtherTrenches( const SRect &rect, const CVec2 &pt ) const
 {
 	if ( !GetAIMap()->IsRectInside( rect ) )
+	{
 		return false;
+	}
 
 	/*const CVec3 vNormal =  DWORDToVec3( GetHeights()->GetNormal( pt ) );
 	if ( fabs(vNormal.x) > fNearToNormale * fabs(vNormal.z) &&
@@ -528,7 +600,9 @@ bool CEntrenchmentCreation::CanDig( const SEntrenchmentRPGStats *pRPG,
 {
 	SRect rect = CEntrenchmentPart::CalcBoundRect( pt, angle, pRPG->segments[nFrameIndex] );
 	if ( !CanDigBecauseOfOtherTrenches( rect, pt ) )
+	{
 		return false;
+	}
 
 	std::list<SVector> tiles;
 	GetAIMap()->GetTilesCoveredByRect( rect, &tiles );
@@ -555,9 +629,13 @@ float CEntrenchmentCreation::GetTrenchWidth( int nType ) // 0 - секция , 1
 
 	int nFrameIndex = 0;
 	if ( nType == 0 )
+	{
 		nFrameIndex = pRPG->GetLineIndex( 0 );
+	}
 	if ( nType == 1 )
+	{
 		nFrameIndex = pRPG->GetArcIndex( 0 );
+	}
 
 	return pRPG->segments[nFrameIndex].vAABBHalfSize.x * 2;
 }

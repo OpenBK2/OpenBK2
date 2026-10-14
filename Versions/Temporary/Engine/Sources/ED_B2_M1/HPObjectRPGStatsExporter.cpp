@@ -12,15 +12,21 @@
 static bool SaveSurfacePointsToDB( IManipulator *pManipulator, const std::vector<SModelSurfacePoint> &rPoints )
 {
 	if ( !pManipulator )
+	{
 		return false;
+	}
 	//
 	if ( !pManipulator->RemoveNode( "SurfacePoints" ) )
+	{
 		return false;
+	}
 	//
 	for ( int i = 0; i < rPoints.size(); ++i )
 	{
 		if ( !pManipulator->InsertNode( "SurfacePoints" ) )
+		{
 			return false;
+		}
 		//
 		std::string szDBAPos = fmt::format( "SurfacePoints.[{}].Pos", i );
 		std::string szDBAOrient = fmt::format( "SurfacePoints.[{}].Orient", i );
@@ -33,18 +39,28 @@ static bool SaveSurfacePointsToDB( IManipulator *pManipulator, const std::vector
 		float fA = 0;
 		float fa = fabs( ax );
 		if ( fa > 1.0f )
+		{
 			fa = 1.0f;
+		}
 		if ( fa > 0 )
+		{
 			fA = asin( fa );
+		}
 		else
+		{
 			ax = V3_AXIS_Z;
+		}
 
 		CQuat q( fA, ax, true );
 
 		if ( !CManipulatorManager::SetVec3( pos, pManipulator, szDBAPos ) )
+		{
 			return false;
+		}
 		if ( !CManipulatorManager::SetVec4( q.GetInternalVector(), pManipulator, szDBAOrient ) )
+		{
 			return false;
+		}
 		//
 	}
 	//
@@ -56,7 +72,9 @@ static bool CreateSingleSurfacePoints( IManipulator *pMan )
 	bool bNeedSurfacePoints = true;
 	CManipulatorManager::GetValue( &bNeedSurfacePoints, pMan, "NeedSurfacePoints" );
 	if ( bNeedSurfacePoints == false )
+	{
 		return true;
+	}
 	// Получаем манипулятор на VisObject
 	CPtr<IManipulator> pVisObjMan = CManipulatorManager::CreateManipulatorFromReference( "visualObject", pMan, 0, 0, 0 );
 	if ( pVisObjMan )
@@ -111,13 +129,19 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 	//
 	CPtr<IManipulator> pVisObjMan = CManipulatorManager::CreateManipulatorFromReference( "visualObject", pMan, 0, 0, 0 );
 	if ( pVisObjMan == 0 )
+	{
 		return;
+	}
 	CPtr<IManipulator> pModelMan = CreateModelManipulatorFromVisObj( pVisObjMan, 0 );
 	if ( pModelMan == 0 )
+	{
 		return;
+	}
 	CPtr<IManipulator> pGeomMan = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pModelMan, 0, 0, 0 );
 	if ( pGeomMan == 0 )
+	{
 		return;
+	}
 	// Get all attributes from model
 	CGrannyBoneAttributesList attribs;
 	if ( GetGeometryAttributes( pGeomMan, &attribs ) )
@@ -129,7 +153,9 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 		for ( CGrannyBoneAttributesList::const_iterator it = attribs.begin(); it != attribs.end(); ++it )
 		{
 			if ( !PatMat( it->szBoneName.c_str(), "leffect??" ) )
+			{
 				continue;
+			}
 
 			STempLightInfo tmpLight = {}; // Optional GLTF extras must have predictable defaults.
 
@@ -208,7 +234,9 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 			for ( std::list<STempLightInfo>::iterator it = lights.begin(); it != lights.end(); ++it )
 			{
 				if ( !pMan->InsertNode( "LightEffects" ) )
+				{
 					continue;
+				}
 
 				const STempLightInfo &tmpLight = *it;
 
@@ -312,7 +340,9 @@ void CHPObjectRPGStatsExporter::CreateSingleIcons( IManipulator *pMan,
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	CPtr<IManipulator> pTextureFolderMan = pResourceManager->CreateFolderManipulator( "Texture" );
 	if ( !pTextureFolderMan )
+	{
 		return;
+	}
 	//
 	std::string szIconTextureName;
 	CManipulatorManager::GetValue( &szIconTextureName, pMan, "IconTexture" );
@@ -323,24 +353,36 @@ void CHPObjectRPGStatsExporter::CreateSingleIcons( IManipulator *pMan,
 		CPtr<IManipulator> pVisObjMan =
 				CManipulatorManager::CreateManipulatorFromReference( "visualObject", pMan, 0, 0, 0 );
 		if ( pVisObjMan == 0 )
+		{
 			return;
+		}
 		CPtr<IManipulator> pModelMan = CreateModelManipulatorFromVisObj( pVisObjMan, 0 );
 		if ( pModelMan == 0 )
+		{
 			return;
+		}
 		CPtr<IManipulator> pGeomMan = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pModelMan, 0, 0, 0 );
 		if ( pGeomMan == 0 )
+		{
 			return;
+		}
 		// GLTF ModelFileRef can live elsewhere; icon.tga stays beside the authored textures.
 		CPtr<IManipulator> material =
 				CManipulatorManager::CreateManipulatorFromReference( "Materials.[0]", pModelMan, 0, 0, 0 );
 		CPtr<IManipulator> texture =
 				material ? CManipulatorManager::CreateManipulatorFromReference( "Texture", material, 0, 0, 0 ) : nullptr;
 		if ( texture )
+		{
 			CManipulatorManager::GetValue( &szTextureFolder, texture, "SrcName" );
+		}
 		if ( szTextureFolder.empty() )
+		{
 			CManipulatorManager::GetValue( &szTextureFolder, pGeomMan, "SrcName" );
+		}
 		if ( szTextureFolder.empty() )
+		{
 			return;
+		}
 		const std::string szIconTextureFileName = NFile::JoinPath( NFile::GetFilePath( szTextureFolder ), "icon.tga" );
 		if ( NFile::DoesFileExist( NFile::JoinPath(
 						 Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder, szIconTextureFileName ) ) )
@@ -383,7 +425,9 @@ EXPORT_RESULT CHPObjectRPGStatsExporter::ExportObject( IManipulator *pManipulato
 	EXPORT_RESULT result =
 			CBasicExporter::ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, exportType );
 	if ( result != ER_SUCCESS )
+	{
 		return result;
+	}
 	if ( exportType == ET_BEFORE_REF )
 	{
 		return ER_SUCCESS;

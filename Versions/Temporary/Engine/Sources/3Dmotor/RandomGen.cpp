@@ -27,7 +27,9 @@ int CRoulette::GetRandomSector( SRand *pRand ) const
 {
 	ASSERT( pRand );
 	if ( m_aSectors.back() == 0 )
+	{
 		return 0;
+	}
 	float fValue = pRand->GetFloat( 0.0f, m_aSectors.back() );
 	int nBegin = 0;
 	int nEnd = m_aSectors.size() - 1;
@@ -35,9 +37,13 @@ int CRoulette::GetRandomSector( SRand *pRand ) const
 	{
 		int nCenter = nBegin + ( nEnd - nBegin ) / 2;
 		if ( fValue < m_aSectors[nCenter] )
+		{
 			nEnd = nCenter;
+		}
 		else
+		{
 			nBegin = nCenter;
+		}
 	}
 	return nBegin;
 }
@@ -131,7 +137,9 @@ void CRandomGenerator::Init()
 	a = b = c = d = e = f = g = h = 0x9e3779b9; /* the golden ratio */
 
 	for ( i = 0; i < 4; ++i ) /* scramble it */
+	{
 		mix( a, b, c, d, e, f, g, h );
+	}
 
 	/* initialize using the contents of r[] as the seed */
 	for ( i = 0; i < RANDSIZ; i += 8 )
@@ -197,5 +205,7 @@ void CRandomGenerator::FillRandRsl()
 {
 	std::random_device rd;
 	for ( int k = 0; k < RANDSIZ; ++k )
+	{
 		randrsl[k] = rd();
+	}
 }

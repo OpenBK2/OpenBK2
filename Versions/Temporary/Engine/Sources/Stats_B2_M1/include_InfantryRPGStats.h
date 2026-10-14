@@ -23,7 +23,9 @@ virtual const SInfantryGun &GetGun( const int nUniqueID, const int nPlatform, co
 	int nPlatformIdx, nGunIdx;
 	GetGunPlatformIndex( nUniqueID, nPlatform, nGun, &nPlatformIdx, &nGunIdx );
 	if ( guns.size() > nGunIdx )
+	{
 		return guns[nGunIdx];
+	}
 	else
 	{
 		NI_ASSERT( false, fmt::format( "wrong gun index, {}", nGunIdx ) );

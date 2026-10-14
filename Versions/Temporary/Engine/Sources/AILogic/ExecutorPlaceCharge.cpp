@@ -20,7 +20,9 @@ CExecutorPlaceCharge::CExecutorPlaceCharge( CAIUnit *_pSoldier, NDb::EUnitSpecia
 int CExecutorPlaceCharge::Segment()
 {
 	if ( !IsExecutorValid() )
+	{
 		return -1;
+	}
 
 	return 0;
 }
@@ -40,13 +42,19 @@ bool CExecutorPlaceCharge::NotifyEvent( const CExecutorEvent &event )
 {
 	const CExecutorEventSpecialAbility *pEv = static_cast<const CExecutorEventSpecialAbility *>( &event );
 	if ( pEv == 0 )
+	{
 		return false;
+	}
 
 	if ( pEv->GetAbility() != eAbility )
+	{
 		return false;
+	}
 
 	if ( pSoldier->GetUniqueId() != event.GetParam().nUnitID )
+	{
 		return false;
+	}
 
 	switch ( event.GetParam().eEventID )
 	{

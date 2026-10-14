@@ -101,7 +101,9 @@ void PreCreate( const CVec2 &vFinish, CObj<CLongObjectCreation> *_pCreation, boo
 	for ( CCreations::iterator it = creations.begin(); it != creations.end(); )
 	{
 		if ( !IsValid( it->pCreation ) )
+		{
 			it = creations.erase( it );
+		}
 		else
 		{
 			if ( it->pCreation == *_pCreation )
@@ -138,11 +140,15 @@ CLongObjectCreation *Create( const CVec2 &vPos, int nPlayer, bool bAllowModifica
 	for ( CCreations::iterator it = creations.begin(); it != creations.end(); )
 	{
 		if ( !IsValid( it->pCreation ) )
+		{
 			it = creations.erase( it );
+		}
 		else
 		{
 			if ( it->vStart == vPos )
+			{
 				return it->pCreation;
+			}
 			++it;
 		}
 	}

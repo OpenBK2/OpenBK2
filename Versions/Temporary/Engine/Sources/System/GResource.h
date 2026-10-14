@@ -77,7 +77,9 @@ class CResourcePrecache : public IPrecache
 	{
 		f.Add( 2, &pStuff );
 		if ( f.IsReading() )
+		{
 			AddToPrecachedUpdate( this );
+		}
 		//precacheUpdateList.push_back( this );
 		return 0;
 	}
@@ -101,7 +103,9 @@ public:
 		{
 			pStuff.Refresh();
 			while ( !pStuff->GetValue() )
+			{
 				std::this_thread::yield();
+			}
 		}
 	}
 };
@@ -142,7 +146,9 @@ public:
 	CResourceOpener( const char *pszResName, const SResKey<int> &key ) : file( pszResName, key )
 	{
 		if ( file.IsOk() )
+		{
 			pSaver = CreateBinSaver( &file.GetFileStream(), SAVER_MODE_READ );
+		}
 	}
 	IBinSaver *operator->() { return pSaver; }
 
@@ -230,11 +236,15 @@ protected:
 				// question: the loader runs on its own thread, so this answer is
 				// about how fast the machine is and not about anything simulated.
 				if ( NAsyncTrace::IsEnabled() )
+				{
 					NAsyncTrace::WriteResource( "waiting", pRequest->GetResName(), pRequest->GetResID() );
+				}
 				return;
 			}
 			if ( NAsyncTrace::IsEnabled() )
+			{
 				NAsyncTrace::WriteResource( "ready", pRequest->GetResName(), pRequest->GetResID() );
+			}
 			RecalcValue( pRequest );
 			pRequest = 0;
 			ReleaseFileRequestHolder();
@@ -245,7 +255,9 @@ protected:
 			if ( pRequest )
 			{
 				if ( NAsyncTrace::IsEnabled() )
+				{
 					NAsyncTrace::WriteResource( "queued", pRequest->GetResName(), pRequest->GetResID() );
+				}
 				AddFileRequest( pRequest );
 			}
 		}
@@ -254,7 +266,9 @@ protected:
 	{
 		TParent::NeedUpdate();
 		if ( !IsValid( this->pValue ) && IsValid( pRequest ) && pRequest->IsReady() )
+		{
 			return true;
+		}
 		return false;
 	}
 

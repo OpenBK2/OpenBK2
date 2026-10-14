@@ -73,7 +73,9 @@ public:
 		for ( int k = 0; k < GetBlocksNumber(); ++k )
 		{
 			if ( flags[k] )
+			{
 				return false;
+			}
 		}
 		return true;
 	}
@@ -82,14 +84,18 @@ public:
 		for ( int k = 0; k < GetBlocksNumber(); ++k )
 		{
 			if ( flags[k] != 0xffffffff )
+			{
 				return false;
+			}
 		}
 		return true;
 	}
 	void Invert()
 	{
 		for ( int k = 0; k < GetBlocksNumber(); ++k )
+		{
 			flags[k] = ~flags[k];
+		}
 	}
 	int GetBlocksNumber() const { return N_BLOCKS_IN_PART_FLAGS; }
 	int GetBlock( int n ) const
@@ -106,13 +112,17 @@ public:
 	{
 		ASSERT( GetBlocksNumber() == a.GetBlocksNumber() );
 		for ( int k = 0; k < GetBlocksNumber(); ++k )
+		{
 			flags[k] &= a.flags[k];
+		}
 	}
 	void CalcOr( const CPartFlags &a )
 	{
 		ASSERT( GetBlocksNumber() == a.GetBlocksNumber() );
 		for ( int k = 0; k < GetBlocksNumber(); ++k )
+		{
 			flags[k] |= a.flags[k];
+		}
 	}
 	CPartFlags &operator|=( const CPartFlags &a )
 	{
@@ -249,7 +259,9 @@ struct SRenderGeometryInfo
 	{
 		f.Add( 1, &pVertices );
 		for ( int k = 0; k < TLT_NUMBER; ++k )
+		{
 			f.Add( 2, &pTriLists[k], k + 1 );
+		}
 		return 0;
 	}
 };
@@ -485,13 +497,17 @@ public:
 	bool IsFilteredFragment( unsigned int n ) const
 	{
 		if ( n >= filterFragment.size() )
+		{
 			return false;
+		}
 		return filterFragment[n];
 	}
 	EFragmentsSplit GetGeometryFlags( unsigned int n ) const
 	{
 		if ( n >= filterGeometry.size() )
+		{
 			return FST_ACCEPT;
+		}
 		return (EFragmentsSplit)filterGeometry[n];
 	}
 	const CPartFlags &GetGeometryParts( unsigned int n ) const { return selectedParts[n]; }
@@ -536,11 +552,15 @@ public:
 		for ( int k = 0; k < pScene->filterGeometry.size(); ++k )
 		{
 			if ( pScene->filterGeometry[k] == FST_REJECT )
+			{
 				continue;
+			}
 			CPartFlags &parts = pScene->selectedParts[k];
 			EFragmentsSplit res = select( pScene->statics[k], pScene->geometries[k], &parts );
 			if ( res == FST_SPLIT && parts.IsEmpty() )
+			{
 				res = FST_REJECT;
+			}
 			pScene->filterGeometry[k] = res;
 		}
 	}
@@ -562,11 +582,15 @@ public:
 	{
 		holdFilter = pScene->filterFragment;
 		if ( holdFilter.empty() )
+		{
 			pScene->filterFragment.resize( pScene->fragments.size(), 0 );
+		}
 		for ( int k = 0; k < pScene->filterFragment.size(); ++k )
 		{
 			if ( pScene->filterFragment[k] )
+			{
 				continue;
+			}
 			pScene->filterFragment[k] = select( pScene->fragments[k] );
 		}
 	}

@@ -143,9 +143,11 @@ int CWaterPatch::Process( const long nTime )
 		{
 			grid[nCount].pos.z = fBaseHeight;
 			for ( int k = 0; k < waves.size(); ++k )
+			{
 				grid[nCount].pos.z +=
 						waves[k].fAmplitude * waterSurf[g][i].amplitude[k] *
 						GetWaveProfile( GetFracPart( waterSurf[g][i].phase[k] + fCurTime * waves[k].fInvPeriod ) );
+			}
 			++nCount;
 		}
 	}
@@ -234,12 +236,16 @@ int CWaterPatch::Process( const long nTime )
 			}
 			++nTexX;
 			if ( nTexX >= DEF_WATER_TEX_TILES_PER_TEX )
+			{
 				nTexX = 0;
+			}
 			fTexX = (float)nTexX * DEF_WATER_TEX_TILE_COEFF;
 
 			++nTexX2;
 			if ( nTexX2 >= DEF_MESH2_TILES_PER_TEX )
+			{
 				nTexX2 = 0;
+			}
 			fTexX2 = (float)nTexX2 * DEF_MESH2_TILE_COEFF;
 
 			nCount += 4;
@@ -247,14 +253,18 @@ int CWaterPatch::Process( const long nTime )
 
 		++nTexY;
 		if ( nTexY >= DEF_WATER_TEX_TILES_PER_TEX )
+		{
 			nTexY = 0;
+		}
 		fTexY = (float)nTexY * DEF_WATER_TEX_TILE_COEFF;
 		nTexX = 0;
 		fTexX = 0.0f;
 
 		fTexY2 += DEF_MESH2_TILE_COEFF;
 		if ( fTexY2 >= 1.0f )
+		{
 			fTexY2 -= 1.0f;
+		}
 		nTexX2 = 0;
 		fTexX2 = 0.0f;
 	}
@@ -288,9 +298,13 @@ int CWaterPatch::Process( const long nTime )
 	for ( std::vector<SGridType>::const_iterator it = grid.begin(); it != grid.end(); ++it )
 	{
 		if ( it->pos.z < fMinHeight )
+		{
 			fMinHeight = it->pos.z;
+		}
 		if ( it->pos.z > fMaxHeight )
+		{
 			fMaxHeight = it->pos.z;
+		}
 	}
 
 	// create coast
@@ -303,9 +317,13 @@ int CWaterPatch::Process( const long nTime )
 			nCount = (long)g * waterSurf.GetSizeX() + i;
 			grid[nCount].pos.y = grid[nCount + waterSurf.GetSizeX()].pos.y - dGridSize.y;
 			if ( grid[nCount].pos.z > 0.0f )
+			{
 				grid[nCount].pos.y -= grid[nCount].pos.z * ( 1.0f - d1 ) * 1.5f;
+			}
 			else
+			{
 				grid[nCount].pos.y -= grid[nCount].pos.z * ( 1.0f - d1 ) * 1.5f;
+			}
 			grid[nCount].pos.z *= d1;
 			grid[nCount].pos.z += 0.15f * ( 1.0f - d1 );
 		}
@@ -526,7 +544,9 @@ int CWaterPatch::Process( const long nTime )
 					               ( grid[nCount - waterSurf.GetSizeX()].pos - grid[nCount].pos ) );
 					NMath::NormalizeFast( &vNorm, n );
 					if ( vNorm.z < 0.0f )
+					{
 						vNorm = -vNorm;
+					}
 					++nNormsCount;
 				}
 				if ( i < ( waterSurf.GetSizeX() - 1 ) )
@@ -535,7 +555,9 @@ int CWaterPatch::Process( const long nTime )
 					               ( grid[nCount - waterSurf.GetSizeX()].pos - grid[nCount].pos ) );
 					NMath::NormalizeFast( &vCurNorm, n );
 					if ( vCurNorm.z < 0.0f )
+					{
 						vCurNorm = -vCurNorm;
+					}
 					vNorm += vCurNorm;
 					++nNormsCount;
 				}
@@ -548,7 +570,9 @@ int CWaterPatch::Process( const long nTime )
 					               ( grid[nCount + waterSurf.GetSizeX()].pos - grid[nCount].pos ) );
 					NMath::NormalizeFast( &vCurNorm, n );
 					if ( vCurNorm.z < 0.0f )
+					{
 						vCurNorm = -vCurNorm;
+					}
 					vNorm += vCurNorm;
 					++nNormsCount;
 				}
@@ -558,7 +582,9 @@ int CWaterPatch::Process( const long nTime )
 					               ( grid[nCount + waterSurf.GetSizeX()].pos - grid[nCount].pos ) );
 					NMath::NormalizeFast( &vCurNorm, n );
 					if ( vCurNorm.z < 0.0f )
+					{
 						vCurNorm = -vCurNorm;
+					}
 					vNorm += vCurNorm;
 					++nNormsCount;
 				}
@@ -689,7 +715,9 @@ int CWaterPatch::Process( const long nTime )
 			float fRad = fmod( waterHorDeform[g][i].fRadOffs + waterHorDeform[g][i].fDRad * nTime,
 			                   ( ( DEF_WATER_HOR_DEFORM_MAX_RAD - DEF_WATER_HOR_DEFORM_MIN_RAD ) * 2.0f ) );
 			if ( fRad >= ( DEF_WATER_HOR_DEFORM_MAX_RAD - DEF_WATER_HOR_DEFORM_MIN_RAD ) )
+			{
 				fRad = 2.0f * ( DEF_WATER_HOR_DEFORM_MAX_RAD - DEF_WATER_HOR_DEFORM_MIN_RAD ) - fRad;
+			}
 			fRad += DEF_WATER_HOR_DEFORM_MIN_RAD;
 			waterHorDeform[g][i].fOffsX = cos( fAng ) * fRad;
 			waterHorDeform[g][i].fOffsY = sin( fAng ) * fRad;
@@ -794,10 +822,14 @@ int CWaterPatch::Init(
 	for ( int k = 0; k < waves.size(); ++k )
 	{
 		if ( k == 0 )
+		{
 			waves[k].fPhaseOffset = 0.0f;
+		}
 		else
+		{
 			waves[k].fPhaseOffset =
 					waves[k - 1].fPhaseOffset + GetPhase( 0, 0, k ) * ( 0.5f + NWin32Random::Random( 0.0f, 1.0f ) * 0.5f );
+		}
 
 		if ( ( k % 2 ) == 0 )
 		{
@@ -871,7 +903,9 @@ int CWaterPatch::Init(
 			waterHorDeform[g][i].fDAng =
 					NWin32Random::Random( 0.0f, 1.0f ) * DEF_WATER_HOR_DEFORM_VAR_DANG + DEF_WATER_HOR_DEFORM_MIN_DANG;
 			if ( ( NWin32Random::Random( 0.0f, 1.0f ) ) >= 0.5f )
+			{
 				waterHorDeform[g][i].fDAng = -waterHorDeform[g][i].fDAng;
+			}
 			float fAng = 0.0f;
 
 			waterHorDeform[g][i].fRadOffs = NWin32Random::Random( 0.0f, 1.0f ) * DEF_WATER_HOR_DEFORM_MAX_RAD;
@@ -881,7 +915,9 @@ int CWaterPatch::Init(
 			float fRad = fmod( waterHorDeform[g][i].fRadOffs,
 			                   ( ( DEF_WATER_HOR_DEFORM_MAX_RAD - DEF_WATER_HOR_DEFORM_MIN_RAD ) * 2.0f ) );
 			if ( fRad >= ( DEF_WATER_HOR_DEFORM_MAX_RAD - DEF_WATER_HOR_DEFORM_MIN_RAD ) )
+			{
 				fRad = 2.0f * ( DEF_WATER_HOR_DEFORM_MAX_RAD - DEF_WATER_HOR_DEFORM_MIN_RAD ) - fRad;
+			}
 			fRad += DEF_WATER_HOR_DEFORM_MIN_RAD;
 
 			waterHorDeform[g][i].fOffsX = cos( fAng ) * fRad;
@@ -1055,7 +1091,9 @@ void CWaterPatch::ProcessWaveDistribution( const int nWaveNum )
 			fAmpl = DEF_WAVE_MIN_AMPL + fAmpl * DEF_WAVE_MAX_AMPL;
 		}
 		else
+		{
 			fAmpl = DEF_WAVE_MIN_AMPL;
+		}
 
 		fDefPhase = 0.0f;
 

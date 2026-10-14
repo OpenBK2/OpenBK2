@@ -55,7 +55,9 @@ bool CChatLobby::Segment()
 {
 	uint64_t nTime = GetLongTickCount();
 	if ( nTime < nLastRefreshTime + nRefreshTime )
+	{
 		return true;
+	}
 	nLastRefreshTime = nTime;
 
 	DeleteOfflineClients();
@@ -117,19 +119,25 @@ bool CChatLobby::ProcessChatPacket( CChatPacket *pPacket )
 {
 	std::string szFromNick;
 	if ( !pClients->GetNick( pPacket->nClientID, &szFromNick ) )
+	{
 		return true;
+	}
 
 	int nToID = pPacket->nID;
 	if ( ( nToID == 0 ) && ( !pPacket->bIsBroadcast ) )
 	{
 		if ( !pClients->GetClientID( pPacket->szNick, &nToID ) )
+		{
 			return true;
+		}
 	}
 
 	if ( pPacket->bIsBroadcast )
 	{
 		if ( clientChannel.find( pPacket->nClientID ) == clientChannel.end() )
+		{
 			return true;
+		}
 		const std::string &szChannel = clientChannel[pPacket->nClientID];
 		const std::list<int> &clientsList = channelClients[szChannel];
 		for ( std::list<int>::const_iterator it = clientsList.begin(); it != clientsList.end(); ++it )
@@ -169,7 +177,9 @@ bool CChatLobby::ProcessChatChannelPacket( CChatChannelPacket *pPacket )
 	const int nID = pPacket->nClientID;
 	const std::string &szChannelName = pPacket->szChannelName;
 	if ( szChannelName == "" )
+	{
 		return true;
+	}
 
 	if ( channelClients.find( szChannelName ) == channelClients.end() )
 	{ // New channel creation
@@ -183,7 +193,9 @@ bool CChatLobby::ProcessChatChannelPacket( CChatChannelPacket *pPacket )
 	{
 		const std::string szOldChannelName = clientChannel[nID];
 		if ( szOldChannelName == szChannelName )
+		{
 			return true;
+		}
 		channelClients[szOldChannelName].remove( nID );
 		// Важно, чтобы сам клиент не получал ни одно из уведомлений
 		NotifyClientLeaveChannel( nID, szOldChannelName );
@@ -229,11 +241,15 @@ bool CChatLobby::ProcessChatChannelsRequestPacket( CChatChannelsListRequestPacke
 bool CChatLobby::ProcessChatModifyIgnoreFriendListPacket( CChatModifyIgnoreFriendListPacket *pPacket )
 {
 	if ( !pClients->IsOnLine( pPacket->nClientID ) )
+	{
 		return true;
+	}
 	if ( pPacket->eChange == CChatModifyIgnoreFriendListPacket::ADD_IGNORE )
 	{
 		if ( !pClients->InIgnoreFriendList( pPacket->nClientID, pPacket->szPlayer, IGNORE_LIST ) )
+		{
 			pClients->AddIgnoreFriendPair( pPacket->nClientID, pPacket->szPlayer, IGNORE_LIST );
+		}
 	}
 	else if ( pPacket->eChange == CChatModifyIgnoreFriendListPacket::REMOVE_IGNORE )
 	{
@@ -243,7 +259,9 @@ bool CChatLobby::ProcessChatModifyIgnoreFriendListPacket( CChatModifyIgnoreFrien
 	{
 		std::list<std::string> currentFriendList = pClients->GetIgnoreFriendList( pPacket->nClientID, FRIEND_LIST );
 		if ( currentFriendList.size() > nMaxFriends )
+		{
 			return true;
+		}
 		if ( !pClients->InIgnoreFriendList( pPacket->nClientID, pPacket->szPlayer, FRIEND_LIST ) )
 		{
 			pClients->AddIgnoreFriendPair( pPacket->nClientID, pPacket->szPlayer, FRIEND_LIST );
@@ -252,9 +270,13 @@ bool CChatLobby::ProcessChatModifyIgnoreFriendListPacket( CChatModifyIgnoreFrien
 			if ( pClients->GetClientID( pPacket->szPlayer, &nNotifierID ) )
 			{
 				if ( clientChannel.find( nNotifierID ) == clientChannel.end() )
+				{
 					cStatus = AFK;
+				}
 				else
+				{
 					cStatus = ONLINE;
+				}
 			}
 			PushPacket( new CChatFriendNotifyPacket( pPacket->nClientID, pPacket->szPlayer, cStatus ) );
 		}
@@ -283,7 +305,9 @@ bool CChatLobby::ProcessChatChannelByNickPacket( CChatChannelByNickPacket *pPack
 		PushPacket( new CChatChannelByNickPacket( pPacket->nClientID, pPacket->szNick, szChannel ) );
 	}
 	else
+	{
 		PushPacket( new CChatChannelByNickPacket( pPacket->nClientID, pPacket->szNick, "" ) );
+	}
 	return true;
 }
 
@@ -360,7 +384,9 @@ void CChatLobby::SendChatPacket( const int nClientID,
 		{
 			std::string szToNick;
 			if ( pClients->GetNick( nClientID, &szToNick ) )
+			{
 				PushPacket( new CChatAFKResponsePacket( nFromID, szToNick ) );
+			}
 		}
 	}
 }
@@ -392,13 +418,19 @@ void CChatLobby::NotifyFriends( const int nClientID, const EChatStatus eStatus, 
 			EChatStatus eChatStatus;
 			int nNotifierID;
 			if ( !pClients->GetClientID( szNotifierName, &nNotifierID ) )
+			{
 				eChatStatus = OFFLINE;
+			}
 			else
 			{
 				if ( clientChannel.find( nNotifierID ) != clientChannel.end() )
+				{
 					eChatStatus = ONLINE;
+				}
 				else
+				{
 					eChatStatus = AFK;
+				}
 			}
 			PushPacket( new CChatFriendNotifyPacket( nClientID, szNotifierName, eChatStatus ) );
 		}

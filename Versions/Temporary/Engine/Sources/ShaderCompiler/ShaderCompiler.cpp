@@ -39,7 +39,9 @@ struct SProcedure
 		for ( int k = 0; k < locals.size(); ++k )
 		{
 			if ( locals[k] == p )
+			{
 				return k;
+			}
 		}
 		return -1;
 	}
@@ -48,7 +50,9 @@ struct SProcedure
 		for ( int k = 0; k < params.size(); ++k )
 		{
 			if ( params[k] == p )
+			{
 				return k;
+			}
 		}
 		return -1;
 	}
@@ -87,11 +91,15 @@ const char *pszRegs[] = {
 static bool IsVSRegister( const char *pTest, const char c )
 {
 	if ( toupper( c ) != toupper( pTest[0] ) )
+	{
 		return false;
+	}
 	for ( ++pTest; pTest[0]; ++pTest )
 	{
 		if ( pTest[0] < '0' || pTest[0] > '9' )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -101,11 +109,15 @@ static bool IsAddressInstruction( const char *pTest )
 	// Check if pTest looks "c[a0.x+Number]", parser create the lexem without spaces.
 	return true;
 	if ( strlen( pTest ) < 7 )
+	{
 		return false;
+	}
 
 	if ( toupper( pTest[0] ) != 'C' && pTest[1] != '[' && toupper( pTest[2] ) != 'A' && toupper( pTest[3] ) != '0' &&
 	     pTest[4] != '.' && toupper( pTest[5] ) != 'X' && toupper( pTest[6] ) != '+' )
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -119,14 +131,18 @@ struct SProgram
 		for ( int k = 0; k < procs.size(); ++k )
 		{
 			if ( procs[k].szName == p )
+			{
 				return k;
+			}
 		}
 		return -1;
 	}
 	bool IsValidCommand( const char *p ) const
 	{
 		if ( IsOneOf( pszCmds, p ) )
+		{
 			return true;
+		}
 		return GetProc( p ) != -1;
 	}
 };
@@ -164,7 +180,9 @@ public:
 	void Finish()
 	{
 		if ( !cur.cmds.empty() )
+		{
 			prog.procs.push_back( cur );
+		}
 		cur.Clear();
 	}
 	void AddLine( const char *pszLine, const char *pszLineEnd )
@@ -172,7 +190,9 @@ public:
 		vector<SLexem> lexems;
 		ParseLine( &lexems, pszLine, pszLineEnd );
 		if ( lexems.empty() )
+		{
 			return;
+		}
 		switch ( state )
 		{
 			case PROCEDURE:
@@ -194,7 +214,9 @@ public:
 					}
 					cur.bExtern = lexems[0].szData == "proc";
 					for ( int k = 2; k < lexems.size(); ++k )
+					{
 						cur.params.push_back( lexems[k].szData );
+					}
 					if ( cur.bExtern && !cur.params.empty() )
 					{
 						ShitHappened( string( "proc " ) + cur.szName +
@@ -205,7 +227,9 @@ public:
 				else if ( lexems[0].szData == "locals" )
 				{
 					for ( int k = 1; k < lexems.size(); ++k )
+					{
 						cur.locals.push_back( lexems[k].szData );
+					}
 				}
 				else
 				{
@@ -270,14 +294,18 @@ public:
 		res += "dcl_texcoord1 v6;\n";
 		int n = prog.GetProc( pszProcName );
 		if ( n == -1 )
+		{
 			return;
+		}
 		list<SStkFrame> stk;
 		stk.push_back( SStkFrame( &prog.procs[n], 0 ) );
 		while ( !stk.empty() )
 		{
 			SStkFrame &f = stk.back();
 			if ( f.nIP >= f.pProc->cmds.size() )
+			{
 				stk.pop_back();
+			}
 			else
 			{
 				const SCommand &cmd = f.pProc->cmds[f.nIP++];
@@ -293,9 +321,13 @@ public:
 						const char *pszParam = sz.c_str();
 						int nLocal = f.pProc->GetLocalVar( pszParam ), nParam = f.pProc->GetParam( pszParam );
 						if ( nLocal != -1 )
+						{
 							nf.args[k] = "r" + GetNumber( nLocal + f.nBaseRegister );
+						}
 						if ( nParam != -1 )
+						{
 							nf.args[k] = f.args[nParam];
+						}
 					}
 					stk.push_back( nf );
 				}
@@ -309,13 +341,21 @@ public:
 						const char *pszParam = szParam.c_str();
 						int nLocal = f.pProc->GetLocalVar( pszParam ), nParam = f.pProc->GetParam( pszParam );
 						if ( nLocal != -1 )
+						{
 							res += szPrefix + "r" + GetNumber( nLocal + f.nBaseRegister ) + szSuffix;
+						}
 						else if ( nParam != -1 )
+						{
 							res += szPrefix + f.args[nParam] + szSuffix;
+						}
 						else
+						{
 							res += szPrefix + pszParam + szSuffix;
+						}
 						if ( k != cmd.params.size() - 1 )
+						{
 							res += ", ";
+						}
 					}
 					res += "\n";
 				}
@@ -443,17 +483,25 @@ static string PreCompileShader( char *pBuf )
 	{
 		k = 0;
 		while ( ( *pBuf != 0 ) && ( *pBuf != 10 ) && ( *pBuf != 13 ) )
+		{
 			parsedWord[k++] = *pBuf++;
+		}
 		parsedWord[k] = '\0';
 
 		CPSProcHash::const_iterator it = psProcHash.find( parsedWord );
 		if ( it != psProcHash.end() )
+		{
 			res += it->second;
+		}
 		else
+		{
 			res += parsedWord;
+		}
 
 		while ( ( *pBuf == 10 ) || ( *pBuf == 13 ) )
+		{
 			res += *pBuf++;
+		}
 	}
 	return res;
 }
@@ -481,7 +529,9 @@ static void FinishState( char *pszFinish )
 			p.szName = szName;
 			CompileShader( PreCompileShader( pszShader ), szName, "pixel", &p.psShader11 );
 			if ( pszShader14 )
+			{
 				CompileShader( PreCompileShader( pszShader14 ), szName, "pixel14", &p.psShader14 );
+			}
 			p.states = rs;
 			p.shader = tss;
 			pixelShaders.push_back( p );
@@ -616,7 +666,9 @@ static void ParseFile( char *pszFile )
 			}
 		}
 		if ( pszParse[0] == ';' || ( pszParse[0] == '/' && pszParse[1] == '/' ) )
+		{
 			continue;
+		}
 		switch ( parseState )
 		{
 			case NONE:
@@ -633,12 +685,16 @@ static void ParseFile( char *pszFile )
 				break;
 			case PSHADER_RS:
 				if ( pNextLine[0] )
+				{
 					pNextLine[-1] = 0;
+				}
 				AddRS( &rs, pszParse );
 				break;
 			case PSHADER_TSS:
 				if ( pNextLine[0] )
+				{
 					pNextLine[-1] = 0;
+				}
 				AddRS( &tss, pszParse );
 				break;
 			case PS_PROC:

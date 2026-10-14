@@ -67,16 +67,22 @@ void CClients::RecalcDBOverload()
 		fQueriesPerSecond = 0.0f;
 	}
 	else
+	{
 		fQueriesPerSecond =
 				float( nQueries + fPrevQueriesPerSecond * QUERIES_CALC_INTERVAL ) / ( fTimeInterval + QUERIES_CALC_INTERVAL );
+	}
 }
 
 bool CClients::IsCriticalBusy() const
 {
 	if ( fQueriesPerSecond > 30.0f )
+	{
 		return ( NRandom::Random( 0.0f, fQueriesPerSecond - 29.0f ) > 1.0f );
+	}
 	else
+	{
 		return false;
+	}
 }
 
 CClients::CClients( IDatabase *_pDatabase )
@@ -108,7 +114,9 @@ int CClients::GetDBUserIDbyNick( const std::string &_szNick )
 {
 	std::unordered_map<std::string, int>::const_iterator it = DBUserIDByNick.find( _szNick );
 	if ( it != DBUserIDByNick.end() )
+	{
 		return it->second;
+	}
 	std::string szNick = EscapeString( _szNick );
 	std::string szQuery =
 			"SELECT t.userID FROM users AS t, names AS n WHERE ( n.Name = '" + szNick + "' AND t.name = n.nameID )";
@@ -164,7 +172,9 @@ void CClients::AddIgnoreFriendPair( const int nRecipient, const std::string &szS
 		const int nRecipientDBUserID = GetDBUserIDbyNick( szNick );
 		const int nSenderDBUserID = GetDBUserIDbyNick( szSender );
 		if ( nRecipientDBUserID == -1 || nSenderDBUserID == -1 )
+		{
 			return;
+		}
 		switch ( eList )
 		{
 			case IGNORE_LIST:
@@ -187,7 +197,9 @@ void CClients::DeleteIgnoreFriendPair( const int nRecipient, const std::string &
 		const int nRecipientDBUserID = GetDBUserIDbyNick( szNick );
 		const int nSenderDBUserID = GetDBUserIDbyNick( szSender );
 		if ( nRecipientDBUserID == -1 || nSenderDBUserID == -1 )
+		{
 			return;
+		}
 		switch ( eList )
 		{
 			case IGNORE_LIST:
@@ -251,7 +263,9 @@ bool CClients::InIgnoreFriendList( const int nRecipient, const std::string &szSe
 				{
 					it = ignoreList.find( nRecipientDBID );
 					if ( it == ignoreList.end() )
+					{
 						return false;
+					}
 					const std::unordered_set<int> &recipientsIgnoreList = it->second;
 					return recipientsIgnoreList.find( nSenderDBID ) != recipientsIgnoreList.end();
 					break;
@@ -260,7 +274,9 @@ bool CClients::InIgnoreFriendList( const int nRecipient, const std::string &szSe
 				{
 					it = friendList.find( nRecipientDBID );
 					if ( it == friendList.end() )
+					{
 						return false;
+					}
 					const std::unordered_set<int> &recipientsFriendList = it->second;
 					return recipientsFriendList.find( nSenderDBID ) != recipientsFriendList.end();
 				}
@@ -269,7 +285,9 @@ bool CClients::InIgnoreFriendList( const int nRecipient, const std::string &szSe
 		}
 	}
 	else
+	{
 		return false;
+	}
 }
 
 std::list<std::string> CClients::GetIgnoreFriendList( const int nClient, EIgnoreFriendList eList )
@@ -302,7 +320,9 @@ std::list<std::string> CClients::GetIgnoreFriendList( const int nClient, EIgnore
 		return clientsIgnoreFriendList;
 	}
 	else
+	{
 		return std::list<std::string>();
+	}
 }
 
 bool CClients::IsCorrectCDKey( const std::string &szCDKey )
@@ -317,7 +337,9 @@ bool CClients::IsCorrectCDKey( const std::string &szCDKey )
 bool CClients::IsBadNick( const std::string &szNick )
 {
 	if ( szNick.empty() )
+	{
 		return true;
+	}
 	// TODO:
 	// Нужна проверка ника на соответствие требованиям
 
@@ -334,7 +356,9 @@ bool CClients::IsBannedNick( const std::string &szNick )
 	{
 		const CDbRow row = result.Row( 0 );
 		if ( row[0] == "1" )
+		{
 			ans = true;
+		}
 	}
 
 	return ans;
@@ -350,7 +374,9 @@ bool CClients::IsBannedCDKey( const std::string &szCDKey )
 	{
 		const CDbRow row = result.Row( 0 );
 		if ( row[0] == "1" )
+		{
 			ans = true;
+		}
 	}
 
 	return ans;
@@ -359,7 +385,9 @@ bool CClients::IsBannedCDKey( const std::string &szCDKey )
 const std::string CClients::GetCDKey( const std::string &szNick )
 {
 	if ( szNick.empty() )
+	{
 		return "";
+	}
 	std::string szQuery =
 			"SELECT cdkeys.CDKey FROM cdkeys, users, names WHERE ( cdkeys.cdkeyID = users.cdkey AND names.nameID = users.name AND names.Name = '" +
 			EscapeString( szNick ) + "')";
@@ -377,7 +405,9 @@ const std::string CClients::GetCDKey( const std::string &szNick )
 const std::string CClients::GetPassword( const std::string &szNick )
 {
 	if ( szNick.empty() )
+	{
 		return "";
+	}
 
 	std::string szQuery = "SELECT users.password FROM users, names WHERE ( users.name = names.nameID AND names.Name = '" +
 	                      EscapeString( szNick ) + "')";
@@ -395,7 +425,9 @@ const std::string CClients::GetPassword( const std::string &szNick )
 const std::string CClients::GetEmail( const std::string &szNick )
 {
 	if ( szNick.empty() )
+	{
 		return "";
+	}
 
 	std::string szQuery = "SELECT users.email FROM users, names WHERE ( users.name = names.nameID AND names.Name = '" +
 	                      EscapeString( szNick ) + "')";
@@ -413,7 +445,9 @@ const std::string CClients::GetEmail( const std::string &szNick )
 bool CClients::IsNickRegistered( const std::string &szNick )
 {
 	if ( szNick.empty() )
+	{
 		return false;
+	}
 	std::string szQuery = "SELECT nameID FROM names WHERE Name = '" + EscapeString( szNick ) + "'";
 	CDbResult result;
 	Query( szQuery, &result );
@@ -436,7 +470,9 @@ void CClients::Register( const std::string &_szNick,
                          const std::string &_szEmail )
 {
 	if ( _szNick.empty() )
+	{
 		return;
+	}
 
 	std::string szNick = EscapeString( _szNick );
 	std::string szPassword = EscapeString( _szPassword );
@@ -503,7 +539,9 @@ void CClients::PutLadderInfoToDB( const std::string &szNick )
 void CClients::LockLadderInfo( const std::string &szNick )
 {
 	if ( ladderInfoCache.find( szNick ) == ladderInfoCache.end() )
+	{
 		return;
+	}
 	++ladderInfoCacheLockCounter[szNick];
 }
 
@@ -515,7 +553,9 @@ void CClients::UnlockLadderInfo( const std::string &szNick )
 		int &nCounter = it->second;
 		--nCounter;
 		if ( nCounter > 0 )
+		{
 			return;
+		}
 		ladderInfoCacheLockCounter.erase( it );
 		if ( !IsOnLine( szNick ) )
 		{
@@ -598,7 +638,9 @@ void CClients::PutRawLadderInfoToDB( const std::string &szNick, const std::unord
 		{
 			const std::string &szStatsName = it->first;
 			if ( availableColumns.find( szStatsName ) == availableColumns.end() )
+			{
 				columnsToCreate.push_back( szStatsName );
+			}
 		}
 		columnsToCreate.sort();
 		// One statement per column: a list of ADD COLUMN clauses in a single
@@ -684,7 +726,9 @@ void CClients::SetOffLine( const int nClientID )
 	gameConnections.erase( nClientID );
 	std::unordered_map<std::string, int>::iterator it = ladderInfoCacheLockCounter.find( szNick );
 	if ( it == ladderInfoCacheLockCounter.end() )
+	{
 		ladderInfoCache.erase( szNick );
+	}
 
 #ifndef _FINALRELEASE
 	GetNetLogger()->Log( szNick, "offline" );
@@ -701,7 +745,9 @@ const bool CClients::GetNick( const int nClientID, std::string *pszNick ) const
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 const bool CClients::GetClientID( const std::string &szNick, int *pnClientID ) const
@@ -713,14 +759,18 @@ const bool CClients::GetClientID( const std::string &szNick, int *pnClientID ) c
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 const bool CClients::GetCommonClientInfo( const int nClientID, SCommonClientInfo *pCommonClientInfo ) const
 {
 	std::unordered_map<int, SCommonClientInfo>::const_iterator iter = onLine.find( nClientID );
 	if ( iter == onLine.end() )
+	{
 		return false;
+	}
 	else
 	{
 		*pCommonClientInfo = iter->second;
@@ -732,7 +782,9 @@ void CClients::SetCommonClientInfo( const int nClientID, const SCommonClientInfo
 {
 	std::unordered_map<int, SCommonClientInfo>::iterator iter = onLine.find( nClientID );
 	if ( iter != onLine.end() )
+	{
 		iter->second = commonClientInfo;
+	}
 }
 
 void CClients::SetGameConnectInfo( const int nClientID,
@@ -756,13 +808,17 @@ bool CClients::GetGameConnectInfo( const int nClientID,
 {
 	std::unordered_map<int, SGameConnection>::const_iterator iter = gameConnections.find( nClientID );
 	if ( iter == gameConnections.end() )
+	{
 		return false;
+	}
 
 	const SGameConnection &conn = iter->second;
 	std::unordered_map<int, SGameConnection::SAddressInfo>::const_iterator addr_iter =
 			conn.connections.find( nConnection );
 	if ( addr_iter == conn.connections.end() )
+	{
 		return false;
+	}
 
 	*pAddressInfo = addr_iter->second;
 	return true;
@@ -774,14 +830,18 @@ void CClients::Log( const int nClientID, const std::string &szMsg ) const
 	//DebugTrace( "%s", szMsg.c_str() );
 	std::unordered_map<int, std::string>::const_iterator iter = nickByID.find( nClientID );
 	if ( iter != nickByID.end() )
+	{
 		GetNetLogger()->Log( iter->second, szMsg );
+	}
 #endif // _FINALRELEASE
 }
 
 bool CClients::IsCDKeyOnline( const std::string &szCDKey )
 {
 	if ( szCDKey == "" )
+	{
 		return true;
+	}
 	std::string szQuery = "SELECT n.Name FROM cdkeys AS c, users AS u, names AS n WHERE c.CDKey = '" +
 	                      EscapeString( szCDKey ) + "' AND c.cdkeyID = u.cdkey AND u.name = n.nameID";
 	CDbResult result;

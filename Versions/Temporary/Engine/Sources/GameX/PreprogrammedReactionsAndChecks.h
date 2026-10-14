@@ -16,7 +16,9 @@ public:
 	void Execute( CObjectBase *pThis, const std::string &szSender )
 	{
 		if ( pThis )
+		{
 			( CastToUserObject( pThis, (TObj *)0 )->*pfnMemFun )( szSender );
+		}
 	}
 };
 
@@ -32,7 +34,9 @@ public:
 	int Execute( const CObjectBase *pThis ) const
 	{
 		if ( pThis )
+		{
 			return ( CastToUserObject( const_cast<CObjectBase *>( pThis ), (TObj *)0 )->*pfnMemFun )();
+		}
 		return 0;
 	}
 };
@@ -60,7 +64,9 @@ public:
 	{
 		typename CChecks::const_iterator pos = checks.find( szCheckName );
 		if ( pos != checks.end() )
+		{
 			return pos->second->Execute( this );
+		}
 		return 0;
 	}
 	bool Execute( const std::string &szSender, const std::string &szReaction )

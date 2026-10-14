@@ -38,19 +38,27 @@ const SSegments &GetSegmentsByFrameIndex( const int nFrameIndex, int *nVisObj ) 
 	NI_ASSERT( nCur >= 0, "wrong frame index for fence" );
 
 	if ( nCur < centerSegments.visObjes.size() )
+	{
 		return centerSegments;
+	}
 	nCur -= centerSegments.visObjes.size();
 
 	if ( nCur < damagedSegmentsOtherSide.visObjes.size() )
+	{
 		return damagedSegmentsOtherSide;
+	}
 	nCur -= damagedSegmentsOtherSide.visObjes.size();
 
 	if ( nCur < damagedSegments.visObjes.size() )
+	{
 		return damagedSegments;
+	}
 	nCur -= damagedSegments.visObjes.size();
 
 	if ( nCur < destroyedSegments.visObjes.size() )
+	{
 		return destroyedSegments;
+	}
 	NI_ASSERT( false, fmt::format( "wrong frame index for fence, {}", nFrameIndex ) );
 	return centerSegments;
 }
@@ -61,7 +69,9 @@ const NDb::SVisObj *GetVisObjByFrameIndex( const int nFrameIndex ) const
 	const SSegments &seg = GetSegmentsByFrameIndex( nFrameIndex, &nCur );
 	// check is already done, no need to check
 	if ( nCur < seg.visObjes.size() )
+	{
 		return seg.visObjes[nCur];
+	}
 
 	return 0;
 }
@@ -96,7 +106,9 @@ virtual const SByteArray2 &GetVisibility( const int nIndex = -1 ) const
 	int nCur;
 	const SSegments &segm = GetSegmentsByFrameIndex( nIndex, &nCur );
 	if ( segm.bUsePassabilityForVisibility )
+	{
 		return segm.passability;
+	}
 	return empty;
 }
 
@@ -167,7 +179,9 @@ ETypesOfLife GetDamageTypeByFrameIndex( const int _nFrameIndex ) const
 	const int nMaxIndexRight = nMaxIndexLeft + damagedSegments.visObjes.size();
 	const int nMaxIndexDestroyed = nMaxIndexRight + destroyedSegments.visObjes.size();
 	if ( _nFrameIndex >= 0 && _nFrameIndex < nMaxIndexSafe )
+	{
 		return ETOL_SAFE;
+	}
 	else if ( _nFrameIndex >= nMaxIndexSafe && _nFrameIndex < nMaxIndexLeft )
 	{
 		NI_VERIFY( HasLeftDamaged(),
@@ -178,9 +192,13 @@ ETypesOfLife GetDamageTypeByFrameIndex( const int _nFrameIndex ) const
 		return ETOL_LEFT;
 	}
 	else if ( _nFrameIndex >= nMaxIndexLeft && _nFrameIndex < nMaxIndexRight )
+	{
 		return ETOL_RIGHT;
+	}
 	else if ( _nFrameIndex >= nMaxIndexRight && _nFrameIndex < nMaxIndexDestroyed )
+	{
 		return ETOL_DESTROYED;
+	}
 	NI_ASSERT( false,
 	           fmt::format( "[MAP DESIGNER ERROR] Invalid frame index ({}). Object \"{}\" has no appropriate lite type.",
 	                        _nFrameIndex,

@@ -22,7 +22,9 @@ bool RecognizeFormatTGA( CDataStream *pStream )
 	const int nOriginalPos = pStream->GetPosition();
 	// Original TGA files can be smaller than the optional 26-byte footer.
 	if ( pStream->GetSize() - nOriginalPos < sizeof( STGAFileHeader ) )
+	{
 		return false;
+	}
 	if ( pStream->GetSize() >= sizeof( STGAFileFooter ) )
 	{
 		pStream->Seek( pStream->GetSize() - sizeof( STGAFileFooter ) );
@@ -30,7 +32,9 @@ bool RecognizeFormatTGA( CDataStream *pStream )
 		pStream->Read( &footer, sizeof( footer ) );
 		pStream->Seek( nOriginalPos );
 		if ( footer.cReservedCharacter == '.' && memcmp( footer.cSignature, "TRUEVISION-XFILE", 16 ) == 0 )
+		{
 			return true;
+		}
 	}
 	// check for the original
 	STGAFileHeader hdr;
@@ -63,11 +67,15 @@ bool RecognizeFormatTGA( CDataStream *pStream )
 			break;
 	}
 	if ( !bCheck )
+	{
 		return false;
+	}
 	// some fields valid values
 	bCheck = hdr.imagespec.descriptor.cUnused == 0;
 	if ( !bCheck )
+	{
 		return false;
+	}
 
 	return true;
 }

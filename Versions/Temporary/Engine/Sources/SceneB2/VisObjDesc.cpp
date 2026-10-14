@@ -63,7 +63,9 @@ void CAnimObjBounder::Recalc()
 void SModelVisObjDesc::Visit( IAIVisitor *pVisitor )
 {
 	if ( pModel && pModel->pGeometry->pAIGeometry )
+	{
 		pVisitor->AddHull( pModel->pGeometry->pAIGeometry, GetPlacement().forward, 0, 0, 1 );
+	}
 }
 
 void SModelVisObjDesc::FillBBPoints( std::vector<CVec3> &bbPoints, std::vector<uint16_t> &bbIndices )
@@ -126,18 +128,24 @@ void SModelVisObjDesc::UpdateBBPolyLine( NGScene::IGameView *pGScene )
 	if ( pModel != 0 )
 	{
 		for ( int i = 0; i < 8; ++i )
+		{
 			GetPlacement().forward.RotateHVector( &( transformedBBPoints[i] ), bbPoints[i] );
+		}
 		pBBPolyLine =
 				(CObjectBase *)( pGScene->CreatePolyline( transformedBBPoints, bbIndices, CVec4( 1.0f, 0, 0, 1.0f ), true ) );
 	}
 	else
+	{
 		pBBPolyLine = 0;
+	}
 }
 
 void SModelVisObjDesc::UpdateSrcBind()
 {
 	if ( pModel && pModel->pGeometry->pAIGeometry )
+	{
 		srcBind.Update();
+	}
 }
 
 void SModelVisObjDesc::UpdateStuff( CVisObjIconsManager *pVOIM )
@@ -192,7 +200,9 @@ void SModelVisObjDesc::UpdateStuff( CVisObjIconsManager *pVOIM )
 void SModelVisObjDesc::ClearAttached( const ESceneSubObjType eType )
 {
 	for ( TAttachOfOneType::iterator it = attachedObjects[eType].begin(); it != attachedObjects[eType].end(); ++it )
+	{
 		it->second->Destroy( GameTimer()->GetGameTime() );
+	}
 
 	attachedObjects[eType].clear();
 	n2Attach.clear();
@@ -210,7 +220,9 @@ void SModelVisObjDesc::ClearAttached( const ESceneSubObjType eType )
 void SStaticVisObjDesc::MoveAfterUpdatePlacement( NGScene::IGameView *pGScene )
 {
 	if ( bHidden || pObj == 0 || pModel == 0 )
+	{
 		return;
+	}
 	NGScene::IGameView::SMeshInfo meshInfo;
 	pGScene->CreateMeshInfo( pModel, &meshInfo, false );
 	if ( CObjectBase *_pObj = pGScene->CreateMesh( meshInfo, transform, 0, 0 ) )
@@ -220,13 +232,19 @@ void SStaticVisObjDesc::MoveAfterUpdatePlacement( NGScene::IGameView *pGScene )
 		{
 			NGScene::SetFade( pObj, fFade );
 			if ( fFade == 1.0f )
+			{
 				fFade = -1.0f;
+			}
 		}
 		if ( pModel->pGeometry->pAIGeometry )
+		{
 			srcBind.Update();
+		}
 	}
 	if ( pBBPolyLine != 0 )
+	{
 		UpdateBBPolyLine( pGScene );
+	}
 }
 
 void SStaticVisObjDesc::UpdatePlacement( NGScene::IGameView *pGScene,
@@ -262,7 +280,9 @@ void SStaticVisObjDesc::ReCreateObject( NGScene::IGameView *pGScene,
                                         bool bShowBB )
 {
 	if ( bHidden || pModel == 0 )
+	{
 		return;
+	}
 	NGScene::IGameView::SMeshInfo meshInfo;
 	pGScene->CreateMeshInfo( pModel, &meshInfo, false );
 	if ( CObjectBase *_pObj = pGScene->CreateMesh( meshInfo, transform, 0, 0 ) )
@@ -277,7 +297,9 @@ void SStaticVisObjDesc::ReCreateObject( NGScene::IGameView *pGScene,
 		{
 			NGScene::SetFade( pObj, fFade );
 			if ( fFade == 1.0f )
+			{
 				fFade = -1.0f;
+			}
 		}
 	}
 
@@ -294,7 +316,9 @@ void SStaticVisObjDesc::ReCreateObject( NGScene::IGameView *pGScene,
 	}
 
 	if ( bShowBB )
+	{
 		UpdateBBPolyLine( pGScene );
+	}
 }
 
 // ************************************************************************************************************************ //
@@ -313,11 +337,17 @@ void SDynamicVisObjDesc::UpdatePlacement( NGScene::IGameView *pGScene,
 	SFBTransform place;
 	MakeMatrix( &place, vScale, vPos, qRot );
 	if ( pTransform == 0 )
+	{
 		pTransform = new CCSFBTransform( place );
+	}
 	else
+	{
 		pTransform->Set( place );
+	}
 	if ( pBBPolyLine != 0 )
+	{
 		UpdateBBPolyLine( pGScene );
+	}
 }
 
 void SDynamicVisObjDesc::UpdatePlacement( NGScene::IGameView *pGScene, const SHMatrix &mPlace )
@@ -326,11 +356,17 @@ void SDynamicVisObjDesc::UpdatePlacement( NGScene::IGameView *pGScene, const SHM
 	Invert( &place.backward, mPlace );
 	place.forward = mPlace;
 	if ( pTransform == 0 )
+	{
 		pTransform = new CCSFBTransform( place );
+	}
 	else
+	{
 		pTransform->Set( place );
+	}
 	if ( pBBPolyLine != 0 )
+	{
 		UpdateBBPolyLine( pGScene );
+	}
 }
 
 void SDynamicVisObjDesc::ReCreateObject( NGScene::IGameView *pGScene,
@@ -339,7 +375,9 @@ void SDynamicVisObjDesc::ReCreateObject( NGScene::IGameView *pGScene,
                                          bool bShowBB )
 {
 	if ( bHidden || pModel == 0 )
+	{
 		return;
+	}
 	NGScene::IGameView::SMeshInfo meshInfo;
 	pGScene->CreateMeshInfo( pModel, &meshInfo, false );
 	if ( CObjectBase *_pObj = pGScene->CreateMesh( meshInfo, pTransform.GetPtr(), 0, 0 ) )
@@ -354,11 +392,15 @@ void SDynamicVisObjDesc::ReCreateObject( NGScene::IGameView *pGScene,
 		{
 			NGScene::SetFade( pObj, fFade );
 			if ( fFade == 1.0f )
+			{
 				fFade = -1.0f;
+			}
 		}
 	}
 	if ( bShowBB )
+	{
 		UpdateBBPolyLine( pGScene );
+	}
 }
 
 // ************************************************************************************************************************ //
@@ -381,7 +423,9 @@ void SAnimatedVisObjDescBase::UpdatePlacement( NGScene::IGameView *pGScene,
 	pTransform->Set( transform );
 	//	pAnimator->SetGlobalPosition( transform.forward );
 	if ( pBBPolyLine != 0 )
+	{
 		UpdateBBPolyLine( pGScene );
+	}
 }
 
 void SAnimatedVisObjDescBase::UpdatePlacement( NGScene::IGameView *pGScene, const SHMatrix &mPlace )
@@ -394,7 +438,9 @@ void SAnimatedVisObjDescBase::UpdatePlacement( NGScene::IGameView *pGScene, cons
 	pTransform->Set( transform );
 	//	pAnimator->SetGlobalPosition( transform.forward );
 	if ( pBBPolyLine != 0 )
+	{
 		UpdateBBPolyLine( pGScene );
+	}
 }
 
 void SAnimatedVisObjDescBase::ClearObject()
@@ -419,7 +465,9 @@ void SAnimatedVisObjDescBase::ReCreateObject( NGScene::IGameView *pGScene,
                                               bool bShowBB )
 {
 	if ( bHidden || pModel == 0 )
+	{
 		return;
+	}
 	// create main object
 	NGScene::IGameView::SMeshInfo meshInfo;
 	pGScene->CreateMeshInfo( pModel, &meshInfo, true );
@@ -435,7 +483,9 @@ void SAnimatedVisObjDescBase::ReCreateObject( NGScene::IGameView *pGScene,
 		{
 			NGScene::SetFade( pObj, fFade );
 			if ( fFade == 1.0f )
+			{
 				fFade = -1.0f;
+			}
 		}
 	}
 	// create attached objects
@@ -451,7 +501,9 @@ void SAnimatedVisObjDescBase::ReCreateObject( NGScene::IGameView *pGScene,
 	}
 
 	if ( bShowBB )
+	{
 		UpdateBBPolyLine( pGScene );
+	}
 }
 
 void SAnimatedVisObjDescBase::ChangeModel( const NDb::SModel *pNewModel,
@@ -467,7 +519,9 @@ void SAnimatedVisObjDescBase::ChangeModel( const NDb::SModel *pNewModel,
 		handle.nModelInFile = 0;
 		CPtr<NAnimation::ISkeletonAnimator> pTempAnimator = NAnimation::CreateSkeletonAnimator( handle, pGameTimer );
 		if ( pTempAnimator == 0 )
+		{
 			return;
+		}
 		pAnimator = pTempAnimator;
 		pAnimator->SetGlobalTransform( pTransform );
 		// reset all attached objects in the case of animator change
@@ -502,8 +556,10 @@ CObjectBase *SAnimatedVisObjDesc::CreateAnimatedMesh( NGScene::IGameView *pGScen
 		                            NGScene::SFullRoomInfo( 0, NGScene::N_MASK_LOD_HIGH ) );
 	}
 	else
+	{
 		return pGScene->CreateMesh(
 				*pMeshInfoPassed, pTransform.GetPtr(), pBounder.GetPtr(), NGScene::CMeshAnimStuff( pModel, pAnimator ) );
+	}
 }
 
 CObjectBase *SAnimatedStaticVisObjDesc::CreateAnimatedMesh( NGScene::IGameView *pGScene,
@@ -546,7 +602,9 @@ void SStaticEffectVisObj::ReCreateObject( NGScene::IGameView *pGView,
                                           bool bShowBB )
 {
 	if ( bHidden || pEffect == 0 )
+	{
 		return;
+	}
 	pObj = pGView->CreateParticles( pEffect, timeStart, pTimer, transform );
 }
 
@@ -558,9 +616,13 @@ void SDynamicEffectVisObj::UpdatePlacement( NGScene::IGameView *pGScene,
 	SFBTransform transform;
 	MakeMatrix( &transform, vScale, vPos, qRot );
 	if ( pTransform == 0 )
+	{
 		pTransform = new CCSFBTransform( transform );
+	}
 	else
+	{
 		pTransform->Set( transform );
+	}
 }
 void SDynamicEffectVisObj::UpdatePlacement( NGScene::IGameView *pGScene, const SHMatrix &mPlace )
 {
@@ -568,9 +630,13 @@ void SDynamicEffectVisObj::UpdatePlacement( NGScene::IGameView *pGScene, const S
 	transform.forward = mPlace;
 	Invert( &transform.backward, mPlace );
 	if ( pTransform == 0 )
+	{
 		pTransform = new CCSFBTransform( transform );
+	}
 	else
+	{
 		pTransform->Set( transform );
+	}
 }
 void SDynamicEffectVisObj::ReCreateObject( NGScene::IGameView *pGView,
                                            CSyncSrc<IVisObj> *pSyncSrc,
@@ -578,7 +644,9 @@ void SDynamicEffectVisObj::ReCreateObject( NGScene::IGameView *pGView,
                                            bool bShowBB )
 {
 	if ( bHidden || pEffect == 0 )
+	{
 		return;
+	}
 	pObj = pGView->CreateParticles( pEffect, timeStart, pTimer, pTransform );
 }
 

@@ -24,11 +24,17 @@ bool LoadAnyImage( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 	NI_ASSERT( pStream != 0, "Can't load to NULL stream" );
 	//
 	if ( NImage::RecognizeFormatDDS( pStream ) )
+	{
 		return NImage::LoadImageDDS( pRes, pStream );
+	}
 	if ( NImage::RecognizeFormatBMP( pStream ) )
+	{
 		return NImage::LoadImageBMP( pRes, pStream );
+	}
 	else if ( NImage::RecognizeFormatTGA( pStream ) )
+	{
 		return NImage::LoadImageTGA( pRes, pStream );
+	}
 	return false;
 }
 
@@ -55,8 +61,10 @@ bool Copy( const CArray2D<uint32_t> &src,
 	}
 	//
 	for ( int j = 0; j < rcRect.Height(); ++j )
+	{
 		memcpy(
 				&( dst[dstPos.y + j][dstPos.x] ), &( src[rcRect.top + j][rcRect.left] ), rcRect.Width() * sizeof( uint32_t ) );
+	}
 	//
 	return true;
 }

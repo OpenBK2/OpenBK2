@@ -363,7 +363,9 @@ static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE *lp
 bool InitInput( HWND hWnd, bool _bNonExclusiveMode, int nSampleBufferSize )
 {
 	if ( bInitialized )
+	{
 		return true;
+	}
 
 #if BOOST_OS_WINDOWS
 	// The editor can restart input with its 3D child window. DirectInput and
@@ -375,13 +377,17 @@ bool InitInput( HWND hWnd, bool _bNonExclusiveMode, int nSampleBufferSize )
 	bNonExclusiveMode = _bNonExclusiveMode;
 
 	if ( !OpenDevices( nSampleBufferSize ) )
+	{
 		return false;
+	}
 
 	bInitialized = true;
 	SetFocus( true );
 
 	for ( CDevicesList::iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
+	{
 		ResyncDevice( *iTempDevice );
+	}
 
 	events.resize( SAMPLE_BUFFER_SIZE * devices.size() );
 	messages.clear();
@@ -392,7 +398,9 @@ bool InitInput( HWND hWnd, bool _bNonExclusiveMode, int nSampleBufferSize )
 bool DoneInput()
 {
 	if ( !bInitialized )
+	{
 		return true;
+	}
 
 	SetFocus( false );
 	CloseDevices();
@@ -418,14 +426,18 @@ static bool OpenDevices( int nSampleBufferSize )
 	hRes = DirectInput8Create(
 			GetModuleHandle( 0 ), DIRECTINPUT_VERSION, IID_IDirectInput8, (void **)pdiInput.GetAddr(), 0 );
 	if ( FAILED( hRes ) )
+	{
 		return false;
+	}
 
 	hRes = pdiInput->CreateDevice( GUID_SysMouse, pdiTempDevice.GetAddr(), 0 );
 	if ( SUCCEEDED( hRes ) )
 	{
 		hRes = pdiTempDevice->SetDataFormat( &c_dfDIMouse2 );
 		if ( FAILED( hRes ) )
+		{
 			return false;
+		}
 
 		DIPROPDWORD sProp;
 		sProp.diph.dwSize = sizeof( DIPROPDWORD );
@@ -435,7 +447,9 @@ static bool OpenDevices( int nSampleBufferSize )
 		sProp.dwData = DIPROPAXISMODE_ABS;
 		hRes = pdiTempDevice->SetProperty( DIPROP_AXISMODE, &sProp.diph );
 		if ( FAILED( hRes ) )
+		{
 			return false;
+		}
 
 		sProp.diph.dwSize = sizeof( DIPROPDWORD );
 		sProp.diph.dwHeaderSize = sizeof( DIPROPHEADER );
@@ -444,7 +458,9 @@ static bool OpenDevices( int nSampleBufferSize )
 		sProp.dwData = nSampleBufferSize > 0 ? nSampleBufferSize : SAMPLE_BUFFER_SIZE;
 		hRes = pdiTempDevice->SetProperty( DIPROP_BUFFERSIZE, &sProp.diph );
 		if ( FAILED( hRes ) )
+		{
 			return false;
+		}
 
 		AddDeviceInfo( pdiTempDevice, c_dfDIMouse2.dwDataSize );
 	}
@@ -454,7 +470,9 @@ static bool OpenDevices( int nSampleBufferSize )
 	{
 		hRes = pdiTempDevice->SetDataFormat( &c_dfDIKeyboard );
 		if ( FAILED( hRes ) )
+		{
 			return false;
+		}
 
 		DIPROPDWORD sProp;
 		sProp.diph.dwSize = sizeof( DIPROPDWORD );
@@ -464,7 +482,9 @@ static bool OpenDevices( int nSampleBufferSize )
 		sProp.dwData = SAMPLE_BUFFER_SIZE;
 		hRes = pdiTempDevice->SetProperty( DIPROP_BUFFERSIZE, &sProp.diph );
 		if ( FAILED( hRes ) )
+		{
 			return false;
+		}
 
 		AddDeviceInfo( pdiTempDevice, c_dfDIKeyboard.dwDataSize );
 	}
@@ -482,7 +502,9 @@ static void CloseDevices()
 static bool SetCoopLevel()
 {
 	if ( bCoopLevelSet )
+	{
 		return true;
+	}
 
 	for ( CDevicesList::iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
 	{
@@ -490,18 +512,26 @@ static bool SetCoopLevel()
 
 		if ( ( is_debugger_present() && ( GET_DIDEVICE_TYPE( iTempDevice->dwDevType ) != DI8DEVTYPE_MOUSE ) ) ||
 		     bNonExclusiveMode )
+		{
 			hRes = iTempDevice->pdiDevice->SetCooperativeLevel( hWindow, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND );
+		}
 		else
 		{
 			int nDeviceID = GET_DIDEVICE_TYPE( iTempDevice->dwDevType );
 			if ( nDeviceID == DI8DEVTYPE_KEYBOARD || nDeviceID == DI8DEVTYPE_MOUSE )
+			{
 				hRes = iTempDevice->pdiDevice->SetCooperativeLevel( hWindow, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND );
+			}
 			else
+			{
 				hRes = iTempDevice->pdiDevice->SetCooperativeLevel( hWindow, DISCL_EXCLUSIVE | DISCL_FOREGROUND );
+			}
 		}
 
 		if ( FAILED( hRes ) )
+		{
 			return false;
+		}
 	}
 
 	bCoopLevelSet = true;
@@ -514,12 +544,16 @@ static bool ReadDeviceData( SInputDevice &sDevice, DIDEVICEOBJECTDATA *pObjects,
 	if ( sDevice.bPoll )
 	{
 		if ( FAILED( sDevice.pdiDevice->Poll() ) )
+		{
 			sDevice.pdiDevice->Acquire();
+		}
 	}
 
 	const HRESULT hRes = sDevice.pdiDevice->GetDeviceData( sizeof( DIDEVICEOBJECTDATA ), pObjects, pdwElements, 0 );
 	if ( hRes == DI_BUFFEROVERFLOW )
+	{
 		sDevice.bNeedResync = true;
+	}
 	if ( SUCCEEDED( hRes ) )
 	{
 		// DirectInput timestamps use the GetTickCount clock, while the binding
@@ -550,7 +584,9 @@ static float ReadControlGranularity( const SKey &sKey )
 	for ( CDevicesList::const_iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
 	{
 		if ( GET_DIDEVICE_TYPE( iTempDevice->dwDevType ) != sKey.nDevType )
+		{
 			continue;
+		}
 
 		DIPROPDWORD diProp;
 		diProp.diph.dwSize = sizeof( DIPROPDWORD );
@@ -559,7 +595,9 @@ static float ReadControlGranularity( const SKey &sKey )
 		diProp.diph.dwObj = INPUT_GETACTIONOFFS( sKey.nAction );
 		HRESULT hRes = iTempDevice->pdiDevice->GetProperty( DIPROP_GRANULARITY, (DIPROPHEADER *)&diProp );
 		if ( SUCCEEDED( hRes ) )
+		{
 			return (float)diProp.dwData;
+		}
 	}
 
 	return 1.0f;
@@ -572,7 +610,9 @@ static std::string ReadControlLocalName( int nAction )
 	for ( CDevicesList::const_iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
 	{
 		if ( GET_DIDEVICE_TYPE( iTempDevice->dwDevType ) != sKey.nDevType )
+		{
 			continue;
+		}
 		DIDEVICEOBJECTINSTANCE objInstance;
 		memset( &objInstance, 0, sizeof( objInstance ) );
 		objInstance.dwSize = sizeof( objInstance );
@@ -611,17 +651,23 @@ static uint32_t dwPrevPump;
 void PumpMessages( bool bFocus )
 {
 	if ( !bInitialized )
+	{
 		return;
+	}
 
 	// Background simulation may keep bFocus true after the window is deactivated.
 	// Input focus must still follow the window the keyboard is actually going to.
 	SetFocus( bFocus && IsWindowFocused() );
 	if ( !bFocusCaptured )
+	{
 		return;
+	}
 
 	uint32_t dwTest = GetCurrentTimeMilliseconds();
 	if ( dwTest - dwPrevPump < 1 )
+	{
 		return;
+	}
 	dwPrevPump = dwTest;
 
 	PumpDeviceEvents();
@@ -660,7 +706,9 @@ void PumpMessages( bool bFocus )
 								sKey.dwLastPressed = 0;
 							}
 							else
+							{
 								sKey.dwLastPressed = sEvent.sMessage.tTime;
+							}
 						}
 						else
 						{
@@ -711,8 +759,10 @@ void PumpMessages( bool bFocus )
 				                                             1 )];
 				SMessage sMessageX( sKeyX.nAction, sKeyX.ePOVAxis, sKeyX.eType, 0, true, iTempEvent->sMessage.tTime );
 				if ( iTempEvent->sMessage.nParam != -1 )
+				{
 					sMessageX.nParam =
 							cos( ( (float)iTempEvent->sMessage.nParam * FP_2PI - FP_PI * 18000 ) / 36000 ) * POV_RANGE_VALUE;
+				}
 
 				messages.push_back( sMessageX );
 
@@ -721,8 +771,10 @@ void PumpMessages( bool bFocus )
 				                                             2 )];
 				SMessage sMessageY( sKeyY.nAction, sKeyY.ePOVAxis, sKeyY.eType, 0, true, iTempEvent->sMessage.tTime );
 				if ( iTempEvent->sMessage.nParam != -1 )
+				{
 					sMessageY.nParam =
 							sin( ( (float)iTempEvent->sMessage.nParam * FP_2PI - FP_PI * 18000 ) / 36000 ) * POV_RANGE_VALUE;
+				}
 				messages.push_back( sMessageY );
 			}
 		}
@@ -731,7 +783,9 @@ void PumpMessages( bool bFocus )
 	for ( CDevicesList::iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
 	{
 		if ( !iTempDevice->bNeedResync )
+		{
 			continue;
+		}
 
 		DebugTrace( "INPUT: Resync device %s\n", iTempDevice->szName.c_str() );
 		iTempDevice->bNeedResync = false;
@@ -753,27 +807,39 @@ static void ResyncDevice( const SInputDevice &sDevice )
 		{
 			uint32_t dwData = 0;
 			if ( sKey.eType == CT_KEY && ( sKey.nAction & DIK_DBLCLK_MODIFIER ) )
+			{
 				dwData = 0;
+			}
 			else
 			{
 				uint8_t *pData = &( sBuffer[INPUT_GETACTIONOFFS( sKey.nAction )] );
 
 				if ( sKey.eType == CT_KEY )
+				{
 					dwData = *(uint8_t *)pData;
+				}
 				else
+				{
 					dwData = *(uint32_t *)pData;
+				}
 			}
 
 			if ( sKey.dwLastValue == dwData )
+			{
 				continue;
+			}
 
 			bool bState = true;
 			if ( sKey.eType == CT_KEY )
 			{
 				if ( dwData & 0x80 )
+				{
 					bState = true;
+				}
 				else
+				{
 					bState = false;
+				}
 			}
 			messages.insert( messages.end(),
 			                 SMessage( sKey.nAction,
@@ -806,13 +872,19 @@ bool GetMessage( SMessage *pMsg )
 bool IsDInputDiscardableKey( const SMessage &mMsg )
 {
 	if ( mMsg.cType != CT_KEY )
+	{
 		return false;
+	}
 
 	if ( actionIDs.find( mMsg.nAction ) == actionIDs.end() )
+	{
 		return false;
+	}
 	const SKey &key = actionIDs[mMsg.nAction];
 	if ( key.nDevType != DI8DEVTYPE_KEYBOARD )
+	{
 		return false;
+	}
 	///const string szName = idNames[ key.nAction ];
 	//return idNames[ key.nAction ] != "ESC";
 	return true;
@@ -826,7 +898,9 @@ STime GetLastEventTime()
 int GetControlID( const std::string &sCommand )
 {
 	if ( nameIDs.find( sCommand ) == nameIDs.end() )
+	{
 		return -1;
+	}
 
 	return nameIDs[sCommand];
 }
@@ -861,7 +935,9 @@ void GetControlInfo( int nAction, EControlType *pcType, float *pfGranularity )
 std::string GetControlLocalName( int nAction )
 {
 	if ( actionIDs.find( nAction ) == actionIDs.end() )
+	{
 		return "";
+	}
 
 	return ReadControlLocalName( nAction );
 }
@@ -874,16 +950,24 @@ std::string GetControlLocalName( int nAction )
 static bool SetFocus( bool bFocus )
 {
 	if ( !bInitialized )
+	{
 		return false;
+	}
 	if ( bFocusCaptured == bFocus )
+	{
 		return true;
+	}
 	if ( bFocus )
 	{
 		if ( !AcquireDevices( true ) )
+		{
 			return false;
+		}
 
 		for ( CDevicesList::const_iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
+		{
 			ResyncDevice( *iTempDevice );
+		}
 	}
 	else
 	{
@@ -893,7 +977,9 @@ static bool SetFocus( bool bFocus )
 		ReleaseKeyboardState();
 
 		if ( !AcquireDevices( false ) )
+		{
 			return false;
+		}
 	}
 
 	bFocusCaptured = bFocus;
@@ -906,13 +992,17 @@ static bool SetFocus( bool bFocus )
 static bool AcquireDevices( bool bAcquire )
 {
 	if ( bAcquire && !SetCoopLevel() )
+	{
 		return false;
+	}
 
 	for ( CDevicesList::const_iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
 	{
 		const HRESULT hRes = bAcquire ? iTempDevice->pdiDevice->Acquire() : iTempDevice->pdiDevice->Unacquire();
 		if ( FAILED( hRes ) )
+		{
 			return false;
+		}
 	}
 
 	return true;
@@ -939,7 +1029,9 @@ static void ReleaseKeyboardState()
 	{
 		SKey &sKey = iTemp->second;
 		if ( sKey.nDevType != DI8DEVTYPE_KEYBOARD || sKey.eType != CT_KEY )
+		{
 			continue;
+		}
 
 		if ( sKey.dwLastValue & 0x80 )
 		{
@@ -964,13 +1056,17 @@ static void AddDeviceInfo( IDirectInputDevice8 *pdiDevice, uint32_t dwFormatSize
 	didInstance.dwSize = sizeof( DIDEVICEINSTANCE );
 	hRes = pdiDevice->GetDeviceInfo( &didInstance );
 	if ( FAILED( hRes ) )
+	{
 		return;
+	}
 
 	memset( &didCaps, 0, sizeof( DIDEVCAPS ) );
 	didCaps.dwSize = sizeof( DIDEVCAPS );
 	hRes = pdiDevice->GetCapabilities( &didCaps );
 	if ( FAILED( hRes ) )
+	{
 		return;
+	}
 
 	SInputDevice siDevice;
 	siDevice.nID = devices.size();
@@ -998,13 +1094,17 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 	didInstance.dwSize = sizeof( DIDEVICEINSTANCE );
 	hRes = pdiDevice->GetDeviceInfo( &didInstance );
 	if ( FAILED( hRes ) )
+	{
 		return;
+	}
 
 	memset( &didCaps, 0, sizeof( DIDEVCAPS ) );
 	didCaps.dwSize = sizeof( DIDEVCAPS );
 	hRes = pdiDevice->GetCapabilities( &didCaps );
 	if ( FAILED( hRes ) )
+	{
 		return;
+	}
 
 	SInputDevice siDevice;
 	siDevice.nID = devices.size();
@@ -1014,7 +1114,9 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 	siDevice.dwFormatSize = sizeof( SInputDataFormat );
 	siDevice.pdiDevice = pdiDevice;
 	if ( ( didCaps.dwFlags & DIDC_POLLEDDATAFORMAT ) || ( didCaps.dwFlags & DIDC_POLLEDDEVICE ) )
+	{
 		siDevice.bPoll = true;
+	}
 
 	DebugTrace( "INPUT: polled device: %s\n", siDevice.bPoll ? "yes" : "no" );
 
@@ -1024,7 +1126,9 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 
 	hRes = pdiDevice->EnumObjects( EnumDeviceObjectsCallback, &sDeviceEnum, DIDFT_ALL );
 	if ( FAILED( hRes ) )
+	{
 		return;
+	}
 
 	DIDATAFORMAT diDataFormat;
 	diDataFormat.dwSize = sizeof( DIDATAFORMAT );
@@ -1035,7 +1139,9 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 	diDataFormat.rgodf = &( sDeviceEnum.vectorObjects[0] );
 	hRes = pdiDevice->SetDataFormat( &diDataFormat );
 	if ( FAILED( hRes ) )
+	{
 		return;
+	}
 
 	DIPROPDWORD dipdw;
 	dipdw.diph.dwSize = sizeof( DIPROPDWORD );
@@ -1045,14 +1151,18 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 	dipdw.dwData = SAMPLE_BUFFER_SIZE;
 	hRes = pdiDevice->SetProperty( DIPROP_BUFFERSIZE, &dipdw.diph );
 	if ( FAILED( hRes ) )
+	{
 		return;
+	}
 
 	for ( std::vector<DIOBJECTDATAFORMAT>::iterator iTemp = sDeviceEnum.vectorObjects.begin();
 	      iTemp != sDeviceEnum.vectorObjects.end();
 	      iTemp++ )
 	{
 		if ( ( iTemp->dwType & DIDFT_AXIS ) == 0 )
+		{
 			continue;
+		}
 
 		DIPROPRANGE dipRange;
 		dipRange.diph.dwSize = sizeof( DIPROPRANGE );
@@ -1124,7 +1234,9 @@ static void AddDeviceControl( int nDeviceID, int nDevType, int nOfs, EControlTyp
 	DebugTrace( "INPUT:\tNew control found! Add new control %s\n", szName.c_str() );
 
 	if ( eType != CT_POV )
+	{
 		return;
+	}
 
 	sKey.nAction = INPUT_KEYIDEX( nDeviceID, nOfs, 1 );
 	sKey.ePOVAxis = PA_X;
@@ -1172,7 +1284,9 @@ static BOOL CALLBACK EnumDevicesCallback( const DIDEVICEINSTANCE *pdidInstance, 
 
 	hRes = pdiInput->CreateDevice( pdidInstance->guidInstance, pdiTempDevice.GetAddr(), NULL );
 	if ( FAILED( hRes ) )
+	{
 		return DIENUM_CONTINUE;
+	}
 
 	DebugTrace( "INPUT: New device found! Add new device %s\n", pdidInstance->tszProductName );
 
@@ -1263,7 +1377,9 @@ static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE *lp
 		diObjectFormat.pguid = &GUID_Button;
 
 		if ( DIDFT_GETINSTANCE( lpdidObject->dwType ) > 32 )
+		{
 			return DIENUM_CONTINUE;
+		}
 
 		diObjectFormat.dwOfs = FIELD_OFFSET( SInputDataFormat, bButton[DIDFT_GETINSTANCE( lpdidObject->dwType )] );
 	}
@@ -1625,7 +1741,9 @@ namespace
 			// Use the host for the entire keyboard/mouse sequence, including clicks.
 			if ( !bHostedFocus || pEvent->type == SDL_EVENT_KEY_DOWN || pEvent->type == SDL_EVENT_KEY_UP ||
 			     ( pEvent->type >= SDL_EVENT_MOUSE_MOTION && pEvent->type <= SDL_EVENT_MOUSE_WHEEL ) )
+			{
 				return true;
+			}
 		}
 		return BufferDeviceEvent( pEvent );
 	}
@@ -1803,7 +1921,9 @@ static bool IsWindowFocused()
 		return false;
 	}
 	if ( hWindow == pHostedWindow )
+	{
 		return bHostedFocus;
+	}
 	return ( SDL_GetWindowFlags( AsSdlWindow( hWindow ) ) & SDL_WINDOW_INPUT_FOCUS ) != 0;
 }
 
@@ -1821,30 +1941,42 @@ void UpdateHostedKeyboard( SDL_Window *pWindow, const bool *pKeys, bool bFocused
 			{
 				const int nKey = SdlScancodeToDirectInputKey( static_cast<SDL_Scancode>( i ) );
 				if ( nKey != 0 )
+				{
 					PushEvent( nKeyboardDeviceID, nKey, bDown ? 0x80 : 0, timestamp );
+				}
 			}
 			hostedKeys[i] = bDown;
 		}
 		pHostedWindow = pWindow;
 		bHostedFocus = bFocused;
 		if ( bFocusChanged )
+		{
 			hostedButtons = bFocused ? SDL_GetGlobalMouseState( nullptr, nullptr ) : 0;
+		}
 	}
 	// Resync held modifiers on entry, and release keys immediately on leaving.
 	// This also works when losing wx focus stops the viewport's game loop.
 	if ( bActiveInput && bFocusChanged )
+	{
 		SetFocus( bFocused );
+	}
 }
 
 void ProcessHostedMouse( SDL_Window *pWindow, const SDL_Event &event )
 {
 	std::lock_guard<std::mutex> lock( watchMutex );
 	if ( !bInitialized || !bHostedFocus || pWindow != pHostedWindow || hWindow != pWindow )
+	{
 		return;
+	}
 	if ( event.type == SDL_EVENT_MOUSE_BUTTON_DOWN )
+	{
 		hostedButtons |= SDL_BUTTON_MASK( event.button.button );
+	}
 	else if ( event.type == SDL_EVENT_MOUSE_BUTTON_UP )
+	{
 		hostedButtons &= ~SDL_BUTTON_MASK( event.button.button );
+	}
 	BufferDeviceEvent( &event );
 }
 

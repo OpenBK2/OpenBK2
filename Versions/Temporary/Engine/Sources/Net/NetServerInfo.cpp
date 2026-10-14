@@ -30,10 +30,14 @@ void CServerInfoSupport::Step( float fDeltaTime )
 				i = servers.erase( i );
 			}
 			else
+			{
 				++i;
+			}
 		}
 		else
+		{
 			++i;
+		}
 	}
 }
 
@@ -53,7 +57,9 @@ CServerInfoSupport::SServerInfo &CServerInfoSupport::GetInfo( const CNodeAddress
 	for ( CServerInfoList::iterator i = servers.begin(); i != servers.end(); ++i )
 	{
 		if ( i->addr == addr )
+		{
 			return *i;
+		}
 	}
 	SServerInfo b;
 	b.addr = addr;
@@ -70,7 +76,9 @@ void CServerInfoSupport::ProcessServerInfo( const CNodeAddress &addr, CBitStream
 	bits.Read( appID );
 	// check that application is correct
 	if ( ( appID & 0xFFFFFF00 ) != ( applicationID & 0xFFFFFF00 ) )
+	{
 		return;
+	}
 
 	SServerInfo &info = GetInfo( addr );
 	info.bWrongVersion = appID != applicationID;

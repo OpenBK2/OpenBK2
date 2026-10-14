@@ -108,7 +108,9 @@ public:
 		for ( std::vector<SMovieKeyData>::const_iterator itKey = keys.begin(); itKey != keys.end(); ++itKey )
 		{
 			if ( itKey->bActive )
+			{
 				++nCount;
+			}
 		}
 		return ( nCount == 1 );
 	}
@@ -182,7 +184,9 @@ public:
 		{
 			const float fCurrDiff = fCursorTime - keys[j].fTime;
 			if ( fCurrDiff <= 0 )
+			{
 				continue;
+			}
 			//
 			if ( fCurrDiff < fDiff )
 			{
@@ -191,7 +195,9 @@ public:
 			}
 		}
 		if ( i < 0 )
+		{
 			return fCursorTime;
+		}
 		//
 		return keys[i].fTime;
 	}
@@ -207,7 +213,9 @@ public:
 		{
 			const float fCurrDiff = keys[j].fTime - fCursorTime;
 			if ( fCurrDiff <= 0 )
+			{
 				continue;
+			}
 			//
 			if ( fCurrDiff < fDiff )
 			{
@@ -216,7 +224,9 @@ public:
 			}
 		}
 		if ( i < 0 )
+		{
 			return fCursorTime;
+		}
 		//
 		return keys[i].fTime;
 	}

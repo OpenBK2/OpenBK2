@@ -48,11 +48,15 @@ bool CMOUnitHelicopter::Create( const int nUniqueID,
 	timeStandingDeviationLastUpdate = GameTimer()->GetGameTime();
 	dwStandingDeviationRandomState = uint32_t( nUniqueID ) ^ 0xA511E9B3u;
 	if ( dwStandingDeviationRandomState == 0 )
+	{
 		dwStandingDeviationRandomState = 0x6D2B79F5u;
+	}
 	bStandingDeviationActive = false;
 
 	if ( !CMOUnitMechanical::Create( nUniqueID, _pUpdate, eSeason, eDayTime, bInEditor ) )
+	{
 		return false;
+	}
 
 	if ( !bInEditor && GetHelicopterStats() )
 	{
@@ -77,7 +81,9 @@ void CMOUnitHelicopter::SetupSpecialAnimationMutator( NAnimation::ISkeletonAnima
 	CMOUnitMechanical::SetupSpecialAnimationMutator( pAnimator );
 	const NDb::SHelicopterStats *pHelicopterStats = GetHelicopterStats();
 	if ( !pHelicopterStats || pHelicopterStats->propellerObjects.empty() || pHelicopterStats->propellerSpeedsRad.empty() )
+	{
 		return;
+	}
 
 	GetOrCreateJoggingMutator()->SetupPropellers(
 			pAnimator, pHelicopterStats->propellerObjects, pHelicopterStats->propellerSpeedsRad );
@@ -100,7 +106,9 @@ CVec3 CMOUnitHelicopter::GetRandomStandingDeviationPoint( const float fRadius )
 		                    NextStandingDeviationRandom() * 2.0f - 1.0f,
 		                    NextStandingDeviationRandom() * 2.0f - 1.0f );
 		if ( fabs2( vPoint ) <= 1.0f )
+		{
 			return vPoint * fRadius;
+		}
 	}
 
 	return VNULL3;
@@ -113,7 +121,9 @@ void CMOUnitHelicopter::ChooseStandingDeviationTarget( const float fRadius )
 	const CVec3 vInnerPoint( GetRandomStandingDeviationPoint( fRadius * 0.65f ) );
 	CVec3 vDirection( vInnerPoint - vStandingDeviationOffset );
 	if ( fabs2( vDirection ) < 0.000001f )
+	{
 		vDirection = CVec3( 1.0f, 0.0f, 0.0f );
+	}
 	Normalize( &vDirection );
 
 	const float fDirectionDotOffset = vDirection.x * vStandingDeviationOffset.x +
@@ -163,7 +173,9 @@ bool CMOUnitHelicopter::UpdateStandingDeviation( const NTimer::STime &time )
 {
 	const NDb::SHelicopterStats *pHeliStats = GetHelicopterStats();
 	if ( !pHeliStats )
+	{
 		return false;
+	}
 
 	if ( !IsAlive() )
 	{
@@ -193,7 +205,9 @@ bool CMOUnitHelicopter::UpdateStandingDeviation( const NTimer::STime &time )
 	const NTimer::STime timeDiff = (std::max)( NTimer::STime( 0 ), time - timeStandingDeviationLastUpdate );
 	timeStandingDeviationLastUpdate = time;
 	if ( fRadius <= 0.0f || fSpeed <= 0.0f || timeDiff <= 0 )
+	{
 		return true;
+	}
 
 	if ( fabs2( vStandingDeviationOffset ) > fRadius * fRadius )
 	{

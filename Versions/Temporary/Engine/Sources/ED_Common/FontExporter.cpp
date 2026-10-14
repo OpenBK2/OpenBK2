@@ -30,7 +30,9 @@ EXPORT_RESULT CFontExporter::ExportObject( IManipulator *pManipulator,
                                            EXPORT_TYPE exportType )
 {
 	if ( ( exportType != ET_BEFORE_REF ) && ( exportType != ET_NO_REF ) )
+	{
 		return ER_SUCCESS;
+	}
 	//
 	ILogger *pLogger = NLog::GetLogger();
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
@@ -92,7 +94,9 @@ EXPORT_RESULT CFontExporter::ExportObject( IManipulator *pManipulator,
 	}
 	//
 	if ( szTextureFileName.empty() || szTextureFileName == " " )
+	{
 		return ER_FAIL;
+	}
 	//
 	const std::string szItalic = bItalic ? "-it" : "";
 	const std::string szAA = bAntialiased ? "-aa" : "";

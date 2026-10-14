@@ -216,7 +216,9 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 	}
 
 	if ( pPacket->eConnectType == CCheckConnectAnswerPacket::ECT_REGISTER )
+	{
 		pClients->Register( pPacket->szNick, pPacket->szPassword, pPacket->szCDKey, pPacket->szEmail );
+	}
 
 	pClients->SetOnLine( pPacket->szNick, pPacket->nClientID );
 

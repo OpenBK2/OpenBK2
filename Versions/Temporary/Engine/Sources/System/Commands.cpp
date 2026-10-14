@@ -30,7 +30,9 @@ void VarBoolHandler( const std::string &szID, const NGlobal::CValue &sValue, voi
 
 	*pFlag = false;
 	if ( sValue.GetFloat() == 1 )
+	{
 		*pFlag = true;
+	}
 }
 
 void VarIntHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )

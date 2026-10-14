@@ -214,7 +214,9 @@ public:
 		}
 		mapAbilityToAction.resize( NDb::_ABILITY_COUNT );
 		for ( int i = 0; i < NDb::_ABILITY_COUNT; ++i )
+		{
 			mapAbilityToAction[i] = GetActionByCommand( GetCommandByAbility( (NDb::EUnitSpecialAbility)i ) );
+		}
 	}
 };
 static CActionsRemapAutomagic theActionsRemapAutomagic;

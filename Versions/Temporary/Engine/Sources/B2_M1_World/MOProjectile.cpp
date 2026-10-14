@@ -37,7 +37,9 @@ void CMOProjectile::CreateAttachedEffect()
 		}
 		//
 		if ( pComplexEffect->pSoundEffect )
+		{
 			AttachSound( EAST_MOVEMENT, pComplexEffect->pSoundEffect, pComplexEffect->pSoundEffect->bLooped );
+		}
 	}
 	else if ( pTrajectoryEffect )
 	{
@@ -76,7 +78,9 @@ void CMOProjectile::InitSmokyExhaustInfo( const CVec3 &vVisPos, const CQuat &qRo
 		}
 	}
 	else
+	{
 		pTrailEffect = 0;
+	}
 }
 
 bool CMOProjectile::Create( const SAINewProjectileUpdate *pUpdate,
@@ -93,7 +97,9 @@ bool CMOProjectile::Create( const SAINewProjectileUpdate *pUpdate,
 
 	bModelExists = pProjectile != 0 && pProjectile->pModel != 0;
 	if ( NGlobal::GetVar( "m1", 0 ).GetFloat() == 0.0f && !bModelExists )
+	{
 		return false;
+	}
 
 	CVec3 vPos( vVisPos );
 	Vis2AI( &vPos );
@@ -111,7 +117,9 @@ bool CMOProjectile::Create( const SAINewProjectileUpdate *pUpdate,
 		if ( pProjectile->pModel->pSkeleton )
 		{
 			if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() ) )
+			{
 				RunDefaultObjectAnimation( pProjectile->pModel->pSkeleton, pAnimator );
+			}
 		}
 
 		CreateAttachedEffect();
@@ -134,7 +142,9 @@ void CMOProjectile::AIUpdatePlacement( const SAINotifyPlacement &placement,
                                        NDb::ESeason eSeason )
 {
 	if ( bHitTarget )
+	{
 		return;
+	}
 
 	NTimer::STime curTime = Singleton<IGameTimer>()->GetGameTime();
 
@@ -152,7 +162,9 @@ void CMOProjectile::AIUpdatePlacement( const SAINotifyPlacement &placement,
 				                       ESAT_REPLACE_ON_BONE );
 			}
 			if ( pComplexEffect->pSoundEffect )
+			{
 				AttachSound( EAST_FALLING, pComplexEffect->pSoundEffect, pComplexEffect->pSoundEffect->bLooped );
+			}
 		}
 	}
 
@@ -198,7 +210,9 @@ void CMOProjectile::AIUpdatePlacement( const SAINotifyPlacement &placement,
 
 		std::list<IScene::SPickObjInfo>::iterator iter = objects.begin();
 		while ( iter != objects.end() && iter->nObjID != pTarget->GetID() )
+		{
 			++iter;
+		}
 		if ( iter != objects.end() )
 		{
 			CVec3 vAIPickPoint;
@@ -240,7 +254,9 @@ void CMOProjectile::Explode( SAINotifyHitInfo::EHitType eHitType,
                              const CVec3 &vDir )
 {
 	if ( bHitTarget )
+	{
 		return;
+	}
 	bHitTarget = true;
 
 	const NDb::SComplexEffect *pComplexEffect = 0;
@@ -254,7 +270,9 @@ void CMOProjectile::Explode( SAINotifyHitInfo::EHitType eHitType,
 			const NDb::SWeaponRPGStats::SShell &shell = pWeapon->shells[nShell];
 			pComplexEffect = shell.pEffectHitGround;
 			if ( shell.pCraters != 0 )
+			{
 				PlaceCrater( shell.pCraters, eSeason, CVec2( vCenter.x, vCenter.y ) );
+			}
 		}
 		break;
 		case SAINotifyHitInfo::EHitType::EHT_WATER:
@@ -266,7 +284,9 @@ void CMOProjectile::Explode( SAINotifyHitInfo::EHitType eHitType,
 			const NDb::SWeaponRPGStats::SShell &shell = pWeapon->shells[nShell];
 			pComplexEffect = shell.pEffectHitAir;
 			if ( shell.pCraters != 0 )
+			{
 				PlaceCrater( shell.pCraters, eSeason, CVec2( vCenter.x, vCenter.y ) );
+			}
 		}
 		break;
 		case SAINotifyHitInfo::EHitType::EHT_AIR:
@@ -281,8 +301,10 @@ void CMOProjectile::Explode( SAINotifyHitInfo::EHitType eHitType,
 		if ( pTarget && pTarget->IsRefValid() )
 		{
 			if ( pTarget->GetTypeID() == NDb::SBridgeRPGStats::typeID )
+			{
 				// For bridges, show explosion on top
 				PlayComplexEffect( OBJECT_ID_FORGET, pComplexEffect, Singleton<IGameTimer>()->GetGameTime(), vCenter );
+			}
 			else
 			{
 				CVec3 vVisCenter;
@@ -318,7 +340,9 @@ void CMOProjectile::Explode( SAINotifyHitInfo::EHitType eHitType,
 			}
 		}
 		else
+		{
 			PlayComplexEffect( OBJECT_ID_FORGET, pComplexEffect, Singleton<IGameTimer>()->GetGameTime(), vCenter );
+		}
 	}
 }
 

@@ -118,7 +118,9 @@ static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, unsigned message, WPA
 			GetWindowRect( GetDlgItem( hwndDlg, IDC_STATIC_SPLITTER ), &rc );
 			nSplitter = rcDlg.bottom - rcDlg.top - rc.top;
 			if ( !isMore )
+			{
 				rcDlg.bottom -= nSplitter;
+			}
 			MoveWindow( hwndDlg,
 			            ( GetSystemMetrics( SM_CXFULLSCREEN ) - rcDlg.right + rcDlg.left ) / 2,
 			            ( GetSystemMetrics( SM_CYFULLSCREEN ) - rcDlg.bottom + rcDlg.top ) / 2,
@@ -201,7 +203,9 @@ bool ReportAssertionDlgProcCommand( HWND hwndDlg, uint16_t wCtrlID, uint16_t wNo
 		{
 			SAssertionDlgParams *pParams = reinterpret_cast<SAssertionDlgParams *>( GetDlgUserData( hwndDlg ) );
 			if ( pParams->pszExtInfo )
+			{
 				MessageBox( hwndDlg, pParams->pszExtInfo, "Details", MB_OK | MB_ICONINFORMATION );
+			}
 		}
 		break;
 		case IDC_BUTTON_MORE:
@@ -247,9 +251,13 @@ bool ReportAssertionDlgProcCommand( HWND hwndDlg, uint16_t wCtrlID, uint16_t wNo
 				if ( pParams )
 				{
 					if ( !pParams->entries.empty() )
+					{
 						ignore.szFunctionName = pParams->entries[0].szFunc.szStr;
+					}
 					else
+					{
 						ignore.szFunctionName = "<UNKNOWN>";
+					}
 					ignore.szCondition = pParams->szCondition;
 					ignore.szFileName = pParams->pszFileName;
 					ignore.nLineNumber = pParams->nLineNumber;

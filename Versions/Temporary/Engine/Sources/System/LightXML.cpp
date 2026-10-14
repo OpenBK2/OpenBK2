@@ -25,7 +25,9 @@ const char *CXMLAttribute::Parse( const char *pszBegin, const char *pszEnd )
 {
 	const char *p = SkipWhiteSpace( pszBegin );
 	if ( !p || !*p )
+	{
 		return 0;
+	}
 
 	// Read the name, the '=' and the value.
 	p = ReadName( p, &szName );
@@ -132,14 +134,18 @@ bool IsComment( const char *pszBegin, const char *pszEnd )
 CXMLMultiNode::~CXMLMultiNode()
 {
 	for ( CNodesList::iterator it = children.begin(); it != children.end(); ++it )
+	{
 		delete *it;
+	}
 }
 
 CXMLNode *CXMLMultiNode::Identify( const char *pszBegin, const char *pszEnd )
 {
 	const char *p = SkipWhiteSpace( pszBegin );
 	if ( !p || !*p || *p != '<' )
+	{
 		return 0;
+	}
 
 	// What is this thing?
 	// - Elements start with a letter or underscore, but xml is reserved.
@@ -149,13 +155,21 @@ CXMLNode *CXMLMultiNode::Identify( const char *pszBegin, const char *pszEnd )
 	//
 	CXMLNode *pNode = 0;
 	if ( IsHeader( p, pszEnd ) )
+	{
 		pNode = new CXMLDeclaration();
+	}
 	else if ( isalpha( *( p + 1 ) ) || *( p + 1 ) == '_' )
+	{
 		pNode = new CXMLElement();
+	}
 	else if ( IsComment( p, pszEnd ) )
+	{
 		pNode = new CXMLComment();
+	}
 	else
+	{
 		pNode = new CXMLUnknown();
+	}
 	return pNode;
 }
 
@@ -213,7 +227,9 @@ void CXMLElement::SetAttributeLocal( const std::string &szName, const std::strin
 {
 	CAttributesMap::iterator pos = attrmap.find( szName );
 	if ( pos != attrmap.end() )
+	{
 		pos->second->SetValue( szValue );
+	}
 	else
 	{
 		attributes.push_back( CXMLAttribute( szName, szValue ) );
@@ -266,7 +282,9 @@ const char *CXMLElement::ReadValue( const char *pszBegin, const char *pszEnd )
 			p = pTextNode->Parse( p, pszEnd );
 
 			if ( !pTextNode->IsBlank() )
+			{
 				szText = pTextNode->GetValue();
+			}
 
 			delete pTextNode;
 		}
@@ -276,7 +294,9 @@ const char *CXMLElement::ReadValue( const char *pszBegin, const char *pszEnd )
 			// Have we hit a new element or an end tag? (p == "</")
 			// HINT: check only *(p + 1) == '/', because here we know, that *p == '<'
 			if ( *( p + 1 ) == '/' )
+			{
 				return p;
+			}
 			else
 			{
 				if ( CXMLNode *pNode = Identify( p, pszEnd ) )
@@ -285,7 +305,9 @@ const char *CXMLElement::ReadValue( const char *pszBegin, const char *pszEnd )
 					AddChild( pNode );
 				}
 				else
+				{
 					return 0;
+				}
 			}
 		}
 		p = SkipWhiteSpace( p );
@@ -301,12 +323,16 @@ const char *CXMLElement::Parse( const char *pszBegin, const char *pszEnd )
 	const char *p = SkipWhiteSpace( pszBegin );
 
 	if ( !p || !*p || *p != '<' )
+	{
 		return 0;
+	}
 	p = SkipWhiteSpace( p + 1 );
 	// Read the name.
 	p = ReadName( p, &szValue );
 	if ( !p || !*p )
+	{
 		return 0;
+	}
 
 	const std::string szEndTag = "</" + szValue + ">";
 	// Check for and read attributes. Also look for an empty tag or an end tag.
@@ -314,13 +340,17 @@ const char *CXMLElement::Parse( const char *pszBegin, const char *pszEnd )
 	{
 		p = SkipWhiteSpace( p );
 		if ( !p || !*p )
+		{
 			return 0;
+		}
 		if ( *p == '/' )
 		{
 			++p;
 			// Empty tag.
 			if ( *p != '>' )
+			{
 				return 0;
+			}
 			return p + 1;
 		}
 		else if ( *p == '>' )
@@ -330,7 +360,9 @@ const char *CXMLElement::Parse( const char *pszBegin, const char *pszEnd )
 			++p;
 			p = ReadValue( p, pszEnd ); // Note this is an Element method
 			if ( !p || !*p )
+			{
 				return 0;
+			}
 
 			// We should find the end tag now
 			if ( IsEqualSubstring( szEndTag, p, pszEnd ) )
@@ -339,7 +371,9 @@ const char *CXMLElement::Parse( const char *pszBegin, const char *pszEnd )
 				return p;
 			}
 			else
+			{
 				return 0;
+			}
 		}
 		else
 		{
@@ -347,7 +381,9 @@ const char *CXMLElement::Parse( const char *pszBegin, const char *pszEnd )
 			CXMLAttribute attrib;
 			p = attrib.Parse( p, pszEnd );
 			if ( !p || !*p )
+			{
 				return 0;
+			}
 			SetAttribute( attrib );
 		}
 	}
@@ -385,7 +421,9 @@ void CXMLElement::Store( NLXML_STREAM &stream, const std::string &szIndention ) 
 		stream << "</" << szValue << ">";
 	}
 	else
+	{
 		stream << " />";
+	}
 }
 // ************************************************************************************************************************ //
 // **
@@ -508,7 +546,9 @@ const char *CXMLDeclaration::Parse( const char *pszBegin, const char *pszEnd )
 		{
 			// Read over whatever it is.
 			while ( p && *p && *p != '>' && !isspace( uint8_t( *p ) ) )
+			{
 				++p;
+			}
 		}
 	}
 	return 0;
@@ -555,7 +595,9 @@ const char *CXMLUnknown::Parse( const char *pszBegin, const char *pszEnd )
 {
 	const char *p = SkipWhiteSpace( pszBegin );
 	if ( !p || !*p || *p != '<' )
+	{
 		return 0;
+	}
 	++p;
 	szValue.clear();
 
@@ -596,10 +638,14 @@ const char *CXMLDocument::Parse( const char *pszBegin, const char *pszEnd )
 	// here is skipping white space.
 	// In this variant (as opposed to stream and Parse) we read everything we can.
 	if ( !pszBegin || !*pszBegin )
+	{
 		return 0;
+	}
 	const char *p = SkipWhiteSpace( pszBegin );
 	if ( !p )
+	{
 		return 0;
+	}
 
 	while ( *p )
 	{
@@ -609,7 +655,9 @@ const char *CXMLDocument::Parse( const char *pszBegin, const char *pszEnd )
 			AddChild( pNode );
 		}
 		else
+		{
 			break;
+		}
 		p = SkipWhiteSpace( p );
 	}
 	// All is well.
@@ -625,7 +673,9 @@ void CXMLDocument::Store( NLXML_STREAM &stream, const std::string &szIndention )
 		// Special rule for streams: stop after the root element.
 		// The stream in code will only read one element, so don't write more than one.
 		if ( ( *it )->GetType() == CXMLNode::ELEMENT )
+		{
 			return;
+		}
 	}
 }
 
@@ -637,9 +687,13 @@ CXMLElement *CXMLDocument::GetRootElement()
 	{
 		pRootNode = GetChild( i );
 		if ( pRootNode->GetType() != NLXML::CXMLNode::ELEMENT )
+		{
 			pRootNode = 0;
+		}
 		else
+		{
 			break;
+		}
 	}
 	//
 	return pRootNode != 0 ? static_cast<CXMLElement *>( pRootNode ) : 0;

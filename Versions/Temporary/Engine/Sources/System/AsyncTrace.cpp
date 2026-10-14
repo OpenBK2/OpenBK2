@@ -35,7 +35,9 @@ namespace
 	FILE *GetFile()
 	{
 		if ( pTraceFile == 0 )
+		{
 			pTraceFile = fopen( "async_events_trace.txt", "w" );
+		}
 		return pTraceFile;
 	}
 }
@@ -48,7 +50,9 @@ bool IsEnabled()
 void SetGameTime( const int nGameTime )
 {
 	if ( !IsEnabledOnce() )
+	{
 		return;
+	}
 	std::lock_guard<std::mutex> lock( traceMutex );
 	nCurGameTime = nGameTime;
 }
@@ -56,7 +60,9 @@ void SetGameTime( const int nGameTime )
 void Write( const char *szCategory, const std::string &szWhat )
 {
 	if ( !IsEnabledOnce() )
+	{
 		return;
+	}
 	// Locked because the resource side of this can be reached from the loader
 	// thread, even though the hooks placed so far are all on the main one.
 	std::lock_guard<std::mutex> lock( traceMutex );
@@ -73,7 +79,9 @@ void Write( const char *szCategory, const std::string &szWhat )
 void WriteResource( const char *szWhat, const char *szResName, const int nID )
 {
 	if ( !IsEnabledOnce() )
+	{
 		return;
+	}
 	Write( "res", fmt::format( "{} {} id={}", szWhat, szResName != 0 ? szResName : "<none>", nID ) );
 }
 }

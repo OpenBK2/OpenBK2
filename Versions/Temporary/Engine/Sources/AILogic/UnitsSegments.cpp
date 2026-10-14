@@ -77,7 +77,9 @@ bool CFirstPathSegments::Check()
 const NTimer::STime CFirstPathSegments::ProcessSegment()
 {
 	if ( ( pUnit->IsAlive() || pUnit->GetStats()->IsTrain() ) && pUnit->IsFree() )
+	{
 		pUnit->FirstSegment( SConsts::AI_SEGMENT_DURATION );
+	}
 
 	return pUnit->GetNextPathSegmTime();
 }
@@ -103,13 +105,19 @@ const NTimer::STime CSecondPathSegments::ProcessSegment()
 		pUnit->SecondSegment( SConsts::AI_SEGMENT_DURATION );
 
 		if ( pUnit->GetStats()->IsAviation() && !pUnit->IsHelicopter() )
+		{
 			pUnit->Moved();
+		}
 		else
 		{
 			if ( pUnit->IsMoving() || ( pUnit->IsTurning() && pUnit->GetTurnSpeed() != 0 ) )
+			{
 				pUnit->Moved();
+			}
 			else
+			{
 				pUnit->Stopped();
+			}
 		}
 	}
 	const NTimer::STime timeResult = pUnit->GetNextSecondPathSegmTime();

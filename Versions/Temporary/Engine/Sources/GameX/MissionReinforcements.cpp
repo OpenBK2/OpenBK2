@@ -55,7 +55,9 @@ void CMissionReinf::SReinfInfo::ShowChevron( int nIndex )
 	{
 		IWindow *pWnd = chevrons[i];
 		if ( pWnd )
+		{
 			pWnd->ShowWindow( i == nIndex );
+		}
 	}
 }
 
@@ -83,7 +85,9 @@ void CMissionReinf::Init( IScreen *pScr,
 	pNotifications = _pNotifications;
 	eSeason = _eSeason;
 	if ( !pScr )
+	{
 		return;
+	}
 
 	eSelected = NDb::_RT_NONE;
 	bAvailNotified = false;
@@ -92,7 +96,9 @@ void CMissionReinf::Init( IScreen *pScr,
 
 	pReinfPanel = GetChildChecked<IWindow>( pScr, "ReinfPanel", true );
 	if ( !pReinfPanel )
+	{
 		return;
+	}
 	/*	int nX;
 	int nSizeX;
 	pReinfPanel->GetPlacement( &nX, 0, &nSizeX, 0 );
@@ -108,10 +114,14 @@ void CMissionReinf::Init( IScreen *pScr,
 
 	pRoundProgress = GetChildChecked<IWindowRoundProgressBar>( pToggleReinfBtn, "ReinfRoundProgress", true );
 	if ( pRoundProgress )
+	{
 		pRoundProgress->ShowWindow( false );
+	}
 	pRoundProgressMask = GetChildChecked<IWindow>( pToggleReinfBtn, "ReinfRoundProgressMask", true );
 	if ( pRoundProgressMask )
+	{
 		pRoundProgressMask->ShowWindow( false );
+	}
 
 	//	pCount = GetChildChecked<ITextView>( pReinfMode, "ReinfCount", true );
 
@@ -139,7 +149,9 @@ void CMissionReinf::Init( IScreen *pScr,
 	pFullInfoWnd = GetChildChecked<IWindow>( pReinfInfo, "FullInfo", true );
 	pNoInfoView = GetChildChecked<ITextView>( pReinfInfo, "NoInfo", true );
 	if ( pNoInfoView )
+	{
 		pNoInfoView->ShowWindow( false );
+	}
 
 	if ( pCommonInfo )
 	{
@@ -147,7 +159,9 @@ void CMissionReinf::Init( IScreen *pScr,
 		{
 			IWindow *pWnd = pCommonInfo->GetChild( fmt::format( "ReinfInfoUnit{}", i ), true );
 			if ( !pWnd )
+			{
 				break;
+			}
 
 			pWnd->ShowWindow( false );
 			units.push_back( SUnitInfo() );
@@ -156,7 +170,9 @@ void CMissionReinf::Init( IScreen *pScr,
 
 			info.pButton = GetChildChecked<IButton>( info.pWnd, "UnitButton", true );
 			if ( info.pButton )
+			{
 				info.pButton->SetName( fmt::format( "UnitButton{}", i ) );
+			}
 
 			info.pIcon = GetChildChecked<IWindow>( info.pButton, "Icon", true );
 			info.pFlagBg = GetChildChecked<IWindow>( info.pButton, "InfoUnitFlagBg", true );
@@ -166,18 +182,24 @@ void CMissionReinf::Init( IScreen *pScr,
 
 		pName = GetChildChecked<ITextView>( pCommonInfo, "ReinfInfoName", true );
 		if ( pName )
+		{
 			pName->ShowWindow( false );
+		}
 	}
 	SetFullInfoMode( false );
 	if ( pUnitFullInfo )
+	{
 		pUnitFullInfo->SetReinfUnit( 0 );
+	}
 
 	// hide all buttons
 	for ( int i = 1;; ++i )
 	{
 		IWindow *pWnd = pReinfPanel->GetChild( fmt::format( "ButtonReinf{:02d}", i ), true );
 		if ( !dynamic_cast<IButton *>( pWnd ) )
+		{
 			break;
+		}
 
 		pWnd->ShowWindow( false );
 	}
@@ -190,7 +212,9 @@ void CMissionReinf::Init( IScreen *pScr,
 		{
 			const NDb::SReinfButton &button = *it;
 			if ( !button.pButton )
+			{
 				continue;
+			}
 			IButton *pButton = GetChildChecked<IButton>( pReinfPanel, button.pButton->szName, true );
 			if ( pButton )
 			{
@@ -208,17 +232,25 @@ void CMissionReinf::Init( IScreen *pScr,
 				pButton->ShowWindow( false /*true*/ );
 
 				if ( info.pIconWnd )
+				{
 					info.pIconWnd->SetTexture( button.pTexture );
+				}
 				if ( info.pIconDisabledWnd )
+				{
 					info.pIconDisabledWnd->SetTexture( button.pTextureDisabled );
+				}
 
 				if ( const NDb::SReinforcement *pContext = GetReinfContext( button.eType ) )
 				{
 					if ( info.pIconWnd )
+					{
 						info.pIconWnd->SetTexture( pContext->pIconTexture );
+					}
 					// Keep the UI-constants disabled texture as the fallback for legacy reinforcement data.
 					if ( info.pIconDisabledWnd && pContext->pDisabledIconTexture )
+					{
 						info.pIconDisabledWnd->SetTexture( pContext->pDisabledIconTexture );
+					}
 					//					if ( pContext->pTooltip )
 					//						info.pIconWnd->SetHelpContext( pContext->pTooltip );
 				}
@@ -257,19 +289,29 @@ void CMissionReinf::Init( IScreen *pScr,
 	pCallReinfModeBtn = GetChildChecked<IButton>( pReinfPanel, "CallReinfModeBtn", true );
 	pAutoShowReinfBtn = GetChildChecked<IButton>( pReinfPanel, "AutoShowReinfBtn", true );
 	if ( pCallReinfModeBtn )
+	{
 		pCallReinfModeBtn->Enable( false );
+	}
 	if ( pCallReinfModeBtn )
+	{
 		pCallReinfModeBtn->ShowWindow( false );
+	}
 	if ( pAutoShowReinfBtn )
+	{
 		pAutoShowReinfBtn->ShowWindow( false );
+	}
 
 	for ( CReinfInfos::const_iterator it = reinfInfos.begin(); it != reinfInfos.end(); ++it )
 	{
 		const SReinfInfo &info = it->second;
 		if ( info.pXPBar )
+		{
 			info.pXPBar->ShowWindow( false );
+		}
 		if ( info.pXPBarBg )
+		{
 			info.pXPBarBg->ShowWindow( false );
+		}
 	}
 
 	UpdateReinfsXPAndLevel();
@@ -281,7 +323,9 @@ void CMissionReinf::SetMousePos( const CVec2 &vPos )
 {
 	vMousePos = vPos;
 	if ( !IsEnabled() )
+	{
 		return;
+	}
 	UpdatePoints();
 }
 
@@ -289,7 +333,9 @@ void CMissionReinf::SetTrackMousePos( bool bTrack )
 {
 	bTrackMousePos = bTrack;
 	if ( !IsEnabled() )
+	{
 		return;
+	}
 	UpdatePoints();
 }
 
@@ -302,7 +348,9 @@ void CMissionReinf::UpdateNewAvail()
 void CMissionReinf::UpdateNewPoint( bool bIsPoints )
 {
 	if ( GetReinfCallsLeft() == 0 )
+	{
 		return;
+	}
 
 	if ( bIsPoints )
 	{
@@ -313,7 +361,9 @@ void CMissionReinf::UpdateNewPoint( bool bIsPoints )
 void CMissionReinf::Update()
 {
 	if ( !pWorld )
+	{
 		return;
+	}
 
 	UpdateReinfs();
 	UpdatePoints();
@@ -381,7 +431,9 @@ void CMissionReinf::Select( NDb::EReinforcementType eType )
 void CMissionReinf::UpdateForcedAction()
 {
 	if ( !IsOpen() )
+	{
 		return;
+	}
 
 	NDb::EUserAction eUserAction = NDb::USER_ACTION_REINF_COMMON;
 	if ( const NDb::SReinforcementTypes *pReinfTypes = GetReinfTypes() )
@@ -404,18 +456,26 @@ void CMissionReinf::UpdateForcedAction()
 		// do nothing
 	}
 	else if ( !CanCall( eSelected ) )
+	{
 		NInput::PostEvent( "set_forced_action", NDb::USER_ACTION_REINF_NONE, 0 );
+	}
 	else
+	{
 		NInput::PostEvent( "set_forced_action", eUserAction, 0 );
+	}
 }
 
 void CMissionReinf::SetFullInfoMode( bool bFullInfo )
 {
 	bFullInfoMode = bFullInfo;
 	if ( pCommonInfo )
+	{
 		pCommonInfo->ShowWindow( !bFullInfoMode );
+	}
 	if ( pFullInfoWnd )
+	{
 		pFullInfoWnd->ShowWindow( bFullInfoMode );
+	}
 }
 
 void CMissionReinf::Close( bool bForced )
@@ -423,9 +483,13 @@ void CMissionReinf::Close( bool bForced )
 	bIsOpen = false;
 	UpdateToggleButtonState();
 	if ( pReinfPanel )
+	{
 		pReinfPanel->Enable( false );
+	}
 	if ( pReinfPanel )
+	{
 		pReinfPanel->ShowWindow( false );
+	}
 
 	if ( bForced )
 	{
@@ -445,7 +509,9 @@ void CMissionReinf::ShowUnitInfo( const std::string &szSender )
 		{
 			SetFullInfoMode( true );
 			if ( pUnitFullInfo )
+			{
 				pUnitFullInfo->SetReinfUnit( info.pStats );
+			}
 			return;
 		}
 	}
@@ -468,7 +534,9 @@ void CMissionReinf::UpdateReinfInfo()
 {
 	NDb::EReinforcementType eType = ePreSelected;
 	if ( eType == NDb::_RT_NONE )
+	{
 		eType = eSelected;
+	}
 
 	for ( CReinfInfos::iterator iInfo = reinfInfos.begin(); iInfo != reinfInfos.end(); ++iInfo )
 	{
@@ -484,11 +552,17 @@ void CMissionReinf::UpdateReinfInfo()
 bool CMissionReinf::CanCall( const NDb::EReinforcementType eType ) const
 {
 	if ( !IsEnabled() )
+	{
 		return false;
+	}
 	if ( eType == NDb::_RT_NONE )
+	{
 		return false;
+	}
 	if ( IsAviaAndCanNotFly( eType ) )
+	{
 		return false;
+	}
 	return true;
 }
 
@@ -534,7 +608,9 @@ bool CMissionReinf::IsAvia( const NDb::EReinforcementType eType ) const
 				{
 					const NDb::SReinforcementEntry &entry = pReinf->entries[i];
 					if ( entry.pMechUnit && entry.pMechUnit->IsAviation() )
+					{
 						return true;
+					}
 				}
 			}
 			return false;
@@ -548,7 +624,9 @@ bool CMissionReinf::IsAvia( const NDb::EReinforcementType eType ) const
 int CMissionReinf::GetReinfCallsLeft() const
 {
 	if ( !Singleton<IScenarioTracker>() )
+	{
 		return 0;
+	}
 	return Singleton<IScenarioTracker>()->GetReinforcementCallsLeft( Singleton<IScenarioTracker>()->GetLocalPlayer() );
 }
 
@@ -556,7 +634,9 @@ void CMissionReinf::UnitFullInfoBack()
 {
 	SetFullInfoMode( false );
 	if ( pUnitFullInfo )
+	{
 		pUnitFullInfo->SetReinfUnit( 0 );
+	}
 }
 
 void CMissionReinf::MouseOverForward( const std::string &szSender )
@@ -587,7 +667,9 @@ void CMissionReinf::BadWeather( bool bStart )
 	}
 
 	if ( !IsOpen() )
+	{
 		return;
+	}
 
 	Update();
 }
@@ -603,7 +685,9 @@ void CMissionReinf::UpdateWinLooseState()
 void CMissionReinf::Show()
 {
 	if ( bIsOpen )
+	{
 		return;
+	}
 
 	bIsOpen = true;
 
@@ -611,11 +695,15 @@ void CMissionReinf::Show()
 	UpdateReinfsVisual();
 
 	if ( pReinfPanel )
+	{
 		pReinfPanel->Enable( true );
+	}
 	UpdateToggleButtonState();
 
 	if ( pReinfPanel )
+	{
 		pReinfPanel->ShowWindow( true );
+	}
 
 	if ( IsEnabled() )
 	{
@@ -634,7 +722,9 @@ void CMissionReinf::Show()
 bool CMissionReinf::IsEnabled() const
 {
 	if ( !Singleton<IScenarioTracker>() )
+	{
 		return false;
+	}
 	int nCount = GetReinfCallsLeft();
 	return Singleton<IScenarioTracker>()->IsMissionActive() && pWorld->IsReinfEnabled() &&
 	       ( nCount == IAIScenarioTracker::INFINITE_CALLS || nCount > 0 ) && !bDisabledByInterface;
@@ -643,7 +733,9 @@ bool CMissionReinf::IsEnabled() const
 void CMissionReinf::UpdateEnable()
 {
 	if ( !Singleton<IScenarioTracker>() )
+	{
 		return;
+	}
 	bool bEnabled = IsEnabled();
 
 	UpdateToggleButtonState();
@@ -651,13 +743,17 @@ void CMissionReinf::UpdateEnable()
 	int nCount = GetReinfCallsLeft();
 	IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
 	if ( nCount == IAIScenarioTracker::INFINITE_CALLS )
+	{
 		nCount = 99;
+	}
 
 	std::vector<IPlayer *> rollers;
 	rollers.push_back( pRoller2 );
 	rollers.push_back( pRoller1 );
 	if ( nPrevReinfCount != nCount )
+	{
 		NUIElementsHelper::PlayRollerAnim( rollers, nPrevReinfCount, nCount, ROLLER_TIME );
+	}
 	nPrevReinfCount = nCount;
 
 	if ( pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
@@ -677,17 +773,25 @@ void CMissionReinf::UpdateEnable()
 	if ( Singleton<IScenarioTracker>()->IsMissionActive() )
 	{
 		if ( IsEnabled() )
+		{
 			NotifyAvailReinf();
+		}
 		else
+		{
 			DisableNotifyAvailReinf();
+		}
 
 		SetBlink( true, !HaveUnits() );
 	}
 	else
+	{
 		SetBlink( false, false );
+	}
 
 	if ( pCallReinfModeBtn )
+	{
 		pCallReinfModeBtn->Enable( bEnabled && CanCall( eSelected ) );
+	}
 }
 
 void CMissionReinf::UpdateReinfs()
@@ -707,7 +811,9 @@ void CMissionReinf::UpdateReinfs()
 		const NDb::SReinforcement *pReinf = *it;
 		CReinfInfos::iterator iInfo = reinfInfos.find( pReinf->eType );
 		if ( iInfo == reinfInfos.end() )
+		{
 			continue;
+		}
 		//		NI_VERIFY( iInfo != reinfInfos.end(), "Forbidden reinf type", continue );
 		SReinfInfo &info = iInfo->second;
 		info.pReinf = pReinf;
@@ -729,15 +835,23 @@ void CMissionReinf::UpdateReinfsVisual()
 		bool bCanCall = bEnabled && CanCall( eType );
 
 		if ( info.pButton )
+		{
 			info.pButton->ShowWindow( bIsReinf );
+		}
 
 		if ( info.pIconWnd )
+		{
 			info.pIconWnd->ShowWindow( bIsReinf && bCanCall );
+		}
 		if ( info.pIconDisabledWnd )
+		{
 			info.pIconDisabledWnd->ShowWindow( bIsReinf && !bCanCall );
+		}
 
 		if ( info.pBadWeatherWnd )
+		{
 			info.pBadWeatherWnd->ShowWindow( bIsReinf && IsAviaAndCanNotFly( eType ) );
+		}
 	}
 }
 
@@ -745,11 +859,17 @@ void CMissionReinf::UpdateMPReinfsXPAndLevel()
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	if ( !pST )
+	{
 		return;
+	}
 	if ( !IsOpen() )
+	{
 		return;
+	}
 	if ( !pST->GetMultiplayerInfo() )
+	{
 		return;
+	}
 
 	for ( CReinfInfos::iterator it = reinfInfos.begin(); it != reinfInfos.end(); ++it )
 	{
@@ -766,35 +886,51 @@ void CMissionReinf::UpdateMPReinfsXPAndLevel()
 		if ( fDeltaExp > 0.0f )
 		{
 			if ( fCurRankExp < fNextRankExp )
+			{
 				fPosition = ( fExp - fCurRankExp ) / fDeltaExp;
+			}
 			else
+			{
 				fPosition = 1.0f; // reached the cap
+			}
 		}
 		else
+		{
 			fPosition = 1.0f;
+		}
 
 		// leader's rank
 		info.ShowChevron( nRank );
 
 		if ( info.pXPBar )
+		{
 			info.pXPBar->SetPosition( fPosition );
+		}
 
 		//		if ( info.pXPLevelBtn )
 		//			info.pXPLevelBtn->ShowWindow( info.pReinf != 0 );
 		if ( info.pXPBar )
+		{
 			info.pXPBar->ShowWindow( info.pReinf != 0 );
+		}
 		if ( info.pXPBarBg )
+		{
 			info.pXPBarBg->ShowWindow( info.pReinf != 0 );
+		}
 
 		const int nLocalPlayer = pST->GetLocalPlayer();
 		std::wstring wszTooltip = NDBWrap::GetReinfXPLevelName( pST->GetReinforcementXPLevel( nLocalPlayer, eType ) );
 		if ( const NDb::SReinforcement *pContext = GetReinfContext( eType ) )
 		{
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( pContext->, Tooltip ) )
+			{
 				wszTooltip = GET_TEXT_PRE( pContext->, Tooltip ) + L"<br>" + wszTooltip;
+			}
 		}
 		if ( info.pButton )
+		{
 			info.pButton->SetTooltip( wszTooltip );
+		}
 	}
 }
 
@@ -802,12 +938,18 @@ void CMissionReinf::UpdateReinfsXPAndLevel()
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	if ( !pST )
+	{
 		return;
+	}
 	const NDb::SCampaign *pCampaign = pST->GetCurrentCampaign();
 	if ( !pCampaign )
+	{
 		return;
+	}
 	if ( !IsOpen() )
+	{
 		return;
+	}
 	for ( CReinfInfos::iterator it = reinfInfos.begin(); it != reinfInfos.end(); ++it )
 	{
 		NDb::EReinforcementType eType = it->first;
@@ -834,35 +976,51 @@ void CMissionReinf::UpdateReinfsXPAndLevel()
 		if ( fDeltaExp > 0.0f )
 		{
 			if ( fCurRankExp < fNextRankExp )
+			{
 				fPosition = ( fExp - fCurRankExp ) / fDeltaExp;
+			}
 			else
+			{
 				fPosition = 1.0f; // reached the cap
+			}
 		}
 		else
+		{
 			fPosition = 0.0f;
+		}
 
 		// leader's rank
 		info.ShowChevron( nRank );
 
 		if ( info.pXPBar )
+		{
 			info.pXPBar->SetPosition( fPosition );
+		}
 
 		//		if ( info.pXPLevelBtn )
 		//			info.pXPLevelBtn->ShowWindow( info.pReinf != 0 );
 		if ( info.pXPBar )
+		{
 			info.pXPBar->ShowWindow( info.pReinf != 0 && bIsLeader );
+		}
 		if ( info.pXPBarBg )
+		{
 			info.pXPBarBg->ShowWindow( info.pReinf != 0 && bIsLeader );
+		}
 
 		const int nLocalPlayer = 0;
 		std::wstring wszTooltip = NDBWrap::GetReinfXPLevelName( pST->GetReinforcementXPLevel( nLocalPlayer, eType ) );
 		if ( const NDb::SReinforcement *pContext = GetReinfContext( eType ) )
 		{
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( pContext->, Tooltip ) )
+			{
 				wszTooltip = GET_TEXT_PRE( pContext->, Tooltip ) + L"<br>" + wszTooltip;
+			}
 		}
 		if ( info.pButton )
+		{
 			info.pButton->SetTooltip( wszTooltip );
+		}
 	}
 }
 
@@ -901,7 +1059,9 @@ NDb::EReinforcementType CMissionReinf::GetDefaultReinfType() const
 	{
 		const SReinfInfo &reinf = it->second;
 		if ( reinf.pReinf )
+		{
 			return reinf.pReinf->eType;
+		}
 	}
 
 	return NDb::_RT_NONE;
@@ -911,10 +1071,14 @@ void CMissionReinf::ShowReinfContents( const NDb::SReinforcement *pReinf )
 {
 	SetFullInfoMode( false );
 	if ( pUnitFullInfo )
+	{
 		pUnitFullInfo->SetReinfUnit( 0 );
+	}
 
 	if ( pNoInfoView )
+	{
 		pNoInfoView->ShowWindow( pReinf == 0 );
+	}
 	if ( !pReinf )
 	{
 		for ( int i = 0; i < units.size(); ++i )
@@ -923,7 +1087,9 @@ void CMissionReinf::ShowReinfContents( const NDb::SReinforcement *pReinf )
 			pWnd->ShowWindow( false );
 		}
 		if ( pName )
+		{
 			pName->ShowWindow( false );
+		}
 	}
 	else
 	{
@@ -935,7 +1101,9 @@ void CMissionReinf::ShowReinfContents( const NDb::SReinforcement *pReinf )
 			STmpReinfEntry tmpReinfEntry;
 			tmpReinfEntry.pStats = entry.pMechUnit;
 			if ( !tmpReinfEntry.pStats )
+			{
 				tmpReinfEntry.pStats = entry.pSquad;
+			}
 			NI_VERIFY( tmpReinfEntry.pStats,
 			           fmt::format( "Incorrect data in reinforcement \"{}\" entry {}", pReinf->GetDBID().ToString(), i ),
 			           continue );
@@ -958,7 +1126,9 @@ void CMissionReinf::ShowReinfContents( const NDb::SReinforcement *pReinf )
 					tmpReinfEntries.erase( it2 );
 				}
 				else
+				{
 					break;
+				}
 			}
 		}
 
@@ -983,20 +1153,30 @@ void CMissionReinf::ShowReinfContents( const NDb::SReinforcement *pReinf )
 				pFlagBgTexture = info.pStats->pIconFlagBackground;
 			}
 			if ( info.pIcon )
+			{
 				info.pIcon->SetTexture( pIconTexture );
+			}
 			if ( info.pFlagBg )
+			{
 				info.pFlagBg->SetTexture( pFlagBgTexture );
+			}
 
 			if ( info.pCountView )
+			{
 				info.pCountView->SetText( info.pCountView->GetDBText() + NStr::ToUnicode( std::to_string( info.nCount ) ) );
+			}
 		}
 
 		if ( pName )
 		{
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( pReinf->, LocalizedName ) )
+			{
 				pName->SetText( pName->GetDBText() + GET_TEXT_PRE( pReinf->, LocalizedName ) );
+			}
 			else
+			{
 				pName->SetText( L"" );
+			}
 			pName->ShowWindow( true );
 		}
 	}
@@ -1005,7 +1185,9 @@ void CMissionReinf::ShowReinfContents( const NDb::SReinforcement *pReinf )
 void CMissionReinf::NotifyAvailReinf()
 {
 	if ( bAvailNotified )
+	{
 		return;
+	}
 
 	bAvailNotified = true;
 	pNotifications->Notify( EVNT_REINFORCEMENT_AVAILABLE, -1, VNULL2 );
@@ -1071,7 +1253,9 @@ void CMissionReinf::Step()
 	}
 
 	if ( !bEnabled )
+	{
 		bWasEnabled = false;
+	}
 }
 
 const NDb::SReinforcement *CMissionReinf::GetReinfContext( const NDb::EReinforcementType eType ) const
@@ -1086,7 +1270,9 @@ const NDb::SReinforcement *CMissionReinf::GetReinfContext( const NDb::EReinforce
 const NDb::SReinforcementTypes *CMissionReinf::GetReinfTypes() const
 {
 	if ( const NDb::SCampaign *pCampaign = Singleton<IScenarioTracker>()->GetCurrentCampaign() )
+	{
 		return pCampaign->pReinforcementTypes;
+	}
 	return 0;
 }
 
@@ -1123,7 +1309,9 @@ void CMissionReinf::OnReinfCallMode()
 void CMissionReinf::OnReinfAutoShowReinf( bool bOn )
 {
 	if ( pAutoShowReinfBtn )
+	{
 		pAutoShowReinfBtn->SetStateWithVisual( bOn ? 0 : 1 );
+	}
 }
 
 bool CMissionReinf::IsAutoShowReinf() const
@@ -1139,7 +1327,9 @@ bool CMissionReinf::IsAviaPresents() const
 		const SReinfInfo &info = it->second;
 
 		if ( IsAvia( eType ) && info.pReinf )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -1152,7 +1342,9 @@ bool CMissionReinf::IsNonAllWeatherAviaPresents() const
 		const SReinfInfo &info = it->second;
 
 		if ( info.pReinf && IsAvia( eType ) && !IsAllWeatherAvia( eType ) )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -1198,7 +1390,9 @@ bool CMissionReinf::IsAllWeatherAvia( const NDb::EReinforcementType eType ) cons
 bool CMissionReinf::HasMasterPilot( const NDb::SReinforcement *pReinf, int nLevel ) const
 {
 	if ( !pReinf )
+	{
 		return false;
+	}
 
 	for ( int i = 0; i < pReinf->entries.size(); ++i )
 	{
@@ -1211,12 +1405,16 @@ bool CMissionReinf::HasMasterPilot( const NDb::SReinforcement *pReinf, int nLeve
 				for ( int j = 0; j < pActions->specialAbilities.size(); ++j )
 				{
 					if ( j > nLevel )
+					{
 						break;
+					}
 					const NDb::SUnitSpecialAblityDesc *pAbility = pActions->specialAbilities[j];
 					if ( pAbility )
 					{
 						if ( pAbility->eName == NDb::ABILITY_MASTER_PILOT )
+						{
 							return true;
+						}
 					}
 				}
 			}
@@ -1247,16 +1445,22 @@ void CMissionReinf::UpdateToggleButtonState()
 	int nIndex = ( bIsOpen ? N_TX_REINF_RIGHT : 0 ) | ( pWorld->IsReinfEnabled() ? 0 : N_TX_REINF_INACTIVE ) |
 	             ( !bClockVisible && bIsLight ? N_TX_REINF_LIGHT : 0 );
 	if ( pToggleReinfBtn )
+	{
 		pToggleReinfBtn->SetTexture( textures[nIndex] );
+	}
 
 	if ( pRoundProgress )
 	{
 		pRoundProgress->ShowWindow( bClockVisible );
 		if ( bClockVisible )
+		{
 			pRoundProgress->SetAngles( FP_PI2, FP_PI2 - fProgress * FP_2PI );
+		}
 	}
 	if ( pRoundProgressMask )
+	{
 		pRoundProgressMask->ShowWindow( bClockVisible );
+	}
 }
 
 void CMissionReinf::SetBlink( bool _bBlink, bool _bFullTime )
@@ -1288,7 +1492,9 @@ void CMissionReinf::UpdateBlink()
 		return;
 	}
 	if ( !bBlink )
+	{
 		return;
+	}
 
 	NTimer::STime timeAbs = Singleton<IGameTimer>()->GetAbsTime();
 	float fDeltaTime = ( timeAbs - timeBlinkAbs ) / 1000.0f;

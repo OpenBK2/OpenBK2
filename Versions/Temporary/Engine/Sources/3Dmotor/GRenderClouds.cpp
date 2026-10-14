@@ -16,7 +16,9 @@ const int N_GRID_SIZE = 64;
 static void RefreshGeometry()
 {
 	if ( IsValid( pCloudGrid ) )
+	{
 		return;
+	}
 	NGfx::CBufferLock<NGfx::SGeomVecFull> geom( &pCloudGrid, N_GRID_SIZE * N_GRID_SIZE );
 	NGfx::SGeomVecFull v;
 	Zero( v );
@@ -54,7 +56,9 @@ void RenderClouds( NGfx::CRenderContext *pRC,
                    const SHMatrix &proj )
 {
 	if ( !IsValid( pCloud ) )
+	{
 		return;
+	}
 	NGfx::CRenderContext rc( *pRC );
 	rc.SetDepth( NGfx::DEPTH_NONE );
 	rc.SetAlphaCombine( NGfx::COMBINE_NONE );

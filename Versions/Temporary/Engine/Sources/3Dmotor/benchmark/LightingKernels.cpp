@@ -80,9 +80,13 @@ struct SInputs
 			coords[k * 2 + 1] = static_cast<int>( random_uint32() & 0x000fffff );
 		}
 		for ( size_t k = 0; k < fog.size(); ++k )
+		{
 			fog[k] = random_uint8();
+		}
 		for ( int k = 0; k < 256; ++k )
+		{
 			scale[k] = random_uint8();
+		}
 
 		word( ls.ambient );
 		word( ls.lightColor );

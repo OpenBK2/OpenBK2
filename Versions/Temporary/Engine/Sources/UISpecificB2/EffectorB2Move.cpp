@@ -34,9 +34,13 @@ void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd,
 	}
 
 	if ( pCmd->bBorder )
+	{
 		eState = ES_BORDER_IN;
+	}
 	else
+	{
 		eState = ( pContext && pContext->bGoOut ) ? ES_GO_OUT : ES_GO_IN;
+	}
 	bGoOut = ( eState == ES_GO_OUT );
 
 	bForward = true;
@@ -69,14 +73,22 @@ void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd,
 		CTRect<float> rcParent = pParent->GetWindowRect();
 
 		if ( vMoveOffset.x > 0 )
+		{
 			vMoveOffset.x = rcParent.Width() - rcElement.x1;
+		}
 		else if ( vMoveOffset.x < 0 )
+		{
 			vMoveOffset.x = -rcElement.x2;
+		}
 
 		if ( vMoveOffset.y > 0 )
+		{
 			vMoveOffset.y = rcParent.Height() - rcElement.y1;
+		}
 		else if ( vMoveOffset.y < 0 )
+		{
 			vMoveOffset.y = -rcElement.y2;
+		}
 	}
 
 	vInitialPos = CVec2( x, y );
@@ -129,7 +141,9 @@ CVec2 CEffectorB2Move::GetDelta( const CVec2 &vSpeed, const CVec2 &vAccel, float
 const int CEffectorB2Move::Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward )
 {
 	if ( bFinished )
+	{
 		return 0;
+	}
 	if ( eState == ES_NONE )
 	{
 		bFinished = true;
@@ -259,7 +273,9 @@ const int CEffectorB2Move::Segment( const int timeDiff, struct IScreen *pScreen,
 		return timeDiff; // consume all time for better visual effect
 	}
 	else
+	{
 		pElement->ShowWindow( true );
+	}
 
 	// return consumed time
 	return fEffectTime - fFormerElapsedTime;

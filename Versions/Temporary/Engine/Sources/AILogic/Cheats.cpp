@@ -16,7 +16,9 @@ bool g_bDontShowWarFog;
 void CheatsPassword( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )
+	{
 		return;
+	}
 	//
 	theCheats.CheckPassword( NStr::ToMBCS( paramsSet[0] ) );
 }
@@ -57,25 +59,33 @@ SCheats::SCheats()
 void SCheats::SetWarFog( bool _bWarFog )
 {
 	if ( !theDipl.IsNetGame() && bPasswordOK )
+	{
 		bWarFog = _bWarFog;
+	}
 }
 
 void SCheats::SetNPartyForWarFog( const int _nPartyForWarFog, bool bUnconditionly )
 {
 	if ( !theDipl.IsNetGame() && bPasswordOK || bUnconditionly )
+	{
 		nPartyForWarFog = _nPartyForWarFog;
+	}
 }
 
 void SCheats::SetLoadObjects( bool _bLoadObjects )
 {
 	if ( !theDipl.IsNetGame() && bPasswordOK )
+	{
 		bLoadObjects = _bLoadObjects;
+	}
 }
 
 void SCheats::SetTurnOffWarFog( bool _bTurnOffWarFog )
 {
 	if ( !theDipl.IsNetGame() && bPasswordOK )
+	{
 		bTurnOffWarFog = _bTurnOffWarFog;
+	}
 }
 
 bool SCheats::GetTurnOffWarFog() const
@@ -90,13 +100,17 @@ bool SCheats::GetTurnOffWarFog() const
 void SCheats::SetImmortals( const int nPlayer, const uint8_t cValue )
 {
 	if ( !theDipl.IsNetGame() && bPasswordOK )
+	{
 		immortals[nPlayer] = cValue;
+	}
 }
 
 void SCheats::SetFirstShoot( const int nPlayer, const uint8_t cValue )
 {
 	if ( !theDipl.IsNetGame() && bPasswordOK )
+	{
 		firstShoot[nPlayer] = cValue;
+	}
 }
 
 int SCheats::operator&( IBinSaver &saver )

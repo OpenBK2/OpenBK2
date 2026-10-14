@@ -86,7 +86,9 @@ static BOOL CALLBACK ReportExceptionDlgProc( HWND hwndDlg, unsigned message, WPA
 				{
 					SExceptionDlgInitParams *pParams = reinterpret_cast<SExceptionDlgInitParams *>( GetDlgUserData( hwndDlg ) );
 					if ( pParams->pszExtInfo )
+					{
 						MessageBox( hwndDlg, pParams->pszExtInfo, "Details", MB_OK | MB_ICONINFORMATION );
+					}
 				}
 				break;
 				case IDC_EXCEPTION_EMERGENCY:

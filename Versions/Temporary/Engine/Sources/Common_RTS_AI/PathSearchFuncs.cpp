@@ -9,9 +9,13 @@ IStaticPath *CreateStaticPathToPoint(
 {
 	CVec2 finishPoint( _finishPoint + vShift );
 	if ( !pAIMap->IsPointInside( finishPoint ) )
+	{
 		finishPoint = _finishPoint;
+	}
 	if ( !bCanGoOutOfRadius && !pUnit->CanGoToPoint( _finishPoint ) )
+	{
 		return 0;
+	}
 
 	return pUnit->CreateBigStaticPath( pUnit->GetCenterPlain(), finishPoint, 0 );
 }
@@ -25,9 +29,13 @@ IStaticPath *CreateStaticPathToPoint( const CVec2 &_startPoint,
 {
 	CVec2 finishPoint( _finishPoint + vShift );
 	if ( !pAIMap->IsPointInside( finishPoint ) )
+	{
 		finishPoint = _finishPoint;
+	}
 	if ( !bCanGoOutOfRadius && !pUnit->CanGoToPoint( finishPoint ) )
+	{
 		return 0;
+	}
 
 	return pUnit->CreateBigStaticPath( _startPoint, finishPoint, 0 );
 }

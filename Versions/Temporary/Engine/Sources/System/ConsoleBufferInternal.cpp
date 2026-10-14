@@ -24,7 +24,9 @@ static std::wstring EraseTags( const std::wstring &szStr )
 			szRet += szStr.substr( i, pos - i );
 			i = szStr.find( '>', pos );
 			if ( i != std::string::npos )
+			{
 				++i;
+			}
 		}
 		else
 		{
@@ -43,7 +45,9 @@ void CConsoleBuffer::WriteASCII( const int nStreamID,
                                  const bool bPersistentMsg )
 {
 	if ( pszString == 0 )
+	{
 		return;
+	}
 	Write( nStreamID, NStr::ToUnicode( pszString ), color, bPersistentMsg );
 }
 
@@ -54,10 +58,14 @@ void CConsoleBuffer::Write( const int nStreamID,
 {
 	++nSlowCompress;
 	if ( ( nSlowCompress & 1023 ) == 0 )
+	{
 		CompressLines();
+	}
 	int nID = 1;
 	if ( !lines.empty() )
+	{
 		nID = lines.back().nSequenceID + 1;
+	}
 	SConsoleLine &l = lines.emplace_back();
 	l.nSequenceID = nID;
 	l.nStream = nStreamID;
@@ -69,7 +77,9 @@ void CConsoleBuffer::Write( const int nStreamID,
 	{
 		static wofstream logFile;
 		if ( !logFile.is_open() )
+		{
 			logFile.open( "console.txt", std::ios_base::out | std::ios_base::trunc );
+		}
 		if ( logFile.good() )
 		{
 			logFile << EraseTags( szString ).c_str() << L"\n";
@@ -85,12 +95,18 @@ bool CConsoleBuffer::GetNextLine( SConsoleLine *pRes, int *pSequenceID )
 	for ( int k = lines.size() - 1; k >= 0; --k )
 	{
 		if ( lines[k].nSequenceID > nSeq )
+		{
 			nBest = k;
+		}
 		else
+		{
 			break;
+		}
 	}
 	if ( nBest == -1 )
+	{
 		return false;
+	}
 	*pRes = lines[nBest];
 	nSeq = lines[nBest].nSequenceID;
 	return true;
@@ -103,13 +119,17 @@ void CConsoleBuffer::CompressLines()
 	for ( int k = 0; k < lines.size(); ++k )
 	{
 		if ( lines[k].bPersistent || k > lines.size() - N_MAX_CONSOLE_LINES )
+		{
 			take[k] = true;
+		}
 	}
 	int nDst = 0;
 	for ( int k = 0; k < lines.size(); ++k )
 	{
 		if ( take[k] )
+		{
 			lines[nDst++] = lines[k];
+		}
 	}
 	lines.resize( nDst );
 }
@@ -126,7 +146,9 @@ void CConsoleBuffer::DumpLog()
 		}
 	}
 	if ( bNeedDumpToFile == false )
+	{
 		return;
+	}
 	//
 	FILE *file = szLogFileName.empty() ? 0 : fopen( szLogFileName.c_str(), "at" );
 	if ( file )
@@ -160,7 +182,9 @@ void WriteToPipe( int nPipe, const std::wstring &sz, uint32_t dwColor, bool bPer
 	msg.sz = sz;
 	msg.dwColor = dwColor;
 	for ( int k = 0; k < dst.copyToStreams.size(); ++k )
+	{
 		pBuffer->Write( dst.copyToStreams[k], sz, dwColor, bPersistentMsg );
+	}
 }
 
 static bool GetPipeMessage( int nPipe, SPipeMessage *pRes )
@@ -168,7 +192,9 @@ static bool GetPipeMessage( int nPipe, SPipeMessage *pRes )
 	CConsoleBuffer *pBuffer = Singleton<CConsoleBuffer>();
 	SPipeChannel &dst = pBuffer->GetPipeChannel( nPipe );
 	if ( dst.msgs.empty() )
+	{
 		return false;
+	}
 	*pRes = dst.msgs.front();
 	dst.msgs.pop_front();
 	return true;
@@ -178,13 +204,19 @@ bool ReadFromPipe( int nPipe, std::string *pRes, uint32_t *pDWColor )
 {
 	*pRes = "";
 	if ( pDWColor )
+	{
 		*pDWColor = 0xffffffff;
+	}
 	SPipeMessage msg;
 	if ( !GetPipeMessage( nPipe, &msg ) )
+	{
 		return false;
+	}
 	*pRes = NStr::ToMBCS( msg.sz );
 	if ( pDWColor )
+	{
 		*pDWColor = msg.dwColor;
+	}
 	return true;
 }
 
@@ -192,13 +224,19 @@ bool ReadFromPipe( int nPipe, std::wstring *pRes, uint32_t *pDWColor )
 {
 	*pRes = L"";
 	if ( pDWColor )
+	{
 		*pDWColor = 0xffffffff;
+	}
 	SPipeMessage msg;
 	if ( !GetPipeMessage( nPipe, &msg ) )
+	{
 		return false;
+	}
 	*pRes = msg.sz;
 	if ( pDWColor )
+	{
 		*pDWColor = msg.dwColor;
+	}
 	return true;
 }
 

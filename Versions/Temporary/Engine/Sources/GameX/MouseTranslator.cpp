@@ -30,7 +30,9 @@ void CMouseTranslatorB1::OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDi
 	{
 		case AS_SCROLL:
 			if ( !bMouseMoveDirect )
+			{
 				RaiseEvent( "scroll_map_true", vPos );
+			}
 			break;
 		case AS_SELECT:
 			RaiseEvent( "update_selection", vPos );
@@ -57,9 +59,13 @@ void CMouseTranslatorB1::OnButtonUp( const CVec2 &vPos )
 	{
 		case AS_MOVE:
 			if ( !IsDownSamePos() )
+			{
 				RaiseEvent( "set_direction", vPos );
+			}
 			else
+			{
 				RaiseEvent( "cancel_direction", vPos );
+			}
 			break;
 		case AS_SELECT:
 		{
@@ -67,16 +73,26 @@ void CMouseTranslatorB1::OnButtonUp( const CVec2 &vPos )
 			if ( !IsShiftDown() )
 			{
 				if ( !bSelectByRect )
+				{
 					nSelectAction = SA_CLEAR_ALWAYS;
+				}
 				else
+				{
 					nSelectAction = SA_CLEAR_IF_NEW_NOT_EMPTY;
+				}
 			}
 			else if ( !bSelectByRect )
+			{
 				nSelectAction = SA_INVERSE;
+			}
 			else
+			{
 				nSelectAction = SA_PRESERVE;
+			}
 			if ( IsCtrlDown() && !bSelectByRect )
+			{
 				nSelectAction |= SA_ONE_TYPE;
+			}
 			if ( bSelectByRect )
 			{
 				nSelectAction |= SA_SELECT_BY_RECT;
@@ -98,13 +114,17 @@ void CMouseTranslatorB1::OnLButtonDown( const CVec2 &vPos, bool bObject )
 void CMouseTranslatorB1::OnRButtonDown( const CVec2 &vPos, bool bObject )
 {
 	if ( IsDownTargetMode() )
+	{
 		RaiseEvent( "set_target", vPos );
+	}
 	else
 	{
 		if ( bObject )
 		{
 			if ( IsSelected( 0 ) )
+			{
 				RaiseEvent( "do_action", vPos );
+			}
 		}
 		else
 		{
@@ -155,7 +175,9 @@ void CMouseTranslatorB2Base::OnMouseMove( const CVec2 &vPos, const bool bMouseMo
 	{
 		case AS_SCROLL:
 			if ( !bMouseMoveDirect )
+			{
 				RaiseEvent( "scroll_map_true", vPos );
+			}
 			break;
 		case AS_SELECT:
 			RaiseEvent( "update_selection", vPos );
@@ -173,21 +195,33 @@ void CMouseTranslatorB2Base::OnButtonUp( const CVec2 &vPos )
 	{
 		case AS_MOVE:
 			if ( !IsDownSamePos() && !IsDownSameTime() )
+			{
 				RaiseEvent( "set_direction", vPos );
+			}
 			else
+			{
 				RaiseEvent( "cancel_direction", vPos );
+			}
 			break;
 		case AS_SELECT:
 		{
 			const bool bSelectByRect = !IsDownSamePos();
 			if ( !IsShiftDown() )
+			{
 				nSelectAction = SA_CLEAR_IF_NEW_NOT_EMPTY;
+			}
 			else if ( !bSelectByRect )
+			{
 				nSelectAction = SA_INVERSE;
+			}
 			else
+			{
 				nSelectAction = SA_PRESERVE;
+			}
 			if ( IsCtrlDown() )
+			{
 				nSelectAction |= SA_ONE_TYPE;
+			}
 			if ( bSelectByRect )
 			{
 				nSelectAction |= SA_SELECT_BY_RECT;
@@ -204,7 +238,9 @@ void CMouseTranslatorB2Base::OnButtonUp( const CVec2 &vPos )
 void CMouseTranslatorB2Base::OnLButtonDown( const CVec2 &vPos, bool bObject )
 {
 	if ( IsDownTargetMode() )
+	{
 		RaiseEventAndFlags( "set_target", vPos );
+	}
 	else
 	{
 		RaiseEvent( "start_selection", vPos );
@@ -216,7 +252,9 @@ void CMouseTranslatorB2Base::OnLButtonDown( const CVec2 &vPos, bool bObject )
 void CMouseTranslatorB2Base::OnRButtonDown( const CVec2 &vPos, bool bObject )
 {
 	if ( IsDownTargetMode() )
+	{
 		RaiseEvent( "reset_target", vPos );
+	}
 	else
 	{
 		if ( IsSelected( 0 ) )
@@ -237,7 +275,9 @@ void CMouseTranslatorB2Base::OnRButtonDown( const CVec2 &vPos, bool bObject )
 void CMouseTranslatorB2Base::OnMinimapLButtonDown( const CVec2 &vPos, bool bTargetMode )
 {
 	if ( bTargetMode )
+	{
 		RaiseEventAndFlags( "set_target_minimap", vPos );
+	}
 	else
 	{
 		RaiseEvent( "scroll_map", vPos );
@@ -253,7 +293,9 @@ void CMouseTranslatorB2Base::OnMinimapRButtonDown( const CVec2 &vPos, bool bTarg
 		SetActionState( AS_SCROLL );
 	}
 	else if ( IsSelected( 0 ) )
+	{
 		RaiseEvent( "set_destination_minimap", vPos );
+	}
 }
 
 void CMouseTranslatorB2Base::CancelAction()
@@ -308,12 +350,18 @@ bool CMouseTranslator::IsSelected( class CMapObj *pMO ) const
 	if ( pMO )
 	{
 		if ( pSelector->CanSelect( pMO ) )
+		{
 			return pSelector->IsSelected( checked_cast<CMOSelectable *>( pMO ) );
+		}
 		else
+		{
 			return false;
+		}
 	}
 	else
+	{
 		return !pSelector->IsEmpty();
+	}
 }
 
 void CMouseTranslator::MsgCancelAction( const SGameMessage &msg )
@@ -325,11 +373,17 @@ int CMouseTranslator::GetFlags() const
 {
 	int nFlags = 0;
 	if ( IsShiftDown() )
+	{
 		nFlags |= EKF_SHIFT;
+	}
 	if ( IsAltDown() )
+	{
 		nFlags |= EKF_ALT;
+	}
 	if ( IsCtrlDown() )
+	{
 		nFlags |= EKF_CTRL;
+	}
 	return nFlags;
 }
 
@@ -341,9 +395,13 @@ void CMouseTranslator::DoLButtonDblClk( const CVec2 &vPos, class CMapObj *pMO, b
 		RaiseEvent( "start_selection", vPos );
 		int nSelectAction = SA_ONE_TYPE;
 		if ( !IsShiftDown() )
+		{
 			nSelectAction |= SA_CLEAR_ALWAYS;
+		}
 		if ( IsCtrlDown() )
+		{
 			nSelectAction |= SA_ON_WORLD;
+		}
 		RaiseEvent( "end_selection", nSelectAction );
 		eActionState = AS_NONE;
 	}
@@ -368,7 +426,9 @@ void CMouseTranslator::DoLButtonUp( const CVec2 &vPos, class CMapObj *pMO, bool 
 	if ( eButtonState == BS_LEFT_DOWN )
 	{
 		if ( vPos.x != -1 && vPos.y != -1 )
+		{
 			OnButtonUp( vPos );
+		}
 		eButtonState = BS_NONE;
 		eActionState = AS_NONE;
 	}
@@ -394,7 +454,9 @@ void CMouseTranslator::DoRButtonUp( const CVec2 &vPos, class CMapObj *pMO, bool 
 	if ( eButtonState == BS_RIGHT_DOWN )
 	{
 		if ( vPos.x != -1 && vPos.y != -1 )
+		{
 			OnButtonUp( vPos );
+		}
 		eButtonState = BS_NONE;
 		eActionState = AS_NONE;
 	}
@@ -412,7 +474,9 @@ bool CMouseTranslator::ProcessEvent( const SGameMessage &event )
 void CMouseTranslator::OnGetFocus( bool bFocus )
 {
 	if ( !bFocus )
+	{
 		CancelAction();
+	}
 }
 
 void CMouseTranslator::CancelAction()
@@ -434,7 +498,9 @@ int CMouseTranslator::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &pSelector );
 	if ( saver.IsReading() )
+	{
 		ResetState();
+	}
 	return 0;
 }
 

@@ -59,7 +59,9 @@ void CGeneralTaskToDefendPatch::InitTanks( CCommonUnit *pUnit )
 	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTRENCH_SELF ), pUnit, true );
 	++nCurReinforcePoint;
 	if ( !patchInfo.reinforcePoints.empty() )
+	{
 		nCurReinforcePoint %= patchInfo.reinforcePoints.size();
+	}
 }
 
 void CGeneralTaskToDefendPatch::InitInfantryInTrenches( class CCommonUnit *pUnit )
@@ -135,7 +137,9 @@ void CGeneralTaskToDefendPatch::AskForWorker( ICommander *pManager, const float 
 
 		//ask for reinforcement
 		if ( _fMaxSeverity > fSeverity && fSeverity <= 0 )
+		{
 			pManager->EnumWorkers( FT_MOBILE_TANKS, this );
+		}
 	}
 }
 
@@ -160,7 +164,9 @@ void CGeneralTaskToDefendPatch::ReleaseWorker( ICommander *pManager, const float
 
 				CalcSeverity( false, true );
 				if ( fSeverity >= _fMinSeverity ) // юнит можно отдать без ущерба для ситуации
+				{
 					pManager->Give( pTank );
+				}
 				else
 				{
 					tanksMobile.push_front( pTank );
@@ -170,7 +176,9 @@ void CGeneralTaskToDefendPatch::ReleaseWorker( ICommander *pManager, const float
 				}
 			}
 			else
+			{
 				++it;
+			}
 		}
 	}
 	else // отдать все резервы
@@ -220,15 +228,25 @@ void CGeneralTaskToDefendPatch::CancelTask( ICommander *pManager )
 	theSupremeBeing.GetEnemyConatiner( pOwner->GetParty() )->RemoveResistance( patchInfo.vCenter );
 
 	for ( CommonUnits::iterator it = infantryInTrenches.begin(); infantryInTrenches.end() != it; ++it )
+	{
 		pManager->Give( *it );
+	}
 	for ( CommonUnits::iterator it = infantryFree.begin(); it != infantryFree.end(); ++it )
+	{
 		pManager->Give( *it );
+	}
 	for ( CommonUnits::iterator it = tanksMobile.begin(); tanksMobile.end() != it; ++it )
+	{
 		pManager->Give( *it );
+	}
 	for ( CommonUnits::iterator it = newTanks.begin(); newTanks.end() != it; ++it )
+	{
 		pManager->Give( *it );
+	}
 	for ( CommonUnits::iterator it = stationaryUnits.begin(); stationaryUnits.end() != it; ++it )
+	{
 		pManager->Give( *it );
+	}
 
 	bFinished = true;
 }
@@ -254,7 +272,9 @@ void CGeneralTaskToDefendPatch::Segment()
 		if ( !bNeedMore )
 		{
 			for ( CommonUnits::iterator it = newTanks.begin(); it != newTanks.end(); ++it )
+			{
 				CGeneralTaskToDefendPatch::InitTanks( *it );
+			}
 			tanksMobile.splice( tanksMobile.end(), newTanks );
 			bNeedRecalc = true;
 		}
@@ -341,7 +361,9 @@ bool CGeneralTaskToDefendPatch::EnumWorker( class CCommonUnit *pUnit, const enum
 				bool bNeedMore = pr1.fCount < patchInfo.nMinUnitsToReinforce;
 
 				if ( !bNeedMore )
+				{
 					Segment();
+				}
 				return bNeedMore;
 			}
 			else
@@ -375,20 +397,26 @@ bool CGeneralTaskToDefendPatch::EvaluateWorker( CCommonUnit *pUnit, const enum E
 		case FT_MOBILE_TANKS:
 			// гаубичные орудия не посылаем
 			if ( pUnit->GetFirstArtilleryGun() != 0 )
+			{
 				return false;
+			}
 			else if ( enemyForces.empty() ) // no enemies, any unit will be fine
 			{
 				return true;
 			}
 			// проверить, пробивает ли предложенный юнит кого-то из врагов
 			else
+			{
 				for ( CommonUnits::const_iterator it = enemyForces.begin(); it != enemyForces.end(); ++it )
 				{
 					NI_ASSERT( dynamic_cast_ptr<CAIUnit *>( *it ) != 0, "wrong tank" );
 					CAIUnit *pEnemy = static_cast_ptr<CAIUnit *>( *it );
 					if ( 0 != pUnit->GetKillSpeed( pEnemy ) ) // можем пробить
+					{
 						return true;
+					}
 				}
+			}
 			return false;
 	}
 	return false;
@@ -459,14 +487,18 @@ void CGeneralTaskToHoldReinforcement::ReleaseWorker( ICommander *pManager, const
 		//unitsPositions.erase( pUnit );
 
 		if ( pTank->IsRefValid() && pTank->IsAlive() )
+		{
 			pManager->Give( pTank );
+		}
 	}
 }
 
 void CGeneralTaskToHoldReinforcement::CancelTask( ICommander *pManager )
 {
 	for ( CommonUnits::iterator it = tanksFree.begin(); tanksFree.end() != it; ++it )
+	{
 		pManager->Give( *it );
+	}
 }
 
 int CGeneralTaskToHoldReinforcement::GetWorkerCount()
@@ -483,7 +515,9 @@ void CGeneralTaskToHoldReinforcement::Segment()
 		{
 			CCommonUnit *pUnit = GetObjectByUniqueIdSafe<CCommonUnit>( it->first );
 			if ( !pUnit || !pUnit->IsRefValid() || !pUnit->IsAlive() )
+			{
 				removed.push_back( pUnit );
+			}
 		}
 	}
 	SGeneralHelper::SSeverityCountPredicate pr1;
@@ -500,10 +534,14 @@ bool CGeneralTaskToHoldReinforcement::EnumWorker( class CCommonUnit *pUnit, cons
 	if ( EPATCH_UNKNOWN == patchInfo.eType )
 	{
 		if ( unitsPositions.find( pUnit->GetUniqueId() ) == unitsPositions.end() )
+		{
 			unitsPositions[pUnit->GetUniqueId()] = pUnit->GetCenterPlain();
+		}
 		else
+		{
 			theGroupLogic.UnitCommand(
 					SAIUnitCmd( ACTION_COMMAND_SWARM_TO, unitsPositions[pUnit->GetUniqueId()] ), pUnit, false );
+		}
 	}
 	else
 	{
@@ -554,7 +592,9 @@ CGeneralTaskRecaptureStorage::CGeneralTaskRecaptureStorage( const CVec2 &vReinfo
 void CGeneralTaskRecaptureStorage::AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit )
 {
 	if ( !bInit && fMaxSeverity > fSeverity )
+	{
 		pManager->EnumWorkers( FT_MOBILE_TANKS, this );
+	}
 }
 
 void CGeneralTaskRecaptureStorage::ReleaseWorker( ICommander *pManager, const float fMinSeverity )
@@ -585,7 +625,9 @@ void CGeneralTaskRecaptureStorage::Segment()
 	SGeneralHelper::RemoveDead( &tanksFree );
 
 	if ( 0 == fSeverity && tanksFree.empty() )
+	{
 		bFinished = true;
+	}
 }
 
 bool CGeneralTaskRecaptureStorage::EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType )
@@ -622,13 +664,17 @@ bool CGeneralTaskToSwarmToPoint::IsTimeToRun() const
 {
 	// wait for some time, not forever.
 	if ( curTime > timeNextCheck )
+	{
 		return true;
+	}
 
 	for ( CTanks::const_iterator it = swarmingTanks.begin(); it != swarmingTanks.end(); ++it )
 	{
 		CCommonUnit *pUnit = *it;
 		if ( pUnit->IsRefValid() && pUnit->IsAlive() && !pUnit->IsIdle() )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -645,7 +691,9 @@ void CGeneralTaskToSwarmToPoint::Run()
 		const int nGroup = theGroupLogic.GenerateGroupNumber();
 		CObjectBase **arUnits = GetLocalTempBuffer<CObjectBase *>( swarmingTanks.size() );
 		for ( int i = 0; i < swarmingTanks.size(); ++i )
+		{
 			arUnits[i] = swarmingTanks[i];
+		}
 		theGroupLogic.RegisterGroup( arUnits, swarmingTanks.size(), nGroup );
 		SAIUnitCmd cmd( ACTION_COMMAND_SWARM_TO, curResistanceToAttack.GetResistanceCellCenter() );
 		cmd.bFromAI = false;
@@ -698,8 +746,10 @@ void CGeneralTaskToSwarmToPoint::SendToGroupPoint()
 		for ( int i = 0; i < swarmingTanks.size(); ++i )
 		{
 			if ( swarmingTanks[i]->IsRefValid() && swarmingTanks[i]->IsAlive() )
+			{
 				theGroupLogic.UnitCommand(
 						SAIUnitCmd( ACTION_MOVE_TO_NOT_PRESIZE, vPrepearCenter, 32 * SConsts::TILE_SIZE ), swarmingTanks[i], true );
+			}
 		}
 
 		eState = ESS_PREPEARING;
@@ -723,7 +773,9 @@ void CGeneralTaskToSwarmToPoint::ReleaseWorker( ICommander *pManager, const floa
 	if ( ( !curResistanceToAttack.IsInitted() || bReleaseWorkers ) && !swarmingTanks.empty() )
 	{
 		for ( int i = 0; i < swarmingTanks.size(); ++i )
+		{
 			pManager->Give( swarmingTanks[i] );
+		}
 		swarmingTanks.clear();
 	}
 }
@@ -806,7 +858,9 @@ void CGeneralTaskToSwarmToPoint::Segment()
 					{
 						++nAlive;
 						if ( swarmingTanks[i]->GetState()->IsRestState() || !swarmingTanks[i]->CanMove() )
+						{
 							++nIdle;
+						}
 					}
 				}
 				if ( timeNextCheck < curTime || nIdle == nAlive || 0 == nAlive )
@@ -838,7 +892,9 @@ void CGeneralTaskToSwarmToPoint::Segment()
 						ClearResistanceToAcceptNewTask();
 						theSupremeBeing.GetEnemyConatiner( pOwner->GetParty() )->GiveResistances( this );
 						if ( curResistanceToAttack.IsInitted() )
+						{
 							SendToGroupPoint();
+						}
 					}
 				}
 			}
@@ -869,7 +925,9 @@ void CGeneralTaskToSwarmToPoint::ClearResistanceToAcceptNewTask()
 		}
 	}
 	if ( nAlive )
+	{
 		vTanksPosition /= nAlive;
+	}
 }
 
 bool CGeneralTaskToSwarmToPoint::EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType )
@@ -912,7 +970,9 @@ bool CGeneralTaskToSwarmToPoint::EnumResistances( const SResistance &resistance 
 bool CGeneralTaskToSwarmToPoint::EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const
 {
 	if ( pUnit->GetFirstArtilleryGun() != 0 )
+	{
 		return false;
+	}
 
 	return true;
 }

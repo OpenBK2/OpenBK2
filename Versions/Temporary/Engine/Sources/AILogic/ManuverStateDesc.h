@@ -24,7 +24,9 @@ class CManuverStateDesc
 	bool IsParamSuitable( const float fVal, const CDBPtr<TParam> pRange ) const
 	{
 		if ( pRange && ( pRange->fMin > fVal || pRange->fMax < fVal ) )
+		{
 			return false;
+		}
 		return true;
 	}
 

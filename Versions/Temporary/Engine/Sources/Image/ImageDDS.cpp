@@ -19,7 +19,9 @@ bool RecognizeFormatDDS( CDataStream *pStream )
 	;
 
 	if ( pStream->GetPosition() + 4 >= pStream->GetSize() )
+	{
 		return false;
+	}
 
 	pStream->Read( &dwSignature, 4 );
 	pStream->Seek( pStream->GetPosition() - 4 );
@@ -44,12 +46,16 @@ static void DecompressARGB( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t
 		{
 			uint16_t *pSrc = (uint16_t *)pCompBytes;
 			for ( int i = 0; i < hdr.dwWidth * hdr.dwHeight; ++i )
+			{
 				*pRes++ = pci.DecompColor( *pSrc++ );
+			}
 		}
 		break;
 		case 24:
 			for ( int i = 0; i < hdr.dwWidth * hdr.dwHeight; ++i )
+			{
 				*pRes++ = ( pCompBytes[i * 3 + 0] << 16 ) | ( pCompBytes[i * 3 + 1] << 8 ) | ( pCompBytes[i * 3 + 2] );
+			}
 			break;
 		case 32:
 			NI_ASSERT( false, "better read it directly to image" );
@@ -109,13 +115,17 @@ bool LoadImageDDS( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 			delete[] buffer;
 		}
 		else
+		{
 			return false;
+		}
 	}
 	else if ( ( ( hdr.ddspf.dwFlags & DDS_ARGB ) == DDS_ARGB ) || ( ( hdr.ddspf.dwFlags & DDS_ARGB ) == DDS_RGB ) )
 	{
 		pRes->SetSizes( hdr.dwWidth, hdr.dwHeight );
 		if ( hdr.ddspf.dwRGBBitCount == 32 ) // directly read to image - this is ARGB8888
+		{
 			pStream->Read( &( *pRes )[0][0], hdr.dwWidth * hdr.dwHeight * 4 );
+		}
 		else
 		{
 			int nCompSize = hdr.dwWidth * hdr.dwHeight * hdr.ddspf.dwRGBBitCount / 8;

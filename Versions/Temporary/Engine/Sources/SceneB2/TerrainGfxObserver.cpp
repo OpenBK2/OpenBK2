@@ -13,7 +13,9 @@ bool HasVSO( const int nID, const std::vector<NDb::SVSOInstance> &instances )
 	for ( std::vector<NDb::SVSOInstance>::const_iterator it = instances.begin(); it != instances.end(); ++it )
 	{
 		if ( it->nVSOID == nID )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -23,7 +25,9 @@ bool HasSpotVSO( const int nID, const std::vector<NDb::STerrainSpotInstance> &in
 	for ( std::vector<NDb::STerrainSpotInstance>::const_iterator it = instances.begin(); it != instances.end(); ++it )
 	{
 		if ( it->nSpotID == nID )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -77,12 +81,14 @@ void CSceneTerrain::UpdatePatchGeometry( std::vector<NMeshData::SMeshData> *pMes
 			patches[nPatchInd][k].pPatch = new CMeshDataPatch( &( meshData[k] ) );
 			//
 			if ( ( pDBDesc->pTerraSet != 0 ) && ( k < pDBDesc->pTerraSet->terraTypes.size() ) )
+			{
 				patches[nPatchInd][k].pHolder = pGameView->CreateMesh(
 						pGameView->MakeMeshInfo( patches[nPatchInd][k].pPatch, pDBDesc->pTerraSet->terraTypes[k]->pMaterial ),
 						placement,
 						0,
 						0,
 						room );
+			}
 		}
 	}
 }
@@ -170,9 +176,13 @@ void CSceneTerrain::RemoveRoad( const int nVSOID )
 	for ( std::vector<CRoad>::iterator it = roads.begin(); it != roads.end(); )
 	{
 		if ( it->GetID() == nVSOID )
+		{
 			it = roads.erase( it );
+		}
 		else
+		{
 			++it;
+		}
 	}
 	//RemoveVSO( nVSOID, roads );
 }
@@ -243,9 +253,13 @@ void CSceneTerrain::RemoveFoot( const int nVSOID )
 	for ( std::vector<CFoot>::iterator it = foots.begin(); it != foots.end(); )
 	{
 		if ( it->GetID() == nVSOID )
+		{
 			it = foots.erase( it );
+		}
 		else
+		{
 			++it;
+		}
 	}
 }
 

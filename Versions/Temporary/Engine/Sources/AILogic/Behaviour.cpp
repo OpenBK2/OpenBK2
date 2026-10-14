@@ -44,7 +44,9 @@ void CShootEstimatorLighAA::AddUnit( CAIUnit *pTarget )
 	if ( IsValidObj( pTarget ) && pTarget->GetStats()->IsAviation() )
 	{
 		if ( pGun != 0 && ( !pGun->CanShootByHeight( pTarget ) || !pGun->CanBreakArmor( pTarget ) ) )
+		{
 			return;
+		}
 
 		CBasicGun *pChosenGun = pGun;
 		// gun не задан, нужно его выбрать и найти время для убиения врага
@@ -52,9 +54,13 @@ void CShootEstimatorLighAA::AddUnit( CAIUnit *pTarget )
 		{
 			int i = 0;
 			while ( i < pUnit->GetNGuns() && !pUnit->GetGun( i )->CanBreach( pTarget ) )
+			{
 				++i;
+			}
 			if ( i >= pUnit->GetNGuns() )
+			{
 				return;
+			}
 			//CRAP{ считаем, что у зениток 1 пушка
 			pChosenGun = pUnit->GetGun( i );
 			//CRAP}
@@ -161,7 +167,9 @@ bool CStandartBehaviour::TryToTraceEnemy( CAIUnit *pUnit )
 		}
 
 		if ( pBestGun == 0 )
+		{
 			return false;
+		}
 
 		const float r = pUnit->GetSightRadius();
 		const float r2 = sqr( r );
@@ -181,7 +189,9 @@ bool CStandartBehaviour::TryToTraceEnemy( CAIUnit *pUnit )
 				for ( int i = 0; i < 4; ++i )
 				{
 					if ( pBestGun->CanBreach( pEnemy, i ) )
+					{
 						++nSides;
+					}
 				}
 
 				if ( nSides > nBestSides || pBestUnit == 0 )
@@ -209,7 +219,9 @@ bool CStandartBehaviour::TryToTraceEnemy( CAIUnit *pUnit )
 		{
 			CAIUnit *pTracedUnit = pUnit->GetTurret( i )->GetTracedUnit();
 			if ( pTracedUnit && !pTracedUnit->IsVisible( nParty ) )
+			{
 				pUnit->GetTurret( i )->StopTracing();
+			}
 		}
 
 		return false;
@@ -223,7 +235,9 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 		if ( pUnit->IsOperable() && pUnit->GetNTurrets() != 0 )
 		{
 			if ( TryToTraceEnemy( pUnit ) )
+			{
 				lastTimeOfRotate = curTime;
+			}
 			else if ( pUnit->GetTurret( 0 )->IsFinished() )
 			{
 				if ( ( theHitsStore.WasHit( pUnit->GetCenterPlain(), 2 * SConsts::RADIUS_OF_HIT_NOTIFY, CHitsStore::EHT_ANY ) ||
@@ -242,9 +256,13 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 
 							uint16_t wRotateAngle;
 							if ( pUnit->GetStats()->IsArmor() )
+							{
 								wRotateAngle = (std::min)( (uint16_t)15000, (uint16_t)pTurret->GetHorTurnConstraint() );
+							}
 							else
+							{
 								wRotateAngle = (std::min)( (uint16_t)32768, (uint16_t)pTurret->GetHorTurnConstraint() );
+							}
 
 							const uint16_t wMinRotateAngle = wRotateAngle / 4;
 							const uint16_t wMaxRotateAngle = (std::max)( DirsDifference( wTurretAngle, wRotateAngle ),
@@ -259,15 +277,23 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 								bool bCounterClockWise = false;
 
 								if ( DirsDifference( wTurretAngle + wRotate, 0 ) <= wRotateAngle )
+								{
 									bClockWise = true;
+								}
 								if ( DirsDifference( wTurretAngle - wRotate, 0 ) <= wRotateAngle )
+								{
 									bCounterClockWise = true;
+								}
 
 								int nSign = 0;
 								if ( bClockWise && !bCounterClockWise )
+								{
 									nSign = 1;
+								}
 								if ( !bClockWise && bCounterClockWise )
+								{
 									nSign = -1;
+								}
 								if ( bClockWise && bCounterClockWise )
 								{
 									if ( nLastSign == 1 )
@@ -295,11 +321,15 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 
 						if ( theHitsStore.WasHit(
 										 pUnit->GetCenterPlain(), 2 * SConsts::RADIUS_OF_HIT_NOTIFY, CHitsStore::EHT_ANY ) )
+						{
 							lastTimeOfRotate = curTime;
+						}
 					}
 				}
 				else
+				{
 					pUnit->GetTurret( 0 )->SetCanReturn();
+				}
 			}
 		}
 

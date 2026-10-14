@@ -157,7 +157,9 @@ static CPtrFuncBase<CObjectInfo> *GetRawGeometry( ISomePart *pPart )
 	CPtrFuncBase<CObjectInfo> *pGeom = pPart->GetObjectInfoNode();
 	CDynamicCast<CLMGeometryGen> pTest = pGeom;
 	if ( pTest != 0 )
+	{
 		pGeom = pTest->GetSrc();
+	}
 	ASSERT( pGeom );
 	ASSERT( dynamic_cast<CLMGeometryGen *>( pGeom ) == 0 );
 	return pGeom;
@@ -192,7 +194,9 @@ static void AddPart( const SSphere &highResLM, std::vector<SLMGroup> *pRes, ISom
 	{
 		SLMGroup &g = ( *pRes )[k];
 		if ( g.fResolution != nResolution )
+		{
 			continue;
+		}
 		// check if group is suitable
 		if ( g.lmAlloc.AllocRegion( lmSize, &lmPos ) )
 		{
@@ -279,7 +283,9 @@ static void RecalcDepthChannels( IRender *pRender,
 		const CVec3 &vDir = skyDirs[nInfoIdx];
 		rcDepth.SetColorWrite( depthChannels[i] );
 		if ( bHasRendered )
+		{
 			rcDepth.ClearZBuffer();
+		}
 		RenderParallelDepth( pRender, &rcDepth, _bound, vDir, groupSelect, &depthInfos[nInfoIdx] );
 		bHasRendered = true;
 	}
@@ -316,17 +322,25 @@ static void RenderLight( SLightmapTargetGeom *pTarget,
 	for ( int i = 1; i < fragments.size(); ++i )
 	{
 		if ( pTarget->pGeom->IsFilteredFragment( i ) )
+		{
 			continue;
+		}
 		const SRenderFragmentInfo &frag = *fragments[i];
 		COpGenContext fi( &res.ops, &frag );
 		CVec3 vTranslucent( 0, 0, 0 );
 		if ( frag.pMaterial )
+		{
 			vTranslucent = frag.pMaterial->GetTranslucentColor();
+		}
 		transColors[i] = vTranslucent;
 		if ( vTranslucent == CVec3( 0, 0, 0 ) )
+		{
 			fi.AddOperation( op, 100, nStencilOp, 0, param1, &VNULL3 );
+		}
 		else
+		{
 			fi.AddOperation( opTrans, 100, nStencilOp, 0, param1, &transColors[i] );
+		}
 	}
 	Execute( 0, &rc, *pTarget->pTS, res, *pTarget->pGeom, lightInfo );
 }
@@ -364,7 +378,9 @@ static void RenderSkyCheck( SLightmapTargetGeom *pTarget,
 		RenderLight( pTarget, lightInfo, RO_CL_SKY_3LIGHT, RO_CL_SKY_3LIGHT_TRANSLUCENT, &depthInfo, DPM_NONE | ABM_NONE );
 	}
 	else
+	{
 		ASSERT( 0 );
+	}
 }
 
 static void InitLightInfo( SLightInfo *pRes, const CVec3 &_vCenter, float fRadius, const CVec3 &_vColor )
@@ -382,7 +398,9 @@ static void RenderQuad( NGfx::CRenderContext *pRC, const CVec3 &_vCenter, const 
 
 	CVec3 v1( _vNormal ^ CVec3( 1, 0, 0 ) );
 	if ( fabs2( v1 ) <= 0.01f )
+	{
 		v1 = _vNormal ^ CVec3( 0, 1, 0 );
+	}
 	Normalize( &v1 );
 	CVec3 v2( v1 ^ _vNormal );
 	CVec3 vCenter( _vCenter - _vNormal * _fRadius / 1000 );
@@ -499,7 +517,9 @@ static void RenderCubeMapDepth(
 		Execute( 0, &rc, ts, dp, geom, lightInfo );
 
 		if ( fabs2( _vNormal ) > 0 )
+		{
 			RenderQuad( &rc, _vCenter, _vNormal, fRadius );
+		}
 	}
 }
 
@@ -511,7 +531,9 @@ static void RenderPointLightShadowed( SLightmapTargetGeom *pTarget,
                                       NGfx::CTexture *pAdd )
 {
 	if ( fabs2( _vColor ) == 0 || fRadius < 0.1f )
+	{
 		return;
+	}
 	pTarget->pRC->SetCulling( NGfx::CULL_NONE );
 	SLightInfo lightInfo;
 	InitLightInfo( &lightInfo, _vCenter, fRadius, _vColor );
@@ -600,7 +622,9 @@ static void CalcLight( IRender *pRender,
 		{
 			CSelectGeometries selector( pTargetGeom, SSphereFilter( SSphere( vCenter, fRadius ) ) );
 			if ( !pTargetGeom->HasSelectedFragments() )
+			{
 				continue;
+			}
 		}
 		RenderCubeMapDepth( pRender, vCenter, fRadius, s.vNormal, pPointDepth );
 		rcTarget.SetTextureRT( pTargetFP1 );
@@ -672,7 +696,9 @@ static bool CalcLM( IRender *pRender, const CLightState &ls, SLMGroup *pRes )
 		SRenderGeometryInfo &gInfo = geomInfos[nPart];
 		gInfo.pTriLists[0] = new CIBCombiner( pCombiner, 0, IBTT_VERTICES );
 		for ( int k = 1; k < TLT_NUMBER; ++k )
+		{
 			gInfo.pTriLists[k] = gInfo.pTriLists[0];
+		}
 		gInfo.pVertices = new CVBCombiner( pCombiner, CT_STATIC, 0, pRender->GetLightState() );
 		int nGeometry = targetGeom.AddGeometry( 0, &gInfo, lmPart.geomBound, false );
 		CPartFlags parts;
@@ -700,7 +726,9 @@ static bool CalcLM( IRender *pRender, const CLightState &ls, SLMGroup *pRes )
 		for ( int y = 0; y < lmSize.y; ++y )
 		{
 			for ( int x = 0; x < lmSize.x; ++x )
+			{
 				( *pRes )[y][x] = fullTex[y + lmShift.y][x + lmShift.x];
+			}
 		}
 		FixBorders( pRes, lmPart.lmQuads );
 	}
@@ -737,12 +765,18 @@ static void FilterLightmappableParts( std::vector<ISomePart *> *pRes )
 		ISomePart *p = ( *pRes )[k];
 		IMaterial *pMat = p->GetMaterial();
 		if ( !pMat->DoesSupportLightmaps() )
+		{
 			continue;
+		}
 		if ( p->GetGroupInfo().nLightFlags & LF_SKIP_LIGHTING )
+		{
 			continue;
+		}
 		p->RefreshObjectInfo();
 		if ( !p->GetObjectInfo()->IsLightmappable() )
+		{
 			continue;
+		}
 		( *pRes )[nDst++] = ( *pRes )[k];
 	}
 	pRes->resize( nDst );
@@ -769,16 +803,22 @@ CollectParts( IRender *pRender, CObjectBase *pUser, int nUserID, bool bTakeNotLo
 				CDynamicCast<CSimplePart> pSPart = pPart.GetPtr();
 				CDynamicCast<CNonePart> pNPart = pPart.GetPtr();
 				if ( pSPart == 0 && pNPart == 0 )
+				{
 					continue;
+				}
 
 				CPtrFuncBase<CObjectInfo> *pGeom = GetRawGeometry( pPart );
 				ASSERT( pGeom );
 
 				if ( pPart->GetFullGroupInfo().pUser != pUser )
+				{
 					continue;
+				}
 				int nPartUserID = pPart->GetFullGroupInfo().nUserID;
 				if ( nUserID == 0 || ( nPartUserID & N_USERID_MASK ) == nUserID )
+				{
 					pRes->push_back( pPart );
+				}
 			}
 		}
 	}
@@ -791,7 +831,9 @@ CollectParts( IRender *pRender, CObjectBase *pUser, int nUserID, bool bTakeNotLo
 			ASSERT( find( pRes->begin(), pRes->end(), p ) == pRes->end() );
 			ASSERT( IsValid( p.GetPtr() ) );
 			if ( IsValid( p.GetPtr() ) )
+			{
 				pRes->push_back( p );
+			}
 		}
 	}
 	FilterLightmappableParts( pRes );
@@ -817,7 +859,9 @@ static CLightmapsHolder *CombineLightmaps( const std::vector<SLMGroup> &groups )
 			//ASSERT( pRes->lightmaps.find( nUserID ) == pRes->lightmaps.end() );
 
 			if ( pRes->lightmaps.find( nUserID ) != pRes->lightmaps.end() )
+			{
 				continue;
+			}
 
 			int nTexture;
 			CTPoint<int> texPos;
@@ -831,7 +875,9 @@ static CLightmapsHolder *CombineLightmaps( const std::vector<SLMGroup> &groups )
 	int nTextures = lmAlloc.GetTexturesNum();
 	pRes->textures.resize( nTextures );
 	for ( int k = 0; k < nTextures; ++k )
+	{
 		pRes->textures[k] = lmAlloc.GetTexture( k );
+	}
 
 	// output amount of generated LMs
 	csSystem << nTextures << " lightmaps generated" << endl;
@@ -871,7 +917,9 @@ CLightmapsHolder *CalcLightmaps( IGScene *pScene,
 	std::vector<ISomePart *> parts;
 	CollectParts( pRender, pUser, nUserID, false, &parts );
 	for ( int k = 0; k < parts.size(); ++k )
+	{
 		AddPart( highResLM, &lmGroups, parts[k] );
+	}
 
 	// test overlap
 	//for ( int k = 0; k < lmGroups.size(); ++k )
@@ -939,7 +987,9 @@ void ApplyLightmaps(
 	int nTextures = pLightmaps->textures.size();
 	std::vector<CObj<CLightmapTexture>> textures( nTextures );
 	for ( int k = 0; k < nTextures; ++k )
+	{
 		textures[k] = new CLightmapTexture( pLD, k );
+	}
 
 	std::vector<ISomePart *> parts;
 	CollectParts( pRender, pUser, 0, true, &parts );
@@ -950,7 +1000,9 @@ void ApplyLightmaps(
 		int nUserID = pPart->GetFullGroupInfo().nUserID;
 		std::unordered_map<int, CLightmapsHolder::SLightmap>::iterator i = pLightmaps->lightmaps.find( nUserID );
 		if ( i == pLightmaps->lightmaps.end() )
+		{
 			continue;
+		}
 		const CLightmapsHolder::SLightmap &lm = i->second;
 
 		pPart->SetLM( textures[lm.nLightmap] );
@@ -968,7 +1020,9 @@ void ApplyLightmaps(
 				pPart->SetObjectInfoNode( new CLMGeometryGen( pGeom, lm.lmShift, lm.fLMResolution, false, true ) );
 
 				if ( GetDumpFlag() )
+				{
 					pPart->RefreshObjectInfo();
+				}
 			}
 		}
 		else if ( pML == 0 || !pML->IsLightMapped() )

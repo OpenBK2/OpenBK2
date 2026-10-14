@@ -609,9 +609,13 @@ namespace NTypeDef
 		{
 			int nNumElements = (int)value;
 			if ( nMinElements >= 0 && nNumElements < nMinElements )
+			{
 				return false;
+			}
 			if ( nMaxElements >= 0 && nNumElements > nMaxElements )
+			{
 				return false;
+			}
 			return true;
 		}
 		//

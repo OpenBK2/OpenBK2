@@ -247,7 +247,9 @@ inline bool PushBackUnique( std::vector<TYPE> *arr, const TYPE &elem )
 	for ( typename std::vector<TYPE>::const_iterator it = arr->begin(); it != arr->end(); ++it )
 	{
 		if ( *it == elem )
+		{
 			return false;
+		}
 	}
 	arr->push_back( elem );
 	return true;
@@ -259,7 +261,9 @@ inline bool PushBackUnique<CVec3>( std::vector<CVec3> *arr, const CVec3 &elem )
 	for ( std::vector<CVec3>::const_iterator it = arr->begin(); it != arr->end(); ++it )
 	{
 		if ( ( fabs( it->x - elem.x ) < DEF_EPS ) && ( fabs( it->y - elem.y ) < DEF_EPS ) )
+		{
 			return false;
+		}
 	}
 	arr->push_back( elem );
 	return true;
@@ -271,7 +275,9 @@ inline bool PushBackUnique<CVec3fEx>( std::vector<CVec3fEx> *arr, const CVec3fEx
 	for ( std::vector<CVec3fEx>::const_iterator it = arr->begin(); it != arr->end(); ++it )
 	{
 		if ( ( fabs( it->x - elem.x ) < DEF_EPS ) && ( fabs( it->y - elem.y ) < DEF_EPS ) )
+		{
 			return false;
+		}
 	}
 	arr->push_back( elem );
 	return true;
@@ -283,7 +289,9 @@ inline bool PushBackUnique<CVec3dEx>( std::vector<CVec3dEx> *arr, const CVec3dEx
 	for ( std::vector<CVec3dEx>::const_iterator it = arr->begin(); it != arr->end(); ++it )
 	{
 		if ( ( fabs( it->x - elem.x ) < DEF_EPS ) && ( fabs( it->y - elem.y ) < DEF_EPS ) )
+		{
 			return false;
+		}
 	}
 	arr->push_back( elem );
 	return true;
@@ -295,7 +303,9 @@ inline int AddUnique( std::vector<TYPE> *arr, const TYPE &elem )
 	for ( int i = 0; i < arr->size(); ++i )
 	{
 		if ( ( *arr )[i] == elem )
+		{
 			return i;
+		}
 	}
 	arr->push_back( elem );
 	return ( arr->size() - 1 );
@@ -307,7 +317,9 @@ inline void AddUnique( std::list<TYPE> *arr, const TYPE &elem )
 	for ( typename std::list<TYPE>::const_iterator it = arr->begin(); it != arr->end(); ++it )
 	{
 		if ( *it == elem )
+		{
 			return;
+		}
 	}
 	arr->push_back( elem );
 }
@@ -318,7 +330,9 @@ inline int AddUnique<CVec3>( std::vector<CVec3> *arr, const CVec3 &elem )
 	for ( int i = 0; i < arr->size(); ++i )
 	{
 		if ( ( fabs( ( *arr )[i].x - elem.x ) < DEF_EPS ) && ( fabs( ( *arr )[i].y - elem.y ) < DEF_EPS ) )
+		{
 			return i;
+		}
 	}
 	arr->push_back( elem );
 	return ( arr->size() - 1 );
@@ -330,7 +344,9 @@ inline int AddUnique<CVec3fEx>( std::vector<CVec3fEx> *arr, const CVec3fEx &elem
 	for ( int i = 0; i < arr->size(); ++i )
 	{
 		if ( ( fabs( ( *arr )[i].x - elem.x ) < DEF_EPS ) && ( fabs( ( *arr )[i].y - elem.y ) < DEF_EPS ) )
+		{
 			return i;
+		}
 	}
 	arr->push_back( elem );
 	return ( arr->size() - 1 );
@@ -342,7 +358,9 @@ inline int AddUnique<CVec3dEx>( std::vector<CVec3dEx> *arr, const CVec3dEx &elem
 	for ( int i = 0; i < arr->size(); ++i )
 	{
 		if ( ( fabs( ( *arr )[i].x - elem.x ) < DEF_EPS ) && ( fabs( ( *arr )[i].y - elem.y ) < DEF_EPS ) )
+		{
 			return i;
+		}
 	}
 	arr->push_back( elem );
 	return ( arr->size() - 1 );
@@ -436,7 +454,9 @@ inline void GetBaryCoords( const CVec3 &p, const CVec3 &p0, const CVec3 &p1, con
 				pBary->y = ( ( p.x - p0.x ) * ( p1.z - p0.z ) - ( p.z - p0.z ) * ( p1.x - p0.x ) ) * d;
 			}
 			else
+			{
 				pBary->Set( -1, -1 );
+			}
 		}
 	}
 }
@@ -482,9 +502,13 @@ inline bool IsBaryIn( const CVec2 &v )
 inline float GetPointDistOnSegment( const CVec3 &p, const CVec3 &p1, const CVec3 &p2 )
 {
 	if ( fabs( p2.x - p1.x ) > DEF_EPS )
+	{
 		return ( p.x - p1.x ) / ( p2.x - p1.x );
+	}
 	else if ( fabs( p2.y - p1.y ) > DEF_EPS )
+	{
 		return ( p.y - p1.y ) / ( p2.y - p1.y );
+	}
 	return 0.0f;
 }
 
@@ -561,7 +585,9 @@ inline float GetDistToSegment( const CVec2 &v, const CVec2 &v1, const CVec2 &v2 
 {
 	const float fDist = fabs2( v2.x - v1.x ) + fabs2( v2.y - v1.y );
 	if ( fDist < DEF_EPS )
+	{
 		return 0.0f;
+	}
 	const float t = ( ( v2.x - v1.x ) * ( v.x - v1.x ) + ( v2.y - v1.y ) * ( v.y - v1.y ) ) / fDist;
 	if ( ( t > -DEF_EPS ) && ( t < ( 1.0f + DEF_EPS ) ) )
 	{
@@ -607,7 +633,9 @@ inline float GetErrorDist( const CVec3fEx &v, const CVec3 &v1, const CVec3 &v2, 
 		const float y = v1.y + ( v2.y - v1.y ) * t - v.y;
 		( *pRes ) = t;
 		if ( ( t > -DEF_EPS ) && ( t < ( 1.0 + DEF_EPS ) ) )
+		{
 			return y * y;
+		}
 		return (std::min)( ( v.x - v1.x ) * ( v.x - v1.x ) + ( y - v1.y ) * ( y - v1.y ),
 		                   ( v.x - v2.x ) * ( v.x - v2.x ) + ( y - v2.y ) * ( y - v2.y ) );
 	}
@@ -617,7 +645,9 @@ inline float GetErrorDist( const CVec3fEx &v, const CVec3 &v1, const CVec3 &v2, 
 		const float x = v1.x + ( v2.x - v1.x ) * t - v.x;
 		( *pRes ) = t;
 		if ( ( t > -DEF_EPS ) && ( t < ( 1.0 + DEF_EPS ) ) )
+		{
 			return x * x;
+		}
 		return (std::min)( ( x - v1.x ) * ( x - v1.x ) + ( v.y - v1.y ) * ( v.y - v1.y ),
 		                   ( x - v2.x ) * ( x - v2.x ) + ( v.y - v2.y ) * ( v.y - v2.y ) );
 	}
@@ -630,32 +660,50 @@ inline bool IsInside( const CTriangleEx &trg, const CVec3dEx &vert /*, bool bInc
 	{
 		const double d = trg.coeffs[0].x * vert.x + trg.coeffs[0].y * vert.y + trg.coeffs[0].z;
 		if ( fabs( d ) < DEF_EPS )
+		{
 			return false;
+		}
 
 		if ( d > 0 )
+		{
 			++nCount;
+		}
 		else
+		{
 			--nCount;
+		}
 	}
 	{
 		const double d = trg.coeffs[1].x * vert.x + trg.coeffs[1].y * vert.y + trg.coeffs[1].z;
 		if ( fabs( d ) < DEF_EPS )
+		{
 			return false;
+		}
 
 		if ( d > 0 )
+		{
 			++nCount;
+		}
 		else
+		{
 			--nCount;
+		}
 	}
 	{
 		const double d = trg.coeffs[2].x * vert.x + trg.coeffs[2].y * vert.y + trg.coeffs[2].z;
 		if ( fabs( d ) < DEF_EPS )
+		{
 			return false;
+		}
 
 		if ( d > 0 )
+		{
 			++nCount;
+		}
 		else
+		{
 			--nCount;
+		}
 	}
 	return ( ( nCount == 3 ) || ( nCount == -3 ) );
 }
@@ -672,9 +720,13 @@ inline bool IsInside( const std::vector<CVec3> &lineCoeffs, const CVec3 &vert )
 			++nCountR;
 		}
 		else if ( d < 0 )
+		{
 			++nCountL;
+		}
 		else
+		{
 			++nCountR;
+		}
 	}
 	return ( ( nCountL == lineCoeffs.size() ) || ( nCountR == lineCoeffs.size() ) );
 }
@@ -688,7 +740,9 @@ inline bool IsIntersect( const CVec3 &p1, const CVec3 &p2, const CVec3 &v1, cons
 		const double t = ( (double)( v1.x - p1.x ) * ( v2.y - v1.y ) - ( v1.y - p1.y ) * ( v2.x - v1.x ) ) * fInvDet;
 		const double k = ( (double)( v1.x - p1.x ) * ( p2.y - p1.y ) - ( v1.y - p1.y ) * ( p2.x - p1.x ) ) * fInvDet;
 		if ( ( t > DEF_EPS ) && ( t < ( 1.0 - DEF_EPS ) ) && ( k > DEF_EPS ) && ( k < ( 1.0 - DEF_EPS ) ) )
+		{
 			return true;
+		}
 	}
 	else
 	{
@@ -699,7 +753,9 @@ inline bool IsIntersect( const CVec3 &p1, const CVec3 &p2, const CVec3 &v1, cons
 			const double t = ( (double)( v1.y - p1.y ) * ( v2.z - v1.z ) - ( v1.z - p1.z ) * ( v2.y - v1.y ) ) * fInvDet;
 			const double k = ( (double)( v1.y - p1.y ) * ( p2.z - p1.z ) - ( v1.z - p1.z ) * ( p2.y - p1.y ) ) * fInvDet;
 			if ( ( t > DEF_EPS ) && ( t < ( 1.0 - DEF_EPS ) ) && ( k > DEF_EPS ) && ( k < ( 1.0 - DEF_EPS ) ) )
+			{
 				return true;
+			}
 		}
 		else
 		{
@@ -710,7 +766,9 @@ inline bool IsIntersect( const CVec3 &p1, const CVec3 &p2, const CVec3 &v1, cons
 				const double t = ( (double)( v1.x - p1.x ) * ( v2.z - v1.z ) - ( v1.z - p1.z ) * ( v2.x - v1.x ) ) * fInvDet;
 				const double k = ( (double)( v1.x - p1.x ) * ( p2.z - p1.z ) - ( v1.z - p1.z ) * ( p2.x - p1.x ) ) * fInvDet;
 				if ( ( t > DEF_EPS ) && ( t < ( 1.0 - DEF_EPS ) ) && ( k > DEF_EPS ) && ( k < ( 1.0 - DEF_EPS ) ) )
+				{
 					return true;
+				}
 			}
 		}
 	}
@@ -727,7 +785,9 @@ inline bool IsIntersect( const CVec3dEx &p1, const CVec3dEx &p2, const CVec3dEx 
 		const double t = ( (double)( v1.x - p1.x ) * ( v2.y - v1.y ) - ( v1.y - p1.y ) * ( v2.x - v1.x ) ) * fInvDet;
 		const double k = ( (double)( v1.x - p1.x ) * ( p2.y - p1.y ) - ( v1.y - p1.y ) * ( p2.x - p1.x ) ) * fInvDet;
 		if ( ( t > DEF_EPS ) && ( t < ( 1.0 - DEF_EPS ) ) && ( k > DEF_EPS ) && ( k < ( 1.0 - DEF_EPS ) ) )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -741,7 +801,9 @@ inline bool IsIntersectOneOf( const CVec3 &p1, const CVec3 &p2, const CVec3 &v1,
 		const double t = ( (double)( v1.x - p1.x ) * ( v2.y - v1.y ) - ( v1.y - p1.y ) * ( v2.x - v1.x ) ) * fInvDet;
 		const double k = ( (double)( v1.x - p1.x ) * ( p2.y - p1.y ) - ( v1.y - p1.y ) * ( p2.x - p1.x ) ) * fInvDet;
 		if ( ( ( t > -DEF_EPS ) && ( t < ( 1.0f + DEF_EPS ) ) ) || ( ( k > -DEF_EPS ) && ( k < ( 1.0f + DEF_EPS ) ) ) )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -773,7 +835,9 @@ inline void AddIntersectionOneSide(
 		const float t = ( ( p1.x - v1.x ) * ( p2.y - p1.y ) - ( p1.y - v1.y ) * ( p2.x - p1.x ) ) * fInvDet;
 		const float k = ( ( v1.y - p1.y ) * ( v2.x - v1.x ) - ( v1.x - p1.x ) * ( v2.y - v1.y ) ) * fInvDet;
 		if ( ( t > DEF_EPS ) && ( t < ( 1.0 - DEF_EPS ) ) && ( k > -DEF_EPS ) && ( k < ( 1.0 + DEF_EPS ) ) )
+		{
 			PushBackUnique( pIntersection, SIntersectPoint( p1 + ( p2 - p1 ) * k, t ) );
+		}
 	}
 }
 
@@ -787,7 +851,9 @@ inline void AddIntersection(
 		const float t = ( ( p1.x - v1.x ) * ( p2.y - p1.y ) - ( p1.y - v1.y ) * ( p2.x - p1.x ) ) * fInvDet;
 		const float k = ( ( v1.y - p1.y ) * ( v2.x - v1.x ) - ( v1.x - p1.x ) * ( v2.y - v1.y ) ) * fInvDet;
 		if ( ( t > -DEF_EPS ) && ( t < ( 1.0 + DEF_EPS ) ) && ( k > -DEF_EPS ) && ( k < ( 1.0 + DEF_EPS ) ) )
+		{
 			PushBackUnique( pIntersection, SIntersectPoint( v1 + ( v2 - v1 ) * t, t ) );
+		}
 	}
 }
 

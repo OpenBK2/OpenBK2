@@ -57,9 +57,13 @@ void CTurret::SetTurnParameters( SRotating *pRotateInfo, const uint16_t wAngle, 
 
 		pRotateInfo->startTime = curTime;
 		if ( pRotateInfo->wRotationSpeed == 0 )
+		{
 			pRotateInfo->endTime = curTime;
+		}
 		else
+		{
 			pRotateInfo->endTime = curTime + wRotateAngle / pRotateInfo->wRotationSpeed;
+		}
 
 		pRotateInfo->wFinalAngle = wAngle;
 
@@ -111,12 +115,18 @@ uint16_t CTurret::ConstraintAngle( const uint16_t wDesAngle, const uint16_t wTur
 	if ( DirsDifference( wDesAngle, 0 ) > wTurnConstraint )
 	{
 		if ( DirsDifference( wDesAngle, wTurnConstraint ) < DirsDifference( wDesAngle, -wTurnConstraint ) )
+		{
 			return wTurnConstraint;
+		}
 		else
+		{
 			return -wTurnConstraint;
+		}
 	}
 	else
+	{
 		return wDesAngle;
+	}
 }
 
 int GetSignOfTurn( const uint16_t wStartAngle, const uint16_t wFinishAngle )
@@ -129,10 +139,14 @@ void CTurret::Segment()
 {
 	CheckAlive();
 	if ( !hor.bFinished && curTime >= hor.endTime )
+	{
 		hor.bFinished = true, hor.wCurAngle = hor.wFinalAngle;
+	}
 
 	if ( !ver.bFinished && curTime >= ver.endTime )
+	{
 		ver.bFinished = true, ver.wCurAngle = ver.wFinalAngle;
+	}
 	/*
 	if ( !hor.bFinished && GetHorCurAngle() > GetHorTurnConstraint() ||
 			 !ver.bFinished && GetVerCurAngle() > GetVerTurnConstraint() )
@@ -142,7 +156,9 @@ void CTurret::Segment()
 	{
 		if ( !IsValidObj( pTracedUnit ) || !pTracedUnit->IsVisible( GetOwnerParty() ) ||
 		     fabs2( GetOwnerCenter() - pTracedUnit->GetCenterPlain() ) > sqr( SAIConsts::TILE_SIZE * 60 ) )
+		{
 			pTracedUnit = 0;
+		}
 		else
 		{
 			const CVec2 toTracedUnit( pTracedUnit->GetCenterPlain() - GetOwnerCenter() );
@@ -150,14 +166,18 @@ void CTurret::Segment()
 			                                                   ( IsBackGunsDirection() ? 32768 : 0 ),
 			                                               GetHorTurnConstraint() );
 			if ( hor.bFinished || GetSignOfTurn( GetHorCurAngle(), wDesHorAngle ) != hor.sign )
+			{
 				TurnHor( wDesHorAngle );
+			}
 
 			if ( bVerAiming )
 			{
 				const uint16_t wDesVerAngle = ConstraintAngle(
 						GetZAngle( toTracedUnit, pTracedUnit->GetCenter().z - GetOwnerZ() ), GetVerTurnConstraint() );
 				if ( ver.bFinished || GetSignOfTurn( GetVerCurAngle(), wDesVerAngle ) != ver.sign )
+				{
 					TurnVer( wDesVerAngle + 16384 * 3 );
+				}
 			}
 		}
 	}
@@ -166,18 +186,24 @@ void CTurret::Segment()
 		bCanReturn = false;
 
 		if ( bReturnToNULLVerAngle )
+		{
 			Turn( wDefaultHorAngle, 16384 * 3 );
+		}
 	}
 }
 
 uint16_t CTurret::GetCurAngle( const SRotating &rotateInfo ) const
 {
 	if ( rotateInfo.bFinished )
+	{
 		return rotateInfo.wCurAngle;
+	}
 	else
 	{
 		if ( curTime >= rotateInfo.endTime )
+		{
 			return rotateInfo.wFinalAngle;
+		}
 		else
 		{
 			const float fAngle =
@@ -191,7 +217,9 @@ uint16_t CTurret::GetCurAngle( const SRotating &rotateInfo ) const
 void CTurret::TraceAim( CAIUnit *pUnit, CBasicGun *pGun )
 {
 	if ( !IsLocked( pGun ) )
+	{
 		pTracedUnit = pUnit;
+	}
 }
 
 void CTurret::StopTracing()
@@ -227,9 +255,13 @@ void CTurret::Lock( const CBasicGun *pGun )
 void CTurret::Unlock( const CBasicGun *pGun )
 {
 	if ( pLockingGun != 0 && ( !pLockingGun->IsRefValid() || !pLockingGun->IsAlive() ) )
+	{
 		pLockingGun = 0;
+	}
 	if ( pGun == pLockingGun )
+	{
 		pLockingGun = 0;
+	}
 }
 
 bool CTurret::IsLocked( const CBasicGun *pGun )
@@ -240,7 +272,9 @@ bool CTurret::IsLocked( const CBasicGun *pGun )
 void CTurret::SetCanReturn()
 {
 	if ( bReturnToNULLVerAngle && GetVerCurAngle() != 16384 * 3 || GetHorCurAngle() != 0 )
+	{
 		bCanReturn = true;
+	}
 }
 
 //*******************************************************************
@@ -263,9 +297,13 @@ CUnitTurret::CUnitTurret( CAIUnit *_pOwner,
 uint16_t CUnitTurret::GetHorTurnConstraint() const
 {
 	if ( !bCanRotateTurret )
+	{
 		return 0;
+	}
 	else
+	{
 		return wHorConstraint;
+	}
 }
 
 bool CUnitTurret::TurnHor( const uint16_t wHorAngle, const bool bInstantly )

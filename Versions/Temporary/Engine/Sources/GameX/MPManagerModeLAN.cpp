@@ -118,7 +118,9 @@ bool CMPManagerModeLAN::Segment()
 void CMPManagerModeLAN::UpdateGameList()
 {
 	if ( eCurrentState != EGS_NOT_IN_GAME )
+	{
 		return;
+	}
 
 	NTimer::STime curTime = Singleton<IGameTimer>()->GetAbsTime();
 	NNet::IDriver::SGameInfo gameInfo;
@@ -132,7 +134,9 @@ void CMPManagerModeLAN::UpdateGameList()
 	{
 		CNetGameList::iterator iter = games.begin();
 		while ( iter != games.end() && !gameNode.SameIP( iter->lanNode ) )
+		{
 			++iter;
+		}
 
 		if ( iter == games.end() ) // new server
 		{
@@ -145,7 +149,9 @@ void CMPManagerModeLAN::UpdateGameList()
 			ExtractGameInfo( &game, &gameInfo );
 			AddGameInfoForUI( &( pGamesMsg->gamesAddChange ), game );
 			if ( pLanTester )
+			{
 				pLanTester->NewGameFound( game.nGameID, game.szSessionName );
+			}
 		}
 		else // old server information refresh
 		{
@@ -187,7 +193,9 @@ bool CMPManagerModeLAN::OnChatMessage( SMPUIChatMessage *pMsg )
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( i == nOwnSlot || !IsPlayerPresent( i ) || slots[i].nClientID < 0 )
+		{
 			continue;
+		}
 
 		pPacket->nClientID = slots[i].nClientID;
 		pPacket->szNick = szMPName;
@@ -238,7 +246,9 @@ bool CMPManagerModeLAN::OnNetNewClient( class CNetNewClient *pPacket )
 bool CMPManagerModeLAN::OnConnectGameFailed( class CConnectGameFailed *pPacket )
 {
 	if ( eCurrentState != EGS_JOINING )
+	{
 		return true;
+	}
 
 	CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW, "++ CONNECT FAILED ++" );
 
@@ -277,7 +287,9 @@ bool CMPManagerModeLAN::OnGameClientWasKicked( class CGameClientWasKicked *pPack
 bool CMPManagerModeLAN::OnRequestLANPassword( class CRequestLANPasswordPacket *pPacket )
 {
 	if ( eCurrentState != EGS_JOINING )
+	{
 		return true;
+	}
 
 	pLANClient->SendPacket( new CLANPasswordPacket( pPacket->nClientID, szPassword ) );
 	return true;
@@ -286,7 +298,9 @@ bool CMPManagerModeLAN::OnRequestLANPassword( class CRequestLANPasswordPacket *p
 bool CMPManagerModeLAN::OnLANPassword( class CLANPasswordPacket *pPacket )
 {
 	if ( eCurrentState != EGS_HOST )
+	{
 		return true;
+	}
 
 	for ( std::list<int>::iterator it = pendingClients.begin(); it != pendingClients.end(); ++it )
 	{
@@ -295,9 +309,13 @@ bool CMPManagerModeLAN::OnLANPassword( class CLANPasswordPacket *pPacket )
 			if ( pPacket->szPassword == szPassword )
 			{
 				if ( HostAssignNewClient( pPacket->nClientID ) )
+				{
 					CompileAndSendLANServerInfo();
+				}
 				else
+				{
 					pLANClient->Kick( pPacket->nClientID );
+				}
 			}
 			else
 			{
@@ -315,7 +333,9 @@ bool CMPManagerModeLAN::OnLANPassword( class CLANPasswordPacket *pPacket )
 void CMPManagerModeLAN::OnSetMySlotNumber()
 {
 	if ( pLanTester )
+	{
 		pLanTester->SetMySlot( nOwnSlot );
+	}
 
 	eCurrentState = EGS_CLIENT;
 }
@@ -350,7 +370,9 @@ void CMPManagerModeLAN::StartGame()
 void CMPManagerModeLAN::EndGame()
 {
 	if ( pLanTester )
+	{
 		pLanTester->EndGame();
+	}
 	StartNewLANDriver();
 	if ( !pLANClient )
 	{
@@ -358,7 +380,9 @@ void CMPManagerModeLAN::EndGame()
 		return;
 	}
 	if ( eCurrentState == EGS_GAME_STARTED )
+	{
 		PushMessage( new SMPUIGameAftemathMessage( false ) );
+	}
 	eCurrentState = EGS_NOT_IN_GAME;
 	CMPManagerMode::EndGame();
 }
@@ -374,7 +398,9 @@ void CMPManagerModeLAN::StartNewLANDriver()
 void CMPManagerModeLAN::CompileAndSendLANServerInfo()
 {
 	if ( !gameDesc.pMPMap || eCurrentState != EGS_HOST )
+	{
 		return;
+	}
 
 	pLANClient->StopGameInfoSend();
 
@@ -399,7 +425,9 @@ void CMPManagerModeLAN::CompileAndSendLANServerInfo()
 void CMPManagerModeLAN::OnLeaveGame()
 {
 	if ( eCurrentState == EGS_NOT_IN_GAME )
+	{
 		return;
+	}
 
 	eCurrentState = EGS_NOT_IN_GAME;
 	StartNewLANDriver();
@@ -413,13 +441,17 @@ void CMPManagerModeLAN::OnLeaveGame()
 void CMPManagerModeLAN::OnGameRoomClientAdded()
 {
 	if ( IsGameHost() )
+	{
 		CompileAndSendLANServerInfo();
+	}
 }
 
 void CMPManagerModeLAN::OnGameRoomClientRemoved()
 {
 	if ( IsGameHost() )
+	{
 		CompileAndSendLANServerInfo();
+	}
 }
 
 void CMPManagerModeLAN::OnGameSpecificInfo()

@@ -128,7 +128,9 @@ bool CCampaignState::IsCompleted() const
 {
 	const bool bKRIDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
 	if ( bKRIDemo )
+	{
 		return false;
+	}
 
 	return bIsCompleted;
 }
@@ -170,7 +172,9 @@ void CInterfaceState::Init()
 void CInterfaceState::InitForbiddenWords()
 {
 	if ( bForbiddenWordsInitialized )
+	{
 		return;
+	}
 	bForbiddenWordsInitialized = true;
 
 	wszForbiddenReplacement = FORBIDDEN_REPLACEMENT;
@@ -179,7 +183,9 @@ void CInterfaceState::InitForbiddenWords()
 	if ( pUIConsts )
 	{
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pUIConsts->, ForbiddenWords ) )
+		{
 			wszForbiddenWords = GET_TEXT_PRE( pUIConsts->, ForbiddenWords );
+		}
 	}
 	int nPos = 0;
 	while ( nPos < wszForbiddenWords.size() )
@@ -192,7 +198,9 @@ void CInterfaceState::InitForbiddenWords()
 		}
 		int nFound = wszForbiddenWords.find( 0x0d, nPos );
 		if ( nFound == std::wstring::npos )
+		{
 			nFound = wszForbiddenWords.size();
+		}
 		std::wstring wszWord = wszForbiddenWords.substr( nPos, nFound - nPos );
 		nPos = nFound;
 		while ( !wszWord.empty() && wszWord[wszWord.size() - 1] == L' ' )
@@ -200,7 +208,9 @@ void CInterfaceState::InitForbiddenWords()
 			wszWord.pop_back();
 		}
 		if ( !wszWord.empty() )
+		{
 			forbiddenWords.push_back( wszWord );
+		}
 	}
 }
 
@@ -225,7 +235,9 @@ CDBID CInterfaceState::GetScreenEntryDBID( const std::string &szName ) const
 	//		return nID;
 	const NDb::SUIScreenEntry *pEntry = GetScreenEntry( szName );
 	if ( pEntry && pEntry->pScreen )
+	{
 		return pEntry->pScreen->GetDBID();
+	}
 	return CDBID();
 }
 
@@ -290,13 +302,17 @@ const std::wstring &CInterfaceState::GetMLTag( const std::wstring &wszName ) con
 	std::string szName = NStr::ToMBCS( wszName );
 	const NDb::SUIConstsB2 *pUIConsts = GetUIConsts();
 	if ( !pUIConsts )
+	{
 		return empty;
+	}
 	std::vector<NDb::SMLTag>::const_iterator it =
 			find_if( pUIConsts->tags.begin(), pUIConsts->tags.end(), STagEntryEqual( szName ) );
 	if ( it != pUIConsts->tags.end() )
 	{
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( it->, Text ) )
+		{
 			return GET_TEXT_PRE( it->, Text );
+		}
 	}
 	NI_ASSERT( 0, fmt::format( "Designers: custom ML tag '{}' not found", szName ) );
 	return empty;
@@ -308,7 +324,9 @@ const std::wstring &CInterfaceState::GetMPGameType( enum NDb::EMPGameType eType 
 
 	const NDb::SUIConstsB2 *pUIConsts = GetUIConsts();
 	if ( !pUIConsts )
+	{
 		return wszEmpty;
+	}
 	for ( std::vector<NDb::SMPLocalizedGameType>::const_iterator it = pUIConsts->mPLocalizedGameTypes.begin();
 	      it != pUIConsts->mPLocalizedGameTypes.end();
 	      ++it )
@@ -317,7 +335,9 @@ const std::wstring &CInterfaceState::GetMPGameType( enum NDb::EMPGameType eType 
 		if ( gameType.eGameType == eType )
 		{
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( gameType., LocalizedText ) )
+			{
 				return GET_TEXT_PRE( gameType., LocalizedText );
+			}
 			return wszEmpty;
 		}
 	}
@@ -330,7 +350,9 @@ std::wstring CInterfaceState::GetSeasonName( enum NDb::ESeason eSeason ) const
 
 	const NDb::SUIConstsB2 *pUIConsts = GetUIConsts();
 	if ( !pUIConsts )
+	{
 		return wszEmpty;
+	}
 
 	for ( int i = 0; i < pUIConsts->seasonNames.size(); ++i )
 	{
@@ -339,7 +361,9 @@ std::wstring CInterfaceState::GetSeasonName( enum NDb::ESeason eSeason ) const
 		{
 			std::wstring wszName;
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( season., Name ) )
+			{
 				wszName = GET_TEXT_PRE( season., Name );
+			}
 			return wszName;
 		}
 	}
@@ -352,7 +376,9 @@ std::wstring CInterfaceState::GetMapSizeName( const NDb::SMapInfo *pMapInfo ) co
 	std::wstring wszEmpty;
 
 	if ( !pMapInfo )
+	{
 		return wszEmpty;
+	}
 
 	std::wstring wszSize = NStr::ToUnicode( fmt::format( "{}x{}", pMapInfo->nNumPatchesX, pMapInfo->nNumPatchesY ) );
 	return wszSize;
@@ -399,7 +425,9 @@ void CInterfaceState::StartSingleMission( const CDBID &dbidCampaign,
 
 	Singleton<IScenarioTracker>()->CampaignStart( pCampaign, nDifficulty, false, false );
 	for ( int i = 0; i <= nChapterNumber; ++i )
+	{
 		Singleton<IScenarioTracker>()->NextChapter();
+	}
 	Singleton<IScenarioTracker>()->MissionStart( pMission );
 
 	NGlobal::RemoveVar( "Multiplayer.Host" );
@@ -412,7 +440,9 @@ void CInterfaceState::StartSingleMission( const CDBID &dbidCampaign,
 NGScene::CScreenshotTexture *CInterfaceState::GetScreenShotTexture()
 {
 	if ( !pScreenShot )
+	{
 		pScreenShot = new NGScene::CScreenshotTexture;
+	}
 	return pScreenShot.GetPtr();
 }
 
@@ -444,7 +474,9 @@ void CInterfaceState::SendCommandsToCloseAllIncluding( const std::string &szInte
 		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 		CInterfaceScreenBase *pInterface = dynamic_cast<CInterfaceScreenBase *>( pI );
 		if ( pInterface && pInterface->GetInterfaceType() == szInterfaceID )
+		{
 			break;
+		}
 	}
 }
 
@@ -454,7 +486,9 @@ void CInterfaceState::SendCommandsToCloseAllIncluding( IInterfaceBase *pLastInte
 	{
 		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 		if ( pI == pLastInterfaceToClose )
+		{
 			break;
+		}
 	}
 }
 
@@ -462,7 +496,9 @@ void CInterfaceState::SendCommandsToBringOnTop( IInterfaceBase *pNewTop )
 {
 	for ( IInterfaceBase *pI = NMainLoop::GetTopInterface(); pI != 0 && pI != pNewTop;
 	      pI = NMainLoop::GetPrevInterface( pI ) )
+	{
 		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
+	}
 }
 
 struct SVar
@@ -514,11 +550,17 @@ IInterfaceState::EScenarioTrackerType CInterfaceState::GetScenarioTrackerType() 
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	if ( !pST )
+	{
 		return ESTT_NONE;
+	}
 	if ( pST->GetGameType() != IAIScenarioTracker::EGT_SINGLE )
+	{
 		return ESTT_MULTI;
+	}
 	else
+	{
 		return ESTT_SINGLE;
+	}
 }
 
 void CInterfaceState::MakeScenarioTracker( EScenarioTrackerType eType )
@@ -578,7 +620,9 @@ const NDb::STexture *CInterfaceState::GetMenuBackgroundTexture() const
 	{
 		const NDb::SCampaign *pCampaign = pST->GetCurrentCampaign();
 		if ( pCampaign )
+		{
 			pBackground = pCampaign->pTextureMenuBackground;
+		}
 	}
 
 	if ( !pBackground )
@@ -600,7 +644,9 @@ std::wstring CInterfaceState::GetRandomCitation()
 		NWin32Random::Seed( GetCurrentTimeMilliseconds() );
 		int nSize = GET_ARRAY_SIZE( pGameRoot->, citation );
 		if ( nSize > 0 )
+		{
 			wszText = GET_ARRAY_ELEMENT( pGameRoot->, citation, NWin32Random::Random( 0, nSize - 1 ) );
+		}
 	}
 	return wszText;
 }
@@ -625,7 +671,9 @@ int CInterfaceState::GetAndRegisterIDForMLHandler( const std::vector<std::pair<s
 void CInterfaceState::UnregisterIDForMLHandler( int nID )
 {
 	if ( paramsForMLHandler.erase( nID ) != 0 )
+	{
 		freeIDsForMLHandler.push_back( nID );
+	}
 }
 
 const std::wstring &CInterfaceState::ExpandMLTag( const std::wstring &wszTag, int nIDForHandler ) const
@@ -645,13 +693,17 @@ const std::wstring &CInterfaceState::ExpandMLTag( const std::wstring &wszTag, in
 				{
 					const std::pair<std::wstring, std::wstring> &param = params[i];
 					if ( param.first == wszDynamicTag )
+					{
 						return param.second;
+					}
 				}
 
 				// find tag by number
 				int nIndex = NStr::ToInt( NStr::ToMBCS( wszDynamicTag ) ) - 1;
 				if ( nIndex >= 0 && nIndex < params.size() )
+				{
 					return params[nIndex].second;
+				}
 			}
 		}
 #ifdef _FINALRELEASE
@@ -737,7 +789,9 @@ std::wstring CInterfaceState::FilterMPChatText( const std::wstring &_wszText )
 			}
 		}
 		if ( !bReplaced )
+		{
 			nPos++;
+		}
 	}
 	return wszText;
 }
@@ -764,7 +818,9 @@ void CCustomMLHandler::Exec( IML *pIML, IMLLayout *pLayout, const std::vector<st
 {
 	std::vector<std::wstring>::const_iterator it = paramsSet.begin();
 	if ( it == paramsSet.end() )
+	{
 		return;
+	}
 	++it;
 	std::wstring wszName;
 	for ( ; it != paramsSet.end(); ++it )
@@ -773,23 +829,37 @@ void CCustomMLHandler::Exec( IML *pIML, IMLLayout *pLayout, const std::vector<st
 	}
 	const std::wstring &wszText = InterfaceState()->ExpandMLTag( wszName, pIML->GetIDForHandler() );
 	if ( !wszText.empty() )
+	{
 		pIML->GetStream()->InsertString( wszText );
+	}
 }
 
 static int GetDifficultyFromName( const std::string &szName )
 {
 	if ( NStr::IsDecNumber( szName ) )
+	{
 		return NStr::ToInt( szName );
+	}
 	else if ( szName == "easy" )
+	{
 		return 0;
+	}
 	else if ( szName == "normal" )
+	{
 		return 1;
+	}
 	else if ( szName == "hard" )
+	{
 		return 2;
+	}
 	else if ( szName == "veryeasy" )
+	{
 		return 4;
+	}
 	else
+	{
 		return 0; // default = easy
+	}
 }
 
 int GetMissionIndexFromName( const CDBID &dbidCampaign, const int nChapterIndex, const std::string &_szMissionName )
@@ -798,7 +868,9 @@ int GetMissionIndexFromName( const CDBID &dbidCampaign, const int nChapterIndex,
 	NStr::TrimBoth( szMissionName, '\"' );
 	//
 	if ( NStr::IsDecNumber( szMissionName ) )
+	{
 		return NStr::ToInt( szMissionName );
+	}
 	//
 	const NDb::SCampaign *pCampaign = NDb::Get<const NDb::SCampaign>( dbidCampaign );
 	NI_VERIFY( pCampaign, fmt::format( "Campaign \"{}\" not found", dbidCampaign.ToString() ), return 0 );
@@ -813,7 +885,9 @@ int GetMissionIndexFromName( const CDBID &dbidCampaign, const int nChapterIndex,
 	{
 		const NDb::CResource *pMapRes = pChapter->missionPath[i].pMap.GetBarePtrNoLoad();
 		if ( pMapRes != 0 && pMapRes->GetDBID() == dbidMission )
+		{
 			return i;
+		}
 	}
 	return 0;
 }
@@ -835,7 +909,9 @@ void StartSingleMission( const std::string &szID, const std::vector<std::wstring
 
 	const CDBID dbidCampaign = GetCampaignDBIDFromName( NStr::ToMBCS( paramsSet[0] ) );
 	if ( dbidCampaign.IsEmpty() )
+	{
 		return;
+	}
 
 	const int nChapterIndex = NStr::ToInt( NStr::ToMBCS( paramsSet[1] ) );
 	const int nMissionIndex = GetMissionIndexFromName( dbidCampaign, nChapterIndex, NStr::ToMBCS( paramsSet[2] ) );

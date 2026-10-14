@@ -57,7 +57,9 @@ bool PrepareResource( const std::string &type, const std::string &name, CPtr<IMa
 		{
 			// Reuse unsaved resources and restore cached resources deleted on disk.
 			if ( !fileExists )
+			{
 				( *resource )->GetObjMan()->SetChanged();
+			}
 			return true;
 		}
 		// The index can retain a resource after its XDB was deleted. Remove that
@@ -69,10 +71,14 @@ bool PrepareResource( const std::string &type, const std::string &name, CPtr<IMa
 		}
 	}
 	if ( folders->InsertObject( type, name ) )
+	{
 		*resource = manager->CreateObjectManipulator( type, name );
+	}
 	*created = ( *resource != nullptr );
 	if ( !*created )
+	{
 		NLog::Log( LT_ERROR, "Create VisObj: cannot create %s '%s'.\n", type.c_str(), name.c_str() );
+	}
 	return *created;
 }
 
@@ -296,7 +302,9 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 	     !PrepareResource( GEOMETRY_TYPE_NAME, szGeometryName, &geometry, &geometryCreated ) ||
 	     !PrepareResource( AIGEOMETRY_TYPE_NAME, szAIGeometryName, &aiGeometry, &aiGeometryCreated ) ||
 	     !PrepareResource( SKELETON_TYPE_NAME, szSkeletonName, &skeleton, &skeletonCreated ) )
+	{
 		return false;
+	}
 
 	bool bResult = true;
 	if ( textureCreated )
@@ -334,7 +342,9 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 	int nMaterialCount = 0;
 	bResult = bResult && CManipulatorManager::GetValue( &nMaterialCount, model, "Materials" );
 	if ( bResult && nMaterialCount == 0 )
+	{
 		bResult = model->InsertNode( "Materials" );
+	}
 	bResult = bResult && model->SetValue( "Materials.[0]", szMaterialName );
 	bResult = bResult && model->SetValue( "Geometry", szGeometryName );
 	bResult = bResult && model->SetValue( "Skeleton", szSkeletonName );
@@ -352,10 +362,12 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 		}
 	}
 	if ( !bResult )
+	{
 		NLog::Log( LT_ERROR,
 		           "Create VisObj: cannot initialize resources for '%s' (%s).\n",
 		           rszUniqueObjectName.c_str(),
 		           szSeasonName.c_str() );
+	}
 	return bResult;
 }
 

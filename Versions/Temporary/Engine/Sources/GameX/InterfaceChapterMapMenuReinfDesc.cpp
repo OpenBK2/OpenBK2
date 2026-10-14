@@ -24,7 +24,9 @@
 void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SReinforcement *pReinf )
 {
 	if ( !pReinf )
+	{
 		return;
+	}
 
 	pReinfDesc->ShowWindow( true );
 	eReinfDescState = ERDWS_REINF;
@@ -35,9 +37,13 @@ void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SReinforcement *pReinf 
 
 	IWindow *pOfficerIcon = GetChildChecked<IWindow>( pReinfDesc1Reinf, "OfficerIcon", true );
 	if ( Singleton<IScenarioTracker>()->GetLeaderLevel( 0, pReinf->eType ) >= 0 )
+	{
 		pOfficerIcon->GetChild( 0 )->ShowWindow( true );
+	}
 	else
+	{
 		pOfficerIcon->GetChild( 0 )->ShowWindow( false );
+	}
 
 	// Find unit buttons
 	IWindow *pCurrentWindow = GetCurrentReinfDescPopup();
@@ -83,7 +89,9 @@ void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SReinforcement *pReinf 
 void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SReinforcement *pReinf, const NDb::SReinforcement *pReinfUpg )
 {
 	if ( !pReinfUpg )
+	{
 		return;
+	}
 
 	pReinfDesc->ShowWindow( true );
 	eReinfDescState = ERDWS_UPGRADE;
@@ -193,7 +201,9 @@ void CInterfaceChapterMapMenu::OnReinfDescItem( const std::string &szSender )
 		if ( reinfDescUnits[i].pButton->GetName() == szSender )
 		{
 			if ( eReinfDescState == ERDWS_UPGRADE )
+			{
 				ReinfDescSelectUnit( reinfDescUnits2, -1 );
+			}
 
 			ReinfDescSelectUnit( reinfDescUnits, i );
 			return;
@@ -246,7 +256,9 @@ void CInterfaceChapterMapMenu::ReinfDescFillUnits( const NDb::SReinforcement *pR
 		units[j].pButton->SetTextString( L"" );
 		ITextView *pUnitQty = GetChildChecked<ITextView>( units[j].pButton, "UnitNumber", true );
 		if ( pUnitQty )
+		{
 			pUnitQty->SetText( L"" );
+		}
 	}
 	ITextView *pReinfName = GetChildChecked<ITextView>( GetCurrentReinfDescPopup(), "ReinforcementName", true );
 	pReinfName->SetText( L"" );
@@ -258,7 +270,9 @@ void CInterfaceChapterMapMenu::ReinfDescFillUnits( const NDb::SReinforcement *pR
 	}
 
 	if ( CHECK_TEXT_NOT_EMPTY_PRE( pReinf->, LocalizedName ) )
+	{
 		pReinfName->SetText( pReinfName->GetDBText() + GET_TEXT_PRE( pReinf->, LocalizedName ) );
+	}
 
 	int nUsedSlots = 0;
 	for ( int i = 0; i < pReinf->entries.size(); ++i )
@@ -308,11 +322,17 @@ void CInterfaceChapterMapMenu::ReinfDescFillUnits( const NDb::SReinforcement *pR
 	{
 		ITextView *pUnitQty = GetChildChecked<ITextView>( units[j].pButton, "UnitNumber", true );
 		if ( !pUnitQty )
+		{
 			continue;
+		}
 		if ( units[j].nQuantity > 1 )
+		{
 			pUnitQty->SetText( pUnitQty->GetDBText() + NStr::ToUnicode( fmt::format( "{:2d}", units[j].nQuantity ) ) );
+		}
 		else
+		{
 			pUnitQty->SetText( L"" );
+		}
 	}
 }
 
@@ -324,7 +344,9 @@ void CInterfaceChapterMapMenu::ReinfDescSelectUnit( CReinfButtonList &units, int
 		reinfDescSingleItem.pSquad = 0;
 	}
 	else if ( units[nIndex].nQuantity == 0 )
+	{
 		return;
+	}
 
 	for ( int i = 0; i < units.size(); ++i )
 	{
@@ -369,7 +391,9 @@ void CInterfaceChapterMapMenu::ReinfDescMakeUnitInfo()
 	{
 		const NDb::SMechUnitRPGStats *pUnit = reinfDescSingleItem.pMechUnit;
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pUnit->, LocalizedName ) )
+		{
 			wszUnitName = GET_TEXT_PRE( pUnit->, LocalizedName );
+		}
 		nHP = pUnit->fMaxHP;
 		nArmor = pUnit->nMaxArmor;
 
@@ -380,7 +404,9 @@ void CInterfaceChapterMapMenu::ReinfDescMakeUnitInfo()
 				const NDb::SWeaponRPGStats *pWeapon = pUnit->GetGun( -1, i, j ).pWeapon;
 
 				if ( !pWeapon )
+				{
 					continue;
+				}
 
 				for ( int k = 0; k < pWeapon->shells.size(); ++k )
 				{
@@ -398,7 +424,9 @@ void CInterfaceChapterMapMenu::ReinfDescMakeUnitInfo()
 	{
 		const NDb::SSquadRPGStats *pSquad = reinfDescSingleItem.pSquad;
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pSquad->, LocalizedName ) )
+		{
 			wszUnitName = GET_TEXT_PRE( pSquad->, LocalizedName );
+		}
 		nHP = pSquad->members.size();
 
 		for ( int i = 0; i < pSquad->members.size(); ++i )
@@ -406,12 +434,16 @@ void CInterfaceChapterMapMenu::ReinfDescMakeUnitInfo()
 			const NDb::SInfantryRPGStats *pSoldier = pSquad->members[i];
 
 			if ( !pSoldier || pSoldier->GetGunsSize( -1, 0 ) == 0 )
+			{
 				continue;
+			}
 
 			const NDb::SWeaponRPGStats *pWeapon = pSoldier->GetGun( -1, 0, 0 ).pWeapon;
 
 			if ( !pWeapon )
+			{
 				continue;
+			}
 
 			for ( int k = 0; k < pWeapon->shells.size(); ++k )
 			{
@@ -427,9 +459,13 @@ void CInterfaceChapterMapMenu::ReinfDescMakeUnitInfo()
 
 	// Encyclopedia is shown only for mech units
 	if ( reinfDescSingleItem.pMechUnit )
+	{
 		pEncyclopedia->ShowWindow( true );
+	}
 	else
+	{
 		pEncyclopedia->ShowWindow( false );
+	}
 
 	pUnitName->SetText( pUnitName->GetDBText() + wszUnitName );
 	pUnitHP->SetText( pUnitHP->GetDBText() + NStr::ToUnicode( std::to_string( nHP ) ) );
@@ -473,7 +509,9 @@ IWindow *CInterfaceChapterMapMenu::GetCurrentReinfDescPopup()
 void CInterfaceChapterMapMenu::ReinfDescScrollRight()
 {
 	if ( nSelectedReinf == reinfDescReinfs.size() )
+	{
 		return;
+	}
 
 	pButtonScrollRight->Enable( false );
 	pButtonScrollLeft->Enable( false );
@@ -489,7 +527,9 @@ void CInterfaceChapterMapMenu::ReinfDescScrollRight()
 void CInterfaceChapterMapMenu::ReinfDescScrollLeft()
 {
 	if ( nSelectedReinf == 0 )
+	{
 		return;
+	}
 
 	pButtonScrollRight->Enable( false );
 	pButtonScrollLeft->Enable( false );
@@ -518,22 +558,34 @@ void CInterfaceChapterMapMenu::ReinfDescProcessScroll( const int nStep )
 		ReinfDescSelectUnit( reinfDescUnits, 0 );
 
 		if ( nSelectedReinf > 0 )
+		{
 			pButtonScrollLeft->Enable( true );
+		}
 		else
+		{
 			pButtonScrollLeft->Enable( false );
+		}
 
 		if ( nSelectedReinf < reinfDescReinfs.size() - 1 )
+		{
 			pButtonScrollRight->Enable( true );
+		}
 		else
+		{
 			pButtonScrollRight->Enable( false );
+		}
 	}
 	else
 	{
 		int nDX = 0;
 		if ( nStep > 0 ) // Scrolling right
+		{
 			nDX = -nButtonStep / 8;
+		}
 		else // Scrolling left
+		{
 			nDX = nButtonStep / 8;
+		}
 
 		for ( int i = 0; i < reinfDescReinfs.size(); ++i )
 		{
@@ -548,7 +600,9 @@ void CInterfaceChapterMapMenu::ReinfDescProcessScroll( const int nStep )
 void CInterfaceChapterMapMenu::ReinfDescSelectReinf( int nIndex )
 {
 	if ( nIndex < 0 || nIndex >= reinfDescReinfs.size() || nIndex == nSelectedReinf )
+	{
 		return;
+	}
 
 	int nOffset = ( nSelectedReinf - nIndex ) * nButtonStep;
 	nSelectedReinf = nIndex;
@@ -566,14 +620,22 @@ void CInterfaceChapterMapMenu::ReinfDescSelectReinf( int nIndex )
 	ReinfDescSelectUnit( reinfDescUnits, 0 );
 
 	if ( nSelectedReinf > 0 )
+	{
 		pButtonScrollLeft->Enable( true );
+	}
 	else
+	{
 		pButtonScrollLeft->Enable( false );
+	}
 
 	if ( nSelectedReinf < reinfDescReinfs.size() - 1 )
+	{
 		pButtonScrollRight->Enable( true );
+	}
 	else
+	{
 		pButtonScrollRight->Enable( false );
+	}
 }
 
 bool CInterfaceChapterMapMenu::OnMouseOverReinf( const std::string &szSender, bool bEnter )
@@ -585,13 +647,17 @@ bool CInterfaceChapterMapMenu::OnMouseOverReinf( const std::string &szSender, bo
 	for ( int nRType = 0; nRType < reinfButtons.size(); ++nRType )
 	{
 		if ( !reinfButtons[nRType].pButton )
+		{
 			continue;
+		}
 
 		if ( /*reinfButtons[nRType].pButton->GetName() == szSender ||*/ reinfButtons[nRType].pBonusWnd->GetName() ==
 		     szSender )
 		{
 			if ( !reinfButtons[nRType].pIcon->IsVisible() )
+			{
 				continue;
+			}
 
 			for ( int i = 0; i < targets.size(); ++i )
 			{
@@ -605,16 +671,24 @@ bool CInterfaceChapterMapMenu::OnMouseOverReinf( const std::string &szSender, bo
 						SReward &reward = target.rewards[j];
 
 						if ( target.pBonusIcon )
+						{
 							target.pBonusIcon->ShowWindow( bEnter );
+						}
 						if ( target.pRecommended )
+						{
 							target.pRecommended->ShowWindow( !bEnter && target.eState == EMS_RECOMMENDED );
+						}
 
 						if ( i != nUpgradeMissionSelected || j != nUpgradeRewardSelected )
 						{
 							if ( reward.pBtn )
+							{
 								reward.pBtn->ShowWindow( bEnter );
+							}
 							if ( reward.pBonusWnd )
+							{
 								reward.pBonusWnd->ShowWindow( false /*bEnter*/ );
+							}
 						}
 					}
 				}

@@ -49,7 +49,9 @@ void CEngineInfo::Recalc()
 	bNeedUpdate = false;
 
 	if ( pValue == 0 )
+	{
 		pValue = new NGScene::CObjectInfo;
+	}
 
 	NGScene::CObjectInfo::SData objData;
 
@@ -58,7 +60,9 @@ void CEngineInfo::Recalc()
 
 	CVec2 vTex( 0.0f, 0.0f );
 	for ( int i = 0; i < aiVerts.size(); ++i )
+	{
 		MakeVertex( &objData.verts[i], aiVerts[i], vTex );
+	}
 
 	objData.geometry = tris;
 

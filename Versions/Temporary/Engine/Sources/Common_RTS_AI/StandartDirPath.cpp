@@ -53,12 +53,18 @@ const CVec2 CStandartDirPath::PeekPoint( const int nShift ) const
 		}
 
 		if ( ( finishPoint - res ) * dir <= 0 )
+		{
 			return finishPoint;
+		}
 		else
+		{
 			return res;
+		}
 	}
 	else
+	{
 		return finishPoint;
+	}
 }
 
 void CStandartDirPath::Shift( const int nShift )
@@ -74,7 +80,9 @@ void CStandartDirPath::Shift( const int nShift )
 		}
 
 		if ( ( finishPoint - curPoint ) * dir <= 0 )
+		{
 			curPoint = finishPoint;
+		}
 	}
 }
 

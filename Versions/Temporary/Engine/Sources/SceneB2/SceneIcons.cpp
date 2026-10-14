@@ -43,7 +43,9 @@ void CSceneIconInfo::OrientToViewer()
 void CSceneIconInfo::Recalc()
 {
 	if ( pValue == 0 )
+	{
 		pValue = new NGScene::CObjectInfo;
+	}
 
 	OrientToViewer();
 
@@ -117,7 +119,9 @@ inline void CSceneIconInfo::MoveIcon( const CVec3 &_vCenter )
 	bound.BoxInit( vCenter - vBBHalfSize, vCenter + vBBHalfSize );
 
 	if ( pBound == 0 )
+	{
 		pBound = new CCSBound();
+	}
 	pBound->Set( bound );
 }
 

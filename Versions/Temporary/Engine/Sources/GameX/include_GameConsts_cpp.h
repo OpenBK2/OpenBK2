@@ -19,7 +19,9 @@ namespace NDb
 uint32_t SGameConsts::GetMPDataVersionChecksum() const
 {
 	if ( !bMPDataVersionChecksumValid )
+	{
 		return RecalculateMPDataVersionChecksum();
+	}
 	return nMPDataVersionChecksum;
 }
 
@@ -64,7 +66,9 @@ uint32_t SGameConsts::RecalculateMPDataVersionChecksum() const
 	{
 		int gummy = 0x123456AF;
 		for ( size_t i = 0; i < mod_folder_name.size(); i++ )
+		{
 			gummy += mod_folder_name[i] * gummy + i * gummy + 0xFED321;
+		}
 		ret = CalculateChecksum( ret, gummy );
 	}
 

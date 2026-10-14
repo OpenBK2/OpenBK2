@@ -82,9 +82,13 @@ void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture,
                                       const CTRect<float> &sWindow )
 {
 	if ( !pTexture ) //CObjectBase *pRes = pScene->Create
+	{
 		pScene->CreateDynamicRects( 0, sLayout, sPosition, sWindow );
+	}
 	else
+	{
 		pScene->CreateDynamicRects( shareTextures.Get( STextureKey( pTexture ) ), sLayout, sPosition, sWindow );
+	}
 }
 
 void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture,
@@ -93,9 +97,13 @@ void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture,
                                       const CTRect<float> &rectTexture )
 {
 	if ( !pTexture ) //CObjectBase *pRes = pScene->Create
+	{
 		pScene->CreateDynamicRects( 0, pPos4, pColors4, rectTexture );
+	}
 	else
+	{
 		pScene->CreateDynamicRects( shareTextures.Get( STextureKey( pTexture ) ), pPos4, pColors4, rectTexture );
+	}
 }
 
 void C2DGameView::CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture,

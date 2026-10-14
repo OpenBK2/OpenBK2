@@ -16,7 +16,9 @@ CInterfaceArmyBranchDlg::CInterfaceArmyBranchDlg() : CInterfaceScreenBase( "Army
 bool CInterfaceArmyBranchDlg::Init()
 {
 	if ( !CInterfaceScreenBase::Init() )
+	{
 		return false;
+	}
 
 	AddScreen( this );
 
@@ -47,7 +49,9 @@ void CInterfaceArmyBranchDlg::MakeInterior()
 	pDescView = GetChildChecked<ITextView>( pMainWnd, "DescView", true );
 
 	if ( pDescView && pDescCont )
+	{
 		pDescCont->PushBack( pDescView, false );
+	}
 
 	IWindow *pBranchesBlock = GetChildChecked<IWindow>( pMainWnd, "BranchesBlock", true );
 	if ( pBranchesBlock )
@@ -56,21 +60,29 @@ void CInterfaceArmyBranchDlg::MakeInterior()
 		{
 			IWindow *pWnd = pBranchesBlock->GetChild( fmt::format( "Branch{:02d}", i + 1 ), true );
 			if ( !pWnd )
+			{
 				break;
+			}
 
 			SVisSlot visSlot;
 			visSlot.pWnd = pWnd;
 			visSlot.pBtn = GetChildChecked<IButton>( pWnd, "BranchBtn", true );
 			visSlot.szBtnName = fmt::format( "BranchBtn{:02d}", i + 1 );
 			if ( visSlot.pBtn )
+			{
 				visSlot.pBtn->SetName( visSlot.szBtnName );
+			}
 			visSlot.pIconWnd = GetChildChecked<IWindow>( pWnd, "Icon", true );
 			visSlot.pSelectionWnd = GetChildChecked<IWindow>( pWnd, "Selection", true );
 
 			if ( visSlot.pBtn )
+			{
 				visSlot.pBtn->ShowWindow( false );
+			}
 			if ( visSlot.pSelectionWnd )
+			{
 				visSlot.pSelectionWnd->ShowWindow( false );
+			}
 
 			visSlots.push_back( visSlot );
 		}
@@ -111,18 +123,26 @@ void CInterfaceArmyBranchDlg::UpdateInterior()
 		if ( nLeftBranch + i >= branches.size() )
 		{
 			if ( visSlot.pBtn )
+			{
 				visSlot.pBtn->ShowWindow( false );
+			}
 		}
 		else
 		{
 			SBranch &branch = branches[nLeftBranch + i];
 
 			if ( visSlot.pBtn )
+			{
 				visSlot.pBtn->ShowWindow( true );
+			}
 			if ( visSlot.pIconWnd )
+			{
 				visSlot.pIconWnd->SetTexture( branch.pIconTexture );
+			}
 			if ( visSlot.pSelectionWnd )
+			{
 				visSlot.pSelectionWnd->ShowWindow( ( nLeftBranch + i == nSelectedBranch ) );
+			}
 		}
 	}
 
@@ -131,12 +151,18 @@ void CInterfaceArmyBranchDlg::UpdateInterior()
 		SBranch &branch = branches[nSelectedBranch];
 
 		if ( pBranchNameView )
+		{
 			pBranchNameView->SetText( pBranchNameView->GetDBText() + branch.wszName );
+		}
 
 		if ( pDescView )
+		{
 			pDescView->SetText( pDescView->GetDBText() + branch.wszDesc );
+		}
 		if ( pDescCont )
+		{
 			pDescCont->Update();
+		}
 	}
 }
 
@@ -153,7 +179,9 @@ bool CInterfaceArmyBranchDlg::OnLeft()
 	{
 		--nLeftBranch;
 		if ( nSelectedBranch >= nLeftBranch + visSlots.size() )
+		{
 			nSelectedBranch = nLeftBranch + visSlots.size() - 1;
+		}
 
 		UpdateInterior();
 	}
@@ -167,7 +195,9 @@ bool CInterfaceArmyBranchDlg::OnRight()
 	{
 		++nLeftBranch;
 		if ( nSelectedBranch < nLeftBranch )
+		{
 			nSelectedBranch = nLeftBranch;
+		}
 
 		UpdateInterior();
 	}
@@ -194,13 +224,21 @@ bool CInterfaceArmyBranchDlg::OnSelect( const std::string &szSender )
 bool CInterfaceArmyBranchDlg::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "dialog_army_branch_close" )
+	{
 		return OnClose();
+	}
 	if ( szReaction == "dialog_army_branch_left" )
+	{
 		return OnLeft();
+	}
 	if ( szReaction == "dialog_army_branch_right" )
+	{
 		return OnRight();
+	}
 	if ( szReaction == "dialog_army_branch_select" )
+	{
 		return OnSelect( szSender );
+	}
 
 	return false;
 }

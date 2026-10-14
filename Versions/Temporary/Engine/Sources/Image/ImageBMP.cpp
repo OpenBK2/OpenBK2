@@ -33,7 +33,9 @@ bool NImage::RecognizeFormatBMP( CDataStream *pStream )
 {
 	char signature[2];
 	if ( pStream->GetPosition() + 2 >= pStream->GetSize() )
+	{
 		return false;
+	}
 
 	pStream->Read( signature, 2 );
 	pStream->Seek( pStream->GetPosition() - 2 );
@@ -58,7 +60,9 @@ bool NImage::LoadImageBMP( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 	std::vector<uint32_t> image( dwWidth * dwHeight );
 	// load image
 	if ( wNumPlanes != 1 )
+	{
 		return false;
+	}
 	//
 	uint32_t *pImageData = 0;
 	//
@@ -89,15 +93,21 @@ bool NImage::LoadImageBMP( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 			for ( i = 0; i < dwHeight; ++i )
 			{
 				if ( pStream->GetPosition() + dwWidth >= pStream->GetSize() )
+				{
 					return false;
+				}
 				pStream->Read( &( dataline[0] ), dwWidth );
 				pImageData = &( image[0] ) + ( dwHeight - i - 1 ) * dwWidth;
 				// convert image from palette to ARGB
 				for ( std::vector<uint8_t>::const_iterator pos = dataline.begin(); pos != dataline.end(); ++pos )
+				{
 					*pImageData++ = palette[*pos];
+				}
 				// skip 'left' bytes
 				if ( nEndOfLineSkip )
+				{
 					pStream->Seek( nEndOfLineSkip );
+				}
 			}
 		}
 		else if ( dwCompression == 1 ) // RLE packing
@@ -121,7 +131,9 @@ bool NImage::LoadImageBMP( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 						d = &( imagedata[0] ) + y * dwWidth;
 					}
 					else if ( rlepair[1] == 1 ) // end of bitmap
+					{
 						bDone = true;
+					}
 					else if ( rlepair[1] == 2 ) // goto xy
 					{
 						pStream->Read( rlepair, 2 );
@@ -134,7 +146,9 @@ bool NImage::LoadImageBMP( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 						pStream->Read( d, rlepair[1] );
 
 						if ( rlepair[1] & 1 )
+						{
 							pStream->Read( rlepair, 1 );
+						}
 						d += rlepair[1];
 						x += rlepair[1];
 					}
@@ -149,14 +163,18 @@ bool NImage::LoadImageBMP( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 			// depalettize image
 			pImageData = &( image[0] );
 			for ( std::vector<uint8_t>::const_iterator pos = imagedata.begin(); pos != imagedata.end(); ++pos )
+			{
 				*pImageData++ = palette[*pos];
+			}
 		}
 	}
 	else if ( ( wNumBits == 16 ) ||
 	          ( wNumBits == 32 ) ) // treat palette as a 3 DWORDs with 'red', 'green' and 'blue' bit masks respectively
 	{
 		if ( dwCompression != BC_BITFIELDS )
+		{
 			return false;
+		}
 		// read palette ('red', 'green' and 'blue' bit masks)
 		uint32_t palette[3];
 		pStream->Read( palette, sizeof( uint32_t ) * 3 );
@@ -177,7 +195,9 @@ bool NImage::LoadImageBMP( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 				*pImageData++ = pci.DecompColor( data ) | 0xFF000000;
 			}
 			if ( nEndOfLineSkip ) // each row is 0-padded to a 4-byte boundary
+			{
 				pStream->Seek( pStream->GetPosition() + nEndOfLineSkip );
+			}
 		}
 	}
 	else if ( wNumBits == 24 )
@@ -198,7 +218,9 @@ bool NImage::LoadImageBMP( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 			}
 
 			if ( nEndOfLineSkip ) // each row is 0-padded to a 4-byte boundary
+			{
 				pStream->Seek( pStream->GetPosition() + nEndOfLineSkip );
+			}
 		}
 	}
 	else if ( wNumBits == 1 )
@@ -224,11 +246,15 @@ bool NImage::LoadImageBMP( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 			}
 
 			if ( nEndOfLineSkip ) // each row is 0-padded to a 4-byte boundary
+			{
 				pStream->Seek( pStream->GetPosition() + nEndOfLineSkip );
+			}
 		}
 	}
 	else
+	{
 		return false;
+	}
 
 	//return new CImage( dwWidth, dwHeight, image );
 	pRes->SetSizes( dwWidth, dwHeight );

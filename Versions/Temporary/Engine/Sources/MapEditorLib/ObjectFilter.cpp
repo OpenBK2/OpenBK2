@@ -13,14 +13,20 @@ static void NormalizeFileName( std::string *pFileName )
 bool CObjectFilter::SEntry::Match( const std::string &szFullName, const std::string &szClassTypeName ) const
 {
 	if ( szClassType != szClassTypeName )
+	{
 		return false;
+	}
 	if ( matches.empty() )
+	{
 		return true;
+	}
 	//
 	for ( std::vector<std::string>::const_iterator it = matches.begin(); it != matches.end(); ++it )
 	{
 		if ( szFullName.compare( 0, it->size(), *it ) == 0 )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -28,7 +34,9 @@ bool CObjectFilter::SEntry::Match( const std::string &szFullName, const std::str
 bool CObjectFilter::Match( const std::string &_szFullName, const std::string &szClassTypeName ) const
 {
 	if ( entries.empty() )
+	{
 		return false;
+	}
 	//
 	bool bResult = false;
 	std::string szFullName = _szFullName;
@@ -37,13 +45,19 @@ bool CObjectFilter::Match( const std::string &_szFullName, const std::string &sz
 	for ( std::vector<SEntry>::const_iterator it = entries.begin(); it != entries.end(); ++it )
 	{
 		if ( it->eOpType == SEntry::OPERATION_UNION && it->Match( szFullName, szClassTypeName ) != false )
+		{
 			bResult = true;
+		}
 		else if ( it->eOpType == SEntry::OPERATION_INTERSECTION &&
 		          ( bResult == false || it->Match( szFullName, szClassTypeName ) == false ) )
+		{
 			return false;
+		}
 		else if ( it->eOpType == SEntry::OPERATION_DIFFERENCE &&
 		          ( bResult == false || it->Match( szFullName, szClassTypeName ) != false ) )
+		{
 			return false;
+		}
 	}
 	return bResult;
 }
@@ -55,11 +69,17 @@ int CObjectFilter::SEntry::operator&( IXmlSaver &saver )
 		std::string szOpType;
 		saver.Add( "Operation", &szOpType );
 		if ( szOpType == "union" )
+		{
 			eOpType = SEntry::OPERATION_UNION;
+		}
 		else if ( szOpType == "intersection" )
+		{
 			eOpType = SEntry::OPERATION_INTERSECTION;
+		}
 		else if ( szOpType == "difference" )
+		{
 			eOpType = SEntry::OPERATION_DIFFERENCE;
+		}
 		else
 		{
 			NI_ASSERT(
@@ -90,7 +110,9 @@ int CObjectFilter::SEntry::operator&( IXmlSaver &saver )
 	if ( saver.IsReading() )
 	{
 		for ( std::vector<std::string>::iterator it = matches.begin(); it != matches.end(); ++it )
+		{
 			NormalizeFileName( &( *it ) );
+		}
 	}
 	return 0;
 }

@@ -16,12 +16,16 @@ CExecutorUnitCombatBonus::CExecutorUnitCombatBonus( EUnitSpecialAbility eAbility
 int CExecutorUnitCombatBonus::Segment()
 {
 	if ( !IsExecutorValid() )
+	{
 		return -1;
+	}
 
 	uint16_t oldMode = modeFlags;
 	modeFlags = 0;
 	if ( GetAIUnit()->IsMoving() )
+	{
 		modeFlags |= EUM_MOVING;
+	}
 
 	if ( GetAIUnit()->GetState()->IsAttackingState() )
 	{
@@ -38,7 +42,9 @@ int CExecutorUnitCombatBonus::Segment()
 	EAbilityCombatReaction eReaction = EACR_IGNORE;
 
 	if ( oldMode != modeFlags ) //Unit started/stopped moving/fighting
+	{
 		eReaction = OnModeChange( oldMode, modeFlags );
+	}
 
 	//Process reaction
 	switch ( eReaction )

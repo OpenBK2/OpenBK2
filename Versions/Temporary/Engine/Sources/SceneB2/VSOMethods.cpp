@@ -23,7 +23,9 @@ void CTerraGen::CollectAllCragsAndRiversInArea( std::vector<int> *pColCrags,
 		if ( it->nID != nExcludeCragID )
 		{
 			if ( IsBBIntersect( vBBMin, vBBMax, it->vRidgeMin, it->vRidgeMax ) )
+			{
 				pColCrags->push_back( it->nID );
+			}
 		}
 	}
 
@@ -34,7 +36,9 @@ void CTerraGen::CollectAllCragsAndRiversInArea( std::vector<int> *pColCrags,
 		if ( it->nID != nExcludeRiverID )
 		{
 			if ( IsBBIntersect( vBBMin, vBBMax, it->vSampMin, it->vSampMax ) )
+			{
 				pColRivers->push_back( it->nID );
+			}
 		}
 	}
 }
@@ -54,10 +58,14 @@ void CTerraGen::UpdateCragsAndRiversInArea( const std::vector<int> &updCrags,
 	UpdateHeightsAfterRivers( vBBMin.x, vBBMin.y, vBBMax.x + 1, vBBMax.y + 1 );
 
 	for ( std::vector<int>::const_iterator it = updRivers.begin(); it != updRivers.end(); ++it )
+	{
 		PutRiverOnTerrain( FindRiverInfo( *it ), vBBMin, vBBMax );
+	}
 
 	for ( std::vector<int>::const_iterator it = updCrags.begin(); it != updCrags.end(); ++it )
+	{
 		PutCragOnTerrain( FindCragInfo( *it ), vBBMin, vBBMax );
+	}
 }
 
 void CTerraGen::UpdateAllOnTerrainObjectsInArea( const CVec2i &vMin, const CVec2i &vMax )
@@ -77,10 +85,14 @@ void CTerraGen::UpdateAllOnTerrainObjectsInArea( const CVec2i &vMin, const CVec2
 		      ++it )
 		{
 			if ( IsBBIntersect( vWorldMin, vWorldMax, it->vBBMin, it->vBBMax ) )
+			{
 				updIDs.push_back( it->nID );
+			}
 		}
 		for ( std::vector<int>::const_iterator it = updIDs.begin(); it != updIDs.end(); ++it )
+		{
 			UpdateRoad( *it );
+		}
 	}
 
 	// update spots
@@ -90,10 +102,14 @@ void CTerraGen::UpdateAllOnTerrainObjectsInArea( const CVec2i &vMin, const CVec2
 	      ++it )
 	{
 		if ( IsBBIntersect( vMin, vMax, it->vMin, it->vMax ) )
+		{
 			updIDs.push_back( it->nID );
+		}
 	}
 	for ( std::vector<int>::const_iterator it = updIDs.begin(); it != updIDs.end(); ++it )
+	{
 		UpdateTerraSpot( *it );
+	}
 }
 
 void CTerraGen::ConvertVSOPointsFromAIToVisAndPutOnTerrain( std::vector<NDb::SVSOPoint> *pDstPoints,

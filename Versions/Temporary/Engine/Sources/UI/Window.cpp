@@ -85,13 +85,21 @@ void CWindow::AfterLoad()
 {
 	// Rebind parts from older saves, which did not store a font-scale owner.
 	if ( pPlacedText )
+	{
 		pPlacedText->SetFontScaleWindow( this );
+	}
 	if ( pForeground )
+	{
 		pForeground->SetFontScaleWindow( this );
+	}
 	if ( pBackground )
+	{
 		pBackground->SetFontScaleWindow( this );
+	}
 	for ( int i = 0; i < drawOrder.Size(); ++i )
+	{
 		drawOrder[i]->AfterLoad();
+	}
 }
 
 int CWindow::RunAnimationAndCommands( const NDb::SUIStateSequence &seq,
@@ -120,7 +128,9 @@ int CWindow::GetOptimalWidth() const
 	return
 		pTextString->GetOptimalWidth();*/
 	if ( !pPlacedText )
+	{
 		return 0;
+	}
 	return pPlacedText->GetOptimalWidth();
 }
 
@@ -152,7 +162,9 @@ const wchar_t *CWindow::GetTextString() const
 		return L"";
 	return pTextString->GetText().c_str();  */
 	if ( !pPlacedText )
+	{
 		return L"";
+	}
 	return pPlacedText->GetText().c_str();
 }
 
@@ -175,11 +187,15 @@ void CWindow::GameMessageSink( const struct SGameMessage &msg, int nMessageType 
 void CWindow::RegisterObservers()
 {
 	for ( int i = 0; i < drawOrder.Size(); ++i )
+	{
 		drawOrder[i]->RegisterObservers();
+	}
 
 	// register own observers
 	for ( int i = 0; i < pWindowStats->gameMessageReactions.size(); ++i )
+	{
 		AddObserver( pWindowStats->gameMessageReactions[i].szGameMessage, &CWindow::GameMessageSink, i );
+	}
 }
 
 void CWindow::SetBackground( IWindowPart *_pBackground )
@@ -209,7 +225,9 @@ const std::wstring &CWindow::GetDBFormatText() const
 	if ( const NDb::SForegroundTextString *pForeground = GetInstance()->pTextString )
 	{
 		if ( pForeground->pShared && CHECK_TEXT_NOT_EMPTY_PRE( pForeground->pShared->, FormatString ) )
+		{
 			return GET_TEXT_PRE( pForeground->pShared->, FormatString );
+		}
 	}
 
 	return szEmpty;
@@ -222,7 +240,9 @@ const std::wstring &CWindow::GetDBInstanceText() const
 	if ( const NDb::SForegroundTextString *pForeground = GetInstance()->pTextString )
 	{
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pForeground->, TextString ) )
+		{
 			return GET_TEXT_PRE( pForeground->, TextString );
+		}
 	}
 
 	return szEmpty;
@@ -238,7 +258,9 @@ const NDb::SWindowPlacement *CWindow::GetDBTextPlacement() const
 	if ( const NDb::SForegroundTextString *pForeground = GetInstance()->pTextString )
 	{
 		if ( pForeground->pShared )
+		{
 			return &pForeground->pShared->position;
+		}
 	}
 	return 0;
 }
@@ -246,13 +268,17 @@ const NDb::SWindowPlacement *CWindow::GetDBTextPlacement() const
 void CWindow::SetTextPlacement( const struct NDb::SWindowPlacement &placement )
 {
 	if ( pPlacedText )
+	{
 		pPlacedText->SetPlacement( placement );
+	}
 }
 
 bool CWindow::UsesHudFontScale() const
 {
 	if ( pParent )
+	{
 		return pParent->UsesHudFontScale();
+	}
 	// During creation, children are measured before they are attached.
 	const IScreen *pLoading = CUIFactory::GetScreenDuringLoad();
 	return pLoading && pLoading != static_cast<const IWindow *>( this ) && pLoading->UsesHudFontScale();
@@ -263,25 +289,37 @@ struct IScreen *CWindow::GetScreen()
 	if ( GetParent() == 0 )
 	{
 		if ( CUIFactory::GetScreenDuringLoad() )
+		{
 			return CUIFactory::GetScreenDuringLoad();
+		}
 		else
+		{
 			return dynamic_cast<CWindowScreen *>( this );
+		}
 	}
 	else
+	{
 		return GetParent()->GetScreen();
+	}
 }
 
 void CWindow::SetFocus( const bool bFocus )
 {
 	if ( bFocus && !IsFocused() )
+	{
 		RemoveAnyFocus();
+	}
 
 	if ( GetParent() )
 	{
 		if ( bFocus )
+		{
 			GetParent()->ProcessFocused( this );
+		}
 		else
+		{
 			GetParent()->ProcessUnfocused( this );
+		}
 	}
 
 	bFocused = bFocus;
@@ -294,10 +332,14 @@ CWindow *CWindow::FindFocusedWindow()
 	while ( true )
 	{
 		if ( pWnd->bFocused )
+		{
 			return pWnd;
+		}
 
 		if ( !pWnd->GetParent() )
+		{
 			break;
+		}
 
 		pWnd = pWnd->GetParent();
 	}
@@ -315,27 +357,37 @@ void CWindow::RemoveAnyFocus()
 {
 	CWindow *pWnd = FindFocusedWindow();
 	if ( pWnd )
+	{
 		pWnd->SetFocus( false );
+	}
 }
 
 void CWindow::CheckRemoveFocus( CWindow *pClickedWnd )
 {
 	if ( !pClickedWnd )
+	{
 		return;
+	}
 
 	CWindow *pFocused = FindFocusedWindow();
 	if ( !pFocused )
+	{
 		return;
+	}
 
 	if ( pFocused == pClickedWnd )
+	{
 		return;
+	}
 
 	// не будем удалять фокус, если кликнули в фокусированное окно или одного из его потомков
 	CWindow *pWnd = pClickedWnd;
 	while ( pWnd )
 	{
 		if ( pWnd->IsRelatedFocus( pFocused ) )
+		{
 			return;
+		}
 
 		pWnd = pWnd->GetParent();
 	}
@@ -347,14 +399,18 @@ void CWindow::ProcessFocused( CWindow *pChild )
 {
 	pFocusedChild = pChild;
 	if ( GetParent() )
+	{
 		GetParent()->ProcessFocused( this );
+	}
 }
 
 void CWindow::ProcessUnfocused( CWindow *pChild )
 {
 	pFocusedChild = 0;
 	if ( GetParent() )
+	{
 		GetParent()->ProcessUnfocused( this );
+	}
 }
 
 CWindow *CWindow::GetRoot()
@@ -390,7 +446,9 @@ void CWindow::ShowWindow( const bool bShow )
 		// notify all windows with delayed reposition
 		// that they have to do reposition now
 		else
+		{
 			RepositionChildren();
+		}
 		OnChangeVisibility( bShow );
 	}
 }
@@ -400,12 +458,18 @@ bool CWindow::IsVisible() const
 	if ( GetInstance()->bVisible )
 	{
 		if ( pParent )
+		{
 			return pParent->IsVisible();
+		}
 		else
+		{
 			return true;
+		}
 	}
 	else
+	{
 		return false;
+	}
 }
 
 int CWindow::GetPriority() const
@@ -444,7 +508,9 @@ void CWindow::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 		}
 		pBackground = CUIFactory::MakeWindowPart( pShared->pBackground );
 		if ( pBackground )
+		{
 			pBackground->SetFontScaleWindow( this );
+		}
 
 		//	if ( GetInstance()->pTextString )
 		//		pTextString =	static_cast<CForegroundTextString*>( CUIFactory::MakeWindowPart( GetInstance()->pTextString ) );
@@ -452,11 +518,15 @@ void CWindow::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 		pPlacedText->SetFontScaleWindow( this );
 		SetTextString( GetDBText() );
 		if ( const NDb::SWindowPlacement *pPlacement = GetDBTextPlacement() )
+		{
 			SetTextPlacement( *pPlacement );
+		}
 
 		pForeground = CUIFactory::MakeWindowPart( pShared->pForeground );
 		if ( pForeground )
+		{
 			pForeground->SetFontScaleWindow( this );
+		}
 
 		GetInstance()->placement.position.Merge( pShared->placement.position.Get() );
 		GetInstance()->placement.lowerMargin.Merge( pShared->placement.lowerMargin.Get() );
@@ -472,17 +542,27 @@ void CWindow::Init()
 	//	if ( pTextString )
 	//		pTextString->Init();
 	if ( pPlacedText )
+	{
 		pPlacedText->Init();
+	}
 	if ( pForeground )
+	{
 		pForeground->Init();
+	}
 	if ( pBackground )
+	{
 		pBackground->Init();
+	}
 
 	for ( int i = 0; i < drawOrder.Size(); ++i )
+	{
 		drawOrder[i]->Init();
+	}
 
 	if ( !pWindowStats->bEnabled )
+	{
 		Enable( false );
+	}
 }
 
 void CWindow::Reposition( const CTRect<float> &parentRect )
@@ -518,15 +598,21 @@ void CWindow::Reposition( const CTRect<float> &parentRect )
 	                            &placement.size.first.y,
 	                            &vScreenPos.y );
 	if ( pBackground )
+	{
 		pBackground->SetPos( vScreenPos, placement.size.Get() );
+	}
 
 	//	if ( pTextString )
 	//		pTextString->SetPos( vScreenPos, placement.size.Get() );
 	if ( pPlacedText )
+	{
 		pPlacedText->Reposition( GetWindowRect() );
+	}
 
 	if ( pForeground )
+	{
 		pForeground->SetPos( vScreenPos, placement.size.Get() );
+	}
 
 	RepositionChildren();
 }
@@ -539,25 +625,37 @@ void CWindow::RepositionChildren( IWindow *_pWindow )
 	if ( pWindow )
 	{
 		if ( children.find( pWindow ) != children.end() )
+		{
 			pWindow->Reposition( rCurrent );
+		}
 	}
 	else
 	{
 		for ( int i = 0; i < drawOrder.Size(); ++i )
+		{
 			drawOrder[i]->Reposition( rCurrent );
+		}
 	}
 }
 
 void CWindow::GetPlacement( int *pX, int *pY, int *pSizeX, int *pSizeY ) const
 {
 	if ( pX )
+	{
 		*pX = GetInstance()->placement.position.Get().x;
+	}
 	if ( pY )
+	{
 		*pY = GetInstance()->placement.position.Get().y;
+	}
 	if ( pSizeX )
+	{
 		*pSizeX = GetInstance()->placement.size.Get().x;
+	}
 	if ( pSizeY )
+	{
 		*pSizeY = GetInstance()->placement.size.Get().y;
+	}
 }
 
 CTRect<int> CWindow::GetPlacement() const
@@ -604,9 +702,13 @@ void CWindow::SetPlacement( const float x, const float y, const float sizeX, con
 		GetInstance()->placement.position.first.y = y;
 	}
 	if ( flags & EWPF_SIZE_X )
+	{
 		GetInstance()->placement.size.first.x = sizeX;
+	}
 	if ( flags & EWPF_SIZE_Y )
+	{
 		GetInstance()->placement.size.first.y = sizeY;
+	}
 
 	if ( pBackground )
 	{
@@ -616,7 +718,9 @@ void CWindow::SetPlacement( const float x, const float y, const float sizeX, con
 	//	if ( pTextString )
 	//		pTextString->SetPos( vScreenPos, GetInstance()->placement.size.Get() );
 	if ( pPlacedText )
+	{
 		pPlacedText->Reposition( GetWindowRect() );
+	}
 	if ( pForeground )
 	{
 		pForeground->SetFontScaleWindow( this );
@@ -629,27 +733,37 @@ void CWindow::SetPlacement( const float x, const float y, const float sizeX, con
 void CWindow::AddChild( IWindow *pWnd, bool bDoReposition )
 {
 	if ( !pWnd )
+	{
 		return;
+	}
 
 	CPtr<CWindow> pWindow = dynamic_cast<CWindow *>( pWnd );
 
 	if ( children.find( pWindow ) != children.end() )
+	{
 		return;
+	}
 
 	if ( drawOrder.GetReserved() <= drawOrder.Size() + 1 )
+	{
 		drawOrder.Reserve( drawOrder.Size() + (std::max)( 10, drawOrder.Size() ) );
+	}
 	drawOrder.Push( pWindow.GetPtr() );
 	pWindow->SetParent( this );
 	children.insert( pWindow );
 	if ( bDoReposition )
+	{
 		RepositionChildren( pWnd );
+	}
 }
 
 void CWindow::RemoveChild( IWindow *_pChild )
 {
 	CWindow *pChild = dynamic_cast<CWindow *>( _pChild );
 	if ( bDelayChildRemove )
+	{
 		removedChildren.push_back( pChild );
+	}
 	else
 	{
 		CChildren::iterator it = children.find( pChild );
@@ -670,9 +784,13 @@ void CWindow::RemoveChild( const std::string &szChildName )
 void CWindow::Close()
 {
 	if ( GetParent() )
+	{
 		GetParent()->RemoveChild( this );
+	}
 	else
+	{
 		ASSERT( 0 );
+	}
 }
 
 int CWindow::CheckNamedChildrenCount( const std::string &szName, bool bRecursive )
@@ -681,9 +799,13 @@ int CWindow::CheckNamedChildrenCount( const std::string &szName, bool bRecursive
 	for ( int i = 0; i < drawOrder.Size(); ++i )
 	{
 		if ( szName == drawOrder[i]->GetName() )
+		{
 			nCount++;
+		}
 		if ( bRecursive )
+		{
 			nCount += drawOrder[i]->CheckNamedChildrenCount( szName, bRecursive );
+		}
 	}
 	//NI_ASSERT( nCount <= 1, StrFmt( "duplicate children name: %s", szName.c_str() ) );
 	return nCount;
@@ -707,11 +829,15 @@ IWindow *CWindow::GetChild( int nIndex )
 IWindow *CWindow::GetChild( const std::string &_szName, const bool bRecursive )
 {
 	if ( _szName.empty() )
+	{
 		return 0;
+	}
 
 	//{ CRAP - wrong window name
 	if ( _szName == " " )
+	{
 		return 0;
+	}
 	//}
 
 #ifndef _FINALRELEASE
@@ -725,7 +851,9 @@ IWindow *CWindow::GetChild( const std::string &_szName, const bool bRecursive )
 	{
 		std::string dbg = drawOrder[i]->GetName();
 		if ( _szName == drawOrder[i]->GetName() )
+		{
 			return drawOrder[i];
+		}
 	}
 
 	if ( bRecursive )
@@ -734,7 +862,9 @@ IWindow *CWindow::GetChild( const std::string &_szName, const bool bRecursive )
 		{
 			IWindow *pWnd = drawOrder[i]->GetChild( _szName, true );
 			if ( pWnd )
+			{
 				return pWnd;
+			}
 		}
 	}
 	return 0;
@@ -743,12 +873,16 @@ IWindow *CWindow::GetChild( const std::string &_szName, const bool bRecursive )
 IWindow *CWindow::GetVisibleChild( const std::string &_szName, const bool bRecursive )
 {
 	if ( _szName.empty() )
+	{
 		return 0;
+	}
 
 	for ( int i = 0; i < drawOrder.Size(); ++i )
 	{
 		if ( drawOrder[i]->IsVisible() && _szName == drawOrder[i]->GetName() )
+		{
 			return drawOrder[i];
+		}
 	}
 	if ( bRecursive )
 	{
@@ -756,7 +890,9 @@ IWindow *CWindow::GetVisibleChild( const std::string &_szName, const bool bRecur
 		{
 			IWindow *pWnd = drawOrder[i]->GetVisibleChild( _szName, true );
 			if ( pWnd )
+			{
 				return pWnd;
+			}
 		}
 	}
 	return 0;
@@ -765,17 +901,21 @@ IWindow *CWindow::GetVisibleChild( const std::string &_szName, const bool bRecur
 IWindow *CWindow::GetChild( const int _nTypeID, const int _nID, const bool bRecursive )
 {
 	for ( int i = 0; i < drawOrder.Size(); ++i )
+	{
 		if ( drawOrder[i]->GetDesc()->GetTypeID() == _nTypeID && drawOrder[i]->GetDesc()->GetRecordID() == _nID )
 		{
 			return drawOrder[i];
 		}
+	}
 	if ( bRecursive )
 	{
 		for ( int i = 0; i < drawOrder.Size(); ++i )
 		{
 			IWindow *pWnd = drawOrder[i]->GetChild( _nTypeID, _nID, true );
 			if ( pWnd )
+			{
 				return pWnd;
+			}
 		}
 	}
 	return 0;
@@ -788,8 +928,12 @@ CWindow *CWindow::GetDeepChild( const std::string &_szName )
 	{
 		// find deeper child
 		for ( int i = drawOrder.Size() - 1; i >= 0; --i )
+		{
 			if ( pRet = drawOrder[i]->GetDeepChild( _szName ) )
+			{
 				return pRet;
+			}
+		}
 	}
 	return 0;
 }
@@ -797,14 +941,18 @@ CWindow *CWindow::GetDeepChild( const std::string &_szName )
 void CWindow::SetParent( CWindow *_pParent )
 {
 	if ( pParent && pParent->IsRefValid() )
+	{
 		pParent->RemoveChild( this );
+	}
 	pParent = _pParent;
 }
 
 bool CWindow::OnButtonDown( const CVec2 &vPos, const int nButton )
 {
 	if ( !IsEnabled() )
+	{
 		return false;
+	}
 
 	NI_ASSERT( nButton >= 0, fmt::format( "don't understand such buttons {}", nButton ) );
 	pressed.resize( (std::max)( (int)pressed.size(), nButton + 1 ) );
@@ -814,15 +962,23 @@ bool CWindow::OnButtonDown( const CVec2 &vPos, const int nButton )
 
 	bool bHandledByChild = false;
 	if ( pressed[nButton] )
+	{
 		bHandledByChild = pressed[nButton]->OnButtonDown( vPos, nButton );
+	}
 	if ( !bHandledByChild )
+	{
 		CheckRemoveFocus( this );
+	}
 	if ( pTmp && pTmp->IsRefValid() && pressed[nButton] != pTmp )
+	{
 		pTmp->OnMouseMove( CVec2( -1, -1 ), 0 );
+	}
 
 	// выполним общее уведомление после частных (для содержимого) - порядок важен
 	if ( pClickNotify && IsInside( vPos ) )
+	{
 		pClickNotify->Clicked( this, nButton );
+	}
 
 	return pressed[nButton] != 0; //bHandledByChild;
 }
@@ -830,7 +986,9 @@ bool CWindow::OnButtonDown( const CVec2 &vPos, const int nButton )
 bool CWindow::OnButtonUp( const CVec2 &vPos, const int nButton )
 {
 	if ( !IsEnabled() )
+	{
 		return false;
+	}
 	NI_ASSERT( nButton >= 0, fmt::format( "don't understand such buttons {}", nButton ) );
 
 	//	if ( CWindow *pChild = PickInternal( vPos, false ) )
@@ -843,7 +1001,9 @@ bool CWindow::OnButtonUp( const CVec2 &vPos, const int nButton )
 		pressed[nButton]->OnButtonUp( vPos, nButton );
 	}
 	if ( pressed.size() > nButton ) //OnButtonUp can spoil the fun!
+	{
 		pressed[nButton] = 0;
+	}
 	return bWasPressed;
 }
 
@@ -852,7 +1012,9 @@ void CWindow::Enable( const bool bEnable )
 	for ( int nButton = 0; nButton < pressed.size(); ++nButton )
 	{
 		if ( pressed[nButton] )
+		{
 			pressed[nButton]->OnButtonUp( CVec2( -1, -1 ), nButton );
+		}
 	}
 	pressed.clear();
 	GetInstance()->bEnabled = bEnable;
@@ -861,15 +1023,23 @@ void CWindow::Enable( const bool bEnable )
 bool CWindow::OnButtonDblClk( const CVec2 &_vPos, const int nButton )
 {
 	if ( !IsEnabled() )
+	{
 		return false;
+	}
 	if ( pShared->bIgnoreDblClick )
+	{
 		return OnButtonDown( _vPos, nButton ); // && OnButtonUp( _vPos, nButton );
+	}
 
 	if ( pClickNotify && IsInside( _vPos ) )
+	{
 		pClickNotify->DoubleClicked( this, nButton );
+	}
 
 	if ( CWindow *pChild = PickInternal( _vPos, false ) )
+	{
 		return pChild->OnButtonDblClk( _vPos, nButton );
+	}
 
 	return false;
 }
@@ -883,7 +1053,9 @@ bool CWindow::OnMouseMove( const CVec2 &_vPos, const int nMouseState )
 			if ( _vPos.x < 0 || _vPos.y < 0 )
 			{
 				if ( pHighlighted )
+				{
 					pHighlighted->OnMouseMove( _vPos, nMouseState );
+				}
 				pHighlighted = 0;
 			}
 			else if ( !pHighlighted )
@@ -893,13 +1065,17 @@ bool CWindow::OnMouseMove( const CVec2 &_vPos, const int nMouseState )
 			else if ( ( pNewHighligted = PickInternal( _vPos, false ) ) != pHighlighted )
 			{
 				if ( pHighlighted ) // remove highlight
+				{
 					pHighlighted->OnMouseMove( CVec2( -1, -1 ), nMouseState );
+				}
 				pHighlighted = pNewHighligted;
 			}
 		}
 
 		if ( pHighlighted )
+		{
 			pHighlighted->OnMouseMove( _vPos, nMouseState );
+		}
 	}
 	else if ( MSTATE_BUTTON1 & nMouseState )
 	{
@@ -908,7 +1084,9 @@ bool CWindow::OnMouseMove( const CVec2 &_vPos, const int nMouseState )
 			if ( !drawOrder[i]->IsTransparent() && drawOrder[i]->IsPickable() )
 			{
 				if ( drawOrder[i]->OnMouseMove( _vPos, nMouseState ) )
+				{
 					return true;
+				}
 			}
 		}
 	}
@@ -931,12 +1109,16 @@ bool CWindow::IsPickable() const
 CWindow *CWindow::PickInternal( const CVec2 &vPos, const bool bRecursive )
 {
 	if ( !IsPickable() )
+	{
 		return 0;
+	}
 	for ( int i = drawOrder.Size() - 1; i >= 0; --i )
 	{
 		CWindow *pWnd = drawOrder[i];
 		if ( pWnd->IsModal() )
+		{
 			return pWnd;
+		}
 
 		if ( pWnd->IsPickable() && pWnd->IsInside( vPos ) )
 		{
@@ -944,7 +1126,9 @@ CWindow *CWindow::PickInternal( const CVec2 &vPos, const bool bRecursive )
 			{
 				CWindow *pPick = pWnd->PickInternal( vPos, bRecursive );
 				if ( pPick )
+				{
 					return pPick;
+				}
 			}
 			return pWnd;
 		}
@@ -962,11 +1146,15 @@ IWindow *CWindow::Pick( const CVec2 &vPos, const bool bRecursive )
 IWindow *CWindow::DemandTooltip()
 {
 	if ( pCustomTooltip )
+	{
 		return pCustomTooltip;
+	}
 
 	IScreen *pScreen = GetScreen();
 	if ( pScreen == 0 )
+	{
 		return 0;
+	}
 
 	if ( !wszCustomTooltip.empty() )
 	{
@@ -988,7 +1176,9 @@ IWindow *CWindow::DemandTooltip()
 const std::wstring &CWindow::GetDBTooltipStr() const
 {
 	if ( CHECK_TEXT_NOT_EMPTY_PRE( GetInstance()->, Tooltip ) )
+	{
 		return GET_TEXT_PRE( GetInstance()->, Tooltip );
+	}
 
 	static std::wstring wszEmpty;
 	return wszEmpty;
@@ -1020,7 +1210,9 @@ int CWindow::GetTooltipIDForMLHandler() const
 void CWindow::Visit( struct IUIVisitor *pVisitor )
 {
 	if ( !IsVisible() )
+	{
 		return;
+	}
 
 	float fFade = GetTotalFadeValue();
 
@@ -1029,7 +1221,9 @@ void CWindow::Visit( struct IUIVisitor *pVisitor )
 	{
 		pBackground->SetFadeValue( fFade );
 		if ( !nOutlineType.IsEmpty() )
+		{
 			pBackground->SetOutline( nOutlineType );
+		}
 		pBackground->Visit( pVisitor );
 	}
 	// text
@@ -1071,7 +1265,9 @@ bool CWindow::IsActiveArea( const CVec2 &vPos ) const
 {
 	const NDb::SWindowShared *pShared = GetSharedDesc();
 	if ( pShared->activeArea.empty() )
+	{
 		return true;
+	}
 	else
 	{
 		return CP_OUTSIDE != ClassifyPolygon( pShared->activeArea, vPos - vScreenPos );
@@ -1081,7 +1277,9 @@ bool CWindow::IsActiveArea( const CVec2 &vPos ) const
 void CWindow::DelayedChildRemove()
 {
 	for ( int i = 0; i < removedChildren.size(); ++i )
+	{
 		drawOrder.Remove( removedChildren[i] );
+	}
 	removedChildren.clear();
 	bDelayChildRemove = false;
 }
@@ -1115,21 +1313,31 @@ bool CWindow::ProcessEvent( const struct SGameMessage &msg )
 	if ( IsValid( pFocusedChild ) && pFocusedChild->IsVisible() )
 	{
 		if ( pFocusedChild->ProcessEvent( msg ) )
+		{
 			return true;
+		}
 	}
 	if ( priorityEvents.ProcessEvent( msg, this ) )
+	{
 		return true;
+	}
 	// children, should work even if windows are removed in progress
 	bDelayChildRemove = true;
 	for ( int i = drawOrder.Size() - 1; i >= 0; --i )
 	{
 		CWindow *pWindow = drawOrder[i];
 		if ( !pWindow )
+		{
 			continue;
+		}
 		if ( pWindow == pFocusedChild )
+		{
 			continue;
+		}
 		if ( msg.mMessage.cType != NInput::CT_UNKNOWN && ( !pWindow->IsVisible() || !pWindow->IsEnabled() ) )
+		{
 			continue;
+		}
 		if ( pWindow->ProcessEvent( msg ) )
 		{
 			DelayedChildRemove();
@@ -1139,7 +1347,9 @@ bool CWindow::ProcessEvent( const struct SGameMessage &msg )
 	DelayedChildRemove();
 
 	if ( CGMORegContainer::ProcessEvent( msg, this ) )
+	{
 		return true;
+	}
 
 	return bIsModal && msg.mMessage.cType != NInput::CT_UNKNOWN;
 }
@@ -1149,9 +1359,13 @@ bool CWindow::IsPointInsideOfChildren( const CVec2 &vPoint )
 	for ( int i = drawOrder.Size() - 1; i >= 0; --i )
 	{
 		if ( !drawOrder[i]->IsVisible() )
+		{
 			continue;
+		}
 		if ( drawOrder[i]->IsInside( vPoint ) )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -1170,8 +1384,12 @@ bool CWindow::ProcessMessage( const struct SBUIMessage &msg )
 	if ( !bRes ) // this window doesn't process message, direct it to children
 	{
 		for ( int i = drawOrder.Size() - 1; i >= 0; --i )
+		{
 			if ( drawOrder[i]->ProcessMessage( msg ) )
+			{
 				return true;
+			}
+		}
 	}
 	return bRes;
 }
@@ -1194,13 +1412,17 @@ void CWindow::SetTexture( const struct NDb::STexture *_pDesc )
 	NI_ASSERT( pBackground != 0,
 	           fmt::format( "Window \"{}\" has no background. Cannot change texture.", GetInstance()->szName ) );
 	if ( pBackground != 0 )
+	{
 		pBackground->SetTexture( _pDesc );
+	}
 }
 
 SWindowContext *CWindow::GetContext()
 {
 	if ( !pContext )
+	{
 		pContext = new SWindowContextCommon();
+	}
 	return pContext;
 }
 
@@ -1209,7 +1431,9 @@ bool CWindow::MsgOnLMouseDown( const struct SGameMessage &msg )
 	NI_ASSERT( IsPacked2DCoords( msg.nParam1 ), "param is not a packed 2D coords!" );
 	CVec2 vPos = UnPackCoords( msg.nParam1 );
 	if ( !IsInside( ScreenToVirtual( vPos ) ) )
+	{
 		return false;
+	}
 	return OnButtonDown( vPos, MSTATE_BUTTON1 );
 }
 
@@ -1225,7 +1449,9 @@ bool CWindow::MsgOnLMouseDblClick( const struct SGameMessage &msg )
 	NI_ASSERT( IsPacked2DCoords( msg.nParam1 ), "param is not a packed 2D coords!" );
 	CVec2 vPos = UnPackCoords( msg.nParam1 );
 	if ( !IsInside( ScreenToVirtual( vPos ) ) )
+	{
 		return false;
+	}
 	return OnButtonDblClk( vPos, MSTATE_BUTTON1 );
 }
 
@@ -1234,7 +1460,9 @@ bool CWindow::MsgOnRMouseDown( const struct SGameMessage &msg )
 	NI_ASSERT( IsPacked2DCoords( msg.nParam1 ), "param is not a packed 2D coords!" );
 	CVec2 vPos = UnPackCoords( msg.nParam1 );
 	if ( !IsInside( ScreenToVirtual( vPos ) ) )
+	{
 		return false;
+	}
 	return OnButtonDown( vPos, MSTATE_BUTTON2 );
 }
 
@@ -1250,7 +1478,9 @@ bool CWindow::MsgOnRMouseDblClick( const struct SGameMessage &msg )
 	NI_ASSERT( IsPacked2DCoords( msg.nParam1 ), "param is not a packed 2D coords!" );
 	CVec2 vPos = UnPackCoords( msg.nParam1 );
 	if ( !IsInside( ScreenToVirtual( vPos ) ) )
+	{
 		return false;
+	}
 	OnButtonDblClk( vPos, MSTATE_BUTTON2 );
 	return true;
 }
@@ -1260,7 +1490,9 @@ bool CWindow::MsgOnMouseMove( const struct SGameMessage &msg )
 	NI_ASSERT( IsPacked2DCoords( msg.nParam1 ), "param is not a packed 2D coords!" );
 	CVec2 vPos = UnPackCoords( msg.nParam1 );
 	if ( !IsInside( ScreenToVirtual( vPos ) ) )
+	{
 		return false;
+	}
 	return OnMouseMove( vPos, 0 );
 }
 

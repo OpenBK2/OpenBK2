@@ -44,7 +44,9 @@ public:
 		for ( CSounds::iterator it = sounds.begin(); it != sounds.end(); ++it )
 		{
 			if ( IsSoundHearable( *it, nRadius ) )
+			{
 				func( *it );
+			}
 		}
 	}
 	// для перебора всех звуков.
@@ -56,16 +58,22 @@ public:
 			for ( CSounds::iterator it = sounds.begin(); it != sounds.end(); ++it )
 			{
 				if ( IsSoundHearable( *it, nRadius ) )
+				{
 					func( *it );
+				}
 				else
+				{
 					func( *it, false );
+				}
 			}
 		}
 		else
 		{
 			// значит ни один из звуков этой клетки не слышен
 			for ( CSounds::iterator it = sounds.begin(); it != sounds.end(); ++it )
+			{
 				func( *it, false );
+			}
 		}
 	}
 };

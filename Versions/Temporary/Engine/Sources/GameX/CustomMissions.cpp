@@ -22,7 +22,9 @@ void GetObjectsFromFolderByType( std::vector<CDBID> *pDBIDs, const NFile::CFileP
 		{
 			const CDBID dbidObject = CDBID( *it );
 			if ( NDb::GetClassTypeName( dbidObject ) == szType )
+			{
 				pDBIDs->push_back( dbidObject );
+			}
 		}
 	}
 }

@@ -113,7 +113,9 @@ void CMemObject::CreateCube( const CVec3 &base, const CVec3 &size, bool bTwoSide
 	{
 		points.insert( points.end(), points.begin(), points.end() );
 		for ( int i = 0; i < 12; ++i )
+		{
 			tris.push_back( STriangle( tris[i].i1, tris[i].i3, tris[i].i2 ) );
+		}
 	}
 	//
 	Create( points, tris );
@@ -143,7 +145,9 @@ void CMemObject::CreateSphere( const CVec3 &ptCenter, float fRadius, int nSubs )
 	mb.AddSphereTriangle( a, d, c, nSubs );
 	mb.AddSphereTriangle( b, c, d, nSubs );
 	for ( int i = 0; i < resPoints.size(); ++i )
+	{
 		resPoints[i] = resPoints[i] * fRadius + ptCenter;
+	}
 }
 
 void CMemObject::CreatePolyline( const std::vector<CVec3> &points )
@@ -168,7 +172,9 @@ typedef CVec2 TTriangle[3];
 void CMemObject::CreatePolygone( const std::vector<CVec2> &points, float fZ )
 {
 	if ( points.size() < 3 )
+	{
 		return;
+	}
 
 	std::vector<CVec3> vert;
 	vert.resize( points.size() );
@@ -206,7 +212,9 @@ void CMemObject::CreatePolygone( const std::vector<CVec2> &points, float fZ )
 			const SMOTessPoint &next = *i;
 
 			if ( temp.fNormal > fRange )
+			{
 				continue;
+			}
 
 			bool bHasInside = false;
 			std::vector<CVec2> vTri( 3 );
@@ -221,17 +229,25 @@ void CMemObject::CreatePolygone( const std::vector<CVec2> &points, float fZ )
 				for ( int nTemp = 0; nTemp < 3; nTemp++ )
 				{
 					if ( vTest == vTri[nTemp] )
+					{
 						bGoOut = true;
+					}
 				}
 				if ( bGoOut )
+				{
 					continue;
+				}
 
 				bHasInside = IsPointInPolygon( vTri, vTest );
 				if ( bHasInside )
+				{
 					break;
+				}
 			}
 			if ( bHasInside )
+			{
 				continue;
+			}
 
 			tris.push_back( STriangle( next.nIndex, temp.nIndex, prev.nIndex ) );
 			poly.erase( iPrev );
@@ -264,7 +280,9 @@ void CMemObject::CreatePolygone( const std::vector<CVec2> &points, float fZ )
 			fRange = 0;
 		}
 		else
+		{
 			break;
+		}
 	}
 	////
 	Create( vert, tris );
@@ -278,13 +296,21 @@ void CMemObject::CreateCylinder( const CVec3 &ptStart, const CVec3 &ptEnd, float
 
 	const float fStep = FP_PI2 / nSubs + 0.001;
 	for ( float fA = fStep; fA < FP_PI2; fA += fStep )
+	{
 		base.push_back( CVec3( fRadius * cos( fA ), 0, fRadius * sin( fA ) ) );
+	}
 	for ( int i = base.size() - 1; i >= 0; --i )
+	{
 		base.push_back( CVec3( -base[i].x, base[i].y, base[i].z ) );
+	}
 	for ( int i = base.size() - 1; i >= 0; --i )
+	{
 		base.push_back( CVec3( base[i].x, base[i].y, -base[i].z ) );
+	}
 	if ( base.size() < 2 )
+	{
 		return;
+	}
 	CVec3 ptDir = ptEnd - ptStart;
 	base.push_back( base.front() );
 	SHMatrix m;

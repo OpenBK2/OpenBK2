@@ -40,7 +40,9 @@ GetParam( const NDb::EUnitAckType eAck, const CUnitAcksInfo &acksInfo, const NDb
 
 	NI_ASSERT( pConsts->acksParameters.size() > posAck->second, fmt::format( "no ack in database {}", int( eAck ) ) );
 	if ( !pConsts->acksParameters.empty() )
+	{
 		return &pConsts->acksParameters[posAck->second];
+	}
 	else
 	{
 		static NDb::SAckParameter par;
@@ -56,7 +58,9 @@ bool CClientAckManager::CAckPredicate::operator()( const SAck &a )
 {
 	const NDb::SAckParameter *pParam = ::GetParam( a.eAck, acksInfo, pConsts );
 	if ( pParam )
+	{
 		return pParam->eAckClass == eType;
+	}
 	return false;
 }
 
@@ -114,7 +118,9 @@ bool CClientAckManager::CBoredUnitsContainer::SendAck( const NTimer::STime curTi
 {
 	NI_ASSERT( nCounter >= 0, "wrong counter" );
 	if ( timeLastBored == 0 )
+	{
 		timeLastBored = curTime + int( timeInterval * ( 1.0f + 1.0f * rand() / RAND_MAX ) );
+	}
 
 	if ( nCounter == 0 || timeLastBored > curTime )
 	{
@@ -133,12 +139,18 @@ bool CClientAckManager::CBoredUnitsContainer::SendAck( const NTimer::STime curTi
 				DelUnit( pUnit );
 				pUnit = 0;
 				if ( nCounter != 0 )
+				{
 					pUnit = ( *boredUnits.begin() ).first;
+				}
 			}
 			if ( IsValid( pUnit ) )
+			{
 				pUnit->SendAcknowledgement( pAckManager, eBored );
+			}
 			else
+			{
 				bSayAck = false;
+			}
 
 			timeLastBored = curTime + int( timeInterval * ( 1.0f + 1.0f * rand() / RAND_MAX ) );
 		}
@@ -218,7 +230,9 @@ void CClientAckManager::InitConsts()
 
 	const std::vector<NDb::SAckParameter> &params( pConsts->acksParameters );
 	for ( int i = 0; i < params.size(); ++i )
+	{
 		acksInfo[params[i].eAckType] = i;
+	}
 }
 
 void CClientAckManager::Init()
@@ -244,7 +258,9 @@ void CClientAckManager::AddDeathAcknowledgement( const CVec3 &vPos,
                                                  const unsigned int timeSinceStart )
 {
 	if ( pGameTimer->GetPauseType() != -1 )
+	{
 		return;
+	}
 
 	//NI_ASSERT( timeSinceStart < pGameTimer->GetAbsTime(), StrFmt( "somebody dead before times with sound %s, timeSinceStart = %d, absTime =%d", sound.c_str(), timeSinceStart, pGameTimer->GetGameTimer() ) );
 
@@ -267,10 +283,14 @@ void CClientAckManager::AddAcknowledgement( struct IMOUnit *pUnit,
                                             const unsigned int nTimeSinceStart )
 {
 	if ( GetParam( eAck ) == 0 )
+	{
 		return;
+	}
 	NDb::EAckClass eType = GetParam( eAck )->eAckClass;
 	if ( pGameTimer->GetPauseType() != -1 && NDb::ACKT_NOTIFY != eType )
+	{
 		return;
+	}
 
 	if ( NDb::ACK_UNIT_DIED == eAck )
 	{
@@ -279,7 +299,9 @@ void CClientAckManager::AddAcknowledgement( struct IMOUnit *pUnit,
 		{
 		}
 		else
+		{
 			return;
+		}
 	}
 
 	//выяснить какой тип у этого аска
@@ -287,7 +309,9 @@ void CClientAckManager::AddAcknowledgement( struct IMOUnit *pUnit,
 	NI_ASSERT( !pUnit->IsRefInvalid(), "added ack from invalid unit" );
 
 	if ( acksInfo.find( eAck ) == acksInfo.end() )
+	{
 		return;
+	}
 
 	SAck ack;
 	ack.pSound = pSound;
@@ -326,9 +350,13 @@ void CClientAckManager::AddAcknowledgement( struct IMOUnit *pUnit,
 			if ( 0 == unitAcks[pUnit].wSoundID )
 			{
 				if ( pLastSelected == pUnit )
+				{
 					++nSelectionCounter;
+				}
 				else
+				{
 					nSelectionCounter = 0;
+				}
 				pLastSelected = pUnit;
 				if ( nSelectionCounter >= NUM_SELECTIONS_BEFORE_F_OFF )
 				{
@@ -338,10 +366,14 @@ void CClientAckManager::AddAcknowledgement( struct IMOUnit *pUnit,
 						pLastSelected = 0;
 					}
 					else
+					{
 						unitAcks[pUnit].acks.push_back( ack );
+					}
 				}
 				else
+				{
 					unitAcks[pUnit].acks.push_back( ack );
+				}
 			}
 
 			break;
@@ -386,7 +418,9 @@ void CClientAckManager::Update( struct ISoundScene *pSoundScene )
 		{
 			const NDb::EUnitAckType eType = static_cast<NDb::EUnitAckType>( ( *it ).first );
 			if ( GetParam( eType ) )
+			{
 				( *it ).second.SendAck( curTime, eType, this, GetParam( eType )->nTimeAfterPrevious );
+			}
 		}
 	}
 
@@ -418,7 +452,9 @@ void CClientAckManager::Update( struct ISoundScene *pSoundScene )
 
 				// если время для позитивного не пришло
 				if ( !pCurrentAskInfo || pCurrentAskInfo->eAckClass == NDb::ACKT_POSITIVE && ack.timeRun > curTime )
+				{
 					continue;
+				}
 
 				//проверить не запущен ли уже Ack данного типа.
 				// если играется, то звук не запускать.
@@ -437,13 +473,19 @@ void CClientAckManager::Update( struct ISoundScene *pSoundScene )
 					{
 						int i = 0;
 						while ( debugAckNames[i].eAckType != NDb::ACK_NONE && debugAckNames[i].eAckType != addedAck.eAck )
+						{
 							++i;
+						}
 
 						std::string szMessage;
 						if ( debugAckNames[i].eAckType != addedAck.eAck )
+						{
 							szMessage = fmt::format( "unknown ack {}", static_cast<int>( addedAck.eAck ) );
+						}
 						else
+						{
 							szMessage = debugAckNames[i].pszName;
+						}
 						szMessage = "														ack " + szMessage;
 
 						WriteToPipe( PIPE_CHAT, szMessage.c_str(), 0xff00ff00 );
@@ -473,7 +515,9 @@ void CClientAckManager::UnitDead( struct IMOUnit *pUnit, struct ISoundScene *pSo
 	}
 
 	for ( BoredUnits::iterator it = boredUnits.begin(); it != boredUnits.end(); ++it )
+	{
 		it->second.DelUnit( pTipaUnit );
+	}
 }
 
 void CClientAckManager::RegisterAsBored( const NDb::EUnitAckType eBored, struct IMOUnit *pObject )

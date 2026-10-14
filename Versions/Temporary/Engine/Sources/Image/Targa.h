@@ -96,7 +96,9 @@ class CTGARawLoader
 		const int nBytesToRead = nNumElements * sizeof( TInColor );
 		pStream->Read( &( buffer[0] ), nBytesToRead );
 		for ( typename std::vector<TInColor>::const_iterator it = buffer.begin(); it != buffer.end(); ++it )
+		{
 			*pColors++ = convertor( *it );
+		}
 		return true;
 	}
 	static bool LoadLocal(
@@ -112,7 +114,9 @@ public:
 	{
 		TConvertor convertor( hdr.colormap.wColorMapLength, hdr.colormap.cColorMapEntrySize, pStream );
 		if ( !convertor.IsReady() )
+		{
 			return false;
+		}
 		// second condition (!= 1) are to avoid pallettized image loading w/o conversion
 		const int nColorsEqual = sizeof( TInColor ) == sizeof( TOutColor ) && sizeof( TInColor ) != 1;
 		SInt2Type<nColorsEqual> separator;
@@ -143,7 +147,9 @@ class CTGARLELoader
 		TInColor buffer[128];
 		pStream->Read( &( buffer[0] ), nNumElements * sizeof( TInColor ) );
 		for ( TInColor *pColor = buffer; pColor != buffer + nNumElements; ++pColor, ++pColors )
+		{
 			*pColors = convertor( *pColor );
+		}
 		return true;
 	}
 	static bool LoadRaw(
@@ -158,7 +164,9 @@ public:
 	{
 		TConvertor convertor( hdr.colormap.wColorMapLength, hdr.colormap.cColorMapEntrySize, pStream );
 		if ( !convertor.IsReady() )
+		{
 			return false;
+		}
 		const int nColorsEqual = sizeof( TInColor ) == sizeof( TOutColor );
 		SInt2Type<nColorsEqual> separator;
 		const int nBytesToRead =
@@ -175,11 +183,15 @@ public:
 				pStream->Read( &pixelValue, sizeof( TInColor ) );
 				const TOutColor color = convertor( pixelValue );
 				for ( TOutColor *pColor = pColors; pColor != pColors + nNumElements; ++pColor )
+				{
 					*pColor = color;
+				}
 				//MemSetDWord( reinterpret_cast<uint32_t*>(pColors), convertor(pixelValue), nNumElements );
 			}
 			else // raw-data packet
+			{
 				LoadRaw( pColors, nNumElements, convertor, pStream, &separator );
+			}
 			pColors += nNumElements;
 			nReadBytes += nNumElements * sizeof( TInColor );
 		}
@@ -203,7 +215,9 @@ inline void LoadTGAHeader( STGAFileHeader *pHdr, CDataStream *pStream )
 	pStream->Read( pHdr, sizeof( *pHdr ) );
 	// skip image ID
 	if ( pHdr->cIDLength != 0 )
+	{
 		pStream->Seek( pStream->GetPosition() + pHdr->cIDLength );
+	}
 }
 
 template <typename TOutColor>
@@ -259,12 +273,18 @@ bool LoadTGAImage( CArray2D<TOutColor> &dst, CDataStream *pStream )
 	LoadTGAHeader( &hdr, pStream );
 	// Reject empty/truncated inputs before taking the first pixel address.
 	if ( !pStream->IsOk() || hdr.imagespec.wImageWidth == 0 || hdr.imagespec.wImageHeight == 0 )
+	{
 		return false;
+	}
 	dst.SetSizes( hdr.imagespec.wImageWidth, hdr.imagespec.wImageHeight );
 	if ( LoadTGAImageData( &( dst[0][0] ), hdr, pStream ) == false )
+	{
 		return false;
+	}
 	if ( hdr.imagespec.descriptor.cTopToBottomOrder == 0 )
+	{
 		FlipY( dst );
+	}
 	return true;
 }
 
@@ -279,11 +299,17 @@ int LoadTGAImageAppendY( CArray2D<TOutColor> &dst, const int nY, CDataStream *pS
 	           "Image too small to append" );
 	if ( ( dst.GetSizeX() != int( hdr.imagespec.wImageWidth ) ) ||
 	     ( dst.GetSizeY() <= nY + int( hdr.imagespec.wImageHeight ) ) )
+	{
 		return nY;
+	}
 	if ( LoadTGAImageData( &( dst[nY][0] ), hdr, pStream ) == false )
+	{
 		return nY;
+	}
 	if ( hdr.imagespec.descriptor.cTopToBottomOrder == 0 )
+	{
 		FlipY( dst, nY, nY + int( hdr.imagespec.wImageHeight ) - 1 );
+	}
 	return nY + int( hdr.imagespec.wImageHeight );
 }
 

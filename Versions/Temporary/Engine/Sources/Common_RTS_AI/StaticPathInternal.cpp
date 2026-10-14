@@ -24,10 +24,14 @@ CCommonStaticPath::CCommonStaticPath( CCommonPathFinder *pStaticPathFinder, CAIM
 	NI_ASSERT( nLen >= 0 && nLen <= pStaticPathFinder->GetPathLength(), "Wrong length" );
 
 	if ( path.size() < nLen )
+	{
 		path.resize( nLen * 1.5, SVector( 0, 0 ) );
+	}
 
 	if ( nLen > 0 )
+	{
 		pStaticPathFinder->GetTiles( &( path[0] ), nLen );
+	}
 }
 
 void CCommonStaticPath::MoveStartTileTo( const int nStart )
@@ -49,30 +53,44 @@ void CCommonStaticPath::MoveFinishTileTo( const int nFinish )
 void CCommonStaticPath::MoveFinishPointBy( const CVec2 &vMove )
 {
 	if ( pAIMap->GetTile( finishPoint + vMove ) == finishTile )
+	{
 		finishPoint += vMove;
+	}
 }
 
 bool CCommonStaticPath::MergePath( IStaticPath *pAppendant, const int _nStartTile )
 {
 	if ( !pAppendant || !pAIMap || nLen <= 0 || nLen > path.size() || _nStartTile < 0 )
+	{
 		return false;
+	}
 	const int nAppendantLength = pAppendant->GetLength();
 	if ( nAppendantLength <= _nStartTile )
+	{
 		return false;
+	}
 	if ( mDistance( pAppendant->GetTile( _nStartTile ), path[nLen - 1] ) > 2 )
+	{
 		return false;
+	}
 	const int nStartTile = pAppendant->GetTile( _nStartTile ) == path[nLen - 1] ? _nStartTile + 1 : _nStartTile;
 	const int nTilesToAppend = nAppendantLength - nStartTile;
 	if ( nTilesToAppend > ( std::numeric_limits<int>::max )() - nLen )
+	{
 		return false;
+	}
 	const int nNewLength = nLen + nTilesToAppend;
 	// path can contain allocation padding or a trimmed suffix; only nLen tiles
 	// belong to the route. Keep one extra endpoint for MoveStartTileTo(nLen).
 	if ( path.size() <= nNewLength )
+	{
 		path.resize( size_t( nNewLength ) + 1 );
+	}
 	// Keep both logical lengths unchanged while copying, including self-appends.
 	for ( int i = nStartTile; i < nAppendantLength; ++i )
+	{
 		path[nLen + ( i - nStartTile )] = pAppendant->GetTile( i );
+	}
 	nLen = nNewLength;
 	finishTile = path[nLen - 1];
 	path[nLen] = finishTile;
@@ -84,7 +102,9 @@ int CCommonStaticPath::MarkStaticPath( const int nID, const NDebugInfo::EColor c
 {
 	std::vector<SVector> tiles;
 	for ( int i = 0; i < nLen; ++i )
+	{
 		tiles.push_back( path[i] );
+	}
 
 	return DebugInfoManager()->CreateMarker( nID, tiles, color );
 }

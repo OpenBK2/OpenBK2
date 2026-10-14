@@ -125,7 +125,9 @@ void ResetStack()
 void SFLB4_PushInterface( IInterfaceBase *pInterface )
 {
 	if ( !interfaces.empty() )
+	{
 		interfaces.back()->OnGetFocus( false );
+	}
 	interfaces.push_back( pInterface );
 	pInterface->OnGetFocus( true );
 }
@@ -142,7 +144,9 @@ void PopInterface()
 		interfaces.pop_back();
 	}
 	if ( !interfaces.empty() )
+	{
 		interfaces.back()->OnGetFocus( true );
+	}
 }
 
 void Command( IInterfaceCommand *pCommand )
@@ -167,16 +171,22 @@ IInterfaceBase *GetTopInterface()
 IInterfaceBase *GetPrevInterface( IInterfaceBase *pCurrentInterface )
 {
 	if ( !pCurrentInterface )
+	{
 		return interfaces.back();
+	}
 
 	for ( CInterfacesList::iterator it = interfaces.begin(); it != interfaces.end(); ++it )
 	{
 		if ( *it == pCurrentInterface )
 		{
 			if ( it != interfaces.begin() )
+			{
 				return *( --it );
+			}
 			else
+			{
 				return 0;
+			}
 		}
 	}
 	return 0;
@@ -202,10 +212,14 @@ void AfterLoad()
 {
 	// interfaces after load
 	for ( CInterfacesList::iterator it = interfaces.begin(); it != interfaces.end(); ++it )
+	{
 		( *it )->AfterLoad();
+	}
 	// UNTIL MODAL INTERFACES (ONLY LAST INTERFACE HAS FOCUS
 	if ( !interfaces.empty() )
+	{
 		( interfaces.back() )->OnGetFocus( true );
+	}
 }
 
 //! Whether to write a line for every interface command executed.
@@ -264,7 +278,9 @@ static bool ProcessEvent( const SGameMessage &msg )
 		{
 			--it;
 			if ( ( *it )->ProcessEvent( msg ) || ( msg.mMessage.cType != NInput::CT_UNKNOWN && ( *it )->IsModal() ) )
+			{
 				return true;
+			}
 		}
 	}
 	return false;
@@ -302,9 +318,13 @@ static void LimitInterfaceFrameRate( bool bActive )
 		const std::chrono::nanoseconds left = frameTime - elapsed;
 		const int64_t nSleepMS = std::chrono::duration_cast<std::chrono::milliseconds>( left ).count();
 		if ( nSleepMS > 1 )
+		{
 			std::this_thread::sleep_for( std::chrono::milliseconds( nSleepMS - 1 ) );
+		}
 		else
+		{
 			std::this_thread::yield();
+		}
 
 		timeNow = std::chrono::steady_clock::now();
 		elapsed = timeNow - timeLastFrame;
@@ -321,7 +341,9 @@ bool StepApp( bool bActive )
 	//	bAppActive = bActive;
 	// execute interface (overlord) commands
 	if ( !ProcessInterfaceCmds() )
+	{
 		return false;
+	}
 	// check for empty interfaces stack
 	if ( interfaces.empty() )
 	{
@@ -343,7 +365,9 @@ bool StepApp( bool bActive )
 		//bAppIsActive = bActive;
 		//NGfx::SetGamma( bActive );//bSetGamma );
 		if ( !ProcessInterfaceCmds() )
+		{
 			return false;
+		}
 		ASSERT( IsValid( interfaces.back() ) );
 
 		if ( true ) //bInput )
@@ -359,25 +383,35 @@ bool StepApp( bool bActive )
 					ProcessMainLoopCmds( event );
 				}
 				if ( !ProcessInterfaceCmds() )
+				{
 					return false;
+				}
 			}
 			if ( event.mMessage.cType == NInput::CT_TIME || bInputEnabled )
+			{
 				ProcessEvent( event );
+			}
 			if ( !ProcessInterfaceCmds() )
+			{
 				return false;
+			}
 
 			//currentTime = event.mMessage.tTime;
 		}
 		//
 		if ( bActive )
+		{
 			NGScene::LoadPrecached();
+		}
 		//
 		if ( !interfaces.empty() )
 		{
 			IInterfaceBase *pInterface = interfaces.back();
 			pInterface->Step( bActive );
 			if ( !ProcessInterfaceCmds() )
+			{
 				return false;
+			}
 		}
 	}
 	LimitInterfaceFrameRate( bActive );
@@ -388,16 +422,24 @@ bool StepApp( bool bActive )
 static void CmdLoad( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )
+	{
 		NMainLoop::Command( CreateICLoad( "quick" ) );
+	}
 	else
+	{
 		NMainLoop::Command( CreateICLoad( NStr::ToMBCS( paramsSet[0] ) ) );
+	}
 }
 static void CmdSave( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )
+	{
 		NMainLoop::Command( CreateICSave( "quick" ) );
+	}
 	else
+	{
 		NMainLoop::Command( CreateICSave( NStr::ToMBCS( paramsSet[0] ) ) );
+	}
 }
 START_REGISTER( MainLoopInternal )
 REGISTER_CMD( "load", CmdLoad );

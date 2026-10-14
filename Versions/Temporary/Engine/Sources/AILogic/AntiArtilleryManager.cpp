@@ -47,18 +47,26 @@ void CAntiArtilleryManager::Segment()
 					while ( bDelete && j < 3 )
 					{
 						if ( theDipl.GetDiplStatusForParties( i, j ) == EDI_ENEMY && IsHeardForParty( pAntiArt, j ) )
+						{
 							bDelete = false;
+						}
 						else
+						{
 							++j;
+						}
 					}
 				}
 
 				if ( bDelete )
+				{
 					aa2Delete.push_back( *iter );
+				}
 			}
 
 			for ( std::list<int>::iterator iter = aa2Delete.begin(); iter != aa2Delete.end(); ++iter )
+			{
 				antiArtilleries[i].erase( *iter );
+			}
 		}
 	}
 }
@@ -76,14 +84,18 @@ CAntiArtilleryManager::CIterator::CIterator( const int nParty ) : nIterParty( nP
 {
 	while ( nCurParty < 3 && ( theDipl.GetDiplStatusForParties( nCurParty, nIterParty ) != EDI_ENEMY ||
 	                           theAAManager.antiArtilleries[nCurParty].empty() ) )
+	{
 		++nCurParty;
+	}
 
 	if ( !IsFinished() )
 	{
 		curIter = theAAManager.antiArtilleries[nCurParty].begin();
 		CAntiArtillery *pAntiArt = GetObjectByUniqueIdSafe<CAntiArtillery>( *curIter );
 		if ( !pAntiArt || !pAntiArt->IsRefValid() || !IsHeardForParty( pAntiArt, nIterParty ) )
+		{
 			Iterate();
+		}
 	}
 }
 
@@ -106,13 +118,17 @@ void CAntiArtilleryManager::CIterator::Iterate()
 	{
 		CAntiArtillery *pAntiArt = 0;
 		if ( curIter != theAAManager.antiArtilleries[nCurParty].end() )
+		{
 			pAntiArt = GetObjectByUniqueIdSafe<CAntiArtillery>( *curIter );
+		}
 
 		if ( curIter == theAAManager.antiArtilleries[nCurParty].end() || !pAntiArt || !pAntiArt->IsRefValid() ||
 		     !IsHeardForParty( pAntiArt, nIterParty ) )
 		{
 			if ( curIter != theAAManager.antiArtilleries[nCurParty].end() )
+			{
 				++curIter;
+			}
 			else
 			{
 				do
@@ -122,11 +138,15 @@ void CAntiArtilleryManager::CIterator::Iterate()
 				                             theAAManager.antiArtilleries[nCurParty].empty() ) );
 
 				if ( nCurParty < 3 )
+				{
 					curIter = theAAManager.antiArtilleries[nCurParty].begin();
+				}
 			}
 		}
 		else
+		{
 			break;
+		}
 	}
 }
 

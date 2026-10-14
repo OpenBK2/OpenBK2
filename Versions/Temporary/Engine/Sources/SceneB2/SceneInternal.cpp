@@ -98,7 +98,9 @@ CScene::CScene()
 void CScene::CreateGScene()
 {
 	if ( eScene == ES_UNKNOWN )
+	{
 		SwitchScene( SCENE_MISSION );
+	}
 
 	if ( eScene == SCENE_2D )
 	{
@@ -137,9 +139,13 @@ void CScene::CreateGScene()
 		data[eScene]->pVisObjIconsManager->Attach2DView( data[eScene]->p2DView );
 	}
 	if ( data[eScene]->pTracksManager == 0 )
+	{
 		data[eScene]->pTracksManager = new CTracksManager( data[eScene]->pGameTimer, data[eScene]->GetGScene() );
+	}
 	if ( data[eScene]->pSceneConsts )
+	{
 		data[eScene]->pTracksManager->SetTracksMaterial( data[eScene]->pSceneConsts->trackMaterials.pTrack );
+	}
 
 	const CVec2 vSize = NGfx::GetScreenRect();
 	Cursor()->SetBounds( 0, 0, vSize.x, vSize.y );
@@ -155,29 +161,41 @@ void CScene::CreateGScene()
 void CScene::Init()
 {
 	if ( eScene == ES_UNKNOWN )
+	{
 		SwitchScene( SCENE_MISSION );
+	}
 	else
+	{
 		data[eScene]->Init();
+	}
 }
 
 void CScene::SetSceneConsts( const NDb::SSceneConsts *_pSceneConsts )
 {
 	if ( ( data.size() <= eScene ) && ( eScene != ES_UNKNOWN ) )
+	{
 		return;
+	}
 
 	if ( _pSceneConsts )
 	{
 		if ( eScene == ES_UNKNOWN )
+		{
 			SwitchScene( SCENE_MISSION );
+		}
 
 		InitDebugMaterials( _pSceneConsts );
 
 		data[eScene]->pSceneConsts = _pSceneConsts;
 		if ( data[eScene]->pTracksManager )
+		{
 			data[eScene]->pTracksManager->SetTracksMaterial( data[eScene]->pSceneConsts->trackMaterials.pTrack );
+		}
 		//
 		if ( data[eScene]->pInterfaceView && _pSceneConsts->pInterfaceLight )
+		{
 			data[eScene]->pInterfaceView->SetAmbient( _pSceneConsts->pInterfaceLight, data[eScene]->pGameTimer );
+		}
 
 		for ( SSceneData::CScreensData::iterator it = data[eScene]->screensData.begin();
 		      it != data[eScene]->screensData.end();
@@ -198,17 +216,25 @@ bool CScene::SetupMode( ESceneMode eMode, bool _bEditorMode )
 {
 	bEditorMode = _bEditorMode;
 	if ( eScene == ES_UNKNOWN )
+	{
 		SwitchScene( SCENE_MISSION );
+	}
 
 	//
 	if ( eMode == SCENE_MODE_FULLSCREEN )
+	{
 		NGlobal::SetVar( "gfx_fullscreen", 1 );
+	}
 	else if ( eMode == SCENE_MODE_WINDOWED )
+	{
 		NGlobal::SetVar( "gfx_fullscreen", 0 );
+	}
 	//
 	NGScene::SUserRTInfo rtInfo;
 	if ( NGlobal::GetVar( "m1", 0 ) == 1 )
+	{
 		rtInfo.AddTex( 1024, "EFFECT_RT" );
+	}
 	if ( !NGScene::SetModeFromConfig( true, rtInfo ) )
 	{
 		NI_ASSERT( false, "Can't set mode from config" ); // no mode found
@@ -227,7 +253,9 @@ bool CScene::SetupMode( ESceneMode eMode, bool _bEditorMode )
 void CScene::ClearScene( const EScene eScene2Clear )
 {
 	if ( eScene2Clear >= data.size() )
+	{
 		return;
+	}
 	ClearSceneHoldQueue();
 	//
 	CDBPtr<NDb::SSceneConsts> pSceneConsts = data[eScene2Clear]->pSceneConsts;
@@ -255,7 +283,9 @@ void CScene::SwitchScene( const EScene _eScene )
 	{
 		eScene = _eScene;
 		if ( data.size() <= eScene )
+		{
 			data.resize( eScene + 1 );
+		}
 
 		if ( data[eScene] == 0 )
 		{
@@ -301,9 +331,13 @@ bool CScene::ToggleShow( ESceneShow eShow )
 				if ( SModelVisObjDesc *pVOD = dynamic_cast_ptr<SModelVisObjDesc *>( it->second ) )
 				{
 					if ( data[eScene]->showModes[eShow] )
+					{
 						pVOD->UpdateBBPolyLine( data[eScene]->GetGScene() );
+					}
 					else
+					{
 						pVOD->pBBPolyLine = 0;
+					}
 				}
 			}
 		}
@@ -335,9 +369,13 @@ bool CScene::ToggleShow( ESceneShow eShow )
 		{
 			data[eScene]->bEnableStatistics = !data[eScene]->bEnableStatistics;
 			if ( data[eScene]->bEnableStatistics )
+			{
 				NGlobal::ProcessCommand( L"Stats 1" );
+			}
 			else
+			{
 				NGlobal::ProcessCommand( L"Stats 0" );
+			}
 			break;
 		}
 		//
@@ -441,14 +479,20 @@ static void CalcGammaRamp2Bounded( NGfx::SPixel8888 *pRamp, float fBrightness, f
 	// если contrast < 0, то a = 1/a (наклон <45 градусов)
 	float fA = 1.0f + 4.0f * fabs( fContrast );
 	if ( fContrast < 0 )
+	{
 		fA = 1.0f / fA;
+	}
 	float fB = 0.5f * ( 1.0f - fA );
 	// gamma: x^power
 	float fPower = 1;
 	if ( fGamma > 0 )
+	{
 		fPower = 1.0f / ( 5.0f * fGamma + 1 );
+	}
 	else if ( fGamma < 0 )
+	{
 		fPower = 1.0f / ( 0.5f * fGamma + 1 );
+	}
 	// brightness: x + b
 	//
 	for ( int i = 0; i < 256; ++i )
@@ -507,10 +551,14 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 	{
 		const STime &timeAbs = GameTimer()->GetAbsTime();
 		if ( data[eScene]->pAbsTimer->GetValue() != timeAbs )
+		{
 			data[eScene]->pAbsTimer->Set( timeAbs );
+		}
 		const STime &timeGame = GameTimer()->GetGameTime();
 		if ( data[eScene]->pGameTimer->GetValue() != timeGame )
+		{
 			data[eScene]->pGameTimer->Set( timeGame );
+		}
 	}
 
 	if ( NGScene::Is3DActive() )
@@ -526,7 +574,9 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 			{
 				CDynamicCast<NGfx::I2DBuffer> pBuffer( pTarget );
 				if ( pBuffer )
+				{
 					vScreenSize = CVec2( pBuffer->GetSizeX(), pBuffer->GetSizeY() );
+				}
 			}
 		}
 
@@ -535,7 +585,9 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 		ICamera *pCamera = Camera();
 
 		if ( s_bPerspectiveCamera )
+		{
 			pCamera->SetPerspectiveTransform( vScreenSize.x, vScreenSize.y, s_fCameraNearPlane, s_fCameraFarPlane );
+		}
 		else
 		{
 			float fSizeX = 0, fSizeY = 0;
@@ -587,13 +639,17 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 		}
 		// delete all tracks, for which this was planned
 		if ( data[eScene]->pTracksManager )
+		{
 			data[eScene]->pTracksManager->ProcessDelQueue();
+		}
 
 		// 2D part
 		if ( NGlobal::GetVar( "m1", 0 ) == 0 )
 		{
 			if ( data[eScene]->pScreenFader )
+			{
 				data[eScene]->pScreenFader->Draw( GameTimer()->GetAbsTime(), false );
+			}
 
 			data[eScene]->p2DView->StartNewFrame( pTarget );
 		}
@@ -601,7 +657,9 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 		if ( data[eScene]->pVisObjIconsManager )
 		{
 			if ( Camera()->WasUpdated() )
+			{
 				data[eScene]->pVisObjIconsManager->UpdateAllIcons();
+			}
 			data[eScene]->pVisObjIconsManager->DrawIcons();
 		}
 
@@ -655,7 +713,9 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 			theUIVisitor.ClearCommandsList();
 
 			if ( data[eScene]->pScreenFader )
+			{
 				data[eScene]->pScreenFader->Draw( GameTimer()->GetAbsTime(), true );
+			}
 		}
 
 		if ( data[eScene]->bEnableStatistics )
@@ -673,7 +733,9 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 			//
 			NTimer::STime timeAbs = GameTimer()->GetAbsTime();
 			if ( data[eScene]->timeStatLastShow == 0 )
+			{
 				data[eScene]->timeStatLastShow = timeAbs;
+			}
 			else if ( data[eScene]->timeStatLastShow + 1000 < timeAbs )
 			{
 				const float fTimeCoeff = 1000.0f / float( timeAbs - data[eScene]->timeStatLastShow );
@@ -692,7 +754,9 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 					}
 				}
 				else
+				{
 					data[eScene]->nFPSDropCounter = 0;
+				}
 				//
 				OutputStat( "FPS", fFPS, 0xff00ffff, pSS );
 				OutputStat(
@@ -718,7 +782,9 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 				data[eScene]->nStatNumDIPs = 0;
 
 				if ( int nMapID = NGlobal::GetVar( "MapInfo.MapDBID", 0 ).GetFloat() )
+				{
 					OutputStat( "Map DBID", nMapID, 0xffffff00, pSS );
+				}
 			}
 			// calc each frame
 			OutputStat( "PointLights", renderStats.nScenePointLights, 0xffffffff, pSS );
@@ -748,7 +814,9 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 		if ( NGlobal::GetVar( "m1", 0 ) == 0 )
 		{
 			if ( !data[eScene]->showModes[SCENE_SHOW_NO_FLIP] && !pTarget )
+			{
 				NGScene::Flip();
+			}
 		}
 
 		//
@@ -777,10 +845,14 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 
 		// Updating weather parameters
 		if ( IsValid( data[eScene]->pWeather ) )
+		{
 			data[eScene]->pWeather->Update();
+		}
 	}
 	else
+	{
 		std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
+	}
 	//
 	ProcessDebugInfoUpdates();
 	//
@@ -935,7 +1007,9 @@ bool CScene::MakeMapShot( const SGameMessage &msg )
 	ICamera *pCamera = Camera();
 	ITerraManager *pTerraManager = GetTerraManager();
 	if ( pTerraManager == 0 )
+	{
 		return false;
+	}
 	const NDb::STerrain *pDesc = pTerraManager->GetDesc();
 	const float fMaxSizeX = pDesc->nNumPatchesX * VIS_TILES_IN_PATCH * VIS_TILE_SIZE;
 	const float fMaxSizeY = pDesc->nNumPatchesX * VIS_TILES_IN_PATCH * VIS_TILE_SIZE;
@@ -1007,7 +1081,9 @@ bool CScene::MakeMapShot( const SGameMessage &msg )
 			pCamera->SetAnchor( itCamera.GetAnchor() );
 
 			if ( NGlobal::GetVar( "m1", 0 ) )
+			{
 				data[eScene]->p2DView->StartNewFrame( 0 );
+			}
 			//
 			Draw( 0 );
 			if ( NGlobal::GetVar( "m1", 0 ) )
@@ -1023,8 +1099,10 @@ bool CScene::MakeMapShot( const SGameMessage &msg )
 			for ( int y = 0; y < data.GetSizeY(); ++y )
 			{
 				for ( int x = 0; x < data.GetSizeX(); ++x )
+				{
 					pImage[( itCamera.GetImagePosY() + y ) * nLineWidth + itCamera.GetImagePosX() + x] =
 							convertor( *( (uint32_t *)( &data[y][x] ) ) );
+				}
 			}
 		}
 		//		// save result image
@@ -1053,9 +1131,13 @@ bool CScene::ToggleAIGeometryMode()
 {
 	int nMode = data[eScene]->eAIGeomMode;
 	if ( nMode == SSceneData::EAI_GEOM_NONE )
+	{
 		nMode = SSceneData::EAI_GEOM_OVER;
+	}
 	else
+	{
 		nMode = SSceneData::EAI_GEOM_NONE;
+	}
 	data[eScene]->eAIGeomMode = (SSceneData::EAIGeomMode)( nMode );
 	data[eScene]->showModes[SCENE_SHOW_AI_GEOM] = ( nMode != SSceneData::EAI_GEOM_NONE );
 	UpdateAIGeometry();
@@ -1066,7 +1148,9 @@ void CScene::CycleAIGeometryModes()
 {
 	int nMode = data[eScene]->eAIGeomMode + 1;
 	if ( nMode >= SSceneData::EAI_GEOM_LAST )
+	{
 		nMode = SSceneData::EAI_GEOM_NONE;
+	}
 	data[eScene]->eAIGeomMode = (SSceneData::EAIGeomMode)( nMode );
 	data[eScene]->showModes[SCENE_SHOW_AI_GEOM] = ( nMode != SSceneData::EAI_GEOM_NONE );
 	UpdateAIGeometry();
@@ -1077,13 +1161,19 @@ void CScene::UpdateAIGeometry()
 	data[eScene]->vAIMapMeshes.clear();
 	SSceneData::EAIGeomMode eMode = data[eScene]->eAIGeomMode;
 	if ( eMode == SSceneData::EAI_GEOM_NONE )
+	{
 		return;
+	}
 
 	CPtr<NGScene::IMaterial> pMaterial;
 	if ( eMode == SSceneData::EAI_GEOM_OVER )
+	{
 		pMaterial = data[eScene]->GetGScene()->CreateMaterial( CVec4( 1, 0, 0, 0.5f ) );
+	}
 	else
+	{
 		pMaterial = data[eScene]->GetGScene()->CreateMaterial( CVec4( 0.5f, 0.5f, 1, 1 ) );
+	}
 
 	data[eScene]->pAIMapVisitor->Sync();
 	data[eScene]->pAIMap->Sync();
@@ -1134,7 +1224,9 @@ void CScene::AddShotTrace( const CVec3 &_vStart,
 void CScene::SwitchWeather( bool bActive, NTimer::STime timeLength )
 {
 	if ( data[eScene]->pTerraManager == 0 || data[eScene]->pTerraManager->GetDesc() == 0 )
+	{
 		return;
+	}
 	//
 	timeBadWeatherLeft = bActive ? timeLength : 0;
 
@@ -1145,11 +1237,13 @@ void CScene::SwitchWeather( bool bActive, NTimer::STime timeLength )
 		{
 			//GetAbsTimer()->Updated();
 			if ( !IsValid( data[eScene]->pWeather ) )
+			{
 				data[eScene]->pWeather = new CWeatherVisual( pWeatherDesc,
 				                                             GetGameTimer(),
 				                                             data[eScene]->pScreenFader,
 				                                             data[eScene]->pTerraManager->GetDesc()->pLight,
 				                                             pWeatherDesc->pWeatherLight );
+			}
 			//data[eScene]->pWeather = new CWeatherVisual( pWeatherDesc, GetAbsTimer() );
 
 			NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_SKIP_LIGHTING, -100 ), 0, 0 );
@@ -1166,7 +1260,9 @@ void CScene::SwitchWeather( bool bActive, NTimer::STime timeLength )
 
 			data[eScene]->pWeather->SwitchOn( timeLength );
 			if ( pWeatherDesc && pWeatherDesc->pWater )
+			{
 				data[eScene]->pTerraManager->SetRainyWaters( pWeatherDesc->pWater );
+			}
 		}
 	}
 	else // Switch off
@@ -1179,7 +1275,9 @@ void CScene::SwitchWeather( bool bActive, NTimer::STime timeLength )
 
 		const NDb::SWeatherDesc *pWeatherDesc = data[eScene]->pTerraManager->GetDesc()->weather.pVisuals;
 		if ( pWeatherDesc && pWeatherDesc->pWater )
+		{
 			data[eScene]->pTerraManager->SetRainyWaters( 0 );
+		}
 	}
 }
 
@@ -1252,7 +1350,9 @@ static void
 CmdSetPWLMapshotCamera( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( !( Scene()->DoesTerraManagerExist() ) )
+	{
 		return;
+	}
 	int nSizeX = 0, nSizeY = 0;
 	if ( ITerraManager *pTerraManager = Scene()->GetTerraManager() )
 	{
@@ -1264,7 +1364,9 @@ CmdSetPWLMapshotCamera( const std::string &szID, const std::vector<std::wstring>
 	}
 	//
 	if ( nSizeX == 0 || nSizeY == 0 )
+	{
 		return;
+	}
 	//
 	const float fYaw = paramsSet.empty() ? 0 : NStr::ToFloat( NStr::ToMBCS( paramsSet[0] ) );
 	const float fPitch = ToDegree( asin( 3.0f / 4.0f ) );

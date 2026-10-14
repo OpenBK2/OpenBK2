@@ -64,7 +64,9 @@ void CListItemTextViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase 
 		pView->SetText( pView->GetDBText() + pText->szText );
 	}
 	else
+	{
 		pView->SetText( L"" );
+	}
 }
 
 // CInterfaceCampaignSelectionMenu
@@ -77,7 +79,9 @@ CInterfaceCampaignSelectionMenu::CInterfaceCampaignSelectionMenu()
 bool CInterfaceCampaignSelectionMenu::Init()
 {
 	if ( !CInterfaceScreenBase::Init() )
+	{
 		return false;
+	}
 
 	InterfaceState()->VerifyScenarioTracker( IInterfaceState::ESTT_NONE );
 
@@ -94,7 +98,9 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 
 	const NDb::SGameRoot *pGameRoot = NGameX::GetGameRoot();
 	if ( !pGameRoot )
+	{
 		return;
+	}
 
 	// GameRoot determines the list size; the shipped panels are only templates.
 	const int nCampaignCount = pGameRoot->campaigns.size();
@@ -110,50 +116,74 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 	{
 		SCampaign &campaign = campaigns[i];
 		if ( campaign.pWnd )
+		{
 			campaign.pWnd->ShowWindow( true );
+		}
 
 		const NDb::SCampaign *pDBCampaign = pGameRoot->campaigns[campaign.nDBCampaign];
 		if ( !pDBCampaign )
 		{
 			if ( campaign.pBtn )
+			{
 				campaign.pBtn->Enable( false );
+			}
 			continue;
 		}
 
 		bool bEnableCampaign = !bDemo || NGlobal::GetVar( fmt::format( "DEMO_CAMPAIGN_ENABLE_{}", i ), 0 );
 		if ( campaign.pBtn )
+		{
 			campaign.pBtn->Enable( bEnableCampaign );
+		}
 
 		ICampaignState *pCampaignState = InterfaceState()->GetCampaign( pDBCampaign->GetDBID() );
 		if ( pCampaignState && pCampaignState->IsCompleted() )
+		{
 			campaign.ePlay = PT_OUTRO;
+		}
 		else
+		{
 			campaign.ePlay = PT_CAMPAIGN;
+		}
 
 		const NDb::STexture *pPicture =
 				( campaign.ePlay == PT_CAMPAIGN ) ? pDBCampaign->pTextureNotStarted : pDBCampaign->pTextureCompleted;
 		campaign.szOutro = pDBCampaign->szOutroMovie;
 
 		if ( campaign.pPictureWnd )
+		{
 			campaign.pPictureWnd->SetTexture( pPicture );
+		}
 
 		std::wstring wszName;
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBCampaign->, LocalizedName ) )
+		{
 			wszName = GET_TEXT_PRE( pDBCampaign->, LocalizedName );
+		}
 		if ( campaign.pNameView )
+		{
 			campaign.pNameView->SetText( campaign.pNameView->GetDBText() + wszName );
+		}
 
 		std::wstring wszDesc;
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBCampaign->, LocalizedDesc ) )
+		{
 			wszDesc = GET_TEXT_PRE( pDBCampaign->, LocalizedDesc );
+		}
 		if ( campaign.pDescView )
+		{
 			campaign.pDescView->SetText( campaign.pDescView->GetDBText() + wszDesc );
+		}
 		if ( campaign.pDescCont )
+		{
 			campaign.pDescCont->Update();
+		}
 	}
 
 	if ( nCampaignCount > 3 )
+	{
 		CreateCampaignList();
+	}
 
 	pPlayBtn = GetChildChecked<IButton>( pMain, "PlayBtn", true );
 	pPlayOutroBtn = GetChildChecked<IButton>( pMain, "PlayOutroBtn", true );
@@ -161,27 +191,37 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 	if ( pGameRoot )
 	{
 		if ( pMain )
+		{
 			SetMainWindowTexture( pMain, pGameRoot->pInterfacesBackground );
+		}
 	}
 
 	pDifficulty = GetChildChecked<IComboBox>( pMain, "Difficulty", true );
 	if ( pDifficulty )
+	{
 		pDifficulty->SetViewer( new CListItemTextViewer() );
+	}
 
 	ePlay = PT_CAMPAIGN;
 	nSelected = -1;
 
 	SelectCampaign( 0, true );
 	if ( pPlayBtn )
+	{
 		pPlayBtn->Enable( nSelected >= 0 );
+	}
 	if ( pPlayOutroBtn && nSelected < 0 )
+	{
 		pPlayOutroBtn->ShowWindow( false );
+	}
 }
 
 void CInterfaceCampaignSelectionMenu::CreateCampaignWindows( int nCampaignCount )
 {
 	if ( !pMain )
+	{
 		return;
+	}
 
 	// Reuse the original panel placements for the standard three-campaign menu.
 	// Discover the available templates without treating their count as a limit.
@@ -190,7 +230,9 @@ void CInterfaceCampaignSelectionMenu::CreateCampaignWindows( int nCampaignCount 
 	{
 		IWindow *pWnd = pMain->GetChild( fmt::format( "CampaignPanel{}", i ), true );
 		if ( !pWnd )
+		{
 			break;
+		}
 		pWnd->ShowWindow( false );
 		campaignWnds.push_back( pWnd );
 	}
@@ -216,7 +258,9 @@ void CInterfaceCampaignSelectionMenu::CreateCampaignWindows( int nCampaignCount 
 void CInterfaceCampaignSelectionMenu::CreateCampaignList()
 {
 	if ( !pMain || campaigns.empty() || !campaigns[0].pDescCont )
+	{
 		return;
+	}
 
 	// Clone the existing menu widgets so this also works with packed retail UI.
 	// Keep descriptors in CPtr: dropping the last CObj clears a resource even
@@ -305,7 +349,9 @@ void CInterfaceCampaignSelectionMenu::CreateCampaignList()
 	for ( SCampaign &campaign : campaigns )
 	{
 		if ( campaign.pWnd )
+		{
 			pCampaignList->PushBack( campaign.pWnd, false );
+		}
 	}
 	pCampaignList->Update();
 }
@@ -322,10 +368,14 @@ void CInterfaceCampaignSelectionMenu::AddCampaignWindow( int nWndIndex, int nCam
 	campaign.pDescView = GetChildChecked<ITextView>( campaign.pDescCont, "DescView", true );
 	campaign.pBackgroundWnd = GetChildChecked<IWindow>( campaign.pWnd, "Background", true );
 	if ( campaign.pDescCont && campaign.pDescView )
+	{
 		campaign.pDescCont->PushBack( campaign.pDescView, false );
+	}
 	campaign.szBtnName = fmt::format( "SelectCampaignBtn{}", nWndIndex );
 	if ( campaign.pBtn )
+	{
 		campaign.pBtn->SetName( campaign.szBtnName );
+	}
 	campaign.nDBCampaign = nCampaignIndex;
 
 	campaigns.push_back( campaign );
@@ -334,13 +384,21 @@ void CInterfaceCampaignSelectionMenu::AddCampaignWindow( int nWndIndex, int nCam
 bool CInterfaceCampaignSelectionMenu::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "menu_select_campaign" )
+	{
 		return OnSelectCampaign( szSender );
+	}
 	if ( szReaction == "menu_back" )
+	{
 		return OnBack();
+	}
 	if ( szReaction == "menu_play" )
+	{
 		return OnPlay();
+	}
 	if ( szReaction == "menu_play_outro" )
+	{
 		return OnPlayOutro();
+	}
 
 	return false;
 }
@@ -368,7 +426,9 @@ bool CInterfaceCampaignSelectionMenu::StepLocal( bool bAppActive )
 	bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );
 
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )
+	{
 		pInterface->Step( bAppActive );
+	}
 
 	return bResult;
 }
@@ -407,7 +467,9 @@ bool CInterfaceCampaignSelectionMenu::OnPlay()
 {
 	// An empty campaign list has no valid selection to launch.
 	if ( nSelected < 0 || nSelected >= campaigns.size() )
+	{
 		return true;
+	}
 
 	const bool bKRIDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
 	if ( bKRIDemo )
@@ -460,13 +522,19 @@ void CInterfaceCampaignSelectionMenu::SelectCampaign( int _nIndex, bool bFirstTi
 	{
 		SCampaign &campaign = campaigns[i];
 		if ( !campaign.pBtn || !campaign.pBtn->IsEnabled() )
+		{
 			continue;
+		}
 		nIndex = i;
 		if ( nIndex == _nIndex )
+		{
 			break;
+		}
 	}
 	if ( nIndex < 0 )
+	{
 		return;
+	}
 
 	const NDb::SGameRoot *pGameRoot = NGameX::GetGameRoot();
 	NI_VERIFY( 0 <= nIndex && nIndex < pGameRoot->campaigns.size(), "index out of range", return );
@@ -525,7 +593,9 @@ void CInterfaceCampaignSelectionMenu::SelectCampaign( int _nIndex, bool bFirstTi
 		const CTRect<float> panelRect = campaigns[nSelected].pWnd->GetWindowRect();
 		const CTRect<float> listRect = pCampaignList->GetWindowRect();
 		if ( panelRect.left < listRect.left || panelRect.right > listRect.right )
+		{
 			pCampaignList->EnsureElementVisible( campaigns[nSelected].pWnd );
+		}
 	}
 
 	ePlay = PT_CAMPAIGN;
@@ -535,23 +605,35 @@ void CInterfaceCampaignSelectionMenu::SelectCampaign( int _nIndex, bool bFirstTi
 		IButton *pButton = campaign.pBtn;
 		bool bSelected = ( i == nSelected );
 		if ( bSelected )
+		{
 			ePlay = campaign.ePlay;
+		}
 		if ( campaign.pBtn )
+		{
 			campaign.pBtn->ShowWindow( !bSelected );
+		}
 	}
 	if ( pPlayOutroBtn )
+	{
 		pPlayOutroBtn->ShowWindow( ePlay == PT_OUTRO );
+	}
 }
 
 void CInterfaceCampaignSelectionMenu::AddDifficultyLevel( const NDb::SDifficultyLevel *pDifficultyLevel )
 {
 	std::wstring wszText;
 	if ( pDifficultyLevel && CHECK_TEXT_NOT_EMPTY_PRE( pDifficultyLevel->, LocalizedName ) )
+	{
 		wszText = GET_TEXT_PRE( pDifficultyLevel->, LocalizedName );
+	}
 	else
+	{
 		wszText = NO_DIFFICULTY_INFO;
+	}
 	if ( pDifficulty )
+	{
 		pDifficulty->AddItem( new CTextData( wszText ) );
+	}
 }
 
 #ifndef _MP_DEMO
@@ -578,9 +660,13 @@ void StartCampaign( const NDb::SCampaign *pCampaignDB, int _nDifficulty, bool bC
 	if ( pCampaignDB->difficultyLevels.size() == 4 )
 	{
 		if ( nDifficulty == 0 )
+		{
 			nDifficulty = 3;
+		}
 		else
+		{
 			nDifficulty--;
+		}
 	}
 
 	InterfaceState()->SetFirstTimeInChapter( true );
@@ -603,14 +689,20 @@ void StartCampaign( const NDb::SCampaign *pCampaignDB, int _nDifficulty, bool bC
 			NGlobal::ProcessCommand( wszCommand );
 		}
 		else
+		{
 			NMainLoop::Command( ML_COMMAND_CHAPTER_MAP_MENU, "" );
+		}
 	}
 	else
 	{
 		if ( s_bCampaignAutostartMission )
+		{
 			szIntro += ";back_and_chapter_map_autostart_mission";
+		}
 		else
+		{
 			szIntro += ";back_and_chapter_map";
+		}
 		NMainLoop::Command( ML_COMMAND_PLAY_MOVIE, szIntro.c_str() );
 	}
 }

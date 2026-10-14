@@ -44,16 +44,22 @@ inline void put_pixel( CArray2D<uint32_t> &img, int x, int y, SARGB pixel )
 inline void get_row( SARGB *row, const CArray2D<uint32_t> &img, int y )
 {
 	if ( ( y < 0 ) || ( y >= img.GetSizeY() ) )
+	{
 		return;
+	}
 	memcpy( row, &( img[y][0] ), img.GetSizeX() * sizeof( SARGB ) );
 }
 
 inline void get_column( SARGB *column, const CArray2D<uint32_t> &img, int x )
 {
 	if ( ( x < 0 ) || ( x >= img.GetSizeX() ) )
+	{
 		return;
+	}
 	for ( int i = 0; i < img.GetSizeY(); ++i )
+	{
 		column[i] = bit_cast<SARGB>( img[i][x] );
+	}
 }
 
 // ************************************************************************************************************************ //
@@ -70,9 +76,13 @@ static const double point_support = 0.0;
 double point_filter( double t )
 {
 	if ( t == 0.0 )
+	{
 		return 1.0;
+	}
 	else
+	{
 		return 0.0;
+	}
 }
 
 static const double filter_support = 1.0;
@@ -81,11 +91,17 @@ double filter( double t )
 {
 	/* f(t) = 2|t|^3 - 3|t|^2 + 1, -1 <= t <= 1 */
 	if ( t < 0.0 )
+	{
 		t = -t;
+	}
 	if ( t < 1.0 )
+	{
 		return ( ( 2.0 * t - 3.0 ) * t * t + 1.0 );
+	}
 	else
+	{
 		return 0.0;
+	}
 }
 
 static const double box_support = 0.5;
@@ -93,9 +109,13 @@ static const double box_support = 0.5;
 double box_filter( double t )
 {
 	if ( ( t > -0.5 ) && ( t <= 0.5 ) )
+	{
 		return 1.0;
+	}
 	else
+	{
 		return 0.0;
+	}
 }
 
 static const double triangle_support = 1.0;
@@ -103,11 +123,17 @@ static const double triangle_support = 1.0;
 double triangle_filter( double t )
 {
 	if ( t < 0.0 )
+	{
 		t = -t;
+	}
 	if ( t < 1.0 )
+	{
 		return ( 1.0 - t );
+	}
 	else
+	{
 		return 0.0;
+	}
 }
 
 static const double bell_support = 1.5;
@@ -115,16 +141,22 @@ static const double bell_support = 1.5;
 double bell_filter( double t ) /* box (*) box (*) box */
 {
 	if ( t < 0 )
+	{
 		t = -t;
+	}
 	if ( t < 0.5 )
+	{
 		return ( 0.75 - ( t * t ) );
+	}
 	else if ( t < 1.5 )
 	{
 		t -= 1.5;
 		return ( 0.5 * t * t );
 	}
 	else
+	{
 		return 0.0;
+	}
 }
 
 static const double B_spline_support = 2.0;
@@ -134,7 +166,9 @@ double B_spline_filter( double t ) /* box (*) box (*) box (*) box */
 	double tt;
 
 	if ( t < 0 )
+	{
 		t = -t;
+	}
 	if ( t < 1 )
 	{
 		tt = t * t;
@@ -146,16 +180,22 @@ double B_spline_filter( double t ) /* box (*) box (*) box (*) box */
 		return ( ( 1.0 / 6.0 ) * ( t * t * t ) );
 	}
 	else
+	{
 		return 0.0;
+	}
 }
 
 double sinc( double x )
 {
 	x *= PI;
 	if ( x != 0 )
+	{
 		return NMath::Sin /*sin*/ ( x ) / x;
+	}
 	else
+	{
 		return 1.0;
+	}
 }
 
 static const double Lanczos3_support = 3.0;
@@ -163,11 +203,17 @@ static const double Lanczos3_support = 3.0;
 double Lanczos3_filter( double t )
 {
 	if ( t < 0 )
+	{
 		t = -t;
+	}
 	if ( t < 3.0 )
+	{
 		return sinc( t ) * sinc( t / 3.0 );
+	}
 	else
+	{
 		return 0.0;
+	}
 }
 
 static const double Mitchell_support = 2.0;
@@ -180,7 +226,9 @@ double Mitchell_filter( double t )
 	double tt = t * t;
 
 	if ( t < 0 )
+	{
 		t = -t;
+	}
 	if ( t < 1.0 )
 	{
 		t = ( ( 12.0 - 9.0 * B - 6.0 * C ) * ( t * tt ) ) + ( ( -18.0 + 12.0 * B + 6.0 * C ) * tt ) + ( 6.0 - 2.0 * B );
@@ -193,7 +241,9 @@ double Mitchell_filter( double t )
 		return ( t / 6.0 );
 	}
 	else
+	{
 		return 0.0;
+	}
 }
 
 typedef double ( *FILTERFUNC )( double t );
@@ -269,9 +319,13 @@ void Scale( CArray2D<uint32_t> *pDst, const CArray2D<uint32_t> &src, const EImag
 					weight = ( *pfnFilterFunc )( weight / fscale ) / fscale;
 					int n = j;
 					if ( j < 0 )
+					{
 						n = -j;
+					}
 					else if ( j >= src.GetSizeX() )
+					{
 						n = ( src.GetSizeX() - j ) + src.GetSizeX() - 1;
+					}
 					int k = contrib[i].n++;
 					contrib[i].p[k].pixel = n;
 					contrib[i].p[k].weight = weight;
@@ -294,9 +348,13 @@ void Scale( CArray2D<uint32_t> *pDst, const CArray2D<uint32_t> &src, const EImag
 					weight = ( *pfnFilterFunc )( weight );
 					int n = j;
 					if ( j < 0 )
+					{
 						n = -j;
+					}
 					else if ( j >= src.GetSizeX() )
+					{
 						n = ( src.GetSizeX() - j ) + src.GetSizeX() - 1;
+					}
 					int k = contrib[i].n++;
 					contrib[i].p[k].pixel = n;
 					contrib[i].p[k].weight = weight;
@@ -333,7 +391,9 @@ void Scale( CArray2D<uint32_t> *pDst, const CArray2D<uint32_t> &src, const EImag
 
 		// free the memory allocated for horizontal filter weights
 		for ( int i = 0; i < imgTemp.GetSizeX(); ++i )
+		{
 			delete[] ( contrib[i].p );
+		}
 		delete[] contrib;
 	}
 
@@ -359,9 +419,13 @@ void Scale( CArray2D<uint32_t> *pDst, const CArray2D<uint32_t> &src, const EImag
 					weight = ( *pfnFilterFunc )( weight / fscale ) / fscale;
 					int n = j;
 					if ( j < 0 )
+					{
 						n = -j;
+					}
 					else if ( j >= imgTemp.GetSizeY() )
+					{
 						n = ( imgTemp.GetSizeY() - j ) + imgTemp.GetSizeY() - 1;
+					}
 					int k = contrib[i].n++;
 					contrib[i].p[k].pixel = n;
 					contrib[i].p[k].weight = weight;
@@ -384,9 +448,13 @@ void Scale( CArray2D<uint32_t> *pDst, const CArray2D<uint32_t> &src, const EImag
 					weight = ( *pfnFilterFunc )( weight );
 					int n = j;
 					if ( j < 0 )
+					{
 						n = -j;
+					}
 					else if ( j >= imgTemp.GetSizeY() )
+					{
 						n = ( imgTemp.GetSizeY() - j ) + imgTemp.GetSizeY() - 1;
+					}
 					int k = contrib[i].n++;
 					contrib[i].p[k].pixel = n;
 					contrib[i].p[k].weight = weight;
@@ -423,7 +491,9 @@ void Scale( CArray2D<uint32_t> *pDst, const CArray2D<uint32_t> &src, const EImag
 
 		// free the memory allocated for vertical filter weights
 		for ( int i = 0; i < dst.GetSizeY(); ++i )
+		{
 			delete[] ( contrib[i].p );
+		}
 		delete[] contrib;
 	}
 }

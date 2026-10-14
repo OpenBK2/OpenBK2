@@ -24,7 +24,9 @@ void CVolumeContainer::Init( const CVec3 &_ptMin, const CVec3 &ptMax, float fReg
 		int nSide = 1 << i;
 		volumeData[i].tris.resize( nSide * nSide * nSide );
 		for ( int k = 0; k < volumeData[i].tris.size(); ++k )
+		{
 			volumeData[i].tris[k].resize( 0 );
+		}
 	}
 	int nSide = 1 << ( nDepth - 1 );
 	fSize1x = nSide / ( ptMax.x - ptMin.x );
@@ -54,7 +56,9 @@ void CVolumeContainer::Fetch( const SBound &bound )
 	fetchBufferArray.resize( (std::max)( fetchBufferArray.size(), fetchMark.size() ) );
 	nFetched = 0;
 	if ( fetchMark.empty() )
+	{
 		return;
+	}
 	//SIntCoords mn, mx;
 	CVec3 ptMin( bound.s.ptCenter - bound.ptHalfBox );
 	CVec3 ptMax( bound.s.ptCenter + bound.ptHalfBox );
@@ -129,17 +133,29 @@ void CVolumeContainer::EnlargeVolumeBounds( SVolumeBounds *pRes, const SHMatrix 
 	pos.RotateHVector( &ptReal, coord );
 	GetCoords( &pt, ptReal );
 	if ( pt.x > pRes->mx.x )
+	{
 		pRes->mx.x = pt.x;
+	}
 	if ( pt.x < pRes->mn.x )
+	{
 		pRes->mn.x = pt.x;
+	}
 	if ( pt.y > pRes->mx.y )
+	{
 		pRes->mx.y = pt.y;
+	}
 	if ( pt.y < pRes->mn.y )
+	{
 		pRes->mn.y = pt.y;
+	}
 	if ( pt.z > pRes->mx.z )
+	{
 		pRes->mx.z = pt.z;
+	}
 	if ( pt.z < pRes->mn.z )
+	{
 		pRes->mn.z = pt.z;
+	}
 }
 
 void CVolumeContainer::MakeVolume( SVolumeBounds *pRes, const SHMatrix &pos, const SBound &bound )
@@ -153,7 +169,9 @@ void CVolumeContainer::MakeVolume( SVolumeBounds *pRes, const SHMatrix &pos, con
 	ASSERT( coords.size() > 0 );
 	InitFirstPt( pRes, pos, coords[0] );
 	for ( int i = 1; i < coords.size(); ++i )
+	{
 		EnlargeVolumeBounds( pRes, pos, coords[i] );
+	}
 }
 
 bool CVolumeContainer::IsOut( const SVolumeBounds &t )
@@ -196,6 +214,8 @@ void CVolumeContainer::Add( const SVolumeBounds &b, int nData )
 		}
 	}
 	if ( nData >= fetchMark.size() )
+	{
 		fetchMark.resize( nData + 1, 0 );
+	}
 }
 }

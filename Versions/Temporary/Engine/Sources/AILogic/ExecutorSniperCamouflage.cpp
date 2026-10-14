@@ -28,7 +28,9 @@ bool CExecutorSniperCamouflage::IsExecutorValidInternal() const
 int CExecutorSniperCamouflage::Segment()
 {
 	if ( !IsExecutorValidInternal() )
+	{
 		return -1;
+	}
 
 	if ( EASS_DISABLE != eState )
 	{
@@ -40,7 +42,9 @@ int CExecutorSniperCamouflage::Segment()
 		{
 			if ( ( *it )->IsRefValid() && ( *it )->IsAlive() &&
 			     ( *it )->GetSightRadius() > fabs( vPos - ( *it )->GetCenterPlain() ) )
+			{
 				++nEnemysAround;
+			}
 		}
 
 		if ( bAdvanced )
@@ -55,7 +59,9 @@ int CExecutorSniperCamouflage::Segment()
 				nLastActionTime = curTime;
 			}
 			else if ( curTime - nLastActionTime > SConsts::SCamouflage::SNEAK_ADVANCED_RESET_TIMEOUT )
+			{
 				bInAction = false;
+			}
 			bStartCounting = !bInAction || ( curTime - nBeginActionTime > SConsts::SCamouflage::SNEAK_ADVANCED_TIMEOUT );
 
 			if ( eState == EASS_ACTIVE )
@@ -96,7 +102,9 @@ int CExecutorSniperCamouflage::Segment()
 void CExecutorSniperCamouflage::UpdateState( const enum EAbilitySwitchState eState, const float fParam )
 {
 	if ( !pUpdate )
+	{
 		pUpdate = new SAISpecialAbilityUpdate;
+	}
 
 	pUpdate->info.nAbilityType = eAbilityType;
 	pUpdate->info.state.eState = eState;
@@ -141,9 +149,13 @@ int CExecutorSniperCamouflage::UpdateCamoflage( const EUnitSpecialAbility eAbili
 			const int nTimePassed = curTime - timeLastUpdate;
 			const int nTimeNeeded = timeDisableGroup;
 			if ( nTimePassed >= nTimeNeeded )
+			{
 				eState = eStateBeforeDisable;
+			}
 			else
+			{
 				UpdateState( EASS_DISABLE, float( nTimePassed ) / float( nTimeNeeded ) );
+			}
 		}
 
 		break;
@@ -174,7 +186,9 @@ int CExecutorSniperCamouflage::UpdateCamoflage( const EUnitSpecialAbility eAbili
 					fCamoflage = 1.0f;
 				}
 				else
+				{
 					UpdateState( EASS_SWITCHING_ON, float( nTimePassed ) / float( nTimeNeeded ) );
+				}
 			}
 		}
 
@@ -192,7 +206,9 @@ int CExecutorSniperCamouflage::UpdateCamoflage( const EUnitSpecialAbility eAbili
 					fCamoflage = 0.0f;
 				}
 				else
+				{
 					UpdateState( EASS_SWITCHING_OFF, float( nTimePassed ) / float( nTimeNeeded ) );
+				}
 			}
 		}
 
@@ -238,7 +254,9 @@ bool CExecutorSniperCamouflage::IsCamoflageAbility( const EUnitSpecialAbility eA
 bool CExecutorSniperCamouflage::NotifyEvent( const CExecutorEvent &event )
 {
 	if ( pUnit->GetUniqueId() != event.GetParam().nUnitID )
+	{
 		return false;
+	}
 
 	// Fire, movement and command events contain only their event parameters.
 	// Inspect an ability payload only in the branches that receive one.
@@ -248,7 +266,9 @@ bool CExecutorSniperCamouflage::NotifyEvent( const CExecutorEvent &event )
 		case EID_FIRE_CAMOFLATED:
 			bWasSomeAction = true;
 			if ( !bAdvanced || bStartCounting )
+			{
 				fCamoflage = (std::max)( 0.0f, fCamoflage - nEnemysAround * SConsts::SCamouflage::SNEAK_DECREASE_PER_SHOT );
+			}
 
 			return true;
 		case EID_START_IDLE:
@@ -262,11 +282,15 @@ bool CExecutorSniperCamouflage::NotifyEvent( const CExecutorEvent &event )
 			return true;
 		case EID_ABILITY_DEACTIVATE:
 			if ( static_cast<const CExecutorEventSpecialAbility &>( event ).GetAbility() != eAbilityType )
+			{
 				return false;
+			}
 			[[fallthrough]];
 		case EID_NEW_COMMAND_RECIEVED:
 			if ( EID_NEW_COMMAND_RECIEVED == eCurID && eState != EASS_SWITCHING_ON )
+			{
 				return false;
+			}
 			timeLastUpdate = curTime;
 			UnCamoUnit();
 			eState = EASS_SWITCHING_OFF;
@@ -276,7 +300,9 @@ bool CExecutorSniperCamouflage::NotifyEvent( const CExecutorEvent &event )
 		{
 			const CExecutorEventSpecialAbility &abilityEvent = static_cast<const CExecutorEventSpecialAbility &>( event );
 			if ( abilityEvent.GetAbility() != eAbilityType )
+			{
 				return false;
+			}
 			timeLastUpdate = curTime;
 			eState = EASS_SWITCHING_ON;
 		}

@@ -84,7 +84,9 @@ void CTerraGen::ApplyObjectTerraForm( const CVec2 &_p1, const CVec2 &_p2, const 
 	}
 
 	if ( !bFlag )
+	{
 		return;
+	}
 
 	for ( int g = nFirstY; g < nLastY; ++g )
 	{

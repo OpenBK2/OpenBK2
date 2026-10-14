@@ -223,7 +223,9 @@ public:
 	{
 		float speed = GetStatsModifier()->speed.Get( GetStats()->fSpeed );
 		if ( !IsGoForward() && CanGoBackward() && IsMech() )
+		{
 			speed *= GetStats()->fReverseSpeedModifier;
+		}
 		return speed;
 
 		//return GetStatsModifier()->speed.Get( GetStats()->fSpeed );

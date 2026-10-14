@@ -14,9 +14,13 @@ IWindow *AddWindowCopy( IWindow *pParent, const struct NDb::SUIDesc *pDesc )
 {
 	IWindow *pWnd = Singleton<IUIInitialization>()->CreateWindowFromDesc( pDesc );
 	if ( !pWnd )
+	{
 		return 0;
+	}
 	if ( pParent )
+	{
 		pParent->AddChild( pWnd, true );
+	}
 	pWnd->Init();
 	return pWnd;
 }
@@ -24,7 +28,9 @@ IWindow *AddWindowCopy( IWindow *pParent, const struct NDb::SUIDesc *pDesc )
 IWindow *AddWindowCopy( IWindow *pParent, const IWindow *pSample )
 {
 	if ( !pSample )
+	{
 		return 0;
+	}
 	return AddWindowCopy( pParent, pSample->GetDesc() );
 }
 
@@ -61,7 +67,9 @@ void CTextureRoundSegmentVisitor::Visit( struct IUIVisitor *pVisitor )
 	CTRect<float> rectScreen;
 	VirtualToScreen( rect, &rectScreen );
 	if ( rectScreen.GetSizeX() < 0.5f || rectScreen.GetSizeY() <= 0.5f )
+	{
 		return;
+	}
 	float fAspect = rectScreen.GetSizeY() / rectScreen.GetSizeX();
 	CVec2 vScreenCenter( rectScreen.GetCenter().x, rectScreen.GetCenter().y );
 	CVec2 vScreenHalf( rectScreen.GetSizeX() * 0.5f, rectScreen.GetSizeY() * 0.5f );
@@ -185,20 +193,26 @@ void CTextureRoundSegmentVisitor::DrawTriangle( struct IUIVisitor *pVisitor,
 bool CTextureRoundSegmentVisitor::ClampAngles( float *pStart, float *pFinish, float fMin, float fMax )
 {
 	if ( fMin > fMax )
+	{
 		fMin -= FP_2PI;
+	}
 	while ( *pStart > fMax )
 	{
 		*pStart -= FP_2PI;
 		*pFinish -= FP_2PI;
 		if ( *pFinish < fMin )
+		{
 			return false;
+		}
 	}
 	while ( *pFinish < fMin )
 	{
 		*pStart += FP_2PI;
 		*pFinish += FP_2PI;
 		if ( *pStart > fMax )
+		{
 			return false;
+		}
 	}
 	*pStart = (std::max)( *pStart, fMin );
 	*pFinish = (std::min)( *pFinish, fMax );

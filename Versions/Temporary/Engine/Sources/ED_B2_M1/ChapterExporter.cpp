@@ -17,7 +17,9 @@ EXPORT_RESULT CChapterExporter::ExportObject( IManipulator *pManipulator,
                                               EXPORT_TYPE exportType )
 {
 	if ( ( exportType != ET_BEFORE_REF ) && ( exportType != ET_NO_REF ) )
+	{
 		return ER_SUCCESS;
+	}
 	//
 	const std::string szChapterPath = NFile::GetFilePath( rszObjectName );
 	// Noise/sea map
@@ -29,7 +31,9 @@ EXPORT_RESULT CChapterExporter::ExportObject( IManipulator *pManipulator,
 		const std::string szDstFileName = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) +
 		                                  szChapterPath + NFile::GetFileName( szSrcFileName );
 		if ( CheckFilesUpdated( szSrcFileName, szDstFileName, bForce ) == false )
+		{
 			NFile::CopyFile( szSrcFileName, szDstFileName );
+		}
 	}
 	if ( CManipulatorManager::GetValue( &szNoiseMap, pManipulator, "DifferentColourMap" ) != false &&
 	     !szNoiseMap.empty() )
@@ -38,7 +42,9 @@ EXPORT_RESULT CChapterExporter::ExportObject( IManipulator *pManipulator,
 		const std::string szDstFileName = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) +
 		                                  szChapterPath + NFile::GetFileName( szSrcFileName );
 		if ( CheckFilesUpdated( szSrcFileName, szDstFileName, bForce ) == false )
+		{
 			NFile::CopyFile( szSrcFileName, szDstFileName );
+		}
 	}
 	//
 	return ER_SUCCESS;

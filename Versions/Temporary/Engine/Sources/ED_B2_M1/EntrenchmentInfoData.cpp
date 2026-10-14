@@ -350,7 +350,9 @@ bool SEntrenchmentInfo::Create( const SObjectCreateInfo *pObjectCreateInfo,
 {
 	CPtr<IResourceManager> pResourceManager = Singleton<IResourceManager>();
 	if ( !pObjectCreateInfo || !pEditorScene || !pObjectController || !pManipulator || !pResourceManager )
+	{
 		return false;
+	}
 
 	bool bResult = true;
 
@@ -534,7 +536,9 @@ bool SEntrenchmentInfo::GetEntrenchmentSegInfoByMapObjElement( SEntrenchmentSegI
 	// (центр сегмента + поворот + длина сегмента ) ---> ( начальная и конечная точки сегмента )
 	//
 	if ( !pSegInfo || !pMOI || !pEntrenchmentStats || !pElement )
+	{
 		return false;
+	}
 	//
 	pSegInfo->eSegType = static_cast<NDb::EEntrenchSegmType>( pElement->nFrameIndex );
 	//
@@ -550,7 +554,9 @@ bool SEntrenchmentInfo::GetEntrenchmentSegInfoByMapObjElement( SEntrenchmentSegI
 		}
 	}
 	if ( i == pEntrenchmentStats->segments.size() )
+	{
 		return false;
+	}
 	//
 	pSegInfo->vPosCenter = pElement->vPosition;
 	pSegInfo->fDirAngle = ( pElement->fDirection + pMOI->fDirection );

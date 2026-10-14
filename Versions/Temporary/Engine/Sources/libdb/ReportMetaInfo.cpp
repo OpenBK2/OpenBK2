@@ -27,7 +27,9 @@ namespace NMetaInfo
 		~SMetaInfoAutoMagic()
 		{
 			if ( s_pMetaInfo )
+			{
 				delete s_pMetaInfo;
+			}
 			s_pMetaInfo = 0;
 		}
 	} aMetaInfoAutoMagic;
@@ -53,14 +55,18 @@ namespace NMetaInfo
 	void DropMetaInfo()
 	{
 		if ( s_pMetaInfo )
+		{
 			delete s_pMetaInfo;
+		}
 		s_pMetaInfo = 0;
 	}
 
 	void StartRegister()
 	{
 		if ( s_pMetaInfo == 0 )
+		{
 			s_pMetaInfo = new SMetaInfo;
+		}
 	}
 
 	// ************************************************************************************************************************ //

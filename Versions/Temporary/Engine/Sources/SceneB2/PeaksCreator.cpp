@@ -20,7 +20,9 @@ inline void CheckTileInsidingAndPush(
 {
 	if ( ( v.x > ( x1 - DEF_EPS ) ) && ( v.x < ( x2 + DEF_EPS ) ) && ( v.y > ( y1 - DEF_EPS ) ) &&
 	     ( v.y < ( y2 + DEF_EPS ) ) )
+	{
 		pInters->push_back( v );
+	}
 }
 
 inline void CheckTrgInsidingAndPush(
@@ -29,7 +31,9 @@ inline void CheckTrgInsidingAndPush(
 	CVec2 vBary;
 	GetBaryCoords( v, v1, v2, v3, &vBary );
 	if ( ( vBary.x > -DEF_EPS ) && ( vBary.y > -DEF_EPS ) && ( ( vBary.x + vBary.y ) < ( 1.0f + DEF_EPS ) ) )
+	{
 		AddUnique( pInters, v );
+	}
 }
 
 inline void CheckVerticalIntersectAndPush(
@@ -88,18 +92,26 @@ inline void InterpolateNorm( CVec3 *pNorm, const CVec3 &vNorm1, const CVec3 &vNo
 {
 	( *pNorm ) = vNorm1 + ( vNorm2 - vNorm1 ) * t;
 	if ( fabs2( *pNorm ) > DEF_EPS )
+	{
 		Normalize( pNorm );
+	}
 	else
+	{
 		( *pNorm ) = vNorm1;
+	}
 }
 
 inline CVec3 GetInterpolateNorm( const CVec3 &n1, const CVec3 &n2, const float t )
 {
 	CVec3 n = n1 + ( n2 - n1 ) * t;
 	if ( fabs2( n ) > EPS_VALUE )
+	{
 		Normalize( &n );
+	}
 	else
+	{
 		n = n1;
+	}
 	return n;
 }
 
@@ -271,7 +283,9 @@ static bool FindNearestVertexInTile( CVec3 *pRes,
 		{
 			const STerrainInfo::STile &tile = tiles[g][i];
 			if ( tile.vertices.empty() )
+			{
 				continue;
+			}
 			if ( bFlag )
 			{
 				//vRes = tile.vertices[0]; vRes.z += tile.addHeights[0];
@@ -298,13 +312,17 @@ static bool FindNearestVertexInTile( CVec3 *pRes,
 	}
 
 	if ( bFlag )
+	{
 		return false;
+	}
 
 	//NI_ASSERT( fDist < DEF_EPS, "Can't find vertex in tile" );
 	pRes->Set( vRes.x, vRes.y, vRes.z );
 
 	if ( fDist < 0.1f )
+	{
 		return true;
+	}
 
 	return false;
 }
@@ -320,7 +338,9 @@ FindNearestVertexInTile( CVec3 *pRes, float *pAddHeight, const CVec3 &v, const C
 void CTerraGen::PeaksGetArrayOfFirstPoints( std::vector<SIntersectPoint> *pInters, const CVec3 &v1, const CVec3 &v2 )
 {
 	if ( fabs( fabs2( v1.x - v2.x ) + fabs2( v1.y - v2.y ) ) < EPS_VALUE )
+	{
 		return;
+	}
 
 	const int nTileX1 = Clamp( int( (std::min)( v1.x, v2.x ) * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeX() - 1 );
 	const int nTileY1 = Clamp( int( (std::min)( v1.y, v2.y ) * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeY() - 1 );
@@ -452,14 +472,18 @@ inline void ReleaseUnusedAttribues( std::vector<NMeshData::SMeshDataTex2> &pData
 	for ( std::vector<NMeshData::SMeshDataTex2>::iterator it = pDataArr.begin(); it != pDataArr.end(); ++it )
 	{
 		if ( it->attributes[0].data.empty() )
+		{
 			it->attributes.resize( 0 );
+		}
 	}
 }
 
 void CTerraGen::AddPeak( const STerrainInfo::SPeak &peak )
 {
 	if ( !( pDesc->pTerraSet ) || ( pDesc->pTerraSet->terraTypes.empty() ) )
+	{
 		return;
+	}
 
 	SPeakGFXInfo gfxInfo;
 	gfxInfo.nID = peak.nID;
@@ -504,11 +528,15 @@ void CTerraGen::AddPeak( const STerrainInfo::SPeak &peak )
 			const STerrainInfo::SVSOPoint &point2 = ( *itPointsArr )[i + 1];
 
 			if ( !FindNearestVertexInTile( &vPos1, &fAddHeight1, point1.vPos, terrainInfo.tiles ) )
+			{
 				//vPos1 = point1.vPos;
 				continue;
+			}
 			if ( !FindNearestVertexInTile( &vPos2, &fAddHeight2, point2.vPos, terrainInfo.tiles ) )
+			{
 				//vPos2 = point2.vPos;
 				continue;
+			}
 
 			//vPrev1 = point1.vPos - point1.vNorm * DEF_PENDENT_WIDTH * 0.5f;
 			//vPrev2 = point2.vPos - point2.vNorm * DEF_PENDENT_WIDTH * 0.5f;
@@ -672,14 +700,18 @@ void CTerraGen::AddPeak( const STerrainInfo::SPeak &peak )
 	terrainGfxInfo.peaks.push_back( gfxInfo );
 
 	if ( pGfxObserver )
+	{
 		pGfxObserver->AddPeak( &( terrainGfxInfo.peaks.back() ) );
+	}
 }
 
 void CTerraGen::AddAllPeaks()
 {
 	for ( std::list<STerrainInfo::SPeak>::const_iterator it = terrainInfo.peaks.begin(); it != terrainInfo.peaks.end();
 	      ++it )
+	{
 		AddPeak( *it );
+	}
 }
 
 void CTerraGen::RemovePeakInfo( const int nVSOID )
@@ -715,7 +747,9 @@ void CTerraGen::RemovePeakGfxInfo( const int nVSOID )
 void CTerraGen::UpdateNeededPeaks()
 {
 	if ( vTexModMin.x < 0 )
+	{
 		return;
+	}
 
 	const CVec2 vMin( (float)vTexModMin.x * DEF_TILE_SIZE, (float)vTexModMin.y * DEF_TILE_SIZE );
 	const CVec2 vMax( (float)( vTexModMax.x + 1 ) * DEF_TILE_SIZE, (float)( vTexModMax.y + 1 ) * DEF_TILE_SIZE );
@@ -728,7 +762,9 @@ void CTerraGen::UpdateNeededPeaks()
 		{
 			RemovePeakGfxInfo( it->nID );
 			if ( pGfxObserver )
+			{
 				pGfxObserver->RemovePeak( it->nID );
+			}
 			AddPeak( *it );
 		}
 	}

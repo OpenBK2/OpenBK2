@@ -24,10 +24,14 @@ EXPORT_RESULT CObjectRPGStatsExporter::CheckObject( IManipulator *pManipulator,
 	const auto result =
 			CObjectBaseRPGStatsExporter::CheckObject( pManipulator, rszObjectTypeName, rszObjectName, bExport, exportType );
 	if ( result != ER_SUCCESS )
+	{
 		return result;
+	}
 	//
 	if ( exportType == ET_BEFORE_REF )
+	{
 		return ER_SUCCESS;
+	}
 	//
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	ILogger *pLogger = NLog::GetLogger();
@@ -48,12 +52,16 @@ EXPORT_RESULT CObjectRPGStatsExporter::CheckObject( IManipulator *pManipulator,
 							CManipulatorManager::CreateManipulatorFromReference( "Skeleton", pModelMan, 0, 0, 0 );
 					// Validate joints directly in the GLTF hierarchy; no generated GR2 file exists.
 					if ( !skeletonResource || !NEditorGltf::IsGltf( skeletonResource ) )
+					{
 						return ER_FAIL;
+					}
 					std::string root;
 					CManipulatorManager::GetValue( &root, skeletonResource, "RootJoint" );
 					NGltf::SSkeletonDefinition skeleton;
 					if ( !NGltf::BuildSkeleton( NEditorGltf::Load( skeletonResource ), root, 0, &skeleton ) )
+					{
 						return ER_FAIL;
+					}
 					{
 						//
 						for ( int i = 0; i < nNumSpecificJoints; ++i )

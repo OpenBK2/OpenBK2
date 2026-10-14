@@ -121,13 +121,17 @@ void CTimeCounter::Count( const int nName, const bool bStart )
 void CTimeCounter::Count( const std::string &szName, const bool bStart )
 {
 	if ( bStart )
+	{
 		NHPTimer::GetTime( &( szStartTimes[szName] ) );
+	}
 	else
 	{
 		const double time = NHPTimer::GetTimePassed( &( szStartTimes[szName] ) );
 
 		if ( szCounters.find( szName ) == szCounters.end() )
+		{
 			szCounters[szName] = 0;
+		}
 
 		szCounters[szName] += time;
 
@@ -182,7 +186,9 @@ void CTimeCounter::PrintCounters()
 void CTimeCounter::ChangeVar( const int nIndex, const float fChange )
 {
 	if ( nIndex >= variables.size() )
+	{
 		variables.resize( nIndex * 1.5, 0.0f );
+	}
 
 	nMaxVar = (std::max)( nIndex, nMaxVar );
 	variables[nIndex] += fChange;
@@ -191,7 +197,9 @@ void CTimeCounter::ChangeVar( const int nIndex, const float fChange )
 void CTimeCounter::SetVar( const int nIndex, const float fValue )
 {
 	if ( nIndex >= variables.size() )
+	{
 		variables.resize( nIndex * 1.5, 0.0f );
+	}
 
 	nMaxVar = (std::max)( nIndex, nMaxVar );
 	variables[nIndex] = fValue;

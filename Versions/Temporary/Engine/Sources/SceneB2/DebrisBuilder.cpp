@@ -26,7 +26,9 @@ static void SmoothMaskSharp( CArray2D<uint8_t> *pImage, const CArray2D<uint8_t> 
 					     ( ( g + gg ) < mask.GetSizeY() ) && ( ( ii * ii + gg * gg ) <= nSmoothRad2 ) )
 					{
 						if ( mask[g + gg][i + ii] == 0 )
+						{
 							++nZeroCount;
+						}
 						++nAllCount;
 					}
 				}
@@ -51,7 +53,9 @@ static void SmoothMaskMedium( CArray2D<uint8_t> *pImage,
 	smoothNoises.reserve( 2 );
 	const unsigned char nSmoothNoise = 9;
 	for ( int k = 0; k < 2; ++k )
+	{
 		smoothNoises.push_back( noiseManager.GetNoise( nSmoothNoise ) );
+	}
 
 	const int nSmoothRad2 = nSmoothRad * nSmoothRad;
 	int nZeroCount, nAllCount;
@@ -68,7 +72,9 @@ static void SmoothMaskMedium( CArray2D<uint8_t> *pImage,
 					     ( ( g + gg ) < mask.GetSizeY() ) && ( ( ii * ii + gg * gg ) <= nSmoothRad2 ) )
 					{
 						if ( mask[g + gg][i + ii] == 0 )
+						{
 							++nZeroCount;
+						}
 						++nAllCount;
 					}
 				}
@@ -100,7 +106,9 @@ static void SmoothMaskBlur( CArray2D<uint8_t> *pImage, const CArray2D<uint8_t> &
 					     ( ( g + gg ) < mask.GetSizeY() ) && ( ( ii * ii + gg * gg ) <= nSmoothRad2 ) )
 					{
 						if ( mask[g + gg][i + ii] == 0 )
+						{
 							++nZeroCount;
+						}
 						++nAllCount;
 					}
 				}
@@ -122,7 +130,9 @@ static bool RasterizeObjectMask( const std::vector<CVec3> &verts,
 {
 	// A vertical/empty mesh has no ground footprint; avoid zero-sized rasterization.
 	if ( verts.empty() || trgs.empty() || vMax.x <= vMin.x || vMax.y <= vMin.y || nSmoothRadius < 0 )
+	{
 		return false;
+	}
 	const float fCoeffX = ( vMax.x - vMin.x ) * DEF_PATCH_TEX_SIZE / DEF_PATCH_WORLD_SIZE;
 	const float fCoeffY = ( vMax.y - vMin.y ) * DEF_PATCH_TEX_SIZE / DEF_PATCH_WORLD_SIZE;
 
@@ -176,11 +186,17 @@ static bool RasterizeObjectMask( const std::vector<CVec3> &verts,
 		const int x3 = Clamp( int( ( verts[it->i3].x - vMin.x ) * fScaleCoeffX ) + nTexOffs, 0, pMask->GetSizeX() - 1 );
 		const int y3 = Clamp( int( ( verts[it->i3].y - vMin.y ) * fScaleCoeffY ) + nTexOffs, 0, pMask->GetSizeY() - 1 );
 		if ( ( fabs( verts[it->i1].z - vMin.z ) <= fDist ) && ( fabs( verts[it->i2].z - vMin.z ) <= fDist ) )
+		{
 			DrawLine( pMask, x1, y1, x2, y2, 1 );
+		}
 		if ( ( fabs( verts[it->i2].z - vMin.z ) <= fDist ) && ( fabs( verts[it->i3].z - vMin.z ) <= fDist ) )
+		{
 			DrawLine( pMask, x2, y2, x3, y3, 1 );
+		}
 		if ( ( fabs( verts[it->i3].z - vMin.z ) <= fDist ) && ( fabs( verts[it->i1].z - vMin.z ) <= fDist ) )
+		{
 			DrawLine( pMask, x3, y3, x1, y1, 1 );
+		}
 	}
 
 	WiseFill( pMask, 1 );
@@ -200,11 +216,17 @@ bool NDebrisBuilder::CreateMask( const std::vector<CVec3> &vertices,
 {
 	CArray2D<uint8_t> mask;
 	if ( !RasterizeObjectMask( vertices, triangles, minimum, maximum, &mask, origin, type, smoothRadius ) )
+	{
 		return false;
+	}
 	if ( type == MASK_AI_PASSABILITY )
+	{
 		image->Swap( mask );
+	}
 	else
+	{
 		SmoothMaskSharp( image, mask, smoothRadius );
+	}
 	return true;
 }
 
@@ -221,11 +243,15 @@ void CTerraGen::CreateDebris( const std::string &szFileName,
 	CVec3 vMin, vMax;
 	LoadGrannyModel( szFileName, &verts, &trgs, &vMin, &vMax );
 	if ( verts.empty() || trgs.empty() )
+	{
 		return;
+	}
 
 	CArray2D<uint8_t> mask;
 	if ( !RasterizeObjectMask( verts, trgs, vMin, vMax, &mask, pOrigin, maskType, nSmoothRadius ) )
+	{
 		return;
+	}
 
 	if ( maskType == NDebrisBuilder::MASK_AI_PASSABILITY )
 	{

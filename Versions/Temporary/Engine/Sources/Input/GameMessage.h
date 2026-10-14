@@ -23,7 +23,9 @@ public:
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
 	{
 		if ( pThis )
+		{
 			return ( CastToUserObject( pThis, (TObj *)0 )->*pfnMemFun )( _msg );
+		}
 		return false;
 	}
 };
@@ -44,7 +46,9 @@ public:
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
 	{
 		if ( pThis )
+		{
 			return ( CastToUserObject( pThis, (TObj *)0 )->*pfnMemFun )( _msg, p1 );
+		}
 		return false;
 	}
 };
@@ -66,7 +70,9 @@ public:
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
 	{
 		if ( pThis )
+		{
 			return ( CastToUserObject( pThis, (TObj *)0 )->*pfnMemFun )( _msg, p1, p2 );
+		}
 		return false;
 	}
 };
@@ -255,7 +261,9 @@ public:
 	bool ProcessEvent( const SGameMessage &event, CObjectBase *pThis )
 	{
 		if ( bind.ProcessEvent( event ) )
+		{
 			return pObserver->Execute( event, pThis );
+		}
 		return false;
 	}
 };
@@ -359,7 +367,9 @@ public:
 		for ( int k = 0; k < eventRegisters.size(); ++k )
 		{
 			if ( eventRegisters[k].ProcessEvent( event, pThis ) )
+			{
 				return true;
+			}
 		}
 		return false;
 	}

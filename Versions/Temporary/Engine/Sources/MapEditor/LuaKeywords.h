@@ -19,18 +19,26 @@ inline std::vector<std::string> ReadLuaKeywordList( std::istream &input )
 	while ( std::getline( input, line ) )
 	{
 		if ( first && line.compare( 0, 3, "\xef\xbb\xbf" ) == 0 )
+		{
 			line.erase( 0, 3 );
+		}
 		first = false;
 		size_t begin = 0;
 		while ( begin < line.size() )
 		{
 			while ( begin < line.size() && std::isspace( static_cast<unsigned char>( line[begin] ) ) )
+			{
 				++begin;
+			}
 			size_t end = begin;
 			while ( end < line.size() && !std::isspace( static_cast<unsigned char>( line[end] ) ) )
+			{
 				++end;
+			}
 			if ( end > begin )
+			{
 				words.push_back( line.substr( begin, end - begin ) );
+			}
 			begin = end;
 		}
 	}
@@ -45,7 +53,9 @@ inline std::string JoinLuaKeywords( const std::vector<std::string> &words )
 	for ( const auto &word : words )
 	{
 		if ( !result.empty() )
+		{
 			result += ' ';
+		}
 		result += word;
 	}
 	return result;
@@ -60,12 +70,18 @@ inline std::vector<std::string> FindLuaFunctions( const std::string &source )
 	auto skipLongString = [&source]( size_t &pos )
 	{
 		if ( pos >= source.size() || source[pos] != '[' )
+		{
 			return false;
+		}
 		size_t end = pos + 1;
 		while ( end < source.size() && source[end] == '=' )
+		{
 			++end;
+		}
 		if ( end >= source.size() || source[end] != '[' )
+		{
 			return false;
+		}
 		const std::string close = "]" + source.substr( pos + 1, end - pos - 1 ) + "]";
 		const size_t found = source.find( close, end + 1 );
 		pos = found == std::string::npos ? source.size() : found + close.size();
@@ -96,9 +112,13 @@ inline std::vector<std::string> FindLuaFunctions( const std::string &source )
 			{
 				const char c = source[pos++];
 				if ( c == '\\' && pos < source.size() )
+				{
 					++pos;
+				}
 				else if ( c == quote )
+				{
 					break;
+				}
 			}
 			tokens.push_back( "<string>" );
 			continue;
@@ -110,40 +130,58 @@ inline std::vector<std::string> FindLuaFunctions( const std::string &source )
 		}
 		const size_t begin = pos++;
 		if ( startsName( source[begin] ) )
+		{
 			while ( pos < source.size() && inName( source[pos] ) )
+			{
 				++pos;
+			}
+		}
 		tokens.push_back( source.substr( begin, pos - begin ) );
 	}
 	std::set<std::string> names;
 	for ( size_t i = 0; i < tokens.size(); ++i )
 	{
 		if ( tokens[i] != "function" )
+		{
 			continue;
+		}
 		size_t begin = i + 1, end = begin;
 		if ( begin < tokens.size() && tokens[begin] == "(" && i >= 2 && tokens[i - 1] == "=" )
 		{
 			// Also recognize: local name = function(...) and table.name = function(...).
 			begin = end = i - 2;
 			while ( begin >= 2 && tokens[begin - 1] == "." && startsName( tokens[begin - 2][0] ) )
+			{
 				begin -= 2;
+			}
 			++end;
 		}
 		else
 		{
 			if ( begin >= tokens.size() || !startsName( tokens[begin][0] ) )
+			{
 				continue;
+			}
 			end = begin + 1;
 			while ( end + 1 < tokens.size() && ( tokens[end] == "." || tokens[end] == ":" ) &&
 			        startsName( tokens[end + 1][0] ) )
+			{
 				end += 2;
+			}
 			if ( end >= tokens.size() || tokens[end] != "(" )
+			{
 				continue;
+			}
 		}
 		if ( !startsName( tokens[begin][0] ) )
+		{
 			continue;
+		}
 		std::string name;
 		for ( size_t j = begin; j < end; ++j )
+		{
 			name += tokens[j];
+		}
 		names.insert( name );
 	}
 	return { names.begin(), names.end() };

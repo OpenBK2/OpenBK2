@@ -28,11 +28,17 @@ struct THermitInterpolate
 	TValue operator()( float fCoeff, TValue p0, TValue p1, TValue v0, TValue v1 )
 	{
 		if ( fCoeff <= 0 )
+		{
 			return p0;
+		}
 		else if ( fCoeff >= 1 )
+		{
 			return p1;
+		}
 		else
+		{
 			return ( ( 2 * p0 - 2 * p1 + v0 + v1 ) * fCoeff * fCoeff * fCoeff +
 			         ( -3 * p0 + 3 * p1 - 2 * v0 - v1 ) * fCoeff * fCoeff + v0 * fCoeff + p0 );
+		}
 	}
 };

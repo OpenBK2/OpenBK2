@@ -171,7 +171,9 @@ inline const NDb::SModel *GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeas
 		      ++it )
 		{
 			if ( it->eSeason == eSeason )
+			{
 				return it->pModel;
+			}
 		}
 	}
 
@@ -187,7 +189,9 @@ inline const NDb::SModel *GetExactLowLevelModel( const NDb::SVisObj *pVisObj, ND
 		      ++it )
 		{
 			if ( it->eSeason == eSeason )
+			{
 				return it->pLowLevelModel;
+			}
 		}
 	}
 

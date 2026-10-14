@@ -183,16 +183,24 @@ struct CFace::SImpl
 	void ReadGpos()
 	{
 		if ( FT_HAS_KERNING( pFace ) )
+		{
 			return;
+		}
 		FT_ULong nLength = 0;
 		if ( FT_Load_Sfnt_Table( pFace, TTAG_GPOS, 0, nullptr, &nLength ) != 0 || nLength == 0 )
+		{
 			return;
+		}
 		std::vector<uint8_t> table( nLength );
 		if ( FT_Load_Sfnt_Table( pFace, TTAG_GPOS, 0, table.data(), &nLength ) != 0 )
+		{
 			return;
+		}
 		std::unique_ptr<CGposKerning> pKerning( new CGposKerning( std::move( table ) ) );
 		if ( !pKerning->IsEmpty() )
+		{
 			pGpos = std::move( pKerning );
+		}
 	}
 };
 
@@ -215,7 +223,9 @@ std::unique_ptr<CFace> CFace::OpenFile( const std::string &szFile, int nFaceInde
 		return nullptr;
 	}
 	if ( !pFace->pImpl->SelectCharmap( pszError ) )
+	{
 		return nullptr;
+	}
 	pFace->pImpl->ReadGpos();
 	return pFace;
 }
@@ -247,7 +257,9 @@ CFace::OpenMemory( std::shared_ptr<const std::vector<uint8_t>> data, int nFaceIn
 		return nullptr;
 	}
 	if ( !pFace->pImpl->SelectCharmap( pszError ) )
+	{
 		return nullptr;
+	}
 	pFace->pImpl->ReadGpos();
 	return pFace;
 }
@@ -288,7 +300,9 @@ bool CFace::Fit( const SOptions &options, const std::vector<uint32_t> &sizingCod
 		// H measures cap height without the overshoot of rounded capitals.
 		SDesignMetrics cap;
 		if ( !MeasureInk( impl.pFace, { 'H' }, &cap, pszError ) )
+		{
 			return false;
+		}
 		fPixelsPerUnit = static_cast<double>( options.nCapHeight ) / ( cap.nWinAscent + cap.nWinDescent );
 	}
 	const double fWidthScale = options.fWidthScale > 0 ? options.fWidthScale : 1.0;

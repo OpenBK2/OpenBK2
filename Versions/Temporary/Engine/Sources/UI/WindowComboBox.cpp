@@ -46,7 +46,9 @@ void CWindowComboBox::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	NI_ASSERT( pIcon, "Window not found" );
 	AddChild( pIcon, false );
 	if ( pIcon )
+	{
 		pIcon->SetNotifySink( this );
+	}
 
 	// required field
 	pList = dynamic_cast<CWindowListCtrl *>( CUIFactory::MakeWindow( pShared->pList ) );
@@ -69,7 +71,9 @@ void CWindowComboBox::Init()
 	CWindow::Init();
 
 	if ( pList )
+	{
 		pList->Init();
+	}
 }
 
 void CWindowComboBox::Reposition( const CTRect<float> &parentRect )
@@ -104,7 +108,9 @@ bool CWindowComboBox::OnButtonDown( const CVec2 &vPos, const int nButton )
 void CWindowComboBox::AddItem( CObjectBase *pData )
 {
 	if ( !pList )
+	{
 		return;
+	}
 
 	IListControlItem *pItem = pList->AddItem( pData );
 	items.push_back( pItem );
@@ -115,11 +121,15 @@ void CWindowComboBox::AddItem( CObjectBase *pData )
 void CWindowComboBox::RemoveItem( CObjectBase *pData )
 {
 	if ( !pList )
+	{
 		return;
+	}
 
 	CItems::iterator pos = find( items.begin(), items.end(), pData );
 	if ( pos == items.end() )
+	{
 		return;
+	}
 
 	pList->RemoveItem( *pos );
 	items.erase( pos );
@@ -149,12 +159,16 @@ void CWindowComboBox::Select( int nIndex )
 	if ( nSelected >= 0 )
 	{
 		if ( pViewer )
+		{
 			pViewer->MakeInterior( pLine, items[nSelected]->GetUserData() );
+		}
 	}
 	else
 	{
 		if ( pViewer )
+		{
 			pViewer->MakeInterior( pLine, 0 );
+		}
 	}
 }
 
@@ -162,20 +176,26 @@ void CWindowComboBox::SetViewer( IDataViewer *_pViewer )
 {
 	pViewer = _pViewer;
 	if ( pList )
+	{
 		pList->SetViewer( pViewer );
+	}
 }
 
 void CWindowComboBox::SetLine( CObjectBase *pData )
 {
 	pLineData = pData;
 	if ( pViewer )
+	{
 		pViewer->MakeInterior( pLine, pLineData );
+	}
 }
 
 void CWindowComboBox::Pushed( class CWindow *pWho )
 {
 	if ( bSuppressPopupList )
+	{
 		return;
+	}
 
 	ShowList( !IsModalList() );
 	bSuppressPopupList = true;
@@ -189,7 +209,9 @@ bool CWindowComboBox::IsModalList() const
 void CWindowComboBox::ShowList( bool bShow )
 {
 	if ( !pList && pList->IsVisible() != bShow )
+	{
 		return;
+	}
 
 	pList->ShowWindow( bShow );
 	if ( bShow )
@@ -200,11 +222,15 @@ void CWindowComboBox::ShowList( bool bShow )
 	else
 	{
 		if ( pList->GetParent() )
+		{
 			pList->GetParent()->RemoveChild( pList );
+		}
 	}
 
 	if ( bShow )
+	{
 		pList->SetFocus( true );
+	}
 }
 
 void CWindowComboBox::OnSelectData( CObjectBase *pData )
@@ -221,7 +247,9 @@ void CWindowComboBox::OnSelectData( CObjectBase *pData )
 	Select( nIndex );
 
 	if ( pList->GetSelectedItem() )
+	{
 		RunAnimationAndCommands( pInstance->onSelection, "", true, true );
+	}
 }
 
 void CWindowComboBox::Clicked( struct IWindow *pWho, const int nButton )
@@ -229,13 +257,17 @@ void CWindowComboBox::Clicked( struct IWindow *pWho, const int nButton )
 	if ( IsModalList() )
 	{
 		if ( nButton == MSTATE_BUTTON1 )
+		{
 			ShowList( false );
+		}
 	}
 	else
 	{
 		// покажем список также в случае клика в строку комбо-бокса
 		if ( !bSuppressPopupList && nButton == MSTATE_BUTTON1 )
+		{
 			ShowList( true );
+		}
 	}
 	bSuppressPopupList = true;
 }

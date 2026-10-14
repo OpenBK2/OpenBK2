@@ -17,11 +17,15 @@ CExecutorExactShot::CExecutorExactShot( CAIUnit *_pUnit )
 int CExecutorExactShot::Segment()
 {
 	if ( !IsExecutorValid() )
+	{
 		return -1;
+	}
 
 	// CRAP: turn it on again after each shot
 	if ( state.bAutocast && !pUnit->IsIgnoreAABBCoeff() )
+	{
 		pUnit->SetIgnoreAABBCoeff( true );
+	}
 
 	return GetNextTime();
 }
@@ -29,7 +33,9 @@ int CExecutorExactShot::Segment()
 void CExecutorExactShot::UpdateProgress( const SAbilitySwitchState _state, const float fParam )
 {
 	if ( !pUpdate )
+	{
 		pUpdate = new SAISpecialAbilityUpdate;
+	}
 
 	pUpdate->info.nAbilityType = NDb::ABILITY_EXACT_SHOT;
 	pUpdate->info.state = state;
@@ -72,14 +78,20 @@ bool CExecutorExactShot::NotifyEvent( const CExecutorEvent &event )
 {
 	//Filter out wrong calls
 	if ( pUnit->GetUniqueId() != event.GetParam().nUnitID )
+	{
 		return false;
+	}
 
 	const CExecutorEventSpecialAbility *pEv = static_cast<const CExecutorEventSpecialAbility *>( &event );
 	if ( pEv == 0 )
+	{
 		return false;
+	}
 
 	if ( pEv->GetAbility() != NDb::ABILITY_EXACT_SHOT )
+	{
 		return false;
+	}
 	//end - Filter out wrong calls
 
 	switch ( event.GetParam().eEventID )

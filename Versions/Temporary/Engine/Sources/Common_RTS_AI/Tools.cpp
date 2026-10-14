@@ -93,7 +93,9 @@ const void CBSpline::IterateForward( SForwardIter *pIter )
 		pIter->fw_d2x += pIter->fw_d3x;
 	}
 	else
+	{
 		pIter->t = -1;
+	}
 }
 
 int CBSpline ::operator&( IBinSaver &saver )
@@ -149,7 +151,9 @@ float CCirclePath::Iterate( const float fLength )
 	const float fCurrentDir = ( bClockWise ) ? ( fStartDir - fCurrentDelta ) : ( fStartDir + fCurrentDelta );
 	vDX = CVec2( NMath::Cos( fCurrentDir ), NMath::Sin( fCurrentDir ) );
 	if ( !bForwardDir )
+	{
 		vDX = -vDX;
+	}
 
 	const float fCurrentPerp = ( bClockWise == bForwardDir ) ? ( fCurrentDir + FP_PI2 ) : ( fCurrentDir - FP_PI2 );
 	vX = CVec2( fRadius * NMath::Cos( fCurrentPerp ), fRadius * NMath::Sin( fCurrentPerp ) ) + vCenter;
@@ -186,14 +190,20 @@ const SRect GetUnitFullSpeedRect( const CBasePathUnit *pUnit, const bool bForInf
 	if ( !pUnit->IsIdle() )
 	{
 		if ( bForInfantry )
+		{
 			lengthAhead = (std::max)( vAABBHalfSize.y * BOUND_RECT_FACTOR + SPEED_FACTOR * pUnit->GetMaxPossibleSpeed(),
 			                          vAABBHalfSize.y * BOUND_RECT_FACTOR * 1.5f );
+		}
 		else
+		{
 			lengthAhead = (std::max)( vAABBHalfSize.y * BOUND_RECT_FACTOR + SPEED_FACTOR * pUnit->GetSpeed(),
 			                          vAABBHalfSize.y * BOUND_RECT_FACTOR * 1.5f );
+		}
 	}
 	else
+	{
 		lengthAhead = vAABBHalfSize.y * BOUND_RECT_FACTOR;
+	}
 
 	SRect speedRect;
 	speedRect.InitRect(
@@ -213,12 +223,18 @@ const SRect GetUnitSpeedRect( const CBasePathUnit *pUnit, const bool bForInfantr
 	if ( !pUnit->IsIdle() )
 	{
 		if ( bForInfantry )
+		{
 			lengthAhead = (std::max)( SPEED_FACTOR * pUnit->GetMaxPossibleSpeed(), vAABBHalfSize.y * 0.5f );
+		}
 		else
+		{
 			lengthAhead = (std::max)( SPEED_FACTOR * pUnit->GetSpeed(), vAABBHalfSize.y * 0.5f );
+		}
 	}
 	else
+	{
 		lengthAhead = 0;
+	}
 
 	SRect speedRect;
 	speedRect.InitRect( pUnit->GetCenterPlain() + pUnit->GetCenterShift() +

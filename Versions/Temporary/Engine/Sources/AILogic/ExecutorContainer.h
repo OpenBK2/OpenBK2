@@ -66,7 +66,9 @@ public:
 		f.Add( 5, &sleeping );
 		f.Add( 6, &events );
 		if ( f.IsReading() )
+		{
 			checkIter = sleeping.end();
+		}
 		return 0;
 	}
 

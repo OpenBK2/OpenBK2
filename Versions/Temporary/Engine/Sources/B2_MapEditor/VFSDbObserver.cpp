@@ -39,7 +39,9 @@ public:
 		if ( NVFS::IFileCreator *pCreator = NVFS::GetMainFileCreator() )
 		{
 			for ( CObjectsList::const_iterator it = objects2remove.begin(); it != objects2remove.end(); ++it )
+			{
 				pCreator->RemoveFile( NDb::GetFileName( *it ) );
+			}
 		}
 		objects2remove.clear();
 	}

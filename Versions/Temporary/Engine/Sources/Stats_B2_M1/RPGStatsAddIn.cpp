@@ -44,19 +44,25 @@ void NDb::SUnitActions::ReMapCommands( CUserCommands &ai, CUserActions &user )
 const NDb::SComplexSoundDesc *ChooseAcknowledgement( const NDb::SAckSetRPGStats *pStats, const NDb::EUnitAckType type )
 {
 	if ( pStats == 0 || type < 0 || type >= pStats->types.size() )
+	{
 		return 0;
+	}
 	return pStats->types[type].pAck;
 }
 
 void NDb::SUnitActions::ToAIUnits( bool bInEditor )
 {
 	if ( bInEditor )
+	{
 		return;
+	}
 	// Add Special Abilities
 	for ( int i = 0; i < specialAbilities.size(); ++i )
 	{
 		if ( specialAbilities[i] == 0 )
+		{
 			continue;
+		}
 		const int nData = GetCommandByAbility( specialAbilities[i]->eName );
 		if ( -1 != nData )
 		{
@@ -69,20 +75,28 @@ void NDb::SUnitActions::ToAIUnits( bool bInEditor )
 	AddValue( availCommands, ACTION_COMMAND_WAIT );
 	AddValue( availCommands, ACTION_COMMAND_MOVE_TO_GRID );
 	if ( availCommands.GetData( ACTION_COMMAND_MOVE_TO ) != 0 )
+	{
 		AddValue( availExposures, ACTION_COMMAND_FOLLOW );
+	}
 	AddValue( availExposures, ACTION_COMMAND_THROW_GRENADE );
 
 	AddValue( availCommands, ACTION_COMMAND_INSTALL );
 	AddValue( availCommands, ACTION_COMMAND_UNINSTALL );
 
 	if ( availCommands.GetData( ACTION_COMMAND_ENTRENCH_BEGIN ) )
+	{
 		AddValue( availCommands, ACTION_COMMAND_ENTRENCH_END );
+	}
 
 	if ( availCommands.GetData( ACTION_COMMAND_BUILD_FENCE_BEGIN ) )
+	{
 		AddValue( availCommands, ACTION_COMMAND_BUILD_FENCE_END );
+	}
 
 	if ( availCommands.GetData( ACTION_COMMAND_ENTRENCH_SELF ) )
+	{
 		AddValue( availExposures, ACTION_COMMAND_ENTRENCH_SELF );
+	}
 
 	// remap commands
 	ReMapCommands( availCommands, availUserActions );
@@ -98,7 +112,9 @@ void NDb::SUnitActions::ToAIUnits( bool bInEditor )
 const bool NDb::SUnitBaseRPGStats::HasCommand( const int nCmd ) const
 {
 	if ( -1 == nCmd )
+	{
 		return false;
+	}
 	NI_ASSERT( ( nCmd >= 0 && nCmd < pActions->availCommands.GetSize() ) || ( nCmd >= 1000 ),
 	           fmt::format( "Wrong command ( {} )\n", nCmd ) );
 	return nCmd >= 1000

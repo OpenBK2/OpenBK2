@@ -48,7 +48,9 @@ public:
 	void OnSerialize( IBinSaver &f )
 	{
 		if ( !f.IsChecksum() )
+		{
 			f.Add( 7, &bIfRegisteredInCWorld );
+		}
 	}
 
 public:

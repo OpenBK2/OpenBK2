@@ -26,7 +26,9 @@ void CAAFeedBacks::Clear()
 void CAAFeedBacks::Fired( CAIUnit *pAA, CAIUnit *pTarget )
 {
 	if ( theDipl.GetDiplStatus( pAA->GetPlayer(), theDipl.GetMyNumber() ) != EDI_ENEMY )
+	{
 		return;
+	}
 
 	const int nAAID = pAA->GetUniqueId();
 	const int nTargetID = pTarget->GetUniqueId();
@@ -45,5 +47,7 @@ void CAAFeedBacks::PlaneDeleted( CAIUnit *pTarget )
 {
 	const int nTargetID = pTarget->GetUniqueId();
 	for ( CAAFeedBacksList::iterator it = feedbacks.begin(); it != feedbacks.end(); ++it )
+	{
 		it->second.remove( nTargetID );
+	}
 }

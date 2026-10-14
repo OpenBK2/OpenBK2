@@ -196,7 +196,9 @@ public:
 		bLowerLevel = true;
 		//
 		for ( CCommandsList::iterator it = upperLevelCommands.begin(); it != upperLevelCommands.end(); ++it )
+		{
 			( *it )->Visit( this );
+		}
 		upperLevelCommands.clear();
 		//
 		bLowerLevel = bStoredLowerLevel;
@@ -225,7 +227,9 @@ public:
 		}
 		//
 		if ( rcClip.IsEmpty() )
+		{
 			return;
+		}
 
 		CRectLayout sLayout = _sLayout;
 		sLayout.fZ = fZ;
@@ -241,7 +245,9 @@ public:
 		}
 		// recalc to new size
 		if ( rcClip.IsEmpty() )
+		{
 			return;
+		}
 		pGFX->CreateDynamicRects( pTexture, rects, CTPoint<float>( 0, 0 ), rcClip );
 	}
 	//
@@ -258,7 +264,9 @@ public:
 		}
 		// recalc to new size
 		if ( rcClip.IsEmpty() )
+		{
 			return;
+		}
 		pGFX->CreateDynamicRects( pTexture, pPos4, pColors4, rectTexture );
 	}
 	//
@@ -271,7 +279,9 @@ public:
 			return;
 		}
 		if ( rcClip.IsEmpty() )
+		{
 			return;
+		}
 		pGFX->CreateDynamicRects( pTexture, rects, CTPoint<float>( 0, 0 ), rcClip );
 	}
 	//
@@ -288,7 +298,9 @@ public:
 			CTRect<float> clipRect = sWindow;
 			clipRect.Intersect( rcClip );
 			if ( clipRect.IsEmpty() )
+			{
 				return;
+			}
 			pML->Render( pGFX, sPosition, clipRect );
 		}
 		else

@@ -152,31 +152,47 @@ inline CVec3 CTerraGen::FindNormalInVertex( const CVec3 &vVert, const int nTileX
 	if ( nTileY > 0 )
 	{
 		if ( nTileX > 0 )
+		{
 			FindNormalsInTile( terrainInfo.tiles[nTileY - 1][nTileX - 1], vVert, vResNorm, nNormsCount );
+		}
 		FindNormalsInTile( terrainInfo.tiles[nTileY - 1][nTileX], vVert, vResNorm, nNormsCount );
 		if ( nTileX < ( terrainInfo.tiles.GetSizeX() - 1 ) )
+		{
 			FindNormalsInTile( terrainInfo.tiles[nTileY - 1][nTileX + 1], vVert, vResNorm, nNormsCount );
+		}
 	}
 
 	if ( nTileX > 0 )
+	{
 		FindNormalsInTile( terrainInfo.tiles[nTileY][nTileX - 1], vVert, vResNorm, nNormsCount );
+	}
 	FindNormalsInTile( terrainInfo.tiles[nTileY][nTileX], vVert, vResNorm, nNormsCount );
 	if ( nTileX < ( terrainInfo.tiles.GetSizeX() - 1 ) )
+	{
 		FindNormalsInTile( terrainInfo.tiles[nTileY][nTileX + 1], vVert, vResNorm, nNormsCount );
+	}
 
 	if ( nTileY < ( terrainInfo.tiles.GetSizeY() - 1 ) )
 	{
 		if ( nTileX > 0 )
+		{
 			FindNormalsInTile( terrainInfo.tiles[nTileY + 1][nTileX - 1], vVert, vResNorm, nNormsCount );
+		}
 		FindNormalsInTile( terrainInfo.tiles[nTileY + 1][nTileX], vVert, vResNorm, nNormsCount );
 		if ( nTileX < ( terrainInfo.tiles.GetSizeX() - 1 ) )
+		{
 			FindNormalsInTile( terrainInfo.tiles[nTileY + 1][nTileX + 1], vVert, vResNorm, nNormsCount );
+		}
 	}
 
 	if ( nNormsCount > 0 )
+	{
 		vResNorm /= nNormsCount;
+	}
 	else
+	{
 		vResNorm = V3_AXIS_Z;
+	}
 
 	Normalize( &vResNorm );
 
@@ -267,7 +283,9 @@ void CTerraGen::UpdateNormals( const int nX1, const int nY1, const int nX2, cons
 					vDNorm = ( vPrevX - vCur ) ^ ( vPrevY - vCur );
 					Normalize( &vDNorm );
 					if ( vDNorm.z < 0.0f )
+					{
 						vDNorm = -vDNorm;
+					}
 					vNorm += vDNorm;
 					++nNormsCount;
 				}
@@ -276,7 +294,9 @@ void CTerraGen::UpdateNormals( const int nX1, const int nY1, const int nX2, cons
 					vDNorm = ( vPrevX - vCur ) ^ ( vNextY - vCur );
 					Normalize( &vDNorm );
 					if ( vDNorm.z < 0.0f )
+					{
 						vDNorm = -vDNorm;
+					}
 					vNorm += vDNorm;
 					++nNormsCount;
 				}
@@ -288,7 +308,9 @@ void CTerraGen::UpdateNormals( const int nX1, const int nY1, const int nX2, cons
 					vDNorm = ( vNextX - vCur ) ^ ( vPrevY - vCur );
 					Normalize( &vDNorm );
 					if ( vDNorm.z < 0.0f )
+					{
 						vDNorm = -vDNorm;
+					}
 					vNorm += vDNorm;
 					++nNormsCount;
 				}
@@ -297,7 +319,9 @@ void CTerraGen::UpdateNormals( const int nX1, const int nY1, const int nX2, cons
 					vDNorm = ( vNextX - vCur ) ^ ( vNextY - vCur );
 					Normalize( &vDNorm );
 					if ( vDNorm.z < 0.0f )
+					{
 						vDNorm = -vDNorm;
+					}
 					vNorm += vDNorm;
 					++nNormsCount;
 				}

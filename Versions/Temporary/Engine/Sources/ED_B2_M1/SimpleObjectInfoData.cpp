@@ -47,7 +47,9 @@ bool SSimpleObjectInfo::KeepZeroHeight()
 					return false;
 				}
 				else
+				{
 					return true;
+				}
 			}
 		}
 		else if ( ( rMapInfoElement.szRPGStatsTypeName == "SquadRPGStats" ) ||

@@ -47,7 +47,9 @@ bool IsSegmentsIntersected( const CVec2 &p11, const CVec2 &p12, const CVec2 &p21
 {
 	const float D = ( p12.x - p11.x ) * ( p22.y - p21.y ) - ( p12.y - p11.y ) * ( p22.x - p21.x );
 	if ( D == 0.0f )
+	{
 		return false;
+	}
 	else
 	{
 		const float d1 = ( p22.y - p21.y ) * ( p21.x - p11.x ) - ( p22.x - p21.x ) * ( p21.y - p11.y );
@@ -80,7 +82,9 @@ bool CMiniMapLayer::NeedUpdate()
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 void CMiniMapLayer::Recalc()
@@ -88,13 +92,17 @@ void CMiniMapLayer::Recalc()
 	if ( nWidth > 0 && nHeight > 0 )
 	{
 		if ( !IsValid( pValue ) )
+		{
 			pValue = NGfx::MakeTexture(
 					GetNextPow2( nWidth ), GetNextPow2( nHeight ), 1, NGfx::SPixel8888::ID, NGfx::DYNAMIC_TEXTURE, NGfx::CLAMP );
+		}
 
 		NGfx::CTextureLock<NGfx::SPixel8888> lock( pValue, 0, NGfx::INPLACE );
 		const int nSize = sizeof( NGfx::SPixel8888 ) * nWidth;
 		for ( int y = 0; y < nHeight; ++y )
+		{
 			memcpy( lock[y], &points[y][0], nSize );
+		}
 	}
 
 	bNeedUpdate = false;
@@ -112,15 +120,21 @@ void CMiniMapLayer::SetSize( const int _nWidth, const int _nHeight )
 void CMiniMapLayer::PutPixel( const int x, const int y, const NGfx::SPixel8888 &color )
 {
 	if ( y < points.GetSizeY() && x < points.GetSizeX() )
+	{
 		points[y][x] = color;
+	}
 }
 
 const NGfx::SPixel8888 CMiniMapLayer::GetPixel( const int x, const int y )
 {
 	if ( x >= 0 && y >= 0 && x < points.GetSizeX() && y < points.GetSizeY() )
+	{
 		return points[y][x];
+	}
 	else
+	{
 		return NGfx::SPixel8888( 0, 0, 0, 0 );
+	}
 }
 
 void CMiniMapLayer::Clear()
@@ -131,7 +145,9 @@ void CMiniMapLayer::Clear()
 int CMiniMapLayer::operator&( IBinSaver &saver )
 {
 	if ( NGlobal::GetVar( "m1", 0 ).GetFloat() == 0 )
+	{
 		saver.Add( 1, &points );
+	}
 
 	saver.Add( 2, &nWidth );
 	saver.Add( 3, &nHeight );
@@ -177,8 +193,10 @@ void CWindowMiniMap::LoadMap( const int nWidth, const int nHeight, const int _nW
 	const int nWarFogLevel = (std::max)( 2, _nWarFogLevel );
 	warFogColors.resize( nWarFogLevel );
 	for ( int i = 0; i < nWarFogLevel; ++i )
+	{
 		warFogColors[i] = NGfx::SPixel8888(
 				0, 0, 0, s_nDarkWarFogAlpha - i * ( s_nDarkWarFogAlpha - s_nLightWarFogAlpha ) / ( nWarFogLevel - 1 ) );
+	}
 
 	// matrix calculation
 	if ( !bRotable )
@@ -225,12 +243,16 @@ void CWindowMiniMap::SetBaseRotableParams()
 	}
 
 	if ( pShared->vRotableSize.x > 0 && pShared->vRotableSize.y > 0 )
+	{
 		vRotableSize = pShared->vRotableSize;
+	}
 	else
 	{
 		vRotableSize = CVec2( vMax.x - vMin.x, vMax.y - vMin.y );
 		if ( vRotableSize.x == 0.0f && vRotableSize.y == 0.0f )
+		{
 			vRotableSize = vSize / FP_SQRT_2;
+		}
 	}
 }
 
@@ -270,7 +292,9 @@ bool CWindowMiniMap::CalculateScreenToMapSlow( const CVec2 &vPos, CVec2 *pvRes )
 	}
 
 	if ( bResult )
+	{
 		bResult = ( pvRes->x >= 0.0f && pvRes->x <= 1.0f && pvRes->y >= 0.0f && pvRes->y <= 1.0f );
+	}
 
 	pvRes->x = Clamp( pvRes->x, 0.0f, 1.0f ) * fMapWidth;
 	pvRes->y = Clamp( pvRes->y, 0.0f, 1.0f ) * fMapHeight;
@@ -327,8 +351,12 @@ bool CWindowMiniMap::ScreenToMap( const CVec2 &vPos, CVec2 *pvRes )
 		screenToMap.SetSizes( nSizeX, nSizeY );
 
 		for ( int y = 0; y < nSizeY; ++y )
+		{
 			for ( int x = 0; x < nSizeX; ++x )
+			{
 				screenToMap[y][x].second = CalculateScreenToMapSlow( CVec2( x, y ), &( screenToMap[y][x].first ) );
+			}
+		}
 	}
 
 	if ( vPos.x < screenToMap.GetSizeX() && vPos.y < screenToMap.GetSizeY() && vPos.x >= 0 && vPos.y >= 0 )
@@ -338,7 +366,9 @@ bool CWindowMiniMap::ScreenToMap( const CVec2 &vPos, CVec2 *pvRes )
 		return result.second;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 void CWindowMiniMap::RadiusMapToScreen( const CVec2 &vMapPos, CVec2 *pvRes )
@@ -399,7 +429,9 @@ void CWindowMiniMap::InitByDesc( const struct NDb::SUIDesc *pDesc )
 		pRotableBackgroundTexture = pShared->pRotableBackgroundTexture;
 		vRotableBackgroundSize = pShared->vRotableBackgroundSize;
 		if ( pShared->vRotableSize.x > 0 && pShared->vRotableSize.y > 0 )
+		{
 			vRotableNorhtPointSize = vRotableSize = pShared->vRotableSize;
+		}
 		pRotableForegroundTexture = pShared->pRotableForegroundTexture;
 	}
 
@@ -475,7 +507,9 @@ void CWindowMiniMap::UpdateWarFog()
 {
 	pWarFogLayer->Clear();
 	if ( warFog.IsEmpty() )
+	{
 		return;
+	}
 
 	const int nSizeX = pInstance->placement.size.Get().x;
 	const int nSizeY = pInstance->placement.size.Get().y;
@@ -501,7 +535,9 @@ void CWindowMiniMap::UpdateWarFog()
 void CWindowMiniMap::Visit( struct IUIVisitor *pVisitor )
 {
 	if ( !IsVisible() )
+	{
 		return;
+	}
 
 	CWindow::Visit( pVisitor );
 
@@ -605,7 +641,9 @@ void CWindowMiniMap::Visit( struct IUIVisitor *pVisitor )
 		pVisitor->VisitUITextureRect( pViewPortLayer, 3, rects );
 	}
 	if ( pRotableNorthPointTexture )
+	{
 		pVisitor->VisitUIRect( pRotableNorthPointTexture, 3, sBackgroundPos, sBackgroundColors, rectTexture );
+	}
 
 	for ( int i = 0; i < markers.size(); ++i )
 	{
@@ -632,7 +670,9 @@ void CWindowMiniMap::Visit( struct IUIVisitor *pVisitor )
 bool CWindowMiniMap::IsActiveArea( const CVec2 &vPos ) const
 {
 	if ( !CWindow::IsActiveArea( vPos ) )
+	{
 		return false;
+	}
 
 	CTRect<float> rect = GetWindowRect();
 	CVec2 vScreenPos( rect.x1, rect.y1 );
@@ -730,7 +770,9 @@ void CWindowMiniMap::MakeRotableTransformParams( const CVec2 &vDirView )
 	float fAngleView = atan2( vDirView.y, vDirView.x ) - FP_PI2;
 	float fDeltaAngle = fabsf( fAngleView - fPrevRotableAngle );
 	if ( fDeltaAngle < F_ANGLE_DELTA )
+	{
 		return;
+	}
 
 	rotableTransform.Init( fAngleView, vRotableSize, vRotableCenter );
 	MakeMaskMimimap();
@@ -742,7 +784,9 @@ bool CWindowMiniMap::OnButtonDown( const CVec2 &vPos, const int nButton )
 	CWindow::OnButtonDown( vPos, nButton );
 
 	if ( !IsVisible() || !IsEnabled() )
+	{
 		return false;
+	}
 
 	CVec2 vAIPos;
 	CTRect<float> rect = GetWindowRect();
@@ -770,7 +814,9 @@ bool CWindowMiniMap::OnButtonUp( const CVec2 &vPos, const int nButton )
 	CWindow::OnButtonUp( vPos, nButton );
 
 	if ( !IsVisible() || !IsEnabled() )
+	{
 		return false;
+	}
 
 	CVec2 vAIPos( -1, -1 );
 	/*if ( IsInside( vPos ) )
@@ -794,13 +840,17 @@ bool CWindowMiniMap::OnMouseMove( const CVec2 &vPos, const int nButton )
 	CWindow::OnMouseMove( vPos, nButton );
 
 	if ( !IsVisible() || !IsEnabled() )
+	{
 		return false;
+	}
 
 	CVec2 vAIPos;
 
 	bool bPressed = false;
 	for ( int i = 0; i < bButtonDown.size(); ++i )
+	{
 		bPressed |= bButtonDown[i] != 0;
+	}
 
 	CTRect<float> rect = GetWindowRect();
 	vLastMousePos = vPos;
@@ -1120,9 +1170,13 @@ void CWindowMiniMap::SetViewport( const std::vector<CVec2> &vPoints )
 		CVec2 vPos1, vPos2;
 		MapToScreen( vPoints[i], &vPos1 );
 		if ( i < vPoints.size() - 1 )
+		{
 			MapToScreen( vPoints[i + 1], &vPos2 );
+		}
 		else
+		{
 			MapToScreen( vPoints[0], &vPos2 );
+		}
 		MakeLine2( vPos1.x, vPos1.y, vPos2.x, vPos2.y, funcDrawPixel );
 	}
 	pViewPortLayer->SetNeedUpdate();
@@ -1131,7 +1185,9 @@ void CWindowMiniMap::SetViewport( const std::vector<CVec2> &vPoints )
 void CWindowMiniMap::SetPlayerColor( const int nPlayer, const NGfx::SPixel8888 &color )
 {
 	if ( playerColors.size() <= nPlayer )
+	{
 		playerColors.resize( nPlayer + 1 );
+	}
 
 	playerColors[nPlayer] = color;
 }
@@ -1139,7 +1195,9 @@ void CWindowMiniMap::SetPlayerColor( const int nPlayer, const NGfx::SPixel8888 &
 void CWindowMiniMap::AfterLoad()
 {
 	if ( NGlobal::GetVar( "m1", 0 ).GetFloat() != 0 )
+	{
 		MakeMaskMimimap();
+	}
 }
 
 int CWindowMiniMap::operator&( IBinSaver &saver )
@@ -1158,7 +1216,9 @@ int CWindowMiniMap::operator&( IBinSaver &saver )
 	saver.Add( 12, &warFogColors );
 
 	if ( NGlobal::GetVar( "m1", 0 ).GetFloat() == 0 )
+	{
 		saver.Add( 13, &maskMiniMap );
+	}
 
 	saver.Add( 14, &pShared );
 	saver.Add( 15, &pInstance );
@@ -1177,9 +1237,13 @@ int CWindowMiniMap::operator&( IBinSaver &saver )
 	saver.Add( 26, &rotableTransform );
 
 	if ( NGlobal::GetVar( "m1", 0 ).GetFloat() == 0 )
+	{
 		saver.Add( 27, &warFog );
+	}
 	else
+	{
 		saver.Add( 27, &fAdditionalScale );
+	}
 
 	saver.Add( 29, &fPrevRotableAngle );
 	saver.Add( 30, &pTexture );

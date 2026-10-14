@@ -29,7 +29,9 @@ CObj<IWindow> g_pLoadingSingleScreen;
 void FitDescription( IWindow *pMaxPanel, IWindow *pPanel, ITextView *pDesc )
 {
 	if ( !pMaxPanel || !pPanel || !pDesc )
+	{
 		return;
+	}
 
 	int nTextSizeY = pDesc->GetSize().y;
 	int nDescSizeY;
@@ -52,7 +54,9 @@ void FitDescription( IWindow *pMaxPanel, IWindow *pPanel, ITextView *pDesc )
 		{
 			int nDeltaY = nTextSizeY - nDescSizeY;
 			if ( nDeltaY > nMaxSizeY - nSizeY )
+			{
 				nDeltaY = nMaxSizeY - nSizeY;
+			}
 
 			pPanel->SetPlacement( 0, nY - nDeltaY / 2, 0, nSizeY + nDeltaY, EWPF_POS_Y | EWPF_SIZE_Y );
 		}
@@ -147,10 +151,14 @@ void CInterfaceLoadingBase::CLoadingScene::Draw( NGfx::CTexture *pTexture )
 	p2DView->StartNewFrame( pTexture );
 	pUIVisitor->SetGView( p2DView );
 	if ( pScreen )
+	{
 		pScreen->Visit( pUIVisitor );
+	}
 	p2DView->Flush();
 	if ( !pTexture )
+	{
 		NGScene::Flip();
+	}
 }
 
 // CInterfaceLoadingBase::CReactions
@@ -180,7 +188,9 @@ int CInterfaceLoadingBase::CReactions::Check( const std::string &szCheckName ) c
 void CInterfaceLoadingBase::ShowFirstElement()
 {
 	if ( pProgress )
+	{
 		pProgress->ShowFirstElement( true );
+	}
 }
 
 // CInterfaceLoadingBase
@@ -222,10 +232,14 @@ void CInterfaceLoadingBase::MakeInterior()
 	//	pVideo = GetChildChecked<IPlayer>( pMain, "Video", true );
 
 	if ( pVideo && !pVideo->IsVisible() )
+	{
 		pVideo = 0;
+	}
 
 	if ( pProgress )
+	{
 		pProgress->SetPosition( 0.0f );
+	}
 	if ( pVideo )
 	{
 		pVideo->Play();
@@ -237,7 +251,9 @@ void CInterfaceLoadingBase::MakeInterior()
 void CInterfaceLoadingBase::UpdateInterior()
 {
 	if ( !bInitialized )
+	{
 		return;
+	}
 
 	bool bUpdated = false;
 
@@ -263,7 +279,9 @@ void CInterfaceLoadingBase::UpdateInterior()
 	}
 
 	if ( bUpdated )
+	{
 		Draw();
+	}
 }
 
 void CInterfaceLoadingBase::Draw()
@@ -316,11 +334,15 @@ void CInterfaceLoadingBase::PlayOnEnterTransitEffect()
 	InterfaceState()->SetTransitEffectFlag( false );
 
 	if ( !NGfx::Is3DActive() )
+	{
 		return;
+	}
 
 	NGScene::CRTPtr *pTarget = NGScene::GetFrameTransitionCapture2();
 	if ( pTarget )
+	{
 		pLoadingScene->Draw( pTarget->GetTexture() );
+	}
 
 	while ( !NGScene::IsFrameTransitionComplete() )
 	{
@@ -341,7 +363,9 @@ bool CInterfaceLoadingBase::IsEffectFinished() const
 CInterfaceLoadingSingle2D::CInterfaceLoadingSingle2D()
 {
 	if ( NSaveLoad::g_WaitLoadData.bChapter )
+	{
 		return;
+	}
 
 	InitInternal( "LoadingSingle" );
 	MakeInterior( NDb::Get<NDb::STexture>( NSaveLoad::g_WaitLoadData.dbidMinimap ),
@@ -349,7 +373,9 @@ CInterfaceLoadingSingle2D::CInterfaceLoadingSingle2D()
 	              InterfaceState()->GetRandomCitation(),
 	              NSaveLoad::g_WaitLoadData.bChapter );
 	if ( InterfaceState()->IsTransitEffectFlag() )
+	{
 		PlayOnEnterTransitEffect();
+	}
 
 	Draw();
 
@@ -364,7 +390,9 @@ CInterfaceLoadingSingle2D::CInterfaceLoadingSingle2D( const NDb::STexture *pMini
 	InitInternal( "LoadingSingle" );
 	MakeInterior( pMinimap, wszDesc, wszCitation, bChapter );
 	if ( InterfaceState()->IsTransitEffectFlag() )
+	{
 		PlayOnEnterTransitEffect();
+	}
 
 	Draw();
 
@@ -374,7 +402,9 @@ CInterfaceLoadingSingle2D::CInterfaceLoadingSingle2D( const NDb::STexture *pMini
 CInterfaceLoadingSingle2D::~CInterfaceLoadingSingle2D()
 {
 	if ( IsInitialized() )
+	{
 		RunFinishScreen();
+	}
 }
 
 void CInterfaceLoadingSingle2D::MakeInterior( const NDb::STexture *pTexture,
@@ -396,25 +426,37 @@ void CInterfaceLoadingSingle2D::MakeInterior( const NDb::STexture *pTexture,
 	{
 		pMapPictureWnd->ShowWindow( true );
 		if ( pTexture )
+		{
 			pMapPictureWnd->SetTexture( pTexture );
+		}
 	}
 
 	if ( pDescView )
+	{
 		pDescView->SetText( pDescView->GetDBText() + wszDesc );
+	}
 
 	FitDescription( pMaxInfoPanel, pInfoPanel, pDescView );
 
 	if ( pCitationText )
+	{
 		pCitationText->SetText( pCitationText->GetDBText() + wszCitation );
+	}
 
 	if ( pCitation )
+	{
 		pCitation->ShowWindow( false );
+	}
 
 	if ( pInfoPanel )
+	{
 		pInfoPanel->ShowWindow( false );
+	}
 
 	if ( pPressKeyView )
+	{
 		pPressKeyView->ShowWindow( false );
+	}
 
 	CInterfaceLoadingBase::MakeInterior();
 }
@@ -422,16 +464,22 @@ void CInterfaceLoadingSingle2D::MakeInterior( const NDb::STexture *pTexture,
 void CInterfaceLoadingSingle2D::ShowOnEnterMoveEffect()
 {
 	if ( pInfoPanel )
+	{
 		pInfoPanel->ShowWindow( true );
+	}
 
 	if ( pCitation )
+	{
 		pCitation->ShowWindow( true );
+	}
 
 	CPtr<SWindowContextB2Move> pContext = new SWindowContextB2Move();
 	pContext->bGoOut = false;
 	pContext->fMaxMoveTime = 0.0f;
 	if ( pCitation )
+	{
 		GetScreen()->RunStateCommandSequience( "bottom_panel_on_exit", GetScreen(), pContext, true );
+	}
 	GetScreen()->RunStateCommandSequience( "effect_info_panel_on_exit", GetScreen(), pContext, true );
 
 	while ( !IsEffectFinished() )
@@ -448,7 +496,9 @@ void CInterfaceLoadingSingle2D::ShowOnEnterMoveEffect()
 void CInterfaceLoadingSingle2D::RunFinishScreen()
 {
 	if ( pPressKeyView )
+	{
 		pPressKeyView->ShowWindow( true );
+	}
 
 	g_pLoadingSingleScreen = GetScreen();
 
@@ -530,7 +580,9 @@ CInterfaceLoadingSingleFinished::CInterfaceLoadingSingleFinished()
 bool CInterfaceLoadingSingleFinished::Init()
 {
 	if ( !CInterfaceScreenBase::Init() )
+	{
 		return false;
+	}
 
 	NI_ASSERT( g_pLoadingSingleScreen, "Post loading screen not found" );
 	if ( !g_pLoadingSingleScreen )
@@ -574,7 +626,9 @@ bool CInterfaceLoadingSingleFinished::StepLocal( bool bAppActive )
 
 	NTimer::STime timeAbsCur = Singleton<IGameTimer>()->GetAbsTime();
 	if ( timeAbs == 0 )
+	{
 		timeAbs = timeAbsCur;
+	}
 	else
 	{
 		float fDelta = (float)( timeAbsCur - timeAbs ) * 0.001f;
@@ -593,11 +647,17 @@ void CInterfaceLoadingSingleFinished::ShowPressKey( bool bFormat1 )
 {
 	std::wstring wszFormat;
 	if ( bFormat1 )
+	{
 		wszFormat = wszPressKeyFormat1;
+	}
 	else
+	{
 		wszFormat = wszPressKeyFormat2;
+	}
 	if ( pPressKeyView )
+	{
 		pPressKeyView->SetText( wszFormat + pPressKeyView->GetDBText() );
+	}
 }
 
 bool CInterfaceLoadingSingleFinished::Execute( const std::string &szSender, const std::string &szReaction )
@@ -619,7 +679,9 @@ int CInterfaceLoadingSingleFinished::Check( const std::string &szCheckName ) con
 bool CInterfaceLoadingSingleFinished::ProcessEvent( const struct SGameMessage &msg )
 {
 	if ( eUIState != EUIS_NORMAL )
+	{
 		return false;
+	}
 
 	if ( msg.mMessage.cType == NInput::CT_KEY )
 	{
@@ -628,7 +690,9 @@ bool CInterfaceLoadingSingleFinished::ProcessEvent( const struct SGameMessage &m
 	}
 
 	if ( msg.mMessage.cType != NInput::CT_UNKNOWN )
+	{
 		return true;
+	}
 
 	return CInterfaceScreenBase::ProcessEvent( msg );
 }

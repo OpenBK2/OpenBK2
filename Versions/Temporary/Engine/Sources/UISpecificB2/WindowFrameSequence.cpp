@@ -32,7 +32,9 @@ void CWindowFrameSequence::Visit( struct IUIVisitor *pVisitor )
 	if ( pShared )
 	{
 		if ( timeStart == 0 )
+		{
 			timeStart = Singleton<IGameTimer>()->GetAbsTime();
+		}
 
 		if ( bRun && nTime > 0 && pShared->nFrameCount > 0 )
 		{
@@ -78,12 +80,18 @@ void CWindowFrameSequence::InitByDesc( const struct NDb::SUIDesc *pDesc )
 	if ( pShared )
 	{
 		if ( pShared->bRandomStartFrame && pShared->nFrameCount > 0 )
+		{
 			nFrame = NWin32Random::Random( 0, pShared->nFrameCount - 1 );
+		}
 		else
+		{
 			nFrame = 0;
+		}
 		nTime = pShared->nTime;
 		if ( pShared->nRandomAddTime > 0 )
+		{
 			nTime += NWin32Random::Random( 0, pShared->nRandomAddTime - 1 );
+		}
 	}
 	bRun = false;
 
@@ -93,11 +101,15 @@ void CWindowFrameSequence::InitByDesc( const struct NDb::SUIDesc *pDesc )
 void CWindowFrameSequence::Run( bool _bRun )
 {
 	if ( bRun == _bRun )
+	{
 		return;
+	}
 
 	bRun = _bRun;
 	if ( bRun )
+	{
 		timeStart = Singleton<IGameTimer>()->GetAbsTime();
+	}
 }
 
 void CWindowFrameSequence::Reset()

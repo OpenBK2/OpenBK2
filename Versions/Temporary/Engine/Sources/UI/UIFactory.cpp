@@ -124,7 +124,9 @@ NGScene::I2DGameView * CUIFactory::Get2DGameView()
 CWindow *CUIFactory::MakeWindow( const struct NDb::SUIDesc *pDesc )
 {
 	if ( !pDesc )
+	{
 		return 0;
+	}
 
 	NI_ASSERT(
 			checked_cast<const NDb::SWindow *>( pDesc )->pShared != 0,
@@ -138,7 +140,9 @@ CWindow *CUIFactory::MakeWindow( const struct NDb::SUIDesc *pDesc )
 IWindowPart *CUIFactory::MakeWindowPart( const struct NDb::SUIDesc *pDesc )
 {
 	if ( !pDesc )
+	{
 		return 0;
+	}
 	IWindowPart *p = MakeObject<IWindowPart>( pDesc->nClassTypeID );
 	p->InitByDesc( pDesc );
 	p->Init();
@@ -148,7 +152,9 @@ IWindowPart *CUIFactory::MakeWindowPart( const struct NDb::SUIDesc *pDesc )
 IMessageReactionB2 *CUIFactory::MakeReaction( const struct NDb::SUIDesc *pDesc )
 {
 	if ( !pDesc )
+	{
 		return 0;
+	}
 	static int nCurrentID = 0;
 
 	NI_ASSERT( nCurrentID != pDesc->nClassTypeID,
@@ -166,7 +172,9 @@ IMessageReactionB2 *CUIFactory::MakeReaction( const struct NDb::SUIDesc *pDesc )
 IMessageCheck *CUIFactory::MakeCheck( const struct NDb::SUIDesc *pDesc )
 {
 	if ( !pDesc )
+	{
 		return 0;
+	}
 	IMessageCheck *p = MakeObject<IMessageCheck>( pDesc->nClassTypeID );
 	p->InitByDesc( pDesc );
 	return p;
@@ -178,7 +186,9 @@ IUIEffector *CUIFactory::MakeEffect( const NDb::SUIStateBase *pCmd,
                                      const std::string &szAnimateWindow )
 {
 	if ( !pCmd )
+	{
 		return 0;
+	}
 	IUIEffector *p = MakeObject<IUIEffector>( pCmd->nClassTypeID );
 	p->Configure( pCmd, pScreen, pContext, szAnimateWindow );
 	return p;

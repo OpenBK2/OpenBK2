@@ -126,5 +126,4 @@ bool Rasterise( const SOptions &options,
                 const std::vector<uint32_t> &codePoints,
                 SFont *pResult,
                 std::string *pszError );
-
 }

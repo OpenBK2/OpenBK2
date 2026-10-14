@@ -37,12 +37,16 @@ CInterfaceMPCustomGame::~CInterfaceMPCustomGame() {}
 bool CInterfaceMPCustomGame::Init()
 {
 	if ( CInterfaceScreenBase::Init() == false )
+	{
 		return false;
+	}
 
 	AddScreen( this );
 	pMain = GetChildChecked<IWindow>( pScreen, "Main", true );
 	if ( !pMain )
+	{
 		return false;
+	}
 	SetMainWindowTexture( pMain, InterfaceState()->GetMenuBackgroundTexture() );
 
 	SetControls();
@@ -111,19 +115,29 @@ void CInterfaceMPCustomGame::SetControls()
 	pBtn->Enable( false );
 	pFilters = GetChildChecked<IWindow>( pMain, "Filters", true );
 	if ( pFilters )
+	{
 		pFilters->ShowWindow( false );
+	}
 	pMapSizeBox = GetChildChecked<IComboBox>( pFilters, "MapSize", true );
 	if ( pMapSizeBox )
+	{
 		pMapSizeBox->SetViewer( new CTextDataViewer() );
+	}
 	pGameTypeBox = GetChildChecked<IComboBox>( pFilters, "GameType", true );
 	if ( pGameTypeBox )
+	{
 		pGameTypeBox->SetViewer( new CTextDataViewer() );
+	}
 	pTechLevel = GetChildChecked<IComboBox>( pFilters, "TechLevel", true );
 	if ( pTechLevel )
+	{
 		pTechLevel->SetViewer( new CTextDataViewer() );
+	}
 	pNumPlayersBox = GetChildChecked<IComboBox>( pFilters, "NumPlayers", true );
 	if ( pNumPlayersBox )
+	{
 		pNumPlayersBox->SetViewer( new CTextDataViewer() );
+	}
 
 	pList = GetChildChecked<IListControl>( pMain, "CustomGame", false );
 	if ( pList )
@@ -139,7 +153,9 @@ void CInterfaceMPCustomGame::SetControls()
 	pGettingListPopup = GetChildChecked<IWindow>( pMain, "GettingListPopup", true );
 	pRefresh = GetChildChecked<IButton>( pMain, "ButtonRefresh", true );
 	if ( pRefresh )
+	{
 		pRefresh->Enable( false );
+	}
 }
 
 void CInterfaceMPCustomGame::CItemCustomGameListViewer::MakeInterior( CObjectBase *pWindow,
@@ -160,7 +176,9 @@ void CInterfaceMPCustomGame::CItemCustomGameListViewer::MakeInterior( CObjectBas
 	std::wstring wszTechText;
 	if ( info.nTechLevel >= 0 && info.nTechLevel < NGameX::GetMPConsts()->techLevels.size() &&
 	     CHECK_TEXT_NOT_EMPTY_PRE( NGameX::GetMPConsts()->techLevels[info.nTechLevel]., Name ) )
+	{
 		wszTechText = GET_TEXT_PRE( NGameX::GetMPConsts()->techLevels[info.nTechLevel]., Name );
+	}
 	NMPSetData::SetChildText( pItem, "ItemTechLevel", wszTechText );
 
 	ITextView *pTxt = GetChildChecked<ITextView>( pItem, "ItemGameType", true );
@@ -185,35 +203,57 @@ void CInterfaceMPCustomGame::OnGetFocus( bool bFocus )
 bool CInterfaceMPCustomGame::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_on_back" )
+	{
 		return OnBackReaction( szSender );
+	}
 
 	if ( szReaction == "react_on_join_game" )
+	{
 		return OnJoinGameReaction( szSender );
+	}
 
 	if ( szReaction == "react_on_filters" )
+	{
 		return OnFiltersReaction( szSender );
+	}
 
 	if ( szReaction == "react_on_load_game" )
+	{
 		return OnLoadGameReaction( szSender );
+	}
 
 	if ( szReaction == "react_on_create_game" )
+	{
 		return OnCreateGameReaction( szSender );
+	}
 
 	if ( szReaction == "react_on_refresh" )
+	{
 		return OnRefreshReaction( szSender );
+	}
 
 	if ( szReaction == "react_on_select_game" )
+	{
 		return OnSelectGameReaction( szSender );
+	}
 
 	if ( szReaction == "reaction_on_cancel" )
+	{
 		return OnCancelFilters( szSender );
+	}
 	if ( szReaction == "reaction_on_ok" )
+	{
 		return OnOkFilters( szSender );
+	}
 
 	if ( szReaction == "react_on_password_ok" )
+	{
 		return OnPasswordOk( szSender );
+	}
 	if ( szReaction == "react_on_password_cancel" )
+	{
 		return OnPasswordCancel( szSender );
+	}
 
 	return false;
 }
@@ -228,13 +268,21 @@ bool CInterfaceMPCustomGame::OnOkFilters( const std::string &szSender )
 {
 	pFilters->ShowWindow( false );
 	if ( pMapSizeBox )
+	{
 		filter.nMapSize = pMapSizeBox->GetSelectedIndex();
+	}
 	if ( pGameTypeBox )
+	{
 		filter.nGameType = pGameTypeBox->GetSelectedIndex();
+	}
 	if ( pTechLevel )
+	{
 		filter.nTechLevel = pTechLevel->GetSelectedIndex();
+	}
 	if ( pNumPlayersBox )
+	{
 		filter.nPlayers = pNumPlayersBox->GetSelectedIndex();
+	}
 
 	RebuildGameList();
 	return true;
@@ -248,19 +296,27 @@ int CInterfaceMPCustomGame::Check( const std::string &szCheckName ) const
 bool CInterfaceMPCustomGame::OnUpdateGameList( SMPUIGameListMessage *pMsg )
 {
 	if ( pGettingListPopup )
+	{
 		pGettingListPopup->ShowWindow( false );
+	}
 	if ( pRefresh )
+	{
 		pRefresh->Enable( true );
+	}
 
 	for ( std::list<int>::iterator it = pMsg->gamesRemoved.begin(); it != pMsg->gamesRemoved.end(); ++it )
 	{
 		CMPGameListItems::iterator itGame = items.find( *it );
 		if ( itGame == items.end() )
+		{
 			continue;
+		}
 
 		SGameEntry &game = itGame->second;
 		if ( game.pItem )
+		{
 			pList->RemoveItem( game.pItem );
+		}
 		items.erase( itGame );
 	}
 
@@ -284,9 +340,13 @@ bool CInterfaceMPCustomGame::OnUpdateGameList( SMPUIGameListMessage *pMsg )
 
 		bool bShouldShow = IsAllowedByFilter( entry.info );
 		if ( entry.pItem && bShouldShow )
+		{
 			entry.pItem->SetUserData( pData );
+		}
 		else if ( !entry.pItem && bShouldShow )
+		{
 			entry.pItem = pList->AddItem( pData );
+		}
 		else if ( entry.pItem && !bShouldShow )
 		{
 			pList->RemoveItem( entry.pItem );
@@ -316,7 +376,9 @@ bool CInterfaceMPCustomGame::OnJoinGameReaction( const std::string &szSender )
 	{
 		CMPGameListItems::iterator it = items.find( nSelectedID );
 		if ( it == items.end() )
+		{
 			return true;
+		}
 
 		CCustomGameListData *pData = dynamic_cast<CCustomGameListData *>( it->second.pItem->GetUserData() );
 		SMPGameInfo &game = pData->info;
@@ -337,13 +399,21 @@ bool CInterfaceMPCustomGame::OnFiltersReaction( const std::string &szSender )
 	pFilters->ShowWindow( true );
 
 	if ( pMapSizeBox )
+	{
 		pMapSizeBox->Select( filter.nMapSize );
+	}
 	if ( pGameTypeBox )
+	{
 		pGameTypeBox->Select( filter.nGameType );
+	}
 	if ( pTechLevel )
+	{
 		pTechLevel->Select( filter.nTechLevel );
+	}
 	if ( pNumPlayersBox )
+	{
 		pNumPlayersBox->Select( filter.nPlayers );
+	}
 
 	return true;
 }
@@ -351,7 +421,9 @@ bool CInterfaceMPCustomGame::OnFiltersReaction( const std::string &szSender )
 bool CInterfaceMPCustomGame::OnRefreshReaction( const std::string &szSender )
 {
 	if ( pRefresh )
+	{
 		pRefresh->Enable( false );
+	}
 	return true;
 }
 
@@ -441,7 +513,9 @@ void CInterfaceMPCustomGame::RebuildGameList()
 		pData->info = entry.info;
 
 		if ( IsAllowedByFilter( entry.info ) )
+		{
 			entry.pItem = pList->AddItem( pData );
+		}
 	}
 	pList->Update();
 }
@@ -455,13 +529,17 @@ bool CInterfaceMPCustomGame::IsAllowedByFilter( const SMPGameInfo &game )
 	if ( filter.nTechLevel )
 	{
 		if ( game.nTechLevel != filter.nTechLevel - 1 )
+		{
 			return false;
+		}
 	}
 
 	if ( filter.nPlayers )
 	{
 		if ( game.nPlayersMax != filter.nPlayers * 2 )
+		{
 			return false;
+		}
 	}
 
 	if ( filter.nMapSize )
@@ -472,15 +550,21 @@ bool CInterfaceMPCustomGame::IsAllowedByFilter( const SMPGameInfo &game )
 		{
 			case 1: // SMALL
 				if ( game.nSizeX * game.nSizeY > nSMBound )
+				{
 					return false;
+				}
 				break;
 			case 2: // MEDIUM
 				if ( game.nSizeX * game.nSizeY < nSMBound || game.nSizeX * game.nSizeY > nMLBound )
+				{
 					return false;
+				}
 				break;
 			case 3: // LARGE
 				if ( game.nSizeX * game.nSizeY < nMLBound )
+				{
 					return false;
+				}
 				break;
 		}
 	}

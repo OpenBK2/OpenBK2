@@ -79,7 +79,9 @@ float CFullScreenFader::GetValue( const NTimer::STime &currentTime )
 	}
 
 	if ( startTime == 0 )
+	{
 		startTime = currentTime;
+	}
 
 	const float fFraction = 0.001f * ( currentTime - startTime ) / fDuration;
 	if ( fFraction >= 1.0f )
@@ -96,7 +98,9 @@ void CFullScreenFader::Draw( const NTimer::STime &time, bool bAfterDrawingInterf
 	for ( std::list<SColorModificatorDescr>::iterator it = colorModificatos.begin(); it != colorModificatos.end(); ++it )
 	{
 		if ( bAfterDrawingInterfaces != it->bModifyInterfaces )
+		{
 			continue;
+		}
 
 		it->pModificator.Refresh();
 		CVec4 vColor( it->pModificator->GetValue(), 1.0f );
@@ -116,7 +120,9 @@ void CFullScreenFader::Draw( const NTimer::STime &time, bool bAfterDrawingInterf
 
 	// Old realization
 	if ( bAfterDrawingInterfaces != bFadeInterfaces )
+	{
 		return;
+	}
 
 	const int rgb = Float2Int( 255.f * GetValue( time ) );
 	if ( rgb != 255 )

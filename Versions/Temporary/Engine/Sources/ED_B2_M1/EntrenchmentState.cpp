@@ -218,7 +218,9 @@ void CEntrenchmentState::RefreshSelectedEntrenchmentInfo()
 	{
 		bool bRes = ( objectSet.szObjectTypeName == "EntrenchmentRPGStats" ) && ( !objectSet.objectNameSet.empty() );
 		if ( !bRes )
+		{
 			return;
+		}
 		selectedEntrenchmentInfo.szRPGStatsTypeName = objectSet.szObjectTypeName;
 		selectedEntrenchmentInfo.rpgStatsDBID = objectSet.objectNameSet.begin()->first;
 		selectedEntrenchmentInfo.pEntrenchmentRPGStats =
@@ -332,7 +334,9 @@ void CEntrenchmentDesignTool::DrawSeg( CSceneDrawTool *pDrawTool, const CVec3 &c
 float CEntrenchmentDesignTool::GetSegDir( int nSegIndex )
 {
 	if ( nSegIndex < 0 || nSegIndex >= segments.size() )
+	{
 		return 0;
+	}
 
 	float fAngle = fStartDir;
 
@@ -411,7 +415,9 @@ CVec3 CEntrenchmentDesignTool::GetSegPos( int nSegIndex, bool bStart )
 	// позиция начала сегмента
 
 	if ( nSegIndex < 0 || nSegIndex >= segments.size() )
+	{
 		return VNULL3;
+	}
 
 	CVec3 cp = vStartPos;
 
@@ -657,7 +663,9 @@ void CEntrenchmentDesignTool::GetSegmentsInfo(
 CVec3 CEntrenchmentDesignTool::GetSegAABBSize( ESegType eSegType )
 {
 	if ( eSegType < 0 || eSegType >= ST_COUNT )
+	{
 		return VNULL3;
+	}
 
 	// ! модели окопов ориентированы вдоль оси X
 	return segAABBSizes[eSegType];
@@ -666,7 +674,9 @@ CVec3 CEntrenchmentDesignTool::GetSegAABBSize( ESegType eSegType )
 CVec2 CEntrenchmentDesignTool::GetSegAABBCenter( ESegType eSegType )
 {
 	if ( eSegType < 0 || eSegType >= ST_COUNT )
+	{
 		return VNULL2;
+	}
 
 	return segAABBCentr[eSegType];
 }

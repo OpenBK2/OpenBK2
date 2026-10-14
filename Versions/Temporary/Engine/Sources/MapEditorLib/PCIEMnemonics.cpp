@@ -39,7 +39,9 @@ EPCIEType CPCIEMnemonics::Get( const SPropertyDesc *pDesc, bool bArrayNode )
 	if ( pDesc )
 	{
 		if ( pDesc->bArray && ( !bArrayNode ) )
+		{
 			nType = PCIE_LIST;
+		}
 		else if ( pDesc->bStruct )
 		{
 			nType = static_cast<EPCIEType>( GetValue( pDesc->szPropControlType ) );
@@ -49,7 +51,9 @@ EPCIEType CPCIEMnemonics::Get( const SPropertyDesc *pDesc, bool bArrayNode )
 			}
 		}
 		else
+		{
 			nType = static_cast<EPCIEType>( GetValue( pDesc->szPropControlType ) );
+		}
 	}
 	return nType;
 }

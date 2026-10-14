@@ -25,7 +25,9 @@ SPrevPathParams::SPrevPathParams( struct IPlane *pPlane )
 		fCurTiltSpeed = 0.0f;
 	}
 	else
+	{
 		pPlane->GetManuver()->GetManuverParams( this );
+	}
 }
 
 //	CPathFractionComplexBase
@@ -36,7 +38,9 @@ CPathFractionComplexBase::CPathFractionComplexBase( const CPathList &pathList )
 	{
 		IPathFraction *pPathFraction = *it;
 		if ( IsValid( pPathFraction ) )
+		{
 			substitute.push_back( pPathFraction );
+		}
 	}
 }
 
@@ -54,7 +58,9 @@ CCurFraction CPathFractionComplexBase::GetCur( const float fDist ) const
 			const float fTmp = fDistSoFar;
 			fDistSoFar += pPathFraction->GetLength();
 			if ( fDistSoFar > fDist )
+			{
 				return CCurFraction( pPathFraction, fTmp );
+			}
 		}
 		return CCurFraction( substitute.back(), fTmp );
 	}
@@ -66,9 +72,13 @@ void CPathFractionComplexBase::AfterSubstitute()
 	for ( CSubstitutes::iterator it = substitute.begin(); it != substitute.end(); )
 	{
 		if ( ( *it )->GetLength() == 0 )
+		{
 			it = substitute.erase( it );
+		}
 		else
+		{
 			++it;
+		}
 	}
 }
 
@@ -86,7 +96,9 @@ CVec3 CPathFractionComplexBase::GetPoint( const float fDist ) const
 {
 	CCurFraction fr = GetCur( fDist );
 	if ( fr.first )
+	{
 		return fr.first->GetPoint( fDist - fr.second );
+	}
 	return VNULL3;
 }
 
@@ -94,7 +106,9 @@ CVec3 CPathFractionComplexBase::GetTangent( const float fDist ) const
 {
 	CCurFraction fr = GetCur( fDist );
 	if ( fr.first )
+	{
 		return fr.first->GetTangent( fDist - fr.second );
+	}
 	return VNULL3;
 }
 
@@ -102,6 +116,8 @@ CVec3 CPathFractionComplexBase::GetNormale( const float fDist ) const
 {
 	CCurFraction fr = GetCur( fDist );
 	if ( fr.first )
+	{
 		return fr.first->GetNormale( fDist - fr.second );
+	}
 	return V3_AXIS_Z;
 }

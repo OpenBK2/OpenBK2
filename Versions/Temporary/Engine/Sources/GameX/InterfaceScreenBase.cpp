@@ -34,11 +34,15 @@ bool AddUIScreen( IScreen *pWindowScreen,
 {
 	IScreen *pScr = dynamic_cast<IScreen *>( pWindowScreen );
 	if ( pScr == 0 )
+	{
 		return false;
+	}
 	//
 	const CDBID dbidScreen = InterfaceState()->GetScreenEntryDBID( szScreenEntryName );
 	if ( dbidScreen.IsEmpty() )
+	{
 		return false;
+	}
 	//
 	// Classify the screen before Load measures any of its text. Menus layered
 	// over the mission remain GUI screens, regardless of the interface stack.
@@ -129,7 +133,9 @@ void CInterfaceScreenBase::ShowVersionInfo()
 bool CInterfaceScreenBase::ProcessEvent( const struct SGameMessage &msg )
 {
 	if ( importantMsgs.ProcessEvent( msg, this ) )
+	{
 		return true;
+	}
 #ifdef _DEBUG
 	{
 		NInput::CBind p( "show_console" );
@@ -144,7 +150,9 @@ bool CInterfaceScreenBase::ProcessEvent( const struct SGameMessage &msg )
 	if ( pScreen )
 	{
 		if ( pScreen->ProcessEvent( msg ) )
+		{
 			return true;
+		}
 	}
 
 	if ( msg.mMessage.cType != NInput::CT_UNKNOWN && ( pScreen && !pScreen->IsEnabled() ) )
@@ -153,7 +161,9 @@ bool CInterfaceScreenBase::ProcessEvent( const struct SGameMessage &msg )
 	}
 
 	if ( CGMORegContainer::ProcessEvent( msg, this ) )
+	{
 		return true;
+	}
 
 	if ( msg.mMessage.cType != NInput::CT_UNKNOWN && ( pScreen && pScreen->IsModal() ) )
 	{
@@ -267,7 +277,9 @@ void CInterfaceScreenBase::Step( bool bAppActive )
 	NTimer::STime nCurrTime = Singleton<IGameTimer>()->GetAbsTime();
 	int nDeltaTime = ( nTime == 0 ) ? 0 : (std::max<int>)( 0, nCurrTime - nTime );
 	if ( pScreen )
+	{
 		pScreen->Segment( nDeltaTime );
+	}
 	nTime = nCurrTime;
 
 	if ( IsInFocus() )
@@ -294,7 +306,9 @@ bool CInterfaceScreenBase::ChangeResolution()
 	if ( fabs2( vScreenSize - vLastScreenSize ) > 1 )
 	{
 		if ( pScreen )
+		{
 			pScreen->UpdateResolution();
+		}
 	}
 	vLastScreenSize = vScreenSize;
 	return false;
@@ -305,16 +319,22 @@ void CInterfaceScreenBase::OnGetFocus( bool bFocus )
 	if ( bFocus && bShowScreenOnGetFocus )
 	{
 		if ( pScreen )
+		{
 			pScreen->ShowWindow( true );
+		}
 
 		bShowScreenOnGetFocus = false;
 	}
 
 	if ( pScreen )
+	{
 		pScreen->OnGetFocus( bFocus );
+	}
 
 	if ( bFocus )
+	{
 		RestoreBindSection();
+	}
 	//
 	bInFocus = bFocus;
 
@@ -398,10 +418,14 @@ bool CInterfaceScreenBase::OnShowConsole( const struct SGameMessage &msg )
 	if ( pST && pST->GetGameType() == IScenarioTracker::EGT_MULTI_FLAG_CONTROL )
 	{
 		if ( NGlobal::GetVar( "mp_allow_show_console", 0 ) == 0 )
+		{
 			return false;
+		}
 	}
 	if ( !pScreen || !pScreen->IsVisible() )
+	{
 		return false;
+	}
 	IWindow *pConsole = Singleton<IDebugSingleton>()->GetConsole();
 	if ( !pConsole )
 	{
@@ -453,7 +477,9 @@ void CInterfaceScreenBase::AddScreen( struct IProgrammedReactionsAndChecks *pRea
 {
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
 	if ( AddUIScreen( pScreen, szInterfaceType, pReactions ) == false )
+	{
 		pScreen = 0;
+	}
 }
 
 void CInterfaceScreenBase::FillVersionWindow()
@@ -466,7 +492,9 @@ void CInterfaceScreenBase::FillVersionWindow()
 bool CInterfaceScreenBase::CheckedShowHelpScreen( bool bForced )
 {
 	if ( NGlobal::GetVar( "game_mode_editor", 0 ) != 0 )
+	{
 		return false;
+	}
 	if ( szInterfaceType != "no_interface" )
 	{
 		const NDb::SUIScreenEntry *pEntry = InterfaceState()->GetScreenEntry( szInterfaceType );
@@ -496,7 +524,9 @@ void CInterfaceScreenBase::SetVersionWindowAfterLoad()
 		std::wstring wszOldBuildInfo = pVersionWindow->GetText();
 		const int nPos = wszOldBuildInfo.find( L"\n\nLoaded from " );
 		if ( nPos != std::wstring::npos )
+		{
 			wszOldBuildInfo.erase( nPos, wszOldBuildInfo.size() );
+		}
 
 		FillVersionWindow();
 		const std::wstring wszNowBuildInfo = pVersionWindow->GetText();
@@ -516,7 +546,9 @@ void CInterfaceScreenBase::HideUnfocusedScreen()
 	{
 		bShowScreenOnGetFocus = pScreen->IsVisible();
 		if ( bShowScreenOnGetFocus )
+		{
 			pScreen->ShowWindow( false );
+		}
 	}
 }
 
@@ -527,7 +559,9 @@ void CInterfaceScreenBase::SetDynamicTextView( ITextView *pView,
 	{
 		int nOldID = pView->GetIDForMLHandler();
 		if ( nOldID >= 0 )
+		{
 			InterfaceState()->UnregisterIDForMLHandler( nOldID );
+		}
 		int nID = InterfaceState()->GetAndRegisterIDForMLHandler( params );
 		registeredIDsForMLHandler[nID] = true;
 		pView->SetIDForMLHandler( nID );
@@ -542,7 +576,9 @@ void CInterfaceScreenBase::SetDynamicTooltip( IWindow *pWnd,
 	{
 		int nOldID = pWnd->GetTooltipIDForMLHandler();
 		if ( nOldID >= 0 )
+		{
 			InterfaceState()->UnregisterIDForMLHandler( nOldID );
+		}
 		int nID = InterfaceState()->GetAndRegisterIDForMLHandler( params );
 		registeredIDsForMLHandler[nID] = true;
 		pWnd->SetTooltipIDForMLHandler( nID );
@@ -554,7 +590,9 @@ void CInterfaceScreenBase::SetMainWindowTexture( IWindow *pMainWindow, const NDb
 {
 	pMainWindow->SetTexture( pTexture );
 	if ( pTexture )
+	{
 		bIsTransparent = false;
+	}
 }
 
 int CInterfaceScreenBase::operator&( IBinSaver &saver )
@@ -577,7 +615,9 @@ namespace NInterface
 static void CmdStartInterface( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )
+	{
 		return;
+	}
 
 	std::string res;
 	NStr::ToMBCS( &res, paramsSet[0] );

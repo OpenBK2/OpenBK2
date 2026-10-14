@@ -150,14 +150,18 @@ bool BitFieldString( std::string *pszValue, const CVariant &rValue, const SPrope
 	{
 		const uint8_t *pValues = static_cast<const uint8_t *>( rValue.GetPtr() );
 		for ( int nByteIndex = 0; nByteIndex < pPropertyDesc->nSize; ++nByteIndex )
+		{
 			*pszValue += fmt::format( "{:02X}", pValues[nByteIndex] );
+		}
 	}
 	else if ( rValue.GetType() == CVariant::VT_INT )
 	{
 		const int nValue = (int)rValue;
 		const uint8_t *pValues = reinterpret_cast<const uint8_t *>( &nValue );
 		for ( int i = 0; i < 4; ++i )
+		{
 			*pszValue += fmt::format( "{:02X}", pValues[i] );
+		}
 	}
 	else
 	{

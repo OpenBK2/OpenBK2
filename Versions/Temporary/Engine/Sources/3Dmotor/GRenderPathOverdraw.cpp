@@ -12,7 +12,9 @@ void RenderOverdraw( CTransformStack *pTS, NGfx::CRenderContext *pRC, IRender *p
 	for ( int k = 0; k < fragments.size(); ++k )
 	{
 		if ( scene.IsFilteredFragment( k ) )
+		{
 			continue;
+		}
 		const SRenderFragmentInfo &f = *fragments[k];
 		COpGenContext fi( &lightOps.ops, &f );
 		fi.AddOperation( RO_SOLID_COLOR, 100, DPM_NONE | STM_INCREMENT, 0, &VNULL4, 0.0f, 0.0f );
@@ -47,9 +49,13 @@ void ColorOverdraw( NGfx::CRenderContext *pRC )
 	for ( int k = 0; k < N_COLORS; ++k )
 	{
 		if ( k == N_COLORS - 1 )
+		{
 			pRC->SetStencil( NGfx::STENCIL_GREATER, k - 1 );
+		}
 		else
+		{
 			pRC->SetStencil( NGfx::STENCIL_TEST, k );
+		}
 		NGfx::C2DQuadsRenderer qr;
 		qr.SetTarget( *pRC, CVec2( 1000, 1000 ), NGfx::QRM_SIMPLE );
 		CTRect<float> rect( 0, 0, 1000, 1000 );

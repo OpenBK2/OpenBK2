@@ -26,12 +26,18 @@ void CBackgroundFrameSequence::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	if ( pStats )
 	{
 		if ( pStats->bRandomStartFrame && pStats->nFrameCount > 0 )
+		{
 			nFrame = NWin32Random::Random( 0, pStats->nFrameCount - 1 );
+		}
 		else
+		{
 			nFrame = 0;
+		}
 		nTime = pStats->nTime;
 		if ( pStats->nRandomAddTime > 0 )
+		{
 			nTime += NWin32Random::Random( 0, pStats->nRandomAddTime - 1 );
+		}
 	}
 	NI_ASSERT( !pStats || ( pStats->nFrameCount <= pStats->nFrameCountX * pStats->nFrameCountY ),
 	           "Too low frames at texture" );
@@ -46,14 +52,18 @@ void CBackgroundFrameSequence::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 void CBackgroundFrameSequence::Visit( IUIVisitor *pVisitor )
 {
 	if ( pos.IsEmpty() || !pStats || !pTexture )
+	{
 		return;
+	}
 
 	if ( nTime > 0 && pStats->nFrameCount > 0 )
 	{
 		NTimer::STime time = Singleton<IGameTimer>()->GetAbsTime();
 
 		if ( timeStart == 0 )
+		{
 			timeStart = time;
+		}
 
 		int nDeltaTime = time - timeStart;
 		if ( nDeltaTime >= nTime )

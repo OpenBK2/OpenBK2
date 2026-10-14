@@ -15,13 +15,19 @@ void RenderShowLightmap( CTransformStack *pTS,
 	for ( int i = 1; i < fragments.size(); ++i )
 	{
 		if ( scene.IsFilteredFragment( i ) )
+		{
 			continue;
+		}
 		const SRenderFragmentInfo &frag = *fragments[i];
 		COpGenContext op( &lightOps.ops, &frag );
 		if ( !frag.pMaterial->DoesSupportLightmaps() )
+		{
 			continue;
+		}
 		if ( !frag.vars.pLM )
+		{
 			continue;
+		}
 		CDGPtr<CPtrFuncBase<NGfx::CTexture>> pTex = frag.vars.pLM.GetPtr();
 		pTex.Refresh();
 		op.AddOperation( RO_G3_SHOW_LM, 10, 0, 0, pTex->GetValue() );

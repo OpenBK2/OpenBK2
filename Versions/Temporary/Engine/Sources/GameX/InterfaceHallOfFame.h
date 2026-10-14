@@ -37,7 +37,9 @@ public:
 		// write file
 		CFileStream stream( "HallOfFame.bin", CFileStream::WIN_CREATE );
 		if ( !stream.IsOk() )
+		{
 			return;
+		}
 
 		CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
 		operator&( *pSaver.GetPtr() );

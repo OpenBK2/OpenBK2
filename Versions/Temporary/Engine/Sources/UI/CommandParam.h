@@ -19,7 +19,9 @@ public:
 	void Merge( const CParam &par )
 	{
 		if ( !IsValid() )
+		{
 			std::pair<TParamType, bool>::operator=( par );
+		}
 	}
 
 	bool IsValid() const { return this->second; }

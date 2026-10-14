@@ -33,7 +33,9 @@ void CTerraGen::AddCrag( const NDb::SVSOInstance *pInstance )
 	{
 		CragManipulator( FindCragInfo( pInstance->nVSOID ), false );
 		if ( pAIObserver )
+		{
 			PutCragToAI( pInstance );
+		}
 	}
 }
 
@@ -46,11 +48,15 @@ bool CTerraGen::AddCrag( const NDb::SVSOInstance *pInstance, const int nRandSeed
 	      ++it )
 	{
 		if ( it->nID == pInstance->nVSOID )
+		{
 			return false;
+		}
 	}
 
 	if ( pInstance->points.empty() )
+	{
 		return false;
+	}
 
 	STerrainInfo::SCrag newCragInfo;
 	NWin32Random::Seed( nRandSeed );
@@ -62,7 +68,9 @@ bool CTerraGen::AddCrag( const NDb::SVSOInstance *pInstance, const int nRandSeed
 
 	// convert right-sided crags to left sided
 	if ( !bLeftSided )
+	{
 		MakeLeftSided( &newCragInfo.sampPoints, pInstance->points );
+	}
 	else
 	{
 		newCragInfo.sampPoints.resize( 0 );
@@ -186,16 +194,24 @@ void CTerraGen::CragsPushExactPoint( std::vector<STerrainInfo::SVSOPoint> *pArra
 		if ( !bStart )
 		{
 			if ( vPos.z > fMaxHeight )
+			{
 				CragsPushExactPoint( pArray, p1, p2, t, t2, nExcludeID, bStart );
+			}
 			else
+			{
 				CragsPushExactPoint( pArray, p1, p2, t1, t, nExcludeID, bStart );
+			}
 		}
 		else
 		{
 			if ( vPos.z > fMaxHeight )
+			{
 				CragsPushExactPoint( pArray, p1, p2, t1, t, nExcludeID, bStart );
+			}
 			else
+			{
 				CragsPushExactPoint( pArray, p1, p2, t, t2, nExcludeID, bStart );
+			}
 		}
 	}
 }
@@ -205,7 +221,9 @@ void CTerraGen::PutCragOnTerrain( STerrainInfo::SCrag *pCrag, const CVec2i &vMin
 
 #ifdef VERSION_DEV_M1
 	if ( pCrag->sampPoints.size() < 2 )
+	{
 		return;
+	}
 
 	STerrainInfo::SFoot foot;
 	foot.nID = pCrag->nID;
@@ -294,7 +312,9 @@ void CTerraGen::PutCragOnTerrain( STerrainInfo::SCrag *pCrag, const CVec2i &vMin
 #else // B2
 
 	if ( pCrag->sampPoints.size() < 2 )
+	{
 		return;
+	}
 
 	std::vector<CVec3fEx> samplesL, samplesR;
 	samplesL.reserve( pCrag->sampPoints.size() * 2 );
@@ -328,7 +348,9 @@ void CTerraGen::PutCragOnTerrain( STerrainInfo::SCrag *pCrag, const CVec2i &vMin
 			++itPointPrev;
 		}
 		if ( itPoint == pCrag->sampPoints.end() )
+		{
 			break;
+		}
 		CragsPushExactPoint( &precPoints, *itPointPrev, *itPoint, 0.0f, 1.0f, pCrag->nID, true );
 		CragsPushPointLR( &samplesL, &samplesR, precPoints.back(), &vMin, &vMax, pCrag->nID );
 		while ( ( itPoint != pCrag->sampPoints.end() ) &&
@@ -368,7 +390,9 @@ void CTerraGen::PutCragOnTerrain( STerrainInfo::SCrag *pCrag, const CVec2i &vMin
 				MakeHole( samplesL, nTileX1, nTileY1, nTileX2, nTileY2 );
 			}
 			else
+			{
 				MakeHole( samplesL, vMinTile.x, vMinTile.y, vMaxTile.x, vMaxTile.y );
+			}
 
 			// add foot
 			foot.points.push_back( precPoints );
@@ -390,7 +414,9 @@ void CTerraGen::PutCragOnTerrain( STerrainInfo::SCrag *pCrag, const CVec2i &vMin
 		pCrag->precVerts.push_back( CVec3( vPos.x, vPos.y, fTerraHeight + ( fMaxCragH < vPos.z ? fMaxCragH : vPos.z ) ) );
 		pCrag->precHeights.push_back( fTerraHeight + vPos.z );
 		if ( pCrag->precHeights.back() < ( pCrag->precVerts.back().z + DEF_CRAG_HEIGHT_ERROR ) )
+		{
 			pCrag->precVerts.back().z -= DEF_CRAG_HEIGHT_ERROR;
+		}
 		pCrag->precNorms.push_back( it->vNorm );
 	}
 
@@ -404,7 +430,9 @@ void CTerraGen::PutCragOnTerrain( STerrainInfo::SCrag *pCrag, const CVec2i &vMin
 void CTerraGen::PutAllCragsOnTerrain()
 {
 	for ( std::list<STerrainInfo::SCrag>::iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end(); ++it )
+	{
 		PutCragOnTerrain( &( *it ), CVec2i( -1, -1 ), CVec2i( -1, -1 ) );
+	}
 
 	//	statistcis
 	const bool bShowDebugInfo_IntersectionsCount = false;
@@ -526,7 +554,9 @@ float CTerraGen::GetMaxCragHeight( const CVec2 &v, const int nExcludeID ) const
 				SRidgeProfile ridgeProfile;
 				float fHeight;
 				if ( GetIncRidgeHeight( v, it->ridge, &fHeight, ridgeProfile ) )
+				{
 					fMaxHeight = (std::max)( fMaxHeight, fHeight );
+				}
 			}
 		}
 	}
@@ -546,7 +576,9 @@ float CTerraGen::GetMaxCragHeight2( const CVec2 &v, const int nExcludeID1, const
 			if ( IsInsideBB( v, it->vBBMin, it->vBBMax ) )
 			{
 				if ( GetIncRidgeHeight( v, it->ridge, &fHeight, ridgeProfile ) )
+				{
 					fMaxHeight = (std::max)( fMaxHeight, fHeight );
+				}
 			}
 		}
 	}
@@ -559,7 +591,9 @@ bool CTerraGen::GetMaxCragHeightEx( const CVec2 &v, float *pHeight ) const
 	( *pHeight ) = 0.0f;
 
 	if ( terrainInfo.crags.empty() )
+	{
 		return false;
+	}
 	float fH;
 	bool bResult = false;
 	SRidgeProfile ridgeProfile;
@@ -607,7 +641,9 @@ void CTerraGen::CragManipulator( const STerrainInfo::SCrag *pCrag, const bool bR
 
 	// grid updater (intellectual)
 	if ( IScene *pScene = Scene() )
+	{
 		pScene->UpdateGrid( vBBMin.x, vBBMin.y, vBBMax.x, vBBMax.y );
+	}
 }
 
 void CTerraGen::RemoveCrag( const int nVSOID )
@@ -651,7 +687,9 @@ void CTerraGen::AddAllCrags()
 	NI_ASSERT( pDesc, "Terrain is not loaded" );
 	//RemoveAllCrags();
 	for ( std::vector<NDb::SVSOInstance>::const_iterator it = pDesc->crags.begin(); it != pDesc->crags.end(); ++it )
+	{
 		AddCrag( &( *it ), GetVSOSeed( &*it ) );
+	}
 }
 
 const NDb::SVSOInstance *CTerraGen::FindCrag( int nID ) const
@@ -659,7 +697,9 @@ const NDb::SVSOInstance *CTerraGen::FindCrag( int nID ) const
 	for ( std::vector<NDb::SVSOInstance>::const_iterator it = pDesc->crags.begin(); it != pDesc->crags.end(); ++it )
 	{
 		if ( it->nVSOID == nID )
+		{
 			return static_cast<const NDb::SVSOInstance *>( &( *it ) );
+		}
 	}
 	//NI_ASSERT( false, StrFmt("Couldn't find crag's instance: ID=%d", nID) );
 	return 0;
@@ -670,7 +710,9 @@ STerrainInfo::SCrag *CTerraGen::FindCragInfo( int nID )
 	for ( std::list<STerrainInfo::SCrag>::iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end(); ++it )
 	{
 		if ( it->nID == nID )
+		{
 			return ( &( *it ) );
+		}
 	}
 	//NI_ASSERT( false, StrFmt("Couldn't find crag's info: ID=%d", nID) );
 	return 0;

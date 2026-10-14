@@ -117,7 +117,9 @@ inline void SDiscretePos::MoveAndRotate( std::vector<CVec3> *pPoints ) const
 {
 	ASSERT( pPoints );
 	for ( int i = 0; i < pPoints->size(); ++i )
+	{
 		MoveAndRotate( &( *pPoints )[i] );
+	}
 }
 
 inline void SDiscretePos::InvMoveAndRotate( CVec3 *pPoint ) const

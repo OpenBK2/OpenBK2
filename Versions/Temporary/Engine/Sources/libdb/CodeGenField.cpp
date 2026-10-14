@@ -39,7 +39,9 @@ void CFieldDefinition::GenerateCode( SCodeStreams *pCode,
 	{
 		const NDb::NTypeDef::STypeStructBase::SField &field = pStruct->fields[nField];
 		if ( field.szName == szFieldName && field.pType == pType )
+		{
 			break;
+		}
 
 		++nField;
 	}
@@ -51,7 +53,9 @@ void CFieldDefinition::GenerateCode( SCodeStreams *pCode,
 	NDb::NTypeDef::STypeDef *pVarType = field.pType;
 
 	if ( IsNoCode( field ) )
+	{
 		return;
+	}
 
 	pCode->h << szTabs;
 	int nBrackets = 0;

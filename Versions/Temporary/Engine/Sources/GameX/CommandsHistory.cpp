@@ -41,7 +41,9 @@ static void ReportReplayLine( const std::string &szLine )
 	fmt::print( "{}\n", szLine );
 	fflush( stdout );
 	if ( IConsoleBuffer *pConsole = Singleton<IConsoleBuffer>() )
+	{
 		pConsole->WriteASCII( CONSOLE_STREAM_CONSOLE, szLine.c_str(), 0xffffffff, true );
+	}
 }
 
 // CCommandsHistory
@@ -79,13 +81,19 @@ const bool CCommandsHistory::SerializeHistory( const std::string &szFileName, co
 	                        bRead ? CFileStream::WIN_READ_ONLY : CFileStream::WIN_CREATE );
 	CPtr<IBinSaver> pSaverMain = CreateBinSaver( &streamMain, bRead ? SAVER_MODE_READ : SAVER_MODE_WRITE );
 	if ( !IsValid( pSaverMain ) )
+	{
 		return false;
+	}
 
 	pSaverMain->Add( 2, &replayInfo );
 	if ( bRead )
+	{
 		pSaverMain->Add( 3, &loadedHistory );
+	}
 	else
+	{
 		pSaverMain->Add( 3, &savingHistory );
+	}
 	// Chunk 4 is new. A replay written before it carries no such chunk, and
 	// CallObjectSerialize leaves the target alone when StartChunk finds none, so
 	// an older replay reads back with no samples and simply cannot be verified.
@@ -105,7 +113,9 @@ const bool CCommandsHistory::SerializeHistory( const std::string &szFileName, co
 		pSaverMain->Add( 5, &pStartSeed );
 		bSeedFromReplay = IsValid( pStartSeed );
 		if ( !bSeedFromReplay )
+		{
 			pStartSeed = pConstructed;
+		}
 	}
 	else
 	{
@@ -113,7 +123,9 @@ const bool CCommandsHistory::SerializeHistory( const std::string &szFileName, co
 	}
 
 	if ( !bRead )
+	{
 		return NSaveLoad::SerializeReplayInfo( &replayInfo, szFileName, bRead );
+	}
 
 	return true;
 }
@@ -121,7 +133,9 @@ const bool CCommandsHistory::SerializeHistory( const std::string &szFileName, co
 bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 {
 	if ( !SerializeHistory( szFileName, true ) )
+	{
 		return false;
+	}
 
 	bLoadedHistory = true;
 	bFinishedHistory = false;
@@ -215,7 +229,9 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 	// zero seed anyway, which is equally deterministic, so doing it here is
 	// right for both.
 	if ( bSeedFromReplay )
+	{
 		NRandom::SetRandomSeed( pStartSeed );
+	}
 
 	// A single-player replay has to start the way StartNewMap starts one, not
 	// the way a multiplayer game does: the tracker is already EGT_SINGLE, so
@@ -270,7 +286,9 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 	{
 		const SMPSlot &slot = replayInfo.slots[i];
 		if ( !slot.bPresent )
+		{
 			continue;
+		}
 
 		pScenarioTracker->AddPlayer( i );
 		pScenarioTracker->SetPlayerSide( i, slot.nTeam );
@@ -331,7 +349,9 @@ bool CCommandsHistory::SaveReplay( const std::string &szFileName,
 	replayInfo.uMapCheckSum = replayInfo.pMap != 0 ? replayInfo.pMap->CalcCheckSum() : 0;
 
 	if ( !SerializeHistory( szFileName, false ) )
+	{
 		return false;
+	}
 
 	//	WriteToPipe( PIPE_CHAT, StrFmt( "Replay \"%s\" succesfully saved", szFileName ), 0xFF00FF00, true );
 	return true;
@@ -349,7 +369,9 @@ bool CCommandsHistory::AddChecksumLog( const int nGameTime, const unsigned long 
 	}
 
 	if ( bLoadedHistory && nEntry == 0 )
+	{
 		VerifyCheckSum( nGameTime, static_cast<uint32_t>( ulChecksum ) );
+	}
 
 	// Only entry 0, which is the whole-state value; the rest are the running
 	// total partway through the walk and there are thousands of them per sample.
@@ -383,7 +405,9 @@ bool CCommandsHistory::AddChecksumLog( const int nGameTime, const unsigned long 
 			}
 		}
 		if ( pEntryDumpFile )
+		{
 			fmt::print( pEntryDumpFile, "{} {:#010x}\n", nEntry, ulChecksum );
+		}
 	}
 	else if ( pEntryDumpFile != 0 )
 	{
@@ -402,7 +426,9 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 {
 	const size_t nRecorded = recordedCheckSums.Size();
 	if ( nRecorded == 0 )
+	{
 		return true;
+	}
 
 	// A replay with no recorded seed replays the commands against a different
 	// random stream, so it would diverge whatever the code did. Say that rather
@@ -446,10 +472,14 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 	// being treated as a difference: a shorter run is caught by the count of
 	// matches, not by pretending the missing samples differed.
 	while ( nCheckSumCursor < nRecorded && recordedCheckSums.times[nCheckSumCursor] < nGameTime )
+	{
 		++nCheckSumCursor;
+	}
 
 	if ( nCheckSumCursor >= nRecorded || recordedCheckSums.times[nCheckSumCursor] != nGameTime )
+	{
 		return true;
+	}
 
 	const uint32_t uRecorded = recordedCheckSums.values[nCheckSumCursor];
 
@@ -485,7 +515,9 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 			// and the window is the one period before this sample, which is what
 			// the ring still holds at this point.
 			if ( IAILogic *pAI = Singleton<IAILogic>() )
+			{
 				pAI->WriteDetailedChecksumInfo( "last_async_rng_debug.txt" );
+			}
 		}
 	}
 
@@ -505,7 +537,9 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 	// itself parted company or whether only the bytes being hashed did. So the
 	// walk above still runs and only the reporting stops here.
 	if ( bCheckSumMismatch )
+	{
 		return false;
+	}
 
 	bCheckSumMismatch = true;
 	ReportReplayLine( fmt::format(
@@ -522,7 +556,9 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 	// worth having at the moment the two runs parted: the RNG counters and
 	// ISAAC state, and the commands that were replayed.
 	if ( IAILogic *pAI = Singleton<IAILogic>() )
+	{
 		pAI->WriteDetailedChecksumInfo( "last_async_detailed_debug.txt" );
+	}
 	WriteCommandsHistoryToFile( "last_async_cmds.txt" );
 
 	return false;
@@ -531,17 +567,23 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 CHistory CCommandsHistory::GetCommandsHistory() const
 {
 	if ( savingHistory.size() > 0 )
+	{
 		return savingHistory;
+	}
 	return loadedHistory;
 }
 
 void CCommandsHistory::AddCommand( const int nSegment, IAILogicCommandB2 *pCmd )
 {
 	if ( bCanAddCommand && pCmd->NeedToBeStored() )
+	{
 		savingHistory[nSegment].push_back( pCmd );
+	}
 
 	if ( nSegment > replayInfo.nLastCommandSegment )
+	{
 		replayInfo.nLastCommandSegment = nSegment;
+	}
 }
 
 void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver *pTranceiver )
@@ -549,7 +591,9 @@ void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver 
 	if ( !bLoadedHistory )
 	{
 		if ( nSegment > replayInfo.nLastGameSegment )
+		{
 			replayInfo.nLastGameSegment = nSegment;
+		}
 	}
 	else
 	{
@@ -606,7 +650,9 @@ void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver 
 				if ( NGlobal::GetVar( "Replay.ExitWhenFinished", 0 ) != 0 )
 				{
 					if ( bVerified )
+					{
 						NGlobal::SetVar( "Replay.Result", 0 );
+					}
 					NMainLoop::Command( CreateICExitGame() );
 				}
 				else
@@ -636,7 +682,9 @@ ICommandsHistory *CreateCommandsHistory( const SReplayInfo &replay )
 		}
 	}
 	else
+	{
 		NGlobal::SetVar( "History.Playing", 0 );
+	}
 
 	return pRes;
 }

@@ -26,7 +26,9 @@ void CCursor::ClearModes()
 	for ( CModesMap::iterator it = modes.begin(); it != modes.end(); ++it )
 	{
 		if ( it->second != 0 )
+		{
 			NWinCursor::DestroyCursor( it->second );
+		}
 	}
 	modes.clear();
 	// hCurrCursor points into what was just freed, so it goes with them
@@ -39,7 +41,9 @@ void CCursor::RegisterMode( const int nMode, const std::string &szFileName )
 {
 	//	NI_ASSERT( modes.find(nMode) == modes.end(), StrFmt("Cursor mode %d already registered", nMode) );
 	if ( szFileName.empty() || szFileName == " " )
+	{
 		return;
+	}
 
 	//
 	NWinCursor::TCursor hCursor = NWinCursor::LoadCursor( szFileName );
@@ -58,7 +62,9 @@ bool CCursor::SetMode( const int nMode )
 		nCurrMode = nMode;
 		CModesMap::const_iterator posCursor = modes.find( nMode );
 		if ( posCursor == modes.end() )
+		{
 			posCursor = modes.find( 0 );
+		}
 		//	hCurrCursor = modes[eMode];
 		// Only a change of cursor restarts the animation, which is what Win32
 		// does when a new animated cursor is set. Testing the cursor rather than
@@ -75,7 +81,9 @@ bool CCursor::SetMode( const int nMode )
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 void CCursor::RestartAnimation()
@@ -116,23 +124,31 @@ void CCursor::Step()
 void CCursor::OnSetCursor()
 {
 	if ( bCanShow )
+	{
 		NWinFrame::SetCursor( bShow ? NWinCursor::GetStepFrame( hCurrCursor, nCurrStep ) : 0 );
+	}
 }
 
 void CCursor::Show( const bool _bShow )
 {
 	bShow = _bShow;
 	if ( bShow )
+	{
 		SetMode( nCurrMode );
+	}
 	else
+	{
 		NWinFrame::SetCursor( 0 );
+	}
 }
 
 void CCursor::CanShow( const bool _bCanShow )
 {
 	bCanShow = _bCanShow;
 	if ( !bCanShow )
+	{
 		Show( false );
+	}
 	//	else
 	//		OnSetCursor();
 }
@@ -186,7 +202,9 @@ int CCursor::operator&( IBinSaver &saver )
 		modesFiles.clear();
 		for ( std::unordered_map<int, std::string>::iterator iter = modesFilesCopy.begin(); iter != modesFilesCopy.end();
 		      ++iter )
+		{
 			RegisterMode( iter->first, iter->second );
+		}
 
 		Show( bShow );
 	}

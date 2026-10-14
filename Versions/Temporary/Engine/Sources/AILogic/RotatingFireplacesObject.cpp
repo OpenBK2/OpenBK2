@@ -12,7 +12,9 @@ void CRotatingFireplacesObject::AddUnit( CSoldier *pSoldier, const int nFireplac
 {
 	std::list<SUnitInfo>::iterator iter = units.begin();
 	while ( iter != units.end() && iter->pSoldier != pSoldier )
+	{
 		++iter;
+	}
 
 	if ( iter == units.end() )
 	{
@@ -40,7 +42,9 @@ void CRotatingFireplacesObject::AddUnit( CSoldier *pSoldier, const int nFireplac
 			RecordRandomCall();
 		}
 		else
+		{
 			iter->nLastFireplace = 0;
+		}
 	}
 
 	iter->lastFireplaceChange = curTime + NRandom::Random( 0, 1000 );
@@ -51,12 +55,16 @@ void CRotatingFireplacesObject::DeleteUnit( CSoldier *pSoldier )
 {
 	std::list<SUnitInfo>::iterator iter = units.begin();
 	while ( iter != units.end() && iter->pSoldier != pSoldier )
+	{
 		++iter;
+	}
 
 	//	NI_ASSERT( iter != units.end(), "Unit not found" );
 
 	if ( iter != units.end() )
+	{
 		units.erase( iter );
+	}
 }
 
 bool CRotatingFireplacesObject::IsBetterToGoToFireplace( CSoldier *pSoldier, const int nFireplace ) const
@@ -64,18 +72,28 @@ bool CRotatingFireplacesObject::IsBetterToGoToFireplace( CSoldier *pSoldier, con
 	CSoldier *pFireplaceSoldier = GetSoldierInFireplace( nFireplace );
 
 	if ( pFireplaceSoldier == pSoldier )
+	{
 		return false;
+	}
 	else if ( pFireplaceSoldier == 0 )
+	{
 		return true;
+	}
 	// не вытеснять солдата из fireplace, если мы уже сидим в fireplace или он убит
 	else if ( !pFireplaceSoldier->IsAlive() || pSoldier->IsInFirePlace() )
+	{
 		return false;
+	}
 	else if ( pSoldier->GetStats()->etype != RPG_TYPE_OFFICER &&
 	          pFireplaceSoldier->GetStats()->etype == RPG_TYPE_OFFICER )
+	{
 		return false;
+	}
 	else if ( pSoldier->GetStats()->etype == RPG_TYPE_OFFICER &&
 	          pFireplaceSoldier->GetStats()->etype != RPG_TYPE_OFFICER )
+	{
 		return true;
+	}
 	else
 	{
 		const int nSoldierMainAmmo = pSoldier->GetNAmmo( 0 );
@@ -84,16 +102,24 @@ bool CRotatingFireplacesObject::IsBetterToGoToFireplace( CSoldier *pSoldier, con
 		if ( nSoldierMainAmmo != 0 || nFireplaceSoldierMainAmmo != 0 )
 		{
 			if ( nSoldierMainAmmo == 0 )
+			{
 				return false;
+			}
 			if ( nFireplaceSoldierMainAmmo == 0 )
+			{
 				return true;
+			}
 
 			const float fSoldierFireRange = pSoldier->GetGun( 0 )->GetFireRange( 0 );
 			const float fFireplaceSoldierFireRange = pFireplaceSoldier->GetGun( 0 )->GetFireRange( 0 );
 			if ( fSoldierFireRange > fFireplaceSoldierFireRange )
+			{
 				return true;
+			}
 			if ( fSoldierFireRange < fFireplaceSoldierFireRange )
+			{
 				return false;
+			}
 
 			const float fSoldierDamageSpeed = pSoldier->GetGun( 0 )->GetFireRate() * pSoldier->GetGun( 0 )->GetDamage();
 			const float fFireplaceSoldierDamageSpeed =
@@ -105,10 +131,14 @@ bool CRotatingFireplacesObject::IsBetterToGoToFireplace( CSoldier *pSoldier, con
 		{
 			int nSoldierAmmo = 0;
 			for ( int i = 0; i < pSoldier->GetNCommonGuns(); ++i )
+			{
 				nSoldierAmmo += pSoldier->GetNAmmo( i );
+			}
 			int nFireplaceSoldierAmmo = 0;
 			for ( int i = 0; i < pFireplaceSoldier->GetNCommonGuns(); ++i )
+			{
 				nFireplaceSoldierAmmo += pFireplaceSoldier->GetNAmmo( i );
+			}
 
 			return ( nSoldierAmmo > nFireplaceSoldierAmmo );
 		}
@@ -142,7 +172,9 @@ void CRotatingFireplacesObject::Segment()
 							iter->nLastFireplace = ( iter->nLastFireplace + 1 ) % GetNFirePlaces();
 
 							if ( IsBetterToGoToFireplace( pSoldier, iter->nLastFireplace ) )
+							{
 								ExchangeUnitToFireplace( pSoldier, iter->nLastFireplace );
+							}
 
 							bChanged = true;
 						}
@@ -151,7 +183,9 @@ void CRotatingFireplacesObject::Segment()
 			}
 
 			if ( !bChanged )
+			{
 				++iter;
+			}
 		}
 	}
 }

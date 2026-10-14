@@ -35,7 +35,9 @@ CBitLocker::~CBitLocker()
 {
 	FlushBits();
 	if ( pData )
+	{
 		::Free( pData, pCurrent - pBuffer );
+	}
 }
 
 void CBitLocker::LockRead( CDataStream &data, unsigned int nSize )

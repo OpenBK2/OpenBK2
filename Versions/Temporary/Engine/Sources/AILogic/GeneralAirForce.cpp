@@ -67,7 +67,9 @@ void CGeneralAirForce::Segment()
 {
 	CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 5, ( bOurTurn ? "aviation's turn" : "ground general's turn" ) );
 	if ( !bOurTurn )
+	{
 		return;
+	}
 
 	for ( int i = 0; i < players.size(); ++i )
 	{
@@ -90,34 +92,46 @@ void CGeneralAirForce::Segment()
 				bOurTurn = false;
 			}
 			else if ( timeWaitForReinforceSystem > curTime ) // reinforcement already ordered, wait
+			{
 				break;
+			}
 
 			if ( theReinfArray[nPlayer].CanCallNow() && theReinfArray[nPlayer].HasReinforcement( NDb::RT_FIGHTERS ) )
 			{
 				if ( PrepeareFighters( nPlayer ) )
+				{
 					CallReinforcement( nPlayer, NDb::RT_FIGHTERS, &requests, FT_AIR_FIGHTER );
+				}
 			}
 
 			if ( theReinfArray[nPlayer].CanCallNow() &&
 			     theReinfArray[nPlayer].HasReinforcement( NDb::RT_GROUND_ATTACK_PLANES ) )
+			{
 				CallReinforcement( nPlayer, NDb::RT_GROUND_ATTACK_PLANES, &requests, FT_AIR_GUNPLANE );
+			}
 
 			if ( theReinfArray[nPlayer].CanCallNow() && theReinfArray[nPlayer].HasReinforcement( NDb::RT_BOMBERS ) )
+			{
 				CallReinforcement( nPlayer, NDb::RT_BOMBERS, &requests, FT_AIR_BOMBER );
+			}
 
 			//CRAP{ UNTILL SCOUTS IN REINFORCEMENTS
 			//if ( theReinfArray[nPlayer].CanCallNow() && theReinfArray[nPlayer].HasReinforcement( NDb::RT_GROUND_ATTACK_PLANES ) )
 			//LaunchScoutFree( nPlayer, NDb::RT_GROUND_ATTACK_PLANES );
 			//CRAP}
 			if ( theReinfArray[nPlayer].CanCallNow() )
+			{
 				bOurTurn = false;
+			}
 		}
 	}
 	std::list<int> deleted;
 	for ( AntiAviation::iterator it = antiAviation.begin(); antiAviation.end() != it; ++it )
 	{
 		if ( it->second->IsTimeToForget() )
+		{
 			deleted.push_back( it->first );
+		}
 	}
 
 	while ( !deleted.empty() )
@@ -134,7 +148,9 @@ bool CGeneralAirForce::PrepeareFighters( int nPlayer )
 	{
 		CAviation *pPlane = *iter;
 		if ( pPlane->IsHelicopter() )
+		{
 			continue;
+		}
 
 		if ( pPlane->IsAlive() && RPG_TYPE_AVIA_FIGHTER != pPlane->GetStats()->etype &&
 		     EDI_FRIEND == theDipl.GetDiplStatus( pPlane->GetPlayer(), nPlayer ) )
@@ -147,7 +163,9 @@ bool CGeneralAirForce::PrepeareFighters( int nPlayer )
 	{
 		CAviation *pPlane = *iter;
 		if ( pPlane->IsHelicopter() )
+		{
 			continue;
+		}
 
 		if ( pPlane->IsAlive() && RPG_TYPE_AVIA_FIGHTER != pPlane->GetStats()->etype &&
 		     EDI_ENEMY == theDipl.GetDiplStatus( pPlane->GetPlayer(), nPlayer ) )
@@ -162,13 +180,17 @@ bool CGeneralAirForce::PrepeareFighters( int nPlayer )
 void CGeneralAirForce::GiveOrders( const int nPlayer )
 {
 	if ( nCurrentRequest == -1 )
+	{
 		return;
+	}
 
 	std::list<CVec2> vPoints;
 	Requests *pRequest = &requests[nCurrentRequest];
 
 	for ( Requests::iterator it = pRequest->begin(); it != pRequest->end(); ++it )
+	{
 		vPoints.push_back( it->second.vPoint );
+	}
 
 	CAviation *pSamplePlane = checked_cast_ptr<CAviation *>( createdAviation[0] );
 
@@ -189,7 +211,9 @@ void CGeneralAirForce::GiveOrders( const int nPlayer )
 			++it;
 		}
 		else
+		{
 			it = vPoints.erase( it );
+		}
 	}
 
 	LaunchPlane( nCurrentRequest, vPoints, nPlayer );
@@ -209,7 +233,9 @@ void CGeneralAirForce::CallReinforcement( const int nPlayer,
 {
 	RequestsByForceType::const_iterator pos = pRequests->find( eForceType );
 	if ( pos == pRequests->end() )
+	{
 		return;
+	}
 
 	timeWaitForReinforceSystem = curTime + TIME_WAIT_FOR_REINFORCE_SYSTEM;
 	nCurrentRequest = eForceType;
@@ -230,7 +256,9 @@ float CGeneralAirForce::CheckLineForSafety( const CVec2 &vStart, const CVec2 &vF
 		CAIUnit *pUnit = GetObjectByUniqueIdSafe<CAIUnit>( it->first );
 
 		if ( !pUnit || !pUnit->IsRefValid() || !pUnit->IsAlive() )
+		{
 			continue;
+		}
 
 		const CVec2 vCenter = pUnit->GetCenterPlain();
 		// find gun that can shoot to planes and it's range
@@ -246,18 +274,26 @@ float CGeneralAirForce::CheckLineForSafety( const CVec2 &vStart, const CVec2 &vF
 				float fMinDist;
 
 				if ( fDistToCenter > fDist1 ) // нормаль от точки не падает на отрезок
+				{
 					fMinDist = fDist1;
+				}
 				else
 				{
 					const float fDist2 = fabs2( vCenter - vFinish );
 					if ( fDistToCenter > fDist2 )
+					{
 						fMinDist = fDist2;
+					}
 					else
+					{
 						fMinDist = sqr( fabs( line.DistToPoint( vCenter ) ) );
+					}
 				}
 
 				if ( sqr( pGun->GetFireRangeMax() ) > fMinDist )
+				{
 					return 1;
+				}
 			}
 		}
 	}
@@ -269,7 +305,9 @@ void CGeneralAirForce::LaunchPlane( EForceType eType, const std::list<CVec2> &vP
 	bOurTurn = false;
 
 	if ( vPoints.empty() )
+	{
 		return;
+	}
 
 	SAIUnitCmd cmd;
 	std::list<CVec2>::const_iterator it = vPoints.begin();
@@ -295,7 +333,9 @@ void CGeneralAirForce::LaunchPlane( EForceType eType, const std::list<CVec2> &vP
 
 	std::vector<int> ids;
 	for ( int i = 0; i < createdAviation.size(); ++i )
+	{
 		ids.push_back( createdAviation[i]->GetUniqueId() );
+	}
 	Singleton<IAILogic>()->RegisterGroup( ids, nGroupID );
 
 	// если вызвались
@@ -323,7 +363,9 @@ void CGeneralAirForce::LaunchScoutFree( const int nPlayer, const NDb::EReinforce
 		for ( int y = nStep / 2; y < fSizeY; y += nStep )
 		{
 			if ( !theWarFog.IsTileVisible( SVector( x, y ), nParty ) )
+			{
 				points.push_back( CVec2( x, y ) );
+			}
 		}
 	}
 	// These points turn into GroupCommand()s below, so their order is simulation
@@ -336,7 +378,9 @@ void CGeneralAirForce::LaunchScoutFree( const int nPlayer, const NDb::EReinforce
 	// sequence of NRandom draws is the one the original engine made.
 	SGeneralHelper::SRandomFunctor pr;
 	for ( size_t i = 1; i < points.size(); ++i )
+	{
 		std::iter_swap( points.begin() + i, points.begin() + pr( static_cast<int>( i ) + 1 ) );
+	}
 	if ( points.empty() )
 	{
 		bOurTurn = false;
@@ -387,7 +431,9 @@ void CGeneralAirForce::LaunchScoutFree( const int nPlayer, const NDb::EReinforce
 	}
 	// вообще-то круто было бы проверить и возврат, но это невозможно
 	if ( !vPointsToFly.empty() )
+	{
 		LaunchPlane( FT_AIR_SCOUT, vPointsToFly, nPlayer );
+	}
 }
 
 int /*request ID*/
@@ -399,10 +445,14 @@ CGeneralAirForce::RequestForSupport( const CVec2 &vSupportCenter, enum EForceTyp
 		for ( Requests::iterator iter = requests[eType].begin(); iter != requests[eType].end(); ++iter )
 		{
 			if ( iter->second.nResistanceCellNumber != -1 )
+			{
 				delRequest.push_back( iter->first );
+			}
 		}
 		for ( std::list<int>::iterator iter = delRequest.begin(); iter != delRequest.end(); ++iter )
+		{
 			CancelRequest( *iter, eType );
+		}
 	}
 
 	const int nID = requestsID.Get();
@@ -428,7 +478,9 @@ void CGeneralAirForce::Give( CCommonUnit *pWorker )
 {
 	CAIUnit *pUnit = checked_cast<CAIUnit *>( pWorker );
 	if ( pUnit->IsHelicopter() )
+	{
 		return;
+	}
 
 	createdAviation.push_back( pUnit );
 }

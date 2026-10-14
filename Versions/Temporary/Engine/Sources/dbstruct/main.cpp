@@ -96,7 +96,9 @@ int LoadAllObjects( ILoadObjectCallback *pCallback )
 				{
 					NDb::IObjMan *pObjMan = NDb::GetManipulator( *itDBID );
 					if ( pCallback != 0 )
+					{
 						pCallback->ObjectLoaded( pObjMan, *itDBID );
+					}
 				}
 			}
 			else
@@ -133,7 +135,9 @@ int UpdateStruct()
 	CMarkChangedCallback callbackMarkChanged;
 	int nRetCode = LoadAllObjects( &callbackMarkChanged );
 	if ( nRetCode != 0 )
+	{
 		return nRetCode;
+	}
 	//
 	Log( "All objects loaded and structure modified. Saving..." );
 	NDb::SaveChanges();
@@ -230,12 +234,18 @@ int PORT_CDECL main( int argc, char *argv[] )
 	Log( "Operating on \"%s\"", szDataPath.c_str() );
 	CDatabaseGuard dbGuard( szDataPath, NDb::DATABASE_MODE_EDITOR );
 	if ( !dbGuard.IsOk() )
+	{
 		return 0xDEAD;
+	}
 	//
 	if ( eMode == MODE_UPDATE_STRUCT )
+	{
 		return UpdateStruct();
+	}
 	else if ( eMode == MODE_MAKE_BIN )
+	{
 		return MakeBin();
+	}
 	//
 	return 0;
 }

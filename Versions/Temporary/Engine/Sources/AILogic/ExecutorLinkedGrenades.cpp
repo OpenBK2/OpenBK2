@@ -21,9 +21,13 @@ void CExecutorLinkedGrenades::SwitchOnEnd()
 	CExecutorUnitBonus::SwitchOnEnd();
 	// Indicate to use multiple grenades
 	if ( const NDb::SUnitSpecialAblityDesc *pSA = GetAbilityDesc() )
+	{
 		GetAIUnit()->SetMultiShot( pSA->fParameter );
+	}
 	else
+	{
 		GetAIUnit()->SetMultiShot( 1 );
+	}
 }
 
 int CExecutorLinkedGrenades::operator&( IBinSaver &saver )

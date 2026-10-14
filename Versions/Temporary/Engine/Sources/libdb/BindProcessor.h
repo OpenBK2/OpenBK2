@@ -86,5 +86,4 @@ namespace NBind
 
 const NTypeDef::STypeStructBase::SField *
 FindField( const std::string &szFullFieldName, const int nCurrPos, const NTypeDef::STypeStructBase *pStruct );
-
 }

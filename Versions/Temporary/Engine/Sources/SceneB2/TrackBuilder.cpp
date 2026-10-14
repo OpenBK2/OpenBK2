@@ -123,7 +123,9 @@ void CTerraGen::AddTrack( const int nID,
 
 	if ( ( nTileX < 0 ) || ( nTileX >= ( terrainInfo.tiles.GetSizeX() - 1 ) ) || ( nTileY < 0 ) ||
 	     ( nTileY >= ( terrainInfo.tiles.GetSizeY() - 1 ) ) )
+	{
 		return;
+	}
 
 	const float fMidX = (float)( nTileX + 1 ) * DEF_TILE_SIZE;
 	const float fMidY = (float)( nTileY + 1 ) * DEF_TILE_SIZE;

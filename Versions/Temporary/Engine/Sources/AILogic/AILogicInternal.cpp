@@ -117,7 +117,9 @@ IAIScenarioTracker *GetScenarioTracker()
 	//CRAP{ FOR SAVES COMPATIBILITY
 	IAIScenarioTracker *p = dynamic_cast<CAILogic *>( Singleton<IAILogic>() )->GetScenarioTracker();
 	if ( p )
+	{
 		return p;
+	}
 	return Singleton<IAIScenarioTracker>();
 	//CRAP}
 }
@@ -138,8 +140,10 @@ void CAILogic::PickedObj( const int nObjID )
 			{
 				IStatsSystemWindow *pStatsSystemWindow = pDebug->GetStatsWindow();
 				if ( pStatsSystemWindow )
+				{
 					pStatsSystemWindow->UpdateEntry(
 							L"Pick", NStr::ToUnicode( std::to_string( pObj->GetUniqueId() ) ), 0xff00ff00 );
+				}
 			}
 		}
 	}
@@ -152,7 +156,9 @@ void CAILogic::PickEmpty()
 	{
 		IStatsSystemWindow *pStatsSystemWindow = pDebug->GetStatsWindow();
 		if ( pStatsSystemWindow )
+		{
 			pStatsSystemWindow->UpdateEntry( L"Pick", L"none", 0xff00ff00 );
+		}
 	}
 }
 
@@ -218,7 +224,9 @@ bool CAILogic::CheckForScenarioTruck( const SMapObjectInfo &object,
 				if ( pArtillery )
 				{
 					if ( !pArtillery->GetStats()->GetActions()->availExposures.GetData( ACTION_COMMAND_TAKE_ARTILLERY ) )
+					{
 						return false;
+					}
 
 					// артиллерия сценарийная, нужно заменить на подходяцщий грузовик
 					/*
@@ -243,7 +251,9 @@ bool CAILogic::CheckForScenarioTruck( const SMapObjectInfo &object,
 			}
 			// линкуется с несуществующим объектом
 			else
+			{
 				return false;
+			}
 		}
 	}
 
@@ -270,12 +280,16 @@ CObjectBase *CAILogic::AddObject( const int nUniqueID,
 
 	NI_ASSERT( object.pObject != 0, "Trying to add object with empty stats... ignoring" );
 	if ( object.pObject == 0 )
+	{
 		return 0;
+	}
 
 	NI_ASSERT( object.pObject->GetTypeID() != NDb::SInfantryRPGStats::typeID,
 	           "Trying to add bare infantry w/o squad - ignoring" );
 	if ( object.pObject->GetTypeID() == NDb::SInfantryRPGStats::typeID )
+	{
 		return 0;
+	}
 
 	{
 		const bool bGoodVisObj = object.pObject->pvisualObject != 0 ||
@@ -288,7 +302,9 @@ CObjectBase *CAILogic::AddObject( const int nUniqueID,
 		                        NDb::GetResName( object.pObject ),
 		                        typeid( *object.pObject.GetPtr() ).name() ) );
 		if ( !bGoodVisObj )
+		{
 			return 0;
+		}
 	}
 	bool bNotAllowedObject = !GetAIMap()->IsPointInside( CVec2( object.vPos.x, object.vPos.y ) ) &&
 	                         object.pObject->GetTypeID() != NDb::SMechUnitRPGStats::typeID &&
@@ -297,7 +313,9 @@ CObjectBase *CAILogic::AddObject( const int nUniqueID,
 	// check if object is inside map
 	NI_ASSERT( !bNotAllowedObject, "object is outside map, deleting. see next assert about object number in MapInfo" );
 	if ( bNotAllowedObject )
+	{
 		return 0;
+	}
 
 	const int nPlayer = object.nPlayer;
 
@@ -381,7 +399,9 @@ CObjectBase *CAILogic::AddObject( const int nUniqueID,
 
 						if ( !NGlobal::GetVar( "nogeneral", 0 ) && !theDipl.IsNetGame() && !bInitialization &&
 						     theSupremeBeing.IsMobileReinforcement( theDipl.GetNParty( nPlayer ), object.nScriptID ) )
+						{
 							theSupremeBeing.AddReinforcement( CAIUnit::GetUnitByUniqueID( id ) );
+						}
 					}
 				}
 			}
@@ -395,7 +415,9 @@ CObjectBase *CAILogic::AddObject( const int nUniqueID,
 			{
 				CDBPtr<SSquadRPGStats> pStats = checked_cast<const SSquadRPGStats *>( pPassedStats );
 				if ( pStats == 0 )
+				{
 					pStats = checked_cast<const SSquadRPGStats *>( object.pObject.GetPtr() );
+				}
 
 				const uint16_t wDir = object.nDir;
 				const int nFormation = object.nFrameIndex == -1 ? 0 : object.nFrameIndex;
@@ -428,7 +450,9 @@ CObjectBase *CAILogic::AddObject( const int nUniqueID,
 				}
 				// pResult can be null in the case of incorrect squad <= defensive programming
 				if ( pResult )
+				{
 					scripts.AddObjToScriptGroup( pResult, object.nScriptID );
+				}
 			}
 
 			break;
@@ -479,10 +503,14 @@ CObjectBase *CAILogic::AddObject( const int nUniqueID,
 				CDBPtr<SObjectBaseRPGStats> pObjDesc = checked_cast<const SObjectBaseRPGStats *>( object.pObject.GetPtr() );
 
 				if ( object.pObject->eVisType == SGVOT_MESH )
+				{
 					pResult =
 							theStatObjs.AddNewTerraMeshObj( pObjDesc, object.fHP, object.vPos, object.nDir, object.nFrameIndex );
+				}
 				else
+				{
 					pResult = theStatObjs.AddNewTerraObj( pObjDesc, object.fHP, object.vPos, object.nDir, object.nFrameIndex );
+				}
 
 				scripts.AddObjToScriptGroup( pResult, object.nScriptID );
 			}
@@ -494,7 +522,9 @@ CObjectBase *CAILogic::AddObject( const int nUniqueID,
 		{
 			CDBPtr<SBridgeRPGStats> pObjDesc = static_cast<const SBridgeRPGStats *>( pPassedStats );
 			if ( pObjDesc == 0 )
+			{
 				pObjDesc = checked_cast<const SBridgeRPGStats *>( object.pObject.GetPtr() );
+			}
 			pResult = theStatObjs.AddNewBridgeSpan( pObjDesc, object.fHP, object.vPos, object.nDir, object.nFrameIndex );
 			scripts.AddObjToScriptGroup( pResult, object.nScriptID );
 
@@ -507,7 +537,9 @@ CObjectBase *CAILogic::AddObject( const int nUniqueID,
 			{
 				CDBPtr<SFenceRPGStats> pObjDesc = static_cast<const SFenceRPGStats *>( pPassedStats );
 				if ( pObjDesc == 0 )
+				{
 					pObjDesc = checked_cast<const SFenceRPGStats *>( object.pObject.GetPtr() );
+				}
 				//				NI_ASSERT( object.nFrameIndex != -1, StrFmt("Can't add fence (linkID = %d) with frame index -1", object.link.nLinkID) );
 				if ( object.nFrameIndex != -1 )
 				{
@@ -543,7 +575,9 @@ CObjectBase *CAILogic::AddObject( const int nUniqueID,
 				NI_ASSERT( dynamic_cast_ptr<const SInfantryRPGStats *>( object.pObject ) == 0, "Soldier witout squad on map." );
 
 				if ( pPassedStats == 0 )
+				{
 					pPassedStats = object.pObject;
+				}
 				if ( pPassedStats != 0 && dynamic_cast<const SObjectBaseRPGStats *>( pPassedStats ) == 0 )
 				{
 					NI_ASSERT( dynamic_cast<const SObjectBaseRPGStats *>( pPassedStats ) != 0,
@@ -555,9 +589,13 @@ CObjectBase *CAILogic::AddObject( const int nUniqueID,
 
 				CDBPtr<SObjectBaseRPGStats> pObjDesc = checked_cast<const SObjectBaseRPGStats *>( pPassedStats );
 				if ( pObjDesc == 0 )
+				{
 					pObjDesc = checked_cast<const SObjectBaseRPGStats *>( object.pObject.GetPtr() );
+				}
 				if ( !pObjDesc )
+				{
 					return 0;
+				}
 				pResult = theStatObjs.AddNewStaticObject( pObjDesc, object.fHP, object.vPos, object.nDir, object.nFrameIndex );
 				scripts.AddObjToScriptGroup( pResult, object.nScriptID );
 			}
@@ -574,7 +612,9 @@ CObjectBase *CAILogic::AddObject( const int nUniqueID,
 		pLinkResult->SetLink( object.link.nLinkID );
 
 		if ( linksInfo != 0 && pLinkResult->GetUniqueId() != 0 )
+		{
 			( *linksInfo )[pLinkResult->GetUniqueId()] = object.link;
+		}
 	}
 
 	return pResult;
@@ -587,10 +627,14 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 	for ( int i = 0; i < pMapInfo->objects.size(); ++i )
 	{
 		if ( pProgress )
+		{
 			pProgress->Step();
+		}
 
 		if ( pMapInfo->objects[i].pObject == 0 || pMapInfo->objects[i].link.nLinkID == -1 )
+		{
 			continue;
+		}
 #ifndef _FINALRELEASE
 		if ( pMapInfo->objects[i].pObject->GetTypeID() == NDb::SMechUnitRPGStats::typeID )
 		{
@@ -602,9 +646,13 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 			                        NDb::GetResName( pMapInfo->objects[i].pObject ),
 			                        NDb::GetResName( pMapInfo ) ) );
 			if ( eUnitRPGType <= NDb::DB_RPG_TYPE_OFFICER )
+			{
 				continue;
+			}
 			if ( !theDipl.IsPlayerExist( pMapInfo->objects[i].nPlayer ) )
+			{
 				continue;
+			}
 		}
 		else if ( pMapInfo->objects[i].pObject->GetTypeID() == NDb::SInfantryRPGStats::typeID )
 		{
@@ -616,16 +664,22 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 			                        NDb::GetResName( pMapInfo->objects[i].pObject ),
 			                        NDb::GetResName( pMapInfo ) ) );
 			if ( eUnitRPGType > NDb::DB_RPG_TYPE_OFFICER )
+			{
 				continue;
+			}
 			if ( !theDipl.IsPlayerExist( pMapInfo->objects[i].nPlayer ) )
+			{
 				continue;
+			}
 		}
 #endif
 		// DebugTrace( "mapobj %d", i );
 		// в reinforcement
 		const int nGroup = pMapInfo->reinforcements.GetGroupById( pMapInfo->objects[i].nScriptID );
 		if ( nGroup != -1 )
+		{
 			scripts.AddUnitToReinforcGroup( pMapInfo->objects[i], nGroup, 0 /*, 0 */ );
+		}
 		else
 		{
 			const SUnitBaseRPGStats *pStats = dynamic_cast_ptr<const SUnitBaseRPGStats *>( pMapInfo->objects[i].pObject );
@@ -645,7 +699,9 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 				                        pMapInfo->objects[i].vPos.y ) );
 			}
 			else
+			{
 				transports.push_back( i );
+			}
 		}
 	}
 
@@ -685,7 +741,9 @@ void CAILogic::LinkArtilleryWithTransport( CArtillery *pArtillery, CAITransportU
 	pArtillery->SetCenter( CVec3( vHookPoint.x, vHookPoint.y, GetHeights()->GetZ( vHookPoint ) ), false );
 
 	if ( IsValid( pCrew ) )
+	{
 		pCrew->QuickLoadToMechUnit( pTransport );
+	}
 
 	pArtillery->InstallAction( ACTION_NOTIFY_UNINSTALL_TRANSPORT, true );
 	updater.AddUpdate( 0, ACTION_NOTIFY_FINISH_UNINSTALL_TRANSPORT, pArtillery, 0 );
@@ -742,12 +800,16 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 								pTrainCar->LinkToCar( pMilitaryCar );
 							}
 							else
+							{
 								NI_ASSERT( false, "Wrong link" );
+							}
 						}
 						else
+						{
 							NI_ASSERT( false,
 							           fmt::format( "Wrong link, linked object does not exist for unit: {}",
 							                        pTrainUnit->GetStats() ? pTrainUnit->GetStats()->GetDBID().ToString() : "???" ) );
+						}
 					}
 				}
 			}
@@ -766,9 +828,13 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 				CBuildingSimple *pBld1 = dynamic_cast<CBuildingSimple *>( pObj1 );
 				CBuildingSimple *pBld2 = dynamic_cast<CBuildingSimple *>( pObj2 );
 				if ( pBld1 )
+				{
 					pBld1->SetPartyFlag( pObj2 );
+				}
 				else if ( pBld2 )
+				{
 					pBld2->SetPartyFlag( pObj1 );
+				}
 			}
 
 			if ( CCommonUnit *pUnit = dynamic_cast<CCommonUnit *>( CLinkObject::GetObjectByUniqueId( iter->first ) ) )
@@ -784,7 +850,9 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 						if ( CAITransportUnit *pTransport = dynamic_cast<CAITransportUnit *>( pObj ) )
 						{
 							if ( CArtillery *pArtillery = dynamic_cast<CArtillery *>( pUnit ) )
+							{
 								LinkArtilleryWithTransport( pArtillery, pTransport );
+							}
 							// линкуются солдатики
 							else if ( pUnit->IsFormation() )
 							{
@@ -824,7 +892,9 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 						else if ( CArtillery *pArtillery = dynamic_cast<CArtillery *>( pObj ) )
 						{
 							if ( CAITransportUnit *pTransport = dynamic_cast<CAITransportUnit *>( pUnit ) )
+							{
 								LinkArtilleryWithTransport( pArtillery, pTransport );
+							}
 						}
 						// линковка с юнитом
 						else if ( CCommonUnit *pWithUnit = dynamic_cast<CCommonUnit *>( pObj ) )
@@ -833,8 +903,10 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 							if ( pUnit->IsFormation() )
 							{
 								if ( link.bIntention )
+								{
 									theGroupLogic.UnitCommand(
 											SAIUnitCmd( ACTION_COMMAND_LOAD, pWithUnit->GetUniqueId() ), pUnit, false );
+								}
 								else
 								{
 									theGroupLogic.UnitCommand(
@@ -860,8 +932,10 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 							if ( pStaticObj->GetObjectType() == ESOT_BUILDING )
 							{
 								if ( link.bIntention )
+								{
 									theGroupLogic.UnitCommand(
 											SAIUnitCmd( ACTION_COMMAND_ENTER, pStaticObj->GetUniqueId(), float( 0 ) ), pUnit, false );
+								}
 								else
 								{
 									CCommonUnit *pLoadingUnit =
@@ -874,8 +948,10 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 							else if ( pStaticObj->GetObjectType() == ESOT_ENTR_PART )
 							{
 								if ( link.bIntention )
+								{
 									theGroupLogic.UnitCommand(
 											SAIUnitCmd( ACTION_COMMAND_ENTER, pStaticObj->GetUniqueId(), float( 2 ) ), pUnit, false );
+								}
 								else
 								{
 									CCommonUnit *pLoadingUnit =
@@ -888,10 +964,14 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 							}
 						}
 						else
+						{
 							NI_ASSERT( false, "Wrong link" );
+						}
 					}
 					else
+					{
 						NI_ASSERT( false, "Wrong link" );
+					}
 				}
 			}
 		}
@@ -914,11 +994,15 @@ void CAILogic::LoadEntrenchments( const std::vector<SEntrenchmentInfo> &entrench
 				CLinkObject *pObj = CLinkObject::GetObjectByLink( nLink );
 				NI_ASSERT( pObj != 0, fmt::format( "Section of entrenchment (link = {}) doesn't exist", nLink ) );
 				if ( pObj )
+				{
 					segments.push_back( pObj );
+				}
 			}
 
 			if ( segments.empty() )
+			{
 				continue;
+			}
 			theStatObjs.AddNewEntrencment( &( segments[0] ), segments.size(), pFullEntrenchment );
 		}
 	}
@@ -958,7 +1042,9 @@ void CAILogic::LaunchStartCommand( const SAIStartCommand &startCommand, CObjectB
 	cmd.fNumber = startCommand.fNumber;
 	cmd.bFromExplosion = startCommand.bFromExplosion;
 	if ( CLinkObject *pObj = CLinkObject::GetObjectByLink( startCommand.nLinkID ) )
+	{
 		cmd.nObjectID = pObj->GetUniqueId();
+	}
 	cmd.vPos = startCommand.vPos;
 
 	const uint16_t wGroup = theGroupLogic.GenerateGroupNumber();
@@ -976,7 +1062,9 @@ void CAILogic::InitStartCommands()
 			const int nSize = iter->unitLinkIDs.size();
 			std::vector<CObjectBase *> unitsBuffer( nSize );
 			for ( int i = 0; i < nSize; ++i )
+			{
 				unitsBuffer[i] = CLinkObject::GetObjectByLink( iter->unitLinkIDs[i] );
+			}
 
 			LaunchStartCommand( *iter, &( unitsBuffer[0] ), nSize );
 		}
@@ -999,12 +1087,16 @@ void CAILogic::InitStartCommands( const LinkInfo &linksInfo, det_map<int, int> &
 				{
 					CLinkObject *pUnit = CLinkObject::GetObjectByLink( old2NewLinks[nLink] );
 					if ( pUnit != 0 && linksInfo.find( pUnit->GetUniqueId() ) != linksInfo.end() )
+					{
 						unitsBuffer[nActuallyUnits++] = pUnit;
+					}
 				}
 			}
 
 			if ( nActuallyUnits != 0 )
+			{
 				LaunchStartCommand( *iter, &( unitsBuffer[0] ), nSize );
+			}
 		}
 	}
 }
@@ -1151,7 +1243,9 @@ void CAILogic::UpdateUnitsOnBridges()
 	{
 		CAIUnit *pUnit = *it;
 		if ( GetTerrain()->IsBridge( pUnit->GetCenterTile() ) )
+		{
 			pUnit->SetCenter( CVec3( pUnit->GetCenterPlain(), GetHeights()->GetZ( pUnit->GetCenterPlain() ) ), true );
+		}
 	}
 }
 
@@ -1171,7 +1265,9 @@ void CAILogic::InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo )
 	GetTerrain()->StartInitMode();
 	pCollisionsCollector = CreateCollisionsCollector();
 	if ( pProgress )
+	{
 		pProgress->SetNumSteps( pMapInfo->objects.size() );
+	}
 
 	theStatObjs.Init( GetAIMap()->GetSizeX(), GetAIMap()->GetSizeY() );
 	updater.Init( GetAIMap()->GetSizeX(), GetAIMap()->GetSizeY() );
@@ -1182,7 +1278,9 @@ void CAILogic::InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo )
 
 	scripts.Init( pMapInfo );
 	if ( pMapInfo->scriptAreas.size() > 0 )
+	{
 		scripts.InitAreas( &( pMapInfo->scriptAreas[0] ), pMapInfo->scriptAreas.size() );
+	}
 
 	LinkInfo linksInfo;
 
@@ -1192,7 +1290,9 @@ void CAILogic::InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo )
 	// перед загрузкой юнитов запомнить, кто является мобильным резервом
 	// -- порядок не менять
 	if ( !NGlobal::GetVar( "balance_test", 0 ) )
+	{
 		LoadUnits( pMapInfo, &linksInfo );
+	}
 	theBonusSystem.SendUpdates();
 
 	LoadEntrenchments( pMapInfo->entrenchments );
@@ -1212,7 +1312,9 @@ void CAILogic::InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo )
 	{
 		std::list<CCommonUnit *> pUnits;
 		for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )
+		{
 			pUnits.push_back( *iter );
+		}
 
 		theSupremeBeing.Init( pMapInfo );
 		theSupremeBeing.GiveNewUnitsToGenerals( pUnits );
@@ -1266,7 +1368,9 @@ bool CAILogic::NeedVerifyCheckSum() const
 void CAILogic::UpdateCheckSum( bool bSend )
 {
 	if ( !IsValid( pCheckSumLog ) && curTime < NGlobal::GetVar( "start_replay_time", 0 ) * 1000 )
+	{
 		return;
+	}
 
 	//if ( theCheats.IsHistoryPlaying() )
 	//	return;
@@ -1321,7 +1425,9 @@ void CAILogic::WriteDetailedChecksumInfo( const char *szFileName )
 	FILE *f = fopen( szFileName, "w" );
 
 	if ( !f )
+	{
 		return;
+	}
 
 	uLong baseChecksum = 11123;
 	NRandom::SDebugState randomDebugState;
@@ -1359,7 +1465,9 @@ void CAILogic::WriteDetailedChecksumInfo( const char *szFileName )
 		std::string unitName = "<NO_NAME>";
 		auto stats = pUnit->GetStats();
 		if ( stats )
+		{
 			unitName = WideToUTF8( NText::GetText( stats->szLocalizedNameFileRef ) );
+		}
 
 		int isA = pUnit->IsAviation();
 		int isF = pUnit->IsFormation();
@@ -1425,7 +1533,9 @@ void CAILogic::Segment()
 		theExecutorContainer.Segment();
 
 		if ( theCheats.GetWarFog() )
+		{
 			theWarFog.Segment();
+		}
 
 		theGraveyard.Segment();
 		theWeather.Segment();
@@ -1457,7 +1567,9 @@ void CAILogic::Segment()
 				// sample every segment for the rest of the game rather than
 				// once per period. Chunks 14 and 15 carry both values.
 				if ( periodToCheckSum <= 0 )
+				{
 					periodToCheckSum = NGlobal::GetVar( "checksumperiod", 1000 );
+				}
 				nextCheckSumTime = curTime + periodToCheckSum;
 			}
 		}
@@ -1480,7 +1592,9 @@ void CAILogic::Segment()
 		bSegment = false;
 
 		if ( curTime == SConsts::SHOW_ALL_TIME_COEFF * SConsts::AI_SEGMENT_DURATION )
+		{
 			updater.AddUpdate( EFB_ASK_FOR_WARFOG );
+		}
 
 		theBalanceTest.SegmentBalanceTest();
 
@@ -1497,7 +1611,9 @@ void CAILogic::Segment()
 				}
 			}
 			if ( bPresent != bLocalPlayerUnitsPresent )
+			{
 				updater.AddUpdate( EFB_LOCAL_PLAYER_UNITS_PRESENT, bPresent, 0 );
+			}
 			bLocalPlayerUnitsPresent = bPresent;
 			timeLocalPlayerUnitCheck = curTime + 500 + NRandom::Random( 1000 );
 			RecordRandomCall();
@@ -1604,9 +1720,13 @@ const bool CAILogic::GetMiniMapUnitsInfo( std::vector<SMiniMapUnitInfo> &vUnits 
 bool CAILogic::GetMiniMapWarForInfo( CArray2D<uint8_t> **pWarFogInfo, bool bFirstTime )
 {
 	if ( CanShowVisibilities() && ( !theDipl.IsNetGame() || bNetGameStarted ) )
+	{
 		return theWarFog.GetWarForInfo( pWarFogInfo, theCheats.GetNPartyForWarFog(), bFirstTime );
+	}
 	else
+	{
 		return false;
+	}
 }
 
 int CAILogic::GetMiniMapWarFogSizeX() const
@@ -1630,7 +1750,9 @@ void CAILogic::ShowAreas( const std::vector<int> &units, EActionNotify &eType, b
 		theGroupLogic.UpdateAllAreas( units, eType );
 	}
 	else
+	{
 		updater.UpdateAreasGroup( false, ACTION_NOTIFY_NONE );
+	}
 }
 
 void CAILogic::GetShootAreas( int nUnitID, SShootAreas *pAreas )
@@ -1639,26 +1761,34 @@ void CAILogic::GetShootAreas( int nUnitID, SShootAreas *pAreas )
 	int nAreas;
 	CLinkObject *pLinkObj = CLinkObject::GetObjectByUniqueId( nUnitID );
 	if ( !pLinkObj )
+	{
 		return;
+	}
 
 	CAIUnit *pAIUnit = dynamic_cast<CAIUnit *>( pLinkObj );
 	if ( pAIUnit )
 	{
 		pAIUnit->GetShootAreas( &unitAreas, &nAreas );
 		for ( std::list<SShootArea>::iterator it = unitAreas.areas.begin(); it != unitAreas.areas.end(); ++it )
+		{
 			pAreas->areas.push_back( *it );
+		}
 	}
 	else
 	{
 		CFormation *pFormation = dynamic_cast<CFormation *>( pLinkObj );
 		if ( !pFormation )
+		{
 			return;
+		}
 
 		for ( int i = 0; i < pFormation->Size(); ++i )
 		{
 			( *pFormation )[i]->GetShootAreas( &unitAreas, &nAreas );
 			for ( std::list<SShootArea>::iterator it = unitAreas.areas.begin(); it != unitAreas.areas.end(); ++it )
+			{
 				pAreas->areas.push_back( *it );
+			}
 		}
 	}
 }
@@ -1700,11 +1830,15 @@ void CAILogic::SetMyDiplomacyInfo( const int nParty, const int nNumber )
 	{
 		theDipl.SetMyNumber( nNumber );
 		if ( nParty != -1 )
+		{
 			theDipl.SetParty( theDipl.GetMyNumber(), nParty );
+		}
 	}
 
 	if ( nParty != -1 )
+	{
 		theCheats.SetNPartyForWarFog( nParty, true );
+	}
 }
 
 void CAILogic::SetNPlayers( const int nPlayers )
@@ -1751,13 +1885,17 @@ bool CAILogic::ToggleShow( const int nShowType )
 void CAILogic::SetDifficultyLevel( const int nLevel )
 {
 	if ( !theDipl.IsNetGame() )
+	{
 		theDifficultyLevel.SetLevel( nLevel );
+	}
 }
 
 void CAILogic::SetCheatDifficultyLevel( const int nCheatLevel )
 {
 	if ( !theDipl.IsNetGame() )
+	{
 		theDifficultyLevel.SetCheatLevel( nCheatLevel );
+	}
 }
 
 void CAILogic::NetGameStarted()
@@ -1799,7 +1937,9 @@ void CAILogic::NeutralizePlayer( const int nPlayer )
 		{
 			CCommonUnit *pUnit = *iter;
 			if ( pUnit->GetPlayer() == nPlayer )
+			{
 				playerUnits.push_back( pUnit );
+			}
 		}
 
 		for ( std::list<CCommonUnit *>::iterator iter = playerUnits.begin(); iter != playerUnits.end(); ++iter )
@@ -1813,32 +1953,46 @@ void CAILogic::NeutralizePlayer( const int nPlayer )
 		theDipl.SetPlayerNotExist( nPlayer );
 
 		if ( nBestPlayer != theDipl.GetNeutralPlayer() )
+		{
 			updater.AddUpdate( EFB_TROOPS_PASSED, MAKELONG( nPlayer, nBestPlayer ) );
+		}
 	}
 }
 
 CObjectBase *CAILogic::GetUnitState( CObjectBase *pObj )
 {
 	if ( CQueueUnit *pUnit = dynamic_cast<CQueueUnit *>( pObj ) )
+	{
 		return pUnit->GetState();
+	}
 	else
+	{
 		return 0;
+	}
 }
 
 bool CAILogic::IsFrozen( CObjectBase *pObj ) const
 {
 	if ( CCommonUnit *pUnit = dynamic_cast<CCommonUnit *>( pObj ) )
+	{
 		return pUnit->CanBeFrozen();
+	}
 	else
+	{
 		return false;
+	}
 }
 
 bool CAILogic::IsFrozenByState( CObjectBase *pObj ) const
 {
 	if ( CCommonUnit *pUnit = dynamic_cast<CCommonUnit *>( pObj ) )
+	{
 		return pUnit->IsFrozenByState();
+	}
 	else
+	{
 		return false;
+	}
 }
 
 void CAILogic::GetGridUnitsCoordinates( const int nGroup, const CVec2 &vGridCenter, CVec2 **pCoord, int *pnLen )
@@ -1848,7 +2002,9 @@ void CAILogic::GetGridUnitsCoordinates( const int nGroup, const CVec2 &vGridCent
 	*pnLen = grid.GetNUnitsInGrid();
 	*pCoord = GetLocalTempBuffer<CVec2>( *pnLen );
 	for ( int i = 0; i < *pnLen; ++i )
+	{
 		( *pCoord )[i] = grid.GetUnitCenter( i ) - vGridCenter;
+	}
 }
 
 void CAILogic::Suspend()
@@ -1892,9 +2048,13 @@ const int CAILogic::VIS_POWER() const
 int CAILogic::GetUniqueID( CObjectBase *pObj )
 {
 	if ( CLinkObject *pLinkObj = dynamic_cast<CLinkObject *>( pObj ) )
+	{
 		return pLinkObj->GetUniqueId();
+	}
 	else
+	{
 		return 0;
+	}
 }
 
 CStaticMapHeights *CAILogic::GetHeights() const
@@ -1928,7 +2088,9 @@ const bool CAILogic::HasPlayerNoUnits( const int nPlayer ) const
 	           return false ); // CRAP - dont't use AILogic directly at Client
 
 	if ( theReinfArray[nPlayer].CanCallNow() )
+	{
 		return false;
+	}
 
 	for ( CGlobalIter iter( GetPlayerDiplomacy( nPlayer ), EDI_FRIEND ); !iter.IsFinished(); iter.Iterate() )
 	{
@@ -2018,15 +2180,23 @@ static void CommandCheckPath( const std::string &szID, const std::vector<std::ws
 
 	SVector vStartTile( 0, 0 );
 	if ( !ConverWStingToInt( &( vStartTile.x ), paramsSet[1], 0, GetAIMap()->GetSizeX() ) )
+	{
 		return;
+	}
 	if ( !ConverWStingToInt( &( vStartTile.y ), paramsSet[2], 0, GetAIMap()->GetSizeY() ) )
+	{
 		return;
+	}
 
 	SVector vFinishTile( 0, 0 );
 	if ( !ConverWStingToInt( &( vFinishTile.x ), paramsSet[3], 0, GetAIMap()->GetSizeX() ) )
+	{
 		return;
+	}
 	if ( !ConverWStingToInt( &( vFinishTile.y ), paramsSet[4], 0, GetAIMap()->GetSizeY() ) )
+	{
 		return;
+	}
 
 	std::string szParam;
 
@@ -2034,25 +2204,43 @@ static void CommandCheckPath( const std::string &szID, const std::vector<std::ws
 	NStr::ToLowerASCII( &szParam );
 	EAIClasses aiClass = EAC_NONE;
 	if ( szParam == "human" )
+	{
 		aiClass = EAC_HUMAN;
+	}
 	else if ( szParam == "wheel" )
+	{
 		aiClass = EAC_WHELL;
+	}
 	else if ( szParam == "track" )
+	{
 		aiClass = EAC_TRACK;
+	}
 	else if ( szParam == "river" )
+	{
 		aiClass = EAC_RIVER;
+	}
 	else if ( szParam == "sea" )
+	{
 		aiClass = EAC_SEA;
+	}
 	else if ( szParam == "terrain" )
+	{
 		aiClass = EAC_TERRAIN;
+	}
 	else if ( szParam == "water" )
+	{
 		aiClass = EAC_WATER;
+	}
 	else if ( szParam == "any" )
+	{
 		aiClass = EAC_ANY;
+	}
 
 	int nBoundTileRadius = 0;
 	if ( !ConverWStingToInt( &nBoundTileRadius, paramsSet[6], 0, GetAIMap()->GetMaxUnitTileRadius() ) )
+	{
 		return;
+	}
 
 	STerrainModeSetter modeSetter( ELM_STATIC, GetAIMap()->GetTerrain() );
 	CCommonPathFinder *pPathFinder = Singleton<CCommonPathFinder>();
@@ -2076,7 +2264,9 @@ static void CommandCheckPath( const std::string &szID, const std::vector<std::ws
 	else
 	{
 		for ( int i = 0; i < pPath->GetLength(); ++i )
+		{
 			smoothPath.push_back( pPath->GetTile( i ) );
+		}
 	}
 
 	pPathFinder->SetPathParameters( nBoundTileRadius,
@@ -2093,7 +2283,9 @@ static void CommandCheckPath( const std::string &szID, const std::vector<std::ws
 		for ( int i = 1; i < pPathFinder->GetPathLength(); ++i )
 		{
 			if ( !GetAIMap()->IsTileInside( realPath[i] ) )
+			{
 				realPath[i] = realPath[i - 1];
+			}
 		}
 	}
 
@@ -2118,15 +2310,23 @@ static void DumpWarFogHeights( const std::string &szID, const std::vector<std::w
 
 	SVector vStartTile( 0, 0 );
 	if ( !ConverWStingToInt( &( vStartTile.x ), paramsSet[1], 0, GetAIMap()->GetSizeX() * GetAIMap()->GetTileSize() ) )
+	{
 		return;
+	}
 	if ( !ConverWStingToInt( &( vStartTile.y ), paramsSet[2], 0, GetAIMap()->GetSizeY() * GetAIMap()->GetTileSize() ) )
+	{
 		return;
+	}
 
 	SVector vFinishTile( 0, 0 );
 	if ( !ConverWStingToInt( &( vFinishTile.x ), paramsSet[3], 0, GetAIMap()->GetSizeX() * GetAIMap()->GetTileSize() ) )
+	{
 		return;
+	}
 	if ( !ConverWStingToInt( &( vFinishTile.y ), paramsSet[4], 0, GetAIMap()->GetSizeY() * GetAIMap()->GetTileSize() ) )
+	{
 		return;
+	}
 
 	const CVec2 vStartPoint( vStartTile.x, vStartTile.y );
 	const CVec2 vFinishPoint( vFinishTile.x, vFinishTile.y );

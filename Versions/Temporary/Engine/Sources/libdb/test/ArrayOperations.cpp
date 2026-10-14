@@ -59,10 +59,14 @@ TEST( ArrayOperations, MiddleEraseDestroysOnlyRemovedRecords )
 	EXPECT_FALSE( references[0].expired() );
 	EXPECT_FALSE( references[4].expired() );
 	for ( int i = 1; i < 4; ++i )
+	{
 		EXPECT_TRUE( references[i].expired() );
+	}
 	ops->remove( &areas, 0, 2 );
 	for ( const auto &reference : references )
+	{
 		EXPECT_TRUE( reference.expired() );
+	}
 }
 
 TEST( ArrayOperations, SimpleStringArraysUseTheirActualElementType )

@@ -32,7 +32,9 @@ public:
 	bool IsBeamIntersectSegm( const SVector &ptStart, const SVector &ptSecond ) const
 	{
 		if ( !IsBeamIntersectLine( ptStart, ptSecond ) )
+		{
 			return false;
+		}
 		const CLine line( ptStart, ptSecond );
 		return line.IsSegmIntersectLine( p1, p2 );
 	}

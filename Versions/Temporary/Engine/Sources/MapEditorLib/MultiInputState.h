@@ -123,16 +123,24 @@ public:
 	IInputState *GetActiveInputState()
 	{
 		if ( ( nActiveInputState >= 0 ) && ( nActiveInputState < inputStateList.size() ) )
+		{
 			return inputStateList[nActiveInputState];
+		}
 		else
+		{
 			return 0;
+		}
 	}
 	//
 	IInputState *GetInputState( int nInputStateIndex )
 	{
 		if ( ( nInputStateIndex >= 0 ) && ( nInputStateIndex < inputStateList.size() ) )
+		{
 			return inputStateList[nInputStateIndex];
+		}
 		else
+		{
 			return 0;
+		}
 	}
 };

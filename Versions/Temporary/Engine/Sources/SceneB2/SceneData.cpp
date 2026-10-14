@@ -27,8 +27,12 @@ void TakeScreenShotMsg( const SGameMessage &msg )
 	CArray2D<NGfx::SPixel8888> data;
 	NGfx::MakeScreenShot( &data, false );
 	for ( int x = 0; x < data.GetSizeX(); ++x )
+	{
 		for ( int y = 0; y < data.GetSizeY(); ++y )
+		{
 			data[y][x].a = 0xFF;
+		}
+	}
 
 	std::tm systime = {};
 	GetLocalTime( &systime, std::time( 0 ) );
@@ -55,7 +59,9 @@ SSceneData::SScreenData::SScreenData( IWindow *_pScreen ) : pScreen( _pScreen )
 void SSceneData::SScreenData::SetSceneConsts( const NDb::SSceneConsts *pSceneConsts )
 {
 	if ( p3DView && pSceneConsts->pInterfaceLight )
+	{
 		p3DView->SetAmbient( pSceneConsts->pInterfaceLight );
+	}
 }
 
 // SSceneData

@@ -12,14 +12,18 @@ struct SBasicChunkInit
 	~SBasicChunkInit()
 	{
 		if ( pSSClasses )
+		{
 			delete pSSClasses;
+		}
 	}
 } init;
 
 void StartRegister()
 {
 	if ( !pSSClasses )
+	{
 		pSSClasses = new CClassFactory<CObjectBase>;
+	}
 }
 
 // создать объект по его typeID
@@ -37,7 +41,9 @@ void RegisterType( int nObjectTypeID, ObjectFactoryNewFunc pfnNewFunc, const std
 void UnRegisterType( int nObjectTypeID, const std::type_info *pObjectTypeInfo )
 {
 	if ( pSSClasses )
+	{
 		pSSClasses->UnregisterTypeBase( nObjectTypeID, pObjectTypeInfo );
+	}
 }
 
 int GetObjectTypeID( CObjectBase *pObj )

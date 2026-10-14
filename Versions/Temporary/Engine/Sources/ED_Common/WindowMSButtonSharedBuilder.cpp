@@ -26,7 +26,9 @@ bool CWindowMSButtonSharedBuilder::IsValidBuildData( IManipulator *pBuildDataMan
 	CVariant value;
 	pBuildDataManipulator->GetValue( "UseDefBuilder", &value );
 	if ( (bool)value )
+	{
 		return true;
+	}
 
 	pBuildDataManipulator->GetValue( "VisualStates", &value );
 	const int nVisualStates = value;
@@ -120,7 +122,9 @@ bool CWindowMSButtonSharedBuilder::InternalInsertObject( std::string *pszObjectT
 
 	// create WindowMSButtonShared object
 	if ( !pFolderCallback->InsertObject( *pszObjectTypeName, *pszUniqueObjectName ) )
+	{
 		return false;
+	}
 
 	CPtr<IManipulator> pMSBManipulator =
 			pResourceManager->CreateObjectManipulator( *pszObjectTypeName, *pszUniqueObjectName );
@@ -156,14 +160,22 @@ bool CWindowMSButtonSharedBuilder::CreateVisualState( const std::string &rszUniq
                                                       int index )
 {
 	if ( !pMSBManipulator->InsertNode( "VisualStates" ) )
+	{
 		return false;
+	}
 
 	if ( !CreateButtonState( rszUniqueObjectName, pBuildDataManipulator, pMSBManipulator, index, "Normal", true ) )
+	{
 		return false;
+	}
 	if ( !CreateButtonState( rszUniqueObjectName, pBuildDataManipulator, pMSBManipulator, index, "Pushed", false ) )
+	{
 		return false;
+	}
 	if ( !CreateButtonState( rszUniqueObjectName, pBuildDataManipulator, pMSBManipulator, index, "Disabled", false ) )
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -192,9 +204,13 @@ bool CWindowMSButtonSharedBuilder::CreateButtonState( const std::string &rszUniq
 	std::string szShortName;
 	const size_t nSlashPos = rszUniqueObjectName.rfind( PATH_SEPARATOR_CHAR );
 	if ( nSlashPos == std::string::npos )
+	{
 		szShortName = rszUniqueObjectName;
+	}
 	else
+	{
 		szShortName = rszUniqueObjectName.substr( nSlashPos + 1 );
+	}
 
 	const std::string szBuilderGenPrefix =
 			rszUniqueObjectName + PATH_SEPARATOR_CHAR + fmt::format( "{}_{}", szShortName.c_str(), index );
@@ -205,7 +221,9 @@ bool CWindowMSButtonSharedBuilder::CreateButtonState( const std::string &rszUniq
 	{
 		// create Texture object
 		if ( !pFolderCallback->InsertObject( TEXTURE_TYPE_NAME, szTexObjectName ) )
+		{
 			return false;
+		}
 
 		CPtr<IManipulator> pTexManipulator =
 				pResourceManager->CreateObjectManipulator( TEXTURE_TYPE_NAME, szTexObjectName );
@@ -222,7 +240,9 @@ bool CWindowMSButtonSharedBuilder::CreateButtonState( const std::string &rszUniq
 
 	// create BackgroundSimpleTexture object
 	if ( !pFolderCallback->InsertObject( BACKGROUND_SIMPLE_TEXTURE_TYPE_NAME, szBSTObjectName ) )
+	{
 		return false;
+	}
 
 	CPtr<IManipulator> pBSTManipulator =
 			pResourceManager->CreateObjectManipulator( BACKGROUND_SIMPLE_TEXTURE_TYPE_NAME, szBSTObjectName );

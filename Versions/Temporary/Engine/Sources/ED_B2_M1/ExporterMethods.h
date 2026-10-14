@@ -174,7 +174,9 @@ bool GetSeasonedValue( TValue *pData,
 				bResult = bResult && CManipulatorManager::GetValue(
 																 &szSeasonName, pManipulator, szDataPrefix + LEVEL_SEPARATOR_CHAR + "Season" );
 				if ( !bResult )
+				{
 					break;
+				}
 				if ( eSeason == typeSeasonMnemonics.GetValue( szSeasonName ) )
 				{
 					bSeasonMissed = false;
@@ -183,18 +185,26 @@ bool GetSeasonedValue( TValue *pData,
 			}
 			//
 			if ( !bResult )
+			{
 				break;
+			}
 			//
 			if ( bSeasonMissed )
+			{
 				eSeason = NDB_DEFAULT_SEASON;
+			}
 			else
+			{
 				break;
+			}
 		} while ( eSeason != NDB_DEFAULT_SEASON );
 		bResult = bResult && ( !bSeasonMissed );
 		bResult =
 				bResult && CManipulatorManager::GetValue( pData, pManipulator, szDataPrefix + LEVEL_SEPARATOR_CHAR + rszName );
 		if ( bResult && ( pszDataPrefix != 0 ) )
+		{
 			( *pszDataPrefix ) = szDataPrefix;
+		}
 	}
 	return bResult;
 }

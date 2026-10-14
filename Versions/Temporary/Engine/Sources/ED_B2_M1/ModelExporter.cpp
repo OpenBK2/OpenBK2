@@ -22,9 +22,13 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator *pManipulator,
                                             EXPORT_TYPE exportType )
 {
 	if ( exportType != ET_AFTER_REF && !NEditorGltf::ValidateForExport( pManipulator, rszObjectTypeName ) )
+	{
 		return ER_BREAK;
+	}
 	if ( exportType == ET_BEFORE_REF )
+	{
 		return ER_SUCCESS;
+	}
 	//
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	try
@@ -41,7 +45,9 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator *pManipulator,
 		}
 		if ( NEditorGltf::IsGltf( pGeomMan ) && exportType == ET_NO_REF &&
 		     !NEditorGltf::Export( pGeomMan, "Geometry", true ) )
+		{
 			return ER_BREAK;
+		}
 		int nNumGeometryMeshes = 0;
 		CManipulatorManager::GetValue( &nNumGeometryMeshes, pGeomMan, "NumMeshes" );
 		if ( nNumGeometryMeshes == 0 )
@@ -65,7 +71,9 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator *pManipulator,
 		// GLTF rendering uses the authored XDB material list in mesh-node order.
 		// Never try to regenerate that list by reading a nonexistent Granny binary.
 		if ( NEditorGltf::IsGltf( pGeomMan ) )
+		{
 			return NEditorGltf::Export( pGeomMan, "Geometry", false ) ? ER_SUCCESS : ER_BREAK;
+		}
 		// load geometry
 		CDBPtr<NDb::SGeometry> pGeometry = NDb::Get<NDb::SGeometry>( CDBID( szGeometryName ) );
 		CGrannyFileInfoGuard pInfo( NBinResources::GetExistentBinaryFileName(
@@ -80,7 +88,9 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator *pManipulator,
 		}
 		//
 		if ( nNumGeomMaterials > 0 )
+		{
 			MakeMaterialsList( pManipulator, pGeomMan, pInfo );
+		}
 	}
 	catch ( ... )
 	{
@@ -124,7 +134,9 @@ bool CModelExporter::MakeMaterialsList( IManipulator *pModelMan, IManipulator *p
 	}
 	// check, do we need transparent material and leave if needn't
 	if ( !bHasTransparency )
+	{
 		return true;
+	}
 	// collect all materials from model
 	std::string szTransparentMaterialName, szOpaqueMaterialName;
 	int nNumModelMaterials = 0;
@@ -147,9 +159,13 @@ bool CModelExporter::MakeMaterialsList( IManipulator *pModelMan, IManipulator *p
 		CManipulatorManager::GetValue( &szMaterialType, pMaterialMan, "AlphaMode" );
 		//
 		if ( szMaterialType == "AM_TRANSPARENT" )
+		{
 			szTransparentMaterialName = szMaterialName;
+		}
 		else
+		{
 			szOpaqueMaterialName = szMaterialName;
+		}
 		materials.push_back( SMaterialInfo( szMaterialName, szMaterialType ) );
 	}
 	// make transparent material and change texture params
@@ -172,7 +188,9 @@ bool CModelExporter::MakeMaterialsList( IManipulator *pModelMan, IManipulator *p
 		}
 		//
 		if ( pTranspMaterialMan != 0 )
+		{
 			CManipulatorManager::SetValue( std::string( "AM_TRANSPARENT" ), pTranspMaterialMan, "AlphaMode" );
+		}
 		// change texture export params to achive transparency
 		CPtr<IManipulator> pMaterialMan =
 				CManipulatorManager::CreateManipulatorFromReference( "Materials.[0]", pModelMan, 0, 0, 0 );
@@ -226,21 +244,31 @@ bool CModelExporter::MakeMaterialsList( IManipulator *pModelMan, IManipulator *p
 			}
 		}
 		else
+		{
 			CManipulatorManager::GetValue( &szMaterialName, pModelMan, szMaterialRefName );
+		}
 		//
 		if ( szMaterialName.empty() || szMaterialName == " " )
 		{
 			if ( bTransparent )
+			{
 				CManipulatorManager::SetValue( szTransparentMaterialName, pModelMan, szMaterialRefName, true );
+			}
 			else
+			{
 				CManipulatorManager::SetValue( szOpaqueMaterialName, pModelMan, szMaterialRefName, true );
+			}
 		}
 		else
 		{
 			if ( bTransparent && szMaterialName != szTransparentMaterialName )
+			{
 				CManipulatorManager::SetValue( szTransparentMaterialName, pModelMan, szMaterialRefName, true );
+			}
 			else if ( !bTransparent && szMaterialName == szTransparentMaterialName )
+			{
 				CManipulatorManager::SetValue( szOpaqueMaterialName, pModelMan, szMaterialRefName, true );
+			}
 		}
 	}
 

@@ -67,6 +67,14 @@ PointerAlignment: Right
 ReferenceAlignment: Right
 DerivePointerAlignment: false
 
+# Every control statement gets braces, inserted if they are missing. This is
+# the one setting here that changes code rather than layout, and it is the
+# point: a braceless body is how Apple shipped "goto fail", and a statement
+# added later that silently falls outside the condition is the easiest mistake
+# to make in this language. The house rule already required braces on anything
+# new; this applies it to everything and keeps it applied.
+InsertBraces: true
+
 # One statement per line. A body on the same line as its condition hides the
 # second statement somebody adds later, and hides which branch a line belongs
 # to when reading quickly.

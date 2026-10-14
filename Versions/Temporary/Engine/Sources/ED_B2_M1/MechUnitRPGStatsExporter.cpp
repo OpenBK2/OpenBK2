@@ -181,7 +181,9 @@ struct SGunInfo
 			nMainGunIdx = 0;
 		}
 		else
+		{
 			bIsMainGun = IsNameMatchPattern( &nMainGunIdx, szShootPoint.c_str(), "LMainGun??" );
+		}
 		bIsCannon = IsNameMatchPattern( &nCannonIdx, szShootPoint.c_str(), "L*Cannon??" );
 		bIsMachineGun = IsNameMatchPattern( &nMachineGunIdx, szShootPoint.c_str(), "LMachineGun*" );
 
@@ -198,14 +200,18 @@ struct SGunInfo
 			nMainGunIdx2 = 0;
 		}
 		else
+		{
 			bIsMainGun2 = IsNameMatchPattern( &nMainGunIdx2, rOther.szShootPoint.c_str(), "LMainGun??" );
+		}
 		bIsCannon2 = IsNameMatchPattern( &nCannonIdx2, rOther.szShootPoint.c_str(), "L*Cannon??" );
 		bIsMachineGun2 = IsNameMatchPattern( &nMachineGunIdx2, rOther.szShootPoint.c_str(), "LMachineGun*" );
 
 		if ( bIsMainGun2 )
 		{
 			if ( !bIsMainGun )
+			{
 				return false;
+			}
 			else
 			{
 				// два мэйнгана на одной платформе
@@ -219,11 +225,15 @@ struct SGunInfo
 		if ( bIsMachineGun2 )
 		{
 			if ( bIsMainGun )
+			{
 				return true;
+			}
 			else
 			{
 				if ( bIsCannon )
+				{
 					return false;
+				}
 				else
 				{
 					if ( bIsMachineGun )
@@ -300,12 +310,16 @@ struct SPlatformInfo
 		if ( rOther.szRotatePoint == "Basis" )
 		{
 			if ( szRotatePoint == "Basis" )
+			{
 				return true;
+			}
 		}
 		else if ( ( rOther.szRotatePoint == "Basis_a" ) || ( rOther.szRotatePoint == "Basis_A" ) )
 		{
 			if ( szRotatePoint == "Basis" || szRotatePoint == "Basis_a" || szRotatePoint == "Basis_A" )
+			{
 				return true;
+			}
 		}
 		else
 		{
@@ -419,7 +433,9 @@ static std::string GetLocatorPlatform( const SSkeletonLocatorInfo &rGunLocator,
 		for ( std::vector<SPlatformInfo>::const_iterator i = rPlatformsInfo.begin(); i != rPlatformsInfo.end(); ++i )
 		{
 			if ( parentLocator.szName == i->szRotatePoint )
+			{
 				return parentLocator.szName;
+			}
 		}
 		curLoc = rLocatorsInfo[curLoc.nParentIdx];
 	}
@@ -430,7 +446,9 @@ static bool IsPlatformExist( IManipulator *pManipulator, int nPlatformNo )
 {
 	CVariant v;
 	if ( !pManipulator->GetValue( "platforms", &v ) )
+	{
 		return false;
+	}
 	int nArraySize = v;
 	return ( nPlatformNo >= 0 ) && ( nPlatformNo < nArraySize );
 }
@@ -441,7 +459,9 @@ static bool IsGunExist( IManipulator *pManipulator, int nPlatformNo, int nGunNo 
 	sprintf( pszDBA, "platforms.[%d].guns", nPlatformNo );
 	CVariant v;
 	if ( !pManipulator->GetValue( pszDBA, &v ) )
+	{
 		return false;
+	}
 	int nArraySize = v;
 	return ( nGunNo >= 0 ) && ( nGunNo < nArraySize );
 }
@@ -470,8 +490,12 @@ const SSkeletonLocatorInfo *GetLocator( const char *pszLocatorName,
                                         const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
 	for ( CLocatorInfoConstIter i = rLocatorsInfo.begin(); i != rLocatorsInfo.end(); ++i )
+	{
 		if ( i->szName == pszLocatorName )
+		{
 			return &*i;
+		}
+	}
 	return 0;
 }
 
@@ -527,11 +551,15 @@ static void GetConstraintInfoFromFile( std::vector<SConstraintInfo> *pConstraint
 	CPtr<IManipulator> pVisObjMan = CManipulatorManager::CreateManipulatorFromReference( VISUALOBJECT, pMan, 0, 0, 0 );
 	CPtr<IManipulator> model = CreateModelManipulatorFromVisObj( pVisObjMan, nullptr );
 	if ( !model )
+	{
 		return;
+	}
 	CPtr<IManipulator> geometry = CManipulatorManager::CreateManipulatorFromReference( "Geometry", model, 0, 0, 0 );
 	CGrannyBoneAttributesList attributes;
 	if ( !geometry || !GetGeometryAttributes( geometry, &attributes ) )
+	{
 		return;
+	}
 	// GLTF node extras retain the legacy constraint names and engine units.
 	for ( const auto &bone : attributes )
 	{
@@ -591,15 +619,21 @@ bool CMechUnitRPGStatsExporter::ProcessAABB( IManipulator *pItUnit )
 		CPtr<IManipulator> pItVisObj =
 				CManipulatorManager::CreateManipulatorFromReference( "visualObject", pItUnit, 0, 0, 0 );
 		if ( pItVisObj == 0 )
+		{
 			return true;
+		}
 		// find first non-null model
 		CPtr<IManipulator> pItModel = CreateModelManipulatorFromVisObj( pItVisObj, 0 );
 		if ( pItModel == 0 )
+		{
 			return true;
+		}
 		//
 		CPtr<IManipulator> pGeomMan = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pItModel, 0, 0, 0 );
 		if ( !pGeomMan )
+		{
 			return false;
+		}
 		CPtr<IManipulator> pAIGeomMan =
 				CManipulatorManager::CreateManipulatorFromReference( "AIGeometry", pGeomMan, 0, 0, 0 );
 		if ( !pAIGeomMan && NEditorGltf::IsGltf( pGeomMan ) )
@@ -608,7 +642,9 @@ bool CMechUnitRPGStatsExporter::ProcessAABB( IManipulator *pItUnit )
 			std::string root;
 			CManipulatorManager::GetValue( &root, pGeomMan, "RootMesh" );
 			if ( !NGltf::GetMeshBoundingBox( NEditorGltf::Load( pGeomMan ), root, true, &minimum, &maximum ) )
+			{
 				return false;
+			}
 			CVec3 center = ( minimum + maximum ) * 0.5f, halfSize = ( maximum - minimum ) * 0.5f;
 			Vis2AI( &center );
 			Vis2AI( &halfSize );
@@ -616,7 +652,9 @@ bool CMechUnitRPGStatsExporter::ProcessAABB( IManipulator *pItUnit )
 			       CManipulatorManager::SetVec2( CVec2( halfSize.x, halfSize.y ), pItUnit, "AABBHalfSize" );
 		}
 		if ( !pAIGeomMan )
+		{
 			return false;
+		}
 		// AABB center
 		CVec3 vAABBCenter;
 		CVec3 vAABBHalfSize;
@@ -648,25 +686,35 @@ bool CMechUnitRPGStatsExporter::ProcessMechUnitAnimations( IManipulator *pItUnit
 	pItUnit->GetValue( "animdescs", &var );
 	int nNumDescs = var;
 	for ( int i = 0; i < nNumDescs; ++i )
+	{
 		pItUnit->RemoveNode( fmt::format( "animdescs.[{}].anims", i ) );
+	}
 	pItUnit->RemoveNode( "animdescs" );
 	for ( int i = 0; i < NDb::__ANIMATION_TYPE_COUNTER; ++i )
+	{
 		pItUnit->InsertNode( "animdescs" );
+	}
 
 	//collect visobjects
 	std::list<std::string> visObjects;
 	pItUnit->GetValue( "visualObject", &var );
 	if ( !IsDBIDEmpty( var ) )
+	{
 		visObjects.push_back( var.GetStr() );
+	}
 	if ( pItUnit->GetValue( "AnimableModel", &var ) )
 	{
 		if ( !IsDBIDEmpty( var ) )
+		{
 			visObjects.push_back( var.GetStr() );
+		}
 	}
 	if ( pItUnit->GetValue( "TransportableModel", &var ) )
 	{
 		if ( !IsDBIDEmpty( var ) )
+		{
 			visObjects.push_back( var.GetStr() );
+		}
 	}
 	pItUnit->GetValue( "DamageLevels", &var );
 	int nNumDamageLevels = var;
@@ -674,7 +722,9 @@ bool CMechUnitRPGStatsExporter::ProcessMechUnitAnimations( IManipulator *pItUnit
 	{
 		pItUnit->GetValue( fmt::format( "DamageLevels.[{}].VisObj", i ), &var );
 		if ( !IsDBIDEmpty( var ) )
+		{
 			visObjects.push_back( var.GetStr() );
+		}
 	}
 
 	//collect skeletons
@@ -684,13 +734,19 @@ bool CMechUnitRPGStatsExporter::ProcessMechUnitAnimations( IManipulator *pItUnit
 		CPtr<IManipulator> pItVisObj = pRM->CreateObjectManipulator( "VisObj", *it );
 		CPtr<IManipulator> pItModel = CreateModelManipulatorFromVisObj( pItVisObj, 0 );
 		if ( pItModel == 0 )
+		{
 			continue;
+		}
 		pItModel->GetValue( "Skeleton", &var );
 		if ( !IsDBIDEmpty( var ) )
+		{
 			skeletons[var.GetStr()] = true;
+		}
 	}
 	if ( skeletons.empty() )
+	{
 		return false;
+	}
 
 	// convert animations from anims array to RPG stats structures
 	int nAnimCounter = 0;
@@ -710,7 +766,9 @@ bool CMechUnitRPGStatsExporter::ProcessMechUnitAnimations( IManipulator *pItUnit
 				std::string szAddr = var.GetStr();
 				int nTypeSepPos = szAddr.find( ':' );
 				if ( nTypeSepPos != std::string::npos )
+				{
 					szAddr = szAddr.substr( nTypeSepPos + 1 );
+				}
 				CPtr<IManipulator> pAnimMan = pRM->CreateObjectManipulator( "AnimB2", szAddr );
 				//get type and create entry
 				pAnimMan->GetValue( "Type", &var );
@@ -765,7 +823,9 @@ void CMechUnitRPGStatsExporter::ProcessAttachedObjects( IManipulator *pUnitManip
 		CPtr<IManipulator> pAttachedPlatformManipulator = CManipulatorManager::CreateManipulatorFromReference(
 				fmt::format( "platforms.[{}].AttachedPlatformVisObj", i ), pUnitManipulator, 0, 0, 0 );
 		if ( pAttachedPlatformManipulator )
+		{
 			ProcessMechUnitAnimations( pAttachedPlatformManipulator );
+		}
 
 		pUnitManipulator->GetValue( fmt::format( "platforms.[{}].guns", i ), &var );
 		const int nGuns = var;
@@ -774,7 +834,9 @@ void CMechUnitRPGStatsExporter::ProcessAttachedObjects( IManipulator *pUnitManip
 			CPtr<IManipulator> pAttachedGunManipulator = CManipulatorManager::CreateManipulatorFromReference(
 					fmt::format( "platforms.[{}].guns.[{}].AttachedGunVisObj", i, j ), pUnitManipulator, 0, 0, 0 );
 			if ( pAttachedGunManipulator )
+			{
 				ProcessMechUnitAnimations( pAttachedGunManipulator );
+			}
 		}
 	}
 }
@@ -842,7 +904,9 @@ void CMechUnitRPGStatsExporter::CopyAnimationsToAttached( IManipulator *pUnitMan
 		CPtr<IManipulator> pAttachedPlatformManipulator = CManipulatorManager::CreateManipulatorFromReference(
 				fmt::format( "platforms.[{}].AttachedPlatformVisObj", i ), pUnitManipulator, 0, 0, 0 );
 		if ( pAttachedPlatformManipulator )
+		{
 			CopyAnimationsToObject( pUnitManipulator, pAttachedPlatformManipulator );
+		}
 
 		pUnitManipulator->GetValue( fmt::format( "platforms.[{}].guns", i ), &var );
 		const int nGuns = var;
@@ -851,7 +915,9 @@ void CMechUnitRPGStatsExporter::CopyAnimationsToAttached( IManipulator *pUnitMan
 			CPtr<IManipulator> pAttachedGunManipulator = CManipulatorManager::CreateManipulatorFromReference(
 					fmt::format( "platforms.[{}].guns.[{}]", i, j ), pUnitManipulator, 0, 0, 0 );
 			if ( pAttachedGunManipulator )
+			{
 				CopyAnimationsToObject( pUnitManipulator, pAttachedPlatformManipulator );
+			}
 		}
 	}
 }
@@ -887,7 +953,9 @@ static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const std:
 
 	CVariant v;
 	if ( !pManipulator->GetValue( szGunsDba, &v ) )
+	{
 		return;
+	}
 
 	const int nNumElems = v;
 	std::vector<uint8_t> gunProcessed( rGuns.size(), uint8_t( 0 ) );
@@ -902,7 +970,9 @@ static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const std:
 
 		CVariant v;
 		if ( !pManipulator->GetValue( szLocNameDBA, &v ) )
+		{
 			continue;
+		}
 
 		std::string szLocatorName = v.GetStr();
 
@@ -912,7 +982,9 @@ static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const std:
 			const SGunInfo *pG = &*j;
 
 			if ( szLocatorName != j->szShootPoint )
+			{
 				continue;
+			}
 
 			if ( j->szShootPoint == szLocatorName )
 			{
@@ -958,10 +1030,14 @@ static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const std:
 		const SGunInfo *pG = &*i;
 
 		if ( gunProcessed[nIdx] )
+		{
 			continue;
+		}
 
 		if ( !pManipulator->InsertNode( szGunsDba ) )
+		{
 			continue;
+		}
 
 		std::string szLocNameDBA = fmt::format( "platforms.[{}].guns.[{}].ShootPoint", nPlatformIdx, nNewElemIdx );
 		std::string szDirectionDBA = fmt::format( "platforms.[{}].guns.[{}].Direction", nPlatformIdx, nNewElemIdx );
@@ -1045,7 +1121,9 @@ static void UpdatePlatforms( IManipulator *pManipulator, const std::vector<SPlat
 	// обновить существующие платформы
 	CVariant v;
 	if ( !pManipulator->GetValue( "platforms", &v ) )
+	{
 		return;
+	}
 	const int nNumElems = v;
 
 	std::vector<uint8_t> platformProcessed( rPlatforms.size(), uint8_t( 0 ) );
@@ -1057,7 +1135,9 @@ static void UpdatePlatforms( IManipulator *pManipulator, const std::vector<SPlat
 
 		CVariant v;
 		if ( !pManipulator->GetValue( szLocNameDBA, &v ) )
+		{
 			continue;
+		}
 
 		std::string szLocatorName = v.GetStr();
 
@@ -1088,10 +1168,14 @@ static void UpdatePlatforms( IManipulator *pManipulator, const std::vector<SPlat
 		const SPlatformInfo *pP = &*i;
 
 		if ( platformProcessed[nIdx] )
+		{
 			continue;
+		}
 
 		if ( !pManipulator->InsertNode( "platforms" ) )
+		{
 			continue;
+		}
 
 		CVariant v = pP->szRotatePoint;
 		std::string szDBA = fmt::format( "platforms.[{}].RotatePoint", nNewElemIdx );
@@ -1142,7 +1226,9 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const std::vector
 
 	// сортировка пушек
 	for ( std::vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
+	{
 		std::sort( i->guns.begin(), i->guns.end() );
+	}
 
 	// ограничения
 	std::vector<SConstraintInfo> constraints;
@@ -1198,7 +1284,9 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const std::vector
 			}
 
 			if ( bFound )
+			{
 				break;
+			}
 		}
 	}
 
@@ -1210,7 +1298,9 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const std::vector
 		{
 			SGunInfo *pG = &*j;
 			if ( pG->szRecoilPoint.empty() )
+			{
 				continue;
+			}
 
 			for ( std::vector<SConstraintInfo>::const_iterator k = constraints.begin(); k != constraints.end(); ++k )
 			{
@@ -1248,9 +1338,13 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const std::vector
 					float fDir = NMath::ACos( vec.y );
 					const float F_EPS_ANGLE = 0.01f;
 					if ( fabs( fDir ) < F_EPS_ANGLE )
+					{
 						pG->nDirection = 0xFFFF;
+					}
 					else
+					{
 						pG->nDirection = ( fDir / FP_2PI ) * 0xFFFF;
+					}
 				}
 			}
 		}
@@ -1273,7 +1367,9 @@ static int FindLocator( const std::string &szLocatorName, const std::vector<SSke
 {
 	int i = 0;
 	while ( i < rLocatorsInfo.size() && rLocatorsInfo[i].szName != szLocatorName )
+	{
 		++i;
+	}
 
 	return i < rLocatorsInfo.size() ? i : -1;
 }
@@ -1283,7 +1379,9 @@ static void CalculteGunsAndPlatformPositions( IManipulator *pManipulator,
 {
 	CVariant v;
 	if ( !pManipulator->GetValue( "platforms", &v ) )
+	{
 		return;
+	}
 	const int nPlatforms = v;
 
 	for ( int i = 0; i < nPlatforms; ++i )
@@ -1293,12 +1391,16 @@ static void CalculteGunsAndPlatformPositions( IManipulator *pManipulator,
 
 		std::string szRotateBone;
 		if ( !CManipulatorManager::GetValue( &szRotateBone, pManipulator, szPlatformName + "RotatePoint" ) )
+		{
 			CManipulatorManager::SetVec3( VNULL3, pManipulator, szPlatformName + "AIRotatePointPos" );
+		}
 		else
 		{
 			const int nLocator = FindLocator( szRotateBone, rLocatorsInfo );
 			if ( nLocator != -1 )
+			{
 				CManipulatorManager::SetVec3( rLocatorsInfo[nLocator].vPos, pManipulator, szPlatformName + "AIRotatePointPos" );
+			}
 		}
 
 		// set guns positions
@@ -1315,7 +1417,9 @@ static void CalculteGunsAndPlatformPositions( IManipulator *pManipulator,
 				{
 					const int nLocator = FindLocator( szShootBone, rLocatorsInfo );
 					if ( nLocator != -1 )
+					{
 						CManipulatorManager::SetVec3( rLocatorsInfo[nLocator].vPos, pManipulator, szGunName + "AIShootPointPos" );
+					}
 				}
 			}
 		}
@@ -1329,19 +1433,27 @@ EXPORT_RESULT CMechUnitRPGStatsExporter::ExportObject( IManipulator *pManipulato
                                                        EXPORT_TYPE exportType )
 {
 	if ( exportType != ET_AFTER_REF && !NEditorGltf::ValidateForExport( pManipulator, rszObjectTypeName ) )
+	{
 		return ER_BREAK;
+	}
 	const EXPORT_RESULT baseResult =
 			CHPObjectRPGStatsExporter::ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, exportType );
 	if ( baseResult == ER_FAIL || baseResult == ER_BREAK )
+	{
 		return baseResult;
+	}
 	//
 	if ( exportType == ET_BEFORE_REF )
+	{
 		return ER_SUCCESS;
+	}
 
 	ProcessMechUnitAnimations( pManipulator );
 
 	if ( !ProcessAABB( pManipulator ) )
+	{
 		return ER_FAIL;
+	}
 	//
 	std::vector<SSkeletonLocatorInfo> visualObjectLocators;
 	std::vector<SSkeletonLocatorInfo> animateModelLocators;
@@ -1406,7 +1518,9 @@ EXPORT_RESULT CMechUnitRPGStatsExporter::CheckObject( IManipulator *pManipulator
                                                       EXPORT_TYPE exportType )
 {
 	if ( exportType == ET_AFTER_REF )
+	{
 		return ER_SUCCESS;
+	}
 	//
 	ILogger *pLogger = NLog::GetLogger();
 	// check for diving bomber

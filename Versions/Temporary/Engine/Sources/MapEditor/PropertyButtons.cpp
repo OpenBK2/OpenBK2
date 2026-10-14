@@ -299,7 +299,9 @@ bool BrowseFile( const NPropertyButton::SContext &rContext, std::string *pszNewT
 				bResult = NEditorGltf::ImportModelFile(
 						NDb::GetFileName( rContext.pObjectSet->objectNameSet.begin()->first ), szFullFilePath, pszNewText, &error );
 				if ( !bResult )
+				{
 					NMessage::Error( error, "Import model" );
+				}
 			}
 			else if ( rContext.szName == "ModelFileName" )
 			{
@@ -316,7 +318,9 @@ bool BrowseFile( const NPropertyButton::SContext &rContext, std::string *pszNewT
 				bResult = true;
 			}
 			if ( bResult )
+			{
 				rFilePathMap[szMask] = NFile::GetFilePath( szFullFilePath );
+			}
 		}
 	}
 	RemoveSceneInput();
@@ -409,13 +413,19 @@ void EditTextFile( const NPropertyButton::SContext &rContext, const std::string 
 			String2File( &bytes, szNewText, bUnicode, false );
 			CMemoryStream stream;
 			if ( !bytes.empty() )
+			{
 				stream.Write( bytes.data(), bytes.size() );
+			}
 			std::string error;
 			// Preserve the previous text if the actual file cannot be replaced.
 			if ( NVFS::WriteFile( NVFS::GetMainFileCreator(), rszFilePath, stream, &error ) )
+			{
 				NText::Reload( rszFilePath );
+			}
 			else
+			{
 				NMessage::Error( error, "Text file could not be saved" );
+			}
 		}
 	}
 	RemoveSceneInput();

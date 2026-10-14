@@ -34,7 +34,9 @@ void CAntiArtillery::Init( const float _fMaxRadius, const int _nParty )
 
 	fMaxRadius = _fMaxRadius;
 	if ( fMaxRadius == 0.0f )
+	{
 		fMaxRadius = ( GetAIMap()->GetSizeX() + GetAIMap()->GetSizeY() ) * SAIConsts::TILE_SIZE;
+	}
 
 	nParty = _nParty;
 
@@ -60,13 +62,17 @@ void CAntiArtillery::Scan( const CVec2 &center )
 		{
 			const float fR2 = fabs2( center - ( *iter )->GetCenterPlain() );
 			if ( fR2 <= sqr( fMaxRadius ) )
+			{
 				closestEnemyDist2[( *iter )->GetParty()] = fR2;
+			}
 		}
 		else
 		{
 			const float fR2 = fabs2( center - ( *iter )->GetCenterPlain() );
 			if ( fR2 <= sqr( fMaxRadius ) && closestEnemyDist2[( *iter )->GetParty()] > fR2 )
+			{
 				closestEnemyDist2[( *iter )->GetParty()] = fR2;
+			}
 		}
 	}
 
@@ -93,7 +99,9 @@ float GetRadius( const float nShots, const float fRevealRadius )
 void CAntiArtillery::Fired( const float _fGunRadius, const CVec2 &center )
 {
 	if ( curTime - lastScan >= SConsts::ANTI_ARTILLERY_SCAN_TIME )
+	{
 		Scan( center );
+	}
 	theAAManager.AddAA( this );
 
 	float fGunRadius = abs( _fGunRadius );
@@ -110,14 +118,18 @@ void CAntiArtillery::Fired( const float _fGunRadius, const CVec2 &center )
 		{
 			if ( fabs2( center - lastHeardPos[i] ) > sqr( SConsts::RELOCATION_RADIUS ) ||
 			     i == 0 && curTime - lastShotTime[i] > SConsts::AUDIBILITY_TIME )
+			{
 				nHeardShots[i] = 0;
+			}
 
 			CVec2 newCenter;
 			const float fCurRadius = GetRadius(
 					(std::min)( (float)nHeardShots[i], (float)SConsts::SHOTS_TO_MINIMIZE_LOCATION_RADIUS ), fGunRadius );
 
 			if ( nHeardShots[i] > SConsts::SHOTS_TO_MINIMIZE_LOCATION_RADIUS )
+			{
 				newCenter = lastRevealCenter[i];
+			}
 			else
 			{
 				const float fOldRadius = GetRadius( nHeardShots[i] - 1, fGunRadius );
@@ -135,7 +147,9 @@ void CAntiArtillery::Fired( const float _fGunRadius, const CVec2 &center )
 			lastRevealCenter[i] = newCenter;
 
 			if ( nHeardShots[i] <= SConsts::SHOTS_TO_MINIMIZE_LOCATION_RADIUS )
+			{
 				++nHeardShots[i];
+			}
 
 			lastShotTime[i] = curTime;
 		}
@@ -171,9 +185,13 @@ void CAntiArtillery::Segment( bool bOwnerVisible )
 		if ( bEnemy && nMyParty == nIterParty && !bIsAA )
 		{
 			if ( bVisibleCircle )
+			{
 				theFeedBackSystem.AddFeedback( pOwner->GetUniqueId(), pOwner->GetCenterPlain(), EFB_HOWITZER_GUN_FIRED, -1 );
+			}
 			else
+			{
 				theFeedBackSystem.RemoveFeedback( pOwner->GetUniqueId(), EFB_HOWITZER_GUN_FIRED );
+			}
 		}
 
 		if ( bEnemy && bHaveToSendCircle )
@@ -187,9 +205,13 @@ void CAntiArtillery::Segment( bool bOwnerVisible )
 			if ( nMyParty == nIterParty && !bOwnerVisible )
 			{
 				if ( bIsAA )
+				{
 					updater.AddUpdate( 0, ACTION_NOTIFY_REVEAL_ARTILLERY, pCircle, 1 );
+				}
 				else
+				{
 					updater.AddUpdate( 0, ACTION_NOTIFY_REVEAL_ARTILLERY, pCircle, -1 );
+				}
 			}
 		}
 	}

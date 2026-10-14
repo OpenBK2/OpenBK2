@@ -161,7 +161,9 @@ inline float NormalizeAngleInDegree( const float angle )
 {
 	float fResult = fmod( double( angle ), 360.0 );
 	if ( fResult < 0 )
+	{
 		fResult += 360.f;
+	}
 	ASSERT( 0.f <= fResult && fResult < 360.f );
 	return fResult;
 }
@@ -276,9 +278,13 @@ inline bool Normalize( TYPE &x, TYPE &y )
 {
 	TYPE u = fabs2( x, y );
 	if ( fabs( u - TYPE( 1 ) ) < FP_EPSILON )
+	{
 		return true; // already normalized
+	}
 	if ( u < FP_EPSILON2 )
+	{
 		return false; // can't normalize
+	}
 	u = static_cast<TYPE>( TYPE( 1 ) / sqrt( u ) );
 	x *= u;
 	y *= u;
@@ -289,9 +295,13 @@ inline bool Normalize( TYPE &x, TYPE &y, TYPE &z )
 {
 	TYPE u = fabs2( x, y, z );
 	if ( fabs( u - TYPE( 1 ) ) < FP_EPSILON )
+	{
 		return true; // already normalized
+	}
 	if ( u < FP_EPSILON2 )
+	{
 		return false; // can't normalize
+	}
 	u = static_cast<TYPE>( TYPE( 1 ) / sqrt( u ) );
 	x *= u;
 	y *= u;
@@ -303,9 +313,13 @@ inline bool Normalize( TYPE &x, TYPE &y, TYPE &z, TYPE &w )
 {
 	TYPE u = fabs2( x, y, z, w );
 	if ( fabs( u - TYPE( 1 ) ) < FP_EPSILON )
+	{
 		return true; // already normalized
+	}
 	if ( u < FP_EPSILON2 )
+	{
 		return false; // can't normalize
+	}
 	u = static_cast<TYPE>( TYPE( 1 ) / sqrt( u ) );
 	x *= u;
 	y *= u;

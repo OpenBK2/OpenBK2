@@ -30,7 +30,9 @@ struct SCheckSumBufferStorage
 	{
 		const int nRequiredSize = nCnt + sizeof( data );
 		if ( nRequiredSize >= buf.size() )
+		{
 			buf.resize( nRequiredSize * 1.5 );
+		}
 		memcpy( &( buf[0] ) + nCnt, &data, sizeof( data ) );
 		nCnt += sizeof( data );
 	}
@@ -39,7 +41,9 @@ struct SCheckSumBufferStorage
 	{
 		const int nRequiredSize = nCnt + nDataSize;
 		if ( nRequiredSize >= buf.size() )
+		{
 			buf.resize( nRequiredSize * 1.5 );
+		}
 		memcpy( &( buf[0] ) + nCnt, pData, nDataSize );
 		nCnt += nDataSize;
 	}

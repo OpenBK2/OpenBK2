@@ -15,9 +15,13 @@ CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorAdrenalineRush::OnMode
                                                                                         const uint16_t newModeFlags )
 {
 	if ( ( GetState() == EASS_READY_TO_ON || GetState() == EASS_SWITCHING_OFF ) && ( newModeFlags & EUM_FIGHTING ) )
+	{
 		return EACR_FORCE_ACTIVATE;
+	}
 	else if ( ( GetState() == EASS_ACTIVE || GetState() == EASS_SWITCHING_ON ) && !( newModeFlags & EUM_FIGHTING ) )
+	{
 		return EACR_FORCE_DEACTIVATE;
+	}
 	return EACR_IGNORE;
 }
 

@@ -48,7 +48,9 @@ void CWindowPlayer::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	bPaused = false;
 	nCurrMovie = 0;
 	if ( !pInstance->szSequenceName.empty() )
+	{
 		SetSequence( pInstance->szSequenceName );
+	}
 }
 
 void CWindowPlayer::Reposition( const CTRect<float> &parentRect )
@@ -59,13 +61,17 @@ void CWindowPlayer::Reposition( const CTRect<float> &parentRect )
 void CWindowPlayer::Visit( struct IUIVisitor *pVisitor )
 {
 	if ( !IsVisible() )
+	{
 		return;
+	}
 
 	CWindow::Visit( pVisitor );
 
 	UpdatePlayer();
 	if ( !pPlayer )
+	{
 		return;
+	}
 
 	CTPoint<int> textureSize;
 	pPlayer->GetSize( &textureSize );
@@ -140,7 +146,9 @@ void CWindowPlayer::Play()
 	bPaused = false;
 	UpdatePlayer();
 	if ( pPlayer && !pPlayer->IsPlaying() )
+	{
 		pPlayer->Play();
+	}
 }
 
 bool CWindowPlayer::Stop()
@@ -178,9 +186,13 @@ bool CWindowPlayer::IsPaused() const
 void CWindowPlayer::SkipMovie()
 {
 	if ( nCurrMovie >= movies.size() )
+	{
 		return;
+	}
 	if ( !movies[nCurrMovie].bCanSkipMovie )
+	{
 		return;
+	}
 
 	if ( pPlayer )
 	{
@@ -194,7 +206,9 @@ void CWindowPlayer::SkipMovie()
 void CWindowPlayer::SkipSequence()
 {
 	if ( nCurrMovie >= movies.size() )
+	{
 		return;
+	}
 	if ( !movies[nCurrMovie].bCanSkipSequence )
 	{
 		SkipMovie();
@@ -211,32 +225,42 @@ void CWindowPlayer::SkipSequence()
 int CWindowPlayer::GetCurrentFrame() const
 {
 	if ( !pPlayer )
+	{
 		return 0;
+	}
 	return pPlayer->GetCurrentFrame();
 }
 
 void CWindowPlayer::SetCurrentFrame( int nFrame )
 {
 	if ( !pPlayer )
+	{
 		return;
+	}
 	return pPlayer->SetCurrentFrame( nFrame );
 }
 
 int CWindowPlayer::GetNumFrames() const
 {
 	if ( !pPlayer )
+	{
 		return 0;
+	}
 	return pPlayer->GetNumFrames();
 }
 
 void CWindowPlayer::UpdatePlayer()
 {
 	if ( bPaused )
+	{
 		return;
+	}
 	if ( pPlayer )
 	{
 		if ( pPlayer->IsPlaying() )
+		{
 			return;
+		}
 		pPlayer = 0;
 		nCurrMovie++;
 	}
@@ -248,7 +272,9 @@ void CWindowPlayer::UpdatePlayer()
 			pPlayer = NGScene::CreateVideoPlayer( movies[nCurrMovie].szFileName + ".ogm", GetSceneFlags() );
 		}
 		if ( pPlayer )
+		{
 			pPlayer->Play();
+		}
 	}
 }
 
@@ -260,9 +286,13 @@ uint32_t CWindowPlayer::GetSceneFlags()
 	//dwFlags |= NGScene::IVideoPlayer::PLAY_NO_TIME_UPDATE;
 	//dwFlags |= NGScene::IVideoPlayer::PLAY_FROM_MEMORY;
 	if ( nCurrMovie < movies.size() && movies[nCurrMovie].bSlideShowMode )
+	{
 		dwFlags |= NGScene::IVideoPlayer::PLAY_NO_TIME_UPDATE;
+	}
 	else
+	{
 		dwFlags |= NGScene::IVideoPlayer::PLAY_WITH_SOUND;
+	}
 	return dwFlags;
 }
 
@@ -273,7 +303,9 @@ void CWindowPlayer::PlayFragment( int nStartFrame, int nEndFrame, int nFrameSkip
 	if ( pPlayer )
 	{
 		if ( nStartFrame != nEndFrame )
+		{
 			pPlayer->PlayFragment( nStartFrame, nEndFrame, nFrameSkip );
+		}
 		else
 		{
 			pPlayer->SetCurrentFrame( nStartFrame );

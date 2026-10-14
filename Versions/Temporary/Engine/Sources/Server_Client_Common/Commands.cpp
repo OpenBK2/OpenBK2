@@ -154,7 +154,9 @@ void CCommands::GetStringCommands( std::vector<std::string> *pCommands )
 	while ( szCommandsList[i].pszCommand != 0 )
 	{
 		if ( szCommandsList[i].bServerCommand == bServer )
+		{
 			pCommands->push_back( szCommandsList[i].pszCommand );
+		}
 
 		++i;
 	}
@@ -168,7 +170,9 @@ const EServerClientCommands CCommands::FindCmd( const std::string &szCommand )
 	while ( szCommandsList[i].pszCommand != 0 )
 	{
 		if ( szCommand == szCommandsList[i].pszCommand && szCommandsList[i].bServerCommand == bServer )
+		{
 			return szCommandsList[i].eCmd;
+		}
 
 		++i;
 	}
@@ -242,7 +246,9 @@ void CCommands::ParseChatLobby( std::vector<std::string> &szWords, SCommand *pCm
 	}
 
 	for ( int i = 2; i < szWords.size(); ++i )
+	{
 		szWords[1] += " " + szWords[i];
+	}
 
 	pCmd->params.push_back( szWords[1] );
 }
@@ -256,7 +262,9 @@ void CCommands::ParseChatPrivate( std::vector<std::string> &szWords, SCommand *p
 	}
 
 	for ( int i = 2; i < szWords.size() - 1; ++i )
+	{
 		szWords[1] += " " + szWords[i];
+	}
 
 	pCmd->params.push_back( szWords[1] );
 	pCmd->params.push_back( szWords[szWords.size() - 1] );
@@ -351,11 +359,17 @@ void CCommands::ParseSetClientState( std::vector<std::string> &szWords, SCommand
 
 	ECommonClientState eState = ES_ONLINE;
 	if ( szWords[1] == "online" )
+	{
 		eState = ES_ONLINE;
+	}
 	if ( szWords[1] == "away" )
+	{
 		eState = ES_AWAY;
+	}
 	if ( szWords[1] == "ingame" )
+	{
 		eState = ES_INGAME;
+	}
 
 	pCmd->params.push_back( std::to_string( (int)eState ) );
 }
@@ -472,7 +486,9 @@ void CCommands::ParseKillGame( std::vector<std::string> &szWords, SCommand *pCmd
 	else
 	{
 		if ( szWords.size() == 2 )
+		{
 			pCmd->params.push_back( szWords[1] );
+		}
 	}
 }
 
@@ -517,7 +533,9 @@ void CCommands::ParseHelp( std::vector<std::string> &szWords, SCommand *pCmd )
 		while ( szCommandsList[i].pszCommand != 0 )
 		{
 			if ( szCommandsList[i].bServerCommand == bServer )
+			{
 				szStr += fmt::format( "    {}\n", szCommandsList[i].pszCommand );
+			}
 
 			++i;
 		}
@@ -566,7 +584,9 @@ void CCommands::ParseConnectGame( std::vector<std::string> &szWords, SCommand *p
 	{
 		szPassword = szWords[2];
 		for ( int i = 3; i < szWords.size(); ++i )
+		{
 			szPassword += " " + szWords[i];
+		}
 	}
 
 	pCmd->params.push_back( szPassword );
@@ -579,7 +599,9 @@ void CCommands::ParseGameBroadcast( std::vector<std::string> &szWords, SCommand 
 
 	std::string szStr = szWords.size() > 2 ? szWords[2] : "undefined";
 	for ( int i = 3; i < szWords.size(); ++i )
+	{
 		szStr += " " + szWords[i];
+	}
 
 	pCmd->params.push_back( szStr );
 }
@@ -599,7 +621,9 @@ void CCommands::ParseGameDirect( std::vector<std::string> &szWords, SCommand *pC
 
 	std::string szStr = szWords.size() > 3 ? szWords[3] : "undefined";
 	for ( int i = 4; i < szWords.size(); ++i )
+	{
 		szStr += " " + szWords[i];
+	}
 
 	pCmd->params.push_back( szStr );
 }
@@ -684,7 +708,9 @@ void CCommands::ParseSpecGameInfo( std::vector<std::string> &szWords, SCommand *
 
 	std::string szMapName = szWords[1];
 	for ( int i = 2; i < szWords.size(); ++i )
+	{
 		szMapName += szWords[i];
+	}
 
 	pCmd->params.push_back( szMapName );
 }
@@ -796,7 +822,9 @@ bool CCommands::LineEntered( const std::string &szLineEntered, std::string *pszE
 			NI_ASSERT( iter != parseCmdFuncs.end(), fmt::format( "Can't parse command {}", szWords[0] ) );
 
 			if ( iter == parseCmdFuncs.end() )
+			{
 				return false;
+			}
 
 			PARSE_CMD_FUNC pfnFunc = iter->second;
 			SCommand cmd;
@@ -817,5 +845,7 @@ bool CCommands::LineEntered( const std::string &szLineEntered, std::string *pszE
 		}
 	}
 	else
+	{
 		return true;
+	}
 }

@@ -86,10 +86,14 @@ void CGroupLogic::DelUnitFromSpecialGroup( CCommonUnit *pUnit )
 	if ( pUnit->nSpecialGroup != 0 )
 	{
 		if ( groupUnits.begin( pUnit->nSpecialGroup ) != groupUnits.end() )
+		{
 			groupUnits.Erase( pUnit->nSpecialGroup, pUnit->nSpecialPos );
+		}
 
 		if ( groupUnits.begin( pUnit->nSpecialGroup ) == groupUnits.end() )
+		{
 			UnregisterSpecialGroup( pUnit->nSpecialGroup );
+		}
 		pUnit->nSpecialGroup = 0;
 	}
 }
@@ -144,7 +148,9 @@ void CGroupLogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, con
 		}
 	}
 	if ( nAvia != 0 )
+	{
 		vPos /= nAvia;
+	}
 	for ( int i = 0; i < nAvia; ++i )
 	{
 		CAIUnit *pAvia = dynamic_cast<CAIUnit *>( pUnitsBuffer[aviaIndexes[i]] );
@@ -158,14 +164,18 @@ void CGroupLogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, con
 	}
 
 	if ( wGroup >= groupUnits.GetQueuesNum() )
+	{
 		groupUnits.IncreaseQueuesNum( wGroup * 1.5 );
+	}
 
 	if ( groupUnits.GetSize( wGroup ) != 0 )
 	{
 		DelGroup( wGroup );
 
 		if ( GetPlayerByGroupNumber( wGroup ) == theDipl.GetMyNumber() )
+		{
 			groupIds.Return( GetIdByGroupNumber( wGroup ) );
+		}
 	}
 
 	registeredGroups.insert( wGroup );
@@ -181,9 +191,13 @@ void CGroupLogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, con
 			{
 				CCommonUnit *pGroupUnit;
 				if ( pUnit->IsInFormation() )
+				{
 					pGroupUnit = pUnit->GetFormation();
+				}
 				else
+				{
 					pGroupUnit = pUnit;
+				}
 
 				if ( pGroupUnit->nGroup != wGroup )
 				{
@@ -206,7 +220,9 @@ void CGroupLogic::RegisterGroup( const std::vector<int> &vIDs, const uint16_t wG
 	CVec2 vPos = VNULL2;
 	int nAvia = 0;
 	for ( int i = 0; i < vIDs.size(); ++i )
+	{
 		objects[i] = (CObjectBase *)CLinkObject::GetObjectByUniqueIdSafe( vIDs[i] );
+	}
 
 	RegisterGroup( objects, vIDs.size(), wGroup );
 	delete[] objects;
@@ -222,7 +238,9 @@ void CGroupLogic::UnregisterSpecialGroup( const uint16_t wSpecialGroup )
 	if ( registeredGroups.find( wSpecialGroup ) != registeredGroups.end() )
 	{
 		for ( int i = groupUnits.begin( wSpecialGroup ); i != groupUnits.end(); i = groupUnits.GetNext( i ) )
+		{
 			groupUnits.GetEl( i )->nSpecialGroup = 0;
+		}
 
 		groupUnits.DelQueue( wSpecialGroup );
 		groupIds.Return( GetIdByGroupNumber( wSpecialGroup ) );
@@ -240,7 +258,9 @@ void CGroupLogic::UnregisterGroup( const uint16_t wGroup )
 		registeredGroups.erase( wGroup );
 	}
 	if ( GetPlayerByGroupNumber( wGroup ) == theDipl.GetMyNumber() )
+	{
 		groupIds.Return( GetIdByGroupNumber( wGroup ) );
+	}
 }
 
 void CGroupLogic::DivideBySubGroups2( const SAIUnitCmd &command, const int nGroup )
@@ -253,11 +273,15 @@ void CGroupLogic::DivideBySubGroups2( const SAIUnitCmd &command, const int nGrou
 		++nCount;
 	}
 	if ( nCount == 0 )
+	{
 		return;
+	}
 	vGroupCenter /= nCount;
 	bool bTooFar = false;
 	for ( int i = groupUnits.begin( nGroup ); i != groupUnits.end() && !bTooFar; i = groupUnits.GetNext( i ) )
+	{
 		bTooFar = fabs2( vGroupCenter - groupUnits.GetEl( i )->GetCenterPlain() ) > sqr( SConsts::GROUP_DISTANCE );
+	}
 	if ( bTooFar )
 	{
 		for ( int i = groupUnits.begin( nGroup ); i != groupUnits.end(); i = groupUnits.GetNext( i ) )
@@ -315,7 +339,9 @@ void CGroupLogic::DivideBySubGroups( const SAIUnitCmd &command, const int nGroup
 	for ( int i = 0; i != centers.size(); ++i )
 	{
 		if ( nums[i] != 0 )
+		{
 			centers[i] /= nums[i];
+		}
 	}
 
 	for ( int i = groupUnits.begin( nGroup ); i != groupUnits.end(); i = groupUnits.GetNext( i ) )
@@ -339,7 +365,9 @@ void CGroupLogic::CreateSpecialGroup( const uint16_t wGroup )
 		registeredGroups.insert( wSpecialGroup );
 
 		if ( wSpecialGroup >= groupUnits.GetQueuesNum() )
+		{
 			groupUnits.IncreaseQueuesNum( wSpecialGroup * 1.5 );
+		}
 
 		int nLen = 0;
 		for ( int i = groupUnits.begin( wGroup ); i != groupUnits.end(); i = groupUnits.GetNext( i ) )
@@ -421,7 +449,9 @@ void CGroupLogic::SetToAmbush( CAmbushGroups::iterator &iter )
 
 	for ( std::list<std::pair<CCommonUnit *, int>>::iterator iter = oldUnitsGroups.begin(); iter != oldUnitsGroups.end();
 	      ++iter )
+	{
 		theGroupLogic.AddUnitToGroup( iter->first, iter->second );
+	}
 }
 
 void CGroupLogic::UnitSetToAmbush( CCommonUnit *pUnit )
@@ -460,7 +490,9 @@ void CGroupLogic::ProcessAmbushGroups()
 				// уже в другой ambush группе, or deleted from ambush groups, удалить из этой
 				if ( checkedUnits.find( nUniqueId ) != checkedUnits.end() ||
 				     ambushUnits.find( nUniqueId ) == ambushUnits.end() )
+				{
 					innerIter = iter->erase( innerIter );
+				}
 				else
 				{
 					// юнит просмотрен
@@ -506,10 +538,14 @@ void CGroupLogic::ProcessAmbushGroups()
 								}
 							}
 							else
+							{
 								bCanSetToAmbush = false;
+							}
 						}
 						else
+						{
 							bCanSetToAmbush = false;
+						}
 
 						++innerIter;
 					}
@@ -525,11 +561,15 @@ void CGroupLogic::ProcessAmbushGroups()
 					++iter;
 				}
 				else
+				{
 					// group is empty, erase from ambush groups
 					iter = ambushGroups.erase( iter );
+				}
 			}
 			else
+			{
 				++iter;
+			}
 		}
 	}
 }
@@ -554,7 +594,9 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 		     command.nCmdType == ACTION_COMMAND_DEPLOY_ARTILLERY || command.nCmdType == ACTION_COMMAND_UNLOAD ||
 		     command.nCmdType == ACTION_COMMAND_RESUPPLY_HR || command.nCmdType == ACTION_COMMAND_RESUPPLY ||
 		     command.nCmdType == ACTION_COMMAND_REPAIR )
+		{
 			DivideBySubGroups2( command, wGroup );
+		}
 		else
 		{
 			for ( int i = groupUnits.begin( wGroup ); i != groupUnits.end(); i = groupUnits.GetNext( i ) )
@@ -575,7 +617,9 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 
 		int nGroupsIter = 0;
 		for ( int i = groupUnits.begin( wGroup ); i != groupUnits.end(); i = groupUnits.GetNext( i ) )
+		{
 			groups[nGroupsIter++] = groupUnits.GetEl( i );
+		}
 		/*
 		if ( command.nCmdType == ACTION_COMMAND_SWARM_TO )
 		{
@@ -605,8 +649,10 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 		}
 
 		if ( command.nCmdType == ACTION_COMMAND_MOVE_TO_GRID )
+		{
 			ProcessGridCommand(
 					command.vPos, CVec2( NMath::Cos( command.fNumber ), NMath::Sin( command.fNumber ) ), wGroup, bPlaceInQueue );
+		}
 		else
 		{
 			CPtr<CAICommand> pCommand = new CAICommand( command );
@@ -614,7 +660,9 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 			{
 				CCommonUnit *pUnit = *iter;
 				if ( command.nCmdType == ACTION_COMMAND_REVERSE_TO && !pUnit->CanCommandBeExecuted( pCommand ) )
+				{
 					continue;
+				}
 				pCommand->AddUnit( pUnit );
 			}
 
@@ -631,17 +679,23 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 					{
 						CCommonUnit *pUnit = *iter;
 						if ( bReverseMove && !pUnit->CanCommandBeExecuted( pCommand ) )
+						{
 							continue;
+						}
 						const float fCommandSpeed =
 								bReverseMove ? pUnit->GetMaxPossibleBackwardSpeed() : pUnit->GetMaxPossibleForwardSpeed();
 						if ( pUnit->CanMove() && fCommandSpeed > 0.0f && fCommandSpeed < fDesGroupSpeed )
+						{
 							fDesGroupSpeed = fCommandSpeed;
+						}
 					}
 				}
 				for ( std::vector<CCommonUnit *>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
 				{
 					if ( command.nCmdType == ACTION_COMMAND_REVERSE_TO && !( *iter )->CanCommandBeExecuted( pCommand ) )
+					{
 						continue;
+					}
 					( *iter )->SetDesiredSpeed( fDesGroupSpeed );
 				}
 			}
@@ -653,7 +707,9 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 				CCommonUnit *pUnit = *iter;
 
 				if ( command.nCmdType == ACTION_COMMAND_REVERSE_TO && !pUnit->CanCommandBeExecuted( pCommand ) )
+				{
 					continue;
+				}
 
 				bool bSendCommand = true;
 				if ( command.nCmdType == ACTION_COMMAND_FORM_FORMATION && pUnit->IsFormation() )
@@ -663,14 +719,20 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 					{
 						const int nMemFormationID = ( *pFormation )[0]->GetMemFormation()->GetUniqueId();
 						if ( memFormationIDs.find( nMemFormationID ) == memFormationIDs.end() )
+						{
 							memFormationIDs.insert( nMemFormationID );
+						}
 						else
+						{
 							bSendCommand = false;
+						}
 					}
 				}
 
 				if ( bSendCommand )
+				{
 					pUnit->TryExecuteCommand( pCommand, bPlaceInQueue, false );
+				}
 			}
 		}
 	}
@@ -681,7 +743,9 @@ void CGroupLogic::UnitCommand( const SAIUnitCmd &command, CCommonUnit *pGroupUni
 	if ( pGroupUnit->IsAlive() )
 	{
 		if ( command.nCmdType == ACTION_COMMAND_DIE )
+		{
 			pGroupUnit->Die( command.bFromExplosion, command.fNumber );
+		}
 		else
 		{
 			CAICommand *pCommand = new CAICommand( command );
@@ -712,7 +776,9 @@ void CGroupLogic::SegmentFollowingUnits()
 
 		const float fHeadUnitSpeed = pHeadUnit->GetSpeedForFollowing();
 		if ( fHeadUnitSpeed != 0.0f )
+		{
 			pUnit->SetDesirableSpeed( fHeadUnitSpeed );
+		}
 	}
 }
 
@@ -725,7 +791,9 @@ void CGroupLogic::StayTimeSegment()
 		CAIUnit *pUnit = ( *iter );
 
 		if ( pUnit->IsRefValid() )
+		{
 			pUnit->AnimationSegment();
+		}
 	}
 }
 
@@ -775,7 +843,9 @@ void CGroupLogic::UpdateAllAreas( const std::vector<int> &units, const EActionNo
 	{
 		CCommonUnit *pUnit = dynamic_cast<CCommonUnit *>( CLinkObject::GetObjectByUniqueIdSafe( units[i] ) );
 		if ( pUnit && pUnit->IsRefValid() )
+		{
 			pUnit->UpdateArea( eAction );
+		}
 	}
 }
 
@@ -783,7 +853,9 @@ void CGroupLogic::RegisterSegments( CCommonUnit *pUnit, const bool bInitializati
 {
 	segmUnits[pUnit->IsInfantry()].RegisterSegments( pUnit, bInitialization );
 	if ( bAllInfo )
+	{
 		freezeUnits.RegisterSegments( pUnit, bInitialization );
+	}
 }
 
 void CGroupLogic::RegisterPathSegments( CAIUnit *pUnit, const bool bInitialization )
@@ -936,12 +1008,18 @@ const CVec2 GetGoPointByCommand( const SAIUnitCmd &cmd )
 			{
 				CBuilding *pBuilding = checked_cast<CBuilding *>( pObj );
 				if ( pBuilding->GetNEntrancePoints() > 0 )
+				{
 					vResult = pBuilding->GetEntrancePoint( 0 );
+				}
 				else
+				{
 					vResult = CVec2( pObj->GetCenter().x, pObj->GetCenter().y );
+				}
 			}
 			else
+			{
 				vResult = CVec2( pObj->GetCenter().x, pObj->GetCenter().y );
+			}
 		}
 
 		break;
@@ -968,7 +1046,9 @@ void CGroupLogic::ProcessGridCommand( const CVec2 &vGridCenter,
 		CCommonUnit *pUnit = grid.GetUnit( i );
 
 		if ( pUnit->GetBehaviourMoving() == SBehaviour::EMHoldPos )
+		{
 			pUnit->SetBehaviourMoving( SBehaviour::EMRoaming );
+		}
 
 		moveToCmd.vPos = grid.GetUnitCenter( i );
 		UnitCommand( moveToCmd, pUnit, bPlaceInQueue );

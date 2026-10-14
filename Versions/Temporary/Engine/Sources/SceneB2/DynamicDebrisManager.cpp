@@ -5,7 +5,9 @@
 void CVisDynamicDebrisPatch::Recalc()
 {
 	if ( pValue == 0 )
+	{
 		pValue = new NGScene::CObjectInfo;
+	}
 
 	NGScene::CObjectInfo::SData objData;
 	objData.verts = data.vertices;

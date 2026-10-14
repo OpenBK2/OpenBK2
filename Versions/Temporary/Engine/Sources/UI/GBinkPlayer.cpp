@@ -215,7 +215,9 @@ void CBinkVideoPlayer::Recalc()
 			bNeedUpdate = false;
 
 			if ( ( ( dwPlayFlags & PLAY_LOOPED ) == 0 ) && ( ffmpeg_player->FrameNum == ffmpeg_player->Frames ) )
+			{
 				bStopped = true;
+			}
 		}
 	}
 
@@ -252,7 +254,9 @@ bool CBinkVideoPlayer::OpenVideo()
 	{
 		pStream = std::unique_ptr<CDataStream>{ NVFS::GetMainVFS()->OpenFile( szFileName ) };
 		if ( !pStream || !pStream->IsOk() || !pStream->CanRead() )
+		{
 			return false;
+		}
 
 		ffmpeg_player = FFmpeg::Open( ( pStream->GetBuffer() ), pStream->GetSize() );
 	}

@@ -19,7 +19,9 @@ static struct SFileStreamDestroyer
 	~SFileStreamDestroyer()
 	{
 		if ( pStream )
+		{
 			delete pStream;
+		}
 	}
 } fileStreamDestroyer;
 
@@ -42,7 +44,9 @@ bool OpenFile( const std::string &_szFileName )
 	NStr::ToLowerASCII( &szFileName );
 
 	if ( pStream )
+	{
 		delete pStream;
+	}
 
 	// Every caller runs yyparse right after this, so this is where the scanner
 	// has to forget the previous file.

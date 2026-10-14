@@ -52,11 +52,15 @@ static bool ReadShortChunkSave( CDataStream &file, chunk_id &dwID, CMemoryStream
 {
 	uint32_t dwLeng = 0;
 	if ( file.GetPosition() == file.GetSize() )
+	{
 		return false;
+	}
 	file.Read( &dwID, sizeof( dwID ) );
 	file.Read( &dwLeng, 1 );
 	if ( dwLeng & 1 )
+	{
 		file.Read( ( (char *)&dwLeng ) + 1, 3 );
+	}
 	dwLeng >>= 1;
 	if ( dwLeng > 500000000 )
 	{
@@ -107,7 +111,9 @@ static bool WriteShortChunkSave( CDataStream &file, chunk_id dwID, CMemoryStream
 		file.Write( &dwLeng, sizeof( dwLeng ) );
 	}
 	else
+	{
 		file.Write( &dwLeng, 1 );
+	}
 	file.Write( chunk.GetBuffer(), chunk.GetSize() );
 	return true;
 }
@@ -136,7 +142,9 @@ static bool GetShortChunkSave( CDataStream &file, chunk_id dwID, CMemoryStream &
 		while ( ReadShortChunkSave( file, dwRid, chunk ) )
 		{
 			if ( dwRid == dwID )
+			{
 				return true;
+			}
 		}
 	}
 	chunk.Clear();
@@ -167,14 +175,20 @@ bool CStructureSaver::ReadShortChunk( SChunkLevel &src, int &nPos, SChunkLevel &
 	const unsigned char *pSrc = data.GetBuffer() + src.nStart;
 	uint32_t dwLeng = 0;
 	if ( nPos + 2 > src.nLength )
+	{
 		return false;
+	}
 	ReadPtrData( pSrc, &res.idChunk, nPos, sizeof( res.idChunk ) );
 	ReadPtrData( pSrc, &dwLeng, nPos, 1 );
 	if ( dwLeng & 1 )
+	{
 		ReadPtrData( pSrc, ( (char *)&dwLeng ) + 1, nPos, 3 );
+	}
 	dwLeng >>= 1;
 	if ( nPos + dwLeng > src.nLength )
+	{
 		return false;
+	}
 	res.nStart = nPos + src.nStart;
 	res.nLength = dwLeng;
 	nPos += dwLeng;
@@ -207,14 +221,20 @@ bool CStructureSaver::WriteShortChunk( SChunkLevel &dst, chunk_id dwID, const un
 		WritePtrData( pDst, &dwLeng, &dst.nLength, sizeof( dwLeng ) );
 	}
 	else
+	{
 		WritePtrData( pDst, &dwLeng, &dst.nLength, 1 );
+	}
 	// prevent copying to itself. Only an exact match is skipped; a source that
 	// overlaps the destination without being equal to it still goes through, and
 	// WritePtrData handles that.
 	if ( pDst + dst.nLength != pData )
+	{
 		WritePtrData( pDst, pData, &dst.nLength, nLength );
+	}
 	else
+	{
 		dst.nLength += nLength;
+	}
 	return true;
 }
 
@@ -226,7 +246,9 @@ bool CStructureSaver::GetShortChunk( SChunkLevel &src, chunk_id dwID, SChunkLeve
 	if ( src.idLastChunk == dwID )
 	{
 		if ( nNumber == src.nLastNumber + 1 )
+		{
 			nCounter = 1;
+		}
 		else
 		{
 			// not sequential access, fall back to linear search
@@ -245,7 +267,9 @@ bool CStructureSaver::GetShortChunk( SChunkLevel &src, chunk_id dwID, SChunkLeve
 			}
 		}
 		else
+		{
 			nCounter = 1;
+		}
 	}
 	while ( ReadShortChunk( src, nPos, res ) )
 	{
@@ -262,7 +286,9 @@ bool CStructureSaver::GetShortChunk( SChunkLevel &src, chunk_id dwID, SChunkLeve
 		}
 	}
 	if ( src.nLastPos == 0 )
+	{
 		return false;
+	}
 	// search from start
 	src.ClearCache();
 	return GetShortChunk( src, dwID, res, nNumber );
@@ -275,7 +301,9 @@ int CStructureSaver::CountShortChunks( SChunkLevel &src, chunk_id dwID )
 	while ( ReadShortChunk( src, nPos, temp ) )
 	{
 		if ( temp.idChunk == dwID )
+		{
 			nRes++;
+		}
 	}
 	return nRes;
 }
@@ -294,7 +322,9 @@ void CStructureSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize,
 			memcpy( pData, data.GetBuffer() + res.nStart, nSize );
 		}
 		else
+		{
 			memset( pData, 0, nSize );
+		}
 	}
 	else
 	{
@@ -384,7 +414,9 @@ void CStructureSaver::StoreObject( CObjectBase *pObject )
 		bool bNew = false;
 		pID = reinterpret_cast<void *>( GetStoredObjectID( pObject, &bNew ) );
 		if ( bNew )
+		{
 			toStore.push_back( pObject );
+		}
 	}
 	RawData( &pID, bMode64 ? sizeof( void * ) : 4 );
 
@@ -412,7 +444,9 @@ CObjectBase *CStructureSaver::LoadObject()
 	{
 		CObjectsHash::iterator pFound = objects.find( pServerPtr );
 		if ( pFound != objects.end() )
+		{
 			return pFound->second;
+		}
 		NI_ASSERT( false, "Here we are in trouble - stored object does not exist" );
 		// here we are in problem - stored object does not exist
 		// actually i think we got to throw the exception
@@ -427,7 +461,9 @@ uintptr_t CStructureSaver::GetStoredObjectID( CObjectBase *pObject, bool *pbNew 
 	CPObjectsHash::iterator pos = storedObjects.find( pObject );
 	*pbNew = ( pos == storedObjects.end() );
 	if ( !*pbNew )
+	{
 		return pos->second;
+	}
 	const uintptr_t nID = nNextObjectID++;
 	storedObjects[pObject] = nID;
 	return nID;
@@ -439,7 +475,9 @@ void CStructureSaver::RegisterExternalObject( CObjectBase *pObject, int nID )
 	{
 		CExternalHash::iterator i = externalObjects.find( nID );
 		if ( i != externalObjects.end() )
+		{
 			objects[i->second] = pObject;
+		}
 	}
 	else
 	{
@@ -463,7 +501,9 @@ bool CStructureSaver::StartChunk( const chunk_id idChunk, int nChunkNumber )
 	{
 		bool bRes = GetShortChunk( last, idChunk, chunks.back(), nChunkNumber );
 		if ( !bRes )
+		{
 			chunks.pop_back();
+		}
 		return bRes;
 	}
 	else
@@ -550,7 +590,9 @@ void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 			}
 		}
 		for ( int k = 0; k < ext.size(); ++k )
+		{
 			RegisterExternalObject( ext[k].pObj, ext[k].nID );
+		}
 
 		chunks.back().nLength = data.GetSize();
 		// create all objects from obj
@@ -606,7 +648,9 @@ void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 						for ( int k = 0; k < ignores.size(); ++k )
 						{
 							if ( ti == *ignores[k] )
+							{
 								bPerformCheck = false;
+							}
 						}
 						if ( bPerformCheck )
 						{
@@ -623,7 +667,9 @@ void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 							}
 							NI_ASSERT( !bFound, "some fields are not saved" );
 							if ( bFound )
+							{
 								ignores.push_back( &ti );
+							}
 						}
 					}
 #endif
@@ -642,7 +688,9 @@ void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 		nVersion = N_SAVELOAD_VERSION;
 
 		for ( int k = 0; k < ext.size(); ++k )
+		{
 			RegisterExternalObject( ext[k].pObj, ext[k].nID );
+		}
 	}
 }
 
@@ -730,7 +778,9 @@ void CStructureSaver::Finish()
 			std::vector<int> externalIDs;
 			externalIDs.reserve( externalObjects.size() );
 			for ( CExternalHash::iterator i = externalObjects.begin(); i != externalObjects.end(); ++i )
+			{
 				externalIDs.push_back( i->first );
+			}
 			std::sort( externalIDs.begin(), externalIDs.end() );
 			for ( int k = 0; k < externalIDs.size(); ++k )
 			{
@@ -779,7 +829,9 @@ static void Size( const std::string &szID, const std::vector<std::wstring> &para
 static void ObjSizes( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	for ( TObjSizes::iterator iter = objSizes.begin(); iter != objSizes.end(); ++iter )
+	{
 		DbgTrc( "%s\t%d", iter->first.c_str(), iter->second );
+	}
 }
 
 START_REGISTER( MissionCommands )

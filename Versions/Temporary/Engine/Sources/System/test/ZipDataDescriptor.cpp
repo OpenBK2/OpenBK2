@@ -148,7 +148,9 @@ std::string ReadThroughVFS( const std::vector<uint8_t> &zip, const char *pszDire
 		{
 			szRead.resize( pStream->GetSize() );
 			if ( !szRead.empty() )
+			{
 				pStream->Read( &szRead[0], static_cast<int>( szRead.size() ) );
+			}
 			delete pStream;
 		}
 	}

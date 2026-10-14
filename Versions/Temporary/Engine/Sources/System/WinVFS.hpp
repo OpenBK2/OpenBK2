@@ -66,7 +66,9 @@ class CWinVFS : public IVFS
 		bool GetStats( SFileStats *pStats, const std::string &szPathName ) const
 		{
 			if ( pStats == 0 )
+			{
 				return false;
+			}
 			pStats->nSize = zipfile.GetFileLen( nIndex );
 			pStats->mtime = zipfile.GetModDateTime( nIndex );
 			// Which archive supplied the file. Several .pak files can carry the
@@ -90,7 +92,9 @@ class CWinVFS : public IVFS
 		void operator()( NFile::CFileIterator &it ) const
 		{
 			if ( it.GetLength() <= 0 )
+			{
 				return;
+			}
 			//
 			const uint32_t dwCheckTime = PackFileTime( it.GetLastWriteTime() );
 			NFile::CFilePath szFileName = it.GetFullName();
@@ -99,7 +103,9 @@ class CWinVFS : public IVFS
 			// spelling and is both the key and the name to open by.
 			CStreamEntriesMap::iterator pos = pVFS->streamEntriesMap.find( szFileName );
 			if ( pos == pVFS->streamEntriesMap.end() )
+			{
 				pVFS->streamEntriesMap[szFileName] = new CWinFileEntry( dwCheckTime, szBasePath, szFileName );
+			}
 			else
 			{
 				if ( pos->second->GetCheckTime() < dwCheckTime )

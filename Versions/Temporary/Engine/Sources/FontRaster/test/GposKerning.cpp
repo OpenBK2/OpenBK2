@@ -90,7 +90,9 @@ bool HaveOswald()
 TEST( GposKerning, MatchesHarfBuzzOnOswald )
 {
 	if ( !HaveOswald() )
+	{
 		GTEST_SKIP() << "no font at " << OSWALD_TTF;
+	}
 	const std::vector<uint8_t> font = ReadFile( OSWALD_TTF );
 	const NFontRaster::CGposKerning kerning( ReadTable( font, "GPOS" ) );
 	ASSERT_FALSE( kerning.IsEmpty() );
@@ -104,7 +106,9 @@ TEST( GposKerning, DamagedTablesGiveNothing )
 {
 	EXPECT_TRUE( NFontRaster::CGposKerning( std::vector<uint8_t>() ).IsEmpty() );
 	if ( !HaveOswald() )
+	{
 		GTEST_SKIP() << "no font at " << OSWALD_TTF;
+	}
 	// every prefix of a real table must parse without reading past its end;
 	// what the prefix still covers may kern, and nothing may crash
 	const std::vector<uint8_t> gpos = ReadTable( ReadFile( OSWALD_TTF ), "GPOS" );
@@ -121,7 +125,9 @@ TEST( GposKerning, FaceWithoutKernTableIsKerned )
 	// The same pair through CFace, in pixels: A V narrows at a 41 pixel cell,
 	// which the kern table path alone would have left at 0
 	if ( !HaveOswald() )
+	{
 		GTEST_SKIP() << "no font at " << OSWALD_TTF;
+	}
 	std::string szError;
 	std::unique_ptr<NFontRaster::CFace> pFace = NFontRaster::CFace::OpenFile( OSWALD_TTF, 0, &szError );
 	ASSERT_TRUE( pFace != nullptr ) << szError;

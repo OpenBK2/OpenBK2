@@ -47,7 +47,9 @@ bool HasReinfUpgrade( const NDb::SChapter *pChapter, const NDb::SReinforcement *
 			{
 				const NDb::SChapterBonus *pBonus = missionInfo.reward[j];
 				if ( !pBonus )
+				{
 					continue;
+				}
 				if ( pBonus->eBonusType == NDb::CBT_REINF_CHANGE && !pBonus->bApplyToEnemy )
 				{
 					if ( pBonus->eReinforcementType == pCurReinf->eType && pBonus->pReinforcementSet != pCurReinf )

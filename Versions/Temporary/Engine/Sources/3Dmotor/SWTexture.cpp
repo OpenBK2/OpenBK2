@@ -31,7 +31,9 @@ void LoadTextureData( std::vector<CArray2D<TPixel>> *pMips, int _nMips, int _nSi
 		ASSERT( nXSize > 0 && nYSize > 0 );
 		mips[nMip].SetSizes( nXSize, nYSize );
 		for ( int y = 0; y < nYSize; ++y )
+		{
 			pFile->Read( &mips[nMip][y][0], nXSize * sizeof( TPixel ) );
+		}
 		//nXSize >>= 1;
 		//nYSize >>= 1;
 	}
@@ -48,19 +50,27 @@ static void CreateChecker( CSWTextureData *pTexture )
 	pTexture->mips[0].SetSizes( nSize, nSize );
 
 	for ( int y = 0; y < nSize; ++y )
+	{
 		for ( int x = 0; x < nSize; ++x )
+		{
 			pTexture->mips[0][y][x] = colors[( ( x & 4 ) == 0 ) & ( ( y & 4 ) == 0 )];
+		}
+	}
 }
 
 bool CSWTexture::IsReady()
 {
 	Touch();
 	if ( bIsReady )
+	{
 		return true;
+	}
 	if ( IsValid( pRequest ) )
 	{
 		if ( !pRequest->IsReady() )
+		{
 			return false;
+		}
 		bIsReady = true;
 		LoadTexture();
 		pRequest = 0;
@@ -69,7 +79,9 @@ bool CSWTexture::IsReady()
 	}
 	const NDb::STexture *pTex = GetKey().tKey;
 	if ( !pTex )
+	{
 		return true;
+	}
 	pRequest = CreateFileRequiest( pTex->szDestName.c_str(), 0 ); //CreateFileRequiest( "Textures", GetKey() );
 	AddFileRequest( pRequest );
 	return false;
@@ -149,7 +161,9 @@ void CSWTexture::Recalc()
 {
 	//ASSERT(0);
 	while ( !IsReady() )
+	{
 		std::this_thread::yield();
+	}
 }
 
 // CSWTextureData
@@ -157,7 +171,9 @@ void CSWTexture::Recalc()
 void CSWTextureData::PrepareBump()
 {
 	if ( bumpMips.size() == mips.size() )
+	{
 		return;
+	}
 	bumpMips.resize( mips.size() );
 	for ( int k = 0; k < mips.size(); ++k )
 	{
@@ -195,9 +211,13 @@ void CBilinearTexture::Recalc()
 	int nPicXSize = pic.GetSizeX();
 	int nPicYSize = pic.GetSizeY();
 	if ( nXSize > 1 )
+	{
 		fdU = ( (float)nPicXSize - 1.01f ) / ( nXSize - 1 );
+	}
 	if ( nYSize > 1 )
+	{
 		fdV = ( (float)nPicYSize - 1.01f ) / ( nYSize - 1 );
+	}
 	int nUPos, nDU = Float2Int( fdU * 0x8000 ), nVPos, nDV = Float2Int( fdV * 0x8000 );
 
 	nVPos = 0;

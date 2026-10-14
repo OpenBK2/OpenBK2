@@ -23,11 +23,15 @@ bool IsNoCode( const NDb::NTypeDef::SAttributes *pAttributes )
 bool IsNoCode( const NDb::NTypeDef::STypeStructBase::SField &field )
 {
 	if ( IsNoCode( field.pAttributes ) )
+	{
 		return true;
+	}
 
 	CDynamicCast<NDb::NTypeDef::STypeStructBase> pStructType = field.pType;
 	if ( pStructType && IsNoCode( pStructType->pAttributes ) )
+	{
 		return true;
+	}
 
 	return false;
 }
@@ -35,9 +39,13 @@ bool IsNoCode( const NDb::NTypeDef::STypeStructBase::SField &field )
 NDb::NTypeDef::STypeDef *GetRealType( NDb::NTypeDef::STypeDef *pType )
 {
 	if ( CDynamicCast<NDb::NTypeDef::STypedefType> pTypeDefNode = pType )
+	{
 		return pTypeDefNode->pRealType;
+	}
 	else
+	{
 		return pType;
+	}
 }
 
 }

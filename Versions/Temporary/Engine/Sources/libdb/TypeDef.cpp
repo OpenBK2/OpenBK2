@@ -54,9 +54,13 @@ namespace NTypeDef
 	void STypeBool::FromString( CVariant *pRes, const std::string &szValue ) const
 	{
 		if ( szValue.empty() || szValue[0] == '0' || szValue == "false" )
+		{
 			*pRes = false;
+		}
 		else if ( szValue[0] == '1' || szValue == "true" )
+		{
 			*pRes = true;
+		}
 		else
 		{
 			NI_ASSERT( false,
@@ -162,9 +166,13 @@ namespace NTypeDef
 		           fmt::format( "Can't convert type {} to DBID", int( value.GetType() ) ),
 		           return );
 		if ( value.GetType() == CVariant::VT_NULL )
+		{
 			pRes->clear();
+		}
 		else
+		{
 			*pRes = value.GetDBID().ToString();
+		}
 	}
 	void STypeRef::FromString( CVariant *pRes, const std::string &szValue ) const
 	{
@@ -176,7 +184,9 @@ namespace NTypeDef
 		{
 			pTypesList->resize( 0 );
 			if ( pTypeClass->derivedTerminalTypes.empty() )
+			{
 				pTypesList->push_back( pTypeClass );
+			}
 			else
 			{
 				pTypesList->reserve( pTypeClass->derivedTerminalTypes.size() );
@@ -191,7 +201,9 @@ namespace NTypeDef
 		if ( const STypeClass *pTypeClass = dynamic_cast_ptr<const STypeClass *>( pRefType ) )
 		{
 			if ( pTypeClass->derivedTerminalTypes.empty() )
+			{
 				return pTypeClass->nClassTypeID == nClassTypeID;
+			}
 			else
 			{
 				for ( STypeClass::CDerivedTerminalTypesList::const_iterator it = pTypeClass->derivedTerminalTypes.begin();
@@ -199,7 +211,9 @@ namespace NTypeDef
 				      ++it )
 				{
 					if ( ( *it )->nClassTypeID == nClassTypeID )
+					{
 						return true;
+					}
 				}
 			}
 		}
@@ -258,7 +272,9 @@ namespace NTypeDef
 		for ( int i = 0; i < constraints.size(); ++i )
 		{
 			if ( !constraints[i]->CheckValueCorrect( value ) )
+			{
 				return false;
+			}
 		}
 		return true;
 	}
@@ -277,30 +293,40 @@ namespace NTypeDef
 	CVariant STypeStructBase::SField::GetDefaultValue() const
 	{
 		if ( defaultValue.GetType() != CVariant::VT_NULL || !pType->IsSimpleType() )
+		{
 			return defaultValue;
+		}
 		else
+		{
 			return checked_cast_ptr<STypeSimple *>( pType )->GetDefaultValue();
+		}
 	}
 
 	bool STypeStructBase::SField::HasAttribute( const std::string &szName ) const
 	{
 		// check field's attribs
 		if ( pAttributes && pAttributes->attributes.find( szName ) != pAttributes->attributes.end() )
+		{
 			return true;
+		}
 		// check type's attribs
 		if ( pType->eType == TYPE_TYPE_BINARY )
 		{
 			const STypeBinary *pTypeBinary = checked_cast_ptr<const STypeBinary *>( pType );
 			if ( pTypeBinary->pAttributes &&
 			     pTypeBinary->pAttributes->attributes.find( szName ) != pTypeBinary->pAttributes->attributes.end() )
+			{
 				return true;
+			}
 		}
 		else if ( pType->eType == TYPE_TYPE_STRUCT )
 		{
 			const STypeStructBase *pTypeStruct = checked_cast_ptr<const STypeStructBase *>( pType );
 			if ( pTypeStruct->pAttributes &&
 			     pTypeStruct->pAttributes->attributes.find( szName ) != pTypeStruct->pAttributes->attributes.end() )
+			{
 				return true;
+			}
 		}
 		return false;
 	}
@@ -312,7 +338,9 @@ namespace NTypeDef
 		{
 			std::map<std::string, CVariant>::const_iterator pos = pAttributes->attributes.find( szName );
 			if ( pos != pAttributes->attributes.end() )
+			{
 				return &( pos->second );
+			}
 		}
 		// check type's attribs
 		if ( pType->eType == TYPE_TYPE_BINARY )
@@ -322,7 +350,9 @@ namespace NTypeDef
 			{
 				std::map<std::string, CVariant>::const_iterator pos = pTypeBinary->pAttributes->attributes.find( szName );
 				if ( pos != pTypeBinary->pAttributes->attributes.end() )
+				{
 					return &( pos->second );
+				}
 			}
 		}
 		else if ( pType->eType == TYPE_TYPE_STRUCT )
@@ -332,7 +362,9 @@ namespace NTypeDef
 			{
 				std::map<std::string, CVariant>::const_iterator pos = pTypeStruct->pAttributes->attributes.find( szName );
 				if ( pos != pTypeStruct->pAttributes->attributes.end() )
+				{
 					return &( pos->second );
+				}
 			}
 		}
 		return 0;
@@ -346,14 +378,18 @@ namespace NTypeDef
 			{
 				derivedTerminalTypes.push_back( pClass );
 				if ( STypeClass *pBaseClass = checked_cast_ptr<STypeClass *>( pBaseType ) )
+				{
 					pBaseClass->RegisterTerminalType( pClass );
+				}
 			}
 		}
 		else
 		{
 			NI_ASSERT( derivedTerminalTypes.empty(), fmt::format( "Terminal class {} has derived classes!!!", szTypeName ) );
 			if ( STypeClass *pBaseClass = checked_cast_ptr<STypeClass *>( pBaseType ) )
+			{
 				pBaseClass->RegisterTerminalType( this );
+			}
 		}
 	}
 

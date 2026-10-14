@@ -102,7 +102,9 @@ void CParatrooperPath::Segment( const NTimer::STime timeDiff )
 		vCurPoint.z -= timeDiff * SConsts::PARATROOPER_FALL_SPEED;
 	}
 	if ( IsFinished() )
+	{
 		vCurPoint = vFinishPoint;
+	}
 
 	pUnit->SetCenter( vCurPoint, true );
 	return;

@@ -9,7 +9,9 @@ int CAIUnit::operator&( IBinSaver &saver )
 	saver.Add( 1, static_cast<CCommonUnit *>( this ) );
 	saver.Add( 5, &timeToDeath );
 	if ( !saver.IsChecksum() )
+	{
 		saver.Add( 6, &player );
+	}
 	saver.Add( 11, &fCamoflage );
 	saver.Add( 12, &wVisionAngle );
 	saver.Add( 15, &fHitPoints );
@@ -84,7 +86,9 @@ void CSoldier::OnSerialize( IBinSaver &saver )
 	if ( !saver.IsReading() && !saver.IsChecksum() )
 	{
 		if ( IsFree() )
+		{
 			pObjInside = 0;
+		}
 	}
 	SerializeOwner( 2, &pObjInside, &saver );
 }
@@ -113,7 +117,9 @@ int CArtillery::operator&( IBinSaver &f )
 	f.Add( 20, &pBulletStorage );
 
 	if ( !f.IsChecksum() )
+	{
 		f.Add( 21, &bBulletStorageVisible );
+	}
 
 	f.Add( 22, &lastCheckToInstall );
 	f.Add( 23, &behUpdateDuration );
@@ -134,7 +140,9 @@ int CCommonUnit::operator&( IBinSaver &saver )
 	saver.Add( 7, &pLockingGun );
 	saver.Add( 9, &wReserveDir );
 	if ( !saver.IsChecksum() )
+	{
 		saver.Add( 10, &bSelectable );
+	}
 
 	saver.Add( 11, &fDesirableSpeed );
 	saver.Add( 12, &pFollowedUnit );
@@ -166,6 +174,8 @@ int CCommonUnit::operator&( IBinSaver &saver )
 		qFinish = qStart;
 	}
 	if ( saver.IsReading() )
+	{
 		nCommandLeft = -1;
+	}
 	return 0;
 }

@@ -28,7 +28,9 @@ CSortedGridUnits::CSortedGridUnits() : units( 10 )
 void CSortedGridUnits::AddUnit( CCommonUnit *pUnit )
 {
 	if ( units.size() >= nUnits - 1 )
+	{
 		units.resize( nUnits * 2 );
+	}
 
 	units[nUnits++] = pUnit;
 
@@ -51,7 +53,9 @@ bool CSortedGridUnits::SUnitsCompare::operator()( const int a, const int b ) con
 	const bool bBFormation = pSortedUnits->IsFormation( b );
 
 	if ( bAFormation ^ bBFormation )
+	{
 		return bBFormation;
+	}
 	else
 	{
 		const CVec2 vACenter( pSortedUnits->rotatedUnitsCoord[a] );
@@ -60,9 +64,13 @@ bool CSortedGridUnits::SUnitsCompare::operator()( const int a, const int b ) con
 		const int nBRow = fmod( vBCenter.y, STANDART_HEIGHT );
 
 		if ( nARow != nBRow )
+		{
 			return nARow > nBRow;
+		}
 		if ( vACenter.x != vBCenter.x )
+		{
 			return vACenter.x > vBCenter.x;
+		}
 		// Overlapping units still need a stable order when assigning grid slots.
 		return pSortedUnits->units[a]->GetUniqueId() < pSortedUnits->units[b]->GetUniqueId();
 	}
@@ -73,7 +81,9 @@ void CSortedGridUnits::Sort()
 	sortedUnitsNums.resize( nUnits, 0 );
 
 	for ( int i = 0; i < nUnits; ++i )
+	{
 		sortedUnitsNums[i] = i;
+	}
 
 	const CVec2 vAverageDir( GetAverageDir() );
 	const CVec2 vRotateAngle( vAverageDir.y, vAverageDir.x );
@@ -86,7 +96,9 @@ void CSortedGridUnits::Sort()
 		fMinCoord = (std::min)( fMinCoord, rotatedUnitsCoord[i].y );
 	}
 	for ( int i = 0; i < nUnits; ++i )
+	{
 		rotatedUnitsCoord[i].y -= fMinCoord;
+	}
 
 	SUnitsCompare cmp;
 	std::sort( sortedUnitsNums.begin(), sortedUnitsNums.end(), cmp );
@@ -130,7 +142,9 @@ CGrid::CGrid( const CVec2 &vGridCenter, const int nGroup, const CVec2 &vGridDir 
 		CCommonUnit *pUnit = theGroupLogic.GetGroupUnit( i );
 
 		if ( pUnit->CanMoveAfterUserCommand() )
+		{
 			sortedUnits.AddUnit( pUnit );
+		}
 	}
 
 	CVec2 vNormGridDir( vGridDir );
@@ -175,7 +189,9 @@ void CGrid::CalculateMaxWidth()
 	for ( int i = 0; i < sortedUnits.GetSize(); ++i )
 	{
 		if ( !sortedUnits.IsFormation( i ) )
+		{
 			fMaxWidth = (std::max)( fMaxWidth, 2.0f * sortedUnits.GetAABB( i ).x );
+		}
 	}
 }
 
@@ -195,7 +211,9 @@ void CGrid::CreateGrid()
 	columns.resize( nColumns, 0.0f );
 	sortedColumns.resize( nColumns, 0 );
 	for ( int i = 0; i < nColumns; ++i )
+	{
 		sortedColumns[i] = i;
+	}
 
 	//
 	float fHeight = 0;

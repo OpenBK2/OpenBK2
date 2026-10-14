@@ -30,7 +30,9 @@ bool CMOUnit::CreateSceneObject( const int nUniqueID,
 
 	const NDb::SModel *pModel = GetModel( pVisObj, eSeason );
 	if ( pModel == 0 )
+	{
 		return false;
+	}
 
 	const NDb::SModel *pLowLevelModel = GetLowLevelModel( pVisObj, eSeason );
 
@@ -58,7 +60,9 @@ void CMOUnit::GetStatus( SObjectStatus *pStatus ) const
 	pStatus->fFuel = fFuel;
 
 	if ( GetStatsLocal() )
+	{
 		pStatus->pArmorPattern = GetStatsLocal()->pArmorPattern;
+	}
 }
 
 bool CMOUnit::Create( const int nUniqueID,
@@ -77,12 +81,16 @@ bool CMOUnit::Create( const int nUniqueID,
 		      ++it )
 		{
 			if ( ( *it ) != 0 )
+			{
 				abilityMap[( *it )->eName] = SAbilityInfo( EASS_READY_TO_ON, 0.0f );
+			}
 		}
 
 		// Add Entrench button info
 		if ( GetStatsLocal()->GetActions()->availUserActions.HasAction( NDb::USER_ACTION_ENTRENCH_SELF ) )
+		{
 			abilityMap[NDb::ABILITY_ENTRENCH_SELF] = SAbilityInfo( EASS_READY_TO_ON, 0.0f );
+		}
 	}
 
 	bOpen = true;
@@ -102,7 +110,9 @@ bool CMOUnit::Create( const int nUniqueID,
 		if ( pS )
 		{
 			for ( int j = 0; j < pS->GetGunsSize( GetID(), 0 ); ++j )
+			{
 				nMaxAmmo += pS->GetGun( GetID(), 0, j ).nAmmo;
+			}
 		}
 	}
 	else
@@ -111,8 +121,12 @@ bool CMOUnit::Create( const int nUniqueID,
 		if ( pS )
 		{
 			for ( int i = 0; i < pS->GetPlatformsSize( GetID() ); ++i )
+			{
 				for ( int j = 0; j < pS->GetGunsSize( GetID(), i ); ++j )
+				{
 					nMaxAmmo += pS->GetGun( GetID(), i, j ).nAmmo;
+				}
+			}
 		}
 	}
 
@@ -126,7 +140,9 @@ bool CMOUnit::Create( const int nUniqueID,
 void CMOUnit::GetActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	if ( GetStatsLocal() == 0 || GetStatsLocal()->GetActions() == 0 )
+	{
 		return;
+	}
 	if ( eActions == ACTIONS_BY )
 	{
 		*pActions |= GetStatsLocal()->GetActions()->availUserActions;
@@ -134,14 +150,22 @@ void CMOUnit::GetActions( CUserActions *pActions, EActionsType eActions ) const
 		{
 			const NDb::SUnitSpecialAblityDesc *pDesc = GetStatsLocal()->GetActions()->specialAbilities[i];
 			if ( !pDesc )
+			{
 				continue;
+			}
 			if ( i <= nLevel )
+			{
 				pActions->SetAction( GetActionByAbility( pDesc->eName ) );
+			}
 			else
+			{
 				pActions->RemoveAction( GetActionByAbility( pDesc->eName ) );
+			}
 		}
 		if ( pActions->HasAction( NDb::USER_ACTION_MOVE ) )
+		{
 			pActions->SetAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN );
+		}
 	}
 	else if ( eActions == ACTIONS_WITH )
 	{
@@ -149,25 +173,33 @@ void CMOUnit::GetActions( CUserActions *pActions, EActionsType eActions ) const
 		pActions->SetAction( NDb::USER_ACTION_EXACT_SHOT );
 		pActions->SetAction( NDb::USER_ACTION_SUPPORT_FIRE );
 		if ( !checked_cast<const NDb::SUnitBaseRPGStats *>( GetStats() )->IsAviation() )
+		{
 			pActions->SetAction( NDb::USER_ACTION_DROP_BOMB );
+		}
 	}
 }
 
 void CMOUnit::GetPossibleActions( CUserActions *pActions ) const
 {
 	if ( GetStatsLocal() == 0 || GetStatsLocal()->GetActions() == 0 )
+	{
 		return;
+	}
 
 	*pActions |= GetStatsLocal()->GetActions()->availUserActions;
 	for ( int i = 0; i < GetStatsLocal()->GetActions()->specialAbilities.size(); ++i )
 	{
 		const NDb::SUnitSpecialAblityDesc *pDesc = GetStatsLocal()->GetActions()->specialAbilities[i];
 		if ( !pDesc )
+		{
 			continue;
+		}
 		pActions->SetAction( GetActionByAbility( pDesc->eName ) );
 	}
 	if ( pActions->HasAction( NDb::USER_ACTION_MOVE ) )
+	{
 		pActions->SetAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN );
+	}
 }
 
 void CMOUnit::GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const {}
@@ -205,12 +237,14 @@ CMOUnit::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckMana
 	if ( pAckManager && nNewCurAmmo < nMaxAmmo / 3 && nCurAmmo >= nMaxAmmo / 3 )
 	{
 		if ( NGlobal::GetVar( "m1", 0 ).GetFloat() == 0 )
+		{
 			pAckManager->AddAcknowledgement(
 					this,
 					NDb::ACK_LOW_AMMO,
 					checked_cast<const NDb::SUnitBaseRPGStats *>( GetStats() )->ChooseAcknowledgement( NDb::ACK_LOW_AMMO, 0 ),
 					0,
 					0 );
+		}
 	}
 
 	nCurAmmo = nNewCurAmmo;
@@ -226,15 +260,21 @@ bool CMOUnit::AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &upda
 	NDb::EUnitSpecialAbility eAbility = static_cast<NDb::EUnitSpecialAbility>( update.info.nAbilityType );
 	CAbilityInfo::iterator pos = abilityMap.find( eAbility );
 	if ( pos == abilityMap.end() )
+	{
 		return false;
+	}
 	SAbilityInfo &info = pos->second;
 
 	bool bResult = true;
 	if ( fabs( info.fParam = update.info.fCurValue ) < MIN_DIFFERENCE &&
 	     info.abilityState.dwStateValue == update.info.state.dwStateValue )
+	{
 		bResult = false;
+	}
 	else
+	{
 		info.fParam = update.info.fCurValue;
+	}
 
 	info.abilityState.dwStateValue = update.info.state.dwStateValue;
 
@@ -249,7 +289,9 @@ int CMOUnit::GetAbilityTier( NDb::EUserAction eAction ) const
 		{
 			const NDb::SUnitSpecialAblityDesc *pDesc = GetStatsLocal()->GetActions()->specialAbilities[i];
 			if ( pDesc && GetActionByAbility( pDesc->eName ) == eAction )
+			{
 				return i;
+			}
 		}
 	}
 	return -1;
@@ -263,7 +305,9 @@ const NDb::SUnitSpecialAblityDesc *CMOUnit::GetAbilityDesc( NDb::EUserAction eAc
 		{
 			const NDb::SUnitSpecialAblityDesc *pDesc = GetStatsLocal()->GetActions()->specialAbilities[i];
 			if ( pDesc && GetActionByAbility( pDesc->eName ) == eAction )
+			{
 				return pDesc;
+			}
 		}
 	}
 	return 0;
@@ -283,7 +327,9 @@ void CMOUnit::GetAbilityInfo( CAbilityInfo &abilityList ) const
 void CMOUnit::SetAnimation( const NDb::SAnimB2 *pAnimation, const NTimer::STime startTime )
 {
 	if ( pAnimation == 0 )
+	{
 		return;
+	}
 	NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() );
 	if ( pAnimator != 0 )
 	{
@@ -326,7 +372,9 @@ void CMOUnit::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 		if ( !bShowUnitRank )
 		{
 			if ( bNewAbility )
+			{
 				iconInfo.eIconLevelup = NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NEW_ABILITY;
+			}
 		}
 		else
 		{
@@ -371,9 +419,13 @@ void CMOUnit::AIUpdateBoredAcknowledgement( const struct SAIBoredAcknowledgement
                                             struct IClientAckManager *pAckManager )
 {
 	if ( ack.bPresent )
+	{
 		pAckManager->RegisterAsBored( NDb::EUnitAckType( ack.nAck ), this );
+	}
 	else
+	{
 		pAckManager->UnRegisterAsBored( NDb::EUnitAckType( ack.nAck ), this );
+	}
 }
 
 void CMOUnit::SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck )
@@ -404,7 +456,9 @@ void CMOUnit::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
                                  IClientAckManager *pAckManager )
 {
 	if ( pUpdate->bShowEffects )
+	{
 		pAckManager->UnitDead( this, pSoundScene );
+	}
 	DisableIcons( true );
 	SetDeathState();
 }
@@ -413,7 +467,9 @@ void CMOUnit::AIUpdateShootAreas( const SAIShootAreaUpdate *pUpdate )
 {
 	if ( pUpdate->nUpdateTime - nOldAreasTime < 1000 && !AreasChanged( pUpdate->info ) &&
 	     !Singleton<IGameTimer>()->HasPause( 0 ) )
+	{
 		return;
+	}
 	nOldAreasTime = pUpdate->nUpdateTime;
 	CopyAreas( pUpdate->info );
 	Scene()->ClearMarkers( ESMT_SHOOT_AREA, GetID() );
@@ -441,14 +497,18 @@ void CMOUnit::CopyAreas( const std::vector<SShootAreas> &newAreas )
 	{
 		oldAreas[i].areas.clear();
 		for ( std::list<SShootArea>::const_iterator it = newAreas[i].areas.begin(); it != newAreas[i].areas.end(); ++it )
+		{
 			oldAreas[i].areas.push_back( *it );
+		}
 	}
 }
 
 bool CMOUnit::AreasChanged( const std::vector<SShootAreas> &newAreas ) const
 {
 	if ( oldAreas.size() != newAreas.size() )
+	{
 		return true;
+	}
 	for ( int i = 0; i < newAreas.size(); ++i )
 	{
 		std::list<SShootArea>::const_iterator itOld = oldAreas[i].areas.begin();
@@ -456,12 +516,16 @@ bool CMOUnit::AreasChanged( const std::vector<SShootAreas> &newAreas ) const
 		while ( itOld != oldAreas[i].areas.end() && itNew != newAreas[i].areas.end() )
 		{
 			if ( *itOld != *itNew )
+			{
 				break;
+			}
 			++itOld;
 			++itNew;
 		}
 		if ( itOld != oldAreas[i].areas.end() || itNew != newAreas[i].areas.end() )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -477,7 +541,9 @@ void CMOUnit::SetUnitLevel( int _nLevel, bool _bShowUnitRank )
 	bShowUnitRank = true; //_bShowUnitRank;
 #ifndef _FINALRELEASE
 	if ( NGlobal::GetVar( "debug_unit_levels", 0 ) != 0 )
+	{
 		nLevel = 3;
+	}
 #endif // _FINALRELEASE
 }
 
@@ -574,15 +640,19 @@ void CMOUnit::TryToAttach( const NDb::SAttachedModelVisObj *pAttachedObj,
 		//			pNewAttachObj = pAttachedObj->pvisualObject;
 
 		if ( pNewAttachObj )
+		{
 			Scene()->AttachSubModel(
 					GetID(), eType, szLocator, GetModel( pNewAttachObj, eSeason ), ESAT_NO_REPLACE, nNumber, true, true );
+		}
 	}
 }
 
 void CMOUnit::SetPointer( const NDb::SModel *pModel )
 {
 	if ( bPointer && pModel )
+	{
 		return;
+	}
 
 	ClearPointer();
 
@@ -613,7 +683,9 @@ void CMOUnit::SetPointer( const NDb::SModel *pModel )
 				}
 			}
 			if ( !IsVisible() )
+			{
 				pAttached->Clear( Singleton<IGameTimer>()->GetGameTime() );
+			}
 		}
 	}
 }

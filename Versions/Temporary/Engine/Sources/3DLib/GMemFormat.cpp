@@ -13,7 +13,9 @@ static void CalcDU( T *pRes, const CVec3 &vNormal )
 	NGfx::CalcCompactVector( &pRes->normal, vNormal );
 	CVec3 vTexU = vNormal ^ CVec3( 0.3f, 0.3f, 0.3f );
 	if ( fabs2( vTexU ) < 0.01f )
+	{
 		vTexU = vNormal ^ CVec3( 0, 1, 0 );
+	}
 	Normalize( &vTexU );
 	CVec3 vTexV = vTexU ^ vNormal;
 	NGfx::CalcCompactVector( &pRes->texU, vTexU );
@@ -35,9 +37,13 @@ void CMemObjectInfo::Recalc()
 	CObjectInfo::SData resData;
 	resData.verts.resize( points.size() );
 	for ( int i = 0; i < points.size(); ++i )
+	{
 		resData.verts[i].pos = points[i];
+	}
 	for ( int i = 0; i < normals.size(); ++i )
+	{
 		CalcDU( &resData.verts[i], normals[i] );
+	}
 	//
 	resData.geometry = tris;
 	pValue->Assign( &resData, false );

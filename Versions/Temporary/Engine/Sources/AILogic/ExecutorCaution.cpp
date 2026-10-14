@@ -27,14 +27,20 @@ bool CExecutorCaution::NotifyEvent( const CExecutorEvent &event )
 {
 	//Filter out wrong calls
 	if ( pUnit->GetUniqueId() != event.GetParam().nUnitID )
+	{
 		return false;
+	}
 
 	const CExecutorEventSpecialAbility *pEv = static_cast<const CExecutorEventSpecialAbility *>( &event );
 	if ( pEv == 0 )
+	{
 		return false;
+	}
 
 	if ( pEv->GetAbility() != GetAbility() )
+	{
 		return false;
+	}
 
 	return CExecutorUnitCombatBonus::NotifyEvent( event );
 }
@@ -45,7 +51,9 @@ CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorCaution::OnModeChange(
 	if ( GetAutocast() && GetState() == EASS_READY_TO_ON )
 	{
 		if ( !( oldModeFlags & EUM_FIGHTING ) && ( newModeFlags & EUM_FIGHTING ) ) //Started fighting
+		{
 			return EACR_FORCE_ACTIVATE;
+		}
 	}
 
 	return EACR_IGNORE;

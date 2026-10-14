@@ -12,7 +12,9 @@ void CUpdates2Globe::AddUpdate( CObjectBase *pUpdate )
 CObjectBase *CUpdates2Globe::GetUpdate()
 {
 	if ( singleUpdates.empty() )
+	{
 		return 0;
+	}
 
 	CPtr<CObjectBase> pUpdate = singleUpdates.front();
 	singleUpdates.pop_front();
@@ -24,7 +26,9 @@ void CUpdates2Globe::Segment()
 {
 	// nobody takes updates, clear all
 	if ( NGlobal::GetVar( "m1", 0 ) == 0 )
+	{
 		singleUpdates.clear();
+	}
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x30133400, CUpdates2Globe );

@@ -44,7 +44,9 @@ namespace NFile
 static bool MatchesMask( const std::string &szName, const std::string &szMask )
 {
 	if ( szMask.empty() || szMask == "*" || szMask == "*.*" )
+	{
 		return true;
+	}
 	const char *pszName = szName.c_str();
 	const char *pszMask = szMask.c_str();
 	const char *pszStar = 0;
@@ -95,7 +97,9 @@ void CFileIterator::Open( const std::string &szFullMask )
 					.lexically_normal()
 					.make_preferred();
 	if ( ec )
+	{
 		return;
+	}
 	it = std::filesystem::directory_iterator( dir, ec );
 	if ( ec )
 	{
@@ -123,13 +127,19 @@ void CFileIterator::SkipToMatch()
 const CFileIterator &CFileIterator::Next()
 {
 	if ( IsEnd() )
+	{
 		return *this;
+	}
 	std::error_code ec;
 	it.increment( ec );
 	if ( ec )
+	{
 		it = std::filesystem::directory_iterator();
+	}
 	else
+	{
 		SkipToMatch();
+	}
 	return *this;
 }
 
@@ -169,13 +179,17 @@ public:
 		if ( !it.IsDirectory() )
 		{
 			if ( bDeleteRO )
+			{
 				MakeWritable( it.GetFullName() );
+			}
 			RemoveOne( it.GetFullName() );
 		}
 		else if ( bDeleteDir )
 		{
 			if ( bDeleteRO )
+			{
 				MakeWritable( it.GetFullName() );
+			}
 			RemoveOne( it.GetFullName() );
 		}
 	}
@@ -202,7 +216,9 @@ public:
 	void operator()( const CFileIterator &it )
 	{
 		if ( !it.IsDirectory() )
+		{
 			pNames->push_back( it.GetFullName() );
+		}
 	}
 };
 void GetDirectoryFiles( const char *pszDirName, const char *pszMask, std::list<std::string> *pNames, bool bRecurse )
@@ -308,19 +324,25 @@ bool IsValidDirName( const std::string &_szName )
 {
 	std::string szName = _szName;
 	if ( szName.empty() || szName.size() > 250 )
+	{
 		return false;
+	}
 	NStr::ToLower( &szName );
 	for ( int i = 0; i < szName.size(); ++i )
 	{
 		int c = (unsigned char)szName[i];
 		if ( c < 33 || c == '<' || c == '>' || c == ':' || c == '"' || c == '/' || c == '\\' || c == '|' || c == '*' ||
 		     c == '?' )
+		{
 			return false;
+		}
 	}
 	for ( const char **p = pszWrongNames; *p; ++p )
 	{
 		if ( szName == *p )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -534,13 +556,19 @@ bool ResolveDataPathCase( std::string *pRes,
 			// names when updating/removing files they have just created.
 			const std::string key = FoldName( szPart );
 			if ( pDir && !pDir->names.count( key ) && !bAllowMissing )
+			{
 				pDir = GetFoldedDir( szDir, true );
+			}
 			// Writers must reuse existing directory/file spelling too, but may
 			// append new components below it instead of requiring the whole path.
 			if ( pDir && pDir->names.count( key ) )
+			{
 				szFound = pDir->names.at( key );
+			}
 			else if ( !bAllowMissing )
+			{
 				return false;
+			}
 		}
 		AppendPathPart( &szReal, szFound );
 		szDir += szFound;

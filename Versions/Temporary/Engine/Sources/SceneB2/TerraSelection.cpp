@@ -54,7 +54,9 @@ void CTerraGen::CreateSelection( NMeshData::SMeshData *pData,
 			AI2Vis( pManager->GetTileHeight( nMiddleX * AI_TILES_IN_VIS_TILE + 1, nMiddleY * AI_TILES_IN_VIS_TILE + 1 ) );
 	float fTileHeight = -1.0f;
 	if ( !terrainInfo.tiles[nMiddleY][nMiddleX].vertices.empty() )
+	{
 		fTileHeight = terrainInfo.tiles[nMiddleY][nMiddleX].vertices[0].z;
+	}
 
 	if ( fTileAIHeight > fTileHeight + 1.0f )
 	{

@@ -75,7 +75,9 @@ int CAILogic::operator&( IBinSaver &saver )
 		saver.Add( 36, &bLocalPlayerUnitsPresent );
 	}
 	if ( saver.IsReading() )
+	{
 		timeLastMiniMapUpdateUnits = curTime;
+	}
 
 	SetNeedNewGroupNumber();
 

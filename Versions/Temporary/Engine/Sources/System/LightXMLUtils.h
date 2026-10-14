@@ -67,7 +67,9 @@ class CStringComposer
 	void Reserve( const int nSize )
 	{
 		if ( chars.capacity() < nSize )
+		{
 			chars.reserve( nSize * 1.5 );
+		}
 	}
 	void AddString( const char *pszStringBegin, const int nLength )
 	{
@@ -176,7 +178,9 @@ BOOST_FORCEINLINE bool IsWhiteSpace( const char chr )
 inline const char *SkipWhiteSpace( const char *p )
 {
 	while ( ( *p != 0 ) && IsWhiteSpace( *p ) )
+	{
 		++p;
+	}
 	//
 	return p;
 }
@@ -184,12 +188,16 @@ inline const char *SkipWhiteSpace( const char *p )
 inline bool IsEqualSubstring( const std::string &szString, const char *pszBegin, const char *pszEnd )
 {
 	if ( pszEnd - pszBegin < szString.length() )
+	{
 		return false;
+	}
 	//
 	for ( std::string::const_iterator it = szString.begin(); it != szString.end(); ++it, ++pszBegin )
 	{
 		if ( *it != *pszBegin )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -199,7 +207,9 @@ inline bool IsEqualSubstring( const std::string &szString, const char *p )
 	for ( std::string::const_iterator it = szString.begin(); it != szString.end(); ++it, ++p )
 	{
 		if ( *it != *p )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -209,7 +219,9 @@ inline bool IsEqualSubstringIC( const std::string &szString, const char *p )
 	for ( std::string::const_iterator it = szString.begin(); it != szString.end(); ++it, ++p )
 	{
 		if ( *it != tolower( *p ) )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -225,7 +237,9 @@ const char *ReadText( std::string *pszText,
 BOOST_FORCEINLINE const char *GetChar( const char *p, char *pValue )
 {
 	if ( *p == '&' )
+	{
 		return GetEntity( p + 1, pValue );
+	}
 	else
 	{
 		*pValue = *p;

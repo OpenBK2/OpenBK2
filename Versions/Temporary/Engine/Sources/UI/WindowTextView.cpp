@@ -34,7 +34,9 @@ void CWindowTextView::SetWidth( const int nWidth )
 	float fOldWidth = GetWindowRect().Width();
 	SetPlacement( 0, 0, nWidth, 0, EWPF_SIZE_X );
 	if ( fOldWidth == GetWindowRect().Width() )
+	{
 		return;
+	}
 	InitText();
 }
 
@@ -43,7 +45,9 @@ const CTPoint<int> CWindowTextView::GetSize() const
 	CTPoint<int> ptSize( 0, 0 );
 	//CRAP{ CHECK WHY EMPTY TOOLTIPS BROKE THIS
 	if ( pGfxText )
+	{
 		ScreenToVirtual( pGfxText->GetSize(), &ptSize );
+	}
 	//CRAP}
 	return ptSize;
 }
@@ -54,9 +58,13 @@ void CWindowTextView::SetPlacement(
 	float fOldWidth = GetWindowRect().Width();
 	CWindow::SetPlacement( x, y, sizeX, sizeY, flags );
 	if ( fOldWidth == GetWindowRect().Width() )
+	{
 		return;
+	}
 	if ( !g_bNoInitText )
+	{
 		InitText();
+	}
 }
 
 void CWindowTextView::Reposition( const CTRect<float> &parentRect )
@@ -64,7 +72,9 @@ void CWindowTextView::Reposition( const CTRect<float> &parentRect )
 	float fOldWidth = GetWindowRect().Width();
 	CWindow::Reposition( parentRect );
 	if ( fOldWidth == GetWindowRect().Width() && ::vScreenRect == this->vScreenRect )
+	{
 		return;
+	}
 	this->vScreenRect = ::vScreenRect;
 	InitText();
 }
@@ -85,7 +95,9 @@ bool CWindowTextView::InitText()
 
 	pGfxText = CreateML( this );
 	if ( nIDForMLHandler >= 0 )
+	{
 		pGfxText->SetIDForHandler( nIDForMLHandler );
+	}
 	CUIFactory::RegisterMLHandlers( pGfxText );
 	pGfxText->SetText( wszCustomText, 0 );
 
@@ -97,7 +109,9 @@ bool CWindowTextView::InitText()
 	pGfxText->Generate( rc.Width() + 0.5f );
 
 	if ( !pInstance->bResizeOnTextSet )
+	{
 		return false;
+	}
 
 	int nHeight = ScreenToVirtualY( pGfxText->GetSize().y ) - ScreenToVirtualY( 0 );
 	const bool bRet = ( nHeight != GetWindowRect().Height() );
@@ -126,7 +140,9 @@ void CWindowTextView::Visit( struct IUIVisitor *pVisitor )
 {
 	// Resizable labels must update their control bounds along with the glyphs.
 	if ( fFontScale != NGScene::GetRuntimeFontScale( UsesHudFontScale() ) )
+	{
 		InitText();
+	}
 	CWindow::Visit( pVisitor );
 
 	if ( pGfxText )
@@ -147,7 +163,9 @@ const std::wstring &CWindowTextView::GetDBFormatText() const
 	if ( const NDb::STextFormat *pTextFormat = pInstance->pTextFormat )
 	{
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pTextFormat->, FormatString ) )
+		{
 			return GET_TEXT_PRE( pTextFormat->, FormatString );
+		}
 	}
 
 	return CWindow::GetDBFormatText();
@@ -156,7 +174,9 @@ const std::wstring &CWindowTextView::GetDBFormatText() const
 const std::wstring &CWindowTextView::GetDBInstanceText() const
 {
 	if ( CHECK_TEXT_NOT_EMPTY_PRE( pInstance->, Text ) )
+	{
 		return GET_TEXT_PRE( pInstance->, Text );
+	}
 
 	return CWindow::GetDBInstanceText();
 }
@@ -174,7 +194,9 @@ const std::wstring &CWindowTextView::GetText() const
 bool CWindowTextView::SetText( const std::wstring &_szText )
 {
 	if ( wszCustomText == _szText )
+	{
 		return true;
+	}
 
 	wszCustomText = _szText;
 	return InitText();
@@ -186,5 +208,7 @@ void CWindowTextView::SetIDForMLHandler( int nID )
 	nIDForMLHandler = nID;
 
 	if ( pGfxText )
+	{
 		InitText();
+	}
 }

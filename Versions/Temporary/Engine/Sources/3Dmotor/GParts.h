@@ -23,13 +23,21 @@ struct SCombinedKey
 	{
 		SGroupInfo &groupInfo = fullGroupInfo.groupInfo;
 		if ( !pMaterial->DoesCastShadow() )
+		{
 			groupInfo.nObjectGroup &= ~N_MASK_CAST_SHADOW;
+		}
 		if ( ( groupInfo.nObjectGroup & N_MASK_CAST_SHADOW ) && pMaterial->IsOpaque() )
+		{
 			groupInfo.nObjectGroup |= N_MASK_OPAQUE;
+		}
 		else
+		{
 			groupInfo.nObjectGroup &= ~N_MASK_OPAQUE;
+		}
 		if ( pMaterial->DoesIgnoreZ() )
+		{
 			groupInfo.nObjectGroup |= N_MASK_IGNOREZ;
+		}
 	}
 	//
 	//	bool operator==( const SCombinedKey &k ) const { return pMaterial == k.pMaterial && fullGroupInfo == k.fullGroupInfo; }
@@ -164,7 +172,9 @@ public:
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices )
 	{
 		if ( bVertices )
+		{
 			p->AddHandle( pAnimation );
+		}
 	}
 };
 
@@ -225,7 +235,9 @@ public:
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices )
 	{
 		if ( bVertices )
+		{
 			p->AddHandle( pTransform );
+		}
 	}
 	bool Update( CVolumeNode *pVolume, SFullStaticTrackers *pTrackers );
 };
@@ -285,7 +297,9 @@ public:
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices )
 	{
 		if ( bVertices )
+		{
 			p->AddHandle( pTransform );
+		}
 	}
 };
 
@@ -327,7 +341,9 @@ public:
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices )
 	{
 		if ( bVertices )
+		{
 			p->AddHandle( pAnimation );
+		}
 	}
 };
 
@@ -469,7 +485,9 @@ public:
 			{
 				CCombinedPart *p = ( *pRes )[k];
 				if ( p->GetCombiner()->GetSize() < PF_MAX_PARTS_PER_COMBINER && p->GetFloorMask() == nFloorMask )
+				{
 					return ( *pRes )[k];
+				}
 			}
 			// have to alloc new one
 			CCombinedPart *p = new CCombinedPart( pTrackers, nFloorMask, bIsDynamic );
@@ -481,7 +499,9 @@ public:
 		GetCombinerPartForAdd( IMaterial *pMaterial, SFullStaticTrackers *pTrackers, int nFloorMask, bool bIsDynamic )
 		{
 			if ( pMaterial->IsTransparent() )
+			{
 				return AllocCombinerPart( &transparent, nFloorMask, pTrackers, bIsDynamic );
+			}
 			return AllocCombinerPart( &normal, nFloorMask, pTrackers, bIsDynamic );
 		}
 		bool IsEmpty() const
@@ -490,7 +510,9 @@ public:
 			{
 				ASSERT( IsValid( *i ) );
 				if ( ( *i )->GetCombiner()->GetSize() != 0 )
+				{
 					return false;
+				}
 			}
 			return true;
 		}

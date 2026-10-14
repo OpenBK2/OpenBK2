@@ -247,8 +247,10 @@ bool SaveChanges( bool bShowConfirmDialog, const std::function<void()> &rReloadD
 				{
 					Singleton<IResourceManager>()->SyncDB();
 					if ( Singleton<IResourceManager>()->CanSyncDB() )
+					{
 						saveError =
 								NDb::GetLastSaveError().empty() ? "The database still has unsaved changes." : NDb::GetLastSaveError();
+					}
 				}
 			}
 			catch ( const std::exception &error )
@@ -258,7 +260,9 @@ bool SaveChanges( bool bShowConfirmDialog, const std::function<void()> &rReloadD
 			// Keep Save/retry available, and refuse Close, Reload and Run Game
 			// when any part of a map or database save failed.
 			if ( !saveError.empty() && pEditorContainer->GetActiveEditor() )
+			{
 				pEditorContainer->GetActiveEditor()->SetModified( true );
+			}
 		}
 		else if ( bModified && !bConfirmed )
 		{
@@ -542,7 +546,9 @@ namespace
 		{
 			if ( pType && pType->nClassTypeID != -1 && pType->szTypeName == *pTypeName &&
 			     NObjectFactory::IsRegistered( pType->nClassTypeID ) )
+			{
 				return true;
+			}
 		}
 		*pError = "Unknown game resource type <" + *pTypeName + ">. The file was not registered.";
 		return false;
@@ -577,7 +583,9 @@ void RegisterXDB( const std::function<void()> &rReloadData )
 	                             "Game database files (*.xdb)|*.xdb||",
 	                             initialFolder,
 	                             &szChosen ) )
+	{
 		return;
+	}
 	std::error_code error;
 	const auto filePath = std::filesystem::canonical( std::filesystem::u8path( szChosen ), error );
 	// The extension as UTF-8 rather than through path::c_str(), which is
@@ -614,7 +622,9 @@ void RegisterXDB( const std::function<void()> &rReloadData )
 	{
 		std::string message = "Select an XDB inside the game's Data folder:\n" + initialFolder;
 		if ( NMOD::DoesAnyMODAttached() )
+		{
 			message += "\n\nOr inside the active mod folder:\n" + dataRoots.front().string();
+		}
 		ReportError( message );
 		return;
 	}

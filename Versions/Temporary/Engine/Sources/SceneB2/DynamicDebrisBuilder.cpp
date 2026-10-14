@@ -25,7 +25,9 @@ inline int AddUniqueDebrisVertex( NMeshData::SMeshDataTex2 &data,
 	      ++it, ++nCount )
 	{
 		if ( ( fabs2( it->pos.x - vert.x ) + fabs2( it->pos.y - vert.y ) + fabs2( it->pos.z - vert.z ) ) < DEF_FLOAT_EPS2 )
+		{
 			return nCount;
+		}
 	}
 	templ.pos = vert;
 	templ.tex.Set( fDistX * vTex.x * DEF_DEBRIS_TEX_SCALE, fDistY * vTex.y * DEF_DEBRIS_TEX_SCALE );
@@ -182,11 +184,17 @@ void CTerraGen::AddDynamicDebris(
 				{
 					points.resize( 0 );
 					if ( bFlag1 )
+					{
 						points.push_back( vert1 );
+					}
 					if ( bFlag2 )
+					{
 						points.push_back( vert2 );
+					}
 					if ( bFlag3 )
+					{
 						points.push_back( vert3 );
+					}
 
 					GetBaryCoords( v1, vert1, vert2, vert3, &bary );
 					if ( ( bary.x >= 0.0f ) && ( bary.y >= 0.0f ) && ( ( bary.x + bary.y ) <= 1.0f ) )
@@ -229,7 +237,9 @@ void CTerraGen::AddDynamicDebris(
 					AddIntersection( &points, v4, v1, vert3, vert1 );
 
 					if ( points.size() < 3 )
+					{
 						continue;
+					}
 
 					tempPoints.resize( 0 );
 					for ( std::vector<CVec3>::const_iterator it = points.begin(); it != points.end(); ++it )
@@ -238,7 +248,9 @@ void CTerraGen::AddDynamicDebris(
 						for ( ; itTemp != tempPoints.end(); ++itTemp )
 						{
 							if ( ( fabs2( it->x - itTemp->x ) + fabs2( it->y - itTemp->y ) ) < DEF_FLOAT_EPS2 )
+							{
 								break;
+							}
 						}
 						if ( itTemp == tempPoints.end() )
 						{
@@ -247,7 +259,9 @@ void CTerraGen::AddDynamicDebris(
 					}
 
 					if ( tempPoints.size() < 3 )
+					{
 						continue;
+					}
 
 					CreateConvexHull( &resPoints, tempPoints );
 
@@ -298,9 +312,13 @@ void CTerraGen::AddDynamicDebris(
 						                                        fDist14 );
 
 						if ( IsCCW( data.vertices[nInd0].pos, data.vertices[nPrevInd].pos, data.vertices[nInd].pos ) )
+						{
 							data.triangles.push_back( STriangle( nInd0, nPrevInd, nInd ) );
+						}
 						else
+						{
 							data.triangles.push_back( STriangle( nInd0, nInd, nPrevInd ) );
+						}
 
 						nPrevInd = nInd;
 					}

@@ -55,7 +55,9 @@ public:
 	{
 		NGameX::PostStorageInitialize();
 		if ( NGlobal::GetVar( "delete_removed_object", 0 ) != 0 )
+		{
 			NDb::AddDbObserver( NDb::CreateVFSDbObserver() );
+		}
 	}
 	void CreateMenus( IMainFrame *pMainFrame ) const;
 };
@@ -66,13 +68,21 @@ void CEditorAppSpecific::LoadMapEditorModule( const std::string &szModuleName ) 
 	// no editor types; the numbering of the rest is left alone because those
 	// names are exported from ED_B2_M1 and ED_B2.
 	if ( IEditorModule *pModule = GetEditorModule1() )
+	{
 		extModules.push_back( pModule );
+	}
 	if ( IEditorModule *pModule = GetEditorModule2() )
+	{
 		extModules.push_back( pModule );
+	}
 	if ( IEditorModule *pModule = GetEditorModule3() )
+	{
 		extModules.push_back( pModule );
+	}
 	if ( IEditorModule *pModule = GetEditorModule4() )
+	{
 		extModules.push_back( pModule );
+	}
 	//
 	NHPTimer::STime time = 0;
 	NHPTimer::GetTime( &time );

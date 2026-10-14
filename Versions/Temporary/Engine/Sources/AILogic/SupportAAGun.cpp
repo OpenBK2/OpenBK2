@@ -22,7 +22,9 @@ void CSupportAAGun::AddGunNumber( const int nGun )
 void CSupportAAGun::Segment()
 {
 	if ( !predictedFire.IsFinishedTask() )
+	{
 		predictedFire.Segment();
+	}
 	else if ( curTime >= timeNextTargetSearch )
 	{
 		// if there is no state - search for target
@@ -35,7 +37,9 @@ void CSupportAAGun::Segment()
 		for ( CPlanesIter iter; !iter.IsFinished(); iter.Iterate() )
 		{
 			if ( theDipl.GetDiplStatus( nPlayer, ( *iter )->GetPlayer() ) == EDI_ENEMY )
+			{
 				pShootEstimator->AddUnit( *iter );
+			}
 		}
 		predictedFire.SetTarget( static_cast<CAviation *>( pShootEstimator->GetBestUnit() ) );
 	}

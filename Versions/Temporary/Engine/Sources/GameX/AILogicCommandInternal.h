@@ -36,7 +36,9 @@ public:
 		std::string szDebug;
 		szDebug = fmt::format( "GroupID = {}, UnitIDs: ", nID );
 		for ( int i = 0; i < unitsIDs.size(); ++i )
+		{
 			szDebug += fmt::format( "{}, ", unitsIDs[i] );
+		}
 		return szDebug;
 	}
 #endif

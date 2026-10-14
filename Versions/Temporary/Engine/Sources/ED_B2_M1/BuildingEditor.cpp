@@ -77,14 +77,18 @@ void CBuildingEditor::ResetGUI( bool bActive )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	if ( !bActive )
+	{
 		pUserData->SerializeSettings( editorSettings, "BuildingRPGStats", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
+	}
 	// Copy only GUI fields from the defaults, preserving all editing settings.
 	const CBuildingRPGStatsEditorSettings defaults;
 	editorSettings.bShowShortcutBar = defaults.bShowShortcutBar;
 	pUserData->SerializeSettings( editorSettings, "BuildingRPGStats", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
 
 	if ( pwndShortcutBar )
+	{
 		pwndShortcutBar->Show( bActive && editorSettings.bShowShortcutBar );
+	}
 }
 
 void CBuildingEditor::CreateControls()
@@ -206,7 +210,9 @@ void CBuildingEditor::ReloadModel( NDb::ESeason eSeason )
 
 	IEditorScene *pScene = EditorScene();
 	if ( !pScene )
+	{
 		return;
+	}
 
 	// load building
 	CVec3 vVisCameraPos = GetLastCameraAnchor();

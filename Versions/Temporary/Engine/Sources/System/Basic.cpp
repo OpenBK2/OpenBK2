@@ -8,7 +8,9 @@ const char *CObjectBase::GetTypeName() const
 	const char *pszName = typeid( *this ).name(), *p;
 	p = strstr( pszName, "::" );
 	if ( !p )
+	{
 		return pszName + 6;
+	}
 	return p + 2;
 }
 
@@ -23,14 +25,18 @@ static std::list<CObjectBase *> *pDestroy, *pInvalidate;
 inline std::list<CObjectBase *> &GetDestroy()
 {
 	if ( !pDestroy )
+	{
 		pDestroy = new std::list<CObjectBase *>;
+	}
 	return *pDestroy;
 }
 
 inline std::list<CObjectBase *> &GetInvalidate()
 {
 	if ( !pInvalidate )
+	{
 		pInvalidate = new std::list<CObjectBase *>;
+	}
 	return *pInvalidate;
 }
 
@@ -65,7 +71,9 @@ void CObjectBase::ReleaseObj( int nRef, int nMask )
 	if ( ( nObjData & 0x7fffffff ) == 0 && nRefData == 0 )
 	{
 		if ( bDestroyInProgress )
+		{
 			GetDestroy().push_back( this );
+		}
 		else
 		{
 			bDestroyInProgress = true;
@@ -98,7 +106,9 @@ void CObjectBase::ReleaseRef()
 	if ( nRefData == 0 && ( nObjData & 0x7fffffff ) == 0 )
 	{
 		if ( bDestroyInProgress )
+		{
 			GetDestroy().push_back( this );
+		}
 		else
 		{
 			bDestroyInProgress = true;
@@ -131,7 +141,9 @@ void CObjectBase::DestroyDelayed()
 	}
 	bDestroyInProgress = false;
 	if ( !tracker.bIsRunning )
+	{
 		FreeLists();
+	}
 }
 
 #ifdef TRACK_OBJECTS_STATISTICS
@@ -141,7 +153,9 @@ std::unordered_set<CObjectBase *> *pObjectsSet; // do not initialize!
 void RegisterInObjectsSet( CObjectBase *pObject )
 {
 	if ( pObjectsSet == 0 )
+	{
 		pObjectsSet = new std::unordered_set<CObjectBase *>;
+	}
 
 	pObjectsSet->insert( pObject );
 }
@@ -199,9 +213,13 @@ static void CollectObjectsStatistics( std::unordered_map<std::string, STypeStats
 		typeStats.nSizeOf = pObject->GetSizeOf();
 
 		if ( IsValid( pObject ) )
+		{
 			++typeStats.nValidsNumber;
+		}
 		else
+		{
 			++typeStats.nInvalidsNumber;
+		}
 
 		pObject->operator&( *pSaver );
 		int nNewStreamSize = memoryStream.GetSize();

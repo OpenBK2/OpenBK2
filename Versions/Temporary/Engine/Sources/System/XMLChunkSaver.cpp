@@ -20,9 +20,13 @@ static const int START_CHUNK_LEVELS = 50;
 IXmlSaver *CreateXmlSaver( CDataStream *pStream, ESaverMode mode )
 {
 	if ( ( mode == SAVER_MODE_READ ) && ( pStream == 0 || pStream->GetSize() == 0 ) )
+	{
 		return 0;
+	}
 	if ( mode == SAVER_MODE_WRITE && pStream == 0 )
+	{
 		return 0;
+	}
 	return new CXMLChunkSaver( pStream, mode == SAVER_MODE_READ );
 }
 
@@ -30,7 +34,9 @@ void CXMLChunkSaver::PushReadChunkLevel( const NXml::CXmlNode *pNode )
 {
 	++nCurChunkLevel;
 	if ( readChunkLevels.size() <= nCurChunkLevel )
+	{
 		readChunkLevels.resize( nCurChunkLevel * 2 );
+	}
 
 	readChunkLevels[nCurChunkLevel] = pNode;
 }
@@ -70,7 +76,9 @@ void CXMLChunkSaver::Start( CDataStream *pStream, bool bRead )
 						Add( "__ServerPtr", &pServerPtr );
 						CXmlResource *pObject = checked_cast<CXmlResource *>( NObjectFactory::MakeObject( nClassTypeID ) );
 						if ( pObject )
+						{
 							objects[pServerPtr] = pObject;
+						}
 						//
 						FinishChunk();
 					}
@@ -84,7 +92,9 @@ void CXMLChunkSaver::Start( CDataStream *pStream, bool bRead )
 						Add( "__ServerPtr", &pServerPtr );
 						CObjectsHash::iterator pos = objects.find( pServerPtr );
 						if ( pos != objects.end() )
+						{
 							pos->second->operator&( *this );
+						}
 						//
 						FinishChunk();
 					}
@@ -117,7 +127,9 @@ void CXMLChunkSaver::Finish()
 	else
 	{
 		if ( !pDstStream )
+		{
 			return;
+		}
 		//
 		if ( !toStore.empty() && StartChunk( "SharedClasses", 0 ) != false )
 		{
@@ -199,10 +211,14 @@ bool CXMLChunkSaver::StartChunk( const chunk_id idChunk, int nChunkNumber )
 			pNode->SetValue( idChunk );
 		}
 		else // use this node
+		{
 			pNode = pCurrNode;
+		}
 		//
 		if ( pCurrNode != pNode )
+		{
 			pCurrNode->AddChild( pNode );
+		}
 
 		pCurrNode = pNode;
 		return true;
@@ -220,7 +236,9 @@ void CXMLChunkSaver::FinishChunk()
 			PopReadChunkLevel();
 		}
 		else
+		{
 			pReadNode = 0;
+		}
 	}
 	else
 	{
@@ -230,16 +248,22 @@ void CXMLChunkSaver::FinishChunk()
 			chunkLevels.pop_back();
 		}
 		else
+		{
 			pCurrNode = 0;
+		}
 	}
 }
 
 int CXMLChunkSaver::CountChunks()
 {
 	if ( IsReading() )
+	{
 		return pReadNode != 0 ? pReadNode->GetNodes().size() : 0;
+	}
 	else
+	{
 		return pCurrNode != 0 ? pCurrNode->CountChildren() : 0;
+	}
 }
 
 static const int ReadInt( const char *p, const int nSize )
@@ -263,7 +287,9 @@ static const int ReadInt( const char *p, const int nSize )
 
 	// *p was read before anything established there was a character to read.
 	if ( p >= pEnd )
+	{
 		return 0;
+	}
 
 	if ( nSize >= 2 && *p == '0' && *( p + 1 ) == 'x' )
 	{
@@ -272,13 +298,21 @@ static const int ReadInt( const char *p, const int nSize )
 		{
 			uint32_t nDst = 0;
 			if ( *p >= '0' && *p <= '9' )
+			{
 				nDst = *p - '0';
+			}
 			else if ( *p >= 'a' && *p <= 'f' )
+			{
 				nDst = *p - 'a' + 10;
+			}
 			else if ( *p >= 'A' && *p <= 'F' )
+			{
 				nDst = *p - 'A' + 10;
+			}
 			else
+			{
 				break;
+			}
 
 			n = n * 16u + nDst;
 			++p;
@@ -300,7 +334,9 @@ static const int ReadInt( const char *p, const int nSize )
 	}
 
 	if ( bNegative )
+	{
 		n = 0u - n;
+	}
 
 	// Not a cast: converting an unsigned value that does not fit back to int is
 	// implementation defined rather than undefined, which is still something an
@@ -329,7 +365,9 @@ static const float ReadFloat( const char *p, const int nSize )
 	}
 
 	if ( p == pEnd )
+	{
 		return f * nSign;
+	}
 
 	if ( *p == '.' )
 	{
@@ -388,7 +426,9 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, int *pnData, int nChunkN
 					const NXml::SXmlAttribute *pAttribute = pNode->GetDataAttribute();
 					int nCheck = 0;
 					if ( pAttribute && pAttribute->value.nSize )
+					{
 						*pnData = ReadInt( pAttribute->value.pszBegin, pAttribute->value.nSize );
+					}
 					return true;
 				}
 			}
@@ -397,7 +437,9 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, int *pnData, int nChunkN
 				const NXml::SXmlAttribute *pAttribute = pReadNode->GetAttribute( idChunk );
 				int nCheck = 0;
 				if ( pAttribute && pAttribute->value.nSize )
+				{
 					*pnData = ReadInt( pAttribute->value.pszBegin, pAttribute->value.nSize );
+				}
 				return true;
 			}
 		}
@@ -504,7 +546,9 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, bool *pData, int nChunkN
 						return true;
 					}
 					else
+					{
 						return false;
+					}
 				}
 			}
 			else
@@ -516,7 +560,9 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, bool *pData, int nChunkN
 					return true;
 				}
 				else
+				{
 					return false;
+				}
 			}
 		}
 	}
@@ -535,7 +581,9 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, bool *pData, int nChunkN
 bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber )
 {
 	if ( idChunk != 0 && StartChunk( idChunk, nChunkNumber ) == false )
+	{
 		return false;
+	}
 	NI_ASSERT( nSize > 0, "Wrong size passed" );
 	std::string szString;
 	if ( IsReading() )
@@ -547,7 +595,9 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 			NStr::StringToBin( szString.c_str(), pData, 0 );
 		}
 		else
+		{
 			memset( pData, 0, nSize );
+		}
 	}
 	else
 	{
@@ -557,14 +607,18 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 	}
 	//
 	if ( idChunk != 0 )
+	{
 		FinishChunk();
+	}
 	return true;
 }
 
 bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, boost::uuids::uuid *pgData, int nChunkNumber )
 {
 	if ( idChunk != 0 && StartChunk( idChunk, nChunkNumber ) == false )
+	{
 		return false;
+	}
 	//
 	bool bRetVal = false;
 	std::string szValue;
@@ -600,13 +654,19 @@ bool CXMLChunkSaver::DataChunkDBID( CDBID *pDBID )
 					if ( !szDBID.empty() )
 					{
 						if ( szDBID[0] == '/' || szDBID[0] == '\\' )
+						{
 							*pDBID = szDBID.c_str() + 1;
+						}
 						else
+						{
 							*pDBID = GetCurrObjectPath() + szDBID;
+						}
 					}
 				}
 				else
+				{
 					*pDBID = "";
+				}
 				return true;
 			}
 		}
@@ -636,20 +696,32 @@ bool CXMLChunkSaver::DataChunkFilePath( NFile::CFilePath *pFilePath )
 				if ( !szRefValue.empty() )
 				{
 					if ( szRefValue[0] == '/' || szRefValue[0] == '\\' )
+					{
 						szFilePath = szRefValue.c_str() + 1;
+					}
 					else
+					{
 						szFilePath = GetCurrObjectPath() + szRefValue;
+					}
 				}
 				else
+				{
 					szFilePath = "";
+				}
 			}
 			else
+			{
 				szFilePath = pReadNode->GetValue().ToString();
+			}
 			//
 			if ( szFilePath.empty() )
+			{
 				*pFilePath = "";
+			}
 			else
+			{
 				*pFilePath = szFilePath;
+			}
 			//
 			return true;
 		}
@@ -764,7 +836,9 @@ CObjectBase *CXMLChunkSaver::LoadObject()
 	{
 		CObjectsHash::iterator pFound = objects.find( pServerPtr );
 		if ( pFound != objects.end() )
+		{
 			return pFound->second;
+		}
 		NI_ASSERT( false, "Here we are in trouble - stored object does not exist" );
 		// here we are in problem - stored object does not exist
 		// actually i think we got to throw the exception
@@ -858,12 +932,18 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, std::string *pData )
 					if ( !szHRef.empty() )
 					{
 						if ( szHRef[0] == '/' || szHRef[0] == '\\' )
+						{
 							*pData = szHRef.c_str() + 1;
+						}
 						else
+						{
 							*pData = GetCurrObjectPath() + szHRef;
+						}
 					}
 					else
+					{
 						pData->clear();
+					}
 					return true;
 				}
 			}
@@ -880,9 +960,13 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, std::string *pData )
 		{
 			const std::string szVal = *pData;
 			if ( strcmp( attrName, HREF_ATTRIBUTE_NAME ) == 0 )
+			{
 				checked_cast<CXMLElement *>( pCurrNode )->SetAttribute( attrName, "/" + szVal );
+			}
 			else
+			{
 				checked_cast<CXMLElement *>( pCurrNode )->SetAttribute( attrName, szVal );
+			}
 			return true;
 		}
 	}

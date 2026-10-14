@@ -86,7 +86,9 @@ static void Split( SPolyhedron *pRes, const SPlane &p )
 		for ( int k = 0; k < s.vertices.size(); ++k )
 		{
 			if ( s.vertices[k].w < 0 )
+			{
 				s.vertices[k] = -s.vertices[k];
+			}
 		}
 		int iPrev = s.vertices.size() - 1;
 		float fPrevSide = planeVec4 * s.vertices[iPrev], fSide;
@@ -100,7 +102,9 @@ static void Split( SPolyhedron *pRes, const SPlane &p )
 			if ( fPrevSide < 0 )
 			{
 				if ( fSide < 0 )
+				{
 					continue;
+				}
 				bWasIntersected = true;
 				if ( fSide > 0 )
 				{
@@ -108,7 +112,9 @@ static void Split( SPolyhedron *pRes, const SPlane &p )
 					d.vertices.push_back( vEnter );
 				}
 				else
+				{
 					vEnter = v;
+				}
 				d.vertices.push_back( v );
 			}
 			else
@@ -122,10 +128,14 @@ static void Split( SPolyhedron *pRes, const SPlane &p )
 						d.vertices.push_back( vExit );
 					}
 					else
+					{
 						vExit = vPrev;
+					}
 				}
 				else
+				{
 					d.vertices.push_back( v );
+				}
 			}
 		}
 		if ( !d.vertices.empty() )
@@ -134,7 +144,9 @@ static void Split( SPolyhedron *pRes, const SPlane &p )
 			pRes->facets.push_back( d );
 		}
 		if ( bWasIntersected )
+		{
 			edges.push_back( SEdge( vEnter, vExit ) );
+		}
 	}
 	if ( !edges.empty() )
 	{
@@ -157,7 +169,9 @@ static void Split( SPolyhedron *pRes, const SPlane &p )
 			}
 			ASSERT( bFound );
 			if ( !bFound )
+			{
 				break;
+			}
 		}
 		onPlane.vPlane = CVec4( -p.n.x, -p.n.y, -p.n.z, p.d );
 		pRes->facets.push_back( onPlane );
@@ -172,7 +186,9 @@ static void SetPlane( SPolygon *pRes, const CVec4 &a, const CVec4 &b, const CVec
 	CVec3 vNormal = ab ^ ac;
 	float fDist = a.x * vNormal.x + a.y * vNormal.y + a.z * vNormal.z;
 	if ( a.w < 0 )
+	{
 		fDist = -fDist;
+	}
 	pRes->vPlane.Set( vNormal * fabs( a.w ), fDist );
 	Normalize( &pRes->vPlane );
 }
@@ -221,7 +237,9 @@ static int AddPoint( SHashedHedron *pRes, const CVec4 &v )
 	for ( int k = 0; k < pRes->pts.size(); ++k )
 	{
 		if ( pRes->pts[k] == v )
+		{
 			return k;
+		}
 	}
 	pRes->pts.push_back( v );
 	return pRes->pts.size() - 1;
@@ -233,9 +251,13 @@ static int AddEdge( SHashedHedron *pRes, int nStart, int nEnd )
 	{
 		SHashedHedron::SEdge &e = pRes->edges[k];
 		if ( e.nStart == nStart && e.nEnd == nEnd )
+		{
 			return k;
+		}
 		if ( e.nStart == nEnd && e.nEnd == nStart )
+		{
 			return k | 0x80000000;
+		}
 	}
 	pRes->edges.push_back( SHashedHedron::SEdge( nStart, nEnd ) );
 	return pRes->edges.size() - 1;
@@ -268,14 +290,20 @@ static bool IsClosed( const SHashedHedron &src )
 		{
 			int nEdge = src.polys[k].edges[i];
 			if ( nEdge & 0x80000000 )
+			{
 				--count[nEdge & 0x7fffffff];
+			}
 			else
+			{
 				++count[nEdge];
+			}
 		}
 	}
 	bool bRes = true;
 	for ( int i = 0; i < count.size(); ++i )
+	{
 		bRes &= count[i] == 0;
+	}
 	return bRes;
 }
 
@@ -291,9 +319,13 @@ static void Assign( SPolyhedron *pRes, const SHashedHedron &src )
 		{
 			int nEdge = s.edges[i];
 			if ( nEdge & 0x80000000 )
+			{
 				d.vertices.push_back( src.pts[src.edges[nEdge & 0x7fffffff].nEnd] );
+			}
 			else
+			{
 				d.vertices.push_back( src.pts[src.edges[nEdge].nStart] );
+			}
 		}
 	}
 }
@@ -323,9 +355,13 @@ MakeShadowOccludersHull( NGeometry::SPolyhedron *pRes, const NGeometry::SPolyhed
 		for ( int i = 0; i < p.edges.size(); ++i )
 		{
 			if ( p.edges[i] & 0x80000000 )
+			{
 				lPolys[p.edges[i] & 0x7fffffff] = k;
+			}
 			else
+			{
 				rPolys[p.edges[i]] = k;
+			}
 		}
 	}
 
@@ -337,15 +373,21 @@ MakeShadowOccludersHull( NGeometry::SPolyhedron *pRes, const NGeometry::SPolyhed
 		if ( up[rPolys[k]] != up[lPolys[k]] )
 		{
 			if ( up[rPolys[k]] )
+			{
 				pRes->facets.push_back( NGeometry::GetTriangle( vStart, vEnd, vInf ) );
+			}
 			else
+			{
 				pRes->facets.push_back( NGeometry::GetTriangle( vEnd, vStart, vInf ) );
+			}
 		}
 	}
 	for ( int k = 0; k < up.size(); ++k )
 	{
 		if ( up[k] )
+		{
 			continue;
+		}
 		pRes->facets.push_back( src.facets[k] );
 	}
 	NGeometry::SHashedHedron hTest;
@@ -623,12 +665,16 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes,
 
 	SAreaCalcInfo areaInfo;
 	for ( std::unordered_map<CVec3, bool, SVec3Hash>::iterator i = pointHash.begin(); i != pointHash.end(); ++i )
+	{
 		areaInfo.points.push_back( i->first );
+	}
 
 	// base orientation
 	areaInfo.vXBase = vLightDir ^ CVec3( 1, 0, 0 );
 	if ( fabs2( areaInfo.vXBase ) < 0.1f )
+	{
 		areaInfo.vXBase = vLightDir ^ CVec3( 0, 1, 0 );
+	}
 	Normalize( &areaInfo.vXBase );
 	areaInfo.vYBase = -areaInfo.vXBase ^ vLightDir;
 	Normalize( &areaInfo.vYBase );
@@ -637,10 +683,14 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes,
 
 	// scaling
 	if ( fMinW > fMinimalSize )
+	{
 		fMinimalSize = fMinW;
+	}
 	float fProjectionScale = 1 / fMinimalSize; // 0.5// 1 // 0.2
 	if ( areaInfo.fCW == 0 )
+	{
 		fProjectionScale = 1e-5f; // practically linear projection
+	}
 	fProjectionScale = (std::max)( 1e-5f, fProjectionScale );
 
 	// select u, v orientation
@@ -696,6 +746,7 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes,
 		pShadowGeomTS->AddClipPlane( pRes->vDirY );
 	}
 	else
+	{
 		for ( int k = 0; k < occluderHedron.facets.size(); ++k )
 		{
 			const CVec4 &vPlane = occluderHedron.facets[k].vPlane;
@@ -703,6 +754,7 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes,
 			float f = fabs( v );
 			pShadowGeomTS->AddClipPlane( CVec4( -vPlane.x / f, -vPlane.y / f, -vPlane.z / f, vPlane.w / f ) );
 		}
+	}
 }
 
 //void MakeSceneGeometryBound( SBound *pRes, const CTransformStack &ts, float fMaxHeight )

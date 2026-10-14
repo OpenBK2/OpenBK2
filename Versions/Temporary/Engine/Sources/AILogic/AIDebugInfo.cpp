@@ -63,7 +63,9 @@ void ToggleLockProfiles()
 						DebugInfoManager()->CreateSegment( ( nCnt << 20 ) | iter->first, segm, 4, NDebugInfo::WHITE );
 					}
 					else
+					{
 						DebugInfoManager()->DeleteObject( ( nCnt << 20 ) | iter->first );
+					}
 
 					++nCnt;
 				}

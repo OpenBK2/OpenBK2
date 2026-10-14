@@ -38,9 +38,13 @@ bool CInterfaceSaveLoadMenu::SSortByName::operator()( const NSaveLoad::SSavegame
                                                       const NSaveLoad::SSavegameEntry &save2 )
 {
 	if ( save1.info.bQuickSave != save2.info.bQuickSave )
+	{
 		return save1.info.bQuickSave;
+	}
 	if ( save1.info.bAutoSave != save2.info.bAutoSave )
+	{
 		return save1.info.bAutoSave;
+	}
 
 	std::wstring wszName1 = save1.wszName;
 	std::wstring wszName2 = save2.wszName;
@@ -86,7 +90,9 @@ CInterfaceSaveLoadMenu::~CInterfaceSaveLoadMenu()
 bool CInterfaceSaveLoadMenu::Init()
 {
 	if ( CInterfaceScreenBase::Init() == false )
+	{
 		return false;
+	}
 
 	pReactions = new CReactions( pScreen, this );
 	AddScreen( pReactions );
@@ -111,23 +117,35 @@ void CInterfaceSaveLoadMenu::MakeInterior()
 	IWindow *pLoadListPanel = GetChildChecked<IWindow>( pMain, "LoadListPanel", true );
 	IWindow *pSaveListPanel = GetChildChecked<IWindow>( pMain, "SaveListPanel", true );
 	if ( bLoadMode )
+	{
 		pListPanel = GetChildChecked<IWindow>( pLoadListPanel, "ListPanel", true );
+	}
 	else
+	{
 		pListPanel = GetChildChecked<IWindow>( pSaveListPanel, "ListPanel", true );
+	}
 	pListTemplate = GetChildChecked<IScrollableContainer>( pListPanel, "SaveList", true );
 	pListItemTemplate = GetChildChecked<IWindow>( pListPanel, "ListItem", true );
 	if ( pLoadListPanel )
+	{
 		pLoadListPanel->ShowWindow( bLoadMode );
+	}
 	if ( pSaveListPanel )
+	{
 		pSaveListPanel->ShowWindow( !bLoadMode );
+	}
 	if ( pEditLine )
 	{
 		pEditLine->ShowWindow( !bLoadMode );
 		if ( !bLoadMode )
+		{
 			pEditLine->SetFocus( true );
+		}
 	}
 	if ( pListItemTemplate )
+	{
 		pListItemTemplate->ShowWindow( false );
+	}
 
 	pDescPanel = GetChildChecked<IWindow>( pMain, "DescMissionPanel", true );
 	pDescCampaignView = GetChildChecked<ITextView>( pDescPanel, "CampaignView", true );
@@ -136,9 +154,13 @@ void CInterfaceSaveLoadMenu::MakeInterior()
 	pDescMissionBriefingCont = GetChildChecked<IScrollableContainer>( pDescPanel, "DescMissionBriefingCont", true );
 	pDescMissionBriefingView = GetChildChecked<ITextView>( pDescMissionBriefingCont, "ItemView", true );
 	if ( pDescMissionBriefingCont && pDescMissionBriefingView )
+	{
 		pDescMissionBriefingCont->PushBack( pDescMissionBriefingView, false );
+	}
 	if ( pDescPanel )
+	{
 		pDescPanel->ShowWindow( false );
+	}
 
 	pDescCustomPanel = GetChildChecked<IWindow>( pMain, "DescCustomPanel", true );
 	pDescCustomMissionView = GetChildChecked<ITextView>( pDescCustomPanel, "MissionView", true );
@@ -146,9 +168,13 @@ void CInterfaceSaveLoadMenu::MakeInterior()
 			GetChildChecked<IScrollableContainer>( pDescCustomPanel, "DescMissionBriefingCont", true );
 	pDescCustomMissionBriefingView = GetChildChecked<ITextView>( pDescCustomMissionBriefingCont, "ItemView", true );
 	if ( pDescCustomMissionBriefingCont && pDescCustomMissionBriefingView )
+	{
 		pDescCustomMissionBriefingCont->PushBack( pDescCustomMissionBriefingView, false );
+	}
 	if ( pDescCustomPanel )
+	{
 		pDescCustomPanel->ShowWindow( false );
+	}
 
 	pDescChapterPanel = GetChildChecked<IWindow>( pMain, "DescChapterPanel", true );
 	pDescChapterCampaignView = GetChildChecked<ITextView>( pDescChapterPanel, "CampaignView", true );
@@ -159,22 +185,38 @@ void CInterfaceSaveLoadMenu::MakeInterior()
 	pChapterTexture = GetChildChecked<IWindow>( pMain, "ChapterPicture", true );
 	pChapterTextureBorder = GetChildChecked<IWindow>( pMain, "ChapterPictureBorder", true );
 	if ( pDescChapterBriefingCont && pDescChapterBriefingView )
+	{
 		pDescChapterBriefingCont->PushBack( pDescChapterBriefingView, false );
+	}
 	if ( pDescChapterPanel )
+	{
 		pDescChapterPanel->ShowWindow( false );
+	}
 	if ( pChapterTextureBorder )
+	{
 		pChapterTextureBorder->ShowWindow( false );
+	}
 
 	if ( pLoad )
+	{
 		pLoad->ShowWindow( false );
+	}
 	if ( pSave )
+	{
 		pSave->ShowWindow( false );
+	}
 	if ( pListTemplate )
+	{
 		pListTemplate->ShowWindow( false );
+	}
 	if ( pHeaderSaveView )
+	{
 		pHeaderSaveView->ShowWindow( false );
+	}
 	if ( pHeaderLoadView )
+	{
 		pHeaderLoadView->ShowWindow( false );
+	}
 
 	pSaveList = 0;
 	nSelected = -1;
@@ -186,18 +228,24 @@ void CInterfaceSaveLoadMenu::MakeInterior()
 
 	if ( CWindow *pPic =
 	         dynamic_cast_ptr<CWindow *>( pPicture ) ) // CRAP - don't use CWindow type out of UI implementation
+	{
 		pPic->SetBackground( pScreenShotTexture );
+	}
 
 	UpdateButtons();
 
 	if ( pMain )
+	{
 		SetMainWindowTexture( pMain, InterfaceState()->GetMenuBackgroundTexture() );
+	}
 }
 
 void CInterfaceSaveLoadMenu::FillSaveList( const ESortModes nSortMode )
 {
 	if ( pSaveList )
+	{
 		pSaveList->RemoveItems();
+	}
 	if ( pListPanel && pSaveList )
 	{
 		pListPanel->RemoveChild( pSaveList );
@@ -206,7 +254,9 @@ void CInterfaceSaveLoadMenu::FillSaveList( const ESortModes nSortMode )
 
 	pSaveList = dynamic_cast<IScrollableContainer *>( AddWindowCopy( pListPanel, pListTemplate ) );
 	if ( pSaveList )
+	{
 		pSaveList->ShowWindow( true );
+	}
 	NI_ASSERT( pSaveList, "Unable to create list" );
 
 	sort( saves.begin(), saves.end(), SSortByDate() );
@@ -232,7 +282,9 @@ void CInterfaceSaveLoadMenu::FillSaveList( const ESortModes nSortMode )
 		}
 
 		if ( pName )
+		{
 			pName->SetText( pName->GetDBText() + save.wszName );
+		}
 
 		std::wstring wszDate = NStr::ToUnicode( fmt::format( "{:02d}.{:02d}.{:04d} {:02d}:{:02d}",
 		                                                     save.time.wDay,
@@ -241,10 +293,14 @@ void CInterfaceSaveLoadMenu::FillSaveList( const ESortModes nSortMode )
 		                                                     save.time.wHour,
 		                                                     save.time.wMinute ) );
 		if ( pDate )
+		{
 			pDate->SetText( pDate->GetDBText() + wszDate );
+		}
 
 		if ( pSaveList )
+		{
 			pSaveList->PushBack( save.pWindow, true );
+		}
 	}
 }
 
@@ -257,18 +313,26 @@ void CInterfaceSaveLoadMenu::MsgBack( const SGameMessage &msg )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	if ( ePrevInterface == EPI_MAIN_MENU )
+	{
 		NMainLoop::Command( ML_COMMAND_MAIN_MENU, "single_player_submenu" );
+	}
 	else if ( ePrevInterface == EPI_LOOSE_MENU )
+	{
 		NMainLoop::Command( ML_COMMAND_WIN_LOOSE, "-1" );
+	}
 
 	if ( ePrevInterface == EPI_CHAPTER_MAP )
+	{
 		NInput::PostEvent( "menu_return_from_subscreen", 0, 0 );
+	}
 }
 
 bool CInterfaceSaveLoadMenu::StepLocal( bool bAppActive )
 {
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )
+	{
 		pInterface->Step( bAppActive );
+	}
 
 	return CInterfaceScreenBase::StepLocal( bAppActive );
 }
@@ -312,7 +376,9 @@ void CInterfaceSaveLoadMenu::MsgOk( const SGameMessage &msg )
 			//Rebuild list
 			FillSaveList( SORT_BY_NAME );
 			if ( nSelected >= saves.size() )
+			{
 				nSelected = saves.size() - 1;
+			}
 			SelectItem( true, true );
 
 			UpdateButtons();
@@ -345,7 +411,9 @@ void CInterfaceSaveLoadMenu::MsgCancel( const SGameMessage &msg )
 void CInterfaceSaveLoadMenu::MsgDblClick( const SGameMessage &msg )
 {
 	if ( bLoadMode )
+	{
 		Load();
+	}
 }
 
 void CInterfaceSaveLoadMenu::MsgSelectPrev( const SGameMessage &msg )
@@ -463,7 +531,9 @@ void CInterfaceSaveLoadMenu::DoSaveGame()
 		saves.erase( it );
 	}
 	else
+	{
 		sg.szFileTitle = NSaveLoad::GetUniqueFileName( saves );
+	}
 	NI_VERIFY( NFile::IsValidDirName( sg.szFileTitle ), "Wrong file name", return );
 	sg.szFileName = NSaveLoad::GetSavePath() + sg.szFileTitle + NSaveLoad::SAVE_FILE_EXTENSION;
 	sg.szInfoFileName = NSaveLoad::GetSavePath() + sg.szFileTitle + NSaveLoad::INFO_FILE_EXTENSION;
@@ -476,7 +546,9 @@ void CInterfaceSaveLoadMenu::DoSaveGame()
 		{
 			CInterfaceScreenBase *pPrevScreen = dynamic_cast<CInterfaceScreenBase *>( pPrevInterface );
 			if ( pPrevScreen )
+			{
 				pPrevScreen->Draw( 0 );
+			}
 		}
 		InterfaceState()->GetScreenShotTexture()->Generate( true );
 	}
@@ -488,7 +560,9 @@ void CInterfaceSaveLoadMenu::DoSaveGame()
 	NMainLoop::Command( ML_COMMAND_SAVE_GAME, sg.szFileTitle.c_str() );
 
 	if ( ePrevInterface == EPI_CHAPTER_MAP )
+	{
 		NInput::PostEvent( "menu_return_from_subscreen", 0, 0 );
+	}
 }
 
 void CInterfaceSaveLoadMenu::SetMode( const std::string &szMode )
@@ -496,7 +570,9 @@ void CInterfaceSaveLoadMenu::SetMode( const std::string &szMode )
 	ePrevInterface = EPI_ANY;
 	bLoadMode = true;
 	if ( szMode == "save" )
+	{
 		bLoadMode = false;
+	}
 	else if ( szMode == "load" )
 	{
 		bLoadMode = true;
@@ -524,23 +600,37 @@ void CInterfaceSaveLoadMenu::SetMode( const std::string &szMode )
 		bLoadMode = true;
 	}
 	else
+	{
 		NI_ASSERT( 0, "Unknown save/load mode" );
+	}
 
 	MakeInterior();
 
 	if ( pLoad )
+	{
 		pLoad->ShowWindow( bLoadMode );
+	}
 	if ( pSave )
+	{
 		pSave->ShowWindow( !bLoadMode );
+	}
 	if ( pEditLine )
+	{
 		pEditLine->ShowWindow( !bLoadMode );
+	}
 	if ( pHeaderSaveView )
+	{
 		pHeaderSaveView->ShowWindow( !bLoadMode );
+	}
 	if ( pHeaderLoadView )
+	{
 		pHeaderLoadView->ShowWindow( bLoadMode );
+	}
 
 	if ( bLoadMode && !saves.empty() )
+	{
 		nSelected = 0;
+	}
 
 	SelectItem( true, bLoadMode );
 
@@ -589,7 +679,9 @@ void CInterfaceSaveLoadMenu::OnSelectionChange( const std::string &szSender )
 	nSelected = -1;
 	IWindow *pSelection = pSaveList ? pSaveList->GetSelectedItem() : 0;
 	if ( !pSelection )
+	{
 		return;
+	}
 
 	for ( int i = 0; i < saves.size(); ++i )
 	{
@@ -623,48 +715,84 @@ void CInterfaceSaveLoadMenu::ComposeDescription( const NSaveLoad::SSaveInfo &inf
 	wszBriefing = info.GetMissionDesc();
 
 	if ( pDescPanel )
+	{
 		pDescPanel->ShowWindow( !info.bFromChapter && !info.bCustomMission );
+	}
 	if ( pDescCustomPanel )
+	{
 		pDescCustomPanel->ShowWindow( !info.bFromChapter && info.bCustomMission );
+	}
 	if ( pDescChapterPanel )
+	{
 		pDescChapterPanel->ShowWindow( info.bFromChapter );
+	}
 
 	if ( pDescCampaignView )
+	{
 		pDescCampaignView->SetText( pDescCampaignView->GetDBText() + wszCampaign );
+	}
 	if ( pDescChapterView )
+	{
 		pDescChapterView->SetText( pDescChapterView->GetDBText() + wszChapter );
+	}
 	if ( pDescMissionView )
+	{
 		pDescMissionView->SetText( pDescMissionView->GetDBText() + wszMission );
+	}
 	if ( pDescMissionBriefingView )
+	{
 		pDescMissionBriefingView->SetText( pDescMissionBriefingView->GetDBText() + wszBriefing );
+	}
 
 	if ( pDescCustomMissionView )
+	{
 		pDescCustomMissionView->SetText( pDescCustomMissionView->GetDBText() + wszMission );
+	}
 	if ( pDescCustomMissionBriefingView )
+	{
 		pDescCustomMissionBriefingView->SetText( pDescCustomMissionBriefingView->GetDBText() + wszBriefing );
+	}
 
 	if ( pDescChapterCampaignView )
+	{
 		pDescChapterCampaignView->SetText( pDescChapterCampaignView->GetDBText() + wszCampaign );
+	}
 	if ( pDescChapterChapterView )
+	{
 		pDescChapterChapterView->SetText( pDescChapterChapterView->GetDBText() + wszChapter );
+	}
 	if ( pDescChapterBriefingView )
+	{
 		pDescChapterBriefingView->SetText( pDescChapterBriefingView->GetDBText() + wszChapterBriefing );
+	}
 
 	if ( pDescMissionBriefingCont )
+	{
 		pDescMissionBriefingCont->Update();
+	}
 	if ( pDescCustomMissionBriefingCont )
+	{
 		pDescCustomMissionBriefingCont->Update();
+	}
 	if ( pDescChapterBriefingCont )
+	{
 		pDescChapterBriefingCont->Update();
+	}
 
 	if ( pPicture )
+	{
 		pPicture->ShowWindow( true /*!info.bFromChapter*/ );
+	}
 	if ( pChapterTextureBorder )
+	{
 		pChapterTextureBorder->ShowWindow( false /*info.bFromChapter*/ );
+	}
 	if ( pChapterTexture )
 	{
 		if ( info.bFromChapter )
+		{
 			pChapterTexture->SetTexture( info.pPicture );
+		}
 		pChapterTexture->ShowWindow( false );
 	}
 }
@@ -672,46 +800,82 @@ void CInterfaceSaveLoadMenu::ComposeDescription( const NSaveLoad::SSaveInfo &inf
 void CInterfaceSaveLoadMenu::SelectItem( bool bUpdateSelection, bool bClearEditLine )
 {
 	if ( pDescPanel )
+	{
 		pDescPanel->ShowWindow( false );
+	}
 	if ( pDescCustomPanel )
+	{
 		pDescCustomPanel->ShowWindow( false );
+	}
 	if ( pDescChapterPanel )
+	{
 		pDescChapterPanel->ShowWindow( false );
+	}
 
 	if ( bClearEditLine && pEditLine )
+	{
 		pEditLine->SetText( L"" );
+	}
 	if ( pPicture )
+	{
 		pPicture->SetTexture( 0 );
+	}
 	if ( pChapterTexture )
+	{
 		pChapterTexture->SetTexture( 0 );
+	}
 	if ( pPicture )
+	{
 		pPicture->ShowWindow( false );
+	}
 	if ( pChapterTextureBorder )
+	{
 		pChapterTextureBorder->ShowWindow( false );
+	}
 
 	if ( pDescCampaignView )
+	{
 		pDescCampaignView->SetText( L"" );
+	}
 	if ( pDescChapterView )
+	{
 		pDescChapterView->SetText( L"" );
+	}
 	if ( pDescMissionView )
+	{
 		pDescMissionView->SetText( L"" );
+	}
 
 	if ( pDescMissionBriefingView )
+	{
 		pDescMissionBriefingView->SetText( L"" );
+	}
 	if ( pDescMissionBriefingCont )
+	{
 		pDescMissionBriefingCont->Update();
+	}
 
 	if ( pDescCustomMissionBriefingView )
+	{
 		pDescCustomMissionBriefingView->SetText( L"" );
+	}
 	if ( pDescCustomMissionBriefingCont )
+	{
 		pDescCustomMissionBriefingCont->Update();
+	}
 	if ( pChapterTextureBorder )
+	{
 		pChapterTextureBorder->ShowWindow( false );
+	}
 
 	if ( pDescMissionBriefingView )
+	{
 		pDescMissionBriefingView->SetText( L"" );
+	}
 	if ( pDescMissionBriefingCont )
+	{
 		pDescMissionBriefingCont->Update();
+	}
 
 	if ( 0 <= nSelected && nSelected < saves.size() )
 	{
@@ -729,14 +893,18 @@ void CInterfaceSaveLoadMenu::SelectItem( bool bUpdateSelection, bool bClearEditL
 
 		//Fill associated controls
 		if ( pEditLine )
+		{
 			pEditLine->SetText( save.wszName.c_str() ); //EditLine
+		}
 
 		ShowSaveInfo( save.info );
 	}
 	else
 	{
 		if ( pSaveList )
+		{
 			pSaveList->Select( 0 );
+		}
 	}
 }
 
@@ -752,10 +920,14 @@ void CInterfaceSaveLoadMenu::ShowSaveInfo( NSaveLoad::SSaveInfo &info )
 		screenShot.FillZero();
 	}
 	if ( pScreenShotTexture )
+	{
 		pScreenShotTexture->Set( screenShot );
+	}
 
 	if ( pPic )
+	{
 		pPic->SetBackground( pScreenShotTexture );
+	}
 
 	//Description
 	ComposeDescription( info );
@@ -764,9 +936,13 @@ void CInterfaceSaveLoadMenu::ShowSaveInfo( NSaveLoad::SSaveInfo &info )
 void CInterfaceSaveLoadMenu::UpdateButtons()
 {
 	if ( pLoad )
+	{
 		pLoad->Enable( nSelected != -1 );
+	}
 	if ( pDeleteBtn )
+	{
 		pDeleteBtn->Enable( nSelected != -1 );
+	}
 }
 
 bool CInterfaceSaveLoadMenu::ProcessEvent( const SGameMessage &msg )

@@ -14,14 +14,18 @@ namespace NBind
 	IObjMan *SBindProcessor::CreateManipulator( const std::string &szName, IObjMan *pParent )
 	{
 		if ( szName.empty() )
+		{
 			return pParent;
+		}
 		// array element mask manipulator
 		const int nArrayIndexStartPos = szName.find( '[' );
 		if ( nArrayIndexStartPos != std::string::npos )
 		{
 			SArrayCallParams callParams;
 			if ( ExtractArrayCallParams( szName, nArrayIndexStartPos, &callParams ) == false )
+			{
 				return 0;
+			}
 
 			IObjMan *pMan = callParams.pUValue->pArray->CreateManipulator( callParams.nArrayIndex,
 			                                                               szName.substr( 0, nArrayIndexStartPos - 1 ),
@@ -74,19 +78,29 @@ namespace NBind
 		NI_VERIFY( nArrayIndexFinishPos != std::string::npos, "Can't find array index finish position tag", return false );
 		int nArrayIndex = 0;
 		for ( int i = nArrayIndexStartPos + 1; i < nArrayIndexFinishPos; ++i )
+		{
 			nArrayIndex = nArrayIndex * 10 + szName[i] - '0';
+		}
 		//
 		if ( nArrayIndexFinishPos == szName.size() )
+		{
 			pCallParams->szRestName.clear();
+		}
 		else if ( nArrayIndexFinishPos + 2 < szName.size() && szName[nArrayIndexFinishPos + 1] == '.' )
+		{
 			pCallParams->szRestName = szName.substr( nArrayIndexFinishPos + 2 );
+		}
 		else
+		{
 			pCallParams->szRestName = szName.substr( nArrayIndexFinishPos + 1 );
+		}
 		pCallParams->nArrayIndex = nArrayIndex;
 		//
 		const int nBinaryShift = pos->second.GetBinaryShift();
 		if ( nBinaryShift != 0x0000ffff )
+		{
 			pCallParams->pRawVector = pThis + nBinaryShift;
+		}
 		//
 		pCallParams->pUValue = &( ownValues[pos->second.GetOwnValueIndex()] );
 		pCallParams->pContained = pos->second.pContained;
@@ -99,7 +113,9 @@ namespace NBind
 		NMetaInfo::SStructMetaInfo::CFieldsMap::iterator pos = pMetaInfo->fields.find( szName );
 		const int nBinaryShift = pos->second.GetBinaryShift();
 		if ( nBinaryShift != 0x0000ffff )
+		{
 			pReqs->pRawVector = pThis + nBinaryShift;
+		}
 		//
 		pReqs->pUValue = &( ownValues[pos->second.GetOwnValueIndex()] );
 		pReqs->pContained = pos->second.pContained;
@@ -116,14 +132,18 @@ namespace NBind
 		{
 			SArrayCallParams callParams;
 			if ( ExtractArrayCallParams( szName, nArrayIndexStartPos, &callParams ) == false )
+			{
 				return false;
+			}
 			*pszRestName = callParams.szRestName;
 			SBindProcessor bindProcessor;
 			return callParams.pUValue->pArray->InitBindProcessor(
 					pProc, callParams.nArrayIndex, callParams.pRawVector, callParams.pContained );
 		}
 		else
+		{
 			return false;
+		}
 	}
 
 	bool SBindProcessor::SetValue( const std::string &szName, const CVariant &value )
@@ -140,7 +160,9 @@ namespace NBind
 			SBindProcessor bindProcessor;
 			std::string szRestName;
 			if ( InitArrayElementBindProcessor( &bindProcessor, &szRestName, szName ) != false )
+			{
 				return bindProcessor.SetValue( szRestName, value );
+			}
 			else
 			{
 				// TODO: add ptr processing here
@@ -148,7 +170,9 @@ namespace NBind
 			}
 		}
 		else
+		{
 			return ( pos->second.*pos->second.pfnSetValue )( value, pThis, ownValues );
+		}
 	}
 
 	bool SBindProcessor::GetValue( const std::string &szName, CVariant *pValue )
@@ -165,7 +189,9 @@ namespace NBind
 			SBindProcessor bindProcessor;
 			std::string szRestName;
 			if ( InitArrayElementBindProcessor( &bindProcessor, &szRestName, szName ) != false )
+			{
 				return bindProcessor.GetValue( szRestName, pValue );
+			}
 			else
 			{
 				// TODO: add ptr processing here
@@ -173,7 +199,9 @@ namespace NBind
 			}
 		}
 		else
+		{
 			return ( pos->second.*pos->second.pfnGetValue )( pValue, pThis, ownValues );
+		}
 	}
 
 	bool SBindProcessor::Insert( const std::string &szName, const int nPos, const int nAmount, bool bSetDefault )
@@ -184,7 +212,9 @@ namespace NBind
 			SBindProcessor bindProcessor;
 			std::string szRestName;
 			if ( InitArrayElementBindProcessor( &bindProcessor, &szRestName, szName ) != false )
+			{
 				return bindProcessor.Insert( szRestName, nPos, nAmount, bSetDefault );
+			}
 			else
 			{
 				// TODO: add ptr processing here
@@ -194,7 +224,9 @@ namespace NBind
 		else
 		{
 			if ( pos->second.GetType() != NTypeDef::TYPE_TYPE_ARRAY )
+			{
 				return false;
+			}
 			UValue &value = ownValues[pos->second.GetOwnValueIndex()];
 			return value.pArray->Insert( nPos, nAmount, pos->second, pThis, bSetDefault );
 		}
@@ -208,7 +240,9 @@ namespace NBind
 			SBindProcessor bindProcessor;
 			std::string szRestName;
 			if ( InitArrayElementBindProcessor( &bindProcessor, &szRestName, szName ) != false )
+			{
 				return bindProcessor.Remove( szRestName, nPos, nAmount );
+			}
 			else
 			{
 				// TODO: add ptr processing here
@@ -218,7 +252,9 @@ namespace NBind
 		else
 		{
 			if ( pos->second.GetType() != NTypeDef::TYPE_TYPE_ARRAY )
+			{
 				return false;
+			}
 			UValue &value = ownValues[pos->second.GetOwnValueIndex()];
 			return value.pArray->Remove( nPos, nAmount, pos->second, pThis );
 		}
@@ -229,10 +265,14 @@ namespace NBind
 		NMetaInfo::SStructMetaInfo::CFieldsMap::iterator pos = pMetaInfo->fields.find( szName );
 		// TODO{ add here ptr processing
 		if ( pos == pMetaInfo->fields.end() )
+		{
 			return nullptr;
+		}
 		// TODO}
 		if ( pos->second.GetType() != NTypeDef::TYPE_TYPE_ARRAY )
+		{
 			return nullptr;
+		}
 		UValue &value = ownValues[pos->second.GetOwnValueIndex()];
 		return value.pArray;
 	}
@@ -245,7 +285,9 @@ FindField( const std::string &szFullFieldName, const int nCurrPos, const NTypeDe
 	if ( pStruct->pBaseType )
 	{
 		if ( const NTypeDef::STypeStructBase::SField *pField = FindField( szFullFieldName, nCurrPos, pStruct->pBaseType ) )
+		{
 			return pField;
+		}
 	}
 	//
 	const int nPos = szFullFieldName.find( '.', nCurrPos );
@@ -256,7 +298,9 @@ FindField( const std::string &szFullFieldName, const int nCurrPos, const NTypeDe
 		      ++it )
 		{
 			if ( szFullFieldName.compare( nCurrPos, szFullFieldName.size() - nCurrPos, it->szName ) == 0 )
+			{
 				return &( *it );
+			}
 		}
 	}
 	else
@@ -270,7 +314,9 @@ FindField( const std::string &szFullFieldName, const int nCurrPos, const NTypeDe
 				if ( it->pType->eType == NTypeDef::TYPE_TYPE_ARRAY )
 				{
 					if ( szFullFieldName[nPos + 1] != '[' )
+					{
 						return 0;
+					}
 					const NTypeDef::STypeArray *pTypeArray = checked_cast_ptr<const NTypeDef::STypeArray *>( it->pType );
 					const int nNewPos = szFullFieldName.find( '.', nPos + 1 );
 					return nNewPos == -1
@@ -280,8 +326,10 @@ FindField( const std::string &szFullFieldName, const int nCurrPos, const NTypeDe
 					                        checked_cast_ptr<const NTypeDef::STypeStructBase *>( pTypeArray->field.pType ) );
 				}
 				else
+				{
 					return FindField(
 							szFullFieldName, nPos + 1, dynamic_cast_ptr<const NTypeDef::STypeStructBase *>( it->pType ) );
+				}
 			}
 		}
 	}

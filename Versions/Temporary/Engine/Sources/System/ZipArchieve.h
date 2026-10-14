@@ -27,7 +27,9 @@ class CZipFile : public CObjectBase
 		~SFileHeader()
 		{
 			if ( pszFileName )
+			{
 				delete[] pszFileName;
+			}
 		}
 		//
 		void Init( const SZipFileHeader &hdr );

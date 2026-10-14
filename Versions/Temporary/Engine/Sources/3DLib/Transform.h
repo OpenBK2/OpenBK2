@@ -76,7 +76,9 @@ public:
 	CMatrixStack43()
 	{
 		for ( int i = 0; i < nMaxNumMatrices; i++ )
+		{
 			Identity( matrices + i );
+		}
 	}
 	void Push43( const SHMatrix &matrix );
 	void Push33( const SHMatrix &matrix );

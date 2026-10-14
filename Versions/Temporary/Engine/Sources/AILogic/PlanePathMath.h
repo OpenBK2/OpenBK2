@@ -43,7 +43,9 @@ public:
 		float fLen = 0;
 		const float fTick = 1.0f / nPres;
 		for ( float f = fTick; f <= 1.0f; f += fTick )
+		{
 			fLen += fabs( Get( f - fTick ) - Get( f ) );
+		}
 		return fLen;
 	}
 };

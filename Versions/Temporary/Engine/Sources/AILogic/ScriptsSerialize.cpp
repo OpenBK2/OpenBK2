@@ -7,7 +7,9 @@ extern CScripts *pScripts;
 int CScripts::operator&( IBinSaver &saver )
 {
 	if ( !saver.IsChecksum() )
+	{
 		saver.Add( 2, &pScript );
+	}
 
 	if ( saver.IsReading() )
 	{
@@ -23,7 +25,9 @@ int CScripts::operator&( IBinSaver &saver )
 	saver.Add( 14, &lastTimeToCheckSuspendedReinforcs );
 
 	if ( saver.IsReading() )
+	{
 		reinforcsIter = suspendedReinforcs.begin();
+	}
 
 	saver.Add( 15, &reservePositions );
 	saver.Add( 16, &bShowErrors );

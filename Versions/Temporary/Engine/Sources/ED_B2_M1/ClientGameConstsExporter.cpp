@@ -38,7 +38,9 @@ EXPORT_RESULT CClientGameConstsExporter::ExportObject( IManipulator *pManipulato
 				const std::string szDstFileName =
 						Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szFileName;
 				if ( CheckFilesUpdated( szSrcFileName, szDstFileName, bForce ) == false )
+				{
 					NFile::CopyFile( szSrcFileName, szDstFileName );
+				}
 			}
 		}
 	}
@@ -46,7 +48,9 @@ EXPORT_RESULT CClientGameConstsExporter::ExportObject( IManipulator *pManipulato
 	std::string szNoisesFileName;
 	if ( CManipulatorManager::GetValue( &szNoisesFileName, pManipulator, "Noises" ) != false &&
 	     !szNoisesFileName.empty() )
+	{
 		ExportFilesList( szNoisesFileName, bForce, "Noises" );
+	}
 	//
 	return ER_SUCCESS;
 }

@@ -199,7 +199,9 @@ class CSceneWxWindow : public wxWindow
 	void OnPaint( wxPaintEvent & )
 	{
 		if ( pumpHook )
+		{
 			pumpHook();
+		}
 		if ( !pCore->BeginPaint() )
 		{
 			// A nested paint while the window moves itself, or one after the
@@ -229,7 +231,9 @@ class CSceneWxWindow : public wxWindow
 	void OnSetFocus( wxFocusEvent &rEvent )
 	{
 		if ( focusHook )
+		{
 			focusHook( true );
+		}
 		rEvent.Skip();
 		CWxWindowWidget oldWidget( rEvent.GetWindow() );
 		pCore->OnSetFocus( &oldWidget );
@@ -238,7 +242,9 @@ class CSceneWxWindow : public wxWindow
 	void OnKillFocus( wxFocusEvent &rEvent )
 	{
 		if ( focusHook )
+		{
 			focusHook( false );
+		}
 		rEvent.Skip();
 		CWxWindowWidget newWidget( rEvent.GetWindow() );
 		pCore->OnKillFocus( &newWidget );
@@ -250,7 +256,9 @@ class CSceneWxWindow : public wxWindow
 	void OnMouse( wxMouseEvent &rEvent )
 	{
 		if ( mouseHook )
+		{
 			mouseHook( rEvent );
+		}
 		const unsigned nFlags = MouseFlags( rEvent );
 		const CTPoint<int> point = ClientPoint( rEvent );
 		const wxEventType eType = rEvent.GetEventType();
@@ -307,7 +315,9 @@ class CSceneWxWindow : public wxWindow
 	void OnRightUp( wxMouseEvent &rEvent )
 	{
 		if ( mouseHook )
+		{
 			mouseHook( rEvent );
+		}
 		// Screen coordinates, as WM_CONTEXTMENU carried and the states expect.
 		const wxPoint screenAt = ClientToScreen( rEvent.GetPosition() );
 		pCore->OnContextMenu( CTPoint<int>( screenAt.x, screenAt.y ) );
@@ -317,7 +327,9 @@ class CSceneWxWindow : public wxWindow
 	void OnMouseWheel( wxMouseEvent &rEvent )
 	{
 		if ( mouseHook )
+		{
 			mouseHook( rEvent );
+		}
 		// Terrain picking expects viewport coordinates for every mouse event,
 		// including the wheel; screen coordinates shift the tool by the dock's
 		// offset even when the render size is already correct.
@@ -341,7 +353,9 @@ class CSceneWxWindow : public wxWindow
 	void OnKeyDown( wxKeyEvent &rEvent )
 	{
 		if ( keyHook )
+		{
 			keyHook( rEvent.GetRawKeyFlags(), true );
+		}
 		const unsigned nChar = VirtualKeyFromWx( rEvent.GetKeyCode() );
 		if ( nChar != 0 )
 		{
@@ -352,7 +366,9 @@ class CSceneWxWindow : public wxWindow
 	void OnKeyUp( wxKeyEvent &rEvent )
 	{
 		if ( keyHook )
+		{
 			keyHook( rEvent.GetRawKeyFlags(), false );
+		}
 		const unsigned nChar = VirtualKeyFromWx( rEvent.GetKeyCode() );
 		if ( nChar != 0 )
 		{

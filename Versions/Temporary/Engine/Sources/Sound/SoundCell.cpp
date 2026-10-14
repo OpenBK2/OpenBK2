@@ -60,7 +60,9 @@ void CSoundCell::RemoveSound( const uint16_t wID, ISFX *pSFX )
 		{
 			CSound *s = *it;
 			if ( pSFX && !s->IsSubstituted() )
+			{
 				pSFX->StopSample( s->GetSound() );
+			}
 			it = sounds.erase( it );
 			RecountForDelete();
 			return;
@@ -75,7 +77,9 @@ const CSound *CSoundCell::GetSound( const uint16_t wID ) const
 	for ( CSounds::const_iterator it = sounds.begin(); it != sounds.end(); ++it )
 	{
 		if ( ( *it )->GetID() == wID )
+		{
 			return ( *it );
+		}
 	}
 	return 0;
 }
@@ -85,7 +89,9 @@ CSound *CSoundCell::GetSound( const uint16_t wID )
 	for ( CSounds::iterator it = sounds.begin(); it != sounds.end(); ++it )
 	{
 		if ( ( *it )->GetID() == wID )
+		{
 			return ( *it );
+		}
 	}
 	return 0;
 }
@@ -125,5 +131,7 @@ void CSoundCell::Update( ISFX *pSFX )
 	}
 
 	if ( bSomeSoundErased )
+	{
 		RecountForDelete();
+	}
 }

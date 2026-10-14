@@ -25,23 +25,33 @@ CDecalFader::CDecalFader( CObjectBase *_pDecal,
 	{
 		CDynamicCast<CDecal> pTryDecal = _pDecal;
 		if ( pTryDecal && _pTime )
+		{
 			pDecal = pTryDecal;
+		}
 	}
 }
 
 float CDecalFader::GetFadeValue( STime tCurrent ) const
 {
 	if ( tCurrent > tFadeOutEnd )
+	{
 		return 0;
+	}
 
 	if ( tCurrent > tFadeOutStart )
+	{
 		return exp( fFadeLog * ( tCurrent - tFadeOutStart ) / ( tFadeOutEnd - tFadeOutStart ) );
+	}
 
 	if ( tCurrent >= tFadeInEnd )
+	{
 		return 1;
+	}
 
 	if ( tCurrent > tFadeInStart )
+	{
 		return exp( fFadeLog * ( tFadeInEnd - tCurrent ) / ( tFadeInEnd - tFadeInStart ) );
+	}
 
 	return 0;
 }
@@ -49,10 +59,14 @@ float CDecalFader::GetFadeValue( STime tCurrent ) const
 bool CDecalFader::Update( void *p )
 {
 	if ( !pDecal || !pTime )
+	{
 		return false;
+	}
 
 	if ( bFrozen )
+	{
 		return true;
+	}
 
 	pTime.Refresh();
 	const STime tCurrent = pTime->GetValue();
@@ -69,7 +83,9 @@ bool CDecalFader::Update( void *p )
 	{
 		CDynamicCast<ISomePart> pPart = decals[i];
 		if ( pPart )
+		{
 			pPart->SetFade( fVal );
+		}
 	}
 
 	return true;
@@ -89,7 +105,9 @@ void CDecalFader::SetToFadeIn()
 	const STime tCurrent = bFrozen ? 0 : pTime->GetValue();
 
 	if ( tCurrent <= tFadeInEnd )
+	{
 		return;
+	}
 
 	if ( tCurrent <= tFadeOutStart )
 	{
@@ -105,7 +123,9 @@ void CDecalFader::SetToFadeIn()
 void CDecalFader::Freeze()
 {
 	if ( bFrozen )
+	{
 		return;
+	}
 	bFrozen = true;
 
 	pTime.Refresh();
@@ -117,7 +137,9 @@ void CDecalFader::Freeze()
 void CDecalFader::Unfreeze()
 {
 	if ( !bFrozen )
+	{
 		return;
+	}
 	bFrozen = false;
 
 	pTime.Refresh();

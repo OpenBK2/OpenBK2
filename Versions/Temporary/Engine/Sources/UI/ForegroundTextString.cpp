@@ -38,7 +38,9 @@ PlaceText( const CTPoint<int> &pixelSize, const CTRect<float> &parent, const NDb
 	const CVec2 size = ScreenToVirtual( CVec2( pixelSize.x, pixelSize.y ) ) - ScreenToVirtual( VNULL2 );
 	CTRect<float> place( parent.x1, parent.y1, parent.x1 + size.x, parent.y1 + size.y );
 	if ( pPlacement )
+	{
 		NUITools::ApplyPlacement( *pPlacement, parent, &place );
+	}
 	CTRect<float> result;
 	VirtualToScreen( place, &result );
 	return result;
@@ -73,7 +75,9 @@ void CForegroundTextString::SetFontScaleWindow( IWindow *pWindow )
 {
 	pFontScaleWindow = pWindow;
 	if ( pGfxText )
+	{
 		pGfxText->SetFontScaleWindow( pWindow );
+	}
 }
 
 void CForegroundTextString::InitText()
@@ -93,20 +97,30 @@ const std::wstring &CForegroundTextString::GetDBInstanceText() const
 {
 	static std::wstring szEmpty;
 	if ( CHECK_TEXT_NOT_EMPTY_PRE( pInstance->, TextString ) )
+	{
 		return GET_TEXT_PRE( pInstance->, TextString );
+	}
 	else if ( pInstance->pShared && CHECK_TEXT_NOT_EMPTY_PRE( pInstance->pShared->, TextString ) )
+	{
 		return GET_TEXT_PRE( pInstance->pShared->, TextString );
+	}
 	else
+	{
 		return szEmpty;
+	}
 }
 
 const std::wstring &CForegroundTextString::GetDBFormatText() const
 {
 	static std::wstring szEmpty;
 	if ( pInstance->pShared && CHECK_TEXT_NOT_EMPTY_PRE( pInstance->pShared->, FormatString ) )
+	{
 		return GET_TEXT_PRE( pInstance->pShared->, FormatString );
+	}
 	else
+	{
 		return szEmpty;
+	}
 }
 
 const std::wstring &CForegroundTextString::GetText() const
@@ -123,14 +137,18 @@ void CForegroundTextString::SetText( const std::wstring &_szText )
 const NDb::SWindowPlacement *CForegroundTextString::GetPlacement() const
 {
 	if ( pInstance->pShared )
+	{
 		return &pInstance->pShared->position;
+	}
 	return 0;
 }
 
 void CForegroundTextString::Visit( struct IUIVisitor *pVisitor )
 {
 	if ( pGfxText )
+	{
 		VisitPlacedText( pVisitor, pGfxText, rcParent, GetPlacement() );
+	}
 }
 
 void CForegroundTextString::Init()
@@ -160,13 +178,17 @@ void CPlacedText::Init() {}
 void CPlacedText::Visit( struct IUIVisitor *pVisitor )
 {
 	if ( pGfxText )
+	{
 		VisitPlacedText( pVisitor, pGfxText, rcParent, &placement );
+	}
 }
 
 void CPlacedText::SetText( const std::wstring &_wszText )
 {
 	if ( wszText == _wszText )
+	{
 		return;
+	}
 
 	wszText = _wszText;
 	InitGfxText();
@@ -181,7 +203,9 @@ void CPlacedText::SetFontScaleWindow( IWindow *pWindow )
 {
 	pFontScaleWindow = pWindow;
 	if ( pGfxText )
+	{
 		pGfxText->SetFontScaleWindow( pWindow );
+	}
 }
 
 void CPlacedText::InitGfxText()
@@ -201,14 +225,18 @@ void CPlacedText::InitGfxText()
 CTPoint<int> CPlacedText::GetSize() const
 {
 	if ( !pGfxText )
+	{
 		return CTPoint<int>( 0, 0 );
+	}
 	return GetVirtualTextSizeCeil( pGfxText );
 }
 
 int CPlacedText::GetOptimalWidth() const
 {
 	if ( !pGfxText )
+	{
 		return 0;
+	}
 	return GetVirtualTextSizeCeil( pGfxText ).x;
 }
 
@@ -217,7 +245,9 @@ void CPlacedText::Reposition( const CTRect<float> &parentRect )
 	float fOldWidth = rcParent.Width();
 	rcParent = parentRect;
 	if ( fOldWidth == rcParent.Width() && ::vScreenRect == this->vScreenRect )
+	{
 		return;
+	}
 	this->vScreenRect = ::vScreenRect;
 	InitGfxText();
 }

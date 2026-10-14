@@ -68,9 +68,13 @@ namespace
 
 		const __m128i low = _mm256_castsi256_si128( values );
 		if ( count >= 2 )
+		{
 			_mm_storeu_si128( reinterpret_cast<__m128i *>( destination ), low );
+		}
 		else
+		{
 			_mm_storel_epi64( reinterpret_cast<__m128i *>( destination ), low );
+		}
 
 		if ( count == 3 )
 		{
@@ -195,7 +199,9 @@ namespace
 	static void SampleWarFogCoords( const CVec3 *pSrcPos, int nVertices, float fScale, int *pIntCoords )
 	{
 		if ( nVertices <= 0 )
+		{
 			return;
+		}
 
 		// Single precision, matching the reference and the SSE2 kernel. See the
 		// comment in GLightPerVertexSSE2.cpp for why the double the two of these
@@ -229,11 +235,17 @@ namespace
 			const __m128i coords01 = _mm_cvtps_epi32( _mm_mul_ps( positions01, scale128 ) );
 			const __m128i coords23 = _mm_cvtps_epi32( _mm_mul_ps( positions23, scale128 ) );
 			if ( remaining >= 2 )
+			{
 				_mm_storeu_si128( reinterpret_cast<__m128i *>( &pIntCoords[k * 2] ), coords01 );
+			}
 			else
+			{
 				_mm_storel_epi64( reinterpret_cast<__m128i *>( &pIntCoords[k * 2] ), coords01 );
+			}
 			if ( remaining == 3 )
+			{
 				_mm_storel_epi64( reinterpret_cast<__m128i *>( &pIntCoords[k * 2 + 4] ), coords23 );
+			}
 		}
 	}
 
@@ -309,7 +321,9 @@ namespace
 	{
 		ASSERT( GetNextPow2( nFogSizeX - 1 ) + 1 == nFogSizeX );
 		if ( nVertices <= 0 )
+		{
 			return;
+		}
 
 		const int nMask = nFogSizeX - 2;
 		int k = 0;
@@ -341,7 +355,9 @@ namespace
 			}
 			const uint32_t result = SampleWarFogIntAVX2x4( samples[0], samples[1], samples[2], samples[3] );
 			for ( int i = 0; i < remaining; ++i )
+			{
 				pRes[k + i] = static_cast<unsigned char>( result >> ( i * 8 ) );
+			}
 		}
 	}
 
@@ -405,7 +421,9 @@ namespace
 			NGfx::SMMXWord *pRes, const CVec3 *pSrcPos, int nCount, const CVec3 &vCenter, float fRadius )
 	{
 		if ( nCount == 0 )
+		{
 			return;
+		}
 
 		const float fAttScale = F_PL_RADIUS2 / sqr( fRadius );
 		const float fRadius2 = sqr( fRadius );
@@ -603,7 +621,9 @@ namespace
 	static void AddColors( uint32_t *pRes, const uint32_t *pSrc, const NGfx::SMMXWord *pAdd, int nCount )
 	{
 		if ( nCount == 0 )
+		{
 			return;
+		}
 
 		int k = 0;
 		for ( ; k + 3 < nCount; k += 4 )
@@ -635,9 +655,13 @@ namespace
 			const __m128i high = _mm256_extracti128_si256( indices, 1 );
 			pRes[k] = LookupCubicRootColorAVX2( low );
 			if ( remaining > 1 )
+			{
 				pRes[k + 1] = LookupCubicRootColorAVX2( _mm_srli_si128( low, 8 ) );
+			}
 			if ( remaining > 2 )
+			{
 				pRes[k + 2] = LookupCubicRootColorAVX2( high );
+			}
 		}
 	}
 
@@ -713,13 +737,17 @@ namespace
 	                         bool bMultiplyOnTransparency )
 	{
 		if ( nCount == 0 )
+		{
 			return;
+		}
 
 		NGfx::SMMXWord alpha{};
 		alpha.nW = 0x1ff;
 		NGfx::SMMXWord transparencyMask{};
 		if ( !bMultiplyOnTransparency )
+		{
 			transparencyMask.nX = transparencyMask.nY = transparencyMask.nZ = 0x7fff;
+		}
 
 		SScaleColorsAVX2Data data;
 		data.alpha = LoadMMXWord256( alpha );
@@ -773,9 +801,13 @@ namespace
 			                                          data );
 			pRes[k] = static_cast<uint32_t>( _mm_cvtsi128_si32( result ) );
 			if ( remaining > 1 )
+			{
 				pRes[k + 1] = static_cast<uint32_t>( _mm_extract_epi32( result, 1 ) );
+			}
 			if ( remaining > 2 )
+			{
 				pRes[k + 2] = static_cast<uint32_t>( _mm_extract_epi32( result, 2 ) );
+			}
 		}
 	}
 
@@ -792,5 +824,4 @@ const SLightingKernels avx2LightingKernels = {
 	&AddColors,
 	&ScaleColors,
 };
-
 }

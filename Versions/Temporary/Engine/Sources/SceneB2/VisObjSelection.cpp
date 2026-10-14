@@ -13,10 +13,14 @@ const float DEFAULT_SELECTION_SIZE = 1.5f;
 void CVisObjSelectionInfo::Recalc()
 {
 	if ( pValue == 0 )
+	{
 		pValue = new NGScene::CObjectInfo;
+	}
 
 	if ( eSelType == NDb::SELECTION_TYPE_GROUND )
+	{
 		pTerraManager->CreateSelection( &data, info.vMin, info.vMax );
+	}
 
 	NGScene::CObjectInfo::SData objData;
 	objData.verts = data.vertices;
@@ -29,7 +33,9 @@ void CVisObjSelectionInfo::Recalc()
 void CVisObjSelectionInfo::SetInfo( const SSelectionInfo &_info )
 {
 	if ( info == _info )
+	{
 		return;
+	}
 	info = _info;
 	ForceUpdate();
 }
@@ -38,10 +44,14 @@ void CScene::SelectObject( const int nID, const CVec3 &vPos, const float fSelSca
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
 	if ( pos == data[eScene]->visObjects.end() )
+	{
 		return;
+	}
 	SModelVisObjDesc *pVOD = dynamic_cast_ptr<SModelVisObjDesc *>( pos->second );
 	if ( pVOD == 0 )
+	{
 		return;
+	}
 
 	//pos->second->selection.selHolder.pHolder = 0;
 	if ( pVOD->bHidden ) //Invisible objects (i.e. infantry in containers) do not display selections
@@ -97,7 +107,9 @@ void CScene::MakeSelection( SVisObjSelection &selection,
 	}
 
 	if ( selection.selHolder.pPatch == 0 )
+	{
 		selection.selHolder.pPatch = new CVisObjSelectionInfo( data[eScene]->pTerraManager );
+	}
 	selection.selHolder.pPatch->SetSelectionType( eSelType );
 
 	NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_SKIP_LIGHTING, -100 ), 0, 0 );
@@ -109,7 +121,9 @@ void CScene::MakeSelection( SVisObjSelection &selection,
 		SBound bound;
 		info.MakeBound( &bound );
 		if ( selection.pBound == 0 )
+		{
 			selection.pBound = new CCSBound();
+		}
 		selection.pBound->Set( bound );
 		selection.selHolder.pPatch->SetInfo( info );
 
@@ -137,13 +151,19 @@ void CScene::MakeSelection( SVisObjSelection &selection,
 	else
 	{
 		if ( pVOD )
+		{
 			vVisPos.z += pVOD->pModel->pGeometry->vSize.z * 0.5f;
+		}
 		SFBTransform place;
 		MakeMatrix( &place, vSize, vVisPos );
 		if ( selection.pTransform == 0 )
+		{
 			selection.pTransform = new CCSFBTransform( place );
+		}
 		else
+		{
 			selection.pTransform->Set( place );
+		}
 		NMeshData::SMeshData &patchData = selection.selHolder.pPatch->data;
 		patchData.vertices.reserve( 4 );
 		patchData.vertices.resize( 0 );
@@ -232,7 +252,9 @@ void CScene::UpdateSelectionHandlers()
 		}
 
 		if ( pHandler->eState == SVisObjSelectionHandler::ESS_NONE )
+		{
 			obsoletes.push_back( it->first );
+		}
 	}
 
 	for ( int i = 0; i < obsoletes.size(); ++i )
@@ -245,10 +267,14 @@ void CScene::UnselectObject( const int nID )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
 	if ( pos == data[eScene]->visObjects.end() )
+	{
 		return;
+	}
 	SModelVisObjDesc *pVOD = dynamic_cast_ptr<SModelVisObjDesc *>( pos->second );
 	if ( pVOD == 0 )
+	{
 		return;
+	}
 	pVOD->bSelected = false;
 	pVOD->selection.selHolder.pHolder = 0;
 }
@@ -259,7 +285,9 @@ int CScene::AddSelection(
 	SModelVisObjDesc *pVOD = 0;
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
 	if ( pos != data[eScene]->visObjects.end() )
+	{
 		pVOD = dynamic_cast_ptr<SModelVisObjDesc *>( pos->second );
+	}
 
 	SVisObjSelectionHandler *pHandler = data[eScene]->GetNewSelection();
 	pHandler->eState = SVisObjSelectionHandler::ESS_FADE_IN;

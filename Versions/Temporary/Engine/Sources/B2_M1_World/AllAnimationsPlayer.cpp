@@ -25,14 +25,18 @@ void CAllAnimationsPlayer::Update()
 			do
 			{
 				if ( bSwitchToNextAnimation )
+				{
 					++animInfo.nAnimation;
+				}
 
 				animDuration = pObj->PlayAnimation( animInfo.nAnimation );
 
 				NI_ASSERT( animDuration.first > 0 || bSwitchToNextAnimation, "Wrong animation length" );
 
 				if ( animDuration.first == -1 )
+				{
 					animInfo.nAnimation = -1;
+				}
 			} while ( animDuration.first <= 0 && animInfo.nAnimation != nStartAnim );
 
 			if ( animDuration.first > 0 )
@@ -41,7 +45,9 @@ void CAllAnimationsPlayer::Update()
 				animInfo.bLooped = animDuration.second;
 			}
 			else
+			{
 				toDelete.push_back( iter->first );
+			}
 		}
 	}
 

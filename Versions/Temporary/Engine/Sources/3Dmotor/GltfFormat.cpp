@@ -73,10 +73,14 @@ namespace
 	{
 		CFileStream stream( NVFS::GetMainVFS(), path );
 		if ( !stream.IsOk() || !stream.CanRead() )
+		{
 			return false;
+		}
 		pBytes->resize( stream.GetSize() );
 		if ( !pBytes->empty() )
+		{
 			memcpy( pBytes->data(), stream.GetBuffer(), pBytes->size() );
+		}
 		return true;
 	}
 
@@ -93,13 +97,19 @@ namespace
 	                       std::vector<std::size_t> *pResult )
 	{
 		if ( nodeIndex >= asset.nodes.size() || ( *pVisited )[nodeIndex] )
+		{
 			return;
+		}
 		( *pVisited )[nodeIndex] = true;
 		const fastgltf::Node &node = asset.nodes[nodeIndex];
 		if ( node.meshIndex.has_value() )
+		{
 			pResult->push_back( nodeIndex );
+		}
 		for ( std::size_t child : node.children )
+		{
 			CollectMeshNodes( asset, child, pVisited, pResult );
+		}
 	}
 
 	void CollectNodeHierarchy( const fastgltf::Asset &asset,
@@ -108,11 +118,15 @@ namespace
 	                           std::vector<std::size_t> *pResult )
 	{
 		if ( nodeIndex >= asset.nodes.size() || ( *pVisited )[nodeIndex] )
+		{
 			return;
+		}
 		( *pVisited )[nodeIndex] = true;
 		pResult->push_back( nodeIndex );
 		for ( std::size_t child : asset.nodes[nodeIndex].children )
+		{
 			CollectNodeHierarchy( asset, child, pVisited, pResult );
+		}
 	}
 
 	bool FindUniqueNode( const TGltfFilePtr &file, const std::string &nodeName, std::size_t *pResult )
@@ -121,7 +135,9 @@ namespace
 		for ( std::size_t i = 0; i < file->asset.nodes.size(); ++i )
 		{
 			if ( std::string( file->asset.nodes[i].name ) != nodeName )
+			{
 				continue;
+			}
 			if ( found )
 			{
 				DebugTrace( "glTF: node selector %s is ambiguous in %s", nodeName.c_str(), file->sourcePath.c_str() );
@@ -131,7 +147,9 @@ namespace
 			*pResult = i;
 		}
 		if ( !found )
+		{
 			DebugTrace( "glTF: node selector %s was not found in %s", nodeName.c_str(), file->sourcePath.c_str() );
+		}
 		return found;
 	}
 
@@ -141,13 +159,19 @@ namespace
 	                         std::unordered_set<std::size_t> *pResult )
 	{
 		if ( nodeIndex >= asset.nodes.size() || ( *pVisited )[nodeIndex] )
+		{
 			return;
+		}
 		( *pVisited )[nodeIndex] = true;
 		const fastgltf::Node &node = asset.nodes[nodeIndex];
 		if ( node.skinIndex.has_value() && *node.skinIndex < asset.skins.size() )
+		{
 			pResult->insert( *node.skinIndex );
+		}
 		for ( std::size_t child : node.children )
+		{
 			CollectSkinIndices( asset, child, pVisited, pResult );
+		}
 	}
 
 	bool IsAncestorOf( const CGltfFile &file, std::size_t ancestor, std::size_t nodeIndex )
@@ -156,7 +180,9 @@ namespace
 		while ( current >= 0 && current < static_cast<int>( file.nodeParents.size() ) )
 		{
 			if ( static_cast<std::size_t>( current ) == ancestor )
+			{
 				return true;
+			}
 			current = file.nodeParents[current];
 		}
 		return false;
@@ -172,7 +198,9 @@ namespace
 
 		std::size_t rootNode = 0;
 		if ( !FindUniqueNode( file, rootNodeName, &rootNode ) )
+		{
 			return false;
+		}
 		std::unordered_set<std::size_t> candidates;
 		std::vector<bool> visited( file->asset.nodes.size(), false );
 		// RootJoint may name either the armature/joint hierarchy or its skinned mesh.
@@ -181,7 +209,9 @@ namespace
 		{
 			const fastgltf::Skin &skin = file->asset.skins[skinIndex];
 			if ( skin.skeleton.has_value() && *skin.skeleton == rootNode )
+			{
 				candidates.insert( skinIndex );
+			}
 			for ( std::size_t joint : skin.joints )
 			{
 				if ( IsAncestorOf( *file, rootNode, joint ) )
@@ -210,9 +240,13 @@ namespace
 	                           std::vector<unsigned char> *pState )
 	{
 		if ( ( *pState )[nodeIndex] == 2 )
+		{
 			return ( *pWorld )[nodeIndex];
+		}
 		if ( ( *pState )[nodeIndex] == 1 )
+		{
 			return IdentityMatrix();
+		}
 		( *pState )[nodeIndex] = 1;
 
 		const fastgltf::TRS &trs = std::get<fastgltf::TRS>( asset.nodes[nodeIndex].transform );
@@ -239,30 +273,46 @@ CGltfFile::CGltfFile( fastgltf::Asset &&_asset, const NFile::CFilePath &_sourceP
 			nodeWorldTransforms( asset.nodes.size() )
 {
 	for ( std::size_t parent = 0; parent < asset.nodes.size(); ++parent )
+	{
 		for ( std::size_t child : asset.nodes[parent].children )
+		{
 			if ( child < nodeParents.size() )
+			{
 				nodeParents[child] = static_cast<int>( parent );
+			}
+		}
+	}
 
 	std::vector<unsigned char> state( asset.nodes.size(), 0 );
 	for ( std::size_t i = 0; i < asset.nodes.size(); ++i )
+	{
 		ResolveNodeWorld( asset, nodeParents, i, &nodeWorldTransforms, &state );
+	}
 
 	std::vector<bool> visited( asset.nodes.size(), false );
 	if ( asset.defaultScene.has_value() && *asset.defaultScene < asset.scenes.size() )
 	{
 		for ( std::size_t root : asset.scenes[*asset.defaultScene].nodeIndices )
+		{
 			CollectMeshNodes( asset, root, &visited, &meshNodes );
+		}
 	}
 	else if ( !asset.scenes.empty() )
 	{
 		for ( std::size_t root : asset.scenes[0].nodeIndices )
+		{
 			CollectMeshNodes( asset, root, &visited, &meshNodes );
+		}
 	}
 	else
 	{
 		for ( std::size_t i = 0; i < asset.nodes.size(); ++i )
+		{
 			if ( asset.nodes[i].meshIndex.has_value() )
+			{
 				meshNodes.push_back( i );
+			}
+		}
 	}
 }
 
@@ -321,13 +371,17 @@ int SSkeletonDefinition::FindBone( const std::string &name ) const
 NFile::CFilePath ResolveModelFilePath( const NDb::CResource *pOwner, const NFile::CFilePath &modelFileRef )
 {
 	if ( modelFileRef.empty() )
+	{
 		return NFile::CFilePath();
+	}
 
 	NFile::CFilePath normalizedRef;
 	NFile::NormalizePath( &normalizedRef, modelFileRef );
 	NVFS::IVFS *pVFS = NVFS::GetMainVFS();
 	if ( !pOwner || !pVFS )
+	{
 		return normalizedRef;
+	}
 
 	const bool bAbsolute =
 			NFile::IsFolderSeparator( normalizedRef[0] ) ||
@@ -342,7 +396,9 @@ NFile::CFilePath ResolveModelFilePath( const NDb::CResource *pOwner, const NFile
 		NFile::CFilePath localPath = NFile::JoinPath( ownerFolder, normalizedRef );
 		NFile::NormalizePath( &localPath );
 		if ( pVFS->DoesFileExist( localPath ) )
+		{
 			return localPath;
+		}
 	}
 
 	// The VFS also passes Windows drive-qualified paths through to the OS.
@@ -423,7 +479,9 @@ TGltfFilePtr LoadFile( const NDb::CResource *pOwner, const NFile::CFilePath &mod
 	{
 		fastgltf::sources::URI *pUri = std::get_if<fastgltf::sources::URI>( &buffer.data );
 		if ( !pUri )
+		{
 			continue;
+		}
 		if ( !pUri->uri.isLocalPath() )
 		{
 			DebugTrace( "glTF: unsupported non-local buffer URI in %s", path.c_str() );
@@ -437,7 +495,9 @@ TGltfFilePtr LoadFile( const NDb::CResource *pOwner, const NFile::CFilePath &mod
 			return TGltfFilePtr();
 		}
 		if ( pUri->fileByteOffset != 0 )
+		{
 			externalBytes.erase( externalBytes.begin(), externalBytes.begin() + pUri->fileByteOffset );
+		}
 		buffer.data = fastgltf::sources::Vector{ std::move( externalBytes ), pUri->mimeType };
 	}
 
@@ -457,7 +517,9 @@ TGltfFilePtr LoadFile( const NDb::CResource *pOwner, const NFile::CFilePath &mod
 bool GetMeshNodes( const TGltfFilePtr &file, const std::string &rootNodeName, std::vector<std::size_t> *pResult )
 {
 	if ( !file || !pResult )
+	{
 		return false;
+	}
 	pResult->clear();
 	if ( rootNodeName.empty() )
 	{
@@ -467,7 +529,9 @@ bool GetMeshNodes( const TGltfFilePtr &file, const std::string &rootNodeName, st
 
 	std::size_t rootNode = 0;
 	if ( !FindUniqueNode( file, rootNodeName, &rootNode ) )
+	{
 		return false;
+	}
 	std::vector<bool> visited( file->asset.nodes.size(), false );
 	CollectMeshNodes( file->asset, rootNode, &visited, pResult );
 	if ( pResult->empty() )
@@ -485,20 +549,28 @@ bool GetMeshBoundingBox( const TGltfFilePtr &file,
                          CVec3 *pMax )
 {
 	if ( !file || !pMin || !pMax )
+	{
 		return false;
+	}
 
 	std::vector<std::size_t> meshNodes;
 	if ( !GetMeshNodes( file, rootNodeName, &meshNodes ) )
+	{
 		return false;
+	}
 
 	bool bHaveVertex = false;
 	for ( std::size_t nodeIndex : meshNodes )
 	{
 		if ( nodeIndex >= file->asset.nodes.size() )
+		{
 			continue;
+		}
 		const fastgltf::Node &node = file->asset.nodes[nodeIndex];
 		if ( !node.meshIndex.has_value() || *node.meshIndex >= file->asset.meshes.size() )
+		{
 			continue;
+		}
 
 		const bool bApplyNodeTransform = bApplyNodeTransformsToSkinnedMeshes || !node.skinIndex.has_value();
 		for ( const fastgltf::Primitive &primitive : file->asset.meshes[*node.meshIndex].primitives )
@@ -507,10 +579,14 @@ bool GetMeshBoundingBox( const TGltfFilePtr &file,
 			if ( primitive.type != fastgltf::PrimitiveType::Triangles &&
 			     primitive.type != fastgltf::PrimitiveType::TriangleStrip &&
 			     primitive.type != fastgltf::PrimitiveType::TriangleFan )
+			{
 				continue;
+			}
 			const auto position = primitive.findAttribute( "POSITION" );
 			if ( position == primitive.attributes.end() || position->accessorIndex >= file->asset.accessors.size() )
+			{
 				continue;
+			}
 			const fastgltf::Accessor &positionAccessor = file->asset.accessors[position->accessorIndex];
 
 			for ( const fastgltf::math::fvec3 &source :
@@ -532,24 +608,38 @@ bool GetMeshBoundingBox( const TGltfFilePtr &file,
 				else
 				{
 					if ( point.x < pMin->x )
+					{
 						pMin->x = point.x;
+					}
 					if ( point.y < pMin->y )
+					{
 						pMin->y = point.y;
+					}
 					if ( point.z < pMin->z )
+					{
 						pMin->z = point.z;
+					}
 					if ( point.x > pMax->x )
+					{
 						pMax->x = point.x;
+					}
 					if ( point.y > pMax->y )
+					{
 						pMax->y = point.y;
+					}
 					if ( point.z > pMax->z )
+					{
 						pMax->z = point.z;
+					}
 				}
 			}
 		}
 	}
 
 	if ( !bHaveVertex )
+	{
 		DebugTrace( "glTF: selected meshes have no supported POSITION vertices in %s", file->sourcePath.c_str() );
+	}
 	return bHaveVertex;
 }
 
@@ -642,11 +732,17 @@ NAnimation::SBoneTransform MakeBoneTransform( const SHMatrix &value )
 	rotation._41 = rotation._42 = rotation._43 = 0.0f;
 	rotation._44 = 1.0f;
 	if ( sx > FP_EPSILON )
+	{
 		rotation._11 /= sx, rotation._21 /= sx, rotation._31 /= sx;
+	}
 	if ( sy > FP_EPSILON )
+	{
 		rotation._12 /= sy, rotation._22 /= sy, rotation._32 /= sy;
+	}
 	if ( sz > FP_EPSILON )
+	{
 		rotation._13 /= sz, rotation._23 /= sz, rotation._33 /= sz;
+	}
 	CQuat quaternion;
 	quaternion.FromEulerMatrix( rotation );
 	quaternion.Normalize();
@@ -659,7 +755,9 @@ namespace
 	bool BuildNodeSkeleton( const TGltfFilePtr &file, const std::string &rootNodeName, SSkeletonDefinition *pResult )
 	{
 		if ( !file || !pResult )
+		{
 			return false;
+		}
 		if ( rootNodeName.empty() )
 		{
 			DebugTrace( "glTF: RootJoint is required for a node-animated file without skins: %s", file->sourcePath.c_str() );
@@ -668,7 +766,9 @@ namespace
 
 		std::size_t rootNode = 0;
 		if ( !FindUniqueNode( file, rootNodeName, &rootNode ) )
+		{
 			return false;
+		}
 		std::vector<std::size_t> nodes;
 		std::vector<bool> visited( file->asset.nodes.size(), false );
 		CollectNodeHierarchy( file->asset, rootNode, &visited, &nodes );
@@ -689,7 +789,9 @@ namespace
 
 		std::unordered_map<std::size_t, int> boneByNode;
 		for ( std::size_t i = 0; i < nodes.size(); ++i )
+		{
 			boneByNode[nodes[i]] = static_cast<int>( i );
+		}
 
 		for ( std::size_t i = 0; i < nodes.size(); ++i )
 		{
@@ -709,7 +811,9 @@ namespace
 			{
 				const auto found = boneByNode.find( static_cast<std::size_t>( parentNode ) );
 				if ( found != boneByNode.end() )
+				{
 					pResult->parents[i] = found->second;
+				}
 			}
 
 			SHMatrix local = file->nodeWorldTransforms[nodeIndex];
@@ -735,7 +839,9 @@ namespace
 bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pResult )
 {
 	if ( !file || !pResult || nSkin < 0 || nSkin >= static_cast<int>( file->asset.skins.size() ) )
+	{
 		return false;
+	}
 	const fastgltf::Skin &skin = file->asset.skins[nSkin];
 	if ( skin.joints.empty() || skin.joints.size() > 256 )
 	{
@@ -751,13 +857,17 @@ bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pR
 
 	std::unordered_map<std::size_t, int> boneByNode;
 	for ( std::size_t i = 0; i < skin.joints.size(); ++i )
+	{
 		boneByNode[skin.joints[i]] = static_cast<int>( i );
+	}
 
 	for ( std::size_t i = 0; i < skin.joints.size(); ++i )
 	{
 		const std::size_t nodeIndex = skin.joints[i];
 		if ( nodeIndex >= file->asset.nodes.size() )
+		{
 			return false;
+		}
 		const fastgltf::Node &node = file->asset.nodes[nodeIndex];
 		std::string name = node.name.empty() ? "Node_" + std::to_string( nodeIndex ) : std::string( node.name );
 		if ( pResult->boneByName.find( name ) != pResult->boneByName.end() )
@@ -803,7 +913,9 @@ bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pR
 		      fastgltf::iterateAccessor<fastgltf::math::fmat4x4>( file->asset, accessor ) )
 		{
 			if ( index >= pResult->inverseBindMatrices.size() )
+			{
 				break;
+			}
 			pResult->inverseBindMatrices[index++] = ConvertMatrix( matrix );
 		}
 	}
@@ -816,14 +928,20 @@ bool BuildSkeleton( const TGltfFilePtr &file,
                     SSkeletonDefinition *pResult )
 {
 	if ( !file )
+	{
 		return false;
+	}
 	// Skinless mechanical models use their node hierarchy as a rigid skeleton.
 	// Requiring RootJoint avoids guessing between unrelated scene roots.
 	if ( file->asset.skins.empty() )
+	{
 		return BuildNodeSkeleton( file, rootNodeName, pResult );
+	}
 	int skinIndex = nFallbackSkin;
 	if ( !ResolveSkinIndex( file, rootNodeName, nFallbackSkin, &skinIndex ) )
+	{
 		return false;
+	}
 	return BuildSkeleton( file, skinIndex, pResult );
 }
 

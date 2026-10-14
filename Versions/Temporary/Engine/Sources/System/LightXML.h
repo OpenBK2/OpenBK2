@@ -47,7 +47,9 @@ class CXMLAttribute : public CXMLBase
 	uint32_t GetHashCode() const
 	{
 		if ( dwHashCode == 0 )
+		{
 			dwHashCode = std::hash<std::string>()( szName );
+		}
 		return dwHashCode;
 	}
 
@@ -121,11 +123,17 @@ public:
 	bool IsMatch( const std::string &szMatchValue, const uint32_t dwMatchHashCode )
 	{
 		if ( dwHashCode == 0 )
+		{
 			dwHashCode = std::hash<std::string>()( szValue );
+		}
 		if ( dwHashCode == dwMatchHashCode )
+		{
 			return szMatchValue == szValue;
+		}
 		else
+		{
 			return false;
+		}
 	}
 };
 
@@ -215,7 +223,9 @@ public:
 		for ( std::string::const_iterator it = szValue.begin(); it != szValue.end(); ++it )
 		{
 			if ( !isspace( uint8_t( *it ) ) )
+			{
 				return false;
+			}
 		}
 		return true;
 	}

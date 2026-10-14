@@ -86,7 +86,9 @@ void CAnimUnitSoldier::AnimationSet( int nAnimation )
 			}
 
 			if ( bComplexAttack )
+			{
 				timeOfFinishAnimation += 800;
+			}
 			break;
 
 		case NDb::ANIMATION_SHOOT_TRENCH:
@@ -163,5 +165,7 @@ void CAnimUnitSoldier::StopCurAnimation()
 		updater.AddUpdate( 0, pOwner->GetIdleAction(), pOwner, -1 );
 	}
 	else
+	{
 		updater.AddUpdate( 0, pOwner->GetMovingAction(), pOwner, -1 );
+	}
 }

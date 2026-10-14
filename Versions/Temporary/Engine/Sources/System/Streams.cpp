@@ -65,7 +65,9 @@ void CDataStream::ReadString( std::string &res, int nMaxSize )
 	int nSize = 0;
 	Read( &nSize, 1 );
 	if ( nSize & 1 )
+	{
 		Read( ( (char *)&nSize ) + 1, 3 );
+	}
 	nSize >>= 1;
 	if ( ( nMaxSize > 0 && nSize > nMaxSize ) )
 	{
@@ -129,12 +131,18 @@ void CMemoryStream::AllocBuf( int nOldFileSize, int nSize )
 	int nTransfer = (std::min)( nSize, nOldFileSize );
 	unsigned char *pPrevBuffer = GetBufferPtr();
 	if ( nTransfer != 0 && pBuf != 0 )
+	{
 		memcpy( pBuf, pPrevBuffer, nTransfer );
+	}
 	delete[] pPrevBuffer;
 	if ( pBuf == 0 )
+	{
 		SetBuffer( 0, 0, 0, 0, GetFlags() | F_Broken );
+	}
 	else
+	{
 		SetBuffer( pBuf, nSize, GetPosition(), GetSize(), GetFlags() );
+	}
 }
 
 CMemoryStream::~CMemoryStream()
@@ -182,18 +190,26 @@ void CMappedStream::AllocBufImpl( int nBufSize, int nPos, int nSize )
 	ASSERT( nBufSize >= nSize );
 	unsigned char *pBuf = 0;
 	if ( nBufSize != 0 )
+	{
 		pBuf = (unsigned char *)MapFile( nBufSize );
+	}
 	if ( pBuf == 0 && nBufSize != 0 )
+	{
 		SetBuffer( 0, 0, 0, 0, GetFlags() | F_Broken );
+	}
 	else
+	{
 		SetBuffer( pBuf, nBufSize, nPos, nSize, GetFlags() );
+	}
 }
 
 void CMappedStream::ReleaseBuf()
 {
 	UnmapFile( GetBufferPtr() );
 	if ( GetSize() != GetBufferSize() && IsOk() )
+	{
 		SetFileSize( GetSize() );
+	}
 }
 
 void CMappedStream::AllocBuf( int nOldFileSize, int nSize )
@@ -212,7 +228,9 @@ void CMappedStream::StartAccess( int _nFlags )
 void CMappedStream::Flush()
 {
 	if ( IsOk() )
+	{
 		FlushFile( GetBufferPtr() );
+	}
 }
 
 // ************************************************************************************************************************ //
@@ -274,7 +292,9 @@ CFileStream::CFileStream( NVFS::IVFS *pVFS, const std::string &szFileName ) : CD
 	//	NI_ASSERT( szFileName.find( ":" ) == string::npos, StrFmt( "\":\" found in file name %s passed to VFS! WIN_READ_ONLY should've been used", szFileName.c_str() ) );
 	pStream = pVFS->OpenFile( szFileName );
 	if ( pStream )
+	{
 		SyncWith( *pStream );
+	}
 	TraceFileOpen( "vfs", szFileName, pStream != 0, "no such entry in the VFS" );
 }
 
@@ -283,7 +303,9 @@ CFileStream::CFileStream( NVFS::IFileCreator *pFileCreator, const std::string &s
 	//	NI_ASSERT( szFileName.find( ":" ) == string::npos, StrFmt( "\":\" found in file name %s passed to VFS! WIN_CREATE should've been used", szFileName.c_str() ) );
 	pStream = pFileCreator->CreateFile( szFileName );
 	if ( pStream )
+	{
 		SyncWith( *pStream );
+	}
 	TraceFileOpen( "create", szFileName, pStream != 0, "the file creator refused it" );
 }
 
@@ -298,7 +320,9 @@ CFileStream::CFileStream( const std::string &szFileName, const EWinMode eWinMode
 		pStream = new CMemoryMappedFile( szFileName.c_str(), STREAM_ACCESS_READ );
 		bOk = pStream->CanRead();
 		if ( !bOk )
+		{
 			pStream->SetBroken();
+		}
 	}
 	else
 	{
@@ -306,9 +330,13 @@ CFileStream::CFileStream( const std::string &szFileName, const EWinMode eWinMode
 		pStream = new CMemoryMappedFile( szFileName.c_str(), STREAM_ACCESS_READ_WRITE );
 		bOk = pStream->CanWrite();
 		if ( bOk )
+		{
 			pStream->Trunc();
+		}
 		else
+		{
 			pStream->SetBroken();
+		}
 	}
 	const int nErrno = errno;
 

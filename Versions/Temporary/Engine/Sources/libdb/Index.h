@@ -20,9 +20,13 @@ inline bool LoadIndexData( std::vector<SFullTypeHeader> *pRes, CDataStream *pStr
 	if ( pStream && pStream->IsOk() )
 	{
 		if ( CPtr<IBinSaver> pSaver = CreateBinSaver( pStream, SAVER_MODE_READ ) )
+		{
 			pSaver->Add( 1, pRes );
+		}
 		else
+		{
 			return false;
+		}
 	}
 	return true;
 }

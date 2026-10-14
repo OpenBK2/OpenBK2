@@ -19,19 +19,25 @@ CSymEngine::CSymEngine()
 	hProcess = GetCurrentProcess();
 	SymSetOptions( SymGetOptions() | SYMOPT_LOAD_LINES | SYMOPT_DEFERRED_LOADS );
 	if ( !SymInitialize( hProcess, 0, TRUE ) )
+	{
 		hProcess = 0;
+	}
 }
 
 CSymEngine::~CSymEngine()
 {
 	if ( hProcess )
+	{
 		SymCleanup( hProcess );
+	}
 }
 
 inline void Clear( CSymString *p )
 {
 	if ( p )
+	{
 		*p = "?";
+	}
 }
 bool CSymEngine::GetSymbol(
 		uint32_t dwAddress, CSymString *pszModule, CSymString *pszFile, int *pnLine, CSymString *pszFunc )
@@ -40,9 +46,13 @@ bool CSymEngine::GetSymbol(
 	Clear( pszFile );
 	Clear( pszFunc );
 	if ( pnLine )
+	{
 		*pnLine = 0;
+	}
 	if ( !hProcess )
+	{
 		return false;
+	}
 	const int N_MAX_NAME_LENG = 1000;
 	const int N_BUF_SIZE = sizeof( SYMBOL_INFO ) + N_MAX_NAME_LENG;
 	char szBuf[N_BUF_SIZE];
@@ -54,7 +64,9 @@ bool CSymEngine::GetSymbol(
 		ZeroSA( moduleInfo );
 		moduleInfo.SizeOfStruct = sizeof( moduleInfo );
 		if ( SymGetModuleInfo64( hProcess, dwAddress, &moduleInfo ) )
+		{
 			*pszModule = moduleInfo.ImageName;
+		}
 	}
 
 	if ( pszFunc )
@@ -63,7 +75,9 @@ bool CSymEngine::GetSymbol(
 		pInfo->SizeOfStruct = std::size( szBuf );
 		pInfo->MaxNameLen = N_MAX_NAME_LENG;
 		if ( SymFromAddr( hProcess, dwAddress, 0, pInfo ) )
+		{
 			*pszFunc = pInfo->Name;
+		}
 	}
 
 	if ( pnLine || pszFile )
@@ -75,9 +89,13 @@ bool CSymEngine::GetSymbol(
 		if ( SymGetLineFromAddr64( hProcess, dwAddress, &dwDisp, &lineInfo ) )
 		{
 			if ( pnLine )
+			{
 				*pnLine = lineInfo.LineNumber;
+			}
 			if ( pszFile )
+			{
 				*pszFile = lineInfo.FileName;
+			}
 		}
 	}
 	return true;
@@ -121,7 +139,9 @@ int CollectCallStack( EXCEPTION_POINTERS *pExPtrs, SCallStackEntry *pRes, int nM
 		                         SymGetModuleBase64,
 		                         0 );
 		if ( !bRes || stkFrame.AddrPC.Offset == 0 )
+		{
 			break;
+		}
 		SCallStackEntry &res = pRes[nEntry];
 		res.dwAddress = (uint32_t)stkFrame.AddrPC.Offset;
 		se.GetSymbol( res.dwAddress, 0, &res.szFile, &res.nLine, &res.szFunc );

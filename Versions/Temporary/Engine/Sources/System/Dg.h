@@ -74,7 +74,9 @@ public:
 	{
 		ASSERT( IsFrameMatch() );
 		if ( !IsValid( pValue ) )
+		{
 			Recalc();
+		}
 		return pValue;
 	}
 	bool HasZeroValue() const { return pValue == 0; }
@@ -92,7 +94,9 @@ protected:
 	void Touch()
 	{
 		if ( nDGCurrentFrame > nDeleteFrame )
+		{
 			SetToHoldQueue( this, &nDeleteFrame );
+		}
 	}
 	virtual bool NeedUpdate()
 	{
@@ -113,7 +117,9 @@ protected:
 	void Touch()
 	{
 		if ( nDGCurrentFrame > nDeleteFrame - 20 )
+		{
 			SetToHoldQueue( this, &nDeleteFrame );
+		}
 	}
 	virtual bool NeedUpdate()
 	{
@@ -194,7 +200,9 @@ public:
 		ASSERT( IsValid( pNode ) );
 		CAccessForDGPtr cppIsWeak;
 		if ( cppIsWeak.GetFrameCalced( pNode ) != nDGCurrentFrame )
+		{
 			cppIsWeak.DoUpdate( pNode );
+		}
 		bool bResult = nVersion != cppIsWeak.GetVersion( pNode );
 		nVersion = cppIsWeak.GetVersion( pNode );
 		return bResult;
@@ -250,15 +258,21 @@ public:
 	EDGNodeChange GetChanges()
 	{
 		if ( !IsValid( p ) )
+		{
 			return DG_CHANGE_UNKNOWN;
+		}
 		CAccessForDGPtr cppIsWeak;
 		int nNodeFrame = cppIsWeak.GetFrameCalced( p );
 		int nNodeVersion = cppIsWeak.GetVersion( p );
 		EDGNodeChange rv;
 		if ( nFrame == nNodeFrame )
+		{
 			rv = DG_CHANGE_UNKNOWN;
+		}
 		else
+		{
 			rv = nNodeVersion == nVersion ? DG_CHANGE_NONE : DG_CHANGE_CHANGED;
+		}
 		nFrame = nNodeFrame;
 		nVersion = nNodeVersion;
 		return rv;
@@ -276,7 +290,9 @@ inline void UpdateSet( TSet *a, TParam *p )
 	for ( typename TSet::iterator i = a->begin(); i != a->end(); )
 	{
 		if ( IsValid( *i ) && ( *i )->Update( p ) )
+		{
 			++i;
+		}
 		else
 		{
 			typename TSet::iterator k = i;
@@ -292,7 +308,9 @@ inline void UpdateSet( TSet *a, TParam *p, TParam2 *p2 )
 	for ( typename TSet::iterator i = a->begin(); i != a->end(); )
 	{
 		if ( IsValid( *i ) && ( *i )->Update( p, p2 ) )
+		{
 			++i;
+		}
 		else
 		{
 			typename TSet::iterator k = i;
@@ -308,7 +326,9 @@ inline void UpdateSet( TSet *a, TParam *p, TParam2 *p2, TParam3 *p3 )
 	for ( typename TSet::iterator i = a->begin(); i != a->end(); )
 	{
 		if ( IsValid( *i ) && ( *i )->Update( p, p2, p3 ) )
+		{
 			++i;
+		}
 		else
 		{
 			typename TSet::iterator k = i;

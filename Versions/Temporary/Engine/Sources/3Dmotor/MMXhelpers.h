@@ -128,7 +128,9 @@ inline uint64_t psllq( uint64_t val, int shift )
 inline uint64_t psrlq( uint64_t val, int shift )
 {
 	if ( shift > 63 )
+	{
 		return 0;
+	}
 	return val >> shift;
 }
 
@@ -189,9 +191,13 @@ inline uint64_t paddsw( uint64_t a, uint64_t b )
 	{
 		int32_t sum = static_cast<int32_t>( wa[i] ) + static_cast<int32_t>( wb[i] );
 		if ( sum > 32767 )
+		{
 			sum = 32767;
+		}
 		if ( sum < -32768 )
+		{
 			sum = -32768;
+		}
 		wr[i] = static_cast<short>( sum );
 	}
 	return combine64( wr );

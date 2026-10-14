@@ -88,7 +88,9 @@ void CTerraAIObserverInGame::FinalizeUpdates()
 void CTerraAIObserverInGame::InitInGame()
 {
 	for ( CRiverSounds::iterator it = riverSounds.begin(); it != riverSounds.end(); ++it )
+	{
 		updater.AddUpdate( EFB_RIVER_POINT, MAKELONG( it->x, it->y ), 0 );
+	}
 }
 
 void CTerraAIObserverInGame::AddRiver( const NDb::SVSOInstance *pInstance )

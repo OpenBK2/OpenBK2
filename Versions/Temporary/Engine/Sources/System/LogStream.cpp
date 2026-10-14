@@ -96,9 +96,13 @@ CLogStream &CLogStream::operator<<( const std::wstring &szText )
 			wsStreamBuffer.append( L"<rb>" );
 		*/
 		else if ( szText[nTemp] == L'\t' )
+		{
 			wsStreamBuffer.append( 1, szText[nTemp] );
+		}
 		else if ( iswprint( szText[nTemp] ) )
+		{
 			wsStreamBuffer.append( 1, szText[nTemp] );
+		}
 	}
 	return *this;
 }

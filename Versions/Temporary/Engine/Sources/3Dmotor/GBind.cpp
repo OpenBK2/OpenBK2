@@ -47,7 +47,9 @@ bool CAnimatedBound::NeedUpdate()
 	// discretisation step
 	const float F_DISCR_STEP = 1;
 	if ( !pAnimation.Refresh() )
+	{
 		return false;
+	}
 	const NAnimation::SSkeletonPose &pose = pAnimation->GetValue();
 	const SHMatrix *pGlobal = (const SHMatrix *)pose.poseGlobal;
 	SHMatrix pos;
@@ -59,7 +61,9 @@ bool CAnimatedBound::NeedUpdate()
 	SSphere newBV;
 	DiscretisizeBoundSphere( &newBV, ptCenter, fRadius, F_DISCR_STEP );
 	if ( newBV == prevValue )
+	{
 		return false;
+	}
 	prevValue = newBV;
 	value.SphereInit( prevValue.ptCenter, prevValue.fRadius );
 	return true;

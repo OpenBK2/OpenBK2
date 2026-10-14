@@ -38,7 +38,9 @@ IAttachedObject *IAttachedObject::CreateAnimatedObj( const NDb::SModel *pModel,
 		CPtr<NAnimation::ISkeletonAnimator> pAnimator = NAnimation::CreateSkeletonAnimator( handle, pTime );
 
 		if ( pAnimator )
+		{
 			return new CAnimatedAttachedObj( pModel, pTransform, pAnimator, nBoneIndex, pBound );
+		}
 	}
 
 	return 0;
@@ -51,10 +53,14 @@ IAttachedObject *IAttachedObject::CreateEffect( const NDb::SEffect *pEffect,
                                                 bool bVertical )
 {
 	if ( bVertical )
+	{
 		return new CAttachedEffect(
 				pEffect, new CAlwaysVerticalTransform( pTransform, bVertical ), nStartTime, nBoneIndex );
+	}
 	else
+	{
 		return new CAttachedEffect( pEffect, pTransform, nStartTime, nBoneIndex );
+	}
 }
 
 IAttachedObject *IAttachedObject::CreateAnimatedLightEffect( const NDb::SAttachedLightEffect *pEffect,
@@ -169,7 +175,9 @@ void CAnimatedAttachedObj::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTime
 void CAttachedEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer )
 {
 	if ( pEffect != 0 )
+	{
 		SetHolder( pGScene->CreateParticles( pEffect, nStartTime, pTimer, GetTransform() ) );
+	}
 }
 
 void CAttachedEffect::Destroy( const NTimer::STime time )
@@ -269,7 +277,9 @@ void CConstantOffsetTransform::Recalc()
 	{
 		NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( nTargetID, szBoneName );
 		if ( pAnimator && pAnimator->GetLocalBonePosition( szBoneName.c_str(), &mMultiplier ) )
+		{
 			bNeedCalcMatrix = false;
+		}
 		if ( pParentTransform )
 		{
 			std::string szParentBone = pParentTransform->szBoneName;
@@ -277,7 +287,9 @@ void CConstantOffsetTransform::Recalc()
 			SHMatrix mParent;
 
 			if ( pParentAnimator && pParentAnimator->GetLocalBonePosition( szParentBone.c_str(), &mParent ) )
+			{
 				mMultiplier = mMultiplier * mParent;
+			}
 
 			pParentTransform = 0;
 		}
@@ -382,7 +394,9 @@ void CAttachedLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTime
 	}
 
 	if ( bNeedRecalc )
+	{
 		RegeneratePositions();
+	}
 
 	//																				Flare
 	if ( !bInEditor && lightEffect.fFlareSize > 0.0f /*&& !pFlareHolder*/ )
@@ -410,7 +424,9 @@ void CAttachedLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTime
 		SHMatrix mDummy;
 		Identity( &mDummy );
 		if ( !pTexture )
+		{
 			pTexture = pSceneConsts->lightFX.pLightConeTexture;
+		}
 		////
 		pDirFlareHolder = pGScene->AddDirFlare( pFlarePos /*new CAttachedLightEffectPos( GetTransform(), mDummy )*/,
 		                                        new CAttachedLightEffectDir( GetTransform() ),
@@ -423,7 +439,9 @@ void CAttachedLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTime
 	{
 		const NDb::SEffect *pEffect = lightEffect.pAdditionalEffect->GetSceneEffect();
 		if ( pEffect )
+		{
 			SetHolder( pGScene->CreateParticles( pEffect, nStartTime, pTimer, pParticleTransform ) );
+		}
 	}
 
 	// Additional sound effect
@@ -436,7 +454,9 @@ void CAttachedLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTime
 void CAttachedLightEffect::AddSound( const NDb::SComplexSoundDesc *pSound )
 {
 	if ( nSoundID != -1 )
+	{
 		RemoveSound();
+	}
 
 	nSoundID = SoundScene()->AddSound(
 			pSound, pSoundPos, SFX_MIX_SUBSTITUTE, pSound->bLooped ? SAM_LOOPED_NEED_ID : SAM_NEED_ID, 0, 2 );
@@ -445,7 +465,9 @@ void CAttachedLightEffect::AddSound( const NDb::SComplexSoundDesc *pSound )
 void CAttachedLightEffect::RemoveSound()
 {
 	if ( nSoundID == -1 )
+	{
 		return;
+	}
 
 	SoundScene()->RemoveSound( nSoundID );
 	nSoundID = -1;
@@ -455,15 +477,21 @@ void CAttachedLightEffect::Destroy( const NTimer::STime time )
 {
 	// Destroy point light
 	if ( !bInEditor && lightEffect.fPointLightSize > 0.0f )
+	{
 		Scene()->RemoveObject( nPointLightID );
+	}
 
 	// Destroy flare
 	if ( !bInEditor && lightEffect.fFlareSize > 0.0f )
+	{
 		pFlareHolder = 0;
+	}
 
 	// Destroy cone
 	if ( !bInEditor && lightEffect.fConeSize > 0.0f )
+	{
 		pDirFlareHolder = 0;
+	}
 
 	// Destroy additional effect
 	if ( !bInEditor && lightEffect.pAdditionalEffect && GetHolder() )
@@ -550,7 +578,9 @@ void CAttachedStaticLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime 
 	}
 
 	if ( bNeedRecalc )
+	{
 		RegeneratePositions();
+	}
 
 	//																				Flare
 	if ( !bInEditor && lightEffect.fFlareSize > 0.0f )
@@ -570,7 +600,9 @@ void CAttachedStaticLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime 
 	if ( !bInEditor && lightEffect.fPointLightSize > 0.0f )
 	{
 		if ( nPointLightID != OBJECT_ID_GENERATE )
+		{
 			Scene()->RemoveObject( nPointLightID );
+		}
 		nPointLightID =
 				Scene()->AddPointLight( nPointLightID, lightEffect.vColour, vPointLightPos, lightEffect.fPointLightSize );
 	}
@@ -581,7 +613,9 @@ void CAttachedStaticLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime 
 		Identity( &mDummy );
 		const NDb::STexture *pTexture = lightEffect.pConeTexture;
 		if ( !pTexture )
+		{
 			pTexture = pSceneConsts->lightFX.pLightConeTexture;
+		}
 		////
 		pDirFlareHolder = pGScene->AddDirFlare( new CAttachedLightEffectPos( pConeTransform, mDummy ),
 		                                        new CAttachedLightEffectDir( pConeTransform ),
@@ -594,7 +628,9 @@ void CAttachedStaticLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime 
 	{
 		const NDb::SEffect *pEffect = lightEffect.pAdditionalEffect->GetSceneEffect();
 		if ( pEffect )
+		{
 			SetHolder( pGScene->CreateParticles( pEffect, nStartTime, pTimer, pConeTransform ) );
+		}
 	}
 }
 
@@ -609,11 +645,15 @@ void CAttachedStaticLightEffect::Destroy( const NTimer::STime time )
 
 	// Destroy flare
 	if ( !bInEditor && lightEffect.fFlareSize > 0.0f )
+	{
 		pFlareHolder = 0;
+	}
 
 	// Destroy light cone
 	if ( !bInEditor && lightEffect.fConeSize > 0.0f )
+	{
 		pDirFlareHolder = 0;
+	}
 
 	if ( !bInEditor && lightEffect.pAdditionalEffect )
 	{

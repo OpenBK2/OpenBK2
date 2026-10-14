@@ -16,7 +16,9 @@ TEST( GrannyGltfTexture, Dxt1PreviewPreservesColorAndPunchThroughAlpha )
 	auto field = [&]( size_t offset, uint32_t value )
 	{
 		for ( int b = 0; b < 4; ++b )
+		{
 			dds[offset + b] = std::byte( ( value >> ( b * 8 ) ) & 255 );
+		}
 	};
 	field( 4, 124 );
 	field( 12, 4 );
@@ -26,7 +28,9 @@ TEST( GrannyGltfTexture, Dxt1PreviewPreservesColorAndPunchThroughAlpha )
 	field( 84, 0x31545844 );
 	dds[130] = dds[131] = std::byte{ 255 };
 	for ( int b = 132; b < 136; ++b )
+	{
 		dds[b] = std::byte{ 0xe4 };
+	}
 	const auto png = NGrannyGltf::DdsPreview( dds );
 	wxMemoryInputStream input( png.data(), png.size() );
 	wxPNGHandler decoder;
@@ -66,7 +70,9 @@ TEST( GrannyGltfTexture, TgaPreservesRowOrderColorsAndAlpha )
 	auto field = [&]( size_t offset, uint32_t value )
 	{
 		for ( int b = 0; b < 4; ++b )
+		{
 			dds[offset + b] = std::byte( ( value >> ( b * 8 ) ) & 255 );
+		}
 	};
 	field( 4, 124 );
 	field( 12, 3 );
@@ -79,9 +85,11 @@ TEST( GrannyGltfTexture, TgaPreservesRowOrderColorsAndAlpha )
 	field( 100, 0xff0000 );
 	field( 104, 0xff000000 );
 	for ( int i = 0; i < 6; ++i )
+	{
 		field( 128 + i * 4,
 		       uint32_t( 10 + i ) | ( uint32_t( 20 + i ) << 8 ) | ( uint32_t( 30 + i ) << 16 ) |
 		           ( uint32_t( i * 50 ) << 24 ) );
+	}
 	const auto tga = NGrannyGltf::DdsPreview( dds, true );
 	wxMemoryInputStream input( tga.data(), tga.size() );
 	wxTGAHandler decoder;
@@ -90,6 +98,7 @@ TEST( GrannyGltfTexture, TgaPreservesRowOrderColorsAndAlpha )
 	ASSERT_EQ( image.GetWidth(), 2 );
 	ASSERT_EQ( image.GetHeight(), 3 );
 	for ( int y = 0; y < 3; ++y )
+	{
 		for ( int x = 0; x < 2; ++x )
 		{
 			const int i = y * 2 + x;
@@ -98,4 +107,5 @@ TEST( GrannyGltfTexture, TgaPreservesRowOrderColorsAndAlpha )
 			EXPECT_EQ( image.GetBlue( x, y ), 30 + i );
 			EXPECT_EQ( image.GetAlpha( x, y ), i * 50 );
 		}
+	}
 }

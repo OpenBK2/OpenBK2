@@ -127,9 +127,13 @@ float CMultiplayerInternal::GetPing( int nPlayer )
 CMultiplayerCommand *CMultiplayerInternal::GetCommand()
 {
 	if ( !CheckConnection() )
+	{
 		return 0;
+	}
 	if ( pktIncoming.GetPosition() != pktIncoming.GetSize() )
+	{
 		return ProcessPacket( nIncomingPktClientID, &pktIncoming );
+	}
 
 	NNet::IDriver::EMessage eMsgID;
 	int nClientID;
@@ -218,7 +222,9 @@ CreateMultiplayerClient( IAICmdsAutoMagic *pCmds, const NDb::SNetGameConsts *pCo
 {
 	CPtr<CMultiplayerInternal> pRes = new CMultiplayerInternal( pConsts, pCmds );
 	if ( pRes->CreateAsClient( pszIPAddress ) )
+	{
 		return pRes.Extract();
+	}
 	return 0;
 }
 

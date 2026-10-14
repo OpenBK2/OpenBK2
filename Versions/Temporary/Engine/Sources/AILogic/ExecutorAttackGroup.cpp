@@ -22,7 +22,9 @@ int CExecutorAttackGroup::Segment()
 			{
 				CCommonUnit *pUnit = *it;
 				if ( IsValidObj( pUnit ) && pUnit->GetState()->GetName() == EUSN_MOVE_TO_RESUPPLY_CELL )
+				{
 					bAllAtPlace = false;
+				}
 			}
 			if ( bAllAtPlace )
 			{
@@ -30,7 +32,9 @@ int CExecutorAttackGroup::Segment()
 				{
 					CCommonUnit *pUnit = *it;
 					if ( IsValidObj( pUnit ) )
+					{
 						theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_SWARM_TO, vPoint ), pUnit, false );
+					}
 				}
 				eState = EAGS_SWARM;
 			}
@@ -72,7 +76,9 @@ bool CExecutorAttackGroup::NotifyEvent( const CExecutorEvent &event )
 			int nUnitID = static_cast<const CExecutorAttackGroupAddUnitEvent *>( &event )->GetUnitID();
 			CDynamicCast<CCommonUnit> pUnit( CLinkObject::GetObjectByUniqueIdSafe( nUnitID ) );
 			if ( pUnit )
+			{
 				units.push_back( pUnit.GetPtr() );
+			}
 		}
 
 			return true;
@@ -83,16 +89,22 @@ bool CExecutorAttackGroup::NotifyEvent( const CExecutorEvent &event )
 			unitsGoingToRadius.splice( unitsGoingToRadius.begin(), units );
 			//ToDo: launch all units to radius
 			for ( CAttackGroupUnits::iterator it = unitsGoingToRadius.begin(); it != unitsGoingToRadius.end(); ++it )
+			{
 				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_TO_NOT_PRESIZE, vPoint, fRadius ), *it, false );
+			}
 			eState = EAGS_APPROACH_RADIUS;
 		}
 
 			return true;
 		case EID_ATTACKGROUP_DELETE:
 			for ( CAttackGroupUnits::iterator it = units.begin(); it != units.end(); ++it )
+			{
 				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP ), *it, false );
+			}
 			for ( CAttackGroupUnits::iterator it = unitsGoingToRadius.begin(); it != unitsGoingToRadius.end(); ++it )
+			{
 				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP ), *it, false );
+			}
 
 			eState = EAGS_END;
 

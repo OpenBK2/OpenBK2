@@ -23,7 +23,9 @@ public:
 	bool MoveNext()
 	{
 		if ( IsEnd() )
+		{
 			return false;
+		}
 		++posCurrent;
 		return !IsEnd();
 	}

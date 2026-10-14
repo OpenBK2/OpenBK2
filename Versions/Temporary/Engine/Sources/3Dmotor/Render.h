@@ -109,11 +109,17 @@ class CRasterizer
 				nBackface = nBack ^ 1;
 			}
 			else if ( nRight > nLeft )
+			{
 				nBackface = nBack;
+			}
 			else
+			{
 				continue;
+			}
 			if ( nBackface && !pThis->DoRenderBackface() )
+			{
 				continue;
+			}
 			pThis->ClipHorizontal( &nLeft, &nRight );
 
 			float fZ = fZBase + nLeft * zGradient.fZx;
@@ -132,11 +138,17 @@ class CRasterizer
 				nBackface = nBack ^ 1;
 			}
 			else if ( nRight > nLeft )
+			{
 				nBackface = nBack;
+			}
 			else
+			{
 				continue;
+			}
 			if ( nBackface && !pThis->DoRenderBackface() )
+			{
 				continue;
+			}
 			pThis->ClipHorizontal( &nLeft, &nRight );
 
 			float fZ = fZBase + nLeft * zGradient.fZx;
@@ -156,7 +168,9 @@ class CRasterizer
 	{
 		float fArea = -vAC.x * vCB.y + vAC.y * vCB.x;
 		if ( fArea == 0 )
+		{
 			return false;
+		}
 		float fD = 1 / fArea;
 		pInfo->fZx = fD * ( -vCB.y * vAC.z + vAC.y * vCB.z );
 		pInfo->fZy = fD * ( vCB.x * vAC.z - vAC.x * vCB.z );
@@ -169,7 +183,9 @@ class CRasterizer
 		int nB = Float2Int( vB.y ); //+ 0.49999f );
 		int nC = Float2Int( vC.y ); //+ 0.49999f );
 		if ( nA == nB && nA == nC )
+		{
 			return;
+		}
 		//int nTestAx = RealFloat2Int( vA.x );
 		//if ( nTestAx == RealFloat2Int( vB.x ) && nTestAx == RealFloat2Int( vC.x ) )
 		//	return;
@@ -177,23 +193,37 @@ class CRasterizer
 		CVec3 vEdge1( vB - vA ), vEdge2( vC - vB ), vEdge3( vA - vC );
 		SZGradientInfo zGrad;
 		if ( !CalcZGradient( &zGrad, vA, vEdge2, vEdge3 ) )
+		{
 			return;
+		}
 		SEdgeInfo sLeft[2], sRight[2];
 
 		if ( vEdge1.y > 0 )
+		{
 			InitEdge( &sLeft[nLeft++], vA, vEdge1, nA, nB );
+		}
 		else if ( vEdge1.y < 0 )
+		{
 			InitEdge( &sRight[nRight++], vB, vEdge1, nB, nA );
+		}
 
 		if ( vEdge2.y > 0 )
+		{
 			InitEdge( &sLeft[nLeft++], vB, vEdge2, nB, nC );
+		}
 		else if ( vEdge2.y < 0 )
+		{
 			InitEdge( &sRight[nRight++], vC, vEdge2, nC, nB );
+		}
 
 		if ( vEdge3.y > 0 )
+		{
 			InitEdge( &sLeft[nLeft++], vC, vEdge3, nC, nA );
+		}
 		else if ( vEdge3.y < 0 )
+		{
 			InitEdge( &sRight[nRight++], vA, vEdge3, nA, nC );
+		}
 
 		SEdgeInfo *pLeft, *pRight;
 		int nEdges, nBack;
@@ -212,16 +242,24 @@ class CRasterizer
 			nBack = 1;
 		}
 		else
+		{
 			return;
+		}
 		if ( nEdges > 1 )
 		{
 			if ( pRight[0].nSY > pRight[1].nSY )
+			{
 				RasterTriangleLow( pLeft[0], pRight[1], pRight[0], zGrad, pLeft[0].nSY, pRight[1].nFY, pLeft[0].nFY, nBack );
+			}
 			else
+			{
 				RasterTriangleLow( pLeft[0], pRight[0], pRight[1], zGrad, pLeft[0].nSY, pRight[0].nFY, pLeft[0].nFY, nBack );
+			}
 		}
 		else if ( nEdges > 0 )
+		{
 			RasterTriangleLow( pLeft[0], pRight[0], pRight[0], zGrad, pLeft[0].nSY, pRight[0].nFY, pLeft[0].nFY, nBack );
+		}
 	}
 	void Intersect( SProjectedPoint *pRes, const SProjectedPoint &vA, const SProjectedPoint &vB )
 	{
@@ -298,9 +336,13 @@ public:
 		//nTemp |= ( v2.src.z < F_RASTERIZER_NEAR_PLANE ) * 2;//( v2.z > v2.w || v2.z < -v2.w ) * 2;
 		//nTemp |= ( v3.src.z < F_RASTERIZER_NEAR_PLANE ) * 1;//( v3.z > v3.w || v3.z < -v3.w ) * 1;
 		if ( nTemp == 0 )
+		{
 			RasterTriangle( v1.res, v2.res, v3.res );
+		}
 		else
+		{
 			RasterClipped( v1, v2, v3, nTemp );
+		}
 	}
 	void RasterNoClip( const CVec3 &v1, const CVec3 &v2, const CVec3 &v3 ) { RasterTriangle( v1, v2, v3 ); }
 };

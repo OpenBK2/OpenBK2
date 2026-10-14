@@ -18,7 +18,9 @@ class C2DScene : public I2DScene
 	{
 		NGfx::C2DQuadsRenderer *pQR = bDepthTest ? &quadRenderTest : &quadRender;
 		if ( pLastQR != pQR && pLastQR != 0 )
+		{
 			pLastQR->Flush();
+		}
 		pLastQR = pQR;
 		return pQR;
 	}
@@ -55,7 +57,9 @@ void C2DScene::CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture,
 		RenderRectLayoutClipped( pQR, pTex->GetValue(), sLayout, sPosition, sWindow, fZ, LRM_NORMAL );
 	}
 	else
+	{
 		RenderRectLayoutClipped( pQR, 0, sLayout, sPosition, sWindow, fZ, LRM_NORMAL );
+	}
 }
 
 void C2DScene::CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture,
@@ -71,7 +75,9 @@ void C2DScene::CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture,
 		RenderRect( pQR, pTex->GetValue(), pPos4, pColors4, rectTexture, 0.0f );
 	}
 	else
+	{
 		RenderRect( pQR, 0, pPos4, pColors4, rectTexture, 0.0f );
+	}
 }
 
 void C2DScene::CreateDynamicClearRects( const CRectLayout &sLayout,
@@ -86,11 +92,17 @@ void C2DScene::StartNewFrame( NGfx::CTexture *pTarget, const CVec2 &vSize, EAlph
 {
 	NGfx::CRenderContext rc;
 	if ( pTarget )
+	{
 		rc.SetTextureRT( pTarget, 0 );
+	}
 	if ( _AlphaMode2D == AM2D_NORMAL )
+	{
 		rc.SetAlphaCombine( NGfx::COMBINE_ALPHA );
+	}
 	else if ( _AlphaMode2D == AM2D_PREMUL )
+	{
 		rc.SetAlphaCombine( NGfx::COMBINE_SMART_ALPHA );
+	}
 	rc.SetStencil( NGfx::STENCIL_NONE );
 	quadRender.SetTarget( rc, vSize, NGfx::QRM_OVERWRITE );
 	quadRenderTest.SetTarget( rc, vSize, NGfx::QRM_DEPTH_NORMAL );

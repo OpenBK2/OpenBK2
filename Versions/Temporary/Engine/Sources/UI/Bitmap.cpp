@@ -11,8 +11,10 @@ REGISTER_SAVELOAD_CLASS( UI, 0x170A6B81, CBitmapWindow );
 void CBitmap::Recalc()
 {
 	if ( !IsValid( pValue ) )
+	{
 		pValue = NGfx::MakeTexture(
 				GetNextPow2( nWidth ), GetNextPow2( nHeight ), 1, NGfx::SPixel8888::ID, NGfx::DYNAMIC_TEXTURE, NGfx::CLAMP );
+	}
 
 	NGfx::CTextureLock<NGfx::SPixel8888> lock( pValue, 0, NGfx::INPLACE );
 	for ( int y = 0; y < nHeight; ++y )
@@ -44,9 +46,13 @@ void CBitmap::PutPixel( const int x, const int y, const NGfx::SPixel8888 &color 
 const NGfx::SPixel8888 CBitmap::GetPixel( const int x, const int y ) const
 {
 	if ( x >= 0 && y >= 0 && x < nWidth && y < nHeight )
+	{
 		return points[y][x];
+	}
 	else
+	{
 		return NGfx::SPixel8888( 0, 0, 0, 0 );
+	}
 }
 
 void CBitmap::Fill( const NGfx::SPixel8888 &color )
@@ -68,7 +74,9 @@ int CBitmap::operator&( IBinSaver &saver )
 void CBitmapWindow::Visit( struct IUIVisitor *pVisitor )
 {
 	if ( !pBitmap )
+	{
 		return;
+	}
 
 	CRectLayout rects;
 	const CTRect<float> rectTexture = CTRect<float>( 0.0f, 0.0f, vSize.x, vSize.y );

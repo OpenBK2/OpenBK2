@@ -84,7 +84,9 @@ void CUnits::CheckCorrectness( const SVector &tile )
 		{
 			const SVector unitCell = AICellsTiles::GetBigCell( pUnit->GetCenterPlain() );
 			if ( unitCell == cell )
+			{
 				++cnt;
+			}
 		}
 	}
 
@@ -150,7 +152,9 @@ void CUnits::AddUnitToConcreteCell( CAIUnit *pUnit, const SVector &cell, bool bW
 
 	// если юнит единственный в свой ячейке, записать ячейку в список
 	if ( ++nUnitsCell[cell.y][cell.x] == 1 )
+	{
 		nCell[cell.y][cell.x] = cellsIds.Get();
+	}
 
 	// добавить юнит в список стоящих на этой ячейке
 	const int newId =
@@ -169,7 +173,9 @@ void CUnits::AddUnitToConcreteCell( CAIUnit *pUnit, const SVector &cell, bool bW
 	posUnitInCell[nUnitID].cell = cell;
 
 	if ( bWithLeveledCelles )
+	{
 		AddUnitToLeveledCells( pUnit, cell, nVisIndex );
+	}
 
 	//	NI_ASSERT( unitsInCellsSet.find( nUnitID ) == unitsInCellsSet.end(), "Unit is in cell" );
 	unitsInCellsSet.insert( nUnitID );
@@ -179,7 +185,9 @@ void CUnits::AddUnitToCell( CAIUnit *pUnit, const CVec2 &newPos, bool bWithLevel
 {
 	const SVector bigCell( AICellsTiles::GetBigCell( newPos ) );
 	if ( IsBigCellInside( bigCell ) )
+	{
 		AddUnitToConcreteCell( pUnit, bigCell, bWithLeveledCelles );
+	}
 }
 
 void CUnits::AddUnitToCell( CAIUnit *pUnit, bool bWithLeveledCelles )
@@ -188,7 +196,9 @@ void CUnits::AddUnitToCell( CAIUnit *pUnit, bool bWithLeveledCelles )
 	const SVector bigCell = AICellsTiles::GetBigCell( vCenter );
 
 	if ( IsBigCellInside( bigCell ) )
+	{
 		AddUnitToConcreteCell( pUnit, bigCell, bWithLeveledCelles );
+	}
 }
 
 void CUnits::DelUnitFromCell( CAIUnit *pUnit, bool bWithLeveledCelles )
@@ -196,7 +206,9 @@ void CUnits::DelUnitFromCell( CAIUnit *pUnit, bool bWithLeveledCelles )
 	const int nUnitUniqueID = pUnit->GetUniqueId();
 	CIDsRemap::const_iterator pos = idsRemap.find( nUnitUniqueID );
 	if ( pos == idsRemap.end() )
+	{
 		return;
+	}
 	const int nUnitID = pos->second;
 
 	if ( IsUnitInCell( nUnitID ) )
@@ -211,10 +223,14 @@ void CUnits::DelUnitFromCell( CAIUnit *pUnit, bool bWithLeveledCelles )
 		unitPos.nUnitPos = 0;
 
 		if ( --nUnitsCell[cell.y][cell.x] == 0 )
+		{
 			cellsIds.Return( nCell[cell.y][cell.x] );
+		}
 
 		if ( bWithLeveledCelles )
+		{
 			DelUnitFromLeveledCells( pUnit, cell, nVisIndex );
+		}
 
 		cell.x = 0;
 		cell.y = 0;
@@ -236,7 +252,9 @@ void CUnits::AddUnitToUnits( CAIUnit *pUnit, const int nPlayer, const int nUnitT
 void CUnits::AddUnitToMap( CAIUnit *pUnit )
 {
 	if ( pUnit->GetStats()->IsAviation() )
+	{
 		planes.push_back( checked_cast<CAviation *>( pUnit ) );
+	}
 
 	const int nUnitUniqueID = pUnit->GetUniqueId();
 
@@ -249,11 +267,15 @@ void CUnits::AddUnitToMap( CAIUnit *pUnit )
 	const int nUnitID = pos->second;
 
 	if ( nUnitID >= posUnitInCell.size() )
+	{
 		posUnitInCell.resize( nUnitID * 1.5 );
+	}
 
 	// нужно добавить в ячейку
 	if ( !pUnit->IsInSolidPlace() )
+	{
 		AddUnitToCell( pUnit, true );
+	}
 
 	const int nParty = pUnit->GetParty();
 
@@ -261,9 +283,13 @@ void CUnits::AddUnitToMap( CAIUnit *pUnit )
 
 	const int nUnitType = pUnit->GetStats()->etype;
 	if ( nUnitsOfType[nParty].find( nUnitType ) == nUnitsOfType[nParty].end() )
+	{
 		nUnitsOfType[nParty][nUnitType] = 1;
+	}
 	else
+	{
 		++nUnitsOfType[nParty][nUnitType];
+	}
 }
 
 void CUnits::DeleteUnitFromMap( CAIUnit *pUnit )
@@ -278,7 +304,9 @@ void CUnits::DeleteUnitFromMap( CAIUnit *pUnit )
 
 	CIDsRemap::const_iterator pos = idsRemap.find( nUnitUniqueID );
 	if ( pos == idsRemap.end() )
+	{
 		return;
+	}
 	const int nUnitID = pos->second;
 
 	// ещё не удалён из ячеек
@@ -313,7 +341,9 @@ void CUnits::UnitChangedPosition( CAIUnit *pUnit, const CVec2 &newPos )
 	const int nUnitUniqueID = pUnit->GetUniqueId();
 	CIDsRemap::const_iterator pos = idsRemap.find( nUnitUniqueID );
 	if ( pos == idsRemap.end() )
+	{
 		return;
+	}
 	const int nUnitID = pos->second;
 
 	const SVector oldBigCell = posUnitInCell[nUnitID].cell;
@@ -334,7 +364,9 @@ void CUnits::UnitChangedPosition( CAIUnit *pUnit, const CVec2 &newPos )
 		//DEBUG}
 
 		if ( bInOldCell )
+		{
 			DelUnitFromCell( pUnit, false );
+		}
 
 		AddUnitToCell( pUnit, newPos, false );
 		const bool bInNewCell = IsUnitInCell( nUnitID );
@@ -360,7 +392,9 @@ void CUnits::UnitChangedPosition( CAIUnit *pUnit, const CVec2 &newPos )
 				}
 
 				if ( bInNewCell )
+				{
 					++numUnits[nVisIndex][i][nUnitParty][!bUnitMech][newLeveledCell.y][newLeveledCell.x];
+				}
 			}
 		}
 	}
@@ -373,16 +407,22 @@ void CUnits::UnitChangedPosition( CAIUnit *pUnit, const CVec2 &newPos )
 CAIUnit *CUnits::operator[]( const int id )
 {
 	if ( id == 0 /*|| !units.GetEl( id )->IsRefValid() */ )
+	{
 		return 0; // Cheat to avoid assert for trains
+	}
 	CAIUnit *pUnit = units.GetEl( id );
 
 	//	NI_ASSERT( pUnit != 0, fmt::format("zero ID (id = {})", id) );
 	if ( pUnit == 0 )
+	{
 		return 0;
+	}
 
 	NI_ASSERT( pUnit->IsRefValid(), fmt::format( "Invalid Ref (id = {})", id ) );
 	if ( !pUnit->IsRefValid() )
+	{
 		return 0;
+	}
 
 	return pUnit;
 }
@@ -429,7 +469,9 @@ const int CUnits::GetNSoldiers( const CVec2 &vCenter, const float fRadius, const
 		{
 			const float fDist2 = fabs2( pUnit->GetCenterPlain() - vCenter );
 			if ( fDist2 < fRadius2 )
+			{
 				++cnt;
+			}
 		}
 	}
 
@@ -444,10 +486,14 @@ const int CUnits::GetNUnits( const CVec2 &vCenter, const float fRadius, const in
 	{
 		CAIUnit *pUnit = *iter;
 		if ( !pUnit )
+		{
 			continue;
+		}
 		const float fDist2 = fabs2( pUnit->GetCenterPlain() - vCenter );
 		if ( fDist2 < fRadius2 )
+		{
 			++cnt;
+		}
 	}
 
 	return cnt;
@@ -516,7 +562,9 @@ void CUnits::CheckUnitCell()
 void CUnits::WriteSpatialCellDebugInfo( FILE *f )
 {
 	if ( !f )
+	{
 		return;
+	}
 
 	det_map<int, int> unitListHits;
 	int nOccupiedCells = 0;
@@ -530,7 +578,9 @@ void CUnits::WriteSpatialCellDebugInfo( FILE *f )
 		for ( int x = 0; x < nBigCellsSizeX; ++x )
 		{
 			if ( nUnitsCell[y][x] == 0 )
+			{
 				continue;
+			}
 
 			++nOccupiedCells;
 			int nRealCellEntries = 0;
@@ -562,12 +612,16 @@ void CUnits::WriteSpatialCellDebugInfo( FILE *f )
 							SVector actualCell( 0, 0 );
 
 							if ( nUnitID <= 0 || nUnitID >= (int)posUnitInCell.size() )
+							{
 								bBadEntry = true;
+							}
 							else
 							{
 								pCellUnit = ( *this )[nUnitID];
 								if ( !pCellUnit )
+								{
 									bBadEntry = true;
+								}
 								else
 								{
 									nUID = pCellUnit->GetUniqueId();
@@ -637,7 +691,9 @@ void CUnits::WriteSpatialCellDebugInfo( FILE *f )
 	{
 		CAIUnit *pUnit = *iter;
 		if ( !pUnit )
+		{
 			continue;
+		}
 
 		const int nUID = pUnit->GetUniqueId();
 		CIDsRemap::const_iterator pos = idsRemap.find( nUID );

@@ -19,12 +19,16 @@ const CVec2 CGroupSmoothPath::GetUnitFormationShift( const CBasePathUnit *pUnit 
 	                        pUnit->GetUniqueID(),
 	                        GetUnit()->GetUniqueID() ) );
 	if ( posUnit == units.end() )
+	{
 		return VNULL2;
+	}
 	const int nPriority = posUnit->second.nPriority;
 	const int nCell = posUnit->second.nCell;
 
 	if ( geometries.size() <= GetCurrentGeometry() )
+	{
 		return VNULL2;
+	}
 
 	CPriorityCells::const_iterator posCell = geometries[GetCurrentGeometry()].geometry.find( nPriority );
 	NI_ASSERT( posCell != geometries[GetCurrentGeometry()].geometry.end(),
@@ -32,7 +36,9 @@ const CVec2 CGroupSmoothPath::GetUnitFormationShift( const CBasePathUnit *pUnit 
 	                        pUnit->GetUniqueID(),
 	                        GetUnit()->GetUniqueID() ) );
 	if ( posCell == geometries[GetCurrentGeometry()].geometry.end() )
+	{
 		return VNULL2;
+	}
 
 	return posCell->second[nCell].vUnitShift;
 }
@@ -45,7 +51,9 @@ const float CGroupSmoothPath::GetUnitFormationProjection( const CBasePathUnit *p
 	                        pUnit->GetUniqueID(),
 	                        GetUnit()->GetUniqueID() ) );
 	if ( posUnit == units.end() )
+	{
 		return 0;
+	}
 	const int nPriority = posUnit->second.nPriority;
 	const int nCell = posUnit->second.nCell;
 
@@ -55,7 +63,9 @@ const float CGroupSmoothPath::GetUnitFormationProjection( const CBasePathUnit *p
 	                        pUnit->GetUniqueID(),
 	                        GetUnit()->GetUniqueID() ) );
 	if ( posCell == geometries[GetCurrentGeometry()].geometry.end() )
+	{
 		return 0;
+	}
 
 	return posCell->second[nCell].fUnitProjShift;
 }
@@ -65,7 +75,9 @@ bool CGroupSmoothPath::AddUnit( CBasePathUnit *pUnit, const int nPriority )
 	//! больше нет мест в формации
 	NI_ASSERT( GetUnitsCount() < GetCellsCount(), "Cannot add more units to formation" );
 	if ( GetUnitsCount() >= GetCellsCount() )
+	{
 		return false;
+	}
 
 	//! юнит уже в формации
 	CUnitsMap::const_iterator pos = units.find( pUnit->GetUniqueID() );
@@ -73,7 +85,9 @@ bool CGroupSmoothPath::AddUnit( CBasePathUnit *pUnit, const int nPriority )
 			pos == units.end(),
 			fmt::format( "Unit (ID: {}) already in formation (ID: {})", pUnit->GetUniqueID(), GetUnit()->GetUniqueID() ) );
 	if ( pos != units.end() )
+	{
 		return false;
+	}
 
 	units[pUnit->GetUniqueID()] = SUnitInfo( pUnit, nPriority );
 	nUnitsCount++;
@@ -89,7 +103,9 @@ bool CGroupSmoothPath::DeleteUnit( CBasePathUnit *pUnit )
 			pos != units.end(),
 			fmt::format( "Unit (ID: {}) not found in formation (ID: {})", pUnit->GetUniqueID(), GetUnit()->GetUniqueID() ) );
 	if ( pos == units.end() )
+	{
 		return false;
+	}
 	units.erase( pos );
 	nUnitsCount--;
 
@@ -106,7 +122,9 @@ void CGroupSmoothPath::RecalcCells()
 		RecalcCells( GetPath()->GetFinishPoint(), vDir );
 	}
 	else
+	{
 		RecalcCells( GetUnit()->GetCenterPlain(), GetUnit()->GetDirectionVector() );
+	}
 }
 
 void CGroupSmoothPath::RecalcCells( const CVec2 &vPosition, const CVec2 &vDirection )
@@ -114,7 +132,9 @@ void CGroupSmoothPath::RecalcCells( const CVec2 &vPosition, const CVec2 &vDirect
 	std::vector<SUnitInfo> unitsList;
 	unitsList.reserve( GetUnitsCount() );
 	for ( CUnitsMap::iterator it = units.begin(); it != units.end(); ++it )
+	{
 		unitsList.push_back( it->second );
+	}
 	std::sort( unitsList.begin(), unitsList.end(), SUnitsInfoSortByPriority() );
 
 	std::vector<SUnitInfo>::iterator itStart = unitsList.begin();
@@ -172,7 +192,9 @@ void CGroupSmoothPath::RecalcCells( const CVec2 &vPosition, const CVec2 &vDirect
 	{
 		CUnitsMap::iterator pos = units.find( it->pUnit->GetUniqueID() );
 		if ( pos != units.end() )
+		{
 			pos->second.nCell = it->nCell;
+		}
 	}
 }
 
@@ -182,10 +204,14 @@ void CGroupSmoothPath::AddGeometry( const std::vector<SGeometryCellInfo> &cells 
 
 	NI_ASSERT( ( GetCellsCount() == 0 || cells.size() == GetCellsCount() ), "Wrong geometry." );
 	if ( GetCellsCount() != 0 && cells.size() != GetCellsCount() )
+	{
 		return;
+	}
 
 	if ( GetCellsCount() == 0 )
+	{
 		nCellsCount = cells.size();
+	}
 
 	CPriorityCells priorityCells;
 
@@ -258,7 +284,9 @@ void CGroupSmoothPath::AlignGeometriesToCenter()
 void CGroupSmoothPath::Segment( const NTimer::STime timeDiff )
 {
 	if ( fMaxPathShift > 0.0f )
+	{
 		fSpeedCoeff = (std::min)( 4.0f, (std::max)( 1.0f, fMaxPathShift / GetAIMap()->GetTileSize() ) );
+	}
 
 	CVec2 vOldDirection = GetDirection();
 	CStandartSmoothPathBasis::Segment( timeDiff );
@@ -269,8 +297,10 @@ void CGroupSmoothPath::Segment( const NTimer::STime timeDiff )
 		DebugInfoManager()->CreateCircle(
 				GetUnit()->GetUniqueID(), CCircle( GetUnit()->GetCenterPlain(), 24 ), NDebugInfo::RED );
 		for ( CUnitsMap::iterator it = units.begin(); it != units.end(); ++it )
+		{
 			DebugInfoManager()->CreateCircle(
 					it->second.pUnit->GetUniqueID(), CCircle( GetValidUnitCenter( it->second.pUnit ), 8 ), NDebugInfo::GREEN );
+		}
 	}
 #endif
 

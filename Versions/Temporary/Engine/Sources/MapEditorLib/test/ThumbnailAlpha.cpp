@@ -25,7 +25,11 @@ TEST( ThumbnailAlpha, FullyTransparentImagesStayTransparent )
 	pixels.FillEvery( 0x00808080 );
 	const wxImage image = NWxImageList::ToWxImage( pixels );
 	for ( int y = 0; y != 2; ++y )
+	{
 		for ( int x = 0; x != 2; ++x )
+		{
 			EXPECT_EQ( image.GetAlpha( x, y ), 0 );
+		}
+	}
 	EXPECT_FALSE( NWxImageList::ToWxImage( CArray2D<uint32_t>() ).IsOk() );
 }

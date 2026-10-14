@@ -29,7 +29,9 @@ bool CNet::InitAsServer()
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 bool CNet::InitAsClient()
@@ -42,7 +44,9 @@ bool CNet::InitAsClient()
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 bool CNet::InitAsClient( NNet::ILinksManager *pLinksManager )
@@ -54,7 +58,9 @@ bool CNet::InitAsClient( NNet::ILinksManager *pLinksManager )
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 bool CNet::InitAsServer( NNet::ILinksManager *pLinksManager )
@@ -66,7 +72,9 @@ bool CNet::InitAsServer( NNet::ILinksManager *pLinksManager )
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 void CNet::StartGame()
@@ -167,9 +175,13 @@ void CNet::SendZipped( const int nClientID, const CMemoryStream &memStream )
 		pSaver->Add( 1, &pNetPacket );
 	}
 	if ( memStreamToSend.GetSize() < memStream.GetSize() )
+	{
 		pNetDriver->SendDirect( nClientID, memStreamToSend );
+	}
 	else
+	{
 		pNetDriver->SendDirect( nClientID, memStream );
+	}
 }
 
 CNetPacket *CNet::UnzipPacketIfNecessary( CNetPacket *pPacket )
@@ -204,12 +216,18 @@ void CNet::SendPacket( CNetPacket *pPacket )
 		}
 
 		if ( memStream.GetSize() > MIN_PACKET_SIZE_TO_ZIP )
+		{
 			SendZipped( pNetPacket->nClientID, memStream );
+		}
 		else
+		{
 			pNetDriver->SendDirect( pNetPacket->nClientID, memStream );
+		}
 	}
 	else
+	{
 		pausePackets.push_back( pPacket );
+	}
 }
 
 const std::string CNet::GetIP( const int nClientID ) const
@@ -239,7 +257,9 @@ void CNet::DebugTogglePause( bool bPause )
 	if ( !bDebugNetPaused )
 	{
 		for ( std::list<CPtr<CNetPacket>>::iterator iter = pausePackets.begin(); iter != pausePackets.end(); ++iter )
+		{
 			SendPacket( *iter );
+		}
 
 		pausePackets.clear();
 	}

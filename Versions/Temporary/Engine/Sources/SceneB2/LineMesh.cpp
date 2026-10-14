@@ -5,7 +5,9 @@
 void CLineMesh::Recalc()
 {
 	if ( pValue == 0 )
+	{
 		pValue = new NGScene::CObjectInfo;
+	}
 	NGScene::CObjectInfo::SData objData;
 	std::vector<NGScene::SVertex> verts;
 	std::vector<STriangle> tris;

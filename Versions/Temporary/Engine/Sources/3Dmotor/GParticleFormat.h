@@ -121,9 +121,13 @@ private:
 		{
 			int n = ( s + e ) / 2;
 			if ( keys[n].nT <= nT )
+			{
 				s = n;
+			}
 			else
+			{
 				e = n;
+			}
 		}
 		const TKey<TValue> &start = keys[s];
 		const TKey<TValue> &end = keys[e];

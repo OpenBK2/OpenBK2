@@ -36,7 +36,9 @@ std::string GetTerrainBinFileName( const NDb::STerrain *pDesc )
 	// new map location
 	std::string szMapFileName = MakeMapPath( pDesc->GetDBID() );
 	if ( NVFS::GetMainVFS()->DoesFileExist( szMapFileName ) )
+	{
 		return szMapFileName;
+	}
 	// unsuccessfull :(
 	return "";
 }
@@ -74,7 +76,9 @@ void LoadBgMap( const std::string &szDesiredSeason, const std::string &rszMapInf
 	NStr::ToLower( &szMapInfoNameLoaded );
 	IEditorScene *pScene = EditorScene();
 	if ( pScene == 0 )
+	{
 		return;
+	}
 	// get map and camera anchor from options
 	std::string szMapName = NEditorOptions::GetBgMap( szDesiredSeason );
 	NStr::ToLower( &szMapName );
@@ -130,7 +134,9 @@ void LoadBgMap( const std::string &szDesiredSeason, const std::string &rszMapInf
 bool LoadUnitCommandTypesFromXML( std::vector<SUnitCommandTypeInfo> *pCmdTypes )
 {
 	if ( !pCmdTypes )
+	{
 		return false;
+	}
 
 	// Native paths are case sensitive on Linux. This is the installed Editor
 	// directory, not the lower-case Windows spelling used by the old dialog.
@@ -158,7 +164,9 @@ bool LoadUnitCommandTypesFromXML( std::vector<SUnitCommandTypeInfo> *pCmdTypes )
 bool GetPolyBoundingRect( float *pXmin, float *pYmin, float *pXmax, float *pYmax, const std::vector<CVec3> &rPoly )
 {
 	if ( rPoly.empty() )
+	{
 		return false;
+	}
 
 	CVec3 v0 = rPoly.front();
 
@@ -172,16 +180,24 @@ bool GetPolyBoundingRect( float *pXmin, float *pYmin, float *pXmax, float *pYmax
 		CVec3 v = *it;
 
 		if ( v.x >= xMax )
+		{
 			xMax = v.x;
+		}
 
 		if ( v.x <= xMin )
+		{
 			xMin = v.x;
+		}
 
 		if ( v.y >= yMax )
+		{
 			yMax = v.y;
+		}
 
 		if ( v.y <= yMin )
+		{
 			yMin = v.y;
+		}
 	}
 
 	*pXmin = xMin;

@@ -22,7 +22,9 @@ CPtr<CInTransportStatesFactory> CInTransportStatesFactory::pFactory = 0;
 IStatesFactory *CInTransportStatesFactory::Instance()
 {
 	if ( pFactory == 0 )
+	{
 		pFactory = new CInTransportStatesFactory();
+	}
 
 	return pFactory;
 }
@@ -80,10 +82,14 @@ CSoldierRestOnBoardState::CSoldierRestOnBoardState( CSoldier *_pSoldier, CMilita
 			pTransport->AddPassenger( pSoldier );
 		}
 		else
+		{
 			pSoldier->SetCommandFinished();
+		}
 	}
 	else
+	{
 		NI_ASSERT( pSoldier->IsInTransport(), "Wrong unit state" );
+	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CSoldierRestOnBoardState::Segment() {}
@@ -97,8 +103,12 @@ ETryStateInterruptResult CSoldierRestOnBoardState::TryInterruptState( class CAIC
 const CVec2 CSoldierRestOnBoardState::GetPurposePoint() const
 {
 	if ( pSoldier && pSoldier->IsRefValid() && pSoldier->IsAlive() )
+	{
 		return pSoldier->GetCenterPlain();
+	}
 	else
+	{
 		return CVec2( -1.0f, -1.0f );
+	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

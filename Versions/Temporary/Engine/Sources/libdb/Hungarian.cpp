@@ -75,9 +75,13 @@ bool ConvertToShortName( std::string *pszShortFieldName,
 		if ( !szPrefix.empty() )
 		{
 			if ( pszShortFieldName->compare( 0, szPrefix.size(), szPrefix ) != 0 )
+			{
 				return false;
+			}
 			else if ( szPrefix.size() == pszShortFieldName->size() )
+			{
 				return false;
+			}
 			else
 			{
 				//			const char cNextPrefixLetter = (*pszShortFieldName)[szPrefix.size()];
@@ -87,7 +91,9 @@ bool ConvertToShortName( std::string *pszShortFieldName,
 			}
 		}
 		else
+		{
 			return true;
+		}
 	}
 
 	return false;
@@ -117,18 +123,24 @@ const std::string GetTypeNameInCode( NDb::NTypeDef::STypeDef *pRawType,
 {
 	NDb::NTypeDef::STypeDef *pType = pRawType;
 	if ( CDynamicCast<NDb::NTypeDef::STypeRef> pRef = pType )
+	{
 		pType = pRef->pRefType;
+	}
 
 	{
 		std::string szResult;
 		if ( pField )
 		{
 			if ( FindRenameInAttributes( &szResult, pField->pAttributes ) )
+			{
 				return szResult;
+			}
 		}
 
 		if ( FindRenameInAttributes( &szResult, pType->GetAttributes() ) )
+		{
 			return szResult;
+		}
 
 		if ( pField && pField->pType )
 		{
@@ -136,7 +148,9 @@ const std::string GetTypeNameInCode( NDb::NTypeDef::STypeDef *pRawType,
 			if ( pTypeArray != 0 )
 			{
 				if ( FindRenameInAttributes( &szResult, pTypeArray->field.pAttributes ) )
+				{
 					return szResult;
+				}
 			}
 		}
 	}
@@ -144,12 +158,18 @@ const std::string GetTypeNameInCode( NDb::NTypeDef::STypeDef *pRawType,
 	if ( pType->eType == NDb::NTypeDef::TYPE_TYPE_CLASS || pType->eType == NDb::NTypeDef::TYPE_TYPE_STRUCT )
 	{
 		if ( pType->GetTypeName() == "Resource" )
+		{
 			return fmt::format( "C{}", pType->GetTypeName() );
+		}
 		else
+		{
 			return fmt::format( "S{}", pType->GetTypeName() );
+		}
 	}
 	else if ( pType->eType == NDb::NTypeDef::TYPE_TYPE_ENUM )
+	{
 		return fmt::format( "E{}", pType->GetTypeName() );
+	}
 
 	// base.cll's GUID is a boost::uuids::uuid in code, since the port took the
 	// Win32 GUID out; the generated serializer writes it with AddUuidChunk,
@@ -170,7 +190,9 @@ const std::string GetTypeNameInCode( NDb::NTypeDef::STypeDef *pRawType,
 const std::string GetFieldNameInCode( const NDb::NTypeDef::STypeClass::SField &field )
 {
 	if ( field.pAttributes && field.pAttributes->attributes.find( "no_prefix" ) != field.pAttributes->attributes.end() )
+	{
 		return field.szName;
+	}
 
 	NDb::NTypeDef::STypeDef *pFieldType = field.pType;
 	const std::string szPrefix = NHungarian::GetTypePrefix( pFieldType->eType, pFieldType->GetAttributes() );

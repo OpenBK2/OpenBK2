@@ -141,7 +141,9 @@ private:
 			else
 			{
 				for ( ; pDst < pFinish; ++pDst )
+				{
 					*pDst = tex.Fetch();
+				}
 			}
 		}
 	}
@@ -257,7 +259,9 @@ class CSWRects : public ISWRects
 			vGeom[2] = CVec3( r.fX + fWidth, r.fY + fHeight, 0 );
 			vGeom[3] = CVec3( r.fX + fWidth, r.fY, 0 );
 			for ( int i = 0; i < 4; ++i )
+			{
 				vGeom[i] *= pRes->GetScale();
+			}
 			SGradientMatrix gm;
 			PrepareGradientMatrix( &gm, vGeom[0], vGeom[1], vGeom[2] );
 			CVec4 ptDU, ptDV;
@@ -317,7 +321,9 @@ class CSWSpot : public ISWRects
 		vGeom[2] = ptCenter + ptUp + ptRight;
 		vGeom[3] = ptCenter + ptRight;
 		for ( int i = 0; i < 4; ++i )
+		{
 			vGeom[i] *= pRes->GetScale();
+		}
 		SGradientMatrix gm;
 		PrepareGradientMatrix( &gm, vGeom[0], vGeom[1], vGeom[2] );
 		CVec4 ptDU, ptDV;
@@ -370,11 +376,15 @@ public:
 		pMask.Refresh();
 		pTextureData = pMask->GetValue();
 		if ( !pTextureData || pTextureData->mips.empty() )
+		{
 			return;
+		}
 
 		const CArray2D<NGfx::SPixel8888> &mask = pTextureData->mips[0];
 		if ( mask.GetSizeX() == 0 || mask.GetSizeY() == 0 )
+		{
 			return;
+		}
 
 		CVec4 vMaskCenter = NGfx::GetCVec4Color( mask[mask.GetSizeY() / 2][mask.GetSizeX() / 2].dwColor );
 
@@ -388,7 +398,9 @@ public:
 			for ( int x = 0; x < nXSize; ++x )
 			{
 				if ( res[y][x].a == 0 )
+				{
 					priorities[y][x] = 0;
+				}
 				else
 				{
 					priorities[y][x] = N_FILLED;
@@ -417,10 +429,14 @@ public:
 						{
 							int nResX = x + dx - nCenterX, nResY = y + dy - nCenterY;
 							if ( nResX < 0 || nResX >= nXSize || nResY < 0 || nResY >= nYSize )
+							{
 								continue;
+							}
 							int nPriority = N_FILLED - 1 - ( square( dx - nCenterX ) + square( dy - nCenterY ) );
 							if ( nPriority <= priorities[nResY][nResX] )
+							{
 								continue;
+							}
 							priorities[nResY][nResX] = nPriority;
 							res[nResY][nResX] = mask[dy][dx];
 						}
@@ -493,7 +509,9 @@ private:
 				++iTemp;
 			}
 			else
+			{
 				iTemp = pSet->erase( iTemp );
+			}
 		}
 	}
 	template <class T>
@@ -536,7 +554,9 @@ ISW2DScene *Make2DSWScene()
 CObjectBase *CSW2DScene::CreateRects( CPtrFuncBase<CSWTextureData> *pTexture, const CRectLayout &layout )
 {
 	if ( !pTexture )
+	{
 		return 0;
+	}
 	CSWRects *pRes = new CSWRects( layout, pTexture );
 	rects.push_back( pRes );
 	return pRes;
@@ -548,7 +568,9 @@ CObjectBase *CSW2DScene::CreateSpot( CPtrFuncBase<CSWTextureData> *pTexture,
                                      float _fAngle )
 {
 	if ( !pTexture )
+	{
 		return 0;
+	}
 	CSWSpot *pSpot = new CSWSpot( _ptPos, _ptSize, _fAngle, pTexture );
 	rects.push_back( pSpot );
 	return pSpot;
@@ -557,7 +579,9 @@ CObjectBase *CSW2DScene::CreateSpot( CPtrFuncBase<CSWTextureData> *pTexture,
 void CSW2DScene::AddPostFilter( CPtrFuncBase<CSWTextureData> *pTexture, int _nCenterX, int _nCenterY )
 {
 	if ( !pTexture )
+	{
 		return;
+	}
 	rects.push_back( new C2DPostFilter( pTexture, _nCenterX, _nCenterY ) );
 }
 
@@ -593,7 +617,9 @@ void CSW2DScene::Draw( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, b
 	CTrueColorRender r;
 	InitScene( &r, pTarget, vViewport );
 	if ( bClear )
+	{
 		r.res.FillZero();
+	}
 	DrawSet( &r, &rects );
 	//
 	CDynamicCast<NGfx::I2DBuffer> p2DBuffer( pTarget );
@@ -605,7 +631,9 @@ void CSW2DScene::Draw( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, b
 			for ( int y = 0; y < lock.GetSizeY(); ++y )
 			{
 				for ( int x = 0; x < lock.GetSizeX(); ++x )
+				{
 					lock[y][x] = r.res[y][x];
+				}
 			}
 		}
 		else
@@ -648,7 +676,9 @@ void CSW2DScene::DrawFog( CArray2D<int> *pFogMap, const CTPoint<int> &vViewport 
 	for ( int y = 0; y < pFogMap->GetSizeY(); ++y )
 	{
 		for ( int x = 0; x < pFogMap->GetSizeX(); ++x )
+		{
 			( *pFogMap )[y][x] = r.res[y][x];
+		}
 	}
 }
 

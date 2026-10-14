@@ -34,7 +34,9 @@ LONG WINAPI SwallowHeapCorruption( EXCEPTION_POINTERS *exception )
 int main( int argc, char **argv )
 {
 	if ( argc != 2 )
+	{
 		return 2;
+	}
 
 #if defined( _WIN32 )
 	// Intentional test failures must not wait for an unattended debug CRT box.
@@ -47,21 +49,31 @@ int main( int argc, char **argv )
 	const std::string mode( argv[1] );
 	const bool initialized = InitCrashpad();
 	if ( mode == "missing-handler" )
+	{
 		return initialized ? 3 : 0;
+	}
 	if ( !initialized )
+	{
 		return 4;
+	}
 
 	if ( mode == "access-violation" )
+	{
 		AccessViolation();
+	}
 	else if ( mode == "worker-access-violation" )
 	{
 		std::thread worker( AccessViolation );
 		worker.join();
 	}
 	else if ( mode == "abort" )
+	{
 		std::abort();
+	}
 	else if ( mode == "terminate" )
+	{
 		std::terminate();
+	}
 	else if ( mode == "caught-exception" || mode == "fallback-directory" )
 	{
 		try
@@ -84,12 +96,18 @@ int main( int argc, char **argv )
 		RaiseException( 0xC0000374, 0, 0, nullptr );
 	}
 	else if ( mode == "invalid-parameter" )
+	{
 		_invalid_parameter_noinfo_noreturn();
+	}
 	else if ( mode == "purecall" )
+	{
 		_purecall();
+	}
 #endif
 	else
+	{
 		return 5;
+	}
 
 	// Any fatal path that returns failed to reach the crash handler.
 	return 6;

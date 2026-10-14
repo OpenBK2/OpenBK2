@@ -41,15 +41,25 @@ inline int GetMSB( uint32_t n )
 {
 	int k = 0;
 	if ( n & 0xFFFF0000 )
+	{
 		k = 16, n >>= 16;
+	}
 	if ( n & 0x0000FF00 )
+	{
 		k += 8, n >>= 8;
+	}
 	if ( n & 0x000000F0 )
+	{
 		k += 4, n >>= 4;
+	}
 	if ( n & 0x0000000C )
+	{
 		k += 2, n >>= 2;
+	}
 	if ( n & 0x00000002 )
+	{
 		k += 1;
+	}
 	return k;
 }
 inline int GetMSB( int n )
@@ -60,24 +70,38 @@ inline int GetMSB( uint16_t n )
 {
 	int k = 0;
 	if ( n & 0xFF00 )
+	{
 		k = 8, n >>= 8;
+	}
 	if ( n & 0x00F0 )
+	{
 		k += 4, n >>= 4;
+	}
 	if ( n & 0x000C )
+	{
 		k += 2, n >>= 2;
+	}
 	if ( n & 0x0002 )
+	{
 		k += 1;
+	}
 	return k;
 }
 inline int GetMSB( uint8_t n )
 {
 	int k = 0;
 	if ( n & 0xF0 )
+	{
 		k = 4, n >>= 4;
+	}
 	if ( n & 0x0C )
+	{
 		k += 2, n >>= 2;
+	}
 	if ( n & 0x02 )
+	{
 		k += 1;
+	}
 	return k;
 }
 
@@ -85,15 +109,25 @@ inline int GetLSB( uint32_t n )
 {
 	int k = 0;
 	if ( ( n & 0x0000FFFF ) == 0 )
+	{
 		k = 16, n >>= 16;
+	}
 	if ( ( n & 0x000000FF ) == 0 )
+	{
 		k += 8, n >>= 8;
+	}
 	if ( ( n & 0x0000000F ) == 0 )
+	{
 		k += 4, n >>= 4;
+	}
 	if ( ( n & 0x00000003 ) == 0 )
+	{
 		k += 2, n >>= 2;
+	}
 	if ( ( n & 0x00000001 ) == 0 )
+	{
 		k += 1;
+	}
 	return k;
 }
 inline int GetLSB( int n )
@@ -104,24 +138,38 @@ inline int GetLSB( uint16_t n )
 {
 	int k = 0;
 	if ( ( n & 0x00FF ) == 0 )
+	{
 		k = 8, n >>= 8;
+	}
 	if ( ( n & 0x000F ) == 0 )
+	{
 		k += 4, n >>= 4;
+	}
 	if ( ( n & 0x0003 ) == 0 )
+	{
 		k += 2, n >>= 2;
+	}
 	if ( ( n & 0x0001 ) == 0 )
+	{
 		k += 1;
+	}
 	return k;
 }
 inline int GetLSB( uint8_t n )
 {
 	int k = 0;
 	if ( ( n & 0x0F ) == 0 )
+	{
 		k = 4, n >>= 4;
+	}
 	if ( ( n & 0x03 ) == 0 )
+	{
 		k += 2, n >>= 2;
+	}
 	if ( ( n & 0x01 ) == 0 )
+	{
 		k += 1;
+	}
 	return k;
 }
 

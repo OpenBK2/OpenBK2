@@ -30,7 +30,9 @@ void CScriptPathPointsState::Leave()
 void CScriptPathPointsState::Draw( IPaintContext *pPaintDC )
 {
 	if ( !EditorScene() )
+	{
 		return;
+	}
 
 	// Match the Fields control points, but leave the polyline open.
 	std::vector<CVec3> terrainPoints = points;
@@ -47,12 +49,16 @@ void CScriptPathPointsState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &r
 {
 	IEditorScene *pScene = EditorScene();
 	if ( !pScene || !Camera() )
+	{
 		return;
+	}
 
 	// Mouse capture can deliver a release outside the view. Misses must not add {0, 0}.
 	const CVec2 screenSize = pScene->GetScreenRect();
 	if ( rMousePoint.x < 0 || rMousePoint.y < 0 || rMousePoint.x >= screenSize.x || rMousePoint.y >= screenSize.y )
+	{
 		return;
+	}
 
 	CVec3 vNear, vFar, vPoint;
 	Camera()->GetProjectiveRayPoints( &vNear, &vFar, CVec2( rMousePoint.x, rMousePoint.y ) );
@@ -60,7 +66,9 @@ void CScriptPathPointsState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &r
 	Vis2AI( &vNear );
 	Vis2AI( &vFar );
 	if ( !pScene->GetIntersectionWithTerrainForEditor( &vPoint, vNear, vFar ) )
+	{
 		return;
+	}
 
 	points.push_back( vPoint );
 	UpdatePath();
@@ -78,13 +86,17 @@ void CScriptPathPointsState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &r
 void CScriptPathPointsState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( nChar == VK_ESCAPE )
+	{
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_EDITOR, ID_TOOLS_CREATE_SCRIPT_PATH_POINTS, 0 );
+	}
 }
 
 void CScriptPathPointsState::UpdatePath()
 {
 	if ( !CopyPathToClipboard() )
+	{
 		NLog::Log( LT_ERROR, "Could not copy script path points to the clipboard.\n" );
+	}
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
@@ -94,7 +106,9 @@ bool CScriptPathPointsState::CopyPathToClipboard() const
 	for ( const CVec3 &point : points )
 	{
 		if ( text.size() > 1 )
+		{
 			text += ", ";
+		}
 		// Default fmt formatting preserves float precision and uses a Lua-compatible decimal dot.
 		text += fmt::format( "{{{}, {}}}", point.x, point.y );
 	}

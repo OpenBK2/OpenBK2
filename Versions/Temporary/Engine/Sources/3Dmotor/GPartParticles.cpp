@@ -46,7 +46,9 @@ bool CParticles::Update( CVolumeNode *pVolume )
 			{
 				std::vector<CPtr<CParticles>>::iterator i = std::find( pNode->particles.begin(), pNode->particles.end(), this );
 				if ( i != pNode->particles.end() )
+				{
 					pNode->particles.erase( i );
+				}
 			}
 			pNode = pNewNode;
 		}

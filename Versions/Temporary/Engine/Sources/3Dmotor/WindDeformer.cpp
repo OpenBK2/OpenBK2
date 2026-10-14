@@ -49,10 +49,14 @@ void CWindDeformer::Recalc()
 {
 	CObjectInfo *pMesh = pGeom->GetValue();
 	if ( !pMesh )
+	{
 		return;
+	}
 
 	if ( !pValue )
+	{
 		pValue = new CObjectInfo( *pMesh );
+	}
 
 	std::vector<NGScene::SUVInfo> &v = pValue->verts;
 	const std::vector<uint16_t> &posInds = pValue->GetPositionIndices();
@@ -86,23 +90,31 @@ void CWindDeformer::Recalc()
 CPtrFuncBase<CObjectInfo> *CreateDeformerHolder( CPtrFuncBase<CObjectInfo> *pGeom, const SFBTransform &place )
 {
 	if ( pGeom )
+	{
 		return new CWindDeformer( pGeom, place );
+	}
 	return 0;
 }
 
 CPtrFuncBase<CObjectInfo> *CreateDeformerHolder( CPtrFuncBase<CObjectInfo> *pGeom, CFuncBase<SFBTransform> *pPlace )
 {
 	if ( pGeom )
+	{
 		return new CWindDeformer( pGeom, pPlace );
+	}
 	return 0;
 }
 
 CObjectBase *GetWindDeformerSource( CObjectBase *p )
 {
 	if ( !p )
+	{
 		return 0;
+	}
 	if ( CDynamicCast<CWindDeformer> pWind = p )
+	{
 		return pWind->GetOriginalGeometry();
+	}
 	return 0;
 }
 

@@ -48,7 +48,9 @@ CNoiseAccessor CNoiseManager::GetNoise( unsigned int nNoiseNum )
 	NI_ASSERT( nNoiseNum < noises.size(),
 	           fmt::format( "Invalid noise number {} - available [0..{}]", nNoiseNum, noises.size() - 1 ) );
 	if ( !noises[nNoiseNum].bLoaded )
+	{
 		LoadNoise( nNoiseNum );
+	}
 
 	return CNoiseAccessor( noises[nNoiseNum].noise );
 }
@@ -60,7 +62,9 @@ CNoiseAccessor CNoiseManager::GetNoise( const std::string &_szName )
 	for ( int i = 0; i < noises.size(); ++i )
 	{
 		if ( noises[i].szFileName == szName )
+		{
 			return GetNoise( i );
+		}
 	}
 	NI_ASSERT( false, fmt::format( "Unknown noise \"{}\"", szName ) );
 	return GetNoise( 0 );

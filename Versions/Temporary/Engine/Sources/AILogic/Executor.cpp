@@ -11,7 +11,9 @@ CExecutor::CExecutor( const EExecutorTypeID _eTypeID, const int _nNextTime )
 		: eTypeID( _eTypeID ), nNextTime( _nNextTime ), nID( 0 ), bActive( true ), nUniqueID( -1 )
 {
 	if ( pTheExecutorsContainer )
+	{
 		nUniqueID = pTheExecutorsContainer->CreateID();
+	}
 	// The id comes out of a free list, so it says how many executors have been
 	// created and returned before this one. Two runs that disagree about it
 	// disagree about something earlier.
@@ -31,5 +33,7 @@ CExecutor::~CExecutor()
 		NAsyncTrace::Write( "exec", fmt::format( "destroyed uid={} type={}", nUniqueID, static_cast<int>( eTypeID ) ) );
 	}
 	if ( -1 != nUniqueID && pTheExecutorsContainer )
+	{
 		pTheExecutorsContainer->ReturnID( nUniqueID );
+	}
 }

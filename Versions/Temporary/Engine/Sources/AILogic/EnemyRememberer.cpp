@@ -33,9 +33,13 @@ void CEnemyRememberer::SetVisible( const class CCommonUnit *pUnit, const bool bV
 const CVec2 CEnemyRememberer::GetPos( const class CCommonUnit *pUnit ) const
 {
 	if ( timeLastSeen == 0 )
+	{
 		return pUnit->GetCenterPlain();
+	}
 	else
+	{
 		return vPosition;
+	}
 }
 
 const bool CEnemyRememberer::IsTimeToForget() const

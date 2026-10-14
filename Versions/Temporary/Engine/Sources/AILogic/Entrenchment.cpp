@@ -61,7 +61,9 @@ const int CEntrenchmentPart::GetNDefenders() const
 {
 	NI_ASSERT( pOwner != 0, "entrenchment part without entrenchment" );
 	if ( pOwner )
+	{
 		return pOwner->GetNDefenders();
+	}
 	return 0;
 }
 
@@ -111,7 +113,9 @@ bool CEntrenchmentPart::CanUnregister() const
 	{
 		const SVector &tile = *iter;
 		if ( !theWarFog.IsTileVisible( tile, 0 ) || !theWarFog.IsTileVisible( tile, 1 ) )
+		{
 			return false;
+		}
 	}
 
 	return true;
@@ -127,11 +131,17 @@ void CEntrenchmentPart::Segment()
 			if ( theWarFog.IsTileVisible( *iter, theDipl.GetMyParty() ) )
 			{
 				if ( pFullEntrenchment )
+				{
 					pFullEntrenchment->SetVisible();
+				}
 				else if ( pOwner )
+				{
 					pOwner->SetVisible();
+				}
 				else
+				{
 					NI_ASSERT( false, fmt::format( "Entrenchment part without parents, link ID {}", GetLink() ) );
+				}
 				break;
 			}
 		}
@@ -139,7 +149,9 @@ void CEntrenchmentPart::Segment()
 
 	// unregister только если виден всеми сторонами - для multiplayer
 	if ( CanUnregister() )
+	{
 		theStatObjs.UnregisterSegment( this );
+	}
 
 	// random вызывать всегда - для mutliplayer
 	nextSegmTime = curTime + NRandom::Random( 500, 2000 );
@@ -202,7 +214,9 @@ void CEntrenchmentPart::TakeDamage( const float fDamage,
 {
 	// trenches must not die
 	if ( pOwner )
+	{
 		pOwner->TakeDamage( fDamage, bFromExplosion, nPlayerOfShoot, pShotUnit );
+	}
 }
 
 bool CEntrenchmentPart::IsPointInside( const CVec2 &point ) const
@@ -229,7 +243,9 @@ void CEntrenchmentPart::SetVisible( const bool bLastSegment /*=false*/ )
 		int nParam = ( bLastSegment ? 1 : -1 ) * ( bDigBySegment ? 2 : 1 );
 
 		if ( GetType() == EST_TERMINATOR && bDigBySegment ) //CRAP: force terminators to dig every time when digging in-game
+		{
 			nParam = 2;
+		}
 
 		updater.AddUpdate( 0, ACTION_NOTIFY_NEW_ENTRENCHMENT, this, nParam );
 		bDigBySegment = false;
@@ -290,16 +306,22 @@ CEntrenchment::CEntrenchment( CObjectBase **_segments,
 
 				float fLength = fToCenter + pPart->GetSegmStats().vAABBHalfSize.y;
 				if ( fLength > 0 && fLength > fLengthAhead )
+				{
 					fLengthAhead = fLength;
+				}
 
 				fLength = fToCenter - pPart->GetSegmStats().vAABBHalfSize.y;
 				if ( fLength < 0 && -fLength > fLengthBack )
+				{
 					fLengthBack = -fLength;
+				}
 			}
 
 			for ( int i = 0; i < pPart->GetSegmStats().fireplaces.size(); ++i )
+			{
 				fireplaces.push_back( SFireplaceInfo(
 						vPartCenter + GetShift( pPart->GetSegmStats().fireplaces[i], vDir ), 0, pPart->GetFrameIndex() ) );
+			}
 		}
 
 		pPart->SetOwner( this, bPiecewise );
@@ -311,7 +333,9 @@ CEntrenchment::CEntrenchment( CObjectBase **_segments,
 	}
 
 	if ( pFullEntrenchment )
+	{
 		pFullEntrenchment->AddEntrenchmentSection( this );
+	}
 
 	NI_ASSERT( fLengthAhead != -1, "Окоп без линейных сегментов и fireplaces" );
 
@@ -467,21 +491,29 @@ void CEntrenchment::DelSoldier( CSoldier *pUnit, const bool bFillEmptyFireplace 
 {
 	std::list<SInsiderInfo>::iterator iter = insiders.begin();
 	while ( iter != insiders.end() && iter->pUnit != pUnit )
+	{
 		++iter;
+	}
 
 	if ( iter != insiders.end() )
 	{
 		int nFireplace = iter->nFireplace;
 		// сидит в fireplace
 		if ( nFireplace != -1 )
+		{
 			fireplaces[nFireplace].pUnit = 0;
+		}
 
 		insiders.erase( iter );
 
 		if ( nFireplace != -1 && bFillEmptyFireplace )
+		{
 			ProcessEmptyFireplace( nFireplace );
+		}
 		if ( nFireplace != -1 && !bFillEmptyFireplace )
+		{
 			--nBusyFireplaces;
+		}
 
 		CRotatingFireplacesObject::DeleteUnit( pUnit );
 		pUnit->ApplyStatsModifier( pStats->pInnerUnitBonus, false );
@@ -542,7 +574,9 @@ void CEntrenchment::Iterate()
 	{
 		++iter;
 		while ( iter != insiders.end() && iter->nFireplace == -1 )
+		{
 			++iter;
+		}
 	}
 }
 
@@ -563,9 +597,13 @@ CSoldier *CEntrenchment::GetUnit( const int n ) const
 const uint8_t CEntrenchment::GetPlayer() const
 {
 	if ( GetNDefenders() == 0 || insiders.empty() )
+	{
 		return theDipl.GetNeutralPlayer();
+	}
 	else
+	{
 		return insiders.begin()->pUnit->GetPlayer();
+	}
 }
 
 void CEntrenchment::Segment()
@@ -574,11 +612,15 @@ void CEntrenchment::Segment()
 	RecordRandomCall();
 
 	if ( !IsUnitsInside() )
+	{
 		theStatObjs.UnregisterSegment( this );
+	}
 	else
 	{
 		if ( !CStormableObject::Segment() )
+		{
 			CRotatingFireplacesObject::Segment();
+		}
 	}
 }
 
@@ -606,12 +648,16 @@ void CEntrenchment::ExchangeUnitToFireplace( CSoldier *pSoldier, int nFirePlace 
 	CSoldier *pDeletedSoldier = GetSoldierInFireplace( nFirePlace );
 
 	if ( pDeletedSoldier )
+	{
 		DelSoldier( pDeletedSoldier, false );
+	}
 	DelSoldier( pSoldier, false );
 
 	AddSoldierToFirePlace( pSoldier, nFirePlace );
 	if ( pDeletedSoldier )
+	{
 		AddSoldier( pDeletedSoldier );
+	}
 }
 
 const int CEntrenchment::GetNFirePlaces() const
@@ -637,13 +683,17 @@ void CEntrenchment::SetVisible()
 	for ( CSegmentList::iterator iter = segments.begin(); iter != segments.end(); ++iter )
 	{
 		if ( pPrevIter )
+		{
 			pPrevIter->SetVisible();
+		}
 
 		pPrevIter = ( *iter );
 	}
 
 	if ( pPrevIter ) //Display last part
+	{
 		pPrevIter->SetVisible( true );
+	}
 }
 
 //*******************************************************************
@@ -673,7 +723,9 @@ void CEntrenchmentTankPit::GetTilesForVisibility( CTilesSet *pTiles ) const
 	{
 		const SVector &v = i->tile;
 		if ( GetAIMap()->IsTileInside( v ) )
+		{
 			pTiles->push_back( v );
+		}
 	}
 }
 
@@ -684,7 +736,9 @@ void CEntrenchmentTankPit::GetCoveredTiles( std::list<SVector> *pTiles ) const
 	{
 		const SVector &v = i->tile;
 		if ( GetAIMap()->IsTileInside( v ) )
+		{
 			pTiles->push_back( v );
+		}
 	}
 }
 

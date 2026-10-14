@@ -36,7 +36,9 @@ void CheckAIObjectBase()
 {
 	CCheckSumSaver saver;
 	for ( object_storage_type::iterator it = GetStorage().begin(); it != GetStorage().end(); ++it )
+	{
 		( it->second )->operator&( saver );
+	}
 }
 /*
 
@@ -68,7 +70,9 @@ CCheckSumSaver::CCheckSumSaver( uLong *_pCheckSum, ICheckSumLog *pLog, const NTi
 CCheckSumSaver::~CCheckSumSaver()
 {
 	if ( IsReading() )
+	{
 		return;
+	}
 
 	int nObject = 0;
 	bDissalowStoreObjects = true;
@@ -177,7 +181,9 @@ void CCheckSumSaver::DataChunkString( std::wstring &data )
 void CCheckSumSaver::StoreObject( CObjectBase *pObject )
 {
 	if ( pObject == 0 || bDissalowStoreObjects )
+	{
 		return;
+	}
 
 	CAddedObjects::iterator pos = addedObjects.find( pObject );
 	if ( pos == addedObjects.end() )
@@ -194,7 +200,9 @@ void CCheckSumSaver::StoreObject( CObjectBase *pObject )
 	static const int nBreakCount = NGlobal::GetVar( "break_count", -1 );
 	static const int nSegmentBreak = NGlobal::GetVar( "segment_break", -1 );
 	if ( pCommandsHistory )
+	{
 		pCommandsHistory->AddChecksumLog( nSegment, *checkSumData, nCount );
+	}
 	if ( nBreakCount == nCount && nSegment == nSegmentBreak )
 	{
 		breakpoint();

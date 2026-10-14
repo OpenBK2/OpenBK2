@@ -69,13 +69,19 @@ CTankShootEstimator::CTankShootEstimator( CAIUnit *_pOwner )
 			int j = 0;
 			while ( j < i && ( pOwner->GetGun( j )->GetGun().nPriority != 0 ||
 			                   pOwner->GetGun( j )->IsCommonEqual( pOwner->GetGun( i ) ) ) )
+			{
 				++j;
+			}
 
 			if ( j < i )
+			{
 				dwDefaultForbidden |= ( 1UL << i );
+			}
 		}
 		if ( _pOwner->GetStats()->etype == RPG_TYPE_ART_AAGUN && pOwner->GetGun( i )->GetShellType() == 1 )
+		{
 			dwDefaultForbidden |= ( 1UL << i );
+		}
 	}
 
 	pMosinStats = theUnitCreation.GetMosinStats();
@@ -95,21 +101,29 @@ const float FindTimeToTurnToPoint( const CVec2 &vPoint, class CCommonUnit *pOwne
 		CTurret *pTurret = pGun->GetTurret();
 		// zero saftey check
 		if ( std::abs( pTurret->GetVerRotationSpeed() ) <= 1e-9f )
+		{
 			nTimeVerticalAim = DirsDifference( pGun->GetVerTurnConstraint(), pTurret->GetVerCurAngle() );
+		}
 		else if ( pGun->IsBallisticTrajectory() )
+		{
 			nTimeVerticalAim =
 					DirsDifference( pGun->GetVerTurnConstraint(), pTurret->GetVerCurAngle() ) / pTurret->GetVerRotationSpeed();
+		}
 
 		const uint16_t wGunDir = pTurret->GetHorCurAngle() + pGun->GetGun().wDirection + wUnitDir;
 		const uint16_t wTurnAngle = DirsDifference( wGunDir, wDirToEnemy );
 
 		if ( wTurnAngle < wDeltaAngle )
+		{
 			return nTimeVerticalAim;
+		}
 		else
 		{
 			float fTurnSpeed = pTurret->GetHorRotationSpeed();
 			if ( bMovingOwner )
+			{
 				fTurnSpeed = (std::min)( fTurnSpeed, pOwner->GetTurnSpeed() );
+			}
 
 			return nTimeVerticalAim + float( wTurnAngle ) / fTurnSpeed;
 		}
@@ -117,15 +131,21 @@ const float FindTimeToTurnToPoint( const CVec2 &vPoint, class CCommonUnit *pOwne
 	else
 	{
 		if ( !bMovingOwner )
+		{
 			return 0.0f;
+		}
 		else
 		{
 			const uint16_t wGunDir = pGun->GetGun().wDirection + wUnitDir;
 			const uint16_t wTurnAngle = DirsDifference( wGunDir, wDirToEnemy );
 			if ( wTurnAngle < wDeltaAngle )
+			{
 				return 0.0f;
+			}
 			else
+			{
 				return float( wTurnAngle ) / pOwner->GetTurnSpeed();
+			}
 		}
 	}
 }
@@ -140,7 +160,9 @@ void CTankShootEstimator::Reset( CAIUnit *pCurEnemy, const bool bDamageUpdated, 
 	dwForbidden = _dwForbidden;
 
 	if ( IsValidObj( pCurTarget ) )
+	{
 		AddUnit( pCurTarget );
+	}
 }
 
 const float
@@ -149,7 +171,9 @@ CTankShootEstimator::GetRating( const SUnitBaseRPGStats *pStats, const CVec2 &vC
 	float fTimeToGo = 0;
 
 	if ( pOwner->CanMove() && !pOwner->NeedDeinstall() )
+	{
 		fTimeToGo = fabs( pOwner->GetCenterPlain() - vCenter ) / pOwner->GetStats()->fSpeed;
+	}
 	fTimeToGo +=
 			FindTimeToTurnToPoint( vCenter, pOwner, pGun ) +
 			( !pGun->CanShootToPointWOMove( vCenter, 0 ) ? fTimeToGo * 100.0f
@@ -169,7 +193,9 @@ const float CTankShootEstimator::GetRating( CAIUnit *pEnemy, CBasicGun *pGun ) c
 	float fTimeToGo = 0;
 
 	if ( pOwner->CanMove() && !pOwner->NeedDeinstall() )
+	{
 		fTimeToGo = fabs( pOwner->GetCenter() - pEnemy->GetCenter() ) / pOwner->GetStats()->fSpeed;
+	}
 	//fTimeToGo += FindTimeToTurnToPoint( pEnemy->GetCenterPlain(), pOwner, pGun );
 	fTimeToGo += FindTimeToTurnToPoint( pEnemy->GetCenterPlain(), pOwner, pGun ) +
 	             ( !pGun->CanShootToUnitWOMove( pEnemy ) ? fTimeToGo * 100.0f
@@ -178,19 +204,29 @@ const float CTankShootEstimator::GetRating( CAIUnit *pEnemy, CBasicGun *pGun ) c
 	const float fEnemyKillUsSpeed = pEnemy->GetKillSpeed( pOwner );
 	float fEnemyKillUsTime;
 	if ( fEnemyKillUsSpeed == 0.0f )
+	{
 		fEnemyKillUsTime = 0.0f;
+	}
 	else
+	{
 		fEnemyKillUsTime = pOwner->GetStats()->fMaxHP / fEnemyKillUsSpeed;
+	}
 
 	float fKillEnemySpeed;
 	if ( !bDamageToCurTargetUpdated )
+	{
 		fKillEnemySpeed = pEnemy->GetTakenDamagePower() + pOwner->GetKillSpeed( pEnemy, pGun );
+	}
 	else
 	{
 		if ( pEnemy != pCurTarget )
+		{
 			fKillEnemySpeed = pEnemy->GetTakenDamagePower() + pOwner->GetKillSpeed( pEnemy, pGun );
+		}
 		else
+		{
 			fKillEnemySpeed = pEnemy->GetTakenDamagePower();
+		}
 	}
 
 	const float fKillEnemyTime = pEnemy->GetStats()->fMaxHP / fKillEnemySpeed;
@@ -219,7 +255,9 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 			2 * enemyRect.width * ( enemyRect.lengthAhead + enemyRect.lengthBack ) / sqr( pEnemy->GetRemissiveCoeff() );
 
 	if ( pOwner->GetUnitAbilityDesc( NDb::ABILITY_COVER_FIRE ) == 0 || !pEnemy->IsInfantry() )
+	{
 		dwForbidden |= dwDefaultForbidden;
+	}
 	const int nGuns = pOwner->GetNGuns();
 	const CVec2 vCenterPlain( pOwner->GetCenterPlain() );
 
@@ -256,7 +294,9 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 					// нельзя стрелять по очагам сопротивления
 					if ( theDipl.IsAIPlayer( pOwner->GetPlayer() ) && pGun->IsBallisticTrajectory() &&
 					     theSupremeBeing.IsInResistanceCircle( pEnemy->GetCenterPlain(), pOwner->GetParty() ) )
+					{
 						continue;
+					}
 
 					// нельзя двигаться или нужно идти достаточно далеко, чтобы примерно дойти до точки, откуда можно стрелять
 					const float fFireRange = pGun->GetFireRange( pEnemy->GetCenter().z );
@@ -267,14 +307,18 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 					{
 						float fTime = 0;
 						if ( bMovingOwner )
+						{
 							fTime = fDistToGo / pOwner->GetStats()->fSpeed;
+						}
 
 						fTime += FindTimeToTurnToPoint( pEnemy->GetCenterPlain(), pOwner, pGun );
 
 						// макс. броня врага не пробивается оружием
 						if ( pGun->GetMaxPossiblePiercing() < pEnemy->GetMaxArmor() )
+						{
 							// поворот на 30 градусов ( 65536 / 360 * 30 )
 							fTime += 5461.0f * pOwner->GetTurnSpeed();
+						}
 
 						const float fDispRadius = GetDispByRadius( pGun, pOwner->GetCenterPlain(), pEnemy->GetCenterPlain() );
 						float fR;
@@ -285,24 +329,36 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 							// может быть area damage
 							// если техника, то по малому радиусу взрыва
 							if ( !pEnemy->GetStats()->IsInfantry() )
+							{
 								fR = 0.56 * fDispRadius - shell.fArea;
+							}
 							// если солдат и свободен, то по большому радиусу
 							else if ( pEnemy->IsFree() )
+							{
 								fR = 0.56 * fDispRadius - shell.fArea2;
+							}
 							else
+							{
 								// если солдат и не свободен, то по малому радиусу
 								fR = 0.56 * fDispRadius - shell.fArea;
+							}
 						}
 						else
+						{
 							// только точное попадание
 							fR = 0.56 * fDispRadius;
+						}
 
 						// вероятность попасть ( примерная... )
 						float fProbToHit;
 						if ( fR <= 0 )
+						{
 							fProbToHit = 1;
+						}
 						else
+						{
 							fProbToHit = (std::min)( 1.0f, fSEnemyRect / ( FP_PI * sqr( fR ) ) );
+						}
 
 						// probability to pierce
 						const float fPierceProb =
@@ -375,16 +431,22 @@ void CTankShootEstimator::AddUnit( CAIUnit *pEnemy )
 
 			if ( pEnemy->GetStats()->IsInfantry() &&
 			     ( nSoldiersCache = units.GetNSoldiers( vEnemyCenter, fDispersion * 1.2f, 1 - pOwner->GetParty() ) ) < 10 )
+			{
 				bChoose = false;
+			}
 
 			if ( !pEnemy->GetStats()->IsInfantry() &&
 			     units.GetNUnits( vEnemyCenter, fDispersion, 1 - pOwner->GetParty() ) < 4 )
+			{
 				bChoose = false;
+			}
 		}
 	}
 
 	if ( bChoose )
+	{
 		ChooseGun( &pBestLocalGun, &nBestLocalGun, pEnemy );
+	}
 
 	if ( pBestLocalGun != 0 )
 	{
@@ -461,7 +523,9 @@ void CSoldierShootEstimator::Reset( CAIUnit *pCurEnemy, const bool bDamageUpdate
 	dwForbidden = _dwForbidden;
 
 	if ( IsValidObj( pCurTarget ) )
+	{
 		AddUnit( pCurTarget );
+	}
 }
 
 const float CSoldierShootEstimator::GetRating( CAIUnit *pEnemy, CBasicGun *pGun ) const
@@ -471,19 +535,29 @@ const float CSoldierShootEstimator::GetRating( CAIUnit *pEnemy, CBasicGun *pGun 
 	const float fEnemyKillUsSpeed = pEnemy->GetKillSpeed( pOwner );
 	float fEnemyKillUsTime;
 	if ( fEnemyKillUsSpeed == 0.0f )
+	{
 		fEnemyKillUsTime = 0.0f;
+	}
 	else
+	{
 		fEnemyKillUsTime = pOwner->GetStats()->fMaxHP / fEnemyKillUsSpeed;
+	}
 
 	float fKillEnemySpeed;
 	if ( !bDamageToCurTargetUpdated )
+	{
 		fKillEnemySpeed = pEnemy->GetTakenDamagePower() + pOwner->GetKillSpeed( pEnemy, pGun );
+	}
 	else
 	{
 		if ( pEnemy != pCurTarget )
+		{
 			fKillEnemySpeed = pEnemy->GetTakenDamagePower() + pOwner->GetKillSpeed( pEnemy, pGun );
+		}
 		else
+		{
 			fKillEnemySpeed = pEnemy->GetTakenDamagePower();
+		}
 	}
 
 	const float fKillEnemyTime = pEnemy->GetStats()->fMaxHP / fKillEnemySpeed;
@@ -498,7 +572,9 @@ CSoldierShootEstimator::GetRating( const SUnitBaseRPGStats *pStats, const CVec2 
 	float fTimeToGo = 0;
 
 	if ( pOwner->CanMove() && !pOwner->NeedDeinstall() )
+	{
 		fTimeToGo = fabs( pOwner->GetCenterPlain() - vCenter ) / pOwner->GetStats()->fSpeed;
+	}
 	fTimeToGo += FindTimeToTurnToPoint( vCenter, pOwner, pGun );
 
 	//	const float fEnemyKillUsSpeed = 0.0f;
@@ -571,24 +647,36 @@ void CSoldierShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAI
 						// может быть area damage
 						// если техника, то по малому радиусу взрыва
 						if ( !pEnemy->GetStats()->IsInfantry() )
+						{
 							fR = 0.56 * fDispRadius - shell.fArea;
+						}
 						// если солдат и свободен, то по большому радиусу
 						else if ( pEnemy->IsFree() )
+						{
 							fR = 0.56 * fDispRadius - shell.fArea2;
+						}
 						else
+						{
 							// если солдат и не свободен, то по малому радиусу
 							fR = 0.56 * fDispRadius - shell.fArea;
+						}
 					}
 					else
+					{
 						// только точное попадание
 						fR = 0.56 * fDispRadius;
+					}
 
 					// вероятность попасть ( примерная... )
 					float fProbToHit;
 					if ( fR <= 0 )
+					{
 						fProbToHit = 1;
+					}
 					else
+					{
 						fProbToHit = (std::min)( 1.0f, fSEnemyRect / ( FP_PI * sqr( fR ) ) );
+					}
 
 					// выстрелов, чтобы убить с вероятностью 80%
 					const float fShotsToKill = 0.8 * pEnemy->GetHitPoints() / pGun->GetDamage();
@@ -639,7 +727,9 @@ void CSoldierShootEstimator::AddUnit( CAIUnit *pEnemy )
 			int nAttackingGrenades = pEnemy->GetNAttackingGrenages();
 			// сколько гранат, не учитывая нас
 			if ( bDamageToCurTargetUpdated && pEnemy == pCurTarget )
+			{
 				--nAttackingGrenades;
+			}
 
 			// гранат не хватает и можно кинуть гранату по юниту
 			if ( ( bUseGrenadeFixed ||
@@ -680,7 +770,9 @@ void CSoldierShootEstimator::AddUnit( CAIUnit *pEnemy )
 	{
 		int nBestLocalGun = 0;
 		if ( !bUseGrenadeFixed )
+		{
 			ChooseGun( &pBestLocalGun, &nBestLocalGun, pEnemy );
+		}
 
 		if ( pBestLocalGun != 0 )
 		{
@@ -752,19 +844,29 @@ const float CPlaneDeffensiveFireShootEstimator::CalcRating( CAIUnit *pEnemy, CBa
 	const float fEnemyKillUsSpeed = pEnemy->GetKillSpeed( pOwner );
 	float fEnemyKillUsTime;
 	if ( fEnemyKillUsSpeed == 0.0f )
+	{
 		fEnemyKillUsTime = 0.0f;
+	}
 	else
+	{
 		fEnemyKillUsTime = pOwner->GetStats()->fMaxHP / fEnemyKillUsSpeed;
+	}
 
 	float fKillEnemySpeed;
 	if ( !bDamageToCurTargetUpdated )
+	{
 		fKillEnemySpeed = pEnemy->GetTakenDamagePower() + pOwner->GetKillSpeed( pEnemy, pGun );
+	}
 	else
 	{
 		if ( pEnemy != pCurTarget )
+		{
 			fKillEnemySpeed = pEnemy->GetTakenDamagePower() + pOwner->GetKillSpeed( pEnemy, pGun );
+		}
 		else
+		{
 			fKillEnemySpeed = pEnemy->GetTakenDamagePower();
+		}
 	}
 
 	const float fKillEnemyTime = pEnemy->GetStats()->fMaxHP / fKillEnemySpeed;
@@ -792,7 +894,9 @@ void CPlaneDeffensiveFireShootEstimator::Reset( class CAIUnit *pCurEnemy,
 	pBestUnit = 0;
 
 	if ( IsValidObj( pCurTarget ) )
+	{
 		AddUnit( pCurTarget );
+	}
 }
 
 void CPlaneDeffensiveFireShootEstimator::AddUnit( class CAIUnit *pEnemy )
@@ -812,7 +916,9 @@ void CPlaneDeffensiveFireShootEstimator::AddUnit( class CAIUnit *pEnemy )
 	}
 
 	if ( !bCanShootByHeight )
+	{
 		return;
+	}
 
 	// приоритеты при защитном огне
 	const float fTempRating = CalcRating( pEnemy, pGun );
@@ -868,7 +974,9 @@ void CPlaneShturmovikShootEstimator::Reset( class CAIUnit *_pCurEnemy,
 void CPlaneShturmovikShootEstimator::AddUnit( CAIUnit *pTry )
 {
 	if ( !pTry || !pTry->IsRefValid() || !pTry->IsAlive() )
+	{
 		return;
+	}
 
 	// if infantry is in buildlings, consider building instead of infantry.
 	if ( !pTry->IsFree() && pTry->GetStats()->IsInfantry() )
@@ -882,7 +990,9 @@ void CPlaneShturmovikShootEstimator::AddUnit( CAIUnit *pTry )
 			{
 				const SBuildingRPGStats *pStats = checked_cast<const SBuildingRPGStats *>( pBuilding->GetStats() );
 				if ( pStats->etype != TYPE_MAIN_RU_STORAGE )
+				{
 					buildings.insert( pBuilding->GetUniqueId() );
+				}
 			}
 		}
 		return;
@@ -916,27 +1026,41 @@ void CPlaneShturmovikShootEstimator::AddUnit( CAIUnit *pTry )
 	}
 
 	if ( !bCanBreak )
+	{
 		return;
+	}
 
 	if ( pTry->GetStats()->IsAviation() )
 	{
 		if ( !bOnlyBombs )
+		{
 			CollectTarget( &bestAviation, pTry, dwPossibleGuns );
+		}
 	}
 	else if ( bOnlyBombs )
+	{
 		CollectTarget( &bestForBombs, pTry, dwPossibleGuns );
+	}
 	else
+	{
 		CollectTarget( &bestForGuns, pTry, dwPossibleGuns );
+	}
 }
 
 class CAIUnit *CPlaneShturmovikShootEstimator::GetBestUnit() const
 {
 	if ( bestForGuns.pTarget )
+	{
 		return bestForGuns.pTarget;
+	}
 	else if ( bestForBombs.pTarget )
+	{
 		return bestForBombs.pTarget;
+	}
 	else
+	{
 		return bestAviation.pTarget;
+	}
 };
 
 void CPlaneShturmovikShootEstimator::CalcBestBuilding()
@@ -975,7 +1099,9 @@ void CPlaneShturmovikShootEstimator::CalcBestBuilding()
 			float fTotalPrice = 0;
 			const int nDefenders = pBuilding->GetNDefenders();
 			for ( int i = 0; i < nDefenders; ++i )
+			{
 				fTotalPrice += pBuilding->GetUnit( i )->GetPriceMax();
+			}
 			fCurrentRating = F( pBuilding->GetHitPoints() / pBuildingStats->fMaxHP, 0, 0, fKillBuildingTime, fTotalPrice );
 		}
 		if ( !pBestBuilding || fCurrentRating > fRating )
@@ -1027,7 +1153,9 @@ bool CShootEstimatorForObstacles::AddObstacle( struct IObstacle *pObstacle )
 {
 	// уничтожать только вражеские препятствия
 	if ( theDipl.GetDiplStatus( pObstacle->GetPlayer(), pOwner->GetPlayer() ) != EDI_ENEMY )
+	{
 		return false;
+	}
 
 	//учитывать C
 	// - время поворота
@@ -1079,7 +1207,9 @@ void CShootEstimatorSupportAAGun::Reset( class CAIUnit *pCurEnemy,
 	fBestRating = 0.0f;
 
 	if ( IsValidObj( pBestTarget ) )
+	{
 		AddUnit( pBestTarget );
+	}
 }
 
 void CShootEstimatorSupportAAGun::AddUnit( class CAIUnit *pEnemy )
@@ -1091,11 +1221,15 @@ void CShootEstimatorSupportAAGun::AddUnit( class CAIUnit *pEnemy )
 	{
 		CBasicGun *pGun = pOwner->GetGun( i );
 		if ( !( dwForbidden & ( 1 << i ) ) && pGun->CanShootByHeight( pEnemy ) )
+		{
 			fTempRating += CalcRating( pEnemy, pGun );
+		}
 	}
 
 	if ( fTempRating == 0.0f )
+	{
 		return;
+	}
 
 	// приоритеты при защитном огне
 	if ( !pBestTarget || fTempRating > fBestRating )
@@ -1113,9 +1247,13 @@ const float CShootEstimatorSupportAAGun::CalcRating( CAIUnit *pEnemy, CBasicGun 
 
 	float fKillEnemySpeed;
 	if ( !bDamageToCurTargetUpdated )
+	{
 		fKillEnemySpeed = pEnemy->GetTakenDamagePower() + pOwner->GetKillSpeed( pEnemy, pGun );
+	}
 	else
+	{
 		fKillEnemySpeed = pEnemy->GetTakenDamagePower();
+	}
 
 	const float fKillEnemyTime = pEnemy->GetStats()->fMaxHP / fKillEnemySpeed;
 	const float fEnemyHPPercent = pEnemy->GetHitPoints() / pEnemy->GetStats()->fMaxHP;

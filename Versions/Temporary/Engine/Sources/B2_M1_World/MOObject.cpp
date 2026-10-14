@@ -30,10 +30,14 @@ bool CMOObject::CreateSceneObject( const int nUniqueID,
 	bAnimateOnDeath = false; // Default
 
 	if ( GetStats()->pvisualObject == 0 )
+	{
 		return false;
+	}
 	const NDb::SModel *pModel = GetModel( ChooseVisObjForHP( fNewHP ), eSeason );
 	if ( !pModel )
+	{
 		return false;
+	}
 
 	CVec3 vPos;
 	CQuat qRot;
@@ -49,7 +53,9 @@ bool CMOObject::CreateSceneObject( const int nUniqueID,
 		if ( const NDb::SObjectRPGStats *pObjectStats = dynamic_cast<const NDb::SObjectRPGStats *>( pStats ) )
 		{
 			if ( pObjectStats->bHideForPerformance && !bDrawGrass )
+			{
 				return true;
+			}
 		}
 
 		if ( pStats->bCanFall )
@@ -104,11 +110,17 @@ bool CMOObject::Create( const int nUniqueID,
 				ISoundScene *pSoundScene = Singleton<ISoundScene>();
 				const NDb::SComplexSoundDesc *pAmbientSoundDesc = pStats->GetAmbientSoundDesc( eSeason, eDayTime );
 				if ( pAmbientSoundDesc )
+				{
 					wAmbientSound = pSoundScene->AddSoundToMap( pAmbientSoundDesc, GetCenter() );
+				}
 				if ( pStats->pCycledSound )
+				{
 					wCycledSound = pSoundScene->AddSoundToMap( pStats->pCycledSound, GetCenter() );
+				}
 				if ( pStats->cycledSoundTimed.size() > eDayTime && pStats->cycledSoundTimed[eDayTime] )
+				{
 					wCycledSoundTimed = pSoundScene->AddSoundToMap( pStats->cycledSoundTimed[eDayTime], GetCenter() );
+				}
 			}
 		}
 		//
@@ -156,7 +168,9 @@ void CMOObject::AIUpdateFall( const SAITreeBrokenUpdate *pUpdate )
 
 	NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() );
 	if ( pAnimator == 0 )
+	{
 		return;
+	}
 	//NI_ASSERT( pAnimator != 0, "Unable to kill tree - no animator availible" );
 	Scene()->RemoveObjectPickability( GetID() );
 	if ( pAnimator != 0 )
@@ -170,10 +184,14 @@ void CMOObject::AIUpdateFall( const SAITreeBrokenUpdate *pUpdate )
 			CPtr<ITreeFallingMutator> pMutator = MakeObject<ITreeFallingMutator>( ITreeFallingMutator::typeID );
 			int nEffectID = OBJECT_ID_GENERATE;
 			if ( pStats->pSeasonedFallEffect )
+			{
 				nEffectID =
 						PlayComplexSeasonedEffect( nEffectID, pStats->pSeasonedFallEffect, pUpdate->nUpdateTime, vPos, eSeason );
+			}
 			else if ( pStats->pFallEffect != 0 )
+			{
 				nEffectID = PlayComplexEffect( nEffectID, pStats->pFallEffect, pUpdate->nUpdateTime, vPos );
+			}
 			pMutator->Setup( pAnimator,
 			                 pUpdate->vDir,
 			                 fAngle,
@@ -202,7 +220,9 @@ void CMOObject::GetDisabledActions( CUserActions *pActions, EActionsType eAction
 	if ( eActions == ACTIONS_WITH || eActions == ACTIONS_ALL )
 	{
 		if ( GetHP() == 0.0f )
+		{
 			pActions->SetAction( NDb::USER_ACTION_ATTACK );
+		}
 	}
 }
 

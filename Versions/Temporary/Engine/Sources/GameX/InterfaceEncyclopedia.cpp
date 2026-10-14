@@ -50,12 +50,18 @@ void CInterfaceEncyclopedia::CDataViewer::MakeInterior( CObjectBase *pWindow, co
 			if ( pData->pStats )
 			{
 				if ( pIconWnd )
+				{
 					pIconWnd->SetTexture( pData->pStats->pIconTexture );
+				}
 				if ( pIconShadowWnd )
+				{
 					pIconShadowWnd->SetTexture( pData->pStats->pIconTexture );
+				}
 			}
 			if ( pDescView )
+			{
 				pDescView->SetText( pDescView->GetDBText() + pData->wszBriefDesc );
+			}
 		}
 	}
 }
@@ -65,38 +71,58 @@ void CInterfaceEncyclopedia::CDataViewer::MakeInterior( CObjectBase *pWindow, co
 bool CInterfaceEncyclopedia::SDataSorter::operator()( const CUnitData *pData1, const CUnitData *pData2 ) const
 {
 	if ( !pData1->pStats || !pData2->pStats )
+	{
 		return pData1 < pData2;
+	}
 
 	NDb::EEncyclopediaFilterUnitType eType1 = pData1->pStats->eEncyclopediaFilterUnitType;
 	NDb::EEncyclopediaFilterUnitType eType2 = pData2->pStats->eEncyclopediaFilterUnitType;
 	//{ CRAP - correct sort order
 	if ( eType1 == NDb::EFUT_ARTILLERY )
+	{
 		eType1 = NDb::EFUT_ARMOR;
+	}
 	else if ( eType1 == NDb::EFUT_ARMOR )
+	{
 		eType1 = NDb::EFUT_ARTILLERY;
+	}
 
 	if ( eType2 == NDb::EFUT_ARTILLERY )
+	{
 		eType2 = NDb::EFUT_ARMOR;
+	}
 	else if ( eType2 == NDb::EFUT_ARMOR )
+	{
 		eType2 = NDb::EFUT_ARTILLERY;
+	}
 	//}
 	if ( eType1 != eType2 )
+	{
 		return eType1 < eType2;
+	}
 	if ( pData1->pStats->ePoliticalSide != pData2->pStats->ePoliticalSide )
+	{
 		return pData1->pStats->ePoliticalSide < pData2->pStats->ePoliticalSide;
+	}
 
 	std::wstring wszName1;
 	std::wstring wszName2;
 	if ( CHECK_TEXT_NOT_EMPTY_PRE( pData1->pStats->, LocalizedName ) )
+	{
 		wszName1 = GET_TEXT_PRE( pData1->pStats->, LocalizedName );
+	}
 	if ( CHECK_TEXT_NOT_EMPTY_PRE( pData2->pStats->, LocalizedName ) )
+	{
 		wszName2 = GET_TEXT_PRE( pData2->pStats->, LocalizedName );
+	}
 
 	std::transform( wszName1.begin(), wszName1.end(), wszName1.begin(), towlower );
 	std::transform( wszName2.begin(), wszName2.end(), wszName2.begin(), towlower );
 
 	if ( wszName1 != wszName2 )
+	{
 		return wszName1 < wszName2;
+	}
 	return pData1 < pData2;
 }
 
@@ -124,7 +150,9 @@ bool CInterfaceEncyclopedia::Init()
 
 	// Init interface
 	if ( !CInterfaceScreenBase::Init() )
+	{
 		return false;
+	}
 
 	AddScreen( this );
 
@@ -166,9 +194,13 @@ void CInterfaceEncyclopedia::EffectFinish()
 	{
 		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 		if ( !pRunUnit )
+		{
 			NMainLoop::Command( ML_COMMAND_MAIN_MENU, "" );
+		}
 		else
+		{
 			NInput::PostEvent( "menu_return_from_encyclopedia", 0, 0 );
+		}
 		pRunUnit = 0;
 	}
 }
@@ -239,13 +271,21 @@ void CInterfaceEncyclopedia::MakeInterior()
 	}
 
 	if ( pUnitDescCont && pUnitDescView )
+	{
 		pUnitDescCont->PushBack( pUnitDescView, false );
+	}
 	if ( pStepBackward )
+	{
 		pStepBackward->Enable( false );
+	}
 	if ( pStepForward )
+	{
 		pStepForward->Enable( false );
+	}
 	if ( pUnitListCont )
+	{
 		pUnitListCont->ShowWindow( false );
+	}
 
 	pDataViewer = new CDataViewer();
 
@@ -265,19 +305,27 @@ void CInterfaceEncyclopedia::MakeInterior()
 		UpdateListCtrlSelection();
 	}
 	else
+	{
 		UpdateInfo();
+	}
 
 	if ( pMain )
+	{
 		SetMainWindowTexture( pMain, InterfaceState()->GetMenuBackgroundTexture() );
+	}
 }
 
 bool CInterfaceEncyclopedia::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "FilterBtn" )
+	{
 		return OnFilterBtn( szSender );
+	}
 
 	if ( szReaction == "effect_finished" )
+	{
 		return OnEffectFinished( szSender );
+	}
 
 	return false;
 }
@@ -293,9 +341,13 @@ void CInterfaceEncyclopedia::MsgBack( const SGameMessage &msg )
 
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	if ( !pRunUnit )
+	{
 		NMainLoop::Command( ML_COMMAND_MAIN_MENU, "" );
+	}
 	else
+	{
 		NInput::PostEvent( "menu_return_from_encyclopedia", 0, 0 );
+	}
 	pRunUnit = 0;
 }
 
@@ -382,7 +434,9 @@ bool CInterfaceEncyclopedia::OnEffectFinished( const std::string &szName )
 	{
 		nEffectCounter--;
 		if ( nEffectCounter <= 0 )
+		{
 			EffectFinish();
+		}
 	}
 
 	return true;
@@ -401,9 +455,13 @@ void CInterfaceEncyclopedia::MakeFilterCache( IWindow *pSample )
 		{
 			SFilterCache &cache = filterCache[nCountry * EFUT_COUNT + nUnitType];
 			if ( pSample )
+			{
 				cache.pUnitListCont = dynamic_cast<IListControl *>( AddWindowCopy( pSample->GetParentWindow(), pSample ) );
+			}
 			if ( !cache.pUnitListCont )
+			{
 				continue;
+			}
 
 			cache.pUnitListCont->ShowWindow( false );
 			cache.pUnitListCont->SetViewer( pDataViewer );
@@ -415,7 +473,9 @@ void CInterfaceEncyclopedia::MakeFilterCache( IWindow *pSample )
 				{
 					const NDb::SMechUnitRPGStats *pStats = pRoot->encyclopediaMechUnits[i];
 					if ( !pStats )
+					{
 						continue;
+					}
 
 					EFilterCountries eCountry;
 					switch ( pStats->ePoliticalSide )
@@ -446,7 +506,9 @@ void CInterfaceEncyclopedia::MakeFilterCache( IWindow *pSample )
 							break;
 					}
 					if ( (EFilterCountries)( nCountry ) != EFC_ALL && (EFilterCountries)( nCountry ) != eCountry )
+					{
 						continue;
+					}
 
 					EFilterUnitTypes eUnitType = EFUT_ALL;
 					switch ( pStats->eEncyclopediaFilterUnitType )
@@ -481,13 +543,17 @@ void CInterfaceEncyclopedia::MakeFilterCache( IWindow *pSample )
 							break;
 					}
 					if ( (EFilterUnitTypes)( nUnitType ) != EFC_ALL && (EFilterUnitTypes)( nUnitType ) != eUnitType )
+					{
 						continue;
+					}
 
 					CUnitData *pData = GetUnitData( pStats );
 					if ( pData )
 					{
 						if ( CHECK_TEXT_NOT_EMPTY_PRE( pStats->, LocalizedName ) )
+						{
 							pData->wszBriefDesc = GET_TEXT_PRE( pStats->, LocalizedName );
+						}
 						cache.filteredUnits.push_back( pData );
 					}
 				}
@@ -524,14 +590,18 @@ void CInterfaceEncyclopedia::UpdateFilters()
 	{
 		SFilterBtn &filter = filterCountries[i];
 		if ( filter.pBtn )
+		{
 			filter.pBtn->SetState( ( i == eSelCountry ) ? 1 : 0 );
+		}
 	}
 
 	for ( int i = 0; i < filterUnitTypes.size(); ++i )
 	{
 		SFilterBtn &filter = filterUnitTypes[i];
 		if ( filter.pBtn )
+		{
 			filter.pBtn->SetState( ( i == eSelUnitType ) ? 1 : 0 );
+		}
 	}
 
 	for ( int nCountry = 0; nCountry < EFC_COUNT; ++nCountry )
@@ -545,7 +615,9 @@ void CInterfaceEncyclopedia::UpdateFilters()
 				bool bShow = ( nCountry == eSelCountry && nUnitType == eSelUnitType );
 				cache.pUnitListCont->ShowWindow( bShow );
 				if ( bShow )
+				{
 					cache.pUnitListCont->Update();
+				}
 			}
 		}
 	}
@@ -554,9 +626,13 @@ void CInterfaceEncyclopedia::UpdateFilters()
 void CInterfaceEncyclopedia::UpdateSelectedUnitInfo()
 {
 	if ( pStepBackward )
+	{
 		pStepBackward->Enable( nSelUnit > 0 );
+	}
 	if ( pStepForward )
+	{
 		pStepForward->Enable( nSelUnit + 1 < selectedUnits.size() );
+	}
 
 	if ( nSelUnit >= 0 && nSelUnit < selectedUnits.size() )
 	{
@@ -565,16 +641,24 @@ void CInterfaceEncyclopedia::UpdateSelectedUnitInfo()
 		if ( pUnitDescView )
 		{
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( pStats->, FullDescription ) )
+			{
 				pUnitDescView->SetText( pUnitDescView->GetDBText() + GET_TEXT_PRE( pStats->, FullDescription ) );
+			}
 			else
+			{
 				pUnitDescView->SetText( L"" );
+			}
 		}
 		if ( pUnitNameView )
 		{
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( pStats->, LocalizedName ) )
+			{
 				pUnitNameView->SetText( pUnitNameView->GetDBText() + GET_TEXT_PRE( pStats->, LocalizedName ) );
+			}
 			else
+			{
 				pUnitNameView->SetText( L"" );
+			}
 		}
 		if ( pUnitDescCont )
 		{
@@ -601,25 +685,35 @@ void CInterfaceEncyclopedia::UpdateSelectedUnitInfo()
 	else
 	{
 		if ( pUnitDescView )
+		{
 			pUnitDescView->SetText( L"" );
+		}
 		if ( pUnitDescCont )
 		{
 			pUnitDescCont->ResetScroller();
 			pUnitDescCont->Update();
 		}
 		if ( pUnitNameView )
+		{
 			pUnitNameView->SetText( L"" );
+		}
 		if ( p3DCtrl )
+		{
 			p3DCtrl->SetObjects( std::vector<IWindow3DControl::SObject>() );
+		}
 	}
 }
 
 void CInterfaceEncyclopedia::AddSelectedUnit( CUnitData *pData, EFilterCountries eCountry, EFilterUnitTypes eUnitType )
 {
 	if ( !pData )
+	{
 		return;
+	}
 	if ( nSelUnit >= 0 && nSelUnit + 1 < selectedUnits.size() )
+	{
 		selectedUnits.resize( nSelUnit + 1 ); // удалим лишние юниты в undo
+	}
 	SSelectedUnit unit;
 	unit.pData = pData;
 	unit.eCountry = eCountry;
@@ -648,14 +742,18 @@ void CInterfaceEncyclopedia::UpdateListCtrlSelection()
 
 		SFilterCache &cache = filterCache[eSelCountry * EFUT_COUNT + eSelUnitType];
 		if ( cache.pUnitListCont )
+		{
 			cache.pUnitListCont->SelectItem( unit.pData );
+		}
 	}
 }
 
 CInterfaceEncyclopedia::CUnitData *CInterfaceEncyclopedia::GetUnitData( const NDb::SUnitBaseRPGStats *pStats )
 {
 	if ( !pStats )
+	{
 		return 0;
+	}
 
 	std::unordered_map<CDBPtr<NDb::SUnitBaseRPGStats>, CPtr<CUnitData>, SDBPtrHash>::iterator it =
 			knownUnits.find( pStats );
@@ -688,11 +786,15 @@ bool CInterfaceEncyclopedia::StepLocal( bool bAppActive )
 	{
 		--nLoading;
 		if ( nLoading == 0 )
+		{
 			EffectStart( true );
+		}
 	}
 
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )
+	{
 		pInterface->Step( bAppActive );
+	}
 
 	return bResult;
 }
@@ -707,7 +809,9 @@ CInterfaceEncyclopediaWait::CInterfaceEncyclopediaWait()
 bool CInterfaceEncyclopediaWait::Init()
 {
 	if ( !CInterfaceScreenBase::Init() )
+	{
 		return false;
+	}
 
 	AddScreen( this );
 

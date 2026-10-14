@@ -92,15 +92,21 @@ void ProcessDepthOfField( const SDepthOfField *pDOF,
 		for ( int k = 0; k < fragments.size(); ++k )
 		{
 			if ( pScene->IsFilteredFragment( k ) )
+			{
 				continue;
+			}
 			const SRenderFragmentInfo &f = *fragments[k];
 			if ( f.vars.fFade > 0.0f )
 			{
 				COpGenContext fi( &lightOps.ops, &f );
 				if ( f.pMaterial )
+				{
 					f.pMaterial->AddCustomOperation( &fi, RO_WRITE_Z, 0, 0, 1, &vDOFParams );
+				}
 				else
+				{
 					fi.AddOperation( RO_WRITE_Z, 0, 0, 1, GetWhiteTexture(), &vDOFParams );
+				}
 			}
 		}
 		Execute( pRender, &rc, *pTS, lightOps, *pScene, SLightInfo() );

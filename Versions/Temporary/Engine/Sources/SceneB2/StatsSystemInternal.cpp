@@ -12,7 +12,9 @@ void CStatsSystem::UpdateEntry( const std::string &szName, const std::string &sz
 {
 	IStatsSystemWindow *pStats = Singleton<IDebugSingleton>()->GetStatsWindow();
 	if ( pStats )
+	{
 		pStats->UpdateEntry( NStr::ToUnicode( szName ), NStr::ToUnicode( szEntry ), dwColor );
+	}
 }
 
 int CStatsSystem::operator&( IBinSaver &saver )

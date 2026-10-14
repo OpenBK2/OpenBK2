@@ -174,7 +174,9 @@ void CWindowSimpleSharedState::LoadWindow()
 void CWindowSimpleSharedState::MakeUIScreenWithElement( const struct NDb::SUIDesc *pElement )
 {
 	if ( pElement == 0 )
+	{
 		return;
+	}
 
 	if ( dynamic_cast<const NDb::SWindowScreen *>( pElement ) )
 	{
@@ -297,7 +299,9 @@ void CWindowSimpleSharedState::OnKeyEnter()
 void CWindowSimpleSharedState::OnKeyBack()
 {
 	if ( pEditor->HasMoreThanOnePushedStates() )
+	{
 		pEditor->PopState();
+	}
 }
 
 void CWindowSimpleSharedState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
@@ -597,7 +601,9 @@ void CWindowSimpleSharedState::InsertChild( const CTPoint<int> &rMousePoint )
 	SObjectSet objectSet;
 	if ( !Singleton<ICommandHandlerContainer>()->HandleCommand(
 					 CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) )
+	{
 		return;
+	}
 
 	if ( 1 != objectSet.objectNameSet.size() )
 	{
@@ -670,15 +676,21 @@ bool CWindowSimpleSharedState::InsertChildInstanceToDB( const std::string &szSha
 {
 	std::string instanceTypeName;
 	if ( !FindInstanceTypeNameByShared( szSharedTypeName, &instanceTypeName ) )
+	{
 		return false;
+	}
 
 	std::string instanceFullName;
 	if ( !GenerateChildInstance( szSharedTypeName, rSharedDBID, &instanceFullName, pInstanceDBID ) )
+	{
 		return false;
+	}
 
 	CVariant value;
 	if ( !pEditor->GetViewManipulator()->GetValue( "Children", &value ) )
+	{
 		return 0;
+	}
 
 	const int nChildIndex = (int)value;
 
@@ -754,7 +766,9 @@ bool CWindowSimpleSharedState::MakeInstanceName( const std::string &szInstanceTy
 
 	std::string editorObjName;
 	if ( !GetEditorObjName( &editorObjName ) )
+	{
 		return false;
+	}
 
 	int index = 0;
 	std::string shortName;
@@ -798,21 +812,29 @@ bool CWindowSimpleSharedState::GenerateChildInstance( const std::string &szShare
 {
 	std::string instanceTypeName;
 	if ( !FindInstanceTypeNameByShared( szSharedTypeName, &instanceTypeName ) )
+	{
 		return false;
+	}
 
 	std::string sharedShortName, sharedFullName;
 	if ( !MakeSharedName( szSharedTypeName, rSharedDBID, &sharedShortName, &sharedFullName ) )
+	{
 		return false;
+	}
 
 	std::string shortName, fullName, objName;
 	if ( !MakeInstanceName( instanceTypeName, sharedShortName, &shortName, &fullName, &objName ) )
+	{
 		return false;
+	}
 
 	CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( instanceTypeName );
 	NI_ASSERT( pFolderManipulator != 0, "CWindowSimpleSharedEditor::GenerateChildInstance: pFolderManipulator == 0" );
 
 	if ( !pEditor->InsertObject( pFolderManipulator, objName ) )
+	{
 		return false;
+	}
 
 	const CDBID instanceDBID( objName );
 

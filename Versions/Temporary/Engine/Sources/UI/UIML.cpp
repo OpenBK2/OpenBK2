@@ -54,15 +54,21 @@ static void GetFontFormatInfo( const NGScene::SFont &sFont, int nMinSize, SFontI
 		sSearch.nWidth = NGScene::FontPointsToPixelWidth( sFont.nSize & FONT_SIZE_MASK, dst.x - dst0.x );
 	}
 	else if ( sFont.nSize & FONT_SIZE_PIXELS )
+	{
 		sSearch.nSize = sFont.nSize & FONT_SIZE_MASK;
+	}
 	else
+	{
 		ASSERT( 0 );
+	}
 
 	sSearch.nSize = (std::max)( sSearch.nSize, nMinSize );
 
 	CPtr<NGScene::CFontInfo> pFont = NGScene::GetTextLocaleInfo()->GetFont( sSearch );
 	if ( !pFont )
+	{
 		return;
+	}
 
 	NI_VERIFY( pFont, fmt::format( "Font not found: {}", sSearch.szName ), return );
 	CDGPtr<CPtrFuncBase<CFontFormatInfo>> pInfo( pFont->GetFormatInfo() );
@@ -173,7 +179,9 @@ void CMLTextObject::Generate()
 		font.szName = "h2";
 		GetFontFormatInfo( font, sState.nMinFontSize, &sFontInfo );
 		if ( !sFontInfo.pInfo )
+		{
 			return;
+		}
 	}
 
 	sSize.y = sFontInfo.pInfo->GetLineSpace() * sFontInfo.scale.y;
@@ -222,9 +230,13 @@ void CMLTextObject::Generate()
 				// headings, buttons or loading advice. Outline-only text still
 				// has a letter shape; completely transparent text has none.
 				if ( sState.sColor.a || ( sState.nOutlineBorder && sState.sOutlineColor.a ) )
+				{
 					sLetterBounds.Union( ink );
+				}
 				if ( sState.sColor.a )
+				{
 					sInkBounds.Union( ink );
+				}
 				// The eight outline copies extend visible coverage on both axes.
 				if ( sState.nOutlineBorder && sState.sOutlineColor.a )
 				{
@@ -255,7 +267,9 @@ void CMLTextObject::Generate()
 			fCharSize += sFontInfo.pInfo->GetAveCharWidth() * sFontInfo.scale.x;
 			ASSERT( fCharSize != 0 );
 			if ( fCharSize == 0 )
+			{
 				continue;
+			}
 
 			int nPart = Float2Int( fX / fCharSize ) / N_TAB_SIZE + 1;
 			fX = nPart * N_TAB_SIZE * fCharSize;
@@ -314,7 +328,9 @@ void CMLTextObject::Render( NGScene::ILayoutFakeView *pView,
                             const CTRect<float> &sWindow )
 {
 	if ( !sOutline.rects.empty() )
+	{
 		pView->CreateDynamicRects( pTexture, sOutline, sGlobalPosition + sPosition, sWindow );
+	}
 
 	pView->CreateDynamicRects( pTexture, sNormal, sGlobalPosition + sPosition, sWindow );
 }
@@ -395,14 +411,20 @@ void CMLImageObject::Generate()
 	if ( pTexture )
 	{
 		if ( ( pTexture->nWidth == 0 ) || ( pTexture->nHeight == 0 ) )
+		{
 			return;
+		}
 
 		sSize.x = pTexture->nWidth;
 		sSize.y = pTexture->nHeight;
 		if ( nWidth != -1 )
+		{
 			sSize.x = nWidth;
+		}
 		if ( nHeight != -1 )
+		{
 			sSize.y = nHeight;
+		}
 
 		CTRect<float> sTexRect;
 		sTexRect.x1 = 0;
@@ -427,7 +449,9 @@ void CMLImageObject::SetState( const SState &_sState )
 {
 	sState = _sState;
 	if ( eAlign != SState::HORALIGN_DEFAULT )
+	{
 		sState.eHAlign = eAlign;
+	}
 }
 
 const CTPoint<float> &CMLImageObject::GetPosition() const
@@ -633,7 +657,9 @@ void CMLLayout::AddCommand( ECommand eCommand, IMLObject *pObject )
 {
 	itemsList.push_back( SCmdPair( eCommand, pObject ) );
 	if ( IsValid( pObject ) )
+	{
 		pObject->SetState( sState );
+	}
 }
 
 const CTPoint<float> &CMLLayout::GetSize() const
@@ -676,7 +702,9 @@ void CMLLayout::Generate( float fWidth )
 		CPtr<IMLObject> pObject = iTemp->pObject;
 
 		if ( IsValid( pObject ) )
+		{
 			pObject->Generate();
+		}
 	}
 
 	SReflowInfo sInfo;
@@ -690,7 +718,9 @@ void CMLLayout::Generate( float fWidth )
 	{
 		ECommand eCommand = iTemp->eCmd;
 		if ( eCommand == CMD_BREAKLINE )
+		{
 			CreateLine( &sInfo, fWidth, true );
+		}
 
 		CPtr<IMLObject> pObject = iTemp->pObject;
 		if ( IsValid( pObject ) )
@@ -708,10 +738,14 @@ void CMLLayout::Generate( float fWidth )
 				case SState::HORALIGN_CENTER:
 				case SState::HORALIGN_JUSTIFY:
 					if ( ( sInfo.fLineWidth + sSize.x ) > ( sInfo.sRight.fValue - sInfo.sLeft.fValue ) )
+					{
 						CreateLine( &sInfo, fWidth, false );
+					}
 
 					if ( ( eCommand == CMD_SPACE ) && sInfo.line.empty() )
+					{
 						break;
+					}
 
 					sInfo.line.push_back( pObject );
 					sInfo.fLineWidth += sSize.x;
@@ -719,7 +753,9 @@ void CMLLayout::Generate( float fWidth )
 					break;
 				case SState::HORALIGN_NOWRAP:
 					if ( ( eCommand == CMD_SPACE ) && sInfo.line.empty() )
+					{
 						break;
+					}
 
 					sInfo.line.push_back( pObject );
 					sInfo.fLineWidth += sSize.x;
@@ -745,6 +781,7 @@ void CMLLayout::Generate( float fWidth )
 	sInkBounds.SetEmpty();
 	sLetterBounds.SetEmpty();
 	for ( const auto &item : itemsList )
+	{
 		if ( item.pObject )
 		{
 			CTRect<float> ink = item.pObject->GetInkBounds();
@@ -760,6 +797,7 @@ void CMLLayout::Generate( float fWidth )
 				sLetterBounds.Union( letters );
 			}
 		}
+	}
 }
 
 void CMLLayout::Render( std::list<CTRect<float>> *pRender,
@@ -771,7 +809,9 @@ void CMLLayout::Render( std::list<CTRect<float>> *pRender,
 		CPtr<IMLObject> pObject = iTemp->pObject;
 
 		if ( IsValid( pObject ) )
+		{
 			pObject->Render( pRender, sPosition, sWindow );
+		}
 	}
 }
 
@@ -782,7 +822,9 @@ void CMLLayout::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &s
 		CPtr<IMLObject> pObject = iTemp->pObject;
 
 		if ( IsValid( pObject ) )
+		{
 			pObject->Render( pView, sPosition, sWindow );
+		}
 	}
 }
 
@@ -793,7 +835,9 @@ void CMLLayout::CreateLine( SReflowInfo *pInfo, float fWidth, bool bEndBlock )
 	// An over-wide first word can request an empty wrap before any line exists.
 	// Only count lines that actually consume vertical space.
 	if ( pInfo->fLineHeight != 0 || pInfo->fLastLineHeight != 0 )
+	{
 		++nLineCount;
+	}
 	pInfo->line.clear();
 
 	if ( pInfo->fLineHeight != 0 )
@@ -802,16 +846,22 @@ void CMLLayout::CreateLine( SReflowInfo *pInfo, float fWidth, bool bEndBlock )
 		pInfo->fLastLineHeight = pInfo->fLineHeight;
 	}
 	else
+	{
 		pInfo->fY += pInfo->fLastLineHeight;
+	}
 
 	pInfo->fLineWidth = 0;
 	pInfo->fLineHeight = 0;
 
 	ProcessWraped( pInfo );
 	if ( pInfo->fY > pInfo->sLeft.fHeight )
+	{
 		pInfo->sLeft.fValue = 0;
+	}
 	if ( pInfo->fY > pInfo->sRight.fHeight )
+	{
 		pInfo->sRight.fValue = fWidth;
+	}
 }
 
 void CMLLayout::EstimateLine( SReflowInfo *pInfo, float fWidth )
@@ -824,28 +874,38 @@ void CMLLayout::EstimateLine( SReflowInfo *pInfo, float fWidth )
 		pInfo->fLastLineHeight = pInfo->fLineHeight;
 	}
 	else
+	{
 		pInfo->fY += pInfo->fLastLineHeight;
+	}
 
 	pInfo->fLineWidth = 0;
 	pInfo->fLineHeight = 0;
 
 	ProcessWraped( pInfo );
 	if ( pInfo->fY > pInfo->sLeft.fHeight )
+	{
 		pInfo->sLeft.fValue = 0;
+	}
 	if ( pInfo->fY > pInfo->sRight.fHeight )
+	{
 		pInfo->sRight.fValue = fWidth;
+	}
 }
 
 void CMLLayout::AssembleLine( SReflowInfo *pInfo, bool bEndBlock )
 {
 	if ( pInfo->line.empty() )
+	{
 		return;
+	}
 
 	float fX = pInfo->sLeft.fValue;
 	float fSpace = 0;
 	SState::EHORAlign eHAlign = pInfo->line.front()->GetState().eHAlign;
 	if ( bEndBlock && ( eHAlign == SState::HORALIGN_JUSTIFY ) )
+	{
 		eHAlign = SState::HORALIGN_LEFT;
+	}
 	switch ( eHAlign )
 	{
 		case SState::HORALIGN_RIGHT:
@@ -1052,7 +1112,9 @@ void CML::SetFade( float fFade )
 void CML::UpdateFontScale()
 {
 	if ( nLayoutWidth >= 0 && fFontScale != NGScene::GetRuntimeFontScale( UsesHudFontScale() ) )
+	{
 		Generate( nLayoutWidth );
+	}
 }
 
 bool CML::IsSingleLine()
@@ -1075,14 +1137,18 @@ static CTPoint<float> TextOrigin( const CTRect<float> &box, int nHeight, bool bC
 	CTPoint<float> origin = box.GetLeftTop();
 	// Center overflowing single-line cells, matching the existing HUD fields.
 	if ( bCenter && nHeight > box.Height() )
+	{
 		origin.y = std::floor( box.y1 + ( box.Height() - nHeight ) * 0.5f + 0.5f );
+	}
 	return origin;
 }
 
 static bool InkOutside( CTRect<float> ink, const CTPoint<float> &position, const CTRect<float> &box )
 {
 	if ( ink.IsEmpty() )
+	{
 		return false;
+	}
 	ink.Move( position );
 	// Coordinate conversions can differ by a small floating-point rounding
 	// error. Do not confuse that with losing a visible pixel at the boundary.
@@ -1106,7 +1172,9 @@ CTPoint<float> CML::FitToBox( const CTRect<float> &sBox, bool bCenterSingleLine,
 	// an ordinary parent panel also clips its children at draw time.
 	CTRect<float> clip = sBox;
 	if ( pClip )
+	{
 		clip.Intersect( *pClip );
+	}
 	// Only undo enlargement, never grow a user's smaller font or loop trying
 	// to fix a box that cannot fit even at 1.0. The global settings stay intact.
 	const bool bFallback = fFontScale > 1.0f && !clip.IsEmpty() && InkOutside( sPreferredInk, preferredOrigin, clip );
@@ -1162,44 +1230,74 @@ void CML::GenerateLayout()
 	{
 		wchar_t wcChar = 0;
 		if ( !pStream->IsEof() )
+		{
 			wcChar = pStream->GetChar();
+		}
 		else
+		{
 			bContinue = false;
+		}
 		eThisChar = CHAR_ALNUM;
 		if ( wcChar == '>' )
+		{
 			eThisChar = CHAR_TAG_END;
+		}
 		else if ( wcChar == '<' )
+		{
 			eThisChar = CHAR_TAG_BEGIN;
+		}
 		else if ( bTAG && ( wcChar == '\"' ) )
+		{
 			bBracketsBlock = !bBracketsBlock;
+		}
 		else if ( iswalnum( wcChar ) != 0 )
+		{
 			eThisChar = CHAR_ALNUM;
+		}
 		else if ( iswpunct( wcChar ) )
+		{
 			eThisChar = bTAG ? CHAR_PUNCTUATION : CHAR_ALNUM; //// CRAP: Tag need to separate '='
+		}
 		else if ( !bBracketsBlock && ( wcChar == L' ' ) )
+		{
 			eThisChar = CHAR_SPACE;
+		}
 		else if ( bBracketsBlock && ( wcChar == L' ' ) )
+		{
 			eThisChar = eLastChar;
+		}
 		else if ( ( wcChar == L'\0' ) || ( wcChar == L'\n' ) )
+		{
 			eThisChar = CHAR_EOL;
+		}
 		else if ( wcChar == L'\r' )
+		{
 			eThisChar = CHAR_SKIP;
+		}
 
 		if ( eLastChar != eThisChar )
 		{
 			if ( !bTAG && ( ( eLastChar == CHAR_ALNUM ) || ( eLastChar == CHAR_PUNCTUATION ) ) )
+			{
 				pLayout->AddObject( new CMLTextObject( pStream, nWordBegin, pStream->GetSeek() - nWordBegin ) );
+			}
 			else if ( !bTAG && ( eLastChar == CHAR_SPACE ) )
+			{
 				pLayout->AddCommand( CMD_SPACE, new CMLTextObject( pStream, nWordBegin, pStream->GetSeek() - nWordBegin ) );
+			}
 			else if ( !bTAG && ( eLastChar == CHAR_EOL ) )
+			{
 				pLayout->AddCommand( CMD_BREAKLINE );
+			}
 			else if ( bTAG && ( ( eLastChar == CHAR_ALNUM ) || ( eLastChar == CHAR_PUNCTUATION ) ) )
 			{
 				std::wstring &wsTemp = paramsSet.emplace_back();
 				pStream->GetString( nWordBegin, pStream->GetSeek() - nWordBegin, &wsTemp );
 			}
 			else if ( eThisChar == CHAR_SKIP )
+			{
 				pStream->IncSeek();
+			}
 
 			nWordBegin = pStream->GetSeek();
 		}
@@ -1215,7 +1313,9 @@ void CML::GenerateLayout()
 			{
 				std::unordered_map<std::wstring, CObj<IMLHandler>>::const_iterator iTemp = tagsMap.find( paramsSet.front() );
 				if ( ( iTemp != tagsMap.end() ) && ( iTemp->second != 0 ) )
+				{
 					iTemp->second->Exec( this, pLayout, paramsSet );
+				}
 			}
 		}
 		else if ( eLastChar == CHAR_TAG_BEGIN )
@@ -1264,7 +1364,9 @@ int CML::operator&( IBinSaver &saver )
 	// Rebuild transient clipping decisions (and ink data absent in old saves)
 	// from the saved text and wrapping width on first use.
 	if ( saver.IsReading() )
+	{
 		fFontScale = 0;
+	}
 	return 0;
 }
 

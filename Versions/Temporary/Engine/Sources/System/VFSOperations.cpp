@@ -10,7 +10,9 @@ static CPtr<IFileCreator> pMainFileCreator;
 IVFS *GetMainVFS()
 {
 	if ( !IsValid( pMainVFS ) )
+	{
 		pMainVFS = 0;
+	}
 
 	return pMainVFS;
 }
@@ -18,7 +20,9 @@ IVFS *GetMainVFS()
 IFileCreator *GetMainFileCreator()
 {
 	if ( !IsValid( pMainFileCreator ) )
+	{
 		pMainFileCreator = 0;
+	}
 
 	return pMainFileCreator;
 }

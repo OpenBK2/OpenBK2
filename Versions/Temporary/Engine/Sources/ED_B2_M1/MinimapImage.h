@@ -289,5 +289,4 @@ bool Create( const NDb::SMapInfo *pMapInfo,
              const NDb::SMinimap *pMinimap,
              const CCreateParameterList &rCreateParameterList,
              std::string *pError = nullptr );
-
 }

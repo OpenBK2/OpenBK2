@@ -17,7 +17,9 @@ extern CPlayerReinforcementArray theReinfArray;
 void CKeyBuildingBonusSystem::InitBonusSystem( const NDb::SMapInfo *pMapInfo )
 {
 	for ( int i = 0; i < pMapInfo->playerBonusObjects.size(); ++i )
+	{
 		buildingBonuses[pMapInfo->playerBonusObjects[i].nLinkID] = pMapInfo->playerBonusObjects[i];
+	}
 }
 
 bool CKeyBuildingBonusSystem::IsStorage( int nLinkID ) const
@@ -35,7 +37,9 @@ bool CKeyBuildingBonusSystem::IsKeyBuilding( int nLinkID ) const
 void CKeyBuildingBonusSystem::SendUpdates() const
 {
 	if ( !GetScenarioTracker() )
+	{
 		return;
+	}
 
 	for ( CBuildingBonuses::const_iterator it = buildingBonuses.begin(); it != buildingBonuses.end(); ++it )
 	{
@@ -58,18 +62,24 @@ void CKeyBuildingBonusSystem::SendUpdates() const
 void CKeyBuildingBonusSystem::ChangeOwnership( int _nOldPlayer, int _nNewPlayer, int nLinkID, bool bDuringMapLoad )
 {
 	if ( !GetScenarioTracker() )
+	{
 		return;
+	}
 
 	CBuildingBonuses::iterator pos = buildingBonuses.find( nLinkID );
 	if ( pos == buildingBonuses.end() )
+	{
 		return;
+	}
 
 	const int nOldParty = theDipl.GetNParty( _nOldPlayer );
 	const int nNewParty = theDipl.GetNParty( _nNewPlayer );
 
 	// diplomacy didn't change
 	if ( nOldParty == nNewParty )
+	{
 		return;
+	}
 	GetScenarioTracker()->KeyBuildingOwnerChange( nLinkID, _nNewPlayer );
 
 	for ( int i = 0; i < theDipl.GetNPlayers(); ++i )
@@ -78,12 +88,16 @@ void CKeyBuildingBonusSystem::ChangeOwnership( int _nOldPlayer, int _nNewPlayer,
 		if ( theDipl.GetNParty( i ) == nOldParty )
 		{
 			if ( GetScenarioTracker()->GetGameType() != IAIScenarioTracker::EGT_SINGLE )
+			{
 				theReinfArray.SetRecycleCoeff( i, GetScenarioTracker()->GetRecycleSpeedCoeff( nOldParty ) );
+			}
 
 			if ( i != theDipl.GetNeutralPlayer() )
 			{
 				if ( !bDuringMapLoad )
+				{
 					theReinfArray.GiveReinforcementCalls( i, -1, false );
+				}
 
 				if ( pos->second.playerBonuses.size() > i )
 				{
@@ -98,12 +112,16 @@ void CKeyBuildingBonusSystem::ChangeOwnership( int _nOldPlayer, int _nNewPlayer,
 		if ( theDipl.GetNParty( i ) == nNewParty )
 		{
 			if ( GetScenarioTracker()->GetGameType() != IAIScenarioTracker::EGT_SINGLE )
+			{
 				theReinfArray.SetRecycleCoeff( i, GetScenarioTracker()->GetRecycleSpeedCoeff( nNewParty ) );
+			}
 
 			if ( i != theDipl.GetNeutralPlayer() )
 			{
 				if ( !bDuringMapLoad )
+				{
 					theReinfArray.GiveReinforcementCalls( i, 1, true );
+				}
 
 				if ( pos->second.playerBonuses.size() > i )
 				{

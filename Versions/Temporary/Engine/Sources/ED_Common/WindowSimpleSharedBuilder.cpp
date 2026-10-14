@@ -24,7 +24,9 @@ bool CWindowSimpleSharedBuilder::IsValidBuildData( IManipulator *pBuildDataManip
 	CVariant value;
 	pBuildDataManipulator->GetValue( "UseDefBuilder", &value );
 	if ( (bool)value )
+	{
 		return true;
+	}
 	pBuildDataManipulator->GetValue( "Texture", &value );
 	if ( !NFile::DoesFileExist(
 					 ( Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder + value.GetStr() ) ) )
@@ -87,7 +89,9 @@ bool CWindowSimpleSharedBuilder::InternalInsertObject( std::string *pszObjectTyp
 
 		// create Texture object
 		if ( !pFolderCallback->InsertObject( TEXTURE_TYPE_NAME, szTexObjectName ) )
+		{
 			return false;
+		}
 
 		CPtr<IManipulator> pTexManipulator =
 				pResourceManager->CreateObjectManipulator( TEXTURE_TYPE_NAME, szTexObjectName );
@@ -108,7 +112,9 @@ bool CWindowSimpleSharedBuilder::InternalInsertObject( std::string *pszObjectTyp
 
 	// create BackgroundSimpleTexture object
 	if ( !pFolderCallback->InsertObject( BACKGROUND_SIMPLE_TEXTURE_TYPE_NAME, szBSTObjectName ) )
+	{
 		return false;
+	}
 
 	CPtr<IManipulator> pBSTManipulator =
 			pResourceManager->CreateObjectManipulator( BACKGROUND_SIMPLE_TEXTURE_TYPE_NAME, szBSTObjectName );
@@ -125,7 +131,9 @@ bool CWindowSimpleSharedBuilder::InternalInsertObject( std::string *pszObjectTyp
 
 	// create WindowSimpleShared object
 	if ( !pFolderCallback->InsertObject( *pszObjectTypeName, szWSSObjectName ) )
+	{
 		return false;
+	}
 
 	CPtr<IManipulator> pWSSManipulator = pResourceManager->CreateObjectManipulator( *pszObjectTypeName, szWSSObjectName );
 	NI_ASSERT( pWSSManipulator != 0, "CWindowSimpleSharedBuilder::InternalInsertObject() pWSSManipulator == 0" );

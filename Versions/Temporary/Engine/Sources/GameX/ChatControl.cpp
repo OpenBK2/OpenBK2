@@ -7,16 +7,22 @@ CChatControlWrapper::CChatControlWrapper( IScrollableContainer *_pList, int _nMa
 		: pList( _pList ), nMaxItems( _nMaxItems ), nItems( 0 )
 {
 	if ( !pList )
+	{
 		return;
+	}
 	pItem = GetChildChecked<IWindow>( pList, "Item", true );
 	if ( pItem )
+	{
 		pItem->ShowWindow( false );
+	}
 }
 
 void CChatControlWrapper::AddItem( const std::wstring &wszText )
 {
 	if ( !pList || !pItem )
+	{
 		return;
+	}
 
 	IWindow *pNewItem = AddWindowCopy( pList, pItem );
 
@@ -37,7 +43,9 @@ void CChatControlWrapper::AddItem( const std::wstring &wszText )
 		items.pop_front();
 	}
 	else
+	{
 		++nItems;
+	}
 
 	pList->EnsureElementVisible( pNewItem );
 	pList->Update();

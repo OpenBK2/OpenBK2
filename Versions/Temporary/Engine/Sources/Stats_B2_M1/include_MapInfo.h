@@ -6,13 +6,17 @@ virtual void PostLoad( bool bInEditor )
 	for ( int i = 0; i < players.size(); ++i )
 	{
 		if ( players[i].nDiplomacySide == -1 )
+		{
 			bAllNonDefault = false;
+		}
 	}
 	if ( bAllNonDefault )
 	{
 		diplomacies.resize( players.size() );
 		for ( int i = 0; i < players.size(); ++i )
+		{
 			diplomacies[i] = players[i].nDiplomacySide;
+		}
 	}
 	// check all objects has correct player
 	const int nNumPlayers = players.size();
@@ -35,5 +39,7 @@ virtual void PostLoad( bool bInEditor )
 	}
 	//
 	for ( std::vector<SMapPlayerInfo>::iterator it = players.begin(); it != players.end(); ++it )
+	{
 		it->PostLoad( bInEditor );
+	}
 }

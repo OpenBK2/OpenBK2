@@ -11,9 +11,13 @@ void CStaticMapHeights::GetPoint4Spline( const CVec2 &vPoint, float *pu, float *
 	int nTileY = vPoint.y / 2 / nTileSize;
 
 	if ( nTileX > heights.GetSizeX() - 4 )
+	{
 		nTileX = heights.GetSizeX() - 4;
+	}
 	if ( nTileY > heights.GetSizeY() - 4 )
+	{
 		nTileY = heights.GetSizeY() - 4;
+	}
 
 	CVec2 vTileStart( nTileX * nTileSize * 2, nTileY * nTileSize * 2 );
 	*pu = ( vPoint.x - vTileStart.x ) / ( 2.0f * nTileSize );
@@ -23,14 +27,20 @@ void CStaticMapHeights::GetPoint4Spline( const CVec2 &vPoint, float *pu, float *
 	NI_ASSERT( *pv >= 0 && *pv <= 1, "Wrong v" );
 
 	for ( int i = 0; i < 4; ++i )
+	{
 		for ( int j = 0; j < 4; ++j )
+		{
 			ptCtrls[i * 4 + j] = heights[nTileY + i][nTileX + j] / ( 2.0f * nTileSize );
+		}
+	}
 }
 
 const uint32_t CStaticMapHeights::GetNormal( const float x, const float y ) const
 {
 	if ( !( x >= 0 && x < nStaticMapSizeX * nTileSize && y >= 0 && y < nStaticMapSizeY * nTileSize ) )
+	{
 		return uint32_t( uint8_t( 127.0f ) ) << 16;
+	}
 	else
 	{
 		float u, v;
@@ -55,7 +65,9 @@ const float CStaticMapHeights::GetVisZ( float x, float y ) const
 
 	// not initialized
 	if ( heights.GetSizeX() == 0 || heights.GetSizeY() == 0 )
+	{
 		return 0;
+	}
 	//
 	GetPoint4Spline( CVec2( x, y ), &u, &v, ptCtrls );
 	// высоты разжимаются обратно, т.к. для сплайна даётся сетка с шагом 1 ( а не 2 * TILE_SIZE )
@@ -154,7 +166,9 @@ void CStaticMapHeights::UpdateHeights(
 		const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &initHeights )
 {
 	if ( initHeights.IsEmpty() )
+	{
 		return;
+	}
 	const int nInitSizeX = initHeights.GetSizeX();
 	const int nInitSizeY = initHeights.GetSizeY();
 
@@ -180,7 +194,9 @@ void CStaticMapHeights::UpdateHeights(
 								1, 0, nInitSizeX, 0, heights.GetSizeX(), heights.GetSizeY() );
 		/**/
 		for ( int j = 0; j < nInitSizeX; ++j )
+		{
 			heights[0][j + 1] = initHeights[0][j];
+		}
 	}
 
 	if ( nY2 >= nInitSizeY - 1 )
@@ -191,7 +207,9 @@ void CStaticMapHeights::UpdateHeights(
 								1, nInitSizeY + 1, nInitSizeX, nInitSizeY + 1, heights.GetSizeX(), heights.GetSizeY() );
 		/**/
 		for ( int j = 0; j < nInitSizeX; ++j )
+		{
 			heights[nInitSizeY + 1][j + 1] = initHeights[nInitSizeY - 1][j];
+		}
 	}
 	if ( nX1 <= 0 )
 	{
@@ -201,7 +219,9 @@ void CStaticMapHeights::UpdateHeights(
 								0, 1, 0, nInitSizeY, heights.GetSizeX(), heights.GetSizeY() );
 		/**/
 		for ( int i = 0; i < nInitSizeY; ++i )
+		{
 			heights[i + 1][0] = initHeights[i][0];
+		}
 	}
 
 	if ( nX2 >= nInitSizeX - 1 )
@@ -212,7 +232,9 @@ void CStaticMapHeights::UpdateHeights(
 								nInitSizeX + 1, 1, nInitSizeX + 1, nInitSizeY, heights.GetSizeX(), heights.GetSizeY() );
 		/**/
 		for ( int i = 0; i < nInitSizeY; ++i )
+		{
 			heights[i + 1][nInitSizeX + 1] = initHeights[i][nInitSizeX - 1];
+		}
 	}
 
 	//{ this part is quick, so may update all the time
@@ -282,9 +304,15 @@ int CStaticMapHeights::UpdateLocalHeights( const int nX1,
 		tiles.clear();
 
 		for ( int x = 0; x < bridge.GetSizeX(); ++x )
+		{
 			for ( int y = 0; y < bridge.GetSizeY(); ++y )
+			{
 				if ( bridge[y][x] )
+				{
 					tiles.push_back( SVector( nX1 + x, nY1 + y ) );
+				}
+			}
+		}
 
 		DebugInfoManager()->CreateMarker( NDebugInfo::OBJECT_ID_FORGET, tiles, NDebugInfo::GREEN );
 	}
@@ -330,7 +358,9 @@ bool CStaticMapHeights::GetLocalHeightsInfo( SVector *pvTopLeft, SVector *pvBott
 	}
 	CHeightsMap::const_iterator pos = oldHeightsMap.find( nID );
 	if ( pos == oldHeightsMap.end() )
+	{
 		return false;
+	}
 	if ( pvTopLeft )
 	{
 		pvTopLeft->x = pos->second.nX1;
@@ -371,33 +401,57 @@ CStaticMapHeights::GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBe
 	float t01, t02;
 
 	if ( vBegin.x < 0 )
+	{
 		t01 = ( vLineX[0] == 0 ) ? -1.0f : -vLineX[1] / vLineX[0];
+	}
 	else if ( vBegin.x > maxX )
+	{
 		t01 = ( vLineX[0] == 0 ) ? -1.0f : ( maxX - vLineX[1] ) / vLineX[0];
+	}
 	else
+	{
 		t01 = 0.0f;
+	}
 
 	if ( vBegin.y < 0 )
+	{
 		t02 = ( vLineY[0] == 0 ) ? -1.0f : -vLineY[1] / vLineY[0];
+	}
 	else if ( vBegin.y > maxY )
+	{
 		t02 = ( vLineY[0] == 0 ) ? -1.0f : ( maxY - vLineY[1] ) / vLineY[0];
+	}
 	else
+	{
 		t02 = 0.0f;
+	}
 	const float t1 = (std::max)( t01, t02 );
 
 	if ( vEnd.x < 0 )
+	{
 		t01 = ( vLineX[0] == 0 ) ? 2.0f : -vLineX[1] / vLineX[0];
+	}
 	else if ( vEnd.x > maxX )
+	{
 		t01 = ( vLineX[0] == 0 ) ? 2.0f : ( maxX - vLineX[1] ) / vLineX[0];
+	}
 	else
+	{
 		t01 = 1.0f;
+	}
 
 	if ( vEnd.y < 0 )
+	{
 		t02 = ( vLineY[0] == 0 ) ? 2.0f : -vLineY[1] / vLineY[0];
+	}
 	else if ( vEnd.y > maxY )
+	{
 		t02 = ( vLineY[0] == 0 ) ? 2.0f : ( maxY - vLineY[1] ) / vLineY[0];
+	}
 	else
+	{
 		t02 = 1.0f;
+	}
 	const float t2 = (std::min)( t01, t02 );
 
 	// просматривать отрезок в интервале t1 .. t2, все что вне - лежит за пределами карты
@@ -422,23 +476,35 @@ CStaticMapHeights::GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBe
 		int y = ( ( vLineY[0] * t + vLineY[1] ) / nTileSize / 2.0f );
 		//
 		if ( (float)x >= ( ( vLineX[0] * t + vLineX[1] ) / nTileSize / 2.0f ) && dX < 0 )
+		{
 			--x;
+		}
 		if ( (float)y >= ( ( vLineY[0] * t + vLineY[1] ) / nTileSize / 2.0f ) && dY < 0 )
+		{
 			--y;
+		}
 
 		t01 = t02 = 1.1f; // something more than 1.0f
 		while ( t < t2 )
 		{
 			t0 = t;
 			if ( dX > 0 )
+			{
 				t01 = ( ( ( x + 1 ) * nTileSize * 2.0f - vLineX[1] ) / vLineX[0] );
+			}
 			else if ( dX < 0 )
+			{
 				t01 = ( ( x * nTileSize * 2.0f - vLineX[1] ) / vLineX[0] );
+			}
 
 			if ( dY > 0 )
+			{
 				t02 = ( ( ( y + 1 ) * nTileSize * 2.0f - vLineY[1] ) / vLineY[0] );
+			}
 			else if ( dY < 0 )
+			{
 				t02 = ( ( y * nTileSize * 2.0f - vLineY[1] ) / vLineY[0] );
+			}
 
 			if ( dX == 0 || ( t02 < t01 && t02 != t0 ) || t01 == t0 )
 			{
@@ -452,7 +518,9 @@ CStaticMapHeights::GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBe
 			}
 
 			if ( t > 1.0f )
+			{
 				t = 1.0f;
+			}
 
 			const float fX = vLineX[0] * t + vLineX[1];
 			const float fY = vLineY[0] * t + vLineY[1];
@@ -470,17 +538,21 @@ CStaticMapHeights::GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBe
 				if ( NGlobal::GetVar( "show_pick_terrain_marker", 0 ) )
 				{
 					if ( t1 <= tX && tX <= t2 )
+					{
 						DebugInfoManager()->DrawLine(
 								78577,
 								NDebugInfo::SArrowHead( CVec3( pvResult->x, pvResult->y, 0.0f ), 20.0f, 10.0f ),
 								NDebugInfo::SArrowHead( *pvResult, 20, 10 ),
 								NDebugInfo::GREEN );
+					}
 					else
+					{
 						DebugInfoManager()->DrawLine(
 								78577,
 								NDebugInfo::SArrowHead( CVec3( pvResult->x, pvResult->y, 0.0f ), 20.0f, 10.0f ),
 								NDebugInfo::SArrowHead( *pvResult, 20, 10 ),
 								NDebugInfo::RED );
+					}
 				}
 #endif
 				return ( t1 <= tX && tX <= t2 );
@@ -512,33 +584,57 @@ CStaticMapHeights::GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const C
 	float t01, t02;
 
 	if ( vBegin.x < 0 )
+	{
 		t01 = ( vLineX[0] == 0 ) ? -1.0f : -vLineX[1] / vLineX[0];
+	}
 	else if ( vBegin.x > maxX )
+	{
 		t01 = ( vLineX[0] == 0 ) ? -1.0f : ( maxX - vLineX[1] ) / vLineX[0];
+	}
 	else
+	{
 		t01 = 0.0f;
+	}
 
 	if ( vBegin.y < 0 )
+	{
 		t02 = ( vLineY[0] == 0 ) ? -1.0f : -vLineY[1] / vLineY[0];
+	}
 	else if ( vBegin.y > maxY )
+	{
 		t02 = ( vLineY[0] == 0 ) ? -1.0f : ( maxY - vLineY[1] ) / vLineY[0];
+	}
 	else
+	{
 		t02 = 0.0f;
+	}
 	const float t1 = (std::max)( t01, t02 );
 
 	if ( vEnd.x < 0 )
+	{
 		t01 = ( vLineX[0] == 0 ) ? 2.0f : -vLineX[1] / vLineX[0];
+	}
 	else if ( vEnd.x > maxX )
+	{
 		t01 = ( vLineX[0] == 0 ) ? 2.0f : ( maxX - vLineX[1] ) / vLineX[0];
+	}
 	else
+	{
 		t01 = 1.0f;
+	}
 
 	if ( vEnd.y < 0 )
+	{
 		t02 = ( vLineY[0] == 0 ) ? 2.0f : -vLineY[1] / vLineY[0];
+	}
 	else if ( vEnd.y > maxY )
+	{
 		t02 = ( vLineY[0] == 0 ) ? 2.0f : ( maxY - vLineY[1] ) / vLineY[0];
+	}
 	else
+	{
 		t02 = 1.0f;
+	}
 	const float t2 = (std::min)( t01, t02 );
 
 	pvResult->x = 0.0f;
@@ -560,14 +656,22 @@ CStaticMapHeights::GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const C
 		{
 			t0 = t;
 			if ( dX > 0 )
+			{
 				t01 = ( ( ( x + 1 ) * nTileSize * 2.0f - vLineX[1] ) / vLineX[0] );
+			}
 			else if ( dX < 0 )
+			{
 				t01 = ( ( x * nTileSize * 2.0f - vLineX[1] ) / vLineX[0] );
+			}
 
 			if ( dY > 0 )
+			{
 				t02 = ( ( ( y + 1 ) * nTileSize * 2.0f - vLineY[1] ) / vLineY[0] );
+			}
 			else if ( dY < 0 )
+			{
 				t02 = ( ( y * nTileSize * 2.0f - vLineY[1] ) / vLineY[0] );
+			}
 
 			if ( dX == 0 || ( t02 < t01 && t02 != t0 ) || t01 == t0 )
 			{
@@ -581,7 +685,9 @@ CStaticMapHeights::GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const C
 			}
 
 			if ( t > 1.0f )
+			{
 				t = 1.0f;
+			}
 
 			const float fX = vLineX[0] * t + vLineX[1];
 			const float fY = vLineY[0] * t + vLineY[1];
@@ -599,17 +705,21 @@ CStaticMapHeights::GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const C
 				if ( NGlobal::GetVar( "show_pick_terrain_marker", 0 ) )
 				{
 					if ( t1 <= tX && tX <= t2 )
+					{
 						DebugInfoManager()->DrawLine(
 								78577,
 								NDebugInfo::SArrowHead( CVec3( pvResult->x, pvResult->y, 0.0f ), 20.0f, 10.0f ),
 								NDebugInfo::SArrowHead( *pvResult, 20, 10 ),
 								NDebugInfo::GREEN );
+					}
 					else
+					{
 						DebugInfoManager()->DrawLine(
 								78577,
 								NDebugInfo::SArrowHead( CVec3( pvResult->x, pvResult->y, 0.0f ), 20.0f, 10.0f ),
 								NDebugInfo::SArrowHead( *pvResult, 20, 10 ),
 								NDebugInfo::RED );
+					}
 				}
 #endif
 				return ( t1 <= tX && tX <= t2 );

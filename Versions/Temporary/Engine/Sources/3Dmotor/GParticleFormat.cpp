@@ -24,7 +24,9 @@ void CParticlesInfo::CalcBound( SBound *pRes )
 		{
 			SParticle &part = particles[nP];
 			if ( !part.pos.nKeys )
+			{
 				continue;
+			}
 			for ( int i = 0; i < part.pos.nKeys; ++i )
 			{
 				CVec3 pos = part.pos.keys[i].GetValue();
@@ -108,7 +110,9 @@ void CParticlesLoader::RecalcValue( CFileRequest *pRequest )
 	pValue->pData = pRequest;
 	CMemoryStream *pFileData = pRequest->GetStream();
 	if ( pFileData->GetSize() == 0 )
+	{
 		return;
+	}
 	//CFileRequest &file = *pRequest;
 
 	//file->Read( &pValue->nBytes, sizeof(int) );

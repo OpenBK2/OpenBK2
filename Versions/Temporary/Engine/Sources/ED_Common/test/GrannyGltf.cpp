@@ -76,7 +76,9 @@ struct SFixture
 		{
 			GrannyMakeIdentity( &bone.LocalTransform );
 			for ( int i = 0; i < 4; ++i )
+			{
 				bone.InverseWorld4x4[i][i] = 1;
+			}
 		}
 		bones[1].LocalTransform.Flags = GrannyHasPosition;
 		bones[1].LocalTransform.Position[2] = 2;
@@ -98,11 +100,15 @@ fastgltf::Asset RoundTrip( NGrannyGltf::SDocument *doc )
 	const auto bytes = doc->Finish();
 	auto data = fastgltf::GltfDataBuffer::FromBytes( bytes.data(), bytes.size() );
 	if ( !data )
+	{
 		throw std::runtime_error( "Invalid GLB bytes" );
+	}
 	fastgltf::Parser parser( fastgltf::Extensions::MSFT_texture_dds );
 	auto asset = parser.loadGltfBinary( data.get(), {}, fastgltf::Options::LoadGLBBuffers );
 	if ( !asset )
+	{
 		throw std::runtime_error( "Cannot parse exported GLB" );
+	}
 	EXPECT_EQ( fastgltf::validate( asset.get() ), fastgltf::Error::None );
 	return std::move( asset.get() );
 }
@@ -118,7 +124,9 @@ void CheckSkinPose( const granny_skeleton *skeleton, const fastgltf::Asset &asse
 	ASSERT_TRUE( local );
 	ASSERT_TRUE( world );
 	for ( int i = 0; i < skeleton->BoneCount; ++i )
+	{
 		*GrannyGetLocalPoseTransform( local.get(), i ) = skeleton->Bones[i].LocalTransform;
+	}
 	GrannyBuildWorldPose( skeleton, 0, skeleton->BoneCount, local.get(), nullptr, world.get() );
 	std::vector<fastgltf::math::fmat4x4> transforms( asset.nodes.size() );
 	fastgltf::iterateSceneNodes( asset,
@@ -137,6 +145,7 @@ void CheckSkinPose( const granny_skeleton *skeleton, const fastgltf::Asset &asse
 		const auto &matrix = transforms[skin.joints[bone]];
 		const auto composite = matrix * *bind;
 		for ( int col = 0; col < 4; ++col )
+		{
 			for ( int row = 0; row < 4; ++row )
 			{
 				EXPECT_NEAR( matrix[col][row], GrannyGetWorldPose4x4( world.get(), bone )[axes[col] * 4 + axes[row]], 1e-3f );
@@ -144,6 +153,7 @@ void CheckSkinPose( const granny_skeleton *skeleton, const fastgltf::Asset &asse
 				             GrannyGetWorldPoseComposite4x4( world.get(), bone )[axes[col] * 4 + axes[row]],
 				             1e-3f );
 			}
+		}
 	}
 }
 
@@ -157,9 +167,13 @@ std::vector<fastgltf::math::fvec4> SkinnedVertices( fastgltf::Asset &asset, size
 		const auto &accessor = asset.accessors[sampler.outputAccessor];
 		auto &trs = std::get<fastgltf::TRS>( asset.nodes[*channel.nodeIndex].transform );
 		if ( channel.path == fastgltf::AnimationPath::Translation )
+		{
 			trs.translation = fastgltf::getAccessorElement<fastgltf::math::fvec3>( asset, accessor, frame );
+		}
 		else if ( channel.path == fastgltf::AnimationPath::Scale )
+		{
 			trs.scale = fastgltf::getAccessorElement<fastgltf::math::fvec3>( asset, accessor, frame );
+		}
 		else if ( channel.path == fastgltf::AnimationPath::Rotation )
 		{
 			const auto q = fastgltf::getAccessorElement<fastgltf::math::fvec4>( asset, accessor, frame );
@@ -168,16 +182,20 @@ std::vector<fastgltf::math::fvec4> SkinnedVertices( fastgltf::Asset &asset, size
 	}
 	std::vector<fastgltf::math::fmat4x4> world( asset.nodes.size() );
 	for ( size_t scene = 0; scene < asset.scenes.size(); ++scene )
+	{
 		fastgltf::iterateSceneNodes( asset,
 		                             scene,
 		                             fastgltf::math::fmat4x4(),
 		                             [&]( const fastgltf::Node &node, const auto &matrix )
 		                             { world[&node - asset.nodes.data()] = matrix; } );
+	}
 	std::vector<fastgltf::math::fvec4> result;
 	for ( const auto &node : asset.nodes )
 	{
 		if ( !node.skinIndex || !node.meshIndex )
+		{
 			continue;
+		}
 		const auto &skin = asset.skins[*node.skinIndex];
 		for ( const auto &primitive : asset.meshes[*node.meshIndex].primitives )
 		{
@@ -221,7 +239,9 @@ TEST( GrannyGltf, PreservesBindPoseAndRemapsSkinByBoneName )
 	const auto indices = fastgltf::iterateAccessor<uint32_t>( asset, asset.accessors[*primitive.indicesAccessor] );
 	std::vector<uint32_t> order;
 	for ( auto index : indices )
+	{
 		order.push_back( index );
+	}
 	EXPECT_EQ( order, ( std::vector<uint32_t>{ 0, 2, 1 } ) );
 	const auto binds =
 			fastgltf::iterateAccessor<fastgltf::math::fmat4x4>( asset, asset.accessors[*asset.skins[0].inverseBindMatrices] );
@@ -266,7 +286,9 @@ TEST( GrannyGltf, ConcatenatesClipsAndResetsUntrackedBones )
 	std::vector<fastgltf::math::fvec3> values;
 	for ( auto value :
 	      fastgltf::iterateAccessor<fastgltf::math::fvec3>( asset, asset.accessors[sampler.outputAccessor] ) )
+	{
 		values.push_back( value );
+	}
 	ASSERT_EQ( values.size(), 62u );
 	EXPECT_NEAR( values[15][1], 3.5f, 1e-5f );
 	EXPECT_NEAR( values[30][1], 5.0f, 1e-5f );
@@ -337,15 +359,21 @@ TEST( GrannyGltf, MirrorReflectsAnimatedSkinnedVerticesAndCollisionGeometry )
 		ASSERT_EQ( a.size(), 6u );
 		ASSERT_EQ( b.size(), a.size() );
 		for ( size_t i = 0; i < a.size(); ++i )
+		{
 			for ( int axis = 0; axis < 4; ++axis )
+			{
 				EXPECT_NEAR( b[i][axis], a[i][axis] * ( axis == 0 ? -1 : 1 ), 1e-4f );
+			}
+		}
 	}
 	for ( const auto &mesh : mirrored.meshes )
 	{
 		const auto &primitive = mesh.primitives[0];
 		std::vector<uint32_t> indices;
 		for ( auto index : fastgltf::iterateAccessor<uint32_t>( mirrored, mirrored.accessors[*primitive.indicesAccessor] ) )
+		{
 			indices.push_back( index );
+		}
 		EXPECT_EQ( indices, ( std::vector<uint32_t>{ 0, 1, 2 } ) );
 		const auto normal = fastgltf::getAccessorElement<fastgltf::math::fvec3>(
 				mirrored, mirrored.accessors[primitive.findAttribute( "NORMAL" )->accessorIndex], 0 );
@@ -394,7 +422,9 @@ TEST( GrannyGltf, ConvertsRepositoryMineTankAndInfantry )
 		const auto path = std::filesystem::path( OBK2_DATA_DIR ) / "bin" / folder / uid;
 		std::ifstream stream( path, std::ios::binary | std::ios::ate );
 		if ( !stream )
+		{
 			return nullptr;
+		}
 		std::vector<char> bytes( static_cast<size_t>( stream.tellg() ) );
 		stream.seekg( 0 );
 		stream.read( bytes.data(), bytes.size() );
@@ -419,7 +449,9 @@ TEST( GrannyGltf, ConvertsRepositoryMineTankAndInfantry )
 		auto *skeleton = load( "Skeletons", samples[sample][1] );
 		auto *ai = load( "AIGeometries", samples[sample][2] );
 		if ( !geometry || !skeleton || !ai )
+		{
 			GTEST_SKIP() << "Optional repository GR2 samples are unavailable";
+		}
 		NGrannyGltf::SModel source;
 		source.name = "Repository sample";
 		ASSERT_GT( geometry->ModelCount, 0 );
@@ -430,12 +462,19 @@ TEST( GrannyGltf, ConvertsRepositoryMineTankAndInfantry )
 		{
 			const granny_skeleton *rig = nullptr;
 			for ( int m = 0; m < ai->ModelCount && !rig; ++m )
+			{
 				for ( int b = 0; b < ai->Models[m]->MeshBindingCount; ++b )
+				{
 					if ( ai->Models[m]->MeshBindings[b].Mesh == ai->Meshes[i] )
+					{
 						rig = ai->Models[m]->Skeleton;
+					}
+				}
+			}
 			source.aiMeshes.push_back( { ai->Meshes[i], rig } );
 		}
 		if ( sample == 2 )
+		{
 			for ( const char *uid : { "6758C21E-E017-458A-97A7-EF0901CD3ECF",
 			                          "75C5382A-4C00-4A83-B11E-FC1A994D16EC",
 			                          "F2C157EF-32F0-47DA-A621-554093706117" } )
@@ -445,6 +484,7 @@ TEST( GrannyGltf, ConvertsRepositoryMineTankAndInfantry )
 				ASSERT_GT( animation->AnimationCount, 0 );
 				source.clips.push_back( { animation->Animations[0], uid } );
 			}
+		}
 		NGrannyGltf::SDocument doc;
 		NGrannyGltf::Convert( source, &doc );
 		auto asset = RoundTrip( &doc );

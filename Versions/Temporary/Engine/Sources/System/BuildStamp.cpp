@@ -82,18 +82,26 @@ static bool ReadModuleId( std::vector<uint8_t> *pResult, const char *pszModule )
 	const std::string szModule = std::string( pszModule ) + ".dll";
 	const uint8_t *pBase = reinterpret_cast<const uint8_t *>( GetModuleHandleA( szModule.c_str() ) );
 	if ( pBase == 0 )
+	{
 		return false;
+	}
 
 	const IMAGE_DOS_HEADER *pDos = reinterpret_cast<const IMAGE_DOS_HEADER *>( pBase );
 	if ( pDos->e_magic != IMAGE_DOS_SIGNATURE )
+	{
 		return false;
+	}
 	const IMAGE_NT_HEADERS *pNt = reinterpret_cast<const IMAGE_NT_HEADERS *>( pBase + pDos->e_lfanew );
 	if ( pNt->Signature != IMAGE_NT_SIGNATURE )
+	{
 		return false;
+	}
 
 	const IMAGE_DATA_DIRECTORY &dir = pNt->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DEBUG];
 	if ( dir.VirtualAddress == 0 || dir.Size < sizeof( IMAGE_DEBUG_DIRECTORY ) )
+	{
 		return false;
+	}
 
 	// The layout of a CV_INFO_PDB70 record. Not a type in the SDK headers, so it
 	// is spelled out here; the signature field is 'RSDS' for this version.
@@ -111,12 +119,18 @@ static bool ReadModuleId( std::vector<uint8_t> *pResult, const char *pszModule )
 	for ( size_t i = 0; i < nEntries; ++i )
 	{
 		if ( pDebug[i].Type != IMAGE_DEBUG_TYPE_CODEVIEW || pDebug[i].AddressOfRawData == 0 )
+		{
 			continue;
+		}
 		if ( pDebug[i].SizeOfData < sizeof( SCodeViewPdb70 ) )
+		{
 			continue;
+		}
 		const SCodeViewPdb70 *pCv = reinterpret_cast<const SCodeViewPdb70 *>( pBase + pDebug[i].AddressOfRawData );
 		if ( pCv->dwSignature != CODEVIEW_PDB70 )
+		{
 			continue;
+		}
 		const uint8_t *pGuid = reinterpret_cast<const uint8_t *>( &pCv->guid );
 		pResult->assign( pGuid, pGuid + sizeof( pCv->guid ) );
 		const uint8_t *pAge = reinterpret_cast<const uint8_t *>( &pCv->dwAge );
@@ -145,13 +159,17 @@ static int OnPhdr( struct dl_phdr_info *pInfo, size_t nSize, void *pData )
 	const char *pszSlash = strrchr( pszName, '/' );
 	const std::string szBase = pszSlash != 0 ? pszSlash + 1 : pszName;
 	if ( szBase.compare( 0, pSearch->szWanted.size(), pSearch->szWanted ) != 0 )
+	{
 		return 0;
+	}
 
 	for ( ElfW( Half ) i = 0; i < pInfo->dlpi_phnum; ++i )
 	{
 		const ElfW( Phdr ) &phdr = pInfo->dlpi_phdr[i];
 		if ( phdr.p_type != PT_NOTE )
+		{
 			continue;
+		}
 
 		const uint8_t *pNote = reinterpret_cast<const uint8_t *>( pInfo->dlpi_addr + phdr.p_vaddr );
 		const uint8_t *pEnd = pNote + phdr.p_memsz;
@@ -164,7 +182,9 @@ static int OnPhdr( struct dl_phdr_info *pInfo, size_t nSize, void *pData )
 			const uint8_t *pName = pNote + sizeof( ElfW( Nhdr ) );
 			const uint8_t *pDesc = pName + ( ( pHdr->n_namesz + 3 ) & ~3u );
 			if ( pDesc + pHdr->n_descsz > pEnd )
+			{
 				break;
+			}
 			if ( pHdr->n_type == NT_GNU_BUILD_ID && pHdr->n_namesz == 4 && memcmp( pName, "GNU", 4 ) == 0 &&
 			     pHdr->n_descsz > 0 )
 			{
@@ -197,7 +217,9 @@ static std::string ReadSimulationImageId()
 	{
 		std::vector<uint8_t> id;
 		if ( !ReadModuleId( &id, pszModule ) )
+		{
 			continue;
+		}
 		// The name as well as the id, so that two modules swapping ids, or one
 		// being absent, cannot produce the same digest.
 		Digest( &uHash, pszModule, strlen( pszModule ) );
@@ -205,12 +227,16 @@ static std::string ReadSimulationImageId()
 		++nFound;
 	}
 	if ( nFound == 0 )
+	{
 		return std::string();
+	}
 
 	// Big endian, so the text reads in the order the bytes were hashed.
 	uint8_t bytes[8];
 	for ( int i = 0; i < 8; ++i )
+	{
 		bytes[i] = static_cast<uint8_t>( uHash >> ( 56 - i * 8 ) );
+	}
 	return ToHex( bytes, sizeof( bytes ) );
 }
 

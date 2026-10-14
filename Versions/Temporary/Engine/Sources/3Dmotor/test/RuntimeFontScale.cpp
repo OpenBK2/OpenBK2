@@ -87,7 +87,9 @@ TEST_F( RuntimeFontScale, ChangingScaleReplacesCachedFontsWithoutResizingOldAtla
 {
 	std::ifstream file( std::string( FONT_DATA_DIR ) + "/PTSans-Regular.ttf", std::ios::binary );
 	if ( !file )
+	{
 		GTEST_SKIP() << "Missing shipped PT Sans font";
+	}
 	NVFS::SetMainVFS( NVFS::CreateWinVFS( std::string( FONT_DATA_DIR ) + "/" ) );
 	CObj<NDb::SFont> record = MakeObject<NDb::SFont>( NDb::SFont::typeID );
 	ASSERT_TRUE( record );

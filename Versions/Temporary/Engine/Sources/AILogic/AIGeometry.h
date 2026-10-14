@@ -22,9 +22,13 @@ inline float SquareOfDistance( const CVec2 &v1, const CVec2 &v2 )
 inline CVec2 Project( const CVec2 &vec, const CVec2 &axis )
 {
 	if ( axis == VNULL2 )
+	{
 		return VNULL2;
+	}
 	else
+	{
 		return axis * ( ( vec * axis ) / fabs2( axis ) );
+	}
 }
 
 inline const CVec2 Proj2D( const CVec3 &v3D )
@@ -138,14 +142,20 @@ public:
 		yerr += ylen;
 
 		if ( xerr >= len )
+		{
 			dir.x += xinc, xerr -= len;
+		}
 		if ( yerr >= len )
+		{
 			dir.y += yinc, yerr -= len;
+		}
 
 		z += intPart;
 		r += rinc;
 		if ( r >= dxy )
+		{
 			z += zinc, r -= dxy;
+		}
 	}
 
 	const SVector &GetPoint() const { return dir; }

@@ -17,7 +17,9 @@ void UpdateEntry( const std::string &szName, const std::string &szValue, const u
 	{
 		IStatsSystemWindow *pStatsSystemWindow = pDebug->GetStatsWindow();
 		if ( pStatsSystemWindow )
+		{
 			pStatsSystemWindow->UpdateEntry( NStr::ToUnicode( szName ), NStr::ToUnicode( szValue ), dwColor );
+		}
 	}
 }
 

@@ -32,11 +32,17 @@ class CICMODPreShutdown : public IInterfaceCommand
 		NMainLoop::ResetStack();
 		//
 		if ( IScene *pScene = Scene() )
+		{
 			pScene->Clear();
+		}
 		if ( ISoundScene *pSoundScene = Singleton<ISoundScene>() )
+		{
 			pSoundScene->ClearSounds();
+		}
 		if ( NGScene::CTextLocaleInfo *pLocale = NGScene::GetTextLocaleInfo() )
+		{
 			pLocale->ClearAllFonts();
+		}
 		//
 		NGameX::UnInitDataDependentSingletons();
 		ClearHoldQueue();
@@ -62,20 +68,28 @@ public:
 			if ( const NDb::SGameRoot *pGameRoot = NGameX::GetGameRoot() )
 			{
 				for ( int i = 0; i < pGameRoot->fonts.size(); ++i )
+				{
 					pLocale->AddFont( pGameRoot->fonts[i] );
+				}
 			}
 		}
 		if ( ISoundScene *pSoundScene = Singleton<ISoundScene>() )
+		{
 			pSoundScene->ClearSounds();
+		}
 	}
 	void Configure( const char *pszConfig )
 	{
 		if ( pszConfig != 0 )
 		{
 			if ( strcmp( pszConfig, MOD_MODE_GAME ) == 0 )
+			{
 				eMode = NDb::DATABASE_MODE_GAME;
+			}
 			else if ( strcmp( pszConfig, MOD_MODE_EDITOR ) == 0 )
+			{
 				eMode = NDb::DATABASE_MODE_EDITOR;
+			}
 		}
 	}
 };

@@ -16,9 +16,13 @@ bool CARSetForcedAction::Execute( struct IScreen *pScreen,
                                   uint16_t wKeyboardFlags ) const
 {
 	if ( NGlobal::GetVar( "m1", 0 ) == 0 )
+	{
 		NInput::PostEvent( "set_forced_action", static_cast<int>( pDesc->eUserAction ), 0 );
+	}
 	else
+	{
 		NInput::PostEvent( "set_forced_action", static_cast<int>( pDesc->eM1UserAction ), 0 );
+	}
 	//IGameEvent *pEvent = Input()->GetEvent( "set_forced_action" );
 	//pEvent->RaiseEvent( static_cast<int>(pDesc->eUserAction), 0 );
 	return true;

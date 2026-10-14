@@ -38,7 +38,9 @@ bool CBasicSceneExporter::ExportFromMaya( const std::string &szTypeName,
 	try
 	{
 		if ( FormScript( &szScript, szTypeName, szObjName, szDstPath, szSrcPath, pManipulator ) == false )
+		{
 			return false;
+		}
 	}
 	catch ( ... )
 	{
@@ -59,11 +61,17 @@ EXPORT_RESULT CBasicSceneExporter::ExportObject( IManipulator *pManipulator,
 	// Export consumes engine-readable GLB/GLTF packages. Legacy GR2 loading
 	// and checking remain available, but this path never launches Maya.
 	if ( exportType == ET_AFTER_REF )
+	{
 		return ER_SUCCESS;
+	}
 	if ( !NEditorGltf::ValidateForExport( pManipulator, rszObjectTypeName ) )
+	{
 		return ER_BREAK;
+	}
 	if ( NEditorGltf::Export( pManipulator, rszObjectTypeName, true ) && ImportGltfInfo( pManipulator ) )
+	{
 		return ER_SUCCESS;
+	}
 	NMessage::Error( "Could not export " + rszObjectName +
 	                     ". Check the model source, selectors and destination permissions; details are in the log.",
 	                 "Model export" );
@@ -77,9 +85,13 @@ EXPORT_RESULT CBasicSceneExporter::CheckObject( IManipulator *pManipulator,
                                                 EXPORT_TYPE exportType )
 {
 	if ( NEditorGltf::IsGltf( pManipulator ) )
+	{
 		return NEditorGltf::Export( pManipulator, rszObjectTypeName, false ) ? ER_SUCCESS : ER_BREAK;
+	}
 	if ( exportType == ET_BEFORE_REF )
+	{
 		return ER_SUCCESS;
+	}
 	//
 	ILogger *pLogger = NLog::GetLogger();
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();

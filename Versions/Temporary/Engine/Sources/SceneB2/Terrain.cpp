@@ -11,7 +11,9 @@
 void CMeshDataPatch::Recalc()
 {
 	if ( pValue == 0 )
+	{
 		pValue = new NGScene::CObjectInfo;
+	}
 	NGScene::CObjectInfo::SData objData;
 
 	objData.verts = pInfo->vertices;
@@ -22,7 +24,9 @@ void CMeshDataPatch::Recalc()
 
 	pValue->Assign( &objData, true );
 	if ( !Scene()->IsEditorMode() )
+	{
 		pInfo->Clear();
+	}
 }
 
 void CPrecipice::CreatePatches( NGScene::IGameView *pGView )
@@ -47,7 +51,9 @@ void CPrecipice::CreatePatches( NGScene::IGameView *pGView )
 void CPeakPatch::Recalc()
 {
 	if ( pValue == 0 )
+	{
 		pValue = new NGScene::CObjectInfo;
+	}
 	NGScene::CObjectInfo::SData objData;
 
 	objData.verts = pInfo->vertices;
@@ -57,7 +63,9 @@ void CPeakPatch::Recalc()
 
 	pValue->Assign( &objData, true );
 	if ( !Scene()->IsEditorMode() )
+	{
 		pInfo->Clear();
+	}
 }
 
 void CPeak::CreatePatches( NGScene::IGameView *pGView, const NDb::STerrain *pTerraDesc )
@@ -116,7 +124,9 @@ void CFoot::CreatePatches( NGScene::IGameView *pGView, const NDb::STerrain *pTer
 void CRiverPatch::Recalc()
 {
 	if ( pValue == 0 )
+	{
 		pValue = new NGScene::CObjectInfo;
+	}
 	NGScene::CObjectInfo::SData objData;
 	if ( pTimer )
 	{
@@ -124,7 +134,9 @@ void CRiverPatch::Recalc()
 		//objData.secondTex.resize( pInfo->vertices.size() );
 		const int nTime = pTimer->GetValue();
 		for ( std::vector<NGScene::SVertex>::iterator it = objData.verts.begin(); it != objData.verts.end(); ++it )
+		{
 			it->tex.y -= nTime * fStreamSpeed / 1000.0f; // hz why minus must present
+		}
 		objData.geometry = pInfo->triangles;
 		pValue->AssignFast( &objData );
 	}
@@ -153,7 +165,9 @@ void CRiver::CreatePatches( NGScene::IGameView *pGView )
 		{
 			NI_ASSERT( pInfo->pDesc->waterLayers[0].materials[0], "Material is not set for first river layer" );
 			if ( pInfo->pDesc->waterLayers[0].materials[0] == 0 )
+			{
 				continue;
+			}
 			//NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_SKIP_LIGHTING, -100 ), 0, 0 );
 			NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_NEVER_STATIC, -100 ), 0, 0 );
 			CCSBound *pBound = new CCSBound();
@@ -191,7 +205,9 @@ void CRiver::CreatePatches( NGScene::IGameView *pGView )
 		{
 			NI_ASSERT( pInfo->pDesc->waterLayers[1].materials[0], "Material is not set for first river layer" );
 			if ( pInfo->pDesc->waterLayers[1].materials[0] == 0 )
+			{
 				continue;
+			}
 			//NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_SKIP_LIGHTING, -100 ), 0, 0 );
 			NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_NEVER_STATIC, -100 ), 0, 0 );
 			CCSBound *pBound = new CCSBound();
@@ -255,29 +271,41 @@ void CRoad::CreatePatches( NGScene::IGameView *pGView )
 		{
 			case SRoadGFXInfo::CENTER:
 				if ( pInfo->pDesc->center.materials[0] )
+				{
 					patch.pHolder = pGView->CreateMesh(
 							pGView->MakeMeshInfo( patch.pPatch, pInfo->pDesc->center.materials[0] ), placement, 0, 0, room );
+				}
 				else
+				{
 					NI_ASSERT( pInfo->pDesc->center.materials[0],
 					           fmt::format( "Center material is not set for road {}", pInfo->nID ) );
+				}
 				break;
 
 			case SRoadGFXInfo::LEFT_BORDER:
 				if ( pInfo->pDesc->leftBorder.pMaterial )
+				{
 					patch.pHolder = pGView->CreateMesh(
 							pGView->MakeMeshInfo( patch.pPatch, pInfo->pDesc->leftBorder.pMaterial ), placement, 0, 0, room );
+				}
 				else
+				{
 					NI_ASSERT( pInfo->pDesc->leftBorder.pMaterial,
 					           fmt::format( "Left border material is not set for road {}", pInfo->nID ) );
+				}
 				break;
 
 			case SRoadGFXInfo::RIGHT_BORDER:
 				if ( pInfo->pDesc->rightBorder.pMaterial )
+				{
 					patch.pHolder = pGView->CreateMesh(
 							pGView->MakeMeshInfo( patch.pPatch, pInfo->pDesc->rightBorder.pMaterial ), placement, 0, 0, room );
+				}
 				else
+				{
 					NI_ASSERT( pInfo->pDesc->rightBorder.pMaterial,
 					           fmt::format( "Right border material is not set for road {}", pInfo->nID ) );
+				}
 				break;
 		}
 		patches.push_back( patch );
@@ -344,11 +372,13 @@ void CSceneTerrain::HideTerrain( bool bHide )
 
 				if ( ( ( *itPatchesArr )[k].pPatch != 0 ) && ( pDBDesc->pTerraSet != 0 ) &&
 				     ( k < pDBDesc->pTerraSet->terraTypes.size() ) )
+				{
 					( *itPatchesArr )[k].pHolder = pGameView->CreateMesh(
 							pGameView->MakeMeshInfo( ( *itPatchesArr )[k].pPatch, pDBDesc->pTerraSet->terraTypes[k]->pMaterial ),
 							placement,
 							0,
 							0 );
+				}
 			}
 		}
 	}

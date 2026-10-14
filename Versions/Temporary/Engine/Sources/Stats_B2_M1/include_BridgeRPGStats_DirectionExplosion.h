@@ -1,7 +1,9 @@
 bool ToAIUnits( bool bInEditor )
 {
 	if ( bInEditor )
+	{
 		return true;
+	}
 	//
 	fDirection = ToRadian( fDirection );
 	fVerticalAngle = ToRadian( fVerticalAngle );

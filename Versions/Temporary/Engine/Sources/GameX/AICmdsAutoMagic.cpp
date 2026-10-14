@@ -25,7 +25,9 @@ CAICmdsAutomagic::CAICmdsAutomagic()
 	NI_ASSERT( byte2msg.size() < 256, fmt::format( "Too many net messages ({})", byte2msg.size() ) );
 
 	for ( int i = 0; i < byte2msg.size(); ++i )
+	{
 		msg2byte[byte2msg[i]] = i;
+	}
 }
 
 int CAICmdsAutomagic::GetCommandID( CObjectBase *p )

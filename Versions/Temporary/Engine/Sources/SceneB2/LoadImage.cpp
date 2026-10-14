@@ -32,19 +32,27 @@ bool LoadGrayTGAImage( CDataStream *pStream, CArray2D<uint8_t> &data )
 	NI_ASSERT( hdr.imagespec.cPixelDepth == 8, "Can't read non-8 bit gray image" );
 	// skip image ID
 	if ( hdr.cIDLength != 0 )
+	{
 		pStream->Seek( pStream->GetPosition() + hdr.cIDLength );
+	}
 	//
 	if ( ( data.GetSizeX() != hdr.imagespec.wImageWidth ) || ( data.GetSizeY() != hdr.imagespec.wImageHeight ) )
+	{
 		data.SetSizes( hdr.imagespec.wImageWidth, hdr.imagespec.wImageHeight );
+	}
 
 	const int nRequested = data.GetSizeX() * data.GetSizeY();
 	if ( hdr.imagespec.descriptor.cTopToBottomOrder == 0 )
 	{
 		for ( int i = data.GetSizeY() - 1; i >= 0; --i )
+		{
 			pStream->Read( &( data[i][0] ), data.GetSizeX() * sizeof( uint8_t ) );
+		}
 	}
 	else
+	{
 		pStream->Read( &( data[0][0] ), nRequested );
+	}
 
 	return true;
 }
@@ -62,16 +70,22 @@ bool AppendGrayTGAImageAtBottom( CDataStream *pStream, CArray2D<uint8_t> &data, 
 	           "Incorrect image size or position" );
 	// skip image ID
 	if ( hdr.cIDLength != 0 )
+	{
 		pStream->Seek( pStream->GetPosition() + hdr.cIDLength );
+	}
 	//
 	const int nRequested = int( hdr.imagespec.wImageWidth ) * int( hdr.imagespec.wImageHeight );
 	if ( hdr.imagespec.descriptor.cTopToBottomOrder == 0 )
 	{
 		for ( int i = nPosY + int( hdr.imagespec.wImageHeight ) - 1; nPosY >= 0; --i )
+		{
 			pStream->Read( &( data[i][0] ), hdr.imagespec.wImageWidth * sizeof( uint8_t ) );
+		}
 	}
 	else
+	{
 		pStream->Read( &( data[nPosY][0] ), nRequested );
+	}
 
 	return true;
 }

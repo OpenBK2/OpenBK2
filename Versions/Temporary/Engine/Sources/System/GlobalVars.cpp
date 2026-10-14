@@ -20,7 +20,9 @@ static CAliasMap s_AliasMap;
 bool AddAlias( const std::string &szAliasName, const std::wstring &wszCommand )
 {
 	if ( s_AliasMap.find( szAliasName ) != s_AliasMap.end() )
+	{
 		return false;
+	}
 	s_AliasMap[szAliasName] = wszCommand;
 	return true;
 }
@@ -29,7 +31,9 @@ std::wstring GetAlias( const std::string &szAliasName )
 {
 	CAliasMap::const_iterator pos = s_AliasMap.find( szAliasName );
 	if ( pos != s_AliasMap.end() )
+	{
 		return pos->second;
+	}
 	return L"";
 }
 
@@ -49,15 +53,21 @@ public:
 		if ( stc.empty() )
 		{
 			if ( TBrackets::IsOpen( chr ) )
+			{
 				stc.push_back( TBrackets::GetClose( chr ) );
+			}
 			else
 			{
 				if ( IsSeparator( chr ) )
+				{
 					return true;
+				}
 			}
 		}
 		else if ( chr == stc.back() )
+		{
 			stc.pop_back();
+		}
 		//
 		return false;
 	}
@@ -69,7 +79,9 @@ static void SplitStringWithMultipleBrackets( const std::wstring &szString, std::
 	                            CBracketMulticharSeparator<wchar_t, NStr::SQuoteTest<wchar_t>>> it( szString, ' ' );
 	      !it.IsEnd();
 	      it.Next() )
+	{
 		szVector.push_back( it.Get() );
+	}
 }
 // TODO}
 
@@ -123,7 +135,9 @@ struct SKillRecordsMap
 	~SKillRecordsMap()
 	{
 		if ( pRecordsMap )
+		{
 			pRecordsMap->pHold = 0;
+		}
 		pRecordsMap = 0;
 		bIsExiting = true;
 	}
@@ -131,7 +145,9 @@ struct SKillRecordsMap
 static CRecordsMap *GetRecordsMap()
 {
 	if ( bIsExiting )
+	{
 		return new CRecordsMap;
+	}
 	if ( !pRecordsMap )
 	{
 		pRecordsMap = new CRecordsMap;
@@ -179,7 +195,9 @@ void UnregisterCmd( const std::string &szID, int nID )
 
 	TRecordsMap::iterator iTemp = recordsMap.find( szID );
 	if ( iTemp == recordsMap.end() )
+	{
 		return;
+	}
 
 	SCommandInfo &info = iTemp->second;
 	info.data.erase( remove_if( info.data.begin(), info.data.end(), SRecordCheck( nID ) ), info.data.end() );
@@ -197,7 +215,9 @@ void RemoveVar( const std::string &szID )
 
 	TRecordsMap::iterator pos = recordsMap.find( szID );
 	if ( pos != recordsMap.end() )
+	{
 		recordsMap.erase( pos );
+	}
 }
 
 void GetIDList( std::vector<std::string> *pList )
@@ -225,7 +245,9 @@ void GetVarsByClass( std::vector<std::pair<std::string, CValue>> *pList, EStorag
 	for ( TRecordsMap::const_iterator it = recordsMap.begin(); it != recordsMap.end(); ++it )
 	{
 		if ( it->second.storage == eStorageClass )
+		{
 			pList->push_back( std::pair<std::string, CValue>( it->first, it->second.sValue ) );
+		}
 	}
 }
 
@@ -236,7 +258,9 @@ const CValue &GetVar( const std::string &szID, const CValue &sDefault )
 
 	TRecordsMap::const_iterator iTemp = recordsMap.find( szID );
 	if ( iTemp == recordsMap.end() )
+	{
 		return sDefault;
+	}
 
 	return iTemp->second.sValue;
 }
@@ -255,8 +279,10 @@ void SetVar( const std::string &szVar, const CValue &sValue, EStorageClass stora
 		i = recordsMap.find( szVar );
 	}
 	else
+	{
 		NI_ASSERT( storage == STORAGE_DONT_CARE || storage == i->second.storage,
 		           "different storage classes has been specified for this var" );
+	}
 	SCommandInfo &info = i->second;
 	info.storage = (std::max)( info.storage, storage );
 	const std::vector<SRecord> &records = info.data;
@@ -264,7 +290,9 @@ void SetVar( const std::string &szVar, const CValue &sValue, EStorageClass stora
 	{
 		const SRecord &sRecord = records[k];
 		if ( sRecord.pVarHandler )
+		{
 			sRecord.pVarHandler( szVar, sValue, sRecord.pContext );
+		}
 	}
 	info.sValue = sValue;
 }
@@ -281,19 +309,25 @@ void ProcessCommand( const std::wstring &wsCommandStr )
 	for ( std::vector<std::wstring>::iterator it = wordsSet.begin(); it != wordsSet.end(); )
 	{
 		if ( it->empty() )
+		{
 			it = wordsSet.erase( it );
+		}
 		else if ( it->compare( 0, 2, L"//" ) == 0 )
 		{
 			wordsSet.erase( it, wordsSet.end() );
 			break;
 		}
 		else
+		{
 			++it;
+		}
 	}
 	//
 
 	if ( wordsSet.empty() )
+	{
 		return;
+	}
 
 	std::string szCommandName = NStr::ToMBCS( *wordsSet.begin() );
 	wordsSet.erase( wordsSet.begin() );
@@ -306,7 +340,9 @@ void ProcessCommand( const std::wstring &wsCommandStr )
 			{
 				wszAliasCmd += L" " + wordsSet[0];
 				for ( int i = 1; i < wordsSet.size(); ++i )
+				{
 					wszAliasCmd += L" " + wordsSet[i];
+				}
 			}
 			ProcessCommand( wszAliasCmd );
 			return;
@@ -324,7 +360,9 @@ void ProcessCommand( const std::wstring &wsCommandStr )
 	for ( std::vector<std::wstring>::iterator it = wordsSet.begin(); it != wordsSet.end(); ++it )
 	{
 		if ( it->size() > 2 && ( *it )[0] == L'\"' && ( *it )[it->size() - 1] == L'\"' )
+		{
 			*it = it->substr( 1, it->size() - 2 );
+		}
 	}
 	//
 	const std::vector<SRecord> &records = iTemp->second.data;
@@ -333,12 +371,16 @@ void ProcessCommand( const std::wstring &wsCommandStr )
 	{
 		const SRecord &sRecord = records[k];
 		if ( sRecord.pCmdHandler == 0 )
+		{
 			continue;
+		}
 		sRecord.pCmdHandler( szCommandName, wordsSet, sRecord.pContext );
 		bWasHandled = true;
 	}
 	if ( !bWasHandled )
+	{
 		CmdDefaultHandler( szCommandName, wordsSet, 0 );
+	}
 }
 
 void LoadConfig( const std::string &szFileName, EStorageClass _newVarStorage )
@@ -371,14 +413,20 @@ void LoadConfig( const std::string &szFileName, EStorageClass _newVarStorage )
 	for ( std::vector<std::string>::const_iterator iTemp = cmdsSet.begin(); iTemp != cmdsSet.end(); ++iTemp )
 	{
 		if ( iTemp->empty() )
+		{
 			continue;
+		}
 
 		std::string szCmd( *iTemp );
 		NStr::TrimBoth( szCmd, "\n\r" );
 		if ( szCmd.substr( 0, 1 ).compare( ";" ) == 0 )
+		{
 			continue;
+		}
 		if ( szCmd.substr( 0, 2 ).compare( "//" ) == 0 )
+		{
 			continue;
+		}
 		//
 		std::wstring wszCmd;
 		NStr::ToUnicode( &wszCmd, szCmd );
@@ -405,10 +453,14 @@ static void SaveConfig( const std::string &szFileName, EStorageClass storage )
 	for ( TRecordsMap::iterator iTemp = recordsMap.begin(); iTemp != recordsMap.end(); iTemp++ )
 	{
 		if ( iTemp->second.storage != storage )
+		{
 			continue;
+		}
 
 		if ( iTemp->second.sValue.GetString().empty() )
+		{
 			continue;
+		}
 
 		SSaveRecord &sRec = tempSet.emplace_back();
 		sRec.szName = iTemp->first;
@@ -430,7 +482,9 @@ static void SaveConfig( const std::string &szFileName, EStorageClass storage )
 	{
 		// put global var with spaces in quotes before save
 		if ( iTemp->szValue.find( ' ' ) != std::string::npos )
+		{
 			iTemp->szValue = '\"' + iTemp->szValue + '\"';
+		}
 		fprintf( pFile, "setvar %s = %s\n", iTemp->szName.c_str(), iTemp->szValue.c_str() );
 	}
 
@@ -457,12 +511,16 @@ void ResetVarsToDefault( EStorageClass storage )
 		if ( info.storage == storage )
 		{
 			if ( !info.bIsRegistered )
+			{
 				toDel.push_back( i->first );
+			}
 			info.sValue = info.sDefaultValue;
 		}
 	}
 	for ( int k = 0; k < toDel.size(); ++k )
+	{
 		recordsMap.erase( recordsMap.find( toDel[k] ) );
+	}
 }
 
 static void SplitString( const std::wstring &szCmd, std::vector<std::wstring> *pRes )
@@ -475,23 +533,31 @@ static void SplitString( const std::wstring &szCmd, std::vector<std::wstring> *p
 	{
 		wchar_t c = szCmd[i];
 		if ( NStr::SBracketsTest<wchar_t>::IsOpen( c ) )
+		{
 			stackBrackets.push_back( NStr::SBracketsTest<wchar_t>::GetClose( c ) );
+		}
 		else if ( stackBrackets.empty() )
 		{
 			if ( ( c == L' ' ) || ( c == L'\t' ) || ( c == L'\r' ) )
 			{
 				std::wstring szRes = szCmd.substr( nLastPos, i - nLastPos );
 				if ( !szRes.empty() )
+				{
 					params.push_back( szRes );
+				}
 				nLastPos = i + 1;
 			}
 		}
 		else if ( c == stackBrackets.back() )
+		{
 			stackBrackets.pop_back();
+		}
 	}
 	// last substring
 	if ( nLastPos + 1 <= int( i ) )
+	{
 		params.push_back( szCmd.substr( nLastPos ) );
+	}
 
 	*pRes = params;
 }
@@ -511,14 +577,18 @@ static void CmdDefaultHandler( const std::string &szID, const std::vector<std::w
 void CmdPrintHelp( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( NGlobal::GetVar( "VVP", 0 ) == 0 )
+	{
 		return;
+	}
 	std::vector<std::string> varsSet;
 	NGlobal::GetIDList( &varsSet );
 	sort( varsSet.begin(), varsSet.end() );
 
 	csSystem << CC_BLUE << "Commands:" << endl;
 	for ( int nTemp = 0; nTemp < varsSet.size(); nTemp++ )
+	{
 		csSystem << varsSet[nTemp] << endl;
+	}
 	csSystem << CC_BLUE << "Total:" << (int)varsSet.size() << endl;
 }
 
@@ -551,7 +621,9 @@ static void CmdSetVar( const std::string &szID, const std::vector<std::wstring> 
 	}
 
 	if ( paramsSet[1].compare( L"=" ) != 0 )
+	{
 		return;
+	}
 
 	// every client must parse these floats identically to stay in sync during
 	// multiplayer. Each of these carries its own guard, so the state is put
@@ -569,15 +641,21 @@ static void CmdAlias( const std::string &szID, const std::vector<std::wstring> &
 		return;
 	}
 	if ( paramsSet[1].compare( L"=" ) != 0 )
+	{
 		return;
+	}
 	//
 	const std::string szAliasName = NStr::ToMBCS( paramsSet[0] );
 	std::wstring wszCommand = paramsSet[2];
 	for ( int i = 3; i < paramsSet.size(); ++i )
+	{
 		wszCommand = wszCommand + L" " + paramsSet[i];
+	}
 	//
 	if ( AddAlias( szAliasName, wszCommand ) == false )
+	{
 		csSystem << "alias " << szAliasName << " already exist!" << endl;
+	}
 }
 
 }

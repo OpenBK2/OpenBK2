@@ -93,9 +93,11 @@ int PORT_CDECL main( int argc, char *argv[] )
 	NHPTimer::GetTime( &hptime );
 	//
 	if ( NFile::DoesFileExist( szIndexFile ) )
+	{
 		// NFile::RenameFile, not MoveFile: windows.h rewrites that name, and this
 		// is the tree's portable spelling of the same move.
 		NFile::RenameFile( szIndexFile, szIndexFileBackup );
+	}
 	//
 	CObj<NVFS::IVFS> pMainVFS = NVFS::CreateWinVFS( szDataDirectory );
 	CObj<NVFS::IFileCreator> pMainFileCreator = NVFS::CreateWinFileCreator( szCWD );
@@ -113,13 +115,17 @@ int PORT_CDECL main( int argc, char *argv[] )
 	{
 		const int nSize = it->size();
 		if ( it->size() < 4 )
+		{
 			continue;
+		}
 		//
 		if ( ( *it )[nSize - 4] == '.' && NStr::ASCII_tolower( ( *it )[nSize - 3] ) == 'x' &&
 		     NStr::ASCII_tolower( ( *it )[nSize - 2] ) == 'd' && NStr::ASCII_tolower( ( *it )[nSize - 1] ) == 'b' )
 		{
 			if ( NDb::RegisterResourceFile( *it ) == false )
+			{
 				printf( "ERROR: can't register resource \"%s\"\n", it->c_str() );
+			}
 			++s_nNumCollectedObjects;
 		}
 	}

@@ -37,7 +37,9 @@ void CInterfaceMPLoading2D::MakeInterior( const SParams &params )
 	pPlayerListItem->ShowWindow( false );*/
 
 	if ( pMapPictureWnd && params.pMapPicture )
+	{
 		pMapPictureWnd->SetTexture( params.pMapPicture );
+	}
 
 	if ( pMinimapWnd )
 	{
@@ -45,10 +47,14 @@ void CInterfaceMPLoading2D::MakeInterior( const SParams &params )
 		pMinimapWnd->SetTexture( params.pMinimap );
 	}
 	if ( pMapNameView )
+	{
 		pMapNameView->SetText( pMapNameView->GetDBText() + params.wszMapName );
+	}
 
 	if ( pPlayerOnMapTeamWnd )
+	{
 		pPlayerOnMapTeamWnd->ShowWindow( false );
+	}
 
 	IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
 	int nMinimapX, nMinimapY;
@@ -81,7 +87,9 @@ void CInterfaceMPLoading2D::MakeInterior( const SParams &params )
 			pTeam1Wnd->ShowWindow( player.nTeam == 0 );
 			pTeam2Wnd->ShowWindow( player.nTeam == 1 );
 			if ( pColourWnd )
+			{
 				pColourWnd->SetBackground( pColourBgr );
+			}
 			pIconWnd->SetTexture( player.pSideMinimapIcon );
 			pNameView->SetText( pNameView->GetDBText() + player.wszName );
 		}

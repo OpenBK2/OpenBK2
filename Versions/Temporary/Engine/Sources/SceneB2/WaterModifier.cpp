@@ -33,7 +33,9 @@ struct SWaterSmoothProfile
 		//return x < DEF_SMOOTH_SLEEKNESS ? 1.0f :
 		//( 0.5f - NMath::Sin( ( x - DEF_SMOOTH_SLEEKNESS ) * DEF_SMOOTH_SLEEKNESS_COEFF * FP_PI - FP_PI2 ) * 0.5f );
 		if ( x < DEF_SMOOTH_SLEEKNESS )
+		{
 			return 0.0f;
+		}
 		const float tx = ( x - DEF_SMOOTH_SLEEKNESS ) * DEF_SMOOTH_SLEEKNESS_COEFF;
 		return tx * tx;
 	}
@@ -113,7 +115,9 @@ static void FillWaterArea( CArray2D<float> *pHeights,
                            const std::vector<NDb::SVSOPoint> &samples )
 {
 	if ( samples.size() < 2 )
+	{
 		return;
+	}
 
 	std::vector<CVec3dEx> boundPoints( samples.size() );
 	CVec2i vMin( INT_MAX, INT_MAX ), vMax( INT_MIN, INT_MIN );
@@ -143,7 +147,9 @@ static void FillWaterArea( CArray2D<float> *pHeights,
 		for ( int i = vMin.x; i <= vMax.x; ++i )
 		{
 			if ( IsInside( boundPoints, CVec3dEx( (float)i * DEF_TILE_SIZE, (float)g * DEF_TILE_SIZE, 0, 1 ) ) )
+			{
 				fillMap[g - vMin.y][i - vMin.x] = 1;
+			}
 		}
 	}
 
@@ -165,7 +171,9 @@ static void FillWaterArea( CArray2D<float> *pHeights,
 static void SmoothHeightsFromSamples( CArray2D<float> *pHeights, const std::vector<NDb::SVSOPoint> &samples )
 {
 	if ( samples.size() < 2 )
+	{
 		return;
+	}
 
 	std::vector<CVec3fEx> ridge( samples.size() * 2 );
 	CVec2 vPos;
@@ -202,9 +210,13 @@ static void SmoothHeightsFromSamples( CArray2D<float> *pHeights, const std::vect
 			{
 				float &fCurHeight = ( *pHeights )[g][i];
 				if ( fCurHeight < 0 )
+				{
 					fCurHeight = fIncHeight;
+				}
 				else
+				{
 					fCurHeight = (std::min)( fCurHeight, fIncHeight );
+				}
 			}
 		}
 	}
@@ -247,20 +259,30 @@ static void InitCornersHash()
 		areaCornersHash[nInd].resize( 0 );
 		k = 1;
 		for ( ; defAreaHash[i][k] != -1; ++k )
+		{
 			areaCornersHash[nInd].push_back( defAreaHash[i][k] );
+		}
 	}
 }
 
 static int GetPointIndOnRect( const NDb::SVSOPoint &p, const CVec2 &p1, const CVec2 &p2 )
 {
 	if ( fabs( p1.y - p.vPos.y ) < DEF_EPS )
+	{
 		return AREA_BOTTOM_SIDE;
+	}
 	if ( fabs( p2.x - p.vPos.x ) < DEF_EPS )
+	{
 		return AREA_RIGHT_SIDE;
+	}
 	if ( fabs( p2.y - p.vPos.y ) < DEF_EPS )
+	{
 		return AREA_TOP_SIDE;
+	}
 	if ( fabs( p1.x - p.vPos.x ) < DEF_EPS )
+	{
 		return AREA_LEFT_SIDE;
+	}
 	return AREA_NONE_SIDE;
 }
 
@@ -387,10 +409,14 @@ static void GetSeaAreas( std::vector<std::vector<NDb::SVSOPoint>> *pRes,
                          const CVec2 &p2 )
 {
 	if ( samples.size() < 2 )
+	{
 		return;
+	}
 
 	if ( areaCornersHash.empty() )
+	{
 		InitCornersHash();
+	}
 
 	std::vector<std::vector<NDb::SVSOPoint>> &res = *pRes;
 	std::vector<NDb::SVSOPoint> addPoints( 128 );
@@ -412,10 +438,14 @@ static void GetSeaAreas( std::vector<std::vector<NDb::SVSOPoint>> *pRes,
 			{
 				addPoints.push_back( *it1 );
 				if ( GetIntersectWithArea( &p, *it1, *it2, p1, p2 ) )
+				{
 					break;
+				}
 			}
 			if ( it2 != samples.end() )
+			{
 				addPoints.push_back( p );
+			}
 
 			if ( addPoints.size() >= 2 )
 			{
@@ -448,7 +478,9 @@ static void ClampArrayLower( CArray2D<float> *pArray, float fValidLowerValue )
 		{
 			float &fVal = ( *pArray )[g][i];
 			if ( fVal < fValidLowerValue )
+			{
 				fVal = fValidLowerValue;
+			}
 		}
 	}
 }
@@ -515,9 +547,13 @@ void CTerraGen::ReCreateAllWaterZones()
 		const NDb::SLakeDesc *pLakeDesc = static_cast<const NDb::SLakeDesc *>( pDesc->lakes[i].pDescriptor.GetPtr() );
 		// if LakeVSO is not lake then it is an island
 		if ( pLakeDesc->bIsLake )
+		{
 			procLakes.push_back( i );
+		}
 		else
+		{
 			procIslands.push_back( i );
+		}
 	}
 
 	// affect lakes
@@ -556,7 +592,9 @@ void CTerraGen::ReCreateAllWaterZones()
 			{
 				STerrainInfo::STile &tile = terrainInfo.tiles[g][i];
 				for ( std::vector<CVec3fEx>::iterator it = tile.vertices.begin(); it != tile.vertices.end(); ++it )
+				{
 					it->z = GetTerraHeight( it->x, it->y, i, g );
+				}
 			}
 		}
 	}
@@ -567,7 +605,9 @@ void CTerraGen::ReCreateAllWaterZones()
 		for ( int i = 0; i < terrainInfo.waterHeightCoeffs.GetSizeX(); ++i )
 		{
 			if ( terrainInfo.waterHeightCoeffs[g][i] > ( 1.0f - EPS_VALUE ) )
+			{
 				terrainInfo.waterAddHeights[g][i] = 0.0f;
+			}
 		}
 	}
 
@@ -643,7 +683,9 @@ void CTerraGen::UpdateWater()
 
 	// grid updater (intellectual)
 	if ( IScene *pScene = Scene() )
+	{
 		pScene->UpdateGrid( vBBMin.x, vBBMin.y, vBBMax.x, vBBMax.y );
+	}
 }
 
 void CTerraGen::InitWater()
@@ -694,7 +736,9 @@ void CTerraGen::InitWater()
 				vPos = it->vPos;
 				AI2Vis( &vPos );
 				if ( !IsPointInsideRivers( vPos, -1 ) )
+				{
 					lastSurf.push_back( *it );
+				}
 				else
 				{
 					if ( lastSurf.size() >= 2 )
@@ -783,7 +827,9 @@ void CTerraGen::InitRainyWater( CDBPtr<NDb::SWater> pWater )
 				vPos = it->vPos;
 				AI2Vis( &vPos );
 				if ( !IsPointInsideRivers( vPos, -1 ) )
+				{
 					lastSurf.push_back( *it );
+				}
 				else
 				{
 					if ( lastSurf.size() >= 2 )

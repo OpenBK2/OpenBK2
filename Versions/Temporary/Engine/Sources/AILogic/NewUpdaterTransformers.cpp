@@ -31,7 +31,9 @@ SAIBasicUpdate *CEventUpdater::CUpdateData::CChangeDBIDUpdateTransformer::Transf
 {
 	SAIChangeDBIDUpdate *pData;
 	if ( pUpdate->pData )
+	{
 		pData = static_cast_ptr<SAIChangeDBIDUpdate *>( pUpdate->pData );
+	}
 	else
 	{
 		pData = new SAIChangeDBIDUpdate;
@@ -211,7 +213,9 @@ SAIBasicUpdate *CEventUpdater::CUpdateData::CShootAreaUpdateTransformer::Transfo
 	pData->eUpdateType = pUpdate->eUpdateType;
 	pData->nUpdateTime = pUpdate->nUpdateTime;
 	if ( pUpdate->pObj->IsAlive() )
+	{
 		updater.RegisterShootAreaUnit( pUpdate->pObj );
+	}
 	return pData;
 }
 
@@ -228,7 +232,9 @@ SAIBasicUpdate *CEventUpdater::CUpdateData::CRangeAreaUpdateTransformer::Transfo
 	pData->eUpdateType = pUpdate->eUpdateType;
 	pData->nUpdateTime = pUpdate->nUpdateTime;
 	if ( pUpdate->pObj->IsAlive() )
+	{
 		updater.RegisterShootAreaUnit( pUpdate->pObj );
+	}
 	return pData;
 }
 

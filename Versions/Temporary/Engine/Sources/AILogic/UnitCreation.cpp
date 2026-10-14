@@ -78,7 +78,9 @@ void CLightPlaneCreation::CalcPositions( const int nMax,
 	for ( int i = 0; i < nMax; ++i )
 	{
 		if ( i % 2 == 0 )
+		{
 			positions->push_back( vStartOffset /*^ direction*/ );
+		}
 		else
 		{
 			positions->push_back( ( vStartOffset + CVec2( -resize * box.y, resize / 2 * box.x ) ) ^ direction );
@@ -133,7 +135,9 @@ void CHeavyPlaneCreation::CalcPositions( const int nMax,
 
 			positions->push_back( res /*^direction*/ );
 			if ( positions->size() == nMax )
+			{
 				return;
+			}
 			// не центровые - по 2 раза
 			if ( iLimit != nSize )
 			{
@@ -145,7 +149,9 @@ void CHeavyPlaneCreation::CalcPositions( const int nMax,
 				}
 				positions->push_back( res /*^ direction*/ );
 				if ( positions->size() == nMax )
+				{
 					return;
+				}
 			}
 		}
 		vStartOffset += CVec2( -resize / 2 * box.y, resize / 2 * box.x );
@@ -312,7 +318,9 @@ CFormation *CUnitCreation::CreateParatroopers( const CVec3 &where, CAIUnit *pPla
 
 	const SSquadRPGStats *pStats = inGameUnits[pPlane->GetPlayer()].pParatrooper;
 	if ( !pStats )
+	{
 		return 0;
+	}
 
 	const uint16_t wDir = pPlane->GetDirection();
 	const int nFormation = 0;
@@ -350,7 +358,9 @@ CFormation *CUnitCreation::CreateResupplyEngineers( CAITransportUnit *pWithUnit 
 	const SSquadRPGStats *pStats = GetPartyDependentInfo( pWithUnit->GetPlayer() )->pResupplyEngineerSquad;
 
 	if ( !pStats )
+	{
 		return 0;
+	}
 
 	const uint16_t wDir = 0;
 	const int nFormation = 0;
@@ -393,13 +403,17 @@ CFormation *CUnitCreation::CreateCrew(
 
 	CVec3 vCreatePos( vPos );
 	if ( -1 == vPos.x )
+	{
 		vCreatePos = pUnit->GetCenter();
+	}
 
 	// если не задан игрок ручками, то используем того-же, что и у юнита
 	const int nPlayer = ( _nPlayer == -1 ) ? pUnit->GetPlayer() : _nPlayer;
 
 	if ( !GetPartyDependentInfo( nPlayer ) )
+	{
 		return 0;
+	}
 
 	// для пулеметов - свой взвод - пулеметчики
 	const SSquadRPGStats *pStats = ( RPG_TYPE_ART_HEAVY_MG == pUnit->GetStats()->etype )
@@ -407,10 +421,14 @@ CFormation *CUnitCreation::CreateCrew(
 	                                   : GetPartyDependentInfo( nPlayer )->pGunCrewSquad;
 
 	if ( RPG_TYPE_ART_AAGUN == pUnit->GetStats()->etype && GetPartyDependentInfo( nPlayer )->pAAGunSquad )
+	{
 		pStats = GetPartyDependentInfo( nPlayer )->pAAGunSquad;
+	}
 
 	if ( !pStats )
+	{
 		return 0;
+	}
 
 	CFormation *pForm = checked_cast<CFormation *>( theUnitCreation.AddNewFormation( pStats,
 	                                                                                 0,
@@ -433,7 +451,9 @@ CFormation *CUnitCreation::CreateCrew(
 	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_CATCH_ARTILLERY, pUnit->GetUniqueId() ), pForm, false );
 	pUnit->SetCapturingUnit( pForm );
 	if ( bImmidiateAttach )
+	{
 		pUnit->SetCrew( pForm );
+	}
 	pForm->SetSelectable( false, true );
 	return pForm;
 }
@@ -446,7 +466,9 @@ class CAIUnit *CUnitCreation::CreateTorpedo( class CAIUnit *pOwner,
 	CPtr<CUnitTorpedo> pUnit = checked_cast<CUnitTorpedo *>( MakeObject<CAIUnit>( AI_TORPEDO ) );
 
 	if ( !pUnit )
+	{
 		return 0;
+	}
 
 	const int nUniqueUnitID = ++SLinkObjDataAutoMagic::pLinkObjData->nCurUniqueID;
 
@@ -507,32 +529,48 @@ int CUnitCreation::AddNewUnit( const int nUniqueID,
 		pUnit = MakeObject<CAIUnit>( AI_HELICOPTER );
 	}
 	else if ( pStats->IsAviation() )
+	{
 		pUnit = MakeObject<CAIUnit>( AI_AVIATION );
+	}
 	else if ( pStats->IsTransport() )
+	{
 		pUnit = MakeObject<CAIUnit>( AI_TRANSPORT_UNIT );
+	}
 	else if ( pStats->IsArtillery() /*|| pStats->etype == RPG_TYPE_TRAIN_SUPER*/ )
+	{
 		pUnit = MakeObject<CAIUnit>( AI_ARTILLERY );
+	}
 	else if ( pStats->etype == RPG_TYPE_TRAIN_LOCOMOTIVE || pStats->etype == RPG_TYPE_TRAIN_ARMOR )
 	{
 		if ( theRailRoadSystem.segments.empty() )
+		{
 			return 0;
+		}
 		pUnit = MakeObject<CAIUnit>( AI_LOCOMOTIVE );
 	}
 	else if ( pStats->IsTrain() )
 	{
 		if ( theRailRoadSystem.segments.empty() )
+		{
 			return 0;
+		}
 		pUnit = MakeObject<CAIUnit>( AI_TRAIN_CAR );
 	}
 	else if ( pStats->IsArmor() || pStats->IsSPG() )
+	{
 		pUnit = MakeObject<CAIUnit>( AI_TANK );
+	}
 	else
+	{
 		NI_ASSERT(
 				false,
 				fmt::format( "Unknown unit's type (DBID \"{}\", type {})", NDb::GetResName( pStats ), int( pStats->etype ) ) );
+	}
 	NI_ASSERT( pUnit != 0, "cannot create unit" );
 	if ( pUnit == 0 )
+	{
 		return 0;
+	}
 
 	pUnit->SetUniqueIdForUnits( nUniqueID );
 
@@ -563,13 +601,19 @@ int CUnitCreation::AddNewUnit( const int nUniqueID,
 		{
 			const NDb::SAIExpLevel *pLevels = pConsts->common.expLevels[i];
 			if ( !pLevels )
+			{
 				continue;
+			}
 			if ( pLevels->eDBType != pUnit->GetReinforcementType() )
+			{
 				continue;
+			}
 			int nXPLevel = pScenarioTracker->GetReinforcementXPLevel( player, eType );
 			nXPLevel = (std::min<int>)( pLevels->levels.size() - 1, nXPLevel );
 			if ( nXPLevel < 0 )
+			{
 				break;
+			}
 
 			if ( pLevels->levels[nXPLevel].pStatsBonus )
 			{
@@ -621,10 +665,14 @@ int CUnitCreation::AddNewUnit( const int nUniqueID,
 		if ( pArt->MustHaveCrewToOperate() )
 		{
 			if ( !CreateCrew( pArt, -1, CVec3( -1, -1, -1 ), -1, true ) )
+			{
 				pArt->ChangePlayer( theDipl.GetNeutralPlayer() );
+			}
 		}
 		else
+		{
 			pArt->SetOperable( 1.0f );
+		}
 	}
 
 	if ( pUnit->GetHitPoints() == 0.0f )
@@ -667,7 +715,9 @@ const SFenceRPGStats *CUnitCreation::GetWireFence() const
 const SMechUnitRPGStats *CUnitCreation::GetFoxHole( const bool bCanDig ) const
 {
 	if ( pConsts == 0 )
+	{
 		return 0;
+	}
 
 	RecordRandomCall();
 	return pConsts->foxHoles[NRandom::Random( pConsts->foxHoles.size() )];
@@ -719,7 +769,9 @@ CCommonUnit *CUnitCreation::AddNewFormation( const SSquadRPGStats *pStats,
 	NI_ASSERT( _nFormation < pStats->formations.size(), "" );
 	int nFormation = 0;
 	if ( _nFormation < pStats->formations.size() )
+	{
 		nFormation = _nFormation;
+	}
 #ifdef _DO_ASSERT_SLOW
 	for ( int i = 0; i < pStats->members.size(); ++i )
 	{
@@ -738,7 +790,9 @@ CCommonUnit *CUnitCreation::AddNewFormation( const SSquadRPGStats *pStats,
 	pFormation->Init( pStats, vFormCenter, z, wDir, pCollisionsCollector );
 
 	if ( bSendToWorld )
+	{
 		updater.AddUpdate( 0, ACTION_NOTIFY_NEW_UNIT, pFormation, -1 );
+	}
 
 	std::list<CVec2> centers;
 	GetCentersOfAllFormationUnits( pStats, vFormCenter, wDir, nFormation, nUnits, &centers );
@@ -769,7 +823,9 @@ CCommonUnit *CUnitCreation::AddNewFormation( const SSquadRPGStats *pStats,
 		NI_ASSERT( dynamic_cast<CSoldier *>( pUnit ) != 0, "Wrong unit in formation" );
 		pFormation->AddNewUnitToSlot( checked_cast<CSoldier *>( pUnit ), /* j, */ bSendToWorld );
 		if ( bSendToWorld )
+		{
 			updater.AddUpdate( 0, ACTION_NOTIFY_NEW_FORMATION, checked_cast<CSoldier *>( pUnit ), -1 );
+		}
 	}
 
 	// create formation ability executors
@@ -856,7 +912,9 @@ bool CUnitCreation::IsAntiTank( const SHPObjectRPGStats *pStats ) const
 	for ( int i = 0; i < pConsts->common.antitankObjects.size(); ++i )
 	{
 		if ( pStats == pConsts->common.antitankObjects[i] )
+		{
 			return true;
+		}
 	}
 
 	return false;
@@ -872,7 +930,9 @@ const NDb::SAIExpLevel *CUnitCreation::GetExpLevels( const enum EUnitRPGType eTy
 	for ( int i = 0; i < pConsts->common.expLevels.size(); ++i )
 	{
 		if ( eType == pConsts->common.expLevels[i]->eType )
+		{
 			return pConsts->common.expLevels[i];
+		}
 	}
 	NI_ASSERT( false, fmt::format( "cannot find expLevels for UnitRPGType {}", int( eType ) ) );
 	return pConsts->common.expLevels[0];
@@ -881,20 +941,28 @@ const NDb::SAIExpLevel *CUnitCreation::GetExpLevels( const enum EUnitRPGType eTy
 CExistingObject *CUnitCreation::CreatePlayerFlag( int nPlayer, CStaticObject *pSample )
 {
 	if ( !pSample )
+	{
 		return 0;
+	}
 	IAIScenarioTracker *pScenarioTracker = GetScenarioTracker();
 	if ( pScenarioTracker && pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
 	{
 		CDBPtr<NDb::SObjectBaseRPGStats> pFlag = pScenarioTracker->GetKeyBuildingFlagObject( nPlayer );
 
 		if ( pFlag )
+		{
 			return checked_cast<CExistingObject *>(
 					theStatObjs.AddNewStaticObject( pFlag, 1.0f, pSample->GetCenter(), pSample->GetDir(), 0 ) );
+		}
 		else
+		{
 			return 0;
+		}
 	}
 	if ( !partyDependentInfo[nPlayer]->pKeyBuildingFlag )
+	{
 		return 0;
+	}
 	return checked_cast<CExistingObject *>( theStatObjs.AddNewStaticObject(
 			partyDependentInfo[nPlayer]->pKeyBuildingFlag, 1.0f, pSample->GetCenter(), pSample->GetDir(), 0 ) );
 }

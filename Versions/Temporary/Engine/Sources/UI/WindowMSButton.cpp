@@ -16,11 +16,17 @@ REGISTER_SAVELOAD_CLASS( UI, 0x11075B87, CWindowMSButton )
 void CButtonSubStateVisual::Init( const NDb::SButtonVisualSubState &substate )
 {
 	if ( substate.pBackground )
+	{
 		pBackground = CUIFactory::MakeWindowPart( substate.pBackground );
+	}
 	if ( substate.pForeground )
+	{
 		pForeground = CUIFactory::MakeWindowPart( substate.pForeground );
+	}
 	if ( substate.pTextString )
+	{
 		pTextString = (CForegroundTextString *)( CUIFactory::MakeWindowPart( substate.pTextString ) );
+	}
 	pTextFormat = substate.pTextFormat;
 }
 
@@ -65,9 +71,13 @@ void CWindowMSButton::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	eEffectSubState = NDb::BST_NORMAL;
 
 	if ( IsEnabled() )
+	{
 		SwitchSubState( NDb::BST_NORMAL );
+	}
 	else
+	{
 		SwitchSubState( NDb::BST_DISABLED );
+	}
 
 	/*for( int i = 0; i<states.size(); i++ )
 	{
@@ -113,7 +123,9 @@ void CWindowMSButton::AfterLoad()
 {
 	// Invalid button descriptors can leave states empty; saves retain these windows.
 	if ( pInstance && pInstance->nState >= 0 && pInstance->nState < states.size() )
+	{
 		SwitchSubState( states[pInstance->nState].eSubState );
+	}
 	// Children and font bindings still need restoration when no state can be applied.
 	CWindow::AfterLoad();
 }
@@ -123,7 +135,9 @@ const std::wstring &CWindowMSButton::GetDBFormatText() const
 	if ( const NDb::STextFormat *pTextFormat = pInstance->pTextFormat )
 	{
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pTextFormat->, FormatString ) )
+		{
 			return GET_TEXT_PRE( pTextFormat->, FormatString );
+		}
 	}
 
 	return CWindow::GetDBFormatText();
@@ -132,7 +146,9 @@ const std::wstring &CWindowMSButton::GetDBFormatText() const
 const std::wstring &CWindowMSButton::GetDBInstanceText() const
 {
 	if ( CHECK_TEXT_NOT_EMPTY_PRE( pInstance->, Text ) )
+	{
 		return GET_TEXT_PRE( pInstance->, Text );
+	}
 
 	return CWindow::GetDBInstanceText();
 }
@@ -169,7 +185,9 @@ void CWindowMSButton::OnEnter( const int nButton )
 			nAnimationID = GetScreen()->RunAnimationSequienceForward(
 					pShared->visualStates[GetState()].mouseOver.onEnterSubState, this );
 			if ( pButtonNotify )
+			{
 				pButtonNotify->Entered( this );
+			}
 		}
 	}
 	bMouseEntered = true;
@@ -188,7 +206,9 @@ void CWindowMSButton::OnLeave( const int nButton )
 
 		bMouseEntered = false;
 		if ( pButtonNotify )
+		{
 			pButtonNotify->Leaved( this );
+		}
 	}
 }
 
@@ -198,7 +218,9 @@ void CWindowMSButton::OnPush( const int nButton )
 	{
 		bPressed[nButton] = true;
 		if ( nButton == MSTATE_BUTTON1 && CUIFactory::GetConsts() )
+		{
 			GetScreen()->RunAnimationSequienceForward( CUIFactory::GetConsts()->buttonClickSound, this );
+		}
 		//
 		if ( pShared->eTriggerMode == NDb::BCST_ON_PUSH )
 		{
@@ -209,7 +231,9 @@ void CWindowMSButton::OnPush( const int nButton )
 				// run state NORMAL in backward direction
 				BackAnimation();
 				if ( pInstance->bAutoChangeState )
+				{
 					SetNextState();
+				}
 				// run logical state Sequience
 				GetScreen()->RunAnimationSequienceForward( pInstance->buttonStates[GetState()].commandsOnEnterState, this );
 
@@ -272,7 +296,9 @@ void CWindowMSButton::OnPush( const int nButton )
 
 		// send notification only for left button !
 		if ( pButtonNotify && nButton == MSTATE_BUTTON1 )
+		{
 			pButtonNotify->Pushed( this );
+		}
 	}
 }
 
@@ -292,7 +318,9 @@ void CWindowMSButton::OnRelease( const bool bInside, const int nButton )
 					BackAnimation();
 					// change state (static appearance )
 					if ( pInstance->bAutoChangeState )
+					{
 						SetNextState();
+					}
 					// run logical state Sequience
 					NI_ASSERT( pInstance->buttonStates.size() > GetState(),
 					           "button states(in instance) have less states then button states in shared." );
@@ -321,7 +349,9 @@ void CWindowMSButton::OnRelease( const bool bInside, const int nButton )
 			}
 			// change substate ( static appearance )
 			if ( eOrigSubState != NDb::BST_DISABLED )
+			{
 				SwitchSubState( NDb::BST_MOUSE_OVER );
+			}
 
 			// run state MOUSE_OVER in forward direction
 			nAnimationID = GetScreen()->RunAnimationSequienceForward(
@@ -337,7 +367,9 @@ void CWindowMSButton::OnRelease( const bool bInside, const int nButton )
 					RunAnimationAndCommands( pShared->visualStates[GetState()].normal.onEnterSubState, "", false, true );
 		}
 		if ( pButtonNotify && nButton == MSTATE_BUTTON1 )
+		{
 			pButtonNotify->Released( this );
+		}
 	}
 }
 
@@ -358,7 +390,9 @@ void CWindowMSButton::SetNextState()
 		SwitchSubState( NDb::BST_NORMAL );
 
 		if ( pButtonNotify )
+		{
 			pButtonNotify->StateChanged( this );
+		}
 	}
 }
 
@@ -367,9 +401,13 @@ void CWindowMSButton::NotifyStateSequenceFinished() {}
 void CWindowMSButton::OnActivatePushedState( const SGameMessage &msg )
 {
 	if ( msg.nParam1 )
+	{
 		SwitchSubState( NDb::BST_PUSHED_DEEP );
+	}
 	else
+	{
 		SwitchSubState( NDb::BST_NORMAL );
+	}
 }
 
 void CWindowMSButton::Init()
@@ -401,11 +439,17 @@ void CWindowMSButton::SetButtonGroup( const int nGroup )
 bool CWindowMSButton::OnButtonDown( const CVec2 &vPos, const int nButton )
 {
 	if ( CWindow::OnButtonDown( vPos, nButton ) )
+	{
 		return true;
+	}
 	if ( !IsInside( vPos ) )
+	{
 		return false;
+	}
 	if ( !IsEnabled() )
+	{
 		return true;
+	}
 	OnPush( nButton );
 	return true;
 }
@@ -413,23 +457,31 @@ bool CWindowMSButton::OnButtonDown( const CVec2 &vPos, const int nButton )
 bool CWindowMSButton::OnButtonUp( const CVec2 &vPos, const int nButton )
 {
 	if ( CWindow::OnButtonUp( vPos, nButton ) )
+	{
 		return true;
+	}
 
 	if ( !bPressed[nButton] || !IsEnabled() )
+	{
 		return false;
+	}
 
 	const bool bInside = IsInside( vPos );
 	if ( nButton == MSTATE_BUTTON1 )
 	{
 		if ( states[pInstance->nState].eSubState == NDb::BST_PUSHED_DEEP )
+		{
 			OnRelease( bInside, nButton );
+		}
 		bPressed[nButton] = false;
 		OnMouseMove( vPos, nButton & ~MSTATE_BUTTON1 );
 	}
 	else if ( nButton == MSTATE_BUTTON2 )
 	{
 		if ( states[pInstance->nState].eSubState == NDb::BST_RIGHT_DOWN )
+		{
 			OnRelease( bInside, nButton );
+		}
 		bPressed[nButton] = false;
 		OnMouseMove( vPos, nButton & ~MSTATE_BUTTON2 );
 	}
@@ -457,15 +509,23 @@ bool CWindowMSButton::OnMouseMove( const CVec2 &vPos, const int nButton )
 	if ( IsEnabled() )
 	{
 		if ( bPressed[0] && !( nButton & MSTATE_BUTTON1 ) )
+		{
 			OnRelease( false, MSTATE_BUTTON1 );
+		}
 		if ( bPressed[1] && !( nButton & MSTATE_BUTTON2 ) )
+		{
 			OnRelease( false, MSTATE_BUTTON2 );
+		}
 
 		const bool bInside = IsInside( vPos );
 		if ( bInside )
+		{
 			OnEnter( nButton );
+		}
 		else
+		{
 			OnLeave( nButton );
+		}
 	}
 	return false;
 }
@@ -475,13 +535,19 @@ void CWindowMSButton::Enable( const bool bEnable )
 	if ( bEnable )
 	{
 		if ( states.empty() )
+		{
 			return;
+		}
 
 		if ( states[GetState()].eSubState == NDb::BST_DISABLED )
+		{
 			SwitchSubState( NDb::BST_NORMAL );
+		}
 	}
 	else
+	{
 		SwitchSubState( NDb::BST_DISABLED );
+	}
 	CWindow::Enable( bEnable );
 }
 
@@ -496,9 +562,13 @@ void CWindowMSButton::SetStateWithVisual( const int nState )
 	                         !pInstance->buttonStates[GetState()].bReverseCommands );
 
 	if ( !IsEnabled() )
+	{
 		Enable( false );
+	}
 	else // change substate ( static appearance )
+	{
 		SwitchSubState( NDb::BST_NORMAL );
+	}
 }
 
 void CWindowMSButton::SetState( const int nState )
@@ -568,7 +638,9 @@ int CWindowMSButton::GetState( const std::string &szName )
 	for ( int i = 0; i < nCount; ++i )
 	{
 		if ( pInstance->buttonStates[i].szName == szName )
+		{
 			return i;
+		}
 	}
 	return -1;
 }
@@ -578,19 +650,29 @@ void CWindowMSButton::SetTexture( const struct NDb::STexture *pDesc )
 	for ( int i = 0; i < states.size(); ++i )
 	{
 		if ( states[i].normal.pBackground )
+		{
 			states[i].normal.pBackground->SetTexture( pDesc );
+		}
 
 		if ( states[i].mouseOver.pBackground )
+		{
 			states[i].mouseOver.pBackground->SetTexture( pDesc );
+		}
 
 		if ( states[i].pushed.pBackground )
+		{
 			states[i].pushed.pBackground->SetTexture( pDesc );
+		}
 
 		if ( states[i].disabled.pBackground )
+		{
 			states[i].disabled.pBackground->SetTexture( pDesc );
+		}
 
 		if ( states[i].rightButtonDown.pBackground )
+		{
 			states[i].rightButtonDown.pBackground->SetTexture( pDesc );
+		}
 	}
 }
 
@@ -625,12 +707,16 @@ void CWindowMSButton::ApplySubstateText( const CButtonSubStateVisual &substate )
 	else if ( substate.pTextString )
 	{
 		if ( const NDb::SWindowPlacement *pPlacement = substate.pTextString->GetPlacement() )
+		{
 			SetTextPlacement( *pPlacement );
+		}
 	}
 	else
 	{
 		if ( const NDb::SWindowPlacement *pPlacement = GetDBTextPlacement() )
+		{
 			SetTextPlacement( *pPlacement );
+		}
 	}
 
 	CWindow::SetTextString( wszText );

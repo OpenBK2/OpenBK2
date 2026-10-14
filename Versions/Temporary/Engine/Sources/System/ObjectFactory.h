@@ -21,7 +21,9 @@ private:
 	{
 		NI_ASSERT( pObject != 0, "null object passed" );
 		if ( pObject == 0 )
+		{
 			return 0;
+		}
 
 		return &typeid( *pObject );
 	}
@@ -30,7 +32,9 @@ private:
 	{
 		CTypeIndexHash::iterator i = typeIndex.find( t );
 		if ( i != typeIndex.end() )
+		{
 			return i->second;
+		}
 		for ( i = typeIndex.begin(); i != typeIndex.end(); ++i )
 		{
 			if ( *i->first == *t )
@@ -51,10 +55,14 @@ public:
 		for ( CTypeIndexHash::iterator i = typeIndex.begin(); i != typeIndex.end(); ++i )
 		{
 			if ( *i->first == *vft )
+			{
 				toErase.push_back( i->first );
+			}
 		}
 		for ( int k = 0; k < toErase.size(); ++k )
+		{
 			typeIndex.erase( toErase[k] );
+		}
 	}
 	template <class TT>
 	void RegisterType( int nTypeID, newFunc func, TT * )
@@ -71,10 +79,14 @@ public:
 	{
 		typename CTypeNewHash::iterator i = typeInfo.find( nTypeID );
 		if ( i == typeInfo.end() )
+		{
 			return 0;
+		}
 		newFunc f = i->second;
 		if ( f )
+		{
 			return f();
+		}
 		return 0;
 	}
 	bool IsRegistered( int nTypeID ) const { return typeInfo.find( nTypeID ) != typeInfo.end(); }

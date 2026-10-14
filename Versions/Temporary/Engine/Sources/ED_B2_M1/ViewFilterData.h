@@ -50,7 +50,9 @@ struct SViewFilterData
 	void GetObjectTypesForFiltering( std::vector<std::string> *pObjTypes )
 	{
 		if ( !pObjTypes )
+		{
 			return;
+		}
 		// эти типы объектов можно будет показывать/скрывать
 		const char *pszObjTypeNames[] = {
 			"ObjectRPGStats",
@@ -102,7 +104,9 @@ struct SViewFilterData
 				{
 					objTypeFilter.erase( it );
 					if ( it == objTypeFilter.end() )
+					{
 						break;
+					}
 				}
 				else
 				{

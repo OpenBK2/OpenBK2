@@ -67,15 +67,21 @@ public:
 			float s1n = s1->GetNNeeded( cMask );
 			float s2n = s2->GetNNeeded( cMask );
 			if ( s1n != s2n )
+			{
 				return s1n > s2n;
+			}
 			else
 			{
 				auto p1 = s1->GetCenter();
 				auto p2 = s2->GetCenter();
 				if ( p1.x != p2.x )
+				{
 					return p1.x > p2.x;
+				}
 				if ( p1.y != p2.y )
+				{
 					return p1.y > p2.y;
+				}
 
 				// this should never happen since centers are always unique
 				return false;
@@ -261,8 +267,12 @@ public:
 	virtual void Run()
 	{
 		if ( pTask )
+		{
 			if ( !pTask->IsFinished() )
+			{
 				pTask->CancelTask( pCommander );
+			}
+		}
 	}
 };
 

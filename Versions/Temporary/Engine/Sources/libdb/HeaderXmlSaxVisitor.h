@@ -27,7 +27,9 @@ public:
 	bool VisitChunkStart( const std::string &szName )
 	{
 		if ( bNeedMoreChunks )
+		{
 			pHeader->szClassTypeName = szName;
+		}
 		bNeedMoreChunks = false;
 		return true;
 	}

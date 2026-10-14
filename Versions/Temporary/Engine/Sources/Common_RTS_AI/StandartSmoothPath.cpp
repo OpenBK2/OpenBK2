@@ -78,9 +78,13 @@ bool CStandartSmoothPathBasis::Init(
 const CVec2 CStandartSmoothPathBasis::PeekPathPoint( const int nShift ) const
 {
 	if ( pPath == 0 )
+	{
 		return VNULL2;
+	}
 	else
+	{
 		return pPath->PeekPoint( nShift );
+	}
 }
 
 const CVec2 CStandartSmoothPathBasis::MoveUnit( const NTimer::STime timeDiff, const float _fSpeed )
@@ -88,12 +92,16 @@ const CVec2 CStandartSmoothPathBasis::MoveUnit( const NTimer::STime timeDiff, co
 	if ( IsFinished() || IsSplinePointsEqual() || bStopped )
 	{
 		if ( !bStopped && !bFinished )
+		{
 			FinishPath();
+		}
 		return GetUnit()->GetCenterPlain();
 	}
 
 	if ( GetSplineDX() != VNULL2 )
+	{
 		GetUnit()->SetDirectionVec( GetSplineDX() );
+	}
 
 	// Clamp consumed movement speed to the unit's current cap (terrain + desired speed + reverse modifier).
 	const float fSpeed = (std::min)( _fSpeed, GetUnit()->GetMaxSpeedHere() );
@@ -102,7 +110,9 @@ const CVec2 CStandartSmoothPathBasis::MoveUnit( const NTimer::STime timeDiff, co
 	while ( !IsFinished() && fabs( GetSplinePoint() - vCenter ) < fRemain )
 	{
 		while ( fabs( GetSplinePoint() - vCenter ) < fRemain && GetNIter() < CBSpline::N_OF_ITERATONS )
+		{
 			IterateSpline();
+		}
 
 		if ( pPath->IsFinished() && mDistance( GetSplinePoint(), pPath->GetFinishPoint() ) < 2 )
 		{
@@ -112,7 +122,9 @@ const CVec2 CStandartSmoothPathBasis::MoveUnit( const NTimer::STime timeDiff, co
 		else
 		{
 			if ( fabs( spline.GetPoint() - vCenter ) < fRemain && GetNIter() >= CBSpline::N_OF_ITERATONS )
+			{
 				InitSpline();
+			}
 		}
 	}
 
@@ -126,7 +138,9 @@ const CVec2 CStandartSmoothPathBasis::MoveUnit( const NTimer::STime timeDiff, co
 	}
 
 	if ( GetSplineDX() != VNULL2 )
+	{
 		GetUnit()->SetDirectionVec( GetSplineDX() );
+	}
 
 	const CVec2 vResult = fabs( GetSplinePoint() - vCenter ) < fRemain
 	                          ? GetSplinePoint()
@@ -169,7 +183,9 @@ const bool CStandartSmoothPathBasis::ValidateCurrentPath( const CVec2 &vCenter, 
 		IterateForwardSpline( &iter );
 
 		while ( iter.t != -1 && fabs2( iterPoint - iter.x ) <= sqr( pAIMap->GetTileSize() ) / 4 )
+		{
 			IterateForwardSpline( &iter );
+		}
 
 		int i = 1;
 		bool bBad = false;
@@ -184,29 +200,39 @@ const bool CStandartSmoothPathBasis::ValidateCurrentPath( const CVec2 &vCenter, 
 								 GetUnit()->GetBoundTileRadius(), iter.x, GetUnit()->GetAIPassabilityClass(), pAIMap ) == FREE_NONE )
 				{
 					if ( !bBad )
+					{
 						bBad = true;
+					}
 					else
 					{
 						// до конца пути осталось немного, лучше остановиться
 						const float fDist2 = fabs2( vCenter - pPath->GetFinishPoint() );
 						if ( fDist2 <= sqr( 3 * GetUnit()->GetUnitProfile().GetHalfLength() ) )
+						{
 							FinishPath();
+						}
 						else
 						{
 							pPath->RecalcPath( vNewPoint,
 							                   GetUnit()->GetProbablePlane( pAIMap->GetTile( vNewPoint ) ) == PLANE_WATER,
 							                   GetUnit()->GetLastKnownGoodTile() );
 							if ( pPath->IsFinished() )
+							{
 								FinishPath();
+							}
 							else if ( !Init( GetUnit(), pPath, false, false, pAIMap ) )
+							{
 								FinishPath();
+							}
 						}
 
 						return false;
 					}
 				}
 				else
+				{
 					bBad = false;
+				}
 
 				iterPoint = iter.x;
 			}
@@ -230,10 +256,14 @@ const bool CStandartSmoothPathBasis::IsPathBroken( const int nStartPoint ) const
 	const SVector v2 = p1 - p0;
 
 	if ( v1 == v2 )
+	{
 		return false;
+	}
 	else
+	{
 		return pAIMap->GetTerrain()->CanUnitGo( pUnit->GetBoundTileRadius(), p0 + v1, pUnit->GetAIPassabilityClass() ) ==
 		       FREE_NONE;
+	}
 }
 
 int CStandartSmoothPathBasis::InitSpline()

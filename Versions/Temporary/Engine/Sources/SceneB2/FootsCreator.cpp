@@ -12,7 +12,9 @@
 void CTerraGen::AddFoot( const STerrainInfo::SFoot &foot )
 {
 	if ( !foot.pFootMaterial )
+	{
 		return;
+	}
 
 	SFootGFXInfo gfxNewFoot;
 	gfxNewFoot.nID = foot.nID;
@@ -66,17 +68,29 @@ void CTerraGen::AddFoot( const STerrainInfo::SFoot &foot )
 			const float fNextTexY2 = fTexY2 - fFootWidth2 * fTexScaleY;
 
 			if ( i < DEF_FOOT_PARAGRAPH )
+			{
 				fAlpha1 = (float)i * DEF_FOOT_PARAGRAPH_INV;
+			}
 			else if ( i > ( itPointsArr->size() - DEF_FOOT_PARAGRAPH - 1 ) )
+			{
 				fAlpha1 = (float)( itPointsArr->size() - i - 1 ) * DEF_FOOT_PARAGRAPH_INV;
+			}
 			else
+			{
 				fAlpha1 = 1.0f;
+			}
 			if ( ( i + 1 ) < DEF_FOOT_PARAGRAPH )
+			{
 				fAlpha2 = (float)( i + 1 ) * DEF_FOOT_PARAGRAPH_INV;
+			}
 			else if ( ( i + 1 ) > ( itPointsArr->size() - DEF_FOOT_PARAGRAPH - 1 ) )
+			{
 				fAlpha2 = (float)( itPointsArr->size() - ( i + 1 ) - 1 ) * DEF_FOOT_PARAGRAPH_INV;
+			}
 			else
+			{
 				fAlpha2 = 1.0f;
+			}
 
 			ProjectQuadOnTerrain( point1.vPos,
 			                      vNextPoint1,
@@ -104,13 +118,17 @@ void CTerraGen::AddFoot( const STerrainInfo::SFoot &foot )
 		}
 
 		if ( nPatchesCount > 0 )
+		{
 			gfxNewFoot.patches.push_back( data );
+		}
 	}
 
 	terrainGfxInfo.foots.push_back( gfxNewFoot );
 
 	if ( pGfxObserver )
+	{
 		pGfxObserver->AddFoot( &( terrainGfxInfo.foots.back() ) );
+	}
 }
 
 //void CTerraGen::AddAllFoots()
@@ -128,7 +146,9 @@ void CTerraGen::AddAllNeededFoots()
 		      ++itFoot )
 		{
 			if ( *it == itFoot->nID )
+			{
 				AddFoot( *itFoot );
+			}
 		}
 	}
 	needAddFoots.resize( 0 );
@@ -152,9 +172,13 @@ void CTerraGen::RemoveFootInfo( const int nVSOID )
 	for ( std::list<STerrainInfo::SFoot>::iterator it = terrainInfo.foots.begin(); it != terrainInfo.foots.end(); )
 	{
 		if ( it->nID == nVSOID )
+		{
 			it = terrainInfo.foots.erase( it );
+		}
 		else
+		{
 			++it;
+		}
 	}
 }
 
@@ -163,8 +187,12 @@ void CTerraGen::RemoveFootGfxInfo( const int nVSOID )
 	for ( std::list<SFootGFXInfo>::iterator it = terrainGfxInfo.foots.begin(); it != terrainGfxInfo.foots.end(); )
 	{
 		if ( it->nID == nVSOID )
+		{
 			it = terrainGfxInfo.foots.erase( it );
+		}
 		else
+		{
 			++it;
+		}
 	}
 }

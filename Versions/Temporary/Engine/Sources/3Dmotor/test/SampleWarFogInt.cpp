@@ -24,9 +24,13 @@ std::vector<const NGScene::SLightingKernels *> AvailableKernels()
 	std::vector<const NGScene::SLightingKernels *> kernels;
 	kernels.push_back( &NGScene::refLightingKernels );
 	if ( NGScene::IsSSE2Present() )
+	{
 		kernels.push_back( &NGScene::sse2LightingKernels );
+	}
 	if ( NGScene::IsAVX2Present() )
+	{
 		kernels.push_back( &NGScene::avx2LightingKernels );
+	}
 	return kernels;
 }
 

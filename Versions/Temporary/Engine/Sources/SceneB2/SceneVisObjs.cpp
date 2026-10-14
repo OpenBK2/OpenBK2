@@ -79,7 +79,9 @@ void CVisObjReflectionInfo::Recalc()
 	if ( !( pGeometry->HasZeroValue() ) )
 	{
 		if ( pValue == 0 )
+		{
 			pValue = new NGScene::CObjectInfo;
+		}
 
 		const std::vector<CVec3> &positions = pGeometry->GetValue()->GetPositions();
 		const std::vector<NGScene::SUVInfo> &vertices = pGeometry->GetValue()->GetVertices();
@@ -149,7 +151,9 @@ bool CScene::CheckObjExist( int nObjectID ) const
 	//проверка на повторное создание объектов только для FastDebug
 #if !defined( _BETARELEASE ) && !defined( _FINALRELEASE )
 	if ( data[eScene]->visObjects.find( nObjectID ) == data[eScene]->visObjects.end() )
+	{
 		return false;
+	}
 	// %.8x, as this was written before fmt, pads to eight digits; fmt's {:.8x}
 	// is a precision, which fmt refuses on an integer and throws format_error
 	// for, so a duplicate id threw here instead of being traced. {:08x} pads,
@@ -181,7 +185,9 @@ void CScene::AddInterfaceObject(
 		                                                      data[eScene]->pAbsTimer );
 		// check for successful animator
 		if ( pVOD->pAnimator == 0 )
+		{
 			return;
+		}
 		//
 		pVOD->pTransform = new CCSFBTransform;
 		pVOD->pAnimator->SetGlobalTransform( pVOD->pTransform );
@@ -224,7 +230,9 @@ void CScene::RemoveInterfaceObject( IWindow *pScreen, const int nID )
 	SSceneData::CScreensData &screensData = data[eScene]->screensData;
 	SSceneData::CScreensData::iterator it = find( screensData.begin(), screensData.end(), pScreen );
 	if ( it != screensData.end() )
+	{
 		it->interfaceVisObjects.erase( nID );
+	}
 }
 
 int CScene::AddObject( const int nID,
@@ -244,9 +252,13 @@ int CScene::AddObject( const int nID,
 	                       ( pModel != 0 && pModel->pSkeleton != 0 && !pModel->pSkeleton->animations.empty() ) &&
 	                           ( eAnimMode != OBJ_ANIM_MODE_FORCE_NON_ANIMATED );
 	if ( bAnimated )
+	{
 		return AddAnimatedObject( nID, pModel, _vPos, qRot, vScale, eAnimMode, pMeshInfo, pLowLevelModel, bHasReflection );
+	}
 	else
+	{
 		return AddStaticObject( nID, pModel, _vPos, qRot, vScale, pMeshInfo, bHasReflection );
+	}
 }
 
 int CScene::AddStaticObject( const int nID,
@@ -265,7 +277,9 @@ int CScene::AddStaticObject( const int nID,
 	// check for object exist
 	const int nObjectID = GetID( nID );
 	if ( CheckObjExist( nObjectID ) )
+	{
 		return nObjectID;
+	}
 	// make placement
 	CPtr<SStaticVisObjDesc> pVOD = new SStaticVisObjDesc();
 	CVec3 vPos;
@@ -323,13 +337,19 @@ int CScene::AddAnimatedObject( const int nID,
 	// check for object exist
 	const int nObjectID = GetID( nID );
 	if ( CheckObjExist( nObjectID ) )
+	{
 		return nObjectID;
+	}
 	//
 	CPtr<SAnimatedVisObjDescBase> pVOD;
 	if ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC || eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC_ABS )
+	{
 		pVOD = new SAnimatedStaticVisObjDesc();
+	}
 	else
+	{
 		pVOD = new SAnimatedVisObjDesc();
+	}
 	// create animator
 	NAnimation::SGrannySkeletonHandle handle;
 	NI_VERIFY( pModel->pSkeleton != 0,
@@ -338,12 +358,18 @@ int CScene::AddAnimatedObject( const int nID,
 	handle.pSkeleton = pModel->pSkeleton;
 	handle.nModelInFile = 0;
 	if ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC_ABS )
+	{
 		pVOD->pAnimator = NAnimation::CreateSkeletonAnimator( handle, data[eScene]->pAbsTimer );
+	}
 	else
+	{
 		pVOD->pAnimator = NAnimation::CreateSkeletonAnimator( handle, data[eScene]->pGameTimer );
+	}
 	// check for successful animator
 	if ( pVOD->pAnimator == 0 )
+	{
 		return -1;
+	}
 	//
 	pVOD->pTransform = new CCSFBTransform;
 	pVOD->pAnimator->SetGlobalTransform( pVOD->pTransform );
@@ -405,9 +431,13 @@ int CScene::AddObject( const int nID,
 	                       ( pModel != 0 && pModel->pSkeleton != 0 && !pModel->pSkeleton->animations.empty() ) &&
 	                           ( eAnimMode != OBJ_ANIM_MODE_FORCE_NON_ANIMATED );
 	if ( bAnimated )
+	{
 		return AddAnimatedObject( nID, pModel, mPlace, eAnimMode, pMeshInfo, bHasReflection );
+	}
 	else
+	{
 		return AddStaticObject( nID, pModel, mPlace, pMeshInfo, bHasReflection );
+	}
 }
 
 int CScene::AddStaticObject( const int nID,
@@ -417,7 +447,9 @@ int CScene::AddStaticObject( const int nID,
                              const bool bHasReflection )
 {
 	if ( pModel == 0 )
+	{
 		return -1;
+	}
 
 	data[eScene]->GetGScene()->Precache( pModel );
 	//data[eScene]->GetGScene()->WaitForLoad();
@@ -425,7 +457,9 @@ int CScene::AddStaticObject( const int nID,
 	// check for object exist
 	const int nObjectID = GetID( nID );
 	if ( CheckObjExist( nObjectID ) )
+	{
 		return nObjectID;
+	}
 	// make placement
 	CPtr<SDynamicVisObjDesc> pVOD = new SDynamicVisObjDesc();
 	pVOD->UpdatePlacement( data[eScene]->GetGScene(), mPlace );
@@ -435,7 +469,9 @@ int CScene::AddStaticObject( const int nID,
 	data[eScene]->GetGScene()->CreateMeshInfo( pModel, pMeshInfo, false );
 
 	if ( bHasReflection )
+	{
 		AddReflectionFromObject( pMeshInfo, pModel, mPlace );
+	}
 
 	if ( CObjectBase *pObj = data[eScene]->GetGScene()->CreateMesh( *pMeshInfo, pVOD->pTransform.GetPtr(), 0, 0 ) )
 	{
@@ -463,7 +499,9 @@ int CScene::AddAnimatedObject( const int nID,
 {
 	// pModel = NDb::Get<NDb::SModel>( 253 );
 	if ( pModel == 0 )
+	{
 		return -1;
+	}
 
 	data[eScene]->GetGScene()->Precache( pModel );
 	//data[eScene]->GetGScene()->WaitForLoad();
@@ -471,24 +509,36 @@ int CScene::AddAnimatedObject( const int nID,
 	// check for object exist
 	const int nObjectID = GetID( nID );
 	if ( CheckObjExist( nObjectID ) )
+	{
 		return nObjectID;
+	}
 	//
 	CPtr<SAnimatedVisObjDescBase> pVOD;
 	if ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC || eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC_ABS )
+	{
 		pVOD = new SAnimatedStaticVisObjDesc();
+	}
 	else
+	{
 		pVOD = new SAnimatedVisObjDesc();
+	}
 	// create animator
 	NAnimation::SGrannySkeletonHandle handle;
 	handle.pSkeleton = pModel->pSkeleton;
 	handle.nModelInFile = 0;
 	if ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC_ABS )
+	{
 		pVOD->pAnimator = NAnimation::CreateSkeletonAnimator( handle, data[eScene]->pAbsTimer );
+	}
 	else
+	{
 		pVOD->pAnimator = NAnimation::CreateSkeletonAnimator( handle, data[eScene]->pGameTimer );
+	}
 	// check for successfull skeleton animator
 	if ( pVOD->pAnimator == 0 )
+	{
 		return -1;
+	}
 	//
 	pVOD->pTransform = new CCSFBTransform;
 	pVOD->pAnimator->SetGlobalTransform( pVOD->pTransform );
@@ -504,7 +554,9 @@ int CScene::AddAnimatedObject( const int nID,
 	data[eScene]->GetGScene()->CreateMeshInfo( pModel, pMeshInfo, true );
 
 	if ( bHasReflection )
+	{
 		AddReflectionFromObject( pMeshInfo, pModel, mPlace );
+	}
 
 	if ( CObjectBase *pObj = data[eScene]->GetGScene()->CreateMesh(
 					 *pMeshInfo, pVOD->pTransform.GetPtr(), 0, NGScene::CMeshAnimStuff( pModel, pVOD->pAnimator ) ) )
@@ -535,7 +587,9 @@ bool CScene::MoveObject( const int nID, const CVec3 &_vPos, const CQuat &qRot, c
 	//	NI_ASSERT( visObjects.find(nID) != visObjects.end(), StrFmt("Can't find object 0x%.8x to move", nID) );
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
 	if ( pos == data[eScene]->visObjects.end() )
+	{
 		return false;
+	}
 	CVec3 vPos;
 	AI2Vis( &vPos, _vPos );
 	pos->second->UpdatePlacement( data[eScene]->GetGScene(), vPos, qRot, vScale );
@@ -550,7 +604,9 @@ bool CScene::MoveObject( const int nID, const SHMatrix &mPlace )
 	//	NI_ASSERT( visObjects.find(nID) != visObjects.end(), StrFmt("Can't find object 0x%.8x to move", nID) );
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
 	if ( pos == data[eScene]->visObjects.end() )
+	{
 		return false;
+	}
 
 	pos->second->UpdatePlacement( data[eScene]->GetGScene(), mPlace );
 	pos->second->UpdateSrcBind();
@@ -563,7 +619,9 @@ bool CScene::ChangeModel( const int nObjectID, const NDb::SModel *pModel )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nObjectID );
 	if ( pos == data[eScene]->visObjects.end() )
+	{
 		return false;
+	}
 
 	if ( pModel )
 	{
@@ -581,7 +639,9 @@ bool CScene::ChangeModel( const int nObjectID, const NDb::SModel *pModel )
 		NTimer::STime currTime = Singleton<IGameTimer>()->GetGameTime();
 		for ( SModelVisObjDesc::CAttaches::iterator it = pVO->attachedObjects.begin(); it != pVO->attachedObjects.end();
 		      ++it )
+		{
 			it->second.clear();
+		}
 	}
 	return true;
 }
@@ -590,7 +650,9 @@ void CScene::RemoveObjectPickability( const int nID )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
 	if ( pos == data[eScene]->visObjects.end() )
+	{
 		return;
+	}
 	if ( SModelVisObjDesc *pVOD = dynamic_cast_ptr<SModelVisObjDesc *>( pos->second ) )
 	{
 		pVOD->srcBind.Unlink();
@@ -602,7 +664,9 @@ void CScene::ShowObject( const int nID, const bool bShow )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
 	if ( pos == data[eScene]->visObjects.end() )
+	{
 		return;
+	}
 
 	pos->second->bHidden = !bShow;
 	if ( bShow )

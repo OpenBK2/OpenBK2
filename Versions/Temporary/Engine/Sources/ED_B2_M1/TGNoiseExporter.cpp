@@ -18,7 +18,9 @@ EXPORT_RESULT CTGNoiseExporter::ExportObject( IManipulator *pManipulator,
                                               EXPORT_TYPE exportType )
 {
 	if ( ( exportType != ET_BEFORE_REF ) && ( exportType != ET_NO_REF ) )
+	{
 		return ER_SUCCESS;
+	}
 	//
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	ILogger *pLogger = NLog::GetLogger();

@@ -667,7 +667,9 @@ template <class TCheck>
 inline TCheck *GetChildChecked( IWindow *pParent, const std::string &szName, const bool bRecursive )
 {
 	if ( !pParent )
+	{
 		return 0;
+	}
 	IWindow *pWnd = pParent->GetChild( szName, bRecursive );
 	TCheck *pCheck = dynamic_cast<TCheck *>( pWnd );
 	NI_ASSERT( !s_bUICommonShowWarnings || pCheck, fmt::format( "Window not found: \"{}\"", szName ) );

@@ -109,9 +109,13 @@ public:
 	virtual void SampleWarFog( const std::vector<CVec3> &vPos, std::vector<float> *pRes )
 	{
 		if ( pRootOutput )
+		{
 			pRootOutput->SampleWarFog( vPos, pRes );
+		}
 		else
+		{
 			pRes->clear();
+		}
 	}
 
 	virtual const SParticleOrientationInfo &GetOrientationInfo() const { return orientation; }
@@ -151,13 +155,17 @@ protected:
 		}
 		bc.Clear();
 		if ( effects.empty() )
+		{
 			return;
+		}
 		for ( int k = 0; k < effects.size(); ++k )
 		{
 			SEffectInfo &eff = effects[k];
 			pl = eff.lmPlacement;
 			if ( !pWriteBuffer )
+			{
 				pWriteBuffer = new SWriteBuffer( &pValue );
+			}
 			nSkipParticles = eff.nStartParticle;
 			dwPColor = eff.dwPColor;
 			ASSERT( pWriteBuffer->nTarget == eff.nBufferPlace );
@@ -175,14 +183,18 @@ public:
 	{
 		ASSERT( ( effects.empty() && pWriteBuffer == 0 ) || ( !effects.empty() && pWriteBuffer != 0 ) );
 		if ( !pWriteBuffer )
+		{
 			pWriteBuffer = new SWriteBuffer( &pValue );
+		}
 		RealStart( pEffect, nStartParticle, bv, lm, dwPColor, pWriteBuffer->nTarget );
 	}
 	void FreeWriteBuffer()
 	{
 		ASSERT( !bIsAddingPart );
 		if ( pWriteBuffer )
+		{
 			delete pWriteBuffer;
+		}
 		pWriteBuffer = 0;
 		bc.Make( &bound );
 	}
@@ -234,7 +246,9 @@ public:
 	void AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tPlace, float fDepth )
 	{
 		if ( --nSkipParticles < 0 && pWriteBuffer->nTarget < N_PARTICLES_BUFFER_SIZE )
+		{
 			RealAddParticle( vPos, dwColor, tPlace, fDepth );
+		}
 	}
 
 	BOOST_FORCEINLINE void
@@ -282,7 +296,9 @@ public:
 	void AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tPlace, float fDepth )
 	{
 		if ( --nSkipParticles < 0 && pWriteBuffer->nTarget < N_PARTICLES_BUFFER_SIZE )
+		{
 			RealAddParticle( vPos, dwColor, tPlace, fDepth );
+		}
 	}
 
 	BOOST_FORCEINLINE uint32_t BlendParticleColor( uint32_t dwColor, uint32_t dwPColor )

@@ -206,7 +206,9 @@ public:
 	virtual ~Script()
 	{
 		if ( m_ownState )
+		{
 			lua_close( m_state );
+		}
 	}
 
 	// Basic stack manipulation.
@@ -227,9 +229,13 @@ public:
 	void PushBool( bool value )
 	{
 		if ( value )
+		{
 			lua_pushnumber( m_state, 1 );
+		}
 		else
+		{
 			lua_pushnil( m_state );
+		}
 		++nPushCount;
 	}
 	void PushNil()

@@ -45,12 +45,16 @@ bool CanSelect( CTestNode *node, CTestNode *target, CTransformStack *clip )
 	SSphere bound;
 	node->GetBound( &bound );
 	if ( !clip->PushClipHint( bound ) )
+	{
 		return false;
+	}
 	bool found = node == target;
 	for ( int i = 0; i < 8 && !found; ++i )
 	{
 		if ( node->GetNode( i ) )
+		{
 			found = CanSelect( node->GetNode( i ), target, clip );
+		}
 	}
 	clip->PopClipHint();
 	return found;

@@ -12,7 +12,9 @@ void CFileFont::Recalc()
 {
 	CResourceOpener file( "Fonts", GetKey() );
 	if ( file.IsOk() )
+	{
 		file->Add( 1, &pValue );
+	}
 }
 
 } // namespace

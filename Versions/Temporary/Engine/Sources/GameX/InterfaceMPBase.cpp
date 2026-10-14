@@ -27,7 +27,9 @@ bool CInterfaceMPScreenBase::StepLocal( bool bAppActive )
 	}
 
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )
+	{
 		pInterface->Step( bAppActive );
+	}
 
 	//Singleton<IMPToUIManager>()->MPUISegment();
 

@@ -30,7 +30,9 @@ ConvertWeights( std::vector<SVertexWeight> *pRes, const std::vector<SLoadVertexW
 			j = 0;
 		}
 		if ( j > 3 )
+		{
 			continue;
+		}
 		r[nVertex].fWeights[j] = wghts[i].fWeight;
 		r[nVertex].cBoneIndices[j] = wghts[i].nBone;
 		j++;

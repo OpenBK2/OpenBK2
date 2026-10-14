@@ -60,16 +60,22 @@ void CModelEditor::ResetGUI( bool bActive )
 	{
 		CModelEditorSettings saved;
 		if ( std::string( profile ) == "UnitStats" )
+		{
 			saved.bDrawAnimations = saved.bDrawTerrain = false;
+		}
 		pUserData->SerializeSettings( saved, profile, SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
 		saved.bShowTool = defaults.bShowTool;
 		saved.bShowToolbar = defaults.bShowToolbar;
 		pUserData->SerializeSettings( saved, profile, SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
 	}
 	if ( pwndTool )
+	{
 		pwndTool->Show( bActive && editorSettings.bShowTool );
+	}
 	if ( auto *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nModelToolbarID ) )
+	{
 		pToolbar->Show( bActive && editorSettings.bShowToolbar );
+	}
 }
 
 void CModelEditor::CreateControls()

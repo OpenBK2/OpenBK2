@@ -34,12 +34,16 @@ const int N_TARGET_SIZE_Y = 512;
 static bool CreateScreenShot( CArray2D<NGfx::SPixel8888> *pTexture, IEditorScene *pScene )
 {
 	if ( !pScene )
+	{
 		return false;
+	}
 
 	// Prepare target texture
 	NGScene::CRTPtr *pTarget = NGScene::GetFrameTransitionCapture2();
 	if ( !pTarget )
+	{
 		return false;
+	}
 
 	// Prepare scene
 	CVec4 vPrevColor = pScene->SetBackgroundColor( CVec4( 0.5f, 0.5f, 0.5f, 0.0f ) );
@@ -67,7 +71,9 @@ static bool WriteTGA( const std::string &szFileName, const CArray2D<NGfx::SPixel
 
 	// Prepare image for writing
 	if ( nIconSizeX > texture.GetSizeX() || nIconSizeY > texture.GetSizeY() )
+	{
 		return false;
+	}
 
 	int nStartX = ( texture.GetSizeX() - nIconSizeX ) / 2;
 	int nStartY = ( texture.GetSizeY() - nIconSizeY ) / 2;
@@ -76,15 +82,19 @@ static bool WriteTGA( const std::string &szFileName, const CArray2D<NGfx::SPixel
 	image.SetSizes( nIconSizeX, nIconSizeY );
 
 	for ( int iX = 0; iX < nIconSizeX; ++iX )
+	{
 		for ( int iY = 0; iY < nIconSizeY; ++iY )
 		{
 			image[iX][iY] = texture[iX + nStartX][iY + nStartY].dwColor;
 		}
+	}
 
 	// Write file
 	CFileStream fileTGA( szFileName, CFileStream::WIN_CREATE );
 	if ( !fileTGA.IsOk() )
+	{
 		return false;
+	}
 
 	NImage::SaveImageAsTGA( &fileTGA, image );
 
@@ -105,7 +115,9 @@ static bool CreateTextureItem( const std::string &szTextureName, const std::stri
 	}
 
 	if ( !pTexMan )
+	{
 		return false;
+	}
 
 	// Setting object properties
 	bool bResult = true;
@@ -117,7 +129,9 @@ static bool CreateTextureItem( const std::string &szTextureName, const std::stri
 	bResult = bResult && CManipulatorManager::SetValue( szTgaName, pTexMan, "SrcName", false );
 
 	if ( !bResult )
+	{
 		return false;
+	}
 
 	// Export object
 	Singleton<IExporterContainer>()->ExportObject( pTexMan, "Texture", szTextureName, true, false );
@@ -152,12 +166,16 @@ void CModelEditor::CreateIcon()
 	const NDb::SMechUnitRPGStats *pUnitStats =
 			NDb::Get<NDb::SMechUnitRPGStats>( GetObjectSet().objectNameSet.begin()->first );
 	if ( !pUnitStats )
+	{
 		return;
+	}
 
 	// Creating screenshot
 	CArray2D<NGfx::SPixel8888> texture;
 	if ( !CreateScreenShot( &texture, EditorScene() ) )
+	{
 		return;
+	}
 
 	// Get unit name and generate directories and icon file names.
 	const std::string &szUnitName = pUnitStats->GetDBID().ToString();
@@ -174,22 +192,30 @@ void CModelEditor::CreateIcon()
 
 	// Prepare icons data and write tga
 	if ( !WriteTGA( szIconFullPath, texture ) )
+	{
 		return;
+	}
 
 	// Create "Texture" item for icon and export it
 	if ( !CreateTextureItem( szTextureItemName, szIconTgaName ) )
+	{
 		return;
+	}
 
 	// Link texture with stats
 	NDb::IObjMan *pManipulator = NDb::GetManipulator( pUnitStats->GetDBID() );
 	if ( !pManipulator )
+	{
 		return;
+	}
 
 	pManipulator->SetValue( "IconTexture", szTextureItemName );
 
 	// Save camera position to object
 	if ( !SaveCameraPosition( pManipulator ) )
+	{
 		return;
+	}
 }
 
 void CModelEditor::RestoreCameraParametersFromStats()
@@ -198,11 +224,15 @@ void CModelEditor::RestoreCameraParametersFromStats()
 	const NDb::SMechUnitRPGStats *pUnitStats =
 			NDb::Get<NDb::SMechUnitRPGStats>( GetObjectSet().objectNameSet.begin()->first );
 	if ( !pUnitStats )
+	{
 		return;
+	}
 
 	NDb::IObjMan *pManipulator = NDb::GetManipulator( pUnitStats->GetDBID() );
 	if ( !pManipulator )
+	{
 		return;
+	}
 
 	// Getting camera parameters
 	float fDistance = 0.0f;
@@ -219,11 +249,15 @@ void CModelEditor::RestoreCameraParametersFromStats()
 	bResult = bResult && pManipulator->GetValue( "CameraPlacementIconShot.Fov", &fFOV );
 
 	if ( !bResult )
+	{
 		return;
+	}
 
 	// Parameters is not defined in this stats
 	if ( fDistance < FP_EPSILON )
+	{
 		return;
+	}
 
 	// Setting parameters
 	editorSettings.currentCamera.vAnchor = vAnchor;

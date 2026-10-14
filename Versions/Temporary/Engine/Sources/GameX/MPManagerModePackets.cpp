@@ -36,10 +36,14 @@ bool CMPManagerMode::OnB2SlotInfoPacket( class CB2SlotInfoPacket *pPacket )
 	if ( pPacket->info.bPresent && !IsPlayerPresent( pPacket->nSlot ) )
 	{
 		if ( nOwnSlot >= 0 )
+		{
 			pClient->SendGamePacket( new CPingPacket( pPacket->nClientID, nOwnSlot, GameTimer()->GetAbsTime() ), false );
+		}
 		// Only clients increase slot counter here, server increases it in NEW_CLIENT handler
 		if ( !IsGameHost() )
+		{
 			++nSlotsUsed;
+		}
 	}
 	else if ( !pPacket->info.bPresent && IsPlayerPresent( pPacket->nSlot ) )
 	{
@@ -53,7 +57,9 @@ bool CMPManagerMode::OnB2SlotInfoPacket( class CB2SlotInfoPacket *pPacket )
 	slot.nPing = nStoredPing;
 
 	if ( nOwnSlot >= 0 )
+	{
 		UpdateMyConnectivityMask();
+	}
 
 	// Send message
 	if ( bGameRoomInit && IsInGameRoom() )
@@ -65,9 +71,13 @@ bool CMPManagerMode::OnB2SlotInfoPacket( class CB2SlotInfoPacket *pPacket )
 		DebugTrace( "+++ Show Slot Info " );
 	}
 	else
+	{
 		DebugTrace( "+++ DO NOT Show Slot Info " );
+	}
 	if ( pLanTester )
+	{
 		pLanTester->ClientInfoChanged( pPacket->nSlot, pPacket->info.bAccept );
+	}
 
 	return true;
 }
@@ -132,7 +142,9 @@ bool CMPManagerMode::OnB2GameRoomStartGamePacket( class CB2GameRoomStartGamePack
 
 	//DebugTrace( "+++ StartGame packet from client %d", pPacket->nClientID );
 	if ( pPacket->slots.size() > slots.size() )
+	{
 		slots.resize( nSlotsUsed );
+	}
 	RehashSlots( pPacket->slotRehash );
 	for ( int i = 0; i < slots.size(); ++i )
 	{
@@ -150,10 +162,14 @@ bool CMPManagerMode::OnB2GameSpecificInfoPacket( class CB2GameSpecificInfoPacket
 
 	// Absolute shit (or in nival devs terms: CRAP) of solution, but it should work really well when detecting if the client has the MP map or not
 	if ( pPacket->info.pMPMap.GetBarePtrNoLoad() == nullptr )
+	{
 		pPacket->info.nPlayers = -1;
+	}
 
 	if ( !IsInGameRoom() || IsGameHost() )
+	{
 		return true;
+	}
 
 	gameDesc = pPacket->info;
 	OnGameSpecificInfo();
@@ -189,7 +205,9 @@ bool CMPManagerMode::OnChatPacket( class CChatPacket *pPacket )
 
 		std::wstring teamOnly = L"";
 		if ( !pPacket->bIsBroadcast )
+		{
 			teamOnly = L" (Team)";
+		}
 
 		std::wstring txt = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + colorStr + nick +
 		                   colorEndStr + teamOnly + L": " + pPacket->wszMessage;
@@ -222,7 +240,9 @@ bool CMPManagerMode::OnSlotNumberPacket( class CSlotNumberPacket *pPacket )
 	ulHostCheckSum = pPacket->ulCheckSum;
 
 	for ( std::list<int>::iterator it = pendingClients.begin(); it != pendingClients.end(); ++it )
+	{
 		ClientAssignNewClient( *it );
+	}
 	pendingClients.clear();
 	OnSetMySlotNumber();
 	return true;
@@ -241,11 +261,15 @@ bool CMPManagerMode::OnB2SuggestKickPacket( class CB2SuggestKickPacket *pPacket 
 	// Vote accounting must use packet sender identity, not local slot order, to stay deterministic across peers.
 	const int nVoterSlot = GetSlotByClientID( pPacket->nClientID );
 	if ( nVoterSlot < 0 || nVoterSlot >= slots.size() || !IsPlayerPresent( nVoterSlot ) )
+	{
 		return true;
+	}
 
 	const int nSlotToKick = pPacket->nSlotToKick;
 	if ( nSlotToKick < 0 || nSlotToKick >= slots.size() || !IsPlayerPresent( nSlotToKick ) )
+	{
 		return true;
+	}
 
 	const uint32_t dwPreVotes = lags[nSlotToKick].dwHatedBy;
 	lags[nSlotToKick].dwHatedBy |= ( 1UL << nVoterSlot );
@@ -265,18 +289,24 @@ bool CMPManagerMode::OnB2SuggestKickPacket( class CB2SuggestKickPacket *pPacket 
 bool CMPManagerMode::OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPacket )
 {
 	if ( !IsGameRunning() )
+	{
 		return true;
+	}
 	const int nSenderSlot = GetSlotByClientID( pPacket->nClientID );
 	const int nPlayer = pPacket->nPlayer;
 	if ( nSenderSlot < 0 || nSenderSlot >= slots.size() || nPlayer < 0 || nPlayer >= slots.size() ||
 	     nPlayer >= lags.size() )
+	{
 		return true;
+	}
 	// Queued reports from departing clients must not consume survivors' budgets.
 	// A scheduled drop already ends participation before the visible slot clears.
 	if ( !IsPlayerPresent( nSenderSlot ) || !IsPlayerPresent( nPlayer ) ||
 	     ( nSenderSlot < scheduledDropSegmentBySlot.size() && scheduledDropSegmentBySlot[nSenderSlot] >= 0 ) ||
 	     ( nPlayer < scheduledDropSegmentBySlot.size() && scheduledDropSegmentBySlot[nPlayer] >= 0 ) )
+	{
 		return true;
+	}
 
 	SLagInfo &lag = lags[pPacket->nPlayer];
 	//DebugTrace( "*** LAG UPDATE player %d, time %d --> %d", pPacket->nPlayer, lag.nLagLeft, pPacket->nTimeLeft );
@@ -308,17 +338,25 @@ bool CMPManagerMode::OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPac
 bool CMPManagerMode::OnB2UserPausePacket( class CB2UserPausePacket *pPacket )
 {
 	if ( !IsGameRunning() )
+	{
 		return true;
+	}
 
 	const int nSlot = GetSlotByClientID( pPacket->nClientID );
 	if ( nSlot < 0 || nSlot >= slots.size() || !IsPlayerPresent( nSlot ) )
+	{
 		return true;
+	}
 
 	const uint32_t dwPreUserPausedPlayers = dwUserPausedPlayers;
 	if ( pPacket->bPaused )
+	{
 		dwUserPausedPlayers |= ( 1UL << nSlot );
+	}
 	else
+	{
 		dwUserPausedPlayers &= ~( 1UL << nSlot );
+	}
 	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
 	                              "RX",
 	                              "CB2UserPausePacket",
@@ -335,7 +373,9 @@ bool CMPManagerMode::OnB2UserPausePacket( class CB2UserPausePacket *pPacket )
 bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegmentPacket *pPacket )
 {
 	if ( !IsGameRunning() )
+	{
 		return true;
+	}
 	const int nPreviousHostClientID = nHostClientID;
 
 	NGameX::MatchPacketTrace_Log(
@@ -375,7 +415,9 @@ bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegment
 bool CMPManagerMode::OnB2GameLostPacket( class CB2GameLostPacket *pPacket )
 {
 	if ( !IsGameRunning() || !IsValid( pTransceiver ) || pPacket->nGameID != nGameID || pPacket->nSegment < 0 )
+	{
 		return true;
+	}
 
 	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
 	                              "RX",
@@ -387,7 +429,9 @@ bool CMPManagerMode::OnB2GameLostPacket( class CB2GameLostPacket *pPacket )
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( i == nOwnSlot )
+		{
 			continue;
+		}
 
 		if ( slots[i].nClientID == pPacket->nClientID )
 		{
@@ -396,7 +440,9 @@ bool CMPManagerMode::OnB2GameLostPacket( class CB2GameLostPacket *pPacket )
 			// Reconcile their finish boundary even after deciding our own result,
 			// otherwise a later finisher waits for packets from an ended client.
 			if ( bOutcomeKnown && bWinOnGameEnd != bPacketWinsGame )
+			{
 				return true;
+			}
 			pTransceiver->ScheduleGameEnd( pPacket->nSegment );
 			//DebugTrace( "+++ Game Lost for team %d (from slot %d) scheduled", slots[i].nTeam, i );
 			bOutcomeKnown = true;
@@ -417,13 +463,17 @@ bool CMPManagerMode::OnPingPacket( class CPingPacket *pPacket )
 	}
 
 	if ( !IsInGameRoom() )
+	{
 		return true;
+	}
 
 	NTimer::STime curTime = GameTimer()->GetAbsTime();
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( i == nOwnSlot )
+		{
 			continue;
+		}
 		SMPSlot &slot = slots[i];
 		if ( slot.nClientID == pPacket->nClientID )
 		{

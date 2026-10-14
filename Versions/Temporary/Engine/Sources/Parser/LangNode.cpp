@@ -41,7 +41,9 @@ ESimpleType GetType( const std::string &szTypeName )
 	{
 		const std::string &szType = iter->second;
 		if ( szType == szTypeName )
+		{
 			return ESimpleType( iter->first );
+		}
 	}
 
 	return EST_UNKNOWN;
@@ -66,7 +68,9 @@ void CSimpleValue::SetValue( const std::string &szDefValue, bool bString )
 		szValue = szDefValue;
 	}
 	else if ( szDefValue == "" )
+	{
 		eType = EST_NOTYPE;
+	}
 	else if ( szDefValue == "true" )
 	{
 		eType = EST_BOOL;
@@ -98,7 +102,9 @@ void CSimpleValue::SetValue( const std::string &szDefValue, bool bString )
 		dwHexValue = NStr::ToInt( szDefValue );
 	}
 	else
+	{
 		VERIFY( false, fmt::format( "unknown attr value {}", szDefValue ), return );
+	}
 }
 
 }

@@ -29,11 +29,17 @@ float CPahtFractionArcLineArc::GetLength() const
 void CPahtFractionArcLineArc::GetSimplePath( CPathList *pPaths )
 {
 	if ( pStart )
+	{
 		pPaths->push_back( pStart.GetPtr() );
+	}
 	if ( pLine )
+	{
 		pPaths->push_back( pLine.GetPtr() );
+	}
 	if ( pFinish )
+	{
 		pPaths->push_back( pFinish.GetPtr() );
+	}
 }
 
 void CPahtFractionArcLineArc::Init( const CVec2 &x0,
@@ -97,13 +103,17 @@ void CPahtFractionArcLineArc::TryPath( const CVec2 &x0,
 	{
 		pPath->Init( r1, x0, v0, o1, v1, x1, _fZ );
 		if ( !*bInitted )
+		{
 			*pBest = *pPath;
+		}
 		else
 		{
 			const float fL1 = pPath->GetLength();
 			const float fL2 = pBest->GetLength();
 			if ( fL1 < fL2 )
+			{
 				*pBest = *pPath;
+			}
 		}
 
 		*bInitted = true;

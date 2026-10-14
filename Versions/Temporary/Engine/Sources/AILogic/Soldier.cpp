@@ -78,7 +78,9 @@ void CSoldier::AllowLieDown( bool _bAllowLieDown )
 	bAllowLieDown = _bAllowLieDown;
 
 	if ( !bAllowLieDown )
+	{
 		StandUp();
+	}
 }
 
 void CSoldier::InitGuns()
@@ -103,13 +105,19 @@ const uint32_t CSoldier::GetNormale() const
 IStatesFactory *CSoldier::GetStatesFactory() const
 {
 	if ( IsInBuilding() )
+	{
 		return CInBuildingStatesFactory::Instance();
+	}
 	/*else if ( IsInEntrenchment() )
 	return CInEntrenchmentStatesFactory::Instance();*/
 	else if ( IsInTransport() )
+	{
 		return CInTransportStatesFactory::Instance();
+	}
 	else
+	{
 		return CSoldierStatesFactory::Instance();
+	}
 }
 
 CBuilding *CSoldier::GetBuilding() const
@@ -192,7 +200,9 @@ void CSoldier::SetInTransport( class CMilitaryCar *pUnit )
 	eInsideType = EOIO_TRANSPORT;
 	// на броне
 	if ( pUnit->GetStats()->IsArmor() || pUnit->GetStats()->IsSPG() )
+	{
 		SetToFirePlace();
+	}
 	else
 	{
 		SetVisionAngle( 0 );
@@ -216,7 +226,9 @@ void CSoldier::SetFree()
 	SetAngles( 0, 65535 );
 
 	if ( bInFirePlace )
+	{
 		bInFirePlace = false;
+	}
 	else if ( bInSolidPlace )
 	{
 		units.AddUnitToCell( this, true );
@@ -224,7 +236,9 @@ void CSoldier::SetFree()
 	}
 
 	if ( eInsideType == EOIO_TRANSPORT && GetPlayer() == theDipl.GetMyNumber() )
+	{
 		SetSelectable( true, true );
+	}
 
 	if ( eInsideType == EOIO_BUILDING || eInsideType == EOIO_ENTRENCHMENT || eInsideType == EOIO_TRANSPORT )
 	{
@@ -242,7 +256,9 @@ void CSoldier::SetFree()
 				// Remove bonus
 				CEntrenchment *pEntrenchment = dynamic_cast<CEntrenchment *>( pObjInside );
 				if ( pEntrenchment )
+				{
 					ApplyStatsModifier( pEntrenchment->GetUnitBonus(), false );
+				}
 			}
 			break;
 			case EOIO_TRANSPORT:
@@ -276,12 +292,18 @@ void CSoldier::SetMasterOfStreetsBonus( EObjectInsideOf eNewInsideType )
 	if ( const NDb::SUnitSpecialAblityDesc *pSA = GetUnitAbilityDesc( NDb::ABILITY_MASTER_OF_STREETS ) )
 	{
 		if ( !pSA->pStatsBonus )
+		{
 			return;
+		}
 
 		if ( eInsideType == EOIO_NONE && eNewInsideType != EOIO_NONE )
+		{
 			ApplyStatsModifier( pSA->pStatsBonus, true );
+		}
 		else if ( eInsideType != EOIO_NONE && eNewInsideType == EOIO_NONE )
+		{
 			ApplyStatsModifier( pSA->pStatsBonus, false );
+		}
 	}
 }
 
@@ -368,13 +390,21 @@ const EActionNotify CSoldier::GetAimAction() const
 	NI_ASSERT( IsInTransport() == false, "Can't aim from inside of transport unit" );
 
 	if ( IsInBuilding() )
+	{
 		return ACTION_NOTIFY_NONE;
+	}
 	else if ( IsInEntrenchment() || IsInTankPit() && !IsVirtualTankPit() )
+	{
 		return ACTION_NOTIFY_AIM_TRENCH;
+	}
 	else if ( bLying || IsVirtualTankPit() )
+	{
 		return ACTION_NOTIFY_AIM_LYING;
+	}
 	else
+	{
 		return ACTION_NOTIFY_AIM;
+	}
 }
 
 const EActionNotify CSoldier::GetShootAction() const
@@ -382,13 +412,21 @@ const EActionNotify CSoldier::GetShootAction() const
 	NI_ASSERT( IsInTransport() == false, "Can't shoot from inside of transport unit" );
 
 	if ( IsInBuilding() )
+	{
 		return ACTION_NOTIFY_SHOOT_BUILDING;
+	}
 	else if ( IsInEntrenchment() || IsInTankPit() && !IsVirtualTankPit() )
+	{
 		return ACTION_NOTIFY_SHOOT_TRENCH;
+	}
 	else if ( IsLying() || IsVirtualTankPit() )
+	{
 		return ACTION_NOTIFY_SHOOT_LYING;
+	}
 	else
+	{
 		return ACTION_NOTIFY_INFANTRY_SHOOT;
+	}
 }
 
 const EActionNotify CSoldier::GetThrowAction() const
@@ -396,13 +434,21 @@ const EActionNotify CSoldier::GetThrowAction() const
 	NI_ASSERT( IsInTransport() == false, "Can't throw a grenade from inside of transport unit" );
 
 	if ( IsInBuilding() )
+	{
 		return ACTION_NOTIFY_THROW_BUILDING;
+	}
 	else if ( IsInEntrenchment() || IsInTankPit() && !IsVirtualTankPit() )
+	{
 		return ACTION_NOTIFY_THROW_TRENCH;
+	}
 	else if ( IsLying() || IsVirtualTankPit() )
+	{
 		return ACTION_NOTIFY_THROW_LYING;
+	}
 	else
+	{
 		return ACTION_NOTIFY_THROW;
+	}
 }
 
 bool CSoldier::InVisCone( const CVec2 &point ) const
@@ -454,9 +500,13 @@ void CSoldier::Init( const CVec2 &center,
 		const NDb::SUnitSpecialAblityDesc *pSA = *it;
 		int nCharges;
 		if ( pSA )
+		{
 			nCharges = pSA->fParameter;
+		}
 		else
+		{
 			nCharges = 3;
+		}
 		switch ( ( *it )->eName )
 		{
 			case NDb::ABILITY_PLACE_CHARGE:
@@ -484,7 +534,9 @@ void CSoldier::DetonateCharges()
 	{
 		CPtr<CMineStaticObject> pMine = *it;
 		if ( IsValidObj( pMine ) )
+		{
 			pMine->Die( 1.0f );
+		}
 	}
 	detonatableCharges.clear();
 	SExecutorEventParam par( EID_ABILITY_DISABLE, 0, GetUniqueId() );
@@ -554,27 +606,43 @@ int CSoldier::GetChargesLeft( NDb::EUnitSpecialAbility eType ) const
 const EActionNotify CSoldier::GetDieAction() const
 {
 	if ( IsInBuilding() )
+	{
 		return ACTION_NOTIFY_DIE_BUILDING;
+	}
 	else if ( IsInEntrenchment() || IsInTankPit() && !IsVirtualTankPit() )
+	{
 		return ACTION_NOTIFY_DIE_TRENCH;
+	}
 	else if ( IsInTransport() )
+	{
 		return ACTION_NOTIFY_DIE_TRANSPORT;
+	}
 	else if ( bLying || IsVirtualTankPit() )
+	{
 		return ACTION_NOTIFY_DIE_LYING;
+	}
 	else
+	{
 		return ACTION_NOTIFY_DIE;
+	}
 }
 
 const EActionNotify CSoldier::GetIdleAction() const
 {
 	if ( IsInEntrenchment() )
+	{
 		return ACTION_NOTIFY_IDLE_TRENCH;
+	}
 	else // if ( IsFree() )
 	{
 		if ( bLying || IsInTankPit() || IsVirtualTankPit() )
+		{
 			return ACTION_NOTIFY_IDLE_LYING;
+		}
 		else
+		{
 			return ACTION_NOTIFY_IDLE;
+		}
 	}
 	//	else
 	//		return ACTION_NOTIFY_IDLE;
@@ -587,9 +655,13 @@ const EActionNotify CSoldier::GetMovingAction() const
 		return ACTION_NOTIFY_FALLING;
 	}
 	else if ( bLying )
+	{
 		return ACTION_NOTIFY_CRAWL;
+	}
 	else
+	{
 		return ACTION_NOTIFY_MOVE;
+	}
 }
 
 bool CSoldier::IsInSolidPlace() const
@@ -617,7 +689,9 @@ void CSoldier::SetToFirePlace()
 	}
 
 	if ( eInsideType == EOIO_NONE )
+	{
 		eInsideType = EOIO_UNKNOWN;
+	}
 
 	WarFogChanged();
 }
@@ -635,7 +709,9 @@ void CSoldier::SetToSolidPlace()
 	}
 
 	if ( eInsideType == EOIO_NONE )
+	{
 		eInsideType = EOIO_UNKNOWN;
+	}
 
 	WarFogChanged();
 }
@@ -665,9 +741,13 @@ const float CSoldier::GetCover() const
 void CSoldier::UpdateLyingPosition()
 {
 	if ( bLying == true )
+	{
 		updater.AddUpdate( 0, ACTION_NOTIFY_STAYING_TO_LYING, this, -1 );
+	}
 	else
+	{
 		updater.AddUpdate( 0, ACTION_NOTIFY_LYING_TO_STAYING, this, -1 );
+	}
 	updater.AddUpdate( 0, ACTION_NOTIFY_PLACEMENT, this, -1 );
 }
 
@@ -698,7 +778,9 @@ void CSoldier::StandUp()
 void CSoldier::Segment()
 {
 	if ( curTime >= nextLogicSegmTime )
+	{
 		CAIUnit::Segment();
+	}
 
 	pGuns->Segment();
 
@@ -706,7 +788,9 @@ void CSoldier::Segment()
 	{
 		CBuilding *pBuilding = checked_cast<CBuilding *>( pObjInside );
 		for ( int i = 0; i < pBuilding->GetNGunsInFireSlot( GetSlot() ); ++i )
+		{
 			pBuilding->GetGunInFireSlot( GetSlot(), i )->Segment();
+		}
 	}
 
 	//для инженеров ( было, теперь все сканируют )
@@ -714,14 +798,18 @@ void CSoldier::Segment()
 	{
 		lastMineCheck = curTime;
 		if ( !IsRestInside() )
+		{
 			RevealNearestMines( pStats->etype ==
 			                    RPG_TYPE_ENGINEER /* && EUSN_CLEAR_MINE == GetFormation()->GetState()->GetName() */ );
+		}
 	}
 
 	if ( curTime >= nextLogicSegmTime )
 	{
 		if ( timeBWSegments < 700 )
+		{
 			timeBWSegments += 20;
+		}
 
 		nextLogicSegmTime = curTime + NRandom::Random( 0, timeBWSegments );
 		RecordRandomCall();
@@ -743,7 +831,9 @@ void CSoldier::FreezeSegment()
 
 			lastHit = curTime;
 			if ( bAllowLieDown && IsInFormation() && pFormation->IsAllowedLieDown() )
+			{
 				LieDown();
+			}
 		}
 		if ( NeedReturnToFormation() )
 		{
@@ -757,7 +847,9 @@ void CSoldier::FreezeSegment()
 	     ( ( curTime - lastHit >=
 	         SConsts::TIME_OF_LYING_UNDER_FIRE + NRandom::Random( 0.0f, SConsts::STAND_LIE_RANDOM_DELAY ) ) &
 	       RecordRandomCall() ) )
+	{
 		StandUp();
+	}
 
 	CAIUnit::FreezeSegment();
 }
@@ -783,7 +875,9 @@ void CSoldier::RevealNearestMines( const bool bIncludingAP )
 		}
 	}
 	if ( bFoundMine )
+	{
 		SendAcknowledgement( NDb::ACK_MINE_FOUND, nParty == theDipl.GetMyParty() );
+	}
 }
 
 void CSoldier::SetFormation( CFormation *_pFormation )
@@ -814,7 +908,9 @@ void CSoldier::Die( const bool fromExplosion, const float fDamage )
 		{
 			CSoldier *pFormationMember = ( *pFormation )[i];
 			if ( !pFormationMember || pFormationMember == this )
+			{
 				continue;
+			}
 
 			const NDb::SUnitBaseRPGStats *pMemberStats = pFormationMember->GetStats();
 			NI_ASSERT( pMemberStats, "No unit stats for formation member" );
@@ -839,7 +935,9 @@ void CSoldier::Die( const bool fromExplosion, const float fDamage )
 			}
 
 			if ( bTransferred )
+			{
 				break;
+			}
 		}
 	}
 
@@ -864,15 +962,23 @@ void CSoldier::GetFogInfo( SWarFogUnitInfo *pInfo ) const
 		if ( GetVisionAngle() >= 32768 )
 		{
 			if ( !IsAngleLimited() )
+			{
 				pInfo->sector = SSector();
+			}
 			else
+			{
 				pInfo->sector = SSector( GetMinAngle(), GetMaxAngle() );
+			}
 		}
 		else
+		{
 			pInfo->sector = SSector( GetFrontDirection() - GetVisionAngle(), GetFrontDirection() + GetVisionAngle() );
+		}
 	}
 	else
+	{
 		CAIUnit::GetFogInfo( pInfo );
+	}
 }
 
 CArtillery *CSoldier::GetArtilleryIfCrew() const
@@ -887,7 +993,9 @@ CArtillery *CSoldier::GetArtilleryIfCrew() const
 				if ( CArtillery *pArtillery = pFullState->GetArtillery() )
 				{
 					if ( pArtillery && pArtillery->IsRefValid() && pArtillery->IsAlive() )
+					{
 						return pArtillery;
+					}
 				}
 			}
 		}
@@ -899,37 +1007,57 @@ CArtillery *CSoldier::GetArtilleryIfCrew() const
 int CSoldier::GetNGuns() const
 {
 	if ( CArtillery *pArtillery = GetArtilleryIfCrew() )
+	{
 		return pGuns->GetNTotalGuns() + pArtillery->GetNGuns();
+	}
 	else if ( !IsInBuilding() || GetSlot() == -1 )
+	{
 		return pGuns->GetNTotalGuns();
+	}
 	else
+	{
 		return pGuns->GetNTotalGuns() + checked_cast<CBuilding *>( pObjInside )->GetNGunsInFireSlot( GetSlot() );
+	}
 }
 
 CBasicGun *CSoldier::GetGun( const int n ) const
 {
 	if ( n < pGuns->GetNTotalGuns() )
+	{
 		return pGuns->GetGun( n );
+	}
 	else if ( n >= GetNGuns() )
+	{
 		return GetGuns()->GetGun( 0 );
+	}
 	else if ( CArtillery *pArtillery = GetArtilleryIfCrew() )
+	{
 		return pArtillery->GetGun( n - pGuns->GetNTotalGuns() );
+	}
 	else
+	{
 		return checked_cast<CBuilding *>( pObjInside )->GetGunInFireSlot( GetSlot(), n - pGuns->GetNTotalGuns() );
+	}
 }
 
 int CSoldier::GetNAmmo( const int nCommonGun ) const
 {
 	if ( nCommonGun < pGuns->GetNCommonGuns() )
+	{
 		return pGuns->GetNAmmo( nCommonGun );
+	}
 	else
+	{
 		return 1000;
+	}
 }
 
 void CSoldier::ChangeAmmo( const int nCommonGun, const int nAmmo )
 {
 	if ( nCommonGun < pGuns->GetNCommonGuns() )
+	{
 		CAIUnit::ChangeAmmo( nCommonGun, nAmmo );
+	}
 	if ( nCommonGun == 1 && !HasGrenades() )
 	{
 		if ( HasGrenades() )
@@ -971,7 +1099,9 @@ void CSoldier::ChangeAmmo( const int nCommonGun, const int nAmmo )
 bool CSoldier::IsCommonGunFiring( const int nCommonGun ) const
 {
 	if ( nCommonGun < pGuns->GetNCommonGuns() )
+	{
 		return CAIUnit::IsCommonGunFiring( nCommonGun );
+	}
 
 	return false;
 }
@@ -979,24 +1109,34 @@ bool CSoldier::IsCommonGunFiring( const int nCommonGun ) const
 void CSoldier::Fired( const float fGunRadius, const int nGun )
 {
 	if ( nGun < pGuns->GetNCommonGuns() )
+	{
 		CAIUnit::Fired( fGunRadius, nGun );
+	}
 }
 
 CTurret *CSoldier::GetTurret( const int nTurret ) const
 {
 	NI_ASSERT( nTurret == 0, "Wrong number of turret for soldier" );
 	if ( !IsInBuilding() || GetSlot() == -1 )
+	{
 		return 0;
+	}
 	else
+	{
 		return checked_cast<CBuilding *>( pObjInside )->GetTurretInFireSlot( GetSlot() );
+	}
 }
 
 const int CSoldier::GetNTurrets() const
 {
 	if ( GetTurret( 0 ) )
+	{
 		return 1;
+	}
 	else
+	{
 		return 0;
+	}
 }
 
 void CSoldier::GetShootAreas( SShootAreas *pShootAreas, int *pnAreas ) const
@@ -1004,7 +1144,9 @@ void CSoldier::GetShootAreas( SShootAreas *pShootAreas, int *pnAreas ) const
 	//construct( pShootAreas );			// this causes memory leaks
 
 	if ( IsFree() || IsInBuilding() && GetTurret( 0 ) != 0 || IsInEntrenchment() && IsInFirePlace() )
+	{
 		CAIUnit::GetShootAreas( pShootAreas, pnAreas );
+	}
 	else
 	{
 		*pnAreas = 1;
@@ -1040,24 +1182,34 @@ void CSoldier::PrepareToDelete()
 	{
 		// удалить из статич. объекта, если нужно
 		if ( IsInBuilding() )
+		{
 			GetBuilding()->DelInsider( this );
+		}
 		else if ( IsInEntrenchment() )
+		{
 			GetEntrenchment()->DelInsider( this );
+		}
 		else if ( IsInTransport() )
+		{
 			GetTransportUnit()->DelPassenger( this );
+		}
 
 		// удалить из формации, если нужно
 		if ( IsInFormation() )
 		{
 			pFormation->DeleteSoldier( this );
 			if ( GetFormation()->Size() == 0 && GetFormation()->VirtualUnitsSize() == 0 )
+			{
 				pFormation->Disappear();
+			}
 
 			if ( pMemorizedFormation )
 			{
 				pMemorizedFormation->DeleteSoldier( this );
 				if ( pMemorizedFormation->Size() == 0 && pMemorizedFormation->VirtualUnitsSize() == 0 )
+				{
 					pMemorizedFormation->Disappear();
+				}
 			}
 
 			if ( pVirtualFormation )
@@ -1089,7 +1241,9 @@ void CSoldier::TakeDamage( const float fDamage,
 			SetCenter( GetHeights()->Get3DPoint( GetCenterPlain() ), true );
 		}
 		if ( IsAlive() && IsInBuilding() )
+		{
 			GetBuilding()->InsiderDamaged( this );
+		}
 	}
 }
 
@@ -1117,9 +1271,13 @@ bool CSoldier::CalculateUnitVisibility4Party( const uint8_t party )
 		              GetBuilding()->IsSoldierVisible( party, GetCenterPlain(), IsCamoulflated(), GetCamouflage() );
 	}
 	else if ( IsInSolidPlace() )
+	{
 		bVisibility = false;
+	}
 	else if ( party == GetParty() )
+	{
 		bVisibility = true;
+	}
 	else if ( IsInFormation() && GetFormation()->GetState() &&
 	          GetFormation()->GetState()->GetName() == EUSN_GUN_CREW_STATE &&
 	          IsValidObj( checked_cast<CFormationGunCrewState *>( GetFormation()->GetState() )->GetArtillery() ) )
@@ -1128,9 +1286,13 @@ bool CSoldier::CalculateUnitVisibility4Party( const uint8_t party )
 		//bVisibility = checked_cast<CFormationGunCrewState*>(GetFormation()->GetState())->GetArtillery()->CalculateUnitVisibility4PartyInner( party );
 	}
 	else if ( IsInFirePlace() && IsInTransport() )
+	{
 		bVisibility = GetTransportUnit()->IsVisible( party );
+	}
 	else
+	{
 		bVisibility = CalculateUnitVisibility4PartyInner( party );
+	}
 	return UpdateUnitVisibilityForParty( party, bVisibility );
 }
 
@@ -1143,18 +1305,26 @@ void CSoldier::SetDirection( const uint16_t newDir )
 bool CSoldier::IsNoticableByUnit( class CCommonUnit *pUnit, const float fNoticeRadius )
 {
 	if ( IsInSolidPlace() )
+	{
 		return false;
+	}
 	else if ( IsInFirePlace() && IsInBuilding() && ( IsVisible( pUnit->GetParty() ) || IsRevealed() ) )
 	{
 		SRect buildRect;
 		GetBuilding()->GetBoundRect( &buildRect );
 		if ( buildRect.IsIntersectCircle( pUnit->GetCenterPlain(), fNoticeRadius ) )
+		{
 			return true;
+		}
 		else
+		{
 			return false;
+		}
 	}
 	else
+	{
 		return CAIUnit::IsNoticableByUnit( pUnit, fNoticeRadius );
+	}
 }
 
 bool CSoldier::ProcessAreaDamage( const CExplosion *pExpl,
@@ -1205,7 +1375,9 @@ bool CSoldier::ProcessAreaDamage( const CExplosion *pExpl,
 			                                             nRngAfter );
 
 			if ( bDamageApplied )
+			{
 				return true;
+			}
 		}
 	}
 	else
@@ -1305,11 +1477,17 @@ bool CSoldier::IsAngleLimited() const
 void CSoldier::GetTilesForVisibility( CTilesSet *pTiles ) const
 {
 	if ( IsFree() )
+	{
 		CAIUnit::GetTilesForVisibility( pTiles );
+	}
 	else if ( CDynamicCast<CUpdatableObj> pUnitInside = pObjInside )
+	{
 		pUnitInside->GetTilesForVisibility( pTiles );
+	}
 	else
+	{
 		CAIUnit::GetTilesForVisibility( pTiles );
+	}
 }
 
 bool CSoldier::ShouldSuspendAction( const EActionNotify &eAction ) const
@@ -1333,14 +1511,20 @@ bool CSoldier::CanJoinToFormation() const
 		bool bCan = true;
 
 		if ( CAICommand *pCmd = GetCurCmd() )
+		{
 			bCan = bCan && !IsTransitionalCommand( pCmd->ToUnitCmd().nCmdType );
+		}
 		if ( CAICommand *pCmd = GetNextCommand() )
+		{
 			bCan = bCan && !IsTransitionalCommand( pCmd->ToUnitCmd().nCmdType );
+		}
 
 		return bCan;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 void CSoldier::SetVirtualFormation( CFormation *pFormation )
@@ -1376,7 +1560,9 @@ void CSoldier::LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CA
 					if ( IsValidObj( pTarget ) && theDipl.GetDiplStatus( GetPlayer(), pTarget->GetPlayer() ) == EDI_ENEMY )
 					{
 						if ( pTarget->IsVisible( GetParty() ) || pTarget->IsRevealed() )
+						{
 							AddUnitToShootEstimator( pTarget );
+						}
 					}
 				}
 			}
@@ -1404,10 +1590,14 @@ void CSoldier::FreezeByState( const bool bFreeze )
 	if ( IsFrozenByState() != bFreeze )
 	{
 		if ( !bFreeze || pFormation->IsEveryUnitResting() )
+		{
 			CAIUnit::FreezeByState( bFreeze );
+		}
 
 		if ( !bFreeze )
+		{
 			pFormation->FreezeByState( bFreeze );
+		}
 	}
 }
 
@@ -1416,7 +1606,9 @@ int CSoldier::HasGrenades() const
 	for ( int i = 0; i < pGuns->GetNGuns(); ++i )
 	{
 		if ( pGuns->GetGun( i )->IsGrenade() && pGuns->GetGun( i )->GetNAmmo() > 0 )
+		{
 			return pGuns->GetGun( i )->GetNAmmo();
+		}
 	}
 	return 0;
 }
@@ -1438,7 +1630,9 @@ const bool CSoldier::CanUnitTrampled( const CBasePathUnit *pTramplerUnit ) const
 	const CCommonUnit *pUnit = dynamic_cast<const CCommonUnit *>( pTramplerUnit );
 	NI_ASSERT( pUnit != 0, "Cannot cast pTramplerUnit to CCommonUnit" );
 	if ( pUnit == 0 )
+	{
 		return false;
+	}
 
 	const int nDipl = GetPlayer();
 	return theDipl.GetNeutralPlayer() == nDipl || theDipl.GetDiplStatus( nDipl, pUnit->GetPlayer() ) == EDI_ENEMY;
@@ -1483,16 +1677,22 @@ void CSniper::Segment()
 
 	float fAdd = SConsts::SNIPER_CAMOUFLAGE_INCREASE * SConsts::AI_SEGMENT_DURATION / 1000;
 	if ( fCamouflageRemoveWhenShootProbability >= fAdd )
+	{
 		fCamouflageRemoveWhenShootProbability -= fAdd;
+	}
 	else
+	{
 		fCamouflageRemoveWhenShootProbability = 0.0f;
+	}
 
 	// analyze camouflage and go to camouflage if not bein seed
 	RecordRandomCall();
 	if ( curTime - lastVisibilityCheck >= 1000 + NRandom::Random( 0, 5 * SConsts::AI_SEGMENT_DURATION ) )
 	{
 		if ( IsInBuilding() && GetBuilding() )
+		{
 			GetBuilding()->RemoveTransparencies();
+		}
 
 		lastVisibilityCheck = curTime;
 		bVisible = false;
@@ -1509,10 +1709,14 @@ void CSniper::Segment()
 			CAIUnit *pUnit = *iter;
 			if ( IsValidObj( pUnit ) && !pUnit->GetStats()->IsAviation() &&
 			     theWarFog.IsUnitVisible( curCenterTile, pUnit->GetParty(), IsCamoulflated() ) )
+			{
 				SetVisible();
+			}
 
 			if ( IsInBuilding() && GetBuilding() )
+			{
 				GetBuilding()->SetTransparencies();
+			}
 		}
 	}
 
@@ -1523,15 +1727,23 @@ void CSniper::Segment()
 bool CSniper::CalculateUnitVisibility4Party( const uint8_t party )
 {
 	if ( !IsCamoulflated() )
+	{
 		return CSoldier::CalculateUnitVisibility4Party( party );
+	}
 	else
 	{
 		if ( IsInSolidPlace() )
+		{
 			return false;
+		}
 		else if ( party == GetParty() )
+		{
 			return true;
+		}
 		else
+		{
 			return bVisible;
+		}
 	}
 }
 

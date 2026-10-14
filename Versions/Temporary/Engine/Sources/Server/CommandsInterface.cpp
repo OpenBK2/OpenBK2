@@ -16,7 +16,9 @@ const int SCommand::GetInt( const int nIndex ) const
 bool CCommandsBase::GetCommand( SCommand *pCmd )
 {
 	if ( cmds.empty() )
+	{
 		return false;
+	}
 
 	*pCmd = cmds.front();
 	cmds.pop_front();
@@ -40,9 +42,13 @@ void CCommandsBase::PreprocessLine( std::string *pszLine, std::vector<std::strin
 	{
 		NStr::TrimBoth( *iter );
 		if ( iter->empty() )
+		{
 			iter = pszWords->erase( iter );
+		}
 		else
+		{
 			++iter;
+		}
 	}
 
 	NStr::ToLower( &( *pszWords )[0] );

@@ -131,7 +131,9 @@ TEST_F( LargeMapSelection, BoxSelectionGridIncludesOnlyObjectsInRectangle )
 			{
 				inView.insert( hit->pObject );
 				if ( x >= 16 && x < 48 && y >= 16 && y < 48 )
+				{
 					inBox.insert( hit->pObject );
+				}
 			}
 		}
 	}

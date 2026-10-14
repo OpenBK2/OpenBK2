@@ -18,7 +18,9 @@ uint16_t CLongObjectCreation::GetLineAngle( const CVec2 &vBegin, const CVec2 &vE
 	Normalize( &vTmp );
 	float fAngle = NMath::ACos( ( vTmp.x ) / fabs( vTmp.x, vTmp.y ) );
 	if ( vTmp.y < 0 )
+	{
 		fAngle = FP_2PI - fAngle;
+	}
 	return uint16_t( ( fAngle / ( 2.0f * PI ) ) * 65535 );
 }
 
@@ -31,7 +33,9 @@ void CLongObjectCreation::SplitLineToSegrments( std::vector<CVec2> *_vPoints,
 	std::vector<CVec2> &vPoints = *_vPoints;
 
 	if ( vBegin == vEnd )
+	{
 		return;
+	}
 	CVec2 vDir( vEnd - vBegin );
 	Normalize( &vDir );
 
@@ -66,7 +70,9 @@ void CLongObjectCreation::GetUnitsPreventing( const SRect &r1, std::list<CPtr<CA
 		{
 			const SRect rect = ( *iter )->GetUnitRect();
 			if ( r1.IsIntersected( rect ) )
+			{
 				units->push_back( *iter );
+			}
 		}
 	}
 }
@@ -80,7 +86,9 @@ bool CLongObjectCreation::IsAnyUnitPrevent( const SRect &r1 ) const
 		{
 			const SRect rect = ( *iter )->GetUnitRect();
 			if ( r1.IsIntersected( rect ) )
+			{
 				return true;
+			}
 		}
 	}
 	return false;
@@ -91,7 +99,9 @@ bool CLongObjectCreation::CanBuildOnRect( SRect r1, const std::list<SVector> &ti
 	// hack! to avoid problem with bounds (due to open set of coordinates)
 	r1.Compress( 0.99f );
 	if ( !GetAIMap()->IsRectInside( r1 ) )
+	{
 		return false;
+	}
 
 	std::list<CPtr<CAIUnit>> preventing;
 
@@ -102,7 +112,9 @@ bool CLongObjectCreation::CanBuildOnRect( SRect r1, const std::list<SVector> &ti
 	for ( std::list<SVector>::const_iterator it = tilesUnder.begin(); it != tilesUnder.end(); ++it )
 	{
 		if ( 0 != GetTerrain()->GetTileLockInfo( *it ) )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -111,12 +123,16 @@ void CLongObjectCreation::UnlockPreventingUnits( std::list<CPtr<CAIUnit>> &preve
 {
 	// Placement previews are local to one client and must not alter pathfinding locks.
 	if ( !IsAIModificationAllowed() )
+	{
 		return;
+	}
 
 	for ( std::list<CPtr<CAIUnit>>::iterator it = preventing.begin(); it != preventing.end(); ++it )
 	{
 		CAIUnit *pUnit = *it;
 		if ( pUnit->GetPlayer() == nPlayer && EUSN_REST == pUnit->GetState()->GetName() && pUnit->CanMove() )
+		{
 			pUnit->UnlockTiles();
+		}
 	}
 }

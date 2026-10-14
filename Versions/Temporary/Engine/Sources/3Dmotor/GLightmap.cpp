@@ -92,9 +92,13 @@ bool CSingleTexAlloc::AllocRegion( const CTPoint<int> &size, CTPoint<int> *pPos 
 	elem.nYSize = GetMSB( size.y - 1 ) + 1;
 	CLightmapTextureCache::SCachePlace place;
 	if ( !pCache->GetPlace( elem, &place ) )
+	{
 		return false;
+	}
 	if ( place.nMRU != 0 )
+	{
 		return false;
+	}
 	CLMRegion *pRes = new CLMRegion;
 	pCache->PerformAlloc( pRes, &place );
 	regions.push_back( pRes );
@@ -114,9 +118,13 @@ bool CLMAlloc::TryAlloc( const NCache::CQuadTreeElement &elem,
 	STex &tex = textures[nTexture];
 	CLightmapTextureCache::SCachePlace place;
 	if ( !tex.pCache->GetPlace( elem, &place ) )
+	{
 		return false;
+	}
 	if ( place.nMRU != 0 )
+	{
 		return false;
+	}
 	CLMRegion *pRes = new CLMRegion;
 	tex.pCache->PerformAlloc( pRes, &place );
 	regions.push_back( pRes );
@@ -128,7 +136,9 @@ bool CLMAlloc::TryAlloc( const NCache::CQuadTreeElement &elem,
 	for ( int y = 0; y < _data.GetSizeY(); ++y )
 	{
 		for ( int x = 0; x < _data.GetSizeX(); ++x )
+		{
 			tex.data[y + nShiftY][x + nShiftX] = _data[y][x];
+		}
 	}
 	// store result
 	*pPos = CTPoint<int>( nShiftX, nShiftY );

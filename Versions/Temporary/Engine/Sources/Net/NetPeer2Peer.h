@@ -88,8 +88,12 @@ private:
 		bool HasClient( UCID addr ) const
 		{
 			for ( std::list<SPeerClient>::const_iterator i = clients.begin(); i != clients.end(); ++i )
+			{
 				if ( i->addr == addr )
+				{
 					return true;
+				}
+			}
 			return false;
 		}
 		const UCID GetAddr( PEER_ID id )
@@ -97,7 +101,9 @@ private:
 			for ( std::list<SPeerClient>::iterator i = clients.begin(); i != clients.end(); ++i )
 			{
 				if ( i->id == id )
+				{
 					return i->addr;
+				}
 			}
 			ASSERT( 0 );
 			return clients.front().addr;
@@ -107,9 +113,13 @@ private:
 			for ( std::list<SPeerClient>::iterator i = clients.begin(); i != clients.end(); )
 			{
 				if ( i->addr == addr )
+				{
 					i = clients.erase( i );
+				}
 				else
+				{
 					++i;
+				}
 			}
 		}
 	};

@@ -34,13 +34,17 @@ void CStatusUpdatesHelper::InitStatus()
 CStatusUpdatesHelper::~CStatusUpdatesHelper()
 {
 	if ( __bInited && __eStatus != EUS_UNDEFINED && IsValid( __pUnit ) )
+	{
 		updater.AddUpdate( CreateStatusUpdate( __eStatus, false, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, __pUnit, -1 );
+	}
 }
 
 void CStatusUpdatesHelper::SetStatus( const EUnitStatus _eStatus )
 {
 	if ( !__bInited )
+	{
 		__eStatus = _eStatus;
+	}
 	else if ( __eStatus != __eStatus )
 	{
 		updater.AddUpdate( CreateStatusUpdate( __eStatus, false, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, __pUnit, -1 );

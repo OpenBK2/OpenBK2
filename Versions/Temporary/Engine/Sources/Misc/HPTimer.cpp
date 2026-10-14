@@ -82,12 +82,16 @@ void NHPTimer::UpdateHPTimerFrequency()
 		// Too short to be useful: keep the baseline where it is and let the next
 		// call measure across a longer span rather than restarting the sample.
 		if ( fRefPassed < F_MIN_SAMPLE_SECONDS )
+		{
 			return;
+		}
 		STime tscNow;
 		GetTime( &tscNow );
 		const STime tscPassed = tscNow - tscStart;
 		if ( tscPassed > 0 )
+		{
 			fProcFreq1 = fRefPassed / static_cast<double>( tscPassed );
+		}
 	}
 	bUpdateInitiated = true;
 	refStart = CRefClock::now();
@@ -100,7 +104,9 @@ static void InitHPTimer()
 	{
 		UpdateHPTimerFrequency();
 		if ( fProcFreq1 != 1 )
+		{
 			break;
+		}
 		std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 	}
 	//cout << "freq = " << fpProcFreq / 1000000 <<  "Mhz" << endl;

@@ -14,10 +14,14 @@ CLANClient *CLANClient::Create( const int nNetGameVersion, const int nGamePort, 
 	NNet::SNetDriverConsts netConsts( _nTimeOut );
 	CPtr<NNet::IDriver> pDriver = NNet::CreateNetDriver( netConsts, true );
 	if ( !pDriver )
+	{
 		return 0;
+	}
 	CPtr<NNet::ILinksManager> pLinks = NNet::CreateServerLinksManager( nGamePort );
 	if ( !pLinks )
+	{
 		return 0;
+	}
 	pDriver->Init( nNetGameVersion, nGamePort, false, pLinks );
 
 	CLANClient *pClient = new CLANClient();
@@ -36,7 +40,9 @@ CNetPacket *CLANClient::GetPacket()
 		return pPacket.Extract();
 	}
 	else
+	{
 		return 0;
+	}
 }
 
 void CLANClient::SendPacket( class CNetPacket *pPacket )

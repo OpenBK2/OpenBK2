@@ -27,7 +27,9 @@ static struct STimesDeleter
 void DumpStats()
 {
 	if ( pTimes == 0 )
+	{
 		DbgTrc( "can't dump stats" );
+	}
 	else
 	{
 		DbgTrc( "============= Profile info =============" );
@@ -35,7 +37,9 @@ void DumpStats()
 		std::vector<std::string> sortedTimes;
 		sortedTimes.reserve( pTimes->size() );
 		for ( Times::iterator iter = pTimes->begin(); iter != pTimes->end(); ++iter )
+		{
 			sortedTimes.push_back( iter->first );
+		}
 
 		std::sort( sortedTimes.begin(), sortedTimes.end() );
 		for ( int i = 0; i < sortedTimes.size(); ++i )
@@ -62,12 +66,18 @@ CProfiler::~CProfiler()
 	{
 		Times::iterator iter = pTimes->find( szHash );
 		if ( iter == pTimes->end() )
+		{
 			pTimes->insert( Times::value_type( szHash, dwTime ) );
+		}
 		else
+		{
 			iter->second += dwTime;
+		}
 	}
 	else
+	{
 		DbgTrc( "%s(%d) : can't measure", szFile.c_str(), nLine );
+	}
 }
 }
 

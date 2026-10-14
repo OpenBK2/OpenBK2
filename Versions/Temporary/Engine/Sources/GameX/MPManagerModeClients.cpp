@@ -19,7 +19,9 @@
 bool CMPManagerMode::HostAssignNewClient( int nClientID )
 {
 	if ( !IsGameHost() )
+	{
 		return false;
+	}
 
 	if ( nSlotsUsed == slots.size() )
 	{
@@ -55,7 +57,9 @@ bool CMPManagerMode::HostAssignNewClient( int nClientID )
 			for ( int i = 0; i < slots.size(); ++i )
 			{
 				if ( !slots[i].bPresent && slots[i].bAccept )
+				{
 					pClient->SendGamePacket( new CB2SlotInfoPacket( nClientID, i, slots[i] ), false );
+				}
 			}
 
 			return true;
@@ -79,7 +83,9 @@ void CMPManagerMode::JoiningClientAssignNewClient( int nClientID )
 void CMPManagerMode::SendLagInfo()
 {
 	if ( !bWaitWindowShown )
+	{
 		return;
+	}
 
 	bool bOwnLag = IsPlayerLagging( nOwnSlot );
 	NTimer::STime curTime = GameTimer()->GetAbsTime();
@@ -94,7 +100,9 @@ void CMPManagerMode::SendLagInfo()
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( i == nOwnSlot || !IsPlayerLagging( i ) )
+		{
 			continue;
+		}
 
 		SLagInfo &lagInfo = lags[i];
 		int nTimeLeft = lagInfo.nLagLeft - ( curTime - lagInfo.timeStartLag );
@@ -110,7 +118,9 @@ void CMPManagerMode::SendLagInfo()
 bool CMPManagerMode::IsPlayerPresent( int nPlayer )
 {
 	if ( nPlayer < 0 || nPlayer >= slots.size() )
+	{
 		return false;
+	}
 	return slots[nPlayer].bPresent;
 }
 
@@ -120,7 +130,9 @@ uint32_t CMPManagerMode::GetPresentMask() const
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( slots[i].bPresent )
+		{
 			dwMask |= ( 1UL << i );
+		}
 	}
 	return dwMask;
 }
@@ -128,21 +140,27 @@ uint32_t CMPManagerMode::GetPresentMask() const
 bool CMPManagerMode::IsPlayerLagging( int nPlayer )
 {
 	if ( !IsPlayerPresent( nPlayer ) )
+	{
 		return false;
+	}
 	return ( dwLaggers & ( 1UL << nPlayer ) );
 }
 
 bool CMPManagerMode::HasPlayerStoppedLagging( int nPlayer )
 {
 	if ( !IsPlayerPresent( nPlayer ) )
+	{
 		return false;
+	}
 	return ( dwLaggersOld & ~dwLaggers & ( 1UL << nPlayer ) );
 }
 
 bool CMPManagerMode::HasPlayerStartedLagging( int nPlayer )
 {
 	if ( !IsPlayerPresent( nPlayer ) )
+	{
 		return false;
+	}
 	return ( ~dwLaggersOld & dwLaggers & ( 1UL << nPlayer ) );
 }
 
@@ -151,7 +169,9 @@ int CMPManagerMode::GetSlotByClientID( int nClientID ) const
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( slots[i].nClientID == nClientID )
+		{
 			return i;
+		}
 	}
 	return -1;
 }
@@ -159,13 +179,17 @@ int CMPManagerMode::GetSlotByClientID( int nClientID ) const
 int CMPManagerMode::GetSlotClientID( int nSlot )
 {
 	if ( nSlot < 0 || nSlot >= slots.size() )
+	{
 		return -1;
+	}
 
 	if ( nSlot == nOwnSlot )
 	{
 		const int nOwnClientID = GetOwnClientID();
 		if ( nOwnClientID >= 0 )
+		{
 			return nOwnClientID;
+		}
 	}
 
 	return slots[nSlot].nClientID;
@@ -187,7 +211,9 @@ int CMPManagerMode::GetReplacementHostClientID( int nRemovedClientID )
 		// remain visible until its announced segment. Never elect that leaver.
 		const bool bDropScheduled = i < scheduledDropSegmentBySlot.size() && scheduledDropSegmentBySlot[i] >= 0;
 		if ( slot.bPresent && !bDropScheduled && nClientID >= 0 && nClientID != nRemovedClientID )
+		{
 			return nClientID;
+		}
 	}
 	return -1;
 }
@@ -195,7 +221,9 @@ int CMPManagerMode::GetReplacementHostClientID( int nRemovedClientID )
 void CMPManagerMode::PromoteGameControlHostAfterRemoval( int nRemovedClientID )
 {
 	if ( nRemovedClientID != nHostClientID )
+	{
 		return;
+	}
 
 	const int nOldHostClientID = nHostClientID;
 	nHostClientID = GetReplacementHostClientID( nRemovedClientID );
@@ -211,11 +239,15 @@ void CMPManagerMode::PromoteGameControlHostAfterRemoval( int nRemovedClientID )
 bool CMPManagerMode::IsAuthoritativeDropPacket( const class CB2DropPlayerAtSegmentPacket *pPacket )
 {
 	if ( !pPacket )
+	{
 		return false;
+	}
 
 	const int nSlotToDrop = pPacket->nSlotToDrop;
 	if ( nSlotToDrop < 0 || nSlotToDrop >= slots.size() )
+	{
 		return false;
+	}
 
 	// If the current game-control host is being dropped, accept either its own
 	// clean leave packet or a packet from the deterministic replacement host.
@@ -242,7 +274,9 @@ bool CMPManagerMode::IsAuthoritativeDropPacket( const class CB2DropPlayerAtSegme
 	}
 
 	if ( pPacket->nClientID == nHostClientID )
+	{
 		return true;
+	}
 
 	return false;
 }
@@ -250,7 +284,9 @@ bool CMPManagerMode::IsAuthoritativeDropPacket( const class CB2DropPlayerAtSegme
 void CMPManagerMode::BroadcastSynchronizedPlayerDrop( int nSlot, int nSegment, const char *szReason )
 {
 	if ( !IsGameControlHost() )
+	{
 		return;
+	}
 
 	NGameX::MatchPacketTrace_Log(
 			nSegment,
@@ -264,14 +300,20 @@ void CMPManagerMode::BroadcastSynchronizedPlayerDrop( int nSlot, int nSegment, c
 void CMPManagerMode::ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment )
 {
 	if ( nSlot < 0 || nSlot >= slots.size() )
+	{
 		return;
+	}
 
 	// Remember and apply the earliest authoritative drop segment for this slot.
 	if ( scheduledDropSegmentBySlot.size() != slots.size() )
+	{
 		scheduledDropSegmentBySlot.assign( slots.size(), -1 );
+	}
 	const int nCurrent = scheduledDropSegmentBySlot[nSlot];
 	if ( nCurrent >= 0 && nCurrent <= nSegment )
+	{
 		return;
+	}
 
 	const uint32_t dwLaggersBefore = dwLaggers;
 	const uint32_t dwLaggersOldBefore = dwLaggersOld;
@@ -283,7 +325,9 @@ void CMPManagerMode::ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment )
 	dwUserPausedPlayers &= ~( 1UL << nSlot );
 	lags[nSlot].dwHatedBy = 0;
 	if ( dwLaggers == 0 )
+	{
 		ShowWaitWindow( false );
+	}
 	NGameX::MatchPacketTrace_RecordDropScheduled( nSlot, nSegment );
 	NGameX::MatchPacketTrace_Log(
 			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
@@ -305,7 +349,9 @@ void CMPManagerMode::ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment )
 	{
 		// A removed local player must not retain a pause whose ownership bit was cleared above.
 		if ( nSlot == nOwnSlot )
+		{
 			pTransceiver->CommandTimeOut( false );
+		}
 		pTransceiver->SchedulePlayerRemoval( nSlot, nSegment );
 	}
 }
@@ -313,16 +359,22 @@ void CMPManagerMode::ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment )
 void CMPManagerMode::ApplyScheduledSlotDrops()
 {
 	if ( !IsGameRunning() || !IsValid( pTransceiver ) )
+	{
 		return;
+	}
 	if ( scheduledDropSegmentBySlot.size() != slots.size() )
+	{
 		return;
+	}
 
 	const int nCommonSegment = pTransceiver->GetCurrentCommonSegment();
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		const int nDropSegment = scheduledDropSegmentBySlot[i];
 		if ( nDropSegment < 0 || nDropSegment > nCommonSegment )
+		{
 			continue;
+		}
 
 		// Retain the authoritative boundary after applying it: duplicate removals
 		// stay idempotent and surviving teammates use it for the same match-end tick.
@@ -372,7 +424,9 @@ void CMPManagerMode::RemoveClient( int nClientID, bool bKicked )
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( slots[i].nClientID != nClientID )
+		{
 			continue;
+		}
 
 		// In active game, never mutate lockstep membership here.
 		// The current game-control host announces deterministic drops. If that host
@@ -386,7 +440,9 @@ void CMPManagerMode::RemoveClient( int nClientID, bool bKicked )
 			if ( IsValid( pTransceiver ) )
 			{
 				if ( scheduledDropSegmentBySlot.size() != slots.size() )
+				{
 					scheduledDropSegmentBySlot.assign( slots.size(), -1 );
+				}
 
 				// Schedule by lockstep membership, not slot UI state.
 				// Slot presence can already be false here while transceiver still waits for this player.
@@ -396,13 +452,17 @@ void CMPManagerMode::RemoveClient( int nClientID, bool bKicked )
 					if ( bOwnsDropAuthority )
 					{
 						if ( bRemovingGameControlHost )
+						{
 							PromoteGameControlHostAfterRemoval( nClientID );
+						}
 
 						ScheduleSynchronizedPlayerDrop( i, nDropSegment );
 
 						if ( IsGameControlHost() )
+						{
 							BroadcastSynchronizedPlayerDrop(
 									i, nDropSegment, bRemovingGameControlHost ? "host_removed" : "remove_client" );
+						}
 						else
 						{
 							NGameX::MatchPacketTrace_Log( nDropSegment,
@@ -424,7 +484,9 @@ void CMPManagerMode::RemoveClient( int nClientID, bool bKicked )
 					}
 				}
 				else if ( bRemovingGameControlHost && GetOwnClientID() == nReplacementHostClientID )
+				{
 					PromoteGameControlHostAfterRemoval( nClientID );
+				}
 			}
 			return;
 		}
@@ -434,7 +496,9 @@ void CMPManagerMode::RemoveClient( int nClientID, bool bKicked )
 		{
 			SMPSlot emptySlot;
 			if ( bKicked )
+			{
 				emptySlot.bAccept = slots[i].bAccept;
+			}
 			slots[i] = emptySlot;
 			slots[i].nClientID = -1;
 			--nSlotsUsed;
@@ -444,7 +508,9 @@ void CMPManagerMode::RemoveClient( int nClientID, bool bKicked )
 			pUpdateMsg->info = emptySlot;
 			PushMessage( pUpdateMsg );
 			if ( pLanTester )
+			{
 				pLanTester->ClientRemoved( nClientID );
+			}
 
 			OnGameRoomClientRemoved();
 			UpdateMyConnectivityMask();
@@ -460,7 +526,9 @@ void CMPManagerMode::UpdateMyConnectivityMask()
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( slots[i].bPresent )
+		{
 			wNewMask |= ( 1 << i );
+		}
 	}
 	if ( wNewMask != wMask )
 	{

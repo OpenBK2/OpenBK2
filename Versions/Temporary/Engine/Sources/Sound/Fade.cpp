@@ -59,17 +59,23 @@ void CFade::Segment()
 			if ( pTrackToEnd )
 			{
 				if ( pTrackToEnd->IsTimeToEndFade( pFade->nFadeTime ) )
+				{
 					bStarting = true;
+				}
 			}
 			else
+			{
 				bStarting = true;
+			}
 
 			if ( bStarting )
 			{
 				fStartVolume = 100.0f * Singleton<IMusicSystem>()->GetVolume( eVolumeType );
 				eState = EFS_STARTED;
 				if ( pFade->bPause && pFade->fFinalVolume != 0.0f )
+				{
 					Singleton<IMusicSystem>()->PauseMusic( eVolumeType, false );
+				}
 				SetCurrentVolume();
 			}
 		}
@@ -86,7 +92,9 @@ void CFade::Segment()
 			{
 				eState = EFS_FINISHED;
 				if ( pFade->bPause && pFade->fFinalVolume == 0.0f )
+				{
 					Singleton<IMusicSystem>()->PauseMusic( eVolumeType, true );
+				}
 			}
 		}
 
@@ -110,7 +118,9 @@ void CFades::Update()
 	for ( CFades::iterator it = begin(); it != end(); )
 	{
 		if ( ( *it )->IsFinished() )
+		{
 			it = erase( it );
+		}
 		else
 		{
 			( *it )->Segment();

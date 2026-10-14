@@ -199,7 +199,9 @@ struct SAnimatedVisObjDescBase : public SModelVisObjDesc
 	NAnimation::ISkeletonAnimator *GetAnimator( bool bRefreshAnimator )
 	{
 		if ( bRefreshAnimator )
+		{
 			pAnimator.Refresh();
+		}
 		return pAnimator;
 	}
 	CFuncBase<SBound> *GetBounder()

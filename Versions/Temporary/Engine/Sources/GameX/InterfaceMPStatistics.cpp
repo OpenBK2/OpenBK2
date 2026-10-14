@@ -32,7 +32,9 @@ CInterfaceMPStatistics::CInterfaceMPStatistics() : CInterfaceMPScreenBase( "MPSt
 bool CInterfaceMPStatistics::Init()
 {
 	if ( !CInterfaceScreenBase::Init() )
+	{
 		return false;
+	}
 	pMPConsts = NGameX::GetMPConsts();
 	AddScreen( this );
 	MakeInterior();
@@ -58,9 +60,13 @@ void CInterfaceMPStatistics::MakeInterior()
 	}
 
 	if ( pHeaderWinView )
+	{
 		pHeaderWinView->ShowWindow( Singleton<IScenarioTracker>()->IsMissionWon() );
+	}
 	if ( pHeaderLostView )
+	{
 		pHeaderLostView->ShowWindow( !Singleton<IScenarioTracker>()->IsMissionWon() );
+	}
 
 	pPlayerNameView = GetChildChecked<ITextView>( pMain, "PlayerNameView", true );
 	pMissionTimeView = GetChildChecked<ITextView>( pMain, "MissionTimeView", true );
@@ -106,7 +112,9 @@ void CInterfaceMPStatistics::MakeInterior()
 
 	IFullScreenFader *pFader = Scene()->GetScreenFader();
 	if ( pFader )
+	{
 		pFader->Start( UNFADE_TIME, SCREEN_FADER_CLEAR, SCREEN_FADER_CLEAR, true );
+	}
 }
 
 void CInterfaceMPStatistics::FillTeams()
@@ -129,7 +137,9 @@ void CInterfaceMPStatistics::FillTeams()
 		}
 	}
 	if ( !pScenarioTracker->IsMissionWon() )
+	{
 		nWinningTeam = 1 - nWinningTeam;
+	}
 
 	wonTeam.clear();
 	lostTeam.clear();
@@ -138,11 +148,17 @@ void CInterfaceMPStatistics::FillTeams()
 	{
 		const IScenarioTracker::SMultiplayerInfo::SPlayer &player = pMPInfo->players[i];
 		if ( player.nTeam == nWinningTeam )
+		{
 			AddPlayerToTeam( player, wonTeam );
+		}
 		else if ( player.nTeam == 1 - nWinningTeam )
+		{
 			AddPlayerToTeam( player, lostTeam );
+		}
 		else
+		{
 			NI_ASSERT( 0, "Neutral player found" );
+		}
 	}
 }
 
@@ -167,7 +183,9 @@ void CInterfaceMPStatistics::AddPlayerToTeam( const IScenarioTracker::SMultiplay
 	std::list<SPlayerItemData>::iterator it = team.begin();
 
 	while ( it != team.end() && ( *it ).nScore > item.nScore )
+	{
 		++it;
+	}
 
 	team.insert( it, item );
 }
@@ -224,7 +242,9 @@ void CInterfaceMPStatistics::AddPlayerItemsToList( std::list<SPlayerItemData> &t
 		pItemColour->SetBackground( pColourBgr );
 
 		if ( pItemTeamColour )
+		{
 			pItemTeamColour->SetState( item.nTeam );
+		}
 
 		pItemLost->SetText( pItemLost->GetDBText() + NStr::ToUnicode( std::to_string( item.nUnitsLost ) ) );
 		pItemKilled->SetText( pItemKilled->GetDBText() + NStr::ToUnicode( std::to_string( item.nUnitsKilled ) ) );
@@ -239,10 +259,14 @@ void CInterfaceMPStatistics::AddPlayerItemsToList( std::list<SPlayerItemData> &t
 bool CInterfaceMPStatistics::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_on_close" )
+	{
 		return OnClosePopup();
+	}
 
 	if ( szReaction == "react_on_save_replay" )
+	{
 		return OnSaveReplay();
+	}
 
 	return false;
 }
@@ -263,9 +287,13 @@ void CInterfaceMPStatistics::MsgNext( const SGameMessage &msg )
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_MISSION_BACKGROUND, "" );
 	if ( bWasLadderGame )
+	{
 		NMainLoop::Command( ML_COMMAND_MP_GAME_LOBBY, "" );
+	}
 	else
+	{
 		NMainLoop::Command( ML_COMMAND_MP_CUSTOM_GAME_MENU, "" );
+	}
 }
 
 bool CInterfaceMPStatistics::OnSaveReplay()
@@ -290,7 +318,9 @@ bool CInterfaceMPStatistics::OnGameAftermathMessage( struct SMPUIGameAftemathMes
 	pExpTotalProgress->ShowWindow( bWasLadderGame );
 
 	if ( !bWasLadderGame )
+	{
 		return true;
+	}
 
 	pPlayerRankView->SetText( pPlayerRankView->GetDBText() +
 	                          GET_TEXT_PRE( pMPConsts->sides[pMsg->nCountry].ladderRanks[pMsg->nRank]., Name ) );
@@ -299,15 +329,21 @@ bool CInterfaceMPStatistics::OnGameAftermathMessage( struct SMPUIGameAftemathMes
 	pExpTotalView->SetText( pExpTotalView->GetDBText() +
 	                        NStr::ToUnicode( fmt::format( "{} / {}", pMsg->nExpTotal1, pMsg->nExpTotal2 ) ) );
 	if ( pMsg->nExpTotal2 != 0 )
+	{
 		pExpTotalProgress->SetPosition( float( pMsg->nExpTotal1 ) / pMsg->nExpTotal2 );
+	}
 	else
+	{
 		pExpTotalProgress->SetPosition( 0.0f );
+	}
 
 	medals = pMsg->medals;
 	nNextMedal = 0;
 
 	if ( pMsg->nLevel != pMsg->nOldLevel )
+	{
 		ShowLevelPopup( pMsg->nLevel, pMsg->nOldLevel, pMsg->nCountry, pMsg->nRank, pMsg->nOldRank );
+	}
 	else if ( medals.size() > 0 )
 	{
 		ShowMedalPopup( medals[0] );
@@ -323,7 +359,9 @@ bool CInterfaceMPStatistics::OnClosePopup()
 	pRankPopup->ShowWindow( false );
 
 	if ( nNextMedal >= medals.size() )
+	{
 		return true;
+	}
 
 	ShowMedalPopup( medals[nNextMedal] );
 	++nNextMedal;
@@ -334,7 +372,9 @@ bool CInterfaceMPStatistics::OnClosePopup()
 void CInterfaceMPStatistics::ShowLevelPopup( int nLevel, int nLevelOld, int nCountry, int nRank, int nRankOld )
 {
 	if ( !pRankPopup )
+	{
 		return;
+	}
 
 	IWindow *pIcon = GetChildChecked<IWindow>( pRankPopup, "PopupPicture", true );
 	ITextView *pCongrats = GetChildChecked<ITextView>( pRankPopup, "PopupCongratulations", true );
@@ -362,7 +402,9 @@ void CInterfaceMPStatistics::ShowLevelPopup( int nLevel, int nLevelOld, int nCou
 void CInterfaceMPStatistics::ShowMedalPopup( const NDb::SMedal *pMedal )
 {
 	if ( !pMedalPopup )
+	{
 		return;
+	}
 	NI_VERIFY( pMedal, "Null link to medal desc in MPConsts", return );
 
 	IWindow *pIcon = GetChildChecked<IWindow>( pMedalPopup, "PopupPicture", true );

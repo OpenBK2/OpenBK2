@@ -66,7 +66,9 @@ int CExecutorRestoreTransparencyQueue::Segment()
 					CLinkObject *pLinkObj = CLinkObject::GetObjectByUniqueId( nID );
 					CExistingObject *pObj = checked_cast<CExistingObject *>( pLinkObj );
 					if ( pObj )
+					{
 						pObj->RestoreTransparenciesImmidiately();
+					}
 					++nRestored;
 				}
 				objectsToRestore.erase( pos );
@@ -77,7 +79,9 @@ int CExecutorRestoreTransparencyQueue::Segment()
 		return nCalcPeriod + NRandom::Random( 0, nCalcPeriodRandom );
 	}
 	else
+	{
 		return 0;
+	}
 }
 
 void CExecutorRestoreTransparencyQueue::RegisterOnEvents( IExecutorContainer *pContainer )

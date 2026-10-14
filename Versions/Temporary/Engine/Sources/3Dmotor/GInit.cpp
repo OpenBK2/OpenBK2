@@ -54,7 +54,9 @@ bool SetModeFromConfig( bool bReinit, const SUserRTInfo &_rtInfo )
 	{
 		NGfx::Done3D();
 		if ( NGfx::Init3D( NGfx::GetHWND() ) == false )
+		{
 			return false;
+		}
 	}
 	//if ( !NGfx::IsDXTSupported() )
 	//	NGlobal::SetVar( "gfx_texture_usedxt", 0 );
@@ -83,9 +85,13 @@ bool SetModeFromConfig( bool bReinit, const SUserRTInfo &_rtInfo )
 	sValue = NGlobal::GetVar( "gfx_fullscreen", 0 );
 	// should not happen in MapEditor
 	if ( sValue.GetFloat() == 1 )
+	{
 		fullScreen = NGfx::FULL_SCREEN;
+	}
 	if ( fullScreen == NGfx::WINDOWED )
+	{
 		bUse16BitMode = NGfx::Is16BitDesktop();
+	}
 
 	NGfx::EHardwareLevel hl = NGfx::GetHardwareLevel();
 
@@ -111,7 +117,9 @@ bool SetModeFromConfig( bool bReinit, const SUserRTInfo &_rtInfo )
 		rtInfo.AddTex( nDepthTexResolution, "DepthMap" );
 
 		if ( IsUsing16bitShadows() )
+		{
 			rtInfo.AddTex( nDepthTexResolution, "DepthMap16", NGfx::SPixel565::ID );
+		}
 
 		rtInfo.AddTex( 512, "WaterReflection" );
 		rtInfo.AddTex( nDepthTexResolution, "DepthCopy" );
@@ -124,7 +132,9 @@ bool SetModeFromConfig( bool bReinit, const SUserRTInfo &_rtInfo )
 		rtInfo.AddCubeTex( 512, "LMPointDepth" );
 	}
 	else
+	{
 		bCanCalcLM = false;
+	}
 
 	if ( NGlobal::GetVar( "gfx_frame_transition", 1 ) )
 	{
@@ -159,7 +169,9 @@ bool SetModeFromConfig( bool bReinit, const SUserRTInfo &_rtInfo )
 		{
 			nFSAA /= 2;
 			if ( nFSAA == 1 )
+			{
 				nFSAA = 0;
+			}
 			NGlobal::SetVar( "gfx_fsaa", nFSAA / 2 );
 			return SetModeFromConfig( true, _rtInfo );
 		}

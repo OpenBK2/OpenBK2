@@ -28,7 +28,9 @@ inline int AddUniqueRoadVertex( std::vector<NGScene::SVertex> *pVerts,
 	{
 		if ( ( fabs2( it->pos.x - vert.x ) < DEF_ROAD_VERT_EPS ) && ( fabs2( it->pos.y - vert.y ) < DEF_ROAD_VERT_EPS ) &&
 		     ( fabs2( it->pos.z - vert.z ) < DEF_ROAD_VERT_EPS ) )
+		{
 			return nCount;
+		}
 	}
 	NGScene::SVertex v;
 	CalcCompactVector( &( v.texU ), V3_AXIS_X );
@@ -179,32 +181,48 @@ void CTerraGen::ProjectTrgOnTerrain( const CVec3 &v1,
 					                         ( vTex2 - vTex1 ) * vBary3.x + ( vTex3 - vTex1 ) * vBary3.y + vTex1,
 					                         ( fAlpha2 - fAlpha1 ) * vBary3.x + ( fAlpha3 - fAlpha1 ) * vBary3.y + fAlpha1 );
 					if ( IsCCW( pData->vertices[nInd1].pos, pData->vertices[nInd2].pos, pData->vertices[nInd3].pos ) )
+					{
 						pData->triangles.push_back( STriangle( nInd1, nInd2, nInd3 ) );
+					}
 					else
+					{
 						pData->triangles.push_back( STriangle( nInd1, nInd3, nInd2 ) );
+					}
 				}
 				else
 				{
 					points.resize( 0 );
 					if ( bFlag1 )
+					{
 						points.push_back( vert1 );
+					}
 					if ( bFlag2 )
+					{
 						points.push_back( vert2 );
+					}
 					if ( bFlag3 )
+					{
 						points.push_back( vert3 );
+					}
 
 					GetBaryCoords( v1, vert1, vert2, vert3, &vBary );
 					if ( ( vBary.x >= 0.0f ) && ( vBary.y >= 0.0f ) && ( ( vBary.x + vBary.y ) <= 1.0f ) )
+					{
 						points.push_back(
 								CVec3( v1.x, v1.y, ( vert2.z - vert1.z ) * vBary.x + ( vert3.z - vert1.z ) * vBary.y + vert1.z ) );
+					}
 					GetBaryCoords( v2, vert1, vert2, vert3, &vBary );
 					if ( ( vBary.x >= 0.0f ) && ( vBary.y >= 0.0f ) && ( ( vBary.x + vBary.y ) <= 1.0f ) )
+					{
 						points.push_back(
 								CVec3( v2.x, v2.y, ( vert2.z - vert1.z ) * vBary.x + ( vert3.z - vert1.z ) * vBary.y + vert1.z ) );
+					}
 					GetBaryCoords( v3, vert1, vert2, vert3, &vBary );
 					if ( ( vBary.x >= 0.0f ) && ( vBary.y >= 0.0f ) && ( ( vBary.x + vBary.y ) <= 1.0f ) )
+					{
 						points.push_back(
 								CVec3( v3.x, v3.y, ( vert2.z - vert1.z ) * vBary.x + ( vert3.z - vert1.z ) * vBary.y + vert1.z ) );
+					}
 
 					AddIntersection( &points, v1, v2, vert1, vert2 );
 					AddIntersection( &points, v2, v3, vert1, vert2 );
@@ -219,7 +237,9 @@ void CTerraGen::ProjectTrgOnTerrain( const CVec3 &v1,
 					AddIntersection( &points, v3, v1, vert3, vert1 );
 
 					if ( points.size() < 3 )
+					{
 						continue;
+					}
 
 					tempPoints.resize( 0 );
 					for ( std::vector<CVec3>::const_iterator it = points.begin(); it != points.end(); ++it )
@@ -228,7 +248,9 @@ void CTerraGen::ProjectTrgOnTerrain( const CVec3 &v1,
 						for ( ; itTemp != tempPoints.end(); ++itTemp )
 						{
 							if ( ( fabs2( it->x - itTemp->x ) + fabs2( it->y - itTemp->y ) ) < DEF_FLOAT_EPS2 )
+							{
 								break;
+							}
 						}
 						if ( itTemp == tempPoints.end() )
 						{
@@ -237,7 +259,9 @@ void CTerraGen::ProjectTrgOnTerrain( const CVec3 &v1,
 					}
 
 					if ( tempPoints.size() < 3 )
+					{
 						continue;
+					}
 
 					CreateConvexHull( &resPoints, tempPoints );
 
@@ -286,9 +310,13 @@ void CTerraGen::ProjectTrgOnTerrain( const CVec3 &v1,
 						                         ( vTex2 - vTex1 ) * vBary.x + ( vTex3 - vTex1 ) * vBary.y + vTex1,
 						                         ( fAlpha2 - fAlpha1 ) * vBary.x + ( fAlpha3 - fAlpha1 ) * vBary.y + fAlpha1 );
 						if ( IsCCW( pData->vertices[nInd0].pos, pData->vertices[nPrevInd].pos, pData->vertices[nInd].pos ) )
+						{
 							pData->triangles.push_back( STriangle( nInd0, nPrevInd, nInd ) );
+						}
 						else
+						{
 							pData->triangles.push_back( STriangle( nInd0, nInd, nPrevInd ) );
+						}
 
 						nPrevInd = nInd;
 					}
@@ -413,36 +441,54 @@ void CTerraGen::ProjectQuadOnTerrain( const CVec3 &v1,
 					                                           g,
 					                                           &pData->vertices );
 					if ( IsCCW( pData->vertices[nInd1].pos, pData->vertices[nInd2].pos, pData->vertices[nInd3].pos ) )
+					{
 						pData->triangles.push_back( STriangle( nInd1, nInd2, nInd3 ) );
+					}
 					else
+					{
 						pData->triangles.push_back( STriangle( nInd1, nInd3, nInd2 ) );
+					}
 				}
 				else
 				{
 					points.resize( 0 );
 					if ( bFlag1 )
+					{
 						points.push_back( vert1 );
+					}
 					if ( bFlag2 )
+					{
 						points.push_back( vert2 );
+					}
 					if ( bFlag3 )
+					{
 						points.push_back( vert3 );
+					}
 
 					GetBaryCoords( v1, vert1, vert2, vert3, &bary );
 					if ( ( bary.x >= 0.0f ) && ( bary.y >= 0.0f ) && ( ( bary.x + bary.y ) <= 1.0f ) )
+					{
 						points.push_back(
 								CVec3( v1.x, v1.y, ( vert2.z - vert1.z ) * bary.x + ( vert3.z - vert1.z ) * bary.y + vert1.z ) );
+					}
 					GetBaryCoords( v2, vert1, vert2, vert3, &bary );
 					if ( ( bary.x >= 0.0f ) && ( bary.y >= 0.0f ) && ( ( bary.x + bary.y ) <= 1.0f ) )
+					{
 						points.push_back(
 								CVec3( v2.x, v2.y, ( vert2.z - vert1.z ) * bary.x + ( vert3.z - vert1.z ) * bary.y + vert1.z ) );
+					}
 					GetBaryCoords( v3, vert1, vert2, vert3, &bary );
 					if ( ( bary.x >= 0.0f ) && ( bary.y >= 0.0f ) && ( ( bary.x + bary.y ) <= 1.0f ) )
+					{
 						points.push_back(
 								CVec3( v3.x, v3.y, ( vert2.z - vert1.z ) * bary.x + ( vert3.z - vert1.z ) * bary.y + vert1.z ) );
+					}
 					GetBaryCoords( v4, vert1, vert2, vert3, &bary );
 					if ( ( bary.x >= 0.0f ) && ( bary.y >= 0.0f ) && ( ( bary.x + bary.y ) <= 1.0f ) )
+					{
 						points.push_back(
 								CVec3( v4.x, v4.y, ( vert2.z - vert1.z ) * bary.x + ( vert3.z - vert1.z ) * bary.y + vert1.z ) );
+					}
 
 					AddIntersection( &points, v1, v2, vert1, vert2 );
 					AddIntersection( &points, v2, v3, vert1, vert2 );
@@ -460,7 +506,9 @@ void CTerraGen::ProjectQuadOnTerrain( const CVec3 &v1,
 					AddIntersection( &points, v4, v1, vert3, vert1 );
 
 					if ( points.size() < 3 )
+					{
 						continue;
+					}
 
 					tempPoints.resize( 0 );
 					for ( std::vector<CVec3>::const_iterator it = points.begin(); it != points.end(); ++it )
@@ -469,7 +517,9 @@ void CTerraGen::ProjectQuadOnTerrain( const CVec3 &v1,
 						for ( ; itTemp != tempPoints.end(); ++itTemp )
 						{
 							if ( ( fabs2( it->x - itTemp->x ) + fabs2( it->y - itTemp->y ) ) < DEF_FLOAT_EPS2 )
+							{
 								break;
+							}
 						}
 						if ( itTemp == tempPoints.end() )
 						{
@@ -478,7 +528,9 @@ void CTerraGen::ProjectQuadOnTerrain( const CVec3 &v1,
 					}
 
 					if ( tempPoints.size() < 3 )
+					{
 						continue;
+					}
 
 					CreateConvexHull( &resPoints, tempPoints );
 
@@ -538,9 +590,13 @@ void CTerraGen::ProjectQuadOnTerrain( const CVec3 &v1,
 						                                          g,
 						                                          &pData->vertices );
 						if ( IsCCW( pData->vertices[nInd0].pos, pData->vertices[nPrevInd].pos, pData->vertices[nInd].pos ) )
+						{
 							pData->triangles.push_back( STriangle( nInd0, nPrevInd, nInd ) );
+						}
 						else
+						{
 							pData->triangles.push_back( STriangle( nInd0, nInd, nPrevInd ) );
+						}
 
 						nPrevInd = nInd;
 					}
@@ -596,6 +652,7 @@ void CTerraGen::ProjectRoadLayer( const NDb::SVSOPoint &point1,
 		                     pCurPatch );
 	}
 	else
+	{
 		ProjectQuadOnTerrain( vCurL,
 		                      vCurR,
 		                      vNextR,
@@ -609,6 +666,7 @@ void CTerraGen::ProjectRoadLayer( const NDb::SVSOPoint &point1,
 		                      point2.fOpacity,
 		                      point2.fOpacity,
 		                      pCurPatch );
+	}
 	/*return;
 
 	const int nStep = max( int( ( point1.fWidth + point2.fWidth ) * fabs( w1 - w2 ) * 0.5f * 2.0f / fPrevDist ), 2 ) - 1;
@@ -657,13 +715,17 @@ TryAddRoadGfxToObserver( STerrainGfxInfo *pTerraGfxInfo, const SRoadGFXInfo &gfx
 
 	for ( std::vector<NMeshData::SMeshData>::const_iterator it = gfxInfo.patches.begin(); it != gfxInfo.patches.end();
 	      ++it )
+	{
 		nSize += it->triangles.size();
+	}
 
 	if ( nSize > 0 )
 	{
 		pTerraGfxInfo->roads.push_back( gfxInfo );
 		if ( pGfxObserver )
+		{
 			pGfxObserver->AddRoad( &( pTerraGfxInfo->roads.back() ) );
+		}
 	}
 }
 
@@ -758,6 +820,7 @@ void CTerraGen::CreateRoadGfx( const NDb::SVSOInstance *pInstance, const std::ve
 			                  fInvTexCoeffX );
 
 			if ( gfxInfo.pDesc->leftBorder.pMaterial )
+			{
 				ProjectRoadLayer( points[g],
 				                  points[g + 1],
 				                  fLeftMinTexX,
@@ -768,8 +831,10 @@ void CTerraGen::CreateRoadGfx( const NDb::SVSOInstance *pInstance, const std::ve
 				                  &( leftGfxInfo.patches[i] ),
 				                  fGlobalMinTexX,
 				                  fInvTexCoeffX );
+			}
 
 			if ( gfxInfo.pDesc->rightBorder.pMaterial )
+			{
 				ProjectRoadLayer( points[g],
 				                  points[g + 1],
 				                  fRightMinTexX,
@@ -780,6 +845,7 @@ void CTerraGen::CreateRoadGfx( const NDb::SVSOInstance *pInstance, const std::ve
 				                  &( rightGfxInfo.patches[i] ),
 				                  fGlobalMinTexX,
 				                  fInvTexCoeffX );
+			}
 
 			fTexY = fNextTexY;
 		}
@@ -788,10 +854,14 @@ void CTerraGen::CreateRoadGfx( const NDb::SVSOInstance *pInstance, const std::ve
 	TryAddRoadGfxToObserver( &terrainGfxInfo, gfxInfo, pGfxObserver );
 
 	if ( gfxInfo.pDesc->leftBorder.pMaterial )
+	{
 		TryAddRoadGfxToObserver( &terrainGfxInfo, leftGfxInfo, pGfxObserver );
+	}
 
 	if ( gfxInfo.pDesc->rightBorder.pMaterial )
+	{
 		TryAddRoadGfxToObserver( &terrainGfxInfo, rightGfxInfo, pGfxObserver );
+	}
 }
 
 void CTerraGen::AddRoad( const NDb::SVSOInstance *pInstance )
@@ -808,7 +878,9 @@ void CTerraGen::AddRoad( const NDb::SVSOInstance *pInstance )
 	}
 
 	if ( pInstance->points.size() < 2 )
+	{
 		return;
+	}
 
 	STerrainInfo::SRoad curRoadInfo;
 	curRoadInfo.nID = pInstance->nVSOID;
@@ -829,7 +901,9 @@ void CTerraGen::AddRoad( const NDb::SVSOInstance *pInstance )
 	CreateRoadGfx( pInstance, points );
 
 	if ( pAIObserver )
+	{
 		PutRoadToAI( pInstance );
+	}
 }
 
 void CTerraGen::UpdateRoad( const int nVSOID )
@@ -860,13 +934,19 @@ void CTerraGen::RemoveRoad( const int nVSOID )
 	for ( std::list<SRoadGFXInfo>::iterator it = terrainGfxInfo.roads.begin(); it != terrainGfxInfo.roads.end(); )
 	{
 		if ( it->nID == nVSOID )
+		{
 			it = terrainGfxInfo.roads.erase( it );
+		}
 		else
+		{
 			++it;
+		}
 	}
 
 	if ( pGfxObserver )
+	{
 		pGfxObserver->RemoveRoad( nVSOID );
+	}
 }
 
 void CTerraGen::AddAllRoads()
@@ -899,7 +979,9 @@ const NDb::SVSOInstance *CTerraGen::FindRoad( int nID ) const
 	for ( std::vector<NDb::SVSOInstance>::const_iterator it = pDesc->roads.begin(); it != pDesc->roads.end(); ++it )
 	{
 		if ( it->nVSOID == nID )
+		{
 			return static_cast<const NDb::SVSOInstance *>( &( *it ) );
+		}
 	}
 	//NI_ASSERT( false, StrFmt( "Couldn't find road's instance: ID=%d", nID ) );
 	return 0;

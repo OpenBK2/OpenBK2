@@ -30,7 +30,9 @@ NGfx::EPixelFormat GetPixelFormat( const SDDSHeader &hdr )
 	else if ( ( hdr.ddspf.dwFlags & DDS_RGB ) == DDS_RGB )
 	{
 		if ( ( hdr.ddspf.dwRGBBitCount == 32 ) && ( hdr.ddspf.dwGBitMask == 0x0000ff00 ) )
+		{
 			return NGfx::CF_A8R8G8B8;
+		}
 		else if ( hdr.ddspf.dwRGBBitCount == 16 )
 		{
 			switch ( hdr.ddspf.dwGBitMask )
@@ -53,9 +55,13 @@ static int GetRealTextureID( const NDb::STexture *pTex )
 {
 	int nID = pTex->GetRecordID();
 	if ( bDXTModeOn )
+	{
 		return nID;
+	}
 	if ( pTex->bIsDXT )
+	{
 		return nID | 0x01000000;
+	}
 	return nID;
 }
 
@@ -118,7 +124,9 @@ void LoadTextureData( NGfx::CTexture *pTexture,
 		ASSERT( lock.GetSizeX() >= nX + nSizeX );
 		ASSERT( lock.GetSizeY() >= nY + nSizeY );
 		for ( int y = nY; y < nY + nSizeY; ++y )
+		{
 			pFile->Read( &( lock[y][nX] ), nSizeX * sizeof( TPixel ) );
+		}
 	}
 }
 
@@ -151,7 +159,9 @@ void LoadTextureData( NGfx::CCubeTexture *pTexture,
 		ASSERT( lock.GetSizeX() >= nX + nSizeX );
 		ASSERT( lock.GetSizeY() >= nY + nSizeY );
 		for ( int y = nY; y < nY + nSizeY; ++y )
+		{
 			pFile->Read( &( lock[y][nX] ), nSizeX * sizeof( TPixel ) );
+		}
 	}
 }
 
@@ -206,11 +216,17 @@ static NGfx::EPixelFormat SelectFormat( const std::vector<NGfx::SPixel8888> &dat
 {
 	std::vector<int> counts( 256, 0 );
 	for ( int k = 0; k < data.size(); ++k )
+	{
 		++counts[data[k].a];
+	}
 	if ( counts[255] == data.size() )
+	{
 		return NGfx::CF_R5G6B5;
+	}
 	if ( ( counts[255] + counts[0] ) == data.size() )
+	{
 		return NGfx::CF_A1R5G5B5;
+	}
 	return NGfx::CF_A4R4G4B4;
 }
 
@@ -242,7 +258,9 @@ static void ConvertTo16Bit( const std::vector<NGfx::SPixel8888> &data,
 	{
 		int nBase = y * nSizeX;
 		for ( int x = 0; x < nSizeX; ++x )
+		{
 			lock[y][x] = DoConvert( data[nBase + x], (T *)0 );
+		}
 	}
 }
 
@@ -258,7 +276,9 @@ static NGfx::CTexture *LoadConvertTo16Bit( CDataStream *pStream,
 	for ( int k = 0; k < nCutMips; ++k )
 	{
 		if ( nLevels == 1 )
+		{
 			break;
+		}
 		pStream->Seek( pStream->GetPosition() + nSizeX * nSizeY * 4 );
 		nSizeX >>= 1;
 		nSizeY >>= 1;
@@ -270,16 +290,22 @@ static NGfx::CTexture *LoadConvertTo16Bit( CDataStream *pStream,
 	for ( int k = 0; k < nLevels; ++k )
 	{
 		if ( pTexBuffer && k >= pTexBuffer->GetNumMipLevels() )
+		{
 			break;
+		}
 		std::vector<NGfx::SPixel8888> data;
 		data.resize( nSizeX * nSizeY );
 		pStream->Read( &data[0], data.size() * sizeof( data[0] ) );
 		if ( k == 0 )
 		{
 			if ( eUsage == NGfx::TEXTURE_2D || eUsage == NGfx::TRANSPARENT_TEXTURE )
+			{
 				format = NGfx::CF_A4R4G4B4;
+			}
 			else
+			{
 				format = SelectFormat( data );
+			}
 			pTexture = NGfx::MakeTexture( nSizeX, nSizeY, nLevels, format, eUsage, eWrap );
 			pTexBuffer = dynamic_cast<NGfx::I2DBuffer *>( pTexture.GetBarePtr() );
 		}
@@ -317,7 +343,9 @@ void CFileTexture::CreateChecker()
 	for ( int y = 0; y < nSize; ++y )
 	{
 		for ( int x = 0; x < nSize; ++x )
+		{
 			lock[y][x] = colors[( ( x & 4 ) == 0 ) & ( ( y & 4 ) == 0 )];
+		}
 	}
 }
 
@@ -332,7 +360,9 @@ static NGfx::CTexture *MakeTexture( const SDDSHeader &hdr, NGfx::ETextureUsage e
 	// A8R8G8B8 (A4R4G4B4 in 16 bit mode), so a 2D texture whose file is DXT or
 	// 16 bit has to be built as a regular texture instead.
 	if ( eUsage == NGfx::TEXTURE_2D && ePixelFormat != NGfx::CF_A8R8G8B8 )
+	{
 		eUsage = NGfx::REGULAR;
+	}
 	return NGfx::MakeTexture(
 			hdr.dwWidth >> nCutMips, hdr.dwHeight >> nCutMips, hdr.dwMipMapCount - nCutMips, ePixelFormat, eUsage, eWrap );
 }
@@ -340,7 +370,9 @@ static NGfx::CTexture *MakeTexture( const SDDSHeader &hdr, NGfx::ETextureUsage e
 void FixMips( SDDSHeader *pRes )
 {
 	if ( pRes->dwMipMapCount == 0 )
+	{
 		pRes->dwMipMapCount = 1;
+	}
 	NGfx::EPixelFormat format = GetPixelFormat( *pRes );
 	int nMaxPossibleLevels = GetMSB( (std::min)( pRes->dwWidth, pRes->dwHeight ) ) -
 	                         ( ( format >= NGfx::CF_DXT1 ) && ( format <= NGfx::CF_DXT5 ) ? 2 : 0 );
@@ -350,7 +382,9 @@ void FixMips( SDDSHeader *pRes )
 void CFileTexture::Recalc()
 {
 	if ( IsValid( pRequest ) && !pRequest->IsReady() && IsValid( pValue ) )
+	{
 		return;
+	}
 
 	const NDb::STexture *pTex = GetKey().tKey.pTexture;
 	if ( !pTex )
@@ -377,7 +411,9 @@ void CFileTexture::Recalc()
 	}
 	int nKeyFlags = GetKey().tKey.nFlags;
 	if ( nKeyFlags & STextureKey::TK_TRANSPARENT )
+	{
 		eUsage = NGfx::TRANSPARENT_TEXTURE;
+	}
 	NGfx::EWrap eWrap = NGfx::CLAMP;
 	switch ( nKeyFlags & ( STextureKey::TK_WRAP_X | STextureKey::TK_WRAP_Y ) )
 	{
@@ -401,9 +437,13 @@ void CFileTexture::Recalc()
 	{
 		pRequest = CreateFileRequiest( pTex->szDestName.c_str(), 0 ); //"Textures", GetRealTextureID( pTex ) );
 		if ( pTex->eType == NDb::STexture::TEXTURE_2D || pTex->bInstantLoad )
+		{
 			pRequest->Read();
+		}
 		else
+		{
 			AddFileRequest( pRequest );
+		}
 	}
 
 	if ( !pRequest->IsReady() )
@@ -428,7 +468,9 @@ void CFileTexture::Recalc()
 				                      hdr.header.dwHeight,
 				                      hdr.header.dwMipMapCount,
 				                      0 ) )
+				{
 					bHasRead = true;
+				}
 			}
 		}
 		if ( !bHasRead )
@@ -516,7 +558,9 @@ bool CFileTexture::NeedUpdate()
 static std::string GetID( const NDb::STexture *p )
 {
 	if ( p )
+	{
 		return p->szDestName;
+	}
 	return "";
 }
 void CFileCubeTexture::Recalc()
@@ -550,7 +594,9 @@ void CFileCubeTexture::Recalc()
 	for ( int i = 0; i < 6; ++i )
 	{
 		if ( szTextureIDs[i] == "" )
+		{
 			continue;
+		}
 		loadFace = (NGfx::EFace)i;
 		SDDSFileHeader hdr;
 		pRequest = CreateFileRequiest( szTextureIDs[i].c_str(),
@@ -598,7 +644,9 @@ void CFileCubeTexture::CreateChecker()
 		for ( int y = 0; y < nSize; ++y )
 		{
 			for ( int x = 0; x < nSize; ++x )
+			{
 				lock[y][x] = colors[( ( x & 4 ) == 0 ) & ( ( y & 4 ) == 0 )];
+			}
 		}
 	}
 }
@@ -613,7 +661,9 @@ void CColorTexture::Recalc()
 	for ( int y = 0; y < lock.GetSizeY(); ++y )
 	{
 		for ( int x = 0; x < lock.GetSizeX(); ++x )
+		{
 			lock[y][x].dwColor = NGfx::GetDWORDColor( vColor );
+		}
 	}
 }
 

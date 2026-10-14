@@ -35,7 +35,9 @@ struct SGameDbForceLoadGuard
 	void Close()
 	{
 		if ( bOpened )
+		{
 			--s_nCurrLoadDepth;
+		}
 		bOpened = false;
 	}
 };
@@ -61,9 +63,13 @@ class CGameDatabase : public CBasicDatabase
 		CDBID dbid;
 		NormalizeDBID( &dbid, _dbid );
 		if ( DoesObjectExist( dbid ) == false )
+		{
 			return 0;
+		}
 		else
+		{
 			return &( elementsMap[dbid] );
+		}
 	}
 	//
 	bool ReallyRegisterResourceFile( const CDBID &dbid );
@@ -140,9 +146,13 @@ public:
 	std::string GetClassTypeName( const CDBID &_dbid )
 	{
 		if ( const SElement *pElement = GetElement( _dbid ) )
+		{
 			return pElement->typeHeader.szClassTypeName;
+		}
 		else
+		{
 			return "";
+		}
 	}
 };
 CBasicDatabase *CreateGameDatabase()
@@ -186,7 +196,9 @@ bool CGameDatabase::LoadTypesMap()
 		{
 			NDb::NTypeDef::STypeClass *pTypeClass = checked_cast_ptr<NDb::NTypeDef::STypeClass *>( *it );
 			if ( !pTypeClass->szTypeName.empty() && pTypeClass->nClassTypeID != -1 )
+			{
 				name2typeIDmap[pTypeClass->szTypeName] = pTypeClass->nClassTypeID;
+			}
 		}
 	}
 	return !topLevelTypes.empty();
@@ -216,10 +228,14 @@ bool CGameDatabase::SaveChangedIndex()
 				return true;
 			}
 			else
+			{
 				return false;
+			}
 		}
 		else
+		{
 			return false;
+		}
 	}
 	bIndexChanged = false;
 	return true;
@@ -228,9 +244,13 @@ bool CGameDatabase::SaveChangedIndex()
 bool CGameDatabase::DoesObjectExist( const CDBID &dbid )
 {
 	if ( elementsMap.find( dbid ) != elementsMap.end() )
+	{
 		return true;
+	}
 	else
+	{
 		return RegisterResourceFile( GetFileName( dbid ) );
+	}
 }
 
 bool CGameDatabase::RegisterResourceFile( const std::string &szFileName )
@@ -243,7 +263,9 @@ bool CGameDatabase::RegisterResourceFile( const std::string &szFileName )
 	if ( pos == elementsMap.end() )
 	{
 		if ( ReallyRegisterResourceFile( dbid ) == false )
+		{
 			return false;
+		}
 		bIndexChanged = true;
 	}
 	return true;
@@ -273,12 +295,16 @@ bool CGameDatabase::ReallyRegisterResourceFile( const CDBID &dbid )
 CResource *CGameDatabase::GetRawObject( const CDBID &dbid )
 {
 	if ( DoesObjectExist( dbid ) == false )
+	{
 		return nullptr;
+	}
 	else
 	{
 		CElementsMap::iterator posElement = elementsMap.find( dbid );
 		if ( posElement->second.pObj != 0 )
+		{
 			return posElement->second.pObj;
+		}
 		else
 		{
 			CName2TypeIDMap::const_iterator posTypeID = name2typeIDmap.find( posElement->second.typeHeader.szClassTypeName );
@@ -323,7 +349,9 @@ LIBDB_EXPORT void SegmentProfiler()
 	if ( dwTime - dwLastProfilerSegment > 1000 )
 	{
 		if ( fBigTimeForLoad != 0.0f )
+		{
 			DbgTrc( "load: %f sec in segment, %d objs loaded", fBigTimeForLoad, nObjLoaded );
+		}
 
 		dwLastProfilerSegment = dwTime;
 		fBigTimeForLoad = 0.0f;
@@ -339,9 +367,13 @@ CResource *CGameDatabase::GetObject( const CDBID &dbid )
 	//	NormalizeDBID( &dbid, _dbid );
 	CResource *pObj = GetRawObject( dbid );
 	if ( pObj == 0 )
+	{
 		return 0;
+	}
 	if ( !s_bForceLoad || pObj->IsLoaded() )
+	{
 		return pObj;
+	}
 	else
 	{
 		CFileStream stream( GetVFS(), GetFileName( dbid ) );
@@ -387,7 +419,9 @@ bool CGameDatabase::GetObjectsList( std::vector<CDBID> *pRes, const int nClassTy
 	for ( CElementsMap::const_iterator it = elementsMap.begin(); it != elementsMap.end(); ++it )
 	{
 		if ( it->second.typeHeader.szClassTypeName == szClassTypeName )
+		{
 			pRes->push_back( it->first );
+		}
 	}
 	return !pRes->empty();
 }

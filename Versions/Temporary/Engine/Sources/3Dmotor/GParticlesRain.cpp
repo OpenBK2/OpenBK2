@@ -68,7 +68,9 @@ void CRainAnimator::Recalc()
 	CDynamicCast<CRainParticleEffect> pRealValue( pValue );
 
 	if ( tStart == 0 )
+	{
 		tStart = pTime->GetValue();
+	}
 	float T = pTime->GetValue() / 1024.0f * 100;
 
 	float fStart = ( pTime->GetValue() - tStart ) / 1024 * FP_PI;
@@ -102,7 +104,9 @@ void CRainAnimator::Recalc()
 			float fpTime = T + ( ( nX * 172 + nY * 13 + nRandomTable[( nX * nX + nY ) & 31] ) & 0xffff );
 			nStep = Float2Int( fpTime / FP_DROP_RAIN_CYCLE );
 			if ( ( nStep & ( N_WEATHER_POWER_GRADATIONS - 1 ) ) >= nPowerCheck )
+			{
 				continue;
+			}
 			float fpTimeStep = ( fpTime - nStep * FP_DROP_RAIN_CYCLE );
 			fZ = FP_DROP_RAIN_MIDDLE_Z + fpTimeStep * vRainWind.z;
 			fZ += Float2Int( ( fWrapCenterZ - fZ ) * ( 1 / ( 2 * FP_LIMIT_DISTANCE ) ) ) * ( 2 * FP_LIMIT_DISTANCE );

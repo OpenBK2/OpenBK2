@@ -25,7 +25,9 @@ void CWindowTooltip::InitTooltip( const CVec2 &vPos,
 	if ( const NDb::SForegroundTextString *pForeground = pInstance->pTextString )
 	{
 		if ( pForeground->pShared && CHECK_TEXT_NOT_EMPTY_PRE( pForeground->pShared->, FormatString ) )
+		{
 			szText = GET_TEXT_PRE( pForeground->pShared->, FormatString ); // format
+		}
 	}
 	szText += _szText;
 
@@ -72,7 +74,9 @@ void CWindowTooltip::InitTooltip( const CVec2 &vPos,
 		NGlobal::SetVar( "TOOLTIP_ENABLED", true );
 	}
 	else
+	{
 		NGlobal::RemoveVar( "TOOLTIP_ENABLED" );
+	}
 }
 
 void CWindowTooltip::AdjustPosByMousePos( const CVec2 &vMousePos )
@@ -85,7 +89,9 @@ void CWindowTooltip::AdjustPosByMousePos( const CVec2 &vMousePos )
 		nX = Clamp( int( vMousePos.x ), 0, nMaxXPos );
 		nY = nDesiredYPos;
 		if ( nY < 0 )
+		{
 			nY = vMousePos.y + 32;
+		}
 	}
 	else
 	{

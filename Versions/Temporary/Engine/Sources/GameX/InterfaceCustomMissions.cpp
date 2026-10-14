@@ -68,7 +68,9 @@ CInterfaceCustomMissions::CInterfaceCustomMissions() : CInterfaceScreenBase( "Cu
 bool CInterfaceCustomMissions::Init()
 {
 	if ( !CInterfaceScreenBase::Init() )
+	{
 		return false;
+	}
 
 	AddScreen( this );
 
@@ -93,7 +95,9 @@ void CInterfaceCustomMissions::MakeInterior()
 	pMissionsListCont = GetChildChecked<IScrollableContainer>( pMissionsListPanel, "MissionsListCont", true );
 
 	if ( pMissionsListItemTemplate )
+	{
 		pMissionsListItemTemplate->ShowWindow( false );
+	}
 
 	pMissionDescView = GetChildChecked<ITextView>( pMissionDescPanel, "MissionDescView", true );
 	pMissionDescCont = GetChildChecked<IScrollableContainer>( pMissionDescPanel, "MissionDescCont", true );
@@ -104,9 +108,13 @@ void CInterfaceCustomMissions::MakeInterior()
 	if ( pMissionDescCont )
 	{
 		if ( pMissionDescItemHeader )
+		{
 			pMissionDescCont->PushBack( pMissionDescItemHeader, false );
+		}
 		if ( pMissionDescView )
+		{
 			pMissionDescCont->PushBack( pMissionDescView, false );
+		}
 	}
 
 	pMinimap = GetChildChecked<IMiniMap>( pMinimapPanel, "Minimap", true );
@@ -115,7 +123,9 @@ void CInterfaceCustomMissions::MakeInterior()
 	pPlayBtn = GetChildChecked<IButton>( pBottomPanel, "PlayBtn", true );
 
 	if ( pDifficultyComboBox )
+	{
 		pDifficultyComboBox->SetViewer( new CDifficultyTextViewer() );
+	}
 
 	std::vector<CDBID> dbIDs;
 	NCustom::GetCustomMissions( &dbIDs );
@@ -128,20 +138,28 @@ void CInterfaceCustomMissions::MakeInterior()
 
 	IWindow *pFirstLineWnd = 0;
 	if ( !missions.empty() )
+	{
 		pFirstLineWnd = missions.front().pWnd;
+	}
 	if ( pMissionsListCont && pFirstLineWnd )
+	{
 		pMissionsListCont->Select( pFirstLineWnd );
+	}
 
 	UpdateSelection( true );
 
 	if ( pMainWnd )
+	{
 		SetMainWindowTexture( pMainWnd, InterfaceState()->GetMenuBackgroundTexture() );
+	}
 }
 
 void CInterfaceCustomMissions::AddMission( const NDb::SMapInfo *pMapInfo )
 {
 	if ( !pMapInfo )
+	{
 		return;
+	}
 
 	SMission mission;
 	mission.pMapInfo = pMapInfo;
@@ -161,24 +179,38 @@ void CInterfaceCustomMissions::AddMission( const NDb::SMapInfo *pMapInfo )
 	}
 
 	if ( CHECK_TEXT_NOT_EMPTY_PRE( pMapInfo->, LocalizedName ) )
+	{
 		mission.wszName = GET_TEXT_PRE( pMapInfo->, LocalizedName );
+	}
 	if ( CHECK_TEXT_NOT_EMPTY_PRE( pMapInfo->, LocalizedDescription ) )
+	{
 		mission.wszDesc = GET_TEXT_PRE( pMapInfo->, LocalizedDescription );
+	}
 
 	mission.wszSize = InterfaceState()->GetMapSizeName( pMapInfo );
 	mission.wszSeason = InterfaceState()->GetSeasonName( pMapInfo->eSeason );
 
 	if ( mission.pFlagWnd )
+	{
 		mission.pFlagWnd->SetTexture( pFlag );
+	}
 	if ( mission.pNameView )
+	{
 		mission.pNameView->SetText( mission.pNameView->GetDBText() + mission.wszName );
+	}
 	if ( mission.pSizeView )
+	{
 		mission.pSizeView->SetText( mission.pSizeView->GetDBText() + mission.wszSize );
+	}
 
 	if ( mission.pWnd )
+	{
 		mission.pWnd->ShowWindow( true );
+	}
 	if ( pMissionsListCont )
+	{
 		pMissionsListCont->PushBack( mission.pWnd, true );
+	}
 
 	missions.push_back( mission );
 }
@@ -186,7 +218,9 @@ void CInterfaceCustomMissions::AddMission( const NDb::SMapInfo *pMapInfo )
 bool CInterfaceCustomMissions::StepLocal( bool bAppActive )
 {
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )
+	{
 		pInterface->Step( bAppActive );
+	}
 
 	return CInterfaceScreenBase::StepLocal( bAppActive );
 }
@@ -195,15 +229,21 @@ const CInterfaceCustomMissions::SMission *CInterfaceCustomMissions::FindSelected
 {
 	IWindow *pSelectedWnd = 0;
 	if ( pMissionsListCont )
+	{
 		pSelectedWnd = pMissionsListCont->GetSelectedItem();
+	}
 	if ( !pSelectedWnd )
+	{
 		return 0;
+	}
 
 	for ( int i = 0; i < missions.size(); ++i )
 	{
 		const SMission &mission = missions[i];
 		if ( mission.pWnd == pSelectedWnd )
+		{
 			return &mission;
+		}
 	}
 
 	return 0;
@@ -212,13 +252,21 @@ const CInterfaceCustomMissions::SMission *CInterfaceCustomMissions::FindSelected
 bool CInterfaceCustomMissions::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "menu_back" )
+	{
 		return OnBack();
+	}
 	if ( szReaction == "menu_play" )
+	{
 		return OnPlay();
+	}
 	if ( szReaction == "menu_select" )
+	{
 		return OnSelect();
+	}
 	if ( szReaction == "menu_dbl_click" )
+	{
 		return OnDblClick();
+	}
 
 	return false;
 }
@@ -242,7 +290,9 @@ bool CInterfaceCustomMissions::OnPlay()
 {
 	const SMission *pMission = FindSelected();
 	if ( pMission )
+	{
 		MissionStart( pMission->pMapInfo );
+	}
 
 	return true;
 }
@@ -258,7 +308,9 @@ bool CInterfaceCustomMissions::OnDblClick()
 {
 	const SMission *pMission = FindSelected();
 	if ( pMission )
+	{
 		MissionStart( pMission->pMapInfo );
+	}
 
 	return true;
 }
@@ -266,11 +318,15 @@ bool CInterfaceCustomMissions::OnDblClick()
 void CInterfaceCustomMissions::MissionStart( const NDb::SMapInfo *pMapInfo )
 {
 	if ( !pMapInfo )
+	{
 		return;
+	}
 
 	int nDifficulty = 0;
 	if ( pDifficultyComboBox )
+	{
 		nDifficulty = pDifficultyComboBox->GetSelectedIndex();
+	}
 
 	Singleton<IScenarioTracker>()->CustomMissionStart( pMapInfo, nDifficulty, false );
 
@@ -286,15 +342,23 @@ void CInterfaceCustomMissions::UpdateSelection( bool bFirstTime )
 	if ( !pMission || !pMission->pWnd )
 	{
 		if ( pMinimap )
+		{
 			pMinimap->ShowWindow( false );
+		}
 
 		if ( pMissionDescCont )
+		{
 			pMissionDescCont->ShowWindow( false );
+		}
 
 		if ( pPlayBtn )
+		{
 			pPlayBtn->Enable( false );
+		}
 		if ( pDifficultyComboBox )
+		{
 			pDifficultyComboBox->ShowWindow( false );
+		}
 
 		return;
 	}
@@ -308,18 +372,26 @@ void CInterfaceCustomMissions::UpdateSelection( bool bFirstTime )
 
 		const NDb::STexture *pTexture = 0;
 		if ( pMission->pMapInfo->pMiniMap )
+		{
 			pTexture = pMission->pMapInfo->pMiniMap->pTexture;
+		}
 
 		pMinimap->SetLoadingMapParams( x, y );
 		pMinimap->SetTexture( pTexture );
 	}
 
 	if ( pMissionDescItemNameView )
+	{
 		pMissionDescItemNameView->SetText( pMissionDescItemNameView->GetDBText() + pMission->wszName );
+	}
 	if ( pMissionDescItemSeasonView )
+	{
 		pMissionDescItemSeasonView->SetText( pMissionDescItemSeasonView->GetDBText() + pMission->wszSeason );
+	}
 	if ( pMissionDescView )
+	{
 		pMissionDescView->SetText( pMissionDescView->GetDBText() + pMission->wszDesc );
+	}
 
 	if ( pMissionDescCont )
 	{
@@ -328,7 +400,9 @@ void CInterfaceCustomMissions::UpdateSelection( bool bFirstTime )
 	}
 
 	if ( pPlayBtn )
+	{
 		pPlayBtn->Enable( true );
+	}
 
 	UpdateDifficulty( pMission, bFirstTime );
 }
@@ -336,7 +410,9 @@ void CInterfaceCustomMissions::UpdateSelection( bool bFirstTime )
 void CInterfaceCustomMissions::UpdateDifficulty( const SMission *pMission, bool bFirstTime )
 {
 	if ( !pDifficultyComboBox )
+	{
 		return;
+	}
 
 	const int nOldDifficulty = bFirstTime ? CUSTOM_MISSION_DEFAULT_DIFFICULTY : pDifficultyComboBox->GetSelectedIndex();
 	pDifficultyComboBox->RemoveAllItems();
@@ -360,9 +436,13 @@ void CInterfaceCustomMissions::UpdateDifficulty( const SMission *pMission, bool 
 	{
 		const NDb::SDifficultyLevel *pDifficultyLevel = difficultyLevels[i];
 		if ( pDifficultyLevel && CHECK_TEXT_NOT_EMPTY_PRE( pDifficultyLevel->, LocalizedName ) )
+		{
 			pDifficultyComboBox->AddItem( new CDifficultyData( GET_TEXT_PRE( pDifficultyLevel->, LocalizedName ) ) );
+		}
 		else
+		{
 			pDifficultyComboBox->AddItem( new CDifficultyData( L"******" ) );
+		}
 	}
 
 	pDifficultyComboBox->Select( nNewDifficulty );

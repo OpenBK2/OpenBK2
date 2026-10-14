@@ -26,16 +26,22 @@ int GetAnimTime( int nAnim ) const
 int GetAnimActionTime( int nAnim ) const
 {
 	if ( nAnim < 0 || nAnim >= animdescs.size() || animdescs[nAnim].anims.empty() )
+	{
 		return 0;
+	}
 	else
 	{
 		NI_ASSERT(
 				animdescs[nAnim].anims[0].nAction < animdescs[nAnim].anims[0].nLength,
 				fmt::format( "AnimPoint is incorrect (too large) for unit \"{}\" animation {}", GetDBID().ToString(), nAnim ) );
 		if ( animdescs[nAnim].anims[0].nAction < animdescs[nAnim].anims[0].nLength )
+		{
 			return animdescs[nAnim].anims[0].nAction;
+		}
 		else
+		{
 			return 0;
+		}
 	}
 }
 // chooses sound for given ack etype and writes it to passed string
@@ -43,9 +49,13 @@ int GetAnimActionTime( int nAnim ) const
 virtual const NDb::SComplexSoundDesc *ChooseAcknowledgement( const EUnitAckType etype, const int nSet ) const
 {
 	if ( acksNames.size() <= nSet )
+	{
 		return 0;
+	}
 	else
+	{
 		return ::ChooseAcknowledgement( acksNames[nSet].GetPtr(), etype );
+	}
 }
 const EUnitRPGClass GetRPGClass() const
 {

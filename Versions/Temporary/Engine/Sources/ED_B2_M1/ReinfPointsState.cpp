@@ -31,9 +31,13 @@ bool CReinfPointsState::CreateReinfPoint()
 	//
 	int n = 0;
 	if ( !CManipulatorManager::GetValue( &n, pMapInfoMan, "Players" ) )
+	{
 		return false;
+	}
 	if ( nSelectedPlayer < 0 || nSelectedPlayer >= n )
+	{
 		return false;
+	}
 	//
 	const std::string szName = fmt::format( "Players.[{}].ReinforcementPoints", nSelectedPlayer );
 	//
@@ -47,7 +51,9 @@ bool CReinfPointsState::CreateReinfPoint()
 		// setting new point coords
 		int nPointsCount = 0;
 		if ( !CManipulatorManager::GetValue( &nPointsCount, pMapInfoMan, szName ) )
+		{
 			return false;
+		}
 
 		const std::string szCurReinfPos = szName + fmt::format( ".[{}].Position", nPointsCount - 1 );
 		const std::string szCurAviaReinfPos = szName + fmt::format( ".[{}].AviationPosition", nPointsCount - 1 );
@@ -66,13 +72,19 @@ bool CReinfPointsState::DeleteSelectedReinfPoint()
 	CPtr<IManipulator> pMapInfoMan = pMapInfoEditor->GetViewManipulator();
 
 	if ( nSelectedReinfPoint == -1 )
+	{
 		return false;
+	}
 	//
 	int n = 0;
 	if ( !CManipulatorManager::GetValue( &n, pMapInfoMan, "Players" ) )
+	{
 		return false;
+	}
 	if ( nSelectedPlayer < 0 || nSelectedPlayer >= n )
+	{
 		return false;
+	}
 	//
 	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
 	if ( NMessage::AskYesNo( strMessage ) )
@@ -100,7 +112,9 @@ bool CReinfPointsState::GetReinfPointsFromWindow()
 	int nPlayersCount = 0;
 	CManipulatorManager::GetValue( &nPlayersCount, pManipulator, szPlayers );
 	if ( nSelectedPlayer < 0 || nSelectedPlayer >= nPlayersCount )
+	{
 		return false;
+	}
 
 	std::string szReinfPoints = szPlayers + fmt::format( ".[{}].ReinforcementPoints", nSelectedPlayer );
 	int nReinfPointsCount = 0;
@@ -144,16 +158,24 @@ bool CReinfPointsState::SaveCurrentReinfPoint( const std::vector<SReinfPoint> &r
 
 	int n = 0;
 	if ( !CManipulatorManager::GetValue( &n, pManipulator, "Players" ) )
+	{
 		return false;
+	}
 	if ( nPlayerIndex < 0 || nPlayerIndex >= n )
+	{
 		return false;
+	}
 	//
 	const std::string szReinfPts = fmt::format( "Players.[{}].ReinforcementPoints", nPlayerIndex );
 	int m = 0;
 	if ( !CManipulatorManager::GetValue( &m, pManipulator, szReinfPts ) )
+	{
 		return false;
+	}
 	if ( nSelectedReinfPoint < 0 || nSelectedReinfPoint >= m )
+	{
 		return false;
+	}
 	//
 	const std::string szCurReinfPt = szReinfPts + fmt::format( ".[{}]", nSelectedReinfPoint );
 	const std::string szCurReinfPos = szCurReinfPt + ".Position";
@@ -171,8 +193,10 @@ bool CReinfPointsState::SaveCurrentReinfPoint( const std::vector<SReinfPoint> &r
 			// the position was changed
 			CManipulatorManager::SetValue( rReinfPoints[nSelectedReinfPoint].vPosition, pManipulator, szCurReinfPos );
 			if ( pObjectController )
+			{
 				pObjectController->AddChangeVec2Operation<CVec2, float>(
 						szCurReinfPos, rReinfPoints[nSelectedReinfPoint].vPosition, pManipulator );
+			}
 		}
 	}
 	//
@@ -186,8 +210,10 @@ bool CReinfPointsState::SaveCurrentReinfPoint( const std::vector<SReinfPoint> &r
 			CManipulatorManager::SetValue(
 					rReinfPoints[nSelectedReinfPoint].vAviationPosition, pManipulator, szCurAviaReinfPos );
 			if ( pObjectController )
+			{
 				pObjectController->AddChangeVec2Operation<CVec2, float>(
 						szCurAviaReinfPos, rReinfPoints[nSelectedReinfPoint].vAviationPosition, pManipulator );
+			}
 		}
 	}
 	//
@@ -200,8 +226,10 @@ bool CReinfPointsState::SaveCurrentReinfPoint( const std::vector<SReinfPoint> &r
 			// the direction was changed
 			CManipulatorManager::SetValue( rReinfPoints[nSelectedReinfPoint].nDirection, pManipulator, szCurReinfDir );
 			if ( pObjectController )
+			{
 				pObjectController->AddChangeOperation(
 						szCurReinfDir, rReinfPoints[nSelectedReinfPoint].nDirection, pManipulator );
+			}
 		}
 	}
 
@@ -392,7 +420,9 @@ CReinfPointsState::CReinfPointsState( CMapInfoEditor *_pMapInfoEditor ) : pMapIn
 void CReinfPointsState::RefreshReinfPointsWindow()
 {
 	if ( nSelectedPlayer == -1 )
+	{
 		return;
+	}
 	//
 	GetReinfPointsFromWindow();
 	//
@@ -431,7 +461,9 @@ void CReinfPointsState::Draw( IPaintContext *pPaintDC )
 	ICamera *pCam = Camera();
 	CPtr<IEditorScene> pScene = EditorScene();
 	if ( !pCam )
+	{
 		return;
+	}
 	//
 	sceneDrawTool.Clear();
 	CVec3 vPos, vAviaPos;
@@ -511,7 +543,9 @@ void CReinfPointsState::PostDraw( IPaintContext *pPaintDC )
 	ICamera *pCamera = Camera();
 	CPtr<IEditorScene> pScene = EditorScene();
 	if ( !pCamera )
+	{
 		return;
+	}
 	//
 	for ( int i = 0; i < reinfPoints.size(); ++i )
 	{
@@ -524,20 +558,26 @@ void CReinfPointsState::PostDraw( IPaintContext *pPaintDC )
 		AI2Vis( &vPos );
 
 		if ( TestRayInFrustrum( vPos, ts, pScene->GetScreenRect(), &res ) )
+		{
 			NDrawToolsDC::DrawLabelDC(
 					pPaintDC,
 					fmt::format( "{} : ({:.0f}, {:.0f})", i, reinfPoints[i].vPosition.x, reinfPoints[i].vPosition.y ),
 					res );
+		}
 	}
 }
 
 void CReinfPointsState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( reinfPoints.size() == 0 ) // no points
+	{
 		return;
+	}
 	CPtr<IEditorScene> pScene = EditorScene();
 	if ( !pScene )
+	{
 		return;
+	}
 
 	CVec3 vPickedPosOnTerrain = VNULL3;
 	Get2DPosOnMapHeights( &vPickedPosOnTerrain, CVec2( rMousePoint.x, rMousePoint.y ) );
@@ -563,7 +603,9 @@ void CReinfPointsState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMou
 			float fDir = AI2VisRad( it->nDirection );
 			fDir += FP_PI2;
 			if ( fDir >= FP_2PI )
+			{
 				fDir -= FP_2PI;
+			}
 
 			CVec2 vDirection = CreateFromPolarCoord( ( SELECTION_RADIUS1 + SELECTION_RADIUS0 ) / 2.0f, fDir );
 			CVec3 vDirPoint = CVec3( vDirection.x + it->vPosition.x, vDirection.y + it->vPosition.y, 0 );
@@ -592,9 +634,13 @@ void CReinfPointsState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMou
 void CReinfPointsState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( reinfPoints.size() == 0 ) // no points
+	{
 		return;
+	}
 	if ( nSelectedReinfPoint < 0 ) // empty selection
+	{
 		return;
+	}
 
 	CVec2 *pMovingPoint;
 
@@ -630,12 +676,16 @@ void CReinfPointsState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMouse
 			const CVec2 vNewDir( vPickedPosOnTerrain.x - pMovingPoint->x, vPickedPosOnTerrain.y - pMovingPoint->y );
 			float fNewDir = GetPolarAngle( vNewDir ) - FP_PI2;
 			if ( fNewDir < 0 )
+			{
 				fNewDir += FP_2PI;
+			}
 
 			reinfPoints[nSelectedReinfPoint].nDirection = Vis2AIRad( fNewDir );
 		}
 		else
+		{
 			return;
+		}
 	}
 	else // editing aviation point
 	{
@@ -656,7 +706,9 @@ void CReinfPointsState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMouse
 			pMovingPoint->y = vPickedPosOnTerrain.y;
 		}
 		else
+		{
 			return;
+		}
 	}
 
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
@@ -665,7 +717,9 @@ void CReinfPointsState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMouse
 void CReinfPointsState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( reinfPoints.size() == 0 ) // no points
+	{
 		return;
+	}
 
 	if ( bMove || bRotate )
 	{
@@ -703,13 +757,19 @@ bool CReinfPointsState::EditPointDeployTemplate()
 					 true ) )
 	{
 		if ( szLink == "" )
+		{
 			CManipulatorManager::SetValue( CVariant(), pMapInfoEditor->GetViewManipulator(), szCurReinfDir );
+		}
 		else
+		{
 			CManipulatorManager::SetValue( szLink, pMapInfoEditor->GetViewManipulator(), szCurReinfDir, true );
+		}
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 bool CReinfPointsState::EditPointTypedTemplate()
@@ -742,7 +802,9 @@ void CReinfPointsState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nF
 		case VK_RETURN:
 		{
 			if ( nSelectedReinfPoint == -1 )
+			{
 				return;
+			}
 
 			SetCameraPosition(
 					CVec3( reinfPoints[nSelectedReinfPoint].vPosition.x, reinfPoints[nSelectedReinfPoint].vPosition.y, 0 ) );

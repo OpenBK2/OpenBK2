@@ -69,7 +69,9 @@ void CPlayLog::SaveToFile( const std::string &szFileName )
 	nFrequ = FSOUND_GetOutputRate();
 
 	if ( !stream.IsOk() )
+	{
 		return;
+	}
 
 	CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
 	operator&( *pSaver.GetPtr() );
@@ -80,7 +82,9 @@ void CPlayLog::PlayFile( const std::string &szFileName, int nMaxSize )
 	CFileStream stream( fmt::format( "{}.soundlog", szFileName ), CFileStream::WIN_READ_ONLY );
 
 	if ( !stream.IsOk() )
+	{
 		return;
+	}
 
 	CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_READ );
 	operator&( *pSaver.GetPtr() );
@@ -114,7 +118,9 @@ void CPlayLog::PlayFile( const std::string &szFileName, int nMaxSize )
 						FSOUND_UNMANAGED, &data[0], /*( b3DSoundShare ? FSOUND_HW3D : FSOUND_2D ) |*/ FSOUND_LOADMEMORY, 0, nSize );
 				const int nChannel = FSOUND_PlaySoundEx( FSOUND_FREE, pSample, 0, true );
 				if ( 0 != nStartPos )
+				{
 					FSOUND_SetCurrentPosition( nChannel, nStartPos );
+				}
 				FSOUND_SetPaused( nChannel, false );
 				toDelete.push_back( pSample );
 			}
@@ -137,10 +143,14 @@ public:
 	{
 		FSOUND_SAMPLE *sample = pSound->GetSample()->GetInternalContainer();
 		if ( sample == 0 )
+		{
 			return -1;
+		}
 		const int nChannel = FSOUND_PlaySoundEx( FSOUND_FREE, sample, 0, true );
 		if ( nChannel < 0 )
+		{
 			return -1;
+		}
 		pSound->SetChannel( nChannel );
 		pSFX->MapSound( pSound, nChannel );
 		pSound->Update( pSFX );
@@ -150,10 +160,14 @@ public:
 	{
 		FSOUND_SAMPLE *sample = pSound->GetSample()->GetInternalContainer();
 		if ( sample == 0 )
+		{
 			return -1;
+		}
 		const int nChannel = FSOUND_PlaySoundEx( FSOUND_FREE, sample, 0, true );
 		if ( nChannel < 0 )
+		{
 			return -1;
+		}
 		pSound->SetChannel( nChannel );
 		pSFX->MapSound( pSound, nChannel );
 		pSound->Update( pSFX );
@@ -201,14 +215,18 @@ bool CSoundEngine::IsInitialized()
 CObjectBase *CSoundEngine::QI( int nInterfaceTypeID )
 {
 	if ( nInterfaceTypeID == 0 )
+	{
 		return reinterpret_cast<CObjectBase *>( FSOUND_GetOutputHandle() );
+	}
 	return 0;
 }
 
 bool CSoundEngine::Init( HWND hWnd, int nDriver, ESFXOutputType output, int nMixRate, int nMaxChannels )
 {
 	if ( !SearchDevices() )
+	{
 		return false;
+	}
 
 	NI_ASSERT( nDriver < drivers.size(), fmt::format( "Can't find driver {} (max found {})", nDriver, drivers.size() ) );
 	FSOUND_SetDriver( nDriver );
@@ -234,13 +252,21 @@ bool CSoundEngine::Init( HWND hWnd, int nDriver, ESFXOutputType output, int nMix
 	// them piecewise would now produce a line apiece.
 	DebugTrace( "Using \"%s\" sound driver.", drivers[nDriver].szDriverName.c_str() );
 	if ( drivers[nDriver].isHardware3DAccelerated )
+	{
 		DebugTrace( "- Driver supports hardware 3D sound!" );
+	}
 	if ( drivers[nDriver].supportEAXReverb )
+	{
 		DebugTrace( "- Driver supports EAX reverb!" );
+	}
 	if ( drivers[nDriver].supportReverb )
+	{
 		DebugTrace( "- Driver supports EAX 2.0 !" );
+	}
 	if ( drivers[nDriver].supportEAX3 )
+	{
 		DebugTrace( "- Driver supports EAX 3.0 !" );
+	}
 
 	const char *pszMixer = "unknown";
 	switch ( FSOUND_GetMixer() )
@@ -323,11 +349,15 @@ void CSoundEngine::Update( const CVec3 &vListener, const CVec3 &vCameraDir, NTim
 	IDebugSingleton *pDebug = Singleton<IDebugSingleton>();
 	IStatsSystemWindow *pStatsSystemWindow = pDebug->GetStatsWindow();
 	if ( pStatsSystemWindow )
+	{
 		pStatsSystemWindow->UpdateEntry( L"SoundChannels", NStr::ToUnicode( std::to_string( nNumChannels ) ), 0xff00ff00 );
+	}
 #endif // _FINALRELEASE
 
 	if ( nNumChannels > 0 )
+	{
 		ClearChannels();
+	}
 }
 
 void CSoundEngine::MapSound( ISound *pSound, int nChannel )
@@ -357,7 +387,9 @@ bool CSoundEngine::Pause( bool bPause )
 void CSoundEngine::ClearChannels()
 {
 	if ( bPaused )
+	{
 		return;
+	}
 	//
 	std::list<int> channels;
 	// collect finished and invalid channels
@@ -386,11 +418,15 @@ void CSoundEngine::ClearChannels()
 int CSoundEngine::PlaySample( ISound *pSound, bool bLooped, unsigned int nStartPos )
 {
 	if ( pSound == 0 || !bEnableSFX )
+	{
 		return -1;
+	}
 	//
 	thePlayVisitor.Init( this );
 	if ( checked_cast<CSFXSound *>( pSound )->GetSample() == 0 )
+	{
 		return -1;
+	}
 
 	CSoundSample *pSample = checked_cast<CSFXSound *>( pSound )->GetSample();
 
@@ -398,9 +434,13 @@ int CSoundEngine::PlaySample( ISound *pSound, bool bLooped, unsigned int nStartP
 	int nSampleRate = pSound->GetSampleRate();
 	int nTimeLength = 1000 * nLength / nSampleRate;
 	if ( bLooped && nTimeLength > 0 )
+	{
 		nStartPos %= nTimeLength;
+	}
 	if ( nTimeLength == 0 )
+	{
 		return 0;
+	}
 
 	if ( nTimeLength < nStartPos )
 	{
@@ -411,7 +451,9 @@ int CSoundEngine::PlaySample( ISound *pSound, bool bLooped, unsigned int nStartP
 	const int nChannel = pSound->Visit( &thePlayVisitor );
 
 	if ( 0 != nStartPos )
+	{
 		FSOUND_SetCurrentPosition( nChannel, nStartPos );
+	}
 	FSOUND_SetPaused( nChannel, false );
 #ifndef _FINALRELEASE
 	//DEBUG{
@@ -440,7 +482,9 @@ void CSoundEngine::StopSample( ISound *pSound )
 bool CSoundEngine::IsPlaying( ISound *pSound )
 {
 	if ( !pSound )
+	{
 		return false;
+	}
 	//
 	CSoundChannelMap::iterator pos = channelsMap.find( pSound );
 	return pos != channelsMap.end();
@@ -449,7 +493,9 @@ bool CSoundEngine::IsPlaying( ISound *pSound )
 void CSoundEngine::StopChannel( int nChannel )
 {
 	if ( nChannel == -1 )
+	{
 		return;
+	}
 	//
 	const bool bRes = FSOUND_StopSound( nChannel );
 	CChannelSoundMap::iterator pos = soundsMap.find( nChannel );
@@ -502,7 +548,9 @@ void CSoundEngine::ReEnableSounds()
 		for ( CChannelSoundMap::iterator it = soundsMap.begin(); it != soundsMap.end(); ++it )
 		{
 			if ( FSOUND_IsPlaying( it->first ) )
+			{
 				FSOUND_StopSound( it->first );
+			}
 		}
 		soundsMap.clear();
 		channelsMap.clear();
@@ -526,7 +574,9 @@ int CSoundEngine::operator&( IBinSaver &saver )
 	saver.Add( 15, &vFormerListener );
 
 	if ( saver.IsReading() )
+	{
 		Pause( true );
+	}
 
 	return 0;
 }
@@ -539,7 +589,9 @@ ISFX *CreateSoundEngine()
 void SoundParams( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 3 )
+	{
 		return;
+	}
 
 	FSOUND_3D_SetDistanceFactor( NStr::ToFloat( NStr::ToMBCS( paramsSet[0] ) ) );
 	FSOUND_3D_SetDopplerFactor( NStr::ToFloat( NStr::ToMBCS( paramsSet[1] ) ) );
@@ -549,7 +601,9 @@ void SoundParams( const std::string &szID, const std::vector<std::wstring> &para
 void SaveSoundLog( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 1 )
+	{
 		return;
+	}
 #ifndef _FINALRELEASE
 	playLog.SaveToFile( NStr::ToMBCS( paramsSet[0] ) );
 #endif
@@ -558,10 +612,14 @@ void SaveSoundLog( const std::string &szID, const std::vector<std::wstring> &par
 void PlaySoundLog( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 1 )
+	{
 		return;
+	}
 #ifndef _FINALRELEASE
 	if ( paramsSet.size() < 2 )
+	{
 		playLog.PlayFile( NStr::ToMBCS( paramsSet[0] ), SOUND_PLAY_LOG_SIZE );
+	}
 	else
 	{
 		playLog.PlayFile( NStr::ToMBCS( paramsSet[0] ), NStr::ToInt( NStr::ToMBCS( paramsSet[1] ) ) );

@@ -181,9 +181,13 @@ void CInterfaceArmyScreen::CReinfData::FillAbilities()
 	{
 		const NDb::SReinforcementEntry &entry = pDBReinf->entries.front();
 		if ( entry.pMechUnit )
+		{
 			pDBUnit = entry.pMechUnit;
+		}
 		else if ( entry.pSquad && !entry.pSquad->members.empty() )
+		{
 			pDBUnit = entry.pSquad->members.front();
+		}
 	}
 	if ( pDBUnit && pDBUnit->pActions )
 	{
@@ -197,9 +201,13 @@ void CInterfaceArmyScreen::CReinfData::FillAbilities()
 				SAbility ability;
 				ability.nLevel = i;
 				if ( CHECK_TEXT_NOT_EMPTY_PRE( pAbility->, LocalizedName ) )
+				{
 					ability.wszName = GET_TEXT_PRE( pAbility->, LocalizedName );
+				}
 				if ( CHECK_TEXT_NOT_EMPTY_PRE( pAbility->, LocalizedDesc ) )
+				{
 					ability.wszDesc = GET_TEXT_PRE( pAbility->, LocalizedDesc );
+				}
 
 				const NDb::SUIConstsB2 *pUIConsts = InterfaceState()->GetUIConsts();
 				for ( int j = 0; j < pUIConsts->actionButtonInfos.size(); ++j )
@@ -212,7 +220,9 @@ void CInterfaceArmyScreen::CReinfData::FillAbilities()
 							ability.pEnabledIcon = pActionButtonInfo->pIcon;
 							ability.pDisabledIcon = pActionButtonInfo->pIconDisabled;
 							if ( CHECK_TEXT_NOT_EMPTY_PRE( pActionButtonInfo->, Tooltip ) )
+							{
 								ability.wszTooltip = GET_TEXT_PRE( pActionButtonInfo->, Tooltip );
+							}
 							break;
 						}
 					}
@@ -238,16 +248,22 @@ void CInterfaceArmyScreen::CReinfViewer::MakeInterior( CObjectBase *pWindow, con
 		ITextView *pUnassignedView = GetChildChecked<ITextView>( pWnd, "Unassigned", true );
 
 		if ( pIcon )
+		{
 			pIcon->SetTexture( pData->pTexture );
+		}
 		if ( pLine01View )
 		{
 			std::wstring wszLine = pData->wszName;
 			pLine01View->SetText( pLine01View->GetDBText() + wszLine );
 		}
 		if ( pAssignedView )
+		{
 			pAssignedView->ShowWindow( pData->pLeader != 0 );
+		}
 		if ( pUnassignedView )
+		{
 			pUnassignedView->ShowWindow( pData->pLeader == 0 );
+		}
 	}
 }
 
@@ -264,7 +280,9 @@ CInterfaceArmyScreen::~CInterfaceArmyScreen()
 bool CInterfaceArmyScreen::Init()
 {
 	if ( !CInterfaceScreenBase::Init() )
+	{
 		return false;
+	}
 
 	AddScreen( this );
 
@@ -285,11 +303,17 @@ void CInterfaceArmyScreen::GetElements()
 	pUndoPromotionsDlg = GetChildChecked<IWindow>( GetScreen(), "UndoPromotionsDlg", true );
 	pUndoAllPromotionsDlg = GetChildChecked<IWindow>( GetScreen(), "UndoAllPromotionsDlg", true );
 	if ( pAutoAssignDlg )
+	{
 		pAutoAssignDlg->ShowWindow( false );
+	}
 	if ( pUndoPromotionsDlg )
+	{
 		pUndoPromotionsDlg->ShowWindow( false );
+	}
 	if ( pUndoAllPromotionsDlg )
+	{
 		pUndoAllPromotionsDlg->ShowWindow( false );
+	}
 
 	pLeftPanel = GetChildChecked<IWindow>( pMain, "LeftPanel", true );
 	pRightPanel = GetChildChecked<IWindow>( pMain, "RightPanel", true );
@@ -298,7 +322,9 @@ void CInterfaceArmyScreen::GetElements()
 
 	pUndoBtn = GetChildChecked<IButton>( pBottomPanel, "UndoBtn", true );
 	if ( pUndoBtn )
+	{
 		pUndoBtn->Enable( false );
+	}
 
 	pCommanderInfoBlock = GetChildChecked<IWindow>( pLeftPanel, "CommanderInfo", true );
 	pReinfCurrentBlock = GetChildChecked<IWindow>( pLeftPanel, "ReinfCurrent", true );
@@ -327,7 +353,9 @@ void CInterfaceArmyScreen::GetElements()
 	{
 		IWindow *pWnd = pLeftPanel ? pLeftPanel->GetChild( fmt::format( "Ability{}", i ), true ) : 0;
 		if ( !pWnd )
+		{
 			break;
+		}
 
 		SVisAbility visAbility;
 		visAbility.pWnd = pWnd;
@@ -354,7 +382,9 @@ void CInterfaceArmyScreen::MakeInterior()
 
 	pReinfViewer = new CReinfViewer();
 	if ( pReinfList )
+	{
 		pReinfList->SetViewer( pReinfViewer );
+	}
 
 	const int nLocalPlayer = 0;
 	const NDb::SUIConstsB2 *pUIConsts = InterfaceState()->GetUIConsts();
@@ -364,7 +394,9 @@ void CInterfaceArmyScreen::MakeInterior()
 	{
 		IScenarioTracker::SChapterReinf &reinf = reinfs[i];
 		if ( reinf.eState == IScenarioTracker::ERS_DISABLED )
+		{
 			continue;
+		}
 
 		CPtr<CReinfData> pReinf = new CReinfData();
 		pReinf->eType = (NDb::EReinforcementType)( i );
@@ -385,7 +417,9 @@ void CInterfaceArmyScreen::MakeInterior()
 							( entry.pMechUnit != 0 ) ? checked_cast_ptr<const NDb::SHPObjectRPGStats *>( entry.pMechUnit )
 																			 : checked_cast_ptr<const NDb::SHPObjectRPGStats *>( entry.pSquad );
 					if ( pDBStats && CHECK_TEXT_NOT_EMPTY_PRE( pDBStats->, LocalizedName ) )
+					{
 						pReinf->wszProfileUnit = GET_TEXT_PRE( pDBStats->, LocalizedName );
+					}
 				}
 			}
 		}
@@ -409,9 +443,13 @@ void CInterfaceArmyScreen::MakeInterior()
 
 			// line02
 			if ( pReinf->bFromPrevChapter )
+			{
 				pReinf->wszProfileUnitRank = InterfaceState()->GetTextEntry( "T_ARMY_SCREEN_REINF_UNAVAILABLE" );
+			}
 			else
+			{
 				pReinf->wszProfileUnitRank = NDBWrap::GetReinfXPLevelName( 0 );
+			}
 		}
 		else
 		{
@@ -425,7 +463,9 @@ void CInterfaceArmyScreen::MakeInterior()
 			IScenarioTracker::SUndoLeaderInfo undo;
 			FillLeaderInfo( pReinf, undo );
 			if ( pReinf && pReinf->pLeader )
+			{
 				pReinf->pLeader->bPermanent = true;
+			}
 		}
 
 		if ( pReinf->bEnabled && !pReinf->bFromPrevChapter && // show enabled only
@@ -436,8 +476,10 @@ void CInterfaceArmyScreen::MakeInterior()
 	}
 
 	if ( pPromotionsView )
+	{
 		pPromotionsView->SetText( pPromotionsView->GetDBText() +
 		                          NStr::ToUnicode( std::to_string( pST->GetAvailablePromotions() ) ) );
+	}
 
 	for ( int i = 0; i < reinforcements.size(); ++i )
 	{
@@ -452,7 +494,9 @@ void CInterfaceArmyScreen::MakeInterior()
 	}
 
 	if ( IScreen *pScreen = GetScreen() )
+	{
 		wszChangedValueTag = pScreen->GetTextEntry( "CHANGED_VALUE_TAG" );
+	}
 
 	const NDb::SCampaign *pCampaign = pST->GetCurrentCampaign();
 	for ( int i = 0; i < visAbilities.size(); ++i )
@@ -465,7 +509,9 @@ void CInterfaceArmyScreen::MakeInterior()
 		{
 			const NDb::SLeaderExpLevel &rank = pCampaign->leaderRanks[i];
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( rank., RankName ) )
+			{
 				wszRankName = GET_TEXT_PRE( rank., RankName );
+			}
 		}
 
 		std::vector<std::pair<std::wstring, std::wstring>> params;
@@ -474,7 +520,9 @@ void CInterfaceArmyScreen::MakeInterior()
 	}
 
 	if ( pMain )
+	{
 		SetMainWindowTexture( pMain, InterfaceState()->GetMenuBackgroundTexture() );
+	}
 
 	nAssignmentCount = 0;
 	UpdateSelectionInfo();
@@ -483,7 +531,9 @@ void CInterfaceArmyScreen::MakeInterior()
 void CInterfaceArmyScreen::FillLeaderInfo( CReinfData *pReinf, const IScenarioTracker::SUndoLeaderInfo &undo )
 {
 	if ( !pReinf )
+	{
 		return;
+	}
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	const IScenarioTracker::SLeaderInfo *pSTLeader = pST->GetLeaderInfo( pReinf->eType );
 	if ( pSTLeader )
@@ -514,31 +564,55 @@ void CInterfaceArmyScreen::FillLeaderInfo( CReinfData *pReinf, const IScenarioTr
 			pLeader->lastSeen.bExpChanged = true;
 			pLeader->lastSeen.fExpStep = ( pLeader->fExp - pLeader->lastSeen.fCurExp ) * EXP_PROGRESS_STEP_FRACTION;
 			if ( pLeader->lastSeen.fExpStep < 1 )
+			{
 				pLeader->lastSeen.fExpStep = 1;
+			}
 		}
 		else
+		{
 			pLeader->lastSeen.bExpChanged = false;
+		}
 		if ( pLeader->lastSeen.nCurRank != pLeader->nRank )
+		{
 			pLeader->lastSeen.bRankChanged = true;
+		}
 		else
+		{
 			pLeader->lastSeen.bRankChanged = false;
+		}
 		if ( pLeader->lastSeen.nCurLost != pLeader->nLost )
+		{
 			pLeader->lastSeen.bLostChanged = true;
+		}
 		else
+		{
 			pLeader->lastSeen.bLostChanged = false;
+		}
 		if ( pLeader->lastSeen.nCurKilled != pLeader->nKilled )
+		{
 			pLeader->lastSeen.bKilledChanged = true;
+		}
 		else
+		{
 			pLeader->lastSeen.bKilledChanged = false;
+		}
 
 		if ( pLeader->lastSeen.bExpChanged )
+		{
 			pLeader->lastSeen.eState = CLeaderInfo::SLastSeen::ST_EXP;
+		}
 		else if ( pLeader->lastSeen.bRankChanged )
+		{
 			pLeader->lastSeen.eState = CLeaderInfo::SLastSeen::ST_RANK;
+		}
 		else if ( pLeader->lastSeen.bLostChanged )
+		{
 			pLeader->lastSeen.eState = CLeaderInfo::SLastSeen::ST_LOST;
+		}
 		else if ( pLeader->lastSeen.bKilledChanged )
+		{
 			pLeader->lastSeen.eState = CLeaderInfo::SLastSeen::ST_KILLED;
+		}
 
 		pLeader->lastSeen.nWaitTime = WAIT_TIME;
 	}
@@ -551,47 +625,71 @@ void CInterfaceArmyScreen::ShowLeaderInfo( bool bEnabled, const CLeaderInfo *pLe
 	bool bAssigned = ( pLeader != 0 );
 
 	if ( pPromoteCommanderView )
+	{
 		pPromoteCommanderView->ShowWindow( !bAssigned && nPromotionCount > 0 );
+	}
 	if ( pPromotionsView )
 	{
 		pPromotionsView->ShowWindow( !bAssigned );
 		pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( std::to_string( nPromotionCount ) ) );
 	}
 	if ( pCommanderInfoBlock )
+	{
 		pCommanderInfoBlock->ShowWindow( bAssigned );
+	}
 	if ( pPictureBlock )
+	{
 		pPictureBlock->ShowWindow( bAssigned || nPromotionCount > 0 );
+	}
 
 	if ( pPermanentCommanderWnd )
+	{
 		pPermanentCommanderWnd->ShowWindow( false );
+	}
 	if ( pSelectCommanderBtn )
+	{
 		pSelectCommanderBtn->ShowWindow( false );
+	}
 	if ( pUnselectCommanderBtn )
+	{
 		pUnselectCommanderBtn->ShowWindow( false );
+	}
 
 	if ( bAssigned )
 	{
 		if ( pLeader->bPermanent )
 		{
 			if ( pPermanentCommanderWnd )
+			{
 				pPermanentCommanderWnd->ShowWindow( true );
+			}
 			if ( pPermanentCommanderIcon )
+			{
 				pPermanentCommanderIcon->SetTexture( pLeader->pIcon );
+			}
 		}
 		else
 		{
 			if ( pUnselectCommanderBtn )
+			{
 				pUnselectCommanderBtn->ShowWindow( true );
+			}
 			if ( pUnselectCommanderIcon )
+			{
 				pUnselectCommanderIcon->SetTexture( pLeader->pIcon );
+			}
 		}
 	}
 	else
 	{
 		if ( pSelectCommanderBtn )
+		{
 			pSelectCommanderBtn->ShowWindow( true );
+		}
 		if ( pSelectCommanderIcon )
+		{
 			pSelectCommanderIcon->ShowWindow( false );
+		}
 	}
 
 	UpdateLeaderVisualInfo( pLeader );
@@ -600,7 +698,9 @@ void CInterfaceArmyScreen::ShowLeaderInfo( bool bEnabled, const CLeaderInfo *pLe
 void CInterfaceArmyScreen::ShowReinfAbilities( bool bEnabled, const CReinfData *pReinf, const CLeaderInfo *pLeader )
 {
 	if ( !pReinf )
+	{
 		return;
+	}
 
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	const IScenarioTracker::SLeaderInfo *pSTLeader = pST->GetLeaderInfo( pReinf->eType );
@@ -624,21 +724,29 @@ void CInterfaceArmyScreen::ShowReinfAbilities( bool bEnabled, const CReinfData *
 			}
 
 			if ( ability.nLevel == 0 || ( pSTLeader && ability.nLevel <= pSTLeader->info.nRank ) )
+			{
 				pIcon = ability.pEnabledIcon;
+			}
 			else
+			{
 				pIcon = ability.pDisabledIcon;
+			}
 			if ( visAbility.pIconWnd )
 			{
 				visAbility.pIconWnd->SetTexture( pIcon );
 			}
 
 			if ( visAbility.pNameView )
+			{
 				visAbility.pNameView->SetText( visAbility.pNameView->GetDBText() + ability.wszName );
+			}
 		}
 		else
 		{
 			if ( visAbility.pWnd )
+			{
 				visAbility.pWnd->ShowWindow( false );
+			}
 		}
 	}
 }
@@ -654,7 +762,9 @@ struct SDBUnit
 void CInterfaceArmyScreen::ShowReinfInfo( bool bEnabled, const CReinfData *pReinf )
 {
 	if ( !pReinf )
+	{
 		return;
+	}
 
 	if ( pReinfInfoNameView )
 	{
@@ -694,35 +804,63 @@ void CInterfaceArmyScreen::UpdateSelectionInfo()
 bool CInterfaceArmyScreen::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "menu_back" )
+	{
 		return OnBack();
+	}
 	if ( szReaction == "reinf_list_select" )
+	{
 		return OnSelect();
+	}
 	if ( szReaction == "set_leader" )
+	{
 		return OnSetLeader();
+	}
 	if ( szReaction == "assign_leader_ok" )
+	{
 		return OnAssignLeaderOk();
+	}
 	if ( szReaction == "assign_leader_cancel" )
+	{
 		return OnAssignLeaderCancel();
+	}
 	if ( szReaction == "edit_line_esc" )
+	{
 		return OnAssignLeaderCancel();
+	}
 
 	if ( szReaction == "menu_undo" )
+	{
 		return OnMenuUndo();
+	}
 	if ( szReaction == "undo_assign_commander" )
+	{
 		return OnUndoAssignCommander();
+	}
 
 	if ( szReaction == "auto_assign_ok" )
+	{
 		return OnAutoAssignOk();
+	}
 	if ( szReaction == "auto_assign_cancel" )
+	{
 		return OnAutoAssignCancel();
+	}
 	if ( szReaction == "undo_promotions_ok" )
+	{
 		return OnUndoPromotionsOk();
+	}
 	if ( szReaction == "undo_promotions_cancel" )
+	{
 		return OnUndoPromotionsCancel();
+	}
 	if ( szReaction == "undo_all_promotions_ok" )
+	{
 		return OnUndoAllPromotionsOk();
+	}
 	if ( szReaction == "undo_all_promotions_cancel" )
+	{
 		return OnUndoAllPromotionsCancel();
+	}
 
 	return false;
 }
@@ -751,7 +889,9 @@ bool CInterfaceArmyScreen::CheckAutoAssign()
 	if ( bAutoAssign )
 	{
 		if ( pAutoAssignDlg )
+		{
 			pAutoAssignDlg->ShowWindow( true );
+		}
 	}
 	return bAutoAssign;
 }
@@ -785,9 +925,13 @@ bool CInterfaceArmyScreen::OnSetLeader()
 		generateLeaderInfo.wszFullName = generateLeaderInfo.wszName;
 
 		if ( pAssignLeaderEdit )
+		{
 			pAssignLeaderEdit->SetText( generateLeaderInfo.wszFullName.c_str() );
+		}
 		if ( pAssignLeaderDlg )
+		{
 			pAssignLeaderDlg->ShowWindow( true );
+		}
 	}
 
 	return true;
@@ -799,29 +943,39 @@ bool CInterfaceArmyScreen::OnAssignLeaderOk()
 	{
 		IScenarioTracker *pST = Singleton<IScenarioTracker>();
 		if ( pAssignLeaderEdit )
+		{
 			generateLeaderInfo.wszFullName = pAssignLeaderEdit->GetText();
+		}
 		IScenarioTracker::SUndoLeaderInfo undo;
 		pST->AssignLeader( pSelection->eType, generateLeaderInfo, &undo );
 		const IScenarioTracker::SLeaderInfo *pSTLeader = pST->GetLeaderInfo( pSelection->eType );
 		if ( pSTLeader )
+		{
 			pST->SetLeaderLastSeenInfo( pSelection->eType, pSTLeader->info );
+		}
 		nAssignmentCount++;
 		FillLeaderInfo( pSelection, undo );
 
 		if ( pPromotionsView )
+		{
 			pPromotionsView->SetText( pPromotionsView->GetDBText() +
 			                          NStr::ToUnicode( std::to_string( pST->GetAvailablePromotions() ) ) );
+		}
 
 		UpdateSelectionInfo();
 
 		pReinfViewer->MakeInterior( pSelection->pItem, pSelection );
 
 		if ( pUndoBtn )
+		{
 			pUndoBtn->Enable( nAssignmentCount > 0 );
+		}
 	}
 
 	if ( pAssignLeaderDlg )
+	{
 		pAssignLeaderDlg->ShowWindow( false );
+	}
 
 	return true;
 }
@@ -829,7 +983,9 @@ bool CInterfaceArmyScreen::OnAssignLeaderOk()
 bool CInterfaceArmyScreen::OnAssignLeaderCancel()
 {
 	if ( pAssignLeaderDlg )
+	{
 		pAssignLeaderDlg->ShowWindow( false );
+	}
 
 	return true;
 }
@@ -854,7 +1010,9 @@ void CInterfaceArmyScreen::AutoAssignCommanders()
 				pST->AssignLeader( pReinf->eType, leader, &undo );
 				const IScenarioTracker::SLeaderInfo *pSTLeader = pST->GetLeaderInfo( pReinf->eType );
 				if ( pSTLeader )
+				{
 					pST->SetLeaderLastSeenInfo( pReinf->eType, pSTLeader->info );
+				}
 
 				nAssignmentCount++;
 				FillLeaderInfo( pReinf, undo );
@@ -862,20 +1020,26 @@ void CInterfaceArmyScreen::AutoAssignCommanders()
 				pReinfViewer->MakeInterior( pReinf->pItem, pReinf );
 
 				if ( pUndoBtn )
+				{
 					pUndoBtn->Enable( nAssignmentCount > 0 );
+				}
 
 				break;
 			}
 		}
 		if ( !bFound )
+		{
 			break;
+		}
 	}
 
 	UpdateSelectionInfo();
 
 	if ( pPromotionsView )
+	{
 		pPromotionsView->SetText( pPromotionsView->GetDBText() +
 		                          NStr::ToUnicode( std::to_string( pST->GetAvailablePromotions() ) ) );
+	}
 }
 
 void CInterfaceArmyScreen::Back()
@@ -887,10 +1051,14 @@ void CInterfaceArmyScreen::Back()
 		CReinfData *pReinf = reinforcements[i];
 		CLeaderInfo *pLeader = pReinf->pLeader;
 		if ( !pLeader )
+		{
 			continue;
+		}
 		const IScenarioTracker::SLeaderInfo *pSTLeader = pST->GetLeaderInfo( pReinf->eType );
 		if ( !pSTLeader )
+		{
 			continue;
+		}
 		if ( pLeader->lastSeen.eState != CLeaderInfo::SLastSeen::ST_NONE &&
 		     pLeader->lastSeen.eState != CLeaderInfo::SLastSeen::ST_DONE )
 		{
@@ -902,7 +1070,9 @@ void CInterfaceArmyScreen::Back()
 			pST->SetLeaderLastSeenInfo( pReinf->eType, info );
 		}
 		else
+		{
 			pST->SetLeaderLastSeenInfo( pReinf->eType, pSTLeader->info );
+		}
 	}
 
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
@@ -912,37 +1082,57 @@ void CInterfaceArmyScreen::Back()
 void CInterfaceArmyScreen::ShowNoSelection()
 {
 	if ( pPromoteCommanderView )
+	{
 		pPromoteCommanderView->ShowWindow( false );
+	}
 	if ( pPromotionsView )
+	{
 		pPromotionsView->ShowWindow( false );
+	}
 	if ( pCommanderInfoBlock )
+	{
 		pCommanderInfoBlock->ShowWindow( false );
+	}
 
 	if ( pPermanentCommanderWnd )
+	{
 		pPermanentCommanderWnd->ShowWindow( false );
+	}
 	if ( pSelectCommanderBtn )
+	{
 		pSelectCommanderBtn->ShowWindow( false );
+	}
 	if ( pUnselectCommanderBtn )
+	{
 		pUnselectCommanderBtn->ShowWindow( false );
+	}
 
 	if ( pReinfCurrentBlock )
+	{
 		pReinfCurrentBlock->ShowWindow( false );
+	}
 	if ( pPictureBlock )
+	{
 		pPictureBlock->ShowWindow( false );
+	}
 
 	for ( int i = 0; i < visAbilities.size(); ++i )
 	{
 		SVisAbility &visAbility = visAbilities[i];
 
 		if ( visAbility.pWnd )
+		{
 			visAbility.pWnd->ShowWindow( false );
+		}
 	}
 }
 
 bool CInterfaceArmyScreen::OnMenuUndo()
 {
 	if ( pUndoAllPromotionsDlg )
+	{
 		pUndoAllPromotionsDlg->ShowWindow( true );
+	}
 
 	return true;
 }
@@ -967,21 +1157,27 @@ void CInterfaceArmyScreen::UndoAllAssignCommander()
 		}
 
 		if ( pPromotionsView )
+		{
 			pPromotionsView->SetText( pPromotionsView->GetDBText() +
 			                          NStr::ToUnicode( std::to_string( pST->GetAvailablePromotions() ) ) );
+		}
 
 		UpdateSelectionInfo();
 
 		nAssignmentCount = 0;
 		if ( pUndoBtn )
+		{
 			pUndoBtn->Enable( nAssignmentCount > 0 );
+		}
 	}
 }
 
 bool CInterfaceArmyScreen::OnUndoAssignCommander()
 {
 	if ( pUndoPromotionsDlg )
+	{
 		pUndoPromotionsDlg->ShowWindow( true );
+	}
 	return true;
 }
 
@@ -996,22 +1192,28 @@ void CInterfaceArmyScreen::UndoAssignCommander()
 		pSelection->pLeader = 0;
 
 		if ( pPromotionsView )
+		{
 			pPromotionsView->SetText( pPromotionsView->GetDBText() +
 			                          NStr::ToUnicode( std::to_string( pST->GetAvailablePromotions() ) ) );
+		}
 
 		UpdateSelectionInfo();
 
 		pReinfViewer->MakeInterior( pSelection->pItem, pSelection );
 
 		if ( pUndoBtn )
+		{
 			pUndoBtn->Enable( nAssignmentCount > 0 );
+		}
 	}
 }
 
 bool CInterfaceArmyScreen::OnAutoAssignOk()
 {
 	if ( pAutoAssignDlg )
+	{
 		pAutoAssignDlg->ShowWindow( false );
+	}
 	AutoAssignCommanders();
 	return true;
 }
@@ -1019,14 +1221,18 @@ bool CInterfaceArmyScreen::OnAutoAssignOk()
 bool CInterfaceArmyScreen::OnAutoAssignCancel()
 {
 	if ( pAutoAssignDlg )
+	{
 		pAutoAssignDlg->ShowWindow( false );
+	}
 	return true;
 }
 
 bool CInterfaceArmyScreen::OnUndoPromotionsOk()
 {
 	if ( pUndoPromotionsDlg )
+	{
 		pUndoPromotionsDlg->ShowWindow( false );
+	}
 	UndoAssignCommander();
 	return true;
 }
@@ -1034,14 +1240,18 @@ bool CInterfaceArmyScreen::OnUndoPromotionsOk()
 bool CInterfaceArmyScreen::OnUndoPromotionsCancel()
 {
 	if ( pUndoPromotionsDlg )
+	{
 		pUndoPromotionsDlg->ShowWindow( false );
+	}
 	return true;
 }
 
 bool CInterfaceArmyScreen::OnUndoAllPromotionsOk()
 {
 	if ( pUndoAllPromotionsDlg )
+	{
 		pUndoAllPromotionsDlg->ShowWindow( false );
+	}
 	UndoAllAssignCommander();
 	return true;
 }
@@ -1049,7 +1259,9 @@ bool CInterfaceArmyScreen::OnUndoAllPromotionsOk()
 bool CInterfaceArmyScreen::OnUndoAllPromotionsCancel()
 {
 	if ( pUndoAllPromotionsDlg )
+	{
 		pUndoAllPromotionsDlg->ShowWindow( false );
+	}
 	return true;
 }
 
@@ -1141,7 +1353,9 @@ void CInterfaceArmyScreen::UpdateSelectedLeaderVisualInfo()
 void CInterfaceArmyScreen::UpdateLeaderVisualInfo( const CLeaderInfo *pLeader )
 {
 	if ( !pLeader )
+	{
 		return;
+	}
 
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 
@@ -1150,9 +1364,13 @@ void CInterfaceArmyScreen::UpdateLeaderVisualInfo( const CLeaderInfo *pLeader )
 	{
 		float fNextLevExp = pST->GetReinforcementXPForLevel( pLeader->eType, nTempRank + 1 );
 		if ( pLeader->lastSeen.fCurExp >= fNextLevExp )
+		{
 			nTempRank++;
+		}
 		else
+		{
 			break;
+		}
 	}
 
 	float fCurLevExp = pST->GetReinforcementXPForLevel( pLeader->eType, nTempRank );
@@ -1160,21 +1378,33 @@ void CInterfaceArmyScreen::UpdateLeaderVisualInfo( const CLeaderInfo *pLeader )
 	float fDeltaExp = fNextLevExp - fCurLevExp;
 	float fExpAtLevel = pLeader->lastSeen.fCurExp - fCurLevExp;
 	if ( fDeltaExp > 0.0f )
+	{
 		fExpAtLevel = Clamp( fExpAtLevel / fDeltaExp, 0.0f, 1.0f );
+	}
 	else
+	{
 		fExpAtLevel = fExpAtLevel > 0.0f ? 1.0f : 0.0f;
+	}
 
 	if ( pLeaderNameView )
+	{
 		pLeaderNameView->SetText( pLeaderNameView->GetDBText() + pLeader->wszName );
+	}
 
 	if ( pLeaderExpBar )
+	{
 		pLeaderExpBar->SetPosition( fExpAtLevel );
+	}
 
 	std::wstring wszRank = pST->GetLeaderRankName( nTempRank );
 	if ( pLeader->lastSeen.bRankChanged && pLeader->lastSeen.nCurRank == pLeader->nRank )
+	{
 		wszRank = wszChangedValueTag + wszRank;
+	}
 	if ( pLeaderRankView )
+	{
 		pLeaderRankView->SetText( pLeaderRankView->GetDBText() + wszRank );
+	}
 
 	std::wstring wszRankNumber = NStr::ToUnicode( std::to_string( pLeader->nRank + 1 ) );
 	std::vector<std::pair<std::wstring, std::wstring>> params;
@@ -1183,25 +1413,39 @@ void CInterfaceArmyScreen::UpdateLeaderVisualInfo( const CLeaderInfo *pLeader )
 
 	std::wstring wszKilled = NStr::ToUnicode( std::to_string( pLeader->lastSeen.nCurKilled ) );
 	if ( pLeader->lastSeen.bKilledChanged && pLeader->lastSeen.nCurKilled == pLeader->nKilled )
+	{
 		wszKilled = wszChangedValueTag + wszKilled;
+	}
 	if ( pLeaderKilledView )
+	{
 		pLeaderKilledView->SetText( pLeaderKilledView->GetDBText() + wszKilled );
+	}
 
 	std::wstring wszLost = NStr::ToUnicode( std::to_string( pLeader->lastSeen.nCurLost ) );
 	if ( pLeader->lastSeen.bLostChanged && pLeader->lastSeen.nCurLost == pLeader->nLost )
+	{
 		wszLost = wszChangedValueTag + wszLost;
+	}
 	if ( pLeaderLostView )
+	{
 		pLeaderLostView->SetText( pLeaderLostView->GetDBText() + wszLost );
+	}
 }
 
 bool CInterfaceArmyScreen::IsMainScreenActive() const
 {
 	if ( pAutoAssignDlg && pAutoAssignDlg->IsVisible() )
+	{
 		return false;
+	}
 	if ( pUndoPromotionsDlg && pUndoPromotionsDlg->IsVisible() )
+	{
 		return false;
+	}
 	if ( pUndoAllPromotionsDlg && pUndoAllPromotionsDlg->IsVisible() )
+	{
 		return false;
+	}
 	return true;
 }
 

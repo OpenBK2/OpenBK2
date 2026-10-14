@@ -45,14 +45,20 @@ class CRndInstance
 			if ( !bWithFilter || find( filter.begin(), filter.end(), elements[i].nFlag ) != filter.end() )
 			{
 				if ( sectors.empty() )
+				{
 					sectors.push_back( SSector( i, elements[i].fWeight ) );
+				}
 				else
+				{
 					sectors.push_back( SSector( i, sectors.back().fValue + elements[i].fWeight ) );
+				}
 			}
 		}
 
 		if ( sectors.empty() )
+		{
 			return 0;
+		}
 
 		float fValue = randomFunc( 0.0f, sectors.back().fValue );
 
@@ -62,9 +68,13 @@ class CRndInstance
 		{
 			int nMed = ( nLeft + nRight ) / 2;
 			if ( fValue >= sectors[nMed].fValue )
+			{
 				nLeft = nMed + 1;
+			}
 			else
+			{
 				nRight = nMed;
+			}
 		}
 		NI_VERIFY( nLeft < sectors.size(), "something is wrong", return elements[sectors.back().nIndex].pObj );
 
@@ -100,12 +110,16 @@ public:
 				elements[i].nFlag = dbElements[i].nFlag;
 				elements[i].fWeight = dbElements[i].fWeight;
 				if ( elements[i].fWeight < 0.0f )
+				{
 					elements[i].fWeight = 0.0f;
+				}
 
 				elements[i].pObj = 0;
 				if ( dbElements[i].nTypeID != 0 && dbElements[i].nObjectID != 0 )
+				{
 					elements[i].pObj = const_cast<T *>(
 							CastToDBUserObject( NDb::GetResource( dbElements[i].nTypeID, dbElements[i].nObjectID ), (T *)0 ) );
+				}
 			}
 		}
 		else
@@ -121,7 +135,9 @@ public:
 					dbElements[i].nObjectID = CastToDBResource( elements[i].pObj.GetPtr() )->GetRecordID();
 				}
 				else
+				{
 					dbElements[i].nTypeID = dbElements[i].nObjectID = 0;
+				}
 			}
 
 			saver.Add( 1, &dbElements );
@@ -154,14 +170,20 @@ const typename TRndType::TRefType *GetRnd( const TRndType &rndType,
 		if ( !bWithFilter || find( filter.begin(), filter.end(), rndType.elements[i].eFlag ) != filter.end() )
 		{
 			if ( sectors.empty() )
+			{
 				sectors.push_back( SDBRndSector( i, rndType.elements[i].fWeight ) );
+			}
 			else
+			{
 				sectors.push_back( SDBRndSector( i, sectors.back().fValue + rndType.elements[i].fWeight ) );
+			}
 		}
 	}
 
 	if ( sectors.empty() || sectors.back().fValue == 0.0f )
+	{
 		return 0;
+	}
 
 	float fValue = randomFunc( 0.0f, sectors.back().fValue );
 
@@ -171,9 +193,13 @@ const typename TRndType::TRefType *GetRnd( const TRndType &rndType,
 	{
 		int nMed = ( nLeft + nRight ) / 2;
 		if ( fValue >= sectors[nMed].fValue )
+		{
 			nLeft = nMed + 1;
+		}
 		else
+		{
 			nRight = nMed;
+		}
 	}
 	NI_VERIFY( nLeft < sectors.size(), "something is wrong", return rndType.elements[sectors.back().nIndex].pObj );
 

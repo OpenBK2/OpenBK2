@@ -26,7 +26,9 @@ void CCameraMovement::Init( const NDb::SMapInfo *_pMapInfo )
 bool CCameraMovement::Segment( const NTimer::STime curTime )
 {
 	if ( bMovementFinished )
+	{
 		return false;
+	}
 
 	const NTimer::STime timeDiff( curTime - timeMoveStart );
 	const NDb::SCameraPlacement &pos( pMapInfo->cameraPositions[nFinishPoint] );

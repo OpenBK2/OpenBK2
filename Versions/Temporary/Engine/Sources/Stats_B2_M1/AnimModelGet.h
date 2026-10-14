@@ -11,7 +11,9 @@ static std::vector<const NDb::SAnimB2 *> GetVisObjAnimsFromModel( const NDb::SVi
 {
 	if ( !visObj || visObj->models.empty() || !visObj->models[0].pModel || !visObj->models[0].pModel->pSkeleton ||
 	     visObj->models[0].pModel->pSkeleton->animations.empty() )
+	{
 		return {};
+	}
 
 	std::vector<const NDb::SAnimB2 *> wanted_anims;
 	wanted_anims.reserve( 8 );
@@ -21,10 +23,14 @@ static std::vector<const NDb::SAnimB2 *> GetVisObjAnimsFromModel( const NDb::SVi
 	{
 		const NDb::SAnimB2 *real_anim = dynamic_cast_ptr<const NDb::SAnimB2 *>( anims[i] );
 		if ( !real_anim )
+		{
 			continue;
+		}
 
 		if ( real_anim->eType == type )
+		{
 			wanted_anims.push_back( real_anim );
+		}
 	}
 
 	return wanted_anims;

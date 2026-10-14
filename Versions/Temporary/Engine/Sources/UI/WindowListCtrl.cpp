@@ -87,7 +87,9 @@ void CWindowListHeader::ResizeColumn( const int nPos, const int nResizingIndex )
 {
 	int nPrevColumnsSize = 0;
 	for ( int i = 0; i < nResizingIndex; ++i )
+	{
 		nPrevColumnsSize += columnSizes[i];
+	}
 
 	if ( nPos < nPrevColumnsSize )
 	{
@@ -120,20 +122,26 @@ void CWindowListHeader::AdjustColums()
 			columnSizes[i] = 0;
 		}
 		else if ( nNext > nW )
+		{
 			columnSizes[i] -= nNext - nW;
+		}
 		else if ( i == columnSizes.size() - 1 ) // last column takes all avalable space
 		{
 			columnSizes[i] = nW - nXSoFar;
 		}
 		IWindow *pChild = subitems[i];
 		if ( pChild )
+		{
 			pChild->SetPlacement( nXSoFar, 0, columnSizes[i], 0, EWPF_POS_X | EWPF_SIZE_X );
+		}
 
 		nXSoFar = nNext;
 	}
 
 	if ( pHeaderNotify )
+	{
 		pHeaderNotify->ColumnsResized( columnSizes );
+	}
 }
 
 bool CWindowListHeader::OnButtonDblClk( const CVec2 &vPos, const int nButton )
@@ -143,7 +151,9 @@ bool CWindowListHeader::OnButtonDblClk( const CVec2 &vPos, const int nButton )
 	{
 		const int nColumn = GetResizeColumnIndex( vPos ).first;
 		if ( -1 != nColumn )
+		{
 			pHeaderNotify->SetOptimalWidth( nColumn );
+		}
 	}
 	return bRes;
 }
@@ -159,7 +169,9 @@ bool CWindowListHeader::OnMouseMove( const CVec2 &vPos, const int nButton )
 			ResizeColumn( vPos.x - rc.left, nResizingIndex );
 		}
 		else
+		{
 			nResizingIndex = -1;
+		}
 	}
 	CWindow::OnMouseMove( vPos, nButton );
 
@@ -197,7 +209,9 @@ std::pair<int, bool> CWindowListHeader::GetResizeColumnIndex( const CVec2 &vPos 
 		if ( abs( nXSoFar - nX ) <= CInterfaceConsts::LIST_CONTROL_HEADER_RESIZE_OFFSET() )
 		{
 			if ( nXSoFar < nX && nNextX < nX && i + 1 < columnSizes.size() ) // next column is very narrow or 0
+			{
 				return std::pair<int, bool>( i + 1, true );
+			}
 			return std::pair<int, bool>( i, false );
 		}
 	}
@@ -207,9 +221,13 @@ std::pair<int, bool> CWindowListHeader::GetResizeColumnIndex( const CVec2 &vPos 
 void CWindowListHeader::UpdateSortButton()
 {
 	if ( pSortIconDown )
+	{
 		pSortIconDown->SetParent( 0 );
+	}
 	if ( pSortIconUp )
+	{
 		pSortIconUp->SetParent( 0 );
+	}
 
 	if ( -1 != nSelectedColumn )
 	{
@@ -220,12 +238,16 @@ void CWindowListHeader::UpdateSortButton()
 			if ( sorters[nSelectedColumn]->IsAscending() )
 			{
 				if ( pSortIconDown )
+				{
 					pSelectedHeader->AddChild( pSortIconDown, false );
+				}
 			}
 			else
 			{
 				if ( pSortIconUp )
+				{
 					pSelectedHeader->AddChild( pSortIconUp, false );
+				}
 			}
 			CTRect<float> rc;
 			FillWindowRect( &rc );
@@ -240,7 +262,9 @@ void CWindowListHeader::Resort( const int nColumn, const bool bAscending )
 	sorters[nColumn]->SetDirection( bAscending );
 	UpdateSortButton();
 	if ( pHeaderNotify )
+	{
 		pHeaderNotify->ColumnResort( sorters[nColumn] );
+	}
 }
 
 bool CWindowListHeader::OnButtonDown( const CVec2 &vPos, const int nButton )
@@ -249,7 +273,9 @@ bool CWindowListHeader::OnButtonDown( const CVec2 &vPos, const int nButton )
 	{
 		nResizingIndex = GetResizeColumnIndex( vPos ).first;
 		if ( -1 != nResizingIndex )
+		{
 			return true; // don't need to send this message deeper.
+		}
 	}
 
 	return CWindow::OnButtonDown( vPos, nButton );
@@ -282,12 +308,16 @@ void CWindowListHeader::Released( class CWindow *pWho )
 		}
 	}
 	if ( nColumn == nSelectedColumn )
+	{
 		sorters[nColumn]->SetDirection( !sorters[nColumn]->IsAscending() );
+	}
 	nSelectedColumn = nColumn;
 	UpdateSortButton();
 
 	if ( pHeaderNotify )
+	{
 		pHeaderNotify->ColumnResort( sorters[nColumn] );
+	}
 }
 
 void CWindowListHeader::SetColumnSize( const int nColumn, const int nWidth )
@@ -299,7 +329,9 @@ void CWindowListHeader::SetColumnSize( const int nColumn, const int nWidth )
 bool CWindowListHeader::OnButtonUp( const CVec2 &vPos, const int nButton )
 {
 	if ( ( MSTATE_BUTTON1 & nButton ) && -1 != nResizingIndex )
+	{
 		nResizingIndex = -1;
+	}
 	return CWindow::OnButtonUp( vPos, nButton );
 }
 
@@ -381,7 +413,9 @@ void CWindowListCtrl::AfterLoad()
 {
 	CWindow::AfterLoad();
 	if ( pHeader )
+	{
 		pHeader->SetNotify( this );
+	}
 }
 
 void CWindowListCtrl::SetFocus( const bool bFocus )
@@ -389,7 +423,9 @@ void CWindowListCtrl::SetFocus( const bool bFocus )
 	CWindowScrollableContainerBase::SetFocus( bFocus );
 
 	if ( pFocusNotify )
+	{
 		pFocusNotify->OnFocus( bFocus );
+	}
 }
 
 void CWindowListCtrl::InitByDesc( const struct NDb::SUIDesc *_pDesc )
@@ -450,7 +486,9 @@ IListControlItem *CWindowListCtrl::AddItem( CObjectBase *pData )
 	IListControlItem *pItem = AddItemInternal();
 	pItem->SetUserData( pData );
 	if ( pViewer )
+	{
 		pViewer->MakeInterior( pItem, pData );
+	}
 	return pItem;
 }
 
@@ -525,7 +563,9 @@ void CWindowListCtrl::Select( IWindow *pElement )
 
 	//Play reaction
 	if ( GetSelectedItem() )
+	{
 		RunAnimationAndCommands( pInstance->onSelection, "", true, true );
+	}
 }
 
 void CWindowListCtrl::RemoveAllElements()
@@ -563,7 +603,9 @@ void CWindowListCtrl::SelectItem( CObjectBase *pData )
 	CWindowScrollableContainerBase::Select( pElement );
 
 	if ( pElement )
+	{
 		EnsureElementVisible( pElement );
+	}
 }
 
 int CWindowListCtrl::GetRowHeight() const
@@ -575,7 +617,9 @@ int CWindowListCtrl::GetRowHeight() const
 		{
 			CParam<CVec2> size = pItem->placement.size;
 			if ( const NDb::SWindowShared *pItemShared = dynamic_cast_ptr<const NDb::SWindowShared *>( pItem->pShared ) )
+			{
 				size.Merge( pItemShared->placement.size.Get() );
+			}
 			nHeight += size.Get().y;
 		}
 		nHeight += pShared->nInterval;

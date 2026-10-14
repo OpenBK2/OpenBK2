@@ -132,15 +132,23 @@ bool CBuildingRPGStatsBuilder::InternalInsertObject( std::string *pszObjectTypeN
 
 		// fill default window
 		if ( szDefaultWindowDay != "" )
+		{
 			bResult = bResult && pBuildingRPGStatsManipulator->SetValue( "DefaultWindow.DayObj", szDefaultWindowDay );
+		}
 		if ( szDefaultWindowNight != "" )
+		{
 			bResult = bResult && pBuildingRPGStatsManipulator->SetValue( "DefaultWindow.NightObj", szDefaultWindowNight );
+		}
 		if ( szDefaultWindowDestroyed != "" )
+		{
 			bResult =
 					bResult && pBuildingRPGStatsManipulator->SetValue( "DefaultWindow.DestroyedObj", szDefaultWindowDestroyed );
+		}
 		if ( szDefaultWindowEffect != "" )
+		{
 			bResult =
 					bResult && pBuildingRPGStatsManipulator->SetValue( "DefaultWindow.DestroyEffect", szDefaultWindowEffect );
+		}
 	}
 	return bResult;
 }

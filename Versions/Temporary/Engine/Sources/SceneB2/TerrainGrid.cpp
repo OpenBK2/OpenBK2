@@ -112,9 +112,13 @@ void CScene::ShowTerrainGrid( ESceneShow eShow )
 void CScene::UpdateGrid( int nMinX, int nMinY, int nMaxX, int nMaxY )
 {
 	if ( IsShowOn( SCENE_SHOW_AI_GRID ) )
+	{
 		UpdateGrid( nMinX, nMinY, nMaxX, nMaxY, true );
+	}
 	else if ( IsShowOn( SCENE_SHOW_GRID ) )
+	{
 		UpdateGrid( nMinX, nMinY, nMaxX, nMaxY, false );
+	}
 }
 
 void CScene::UpdateGrid( int nMinX, int nMinY, int nMaxX, int nMaxY, bool bAIGrid )
@@ -161,7 +165,9 @@ void CScene::UpdateGrid( int nMinX, int nMinY, int nMaxX, int nMaxY, bool bAIGri
 
 				int nPatchIndex = 2 * ( ( y * nNumPatchesX ) + x );
 				if ( nPatchIndex < 0 || nPatchIndex >= grid.size() )
+				{
 					continue;
+				}
 
 				grid[nPatchIndex] = pGScene->CreatePolyline( vertices, indicesCenter, CLR_CENTER, bGridDepthTest );
 				grid[nPatchIndex + 1] = pGScene->CreatePolyline( vertices, indicesBorder, CLR_BORDER, bGridDepthTest );

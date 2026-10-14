@@ -154,7 +154,9 @@ void CChapterState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePo
 		SChapterMapMenuHelper::SMission &mission = pHelper->missions[i];
 		IWindow *pWnd = mission.pWnd;
 		if ( !pWnd )
+		{
 			continue;
+		}
 
 		CTRect<float> rcWnd = pWnd->GetWindowRect();
 		if ( rcWnd.IsInside( vScreenPos ) )
@@ -204,9 +206,13 @@ void CChapterState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoin
 				CVec2( rMousePoint.x, rMousePoint.y ), &vScreenPos );
 
 		if ( pPickedMission )
+		{
 			MoveMission( pPickedMission, vScreenPos, true );
+		}
 		else if ( pPickedArrow )
+		{
 			MoveArrow( pPickedArrow, vScreenPos, true );
+		}
 
 		vPrevPos = vScreenPos;
 
@@ -239,9 +245,13 @@ void CChapterState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 
 		bool bMoved = false;
 		if ( pPickedMission )
+		{
 			bMoved = MoveMission( pPickedMission, vScreenPos, false );
+		}
 		else if ( pPickedArrow )
+		{
 			bMoved = MoveArrow( pPickedArrow, vScreenPos, false );
+		}
 
 		if ( bMoved )
 		{
@@ -334,7 +344,9 @@ void CChapterState::LoadChapterMap()
 			IWindow *pWnd = AddWindowCopy( pChapterMap, ( i == 0 ) ? pBigMissionBtn : pMissionBtn );
 			mission.pWnd = pWnd;
 			if ( !pWnd )
+			{
 				continue;
+			}
 
 			int nSizeX;
 			int nSizeY;
@@ -347,14 +359,18 @@ void CChapterState::LoadChapterMap()
 			ITextView *pNumber =
 					dynamic_cast<ITextView *>( AddWindowCopy( pWnd, ( i == 0 ) ? pBigNumberView : pNumberView ) );
 			if ( pNumber )
+			{
 				pNumber->SetText( pNumber->GetDBText() + NStr::ToUnicode( std::to_string( i ) ) );
+			}
 
 			for ( int j = 0; j < mission.arrows.size(); ++j )
 			{
 				const SChapterMapMenuHelper::SArrow &arrow = mission.arrows[j];
 
 				if ( pFrontLines )
+				{
 					pFrontLines->AddArrow( arrow.points, arrow.fWidth, arrow.pTexture, arrow.GetColor() );
+				}
 			}
 		}
 	}
@@ -390,7 +406,9 @@ void CChapterState::CreateScreen()
 bool CChapterState::MoveMission( SChapterMapMenuHelper::SMission *pMission, const CVec2 &vPos, bool bSave )
 {
 	if ( !pMission || !IsValid( pMission->pWnd ) )
+	{
 		return false;
+	}
 
 	bool bMoved = false;
 	CVec2 vDelta = vPos - vPrevPos;
@@ -430,7 +448,9 @@ bool CChapterState::MoveMission( SChapterMapMenuHelper::SMission *pMission, cons
 bool CChapterState::MoveArrow( SChapterMapMenuHelper::SArrow *pArrow, const CVec2 &vPos, bool bSave )
 {
 	if ( !pArrow )
+	{
 		return false;
+	}
 
 	bool bMoved = false;
 	CVec2 vDelta = vPos - vPrevPos;
@@ -443,7 +463,9 @@ bool CChapterState::MoveArrow( SChapterMapMenuHelper::SArrow *pArrow, const CVec
 		pHelper->MoveArrow( pArrow, CVec2( nDeltaX, nDeltaY ) );
 
 		if ( pFrontLines )
+		{
 			pFrontLines->ClearArrows();
+		}
 
 		for ( int i = 0; i < pHelper->missions.size(); ++i )
 		{
@@ -454,7 +476,9 @@ bool CChapterState::MoveArrow( SChapterMapMenuHelper::SArrow *pArrow, const CVec
 				const SChapterMapMenuHelper::SArrow &arrow = mission.arrows[j];
 
 				if ( pFrontLines )
+				{
 					pFrontLines->AddArrow( arrow.points, arrow.fWidth, arrow.pTexture, arrow.GetColor() );
+				}
 			}
 		}
 
@@ -485,26 +509,32 @@ bool CChapterState::MoveArrow( SChapterMapMenuHelper::SArrow *pArrow, const CVec
 void CChapterState::UpdateFrontLines()
 {
 	if ( pFrontLines )
+	{
 		pFrontLines->SetParams( pChapter->szSeaNoiseMask,
 		                        pChapter->szDifferentColourMap,
 		                        pHelper->vMainStrike,
 		                        pChapter->nPositiveColour,
 		                        pChapter->nNegativeColour );
+	}
 
 	if ( pFrontLines )
+	{
 		pFrontLines->ClearNodes();
+	}
 
 	for ( int i = 0; i < pHelper->missions.size(); ++i )
 	{
 		SChapterMapMenuHelper::SMission &mission = pHelper->missions[i];
 
 		if ( pFrontLines )
+		{
 			pFrontLines->SetNode( mission.vPos.x,
 			                      mission.vPos.y,
 			                      mission.vEndOffset.x,
 			                      mission.vEndOffset.y,
 			                      mission.bShowPotentialComplete ? mission.fPotentialComplete
 			                                                     : mission.fPotentialIncomplete );
+		}
 	}
 }
 
@@ -546,7 +576,9 @@ void CChapterState::SetMaskManipulatorArrow( SChapterMapMenuHelper::SArrow *pArr
 IView *CChapterState::ClearView()
 {
 	if ( pMaskManipulator != 0 )
+	{
 		ClearMaskManipulator();
+	}
 
 	IView *pView = 0;
 	Singleton<ICommandHandlerContainer>()->HandleCommand(
@@ -623,9 +655,13 @@ void CChapterState::OnKeyArrows( int nDeltaX, int nDeltaY )
 		CVec2 vScreenPos( vPrevPos.x + nDeltaX, vPrevPos.y + nDeltaY );
 
 		if ( pPickedMission )
+		{
 			MoveMission( pPickedMission, vScreenPos, true );
+		}
 		else if ( pPickedArrow )
+		{
 			MoveArrow( pPickedArrow, vScreenPos, true );
+		}
 
 		vPrevPos = vScreenPos;
 

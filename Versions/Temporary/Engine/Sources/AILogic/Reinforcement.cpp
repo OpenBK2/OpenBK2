@@ -22,12 +22,16 @@ static CArray2D<float> expediencyValues;
 void InitReinforcementTypes( const NDb::SAIGameConsts *_pConsts )
 {
 	for ( int i = 0; i < _pConsts->reinforcementTypes.size(); ++i )
+	{
 		reinfTypes[int( ReMapRPGType( _pConsts->reinforcementTypes[i].eUnitRPGType ) )] =
 				_pConsts->reinforcementTypes[i].eReinfType;
+	}
 
 	// Helicopters use the first extra air reinforcement slot unless the DB remaps them elsewhere.
 	if ( reinfTypes.find( NDb::RPG_TYPE_AVIA_HELICOPTER ) == reinfTypes.end() )
+	{
 		reinfTypes[NDb::RPG_TYPE_AVIA_HELICOPTER] = NDb::RT_EXTRA_AIR_1;
+	}
 
 	//Init reinf.expediency matrix
 	expediencyValues.SetSizes( NUMBER_OF_REINF_TYPES, NUMBER_OF_REINF_TYPES );
@@ -40,9 +44,13 @@ void InitReinforcementTypes( const NDb::SAIGameConsts *_pConsts )
 		{
 			float fValue = expSet[j];
 			if ( fValue >= 0.0f && fValue <= 1.0f )
+			{
 				expediencyValues[i][j] = fValue;
+			}
 			else
+			{
 				NI_ASSERT( false, fmt::format( "Invalid Expediency value ({}, {})", i, j ) );
+			}
 		}
 	}
 }
@@ -63,7 +71,9 @@ const NDb::EReinforcementType GetReinforcementType( const NDb::EDBUnitRPGType eU
 	det_map<int /*NDb::EUnitRPGType*/, NDb::EReinforcementType>::const_iterator pos =
 			reinfTypes.find( int( ReMapRPGType( eUnitRpgType ) ) );
 	if ( pos != reinfTypes.end() )
+	{
 		return pos->second;
+	}
 	NI_ASSERT( 0, fmt::format( "Reinforcement type not found for NDb::EDBUnitRPGType: {}", int( eUnitRpgType ) ) );
 	return NDb::_RT_NONE;
 }
@@ -72,7 +82,9 @@ const float GetReinforcementExpediency( const NDb::EReinforcementType eMyType,
                                         const NDb::EReinforcementType eEnemyType )
 {
 	if ( NUMBER_OF_REINF_TYPES > eEnemyType && NUMBER_OF_REINF_TYPES > eMyType )
+	{
 		return expediencyValues[eMyType][eEnemyType];
+	}
 	return 0.0f;
 }
 

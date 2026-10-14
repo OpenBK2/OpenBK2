@@ -68,9 +68,13 @@ void CBalanceTest::PrintBalanceTestData()
 		                                 ? NText::GetText( NDb::Get<SMechUnitRPGStats>( szDBID )->szLocalizedNameFileRef )
 		                                 : NText::GetText( NDb::Get<SSquadRPGStats>( szDBID )->szLocalizedNameFileRef );
 		if ( !wszName.empty() )
+		{
 			szSide[nPlayer] += NStr::ToMBCS( wszName );
+		}
 		else
+		{
 			szSide[nPlayer] += "error, no name";
+		}
 	}
 	AllignSizes( &szTitle, &szSide[0], &szSide[1], 1 );
 
@@ -123,9 +127,13 @@ void CBalanceTest::PrintBalanceTestData()
 			                       : "| All dead";
 		}
 		if ( bCanBeVictory[0] && !bCanBeVictory[1] )
+		{
 			++nVictories[0];
+		}
 		if ( !bCanBeVictory[0] && bCanBeVictory[1] )
+		{
 			++nVictories[1];
+		}
 		AllignSizes( &szTitle, &szSide[0], &szSide[1], 1 );
 	}
 	szTitle += "| Score";
@@ -215,9 +223,13 @@ void CBalanceTest::CollectBalanceTestData( int nIteration )
 						}
 					}
 					if ( pUnit->GetHitPoints() != pUnit->GetStats()->fMaxHP )
+					{
 						++nDamaged;
+					}
 					else
+					{
 						++nFullHealth;
+					}
 				}
 			}
 		}
@@ -230,11 +242,15 @@ void CBalanceTest::InitBalanceTest( const NDb::SMapInfo *pMapInfo )
 {
 	bTest = NGlobal::GetVar( "balance_test", 0 );
 	if ( !bTest )
+	{
 		return;
+	}
 	NGlobal::SetVar( "temp.nogeneral_sript", true );
 
 	if ( NGlobal::GetVar( "balance_test_no_visual", 1 ) )
+	{
 		Singleton<IGameTimer>()->SetSpeed( 10000 );
+	}
 
 	shoot.clear();
 	shoot.resize( 3, false );
@@ -296,7 +312,9 @@ void CBalanceTest::InitBalanceTest( const NDb::SMapInfo *pMapInfo )
 		{
 			CCommonUnit *pUnit = checked_cast<CCommonUnit *>( it->second );
 			if ( pUnit->IsEmptyCmdQueue() )
+			{
 				ids.push_back( checked_cast<CLinkObject *>( it->second )->GetUniqueId() );
+			}
 		}
 		const int nGroup = theGroupLogic.GenerateGroupNumber();
 		theGroupLogic.RegisterGroup( ids, nGroup );
@@ -316,7 +334,9 @@ void CBalanceTest::InitBalanceTest( const NDb::SMapInfo *pMapInfo )
 			{
 				CAIUnit *pUnit = ( *iter );
 				if ( pUnit->GetPlayer() == nPlayer && ( bIsMech ? !pUnit->IsInfantry() : true ) )
+				{
 					++nTotal;
+				}
 			}
 		}
 		NGlobal::SetVar( fmt::format( "balance_test_iter_{}_player_{}_total", nIteration, nPlayer ), nTotal );
@@ -326,7 +346,9 @@ void CBalanceTest::InitBalanceTest( const NDb::SMapInfo *pMapInfo )
 void CBalanceTest::SegmentBalanceTest()
 {
 	if ( !bTest )
+	{
 		return;
+	}
 
 	const int nTestTime = NGlobal::GetVar( "balance_params_iteration_time", 60 );
 
@@ -336,7 +358,9 @@ void CBalanceTest::SegmentBalanceTest()
 	for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )
 	{
 		if ( IsValidObj( ( *iter ) ) )
+		{
 			bAlive[( *iter )->GetParty()] = true;
+		}
 	}
 	bFinishIteration = !bAlive[0] || !bAlive[1];
 
@@ -357,7 +381,9 @@ void CBalanceTest::SegmentBalanceTest()
 			for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )
 			{
 				if ( IsValidObj( ( *iter ) ) )
+				{
 					( *iter )->Disappear();
+				}
 			}
 			// launch map again
 			InitBalanceTest( pBalanceMapInfo );
@@ -375,12 +401,16 @@ void CBalanceTest::SegmentBalanceTest()
 const NDb::SUnitStatsModifier *CBalanceTest::GetModifier( int nPlayer ) const
 {
 	if ( !bTest )
+	{
 		return 0;
+	}
 
 	const std::string szDBID = NStr::ToMBCS(
 			NGlobal::GetVar( nPlayer == 0 ? "balance_params_stats_modifier_0" : "balance_params_stats_modifier_1", "" )
 					.GetString() );
 	if ( szDBID.empty() )
+	{
 		return NDb::Get<NDb::SUnitStatsModifier>( szDBID );
+	}
 	return 0;
 }

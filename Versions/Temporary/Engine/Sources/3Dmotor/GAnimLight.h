@@ -36,9 +36,13 @@ public:
 		{
 			int n = ( s + e ) / 2;
 			if ( keys[n].nT <= fT )
+			{
 				s = n;
+			}
 			else
+			{
 				e = n;
+			}
 		}
 		const TKey<TValue> &start = keys[s];
 		const TKey<TValue> &end = keys[e];

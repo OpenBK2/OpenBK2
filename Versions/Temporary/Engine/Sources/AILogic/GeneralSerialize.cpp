@@ -31,7 +31,9 @@ void CGeneral::OnSerialize( IBinSaver &saver )
 		curProcessed = enemys.begin();
 
 		if ( enemyByRType.size() == 0 )
+		{
 			enemyByRType.resize( NDb::_RT_NONE );
+		}
 		SGeneralConsts::Init();
 	}
 }

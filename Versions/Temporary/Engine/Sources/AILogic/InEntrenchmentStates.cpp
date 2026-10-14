@@ -31,7 +31,9 @@ CPtr<CInEntrenchmentStatesFactory> CInEntrenchmentStatesFactory::pFactory = 0;
 IStatesFactory *CInEntrenchmentStatesFactory::Instance()
 {
 	if ( pFactory == 0 )
+	{
 		pFactory = new CInEntrenchmentStatesFactory();
+	}
 
 	return pFactory;
 }
@@ -73,9 +75,13 @@ IUnitState *CInEntrenchmentStatesFactory::ProduceState( class CQueueUnit *pUnit,
 		{
 			CObjectBase *pEnt = GetObjectByCmd( cmd );
 			if ( checked_cast<CEntrenchment *>( pEnt ) )
+			{
 				pResult = CSoldierRestInEntrenchmentState::Instance( pSoldier, checked_cast<CEntrenchment *>( pEnt ) );
+			}
 			else
+			{
 				pResult = CSoldierRestInEntrenchmentState::Instance( pSoldier, 0 );
+			}
 		}
 
 		break;
@@ -118,27 +124,37 @@ void CSoldierRestInEntrenchmentState::SetUnitTo( CEntrenchment *pEntrenchment )
 {
 	// только зашёл в окоп
 	if ( pEntrenchment != 0 && !pSoldier->IsInEntrenchment() )
+	{
 		pSoldier->SetInEntrenchment( pEntrenchment );
+	}
 	// уже там сидит
 	else
 	{
 		//NI_ASSERT( pSoldier->IsInEntrenchment(), "Wrong unit state" );
 		if ( pSoldier->IsVisibleByPlayer() )
+		{
 			updater.AddUpdate( 0, ACTION_NOTIFY_IDLE_TRENCH, pSoldier, -1 );
+		}
 	}
 }
 
 void CSoldierRestInEntrenchmentState::Segment()
 {
 	if ( pSoldier->IsInFirePlace() )
+	{
 		pSoldier->AnalyzeTargetScan( 0, false, false );
+	}
 
 	if ( pSoldier->IsInFollowState() &&
 	     fabs( pSoldier->GetCenter() - pSoldier->GetFollowedUnit()->GetCenter() ) >= SConsts::FOLLOW_GO_RADIUS )
+	{
 		theGroupLogic.UnitCommand(
 				SAIUnitCmd( ACTION_COMMAND_FOLLOW_NOW, pSoldier->GetFollowedUnit()->GetUniqueId() ), pSoldier, false );
+	}
 	else
+	{
 		pSoldier->FreezeByState( true );
+	}
 }
 
 ETryStateInterruptResult CSoldierRestInEntrenchmentState::TryInterruptState( class CAICommand *pCommand )
@@ -150,9 +166,13 @@ ETryStateInterruptResult CSoldierRestInEntrenchmentState::TryInterruptState( cla
 const CVec2 CSoldierRestInEntrenchmentState::GetPurposePoint() const
 {
 	if ( pSoldier && pSoldier->IsRefValid() && pSoldier->IsAlive() )
+	{
 		return pSoldier->GetCenterPlain();
+	}
 	else
+	{
 		return CVec2( -1.0f, -1.0f );
+	}
 }
 
 //*******************************************************************
@@ -171,7 +191,9 @@ CSoldierAttackInEtrenchState::CSoldierAttackInEtrenchState( CSoldier *_pSoldier,
 			nEnemyParty( _pEnemy->GetParty() )
 {
 	if ( !pEnemy->IsAlive() )
+	{
 		pSoldier->SendAcknowledgement( ACK_INVALID_TARGET, true );
+	}
 }
 
 void CSoldierAttackInEtrenchState::AnalyzeCurrentState()
@@ -191,7 +213,9 @@ void CSoldierAttackInEtrenchState::AnalyzeCurrentState()
 			const EUnitAckType eReject = pGun->GetRejectReason();
 			pSoldier->SendAcknowledgement( eReject );
 			if ( eReject == ACK_NO_AMMO && pSoldier->GetPlayer() == theDipl.GetMyNumber() )
+			{
 				theFeedBackSystem.AddFeedbackAndForget( pSoldier->GetUniqueID(), pSoldier->GetCenterPlain(), EFB_NO_AMMO, -1 );
+			}
 
 			pGun->StopFire();
 			pSoldier->UnRegisterAsBored( ACK_BORED_ATTACK );
@@ -219,7 +243,9 @@ void CSoldierAttackInEtrenchState::FinishState()
 void CSoldierAttackInEtrenchState::Segment()
 {
 	if ( bFinish || !IsValidObj( pEnemy ) )
+	{
 		FinishState();
+	}
 	else if ( !pSoldier->GetEntrenchment()->IsAnyAttackers() )
 	{
 		if ( pGun == 0 )
@@ -244,7 +270,9 @@ void CSoldierAttackInEtrenchState::Segment()
 			     bFinish || pEnemy->GetParty() != nEnemyParty )
 			{
 				if ( IsValidObj( pEnemy ) && !pEnemy->IsVisible( pSoldier->GetParty() ) )
+				{
 					pSoldier->SendAcknowledgement( ACK_DONT_SEE_THE_ENEMY );
+				}
 
 				pGun->StopFire();
 				damageToEnemyUpdater.UnsetDamageFromEnemy( pEnemy );
@@ -252,7 +280,9 @@ void CSoldierAttackInEtrenchState::Segment()
 				pSoldier->SetCommandFinished();
 			}
 			else
+			{
 				AnalyzeCurrentState();
+			}
 		}
 	}
 }
@@ -271,21 +301,29 @@ ETryStateInterruptResult CSoldierAttackInEtrenchState::TryInterruptState( class 
 	if ( cmd.nCmdType != ACTION_COMMAND_ATTACK_UNIT || GetObjectByCmd( cmd ) != pEnemy )
 	{
 		if ( IsValid( pGun ) )
+		{
 			pGun->StopFire();
+		}
 
 		bFinish = true;
 		return TSIR_YES_WAIT;
 	}
 	else
+	{
 		return TSIR_NO_COMMAND_INCOMPATIBLE;
+	}
 }
 
 const CVec2 CSoldierAttackInEtrenchState::GetPurposePoint() const
 {
 	if ( IsValidObj( pEnemy ) )
+	{
 		return pEnemy->GetCenterPlain();
+	}
 	else
+	{
 		return CVec2( -1.0f, -1.0f );
+	}
 }
 
 CAIUnit *CSoldierAttackInEtrenchState::GetTargetUnit() const

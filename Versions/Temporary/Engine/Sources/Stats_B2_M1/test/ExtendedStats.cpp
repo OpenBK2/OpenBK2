@@ -54,7 +54,9 @@ protected:
 		NVFS::SetMainFileCreator( NVFS::CreateWinFileCreator( path ) );
 		ASSERT_TRUE( NDb::OpenDatabase( NVFS::GetMainVFS(), NVFS::GetMainFileCreator(), NDb::DATABASE_MODE_EDITOR ) );
 		for ( const char *file : { "legacy.xdb", "defaults.xdb", "extended.xdb", "unit.xdb" } )
+		{
 			ASSERT_TRUE( NDb::RegisterResourceFile( file ) );
+		}
 	}
 
 	static void TearDownTestSuite()

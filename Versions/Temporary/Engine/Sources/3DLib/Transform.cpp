@@ -131,7 +131,9 @@ bool InvertMatrix( SHMatrix *pRes, const SHMatrix &m )
 		bRes = false; // singular matrix found !
 	}
 	else
+	{
 		fDet = 1.0f / fDet;
+	}
 	pRes->_11 *= fDet;
 	pRes->_21 *= fDet;
 	pRes->_31 *= fDet;
@@ -167,9 +169,13 @@ void MakeProjectiveRay(
 	float fDepth = screenRect.x * 0.5f / tan( ToRadian( fFovX ) * 0.5f );
 	CVec3 direction( cursorPos.x - screenRect.x / 2, fDepth, -cursorPos.y + screenRect.y / 2 );
 	if ( fabs2( direction ) < 1e-8f )
+	{
 		direction = CVec3( 0, 1, 0 );
+	}
 	else
+	{
 		Normalize( &direction );
+	}
 	camera.RotateVector( pRes, direction );
 	*pOrig = camera.GetTranslation();
 }
@@ -194,7 +200,9 @@ bool TestRayInFrustrum( const CVec3 &ptPos, const SHMatrix &camera, const CVec2 
 	CVec3 vRes;
 	cam1.RotateHVector( &vRes, ptPos );
 	if ( vRes.y < 0.001f )
+	{
 		return false;
+	}
 	vRes.x /= vRes.y;
 	vRes.z /= vRes.y;
 	float fDepth = screenRect.x * 0.5f / tan( ToRadian( fFovX ) * 0.5f );
@@ -206,9 +214,13 @@ bool TestRayInFrustrum( const CVec3 &ptPos, const SHMatrix &camera, const CVec2 
 	}
 
 	if ( fabs( vRes.x * fDepth ) > screenRect.x / 2 )
+	{
 		return false;
+	}
 	if ( fabs( vRes.z * fDepth ) > screenRect.y / 2 )
+	{
 		return false;
+	}
 	return true;
 }
 
@@ -236,13 +248,21 @@ bool TestRayInFrustrum( const CVec3 &ptPos,
 	}
 
 	if ( fabs( vRes.x ) > 1 )
+	{
 		return false;
+	}
 	if ( fabs( vRes.y ) > 1 )
+	{
 		return false;
+	}
 	if ( pfMaxDistance && vRes.z > *pfMaxDistance )
+	{
 		return false;
+	}
 	if ( pfMinDistance && vRes.z < *pfMinDistance )
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -346,9 +366,13 @@ void CTransformStack::MakeProjective(
 		const CVec2 &screenRect, float fFovX, float fZMin, float fZMax, const CVec2 &vShift )
 {
 	if ( screenRect.y == 0 || screenRect.x == 0 )
+	{
 		MakeProjective( 1, fFovX, fZMin, fZMax, vShift );
+	}
 	else
+	{
 		MakeProjective( screenRect.y / screenRect.x, fFovX, fZMin, fZMax, vShift );
+	}
 }
 
 void CTransformStack::MakeParallel( float fWidth, float fHeight, float fZMin, float fZMax )
@@ -408,14 +432,22 @@ static void CalcLeftRight( float *pf1, float *pf2, float a, float b )
 {
 	float f1 = a - 1;
 	if ( f1 < 0 )
+	{
 		*pf1 = f1 / ( b - 1 );
+	}
 	else
+	{
 		*pf1 = f1 / ( b + 1 );
+	}
 	float f2 = a + 1;
 	if ( f2 < 0 )
+	{
 		*pf2 = f2 / ( b + 1 );
+	}
 	else
+	{
 		*pf2 = f2 / ( b - 1 );
+	}
 	ASSERT( *pf2 > *pf1 );
 }
 
@@ -432,10 +464,14 @@ bool CTransformStack::GetCoverRect( CTRect<float> *pRes, const CVec3 &_ptCenter,
 	for ( int i = 0; i < nClipPlanes; i++, nTest <<= 1 )
 	{
 		if ( ( nFlags & nTest ) == 0 )
+		{
 			continue;
+		}
 		float fTest = Dot( ptCenter, viewFrustrum[i] );
 		if ( fTest < -fRadius )
+		{
 			return false;
+		}
 	}
 	if ( ptCenter.w <= 0 || fRadius == 0 )
 	{
@@ -482,12 +518,18 @@ bool CTransformStack::PushClipHint( const SSphere &s )
 	for ( int i = 0; i < nClipPlanes; i++, nTest <<= 1 )
 	{
 		if ( ( nFlags & nTest ) == 0 )
+		{
 			continue;
+		}
 		float fTest = Dot( ptCenter, viewFrustrum[i] );
 		if ( fTest < -fRadius )
+		{
 			return false;
+		}
 		if ( fTest > fRadius )
+		{
 			nFlags &= ~nTest;
+		}
 	}
 	nClipFlags[++nClipFlagsPtr] = nFlags;
 	ASSERT( nClipFlagsPtr < std::size( nClipFlags ) );
@@ -504,23 +546,33 @@ bool CTransformStack::PushClipHint( const SBound &bv )
 	for ( int i = 0; i < nClipPlanes; i++, nTest <<= 1 )
 	{
 		if ( ( nFlags & nTest ) == 0 )
+		{
 			continue;
+		}
 		float fTest = Dot( ptCenter, viewFrustrum[i] );
 		if ( fTest < -fRadius )
+		{
 			return false;
+		}
 		bDoubt |= fTest < 0;
 		if ( fTest > fRadius )
+		{
 			nFlags &= ~nTest;
+		}
 	}
 	nClipFlags[++nClipFlagsPtr] = nFlags;
 	ASSERT( nClipFlagsPtr < std::size( nClipFlags ) );
 	if ( !bDoubt )
+	{
 		return true;
+	}
 	if ( CheckParallelepiped( bv.s.ptCenter,
 	                          CVec3( bv.ptHalfBox.x, 0, 0 ),
 	                          CVec3( 0, bv.ptHalfBox.y, 0 ),
 	                          CVec3( 0, 0, bv.ptHalfBox.z ) ) )
+	{
 		return true;
+	}
 	--nClipFlagsPtr;
 	return false;
 }
@@ -535,16 +587,22 @@ bool CTransformStack::IsIn( const SSphere &s )
 {
 	TFlags nFlags = nClipFlags[nClipFlagsPtr], nTest = 1;
 	if ( nFlags == 0 )
+	{
 		return true;
+	}
 	CVec4 ptCenter;
 	Get().forward.RotateHVector( &ptCenter, s.ptCenter );
 	for ( int i = 0; i < nClipPlanes; i++, nTest <<= 1 )
 	{
 		if ( ( nFlags & nTest ) == 0 )
+		{
 			continue;
+		}
 		float fTest = Dot( ptCenter, viewFrustrum[i] );
 		if ( fTest < -s.fRadius )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -557,7 +615,9 @@ bool CTransformStack::CheckSphere( const CVec4 &ptCenter, float fRadius, bool *p
 	for ( int i = 0; i < nClipPlanes; i++, nTest <<= 1 )
 	{
 		if ( ( nFlags & nTest ) == 0 )
+		{
 			continue;
+		}
 		float fDot = Dot( ptCenter, viewFrustrum[i] );
 		// trivial reject, sphere is behind plane
 		if ( fDot < -fRadius )
@@ -566,7 +626,9 @@ bool CTransformStack::CheckSphere( const CVec4 &ptCenter, float fRadius, bool *p
 			return true;
 		}
 		if ( fDot < 0 )
+		{
 			bIn = false;
+		}
 	}
 	// trivial accept, center in frustrum
 	if ( bIn )
@@ -607,7 +669,9 @@ static bool ClipPolygon( const SClipPolygon &pts, const CVec4 &plane, SClipPolyg
 {
 	float fRes[128];
 	for ( int i = 0; i < pts.size(); ++i )
+	{
 		fRes[i] = Dot( ptPolygon[pts[i]], plane );
+	}
 	pRes->resize( 0 );
 	/*bool bRes = false;
 	*pRes = pts;
@@ -685,7 +749,9 @@ bool CTransformStack::CheckParallelepiped( const CVec3 &ptCenter,
 		CVec3 vNormal( ( c - b ) ^ ( a - b ) );
 		float fFront = vNormal * ( b - vInside );
 		if ( fFront >= 0 )
+		{
 			continue;
+		}
 		bHasFront = true;
 		// clip it with each plane
 		pSrc = &poly;
@@ -694,30 +760,40 @@ bool CTransformStack::CheckParallelepiped( const CVec3 &ptCenter,
 		for ( int k = 0; k < nClipPlanes; k++, nTest <<= 1 )
 		{
 			if ( ( nFlags & nTest ) == 0 )
+			{
 				continue;
+			}
 			CVec4 vClipPlane;
 			Get().forward.RotateHVectorTransposed( &vClipPlane, viewFrustrum[k] );
 			if ( !ClipPolygon( *pSrc, vClipPlane, pDst ) )
+			{
 				goto NextPolygon;
+			}
 			std::swap( pSrc, pDst );
 		}
 		return true; // intersects
 	NextPolygon:;
 	}
 	if ( !bHasFront )
+	{
 		return true; // lies inside
+	}
 	return false;
 }
 
 bool CTransformStack::IsIn( const SBound &s )
 {
 	if ( IsFullGet() )
+	{
 		return true;
+	}
 	CVec4 ptCenter;
 	Get().forward.RotateHVector( &ptCenter, s.s.ptCenter );
 	bool bRes;
 	if ( CheckSphere( ptCenter, s.s.fRadius, &bRes ) )
+	{
 		return bRes;
+	}
 	return CheckParallelepiped(
 			s.s.ptCenter, CVec3( s.ptHalfBox.x, 0, 0 ), CVec3( 0, s.ptHalfBox.y, 0 ), CVec3( 0, 0, s.ptHalfBox.z ) );
 }
@@ -725,12 +801,16 @@ bool CTransformStack::IsIn( const SBound &s )
 bool CTransformStack::IsIn( const SSphere &s, const CVec3 &_ptXAxis, const CVec3 &_ptYAxis, const CVec3 &_ptZAxis )
 {
 	if ( IsFullGet() )
+	{
 		return true;
+	}
 	CVec4 ptCenter;
 	Get().forward.RotateHVector( &ptCenter, s.ptCenter );
 	bool bRes;
 	if ( CheckSphere( ptCenter, s.fRadius, &bRes ) )
+	{
 		return bRes;
+	}
 	return CheckParallelepiped( s.ptCenter, _ptXAxis, _ptYAxis, _ptZAxis );
 }
 

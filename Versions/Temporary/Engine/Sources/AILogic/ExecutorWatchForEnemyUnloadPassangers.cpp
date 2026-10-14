@@ -42,12 +42,16 @@ int CExecutorWatchForEnemyUnloadPassangers::Segment()
 					{
 						CSoldier *pPass = pUnit->GetPassenger( i );
 						if ( !pPass )
+						{
 							continue;
+						}
 						formations[pPass->GetFormation()->GetUniqueId()] = true;
 					}
 					int nTowedGunCrewID = -1;
 					if ( pUnit->GetTowedArtillery() && pUnit->GetTowedArtillery()->GetCrew() )
+					{
 						nTowedGunCrewID = pUnit->GetTowedArtillery()->GetCrew()->GetUniqueId();
+					}
 					for ( std::map<int, bool>::iterator it = formations.begin(); it != formations.end(); ++it )
 					{
 						if ( it->first != nTowedGunCrewID )
@@ -65,7 +69,9 @@ int CExecutorWatchForEnemyUnloadPassangers::Segment()
 		}
 	}
 	else
+	{
 		return -1;
+	}
 
 	RecordRandomCall();
 	return GetNextTime() + NRandom::Random( 50 );

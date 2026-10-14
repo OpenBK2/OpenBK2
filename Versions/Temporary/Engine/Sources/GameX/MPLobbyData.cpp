@@ -39,9 +39,13 @@ void CClientListViewer::SetData( CObjectBase *pWindow, const CObjectBase *pData 
 	if ( IsValid( pInfo->pStatusIcon ) )
 	{
 		if ( IsValid( pInterface ) )
+		{
 			pInfo->pStatusIcon->SetState( pInterface->GetButtonState( pInfo->szName ) );
+		}
 		else
+		{
 			pInfo->pStatusIcon->SetState( 0 );
+		}
 	}
 }
 
@@ -53,7 +57,9 @@ void CChannelListViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *
 
 	std::wstring wszText = L"";
 	if ( pInfo )
+	{
 		wszText = pInfo->wszText;
+	}
 
 	CDynamicCast<ITextView> pTxt = pItem->GetChild( "ItemComboText", true );
 	NMPSetData::SetText( pTxt, wszText );

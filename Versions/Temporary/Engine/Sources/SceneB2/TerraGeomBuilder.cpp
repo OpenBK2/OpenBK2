@@ -37,7 +37,9 @@ void CTerraGen::GenerateTerrain()
 	for ( std::vector<CDBPtr<NDb::STGTerraType>>::const_iterator it = pDesc->pTerraSet->terraTypes.begin();
 	      it != pDesc->pTerraSet->terraTypes.end();
 	      ++it )
+	{
 		params.push_back( ( *it )->aIProperty );
+	}
 
 	SetTerraTypesToAI( params );
 
@@ -157,7 +159,9 @@ static void UnpackRawToFloatArr( float *pData, const int nLength, const std::vec
 					break;
 				}
 				else
+				{
 					pData[k++] = 0.0f;
+				}
 			}
 		}
 		++it;
@@ -185,7 +189,9 @@ void CTerraGen::OptimizeTerrainInfo()
 				if ( ( IsInsideBB( CVec2( tile.vertices[it->i1].x, tile.vertices[it->i1].y ), vMin, vMax ) ) &&
 				     ( IsInsideBB( CVec2( tile.vertices[it->i2].x, tile.vertices[it->i2].y ), vMin, vMax ) ) &&
 				     ( IsInsideBB( CVec2( tile.vertices[it->i3].x, tile.vertices[it->i3].y ), vMin, vMax ) ) )
+				{
 					trgs.push_back( *it );
+				}
 			}
 			tile.triangles = trgs;
 		}
@@ -225,7 +231,9 @@ void CTerraGen::OptimizeTerrainInfo()
 				itAdd->vertices.resize( 0 );
 				for ( std::vector<CVec3fEx>::const_iterator itVert = tile.vertices.begin(); itVert != tile.vertices.end();
 				      ++itVert )
+				{
 					itAdd->vertices.push_back( itVert->GetVec3() );
+				}
 				itAdd->addHeights = tile.addHeights;
 			}
 		}
@@ -316,7 +324,9 @@ void CTerraGen::RestoreTerrainInfoAfterOptimizing()
 				tile.vertices.reserve( it->vertices.size() );
 				tile.vertices.resize( 0 );
 				for ( std::vector<CVec3>::const_iterator itVert = it->vertices.begin(); itVert != it->vertices.end(); ++itVert )
+				{
 					tile.vertices.push_back( CVec3fEx( *itVert, 0 ) );
+				}
 				tile.addHeights = it->addHeights;
 			}
 		}

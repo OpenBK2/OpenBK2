@@ -20,7 +20,9 @@ void ShowWarningNoLine( const std::string &szWarning )
 	std::vector<std::string> strings;
 	NStr::SplitString( szWarning, &strings, '\n' );
 	for ( int i = 0; i < strings.size(); ++i )
+	{
 		DbgTrc( "%s", strings[i].c_str() );
+	}
 }
 
 void ShowError( const std::string &szError )
@@ -33,7 +35,9 @@ void ShowError( const std::string &szError )
 	std::vector<std::string> strings;
 	NStr::SplitString( szErr, &strings, '\n' );
 	for ( int i = 0; i < strings.size(); ++i )
+	{
 		DbgTrc( "%s", strings[i].c_str() );
+	}
 }
 
 void ShowErrorNoLine( const std::string &szError )
@@ -46,7 +50,9 @@ void ShowErrorNoLine( const std::string &szError )
 	NStr::SplitString( szError, &strings, '\n' );
 
 	for ( int i = 0; i < strings.size(); ++i )
+	{
 		DbgTrc( "%s", strings[i].c_str() );
+	}
 }
 
 }

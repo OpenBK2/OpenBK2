@@ -18,7 +18,9 @@ EXPORT_RESULT CMinimapExporter::ExportObject( IManipulator *pManipulator,
                                               EXPORT_TYPE exportType )
 {
 	if ( ( exportType != ET_BEFORE_REF ) && ( exportType != ET_NO_REF ) )
+	{
 		return ER_SUCCESS;
+	}
 	//
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	//
@@ -34,7 +36,9 @@ EXPORT_RESULT CMinimapExporter::ExportObject( IManipulator *pManipulator,
 			const std::string szDstFileName =
 					Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szNoiseImageFileName;
 			if ( CheckFilesUpdated( szSrcFileName, szDstFileName, bForce ) == false )
+			{
 				NFile::CopyFile( szSrcFileName, szDstFileName );
+			}
 		}
 	}
 	return ER_SUCCESS;

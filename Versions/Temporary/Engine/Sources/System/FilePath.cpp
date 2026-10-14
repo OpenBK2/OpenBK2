@@ -32,7 +32,9 @@ static size_t FindLastSlash( const std::string &szFullFilePath )
 	for ( size_t i = szFullFilePath.size(); i-- > 0; )
 	{
 		if ( IsFolderSeparator( szFullFilePath[i] ) )
+		{
 			return i;
+		}
 	}
 	return std::string::npos;
 }
@@ -74,7 +76,9 @@ std::string GetFileExt( const std::string &szFullFilePath )
 std::string CutFileExt( const std::string &szFullFilePath, const char *pszExt )
 {
 	if ( szFullFilePath.empty() )
+	{
 		return szFullFilePath;
+	}
 	//
 	if ( pszExt == 0 || pszExt[0] == 0 )
 	{
@@ -82,7 +86,9 @@ std::string CutFileExt( const std::string &szFullFilePath, const char *pszExt )
 		for ( size_t i = szFullFilePath.size() - 1; i > nPos; --i )
 		{
 			if ( szFullFilePath[i] == '.' )
+			{
 				return szFullFilePath.substr( 0, i );
+			}
 		}
 		return szFullFilePath;
 	}
@@ -92,7 +98,9 @@ std::string CutFileExt( const std::string &szFullFilePath, const char *pszExt )
 		const size_t nCmpSize = szFullFilePath.size() - ( nPos + 1 );
 		if ( nPos != std::string::npos &&
 		     ComparePathEq( nPos + 1, nCmpSize, szFullFilePath, 0, strlen( pszExt ), pszExt ) != false )
+		{
 			return szFullFilePath.substr( 0, nPos );
+		}
 		return szFullFilePath;
 	}
 }
@@ -102,7 +110,9 @@ static size_t FindNextSlash( const std::string &szFullFilePath, const int nStart
 	for ( size_t i = nStartPos; i < szFullFilePath.size(); ++i )
 	{
 		if ( IsFolderSeparator( szFullFilePath[i] ) )
+		{
 			return i;
+		}
 	}
 	return std::string::npos;
 }
@@ -141,18 +151,26 @@ bool ComparePathEq( const int nStart1,
                     const std::string &szPath2 )
 {
 	if ( nLength1 != nLength2 )
+	{
 		return false;
+	}
 	if ( &szPath1 == &szPath2 )
+	{
 		return true;
+	}
 	if ( nLength1 == 0 )
+	{
 		return true;
+	}
 	//
 	const char *p1 = &( szPath1[nStart1] );
 	const char *p2 = &( szPath2[nStart2] );
 	for ( int i = 0; i < nLength1; ++i )
 	{
 		if ( ConvertCharASCII( p1[i] ) != ConvertCharASCII( p2[i] ) )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -165,11 +183,17 @@ bool ComparePathLt( const int nStart1,
                     const std::string &szPath2 )
 {
 	if ( nLength1 < nLength2 )
+	{
 		return true;
+	}
 	if ( &szPath1 == &szPath2 )
+	{
 		return false;
+	}
 	if ( nLength2 == 0 )
+	{
 		return false;
+	}
 	//
 	const int nSize = (std::min)( nLength1, nLength2 );
 	const char *p1 = &( szPath1[nStart1] );
@@ -177,7 +201,9 @@ bool ComparePathLt( const int nStart1,
 	for ( int i = 0; i < nSize; ++i )
 	{
 		if ( ConvertCharASCII( p1[i] ) >= ConvertCharASCII( p2[i] ) )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -197,9 +223,13 @@ void MakeRelativePath( std::string *pRes, const std::string &szFullPath, const s
 	//
 	const size_t nPos = FindLastSlash( szParentPath );
 	if ( nPos != std::string::npos && ComparePathEq( 0, nPos + 1, szParentPath, 0, nPos + 1, szFullPath ) )
+	{
 		*pRes = szFullPath.c_str() + nPos + 1;
+	}
 	else
+	{
 		*pRes = '/' + szFullPath;
+	}
 }
 
 void MakeFullPath( std::string *pRes, const std::string &szRelativePath, const std::string &szParentPath )
@@ -216,14 +246,20 @@ void MakeFullPath( std::string *pRes, const std::string &szRelativePath, const s
 	}
 	//
 	if ( IsFolderSeparator( szRelativePath[0] ) ) // absolute path
+	{
 		*pRes = szRelativePath.c_str() + 1;
+	}
 	else // relative to parent's path
 	{
 		const size_t nPos = FindLastSlash( szParentPath );
 		if ( nPos != std::string::npos )
+		{
 			*pRes = szParentPath.substr( 0, nPos ) + "/" + szRelativePath;
+		}
 		else
+		{
 			*pRes = szRelativePath;
+		}
 	}
 }
 
@@ -232,20 +268,26 @@ void NormalizePath( std::string *pRes, const std::string &szFilePath )
 	const size_t nSize = szFilePath.size();
 	pRes->resize( szFilePath.size() );
 	for ( size_t i = 0; i < nSize; ++i )
+	{
 		( *pRes )[i] = ConvertFolderSeparator( szFilePath[i] );
+	}
 }
 
 void AppendSlash( std::string *pFilePath, const char cSlash )
 {
 	if ( !pFilePath->empty() && !IsFolderSeparator( ( *pFilePath )[pFilePath->size() - 1] ) )
+	{
 		( *pFilePath ) += cSlash;
+	}
 }
 void ConvertSlashes( std::string *pFilePath, const char cFrom, const char cTo )
 {
 	for ( std::string::iterator it = pFilePath->begin(); it != pFilePath->end(); ++it )
 	{
 		if ( *it == cFrom )
+		{
 			*it = cTo;
+		}
 	}
 }
 
@@ -289,7 +331,9 @@ int CFilePath::MakeHashKey() const
 {
 	unsigned int uHashKey = 0;
 	for ( std::string::const_iterator it = this->begin(); it != this->end(); ++it )
+	{
 		uHashKey = 5 * uHashKey + ConvertChar( *it );
+	}
 	return uHashKey;
 }
 

@@ -260,7 +260,9 @@ public:
 	virtual void Iterate()
 	{
 		if ( nIterator < fire.Size() )
+		{
 			++nIterator;
+		}
 	}
 	virtual bool IsIterateFinished() { return nIterator == fire.Size(); }
 	virtual class CAIUnit *GetIteratedUnit();

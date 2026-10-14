@@ -32,18 +32,24 @@ public:
 		Unlink();
 		pSync = p;
 		if ( IsValid( pSync ) )
+		{
 			nID = p->Add( pObject );
+		}
 	}
 	void Unlink()
 	{
 		if ( IsValid( pSync ) )
+		{
 			pSync->Remove( nID );
+		}
 		pSync = 0;
 	}
 	void Update()
 	{
 		if ( IsValid( pSync ) )
+		{
 			pSync->Update( nID );
+		}
 	}
 };
 
@@ -85,8 +91,12 @@ private:
 	bool Has( T *p )
 	{
 		for ( int k = 0; k < objects.size(); ++k )
+		{
 			if ( objects[k].pObject == p )
+			{
 				return true;
+			}
+		}
 		return false;
 	}
 	void EraseLink( int nID )
@@ -175,7 +185,9 @@ public:
 		{
 			const typename CSyncSrc<T>::SObject &o = src.objects[nID];
 			if ( o.nVersion <= nVersion )
+			{
 				break;
+			}
 			CPtr<T> pHold( o.pObject );
 			VisitObject( nID, o.pObject );
 		}
@@ -251,7 +263,9 @@ private:
 	void VisitObject( int nID, T *pObject )
 	{
 		if ( view.size() < nID + 1 )
+		{
 			view.resize( nID + 1 );
+		}
 		view[nID].resize( 0 );
 		if ( pObject )
 		{
@@ -304,9 +318,13 @@ public:
 			T *p = newSet[k];
 			typename CStuffHash::iterator i = t.find( p );
 			if ( i != t.end() )
+			{
 				t.erase( i );
+			}
 			else
+			{
 				stuff[p] = Add( p );
+			}
 		}
 		for ( typename CStuffHash::iterator i = t.begin(); i != t.end(); ++i )
 		{
@@ -320,7 +338,9 @@ public:
 	{
 		typename CStuffHash::iterator k = stuff.find( p );
 		if ( k == stuff.end() )
+		{
 			stuff[p] = Add( p );
+		}
 	}
 };
 
@@ -348,19 +368,27 @@ private:
 	void VisitObject( int nID, T *pObject )
 	{
 		if ( track.size() < nID + 1 )
+		{
 			track.resize( nID + 1 );
+		}
 		if ( track[nID] != pObject )
 		{
 			if ( track[nID] )
+			{
 				pRes->BoolSwitch( track[nID], nMask );
+			}
 			if ( pObject )
+			{
 				pRes->BoolSwitch( pObject, nMask );
+			}
 			track[nID] = pObject;
 		}
 		else
 		{
 			if ( pObject )
+			{
 				pRes->BoolUpdate( pObject );
+			}
 		}
 	}
 
@@ -401,9 +429,13 @@ class CBoolSyncSrc : public CSyncSrc<T>
 			SObjectInfo &r = objects[pObject];
 			r.nMask = nMask;
 			if ( TFunc::GetResult( r.nMask ) )
+			{
 				r.nTrackID = Add( pObject );
+			}
 			else
+			{
 				r.nTrackID = -1;
+			}
 		}
 		else
 		{
@@ -411,7 +443,9 @@ class CBoolSyncSrc : public CSyncSrc<T>
 			if ( TFunc::GetResult( i->second.nMask ) )
 			{
 				if ( i->second.nTrackID == -1 )
+				{
 					i->second.nTrackID = Add( pObject );
+				}
 			}
 			else
 			{
@@ -433,7 +467,9 @@ class CBoolSyncSrc : public CSyncSrc<T>
 		typename CObjectsHash::iterator i = objects.find( pObject );
 		ASSERT( i != objects.end() );
 		if ( i->second.nTrackID >= 0 )
+		{
 			Update( i->second.nTrackID );
+		}
 	}
 	virtual void Refresh()
 	{

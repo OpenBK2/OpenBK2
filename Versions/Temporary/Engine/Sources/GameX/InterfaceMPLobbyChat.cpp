@@ -40,7 +40,9 @@ bool CInterfaceMPLobby::OnChatSelectChannel()
 	{
 		CTextData *pData = dynamic_cast<CTextData *>( pItem->GetUserData() );
 		if ( pData )
+		{
 			pChannelNameEdit->SetText( pData->wszText.c_str() );
+		}
 	}
 
 	OnChatHideChannels();
@@ -78,9 +80,13 @@ bool CInterfaceMPLobby::OnPostChatMessageReaction()
 		if ( !wszText.empty() )
 		{
 			if ( pSelection )
+			{
 				Singleton<IMPToUIManager>()->AddUIMessage( new SMPUIChatMessage( pSelection->szName, wszText ) );
+			}
 			else
+			{
 				Singleton<IMPToUIManager>()->AddUIMessage( new SMPUIChatMessage( wszText ) );
+			}
 		}
 		pChatInput->SetText( L"" );
 	}
@@ -90,13 +96,19 @@ bool CInterfaceMPLobby::OnPostChatMessageReaction()
 void CInterfaceMPLobby::RebuildClientList()
 {
 	for ( CChatClientsList::iterator it = chatClients.begin(); it != chatClients.end(); ++it )
+	{
 		it->second->pListItem = 0;
+	}
 	for ( CChatClientsList::iterator it = chatFriends.begin(); it != chatFriends.end(); ++it )
+	{
 		it->second->pListItem = 0;
+	}
 
 	CChatClientsList *pClients = bShowingFriends ? &chatFriends : &chatClients;
 	if ( pSelection )
+	{
 		pSelection->pListItem = 0;
+	}
 	pNicksList->RemoveAllElements();
 	for ( CChatClientsList::iterator it = pClients->begin(); it != pClients->end(); ++it )
 	{
@@ -110,7 +122,9 @@ void CInterfaceMPLobby::RebuildClientList()
 	{
 		pSelection = 0;
 		if ( pPostMessage )
+		{
 			pPostMessage->SetState( 0 );
+		}
 	}
 	pNicksList->SelectItem( pSelection );
 }
@@ -121,12 +135,16 @@ bool CInterfaceMPLobby::OnChatMessage( SMPUIChatMessage *pMsg )
 {
 	std::wstring wszText;
 	if ( pMsg->szName.empty() )
+	{
 		wszText = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + pMsg->wszText;
+	}
 	else
 	{
 		std::wstring wszPrivate;
 		if ( pMsg->bPrivate )
+		{
 			wszPrivate = InterfaceState()->GetTextEntry( "T_PRIVATE_MESSAGE_PREFIX" );
+		}
 		wszText = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" +
 		          NStr::ToUnicode( pMsg->szName ) + L": " + pMsg->wszText;
 	}
@@ -169,7 +187,9 @@ bool CInterfaceMPLobby::OnChatChannelNicksMessage( struct SMPUIChatChannelNicksM
 		eDefaultStatus = EMPS_OFFLINE;
 	}
 	else if ( pMsg->eType == SMPUIChatChannelNicksMessage::ELT_IGNORE )
+	{
 		pList = &chatIgnores;
+	}
 
 	// Process clients list
 	pList->clear();
@@ -191,9 +211,13 @@ bool CInterfaceMPLobby::OnChatChannelNicksChangeMessage( struct SMPUIChatChannel
 		// Friends list
 		CChatClientsList::iterator itFriend = chatFriends.find( pMsg->szNick );
 		if ( itFriend == chatFriends.end() )
+		{
 			chatFriends[pMsg->szNick] = new CClientListData( pMsg->szNick, pMsg->eStatus );
+		}
 		else
+		{
 			itFriend->second->eStatus = pMsg->eStatus;
+		}
 	}
 	else
 	{
@@ -220,7 +244,9 @@ int CInterfaceMPLobby::GetButtonState( const std::string &szNick )
 {
 	CChatClientsList::iterator itIgnore = chatIgnores.find( szNick );
 	if ( itIgnore != chatIgnores.end() )
+	{
 		return 1;
+	}
 
 	CChatClientsList::iterator itFriend = chatFriends.find( szNick );
 	if ( itFriend != chatFriends.end() )

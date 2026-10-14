@@ -130,7 +130,9 @@ public:
 					nObjectTileID = GetStaticObjectAtTile( tile );
 				}
 				else
+				{
 					visitor( checkPoint, nObjectTileID > -1 && nObjectTileID == GetStaticObjectAtTile( tile ) );
+				}
 			}
 		} while ( bres.GetDirection() != vOffset );
 		return visitor.GetReturnValue();

@@ -73,8 +73,10 @@ CServerClient::CServerClient( const char *pServerIPAddress,
 		processors.push_back( pProcessor );
 	}
 	else
+	{
 		PushPacket(
 				new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_CANT_RESOLVE_ADDRESS ) );
+	}
 
 	GetNetLogger()->OpenLogFile( "client" );
 }
@@ -87,7 +89,9 @@ CServerClient::~CServerClient()
 CNetPacket *CServerClient::GetPacket()
 {
 	if ( bDebugPaused )
+	{
 		return 0;
+	}
 
 	if ( !packets.empty() )
 	{
@@ -99,7 +103,9 @@ CNetPacket *CServerClient::GetPacket()
 	{
 		CNetPacket *pPacket = pPlayGameProcessor->GetPacket();
 		if ( pPacket && pPacket->nClientID == 0 )
+		{
 			GetNetLogger()->Log( "client", fmt::format( "from net {}", GetPacketInfo( pPacket ) ) );
+		}
 
 		return pPacket;
 	}
@@ -108,7 +114,9 @@ CNetPacket *CServerClient::GetPacket()
 void CServerClient::GetPacketsFromNet()
 {
 	if ( bDebugPaused )
+	{
 		return;
+	}
 
 	while ( CPtr<CNetPacket> pPacket = pNet->ReceivePacket() )
 	{
@@ -124,7 +132,9 @@ void CServerClient::GetPacketsFromNet()
 		}
 
 		if ( !bProcessed )
+		{
 			PushPacket( pPacket );
+		}
 	}
 }
 
@@ -164,14 +174,18 @@ void CServerClient::SendPacket( CNetPacket *pPacket2Process )
 		}
 
 		if ( !bProcessed )
+		{
 			pNet->SendPacket( pPacket );
+		}
 	}
 }
 
 void CServerClient::Segment()
 {
 	if ( bDebugPaused )
+	{
 		return;
+	}
 
 	GetPacketsFromNet();
 
@@ -183,12 +197,18 @@ void CServerClient::Segment()
 
 		CPtr<CNetPacket> pPacket;
 		while ( pPacket = pProcessor->GetPacket() )
+		{
 			PushPacket( pPacket );
+		}
 
 		if ( !bSegment )
+		{
 			iter = processors.erase( iter );
+		}
 		else
+		{
 			++iter;
+		}
 	}
 }
 
@@ -209,19 +229,25 @@ void CServerClient::SendGamePacket( CNetPacket *_pPacket, bool bBroadcast )
 void CServerClient::TogglePauseServerConnection( bool bPause )
 {
 	if ( pNet )
+	{
 		pNet->DebugTogglePause( bPause );
+	}
 }
 
 void CServerClient::TogglePauseAcceptGamers( bool bPause )
 {
 	if ( pPlayGameProcessor )
+	{
 		pPlayGameProcessor->TogglePauseAcceptGamersNet( bPause );
+	}
 }
 
 void CServerClient::TogglePauseConnectGamer( const int nGamer, bool bPause )
 {
 	if ( pPlayGameProcessor )
+	{
 		pPlayGameProcessor->TogglePauseConnectGamer( nGamer, bPause );
+	}
 }
 
 void CServerClient::TogglePause( bool bPause )
@@ -231,12 +257,16 @@ void CServerClient::TogglePause( bool bPause )
 	{
 		for ( std::list<CPtr<class CNetPacket>>::iterator iter = pausedPackets.begin(); iter != pausedPackets.end();
 		      ++iter )
+		{
 			SendPacket( *iter );
+		}
 		pausedPackets.clear();
 
 		for ( std::list<SPausedGamePacket>::iterator iter = pausedGamePackets.begin(); iter != pausedGamePackets.end();
 		      ++iter )
+		{
 			SendGamePacket( iter->pPacket, iter->bBroadcast );
+		}
 		pausedGamePackets.clear();
 	}
 }

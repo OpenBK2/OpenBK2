@@ -152,7 +152,9 @@ inline void SegmentWOMove( const NTimer::STime lastSegmTime,
 			static TSegments check;
 			check.SetSegmentObject( container.GetEl( iter ) );
 			if ( check.Check() )
+			{
 				check.ProcessSegment();
+			}
 		}
 	}
 }

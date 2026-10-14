@@ -78,7 +78,9 @@ static std::string GetProfileDir( const std::wstring &szName )
 	{
 		szResDir = NFile::JoinPath( szRoot, szNameAscii ) + NFile::PATH_SEPARATOR;
 		if ( NFile::DoesFileExist( szResDir + "user.cfg" ) )
+		{
 			return szResDir;
+		}
 		else
 		{
 			NFile::CreatePath( szResDir );
@@ -91,9 +93,13 @@ static std::string GetProfileDir( const std::wstring &szName )
 		for ( NFile::CFileIterator it( NFile::JoinPath( szRoot, "*.*" ) ); !it.IsEnd(); ++it )
 		{
 			if ( !it.IsDirectory() || it.IsDots() )
+			{
 				continue;
+			}
 			if ( GetProfileName( szRoot, it.GetFileName() ) == szName )
+			{
 				return it.GetFullName() + "/";
+			}
 		}
 		// create dir
 		const auto guid = boost::uuids::random_generator()();
@@ -140,9 +146,13 @@ void LoadProfile()
 	OnProfileChange();
 	std::string szProfileDir = GetProfileDir( GetCurrentProfileName() );
 	if ( NFile::DoesFileExist( szProfileDir + "user.cfg" ) )
+	{
 		LoadUserConfig( szProfileDir );
+	}
 	else
+	{
 		LoadUserConfig( GetDefaultProfileDir() );
+	}
 }
 
 void SaveProfile()
@@ -189,9 +199,13 @@ void GetAllProfiles( std::vector<std::wstring> *pRes )
 	for ( NFile::CFileIterator it( NFile::JoinPath( szRoot, "*.*" ) ); !it.IsEnd(); ++it )
 	{
 		if ( !it.IsDirectory() || it.IsDots() )
+		{
 			continue;
+		}
 		if ( IsDefaultProfileName( it.GetFileName() ) )
+		{
 			continue;
+		}
 		pRes->push_back( GetProfileName( szRoot, it.GetFileName() ) );
 	}
 }
@@ -219,17 +233,25 @@ std::string GetReplayDir()
 static void RemoveProfile( const std::string &szID, const std::vector<std::wstring> &szParams, void *pContext )
 {
 	if ( szParams.size() == 1 )
+	{
 		RemoveProfile( szParams[0] );
+	}
 	else
+	{
 		csSystem << "Usage : remove_profile <user name>" << endl;
+	}
 }
 
 static void ChangeProfile( const std::string &szID, const std::vector<std::wstring> &szParams, void *pContext )
 {
 	if ( szParams.size() == 1 )
+	{
 		ChangeProfile( szParams[0] );
+	}
 	else
+	{
 		csSystem << "Usage: change_profile <user name>" << endl;
+	}
 }
 
 START_REGISTER( Profiles )

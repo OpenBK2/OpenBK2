@@ -40,11 +40,15 @@ const NDb::SReinforcement *CScenarioTrackerMultiplayer::GetReinforcement( int nP
                                                                           NDb::EReinforcementType eType ) const
 {
 	if ( players.size() <= nPlayer )
+	{
 		return 0;
+	}
 
 	CReinforcementTypes::const_iterator pos = players[nPlayer].reinforcementTypes.find( eType );
 	if ( pos != players[nPlayer].reinforcementTypes.end() )
+	{
 		return pos->second;
+	}
 	return 0;
 }
 
@@ -52,29 +56,41 @@ int CScenarioTrackerMultiplayer::GetReinforcementCallsLeft( int nPlayer )
 {
 	NI_VERIFY( nPlayer >= 0 && nPlayer < players.size(), "Index out of range", return 0 );
 	if ( bNoKeyBuildings || eType == EGT_MULTI_FLAG_CONTROL )
+	{
 		return players[nPlayer].nReinforcementCallsLeft;
+	}
 	else
+	{
 		return IAIScenarioTracker::INFINITE_CALLS;
+	}
 }
 
 void CScenarioTrackerMultiplayer::DecreaseReinforcementCallsLeft( int nPlayer, int nCalls )
 {
 	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 )
+	{
 		return;
+	}
 
 	int nActualCalls = ( nCalls == 0 ) ? 1 : nCalls;
 
 	if ( nCalls == 0 )
+	{
 		++players[nPlayer].nReinforcementCallsUsed;
+	}
 
 	if ( bNoKeyBuildings || eType == EGT_MULTI_FLAG_CONTROL )
+	{
 		players[nPlayer].nReinforcementCallsLeft = (std::max)( players[nPlayer].nReinforcementCallsLeft - nActualCalls, 0 );
+	}
 }
 
 void CScenarioTrackerMultiplayer::RegisterReinforcementCall( int nPlayer, NDb::EReinforcementType eType )
 {
 	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 )
+	{
 		return;
+	}
 
 	DecreaseReinforcementCallsLeft( nPlayer, 0 );
 	reinfCallsByType[nPlayer][eType] += 1;
@@ -86,7 +102,9 @@ void CScenarioTrackerMultiplayer::GetReinforcementCallsInfo( int nPlayer, std::v
 	reinfUses.resize( NDb::_RT_NONE, 0 );
 
 	if ( nPlayer < 0 || nPlayer >= reinfCallsByType.GetSizeY() )
+	{
 		return;
+	}
 
 	for ( int i = 0; i < NDb::_RT_NONE; ++i )
 	{
@@ -149,9 +167,13 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo *_pMission, 
 		else
 		{
 			if ( bNoKeyBuildings )
+			{
 				player.nReinforcementCallsLeft = pMission->players[i].nReinforcementCalls;
+			}
 			else
+			{
 				player.nReinforcementCallsLeft = IAIScenarioTracker::INFINITE_CALLS;
+			}
 		}
 		player.nReinforcementCallsUsed = 0;
 
@@ -161,7 +183,9 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo *_pMission, 
 			nNeutralPlayer = i;
 		}
 		else
+		{
 			players[i].bPresent = false; // The rest have to be added explicitly
+		}
 
 		players[i].timeKeyPointsOwned = 0;
 
@@ -224,7 +248,9 @@ void CScenarioTrackerMultiplayer::UpdateStatistics()
 	for ( int i = 0; i < players.size(); ++i )
 	{
 		if ( GetPlayerSide( i ) != 2 )
+		{
 			CalculateScore( i );
+		}
 	}
 }
 
@@ -256,14 +282,18 @@ void CScenarioTrackerMultiplayer::ClearMissionScriptVars()
 int CScenarioTrackerMultiplayer::GetNPlayers() const
 {
 	if ( GetCurrentMission() )
+	{
 		return GetCurrentMission()->players.size() - 1;
+	}
 	return 0;
 }
 
 int CScenarioTrackerMultiplayer::GetPlayerSide( int nPlayer ) const
 {
 	if ( players.size() > nPlayer )
+	{
 		return players[nPlayer].nDiplomacySide;
+	}
 	return 2;
 }
 
@@ -275,7 +305,9 @@ enum EMissionObjectiveState CScenarioTrackerMultiplayer::GetObjectiveState( cons
 void CScenarioTrackerMultiplayer::AddPlayer( const int nPlayer )
 {
 	if ( nPlayer >= 0 && nPlayer < players.size() )
+	{
 		players[nPlayer].bPresent = true;
+	}
 }
 
 void CScenarioTrackerMultiplayer::RemovePlayer( const int nPlayer )
@@ -290,19 +322,27 @@ void CScenarioTrackerMultiplayer::RemovePlayer( const int nPlayer )
 bool CScenarioTrackerMultiplayer::IsPlayerPresent( const int nPlayer ) const
 {
 	if ( nPlayer >= 0 && nPlayer < players.size() )
+	{
 		return players[nPlayer].bPresent;
+	}
 	else
+	{
 		return false;
+	}
 }
 
 void CScenarioTrackerMultiplayer::KeyBuildingOwnerChange( const int nBuildingLinkID, const int nNewOwnerPlayer )
 {
 	if ( !pMission || !IsPlayerPresent( nNewOwnerPlayer ) )
+	{
 		return;
+	}
 
 	std::unordered_map<int, int>::iterator pos = flags.find( nBuildingLinkID );
 	if ( pos == flags.end() )
+	{
 		return;
+	}
 	int nOldPlayer = pos->second;
 
 	NTimer::STime curTime = Singleton<IGameTimer>()->GetSegmentTime();
@@ -311,7 +351,9 @@ void CScenarioTrackerMultiplayer::KeyBuildingOwnerChange( const int nBuildingLin
 	flagTimes[nBuildingLinkID] = curTime;
 
 	if ( nOldPlayer != nNeutralPlayer )
+	{
 		players[nOldPlayer].timeKeyPointsOwned += timeOwned;
+	}
 
 	pos->second = nNewOwnerPlayer;
 }
@@ -320,9 +362,13 @@ const int CScenarioTrackerMultiplayer::GetKeyBuildingOwner( const int nBuildingL
 {
 	std::unordered_map<int, int>::const_iterator pos = flags.find( nBuildingLinkID );
 	if ( pos == flags.end() )
+	{
 		return nNeutralPlayer;
+	}
 	else
+	{
 		return pos->second;
+	}
 }
 
 const std::pair<int, int> CScenarioTrackerMultiplayer::GetKeyBuildingSummary()
@@ -333,9 +379,13 @@ const std::pair<int, int> CScenarioTrackerMultiplayer::GetKeyBuildingSummary()
 	for ( std::unordered_map<int, int>::const_iterator it = flags.begin(); it != flags.end(); ++it )
 	{
 		if ( GetPlayerSide( it->second ) == 0 )
+		{
 			++nOwned0;
+		}
 		else if ( GetPlayerSide( it->second ) == 1 )
+		{
 			++nOwned1;
+		}
 	}
 	return std::pair<int, int>( nOwned0, nOwned1 );
 }
@@ -345,7 +395,9 @@ const std::pair<int, int> CScenarioTrackerMultiplayer::GetKeyBuildingSummary()
 const float CScenarioTrackerMultiplayer::GetRecycleSpeedCoeff( const int nSide )
 {
 	if ( !pMission || flags.empty() )
+	{
 		return 1.0f;
+	}
 
 	if ( eType == EGT_MULTI_FLAG_CONTROL )
 	{
@@ -358,17 +410,25 @@ const float CScenarioTrackerMultiplayer::GetRecycleSpeedCoeff( const int nSide )
 		{
 			++nFlags;
 			if ( GetPlayerSide( it->second ) == nSide )
+			{
 				++nOwnFlags;
+			}
 		}
 
 		float fFullTime = pMPConsts->vReinfCounterRecycle.y;
 		float fMinTime = pMPConsts->vReinfCounterRecycle.x;
 		if ( fFullTime < fMinTime )
+		{
 			std::swap( fFullTime, fMinTime );
+		}
 		if ( fFullTime == 0.0f )
+		{
 			fFullTime = FULL_RECYCLE_TIME;
+		}
 		if ( fMinTime == 0.0f )
+		{
 			fMinTime = MIN_RECYCLE_TIME;
+		}
 
 		fCoeff = ( fFullTime - ( fFullTime - fMinTime ) * nOwnFlags / nFlags ) /* / fFullTime*/;
 
@@ -376,7 +436,9 @@ const float CScenarioTrackerMultiplayer::GetRecycleSpeedCoeff( const int nSide )
 	}
 
 	if ( nSide == 2 || bNoKeyBuildings )
+	{
 		return 1.0f;
+	}
 
 	float fCoeff = -1.0f;
 	for ( std::unordered_map<int, int>::const_iterator it = flags.begin(); it != flags.end(); ++it )
@@ -384,9 +446,13 @@ const float CScenarioTrackerMultiplayer::GetRecycleSpeedCoeff( const int nSide )
 		if ( GetPlayerSide( it->second ) == nSide )
 		{
 			if ( fCoeff < 0.0f )
+			{
 				fCoeff = 1.0f;
+			}
 			else
+			{
 				fCoeff *= 0.85f;
+			}
 		}
 	}
 
@@ -410,10 +476,14 @@ void CScenarioTrackerMultiplayer::SetStatistics( int nPlayer, EStatisticsKind eK
 	NI_ASSERT( nValue >= 0, "Wrong statistics value" );
 
 	if ( nPlayer >= statistic.size() )
+	{
 		statistic.resize( nPlayer + 1 );
+	}
 
 	if ( eKind >= statistic[nPlayer].size() )
+	{
 		statistic[nPlayer].insert( statistic[nPlayer].end(), eKind + 1 - statistic[nPlayer].size(), 0 );
+	}
 
 	statistic[nPlayer][eKind] = nValue;
 }
@@ -444,7 +514,9 @@ float CScenarioTrackerMultiplayer::GetReinforcementXP( int nPlayer, NDb::EReinfo
 	if ( nPlayer == nLocalPlayer && eType == NDb::_RT_NONE ) // CRAP for designers' bastard baby - the recycle tooltip
 	{
 		if ( bNoKeyBuildings )
+		{
 			return -1.0f;
+		}
 
 		return nSecondsToReinf;
 	}
@@ -455,7 +527,9 @@ float CScenarioTrackerMultiplayer::GetReinforcementXP( int nPlayer, NDb::EReinfo
 	}
 	CReinforcementXPs::const_iterator pos = players[nPlayer].experience.find( eType );
 	if ( pos != players[nPlayer].experience.end() )
+	{
 		return pos->second;
+	}
 
 	return 0.0f;
 }
@@ -478,7 +552,9 @@ int CScenarioTrackerMultiplayer::GetReinforcementXPLevel( int nPlayer, NDb::ERei
 	}
 #ifndef _FINALRELEASE
 	if ( NGlobal::GetVar( "debug_unit_levels", 0 ) != 0 )
+	{
 		return N_MAX_XP_LEVEL;
+	}
 #endif // _FINALRELEASE
 	if ( eType == NDb::RT_ENGINEERING
 	     // --- Extra Max Level Ground ---
@@ -499,7 +575,9 @@ int CScenarioTrackerMultiplayer::GetReinforcementXPLevel( int nPlayer, NDb::ERei
 
 	CReinforcementLevels::const_iterator pos = players[nPlayer].reinfLevels.find( eType );
 	if ( pos != players[nPlayer].reinfLevels.end() )
+	{
 		return pos->second;
+	}
 
 	return 0;
 }
@@ -507,18 +585,26 @@ int CScenarioTrackerMultiplayer::GetReinforcementXPLevel( int nPlayer, NDb::ERei
 float CScenarioTrackerMultiplayer::GetReinforcementXPForLevel( NDb::EReinforcementType eType, int nLevel ) const
 {
 	if ( !pMPConsts )
+	{
 		return 0.0f;
+	}
 
 	for ( int i = 0; i < pMPConsts->expLevels.size(); ++i )
 	{
 		const NDb::SAIExpLevel *pLevels = pMPConsts->expLevels[i];
 		if ( !pLevels )
+		{
 			continue;
+		}
 		if ( pLevels->eDBType != eType )
+		{
 			continue;
+		}
 		int nCheckedLevel = (std::min<int>)( pLevels->levels.size() - 1, nLevel );
 		if ( nCheckedLevel < 0 )
+		{
 			break;
+		}
 
 		// Get it
 		return pLevels->levels[nCheckedLevel].fExperience;
@@ -562,12 +648,18 @@ bool CScenarioTrackerMultiplayer::RegisterUnitKill( const SKillInfo &info )
 
 	// register kill
 	if ( info.nPlayer < kills.GetSizeY() && info.nKilledUnitPlayer < kills.GetSizeX() )
+	{
 		kills[info.nPlayer][info.nKilledUnitPlayer] += info.bInfantryKill ? 0.1f : 1.0f;
+	}
 	if ( info.nPlayer < priceKills.GetSizeY() && info.nKilledUnitPlayer < priceKills.GetSizeX() )
+	{
 		priceKills[info.nPlayer][info.nKilledUnitPlayer] += info.fExpPrice;
+	}
 
 	if ( info.eReinfType == NDb::_RT_NONE )
+	{
 		return false;
+	}
 
 	bool bResult = false;
 
@@ -586,7 +678,9 @@ bool CScenarioTrackerMultiplayer::RegisterUnitKill( const SKillInfo &info )
 		{
 			const int nReinfType = it->first;
 			if ( GetReinforcementXPLevel( info.nPlayer, (NDb::EReinforcementType)nReinfType ) < N_MAX_XP_LEVEL )
+			{
 				++nCount;
+			}
 		}
 		if ( nCount > 0 )
 		{
@@ -616,7 +710,9 @@ int CScenarioTrackerMultiplayer::GetUnitKills( const int nPlayer ) const
 	float fSum = 0;
 
 	for ( int i = 0; i < kills.GetSizeX(); ++i )
+	{
 		fSum += kills[nPlayer][i];
+	}
 
 	return fSum;
 }
@@ -650,12 +746,16 @@ void CScenarioTrackerMultiplayer::CalculateScore( const int nPlayer )
 		for ( std::unordered_map<int, int>::iterator it = flags.begin(); it != flags.end(); ++it )
 		{
 			if ( it->second == nPlayer )
+			{
 				nTime += curTime - flagTimes[it->first];
+			}
 		}
 
 		nTime /= 1000;
 		if ( nPlayer == nNeutralPlayer )
+		{
 			nTime = 0;
+		}
 
 		SetStatistics( nPlayer, ESK_KEY_BUILDINGS_CAPTURED, nTime );
 	}
@@ -755,7 +855,9 @@ IScenarioTracker::SMultiplayerInfo *CScenarioTrackerMultiplayer::GetMultiplayerI
 void CScenarioTrackerMultiplayer::SetPlayerParty( const int nPlayer, const int nNewSide )
 {
 	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 )
+	{
 		return;
+	}
 
 	NI_VERIFY( nPlayer >= 0 && nPlayer < players.size(),
 	           fmt::format( "PRG: Player No {} not in bounds (max {})", nPlayer, players.size() ),
@@ -763,7 +865,9 @@ void CScenarioTrackerMultiplayer::SetPlayerParty( const int nPlayer, const int n
 	players[nPlayer].nMultiplayerSide = nNewSide;
 
 	if ( players[nPlayer].nMultiplayerSide < 0 || players[nPlayer].nMultiplayerSide >= pMPConsts->sides.size() )
+	{
 		players[nPlayer].nMultiplayerSide = -1;
+	}
 
 	UpdateReinforcements( nPlayer );
 }
@@ -778,20 +882,30 @@ const NDb::SPartyDependentInfo *CScenarioTrackerMultiplayer::GetPlayerParty( con
 	{
 		CDBPtr<NDb::SMapInfo> pMapInfo;
 		if ( IsMissionActive() )
+		{
 			pMapInfo = GetCurrentMission();
+		}
 		else
+		{
 			pMapInfo = GetLastMission();
+		}
 
 		if ( !pMapInfo )
+		{
 			return 0;
+		}
 
 		return pMapInfo->players[nPlayer].pPartyInfo;
 	}
 
 	if ( players[nPlayer].nMultiplayerSide >= 0 )
+	{
 		return pMPConsts->sides[players[nPlayer].nMultiplayerSide].pPartyInfo;
+	}
 	else
+	{
 		return 0;
+	}
 }
 
 void CScenarioTrackerMultiplayer::SetPlayerSide( const int nPlayer, const int nNewTeam )
@@ -800,15 +914,21 @@ void CScenarioTrackerMultiplayer::SetPlayerSide( const int nPlayer, const int nN
 	           fmt::format( "PRG: Player No {} not in bounds (max {})", nPlayer, players.size() ),
 	           return );
 	if ( nNewTeam < 0 || nNewTeam > 2 )
+	{
 		players[nPlayer].nDiplomacySide = 2;
+	}
 	else
+	{
 		players[nPlayer].nDiplomacySide = nNewTeam;
+	}
 }
 
 void CScenarioTrackerMultiplayer::UpdateReinforcements( const int nPlayer )
 {
 	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 )
+	{
 		return;
+	}
 
 	CReinforcementTypes &reinfs = players[nPlayer].reinforcementTypes;
 	reinfs.clear();
@@ -816,19 +936,25 @@ void CScenarioTrackerMultiplayer::UpdateReinforcements( const int nPlayer )
 	{
 		CDBPtr<NDb::SReinforcement> pReinf = pMission->players[nPlayer].reinforcementTypes[i];
 		if ( !pReinf )
+		{
 			continue;
+		}
 
 		NDb::EReinforcementType eType = pReinf->eType;
 
 		if ( nTechLevel < 0 || players[nPlayer].nMultiplayerSide == -1 ) // keep default if side (or techlevel) is undefined
+		{
 			continue;
+		}
 
 		// Use only the current tech level to assign reinfs - no more inheritance from old ones!
 		const std::vector<NDb::STechLevelReinfSet> &techLevels =
 				pMPConsts->sides[players[nPlayer].nMultiplayerSide].techLevels;
 
 		if ( nTechLevel >= techLevels.size() )
+		{
 			continue;
+		}
 
 		const std::vector<CDBPtr<NDb::SReinforcement>> &reinfSet = techLevels[nTechLevel].reinforcements;
 
@@ -866,7 +992,9 @@ void CScenarioTrackerMultiplayer::UpdateReinforcements( const int nPlayer )
 const NDb::SReinforcement *CScenarioTrackerMultiplayer::GetStartUnits( int nPlayer ) const
 {
 	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 || nTechLevel < 0 )
+	{
 		return 0;
+	}
 
 	const NDb::STechLevelReinfSet &curTechLevel =
 			pMPConsts->sides[players[nPlayer].nMultiplayerSide].techLevels[nTechLevel];
@@ -877,7 +1005,9 @@ const NDb::SReinforcement *CScenarioTrackerMultiplayer::GetStartUnits( int nPlay
 void CScenarioTrackerMultiplayer::IncreaseReinforcementCallsLeft( int nPlayer, int nCalls )
 {
 	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 )
+	{
 		return;
+	}
 
 	players[nPlayer].nReinforcementCallsLeft += nCalls;
 	const auto message = fmt::format( "Player {} reinf qty increase", nPlayer );
@@ -887,7 +1017,9 @@ void CScenarioTrackerMultiplayer::IncreaseReinforcementCallsLeft( int nPlayer, i
 const IScenarioTracker::SPlayerColor &CScenarioTrackerMultiplayer::GetPlayerColor( int nPlayer ) const
 {
 	if ( nPlayer < 0 || nPlayer >= players.size() )
+	{
 		return playerColorNeutral;
+	}
 
 	return players[nPlayer].playerColor;
 }
@@ -896,7 +1028,9 @@ void CScenarioTrackerMultiplayer::SetPlayerColour( const int nPlayer, const int 
 {
 	if ( !IsMissionActive() || nPlayer < 0 || nPlayer >= players.size() || nNewColour < 0 ||
 	     nNewColour >= pMPConsts->playerColorInfos.size() )
+	{
 		return;
+	}
 
 	players[nPlayer].playerColor.dwColor = pMPConsts->playerColorInfos[nNewColour].nColor | 0xFF000000;
 	players[nPlayer].playerColor.pUnitFullInfo = pMPConsts->playerColorInfos[nNewColour].pUnitFullInfo;
@@ -912,7 +1046,9 @@ const NDb::SObjectBaseRPGStats *CScenarioTrackerMultiplayer::GetKeyBuildingFlagO
 	if ( nSide >= 0 && nSide < pMPConsts->diplomacyInfo.size() )
 	{
 		if ( pMPConsts->diplomacyInfo[nSide] )
+		{
 			return pMPConsts->diplomacyInfo[nSide]->pKeyBuildingFlag;
+		}
 	}
 	return 0;
 }

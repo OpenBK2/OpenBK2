@@ -12,7 +12,9 @@ bool CParatrooperAnimationProcess::Update( const NTimer::STime &time )
 		if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( nParachuteID ) )
 		{
 			if ( !pParaAnim )
+			{
 				return false;
+			}
 			pAnimator->ClearAllAnimations();
 			AddAnimation( pParaAnim, timeToChange, pAnimator, true );
 		}

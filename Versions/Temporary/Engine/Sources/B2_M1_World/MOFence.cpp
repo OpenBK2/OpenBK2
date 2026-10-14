@@ -15,7 +15,9 @@ bool CMOFence::CreateSceneObject( const int nUniqueID,
 
 	NI_ASSERT( pModel != 0, fmt::format( "Wrong fence \"{}\" - no model", GetStats()->GetDBID().ToString().c_str() ) );
 	if ( !pModel )
+	{
 		return false;
+	}
 
 	CVec3 vPos;
 	CQuat qRot;
@@ -60,7 +62,9 @@ void CMOFence::GetActions( CUserActions *pActions, EActionsType eActions ) const
 	if ( eActions == ACTIONS_WITH || eActions == ACTIONS_ALL )
 	{
 		if ( GetHP() == 0.0f )
+		{
 			pActions->SetAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN );
+		}
 		pActions->SetAction( NDb::USER_ACTION_ATTACK );
 	}
 }
@@ -70,7 +74,9 @@ void CMOFence::GetDisabledActions( CUserActions *pActions, EActionsType eActions
 	if ( eActions == ACTIONS_WITH || eActions == ACTIONS_ALL )
 	{
 		if ( GetHP() == 0.0f )
+		{
 			pActions->SetAction( NDb::USER_ACTION_ATTACK );
+		}
 	}
 }
 
@@ -78,7 +84,9 @@ NDb::EUserAction
 CMOFence::GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const
 {
 	if ( bAltMode && pActionsWith->HasAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN ) )
+	{
 		return NDb::USER_ACTION_MOVE_LIKE_TERRAIN;
+	}
 
 	NDb::EUserAction eAction = CMapObj::GetBestAutoAction( actionsBy, pActionsWith, bAltMode );
 
@@ -89,17 +97,23 @@ CMOFence::GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActio
 			if ( actionsBy.HasAction( NDb::USER_ACTION_MOVE_TRACK ) )
 			{
 				if ( ( pStats->nAIPassabilityClass & EAC_TRACK ) == 0 )
+				{
 					eAction = NDb::USER_ACTION_MOVE_TRACK;
+				}
 			}
 			if ( actionsBy.HasAction( NDb::USER_ACTION_MOVE_WHELL ) )
 			{
 				if ( ( pStats->nAIPassabilityClass & EAC_WHELL ) == 0 )
+				{
 					eAction = NDb::USER_ACTION_MOVE_WHELL;
+				}
 			}
 			if ( actionsBy.HasAction( NDb::USER_ACTION_MOVE_HUMAN ) )
 			{
 				if ( ( pStats->nAIPassabilityClass & EAC_HUMAN ) == 0 )
+				{
 					eAction = NDb::USER_ACTION_MOVE_HUMAN;
+				}
 			}
 		}
 	}

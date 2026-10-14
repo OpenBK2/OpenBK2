@@ -51,7 +51,9 @@ protected:
 		{
 			data.pFileEnd = data.pCurrent;
 			if ( data.pCurrent > data.pBufferEnd )
+			{
 				return FixupBuf( pOldFileEnd - data.pBuffer );
+			}
 		}
 		return true;
 	}
@@ -84,7 +86,9 @@ public:
 	{
 		ASSERT( CanRead() );
 		if ( data.pCurrent + nSize > data.pFileEnd )
+		{
 			ReadOverflow( pDest, nSize );
+		}
 		else
 		{
 			memcpy( pDest, data.pCurrent, nSize );
@@ -95,7 +99,9 @@ public:
 	{
 		ASSERT( CanWrite() );
 		if ( Seek( data.pCurrent + nSize ) )
+		{
 			memcpy( data.pCurrent - nSize, pSrc, nSize );
+		}
 	}
 	//
 	int GetSize() const { return data.pFileEnd - data.pBuffer; }

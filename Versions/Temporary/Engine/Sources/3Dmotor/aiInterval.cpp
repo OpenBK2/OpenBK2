@@ -33,11 +33,15 @@ void CalcResult( std::vector<T> *pEnter, std::vector<T> *pExit, bool bTerrain, T
 		{
 			enter.resize( enter.size() + 1 );
 			for ( int i = enter.size() - 1; i > 0; --i )
+			{
 				enter[i] = enter[i - 1];
+			}
 			enter[0] = make( -1e10f );
 		}
 		if ( enter.size() > exit.size() )
+		{
 			exit.push_back( make( 1e10f ) );
+		}
 		if ( enter.size() != exit.size() )
 		{
 			//ASSERT( 0 );
@@ -71,7 +75,9 @@ void FillIntersectionResults( std::vector<SInterval> *pRes,
 		// due to cheating with degenerate cases and computation errors this might happen
 		//ASSERT( enter[i].fT <= exit[i].fT );
 		if ( enter[i].fT > exit[i].fT )
+		{
 			DebugTrace( "AI tracing, something went wrong" );
+		}
 		exit[i].fT =
 				(std::max)( enter[i].fT, exit[i].fT ); // this is it Beavis, correct wrong results so it seams less buggy
 		pRes->push_back( SInterval( _src, _nUserID, enter[i], exit[i] ) );

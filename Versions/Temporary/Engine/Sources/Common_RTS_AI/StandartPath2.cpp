@@ -71,9 +71,13 @@ void CStandartPath2::InitByStaticPath( CCommonStaticPath *_pStaticPath,
 	pathTiles[1] = pathTiles[0] = GetTile( vStartPoint );
 
 	if ( pStaticPath == 0 )
+	{
 		SetFinishPoint( vStartPoint );
+	}
 	else
+	{
 		CalculatePath( true, INVALID_TILE );
+	}
 }
 
 const bool CStandartPath2::CanUnitGo( const SVector &vTile ) const
@@ -102,7 +106,9 @@ const SVector CStandartPath2::GetTileWithShift( const SVector &vTile ) const
 
 	bool bCanUnitGo = CanUnitGo( bres.GetDirection() );
 	if ( !bCanUnitGo )
+	{
 		return INVALID_TILE;
+	}
 
 	SVector vResult = vTile;
 	while ( bCanUnitGo && bres.GetDirection() != vEndTile )
@@ -118,14 +124,18 @@ const SVector CStandartPath2::GetTileWithShift( const SVector &vTile ) const
 void CStandartPath2::CopyPath( const int nLength )
 {
 	if ( nLength < 0 )
+	{
 		return;
+	}
 	pPathFinder->GetTiles( &( pathBuffer[0] ), nLength );
 	const int nCopyTiles = (std::min)( nLength, MAX_PATH_TILES_COUNT - nLastPathTile );
 	memcpy( &( pathTiles[0] ) + nLastPathTile,
 	        &( pathBuffer[0] ),
 	        sizeof( SVector ) * (std::min)( nLength, MAX_PATH_TILES_COUNT - nLastPathTile ) );
 	if ( nLength > nCopyTiles )
+	{
 		memcpy( &( pathTiles[0] ), &( pathBuffer[0] ) + nCopyTiles, sizeof( SVector ) * ( nLength - nCopyTiles ) );
+	}
 	nLastPathTile = ( nLastPathTile + nLength ) % MAX_PATH_TILES_COUNT;
 	// чтоб можно было спрашивать
 	pathTiles[nLastPathTile] = pathBuffer[nLength - 1];
@@ -135,12 +145,16 @@ const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLas
 {
 	// нечего считать, пора заканчивать
 	if ( pathTiles[nLastPathTile] == vFinishTile )
+	{
 		return false;
+	}
 
 	const int nPrevStaticPathTile = nCurStaticPathTile;
 	// выбираем точку на текущем статическом пути
 	if ( bShift )
+	{
 		nCurStaticPathTile = (std::min)( nCurStaticPathTile + STATIC_PATH_SHIFT, pStaticPath->GetLength() - 2 );
+	}
 
 	SVector vNextTile = GetTileWithShift( pStaticPath->GetTile( nCurStaticPathTile ) );
 	bool bNextTileValid = true;
@@ -150,14 +164,20 @@ const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLas
 		while ( nShift < STATIC_PATH_SHIFT && !IsValidTile( vNextTile ) )
 		{
 			if ( nCurStaticPathTile + nShift < pStaticPath->GetLength() - 1 )
+			{
 				vNextTile = GetTileWithShift( pStaticPath->GetTile( nCurStaticPathTile + nShift ) );
+			}
 			if ( IsValidTile( vNextTile ) )
+			{
 				nCurStaticPathTile += nShift;
+			}
 			else if ( nCurStaticPathTile - nShift > nPrevStaticPathTile )
 			{
 				vNextTile = GetTileWithShift( pStaticPath->GetTile( nCurStaticPathTile - nShift ) );
 				if ( IsValidTile( vNextTile ) )
+				{
 					nCurStaticPathTile -= nShift;
+				}
 			}
 			++nShift;
 		}
@@ -196,13 +216,19 @@ const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLas
 	// если путь не найден - ничего не делаем, или на следующий раз посчитается, или путь закончится
 	// переделывать путь смысла нет - все равно не найдется
 	if ( pFoundStaticPath == 0 )
+	{
 		return false;
+	}
 
 	if ( pFoundStaticPath->GetStartTile() == pFoundStaticPath->GetFinishTile() )
+	{
 		return false;
+	}
 
 	if ( pFoundStaticPath->GetFinishTile() != vNextTile )
+	{
 		bNextTileValid = false;
+	}
 
 	// если этот путь не слишком длинный - копируем его
 	if ( pFoundStaticPath->GetLength() <= SMALL_PATH_TILES_COUNT )
@@ -210,7 +236,9 @@ const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLas
 		CopyPath( pFoundStaticPath->GetLength() );
 		// это был последний шаг - корректируем конечную точку
 		if ( nCurStaticPathTile == pStaticPath->GetLength() - 2 )
+		{
 			SetFinishTile( pathTiles[nLastPathTile] );
+		}
 	}
 	else
 	{
@@ -221,7 +249,9 @@ const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLas
 		{
 			bCloseToFinish = CompareDistance( vFinishTile, vNextTile, pFoundStaticPath->GetTile( nLength ) );
 			if ( !bCloseToFinish )
+			{
 				--nLength;
+			}
 		} while ( nLength > SMALL_PATH_TILES_COUNT && !bCloseToFinish );
 		CopyPath( nLength );
 
@@ -244,7 +274,9 @@ const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLas
 		}
 		// это был последний шаг - корректируем конечную точку
 		if ( nCurStaticPathTile == pStaticPath->GetLength() - 2 )
+		{
 			SetFinishTile( pFoundStaticPath->GetFinishTile() );
+		}
 	}
 	return true;
 }
@@ -252,10 +284,14 @@ const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLas
 const CVec2 CStandartPath2::PeekPoint( const int _nShift ) const
 {
 	if ( IsFinished() )
+	{
 		return vFinishPoint;
+	}
 
 	if ( nCurInsTile + _nShift < insTiles.size() )
+	{
 		return GetPoint( insTiles[nCurInsTile + _nShift] );
+	}
 
 	int nShift = nCurInsTile + _nShift - insTiles.size();
 	NI_VERIFY(
@@ -263,7 +299,9 @@ const CVec2 CStandartPath2::PeekPoint( const int _nShift ) const
 
 	const int nLastPathTile2 = ( nCurPathTile < nLastPathTile ) ? nLastPathTile : nLastPathTile + MAX_PATH_TILES_COUNT;
 	if ( nCurPathTile + nShift > nLastPathTile2 )
+	{
 		return vFinishPoint;
+	}
 
 	const int nTile = ( nCurPathTile + nShift ) % MAX_PATH_TILES_COUNT;
 	return GetPoint( pathTiles[nTile] );
@@ -272,7 +310,9 @@ const CVec2 CStandartPath2::PeekPoint( const int _nShift ) const
 void CStandartPath2::Shift( const int _nShift )
 {
 	if ( IsFinished() )
+	{
 		return;
+	}
 	if ( nCurInsTile + _nShift < insTiles.size() )
 	{
 		nCurInsTile += _nShift;
@@ -294,7 +334,9 @@ void CStandartPath2::InsertTiles( const std::list<SVector> &tiles )
 {
 	insTiles.clear();
 	for ( std::list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
+	{
 		insTiles.push_back( *it );
+	}
 	nCurInsTile = 0;
 }
 
@@ -328,14 +370,18 @@ void CStandartPath2::RecoverPath( const CVec2 &vPoint, const bool bIsPointAtWate
 		                                       pNewStaticPath->GetLength() + STATIC_PATH_SHIFT )
 		{
 			if ( pBackStaticPath->MergePath( pStaticPath, nCurStaticPathTile ) )
+			{
 				pNewStaticPath = pBackStaticPath;
+			}
 		}
 	}
 
 	// pNewStaticPath can still be null.. so just pull some crap out to prevent this rare crash
 	// idk if this approach is good or not, but it's better than crash!
 	if ( !pNewStaticPath )
+	{
 		pNewStaticPath = pPathFinder->CreatePath( false );
+	}
 
 	InitByStaticPath(
 			dynamic_cast_ptr<CCommonStaticPath *>( pNewStaticPath ), vPoint, pNewStaticPath->GetFinishPoint(), true );
@@ -349,7 +395,9 @@ void CStandartPath2::RecalcPath( const CVec2 &vPoint, const bool bIsPointAtWater
 	pathTiles[0] = pathTiles[1] = pAIMap->GetTile( vPoint );
 
 	if ( !CalculatePath( false, vLastKnownGoodTile ) )
+	{
 		nLastPathTile = 0;
+	}
 }
 
 void CStandartPath2::MarkPath( const int nID, const NDebugInfo::EColor color ) const
@@ -357,12 +405,16 @@ void CStandartPath2::MarkPath( const int nID, const NDebugInfo::EColor color ) c
 	std::vector<SVector> tiles;
 
 	if ( IsFinished() )
+	{
 		return;
+	}
 
 	if ( nCurInsTile < insTiles.size() )
 	{
 		for ( int i = nCurInsTile; i < insTiles.size(); ++i )
+		{
 			tiles.push_back( insTiles[i] );
+		}
 	}
 
 	int i = nCurPathTile;
@@ -371,7 +423,9 @@ void CStandartPath2::MarkPath( const int nID, const NDebugInfo::EColor color ) c
 		tiles.push_back( pathTiles[i] );
 		++i;
 		if ( i == MAX_PATH_TILES_COUNT )
+		{
 			i = 0;
+		}
 	}
 	DebugInfoManager()->CreateMarker( nID, tiles, color );
 }

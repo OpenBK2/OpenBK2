@@ -38,7 +38,9 @@ EBSUReport PORT_STDCALL ReportAssert( const char *pszCondition,
 {
 	// first, check for ignore
 	if ( IsIgnore( ignores, pszFileName, nLineNumber ) )
+	{
 		return BSU_IGNORE;
+	}
 	//
 	std::vector<SCallStackEntry> entries;
 	{
@@ -46,7 +48,9 @@ EBSUReport PORT_STDCALL ReportAssert( const char *pszCondition,
 		int nEntries = CollectCallStack( &entries[0], entries.size() );
 		entries.resize( nEntries );
 		if ( entries.size() >= 2 )
+		{
 			entries.erase( entries.begin(), entries.begin() + 2 );
+		}
 	}
 	TypeDebugTrace( pszCondition, pszDescription, entries );
 

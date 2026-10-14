@@ -122,7 +122,9 @@ int CControlSumCheckCommand::operator&( IBinSaver &saver )
 
 	int nCheckSumsSize;
 	if ( !saver.IsReading() )
+	{
 		nCheckSumsSize = checkSums.size();
+	}
 	saver.Add( 3, &nCheckSumsSize );
 
 	if ( saver.IsReading() )
@@ -189,7 +191,9 @@ void CControlSumHistoryCommand::Check( const int nOurNumber, const int nStartSeg
 		for ( int j = 0; j < 16; ++j )
 		{
 			if ( j == nOurNumber || ( wMask & ( 1UL << j ) ) == 0 )
+			{
 				continue; // Own player / No player
+			}
 
 			if ( checkSums[j][nIndex] != checkSum )
 			{
@@ -213,7 +217,9 @@ void CControlSumHistoryCommand::Check( const int nOurNumber, const int nStartSeg
 		for ( int j = 0; j < 16; ++j )
 		{
 			if ( j == nOurNumber || ( wMask & ( 1UL << j ) ) == 0 )
+			{
 				continue; // Own player / No player
+			}
 
 			if ( checkSums[j][i] != checkSum )
 			{

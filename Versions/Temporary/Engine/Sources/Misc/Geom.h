@@ -667,7 +667,9 @@ struct SVector
 			return CVec2( float( x ) * revR, float( y ) * revR );
 		}
 		else
+		{
 			return VNULL2;
+		}
 	}
 	//
 	void TurnLeft()
@@ -692,9 +694,13 @@ struct SVector
 		if ( signX == -1 && signY <= 0 )	{ x = 0;  y = -1; return; }
 		*/
 		if ( signX != 0 && signX * signY >= 0 )
+		{
 			x = 0, y = signX;
+		}
 		else
+		{
 			x = -signY, y = 0;
+		}
 	}
 
 	void TurnLeftUntil45()
@@ -705,17 +711,25 @@ struct SVector
 		if ( signX != 0 && signX * signY >= 0 )
 		{
 			if ( abs( x ) > abs( y ) )
+			{
 				x = signX;
+			}
 			else
+			{
 				x = 0;
+			}
 			y = signX;
 		}
 		else
 		{
 			if ( abs( y ) > abs( x ) )
+			{
 				y = signY;
+			}
 			else
+			{
 				y = 0;
+			}
 
 			x = -signY;
 		}
@@ -746,9 +760,13 @@ struct SVector
 		if ( signX == 1 && signY <= 0 )		{ x = 0;  y = -1; return; }
 		*/
 		if ( signX != 0 && signX * signY <= 0 )
+		{
 			x = 0, y = -signX;
+		}
 		else
+		{
 			y = 0, x = signY;
+		}
 	}
 
 	void TurnRightUntil45()
@@ -759,17 +777,25 @@ struct SVector
 		if ( signX != 0 && signX * signY <= 0 )
 		{
 			if ( abs( x ) > abs( y ) )
+			{
 				x = signX;
+			}
 			else
+			{
 				x = 0;
+			}
 			y = -signX;
 		}
 		else
 		{
 			if ( abs( y ) > abs( x ) )
+			{
 				y = signY;
+			}
 			else
+			{
 				y = 0;
+			}
 			x = signY;
 		}
 	}
@@ -1516,7 +1542,9 @@ public:
 	TRect &Union( const TRect &rect )
 	{
 		if ( IsEmpty() )
+		{
 			*this = rect;
+		}
 		else if ( !rect.IsEmpty() )
 		{
 			minx = (std::min)( minx, rect.minx );
@@ -1656,7 +1684,9 @@ struct SBound
 	{
 		CVec3 vTest( s.ptCenter - v );
 		if ( fabs2( vTest ) > fabs2( s.fRadius ) )
+		{
 			return false;
+		}
 		return fabs( vTest.x ) <= ptHalfBox.x && fabs( vTest.y ) < ptHalfBox.y && fabs( vTest.z ) < ptHalfBox.z;
 	}
 };
@@ -1665,10 +1695,14 @@ inline bool DoesIntersect( const SBound &a, const SBound &b )
 {
 	CVec3 ptDif = a.s.ptCenter - b.s.ptCenter;
 	if ( fabs2( ptDif ) > fabs2( a.s.fRadius + b.s.fRadius ) )
+	{
 		return false;
+	}
 	if ( fabs( ptDif.x ) > a.ptHalfBox.x + b.ptHalfBox.x || fabs( ptDif.y ) > a.ptHalfBox.y + b.ptHalfBox.y ||
 	     fabs( ptDif.z ) > a.ptHalfBox.z + b.ptHalfBox.z )
+	{
 		return false;
+	}
 	return true;
 }
 
@@ -1686,11 +1720,15 @@ inline bool SPlane::Set( const CVec3 &pt0, const CVec3 &pt1, const CVec3 &pt2, b
 {
 	CVec3 v1( pt1.x - pt0.x, pt1.y - pt0.y, pt1.z - pt0.z ), v2( pt2.x - pt0.x, pt2.y - pt0.y, pt2.z - pt0.z );
 	if ( bNormalize && ( !Normalize( &v1 ) || !Normalize( &v2 ) ) )
+	{
 		return false;
+	}
 	// calc normale
 	n = v1 ^ v2;
 	if ( bNormalize && !Normalize( &n ) )
+	{
 		return false;
+	}
 	// calc distance coeff
 	d = -( pt0 * n );
 	//
@@ -1910,7 +1948,9 @@ inline bool SHMatrix::HomogeneousInverse( const SHMatrix &m )
 	float det = m._11 * ( m._22 * m._33 - m._23 * m._32 ) + m._21 * ( m._13 * m._32 - m._12 * m._33 ) +
 	            m._31 * ( m._12 * m._23 - m._13 * m._22 );
 	if ( det == 0 )
+	{
 		return false; // singular matrix found !
+	}
 	det = 1.0f / det;
 	// calculate reverse rotation
 	_11 = ( m._22 * m._33 - m._23 * m._32 ) * det;
@@ -1978,7 +2018,9 @@ inline bool Invert( SHMatrix *pRes, const SHMatrix &m )
 	// Division by determinant
 	float fDet = m._11 * pRes->_11 + m._21 * pRes->_12 + m._31 * pRes->_13 + m._41 * pRes->_14;
 	if ( fDet == 0 )
+	{
 		return false; // singular matrix found !
+	}
 	fDet = 1.0f / fDet;
 	pRes->_11 *= fDet;
 	pRes->_21 *= fDet;
@@ -2282,7 +2324,9 @@ inline bool CQuat::Inverse( const CQuat &q )
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 // inverse quaternion
@@ -2299,7 +2343,9 @@ inline bool CQuat::Inverse()
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 // decomposing quaternion to axis and angle
@@ -2514,7 +2560,9 @@ inline bool FindTangentPoints( const CVec2 &p, const CCircle &c, CVec2 *p1, CVec
 	const float r2 = fabs2( c.r );
 
 	if ( hyp2 < r2 )
+	{
 		return false;
+	}
 
 	if ( hyp2 == r2 )
 	{
@@ -2545,9 +2593,13 @@ inline void CLine2::ProjectPoint( const CVec2 &point, CVec2 *result )
 {
 	float fK;
 	if ( bNormalized )
+	{
 		fK = a * point.x + b * point.y + c;
+	}
 	else
+	{
 		fK = ( a * point.x + b * point.y + c ) / fabs2( a, b );
+	}
 
 	result->x = point.x - fK * a;
 	result->y = point.y - fK * b;
@@ -2572,7 +2624,9 @@ inline float IsPointInsideTriangle( const CVec2 &p1, const CVec2 &p2, const CVec
 	const int nSign = boost::math::sign( TriangleArea2( p1, p2, p3 ) );
 
 	if ( nSign != 0 )
+	{
 		return nSign * nSign1 >= 0 && nSign * nSign2 >= 0 && nSign * nSign3 >= 0;
+	}
 	// singular triangle
 	else
 	{
@@ -2581,7 +2635,9 @@ inline float IsPointInsideTriangle( const CVec2 &p1, const CVec2 &p2, const CVec
 			return CSegment( p1, p2 ).GetDistToPoint( p ) < 1e-6 || CSegment( p1, p3 ).GetDistToPoint( p ) < 1e-6;
 		}
 		else
+		{
 			return false;
+		}
 	}
 }
 
@@ -2592,21 +2648,33 @@ inline float IsPointInsideTriangle( const CVec2 &p1, const CVec2 &p2, const CVec
 inline const float CSegment::GetDistToPoint( const CVec2 &point ) const
 {
 	if ( ( point - p1 ) * dir <= 0 )
+	{
 		return fabs( point - p1 );
+	}
 	else if ( ( point - p2 ) * dir >= 0 )
+	{
 		return fabs( point - p2 );
+	}
 	else
+	{
 		return fabs( TriangleArea2( p1, p2, point ) ) / fabs( p2 - p1 );
+	}
 }
 
 inline void CSegment::GetClosestPoint( const CVec2 &point, CVec2 *result ) const
 {
 	if ( ( point - p1 ) * dir <= 0 )
+	{
 		*result = p1;
+	}
 	else if ( ( point - p2 ) * dir >= 0 )
+	{
 		*result = p2;
+	}
 	else
+	{
 		CLine2( p1, p2 ).ProjectPoint( point, result );
+	}
 }
 
 inline void MakeMatrix( SHMatrix *pMatrix, const CVec3 &pos, const CQuat &rot )

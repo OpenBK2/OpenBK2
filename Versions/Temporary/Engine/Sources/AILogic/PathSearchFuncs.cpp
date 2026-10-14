@@ -41,7 +41,9 @@ IStaticPath *CreateStaticPathForAttack( CBasePathUnit *pUnit,
 
 			RecordRandomCall();
 			if ( NRandom::Random( 0.0f, 1.0f ) < 0.5f )
+			{
 				vRandomCant = -vRandomCant;
+			}
 		}
 
 		const CVec2 vFinishPoint = pTarget->GetCenterPlain() + vRandomCant;
@@ -72,7 +74,9 @@ IStaticPath *CreateStaticPathForAttack( CBasePathUnit *pUnit,
 			}
 		}
 		else
+		{
 			return 0;
+		}
 	}
 	else
 	{
@@ -130,7 +134,9 @@ IStaticPath *CreateStaticPathForSideAttack( CBasePathUnit *pUnit,
 		return 0;
 	}
 	else
+	{
 		return pPath;
+	}
 }
 
 IStaticPath *CreatePathWithChecking( CBasePathUnit *pUnit, const SVector &vTargetTile, IPointChecking *pPointChecking )
@@ -173,7 +179,9 @@ IStaticPath *CreateStaticPathForStObjAttack( CBasePathUnit *pUnit,
 bool CanUnitApproachToUnitByPath( const CAIUnit *Moving, const IStaticPath *Path, const CAIUnit *Standing )
 {
 	if ( !Path )
+	{
 		return false;
+	}
 
 	SRect rMoving = Moving->GetUnitRect();
 	CVec2 vShift = Path->GetFinishPoint() - Moving->GetCenterPlain();
@@ -190,7 +198,9 @@ bool CanUnitApproachToUnitByPath( const CAIUnit *Moving, const IStaticPath *Path
 bool CanUnitApproachToPointByPath( const CAIUnit *Moving, const IStaticPath *Path, const CVec2 &point )
 {
 	if ( !Path )
+	{
 		return false;
+	}
 
 	SRect rMoving = Moving->GetUnitRect();
 	CVec2 vShift = Path->GetFinishPoint() - Moving->GetCenterPlain();
@@ -207,7 +217,9 @@ bool CanUnitApproachToPointByPath( const CAIUnit *Moving, const IStaticPath *Pat
 bool CanUnitApproachToObjectByPath( const CAIUnit *Moving, const IStaticPath *Path, const CStaticObject *standing )
 {
 	if ( !Path )
+	{
 		return false;
+	}
 
 	SRect rMoving = Moving->GetUnitRect();
 	CVec2 vShift = Path->GetFinishPoint() - Moving->GetCenterPlain();

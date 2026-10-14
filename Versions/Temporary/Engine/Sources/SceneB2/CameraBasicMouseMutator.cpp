@@ -10,9 +10,13 @@ namespace NCamera
 static inline float CyclicClamp( const float fValue, const float fMin, const float fMax )
 {
 	if ( fValue < fMin )
+	{
 		return fMax + fmod( fValue - fMin, fMax - fMin );
+	}
 	else
+	{
 		return fMin + fmod( fValue - fMin, fMax - fMin );
+	}
 }
 
 float IncrementValue(
@@ -24,9 +28,13 @@ float IncrementValue(
 	{
 		fResult = fCurrValue + fAdd * limit.fManualSpeed;
 		if ( limit.fMax > limit.fMin && !bFreeCamera )
+		{
 			return limit.bCyclic ? CyclicClamp( fResult, limit.fMin, limit.fMax ) : Clamp( fResult, limit.fMin, limit.fMax );
+		}
 		else
+		{
 			return fResult;
+		}
 	}
 	else if ( bAutoPositioning && !bFreeCamera && limit.fMax > limit.fMin ) // automatic
 	{
@@ -42,7 +50,9 @@ float IncrementValue(
 		}
 	}
 	else
+	{
 		return fCurrValue;
+	}
 }
 
 CCameraBasicMouseMutator::CCameraBasicMouseMutator()
@@ -170,15 +180,21 @@ void CCameraBasicMouseMutator::SetAnchorLimits( const CTRect<float> &vLimits )
 void CCameraBasicMouseMutator::SwitchAutoPositioning( const bool bAllowAutoPositioning )
 {
 	if ( NGlobal::GetVar( "disable_auto_camera", 0 ) == 0 )
+	{
 		bAutoPositioning = bAllowAutoPositioning;
+	}
 }
 
 void CCameraBasicMouseMutator::SwitchManualScrolling( const std::string &szLocker, const bool bManualOn )
 {
 	if ( bManualOn )
+	{
 		manualLockers.erase( szLocker );
+	}
 	else
+	{
 		manualLockers[szLocker] = true;
+	}
 }
 
 const CVec3 CCameraBasicMouseMutator::GetListener() const

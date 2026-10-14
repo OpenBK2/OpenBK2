@@ -48,7 +48,9 @@ char *pErrToString[] = {
 const char *ErrorToString( int nErrorCode )
 {
 	if ( nErrorCode > LUA_ERRERR || nErrorCode < 0 )
+	{
 		return "Unknown";
+	}
 	return pErrToString[nErrorCode];
 }
 
@@ -76,13 +78,17 @@ void Script::Register( const char *funcName, lua_CFunction function )
 void Script::Register( const SRegFunction *pList )
 {
 	for ( const SRegFunction *p = pList; p->func && p->name; ++p )
+	{
 		Register( p->name, p->func );
+	}
 }
 
 void Script::RegisterSaveLoad( const SRegFunction *pList )
 {
 	for ( const SRegFunction *p = pList; p->func && p->name; ++p )
+	{
 		lua_RegisterFunc( p->func, MakeUniqueName( m_state, p->name ) );
+	}
 }
 
 static void luaErrorNEA( Script *pScript, const std::string &szFuncName )
@@ -135,9 +141,13 @@ bool Script::CheckArgs( const char *szArgList,
 		if ( *pCurChar == '[' )
 		{
 			for ( ++pCurChar; *pCurChar != ']' && *pCurChar != char( 0 ); ++pCurChar )
+			{
 				szDefaultValue += *pCurChar;
+			}
 			if ( *pCurChar != char( 0 ) )
+			{
 				++pCurChar;
+			}
 			bHasDefaultValue = true;
 		}
 		bDone = *pCurChar == char( 0 );
@@ -157,18 +167,24 @@ bool Script::CheckArgs( const char *szArgList,
 						param.f = o.GetNumber();
 						param.n = param.f;
 						if ( bLog )
+						{
 							param.s = std::string( o.GetString() );
+						}
 					}
 					break;
 				case 's':
 					isOK = o.IsString();
 					if ( isOK )
+					{
 						param.s = o.GetString();
+					}
 					break;
 				case 't':
 					isOK = o.IsTable();
 					if ( bLog )
+					{
 						param.s = "[table]";
+					}
 					break;
 				case 'u':
 					isOK = o.IsUserData();
@@ -186,9 +202,13 @@ bool Script::CheckArgs( const char *szArgList,
 				case 'b':
 					isOK = o.IsNumber() || o.IsNil();
 					if ( isOK )
+					{
 						param.b = !o.IsNil();
+					}
 					if ( bLog )
+					{
 						param.s = param.b ? "true" : "false";
+					}
 					break;
 				case '.':
 					return true;
@@ -214,9 +234,13 @@ bool Script::CheckArgs( const char *szArgList,
 					break;
 				case 'b':
 					if ( szDefaultValue == "false" )
+					{
 						param.b = false;
+					}
 					else
+					{
 						param.b = true;
+					}
 					break;
 			}
 		}
@@ -245,9 +269,13 @@ Script::Script( const char *instanceName, bool initStandardLibrary, lua_CFunctio
 	// Register some basic functions with Lua.
 	//	Register("LOG", Script_LOG);
 	if ( !logFunction )
+	{
 		Register( "_ERRORMESSAGE", Script_LOG );
+	}
 	else
+	{
 		Register( "_ERRORMESSAGE", logFunction );
+	}
 }
 
 /**
@@ -269,10 +297,14 @@ float Script::ConfigGetReal( const char *section, const char *entry, double defa
 
 	Object obj = GetGlobal( section );
 	if ( obj.IsNil() )
+	{
 		return (float)defaultValue;
+	}
 	obj = obj.GetByName( entry );
 	if ( obj.IsNumber() )
+	{
 		return obj.GetNumber();
+	}
 	return (float)defaultValue;
 }
 
@@ -286,10 +318,14 @@ const char *Script::ConfigGetString( const char *section, const char *entry, con
 
 	Object obj = GetGlobal( section );
 	if ( obj.IsNil() )
+	{
 		return defaultValue;
+	}
 	obj = obj.GetByName( entry );
 	if ( obj.IsString() )
+	{
 		return obj.GetString();
+	}
 	return defaultValue;
 }
 
@@ -357,7 +393,9 @@ static std::string IndentString( unsigned int indentLevel )
 {
 	std::string str;
 	for ( int i = 0; i < indentLevel; ++i )
+	{
 		str += ' ';
+	}
 	return str;
 }
 
@@ -379,13 +417,21 @@ Script::GetObjectAsText( const char *name, Script::Object value, bool bDecorateO
 	}
 
 	if ( value.IsUserData() )
+	{
 		strRet += "<userdata>";
+	}
 	else if ( value.IsCFunction() )
+	{
 		strRet += "<C-function>";
+	}
 	else if ( value.IsFunction() )
+	{
 		strRet += "<function>";
+	}
 	else if ( value.IsNil() )
+	{
 		strRet += "nil";
+	}
 	else if ( value.IsNumber() )
 	{
 		char buff[1024];
@@ -395,10 +441,14 @@ Script::GetObjectAsText( const char *name, Script::Object value, bool bDecorateO
 	else if ( value.IsString() )
 	{
 		if ( bDecorateOutput )
+		{
 			strRet += '"';
+		}
 		strRet += value.GetString();
 		if ( bDecorateOutput )
+		{
 			strRet += '"';
+		}
 	}
 	else if ( value.IsTable() )
 	{
@@ -440,11 +490,15 @@ Script::GetObjectAsText( const char *name, Script::Object value, bool bDecorateO
 
 					// If it doesn't exist, then exit the loop.
 					if ( value.IsNil() )
+					{
 						break;
+					}
 
 					// Only add the comma and return if not on the first item.
 					if ( !firstSequential )
+					{
 						strRet += "\n";
+					}
 
 					// Write the object as an unnamed entry.
 					strRet += GetObjectAsText( NULL, value, indentLevel + 1 );
@@ -535,7 +589,9 @@ Script::GetObjectAsText( const char *name, Script::Object value, bool bDecorateO
 		strRet += "}";
 	}
 	if ( indentLevel == 0 && bDecorateOutput )
+	{
 		strRet += "\n";
+	}
 	return strRet;
 }
 
@@ -546,9 +602,13 @@ std::string Script::GetObjectAsText( const char *name, bool bDecorateOutput )
 	GetGlobal( name );
 	Object value = GetObject( GetTop() );
 	if ( !value.IsNil() )
+	{
 		return GetObjectAsText( name, value, bDecorateOutput, 0 );
+	}
 	else
+	{
 		return std::string( "There is no global entity with name \"" ) + name + "\"";
+	}
 }
 
 std::string Script::GetStateAsText()
@@ -604,7 +664,9 @@ int Script::operator&( IBinSaver &f )
 	if ( f.IsReading() )
 	{
 		if ( m_ownState )
+		{
 			lua_close( m_state );
+		}
 		f.Add( 2, &m_ownState );
 		ASSERT( m_ownState );
 		m_state = lua_open( 0 );

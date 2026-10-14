@@ -96,17 +96,25 @@ void CPassMarkersDraw::DrawPassabilities()
 			const SVector tile( x, y );
 
 			for ( int i = 0; i < MARKERS_COLORS_COUNT; ++i )
+			{
 				if ( markers_aiClasses[i] != EAC_NONE )
 				{
 					if ( pTerrain->CanUnitGo( markers_radiuses[i], tile, markers_aiClasses[i] ) == markers_freeClass[i] )
+					{
 						tiles[i].push_back( tile );
+					}
 				}
+			}
 		}
 	}
 
 	for ( int i = 0; i < MARKERS_COLORS_COUNT; ++i )
+	{
 		if ( markers_aiClasses[i] != EAC_NONE )
+		{
 			markers_id[i] = DebugInfoManager()->CreateMarker( markers_id[i], tiles[i], markers_colors[i] );
+		}
+	}
 
 	if ( NPassMarkers::s_bShowWater )
 	{
@@ -117,7 +125,9 @@ void CPassMarkersDraw::DrawPassabilities()
 			{
 				const SVector tile( x, y );
 				if ( pTerrain->GetTerrainType( x, y ) == ETT_WATER_TERRAIN )
+				{
 					water.push_back( tile );
+				}
 			}
 		}
 		nWaterMarker = DebugInfoManager()->CreateMarker( nWaterMarker, water, NDebugInfo::WHITE );
@@ -153,13 +163,17 @@ void CPassMarkersDraw::ToggleDrawPassMarkers1()
 	bDrawMarkers = !bDrawMarkers;
 	//
 	if ( bDrawMarkers )
+	{
 		DrawPassabilities();
+	}
 }
 
 void CPassMarkersDraw::UpdatePassMarkers()
 {
 	if ( !bDrawMarkers )
+	{
 		return;
+	}
 
 	// process update
 }

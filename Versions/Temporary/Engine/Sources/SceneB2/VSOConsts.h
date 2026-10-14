@@ -98,7 +98,9 @@ inline int GetVSOSeed( const NDb::SVSOInstance *pInstance )
 	NI_VERIFY( pInstance, "GetVSOSeed( pInstance ) is called with invalid pointer", return 0.0f )
 	//NI_VERIFY( !(pInstance->controlPoints.empty()), "GetVSOSeed: VSO has no control points", return 0.0f )
 	if ( pInstance->controlPoints.empty() )
+	{
 		return 0.0f;
+	}
 
 	const CVec3 v1( pInstance->controlPoints[0] );
 	const CVec3 v2( pInstance->controlPoints[pInstance->controlPoints.size() - 1] );

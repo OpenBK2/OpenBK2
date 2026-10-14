@@ -37,7 +37,9 @@ protected:
 			return true;
 		}
 		else
+		{
 			return false;
+		}
 	}
 	void Recalc();
 
@@ -100,13 +102,19 @@ public:
 			if ( nMaskWidth > 0 || nMaskHeight > 0 ) // Ignore empty mask
 			{
 				if ( x >= nMaskWidth || y >= nMaskHeight || pMask->GetData( x, y ) )
+				{
 					return;
+				}
 			}
 
 			if ( nLineWidth == 0 )
+			{
 				pMapLayer->PutPixel( x, y, color );
+			}
 			else
+			{
 				DrawOctoCircle( x, y, nLineWidth * 0.5f );
+			}
 		}
 	}
 };

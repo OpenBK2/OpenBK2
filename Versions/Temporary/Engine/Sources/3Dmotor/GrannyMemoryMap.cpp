@@ -41,7 +41,9 @@ static GRANNY_CALLBACK( void * ) GrannyReplacementAlloc( char const *pszFile,
                                                          granny_int32x nAllocationIntent )
 {
 	if ( pGrannyMemoryMap == 0 )
+	{
 		pGrannyMemoryMap = new std::unordered_map<void *, SMemoryInfo>;
+	}
 
 	void *pMemory = ( *AllocateCallback )( pszFile, nLine, nAlignment, nSize, nAllocationIntent );
 	pGrannyMemoryMap->insert(
@@ -79,14 +81,20 @@ void DumpGrannyMemory()
 
 		TMemoryRequestMap::iterator itRequest = MemoryRequestMap.find( szBuf );
 		if ( itRequest == MemoryRequestMap.end() )
+		{
 			MemoryRequestMap.insert( std::pair<std::string, int>( szBuf, 0 ) );
+		}
 		else
+		{
 			itRequest->second += info.nSize;
+		}
 	}
 
 	std::vector<std::pair<std::string, int>> MemoryRequestArray;
 	for ( TMemoryRequestMap::iterator it = MemoryRequestMap.begin(); it != MemoryRequestMap.end(); ++it )
+	{
 		MemoryRequestArray.push_back( std::pair<std::string, int>( it->first.data(), it->second ) );
+	}
 
 	MemoryRequestMap.clear();
 

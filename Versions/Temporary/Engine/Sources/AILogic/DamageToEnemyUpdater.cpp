@@ -32,7 +32,9 @@ void CDamageToEnemyUpdater::SetDamageToEnemy( CAIUnit *pOwner, CAIUnit *pEnemy, 
 void CDamageToEnemyUpdater::SetDamageToEnemy( CAIUnit *pOwner, CAIUnit *pEnemy, CBasicGun *pGun )
 {
 	if ( pCurEnemy == pEnemy )
+	{
 		return; // nothing to do
+	}
 
 	UnsetDamageFromEnemy( pCurEnemy );
 	pCurEnemy = pEnemy;
@@ -45,7 +47,9 @@ void CDamageToEnemyUpdater::SetDamageToEnemy( CAIUnit *pOwner, CAIUnit *pEnemy, 
 			pEnemy->UpdateNAttackingGrenages( 1 );
 		}
 		else
+		{
 			nTakenDamageUpdated = 2;
+		}
 
 		fTakenDamagePower = pOwner->GetKillSpeed( pEnemy );
 		pEnemy->UpdateTakenDamagePower( fTakenDamagePower );
@@ -53,7 +57,9 @@ void CDamageToEnemyUpdater::SetDamageToEnemy( CAIUnit *pOwner, CAIUnit *pEnemy, 
 		NI_ASSERT( std::isfinite( fTakenDamagePower ), "Wrong fTakenDamagePower" );
 	}
 	else
+	{
 		nTakenDamageUpdated = 0;
+	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CDamageToEnemyUpdater::UnsetDamageFromEnemy( CAIUnit *pEnemy )
@@ -61,7 +67,9 @@ void CDamageToEnemyUpdater::UnsetDamageFromEnemy( CAIUnit *pEnemy )
 	if ( nTakenDamageUpdated != 0 && pEnemy && pEnemy->IsAlive() && pEnemy == pCurEnemy )
 	{
 		if ( nTakenDamageUpdated == 1 )
+		{
 			pEnemy->UpdateNAttackingGrenages( -1 );
+		}
 
 		NI_ASSERT( std::isfinite( fTakenDamagePower ), "Wrong fTakenDamagePower" );
 

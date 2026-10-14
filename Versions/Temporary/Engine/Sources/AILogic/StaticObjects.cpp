@@ -63,7 +63,9 @@ void CStaticObjects::CStoragesContainer::AddStorage( class CBuilding *pNewStorag
 {
 	const int nParty = theDipl.GetNParty( nPlayer );
 	if ( nParty >= 2 )
+	{
 		return;
+	}
 	const SBuildingRPGStats *pStats = static_cast<const SBuildingRPGStats *>( pNewStorage->GetStats() );
 	if ( pStats->etype == TYPE_MAIN_RU_STORAGE || pStats->etype == TYPE_TEMP_RU_STORAGE ||
 	     theBonusSystem.IsStorage( nLinkID ) )
@@ -83,7 +85,9 @@ void CStaticObjects::CStoragesContainer::RemoveStorage( const int nID, const int
 	{
 		const int nParty = theDipl.GetNParty( nPlayer );
 		if ( nParty >= 2 )
+		{
 			return;
+		}
 		storages.erase( nID );
 	}
 }
@@ -100,7 +104,9 @@ void CStaticObjects::CStoragesContainer::EnumStoragesForParty( const int nParty,
 	{
 		CBuilding *pStor = i->second;
 		if ( theDipl.GetNParty( pStor->GetPlayer() ) == nParty && pStor->IsAlive() )
+		{
 			pPred->AddStorage( pStor, 0 );
+		}
 	}
 }
 
@@ -112,7 +118,9 @@ void CStaticObjects::CStoragesContainer::EnumStoragesInRange( const CVec2 &vCent
                                                               CStaticObjects::IEnumStoragesPredicate *pPred )
 {
 	if ( nParty >= 2 )
+	{
 		return;
+	}
 
 	for ( CStorages::iterator it = storages.begin(); it != storages.end(); ++it )
 	{
@@ -169,7 +177,9 @@ void CStaticObjects::EnumObstaclesInRange( const CVec2 &vCenter, const float fR,
 			{
 
 				if ( ( *it )->IsAlive() && fabs2( vCenter - CVec2( ( *it )->GetCenter().x, ( *it )->GetCenter().y ) ) < fR2 )
+				{
 					f->AddObstacle( *it );
+				}
 			}
 		}
 	}
@@ -200,7 +210,9 @@ void CStaticObjects::DeleteInternalEntrenchmentInfo( CEntrenchment *pEntrench )
 	CObjectBase *pObj = pEntrench;
 	std::list<CObj<CObjectBase>>::iterator iter = entrenchments.begin();
 	while ( iter != entrenchments.end() && ( *iter ) != pObj )
+	{
 		++iter;
+	}
 
 	NI_ASSERT( iter != entrenchments.end(), "Wrong object to delete" );
 
@@ -263,11 +275,15 @@ CExistingObject *CStaticObjects::AddNewTankPit( const SMechUnitRPGStats *pStats,
 void CStaticObjects::AddStaticObject( class CExistingObject *pObj, bool bAlreadyLocked )
 {
 	if ( !IsValid( pObj ) )
+	{
 		return;
+	}
 
 	pObj->Mem2UniqueIdObjs();
 	if ( !bAlreadyLocked )
+	{
 		pObj->LockTiles();
+	}
 	pObj->SetTransparencies();
 	AddToAreaMap( pObj );
 
@@ -427,7 +443,9 @@ void CStaticObjects::AddEntrencmentPart( class CEntrenchmentPart *pObj, bool bLo
 {
 	pObj->Mem2UniqueIdObjs();
 	if ( !bLockedAlready )
+	{
 		pObj->LockTiles();
+	}
 	pObj->SetTransparencies();
 
 	AddToAreaMap( pObj );
@@ -480,7 +498,9 @@ CMineStaticObject *CStaticObjects::AddNewMine(
 
 	// ставим только наши мины
 	if ( theDipl.GetDiplStatus( theDipl.GetMyNumber(), player ) == EDI_FRIEND )
+	{
 		pObj->RegisterInWorld();
+	}
 
 	return pObj;
 }
@@ -491,7 +511,9 @@ void CStaticObjects::AddObjectToAreaMapTile( CExistingObject *pObj, const SVecto
 	{
 		areaMap.AddToPosition( pObj, tile );
 		if ( pObj->IsContainer() )
+		{
 			containersAreaMap.AddToPosition( pObj, tile );
+		}
 	}
 }
 
@@ -502,11 +524,15 @@ void CStaticObjects::AddToAreaMap( CExistingObject *pObj )
 
 	// чтобы не удалился после update
 	if ( tiles.empty() )
+	{
 		AddObjectToAreaMapTile( pObj, AICellsTiles::GetTile( CVec2( pObj->GetCenter().x, pObj->GetCenter().y ) ) );
+	}
 	else
 	{
 		for ( std::list<SVector>::iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
+		{
 			AddObjectToAreaMapTile( pObj, *iter );
+		}
 	}
 
 	++nObjs;
@@ -518,7 +544,9 @@ void CStaticObjects::RemoveObjectFromAreaMapTile( CExistingObject *pObj, const S
 	{
 		areaMap.RemoveFromPosition( pObj, tile );
 		if ( pObj->IsContainer() )
+		{
 			containersAreaMap.RemoveFromPosition( pObj, tile );
+		}
 	}
 }
 
@@ -528,11 +556,15 @@ void CStaticObjects::RemoveFromAreaMap( CExistingObject *pObj )
 	pObj->GetCoveredTiles( &tiles );
 
 	if ( tiles.empty() )
+	{
 		RemoveObjectFromAreaMapTile( pObj, AICellsTiles::GetTile( CVec2( pObj->GetCenter().x, pObj->GetCenter().y ) ) );
+	}
 	else
 	{
 		for ( std::list<SVector>::iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
+		{
 			RemoveObjectFromAreaMapTile( pObj, *iter );
+		}
 	}
 
 	--nObjs;
@@ -559,7 +591,9 @@ void CStaticObjects::Segment()
 		UnregisterSegment( pObj );
 
 		if ( !pObj->HasFallen() && !pObj->IsTrampled() )
+		{
 			updater.AddUpdate( 0, ACTION_NOTIFY_DELETED_ST_OBJ, pObj, -1 );
+		}
 
 		// Every deleted static object came through here cast to CBuilding, and
 		// most of them are not one. CBuilding inherits from three bases, so the
@@ -572,15 +606,21 @@ void CStaticObjects::Segment()
 		storagesContainer.RemoveStorage( pObj->GetUniqueId(), pObj->GetPlayer() );
 
 		if ( obstacleObjects.end() != obstacleObjects.find( pObj->GetUniqueId() ) )
+		{
 			RemoveObstacle( obstacleObjects[pObj->GetUniqueId()] );
+		}
 
 		pObj->UnlockTiles();
 
 		pObj->RemoveTransparencies();
 		if ( pObj->GetObjectType() != ESOT_TERRA )
+		{
 			RemoveFromAreaMap( pObj );
+		}
 		else
+		{
 			terraObjs.erase( pObj->GetUniqueId() );
+		}
 	}
 
 	deletedObjects.clear();
@@ -588,15 +628,21 @@ void CStaticObjects::Segment()
 	// горящие объекты
 	std::list<int> burningList;
 	for ( det_set<int>::const_iterator iter = burningObjects.begin(); iter != burningObjects.end(); ++iter )
+	{
 		burningList.push_back( *iter );
+	}
 
 	for ( std::list<int>::iterator iter = burningList.begin(); iter != burningList.end(); ++iter )
 	{
 		CExistingObject *pObj = GetObjectByUniqueIdSafe<CExistingObject>( *iter );
 		if ( !pObj || !pObj->IsRefValid() || !pObj->IsAlive() )
+		{
 			burningObjects.erase( *iter );
+		}
 		else
+		{
 			pObj->BurnSegment();
+		}
 	}
 }
 
@@ -637,12 +683,16 @@ void CStaticObjects::UpdateAllObjectsPos()
 				if ( IsValid( pFullBridge ) )
 				{
 					if ( fullBridges.find( pFullBridge->GetUniqueId() ) == fullBridges.end() )
+					{
 						fullBridges[pFullBridge->GetUniqueId()] = pFullBridge;
+					}
 				}
 			}
 		}
 	}
 
 	for ( det_map<int, CPtr<CFullBridge>>::iterator it = fullBridges.begin(); it != fullBridges.end(); ++it )
+	{
 		it->second->InitEntireBridge();
+	}
 }

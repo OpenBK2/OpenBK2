@@ -22,11 +22,15 @@ namespace
 	{
 		CFileStream stream( NVFS::GetMainVFS(), path );
 		if ( !stream.IsOk() || !stream.CanRead() || stream.GetSize() <= 0 )
+		{
 			throw std::runtime_error( "Cannot read game resource: " + path );
+		}
 		std::vector<std::byte> bytes( stream.GetSize() );
 		stream.Read( bytes.data(), bytes.size() );
 		if ( !stream.IsOk() )
+		{
 			throw std::runtime_error( "Incomplete game resource: " + path );
+		}
 		return bytes;
 	}
 
@@ -43,12 +47,16 @@ namespace
 					std::string( "bin/" ) + folder, resource->GetRecordID(), resource->uid );
 			const auto old = cache.find( path );
 			if ( old != cache.end() )
+			{
 				return old->second;
+			}
 			const auto bytes = Read( path );
 			TFile file( GrannyReadEntireFileFromMemory( static_cast<int>( bytes.size() ), bytes.data() ), GrannyFreeFile );
 			auto *info = file ? GrannyGetFileInfo( file.get() ) : nullptr;
 			if ( !info )
+			{
 				throw std::runtime_error( "Cannot decode Granny3D resource: " + path );
+			}
 			files.push_back( std::move( file ) );
 			cache.emplace( path, info );
 			return info;
@@ -58,15 +66,19 @@ namespace
 	const granny_model *FirstModel( const granny_file_info *info )
 	{
 		if ( !info || info->ModelCount < 1 || !info->Models || !info->Models[0] )
+		{
 			throw std::runtime_error( "Granny3D resource contains no model" );
+		}
 		return info->Models[0];
 	}
 
 	void RequireGranny( const std::string &reference )
 	{
 		if ( !reference.empty() )
+		{
 			throw std::runtime_error(
 					"This command exports legacy Granny3D resources. The model contains a GLB/GLTF reference: " + reference );
+		}
 	}
 
 	std::string FileName( const std::string &text )
@@ -76,14 +88,18 @@ namespace
 		std::string result;
 		const char digits[] = "0123456789ABCDEF";
 		for ( unsigned char c : text )
+		{
 			if ( ( c >= 'a' && c <= 'z' ) || ( c >= 'A' && c <= 'Z' ) || ( c >= '0' && c <= '9' ) || c == '-' || c == '.' )
+			{
 				result += c;
+			}
 			else
 			{
 				result += '_';
 				result += digits[c >> 4];
 				result += digits[c & 15];
 			}
+		}
 		return result;
 	}
 
@@ -99,7 +115,9 @@ namespace
 		Image( const std::string &name, std::vector<std::byte> bytes, fastgltf::MimeType mime, const char *extension )
 		{
 			if ( !options.separateTextures )
+			{
 				return doc->AddImage( name, bytes, mime );
+			}
 			const size_t slash = name.find_last_of( "/\\" );
 			std::string stem = name.substr( slash == std::string::npos ? 0 : slash + 1 );
 			stem = stem.substr( 0, stem.find_last_of( '.' ) );
@@ -120,7 +138,9 @@ namespace
 			const std::string key = NDb::GetFileName( source->GetDBID() );
 			const auto old = textures.find( key );
 			if ( old != textures.end() )
+			{
 				return old->second;
+			}
 			const std::string path = source->szDestName;
 			auto dds = Read( path );
 			const bool tga = options.separateTextures && options.convertTexturesToTga;
@@ -150,7 +170,9 @@ namespace
 			{
 				texture.ddsImageIndex = Image( path, std::move( dds ), fastgltf::MimeType::DDS, ".dds" );
 				if ( textures.empty() )
+				{
 					doc->asset.extensionsUsed.push_back( "MSFT_texture_dds" );
+				}
 			}
 			const size_t index = doc->asset.textures.size();
 			doc->asset.textures.push_back( std::move( texture ) );
@@ -169,9 +191,13 @@ namespace
 				material.name = NDb::GetFileName( source->GetDBID() );
 				material.doubleSided = source->bIs2Sided;
 				if ( source->eAlphaMode == NDb::SMaterial::AM_ALPHA_TEST )
+				{
 					material.alphaMode = fastgltf::AlphaMode::Mask;
+				}
 				else if ( source->eAlphaMode != NDb::SMaterial::AM_OPAQUE )
+				{
 					material.alphaMode = fastgltf::AlphaMode::Blend;
+				}
 				if ( source->pTexture )
 				{
 					fastgltf::TextureInfo texture;
@@ -183,9 +209,13 @@ namespace
 				auto preserve = [&]( const char *role, const NDb::STexture *texture )
 				{
 					if ( !texture )
+					{
 						return;
+					}
 					if ( extras.size() > 1 )
+					{
 						extras += ',';
+					}
 					extras += NGrannyGltf::Quote( role ) + ':' + std::to_string( Texture( texture ) );
 				};
 				preserve( "Bump", source->pBump );
@@ -219,7 +249,9 @@ bool ExportGrannyModel( const NDb::SModel *model,
 	try
 	{
 		if ( !model || !model->pGeometry )
+		{
 			throw std::runtime_error( "Select a Model with a Geometry reference" );
+		}
 		RequireGranny( model->pGeometry->szModelFileRef );
 		SFiles files;
 		NGrannyGltf::SModel input;
@@ -233,7 +265,9 @@ bool ExportGrannyModel( const NDb::SModel *model,
 			RequireGranny( model->pSkeleton->szModelFileRef );
 			input.skeleton = FirstModel( files.Load( "Skeletons", model->pSkeleton.GetPtr() ) )->Skeleton;
 			if ( !input.skeleton )
+			{
 				throw std::runtime_error( "Model's Skeleton resource has no skeleton" );
+			}
 		}
 		if ( model->pGeometry->pAIGeometry )
 		{
@@ -241,16 +275,24 @@ bool ExportGrannyModel( const NDb::SModel *model,
 			RequireGranny( ai->szModelFileRef );
 			const auto *info = files.Load( "AIGeometries", ai );
 			if ( info->MeshCount < 1 || !info->Meshes )
+			{
 				throw std::runtime_error( "AIGeometry contains no meshes" );
+			}
 			for ( int i = 0; i < info->MeshCount; ++i )
 			{
 				const granny_skeleton *skeleton = nullptr;
 				// As in CFileSkinPointsLoadFromGranny, collision meshes bind to
 				// their owning GR2 model, which can differ from the render rig.
 				for ( int m = 0; m < info->ModelCount && !skeleton; ++m )
+				{
 					for ( int b = 0; b < info->Models[m]->MeshBindingCount; ++b )
+					{
 						if ( info->Models[m]->MeshBindings[b].Mesh == info->Meshes[i] )
+						{
 							skeleton = info->Models[m]->Skeleton;
+						}
+					}
+				}
 				input.aiMeshes.push_back( { info->Meshes[i], skeleton } );
 			}
 		}
@@ -260,15 +302,21 @@ bool ExportGrannyModel( const NDb::SModel *model,
 			for ( const auto &reference : references )
 			{
 				if ( !reference )
+				{
 					continue;
+				}
 				RequireGranny( reference->GetModelFileRef() );
 				const std::string name = NDb::GetFileName( reference->GetDBID() );
 				const bool first = seen.insert( name ).second;
 				if ( additional && !first )
+				{
 					continue;
+				}
 				const auto *info = files.Load( "Animations", reference.GetPtr() );
 				if ( info->AnimationCount < 1 || !info->Animations )
+				{
 					throw std::runtime_error( "No Granny3D animation in " + name );
+				}
 				// AnimB2 references address animation zero, as SAnimHandle does.
 				input.clips.push_back( { info->Animations[0], name } );
 			}
@@ -276,15 +324,21 @@ bool ExportGrannyModel( const NDb::SModel *model,
 		// Preserve the Model list's order, then append only new skeleton clips.
 		animations( model->animations, false );
 		if ( model->pSkeleton )
+		{
 			animations( model->pSkeleton->animations, true );
+		}
 		NGrannyGltf::SDocument doc;
 		SMaterials materials{ &doc, options, std::filesystem::u8path( destination ) };
 		for ( const auto &material : model->materials )
+		{
 			materials.Add( material );
+		}
 		NGrannyGltf::Convert( input, &doc );
 		auto bytes = doc.Finish();
 		if ( !materials.files.empty() )
+		{
 			std::filesystem::create_directories( std::filesystem::u8path( materials.files.front().path ).parent_path() );
+		}
 		materials.files.push_back( { destination, std::move( bytes ) } );
 		NGrannyGltf::SaveExportFiles( materials.files );
 		NLog::Log( LT_NORMAL, "Exported Granny3D model %.450s to %.450s\n", input.name.c_str(), destination.c_str() );
@@ -293,7 +347,9 @@ bool ExportGrannyModel( const NDb::SModel *model,
 	catch ( const std::exception &failure )
 	{
 		if ( error )
+		{
 			*error = failure.what();
+		}
 		NLog::Log( LT_ERROR, "Granny3D to GLB export failed: %.950s\n", failure.what() );
 		return false;
 	}

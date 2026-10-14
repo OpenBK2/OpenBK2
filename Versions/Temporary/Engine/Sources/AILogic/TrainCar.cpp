@@ -47,7 +47,9 @@ CPtr<CTrainCarStatesFactory> CTrainCarStatesFactory::pFactory = 0;
 IStatesFactory *CTrainCarStatesFactory::Instance()
 {
 	if ( pFactory == 0 )
+	{
 		pFactory = new CTrainCarStatesFactory();
+	}
 
 	return pFactory;
 }
@@ -162,8 +164,10 @@ IUnitState *CTrainCarStatesFactory::ProduceState( class CQueueUnit *pObj, class 
 					pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, nBurstCount );
 				}
 				else
+				{
 					pUnit->SendAcknowledgement(
 							pCommand, pUnit->GetFirstArtilleryGun()->GetRejectReason(), !pCommand->IsFromAI() );
+				}
 			}
 
 			break;
@@ -249,7 +253,9 @@ void CTrainCar::Init( const CVec2 &center,
 		vOwnPos = track.points[nPoint].vPos;
 		vOwnPos.z = GetHeights()->GetZ( vOwnPos );
 		if ( !nPoint )
+		{
 			++nPoint;
+		}
 
 		vOwnPos = track.points[nPoint].vPos - track.points[nPoint - 1].vPos;
 
@@ -284,42 +290,64 @@ void CTrainCar::Init( const CVec2 &center,
 void CTrainCar::SetToTrackPos( float fPos )
 {
 	if ( nTrack < 0 )
+	{
 		return;
+	}
 
 	const SRailRoadSystem::SRRInstance &track = theRailRoadSystem.segments[nTrack];
 
 	if ( bBackward )
+	{
 		fTrackPos = Clamp( fPos, fFrontOffset, GetTrackLimit() - fBackOffset );
+	}
 	else
+	{
 		fTrackPos = Clamp( fPos, fBackOffset, GetTrackLimit() - fFrontOffset );
+	}
 
 	float fWheelPos;
 	if ( bBackward )
+	{
 		fWheelPos = Clamp( fTrackPos - fFrontOffset, 0.0f, GetTrackLimit() );
+	}
 	else
+	{
 		fWheelPos = Clamp( fTrackPos + fFrontOffset, 0.0f, GetTrackLimit() );
+	}
 	float fFraction;
 	int nPoint;
 	track.Decompose( fWheelPos, &nPoint, &fFraction );
 
 	CVec3 vFrontPos;
 	if ( nPoint + 1 >= track.points.size() )
+	{
 		vFrontPos = track.points.back().vPos;
+	}
 	else
+	{
 		vFrontPos.Lerp( fFraction, track.points[nPoint].vPos, track.points[nPoint + 1].vPos );
+	}
 	vFrontPos.z = GetHeights()->GetZ( vFrontPos );
 
 	CVec3 vBackPos;
 	if ( bBackward )
+	{
 		fWheelPos = Clamp( fTrackPos + fBackOffset, 0.0f, GetTrackLimit() );
+	}
 	else
+	{
 		fWheelPos = Clamp( fTrackPos - fBackOffset, 0.0f, GetTrackLimit() );
+	}
 
 	track.Decompose( fWheelPos, &nPoint, &fFraction );
 	if ( nPoint + 1 >= track.points.size() )
+	{
 		vBackPos = track.points.back().vPos;
+	}
 	else
+	{
 		vBackPos.Lerp( fFraction, track.points[nPoint].vPos, track.points[nPoint + 1].vPos );
+	}
 	vBackPos.z = GetHeights()->GetZ( vBackPos );
 
 	CVec3 vPos;
@@ -327,7 +355,9 @@ void CTrainCar::SetToTrackPos( float fPos )
 
 	uint16_t wDir = GetDirectionByVector( vPos.x, vPos.y );
 	if ( IsGoForward() )
+	{
 		wDir += 32768;
+	}
 
 	SetDirection( wDir );
 
@@ -363,16 +393,22 @@ void CTrainCar::LinkToCar( CMilitaryCar *pLinkTo )
 		pLinkFront = pLinkToCar;
 
 		if ( pLinkToCar->GetLocomotive() )
+		{
 			LinkToLocomotive( pLinkToCar->GetLocomotive() );
+		}
 	}
 	else
 	{
 		CTrainLocomotive *pLinkToLocomotive = dynamic_cast<CTrainLocomotive *>( pLinkTo );
 
 		if ( pLinkToLocomotive )
+		{
 			LinkToLocomotive( pLinkToLocomotive );
+		}
 		else
+		{
 			NI_ASSERT( 0, fmt::format( "Wrong link for train car (not another car or locomotive), link ID {} ", GetLink() ) );
+		}
 	}
 }
 
@@ -390,7 +426,9 @@ void CTrainCar::LinkToLocomotive( CTrainLocomotive *pLinkTo )
 
 	// Link other cars
 	if ( pLinkBack )
+	{
 		pLinkBack->LinkToLocomotive( pLinkTo );
+	}
 	pLocomotive->SetToTrackPos( pLocomotive->GetTrackPos() );
 	SetCenter( GetCenter(), false );
 	CallUpdatePlacement();
@@ -404,7 +442,9 @@ void CTrainCar::Segment()
 void CTrainCar::SetCollision( ICollision *pCollision, IPath *pPath )
 {
 	if ( pCollision->GetName() != NCollision::ECN_GIVE_PLACE )
+	{
 		CMilitaryCar::SetCollision( pCollision, pPath );
+	}
 }
 
 const ECollidingType CTrainCar::GetCollidingType( CBasePathUnit *pUnit ) const
@@ -412,12 +452,16 @@ const ECollidingType CTrainCar::GetCollidingType( CBasePathUnit *pUnit ) const
 	if ( CTrainCar *pTrainCar = dynamic_cast<CTrainCar *>( pUnit ) )
 	{
 		if ( pTrainCar->GetLocomotive() == GetLocomotive() ) // it's from this train: ignore
+		{
 			return ECT_NONE;
+		}
 	}
 	else if ( CTrainLocomotive *pLocoCar = dynamic_cast<CTrainLocomotive *>( pUnit ) )
 	{
 		if ( pLocoCar == GetLocomotive() ) // or it's loco from this train: ignore
+		{
 			return ECT_NONE;
+		}
 	}
 	return ECT_ALL;
 }
@@ -446,9 +490,13 @@ IUnitState *CTrainCarMoveToState::Instance( CAIUnit *_pUnit )
 	NI_ASSERT( dynamic_cast<CTrainCar *>( _pUnit ) != 0, "Wrong unit type (not Train Car)" );
 	CTrainCar *pUnit = checked_cast<CTrainCar *>( _pUnit );
 	if ( pUnit )
+	{
 		return new CTrainCarMoveToState( pUnit );
+	}
 	else
+	{
 		return 0;
+	}
 }
 
 CTrainCarMoveToState::CTrainCarMoveToState( CTrainCar *_pUnit )
@@ -476,7 +524,9 @@ void CTrainCarMoveToState::Segment()
 	else
 	{
 		if ( pUnit->GetBehaviourFire() == SBehaviour::EFAtWill )
+		{
 			CFreeFireManager::Analyze( pUnit, 0 );
+		}
 
 		if ( pPath->IsFinished() || pUnit->GetLocomotive()->GetState()->GetName() != EUSN_MOVE )
 		{
@@ -501,9 +551,13 @@ IUnitState *CTrainCarAttackUnitState::Instance( CAIUnit *_pUnit, CAIUnit *_pTarg
 	NI_ASSERT( dynamic_cast<CTrainCar *>( _pUnit ) != 0, "Wrong unit type (not Train Car)" );
 	CTrainCar *pUnit = checked_cast<CTrainCar *>( _pUnit );
 	if ( pUnit )
+	{
 		return new CTrainCarAttackUnitState( pUnit, _pTarget );
+	}
 	else
+	{
 		return 0;
+	}
 }
 
 CTrainCarAttackUnitState::CTrainCarAttackUnitState( CTrainCar *_pUnit, CAIUnit *_pTarget )
@@ -599,7 +653,9 @@ const bool CTrainCarAttackUnitState::TryFiring()
 			bResult = true;
 		}
 		else
+		{
 			pGun->TraceAim( pTarget );
+		}
 	}
 
 	return bResult;
@@ -608,7 +664,9 @@ const bool CTrainCarAttackUnitState::TryFiring()
 ETryStateInterruptResult CTrainCarAttackUnitState::TryInterruptState( class CAICommand *pCommand )
 {
 	for ( int i = 0; i < pUnit->GetNGuns(); ++i )
+	{
 		pUnit->GetGun( i )->StopFire();
+	}
 
 	pUnit->Stop();
 	//pUnit->UnfixUnlocking();
@@ -624,9 +682,13 @@ IUnitState *CTrainCarAttackObjectState::Instance( CAIUnit *_pUnit, CStaticObject
 	NI_ASSERT( dynamic_cast<CTrainCar *>( _pUnit ) != 0, "Wrong unit type (not Train Car)" );
 	CTrainCar *pUnit = checked_cast<CTrainCar *>( _pUnit );
 	if ( pUnit )
+	{
 		return new CTrainCarAttackObjectState( pUnit, _pTarget );
+	}
 	else
+	{
 		return 0;
+	}
 }
 
 CTrainCarAttackObjectState::CTrainCarAttackObjectState( CTrainCar *_pUnit, CStaticObject *_pTarget )
@@ -735,7 +797,9 @@ const bool CTrainCarAttackObjectState::TryFiring()
 ETryStateInterruptResult CTrainCarAttackObjectState::TryInterruptState( class CAICommand *pCommand )
 {
 	for ( int i = 0; i < pUnit->GetNGuns(); ++i )
+	{
 		pUnit->GetGun( i )->StopFire();
+	}
 
 	pUnit->Stop();
 	//pUnit->UnfixUnlocking();

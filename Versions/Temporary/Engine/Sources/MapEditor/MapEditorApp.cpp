@@ -138,9 +138,13 @@ bool CEditorApp::CreateSingletons()
 	{
 		CDataStream *pStream = new CFileStream( NFile::JoinPath( szBaseDir, "MapEditor.log" ), CFileStream::WIN_CREATE );
 		if ( pStream->IsOk() )
+		{
 			theLogger.SetLogStream( pStream );
+		}
 		else
+		{
 			delete pStream;
+		}
 	}
 
 	if ( IUserDataContainer *pUserDataContainer = Singleton<IUserDataContainer>() )
@@ -433,7 +437,9 @@ bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 	CObj<CObjectBase> pSplashScreen;
 	//Показать SplashScreen
 	if ( bShowSplashScreen )
+	{
 		pSplashScreen = NSplash::CreateSplashScreen( NFile::JoinPath( "..", "splash.bmp" ), false );
+	}
 
 	// Нет такого же приложения, продолжаем инициализацию
 
@@ -484,7 +490,9 @@ bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 	//
 	// Окно создано, закрываем Splash Screen
 	if ( bShowSplashScreen )
+	{
 		pSplashScreen = 0;
+	}
 	//Singleton<IResourceManager>()->ResetCache();
 	//
 	//DebugTrace( "EditorApp() ResetCache(): %g", NHPTimer::GetTimePassed( &time ) );

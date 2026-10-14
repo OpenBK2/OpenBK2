@@ -41,7 +41,9 @@ void CWriteStream::WriteChecked( const std::string &str )
 						buffer << str[i];
 						++i;
 						if ( str[i] == ';' )
+						{
 							break;
+						}
 					}
 				}
 				else
@@ -94,14 +96,22 @@ const char *GetEntity( const char *p, char *pValue )
 	if ( ( *( (uint16_t *)p ) == *( (uint16_t *)phx ) ) && *( p + 2 ) && *( p + 3 ) )
 	{
 		if ( isalpha( *( p + 2 ) ) )
+		{
 			*pValue = ( tolower( *( p + 2 ) ) - 'a' + 10 ) * 16;
+		}
 		else
+		{
 			*pValue = ( *( p + 2 ) - '0' ) * 16;
+		}
 
 		if ( isalpha( *( p + 3 ) ) )
+		{
 			*pValue += ( tolower( *( p + 3 ) ) - 'a' + 10 );
+		}
 		else
+		{
 			*pValue += ( *( p + 3 ) - '0' );
+		}
 
 		return p + 5;
 	}

@@ -249,19 +249,25 @@ bool CManipulatorManager::ForceCreateManipulatorForReference( CPtr<IManipulator>
 	{
 		if ( ( *pResultManipulator )->GetName( -1, &sManipulatorCurrentName ) &&
 		     ( sManipulatorCurrentName == sManipulatorName ) )
+		{
 			return true;
+		}
 	}
 
 	if ( CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( szTableName ) )
 	{
 		if ( !pFolderManipulator->InsertNode( sManipulatorName, NODE_ADD_INDEX ) )
+		{
 			return false;
+		}
 
 		if ( CManipulatorManager::SetValue( sManipulatorName, pManipulator, szFieldName ) )
 		{
 			*pResultManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szTableName, sManipulatorName );
 			if ( pszResultName )
+			{
 				*pszResultName = sManipulatorName;
+			}
 			return true;
 		}
 	}

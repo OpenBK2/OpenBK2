@@ -31,9 +31,13 @@ void SChapterReinfBase::SUnit::InitControls( IWindow *_pWnd, const std::string &
 	IButton *pUnitCountBtn = GetChildChecked<IButton>( pWnd, "UnitCountBtn", true );
 	szBtnName = _szBtnName;
 	if ( pBtn )
+	{
 		pBtn->SetName( szBtnName );
+	}
 	if ( pUnitCountBtn )
+	{
 		pUnitCountBtn->SetName( szBtnName );
+	}
 	pAppearanceWnd = GetChildChecked<IWindow>( pWnd, "UnitAppearance", true );
 	pUnknownWnd = GetChildChecked<IWindow>( pWnd, "UnitUnknown", true );
 	pNoneWnd = GetChildChecked<IWindow>( pWnd, "UnitNone", true );
@@ -51,24 +55,38 @@ void SChapterReinfBase::SUnit::InitControls( IWindow *_pWnd, const std::string &
 	pHPBar = GetChildChecked<IProgressBar>( pWnd, "HPBar", true );
 
 	if ( pAppearanceWnd )
+	{
 		pAppearanceWnd->ShowWindow( false );
+	}
 	if ( pUnknownWnd )
+	{
 		pUnknownWnd->ShowWindow( false );
+	}
 	if ( pNoneWnd )
+	{
 		pNoneWnd->ShowWindow( false );
+	}
 	if ( pCountWnd )
+	{
 		pCountWnd->ShowWindow( false );
+	}
 	if ( pSelectionWnd )
+	{
 		pSelectionWnd->ShowWindow( false );
+	}
 
 	if ( p3DCtrl )
+	{
 		p3DCtrl->SetBaseID3D( nBaseIndex );
+	}
 }
 
 void SChapterReinfBase::SUnit::ShowSelection( bool bShow )
 {
 	if ( pSelectionWnd )
+	{
 		pSelectionWnd->ShowWindow( bShow );
+	}
 }
 
 void SChapterReinfBase::SUnit::SetUnknown()
@@ -77,17 +95,29 @@ void SChapterReinfBase::SUnit::SetUnknown()
 
 	NI_ASSERT( IsValid( pAppearanceWnd ), "Programmers: incorrect destroy order" );
 	if ( pAppearanceWnd )
+	{
 		pAppearanceWnd->ShowWindow( false );
+	}
 	if ( pUnknownWnd )
+	{
 		pUnknownWnd->ShowWindow( true );
+	}
 	if ( pNoneWnd )
+	{
 		pNoneWnd->ShowWindow( false );
+	}
 	if ( pCountWnd )
+	{
 		pCountWnd->ShowWindow( false );
+	}
 	if ( pSelectionWnd )
+	{
 		pSelectionWnd->ShowWindow( false );
+	}
 	if ( p3DCtrl )
+	{
 		p3DCtrl->ShowWindow( false );
+	}
 
 	Clear3DView();
 }
@@ -98,17 +128,29 @@ void SChapterReinfBase::SUnit::SetNone()
 
 	NI_ASSERT( IsValid( pAppearanceWnd ), "Programmers: incorrect destroy order" );
 	if ( pAppearanceWnd )
+	{
 		pAppearanceWnd->ShowWindow( false );
+	}
 	if ( pUnknownWnd )
+	{
 		pUnknownWnd->ShowWindow( false );
+	}
 	if ( pNoneWnd )
+	{
 		pNoneWnd->ShowWindow( true );
+	}
 	if ( pCountWnd )
+	{
 		pCountWnd->ShowWindow( false );
+	}
 	if ( pSelectionWnd )
+	{
 		pSelectionWnd->ShowWindow( false );
+	}
 	if ( p3DCtrl )
+	{
 		p3DCtrl->ShowWindow( false );
+	}
 
 	Clear3DView();
 }
@@ -120,23 +162,35 @@ void SChapterReinfBase::SUnit::SetUnit( const SUnitData &_data )
 	MakeUnitInfo();
 
 	if ( pAppearanceWnd )
+	{
 		pAppearanceWnd->ShowWindow( true );
+	}
 	if ( pUnknownWnd )
+	{
 		pUnknownWnd->ShowWindow( false );
+	}
 	if ( pNoneWnd )
+	{
 		pNoneWnd->ShowWindow( false );
+	}
 	if ( pCountWnd )
+	{
 		pCountWnd->ShowWindow( data.nCount > 1 );
+	}
 	if ( data.nCount > 1 )
 	{
 		std::wstring wszCount = NStr::ToUnicode( std::to_string( data.nCount ) );
 		if ( pCountView )
+		{
 			pCountView->SetText( pCountView->GetDBText() + wszCount );
+		}
 	}
 
 	std::wstring wszHP = NStr::ToUnicode( std::to_string( data.nHP ) );
 	if ( pHPView )
+	{
 		pHPView->SetText( pHPView->GetDBText() + wszHP );
+	}
 
 	if ( pHPBar )
 	{
@@ -156,29 +210,51 @@ void SChapterReinfBase::SUnit::SetUnit( const SUnitData &_data )
 		std::wstring wszArmorTop = NStr::ToUnicode( std::to_string( data.armors[NUnitFullInfo::ES_ARMOR_TOP] ) );
 		std::wstring wszArmorBack = NStr::ToUnicode( std::to_string( data.armors[NUnitFullInfo::ES_ARMOR_BACK] ) );
 		if ( pArmorFrontView )
+		{
 			pArmorFrontView->SetText( pArmorFrontView->GetDBText() + wszArmorFront );
+		}
 		if ( pArmorLeftView )
+		{
 			pArmorLeftView->SetText( pArmorLeftView->GetDBText() + wszArmorSide );
+		}
 		if ( pArmorRightView )
+		{
 			pArmorRightView->SetText( pArmorRightView->GetDBText() + wszArmorSide );
+		}
 		if ( pArmorTopView )
+		{
 			pArmorTopView->SetText( pArmorTopView->GetDBText() + wszArmorTop );
+		}
 		if ( pArmorBackView )
+		{
 			pArmorBackView->SetText( pArmorBackView->GetDBText() + wszArmorBack );
+		}
 	}
 	if ( pArmorFrontView )
+	{
 		pArmorFrontView->ShowWindow( bShowArmor );
+	}
 	if ( pArmorLeftView )
+	{
 		pArmorLeftView->ShowWindow( bShowArmor );
+	}
 	if ( pArmorRightView )
+	{
 		pArmorRightView->ShowWindow( bShowArmor );
+	}
 	if ( pArmorTopView )
+	{
 		pArmorTopView->ShowWindow( bShowArmor );
+	}
 	if ( pArmorBackView )
+	{
 		pArmorBackView->ShowWindow( bShowArmor );
+	}
 
 	if ( p3DCtrl )
+	{
 		p3DCtrl->ShowWindow( true );
+	}
 
 	Show3DView();
 }
@@ -189,10 +265,14 @@ void SChapterReinfBase::SUnit::MakeUnitInfo()
 
 	const NDb::SHPObjectRPGStats *pStats = data.pMechUnit;
 	if ( !pStats )
+	{
 		pStats = data.pSquad;
+	}
 
 	if ( pStats && CHECK_TEXT_NOT_EMPTY_PRE( pStats->, LocalizedName ) )
+	{
 		data.wszName = GET_TEXT_PRE( pStats->, LocalizedName );
+	}
 
 	NUnitFullInfo::MakeWeapons( data.weapons, pStats );
 	NUnitFullInfo::MakeArmors( data.armors, pStats );
@@ -204,19 +284,25 @@ void SChapterReinfBase::SUnit::MakeUnitInfo()
 void SChapterReinfBase::SUnit::Clear3DView()
 {
 	if ( p3DCtrl )
+	{
 		p3DCtrl->SetObjects( std::vector<IWindow3DControl::SObject>() );
+	}
 }
 
 void SChapterReinfBase::SUnit::Show3DView()
 {
 	if ( p3DCtrl )
+	{
 		p3DCtrl->SetObjects( data.objects3D );
+	}
 }
 
 void SChapterReinfBase::SUnit::Make3DInfo( const NDb::SHPObjectRPGStats *pStats )
 {
 	if ( !p3DCtrl )
+	{
 		return;
+	}
 
 	data.objects3D.clear();
 
@@ -226,13 +312,17 @@ void SChapterReinfBase::SUnit::Make3DInfo( const NDb::SHPObjectRPGStats *pStats 
 		{
 			const NDb::SInfantryRPGStats *pMember = pSquadStats->members[i];
 			if ( !pMember )
+			{
 				continue;
+			}
 			IWindow3DControl::SParam param = p3DCtrl->GetDBObjectParam( i + 1 );
 			IWindow3DControl::SObject object;
 			object.nID = i;
 			const NDb::SVisObj *pVisObj = pMember->pinfoVisualObject;
 			if ( !pVisObj )
+			{
 				pVisObj = pMember->pvisualObject;
+			}
 			object.pModel = NUnitFullInfo::GetModel( pVisObj, NDb::SEASON_SUMMER );
 			NI_ASSERT( object.pModel, fmt::format( "Designers: no model for object: {}", pStats->GetDBID().ToString() ) );
 			object.vPos = param.vPos;
@@ -251,7 +341,9 @@ void SChapterReinfBase::SUnit::Make3DInfo( const NDb::SHPObjectRPGStats *pStats 
 		{
 			pVisObj = pStats->pinfoVisualObject;
 			if ( !pVisObj )
+			{
 				pVisObj = pStats->pvisualObject;
+			}
 		}
 		object.pModel = pStats ? NUnitFullInfo::GetModel( pVisObj, NDb::SEASON_SUMMER ) : 0;
 		NI_ASSERT( !pStats || object.pModel,
@@ -276,7 +368,9 @@ void SChapterReinfBase::InitUnitInfoControls( IWindow *pBaseWnd )
 		{
 			IWindow *pWnd = pBaseWnd->GetChild( fmt::format( "UnitWeapon{}", i ), true );
 			if ( !pWnd )
+			{
 				break;
+			}
 			weapons.push_back( SUnitWeapon() );
 			SUnitWeapon &weapon = weapons.back();
 			weapon.pWnd = pWnd;
@@ -288,18 +382,26 @@ void SChapterReinfBase::InitUnitInfoControls( IWindow *pBaseWnd )
 		}
 	}
 	if ( pUnitSupplyLabel )
+	{
 		pUnitSupplyLabel->ShowWindow( false );
+	}
 	if ( pUnitSupplyView )
+	{
 		pUnitSupplyView->ShowWindow( false );
+	}
 }
 
 void SChapterReinfBase::ShowUnitInfo( SUnit *pUnit )
 {
 	std::wstring wszName;
 	if ( pUnit )
+	{
 		wszName = pUnit->data.wszName;
+	}
 	if ( pUnitNameView )
+	{
 		pUnitNameView->SetText( pUnitNameView->GetDBText() + wszName );
+	}
 
 	for ( int i = 0; i < weapons.size(); ++i )
 	{
@@ -307,33 +409,47 @@ void SChapterReinfBase::ShowUnitInfo( SUnit *pUnit )
 		if ( !pUnit || i >= pUnit->data.weapons.size() )
 		{
 			if ( weapon.pWnd )
+			{
 				weapon.pWnd->ShowWindow( false );
+			}
 			continue;
 		}
 
 		NUnitFullInfo::SWeapon &weaponInfo = pUnit->data.weapons[i];
 		if ( weapon.pWnd )
+		{
 			weapon.pWnd->ShowWindow( true );
+		}
 		if ( weapon.pIconWnd )
 		{
 			std::wstring wszTooltip;
 			if ( weaponInfo.pWeapon && CHECK_TEXT_NOT_EMPTY_PRE( weaponInfo.pWeapon->, LocalizedName ) )
+			{
 				wszTooltip = GET_TEXT_PRE( weaponInfo.pWeapon->, LocalizedName );
+			}
 			weapon.pIconWnd->SetTexture( weaponInfo.pWeapon ? weaponInfo.pWeapon->pWeaponTypeTexture : 0 );
 			weapon.pIconWnd->SetTooltip( wszTooltip );
 		}
 		std::wstring wszCount = NStr::ToUnicode( std::to_string( weaponInfo.nCount ) );
 		if ( weapon.pCountView )
+		{
 			weapon.pCountView->SetText( weapon.pCountView->GetDBText() + wszCount );
+		}
 		std::wstring wszDamage = NStr::ToUnicode( std::to_string( weaponInfo.nDamage ) );
 		if ( weapon.pDamageView )
+		{
 			weapon.pDamageView->SetText( weapon.pDamageView->GetDBText() + wszDamage );
+		}
 		std::wstring wszPenetration = NStr::ToUnicode( std::to_string( weaponInfo.nPenetration ) );
 		if ( weapon.pPenetrationView )
+		{
 			weapon.pPenetrationView->SetText( weapon.pPenetrationView->GetDBText() + wszPenetration );
+		}
 		std::wstring wszAmmo = NStr::ToUnicode( std::to_string( weaponInfo.nAmmo ) );
 		if ( weapon.pAmmoView )
+		{
 			weapon.pAmmoView->SetText( weapon.pAmmoView->GetDBText() + wszAmmo );
+		}
 	}
 
 	bool bIsSupply = pUnit ? pUnit->data.weapons.empty() : false;
@@ -341,10 +457,14 @@ void SChapterReinfBase::ShowUnitInfo( SUnit *pUnit )
 	{
 		if ( pUnit->data.pMechUnit->pActions &&
 		     NUnitFullInfo::IsResourcesCarrier( pUnit->data.pMechUnit->pActions->availUserActions ) )
+		{
 			bIsSupply = true;
+		}
 	}
 	if ( pUnitSupplyLabel )
+	{
 		pUnitSupplyLabel->ShowWindow( bIsSupply );
+	}
 	if ( pUnitSupplyView )
 	{
 		pUnitSupplyView->ShowWindow( bIsSupply );
@@ -356,7 +476,9 @@ void SChapterReinfBase::MakeReinfData( std::vector<SUnitData> &units, const NDb:
 {
 	units.resize( 0 );
 	if ( !pReinf )
+	{
 		return;
+	}
 
 	units.reserve( pReinf->entries.size() );
 	for ( int i = 0; i < pReinf->entries.size(); ++i )
@@ -369,9 +491,13 @@ void SChapterReinfBase::MakeReinfData( std::vector<SUnitData> &units, const NDb:
 
 		std::vector<SUnitData>::iterator it = find_if( units.begin(), units.end(), unitData );
 		if ( it == units.end() )
+		{
 			units.push_back( unitData );
+		}
 		else
+		{
 			++( it->nCount );
+		}
 	}
 }
 
@@ -384,11 +510,15 @@ void SChapterReinfUpgrade::InitControls( IWindow *_pBaseWnd )
 	pReinfIconWnd = GetChildChecked<IWindow>( pUpgradePanel, "ReinfIcon", true );
 	pReinfHeaderView = GetChildChecked<ITextView>( pUpgradePanel, "Header", true );
 	if ( pUpgradePanel )
+	{
 		pUpgradePanel->ShowWindow( false );
+	}
 
 	pLineTemplate = GetChildChecked<IWindow>( pUpgradePanel, "UpgradeLine", true );
 	if ( pLineTemplate )
+	{
 		pLineTemplate->ShowWindow( false );
+	}
 	pContainer = GetChildChecked<IScrollableContainer>( pUpgradePanel, "Container", true );
 
 	InitUnitInfoControls( pUpgradePanel );
@@ -397,20 +527,32 @@ void SChapterReinfUpgrade::InitControls( IWindow *_pBaseWnd )
 void SChapterReinfUpgrade::ShowReinf( const NDb::SReinforcement *pOldReinf, const NDb::SReinforcement *pNewReinf )
 {
 	if ( !pNewReinf && !pOldReinf )
+	{
 		return;
+	}
 
 	if ( pBaseWnd )
+	{
 		pBaseWnd->ShowWindow( true );
+	}
 	if ( pUpgradePanel )
+	{
 		pUpgradePanel->ShowWindow( true );
+	}
 
 	if ( pReinfIconWnd )
+	{
 		pReinfIconWnd->SetTexture( pNewReinf ? pNewReinf->pIconTexture : 0 );
+	}
 	std::wstring wszName;
 	if ( pNewReinf && CHECK_TEXT_NOT_EMPTY_PRE( pNewReinf->, LocalizedName ) )
+	{
 		wszName = GET_TEXT_PRE( pNewReinf->, LocalizedName );
+	}
 	if ( pReinfHeaderView )
+	{
 		pReinfHeaderView->SetText( pReinfHeaderView->GetDBText() + wszName );
+	}
 
 	std::vector<SUnitData> unitsDataOld;
 	std::vector<SUnitData> unitsDataNew;
@@ -480,7 +622,9 @@ void SChapterReinfUpgrade::ShowReinf( const NDb::SReinforcement *pOldReinf, cons
 void SChapterReinfUpgrade::UnitBtnPressed( const std::string &szSender )
 {
 	if ( !pBaseWnd || !pBaseWnd->IsVisible() )
+	{
 		return;
+	}
 
 	for ( int i = 0; i < lines.size(); ++i )
 	{
@@ -501,33 +645,49 @@ void SChapterReinfUpgrade::UnitBtnPressed( const std::string &szSender )
 void SChapterReinfUpgrade::Hide()
 {
 	if ( pSelectedUnit )
+	{
 		pSelectedUnit->ShowSelection( false );
+	}
 	pSelectedUnit = 0;
 	if ( pBaseWnd )
+	{
 		pBaseWnd->ShowWindow( false );
+	}
 	if ( pUpgradePanel )
+	{
 		pUpgradePanel->ShowWindow( false );
+	}
 
 	for ( int i = 0; i < lines.size(); ++i )
 	{
 		if ( lines[i].pUnit1 )
+		{
 			lines[i].pUnit1->SetUnknown();
+		}
 		if ( lines[i].pUnit2 )
+		{
 			lines[i].pUnit2->SetUnknown();
+		}
 	}
 
 	lines.resize( 0 );
 
 	if ( pContainer )
+	{
 		pContainer->RemoveItems();
+	}
 }
 
 void SChapterReinfUpgrade::SelectUnit( SUnit *pUnit )
 {
 	if ( !pUnit || pUnit->data.nCount == 0 )
+	{
 		return;
+	}
 	if ( pSelectedUnit )
+	{
 		pSelectedUnit->ShowSelection( false );
+	}
 	pSelectedUnit = pUnit;
 	if ( pSelectedUnit )
 	{
@@ -554,7 +714,9 @@ void SChapterReinfComposition::InitControls( IWindow *_pBaseWnd )
 	pReinfIconWnd = GetChildChecked<IWindow>( pCompositionPanel, "ReinfIcon", true );
 	pReinfHeaderView = GetChildChecked<ITextView>( pCompositionPanel, "ReinfNameView", true );
 	if ( pCompositionPanel )
+	{
 		pCompositionPanel->ShowWindow( false );
+	}
 
 	if ( pCompositionPanel )
 	{
@@ -562,7 +724,9 @@ void SChapterReinfComposition::InitControls( IWindow *_pBaseWnd )
 		{
 			IWindow *pWnd = pCompositionPanel->GetChild( fmt::format( "Unit{}", i ), true );
 			if ( !pWnd )
+			{
 				break;
+			}
 			units.push_back( new SUnit() );
 			SUnit *pUnit = units.back();
 			pUnit->InitControls( pWnd, fmt::format( "UnitBtn{}", i ), BASE_ID_3D + DELTA_ID_3D * i );
@@ -575,17 +739,27 @@ void SChapterReinfComposition::InitControls( IWindow *_pBaseWnd )
 void SChapterReinfComposition::ShowReinf( const NDb::SReinforcement *pReinf )
 {
 	if ( pBaseWnd )
+	{
 		pBaseWnd->ShowWindow( true );
+	}
 	if ( pCompositionPanel )
+	{
 		pCompositionPanel->ShowWindow( true );
+	}
 
 	if ( pReinfIconWnd )
+	{
 		pReinfIconWnd->SetTexture( pReinf ? pReinf->pIconTexture : 0 );
+	}
 	std::wstring wszName;
 	if ( pReinf && CHECK_TEXT_NOT_EMPTY_PRE( pReinf->, LocalizedName ) )
+	{
 		wszName = GET_TEXT_PRE( pReinf->, LocalizedName );
+	}
 	if ( pReinfHeaderView )
+	{
 		pReinfHeaderView->SetText( pReinfHeaderView->GetDBText() + wszName );
+	}
 
 	if ( !pReinf )
 	{
@@ -612,7 +786,9 @@ void SChapterReinfComposition::ShowReinf( const NDb::SReinforcement *pReinf )
 void SChapterReinfComposition::UnitBtnPressed( const std::string &szSender )
 {
 	if ( !pBaseWnd || !pBaseWnd->IsVisible() )
+	{
 		return;
+	}
 
 	for ( int i = 0; i < units.size(); ++i )
 	{
@@ -628,12 +804,18 @@ void SChapterReinfComposition::UnitBtnPressed( const std::string &szSender )
 void SChapterReinfComposition::Hide()
 {
 	if ( pSelectedUnit )
+	{
 		pSelectedUnit->ShowSelection( false );
+	}
 	pSelectedUnit = 0;
 	if ( pBaseWnd )
+	{
 		pBaseWnd->ShowWindow( false );
+	}
 	if ( pCompositionPanel )
+	{
 		pCompositionPanel->ShowWindow( false );
+	}
 
 	for ( int i = 0; i < units.size(); ++i )
 	{
@@ -644,12 +826,18 @@ void SChapterReinfComposition::Hide()
 void SChapterReinfComposition::SelectUnit( SUnit *pUnit )
 {
 	if ( !pUnit || pUnit->data.nCount == 0 )
+	{
 		return;
+	}
 	if ( pSelectedUnit )
+	{
 		pSelectedUnit->ShowSelection( false );
+	}
 	pSelectedUnit = pUnit;
 	if ( pSelectedUnit )
+	{
 		pSelectedUnit->ShowSelection( true );
+	}
 	ShowUnitInfo( pUnit );
 }
 
@@ -666,11 +854,15 @@ void CInterfaceChapterMapMenu::SChapterDesc::InitControls( IWindow *_pBaseWnd )
 	pDescHeader = GetChildChecked<ITextView>( pContainer, "ItemHeader", true );
 
 	if ( pPanel )
+	{
 		pPanel->ShowWindow( false );
+	}
 	if ( pContainer )
 	{
 		if ( pItemGeneral )
+		{
 			pContainer->PushBack( pItemGeneral, false );
+		}
 		if ( pDescView && pDescHeader )
 		{
 			pContainer->PushBack( pDescHeader, false );
@@ -682,15 +874,21 @@ void CInterfaceChapterMapMenu::SChapterDesc::InitControls( IWindow *_pBaseWnd )
 void CInterfaceChapterMapMenu::SChapterDesc::Show( const NDb::SChapter *pChapter )
 {
 	if ( pBaseWnd )
+	{
 		pBaseWnd->ShowWindow( true );
+	}
 	if ( pPanel )
+	{
 		pPanel->ShowWindow( true );
+	}
 	if ( pContainer && pItemGeneral && pChapter )
 	{
 		CDBPtr<NDb::STexture> pPicture = pChapter->general.pPortrait;
 		std::wstring wszDesc;
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pChapter->general., Desc ) )
+		{
 			wszDesc = GET_TEXT_PRE( pChapter->general., Desc );
+		}
 
 		ITextView *pGeneralDesc = GetChildChecked<ITextView>( pItemGeneral, "ItemGeneralDesc", true );
 		IWindow *pGeneralPicture = GetChildChecked<IWindow>( pItemGeneral, "ItemGeneralPicture", true );
@@ -711,7 +909,9 @@ void CInterfaceChapterMapMenu::SChapterDesc::Show( const NDb::SChapter *pChapter
 	{
 		std::wstring wszDesc;
 		if ( pChapter && CHECK_TEXT_NOT_EMPTY_PRE( pChapter->, LocalizedDescription ) )
+		{
 			wszDesc = GET_TEXT_PRE( pChapter->, LocalizedDescription );
+		}
 		pDescView->SetText( pDescView->GetDBText() + wszDesc );
 
 		pContainer->Update();
@@ -721,9 +921,13 @@ void CInterfaceChapterMapMenu::SChapterDesc::Show( const NDb::SChapter *pChapter
 void CInterfaceChapterMapMenu::SChapterDesc::Hide()
 {
 	if ( pBaseWnd )
+	{
 		pBaseWnd->ShowWindow( false );
+	}
 	if ( pPanel )
+	{
 		pPanel->ShowWindow( false );
+	}
 }
 
 // CInterfaceChapterMapMenu::SMissionDesc
@@ -740,42 +944,62 @@ void CInterfaceChapterMapMenu::SMissionDesc::InitControls( IWindow *_pBaseWnd )
 	pWeatherView = GetChildChecked<ITextView>( pPanel, "Weather", true );
 
 	if ( pPanel )
+	{
 		pPanel->ShowWindow( false );
+	}
 	if ( pContainer && pDescView )
+	{
 		pContainer->PushBack( pDescView, false );
+	}
 }
 
 void CInterfaceChapterMapMenu::SMissionDesc::Show( const NDb::SMissionEnableInfo &mission )
 {
 	if ( pBaseWnd )
+	{
 		pBaseWnd->ShowWindow( true );
+	}
 	if ( pPanel )
+	{
 		pPanel->ShowWindow( true );
+	}
 
 	if ( pContainer && pDescView )
 	{
 		std::wstring wszMissionDesc;
 		if ( mission.pMap && CHECK_TEXT_NOT_EMPTY_PRE( mission.pMap->, LoadingDescription ) )
+		{
 			wszMissionDesc = GET_TEXT_PRE( mission.pMap->, LoadingDescription );
+		}
 		pDescView->SetText( pDescView->GetDBText() + wszMissionDesc );
 		pContainer->Update();
 	}
 
 	std::wstring wszName;
 	if ( mission.pMap && CHECK_TEXT_NOT_EMPTY_PRE( mission.pMap->, LocalizedName ) )
+	{
 		wszName = GET_TEXT_PRE( mission.pMap->, LocalizedName );
+	}
 	if ( pNameView )
+	{
 		pNameView->SetText( pNameView->GetDBText() + wszName );
+	}
 
 	std::wstring wszDifficulty;
 	if ( IScenarioTracker *pST = Singleton<IScenarioTracker>() )
 	{
 		if ( const NDb::SDifficultyLevel *pDifficulty = pST->GetDifficultyLevelDB() )
+		{
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( pDifficulty->, LocalizedName ) )
+			{
 				wszDifficulty = GET_TEXT_PRE( pDifficulty->, LocalizedName );
+			}
+		}
 	}
 	if ( pDifficultyView )
+	{
 		pDifficultyView->SetText( pDifficultyView->GetDBText() + wszDifficulty );
+	}
 
 	std::wstring wszWeather;
 	switch ( mission.eWeather )
@@ -797,15 +1021,21 @@ void CInterfaceChapterMapMenu::SMissionDesc::Show( const NDb::SMissionEnableInfo
 			break;
 	}
 	if ( pWeatherView )
+	{
 		pWeatherView->SetText( pWeatherView->GetDBText() + wszWeather );
+	}
 }
 
 void CInterfaceChapterMapMenu::SMissionDesc::Hide()
 {
 	if ( pBaseWnd )
+	{
 		pBaseWnd->ShowWindow( false );
+	}
 	if ( pPanel )
+	{
 		pPanel->ShowWindow( false );
+	}
 }
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x17235340, SChapterReinfUpgrade )

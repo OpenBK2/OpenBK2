@@ -39,21 +39,33 @@ public:
 	const EDiplomacyInfo GetDiplStatus( const uint8_t a, const uint8_t b ) const
 	{
 		if ( playerParty[a] == 2 || playerParty[b] == 2 )
+		{
 			return EDI_NEUTRAL;
+		}
 		else if ( playerParty[a] != playerParty[b] )
+		{
 			return EDI_ENEMY;
+		}
 		else
+		{
 			return EDI_FRIEND;
+		}
 	}
 
 	const EDiplomacyInfo GetDiplStatusForParties( const uint8_t nParty1, const uint8_t nParty2 )
 	{
 		if ( nParty1 == 2 || nParty2 == 2 )
+		{
 			return EDI_NEUTRAL;
+		}
 		else if ( nParty1 != nParty2 )
+		{
 			return EDI_ENEMY;
+		}
 		else
+		{
 			return EDI_FRIEND;
+		}
 	}
 
 	const uint8_t GetNParty( const uint8_t cPlayer ) const { return playerParty[cPlayer]; }

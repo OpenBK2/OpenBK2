@@ -116,7 +116,9 @@ bool CMapInfoBuilder::MakeMinimapMaterialAndTexture( std::string *pszObjectName,
 		// create texture
 		const std::string szTextureName = szFolder + "minimap_texture.xdb";
 		if ( pFolderCallback->InsertObject( TEXTURE_TYPE_NAME, szTextureName ) == false )
+		{
 			return false;
+		}
 		CPtr<IManipulator> pTexMan = pRM->CreateObjectManipulator( TEXTURE_TYPE_NAME, szTextureName );
 		bResult = bResult && CManipulatorManager::SetValue( "TEXTURE_2D", pTexMan, "Type", false );
 		bResult = bResult && CManipulatorManager::SetValue( "CONVERT_TRANSPARENT", pTexMan, "ConversionType", false );
@@ -131,7 +133,9 @@ bool CMapInfoBuilder::MakeMinimapMaterialAndTexture( std::string *pszObjectName,
 			// New maps need the source in the same mod layer as later saves.
 			CMemoryStream stream;
 			if ( !NImage::SaveAsTGA( image, &stream ) )
+			{
 				stream.SetBroken();
+			}
 			std::string error;
 			if ( !NVFS::WriteFile( NVFS::GetMainFileCreator(), szFolder + "minimap.tga", stream, &error ) )
 			{
@@ -140,12 +144,16 @@ bool CMapInfoBuilder::MakeMinimapMaterialAndTexture( std::string *pszObjectName,
 			}
 			if ( Singleton<IExporterContainer>()->ExportObject( pTexMan, TEXTURE_TYPE_NAME, szTextureName, true, false ) !=
 			     ER_SUCCESS )
+			{
 				return false;
+			}
 		}
 		// create material
 		const std::string szMaterialName = szFolder + "minimap_material.xdb";
 		if ( pFolderCallback->InsertObject( MATERIAL_TYPE_NAME, szMaterialName ) == false )
+		{
 			return false;
+		}
 		CPtr<IManipulator> pMatMan = pRM->CreateObjectManipulator( MATERIAL_TYPE_NAME, szMaterialName );
 		bResult = bResult && CManipulatorManager::SetValue( szTextureName, pMatMan, "Texture", true );
 		bResult = bResult && CManipulatorManager::SetValue( "AM_TRANSPARENT", pMatMan, "AlphaMode", false );
@@ -278,7 +286,9 @@ bool CMapInfoBuilder::InternalInsertObject( std::string *pszObjectTypeName,
 	const std::string szPreLightName = NEditorOptions::GetPreLight( szSeasonName, szDayTimeName );
 	const std::string szOceanWater = NEditorOptions::GetOceanWater( szSeasonName );
 	if ( szTilesetName.empty() || szLightName.empty() || szPreLightName.empty() || szOceanWater.empty() )
+	{
 		return false;
+	}
 	//
 	bool bResult = pFolderCallback->InsertObject( *pszObjectTypeName, szFullObjectName );
 	if ( bResult )
@@ -310,7 +320,9 @@ bool CMapInfoBuilder::InternalInsertObject( std::string *pszObjectTypeName,
 			{
 				bResult = bResult && pMapInfoManipulator->InsertNode( "Players" );
 				if ( !bResult )
+				{
 					break;
+				}
 			}
 			for ( int nPlayerIndex = 0; nPlayerIndex < nPlayerCount; ++nPlayerIndex )
 			{
@@ -323,14 +335,20 @@ bool CMapInfoBuilder::InternalInsertObject( std::string *pszObjectTypeName,
 				// set automatic diplomacy
 				int nPlayerDiplomacySide = 1;
 				if ( nPlayerIndex < nNumFriendlyPlayers )
+				{
 					nPlayerDiplomacySide = 0;
+				}
 				else if ( nPlayerIndex == nNeutralPlayerIndex )
+				{
 					nPlayerDiplomacySide = 2;
+				}
 				bResult = bResult && CManipulatorManager::SetValue( nPlayerDiplomacySide,
 				                                                    pMapInfoManipulator,
 				                                                    fmt::format( "Players.[{}].DiplomacySide", nPlayerIndex ) );
 				if ( !bResult )
+				{
 					break;
+				}
 			}
 		}
 		// Добавляем информацию о дипломатических отношениях
@@ -343,14 +361,18 @@ bool CMapInfoBuilder::InternalInsertObject( std::string *pszObjectTypeName,
 			{
 				bResult = bResult && pMapInfoManipulator->InsertNode( "Diplomacies" );
 				if ( !bResult )
+				{
 					break;
+				}
 			}
 			bResult = bResult && pMapInfoManipulator->SetValue( "Diplomacies.[0]", 0 );
 			for ( int nDiplomacyIndex = 1; nDiplomacyIndex < ( nPlayerCount - 1 ); ++nDiplomacyIndex )
 			{
 				bResult = bResult && pMapInfoManipulator->SetValue( fmt::format( "Diplomacies.[{}]", nDiplomacyIndex ), 1 );
 				if ( !bResult )
+				{
 					break;
+				}
 			}
 			bResult = bResult && pMapInfoManipulator->SetValue( fmt::format( "Diplomacies.[{}]", ( nPlayerCount - 1 ) ), 2 );
 		}
@@ -435,7 +457,9 @@ bool CMapInfoBuilder::InternalCopy( const std::string &rszObjectTypeName,
 
 	const NDb::SMapInfo *pMapInfo = NDb::Get<NDb::SMapInfo>( CDBID( rszSource ) );
 	if ( !pMapInfo )
+	{
 		return false;
+	}
 
 	const std::string szOldFolderName = rszSource.substr( 0, rszSource.rfind( '\\' ) + 1 );
 	const std::string szNewFolderName = szDestination.substr( 0, szDestination.rfind( '\\' ) + 1 );
@@ -449,7 +473,9 @@ bool CMapInfoBuilder::InternalCopy( const std::string &rszObjectTypeName,
 		}
 		//
 		if ( szSourceMapFileName.empty() )
+		{
 			return false;
+		}
 		//
 		TrippleCopy( szSourceMapFileName, szNewFolderName + "map.b2m", pUserData );
 	}
@@ -457,24 +483,32 @@ bool CMapInfoBuilder::InternalCopy( const std::string &rszObjectTypeName,
 	{
 		std::string szMinimapMaterialName;
 		if ( MakeMinimapMaterialAndTexture( &szMinimapMaterialName, szNewFolderName ) != false )
+		{
 			bResult = bResult && CManipulatorManager::SetValue( szMinimapMaterialName, pMapInfoManipulator, "MiniMap", true );
+		}
 	}
 	// copy raw script file
 	{
 		std::string szSrcScriptFileName = pUserData->constUserData.szExportSourceFolder + szOldFolderName + "script.lua";
 		if ( NFile::DoesFileExist( szSrcScriptFileName ) )
+		{
 			TrippleCopy( szSrcScriptFileName, szNewFolderName + "script.lua", pUserData );
+		}
 		else
 		{
 			szSrcScriptFileName = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) +
 			                      szOldFolderName + "script.lua";
 			if ( NFile::DoesFileExist( szSrcScriptFileName ) )
+			{
 				TrippleCopy( szSrcScriptFileName, szNewFolderName + "script.lua", pUserData );
+			}
 			else
 			{
 				szSrcScriptFileName = pUserData->constUserData.szDataStorageFolder + szOldFolderName + "script.lua";
 				if ( NFile::DoesFileExist( szSrcScriptFileName ) )
+				{
 					TrippleCopy( szSrcScriptFileName, szNewFolderName + "script.lua", pUserData );
+				}
 			}
 		}
 	}

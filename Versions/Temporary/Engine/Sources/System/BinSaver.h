@@ -138,7 +138,9 @@ private:
 	void PORT_CDECL CallObjectSerialize( const chunk_id idChunk, int nChunkNumber, T *p, ... )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		p->T::operator&( *this );
 		FinishChunk();
 	}
@@ -157,9 +159,13 @@ private:
 		{
 			data.clear();
 			if ( GetVersion() < 2 )
+			{
 				nSize = CountChunks( 1 );
+			}
 			else
+			{
 				Add( 2, &nSize );
+			}
 			data.resize( nSize );
 		}
 		else
@@ -168,7 +174,9 @@ private:
 			Add( 2, &nSize );
 		}
 		for ( i = 0; i < nSize; i++ )
+		{
 			Add( 1, &data[i], i + 1 );
+		}
 	}
 	template <class T>
 	void DoDataVector( std::vector<T> &data )
@@ -181,7 +189,9 @@ private:
 			data.resize( nSize );
 		}
 		if ( nSize > 0 )
+		{
 			DataChunk( 2, &data[0], sizeof( T ) * nSize, 1 );
+		}
 	}
 	// hash_map
 	template <class T1, class T2, class T3>
@@ -192,9 +202,13 @@ private:
 			data.clear();
 			int nSize, i;
 			if ( GetVersion() < 2 )
+			{
 				nSize = CountChunks( 1 );
+			}
 			else
+			{
 				Add( 3, &nSize );
+			}
 			if ( GetVersion() > 3 )
 			{
 				int nBuckets;
@@ -204,9 +218,13 @@ private:
 			std::vector<T1> indices;
 			indices.resize( nSize );
 			for ( i = 0; i < nSize; ++i )
+			{
 				Add( 1, &indices[i], i + 1 );
+			}
 			for ( i = 0; i < nSize; ++i )
+			{
 				Add( 2, &data[indices[i]], i + 1 );
+			}
 		}
 		else
 		{
@@ -218,11 +236,17 @@ private:
 			indices.resize( nSize );
 			int i = 1;
 			for ( typename std::unordered_map<T1, T2, T3>::iterator pos = data.begin(); pos != data.end(); ++pos, ++i )
+			{
 				indices[nSize - i] = pos->first;
+			}
 			for ( i = 0; i < nSize; ++i )
+			{
 				Add( 1, &indices[i], i + 1 );
+			}
 			for ( i = 0; i < nSize; ++i )
+			{
 				Add( 2, &data[indices[i]], i + 1 );
+			}
 		}
 	}
 
@@ -254,9 +278,13 @@ private:
 			data.clear();
 			int nSize, i;
 			if ( GetVersion() < 2 )
+			{
 				nSize = CountChunks( 1 );
+			}
 			else
+			{
 				Add( 3, &nSize );
+			}
 			if ( GetVersion() > 3 )
 			{
 				// Keep the chunk compatible with unordered_map saves. The exact
@@ -269,9 +297,13 @@ private:
 			std::vector<T1> indices;
 			indices.resize( nSize );
 			for ( i = 0; i < nSize; ++i )
+			{
 				Add( 1, &indices[i], i + 1 );
+			}
 			for ( i = 0; i < nSize; ++i )
+			{
 				Add( 2, &data[indices[i]], i + 1 );
+			}
 		}
 		else
 		{
@@ -290,14 +322,20 @@ private:
 			std::vector<T1> indices;
 			indices.reserve( nSize );
 			for ( typename det_map<T1, T2, T3, T4>::iterator pos = data.begin(); pos != data.end(); ++pos )
+			{
 				indices.push_back( pos->first );
+			}
 
 			for ( int i = 0; i < nSize; ++i )
+			{
 				Add( 1, &indices[i], i + 1 );
+			}
 
 			int i = 1;
 			for ( typename det_map<T1, T2, T3, T4>::iterator pos = data.begin(); pos != data.end(); ++pos, ++i )
+			{
 				Add( 2, &pos->second, i );
+			}
 		}
 	}
 
@@ -312,7 +350,9 @@ private:
 			data.clear();
 			data.reserve( vectorData.size() );
 			for ( typename std::vector<T1>::const_iterator it = vectorData.begin(); it != vectorData.end(); ++it )
+			{
 				data.insert( *it );
+			}
 		}
 		else
 		{
@@ -362,9 +402,13 @@ private:
 		Add( 1, &nXSize );
 		Add( 2, &nYSize );
 		if ( IsReading() )
+		{
 			a.SetSizes( nXSize, nYSize );
+		}
 		for ( int i = 0; i < nXSize * nYSize; i++ )
+		{
 			Add( 3, &a[i / nXSize][i % nXSize], i + 1 );
+		}
 	}
 	template <class T>
 	void Do2DArrayData( CArray2D<T> &a )
@@ -373,9 +417,13 @@ private:
 		Add( 1, &nXSize );
 		Add( 2, &nYSize );
 		if ( IsReading() )
+		{
 			a.SetSizes( nXSize, nYSize );
+		}
 		if ( nXSize * nYSize > 0 )
+		{
 			DataChunk( 3, &a[0][0], sizeof( T ) * nXSize * nYSize, 1 );
+		}
 	}
 	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber ) = 0;
 	virtual void FinishChunk() = 0;
@@ -408,21 +456,27 @@ public:
 	void Add( const chunk_id idChunk, stdString *pStr, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		DataChunkString( *pStr );
 		FinishChunk();
 	}
 	void Add( const chunk_id idChunk, stdWString *pStr, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		DataChunkString( *pStr );
 		FinishChunk();
 	}
 	void Add( const chunk_id idChunk, CMemoryStream *pStr, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		int nSize = pStr->GetSize();
 		Add( 1, &nSize );
 		if ( !StartChunk( 2, 1 ) )
@@ -431,7 +485,9 @@ public:
 			return;
 		}
 		if ( IsReading() )
+		{
 			pStr->SetSize( nSize );
+		}
 		DataChunk( 1, pStr->GetBufferForWrite(), nSize, 1 );
 		FinishChunk();
 		FinishChunk();
@@ -440,18 +496,26 @@ public:
 	void Add( const chunk_id idChunk, std::vector<T1> *pVec, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		if ( sizeof( TestDataPath( &( *pVec )[0] ) ) == 1 && sizeof( ( *pVec )[0] & ( *this ) ) == 1 )
+		{
 			DoDataVector( *pVec );
+		}
 		else
+		{
 			DoVector( *pVec );
+		}
 		FinishChunk();
 	}
 	template <class T1, class T2, class T3>
 	void Add( const chunk_id idChunk, std::unordered_map<T1, T2, T3> *pHash, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		DoHashMap( *pHash );
 		FinishChunk();
 	}
@@ -459,7 +523,9 @@ public:
 	void Add( const chunk_id idChunk, std::unordered_set<T1, T2> *pHash, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		DoHashSet( *pHash );
 		FinishChunk();
 	}
@@ -467,7 +533,9 @@ public:
 	void Add( const chunk_id idChunk, det_map<T1, T2, T3, T4> *pMap, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		DoDetMap( *pMap );
 		FinishChunk();
 	}
@@ -475,7 +543,9 @@ public:
 	void Add( const chunk_id idChunk, det_set<T1, T2, T3> *pSet, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		DoDetSet( *pSet );
 		FinishChunk();
 	}
@@ -483,7 +553,9 @@ public:
 	void Add( const chunk_id idChunk, std::priority_queue<T1, T2, T3> *pQueue, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		DoPriorityQueue( *pQueue );
 		FinishChunk();
 	}
@@ -501,7 +573,9 @@ public:
 	void Add( const chunk_id idChunk, std::set<T1, T2> *pSet, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		DoSet( *pSet );
 		FinishChunk();
 	}
@@ -509,26 +583,38 @@ public:
 	void Add( const chunk_id idChunk, CArray2D<T1> *pArr, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		if ( sizeof( TestDataPath( &( *pArr )[0][0] ) ) == 1 && sizeof( ( *pArr )[0][0] & ( *this ) ) == 1 )
+		{
 			Do2DArrayData( *pArr );
+		}
 		else
+		{
 			Do2DArray( *pArr );
+		}
 		FinishChunk();
 	}
 	template <class T1>
 	void Add( const chunk_id idChunk, std::list<T1> *pList, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		std::list<T1> &data = *pList;
 		if ( IsReading() )
 		{
 			int nSize;
 			if ( GetVersion() < 2 )
+			{
 				nSize = CountChunks( 1 );
+			}
 			else
+			{
 				Add( 2, &nSize );
+			}
 			data.clear();
 			data.insert( data.begin(), nSize, T1() );
 		}
@@ -539,14 +625,18 @@ public:
 		}
 		int i = 1;
 		for ( typename std::list<T1>::iterator k = data.begin(); k != data.end(); ++k, ++i )
+		{
 			Add( 1, &( *k ), i );
+		}
 		FinishChunk();
 	}
 	template <class T1, class T2>
 	void Add( const chunk_id idChunk, std::pair<T1, T2> *pData, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		Add( 1, &( pData->first ) );
 		Add( 2, &( pData->second ) );
 		FinishChunk();
@@ -554,7 +644,9 @@ public:
 	void AddPolymorphicBase( chunk_id idChunk, CObjectBase *pObject, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
+		{
 			return;
+		}
 		( *pObject ) & ( *this );
 		FinishChunk();
 	}
@@ -569,9 +661,13 @@ public:
 		}
 #endif
 		if ( IsReading() )
+		{
 			pData->Set( CastToUserObject( LoadObject(), (T1 *)0 ) );
+		}
 		else
+		{
 			StoreObject( pData->GetBarePtr() );
+		}
 	}
 
 private:

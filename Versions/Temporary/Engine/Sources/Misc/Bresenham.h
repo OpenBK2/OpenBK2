@@ -23,11 +23,15 @@ public:
 		// x component
 		xerr += xlen;
 		if ( xerr >= len )
+		{
 			x1 += xinc, xerr -= len;
+		}
 		// y component
 		yerr += ylen;
 		if ( yerr >= len )
+		{
 			y1 += yinc, yerr -= len;
+		}
 	}
 	// check for line's end
 	bool IsEnd() const { return ( x1 == x2 ) && ( y1 == y2 ); }
@@ -54,13 +58,17 @@ void ScanLine2( int x1, int y1, int x2, int y2, TFunctional &func )
 	CBresenham2 line( x1, y1, x2, y2 );
 	// first point
 	if ( func( line.GetX(), line.GetY() ) == false )
+	{
 		return;
+	}
 	// iterate line
 	while ( !line.IsEnd() )
 	{
 		line.Next();
 		if ( func( line.GetX(), line.GetY() ) == false )
+		{
 			break;
+		}
 	}
 }
 
@@ -123,26 +131,38 @@ public:
 	{
 		xerr += xlen;
 		if ( xerr >= len )
+		{
 			dir.x = xinc, xerr -= len;
+		}
 		else
+		{
 			dir.x = 0;
+		}
 
 		yerr += ylen;
 		if ( yerr >= len )
+		{
 			dir.y = yinc, yerr -= len;
+		}
 		else
+		{
 			dir.y = 0;
+		}
 	}
 
 	void MakePointStep()
 	{
 		xerr += xlen;
 		if ( xerr >= len )
+		{
 			dir.x += xinc, xerr -= len;
+		}
 
 		yerr += ylen;
 		if ( yerr >= len )
+		{
 			dir.y += yinc, yerr -= len;
+		}
 	}
 
 	const SVector &GetDirection() const { return dir; }

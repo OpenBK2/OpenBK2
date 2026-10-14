@@ -142,8 +142,10 @@ public:
 				pStream->Read( &( palette24[0] ), sizeof( SColor24 ) * palette24.size() );
 				palette.reserve( nColorMapLength );
 				for ( std::vector<SColor24>::const_iterator it = palette24.begin(); it != palette24.end(); ++it )
+				{
 					palette.push_back( 0xff000000 | ( uint32_t( it->r ) << 16 ) | ( uint32_t( it->g ) << 8 ) |
 					                   uint32_t( it->b ) );
+				}
 			}
 			break;
 			default:
@@ -206,7 +208,9 @@ public:
 				pStream->Read( &( palette32[0] ), sizeof( uint32_t ) * palette32.size() );
 				palette.reserve( nColorMapLength );
 				for ( std::vector<uint32_t>::const_iterator it = palette32.begin(); it != palette32.end(); ++it )
+				{
 					palette.push_back( MakeGray( GetR( *it ), GetG( *it ), GetB( *it ) ) );
+				}
 			}
 			break;
 			case 24:
@@ -215,7 +219,9 @@ public:
 				pStream->Read( &( palette24[0] ), sizeof( SColor24 ) * palette24.size() );
 				palette.reserve( nColorMapLength );
 				for ( std::vector<SColor24>::const_iterator it = palette24.begin(); it != palette24.end(); ++it )
+				{
 					palette.push_back( MakeGray( it->r, it->g, it->b ) );
+				}
 			}
 			break;
 			default:
@@ -242,8 +248,10 @@ public:
 				pStream->Read( &( palette32[0] ), sizeof( uint32_t ) * palette32.size() );
 				palette.reserve( nColorMapLength );
 				for ( std::vector<uint32_t>::const_iterator it = palette32.begin(); it != palette32.end(); ++it )
+				{
 					palette.push_back(
 							CVec4( GetR( *it ) / 255.0f, GetG( *it ) / 255.0f, GetB( *it ) / 255.0f, GetA( *it ) / 255.0f ) );
+				}
 			}
 			break;
 			case 24:
@@ -252,7 +260,9 @@ public:
 				pStream->Read( &( palette24[0] ), sizeof( SColor24 ) * palette24.size() );
 				palette.reserve( nColorMapLength );
 				for ( std::vector<SColor24>::const_iterator it = palette24.begin(); it != palette24.end(); ++it )
+				{
 					palette.push_back( CVec4( it->r / 255.0f, it->g / 255.0f, it->b / 255.0f, 1.0f ) );
+				}
 			}
 			break;
 			default:
@@ -367,7 +377,9 @@ inline void Convert( CArray2D<TOutColor> *pDst, const CArray2D<TInColor> &src )
 	const TInColor *pEnd = pInColor + src.GetSizeX() * src.GetSizeY();
 	TOutColor *pOutColor = &( ( *pDst )[0][0] );
 	for ( ; pInColor != pEnd; ++pInColor, ++pOutColor )
+	{
 		*pOutColor = convertor( *pInColor );
+	}
 }
 
 template <typename TColor>

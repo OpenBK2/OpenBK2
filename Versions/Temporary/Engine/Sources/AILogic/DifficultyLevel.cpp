@@ -47,7 +47,9 @@ void CDifficultyLevel::Init()
 		}
 	}
 	if ( theDipl.IsNetGame() )
+	{
 		nLevel = 1;
+	}
 
 	nCheatLevel = 255;
 }
@@ -60,5 +62,7 @@ void CDifficultyLevel::SetLevel( const int _nLevel )
 void CDifficultyLevel::OnSerialize( IBinSaver &saver )
 {
 	if ( saver.IsReading() )
+	{
 		Init();
+	}
 }

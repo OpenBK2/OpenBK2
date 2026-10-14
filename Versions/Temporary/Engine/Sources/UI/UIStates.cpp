@@ -16,7 +16,9 @@ CStates::CStates( const NDb::SUIStateSequence &seq,
 	Reserve( seq.commands.size() );
 	for ( std::vector<CDBPtr<NDb::SUIStateBase>>::const_iterator it = seq.commands.begin(); it != seq.commands.end();
 	      ++it )
+	{
 		Add( *it );
+	}
 	CheckEnd();
 }
 
@@ -42,7 +44,9 @@ void CStates::FastForward( const int timeDiff, class CWindowScreen *pScreen )
 void CStates::NotifyParent()
 {
 	if ( IsValid( pNotifySink ) )
+	{
 		pNotifySink->NotifyStateSequenceFinished();
+	}
 }
 
 void CStates::CheckEnd()
@@ -60,7 +64,9 @@ void CStates::CheckEnd()
 		NotifyParent();
 	}
 	else if ( !states.empty() )
+	{
 		bEnd = false;
+	}
 }
 
 void CStates::Add( const NDb::SUIStateBase *_pCmd )
@@ -89,8 +95,12 @@ void CStates::Reverse()
 	if ( !IsEnd() ) // notify every effect about reverce
 	{
 		for ( int i = 0; i < states.size(); ++i )
+		{
 			if ( states[i].pEffect )
+			{
 				states[i].pEffect->Reverse();
+			}
+		}
 	}
 }
 
@@ -111,14 +121,22 @@ void CStates::Play( const int timeDiff, class CWindowScreen *pScreen, const bool
 		{
 			IUIEffector *pEff = CreateEffect( GetCur().pCmd, pScreen, pContext );
 			if ( 0 == pEff )
+			{
 				Advance();
+			}
 			else
+			{
 				GetCur().pEffect = pEff;
+			}
 		}
 		else if ( GetCur().pEffect->IsFinished() ) // effect is finished, advance to next command
+		{
 			Advance();
+		}
 		else if ( timeAllowed <= 0 )
+		{
 			break;
+		}
 		else
 		{
 			const int timeConsumed = GetCur().pEffect->Segment( timeAllowed, pScreen, bFastForward );

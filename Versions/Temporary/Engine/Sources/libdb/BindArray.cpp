@@ -56,22 +56,32 @@ namespace NBind
 		{
 			int nSize = 0;
 			if ( pParent->GetValue( szAddName, &nSize ) != false )
+			{
 				return nSize;
+			}
 			else
+			{
 				return 0;
+			}
 		}
 		void ReportArrayInsert( int nPos, int nAmount )
 		{
 			if ( nIndex >= nPos )
+			{
 				nIndex += nAmount;
+			}
 		}
 		void ReportArrayRemove( int nPos, int nAmount )
 		{
 			// A manipulator for an erased element must never refer to its successor.
 			if ( nIndex >= nPos && nIndex < nPos + nAmount )
+			{
 				nIndex = -1;
+			}
 			else if ( nIndex >= nPos + nAmount )
+			{
 				nIndex -= nAmount;
+			}
 		}
 		//
 		IObjManIterator *CreateIterator( bool bShowHidden )
@@ -84,12 +94,18 @@ namespace NBind
 		IObjMan *CreateManipulator( const std::string &szName )
 		{
 			if ( szName.empty() )
+			{
 				return this;
+			}
 			SBindProcessor bindProcessor;
 			if ( pBindArray->InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
+			{
 				return bindProcessor.CreateManipulator( szName, this );
+			}
 			else
+			{
 				return 0;
+			}
 		}
 		std::string GetFullName() const
 		{
@@ -97,10 +113,14 @@ namespace NBind
 			if ( !szFullName.empty() )
 			{
 				if ( !szAddName.empty() )
+				{
 					szFullName = szFullName + "." + szAddName;
+				}
 			}
 			else
+			{
 				szFullName = szAddName;
+			}
 			//
 			return !szFullName.empty() ? szFullName + fmt::format( ".[{}]", nIndex ) : fmt::format( "[{}]", nIndex );
 		}
@@ -110,55 +130,79 @@ namespace NBind
 			SetChanged();
 			SBindProcessor bindProcessor;
 			if ( pBindArray->InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
+			{
 				return bindProcessor.SetValue( szName, value );
+			}
 			else
+			{
 				return false;
+			}
 		}
 		bool GetValue( const std::string &szName, CVariant *pValue )
 		{
 			SBindProcessor bindProcessor;
 			if ( pBindArray->InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
+			{
 				return bindProcessor.GetValue( szName, pValue );
+			}
 			else
+			{
 				return false;
+			}
 		}
 		// array-specific functions
 		bool Insert( const std::string &szName, const int nPos, const int nAmount = 1, bool bSetDefault = false )
 		{
 			SetChanged();
 			if ( szName.empty() )
+			{
 				return pParent->Insert( szAddName, nPos, nAmount, bSetDefault );
+			}
 			else
 			{
 				SBindProcessor bindProcessor;
 				if ( pBindArray->InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
+				{
 					return bindProcessor.Insert( szName, nPos, nAmount, bSetDefault );
+				}
 				else
+				{
 					return false;
+				}
 			}
 		}
 		bool Remove( const std::string &szName, const int nPos, const int nAmount = 1 )
 		{
 			SetChanged();
 			if ( szName.empty() )
+			{
 				return pParent->Remove( szAddName, nPos, nAmount );
+			}
 			else
 			{
 				SBindProcessor bindProcessor;
 				if ( pBindArray->InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
+				{
 					return bindProcessor.Remove( szName, nPos, nAmount );
+				}
 				else
+				{
 					return false;
+				}
 			}
 		}
 		// get property field descriptor by name
 		const NTypeDef::STypeStructBase::SField *GetDesc( const std::string &szFullFieldName ) const
 		{
 			if ( szFullFieldName.empty() )
+			{
 				return &( pTypeArray->field );
+			}
 			else
+			{
 				return FindField(
 						szFullFieldName, 0, checked_cast_ptr<const NTypeDef::STypeStructBase *>( pTypeArray->field.pType ) );
+			}
 		}
 		// direct access to embedded struct (if it is)
 		CResource *GetObject() { return pParent->GetObject(); }
@@ -174,26 +218,38 @@ namespace NBind
 		{
 			SBindProcessor bindProcessor;
 			if ( pBindArray->InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
+			{
 				return bindProcessor.LoadXML( szAddName, pType, pNode, this );
+			}
 			else
+			{
 				return false;
+			}
 		}
 		bool SaveXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode )
 		{
 			SBindProcessor bindProcessor;
 			if ( pBindArray->InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
+			{
 				return bindProcessor.SaveXML( szAddName, pType, pNode, this );
+			}
 			else
+			{
 				return false;
+			}
 		}
 		bool SetDefault( const std::string &szAddName, NTypeDef::STypeStructBase *pType )
 		{
 			SetChanged();
 			SBindProcessor bindProcessor;
 			if ( pBindArray->InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
+			{
 				return bindProcessor.SetDefault( szAddName, pType );
+			}
 			else
+			{
 				return false;
+			}
 		}
 	};
 
@@ -230,20 +286,34 @@ namespace NBind
 	                                    NMetaInfo::SStructMetaInfo *pContained )
 	{
 		if ( nIndex < 0 )
+		{
 			return false;
+		}
 		if ( pContained->nNumCodeValues == 0 )
+		{
 			pBindProcessor->pThis = nullptr;
+		}
 		else if ( pRawVector && pContained->pArrayOperations && nIndex < pContained->pArrayOperations->size( pRawVector ) )
+		{
 			pBindProcessor->pThis = pContained->pArrayOperations->element( pRawVector, nIndex );
+		}
 		else
+		{
 			return false;
+		}
 		//
 		if ( pContained->nNumOwnValues == 0 )
+		{
 			pBindProcessor->ownValues = 0;
+		}
 		else if ( nIndex * pContained->nNumOwnValues < ownValues.size() )
+		{
 			pBindProcessor->ownValues = &( ownValues[nIndex * pContained->nNumOwnValues] );
+		}
 		else
+		{
 			return false;
+		}
 		//
 		pBindProcessor->pMetaInfo = pContained;
 		return true;
@@ -278,21 +348,29 @@ namespace NBind
 	                         bool bSetDefault )
 	{
 		if ( nAmount <= 0 || _nPos < -1 )
+		{
 			return false;
+		}
 		const int nSize = GetSize( field, pThis );
 		const int nPos = _nPos == -1 || _nPos > nSize ? nSize : _nPos;
 		const auto *operations = field.pContained->pArrayOperations;
 		void *vector = field.GetBinaryShift() == 0x0000ffff ? nullptr : pThis + field.GetBinaryShift();
 		if ( vector && !operations )
+		{
 			return false;
+		}
 		const int nOwn = field.pContained->nNumOwnValues;
 		// Reserve the sidecar before changing the typed vector, so its allocation
 		// cannot fail after vector insertion has already succeeded.
 		const size_t required = ( size_t( nSize ) + nAmount ) * nOwn;
 		if ( required > ownValues.capacity() )
+		{
 			ownValues.reserve( (std::max)( required, ownValues.capacity() * 2 ) );
+		}
 		if ( vector )
+		{
 			operations->insert( vector, nPos, nAmount );
+		}
 		ownValues.insert( ownValues.begin() + nPos * nOwn, nAmount * nOwn, UValue() );
 		for ( int i = 0; i < nAmount; ++i )
 		{
@@ -304,15 +382,21 @@ namespace NBind
 			{
 				SBindProcessor processor( data, values, field.pContained );
 				if ( field.pContained->singleField.main.size != 0 )
+				{
 					processor.SetValue( "",
 					                    checked_cast_ptr<const NTypeDef::STypeSimple *>( field.pContained->singleField.pTypeDef )
 					                        ->GetDefaultValue() );
+				}
 				else
+				{
 					processor.SetDefault( "", field.pContained->pStructTypeDef );
+				}
 			}
 		}
 		for ( auto *manipulator : arrayElementManipulators )
+		{
 			manipulator->ReportArrayInsert( nPos, nAmount );
+		}
 		return true;
 	}
 
@@ -323,25 +407,37 @@ namespace NBind
 	{
 		const int nSize = GetSize( field, pThis );
 		if ( nSize == 0 )
+		{
 			return true;
+		}
 		const int nPos = _nPos == -1 ? ( _nAmount == -1 ? 0 : nSize - 1 ) : _nPos;
 		if ( nPos < 0 || nPos >= nSize || _nAmount < -1 || _nAmount == 0 )
+		{
 			return false;
+		}
 		// Honor the requested count (the old implementation always removed one).
 		const int nAmount = _nAmount == -1 ? nSize - nPos : (std::min)( _nAmount, nSize - nPos );
 		const auto *operations = field.pContained->pArrayOperations;
 		void *vector = field.GetBinaryShift() == 0x0000ffff ? nullptr : pThis + field.GetBinaryShift();
 		if ( vector && !operations )
+		{
 			return false;
+		}
 		const int nOwn = field.pContained->nNumOwnValues;
 		for ( int i = 0; i < nAmount && nOwn; ++i )
+		{
 			field.pContained->DestructStruct(
 					vector ? operations->element( vector, nPos + i ) : nullptr, &ownValues[( nPos + i ) * nOwn], true );
+		}
 		if ( vector )
+		{
 			operations->remove( vector, nPos, nAmount );
+		}
 		ownValues.erase( ownValues.begin() + nPos * nOwn, ownValues.begin() + ( nPos + nAmount ) * nOwn );
 		for ( auto *manipulator : arrayElementManipulators )
+		{
 			manipulator->ReportArrayRemove( nPos, nAmount );
+		}
 		return true;
 	}
 
@@ -353,9 +449,13 @@ namespace NBind
 		// Do not erase compiled elements here: their enclosing C++ vector/resource
 		// will destroy them, or may remain alive after its manipulator is released.
 		if ( nOwn )
+		{
 			for ( int i = 0; i < int( ownValues.size() ) / nOwn; ++i )
+			{
 				field.pContained->DestructStruct(
 						vector && operations ? operations->element( vector, i ) : nullptr, &ownValues[i * nOwn], true );
+			}
+		}
 		ownValues.clear();
 	}
 
@@ -367,9 +467,13 @@ namespace NBind
 	{
 		SBindProcessor bindProcessor;
 		if ( InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
+		{
 			return bindProcessor.SetValue( szRestName, value );
+		}
 		else
+		{
 			return false;
+		}
 	}
 
 	bool CBindArray::GetValue( const std::string &szRestName,
@@ -380,9 +484,13 @@ namespace NBind
 	{
 		SBindProcessor bindProcessor;
 		if ( InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
+		{
 			return bindProcessor.GetValue( szRestName, pValue );
+		}
 		else
+		{
 			return false;
+		}
 	}
 
 	void CBindArray::RemoveArrayElementManipulator( IArrayElementManipulator *pArrElMan )
@@ -424,9 +532,13 @@ namespace NBind
 		if ( IArrayObjMan *pArrayObjMan = dynamic_cast_ptr<IArrayObjMan *>( pParent ) )
 		{
 			if ( szAddName.empty() )
+			{
 				nNumArrayElements = pArrayObjMan->GetSize();
+			}
 			else
+			{
 				pArrayObjMan->GetValue( szAddName, &nNumArrayElements );
+			}
 		}
 		else
 		{
@@ -449,7 +561,9 @@ namespace NBind
 	bool CArrayIterator::Next()
 	{
 		if ( pTypeArray->field.pType->IsSimpleType() )
+		{
 			return ++nCurrElementIndex < nNumArrayElements;
+		}
 		else
 		{
 			// check for iterator exists
@@ -468,10 +582,14 @@ namespace NBind
 			}
 			// can we obtain next field from iterator?
 			if ( pIterator->Next() == true )
+			{
 				return true;
+			}
 			// go to next array element
 			if ( bArrayElementLocked || ++nCurrElementIndex >= nNumArrayElements )
+			{
 				return false;
+			}
 			pIterator = 0;
 			return true;
 		}
@@ -480,7 +598,9 @@ namespace NBind
 	bool CArrayIterator::IsEnd() const
 	{
 		if ( pTypeArray->field.pType->IsSimpleType() )
+		{
 			return nCurrElementIndex >= nNumArrayElements;
+		}
 		else if ( pIterator )
 		{
 			return ( nCurrElementIndex >= nNumArrayElements ) ||
@@ -492,27 +612,41 @@ namespace NBind
 			       ( nCurrElementIndex + 1 >= nNumArrayElements && bArrayElementLocked );
 		}
 		else
+		{
 			return false;
+		}
 	}
 
 	std::string CArrayIterator::GetName() const
 	{
 		if ( pTypeArray->field.pType->IsSimpleType() || pIterator == 0 )
+		{
 			return szAddName.empty() ? "" : szAddName + fmt::format( ".[{}]", nCurrElementIndex );
+		}
 		else if ( pIterator )
+		{
 			return pIterator->GetName();
+		}
 		else
+		{
 			return "";
+		}
 	}
 
 	const NTypeDef::STypeStructBase::SField *CArrayIterator::GetDesc() const
 	{
 		if ( pTypeArray->field.pType->IsSimpleType() || ( pIterator == 0 && !bArrayElementLocked ) )
+		{
 			return &( pTypeArray->field );
+		}
 		else if ( pIterator )
+		{
 			return pIterator->GetDesc();
+		}
 		else
+		{
 			return 0;
+		}
 	}
 
 }

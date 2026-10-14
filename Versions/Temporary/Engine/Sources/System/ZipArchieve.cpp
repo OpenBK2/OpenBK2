@@ -165,7 +165,9 @@ CZipFile::CZipFile( const char *pszName ) : mmf( pszName, STREAM_ACCESS_READ )
 {
 	NI_ASSERT( pszName != 0, "NULL stream passed to zip file" );
 	if ( !mmf.IsOk() )
+	{
 		return;
+	}
 	nTotalSize = mmf.GetFileSize();
 	// The check this replaces was for the Windows 9x family, which had no
 	// file mapping. A failure here is still handled: CMemoryMappedFileFragment
@@ -175,14 +177,18 @@ CZipFile::CZipFile( const char *pszName ) : mmf( pszName, STREAM_ACCESS_READ )
 	// Assuming no extra comment at the end, read the whole end record.
 	int cdhOffset = nTotalSize - sizeof( SZipCentralDirHeader );
 	if ( cdhOffset < 0 )
+	{
 		return;
+	}
 	CMemoryMappedFileFragment cdhRead( &mmf, cdhOffset, sizeof( SZipCentralDirHeader ) );
 	const SZipCentralDirHeader &cdh = *(const SZipCentralDirHeader *)cdhRead.GetBuffer();
 
 	// Check
 	NI_ASSERT( cdh.dwSignature == SZipCentralDirHeader::SIGNATURE, "Can't recognize zip dir header" );
 	if ( cdh.dwSignature != SZipCentralDirHeader::SIGNATURE )
+	{
 		return;
+	}
 
 	int nDirStart = cdh.dwDirOffset; //cdhOffset - cdh.dwDirSize;
 	int nDirSize = cdh.dwDirSize;
@@ -199,7 +205,9 @@ CZipFile::CZipFile( const char *pszName ) : mmf( pszName, STREAM_ACCESS_READ )
 		const SZipFileHeader &hdr = *reinterpret_cast<const SZipFileHeader *>( pfh );
 		// Check the directory entry integrity.
 		if ( hdr.dwSignature != SZipFileHeader::SIGNATURE )
+		{
 			return;
+		}
 		else if ( hdr.wCompression == SZipLocalFileHeader::COMP_DEFLAT ||
 		          hdr.wCompression == SZipLocalFileHeader::COMP_STORE )
 		{
@@ -288,7 +296,9 @@ CDataStream *CZipFile::OpenFile( const SFileHeader &ghdr )
 	if ( hdr.wCompression == SZipLocalFileHeader::COMP_STORE )
 	{
 		if ( nBeginPos + dwCSize > nTotalSize )
+		{
 			return 0;
+		}
 		return new CMemoryMappedFileFragment( &mmf, nBeginPos, dwCSize );
 	}
 	// create new memory stream and setup stats
@@ -320,13 +330,17 @@ CDataStream *CZipFile::OpenFile( const SFileHeader &ghdr )
 		inflateEnd( &stream );
 		// CRAP{ почему-то иногда при распаковке возвращается "buffer error" всесто "stream end"...
 		if ( ( err == Z_STREAM_END ) || ( err == Z_BUF_ERROR ) )
+		{
 			err = Z_OK;
+		}
 		// CRAP}
 		inflateEnd( &stream );
 	}
 
 	if ( err == Z_OK )
+	{
 		return pDstStream;
+	}
 
 	delete pDstStream;
 	return 0;

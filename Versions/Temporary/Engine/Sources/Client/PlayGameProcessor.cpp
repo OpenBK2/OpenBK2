@@ -130,7 +130,9 @@ void CPlayGameProcessor::ProcessConnectServerProcessor()
 		while ( pConnectServerProcessor && ( pPacket = pConnectServerProcessor->GetPacket() ) )
 		{
 			if ( CConnectServerPacket *pConnectPacket = dynamic_cast_ptr<CConnectServerPacket *>( pPacket ) )
+			{
 				ProcessConnectServerPacket( pConnectPacket );
+			}
 		}
 	}
 }
@@ -146,7 +148,9 @@ void CPlayGameProcessor::ProcessAcceptingGamersPackets()
 			bool bProcessed = ProcessPacket( pPacket );
 
 			if ( pConnectServerProcessor )
+			{
 				bProcessed = pConnectServerProcessor->ProcessPacket( pPacket );
+			}
 
 			TConnectionEfforts::iterator eff_iter = connectionEfforts.begin();
 			while ( !bProcessed && eff_iter != connectionEfforts.end() )
@@ -163,25 +167,33 @@ void CPlayGameProcessor::ProcessAcceptingGamersPackets()
 				if ( pConnection->GetNet() == pAcceptGamersNet )
 				{
 					if ( pConnection->ProcessPacketFromPlayersNet( pPacket ) )
+					{
 						bProcessed = true;
+					}
 				}
 				++conn_iter;
 			}
 
 			// some new client, we didn't start accepting packets from him yet
 			if ( !bProcessed && pPacket->nClientID != 0 )
+			{
 				waitingPackets.push_back( SWaitingPacket( pPacket, GetCurrentTimeMilliseconds() ) );
+			}
 		}
 	}
 
 	for ( TConnections::iterator iter = connections.begin(); iter != connections.end(); ++iter )
+	{
 		DrainConnectionPackets( iter->second );
+	}
 }
 
 void CPlayGameProcessor::DrainConnectionPackets( IConnection *pConnection )
 {
 	while ( CPtr<CNetPacket> pPacket = pConnection->GetPacket() )
+	{
 		PushPacket( pPacket );
+	}
 }
 
 void CPlayGameProcessor::ProcessEfforts()
@@ -195,9 +207,13 @@ void CPlayGameProcessor::ProcessEfforts()
 
 		const CConnectionEffort::EState eState = pEffort->GetState();
 		if ( eState == CConnectionEffort::ES_SUCCESS )
+		{
 			success.push_back( pEffort );
+		}
 		if ( eState == CConnectionEffort::ES_FAILED )
+		{
 			failed.push_back( pEffort );
+		}
 	}
 
 	for ( std::list<CPtr<CConnectionEffort>>::iterator iter = success.begin(); iter != success.end(); ++iter )
@@ -232,9 +248,13 @@ bool CPlayGameProcessor::Segment()
 	{
 		const SWaitingPacket &packet = *iter;
 		if ( dwCurTime - packet.dwStartTime > dwWaitingPacketTimeout )
+		{
 			iter = waitingPackets.erase( iter );
+		}
 		else
+		{
 			++iter;
+		}
 	}
 
 	std::list<int> deadConnections;
@@ -242,11 +262,15 @@ bool CPlayGameProcessor::Segment()
 	{
 		IConnection *pConnection = conn_iter->second;
 		if ( !pConnection->IsAlive() )
+		{
 			deadConnections.push_back( conn_iter->first );
+		}
 	}
 
 	for ( std::list<int>::iterator iter = deadConnections.begin(); iter != deadConnections.end(); ++iter )
+	{
 		connections.erase( *iter );
+	}
 
 	return true;
 }
@@ -263,9 +287,13 @@ bool CPlayGameProcessor::CreateConnectionEffort( CConnectionEffort *pEffort )
 			const SWaitingPacket &packet = *iter;
 			const bool bProcessed = pEffort->ProcessPacket( packet.pPacket );
 			if ( bProcessed )
+			{
 				iter = waitingPackets.erase( iter );
+			}
 			else
+			{
 				++iter;
+			}
 		}
 
 		return true;
@@ -336,12 +364,16 @@ void CPlayGameProcessor::SendGamePacket( CNetPacket *pPacket, bool bBroadcast )
 	{
 		TConnections::iterator iter = connections.find( pPacket->nClientID );
 		if ( iter != connections.end() )
+		{
 			iter->second->SendGamePacket( pPacket );
+		}
 	}
 	else
 	{
 		for ( TConnections::iterator iter = connections.begin(); iter != connections.end(); ++iter )
+		{
 			iter->second->SendGamePacket( pPacket );
+		}
 	}
 }
 
@@ -385,7 +417,9 @@ bool CPlayGameProcessor::ProcessPacket( CNetPacket *pPacket )
 bool CPlayGameProcessor::ProcessKickClient( CGameKickClient *pPacket )
 {
 	if ( nOurGameID == pPacket->nGameID )
+	{
 		pNet->SendPacket( pPacket );
+	}
 
 	return true;
 }
@@ -397,7 +431,9 @@ bool CPlayGameProcessor::ProcessGameKilled( CGameKilled *pPacket )
 		// As with a single-client departure, the server can kill the room in
 		// the same batch that delivered its final relayed game packets.
 		for ( TConnections::iterator iter = connections.begin(); iter != connections.end(); ++iter )
+		{
 			DrainConnectionPackets( iter->second );
+		}
 		Clear();
 		PushPacket( pPacket );
 	}
@@ -432,14 +468,18 @@ bool CPlayGameProcessor::ProcessGameClientDead( CGameClientDead *pPacket )
 void CPlayGameProcessor::TogglePauseAcceptGamersNet( bool bPause )
 {
 	if ( pAcceptGamersNet )
+	{
 		pAcceptGamersNet->DebugTogglePause( bPause );
+	}
 }
 
 void CPlayGameProcessor::TogglePauseConnectGamer( const int nGamer, bool bPause )
 {
 	TConnections::iterator iter = connections.find( nGamer );
 	if ( iter != connections.end() )
+	{
 		iter->second->TogglePauseNet( bPause );
+	}
 }
 
 BASIC_REGISTER_CLASS( CLIENT, CPlayGameProcessor )

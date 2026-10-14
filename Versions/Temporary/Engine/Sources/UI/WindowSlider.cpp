@@ -48,7 +48,9 @@ void CWindowSlider::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	//{ CRAP - temporary
 	IWindow *pWnd = GetChild( "Lever", false );
 	if ( pWnd )
+	{
 		pWnd->ShowWindow( false );
+	}
 	//}
 
 	pLever = dynamic_cast<CWindowMSButton *>( CUIFactory::MakeWindow( pShared->pLever ) );
@@ -72,9 +74,13 @@ void CWindowSlider::UpdatePos()
 		                 pShared->fMinLeverSize,
 		                 pShared->fMaxLeverSize == 0 ? nW : pShared->fMaxLeverSize );
 		if ( fMax - fMin >= 1.0f )
+		{
 			nLeverX = ( nW - nLeverW ) * fCur / ( fMax - fMin );
+		}
 		else
+		{
 			nLeverX = 0;
+		}
 		pLever->SetPlacement( nLeverX, 0, nLeverW, 0, EWPF_POS_X | EWPF_SIZE_X );
 	}
 	else
@@ -83,14 +89,20 @@ void CWindowSlider::UpdatePos()
 		                 pShared->fMinLeverSize,
 		                 pShared->fMaxLeverSize == 0 ? nH : pShared->fMaxLeverSize );
 		if ( fMax - fMin >= 1.0f )
+		{
 			nLeverY = ( nH - nLeverH ) * fCur / ( fMax - fMin );
+		}
 		else
+		{
 			nLeverY = 0;
+		}
 		pLever->SetPlacement( 0, nLeverY, 0, nLeverH, EWPF_POS_Y | EWPF_SIZE_Y );
 	}
 	// notify parent about position change
 	if ( pNotifySink )
+	{
 		pNotifySink->SliderPosition( fCur, this );
+	}
 }
 
 void CWindowSlider::SetRange( const float _fMin, const float _fMax, const float _fPageSize )
@@ -122,7 +134,9 @@ void CWindowSlider::SetRange( const float _fMin, const float _fMax, const float 
 
 	IScreen *pScreen = GetScreen();
 	if ( pScreen )
+	{
 		pScreen->RegisterToSegment( this, bMouseScrollingAllowed && fMax > fMin );
+	}
 
 	UpdatePos();
 }
@@ -166,15 +180,21 @@ float CWindowSlider::GetPos() const
 void CWindowSlider::Reposition( const CTRect<float> &parentRect )
 {
 	if ( !pLever )
+	{
 		pLever = dynamic_cast<CWindowMSButton *>( GetChild( "Lever", false ) );
+	}
 	NI_ASSERT( pLever != 0, "slider without lever" );
 
 	int nW, nH;
 	GetPlacement( 0, 0, &nW, &nH );
 	if ( pShared->bHorisontal )
+	{
 		pLever->SetPlacement( 0, 0, 0, nH, EWPF_SIZE_Y );
+	}
 	else
+	{
 		pLever->SetPlacement( 0, 0, nW, 0, EWPF_SIZE_X );
+	}
 
 	// set lever width or height
 	CWindow::Reposition( parentRect );
@@ -187,9 +207,13 @@ void CWindowSlider::OnKeyUp( const struct SGameMessage &msg )
 	if ( !pShared->bHorisontal )
 	{
 		if ( pInstance->nSpecialPositions > 1 )
+		{
 			fCur -= ( fMax - fMin ) / ( pInstance->nSpecialPositions );
+		}
 		else
+		{
 			--fCur;
+		}
 		UpdatePos();
 	}
 }
@@ -199,9 +223,13 @@ void CWindowSlider::OnKeyDown( const struct SGameMessage &msg )
 	if ( !pShared->bHorisontal )
 	{
 		if ( pInstance->nSpecialPositions > 1 )
+		{
 			fCur += ( fMax - fMin ) / ( pInstance->nSpecialPositions );
+		}
 		else
+		{
 			++fCur;
+		}
 		UpdatePos();
 	}
 }
@@ -235,9 +263,13 @@ void CWindowSlider::OnKeyRight( const struct SGameMessage &msg )
 	if ( pShared->bHorisontal )
 	{
 		if ( pInstance->nSpecialPositions > 1 )
+		{
 			fCur += ( fMax - fMin ) / ( pInstance->nSpecialPositions );
+		}
 		else
+		{
 			++fCur;
+		}
 		UpdatePos();
 	}
 }
@@ -247,9 +279,13 @@ void CWindowSlider::OnKeyLeft( const struct SGameMessage &msg )
 	if ( pShared->bHorisontal )
 	{
 		if ( pInstance->nSpecialPositions > 1 )
+		{
 			fCur -= ( fMax - fMin ) / ( pInstance->nSpecialPositions );
+		}
 		else
+		{
 			--fCur;
+		}
 		UpdatePos();
 	}
 }
@@ -289,9 +325,13 @@ float CWindowSlider::VerifyPos( const float _fCur ) const
 {
 	float fTriedCur = _fCur;
 	if ( fTriedCur < fMin )
+	{
 		return fMin;
+	}
 	if ( fTriedCur > fMax )
+	{
 		return fMax;
+	}
 	return fTriedCur;
 }
 
@@ -315,7 +355,9 @@ int CWindowSlider::GetCurrentSpecialPosition() const
 void CWindowSlider::SetSpecialPosition( int nPosition )
 {
 	if ( pInstance->nSpecialPositions > 1 )
+	{
 		SetPos( nPosition * ( fMax - fMin ) / ( pInstance->nSpecialPositions - 1 ) );
+	}
 }
 
 float CWindowSlider::CalcPressedPos( const CVec2 &vPos, const float fPosOffset ) const
@@ -334,13 +376,19 @@ float CWindowSlider::CalcPressedPos( const CVec2 &vPos, const float fPosOffset )
 	{
 		float fPortion = fOffset / fSize;
 		if ( fPortion < 0 )
+		{
 			fPortion = 0;
+		}
 		if ( fPortion > 1 )
+		{
 			fPortion = 1;
+		}
 		int nPortion = ( nSpecialPositions - 1 ) * fPortion;
 		float fRest = fPortion * ( nSpecialPositions - 1 ) - nPortion;
 		if ( fRest > 0.5 )
+		{
 			nPortion++;
+		}
 		return nPortion * ( fMax - fMin ) / ( nSpecialPositions - 1 );
 	}
 	return fOffset / fSize * ( fMax - fMin );
@@ -380,7 +428,9 @@ bool CWindowSlider::OnButtonDown( const CVec2 &vPos, const int nButton )
 		GetScreen()->RegisterToSegment( this, true );
 	}
 	else
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -390,7 +440,9 @@ void CWindowSlider::ScrollFast()
 	if ( ( VerifyPos( CalcPressedPos( vPressedPos ) ) > fCur ) == bFastScrollForward )
 	{
 		if ( pInstance->nSpecialPositions > 1 )
+		{
 			SetSpecialPosition( GetCurrentSpecialPosition() + ( bFastScrollForward ? 1 : -1 ) );
+		}
 		else
 		{
 			fCur += bFastScrollForward ? fPageSize : -fPageSize;
@@ -408,7 +460,9 @@ bool CWindowSlider::ProcessEvent( const struct SGameMessage &msg )
 		nFunk = 0;
 	}
 	if ( NeedHandleMouseScrolling() && inputScroll.ProcessEvent( msg ) )
+	{
 		return true;
+	}
 	return CWindow::ProcessEvent( msg );
 }
 
@@ -416,7 +470,9 @@ void CWindowSlider::Segment( const int timeDiff )
 {
 	const float fDelta = inputScroll.GetDelta();
 	if ( pInstance->nSpecialPositions > 1 )
+	{
 		return;
+	}
 	if ( fDelta != 0 )
 	{
 		fCur += fPageSize * fDelta;

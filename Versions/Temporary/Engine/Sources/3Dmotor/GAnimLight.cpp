@@ -30,7 +30,9 @@ void CLightLoader::RecalcValue( CFileRequest *p )
 void CLightAnimator::Recalc()
 {
 	if ( !IsValid( pValue ) )
+	{
 		pValue = new CAnimLight;
+	}
 	CAnimLight &value = *pValue;
 
 	value.bEnd = true;
@@ -59,17 +61,23 @@ void CLightAnimator::Recalc()
 	{
 		fTAnim = fTObject;
 		if ( fTAnim < pLight->fTEnd )
+		{
 			value.bEnd = false;
+		}
 	}
 	else
 	{
 		int nCurCycle = int( fTObject / pInstance->fEndCycle ) + 1;
 		if ( pInstance->nCycleCount && nCurCycle > pInstance->nCycleCount )
+		{
 			nCurCycle = pInstance->nCycleCount;
+		}
 		fTAnim = fTObject - ( nCurCycle - 1 ) * pInstance->fEndCycle;
 		if ( pInstance->nCycleCount == 0 ||
 		     fTObject < pLight->fTEnd + ( pInstance->nCycleCount - 1 ) * pInstance->fEndCycle )
+		{
 			value.bEnd = false;
+		}
 	}
 	if ( fTAnim >= pLight->fTStart && fTAnim < pLight->fTEnd )
 	{

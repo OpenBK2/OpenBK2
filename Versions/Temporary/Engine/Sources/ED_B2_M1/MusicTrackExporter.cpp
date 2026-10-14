@@ -62,7 +62,9 @@ EXPORT_RESULT CMusicTrackExporter::ExportObject( IManipulator *pManipulator,
 	//
 	// check for source and destination times if not forced mode
 	if ( ( szSource == szDestination ) || CheckFilesUpdated( szSource, szDestination, bForce ) )
+	{
 		return ER_SUCCESS;
+	}
 	//
 	std::error_code copyError;
 	if ( NFile::CopyFile( szSource, szDestination, &copyError ) == false )

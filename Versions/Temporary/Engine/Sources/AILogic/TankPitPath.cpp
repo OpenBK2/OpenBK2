@@ -25,7 +25,9 @@ bool CTankPitPath::IsFinished() const
 void CTankPitPath::Segment( const NTimer::STime timeDiff )
 {
 	if ( vEndPoint == vCurPoint ) // уже дошли
+	{
 		fSpeedLen = 0;
+	}
 	else if ( pUnit )
 	{
 		fSpeedLen = pUnit->GetMaxSpeedHere();
@@ -39,7 +41,9 @@ void CTankPitPath::Segment( const NTimer::STime timeDiff )
 			vCurPoint += vDir;
 		}
 		else
+		{
 			vCurPoint = vEndPoint;
+		}
 	}
 
 	pUnit->SetCenter( CVec3( vCurPoint.x, vCurPoint.y, GetHeights()->GetZ( vCurPoint ) ) );

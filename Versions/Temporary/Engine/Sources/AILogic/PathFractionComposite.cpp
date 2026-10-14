@@ -96,7 +96,9 @@ CPathFractionComposite::CPathFractionComposite( struct IPlane *pPlane, struct IP
 		return;
 	}
 	else
+	{
 		bFinished = false;
+	}
 
 	p3 = points[0];
 
@@ -130,7 +132,9 @@ CPathFractionComposite::CPathFractionComposite( struct IPlane *pPlane, struct IP
 bool CPathFractionComposite::Iterate( const float fDist, float *pfDistRemain )
 {
 	if ( bFinished )
+	{
 		return true;
+	}
 
 	const float fDistToGo = fDist;
 

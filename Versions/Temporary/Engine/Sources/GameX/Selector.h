@@ -28,7 +28,9 @@ public:
 	void Add( CMOSelectable *pMO )
 	{
 		if ( !pMO )
+		{
 			return;
+		}
 		NI_ASSERT( find( objList.begin(), objList.end(), pMO ) == objList.end(), "Duplicate object" );
 		objList.push_back( pMO );
 	}
@@ -40,10 +42,14 @@ public:
 	void Hide( CMOSelectable *pMO )
 	{
 		if ( !pMO )
+		{
 			return;
+		}
 		CMapObjectsList::iterator it = find( objList.begin(), objList.end(), pMO );
 		if ( it == objList.end() )
+		{
 			return;
+		}
 		objList.erase( it );
 		objListHidden.remove( pMO ); // avoid duplicate
 		objListHidden.push_back( pMO );
@@ -51,10 +57,14 @@ public:
 	void UnHide( CMOSelectable *pMO )
 	{
 		if ( !pMO )
+		{
 			return;
+		}
 		CMapObjectsList::iterator it = find( objListHidden.begin(), objListHidden.end(), pMO );
 		if ( it == objListHidden.end() )
+		{
 			return;
+		}
 		objListHidden.erase( it );
 		objList.remove( pMO ); // avoid duplicate
 		objList.push_back( pMO );
@@ -72,10 +82,14 @@ public:
 	{
 		CMapObjectsList::const_iterator it = find( objList.begin(), objList.end(), pMO );
 		if ( it != objList.end() )
+		{
 			return true;
+		}
 		CMapObjectsList::const_iterator it2 = find( objListHidden.begin(), objListHidden.end(), pMO );
 		if ( it2 != objListHidden.end() )
+		{
 			return true;
+		}
 		return false;
 	}
 
@@ -121,15 +135,23 @@ private:
 				if ( pMapObject1->GetTypeID() == pMapObject2->GetTypeID() )
 				{
 					if ( pMapObject1->GetStats() == pMapObject2->GetStats() )
+					{
 						return pMapObject1->GetID() > pMapObject2->GetID();
+					}
 					else
+					{
 						return pMapObject1->GetStats()->GetDBID().ToString() > pMapObject2->GetStats()->GetDBID().ToString();
+					}
 				}
 				else
+				{
 					return pMapObject1->GetTypeID() > pMapObject2->GetTypeID();
+				}
 			}
 			else
+			{
 				return actions1 > actions2;
+			}
 		}
 	};
 
@@ -171,15 +193,23 @@ private:
 				if ( pSO1->GetTypeID() == pSO2->GetTypeID() )
 				{
 					if ( pSO1->GetStats() == pSO2->GetStats() )
+					{
 						return pSO1->GetID() > pSO2->GetID();
+					}
 					else
+					{
 						return pSO1->GetStats()->GetDBID().ToString() > pSO2->GetStats()->GetDBID().ToString();
+					}
 				}
 				else
+				{
 					return pSO1->GetTypeID() > pSO2->GetTypeID();
+				}
 			}
 			else
+			{
 				return actions1 > actions2;
+			}
 		}
 	};
 

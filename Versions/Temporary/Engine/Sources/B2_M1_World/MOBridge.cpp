@@ -22,7 +22,9 @@ bool CMOBridge::CreateSceneObject( const int nUniqueID,
 
 	NI_ASSERT( pModel != 0, fmt::format( "Wrong vis for bridge \"{}\"", GetStats()->GetDBID().ToString() ) );
 	if ( !pModel )
+	{
 		return false;
+	}
 
 	CVec3 vPos;
 	CQuat qRot;
@@ -65,9 +67,13 @@ bool CMOBridge::Create( const int nUniqueID,
 	{
 		bDestroyed = GetHP() <= 0.0f;
 		if ( bDestroyed )
+		{
 			PlayDeathAnimation( 0, true );
+		}
 		else
+		{
 			RunDefaultObjectAnimation( GetModelDesc()->pSkeleton, Scene()->GetAnimator( GetID() ) );
+		}
 		return true;
 	}
 	return false;
@@ -108,9 +114,13 @@ const NDb::SVisObj *CMOBridge::GetVisObjForHP( float fHP, int *pnDamagedState )
 	if ( nRandomSpan == -1 )
 	{
 		if ( objects.size() == 1 )
+		{
 			nRandomSpan = 0;
+		}
 		else
+		{
 			nRandomSpan = NWin32Random::Random( objects.size() - 1 );
+		}
 	}
 	return objects[nRandomSpan];
 }
@@ -127,28 +137,38 @@ void CMOBridge::PlayDeathAnimation( const NTimer::STime timeStart, const bool bI
 	const NDb::SVisObj *pVO = GetVisObjForHP( 0, &nDamagedState );
 	NI_ASSERT( pVO, fmt::format( "No VisObject for destroyed Bridge state (object {})", GetID() ) );
 	if ( !pVO )
+	{
 		return;
+	}
 	const NDb::SModel *pModel = GetModel( pVO, eSeason );
 	NI_ASSERT( pModel, fmt::format( "No Model for destroyed Bridge state (object {})", GetID() ) );
 	if ( !pModel )
+	{
 		return;
+	}
 	CDBPtr<NDb::SSkeleton> pSkeleton = pModel->pSkeleton;
 	NI_ASSERT( pSkeleton, fmt::format( "No Skeleton for destroyed Bridge state (object {})", GetID() ) );
 	if ( !pSkeleton )
+	{
 		return;
+	}
 	std::vector<const NDb::SAnimB2 *> deathAnims;
 	deathAnims.reserve( pSkeleton->animations.size() );
 	for ( int i = 0; i < pSkeleton->animations.size(); ++i )
 	{
 		CDBPtr<NDb::SAnimB2> pAnim = checked_cast<const NDb::SAnimB2 *>( pSkeleton->animations[i].GetPtr() );
 		if ( pAnim->eType == NDb::ANIMATION_DEATH )
+		{
 			deathAnims.push_back( pAnim );
+		}
 	}
 	if ( deathAnims.size() > 0 )
 	{
 		int nRandomAnim = deathAnims.size() == 1 ? 0 : NWin32Random::Random( deathAnims.size() );
 		if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() ) )
+		{
 			AddAnimation( deathAnims[nRandomAnim], timeStart, pAnimator, false, bInstant ? FP_MAX_VALUE : 1.0f );
+		}
 	}
 }
 
@@ -171,7 +191,9 @@ IClientUpdatableProcess *CMOBridge::AIUpdateRPGStats( const SAINotifyRPGStats &s
 			const NDb::SModel *pModel = GetModel( pVO, eSeason );
 			ChangeModelToDamaged( nDamagedState, pModel, eSeason );
 			if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() ) )
+			{
 				pAnimator->ClearAllAnimations();
+			}
 		}
 		return 0;
 	}
@@ -219,7 +241,9 @@ void CMOBridge::GetActions( CUserActions *pActions, EActionsType eActions ) cons
 	if ( eActions == ACTIONS_WITH || eActions == ACTIONS_ALL )
 	{
 		if ( bDestroyed )
+		{
 			pActions->SetAction( NDb::USER_ACTION_ENGINEER_REPAIR );
+		}
 		else
 		{
 			pActions->SetAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN );
@@ -244,7 +268,9 @@ NDb::EUserAction
 CMOBridge::GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const
 {
 	if ( bAltMode && pActionsWith->HasAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN ) )
+	{
 		return NDb::USER_ACTION_MOVE_LIKE_TERRAIN;
+	}
 
 	return CMapObj::GetBestAutoAction( actionsBy, pActionsWith, bAltMode );
 }

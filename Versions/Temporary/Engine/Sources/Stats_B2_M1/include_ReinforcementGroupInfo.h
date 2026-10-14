@@ -4,9 +4,13 @@ int GetGroupById( const int scriptID ) const
 	{
 		int i = 0;
 		while ( i < it->groupsVector.data.size() && it->groupsVector.data[i] != scriptID )
+		{
 			++i;
+		}
 		if ( i < it->groupsVector.data.size() )
+		{
 			return it->nGroupID;
+		}
 	}
 	return -1;
 

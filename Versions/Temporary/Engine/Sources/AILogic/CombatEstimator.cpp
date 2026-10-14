@@ -49,15 +49,23 @@ bool CCombatEstimator::IsCombatSituation() const
 void CCombatEstimator::AddUnit( CAIUnit *pUnit )
 {
 	if ( pUnit->GetStats()->IsInfantry() )
+	{
 		registeredInfantry.insert( pUnit->GetUniqueId() );
+	}
 	else
+	{
 		registeredMechUnits.insert( pUnit->GetUniqueId() );
+	}
 }
 
 void CCombatEstimator::DelUnit( CAIUnit *pUnit )
 {
 	if ( pUnit->GetStats()->IsInfantry() )
+	{
 		registeredInfantry.erase( pUnit->GetUniqueId() );
+	}
 	else
+	{
 		registeredMechUnits.erase( pUnit->GetUniqueId() );
+	}
 }

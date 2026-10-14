@@ -64,7 +64,9 @@ class SYSTEM_EXPORT CMemoryMappedFile : public CMappedStream
 	{
 		ASSERT( CanWrite() );
 		if ( !CanWrite() )
+		{
 			return;
+		}
 		file.SetFileSize( nSize );
 	}
 	void *MapFile( int nSize );
@@ -78,13 +80,19 @@ public:
 	CMemoryMappedFile( const char *pszName, EStreamAccess access = STREAM_ACCESS_READ_WRITE ) : file( pszName, access )
 	{
 		if ( !file.IsOk() )
+		{
 			SetBuffer( 0, 0, 0, 0, F_Broken );
+		}
 		else
 		{
 			if ( access == STREAM_ACCESS_READ_WRITE )
+			{
 				StartAccess( F_CanRW );
+			}
 			else
+			{
 				StartAccess( F_CanRead );
+			}
 		}
 	}
 	~CMemoryMappedFile() { FinishAccess(); }

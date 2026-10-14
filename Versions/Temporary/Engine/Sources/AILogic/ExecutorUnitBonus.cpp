@@ -17,7 +17,9 @@ CExecutorUnitBonus::CExecutorUnitBonus( EUnitSpecialAbility eAbility, CAIUnit *_
 	//Init bonus pointer
 	SetAbilityDesc( pUnit->GetUnitAbilityDesc( eAbility ) );
 	if ( GetAbilityDesc() )
+	{
 		pModifier = GetAbilityDesc()->pStatsBonus;
+	}
 
 	switch ( eAbility )
 	{
@@ -55,14 +57,20 @@ bool CExecutorUnitBonus::NotifyEvent( const CExecutorEvent &event )
 {
 	//Filter out wrong calls
 	if ( pUnit->GetUniqueId() != event.GetParam().nUnitID )
+	{
 		return false;
+	}
 
 	const CExecutorEventSpecialAbility *pEv = static_cast<const CExecutorEventSpecialAbility *>( &event );
 	if ( pEv == 0 )
+	{
 		return false;
+	}
 
 	if ( pEv->GetAbility() != GetAbility() )
+	{
 		return false;
+	}
 	//end - Filter out wrong calls
 
 	return CExecutorUnitBase::NotifyEvent( event );
@@ -76,14 +84,18 @@ float CExecutorUnitBonus::OnAbilityActive()
 	{
 		const int nTimeNeeded = pSA->nWorkTime;
 		if ( nTimeNeeded == 0 )
+		{
 			return 0.0f; //Does not expire
+		}
 
 		if ( nTimePassed >= nTimeNeeded )
 		{
 			return 1.0f;
 		}
 		else
+		{
 			return float( nTimePassed ) / float( nTimeNeeded );
+		}
 	}
 
 	return 0.0f;
@@ -103,7 +115,9 @@ void CExecutorUnitBonus::SwitchingOffEnd()
 		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW, "Ability stats bonus OFF" );
 		bBonusApplied = false;
 		if ( eStatus != EUS_UNDEFINED )
+		{
 			updater.AddUpdate( CreateStatusUpdate( eStatus, bBonusApplied, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, pUnit, -1 );
+		}
 	}
 }
 
@@ -118,7 +132,9 @@ void CExecutorUnitBonus::SwitchOnEnd()
 		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW, "Ability stats bonus ON" );
 		bBonusApplied = true;
 		if ( eStatus != EUS_UNDEFINED )
+		{
 			updater.AddUpdate( CreateStatusUpdate( eStatus, bBonusApplied, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, pUnit, -1 );
+		}
 	}
 	timeLastUpdate = curTime;
 }

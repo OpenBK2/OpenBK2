@@ -26,7 +26,9 @@ CCheckSumScope::CCheckSumScope( uint32_t &cache )
 	// A nonzero cache is either a completed shared child or an active cycle.
 	// Register before incrementing depth so allocation failure cannot strand it.
 	if ( cache == 0 )
+	{
 		traversal.caches.push_back( &cache );
+	}
 	++traversal.nDepth;
 }
 
@@ -36,7 +38,9 @@ CCheckSumScope::~CCheckSumScope()
 	{
 		// Also runs on exception: future calls must recompute changed descendants.
 		for ( uint32_t *pCache : traversal.caches )
+		{
 			*pCache = 0;
+		}
 		traversal.caches.clear();
 	}
 }

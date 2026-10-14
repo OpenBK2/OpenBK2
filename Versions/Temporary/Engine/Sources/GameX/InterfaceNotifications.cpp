@@ -65,7 +65,9 @@ void CVisualNotifications::SMapPointer::Init( int _nUniqueID, const CVec3 &_vPos
 	const NDb::SModel *pModel = ( pVisObj != 0 && !pVisObj->models.empty() ) ? pVisObj->models.front().pModel : 0;
 
 	if ( !pModel )
+	{
 		return;
+	}
 
 	Scene()->AddObject( nUniqueID, pModel, vPos, QNULL, CVec3( 1, 1, 1 ), OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC, 0 );
 	if ( pModel->pSkeleton != 0 )
@@ -142,7 +144,9 @@ CVisualNotifications::CVisualNotifications( IWindow *pParent,
 			{
 				const NDb::SNotification *pNotification = *it;
 				if ( !pNotification )
+				{
 					continue;
+				}
 
 				entries[pNotification->eType] = pNotification;
 			}
@@ -248,9 +252,13 @@ void CVisualNotifications::Step( const NTimer::STime nDeltaGameTime, bool bAppAc
 	                         !GameTimer()->HasPause( PAUSE_TYPE_INACTIVE ) &&
 	                         !GameTimer()->HasPause( PAUSE_TYPE_INTERFACE );
 	if ( bEventTimerActive && !bEventTimerStopped )
+	{
 		UpdateEvents( (float)( nDeltaGameTime ) / 1000.0f );
+	}
 	else
+	{
 		UpdateEvents( 0.0f );
+	}
 
 	if ( bShowMPMarker && nAbsCurrTime > timeMarkerExpire )
 	{
@@ -272,11 +280,15 @@ void CVisualNotifications::StepAbs( float fDeltaTime, bool bAppActive )
 		{
 			notification.fTimeRemain -= fDeltaTime;
 			if ( notification.fTimeRemain <= 0.0f )
+			{
 				bFinished = true;
+			}
 		}
 		notification.fSize -= notification.fSpeed * fDeltaTime;
 		if ( notification.fSize < 0.0f )
+		{
 			bFinished = true;
+		}
 		notification.fAngle += notification.fRotationSpeed * fDeltaTime;
 
 		if ( !bFinished )
@@ -291,9 +303,13 @@ void CVisualNotifications::StepAbs( float fDeltaTime, bool bAppActive )
 		}
 
 		if ( bFinished )
+		{
 			it = notifications.erase( it );
+		}
 		else
+		{
 			++it;
+		}
 	}
 	pMiniMap->SetFigures( figures );
 
@@ -302,7 +318,9 @@ void CVisualNotifications::StepAbs( float fDeltaTime, bool bAppActive )
 	{
 		fNewObjectiveTime = FADE_DELTA_TIME;
 		if ( bNewObjective )
+		{
 			NInput::PostEvent( "fade_show_objectives_button", 0, 0 );
+		}
 	}
 
 	UpdateMarkers();
@@ -322,12 +340,16 @@ void CVisualNotifications::AddNotificationMain( int nID,
 {
 	CEntries::const_iterator it = entries.find( eType );
 	if ( it == entries.end() )
+	{
 		return;
+	}
 
 	const NDb::SNotification *pEntry = it->second;
 
 	if ( pEntry->pSound )
+	{
 		SoundScene()->AddSound( pEntry->pSound, VNULL3, SFX_INTERFACE, SAM_ADD_N_FORGET, 0, 2 );
+	}
 
 	if ( entries[eType]->fDuplicateDelay == 0.0f || textMessageTimes[eType] == 0 ||
 	     GameTimer()->GetAbsTime() - textMessageTimes[eType] > entries[eType]->fDuplicateDelay )
@@ -346,7 +368,9 @@ void CVisualNotifications::AddNotificationMinimap( int nID, const CVec2 &vPos, N
 {
 	CEntries::const_iterator it = entries.find( eType );
 	if ( it == entries.end() )
+	{
 		return;
+	}
 
 	const NDb::SNotification *pEntry = it->second;
 
@@ -368,11 +392,15 @@ void CVisualNotifications::AddObjectivePointers( int nID )
 {
 	const NDb::SMissionObjective *pObjective = GetObjective( nID );
 	if ( !pObjective )
+	{
 		return;
+	}
 
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	if ( pST->IsDynamicObjective( nID ) )
+	{
 		return;
+	}
 
 	std::vector<CVec3> places;
 	pST->GetObjectivePlaces( nID, &places );
@@ -384,7 +412,9 @@ void CVisualNotifications::AddPointerModels( int nID, const std::vector<CVec3> &
 {
 	std::unordered_map<int, SMapPointers>::iterator it = pointers.find( nID );
 	if ( it != pointers.end() )
+	{
 		return;
+	}
 
 	it = pointers.insert( std::pair<int, SMapPointers>( nID, SMapPointers() ) ).first;
 	std::vector<SMapPointer> &mapPointers = it->second;
@@ -412,7 +442,9 @@ void CVisualNotifications::RemoveObjectivePointers( int nID )
 {
 	std::unordered_map<int, SMapPointers>::iterator it = pointers.find( nID );
 	if ( it == pointers.end() )
+	{
 		return;
+	}
 
 	std::vector<SMapPointer> &mapPointers = it->second;
 	for ( int i = 0; i < mapPointers.size(); ++i )
@@ -428,11 +460,15 @@ void CVisualNotifications::UpdateObjectivePointers( int nID )
 {
 	const NDb::SMissionObjective *pObjective = GetObjective( nID );
 	if ( !pObjective )
+	{
 		return;
+	}
 
 	std::unordered_map<int, SMapPointers>::iterator it = pointers.find( nID );
 	if ( it == pointers.end() )
+	{
 		return;
+	}
 
 	std::vector<SMapPointer> &mapPointers = it->second;
 	std::vector<CVec3> places;
@@ -442,12 +478,16 @@ void CVisualNotifications::UpdateObjectivePointers( int nID )
 	{
 		RemoveObjectivePointers( nID );
 		if ( !places.empty() )
+		{
 			AddObjectivePointers( nID );
+		}
 	}
 
 	it = pointers.find( nID );
 	if ( it == pointers.end() )
+	{
 		return;
+	}
 	std::vector<SMapPointer> &mapPointers2 = it->second;
 	if ( places.size() == mapPointers2.size() )
 	{
@@ -463,12 +503,16 @@ void CVisualNotifications::AddObjectiveNotification( int nID, NDb::ENotification
 {
 	const NDb::SMissionObjective *pObjective = GetObjective( nID );
 	if ( !pObjective )
+	{
 		return;
+	}
 	//
 
 	std::wstring wszCustomText;
 	if ( CHECK_TEXT_NOT_EMPTY_PRE( pObjective->, Header ) )
+	{
 		wszCustomText = GET_TEXT_PRE( pObjective->, Header );
+	}
 	AddNotificationMain( nID, VNULL2, eType, wszCustomText );
 
 	for ( std::vector<CVec2>::const_iterator it = pObjective->mapPositions.begin(); it != pObjective->mapPositions.end();
@@ -527,7 +571,9 @@ bool CVisualNotifications::OnAASeen( int nID, const CVec2 &vPos )
 bool CVisualNotifications::OnReinforcementAvailable( int nID, const CVec2 &vPos )
 {
 	if ( const NDb::SComplexSoundDesc *pSound = InterfaceState()->GetSoundEntry( "SOUND_REINF_AVAILABLE" ) )
+	{
 		SoundScene()->AddSound( pSound, VNULL3, SFX_INTERFACE, SAM_ADD_N_FORGET, 0, 2 );
+	}
 
 	return true;
 }
@@ -617,7 +663,9 @@ bool CVisualNotifications::OnCompleteObjective( int nID, const CVec2 &vPos )
 	AddEvent( params );
 	// make autosave on objective complete
 	if ( s_bAutosaveObjectiveComplete )
+	{
 		NSaveLoad::MakeUniqueSave( InterfaceState()->GetTextEntry( "T_AUTO_SAVE_OBJECTIVE_COMPLETE" ), true, false, false );
+	}
 
 	return true;
 }
@@ -683,9 +731,13 @@ bool CVisualNotifications::OnHideObjectives( int nID, const CVec2 &vPos )
 void CVisualNotifications::UpdateMarkers()
 {
 	if ( !Singleton<IScenarioTracker>() )
+	{
 		return;
+	}
 	if ( !pMiniMap || NGlobal::GetVar( "game_mode_editor", 0 ) != 0 )
+	{
 		return;
+	}
 
 	std::vector<IMiniMap::SMarker> markers;
 
@@ -728,9 +780,13 @@ void CVisualNotifications::UpdateMarkers()
 				if ( pPartyInfo )
 				{
 					if ( it->first == nSelectedKeyObject )
+					{
 						pTexture = pPartyInfo->pMinimapKeyObjectIconSelected;
+					}
 					else
+					{
 						pTexture = pPartyInfo->pMinimapKeyObjectIcon;
+					}
 				}
 			}
 		}
@@ -755,7 +811,9 @@ void CVisualNotifications::UpdateMarkers()
 
 		EMissionObjectiveState eState = Singleton<IScenarioTracker>()->GetObjectiveState( nID );
 		if ( !bShowObjectives && eState != EMOS_RECEIVED )
+		{
 			continue;
+		}
 
 		std::vector<CVec3> places;
 		bool bPlaces = Singleton<IScenarioTracker>()->GetObjectivePlaces( nID, &places );
@@ -781,7 +839,9 @@ void CVisualNotifications::UpdateMarkers()
 		const NDb::STexture *pNorthTexture =
 				InterfaceState()->GetTextureEntry( fmt::format( "TX_MINIMAP_NORTH_MARKER{}", pMapInfo->nNortType ) );
 		if ( pNorthTexture )
+		{
 			pMiniMap->SetNortDirectionTexture( pNorthTexture );
+		}
 	}
 
 	if ( bShowMPMarker )
@@ -807,7 +867,9 @@ void CVisualNotifications::OnBtn( const std::string &szSender, bool bRightBtn )
 			if ( bRightBtn )
 			{
 				if ( pParent )
+				{
 					pParent->RemoveChild( pEvent->pItemWnd );
+				}
 				events.erase( it );
 				RearrangeEvents();
 			}
@@ -818,7 +880,9 @@ void CVisualNotifications::OnBtn( const std::string &szSender, bool bRightBtn )
 				if ( bErase )
 				{
 					if ( pParent )
+					{
 						pParent->RemoveChild( pEvent->pItemWnd );
+					}
 					events.erase( it );
 					RearrangeEvents();
 				}
@@ -839,9 +903,13 @@ void CVisualNotifications::InitEvents( IWindow *_pParent )
 	pItemTemplateWnd = GetChildChecked<IWindow>( pEventPanel, "ItemTemplate", true );
 
 	if ( pEventPanel )
+	{
 		pEventPanel->ShowWindow( true );
+	}
 	if ( pItemTemplateWnd )
+	{
 		pItemTemplateWnd->ShowWindow( false );
+	}
 
 	if ( pEventPanel )
 	{
@@ -849,12 +917,16 @@ void CVisualNotifications::InitEvents( IWindow *_pParent )
 		nEventBottom = rect.y2;
 	}
 	if ( pItemTemplateWnd )
+	{
 		pItemTemplateWnd->GetPlacement( 0, 0, 0, &nEventItemHeight );
+	}
 
 	nMaxEventCount = nEventBottom / ( nEventItemHeight + EVENT_ITEMS_INTERVAL );
 
 	if ( pEventPanel )
+	{
 		pEventPanel->ShowWindow( false );
+	}
 
 	if ( const NDb::SGameRoot *pGameRoot = InterfaceState()->GetGameRoot() )
 	{
@@ -875,7 +947,9 @@ CVisualNotifications::SEvent *CVisualNotifications::CreateEventItem( const SEven
 {
 	const NDb::SNotificationEvent *pDBEvent = GetEvent( params.eEventType );
 	if ( !pDBEvent )
+	{
 		return 0;
+	}
 
 	SEvent *pEvent = new SEvent();
 	pEvent->pItemWnd = AddWindowCopy( pParent, pItemTemplateWnd );
@@ -886,7 +960,9 @@ CVisualNotifications::SEvent *CVisualNotifications::CreateEventItem( const SEven
 	pEvent->objects = params.objects;
 	pEvent->nID = params.nID;
 	if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBEvent->, Text ) )
+	{
 		pEvent->wszText = GET_TEXT_PRE( pDBEvent->, Text );
+	}
 	nFreeEvent++;
 
 	return pEvent;
@@ -901,9 +977,13 @@ void CVisualNotifications::CreateEventItemView( SEvent *pEvent )
 	IWindow *pIconWnd = GetChildChecked<IWindow>( pIconBtn, "Icon", true );
 
 	if ( pEvent->pItemWnd )
+	{
 		pEvent->pItemWnd->ShowWindow( true );
+	}
 	if ( pIconWnd )
+	{
 		pIconWnd->SetTexture( pDBEvent->pTexture );
+	}
 	if ( pDescView )
 	{
 		std::wstring wszFormat = InterfaceState()->GetMissionConsoleMLTag();
@@ -919,7 +999,9 @@ void CVisualNotifications::CreateEventItemView( SEvent *pEvent )
 			{
 				const IScenarioTracker::SMultiplayerInfo::SPlayer &player = pMPInfo->players[i];
 				if ( player.nIndex != nPlayer || player.wszName.empty() )
+				{
 					continue;
+				}
 
 				// Player elimination stores the removed player slot in nID.
 				const uint32_t dwColor = pScenarioTracker->GetPlayerColor( nPlayer ).dwColor;
@@ -956,13 +1038,19 @@ void CVisualNotifications::CreateEventItemView( SEvent *pEvent )
 	if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBEvent->, Tooltip ) )
 	{
 		if ( pIconBtn )
+		{
 			pIconBtn->SetTooltip( GET_TEXT_PRE( pDBEvent->, Tooltip ) );
+		}
 	}
 	if ( pIconBtn )
+	{
 		pIconBtn->SetName( pEvent->szName );
+	}
 
 	if ( pEvent->pDBEvent->pSound )
+	{
 		SoundScene()->AddSound( pEvent->pDBEvent->pSound, VNULL3, SFX_INTERFACE, SAM_ADD_N_FORGET, 0, 2 );
+	}
 }
 
 void CVisualNotifications::UpdateEvents( float fDeltaTime )
@@ -976,7 +1064,9 @@ void CVisualNotifications::UpdateEvents( float fDeltaTime )
 		if ( pEvent->pDBEvent->fAutoRemoveTime > 0.0f && pEvent->fVisibleTime > pEvent->pDBEvent->fAutoRemoveTime )
 		{
 			if ( pParent )
+			{
 				pParent->RemoveChild( pEvent->pItemWnd );
+			}
 			it = events.erase( it );
 			continue;
 		}
@@ -989,14 +1079,18 @@ void CVisualNotifications::UpdateEvents( float fDeltaTime )
 		for ( std::list<CObj<SEvent>>::iterator it = events.begin(); it != events.end(); )
 		{
 			if ( nCount <= nMaxEventCount )
+			{
 				break;
+			}
 
 			SEvent *pEvent = *it;
 
 			if ( pEvent->pDBEvent->fAutoRemoveTime > 0.0f ) // can auto remove
 			{
 				if ( pParent )
+				{
 					pParent->RemoveChild( pEvent->pItemWnd );
+				}
 				it = events.erase( it );
 				--nCount;
 				continue;
@@ -1039,7 +1133,9 @@ void CVisualNotifications::EventLeftClick( SEvent *pEvent, bool *pErase )
 		CVec2 vNearPos;
 		bool bResult = GetEventPos( &vNearPos, pEvent );
 		if ( bResult )
+		{
 			MoveCamera( vNearPos );
+		}
 	}
 
 	switch ( pEvent->pDBEvent->eType )
@@ -1085,13 +1181,19 @@ void CVisualNotifications::EventLeftClick( SEvent *pEvent, bool *pErase )
 				{
 					const NDb::SReinforcement *pReinf = pST->GetReinforcement( nLocalPlayer, eReinforcementType );
 					if ( !pReinf )
+					{
 						continue;
+					}
 
 					CInterfaceArmyBranchDlg::SBranch branch;
 					if ( CHECK_TEXT_NOT_EMPTY_PRE( pReinf->, LocalizedName ) )
+					{
 						branch.wszName = GET_TEXT_PRE( pReinf->, LocalizedName );
+					}
 					if ( CHECK_TEXT_NOT_EMPTY_PRE( pReinf->, LocalizedDesc ) )
+					{
 						branch.wszDesc = GET_TEXT_PRE( pReinf->, LocalizedDesc );
+					}
 					branch.pIconTexture = pReinf->pIconTexture;
 
 					if ( branch.wszDesc.empty() )
@@ -1107,7 +1209,9 @@ void CVisualNotifications::EventLeftClick( SEvent *pEvent, bool *pErase )
 									if ( branch.wszDesc.empty() )
 									{
 										if ( CHECK_TEXT_NOT_EMPTY_PRE( pUIC->reinfButtons[i]., Desc ) )
+										{
 											branch.wszDesc = GET_TEXT_PRE( pUIC->reinfButtons[i]., Desc );
+										}
 									}
 								}
 							}
@@ -1132,7 +1236,9 @@ void CVisualNotifications::EventLeftClick( SEvent *pEvent, bool *pErase )
 			if ( pReinf )
 			{
 				if ( CHECK_TEXT_NOT_EMPTY_PRE( pReinf->, LocalizedName ) )
+				{
 					wszText = wszText + GET_TEXT_PRE( pReinf->, LocalizedName );
+				}
 			}
 			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
 			                    CICMessageBox::MakeConfigString( "MessageBoxWindowOk", wszText ).c_str() );
@@ -1179,7 +1285,9 @@ void CVisualNotifications::AddEvent( const SEventParams &params )
 {
 	SEvent *pEvent = CreateEventItem( params );
 	if ( !pEvent )
+	{
 		return;
+	}
 
 	events.push_back( pEvent );
 
@@ -1188,7 +1296,9 @@ void CVisualNotifications::AddEvent( const SEventParams &params )
 		case NDb::NEVT_KEY_POINT_ATTACKED:
 		{
 			if ( !pEvent->positions.empty() )
+			{
 				AddNotificationMinimap( -1, pEvent->positions.front(), NDb::NTF_KEY_OBJECT_ATTACKED );
+			}
 			break;
 		}
 
@@ -1200,21 +1310,27 @@ void CVisualNotifications::AddEvent( const SEventParams &params )
 		case NDb::NEVT_AVIA_BAD_WEATHER_RETREAT:
 		{
 			if ( !pEvent->positions.empty() )
+			{
 				AddNotificationMinimap( -1, pEvent->positions.front(), NDb::NTF_AVIA_BAD_WEATHER_RETREAT );
+			}
 			break;
 		}
 
 		case NDb::NEVT_ENEMY_AVIA_DETECTED:
 		{
 			if ( !pEvent->positions.empty() )
+			{
 				AddNotificationMinimap( -1, pEvent->positions.front(), NDb::NTF_ENEMY_AVIA );
+			}
 			break;
 		}
 
 		case NDb::NEVT_ENGINEERING_MINE_DETECTED:
 		{
 			if ( !pEvent->positions.empty() )
+			{
 				AddNotificationMinimap( -1, pEvent->positions.front(), NDb::NTF_MINE_DETECTED );
+			}
 			break;
 		}
 
@@ -1226,7 +1342,9 @@ void CVisualNotifications::AddEvent( const SEventParams &params )
 			{
 				pEvent->positions = pObjective->mapPositions;
 				if ( CHECK_TEXT_NOT_EMPTY_PRE( pObjective->, Header ) )
+				{
 					pEvent->wszText = pEvent->wszText + L": " + GET_TEXT_PRE( pObjective->, Header );
+				}
 			}
 			break;
 		}
@@ -1248,16 +1366,22 @@ void CVisualNotifications::RemoveEvent( NDb::ENotificationEventType eEventType, 
 		     ( nID == -1 || pEvent->nID == nID ) )
 		{
 			if ( pParent )
+			{
 				pParent->RemoveChild( pEvent->pItemWnd );
+			}
 			it = events.erase( it );
 			bRemove = true;
 		}
 		else
+		{
 			++it;
+		}
 	}
 
 	if ( bRemove )
+	{
 		RearrangeEvents();
+	}
 }
 
 void CVisualNotifications::MoveCamera( const CVec2 &vPos )
@@ -1270,11 +1394,15 @@ void CVisualNotifications::MoveCamera( const CVec2 &vPos )
 const NDb::SMissionObjective *CVisualNotifications::GetObjective( int nID )
 {
 	if ( nID < 0 )
+	{
 		return 0;
+	}
 
 	const NDb::SMapInfo *pMapInfo = Singleton<IScenarioTracker>()->GetCurrentMission();
 	if ( !pMapInfo )
+	{
 		return 0;
+	}
 
 	NI_VERIFY( nID < pMapInfo->objectives.size(),
 	           fmt::format( "Index out of range ({}:{})", nID, pMapInfo->objectives.size() ),
@@ -1319,11 +1447,17 @@ bool CVisualNotifications::GetEventPos( CVec2 *pPos, const SEvent *pEvent ) cons
 		{
 			CMapObj *pMO = pEvent->objects[i];
 			if ( !IsValid( pMO ) )
+			{
 				continue;
+			}
 			if ( !pMO->IsAlive() )
+			{
 				continue;
+			}
 			if ( !pMO->IsVisible() )
+			{
 				continue;
+			}
 
 			const CVec3 &vPos3 = pMO->GetCenter();
 			if ( !bFound ||
@@ -1337,7 +1471,9 @@ bool CVisualNotifications::GetEventPos( CVec2 *pPos, const SEvent *pEvent ) cons
 		pPos->x = vPos.x;
 		pPos->y = vPos.y;
 		if ( bFound )
+		{
 			return true;
+		}
 	}
 
 	if ( !pEvent->positions.empty() )
@@ -1347,7 +1483,9 @@ bool CVisualNotifications::GetEventPos( CVec2 *pPos, const SEvent *pEvent ) cons
 		{
 			const CVec2 &vPos = pEvent->positions[i];
 			if ( fabs2( vPos - vCameraPos2 ) < fabs2( vNearPos - vCameraPos2 ) )
+			{
 				vNearPos = vPos;
+			}
 		}
 		*pPos = vNearPos;
 		return true;

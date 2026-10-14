@@ -94,7 +94,9 @@ void PlayRollerAnim( std::vector<IPlayer *> &rollers, int _nStart, int _nEnd, fl
 	for ( int i = 0; i < rollers.size(); ++i )
 	{
 		if ( rollers[i] )
+		{
 			rollers[i]->PlayFragment( frameStart[i], frameEnd[i], frameSkip[i] );
+		}
 	}
 }
 
@@ -114,9 +116,13 @@ void SExpProgressCareer::Init()
 	if ( pCampaign && !pCampaign->rankExperiences.empty() )
 	{
 		if ( nRank < pCampaign->rankExperiences.size() )
+		{
 			fTargetLevelExp = pCampaign->rankExperiences[nRank].fExperience;
+		}
 		else
+		{
 			fTargetLevelExp = pCampaign->rankExperiences.back().fExperience;
+		}
 	}
 
 	bFinal = false;
@@ -135,12 +141,16 @@ void SExpProgressCareer::Init()
 void SExpProgressCareer::Step( bool bWait )
 {
 	if ( bFinal )
+	{
 		return;
+	}
 
 	bool bNextStep = false;
 	NTimer::STime time = Singleton<IGameTimer>()->GetAbsTime();
 	if ( timePrev == 0 || bWait )
+	{
 		timePrev = time;
+	}
 	else if ( time >= timePrev + STEP_WAIT_TIME )
 	{
 		timePrev = time;
@@ -182,14 +192,22 @@ void SExpProgressRank::Init()
 	if ( pCampaign && !pCampaign->rankExperiences.empty() )
 	{
 		if ( nRank < pCampaign->rankExperiences.size() )
+		{
 			fTargetLevelExp = pCampaign->rankExperiences[nRank].fExperience;
+		}
 		else
+		{
 			fTargetLevelExp = pCampaign->rankExperiences.back().fExperience;
+		}
 
 		if ( nRank + 1 < pCampaign->rankExperiences.size() )
+		{
 			fTargetNextLevelExp = pCampaign->rankExperiences[nRank + 1].fExperience;
+		}
 		else
+		{
 			fTargetNextLevelExp = pCampaign->rankExperiences.back().fExperience;
+		}
 	}
 
 	bFinal = false;
@@ -212,12 +230,16 @@ void SExpProgressRank::Init()
 void SExpProgressRank::Step( bool bWait )
 {
 	if ( bFinal )
+	{
 		return;
+	}
 
 	bool bNextStep = false;
 	NTimer::STime time = Singleton<IGameTimer>()->GetAbsTime();
 	if ( timePrev == 0 || bWait )
+	{
 		timePrev = time;
+	}
 	else if ( time >= timePrev + STEP_WAIT_TIME )
 	{
 		timePrev = time;
@@ -245,7 +267,9 @@ void SExpProgressRank::Step( bool bWait )
 			nNextLevel++;
 		}
 		else
+		{
 			break;
+		}
 	}
 	float fLevelDeltaExp = fNextLevExp - fCurLevelExp;
 

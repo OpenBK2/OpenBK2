@@ -19,35 +19,65 @@ static NGfx::SPixel8888 StringToColor( const std::wstring &color, float fFade = 
 	NGfx::SPixel8888 retColor;
 
 	if ( color.compare( L"white" ) == 0 )
+	{
 		retColor = NGfx::SPixel8888( 0xFF, 0xFF, 0xFF, 0xFF );
+	}
 	else if ( color.compare( L"red" ) == 0 )
+	{
 		retColor = NGfx::SPixel8888( 0xFF, 0, 0, 0xFF );
+	}
 	else if ( color.compare( L"green" ) == 0 )
+	{
 		retColor = NGfx::SPixel8888( 0, 0xFF, 0, 0xFF );
+	}
 	else if ( color.compare( L"blue" ) == 0 )
+	{
 		retColor = NGfx::SPixel8888( 0, 0, 0xFF, 0xFF );
+	}
 	else if ( color.compare( L"yellow" ) == 0 )
+	{
 		retColor = NGfx::SPixel8888( 0xFF, 0xFF, 0, 0xFF );
+	}
 	else if ( color.compare( L"cyan" ) == 0 )
+	{
 		retColor = NGfx::SPixel8888( 0, 0xFF, 0xFF, 0xFF );
+	}
 	else if ( color.compare( L"orange" ) == 0 )
+	{
 		retColor = NGfx::SPixel8888( 0xFF, 0x80, 0x40, 0xFF );
+	}
 	else if ( color.compare( L"pink" ) == 0 )
+	{
 		retColor = NGfx::SPixel8888( 0xFF, 0x80, 0xFF, 0xFF );
+	}
 	else if ( color.compare( L"brown" ) == 0 )
+	{
 		retColor = NGfx::SPixel8888( 110, 110, 56, 0xFF );
+	}
 	else if ( color.compare( L"grey" ) == 0 )
+	{
 		retColor = NGfx::SPixel8888( 180, 180, 180, 0xFF );
+	}
 	else if ( color.compare( L"black" ) == 0 )
+	{
 		retColor = NGfx::SPixel8888( 0, 0, 0, 0xFF );
+	}
 	else if ( color.compare( L"darkyellow" ) == 0 )
+	{
 		retColor = NGfx::SPixel8888( 242, 192, 17, 0xFF );
+	}
 	else if ( color.compare( L"beige" ) == 0 )
+	{
 		retColor = NGfx::SPixel8888( 209, 183, 167, 0xFF );
+	}
 	else if ( color.compare( L"lightblue" ) == 0 )
+	{
 		retColor = NGfx::SPixel8888( 0, 128, 250, 0xFF );
+	}
 	else
+	{
 		swscanf( color.c_str(), L"%x", &retColor.dwColor );
+	}
 	if ( fFade != 1.0f )
 	{
 		retColor.a *= fFade;
@@ -77,7 +107,9 @@ void CTabHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::v
 void CColorHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() != 3 )
+	{
 		return;
+	}
 	pLayout->AddObject( CreateColorObject( StringToColor( paramsSet[2], sFadeValue->fFadeValue ) ) );
 }
 
@@ -95,9 +127,13 @@ void CFontHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::
 	while ( nTemp < paramsSet.size() )
 	{
 		if ( nTemp + 2 >= paramsSet.size() )
+		{
 			break;
+		}
 		if ( paramsSet[nTemp + 1].compare( L"=" ) != 0 )
+		{
 			break;
+		}
 
 		const std::wstring &wsID = paramsSet[nTemp];
 		const std::wstring &wsParam = paramsSet[nTemp + 2];
@@ -112,12 +148,18 @@ void CFontHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::
 			{
 				std::wstring sizeMod( wsString );
 				if ( sizeMod.compare( L"px" ) == 0 )
+				{
 					font.nSize |= FONT_SIZE_PIXELS;
+				}
 				else if ( sizeMod.compare( L"pt" ) == 0 )
+				{
 					font.nSize |= FONT_SIZE_POINTS;
+				}
 			}
 			else
+			{
 				font.nSize |= FONT_SIZE_POINTS;
+			}
 		}
 		else if ( wsID.compare( L"face" ) == 0 )
 		{
@@ -151,11 +193,17 @@ void CFontHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::
 void CMinFontSizeHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() != 4 )
+	{
 		return;
+	}
 	if ( paramsSet[1].compare( L"size" ) == 0 )
+	{
 		return;
+	}
 	if ( paramsSet[2].compare( L"=" ) == 0 )
+	{
 		return;
+	}
 
 	int nMinFontSize = NStr::ToIntDec( paramsSet[3] );
 	pLayout->AddObject( CreateMinFontSizeObject( nMinFontSize ) );

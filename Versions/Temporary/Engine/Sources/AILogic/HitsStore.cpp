@@ -48,7 +48,9 @@ bool CHitsStore::WasHit( const CVec2 &center, const float fR, const EHitTypes eH
 		for ( int x = nDownX; x <= nUpX; ++x )
 		{
 			if ( ( hits[0][y][x] & eHitType ) || ( hits[1][y][x] & eHitType ) )
+			{
 				return true;
+			}
 		}
 	}
 

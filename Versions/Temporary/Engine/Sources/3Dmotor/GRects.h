@@ -39,5 +39,4 @@ void RenderRect( NGfx::C2DQuadsRenderer *pRes,
                  const NGfx::SPixel8888 *pColors4,
                  const CTRect<float> &rSrc,
                  float fZ = 1.0f );
-
 }

@@ -8,18 +8,26 @@ const SSoundStats *GetRandomSound() const
 	{
 		fSum += sounds[i].fProbability;
 		if ( fSum > fRand )
+		{
 			return &sounds[i];
+		}
 	}
 	return 0;
 }
 virtual void PostLoad( bool bInEditor )
 {
 	if ( bInEditor )
+	{
 		return;
+	}
 	float fDenominator = 0;
 	for ( std::vector<SSoundStats>::const_iterator it = sounds.begin(); it != sounds.end(); ++it )
+	{
 		fDenominator += it->fProbability;
+	}
 	fDenominator = 1.0f / fDenominator;
 	for ( std::vector<SSoundStats>::iterator it = sounds.begin(); it != sounds.end(); ++it )
+	{
 		it->fProbability *= fDenominator;
+	}
 }

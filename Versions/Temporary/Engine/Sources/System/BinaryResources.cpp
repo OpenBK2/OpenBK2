@@ -30,7 +30,9 @@ GetExistentBinaryFileName( const std::string &rszDirPrefix, const int nRecordID,
 	std::string szName = GetBinaryFileName( rszDirPrefix, nRecordID, uid );
 
 	if ( NVFS::GetMainVFS()->DoesFileExist( szName ) )
+	{
 		return szName;
+	}
 
 	std::string szDirPrefix = rszDirPrefix;
 	NStr::TrimRight( szDirPrefix, '\\' );

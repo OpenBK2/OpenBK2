@@ -48,10 +48,14 @@ void CGeneral::CheckAvailableReinforcement()
 	}
 
 	if ( !theReinfArray[nParty].CanCallNow() )
+	{
 		return;
+	}
 
 	if ( !pAirForce->TurnReturned() )
+	{
 		return;
+	}
 
 	// Pass some of the calls to airforce general
 	++nAirReinfTurnCounter;
@@ -66,11 +70,13 @@ void CGeneral::CheckAvailableReinforcement()
 	// Select the most needed category (max value)
 	nReinfTypeNeeded = 0;
 	for ( int i = 0; i < NDb::_RT_NONE; ++i )
+	{
 		if ( enemyByRType[i] > fMaxEffect && !IsAviationReinfType( i ) )
 		{
 			fMaxEffect = enemyByRType[i];
 			nReinfTypeNeeded = i;
 		}
+	}
 
 	// if time has come, select one and call
 	fMaxEffect = -2.0f; //Since effectiveness is [-1 .. 1]
@@ -81,7 +87,9 @@ void CGeneral::CheckAvailableReinforcement()
 	for ( int i = 0; i < NDb::_RT_NONE; ++i )
 	{
 		if ( !theReinfArray[nParty].HasReinforcement( NDb::EReinforcementType( i ) ) || IsAviationReinfType( i ) )
+		{
 			continue;
+		}
 
 		// calculate potential effect
 		fEffect = 0;
@@ -114,32 +122,42 @@ void CGeneral::CheckAvailableReinforcement()
 		for ( ; i < nARQuantity - 1; ++i )
 		{
 			if ( fReinfEff[i] <= fRandValue && fReinfEff[i + 1] > fRandValue )
+			{
 				break;
+			}
 		}
 		// check if this reinforcement will increase mobile tanks nuber over the maximum allowed number
 		// don't call if it will
 		int nWorkers = theReinfArray[nParty].GetNEntries( NDb::EReinforcementType( nAvailReinfs[i] ) );
 		for ( Tasks::iterator it = tasks.begin(); it != tasks.end(); ++it )
+		{
 			nWorkers += ( *it )->GetWorkerCount();
+		}
 		nWorkers += tanksFree.size();
 
 		if ( nWorkers <= nMaxAllowedMobileTanks )
+		{
 			theReinfArray[nParty].CallReinforcement(
 					NDb::EReinforcementType( nAvailReinfs[i] ), theReinfArray[nParty].GetRandomPoint(), -1 );
+		}
 	}
 }
 
 void CGeneral::BalanceUpdate( EBalanceAction eAction, CCommonUnit *_pUnit )
 {
 	if ( IsValidObj( _pUnit ) == false )
+	{
 		return;
+	}
 
 	if ( _pUnit->IsFormation() ) // Filter out formations, and count soldiers in there
 	{
 		CFormation *pForm = checked_cast<CFormation *>( _pUnit );
 
 		for ( int i = 0; i < pForm->Size(); ++i )
+		{
 			BalanceUpdate( eAction, ( *pForm )[i] ); //Self-call!
+		}
 
 		return;
 	}
@@ -155,7 +173,9 @@ void CGeneral::BalanceUpdate( EBalanceAction eAction, CCommonUnit *_pUnit )
 	if ( pUnit->GetStats()->IsInfantry() )
 	{
 		if ( eUType != DB_RPG_TYPE_SNIPER )
+		{
 			fTypeMult *= 0.1f; // Soldier counts as 1/10 (all but snipers);
+		}
 	}
 
 	int nUnitParty = pUnit->GetParty();
@@ -168,7 +188,9 @@ void CGeneral::BalanceUpdate( EBalanceAction eAction, CCommonUnit *_pUnit )
 	           eUType = NDb::DB_RPG_TYPE_SOLDIER );
 
 	if ( eRType < 0 || eRType >= _RT_NONE )
+	{
 		eRType = NReinforcement::GetReinforcementType( eUType );
+	}
 
 	//Find out what reinfs the unit can be in
 	for ( int i = 0; i < NDb::_RT_NONE; ++i )
@@ -202,17 +224,21 @@ void CGeneral::BalanceUpdate( EBalanceAction eAction, CCommonUnit *_pUnit )
 				break;
 			case BA_ADD_OWN:
 				for ( int j = 0; j < NDb::_RT_NONE; ++j )
+				{
 					enemyByRType[i] -=
 							effects[j] * fTypeMult *
 							NReinforcement::GetReinforcementExpediency( NDb::EReinforcementType( j ), NDb::EReinforcementType( i ) ) /
 							2;
+				}
 				break;
 			case BA_REMOVE_OWN:
 				for ( int j = 0; j < NDb::_RT_NONE; ++j )
+				{
 					enemyByRType[i] +=
 							effects[j] * fTypeMult *
 							NReinforcement::GetReinforcementExpediency( NDb::EReinforcementType( j ), NDb::EReinforcementType( i ) ) /
 							2;
+				}
 				break;
 		}
 	}

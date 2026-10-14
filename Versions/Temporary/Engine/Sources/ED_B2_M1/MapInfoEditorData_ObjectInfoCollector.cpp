@@ -670,13 +670,17 @@ void SObjectInfoCollector::DrawShootAreas( CSceneDrawTool *pEditorSceneDrawTool 
 							float fStartAngle = fObjectDirection + platform.constraint.fMin + FP_PI2;
 							float fEndAngle = fObjectDirection + platform.constraint.fMax + FP_PI2;
 							if ( fEndAngle - fStartAngle >= FP_2PI )
+							{
 								fStartAngle = fEndAngle = 0;
+							}
 							//
 							for ( int nGun = 0; nGun < pStats->GetGunsSize( nID, nPlatform ); ++nGun )
 							{
 								const NDb::SMechUnitRPGStats::SMechUnitGun &gun = pStats->GetGun( nID, nPlatform, nGun );
 								if ( !gun.pWeapon || !gun.bIsPrimary )
+								{
 									continue;
+								}
 
 								const float fRangeMin = gun.pWeapon->fRangeMin;
 								const float fRangeMax = gun.pWeapon->fRangeMax;
@@ -709,7 +713,9 @@ void SObjectInfoCollector::DrawShootAreas( CSceneDrawTool *pEditorSceneDrawTool 
 								{
 									const NDb::SInfantryRPGStats::SInfantryGun &gun = pMember->GetGun( nID, nMember, nGun );
 									if ( !gun.pWeapon )
+									{
 										continue;
+									}
 
 									const float fDirection = gun.fDirection + FP_PI * 0.5;
 									const float fRangeMin = gun.pWeapon->fRangeMin;

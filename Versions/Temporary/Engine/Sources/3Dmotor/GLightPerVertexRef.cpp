@@ -320,5 +320,4 @@ const SLightingKernels refLightingKernels = {
 	&AddColors,
 	&ScaleColors,
 };
-
 }

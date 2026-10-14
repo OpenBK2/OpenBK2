@@ -65,5 +65,4 @@ INPUT_EXPORT bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg,
                                   int *pnParam2,
                                   int *pnCount,
                                   NInput::EControlType *peControlType );
-
 };

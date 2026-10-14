@@ -228,10 +228,14 @@ CMapInfoState::CMapInfoState( CMapInfoEditor *_pMapInfoEditor ) : pMapInfoEditor
 void CMapInfoState::ToggleScriptPathPoints()
 {
 	if ( !pMapInfoEditor || !pMapInfoEditor->pMapInfo )
+	{
 		return;
+	}
 
 	if ( IsCreatingScriptPathPoints() )
+	{
 		SetActiveInputState( nPreviousInputState, true, false );
+	}
 	else
 	{
 		nPreviousInputState = GetActiveInputStateIndex();
@@ -682,7 +686,9 @@ void CMapInfoState::Leave()
 	CMultiInputState::Leave();
 	// Discard the temporary tool before saving the palette selection, without re-entering a tool.
 	if ( IsCreatingScriptPathPoints() )
+	{
 		SetActiveInputState( nPreviousInputState, false, false );
+	}
 	// сохраняем состояние панелей
 	SaveEnterConfig();
 	//
@@ -726,7 +732,9 @@ bool CMapInfoState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			const unsigned nShortcutIndex = HIWORD( dwData );
 			const unsigned nTabIndex = LOWORD( dwData );
 			if ( nShortcutIndex >= IS_COUNT )
+			{
 				return false;
+			}
 
 			if ( nTabIndex != INVALID_TAB_INDEX && IsMultiInputState( nShortcutIndex ) )
 			{

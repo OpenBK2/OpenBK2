@@ -26,12 +26,18 @@ int CExecutorStaticObjectSegment::Segment()
 		pObject->Segment();
 
 		if ( pObject->IsTerminateExecutors() )
+		{
 			return -1;
+		}
 		else
+		{
 			return ( pObject->GetNextSegmentTime() - curTime ) / SConsts::AI_SEGMENT_DURATION;
+		}
 	}
 	else
+	{
 		return -1;
+	}
 
 	//	return GetNextTime();
 }

@@ -14,7 +14,9 @@ bool CBasicExporter::LoadExporterSettings() const
 	if ( textMapSettings.IsEmpty() )
 	{
 		if ( szObjectTypeName.empty() )
+		{
 			return false;
+		}
 		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 		pUserData->SerializeSettings( textMapSettings, szObjectTypeName, SUserData::EXPORTER_SETINGS, SUserData::ST_LOAD );
 		if ( textMapSettings.IsEmpty() )
@@ -32,9 +34,13 @@ bool CBasicExporter::LoadExporterSettings() const
 const char *CBasicExporter::GetTextTemplate( const char *pszTemplateName ) const
 {
 	if ( LoadExporterSettings() )
+	{
 		return textMapSettings.GetText( pszTemplateName );
+	}
 	else
+	{
 		return "";
+	}
 }
 
 bool CBasicExporter::ExecuteMayaScript( const std::string &szScript )

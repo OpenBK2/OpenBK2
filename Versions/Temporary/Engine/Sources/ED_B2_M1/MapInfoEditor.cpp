@@ -101,7 +101,9 @@ void CMapInfoEditor::ResetGUI( bool bActive )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	if ( !bActive )
+	{
 		pUserData->SerializeSettings( editorSettings, "MapInfo", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
+	}
 	// Copy only GUI fields from the defaults, preserving all editing settings.
 	const CMapInfoEditorSettings defaults;
 	editorSettings.bShowShortcutBar = defaults.bShowShortcutBar;
@@ -112,15 +114,25 @@ void CMapInfoEditor::ResetGUI( bool bActive )
 	pUserData->SerializeSettings( editorSettings, "MapInfo", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
 
 	if ( pwndShortcutBar )
+	{
 		pwndShortcutBar->Show( bActive && editorSettings.bShowShortcutBar );
+	}
 	if ( pwndMiniMap )
+	{
 		pwndMiniMap->Show( bActive && editorSettings.bShowMinimapBar );
+	}
 	if ( pwndMoviesEditor )
+	{
 		pwndMoviesEditor->Show( bActive && editorSettings.bShowMoviesEditor );
+	}
 	if ( auto *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
+	{
 		pToolbar->Show( bActive && editorSettings.bShowMapInfoToolsToolbar );
+	}
 	if ( auto *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
+	{
 		pToolbar->Show( bActive && editorSettings.bShowMapInfoViewToolbar );
+	}
 }
 
 void CMapInfoEditor::CreateControls()
@@ -397,25 +409,37 @@ void CMapInfoEditor::Create()
 	}
 
 	if ( pwndShortcutBar )
+	{
 		pwndShortcutBar->Show( editorSettings.bShowShortcutBar );
+	}
 
 	if ( pwndMiniMap )
+	{
 		pwndMiniMap->Show( editorSettings.bShowMinimapBar );
+	}
 
 	if ( pwndMoviesEditor )
+	{
 		pwndMoviesEditor->Show( editorSettings.bShowMoviesEditor );
+	}
 
 	if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
+	{
 		pToolbar->Show( editorSettings.bShowMapInfoToolsToolbar );
+	}
 
 	if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
+	{
 		pToolbar->Show( editorSettings.bShowMapInfoViewToolbar );
+	}
 
 	NHPTimer::STime time = 0;
 	NHPTimer::GetTime( &time );
 	//
 	if ( !pMapInfoState )
+	{
 		pMapInfoState = new CMapInfoState( this );
+	}
 
 	//
 	DebugTrace( "CMapInfoEditor::Create(): Create mapinfo state: %g", NHPTimer::GetTimePassed( &time ) );
@@ -488,7 +512,9 @@ void CMapInfoEditor::Save( bool bSaveChanges )
 			if ( !NEditor::SaveTerrain( EditorScene()->GetTerraManager(), &szSaveError ) )
 			{
 				if ( szSaveError.empty() )
+				{
 					szSaveError = "Could not serialize the map terrain.";
+				}
 				NLog::GetLogger()->Log( LT_ERROR, "Failed to save map\n" );
 				NLog::GetLogger()->Log( LT_ERROR, fmt::format( "\tObjectID: {}\n", NDb::GetResName( pMapInfo ) ) );
 				bSaveFailed = true;
@@ -508,7 +534,9 @@ void CMapInfoEditor::Save( bool bSaveChanges )
 	// A failed minimap export is a failed save too; keep the document open
 	// and modified so the common save handler can report the error and retry.
 	if ( !CMapInfoBuilder::EnsureMinimapMaterialAndTexture( GetViewManipulator(), pMapInfo->GetDBID() ) )
+	{
 		szSaveError = "Could not create the map's minimap material and texture.";
+	}
 	if ( !szSaveError.empty() || !CreateMinimapImage() )
 	{
 		bSaveFailed = true;
@@ -530,7 +558,9 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		case ID_TOOLS_CREATE_SCRIPT_PATH_POINTS:
 		{
 			if ( !pMapInfo || !pMapInfoState )
+			{
 				return false;
+			}
 			pMapInfoState->ToggleScriptPathPoints();
 			return true;
 		}
@@ -581,7 +611,9 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			{
 				const NDb::SVSOInstance &road = pMapInfo->roads[i];
 				if ( road.points.size() < 2 )
+				{
 					continue;
+				}
 
 				bool bResult = true;
 				for ( int nPointIndex = 0; nPointIndex < road.points.size(); ++nPointIndex )
@@ -605,7 +637,9 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			{
 				const NDb::SVSOInstance &river = pMapInfo->rivers[i];
 				if ( river.points.size() < 2 )
+				{
 					continue;
+				}
 
 				bool bResult = true;
 				for ( int nPointIndex = 0; nPointIndex < river.points.size(); ++nPointIndex )
@@ -629,7 +663,9 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			{
 				const NDb::SVSOInstance &crag = pMapInfo->crags[i];
 				if ( crag.points.size() < 2 )
+				{
 					continue;
+				}
 
 				bool bResult = true;
 				for ( int nPointIndex = 0; nPointIndex < crag.points.size(); ++nPointIndex )
@@ -653,7 +689,9 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			{
 				const NDb::SVSOInstance &lake = pMapInfo->lakes[i];
 				if ( lake.points.size() < 2 )
+				{
 					continue;
+				}
 
 				bool bResult = true;
 				for ( int nPointIndex = 0; nPointIndex < lake.points.size(); ++nPointIndex )
@@ -2029,7 +2067,9 @@ void CMapInfoEditor::ApplyViewFilter()
 {
 	CPtr<IEditorScene> pEditorScene = EditorScene();
 	if ( !pEditorScene )
+	{
 		return;
+	}
 
 	// grid
 	if ( editorSettings.viewFilterData.bShowGrid )
@@ -2224,13 +2264,19 @@ void CMapInfoEditor::ApplyViewFilter()
 
 	// object types
 	if ( !pMapInfo )
+	{
 		return;
+	}
 	CPtr<IResourceManager> pResourceManager = Singleton<IResourceManager>();
 	if ( !pResourceManager )
+	{
 		return;
+	}
 	CPtr<IManipulator> pTableManipulator = pResourceManager->CreateTableManipulator();
 	if ( !pTableManipulator )
+	{
 		return;
+	}
 
 	// получить idшники типов объектов, которые должны быть скрыты фильтром
 	std::unordered_map<std::string, bool> filterSettings;
@@ -2252,7 +2298,9 @@ void CMapInfoEditor::ApplyViewFilter()
 		// по объектам
 		NMapInfoEditor::SObjectInfo *pOI = itObjectInfo->second;
 		if ( !pOI )
+		{
 			continue;
+		}
 
 		for ( NMapInfoEditor::SObjectInfo::CSceneIDToLinkIDMap::iterator itSceneIDToElemID =
 		          pOI->sceneIDToLinkIDMap.begin();
@@ -2264,15 +2312,21 @@ void CMapInfoEditor::ApplyViewFilter()
 			int nElemID = itSceneIDToElemID->second;
 			NMapInfoEditor::SObjectInfo::CMapInfoElementMap::iterator itElement = pOI->mapInfoElementMap.find( nElemID );
 			if ( itElement == pOI->mapInfoElementMap.end() )
+			{
 				continue;
+			}
 			NMapInfoEditor::SObjectInfo::SMapInfoElement *pElement = &( itElement->second );
 			//
 			const std::string szElementTypeName = pElement->szRPGStatsTypeName;
 			std::unordered_map<std::string, bool>::iterator itFilter = filterSettings.find( szElementTypeName );
 			if ( itFilter == filterSettings.end() || itFilter->second == true )
+			{
 				pEditorScene->ShowObject( nSceneID, true );
+			}
 			else
+			{
 				pEditorScene->ShowObject( nSceneID, false );
+			}
 		}
 	}
 	//
@@ -2282,7 +2336,9 @@ void CMapInfoEditor::ApplyViewFilter()
 void CMapInfoEditor::RunGame()
 {
 	if ( !pMapInfo )
+	{
 		return;
+	}
 	// IMainFrameContainer hands out a toolkit-neutral IWidget now, not a Stingray
 	// workbook pointer; MainFrameWnd() is the MFC front-end's way back to a CWnd.
 	// NMessage, which this file can use after all. It was left as ::MessageBox
@@ -2330,7 +2386,9 @@ void CMapInfoEditor::RunGame()
 	// Save the current map and DB before the independent game process reads them.
 	bSaveFailed = false;
 	if ( !Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, false ) )
+	{
 		return; // Save already reported the specific failure and kept the edits open.
+	}
 	if ( bSaveFailed || Singleton<IResourceManager>()->CanSyncDB() || !NDb::SaveChangedIndex() )
 	{
 		ReportError( "The map or database index could not be saved. Check the editor log." );

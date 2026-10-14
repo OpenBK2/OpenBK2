@@ -79,9 +79,13 @@ struct SRenderTargetsInfo
 	{
 		SRenderTargetDesc desc( nResolution, nFormatID );
 		if ( pRes->find( desc ) == pRes->end() )
+		{
 			( *pRes )[desc] = nTargets;
+		}
 		else
+		{
 			( *pRes )[desc] += nTargets;
+		}
 	}
 	void AddTex( int nResolution, int nFormatID, int nTargets ) { Add( &targets, nResolution, nFormatID, nTargets ); }
 	void AddCube( int nResolution, int nFormatID, int nTargets )
@@ -91,9 +95,13 @@ struct SRenderTargetsInfo
 	void Add( const SRenderTargetsInfo &a )
 	{
 		for ( CRTHash::const_iterator i = a.targets.begin(); i != a.targets.end(); ++i )
+		{
 			Add( &targets, i->first.nResolution, i->first.nFormatID, i->second );
+		}
 		for ( CRTHash::const_iterator i = a.cubeTargets.begin(); i != a.cubeTargets.end(); ++i )
+		{
 			Add( &cubeTargets, i->first.nResolution, i->first.nFormatID, i->second );
+		}
 		nRegisters += a.nRegisters;
 		nFloatRegisters += a.nFloatRegisters;
 	}
@@ -136,7 +144,9 @@ void D3DASSERT( HRESULT hRes, fmt::string_view fmtStr, const TArgs &...args )
 	// S_OK rather than D3D_OK, which d3d9.h defines as S_OK: the test lives in this
 	// header now, and Gfx.h is included by modules that have no reason to see d3d9.h.
 	if ( hRes == S_OK )
+	{
 		return;
+	}
 	D3DAssertFailed( hRes, fmtStr, fmt::make_printf_args( args... ) );
 }
 

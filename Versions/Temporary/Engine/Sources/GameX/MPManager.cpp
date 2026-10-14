@@ -38,9 +38,13 @@ void CMPManager::AddUIMessage( SMPUIMessage *_pMsg )
 	CPtr<SMPUIMessage> pMsg = _pMsg;
 	bool bResult = false;
 	if ( pCurrentNetMode )
+	{
 		bResult = pCurrentNetMode->HandleMessage( _pMsg );
+	}
 	if ( !bResult )
+	{
 		bResult = HandleMessage( pMsg );
+	}
 
 	NI_ASSERT( bResult, "Unhandled MP to UI message" );
 }
@@ -70,7 +74,9 @@ bool CMPManager::Segment()
 {
 	// Pass on messages
 	while ( CPtr<SMPUIMessage> pMsg = pCurrentNetMode->GetMessage() )
+	{
 		PushMessage( pMsg );
+	}
 
 	return pCurrentNetMode->Segment();
 }

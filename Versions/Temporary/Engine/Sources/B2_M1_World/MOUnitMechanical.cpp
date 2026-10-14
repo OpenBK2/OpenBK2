@@ -84,7 +84,9 @@ const SIconsSetInfo &GetDBIconsSet( NDb::EDesignUnitType eType )
 
 	CIconsSet::const_iterator it = iconsSets.find( eType );
 	if ( it == iconsSets.end() )
+	{
 		return iconsSetDefault;
+	}
 	return it->second;
 }
 
@@ -95,7 +97,9 @@ bool CMOUnitMechanical::IsInside( const int nID )
 	for ( std::vector<CPtr<CMOSelectable>>::iterator it = vPassangers.begin(); it != vPassangers.end(); ++it )
 	{
 		if ( ( *it )->GetID() == nID )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -103,7 +107,9 @@ bool CMOUnitMechanical::IsInside( const int nID )
 IMechUnitJoggingMutator *CMOUnitMechanical::GetOrCreateJoggingMutator()
 {
 	if ( !pJoggingMutator )
+	{
 		pJoggingMutator = MakeObject<IMechUnitJoggingMutator>( IMechUnitJoggingMutator::typeID );
+	}
 	return pJoggingMutator;
 }
 
@@ -112,7 +118,9 @@ void CMOUnitMechanical::SetupSpecialAnimationMutator( NAnimation::ISkeletonAnima
 	CDynamicCast<NAnimation::IGetBone> pGetBone = pAnimator;
 	const int nBoneIndex = pGetBone ? pGetBone->GetBoneIndex( "Basis" ) : -1;
 	if ( nBoneIndex < 0 )
+	{
 		return;
+	}
 
 	nJoggingBasisBoneIndex = nBoneIndex;
 	GetOrCreateJoggingMutator();
@@ -127,7 +135,9 @@ void CMOUnitMechanical::AdjustVisualPlacement( SAINotifyPlacement * )
 void CMOUnitMechanical::SetJoggingMode( const int nMode, const bool bPlay )
 {
 	if ( !pJoggingMutator || nJoggingBasisBoneIndex < 0 )
+	{
 		return;
+	}
 
 	if ( nMode == EJM_NONE )
 	{
@@ -162,9 +172,13 @@ void CMOUnitMechanical::SetJoggingMode( const int nMode, const bool bPlay )
 	}
 
 	if ( bPlay )
+	{
 		pJoggingMutator->Play();
+	}
 	else
+	{
 		pJoggingMutator->Stop();
+	}
 }
 
 void CMOUnitMechanical::UpdateAmphibianJogging( const bool bMoving )
@@ -172,7 +186,9 @@ void CMOUnitMechanical::UpdateAmphibianJogging( const bool bMoving )
 	if ( pTransport )
 	{
 		if ( pJoggingMutator )
+		{
 			pJoggingMutator->Stop();
+		}
 		return;
 	}
 
@@ -180,11 +196,17 @@ void CMOUnitMechanical::UpdateAmphibianJogging( const bool bMoving )
 	const bool bUseWaterJogging = bAmphibianInWater && pStats->IsAmphibious() && pStats->pAmphibianStats;
 
 	if ( bMoving )
+	{
 		SetJoggingMode( bUseWaterJogging ? EJM_WATER_MOVE : EJM_LAND_MOVE, true );
+	}
 	else if ( bUseWaterJogging )
+	{
 		SetJoggingMode( EJM_WATER_IDLE, true );
+	}
 	else
+	{
 		SetJoggingMode( EJM_LAND_MOVE, false );
+	}
 }
 
 void CMOUnitMechanical::AttachComplexEffectToLocators( IScene *pScene,
@@ -193,11 +215,15 @@ void CMOUnitMechanical::AttachComplexEffectToLocators( IScene *pScene,
                                                        const NTimer::STime time ) const
 {
 	if ( !pScene || locators.empty() || !pComplexEffect || !pComplexEffect->GetSceneEffect() )
+	{
 		return;
+	}
 
 	for ( int i = 0; i < locators.size(); ++i )
+	{
 		pScene->AttachEffect(
 				GetID(), ESSOT_WATER_DROPS, locators[i], pComplexEffect->GetSceneEffect(), time, ESAT_NO_REPLACE );
+	}
 }
 
 void CMOUnitMechanical::UpdateWaterMoveEffects( const SAINotifyPlacement &placement, IScene *pScene )
@@ -212,7 +238,9 @@ void CMOUnitMechanical::UpdateWaterMoveEffects( const SAINotifyPlacement &placem
 
 	const NDb::SAmphibianStats *pAmphibianStats = pStats->pAmphibianStats;
 	if ( pAmphibianStats->waterMoveLocators.empty() || !pAmphibianStats->pWaterMoveEffect || !IsVisible() )
+	{
 		return;
+	}
 
 	const NTimer::STime time = GameTimer()->GetGameTime();
 	const CVec2 vPlacement( placement.center.x, placement.center.y );
@@ -221,7 +249,9 @@ void CMOUnitMechanical::UpdateWaterMoveEffects( const SAINotifyPlacement &placem
 
 	if ( nLastWaterMoveEffectTime >= 0 && fabs2( vPlacement - vLastWaterMoveEffectPos ) < sqr( fMinDistance ) &&
 	     time - nLastWaterMoveEffectTime < 500 )
+	{
 		return;
+	}
 
 	// Moving water effects are pulsed like track/dust effects to avoid piling up attaches every placement packet.
 	AttachComplexEffectToLocators( pScene, pAmphibianStats->waterMoveLocators, pAmphibianStats->pWaterMoveEffect, time );
@@ -232,7 +262,9 @@ void CMOUnitMechanical::UpdateWaterMoveEffects( const SAINotifyPlacement &placem
 IClientUpdatableProcess *CMOUnitMechanical::CreateIdleEffectProcess() const
 {
 	if ( pTransport )
+	{
 		return 0;
+	}
 
 	const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
 	if ( bAmphibianWaterEffectsActive && pStats->IsAmphibious() && pStats->pAmphibianStats &&
@@ -245,7 +277,9 @@ IClientUpdatableProcess *CMOUnitMechanical::CreateIdleEffectProcess() const
 	}
 
 	if ( pStats->shipEffects.pBoardSideEffect != 0 && !pStats->shipEffects.boardSideLocators.empty() )
+	{
 		return new CIdleMechProcess( GetID(), pStats->shipEffects.boardSideLocators, pStats->shipEffects.pBoardSideEffect );
+	}
 
 	return 0;
 }
@@ -255,9 +289,13 @@ void CMOUnitMechanical::SetDiveSound( bool bDive )
 	if ( GetStatsLocal()->pSoundDive )
 	{
 		if ( bDive )
+		{
 			AttachSound( EAST_PLANE_DIVE, GetStatsLocal()->pSoundDive, false );
+		}
 		else
+		{
 			DetachSound( EAST_PLANE_DIVE );
+		}
 	}
 }
 
@@ -320,16 +358,22 @@ bool CMOUnitMechanical::Create( const int nUniqueID,
 	bAmphibianWaterEffectsActive = bHasAmphibianStats && fAdjustedWaterCoeff >= AMPHIBIAN_WATER_EFFECTS_MIN_COEFF;
 
 	if ( pStats->eSelectionType == NDb::SELECTION_TYPE_CANNOT_SELECT )
+	{
 		SetCanSelect( false );
+	}
 
 	if ( pStats->bLeavesTracks || pStats->pEffectWheelDust )
 	{
 		lastTrackPoints.resize( 5 );
 		for ( int i = 0; i < 5; ++i )
+		{
 			lastTrackPoints[i] = VNULL3;
+		}
 		trackPoints.resize( 8 );
 		for ( int i = 0; i < 8; ++i )
+		{
 			trackPoints[i] = VNULL3;
+		}
 		fTrackWidth = pStats->vAABBHalfSize.x * 2.0f * pStats->fTrackWidth;
 	}
 	else
@@ -345,7 +389,9 @@ bool CMOUnitMechanical::Create( const int nUniqueID,
 		{
 			SetupSpecialAnimationMutator( pAnimator );
 			if ( pJoggingMutator )
+			{
 				pAnimator->SetSpecialMutator( pJoggingMutator );
+			}
 			// run default animation (idle)
 			RunDefaultObjectAnimation( GetModelDesc()->pSkeleton, pAnimator );
 		}
@@ -355,7 +401,9 @@ bool CMOUnitMechanical::Create( const int nUniqueID,
 	if ( !bInEditor )
 	{
 		if ( pStats->iconsSetParams.bCustom )
+		{
 			SetIconsSetInfo( SIconsSetInfo( pStats->iconsSetParams.fRaising, pStats->iconsSetParams.fHPBarLen ) );
+		}
 		else
 		{
 			const SIconsSetInfo &info = GetDBIconsSet( GetStatsLocal()->eUnitType );
@@ -369,7 +417,9 @@ bool CMOUnitMechanical::Create( const int nUniqueID,
 		InitAttached( eSeason, pChooseFunc );
 		// hide attached
 		if ( !IsVisible() )
+		{
 			Scene()->ShowObject( GetID(), IsVisible() );
+		}
 	}
 
 	if ( bResult && !bInEditor && bAmphibianWaterEffectsActive )
@@ -378,7 +428,9 @@ bool CMOUnitMechanical::Create( const int nUniqueID,
 		// their water idle process directly from the initial placement information.
 		pIdleProcess = CreateIdleEffectProcess();
 		if ( pIdleProcess )
+		{
 			NUpdatableProcess::Register( pIdleProcess );
+		}
 	}
 
 	return bResult;
@@ -389,7 +441,9 @@ void CMOUnitMechanical::GetStatus( SObjectStatus *pStatus ) const
 	CMOUnit::GetStatus( pStatus );
 
 	if ( !GetStatsLocal() )
+	{
 		return;
+	}
 
 	// Armor
 	if ( GetStatsLocal()->armors.size() >= ARMOR_COUNT )
@@ -416,7 +470,9 @@ void CMOUnitMechanical::GetStatus( SObjectStatus *pStatus ) const
 		{
 			const NDb::SBaseGunRPGStats &gun = GetStatsLocal()->GetGun( nID, i, j );
 			if ( !gun.pWeapon )
+			{
 				continue;
+			}
 
 			SObjectStatus::SWeapon weapon;
 
@@ -426,14 +482,18 @@ void CMOUnitMechanical::GetStatus( SObjectStatus *pStatus ) const
 			weapon.bPrimary = gun.bIsPrimary;
 
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( gun.pWeapon->, LocalizedName ) )
+			{
 				weapon.szLocalizedName = GET_TEXT_PRE( gun.pWeapon->, LocalizedName );
+			}
 
 			weapon.nDamage = pShell->fDamagePower;
 			weapon.nPenetration = pShell->nPiercing;
 			weapon.nMaxAmmo = gun.nAmmo;
 
 			if ( weapon.pWeaponID && weapon.pWeaponID->eWeaponType != NDb::SWeaponRPGStats::WEAPON_HIDED )
+			{
 				pStatus->AddWeapon( weapon );
+			}
 		}
 	}
 
@@ -456,20 +516,32 @@ void CMOUnitMechanical::GetActions( CUserActions *pActions, EActionsType eAction
 	if ( eActions == ACTIONS_BY || eActions == ACTIONS_ALL )
 	{
 		if ( bArtilleryHooked )
+		{
 			pActions->RemoveAction( NDb::USER_ACTION_HOOK_ARTILLERY );
+		}
 		else
+		{
 			pActions->RemoveAction( NDb::USER_ACTION_DEPLOY_ARTILLERY );
+		}
 		if ( pStats && pStats->IsTransport() && GetSupply() < 1000.0f )
+		{
 			pActions->SetAction( NDb::USER_ACTION_FILL_RU );
+		}
 		else
+		{
 			pActions->RemoveAction( NDb::USER_ACTION_FILL_RU );
+		}
 
 		if ( pStats && pActions->HasAction( NDb::USER_ACTION_MOVE ) )
 		{
 			if ( ( pStats->nAIPassabilityClass & EAC_TRACK ) != 0 )
+			{
 				pActions->SetAction( NDb::USER_ACTION_MOVE_TRACK );
+			}
 			if ( ( pStats->nAIPassabilityClass & EAC_WHELL ) != 0 )
+			{
 				pActions->SetAction( NDb::USER_ACTION_MOVE_WHELL );
+			}
 		}
 
 		// Rocket/AA artillery must be gunnerless; Move still filters out its static variants.
@@ -481,27 +553,43 @@ void CMOUnitMechanical::GetActions( CUserActions *pActions, EActionsType eAction
 		                            : ( pStats->IsArmor() || pStats->IsSPG() || pStats->IsTransport() ) ) &&
 				pStats->eSelectionType != NDb::SELECTION_TYPE_WATER;
 		if ( bCanReverseByType && !bArtilleryHooked && pActions->HasAction( NDb::USER_ACTION_MOVE ) )
+		{
 			pActions->SetAction( NDb::USER_ACTION_REVERSE );
+		}
 		else
+		{
 			pActions->RemoveAction( NDb::USER_ACTION_REVERSE );
+		}
 	}
 	if ( eActions == ACTIONS_WITH || eActions == ACTIONS_ALL )
 	{
 		if ( !IsNeutral() )
+		{
 			pActions->RemoveAction( NDb::USER_ACTION_CAPTURE_ARTILLERY );
+		}
 		// break track for tanks (CRAP)
 		if ( ( pStats->IsArmor() || pStats->IsSPG() ) && pStats->eSelectionType != NDb::SELECTION_TYPE_WATER )
+		{
 			pActions->SetAction( NDb::USER_ACTION_TRACK_TARGETING );
+		}
 		// human
 		if ( GetFreePlaces() <= 0 || IsNeutral() )
+		{
 			pActions->RemoveAction( NDb::USER_ACTION_BOARD );
+		}
 		// mech
 		if ( GetFreeMechPlaces() <= 0 || IsNeutral() )
+		{
 			pActions->RemoveAction( NDb::USER_ACTION_MECH_BOARD );
+		}
 		if ( GetHP() < 1.0f )
+		{
 			pActions->SetAction( NDb::USER_ACTION_ENGINEER_REPAIR );
+		}
 		else
+		{
 			pActions->RemoveAction( NDb::USER_ACTION_ENGINEER_REPAIR );
+		}
 		// count ammo for guns
 		bool bResupply = false;
 		if ( pStats && !pStats->IsAviation() )
@@ -519,13 +607,19 @@ void CMOUnitMechanical::GetActions( CUserActions *pActions, EActionsType eAction
 					}
 				}
 				if ( GetWeaponAmmoTotal() < nAmmo )
+				{
 					bResupply = true;
+				}
 			}
 		}
 		if ( bResupply )
+		{
 			pActions->SetAction( NDb::USER_ACTION_SUPPORT_RESUPPLY );
+		}
 		else
+		{
 			pActions->RemoveAction( NDb::USER_ACTION_SUPPORT_RESUPPLY );
+		}
 	}
 }
 
@@ -543,9 +637,13 @@ void CMOUnitMechanical::GetPossibleActions( CUserActions *pActions ) const
 	                            : ( pStats->IsArmor() || pStats->IsSPG() || pStats->IsTransport() ) ) &&
 			pStats->eSelectionType != NDb::SELECTION_TYPE_WATER;
 	if ( bCanReverseByType && pActions->HasAction( NDb::USER_ACTION_MOVE ) )
+	{
 		pActions->SetAction( NDb::USER_ACTION_REVERSE );
+	}
 	else
+	{
 		pActions->RemoveAction( NDb::USER_ACTION_REVERSE );
+	}
 }
 
 void CMOUnitMechanical::GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const
@@ -556,9 +654,13 @@ void CMOUnitMechanical::GetDisabledActions( CUserActions *pActions, EActionsType
 	{
 		// Reverse has the same mobility restrictions as move, plus towing prevents backing up.
 		if ( bArtilleryHooked || pActions->HasAction( NDb::USER_ACTION_MOVE ) )
+		{
 			pActions->SetAction( NDb::USER_ACTION_REVERSE );
+		}
 		if ( vPassangers.empty() /*|| bArtilleryHooked*/ )
+		{
 			pActions->SetAction( NDb::USER_ACTION_LEAVE );
+		}
 		if ( !IsOpen() || ( pTransport && !pTransport->IsOpen() ) )
 		{
 			pActions->SetAction( NDb::USER_ACTION_LEAVE );
@@ -594,7 +696,9 @@ const CVec3 CMOUnitMechanical::GetFirePoint( const int nPlatform, const int nGun
 	           return VNULL3 );
 	NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID(), gun.szShootPoint );
 	if ( !pAnimator )
+	{
 		return VNULL3;
+	}
 	SHMatrix mShootPoint;
 	NI_VERIFY(
 			pAnimator->GetBonePosition( gun.szShootPoint.c_str(), &mShootPoint ),
@@ -621,7 +725,9 @@ void CMOUnitMechanical::AIUpdateShot( const SAINotifyBaseShot &_shot,
 	{
 		NAnimation::ISkeletonAnimator *pAnimator = pScene->GetAnimator( nID, gun.szShootPoint );
 		if ( !pAnimator )
+		{
 			return;
+		}
 
 		const NDb::SComplexEffect *pComplexEffect = gun.pWeapon->shells[shot.cShell].pEffectGunFire;
 		if ( !pAnimator->GetBonePosition( gun.szShootPoint.c_str(), &mShootPoint ) )
@@ -636,7 +742,9 @@ void CMOUnitMechanical::AIUpdateShot( const SAINotifyBaseShot &_shot,
 		if ( pStats->animdescs.size() > NDb::ANIMATION_SHOOT && !pStats->animdescs[NDb::ANIMATION_SHOOT].anims.empty() )
 		{
 			if ( pComplexEffect != 0 && IsVisible() )
+			{
 				PlayComplexEffect( OBJECT_ID_FORGET, pComplexEffect, _shot.time, mShootPoint );
+			}
 		}
 		else if ( gun.bRecoil )
 		{
@@ -664,14 +772,20 @@ void CMOUnitMechanical::AIUpdateShot( const SAINotifyBaseShot &_shot,
 			pAnimator->SetBoneMutator( 0, currTime, mutatorBasis ); // 0 as const char *
 
 			if ( pComplexEffect != 0 && IsVisible() )
+			{
 				PlayComplexEffect( OBJECT_ID_FORGET, pComplexEffect, _shot.time, mShootPoint );
+			}
 		}
 		else if ( pComplexEffect != 0 && IsVisible() )
+		{
 			PlayComplexEffect( nID, gun.szShootPoint, ESSOT_GUN_FIRE, pComplexEffect, _shot.time, ESAT_REPLACE_ON_BONE );
+		}
 		// play effect shoot dust (for primary guns)
 		if ( IsVisible() && gun.bIsPrimary && pStats->pEffectShootDust != 0 )
+		{
 			PlayComplexSeasonedEffect(
 					OBJECT_ID_FORGET, pStats->pEffectShootDust, _shot.time, GetCenter(), GetOrientation(), eSeason );
+		}
 		//
 		AddShotTrace( gun.pWeapon, shot, CVec3( mShootPoint._14, mShootPoint._24, mShootPoint._34 ), currTime, pScene );
 		// earthquake
@@ -696,7 +810,9 @@ void CMOUnitMechanical::AddShotTrace( const CDBPtr<NDb::SWeaponRPGStats> pWeapon
 		CVec3 vEnd( shot.vDestPos );
 		AI2Vis( &vEnd );
 		if ( vEnd.z == 0 )
+		{
 			vEnd.z = AI2Vis( Scene()->GetZ( shot.vDestPos.x, shot.vDestPos.y ) );
+		}
 		//
 		pScene->AddShotTrace( vStart, vEnd, currTime, &( pWeapon->shells[shot.cShell] ) );
 		//pScene->AddLaserMark( vStart, vEnd );
@@ -750,13 +866,17 @@ void CMOUnitMechanical::AIUpdateTurretTurn( const struct SAINotifyTurretTurn &tu
 			{
 				NAnimation::ISkeletonAnimator *pAnimator = pScene->GetAnimator( nID, szBoneName );
 				if ( pAnimator )
+				{
 					pAnimator->SetBoneMutator( szBoneName.c_str(), currTime, mutator );
+				}
 				else
+				{
 					DebugTrace( "Gun elevation: RotatePoint '%s' was not found for object %d, platform %d, gun %d",
 					            szBoneName.c_str(),
 					            nID,
 					            turn.nPlantform,
 					            i );
+				}
 			}
 		}
 	}
@@ -775,7 +895,9 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
                                            NDb::ESeason eSeason )
 {
 	if ( NGlobal::GetVar( "m1", 0 ) == 0 && GameTimer()->GetPauseType() != -1 )
+	{
 		return;
+	}
 
 	const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
 	const bool bHasAmphibianStats = pStats->IsAmphibious() && pStats->pAmphibianStats;
@@ -813,7 +935,9 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 		// when a stationary amphibian enters or leaves the water-effects range.
 		pIdleProcess = CreateIdleEffectProcess();
 		if ( pIdleProcess )
+		{
 			NUpdatableProcess::Register( pIdleProcess );
+		}
 	}
 
 	// in-transport units don't leave tracks, no tracks on zero speed
@@ -875,7 +999,9 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 			bNewDir = ( fDir == 0 ? bForwardMoving : ( fDir > 0 ) );
 		}
 		if ( bNewDir != bForwardMoving )
+		{
 			bPlaceSegment = true;
+		}
 		if ( bPlaceSegment )
 		{
 			//get point coordinates
@@ -1019,18 +1145,22 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 				if ( pStats->bLeavesTracks && bForwardMoving && pStats->shipEffects.pRastrumEffect != 0 )
 				{
 					for ( int i = 0; i < pStats->shipEffects.rastrumLocators.size(); ++i )
+					{
 						pScene->AttachEffect( GetID(),
 						                      ESSOT_WATER_DROPS,
 						                      pStats->shipEffects.rastrumLocators[i],
 						                      pStats->shipEffects.pRastrumEffect->GetSceneEffect(),
 						                      Singleton<IGameTimer>()->GetGameTime(),
 						                      ESAT_NO_REPLACE );
+					}
 				}
 			}
 
 			//remember for future use
 			for ( int i = 0; i < 4; ++i )
+			{
 				lastTrackPoints[i] = newTrackPoints[i];
+			}
 			nLastTrackTime = Singleton<IGameTimer>()->GetGameTime();
 			lastTrackPoints[4].Set( placement.center.x, placement.center.y, placement.z );
 			wLastTrackDir = placement.dir;
@@ -1046,7 +1176,9 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 		AI2Vis( &vPos );
 		const NTimer::STime currTime = GameTimer()->GetGameTime();
 		for ( std::vector<CObj<CSmokeTrailEffect>>::iterator it = smokeTrails.begin(); it != smokeTrails.end(); ++it )
+		{
 			( *it )->UpdatePlacement( vPos, qRot, currTime, IsVisible() );
+		}
 	}
 }
 
@@ -1057,7 +1189,9 @@ void CMOUnitMechanical::SetTransport( IMOContainer *_pTransport )
 	pTransport = _pTransport;
 
 	if ( pJoggingMutator )
+	{
 		pJoggingMutator->Stop();
+	}
 	DetachSound( EAST_MOVEMENT );
 	DetachSound( EAST_IDLE );
 	bMoved = FALSE;
@@ -1066,7 +1200,9 @@ void CMOUnitMechanical::SetTransport( IMOContainer *_pTransport )
 	nLastWaterMoveEffectTime = -1;
 
 	if ( bChanged )
+	{
 		UpdateVisibility( true );
+	}
 }
 
 IClientUpdatableProcess *CMOUnitMechanical::AIUpdateMovement( const NTimer::STime &time,
@@ -1076,7 +1212,9 @@ IClientUpdatableProcess *CMOUnitMechanical::AIUpdateMovement( const NTimer::STim
 {
 	pIdleProcess = 0;
 	if ( pTransport )
+	{
 		return pIdleProcess;
+	}
 
 	if ( _bMove )
 	{
@@ -1094,12 +1232,14 @@ IClientUpdatableProcess *CMOUnitMechanical::AIUpdateMovement( const NTimer::STim
 			{
 				IScene *pScene = Scene();
 				for ( int i = 0; i < pStats->exhaustPoints.size(); ++i )
+				{
 					pScene->AttachEffect( GetID(),
 					                      ESSOT_EXHAUST,
 					                      pStats->exhaustPoints[i],
 					                      pStats->pEffectDiesel->GetSceneEffect(),
 					                      time,
 					                      i == 0 ? ESAT_REPLACE_ON_TYPE : ESAT_NO_REPLACE );
+				}
 			}
 		}
 	}
@@ -1108,13 +1248,17 @@ IClientUpdatableProcess *CMOUnitMechanical::AIUpdateMovement( const NTimer::STim
 		DetachSound( EAST_MOVEMENT );
 		const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats *>( GetStats() );
 		if ( pStats->pSoundMoveStop )
+		{
 			pSoundScene->AddSound( pStats->pSoundMoveStop, GetCenter(), SFX_MIX_IF_TIME_EQUALS, SAM_ADD_N_FORGET, 0, 2 );
+		}
 		bMoved = false;
 		UpdateAmphibianJogging( false );
 		pIdleProcess = CreateIdleEffectProcess();
 		//
 		if ( pStats->pSoundIdle )
+		{
 			AttachSound( EAST_IDLE, pStats->pSoundIdle, true );
+		}
 	}
 	return pIdleProcess;
 }
@@ -1125,22 +1269,32 @@ bool CMOUnitMechanical::Load( struct IMOUnit *pMO, bool bEnter )
 	if ( bEnter )
 	{
 		if ( !IsInside( nID ) )
+		{
 			vPassangers.push_back( pMO );
+		}
 	}
 	else
 	{
 		if ( vPassangers.empty() )
+		{
 			return false;
+		}
 		bool bShift = false;
 		for ( int i = 0; i < vPassangers.size() - 1; ++i )
 		{
 			if ( vPassangers[i]->GetID() == nID )
+			{
 				bShift = true;
+			}
 			if ( bShift )
+			{
 				vPassangers[i] = vPassangers[i + 1];
+			}
 		}
 		if ( bShift || vPassangers[vPassangers.size() - 1]->GetID() == nID )
+		{
 			vPassangers.resize( vPassangers.size() - 1 );
+		}
 	}
 	if ( IsSelected() )
 	{
@@ -1153,28 +1307,40 @@ bool CMOUnitMechanical::Load( struct IMOUnit *pMO, bool bEnter )
 bool CMOUnitMechanical::LoadSquad( struct IMOSquad *pSquad, bool bEnter )
 {
 	if ( pSquad == 0 )
+	{
 		return true;
+	}
 	pSquad->SetContainer( bEnter ? this : 0 );
 	const int nID = pSquad->GetID();
 	if ( bEnter )
 	{
 		if ( !IsInside( nID ) )
+		{
 			vPassangers.push_back( pSquad );
+		}
 	}
 	else
 	{
 		if ( vPassangers.empty() )
+		{
 			return false;
+		}
 		bool bShift = false;
 		for ( int i = 0; i < vPassangers.size() - 1; ++i )
 		{
 			if ( vPassangers[i]->GetID() == nID )
+			{
 				bShift = true;
+			}
 			if ( bShift )
+			{
 				vPassangers[i] = vPassangers[i + 1];
+			}
 		}
 		if ( bShift || vPassangers[vPassangers.size() - 1]->GetID() == nID )
+		{
 			vPassangers.resize( vPassangers.size() - 1 );
+		}
 	}
 	if ( IsSelected() )
 	{
@@ -1189,7 +1355,9 @@ void CMOUnitMechanical::GetPassangers( std::vector<CMOSelectable *> *pBuffer ) c
 	NI_ASSERT( pBuffer, "Wrong pointer" );
 	pBuffer->resize( vPassangers.size() );
 	for ( int i = 0; i < vPassangers.size(); ++i )
+	{
 		( *pBuffer )[i] = vPassangers[i];
+	}
 }
 
 int CMOUnitMechanical::GetFreePlaces() const
@@ -1210,7 +1378,9 @@ int CMOUnitMechanical::GetMechPassangersCount() const
 	for ( int i = 0; i < vPassangers.size(); ++i )
 	{
 		if ( dynamic_cast<CMOUnitMechanical *>( vPassangers[i].GetPtr() ) )
+		{
 			nCount++;
+		}
 	}
 	return nCount;
 }
@@ -1248,7 +1418,9 @@ const NDb::SAnimB2 *CMOUnitMechanical::GetAnimB2( const NDb::SModel *pModel,
 		{
 			const int nAnimSkeletonIndex = animdescs[eAnimType].anims[nAnimID].nFrameIndex;
 			if ( nAnimSkeletonIndex >= 0 && nAnimSkeletonIndex < pModel->pSkeleton->animations.size() )
+			{
 				return dynamic_cast_ptr<const NDb::SAnimB2 *>( pModel->pSkeleton->animations[nAnimSkeletonIndex] );
+			}
 		}
 
 		// When skipping the (already kinda useless) animdescs, just iterate through all anims of the same type and pick the one with index that's nAnimID
@@ -1256,16 +1428,22 @@ const NDb::SAnimB2 *CMOUnitMechanical::GetAnimB2( const NDb::SModel *pModel,
 		{
 			const auto &anims = pModel->pSkeleton->animations;
 			if ( anims.size() < 1 )
+			{
 				return 0;
+			}
 
 			int currentIndex = -1;
 			for ( int i = 0; i < anims.size(); i++ )
 			{
 				auto anim = dynamic_cast_ptr<const NDb::SAnimB2 *>( anims[i] );
 				if ( anim->eType == eAnimType )
+				{
 					currentIndex++;
+				}
 				if ( currentIndex == nAnimID )
+				{
 					return anim;
+				}
 			}
 
 			return 0;
@@ -1329,7 +1507,9 @@ void CMOUnitMechanical::PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate )
 
 	// Use animable model for artillery and trucks
 	if ( pStats->pAnimableModel != 0 )
+	{
 		isAnimable = true;
+	}
 
 	if ( nParam != -1 )
 	{
@@ -1388,7 +1568,9 @@ void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate,
                                           struct IClientAckManager *pAckManager )
 {
 	if ( pJoggingMutator )
+	{
 		pJoggingMutator->Stop();
+	}
 	//
 	if ( !IsVisible() )
 	{
@@ -1442,6 +1624,7 @@ void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate,
 						// no locator, attach to center
 						SFBTransform transform;
 						if ( Scene()->GetVisObjPlacement( GetID(), &transform ) )
+						{
 							Scene()->AttachEffect( GetID(),
 							                       ESSOT_DEATH_EFFECTS,
 							                       new CCSFBTransform( transform ),
@@ -1450,8 +1633,10 @@ void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate,
 							                       ESAT_NO_REPLACE,
 							                       -1,
 							                       true );
+						}
 					}
 					else
+					{
 						Scene()->AttachEffect( GetID(),
 						                       ESSOT_DEATH_EFFECTS,
 						                       pStats->szFatalitySmokePoint,
@@ -1459,6 +1644,7 @@ void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate,
 						                       nStartTime,
 						                       ESAT_NO_REPLACE,
 						                       true );
+					}
 				}
 
 				PlaySoundEffect( OBJECT_ID_FORGET, pStats->pEffectFatality->pSoundEffect, nStartTime, GetCenter() );
@@ -1481,6 +1667,7 @@ void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate,
 						// no locator, attach to center
 						SFBTransform transform;
 						if ( Scene()->GetVisObjPlacement( GetID(), &transform ) )
+						{
 							Scene()->AttachEffect( GetID(),
 							                       ESSOT_DEATH_EFFECTS,
 							                       new CCSFBTransform( transform ),
@@ -1489,10 +1676,13 @@ void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate,
 							                       ESAT_NO_REPLACE,
 							                       -1,
 							                       true );
+						}
 					}
 					else
+					{
 						Scene()->AttachEffect(
 								GetID(), ESSOT_DEATH_EFFECTS, szLocator, pEffect, nStartTime, ESAT_NO_REPLACE, true );
+					}
 				}
 
 				PlaySoundEffect( OBJECT_ID_FORGET, pStats->pEffectSmoke->pSoundEffect, nStartTime, GetCenter() );
@@ -1534,7 +1724,9 @@ void CMOUnitMechanical::AIUpdateDeadPlane( const SAIActionUpdate *pUpdate )
 	{
 		smokeTrails.clear();
 		if ( pStats->pEffectFatality )
+		{
 			PlayComplexEffect( OBJECT_ID_FORGET, pStats->pEffectFatality, timeEffect, GetCenter() );
+		}
 	}
 }
 
@@ -1553,10 +1745,14 @@ void CMOUnitMechanical::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
 		CQuat qRot;
 		GetPlacement( &vPos, &qRot, &vScale );
 		if ( GetStatsLocal()->pEffectDisappear != 0 )
+		{
 			PlayComplexEffect( OBJECT_ID_FORGET, GetStatsLocal()->pEffectDisappear, pUpdate->nUpdateTime, vPos );
+		}
 	}
 	if ( pTransport )
+	{
 		pTransport->Load( this, false );
+	}
 	SetTransport( 0 );
 }
 
@@ -1573,7 +1769,9 @@ void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const ND
 			{
 				const NDb::SVisObj *pVisObj = mech->pvisualObject;
 				if ( mech->pAnimableModel != 0 )
+				{
 					pVisObj = mech->pAnimableModel;
+				}
 				ChangeModelToAnimable( GetModel( pVisObj, eSeason ), eSeason );
 			}
 			const NDb::EAnimationType eType =
@@ -1612,7 +1810,9 @@ void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const ND
 				auto anims = GetVisObjAnimsFromModel( mech->pAnimableModel, eType );
 
 				if ( anims.size() < 1 )
+				{
 					return;
+				}
 
 				auto pAnim = anims[0];
 				if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() ) )
@@ -1678,7 +1878,9 @@ void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const ND
 					auto anims = GetVisObjAnimsFromModel( mech->pAnimableModel, eType );
 
 					if ( anims.size() < 1 )
+					{
 						return;
+					}
 
 					auto pAnim = anims[0];
 
@@ -1705,7 +1907,9 @@ void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const ND
 
 		case ACTION_NOTIFY_FINISH_UNINSTALL_TRANSPORT:
 			if ( GetStatsLocal()->pTransportableModel )
+			{
 				ChangeModelToTransportable( GetModel( GetStatsLocal()->pTransportableModel, eSeason ), eSeason );
+			}
 
 			break;
 
@@ -1713,7 +1917,9 @@ void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const ND
 			if ( const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats *>( GetStats() ) )
 			{
 				if ( pStats->animdescs.size() > NDb::ANIMATION_SHOOT && !pStats->animdescs[NDb::ANIMATION_SHOOT].anims.empty() )
+				{
 					PlayAnimation( pStats->animdescs[NDb::ANIMATION_SHOOT].anims[0].nFrameIndex );
+				}
 			}
 			break;
 	}
@@ -1723,9 +1929,13 @@ void CMOUnitMechanical::Select( bool bSelect )
 {
 	// show unit selections
 	if ( bSelect )
+	{
 		Scene()->SelectObject( GetID(), GetCenter(), GetSelectionScale(), GetSelectionType() );
+	}
 	else
+	{
 		Scene()->UnselectObject( GetID() );
+	}
 
 	CMOSelectable::Select( bSelect );
 	UpdateIcons();
@@ -1746,14 +1956,18 @@ CMOProjectile *CMOUnitMechanical::LaunchProjectile( const SAINewProjectileUpdate
 	                        GetStatsLocal()->GetDBID().ToString(),
 	                        pUpdate->info.nGun ) );
 	if ( pWeapon == 0 )
+	{
 		return 0;
+	}
 
 	NI_ASSERT( pUpdate->info.nShell < pWeapon->shells.size(),
 	           fmt::format( "Wrong number of shell ({}), total number of shells ({})",
 	                        pUpdate->info.nShell,
 	                        pWeapon->shells.size() ) );
 	if ( pUpdate->info.nShell >= pWeapon->shells.size() )
+	{
 		return 0;
+	}
 
 	// calculate shoot point transition and direction
 	CQuat qShootPointRotation = QNULL;
@@ -1765,7 +1979,9 @@ CMOProjectile *CMOUnitMechanical::LaunchProjectile( const SAINewProjectileUpdate
 	{
 		SHMatrix mShootPointPose;
 		if ( !pShootPointAnimator->GetBonePosition( gun.szShootPoint.c_str(), &mShootPointPose ) )
+		{
 			return 0;
+		}
 		//
 		vShootPointTransition = mShootPointPose.GetTrans3();
 		qShootPointRotation.FromEulerMatrix( mShootPointPose );
@@ -1798,9 +2014,13 @@ CMOProjectile *CMOUnitMechanical::LaunchProjectile( const SAINewProjectileUpdate
 	                          qShootPointRotation,
 	                          shell.pEffectTrajectory,
 	                          vRotationSpeedRad ) )
+	{
 		return pProjectile.Extract();
+	}
 	else
+	{
 		return 0;
+	}
 }
 
 void CMOUnitMechanical::OnSerialize( IBinSaver &saver ) {}
@@ -1808,9 +2028,13 @@ void CMOUnitMechanical::OnSerialize( IBinSaver &saver ) {}
 void CMOUnitMechanical::SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck )
 {
 	if ( IsValid( pOneFromCrew ) )
+	{
 		return pOneFromCrew->SendAcknowledgement( pAckManager, eAck );
+	}
 	else
+	{
 		return CMOUnit::SendAcknowledgement( pAckManager, eAck );
+	}
 }
 
 REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x100A7487, CMOUnitMechanical );

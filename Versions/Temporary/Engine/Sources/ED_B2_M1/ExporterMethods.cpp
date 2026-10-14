@@ -146,7 +146,9 @@ bool CreateObjectStaticDebris( const NEditorGltf::SMeshData &mesh,
 	                                  origin,
 	                                  NDebrisBuilder::MASK_STATIC,
 	                                  smoothRadius ) )
+	{
 		return false;
+	}
 	CFileStream stream( NVFS::GetMainFileCreator(), imageName );
 	return stream.IsOk() && NImage::SaveAsTGA<uint8_t>( image, &stream );
 }
@@ -165,12 +167,18 @@ bool CreateObjectDynamicDebris( const NEditorGltf::SMeshData &mesh,
 	                                  origin,
 	                                  NDebrisBuilder::MASK_DYNAMIC,
 	                                  static_cast<int>( width ) ) )
+	{
 		return false;
+	}
 	CArray2D<uint32_t> rgba;
 	rgba.SetSizes( image.GetSizeY(), image.GetSizeX() );
 	for ( int x = 0; x < image.GetSizeX(); ++x )
+	{
 		for ( int y = 0; y < image.GetSizeY(); ++y )
+		{
 			rgba[x][y] = uint32_t( image[y][x] ) * 0x01010101u;
+		}
+	}
 	CFileStream stream( NVFS::GetMainFileCreator(), imageName );
 	return stream.IsOk() && NImage::SaveAsTGA( rgba, &stream );
 }
@@ -267,16 +275,22 @@ void GetModelLocators( std::vector<SSkeletonLocatorInfo> *pLocatorsInfo,
 	CPtr<IManipulator> pItVisObj =
 			CManipulatorManager::CreateManipulatorFromReference( pszModelSrcField, pRPGStatsManipulator, 0, 0, 0 );
 	if ( !pItVisObj )
+	{
 		return;
+	}
 
 	CPtr<IManipulator> pItModel = CreateModelManipulatorFromVisObj( pItVisObj, 0 );
 	if ( !pItModel )
+	{
 		return;
+	}
 
 	CPtr<IManipulator> pSkelManinpulator =
 			CManipulatorManager::CreateManipulatorFromReference( SKELETON_FIELD_IN_VISOBJ, pItModel, 0, 0, 0 );
 	if ( !pSkelManinpulator )
+	{
 		return;
+	}
 
 	GetSkeletonLocatorsInfo( pLocatorsInfo, pSkelManinpulator->GetDBID() );
 }
@@ -287,7 +301,9 @@ void GetSkeletonLocatorsInfo( std::vector<SSkeletonLocatorInfo> *pLocatorsInfo, 
 
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	if ( !pUserData )
+	{
 		return;
+	}
 	const std::string szSkeletonsFolder =
 			Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + SKELETONS_BIN_PATH;
 
@@ -296,7 +312,9 @@ void GetSkeletonLocatorsInfo( std::vector<SSkeletonLocatorInfo> *pLocatorsInfo, 
 	handle.nModelInFile = 0;
 	handle.pSkeleton = 0;
 	if ( CObj<NDb::IObjMan> pSkeletonObjMan = NDb::GetManipulator( dbidSkeleton ) )
+	{
 		handle.pSkeleton = dynamic_cast<const NDb::SSkeleton *>( pSkeletonObjMan->GetObject() );
+	}
 	//
 	CObj<CCSTime> pCSTime = new CCSTime();
 	pCSTime->Set( 0 );
@@ -336,7 +354,9 @@ void GetSkeletonLocatorsInfo( std::vector<SSkeletonLocatorInfo> *pLocatorsInfo, 
 		const auto file = NGltf::LoadFile( pDBSkeleton, pDBSkeleton->szModelFileRef );
 		NGltf::SSkeletonDefinition skeleton;
 		if ( !NGltf::BuildSkeleton( file, pDBSkeleton->szRootJoint, 0, &skeleton ) )
+		{
 			return;
+		}
 		std::vector<int> indices( skeleton.boneNames.size(), -1 );
 		const size_t first = pLocatorsInfo->size();
 		for ( size_t i = 0; i < skeleton.boneNames.size(); ++i )
@@ -345,7 +365,9 @@ void GetSkeletonLocatorsInfo( std::vector<SSkeletonLocatorInfo> *pLocatorsInfo, 
 			locator.szName = skeleton.boneNames[i];
 			if ( !pAnimator->GetBonePosition( locator.szName.c_str(), &locator.vPos ) ||
 			     !pAnimator->GetBonePosition( locator.szName.c_str(), &locator.mtx ) )
+			{
 				continue;
+			}
 			Vis2AI( &locator.vPos );
 			locator.nParentIdx = skeleton.parents[i];
 			indices[i] = static_cast<int>( pLocatorsInfo->size() );
@@ -364,11 +386,15 @@ void GetSkeletonLocatorsInfo( std::vector<SSkeletonLocatorInfo> *pLocatorsInfo, 
 	WaitForFile( szFilePath, 10000 );
 	granny_file *pFile = GrannyReadEntireFile( szFilePath.c_str() );
 	if ( !pFile )
+	{
 		return;
+	}
 
 	granny_file_info *pInfo = GrannyGetFileInfo( pFile );
 	if ( !pInfo )
+	{
 		return;
+	}
 
 	std::unordered_map<int, int> potentialParents;
 
@@ -398,9 +424,13 @@ void GetSkeletonLocatorsInfo( std::vector<SSkeletonLocatorInfo> *pLocatorsInfo, 
 	{
 		int nGrannyParentIdx = i->nParentIdx;
 		if ( nGrannyParentIdx == -1 )
+		{
 			i->nParentIdx = -1;
+		}
 		else
+		{
 			i->nParentIdx = potentialParents[nGrannyParentIdx];
+		}
 	}
 
 	GrannyFreeFile( pFile );
@@ -414,25 +444,43 @@ int PatMat( const char *raw, const char *pat )
 	int i, slraw;
 
 	if ( ( *pat == '\0' ) && ( *raw == '\0' ) )
+	{
 		return ( 1 );
+	}
 	if ( *pat == '\0' )
+	{
 		return ( 0 );
+	}
 	if ( *pat == '*' )
 	{
 		if ( *( pat + 1 ) == '\0' )
+		{
 			return ( 1 );
+		}
 		for ( i = 0, slraw = strlen( raw ); i <= slraw; i++ )
+		{
 			if ( ( *( raw + i ) == *( pat + 1 ) ) || ( *( pat + 1 ) == '?' ) )
+			{
 				if ( PatMat( raw + i + 1, pat + 2 ) == 1 )
+				{
 					return ( 1 );
+				}
+			}
+		}
 	}
 	else
 	{
 		if ( *raw == '\0' )
+		{
 			return ( 0 );
+		}
 		if ( ( *pat == '?' ) || ( *pat == *raw ) )
+		{
 			if ( PatMat( raw + 1, pat + 1 ) == 1 )
+			{
 				return ( 1 );
+			}
+		}
 	}
 	return ( 0 );
 }
@@ -440,12 +488,16 @@ int PatMat( const char *raw, const char *pat )
 bool IsNameMatchPattern( int *pQIdx, const char *pszName, const char *pszPattern )
 {
 	if ( !PatMat( pszName, pszPattern ) )
+	{
 		return false;
+	}
 
 	const char *pp = pszName;
 
 	while ( *pp && !isdigit( *pp ) )
+	{
 		++pp;
+	}
 
 	if ( *pp )
 	{
@@ -478,7 +530,9 @@ void SearchLocators( std::vector<SLocatorQInfo> *pQLocInfo,
 	{
 		int nQIdx;
 		if ( !IsNameMatchPattern( &nQIdx, i->szName.c_str(), pszLocatorNamePattern ) )
+		{
 			continue;
+		}
 
 		SLocatorQInfo qinf;
 		qinf.inf = *i;
@@ -497,7 +551,9 @@ bool SearchLocator( SSkeletonLocatorInfo *pLocInfo,
 	for ( CLocatorInfoConstIter i = rLocatorsInfo.begin(); i != rLocatorsInfo.end(); ++i )
 	{
 		if ( i->szName != pszLocatorName )
+		{
 			continue;
+		}
 
 		*pLocInfo = *i;
 		return true;
@@ -525,7 +581,9 @@ void SetPointValueForStringField( IManipulator *pManipulator,
 {
 	SSkeletonLocatorInfo inf;
 	if ( SearchLocator( &inf, rLocatorsInfo, pszLocatorName ) )
+	{
 		pManipulator->SetValue( pszFieldName, inf.szName );
+	}
 }
 
 void SetPointsValuesForVec2Array( IManipulator *pManipulator,
@@ -590,7 +648,9 @@ void SetPointsValuesForVec2StructArray( IManipulator *pManipulator,
 	pManipulator->GetValue( pszArrayName, &v );
 	int nArraySize = v;
 	for ( int i = 0; i < ( nArraySize - lc.size() ); ++i )
+	{
 		pManipulator->InsertNode( pszArrayName );
+	}
 
 	int nIdx = 0;
 	for ( CLocatorQInfoConstIter i = lc.begin(); i != lc.end(); ++i, ++nIdx )
@@ -622,7 +682,9 @@ void SetPointsValuesForVec3StructArray( IManipulator *pManipulator,
 	{
 		pManipulator->RemoveNode( pszArrayName, NODE_REMOVEALL_INDEX );
 		for ( int i = 0; i < lc.size(); ++i )
+		{
 			pManipulator->InsertNode( pszArrayName );
+		}
 	}
 	else
 	{
@@ -630,7 +692,9 @@ void SetPointsValuesForVec3StructArray( IManipulator *pManipulator,
 		pManipulator->GetValue( pszArrayName, &v );
 		int nArraySize = v;
 		for ( int i = 0; i < ( lc.size() - nArraySize ); ++i )
+		{
 			pManipulator->InsertNode( pszArrayName );
+		}
 	}
 
 	int nIdx = 0;
@@ -657,12 +721,18 @@ void GetPassability( CArray2D<uint8_t> *pPassability, IManipulator *pBuildingRPG
 		sprintf( pszDBARow, "passability.data.[%d].data", y );
 		CVariant vElemNum;
 		if ( !pBuildingRPGStatsManipulator->GetValue( pszDBARow, &vElemNum ) )
+		{
 			continue;
+		}
 		int nElemNum = vElemNum;
 		if ( nElemNum == 0 )
+		{
 			continue;
+		}
 		if ( nElemNum > nMaxSizeX )
+		{
 			nMaxSizeX = nElemNum;
+		}
 		data[y].resize( nElemNum );
 		for ( int x = 0; x < nElemNum; ++x )
 		{
@@ -687,9 +757,13 @@ void GetPassability( CArray2D<uint8_t> *pPassability, IManipulator *pBuildingRPG
 		for ( int x = 0; x < nMaxSizeX; ++x )
 		{
 			if ( x >= nVecRealSize )
+			{
 				( *pPassability )[y][x] = -1;
+			}
 			else
+			{
 				( *pPassability )[y][x] = data[y][x];
+			}
 		}
 	}
 }
@@ -699,7 +773,9 @@ static const int FindLocator( std::vector<SLocatorQInfo> &lc, const std::string 
 	for ( int i = 0; i < lc.size(); ++i )
 	{
 		if ( lc[i].inf.szName == szName )
+		{
 			return i;
+		}
 	}
 
 	return -1;
@@ -730,7 +806,9 @@ static void FixLocators( IManipulator *pManipulator,
 			{
 				int k = FindLocator( lc, std::string( vLocatorName.GetStr() ) );
 				if ( k == -1 || locatorFound[k] )
+				{
 					nodesToRemove.push_front( i );
+				}
 				else
 				{
 					locatorFound[k] = true;
@@ -749,7 +827,9 @@ static void FixLocators( IManipulator *pManipulator,
 		}
 
 		for ( std::list<int>::iterator iter = nodesToRemove.begin(); iter != nodesToRemove.end(); ++iter )
+		{
 			pManipulator->RemoveNode( szArrayName, *iter );
+		}
 
 		for ( int i = 0; i < lc.size(); ++i )
 		{
@@ -785,7 +865,9 @@ bool FixLocators( const SObjectSet &objectSet, const std::string &szLocatorNameP
 		CPtr<IManipulator> pManipulator =
 				Singleton<IResourceManager>()->CreateObjectManipulator( szCurObjectTypeName, itObjectName->first );
 		if ( !pManipulator )
+		{
 			return false;
+		}
 
 		// Получаем манипулятор на VisObject
 		CPtr<IManipulator> pVisObjectManipulator =
@@ -812,7 +894,9 @@ float GetLocatorDirection( const SSkeletonLocatorInfo *pLocInfo, bool bGetInRadi
 
 	// угол возвращается в AI системе отчсчета (отсчитывается против часовой стрелки от (0,1,0))
 	if ( fAngle < 0 ) // 0..2pi
+	{
 		fAngle += FP_2PI;
+	}
 
 	if ( fAngle <= FP_PI2 )
 	{
@@ -825,7 +909,9 @@ float GetLocatorDirection( const SSkeletonLocatorInfo *pLocInfo, bool bGetInRadi
 	}
 
 	if ( bGetInRadian )
+	{
 		return fAngle;
+	}
 
 	// в AI еденицах
 	const float F_EPS_ANGLE = 0.01f;
@@ -845,7 +931,9 @@ float GetLocatorDirection( const SSkeletonLocatorInfo *pLocInfo, bool bGetInRadi
 bool GetGeometryAttributes( IManipulator *pGeomMan, CGrannyBoneAttributesList *pAttributeList )
 {
 	if ( NEditorGltf::IsGltf( pGeomMan ) )
+	{
 		return NEditorGltf::ReadAttributes( pGeomMan, pAttributeList );
+	}
 	return ReadAttributes( pAttributeList, NMEGeomAttribs::GetAttribsByGeometry( pGeomMan ), "", true );
 }
 
@@ -862,7 +950,9 @@ struct SEntry
 		if ( saver.IsReading() )
 		{
 			if ( NFile::GetFileExt( szFileName ).empty() )
+			{
 				szFileName += ".bik";
+			}
 		}
 		//
 		return 0;
@@ -874,7 +964,9 @@ bool LoadFilesList( std::vector<SEntry> *pFiles, const std::string &szFileName, 
 	CFileStream stream( NVFS::GetMainVFS(), szFileName );
 	CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ );
 	if ( pSaver == 0 )
+	{
 		return false;
+	}
 	pSaver->Add( pszBase, pFiles );
 	return true;
 }

@@ -35,7 +35,9 @@ SRegFunction pLuaPtrTagFuncList[] = { { 0, 0 } };
 Script *GetScript()
 {
 	if ( !IsValid( pScript ) )
+	{
 		return 0;
+	}
 	return &pScript->script;
 }
 
@@ -46,7 +48,9 @@ int CScriptWrapper::CallScriptFunction( const char *pszFunction, const bool bLog
 	int nDoResult = script.DoString( pszFunction );
 
 	if ( nDoResult != 0 )
+	{
 		return -1;
+	}
 
 	const int nNumRetArgs = script.GetTop();
 	std::string szAnswer( "" );
@@ -56,7 +60,9 @@ int CScriptWrapper::CallScriptFunction( const char *pszFunction, const bool bLog
 	{
 		Script::Object obj = script.GetObject( 1 );
 		if ( obj.IsNumber() )
+		{
 			nResult = obj.GetNumber();
+		}
 	}
 
 	for ( int i = 1; i <= nNumRetArgs; ++i )
@@ -64,12 +70,18 @@ int CScriptWrapper::CallScriptFunction( const char *pszFunction, const bool bLog
 		Script::Object obj = pScript->GetScript()->GetObject( i );
 
 		if ( obj.IsNumber() )
+		{
 			szAnswer += std::to_string( int( obj ) );
+		}
 		else if ( const char *pszAnswer = obj.GetString() )
+		{
 			szAnswer += pszAnswer;
+		}
 
 		if ( i < nNumRetArgs )
+		{
 			szAnswer += ", ";
+		}
 	}
 
 	script.SetTop( oldtop );
@@ -77,7 +89,9 @@ int CScriptWrapper::CallScriptFunction( const char *pszFunction, const bool bLog
 	if ( bLogToConsole )
 	{
 		if ( !szAnswer.empty() )
+		{
 			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, szAnswer.c_str(), 0xff00ff00 );
+		}
 	}
 
 	return nResult;
@@ -119,7 +133,9 @@ int CScriptWrapper::RunScriptByID( int nID )
 int CScriptWrapper::RunScript( const char *pszScriptText )
 {
 	if ( pszScriptText == 0 || !strlen( pszScriptText ) )
+	{
 		return 0;
+	}
 	return ( script.DoBuffer( &( pszScriptText[0] ), strlen( pszScriptText ), "Script" ) == 0 );
 }
 

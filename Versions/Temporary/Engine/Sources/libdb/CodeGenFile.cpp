@@ -40,7 +40,9 @@ static const std::string GetIncludeRefName( const std::vector<std::string> &spli
 		}
 		std::string szRefIncludeName = "";
 		for ( int i = 0; i < inclDirs.size(); ++i )
+		{
 			szRefIncludeName += inclDirs[i] + "/";
+		}
 		szRefIncludeName += szInclFileName;
 
 		return szRefIncludeName;
@@ -70,11 +72,15 @@ CFile::CFile( NLang::CFileNode *pFileNode,
 		std::string szIncludeRefName = GetIncludeRefName( dirs, szRootDir, iter->second->GetPathOnDisk() );
 		const std::string szExt = NFile::GetFileExt( szIncludeRefName );
 		if ( szExt == ".cll" )
+		{
 			szIncludeRefName = szIncludeRefName.substr( 0, szIncludeRefName.size() - szExt.size() ) + ".h";
+		}
 		// base.cll and game.cll, at the root, generate nothing to include; from a
 		// module directory their paths are now the bare root-relative names
 		if ( !szIncludeRefName.empty() && szIncludeRefName != "base.h" && szIncludeRefName != "game.h" )
+		{
 			includes.push_back( szIncludeRefName );
+		}
 	}
 
 	// Ignoring case, the order they had when they were all lowercase and the
@@ -157,9 +163,13 @@ void CFile::GenerateCode( const std::string &szRootDir )
 		if ( !includes.empty() || !hExternalIncludes.empty() )
 		{
 			for ( std::list<std::string>::iterator iter = includes.begin(); iter != includes.end(); ++iter )
+			{
 				h << "#include " << qcomma << *iter << qcomma << endl;
+			}
 			for ( std::list<std::string>::iterator iter = hExternalIncludes.begin(); iter != hExternalIncludes.end(); ++iter )
+			{
 				h << "#include " << qcomma << *iter << qcomma << endl;
+			}
 			h << endl;
 		}
 		h << "#include <cstdint>" << endl;
@@ -190,7 +200,9 @@ void CFile::GenerateCode( const std::string &szRootDir )
 		}
 		for ( std::list<std::string>::iterator iter = cppExternalIncludes.begin(); iter != cppExternalIncludes.end();
 		      ++iter )
+		{
 			cpp << "#include " << qcomma << *iter << qcomma << endl;
+		}
 		cpp << endl;
 		if ( bCppUsesExport )
 		{

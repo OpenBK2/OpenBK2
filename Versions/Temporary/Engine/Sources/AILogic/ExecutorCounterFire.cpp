@@ -32,7 +32,9 @@ CExecutorCounterFire::CExecutorCounterFire( CArtillery *_pUnit )
 void CExecutorCounterFire::UpdateState()
 {
 	if ( !pUpdate )
+	{
 		pUpdate = new SAISpecialAbilityUpdate;
+	}
 
 	pUpdate->info.nAbilityType = NDb::ABILITY_ANTIATRILLERY_FIRE;
 	pUpdate->info.state = state;
@@ -47,15 +49,21 @@ void CExecutorCounterFire::UpdateState()
 	}
 
 	if ( state.eState == EASS_DISABLE )
+	{
 		updater.AddUpdate( CreateStatusUpdate( EUS_COUNTER_FIRE, false, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, pUnit, -1 );
+	}
 	else
+	{
 		updater.AddUpdate( CreateStatusUpdate( EUS_COUNTER_FIRE, true, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, pUnit, -1 );
+	}
 }
 
 void CExecutorCounterFire::ApplyBonus( const bool bForward )
 {
 	if ( !IsValid( pUnit ) )
+	{
 		return;
+	}
 
 	const NDb::SUnitSpecialAblityDesc *pSA = pUnit->GetUnitAbilityDesc( NDb::ABILITY_ANTIATRILLERY_FIRE );
 
@@ -69,12 +77,16 @@ void CExecutorCounterFire::ApplyBonus( const bool bForward )
 int CExecutorCounterFire::Segment()
 {
 	if ( !IsExecutorValid() || !IsValid( pUnit ) )
+	{
 		return -1; // The executor is to be deleted
+	}
 
 	const EUnitStateNames eUnitState = pUnit->GetState()->GetName();
 	const NDb::SUnitSpecialAblityDesc *pSA = pUnit->GetUnitAbilityDesc( NDb::ABILITY_ANTIATRILLERY_FIRE );
 	if ( !pSA )
+	{
 		return -1;
+	}
 	CSegment marker;
 	CCircle searchCircle( vSearchCenter, fSearchRadius );
 
@@ -87,6 +99,7 @@ int CExecutorCounterFire::Segment()
 		UpdateState();
 	}
 	else
+	{
 		switch ( state.eState )
 		{
 			case EASS_SWITCHING_ON: //Need to choose target (or check if started firing)
@@ -143,7 +156,9 @@ int CExecutorCounterFire::Segment()
 					DebugInfoManager()->CreateSegment( OBJECT_ID_FORGET, marker, 2, NAIVisInfo::WHITE );*/
 					}
 					else
+					{
 						state.eState = EASS_READY_TO_ON;
+					}
 
 					ApplyBonus( bTargetFound );
 				}
@@ -154,7 +169,9 @@ int CExecutorCounterFire::Segment()
 			case EASS_ACTIVE: // Check if expired, retarget if necessary
 			{
 				if ( IsValid( pCurrentTarget ) ) // Target alive, check when it last shot.
+				{
 					timeLastHeard = pCurrentTarget->GetLastHeardTime( pUnit->GetParty() );
+				}
 				//otherwise, keep previous time
 
 				if ( curTime - timeLastHeard >= pSA->nWorkTime ) // No activity for specified time
@@ -181,10 +198,13 @@ int CExecutorCounterFire::Segment()
 			case EASS_READY_TO_ON:
 			{
 				if ( state.bAutocast ) //Start searching for target immediately
+				{
 					state.eState = EASS_SWITCHING_ON;
+				}
 			}
 			break;
 		}
+	}
 
 	//theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_ART_BOMBARDMENT, iter->vAttackPos ), pUnit, false );
 
@@ -195,14 +215,20 @@ bool CExecutorCounterFire::NotifyEvent( const CExecutorEvent &event )
 {
 	//Filter out wrong calls
 	if ( pUnit->GetUniqueId() != event.GetParam().nUnitID )
+	{
 		return false;
+	}
 
 	const CExecutorEventSpecialAbility *pEv = static_cast<const CExecutorEventSpecialAbility *>( &event );
 	if ( pEv == 0 )
+	{
 		return false;
+	}
 
 	if ( pEv->GetAbility() != NDb::ABILITY_ANTIATRILLERY_FIRE )
+	{
 		return false;
+	}
 	//end - Filter out wrong calls
 
 	switch ( event.GetParam().eEventID )
@@ -213,7 +239,9 @@ bool CExecutorCounterFire::NotifyEvent( const CExecutorEvent &event )
 					static_cast<const CExecutorEventSpecialAbilitySetTarget *>( pEv );
 			NI_ASSERT( pEvSetTarget, "Wrong event passed to executor (SetTarget expected)" );
 			if ( !pEvSetTarget )
+			{
 				return false;
+			}
 
 			state.eState = EASS_SWITCHING_ON;
 			state.bAutocast = false;

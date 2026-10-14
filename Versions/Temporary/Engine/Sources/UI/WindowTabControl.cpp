@@ -26,7 +26,9 @@ void CWindowTabControl::AfterLoad()
 {
 	CWindow::AfterLoad();
 	if ( pHeadersContainer )
+	{
 		Init();
+	}
 }
 
 void CWindowTabControl::InitByDesc( const struct NDb::SUIDesc *_pDesc )
@@ -40,7 +42,9 @@ void CWindowTabControl::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	pHeadersContainer =
 			dynamic_cast<CWindowScrollableContainer *>( CUIFactory::MakeWindow( pShared->pHeadersContainer ) );
 	if ( pHeadersContainer )
+	{
 		AddChild( pHeadersContainer, false );
+	}
 
 	for ( int i = 0; i < pDesc->tabs.size(); ++i )
 	{
@@ -48,7 +52,9 @@ void CWindowTabControl::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 		CWindow *pTab = CUIFactory::MakeWindow( tab.pTabContainer );
 		AddTab( NStr::ToUnicode( tab.szButtonName ), pTab );
 		if ( i > 0 )
+		{
 			pTab->ShowWindow( false );
+		}
 	}
 	SetActive( 0 );
 
@@ -77,7 +83,9 @@ void CWindowTabControl::SetActive( const int nTab, const bool bUpdateButtons )
 	{
 		// hide current nActiveTab window and show new tab window
 		if ( -1 != nActiveTab )
+		{
 			ShowTab( nActiveTab, false, false );
+		}
 		nActiveTab = nTab;
 		ShowTab( nActiveTab, true, bUpdateButtons );
 	}
@@ -87,7 +95,9 @@ void CWindowTabControl::ShowTab( const int nTab, const bool bShow, const bool bU
 {
 	CWindow *pWindow = dynamic_cast<CWindow *>( GetChild( CreateTabName( nTab, 0 ), false ) );
 	if ( pWindow )
+	{
 		pWindow->ShowWindow( bShow );
+	}
 
 	if ( /*bUpdateButtons && bShow && pButtonSample &&*/ pHeadersContainer )
 	{
@@ -113,7 +123,9 @@ void CWindowTabControl::Reposition( const CTRect<float> &rcParent )
 		pButtonSample = dynamic_cast<CWindowMSButton*>( GetChild( "ButtonSample" ) );
 */
 	if ( !pHeadersContainer )
+	{
 		pHeadersContainer = dynamic_cast<CWindowScrollableContainer *>( GetChild( "HeadersContainer", false ) );
+	}
 }
 
 void CWindowTabControl::Init()
@@ -129,12 +141,16 @@ void CWindowTabControl::Init()
 			{
 				IWindow *pButton = pHeadersContainer->GetItem( nTabNumber );
 				if ( pButton )
+				{
 					dynamic_cast<IButton *>( pButton )->SetNotifySink( this );
+				}
 			}
 			++nTabNumber;
 		}
 		else
+		{
 			break;
+		}
 	}
 }
 
@@ -196,7 +212,9 @@ void CWindowTabControl::AddElement( const int nTab, IWindow *pWnd )
 {
 	CWindow *pWindow = dynamic_cast<CWindow *>( GetChild( CreateTabName( nTab, 0 ), false ) );
 	if ( pWindow )
+	{
 		pWindow->AddChild( pWnd, true );
+	}
 }
 
 void CWindowTabControl::StateChanged( class CWindow *pWho )

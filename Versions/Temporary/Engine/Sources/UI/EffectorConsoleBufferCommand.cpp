@@ -22,7 +22,9 @@ void CEffectorConsoleBufferCommand::Configure( const NDb::SUIStateBase *_pCmd,
 	const NDb::SUIConsoleCommand *pCmd( checked_cast<const NDb::SUIConsoleCommand *>( _pCmd ) );
 	CParam<std::string> elementToAsk( pCmd->szEditBoxName );
 	if ( pCmd->szEditBoxName.empty() )
+	{
 		elementToAsk = szAnimatedWindow;
+	}
 
 	szEditBoxName = elementToAsk.Get();
 	bFinished = false;

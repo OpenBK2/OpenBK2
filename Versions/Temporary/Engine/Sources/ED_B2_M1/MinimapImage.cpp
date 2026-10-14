@@ -818,7 +818,9 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 {
 	bool bSuccess = true;
 	if ( pError )
+	{
 		pError->clear();
+	}
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	NI_ASSERT( pUserData != 0, "Wrong parameter: pUserData == 0" );
 	NI_ASSERT( pMapInfo != 0, "Wrong parameter: pMapInfo == 0" );
@@ -1275,13 +1277,17 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 		CMemoryStream imageStream;
 		NImage::FlipY( minimapImage );
 		if ( !NImage::SaveAsTGA( minimapImage, &imageStream ) )
+		{
 			imageStream.SetBroken();
+		}
 		std::string error;
 		if ( !NVFS::WriteFile( NVFS::GetMainFileCreator(), itCreateParameter->szImageFileName, imageStream, &error ) )
 		{
 			bSuccess = false;
 			if ( pError && pError->empty() )
+			{
 				*pError = error;
+			}
 		}
 		// delete noises
 		{

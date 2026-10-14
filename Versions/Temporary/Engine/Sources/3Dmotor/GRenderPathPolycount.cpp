@@ -13,7 +13,9 @@ void RenderPolycount( CTransformStack *pTS, NGfx::CRenderContext *pRC, IRender *
 	for ( int k = 0; k < fragments.size(); ++k )
 	{
 		if ( scene.IsFilteredFragment( k ) )
+		{
 			continue;
+		}
 		const SRenderFragmentInfo &f = *fragments[k];
 
 		float fFade = f.vars.fFade;

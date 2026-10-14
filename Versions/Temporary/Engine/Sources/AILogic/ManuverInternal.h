@@ -12,7 +12,9 @@ struct SPlanesConsts
 	static float GetMinHeight()
 	{
 		if ( MIN_HEIGHT_TEMP == 0.0f )
+		{
 			return MIN_HEIGHT;
+		}
 		return MIN_HEIGHT_TEMP;
 	}
 };

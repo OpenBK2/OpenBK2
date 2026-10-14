@@ -68,7 +68,9 @@ CLinksManagerCommon::CLinksManagerCommon()
 			pOctets[3] = 255;
 		}
 		if ( bClass >= 192 && bClass <= 223 )
+		{
 			pOctets[3] = 255;
+		}
 		broadcastAddr = addr;
 	}
 }
@@ -76,7 +78,9 @@ CLinksManagerCommon::CLinksManagerCommon()
 CLinksManagerCommon::~CLinksManagerCommon()
 {
 	if ( s != INVALID_SOCKET )
+	{
 		closesocket( s );
+	}
 	s = INVALID_SOCKET;
 }
 
@@ -84,7 +88,9 @@ bool CLinksManagerCommon::Init( const int nPort )
 {
 	s = socket( AF_INET, SOCK_DGRAM, IPPROTO_UDP );
 	if ( s == INVALID_SOCKET )
+	{
 		return false;
+	}
 	sockaddr_in name;
 	memset( &name, 0, sizeof( name ) );
 	name.sin_family = AF_INET;
@@ -127,7 +133,9 @@ bool CLinksManagerCommon::IsLocalAddr( const CNodeAddress &test ) const
 {
 	const sockaddr_in &nt = *(sockaddr_in *)&test.addr;
 	if ( nt.sin_addr.s_addr == 0x0100007f )
+	{
 		return true;
+	}
 	//for ( int i = 0; i < broadcastAddr.size(); ++i )
 	{
 		const CNodeAddress &broad = broadcastAddr; //[ i ];
@@ -139,14 +147,20 @@ bool CLinksManagerCommon::IsLocalAddr( const CNodeAddress &test ) const
 		{
 			uint32_t dwTestMask = 0xFF << k * 8;
 			if ( ( dwB & dwTestMask ) == dwTestMask )
+			{
 				dwMask |= dwTestMask;
+			}
 			else
+			{
 				break;
+			}
 		}
 		dwMask = ~dwMask;
 		const bool bTest = ( dwB & dwMask ) == ( dwT & dwMask );
 		if ( bTest )
+		{
 			return true;
+		}
 	}
 
 	return false;
@@ -158,17 +172,23 @@ bool CLinksManagerCommon::GetSelfAddress( CNodeAddressSet *pRes ) const
 	sockaddr_in addr;
 	socket_length_t nBufLeng = sizeof( sockaddr_in );
 	if ( getsockname( s, (sockaddr *)&addr, &nBufLeng ) != 0 )
+	{
 		return false;
+	}
 	pRes->nPort = addr.sin_port;
 	char szHostName[10000];
 	gethostname( szHostName, 9999 );
 	hostent *p = gethostbyname( szHostName );
 	if ( !p || p->h_addrtype != AF_INET || p->h_length != 4 )
+	{
 		return false;
+	}
 	for ( int k = 0; k < N_MAX_HOST_HOMES; ++k )
 	{
 		if ( !p->h_addr_list[k] )
+		{
 			break;
+		}
 		pRes->ips[k] = *(int *)p->h_addr_list[k];
 	}
 	return true;
@@ -191,14 +211,18 @@ struct SPacket
 bool CLinksManagerCommon::Send( const CNodeAddress &dst, CMemoryStream &pkt ) const
 {
 	if ( !IsGoodAddress( dst.addr ) )
+	{
 		return true;
+	}
 
 #ifdef NET_TEST_APPLICATION
 	static std::vector<SPacket> pktQueue[10];
 	if ( bEmulateWeakNetwork )
 	{
 		if ( rand() <= RAND_MAX * fLostRate )
+		{
 			return true;
+		}
 		pktQueue.push_back();
 		pktQueue.back().addr = dst;
 		pktQueue.back().pkt = pkt;
@@ -241,7 +265,9 @@ bool CLinksManagerCommon::Recv( CNodeAddress *pSrc, CMemoryStream *pPkt ) const
 
 	const bool bGoodAddress = IsGoodAddress( pSrc->addr );
 	if ( !bGoodAddress )
+	{
 		nRes = 0;
+	}
 
 	if ( nRes >= 0 )
 	{

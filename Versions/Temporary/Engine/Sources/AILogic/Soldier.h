@@ -213,7 +213,9 @@ public:
 	virtual const float GetSightRadius() const
 	{
 		if ( bInSolidPlace )
+		{
 			return 0;
+		}
 		return ( fOwnSightRadius >= 0.0f ) ? fOwnSightRadius : CAIUnit::GetSightRadius();
 	}
 

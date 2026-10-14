@@ -30,7 +30,9 @@ void SetToHoldQueue( CObjectBase *p, int *pnFrame )
 void ClearHoldQueue()
 {
 	for ( int i = 0; i < N_HOLD_TIME; ++i )
+	{
 		holdQueue[i].Clear();
+	}
 }
 
 void MarkNewDGFrame()

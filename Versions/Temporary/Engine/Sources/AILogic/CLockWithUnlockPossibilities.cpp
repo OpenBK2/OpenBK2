@@ -30,7 +30,9 @@ bool CLockWithUnlockPossibilities::TryLockAlongTheWay( const bool bLock, const u
 			if ( bigRect.IsIntersected( ( *iter )->GetUnitRect() ) )
 			{
 				if ( ++nUnits > 1 )
+				{
 					return false;
+				}
 			}
 		}
 
@@ -63,7 +65,9 @@ bool CLockWithUnlockPossibilities::TryLockAlongTheWay( const bool bLock, const u
 			// все по-новому залочить
 			std::list<SObjTileInfo> tilesInfo;
 			for ( std::list<SVector>::iterator it = pathTiles.begin(); it != pathTiles.end(); ++it )
+			{
 				tilesInfo.push_back( SObjTileInfo( *it, EAC_ANY ) );
+			}
 
 			GetTerrain()->AddStaticObjectTiles( tilesInfo );
 		}
@@ -75,7 +79,9 @@ bool CLockWithUnlockPossibilities::TryLockAlongTheWay( const bool bLock, const u
 			//разлочить
 			std::list<SObjTileInfo> tilesInfo;
 			for ( std::list<SVector>::iterator it = pathTiles.begin(); it != pathTiles.end(); ++it )
+			{
 				tilesInfo.push_back( SObjTileInfo( *it, EAC_ANY ) );
+			}
 
 			GetTerrain()->RemoveStaticObjectTiles( tilesInfo );
 

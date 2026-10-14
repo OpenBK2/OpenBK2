@@ -78,16 +78,22 @@ void CDirectionalLight::PrepareLightInfo( SLightInfo *pLightInfo )
 float CDirectionalLight::GetSmoothedSceneHeight( float f )
 {
 	if ( f < fSmoothedSceneHeight * 0.7f )
+	{
 		fSmoothedSceneHeight = f;
+	}
 	if ( f > fSmoothedSceneHeight )
+	{
 		fSmoothedSceneHeight = Float2Int( f + 0.5f );
+	}
 	return fSmoothedSceneHeight;
 }
 
 NGfx::CTexture *CDirectionalLight::GetCloudsTexture()
 {
 	if ( !pClouds )
+	{
 		return 0;
+	}
 	pClouds.Refresh();
 	return pClouds->GetValue();
 }
@@ -95,10 +101,14 @@ NGfx::CTexture *CDirectionalLight::GetCloudsTexture()
 void CDirectionalLight::CalcCloudProjection( SHMatrix *pRes )
 {
 	if ( !pClouds )
+	{
 		return;
+	}
 	Identity( pRes );
 	if ( !pCloudsProjection )
+	{
 		return;
+	}
 	pCloudsProjection.Refresh();
 	*pRes = pCloudsProjection->GetValue();
 }
@@ -133,12 +143,16 @@ void CPointLight::AddToState( SPerVertexLightState *pRes )
 bool CDynamicPointLight::CheckCulling( CTransformStack *pTS )
 {
 	if ( !bIsOn )
+	{
 		return false;
+	}
 
 	pLight.Refresh();
 	const CAnimLight &l = *pLight->GetValue();
 	if ( !l.bActive || l.bEnd )
+	{
 		return false;
+	}
 	return pTS->IsIn( SSphere( l.position, l.fRadius ) );
 }
 
@@ -147,7 +161,9 @@ void CDynamicPointLight::AddToState( SPerVertexLightState *pRes )
 	pLight.Refresh();
 	const CAnimLight &l = *pLight->GetValue();
 	if ( !l.bActive || l.bEnd )
+	{
 		return;
+	}
 	pRes->AddPointLight( l.position, l.fRadius, l.color );
 }
 
@@ -158,24 +174,32 @@ bool CLightStateNode::NeedUpdate()
 {
 	bool bRes = false;
 	if ( IsValid( pDirectionalLight ) )
+	{
 		bRes |= pDirectionalLight.Refresh();
+	}
 	bRes |= EraseInvalidRefs( &lights );
 	bRes |= !value.dynamicPointLights.empty();
 	bRes |= bSmthHasChanged;
 	value.ResetDynamicLights();
 
 	if ( !s_bDynamicLights )
+	{
 		return bRes;
+	}
 
 	int nIndex = 0;
 	for ( int k = 0; k < dynamicLights.size(); ++k )
 	{
 		ILight *pLight = dynamicLights[k];
 		if ( !IsValid( pLight ) )
+		{
 			continue;
+		}
 
 		if ( pLight->CheckCulling( &tsClip ) )
+		{
 			pLight->AddToState( &value );
+		}
 
 		dynamicLights[nIndex++] = pLight;
 	}
@@ -190,7 +214,9 @@ void CLightStateNode::Recalc()
 	bSmthHasChanged = false;
 	value.ResetStaticLights();
 	if ( IsValid( pDirectionalLight ) )
+	{
 		pDirectionalLight->AddToState( &value );
+	}
 	for ( std::vector<CPtr<ILight>>::iterator k = lights.begin(); k != lights.end(); ++k )
 	{
 		ILight *pLight = *k;
@@ -208,7 +234,9 @@ void CLightStateNode::SetWarFogBlend( float fBlend )
 void CLightStateNode::SetWarFog( const CArray2D<unsigned char> &_fog, float _fScale )
 {
 	if ( value.SetWarFog( _fog, _fScale ) )
+	{
 		bSmthHasChanged = true;
+	}
 }
 
 void CLightStateNode::SetDirectional( CDirectionalLight *p )

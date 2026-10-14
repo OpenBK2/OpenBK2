@@ -24,7 +24,9 @@ namespace
 	void Require( bool condition, const std::string &message )
 	{
 		if ( !condition )
+		{
 			throw std::runtime_error( message );
+		}
 	}
 
 	float Finite( float value )
@@ -61,7 +63,9 @@ namespace
 		{
 			float length = 0;
 			for ( float value : source.Orientation )
+			{
 				length += Finite( value ) * value;
+			}
 			Require( length > 1e-12f, "GR2 contains a zero rotation quaternion" );
 			const float scale = 1 / std::sqrt( length );
 			// Conjugate every local rotation by the same reflection as the mesh.
@@ -77,9 +81,13 @@ namespace
 			// glTF animated nodes cannot represent shear. Refuse it explicitly instead
 			// of producing a plausible but incorrectly deformed model.
 			for ( int row = 0; row < 3; ++row )
+			{
 				for ( int col = 0; col < 3; ++col )
+				{
 					Require( row == col || std::abs( Finite( source.ScaleShear[row][col] ) ) < 1e-5f,
 					         "GR2 contains bone shear, which glTF TRS animation cannot represent" );
+				}
+			}
 			result.scale = {
 				Finite( source.ScaleShear[0][0] ), Finite( source.ScaleShear[2][2] ), Finite( source.ScaleShear[1][1] ) };
 		}
@@ -112,11 +120,13 @@ namespace
 	{
 		auto minimum = values.front(), maximum = minimum;
 		for ( const auto &value : values )
+		{
 			for ( size_t i = 0; i < 3; ++i )
 			{
 				minimum[i] = std::min( minimum[i], value[i] );
 				maximum[i] = std::max( maximum[i], value[i] );
 			}
+		}
 		accessor->min = fastgltf::AccessorBoundsArray::ForType<double>( 3 );
 		accessor->max = fastgltf::AccessorBoundsArray::ForType<double>( 3 );
 		for ( size_t i = 0; i < 3; ++i )
@@ -139,7 +149,9 @@ namespace
 		for ( const auto *member = vertices.VertexType; member && member->Type != GrannyEndMember; ++member )
 		{
 			if ( member->Name && std::strcmp( member->Name, name ) == 0 )
+			{
 				return { offset, std::max( 1, member->ArrayWidth ), member->Type };
+			}
 			const int size = GrannyGetMemberTypeSize( member );
 			Require( size > 0 && offset <= std::numeric_limits<int>::max() - size, "Invalid GR2 vertex type" );
 			offset += size;
@@ -155,7 +167,9 @@ namespace
 		std::array<float, N> result;
 		std::memcpy( result.data(), vertex + member.offset, sizeof( result ) );
 		for ( float &value : result )
+		{
 			value = Finite( value );
+		}
 		return result;
 	}
 
@@ -171,7 +185,9 @@ namespace
 	{
 		std::vector<size_t> roots;
 		if ( !skeleton )
+		{
 			return roots;
+		}
 		Require( skeleton->BoneCount > 0 && skeleton->BoneCount <= 65535 && skeleton->Bones,
 		         "GR2 skeleton has an invalid bone count" );
 		fastgltf::Skin skin;
@@ -192,9 +208,13 @@ namespace
 			// flat array is already glTF column-major. Conjugate by the axis swap
 			// and optional reflection, just like the local and animated transforms.
 			for ( int col = 0; col < 4; ++col )
+			{
 				for ( int row = 0; row < 4; ++row )
+				{
 					matrix[col * 4 + row] = Finite( bone.InverseWorld4x4[axes[col]][axes[row]] ) *
 					                        ( mirrorX && ( ( col == 0 ) != ( row == 0 ) ) ? -1.f : 1.f );
+				}
+			}
 			inverseBind.push_back( matrix );
 		}
 		for ( int i = 0; i < skeleton->BoneCount; ++i )
@@ -210,12 +230,18 @@ namespace
 				ancestor = skeleton->Bones[ancestor].ParentIndex;
 			}
 			if ( parent < 0 )
+			{
 				roots.push_back( skin.joints[i] );
+			}
 			else
+			{
 				doc->asset.nodes[skin.joints[parent]].children.push_back( skin.joints[i] );
+			}
 		}
 		if ( roots.size() == 1 )
+		{
 			skin.skeleton = roots[0];
+		}
 		skin.inverseBindMatrices = Floats( doc, inverseBind, fastgltf::AccessorType::Mat4 );
 		doc->asset.skins.push_back( std::move( skin ) );
 		return roots;
@@ -240,7 +266,9 @@ namespace
 		const auto normal = Member( vertices, GrannyVertexNormalName );
 		auto uv = Member( vertices, GrannyVertexTextureCoordinatesName );
 		if ( uv.offset < 0 )
+		{
 			uv = Member( vertices, "TextureCoordinates0" );
+		}
 		const auto weightsMember = Member( vertices, GrannyVertexBoneWeightsName );
 		const auto jointsMember = Member( vertices, GrannyVertexBoneIndicesName );
 		const bool rigid = GrannyMeshIsRigid( source );
@@ -281,11 +309,15 @@ namespace
 				const float length = std::sqrt( n[0] * n[0] + n[1] * n[1] + n[2] * n[2] );
 				Require( length > 1e-12f, "GR2 contains a zero vertex normal" );
 				for ( float &value : n )
+				{
 					value /= length;
+				}
 				normals.push_back( n );
 			}
 			if ( uv.offset >= 0 )
+			{
 				texcoords.push_back( ReadFloat<2>( vertex, uv ) );
+			}
 			if ( skinned )
 			{
 				V4 weight = { 1, 0, 0, 0 };
@@ -299,7 +331,9 @@ namespace
 					{
 						const unsigned w = vertex[weightsMember.offset + k];
 						if ( !w )
+						{
 							continue; // Unused slots may carry garbage bone indices.
+						}
 						const unsigned index = vertex[jointsMember.offset + k];
 						Require( index < boneMap.size(), "GR2 skin index is outside its bone bindings" );
 						joint[k] = boneMap[index];
@@ -308,7 +342,9 @@ namespace
 					}
 					Require( total > 0, "GR2 vertex has no skin weight" );
 					for ( float &w : weight )
+					{
 						w /= total;
+					}
 				}
 				weights.push_back( weight );
 				joints.push_back( joint );
@@ -319,11 +355,15 @@ namespace
 		Bounds( &doc->asset.accessors[positionAccessor], positions );
 		base.attributes.emplace_back( fastgltf::Attribute{ "POSITION", positionAccessor } );
 		if ( !normals.empty() )
+		{
 			base.attributes.emplace_back(
 					fastgltf::Attribute{ "NORMAL", Floats( doc, normals, fastgltf::AccessorType::Vec3 ) } );
+		}
 		if ( !texcoords.empty() )
+		{
 			base.attributes.emplace_back(
 					fastgltf::Attribute{ "TEXCOORD_0", Floats( doc, texcoords, fastgltf::AccessorType::Vec2 ) } );
+		}
 		if ( skinned )
 		{
 			base.attributes.emplace_back(
@@ -353,7 +393,9 @@ namespace
 			Require( first >= 0 && count >= 0 && first <= indexCount / 3 && count <= indexCount / 3 - first,
 			         "GR2 triangle group is outside the index array" );
 			if ( count == 0 )
+			{
 				continue;
+			}
 			std::vector<uint32_t> triangles;
 			for ( size_t i = size_t( first ) * 3; i < size_t( first + count ) * 3; i += 3 )
 			{
@@ -369,14 +411,18 @@ namespace
 					Accessor( doc, triangles, fastgltf::AccessorType::Scalar, fastgltf::ComponentType::UnsignedInt );
 			const int material = materials.empty() ? -1 : materials[std::min( size_t( group ), materials.size() - 1 )];
 			if ( material >= 0 && size_t( material ) < doc->asset.materials.size() )
+			{
 				primitive.materialIndex = size_t( material );
+			}
 			mesh.primitives.push_back( std::move( primitive ) );
 		}
 		Require( !mesh.primitives.empty(), "GR2 mesh has no triangles" );
 		const size_t node = Node( doc, std::string( mesh.name ) );
 		doc->asset.nodes[node].meshIndex = doc->asset.meshes.size();
 		if ( skinned )
+		{
 			doc->asset.nodes[node].skinIndex = skinIndex;
+		}
 		doc->asset.nodes[parent].children.push_back( node );
 		doc->asset.meshes.push_back( std::move( mesh ) );
 	}
@@ -384,7 +430,9 @@ namespace
 	void Animations( const SModel &source, const granny_skeleton *skeleton, SDocument *doc, size_t skinIndex = 0 )
 	{
 		if ( source.clips.empty() )
+		{
 			return;
+		}
 		Require( skeleton, "Cannot export animations without a skeleton" );
 		granny_model model = {};
 		model.Name = source.geometry->Name;
@@ -430,7 +478,9 @@ namespace
 				// A float duration just above an exact 30 Hz frame can round both
 				// that frame and the final endpoint to the same float timestamp.
 				if ( frame == frames && frame > 0 && time == times.back() )
+				{
 					continue;
+				}
 				Require( times.empty() || time > times.back(), "Animation timeline exceeds float time precision" );
 				times.push_back( time );
 				GrannySetControlRawLocalClock( control.get(), local );
@@ -446,16 +496,24 @@ namespace
 					{
 						float dot = 0;
 						for ( int k = 0; k < 4; ++k )
+						{
 							dot += rotation[k] * rotations[bone].back()[k];
+						}
 						if ( dot < 0 )
+						{
 							for ( float &value : rotation )
+							{
 								value = -value;
+							}
+						}
 					}
 					rotations[bone].push_back( rotation );
 				}
 			}
 			if ( clipIndex )
+			{
 				ranges += ',';
+			}
 			ranges += "{\"name\":" + Quote( clip.name ) + ",\"firstFrame\":" + Number( startFrame ) +
 			          ",\"lastFrame\":" + Number( startFrame + animation->Duration * FramesPerSecond ) +
 			          ",\"startSeconds\":" + Number( start ) + ",\"endSeconds\":" + Number( start + animation->Duration ) +
@@ -484,7 +542,9 @@ namespace
 		// Scene extras also survive importers which do not expose animation extras.
 		doc->extras[{ fastgltf::Category::Scenes, 0 }] = ranges;
 		if ( doc->asset.animations.empty() )
+		{
 			doc->asset.animations.push_back( std::move( animation ) );
+		}
 		else
 		{
 			// An AI mesh can carry a different skeleton. Sample it independently,
@@ -496,7 +556,9 @@ namespace
 				target.channels.push_back( channel );
 			}
 			for ( auto &sampler : animation.samplers )
+			{
 				target.samplers.push_back( std::move( sampler ) );
+			}
 		}
 	}
 }
@@ -519,7 +581,9 @@ std::string Quote( const std::string &text )
 			result += digits[c & 15];
 		}
 		else
+		{
 			result += char( c );
+		}
 	}
 	return result + '"';
 }
@@ -530,7 +594,9 @@ size_t SDocument::AddBytes( const void *data, size_t size )
 	Require( size <= uint64_t( UINT32_MAX ) - 4 && binary.size() <= uint64_t( UINT32_MAX ) - 4 - size,
 	         "Model exceeds the GLB 4 GB size limit" );
 	while ( binary.size() % 4 )
+	{
 		binary.push_back( std::byte{ 0 } );
+	}
 	fastgltf::BufferView view;
 	view.bufferIndex = 0;
 	view.byteOffset = binary.size();
@@ -583,7 +649,9 @@ void Convert( const SModel &source, SDocument *doc )
 	fastgltf::Scene scene;
 	scene.name = source.name;
 	for ( size_t root : roots )
+	{
 		scene.nodeIndices.push_back( root );
+	}
 	scene.nodeIndices.push_back( geometry );
 	doc->asset.scenes.push_back( std::move( scene ) );
 	size_t nextMaterial = 0;
@@ -591,11 +659,17 @@ void Convert( const SModel &source, SDocument *doc )
 	{
 		std::vector<int> materials;
 		if ( source.materialQuantities.empty() )
+		{
 			materials.push_back(
 					doc->asset.materials.empty() ? -1 : int( std::min( size_t( i ), doc->asset.materials.size() - 1 ) ) );
+		}
 		else if ( size_t( i ) < source.materialQuantities.size() )
+		{
 			for ( int k = 0; k < source.materialQuantities[i]; ++k )
+			{
 				materials.push_back( int( nextMaterial++ ) );
+			}
+		}
 		const auto *mesh = source.geometry->MeshBindings[i].Mesh;
 		const bool animate =
 				skeleton && mesh && mesh->BoneBindingCount > 0 &&
@@ -623,12 +697,16 @@ void Convert( const SModel &source, SDocument *doc )
 				{
 					skin = doc->asset.skins.size();
 					for ( size_t root : Skeleton( part.skeleton, doc, source.mirrorX ) )
+					{
 						aiScene.nodeIndices.push_back( root );
+					}
 					aiSkins.emplace( part.skeleton, skin );
 					Animations( source, part.skeleton, doc, skin );
 				}
 				else
+				{
 					skin = found->second;
+				}
 			}
 			Mesh( part.mesh,
 			      part.skeleton,

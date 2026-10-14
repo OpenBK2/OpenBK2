@@ -123,7 +123,9 @@ void CStreamTracker::PumpIncoming()
 			if ( i->nOffset == nChannelInputOffset )
 			{
 				if ( channelInBuf.GetBufSize() < i->nLength )
+				{
 					break; // avoid buffer overflow
+				}
 				int nRes = channelInBuf.Write( i->cData, i->nLength );
 				ASSERT( nRes == i->nLength ); // buffer overflow
 				nChannelInputOffset += i->nLength;
@@ -131,18 +133,26 @@ void CStreamTracker::PumpIncoming()
 				bCont = true;
 			}
 			else
+			{
 				++i;
+			}
 		}
 		if ( !bCont )
+		{
 			break;
+		}
 	}
 	// remove redundant blocks
 	for ( SChannelBlockList::iterator i = channelInList.begin(); i != channelInList.end(); )
 	{
 		if ( IsBefore( nChannelInputOffset, i->nOffset ) )
+		{
 			i = channelInList.erase( i );
+		}
 		else
+		{
 			++i;
+		}
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////
@@ -163,7 +173,9 @@ void CStreamTracker::Rollback( const std::vector<PACKET_ID> &pkts )
 				break;
 			}
 			else
+			{
 				++i;
+			}
 		}
 	}
 }
@@ -175,7 +187,9 @@ void CStreamTracker::Erase( const std::vector<PACKET_ID> &pkts )
 		PACKET_ID nPkt = pkts[i];
 		std::unordered_map<PACKET_ID, PACKET_ID>::iterator k = reassign.find( nPkt );
 		if ( k != reassign.end() )
+		{
 			reassign.erase( k );
+		}
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////
@@ -188,7 +202,9 @@ void CStreamTracker::Commit( const std::vector<PACKET_ID> &pkts )
 		{
 			std::unordered_map<PACKET_ID, PACKET_ID>::iterator k = reassign.find( nPkt );
 			if ( k == reassign.end() )
+			{
 				break;
+			}
 #ifdef LOG
 			cout << "commit pkt" << nPkt << " translated to commit pkt " << k->second << endl;
 #endif

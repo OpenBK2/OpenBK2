@@ -26,23 +26,33 @@ void CVariant::Clear()
 	{
 		case VT_STR:
 			if ( m_pstr )
+			{
 				delete m_pstr;
+			}
 			break;
 		case VT_WSTR:
 			if ( m_pwstr )
+			{
 				delete m_pwstr;
+			}
 			break;
 		case VT_POINTER:
 			if ( m_pblob )
+			{
 				delete m_pblob;
+			}
 			break;
 		case VT_DBID:
 			if ( m_dbid )
+			{
 				delete m_dbid;
+			}
 			break;
 		case VT_MULTIVARIANT:
 			if ( m_pmvar )
+			{
 				delete m_pmvar;
+			}
 			break;
 		default:
 			break;
@@ -103,7 +113,9 @@ CVariant &CVariant::operator=( const CVariant &var )
 bool CVariant::GetBool() const
 {
 	if ( m_eType == VT_BOOL )
+	{
 		return m_bool;
+	}
 	NI_ASSERT( false, fmt::format( "Can't convert type {} to bool", int( m_eType ) ) );
 	return false;
 }
@@ -111,7 +123,9 @@ bool CVariant::GetBool() const
 int CVariant::GetInt() const
 {
 	if ( m_eType == VT_INT )
+	{
 		return m_int;
+	}
 	// TODO change all places in code where NULL variant assumes (int)0
 	NI_ASSERT( false, fmt::format( "Can't convert type {} to int", int( m_eType ) ) );
 	return 0;
@@ -120,7 +134,9 @@ int CVariant::GetInt() const
 float CVariant::GetFloat() const
 {
 	if ( m_eType == VT_FLOAT )
+	{
 		return m_float;
+	}
 	NI_ASSERT( false, fmt::format( "Can't convert type {} to float", int( m_eType ) ) );
 	return 0;
 }
@@ -142,7 +158,9 @@ const char *CVariant::GetStr() const
 const wchar_t *CVariant::GetWStr() const
 {
 	if ( m_eType == VT_WSTR )
+	{
 		return m_pwstr->c_str();
+	}
 	NI_ASSERT( false, fmt::format( "Can't convert type {} to wstring", int( m_eType ) ) );
 	return L"";
 }
@@ -181,7 +199,9 @@ const CDBID &CVariant::GetDBID() const
 {
 	static CDBID dummy;
 	if ( m_eType == VT_DBID )
+	{
 		return *m_dbid;
+	}
 	NI_ASSERT( false, fmt::format( "Can't convert type {} to CDBID", int( m_eType ) ) );
 	return dummy;
 }
@@ -231,9 +251,13 @@ CVariant::operator int() const
 				return 0;
 			case VT_POINTER:
 				if ( GetBlobSize() == 4 )
+				{
 					return *( (int *)GetPtr() );
+				}
 				else if ( GetBlobSize() == 0 )
+				{
 					return 0;
+				}
 				else
 				{
 					NI_ASSERT( false, fmt::format( "Can't convert binary data of invalid size ({}) to int", GetBlobSize() ) );
@@ -406,11 +430,17 @@ bool CVariant::operator!=( const CVariant &var ) const
 bool CVariant::operator==( const CVariant &var ) const
 {
 	if ( this == &var )
+	{
 		return true;
+	}
 	else if ( ( m_eType == VT_INT && var.m_eType == VT_POINTER ) || ( var.m_eType == VT_INT && m_eType == VT_POINTER ) )
+	{
 		return (int)( *this ) == (int)var;
+	}
 	else if ( m_eType != var.m_eType )
+	{
 		return false;
+	}
 	else
 	{
 		switch ( m_eType )
@@ -433,7 +463,9 @@ bool CVariant::operator==( const CVariant &var ) const
 					return memcmp( m_pblob->m_ptr, var.m_pblob->m_ptr, m_pblob->m_nSize ) == 0;
 				}
 				else
+				{
 					return false;
+				}
 			case VT_DBID:
 				return ( ( *m_dbid ) == ( *var.m_dbid ) );
 			case VT_MULTIVARIANT:
@@ -478,27 +510,37 @@ int CVariant::operator&( IBinSaver &saver )
 			break;
 		case VT_STR:
 			if ( saver.IsReading() )
+			{
 				m_pstr = new std::string();
+			}
 			saver.Add( 2, m_pstr );
 			break;
 		case VT_WSTR:
 			if ( saver.IsReading() )
+			{
 				m_pwstr = new std::wstring();
+			}
 			saver.Add( 2, m_pwstr );
 			break;
 		case VT_POINTER:
 			if ( saver.IsReading() )
+			{
 				m_pblob = new SBlob();
+			}
 			saver.Add( 2, m_pblob );
 			break;
 		case VT_DBID:
 			if ( saver.IsReading() )
+			{
 				m_dbid = new CDBID();
+			}
 			saver.Add( 2, m_dbid );
 			break;
 		case VT_MULTIVARIANT:
 			if ( saver.IsReading() )
+			{
 				m_pmvar = new SMultiVariant();
+			}
 			saver.Add( 2, m_pmvar );
 			break;
 	}
@@ -509,7 +551,9 @@ int CVariant::operator&( IBinSaver &saver )
 int CVariant::operator&( IXmlSaver &saver )
 {
 	if ( saver.IsReading() )
+	{
 		Clear();
+	}
 	//
 	saver.Add( "Type", &m_eType );
 	switch ( m_eType )
@@ -531,25 +575,33 @@ int CVariant::operator&( IXmlSaver &saver )
 
 		case VT_STR:
 			if ( saver.IsReading() )
+			{
 				m_pstr = new std::string();
+			}
 			saver.Add( "Data", m_pstr );
 			break;
 
 		case VT_WSTR:
 			if ( saver.IsReading() )
+			{
 				m_pwstr = new std::wstring();
+			}
 			saver.Add( "Data", m_pwstr );
 			break;
 
 		case VT_POINTER:
 			if ( saver.IsReading() )
+			{
 				m_pblob = new SBlob();
+			}
 			saver.Add( "Data", m_pblob );
 			break;
 
 		case VT_DBID:
 			if ( saver.IsReading() )
+			{
 				m_dbid = new CDBID();
+			}
 			saver.Add( "Data", m_dbid );
 			break;
 

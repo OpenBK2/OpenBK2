@@ -16,7 +16,9 @@ bool CheckObstacles( const bool bIgnoreObstacles, const SVector &curTile, const 
 		const SVector vVisCurTile( curTile.x / AI_TILES_IN_VIS_TILE, curTile.y / AI_TILES_IN_VIS_TILE );
 		const SVector vVisTargetTile( targetTile.x / AI_TILES_IN_VIS_TILE, targetTile.y / AI_TILES_IN_VIS_TILE );
 		if ( !theWarFog.IsTraceable( vVisCurTile, vVisTargetTile ) )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -28,7 +30,9 @@ bool CheckObstacles( const bool bIgnoreObstacles, const SVector &curTile, const 
 bool CAttackPointChecking::IsGoodTile( const SVector &curTile ) const
 {
 	if ( !CheckObstacles( bIgnoreObstacles, curTile, targetTile ) )
+	{
 		return false;
+	}
 
 	const float fDist = SquareOfDistance( curTile, targetTile );
 
@@ -52,7 +56,9 @@ bool CGoToDistance::IsGoodTile( const SVector &curTile ) const
 bool CAttackSideChecking::IsGoodTile( const SVector &curTile ) const
 {
 	if ( !CheckObstacles( bIgnoreObstacles, curTile, targetTile ) )
+	{
 		return false;
+	}
 
 	const uint16_t wCurDir = GetDirectionByVector( ( curTile - targetTile ).ToCVec2() );
 	const float fDist = SquareOfDistance( curTile, targetTile );
@@ -79,11 +85,15 @@ CAttackStObjectChecking::CAttackStObjectChecking( const float _fRangeMin,
 bool CAttackStObjectChecking::IsGoodTile( const SVector &curTile ) const
 {
 	if ( !pObj->IsAlive() )
+	{
 		return true;
+	}
 
 	const SVector targetTile = AICellsTiles::GetTile( pObj->GetAttackCenter( AICellsTiles::GetPointByTile( curTile ) ) );
 	if ( !CheckObstacles( bIgnoreObstacles, curTile, targetTile ) )
+	{
 		return false;
+	}
 
 	const float fDist = SquareOfDistance( curTile, targetTile );
 

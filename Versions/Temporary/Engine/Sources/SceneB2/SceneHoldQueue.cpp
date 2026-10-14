@@ -12,9 +12,13 @@ void SetToSceneHoldQueue( CObjectBase *p, bool bSerialize )
 {
 	const int nCurrPos = int( timeLastTime ) & ( N_HOLD_TIME - 1 );
 	if ( bSerialize )
+	{
 		*serializableSceneHoldQueue[nCurrPos].Alloc() = p;
+	}
 	else
+	{
 		*sceneHoldQueue[nCurrPos].Alloc() = p;
+	}
 }
 
 void ClearSceneHoldQueue()
@@ -32,7 +36,9 @@ void StepSceneHoldQueue( const NTimer::STime _timeCurrTime )
 	const int nPrevPos = int( timeLastTime ) & ( N_HOLD_TIME - 1 );
 	const int nCurrPos = int( timeCurrTime ) & ( N_HOLD_TIME - 1 );
 	if ( nPrevPos == nCurrPos )
+	{
 		return;
+	}
 	if ( nPrevPos < nCurrPos )
 	{
 		for ( int i = nPrevPos + 1; i <= nCurrPos; ++i )
@@ -65,7 +71,9 @@ void GetSceneHoldedObjects( std::list<CObjectBase *> *pObjects, bool bSerializea
 		for ( int i = 0; i < N_HOLD_TIME; ++i )
 		{
 			for ( CScenePool::SIterator it( &( serializableSceneHoldQueue[i] ) ); it.p != 0; --it )
+			{
 				pObjects->push_back( *it.p );
+			}
 		}
 	}
 	else
@@ -73,7 +81,9 @@ void GetSceneHoldedObjects( std::list<CObjectBase *> *pObjects, bool bSerializea
 		for ( int i = 0; i < N_HOLD_TIME; ++i )
 		{
 			for ( CScenePool::SIterator it( &( sceneHoldQueue[i] ) ); it.p != 0; --it )
+			{
 				pObjects->push_back( *it.p );
+			}
 		}
 	}
 }
@@ -100,7 +110,9 @@ void SerializeSceneHoldQueue( IBinSaver::chunk_id chunkID, IBinSaver &saver )
 		for ( int i = 0; i < N_HOLD_TIME; ++i )
 		{
 			for ( std::list<CObj<CObjectBase>>::iterator it = hq.data[i].begin(); it != hq.data[i].end(); ++it )
+			{
 				*serializableSceneHoldQueue[i].Alloc() = it->GetPtr();
+			}
 		}
 	}
 	else
@@ -108,7 +120,9 @@ void SerializeSceneHoldQueue( IBinSaver::chunk_id chunkID, IBinSaver &saver )
 		for ( int i = 0; i < N_HOLD_TIME; ++i )
 		{
 			for ( CScenePool::SIterator it( &( serializableSceneHoldQueue[i] ) ); it.p != 0; --it )
+			{
 				hq.data[i].push_back( *it.p );
+			}
 		}
 		saver.Add( chunkID, &hq );
 	}

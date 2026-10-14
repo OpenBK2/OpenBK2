@@ -32,7 +32,9 @@ class CTempAttributesTool : public IExportTool
 		~SDesc()
 		{
 			if ( pFile )
+			{
 				GrannyFreeFile( pFile );
+			}
 		}
 	};
 	//
@@ -46,7 +48,9 @@ class CTempAttributesTool : public IExportTool
 	bool LoadSettings()
 	{
 		if ( !szAttribsExportTemplate.empty() && !szAttribsExportSettings.empty() )
+		{
 			return true;
+		}
 		//
 		CTextMapSettings textMapSettings;
 		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
@@ -67,7 +71,9 @@ class CTempAttributesTool : public IExportTool
 	                    const std::string &szRootJoint )
 	{
 		if ( LoadSettings() == false )
+		{
 			return false;
+		}
 		// form script to export temp file
 		std::string szDstFileName = NFile::GetTempFileName() + ".gr2";
 		NStr::ReplaceAllChars( &szDstFileName, '\\', '/' );
@@ -82,18 +88,26 @@ class CTempAttributesTool : public IExportTool
 		szScript += ";\n";
 		NFile::CreatePath( NFile::GetFilePath( szDstFileName ) );
 		if ( ExecuteMayaScript( szScript ) == false )
+		{
 			return false;
+		}
 		//
 		if ( WaitForFile( szDstFileName, 10000 ) == false )
+		{
 			return false;
+		}
 		// read granny file
 		pDesc->pFile = GrannyReadEntireFile( szDstFileName.c_str() );
 		NFile::RemoveFile( szDstFileName.c_str() ); // delete temp file
 		if ( pDesc->pFile == 0 )
+		{
 			return false;
+		}
 		pDesc->pFileInfo = GrannyGetFileInfo( pDesc->pFile );
 		if ( pDesc->pFileInfo == 0 )
+		{
 			return false;
+		}
 		//
 		pDesc->szRootMesh = szRootMesh;
 		pDesc->szRootJoint = szRootJoint;
@@ -108,7 +122,9 @@ public:
 	GetAttribs( const std::string &_szFileName, const std::string &szRootMesh, const std::string &szRootJoint )
 	{
 		if ( szRootMesh.empty() && szRootJoint.empty() )
+		{
 			return 0;
+		}
 		std::string szFileName;
 		NStr::ToLower( &szFileName, _szFileName );
 		NStr::ReplaceAllChars( &szFileName, '\\', '/' );
@@ -132,13 +148,19 @@ public:
 				const bool bMesh = itDesc->szRootMesh == szRootMesh;
 				// exact
 				if ( bJoint && bMesh )
+				{
 					return itDesc->pFileInfo;
+				}
 				// mesh == joint and one of them are matched
 				if ( ( szRootMesh == szRootJoint ) && ( bJoint || bMesh ) )
+				{
 					return itDesc->pFileInfo;
+				}
 				// mesh or joint are empty and opposite matched
 				if ( ( szRootMesh.empty() && bJoint ) || ( szRootJoint.empty() && bMesh ) )
+				{
 					return itDesc->pFileInfo;
+				}
 			}
 			// create new entry
 			CDescsList::iterator pos = posList->second.insert( posList->second.end(), SDesc() );
@@ -156,7 +178,9 @@ static CObj<CTempAttributesTool> pTempAttributesTool;
 IExportTool *GetOrCreateTempAttributesExportTool()
 {
 	if ( pTempAttributesTool == 0 )
+	{
 		pTempAttributesTool = new CTempAttributesTool();
+	}
 	return pTempAttributesTool;
 }
 void DestroyTempAttributesExportTool()
@@ -167,11 +191,15 @@ void DestroyTempAttributesExportTool()
 granny_file_info *GetAttribsByVisObj( IManipulator *pMan )
 {
 	if ( pMan == 0 )
+	{
 		return 0;
+	}
 	int nNumSeasons = -1;
 	CManipulatorManager::GetValue( &nNumSeasons, pMan, "Models" );
 	if ( nNumSeasons <= 0 )
+	{
 		return 0;
+	}
 	// try summer model
 	for ( int i = 0; i < nNumSeasons; ++i )
 	{
@@ -193,7 +221,9 @@ granny_file_info *GetAttribsByVisObj( IManipulator *pMan )
 granny_file_info *GetAttribsByModel( IManipulator *pMan )
 {
 	if ( pMan == 0 )
+	{
 		return 0;
+	}
 	CPtr<IManipulator> pGeomMan = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pMan, 0, 0, 0 );
 	return GetAttribsByGeometry( pGeomMan );
 }
@@ -201,13 +231,17 @@ granny_file_info *GetAttribsByModel( IManipulator *pMan )
 granny_file_info *GetAttribsBySkeleton( IManipulator *pMan )
 {
 	if ( pMan == 0 )
+	{
 		return 0;
+	}
 	std::string szSrcFileName;
 	CManipulatorManager::GetValue( &szSrcFileName, pMan, "SrcName" );
 	std::string szRootJoint;
 	CManipulatorManager::GetValue( &szRootJoint, pMan, "RootJoint" );
 	if ( szSrcFileName.empty() || szRootJoint.empty() )
+	{
 		return 0;
+	}
 	//
 	const SUserData *pUD = Singleton<IUserDataContainer>()->Get();
 	return GetAttribs( pUD->constUserData.szExportSourceFolder + szSrcFileName, "", szRootJoint );
@@ -216,7 +250,9 @@ granny_file_info *GetAttribsBySkeleton( IManipulator *pMan )
 granny_file_info *GetAttribsByGeometry( IManipulator *pMan )
 {
 	if ( pMan == 0 )
+	{
 		return 0;
+	}
 	std::string szSrcFileName;
 	CManipulatorManager::GetValue( &szSrcFileName, pMan, "SrcName" );
 	std::string szRootMesh;
@@ -224,7 +260,9 @@ granny_file_info *GetAttribsByGeometry( IManipulator *pMan )
 	std::string szRootJoint;
 	CManipulatorManager::GetValue( &szRootJoint, pMan, "RootJoint" );
 	if ( szSrcFileName.empty() || szRootJoint.empty() || szRootMesh.empty() )
+	{
 		return 0;
+	}
 	//
 	const SUserData *pUD = Singleton<IUserDataContainer>()->Get();
 	return GetAttribs( pUD->constUserData.szExportSourceFolder + szSrcFileName, szRootMesh, szRootJoint );
@@ -234,7 +272,9 @@ granny_file_info *
 GetAttribs( const std::string &szFileName, const std::string &szRootMesh, const std::string &szRootJoint )
 {
 	if ( szFileName.empty() || ( pTempAttributesTool == 0 ) )
+	{
 		return 0;
+	}
 	//
 	return pTempAttributesTool->GetAttribs( szFileName, szRootMesh, szRootJoint );
 }

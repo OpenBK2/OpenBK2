@@ -19,7 +19,9 @@ bool Compile( std::vector<CObj<NDb::NTypeDef::STypeDef>> *pTypes,
 	CPtr<CVisitor> pVisitor = new CVisitor( pTypes, pTermTypesDesc );
 	pVisitor->Visit( pRootNN );
 	if ( pVisitor->IsFailed() )
+	{
 		return false;
+	}
 
 	int nCnt = 0;
 	for ( int i = 0; i < pTypes->size(); ++i )

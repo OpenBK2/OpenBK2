@@ -130,12 +130,16 @@ CCombatMusic::CCombatMusic() : eState( ESSS_IDLE ), timeLastCombatNotify( 0 )
 void CCombatMusic::Update( bool bCombatNotify )
 {
 	if ( 1 >= Singleton<IMusicSystem>()->GetNPlayLists() )
+	{
 		return;
+	}
 
 	const NTimer::STime curTime = Singleton<IGameTimer>()->GetGameTime();
 
 	if ( bCombatNotify )
+	{
 		timeLastCombatNotify = curTime;
+	}
 
 	switch ( eState )
 	{
@@ -150,7 +154,9 @@ void CCombatMusic::Update( bool bCombatNotify )
 			break;
 		case ESSS_TO_COMBAT:
 			if ( 1 == Singleton<IMusicSystem>()->GetPlayList() )
+			{
 				eState = ESSS_COMBAT;
+			}
 
 			break;
 		case ESSS_COMBAT:
@@ -163,7 +169,9 @@ void CCombatMusic::Update( bool bCombatNotify )
 			break;
 		case ESSS_TO_IDLE:
 			if ( 0 == Singleton<IMusicSystem>()->GetPlayList() )
+			{
 				eState = ESSS_IDLE;
+			}
 			else if ( curTime - timeLastCombatNotify < combatPlayWONotify && Singleton<IMusicSystem>()->CanChangePlayList() )
 			{
 				timeLastCombatNotify = curTime;
@@ -258,7 +266,9 @@ void CUpdatableWorld::UpdateAcknowledgemets()
 			{
 				CDynamicCast<IMOUnit> pUnit = pMO;
 				if ( pUnit )
+				{
 					pUnit->AIUpdateAcknowledgement( NDb::EUnitAckType( ack.nAck ), AckManager(), ack.nSet );
+				}
 				else
 				{
 					CDynamicCast<IMOSquad> pSquad = pMO;
@@ -270,7 +280,9 @@ void CUpdatableWorld::UpdateAcknowledgemets()
 						{
 							CDynamicCast<IMOUnit> pUnit = passangers[0];
 							if ( pUnit )
+							{
 								pUnit->AIUpdateAcknowledgement( NDb::EUnitAckType( ack.nAck ), AckManager(), ack.nSet );
+							}
 						}
 					}
 				}
@@ -313,9 +325,13 @@ void CUpdatableWorld::UpdateBasicUpdates()
 				CUpdateType::iterator it = updateType.find( pUpdate->eUpdateType );
 				// for compatibility with old updates
 				if ( it != updateType.end() )
+				{
 					( this->*( it->second ) )( pUpdate );
+				}
 				else
+				{
 					pUpdate->ProcessClient( this );
+				}
 			}
 		}
 	}
@@ -331,9 +347,13 @@ void CUpdatableWorld::PerformUpdate( CObjectBase *pRawUpdate )
 		CUpdateType::iterator it = updateType.find( pUpdate->eUpdateType );
 		// for compatibility with old updates
 		if ( it != updateType.end() )
+		{
 			( this->*( it->second ) )( pUpdate );
+		}
 		else
+		{
 			pUpdate->ProcessClient( this );
+		}
 	}
 }
 
@@ -347,9 +367,13 @@ void CUpdatableWorld::UpdateClientData()
 		{
 			CPtr<IClientUpdatableProcess> pProcess = *it;
 			if ( IsValid( pProcess ) == false || pProcess->Update( currTime ) == false )
+			{
 				it = processesToUpdate.erase( it );
+			}
 			else
+			{
 				++it;
+			}
 		}
 	}
 }
@@ -486,7 +510,9 @@ void CUpdatableWorld::UpdateDeadPlane( const SAIBasicUpdate *_pUpdate )
 {
 	const SAIActionUpdate *pUpdate = checked_cast<const SAIActionUpdate *>( _pUpdate );
 	if ( CMOUnitMechanical *pMO = dynamic_cast<CMOUnitMechanical *>( GetMapObj( pUpdate->nObjUniqueID ) ) )
+	{
 		pMO->AIUpdateDeadPlane( pUpdate );
+	}
 }
 
 void CUpdatableWorld::UpdateReinfTypeAvail( const SAIBasicUpdate *_pUpdate )
@@ -533,12 +559,18 @@ void CUpdatableWorld::UpdateReinforcmentPoint( const SAIBasicUpdate *_pUpdate )
 
 	bool bWasEmpty = reinforcementPositions.empty();
 	if ( pUpdate->bEnable )
+	{
 		reinforcementPositions[pUpdate->nPointID] = pUpdate->position;
+	}
 	else
+	{
 		reinforcementPositions.erase( pUpdate->nPointID );
+	}
 	bool bIsEmpty = reinforcementPositions.empty();
 	if ( bWasEmpty != bIsEmpty )
+	{
 		NInput::PostEvent( "new_update_reinf_point", !bIsEmpty, 0 );
+	}
 }
 
 void CUpdatableWorld::UpdateChageDBID( const SAIBasicUpdate *_pUpdate )
@@ -548,7 +580,9 @@ void CUpdatableWorld::UpdateChageDBID( const SAIBasicUpdate *_pUpdate )
 	CMapObj *pMO = checked_cast<CMapObj *>( GetMapObj( nID ) );
 
 	if ( pMO && dynamic_cast<CMOUnitInfantry *>( pMO ) )
+	{
 		checked_cast<CMOUnitInfantry *>( pMO )->ChangeRPGStats( *pUpdate, GetSeason() );
+	}
 }
 
 void CUpdatableWorld::SendUpdateReinfPoints( int nFactoryID )
@@ -581,12 +615,16 @@ void CUpdatableWorld::UpdateMove( const SAIBasicUpdate *_pUpdate )
 	const int nID = pUpdate->nObjUniqueID;
 	CMapObj *pMO = checked_cast<CMapObj *>( GetMapObj( nID ) );
 	if ( pMO == 0 )
+	{
 		return;
+	}
 	//
 	const NTimer::STime time = (std::min)( pUpdate->nUpdateTime, GameTimer()->GetGameTime() );
 	CPtr<IClientUpdatableProcess> pProcess = pMO->AIUpdateMovement( time, true, Scene(), SoundScene() );
 	if ( pProcess != 0 )
+	{
 		RegisterProcess( pProcess );
+	}
 }
 
 void CUpdatableWorld::UpdateIdleTrench( const SAIBasicUpdate *_pUpdate )
@@ -598,7 +636,9 @@ void CUpdatableWorld::UpdateIdleTrench( const SAIBasicUpdate *_pUpdate )
 
 	CMapObj *pMapObj = GetMapObj( nInfantryUniqueID );
 	if ( !pMapObj )
+	{
 		return;
+	}
 
 	const int nTargetUniqueID = pUpdate->info.nTargetUniqueID;
 
@@ -611,11 +651,15 @@ void CUpdatableWorld::UpdateStop( const SAIBasicUpdate *_pUpdate )
 	const int nID = pUpdate->nObjUniqueID;
 	CMapObj *pMO = checked_cast<CMapObj *>( GetMapObj( nID ) );
 	if ( pMO == 0 )
+	{
 		return;
+	}
 	const NTimer::STime time = (std::min)( pUpdate->nUpdateTime, GameTimer()->GetGameTime() );
 	CPtr<IClientUpdatableProcess> pProcess = pMO->AIUpdateMovement( time, false, Scene(), SoundScene() );
 	if ( pProcess != 0 )
+	{
 		RegisterProcess( pProcess );
+	}
 }
 
 void CUpdatableWorld::UpdateDelayedShoot( const SAIBasicUpdate *_pUpdate )
@@ -624,7 +668,9 @@ void CUpdatableWorld::UpdateDelayedShoot( const SAIBasicUpdate *_pUpdate )
 	const int nID = pUpdate->nObjUniqueID;
 	CMapObj *pMO = checked_cast<CMapObj *>( GetMapObj( nID ) );
 	if ( pMO == 0 )
+	{
 		return;
+	}
 	pMO->AIUpdateAction( pUpdate, eSeason );
 }
 
@@ -633,7 +679,9 @@ void CUpdatableWorld::UpdateSelectable( const SAIBasicUpdate *_pUpdate )
 	const SAIActionUpdate *pUpdate( checked_cast<const SAIActionUpdate *>( _pUpdate ) );
 	CMOSelectable *pMO = checked_cast<CMOSelectable *>( GetMapObj( pUpdate->nObjUniqueID ) );
 	if ( pMO == 0 )
+	{
 		return;
+	}
 	//		(GetMapObj( checked_cast<const CUpdatableObj*>( pUpdate->pObj.GetPtr() )->GetUniqueId() ));
 	const bool bCanSelect = pUpdate->nParam;
 	if ( pMO->CanSelect() != bCanSelect )
@@ -693,7 +741,9 @@ void CUpdatableWorld::UpdateSpecialAbility( const SAIBasicUpdate *_pUpdate )
 	CMOSelectable *pMO = checked_cast<CMOSelectable *>( GetMapObj( nID ) );
 
 	if ( pMO && pMO->AIUpdateSpecialAbility( *pUpdate ) )
+	{
 		DoUpdateSpecialAbility( pMO );
+	}
 }
 
 void CUpdatableWorld::UpdateTreeBroken( const SAIBasicUpdate *_pUpdate )
@@ -704,7 +754,9 @@ void CUpdatableWorld::UpdateTreeBroken( const SAIBasicUpdate *_pUpdate )
 	CPtr<CMOObject> pTree = checked_cast<CMOObject *>( GetMapObj( nUniqueID ) );
 	NI_ASSERT( pTree, fmt::format( "Trying to trample (as a tree) object # {}", nUniqueID ) );
 	if ( pTree != 0 )
+	{
 		pTree->AIUpdateFall( pUpdate );
+	}
 }
 
 void CUpdatableWorld::UpdateNewEntrenchment( const SAIBasicUpdate *_pUpdate )
@@ -712,11 +764,15 @@ void CUpdatableWorld::UpdateNewEntrenchment( const SAIBasicUpdate *_pUpdate )
 	CDynamicCast<const SAITrenchUpdate> pUpdate = _pUpdate;
 	NI_ASSERT( pUpdate, "Programmers: wrong update type (CUpdatableWorld::UpdateNewEntrenchment)" );
 	if ( !pUpdate )
+	{
 		return;
+	}
 
 	CDynamicCast<CMOEntrenchmentPart> pMOPart = GetMapObj( pUpdate->info.nSegmentID );
 	if ( !pMOPart )
+	{
 		return;
+	}
 
 	const int nUniqueID = pUpdate->info.nEntrenchID;
 	CDynamicCast<CMOEntrenchment> pMOEntrenchment = GetMapObj( nUniqueID );
@@ -771,14 +827,20 @@ void CUpdatableWorld::UpdateModifyEntranceState( const SAIBasicUpdate *_pUpdate 
 {
 	const SAIModifyEntranceStateUpdate *pUpdate = checked_cast<const SAIModifyEntranceStateUpdate *>( _pUpdate );
 	if ( pUpdate == 0 )
+	{
 		return;
+	}
 
 	CMapObj *pMO = GetMapObj( pUpdate->nObjUniqueID );
 	IMOContainer *pMOCont = dynamic_cast<IMOContainer *>( pMO );
 	if ( pMOCont )
+	{
 		pMOCont->AIUpdateModifyEntranceState( pUpdate->bOpen );
+	}
 	if ( pMO )
+	{
 		DoUpdateObjectStats( pMO );
+	}
 }
 
 void CUpdatableWorld::UpdateShootBuilding( const SAIBasicUpdate *_pUpdate ) {}
@@ -816,7 +878,9 @@ void CUpdatableWorld::UpdateHit( const SAIBasicUpdate *_pUpdate )
 			const NDb::SWeaponRPGStats::SShell &shell = pUpdate->info.pWeapon->shells[pUpdate->info.wShell];
 			pComplexEffect = shell.pEffectHitGround;
 			if ( shell.pCraters != 0 )
+			{
 				PlaceCrater( shell.pCraters, eSeason, CVec2( pUpdate->info.explCoord.x, pUpdate->info.explCoord.y ) );
+			}
 		}
 		//		DebugTrace( "EHT_GROUND" );
 		break;
@@ -830,7 +894,9 @@ void CUpdatableWorld::UpdateHit( const SAIBasicUpdate *_pUpdate )
 			const NDb::SWeaponRPGStats::SShell &shell = pUpdate->info.pWeapon->shells[pUpdate->info.wShell];
 			pComplexEffect = shell.pEffectHitAir;
 			if ( shell.pCraters != 0 )
+			{
 				PlaceCrater( shell.pCraters, eSeason, CVec2( pUpdate->info.explCoord.x, pUpdate->info.explCoord.y ) );
+			}
 		}
 		break;
 		case SAINotifyHitInfo::EHitType::EHT_AIR:
@@ -843,13 +909,19 @@ void CUpdatableWorld::UpdateHit( const SAIBasicUpdate *_pUpdate )
 		if ( CMapObj *pUnit = checked_cast<CMapObj *>( GetMapObj( nVictimUniqueID ) ) )
 		{
 			if ( pUnit->GetTypeID() == NDb::SBridgeRPGStats::typeID )
+			{
 				// For bridges, show explosion on top
 				PlayComplexEffect( OBJECT_ID_FORGET, pComplexEffect, pUpdate->nUpdateTime, pUpdate->info.explCoord );
+			}
 			else
+			{
 				pUnit->AIUpdateHit( pComplexEffect, pUpdate->info.wDir, pUpdate->nUpdateTime );
+			}
 		}
 		else
+		{
 			PlayComplexEffect( OBJECT_ID_FORGET, pComplexEffect, pUpdate->nUpdateTime, pUpdate->info.explCoord );
+		}
 		// add earthquake
 		if ( pUpdate->info.pWeapon->shells[pUpdate->info.wShell].fDetonationPower > 0 )
 		{
@@ -882,10 +954,14 @@ void CUpdatableWorld::UpdateDeleteObject( const SAIBasicUpdate *_pUpdate )
 				{
 					CDynamicCast<const NDb::SObjectBaseRPGStats> pObjectStats = pStats;
 					if ( pObjectStats && pObjectStats->pSeasonedEffectExplosion )
+					{
 						PlayComplexSeasonedEffect(
 								OBJECT_ID_FORGET, pObjectStats->pSeasonedEffectExplosion, pUpdate->nUpdateTime, vPos, eSeason );
+					}
 					else
+					{
 						PlayComplexEffect( OBJECT_ID_FORGET, pStats->pEffectExplosion, pUpdate->nUpdateTime, vPos );
+					}
 				}
 			}
 		}
@@ -912,10 +988,14 @@ void CUpdatableWorld::UpdateSilentDeath( const SAIBasicUpdate *_pUpdate )
 			pMO->GetPlacement( &vPos, &qRot, &vScale );
 
 			if ( pStats->pSeasonedEffectDeath )
+			{
 				PlayComplexSeasonedEffect(
 						OBJECT_ID_FORGET, pStats->pSeasonedEffectDeath, pUpdate->nUpdateTime, vPos, eSeason );
+			}
 			else if ( pStats->pEffectDeath != 0 )
+			{
 				PlayComplexEffect( OBJECT_ID_FORGET, pStats->pEffectDeath, pUpdate->nUpdateTime, vPos );
+			}
 
 			// change model to death without animation and death effect
 			if ( IMOUnit *pUnit = dynamic_cast<IMOUnit *>( pMO ) )
@@ -967,9 +1047,13 @@ void CUpdatableWorld::UpdateRevealArtillery( const SAIBasicUpdate *_pUpdate )
 	if ( pUpdate )
 	{
 		if ( pUpdate->nParam > 0 )
+		{
 			pNotifications->Notify( EVNT_ENEMY_AA_SEEN, 0, pUpdate->info.center );
+		}
 		else
+		{
 			pNotifications->Notify( EVNT_ENEMY_ARTILLERY_SEEN, 0, pUpdate->info.center );
+		}
 	}
 }
 
@@ -985,7 +1069,9 @@ void CUpdatableWorld::UpdateBreakTrack( const SAIBasicUpdate *_pUpdate )
 {
 	const SAIActionUpdate *pUpdate = checked_cast<const SAIActionUpdate *>( _pUpdate );
 	if ( pUpdate == 0 )
+	{
 		return;
+	}
 
 	CMapObj *pMO = GetMapObj( pUpdate->nObjUniqueID );
 	CMOUnitMechanical *pMOUnit = dynamic_cast<CMOUnitMechanical *>( pMO );
@@ -999,7 +1085,9 @@ void CUpdatableWorld::UpdateRepairTrack( const SAIBasicUpdate *_pUpdate )
 {
 	const SAIActionUpdate *pUpdate = checked_cast<const SAIActionUpdate *>( _pUpdate );
 	if ( pUpdate == 0 )
+	{
 		return;
+	}
 
 	CMapObj *pMO = GetMapObj( pUpdate->nObjUniqueID );
 	CMOUnitMechanical *pMOUnit = dynamic_cast<CMOUnitMechanical *>( pMO );
@@ -1037,7 +1125,9 @@ void CUpdatableWorld::UpdateChangeVisibility( const SAIBasicUpdate *_pUpdate )
 		CMapObj *pMO = checked_cast<CMapObj *>( GetMapObj( nID ) );
 		bool bNewVisibility = pOldUpdate->nParam;
 		if ( pMO && ( pMO->IsVisible() != bNewVisibility ) )
+		{
 			pMO->SetVisible( pOldUpdate->nParam, eSeason, ( eDayTime == NDb::DAY_NIGHT ) );
+		}
 	}
 }
 
@@ -1049,7 +1139,9 @@ void CUpdatableWorld::UpdateStateChanged( const SAIBasicUpdate *_pUpdate )
 
 	CMapObj *pMO = GetMapObj( nID );
 	if ( pMO == 0 )
+	{
 		return;
+	}
 	pMO->AIUpdateState( pUpdate->nParam );
 }
 
@@ -1075,7 +1167,9 @@ void CUpdatableWorld::UpdateSelectionGroup( const SAIBasicUpdate *_pUpdate )
 	CMOSelectable *pMO = checked_cast<CMOSelectable *>( GetMapObj( nID ) );
 	CMOSelectable *pMOPattern = checked_cast<CMOSelectable *>( GetMapObj( pUpdate->nParam ) );
 	if ( pMO == 0 || pMOPattern == 0 )
+	{
 		return;
+	}
 
 	OnReplaceSelectionGroup( pMOPattern, pMO );
 }
@@ -1096,7 +1190,9 @@ void CUpdatableWorld::UpdateDiplomacy( const SAIBasicUpdate *_pUpdate )
 	const int nID = GetID2<T>( _pUpdate );
 	CMOSelectable *pMO = checked_cast<CMOSelectable *>( GetMapObj( nID ) );
 	if ( pMO == 0 )
+	{
 		return;
+	}
 	if ( !pMO->AIUpdateDiplomacy( pUpdate->info ) )
 	{
 		DeSelect( pMO );
@@ -1134,7 +1230,9 @@ void CUpdatableWorld::UpdateKeyBuildingLost( const SAIBasicUpdate *_pUpdate )
 		pMO->AIUpdateKeyObject( pUpdate->info );
 		CVec3 vCenter = pMO->GetCenter();
 		if ( pUpdate->info.bFriendLost )
+		{
 			pNotifications->Notify( EVNT_LOSS_KEY_OBJECT, -1, CVec2( vCenter.x, vCenter.y ) );
+		}
 		pNotifications->Notify( EVNT_KEY_OBJECT_STATE, pMO );
 		OnUpdateDiplomacy( pMO, pUpdate->info.nPlayer );
 	}
@@ -1175,14 +1273,18 @@ void CUpdatableWorld::UpdateShootAreas( const SAIBasicUpdate *_pUpdate )
 	const SAIShootAreaUpdate *pUpdate = checked_cast<const SAIShootAreaUpdate *>( _pUpdate );
 	CMOUnit *pMO = checked_cast<CMOUnit *>( GetMapObj( pUpdate->nObjID ) );
 	if ( pMO )
+	{
 		pMO->AIUpdateShootAreas( pUpdate );
+	}
 }
 
 void CUpdatableWorld::UpdateRangeAreas( const SAIBasicUpdate *_pUpdate )
 {
 	const SAIShootAreaUpdate *pUpdate = checked_cast<const SAIShootAreaUpdate *>( _pUpdate );
 	if ( pUpdate->nUpdateTime - nLastRangeAreasTime < 1000 )
+	{
 		return;
+	}
 	nLastRangeAreasTime = pUpdate->nUpdateTime;
 	for ( int i = 0; i < pUpdate->info.size(); ++i )
 	{
@@ -1208,7 +1310,9 @@ void CUpdatableWorld::UpdateMechShoot( const SAIBasicUpdate *_pUpdate )
 	const int nID = GetID2<SAIMechShotUpdate>( _pUpdate );
 	CMapObj *pMO = GetMapObj( nID );
 	if ( pMO )
+	{
 		checked_cast<IMOContainer *>( pMO )->AIUpdateShot( pUpdate->info, pUpdate->info.time, Scene(), eSeason );
+	}
 }
 
 void CUpdatableWorld::UpdateInfantryShoot( const SAIBasicUpdate *_pUpdate )
@@ -1218,7 +1322,9 @@ void CUpdatableWorld::UpdateInfantryShoot( const SAIBasicUpdate *_pUpdate )
 	const int nID = GetID2<SAIInfantryShotUpdate>( _pUpdate );
 	CMapObj *pMO = GetMapObj( nID );
 	if ( pMO == 0 )
+	{
 		return;
+	}
 	checked_cast<IMOContainer *>( pMO )->AIUpdateShot( pUpdate->info, pUpdate->info.time, Scene(), eSeason );
 }
 
@@ -1228,8 +1334,10 @@ void CUpdatableWorld::UpdateTurretTurn( const SAIBasicUpdate *_pUpdate )
 	const T *pUpdate( checked_cast<const T *>( _pUpdate ) );
 	const int nID = GetID2<T>( _pUpdate );
 	if ( CMapObj *pMO = GetMapObj( nID ) )
+	{
 		pMO->AIUpdateTurretTurn(
 				pUpdate->info, pUpdate->nUpdateTime, Scene(), pUpdate->eUpdateType == ACTION_NOTIFY_TURRET_HOR_TURN );
+	}
 }
 
 void CUpdatableWorld::UpdateEntranceState( const SAIBasicUpdate *_pUpdate )
@@ -1241,7 +1349,9 @@ void CUpdatableWorld::UpdateEntranceState( const SAIBasicUpdate *_pUpdate )
 
 	CMapObj *pMapObj = GetMapObj( nInfantryUniqueID );
 	if ( !pMapObj )
+	{
 		return;
+	}
 
 	const int nTargetUniqueID = pUpdate->info.nTargetUniqueID;
 	IMOContainer *pTarget = dynamic_cast<IMOContainer *>( GetMapObj( nTargetUniqueID ) );
@@ -1277,7 +1387,9 @@ void CUpdatableWorld::UpdateEntranceState( const SAIBasicUpdate *_pUpdate )
 				{
 					CDynamicCast<CMOBuilding> pBuilding = pTarget;
 					if ( !pBuilding )
+					{
 						DeSelect( pInfantry );
+					}
 					// Units should keep selection then entering buildings...
 				}
 				RemoveFromSelectionGroup( pInfantry );
@@ -1326,11 +1438,15 @@ void CUpdatableWorld::UpdateNewFormation( const SAIBasicUpdate *_pUpdate )
 	CMOSquad *pSquad = checked_cast<CMOSquad *>( GetMapObj( nSquadUniqudID ) );
 
 	if ( pSoilder == 0 || pSquad == 0 )
+	{
 		return;
+	}
 
 	pSquad->Load( pSoilder, true );
 	if ( pSquad->IsSelected() )
+	{
 		Select( pSoilder );
+	}
 }
 
 void CUpdatableWorld::UpdateSideChanged( const SAIBasicUpdate *_pUpdate )
@@ -1417,11 +1533,17 @@ void CUpdatableWorld::UpdateSelection( const SAIBasicUpdate *_pUpdate )
 	const int nID = pUpdate->nObjUniqueID;
 	CMapObj *pMO = GetMapObj( nID );
 	if ( pMO == 0 )
+	{
 		return;
+	}
 	if ( pUpdate->nParam )
+	{
 		Select( pMO );
+	}
 	else
+	{
 		DeSelect( pMO );
+	}
 }
 
 void CUpdatableWorld::UpdateRPGChanged( const SAIBasicUpdate *_pUpdate )
@@ -1434,14 +1556,18 @@ void CUpdatableWorld::UpdateRPGChanged( const SAIBasicUpdate *_pUpdate )
 	{
 		IClientUpdatableProcess *pProcess = pMO->AIUpdateRPGStats( pUpdate->info, AckManager(), eSeason );
 		if ( pProcess != 0 )
+		{
 			RegisterProcess( pProcess );
+		}
 		if ( pUpdate->info.fHitPoints <= 0 )
 		{
 			DeSelectDead( pMO );
 			RemoveFromSelectionGroup( pMO );
 		}
 		else
+		{
 			DoUpdateObjectStats( pMO );
+		}
 	}
 }
 
@@ -1452,7 +1578,9 @@ void CUpdatableWorld::UpdatePlacement( const SAIBasicUpdate *_pUpdate )
 	const int nID = GetIDFromInfo<T>( _pUpdate );
 	CMapObj *pMO = GetMapObj( nID );
 	if ( pMO )
+	{
 		pMO->AIUpdatePlacement( pUpdate->info, Scene(), SoundScene(), eSeason );
+	}
 }
 
 void CUpdatableWorld::AIUpdateAreas( const SAIBasicUpdate *_pUpdate )
@@ -1473,7 +1601,9 @@ void CUpdatableWorld::UpdateNewBridgeSpan( const SAIBasicUpdate *_pUpdate )
 	CreateNewObject( nUniqueID, nTypeID, _pUpdate );
 	CMapObj *pMO = GetMapObj( nUniqueID );
 	if ( pMO )
+	{
 		pMO->SetDiplomacy( pUpdate->info.eDipl );
+	}
 }
 
 void CUpdatableWorld::UpdateNewUnits( const SAIBasicUpdate *_pUpdate )
@@ -1481,7 +1611,9 @@ void CUpdatableWorld::UpdateNewUnits( const SAIBasicUpdate *_pUpdate )
 	CDynamicCast<SAINewUnitUpdate> pUpdate( _pUpdate );
 	NI_ASSERT( pUpdate, "Programmers: wrong update type (CUpdatableWorld::UpdateNewUnits)" );
 	if ( !pUpdate )
+	{
 		return;
+	}
 
 	const int nUniqueID = GetID2<SAINewUnitUpdate>( pUpdate );
 	const int nTypeID = pUpdate->info.pStats == 0 ? -1 : pUpdate->info.pStats->GetTypeID();
@@ -1495,7 +1627,9 @@ void CUpdatableWorld::UpdateNewUnits( const SAIBasicUpdate *_pUpdate )
 		{
 			pMO->SetVisible( true, eSeason, ( eDayTime == NDb::DAY_NIGHT ) );
 			if ( CMOUnit *pMOUnit = dynamic_cast<CMOUnit *>( pMO ) )
+			{
 				pMOUnit->DisableIcons( true );
+			}
 		}
 		pMO->AINewUnitInfo( pUpdate->info, Scene(), SoundScene(), eSeason );
 		OnUpdateNewUnit( pUpdate, pMO );
@@ -1543,12 +1677,16 @@ void CUpdatableWorld::UpdateObjectsUnderConstruction( const SAIBasicUpdate *_pUp
 	typedef SAIObjectsUnderConstructionUpdate T;
 	const T *pUpdate = checked_cast<const T *>( _pUpdate );
 	if ( !pUpdate )
+	{
 		return;
+	}
 	CObj<SAINewUnitUpdate> pTempUpdate = new SAINewUnitUpdate;
 
 	//Temporary visual objects are deleted in any case
 	for ( int i = 0; i < ghostObjects.size(); ++i )
+	{
 		RemoveMapObj( ghostObjects[i], true );
+	}
 
 	ghostObjects.clear();
 
@@ -1573,20 +1711,32 @@ void CUpdatableWorld::UpdateObjectsUnderConstruction( const SAIBasicUpdate *_pUp
 
 		tiles.resize( pUpdate->buildTiles.size() );
 		for ( int i = 0; i < pUpdate->buildTiles.size(); ++i )
+		{
 			tiles[i] = SVector( pUpdate->buildTiles[i] );
+		}
 
 		if ( nGreenTilesID == -1 )
+		{
 			nGreenTilesID = DebugInfoManager()->CreateMarker( NDebugInfo::OBJECT_ID_GENERATE, tiles, NDebugInfo::GREEN );
+		}
 		else
+		{
 			DebugInfoManager()->CreateMarker( nGreenTilesID, tiles, NDebugInfo::GREEN );
+		}
 
 		tiles.resize( pUpdate->impossibleToBuildTiles.size() );
 		for ( int i = 0; i < pUpdate->impossibleToBuildTiles.size(); ++i )
+		{
 			tiles[i] = SVector( pUpdate->impossibleToBuildTiles[i] );
+		}
 		if ( nRedTilesID == -1 )
+		{
 			nRedTilesID = DebugInfoManager()->CreateMarker( NDebugInfo::OBJECT_ID_GENERATE, tiles, NDebugInfo::RED );
+		}
 		else
+		{
 			DebugInfoManager()->CreateMarker( nRedTilesID, tiles, NDebugInfo::RED );
+		}
 	}
 	else //Remove markers
 	{
@@ -1744,7 +1894,9 @@ void CUpdatableWorld::CreateNewObject( const int nUniquieID, const int nTypeID, 
 		if ( pMO )
 		{
 			if ( pMO->Create( nUniquieID, _pUpdate, eSeason, eDayTime, false ) )
+			{
 				AddMapObj( nUniquieID, pMO );
+			}
 			else
 			{
 				const SAINewUnitUpdate *pUpdate = dynamic_cast<const SAINewUnitUpdate *>( _pUpdate );
@@ -1781,7 +1933,9 @@ void CUpdatableWorld::Update()
 {
 	currTime = Singleton<IGameTimer>()->GetGameTime();
 	for ( CEverySegment::iterator it = everySegment.begin(); it != everySegment.end(); ++it )
+	{
 		( this->*( *it ) )();
+	}
 	AckManager()->Update( SoundScene() );
 
 	// Remove old corpses
@@ -1826,12 +1980,16 @@ void CUpdatableWorld::UpdateSwitchLightFX( const SAIBasicUpdate *_pUpdate )
 	typedef SAIActionUpdate T;
 	const T *pUpdate = checked_cast<const T *>( _pUpdate );
 	if ( !pUpdate )
+	{
 		return;
+	}
 
 	const int nUniqueID = pUpdate->nObjUniqueID;
 	CMapObj *pMO = GetMapObj( nUniqueID );
 	if ( pMO )
+	{
 		pMO->ForceSwitchLightFX( pUpdate->nParam, false );
+	}
 }
 
 void CUpdatableWorld::ProcessUpdate( const SAIHeadLightUpdate *pUpdate )
@@ -1856,7 +2014,9 @@ void CUpdatableWorld::ProcessUpdate( const SAIToggleDayNightWindowsUpdate *pUpda
 		           fmt::format( "Object {}, id {}, can't update windows", typeid( *pMO ).name(), pUpdate->nObjUniqueID ) );
 
 		if ( pMOBuilding )
+		{
 			pMOBuilding->ToggleNightWindows( pUpdate->bNightOn, eSeason );
+		}
 	}
 }
 
@@ -1874,9 +2034,13 @@ void CUpdatableWorld::ProcessUpdate( const SAIBreakWindowUpdate *pUpdate )
 		if ( pMOBuilding )
 		{
 			if ( pUpdate->nWindow >= 0 )
+			{
 				pMOBuilding->BreakWindow( pUpdate->nWindow, eSeason );
+			}
 			else
+			{
 				pMOBuilding->BreakAllWindows( eSeason );
+			}
 		}
 	}
 }
@@ -1890,18 +2054,26 @@ void CUpdatableWorld::UpdateStartFinishParadrop( const SAIBasicUpdate *_pUpdate 
 {
 	const SParadropStartFinishUpdate *pUpdate = dynamic_cast<const SParadropStartFinishUpdate *>( _pUpdate );
 	if ( pUpdate == 0 )
+	{
 		return;
+	}
 	IMOUnit *pMO = dynamic_cast<IMOUnit *>( GetMapObj( pUpdate->nObjUniqueID ) );
 	if ( pMO == 0 )
+	{
 		return;
+	}
 	if ( IClientUpdatableProcess *pProcess = pMO->AIUpdateStartFinishParadrop( pUpdate, eSeason ) )
+	{
 		RegisterProcess( pProcess );
+	}
 }
 
 void CUpdatableWorld::UpdatePlayAllAnimations()
 {
 	if ( pAllAnimationsPlayer )
+	{
 		pAllAnimationsPlayer->Update();
+	}
 }
 
 void CUpdatableWorld::PlayAllObjectsAnimations()
@@ -1930,7 +2102,9 @@ void CUpdatableWorld::UpdateDamage( const SAIBasicUpdate *_pUpdate )
 		CPtr<IClientUpdatableProcess> pProcess =
 				pMO->AIUpdateDamage( pUpdate->nProjectileUniqueID, pUpdate->fDamage, probableAttached, Scene(), eSeason, true );
 		if ( pProcess )
+		{
 			RegisterProcess( pProcess );
+		}
 
 		if ( !pMO->IsAlive() )
 		{
@@ -1938,7 +2112,9 @@ void CUpdatableWorld::UpdateDamage( const SAIBasicUpdate *_pUpdate )
 			RemoveFromSelectionGroup( pMO );
 		}
 		else
+		{
 			DoUpdateObjectStats( pMO );
+		}
 	}
 }
 
@@ -1946,18 +2122,24 @@ void CUpdatableWorld::UpdateParentOfAtomObj( const SAIBasicUpdate *pRawUpdate )
 {
 	CDynamicCast<SParentOfAtomObjectUpdate> pUpdate = pRawUpdate;
 	if ( !pUpdate )
+	{
 		return;
+	}
 
 	CMapObj *pMO = GetMapObj( pUpdate->nAtomObjectID );
 	if ( pMO )
+	{
 		pMO->SetParentID( pUpdate->nParentID );
+	}
 }
 
 void CUpdatableWorld::UpdateScriptCameraRun( const SAIBasicUpdate *_pUpdate )
 {
 	CDynamicCast<SScriptCameraRunUpdate> pUpdate = _pUpdate;
 	if ( !pUpdate )
+	{
 		return;
+	}
 
 	NCamera::CCameraPlacement startCamera, finishCamera;
 	CCSTime *pTimer = Scene()->GetGameTimer();
@@ -1967,11 +2149,15 @@ void CUpdatableWorld::UpdateScriptCameraRun( const SAIBasicUpdate *_pUpdate )
 	GetCameraByName( &finishCamera, pUpdate->szFinishCam );
 	CVec3 vTargetPos;
 	if ( pUpdate->nTargetID != -1 )
+	{
 		GetObjectPosByScriptID( &vTargetPos, pUpdate->nTargetID );
+	}
 
 	NTimer::STime time = (NTimer::STime)( pUpdate->fTime * 1000.0f );
 	if ( pUpdate->fLinSpeed != 0 )
+	{
 		time = fabs( startCamera.vPosition - finishCamera.vPosition ) / pUpdate->fLinSpeed;
+	}
 
 	NDb::SScriptMovies moviesData;
 	moviesData.scriptCameraPlacements.clear();
@@ -2064,7 +2250,9 @@ void CUpdatableWorld::UpdateScriptCameraStartMovie( const SAIBasicUpdate *_pUpda
 {
 	CDynamicCast<SScriptCameraStartMovieUpdate> pUpdate = _pUpdate;
 	if ( !pUpdate )
+	{
 		return;
+	}
 
 	NDb::SScriptMovies moviesData;
 
@@ -2092,7 +2280,9 @@ void CUpdatableWorld::UpdateScriptCameraStopMovie( const SAIBasicUpdate *_pUpdat
 {
 	CDynamicCast<SScriptCameraStopMovieUpdate> pUpdate = _pUpdate;
 	if ( !pUpdate )
+	{
 		return;
+	}
 
 	if ( CScriptMoviesMutatorHolder *pMoviesHolder = Camera()->GetScriptMutatorsHolder() )
 	{
@@ -2104,7 +2294,9 @@ void CUpdatableWorld::UpdateWeatherChanged( const SAIBasicUpdate *_pUpdate )
 {
 	CDynamicCast<SWeatherChangedUpdate> pUpdate = _pUpdate;
 	if ( !pUpdate )
+	{
 		return;
+	}
 
 	NInput::PostEvent( "bad_weather", pUpdate->bActive, 0 );
 	Scene()->SwitchWeather( pUpdate->bActive, pUpdate->nTimeTo );
@@ -2123,7 +2315,9 @@ void CUpdatableWorld::UpdateNotifyDisableAction( const SAIBasicUpdate *_pUpdate 
 	if ( CMapObj *pMO = GetMapObj( pUpdate->nObjUniqueID ) )
 	{
 		if ( pMO->AIUpdateAction( false, (EActionCommand)( pUpdate->nParam ) ) )
+		{
 			DoUpdateSpecialAbility( pMO );
+		}
 	}
 }
 
@@ -2135,7 +2329,9 @@ void CUpdatableWorld::UpdateNotifyEnableAction( const SAIBasicUpdate *_pUpdate )
 	if ( CMapObj *pMO = GetMapObj( pUpdate->nObjUniqueID ) )
 	{
 		if ( pMO->AIUpdateAction( true, (EActionCommand)( pUpdate->nParam ) ) )
+		{
 			DoUpdateSpecialAbility( pMO );
+		}
 	}
 }
 
@@ -2178,11 +2374,15 @@ void CUpdatableWorld::ProcessUpdate( const SLaserMarkUpdate *pUpdate )
 	{
 		std::unordered_map<int, CObj<CLaserMarkTrace>>::iterator pos = laserMarks.find( pUpdate->info.nLaserMarkID );
 		if ( pos != laserMarks.end() )
+		{
 			laserMarks.erase( pos );
+		}
 
 		std::unordered_map<int, CObj<CObjectBase>>::iterator posMesh = laserMarksMeshes.find( pUpdate->info.nLaserMarkID );
 		if ( posMesh != laserMarksMeshes.end() )
+		{
 			laserMarksMeshes.erase( posMesh );
+		}
 	}
 	else
 	{
@@ -2258,7 +2458,9 @@ void CUpdatableWorld::ProcessUpdate( const SExplodeProjectileUpdate *pUpdate )
 	if ( CMapObj *pObj = GetMapObj( pUpdate->nProjectileID ) )
 	{
 		if ( CDynamicCast<CMOProjectile> pProjectile = pObj )
+		{
 			pProjectile->Explode( pUpdate->eHitType, eSeason, pUpdate->vExplCenter, pUpdate->vExplDir );
+		}
 	}
 }
 
@@ -2275,7 +2477,9 @@ void CUpdatableWorld::ProcessUpdate( const SClientUpdateSingleUnitUpdate *pUpdat
 void CUpdatableWorld::ProcessUpdate( const SChatMessageUpdate *pUpdate )
 {
 	if ( !pUpdate->bAnotherChat )
+	{
 		WriteToPipe( PIPE_CHAT, pUpdate->wszMessage, pUpdate->dwColor );
+	}
 	else
 	{
 		WriteToPipe( PIPE_CHAT, pUpdate->wszMessage, pUpdate->dwColor );
@@ -2301,9 +2505,13 @@ void CUpdatableWorld::ProcessUpdate( const SChatClear *pUpdate )
 void CUpdatableWorld::ProcessUpdate( const struct SStartStopSequenceUpdate *pUpdate )
 {
 	if ( pUpdate->bStart )
+	{
 		NInput::PostEvent( "begin_script_movie_sequence", 2, 0 );
+	}
 	else
+	{
 		NInput::PostEvent( "end_script_movie_sequence", 2, 0 );
+	}
 }
 
 void CUpdatableWorld::ProcessUpdate( const SMSChangePlaylistUpdate *pUpdate )

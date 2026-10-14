@@ -227,17 +227,29 @@ void CTextFormater::Generate()
 		wcChar = wsText.c_str()[nTemp];
 
 		if ( wcChar == L'\t' )
+		{
 			eThisChar = CHAR_TAB;
+		}
 		else if ( wcChar == L' ' )
+		{
 			eThisChar = CHAR_SPACE;
+		}
 		else if ( bProcessTAGs && ( wcChar == WC_TAG_BEGIN ) )
+		{
 			eThisChar = CHAR_TAG;
+		}
 		else if ( ( wcChar == L'\0' ) || ( wcChar == L'\n' ) )
+		{
 			eThisChar = CHAR_NEWLINE;
+		}
 		else if ( iswgraph( wcChar ) )
+		{
 			eThisChar = CHAR_ALNUM;
+		}
 		else
+		{
 			ASSERT( 0 );
+		}
 
 		if ( ( eThisChar != eLastChar ) || ( fWordWidth > sSize.x ) )
 		{
@@ -282,7 +294,9 @@ void CTextFormater::Generate()
 		if ( ( eThisChar == CHAR_NEWLINE ) || ( ( eAlignStyle != ALIGN_NOWRAP ) && ( fLineWidth + fWordWidth ) > sSize.x ) )
 		{
 			if ( fLineHeight == 0 )
+			{
 				fLineHeight = fLastLineHeight;
+			}
 
 			GenerateLine();
 			sRealSize.x = (std::max)( fLineWidth, sRealSize.x );
@@ -415,7 +429,9 @@ void CTextFormater::ProcessTAG( const std::wstring &wsTag )
 	if ( wsTag.compare( L"br" ) == 0 )
 	{
 		if ( fLineHeight == 0 )
+		{
 			fLineHeight = fLastLineHeight;
+		}
 
 		GenerateLine();
 		sRealSize.x = (std::max)( fLineWidth, sRealSize.x );
@@ -440,19 +456,33 @@ void CTextFormater::ProcessTAG( const std::wstring &wsTag )
 		chunksList.push_back( SChunk( CHAR_ALNUM, -1, sState, L">" ) );
 	}
 	else if ( wsTag.compare( L"left" ) == 0 )
+	{
 		eAlignStyle = ALIGN_LEFT;
+	}
 	else if ( wsTag.compare( L"right" ) == 0 )
+	{
 		eAlignStyle = ALIGN_RIGHT;
+	}
 	else if ( wsTag.compare( L"center" ) == 0 )
+	{
 		eAlignStyle = ALIGN_CENTER;
+	}
 	else if ( wsTag.compare( L"justify" ) == 0 )
+	{
 		eAlignStyle = ALIGN_JUSTIFY;
+	}
 	else if ( wsTag.compare( L"nowrap" ) == 0 )
+	{
 		eAlignStyle = ALIGN_NOWRAP;
+	}
 	else if ( wsTag.substr( 0, 4 ).compare( L"font" ) == 0 )
+	{
 		TagFont( wsTag );
+	}
 	else if ( wsTag.substr( 0, 5 ).compare( L"color" ) == 0 )
+	{
 		TagColor( wsTag );
+	}
 }
 
 struct SWString
@@ -476,20 +506,32 @@ void SplitString( const std::wstring &wsString, std::vector<SWString> *pParts )
 		wcChar = wsString.c_str()[nTemp];
 
 		if ( ( !bBracketsBlock && ( wcChar == L' ' ) ) || ( wcChar == L'\0' ) || ( wcChar == L'\n' ) )
+		{
 			eThisChar = CHAR_SPACE;
+		}
 		else if ( wcChar == L'\"' )
+		{
 			bBracketsBlock = !bBracketsBlock;
+		}
 		else if ( iswpunct( wcChar ) )
+		{
 			eThisChar = CHAR_PUNCTUATION;
+		}
 		else if ( iswalnum( wcChar ) || ( bBracketsBlock && ( wcChar == L' ' ) ) )
+		{
 			eThisChar = CHAR_ALNUM;
+		}
 		else
+		{
 			ASSERT( 0 );
+		}
 
 		if ( eLastChar != eThisChar )
 		{
 			if ( ( eLastChar == CHAR_ALNUM ) || ( eLastChar == CHAR_PUNCTUATION ) )
+			{
 				pParts->push_back( SWString( eLastChar, wsString.substr( nWordBegin, nTemp - nWordBegin ) ) );
+			}
 
 			nWordBegin = nTemp;
 		}
@@ -508,27 +550,43 @@ void CTextFormater::TagFont( const std::wstring &wsTag )
 	for ( std::vector<SWString>::iterator iTemp = partsList.begin(); iTemp != partsList.end(); iTemp++ )
 	{
 		if ( iTemp->eType != CHAR_ALNUM )
+		{
 			continue;
+		}
 
 		if ( iTemp->wsString.compare( L"size" ) == 0 )
 		{
 			iTemp++;
 			if ( ( iTemp->eType != CHAR_PUNCTUATION ) || ( iTemp->wsString.compare( L"=" ) != 0 ) )
+			{
 				continue;
+			}
 			iTemp++;
 			if ( iTemp->eType != CHAR_ALNUM )
+			{
 				continue;
+			}
 
 			if ( iTemp->wsString.compare( L"small" ) == 0 )
+			{
 				sNewFont.nSize = FONT_SIZE_SMALL;
+			}
 			else if ( iTemp->wsString.compare( L"normal" ) == 0 )
+			{
 				sNewFont.nSize = FONT_SIZE_NORMAL;
+			}
 			else if ( iTemp->wsString.compare( L"large" ) == 0 )
+			{
 				sNewFont.nSize = FONT_SIZE_LARGE;
+			}
 			else if ( iTemp->wsString.compare( L"xlarge" ) == 0 )
+			{
 				sNewFont.nSize = FONT_SIZE_XLARGE;
+			}
 			else if ( iTemp->wsString.compare( L"xxlarge" ) == 0 )
+			{
 				sNewFont.nSize = FONT_SIZE_XXLARGE;
+			}
 			else
 			{
 				wchar_t wsString[128];
@@ -538,22 +596,32 @@ void CTextFormater::TagFont( const std::wstring &wsTag )
 				{
 					std::wstring wsSizeMod( wsString );
 					if ( wsSizeMod.compare( L"px" ) == 0 )
+					{
 						sNewFont.nSize |= FONT_SIZE_PIXELS;
+					}
 					else if ( wsSizeMod.compare( L"pt" ) == 0 )
+					{
 						sNewFont.nSize |= FONT_SIZE_POINTS;
+					}
 				}
 				else
+				{
 					sNewFont.nSize |= FONT_SIZE_POINTS;
+				}
 			}
 		}
 		else if ( iTemp->wsString.compare( L"face" ) == 0 )
 		{
 			iTemp++;
 			if ( ( iTemp->eType != CHAR_PUNCTUATION ) || ( iTemp->wsString.compare( L"=" ) != 0 ) )
+			{
 				continue;
+			}
 			iTemp++;
 			if ( iTemp->eType != CHAR_ALNUM )
+			{
 				continue;
+			}
 
 			sNewFont.szName = NStr::ToMBCS( iTemp->wsString );
 		}
@@ -571,41 +639,75 @@ void CTextFormater::TagColor( const std::wstring &wsTag )
 	std::vector<SWString>::iterator iTemp = partsList.begin();
 	iTemp++;
 	if ( ( iTemp->eType != CHAR_PUNCTUATION ) || ( iTemp->wsString.compare( L"=" ) != 0 ) )
+	{
 		return;
+	}
 	iTemp++;
 	if ( iTemp->eType != CHAR_ALNUM )
+	{
 		return;
+	}
 
 	if ( iTemp->wsString.compare( L"white" ) == 0 )
+	{
 		sState.sColor = NGfx::SPixel8888( 0xFF, 0xFF, 0xFF, 0xFF );
+	}
 	else if ( iTemp->wsString.compare( L"red" ) == 0 )
+	{
 		sState.sColor = NGfx::SPixel8888( 0xFF, 0, 0, 0xFF );
+	}
 	else if ( iTemp->wsString.compare( L"green" ) == 0 )
+	{
 		sState.sColor = NGfx::SPixel8888( 0, 0xFF, 0, 0xFF );
+	}
 	else if ( iTemp->wsString.compare( L"blue" ) == 0 )
+	{
 		sState.sColor = NGfx::SPixel8888( 0, 0, 0xFF, 0xFF );
+	}
 	else if ( iTemp->wsString.compare( L"yellow" ) == 0 )
+	{
 		sState.sColor = NGfx::SPixel8888( 0xFF, 0xFF, 0, 0xFF );
+	}
 	else if ( iTemp->wsString.compare( L"cyan" ) == 0 )
+	{
 		sState.sColor = NGfx::SPixel8888( 0, 0xFF, 0xFF, 0xFF );
+	}
 	else if ( iTemp->wsString.compare( L"orange" ) == 0 )
+	{
 		sState.sColor = NGfx::SPixel8888( 0xFF, 0x80, 0x40, 0xFF );
+	}
 	else if ( iTemp->wsString.compare( L"pink" ) == 0 )
+	{
 		sState.sColor = NGfx::SPixel8888( 0xFF, 0x80, 0xFF, 0xFF );
+	}
 	else if ( iTemp->wsString.compare( L"brown" ) == 0 )
+	{
 		sState.sColor = NGfx::SPixel8888( 110, 110, 56, 0xFF );
+	}
 	else if ( iTemp->wsString.compare( L"grey" ) == 0 )
+	{
 		sState.sColor = NGfx::SPixel8888( 180, 180, 180, 0xFF );
+	}
 	else if ( iTemp->wsString.compare( L"black" ) == 0 )
+	{
 		sState.sColor = NGfx::SPixel8888( 0, 0, 0, 0xFF );
+	}
 	else if ( iTemp->wsString.compare( L"darkyellow" ) == 0 )
+	{
 		sState.sColor = NGfx::SPixel8888( 242, 192, 17, 0xFF );
+	}
 	else if ( iTemp->wsString.compare( L"beige" ) == 0 )
+	{
 		sState.sColor = NGfx::SPixel8888( 209, 183, 167, 0xFF );
+	}
 	else if ( iTemp->wsString.compare( L"lightblue" ) == 0 )
+	{
 		sState.sColor = NGfx::SPixel8888( 0, 101, 213, 0xFF );
+	}
 	else
+	{
 		swscanf( iTemp->wsString.c_str(), L"%x", &sState.sColor.dwColor );
+	}
 }
 
 CRectLayout *CTextFormater::GetLayout( const SFont &sFont )
@@ -619,7 +721,9 @@ CRectLayout *CTextFormater::GetLayout( const SFont &sFont )
 	{
 		const SText::SFontLayout &sLayout = value.rectLayouts[nTemp];
 		if ( ( sLayout.sFont.nSize == sFont.nSize ) && ( sLayout.pFontInfo == pInfo ) )
+		{
 			return &value.rectLayouts[nTemp].sLayout;
+		}
 	}
 
 	SFontInfo sFontInfo;
@@ -648,9 +752,13 @@ void CTextFormater::GetFontFormatInfo( const SFont &sFont, SFontInfo *pFontInfo 
 		sSearch.nWidth = FontPointsToPixelWidth( sFont.nSize & FONT_SIZE_MASK, vScreen.x );
 	}
 	else if ( sFont.nSize & FONT_SIZE_PIXELS )
+	{
 		sSearch.nSize = sFont.nSize & FONT_SIZE_MASK;
+	}
 	else
+	{
 		ASSERT( 0 );
+	}
 
 	CPtr<CFontInfo> pFont = pLocale->GetFont( sSearch );
 	CDGPtr<CPtrFuncBase<CFontFormatInfo>> pInfo( pFont->GetFormatInfo() );

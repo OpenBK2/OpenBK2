@@ -51,7 +51,9 @@ struct CWxThumbnailList::SImpl
 		wxImageList *images = ( style & wxLC_ICON ) ? normal : small;
 		wxBitmap bitmap;
 		if ( images && index >= 0 && index < images->GetImageCount() )
+		{
 			bitmap = images->GetBitmap( index );
+		}
 		// GtkListStore retains the pixbuf, including its alpha or bitmap mask.
 		gtk_list_store_set( store, iter, PIXBUF, bitmap.IsOk() ? bitmap.GetPixbuf() : nullptr, -1 );
 	}
@@ -60,7 +62,9 @@ struct CWxThumbnailList::SImpl
 		GtkTreeIter iter;
 		for ( bool valid = gtk_tree_model_get_iter_first( GTK_TREE_MODEL( store ), &iter ); valid;
 		      valid = gtk_tree_model_iter_next( GTK_TREE_MODEL( store ), &iter ) )
+		{
 			UpdateImage( &iter );
+		}
 	}
 	void ContextMenu( const wxPoint &point )
 	{
@@ -90,7 +94,9 @@ CWxThumbnailList::CWxThumbnailList(
 	SetWindowStyleFlag( style );
 	SetInitialSize( size );
 	if ( pos != wxDefaultPosition )
+	{
 		Move( pos );
+	}
 	gtk_widget_show_all( scroll );
 
 	g_signal_connect( impl->view,
@@ -100,7 +106,9 @@ CWxThumbnailList::CWxThumbnailList(
 																	auto *self = static_cast<SImpl *>( data );
 																	const long index = self->Selected();
 																	if ( index < 0 )
+																	{
 																		return;
+																	}
 																	wxListEvent event( wxEVT_LIST_ITEM_SELECTED, self->owner->GetId() );
 																	event.SetEventObject( self->owner );
 																	event.SetIndex( index );
@@ -112,7 +120,9 @@ CWxThumbnailList::CWxThumbnailList(
 	                  G_CALLBACK( +[]( GtkWidget *widget, GdkEventButton *event, gpointer data ) -> gboolean
 	                              {
 																	if ( event->button != 3 )
+																	{
 																		return FALSE;
+																	}
 																	auto *self = static_cast<SImpl *>( data );
 																	if ( GtkTreePath *path = gtk_icon_view_get_path_at_pos(
 																					 GTK_ICON_VIEW( widget ), event->x, event->y ) )
@@ -146,9 +156,11 @@ void CWxThumbnailList::SetWindowStyleFlag( long style )
 {
 	const bool sort = ( style & wxLC_SORT_ASCENDING ) != 0;
 	if ( sort != ( ( impl->style & wxLC_SORT_ASCENDING ) != 0 ) )
+	{
 		gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( impl->store ),
 		                                      sort ? SImpl::LABEL : GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
 		                                      GTK_SORT_ASCENDING );
+	}
 	impl->style = style;
 	m_windowStyle = style;
 	const bool thumbnails = ( style & wxLC_ICON ) != 0;
@@ -163,9 +175,13 @@ void CWxThumbnailList::SetWindowStyleFlag( long style )
 void CWxThumbnailList::SetImageList( wxImageList *images, int which )
 {
 	if ( which == wxIMAGE_LIST_NORMAL )
+	{
 		impl->normal = images;
+	}
 	else if ( which == wxIMAGE_LIST_SMALL )
+	{
 		impl->small = images;
+	}
 	impl->UpdateImages();
 }
 
@@ -209,7 +225,9 @@ bool CWxThumbnailList::SetItemData( long index, wxUIntPtr data )
 {
 	GtkTreeIter iter;
 	if ( !impl->Iter( index, &iter ) )
+	{
 		return false;
+	}
 	gtk_list_store_set( impl->store, &iter, SImpl::DATA, guint64( data ), -1 );
 	return true;
 }
@@ -219,7 +237,9 @@ wxUIntPtr CWxThumbnailList::GetItemData( long index ) const
 	GtkTreeIter iter;
 	guint64 data = 0;
 	if ( impl->Iter( index, &iter ) )
+	{
 		gtk_tree_model_get( GTK_TREE_MODEL( impl->store ), &iter, SImpl::DATA, &data, -1 );
+	}
 	return wxUIntPtr( data );
 }
 
@@ -227,7 +247,9 @@ wxString CWxThumbnailList::GetItemText( long index ) const
 {
 	GtkTreeIter iter;
 	if ( !impl->Iter( index, &iter ) )
+	{
 		return {};
+	}
 	gchar *text = nullptr;
 	gtk_tree_model_get( GTK_TREE_MODEL( impl->store ), &iter, SImpl::LABEL, &text, -1 );
 	const wxString result = wxString::FromUTF8( text );
@@ -244,17 +266,25 @@ long CWxThumbnailList::GetNextItem( long index, int, int state ) const
 bool CWxThumbnailList::SetItemState( long index, long state, long mask )
 {
 	if ( index < 0 || index >= GetItemCount() )
+	{
 		return false;
+	}
 	GtkTreePath *path = gtk_tree_path_new_from_indices( int( index ), -1 );
 	if ( mask & wxLIST_STATE_SELECTED )
 	{
 		if ( state & wxLIST_STATE_SELECTED )
+		{
 			gtk_icon_view_select_path( GTK_ICON_VIEW( impl->view ), path );
+		}
 		else
+		{
 			gtk_icon_view_unselect_path( GTK_ICON_VIEW( impl->view ), path );
+		}
 	}
 	if ( mask & state & wxLIST_STATE_FOCUSED )
+	{
 		gtk_icon_view_set_cursor( GTK_ICON_VIEW( impl->view ), path, nullptr, FALSE );
+	}
 	gtk_tree_path_free( path );
 	return true;
 }
@@ -262,7 +292,9 @@ bool CWxThumbnailList::SetItemState( long index, long state, long mask )
 bool CWxThumbnailList::EnsureVisible( long index )
 {
 	if ( index < 0 || index >= GetItemCount() )
+	{
 		return false;
+	}
 	GtkTreePath *path = gtk_tree_path_new_from_indices( int( index ), -1 );
 	gtk_icon_view_scroll_to_path( GTK_ICON_VIEW( impl->view ), path, FALSE, 0, 0 );
 	gtk_tree_path_free( path );

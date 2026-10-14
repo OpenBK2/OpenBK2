@@ -120,7 +120,9 @@ void CTerraGen::AddExplosion( const CVec2 &_vMin,
 			Clamp( int( ( vMin.y + vMax.y ) * 0.5f * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeY() - 1 );
 
 	if ( ++terraExplosionsHeights[nCenterY][nCenterX] >= s_nMaxExplosionsPerTile )
+	{
 		terraExplosionsHeights[nCenterY][nCenterX] = 0;
+	}
 
 	NMeshData::SMeshData data;
 	CreateExplosionData(
@@ -128,15 +130,19 @@ void CTerraGen::AddExplosion( const CVec2 &_vMin,
 	const int nID = explosionsManager.AddExplosion( data, pMaterial );
 
 	for ( int nX = nTileX1; nX <= nTileX2; ++nX )
+	{
 		for ( int nY = nTileY1; nY <= nTileY2; ++nY )
 		{
 			std::vector<int> &idArr = terraExplosionsHash[nY][nX];
 			idArr.resize( s_nMaxExplosionsPerTile, -1 );
 			explosionsManager.RemoveExplosion( idArr[s_nMaxExplosionsPerTile - 1] );
 			for ( int k = s_nMaxExplosionsPerTile - 1; k >= 1; --k )
+			{
 				idArr[k] = idArr[k - 1];
+			}
 			idArr[0] = nID;
 		}
+	}
 }
 
 START_REGISTER( ExplosionsBuiler )

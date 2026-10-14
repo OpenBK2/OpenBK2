@@ -70,7 +70,9 @@ static std::string GetClassTypeName( const int nClassTypeID )
 	for ( int i = 0; i < classes.size(); ++i )
 	{
 		if ( classes[i]->nClassTypeID == nClassTypeID )
+		{
 			return classes[i]->szTypeName;
+		}
 	}
 	return 0;
 }
@@ -85,7 +87,9 @@ IManipulator *CResourceManagerWrapper::CreateObjectManipulator( const std::strin
                                                                 const std::string &szObjectName )
 {
 	if ( NDb::IObjMan *pMan = NDb::GetManipulator( CDBID( szObjectName ) ) )
+	{
 		return new CObjectManipulatorWrapper( pMan );
+	}
 	return 0;
 }
 
@@ -96,7 +100,9 @@ IManipulator *CResourceManagerWrapper::CreateObjectManipulator( const std::strin
 	for ( int i = 0; i < classes.size(); ++i )
 	{
 		if ( classes[i]->szTypeName == szTypeName )
+		{
 			return CreateObjectManipulator( classes[i]->nClassTypeID, nID );
+		}
 	}
 	return 0;
 }
@@ -109,21 +115,27 @@ IManipulator *CResourceManagerWrapper::CreateObjectManipulator( int nTypeID, int
 IManipulator *CResourceManagerWrapper::CreateObjectManipulator( const std::string &szTypeName, const CDBID &rCDBID )
 {
 	if ( NDb::IObjMan *pMan = NDb::GetManipulator( rCDBID ) )
+	{
 		return new CObjectManipulatorWrapper( pMan );
+	}
 	return 0;
 }
 
 IManipulator *CResourceManagerWrapper::CreateObjectManipulator( const std::string &szObjectName )
 {
 	if ( NDb::IObjMan *pMan = NDb::GetManipulator( CDBID( szObjectName ) ) )
+	{
 		return new CObjectManipulatorWrapper( pMan );
+	}
 	return 0;
 }
 
 IManipulator *CResourceManagerWrapper::CreateObjectManipulator( const CDBID &rCDBID )
 {
 	if ( NDb::IObjMan *pMan = NDb::GetManipulator( rCDBID ) )
+	{
 		return new CObjectManipulatorWrapper( pMan );
+	}
 	return 0;
 }
 
@@ -160,7 +172,9 @@ void CResourceManagerWrapper::FillReferencingObjects( bool *pServiceIsReady,
 		results.push_back( szFileName );
 	}
 	if ( pServiceIsReady )
+	{
 		*pServiceIsReady = true;
+	}
 }
 
 // CRAP{ remove it ASAP

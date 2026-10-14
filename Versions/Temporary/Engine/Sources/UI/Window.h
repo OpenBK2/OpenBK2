@@ -113,7 +113,9 @@ protected:
 	const char *GetPressedName( const int nButton )
 	{
 		if ( pressed.size() > nButton && pressed[nButton] )
+		{
 			return pressed[nButton]->GetName().c_str();
+		}
 		return 0;
 	}
 	int RunAnimationAndCommands( const NDb::SUIStateSequence &seq,

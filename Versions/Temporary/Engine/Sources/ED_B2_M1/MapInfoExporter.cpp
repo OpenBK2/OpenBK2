@@ -200,13 +200,17 @@ EXPORT_RESULT CMapInfoExporter::ExportObject( IManipulator *pManipulator,
 	std::string szMapFilesPath;
 	if ( CManipulatorManager::GetValue( &szMapFilesPath, pManipulator, "MapFilesPath" ) == false ||
 	     szMapFilesPath.empty() )
+	{
 		return ER_FAIL;
+	}
 	const std::string szSrcPath = pUserData->constUserData.szExportSourceFolder + szMapFilesPath + "map.b2m";
 	//const std::string szDstPath = pUserData->szExportDestinationFolder + fmt::format( "bin\\maps\\{}", nObjectID );
 	CVariant vtGUID;
 	if ( pManipulator->GetValue( "uid", &vtGUID ) == false || vtGUID.GetType() != CVariant::VT_POINTER ||
 	     vtGUID.GetBlobSize() != 16 )
+	{
 		return ER_FAIL;
+	}
 	const boost::uuids::uuid guid = *( static_cast<const boost::uuids::uuid *>( vtGUID.GetPtr() ) );
 	//	const NDb::SMapInfo *pMapInfo = NDb::Get<NDb::SMapInfo>( nObjectID );
 	//	if ( !pMapInfo )

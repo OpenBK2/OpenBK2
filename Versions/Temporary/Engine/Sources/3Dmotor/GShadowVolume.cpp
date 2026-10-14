@@ -42,7 +42,9 @@ public:
 		int nSize = (std::max)( nXSize, nYSize );
 		int nLevels = 0;
 		while ( ( nSize >> nLevels ) > 4 )
+		{
 			++nLevels;
+		}
 		depthBuffer.resize( nLevels + 1 );
 		depthBuffer[0].SetSizes( nXSize, nYSize );
 		for ( int k = 1; k <= nLevels; ++k )
@@ -85,7 +87,9 @@ public:
 				for ( int y = nYSize; y < dst.GetSizeY(); ++y )
 				{
 					for ( int x = 0; x < nXSize; ++x )
+					{
 						dst[y][x] = (std::min)( src[y * 2][x * 2], src[y * 2][x * 2 + 1] );
+					}
 				}
 			}
 			else
@@ -93,7 +97,9 @@ public:
 				for ( int y = nYSize; y < dst.GetSizeY(); ++y )
 				{
 					for ( int x = 0; x < nXSize; ++x )
+					{
 						dst[y][x] = N_HZ_MAX;
+					}
 				}
 			}
 			if ( nXSize * 2 < src.GetSizeX() )
@@ -102,7 +108,9 @@ public:
 				for ( int x = nXSize; x < dst.GetSizeX(); ++x )
 				{
 					for ( int y = 0; y < nYSize; ++y )
+					{
 						dst[y][x] = (std::min)( src[y * 2][x * 2], src[y * 2 + 1][x * 2] );
+					}
 				}
 			}
 			else
@@ -110,13 +118,17 @@ public:
 				for ( int x = nXSize; x < dst.GetSizeX(); ++x )
 				{
 					for ( int y = 0; y < nYSize; ++y )
+					{
 						dst[y][x] = N_HZ_MAX;
+					}
 				}
 			}
 			for ( int x = nXSize; x < dst.GetSizeX(); ++x )
 			{
 				for ( int y = nYSize; y < dst.GetSizeY(); ++y )
+				{
 					dst[y][x] = N_HZ_MAX;
+				}
 			}
 		}
 	}
@@ -128,7 +140,9 @@ public:
 		int nY2 = Float2Int( ( r.y2 + 1 ) * 0.5f * depthBuffer[0].GetSizeY() - 0.5f );
 		int nMax = (std::max)( nX2 - nX1, nY2 - nY1 ), nLevel = 0;
 		while ( ( nMax >> nLevel ) > 3 && nLevel < depthBuffer.size() - 1 )
+		{
 			++nLevel;
+		}
 		const CArray2D<zbuf_type> &l = depthBuffer[nLevel];
 		nX1 = (std::max)( ( nX1 >> nLevel ) - 0, 0 );
 		nX2 = (std::min)( ( nX2 >> nLevel ) + 0, l.GetSizeX() - 1 );
@@ -139,7 +153,9 @@ public:
 			for ( int x = nX1; x <= nX2; ++x )
 			{
 				if ( nCheck > l[y][x] )
+				{
 					return true;
+				}
 			}
 		}
 		return false;
@@ -148,15 +164,21 @@ public:
 	{
 		CTRect<float> r;
 		if ( !pTS->GetCoverRect( &r, s.ptCenter, s.fRadius ) )
+		{
 			return false;
+		}
 		const SHMatrix &m = pTS->Get().forward;
 		const CVec3 &v = s.ptCenter;
 		float fDist = m.wx * v.x + m.wy * v.y + m.wz * v.z + m.ww;
 		if ( fDist < s.fRadius )
+		{
 			return true;
+		}
 		float fCheck = fZBufScale / ( fDist - s.fRadius );
 		if ( fCheck > N_HZ_MAX )
+		{
 			return true;
+		}
 		return IsVisible( r, fCheck );
 	}
 	void SetBaseZ( int x, int y, zbuf_type n ) { depthBuffer[0][y][x] = n; }
@@ -285,7 +307,9 @@ static int CountParts( const std::vector<SRenderPartSet> &l )
 {
 	int nRes = 0;
 	for ( std::vector<SRenderPartSet>::const_iterator i = l.begin(); i != l.end(); ++i )
+	{
 		nRes += i->pParts->size();
+	}
 	return nRes;
 }
 
@@ -296,9 +320,13 @@ struct SCompareRPS
 	bool operator()( const SRenderPartSet &a, const SRenderPartSet &b ) const
 	{
 		if ( a.nFloorMask > b.nFloorMask )
+		{
 			return true;
+		}
 		if ( a.nFloorMask == b.nFloorMask )
+		{
 			return a.pGeometry->pVertices->GetBound().s.ptCenter * vZ < b.pGeometry->pVertices->GetBound().s.ptCenter * vZ;
+		}
 		return false;
 	}
 };
@@ -329,7 +357,9 @@ static void RenderStuff( CPartsRender &pr,
 		if ( rps.nFloorMask != nPrevFloorMask )
 		{
 			if ( pHZOptimize )
+			{
 				pHZOptimize->BuildHZ();
+			}
 			nPrevFloorMask = rps.nFloorMask;
 			bFirstPass = false;
 		}
@@ -340,12 +370,18 @@ static void RenderStuff( CPartsRender &pr,
 			pr.SetCurrentID( ++nIDCounter );
 
 			if ( !rps.parts.IsSet( nPart ) )
+			{
 				continue;
+			}
 			if ( !rps.opaque.IsSet( nPart ) )
+			{
 				continue;
+			}
 			IPart *pPart = rps.GetPart( nPart );
 			if ( !IsValid( pPart ) )
+			{
 				continue;
+			}
 			float fCheck = pPart->fAverageTriArea;
 			if ( fCheck < fDensityLimit )
 			{
@@ -361,7 +397,9 @@ static void RenderStuff( CPartsRender &pr,
 			if ( pHZOptimize && !bFirstPass )
 			{
 				if ( !pHZOptimize->IsVisible( bounds[nPart], pTS ) )
+				{
 					continue;
+				}
 			}
 
 			std::vector<CVec3> points;
@@ -370,7 +408,9 @@ static void RenderStuff( CPartsRender &pr,
 
 			static std::vector<SProjectedPoint> verticesSet;
 			if ( points.size() > verticesSet.size() )
+			{
 				verticesSet.resize( points.size() );
+			}
 			for ( int nVert = 0; nVert < points.size(); nVert++ )
 			{
 				const CVec3 &src = points[nVert];
@@ -429,7 +469,9 @@ void GeneratePartList( IRender *pRender,
 				}
 			}
 			if ( !pDst )
+			{
 				pDst = &*pRes->insert( pRes->end(), SRenderPartSet( rps.pNode, rps.pParts, rps.pGeometry, rps.nFloorMask ) );
+			}
 			const std::vector<SSphere> &bounds = rps.pGeometry->pVertices->GetBounds();
 			for ( int k = 0; k < rps.pParts->size(); ++k )
 			{
@@ -439,11 +481,15 @@ void GeneratePartList( IRender *pRender,
 				{
 					float fDist = fabs( bounds[k].ptCenter - vCenter ) - bounds[k].fRadius;
 					if ( fDist < 0.5f * fRadius )
+					{
 						bIsVisible = pHZ->IsVisible( bounds[k], &sTransform );
+					}
 				}
 				bIsVisible |= pr.GetRefs( nID ) != 0;
 				if ( bIsVisible )
+				{
 					pDst->parts.Set( k );
+				}
 			}
 		}
 		//if ( nTemp == 0 )
@@ -513,7 +559,9 @@ void MakeInvisibleElementsList( IRender *pRender,
 			//	continue;
 			bool bIsVisible = false;
 			if ( rps.parts.IsSet( k ) && !rps.opaque.IsSet( k ) )
+			{
 				bIsVisible = pHZ->IsVisible( bounds[k], pTS );
+			}
 			bIsVisible |= pr.GetRefs( nID ) != 0;
 
 			if ( !bIsVisible )
@@ -561,7 +609,9 @@ void MakeInvisibleElementsListFast( IRender *pRender,
 			//	continue;
 			bool bIsVisible = false;
 			if ( rps.parts.IsSet( k ) && !rps.opaque.IsSet( k ) )
+			{
 				bIsVisible = pHZ->IsVisible( bounds[k], pTS );
+			}
 			bIsVisible |= pr.GetRefs( nID ) != 0;
 
 			if ( !bIsVisible )
@@ -635,7 +685,9 @@ int CShadowVolumeBuilder::AddPoint( const CVec3 &a )
 {
 	CPointHash::iterator i = pointHash.find( a );
 	if ( i != pointHash.end() )
+	{
 		return i->second;
+	}
 	int nRes = resPoints.size();
 	pointHash[a] = nRes;
 	resPoints.push_back( a );
@@ -677,7 +729,9 @@ void CShadowVolumeBuilder::AddEdge( int n1, int n2 )
 			if ( fTest < 0 )
 			{
 				for ( int m = nSize; m > k + 1; --m )
+				{
 					points[m] = points[m - 1];
+				}
 				CalcMiddle( &points[k + 1], points[k], fCur, points[k + 2], fNext );
 				nSize++;
 				break;
@@ -687,9 +741,13 @@ void CShadowVolumeBuilder::AddEdge( int n1, int n2 )
 	nIndices[0] = n2;
 	nIndices[1] = n1;
 	for ( int k = 0; k < nSize; ++k )
+	{
 		nIndices[k + 2] = AddBackPoint( points[k] );
+	}
 	for ( int k = 2; k < nSize + 2; ++k )
+	{
 		resTris.push_back( STriangle( nIndices[0], nIndices[k - 1], nIndices[k] ) );
+	}
 }
 
 void CShadowVolumeBuilder::AddBackTriangle( int nPlane, const SPoly &poly )
@@ -699,9 +757,13 @@ void CShadowVolumeBuilder::AddBackTriangle( int nPlane, const SPoly &poly )
 		int nIndices[N_MAX_POINTS];
 		// project points onto octahedron
 		for ( int k = 0; k < poly.GetSize(); ++k )
+		{
 			nIndices[k] = AddBackPoint( poly.points[k] );
+		}
 		for ( int k = 2; k < poly.GetSize(); ++k )
+		{
 			resTris.push_back( STriangle( nIndices[0], nIndices[k - 1], nIndices[k] ) );
+		}
 		return;
 	}
 	SPoly pos, neg;
@@ -742,9 +804,13 @@ void CShadowVolumeBuilder::AddBackTriangle( int nPlane, const SPoly &poly )
 		pPrev = pCur;
 	}
 	if ( !pos.IsEmpty() )
+	{
 		AddBackTriangle( nPlane + 1, pos );
+	}
 	if ( !neg.IsEmpty() )
+	{
 		AddBackTriangle( nPlane + 1, neg );
+	}
 }
 
 struct SEdge
@@ -778,9 +844,13 @@ struct SEdgeTracker
 		}
 		CEdgesHash::iterator i = edges.find( e );
 		if ( i == edges.end() )
+		{
 			edges[e] = 1;
+		}
 		else
+		{
 			++i->second;
+		}
 	}
 };
 
@@ -788,7 +858,9 @@ void CShadowVolumeBuilder::BuildResult()
 {
 	// add fronts
 	for ( int k = 0; k < tris.size(); ++k )
+	{
 		resTris.push_back( tris[k] );
+	}
 	// add back covers
 	for ( int k = 0; k < tris.size(); ++k )
 	{
@@ -811,9 +883,13 @@ void CShadowVolumeBuilder::BuildResult()
 	for ( CEdgesHash::iterator i = edges.edges.begin(); i != edges.edges.end(); ++i )
 	{
 		for ( int k = 0; k < i->second; ++k )
+		{
 			AddEdge( i->first.nStart, i->first.nFinish );
+		}
 		for ( int k = -1; k >= i->second; --k )
+		{
 			AddEdge( i->first.nFinish, i->first.nStart );
+		}
 	}
 }
 
@@ -828,13 +904,17 @@ void CShadowVolumeBuilder::AddTriangle( const CVec3 &p1, const CVec3 &p2, const 
 	CVec3 vNormal( ( p2 - p1 ) ^ ( p3 - p1 ) );
 	float fTest = vNormal * vCenter;
 	if ( ( vNormal * p1 >= fTest ) && ( vNormal * p2 >= fTest ) && ( vNormal * p3 >= fTest ) )
+	{
 		return;
+	}
 
 	float f1 = CalcPointNorm( p1 );
 	float f2 = CalcPointNorm( p2 );
 	float f3 = CalcPointNorm( p3 );
 	if ( f1 > fRadius * FP_SQRT_3 && f2 > fRadius * FP_SQRT_3 && f3 > fRadius * FP_SQRT_3 )
+	{
 		return;
+	}
 	fHullRadius = (std::max)( fHullRadius, f1 );
 	fHullRadius = (std::max)( fHullRadius, f2 );
 	fHullRadius = (std::max)( fHullRadius, f3 );
@@ -859,7 +939,9 @@ void MakeShadowVolumes( IRender *pRender,
 	std::vector<SRenderPartSet> listParts;
 
 	if ( pIgnore )
+	{
 		pIgnore->clear();
+	}
 	if ( eType == IRender::DT_STATIC )
 	{
 		GeneratePartList( pRender, vCenter, fRadius, &listParts, eType, mask );
@@ -879,7 +961,9 @@ void MakeShadowVolumes( IRender *pRender,
 		}
 	}
 	else
+	{
 		pRender->FormPartList( pTS, &listParts, eType, mask );
+	}
 
 	//int nVertCount = 0;
 	//int nCoverTriCount = 0;
@@ -893,10 +977,14 @@ void MakeShadowVolumes( IRender *pRender,
 		for ( int k = 0; k < rps.pParts->size(); ++k )
 		{
 			if ( !rps.parts.IsSet( k ) )
+			{
 				continue;
+			}
 			IPart *pPart = rps.GetPart( k );
 			if ( !IsValid( pPart ) )
+			{
 				continue;
+			}
 
 			std::vector<CVec3> points;
 			std::vector<STriangle> tris;

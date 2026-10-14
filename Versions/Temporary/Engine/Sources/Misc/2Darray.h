@@ -39,7 +39,9 @@ class CArray2D
 			nYSize = a.nYSize;
 			Create();
 			for ( int i = 0; i < nXSize * nYSize; i++ )
+			{
 				data[i] = a.data[i];
+			}
 		}
 		else
 		{
@@ -51,16 +53,22 @@ class CArray2D
 	void Destroy()
 	{
 		if ( data )
+		{
 			delete[] data;
+		}
 		if ( pData )
+		{
 			delete[] pData;
+		}
 	}
 	void Create()
 	{
 		data = new T[nXSize * nYSize];
 		pData = new PT[nYSize];
 		for ( int i = 0; i < nYSize; i++ )
+		{
 			pData[i] = data + i * nXSize;
+		}
 	}
 
 public:
@@ -77,7 +85,9 @@ public:
 		if ( nXSize == a.nXSize && nYSize == a.nYSize )
 		{
 			for ( int k = 0, nTotal = nXSize * nYSize; k < nTotal; ++k )
+			{
 				data[k] = a.data[k];
+			}
 		}
 		else
 		{
@@ -90,7 +100,9 @@ public:
 	void SetSizes( int xsize, int ysize )
 	{
 		if ( nXSize == xsize && nYSize == ysize )
+		{
 			return;
+		}
 		Destroy();
 		nXSize = xsize;
 		nYSize = ysize;
@@ -140,7 +152,9 @@ public:
 	void FillEvery( const T &a )
 	{
 		for ( int i = 0; i < nXSize * nYSize; i++ )
+		{
 			data[i] = a;
+		}
 	}
 	void Swap( CArray2D<T> &arr )
 	{

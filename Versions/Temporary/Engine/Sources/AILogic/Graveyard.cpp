@@ -94,8 +94,10 @@ void CGraveyard::Segment()
 				const bool bIsAmphibian = pMechStats && pMechStats->IsAmphibious() && pMechStats->pAmphibianStats;
 				const bool bIsShip = ( pKilled->pUnit->GetAIPassabilityClass() & EAC_WATER ) && !bIsAmphibian;
 				if ( !bIsShip && !pKilled->bRemoveCorpseAfterAnimation )
+				{
 					CFakeCorpseStaticObject::CreateFakeCorpseStaticObject(
 							pKilled->pUnit, pKilled->lockedTiles, pKilled->pUnit->IsTrampled() );
+				}
 				else
 				{
 					pKilled->pUnit->FixUnlocking();
@@ -111,7 +113,9 @@ void CGraveyard::Segment()
 			{
 				pKilled->endFogTime = 0;
 				if ( pKilled->pUnit->GetParty() < 2 )
+				{
 					theWarFog.DeleteUnit( pKilled->pUnit->GetUniqueId() );
+				}
 			}
 
 			if ( pKilled->endFogTime == 0 )
@@ -120,10 +124,14 @@ void CGraveyard::Segment()
 				iter = killed.erase( iter );
 			}
 			else
+			{
 				++iter;
+			}
 		}
 		else
+		{
 			++iter;
+		}
 	}
 
 	CheckSoonBeDead();
@@ -137,16 +145,22 @@ void CGraveyard::Segment()
 		units.DeleteUnitFromMap( pUnit );
 		units.FullUnitDelete( pUnit );
 		if ( pUnit->GetParty() < 2 )
+		{
 			theWarFog.DeleteUnit( pUnit->GetUniqueId() );
+		}
 	}
 	dissapeared.clear();
 
 	for ( det_map<int, bool>::iterator it = diedVisible.begin(); it != diedVisible.end(); )
 	{
 		if ( !CLinkObject::IsLinkObjectExists( it->first ) )
+		{
 			diedVisible.erase( it++ );
+		}
 		else
+		{
 			++it;
+		}
 	}
 }
 
@@ -157,7 +171,9 @@ void CGraveyard::AddKilledUnit( CAIUnit *pUnit,
 {
 	pUnit->UnfixUnlocking();
 	if ( pUnit->CanLockTiles() )
+	{
 		pUnit->ForceLockTiles();
+	}
 
 	CPtr<SKilledUnit> pKillInfo = new SKilledUnit();
 
@@ -176,7 +192,9 @@ void CGraveyard::AddKilledUnit( CAIUnit *pUnit,
 
 		if ( pStats->animdescs.size() > NDb::ANIMATION_DEATH_FATALITY &&
 		     pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims.size() > nFatality )
+		{
 			nAABBD = pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims[nFatality].nAABB_D;
+		}
 
 		SRect finishRect;
 		const CVec2 vFrontDir = GetVectorByDirection( pUnit->GetFrontDirection() );
@@ -207,18 +225,24 @@ void CGraveyard::AddKilledUnit( CAIUnit *pUnit,
 		}
 		else if ( pStats->animdescs.size() > NDb::ANIMATION_DEATH_FATALITY &&
 		          pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims.size() > nFatality )
+		{
 			pKillInfo->timeToEndDieAnimation = timeOfVisDeath +
 			                                   pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims[nFatality].nLength +
 			                                   2 * SConsts::AI_SEGMENT_DURATION;
+		}
 		else
 		{
 			if ( !mech || !mech->pAnimableModel )
+			{
 				return; // fatal error
+			}
 
 			animable_anims = GetVisObjAnimsFromModel( mech->pAnimableModel, NDb::EAnimationType::ANIMATION_DEATH_FATALITY );
 
 			if ( animable_anims.size() < nFatality )
+			{
 				return;
+			}
 
 			pKillInfo->timeToEndDieAnimation =
 					timeOfVisDeath + animable_anims[nFatality]->nLength + 2 * SConsts::AI_SEGMENT_DURATION;
@@ -236,19 +260,27 @@ void CGraveyard::AddKilledUnit( CAIUnit *pUnit,
 		const int nAnimIndex = -( nFatality + 2 );
 		if ( nAnimation >= 0 && pStats->animdescs.size() > nAnimation && !pStats->animdescs[nAnimation].anims.empty() &&
 		     nFatality != -1 && nAnimIndex < pStats->animdescs[nAnimation].anims.size() )
+		{
 			pKillInfo->timeToEndDieAnimation =
 					timeOfVisDeath + pStats->animdescs[nAnimation].anims[nAnimIndex].nLength + 2 * SConsts::AI_SEGMENT_DURATION;
+		}
 		else if ( nAnimation >= 0 && mech && mech->pAnimableModel )
 		{
 			animable_anims = GetVisObjAnimsFromModel( mech->pAnimableModel, NDb::EAnimationType( nAnimation ) );
 			if ( nFatality != -1 && nAnimIndex >= 0 && nAnimIndex < animable_anims.size() )
+			{
 				pKillInfo->timeToEndDieAnimation =
 						timeOfVisDeath + animable_anims[nAnimIndex]->nLength + 2 * SConsts::AI_SEGMENT_DURATION;
+			}
 			else
+			{
 				pKillInfo->timeToEndDieAnimation = timeOfVisDeath + 2 * SConsts::AI_SEGMENT_DURATION;
+			}
 		}
 		else
+		{
 			pKillInfo->timeToEndDieAnimation = timeOfVisDeath + 2 * SConsts::AI_SEGMENT_DURATION;
+		}
 		if ( timeOfVisDeath == 0 )
 		{
 			pKillInfo->timeToEndDieAnimation = 0;
@@ -260,7 +292,9 @@ void CGraveyard::AddKilledUnit( CAIUnit *pUnit,
 	pUnit->FixUnlocking();
 
 	if ( !pUnit->IsInfantry() )
+	{
 		GetTerrain()->AddStaticObjectTiles( pKillInfo->lockedTiles );
+	}
 
 	killed.push_back( pKillInfo );
 	units.DeleteUnitFromMap( pUnit );
@@ -300,7 +334,9 @@ void CGraveyard::CheckSoonBeDead()
 	std::vector<std::pair<CObj<CAIUnit>, float>> soonToDie;
 	soonToDie.reserve( 16 );
 	for ( UpdateObjSet::iterator iter = soonBeDead.begin(); iter != soonBeDead.end(); ++iter )
+	{
 		soonToDie.push_back( iter->second );
+	}
 
 	std::sort( soonToDie.begin(),
 	           soonToDie.end(),
@@ -340,7 +376,9 @@ void CGraveyard::CheckSoonBeDead()
 	}
 
 	for ( std::vector<CAIUnit *>::iterator iter = deadObjs.begin(); iter != deadObjs.end(); ++iter )
+	{
 		soonBeDead.erase( ( *iter )->GetUniqueId() );
+	}
 }
 
 void CGraveyard::Clear()
@@ -362,7 +400,9 @@ void CGraveyard::AddToSoonBeDead( CAIUnit *pUnit, const float fDamage )
 	soonBeDead[nUniqueID].first = pUnit;
 	soonBeDead[nUniqueID].second = fDamage;
 	if ( pUnit->IsVisible( theDipl.GetMyParty() ) )
+	{
 		diedVisible[nUniqueID] = true;
+	}
 }
 
 void CGraveyard::AddBridgeKilledSoldier( const SVector &tile, CAIUnit *pSoldier )
@@ -412,7 +452,9 @@ void CDeadUnit::GetTilesForVisibility( CTilesSet *pTiles ) const
 {
 	pTiles->clear();
 	if ( GetAIMap()->IsTileInside( tileCenter ) )
+	{
 		pTiles->push_back( tileCenter );
+	}
 }
 
 bool CDeadUnit::ShouldSuspendAction( const EActionNotify &eAction ) const
@@ -433,23 +475,33 @@ void CDeadUnit::GetDyingInfo( SAINotifyAction *pDyingInfo, bool *pbVisibleWhenDi
 	if ( dieAction != ACTION_NOTIFY_NONE )
 	{
 		if ( nFatality >= 0 )
+		{
 			pDyingInfo->nParam = ( NDb::ANIMATION_DEATH_FATALITY << 16 ) | nFatality;
+		}
 		else
+		{
 			pDyingInfo->nParam = ( nDeathAnimType << 16 ) | ( -nFatality - 2 );
+		}
 	}
 	else
 	{
 		if ( nFatality == -1 )
+		{
 			nFatality = uint16_t( -1 );
+		}
 
 		pDyingInfo->nParam = nFatality;
 	}
 
 	if ( bPutMud )
+	{
 		pDyingInfo->nParam |= 0x80000000;
+	}
 
 	if ( pbVisibleWhenDie )
+	{
 		*pbVisibleWhenDie = bVisibleWhenDie;
+	}
 }
 
 CUpdatableObj *CDeadUnit::GetDieObject() const
@@ -465,7 +517,9 @@ bool CGraveyard::IsDiedVisible( int nUniqueID )
 void CGraveyard::OnSerialize( IBinSaver &saver )
 {
 	if ( !saver.IsChecksum() )
+	{
 		saver.Add( 6, &diedVisible );
+	}
 	//CRAP{ for old saves support
 	/*if ( saver.IsReading() && dissapeared.empty() )
 	{

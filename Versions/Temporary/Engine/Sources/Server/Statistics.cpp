@@ -112,14 +112,18 @@ void CAverageTimeBetweenEvents::Add( const float &fValue )
 {
 	nEvents += fValue;
 	if ( nStartTime == 0ULL )
+	{
 		nStartTime = GetLongTickCount();
+	}
 }
 
 void CAverageValuePerTime::Add( const float &fValue )
 {
 	fEventsSum += fValue;
 	if ( nStartTime == 0ULL )
+	{
 		nStartTime = GetLongTickCount();
+	}
 }
 
 float CAverageTimeBetweenEvents::GetValue() const

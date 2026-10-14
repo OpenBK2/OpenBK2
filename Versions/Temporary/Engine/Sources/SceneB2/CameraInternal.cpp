@@ -95,7 +95,9 @@ void CCamera::ResetToDefault()
 void CCamera::SetLimits( const NCamera::ELimitsType eLimitsType, const NCamera::SCameraLimits &limits )
 {
 	if ( pMouseMutator )
+	{
 		pMouseMutator->SetLimits( eLimitsType, limits );
+	}
 
 	bWasUpdatedExternally = true;
 }
@@ -103,33 +105,45 @@ void CCamera::SetLimits( const NCamera::ELimitsType eLimitsType, const NCamera::
 void CCamera::GetLimits( const NCamera::ELimitsType eLimitsType, NCamera::SCameraLimits *pLimits ) const
 {
 	if ( pMouseMutator )
+	{
 		pMouseMutator->GetLimits( eLimitsType, pLimits );
+	}
 }
 
 void CCamera::SetAnchorLimits( const CTRect<float> &vLimits )
 {
 	if ( pMouseMutator )
+	{
 		pMouseMutator->SetAnchorLimits( vLimits );
+	}
 }
 
 void CCamera::SwitchAutoPositioning( const bool bAllowAutoPositioning )
 {
 	if ( pMouseMutator )
+	{
 		pMouseMutator->SwitchAutoPositioning( bAllowAutoPositioning );
+	}
 }
 
 void CCamera::SwitchManualScrolling( const std::string &szLocker, const bool bManualOn )
 {
 	if ( pMouseMutator )
+	{
 		pMouseMutator->SwitchManualScrolling( szLocker, bManualOn );
+	}
 }
 
 const CVec3 CCamera::GetListener() const
 {
 	if ( IsScriptHolderActive() )
+	{
 		return pScriptMutatorsHolder->GetPos();
+	}
 	else if ( pMouseMutator )
+	{
 		return pMouseMutator->GetListener();
+	}
 
 	return VNULL3;
 }
@@ -147,51 +161,75 @@ void CCamera::SetPerspectiveTransform( float _fWidth, float _fHeight, float _fNe
 float CCamera::GetYaw() const
 {
 	if ( IsScriptHolderActive() )
+	{
 		return pScriptMutatorsHolder->GetYaw();
+	}
 	else if ( pMouseMutator )
+	{
 		return pMouseMutator->GetYaw();
+	}
 	else
+	{
 		return DEF_YAW;
+	}
 }
 
 float CCamera::GetPitch() const
 {
 	if ( IsScriptHolderActive() )
+	{
 		return pScriptMutatorsHolder->GetPitch();
+	}
 	else if ( pMouseMutator )
+	{
 		return pMouseMutator->GetPitch();
+	}
 	else
+	{
 		return DEF_PITCH;
+	}
 }
 
 float CCamera::GetFOV() const
 {
 	if ( IsScriptHolderActive() )
+	{
 		return pScriptMutatorsHolder->GetFOV();
+	}
 	else if ( pMouseMutator )
+	{
 		return pMouseMutator->GetFOV();
+	}
 	else
+	{
 		return DEF_FOV;
+	}
 }
 
 void CCamera::SetYaw( float _fYaw )
 {
 	if ( pMouseMutator )
+	{
 		pMouseMutator->SetYaw( _fYaw );
+	}
 	bWasUpdatedExternally = true;
 }
 
 void CCamera::SetPitch( float _fPitch )
 {
 	if ( pMouseMutator )
+	{
 		pMouseMutator->SetPitch( _fPitch );
+	}
 	bWasUpdatedExternally = true;
 }
 
 void CCamera::SetFOV( float _fFOV )
 {
 	if ( pMouseMutator )
+	{
 		pMouseMutator->SetFOV( _fFOV );
+	}
 	bWasUpdatedExternally = true;
 }
 
@@ -253,7 +291,9 @@ void CCamera::Update()
 		placement = pMouseMutator->GetValue();
 	}
 	else
+	{
 		return;
+	}
 
 	const float fYaw = placement.fYaw;
 	const float fPitch = placement.fPitch;
@@ -274,9 +314,13 @@ void CCamera::Update()
 			fVal += exp( -fTime * it->fAttenuation ) * cos( s_fQuakePeriod * FP_2PI * fTime ) * it->fAmplitude;
 			it->fTime += fTimeDiff;
 			if ( it->fTime >= it->fDuration )
+			{
 				it = earthquakes.erase( it );
+			}
 			else
+			{
 				++it;
+			}
 		}
 		vPosition.z += fVal;
 	}
@@ -294,14 +338,20 @@ void CCamera::Update()
 		MakeMatrix( &matView, fpTang, fpRisk, fRoll, vPosition );
 	}
 	else
+	{
 		MakeMatrix( &matView, vPosition, vDir );
+	}
 
 	// build projection matrix
 	transformStack.Clear();
 	if ( bPerspectiveTransform )
+	{
 		transformStack.MakeProjective( CVec2( fScreenWidth, fScreenHeight ), fFOV, fNearClipPlane, fFarClipPlane );
+	}
 	else
+	{
 		transformStack.MakeParallel( fScreenWidth, fScreenHeight, fNearClipPlane, fFarClipPlane );
+	}
 
 	matProj = transformStack.Get().forward;
 	transformStack.SetCamera( GetViewMatrix() );
@@ -313,32 +363,44 @@ void CCamera::Update()
 void CCamera::SetAnchor( const CVec3 &_vAnchor )
 {
 	if ( pMouseMutator )
+	{
 		pMouseMutator->SetAnchor( _vAnchor );
+	}
 	bWasUpdatedExternally = true;
 }
 
 void CCamera::SetPlacement( const float _fDist, const float _fPitch, const float _fYaw )
 {
 	if ( pMouseMutator )
+	{
 		pMouseMutator->SetPlacement( _fDist, ToRadian( 270.0f - _fPitch ), ToRadian( _fYaw ) );
+	}
 	bWasUpdatedExternally = true;
 }
 
 void CCamera::SetDistance( const float _fDist )
 {
 	if ( pMouseMutator )
+	{
 		pMouseMutator->SetDistance( _fDist );
+	}
 	bWasUpdatedExternally = true;
 }
 
 float CCamera::GetDistance() const
 {
 	if ( IsScriptHolderActive() )
+	{
 		return pScriptMutatorsHolder->GetDistance();
+	}
 	else if ( pMouseMutator )
+	{
 		return pMouseMutator->GetDistance();
+	}
 	else
+	{
 		return 1.0f;
+	}
 }
 
 void CCamera::GetPlacement( float *pfDist, float *pfPitch, float *pfYaw )
@@ -373,7 +435,9 @@ void CCamera::GetCameraState( CVec3 *pvPos, float *pfYaw, float *pfPitch, float 
 	{
 		NCamera::CCameraPlacement *pPlacement = static_cast<NCamera::CCameraPlacement *>( pMouseMutator );
 		if ( !pPlacement )
+		{
 			return;
+		}
 
 		( *pvPos ) = pPlacement->vPosition;
 		( *pfYaw ) = pPlacement->fYaw;
@@ -390,7 +454,9 @@ void CCamera::SetCameraState(
 	{
 		NCamera::CCameraPlacement *pPlacement = static_cast<NCamera::CCameraPlacement *>( pMouseMutator );
 		if ( !pPlacement )
+		{
 			return;
+		}
 
 		pPlacement->vPosition = vPos;
 		pPlacement->fYaw = fYaw;
@@ -405,45 +471,65 @@ void CCamera::SetCameraState(
 const CVec3 CCamera::GetAnchor() const
 {
 	if ( IsScriptHolderActive() )
+	{
 		return pScriptMutatorsHolder->GetAnchor();
+	}
 	else if ( pMouseMutator )
+	{
 		return pMouseMutator->GetAnchor();
+	}
 	else
+	{
 		return VNULL3;
+	}
 }
 
 const CVec3 CCamera::GetPos() const
 {
 	if ( IsScriptHolderActive() )
+	{
 		return pScriptMutatorsHolder->GetPos();
+	}
 	else if ( pMouseMutator )
+	{
 		return pMouseMutator->GetPos();
+	}
 	else
+	{
 		return VNULL3;
+	}
 }
 
 void CCamera::ResetScrolling()
 {
 	if ( pMouseMutator )
+	{
 		pMouseMutator->ResetScrolling();
+	}
 }
 
 void CCamera::SetScrollSpeedX( const float _fSpeed )
 {
 	if ( pMouseMutator )
+	{
 		pMouseMutator->SetScrollSpeedX( _fSpeed );
+	}
 }
 
 void CCamera::SetScrollSpeedY( const float _fSpeed )
 {
 	if ( pMouseMutator )
+	{
 		pMouseMutator->SetScrollSpeedY( _fSpeed );
+	}
 }
 
 void CCamera::SetYawSpeed( const float fSpeed )
 {
 	if ( pMouseMutator )
+	{
 		pMouseMutator->SetYawSpeed( fSpeed );
+	}
 }
 
 bool CCamera::ProcessEvent( const SGameMessage &msg )
@@ -454,10 +540,14 @@ bool CCamera::ProcessEvent( const SGameMessage &msg )
 		{
 			NCamera::CCameraPlacement placement = pScriptMutatorsHolder->GetValue();
 			if ( placement.ProcessEvent( msg ) )
+			{
 				return true;
+			}
 		}
 		else if ( pMouseMutator && pMouseMutator->ProcessEvent( msg ) )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -465,7 +555,9 @@ bool CCamera::ProcessEvent( const SGameMessage &msg )
 void CCamera::AddEarthquake( const CVec3 &vPos, const float fPower )
 {
 	if ( fPower <= 0 )
+	{
 		return;
+	}
 
 	const CVec3 &vAnchor = GetAnchor();
 	const float fDist = fabs( vPos.x - vAnchor.x, vPos.y - vAnchor.y );
@@ -473,7 +565,9 @@ void CCamera::AddEarthquake( const CVec3 &vPos, const float fPower )
 	{
 		float fCoeff = fPower;
 		if ( fDist > s_fQuakeMinRadius )
+		{
 			fCoeff *= ( 1.0f - ( fDist - s_fQuakeMinRadius ) / ( s_fQuakeMaxRadius - s_fQuakeMinRadius ) );
+		}
 		earthquakes.push_back(
 				NCamera::SEarthQuake( fPower * fCoeff * s_fQuakePowerCoeff, s_fQuakeAttenuation, s_fQuakeDuration ) );
 	}
@@ -548,7 +642,9 @@ bool CCamera::ValidateScriptPlacement( NCamera::CCameraPlacement *pPlacement ) c
 void CCamera::FinishMovie( bool bSmoothEnd /* = false	*/ )
 {
 	if ( !pScriptMutatorsHolder )
+	{
 		return;
+	}
 
 	pScriptMutatorsHolder.Refresh();
 	NCamera::CCameraPlacement realPlacement = pScriptMutatorsHolder->GetValue();
@@ -644,7 +740,9 @@ int CCamera::operator&( IBinSaver &saver )
 		bWasUpdated = true;
 		bWasUpdatedExternally = true;
 		if ( pMouseMutator == 0 )
+		{
 			SetupDefaultMouseMutator();
+		}
 		bPerspectiveTransform = true;
 	}
 	return 0;

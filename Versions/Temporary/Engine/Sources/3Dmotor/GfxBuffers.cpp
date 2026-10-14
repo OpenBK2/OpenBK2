@@ -35,13 +35,17 @@ INew2DTexAllocCallback::~INew2DTexAllocCallback()
 	// alloc2Dcallback.remove( this );
 	auto this_pos = std::find( alloc2Dcallback.begin(), alloc2Dcallback.end(), this );
 	if ( this_pos != alloc2Dcallback.end() )
+	{
 		alloc2Dcallback.erase( this_pos );
+	}
 }
 
 static void InformNew2DTextureAlloc()
 {
 	for ( std::vector<INew2DTexAllocCallback *>::iterator i = alloc2Dcallback.begin(); i != alloc2Dcallback.end(); ++i )
+	{
 		( *i )->NewTextureWasAllocated();
+	}
 }
 
 static std::vector<CPtr<CLockable>> lockableList;
@@ -66,7 +70,9 @@ void FreeLinearBuffers()
 			++i;
 		}
 		else
+		{
 			i = lockableList.erase( i );
+		}
 	}
 	bWasLinearBufferLock = false;
 }
@@ -185,24 +191,34 @@ public:
 		pCache->AdvanceFrameCounter();
 		int nReserve = 10;
 		if ( !frames.empty() )
+		{
 			nReserve = frames.front().data.size() + 64;
+		}
 		frames.emplace_front();
 		frames.front().data.reserve( nReserve );
 		// remove all elements for dynamic buffer
 		if ( bFlushBufferOnNewFrame )
+		{
 			pCache->Clear();
+		}
 		int nKeepObjectsFrames = bAccountQueueDepth ? GetMaxBufferedFlipsNum() : 0; //N_MAX_PRESENTS_IN_QUEUE + 1;
 		while ( frames.size() > nKeepObjectsFrames + 1 )
+		{
 			frames.pop_back();
+		}
 		if ( !bOnThrashing )
 		{
 			if ( bIsThrashing )
 			{
 				pCache->Clear();
 				if ( pbNeedFlush )
+				{
 					*pbNeedFlush = true;
+				}
 				else
+				{
 					ASSERT( 0 ); // dx exec queue should be flushed in this case
+				}
 			}
 			bIsThrashing = false;
 		}
@@ -212,7 +228,9 @@ public:
 	void CalcStats( NCache::SStats *pStats )
 	{
 		if ( IsValid( pCache ) )
+		{
 			pCache->CalcStats( pStats );
+		}
 		pStats->bThrashing |= bIsThrashing;
 	}
 	void DrawRU( CTexture *pTarget )
@@ -221,8 +239,12 @@ public:
 		std::vector<typename CCache::SStatePlace> places;
 		pCache->GetState( &places );
 		for ( int y = 0; y < tl.GetSizeY(); ++y )
+		{
 			for ( int x = 0; x < tl.GetSizeX(); ++x )
+			{
 				tl[y][x] = SPixel8888( 255, 255, 255 );
+			}
+		}
 		for ( int k = 0; k < places.size(); ++k )
 		{
 			const typename CCache::SStatePlace &p = places[k];
@@ -260,7 +282,9 @@ public:
 				for ( int y = 0; y < N_YSTEP; ++y )
 				{
 					for ( int x = 0; x < N_XSTEP; ++x )
+					{
 						tl[y1 + y][x1 + x] = color;
+					}
 				}
 			}
 		}
@@ -292,7 +316,9 @@ public:
 	~CLinearBufferElement()
 	{
 		while ( nLocked-- )
+		{
 			pBuffer->Unlock();
+		}
 	}
 	virtual int GetFormatID() const { return pBuffer->GetFormatID(); }
 	virtual void SetSize( int _nSize )
@@ -312,7 +338,9 @@ public:
 	virtual void Unlock()
 	{
 		if ( nLocked == 0 )
+		{
 			return;
+		}
 		--nLocked;
 		pBuffer->Unlock();
 	}
@@ -334,7 +362,9 @@ public:
 	{
 		ASSERT( IsValid( this ) );
 		if ( Touch() )
+		{
 			pBuffer->WasTouched( this );
+		}
 	}
 	virtual void SetVertexStream()
 	{
@@ -355,7 +385,9 @@ public:
 	CTriListWrapper *NewWrapper( T *pThis, int nTris )
 	{
 		if ( ( ( ++nSlowCheck ) & 0xff ) == 0 && !wrappers.empty() )
+		{
 			EraseInvalidRefs( &wrappers );
+		}
 		ASSERT( nTris <= pThis->GetSize() );
 		CTriListWrapper *pRes = new CTriListWrapper( pThis, nTris );
 		wrappers.push_back( pRes );
@@ -479,9 +511,13 @@ public:
 	{
 		uint32_t dwUsage = 0;
 		if ( usage == TARGET )
+		{
 			dwUsage = D3DUSAGE_RENDERTARGET;
+		}
 		if ( usage == DYNAMIC_TEXTURE )
+		{
 			dwUsage |= D3DUSAGE_DYNAMIC;
+		}
 		D3DPOOL pool = usage == REGULAR ? D3DPOOL_MANAGED : D3DPOOL_DEFAULT;
 
 		HRESULT hRes = pDevice->CreateTexture( _nXSize, _nYSize, _nLevels, dwUsage, _format, pool, obj.GetAddr(), 0 );
@@ -490,7 +526,9 @@ public:
 		if ( is_debugger_present() )
 		{
 			if ( hRes == D3DERR_OUTOFVIDEOMEMORY )
+			{
 				ASSERT( 0 );
+			}
 			ASSERT( D3D_OK == hRes );
 		}
 		D3DASSERT( hRes,
@@ -512,13 +550,17 @@ public:
 	{
 		int nRes = 0;
 		for ( int k = 0; k < nLevels; ++k )
+		{
 			nRes += nXSize * nYSize * D3DFormat2PixelBitSize( format ) >> ( k * 2 );
+		}
 		return nRes >> 3;
 	}
 	int GetRawSizeNotSetMip( int nMip ) const
 	{
 		if ( nMip != nLOD )
+		{
 			return ( nXSize * nYSize * D3DFormat2PixelBitSize( format ) >> ( (std::min)( nMip, nLevels - 1 ) * 2 ) ) >> 3;
+		}
 		return 0;
 	}
 	void SetLOD( int _nLOD )
@@ -554,10 +596,14 @@ public:
 		HRESULT hRes = pDevice->CreateTexture(
 				N_SYSMEM_TEXTURE_SIZE, N_SYSMEM_TEXTURE_SIZE, 1, 0, _format, D3DPOOL_SYSTEMMEM, pTexture.GetAddr(), 0 );
 		if ( FAILED( hRes ) )
+		{
 			ThrowD3DBufferError( "CreateTexture for staging buffer", hRes );
+		}
 		hRes = pTexture->GetSurfaceLevel( 0, pSurface.GetAddr() );
 		if ( FAILED( hRes ) )
+		{
 			ThrowD3DBufferError( "GetSurfaceLevel for staging buffer", hRes );
+		}
 	}
 	void MarkBusy() { bBusy = true; }
 	void Free() { bBusy = false; }
@@ -584,7 +630,9 @@ CSurfaceRing::CSurfaceRing( D3DFORMAT _format, int nSize )
 	textures.resize( 0 );
 	textures.reserve( nSize );
 	for ( int i = 0; i < nSize; i++ )
+	{
 		textures.push_back( new CSysTexture( _format ) );
+	}
 	nCurrent = 0;
 }
 
@@ -595,7 +643,9 @@ CSysTexture *CSurfaceRing::GetTexture()
 	{
 		pRes = textures[nCurrent];
 		if ( !pRes->IsBusy() )
+		{
 			break;
+		}
 		Switch();
 	}
 	Switch();
@@ -639,7 +689,9 @@ CTextureLocker::CTextureLocker( IDirect3DSurface9 *_pObj,
 		: pObj( _pObj ), rect( _rect ), access( _access ), pTexture( _pTexture )
 {
 	if ( !pObj )
+	{
 		ThrowD3DBufferError( "Texture LockRect: surface unavailable", E_POINTER );
+	}
 	NWin32Helper::com_ptr<IDirect3DSurface9> pTempBuf;
 	//
 	uint32_t dwLockFlags = 0; //D3DLOCK_NO_DIRTY_UPDATE;
@@ -649,7 +701,9 @@ CTextureLocker::CTextureLocker( IDirect3DSurface9 *_pObj,
 		lockRect.SetRect( 0, 0, rect.Width(), rect.Height() );
 		CFormatRingMap::iterator i = sysTextures.find( format );
 		if ( i == sysTextures.end() )
+		{
 			ThrowD3DBufferError( "Texture LockRect: staging format unavailable", E_INVALIDARG );
+		}
 		pLocker = i->second->GetTexture();
 		ASSERT( rect.Width() <= N_SYSMEM_TEXTURE_SIZE );
 		ASSERT( rect.Height() <= N_SYSMEM_TEXTURE_SIZE );
@@ -666,21 +720,31 @@ CTextureLocker::CTextureLocker( IDirect3DSurface9 *_pObj,
 	else
 	{
 		if ( access == INPLACE_READONLY )
+		{
 			dwLockFlags |= D3DLOCK_READONLY;
+		}
 		if ( pTexture )
+		{
 			dwLockFlags |= D3DLOCK_NO_DIRTY_UPDATE;
+		}
 		pTempBuf = pObj;
 		lockRect = rect;
 	}
 	if ( !pTempBuf )
+	{
 		ThrowD3DBufferError( "Texture LockRect: staging surface unavailable", E_POINTER );
+	}
 	const HRESULT hr = pTempBuf->LockRect( &buf, (RECT *)&lockRect, dwLockFlags );
 	if ( FAILED( hr ) )
+	{
 		ThrowD3DBufferError( "Texture LockRect", hr );
+	}
 	// Reserve a staging surface only after locking succeeds: a throwing constructor
 	// has no destructor to release it. Never substitute a fixed-size scratch buffer.
 	if ( pLocker )
+	{
 		pLocker->MarkBusy();
+	}
 }
 
 CTextureLocker::~CTextureLocker()
@@ -694,7 +758,9 @@ CTextureLocker::~CTextureLocker()
 			pTempBuf->UnlockRect();
 			// fix for a strange bug (adding dirty rects during lockrect for pool_default textures break)
 			if ( access == INPLACE && pTexture )
+			{
 				pTexture->AddDirtyRect( (RECT *)&rect );
+			}
 		}
 	}
 	else
@@ -766,11 +832,15 @@ public:
 I2DBufferLock *CTexture::Lock( int nLevel, EAccess access )
 {
 	if ( !IsValid( pTB ) || !pTB->obj )
+	{
 		ThrowD3DBufferError( "Texture Lock: texture unavailable", E_POINTER );
+	}
 	NWin32Helper::com_ptr<IDirect3DSurface9> pSurface;
 	const HRESULT hr = pTB->obj->GetSurfaceLevel( nLevel, pSurface.GetAddr() );
 	if ( FAILED( hr ) )
+	{
 		ThrowD3DBufferError( "GetSurfaceLevel for texture Lock", hr );
+	}
 	CTRect<int> rect = region;
 	rect.x1 >>= nLevel;
 	rect.y1 >>= nLevel;
@@ -816,7 +886,9 @@ public:
 			: format( _format ), nSize( _nSize ), nMipLevels( _nMipLevels )
 	{
 		if ( bNoCubeMapMipLevels )
+		{
 			nMipLevels = 1;
+		}
 
 		HRESULT hRes = pDevice->CreateCubeTexture( _nSize,
 		                                           nMipLevels,
@@ -828,7 +900,9 @@ public:
 		if ( is_debugger_present() )
 		{
 			if ( hRes == D3DERR_OUTOFVIDEOMEMORY )
+			{
 				ASSERT( 0 );
+			}
 			ASSERT( D3D_OK == hRes );
 		}
 		bInitOk &= SUCCEEDED( hRes );
@@ -879,11 +953,15 @@ inline D3DCUBEMAP_FACES GetD3DFace( EFace face )
 I2DBufferLock *CCubeTexture::Lock( EFace face, int nLevel, EAccess access )
 {
 	if ( !IsValid( pTB ) || !pTB->obj )
+	{
 		ThrowD3DBufferError( "Cube texture Lock: texture unavailable", E_POINTER );
+	}
 	NWin32Helper::com_ptr<IDirect3DSurface9> pSurface;
 	const HRESULT hr = pTB->obj->GetCubeMapSurface( GetD3DFace( face ), nLevel, pSurface.GetAddr() );
 	if ( FAILED( hr ) )
+	{
 		ThrowD3DBufferError( "GetCubeMapSurface for texture Lock", hr );
+	}
 	int nSize = pTB->GetSize();
 	CTRect<int> rect( 0, 0, nSize >> nLevel, nSize >> nLevel );
 	return new CTextureLocker( pSurface, rect, access, pTB->GetFormat(), 0 );
@@ -909,13 +987,19 @@ public:
 	{
 		pBuffer = _pBuffer;
 		if ( pBuffer )
+		{
 			pTexture = new CTexture( pBuffer, CLAMP );
+		}
 		else
+		{
 			pTexture = 0;
+		}
 		pTexObj = pTexture;
 		pCache = 0;
 		if ( !pBuffer )
+		{
 			return;
+		}
 		pCache = new CCache( nCurrentFrame );
 		NCache::CQuadTreeElement root;
 		root.nXSize = GetMSB( pBuffer->GetSizeX() - 1 ) + 1;
@@ -927,7 +1011,9 @@ public:
 	void NextFrame( bool bOnThrashing )
 	{
 		if ( IsValid( pCache ) )
+		{
 			pCache->AdvanceFrameCounter();
+		}
 	}
 	CTB *GetTB() const { return pBuffer; }
 	CTexture *GetTexture() const { return pTexture; }
@@ -935,13 +1021,17 @@ public:
 	CTexture *Alloc( int nXSize, int nYSize )
 	{
 		if ( !IsValid( pCache ) )
+		{
 			return 0;
+		}
 		NCache::CQuadTreeElement elem;
 		elem.nXSize = GetMSB( nXSize - 1 ) + 1;
 		elem.nYSize = GetMSB( nYSize - 1 ) + 1;
 		CCache::SCachePlace place;
 		if ( !pCache->GetPlace( elem, &place ) )
+		{
 			return 0;
+		}
 		CTexture *pRes = new CTexture( pBuffer, CLAMP );
 		pCache->PerformAlloc( pRes, &place );
 		pRes->region.SetRect( place.resPlace.nShiftX,
@@ -957,8 +1047,12 @@ public:
 		std::vector<CCache::SStatePlace> places;
 		pCache->GetState( &places );
 		for ( int y = 0; y < tl.GetSizeY(); ++y )
+		{
 			for ( int x = 0; x < tl.GetSizeX(); ++x )
+			{
 				tl[y][x] = SPixel8888( 255, 255, 255 );
+			}
+		}
 		for ( int k = 0; k < places.size(); ++k )
 		{
 			const CCache::SStatePlace &p = places[k];
@@ -988,11 +1082,15 @@ public:
 			}
 			const NCache::CQuadTreeElement &te = p.place;
 			if ( ( ( te.nShiftX >> te.nXSize ) + ( te.nShiftY >> te.nYSize ) ) & 1 )
+			{
 				color.g = 30;
+			}
 			for ( int y = te.nShiftY; y < te.nShiftY + ( 1 << te.nYSize ); ++y )
 			{
 				for ( int x = te.nShiftX; x < te.nShiftX + ( 1 << te.nXSize ); ++x )
+				{
 					tl[y][x] = color;
+				}
 			}
 		}
 	}
@@ -1022,7 +1120,9 @@ public:
 		{
 			ASSERT( IsValid( i->pTB ) );
 			if ( !IsValid( i->pTexture ) )
+			{
 				i->pTexture = 0;
+			}
 		}
 	}
 	THandle *Alloc()
@@ -1045,7 +1145,9 @@ public:
 			}
 		}
 		if ( pBest == 0 )
+		{
 			return 0;
+		}
 		THandle *pRes = CreateHandle( pBest->pTB );
 		pBest->pTexture = pRes;
 		pRes->Touch();
@@ -1061,7 +1163,9 @@ public:
 		int nSize = desc.nResolution;
 		D3DFORMAT fmt = PixelID2D3DFormat( desc.nFormatID );
 		for ( int i = 0; i < nNumber; ++i )
+		{
 			AddBuffer( new CTB( nSize, nSize, 1, fmt, TARGET ) );
+		}
 	}
 	virtual CTexture *CreateHandle( CTB *pTB ) { return new CTexture( pTB, CLAMP ); }
 };
@@ -1074,7 +1178,9 @@ public:
 		int nSize = desc.nResolution;
 		D3DFORMAT fmt = PixelID2D3DFormat( desc.nFormatID );
 		for ( int i = 0; i < nNumber; ++i )
+		{
 			AddBuffer( new CCubeTB( nSize, 1, fmt, TARGET ) );
+		}
 	}
 	virtual CCubeTexture *CreateHandle( CCubeTB *pTB ) { return new CCubeTexture( pTB ); }
 };
@@ -1188,10 +1294,14 @@ public:
 	void FlushPrimitive()
 	{
 		if ( pDynamicTrisBuffer->pLocked )
+		{
 			pDynamicTrisBuffer->Unlock();
+		}
 
 		if ( bWasLinearBufferLock )
+		{
 			FreeLinearBuffers();
+		}
 		if ( nLast - nStart > 0 )
 		{
 			HRESULT hr;
@@ -1217,14 +1327,18 @@ public:
 		}
 		nLast = ( nLast + 1 ) & ~1;
 		if ( nBuf - nLast < N_MIN_BATCH_SIZE )
+		{
 			nLast = nBuf;
+		}
 		nMaxVBIndex = 0;
 		nStart = nLast;
 	}
 	void NextFrame()
 	{
 		if ( bBan32BitIndices )
+		{
 			return;
+		}
 		FlushPrimitive();
 		nLast = nBuf;
 		nStart = nLast;
@@ -1237,7 +1351,9 @@ class CDynamicTrisIndices16 : public CDynamicTrisBase<CDynamicTrisIndices16, CIB
 	{
 		ASSERT( nMax > nMin && nMax < nVBSize );
 		if ( bWasLinearBufferLock )
+		{
 			FreeLinearBuffers();
+		}
 		if ( nLast - nStart > 0 )
 		{
 			HRESULT hr;
@@ -1268,7 +1384,9 @@ class CDynamicTrisIndices16 : public CDynamicTrisBase<CDynamicTrisIndices16, CIB
 		}
 		nLast = ( nLast + 1 ) & ~1;
 		if ( nBuf - nLast < N_MIN_BATCH_SIZE )
+		{
 			nLast = nBuf;
+		}
 		nStart = nLast;
 	}
 
@@ -1367,7 +1485,9 @@ static void OnThrashing()
 {
 	dynamicTris32.FlushPrimitive();
 	for ( int k = 0; k < N_MAX_PRESENTS_IN_QUEUE + 1; ++k )
+	{
 		NextFrameBuffes( true );
+	}
 }
 
 template <class T>
@@ -1401,7 +1521,9 @@ void DestroyLostableBuffers()
 	pDevice->SetIndices( 0 );
 	pDevice->SetStreamSource( 0, 0, 0, 4 );
 	for ( int i = 0; i < 8; i++ )
+	{
 		pDevice->SetTexture( i, 0 );
+	}
 	transparentCache.Init( 0 );
 	textureCache.Init( 0 );
 }
@@ -1416,41 +1538,59 @@ void NextFrameBuffes( bool bOnThrashing )
 {
 	// render caches RU
 	if ( bFill2d )
+	{
 		textureCache.DrawRU();
+	}
 	if ( bFillTransp )
+	{
 		transparentCache.DrawRU();
+	}
 
 	++nCurrentFrame;
 	EraseInvalidRefs( &lostable );
 	EraseInvalidRefs( &managed );
 	for ( CRTCache::iterator i = rtCache.begin(); i != rtCache.end(); ++i )
+	{
 		i->second.Walk();
+	}
 	for ( CCMCache::iterator i = cmCache.begin(); i != cmCache.end(); ++i )
+	{
 		i->second.Walk();
+	}
 	bool bNeedFlush = false;
 	for ( CGeometryCacheHash::iterator i = geometries.begin(); i != geometries.end(); ++i )
+	{
 		i->second->NextFrame( bOnThrashing, &bNeedFlush );
+	}
 	textureCache.NextFrame( bOnThrashing );
 	transparentCache.NextFrame( bOnThrashing );
 	dynamicTris16.NextFrame();
 	dynamicTris32.NextFrame();
 	if ( bNeedFlush )
+	{
 		geometries.begin()->second->Flush();
+	}
 }
 
 CTexture *GetTextureContainer( CTexture *pTex, STexturePlaceInfo *pPlace )
 {
 	if ( !IsValid( pTex ) )
+	{
 		return 0;
+	}
 	pTex->Touch();
 	pPlace->place = pTex->region;
 	pPlace->size.x = pTex->pTB->GetSizeX();
 	pPlace->size.y = pTex->pTB->GetSizeY();
 	if ( pPlace->IsWhole() )
+	{
 		return pTex;
+	}
 	CTexContainerHash::iterator i = texContainers.find( pTex->pTB );
 	if ( i != texContainers.end() && IsValid( i->second ) )
+	{
 		return i->second;
+	}
 	CTexture *pRes = new CTexture( pTex->pTB, CLAMP );
 	texContainers[pTex->pTB] = pRes;
 	return pRes;
@@ -1464,9 +1604,13 @@ void AddGeometryCache( int nSize, EBufferUsage usage, ETrueBufferUsage trueUsage
 void InitBuffers()
 {
 	for ( SRenderTargetsInfo::CRTHash::iterator i = rtInfo.targets.begin(); i != rtInfo.targets.end(); ++i )
+	{
 		rtCache[i->first].Init( i->first, i->second );
+	}
 	for ( SRenderTargetsInfo::CRTHash::iterator i = rtInfo.cubeTargets.begin(); i != rtInfo.cubeTargets.end(); ++i )
+	{
 		cmCache[i->first].Init( i->first, i->second );
+	}
 	// buffers for dynamic textures
 	sysTextures[D3DFMT_A8R8G8B8] = new CSurfaceRing( D3DFMT_A8R8G8B8, N_SYSMEM_TEXTURES );
 	//sysTextures[D3DFMT_R5G6B5] = new CSurfaceRing( D3DFMT_R5G6B5, N_SYSMEM_TEXTURES );
@@ -1483,13 +1627,17 @@ void InitBuffers()
 				HRESULT hr;
 				hr = pDevice->CreateVertexBuffer( nAmount, D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, pHold.GetAddr(), 0 );
 				if ( SUCCEEDED( hr ) )
+				{
 					break;
+				}
 			}
 			AddGeometryCache<SGeomVecFull>( nGeomBufSize, DYNAMIC, TBU_DYNAMIC );
 			pHold = 0;
 		}
 		else
+		{
 			AddGeometryCache<SGeomVecFull>( nGeomBufSize, DYNAMIC, TBU_DYNAMIC );
+		}
 	}
 	else
 	{
@@ -1502,16 +1650,22 @@ void InitBuffers()
 				HRESULT hr;
 				hr = pDevice->CreateVertexBuffer( nAmount, D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, pHold.GetAddr(), 0 );
 				if ( SUCCEEDED( hr ) )
+				{
 					break;
+				}
 			}
 			AddGeometryCache<SGeomVecT2C1>( nGeomBufSize, DYNAMIC, TBU_DYNAMIC );
 			pHold = 0;
 		}
 		else
+		{
 			AddGeometryCache<SGeomVecT2C1>( nGeomBufSize, DYNAMIC, TBU_DYNAMIC );
+		}
 	}
 	if ( bBan32BitIndices )
+	{
 		dynamicTris16.Init();
+	}
 	else
 	{
 		dynamicTris32.Init();
@@ -1549,14 +1703,18 @@ static ILinearBuffer *MakeTriList( int nSize ) // int nSize, EBufferUsage eUsage
 ILinearBuffer *CreateBuffer( int nFormatID, int nSize, EBufferUsage usage )
 {
 	if ( nFormatID == S3DTriangle::ID )
+	{
 		return MakeTriList( nSize );
+	}
 	return MakeGeometry( nFormatID, nSize, usage );
 }
 
 CTriList *MakeWrapper( CTriList *pSrc, int nTris )
 {
 	if ( IsValid( pSrc ) )
+	{
 		return pSrc->CreateWrapper( nTris );
+	}
 	return 0;
 }
 
@@ -1670,7 +1828,9 @@ static CTexture *MakeMipDrawTexture( CTexture *pTex )
 	STextureSize key( pTex->GetSizeX(), pTex->GetSizeY(), pTex->GetNumMipLevels() );
 	CTextureMipHash::iterator i = mipDrawTextures.find( key );
 	if ( i != mipDrawTextures.end() && IsValid( i->second ) )
+	{
 		return i->second;
+	}
 	CTexture *pRes = MakeTexture( key.nXSize, key.nYSize, key.nMips, NGfx::SPixel8888::ID, NGfx::REGULAR, NGfx::CLAMP );
 	for ( int k = 0; k < pRes->GetNumMipLevels(); ++k )
 	{
@@ -1709,7 +1869,9 @@ static CTexture *MakeMipDrawTexture( CTexture *pTex )
 		for ( int y = 0; y < tex.GetSizeY(); ++y )
 		{
 			for ( int x = 0; x < tex.GetSizeX(); ++x )
+			{
 				tex[y][x] = color;
+			}
 		}
 	}
 	mipDrawTextures[key] = pRes;
@@ -1722,7 +1884,9 @@ void SetTexture( int nStage, CTexture *pTex )
 		if ( IsValid( pTex ) )
 		{
 			if ( bDrawMip )
+			{
 				pTex = MakeMipDrawTexture( pTex );
+			}
 			pTex->Touch();
 			HRESULT hRes = pDevice->SetTexture( nStage, pTex->pTB->obj );
 			ASSERT( hRes == D3D_OK );
@@ -1735,7 +1899,9 @@ void SetTexture( int nStage, CTexture *pTex )
 		return;
 	}
 	if ( !IsValid( pSmallTexture ) )
+	{
 		pSmallTexture = MakeTexture( 1, 1, 1, NGfx::SPixel4444::ID, REGULAR, WRAP );
+	}
 	pSmallTexture->Touch();
 	HRESULT hRes = pDevice->SetTexture( nStage, pSmallTexture->pTB->obj );
 	ASSERT( hRes == D3D_OK );
@@ -1760,7 +1926,9 @@ void SetTexture( int nStage, CCubeTexture *pTex )
 		return;
 	}
 	if ( !IsValid( pSmallCubeTexture ) )
+	{
 		pSmallCubeTexture = MakeCubeTexture( 2, 1, NGfx::SPixel8888::ID, REGULAR );
+	}
 	pSmallCubeTexture->Touch();
 	HRESULT hRes = pDevice->SetTexture( nStage, pSmallCubeTexture->GetTB()->obj );
 	ASSERT( hRes == D3D_OK );
@@ -1802,7 +1970,9 @@ AddPrimitiveGeometry( T *pRes, CGeometry *pGeom, const STriangleList *pTris, int
 	for ( int k = 0; k < nCount; ++k )
 	{
 		if ( ( nMask & ( 1 << k ) ) == 0 )
+		{
 			continue;
+		}
 		const STriangleList &t = pTris[k];
 		int nTris = t.nTris;
 		//dynamicTris.AddPrimitiveGeometry( (S3DTriangle*)t.pTri, nTris, nVBStart + t.nBaseIndex, nVBSize - t.nBaseIndex );
@@ -1821,23 +1991,31 @@ AddPrimitiveGeometry( T *pRes, CGeometry *pGeom, const STriangleList *pTris, int
 		nTrisLast = nTris;
 	}
 	if ( pTriBufLast )
+	{
 		pRes->AddPrimitiveGeometry( pTriBufLast, nTrisLast, nVBStart + nOffsetLast, nVBSize - nOffsetLast );
+	}
 }
 
 void AddPrimitiveGeometry( CGeometry *pGeom, const STriangleList *pTris, int nCount, unsigned nMask )
 {
 	ASSERT( sizeof( S3DTriangle ) == sizeof( STriangle ) ); // is required for this function to work
 	if ( bBan32BitIndices )
+	{
 		AddPrimitiveGeometry( &dynamicTris16, pGeom, pTris, nCount, nMask );
+	}
 	else
+	{
 		AddPrimitiveGeometry( &dynamicTris32, pGeom, pTris, nCount, nMask );
+	}
 }
 
 void FlushPrimitive()
 {
 	// for 16 bit buffers FlushPrimitive done in AddPrimitiveGeometry
 	if ( !bBan32BitIndices )
+	{
 		dynamicTris32.FlushPrimitive();
+	}
 }
 
 void AddLineStrip( CGeometry *pGeom, const unsigned short *pIndices, int nLines )
@@ -1846,11 +2024,17 @@ void AddLineStrip( CGeometry *pGeom, const unsigned short *pIndices, int nLines 
 	int nVBGeomSize = pGeom->GetVBSize();
 	int nVBGeomStart = pGeom->GetVBStart();
 	if ( nVBGeomSize < 2 )
+	{
 		return;
+	}
 	if ( bBan32BitIndices )
+	{
 		dynamicTris16.AddLinestrip( nVBGeomStart, nVBGeomSize, pIndices, nLines );
+	}
 	else
+	{
 		dynamicTris32.AddLinestrip( nVBGeomStart, nVBGeomSize, pIndices, nLines );
+	}
 	//	dynamicTris.FlushPrimitive();
 }
 
@@ -1916,7 +2100,9 @@ void GetRenderTargetData( CArray2D<NGfx::SPixel8888> *pRes, NGfx::CTexture *_pSr
 	pRes->SetSizes( desc.Width, desc.Height );
 	char *pData = (char *)data.pBits;
 	for ( int y = 0; y < pRes->GetSizeY(); ++y, pData += data.Pitch )
+	{
 		memcpy( &( *pRes )[y][0], pData, sizeof( ( *pRes )[0][0] ) * pRes->GetSizeX() );
+	}
 	hr = pDst->UnlockRect();
 	ASSERT( D3D_OK == hr );
 }
@@ -1928,7 +2114,9 @@ int CalcTouchedTextureSize()
 	{
 		CDynamicCast<CTexture> pTexture( *i );
 		if ( IsValid( pTexture ) && pTexture->GetFrameMRU() > nCurrentFrame - N_MAX_PRESENTS_IN_QUEUE - 2 )
+		{
 			nRes += pTexture->pTB->GetRawSize();
+		}
 	}
 	return nRes;
 }
@@ -1946,7 +2134,9 @@ int CalcTotalTextureSize( int *pnTexturesCount )
 		}
 	}
 	if ( pnTexturesCount )
+	{
 		*pnTexturesCount = nCount;
+	}
 	return nRes;
 }
 
@@ -1957,7 +2147,9 @@ int CalcTouchedTextureSizeNotSetMip( int nMip )
 	{
 		CDynamicCast<CTexture> pTexture( *i );
 		if ( IsValid( pTexture ) && pTexture->GetFrameMRU() > nCurrentFrame - N_MAX_PRESENTS_IN_QUEUE - 2 )
+		{
 			nRes += pTexture->pTB->GetRawSizeNotSetMip( nMip );
+		}
 	}
 	return nRes;
 }
@@ -1968,7 +2160,9 @@ void SetLODToAllTextures( int nLOD )
 	{
 		CDynamicCast<CTexture> pTexture( *i );
 		if ( IsValid( pTexture ) )
+		{
 			pTexture->pTB->SetLOD( nLOD );
+		}
 	}
 }
 
@@ -1984,7 +2178,9 @@ bool IsStaticGeometryThrashing()
 {
 	bool bRes = false;
 	for ( CGeometryCacheHash::iterator i = geometries.begin(); i != geometries.end(); ++i )
+	{
 		bRes |= i->first.usage == STATIC && IsThrashing( i->second.GetPtr() );
+	}
 	return bRes;
 }
 
@@ -1992,7 +2188,9 @@ bool IsDynamicGeometryThrashing()
 {
 	bool bRes = false;
 	for ( CGeometryCacheHash::iterator i = geometries.begin(); i != geometries.end(); ++i )
+	{
 		bRes |= i->first.usage == DYNAMIC && IsThrashing( i->second.GetPtr() );
+	}
 	return bRes;
 }
 
@@ -2014,16 +2212,22 @@ bool CanStreamGeometry()
 void FlushQueue()
 {
 	if ( geometries.empty() )
+	{
 		return;
+	}
 	geometries.begin()->second->Flush();
 }
 
 CTexture *GetLinearBufferMRU( EBufferUsage usage )
 {
 	if ( !IsValid( pLinearBufferMRU ) )
+	{
 		pLinearBufferMRU = MakeTexture( 1024, 1024, 1, SPixel8888::ID, REGULAR, CLAMP );
+	}
 	if ( geometries.find( SGeometryType( usage, SGeomVecFull::ID ) ) == geometries.end() )
+	{
 		return 0;
+	}
 	geometries[SGeometryType( usage, SGeomVecFull::ID )]->DrawRU( pLinearBufferMRU );
 	return pLinearBufferMRU;
 }
@@ -2036,9 +2240,13 @@ void TypeStats( CLinearBuffer<TBuf, TElem> *pLinearBuffer )
 	csSystem << "size=" << stats.nFree + stats.nUsed << "; blocks=" << stats.nBlocks << "; used=" << stats.nUsed << endl;
 	csSystem << "frame=" << (int)stats.nCurrentRU << "; eldest=" << (int)stats.nEldestEntry;
 	if ( stats.bThrashing )
+	{
 		csSystem << " thrashing" << endl;
+	}
 	else
+	{
 		csSystem << " ok" << endl;
+	}
 }
 
 static void ShowCacheStats( const std::string &szID, const std::vector<std::wstring> &szParams, void *pContext )
@@ -2047,9 +2255,13 @@ static void ShowCacheStats( const std::string &szID, const std::vector<std::wstr
 	{
 		csSystem << "type " << i->first.nID;
 		if ( i->first.usage == STATIC )
+		{
 			csSystem << " static geometry" << endl;
+		}
 		else
+		{
 			csSystem << " dynamic geometry" << endl;
+		}
 		TypeStats( i->second.GetPtr() );
 	}
 }

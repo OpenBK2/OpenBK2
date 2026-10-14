@@ -10,7 +10,9 @@ CTableManipulatorWrapper::CTableManipulatorWrapper( std::vector<STypeClass *> &c
 	{
 		STypeClass *pClass = classes[i];
 		if ( pClass->nClassTypeID == -1 )
+		{
 			continue;
+		}
 		namesMap[pClass->szTypeName] = pClass;
 		idsMap[pClass->nClassTypeID] = pClass;
 	}
@@ -37,7 +39,9 @@ unsigned CTableManipulatorWrapper::GetID( const std::string &szName ) const
 {
 	const STypeClass *pType = GetType( szName );
 	if ( pType )
+	{
 		return pType->nClassTypeID;
+	}
 	else
 	{
 		NI_ASSERT( pType, fmt::format( "CTableManipulatorWrapper::GetID( \"{}\" )", szName ) );

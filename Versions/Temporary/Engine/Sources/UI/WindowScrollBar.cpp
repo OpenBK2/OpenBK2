@@ -30,9 +30,13 @@ void CWindowScrollBar::AfterLoad()
 {
 	CWindow::AfterLoad();
 	if ( IsValid( pButtonLower ) )
+	{
 		pButtonLower->SetNotifySink( this );
+	}
 	if ( IsValid( pButtonGreater ) )
+	{
 		pButtonGreater->SetNotifySink( this );
+	}
 }
 
 void CWindowScrollBar::AllowMouseScrolling( const bool _bAllow )
@@ -77,21 +81,31 @@ void CWindowScrollBar::Reposition( const CTRect<float> &parentRect )
 {
 	//
 	if ( !pSlider )
+	{
 		pSlider = dynamic_cast<CWindowSlider *>( GetChild( "Slider", false ) );
+	}
 	NI_ASSERT( pSlider != 0, "scrollbar must have \"Slider\"" );
 
 	if ( !IsValid( pButtonGreater ) )
+	{
 		pButtonGreater = dynamic_cast<CWindowMSButton *>( GetChild( "ButtonGreater", false ) );
+	}
 
 	if ( !IsValid( pButtonLower ) )
+	{
 		pButtonLower = dynamic_cast<CWindowMSButton *>( GetChild( "ButtonLower", false ) );
+	}
 
 	CWindow::Reposition( parentRect );
 
 	if ( IsValid( pButtonGreater ) )
+	{
 		pButtonGreater->SetNotifySink( this );
+	}
 	if ( IsValid( pButtonLower ) )
+	{
 		pButtonLower->SetNotifySink( this );
+	}
 	UpdateButtons();
 }
 
@@ -167,9 +181,13 @@ void CWindowScrollBar::UpdateButtons()
 {
 	const bool bLever = pSlider->IsLeverVisible();
 	if ( IsValid( pButtonGreater ) )
+	{
 		pButtonGreater->Enable( bLever );
+	}
 	if ( IsValid( pButtonLower ) )
+	{
 		pButtonLower->Enable( bLever );
+	}
 }
 
 void CWindowScrollBar::GetRange( float *pMax, float *pMin ) const

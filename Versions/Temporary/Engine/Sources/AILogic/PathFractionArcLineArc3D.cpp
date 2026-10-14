@@ -17,9 +17,13 @@ void CPahtFractionArcLineArc3D::GetSimplePath( CPathList *pPaths )
 	CPathFractionArc3D *pFinishArc = pFinish->GetArc();
 
 	if ( pStartArc != 0 )
+	{
 		pPaths->push_back( pStartArc );
+	}
 	if ( pStart )
+	{
 		pPaths->push_back( pStart->GetLine() );
+	}
 	if ( pFinishArc != 0 )
 	{
 		CPathFractionArc3D *pFinishArcCopy = new CPathFractionArc3D( *pFinishArc );
@@ -100,7 +104,9 @@ void PlanePathTest( const std::string &szID, const std::vector<std::wstring> &pa
 	float fPathLenght = pCP->GetLength();
 	std::vector<CVec3> points;
 	for ( float fCur = 0; fCur < fPathLenght; fCur += fAtom )
+	{
 		points.push_back( pCP->GetPoint( fCur ) );
+	}
 
 	for ( int i = 0; i < points.size() - 1; ++i )
 	{

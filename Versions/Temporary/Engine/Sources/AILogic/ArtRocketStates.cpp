@@ -34,7 +34,9 @@ CPtr<CArtRocketStatesFactory> CArtRocketStatesFactory::pFactory = 0;
 IStatesFactory *CArtRocketStatesFactory::Instance()
 {
 	if ( pFactory == 0 )
+	{
 		pFactory = new CArtRocketStatesFactory();
+	}
 
 	return pFactory;
 }
@@ -166,7 +168,9 @@ IUnitState *CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pArtillery );
 			}
 			else
+			{
 				pResult = CArtilleryMoveToState::Instance( pArtillery, cmd.vPos, cmd.nCmdType == ACTION_COMMAND_REVERSE_TO );
+			}
 		}
 
 		break;
@@ -189,7 +193,9 @@ IUnitState *CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 				//theGroupLogic.InsertUnitCommand( SAIUnitCmd(ACTION_COMMAND_ENTRENCH_SELF, float(int(PARAM_ABILITY_OFF)), false ), pArtillery );
 			}
 			else
+			{
 				pResult = CArtilleryTurnToPointState::Instance( pArtillery, cmd.vPos );
+			}
 
 			break;
 		case ACTION_COMMAND_ROTATE_TO_DIR:
@@ -229,7 +235,9 @@ IUnitState *CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 						pArtillery, checked_cast<CArtilleryBulletStorage *>( pStaticObj )->GetOwner()->GetCenterPlain() );
 			}
 			else
+			{
 				pResult = CArtilleryAttackCommonStatObjState::Instance( pArtillery, pStaticObj );
+			}
 		}
 
 		break;
@@ -257,9 +265,13 @@ IUnitState *CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pArtillery );
 			}
 			else if ( !pArtillery->CanMove() )
+			{
 				pArtillery->SendAcknowledgement( pCommand, ACK_NEGATIVE, !pCommand->IsFromAI() );
+			}
 			else
+			{
 				pResult = CCommonSwarmState::Instance( pArtillery, cmd.vPos, cmd.fNumber );
+			}
 
 			break;
 		default:
@@ -314,21 +326,27 @@ CArtRocketAttackGroundState::CArtRocketAttackGroundState( CArtillery *_pArtiller
 			const EUnitAckType eReject = pArtillery->GetFirstArtilleryGun()->GetRejectReason();
 			pArtillery->SendAcknowledgement( eReject, true );
 			if ( eReject == ACK_NO_AMMO && pArtillery->GetPlayer() == theDipl.GetMyNumber() )
+			{
 				theFeedBackSystem.AddFeedbackAndForget(
 						pArtillery->GetUniqueID(), pArtillery->GetCenterPlain(), EFB_NO_AMMO, -1 );
+			}
 
 			bFinished = true;
 		}
 	}
 	else
+	{
 		eState = EAGS_FIRING;
+	}
 }
 
 void CArtRocketAttackGroundState::Segment()
 {
 	NI_ASSERT( pArtillery->GetFirstArtilleryGun() != 0, "Rocket unit doesn't have any ballistic guns" );
 	if ( bFinished )
+	{
 		pArtillery->SetCommandFinished();
+	}
 	else
 	{
 		switch ( eState )
@@ -357,7 +375,9 @@ void CArtRocketAttackGroundState::Segment()
 							{
 								CBasicGun *pGun = pArtillery->GetGun( i );
 								if ( pTurret == pGun->GetTurret() )
+								{
 									pGun->StopFire();
+								}
 							}
 
 							pArtillery->SetCommandFinished();
@@ -365,8 +385,10 @@ void CArtRocketAttackGroundState::Segment()
 							{
 								pArtillery->SendAcknowledgement( ACK_NO_AMMO );
 								if ( pArtillery->GetPlayer() == theDipl.GetMyNumber() )
+								{
 									theFeedBackSystem.AddFeedbackAndForget(
 											pArtillery->GetUniqueID(), pArtillery->GetCenterPlain(), EFB_NO_AMMO, -1 );
+								}
 							}
 						}
 						else
@@ -384,11 +406,15 @@ void CArtRocketAttackGroundState::Segment()
 						{
 							pArtillery->SendAcknowledgement( ACK_NO_AMMO );
 							if ( pArtillery->GetPlayer() == theDipl.GetMyNumber() )
+							{
 								theFeedBackSystem.AddFeedbackAndForget(
 										pArtillery->GetUniqueID(), pArtillery->GetCenterPlain(), EFB_NO_AMMO, -1 );
+							}
 							bSaidNoAmmo = true;
 							if ( NGlobal::GetVar( "stop_on_no_ammo", 0 ) )
+							{
 								pArtillery->SetCommandFinished();
+							}
 						}
 					}
 				}

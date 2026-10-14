@@ -50,7 +50,9 @@ struct SSquadMemberInfo
 	bool operator==( const SSquadMemberInfo &rOther )
 	{
 		if ( nSceneObjectID == rOther.nSceneObjectID )
+		{
 			return true;
+		}
 		return false;
 	}
 };

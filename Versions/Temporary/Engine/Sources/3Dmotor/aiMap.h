@@ -34,7 +34,9 @@ public:
 	{
 		floors.push_back( nFloor1 );
 		if ( nFloor2 != nFloor1 )
+		{
 			floors.push_back( nFloor2 );
+		}
 	}
 	CFloorsSet( const std::vector<int> &_floors ) : floors( _floors ) {}
 };

@@ -58,7 +58,9 @@ bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath
 	catch ( const std::exception &error )
 	{
 		if ( pError )
+		{
 			*pError = szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME + "\n" + error.what();
+		}
 	}
 	//
 	return false;
@@ -71,7 +73,9 @@ void CTerrainManager::Setup( NGScene::IGameView *pGView, CFuncBase<STime> *_pTim
 	pGameView = pGView;
 	pTimer = _pTimer;
 	if ( pTerraGen == 0 )
+	{
 		pTerraGen = new CTerraGen();
+	}
 	pTerraGen->AttachGameView( pGView );
 	pTerraGen->AttachTimer( pTimer );
 }
@@ -79,7 +83,9 @@ void CTerrainManager::Setup( NGScene::IGameView *pGView, CFuncBase<STime> *_pTim
 void CTerrainManager::SetAIObserver( struct ITerraAIObserver *pObserver )
 {
 	if ( pTerraGen == 0 )
+	{
 		InitTerragen();
+	}
 	pTerraGen->SetAIObserver( pObserver );
 }
 
@@ -94,7 +100,9 @@ void CTerrainManager::Load( const NDb::STerrain *_pDesc, CDataStream *pStream )
 	pDesc = _pDesc;
 	//
 	if ( !pTerraGen )
+	{
 		InitTerragen();
+	}
 	//
 	if ( pGameView )
 	{

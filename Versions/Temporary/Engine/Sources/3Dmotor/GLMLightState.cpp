@@ -32,7 +32,9 @@ static void GenerateRandomSphereVector( CVec3 *pRes )
 		CVec3 v( randomGen.GetFloat( -1, 1 ), randomGen.GetFloat( -1, 1 ), randomGen.GetFloat( -1, 1 ) );
 		float f = fabs2( v );
 		if ( f == 0 || f > 1 )
+		{
 			continue;
+		}
 		*pRes = v / sqrt( f );
 		return;
 	}
@@ -44,9 +46,13 @@ const float F_POINT_STRENGTH =
 void CLightState::AddRay( const CVec3 &vFrom, const CVec3 &vDir, const CVec3 &_vColor )
 {
 	if ( !IsValid( pVis ) )
+	{
 		return;
+	}
 	if ( randomGen.GetFloat( 0, 1 ) < 0.3f ) // absorbtion
+	{
 		return;
+	}
 	CRay r;
 	r.ptOrigin = vFrom;
 	r.ptDir = vDir;
@@ -54,7 +60,9 @@ void CLightState::AddRay( const CVec3 &vFrom, const CVec3 &vDir, const CVec3 &_v
 	CVec3 vPoint, vNormal, vReflectColor( 1, 1, 1 );
 	float fT;
 	if ( !pVis->TraceScene( MakeSelectAll(), r, &fT, &vNormal, SPS_STATIC ) ) // &vReflectColor
+	{
 		return;
+	}
 	vPoint = r.Get( fT ); // + vNormal * 0.01f;
 	float fRadius = F_POINT_RADIUS;
 	//vReflectColor *= 2;
@@ -65,19 +73,25 @@ void CLightState::AddRay( const CVec3 &vFrom, const CVec3 &vDir, const CVec3 &_v
 	CVec3 vRefColor( _vColor.r * vReflectColor.r, _vColor.g * vReflectColor.g, _vColor.b * vReflectColor.b );
 	CVec3 vColor( vRefColor );
 	if ( fabs2( vColor ) == 0 )
+	{
 		return;
+	}
 	while ( fabs2( vColor ) < F_MIN_COLOR_SQUARED )
 	{
 		vColor *= 2;
 		fRadius /= 1.41f;
 	}
 	if ( fRadius < 1 )
+	{
 		return;
+	}
 	semiPoints.push_back( SSemiPointLight( vColor, vPoint, vNormal, fRadius ) );
 	CVec3 vReflect;
 	GenerateRandomSphereVector( &vReflect );
 	if ( vReflect * vNormal < 0 )
+	{
 		vReflect -= ( 2 * ( vReflect * vNormal ) ) * vNormal;
+	}
 	AddRay( vPoint + vReflect * 0.01f, vReflect, vRefColor * 0.9f );
 }
 
@@ -85,11 +99,15 @@ void CLightState::AddParallel( const SSphere &_bound, const CVec3 &vDir, const C
 {
 	CVec3 vColor = _vColor;
 	if ( fabs2( vColor ) < 1e-16f )
+	{
 		return;
+	}
 	//if ( bDoRender )
 	//	parallel.push_back( SParallelLight( vColor, vDir ) );
 	if ( !pVis )
+	{
 		return;
+	}
 	CVec3 vCenter = _bound.ptCenter;
 	float fWidth = _bound.fRadius * 2;
 	float fTest = randomGen.GetFloat( 0, F_POINT_STRENGTH );
@@ -106,7 +124,9 @@ void CLightState::AddParallel( const SSphere &_bound, const CVec3 &vDir, const C
 	}
 	CVec3 vRight = CVec3( 0, 0, 1 ) ^ vDir;
 	if ( fabs2( vRight ) < 0.001f )
+	{
 		vRight = CVec3( 0, 1, 0 ) ^ vDir;
+	}
 	Normalize( &vRight );
 	CVec3 vUp = vRight ^ vDir;
 	static int nFake = 0;
@@ -125,7 +145,9 @@ void CLightState::AddPoint( const CVec3 &vCenter, float fRadius, const CVec3 &_v
 	//if ( bDoRender )
 	points.push_back( SPointLight( _vColor, vCenter, fRadius ) );
 	if ( !pVis )
+	{
 		return;
+	}
 	float fTest = randomGen.GetFloat( 0, F_POINT_STRENGTH );
 	float fStrength = sqr( fRadius ) / sqr( F_POINT_RADIUS ) * F_POINT_STRENGTH;
 	CVec3 vColor( _vColor );
@@ -161,9 +183,13 @@ CVec3 CLightState::GenerateSkyDir( SLightStateCalcSeed *pSeed, int nSkyDirs )
 		vSky = CVec3( cos( fOmega ) * sin( fTeta ), sin( fOmega ) * sin( fTeta ), -cos( fTeta ) );
 		++nSeed;
 		if ( nSeed == 100000 ) //12 )//
+		{
 			nSeed = 0;
+		}
 		if ( vSky.z <= -0.3f )
+		{
 			break;
+		}
 		ASSERT( 0 );
 	}
 	return vSky;

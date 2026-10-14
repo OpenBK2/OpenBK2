@@ -69,11 +69,15 @@ CMPManagerMode::CMPManagerMode() : nGameID( -1 ), nHostClientID( -1 ), dwUserPau
 bool CMPManagerMode::SAutoUpdate::CheckNeedUpdate()
 {
 	if ( !bUpdating )
+	{
 		return false;
+	}
 
 	NTimer::STime currTime = Singleton<IGameTimer>()->GetAbsTime();
 	if ( currTime < timeNextUpdate )
+	{
 		return false;
+	}
 	timeNextUpdate = currTime + timeUpdatePeriod;
 	return true;
 }
@@ -90,13 +94,17 @@ void CMPManagerMode::BroadcastGameControlPacket( CNetPacket *pPacket )
 bool CMPManagerMode::Segment()
 {
 	if ( !pMPConsts )
+	{
 		pMPConsts = NGameX::GetMPConsts();
+	}
 
 	pClient->Segment();
 
 	// Update games list if necessary
 	if ( gamesUpdate.CheckNeedUpdate() )
+	{
 		UpdateGameList();
+	}
 
 	if ( IsInGameRoom() && pingUpdate.CheckNeedUpdate() )
 	{
@@ -113,10 +121,14 @@ bool CMPManagerMode::Segment()
 			bool bResult = pTransceiver->ProcessPacket( pPacket );
 			//NI_VERIFY( bResult, "PRG: Game packet unhandled by transceiver", continue );
 			if ( bResult )
+			{
 				continue;
+			}
 		}
 		else if ( CMPTransceiver::IsGamePacket( pPacket ) ) // Game packet, but no game, ignore
+		{
 			continue;
+		}
 
 		bool bResult = ProcessPacket( pPacket );
 		//NI_ASSERT( bResult, "PRG: Unhandled general packet" );
@@ -130,7 +142,9 @@ bool CMPManagerMode::Segment()
 		// A start-game packet can queue mission loading during this same call.
 		// Do not inspect simulation victory conditions until lockstep has started.
 		if ( pTransceiver->IsGameRunning() )
+		{
 			CheckEndGameConditions();
+		}
 	}
 
 	return true;
@@ -144,12 +158,16 @@ const bool CMPManagerMode::SaveReplay( const std::string &szFileName )
 		{
 			SMPSlot &slot = slots[i];
 			if ( !slot.bPresent && slot.bAccept && ( dwInitialPlayers & ( 1UL << i ) ) )
+			{
 				slot.bPresent = true;
+			}
 		}
 		return pCommandsHistory->SaveReplay( szFileName, gameDesc, slots, nWinningSide );
 	}
 	else
+	{
 		return false;
+	}
 }
 
 /*
@@ -199,15 +217,23 @@ void CMPManagerMode::SendGameRoomInitMessages()
 void CMPManagerMode::ShowWaitWindow( bool bShow )
 {
 	if ( bShow == bWaitWindowShown )
+	{
 		return;
+	}
 	if ( bShow )
+	{
 		NMainLoop::Command( ML_COMMAND_MP_WAIT_PLAYERS, "" );
+	}
 	else
+	{
 		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
+	}
 
 	lagsUpdate.bUpdating = bShow;
 	if ( bShow )
+	{
 		lagsUpdate.timeNextUpdate = 0;
+	}
 	bWaitWindowShown = bShow;
 }
 
@@ -225,7 +251,9 @@ void CMPManagerMode::OnCriticalNetworkError( const std::wstring &wszMessage )
 void CMPManagerMode::SendStartGamePacket()
 {
 	if ( !IsGameHost() )
+	{
 		return;
+	}
 
 	CPtr<CB2GameRoomStartGamePacket> pStartPkt = new CB2GameRoomStartGamePacket( 0 );
 	pStartPkt->slots.resize( slots.size() );
@@ -259,7 +287,9 @@ unsigned long CMPManagerMode::GetCheckSum( const NDb::SMultiplayerMap *pMPMap )
 {
 	unsigned long ulCheckSum = 0;
 	if ( pMPMap )
+	{
 		ulCheckSum = pMPMap->CalcCheckSum();
+	}
 
 	return ulCheckSum;
 }

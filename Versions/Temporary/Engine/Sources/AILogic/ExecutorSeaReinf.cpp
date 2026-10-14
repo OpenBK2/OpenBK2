@@ -55,7 +55,9 @@ CExecutorTransportReinforcement::CExecutorTransportReinforcement( std::list<CAIU
 		SVector vTile = GetAIMap()->GetTile( vCurPoint + vStep );
 		if ( !GetAIMap()->IsPointInside( vCurPoint ) || !GetAIMap()->IsTileInside( vTile ) ||
 		     ( GetTerrain()->GetTileLockInfo( vTile ) & EAC_WATER ) != 0 )
+		{
 			break;
+		}
 
 		vCurPoint += vStep;
 	}
@@ -85,7 +87,9 @@ int CExecutorTransportReinforcement::Segment()
 	for ( int i = 0; i < transports.size(); ++i )
 	{
 		if ( transports[i].eState == ETS_LEFT )
+		{
 			continue;
+		}
 
 		if ( !transports[i].pUnit->IsAlive() ) // Check if the transport is dead
 		{
@@ -125,13 +129,19 @@ int CExecutorTransportReinforcement::Segment()
 			}
 		}
 		else
+		{
 			bFinish = false;
+		}
 	}
 
 	if ( bFinish )
+	{
 		return -1;
+	}
 	else
+	{
 		return GetNextTime();
+	}
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19174C40, CExecutorTransportReinforcement )

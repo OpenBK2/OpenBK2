@@ -48,10 +48,16 @@ int CWindowConsoleOutput::operator&( IBinSaver &saver )
 	{
 		// Chat rows in older saves have no font-scale owner yet.
 		if ( pUpperSign )
+		{
 			pUpperSign->SetFontScaleWindow( this );
+		}
 		for ( auto &line : vectorOfStrings )
+		{
 			if ( line.pGfxText )
+			{
 				line.pGfxText->SetFontScaleWindow( this );
+			}
+		}
 	}
 	return 0;
 }
@@ -68,14 +74,20 @@ void CWindowConsoleOutput::Scroll( const int bUp )
 	if ( bUp )
 	{
 		if ( nBeginString + CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE < vectorOfStrings.size() )
+		{
 			nBeginString += CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE - MINUS_PAGE_SIZE;
+		}
 	}
 	else
 	{
 		if ( nBeginString - CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE > 0 )
+		{
 			nBeginString -= CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE - MINUS_PAGE_SIZE;
+		}
 		else
+		{
 			nBeginString = 0;
+		}
 	}
 }
 
@@ -84,7 +96,9 @@ void CWindowConsoleOutput::Init()
 	CWindow::Init();
 	IScreen *pScreen = GetScreen();
 	if ( pScreen )
+	{
 		GetScreen()->RegisterToSegment( this, true );
+	}
 }
 
 void CWindowConsoleOutput::Segment( const int timeDiff )
@@ -97,7 +111,9 @@ void CWindowConsoleOutput::Segment( const int timeDiff )
 	if ( nExtra > 0 )
 	{
 		for ( int i = 0; i < nSize; ++i )
+		{
 			vectorOfStrings[i] = vectorOfStrings[vectorOfStrings.size() - nSize + i];
+		}
 		vectorOfStrings.resize( nSize );
 	}
 }
@@ -123,7 +139,9 @@ void CWindowConsoleOutput::ToBegin()
 void CWindowConsoleOutput::ToEnd()
 {
 	if ( vectorOfStrings.size() > CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE )
+	{
 		nBeginString = vectorOfStrings.size() - CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE + MINUS_PAGE_SIZE;
+	}
 }
 
 void CWindowConsoleOutput::Visit( struct IUIVisitor *pVisitor )
@@ -146,7 +164,9 @@ void CWindowConsoleOutput::Visit( struct IUIVisitor *pVisitor )
 			pVisitor->VisitUIText( pUpperSign, vPosition, tmp );
 		}
 		else
+		{
 			nCurrentY -= TEXT_VERTICAL_SIZE;
+		}
 
 		// отобразим строчки
 		int nSize = vectorOfStrings.size();
@@ -160,7 +180,9 @@ void CWindowConsoleOutput::Visit( struct IUIVisitor *pVisitor )
 			pVisitor->VisitUIText( vectorOfStrings[nSize - i - 1].pGfxText, tmp.GetLeftTop() + vPosition, tmp );
 			nCurrentY -= TEXT_VERTICAL_SIZE;
 			if ( nCurrentY < 0 )
+			{
 				break;
+			}
 		}
 	}
 }

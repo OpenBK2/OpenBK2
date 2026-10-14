@@ -17,9 +17,13 @@ static NTimer::STime GetFeedBackTime( const EFeedBack eFeedBack )
 {
 	TFeedBackTimes::const_iterator pos = feedBackTimes.find( eFeedBack );
 	if ( pos == feedBackTimes.end() )
+	{
 		return feedBackDefaultTime;
+	}
 	else
+	{
 		return pos->second;
+	}
 }
 
 CFeedBackSystem::CFeedBackSystem()
@@ -99,7 +103,9 @@ void CFeedBackSystem::RemoveFeedback( int nID, EFeedBack eFeedBack )
 				it = cells.erase( it );
 			}
 			else
+			{
 				++it;
+			}
 		}
 		else
 		{
@@ -112,7 +118,9 @@ void CFeedBackSystem::RemoveFeedback( int nID, EFeedBack eFeedBack )
 void CFeedBackSystem::RemovedAllFeedbacks( int nID )
 {
 	for ( CFeedbacks::iterator it = feedbacks.begin(); it != feedbacks.end(); ++it )
+	{
 		RemoveFeedback( nID, it->first );
+	}
 }
 
 void CFeedBackSystem::Segment()
@@ -130,7 +138,9 @@ void CFeedBackSystem::Segment()
 				CPtr<SFeedBackUnitsArray> pParam = new SFeedBackUnitsArray;
 				pParam->unitIDs.resize( cellsIt->objectIDs.size() );
 				for ( int i = 0; i < cellsIt->objectIDs.size(); ++i )
+				{
 					pParam->unitIDs[i] = cellsIt->objectIDs[i].first;
+				}
 				pParam->nParam = cellsIt->objectIDs[0].second;
 				pParam->nUpdateID = cellsIt->nClientID = clientIDs.Get();
 				pParam->vCenterCamera = cellsIt->vCenter;
@@ -154,7 +164,9 @@ void CFeedBackSystem::Segment()
 					CPtr<SFeedBackUnitsArray> pParam = new SFeedBackUnitsArray;
 					pParam->unitIDs.resize( cellsIt->objectIDs.size() );
 					for ( int i = 0; i < cellsIt->objectIDs.size(); ++i )
+					{
 						pParam->unitIDs[i] = cellsIt->objectIDs[i].first;
+					}
 					pParam->nParam = cellsIt->objectIDs[0].second;
 					pParam->nUpdateID = cellsIt->nClientID;
 					pParam->vCenterCamera = cellsIt->vCenter;
@@ -163,7 +175,9 @@ void CFeedBackSystem::Segment()
 					++cellsIt;
 				}
 				else
+				{
 					++cellsIt;
+				}
 			}
 		}
 	}

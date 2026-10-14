@@ -77,11 +77,13 @@ TEST( GrannyWeights, ConvertsOneThroughFourInfluencesAndClearsUnusedSlots )
 		ASSERT_EQ( nullptr, source.Convert( &result ) );
 		ASSERT_EQ( 2u, result.size() );
 		for ( int vertex = 0; vertex < 2; ++vertex )
+		{
 			for ( int j = 0; j < 4; ++j )
 			{
 				EXPECT_FLOAT_EQ( j < width ? source.Weight( vertex, j ) / 255.0f : 0.0f, result[vertex].fWeights[j] );
 				EXPECT_EQ( j < width ? 3 - source.Index( vertex, j ) : 0, result[vertex].cBoneIndices[j] );
 			}
+		}
 	}
 }
 
@@ -92,7 +94,9 @@ TEST( GrannyWeights, IgnoresOutOfRangeIndicesOnZeroWeightInfluences )
 	{
 		source.Weight( vertex, 0 ) = 255;
 		for ( int j = 1; j < 4; ++j )
+		{
 			source.Index( vertex, j ) = 255;
+		}
 	}
 	std::vector<NGScene::SVertexWeight> result;
 	ASSERT_EQ( nullptr, source.Convert( &result ) );

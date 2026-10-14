@@ -25,7 +25,9 @@ void CPause::Segment()
 			timePaused += curTime - timeLastCall;
 			timeLastCall = curTime;
 			if ( timePaused >= timeToPause )
+			{
 				eState = EPS_FINISHED;
+			}
 		}
 
 		break;

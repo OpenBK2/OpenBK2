@@ -24,7 +24,9 @@ public:
 	{
 		const auto found = files.find( path );
 		if ( found == files.end() )
+		{
 			return nullptr;
+		}
 		auto *stream = new CMemoryStream;
 		stream->Write( found->second.data(), found->second.size() );
 		stream->Seek( 0 );
@@ -135,9 +137,13 @@ struct SModel
 	fmat4x4 SampleWorld( float t, fastgltf::AnimationInterpolation interpolation ) const
 	{
 		if ( interpolation == fastgltf::AnimationInterpolation::Step )
+		{
 			t = t < 1 ? 0 : 1;
+		}
 		if ( interpolation == fastgltf::AnimationInterpolation::CubicSpline )
+		{
 			t = t * t * ( 3 - 2 * t );
+		}
 		fastgltf::TRS sample;
 		sample.translation = first.translation * ( 1 - t ) + last.translation * t;
 		sample.scale = first.scale * ( 1 - t ) + last.scale * t;
@@ -148,7 +154,9 @@ struct SModel
 			sample.rotation = q * ( 1.f / std::sqrt( dot( q, q ) ) );
 		}
 		else
+		{
 			sample.rotation = slerp( first.rotation, last.rotation, t );
+		}
 		fastgltf::Node root;
 		root.transform = sample;
 		return fastgltf::getTransformMatrix( asset.nodes[1], fastgltf::getTransformMatrix( root ) );

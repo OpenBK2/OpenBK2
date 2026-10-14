@@ -29,7 +29,9 @@ typedef std::vector<SLevelDesc> CLevelsList;
 inline bool IsInRect( const CLevelsList &levels )
 {
 	if ( levels.size() < 2 )
+	{
 		return false;
+	}
 	return ( levels[levels.size() - 2].szType == "Rect" );
 }
 
@@ -55,7 +57,9 @@ void ConvertXMLSysChars( std::string *pString )
 						szRes += ( *pString )[i];
 						++i;
 						if ( ( *pString )[i] == ';' )
+						{
 							break;
+						}
 					}
 				}
 				else
@@ -111,13 +115,17 @@ void VariantToString( std::string *pString, const CVariant &variant, EPCIEType e
 		case CVariant::VT_STR:
 			*pString = variant.GetStr();
 			if ( bConvertSysChars )
+			{
 				ConvertXMLSysChars( pString );
+			}
 			break;
 
 		case CVariant::VT_WSTR:
 			*pString = WideToUTF8( variant.GetWStr() );
 			if ( bConvertSysChars )
+			{
 				ConvertXMLSysChars( pString );
+			}
 			break;
 
 		case CVariant::VT_POINTER:
@@ -125,9 +133,13 @@ void VariantToString( std::string *pString, const CVariant &variant, EPCIEType e
 			{
 				NI_ASSERT( variant.GetBlobSize() == sizeof( boost::uuids::uuid ), "Size mismatch during GUID convertion" );
 				if ( variant.GetBlobSize() == sizeof( boost::uuids::uuid ) )
+				{
 					*pString = boost::uuids::to_string( *static_cast<const boost::uuids::uuid *>( variant.GetPtr() ) );
+				}
 				else
+				{
 					pString->clear();
+				}
 			}
 			else
 			{
@@ -144,7 +156,9 @@ void VariantToString( std::string *pString, const CVariant &variant, EPCIEType e
 void PrintTabs( const int nAmount, FILE *file )
 {
 	if ( nAmount <= 0 )
+	{
 		return;
+	}
 	// Two things were wrong here, and only the smaller one was a warning.
 	//
 	// The buffer was a fixed char[256] filled by a loop bounded only by
@@ -172,16 +186,22 @@ void StartLevel( const std::string &szName,
 		for ( std::list<std::pair<std::string, std::string>>::const_iterator it = pAtributes->begin();
 		      it != pAtributes->end();
 		      ++it )
+		{
 			szAttributes += " " + it->first + "=\"" + it->second + "\"";
+		}
 	}
 	//
 	if ( nArraySize == 0 )
 	{
 		PrintTabs( levels.size(), file );
 		if ( szName[0] == '[' )
+		{
 			fprintf( file, "<Item%s/>\n", szAttributes.c_str() );
+		}
 		else
+		{
 			fprintf( file, "<%s%s/>\n", szName.c_str(), szAttributes.c_str() );
+		}
 	}
 	else
 	{
@@ -192,16 +212,24 @@ void StartLevel( const std::string &szName,
 			if ( szName[0] == '[' )
 			{
 				if ( szAttributes.empty() )
+				{
 					fprintf( file, "<Item>\n" );
+				}
 				else
+				{
 					fprintf( file, "<Item%s>\n", szAttributes.c_str() );
+				}
 			}
 			else
 			{
 				if ( szAttributes.empty() )
+				{
 					fprintf( file, "<%s>\n", szName.c_str() );
+				}
 				else
+				{
 					fprintf( file, "<%s%s>\n", szName.c_str(), szAttributes.c_str() );
+				}
 			}
 		}
 	}
@@ -214,9 +242,13 @@ void FinishLevel( CLevelsList &levels, FILE *file )
 	{
 		PrintTabs( levels.size() - 1, file );
 		if ( levels.back().szName[0] == '[' )
+		{
 			fprintf( file, "</Item>\n" );
+		}
 		else
+		{
 			fprintf( file, "</%s>\n", levels.back().szName.c_str() );
+		}
 	}
 	levels.pop_back();
 }
@@ -232,7 +264,9 @@ std::string MakeSimpleChunkName( const std::string &szFullName, CLevelsList &lev
 			// rollback from 'i - 1' level!
 			int nNumRollback = levels.size() - i;
 			while ( --nNumRollback >= 0 )
+			{
 				FinishLevel( levels, file );
+			}
 			break;
 		}
 		nLastPos = nPos + 1;
@@ -253,7 +287,9 @@ void MoveToNextLevel(
 			// rollback from 'i - 1' level!
 			int nNumRollback = levels.size() - i;
 			while ( --nNumRollback >= 0 )
+			{
 				FinishLevel( levels, file );
+			}
 			break;
 		}
 		nLastPos = nPos + 1;
@@ -265,9 +301,13 @@ void MoveToNextLevel(
 const std::string GetTypeName( const SPropertyDesc *pDesc, const std::string &szFullName )
 {
 	if ( pDesc->bArray && szFullName[szFullName.size() - 1] != ']' )
+	{
 		return "vector< " + pDesc->szTypeName + " >";
+	}
 	else
+	{
 		return pDesc->szTypeName;
+	}
 }
 
 void CXmlExporter::ExportObjectToXML( FILE *file,
@@ -304,7 +344,9 @@ void CXmlExporter::ExportObjectToXML( FILE *file,
 					EPCIEType ePCIType = typePCIEMnemonics.Get( pDesc, szFullFieldName );
 					//
 					if ( ePCIType == PCIE_UNKNOWN && pDesc->szTypeName == "hexBinary" )
+					{
 						ePCIType = PCIE_BINARY_BIT_FIELD;
+					}
 					//
 					if ( typePCIEMnemonics.IsLeaf( ePCIType ) )
 					{
@@ -334,10 +376,14 @@ void CXmlExporter::ExportObjectToXML( FILE *file,
 									//										fprintf( file, "<%s href=\"\"/>\n", szChunkName.c_str() );
 								}
 								else
+								{
 									fprintf( file, "<%s href=\"\"/>\n", szChunkName.c_str() );
+								}
 							}
 							else
+							{
 								fprintf( file, "<%s href=\"\"/>\n", szChunkName.c_str() );
+							}
 						}
 						else
 						{
@@ -347,7 +393,9 @@ void CXmlExporter::ExportObjectToXML( FILE *file,
 							{
 								VariantToString( &szValue, value, ePCIType, true );
 								if ( szValue.empty() )
+								{
 									fprintf( file, "<%s />\n", szChunkName.c_str() );
+								}
 								else
 								{
 									if ( szTypeName == "Text" && szFullFieldName == "Text" )
@@ -367,7 +415,9 @@ void CXmlExporter::ExportObjectToXML( FILE *file,
 											uint16_t wUnicodeMagic = 0xfeff;
 											fwrite( &wUnicodeMagic, sizeof( uint16_t ), 1, txtfile );
 											if ( !wszUnicodeValue.empty() )
+											{
 												fwrite( wszUnicodeValue.c_str(), sizeof( uint16_t ), wszUnicodeValue.size(), txtfile );
+											}
 											fclose( txtfile );
 										}
 									}
@@ -383,7 +433,9 @@ void CXmlExporter::ExportObjectToXML( FILE *file,
 										if ( FILE *txtfile = fopen( szFullFileName.c_str(), "wb" ) )
 										{
 											if ( !szRawValue.empty() )
+											{
 												fwrite( szRawValue.c_str(), sizeof( char ), szRawValue.size(), txtfile );
+											}
 											fclose( txtfile );
 										}
 									}
@@ -425,13 +477,21 @@ void CXmlExporter::ExportObjectToXML( FILE *file,
 									else if ( IsInRect( levels ) )
 									{
 										if ( szFullFieldName.compare( szFullFieldName.size() - 9, 9, "LeftTop.x" ) == 0 )
+										{
 											fprintf( file, "<x1>%s</x1>\n", szValue.c_str() );
+										}
 										else if ( szFullFieldName.compare( szFullFieldName.size() - 9, 9, "LeftTop.y" ) == 0 )
+										{
 											fprintf( file, "<y1>%s</y1>\n", szValue.c_str() );
+										}
 										else if ( szFullFieldName.compare( szFullFieldName.size() - 13, 13, "RightBottom.x" ) == 0 )
+										{
 											fprintf( file, "<x2>%s</x2>\n", szValue.c_str() );
+										}
 										else if ( szFullFieldName.compare( szFullFieldName.size() - 13, 13, "RightBottom.y" ) == 0 )
+										{
 											fprintf( file, "<y2>%s</y2>\n", szValue.c_str() );
+										}
 										else
 										{
 											NI_ASSERT( false,
@@ -439,11 +499,15 @@ void CXmlExporter::ExportObjectToXML( FILE *file,
 										}
 									}
 									else
+									{
 										fprintf( file, "<%s>%s</%s>\n", szChunkName.c_str(), szValue.c_str(), szChunkName.c_str() );
+									}
 								}
 							}
 							else
+							{
 								fprintf( file, "<%s />\n", szChunkName.c_str() );
+							}
 						}
 					}
 					else
@@ -452,12 +516,18 @@ void CXmlExporter::ExportObjectToXML( FILE *file,
 						{
 							CVariant value;
 							if ( pObjMan->GetValue( szFullFieldName, &value ) != false )
+							{
 								MoveToNextLevel( szFullFieldName, GetTypeName( pDesc, szFullFieldName ), levels, file, (int)value );
+							}
 							else
+							{
 								MoveToNextLevel( szFullFieldName, GetTypeName( pDesc, szFullFieldName ), levels, file, -1 );
+							}
 						}
 						else
+						{
 							MoveToNextLevel( szFullFieldName, GetTypeName( pDesc, szFullFieldName ), levels, file, -1 );
+						}
 					}
 				}
 			}
@@ -465,7 +535,9 @@ void CXmlExporter::ExportObjectToXML( FILE *file,
 	}
 	//
 	while ( !levels.empty() )
+	{
 		FinishLevel( levels, file );
+	}
 	//
 	FinishExport();
 }
@@ -476,9 +548,13 @@ bool CXmlExporter::ExportObject( const std::string &szObjectName,
 {
 	const std::string szFullName = MakePathName( szObjectName, szClassTypeName, szFieldName );
 	if ( szFullName.empty() )
+	{
 		return false;
+	}
 	if ( exportedObjects.find( szFullName ) != exportedObjects.end() )
+	{
 		return true;
+	}
 	else
 	{
 		IResourceManager *pRM = Singleton<IResourceManager>();
@@ -540,9 +616,13 @@ static void DumpTypeNames()
 			if ( pItTable->GetName( &szTypeName ) != false && !szTypeName.empty() && szTypeName != " " )
 			{
 				if ( szTypeName.size() > 7 && szTypeName.compare( szTypeName.size() - 7, 7, "Builder" ) == 0 )
+				{
 					continue;
+				}
 				if ( szTypeName.size() > 6 && szTypeName.compare( szTypeName.size() - 6, 6, "Copier" ) == 0 )
+				{
 					continue;
+				}
 				typeNames.push_back( szTypeName );
 			}
 		}
@@ -551,7 +631,9 @@ static void DumpTypeNames()
 		if ( FILE *fout = fopen( "c:\\b2\\TypeNames.txt", "wt" ) )
 		{
 			for ( int i = 0; i < typeNames.size(); ++i )
+			{
 				fprintf( fout, "{ \"%s\" },\n", typeNames[i].c_str() );
+			}
 			fclose( fout );
 		}
 	}
@@ -774,7 +856,9 @@ void DumpAllObjects()
 	IResourceManager *pRM = Singleton<IResourceManager>();
 	CObj<IManipulator> pTableMan = pRM->CreateTableManipulator();
 	if ( pTableMan == 0 )
+	{
 		return;
+	}
 	int nStartPosition = 0;
 	const char *pszLastExportedTypeName = 0;
 	// continue export after failure - find start position

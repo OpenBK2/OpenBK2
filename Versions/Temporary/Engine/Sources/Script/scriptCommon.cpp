@@ -59,7 +59,9 @@ static void
 ShowLuaLog( const std::string &szName, intptr_t nThreadID, const std::vector<SLuaParams> &params, bool bParsed )
 {
 	if ( !bShowLuaLog )
+	{
 		return;
+	}
 	char buf[32];
 	sprintf( buf, "%" PRIxPTR, nThreadID );
 	csScript << CC_GREY << "  LUA(" << buf << "):  " << CC_ORANGE << szName << "(  ";
@@ -68,9 +70,13 @@ ShowLuaLog( const std::string &szName, intptr_t nThreadID, const std::vector<SLu
 	for ( std::vector<SLuaParams>::const_iterator i = params.begin(); i != params.end(); ++i )
 	{
 		if ( IsValid( i->p ) )
+		{
 			szLog += luaOutUserData( i->p.GetPtr(), false ) + ", ";
+		}
 		else
+		{
 			szLog += i->s + ", ";
+		}
 	}
 	if ( !params.empty() )
 	{
@@ -80,7 +86,9 @@ ShowLuaLog( const std::string &szName, intptr_t nThreadID, const std::vector<SLu
 	csScript << CC_WHITE << szLog;
 	csScript << CC_ORANGE << " )";
 	if ( !bParsed )
+	{
 		csScript << " check failed";
+	}
 	csScript << endl;
 }
 
@@ -88,7 +96,9 @@ int luaGetParamCount( lua_State *pState )
 {
 	ASSERT( pState != 0 );
 	if ( pState == 0 )
+	{
 		return 0;
+	}
 	//
 	return GetScript()->GetTop();
 }
@@ -102,11 +112,15 @@ bool luaPrepareData( lua_State *pState,
 	*ppScript = 0;
 	ASSERT( pState != 0 );
 	if ( pState == 0 )
+	{
 		return false;
+	}
 	*ppScript = GetScript();
 	ASSERT( ( *ppScript )->m_state == pState );
 	if ( ( *ppScript )->m_state != pState )
+	{
 		return false;
+	}
 	if ( !bConfigLoaded )
 	{
 		SetModeFromConfig();
@@ -141,11 +155,17 @@ static std::string IToA( float f )
 static std::string luaOutUserData( void *pData, bool bWriteToConsole )
 {
 	if ( GetScript() == 0 )
+	{
 		return "";
+	}
 	if ( bWriteToConsole )
+	{
 		csScript << CC_RED << "[Script] error: Unregistered CPtr or CObj target";
+	}
 	else
+	{
 		return "Ptr[Unregistered CPtr or CObj target]";
+	}
 
 	return "";
 }
@@ -167,9 +187,13 @@ int luaOut( lua_State *state )
 					if ( !luaOutDBUserData( o ) )
 					{
 						if ( o.Tag() == tagLuaCPtr )
+						{
 							csScript << " CPtr -> ";
+						}
 						else if ( o.Tag() == tagLuaCObj )
+						{
 							csScript << " CObj -> ";
+						}
 						luaOutUserData( luaGetPtr( o ) );
 						csScript << endl;
 					}
@@ -187,11 +211,17 @@ int luaOut( lua_State *state )
 			break;
 		}
 		else if ( o.IsNil() )
+		{
 			csScript << "NIL";
+		}
 		else if ( o.IsString() )
+		{
 			csScript << o.GetString();
+		}
 		else
+		{
 			ASSERT( 0 );
+		}
 	}
 	csScript << endl;
 	return 0;
@@ -218,7 +248,9 @@ int luaRandom( lua_State *state )
 {
 	Script script( state );
 	if ( !script.GetObject( 1 ).IsNumber() )
+	{
 		script.PushNumber( 0 );
+	}
 	else if ( script.GetTop() == 0 )
 	{
 		script.PushNumber( NRandom::Random() );
@@ -230,16 +262,22 @@ int luaRandom( lua_State *state )
 		RecordRandomCall();
 	}
 	else
+	{
 		return 1;
+	}
 	return 1;
 }
 
 bool luaGetBool( const Script::Object &o )
 {
 	if ( o.IsNil() )
+	{
 		return false;
+	}
 	else
+	{
 		return true;
+	}
 }
 
 void luaMakeCallParamsVector( char *szParams, va_list *pL, std::vector<CObj<CLUACallParam>> *pParams )
@@ -276,7 +314,9 @@ luaPushCallParameters( const std::string &szName, const std::vector<CObj<CLUACal
 {
 	ASSERT( pState );
 	if ( !pState )
+	{
 		return false;
+	}
 	//
 	int nLuaTop = lua_gettop( pState );
 	StkId stackTop = pState->pCT->top;
@@ -322,7 +362,9 @@ void luaCallFunction( const std::string &szName, const std::vector<CObj<CLUACall
 	lua_State *pState = 0;
 	Script *pScript = GetScript();
 	if ( pScript )
+	{
 		pState = pScript->GetState();
+	}
 	if ( !pState )
 	{
 		ASSERT( 0 );
@@ -336,7 +378,9 @@ void luaCallFunction( const std::string &szName, const std::vector<CObj<CLUACall
 	ASSERT( pOld );
 	lua_setThread( pState, lua_newThread( pState, szName.c_str() ) );
 	if ( luaPushCallParameters( szName, params, pState ) )
+	{
 		lua_startThread( pState, params.size() );
+	}
 	lua_setThread( pState, pOld );
 	ASSERT( pState->pCT->top == stackTop ); // stack corrupted or current thread was changed
 }
@@ -365,9 +409,13 @@ END_SCRIPT_COMMAND
 
 BEGIN_SCRIPT_COMMAND( IsEqual, "uu" )
 if ( luaParams[0].p == luaParams[1].p )
+{
 	pScript->PushNumber( 1 );
+}
 else
+{
 	pScript->PushNil();
+}
 return 1;
 END_SCRIPT_COMMAND
 
@@ -375,9 +423,13 @@ BEGIN_SCRIPT_COMMAND( GetGlobalVar, "ss[]" )
 std::string szDef = luaParams[1].s;
 std::string sz = NStr::ToMBCS( NGlobal::GetVar( luaParams[0].s, szDef ) );
 if ( sz == "" )
+{
 	pScript->PushNil();
+}
 else
+{
 	pScript->PushString( sz.c_str() );
+}
 return 1;
 END_SCRIPT_COMMAND
 
@@ -389,9 +441,13 @@ END_SCRIPT_COMMAND
 void luaPushBool( lua_State *pState, bool bValue )
 {
 	if ( bValue )
+	{
 		lua_pushnumber( pState, 1 );
+	}
 	else
+	{
 		lua_pushnil( pState );
+	}
 }
 
 void luaCreateCPtrVar( const std::string &szVarName, CObjectBase *pObj )
@@ -399,7 +455,9 @@ void luaCreateCPtrVar( const std::string &szVarName, CObjectBase *pObj )
 	lua_State *pState = 0;
 	Script *pScript = GetScript();
 	if ( pScript )
+	{
 		pState = pScript->GetState();
+	}
 	if ( !pState )
 	{
 		ScriptError( "script is unavailable at the moment" );

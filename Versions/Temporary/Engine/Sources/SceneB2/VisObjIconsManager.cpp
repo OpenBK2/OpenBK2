@@ -24,7 +24,9 @@ void CVisObjIconsManager::Init( const NDb::SVisObjIconsSet *pIconsSet )
 	pTexture = pIconsSet->pTexture;
 	NI_ASSERT( pTexture, "Texture is not set for icons" );
 	if ( !pTexture )
+	{
 		return;
+	}
 
 	// initialize HPBar
 	nHPBarColorsNum = DEF_HP_COLOR_NUM; //max( pIconsSet->hpBarColors.size(), 1 );
@@ -35,7 +37,9 @@ void CVisObjIconsManager::Init( const NDb::SVisObjIconsSet *pIconsSet )
 	if ( pIconsSet->hpBarBorders.size() >= DEF_HPBAR_PARTS_NUM )
 	{
 		for ( int i = 0; i < DEF_HPBAR_PARTS_NUM; ++i )
+		{
 			hpBarTexCoords[i] = pIconsSet->hpBarBorders[i];
+		}
 	}
 
 	// CRAP - adapted for new color system
@@ -70,7 +74,9 @@ void CVisObjIconsManager::Init( const NDb::SVisObjIconsSet *pIconsSet )
 	std::sort( singleIcons.begin(), singleIcons.end() );
 
 	for ( int i = 0; i < singleIcons.size(); ++i )
+	{
 		type2VectorHash[singleIcons[i].nType] = i;
+	}
 
 	rectLayout.rects.reserve( 256 );
 
@@ -100,7 +106,9 @@ inline void CVisObjIconsManager::ProjectIcon( CVisObjIconsManager::SObjIcon &ico
 
 	if ( ( fOffsetX < 0.0f ) || ( fOffsetX > 1.0f ) || ( fOffsetY < 0.0f ) || ( fOffsetY > 1.0f ) ||
 	     ( icon.fDepth < 0.0f ) || fW < 0.0f )
+	{
 		icon.fDepth = -1.0f; // for not processing after sorting
+	}
 	else
 	{
 		icon.nScrOffsetX = Float2Int( fOffsetX * vViewportSize.x ) - ( icon.nHPBarBaseLength >> 1 );
@@ -135,7 +143,9 @@ inline void CVisObjIconsManager::RegenerateIconRects( CVisObjIconsManager::SObjI
 			}
 			fIconsSizeX += DEF_ICONS_GAP_X * ( icon.icons.size() - 1 );
 			if ( fIconsSizeX > fHPBarLength )
+			{
 				fIconsOffsetX += ( fIconsSizeX - fHPBarLength ) * 0.5f;
+			}
 
 			for ( std::vector<int>::const_iterator it = icon.icons.begin(); it != icon.icons.end(); ++it )
 			{
@@ -227,7 +237,9 @@ inline void CVisObjIconsManager::RegenerateIconRects( CVisObjIconsManager::SObjI
 						rectLayout.rects.push_back( rect );
 					}
 					else
+					{
 						rect.fSizeX = 0.0f;
+					}
 					rect.fX = fOffsetX + fHPColOffset + rect.fSizeX;
 					rect.fY = fOffsetY + fHPColOffset;
 					const CTRect<float> &colRect = hpBarTexCoords[hpBar.nColorIndex2];
@@ -250,10 +262,14 @@ void CVisObjIconsManager::RegenerateAllIconsRects()
 
 	regenIcons.resize( 0 );
 	for ( CObjIconsHash::const_iterator it = objIcons.begin(); it != objIcons.end(); ++it )
+	{
 		regenIcons.push_back( it->second );
+	}
 
 	if ( regenIcons.empty() )
+	{
 		return;
+	}
 
 	std::sort( regenIcons.begin(), regenIcons.end() ); // for depth ordering
 	std::vector<SObjIcon>::iterator itIcon = regenIcons.end();
@@ -261,7 +277,9 @@ void CVisObjIconsManager::RegenerateAllIconsRects()
 	{
 		--itIcon;
 		if ( itIcon->fDepth < 0.0f )
+		{
 			break;
+		}
 		RegenerateIconRects( *itIcon );
 	} while ( itIcon != regenIcons.begin() );
 }
@@ -269,14 +287,18 @@ void CVisObjIconsManager::RegenerateAllIconsRects()
 void CVisObjIconsManager::UpdateAllIcons()
 {
 	if ( !p2DView )
+	{
 		return;
+	}
 
 	const CVec2 vViewportSize = p2DView->GetViewportSize();
 	ICamera *pCamera = Camera();
 	const SHMatrix matr = pCamera->GetTransform().Get().forward;
 
 	for ( CObjIconsHash::iterator it = objIcons.begin(); it != objIcons.end(); ++it )
+	{
 		ProjectIcon( it->second, matr, vViewportSize );
+	}
 
 	bNeedUpdate = true;
 }
@@ -291,7 +313,9 @@ inline void CVisObjIconsManager::UpdateIcon( SObjIcon &icon )
 	ProjectIcon( icon, matr, vViewportSize );
 
 	if ( ( icon.fDepth >= 0.0f ) || ( bWasInside ) )
+	{
 		bNeedUpdate = true;
+	}
 	//RegenerateAllIconsRects();
 }
 
@@ -337,11 +361,17 @@ void CVisObjIconsManager::SetIcon( const SSceneObjIconInfo &iconInfo, const CVec
 	icon.nIconLevelup = -1;
 	icon.nIconDamagedBuilding = -1;
 	if ( iconInfo.eIconGroup != NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE )
+	{
 		icon.nIconGroup = type2VectorHash[iconInfo.eIconGroup];
+	}
 	if ( iconInfo.eIconLevelup != NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE )
+	{
 		icon.nIconLevelup = type2VectorHash[iconInfo.eIconLevelup];
+	}
 	if ( iconInfo.eIconDamagedBuilding != NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE )
+	{
 		icon.nIconDamagedBuilding = type2VectorHash[iconInfo.eIconDamagedBuilding];
+	}
 	sort( icon.icons.begin(), icon.icons.end() ); // for priority ordering
 	for ( int i = 0; i < icon.hpBars.size() - 1; ++i )
 	{
@@ -391,7 +421,9 @@ void CVisObjIconsManager::DrawIcons()
 		}
 
 		if ( rectLayout.rects.empty() )
+		{
 			return;
+		}
 
 		CTRect<float> scrRect( CVec2( 0, 0 ), p2DView->GetViewportSize() );
 		//p2DView->CreateDynamicClearRects( rectLayout, CTPoint<float>( 0, 0 ), scrRect );

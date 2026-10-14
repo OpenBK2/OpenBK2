@@ -13,13 +13,21 @@ inline const SVector GetCell( const int x, const int y )
 {
 	SVector res;
 	if ( x < 0 )
+	{
 		res.x = 0;
+	}
 	else
+	{
 		res.x = x / SConsts::CELL_SIZE;
+	}
 	if ( y < 0 )
+	{
 		res.y = 0;
+	}
 	else
+	{
 		res.y = y / SConsts::CELL_SIZE;
+	}
 
 	return res;
 }
@@ -28,13 +36,21 @@ inline const SVector GetBigCell( const int x, const int y )
 {
 	SVector res;
 	if ( x < 0 )
+	{
 		res.x = 0;
+	}
 	else
+	{
 		res.x = x / SConsts::BIG_CELL_SIZE;
+	}
 	if ( y < 0 )
+	{
 		res.y = 0;
+	}
 	else
+	{
 		res.y = y / SConsts::BIG_CELL_SIZE;
+	}
 
 	return res;
 }

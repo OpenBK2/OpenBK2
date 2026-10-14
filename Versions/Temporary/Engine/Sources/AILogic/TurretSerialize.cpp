@@ -19,9 +19,13 @@ void CTurret::SerializeRotation( IBinSaver &saver, const int nChunk, SRotating &
 	const auto field = [&]( auto &value, const size_t offset )
 	{
 		if ( saver.IsReading() )
+		{
 			std::memcpy( &value, data + offset, sizeof( value ) );
+		}
 		else
+		{
 			std::memcpy( data + offset, &value, sizeof( value ) );
+		}
 	};
 	field( rotation.wRotationSpeed, offsetof( SRotating, wRotationSpeed ) );
 	field( rotation.wCurAngle.wAngle, offsetof( SRotating, wCurAngle ) );
@@ -31,7 +35,9 @@ void CTurret::SerializeRotation( IBinSaver &saver, const int nChunk, SRotating &
 	field( rotation.endTime, offsetof( SRotating, endTime ) );
 	field( rotation.bFinished, offsetof( SRotating, bFinished ) );
 	if ( !saver.IsReading() )
+	{
 		saver.AddRawData( nChunk, data, sizeof( data ) );
+	}
 }
 
 int CTurret::operator&( IBinSaver &saver )

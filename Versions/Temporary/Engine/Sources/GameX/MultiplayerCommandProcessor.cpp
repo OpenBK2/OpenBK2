@@ -14,7 +14,9 @@ bool CMPUIMessageTranslator::HandleMessage( SMPUIMessage *pMsg )
 {
 	CHandlers::iterator it = handlers.find( pMsg->eMessageType );
 	if ( it == handlers.end() )
+	{
 		return false;
+	}
 	return it->second->HandleMessage( pMsg );
 }
 
@@ -28,7 +30,9 @@ void CMPUIMessageProcessor::PushMessage( SMPUIMessage *pMsg )
 SMPUIMessage *CMPUIMessageProcessor::GetMessage()
 {
 	if ( messages.empty() )
+	{
 		return 0;
+	}
 
 	CPtr<SMPUIMessage> pMsg = messages.front();
 	messages.pop_front();
@@ -38,7 +42,9 @@ SMPUIMessage *CMPUIMessageProcessor::GetMessage()
 SMPUIMessage *CMPUIMessageProcessor::PeekMessage()
 {
 	if ( messages.empty() )
+	{
 		return 0;
+	}
 
 	return messages.front();
 }

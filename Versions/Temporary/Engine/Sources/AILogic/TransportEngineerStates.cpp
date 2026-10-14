@@ -77,7 +77,9 @@ bool CTransportResupplyState::FindUnitToServe( bool *pIsNotEnoughRU )
 void CTransportResupplyState::UpdateActionBegin()
 {
 	if ( !bUpdatedActionsBegin )
+	{
 		pTransport->SendAcknowledgement( ACK_START_SERVICE_RESUPPLY );
+	}
 	bUpdatedActionsBegin = true;
 }
 
@@ -113,7 +115,9 @@ CTransportRepairState::CTransportRepairState( CAITransportUnit *pTransport,
 void CTransportRepairState::UpdateActionBegin()
 {
 	if ( !bUpdatedActionsBegin )
+	{
 		pTransport->SendAcknowledgement( ACK_START_SERVICE_REPAIR );
+	}
 	bUpdatedActionsBegin = true;
 }
 
@@ -156,7 +160,9 @@ CTransportLoadRuState::CTransportLoadRuState( CAITransportUnit *_pTransport,
 			eState( ETLRS_SEARCH_FOR_STORAGE ), nEntrance( -1 ), bSubState( bSubState ), pStorage( _pPreferredStorage )
 {
 	if ( pTransport->GetResursUnitsLeft() == SConsts::TRANSPORT_RU_CAPACITY )
+	{
 		pTransport->SetCommandFinished();
+	}
 }
 
 CBuilding *CTransportLoadRuState::FindNearestSource()
@@ -217,32 +223,44 @@ void CTransportLoadRuState::Segment()
 				if ( -1 != ( nEntrance = CFormationRepairBuildingState::SendToNearestEntrance( pTransport, pStorage ) ) )
 				{
 					if ( bSubState )
+					{
 						pTransport->SendAcknowledgement( ACK_GOING_TO_STORAGE, true );
+					}
 					eState = ETLRS_APPROACHING_STORAGE;
 				}
 				else //if ( bSubState )
+				{
 					pTransport->SendAcknowledgement( ACK_NO_RESOURCES_CANT_FIND_DEPOT, true );
+				}
 			}
 			else //if ( bSubState )
+			{
 				pTransport->SendAcknowledgement( ACK_NO_RESOURCES_CANT_FIND_DEPOT, true );
+			}
 
 			if ( ETLRS_APPROACHING_STORAGE != eState )
 			{
 				if ( pTransport->GetPlayer() == theDipl.GetMyNumber() )
+				{
 					updater.AddUpdate(
 							EFB_WORK_TERMINATED, MAKELONG( pTransport->GetCenterPlain().x, pTransport->GetCenterPlain().y ), 0 );
+				}
 				// почистить очередь команд у транспорта
 				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_GUARD ), pTransport, false );
 				Interrupt();
 			}
 			else
+			{
 				InitStatus();
+			}
 		}
 
 		break;
 		case ETLRS_APPROACHING_STORAGE:
 			if ( !IsValidObj( pStorage ) )
+			{
 				eState = ETLRS_SEARCH_FOR_STORAGE;
+			}
 			else if ( fabs2( pTransport->GetCenterPlain() - pStorage->GetEntrancePoint( nEntrance ) ) <
 			          sqr( SConsts::TRANSPORT_LOAD_RU_DISTANCE ) )
 			{
@@ -250,7 +268,9 @@ void CTransportLoadRuState::Segment()
 				eState = ETLRS_START_LOADING_RU;
 			}
 			else if ( pTransport->IsIdle() )
+			{
 				eState = ETLRS_START_LOADING_RU;
+			}
 
 			break;
 		case ETLRS_START_LOADING_RU:
@@ -278,7 +298,9 @@ void CTransportLoadRuState::Segment()
 				}
 			}
 			else
+			{
 				eState = ETLRS_SEARCH_FOR_STORAGE;
+			}
 
 			break;
 		case ETLRS_LOADING_RU:
@@ -292,7 +314,9 @@ void CTransportLoadRuState::Segment()
 					eState = ETLRS_START_LOADING_RU;
 				}
 				else
+				{
 					Interrupt();
+				}
 			}
 
 			break;
@@ -307,7 +331,9 @@ void CTransportLoadRuState::Segment()
 				}
 			}
 			else
+			{
 				pTransport->SetCommandFinished();
+			}
 
 			break;
 	}
@@ -316,16 +342,22 @@ void CTransportLoadRuState::Segment()
 void CTransportLoadRuState::Interrupt()
 {
 	if ( bSubState )
+	{
 		eState = ETLRS_SUBSTATE_FINISHED;
+	}
 	else
+	{
 		TryInterruptState( 0 );
+	}
 }
 
 void CTransportLoadRuState::CreateSquad()
 {
 	pTransport->Unlock();
 	if ( IsValidObj( pLoaderSquad ) )
+	{
 		pLoaderSquad->Disappear();
+	}
 
 	if ( pTransport->GetPlayer() == theDipl.GetNeutralPlayer() )
 	{
@@ -347,7 +379,9 @@ ETryStateInterruptResult CTransportLoadRuState::TryInterruptState( class CAIComm
 		if ( IsValidObj( pLoaderSquad ) )
 		{
 			if ( pLoaderSquad->IsInTransport() )
+			{
 				pLoaderSquad->Disappear();
+			}
 			else
 			{
 				theGroupLogic.UnitCommand(
@@ -381,7 +415,9 @@ CTransportServeState::CTransportServeState( class CAITransportUnit *_pTransport,
 			bSendFinishFeedback( false )
 {
 	if ( IsValidObj( pPreferredUnit ) )
+	{
 		vServePoint = pPreferredUnit->GetCenterPlain();
+	}
 
 	// for artillery crew
 	if ( IsValidObj( pPreferredUnit ) )
@@ -430,7 +466,9 @@ void CTransportServeState::Segment()
 		case ETRS_START_APPROACH:
 		{
 			if ( pTransport->GetResursUnitsLeft() == 0.0f )
+			{
 				eState = ETRS_GOING_TO_STORAGE;
+			}
 			else
 			{
 				if ( IsUnitNearPoint( pTransport, vServePoint, SConsts::TRANSPORT_RESUPPLY_OFFSET ) )
@@ -530,8 +568,10 @@ void CTransportServeState::Segment()
 				if ( !bSendFinishFeedback )
 				{
 					if ( pTransport->GetPlayer() == theDipl.GetMyNumber() )
+					{
 						theFeedBackSystem.AddFeedback(
 								pTransport->GetUniqueId(), pTransport->GetCenterPlain(), EFB_ENGINEER_WORK_FINISHED, -1 );
+					}
 					bSendFinishFeedback = true;
 				}
 				eState = ETRS_FINDING_UNIT_TO_SERVE;
@@ -552,7 +592,9 @@ void CTransportServeState::Segment()
 			{
 				timeLastUpdate = curTime;
 				if ( !IsValidObj( pLoaderSquad ) || pLoaderSquad->IsInTransport() )
+				{
 					eState = ETRS_CREATE_SQUAD;
+				}
 			}
 
 			break;
@@ -567,7 +609,9 @@ void CTransportServeState::Segment()
 				}
 			}
 			else
+			{
 				pTransport->SetCommandFinished();
+			}
 
 			break;
 	}
@@ -583,7 +627,9 @@ void CTransportServeState::CreateSquad()
 
 	pTransport->Unlock();
 	if ( IsValidObj( pLoaderSquad ) )
+	{
 		pLoaderSquad->Disappear();
+	}
 
 	if ( pTransport->GetPlayer() == theDipl.GetNeutralPlayer() )
 	{
@@ -605,7 +651,9 @@ ETryStateInterruptResult CTransportServeState::TryInterruptState( class CAIComma
 		if ( IsValidObj( pLoaderSquad ) )
 		{
 			if ( pLoaderSquad->IsInTransport() )
+			{
 				pLoaderSquad->Disappear();
+			}
 			else
 			{
 				theGroupLogic.UnitCommand(
@@ -622,8 +670,10 @@ ETryStateInterruptResult CTransportServeState::TryInterruptState( class CAIComma
 	else
 	{
 		if ( pTransport->IsRefValid() && pTransport->GetPlayer() == theDipl.GetMyNumber() )
+		{
 			updater.AddUpdate(
 					EFB_WORK_TERMINATED, MAKELONG( pTransport->GetCenterPlain().x, pTransport->GetCenterPlain().y ), 0 );
+		}
 		CAITransportUnit::FreeLoaders( pLoaderSquad, pTransport );
 		pTransport->SetCommandFinished();
 		return TSIR_YES_IMMIDIATELY;
@@ -647,9 +697,13 @@ void CTransportBuildState::Segment()
 		case ETBS_ESTIMATE:
 			InitStatus();
 			if ( IsEndPointNeeded() )
+			{
 				eState = ETBS_WAIT_FOR_ENDPOINT;
+			}
 			else
+			{
 				eState = ETBS_END_POINT_READY;
+			}
 
 			break;
 		case ETBS_END_POINT_READY:
@@ -659,9 +713,13 @@ void CTransportBuildState::Segment()
 				pUnit->SetCommandFinished();
 			}
 			else if ( IsEnoughResources() )
+			{
 				eState = ETBS_START_APPROACH;
+			}
 			else
+			{
 				eState = ETBS_LOADING_RESOURCES;
+			}
 
 			break;
 		case ETBS_WAIT_FOR_ENDPOINT:
@@ -685,15 +743,21 @@ void CTransportBuildState::Segment()
 			break;
 		case ETBS_LOADING_RESOURCES:
 			if ( !pLoadRuSubState )
+			{
 				pLoadRuSubState = checked_cast<CTransportLoadRuState *>( CTransportLoadRuState::Instance( pUnit, true ) );
+			}
 			pLoadRuSubState->Segment();
 			if ( pLoadRuSubState->IsSubStateFinished() )
 			{
 				pLoadRuSubState = 0;
 				if ( IsEnoughResources() )
+				{
 					eState = ETBS_START_APPROACH;
+				}
 				else
+				{
 					TryInterruptState( 0 );
+				}
 			}
 
 			break;
@@ -707,10 +771,14 @@ void CTransportBuildState::Segment()
 			else if ( pUnit->IsIdle() )
 			{
 				if ( MustSayNegative() )
+				{
 					pUnit->SendAcknowledgement( ACK_NEGATIVE_NOTIFICATION );
+				}
 				if ( pUnit->GetPlayer() == theDipl.GetMyNumber() )
+				{
 					theFeedBackSystem.AddFeedbackAndForget(
 							pUnit->GetUniqueID(), pUnit->GetCenterPlain(), EFB_ENGINEER_WORK_FINISHED, -1 );
+				}
 				TryInterruptState( 0 );
 			}
 
@@ -719,14 +787,18 @@ void CTransportBuildState::Segment()
 		{
 			pUnit->Unlock();
 			if ( IsValidObj( pEngineers ) )
+			{
 				pEngineers->Disappear();
+			}
 
 			if ( pUnit->GetPlayer() == theDipl.GetNeutralPlayer() )
 			{
 				pEngineers = 0;
 				if ( pUnit->GetPlayer() == theDipl.GetMyNumber() )
+				{
 					theFeedBackSystem.AddFeedbackAndForget(
 							pUnit->GetUniqueID(), pUnit->GetCenterPlain(), EFB_ENGINEER_WORK_FINISHED, -1 );
+				}
 
 				TryInterruptState( 0 );
 			}
@@ -750,18 +822,24 @@ void CTransportBuildState::Segment()
 			{
 				pUnit->Unlock();
 				if ( IsValidObj( pEngineers ) )
+				{
 					pEngineers->Disappear();
+				}
 
 				if ( IsWorkDone() )
 				{
 					if ( pUnit->GetPlayer() == theDipl.GetMyNumber() )
 					{
 						if ( MustSayNegative() )
+						{
 							updater.AddUpdate(
 									EFB_WORK_TERMINATED, MAKELONG( pUnit->GetCenterPlain().x, pUnit->GetCenterPlain().y ), 0 );
+						}
 						else
+						{
 							theFeedBackSystem.AddFeedbackAndForget(
 									pUnit->GetUniqueID(), pUnit->GetCenterPlain(), EFB_ENGINEER_WORK_FINISHED, -1 );
+						}
 					}
 
 					TryInterruptState( 0 );
@@ -772,7 +850,9 @@ void CTransportBuildState::Segment()
 					eState = ETBS_LOADING_RESOURCES;
 				}
 				else
+				{
 					eState = ETBS_CREATE_SQUAD;
+				}
 			}
 
 			break;
@@ -784,16 +864,20 @@ void CTransportBuildState::Segment()
 					pUnit->Unlock();
 					pEngineers->Disappear();
 					if ( pUnit->GetPlayer() == theDipl.GetMyNumber() )
+					{
 						theFeedBackSystem.AddFeedbackAndForget(
 								pUnit->GetUniqueID(), pUnit->GetCenterPlain(), EFB_ENGINEER_WORK_FINISHED, -1 );
+					}
 					TryInterruptState( 0 );
 				}
 			}
 			else
 			{
 				if ( pUnit->GetPlayer() == theDipl.GetMyNumber() )
+				{
 					theFeedBackSystem.AddFeedbackAndForget(
 							pUnit->GetUniqueID(), pUnit->GetCenterPlain(), EFB_ENGINEER_WORK_FINISHED, -1 );
+				}
 				TryInterruptState( 0 );
 			}
 
@@ -820,7 +904,9 @@ ETryStateInterruptResult CTransportBuildState::TryInterruptState( class CAIComma
 		if ( IsValidObj( pEngineers ) )
 		{
 			if ( pEngineers->IsInTransport() )
+			{
 				pEngineers->Disappear();
+			}
 			else
 			{
 				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_CATCH_TRANSPORT, pUnit->GetUniqueId() ), pEngineers, false );
@@ -836,7 +922,9 @@ ETryStateInterruptResult CTransportBuildState::TryInterruptState( class CAIComma
 	else
 	{
 		if ( pUnit->IsRefValid() && pUnit->GetPlayer() == theDipl.GetMyNumber() )
+		{
 			updater.AddUpdate( EFB_WORK_TERMINATED, MAKELONG( pUnit->GetCenterPlain().x, pUnit->GetCenterPlain().y ), 0 );
+		}
 		CAITransportUnit::FreeLoaders( pEngineers, pUnit );
 		pUnit->SetCommandFinished();
 		return TSIR_YES_IMMIDIATELY;
@@ -883,7 +971,9 @@ void CTransportBuildLongObjectState::SendTransportToBuildPoint()
 		// подъезжать нужно
 		CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vStartPoint, VNULL2, pUnit, true, GetAIMap() );
 		if ( pPath )
+		{
 			pUnit->SendAlongPath( pPath, VNULL2, true );
+		}
 	}
 	else if ( fCurDist < fRadius )
 	{
@@ -1022,7 +1112,9 @@ void CTransportClearMineState::SendTransportToBuildPoint()
 {
 	CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vStartPoint, VNULL2, pUnit, true, GetAIMap() );
 	if ( pPath )
+	{
 		pUnit->SendAlongPath( pPath, VNULL2, true );
+	}
 }
 
 bool CTransportClearMineState::HaveToSendEngeneersNow()
@@ -1035,7 +1127,9 @@ bool CTransportClearMineState::HaveToSendEngeneersNow()
 		      iter.Iterate() )
 		{
 			if ( ( *iter )->WillExplodeUnder( pUnit ) )
+			{
 				return true;
+			}
 		}
 	}
 	return false;
@@ -1089,7 +1183,9 @@ void CTransportPlaceMineState::SendTransportToBuildPoint()
 {
 	CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vStartPoint, VNULL2, pUnit, true, GetAIMap() );
 	if ( pPath )
+	{
 		pUnit->SendAlongPath( pPath, VNULL2, true );
+	}
 	bTransportSent = true;
 }
 
@@ -1099,13 +1195,19 @@ bool CTransportPlaceMineState::HaveToSendEngeneersNow()
 
 	if ( pUnit->IsIdle() &&
 	     fabs2( pUnit->GetCenterPlain() - vStartPoint ) <= sqr( SConsts::TRANSPORT_RESUPPLY_OFFSET * 2 ) )
+	{
 		return true;
+	}
 
 	if ( !pUnit->IsIdle() && fabs2( pUnit->GetCenterPlain() - vStartPoint ) <= sqr( SConsts::TRANSPORT_RESUPPLY_OFFSET ) )
+	{
 		return true;
+	}
 
 	if ( bTransportSent && pUnit->IsIdle() )
+	{
 		return true;
+	}
 	return false;
 }
 
@@ -1169,7 +1271,9 @@ void CTransportPlaceAntitankState::SendTransportToBuildPoint()
 {
 	CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vStartPoint, VNULL2, pUnit, true, GetAIMap() );
 	if ( pPath )
+	{
 		pUnit->SendAlongPath( pPath, VNULL2, true );
+	}
 	bSent = true;
 }
 
@@ -1178,13 +1282,19 @@ bool CTransportPlaceAntitankState::HaveToSendEngeneersNow()
 	//	const SMechUnitRPGStats * pStats = checked_cast<const SMechUnitRPGStats*>( pUnit->GetStats() );
 	if ( pUnit->IsIdle() &&
 	     fabs2( pUnit->GetCenterPlain() - vStartPoint ) <= sqr( SConsts::TRANSPORT_RESUPPLY_OFFSET * 2 ) )
+	{
 		return true;
+	}
 
 	if ( !pUnit->IsIdle() && fabs2( pUnit->GetCenterPlain() - vStartPoint ) <= sqr( SConsts::TRANSPORT_RESUPPLY_OFFSET ) )
+	{
 		return true;
+	}
 
 	if ( bSent && pUnit->IsIdle() )
+	{
 		return true;
+	}
 	return false;
 }
 
@@ -1235,7 +1345,9 @@ void CTransportRepairBridgeState::SendTransportToBuildPoint()
 	CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vStartPoint, VNULL2, pUnit, true, GetAIMap() );
 	bSentToBuildPoint = true;
 	if ( pPath )
+	{
 		pUnit->SendAlongPath( pPath, VNULL2, true );
+	}
 }
 
 bool CTransportRepairBridgeState::HaveToSendEngeneersNow()
@@ -1289,7 +1401,9 @@ void CTransportBuildBridgeState::SendTransportToBuildPoint()
 
 	bTransportSent = true;
 	if ( pPath )
+	{
 		pUnit->SendAlongPath( pPath, VNULL2, true );
+	}
 }
 
 bool CTransportBuildBridgeState::HaveToSendEngeneersNow()
@@ -1366,7 +1480,9 @@ bool CTransportRepairBuildingState::HaveToSendEngeneersNow()
 	const SMechUnitRPGStats *pStats = checked_cast<const SMechUnitRPGStats *>( pUnit->GetStats() );
 	if ( bSentToBuildPoint && pUnit->IsIdle() ||
 	     fabs2( pUnit->GetCenterPlain() - vStartPoint ) <= sqr( pStats->vAABBHalfSize.y * 2 ) )
+	{
 		return true;
+	}
 	return false;
 }
 

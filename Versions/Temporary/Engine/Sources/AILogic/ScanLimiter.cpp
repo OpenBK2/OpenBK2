@@ -14,7 +14,9 @@ void CScanLimiter::TargetScanning( const EUnitRPGType &scanUnitType )
 {
 	if ( !( ( scanUnitType & RPG_TYPE_AVIATION ) || ( scanUnitType & RPG_TYPE_ART_AAGUN ) ||
 	        ( scanUnitType & RPG_TYPE_ART_HOWITZER ) ) )
+	{
 		++nScannedUnits;
+	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CScanLimiter::CanScan() const

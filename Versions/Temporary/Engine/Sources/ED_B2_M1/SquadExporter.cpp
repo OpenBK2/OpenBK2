@@ -16,7 +16,9 @@ EXPORT_RESULT CSquadExporter::CheckObject( IManipulator *pManipulator,
                                            EXPORT_TYPE exportType )
 {
 	if ( exportType == ET_AFTER_REF )
+	{
 		return ER_SUCCESS;
+	}
 	//
 	ILogger *pLogger = NLog::GetLogger();
 	//
@@ -42,7 +44,9 @@ EXPORT_RESULT CSquadExporter::CheckObject( IManipulator *pManipulator,
 		std::string szFormationMoveType;
 		CManipulatorManager::GetValue( &szFormationMoveType, pManipulator, fmt::format( "formations.[{}].type", i ) );
 		if ( !szFormationMoveType.empty() && szFormationMoveType != " " )
+		{
 			formationTypes.push_back( szFormationMoveType );
+		}
 		//
 		int nNumChangesByEvent = 0;
 		if ( CManipulatorManager::GetValue(

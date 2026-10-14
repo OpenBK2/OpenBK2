@@ -35,19 +35,25 @@ void CAICommand::InitCmdId()
 {
 	id = cmdIds.Get();
 	if ( id >= paths.GetQueuesNum() )
+	{
 		paths.IncreaseQueuesNum( id * 1.5 );
+	}
 }
 
 void CAICommand::AddUnit( CCommonUnit *pUnit )
 {
 	if ( pMover )
+	{
 		pMover->AddUnit( pUnit );
+	}
 }
 
 void CAICommand::DeleteUnit( const int nUnitID )
 {
 	if ( pMover )
+	{
 		pMover->DeleteUnit( nUnitID );
+	}
 }
 
 CVec2 CAICommand::GetMoveTarget( CCommonUnit *pUnit )
@@ -62,7 +68,9 @@ CVec2 CAICommand::GetMoveTarget( CCommonUnit *pUnit )
 IStaticPath *CAICommand::CreateStaticPath( CCommonUnit *pUnit )
 {
 	if ( pMover )
+	{
 		return pMover->CreateStaticPath( pUnit );
+	}
 	else
 	{
 		CPtr<IStaticPath> pPath = CreateStaticPathToPoint( unitCmd.vPos, pUnit->GetGroupShift(), pUnit, false, GetAIMap() );

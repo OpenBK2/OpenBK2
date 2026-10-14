@@ -35,7 +35,9 @@ CInterfaceDemo::CInterfaceDemo()
 bool CInterfaceDemo::Init()
 {
 	if ( !CInterfaceScreenBase::Init() )
+	{
 		return false;
+	}
 
 	AddScreen( this );
 
@@ -60,7 +62,9 @@ void CInterfaceDemo::MakeInterior()
 
 	pPictureTexture = new CBackgroundMutableTexture();
 	if ( pMain )
+	{
 		pMain->SetBackground( pPictureTexture );
+	}
 
 	NextPicture();
 }
@@ -77,7 +81,9 @@ bool CInterfaceDemo::StepLocal( bool bAppActive )
 			fDelay -= (float)( timeAbsCur - timeAbs ) * 0.001f;
 
 			if ( fDelay <= 0.0f )
+			{
 				NextPicture();
+			}
 		}
 		timeAbs = timeAbsCur;
 	}
@@ -123,9 +129,13 @@ void CInterfaceDemo::NextPicture()
 	}
 	bFinished = true;
 	if ( bFinal )
+	{
 		NGlobal::ProcessCommand( L"final_exit" );
+	}
 	else
+	{
 		NGlobal::ProcessCommand( L"menu" );
+	}
 }
 
 void CInterfaceDemo::SetFinal( bool _bFinal )

@@ -7,7 +7,9 @@ void CWindowSelection::Visit( struct IUIVisitor *pVisitor )
 {
 	CWindow::Visit( pVisitor );
 	if ( pSelectorRect != 0 && bSelectorVisible )
+	{
 		pSelectorRect->Visit( pVisitor );
+	}
 }
 
 bool CWindowSelection::MsgStartSelection( const SGameMessage &msg )
@@ -67,7 +69,9 @@ bool CWindowSelection::MsgUpdateSelection( const SGameMessage &msg )
 	ScreenToVirtual( vLeftTop, &vLeftTop );
 	ScreenToVirtual( vRightBottom, &vRightBottom );
 	if ( 0 != pSelectorRect.GetPtr() )
+	{
 		pSelectorRect->SetPos( vLeftTop, vRightBottom - vLeftTop );
+	}
 	bSelectorVisible = true;
 	return false;
 }

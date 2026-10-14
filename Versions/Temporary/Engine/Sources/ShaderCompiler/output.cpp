@@ -10,11 +10,15 @@ static void WriteRS( ofstream &f, const SStates &s, const char *pszName, const c
 {
 	f << "static SRenderState rs" << pszPrefix << pszName << "[] = { " << endl;
 	for ( int i = 0; i < s.rs.size(); ++i )
+	{
 		f << "{ " << s.rs[i].sz1.c_str() << ", " << s.rs[i].sz2.c_str() << "}, " << endl;
+	}
 	f << "{(D3DRENDERSTATETYPE)0,0} };" << endl;
 	f << "static STextureStageState tss" << pszPrefix << pszName << "[] = { " << endl;
 	for ( int i = 0; i < s.tss.size(); ++i )
+	{
 		f << "{ " << s.tss[i].sz1.c_str() << ", " << s.tss[i].sz2.c_str() << ", " << s.tss[i].sz3.c_str() << "}, " << endl;
+	}
 	f << "{-1,(D3DTEXTURESTAGESTATETYPE)0,0} };" << endl;
 }
 
@@ -24,14 +28,18 @@ static void WriteShader( ofstream &f, const uint32_t *pRes )
 	f << hex;
 	int i;
 	for ( i = 0; ( pRes[i] & 0xffff ) != 0xffff; ++i )
+	{
 		f << pRes[i] << ", 0x";
+	}
 	f << pRes[i] << " };" << dec << endl;
 }
 
 static void WriteShader( ofstream &f, const string &szName, const vector<uint32_t> &shader, string *pszDeclaration )
 {
 	if ( !pszDeclaration->empty() )
+	{
 		*pszDeclaration += ",";
+	}
 	if ( shader.empty() )
 	{
 		*pszDeclaration += "0";
@@ -53,7 +61,9 @@ static bool AreFilesDifferent( const string &szFileName0, const string &szFileNa
 
 	bool bDifferent = false;
 	if ( !pFile0 || !pFile1 )
+	{
 		bDifferent = true;
+	}
 	else
 	{
 		fseek( pFile0, 0, SEEK_END );
@@ -88,14 +98,20 @@ static bool AreFilesDifferent( const string &szFileName0, const string &szFileNa
 			delete[] pBuffer1;
 		}
 		else
+		{
 			bDifferent = true;
+		}
 	}
 
 	if ( pFile0 )
+	{
 		fclose( pFile0 );
+	}
 
 	if ( pFile1 )
+	{
 		fclose( pFile1 );
+	}
 
 	return bDifferent;
 }
@@ -189,7 +205,9 @@ void WriteResult( const char *pszOutput )
 		{
 			f << "&vs" << vertexShaders[k].szName;
 			if ( k != vertexShaders.size() - 1 )
+			{
 				f << ", ";
+			}
 		}
 		f << " };" << endl;
 
@@ -198,7 +216,9 @@ void WriteResult( const char *pszOutput )
 		{
 			f << "&ps" << pixelShaders[k].szName;
 			if ( k != pixelShaders.size() - 1 )
+			{
 				f << ", ";
+			}
 		}
 		f << " };" << endl;
 		//f << "}" << endl;

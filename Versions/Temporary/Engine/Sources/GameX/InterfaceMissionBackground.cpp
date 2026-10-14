@@ -39,7 +39,9 @@ CInterfaceMissionBackground::~CInterfaceMissionBackground()
 bool CInterfaceMissionBackground::Init()
 {
 	if ( !CInterfaceMissionBase::Init() )
+	{
 		return false;
+	}
 
 	NGlobal::SetVar( "MissionIconsMovieMode", 1.0f );
 
@@ -54,7 +56,9 @@ bool CInterfaceMissionBackground::Init()
 		AddScreen( 0 );
 		IWindow *pMain = GetChildChecked<IWindow>( GetScreen(), "Main", true );
 		if ( pMain )
+		{
 			SetMainWindowTexture( pMain, pPicture );
+		}
 	}
 
 	Singleton<ISFX>()->Pause( false );
@@ -65,7 +69,9 @@ bool CInterfaceMissionBackground::Init()
 void CInterfaceMissionBackground::StartMissionMap( const NDb::SMapInfo *pMapInfo )
 {
 	if ( !pMapInfo || NGlobal::GetVar( "CRAP.MainMenu.BackgroundMap", 0 ) != 0 )
+	{
 		return;
+	}
 
 	CPtr<ITransceiver> pTrans = CreateSinglePlayerTransceiver( SReplayInfo(), Singleton<IAILogic>() );
 	StartNewMap( pMapInfo, pTrans, pScenarioTracker );
@@ -83,7 +89,9 @@ void CInterfaceMissionBackground::StartMissionMap( const NDb::SMapInfo *pMapInfo
 		}
 	}
 	else
+	{
 		Camera()->SetAnchor( CVec3( 10, 10, 0 ) );
+	}
 }
 
 void CInterfaceMissionBackground::MsgUnloadMission( const SGameMessage &msg )
@@ -143,7 +151,9 @@ bool CInterfaceMissionBackground::StepLocal( bool bAppActive )
 	else
 	{
 		if ( pWorld )
+		{
 			Unload();
+		}
 	}
 
 	return CInterfaceMissionBase::StepLocal( bAppActive );

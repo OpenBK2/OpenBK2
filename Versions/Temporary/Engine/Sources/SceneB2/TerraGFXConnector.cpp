@@ -33,10 +33,14 @@ void CTerraGen::CalcTerraVertexData( NGScene::SVertex *pVertex,
 	pVertex->tex.y = ( vPos.y - (float)nPatchY * DEF_PATCH_WORLD_SIZE ) * DEF_INV_PATCH_WORLD_SIZE;
 	CVec3 vNorm;
 	if ( pRealNorm )
+	{
 		vNorm = *pRealNorm;
+	}
 	else
+	{
 		vNorm =
 				bNeedFaster ? GetTerraNormFast( vPos.x, vPos.y, nTileX, nTileY ) : FindNormalInVertex( vPos, nTileX, nTileY );
+	}
 	CalcCompactVector( &( pVertex->normal ), vNorm );
 	pVertex->pos = ( pRealPos != 0 ) ? ( *pRealPos ) : vPos;
 	CalcCompactVector( &( pVertex->texU ), GetPreLightColor( pDesc, vNorm, vPreLightDir ) );
@@ -62,7 +66,9 @@ void CTerraGen::RemoveInvisibleTriangles( NMeshData::SMeshData *pPatch )
 			pPatch->triangles.resize( pPatch->triangles.size() - 1 );
 		}
 		else
+		{
 			++iTriangle;
+		}
 	}
 }
 
@@ -187,7 +193,9 @@ void CTerraGen::AddTileTriangle( std::vector<NMeshData::SMeshData> *pMeshData,
 	prePushTrgs.resize( 0 );
 
 	if ( tileTerraMasks.empty() )
+	{
 		return;
+	}
 
 	const CArray2D<uint8_t> &mask = tileTerraMasks[0];
 	const int nV1x = Clamp( int( v1.x * DEF_INV_TILE_SIZE ), 0, mask.GetSizeX() - 2 );
@@ -210,7 +218,9 @@ void CTerraGen::AddTileTriangle( std::vector<NMeshData::SMeshData> *pMeshData,
 		const uint8_t cAlpha2 = GetInterpolateValue( curMask, nV2x, nV2y, fV2dx, fV2dy );
 		const uint8_t cAlpha3 = GetInterpolateValue( curMask, nV3x, nV3y, fV3dx, fV3dy );
 		if ( ( cAlpha1 > DEF_TILE_MIN_ALPHA ) || ( cAlpha2 > DEF_TILE_MIN_ALPHA ) || ( cAlpha3 > DEF_TILE_MIN_ALPHA ) )
+		{
 			prePushTrgs.push_back( SPushAlphaTriangle( tilesOrder[k].nPrevNum, cAlpha1, cAlpha2, cAlpha3 ) );
+		}
 	}
 
 	const int nSizeMinusOne = prePushTrgs.size() - 1;
@@ -259,13 +269,19 @@ void CTerraGen::AddTileTriangle( std::vector<NMeshData::SMeshData> *pMeshData,
 		if ( ( nInd1 != nInd2 ) && ( nInd2 != nInd3 ) && ( nInd3 != nInd1 ) )
 		{
 			if ( IsCCW( v1, v2, v3 ) )
+			{
 				triangles.push_back( STriangle( nInd1, nInd2, nInd3 ) );
+			}
 			else
+			{
 				triangles.push_back( STriangle( nInd1, nInd3, nInd2 ) );
+			}
 		}
 
 		if ( ( nA1 >= 0xff ) && ( nA2 >= 0xff ) && ( nA3 >= 0xff ) )
+		{
 			break;
+		}
 	}
 }
 
@@ -378,21 +394,33 @@ void CTerraGen::PutAllFeaturesToGfx()
 	//	pGfxObserver->AddCrag( &(*it) );
 	for ( std::list<SRiverGFXInfo>::const_iterator it = terrainGfxInfo.rivers.begin(); it != terrainGfxInfo.rivers.end();
 	      ++it )
+	{
 		pGfxObserver->AddRiver( &( *it ) );
+	}
 	for ( std::list<SRoadGFXInfo>::iterator it = terrainGfxInfo.roads.begin(); it != terrainGfxInfo.roads.end(); ++it )
+	{
 		pGfxObserver->AddRoad( &( *it ) );
+	}
 	for ( std::list<STerraSpotGFXInfo>::iterator it = terrainGfxInfo.terraspots.begin();
 	      it != terrainGfxInfo.terraspots.end();
 	      ++it )
+	{
 		pGfxObserver->AddTerraSpot( &( *it ) );
+	}
 	for ( std::list<SPeakGFXInfo>::iterator it = terrainGfxInfo.peaks.begin(); it != terrainGfxInfo.peaks.end(); ++it )
+	{
 		pGfxObserver->AddPeak( &( *it ) );
+	}
 	for ( std::list<SFootGFXInfo>::iterator it = terrainGfxInfo.foots.begin(); it != terrainGfxInfo.foots.end(); ++it )
+	{
 		pGfxObserver->AddFoot( &( *it ) );
+	}
 	for ( std::list<SPrecipiceGFXInfo>::iterator it = terrainGfxInfo.precipices.begin();
 	      it != terrainGfxInfo.precipices.end();
 	      ++it )
+	{
 		pGfxObserver->AddPrecipice( &( *it ) );
+	}
 }
 
 void CTerraGen::UpdateAllGfxInfo()
@@ -400,7 +428,9 @@ void CTerraGen::UpdateAllGfxInfo()
 	UpdateGfxInfo( 0, 0, terrainInfo.nNumPatchesX, terrainInfo.nNumPatchesY );
 
 	if ( pGfxObserver )
+	{
 		PutAllFeaturesToGfx();
+	}
 }
 
 void CTerraGen::ReCreateAllFeaturesGfx()
@@ -430,7 +460,9 @@ void CTerraGen::ReCreateAllFeaturesGfx()
 		//AddAllFoots();
 		for ( std::list<STerrainInfo::SFoot>::const_iterator it = terrainInfo.foots.begin(); it != terrainInfo.foots.end();
 		      ++it )
+		{
 			AddFoot( *it );
+		}
 
 		terrainInfo.peaks.clear();
 
@@ -438,7 +470,9 @@ void CTerraGen::ReCreateAllFeaturesGfx()
 		for ( std::list<STerrainInfo::SPrecipice>::iterator it = terrainInfo.precipices.begin();
 		      it != terrainInfo.precipices.end();
 		      ++it )
+		{
 			CreatePrecipiceMesh( &( *it ), false );
+		}
 
 		// recreate peaks
 		//for ( list<STerrainInfo::SPeak>::const_iterator it = terrainInfo.peaks.begin(); it != terrainInfo.peaks.end(); ++it )
@@ -453,10 +487,14 @@ void CTerraGen::ReCreateAllFeaturesGfx()
 		{
 			const NDb::SVSOInstance *pInstance = FindRiver( it->nID );
 			if ( pInstance )
+			{
 				CreateRiverGfx( &( *it ), pInstance, true );
+			}
 		}
 		if ( !terrainGfxInfo.rivers.empty() )
+		{
 			UpdateRiversDepthes();
+		}
 	}
 
 	// recreate spots
@@ -468,9 +506,13 @@ void CTerraGen::ReCreateAllFeaturesGfx()
 		{
 			const NDb::STerrainSpotInstance *pInstance = FindTerraSpot( it->nID );
 			if ( pInstance && pInstance->pDescriptor )
+			{
 				CreateTerraSpotGfx( &( *it ), pInstance );
+			}
 			else
+			{
 				DebugTrace( "Can't find terra spot instance %d or instance descriptor empty", it->nID );
+			}
 		}
 	}
 
@@ -616,7 +658,9 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 	{
 		terrainGfxInfo.terraPatches.resize( nPatchesNum );
 		for ( int i = 0; i < nPatchesNum; ++i )
+		{
 			terrainGfxInfo.terraPatches[i].resize( tileTerraMasks.size() );
+		}
 	}
 
 	//UpdateNormals( nPatchX, nPatchY );
@@ -713,7 +757,9 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 
 		CPatchPreLightHash preLightHash( patchNorms.size() );
 		for ( CPatchNormsHash::const_iterator it = patchNorms.begin(); it != patchNorms.end(); ++it )
+		{
 			preLightHash[it->first] = GetPreLightColor( pDesc, it->second, vPreLightDir );
+		}
 
 		std::vector<std::unordered_map<int, int>> patchesVertsHash( tileTerraMasks.size() );
 		static std::unordered_map<int, NGScene::SVertex> vertsHash( 1024 );
@@ -733,10 +779,14 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 				{
 					const CArray2D<uint8_t> &mask = tileTerraMasks[k];
 					if ( ( mask[g][i] > 0 ) || ( mask[g][i + 1] > 0 ) || ( mask[g + 1][i + 1] > 0 ) || ( mask[g + 1][i] > 0 ) )
+					{
 						maskLayers.push_back( k );
+					}
 				}
 				if ( maskLayers.empty() )
+				{
 					continue;
+				}
 
 				const STerrainInfo::STile &tile = terrainInfo.tiles[g][i];
 				for ( std::vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
@@ -776,7 +826,9 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 							nAlpha4 = (std::min)( nAlpha4 + mask[g + 1][i + 1], 255 );
 						}
 						else
+						{
 							nAlpha1 = nAlpha2 = nAlpha3 = nAlpha4 = 255;
+						}
 						const int nSub1 = nAlpha2 - nAlpha1;
 						const int nSub2 = nAlpha4 - nAlpha3;
 						const uint8_t cA1 = (std::min)( Float2Int( ( (float)nAlpha1 + (float)nSub1 * dx1 ) * ( 1.0f - dy1 ) +
@@ -818,7 +870,9 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 						                                       preLightHash );
 
 						if ( pDesc->pTerraSet->bWrapTexture )
+						{
 							WrapChapterTexture( &curData.vertices, pDesc->nNumPatchesX, pDesc->nNumPatchesY, fTexScaleCoeff );
+						}
 
 						curData.vertices[nLayerInd1].normal.w = (std::max)( cA1, curData.vertices[nLayerInd1].normal.w );
 						curData.vertices[nLayerInd2].normal.w = (std::max)( cA2, curData.vertices[nLayerInd2].normal.w );
@@ -827,7 +881,9 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 						if ( nLayerInd1 == nLayerInd2 || nLayerInd1 == nLayerInd3 || nLayerInd2 == nLayerInd3 )
 						{
 							if ( ( nAlpha1 == 255 ) && ( nAlpha2 == 255 ) && ( nAlpha3 == 255 ) && ( nAlpha4 == 255 ) )
+							{
 								break;
+							}
 
 							continue;
 						}
@@ -850,7 +906,9 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 						if ( bFound )
 						{
 							if ( ( nAlpha1 == 255 ) && ( nAlpha2 == 255 ) && ( nAlpha3 == 255 ) && ( nAlpha4 == 255 ) )
+							{
 								break;
+							}
 
 							continue;
 						}
@@ -858,7 +916,9 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 						curData.triangles.push_back( STriangle( nLayerInd1, nLayerInd2, nLayerInd3 ) );
 
 						if ( ( nAlpha1 == 255 ) && ( nAlpha2 == 255 ) && ( nAlpha3 == 255 ) && ( nAlpha4 == 255 ) )
+						{
 							break;
+						}
 					}
 				}
 				//if ( terrainInfo.seaMask.IsEmpty() || !( terrainInfo.seaMask[g][i] && waterBottomMap[g][i] ) )
@@ -892,7 +952,9 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 			std::vector<STriangle>( data.triangles ).swap( data.triangles );
 			std::vector<uint32_t>( data.attributes[0].data ).swap( data.attributes[0].data );
 			if ( data.attributes[0].data.empty() )
+			{
 				data.attributes.clear();
+			}
 		}
 	}
 
@@ -906,6 +968,8 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 	if ( pGfxObserver )
 	{
 		for ( int i = 0; i < DEF_BREAK_TERRA_PATCHES; ++i )
+		{
 			pGfxObserver->UpdatePatchGeometry( &terrainGfxInfo.terraPatches[nPatchInd + i], nPatchInd + i );
+		}
 	}
 }

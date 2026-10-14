@@ -40,7 +40,9 @@ class CConsoleBuffer : public IConsoleBuffer
 	int operator&( IBinSaver &saver )
 	{
 		if ( saver.IsChecksum() )
+		{
 			return 0;
+		}
 
 		saver.Add( 7, &szLogFileName );
 		saver.Add( 8, &pipes );

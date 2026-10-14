@@ -33,7 +33,9 @@ void CBridgeRPGStatsExporter::GetTempAIGeometryName( std::string *pszAIGeometryN
 			fmt::format( "{}{}\\{}", rszVisObjectName.c_str(), AI_GEOMETRY_PREFIX[eAIGeometry], rDBID.ToString().c_str() );
 	CTempNamesMap::const_iterator pos = tempNamesMap.find( szKey );
 	if ( pos != tempNamesMap.end() )
+	{
 		*pszAIGeometryName = pos->second;
+	}
 	else
 	{
 		const std::string szTempFileName = NFile::GetTempFileName() + ".gr2";
@@ -336,7 +338,9 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator *pManipulator,
 	CStaticObjectRPGStatsExporter::ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, exportType );
 	//
 	if ( exportType == ET_BEFORE_REF )
+	{
 		return ER_SUCCESS;
+	}
 	//
 	ExportAdditionalInfo( pManipulator, rszObjectName, objectDBID );
 	//

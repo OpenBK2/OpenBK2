@@ -23,7 +23,9 @@ void LoadPrecached()
 	{
 		IPrecache *p = precacheUpdateList[k];
 		if ( IsValid( p ) )
+		{
 			p->ForceUpdate();
+		}
 	}
 	precacheUpdateList.clear();
 }
@@ -36,7 +38,9 @@ void AddToPrecachedUpdate( IPrecache *pAdd )
 inline std::string GetFileResourceName( const char *pszResName, int nFileID )
 {
 	if ( nFileID == 0 )
+	{
 		return pszResName;
+	}
 	char szBuf[1024];
 	sprintf( szBuf, "bin\\%s\\%d", pszResName, nFileID );
 	return szBuf;
@@ -45,7 +49,9 @@ inline std::string GetFileResourceName( const char *pszResName, int nFileID )
 inline std::string GetFileResourceUidName( const char *pszResName, const boost::uuids::uuid &fileUID )
 {
 	if ( fileUID.is_nil() )
+	{
 		return pszResName;
+	}
 	return fmt::format( "bin\\{}\\{}", pszResName, boost::uuids::to_string( fileUID ) );
 }
 
@@ -57,7 +63,9 @@ static inline bool DoesFileExist( const char *pszResName, int nID )
 static inline bool DoesFileExist( const char *pszResName, const boost::uuids::uuid &fileUID )
 {
 	if ( fileUID.is_nil() )
+	{
 		return false;
+	}
 
 	return NVFS::GetMainVFS()->DoesFileExist( GetFileResourceUidName( pszResName, fileUID ) );
 }
@@ -102,10 +110,14 @@ bool CResourceFileOpener::DoesExist( const char *pszResName, const SResKey<int> 
 	SDoesExistKey k( pszResName, key );
 	TDoesExistHash::iterator i = deh.find( k );
 	if ( i != deh.end() )
+	{
 		return i->second;
+	}
 	bool bRes = DoesFileExist( pszResName, key.uidKey );
 	if ( !bRes )
+	{
 		bRes = DoesFileExist( pszResName, key.tKey );
+	}
 	deh[k] = bRes;
 	return bRes;
 }
@@ -138,7 +150,9 @@ void CFileRequest::Read()
 	// its own stores.
 	ASSERT( !bIsReady.load( std::memory_order_relaxed ) );
 	if ( bIsReady.load( std::memory_order_relaxed ) )
+	{
 		return;
+	}
 	std::lock_guard l( readResource );
 	bIsFileReading = true;
 	const std::string szResourceName = DoesFileExist( pszResName, uid ) ? GetFileResourceUidName( pszResName, uid )
@@ -182,7 +196,9 @@ static void LoaderThread()
 		// a null request means stop, and ~SKillLoaderThread puts it at the
 		// front so shutdown does not wait for the queue to drain
 		if ( pRes == 0 )
+		{
 			return;
+		}
 		// Validity is deliberately not tested here. IsValid() reads the object's
 		// refcount word, and CObjectBase refcounting is single-threaded by
 		// design, so testing it on this thread races with every CPtr and CObj
@@ -199,7 +215,9 @@ void AddFileRequest( NGScene::CFileRequest *pReq )
 	// the validity flag lives in. The loader thread used to retest validity
 	// after popping, which it cannot do without racing those refcounts.
 	if ( !IsValid( pReq ) || pReq->IsReady() )
+	{
 		return;
+	}
 	// resource_sync_load reads every request on the calling thread, so that
 	// whether a resource is ready stops being a question about how fast the
 	// machine is. Two runs of the same binary on the same replay do not agree,
@@ -243,7 +261,9 @@ void ReleaseFileRequestHolder()
 	// thread is still writing into. This is the same "in flight" test
 	// HasFileRequestsInFly() answers with.
 	if ( requests.empty() && !bIsFileReading )
+	{
 		holdRequests.clear();
+	}
 }
 
 void SFLB3_RunResourceLoadingThread()
@@ -251,7 +271,9 @@ void SFLB3_RunResourceLoadingThread()
 	// assigning over a running std::thread calls std::terminate, where
 	// CreateThread would only have leaked the old handle
 	if ( loaderThread.joinable() )
+	{
 		return;
+	}
 	loaderThread = std::thread( LoaderThread );
 }
 
@@ -260,7 +282,9 @@ struct SKillLoaderThread
 	~SKillLoaderThread()
 	{
 		if ( !loaderThread.joinable() )
+		{
 			return;
+		}
 		{
 			std::lock_guard l( reqQueue );
 			requests.push_front( 0 );

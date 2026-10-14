@@ -85,10 +85,14 @@ static void UpdateGfxHeights( SRiverGFXInfo *pGfxInfo,
 	{
 		int nAlpha2CellsNumL = nAlphaCellsNumL * DEF_WATER2_TO_WATER_COEFF;
 		if ( nAlphaCellsNumL >= 1 )
+		{
 			nAlpha2CellsNumL = (std::max)( nAlpha2CellsNumL, 1 );
+		}
 		int nAlpha2CellsNumR = nAlphaCellsNumR * DEF_WATER2_TO_WATER_COEFF;
 		if ( nAlphaCellsNumR >= 1 )
+		{
 			nAlpha2CellsNumR = (std::max)( nAlpha2CellsNumR, 1 );
+		}
 		const float fAlphaCellsCoeffL = 1.0f / nAlphaCellsNumL;
 		const float fAlphaCellsCoeffR = 1.0f / nAlphaCellsNumR;
 		const float fAlpha2CellsCoeffL = 1.0f / nAlpha2CellsNumL;
@@ -169,7 +173,9 @@ void CTerraGen::AddRiver( const NDb::SVSOInstance *pInstance )
 	{
 		RiverManipulator( FindRiverInfo( pInstance->nVSOID ), false );
 		if ( pAIObserver )
+		{
 			PutRiverToAI( pInstance );
+		}
 	}
 }
 
@@ -196,11 +202,15 @@ bool CTerraGen::AddRiver( const NDb::SVSOInstance *pInstance, const int nRandSee
 	      ++it )
 	{
 		if ( it->nID == pInstance->nVSOID )
+		{
 			return false;
+		}
 	}
 
 	if ( pInstance->points.size() < 2 )
+	{
 		return false;
+	}
 
 	STerrainInfo::SRiver curRiverInfo;
 	NWin32Random::Seed( nRandSeed );
@@ -268,11 +278,15 @@ bool CTerraGen::AddRiver( const NDb::SVSOInstance *pInstance, const int nRandSee
 	// find max river samples number
 	curRiverInfo.nWaterSamplesNum = DEF_WATER_SAMPLES_NUM;
 	if ( !curRiverInfo.pDesc->waterLayers.empty() )
+	{
 		curRiverInfo.nWaterSamplesNum = curRiverInfo.pDesc->waterLayers[0].nNumCells;
+	}
 
 	curRiverInfo.nWater2SamplesNum = (std::max)( curRiverInfo.nWaterSamplesNum * DEF_WATER2_TO_WATER_COEFF, 1.f );
 	if ( curRiverInfo.pDesc->waterLayers.size() > 1 )
+	{
 		curRiverInfo.nWater2SamplesNum = curRiverInfo.pDesc->waterLayers[1].nNumCells;
+	}
 
 	//	curRiverInfo.nWaterSamplesNum = DEF_WATER_SAMPLES_NUM;
 	//	for ( int i = 1; i < sampPoints.size(); ++i )
@@ -489,7 +503,9 @@ void CTerraGen::CreateRiverGfx( STerrainInfo::SRiver *pRiver,
 {
 	NI_ASSERT( pRiver->precVertsL.size() == pInstance->points.size(), "River's info is not corresponded to VSOInstance" );
 	if ( pRiver->precVertsL.size() != pInstance->points.size() )
+	{
 		return;
+	}
 
 	NGScene::SVertex bottomVertL, bottomVertR, bottomVert;
 	InitBottomVertex( bottomVertL );
@@ -564,7 +580,9 @@ void CTerraGen::CreateRiverGfx( STerrainInfo::SRiver *pRiver,
 			//bottomVert.normal.w = Clamp<int>( (fTest - fTest*fTest)*4*255, 0, 255 );//IsPointOnMap( GetVec2(bottomVert.pos) ) ? 1.0f : 0.0f;
 			gfxInfo.bottomPatches[nCurPatch].vertices.push_back( bottomVert );
 			if ( ( nPatchInd == DEF_RIVER_SAMPLES_PER_PATCH ) && ( nCurPatch < ( nNumPatches - 1 ) ) )
+			{
 				gfxInfo.bottomPatches[nCurPatch + 1].vertices.push_back( bottomVert );
+			}
 		}
 
 		// water
@@ -588,9 +606,11 @@ void CTerraGen::CreateRiverGfx( STerrainInfo::SRiver *pRiver,
 				waterVert.pos = waterVertL.pos + ( waterVertR.pos - waterVertL.pos ) * waterVert.tex.x;
 				waterVert.tex.x = fMinTexX + ( fMaxTexX - fMinTexX ) * waterVert.tex.x;
 				if ( ( k != 0 ) && ( k != ( pRiver->nWaterSamplesNum - 1 ) ) )
+				{
 					waterVert.pos +=
 							pRiver->precNormsL[i] * NWin32Random::RandomCheck( -pRiver->pDesc->waterLayers[0].fDisturbance,
 					                                                       pRiver->pDesc->waterLayers[0].fDisturbance );
+				}
 				/*if ( ( k == 0 ) || ( k == ( curRiverInfo.nWaterSamplesNum - 1 ) ) )
 				waterVert.normal.w = 0;
 				else
@@ -600,7 +620,9 @@ void CTerraGen::CreateRiverGfx( STerrainInfo::SRiver *pRiver,
 						0; // IsPointOnMap( GetVec2(waterVert.pos) ) ? Clamp( Float2Int(pInstance->points[i].fOpacity * 255.0f), 0, 255 ) : 0.0f;
 				gfxInfo.waterPatches[nCurPatch].vertices.push_back( waterVert );
 				if ( ( nPatchInd == DEF_RIVER_SAMPLES_PER_PATCH ) && ( nCurPatch < ( nNumPatches - 1 ) ) )
+				{
 					gfxInfo.waterPatches[nCurPatch + 1].vertices.push_back( waterVert );
+				}
 			}
 		}
 
@@ -626,9 +648,11 @@ void CTerraGen::CreateRiverGfx( STerrainInfo::SRiver *pRiver,
 				waterVert.pos = waterVertL.pos + ( waterVertR.pos - waterVertL.pos ) * waterVert.tex.x;
 				waterVert.tex.x = fMinTexX + ( fMaxTexX - fMinTexX ) * waterVert.tex.x;
 				if ( ( k != 0 ) && ( k != ( pRiver->nWater2SamplesNum - 1 ) ) )
+				{
 					waterVert.pos +=
 							pRiver->precNormsL[i] * NWin32Random::RandomCheck( -pRiver->pDesc->waterLayers[1].fDisturbance,
 					                                                       pRiver->pDesc->waterLayers[1].fDisturbance );
+				}
 				/*if ( ( k == 0 ) || ( k == ( curRiverInfo.nWater2SamplesNum - 1 ) ) )
 				waterVert.normal.w = 0;
 				else
@@ -638,7 +662,9 @@ void CTerraGen::CreateRiverGfx( STerrainInfo::SRiver *pRiver,
 						0; // IsPointOnMap( GetVec2(waterVert.pos) ) ? Clamp( Float2Int(pInstance->points[i].fOpacity * 255.0f), 0, 255 ) : 0.0f;
 				gfxInfo.water2Patches[nCurPatch].vertices.push_back( waterVert );
 				if ( ( nPatchInd == DEF_RIVER_SAMPLES_PER_PATCH ) && ( nCurPatch < ( nNumPatches - 1 ) ) )
+				{
 					gfxInfo.water2Patches[nCurPatch + 1].vertices.push_back( waterVert );
+				}
 			}
 		}
 
@@ -703,36 +729,48 @@ void CTerraGen::CreateRiverGfx( STerrainInfo::SRiver *pRiver,
 	}
 
 	if ( bNeedUpdateHeights )
+	{
 		UpdateRiverHeights( pRiver, &gfxInfo, pInstance );
+	}
 
 	//ClampRiverGfxByMap( &gfxInfo );
 
 	terrainGfxInfo.rivers.push_back( gfxInfo );
 
 	if ( pGfxObserver )
+	{
 		pGfxObserver->AddRiver( &( terrainGfxInfo.rivers.back() ) );
+	}
 }
 
 void CTerraGen::PutAllRiversOnTerrain()
 {
 	for ( std::list<STerrainInfo::SRiver>::iterator it = terrainInfo.rivers.begin(); it != terrainInfo.rivers.end();
 	      ++it )
+	{
 		PutRiverOnTerrain( &( *it ), CVec2i( -1, -1 ), CVec2i( -1, -1 ) );
+	}
 }
 
 void CTerraGen::PutRiverOnTerrain( STerrainInfo::SRiver *pRiver, const CVec2i &vMinTile, const CVec2i &vMaxTile )
 {
 	// make hole in terrain
 	if ( vMinTile.x == -1 )
+	{
 		MakeHole( pRiver->samples, pRiver->vSampMin.x, pRiver->vSampMin.y, pRiver->vSampMax.x, pRiver->vSampMax.y );
+	}
 	else
+	{
 		MakeHole( pRiver->samples, vMinTile.x, vMinTile.y, vMaxTile.x, vMaxTile.y );
+	}
 
 	SRiverGFXInfo *pGfxInfo = FindRiverGfxInfo( pRiver->nID );
 	const NDb::SVSOInstance *pRiverInstance = FindRiver( pRiver->nID );
 
 	if ( pGfxInfo && pRiverInstance )
+	{
 		UpdateRiverHeights( pRiver, pGfxInfo, pRiverInstance );
+	}
 
 	float fHeight;
 	for ( std::vector<CVec3>::iterator it = pRiver->precVertsL.begin(); it != pRiver->precVertsL.end(); ++it )
@@ -749,7 +787,9 @@ void CTerraGen::PutRiverOnTerrain( STerrainInfo::SRiver *pRiver, const CVec2i &v
 	AddToPrecipiceUpdateQueue( pRiver->nID | 0x10000 );
 
 	if ( pGfxInfo && pGfxObserver )
+	{
 		pGfxObserver->UpdateRiver( pRiver->nID );
+	}
 }
 
 void CTerraGen::RiverManipulator( STerrainInfo::SRiver *pRiver, const bool bRemove )
@@ -776,7 +816,9 @@ void CTerraGen::RiverManipulator( STerrainInfo::SRiver *pRiver, const bool bRemo
 	}
 
 	if ( !bRemove )
+	{
 		AddUnique( &updatedRivers, pRiver->nID );
+	}
 
 	UpdateCragsAndRiversInArea( updatedCrags, updatedRivers, vBBMin, vBBMax );
 
@@ -785,7 +827,9 @@ void CTerraGen::RiverManipulator( STerrainInfo::SRiver *pRiver, const bool bRemo
 
 	// grid updater (intellectual)
 	if ( IScene *pScene = Scene() )
+	{
 		pScene->UpdateGrid( vBBMin.x, vBBMin.y, vBBMax.x, vBBMax.y );
+	}
 }
 
 void CTerraGen::RemoveRiver( const int nVSOID )
@@ -795,7 +839,9 @@ void CTerraGen::RemoveRiver( const int nVSOID )
 	for ( ; itRiver != terrainInfo.rivers.end(); ++itRiver )
 	{
 		if ( itRiver->nID == nVSOID )
+		{
 			break;
+		}
 	}
 	if ( itRiver == terrainInfo.rivers.end() )
 	{
@@ -845,7 +891,9 @@ void CTerraGen::AddAllRivers()
 	//RemoveAllRivers();
 
 	for ( std::vector<NDb::SVSOInstance>::const_iterator it = pDesc->rivers.begin(); it != pDesc->rivers.end(); ++it )
+	{
 		AddRiver( &( *it ), GetVSOSeed( &*it ) );
+	}
 
 	//if ( !pDesc->rivers.empty() )
 	//{
@@ -893,7 +941,9 @@ const NDb::SVSOInstance *CTerraGen::FindRiver( int nID ) const
 	for ( std::vector<NDb::SVSOInstance>::const_iterator it = pDesc->rivers.begin(); it != pDesc->rivers.end(); ++it )
 	{
 		if ( it->nVSOID == nID )
+		{
 			return static_cast<const NDb::SVSOInstance *>( &( *it ) );
+		}
 	}
 	//NI_ASSERT( false, StrFmt( "Couldn't find rivers's instance: ID=%d", nID ) );
 	return 0;
@@ -905,7 +955,9 @@ STerrainInfo::SRiver *CTerraGen::FindRiverInfo( int nID )
 	      ++it )
 	{
 		if ( it->nID == nID )
+		{
 			return ( &( *it ) );
+		}
 	}
 	//NI_ASSERT( false, StrFmt("Couldn't find river's info: ID=%d", nID) );
 	return 0;
@@ -917,7 +969,9 @@ struct SRiverProfile
 	{
 		// TODO: old riverprofile
 		if ( x <= DEF_RIVER_RIDGE_NULL )
+		{
 			return 1.0f;
+		}
 		const float tx = ( x - DEF_RIVER_RIDGE_NULL ) * DEF_RIVER_RIDGE_COEFF;
 		return 1.0f - tx * tx;
 		//return 1.0f - x * x;
@@ -938,7 +992,9 @@ struct SRiverBottomProfile
 float CTerraGen::GetMaxRiverHeight( const CVec2 &v ) const
 {
 	if ( terrainInfo.rivers.empty() )
+	{
 		return 0.0f;
+	}
 
 	bool bFlag = false;
 	float fHeight = -FP_MAX_VALUE;
@@ -1049,20 +1105,28 @@ void CTerraGen::UpdateRiversDepthes()
 								GetBaryCoords( vert1, v1, v3, v2, &vBary );
 								if ( ( vBary.x > -DEF_EPS ) && ( vBary.y > -DEF_EPS ) &&
 								     ( ( vBary.x + vBary.y ) < ( 1.0f + DEF_EPS ) ) )
+								{
 									fMinHeight1 = (std::min)( fMinHeight1, ( v3.z - v1.z ) * vBary.x + ( v2.z - v1.z ) * vBary.y + v1.z );
+								}
 								GetBaryCoords( vert1, v4, v2, v3, &vBary );
 								if ( ( vBary.x > -DEF_EPS ) && ( vBary.y > -DEF_EPS ) &&
 								     ( ( vBary.x + vBary.y ) < ( 1.0f + DEF_EPS ) ) )
+								{
 									fMinHeight1 = (std::min)( fMinHeight1, ( v2.z - v4.z ) * vBary.x + ( v3.z - v4.z ) * vBary.y + v4.z );
+								}
 
 								GetBaryCoords( vert2, v1, v3, v2, &vBary );
 								if ( ( vBary.x > -DEF_EPS ) && ( vBary.y > -DEF_EPS ) &&
 								     ( ( vBary.x + vBary.y ) < ( 1.0f + DEF_EPS ) ) )
+								{
 									fMinHeight2 = (std::min)( fMinHeight2, ( v3.z - v1.z ) * vBary.x + ( v2.z - v1.z ) * vBary.y + v1.z );
+								}
 								GetBaryCoords( vert2, v4, v2, v3, &vBary );
 								if ( ( vBary.x > -DEF_EPS ) && ( vBary.y > -DEF_EPS ) &&
 								     ( ( vBary.x + vBary.y ) < ( 1.0f + DEF_EPS ) ) )
+								{
 									fMinHeight2 = (std::min)( fMinHeight2, ( v2.z - v4.z ) * vBary.x + ( v3.z - v4.z ) * vBary.y + v4.z );
+								}
 							}
 						}
 					}
@@ -1158,7 +1222,9 @@ void CTerraGen::UpdateRiversDepthes()
 					}
 
 					if ( pGfxObserver )
+					{
 						pGfxObserver->UpdateRiver( itCurRiver->nID );
+					}
 				}
 
 				bWasUpdated = true;
@@ -1176,7 +1242,9 @@ SRiverGFXInfo *CTerraGen::FindRiverGfxInfo( const int nID )
 	for ( std::list<SRiverGFXInfo>::iterator it = terrainGfxInfo.rivers.begin(); it != terrainGfxInfo.rivers.end(); ++it )
 	{
 		if ( it->nID == nID )
+		{
 			return &( *it );
+		}
 	}
 	return 0;
 }
@@ -1213,7 +1281,9 @@ inline void AddInterpolatedVertex( std::vector<NGScene::SVertex> *pClampVerts,
 		CalcCompactVector( &( vertex.normal ), vNorm );
 	}
 	else
+	{
 		vertex.normal = vert1.normal;
+	}
 	vertex.tex = ( vert2.tex - vert1.tex ) * vBary.x + ( vert3.tex - vert1.tex ) * vBary.y + vert1.tex;
 	vertex.normal.w =
 			255 - ( DEF_MIN_REFL_ALPHA_VAL +
@@ -1258,7 +1328,9 @@ inline void GetIntersectionOfPlaneAndSegment(
 	{
 		const float t = -( vNorm * v1 + fDist ) / d;
 		if ( ( t > -DEF_EPS ) && ( t < ( 1.0f + DEF_EPS ) ) )
+		{
 			PushBackUnique( pIntersVerts, v1 + ( v2 - v1 ) * t );
+		}
 	}
 }
 
@@ -1272,8 +1344,10 @@ inline void GetClampVertices( std::vector<CVec3> *pClampVerts,
 	CVec2 vBary;
 	GetBaryCoords( v1, p1, p2, p3, &vBary );
 	if ( ( vBary.x > -DEF_EPS ) && ( vBary.y > -DEF_EPS ) && ( ( vBary.x + vBary.y ) < ( 1.0f + DEF_EPS ) ) )
+	{
 		//PushBackUnique( pClampVerts, v1 );
 		pClampVerts->push_back( v1 );
+	}
 
 	static std::vector<SIntersectPoint> locInters( 16 );
 	locInters.resize( 0 );
@@ -1284,12 +1358,16 @@ inline void GetClampVertices( std::vector<CVec3> *pClampVerts,
 	std::sort( locInters.begin(), locInters.end() );
 
 	for ( std::vector<SIntersectPoint>::const_iterator it = locInters.begin(); it != locInters.end(); ++it )
+	{
 		PushBackUnique( pClampVerts, it->vPoint );
+	}
 
 	GetBaryCoords( v2, p1, p2, p3, &vBary );
 	if ( ( vBary.x > -DEF_EPS ) && ( vBary.y > -DEF_EPS ) && ( ( vBary.x + vBary.y ) < ( 1.0f + DEF_EPS ) ) )
+	{
 		//PushBackUnique( pClampVerts, v2 );
 		pClampVerts->push_back( v2 );
+	}
 }
 
 inline void AddCorrectOrientedTrg( NMeshData::SMeshData *pData, const int nInd1, const int nInd2, const int nInd3 )
@@ -1298,9 +1376,13 @@ inline void AddCorrectOrientedTrg( NMeshData::SMeshData *pData, const int nInd1,
 	              ( pData->vertices[nInd3].pos - pData->vertices[nInd1].pos );
 	Normalize( &vNorm );
 	if ( ( vNorm * GetVector( pData->vertices[nInd1].normal ) ) > 0.0f )
+	{
 		pData->triangles.push_back( STriangle( nInd1, nInd2, nInd3 ) );
+	}
 	else
+	{
 		pData->triangles.push_back( STriangle( nInd1, nInd3, nInd2 ) );
+	}
 }
 
 struct SRiverVertsArrOrder
@@ -1342,7 +1424,9 @@ inline void GetIntersectionOfTrgAndSegment( std::vector<CVec3> &pIntersVerts,
 			CVec2 vBary;
 			GetBaryCoords( p, p1, p2, p3, &vBary );
 			if ( ( vBary.x > -DEF_EPS ) && ( vBary.y > -DEF_EPS ) && ( ( vBary.x + vBary.y ) < ( 1.0f + DEF_EPS ) ) )
+			{
 				pIntersVerts.push_back( p );
+			}
 		}
 	}
 }
@@ -1350,7 +1434,9 @@ inline void GetIntersectionOfTrgAndSegment( std::vector<CVec3> &pIntersVerts,
 void CTerraGen::ClampUnderRivers( NMeshData::SMeshData *pData )
 {
 	if ( pData->triangles.empty() || pData->vertices.empty() )
+	{
 		return;
+	}
 
 	CVec3 vBBMin, vBBMax;
 	CalcBBForGeometry( &vBBMin, &vBBMax, *pData );
@@ -1436,18 +1522,26 @@ void CTerraGen::ClampUnderRivers( NMeshData::SMeshData *pData )
 						vNorm = ( p2 - p1 ) ^ ( p3 - p1 );
 						Normalize( &vNorm );
 						if ( vNorm.z < 0.0f )
+						{
 							vNorm = -vNorm;
+						}
 						const float fDist = -p1 * vNorm;
 
 						// check source vertices
 						if ( IsPointUnderTrg( v1.pos, p1, p2, p3, vNorm, fDist, fDiff ) )
+						{
 							bFlag1 = true;
+						}
 						fAlpha1 = (std::max)( fAlpha1, fDiff );
 						if ( IsPointUnderTrg( v2.pos, p1, p2, p3, vNorm, fDist, fDiff ) )
+						{
 							bFlag2 = true;
+						}
 						fAlpha2 = (std::max)( fAlpha2, fDiff );
 						if ( IsPointUnderTrg( v3.pos, p1, p2, p3, vNorm, fDist, fDiff ) )
+						{
 							bFlag3 = true;
+						}
 						fAlpha3 = (std::max)( fAlpha3, fDiff );
 
 						GetIntersectionOfTrgAndSegment( intersVerts, v1.pos, v2.pos, vNorm, fDist, p1, p2, p3 );
@@ -1496,7 +1590,9 @@ void CTerraGen::ClampUnderRivers( NMeshData::SMeshData *pData )
 		if ( nCount > 0 )
 		{
 			if ( nCount == 3 )
+			{
 				newData.triangles.push_back( STriangle( nVertsOffs, nVertsOffs + 1, nVertsOffs + 2 ) );
+			}
 			else
 			{
 
@@ -1580,15 +1676,19 @@ void CTerraGen::ClampUnderRivers( NMeshData::SMeshData *pData )
 					{
 						//for ( vector<vector<CVec3> >::const_iterator itRiversClampVertsArr = riversClampVerts.begin(); itRiversClampVertsArr != riversClampVerts.end(); ++itRiversClampVertsArr )
 						for ( std::vector<SIntersectPoint>::const_iterator it = midPoints.begin(); it != midPoints.end(); ++it )
+						{
 							//const int nCurOffset = newData.vertices.size();
 							//for ( vector<CVec3>::const_iterator it = itRiversClampVertsArr->begin(); it != itRiversClampVertsArr->end(); ++it )
 							//{
 							AddInterpolatedVertex( &( newData.vertices ), it->vPoint, v1, v2, v3, fAlpha1, fAlpha2, fAlpha3 );
+						}
 						//}
 						//for ( int i = 1; i < itRiversClampVertsArr->size(); ++i )
 						//AddCorrectOrientedTrg( newData, nVertsOffs, nCurOffset + i - 1, nCurOffset + i );
 						for ( int i = 1; i < midPoints.size(); ++i )
+						{
 							AddCorrectOrientedTrg( &newData, nVertsOffs, nVertsOffs + i, nVertsOffs + i + 1 );
+						}
 					}
 					else // nCount == 2
 					{
@@ -1633,9 +1733,13 @@ void CTerraGen::ClampUnderRivers( NMeshData::SMeshData *pData )
 						}
 
 						for ( std::vector<SIntersectPoint>::const_iterator it = midPoints.begin(); it != midPoints.end(); ++it )
+						{
 							AddInterpolatedVertex( &( newData.vertices ), it->vPoint, v1, v2, v3, fAlpha1, fAlpha2, fAlpha3 );
+						}
 						for ( int i = 1; i < midPoints.size(); ++i )
+						{
 							AddCorrectOrientedTrg( &newData, nOrderNum1, nVertsOffs + i + 1, nVertsOffs + i + 2 );
+						}
 						AddCorrectOrientedTrg( &newData, nVertsOffs + 2 + midPoints.size() - 1, nOrderNum2, nOrderNum1 );
 					}
 				}
@@ -1720,7 +1824,9 @@ void CTerraGen::ClampUnderRivers( NMeshData::SMeshData *pData )
 		CVec3 vCenter( 0, 0, 0 ), vDist;
 		for ( std::vector<NGScene::SVertex>::const_iterator it = newData.vertices.begin(); it != newData.vertices.end();
 		      ++it )
+		{
 			vCenter += it->pos;
+		}
 		vCenter /= newData.vertices.size();
 		for ( std::vector<NGScene::SVertex>::iterator it = newData.vertices.begin(); it != newData.vertices.end(); ++it )
 		{
@@ -1760,10 +1866,14 @@ bool CTerraGen::IsPointInsideRivers( const CVec3 &v, const int nExcludeID )
 		{
 			std::vector<CVec3dEx> samples( itRiver->samples.size() );
 			for ( int i = 0; i < samples.size(); ++i )
+			{
 				samples[i] = itRiver->samples[i];
+			}
 
 			if ( IsInside( samples, vert ) )
+			{
 				return true;
+			}
 		}
 	}
 	return false;

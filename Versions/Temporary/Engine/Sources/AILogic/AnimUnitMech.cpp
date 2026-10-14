@@ -55,7 +55,9 @@ void CAnimUnitMech::Segment()
 					updater.AddUpdate( 0, pOwner->GetIdleAction(), pOwner, -1 );
 				}
 				else
+				{
 					updater.AddUpdate( 0, pOwner->GetMovingAction(), pOwner, -1 );
+				}
 			}
 		}
 	}

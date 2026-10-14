@@ -31,7 +31,9 @@ std::string Join( It first, It last, const std::string &szSeparator = " " )
 		return szRes;
 	}
 	else
+	{
 		return "";
+	}
 }
 
 // разделить строку на массив строк по заданному разделителю
@@ -244,14 +246,18 @@ BOOST_FORCEINLINE char ASCII_tolower( const char chr )
 inline void ToLowerASCII( std::string *pRes )
 {
 	for ( std::string::iterator it = pRes->begin(); it != pRes->end(); ++it )
+	{
 		*it = ASCII_tolower( *it );
+	}
 }
 inline void ToLowerASCII( std::string *pRes, const std::string &szString )
 {
 	const int nSize = szString.size();
 	pRes->resize( nSize );
 	for ( int i = 0; i < nSize; ++i )
+	{
 		( *pRes )[i] = ASCII_tolower( szString[i] );
+	}
 }
 
 // convert 'string', which represents integer value in any radix (oct, dec, hex) to 'int'
@@ -328,11 +334,17 @@ BOOST_FORCEINLINE char HalfByteToHexSymbol( const unsigned char chr )
 BOOST_FORCEINLINE unsigned char HexSymbolToHalfByte( const char chr )
 {
 	if ( chr >= 'a' )
+	{
 		return chr - 'a' + 10;
+	}
 	else if ( chr >= 'A' )
+	{
 		return chr - 'A' + 10;
+	}
 	else
+	{
 		return chr - '0';
+	}
 }
 inline std::string ToHex( int number )
 {
@@ -368,7 +380,9 @@ void ReplaceAllChars( std::basic_string<TChar> *pString, const TChar tFrom, cons
 	for ( typename std::basic_string<TChar>::iterator it = pString->begin(); it != pString->end(); ++it )
 	{
 		if ( *it == tFrom )
+		{
 			*it = tTo;
+		}
 	}
 }
 
@@ -476,15 +490,21 @@ public:
 		if ( stc.empty() )
 		{
 			if ( TBrackets::IsOpen( chr ) )
+			{
 				stc.push_back( TBrackets::GetClose( chr ) );
+			}
 			else
 			{
 				if ( chr == cSeparator )
+				{
 					return true;
+				}
 			}
 		}
 		else if ( chr == stc.back() )
+		{
 			stc.pop_back();
+		}
 		//
 		return false;
 	}
@@ -534,7 +554,9 @@ public:
 			memcpy( &( ( *pString )[0] ), &( szInput[nPrevPos] ), ( nCurrPos - nPrevPos ) * sizeof( TChar ) );
 		}
 		else
+		{
 			pString->clear();
+		}
 	}
 	int GetPrevPos() const { return nPrevPos; }
 	int GetCurrPos() const { return nCurrPos; }
@@ -557,11 +579,17 @@ namespace NImplementation
 		{
 			NI_VERIFY( nIndex <= nLength + szSample.size() + 1, "wrong index", return '$' );
 			if ( nIndex <= szSample.size() )
+			{
 				return szSample[nIndex - 1];
+			}
 			else if ( nIndex == szSample.size() + 1 )
+			{
 				return ' ';
+			}
 			else
+			{
 				return *( pszBegin + ( nIndex - szSample.size() - 2 ) );
+			}
 		}
 	};
 
@@ -582,7 +610,9 @@ void FastSearch( const char *pszBegin,
                  T charsComparer )
 {
 	if ( nSize == 0 || szSample.empty() )
+	{
 		return;
+	}
 
 	NImplementation::SSearchStr str( pszBegin, nSize, szSample );
 	NImplementation::SPrefixesArray prefixes( szSample.size() + 2 );
@@ -591,23 +621,31 @@ void FastSearch( const char *pszBegin,
 	while ( i != nSize + szSample.size() + 1 )
 	{
 		if ( i == szSample.size() )
+		{
 			prefixes[i + 1] = 0;
+		}
 		else
 		{
 			int nLen = prefixes[i];
 			// special case: all symbols in the szSample are equal
 			if ( nLen == szSample.size() && prefixes[nLen] == nLen - 1 && str[i + 1] == str[nLen] )
+			{
 				prefixes[i + 1] = nLen;
+			}
 			else
 			{
 				while ( nLen > 0 && ( nLen == szSample.size() || !charsComparer( str[nLen + 1], str[i + 1] ) ) )
+				{
 					nLen = prefixes[nLen];
+				}
 
 				prefixes[i + 1] = charsComparer( str[nLen + 1], str[i + 1] ) ? nLen + 1 : 0;
 			}
 
 			if ( prefixes[i + 1] == szSample.size() )
+			{
 				pFoundEntriesPos->push_back( i - 2 * szSample.size() );
+			}
 		}
 
 		++i;
@@ -619,7 +657,9 @@ int FastSerachFirst( const char *pszBegin, const std::string &szSample, T charsC
 {
 	const int nSize = strlen( pszBegin );
 	if ( nSize == 0 || szSample.empty() )
+	{
 		return -1;
+	}
 
 	NImplementation::SSearchStr str( pszBegin, nSize, szSample );
 	NImplementation::SPrefixesArray prefixes( szSample.size() );
@@ -629,18 +669,26 @@ int FastSerachFirst( const char *pszBegin, const std::string &szSample, T charsC
 	{
 		int nLen = prefixes[i - 1];
 		if ( nLen == szSample.size() )
+		{
 			nLen = prefixes[nLen];
+		}
 		while ( nLen > 0 && !charsComparer( str[nLen], str[i] ) )
+		{
 			nLen = prefixes[nLen];
+		}
 
 		if ( charsComparer( str[nLen], str[i] ) )
 		{
 			prefixes[i] = nLen + 1;
 			if ( prefixes[i] == szSample.size() && i != szSample.size() - 1 )
+			{
 				return i + 1 - 2 * szSample.size();
+			}
 		}
 		else
+		{
 			prefixes[i] = 0;
+		}
 
 		++i;
 	}
@@ -656,9 +704,13 @@ int SerachFirst( const char *pszBegin, const std::string &szSample, T charsCompa
 	{
 		int n = 0;
 		while ( n < nPatternSize - 1 && charsComparer( pszBegin[i + n], szSample[n] ) )
+		{
 			++n;
+		}
 		if ( charsComparer( pszBegin[i + n], szSample[n] ) )
+		{
 			return i;
+		}
 	}
 	return -1;
 }

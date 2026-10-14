@@ -76,7 +76,9 @@ public:
 	const bool IsVisible( const SVector &vTile, const int nSpiralIndex ) const
 	{
 		if ( GetSpiralPoint( nSpiralIndex ).sector.IsIntersec( sector ) )
+		{
 			return CVisForGroundUnitBasis::IsVisible( vTile, nSpiralIndex );
+		}
 		return false;
 	}
 };
@@ -84,9 +86,15 @@ public:
 CWarFogVisibility *CreateWarFogVisibility( CGlobalWarFog *pWarFog, const SWarFogUnitInfo &unitInfo )
 {
 	if ( unitInfo.bPlane )
+	{
 		return new CVisForPlane( pWarFog );
+	}
 	else if ( unitInfo.sector.IsWholeCircle() )
+	{
 		return new CVisForGroundUnit( pWarFog, unitInfo.vPos );
+	}
 	else
+	{
 		return new CVisForGroundUnitWithSector( pWarFog, unitInfo.vPos, unitInfo.sector );
+	}
 }

@@ -100,7 +100,9 @@ void CParticleExporter::FinishExport( const std::string &rszObjectTypeName, bool
 	MERunScript( szScriptText, rszObjectTypeName, bNeedExport, true );
 	//
 	if ( GetObjectSet().objectNameSet.empty() )
+	{
 		return;
+	}
 	//
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	const std::string szParticleFolder =
@@ -123,7 +125,9 @@ void CParticleExporter::FinishExport( const std::string &rszObjectTypeName, bool
 				ImportInfoToDBAfterRefs( "Unknown name", szDstFileName, pManipulator );
 			}
 			else
+			{
 				NFile::RemoveFile( szTempFileName.c_str() );
+			}
 		}
 	}
 	exportedFilesMap.clear();
@@ -143,7 +147,9 @@ bool CParticleExporter::ImportInfoToDBAfterRefs( const std::string &szObjName,
 		pParticle->SetKey( SIntResKey( uid, pManipulator->GetID( "" ) ) );
 	}
 	else
+	{
 		pParticle->SetKey( pManipulator->GetID( "" ) );
+	}
 
 	// Through the raw pointer: CPtr to CDGPtr is two user conversions, which
 	// only MSVC chained in a copy-initialisation.
@@ -157,7 +163,9 @@ bool CParticleExporter::ImportInfoToDBAfterRefs( const std::string &szObjName,
 		pInfo = pFunc->GetValue();
 	}
 	if ( pInfo == 0 )
+	{
 		return false;
+	}
 	SBound bound;
 	pInfo->CalcBound( &bound );
 

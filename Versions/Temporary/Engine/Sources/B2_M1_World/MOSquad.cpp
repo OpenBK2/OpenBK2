@@ -37,7 +37,9 @@ const SIconsSetInfo &GetDBIconsSet( NDb::EDesignSquadType eType )
 
 	CIconsSet::const_iterator it = iconsSets.find( eType );
 	if ( it == iconsSets.end() )
+	{
 		return iconsSetDefault;
+	}
 	return it->second;
 }
 
@@ -61,7 +63,9 @@ CMOSquad::~CMOSquad( void )
 void CMOSquad::SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck )
 {
 	if ( !units.empty() )
+	{
 		( *units.begin() )->SendAcknowledgement( pAckManager, eAck );
+	}
 }
 
 bool CMOSquad::AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update )
@@ -90,7 +94,9 @@ bool CMOSquad::Create( const int nUniqueID,
 	if ( !bInEditor )
 	{
 		if ( pStats->iconsSetParams.bCustom )
+		{
 			SetIconsSetInfo( SIconsSetInfo( pStats->iconsSetParams.fRaising, pStats->iconsSetParams.fHPBarLen ) );
+		}
 		else
 		{
 			const SIconsSetInfo &info = GetDBIconsSet( pStats->eSquadType );
@@ -146,7 +152,9 @@ bool CMOSquad::IsInSquad( struct IMOUnit *pUnit )
 	for ( CUnitsList::iterator it = units.begin(); it != units.end(); ++it )
 	{
 		if ( *it == pUnit )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -171,14 +179,18 @@ void CMOSquad::GetActions( CUserActions *pActions, EActionsType eActions ) const
 	{
 		IMOUnit *pUnit = *it;
 		if ( !pUnit->IsAlive() )
+		{
 			continue;
+		}
 		pUnit->GetActions( pActions, eActions );
 	}
 	if ( eActions == ACTIONS_BY || eActions == ACTIONS_ALL )
 	{
 		const NDb::SSquadRPGStats *pSt = checked_cast<const NDb::SSquadRPGStats *>( GetStats() );
 		if ( pSt->formations.empty() )
+		{
 			pActions->RemoveAction( NDb::USER_ACTION_FORMATION );
+		}
 		else
 		{
 		}
@@ -188,7 +200,9 @@ void CMOSquad::GetActions( CUserActions *pActions, EActionsType eActions ) const
 void CMOSquad::GetPossibleActions( CUserActions *pActions ) const
 {
 	if ( !GetStats() )
+	{
 		return;
+	}
 
 	const NDb::SSquadRPGStats *pSt = checked_cast<const NDb::SSquadRPGStats *>( GetStats() );
 
@@ -197,27 +211,37 @@ void CMOSquad::GetPossibleActions( CUserActions *pActions ) const
 		const NDb::SInfantryRPGStats *pMemberStats = pSt->members[i];
 		const NDb::SUnitActions *pMemberActions = pMemberStats->pActions;
 		if ( !pMemberActions )
+		{
 			continue;
+		}
 
 		*pActions |= pMemberActions->availUserActions;
 		for ( int i = 0; i < pMemberActions->specialAbilities.size(); ++i )
 		{
 			const NDb::SUnitSpecialAblityDesc *pDesc = pMemberActions->specialAbilities[i];
 			if ( !pDesc )
+			{
 				continue;
+			}
 			pActions->SetAction( GetActionByAbility( pDesc->eName ) );
 		}
 		if ( pActions->HasAction( NDb::USER_ACTION_MOVE ) )
+		{
 			pActions->SetAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN );
+		}
 	}
 
 	if ( pSt->formations.empty() )
+	{
 		pActions->RemoveAction( NDb::USER_ACTION_FORMATION );
+	}
 	else
 	{
 		pActions->SetAction( NDb::USER_ACTION_FORMATION );
 		for ( int i = 0; i < pSt->formations.size(); ++i )
+		{
 			pActions->SetAction( NDb::USER_ACTION_FORMATION_0 + pSt->formations[i].etype );
+		}
 	}
 }
 
@@ -226,7 +250,9 @@ void CMOSquad::GetDisabledActions( CUserActions *pActions, EActionsType eActions
 	if ( eActions == ACTIONS_BY || eActions == ACTIONS_ALL )
 	{
 		if ( pServedGun )
+		{
 			pActions->SetAction( NDb::USER_ACTION_CAPTURE_ARTILLERY );
+		}
 
 		pActions->SetAction( NDb::USER_ACTION_FORMATION_0 );
 		pActions->SetAction( NDb::USER_ACTION_FORMATION_1 );
@@ -298,7 +324,9 @@ void CMOSquad::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
 	}
 
 	if ( IsValid( pTransport ) )
+	{
 		pTransport->LoadSquad( this, false );
+	}
 }
 
 void CMOSquad::AIUpdateServedArtillery( IMOUnit *pMOUnit )
@@ -332,7 +360,9 @@ void CMOSquad::GetAbilityInfo( CAbilityInfo &squadAbilities ) const
 	{
 		IMOUnit *pUnit = *it;
 		if ( !pUnit->IsAlive() )
+		{
 			continue;
+		}
 
 		CAbilityInfo unitAbilities;
 		pUnit->GetAbilityInfo( unitAbilities );
@@ -346,11 +376,15 @@ int CMOSquad::GetAbilityTier( NDb::EUserAction eAction ) const
 	{
 		IMOUnit *pUnit = *it;
 		if ( !pUnit->IsAlive() )
+		{
 			continue;
+		}
 
 		int nTier = pUnit->GetAbilityTier( eAction );
 		if ( nTier != -1 )
+		{
 			return nTier;
+		}
 	}
 	return -1;
 }
@@ -362,11 +396,15 @@ const NDb::SUnitSpecialAblityDesc *CMOSquad::GetAbilityDesc( NDb::EUserAction eA
 	{
 		IMOUnit *pUnit = *it;
 		if ( !pUnit->IsAlive() )
+		{
 			continue;
+		}
 
 		const NDb::SUnitSpecialAblityDesc *pDesc = pUnit->GetAbilityDesc( eAction );
 		if ( pDesc )
+		{
 			return pDesc;
+		}
 	}
 	return 0;
 }
@@ -436,9 +474,13 @@ bool CMOSquad::IsFirstUnit( const IMOUnit *_pUnit ) const
 		IMOUnit *pUnit = *it;
 		bool bFit = pUnit->IsAlive() && pUnit->IsVisible();
 		if ( pUnit == _pUnit )
+		{
 			return bFit;
+		}
 		if ( bFit )
+		{
 			return false;
+		}
 	}
 	return false;
 }
@@ -461,7 +503,9 @@ void CMOSquad::UpdateSquadIcons()
 		pUnit->UpdateIcons();
 	}
 	if ( pContainer )
+	{
 		pContainer->UpdateIcons();
+	}
 }
 
 void CMOSquad::InitByDB() {}
@@ -470,11 +514,17 @@ void CMOSquad::UpdateServedGunCrew( const bool bClearCrew )
 {
 	CDynamicCast<CMOUnitMechanical> pArtillery = pServedGun;
 	if ( !IsValid( pArtillery ) )
+	{
 		return;
+	}
 	if ( bClearCrew || units.empty() || !IsValid( *units.begin() ) )
+	{
 		pArtillery->SetCrewSoldier( 0 );
+	}
 	else
+	{
 		pArtillery->SetCrewSoldier( *units.begin() );
+	}
 }
 
 REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x100A7485, CMOSquad );

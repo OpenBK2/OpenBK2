@@ -27,7 +27,9 @@ EXPORT_RESULT CFenceRPGStatsExporter::ExportObject( IManipulator *pManipulator,
 	CStaticObjectRPGStatsExporter::ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, exportType );
 	//
 	if ( exportType == ET_BEFORE_REF )
+	{
 		return ER_SUCCESS;
+	}
 	//
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	CArray2D<uint8_t> passabilityArray( 1, 3 );
@@ -58,10 +60,14 @@ bool CFenceRPGStatsExporter::GetGeom0FileName( IManipulator *pManipulator,
 	// Получаем манипулятор на VisObject-ы
 	int nNumVisobjs = 0;
 	if ( !CManipulatorManager::GetValue( &nNumVisobjs, pManipulator, rszSegmentsSetName + ".VisObjes" ) )
+	{
 		return false;
+	}
 
 	if ( nNumVisobjs <= 0 )
+	{
 		return false;
+	}
 
 	// рассматриваем только первую модель (если их несколько)
 	// т.е. passability у них всех должна быть одинаковая
@@ -69,17 +75,23 @@ bool CFenceRPGStatsExporter::GetGeom0FileName( IManipulator *pManipulator,
 
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	if ( !pResourceManager )
+	{
 		return false;
+	}
 
 	CPtr<IManipulator> pVisObjectManipulator =
 			CManipulatorManager::CreateManipulatorFromReference( szObjName, pManipulator, 0, 0, 0 );
 	if ( !pVisObjectManipulator )
+	{
 		return false;
+	}
 
 	// Получаем манипулятор модель сезона по умолчанию ( летнюю )
 	CPtr<IManipulator> pModelManipulator = CreateModelManipulatorFromVisObj( pVisObjectManipulator, 0 );
 	if ( pModelManipulator == 0 )
+	{
 		return false;
+	}
 
 	std::string szGeometryName;
 	CManipulatorManager::GetParamsFromReference( "Geometry", pModelManipulator, 0, &szGeometryName, 0 );
@@ -101,7 +113,9 @@ void CFenceRPGStatsExporter::CreatePassProfiles( IManipulator *pManipulator, con
 	{
 		NDb::SPassProfile passProfile;
 		if ( CreateObjectPassabilityProfile( szGrannyFileName, 1.0f, &passProfile ) )
+		{
 			SavePassProfile( passProfile, rszSegmentsSetName, "PassProfile", pManipulator );
+		}
 	}
 }
 

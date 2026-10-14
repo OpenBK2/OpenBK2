@@ -111,7 +111,9 @@ BASIC_REGISTER_CLASS( AILOGIC, CAIUnit );
 bool IsMapFullyFree( const SRect &rect, CAIUnit *pUnit )
 {
 	if ( GetAIMap()->IsRectOnLockedTiles( rect, EAC_ANY ) )
+	{
 		return false;
+	}
 
 	int nMinX = (std::min)( (std::min)( rect.v1().x, rect.v2().x ), (std::min)( rect.v3().x, rect.v4().x ) );
 	int nMinY = (std::min)( (std::min)( rect.v1().y, rect.v2().y ), (std::min)( rect.v3().y, rect.v4().y ) );
@@ -129,7 +131,9 @@ bool IsMapFullyFree( const SRect &rect, CAIUnit *pUnit )
 		{
 			if ( pIterUnit != pUnit && ( pIterUnit->IsAlive() || !pIterUnit->GetStats()->IsInfantry() ) &&
 			     pIterUnit->GetUnitRect().IsIntersected( rect ) )
+			{
 				return false;
+			}
 		}
 	}
 
@@ -140,7 +144,9 @@ const CVec2 CAIUnit::GetGunCenter( const int nGun, const int nPlatform ) const
 {
 	const NDb::SUnitBaseRPGStats *pStats = GetStats();
 	if ( pStats->IsInfantry() )
+	{
 		return GetCenterPlain();
+	}
 
 	const NDb::SMechUnitRPGStats *pMechStats = checked_cast<const NDb::SMechUnitRPGStats *>( pStats );
 	const CVec3 vGunPos = pMechStats->GetPlatform( nUniqueID, nPlatform ).vAIRotatePointPos;
@@ -172,12 +178,18 @@ const SAINotifyHitInfo::EHitType CAIUnit::ProcessExactHit( const SRect &combatRe
 	{
 		// пробили
 		if ( nRandPiercing >= nRandArmor && !IsSavedByCover() )
+		{
 			return SAINotifyHitInfo::EHT_HIT;
+		}
 		else
+		{
 			return SAINotifyHitInfo::EHT_REFLECT;
+		}
 	}
 	else
+	{
 		return SAINotifyHitInfo::EHT_MISS;
+	}
 }
 
 const int CAIUnit::GetRandArmorByDir( const int nArmorDir, const uint16_t wAttackDir, const SRect &unitRect )
@@ -221,7 +233,9 @@ bool CAIUnit::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmorDir, con
 			// если бьёт снизу, or with ignore AABBCoef ability on, то не сжимать
 			CAIUnit *pWhoFired = pExpl->GetWhoFire();
 			if ( nArmorDir != 1 && ( IsValidObj( pWhoFired ) && !pWhoFired->IsIgnoreAABBCoeff() ) )
+			{
 				unitRect.Compress( GetRemissiveCoeff() );
+			}
 
 			const SAINotifyHitInfo::EHitType eHitType =
 					ProcessExactHit( unitRect, vExplCoord, pExpl->GetRandomPiercing(), nRandArmor );
@@ -231,7 +245,9 @@ bool CAIUnit::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmorDir, con
 				if ( timeLastAttackedAck == 0 )
 				{
 					if ( GetPlayer() == theDipl.GetMyNumber() )
+					{
 						theFeedBackSystem.AddFeedbackAndForget( nUniqueID, GetCenterPlain(), EFB_UNDER_ATTACK, -1 );
+					}
 
 					timeLastAttackedAck = curTime;
 				}
@@ -239,16 +255,22 @@ bool CAIUnit::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmorDir, con
 
 			if ( eHitType == SAINotifyHitInfo::EHT_HIT || theCheats.GetFirstShoot( pExpl->GetPlayerOfShoot() ) == 1 ||
 			     ( IsValidObj( pWhoFired ) && pWhoFired->IsTargetingTrack() ) )
+			{
 				// Always hit if cheating or track targetting
 				TakeDamage( pExpl->GetRandomDamage(), &pExpl->GetShellStats(), pExpl->GetPlayerOfShoot(), pExpl->GetWhoFire() );
+			}
 
 			if ( !GetStats()->IsInfantry() )
+			{
 				pExpl->AddHitToSend( new CHitInfo( pExpl, this, eHitType, vExplCoord3D ) );
+			}
 			else
 			{
 				CSoldier *pSoldier = checked_cast<CSoldier *>( this );
 				if ( !pSoldier->IsInBuilding() )
+				{
 					pExpl->AddHitToSend( new CHitInfo( pExpl, this, eHitType, vExplCoord3D ) );
+				}
 			}
 
 			return true;
@@ -287,7 +309,9 @@ bool CAIUnit::ProcessAreaDamage( const class CExplosion *pExpl,
 		{
 			SRect unitRect = GetUnitRect();
 			if ( nArmorDir != 1 )
+			{
 				unitRect.Compress( GetRemissiveCoeff() );
+			}
 
 			bCircleHit = unitRect.IsIntersectCircle( vExplCoord2D, fSmallRadius );
 			if ( bCircleHit )
@@ -403,7 +427,9 @@ void CAIUnit::Init( const CVec2 &center,
 	{ //reinforcement price init
 		const SUnitBaseRPGStats *pStats = GetStats();
 		if ( pStats->GetTypeID() == SMechUnitRPGStats::typeID )
+		{
 			SetPrice( checked_cast<const SMechUnitRPGStats *>( pStats )->fReinforcementPrice );
+		}
 	}
 
 	//
@@ -463,11 +489,15 @@ const NDb::SAmphibianStats *CAIUnit::GetAmphibianStats() const
 {
 	const SUnitBaseRPGStats *pStats = GetStats();
 	if ( !pStats || pStats->GetTypeID() != SMechUnitRPGStats::typeID )
+	{
 		return 0;
+	}
 
 	const SMechUnitRPGStats *pMechStats = checked_cast<const SMechUnitRPGStats *>( pStats );
 	if ( !pMechStats->IsAmphibious() || !pMechStats->pAmphibianStats )
+	{
 		return 0;
+	}
 
 	return pMechStats->pAmphibianStats;
 }
@@ -503,11 +533,15 @@ const float CAIUnit::GetAmphibianWaterCoeff( const CVec2 &point ) const
 {
 	const NDb::SAmphibianStats *pAmphibianStats = GetAmphibianStats();
 	if ( !pAmphibianStats || !IsAmphibianWaterPoint( point ) )
+	{
 		return 0.0f;
+	}
 
 	const float fBlendTiles = pAmphibianStats->fWaterOffsetBlendTiles;
 	if ( fBlendTiles <= 0.0f )
+	{
 		return 1.0f;
+	}
 
 	const SVector centerTile = GetAIMap()->GetTile( point );
 	const int nTileSize = GetAIMap()->GetTileSize();
@@ -520,7 +554,9 @@ const float CAIUnit::GetAmphibianWaterCoeff( const CVec2 &point ) const
 		{
 			const SVector tile( x, y );
 			if ( !GetAIMap()->IsTileInside( tile ) || IsAmphibianWaterTile( tile ) )
+			{
 				continue;
+			}
 
 			const CVec2 vTilePoint = GetAIMap()->GetPointByTile( tile );
 			fNearestLandDist2 = (std::min)( fNearestLandDist2, fabs2( vTilePoint - point ) );
@@ -528,7 +564,9 @@ const float CAIUnit::GetAmphibianWaterCoeff( const CVec2 &point ) const
 	}
 
 	if ( fNearestLandDist2 == FLT_MAX )
+	{
 		return 1.0f;
+	}
 
 	// Blend visual sinking by distance from the nearest non-water shore tile.
 	const float fNearestLandTiles = sqrtf( fNearestLandDist2 ) / float( nTileSize );
@@ -539,11 +577,15 @@ void CAIUnit::UpdateAmphibianWaterModifier()
 {
 	const NDb::SAmphibianStats *pAmphibianStats = GetAmphibianStats();
 	if ( !pAmphibianStats || !pAmphibianStats->pWaterStatsModifier )
+	{
 		return;
+	}
 
 	const bool bNeedModifier = IsInWater();
 	if ( bNeedModifier == bAmphibianWaterModifierApplied )
+	{
 		return;
+	}
 
 	ApplyStatsModifier( pAmphibianStats->pWaterStatsModifier, bNeedModifier );
 	bAmphibianWaterModifierApplied = bNeedModifier;
@@ -558,16 +600,22 @@ const bool CAIUnit::CanMoveBetweenTiles( const SVector &fromTile, const SVector 
 	const NDb::SAmphibianStats *pAmphibianStats = GetAmphibianStats();
 	if ( !pAmphibianStats || fromTile == toTile || !GetAIMap()->IsTileInside( fromTile ) ||
 	     !GetAIMap()->IsTileInside( toTile ) )
+	{
 		return true;
+	}
 
 	const bool bFromWater = IsAmphibianWaterTile( fromTile );
 	const bool bToWater = IsAmphibianWaterTile( toTile );
 	if ( bFromWater == bToWater )
+	{
 		return true;
+	}
 
 	const SMechUnitRPGStats *pMechStats = checked_cast<const SMechUnitRPGStats *>( GetStats() );
 	if ( pMechStats->fMaxHeight <= 0.0f && !pMechStats->IsAmphibious() )
+	{
 		return true;
+	}
 
 	const SVector &landTile = bFromWater ? toTile : fromTile;
 	const SVector &waterTile = bFromWater ? fromTile : toTile;
@@ -585,7 +633,9 @@ void CAIUnit::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime 
 	pPlacement->fWaterCoeff = bRestInside ? 0.0f : GetAmphibianWaterCoeff( vPlacement );
 
 	if ( !GetAmphibianStats() || !pPlacement->bNewFormat || pPlacement->fWaterCoeff <= 0.0f )
+	{
 		return;
+	}
 
 	// Preserve interpolated yaw and discard terrain pitch/roll so amphibians
 	// remain level instead of following hidden river or cliff geometry.
@@ -623,14 +673,18 @@ void CAIUnit::PrepareToDelete()
 	{
 		SetAlive( false );
 		if ( theBalanceTest.IsActive() )
+		{
 			theBalanceTest.UnitDead( this );
+		}
 
 		Stop();
 
 		GetTerrain()->RemoveTemporaryUnlocking( GetUniqueId() );
 
 		if ( pAntiArtillery != 0 )
+		{
 			theAAManager.RemoveAA( pAntiArtillery );
+		}
 
 		theGroupLogic.DelUnitFromGroup( this );
 		theGroupLogic.DelUnitFromSpecialGroup( this );
@@ -664,11 +718,15 @@ void CAIUnit::DieTrain( const float fDamage )
 		SetAlive( false );
 
 		if ( GetStats()->etype == RPG_TYPE_TRAIN_LOCOMOTIVE || GetStats()->etype == RPG_TYPE_TRAIN_ARMOR )
+		{
 			Stop();
+		}
 		GetState()->TryInterruptState( 0 );
 
 		if ( pAntiArtillery != 0 )
+		{
 			theAAManager.RemoveAA( pAntiArtillery );
+		}
 
 		theGroupLogic.DelUnitFromGroup( this );
 		theGroupLogic.DelUnitFromSpecialGroup( this );
@@ -688,7 +746,9 @@ void CAIUnit::DieTrain( const float fDamage )
 
 		//ForceLockTiles();
 		if ( GetParty() < 2 )
+		{
 			theWarFog.DeleteUnit( GetUniqueId() );
+		}
 	}
 }
 
@@ -697,11 +757,15 @@ void CAIUnit::Die( const bool fromExplosion, const float fDamage )
 	if ( IsAlive() )
 	{
 		if ( GetStats()->IsTrain() )
+		{
 			DieTrain( fDamage );
+		}
 		else
 		{
 			if ( GetStats()->etype == RPG_TYPE_SNIPER && GetPlayer() == theDipl.GetMyNumber() )
+			{
 				updater.AddUpdate( EFB_SNIPER_DEAD, MAKELONG( GetCenter().x, GetCenter().y ) );
+			}
 
 			if ( theBalanceTest.IsActive() && !theBalanceTest.HasShoot( GetPlayer() ) )
 			{
@@ -728,7 +792,9 @@ void CAIUnit::Die( const bool fromExplosion, const float fDamage )
 				RecordRandomCall();
 			}
 			else
+			{
 				timeToDeath = curTime;
+			}
 			//}
 		}
 
@@ -751,9 +817,13 @@ bool CAIUnit::CalculateUnitVisibility4PartyInner( const uint8_t party ) const
 {
 	// NI_ASSERT( !bAlwaysVisible, "always visible, but not coast battery" );
 	if ( bAlwaysVisible )
+	{
 		return true;
+	}
 	else if ( theDipl.GetNeutralParty() == party )
+	{
 		return false;
+	}
 	else
 	{
 		const uint8_t cParty = theDipl.GetNParty( player );
@@ -774,7 +844,9 @@ void CAIUnit::UpdateCrewAndTruckVisibility( uint8_t party, bool bNewVisibility )
 			{
 				( *pServingFormation )[i]->SetVisibility( party, bNewVisibility );
 				if ( party == theCheats.GetNPartyForWarFog() )
+				{
 					updater.AddUpdate( 0, ACTION_NOTIFY_CHANGE_VISIBILITY, ( *pServingFormation )[i], bNewVisibility );
+				}
 			}
 		}
 		if ( GetState()->GetName() == EUSN_BEING_TOWED )
@@ -784,7 +856,9 @@ void CAIUnit::UpdateCrewAndTruckVisibility( uint8_t party, bool bNewVisibility )
 			{
 				pTransport->SetVisibility( party, bNewVisibility );
 				if ( party == theCheats.GetNPartyForWarFog() )
+				{
 					updater.AddUpdate( 0, ACTION_NOTIFY_CHANGE_VISIBILITY, pTransport, bNewVisibility );
+				}
 			}
 		}
 	}
@@ -837,12 +911,18 @@ bool CAIUnit::UpdateUnitVisibilityForParty( const uint8_t party, const bool bVis
 				if ( theDipl.GetMyParty() != GetParty() )
 				{
 					if ( bNewVisibility && GetStats()->IsAviation() )
+					{
 						theFeedBackSystem.AddFeedbackAndForget( GetUniqueId(), GetCenterPlain(), EFB_ENEMY_SIGHTED, -1 );
+					}
 				}
 				if ( IsInTankPit() )
+				{
 					UpdateTankPitVisibility( bVisibilityChanged, bNewVisibility );
+				}
 				if ( GetStats()->IsArtillery() )
+				{
 					( checked_cast<CArtillery *>( this ) )->UpdateAmmoBoxVisibility( bVisibilityChanged, bNewVisibility );
+				}
 			}
 
 			UpdateCrewAndTruckVisibility( party, bNewVisibility );
@@ -862,7 +942,9 @@ void CAIUnit::GetTilesForVisibility( CTilesSet *pTiles ) const
 	pTiles->clear();
 	const SVector tile = GetCenterTile();
 	if ( GetAIMap()->IsTileInside( tile ) )
+	{
 		pTiles->push_back( tile );
+	}
 }
 
 bool CAIUnit::ShouldSuspendAction( const EActionNotify &eAction ) const
@@ -885,7 +967,9 @@ void CAIUnit::CheckForReveal()
 				bRevealed = NRandom::Random( 0.0f, 1.0f ) < SConsts::REVEAL_INFO[GetStats()->etype].fRevealByQuery;
 				RecordRandomCall();
 				if ( bRevealed )
+				{
 					timeOfReveal = curTime;
+				}
 			}
 
 			vPlaceOfReveal = GetCenterPlain();
@@ -943,9 +1027,13 @@ void CAIUnit::FreezeSegment()
 		if ( GetPlayer() != theDipl.GetMyNumber() && !GetStats()->IsAviation() )
 		{
 			if ( IsVisibleByPlayer() && GetSpeed() != 0.0f )
+			{
 				theCombatEstimator.AddUnit( this );
+			}
 			else
+			{
 				theCombatEstimator.DelUnit( this );
+			}
 		}
 
 		pUnitInfoForGeneral->Segment();
@@ -959,7 +1047,9 @@ void CAIUnit::FreezeSegment()
 	}
 
 	if ( creationTime + 1000 < curTime )
+	{
 		CCommonUnit::FreezeSegment();
+	}
 
 	/*
 	if ( GetState() && GetState()->IsRestState() || GetState()->GetName() == EUSN_USE_SPYGLASS )
@@ -992,10 +1082,14 @@ void CAIUnit::CalcVisibility( const bool bIgnoreTime )
 				theSupremeBeing.SetUnitVisible( this, i, bVisibility );
 				if ( theDipl.GetNeutralPlayer() != GetPlayer() && !theDipl.IsAIPlayer( GetPlayer() ) &&
 				     theDipl.IsAIPlayer( i ) )
+				{
 					pUnitInfoForGeneral->UpdateVisibility( bVisibility );
+				}
 
 				if ( bVisibility && GetParty() == theDipl.GetNeutralParty() )
+				{
 					UpdateUnitsRequestsForResupply();
+				}
 			}
 		}
 		creationTime = curTime;
@@ -1041,7 +1135,9 @@ bool CAIUnit::CanCommandBeExecutedByStats( int nCmd ) const
 	{
 		const NDb::SUnitBaseRPGStats *pStats = GetStats();
 		if ( pStats->GetTypeID() != NDb::SMechUnitRPGStats::typeID )
+		{
 			return false;
+		}
 
 		const NDb::SMechUnitRPGStats *pMechStats = checked_cast<const NDb::SMechUnitRPGStats *>( pStats );
 		// Rocket/AA artillery may reverse only when no movement mode defines gunner positions.
@@ -1118,7 +1214,9 @@ void CAIUnit::TakeDamage( const float _fDamage,
 				{
 					bDisappear = GetTerrain()->IsLocked( GetCenterTile(), EAC_ANY );
 					if ( bDisappear )
+					{
 						theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_DISAPPEAR ), this, false );
+					}
 				}
 				//if ( GetStats()->IsInfantry() )
 				theGraveyard.AddBridgeKilledSoldier( GetCenterTile(), this );
@@ -1138,15 +1236,21 @@ void CAIUnit::TakeDamage( const float _fDamage,
 			{
 				const float fMaxHP = pStats->fMaxHP;
 				if ( fFormerHP / fMaxHP > SConsts::LOW_HP_PERCENTAGE && fHitPoints / fMaxHP <= SConsts::LOW_HP_PERCENTAGE )
+				{
 					SendAcknowledgement( NDb::ACK_LOW_HIT_POINTS );
+				}
 
 				if ( fFormerHP == fMaxHP && fHitPoints != fMaxHP )
+				{
 					theSupremeBeing.UnitAskedForResupply( this, pStats->IsInfantry() ? ERT_MEDICINE : ERT_REPAIR, true );
+				}
 			}
 
 			if ( IsValid( pShotUnit ) && !pShotUnit->IsAviation() &&
 			     theDipl.GetDiplStatus( pShotUnit->GetPlayer(), GetPlayer() ) == EDI_ENEMY )
+			{
 				timeLastAttacked = curTime;
+			}
 		}
 	}
 }
@@ -1159,7 +1263,9 @@ const bool CAIUnit::CanTurnRound() const
 void CAIUnit::Fired( const float fGunRadius, const int nGun )
 {
 	if ( pAntiArtillery != 0 && fGunRadius != 0.0f )
+	{
 		pAntiArtillery->Fired( fGunRadius, GetCenterPlain() );
+	}
 
 	if ( !GetStats()->IsAviation() )
 	{
@@ -1181,12 +1287,16 @@ void CAIUnit::UpdateUnitsRequestsForResupply()
 	if ( !theDipl.IsNetGame() )
 	{
 		if ( !IsAlive() || IsRefInvalid() )
+		{
 			return;
+		}
 		// when gun crew is killed, ask to refill it again
 		if ( theDipl.GetNParty( GetPlayer() ) == theDipl.GetNeutralParty() )
 		{
 			if ( GetStats()->IsArtillery() )
+			{
 				theSupremeBeing.UnitAskedForResupply( this, ERT_HUMAN_RESUPPLY, true );
+			}
 		}
 		else
 		{
@@ -1210,9 +1320,13 @@ void CAIUnit::UpdateUnitsRequestsForResupply()
 			if ( GetHitPoints() != fMaxHP )
 			{
 				if ( pStats->IsInfantry() )
+				{
 					theSupremeBeing.UnitAskedForResupply( this, ERT_MEDICINE, true );
+				}
 				else if ( !pStats->IsAviation() )
+				{
 					theSupremeBeing.UnitAskedForResupply( this, ERT_REPAIR, true );
+				}
 			}
 		}
 	}
@@ -1255,7 +1369,9 @@ void CAIUnit::ChangePlayer( const uint8_t cPlayer )
 	{
 		theGroupLogic.DelUnitFromGroup( this );
 		if ( theGroupLogic.BeginGroup( nGroup ) == theGroupLogic.EndGroup() )
+		{
 			theGroupLogic.UnregisterGroup( nGroup );
+		}
 	}
 
 	UpdateUnitsRequestsForResupply();
@@ -1270,14 +1386,20 @@ void CAIUnit::ChangePlayer( const uint8_t cPlayer )
 		// for initialization of gun owner party
 		// infantry can possess of artillery gun, so we check for owner
 		if ( GetGun( i )->GetOwner() == this )
+		{
 			GetGun( i )->SetOwner( this );
+		}
 	}
 
 	if ( pAntiArtillery )
+	{
 		pAntiArtillery->SetParty( GetParty() );
+	}
 
 	if ( GetFormation() )
+	{
 		GetFormation()->ChangePlayer( cPlayer );
+	}
 
 	InitSpecialAbilities();
 }
@@ -1306,7 +1428,9 @@ void CAIUnit::CheckAmmoStatus()
 			break;
 		}
 		else if ( nAmmo < nMaxAmmo / 3 && eStats == EUS_RESUPPLY_GROUP )
+		{
 			eStats = EUS_LOW_AMMO;
+		}
 	}
 	updater.AddUpdate( CreateStatusUpdate( eStats, true, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
 }
@@ -1332,7 +1456,9 @@ const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy, const uint32_t dwGuns ) cons
 	for ( int i = 0; i < sizeof( dwGuns ) * 8 && i < GetNGuns(); ++i )
 	{
 		if ( ( dwGuns & i << i ) )
+		{
 			fSpeed += GetKillSpeed( pEnemy, GetGun( i ) );
+		}
 	}
 
 	return fSpeed;
@@ -1345,7 +1471,9 @@ const float CAIUnit::GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 
 	for ( int i = 0; i < nGuns; ++i )
 	{
 		if ( ( dwGuns & i << i ) )
+		{
 			fSpeed += GetKillSpeed( pStats, vCenter, GetGun( i ) );
+		}
 	}
 
 	return fSpeed;
@@ -1386,7 +1514,9 @@ const float CAIUnit::GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 
 	}
 
 	if ( fPiercingProbability == 0.0f )
+	{
 		return 0;
+	}
 	else
 	{
 		const float fMaxHP = pStats->fMaxHP;
@@ -1406,7 +1536,9 @@ const float CAIUnit::GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 
 			return fMaxHP / fTimeToKill;
 		}
 		else
+		{
 			return 1.0f; // For the projector
+		}
 	}
 }
 
@@ -1424,7 +1556,9 @@ const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy, CBasicGun *pGun ) const
 	if ( pGun->GetShell().IsSAMTrajectory() )
 	{
 		if ( !pEnemy->GetStats()->IsAviation() )
+		{
 			return 0.0f;
+		}
 
 		if ( pGun->CanBreach( pEnemy, RPG_BOTTOM ) )
 		{
@@ -1450,7 +1584,9 @@ const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy, CBasicGun *pGun ) const
 	}
 
 	if ( fPiercingProbability == 0.0f )
+	{
 		return 0;
+	}
 	else
 	{
 		float fTimeToGo = 0;
@@ -1474,7 +1610,9 @@ const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy, CBasicGun *pGun ) const
 			return fMaxHP / ( fTimeToKill + fTimeToGo );
 		}
 		else
+		{
 			return 1.0f; // For the projector
+		}
 	}
 }
 
@@ -1482,10 +1620,14 @@ const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy ) const
 {
 	int i = 0;
 	while ( i < GetNGuns() && !GetGun( i )->CanShootToUnit( pEnemy ) )
+	{
 		++i;
+	}
 
 	if ( i >= GetNGuns() )
+	{
 		return 0;
+	}
 
 	return GetKillSpeed( pEnemy, GetGun( i ) );
 }
@@ -1502,7 +1644,9 @@ void CAIUnit::UpdateTakenDamagePower( const float fUpdate )
 	{
 		fTakenDamagePower += fUpdate;
 		if ( fTakenDamagePower < 0 && fTakenDamagePower >= -0.0001f )
+		{
 			fTakenDamagePower = 0.0f;
+		}
 
 		NI_ASSERT( fTakenDamagePower >= 0, "Wrong taken damage power" );
 	}
@@ -1535,7 +1679,9 @@ CBasicGun *CAIUnit::AnalyzeGunChoose( CAIUnit *pEnemy )
 		return GetBestShootEstimatedGun();
 	}
 	else
+	{
 		return 0;
+	}
 }
 
 void CAIUnit::SetTargetScanRandom()
@@ -1577,18 +1723,26 @@ const float CAIUnit::GetTargetScanRadius()
 {
 	// дальнобойное AI орудие
 	if ( theDipl.IsAIPlayer( GetPlayer() ) && GetFirstArtilleryGun() != 0 && !DoesReservePosExist() )
+	{
 		return GetFirstArtilleryGun()->GetFireRange( 0 );
+	}
 	else if ( GetStats()->etype == RPG_TYPE_OFFICER )
+	{
 		return (std::min)( GetGun( 0 )->GetFireRange( 0 ) * SConsts::OFFICER_COEFFICIENT_FOR_SCAN, GetSightRadius() );
+	}
 	else if ( GetStats()->IsArtillery() )
+	{
 		return (std::min)( GetMaxFireRange(), SConsts::MAX_FIRE_RANGE_TO_SHOOT_BY_LINE );
+	}
 	else
 	{
 		const float fCallForHelpRadius =
 				theDipl.IsAIPlayer( GetPlayer() ) ? SConsts::AI_CALL_FOR_HELP_RADIUS : SConsts::CALL_FOR_HELP_RADIUS;
 		float fFireRange = GetSightRadius();
 		for ( int i = 0; i < GetNGuns(); i++ )
+		{
 			fFireRange = (std::max)( fFireRange, GetGun( i )->GetFireRange( 0.0f ) );
+		}
 
 		return (std::min)( fCallForHelpRadius, fFireRange );
 	}
@@ -1614,7 +1768,9 @@ bool CAIUnit::LookForTargetInRange( CAIUnit *pCurTarget,
 				break;
 			}
 			else
+			{
 				it = targetsCache.erase( it );
+			}
 		}
 		*pBestTarget = GetBestShootEstimatedUnit();
 		*pGun = GetBestShootEstimatedGun();
@@ -1646,7 +1802,9 @@ bool CAIUnit::LookForTargetInRange( CAIUnit *pCurTarget,
 						{
 							AddUnitToShootEstimator( pSoldier );
 							if ( targetsCache.size() < MAX_TARGETS_CACHE_SIZE )
+							{
 								targetsCache.push_back( pSoldier );
+							}
 							bDoNotAddThisUnit = true;
 						}
 					}
@@ -1656,7 +1814,9 @@ bool CAIUnit::LookForTargetInRange( CAIUnit *pCurTarget,
 			{
 				AddUnitToShootEstimator( pTarget );
 				if ( targetsCache.size() < MAX_TARGETS_CACHE_SIZE )
+				{
 					targetsCache.push_back( pTarget );
+				}
 			}
 		}
 	}
@@ -1676,7 +1836,9 @@ bool CAIUnit::LookForTargetInRange( CAIUnit *pCurTarget,
 				{
 					AddUnitToShootEstimator( pTarget->GetUnit( i ) );
 					if ( targetsCache.size() < MAX_TARGETS_CACHE_SIZE )
+					{
 						targetsCache.push_back( pTarget->GetUnit( i ) );
+					}
 				}
 			}
 		}
@@ -1694,7 +1856,9 @@ bool CAIUnit::LookForTargetInRange( CAIUnit *pCurTarget,
 		for ( CPlanesIter iter; !iter.IsFinished(); iter.Iterate() )
 		{
 			if ( theDipl.GetDiplStatus( GetPlayer(), ( *iter )->GetPlayer() ) == EDI_ENEMY )
+			{
 				estimatorAA.AddUnit( *iter );
+			}
 		}
 
 		*pBestTarget = estimatorAA.GetBestUnit();
@@ -1707,7 +1871,9 @@ bool CAIUnit::LookForTargetInRange( CAIUnit *pCurTarget,
 void CAIUnit::LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, CBasicGun **pGun )
 {
 	if ( IsValid( pCurTarget ) && pCurTarget->IsAlive() )
+	{
 		return;
+	}
 
 	if ( CanShoot() )
 	{
@@ -1720,7 +1886,9 @@ void CAIUnit::LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAI
 		     !LookForTargetInRange( pCurTarget, bDamageUpdated, pBestTarget, pGun, fRange * 0.250f, false, false ) ||
 		     !LookForTargetInRange( pCurTarget, bDamageUpdated, pBestTarget, pGun, fRange * 0.500f, false, false ) ||
 		     !LookForTargetInRange( pCurTarget, bDamageUpdated, pBestTarget, pGun, fRange * 0.750f, false, true ) )
+		{
 			LookForTargetInRange( pCurTarget, bDamageUpdated, pBestTarget, pGun, fRange, true, true );
+		}
 
 		if ( curTime >= lastScanTime + realScanDuration )
 		{
@@ -1746,7 +1914,9 @@ void CAIUnit::LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAI
 		}
 
 		if ( !bHadTarget && *pBestTarget && !( *pBestTarget )->IsAviation() ) // target just found
+		{
 			SendAcknowledgement( NDb::ACK_ENEMY_FOUND, GetParty() == theDipl.GetMyParty() );
+		}
 	}
 	else
 	{
@@ -1791,7 +1961,9 @@ void CAIUnit::LookForFarTarget( CAIUnit *pCurTarget,
 		*pGun = pChosenGun;
 	}
 	if ( !bHadTarget && *pBestTarget && !( *pBestTarget )->IsAviation() ) // target just found
+	{
 		SendAcknowledgement( NDb::ACK_ENEMY_FOUND, GetParty() == theDipl.GetMyParty() );
+	}
 
 	bFreeEnemySearch = false;
 	SetCircularAttack( false );
@@ -1800,7 +1972,9 @@ void CAIUnit::LookForFarTarget( CAIUnit *pCurTarget,
 void CAIUnit::SetCircularAttack( const bool bCanAttack )
 {
 	for ( int i = 0; i < GetNGuns(); ++i )
+	{
 		GetGun( i )->SetCircularAttack( bCanAttack );
+	}
 }
 
 bool CAIUnit::IsTimeToAnalyzeTargetScan() const
@@ -1813,16 +1987,24 @@ const bool CAIUnit::AttackTarget( CAIUnit *pTarget, CAIUnit *pCurTarget )
 	if ( IsValidObj( pTarget ) && ( pCurTarget == 0 || pTarget != pCurTarget ) )
 	{
 		if ( GetState()->GetName() == EUSN_MECHUNIT_REST_ON_BOARD )
+		{
 			theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_ONBOARD_ATTACK_UNIT, pTarget->GetUniqueId() ), this, false );
+		}
 		else if ( GetStats()->etype == RPG_TYPE_ART_ROCKET )
+		{
 			theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ART_BOMBARDMENT, pTarget->GetCenterPlain() ), this );
+		}
 		else
 		{
 			const bool bAllowMoving = !GetState()->IsRestState();
 			if ( bAllowMoving )
+			{
 				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_SWARM_ATTACK_UNIT, pTarget->GetUniqueId() ), this );
+			}
 			else
+			{
 				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ATTACK_UNIT, pTarget->GetUniqueId() ), this );
+			}
 		}
 		return true;
 	}
@@ -1869,14 +2051,20 @@ uint8_t CAIUnit::AnalyzeTargetScanInternal( CAIUnit *pCurTarget,
 			if ( pTarget != 0 && pCheckBuilding != 0 && pTarget->GetStats()->IsInfantry() &&
 			     checked_cast<CSoldier *>( pTarget )->IsInBuilding() &&
 			     checked_cast<CSoldier *>( pTarget )->GetBuilding() == pCheckBuilding )
+			{
 				pTarget = 0;
+			}
 
 			// Formation recovery may scan for nearby threats, but should not start an attack that needs a move first.
 			if ( bOnlyShootWithoutMoving && pTarget && ( !pGun || !pGun->CanShootToUnitWOMove( pTarget ) ) )
+			{
 				pTarget = 0;
+			}
 
 			if ( AttackTarget( pTarget, pCurTarget ) )
+			{
 				return 3;
+			}
 			else if ( !pTarget && bScanForObstacles )
 			{
 				// нет врагов, пострелять по препятствиям, если нужно
@@ -1898,7 +2086,9 @@ uint8_t CAIUnit::AnalyzeTargetScanInternal( CAIUnit *pCurTarget,
 		{
 			CBasicGun *pGun = GetBestShootEstimatedGun();
 			if ( !pGun || !pGun->CanShootToUnitWOMove( pTarget ) )
+			{
 				pTarget = 0;
+			}
 		}
 
 		return AttackTarget( pTarget, pCurTarget ) ? 3 : 0;
@@ -1948,7 +2138,9 @@ const int CAIUnit::ChooseFatality( const float fDamage, NDb::EAnimationType *pDe
 {
 	const SUnitBaseRPGStats *pStats = GetStats();
 	if ( pDeathAnimType )
+	{
 		*pDeathAnimType = NDb::ANIMATION_DEATH;
+	}
 
 	const SMechUnitRPGStats *mechStats = dynamic_cast<const SMechUnitRPGStats *>( pStats );
 	const bool bAmphibianWaterDeath = GetAmphibianStats() != 0 && IsInWater();
@@ -1961,7 +2153,9 @@ const int CAIUnit::ChooseFatality( const float fDamage, NDb::EAnimationType *pDe
 			const int nDeathAnim = NRandom::Random( pStats->animdescs[NDb::ANIMATION_DEATH_WATER].anims.size() );
 			RecordRandomCall();
 			if ( pDeathAnimType )
+			{
 				*pDeathAnimType = NDb::ANIMATION_DEATH_WATER;
+			}
 			return -1 * int( nDeathAnim + 2 );
 		}
 		else if ( mechStats && mechStats->pAnimableModel )
@@ -1973,7 +2167,9 @@ const int CAIUnit::ChooseFatality( const float fDamage, NDb::EAnimationType *pDe
 				const int nDeathAnim = NRandom::Random( water_death_anims.size() );
 				RecordRandomCall();
 				if ( pDeathAnimType )
+				{
 					*pDeathAnimType = NDb::ANIMATION_DEATH_WATER;
+				}
 				return -1 * int( nDeathAnim + 2 );
 			}
 		}
@@ -2023,7 +2219,9 @@ const int CAIUnit::ChooseFatality( const float fDamage, NDb::EAnimationType *pDe
 			LockTiles();
 
 			if ( bFree )
+			{
 				return nFatality;
+			}
 		}
 		else if ( mechStats && mechStats->pAnimableModel )
 		{
@@ -2035,7 +2233,9 @@ const int CAIUnit::ChooseFatality( const float fDamage, NDb::EAnimationType *pDe
 				auto death_anims = GetVisObjAnimsFromModel( mechStats->pAnimableModel, NDb::EAnimationType::ANIMATION_DEATH );
 
 				if ( death_anims.empty() )
+				{
 					return -1;
+				}
 
 				goto death_animable_anim;
 			}
@@ -2047,7 +2247,9 @@ const int CAIUnit::ChooseFatality( const float fDamage, NDb::EAnimationType *pDe
 
 			if ( pStats->animdescs.size() > NDb::ANIMATION_DEATH_FATALITY &&
 			     pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims.size() > nFatality )
+			{
 				nRect = pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims[nFatality].nAABB_A;
+			}
 
 			CVec2 vRectCenter( VNULL2 ), vRectHalfSize( VNULL2 );
 			if ( !pStats->aabb_as.empty() && nRect != -1 && pStats->aabb_as.size() > nRect )
@@ -2074,13 +2276,17 @@ const int CAIUnit::ChooseFatality( const float fDamage, NDb::EAnimationType *pDe
 			LockTiles();
 
 			if ( bFree )
+			{
 				return nFatality;
+			}
 		}
 	}
 
 death_animable_anim:
 	if ( pDeathAnimType )
+	{
 		*pDeathAnimType = NDb::ANIMATION_DEATH;
+	}
 	// Decide the param for death anim
 	if ( ( pStats->animdescs.size() < NDb::ANIMATION_DEATH || pStats->animdescs[NDb::ANIMATION_DEATH].anims.empty() ) &&
 	     mechStats && mechStats->pAnimableModel )
@@ -2088,14 +2294,18 @@ death_animable_anim:
 		auto death_anims = GetVisObjAnimsFromModel( mechStats->pAnimableModel, NDb::EAnimationType::ANIMATION_DEATH );
 
 		if ( death_anims.empty() )
+		{
 			return -1;
+		}
 
 		RecordRandomCall();
 		return -1 * int( NRandom::Random( death_anims.size() ) + 2 );
 	}
 
 	if ( pStats->animdescs.size() < NDb::ANIMATION_DEATH || pStats->animdescs[NDb::ANIMATION_DEATH].anims.empty() )
+	{
 		return -1;
+	}
 	else
 	{
 		RecordRandomCall();
@@ -2159,23 +2369,33 @@ void CAIUnit::GetShootAreas( SShootAreas *pShootAreas, int *pnAreas ) const
 				CBasicGun *pGunI = GetGun( i );
 				const float fLocalFireRange = pGunI->GetFireRange( 0.0f );
 				if ( fLocalFireRange > fMaxFireRange )
+				{
 					fMaxFireRange = fLocalFireRange;
+				}
 
 				const float fLocalMinFireRange = pGunI->GetWeapon()->fRangeMin;
 				if ( fLocalMinFireRange < fMinFireRange )
+				{
 					fMinFireRange = fLocalMinFireRange;
+				}
 
 				if ( !pGun || !pGun->IsOnTurret() && pGunI->IsOnTurret() )
+				{
 					pGun = pGunI;
+				}
 				else if ( pGun && !pGun->IsOnTurret() && !pGunI->IsOnTurret() )
 				{
 					if ( pGun->GetWeapon()->wDeltaAngle < pGunI->GetWeapon()->wDeltaAngle )
+					{
 						pGun = pGunI;
+					}
 				}
 				else if ( pGun && pGun->IsOnTurret() && pGunI->IsOnTurret() )
 				{
 					if ( pGun->GetHorTurnConstraint() < pGunI->GetHorTurnConstraint() )
+					{
 						pGun = pGunI;
+					}
 				}
 			}
 		}
@@ -2205,7 +2425,9 @@ void CAIUnit::SetInTankPit( CExistingObject *_pTankPit )
 	ApplyStatsModifier( checked_cast<const NDb::SMechUnitRPGStats *>( pTankPit->GetStats() )->pInnerUnitBonus, true );
 
 	if ( IsInTankPit() )
+	{
 		UpdateTankPitVisibility( true, visible4Party[theCheats.GetNPartyForWarFog()] );
+	}
 
 	updater.AddUpdate(
 			CreateStatusUpdate( EUS_IN_TANK_PIT, IsInTankPit(), 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
@@ -2214,12 +2436,18 @@ void CAIUnit::SetInTankPit( CExistingObject *_pTankPit )
 void CAIUnit::UpdateTankPitVisibility( const bool bVisibilityChanged, const bool bVisible )
 {
 	if ( !bVisibilityChanged )
+	{
 		return;
+	}
 
 	if ( bVisible )
+	{
 		updater.AddUpdate( 0, ACTION_NOTIFY_NEW_ST_OBJ, GetTankPit(), -1 );
+	}
 	else
+	{
 		updater.AddUpdate( 0, ACTION_NOTIFY_DELETED_ST_OBJ, GetTankPit(), -1 );
+	}
 }
 
 void CAIUnit::SetOffTankPit()
@@ -2244,7 +2472,9 @@ void CAIUnit::SetCamoulfage()
 		SetBehaviourFire( SBehaviour::EFNoFire );
 	}
 	else
+	{
 		fCamoflage = Clamp( 1.0f - GetStatsModifier()->camouflage.Get( GetStats()->fCamouflage ), 0.0f, 1.0f );
+	}
 
 	updater.AddUpdate( 0, ACTION_NOTIFY_SET_CAMOUFLAGE, this, -1 );
 }
@@ -2295,7 +2525,9 @@ void CAIUnit::AnalyzeCamouflage()
 		{
 			camouflateTime = curTime;
 			if ( IsCamoulflated() )
+			{
 				RemoveCamouflage( ECRR_USER_COMMAND );
+			}
 		}
 		else
 		{
@@ -2305,10 +2537,14 @@ void CAIUnit::AnalyzeCamouflage()
 			{
 				camouflateTime = curTime;
 				if ( IsCamoulflated() )
+				{
 					RemoveCamouflage( ECRR_USER_COMMAND );
+				}
 			}
 			else if ( !IsCamoulflated() && curTime - camouflateTime >= GetTimeToCamouflage() )
+			{
 				SetCamoulfage();
+			}
 		}
 	}
 }
@@ -2372,7 +2608,9 @@ void CAIUnit::SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool 
 				bSend = true;
 				if ( pArtillery->GetStats()->etype == RPG_TYPE_ART_HEAVY_GUN ||
 				     pArtillery->GetStats()->etype == RPG_TYPE_ART_HOWITZER )
+				{
 					nSet = 1;
+				}
 			}
 		}
 		else if ( pStats->IsTrain() && ( ack == ACK_CANNOT_MOVE_TRACK_DAMAGED ) )
@@ -2381,10 +2619,14 @@ void CAIUnit::SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool 
 			ack = ACK_NEGATIVE; //ACK_CANNOT_FIND_PATH_TO_TARGET;
 		}
 		else
+		{
 			bSend = true;
+		}
 
 		if ( bSend )
+		{
 			theAckManager.AddAcknowledgment( ack, this, nSet );
+		}
 	}
 }
 
@@ -2480,7 +2722,9 @@ void CAIUnit::SetDirection( const uint16_t wDirection )
 	CBasePathUnit::SetDirection( wDirection );
 
 	if ( GetVisionAngle() != 32768 )
+	{
 		WarFogChanged();
+	}
 }
 
 void CAIUnit::UnRegisterAsBored( const enum EUnitAckType eBoredType )
@@ -2540,7 +2784,9 @@ void CAIUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyT
 	{
 		SetBehaviourMoving( SBehaviour::EMRoaming );
 		if ( GetStats()->IsInfantry() )
+		{
 			UnlockTiles();
+		}
 	}
 	if ( !pCommand->ToUnitCmd().bFromAI )
 	{
@@ -2553,27 +2799,37 @@ void CAIUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyT
 void CAIUnit::Lock( const CBasicGun *pGun )
 {
 	if ( !GetStats()->IsTrain() )
+	{
 		CCommonUnit::Lock( pGun );
+	}
 }
 
 void CAIUnit::Unlock( const CBasicGun *pGun )
 {
 	if ( !GetStats()->IsTrain() )
+	{
 		CCommonUnit::Unlock( pGun );
+	}
 }
 
 bool CAIUnit::IsLocked( const CBasicGun *pGun ) const
 {
 	if ( GetStats()->IsTrain() || bRestInside )
+	{
 		return true;
+	}
 	else
+	{
 		return CCommonUnit::IsLocked( pGun );
+	}
 }
 
 void CAIUnit::SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType )
 {
 	if ( GetGuns()->SetActiveShellType( eShellType ) )
+	{
 		updater.AddUpdate( 0, ACTION_NOTIFY_SHELLTYPE_CHANGED, this, static_cast<int>( eShellType ) );
+	}
 }
 
 void CAIUnit::AnimationSet( int nAnimation )
@@ -2605,7 +2861,9 @@ void CAIUnit::WantedToReveal( CAIUnit *pWhoRevealed )
 {
 	if ( !theDipl.IsNetGame() && theDipl.GetMyNumber() == GetPlayer() &&
 	     theDipl.GetDiplStatus( pWhoRevealed->GetPlayer(), GetPlayer() ) == EDI_ENEMY )
+	{
 		bQueredToReveal = true;
+	}
 }
 
 bool CAIUnit::IsRevealed() const
@@ -2629,7 +2887,9 @@ void CAIUnit::NotifyAbilityRun( class CAICommand *pCommand )
 	const NDb::EUnitSpecialAbility eAbility =
 			(NDb::EUnitSpecialAbility)GetAbilityByCommand( pCommand->ToUnitCmd().nCmdType );
 	if ( NDb::ABILITY_NOT_ABILITY == eAbility )
+	{
 		return;
+	}
 
 	const NDb::SUnitSpecialAblityDesc *pDesc = GetUnitAbilityDesc( eAbility );
 	if ( pDesc )
@@ -2680,7 +2940,9 @@ void CAIUnit::InitSpecialAbilities( int nFromLevel )
 		                        NDb::GetResName( GetStats() ),
 		                        typeid( *GetStats() ).name() ) )
 		if ( GetStats()->GetActions()->specialAbilities[i] != 0 )
+		{
 			InitAbility( GetStats()->GetActions()->specialAbilities[i]->eName );
+		}
 	}
 }
 
@@ -2912,14 +3174,18 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 		{ // It is just a stat bonus
 			const NDb::SUnitSpecialAblityDesc *pSA = GetUnitAbilityDesc( NDb::ABILITY_EXACT_BOMBING );
 			if ( pSA )
+			{
 				ApplyStatsModifier( pSA->pStatsBonus, true );
+			}
 		}
 		break;
 		case NDb::ABILITY_SPY_MODE:
 		{
 			NI_ASSERT( GetStats()->IsInfantry(), "Skill (Spy Mode) suitable for infantry only" );
 			if ( !GetStats()->IsInfantry() )
+			{
 				break;
+			}
 			CPtr<CExecutor> pEx = new CExecutorSpyMode( this );
 			theExecutorContainer.Add( pEx );
 			pEx->RegisterOnEvents( &theExecutorContainer );
@@ -2930,7 +3196,9 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 		{ // It is just a stat bonus
 			const NDb::SUnitSpecialAblityDesc *pSA = GetUnitAbilityDesc( NDb::ABILITY_SKY_GUARD );
 			if ( pSA )
+			{
 				ApplyStatsModifier( pSA->pStatsBonus, true );
+			}
 		}
 		break;
 		case NDb::ABILITY_MASTER_PILOT:
@@ -2943,7 +3211,9 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 		{ // It is just a stat bonus
 			const NDb::SUnitSpecialAblityDesc *pSA = GetUnitAbilityDesc( NDb::ABILITY_SURVIVAL );
 			if ( pSA )
+			{
 				ApplyStatsModifier( pSA->pStatsBonus, true );
+			}
 		}
 		break;
 		case NDb::ABILITY_TANK_HUNTER:
@@ -2979,7 +3249,9 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 const bool CAIUnit::CanShootInMovement()
 {
 	if ( GetStats()->IsAviation() ) // Aviation can always shoot in movement
+	{
 		return true;
+	}
 
 	if ( pShootInMovementExecutor )
 	{ // Has this ability, check if it is active
@@ -3019,7 +3291,9 @@ void CAIUnit::SetHoldSector()
 
 		const NDb::SUnitSpecialAblityDesc *pSA = GetUnitAbilityDesc( NDb::ABILITY_HOLD_SECTOR );
 		if ( pSA && pSA->pStatsBonus )
+		{
 			ApplyStatsModifier( pSA->pStatsBonus, true );
+		}
 
 		CPtr<SAISpecialAbilityUpdate> pUpdate = new SAISpecialAbilityUpdate;
 		pUpdate->info.nAbilityType = NDb::ABILITY_HOLD_SECTOR;
@@ -3053,7 +3327,9 @@ void CAIUnit::ResetHoldSector()
 		SetBehaviourMoving( SBehaviour::EMRoaming );
 		const NDb::SUnitSpecialAblityDesc *pSA = GetUnitAbilityDesc( NDb::ABILITY_HOLD_SECTOR );
 		if ( pSA && pSA->pStatsBonus )
+		{
 			ApplyStatsModifier( pSA->pStatsBonus, false );
+		}
 
 		CPtr<SAISpecialAbilityUpdate> pUpdate = new SAISpecialAbilityUpdate;
 		pUpdate->info.nAbilityType = NDb::ABILITY_HOLD_SECTOR;
@@ -3069,13 +3345,17 @@ void CAIUnit::ResetHoldSector()
 void CAIUnit::SetTrackTargeting( bool bOn )
 {
 	if ( bOn == bTargetingTrack )
+	{
 		return;
+	}
 	const NDb::SUnitSpecialAblityDesc *pDesc = GetUnitAbilityDesc( NDb::ABILITY_TRACK_TARGETING );
 	if ( pDesc )
 	{
 		bTargetingTrack = bOn;
 		if ( pDesc->pStatsBonus )
+		{
 			ApplyStatsModifier( pDesc->pStatsBonus, bOn );
+		}
 
 		updater.AddUpdate(
 				CreateStatusUpdate( EUS_TRACK_TARGET, bTargetingTrack, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
@@ -3092,7 +3372,9 @@ void CAIUnit::SetIgnoreAABBCoeff( const bool bIgnore )
 		{
 			bIgnoreAABBCoeff = bIgnore;
 			if ( pDesc->pStatsBonus )
+			{
 				ApplyStatsModifier( pDesc->pStatsBonus, bIgnore );
+			}
 
 			updater.AddUpdate(
 					CreateStatusUpdate( EUS_TRACK_TARGET, bIgnoreAABBCoeff, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
@@ -3121,7 +3403,9 @@ void CAIUnit::GetEntranceStateInfo( struct SAINotifyEntranceState *pInfo ) const
 const float CAIUnit::GetAimTimeBonus() const
 {
 	if ( bTargetingTrack )
+	{
 		return SConsts::TRACK_TARGETING_AIM_BONUS;
+	}
 	return 1.0f;
 }
 
@@ -3178,9 +3462,13 @@ void CAIUnit::UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDir
 {
 	CCommonUnit::UpdatePlacement( vOldPosition, wOldDirection, bNeedUpdate );
 	if ( bNeedUpdate )
+	{
 		UpdateUnitProfile();
+	}
 	if ( !IsInSolidPlace() )
+	{
 		units.UnitChangedPosition( this, GetCenterPlain() );
+	}
 }
 
 NTimer::STime CAIUnit::GetDisappearInterval() const
@@ -3198,7 +3486,9 @@ void CAIUnit::UnitTrampled( const CBasePathUnit *pTramplerUnit )
 	const CAIUnit *pUnit = dynamic_cast<const CAIUnit *>( pTramplerUnit );
 	NI_ASSERT( pUnit != 0, "Cannot cast pTramplerUnit to CCommonUnit" );
 	if ( pUnit == 0 )
+	{
 		return;
+	}
 
 	theStatistics.UnitKilled( pUnit->GetPlayer(),
 	                          GetPlayer(),
@@ -3238,12 +3528,16 @@ const NDb::SUnitSpecialAblityDesc *CAIUnit::GetUnitAbilityDesc( const NDb::EUnit
 					NI_ASSERT( abilities[n],
 					           fmt::format( "No ability desc. Unit \"{}\", ability {}", NDb::GetResName( GetStats() ), n ) );
 					if ( abilities[n]->eName == eType )
+					{
 						return abilities[n];
+					}
 				}
 				return 0;
 			}
 			else
+			{
 				return abilities[i];
+			}
 		}
 	}
 	return 0;
@@ -3252,14 +3546,18 @@ const NDb::SUnitSpecialAblityDesc *CAIUnit::GetUnitAbilityDesc( const NDb::EUnit
 const ECollidingType CAIUnit::GetCollidingType( CBasePathUnit *pUnit ) const
 {
 	if ( GetState()->GetName() != EUSN_MECHUNIT_REST_ON_BOARD )
+	{
 		return bRestInside ? ECT_NONE : ECT_ALL;
+	}
 	return ECT_NONE;
 }
 
 const bool CAIUnit::CanLockTiles() const
 {
 	if ( GetState()->GetName() != EUSN_MECHUNIT_REST_ON_BOARD )
+	{
 		return CCommonUnit::CanLockTiles();
+	}
 	return false;
 }
 
@@ -3271,7 +3569,9 @@ const bool CAIUnit::IsRound() const
 void CAIUnit::SetReinforcementType( const NDb::EReinforcementType eType )
 {
 	if ( !GetScenarioTracker() )
+	{
 		return;
+	}
 	// Change level stats bonus to the new type
 	if ( eReinforcementType != eType )
 	{
@@ -3283,14 +3583,18 @@ void CAIUnit::SetReinforcementType( const NDb::EReinforcementType eType )
 		{
 			const NDb::SAIExpLevel *pLevels = pConsts->common.expLevels[i];
 			if ( !pLevels )
+			{
 				continue;
+			}
 
 			if ( pLevels->eDBType == eReinforcementType && !bOldRemoved )
 			{
 				int nXPLevel = GetScenarioTracker()->GetReinforcementXPLevel( player, eReinforcementType );
 				nXPLevel = (std::min<int>)( pLevels->levels.size() - 1, nXPLevel );
 				if ( nXPLevel < 0 )
+				{
 					continue;
+				}
 				if ( pLevels->levels[nXPLevel].pStatsBonus )
 				{
 					ApplyStatsModifier( pLevels->levels[nXPLevel].pStatsBonus, false );
@@ -3302,7 +3606,9 @@ void CAIUnit::SetReinforcementType( const NDb::EReinforcementType eType )
 				int nXPLevel = GetScenarioTracker()->GetReinforcementXPLevel( player, eType );
 				nXPLevel = (std::min<int>)( pLevels->levels.size() - 1, nXPLevel );
 				if ( nXPLevel < 0 )
+				{
 					continue;
+				}
 				if ( pLevels->levels[nXPLevel].pStatsBonus )
 				{
 					ApplyStatsModifier( pLevels->levels[nXPLevel].pStatsBonus, true );

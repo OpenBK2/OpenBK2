@@ -23,7 +23,9 @@ namespace NExtraDraw
 void DrawVector( CSceneDrawTool *pSceneDrawTool, unsigned uColor, const std::vector<CVec3> &vPoints )
 {
 	if ( vPoints.size() < 2 )
+	{
 		return;
+	}
 
 	std::vector<CVec3>::const_iterator itPoint = vPoints.begin();
 	std::vector<CVec3>::const_iterator itPointPrev = itPoint;
@@ -32,7 +34,9 @@ void DrawVector( CSceneDrawTool *pSceneDrawTool, unsigned uColor, const std::vec
 	while ( 1 )
 	{
 		if ( itPoint == vPoints.end() )
+		{
 			break;
+		}
 
 		pSceneDrawTool->DrawLine( *itPoint, *itPointPrev, uColor, false );
 
@@ -47,7 +51,9 @@ void DrawArray( CSceneDrawTool *pSceneDrawTool, unsigned uColor, const CArray2D<
 	const int nSizeX = array.GetSizeX();
 	const int nSizeY = array.GetSizeY();
 	if ( ( nSizeX < 1 ) | ( nSizeY < 1 ) )
+	{
 		return;
+	}
 
 	for ( int g = 0; g < nSizeY; ++g )
 	{

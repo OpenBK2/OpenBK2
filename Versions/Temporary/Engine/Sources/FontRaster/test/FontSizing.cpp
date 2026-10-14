@@ -55,7 +55,9 @@ TEST( FontSizing, KeepsLegacyCapHeightAndFitsEuropeanAccents )
 	{
 		auto data = ReadFont( font.file );
 		if ( data->empty() )
+		{
 			GTEST_SKIP() << "Missing shipped font: " << font.file;
+		}
 		std::string error;
 		auto face = NFontRaster::CFace::OpenMemory( data, NFontRaster::SelectFace( *data, font.weight, false ), &error );
 		ASSERT_TRUE( face ) << error;
@@ -77,7 +79,9 @@ TEST( FontSizing, KeepsLegacyCapHeightAndFitsEuropeanAccents )
 				NFontRaster::SGlyphBitmap glyph;
 				ASSERT_TRUE( face->RenderGlyph( code, &glyph, &error ) ) << error;
 				if ( glyph.nRows == 0 )
+				{
 					continue;
+				}
 				EXPECT_GE( metrics.nAscent - glyph.nTop, 0 ) << code;
 				EXPECT_LE( metrics.nAscent - glyph.nTop + glyph.nRows, metrics.nCellHeight ) << code;
 			}
@@ -89,7 +93,9 @@ TEST( FontSizing, RasterizesHorizontalScaleWithoutChangingHeight )
 {
 	auto data = ReadFont( "Oswald-Variable.ttf" );
 	if ( data->empty() )
+	{
 		GTEST_SKIP() << "Missing shipped Oswald font";
+	}
 	std::string error;
 	auto face = NFontRaster::CFace::OpenMemory( data, NFontRaster::SelectFace( *data, 700, false ), &error );
 	ASSERT_TRUE( face ) << error;
@@ -118,7 +124,9 @@ TEST( FontSizing, BatchAtlasUsesTheExpandedCell )
 {
 	auto data = ReadFont( "Oswald-Variable.ttf" );
 	if ( data->empty() )
+	{
 		GTEST_SKIP() << "Missing shipped Oswald font";
+	}
 	NFontRaster::SOptions options;
 	options.szFontFile = std::string( FONT_DATA_DIR ) + "/Oswald-Variable.ttf";
 	options.nFaceIndex = NFontRaster::SelectFace( *data, 700, false );

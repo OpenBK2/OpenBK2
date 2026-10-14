@@ -15,7 +15,9 @@ public:
 	CCombinerVFS( IVFS *pVFS )
 	{
 		if ( pVFS )
+		{
 			vfses.push_back( pVFS );
+		}
 	}
 	//
 	CDataStream *OpenFile( const std::string &szPath );

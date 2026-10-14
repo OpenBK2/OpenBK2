@@ -147,7 +147,9 @@ static bool CompressLevel( std::vector<uint8_t> *pRes, const CArray2D<uint32_t> 
 	const int nSizeX = image.GetSizeX();
 	const int nSizeY = image.GetSizeY();
 	if ( nSizeX <= 0 || nSizeY <= 0 )
+	{
 		return false;
+	}
 
 	if ( IsDXTFormat( format ) )
 	{
@@ -175,7 +177,9 @@ static bool CompressLevel( std::vector<uint8_t> *pRes, const CArray2D<uint32_t> 
 
 	SDDSPixelFormat ddsformat;
 	if ( !GetDDSPixelFormat( format, &ddsformat ) )
+	{
 		return false;
+	}
 	// The 16 bit formats quantise by truncation, as the removed S3TC path did.
 	SPixelConvertInfo pci( ddsformat.dwABitMask, ddsformat.dwRBitMask, ddsformat.dwGBitMask, ddsformat.dwBBitMask );
 	pRes->resize( nSizeX * nSizeY * 2 );
@@ -184,7 +188,9 @@ static bool CompressLevel( std::vector<uint8_t> *pRes, const CArray2D<uint32_t> 
 	{
 		const uint32_t *pSrc = &image[y][0];
 		for ( int x = 0; x < nSizeX; ++x, ++pSrc, ++pDst )
+		{
 			*pDst = static_cast<uint16_t>( pci.ComposeColorSlow( *pSrc ) );
+		}
 	}
 	return true;
 }
@@ -218,7 +224,9 @@ MakeDDSHeader( SDDSHeader *pHdr, int nWidth, int nHeight, NGfx::EPixelFormat ePi
 	// Readers ignore it; it is set so a re-export of an existing texture differs
 	// from it in as few bytes as possible.
 	if ( !IsDXTFormat( ePixelFormat ) && ( pHdr->ddspf.dwFlags & DDS_ARGB ) == DDS_ARGB )
+	{
 		pHdr->dwSurfaceFlags |= DDS_SURFACE_ALPHA;
+	}
 }
 
 // ************************************************************************************************************************ //
@@ -336,7 +344,9 @@ WriteDDS( const std::string &szFileName, NGfx::EPixelFormat ePixelFormat, const 
 {
 	ASSERT( !mips.empty() );
 	if ( mips.empty() )
+	{
 		return false;
+	}
 
 	SDDSPixelFormat ddsformat;
 	if ( !GetDDSPixelFormat( ePixelFormat, &ddsformat ) )
@@ -372,7 +382,9 @@ WriteDDS( const std::string &szFileName, NGfx::EPixelFormat ePixelFormat, const 
 	}
 	stream.Write( &hdr, sizeof( hdr ) );
 	for ( size_t i = 0; i < levels.size(); ++i )
+	{
 		stream.Write( &levels[i][0], levels[i].size() );
+	}
 	return stream.IsOk();
 }
 
@@ -386,7 +398,9 @@ bool ConvertAndSaveAsDDS( const std::string &szFileName,
                           float fMappingSize )
 {
 	if ( srcImage.GetSizeX() <= 0 || srcImage.GetSizeY() <= 0 )
+	{
 		return false;
+	}
 
 	std::vector<CArray2D<uint32_t>> mips;
 

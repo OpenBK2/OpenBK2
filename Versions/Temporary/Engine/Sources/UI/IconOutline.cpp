@@ -35,7 +35,9 @@ struct SRLBuilder : public NGScene::ILayoutFakeView
 			CRectLayout::STextureCoord sTex;
 
 			if ( !NGScene::ClipRect( &sClippedRect, &sTex, sRect, sPosition, sWindow ) )
+			{
 				continue;
+			}
 
 			CRectLayout::SRect r;
 			int d = ( nTemp == sLayout.rects.size() - 1 ) ? 1 : 0;
@@ -127,7 +129,9 @@ void CIconOutliner::Recalc()
 			{
 				const NDb::STexture *pMask = NDb::Get<NDb::STexture>( cmd.nOutlineType );
 				if ( pMask )
+				{
 					p2DScene->AddPostFilter( NGScene::GetSWTex( pMask ), pMask->nWidth / 2, pMask->nHeight / 2 );
+				}
 			}
 			break;
 			case SFormattingInfo::ELEM_PICTURE:
@@ -164,14 +168,18 @@ void CIconOutliner::Recalc()
 void CIconOutliner::SetFormat( const SFormattingInfo &_fmt )
 {
 	if ( fmt == _fmt )
+	{
 		return;
+	}
 	fmt = _fmt;
 	gfxTexts.resize( fmt.cmds.size() );
 
 	fmtProcessed = fmt;
 
 	if ( !nOutlineType.IsEmpty() )
+	{
 		fmtProcessed.AddOutline( nOutlineType );
+	}
 
 	bool bIsFixedSize = fixedSize.x != 0 && fixedSize.y != 0;
 	int nSizeXAdd = ( eUsage == NGfx::TEXTURE_2D ) ? GetSizeAdd().x : 0;
@@ -265,11 +273,17 @@ void CIconOutliner::SetFormat( const SFormattingInfo &_fmt )
 	{
 		SFormattingInfo::SCmd &cmd = fmtProcessed.cmds[k];
 		if ( cmd.nFlags == 0 )
+		{
 			continue;
+		}
 		if ( cmd.nFlags & SFormattingInfo::CENTER_X )
+		{
 			cmd.vPos.x = resSize.x / 2 - cmd.vSize.x / 2;
+		}
 		if ( cmd.nFlags & SFormattingInfo::CENTER_Y )
+		{
 			cmd.vPos.y = resSize.y / 2 - cmd.vSize.y / 2;
+		}
 	}
 
 	// account outlining in size

@@ -125,7 +125,9 @@ static NGScene::CAnimWaterMaterial *GetAnimatedMaterial( const SAnimWaterMateria
 	for ( int iMaterial = 0; iMaterial < animMaterials.size(); ++iMaterial )
 	{
 		if ( animMaterials[iMaterial].first == animWaterKey && IsValid( animMaterials[iMaterial].second ) )
+		{
 			return animMaterials[iMaterial].second;
+		}
 	}
 
 	animMaterials.push_back( std::pair<SAnimWaterMaterialKey, CPtr<NGScene::CAnimWaterMaterial>>() );
@@ -149,7 +151,9 @@ void CVisWaterPatch::UpdateGeomData() {}
 void CVisWaterPatch::Recalc()
 {
 	if ( pValue == 0 )
+	{
 		pValue = new NGScene::CObjectInfo;
+	}
 
 	UpdateGeomData();
 
@@ -187,7 +191,9 @@ CVisWaterPatch::CVisWaterPatch( const CWaterController *pContr,
 		vSunDir = -vSunDir;
 	}
 	else
+	{
 		vSunDir.Set( 0, 0, 0 );
+	}
 
 	nAnimMaxFrames = (std::max)( nFramesX * nFramesY, 1 );
 	nNumFramesX = (std::max)( nFramesX, 1 );
@@ -210,7 +216,9 @@ inline int FindRealIndex( const CVec2i &val, const std::vector<CVec2i> &arr )
 	for ( int i = 0; i < arr.size(); ++i )
 	{
 		if ( arr[i] == val )
+		{
 			return i;
+		}
 	}
 	NI_ASSERT( false, "Can't find value in array" );
 	return 0;
@@ -270,7 +278,9 @@ void CWaterController::ProcessWavesDistribution( CArray2D<CPtr<SWaterNode>> *pWa
 				fAmpl = DEF_WAVE_MIN_AMPL + fAmpl * DEF_WAVE_MAX_AMPL;
 			}
 			else
+			{
 				fAmpl = DEF_WAVE_MIN_AMPL;
+			}
 
 			fDefPhase = waves[k].fPhaseOffset;
 
@@ -317,7 +327,9 @@ void CWaterController::ProcessWavesDistribution( CArray2D<CPtr<SWaterNode>> *pWa
 		for ( int i = 0; i < waterNodes.GetSizeX(); ++i )
 		{
 			if ( !waterNodes[g][i] )
+			{
 				continue;
+			}
 
 			SWaterNode *pCurNode = waterNodes[g][i];
 			std::sort( pCurNode->waveParams.begin(), pCurNode->waveParams.end() );
@@ -330,7 +342,9 @@ inline int FindWaterParamInd( int nInd, const std::vector<NWaterStuff::SWaterPar
 	for ( int k = 0; k < params.size(); ++k )
 	{
 		if ( params[k].nSeaMapIndex == nInd )
+		{
 			return k;
+		}
 	}
 	return -1;
 }
@@ -347,30 +361,42 @@ void CWaterController::Init( const float fAngle,
 	shaderWaterPatches.clear();
 
 	if ( _waterParams.size() <= 0 )
+	{
 		return;
+	}
 
 	pGScene = _pGScene;
 
 	std::vector<NWaterStuff::SWaterParams> waterParams( _waterParams );
 	for ( int k = 0; k < waterParams.size(); ++k )
+	{
 		waterParams[k].nSeaMapIndex = k + 1;
+	}
 
 	std::vector<NWaterStuff::SWaterParams> silentWaterParams, oceanWaterParams;
 	for ( std::vector<NWaterStuff::SWaterParams>::const_iterator it = waterParams.begin(); it != waterParams.end(); ++it )
 	{
 		if ( it->bUseWaves )
+		{
 			oceanWaterParams.push_back( *it );
+		}
 		else
+		{
 			silentWaterParams.push_back( *it );
+		}
 	}
 
 	if ( _pGScene )
 	{
 		if ( !oceanWaterParams.empty() )
+		{
 			InitOceanWater( seaMap, oceanWaterParams, waterBorders, _pGScene, pWater, fAngle );
+		}
 
 		if ( !silentWaterParams.empty() )
+		{
 			InitSilentWater( seaMap, silentWaterParams, waterBorders, _pGScene, pWater );
+		}
 	}
 }
 
@@ -426,15 +452,21 @@ void CWaterController::SetBorders( CArray2D<CPtr<SWaterNode>> *pWaterNodes,
 		const std::vector<NDb::SVSOPoint> &curBorder = waterBorders[k].points;
 
 		if ( curBorder.size() < 2 )
+		{
 			continue;
+		}
 
 		const bool bNeedCycle = ( fabs( curBorder[0].vPos.x - curBorder[curBorder.size() - 1].vPos.x ) < DEF_EPS ) &&
 		                        ( fabs( curBorder[0].vPos.y - curBorder[curBorder.size() - 1].vPos.y ) < DEF_EPS );
 
 		if ( bNeedCycle )
+		{
 			coastPoints.resize( ( curBorder.size() - 1 ) * 4 + 2 );
+		}
 		else
+		{
 			coastPoints.resize( ( curBorder.size() - 1 ) * 4 );
+		}
 
 		const int nCoastSize = coastPoints.size();
 		nInd = 0;
@@ -488,9 +520,13 @@ void CWaterController::SetBorders( CArray2D<CPtr<SWaterNode>> *pWaterNodes,
 							fAlpha = Clamp( fAlpha, 0.0f, 1.0f );
 							SWaterNode &wn = *waterNodes[g][i];
 							if ( wn.bIsLargeAlpha ) // first alpha changing
+							{
 								wn.SetAlpha( fAlpha );
+							}
 							else // interference
+							{
 								wn.SetAlpha( ( wn.GetAlpha() + fAlpha ) * 0.5f );
+							}
 							wn.bIsLargeAlpha = false;
 						}
 					}
@@ -587,12 +623,16 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 				for ( int ii = nFirstX; ii < nLastX; ++ii )
 				{
 					if ( waterNodes[gg][ii] )
+					{
 						PushBackUnique( &useParams, waterNodes[gg][ii]->nParamInd );
+					}
 				}
 			}
 
 			if ( useParams.empty() )
+			{
 				continue;
+			}
 
 			// Create patch for current water param
 			for ( std::vector<uint8_t>::const_iterator it = useParams.begin(); it != useParams.end(); ++it )
@@ -613,7 +653,9 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 					for ( int ii = nFirstX; ii < nLastX; ++ii )
 					{
 						if ( !waterNodes[gg][ii] )
+						{
 							continue;
+						}
 
 						const SWaterNode *pCurNode = waterNodes[gg][ii];
 
@@ -721,7 +763,9 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 				}
 
 				if ( !pCurPatch )
+				{
 					continue;
+				}
 
 				if ( vMaxBBs.x - vMinBBs.x < FP_EPSILON || vMaxBBs.y - vMinBBs.y < FP_EPSILON )
 				{
@@ -931,14 +975,20 @@ static void CreateAlphaMap( CArray2D<uint8_t> *pAlphaMap,
 	{
 		const std::vector<NDb::SVSOPoint> &curBorder = borders[k].points;
 		if ( curBorder.size() < 2 )
+		{
 			continue;
+		}
 		const bool bNeedCycle = ( fabs( curBorder[0].vPos.x - curBorder[curBorder.size() - 1].vPos.x ) < DEF_EPS ) &&
 		                        ( fabs( curBorder[0].vPos.y - curBorder[curBorder.size() - 1].vPos.y ) < DEF_EPS );
 
 		if ( bNeedCycle )
+		{
 			coastPoints.resize( ( curBorder.size() - 1 ) * 4 + 2 );
+		}
 		else
+		{
 			coastPoints.resize( ( curBorder.size() - 1 ) * 4 );
+		}
 
 		const int nCoastSize = coastPoints.size();
 		int nInd = 0;
@@ -989,9 +1039,13 @@ static void CreateAlphaMap( CArray2D<uint8_t> *pAlphaMap,
 					{
 						const int nAlpha = Clamp( Float2Int( fAlpha * 254.0f ), 0, 254 );
 						if ( ( *pAlphaMap )[g][i] == 0xff )
+						{
 							( *pAlphaMap )[g][i] = nAlpha;
+						}
 						else
+						{
 							( *pAlphaMap )[g][i] = ( int( ( *pAlphaMap )[g][i] ) + nAlpha ) >> 1;
+						}
 					}
 				}
 			}
@@ -1130,13 +1184,17 @@ inline int GetVertexIndex( CVertsHash *pVertsHash,
 		return nAddInd;
 	}
 	else
+	{
 		return it->second;
+	}
 }
 
 void CShaderWater::Recalc()
 {
 	if ( !pValue )
+	{
 		pValue = new NGScene::CObjectInfo;
+	}
 
 	NGScene::CObjectInfo::SData data;
 	data.verts.reserve( 256 );
@@ -1435,11 +1493,15 @@ void CWaterController::InitOceanWater( const CArray2D<uint8_t> &seaMap,
 				waterNodes[g][i]->waveParams.resize( waves.size() );
 			}
 			if ( fTexX > ( 1.0f - DEF_TEX_ERROR ) )
+			{
 				fTexX = 0.0f;
+			}
 			fTexX += fWaterTexTileCoeff;
 		}
 		if ( fTexY > ( 1.0f - DEF_TEX_ERROR ) )
+		{
 			fTexY = 0.0f;
+		}
 		fTexY += fWaterTexTileCoeff;
 	}
 
@@ -1454,7 +1516,9 @@ void CWaterController::InitOceanWater( const CArray2D<uint8_t> &seaMap,
 			CFileStream noiseStream( NVFS::GetMainVFS(), waterParams[i].szNoiseFileName );
 			NI_ASSERT( noiseStream.IsOk(), fmt::format( "Can't load water noise {}", waterParams[i].szNoiseFileName ) );
 			if ( noiseStream.IsOk() )
+			{
 				NImage::LoadTGAImage( noises[i], &noiseStream );
+			}
 			else
 			{
 				noises[i].SetSizes( 1, 1 );

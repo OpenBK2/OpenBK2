@@ -145,7 +145,9 @@ void CAckTracker::Step( std::vector<PACKET_ID> *pRolled,
 			rolledUpdates.splice( rolledUpdates.end(), sentUpdates, itmp );
 		}
 		else
+		{
 			break;
+		}
 	}
 	for ( it = rolledUpdates.begin(); it != rolledUpdates.end(); )
 	{
@@ -155,7 +157,9 @@ void CAckTracker::Step( std::vector<PACKET_ID> *pRolled,
 			it = rolledUpdates.erase( it );
 		}
 		else
+		{
 			++it;
+		}
 	}
 	//
 }
@@ -186,7 +190,9 @@ void CAckTracker::ReceiveAck( std::vector<PACKET_ID> *pAcked, PACKET_ID nPkt )
 			return;
 		}
 		else
+		{
 			++i;
+		}
 	}
 	// this should be very rare case so perfomance is not critical
 	for ( i = rolledUpdates.begin(); i != rolledUpdates.end(); )
@@ -199,7 +205,9 @@ void CAckTracker::ReceiveAck( std::vector<PACKET_ID> *pAcked, PACKET_ID nPkt )
 			return;
 		}
 		else
+		{
 			++i;
+		}
 	}
 }
 
@@ -213,15 +221,21 @@ void CAckTracker::ReceivePktAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bi
 	//
 	int nShift = ( nLast - nAckedLast ) & ( CS_PACKET_ID_RANGE - 1 );
 	if ( nShift > CS_PACKET_ID_RANGE / 2 )
+	{
 		nShift -= CS_PACKET_ID_RANGE;
+	}
 	if ( nShift <= 0 )
 	{
 		// A whole bitmap has moved out of range; shifting uint32_t by 32 is
 		// undefined and can suppress valid ACKs after packet reordering.
 		if ( nShift <= -32 )
+		{
 			dwAckedBits = 0;
+		}
 		else
+		{
 			dwAckedBits >>= -nShift;
+		}
 	}
 	else
 	{
@@ -229,9 +243,13 @@ void CAckTracker::ReceivePktAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bi
 		dwAckedBits |= 1;
 		nShift--;
 		if ( nShift < 32 )
+		{
 			dwAckedBits <<= nShift;
+		}
 		else
+		{
 			dwAckedBits = 0;
+		}
 	}
 	dwNewAckBits = dwBits & ~dwAckedBits;
 	dwAckedBits |= dwNewAckBits;
@@ -242,7 +260,9 @@ void CAckTracker::ReceivePktAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bi
 	{
 		nLast--;
 		if ( dwNewAckBits & ( 1 << ( i - 1 ) ) )
+		{
 			ReceiveAck( pAcked, nLast );
+		}
 	}
 }
 
@@ -284,10 +304,14 @@ bool CAckTracker::ReadAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bits )
 	// calcing sequential number of arrived update (accounting for wrapping of pkt numbers)
 	nCurUpdate = nPktHighCounter + nReceived;
 	if ( nPktLastReceived == 0 )
+	{
 		nPktLastReceived = nCurUpdate;
+	}
 	int nDif = nCurUpdate - nPktLastReceived;
 	if ( nDif > CS_PACKET_ID_RANGE / 2 )
+	{
 		nCurUpdate -= CS_PACKET_ID_RANGE;
+	}
 	else if ( nDif < -CS_PACKET_ID_RANGE / 2 )
 	{
 		nCurUpdate += CS_PACKET_ID_RANGE;
@@ -295,7 +319,9 @@ bool CAckTracker::ReadAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bits )
 	}
 	// check is not packet too obsolete
 	if ( !CheckRecvPacketNumber( nCurUpdate ) )
+	{
 		return false;
+	}
 
 	// receiving acks
 	ReceivePktAcks( pAcked, bits );
@@ -316,7 +342,9 @@ void CAckTracker::SendPktAcks( CBitStream *pBits )
 		std::vector<UPDATE_ID>::iterator k;
 		k = find( receivedPkts.begin(), receivedPkts.end(), nTest );
 		if ( k != receivedPkts.end() )
+		{
 			dwBits |= 1 << ( i - 1 );
+		}
 	}
 	( *pBits ).Write( &nLast, sizeof( nLast ) );
 	( *pBits ).Write( &dwBits, 4 );
@@ -324,7 +352,9 @@ void CAckTracker::SendPktAcks( CBitStream *pBits )
 	for ( i = receivedPkts.size() - 1; i >= 0; i-- )
 	{
 		if ( receivedPkts[i] + 32 < nPktLastReceived )
+		{
 			receivedPkts.erase( receivedPkts.begin() + i );
+		}
 	}
 }
 
@@ -371,7 +401,9 @@ void CAckTracker::PacketLost( PACKET_ID pktID )
 			it = sentUpdates.erase( it );
 		}
 		else
+		{
 			++it;
+		}
 	}
 	ASSERT( bFound );
 }

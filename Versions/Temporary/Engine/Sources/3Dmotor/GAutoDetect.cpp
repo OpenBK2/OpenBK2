@@ -148,7 +148,9 @@ static SCfgValue *fsaaConfig[4] = { fsaa0, fsaa1, fsaa2, fsaa3 };
 static void ApplyCfgValues( SCfgValue **pCfg, int nCfgEntries, int nValue )
 {
 	if ( nValue == CV_CUSTOM )
+	{
 		return;
+	}
 
 	nValue = Clamp( nValue, -1, nCfgEntries );
 	if ( nValue >= 0 )
@@ -156,7 +158,9 @@ static void ApplyCfgValues( SCfgValue **pCfg, int nCfgEntries, int nValue )
 		SCfgValue *pCfgEntry = pCfg[nValue];
 
 		for ( ; pCfgEntry->pszName; ++pCfgEntry )
+		{
 			NGlobal::SetVar( pCfgEntry->pszName, pCfgEntry->fValue );
+		}
 	}
 }
 
@@ -170,13 +174,17 @@ static EConfigValue FindCfgMode( SCfgValue **pCfg, int nCfgEntries )
 		for ( ; pCfgEntry->pszName; ++pCfgEntry )
 		{
 			if ( NGlobal::GetVar( pCfgEntry->pszName, pCfgEntry->fValue ).GetFloat() == pCfgEntry->fValue )
+			{
 				continue;
+			}
 
 			bSame = false;
 			break;
 		}
 		if ( bSame )
+		{
 			return EConfigValue( nTemp );
+		}
 	}
 
 	return CV_CUSTOM;
@@ -207,7 +215,9 @@ void AutoDetectVideoConfig()
 			bDoTest = NGfx::SetMode( NGfx::SVideoMode( 640, 480, nBPP, NGfx::WINDOWED ), gfxRTInfo );
 		}
 		if ( bDoTest )
+		{
 			NGfx::PerformBenchmark();
+		}
 		const NGfx::SPerformanceInfo &perf = NGfx::GetPerformanceInfo();
 		csSystem << CC_GREEN << "PSRate = " << perf.fPSRate << ";  FillRate = " << perf.fFillRate
 						 << ";  TriRate = " << perf.fTriangleRate << ";  CPUclock = " << perf.fCPUclock << endl;
@@ -218,9 +228,13 @@ void AutoDetectVideoConfig()
 	{
 		const SAutoDetectCfg &sType = configAutoDetect[nTemp];
 		if ( ( sType.nCard != NGfx::VC_DEFAULT ) && ( sType.nCard != card ) )
+		{
 			continue;
+		}
 		if ( ( sType.nLevel != HWLEVEL_ANY ) && ( sType.nLevel != hl ) )
+		{
 			continue;
+		}
 
 		nDefaultSpeed = sType.nSpeed;
 		nDefaultTexture = sType.nTexture;
@@ -248,7 +262,9 @@ void AutoDetectVideoConfig()
 		if ( perf.fFillRate != 0 )
 		{
 			if ( perf.fTriangleRate < 5 )
+			{
 				nDefaultSpeed = CV_VHIGH;
+			}
 			if ( perf.fFillRate < 400 )
 			{
 				nDefaultSpeed = CV_HIGH;
@@ -258,7 +274,9 @@ void AutoDetectVideoConfig()
 			{
 				NGlobal::SetVar( "gfx_resolution", "1024x768" );
 				if ( perf.fFillRate < perf.fPSRate * 0.7 )
+				{
 					nDefault16bppMode = 1;
+				}
 				nDefaultTexture = (std::min)( nDefaultTexture, (int)CV_MED );
 			}
 			if ( perf.fFillRate > 700 )
@@ -267,7 +285,9 @@ void AutoDetectVideoConfig()
 				nDefaultFSAA = CV_VHIGH;
 			}
 			else
+			{
 				nDefaultTexture = (std::min)( nDefaultTexture, (int)CV_HIGH );
+			}
 		}
 	}
 
@@ -276,7 +296,9 @@ void AutoDetectVideoConfig()
 	NGlobal::SetVar( "gfx_resolution", fmt::format( "{}x{}", nDesktopWidth, nDesktopHeight ) );
 
 	if ( !NGfx::CanStreamGeometry() || perf.fCPUclock < 1400 )
+	{
 		nDefaultSpeed = CV_VHIGH;
+	}
 
 	// Disable 16 bit mode by default
 	NGlobal::SetVar( "gfx_16bit_mode", 0 );
@@ -312,12 +334,18 @@ void SetSpeedMode( EConfigValue eMode )
 		if ( eMode != CV_VHIGH )
 		{
 			if ( NHPTimer::GetClockRate() > 1200000000 )
+			{
 				nHSRMode = 2;
+			}
 			else
+			{
 				nHSRMode = 1;
+			}
 		}
 		else
+		{
 			nHSRMode = 1;
+		}
 	}
 	NGlobal::SetVar( "gfx_hsr", nHSRMode );
 }

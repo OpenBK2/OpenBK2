@@ -30,7 +30,9 @@ SMarkerSet::SMarkerSet( const CVec3 &rvBuildingPos, const CVec2 &rvBuildingOrigi
 SMarkerSet::~SMarkerSet()
 {
 	if ( bIsInScene )
+	{
 		DetachFromScene();
+	}
 }
 
 void SMarkerSet::AttachToScene( bool bActive, const std::vector<SMarkerPoint> &points )
@@ -49,11 +51,15 @@ void SMarkerSet::AttachToScene( bool bActive, const std::vector<SMarkerPoint> &p
 	const float F_ARROW_SIZE = 50.0f;
 
 	if ( points.empty() )
+	{
 		return;
+	}
 
 	IEditorScene *pScene = EditorScene();
 	if ( !pScene )
+	{
 		return;
+	}
 
 	int nIdx = ( bActive ? 1 : 0 );
 	int nBaseIdx = ( bActive ? 0x1000 : 0x2000 );
@@ -114,9 +120,13 @@ void SMarkerSet::AttachToScene( bool bActive, const std::vector<SMarkerPoint> &p
 		float fR = i->fDir;
 		const float F_3PI2 = ( 3.0f * FP_PI2 );
 		if ( fR >= F_3PI2 )
+		{
 			fR -= F_3PI2;
+		}
 		else
+		{
 			fR += FP_PI2;
+		}
 		CVec3 dv( cos( fR ), sin( fR ), 0.01f );
 		polyline[k + 1] = v + dv * F_ARROW_SIZE;
 		k += 2;
@@ -136,11 +146,15 @@ void SMarkerSet::AttachToScene()
 void SMarkerSet::DetachFromScene()
 {
 	if ( !bIsInScene )
+	{
 		return;
+	}
 
 	IEditorScene *pScene = EditorScene();
 	if ( !pScene )
+	{
 		return;
+	}
 
 	pScene->RemovePolyline( xAxisID[0] );
 	pScene->RemovePolyline( yAxisID[0] );
@@ -169,7 +183,9 @@ void SMarkerSet::AddMarker(
 {
 	IEditorScene *pScene = EditorScene();
 	if ( !pScene )
+	{
 		return;
+	}
 
 	SMarkerPoint point;
 
@@ -218,7 +234,11 @@ void SMarkerSet::AddMarker(
 	}
 
 	if ( bActive )
+	{
 		activePoints.push_back( point );
+	}
 	else
+	{
 		points.push_back( point );
+	}
 }

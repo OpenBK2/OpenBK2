@@ -77,7 +77,9 @@ void CPointsListState::SetPointMarkers()
 {
 	IEditorScene *pScene = EditorScene();
 	if ( !pScene )
+	{
 		return;
+	}
 
 	CPtr<IManipulator> pManipulator = Singleton<IResourceManager>()->CreateObjectManipulator(
 			pBuildingEditor->GetObjectSet().szObjectTypeName, pBuildingEditor->GetObjectSet().objectNameSet.begin()->first );
@@ -107,8 +109,10 @@ void CPointsListState::SetPointMarkers()
 
 			CVariant dir = 0.0f;
 			if ( !GetDirectionFieldName().empty() )
+			{
 				pManipulator->GetValue(
 						fmt::format( "{}.[{}].{}", GetPointsArrayFieldName().c_str(), i, GetDirectionFieldName().c_str() ), &dir );
+			}
 
 			bool bMarkerIsActive = ( i == nActiveIndex );
 			bool bOriginInUse = IsOriginInUse();
@@ -128,7 +132,9 @@ int CPointsListState::GetPointsNum( const std::string &rszField )
 {
 	const SObjectSet &objSet = pBuildingEditor->GetObjectSet();
 	if ( objSet.objectNameSet.empty() )
+	{
 		return 0;
+	}
 
 	CPtr<IManipulator> pManipulator = Singleton<IResourceManager>()->CreateObjectManipulator(
 			objSet.szObjectTypeName, objSet.objectNameSet.begin()->first );
@@ -169,7 +175,9 @@ int CPointsListState::GetSelectedPointIndex()
 	data.nInstanceID = nInstanceID;
 
 	if ( GetPointListDialogData( &data ) )
+	{
 		return data.nSelectedPoint;
+	}
 
 	return -1;
 }
@@ -177,13 +185,17 @@ int CPointsListState::GetSelectedPointIndex()
 void CPointsListState::SetMaskManipulator()
 {
 	if ( pMaskManipulator != 0 )
+	{
 		ClearMaskManipulator();
+	}
 
 	IView *pView = 0;
 	Singleton<ICommandHandlerContainer>()->HandleCommand(
 			CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uintptr_t>( &pView ) );
 	if ( pView != 0 )
+	{
 		pView->RemoveViewManipulator();
+	}
 
 	pMaskManipulator = 0;
 
@@ -216,7 +228,9 @@ void CPointsListState::SetMaskManipulator()
 	Singleton<ICommandHandlerContainer>()->HandleCommand(
 			CHID_PC_DIALOG, ID_PC_DIALOG_GET_COMMAND_HANDLER, reinterpret_cast<uintptr_t>( &pCommandHandler ) );
 	if ( pCommandHandler != 0 )
+	{
 		pCommandHandler->HandleCommand( ID_PC_EXPAND_ALL, 0 );
+	}
 }
 
 bool CPointsListState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
@@ -227,7 +241,9 @@ bool CPointsListState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		{
 			int nPointsListDlgInstanceID = dwData;
 			if ( nPointsListDlgInstanceID == nInstanceID )
+			{
 				RefreshState();
+			}
 
 			return true;
 		}
@@ -263,22 +279,32 @@ void CPointsListState::RefreshState()
 			return;
 		}
 		if ( currDialogData.eSeason != data.eSeason )
+		{
 			pBuildingEditor->ChangeSeason( data.eSeason );
+		}
 
 		if ( currDialogData.nSelectedPoint != data.nSelectedPoint )
 		{
 			if ( data.bChkPropmask )
+			{
 				SetMaskManipulator();
+			}
 			else
+			{
 				ClearMaskManipulator();
+			}
 		}
 
 		if ( currDialogData.bChkPropmask != data.bChkPropmask )
 		{
 			if ( data.bChkPropmask )
+			{
 				SetMaskManipulator();
+			}
 			else
+			{
 				ClearMaskManipulator();
+			}
 		}
 
 		pBuildingEditor->SetDrawPassability( data.bChkPassability );
@@ -300,7 +326,9 @@ bool CPointsListState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool 
 void CPointsListState::PostDraw( IPaintContext *pPaintDC )
 {
 	if ( !IsValid( pProcess ) || !pProcess->Update( GameTimer()->GetAbsTime() ) )
+	{
 		pProcess = 0;
+	}
 
 	pBuildingEditor->DrawPassability( pPaintDC );
 }
@@ -311,7 +339,9 @@ void CPointsListState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFl
 	{
 		CPtr<IEditorScene> pScene = EditorScene();
 		if ( pScene )
+		{
 			pScene->ToggleShow( SCENE_SHOW_AI_GRID );
+		}
 	}
 }
 
@@ -432,7 +462,9 @@ void CSurfacePointsState::Draw( IPaintContext *pPaintDC )
 void CSurfacePointsState::AddPointSpecificMarker( IManipulator *pManipulator, int nPointIndex )
 {
 	if ( nPointIndex == 0 )
+	{
 		surfPoints.clear();
+	}
 	//
 	NDb::SHPObjectRPGStats::SModelSurfacePoint point;
 	point.vPos = VNULL3;
@@ -476,10 +508,12 @@ void CDamageLevelsState::RefreshState()
 	pNewStats.fFuel = 0.0f;
 	pNewStats.time = GameTimer()->GetAbsTime();
 	if ( nActiveIndex > 0 ) // ( != -1) && ( != 0)
+	{
 		CManipulatorManager::GetValue(
 				&pNewStats.fHitPoints,
 				pManipulator,
 				fmt::format( "{}.[{}].DamageHP", GetPointsArrayFieldName().c_str(), nActiveIndex - 1 ) );
+	}
 
 	pNewStats.fHitPoints *= static_cast<CMapObj *>( pBuilding )->GetStats()->fMaxHP;
 	pProcess = pBuilding->AIUpdateRPGStats(

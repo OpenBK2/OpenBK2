@@ -36,7 +36,9 @@ static uint32_t ConvertColor( const CVec3 &vColor )
 void CColorBackground::Visit( struct IUIVisitor *pVisitor )
 {
 	if ( pos.IsEmpty() )
+	{
 		return;
+	}
 
 	CTPoint<int> size;
 
@@ -68,7 +70,9 @@ void CColorViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pData 
 	pBackground->nColor = pInfo->nColor;
 
 	if ( pWnd )
+	{
 		pWnd->SetBackground( pBackground );
+	}
 }
 
 void CTextureViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const
@@ -101,7 +105,9 @@ void CTextDataViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pDa
 
 	std::wstring wszText = L"";
 	if ( pInfo )
+	{
 		wszText = pInfo->wszText;
+	}
 
 	ITextView *pTxt = GetChildChecked<ITextView>( pItem, "ItemComboText", true );
 	pTxt->SetText( pTxt->GetDBText() + wszText );
@@ -112,7 +118,9 @@ void CTextDataViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pDa
 void NMPSetData::SetText( ITextView *pText, const std::wstring &szText )
 {
 	if ( !pText )
+	{
 		return;
+	}
 	pText->SetText( pText->GetDBText() + szText );
 }
 

@@ -4,7 +4,9 @@ virtual void ToAIUnits( bool bInEditor )
 	SStaticObjectRPGStats::ToAIUnits( bInEditor );
 
 	for ( int i = 0; i < segments.size(); ++i )
+	{
 		segments[i].ToAIUnits( bInEditor );
+	}
 }
 //
 virtual const CVec2 &GetOrigin( const int nIndex = -1 ) const

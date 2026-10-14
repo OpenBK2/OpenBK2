@@ -89,12 +89,16 @@ void CGeneralTaskToDefendStorage::AskForWorker( ICommander *pManager, const floa
 		{
 			case TS_RECAPTURE:
 				if ( !wRequestID )
+				{
 					wRequestID = pManager->RequestForSupport( CVec2( pStorage->GetCenter().x, pStorage->GetCenter().y ),
 					                                          FT_RECAPTURE_STORAGE );
+				}
 				break;
 			case TS_REPAIR:
 				if ( !IsValidObj( pRepairTransport ) )
+				{
 					pManager->EnumWorkers( FT_TRUCK_REPAIR_BUILDING, this );
+				}
 				break;
 		}
 	}
@@ -131,7 +135,9 @@ float CGeneralTaskToDefendStorage::EvaluateWorkerRating( CCommonUnit *pUnit, con
 			// у юнитов есть функция GetCenter, которая возвращает 3D координаты юнита
 			const float fDist = fabs2( pStorage->GetCenter() - CVec3( pUnit->GetCenterPlain(), 0 ) );
 			if ( fDist == 0.0f )
+			{
 				return 1;
+			}
 			return 1.0f / fDist;
 		}
 
@@ -171,7 +177,9 @@ void CGeneralTaskToDefendStorage::ReleaseWorker( ICommander *pManager, const flo
 void CGeneralTaskToDefendStorage::CancelTask( ICommander *pManager )
 {
 	if ( pRepairTransport )
+	{
 		pManager->Give( pRepairTransport );
+	}
 	pRepairTransport = 0;
 }
 
@@ -189,9 +197,13 @@ void CGeneralTaskToDefendStorage::Segment()
 			break;
 		case TS_OPERATE:
 			if ( theDipl.GetNParty( pStorage->GetPlayer() ) != nParty )
+			{
 				eState = TS_START_RECAPTURE;
+			}
 			else if ( pStorage->GetHitPoints() == 0 )
+			{
 				eState = TS_START_REPAIR;
+			}
 
 			break;
 		case TS_START_RECAPTURE:
@@ -237,7 +249,9 @@ void CGeneralTaskToDefendStorage::Segment()
 			}
 
 			if ( pRepairTransport && !IsValidObj( pRepairTransport ) )
+			{
 				pRepairTransport = 0;
+			}
 
 			break;
 	}
@@ -282,7 +296,9 @@ void CGeneralTaskToResupplyCell::AskForWorker( ICommander *pManager, const float
 {
 	if ( !bInit && pCell->GetNNeeded( eResupplyType ) != 0 && fSeverity <= fMaxSeverity &&
 	     !IsValidObj( pResupplyTransport ) )
+	{
 		pManager->EnumWorkers( FT_TRUCK_RESUPPLY, this );
+	}
 }
 
 void CGeneralTaskToResupplyCell::ReleaseWorker( ICommander *pManager, const float fMinSeverity )
@@ -313,7 +329,9 @@ void CGeneralTaskToResupplyCell::Segment()
 	}
 	//all was resupplied
 	if ( pCell->GetNNeeded( eResupplyType ) == 0 || pCell->IsDangerous() )
+	{
 		bFinished = true;
+	}
 
 	// truck don't have resources and cannot find storage
 	if ( IsValidObj( pResupplyTransport ) && EUSN_REST == pResupplyTransport->GetState()->GetName() )
@@ -322,7 +340,9 @@ void CGeneralTaskToResupplyCell::Segment()
 	}
 
 	if ( fSeverity == 1 && curTime >= timeNextCheck )
+	{
 		fSeverity = -1;
+	}
 }
 
 bool CGeneralTaskToResupplyCell::EnumWorker( class CCommonUnit *pUnit, const enum EForceType _eType )
@@ -367,7 +387,9 @@ void CResupplyCellInfo::AddUnitResupply( CCommonUnit *pUnit, const enum EResuppl
 
 		// if this unit doesn't exist, create it.
 		if ( resupplyInfo.find( nID ) == resupplyInfo.end() )
+		{
 			resupplyInfo.insert( std::pair<int, uint8_t>( nID, 0 ) );
+		}
 
 		if ( !( resupplyInfo[nID] & ( 1 << eType ) ) )
 		{
@@ -387,7 +409,9 @@ void CResupplyCellInfo::RemoveUnitResupply( class CCommonUnit *pUnit, const enum
 	{
 		const uint8_t cRes = curResupply->second;
 		if ( cRes & ( 1 << eType ) )
+		{
 			RemoveUnitResupplyInternal( pUnit, eType );
+		}
 	}
 }
 
@@ -403,7 +427,9 @@ void CResupplyCellInfo::RemoveUnitResupplyInternal( class CCommonUnit *pUnit, co
 	curInfo->second &= ~( 1 << eType );
 
 	if ( 0 == curInfo->second )
+	{
 		resupplyInfo.erase( nID );
+	}
 }
 
 void CResupplyCellInfo::SetDanger( const NTimer::STime timeDanger )
@@ -426,7 +452,9 @@ void CResupplyCellInfo::AddUnit( class CCommonUnit *pUnit, const uint8_t cRes )
 	for ( int i = 0; i < _ERT_COUNT; ++i )
 	{
 		if ( cRes & ( 1 << i ) )
+		{
 			AddUnitResupply( pUnit, static_cast<EResupplyType>( i ) );
+		}
 	}
 }
 
@@ -443,7 +471,9 @@ uint8_t CResupplyCellInfo::RemoveUnit( class CCommonUnit *pUnit )
 		for ( int i = 0; i < _ERT_COUNT && resupplyInfo.find( nID ) != resupplyInfo.end(); ++i )
 		{
 			if ( cRes & ( 1 << i ) )
+			{
 				RemoveUnitResupplyInternal( pUnit, static_cast<EResupplyType>( i ) );
+			}
 		}
 		return cRes;
 	}
@@ -456,7 +486,9 @@ float CResupplyCellInfo::GetNNeeded( const uint8_t cTypeMask ) const
 	for ( int i = 0; i < _ERT_COUNT; ++i )
 	{
 		if ( ( cTypeMask & ( 1 << i ) ) && !( cMarkedUnderSupply & ( 1 << i ) ) )
+		{
 			fLocalCount += resupplyCount[i];
+		}
 	}
 	return fLocalCount;
 }
@@ -475,9 +507,13 @@ const bool CResupplyCellInfo::IsUnitRegistered( CCommonUnit *pUnit ) const
 void CResupplyCellInfo::MarkUnderSupply( const enum EResupplyType eType, const bool bSupply )
 {
 	if ( bSupply )
+	{
 		cMarkedUnderSupply |= ( 1 << eType );
+	}
 	else
+	{
 		cMarkedUnderSupply &= ~( 1 << eType );
+	}
 }
 
 bool CResupplyCellInfo::IsUnitSuitable( const class CCommonUnit *pUnit, const enum EResupplyType eType )
@@ -539,7 +575,9 @@ CVec2 CResupplyCellInfo::CalcResupplyPos( const enum EResupplyType eType ) const
 void CFreeArtilleryHolder::ResetIterator()
 {
 	if ( artilleries.empty() )
+	{
 		itCurrent = artilleries.end();
+	}
 	else
 	{
 		itCurrent = artilleries.begin();
@@ -551,36 +589,52 @@ void CFreeArtilleryHolder::AddArtillery( CArtillery *pArtillery )
 {
 	const int nUnitID = pArtillery->GetUniqueID();
 	if ( IsExists( nUnitID ) )
+	{
 		return;
+	}
 	const int nCurrentID = !IsValidCurrent() ? -1 : itCurrent->second.pArtillery->GetUniqueID();
 	artilleries[nUnitID] = SArtilleryInfo( pArtillery );
 	if ( nCurrentID == -1 )
+	{
 		ResetIterator();
+	}
 	else
+	{
 		itCurrent = artilleries.find( nCurrentID );
+	}
 }
 
 void CFreeArtilleryHolder::RemoveArtillery( CArtillery *pArtillery )
 {
 	const int nUnitID = pArtillery->GetUniqueID();
 	if ( !IsExists( nUnitID ) )
+	{
 		return;
+	}
 	const int nCurrentID = !IsValidCurrent() ? -1 : itCurrent->second.pArtillery->GetUniqueID();
 	TArtilleries::iterator posDelete = artilleries.find( nUnitID );
 	artilleries.erase( posDelete );
 	//DebugTrace( "Remove artillery %d from holder", nUnitID );
 	if ( nCurrentID == -1 || artilleries.empty() )
+	{
 		itCurrent = artilleries.end();
+	}
 	else if ( nCurrentID == nUnitID )
+	{
 		ResetIterator();
+	}
 	else
+	{
 		itCurrent = artilleries.find( nCurrentID );
+	}
 }
 
 const bool CFreeArtilleryHolder::IsValidCurrent() const
 {
 	if ( itCurrent == artilleries.end() )
+	{
 		return false;
+	}
 
 	return IsValid( itCurrent->second.pArtillery ) && !( itCurrent->second.pArtillery->HasServeCrew() );
 }
@@ -588,13 +642,19 @@ const bool CFreeArtilleryHolder::IsValidCurrent() const
 const bool CFreeArtilleryHolder::IsFreeCurrent() const
 {
 	if ( itCurrent == artilleries.end() )
+	{
 		return false;
+	}
 
 	if ( !IsValid( itCurrent->second.pCatchingFormation ) )
+	{
 		return true;
+	}
 
 	if ( itCurrent->second.pCatchingFormation->GetState()->GetName() == EUSN_GUN_CAPTURE )
+	{
 		return false;
+	}
 
 	itCurrent->second.pCatchingFormation = 0;
 	return true;
@@ -603,12 +663,16 @@ const bool CFreeArtilleryHolder::IsFreeCurrent() const
 void CFreeArtilleryHolder::Segment()
 {
 	if ( artilleries.empty() )
+	{
 		return;
+	}
 	timeFromReset += SAIConsts::AI_SEGMENT_DURATION;
 	if ( itCurrent == artilleries.end() )
 	{
 		if ( curTime - timeFromReset > 1000 )
+		{
 			ResetIterator();
+		}
 	}
 	else
 	{
@@ -616,11 +680,17 @@ void CFreeArtilleryHolder::Segment()
 		while ( itCurrent != artilleries.end() )
 		{
 			if ( !IsValidCurrent() )
+			{
 				artilleries.erase( itCurrent++ );
+			}
 			else if ( !IsFreeCurrent() )
+			{
 				++itCurrent;
+			}
 			else
+			{
 				return;
+			}
 		}
 	}
 }
@@ -633,13 +703,17 @@ CArtillery *CFreeArtilleryHolder::Get() const
 void CFreeArtilleryHolder::TryCatch( CFormation *pFormation )
 {
 	if ( itCurrent != artilleries.end() )
+	{
 		itCurrent->second.pCatchingFormation = pFormation;
+	}
 }
 
 void CFreeArtilleryHolder::OnSerialize( IBinSaver &f )
 {
 	if ( f.IsReading() )
+	{
 		ResetIterator();
+	}
 }
 
 //*******************************************************************
@@ -696,13 +770,17 @@ void CGeneralIntendant::AddReiforcePositions( const struct NDb::SAIGeneralParcel
 		vPositions[nFormer + i].second = patchInfo.GetDir() + patchInfo.reinforcePoints[i].GetDir();
 	}
 	if ( vPositions.empty() )
+	{
 		vPositions.push_back( CPosition( patchInfo.vCenter, patchInfo.GetDir() ) );
+	}
 }
 
 void CGeneralIntendant::AddReiforcePosition( const CVec2 &vPos, const uint16_t wDirection )
 {
 	if ( !bInitedByParcel )
+	{
 		vPositions.push_back( CPosition( vPos, wDirection ) );
+	}
 }
 
 void CGeneralIntendant::Init()
@@ -750,18 +828,24 @@ void CGeneralIntendant::CancelRequest( int nRequestID, enum EForceType eType )
 void CGeneralIntendant::UnitDead( class CCommonUnit *pUnit )
 {
 	if ( !IsUnitRegistered( pUnit ) )
+	{
 		return;
+	}
 
 	ResupplyCells::iterator pFormerCell = GetCell( pUnit->GetCenterPlain() );
 	pFormerCell->second->RemoveUnit( pUnit );
 	if ( pFormerCell->second->IsEmpty() )
+	{
 		cellsWithRequests.erase( pFormerCell );
+	}
 }
 
 void CGeneralIntendant::UnitChangedPosition( class CCommonUnit *pUnit, const CVec2 &vNewPos )
 {
 	if ( !IsUnitRegistered( pUnit ) )
+	{
 		return;
+	}
 
 	ResupplyCells::iterator pFormerCell = GetCell( pUnit->GetCenterPlain() );
 	ResupplyCells::iterator pNewCell = GetCell( vNewPos );
@@ -769,7 +853,9 @@ void CGeneralIntendant::UnitChangedPosition( class CCommonUnit *pUnit, const CVe
 
 	pNewCell->second->AddUnit( pUnit, pFormerCell->second->RemoveUnit( pUnit ) );
 	if ( pFormerCell->second->IsEmpty() )
+	{
 		cellsWithRequests.erase( pFormerCell );
+	}
 }
 
 void CGeneralIntendant::SetArtilleryVisible( const CAIUnit *pArtillery, const bool bVisible )
@@ -792,9 +878,13 @@ void CGeneralIntendant::UnitAskedForResupply( class CCommonUnit *pUnit,
 		if ( pArtillery )
 		{
 			if ( bSet )
+			{
 				freeArtilleryHolder.AddArtillery( pArtillery );
+			}
 			else
+			{
 				freeArtilleryHolder.RemoveArtillery( pArtillery );
+			}
 
 			return;
 		}
@@ -827,7 +917,9 @@ void CGeneralIntendant::UnitAskedForResupply( class CCommonUnit *pUnit,
 			ResupplyCells::iterator pFormerCell = GetCell( pUnit->GetCenterPlain() );
 			pFormerCell->second->RemoveUnitResupply( pUnit, eType );
 			if ( pFormerCell->second->IsEmpty() )
+			{
 				cellsWithRequests.erase( pFormerCell );
+			}
 		}
 	}
 }
@@ -861,7 +953,9 @@ void CGeneralIntendant::SearchCrewForArtillery()
 	freeArtilleryHolder.Segment();
 	CPtr<CArtillery> pArtillery = freeArtilleryHolder.Get();
 	if ( !IsValid( pArtillery ) || pArtillery->HasServeCrew() )
+	{
 		return;
+	}
 	const CVec2 vArtCenter( pArtillery->GetCenterPlain() );
 
 	CPtr<CFormation> pBestFormation = 0;
@@ -918,7 +1012,9 @@ void CGeneralIntendant::Segment()
 			for ( int i = 0; i < _ERT_COUNT; ++i )
 			{
 				if ( CResupplyCellInfo::IsUnitSuitable( pUnit, static_cast<EResupplyType>( i ) ) )
+				{
 					cResupplyPossible |= ( 1 << i );
+				}
 			}
 		}
 	}
@@ -930,7 +1026,9 @@ void CGeneralIntendant::Segment()
 		cellsToSort.resize( cellsWithRequests.size() );
 		int i = 0;
 		for ( ResupplyCells::iterator it = cellsWithRequests.begin(); it != cellsWithRequests.end(); ++it )
+		{
 			cellsToSort[i++] = it->second;
+		}
 		CResupplyCellInfo::SSortByResupplyMaskPredicate pr( cResupplyPossible );
 		std::sort( cellsToSort.begin(), cellsToSort.end(), pr );
 		// done, cellsToSort now contains prioritized tasks

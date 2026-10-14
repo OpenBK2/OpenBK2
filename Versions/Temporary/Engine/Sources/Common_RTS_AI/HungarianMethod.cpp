@@ -6,7 +6,9 @@ bool CHungarianMethod::Init( const CArray2D<float> &_matrix )
 	NI_ASSERT( _matrix.GetSizeX() == _matrix.GetSizeY(), "CHungarianMethod can work only with sqare matricies" )
 
 	if ( _matrix.GetSizeX() != _matrix.GetSizeY() )
+	{
 		return false;
+	}
 
 	matrix = _matrix;
 	nSize = matrix.GetSizeX();
@@ -30,10 +32,14 @@ void CHungarianMethod::Minimize()
 		for ( int j = 1; j < nSize; ++j )
 		{
 			if ( matrix[j][i] < fMin )
+			{
 				fMin = matrix[j][i];
+			}
 		}
 		for ( int j = 0; j < nSize; ++j )
+		{
 			matrix[j][i] -= fMin;
+		}
 	}
 
 	// шаг 2. Формирование нулей по столбцам
@@ -43,10 +49,14 @@ void CHungarianMethod::Minimize()
 		for ( int i = 1; i < nSize; ++i )
 		{
 			if ( matrix[j][i] < fMin )
+			{
 				fMin = matrix[j][i];
+			}
 		}
 		for ( int i = 0; i < nSize; ++i )
+		{
 			matrix[j][i] -= fMin;
+		}
 	}
 }
 
@@ -68,7 +78,9 @@ void CHungarianMethod::MarkZeros()
 					marks[j][i] = 1;
 				}
 				else
+				{
 					marks[j][i] = -1;
+				}
 			}
 		}
 	}
@@ -78,7 +90,9 @@ bool CHungarianMethod::FindMatchingInRow( const int nRow )
 {
 	int nCol = 0;
 	while ( marks[nCol][nRow] != 1 )
+	{
 		nCol++;
+	}
 	for ( int i = 0; i < nSize; ++i )
 	{
 		if ( marks[nCol][i] == -1 && markRow[i] == 0 )
@@ -124,7 +138,9 @@ bool CHungarianMethod::SwapMarks()
 						return true;
 					}
 					else
+					{
 						markRow[i] = 1;
+					}
 				}
 			}
 		}
@@ -135,8 +151,12 @@ bool CHungarianMethod::SwapMarks()
 bool CHungarianMethod::IsSolved() const
 {
 	for ( int i = 0; i < nSize; ++i )
+	{
 		if ( row[i] == 0 )
+		{
 			return false;
+		}
+	}
 	return true;
 }
 
@@ -159,7 +179,9 @@ void CHungarianMethod::UpdateMatrix()
 				for ( int j = 0; j < nSize; ++j )
 				{
 					if ( marks[j][i] == -1 )
+					{
 						markCol[j] = 1;
+					}
 				}
 			}
 		}
@@ -189,7 +211,9 @@ void CHungarianMethod::UpdateMatrix()
 				if ( markCol[j] == 0 )
 				{
 					if ( fDelta > matrix[j][i] )
+					{
 						fDelta = matrix[j][i];
+					}
 				}
 			}
 		}
@@ -200,7 +224,9 @@ void CHungarianMethod::UpdateMatrix()
 		if ( markRow[i] == 0 )
 		{
 			for ( int j = 0; j < nSize; ++j )
+			{
 				matrix[j][i] += fDelta;
+			}
 		}
 	}
 	for ( int j = 0; j < nSize; ++j )
@@ -208,7 +234,9 @@ void CHungarianMethod::UpdateMatrix()
 		if ( markCol[j] == 0 )
 		{
 			for ( int i = 0; i < nSize; ++i )
+			{
 				matrix[j][i] -= fDelta;
+			}
 		}
 	}
 }
@@ -237,7 +265,9 @@ void CHungarianMethod::Solve()
 		while ( SwapMarks() )
 			;
 		if ( IsSolved() )
+		{
 			break;
+		}
 		UpdateMatrix();
 	}
 	BuildResult();

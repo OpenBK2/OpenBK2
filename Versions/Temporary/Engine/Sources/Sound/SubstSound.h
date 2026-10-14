@@ -15,7 +15,9 @@ public:
 	virtual ~CSubstSound()
 	{
 		if ( pSFX )
+		{
 			pSFX->StopSample( pSample );
+		}
 	}
 	ISound *GetSound() { return pSample; }
 	int operator&( IBinSaver &saver );

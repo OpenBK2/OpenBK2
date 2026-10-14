@@ -150,7 +150,9 @@ bool CConnectServerProcessor::ProcessForgottenPasswordPacket( CForgottenPassword
 bool CConnectServerProcessor::ProcessNewClient( CNetNewClient *pPacket )
 {
 	if ( !bCheckConnect )
+	{
 		PushPacket( new CConnectServerPacket( CConnectServerPacket::ECS_SUCCESS, CConnectServerPacket::ERR_UNKNOWN ) );
+	}
 
 	return pPacket->nClientID == 0;
 }

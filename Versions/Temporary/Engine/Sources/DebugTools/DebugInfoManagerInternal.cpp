@@ -17,7 +17,9 @@ const int CDebugInfoManager::GetID( const int nID )
 		return nCurrentID;
 	}
 	else
+	{
 		return nID;
+	}
 }
 
 const int CDebugInfoManager::PushUpdate( NDebugInfo::SDebugInfoUpdate *pObject )
@@ -47,7 +49,9 @@ int CDebugInfoManager::CreateSegment( const int nID,
 void CDebugInfoManager::DeleteObject( const int nID )
 {
 	if ( nID > 0 )
+	{
 		PushUpdate( new NDebugInfo::SDebugInfoDeleteObject( nID ) );
+	}
 }
 
 const CVec4 CDebugInfoManager::Color2CVec4( const NDebugInfo::EColor eColor ) const
@@ -110,7 +114,9 @@ int CDebugInfoManager::DrawRect( const int nID, const SRect &rect, const float f
 void CDebugInfoManager::RemoveLine( const int nID )
 {
 	if ( nID > 0 )
+	{
 		PushUpdate( new NDebugInfo::SDebugInfoDeleteLine( nID ) );
+	}
 }
 
 void CDebugInfoManager::ShowAxes( const bool bShow )
@@ -181,15 +187,21 @@ void CDebugInfoManager::Reset()
 const NDebugInfo::SDebugInfoUpdate *CDebugInfoManager::GetUpdate() const
 {
 	if ( updates.empty() )
+	{
 		return 0;
+	}
 	else
+	{
 		return updates.front();
+	}
 }
 
 const bool CDebugInfoManager::PopUpdate()
 {
 	if ( updates.empty() )
+	{
 		return false;
+	}
 	else
 	{
 		updates.pop_front();

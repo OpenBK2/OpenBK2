@@ -106,7 +106,9 @@ void CGameLobby::ClientLeaved( const int nID )
 			SLobbyGameInfo &gameInfo = iter->second;
 			std::unordered_set<int>::iterator clients_iter = gameInfo.clients.find( nID );
 			if ( clients_iter != gameInfo.clients.end() )
+			{
 				gameInfo.clients.erase( nID );
+			}
 
 			SetClientGameID( nID, -1 );
 			GameInfoChanged( iter->first );
@@ -125,11 +127,17 @@ void CGameLobby::GameInfoChanged( const int nID )
 		gamesVersions.Change( nID );
 		const uint64_t nTime = GetLongTickCount();
 		if ( lobbyGames[nID].nLastGameHeartBeat < nTime )
+		{
 			lobbyGames[nID].nLastGameHeartBeat = nTime;
+		}
 		if ( lobbyGames[nID].gameInfo.nPlayers > 0 && lobbyGames[nID].clients.size() == 0 )
+		{
 			KillGame( nID );
+		}
 		else
+		{
 			lobbyGames[nID].gameInfo.nPlayers = lobbyGames[nID].clients.size();
+		}
 	}
 }
 
@@ -141,17 +149,23 @@ bool CGameLobby::ProcessCommonClientStatePacket( CCommonClientStatePacket *pPack
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 bool CGameLobby::ProcessGetLobbyClientsListPacket( CGetLobbyClientsListPacket *pPacket )
 {
 	if ( GetLobbyID() != pPacket->nLobbyID )
+	{
 		return false;
+	}
 
 	std::string szList;
 	if ( lobbyClients.empty() )
+	{
 		szList = "no clients online\n";
+	}
 	else
 	{
 		szList = "Lobby clients:\n";
@@ -159,9 +173,13 @@ bool CGameLobby::ProcessGetLobbyClientsListPacket( CGetLobbyClientsListPacket *p
 		{
 			std::string szNick;
 			if ( !pClients->GetNick( *iter, &szNick ) )
+			{
 				szList += fmt::format( "  something wrong with client {}\n", *iter );
+			}
 			else
+			{
 				szList += "  " + szNick + "\n";
+			}
 		}
 	}
 
@@ -172,23 +190,31 @@ bool CGameLobby::ProcessGetLobbyClientsListPacket( CGetLobbyClientsListPacket *p
 bool CGameLobby::ProcessGameHeartBeatPacket( CGameHeartBeatPacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
+	{
 		return false;
+	}
 
 	if ( lobbyGames.find( pPacket->nGameID ) != lobbyGames.end() )
 	{
 		const uint64_t nTime = GetLongTickCount();
 		if ( lobbyGames[pPacket->nGameID].nLastGameHeartBeat < nTime )
+		{
 			lobbyGames[pPacket->nGameID].nLastGameHeartBeat = nTime;
+		}
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 bool CGameLobby::ProcessGameStartLoadingPacket( CGameStartLoadingPacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
+	{
 		return false;
+	}
 
 	if ( lobbyGames.find( pPacket->nGameID ) != lobbyGames.end() )
 	{
@@ -196,24 +222,34 @@ bool CGameLobby::ProcessGameStartLoadingPacket( CGameStartLoadingPacket *pPacket
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 bool CGameLobby::ProcessConnectGamePacket( CConnectGamePacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
+	{
 		return false;
+	}
 
 	std::unordered_map<int, SLobbyGameInfo>::iterator iter = lobbyGames.find( pPacket->nGameID );
 	if ( iter != lobbyGames.end() )
 	{
 		SLobbyGameInfo &gameInfo = iter->second;
 		if ( !gameInfo.gameInfo.bCanConnect )
+		{
 			PushPacket( new CConnectGameFailed( pPacket->nClientID, CConnectGameFailed::ER_GAME_CLOSE_TO_CONNECT ) );
+		}
 		else if ( gameInfo.gameInfo.bHasPassword && gameInfo.gameInfo.szPassword != pPacket->szPassword )
+		{
 			PushPacket( new CConnectGameFailed( pPacket->nClientID, CConnectGameFailed::ER_WRONG_PASSWORD ) );
+		}
 		else if ( gameInfo.clients.size() >= gameInfo.gameInfo.nMaxPlayers )
+		{
 			PushPacket( new CConnectGameFailed( pPacket->nClientID, CConnectGameFailed::ER_MAX_PLAYERS_REACHED ) );
+		}
 		else
 		{
 			PushPacket( new CConnectedGameID( pPacket->nClientID, pPacket->nGameID ) );
@@ -224,7 +260,9 @@ bool CGameLobby::ProcessConnectGamePacket( CConnectGamePacket *pPacket )
 				pSpecificGameInfo->nClientID = pPacket->nClientID;
 				pSpecificGameInfo->nGameID = iter->first;
 				if ( iter->second.pSpecificGameInfo )
+				{
 					pSpecificGameInfo->pInfo = iter->second.pSpecificGameInfo->pInfo;
+				}
 
 				PushPacket( pSpecificGameInfo );
 			}
@@ -233,7 +271,9 @@ bool CGameLobby::ProcessConnectGamePacket( CConnectGamePacket *pPacket )
 			for ( std::unordered_set<int>::iterator clients_iter = gameInfo.clients.begin();
 			      clients_iter != gameInfo.clients.end();
 			      ++clients_iter )
+			{
 				pAnswerPacket->clients.push_back( *clients_iter );
+			}
 			PushPacket( pAnswerPacket );
 
 			gameInfo.clients.insert( pPacket->nClientID );
@@ -253,7 +293,9 @@ void CGameLobby::InformThroughServerClients( const int nLeftGameClient )
 		for ( std::unordered_set<int>::iterator iter = throughServerClients[nLeftGameClient].begin();
 		      iter != throughServerClients[nLeftGameClient].end();
 		      ++iter )
+		{
 			PushPacket( new CGameClientDead( *iter, nLeftGameClient ) );
+		}
 
 		throughServerClients.erase( nLeftGameClient );
 	}
@@ -262,7 +304,9 @@ void CGameLobby::InformThroughServerClients( const int nLeftGameClient )
 bool CGameLobby::ProcessLeaveGame( CLeaveGamePacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
+	{
 		return false;
+	}
 
 	std::unordered_map<int, SLobbyGameInfo>::iterator iter = lobbyGames.find( pPacket->nGameID );
 	if ( iter != lobbyGames.end() )
@@ -285,7 +329,9 @@ bool CGameLobby::ProcessLeaveGame( CLeaveGamePacket *pPacket )
 bool CGameLobby::ProcessWant2Connect2Client( CWant2Connect2Client *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) || !IsLobbyClient( pPacket->nClient2Connect ) )
+	{
 		return false;
+	}
 
 	SGameConnection::SAddressInfo addrClient, addrClientTo;
 	if ( pClients->GetGameConnectInfo( pPacket->nClientID, pPacket->nMyConnect, &addrClient ) &&
@@ -306,10 +352,14 @@ bool CGameLobby::ProcessWant2Connect2Client( CWant2Connect2Client *pPacket )
 bool CGameLobby::ProcessKickClient( CGameKickClient *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
+	{
 		return false;
+	}
 
 	if ( !PlayerCanKickPlayer() )
+	{
 		return true;
+	}
 
 	std::unordered_map<int, SLobbyGameInfo>::iterator iter = lobbyGames.find( pPacket->nGameID );
 	if ( iter != lobbyGames.end() )
@@ -337,10 +387,14 @@ bool CGameLobby::ProcessKickClient( CGameKickClient *pPacket )
 bool CGameLobby::ProcessEnterLobby( CEnterLobbyPacket *pPacket )
 {
 	if ( IsLobbyClient( pPacket->nClientID ) )
+	{
 		RemoveLobbyClient( pPacket->nClientID );
+	}
 
 	if ( pPacket->nLobbyID != GetLobbyID() )
+	{
 		return false;
+	}
 
 	ClientEntered( pPacket->nClientID );
 	ClientEnterToLobby( pPacket->nClientID );
@@ -354,7 +408,9 @@ bool CGameLobby::ProcessEnterLobby( CEnterLobbyPacket *pPacket )
 bool CGameLobby::ProcessLeaveLobby( CLeaveLobbyPacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
+	{
 		return false;
+	}
 
 	RemoveLobbyClient( pPacket->nClientID );
 
@@ -370,7 +426,9 @@ void CGameLobby::RemoveLobbyClient( const int nClientID )
 bool CGameLobby::ProcessRemoveClient( CNetRemoveClient *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
+	{
 		return false;
+	}
 
 	RemoveLobbyClient( pPacket->nClientID );
 
@@ -380,7 +438,9 @@ bool CGameLobby::ProcessRemoveClient( CNetRemoveClient *pPacket )
 bool CGameLobby::ProcessCreateGame( CCreateGamePacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
+	{
 		return false;
+	}
 
 	const int nGameID = CreateGame( 2 );
 	lobbyGames[nGameID].clients.insert( pPacket->nClientID );
@@ -447,7 +507,9 @@ bool CGameLobby::KillGame( const int nGameID )
 bool CGameLobby::ProcessKillGame( CKillGamePacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
+	{
 		return false;
+	}
 
 	const int nGameID = pPacket->nGameID;
 	return KillGame( nGameID );
@@ -456,10 +518,14 @@ bool CGameLobby::ProcessKillGame( CKillGamePacket *pPacket )
 bool CGameLobby::ProcessGetLobbyGames( CGetLobbyGamesPacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
+	{
 		return false;
+	}
 
 	if ( !PlayerCanSeeGamesList() )
+	{
 		return true;
+	}
 
 	SGetGameInfoFunc getGameInfo( this );
 	GetUpdate( pPacket, (CLobbyGamesPacket *)0, getGameInfo, false );
@@ -470,7 +536,9 @@ bool CGameLobby::ProcessGetLobbyGames( CGetLobbyGamesPacket *pPacket )
 bool CGameLobby::ProcessGetLobbyClients( CGetLobbyClientsPacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
+	{
 		return false;
+	}
 
 	GetLobbyClients( pPacket );
 	return true;
@@ -479,13 +547,19 @@ bool CGameLobby::ProcessGetLobbyClients( CGetLobbyClientsPacket *pPacket )
 bool CGameLobby::ProcessUpdateGame( CUpdateGameInfo *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
+	{
 		return false;
+	}
 
 	if ( lobbyGames.find( pPacket->gameInfo.nID ) == lobbyGames.end() )
+	{
 		return false;
+	}
 
 	if ( !PlayerCanUpdateGameInfo() )
+	{
 		return true;
+	}
 
 	GameInfoChanged( pPacket->gameInfo.nID );
 	lobbyGames[pPacket->gameInfo.nID].gameInfo = pPacket->gameInfo;
@@ -503,16 +577,22 @@ const bool CGameLobby::GetGameInfo( const int nGameID, SGameInfo *pInfo ) const
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 bool CGameLobby::ProcessSpecificGameInfo( CSpecificGameInfo *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
+	{
 		return false;
+	}
 
 	if ( !PlayerNeedSpecificGameInfo() )
+	{
 		return true;
+	}
 
 	std::unordered_map<int, SLobbyGameInfo>::iterator iter = lobbyGames.find( pPacket->nGameID );
 	if ( iter != lobbyGames.end() )
@@ -530,7 +610,9 @@ bool CGameLobby::ProcessSpecificGameInfo( CSpecificGameInfo *pPacket )
 				pSpecificGameInfo->nClientID = *clients_iter;
 				pSpecificGameInfo->nGameID = pPacket->nGameID;
 				if ( pPacket )
+				{
 					pSpecificGameInfo->pInfo = pPacket->pInfo;
+				}
 
 				PushPacket( pSpecificGameInfo );
 			}
@@ -539,7 +621,9 @@ bool CGameLobby::ProcessSpecificGameInfo( CSpecificGameInfo *pPacket )
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 bool CGameLobby::Segment()
@@ -577,7 +661,9 @@ bool CGameLobby::GetGameClients( const int nGame, std::unordered_set<int> *pClie
 {
 	std::unordered_map<int, SLobbyGameInfo>::iterator iter = lobbyGames.find( nGame );
 	if ( iter == lobbyGames.end() )
+	{
 		return false;
+	}
 	else
 	{
 		*pClients = iter->second.clients;
@@ -588,16 +674,22 @@ bool CGameLobby::GetGameClients( const int nGame, std::unordered_set<int> *pClie
 bool CGameLobby::ProcessThroughServerConnection( CThroughServerConnectionPacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
+	{
 		return false;
+	}
 
 	std::unordered_map<int, SLobbyGameInfo>::iterator iter = lobbyGames.find( pPacket->nGameID );
 	if ( iter == lobbyGames.end() )
+	{
 		return false;
+	}
 	else
 	{
 		std::unordered_set<int> &clients = iter->second.clients;
 		if ( clients.find( pPacket->nClientWith ) == clients.end() )
+		{
 			PushPacket( new CGameClientDead( pPacket->nClientID, pPacket->nClientWith ) );
+		}
 		else
 		{
 			throughServerClients[pPacket->nClientWith].insert( pPacket->nClientID );
@@ -620,11 +712,15 @@ bool CGameLobby::ProcessThroughServerConnection( CThroughServerConnectionPacket 
 bool CGameLobby::ProcessShowLobbyGames( CShowLobbyGamesPacket *pPacket )
 {
 	if ( pPacket->nLobbyID != GetLobbyID() )
+	{
 		return false;
+	}
 
 	std::string szStr;
 	if ( lobbyGames.empty() )
+	{
 		szStr = "no games is online\n";
+	}
 	else
 	{
 		szStr = "games:\n";
@@ -640,18 +736,26 @@ bool CGameLobby::ProcessShowLobbyGames( CShowLobbyGamesPacket *pPacket )
 			                      (int)info.bHasPassword,
 			                      info.szPassword );
 			if ( info.bCanConnect )
+			{
 				szStr += ", can connect";
+			}
 			else
+			{
 				szStr += ", cannot connect";
+			}
 
 			std::unordered_set<int> clients;
 			if ( !GetGameClients( info.nID, &clients ) )
+			{
 				szStr += ", something wrong with the game";
+			}
 			else
 			{
 				szStr += "\n    ";
 				if ( clients.empty() )
+				{
 					szStr += "no clients";
+				}
 				else
 				{
 					std::unordered_set<int>::iterator iter = clients.begin();

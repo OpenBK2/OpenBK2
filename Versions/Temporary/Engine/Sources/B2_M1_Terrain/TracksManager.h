@@ -30,7 +30,9 @@ protected:
 	bool NeedUpdate()
 	{
 		if ( bNeedUpdate )
+		{
 			return pTimer.Refresh();
+		}
 		pTimer.Refresh();
 		return false;
 	}
@@ -119,7 +121,9 @@ public:
 			for ( int i = 0; i < tracks.size(); ++i )
 			{
 				if ( tracks[i].trackHolder.pHolder )
+				{
 					updatedTracks.push_back( i );
+				}
 			}
 		}
 		saver.Add( 5, &updatedTracks );

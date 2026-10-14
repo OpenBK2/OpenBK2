@@ -74,7 +74,9 @@ public:
 	void Reserve( const int nSize )
 	{
 		if ( nSize + 1 > heap.size() )
+		{
 			heap.resize( nSize + 1 );
+		}
 	}
 
 	const int Size() const { return nEl; }

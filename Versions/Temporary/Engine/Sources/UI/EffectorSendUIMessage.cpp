@@ -36,7 +36,9 @@ void CEffectorSendUIMessage::Configure( const NDb::SUIStateBase *_pCmd,
 		messageID.Merge( pContext->szMessageID );
 		param.Merge( pContext->szParam );
 		if ( !szAnimatedWindow.empty() )
+		{
 			param.Merge( szAnimatedWindow );
+		}
 		forwardParam.Merge( pContext->nForwardParam );
 		backParam.Merge( pContext->nBackParam );
 	}
@@ -66,7 +68,9 @@ const int CEffectorSendUIMessage::Segment( const int timeDiff, struct IScreen *p
 		}
 	}
 	if ( !bResult )
+	{
 		pScreen->ProcessUIMessage( SBUIMessage( szMessageID, szParam, bForward ? nForwardParam : nBackParam ) );
+	}
 
 	bFinished = true;
 	return 0;

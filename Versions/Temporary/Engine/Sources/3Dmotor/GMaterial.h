@@ -103,11 +103,17 @@ class CGenericMaterial : public IMaterial
 		mt = _mt;
 		nDecalDepthTest = 0;
 		if ( mt == EXACT_DECAL )
+		{
 			nDecalDepthTest = DPM_EQUAL;
+		}
 		else if ( mt == DECAL_ZWRITE )
+		{
 			nDecalDepthTest = DPM_NORMAL;
+		}
 		else
+		{
 			nDecalDepthTest = DPM_TESTONLY;
+		}
 	}
 	char GetDecalDepthTest() const { return nDecalDepthTest; }
 	bool SetRenderMode( NGfx::CRenderContext *pRC,

@@ -89,9 +89,13 @@ struct SUnitProfile
 	const void Compress( const float fFactor )
 	{
 		if ( bRect )
+		{
 			rect.Compress( fFactor );
+		}
 		else
+		{
 			circle.r *= fFactor;
+		}
 	}
 
 	const bool IsCircle() const { return !bRect; }

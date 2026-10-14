@@ -85,7 +85,9 @@ bool GetGrannyMeshBoundingBox( CVec3 *pvMin, CVec3 *pvMax, granny_file_info *pIn
 int GetGrannyAnimationLength( granny_file_info *pInfo )
 {
 	if ( pInfo->AnimationCount == 0 )
+	{
 		return 0;
+	}
 	granny_animation *pAnimation = pInfo->Animations[0];
 	return int( pAnimation->Duration * 1000.0f );
 }
@@ -193,10 +195,14 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList,
 {
 	granny_file *pFile = GrannyReadEntireFile( rszFileName.c_str() );
 	if ( pFile == 0 )
+	{
 		return false;
+	}
 	granny_file_info *pInfo = GrannyGetFileInfo( pFile );
 	if ( ( pInfo == 0 ) || ( pInfo->SkeletonCount != 1 ) )
+	{
 		return false;
+	}
 	//
 	bool bRetVal = ReadAttributes( pBoneList, pInfo, rszDesiredSkeletonName, bFromRoot );
 	//
@@ -212,7 +218,9 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList,
 	NI_ASSERT( pBoneList != 0, "ReadAttributes() pBoneList == 0" );
 	//
 	if ( pInfo == 0 || pInfo->SkeletonCount != 1 )
+	{
 		return false;
+	}
 	//
 	if ( !rszDesiredSkeletonName.empty() )
 	{
@@ -221,11 +229,15 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList,
 		std::string szDesiredSkeletonName = rszDesiredSkeletonName;
 		NStr::ToLowerASCII( &szDesiredSkeletonName );
 		if ( szDesiredSkeletonName != szSkeletonName )
+		{
 			return false;
+		}
 	}
 	const int nStartFromBone = bFromRoot ? 0 : 1;
 	if ( pInfo->Skeletons[0]->BoneCount <= nStartFromBone )
+	{
 		return false;
+	}
 	//
 	pBoneList->reserve( pBoneList->size() + pInfo->Skeletons[0]->BoneCount );
 	for ( int i = nStartFromBone; i < pInfo->Skeletons[0]->BoneCount; ++i )
@@ -350,7 +362,9 @@ CGrannyFileInfoGuard::CGrannyFileInfoGuard( const std::string &szFileName )
 CGrannyFileInfoGuard::~CGrannyFileInfoGuard()
 {
 	if ( pFile )
+	{
 		GrannyFreeFile( pFile );
+	}
 }
 
 // basement storage

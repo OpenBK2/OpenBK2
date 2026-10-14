@@ -24,13 +24,17 @@ EXPORT_RESULT CGameRootExporter::ExportObject( IManipulator *pManipulator,
 	//	// CRAP}
 	//
 	if ( ( exportType != ET_BEFORE_REF ) && ( exportType != ET_NO_REF ) )
+	{
 		return ER_SUCCESS;
+	}
 	//
 	std::string szIntroMovie;
 	if ( CManipulatorManager::GetValue( &szIntroMovie, pManipulator, "IntroMovie" ) != false && !szIntroMovie.empty() )
 	{
 		if ( ExportFilesList( szIntroMovie, bForce, "Movies" ) == false )
+		{
 			return ER_FAIL;
+		}
 	}
 	//
 	return ER_SUCCESS;

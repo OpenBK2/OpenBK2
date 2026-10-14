@@ -28,7 +28,9 @@ int CExecutorUnitBase::Segment()
 void CExecutorUnitBase::UpdateProgress( const SAbilitySwitchState _state, const float fParam )
 {
 	if ( !pUpdate )
+	{
 		pUpdate = new SAISpecialAbilityUpdate;
+	}
 
 	pUpdate->info.nAbilityType = eAbility;
 	pUpdate->info.state = state;
@@ -39,11 +41,15 @@ void CExecutorUnitBase::UpdateProgress( const SAbilitySwitchState _state, const 
 	if ( state.dwStateValue == lastSent.state.dwStateValue )
 	{
 		if ( fabs( fOldProgress - fParam ) < 0.1f )
+		{
 			bNearlySameProgress = true;
+		}
 	}
 
 	if ( !bNearlySameProgress )
+	{
 		fOldProgress = fParam;
+	}
 
 	if ( !bNearlySameProgress && 0 != memcmp( &lastSent, &pUpdate->info, sizeof( lastSent ) ) )
 	{
@@ -75,7 +81,9 @@ bool CExecutorUnitBase::UpdateAbilityState()
 				return true;
 			}
 			else
+			{
 				UpdateProgress( state, fProgress );
+			}
 		}
 		break;
 		case EASS_DISABLE:
@@ -84,7 +92,9 @@ bool CExecutorUnitBase::UpdateAbilityState()
 			const int nTimeNeeded = timeDisableGroup;
 
 			if ( timeDisableGroup == 0 ) // never enable
+			{
 				UpdateProgress( state, 0.0f );
+			}
 			else if ( nTimePassed >= nTimeNeeded )
 			{
 				state = stateBeforeDisable;
@@ -92,7 +102,9 @@ bool CExecutorUnitBase::UpdateAbilityState()
 				return true;
 			}
 			else
+			{
 				UpdateProgress( state, float( nTimePassed ) / float( nTimeNeeded ) );
+			}
 		}
 
 		break;
@@ -118,7 +130,9 @@ bool CExecutorUnitBase::UpdateAbilityState()
 						return true;
 					}
 					else
+					{
 						UpdateProgress( state, float( nTimePassed ) / float( nTimeNeeded ) );
+					}
 				}
 			}
 		}
@@ -138,7 +152,9 @@ bool CExecutorUnitBase::UpdateAbilityState()
 					return true;
 				}
 				else
+				{
 					UpdateProgress( state, float( nTimePassed ) / float( nTimeNeeded ) );
+				}
 			}
 		}
 
@@ -158,7 +174,9 @@ bool CExecutorUnitBase::UpdateAbilityState()
 					return true;
 				}
 				else
+				{
 					UpdateProgress( state, float( nTimePassed ) / float( nTimeNeeded ) );
+				}
 			}
 		}
 
@@ -194,7 +212,9 @@ void CExecutorUnitBase::RegisterOnUnitEvents( IExecutorContainer *pContainer,
 void CExecutorUnitBase::Disable()
 {
 	if ( EASS_DISABLE != state.eState )
+	{
 		stateBeforeDisable = state;
+	}
 	state.eState = EASS_DISABLE;
 	timeDisableGroup = 0;
 }
@@ -266,7 +286,9 @@ bool CExecutorUnitBase::NotifyEvent( const CExecutorEvent &event )
 			          GetAbilityDesc()->eGroupID == pEv->GetDesc()->eGroupID ) // ability from this group started
 			{
 				if ( EASS_DISABLE != state.eState )
+				{
 					stateBeforeDisable = state;
+				}
 				state.eState = EASS_DISABLE;
 				fOldProgress = -1.0f;
 				timeDisableGroup = pEv->GetDesc()->nDisableGroupTime;

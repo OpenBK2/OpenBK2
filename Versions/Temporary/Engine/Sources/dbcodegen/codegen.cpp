@@ -47,8 +47,10 @@ namespace NCodeGenTool
 			STypesSort typesSort;
 			std::sort( pRes->types.begin(), pRes->types.end(), typesSort );
 			if ( bGenerateCodeStructure )
+			{
 				pRes->pCodeStructure = NCodeGen::GenerateCodeStructure(
 						NLang::GetRootFile(), pRes->nodes2TypeDefs, szDescriptorsPath, pTermTypesDesc );
+			}
 			return true;
 		}
 		return false;
@@ -147,10 +149,14 @@ namespace NCodeGenTool
 	{
 		CFileStream stream( szFileName, CFileStream::WIN_READ_ONLY );
 		if ( !stream.IsOk() )
+		{
 			return false;
+		}
 		const int nSize = stream.GetSize();
 		if ( nSize == 0 )
+		{
 			return false;
+		}
 		data.resize( nSize );
 		stream.Read( &( data[0] ), nSize );
 		return true;
@@ -162,12 +168,16 @@ namespace NCodeGenTool
 		{
 			std::vector<uint8_t> newFile;
 			if ( ReadFile( newFile, szSrcFileName ) == false )
+			{
 				return false;
+			}
 			std::vector<uint8_t> oldFile;
 			if ( ReadFile( oldFile, szDstFileName ) != false )
 			{
 				if ( SameText( newFile, oldFile ) )
+				{
 					return true;
+				}
 			}
 		}
 		//
@@ -183,7 +193,9 @@ namespace NCodeGenTool
 		for ( std::list<std::string>::const_iterator it = filetitles.begin(); it != filetitles.end(); ++it )
 		{
 			if ( ( *it ) == "game" || ( *it ) == "base" )
+			{
 				continue;
+			}
 			//
 			// Once a generated file is in the tree, or found unchanged there, its temp
 			// copy goes. RemoveFile is std::filesystem::remove behind System's

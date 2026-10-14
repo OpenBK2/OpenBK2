@@ -95,7 +95,9 @@ public:
 	float GetLength( const float t, const int nNumSteps = 100 ) const
 	{
 		if ( t < 1e-4 )
+		{
 			return fabs( Get( t ) - Get( 0 ) );
+		}
 		const float fStep = t / float( nNumSteps );
 		CVec2 vLastPos, vPos = Get( 0 );
 		float fLen = 0;
@@ -110,7 +112,9 @@ public:
 	const float GetLength( const float fT1, const float fT2, const int nNumSteps = 100 ) const
 	{
 		if ( fT2 - fT1 < 1e-4 )
+		{
 			return fabs( Get( fT2 ) - Get( fT1 ) );
+		}
 		const float fStep = ( fT2 - fT1 ) / float( nNumSteps );
 		CVec2 vLastPos, vPos = Get( fT1 );
 		float fLen = 0;
@@ -160,7 +164,9 @@ public:
 		const float dy = y.GetDiff1( t );
 		const float denominator = dx * y.GetDiff2( t ) - dy * x.GetDiff2( t );
 		if ( fabs( denominator ) < 1e-5f )
+		{
 			return VNULL2;
+		}
 		const float fCoeff = ( fabs2( dx ) + fabs2( dy ) ) / denominator;
 		return CVec2( x( t ) - fCoeff * dy, y( t ) + fCoeff * dx );
 	}

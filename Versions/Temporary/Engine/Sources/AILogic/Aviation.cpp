@@ -183,7 +183,9 @@ const float CAviation::GetSpeed() const
 void CAviation::SetPlanesFormation( class CPlanesFormation *_pFormation, const CVec3 &_vShift )
 {
 	if ( pFormation && !_pFormation )
+	{
 		SetDirection( GetFrontDirection() );
+	}
 	pFormation = _pFormation;
 	vPlanesShift = _vShift;
 }
@@ -203,7 +205,9 @@ void CAviation::SecondSegment( const NTimer::STime timeDiff )
 
 		pFormation->AddProcessed();
 		if ( pFormation->IsAllProcessed() )
+		{
 			pFormation->SecondSegment( timeDiff );
+		}
 	}
 	CMilitaryCar::SecondSegment( timeDiff );
 }
@@ -246,7 +250,9 @@ void CAviation::Segment()
 
 	CMilitaryCar::Segment();
 	if ( !IsAlive() )
+	{
 		return;
+	}
 	pFormation->AddAlive();
 
 	// ground scan time
@@ -329,11 +335,17 @@ void CAviation::Die( const bool fromExplosion, const float fDamage )
 	//EFeedBack eFeed = 0;
 	int nParam = 0;
 	if ( GetPlayer() == theDipl.GetMyNumber() )
+	{
 		nParam = 1;
+	}
 	else if ( GetParty() == theDipl.GetMyParty() )
+	{
 		nParam = 2;
+	}
 	else if ( EDI_ENEMY == theDipl.GetDiplStatus( GetParty(), theDipl.GetMyParty() ) )
+	{
 		nParam = 3;
+	}
 
 	/*	if ( nParam != 0 )
 		updater.AddUpdate( EFB_AVIA_KILLED, (nParam << 16) | GetAviationType() );

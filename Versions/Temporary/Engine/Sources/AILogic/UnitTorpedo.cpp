@@ -23,7 +23,9 @@ CPtr<CTorpedoStatesFactory> CTorpedoStatesFactory::pFactory = 0;
 IStatesFactory *CTorpedoStatesFactory::Instance()
 {
 	if ( pFactory == 0 )
+	{
 		pFactory = new CTorpedoStatesFactory();
+	}
 
 	return pFactory;
 }
@@ -102,7 +104,9 @@ void CUnitTorpedo::Segment()
 
 	// Do not explode in the 1st second
 	if ( curTime - timeLaunched < 1000 )
+	{
 		return;
+	}
 
 	// Check for impending collisions
 	for ( CUnitsIter<0, 3> iter( 0, ANY_PARTY, GetCenterPlain(), nTorpedoSearchRadius ); !iter.IsFinished();
@@ -110,13 +114,19 @@ void CUnitTorpedo::Segment()
 	{
 		CPtr<CAIUnit> curUnit = *iter;
 		if ( curUnit == this )
+		{
 			continue;
+		}
 
 		if ( curUnit == pOwner ) // torpedo is under the owner, continue
+		{
 			return;
+		}
 
 		if ( curUnit->GetStats() == GetStats() ) // another torpedo
+		{
 			continue;
+		}
 
 		if ( curUnit->IsAlive() && !curUnit->GetStats()->IsAviation() )
 		{

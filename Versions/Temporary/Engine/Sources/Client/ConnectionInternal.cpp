@@ -133,28 +133,38 @@ int CSimpleConnection::CheckTestConnection( CNetPacket *pPacket )
 bool CSimpleConnection::ProcessPacketFromPlayersNet( CNetPacket *pPacket )
 {
 	if ( bAsClient )
+	{
 		return false;
+	}
 
 	const int nCheckTestConnectionResult = CheckTestConnection( pPacket );
 	if ( nCheckTestConnectionResult != 0 )
+	{
 		return nCheckTestConnectionResult == 1;
+	}
 
 	if ( pPacket->nClientID == nClientLocalID )
 	{
 		pPacket->nClientID = nClientServerID;
 
 		if ( !pFinishConnection->ProcessPacket( pPacket ) )
+		{
 			packets.push_back( pPacket );
+		}
 		else
 		{
 			while ( CNetPacket *pFinishConnectionPacket = pFinishConnection->GetPacket() )
+			{
 				packets.push_back( pFinishConnectionPacket );
+			}
 		}
 
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 CNetPacket *CSimpleConnection::GetPacket()
@@ -167,22 +177,32 @@ CNetPacket *CSimpleConnection::GetPacket()
 	}
 
 	if ( !bAsClient )
+	{
 		return 0;
+	}
 
 	if ( CNetPacket *pPacket = pFinishConnection->GetPacket() )
+	{
 		return pPacket;
+	}
 
 	CNetPacket *pPacket = pNet->ReceivePacket();
 	if ( !pPacket )
+	{
 		return 0;
+	}
 
 	const int nCheckTestConnectionResult = CheckTestConnection( pPacket );
 	if ( nCheckTestConnectionResult != 0 )
+	{
 		return 0;
+	}
 
 	pPacket->nClientID = nClientServerID;
 	if ( !pFinishConnection->ProcessPacket( pPacket ) )
+	{
 		return pPacket;
+	}
 	else
 	{
 		CNetPacket *pFinishConnectionPacket = pFinishConnection->GetPacket();
@@ -198,7 +218,9 @@ bool CSimpleConnection::IsAlive() const
 void CSimpleConnection::TogglePauseNet( const bool bPause ) const
 {
 	if ( bAsClient )
+	{
 		pNet->DebugTogglePause( bPause );
+	}
 }
 
 //*******************************************************************
@@ -254,7 +276,9 @@ CNetPacket *CThroughServerConnection::GetPacket()
 		return pPacket.Extract();
 	}
 	else
+	{
 		return 0;
+	}
 }
 
 void CThroughServerConnection::TogglePauseNet( const bool bPause ) const

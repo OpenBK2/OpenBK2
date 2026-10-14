@@ -32,7 +32,9 @@ inline bool operator==( const SXmlValue &val, const char *pStr )
 {
 	int i = 0;
 	while ( i < val.nSize && *( pStr + i ) != 0 && *( pStr + i ) == *( val.pszBegin + i ) )
+	{
 		++i;
+	}
 
 	return i == val.nSize && *( pStr + i ) == 0;
 }
@@ -104,7 +106,9 @@ public:
 	~CXmlReader()
 	{
 		if ( buf )
+		{
 			delete[] buf;
+		}
 	}
 
 	const CXmlNode *GetRootElement() const { return &rootNode; }

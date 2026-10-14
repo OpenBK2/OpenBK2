@@ -45,8 +45,10 @@ void CScene::AddTrack( const int nID,
                        const float fAplha )
 {
 	if ( data[eScene]->pTracksManager )
+	{
 		data[eScene]->pTerraManager->AddTrack(
 				nID, fFadingSpeed, _v1, _v2, _v3, _v4, vNorm, _fWidth, fAplha, data[eScene]->pTracksManager );
+	}
 }
 
 void CScene::AddExplosion( const CVec2 &_vMin, const CVec2 &_vMax, const NDb::SMaterial *pMaterial )
@@ -74,7 +76,9 @@ void CScene::SetWarFogBlend( const float fBlend )
 void CScene::SetLight( const NDb::SAmbientLight *pLight )
 {
 	if ( !pLight )
+	{
 		return;
+	}
 
 	data[eScene]->GetGScene()->SetAmbient( pLight, data[eScene]->pGameTimer );
 	data[eScene]->pSceneAmbientLight = pLight;
@@ -128,7 +132,9 @@ int CScene::AddPointLight( const int nID, const CVec3 &ptColor, const CVec3 &ptO
 		return nObjectID;
 	}
 	else
+	{
 		return -1;
+	}
 }
 
 void CScene::ToggleShowMsg( const SGameMessage &msg, ESceneShow eShow )
@@ -159,7 +165,9 @@ bool CScene::ToggleShowPassability()
 bool CScene::ProcessEvent( const SGameMessage &msg )
 {
 	if ( Camera()->ProcessEvent( msg ) )
+	{
 		return true;
+	}
 	return observers.ProcessEvent( msg, this );
 }
 
@@ -167,7 +175,9 @@ void CScene::AfterLoad()
 {
 	// check for after-load already done
 	if ( ( data.size() <= eScene ) || ( data[eScene]->p2DView != 0 ) && ( data[eScene]->GetGScene() != 0 ) )
+	{
 		return;
+	}
 
 	data[eScene]->pAbsTimer->Set( GameTimer()->GetAbsTime() );
 	data[eScene]->pGameTimer->Set( GameTimer()->GetGameTime() );
@@ -208,11 +218,17 @@ void CScene::AfterLoad()
 
 	// Setting Light
 	if ( data[eScene]->pSceneAmbientLight )
+	{
 		SetLight( data[eScene]->pSceneAmbientLight );
+	}
 	else if ( IsValid( data[eScene]->pTerraManager ) )
+	{
 		SetLight( data[eScene]->pTerraManager->GetDesc()->pLight );
+	}
 	else
+	{
 		SetLight( 0 );
+	}
 
 	// holded objects
 	if ( eScene == SCENE_MISSION )
@@ -230,12 +246,16 @@ void CScene::AfterLoad()
 				                      data[eScene]->showModes[SCENE_SHOW_BBOXES] );
 			}
 			else if ( IAttachedObject *pAO = dynamic_cast<IAttachedObject *>( *it ) )
+			{
 				pAO->ReCreate( data[eScene]->GetGScene(), data[eScene]->pGameTimer );
+			}
 		}
 	}
 
 	if ( data[eScene]->pTracksManager )
+	{
 		data[eScene]->pTracksManager->AfterLoad( data[eScene]->pGameTimer, data[eScene]->GetGScene() );
+	}
 
 	if ( data[eScene]->pTerraManager && data[eScene]->pTerraManager->GetDesc() )
 	{
@@ -263,7 +283,9 @@ void CScene::AfterLoad()
 	}
 
 	if ( timeBadWeatherLeft > 0 )
+	{
 		SwitchWeather( true, timeBadWeatherLeft );
+	}
 }
 
 void CScene::SwitchSceneAfterLoad( const EScene _eScene )
@@ -275,7 +297,9 @@ bool CScene::GetVisObjPlacement( const int nID, SFBTransform *pTransform ) const
 {
 	SSceneData::CVisObjectsMap::const_iterator pos = data[eScene]->visObjects.find( nID );
 	if ( pos == data[eScene]->visObjects.end() )
+	{
 		return false;
+	}
 	( *pTransform ).forward = pos->second->GetPlacement().forward;
 	( *pTransform ).backward = pos->second->GetPlacement().backward;
 	return true;
@@ -309,7 +333,9 @@ void CScene::CalcAverageOverdrawMsg( const SGameMessage &msg )
 {
 	std::unordered_map<uint32_t, int> colors;
 	for ( int i = 0; i < std::size( NScene::overdrawColors ); ++i )
+	{
 		colors[NScene::overdrawColors[i]] = i + 1;
+	}
 	// turn UI off, overdraw on
 	while ( ToggleShow( SCENE_SHOW_UI ) != false )
 		;
@@ -318,7 +344,9 @@ void CScene::CalcAverageOverdrawMsg( const SGameMessage &msg )
 
 	// draw and make screenshot
 	if ( NGlobal::GetVar( "m1", 0 ) )
+	{
 		data[eScene]->p2DView->StartNewFrame( 0 );
+	}
 	Draw( 0 );
 	if ( NGlobal::GetVar( "m1", 0 ) )
 	{

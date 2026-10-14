@@ -27,14 +27,22 @@ void ConvertToString( std::string *pStr )
 			{
 				char c1, c2;
 				if ( isalpha( str[i + 3] ) )
+				{
 					c1 = ( tolower( str[i + 3] ) - 'a' + 10 ) * 16;
+				}
 				else
+				{
 					c1 = ( str[i + 3] - '0' ) * 16;
+				}
 
 				if ( isalpha( str[i + 4] ) )
+				{
 					c2 = ( tolower( str[i + 4] ) - 'a' + 10 );
+				}
 				else
+				{
 					c2 = ( str[i + 4] - '0' );
+				}
 
 				str[nCnt++] = c1;
 				str[nCnt++] = c2;
@@ -51,7 +59,9 @@ void ConvertToString( std::string *pStr )
 					while ( *( entities[j].pszCode + k1 ) != 0 && k2 < str.size() )
 					{
 						if ( *( entities[j].pszCode + k1 ) != str[k2] )
+						{
 							break;
+						}
 						++k1;
 						++k2;
 					}
@@ -68,11 +78,15 @@ void ConvertToString( std::string *pStr )
 				}
 
 				if ( !bMatch )
+				{
 					str[nCnt++] = str[i++];
+				}
 			}
 		}
 		else
+		{
 			str[nCnt++] = str[i++];
+		}
 	}
 
 	str.resize( nCnt );

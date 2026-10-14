@@ -147,7 +147,9 @@ void CCommonPathFinder::AnalyzePoint( const SVector &point, const int num )
 		minDistance = mDist;
 		minPointNum = num;
 		if ( !bFinished && pChecking && pChecking->IsGoodTile( point ) )
+		{
 			bFinished = true;
+		}
 	}
 }
 
@@ -250,7 +252,9 @@ CCommonPathFinder::CalculateHandPath( const SVector &blockPoint, const SVector &
 						cyclePoints[nCyclePoints++] = i;
 					}
 					else
+					{
 						mapBuf[stopPoints[i].x][stopPoints[i].y] = mapBufIndex;
+					}
 					AnalyzePoint( stopPoints[i], i );
 				}
 
@@ -303,7 +307,9 @@ CCommonPathFinder::CalculateHandPath( const SVector &blockPoint, const SVector &
 						cyclePoints[nCyclePoints++] = i;
 					}
 					else
+					{
 						mapBuf[addPoints[i].x][addPoints[i].y] = mapBufIndex;
+					}
 					AnalyzePoint( addPoints[i], i );
 				}
 				memcpy(
@@ -329,7 +335,9 @@ CCommonPathFinder::CalculateHandPath( const SVector &blockPoint, const SVector &
 bool CCommonPathFinder::CanGoTowardPoint( const SVector &start, const SVector &finish )
 {
 	if ( mDistance( start, finish ) <= 2 * nBoundTileRadius + 1 )
+	{
 		return true;
+	}
 	CBres bres;
 	bres.Init( start, finish );
 	bres.MakeStep();
@@ -423,7 +431,9 @@ CCommonPathFinder::CalculateSimplePath( const SVector &blockPoint, const SVector
 						cyclePoints[nCyclePoints++] = i;
 					}
 					else
+					{
 						mapBuf[stopPoints[i].x][stopPoints[i].y] = mapBufIndex;
+					}
 					AnalyzePoint( stopPoints[i], i );
 				}
 				return curRightPoint;
@@ -466,7 +476,9 @@ CCommonPathFinder::CalculateSimplePath( const SVector &blockPoint, const SVector
 						cyclePoints[nCyclePoints++] = i;
 					}
 					else
+					{
 						mapBuf[addPoints[i].x][addPoints[i].y] = mapBufIndex;
+					}
 					AnalyzePoint( addPoints[i], i );
 				}
 				memcpy(
@@ -509,7 +521,9 @@ bool CCommonPathFinder::CheckFakePath( const SVector point )
 const int CCommonPathFinder::GetAdditionalPathLength( const SVector &pointFrom )
 {
 	if ( pointFrom == lastKnownGoodTile )
+	{
 		return 0;
+	}
 	else
 	{
 		const SVector oldStart = startPoint;
@@ -524,9 +538,13 @@ const int CCommonPathFinder::GetAdditionalPathLength( const SVector &pointFrom )
 		if ( CalculatePath() )
 		{
 			if ( GetPathLength() == 0 || GetStopTile( GetPathLength() - 1 ) != lastKnownGoodTile )
+			{
 				nPathLength = -1;
+			}
 			else
+			{
 				nPathLength = GetPathLength();
+			}
 		}
 
 		startPoint = oldStart;
@@ -553,7 +571,9 @@ const SVector CCommonPathFinder::LookForFakePathBegin()
 			if ( pTerrain->CanUnitGo( nBoundTileRadius, point, aiClass ) != FREE_NONE )
 			{
 				if ( firstPointToGo.x == -1 || mDistance( firstPointToGo, startPoint ) > mDistance( point, startPoint ) )
+				{
 					firstPointToGo = point;
+				}
 
 				const int nLocalPathLength = GetAdditionalPathLength( point );
 				if ( nLocalPathLength != -1 && ( nBestPathLength == -1 || nLocalPathLength < nBestPathLength ) )
@@ -562,14 +582,18 @@ const SVector CCommonPathFinder::LookForFakePathBegin()
 					bestPoint = point;
 				}
 				else if ( nLocalPathLength == -1 )
+				{
 					++nFails;
+				}
 			}
 
 			const SVector point1( startPoint.x + i, j );
 			if ( pTerrain->CanUnitGo( nBoundTileRadius, point1, aiClass ) != FREE_NONE )
 			{
 				if ( firstPointToGo.x == -1 || mDistance( firstPointToGo, startPoint ) > mDistance( point, startPoint ) )
+				{
 					firstPointToGo = point;
+				}
 
 				const int nLocalPathLength = GetAdditionalPathLength( point1 );
 				if ( nLocalPathLength != -1 && ( nBestPathLength == -1 || nLocalPathLength < nBestPathLength ) )
@@ -578,7 +602,9 @@ const SVector CCommonPathFinder::LookForFakePathBegin()
 					bestPoint = point1;
 				}
 				else if ( nLocalPathLength == -1 )
+				{
 					++nFails;
+				}
 			}
 		}
 
@@ -588,7 +614,9 @@ const SVector CCommonPathFinder::LookForFakePathBegin()
 			if ( pTerrain->CanUnitGo( nBoundTileRadius, point, aiClass ) != FREE_NONE )
 			{
 				if ( firstPointToGo.x == -1 || mDistance( firstPointToGo, startPoint ) > mDistance( point, startPoint ) )
+				{
 					firstPointToGo = point;
+				}
 
 				const int nLocalPathLength = GetAdditionalPathLength( point );
 				if ( nLocalPathLength != -1 && ( nBestPathLength == -1 || nLocalPathLength < nBestPathLength ) )
@@ -597,14 +625,18 @@ const SVector CCommonPathFinder::LookForFakePathBegin()
 					bestPoint = point;
 				}
 				else if ( nLocalPathLength == -1 )
+				{
 					++nFails;
+				}
 			}
 
 			const SVector point1( j, startPoint.y + i );
 			if ( pTerrain->CanUnitGo( nBoundTileRadius, point1, aiClass ) != FREE_NONE )
 			{
 				if ( firstPointToGo.x == -1 || mDistance( firstPointToGo, startPoint ) > mDistance( point, startPoint ) )
+				{
 					firstPointToGo = point;
+				}
 
 				const int nLocalPathLength = GetAdditionalPathLength( point1 );
 				if ( nLocalPathLength != -1 && ( nBestPathLength == -1 || nLocalPathLength < nBestPathLength ) )
@@ -613,7 +645,9 @@ const SVector CCommonPathFinder::LookForFakePathBegin()
 					bestPoint = point1;
 				}
 				else if ( nLocalPathLength == -1 )
+				{
 					++nFails;
+				}
 			}
 		}
 	}
@@ -622,16 +656,24 @@ const SVector CCommonPathFinder::LookForFakePathBegin()
 	if ( nBestPathLength == -1 )
 	{
 		if ( firstPointToGo.x != -1 )
+		{
 			return firstPointToGo;
+		}
 		else
+		{
 			return startPoint;
+		}
 
 		//		return startPoint;
 	}
 	else if ( CheckFakePath( bestPoint ) )
+	{
 		return bestPoint;
+	}
 	else
+	{
 		return startPoint;
+	}
 }
 
 bool CCommonPathFinder::CalculatePath()
@@ -670,7 +712,9 @@ bool CCommonPathFinder::CalculatePath()
 	}
 	//		startSearchPoint = LookForFakePathBegin();
 	else
+	{
 		startSearchPoint = startPoint;
+	}
 	//SVector startSearchPoint;
 	//startSearchPoint = startPoint;
 	// CRAP}
@@ -682,7 +726,9 @@ bool CCommonPathFinder::CalculatePath()
 		for ( int j = -1; j <= 1 && !bCanGo; ++j )
 		{
 			if ( i != 0 || j != 0 )
+			{
 				bCanGo = ( CanUnitGoByDir( nBoundTileRadius, aiClass, startSearchPoint, SVector( i, j ) ) != FREE_NONE );
+			}
 		}
 	}
 
@@ -720,7 +766,9 @@ bool CCommonPathFinder::CalculatePath()
 					point = CalculateHandPath( curPoint, bres.GetDirection(), finishPoint );
 
 					if ( point.x == -1 || mDistance( point, curPoint ) >= 2 * nBoundTileRadius + 1 )
+					{
 						curPoint = point;
+					}
 					else
 					{
 						CheckBestPoint( curPoint );
@@ -729,7 +777,9 @@ bool CCommonPathFinder::CalculatePath()
 					}
 				}
 				else
+				{
 					curPoint = point;
+				}
 			}
 			else
 			{
@@ -741,7 +791,9 @@ bool CCommonPathFinder::CalculatePath()
 				cyclePoints[nCyclePoints++] = nLength;
 				SVector point( CalculateHandPath( curPoint, bres.GetDirection(), finishPoint ) );
 				if ( point.x == -1 || mDistance( point, curPoint ) >= 2 * nBoundTileRadius + 1 )
+				{
 					curPoint = point;
+				}
 				else
 				{
 					CheckBestPoint( curPoint );
@@ -752,7 +804,9 @@ bool CCommonPathFinder::CalculatePath()
 			}
 
 			if ( curPoint.x != -1 )
+			{
 				bres.Init( curPoint, finishPoint );
+			}
 		}
 		else
 		{
@@ -791,7 +845,9 @@ bool CCommonPathFinder::CalculatePath()
 const CVec2 &CCommonPathFinder::GetFinishPoint()
 {
 	if ( pAIMap->GetTile( vFinishPoint ) != finishPoint )
+	{
 		vFinishPoint = pAIMap->GetPointByTile( finishPoint );
+	}
 
 	return vFinishPoint;
 }
@@ -801,7 +857,9 @@ void CCommonPathFinder::EraseCycles()
 	if ( minDistance > 1 || pTerrain->CanUnitGo( nBoundTileRadius, finishPoint, aiClass ) == FREE_NONE )
 	{
 		if ( nLength > minPointNum )
+		{
 			nLength = minPointNum;
+		}
 
 		finishPoint = stopPoints[nLength];
 	}
@@ -813,7 +871,9 @@ void CCommonPathFinder::EraseCycles()
 
 	// ищем конец ближайшего цикла
 	while ( cycleNum > 0 && cyclePoints[cycleNum] > i - nStart )
+	{
 		--cycleNum;
+	}
 
 	while ( i - nStart >= 0 && cycleNum > 0 )
 	{
@@ -837,7 +897,9 @@ void CCommonPathFinder::EraseCycles()
 
 		// ищем конец ближайшего цикла
 		while ( cycleNum > 0 && cyclePoints[cycleNum] > i - nStart )
+		{
 			--cycleNum;
+		}
 	}
 	//	--nStart;
 	nLength -= nStart;
@@ -859,7 +921,9 @@ bool CCommonPathFinder::Walkable( const SVector &start, const SVector &finish )
 	{
 		bres.MakePointStep();
 		if ( pTerrain->CanUnitGo( nBoundTileRadius, bres.GetDirection(), aiClass ) == FREE_NONE )
+		{
 			return false;
+		}
 	}
 
 	return true;
@@ -901,7 +965,9 @@ void CCommonPathFinder::LineSmoothing( const int STEP_LENGTH_THERE,
                                        const int MAX_NUM_OF_ATTEMPTS_BACK )
 {
 	if ( nLength < 0 )
+	{
 		return;
+	}
 
 	stopPoints[nStart + nLength++] = finishPoint;
 
@@ -1003,7 +1069,9 @@ void CCommonPathFinder::LineSmoothing( const int STEP_LENGTH_THERE,
 			{
 				int j = (std::min)( i - 1, (int)TOLERANCE ) + 1;
 				while ( j > 0 && !Walkable( stopPoints[segmBegin[i]], stopPoints[segmBegin[i - j + 1] - 1] ) )
+				{
 					j >>= 1;
+				}
 
 				if ( !j )
 				{
@@ -1025,7 +1093,9 @@ void CCommonPathFinder::LineSmoothing( const int STEP_LENGTH_THERE,
 			{
 				int j = (std::max)( 1, i - TOLERANCE );
 				while ( j <= i && !Walkable( stopPoints[segmBegin[i]], stopPoints[segmBegin[j] - 1] ) )
+				{
 					++j;
+				}
 
 				addLen += SavePathThere( stopPoints[segmBegin[i]], stopPoints[segmBegin[j] - 1], addLen );
 				addPoints[addLen++] = stopPoints[segmBegin[j] - 1];
@@ -1079,16 +1149,22 @@ IStaticPath *CCommonPathFinder::CreatePathAfterExistCheck()
 	EraseCycles();
 
 	if ( nLength < 0 )
+	{
 		return 0;
+	}
 	else
 	{
 		if ( longPath )
+		{
 			LineSmoothing( STEP_LENGTH_THERE, MAX_NUM_OF_ATTEMPTS_THERE, STEP_LENGTH_BACK, MAX_NUM_OF_ATTEMPTS_BACK );
+		}
 		else
+		{
 			LineSmoothing( STEP_LENGTH_THERE_SHORT,
 			               MAX_NUM_OF_ATTEMPTS_THERE_SHORT,
 			               STEP_LENGTH_BACK_SHORT,
 			               MAX_NUM_OF_ATTEMPTS_BACK_SHORT );
+		}
 
 		return new CCommonStaticPath( this, pAIMap );
 	}
@@ -1097,7 +1173,9 @@ IStaticPath *CCommonPathFinder::CreatePathAfterExistCheck()
 IStaticPath *CCommonPathFinder::CreatePath( const bool bCreateNullPath )
 {
 	if ( DoesPathExist() || nLength > 0 )
+	{
 		return CreatePathAfterExistCheck();
+	}
 	else
 	{
 		if ( bCreateNullPath )
@@ -1107,7 +1185,9 @@ IStaticPath *CCommonPathFinder::CreatePath( const bool bCreateNullPath )
 			return new CCommonStaticPath( this, pAIMap );
 		}
 		else
+		{
 			return 0;
+		}
 	}
 }
 
@@ -1124,7 +1204,9 @@ void CCommonPathFinder::NextMapBufIndex()
 int CCommonPathFinder::operator&( IBinSaver &saver )
 {
 	if ( saver.IsReading() )
+	{
 		Init();
+	}
 
 	return 0;
 }
@@ -1134,7 +1216,9 @@ void CCommonPathFinder::MarkPathTiles()
 	std::vector<SVector> terrainTiles;
 
 	for ( int i = 0; i < GetPathLength(); ++i )
+	{
 		terrainTiles.push_back( addPoints[i] );
+	}
 
 	nGreenMarker = DebugInfoManager()->CreateMarker( nGreenMarker, terrainTiles, NDebugInfo::GREEN );
 }

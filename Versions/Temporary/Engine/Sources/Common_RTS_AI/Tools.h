@@ -101,7 +101,9 @@ public:
 		fStartDir = ( vDX.x == 0 ) ? ( ( vDX.y > 0 ) ? FP_PI2 : -FP_PI2 ) : atan2f( vDX.y, vDX.x );
 		fDirDiff = ( bClockWise ) ? ( fStartDir - fEndDir ) : ( fEndDir - fStartDir );
 		while ( fDirDiff < 0 )
+		{
 			fDirDiff += FP_2PI;
+		}
 
 		vX = _vPoint;
 		vLastDX = CVec2( NMath::Cos( fEndDir ), NMath::Sin( fEndDir ) );
@@ -154,7 +156,9 @@ uint16_t CheckArcTiles( TYPE &func,
 		{
 			tile = curTile;
 			if ( !func( tile ) )
+			{
 				return angle;
+			}
 		}
 	}
 	return wDiffAngle;

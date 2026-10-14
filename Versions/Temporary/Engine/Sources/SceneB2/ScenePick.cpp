@@ -38,7 +38,9 @@ void CScene::PickAllObjects( const CVec3 &vAIPos1,
 
 	const CVec3 vDir( vPos2 - vPos1 );
 	if ( vDir == VNULL3 )
+	{
 		return;
+	}
 
 	CRay ray( vPos1, vDir );
 	const float fLength = fabs( vDir );
@@ -49,7 +51,9 @@ void CScene::PickAllObjects( const CVec3 &vAIPos1,
 	{
 		const NAI::SInterval &interval = *it;
 		if ( interval.enter.fT > fLength )
+		{
 			break;
+		}
 
 		SPickObjInfo info;
 		info.vPickPoint = vPos1 + vDir * interval.enter.fT;
@@ -67,7 +71,9 @@ void CScene::PickAllObjects( const CVec3 &vAIPos1,
 				pPickedAttached->push_back( nID );
 			}
 			else
+			{
 				info.nObjID = nID;
+			}
 
 			pPickedObjects->push_back( info );
 		}
@@ -82,12 +88,16 @@ inline float GetGridPosition( float fPosition, int nGridSize )
 void CScene::PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos, const EPickObjectsClass ePickObjsClass )
 {
 	if ( fastRender.resGrid.IsEmpty() )
+	{
 		return;
+	}
 
 	CVec3 vOrig, vDir;
 	Camera()->GetProjectiveRay( &vOrig, &vDir, vScreenPos );
 	if ( vDir == VNULL3 )
+	{
 		return;
+	}
 
 	CRay ray;
 	ray.ptOrigin = vOrig;
@@ -105,9 +115,13 @@ void CScene::PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos, 
 
 			if ( ( nID & 0x80000000 ) &&
 			     data[eScene]->attachIDToMapObjID.find( nID ) != data[eScene]->attachIDToMapObjID.end() )
+			{
 				pickObjects.push_back( data[eScene]->attachIDToMapObjID[nID] );
+			}
 			else
+			{
 				pickObjects.push_back( nID );
+			}
 		}
 	}
 	/*
@@ -155,7 +169,9 @@ void CScene::PickObjects( std::list<int> &pickObjects,
                           const EPickObjectsClass ePickObjsClass )
 {
 	if ( fastRender.resGrid.IsEmpty() )
+	{
 		return;
+	}
 
 	// Lets find square that lies inside vScreenPos1, vScreenPos2
 	CVec2 vScreenRect = NGfx::GetScreenRect();
@@ -163,25 +179,39 @@ void CScene::PickObjects( std::list<int> &pickObjects,
 	CVec2 vPosMax( vScreenPos2.x / vScreenRect.x, vScreenPos2.y / vScreenRect.y );
 
 	if ( vPosMin.x > vPosMax.x )
+	{
 		std::swap( vPosMin.x, vPosMax.x );
+	}
 
 	if ( vPosMin.y > vPosMax.y )
+	{
 		std::swap( vPosMin.y, vPosMax.y );
+	}
 
 	if ( vPosMin.x < 0.0f )
+	{
 		vPosMin.x = 0.0f;
+	}
 
 	if ( vPosMin.y < 0.0f )
+	{
 		vPosMin.y = 0.0f;
+	}
 
 	if ( vPosMax.x > 1.0f )
+	{
 		vPosMax.x = 1.0f;
+	}
 
 	if ( vPosMax.y > 1.0f )
+	{
 		vPosMax.y = 1.0f;
+	}
 
 	if ( vPosMin.x >= vPosMax.x || vPosMin.y >= vPosMax.y )
+	{
 		return;
+	}
 
 	int nMinX = GetGridPosition( vPosMin.x, fastRender.resGrid.GetSizeX() );
 	int nMaxX = GetGridPosition( vPosMax.x, fastRender.resGrid.GetSizeX() );
@@ -214,9 +244,13 @@ void CScene::PickObjects( std::list<int> &pickObjects,
 
 							if ( ( nID & 0x80000000 ) &&
 							     data[eScene]->attachIDToMapObjID.find( nID ) != data[eScene]->attachIDToMapObjID.end() )
+							{
 								pickObjects.push_back( data[eScene]->attachIDToMapObjID[nID] );
+							}
 							else
+							{
 								pickObjects.push_back( nID );
+							}
 						}
 					}
 				}
@@ -234,7 +268,9 @@ void CScene::GetObstacleObjects( std::list<int> *pObstacleObjects,
                                  const SObjectFilter &canBeObstacle )
 {
 	if ( fastRender.resGrid.IsEmpty() )
+	{
 		return;
+	}
 
 	// Lets find square that lies inside vScreenPos1, vScreenPos2
 	CVec2 vScreenRect = NGfx::GetScreenRect();
@@ -242,25 +278,39 @@ void CScene::GetObstacleObjects( std::list<int> *pObstacleObjects,
 	CVec2 vPosMax( vScreenPos2.x / vScreenRect.x, vScreenPos2.y / vScreenRect.y );
 
 	if ( vPosMin.x > vPosMax.x )
+	{
 		std::swap( vPosMin.x, vPosMax.x );
+	}
 
 	if ( vPosMin.y > vPosMax.y )
+	{
 		std::swap( vPosMin.y, vPosMax.y );
+	}
 
 	if ( vPosMin.x < 0.0f )
+	{
 		vPosMin.x = 0.0f;
+	}
 
 	if ( vPosMin.y < 0.0f )
+	{
 		vPosMin.y = 0.0f;
+	}
 
 	if ( vPosMax.x > 1.0f )
+	{
 		vPosMax.x = 1.0f;
+	}
 
 	if ( vPosMax.y > 1.0f )
+	{
 		vPosMax.y = 1.0f;
+	}
 
 	if ( vPosMin.x >= vPosMax.x || vPosMin.y >= vPosMax.y )
+	{
 		return;
+	}
 
 	int nMinX = GetGridPosition( vPosMin.x, fastRender.resGrid.GetSizeX() );
 	int nMaxX = GetGridPosition( vPosMax.x, fastRender.resGrid.GetSizeX() );
@@ -282,28 +332,38 @@ void CScene::GetObstacleObjects( std::list<int> *pObstacleObjects,
 
 				// Check if this object can be covered by others
 				if ( pVisObjDescBase && canBeCovered( pVisObjDescBase->GetID() ) )
+				{
 					pCovered = pResult;
+				}
 			}
 
 			if ( !pCovered )
+			{
 				continue;
+			}
 
 			// So we will add all obstacles in this node
 			for ( NAI::CFastRenderer::SResult *pResult = fastRender.resGrid[iY][iX]; pResult != pCovered;
 			      pResult = pResult->pNext )
 			{
 				if ( !IsValid( pResult->pObject ) )
+				{
 					continue;
+				}
 
 				CDynamicCast<const SVisObjDescBase> pVisObjDescBase = pResult->pObject;
 
 				// Check if this object can obstacle
 				if ( !pVisObjDescBase || !canBeObstacle( pVisObjDescBase->GetID() ) )
+				{
 					continue;
+				}
 
 				// Check if we already added this object
 				if ( foundObjects.find( pVisObjDescBase->GetID() ) != foundObjects.end() )
+				{
 					continue;
+				}
 
 				// Adding object
 				foundObjects.insert( pVisObjDescBase->GetID() );
@@ -327,7 +387,9 @@ void CScene::GetCoveredObjects( std::list<int> *pCoveredObjects,
 			for ( NAI::CFastRenderer::SResult *pResult = fastRender.resGrid[iY][iX]; pResult; pResult = pResult->pNext )
 			{
 				if ( !IsValid( pResult->pObject ) )
+				{
 					continue;
+				}
 
 				if ( !bNodeIsCovered )
 				{
@@ -335,7 +397,9 @@ void CScene::GetCoveredObjects( std::list<int> *pCoveredObjects,
 
 					// Check if this object can obstacle others
 					if ( pVisObjDescBase && canBeObstacle( pVisObjDescBase->GetID() ) )
+					{
 						bNodeIsCovered = true;
+					}
 				}
 				else
 				{
@@ -343,11 +407,15 @@ void CScene::GetCoveredObjects( std::list<int> *pCoveredObjects,
 
 					// Check if this object can be covered
 					if ( !pVisObjDescBase || !canBeCovered( pVisObjDescBase->GetID() ) )
+					{
 						continue;
+					}
 
 					// Check if we already added this object
 					if ( foundObjects.find( pVisObjDescBase->GetID() ) != foundObjects.end() )
+					{
 						continue;
+					}
 
 					// Adding object
 					foundObjects.insert( pVisObjDescBase->GetID() );

@@ -33,9 +33,13 @@ const CVec2 GetSafeDirection( const CVec2 &vDirection, const CVec2 &vFallback )
 {
 	CVec2 vResult( vDirection );
 	if ( fabs2( vResult ) < 0.0001f )
+	{
 		vResult = vFallback;
+	}
 	if ( fabs2( vResult ) < 0.0001f )
+	{
 		vResult = CVec2( 1.0f, 0.0f );
+	}
 	Normalize( &vResult );
 	return vResult;
 }
@@ -50,9 +54,13 @@ uint16_t InterpolateDirection( const uint16_t wStart, const uint16_t wFinish, co
 {
 	int nDelta = int( wFinish ) - int( wStart );
 	if ( nDelta > 32767 )
+	{
 		nDelta -= 65536;
+	}
 	else if ( nDelta < -32768 )
+	{
 		nDelta += 65536;
+	}
 
 	return uint16_t( int( wStart ) + Float2Int( float( nDelta ) * fCoeff ) );
 }
@@ -182,7 +190,9 @@ void CHelicopter::SetDirection( const uint16_t wDirection, const bool bNeedUpdat
 bool CHelicopter::AdvanceDesiredDirection( const NTimer::STime timeDiff )
 {
 	if ( !bDesiredDirectionSet )
+	{
 		return true;
+	}
 
 	const uint16_t wClockWise = wDesiredDirection - GetFrontDirection();
 	const uint16_t wAntiClockWise = GetFrontDirection() - wDesiredDirection;
@@ -213,13 +223,17 @@ void CHelicopter::AimAtPoint( const CVec2 &vPoint )
 	vVisualAimPoint = CVec3( vPoint, GetAIMap()->GetHeights()->GetZ( vPoint ) );
 	bVisualAimPointSet = true;
 	if ( fabs2( vPoint - GetCenterPlain() ) > 0.0001f )
+	{
 		TurnToDirection( GetDirectionByVector( vPoint - GetCenterPlain() ), false, true );
+	}
 }
 
 void CHelicopter::AimAtUnit( CAIUnit *pTarget, CBasicGun *pGun )
 {
 	if ( !pTarget )
+	{
 		return;
+	}
 
 	AimAtPoint( pTarget->GetCenterPlain() );
 	vVisualAimPoint = pTarget->GetCenter();
@@ -267,7 +281,9 @@ void CHelicopter::Segment()
 
 	CMilitaryCar::Segment();
 	if ( !IsAlive() )
+	{
 		return;
+	}
 
 	// Keep the same "being attacked by aviation" acknowledgement behavior as planes.
 	if ( curTime > timeNextGroundScan )
@@ -441,7 +457,9 @@ void CHelicopter::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 	float fVisualDeathSelfRotation = fDeathSelfRotation;
 	float fVisualDeathDownwardsAngle = 0.1f;
 	if ( !bDeadSpiralStarted && fabs( CVec2( vVisualSpeed.x, vVisualSpeed.y ) ) < 0.001f )
+	{
 		vVisualSpeed = CVec3( vVisualFrontDirection, 0.0f );
+	}
 
 	const NDb::SHelicopterStats *pHeliStats = GetHelicopterStats();
 	if ( bDeadSpiralStarted )
@@ -509,7 +527,9 @@ void CHelicopter::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 		pPlacement->rotation = CQuat( fYaw, V3_AXIS_Z ) * CQuat( -fVisualAttackAngle, V3_AXIS_X );
 	}
 	else
+	{
 		MakeQuatBySpeedAndNormale( &pPlacement->rotation, vVisualSpeed, vVisualNormal );
+	}
 	pPlacement->dir = wVisualDirection;
 	pPlacement->vPlacement = vVisualPos;
 	pPlacement->fSpeed = GetSpeed();
@@ -524,7 +544,9 @@ void CHelicopter::DecFuel( const bool bEconomyMode )
 	if ( bEconomyMode )
 	{
 		if ( const NDb::SHelicopterStats *pHeliStats = GetHelicopterStats() )
+		{
 			fDec *= pHeliStats->fStandingFuelDrainModifier;
+		}
 	}
 
 	fFuel = (std::max)( fFuel - fDec, 0.0f );
@@ -542,7 +564,9 @@ void CHelicopter::Die( const bool fromExplosion, const float fDamage )
 void CHelicopter::StartDeathSpiral()
 {
 	if ( bDeadSpiralStarted )
+	{
 		return;
+	}
 
 	bMoveTargetSet = false;
 	bAttackTilt = false;
@@ -650,7 +674,9 @@ CVec2 CHelicopter::GetLeavePoint() const
 		vTarget = CVec2( vCur.x, -HELICOPTER_LEAVE_DISTANCE );
 	}
 	if ( fMapY - vCur.y < fClosestDistance )
+	{
 		vTarget = CVec2( vCur.x, fMapY + HELICOPTER_LEAVE_DISTANCE );
+	}
 
 	return vTarget;
 }

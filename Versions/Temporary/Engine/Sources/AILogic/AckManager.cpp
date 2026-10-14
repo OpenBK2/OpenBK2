@@ -40,7 +40,9 @@ bool CAckManager::UpdateAcknowledgment( SAIAcknowledgment &pAck )
 		++ackIndex;
 		const CUpdatableObj *pObj = GetObjectByUniqueIdSafe<CUpdatableObj>( pAck.nObjUniqueID );
 		if ( pObj && pObj->IsRefValid() && pObj->IsAlive() )
+		{
 			return true;
+		}
 	}
 	acknowledgements.clear();
 	ackIndex = 0;
@@ -50,7 +52,9 @@ bool CAckManager::UpdateAcknowledgment( SAIAcknowledgment &pAck )
 bool CAckManager::UpdateAcknowledgment( SAIBoredAcknowledgement &pAck )
 {
 	if ( bored.size() == 0 )
+	{
 		return false;
+	}
 
 	CAckTypeBoredPrecence::iterator it = bored.begin();
 	if ( it->second.size() == 0 )
@@ -85,7 +89,9 @@ void CAckManager::AddAcknowledgment( EUnitAckType eAck, CUpdatableObj *pObject, 
 void CAckManager::RegisterAsBored( EUnitAckType eBored, class CAIUnit *pObject )
 {
 	if ( pObject->GetPlayer() != theDipl.GetMyNumber() )
+	{
 		return;
+	}
 	//NI_ASSERT( eBored <= _ACK_BORED_END && eBored >= _ACK_BORED_BEGIN, "not bored ack passed" );
 	bored[eBored][pObject->GetUniqueId()] = CUnitBoredPresence( pObject, true );
 }
@@ -93,7 +99,9 @@ void CAckManager::RegisterAsBored( EUnitAckType eBored, class CAIUnit *pObject )
 void CAckManager::UnRegisterAsBored( EUnitAckType eBored, class CAIUnit *pObject )
 {
 	if ( pObject->GetPlayer() != theDipl.GetMyNumber() )
+	{
 		return;
+	}
 	// если этот юнит есть в списке, то он удаляется.
 	//NI_ASSERT( eBored <= _ACK_BORED_END && eBored >= _ACK_BORED_BEGIN, "not bored ack passed" );
 	bored[eBored][pObject->GetUniqueId()] = CUnitBoredPresence( pObject, false );
@@ -106,6 +114,8 @@ void CAckManager::UnRegisterAsBored( EUnitAckType eBored, class CAIUnit *pObject
 void CAckManager::UnitDead( class CAIUnit *pObject )
 {
 	for ( CAckTypeBoredPrecence::iterator it = bored.begin(); it != bored.end(); ++it )
+	{
 		it->second.erase( pObject->GetUniqueId() );
+	}
 	// common acks from dead units will be deleted in update.
 }

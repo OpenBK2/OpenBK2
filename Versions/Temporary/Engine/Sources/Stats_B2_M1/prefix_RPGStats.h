@@ -67,7 +67,9 @@ enum EAIClass
 inline int GetRandom( int nAverage, int nRandom )
 {
 	if ( nRandom <= 0 )
+	{
 		return nAverage;
+	}
 
 	RecordRandomCall();
 	return NRandom::RandomCheck( nAverage - nRandom, nAverage + nRandom );
@@ -75,7 +77,9 @@ inline int GetRandom( int nAverage, int nRandom )
 inline float GetRandom( float fAverage, int nRandom )
 {
 	if ( nRandom <= 0 )
+	{
 		return fAverage;
+	}
 
 	RecordRandomCall();
 	return NRandom::RandomCheck( fAverage - float( nRandom ), fAverage + float( nRandom ) );

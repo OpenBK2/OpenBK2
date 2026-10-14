@@ -89,7 +89,9 @@ CReflowState::CReflowState( NGScene::ILayoutFakeView *_pView, float _fWidth )
 void CReflowState::AddObject( IVisReflowObject *pObject )
 {
 	if ( !IsValid( pObject ) )
+	{
 		return;
+	}
 
 	const CTPoint<float> &visSize = pObject->GetSize();
 
@@ -101,7 +103,9 @@ void CReflowState::AddObject( IVisReflowObject *pObject )
 		case EHA_JUSTIFY:
 		{
 			if ( ( fLineWidth + visSize.x ) > ( rangeRight.fValue - rangeLeft.fValue ) )
+			{
 				CreateLine( false );
+			}
 
 			line.push_back( pObject );
 			fLineWidth += visSize.x;
@@ -143,15 +147,21 @@ void CReflowState::CreateLine( bool bEndBlock )
 	line.clear();
 
 	if ( size.y - rangeLeft.fHeight > -FP_EPSILON )
+	{
 		rangeLeft.fValue = 0;
+	}
 	if ( size.y - rangeRight.fHeight > -FP_EPSILON )
+	{
 		rangeRight.fValue = fWidth;
+	}
 }
 
 void CReflowState::Finalize()
 {
 	if ( !line.empty() )
+	{
 		CreateLine( true );
+	}
 
 	for ( std::list<SLine>::iterator iTemp = lines.begin(); iTemp != lines.end(); ++iTemp )
 	{
@@ -179,7 +189,9 @@ void CReflowState::Finalize()
 				for ( TVisObjects::iterator iObject = line.line.begin(); iObject != line.line.end(); ++iObject )
 				{
 					if ( ( *iObject )->IsSpace() )
+					{
 						fSpaceSize += ( *iObject )->GetSize().x;
+					}
 				}
 
 				float fTotalWidth = line.fRight - line.fLeft - line.fWidth + fSpaceSize;
@@ -206,9 +218,13 @@ void CReflowState::Finalize()
 			}
 
 			if ( ( *iObject )->IsSpace() )
+			{
 				fX += visSize.x * fSpaceMul;
+			}
 			else
+			{
 				fX += visSize.x;
+			}
 
 			size.x = (std::max)( size.x, fX );
 		}
@@ -248,7 +264,9 @@ void CReflowState::RemoveSpaces()
 	for ( TVisObjects::iterator iTemp = line.begin(); iTemp != line.end(); )
 	{
 		if ( !( *iTemp )->IsSpace() )
+		{
 			break;
+		}
 
 		iTemp = line.erase( iTemp );
 	}
@@ -259,9 +277,13 @@ void CReflowState::RemoveSpaces()
 		--iTemp;
 
 		if ( ( *iTemp )->IsSpace() )
+		{
 			line.erase( iTemp );
+		}
 		else
+		{
 			break;
+		}
 	}
 }
 
@@ -309,12 +331,16 @@ void CReflowLayout::Generate( NGScene::ILayoutFakeView *pView, float fWidth )
 	{
 		IReflowObject *pObject = *iTemp;
 		if ( !IsValid( pObject ) )
+		{
 			continue;
+		}
 
 		pObject->Update( &state );
 
 		if ( CDynamicCast<IVisReflowObject> pVisObject = pObject )
+		{
 			state.AddObject( pVisObject );
+		}
 	}
 
 	state.Finalize();
@@ -328,7 +354,9 @@ void CReflowLayout::Render( NGScene::ILayoutFakeView *pView,
 	for ( TObjects::iterator iTemp = objects.begin(); iTemp != objects.end(); ++iTemp )
 	{
 		if ( CDynamicCast<IVisReflowObject> pVisObject = *iTemp )
+		{
 			pVisObject->Render( pView, position, window );
+		}
 	}
 }
 
@@ -339,7 +367,9 @@ void CReflowLayout::Render( std::list<CTRect<float>> *pRender,
 	for ( TObjects::iterator iTemp = objects.begin(); iTemp != objects.end(); ++iTemp )
 	{
 		if ( CDynamicCast<IVisReflowObject> pVisObject = *iTemp )
+		{
 			pVisObject->Render( pRender, position, window );
+		}
 	}
 }
 

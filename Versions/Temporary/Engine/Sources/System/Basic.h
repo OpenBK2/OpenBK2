@@ -42,13 +42,17 @@ private:
 	void AddRef()
 	{
 		if ( nRefData == 0 )
+		{
 			strncpy( szObjectName, GetTypeName(), 12 );
+		}
 		++nRefData;
 	}
 	void AddObj( int nRef )
 	{
 		if ( nObjData == 0 )
+		{
 			strncpy( szObjectName, GetTypeName(), 12 );
+		}
 		nObjData += nRef;
 	}
 #else
@@ -115,7 +119,9 @@ public:
 	{
 		nObjData &= 0x7fffffff;
 		if ( b )
+		{
 			nObjData |= 0x80000000;
+		}
 	}
 	// reset data in class to default values, saves RefCount from destruction
 	void Clear()
@@ -289,19 +295,25 @@ private:
 	{
 		TRef p;
 		if ( _ptr )
+		{
 			p.AddRef( CastToObjectBase( _ptr ) );
+		}
 	}
 	void DecRef( TUserObj *_ptr )
 	{
 		TRef p;
 		if ( _ptr )
+		{
 			p.DecRef( CastToObjectBase( _ptr ) );
+		}
 	}
 	void Release( TUserObj *_ptr )
 	{
 		TRef p;
 		if ( _ptr )
+		{
 			p.Release( CastToObjectBase( _ptr ) );
+		}
 	}
 
 protected:
@@ -451,7 +463,9 @@ inline bool EraseInvalidRefs( TContainer *pData )
 	for ( typename TContainer::iterator i = pData->begin(); i != pData->end(); )
 	{
 		if ( IsValid( *i ) )
+		{
 			++i;
+		}
 		else
 		{
 			i = pData->erase( i );

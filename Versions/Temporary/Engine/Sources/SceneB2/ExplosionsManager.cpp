@@ -6,7 +6,9 @@
 void CExplosionObjInfo::Recalc()
 {
 	if ( pValue == 0 )
+	{
 		pValue = new NGScene::CObjectInfo();
+	}
 
 	NGScene::CObjectInfo::SData objData;
 	objData.verts = data.vertices;
@@ -40,8 +42,12 @@ void CExplosionsManager::RemoveExplosion( const int nID )
 	for ( std::list<SExplosionObj>::iterator it = explosions.begin(); it != explosions.end(); )
 	{
 		if ( it->nID == nID )
+		{
 			it = explosions.erase( it );
+		}
 		else
+		{
 			++it;
+		}
 	}
 }

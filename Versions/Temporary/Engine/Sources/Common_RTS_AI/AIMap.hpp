@@ -26,7 +26,9 @@ inline void CAIMap::PushTile(
 	if ( !mask.GetData( tile.x + nMaxRadius, tile.y + nMaxRadius ) )
 	{
 		if ( IsTileInside( vCenter + tile ) )
+		{
 			tiles->push_back( vCenter + tile );
+		}
 		mask.SetData( tile.x + nMaxRadius, tile.y + nMaxRadius );
 	}
 }
@@ -83,7 +85,9 @@ inline bool CAIMap::ProcessLineTiles( const SVector &vCenter,
 	{
 		curOffset = bres.GetDirection();
 		if ( Process8Tiles( vCenter, curOffset, pTiles, aiClass, bAddOnly, mask ) )
+		{
 			return true;
+		}
 		bres.MakePointStep();
 	} while ( curOffset != vOffset );
 	return false;
@@ -100,7 +104,9 @@ inline bool CAIMap::ProcessLargeCircleTiles( const CVec2 &vCenter,
 	const int nTileRadius = fRadius / GetTileSize();
 
 	if ( N )
+	{
 		pTiles->clear();
+	}
 
 	if ( !N )
 	{
@@ -108,13 +114,17 @@ inline bool CAIMap::ProcessLargeCircleTiles( const CVec2 &vCenter,
 		const int nSizeY = GetSizeY() * GetTileSize();
 		if ( vTileCenter.x - nTileRadius < 0 || vTileCenter.x + nTileRadius > nSizeX || vTileCenter.y - nTileRadius < 0 ||
 		     vTileCenter.y + nTileRadius > nSizeY )
+		{
 			return true;
+		}
 	}
 
 	if ( nTileRadius < 2 )
 	{
 		if ( N )
+		{
 			pTiles->push_back( vTileCenter );
+		}
 		return false;
 	}
 
@@ -130,12 +140,16 @@ inline bool CAIMap::ProcessLargeCircleTiles( const CVec2 &vCenter,
 		if ( N )
 		{
 			if ( ProcessLineTiles( vTileCenter, SVector( x, y ), pTiles, aiClass, true, mask ) )
+			{
 				return true;
+			}
 		}
 		else
 		{
 			if ( ProcessLineTiles( vTileCenter, SVector( x, y ), pTiles, aiClass, false, mask ) )
+			{
 				return true;
+			}
 		}
 		if ( d < 0 )
 		{
@@ -148,12 +162,16 @@ inline bool CAIMap::ProcessLargeCircleTiles( const CVec2 &vCenter,
 			if ( N )
 			{
 				if ( ProcessLineTiles( vTileCenter, SVector( x, y ), pTiles, aiClass, true, mask ) )
+				{
 					return true;
+				}
 			}
 			else
 			{
 				if ( ProcessLineTiles( vTileCenter, SVector( x, y ), pTiles, aiClass, false, mask ) )
+				{
 					return true;
+				}
 			}
 		}
 		x++;
@@ -172,7 +190,9 @@ inline bool CAIMap::ProcessCircleTiles( const CVec2 &vCenter,
 	const int nTileRadius = fRadius / GetTileSize();
 
 	if ( pTiles )
+	{
 		pTiles->clear();
+	}
 
 	if ( !N )
 	{
@@ -180,7 +200,9 @@ inline bool CAIMap::ProcessCircleTiles( const CVec2 &vCenter,
 		const int nSizeY = GetSizeY() * GetTileSize();
 		if ( vTileCenter.x - nTileRadius < 0 || vTileCenter.x + nTileRadius > nSizeX || vTileCenter.y - nTileRadius < 0 ||
 		     vTileCenter.y + nTileRadius > nSizeY )
+		{
 			return true;
+		}
 	}
 	/*
 	if ( nTileRadius < 2 )
@@ -196,10 +218,14 @@ inline bool CAIMap::ProcessCircleTiles( const CVec2 &vCenter,
 		if ( N )
 		{
 			if ( IsTileInside( vTileCenter + tiles[i] ) )
+			{
 				pTiles->push_back( vTileCenter + tiles[i] );
+			}
 		}
 		else if ( GetTerrain()->IsLocked( vTileCenter + tiles[i], aiClass ) )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -214,7 +240,9 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1,
                                             const SGenericNumber<N> & )
 {
 	if ( N )
+	{
 		pTiles->clear();
+	}
 
 	// выход за пределы карты
 	if ( !N )
@@ -224,7 +252,9 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1,
 		if ( v1.x < 0 || v1.y < 0 || v2.x < 0 || v2.y < 0 || v3.x < 0 || v3.y < 0 || v4.x < 0 || v4.y < 0 ||
 		     v1.x >= nSizeX || v1.y >= nSizeY || v2.x >= nSizeX || v2.y >= nSizeY || v3.x >= nSizeX || v3.y >= nSizeY ||
 		     v4.x >= nSizeX || v4.y >= nSizeY )
+		{
 			return true;
+		}
 	}
 
 	const CVec2 center = 0.25f * ( v1 + v2 + v3 + v4 );
@@ -244,27 +274,43 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1,
 
 	SVector p1( tile1 ), p2( tile1 );
 	if ( tile2.y < p1.y )
+	{
 		p1 = tile2;
+	}
 	if ( tile2.y > p2.y )
+	{
 		p2 = tile2;
+	}
 	if ( tile3.y < p1.y )
+	{
 		p1 = tile3;
+	}
 	if ( tile3.y > p2.y )
+	{
 		p2 = tile3;
+	}
 	if ( tile4.y < p1.y )
+	{
 		p1 = tile4;
+	}
 	if ( tile4.y > p2.y )
+	{
 		p2 = tile4;
+	}
 
 	if ( p1 == p2 )
 	{
 		if ( N )
 		{
 			if ( IsTileInside( p1 ) )
+			{
 				pTiles->push_back( p1 );
+			}
 		}
 		else if ( IsTileInside( p1 ) && IsLocked( p1, aiClass ) )
+		{
 			return true;
+		}
 	}
 	else if ( TriangleArea2( tile1.ToCVec2(), tile2.ToCVec2(), tile3.ToCVec2() ) == 0 )
 	{
@@ -276,9 +322,13 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1,
 		{
 			curTile = bres.GetDirection();
 			if ( N )
+			{
 				pTiles->push_back( curTile );
+			}
 			else if ( IsLocked( curTile, aiClass ) )
+			{
 				return true;
+			}
 
 			bres.MakePointStep();
 		} while ( curTile != p2 );
@@ -300,9 +350,13 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1,
 				if ( IsTileInside( curTile ) )
 				{
 					if ( N )
+					{
 						pTiles->push_back( curTile );
+					}
 					else if ( IsLocked( curTile, aiClass ) )
+					{
 						return true;
+					}
 				}
 			}
 
@@ -314,9 +368,13 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1,
 				if ( IsTileInside( curTile ) )
 				{
 					if ( N )
+					{
 						pTiles->push_back( curTile );
+					}
 					else if ( IsLocked( curTile, aiClass ) )
+					{
 						return true;
+					}
 				}
 
 				--curTile.x;
@@ -334,9 +392,13 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1,
 				if ( IsTileInside( curTile ) )
 				{
 					if ( N )
+					{
 						pTiles->push_back( curTile );
+					}
 					else if ( IsLocked( curTile, aiClass ) )
+					{
 						return true;
+					}
 				}
 
 				++curTile.x;
@@ -344,7 +406,9 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1,
 			}
 
 			if ( bres.GetDirection() == p2 )
+			{
 				bFlag = false;
+			}
 			else
 			{
 				const int y = bres.GetDirection().y;
@@ -365,7 +429,9 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1,
 	{
 		const SVector tile( GetTile( center ) );
 		if ( pTiles->empty() && IsTileInside( tile ) )
+		{
 			pTiles->push_back( tile );
+		}
 	}
 
 	return false;
@@ -408,7 +474,9 @@ public:
 	bool operator()( float x, float y )
 	{
 		if ( pAIMap->IsTileInside( x, y ) )
+		{
 			pTiles->push_back( SVector( x, y ) );
+		}
 
 		return true;
 	}

@@ -149,9 +149,13 @@ public:
 	{
 		CBasicGun *pGun = 0;
 		if ( nTurret != -1 )
+		{
 			pGun = new CTurretGun( pUnit, nShell, pCommonGunInfo, eType, nTurret );
+		}
 		else
+		{
 			pGun = new CBaseGun( pUnit, nShell, pCommonGunInfo, eType );
+		}
 
 		return pGun;
 	}

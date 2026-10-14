@@ -9,7 +9,9 @@ static float LASER_MARK_PULSAR_TIME = 0.2f;
 void CLaserMarkTrace::Recalc()
 {
 	if ( HasZeroValue() )
+	{
 		pValue = new NGScene::CObjectInfo;
+	}
 
 	NGScene::CObjectInfo::SData data;
 	data.verts.resize( 8 );
@@ -44,7 +46,9 @@ void CLaserMarkTrace::Recalc()
 	NGfx::SCompactVector vCompactNormal;
 	NGfx::CalcCompactVector( &vCompactNormal, CVec3( 0, 0, 1 ) );
 	for ( std::vector<NGScene::SVertex>::iterator it = data.verts.begin(); it != data.verts.end(); ++it )
+	{
 		it->normal = vCompactNormal;
+	}
 
 	data.geometry[0].i1 = 0;
 	data.geometry[0].i2 = 1;

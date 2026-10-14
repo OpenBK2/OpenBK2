@@ -433,11 +433,15 @@ std::wstring DecodeUnicodeResource( const std::vector<uint8_t> &buffer, bool *ne
 			appendUnit( 0xdc00 + ( code & 0x3ff ) );
 		}
 		else
+		{
 			appendUnit( code );
+		}
 	}
 	legacy &= hasPadding;
 	if ( needsRepair )
+	{
 		*needsRepair = legacy;
+	}
 	return legacy ? UTF16LEToWide( recovered.data(), recovered.size() ) : UTF16LEToWide( buffer.data() + 2, size );
 }
 }
@@ -449,7 +453,9 @@ void File2String( std::string *pstrText,
                   bool *pbNeedsUnicodeRepair )
 {
 	if ( pbNeedsUnicodeRepair )
+	{
 		*pbNeedsUnicodeRepair = false;
+	}
 	if ( pstrText )
 	{
 		pstrText->clear();
@@ -522,7 +528,9 @@ void File2String( std::string *pstrText,
                   bool *pbNeedsUnicodeRepair )
 {
 	if ( pbNeedsUnicodeRepair )
+	{
 		*pbNeedsUnicodeRepair = false;
+	}
 	if ( pstrText != 0 )
 	{
 		pstrText->clear();

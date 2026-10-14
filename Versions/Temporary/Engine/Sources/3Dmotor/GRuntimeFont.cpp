@@ -105,7 +105,9 @@ namespace
 			for ( const int nCharset : CHARSETS )
 			{
 				for ( const uint32_t nCodePoint : NCodePages::GetPrintableCodePoints( nCharset ) )
+				{
 					codePoints.push_back( nCodePoint );
+				}
 			}
 			std::sort( codePoints.begin(), codePoints.end() );
 			codePoints.erase( std::unique( codePoints.begin(), codePoints.end() ), codePoints.end() );
@@ -133,14 +135,20 @@ namespace
 		const CFontFormatInfo *pFormat = baked->GetValue();
 		if ( pFormat == nullptr || pFormat->GetLineSpace() <= 0 || !pFormat->HasChar( 'H' ) ||
 		     pRecord->pTexture == nullptr )
+		{
 			return result;
+		}
 		CFileStream stream( NVFS::GetMainVFS(), pRecord->pTexture->szDestName );
 		CArray2D<uint32_t> pixels;
 		if ( !stream.IsOk() || !NImage::LoadImageDDS( &pixels, &stream ) )
+		{
 			return result;
+		}
 		const STFCharacter &capital = pFormat->GetChar( 'H' );
 		if ( capital.x1 < 0 || capital.y1 < 0 || capital.x2 > pixels.GetSizeX() || capital.y2 > pixels.GetSizeY() )
+		{
 			return result;
+		}
 		int nTop = capital.y2, nBottom = capital.y1;
 		for ( int y = capital.y1; y < capital.y2; ++y )
 		{
@@ -154,14 +162,20 @@ namespace
 			}
 		}
 		if ( nBottom <= nTop )
+		{
 			return result;
+		}
 		int nAdvance = 0;
 		for ( const char c : REFERENCE_CHARACTERS )
 		{
 			if ( c == 0 )
+			{
 				break;
+			}
 			if ( !pFormat->HasChar( c ) )
+			{
 				return result;
+			}
 			const STFCharacter &glyph = pFormat->GetChar( c );
 			nAdvance += glyph.nA + glyph.nBC;
 		}
@@ -181,7 +195,9 @@ namespace
 		std::unordered_map<std::string, std::shared_ptr<const std::vector<uint8_t>>>::const_iterator pos =
 				loaded.find( szKey );
 		if ( pos != loaded.end() )
+		{
 			return pos->second;
+		}
 		std::shared_ptr<std::vector<uint8_t>> pData;
 		CFileStream stream( NVFS::GetMainVFS(), szPath );
 		if ( stream.IsOk() && stream.GetSize() > 0 )
@@ -229,7 +245,9 @@ namespace
 	{
 		static std::unique_ptr<NFontRaster::CFontCatalog> pCatalog;
 		if ( pCatalog == nullptr )
+		{
 			pCatalog.reset( new NFontRaster::CFontCatalog( NFontRaster::GetSystemFontDirectories() ) );
+		}
 		return *pCatalog;
 	}
 
@@ -270,7 +288,9 @@ FitFallback( NFontRaster::CFace *pFace, const NFontRaster::SOptions &options, co
 {
 	std::string szError;
 	if ( pFace->Fit( options, sizing, &szError ) )
+	{
 		return true;
+	}
 	NFontRaster::SOptions winOptions = options;
 	winOptions.eCellMetrics = NFontRaster::CELL_WIN;
 	winOptions.nCapHeight = 0; // a fallback without Latin H cannot match cap height
@@ -290,7 +310,9 @@ bool CGlyphAtlas::Init( const NDb::SFont *_pRecord,
 	pState.reset( new SState );
 	pValue = 0;
 	if ( pRecord == 0 || nCellHeight <= 0 )
+	{
 		return false;
+	}
 	SState &state = *pState;
 	std::shared_ptr<const std::vector<uint8_t>> pData = LoadFontData( pRecord->szFontFile );
 	if ( pData == nullptr )
@@ -313,7 +335,9 @@ bool CGlyphAtlas::Init( const NDb::SFont *_pRecord,
 	const int nWidth = nCellWidth > 0 ? nCellWidth : nCellHeight;
 	state.options.fWidthScale = static_cast<double>( nWidth ) / nCellHeight;
 	if ( reference.fCapHeight > 0 && pFace != nullptr && pFace->HasGlyph( 'H' ) )
+	{
 		state.options.nCapHeight = (std::max)( 1, static_cast<int>( std::lround( reference.fCapHeight * nCellHeight ) ) );
+	}
 	if ( pFace == nullptr || !pFace->Fit( state.options, state.sizing, &szError ) )
 	{
 		DebugTrace( "runtime font: \"%s\" for font \"%s\": %s",
@@ -330,7 +354,9 @@ bool CGlyphAtlas::Init( const NDb::SFont *_pRecord,
 		for ( const char c : REFERENCE_CHARACTERS )
 		{
 			if ( c == 0 )
+			{
 				break;
+			}
 			NFontRaster::SGlyphBitmap glyph;
 			if ( !pFace->HasGlyph( c ) || !pFace->RenderGlyph( c, &glyph, &szError ) )
 			{
@@ -343,7 +369,9 @@ bool CGlyphAtlas::Init( const NDb::SFont *_pRecord,
 		{
 			state.options.fWidthScale *= reference.fAdvance * nWidth / nAdvance;
 			if ( !pFace->Fit( state.options, state.sizing, &szError ) )
+			{
 				return false;
+			}
 		}
 	}
 	const NFontRaster::SFaceMetrics &metrics = pFace->GetMetrics();
@@ -363,7 +391,9 @@ bool CGlyphAtlas::Init( const NDb::SFont *_pRecord,
 	{
 		std::shared_ptr<const std::vector<uint8_t>> pFallbackData = LoadFontData( szFallback );
 		if ( pFallbackData == nullptr )
+		{
 			continue;
+		}
 		std::unique_ptr<NFontRaster::CFace> pFallback = NFontRaster::CFace::OpenMemory(
 				pFallbackData, NFontRaster::SelectFace( *pFallbackData, pRecord->nThickness, pRecord->bItalic ), &szError );
 		if ( pFallback != nullptr && FitFallback( pFallback.get(), state.options, state.sizing ) )
@@ -377,7 +407,9 @@ bool CGlyphAtlas::Init( const NDb::SFont *_pRecord,
 	const int nWanted = static_cast<int>( std::sqrt( N_GLYPHS_PLANNED * fGlyphArea ) );
 	state.nSize = N_MIN_ATLAS;
 	while ( state.nSize < nWanted && state.nSize < N_MAX_ATLAS )
+	{
 		state.nSize <<= 1;
+	}
 	state.coverage.assign( static_cast<size_t>( state.nSize ) * state.nSize, 0 );
 	state.nPenX = N_PADDING;
 	state.nPenY = N_PADDING;
@@ -393,11 +425,15 @@ bool CGlyphAtlas::AddGlyph( const uint16_t wChar )
 	// first face's .notdef, which no face "has".
 	int nFace = -1;
 	if ( wChar == W_DEFAULT_CHAR )
+	{
 		nFace = 0;
+	}
 	for ( int i = 0; nFace < 0 && i < static_cast<int>( state.faces.size() ); ++i )
 	{
 		if ( state.faces[i]->HasGlyph( wChar ) )
+		{
 			nFace = i;
+		}
 	}
 	if ( nFace < 0 && !state.bSystemFacesAdded )
 	{
@@ -408,7 +444,9 @@ bool CGlyphAtlas::AddGlyph( const uint16_t wChar )
 		{
 			NFontRaster::SFontMatch match;
 			if ( !GetSystemCatalog().Find( pszFamily, pRecord->nThickness, pRecord->bItalic, &match ) )
+			{
 				continue;
+			}
 			std::string szError;
 			std::unique_ptr<NFontRaster::CFace> pFace =
 					NFontRaster::CFace::OpenFile( match.szFile, match.nFaceIndex, &szError );
@@ -420,7 +458,9 @@ bool CGlyphAtlas::AddGlyph( const uint16_t wChar )
 		for ( int i = 0; nFace < 0 && i < static_cast<int>( state.faces.size() ); ++i )
 		{
 			if ( state.faces[i]->HasGlyph( wChar ) )
+			{
 				nFace = i;
+			}
 		}
 	}
 	if ( nFace < 0 || state.bFull )
@@ -466,14 +506,20 @@ bool CGlyphAtlas::AddGlyph( const uint16_t wChar )
 	{
 		const int nCellRow = nFirstRow + y;
 		if ( nCellRow < 0 || nCellRow >= state.nRasterHeight )
+		{
 			continue;
+		}
 		uint8_t *pDst = &state.coverage[static_cast<size_t>( state.nPenY + nCellRow ) * state.nSize + state.nPenX];
 		std::copy_n( &glyph.coverage[static_cast<size_t>( y ) * glyph.nB], glyph.nB, pDst );
 		// Measure actual coverage once, while rasterising. Spaces and the
 		// accent/descender padding must not count as clipped visible text.
 		for ( int x = 0; x < glyph.nB; ++x )
+		{
 			if ( pDst[x] != 0 )
+			{
 				inkBounds.Union( CTRect<int>( x, nCellRow, x + 1, nCellRow + 1 ) );
+			}
+		}
 	}
 	STFCharacter character;
 	character.x1 = state.nPenX;
@@ -502,7 +548,9 @@ bool CGlyphAtlas::AddGlyph( const uint16_t wChar )
 void CGlyphAtlas::Prepare( const std::wstring &wsText )
 {
 	if ( pState == nullptr || pState->faces.empty() )
+	{
 		return;
+	}
 	SState &state = *pState;
 	for ( const wchar_t wch : wsText )
 	{
@@ -510,7 +558,9 @@ void CGlyphAtlas::Prepare( const std::wstring &wsText )
 		// UTF-16 unit is the key, as it is in every font the engine reads
 		const uint16_t wChar = static_cast<uint16_t>( wch );
 		if ( wChar < 0x20 || state.pFormat->HasChar( wChar ) || state.missing.count( wChar ) != 0 )
+		{
 			continue;
+		}
 		AddGlyph( wChar );
 	}
 	// kerning for each adjacent pair, asked of the face both came from
@@ -519,12 +569,16 @@ void CGlyphAtlas::Prepare( const std::wstring &wsText )
 		const uint16_t wLast = static_cast<uint16_t>( wsText[i - 1] );
 		const uint16_t wChar = static_cast<uint16_t>( wsText[i] );
 		if ( state.pFormat->HasKern( wChar, wLast ) )
+		{
 			continue;
+		}
 		std::unordered_map<uint16_t, int>::const_iterator last = state.glyphFace.find( wLast );
 		std::unordered_map<uint16_t, int>::const_iterator current = state.glyphFace.find( wChar );
 		int nKern = 0;
 		if ( last != state.glyphFace.end() && current != state.glyphFace.end() && last->second == current->second )
+		{
 			nKern = state.faces[current->second]->GetKerning( wLast, wChar );
+		}
 		// zero is stored too, so that a pair is asked about once
 		state.pFormat->SetKern( wChar, wLast, nKern );
 	}
@@ -542,11 +596,15 @@ bool CGlyphAtlas::Rebuild()
 	// places, since placement depends on nothing else
 	const std::vector<uint16_t> saved = order;
 	if ( !Init( pRecord, nCellHeight, nCellWidth, bMatchBakedSize ) )
+	{
 		return false;
+	}
 	for ( size_t i = 1; i < saved.size(); ++i )
 	{
 		if ( !pState->pFormat->HasChar( saved[i] ) )
+		{
 			AddGlyph( saved[i] );
+		}
 	}
 	return true;
 }
@@ -591,7 +649,9 @@ void CGlyphAtlas::Recalc()
 			const uint8_t *pSrc = &state.coverage[static_cast<size_t>( y ) * state.nSize];
 			NGfx::SPixel4444 *pDst = lock[y];
 			for ( int x = 0; x < state.nSize; ++x )
+			{
 				pDst[x].wColor = static_cast<uint16_t>( ( ( pSrc[x] >> 4 ) << 12 ) | 0x0FFF );
+			}
 		}
 	}
 	else
@@ -602,7 +662,9 @@ void CGlyphAtlas::Recalc()
 			const uint8_t *pSrc = &state.coverage[static_cast<size_t>( y ) * state.nSize];
 			NGfx::SPixel8888 *pDst = lock[y];
 			for ( int x = 0; x < state.nSize; ++x )
+			{
 				pDst[x].dwColor = ( static_cast<uint32_t>( pSrc[x] ) << 24 ) | 0x00FFFFFF;
+			}
 		}
 	}
 	state.bDirty = false;
@@ -622,7 +684,9 @@ int CGlyphAtlas::operator&( IBinSaver &saver )
 	{
 		pRecord = pSavedRecord;
 		if ( !Rebuild() )
+		{
 			pState.reset();
+		}
 		pValue = 0;
 	}
 	return 0;
@@ -647,7 +711,9 @@ CRuntimeFontInfo::CRuntimeFontInfo( const SFont &sFont, CGlyphAtlas *_pAtlas )
 void CRuntimeFontInfo::PrepareGlyphs( const std::wstring &wsText )
 {
 	if ( IsValid( pAtlas ) )
+	{
 		pAtlas->Prepare( wsText );
+	}
 }
 
 }

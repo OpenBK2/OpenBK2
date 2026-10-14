@@ -46,16 +46,24 @@ public:
 		normal.Init( state.normal );
 		mouseOver.Init( state.mouseOver );
 		if ( !mouseOver.IsValid() )
+		{
 			mouseOver.Init( state.normal );
+		}
 		pushed.Init( state.pushed );
 		if ( !pushed.IsValid() )
+		{
 			pushed.Init( state.normal );
+		}
 		disabled.Init( state.disabled );
 		if ( !disabled.IsValid() )
+		{
 			disabled.Init( state.normal );
+		}
 		rightButtonDown.Init( state.rightButtonDown );
 		if ( !rightButtonDown.IsValid() )
+		{
 			rightButtonDown.Init( state.normal );
+		}
 	}
 	void SetupTextString( const NDb::SForegroundTextString *pTextString )
 	{

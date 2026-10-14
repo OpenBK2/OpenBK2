@@ -9,7 +9,9 @@ inline CVec4 SubHomogen( const CVec4 &_v1, const CVec4 &_v2 )
 inline CVec3 SafeUnhomogen( const CVec4 &v )
 {
 	if ( v.w == 0 )
+	{
 		return CVec3( v.x, v.y, v.z ) * 1e6f;
+	}
 	return CVec3( v.x / v.w, v.y / v.w, v.z / v.w );
 }
 inline CVec3 Unhomogen( const CVec4 &a )

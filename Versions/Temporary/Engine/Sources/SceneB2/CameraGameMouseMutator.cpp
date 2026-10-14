@@ -79,7 +79,9 @@ float CCameraGameMouseMutator::GetZoomDistance( float fTimeDiff, float fRealSens
 	}
 
 	if ( !bSmoothZoomActive )
+	{
 		fZoomTargetDistance = GetDistance();
+	}
 	if ( fMouseDelta != 0 )
 	{
 		// Accumulate wheel steps at the target distance, so smoothing speed does not
@@ -97,8 +99,10 @@ float CCameraGameMouseMutator::GetZoomDistance( float fTimeDiff, float fRealSens
 	// Keyboard zoom remains immediate; move the wheel target by the same input.
 	const float fKeyboardZoom = fKeyboardDelta * fZoomSensitivity * fSpeedCoeff;
 	if ( bSmoothZoomActive && fKeyboardZoom != 0 )
+	{
 		fZoomTargetDistance =
 				IncrementValue( fZoomTargetDistance, fKeyboardZoom, GetDistanceLimit(), 0, false, s_bGameFreeCamera );
+	}
 	float fDistance = IncrementValue( GetDistance(),
 	                                  fKeyboardZoom,
 	                                  GetDistanceLimit(),
@@ -144,13 +148,19 @@ void CCameraGameMouseMutator::Recalc()
 		if ( s_bGameCameraSelectYawPitch )
 		{
 			if ( fabs( fPitchDelta ) > fabs( fYawDelta ) )
+			{
 				fYawDelta = 0;
+			}
 			else
+			{
 				fPitchDelta = 0;
+			}
 		}
 		//
 		if ( s_bGameCameraMousePitchInvert )
+		{
 			fPitchDelta = -fPitchDelta;
+		}
 		// increment pitch
 		const float fAddPitch = ToRadian( 180.0f );
 		fPitch =
@@ -209,7 +219,9 @@ void CCameraGameMouseMutator::Recalc()
 		quat.GetZAxis( &vDir );
 		vPosition = vGameAnchor - vDir * GetDistance();
 		if ( s_bGameCameraTrackHeights && !NGlobal::GetVar( "temp.script_movie", false ) )
+		{
 			vPosition.z += AI2Vis( Scene()->GetZ( Vis2AI( vPosition.x ), Vis2AI( vPosition.y ) ) );
+		}
 	}
 	else
 	{
@@ -224,7 +236,9 @@ void CCameraGameMouseMutator::Recalc()
 		quat.GetZAxis( &vDir );
 		vPosition = GetAnchor() - vDir * GetDistance();
 		if ( s_bGameCameraTrackHeights && !NGlobal::GetVar( "temp.script_movie", false ) )
+		{
 			vPosition.z += AI2Vis( Scene()->GetZ( Vis2AI( vPosition.x ), Vis2AI( vPosition.y ) ) );
+		}
 
 		ClearSliders();
 	}

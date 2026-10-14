@@ -86,14 +86,20 @@ bool CExecutorSpyMode::NotifyEvent( const CExecutorEvent &event )
 {
 	//Filter out wrong calls
 	if ( GetAIUnit()->GetUniqueId() != event.GetParam().nUnitID )
+	{
 		return false;
+	}
 
 	const CExecutorEventSpecialAbility *pEv = static_cast<const CExecutorEventSpecialAbility *>( &event );
 	if ( pEv == 0 )
+	{
 		return false;
+	}
 
 	if ( pEv->GetAbility() != GetAbility() )
+	{
 		return false;
+	}
 	//end - Filter out wrong calls
 
 	if ( event.GetParam().eEventID == EID_ABILITY_SET_TARGET )
@@ -101,7 +107,9 @@ bool CExecutorSpyMode::NotifyEvent( const CExecutorEvent &event )
 		const CExecutorEventSpecialAbilitySetTarget *pEST =
 				static_cast<const CExecutorEventSpecialAbilitySetTarget *>( pEv );
 		if ( !pEST )
+		{
 			return false;
+		}
 
 		pEnemyStats = pEST->GetTarget();
 		if ( GetState() == EASS_ACTIVE && !bMasked )

@@ -19,7 +19,9 @@ CInterfaceLoadMod::CInterfaceLoadMod() : CInterfaceScreenBase( "LoadMod", "load_
 bool CInterfaceLoadMod::Init()
 {
 	if ( !CInterfaceScreenBase::Init() )
+	{
 		return false;
+	}
 
 	AddScreen( this );
 
@@ -41,7 +43,9 @@ void CInterfaceLoadMod::MakeInterior()
 	pModsListItemTemplate = GetChildChecked<IWindow>( pModsListPanel, "ModsListItem", true );
 
 	if ( pModsListItemTemplate )
+	{
 		pModsListItemTemplate->ShowWindow( false );
+	}
 
 	pModDescCont = GetChildChecked<IScrollableContainer>( pModDescPanel, "ModDescCont", true );
 	pModDescView = GetChildChecked<ITextView>( pModDescPanel, "ModDescView", true );
@@ -50,9 +54,13 @@ void CInterfaceLoadMod::MakeInterior()
 	if ( pModDescCont )
 	{
 		if ( pModNameView )
+		{
 			pModDescCont->PushBack( pModNameView, false );
+		}
 		if ( pModDescView )
+		{
 			pModDescCont->PushBack( pModDescView, false );
+		}
 	}
 
 	pDefaultBtn = GetChildChecked<IButton>( pBottomPanel, "DefaultBtn", true );
@@ -91,7 +99,9 @@ void CInterfaceLoadMod::MakeInterior()
 	}
 
 	if ( pModsListCont )
+	{
 		pModsListCont->Select( pWnd );
+	}
 
 	UpdateSelection();
 }
@@ -109,13 +119,21 @@ void CInterfaceLoadMod::AddMod( const std::wstring &wszName,
 	mod.szFullFolderPath = szFullFolderPath;
 
 	if ( mod.pWnd )
+	{
 		mod.pWnd->ShowWindow( true );
+	}
 	if ( mod.pNameView )
+	{
 		mod.pNameView->SetText( mod.pNameView->GetDBText() + mod.wszName );
+	}
 	if ( mod.pCheckedWnd )
+	{
 		mod.pCheckedWnd->ShowWindow( false );
+	}
 	if ( pModsListCont )
+	{
 		pModsListCont->PushBack( mod.pWnd, true );
+	}
 
 	mods.push_back( mod );
 }
@@ -124,15 +142,21 @@ const CInterfaceLoadMod::SMod *CInterfaceLoadMod::FindSelected() const
 {
 	IWindow *pSelectedWnd = 0;
 	if ( pModsListCont )
+	{
 		pSelectedWnd = pModsListCont->GetSelectedItem();
+	}
 	if ( !pSelectedWnd )
+	{
 		return 0;
+	}
 
 	for ( int i = 0; i < mods.size(); ++i )
 	{
 		const SMod &mod = mods[i];
 		if ( mod.pWnd == pSelectedWnd )
+		{
 			return &mod;
+		}
 	}
 
 	return 0;
@@ -141,15 +165,25 @@ const CInterfaceLoadMod::SMod *CInterfaceLoadMod::FindSelected() const
 bool CInterfaceLoadMod::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "menu_back" )
+	{
 		return OnBack();
+	}
 	if ( szReaction == "menu_default" )
+	{
 		return OnDefault();
+	}
 	if ( szReaction == "menu_accept" )
+	{
 		return OnAccept();
+	}
 	if ( szReaction == "menu_select" )
+	{
 		return OnSelect();
+	}
 	if ( szReaction == "menu_dbl_click" )
+	{
 		return OnDblClick();
+	}
 
 	return false;
 }
@@ -170,7 +204,9 @@ bool CInterfaceLoadMod::OnBack()
 bool CInterfaceLoadMod::OnDefault()
 {
 	if ( pModsListCont )
+	{
 		pModsListCont->Select( 0 );
+	}
 
 	UpdateSelection();
 
@@ -232,46 +268,72 @@ void CInterfaceLoadMod::UpdateSelection()
 	if ( !pMod || !pMod->pWnd )
 	{
 		if ( pModNameView )
+		{
 			pModNameView->SetText( pModNameView->GetDBText() + wszModDefaultName );
+		}
 		if ( pModDescView )
+		{
 			pModDescView->SetText( pModDescView->GetDBText() + wszModDefaultDesc );
+		}
 		if ( pModDescCont )
+		{
 			pModDescCont->Update();
+		}
 
 		if ( pDefaultBtn )
+		{
 			pDefaultBtn->Enable( false );
+		}
 		if ( pAcceptBtn )
+		{
 			pAcceptBtn->Enable( IsChanged() );
+		}
 
 		return;
 	}
 
 	if ( pModNameView )
+	{
 		pModNameView->SetText( pModNameView->GetDBText() + pMod->wszName );
+	}
 	if ( pModDescView )
+	{
 		pModDescView->SetText( pModDescView->GetDBText() + pMod->wszDesc );
+	}
 
 	if ( pModDescCont )
+	{
 		pModDescCont->Update();
+	}
 
 	if ( pDefaultBtn )
+	{
 		pDefaultBtn->Enable( true );
+	}
 	if ( pAcceptBtn )
+	{
 		pAcceptBtn->Enable( IsChanged() );
+	}
 
 	pPrevCheckedWnd = pMod->pCheckedWnd;
 	if ( pPrevCheckedWnd )
+	{
 		pPrevCheckedWnd->ShowWindow( true );
+	}
 }
 
 bool CInterfaceLoadMod::IsChanged() const
 {
 	const SMod *pMod = FindSelected();
 	if ( !pMod )
+	{
 		return nInitialMod != NO_MOD;
+	}
 
 	if ( nInitialMod < 0 || nInitialMod >= mods.size() )
+	{
 		return true;
+	}
 
 	return pMod != &mods[nInitialMod];
 }
@@ -279,7 +341,9 @@ bool CInterfaceLoadMod::IsChanged() const
 bool CInterfaceLoadMod::StepLocal( bool bAppActive )
 {
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )
+	{
 		pInterface->Step( bAppActive );
+	}
 
 	return CInterfaceScreenBase::StepLocal( bAppActive );
 }

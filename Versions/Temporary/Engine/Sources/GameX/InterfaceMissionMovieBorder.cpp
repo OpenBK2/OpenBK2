@@ -16,7 +16,9 @@ CInterfaceMissionMovieBorder::~CInterfaceMissionMovieBorder() {}
 bool CInterfaceMissionMovieBorder::Init()
 {
 	if ( CInterfaceScreenBase::Init() == false )
+	{
 		return false;
+	}
 
 	RegisterObservers();
 
@@ -43,7 +45,9 @@ void CInterfaceMissionMovieBorder::OnGetFocus( bool bFocus )
 bool CInterfaceMissionMovieBorder::StepLocal( bool bAppActive )
 {
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )
+	{
 		pInterface->Step( bAppActive );
+	}
 
 	return bAppActive;
 }
@@ -61,7 +65,9 @@ int CInterfaceMissionMovieBorder::Check( const std::string &szCheckName ) const
 bool CInterfaceMissionMovieBorder::ProcessEvent( const SGameMessage &msg )
 {
 	if ( CInterfaceScreenBase::ProcessEvent( msg ) )
+	{
 		return true;
+	}
 
 	return false;
 }

@@ -33,15 +33,21 @@ inline bool IsUseG5()
 inline int GetAlphaMode( bool bAdd, bool bFogEnabled, int *pnFog )
 {
 	if ( pnFog )
+	{
 		*pnFog = bFogEnabled ? FOG_NORMAL : FOG_NONE;
+	}
 	if ( bAdd )
 	{
 		if ( bFogEnabled )
+		{
 			return ABM_ALPHA_ADD | FOG_BLACK;
+		}
 		return ABM_ALPHA_ADD | FOG_NONE;
 	}
 	if ( bFogEnabled )
+	{
 		return ABM_ALPHA_BLEND | FOG_NORMAL;
+	}
 	return ABM_ALPHA_BLEND | FOG_NONE;
 }
 
@@ -59,13 +65,17 @@ inline void AssignTexBlackDefault( NGfx::CTexture **pTex, CDGPtr<CPtrFuncBase<NG
 {
 	AssignTex( pTex, p );
 	if ( *pTex == 0 )
+	{
 		*pTex = GetBlackTexture();
+	}
 }
 inline void AssignTexWhiteDefault( NGfx::CTexture **pTex, CDGPtr<CPtrFuncBase<NGfx::CTexture>> &p )
 {
 	AssignTex( pTex, p );
 	if ( *pTex == 0 )
+	{
 		*pTex = GetWhiteTexture();
+	}
 }
 template <class T>
 inline void Refresh( CDGPtr<T> *p )
@@ -86,9 +96,13 @@ static void SetupPShadows( NGfx::CRenderContext *pRC, const SFastGf3RenderInfo *
 	pRC->SetTexture( 1, pFastInfo->pDepth, NGfx::FILTER_LINEAR );
 	pRC->SetAlphaRef( pFastInfo->nAlphaTest );
 	if ( pFastInfo->bTranslucent )
+	{
 		pRC->SetVSConst( 35, CVec4( 0, 0, 0, 1e-5f ) );
+	}
 	else
+	{
 		pRC->SetVSConst( 35, lightInfo.vLightPos );
+	}
 }
 
 inline void AddCommonCustomOperation( CDGPtr<CPtrFuncBase<NGfx::CTexture>> &pMatTex,
@@ -102,7 +116,9 @@ inline void AddCommonCustomOperation( CDGPtr<CPtrFuncBase<NGfx::CTexture>> &pMat
 	NGfx::CTexture *pTex = 0;
 	AssignTex( &pTex, pMatTex );
 	if ( !pTex )
+	{
 		pTex = GetWhiteTexture();
+	}
 
 	pOp->AddOperation( op, 0, nSBM, nDestRegister, pTex, p );
 }
@@ -129,11 +145,17 @@ static void SetG5Props( NGfx::CRenderContext *pRC )
 IMaterial *CGenericMaterial::GetExactDecal()
 {
 	if ( IsValid( pExactDecal ) )
+	{
 		return pExactDecal;
+	}
 	if ( mt == EXACT_DECAL )
+	{
 		return this;
+	}
 	if ( mt != DECAL )
+	{
 		return 0;
+	}
 	pExactDecal = Duplicate();
 	pExactDecal->SetMT( EXACT_DECAL );
 	return pExactDecal;
@@ -144,9 +166,13 @@ IMaterial *CGenericMaterial::GetExactDecal()
 IMaterial *CGenericMaterial::GetWindAffected()
 {
 	if ( IsValid( pWindAffected ) )
+	{
 		return pWindAffected;
+	}
 	if ( bWindAffected )
+	{
 		return this;
+	}
 	pWindAffected = Duplicate();
 	pWindAffected->bWindAffected = true;
 	return pWindAffected;
@@ -157,9 +183,13 @@ IMaterial *CGenericMaterial::GetWindAffected()
 IMaterial *CGenericMaterial::GetNoReceiveShadows()
 {
 	if ( IsValid( pNoReceiveShadows ) )
+	{
 		return pNoReceiveShadows;
+	}
 	if ( !bReceiveShadows )
+	{
 		return this;
+	}
 	pNoReceiveShadows = Duplicate();
 	pNoReceiveShadows->bReceiveShadows = false;
 	return pNoReceiveShadows;
@@ -186,17 +216,23 @@ void CGenericMaterial::SetReflectionInfo( CPtrFuncBase<NGfx::CCubeTexture> *_pSk
 NGfx::CTexture *CGenericMaterial::GetAlphaTestTex()
 {
 	if ( !pDiffuseTex )
+	{
 		return 0;
+	}
 
 	if ( bNewShadows )
+	{
 		if ( mt == MT_TRANSPARENT )
 		{
 			pDiffuseTex.Refresh();
 			return pDiffuseTex->GetValue();
 		}
+	}
 
 	if ( !bAlphaTest )
+	{
 		return 0;
+	}
 	pDiffuseTex.Refresh();
 	return pDiffuseTex->GetValue();
 }
@@ -208,10 +244,14 @@ void CGenericMaterial::AddATOperations( COpGenContext *p, const SPerspDirectiona
 		ASSERT( pDiffuseTex );
 		pDiffuseTex.Refresh();
 		if ( pDepthInfo )
+		{
 			p->AddOperation(
 					RO_TEXTURE_AT_NLP, 0, 0, 0, pDiffuseTex->GetValue(), p->GetCurFragment()->vars.fFade, pDepthInfo );
+		}
 		else
+		{
 			p->AddOperation( RO_TEXTURE_AT, 0, 0, 0, pDiffuseTex->GetValue(), p->GetCurFragment()->vars.fFade );
+		}
 	}
 }
 
@@ -257,7 +297,9 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 					SetG5Props( pRC );
 				}
 				else
+				{
 					pRC->SetPixelShader( psG3DiffuseTex2 );
+				}
 				pRC->SetVertexShader( vsG3DiffuseTex2 );
 				pRC->SetVSConst( 31, CVec4( 1.0f / NGfx::N_VEC_FULL_TEX_SIZE, 0, 0, 0 ) );
 			}
@@ -271,9 +313,13 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 				else if ( !bNewShadows )
 				{
 					if ( s_bShadowOnTrees )
+					{
 						pRC->SetPixelShader( psG3DiffuseTex );
+					}
 					else
+					{
 						pRC->SetPixelShader( bAlphaTest ? psG3DiffuseTexNoShadows : psG3DiffuseTex );
+					}
 				}
 				else
 				{
@@ -304,7 +350,9 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 			SetupPShadows( pRC, p1.pFastInfo, lightInfo );
 			pRC->SetPSConst( 4, CVec4( 0, 0, 0, 124 / 256.0f ) );
 			if ( p1.pFastInfo->pTexture2 )
+			{
 				pRC->SetTexture( 3, p1.pFastInfo->pTexture2, NGfx::FILTER_BEST );
+			}
 			//pRC->SetTexture( 2, p1.pFastInfo->pTexture2, NGfx::FILTER_BEST );
 			break;
 		case RO_G3_TRASPARENT:
@@ -314,7 +362,9 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 				SetG5Props( pRC );
 			}
 			else
+			{
 				pRC->SetPixelShader( bNewShadows ? psG3TransparentGeomNoLM : psG3TransparentGeom );
+			}
 
 			if ( bWindAffected )
 			{
@@ -347,7 +397,9 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 					SetG5Props( pRC );
 				}
 				else
+				{
 					pRC->SetPixelShader( psG3DiffuseTex2 );
+				}
 				pRC->SetVertexShader( vsG3DiffuseTex2 );
 				pRC->SetVSConst( 31, CVec4( 1.0f / NGfx::N_VEC_FULL_TEX_SIZE, 0, 0, 0 ) );
 			}
@@ -359,14 +411,18 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 					SetG5Props( pRC );
 				}
 				else
+				{
 					pRC->SetPixelShader( psG3DiffuseTex );
+				}
 				//pRC->SetPixelShader( psDiffuse );
 				pRC->SetVertexShader( vsG3DiffuseTex );
 			}
 			SetupPShadows( pRC, p1.pFastInfo, lightInfo );
 			pRC->SetPSConst( 4, CVec4( 0, 0, 0, 124 / 256.0f ) );
 			if ( p1.pFastInfo->pTexture2 )
+			{
 				pRC->SetTexture( 3, p1.pFastInfo->pTexture2, NGfx::FILTER_BEST );
+			}
 			//pRC->SetTexture( 2, p1.pFastInfo->pTexture2, NGfx::FILTER_BEST );
 			break;
 		case RO_G3_DIFFUSE_SPEC:
@@ -414,7 +470,9 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 					if ( fPower > 16 )
 					{
 						if ( fPower > 32 )
+						{
 							f32 = 1;
+						}
 						else
 						{
 							f32 = ( fPower - 16 ) / 16;
@@ -428,7 +486,9 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 					}
 				}
 				else
+				{
 					f8 = 1;
+				}
 				pRC->SetPSConst( 0, f8 * CVec4( 1, 1, 1, 1 ) );  // specular power 8
 				pRC->SetPSConst( 1, f16 * CVec4( 1, 1, 1, 1 ) ); // specular power 16
 				pRC->SetPSConst( 2, f32 * CVec4( 1, 1, 1, 1 ) ); // specular power 32
@@ -629,7 +689,9 @@ void CGenericMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pR
 	// fill reflection info
 	AssignTex( &pSky, pSkyTex );
 	if ( pSky )
+	{
 		AssignTexWhiteDefault( &pMirror, pMirrorTex );
+	}
 	AssignTex( &pSpecular, pSpecularTex );
 
 	// add rops
@@ -818,7 +880,9 @@ bool CWaterMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 				SetG5Props( pRC );
 			}
 			else
+			{
 				pRC->SetPixelShader( psG3DiffuseTex );
+			}
 			pRC->SetVertexShader( vsG3DiffuseTex );
 			SetupPShadows( pRC, p1.pFastInfo, lightInfo );
 			pRC->SetPSConst( 4, CVec4( 0, 0, 0, 124 / 256.0f ) );
@@ -873,7 +937,9 @@ void CWaterMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC
 	pInfo->bTranslucent = false;
 	pInfo->pLM = 0;
 	if ( pSecondTex )
+	{
 		pOp->AddOperation( RO_BLEND2TEX_COLOR, 31 + nPriority, DPM_TESTONLY | nAlphaMode, 0, this, pInfo );
+	}
 	else
 	{
 		pOp->AddOperation( RO_G3_DIFFUSE_TEX, 31 + nPriority, DPM_TESTONLY | nAlphaMode, 0, this, pInfo );
@@ -1312,7 +1378,9 @@ void CReflectWaterMaterial::AddOperations( COpGenContext *pOp, SRenderPathContex
 	pInfo->bTranslucent = false;
 	pInfo->pLM = 0;
 	if ( pSecondTex )
+	{
 		pOp->AddOperation( RO_WITH_REFLECTION, 31 + nPriority, DPM_TESTONLY | nAlphaMode, 0, this, pInfo );
+	}
 	else
 	{
 		pOp->AddOperation( RO_WITHOUT_REFLECTION, 31 + nPriority, DPM_TESTONLY | nAlphaMode, 0, this, pInfo );
@@ -1402,7 +1470,9 @@ bool CTerrainMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 					SetG5Props( pRC );
 				}
 				else
+				{
 					pRC->SetPixelShader( psG3DiffuseTex2Terrain );
+				}
 				pRC->SetVertexShader( vsG3DiffuseTex2Terrain );
 			}
 			else
@@ -1413,7 +1483,9 @@ bool CTerrainMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 					SetG5Props( pRC );
 				}
 				else
+				{
 					pRC->SetPixelShader( psG3DiffuseTexTerrain );
+				}
 				//pRC->SetPixelShader( psDiffuseAlpha );
 				pRC->SetVertexShader( vsG3DiffuseTexTerrain );
 			}
@@ -1421,19 +1493,27 @@ bool CTerrainMaterial::SetRenderMode( NGfx::CRenderContext *pRC,
 			pRC->SetPSConst( 4, CVec4( 0, 0, 0, 124 / 256.0f ) );
 			pRC->SetPSConst( 3, CVec4( 0, 0, 0, -0.375 ) );
 			if ( p1.pFastInfo->pTexture2 )
+			{
 				pRC->SetTexture( 3, p1.pFastInfo->pTexture2, NGfx::FILTER_BEST );
+			}
 			//pRC->SetTexture( 2, p1.pFastInfo->pTexture2, NGfx::FILTER_BEST );
 			break;
 		case RO_TERRAIN_GF2:
 			if ( p1.pFastInfo->pTexture2 )
+			{
 				pRC->SetPixelShader( psTnLLitTexture2Terrain );
+			}
 			else
+			{
 				pRC->SetPixelShader( psTnLLitTextureTerrain );
+			}
 			pRC->SetVertexShader( NGfx::TNLVS_VERTEX_COLOR_AND_ALPHA );
 			pRC->SetTnlVertexColor( p1.pFastInfo->vColor );
 			pRC->SetTexture( 0, p1.pFastInfo->pTexture, NGfx::FILTER_BEST );
 			if ( p1.pFastInfo->pTexture2 )
+			{
 				pRC->SetTexture( 1, p1.pFastInfo->pTexture2, NGfx::FILTER_BEST );
+			}
 			pRC->SetAlphaRef( p1.pFastInfo->nAlphaTest );
 			break;
 	}
@@ -1593,7 +1673,9 @@ void CSimpleSkyMaterial::AddCustomOperation( COpGenContext *pOp,
 IMaterial *GetExactDecal( IMaterial *_p )
 {
 	if ( CDynamicCast<CGenericMaterial> p = _p )
+	{
 		return p->GetExactDecal();
+	}
 	return 0;
 }
 
@@ -1607,11 +1689,15 @@ IMaterial *CreateMaterial( const SMaterialCreateInfo &m )
 		{
 			CGenericMaterial *pRes = new CGenericMaterial( m.bDoesCastShadow, m.bBackFaceCastShadow );
 			if ( m.pColor )
+			{
 				pRes->SetDiffuseColor( m.pColor );
+			}
 			//const_cast<CVec3&>(vGlossVolor) = CVec3(1,1,1);
 			//fSpecPower = 1;
 			if ( m.pTexture )
+			{
 				pRes->SetDiffuseTex( m.pTexture, m.vAvrgTexColor );
+			}
 			pRes->SetSelfIllum( m.bSelfIllum );
 			pRes->Set2Sided( m.b2Sided );
 			pRes->SetFogApplying( m.bApplyFog );
@@ -1636,21 +1722,31 @@ IMaterial *CreateMaterial( const SMaterialCreateInfo &m )
 					break;
 				case MF_TRANSPARENT:
 					if ( ( m.fMetalMirror != 0 || m.fDielMirror != 0 ) && NGfx::GetHardwareLevel() < NGfx::HL_R300 )
+					{
 						pRes->SetDecalZWrite();
+					}
 					else
+					{
 						pRes->SetTransparent();
+					}
 					break;
 				case MF_ALPHA_TEST:
 					pRes->SetAlphaTest( true );
 					break;
 			}
 			if ( m.pBump )
+			{
 				pRes->SetDiffuseTex2( m.pBump );
+			}
 			if ( m.pDetail )
+			{
 				pRes->SetDetail( m.pDetail, m.fDetailScale );
+			}
 			pRes->SetPriority( m.nPriority );
 			if ( m.pSpecular )
+			{
 				pRes->SetSpecular( m.pSpecular, m.fSpecPower );
+			}
 
 			// fill reflection info
 			//fDielMirror = 1;
@@ -1701,7 +1797,9 @@ IMaterial *AttachColor( IMaterial *pSrc, CFuncBase<CVec4> *pColor )
 {
 	CDynamicCast<CGenericMaterial> pMat( pSrc );
 	if ( !pMat )
+	{
 		return 0;
+	}
 	CGenericMaterial *pRes = pMat->Duplicate();
 	pRes->SetDiffuseColor( pColor );
 	return pRes;

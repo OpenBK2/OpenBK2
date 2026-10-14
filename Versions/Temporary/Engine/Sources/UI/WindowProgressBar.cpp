@@ -42,12 +42,18 @@ void CWindowProgressBar::Visit( struct IUIVisitor *pVisitor )
 {
 	CWindow::Visit( pVisitor );
 	if ( pForward )
+	{
 		pForward->Visit( pVisitor );
+	}
 	if ( pBackward )
+	{
 		pBackward->Visit( pVisitor );
+	}
 	VisitText( pVisitor );
 	if ( pGlow && GetPosition() > 0.f && GetPosition() < 1.f )
+	{
 		pGlow->Visit( pVisitor );
+	}
 }
 
 void CWindowProgressBar::SetPosition( const float fPos )
@@ -66,7 +72,9 @@ void CWindowProgressBar::SetPosition( const float fPos )
 			fProgressSize = fStepSize * ( floorf( fProgressSize / fStepSize ) + 1.0f );
 		}
 		else
+		{
 			fProgressSize = fStepSize * floorf( fProgressSize / fStepSize );
+		}
 		fProgressSize = Clamp( fProgressSize, 0.0f, rect.Width() );
 	}
 
@@ -80,13 +88,19 @@ void CWindowProgressBar::SetPosition( const float fPos )
 	                      rect.GetCenter().y - pShared->vGlowSize.y / 2.f );
 
 	if ( pForward )
+	{
 		pForward->SetPos( vForwardPos, vForwardSize );
+	}
 
 	if ( pBackward )
+	{
 		pBackward->SetPos( vBackwardPos, vBackwardSize );
+	}
 
 	if ( pGlow )
+	{
 		pGlow->SetPos( vGlowPos, pShared->vGlowSize );
+	}
 }
 
 void CWindowProgressBar::ShowFirstElement( bool bShow )
@@ -192,7 +206,9 @@ int CWindowMultiTextureProgressBar::FindStateIndex( float fProgress )
 	{
 		const NDb::SMultiTextureProgressBarSharedState &state = *it;
 		if ( fProgress <= state.fValue )
+		{
 			break;
+		}
 	}
 	return (std::min<int>)( nIndex, parts.size() - 1 );
 }

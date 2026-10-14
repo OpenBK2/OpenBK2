@@ -192,14 +192,18 @@ std::string CXmlExporterB2::MakePathName( const std::string &szObjectName,
 		for ( int i = 0; i < szFullPathName.size(); ++i )
 		{
 			if ( ( ( szFullPathName[i] & 0x80 ) != 0 ) || ( szFullPathName[i] < 0x20 ) )
+			{
 				szFullPathName[i] = '_';
+			}
 		}
 		//
 		namesMap[szFullName] = szFullPathName;
 		return szFullPathName;
 	}
 	else
+	{
 		return pos->second;
+	}
 }
 
 std::string CXmlExporterB2::MakePathNameOther( const std::string &szObjectName,
@@ -216,5 +220,4 @@ CXmlExporter *GetExporter()
 {
 	return &theExporter;
 }
-
 }

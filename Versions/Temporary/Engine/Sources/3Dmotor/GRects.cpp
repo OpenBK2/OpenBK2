@@ -13,7 +13,9 @@ void RenderRectLayout(
 		const CRectLayout::SRect &r = l.rects[i];
 		NGfx::SPixel8888 color = r.sColor;
 		if ( lrm == LRM_CLEAR_RECT )
+		{
 			color.a = 0;
+		}
 
 		CTRect<float> rTarget( r.fX, r.fY, r.fX + r.fSizeX, r.fY + r.fSizeY );
 		CTRect<float> rSrc( r.sTex.rcTexRect );
@@ -42,7 +44,9 @@ bool ClipRect( CTRect<float> *pClippedRect,
 	sClippedRect.y1 = Clamp( sClippedRect.y1, sWindow.y1, sWindow.y2 );
 	sClippedRect.y2 = Clamp( sClippedRect.y2, sWindow.y1, sWindow.y2 );
 	if ( ( sClippedRect.Width() <= 0 ) || ( sClippedRect.Height() <= 0 ) )
+	{
 		return false;
+	}
 
 	sTex = sRect.sTex;
 	float fCSWidth = float( sTex.rcTexRect.Width() ) / sSourceRect.Width();
@@ -69,11 +73,15 @@ void RenderRectLayoutClipped( NGfx::C2DQuadsRenderer *pRes,
 		CRectLayout::STextureCoord sTex;
 
 		if ( !ClipRect( &sClippedRect, &sTex, sRect, sPosition, sWindow ) )
+		{
 			continue;
+		}
 
 		NGfx::SPixel8888 color = sRect.sColor;
 		if ( lrm == LRM_CLEAR_RECT )
+		{
 			color.dwColor = 0;
+		}
 
 		pRes->AddRect( sClippedRect, pTex, sTex.rcTexRect, color, fZ );
 	}

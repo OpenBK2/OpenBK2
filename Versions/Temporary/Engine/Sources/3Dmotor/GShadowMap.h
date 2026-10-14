@@ -47,5 +47,4 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes,
                        const SBound &sceneBound,
                        float fSceneHeight,
                        SShadowMatrixAlign *pAlign );
-
 }

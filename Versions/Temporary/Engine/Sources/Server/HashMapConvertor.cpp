@@ -13,9 +13,13 @@ void ConvertNumber( std::unordered_map<std::string, int> *pHashMap,
 	{
 		std::unordered_map<std::string, int>::const_iterator it = pHashMap->find( szName );
 		if ( it != pHashMap->end() )
+		{
 			*pValue = it->second;
+		}
 		else
+		{
 			*pValue = 0;
+		}
 	}
 	else
 	{

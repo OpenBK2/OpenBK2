@@ -64,7 +64,9 @@ const SSpan& GetSpanStats( const int nIndex, const int nState = 0 ) const
 const SElementRPGStats &GetElementStats( const int nIndex ) const
 {
 	if ( nIndex == -1 || nIndex == 1 )
+	{
 		return center;
+	}
 	return end;
 }
 virtual const CVec2 &GetOrigin( const int nIndex = -1 ) const

@@ -26,13 +26,21 @@ CGameTimer::CGameTimer( const int _nSegmentDuration )
 void CGameTimer::CreateDGTimers()
 {
 	if ( pAbsTimer == 0 )
+	{
 		pAbsTimer = new CCSTime2();
+	}
 	if ( pGameTimer == 0 )
+	{
 		pGameTimer = new CCSTime2();
+	}
 	if ( pAbsTimerA5 == 0 )
+	{
 		pAbsTimerA5 = new CCTime();
+	}
 	if ( pGameTimerA5 == 0 )
+	{
 		pGameTimerA5 = new CCTime();
+	}
 }
 
 void CGameTimer::SetupDGTimers()
@@ -99,7 +107,9 @@ bool CGameTimer::CanStartNextSegment() const
 bool CGameTimer::NextSegment()
 {
 	if ( !CanStartNextSegment() )
+	{
 		return false;
+	}
 	timeSegment += nSegmentDuration;
 	++nSegmentsCounter;
 	return true;
@@ -115,7 +125,9 @@ void CGameTimer::ProcessPause( const bool bPause, const int nType )
 		{
 			// check for exact match
 			if ( *it == nType )
+			{
 				return;
+			}
 			// check for interval
 			if ( ( *it > nType ) && ( nPrevPauseType < nType ) )
 			{
@@ -157,7 +169,9 @@ bool CGameTimer::HasPause( const int nType ) const
 	for ( CPauseTypes::const_iterator it = pauseTypes.begin(); it != pauseTypes.end(); ++it )
 	{
 		if ( *it == nType )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -204,7 +218,9 @@ int CGameTimer::operator&( IBinSaver &saver )
 
 	//CRAP{ for compatibility with legacy saves
 	if ( nSegmentDuration == 0 )
+	{
 		nSegmentDuration = 50;
+	}
 	//
 	if ( saver.IsReading() )
 	{

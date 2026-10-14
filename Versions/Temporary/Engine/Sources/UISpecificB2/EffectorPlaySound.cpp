@@ -29,7 +29,9 @@ void CEffectorPlaySound::Configure( const NDb::SUIStateBase *_pCmd,
 	const NDb::SUISPlaySound *pCmd( checked_cast<const NDb::SUISPlaySound *>( _pCmd ) );
 	CParam<CDBPtr<NDb::SComplexSoundDesc>> pS( pCmd->pSoundToPlay );
 	if ( pContext )
+	{
 		pS.Merge( pContext->pSoundToPlay );
+	}
 	NI_ASSERT( pS.IsValid(), "SOUND to play is invalid" );
 	pSound = pS.Get();
 }

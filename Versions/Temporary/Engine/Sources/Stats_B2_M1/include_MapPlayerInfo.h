@@ -9,6 +9,8 @@ void PostLoad( bool bInEditor )
 			NI_ASSERT( false, "Empty reinforcement type in MapPlayerInfo!" )
 		}
 		else
+		{
 			++it;
+		}
 	}
 }

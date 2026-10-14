@@ -64,7 +64,9 @@ CRPGStatsAutomagic::CRPGStatsAutomagic()
 	//
 	//
 	for ( CI2SMap::const_iterator it = i2s.begin(); it != i2s.end(); ++it )
+	{
 		s2i[it->second] = it->first;
+	}
 	//
 	int a = CRAP_LinkerTooSmart_FeedBackUpdates();
 }
@@ -94,7 +96,9 @@ bool CRPGStatsAutomagic::IsLastInt( const int nVal ) const
 const char *CRPGStatsAutomagic::GetNextStr( const char *pszVal )
 {
 	if ( IsLastStr( pszVal ) )
+	{
 		return szUnknown.c_str();
+	}
 	else
 	{
 		CS2IMap::const_iterator iter = s2i.find( pszVal );
@@ -105,7 +109,9 @@ const char *CRPGStatsAutomagic::GetNextStr( const char *pszVal )
 const int CRPGStatsAutomagic::GetNextInt( const int nVal )
 {
 	if ( IsLastInt( nVal ) )
+	{
 		return -1;
+	}
 	else
 	{
 		CI2SMap::const_iterator iter = i2s.find( nVal );

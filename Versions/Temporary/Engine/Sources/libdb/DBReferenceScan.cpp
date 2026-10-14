@@ -32,7 +32,9 @@ void CollectObjectReferences( std::vector<std::string> *pRes,
 {
 	pRes->clear();
 	if ( pBegin == 0 || pEnd <= pBegin )
+	{
 		return;
+	}
 
 	// A raw scan for the attribute rather than an XML parse. Answering this
 	// question means reading every object in the database, and parsing them all
@@ -45,16 +47,22 @@ void CollectObjectReferences( std::vector<std::string> *pRes,
 	{
 		const char *pFound = std::search( p, pEnd, szHRefAttribute, szHRefAttribute + nAttrLen );
 		if ( pFound == pEnd )
+		{
 			break;
+		}
 		const char *pValue = pFound + nAttrLen;
 		const char *pClose = std::find( pValue, pEnd, '"' );
 		if ( pClose == pEnd )
+		{
 			break;
+		}
 		p = pClose + 1;
 
 		const std::string szHRef( pValue, pClose );
 		if ( szHRef.find( szXPointer ) == std::string::npos )
+		{
 			continue;
+		}
 
 		// The same two calls, in the same order, that LoadRefFromNode uses to
 		// turn this attribute back into a CDBID. Anything else here would
@@ -64,7 +72,9 @@ void CollectObjectReferences( std::vector<std::string> *pRes,
 		NFile::MakeFullPath( &szResult, szPath, szOwnFileName );
 		NFile::NormalizePath( &szResult );
 		if ( !szResult.empty() )
+		{
 			pRes->push_back( szResult );
+		}
 	}
 }
 

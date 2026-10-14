@@ -99,14 +99,18 @@ std::vector<uint8_t> ReadFile( const std::filesystem::path &path )
 	std::vector<uint8_t> res;
 	FILE *pFile = fopen( path.string().c_str(), "rb" );
 	if ( !pFile )
+	{
 		return res;
+	}
 	fseek( pFile, 0, SEEK_END );
 	res.resize( static_cast<size_t>( ftell( pFile ) ) );
 	fseek( pFile, 0, SEEK_SET );
 	if ( !res.empty() )
 	{
 		if ( fread( &res[0], 1, res.size(), pFile ) != res.size() )
+		{
 			res.clear();
+		}
 	}
 	fclose( pFile );
 	return res;
@@ -130,9 +134,13 @@ size_t ExpectedSize( int nSizeX, int nSizeY, NGfx::EPixelFormat format, int nMip
 		const int w = (std::max)( 1, nSizeX >> i );
 		const int h = (std::max)( 1, nSizeY >> i );
 		if ( format >= NGfx::CF_DXT1 && format <= NGfx::CF_DXT5 )
+		{
 			nTotal += static_cast<size_t>( ( w + 3 ) / 4 ) * ( ( h + 3 ) / 4 ) * BlockBytes( format );
+		}
 		else
+		{
 			nTotal += static_cast<size_t>( w ) * h * ( NGfx::GetBPP( format ) / 8 );
+		}
 	}
 	return nTotal;
 }
@@ -295,7 +303,9 @@ TEST( DDSWrite, A8R8G8B8IsLossless )
 	for ( int y = 0; y < src.GetSizeY(); ++y )
 	{
 		for ( int x = 0; x < src.GetSizeX(); ++x )
+		{
 			ASSERT_EQ( src[y][x], pPixels[y * src.GetSizeX() + x] ) << "at " << x << "," << y;
+		}
 	}
 }
 
@@ -333,7 +343,9 @@ TEST( DDSWrite, ChannelOrderSurvives )
 	for ( int y = 0; y < 16; ++y )
 	{
 		for ( int x = 0; x < 16; ++x )
+		{
 			src[y][x] = 0xffc03010u; // strongly red, mid green, little blue
+		}
 	}
 	const std::vector<uint8_t> bytes = WriteAndRead( "obk2_dds_chan.dds", src, NGfx::CF_DXT1, 1 );
 	CArray2D<uint32_t> decoded;
@@ -361,7 +373,9 @@ TEST( DDSWrite, Dxt1PunchThroughAlpha )
 	for ( int y = 0; y < 16; ++y )
 	{
 		for ( int x = 0; x < 16; ++x )
+		{
 			src[y][x] = ( x < 8 ) ? 0x00000000u : 0xff3080c0u;
+		}
 	}
 	const std::vector<uint8_t> bytes = WriteAndRead( "obk2_dds_punch.dds", src, NGfx::CF_DXT1, 1 );
 	ASSERT_GE( bytes.size(), sizeof( SDDSFileHeader ) + 8u );
@@ -374,7 +388,9 @@ TEST( DDSWrite, Dxt1PunchThroughAlpha )
 		const uint16_t c0 = static_cast<uint16_t>( pBlocks[i * 8 + 0] | ( pBlocks[i * 8 + 1] << 8 ) );
 		const uint16_t c1 = static_cast<uint16_t>( pBlocks[i * 8 + 2] | ( pBlocks[i * 8 + 3] << 8 ) );
 		if ( c0 <= c1 )
+		{
 			bAnyThreeColour = true;
+		}
 	}
 	EXPECT_TRUE( bAnyThreeColour ) << "no three-colour block emitted for a half transparent image";
 
@@ -399,7 +415,9 @@ TEST( DDSWrite, ReEncodingShippedIsNearLossless )
 {
 	const std::filesystem::path root = std::filesystem::path( OBK2_DATA_DIR );
 	if ( !HaveShippedData( root ) )
+	{
 		GTEST_SKIP() << "no game data at " << root.string();
+	}
 
 	int nChecked = 0;
 	double fWorst = 0;
@@ -409,23 +427,37 @@ TEST( DDSWrite, ReEncodingShippedIsNearLossless )
 	      it.increment( ec ) )
 	{
 		if ( ec || !it->is_regular_file( ec ) )
+		{
 			continue;
+		}
 		const std::filesystem::path &p = it->path();
 		if ( p.extension() != ".dds" && p.extension() != ".DDS" )
+		{
 			continue;
+		}
 		const std::vector<uint8_t> bytes = ReadFile( p );
 		if ( bytes.size() < sizeof( SDDSFileHeader ) )
+		{
 			continue;
+		}
 		const SDDSHeader &hdr = HeaderOf( bytes );
 		if ( hdr.dwWidth > 128 || hdr.dwHeight > 128 || !( hdr.ddspf.dwFlags & DDS_FOURCC ) )
+		{
 			continue;
+		}
 		NGfx::EPixelFormat format;
 		if ( hdr.ddspf.dwFourCC == MAKEFOURCC( 'D', 'X', 'T', '1' ) )
+		{
 			format = NGfx::CF_DXT1;
+		}
 		else if ( hdr.ddspf.dwFourCC == MAKEFOURCC( 'D', 'X', 'T', '3' ) )
+		{
 			format = NGfx::CF_DXT3;
+		}
 		else
+		{
 			continue;
+		}
 
 		// What the original encoder's blocks decode to.
 		CArray2D<uint32_t> original;
@@ -460,7 +492,9 @@ TEST( DDSWrite, ReEncodingAFlatTextureReproducesTheOriginalBlock )
 {
 	const std::filesystem::path p = std::filesystem::path( OBK2_DATA_DIR ) / "aidebuginfo" / "white.dds";
 	if ( !std::filesystem::exists( p ) )
+	{
 		GTEST_SKIP() << "no " << p.string();
+	}
 	const std::vector<uint8_t> bytes = ReadFile( p );
 	ASSERT_GT( bytes.size(), sizeof( SDDSFileHeader ) );
 	CArray2D<uint32_t> original;
@@ -505,7 +539,9 @@ CArray2D<uint32_t> MakeCutOut( int nSize )
 	for ( int y = 0; y < nSize; ++y )
 	{
 		for ( int x = 0; x < nSize; ++x )
+		{
 			image[y][x] = ( x < nSize / 2 ) ? 0xffffffffu : 0x00ff0000u;
+		}
 	}
 	return image;
 }
@@ -574,7 +610,9 @@ TEST( DDSWrite, TransparentAddZeroesAlpha )
 	const uint32_t *pPixels = reinterpret_cast<const uint32_t *>( &bytes[sizeof( SDDSFileHeader )] );
 	const size_t nCount = ( bytes.size() - sizeof( SDDSFileHeader ) ) / 4;
 	for ( size_t i = 0; i < nCount; ++i )
+	{
 		ASSERT_EQ( 0u, pPixels[i] >> 24 ) << "alpha survived at texel " << i;
+	}
 }
 
 // A bump texture is a height field on the way in and normals on the way out, so
@@ -623,7 +661,9 @@ TEST( DDSWrite, FastMipStillProducesAFullChain )
 	for ( int y = 0; y < nSize; ++y )
 	{
 		for ( int x = 0; x < nSize; ++x )
+		{
 			src[y][x] = 0xff4080c0u;
+		}
 	}
 	const std::filesystem::path path = TempFile( "obk2_dds_fast.dds" );
 	std::error_code ec;
@@ -662,7 +702,9 @@ TEST( DDSWrite, UnpackDXTMatchesReference )
 {
 	const std::filesystem::path root = std::filesystem::path( OBK2_DATA_DIR );
 	if ( !HaveShippedData( root ) )
+	{
 		GTEST_SKIP() << "no game data at " << root.string();
+	}
 
 	int nDxt1 = 0;
 	int nDxt3 = 0;
@@ -671,19 +713,29 @@ TEST( DDSWrite, UnpackDXTMatchesReference )
 	      it.increment( ec ) )
 	{
 		if ( ec || !it->is_regular_file( ec ) )
+		{
 			continue;
+		}
 		const std::filesystem::path &p = it->path();
 		if ( p.extension() != ".dds" && p.extension() != ".DDS" )
+		{
 			continue;
+		}
 		const std::vector<uint8_t> bytes = ReadFile( p );
 		if ( bytes.size() < sizeof( SDDSFileHeader ) )
+		{
 			continue;
+		}
 		const SDDSHeader &hdr = HeaderOf( bytes );
 		if ( !( hdr.ddspf.dwFlags & DDS_FOURCC ) || hdr.dwWidth > 256 || hdr.dwHeight > 256 )
+		{
 			continue;
+		}
 		// UnpackDXT walks whole 4x4 blocks and has no edge handling.
 		if ( ( hdr.dwWidth % 4 ) != 0 || ( hdr.dwHeight % 4 ) != 0 )
+		{
 			continue;
+		}
 
 		NGfx::EPixelFormat format;
 		if ( hdr.ddspf.dwFourCC == MAKEFOURCC( 'D', 'X', 'T', '1' ) && nDxt1 < 60 )
@@ -732,7 +784,9 @@ TEST( DDSWrite, UnpackDXTReachesFullWhite )
 	for ( int y = 0; y < 4; ++y )
 	{
 		for ( int x = 0; x < 4; ++x )
+		{
 			src[y][x] = 0xffffffffu;
+		}
 	}
 	const std::vector<uint8_t> bytes = WriteAndRead( "obk2_dds_white.dds", src, NGfx::CF_DXT1, 1 );
 	ASSERT_GE( bytes.size(), sizeof( SDDSFileHeader ) + 8u );
@@ -752,7 +806,9 @@ TEST( DDSWrite, ShippedHeadersMatch )
 {
 	const std::filesystem::path root = std::filesystem::path( OBK2_DATA_DIR );
 	if ( !HaveShippedData( root ) )
+	{
 		GTEST_SKIP() << "no game data at " << root.string();
+	}
 
 	int nChecked = 0;
 	int nSkippedDialect = 0;
@@ -761,18 +817,26 @@ TEST( DDSWrite, ShippedHeadersMatch )
 	      it.increment( ec ) )
 	{
 		if ( ec || !it->is_regular_file( ec ) )
+		{
 			continue;
+		}
 		const std::filesystem::path &p = it->path();
 		if ( p.extension() != ".dds" && p.extension() != ".DDS" )
+		{
 			continue;
+		}
 		const std::vector<uint8_t> bytes = ReadFile( p );
 		if ( bytes.size() < sizeof( SDDSFileHeader ) )
+		{
 			continue;
+		}
 		const SDDSHeader &hdr = HeaderOf( bytes );
 		// Keep the files to something a block compressor can chew through
 		// quickly; the header rule does not vary with size.
 		if ( hdr.dwWidth > 64 || hdr.dwHeight > 64 )
+		{
 			continue;
+		}
 		// The minority dialects set PITCH or LINEARSIZE. They are not what this
 		// writer emits and not what the bulk of the data looks like.
 		if ( ( hdr.dwHeaderFlags & ( DDS_HEADER_FLAGS_PITCH | DDS_HEADER_FLAGS_LINEARSIZE ) ) != 0 )
@@ -785,11 +849,17 @@ TEST( DDSWrite, ShippedHeadersMatch )
 		if ( hdr.ddspf.dwFlags & DDS_FOURCC )
 		{
 			if ( hdr.ddspf.dwFourCC == MAKEFOURCC( 'D', 'X', 'T', '1' ) )
+			{
 				format = NGfx::CF_DXT1;
+			}
 			else if ( hdr.ddspf.dwFourCC == MAKEFOURCC( 'D', 'X', 'T', '3' ) )
+			{
 				format = NGfx::CF_DXT3;
+			}
 			else
+			{
 				continue;
+			}
 		}
 		else if ( hdr.ddspf.dwRGBBitCount != 32 )
 		{

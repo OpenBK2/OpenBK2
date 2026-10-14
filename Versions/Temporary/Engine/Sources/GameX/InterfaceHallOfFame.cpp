@@ -16,7 +16,9 @@ CHallOfFame::CHallOfFame()
 	// write file
 	CFileStream stream( "HallOfFame.bin", CFileStream::WIN_READ_ONLY );
 	if ( !stream.IsOk() )
+	{
 		return;
+	}
 
 	CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_READ );
 	operator&( *pSaver.GetPtr() );
@@ -47,7 +49,9 @@ bool CInterfaceHallOfFame::Init()
 	theHallOfFame.AddRecord( L"Veselov", 12000 );
 
 	if ( CInterfaceScreenBase::Init() == false )
+	{
 		return false;
+	}
 
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
 	AddUIScreen( pScreen, "HallOfFame", this );
@@ -84,7 +88,9 @@ void CInterfaceHallOfFame::MakeInterior()
 
 	// insert player's records
 	for ( int i = 0; i < theHallOfFame.GetNRecords(); ++i )
+	{
 		entries.push_back( theHallOfFame.GetEntry( i ) );
+	}
 
 	// resort altogether
 	SHallOfFameEntryCompare pr;

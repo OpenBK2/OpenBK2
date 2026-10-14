@@ -62,7 +62,9 @@ CTargetMesh::CTargetMesh( float fSizeX, float fSizeY )
 void CTargetMesh::Recalc()
 {
 	if ( pValue == 0 )
+	{
 		pValue = new NGScene::CObjectInfo;
+	}
 
 	const CTransformStack &cameraTransform = Camera()->GetTransform();
 
@@ -98,7 +100,9 @@ void CreateTargetMesh( float fSizeX, float fSizeY )
 {
 	CPtr<NGScene::IGameView> pGameView = EditorScene()->GetGView();
 	if ( !pGameView )
+	{
 		return;
+	}
 
 	CPtr<CPtrFuncBase<NGScene::CObjectInfo>> pGeom = new CTargetMesh( fSizeX, fSizeY );
 

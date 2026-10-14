@@ -104,7 +104,9 @@ bool CFolderController::RedoWithoutUpdateViews()
 					{
 						bResult = pFolderManipulator->IsNameExists( itUndoData->szDestination );
 						if ( !bResult )
+						{
 							bResult = pFolderManipulator->InsertNode( itUndoData->szDestination );
+						}
 						if ( bResult )
 						{
 							if ( ( itUndoData->szDestination[itUndoData->szDestination.size() - 1] != PATH_SEPARATOR_CHAR ) &&

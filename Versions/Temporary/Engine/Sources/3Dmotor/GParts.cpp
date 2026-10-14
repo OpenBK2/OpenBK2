@@ -26,9 +26,13 @@ static void AttachPart( ISomePart *pRes, CVolumeNode *pNode, SFullStaticTrackers
 	}
 
 	if ( bIsDynamic )
+	{
 		pCPart = pNode->dynamicParts.GetCombinerPartForAdd( pRes->GetMaterial(), pTrackers, nFloorMask, true );
+	}
 	else
+	{
 		pCPart = pNode->staticParts.GetCombinerPartForAdd( pRes->GetMaterial(), pTrackers, nFloorMask, false );
+	}
 	pRes->pOwner = pCPart;
 	pRes->SetCombiner( pCPart->GetCombiner() );
 	//if ( bAnimationOnly )
@@ -62,13 +66,21 @@ void ISomePart::SetCacheLightFlags()
 {
 	const SFullGroupInfo &gInfo = group.fullGroupInfo;
 	if ( gInfo.groupInfo.nLightFlags & LF_USE_DIRECTIONAL_APPROX )
+	{
 		cacheLighting.bReplaceWithDirectional = true;
+	}
 	if ( gInfo.groupInfo.nLightFlags & LF_DO_NOT_CACHE_LIGHT )
+	{
 		cacheLighting.bDoNotCacheLighting = true;
+	}
 	if ( gInfo.groupInfo.nLightFlags & LF_SKIP_LIGHTING )
+	{
 		cacheLighting.bSkipLighting = true;
+	}
 	if ( gInfo.groupInfo.nLightFlags & LF_DO_NOT_MULTIPLY_ON_TRANSPARENCY )
+	{
 		cacheLighting.bMultiplyOnTransparency = false;
+	}
 	if ( group.pMaterial->IsSelfIllum() )
 	{
 		cacheLighting.bSkipLighting = true;
@@ -76,9 +88,13 @@ void ISomePart::SetCacheLightFlags()
 	}
 	cacheLighting.bSkipStaticPointLights = vars.pLM != 0;
 	if ( group.pMaterial )
+	{
 		cacheLighting.vTranslucentColor = group.pMaterial->GetTranslucentColor();
+	}
 	else
+	{
 		cacheLighting.vTranslucentColor = CVec3( 0, 0, 0 );
+	}
 	cacheLighting.bTranslucent = fabs2( cacheLighting.vTranslucentColor ) > 0;
 }
 
@@ -86,18 +102,26 @@ void ISomePart::SetVars( const SPerPartVariables &_vars )
 {
 	vars = _vars;
 	if ( pOwner )
+	{
 		pOwner->PartHasChanged();
+	}
 }
 
 void ISomePart::SetFade( float _fFade )
 {
 	SPerPartVariables v = vars;
 	if ( _fFade < 1.0f / 256 )
+	{
 		v.fFade = 0;
+	}
 	else if ( _fFade > 255.0f / 256 )
+	{
 		v.fFade = 1;
+	}
 	else
+	{
 		v.fFade = _fFade;
+	}
 	SetVars( v );
 }
 
@@ -159,7 +183,9 @@ bool CDynamicPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pTrackers 
 		return true;
 	}
 	if ( bound.s.fRadius == 1e20f )
+	{
 		GetObjectInfo()->CalcBound( &bound );
+	}
 
 	if ( pTransform.Refresh() )
 	{
@@ -171,7 +197,9 @@ bool CDynamicPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pTrackers 
 	else
 	{
 		if ( !bFreeze )
+		{
 			++nStillCounter;
+		}
 		if ( nStillCounter == 3 && ( GetGroupInfo().nLightFlags & LF_NEVER_STATIC ) == 0 )
 		{
 			CVolumeNode *pNode = pVolume->SelectNode( pTransform, bound );
@@ -221,13 +249,19 @@ bool CAnimatedBoundPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pTra
 	{
 		case DG_CHANGE_UNKNOWN:
 			if ( bt == BT_STATIC )
+			{
 				needBT = bt;
+			}
 			break;
 		case DG_CHANGE_NONE:
 			if ( !bFreeze )
+			{
 				++nStillCounter;
+			}
 			if ( nStillCounter > 3 && ( GetGroupInfo().nLightFlags & LF_NEVER_STATIC ) == 0 )
+			{
 				needBT = BT_STATIC;
+			}
 			break;
 		case DG_CHANGE_CHANGED:
 			nStillCounter = 0;
@@ -239,10 +273,14 @@ bool CAnimatedBoundPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pTra
 	}
 
 	if ( pBound.Refresh() )
+	{
 		bt = BT_NONE;
+	}
 
 	if ( bt == needBT )
+	{
 		return true;
+	}
 
 	ASSERT( needBT != BT_NONE );
 	bt = needBT;
@@ -250,7 +288,9 @@ bool CAnimatedBoundPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pTra
 	CVolumeNode *pNode = pVolume->GetNode( bv.s.ptCenter, bv.s.fRadius );
 	ASSERT( pNode );
 	if ( bt == BT_DYNAMIC )
+	{
 		AttachPart( this, pNode, pTrackers, true );
+	}
 	else
 	{
 		ASSERT( bt == BT_STATIC );
@@ -274,27 +314,37 @@ void CDynamicGeometryPart::AddChangeTrackers( CAnimationWatch *p, bool bVertices
 {
 	p->AddHandle( GetObjectInfoNode() );
 	if ( pTransform )
+	{
 		p->AddHandle( pTransform );
+	}
 }
 
 bool CDynamicGeometryPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pTrackers )
 {
 	EDGNodeChange dg = pChanges.GetChanges();
 	if ( pTransform && pTransform.Refresh() )
+	{
 		dg = DG_CHANGE_CHANGED;
+	}
 
 	EBindType needBT = BT_DYNAMIC;
 	switch ( dg )
 	{
 		case DG_CHANGE_UNKNOWN:
 			if ( bt == BT_STATIC )
+			{
 				needBT = bt;
+			}
 			break;
 		case DG_CHANGE_NONE:
 			if ( !bFreeze )
+			{
 				++nStillCounter;
+			}
 			if ( nStillCounter > 3 && ( GetGroupInfo().nLightFlags & LF_NEVER_STATIC ) == 0 )
+			{
 				needBT = BT_STATIC;
+			}
 			break;
 		case DG_CHANGE_CHANGED:
 			nStillCounter = 0;
@@ -306,10 +356,14 @@ bool CDynamicGeometryPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pT
 	}
 
 	if ( pBound.Refresh() )
+	{
 		bt = BT_NONE;
+	}
 
 	if ( bt == needBT )
+	{
 		return true;
+	}
 
 	ASSERT( needBT != BT_NONE );
 	bt = needBT;
@@ -317,7 +371,9 @@ bool CDynamicGeometryPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pT
 	CVolumeNode *pNode = pVolume->GetNode( bv.s.ptCenter, bv.s.fRadius );
 	ASSERT( pNode );
 	if ( bt == BT_DYNAMIC )
+	{
 		AttachPart( this, pNode, pTrackers, true );
+	}
 	else
 	{
 		ASSERT( bt == BT_STATIC );
@@ -347,14 +403,18 @@ void CCombinedPart::InitGeometry()
 SRenderGeometryInfo *CCombinedPart::GetGeometryInfo()
 {
 	if ( !geometryInfo.pVertices )
+	{
 		InitGeometry();
+	}
 	return &geometryInfo;
 }
 
 void CCombinedPart::UpdatePartInfo()
 {
 	if ( !pCombiner.Refresh() && !bRecalcPartInfo )
+	{
 		return;
+	}
 	bRecalcPartInfo = false;
 	CDGPtr<CFuncBase<std::vector<CPtr<IPart>>>> pC( GetCombiner() );
 	pC.Refresh();
@@ -413,7 +473,9 @@ inline void UpdateVector( std::vector<TElem> *a, TParam *p1, TParam2 *p2 )
 	{
 		const TElem &ptr = ( *a )[k];
 		if ( IsValid( ptr ) && ptr->Update( p1, p2 ) )
+		{
 			++k;
+		}
 		else
 		{
 			( *a )[k] = ( *a )[nSize - 1];
@@ -430,7 +492,9 @@ inline void UpdateVector( std::vector<TElem> *a, TParam *p )
 	{
 		const TElem &ptr = ( *a )[k];
 		if ( IsValid( ptr ) && ptr->Update( p ) )
+		{
 			++k;
+		}
 		else
 		{
 			( *a )[k] = ( *a )[nSize - 1];
@@ -443,7 +507,9 @@ inline void UpdateVector( std::vector<TElem> *a, TParam *p )
 void CVolumeNode::SUpdatableObjects::Update( int nFrame, CVolumeNode *pVolume, SFullStaticTrackers *pTrackers )
 {
 	if ( nFrame == nLastFrame )
+	{
 		return;
+	}
 	nLastFrame = nFrame;
 	UpdateVector( &animatedParts, pVolume, pTrackers );
 	UpdateVector( &movingParts, pVolume, pTrackers );
@@ -460,30 +526,42 @@ bool CVolumeNode::IsEmpty()
 void SetPartFade( CObjectBase *_p, float fFade )
 {
 	if ( CDynamicCast<ISomePart> p = _p )
+	{
 		p->SetFade( fFade );
+	}
 	else if ( CDynamicCast<IParticles> p = _p )
+	{
 		p->SetFade( fFade );
+	}
 }
 
 void SetPartPriority( CObjectBase *_p, int _nPriority )
 {
 	if ( CDynamicCast<ISomePart> p = _p )
+	{
 		p->SetPriority( _nPriority );
+	}
 }
 
 void SetPartLM( CObjectBase *_p, CPtrFuncBase<NGfx::CTexture> *pLM ) //CFuncBase<CArray2D<NGfx::SPixel8888> > *pLM )
 {
 	if ( CDynamicCast<ISomePart> p = _p )
+	{
 		p->SetLM( pLM );
+	}
 }
 
 CObjectBase *GetPartGeometry( CObjectBase *_pA )
 {
 	if ( !_pA )
+	{
 		return nullptr;
+	}
 	CDynamicCast<IPart> pA( _pA );
 	if ( !pA )
+	{
 		return nullptr;
+	}
 	return pA->GetObjectInfoNode();
 }
 }

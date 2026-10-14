@@ -15,7 +15,9 @@ std::vector<typename Map::key_type> Keys( const Map &map )
 {
 	std::vector<typename Map::key_type> keys;
 	for ( const auto &entry : map )
+	{
 		keys.push_back( entry.first );
+	}
 	return keys;
 }
 
@@ -34,7 +36,9 @@ struct ThrowOnCopy
 	ThrowOnCopy( const ThrowOnCopy &other ) : nValue( other.nValue )
 	{
 		if ( bThrow )
+		{
 			throw std::runtime_error( "copy failed" );
+		}
 	}
 	ThrowOnCopy( ThrowOnCopy && ) = default;
 };

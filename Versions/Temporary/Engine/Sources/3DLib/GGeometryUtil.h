@@ -19,21 +19,31 @@ struct SVxCache
 	void Push( uint16_t n )
 	{
 		if ( IsIn( n ) )
+		{
 			return;
+		}
 		nData[( ++nPos ) % N_SIZE] = n;
 	}
 	bool IsIn( uint16_t n ) const
 	{
 		for ( int k = 0; k < N_SIZE; ++k )
+		{
 			if ( nData[k] == n )
+			{
 				return true;
+			}
+		}
 		return false;
 	}
 	int GetPos( uint16_t n ) const
 	{
 		for ( int k = 0; k < N_SIZE; ++k )
+		{
 			if ( nData[k] == n )
+			{
 				return ( nPos - k + N_SIZE ) % N_SIZE;
+			}
+		}
 		return -1;
 	}
 };
@@ -95,9 +105,13 @@ private:
 		bool GetL( int *pnResDistance, int n, int nVertex, int nVCacheSize )
 		{
 			if ( n <= *pnResDistance )
+			{
 				return false;
+			}
 			if ( n + 1 >= nVCacheSize )
+			{
 				return false;
+			}
 			if ( n + pOptimizer->freeLinks[nVertex] * 3 + 1 < nVCacheSize )
 			{
 				*pnResDistance = n;
@@ -106,7 +120,9 @@ private:
 			int nFL = pOptimizer->CountNotCachedFL( tris, nVertex );
 			ASSERT( nFL <= pOptimizer->freeLinks[nVertex] * 3 );
 			if ( n + nFL + 1 >= nVCacheSize )
+			{
 				return false;
+			}
 			*pnResDistance = n;
 			return true; // - 0 * fl;// - 3 * fl;
 		}
@@ -141,7 +157,9 @@ private:
 				return;
 			}
 			if ( nCached == 2 )
+			{
 				nCached = 1;
+			}
 
 			int nCachePos = pOptimizer->cache.size() - 1;
 			int nQDistance1, nQDistance2, nQDistance3;
@@ -150,11 +168,17 @@ private:
 			nQDistance3 = nCachePos - pOptimizer->cachePos[q.i3];
 			int nDistanceGuess = 0;
 			if ( nQDistance1 + 1 < nVCacheSize )
+			{
 				nDistanceGuess = nQDistance1;
+			}
 			if ( nQDistance2 + 1 < nVCacheSize )
+			{
 				nDistanceGuess = (std::max)( nDistanceGuess, nQDistance2 );
+			}
 			if ( nQDistance3 + 1 < nVCacheSize )
+			{
 				nDistanceGuess = (std::max)( nDistanceGuess, nQDistance3 );
+			}
 			if ( nCached == nBestCached && nDistanceGuess < nBestDistance )
 			{
 				pOptimizer->ReverseVertex();

@@ -140,7 +140,9 @@ CEventUpdater::CUpdateData *CEventUpdater::CreateAnimationUpdate( CUpdatableObj 
 {
 	const SUnitBaseRPGStats *pStats = dynamic_cast<const SUnitBaseRPGStats *>( pObj->GetStats() );
 	if ( pStats == 0 )
+	{
 		return 0;
+	}
 	int nAnimIndex = -1;
 	if ( CSoldier *pSoldier = dynamic_cast<CSoldier *>( pObj ) )
 	{
@@ -175,14 +177,20 @@ CEventUpdater::CUpdateData *CEventUpdater::CreateAnimationUpdate( CUpdatableObj 
 	if ( !pStats->animdescs.empty() )
 	{
 		if ( pStats->animdescs.size() <= nAnimation )
+		{
 			nAnimation = NDb::ANIMATION_IDLE;
+		}
 		const std::vector<NDb::SAnimDesc> &anims = pStats->animdescs[nAnimation].anims;
 		if ( !anims.empty() )
 		{
 			if ( pStats->GetTypeID() == NDb::SInfantryRPGStats::typeID )
+			{
 				nAnimIndex = nAnimation;
+			}
 			else
+			{
 				nAnimIndex = anims[0].nFrameIndex;
+			}
 		}
 	}
 	return new CUpdateData( nTime, nCounter, ACTION_NOTIFY_ANIMATION_CHANGED, pObj, nAnimIndex );
@@ -214,14 +222,18 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 	if ( eUpdateType == ACTION_NOTIFY_PLACEMENT )
 	{
 		if ( pObj && pObj->IsRefValid() )
+		{
 			updatedPlacements.insert( pObj->GetUniqueId() );
+		}
 	}
 
 	bool bSuspend = ( pObj != 0 && ( IsInterpolatableEvent( eUpdateType ) || pObj->ShouldSuspendAction( eUpdateType ) ) &&
 	                  !pObj->IsVisible( nMyParty ) );
 
 	if ( eUpdateType == ACTION_NOTIFY_PLACEMENT && bSuspend )
+	{
 		return;
+	}
 
 	++nCounter;
 	CUpdateData *pData = new CUpdateData( nTime, nCounter, eUpdateType, pObj, nParam );
@@ -240,7 +252,9 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 			if ( pObj->IsAlive() || IsDeathAnimation( nAnimation ) )
 			{
 				if ( CUpdateData *pAnimUpdate = CreateAnimationUpdate( pObj, nAnimation ) )
+				{
 					updatesBush.push_back( pAnimUpdate );
+				}
 			}
 		}
 	}
@@ -264,7 +278,9 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 		{
 			CUpdatableObj *pObj = GetObjectByUniqueIdSafe<CUpdatableObj>( pInternalData->info.nObjUniqueID );
 			if ( pObj && pObj->IsRefValid() )
+			{
 				pObj->AnimationSet( nShotAnimation );
+			}
 			//			checked_cast<CUpdatableObj*>(pInternalData->info.pObj.GetPtr())->AnimationSet( nShotAnimation );
 		}
 		pData->pData = pInternalData;
@@ -286,7 +302,9 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 				{
 					if ( CUpdateData *pAnimUpdate =
 					         CreateAnimationUpdate( pSoldier, GetAnimationFromAction( pInternalData->info.typeID ) ) )
+					{
 						updatesBush.push_back( pAnimUpdate );
+					}
 				}
 			}
 		}
@@ -305,7 +323,9 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 	if ( bSuspend )
 	{
 		if ( IsOneCopyEvent( eUpdateType ) )
+		{
 			ClearUpdates( pObj, eUpdateType );
+		}
 
 		//determine current update position
 		CTilesSet tiles;
@@ -314,17 +334,23 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 		{
 			for ( std::vector<CPtr<CUpdateData>>::iterator itUpdate = updatesBush.begin(); itUpdate != updatesBush.end();
 			      ++itUpdate )
+			{
 				InsertSuspendedUpdate( *itUpdate, *it );
+			}
 		}
 	}
 	else
 	{
 		for ( std::vector<CPtr<CUpdateData>>::iterator it = updatesBush.begin(); it != updatesBush.end(); ++it )
+		{
 			pendingUpdates.push_back( *it );
+		}
 	}
 
 	for ( std::vector<CPtr<CUpdateData>>::iterator it = updatesBush.begin(); it != updatesBush.end(); ++it )
+	{
 		updatesHash[pObj].push_back( *it );
+	}
 
 	updatesBush.resize( 0 );
 }
@@ -354,10 +380,14 @@ void CEventUpdater::ClearUpdates( CUpdatableObj *pObj, EActionNotify eUpdateType
 					iit = lst.erase( iit );
 				}
 				else
+				{
 					++iit;
+				}
 			}
 			if ( lst.empty() )
+			{
 				updatesHash.erase( it );
+			}
 		}
 	}
 	else
@@ -374,12 +404,18 @@ void CEventUpdater::ClearUpdates( CUpdatableObj *pObj, EActionNotify eUpdateType
 					iit = lst.erase( iit );
 				}
 				else
+				{
 					++iit;
+				}
 			}
 			if ( lst.empty() )
+			{
 				updatesHash.erase( it++ );
+			}
 			else
+			{
 				++it;
+			}
 		}
 	}
 }
@@ -396,11 +432,17 @@ CEventUpdater::CUpdateData *CEventUpdater::PopUpdate()
 			pData = *it;
 			pendingUpdates.erase( it );
 			if ( !pData->bValid )
+			{
 				continue;
+			}
 			if ( IsInterpolatableEvent( pData->eUpdateType ) )
+			{
 				interpolatableUpdates.push_back( pData );
+			}
 			else
+			{
 				pData->bValid = false;
+			}
 		}
 		// otherwise, try suspendable queue
 		if ( pData == 0 && pendingIt != pendingSuspendableUpdates.end() )
@@ -412,7 +454,9 @@ CEventUpdater::CUpdateData *CEventUpdater::PopUpdate()
 				continue;
 			}
 			if ( pData->nUpdateTime < nReturnTime )
+			{
 				pData->bValid = false;
+			}
 			++pendingIt;
 		}
 
@@ -423,14 +467,18 @@ CEventUpdater::CUpdateData *CEventUpdater::PopUpdate()
 void CEventUpdater::UpdateTime( const NTimer::STime &nNewTime )
 {
 	if ( nTime == nNewTime )
+	{
 		return;
+	}
 	nTime = nNewTime;
 	//reset counter
 	nCounter = 0;
 	if ( bShowAreas )
 	{
 		for ( std::list<CPtr<CUpdatableObj>>::iterator it = shootGroupUnits.begin(); it != shootGroupUnits.end(); ++it )
+		{
 			updater.AddUpdate( 0, eAreaType, it->GetPtr(), -1 );
+		}
 	}
 	shootGroupUnits.clear();
 }
@@ -440,9 +488,13 @@ void CEventUpdater::TileBecameVisibleFromWarFog( const SVector &_vPos, const int
 	const int nDivider = DIVIDER_CONST / AI_TILES_IN_VIS_TILE;
 	const SVector vPos( _vPos.x / nDivider, _vPos.y / nDivider );
 	if ( nParty != nMyParty )
+	{
 		return;
+	}
 	if ( !suspended[vPos.y][vPos.x].empty() )
+	{
 		visibleTiles.insert( vPos );
+	}
 }
 
 void CEventUpdater::PumpUpdates()
@@ -460,7 +512,9 @@ void CEventUpdater::PumpUpdates()
 
 			EActionNotify eType = pUpdate->eUpdateType;
 			if ( !pUpdate->bValid )
+			{
 				continue;
+			}
 
 			CUpdateList *pPendingList = &pendingUpdates;
 			if ( IsInterpolatableEvent( eType ) )
@@ -469,10 +523,14 @@ void CEventUpdater::PumpUpdates()
 				bSuspendableUpdatesChanged = true;
 			}
 			else
+			{
 				bUpdatesChanged = true;
+			}
 
 			if ( pUpdate->bValid )
+			{
 				pPendingList->push_back( pUpdate );
+			}
 		}
 		lst.clear();
 	}
@@ -482,16 +540,22 @@ void CEventUpdater::PumpUpdates()
 
 	// Sort the lists
 	if ( bUpdatesChanged )
+	{
 		pendingUpdates.sort( SUpdateDataLessCompare() );
+	}
 
 	if ( bSuspendableUpdatesChanged )
+	{
 		pendingSuspendableUpdates.sort( SUpdateDataLessCompare() );
+	}
 }
 
 void CEventUpdater::ClearInterpolatable()
 {
 	for ( CUpdateList::iterator it = interpolatableUpdates.begin(); it != interpolatableUpdates.end(); ++it )
+	{
 		( *it )->bValid = false;
+	}
 	interpolatableUpdates.clear();
 }
 
@@ -504,9 +568,13 @@ void CEventUpdater::CollectUpdates( NTimer::STime nUpTo )
 	for ( CUpdateList::iterator it = pendingSuspendableUpdates.begin(); it != pendingSuspendableUpdates.end(); )
 	{
 		if ( ( *it )->bValid )
+		{
 			++it;
+		}
 		else
+		{
 			it = pendingSuspendableUpdates.erase( it );
+		}
 	}
 
 	PumpUpdates();
@@ -523,15 +591,23 @@ void CEventUpdater::CollectUpdates( NTimer::STime nUpTo )
 			for ( CUpdateList::iterator itUpdate = lst.begin(); itUpdate != lst.end(); )
 			{
 				if ( ( *itUpdate )->bValid )
+				{
 					++itUpdate;
+				}
 				else
+				{
 					itUpdate = lst.erase( itUpdate );
+				}
 			}
 
 			if ( lst.empty() )
+			{
 				updatesHash.erase( it++ );
+			}
 			else
+			{
 				++it;
+			}
 		}
 	}
 }
@@ -548,7 +624,9 @@ void CEventUpdater::UpdateAreasGroup( const bool bShow, EActionNotify eType )
 bool CEventUpdater::IsPlacementUpdated( CUpdatableObj *pObj ) const
 {
 	if ( !pObj || !pObj->IsRefValid() )
+	{
 		return false;
+	}
 
 	return updatedPlacements.find( pObj->GetUniqueId() ) != updatedPlacements.end();
 }
@@ -566,11 +644,15 @@ void CEventUpdater::PrepareUpdates()
 SAIBasicUpdate *CEventUpdater::GetUpdate()
 {
 	if ( CAITimer::GetGameTime() > nReturnTime )
+	{
 		CollectUpdates( CAITimer::GetGameTime() );
+	}
 
 	CPtr<CUpdateData> pData = PopUpdate();
 	if ( pData == 0 )
+	{
 		return 0;
+	}
 
 	return pData->GetClientStruct( nReturnTime );
 }
@@ -609,7 +691,9 @@ void CEventUpdater::DumpSizes()
 
 					TDumpObjectsHash::const_iterator pos = objects.find( nID );
 					if ( pos == objects.end() )
+					{
 						objectsID.push_back( nID );
+					}
 
 					if ( bValid )
 					{
@@ -640,9 +724,13 @@ void CEventUpdater::DumpSizes()
 	{
 		std::string str;
 		if ( *it == -1 )
+		{
 			str = "Invalid";
+		}
 		else
+		{
 			str = std::to_string( *it );
+		}
 
 		TDumpObjectsHash::const_iterator pos = objects.find( *it );
 		const TDumpUpdatesHash &thisUpdates = pos->second;
@@ -650,9 +738,13 @@ void CEventUpdater::DumpSizes()
 		{
 			TDumpUpdatesHash::const_iterator posUpd = thisUpdates.find( itUpd->first );
 			if ( posUpd != thisUpdates.end() )
+			{
 				str = str + fmt::format( "\t{}/{}", posUpd->second.nValidCount, posUpd->second.nInvalidCount );
+			}
 			else
+			{
 				str = str + "\t-/-";
+			}
 		}
 		DebugTrace( "%s", str.c_str() );
 	}
@@ -688,7 +780,9 @@ int CEventUpdater::operator&( IBinSaver &saver )
 			for ( pendingIt = pendingSuspendableUpdates.begin(); pendingIt != pendingSuspendableUpdates.end(); ++pendingIt )
 			{
 				if ( pCurrPendingIt == *pendingIt )
+				{
 					break;
+				}
 			}
 			CUpdateData::Init();
 		}

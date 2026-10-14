@@ -16,12 +16,18 @@ CTimerChargeExecutor::CTimerChargeExecutor( CMineStaticObject *_pObj, int nOffse
 int CTimerChargeExecutor::Segment()
 {
 	if ( !IsValidObj( pCharge ) )
+	{
 		return -1;
+	}
 	int nDiff = nTimeToExplode - curTime;
 	if ( nDiff > 1000 )
+	{
 		return 1000 / SAIConsts::AI_SEGMENT_DURATION;
+	}
 	if ( nDiff > 0 )
+	{
 		return nDiff / SAIConsts::AI_SEGMENT_DURATION;
+	}
 	pCharge->Die( 1.0f );
 	return -1;
 }

@@ -106,7 +106,9 @@ public:
 	{
 		const NDb::STexture *pTex = key;
 		if ( !pTex )
+		{
 			return;
+		}
 
 		pSWTexture = NGScene::GetSWTex( pTex );
 		bFakeTexture = true;
@@ -114,7 +116,9 @@ public:
 	void SetColor( CFuncBase<CVec3> *_pColor )
 	{
 		if ( pColor != _pColor )
+		{
 			pColor = _pColor;
+		}
 	}
 };
 
@@ -125,7 +129,9 @@ bool CParticleTexture::NeedUpdate()
 	bool bRes = TParent::NeedUpdate();
 	bRes |= !IsValid( pValue );
 	if ( pColor )
+	{
 		bRes |= pColor.Refresh();
+	}
 
 	if ( pSWTexture )
 	{
@@ -161,19 +167,23 @@ void CParticleTexture::Recalc()
 	CSWTextureData *pTextureData = pSWTexture->GetValue();
 
 	if ( NGfx::Is16BitTextures() )
+	{
 		pValue = NGfx::MakeTexture( pTextureData->GetSizeX(),
 		                            pTextureData->GetSizeY(),
 		                            -1,
 		                            NGfx::SPixel4444::ID,
 		                            NGfx::TRANSPARENT_TEXTURE,
 		                            NGfx::CLAMP );
+	}
 	else
+	{
 		pValue = NGfx::MakeTexture( pTextureData->GetSizeX(),
 		                            pTextureData->GetSizeY(),
 		                            -1,
 		                            NGfx::SPixel8888::ID,
 		                            NGfx::TRANSPARENT_TEXTURE,
 		                            NGfx::CLAMP );
+	}
 
 	CVec3 vColor( 1.0f, 1.0f, 1.0f );
 	if ( pColor )
@@ -537,7 +547,9 @@ CRenderNode *CGameView::NewRenderNode()
 IMaterial *CGameView::CreateMaterial( const CVec4 &vColor, bool bDoesCastShadow )
 {
 	if ( vColor.a == 1 )
+	{
 		return colorMaterials.CreateMaterial( CVec3( vColor.x, vColor.y, vColor.z ) );
+	}
 	return transparentMaterials.CreateMaterial( vColor, bDoesCastShadow );
 }
 
@@ -546,7 +558,9 @@ void CGameView::CreateMeshInfo(
 {
 	pRes->parts.resize( 0 );
 	if ( !pModel )
+	{
 		return;
+	}
 	const NDb::SGeometry *pGeometry = pModel->pGeometry;
 	if ( !pGeometry )
 	{
@@ -617,7 +631,9 @@ void CGameView::CreateMeshInfo(
 					if ( nModelMaterial < pModel->materials.size() )
 					{
 						if ( pModel->materials[nModelMaterial] )
+						{
 							p.pMaterial = CreateMaterial( pModel->materials[nModelMaterial] );
+						}
 
 						/*if ( ( nMesh < pModel->pGeometry->meshNames.size() ) &&
 							( strncmp( pModel->pGeometry->meshNames[nMesh].c_str(), SZ_REPLACE_MATERIAL_PREFIX.c_str(), SZ_REPLACE_MATERIAL_PREFIX.size() ) == 0 ) )
@@ -634,15 +650,23 @@ void CGameView::CreateMeshInfo(
 					p.nOrigMeshIndex = nMesh;
 
 					if ( nMesh < pGeometry->meshAnimated.size() )
+					{
 						p.bAnimated = pGeometry->meshAnimated[nMesh] || bRigidGltfModel;
+					}
 					else
+					{
 						p.bAnimated = bWholeAnimated || bRigidGltfModel;
+					}
 
 					if ( nMesh < pGeometry->meshWindAffected.size() )
+					{
 						p.bWindAffected = pGeometry->meshWindAffected[nMesh];
+					}
 
 					if ( p.bWindAffected )
+					{
 						p.pMaterial = p.pMaterial->GetWindAffected();
+					}
 
 					ASSERT( p.pMaterial );
 				}
@@ -657,15 +681,23 @@ void CGameView::CreateMeshInfo(
 				p.nOrigMeshIndex = nMesh;
 
 				if ( nMesh < pGeometry->meshAnimated.size() )
+				{
 					p.bAnimated = pGeometry->meshAnimated[nMesh] || bRigidGltfModel;
+				}
 				else
+				{
 					p.bAnimated = bWholeAnimated || bRigidGltfModel;
+				}
 
 				if ( nMesh < pGeometry->meshWindAffected.size() )
+				{
 					p.bWindAffected = pGeometry->meshWindAffected[nMesh];
+				}
 
 				if ( p.bWindAffected )
+				{
 					p.pMaterial = p.pMaterial->GetWindAffected();
+				}
 				//if( !p.bReceiveShadows ) p.pMaterial = p.pMaterial->GetNoReceiveShadows();
 
 				ASSERT( p.pMaterial );
@@ -690,13 +722,19 @@ CObjectBase *CGameView::CreateDynamicMesh( const SMeshInfo &meshInfo,
 	{
 		const SPartInfo &p = meshInfo.parts[k];
 		if ( !p.pMaterial || !p.pGeometry )
+		{
 			continue;
+		}
 
 		CPtr<CPtrFuncBase<CObjectInfo>> pGeom;
 		if ( pPrevLight && pPrevLight->pHeightFog )
+		{
 			pGeom = CreateHeightFogHolder( p.pGeometry, pPrevLight->pHeightFog, pPlacement );
+		}
 		else
+		{
 			pGeom = p.pGeometry;
+		}
 
 		CObjectBase *pPart =
 				pScene->CreateDynamicGeometry( pGeom, pPlacement, p.pMaterial, pBound, hintBV, GetGroupInfo( _g, k ) );
@@ -769,7 +807,9 @@ CObjectBase *CGameView::CreateMesh( const SMeshInfo &meshInfo,
                                     IFader *pFader )
 {
 	if ( meshInfo.parts.empty() )
+	{
 		return 0;
+	}
 
 	CPtr<CObjectBase> pPart;
 	CPtr<CBind> pBind;
@@ -777,7 +817,9 @@ CObjectBase *CGameView::CreateMesh( const SMeshInfo &meshInfo,
 
 	CCreateMeshBound meshBound = _meshBound;
 	if ( !meshBound.GetBounder() && ( meshBound.GetBound().s.fRadius == 0.0f ) )
+	{
 		meshBound.Create( animStuff.GetAnimation(), animStuff.GetModel() );
+	}
 	// we suppose, that if animation present, then object is potentially animated (CPtr to avoid memory leaks else)
 	if ( animStuff.GetAnimation() && animStuff.GetModel() && animStuff.GetModel()->pSkeleton )
 	{
@@ -790,25 +832,37 @@ CObjectBase *CGameView::CreateMesh( const SMeshInfo &meshInfo,
 	{
 		const SPartInfo &p = meshInfo.parts[k];
 		if ( !p.pMaterial || !p.pGeometry )
+		{
 			continue;
+		}
 
 		CPtr<CPtrFuncBase<CObjectInfo>> pGeom;
 		if ( pPrevLight && pPrevLight->pHeightFog )
 		{
 			if ( meshTransform.GetTransformer() )
+			{
 				pGeom = CreateHeightFogHolder( p.pGeometry, pPrevLight->pHeightFog, meshTransform.GetTransformer() );
+			}
 			else
+			{
 				pGeom = CreateHeightFogHolder( p.pGeometry, pPrevLight->pHeightFog, meshTransform.GetPlace() );
+			}
 		}
 		else
+		{
 			pGeom = p.pGeometry;
+		}
 
 		if ( p.bWindAffected )
 		{
 			if ( meshTransform.GetTransformer() )
+			{
 				pGeom = CreateDeformerHolder( pGeom, meshTransform.GetTransformer() );
+			}
 			else
+			{
 				pGeom = CreateDeformerHolder( pGeom, meshTransform.GetPlace() );
+			}
 		}
 
 		if ( !( p.bAnimated ) || !pMMXAnimation )
@@ -816,15 +870,19 @@ CObjectBase *CGameView::CreateMesh( const SMeshInfo &meshInfo,
 			if ( meshTransform.GetTransformer() )
 			{
 				if ( meshBound.GetBounder() )
+				{
 					pPart = pScene->CreateGeometry( pGeom,
 					                                p.pMaterial,
 					                                meshTransform.GetTransformer(),
 					                                meshBound.GetBounder(),
 					                                _meshBound.GetHintBV(),
 					                                GetGroupInfo( _g, k ) );
+				}
 				else
+				{
 					pPart = pScene->CreateGeometry(
 							pGeom, p.pMaterial, meshTransform.GetTransformer(), _meshBound.GetHintBV(), GetGroupInfo( _g, k ) );
+				}
 			}
 			else
 			{
@@ -834,6 +892,7 @@ CObjectBase *CGameView::CreateMesh( const SMeshInfo &meshInfo,
 		else
 		{
 			if ( meshBound.GetBounder() )
+			{
 				pPart = pScene->CreateGeometry( pGeom,
 				                                p.pMaterial,
 				                                pBind,
@@ -841,9 +900,12 @@ CObjectBase *CGameView::CreateMesh( const SMeshInfo &meshInfo,
 				                                meshBound.GetBounder(),
 				                                _meshBound.GetHintBV(),
 				                                GetGroupInfo( _g, k ) );
+			}
 			else
+			{
 				pPart = pScene->CreateGeometry(
 						pGeom, p.pMaterial, pBind, pMMXAnimation, meshBound.GetBound(), GetGroupInfo( _g, k ) );
+			}
 		}
 
 		pRes->AddPart( pPart );
@@ -872,11 +934,15 @@ CObjectBase *CGameView::CreateParticles( bool bIsDynamic,
 {
 	SBound hintBV = MakeLargeHintBound();
 	if ( bIsDynamic )
+	{
 		return pScene->CreateParticles(
 				pEffect, pPlacement, hintBV, hintBV, GetGroupInfo( _r, bCastShadows, bCrown ), nPFlags );
+	}
 	else
+	{
 		return pScene->CreateParticles(
 				pEffect, pPlacement, bound, hintBV, GetGroupInfo( _r, bCastShadows, bCrown ), nPFlags );
+	}
 }
 
 template <class T>
@@ -887,7 +953,9 @@ static void InitParticleTextures( T *pAnimator, const NDb::SParticleInstance *pI
 	for ( int i = 0; i < pAnimator->textureIDs.size(); ++i )
 	{
 		if ( !pInstance->textures[i] )
+		{
 			continue;
+		}
 		nLast = i;
 
 		// We needn't lit add type textures
@@ -898,8 +966,10 @@ static void InitParticleTextures( T *pAnimator, const NDb::SParticleInstance *pI
 			pAnimator->textureIDs[i] = pParticleTexture;
 		}
 		else
+		{
 			pAnimator->textureIDs[i] =
 					shareTextures.Get( STextureKey( pInstance->textures[i], STextureKey::TK_TRANSPARENT ) );
+		}
 	}
 	pAnimator->textureIDs.resize( nLast + 1 );
 }
@@ -918,7 +988,9 @@ CObjectBase *CGameView::TrueCreateParticles( bool _bIsDynamic,
 	CPtr<CFuncBase<SFBTransform>> pTransformHolder( pPlacement );
 	CPtr<CFuncBase<NAnimation::SGrannySkeletonPose>> pAnimatorHolder( pScAnim );
 	if ( pEffect->instances.empty() && pEffect->lights.empty() && pEffect->models.empty() )
+	{
 		return 0;
+	}
 
 	CRenderNode *pRes = NewRenderNode();
 
@@ -927,10 +999,14 @@ CObjectBase *CGameView::TrueCreateParticles( bool _bIsDynamic,
 	{
 		const NDb::SParticleInstance *pInstance = pEffect->instances[i];
 		if ( !pInstance )
+		{
 			continue;
+		}
 		const NDb::SParticle *pParticle = pInstance->pParticle;
 		if ( !pParticle )
+		{
 			continue;
+		}
 
 		CMSRNode *pMSR = new CMSRNode;
 		if ( pScAnim && pInstance->nGlueToBone )
@@ -951,9 +1027,13 @@ CObjectBase *CGameView::TrueCreateParticles( bool _bIsDynamic,
 			}
 		}
 		else if ( !IsValid( pPlacement ) )
+		{
 			continue;
+		}
 		else
+		{
 			pMSR->pAncestor = pPlacement;
+		}
 
 		{
 			SFBTransform trans;
@@ -966,7 +1046,9 @@ CObjectBase *CGameView::TrueCreateParticles( bool _bIsDynamic,
 
 		SBound particleBound = pParticle->bound;
 		if ( pParticle->vWrapSize.x != 0 ) // IsWrapping()
+		{
 			particleBound.BoxInit( CVec3( 0, 0, 0 ), CVec3( 1000, 1000, 50 ) );
+		}
 
 		CParticleAnimator *pAnimator = new CParticleAnimator( pInstance,
 		                                                      stBeginTime,
@@ -980,13 +1062,21 @@ CObjectBase *CGameView::TrueCreateParticles( bool _bIsDynamic,
 
 		int nPFlags = 0;
 		if ( pInstance->eLight == NDb::SParticleInstance::L_LIT )
+		{
 			nPFlags |= PF_LIT;
+		}
 		else
+		{
 			nPFlags |= PF_SELF_ILLUM;
+		}
 		if ( pInstance->eStatic == NDb::SParticleInstance::P_STATIC && !_bIsDynamic )
+		{
 			nPFlags |= PF_STATIC;
+		}
 		else
+		{
 			nPFlags |= PF_DYNAMIC;
+		}
 		pRes->AddPart( CreateParticles( _bIsDynamic,
 		                                nPFlags,
 		                                pInstance->bDoesCastShadow,
@@ -1003,11 +1093,15 @@ CObjectBase *CGameView::TrueCreateParticles( bool _bIsDynamic,
 	{
 		const NDb::SLightInstance *pInstance = pEffect->lights[i];
 		if ( !pInstance )
+		{
 			continue;
+		}
 
 		const NDb::SAnimLight *pLight = pInstance->pLight;
 		if ( !pLight )
+		{
 			continue;
+		}
 
 		CMSRNode *pMSR = new CMSRNode;
 		if ( pScAnim && pInstance->nGlueToBone )
@@ -1028,7 +1122,9 @@ CObjectBase *CGameView::TrueCreateParticles( bool _bIsDynamic,
 			}
 		}
 		else
+		{
 			pMSR->pAncestor = pPlacement;
+		}
 
 		{
 			SFBTransform trans;
@@ -1076,7 +1172,9 @@ CObjectBase *CGameView::TrueCreateParticles( bool _bIsDynamic,
 			}
 		}
 		else
+		{
 			pMSR->pAncestor = pPlacement;
+		}
 
 		{
 			SFBTransform trans;
@@ -1181,14 +1279,20 @@ CObjectBase *CGameView::CreateRain( const NDb::SParticleInstance *pInstance,
 {
 	const NDb::SParticle *pParticle = pInstance->pParticle;
 	if ( !pParticle )
+	{
 		return 0;
+	}
 	CRainAnimator *pAnimator = new NGScene::CRainAnimator( pTime, pScene->GetCamera(), pFilter );
 	InitParticleTextures( pAnimator, pInstance );
 	int nPFlags = 0;
 	if ( pInstance->eLight == NDb::SParticleInstance::L_LIT )
+	{
 		nPFlags |= PF_LIT;
+	}
 	else
+	{
 		nPFlags |= PF_SELF_ILLUM;
+	}
 	nPFlags |= PF_DYNAMIC;
 	SBound particleBound;
 	particleBound.BoxInit( CVec3( 0, 0, 0 ), CVec3( 1000, 1000, 50 ) );
@@ -1226,7 +1330,9 @@ CObjectBase *CGameView::Precache( const NDb::SModel *pModel )
 	for ( int nPart = 0; nPart < meshInfo.parts.size(); ++nPart )
 	{
 		if ( !meshInfo.parts[nPart].pGeometry )
+		{
 			continue;
+		}
 
 		pRes->AddPart( MakePrecache( meshInfo.parts[nPart].pGeometry.GetPtr() ) );
 	}
@@ -1251,7 +1357,9 @@ void CGameView::Precache( const NDb::SEffect *pEffect )
 		const NDb::SParticleInstance *pInstance = pEffect->instances[i];
 		const NDb::SParticle *pParticle = pInstance->pParticle;
 		if ( !pParticle )
+		{
 			continue;
+		}
 
 		pRes->AddPart( MakePrecache( shareParticles.Get( GetIntResKey( pParticle ) ) ) );
 	}
@@ -1262,7 +1370,9 @@ void CGameView::Precache( const NDb::SEffect *pEffect )
 		const NDb::SLightInstance *pInstance = pEffect->lights[i];
 		const NDb::SAnimLight *pLight = pInstance->pLight;
 		if ( !pLight )
+		{
 			continue;
+		}
 		pRes->AddPart( MakePrecache( shareAnimLights.Get( pLight ) ) );
 	}
 	precacheObjects.push_back( pRes );
@@ -1291,13 +1401,19 @@ void CGameView::TouchPrecached()
 			{
 				CDynamicCast<IPrecache> pPrecache( p->parts[k] );
 				if ( pPrecache )
+				{
 					bOk &= pPrecache->TryUpdate();
+				}
 			}
 		}
 		if ( bOk )
+		{
 			i = precacheObjects.erase( i );
+		}
 		else
+		{
 			++i;
+		}
 	}
 }
 
@@ -1313,19 +1429,25 @@ public:
 	{
 		nTerrains = nTotal - nCount;
 		if ( pForward )
+		{
 			pForward->LeftToLoad( nCount );
+		}
 	}
 	virtual void SetTotalCount( int nTotalCount )
 	{
 		nTotal = nTotalCount;
 		if ( pForward )
+		{
 			pForward->SetTotalCount( nTotalCount );
+		}
 	}
 	virtual void Step()
 	{
 		++nTerrains;
 		if ( pForward )
+		{
 			pForward->Step();
+		}
 	}
 	void Forward( ILoadingCounter *_pForward )
 	{
@@ -1343,16 +1465,22 @@ void CGameView::LoadEverythingInt()
 		pScene->PrecacheMaterials( pTerrainCounter );
 		TouchPrecached();
 		if ( pWaitLoading )
+		{
 			pWaitLoading->SetTotalCount( CountFileRequestsInFly() );
+		}
 		while ( HasFileRequestsInFly() )
 		{
 			if ( pWaitLoading )
+			{
 				pWaitLoading->LeftToLoad( CountFileRequestsInFly() );
+			}
 			std::this_thread::yield();
 		}
 		MarkNewDGFrame();
 		if ( pCalcTerrain )
+		{
 			pTerrainCounter->Forward( pCalcTerrain );
+		}
 		pScene->PrecacheMaterials( pTerrainCounter );
 		TouchPrecached();
 		ASSERT( precacheObjects.empty() );
@@ -1374,7 +1502,9 @@ void CGameView::LoadFogColors( const NDb::SAmbientLight *pAmbientLight )
 		fogColors = pTextureData->mips[0];
 	}
 	else
+	{
 		fogColors.Clear();
+	}
 }
 
 void CGameView::Draw( CTransformStack *pTS,
@@ -1394,7 +1524,9 @@ void CGameView::Draw( CTransformStack *pTS,
 		if ( IsValid( *readFader ) && ( *readFader )->Update( (void *)0 ) )
 		{
 			if ( writeFader != readFader )
+			{
 				*writeFader = *readFader;
+			}
 			++writeFader;
 		}
 	}
@@ -1435,7 +1567,9 @@ void CGameView::Draw( CTransformStack *pTS,
 			float fPitch = -atan2( vCameraDirection.z, sqrt( sqr( vCameraDirection.x ) + sqr( vCameraDirection.y ) ) );
 
 			if ( fYaw < 0 )
+			{
 				fYaw += FP_2PI;
+			}
 
 			// Calculating color by influence of 4 points
 			float fX = ( fYaw / FP_2PI ) * ( fogColors.GetSizeX() - 1 );
@@ -1476,7 +1610,9 @@ void CGameView::MakeTargetRect( CTRect<float> *pRes, const SDrawInfo &drawInfo )
 static ERenderPath GetRenderPath( ESceneRenderMode rm, bool bForceFastest )
 {
 	if ( NGfx::IsTnLDevice() )
+	{
 		return RP_TNL;
+	}
 	switch ( rm )
 	{
 		case SRM_SHOWOVERDRAW:
@@ -1524,7 +1660,9 @@ inline CVec3 GetCameraPosition( CTransformStack *pTS )
 void CGameView::Draw( const SDrawInfo &drawInfo )
 {
 	if ( pSkyDome && drawInfo.pTS )
+	{
 		pSkyDome->SetCameraPos( GetCameraPosition( drawInfo.pTS ) );
+	}
 
 #ifdef FADE_TEST
 	{
@@ -1533,7 +1671,9 @@ void CGameView::Draw( const SDrawInfo &drawInfo )
 		{
 			CObjectBase *p = fadeTestObjects[k];
 			if ( IsValid( p ) )
+			{
 				SetFade( p, fFade );
+			}
 		}
 	}
 #endif
@@ -1570,11 +1710,15 @@ void CGameView::Draw( const SDrawInfo &drawInfo )
 	ERenderPath renderPath = GetRenderPath();
 	NGfx::CRenderContext rc;
 	if ( drawInfo.pTarget )
+	{
 		rc.SetTextureRT( drawInfo.pTarget );
+	}
 
 	SRTClearParams rtClear = drawInfo.rtClear;
 	if ( drawInfo.bUseDefaultClearColor )
+	{
 		rtClear.vColor = CVec4( vDefaultClearColor, 1 );
+	}
 
 	int nLightOptions = drawInfo.bShadows ? 0 : LO_NOSHADOWS;
 
@@ -1611,7 +1755,9 @@ void CGameView::MakeHQShot( const SDrawInfo &_drawInfo, CArray2D<NGfx::SPixel888
 			drawInfo.vOrigin.y += dy * drawInfo.vSize.y;
 
 			if ( pSkyDome && drawInfo.pTS )
+			{
 				pSkyDome->SetCameraPos( GetCameraPosition( drawInfo.pTS ) );
+			}
 
 			//for ( int k = 0; k < 100; ++k )
 			{
@@ -1628,7 +1774,9 @@ void CGameView::MakeHQShot( const SDrawInfo &_drawInfo, CArray2D<NGfx::SPixel888
 				MakeClipTS( &tsClip, *drawInfo.pTS, drawInfo.vOrigin, drawInfo.vSize );
 				SRTClearParams rtClear = drawInfo.rtClear;
 				if ( drawInfo.bUseDefaultClearColor )
+				{
 					rtClear.vColor = CVec4( vDefaultClearColor, 1 );
+				}
 
 				Draw( &tsClip, drawInfo.pTS, &rc, rtClear, GetRenderPath(), drawInfo.bShadows ? 0 : LO_NOSHADOWS );
 			}
@@ -1666,7 +1814,9 @@ void CGameView::SetAmbientEffect( const NDb::SEffect *pEffect, STime stBeginTime
 	const NDb::SLightInstance *pInstance = pEffect->lights.front();
 	const NDb::SAnimLight *pLight = pInstance->pLight;
 	if ( !pLight )
+	{
 		return;
+	}
 	CLightAnimator *pAnimator = new NGScene::CLightAnimator( pInstance, stBeginTime, pInstance->fScale );
 	pAnimator->pInfo = shareAnimLights.Get( pLight );
 	pAnimator->pTime = pTime;
@@ -1682,7 +1832,9 @@ void CGameView::SetAmbientEffect( const NDb::SEffect *pEffect, STime stBeginTime
 CObjectBase *CGameView::AddPointLight( const CVec3 &ptColor, const CVec3 &ptOrigin, float fR )
 {
 	if ( fR <= 0 )
+	{
 		return 0;
+	}
 	return pScene->AddPointLight( ptColor, ptOrigin, fR );
 }
 
@@ -1701,7 +1853,9 @@ CObjectBase *CGameView::AddFlare( CFuncBase<CVec3> *pOrigin,
 {
 	//fFlareRadius = 1;
 	if ( fFlareRadius <= 0 || pTime == 0 || pFlareTexture == 0 )
+	{
 		return 0;
+	}
 	// glow in the dark
 	SBound bound;
 	bound.SphereInit( CVec3( 0, 0, 0 ), fFlareRadius );
@@ -1727,7 +1881,9 @@ CObjectBase *CGameView::AddDirFlare(
 		CFuncBase<CVec3> *pPos, CFuncBase<CVec3> *pDir, const CVec2 &sSize, const NDb::STexture *pTexture, int nFloor )
 {
 	if ( ( fabs( sSize ) < FP_EPSILON ) || !pTexture )
+	{
 		return 0;
+	}
 
 	return AddDirFlare( pPos, pDir, new CCVec2( sSize ), sSize, pTexture, nFloor );
 }
@@ -1768,7 +1924,9 @@ static void GetParts( std::vector<CObjectBase *> *pRes, const std::vector<CObjec
 		}
 
 		for ( int nTemp = 0; nTemp < pNode->parts.size(); nTemp++ )
+		{
 			pRes->push_back( pNode->parts[nTemp] );
+		}
 	}
 }
 
@@ -1782,7 +1940,9 @@ CObjectBase *CGameView::AddPostFilter( const std::vector<CObjectBase *> &target,
 	{
 		CObjectBase *p = pScene->CreatePostProcessor( parts[k], pEffect );
 		if ( p )
+		{
 			pRes->AddPart( p );
+		}
 	}
 	return pRes;
 }
@@ -1796,8 +1956,10 @@ CObjectBase *CGameView::AddSpotLight( const CVec3 &ptColor,
                                       bool bLightmapOnly )
 {
 	if ( pMask )
+	{
 		return pScene->AddSpotLight(
 				new CCVec3( ptColor ), ptOrigin, ptDir, fFOV, fRadius, shareTextures.Get( (STextureKey)pMask ), bLightmapOnly );
+	}
 	return pScene->AddSpotLight( new CCVec3( ptColor ), ptOrigin, ptDir, fFOV, fRadius, 0, bLightmapOnly );
 }
 
@@ -1841,13 +2003,19 @@ void CGameView::SetAmbient( const NDb::SAmbientLight *pLight, bool bSelectGF2, C
 
 	// set haze
 	if ( pLight->pHaze )
+	{
 		pHaze = shareTextures.Get( (STextureKey)pLight->pHaze );
+	}
 	else
+	{
 		pHaze = 0;
+	}
 
 	// set depth of field
 	if ( pLight->pDepthOfField )
+	{
 		SetDepthOfField( new SDepthOfField( pLight->pDepthOfField->fFocalDist, pLight->pDepthOfField->fFocusRange ) );
+	}
 
 	// set shadows
 	if ( !IsUsingShadows( GetRenderPath() ) && pLight->pGForce2Light &&
@@ -1870,16 +2038,24 @@ void CGameView::SetAmbient( const NDb::SAmbientLight *pLight, bool bSelectGF2, C
 	CVec3 vLightDir = GetLightDir( pLight->fPitch, pLight->fYaw );
 	CVec3 vShadowsLightDir;
 	if ( pLight->fShadowPitch == 100 )
+	{
 		vShadowsLightDir = vLightDir;
+	}
 	else
+	{
 		vShadowsLightDir = GetLightDir( pLight->fShadowPitch, pLight->fShadowYaw );
+	}
 
 	CPtrFuncBase<NGfx::CTexture> *pCloudsTexture = 0;
 	if ( pLight->pCloudTex )
+	{
 		pCloudsTexture = shareTextures.Get( GetKey( pLight->pCloudTex ) );
+	}
 	CFuncBase<SHMatrix> *pCloudsPos = 0;
 	if ( pTime && pCloudsTexture )
+	{
 		pCloudsPos = new CCloudMover( pTime, pLight->vCloudSize, pLight->fCloudDir, pLight->fCloudSpeed );
+	}
 
 	float fMaxShadowHeight = pLight->fMaxShadowHeight == 0 ? 20 : pLight->fMaxShadowHeight;
 	pScene->SetDirectionalLight( new CCVec3( vLightColor ),
@@ -1898,9 +2074,13 @@ void CGameView::SetAmbient( const NDb::SAmbientLight *pLight, bool bSelectGF2, C
 	                             pLight->vDymanicLightsModifications );
 	// ambient light
 	if ( pLight->pSky )
+	{
 		pMaterials->SetSky( shareCubeTextures.Get( pLight->pSky ) );
+	}
 	else
+	{
 		pMaterials->SetSky( 0 );
+	}
 	////
 	if ( pLight->pSunFlares )
 	{
@@ -1918,14 +2098,18 @@ void CGameView::SetAmbient( const NDb::SAmbientLight *pLight, bool bSelectGF2, C
 		}
 		////
 		if ( pLight->pSunFlares->pOverBright )
+		{
 			pFlares->pOverbright = shareTextures.Get( STextureKey( pLight->pSunFlares->pOverBright, 0 ) );
+		}
 		////
 		CVec3 sunFlareDir = GetLightDir( pLight->fSunFlarePitch, pLight->fSunFlareYaw );
 		Normalize( &sunFlareDir );
 		pScene->SetSunFlares( sunFlareDir, pFlares, pTime );
 	}
 	else
+	{
 		pScene->SetSunFlares( CVec3( 0, 0, 0 ), 0, 0 );
+	}
 #ifdef DEBUG_LIGHTING
 	static std::vector<CObj<CObjectBase>> lights;
 	float fBright = 1; //.5f;
@@ -1939,18 +2123,24 @@ void CGameView::SetAmbient( const NDb::SAmbientLight *pLight, bool bSelectGF2, C
 
 	pRain = 0;
 	if ( pLight->pRain && pTime )
+	{
 		pRain = CreateRain( pLight->pRain, pTime, 0, SRoomInfo() );
+	}
 
 	pSkyDome = 0;
 	if ( pLight->pSkyDome )
+	{
 		pSkyDome = CreateSkyDome( this, pLight->pSkyDome );
+	}
 }
 
 void CGameView::SetRenderMode( ESceneRenderMode mode )
 {
 	renderMode = mode;
 	if ( pPrevLight )
+	{
 		SetAmbient( pPrevLight, pPrevLightTime );
+	}
 }
 
 ESceneRenderMode CGameView::GetRenderMode() const
@@ -1971,7 +2161,9 @@ bool CGameView::TraceScene( const CRay &r,
 	SFullGroupInfo gg;
 	bool bRes = pScene->TraceScene( mask, r, pfT, pNormal, ps, &gg, ppPart );
 	if ( pRoomInfo )
+	{
 		*pRoomInfo = GetRoomInfo( gg );
+	}
 	return bRes;
 }
 
@@ -1991,14 +2183,20 @@ template <class T>
 static void PerPartFunc( CObjectBase *_p, T f )
 {
 	if ( !IsValid( _p ) )
+	{
 		return;
+	}
 	if ( CDynamicCast<CRenderNode> p = _p )
 	{
 		for ( int k = 0; k < p->parts.size(); ++k )
+		{
 			f( p->parts[k] );
+		}
 	}
 	else
+	{
 		f( _p );
+	}
 }
 
 struct SSetFade
@@ -2032,9 +2230,13 @@ struct SStopParticlesGeneration
 	{
 		CPtrFuncBase<CParticleEffect> *p = GetParticleAnimator( _p );
 		if ( !p )
+		{
 			return;
+		}
 		if ( CDynamicCast<CParticleAnimator> pAnimator = p )
+		{
 			pAnimator->StopParticlesGeneration( tTime );
+		}
 	}
 };
 void StopParticlesGeneration( CObjectBase *_p, STime tStop )
@@ -2065,9 +2267,13 @@ static void SetShadowsMode( IGameView *p, T take )
 	{
 		r = (ESceneRenderMode)( r + 1 );
 		if ( r == SRM_LAST )
+		{
 			r = SRM_SHOWOVERDRAW;
+		}
 		if ( take( r ) )
+		{
 			break;
+		}
 	}
 	p->SetRenderMode( r );
 }
@@ -2084,14 +2290,18 @@ void SetNextTranspRenderMode( IGameView *p )
 	ETransparentMode tr = p->GetTransparentMode();
 	tr = (ETransparentMode)( tr + 1 );
 	if ( tr == TRM_LAST )
+	{
 		tr = TRM_NONE;
+	}
 	p->SetTransparentMode( tr );
 }
 void SetNextHSRMode( IGameView *p )
 {
 	EHSRMode r = (EHSRMode)( p->GetHSRMode() + 1 );
 	if ( r == HSR_LAST )
+	{
 		r = HSR_NONE;
+	}
 	p->SetHSRMode( r );
 }
 
@@ -2103,7 +2313,9 @@ void ReloadTexture( const NDb::STexture *p )
 		for ( CTextureBasicShare::CDataHash::const_iterator i = data.begin(); i != data.end(); ++i )
 		{
 			if ( IsValid( i->second ) && i->first == p )
+			{
 				i->second->ReleaseTexture();
+			}
 		}
 	}
 	else
@@ -2111,7 +2323,9 @@ void ReloadTexture( const NDb::STexture *p )
 		for ( CTextureBasicShare::CDataHash::const_iterator i = data.begin(); i != data.end(); ++i )
 		{
 			if ( IsValid( i->second ) )
+			{
 				i->second->ReleaseTexture();
+			}
 		}
 	}
 }
@@ -2190,9 +2404,13 @@ static void VarSetHSR( const std::string &szID, const NGlobal::CValue &sValue, v
 {
 	defaultHSRMode = HSR_NONE;
 	if ( sValue.GetFloat() == 1 )
+	{
 		defaultHSRMode = HSR_FAST;
+	}
 	if ( sValue.GetFloat() > 1 )
+	{
 		defaultHSRMode = HSR_DYNAMIC;
+	}
 }
 
 // IT WILL BE DELETED SOON - for fast change of parameters

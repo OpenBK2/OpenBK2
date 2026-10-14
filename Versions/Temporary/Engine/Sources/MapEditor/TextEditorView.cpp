@@ -80,7 +80,9 @@ void LoadLuaKeywords( SLuaKeywords *pKeywords )
 		{
 			szKeyWordsFile = pUserData->Get()->constUserData.propertyControlData.szLUAKeyWordsFileName;
 			if ( NFile::IsPathRelative( szKeyWordsFile ) )
+			{
 				szKeyWordsFile = NFile::JoinPath( pUserData->Get()->constUserData.szStartFolder, szKeyWordsFile );
+			}
 		}
 		// Legacy configuration spells this editor\luakeywords.txt, while
 		// the installed directory is Editor on case-sensitive filesystems.
@@ -91,7 +93,9 @@ void LoadLuaKeywords( SLuaKeywords *pKeywords )
 			const auto full = std::filesystem::absolute( std::filesystem::u8path( szKeyWordsFile ) );
 			std::string relative;
 			if ( NFile::ResolveDataPathCase( &relative, full.root_path().u8string(), full.relative_path().u8string() ) )
+			{
 				fKeywords.open( std::filesystem::u8path( NFile::JoinPath( full.root_path().u8string(), relative ) ) );
+			}
 		}
 		pKeywords->completionWords = ReadLuaKeywordList( fKeywords );
 		std::string szKeywords = JoinLuaKeywords( pKeywords->completionWords );

@@ -14,9 +14,13 @@ const NDb::SMaterial *Color2Color( const NDebugInfo::EColor color )
 	std::unordered_map<NDebugInfo::EColor, CDBPtr<NDb::SMaterial>, SEnumHash>::const_iterator pos =
 			colorsMap.find( color );
 	if ( pos == colorsMap.end() )
+	{
 		return 0;
+	}
 	else
+	{
 		return pos->second;
+	}
 }
 
 void CScene::InitDebugMaterials( const NDb::SSceneConsts *pSceneConsts )
@@ -170,7 +174,9 @@ void CScene::ProcessDebugInfoUpdates()
 				{
 					CDebugInfoObjects::iterator pos = debugInfoObjects.find( pDebugInfoUpdate->nID );
 					if ( pos != debugInfoObjects.end() )
+					{
 						debugInfoObjects.erase( pos );
+					}
 				}
 				break;
 				case NDebugInfo::DEBUG_INFO_DELETE_LINE:

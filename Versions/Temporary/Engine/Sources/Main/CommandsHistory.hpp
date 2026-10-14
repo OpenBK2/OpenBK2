@@ -37,13 +37,17 @@ struct ICommandsHistory : public ICheckSumLog
 			FILE *f = fopen( path.c_str(), "w" );
 
 			if ( !f )
+			{
 				return;
+			}
 
 			fprintf( f, "Commands:\n" );
 			using cmd_pair = std::pair<int, std::list<CPtr<IAILogicCommandB2>>>;
 			std::vector<cmd_pair> all;
 			for ( auto pair : cmds )
+			{
 				all.push_back( { pair.first, pair.second } );
+			}
 			std::sort( all.begin(), all.end(), []( const cmd_pair &p1, const cmd_pair &p2 ) { return p1.first < p2.first; } );
 			for ( int i = 0; i < all.size(); i++ )
 			{
@@ -66,9 +70,13 @@ struct ICommandsHistory : public ICheckSumLog
 						auto cmde = ucmd->GetCommand();
 						auto cmdnameiter = ActionCommandToString.find( cmde->nCmdType );
 						if ( cmdnameiter != ActionCommandToString.end() )
+						{
 							fprintf( f, " [%s]", cmdnameiter->second.c_str() );
+						}
 						else
+						{
 							fprintf( f, " UNKNOWN_CMD[%d]", (int)cmde->nCmdType );
+						}
 					}
 					fprintf( f, "\n" );
 				}

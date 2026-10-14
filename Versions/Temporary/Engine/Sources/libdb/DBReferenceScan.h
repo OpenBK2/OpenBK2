@@ -21,5 +21,4 @@ LIBDB_EXPORT void CollectObjectReferences( std::vector<std::string> *pRes,
                                            const char *pBegin,
                                            const char *pEnd,
                                            const std::string &szOwnFileName );
-
 }

@@ -31,11 +31,17 @@ void CTerraGen::MakeHoleOnTile( const std::vector<CVec3dEx> &samples,
 
 		// add triangles vertices, which are placed outside sample curve
 		if ( IsOutside( samples, curTrg.points[0] ) )
+		{
 			newVerts.push_back( curTrg.points[0] );
+		}
 		if ( IsOutside( samples, curTrg.points[1] ) )
+		{
 			newVerts.push_back( curTrg.points[1] );
+		}
 		if ( IsOutside( samples, curTrg.points[2] ) )
+		{
 			newVerts.push_back( curTrg.points[2] );
+		}
 
 		// add intersections between sample curve and triangle
 		GetIntersection( &newVerts, samples, curTrg.points[0], curTrg.points[1] );
@@ -43,13 +49,17 @@ void CTerraGen::MakeHoleOnTile( const std::vector<CVec3dEx> &samples,
 		GetIntersection( &newVerts, samples, curTrg.points[2], curTrg.points[0] );
 
 		if ( newVerts.size() < 3 ) // triangle is placed completely inside sample curve
+		{
 			continue;
+		}
 
 		// add sample curve's vertices, which are placed inside triangle
 		for ( std::vector<CVec3dEx>::const_iterator itPoint = samples.begin(); itPoint != samples.end(); ++itPoint )
 		{
 			if ( IsInside( curTrg, *itPoint ) )
+			{
 				newVerts.push_back( CVec3dEx( itPoint->x, itPoint->y, itPoint->z, itPoint->flag ) );
+			}
 		}
 
 		// create triangles
@@ -95,9 +105,13 @@ void CTerraGen::MakeHoleOnTile( const std::vector<CVec3dEx> &samples,
 									const int nInd3 = AddUnique(
 											&tileVertices, CVec3dEx( newVerts[i3].x, newVerts[i3].y, newVerts[i3].z, newVerts[i3].flag ) );
 									if ( IsCCW( tileVertices[nInd1], tileVertices[nInd2], tileVertices[nInd3] ) )
+									{
 										tileTriangles.push_back( STriangle( nInd1, nInd2, nInd3 ) );
+									}
 									else
+									{
 										tileTriangles.push_back( STriangle( nInd1, nInd3, nInd2 ) );
+									}
 								}
 							}
 						}
@@ -128,7 +142,9 @@ void CTerraGen::MakeHole( const std::vector<CVec3fEx> &samples,
                           const bool bLeftHeighten /*= true*/ )
 {
 	if ( samples.empty() )
+	{
 		return;
+	}
 
 	NWin32Helper::CPrecisionControl precControl( NWin32Helper::CPrecisionControl::PCM_HIGH );
 
@@ -143,7 +159,9 @@ void CTerraGen::MakeHole( const std::vector<CVec3fEx> &samples,
 
 		if ( IsTrgSingular( newSamples[0], newSamples[1], newSamples[2] ) &&
 		     IsTrgSingular( newSamples[0], newSamples[1], newSamples[3] ) )
+		{
 			continue;
+		}
 
 		const double fMinX =
 				(std::min)( (std::min)( newSamples[0].x, newSamples[1].x ), (std::min)( newSamples[2].x, newSamples[3].x ) );
@@ -179,7 +197,9 @@ void CTerraGen::AddEntrenchment( const std::vector<CVec2> &_ctrlPoints,
                                  const bool bWriteHistory /* = true*/ )
 {
 	if ( !s_bMakeHolesForEntrenchment || _ctrlPoints.empty() )
+	{
 		return;
+	}
 
 	if ( bWriteHistory )
 	{

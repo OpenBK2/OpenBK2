@@ -11,8 +11,10 @@ CExecutorBurningFuel::CExecutorBurningFuel( const CVec3 &_vPos, const NDb::SBurn
 		: CExecutor( TID_BURNING_FUEL, 20 ), vPos( _vPos ), pStats( _pStats ), timeBurn( curTime + _pStats->nBurnTime )
 {
 	if ( pStats->pWeaponFireOnDesctruction )
+	{
 		theShellsStore.AddShell( new CInvisShell(
 				curTime, new CBurstExpl( 0, pStats->pWeaponFireOnDesctruction, vPos, VNULL3, 0, false, 1, true ), 0 ) );
+	}
 }
 
 int CExecutorBurningFuel::Segment()
@@ -23,10 +25,14 @@ int CExecutorBurningFuel::Segment()
 				curTime, new CBurstExpl( 0, pStats->pWeaponFireEachSecond, vPos, VNULL3, 0, false, 1, true ), 0 ) );
 	}
 	else
+	{
 		return -1;
+	}
 
 	if ( curTime > timeBurn )
+	{
 		return -1;
+	}
 	else
 	{
 		RecordRandomCall();

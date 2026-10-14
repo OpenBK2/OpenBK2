@@ -45,11 +45,17 @@ bool CAIGeometryExporter::FormScript( std::string *pScriptText,
 	std::string szRootJoint;
 	const std::string szScriptTemplate = GetScriptTemplate( "ExportAIGeometry" );
 	if ( CManipulatorManager::GetValue( &szRootMesh, pManipulator, "RootMesh" ) == false )
+	{
 		szRootMesh.clear();
+	}
 	if ( CManipulatorManager::GetValue( &szRootJoint, pManipulator, "RootJoint" ) == false )
+	{
 		szRootJoint.clear();
+	}
 	if ( szRootMesh == szRootJoint )
+	{
 		szRootJoint.clear();
+	}
 
 	*pScriptText = fmt::sprintf( szScriptTemplate.c_str(),
 	                             szObjName.c_str(),

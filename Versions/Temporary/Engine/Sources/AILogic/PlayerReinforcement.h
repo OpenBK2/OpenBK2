@@ -103,7 +103,9 @@ private:
 	void OnSerialize( IBinSaver &f )
 	{
 		if ( !f.IsChecksum() )
+		{
 			f.Add( 8, &unitAvailability );
+		}
 	}
 
 	// initial reinforcement fill

@@ -152,7 +152,9 @@ protected:
 		                         IMODContainer::tidTypeID,
 		                         IUserDataContainer::tidTypeID };
 		for ( unsigned id : ids )
+		{
 			NSingleton::UnRegisterSingleton( id );
+		}
 		IResourceManager::UninitSingleton();
 		NDb::CloseDatabase();
 		NVFS::SetMainVFS( savedVFS );
@@ -279,7 +281,9 @@ TEST_F( SkeletonExporter, SuppliedArtilleryModel )
 	// Optional local integration check; never write to the artist's game data.
 	const char *source = std::getenv( "OBK2_SKELETON_GLB" );
 	if ( !source )
+	{
 		GTEST_SKIP() << "Set OBK2_SKELETON_GLB to the artillery Anim.glb for the real-model check.";
+	}
 	fs::copy_file( fs::u8path( source ), root / "artillery.glb" );
 	ASSERT_TRUE( skeleton->SetValue( "ModelFileRef", "artillery.glb" ) );
 	ASSERT_TRUE( Import() ) << log->messages;
@@ -295,8 +299,12 @@ TEST_F( SkeletonExporter, SuppliedArtilleryModel )
 	NDb::SaveChanges();
 	int files = 0;
 	for ( const auto &entry : fs::directory_iterator( root / "Unit" ) )
+	{
 		if ( entry.path().filename().string().find( "_animb2.xdb" ) != std::string::npos )
+		{
 			++files;
+		}
+	}
 	EXPECT_EQ( files, 12 );
 }
 }

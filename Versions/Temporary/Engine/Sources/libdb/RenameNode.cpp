@@ -38,7 +38,9 @@ bool RenameNode( const std::string &szOldName, const std::string &szNewName )
 		bRes = NDb::RenameObjects( renames ) && bRes;
 	}
 	else
+	{
 		bRes = bRes && NDb::RenameObject( CDBID( szOldName ), CDBID( szNewName ) );
+	}
 	//
 	return bRes;
 }

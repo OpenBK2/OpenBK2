@@ -79,22 +79,30 @@ static void MakeShadowDepthCmdList( CRenderCmdList *pRes,
 	for ( int k = 0; k < fragments.size(); ++k )
 	{
 		if ( src.IsFilteredFragment( k ) )
+		{
 			continue;
+		}
 		const SRenderFragmentInfo &f = *fragments[k];
 		if ( f.vars.fFade < fMinFade )
+		{
 			continue;
+		}
 
 		COpGenContext fi( &pRes->ops, &f );
 		NGfx::CTexture *pATexture = 0;
 
 		if ( f.pMaterial == 0 )
+		{
 			continue;
+		}
 
 		pATexture = f.pMaterial->GetAlphaTestTex();
 		bool reject = !f.pMaterial->DoesCastShadow();
 
 		if ( !pATexture && !reject )
+		{
 			fi.AddOperation( normalOp, 100, DPM_NORMAL_NOTEQ, 0, pDepthInfo );
+		}
 	}
 }
 
@@ -109,10 +117,14 @@ static void MakeShadowColorCmdList( CRenderCmdList *pRes,
 	for ( int k = 0; k < fragments.size(); ++k )
 	{
 		if ( src.IsFilteredFragment( k ) )
+		{
 			continue;
+		}
 		const SRenderFragmentInfo &f = *fragments[k];
 		if ( f.vars.fFade < fMinFade )
+		{
 			continue;
+		}
 
 		COpGenContext fi( &pRes->ops, &f );
 		NGfx::CTexture *pATexture = 0;
@@ -125,10 +137,14 @@ static void MakeShadowColorCmdList( CRenderCmdList *pRes,
 		}
 
 		if ( pATexture == 0 )
+		{
 			pATexture = GetWhiteTexture();
+		}
 
 		if ( !reject )
+		{
 			fi.AddOperation( normalOp, 100, DPM_NORMAL_NOTEQ, 0, pDepthInfo, pATexture );
+		}
 	}
 }
 
@@ -192,7 +208,9 @@ static void RenderDepthTexture( NGfx::CTexture *pDepthTex,
 		CRenderCmdList res;
 		MakeShadowDepthCmdList( &res, geom, 0.01f, &renderDepthInfo, RO_DIR_DEPTH, RO_DIR_DEPTH_AT_NLP );
 		if ( !bNewShadows )
+		{
 			MakeSingleOp( &res, geom, true, 0.01f, &renderDepthInfo, RO_DIR_DEPTH, &renderDepthInfo );
+		}
 
 		Execute( pRender, &rc, sts, res, geom, lightInfo );
 	}
@@ -318,7 +336,9 @@ static void UpdateDepthTexture( CTransformStack *pTS,
 	*pDepthInfo = SPerspDirectionalDepthInfo();
 
 	if ( nLightingOptions & LO_NOSHADOWS )
+	{
 		return;
+	}
 	float fSmoothHeight = pLight->GetSmoothedSceneHeight( sceneBound.s.ptCenter.z + sceneBound.ptHalfBox.z );
 	CVec3 vShadowsLightDir = pLight->GetShadowsLightDir();
 
@@ -345,6 +365,7 @@ static void UpdateDepthTexture( CTransformStack *pTS,
 	NGfx::CTexture *pDepthTexCopy = pDepthShadowCopy.GetTexture();
 
 	if ( pDepthInfo->nlp.bNeedUpdate || !bNewShadows )
+	{
 		RenderDepthTexture( bNewShadows ? pDepthTexCopy : pDepthTexture,
 		                    depthGeom,
 		                    pLight,
@@ -355,6 +376,7 @@ static void UpdateDepthTexture( CTransformStack *pTS,
 		                    pDepthInfo,
 		                    pRender,
 		                    sceneGeom );
+	}
 
 	if ( bNewShadows )
 	{
@@ -451,7 +473,9 @@ static void Render( CTransformStack *pTS,
 	for ( int i = 1; i < fragments.size(); ++i )
 	{
 		if ( scene.IsFilteredFragment( i ) )
+		{
 			continue;
+		}
 		const SRenderFragmentInfo &frag = *fragments[i];
 		COpGenContext op( &lightOps.ops, &frag );
 		frag.pMaterial->AddOperations( &op, pRPC );
@@ -474,7 +498,9 @@ static bool GetIntersectBound( SBound *pRes, const SBound &b1, const SBound &b2 
 	vMax.y = (std::min)( vMax1.y, vMax2.y );
 	vMax.z = (std::min)( vMax1.z, vMax2.z );
 	if ( vMax.x < vMin.x || vMax.y < vMin.y || vMax.z < vMin.z )
+	{
 		return false;
+	}
 	pRes->BoxInit( vMin, vMax );
 	return true;
 }
@@ -511,7 +537,9 @@ void UpdateWaterReflection( CTransformStack *pTS,
 		const SRenderFragmentInfo &fragment = *( *iFragment );
 
 		if ( !fragment.pMaterial || !fragment.pMaterial->IsUsingWaterReflection() )
+		{
 			continue;
+		}
 
 		fZ += fragment.pMaterial->GetReflectionZ();
 		fDiv += 1.0f;
@@ -529,7 +557,9 @@ void UpdateWaterReflection( CTransformStack *pTS,
 			for ( int k = 0; k < 32; ++k )
 			{
 				if ( !( nFlags & ( 1 << k ) ) )
+				{
 					continue;
+				}
 
 				vBoxMins.Minimize( bounds[k].ptCenter );
 				vBoxMaxs.Maximize( bounds[k].ptCenter );
@@ -538,7 +568,9 @@ void UpdateWaterReflection( CTransformStack *pTS,
 	}
 
 	if ( vBoxMins.x > vBoxMaxs.x )
+	{
 		return;
+	}
 
 	const float fWaterHeight = fZ / fDiv; //(vBoxMins.z + vBoxMaxs.z)/2.0f;
 
@@ -703,11 +735,17 @@ void RenderGf3Fast( CTransformStack *pTS,
                     NGfx::CCubeTexture *_pSky )
 {
 	if ( bNoDepthRender )
+	{
 		nLightingOptions |= LO_NOSHADOWS;
+	}
 	if ( nLightingOptions & LO_NOSHADOWS )
+	{
 		pCurrentDepthTexture = GetWhiteTexture();
+	}
 	else
+	{
 		pCurrentDepthTexture = pDepthShadow.GetTexture();
+	}
 
 	SLightInfo lightInfo;
 	pLight->PrepareLightInfo( &lightInfo );
@@ -720,7 +758,9 @@ void RenderGf3Fast( CTransformStack *pTS,
 	bool bDrawWaterReflection = NGScene::bWaterReflection;
 
 	if ( bDrawWaterReflection )
+	{
 		pCurrentWaterReflectionTexture = pWaterReflection.GetTexture();
+	}
 
 	SRenderPathContext rpc( false, pCurrentDepthTexture, pCurrentWaterReflectionTexture );
 
@@ -754,7 +794,9 @@ void RenderGf3Fast( CTransformStack *pTS,
 	ClearRT( pRC, rtClear );
 
 	if ( trMode != TRM_ONLY )
+	{
 		Render( pTS, pRC, pRender, scene, lightInfo, &rpc );
+	}
 
 	pRender->RenderPostProcess( pTS, pRC );
 	// draw transparent stuff

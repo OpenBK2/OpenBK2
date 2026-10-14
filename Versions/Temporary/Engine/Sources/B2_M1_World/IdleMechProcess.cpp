@@ -20,13 +20,17 @@ CIdleMechProcess::CIdleMechProcess( int nObjectID,
 {
 	bones.resize( effectBones.size() );
 	for ( int i = 0; i < effectBones.size(); ++i )
+	{
 		bones[i] = effectBones[i];
+	}
 }
 
 bool CIdleMechProcess::Update( const NTimer::STime &time )
 {
 	if ( bones.size() == 0 )
+	{
 		return false;
+	}
 	if ( times.size() == 0 )
 	{
 		if ( bRandomLocator )
@@ -38,7 +42,9 @@ bool CIdleMechProcess::Update( const NTimer::STime &time )
 		{
 			times.resize( bones.size() );
 			for ( int i = 0; i < times.size(); ++i )
+			{
 				times[i] = time + NWin32Random::Random( 10000 );
+			}
 		}
 	}
 	else

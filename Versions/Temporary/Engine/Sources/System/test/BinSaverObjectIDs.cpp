@@ -151,7 +151,9 @@ std::vector<char> SaveDetMap( size_t nReserve )
 	det_map<uint16_t, int> map;
 	map.reserve( nReserve );
 	for ( int i = 0; i < 25; ++i )
+	{
 		map[static_cast<uint16_t>( 1000 - i * 7 )] = i;
+	}
 	CMemoryStream stream;
 	{
 		CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_WRITE );

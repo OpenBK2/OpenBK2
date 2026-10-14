@@ -46,20 +46,26 @@ CInterfaceMPGameRoom::CInterfaceMPGameRoom() : CInterfaceMPScreenBase( "MPGameRo
 CInterfaceMPGameRoom::~CInterfaceMPGameRoom()
 {
 	if ( pScreen )
+	{
 		Scene()->RemoveScreen( pScreen );
+	}
 }
 
 bool CInterfaceMPGameRoom::Init()
 {
 	if ( CInterfaceScreenBase::Init() == false )
+	{
 		return false;
+	}
 
 	RegisterObservers();
 
 	// load screen
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
 	if ( AddUIScreen( pScreen, "MPGameRoom", this ) == false )
+	{
 		return false;
+	}
 
 	pMain = GetChildChecked<IWindow>( pScreen, "Main", true );
 	NI_VERIFY( pMain, "No main window found", return false );
@@ -102,13 +108,19 @@ void CInterfaceMPGameRoom::InitControls()
 
 	pCantStartAccept = GetChildChecked<ITextView>( pMain, "CantStartAccept", true );
 	if ( pCantStartAccept )
+	{
 		pCantStartAccept->ShowWindow( false );
+	}
 	pCantStartColour = GetChildChecked<ITextView>( pMain, "CantStartColour", true );
 	if ( pCantStartColour )
+	{
 		pCantStartColour->ShowWindow( false );
+	}
 	pCantStartSide = GetChildChecked<ITextView>( pMain, "CantStartSide", true );
 	if ( pCantStartSide )
+	{
 		pCantStartSide->ShowWindow( false );
+	}
 }
 
 void CInterfaceMPGameRoom::SetControls()
@@ -119,7 +131,9 @@ void CInterfaceMPGameRoom::SetControls()
 		pButtonBeginGame->Enable( false );
 	}
 	if ( pWaitMessage )
+	{
 		pWaitMessage->ShowWindow( true );
+	}
 }
 
 void CInterfaceMPGameRoom::OnGetFocus( bool bFocus )
@@ -130,43 +144,69 @@ void CInterfaceMPGameRoom::OnGetFocus( bool bFocus )
 bool CInterfaceMPGameRoom::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_on_back" )
+	{
 		return OnBackReaction();
+	}
 
 	if ( szReaction == "react_on_begin" )
+	{
 		return OnBeginGameReaction();
+	}
 
 	if ( szReaction == "react_on_accept" )
+	{
 		return OnAcceptGameReaction();
+	}
 
 	if ( szReaction == "react_on_reject" )
+	{
 		return OnRejectGameReaction();
+	}
 
 	if ( szReaction == "chat_enter" )
+	{
 		return OnChatEnter();
+	}
 
 	if ( szReaction == "chat_escape" )
+	{
 		return OnChatEscape();
+	}
 
 	if ( szReaction == "react_on_change_player_side" )
+	{
 		return OnChangeSideReaction();
+	}
 
 	if ( szReaction == "react_on_change_player_team" )
+	{
 		return OnChangeTeamReaction();
+	}
 
 	if ( szReaction == "react_on_change_player_color" )
+	{
 		return OnChangeColorReaction();
+	}
 
 	if ( szReaction == "reaction_stop_waiting" )
+	{
 		return OnInterruptReaction();
+	}
 
 	if ( szReaction == "react_on_change_slot_status" )
+	{
 		return OnPlayerCombo( szSender );
+	}
 
 	if ( szReaction == "react_on_open_advanced" )
+	{
 		return OnShowAdvanced( true );
+	}
 
 	if ( szReaction == "react_on_close_advanced" )
+	{
 		return OnShowAdvanced( false );
+	}
 
 	return false;
 }
@@ -178,17 +218,23 @@ int CInterfaceMPGameRoom::SelectionIndexToNationIndex( int nSelectionIndex )
 	const std::vector<NDb::SMultiplayerSide> &sides = pMPConsts->sides;
 
 	if ( !sides[0].techLevels[nTechLevel].bDisabled && nSelectionIndex == 0 )
+	{
 		return 0;
+	}
 
 	// nSelectionIndex is always >= 1
 	int nValidIndex = 0;
 	for ( int i = 0; i < sides.size(); i++ )
 	{
 		if ( !sides[i].techLevels[nTechLevel].bDisabled )
+		{
 			nValidIndex++;
+		}
 
 		if ( nValidIndex == nSelectionIndex )
+		{
 			return i;
+		}
 	}
 
 	// If nation index selection is somehow wrong (it should never be), just pick a random one..
@@ -205,7 +251,9 @@ int CInterfaceMPGameRoom::NationIndexToSelectionIndex( int nCountryIndex )
 	for ( int i = 0; i <= nCountryIndex; i++ )
 	{
 		if ( !sides[i].techLevels[nTechLevel].bDisabled )
+		{
 			nValidIndex++;
+		}
 	}
 
 	return nValidIndex;
@@ -241,7 +289,9 @@ bool CInterfaceMPGameRoom::OnPlayerCombo( const std::string &szSender )
 	}
 
 	if ( slot.info.bAccept != bWantClosed )
+	{
 		OpenCloseEmptySlot( nIndex, bWantClosed );
+	}
 
 	return true;
 }
@@ -333,7 +383,9 @@ bool CInterfaceMPGameRoom::OnAcceptGameReaction()
 	slot.pCountry->Enable( false );
 	slot.pTeam->Enable( false );
 	if ( slot.pControlDisabler )
+	{
 		slot.pControlDisabler->ShowWindow( true );
+	}
 
 	SendUpdateSlot( nOwnSlot );
 	CheckStartConditions();
@@ -350,7 +402,9 @@ bool CInterfaceMPGameRoom::OnRejectGameReaction()
 	slot.pCountry->Enable( true );
 	slot.pTeam->Enable( true );
 	if ( slot.pControlDisabler )
+	{
 		slot.pControlDisabler->ShowWindow( false );
+	}
 
 	SendUpdateSlot( nOwnSlot );
 	CheckStartConditions();
@@ -369,8 +423,12 @@ void CInterfaceMPGameRoom::SendUpdateSlot( const int nSlot )
 		// Build a list of valid nation indexes and pick a random one from there
 		std::vector<int> validIndexes;
 		for ( int i = 0; i < sides.size(); i++ )
+		{
 			if ( !sides[i].techLevels[nTechLevel].bDisabled )
+			{
 				validIndexes.push_back( i );
+			}
+		}
 
 		slots[nSlot].info.nCountry = validIndexes[NWin32Random::Random( validIndexes.size() )];
 	}
@@ -414,10 +472,14 @@ bool CInterfaceMPGameRoom::OnChatMessage( SMPUIChatMessage *pMsg )
 {
 	std::wstring wszText;
 	if ( pMsg->szName.empty() )
+	{
 		wszText = pMsg->wszText;
+	}
 	else
+	{
 		wszText = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" +
 		          NStr::ToUnicode( pMsg->szName ) + L": " + pMsg->wszText;
+	}
 	pChatWrapper->AddItem( wszText );
 
 	// notify the user if the app is minimized or unfocused
@@ -429,7 +491,9 @@ bool CInterfaceMPGameRoom::OnChatMessage( SMPUIChatMessage *pMsg )
 void CInterfaceMPGameRoom::SetTimeLimit( int nTimeLimit )
 {
 	if ( !pTimeLimit )
+	{
 		return;
+	}
 	std::wstring wszText = NStr::ToUnicode( fmt::format( "{} min.", nTimeLimit ) );
 	pTimeLimit->SetText( pTimeLimit->GetDBText() + wszText );
 }
@@ -479,7 +543,9 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 	}
 
 	if ( bConnected )
+	{
 		return true;
+	}
 
 	bHost = pMsg->bHost;
 
@@ -502,7 +568,9 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 
 	IButton *pRandomPlacement = GetChildChecked<IButton>( pAdvancedPopup, "RandomPlacement", true );
 	if ( pRandomPlacement )
+	{
 		pRandomPlacement->SetState( gameDesc.bRandomPlacement ? 1 : 0 );
+	}
 
 	// Set up slots
 	slots.resize( nPlayers );
@@ -544,7 +612,9 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 		slot.pColour->SetName( fmt::format( "Colour{}", i ) );
 		slot.pColour->SetViewer( new CColorViewer() );
 		for ( int j = 0; j < pMPConsts->playerColorInfos.size(); ++j )
+		{
 			slot.pColour->AddItem( new CColorData( pMPConsts->playerColorInfos[j].nColor | 0xff000000 ) );
+		}
 
 		slot.pAccept = GetChildChecked<IButton>( pWnd, "Status", true );
 		slot.pAccept->SetName( fmt::format( "Status{}", i ) );
@@ -557,13 +627,17 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 
 		slot.pControlDisabler = GetChildChecked<IWindow>( pWnd, "ControlDisabler", true );
 		if ( slot.pControlDisabler )
+		{
 			slot.pControlDisabler->ShowWindow( false );
+		}
 
 		if ( i != nOwnSlot )
 		{
 			CPtr<IWindow> pShade = GetChildChecked<IWindow>( pWnd, "SlotShade", true );
 			if ( pShade )
+			{
 				pShade->ShowWindow( true );
+			}
 
 			slot.pPlayerName->ShowWindow( true );
 			slot.pPlayerNameText->SetText( slot.pPlayerNameText->GetDBText() + pScreen->GetTextEntry( "COMBO_OPEN" ) );
@@ -595,7 +669,9 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 	bConnected = true;
 
 	if ( pMsg->bHost )
+	{
 		pButtonBeginGame->ShowWindow( true );
+	}
 
 	return true;
 }
@@ -623,9 +699,13 @@ void CInterfaceMPGameRoom::UpdateInterior()
 
 		slot.pPlayerNameText->SetText( slot.pPlayerNameText->GetDBText() + NStr::ToUnicode( slot.info.szName ) );
 		if ( slot.info.bRandomCountry )
+		{
 			slot.pCountry->Select( 0 );
+		}
 		else
+		{
 			slot.pCountry->Select( NationIndexToSelectionIndex( slot.info.nCountry ) + 1 );
+		}
 		slot.pTeam->SetState( slot.info.nTeam );
 		slot.pColour->Select( slot.info.nColour );
 		slot.pAccept->SetState( slot.info.bAccept ? 1 : 0 );
@@ -643,12 +723,18 @@ void CInterfaceMPGameRoom::UpdateInterior()
 		if ( !slot.info.bPresent )
 		{
 			if ( slot.info.bAccept )
+			{
 				slot.pPlayerNameText->SetText( slot.pPlayerNameText->GetDBText() + pScreen->GetTextEntry( "COMBO_CLOSE" ) );
+			}
 			else
+			{
 				slot.pPlayerNameText->SetText( slot.pPlayerNameText->GetDBText() + pScreen->GetTextEntry( "COMBO_OPEN" ) );
+			}
 
 			if ( bHost )
+			{
 				slot.pPlayerCombo->Select( ( slot.info.bAccept ) ? 1 : 0 );
+			}
 
 			slot.pPing->SetState( 0 );
 			wszPingTooltip += GetScreen()->GetTextEntry( "PING_NA" );
@@ -720,13 +806,17 @@ void CInterfaceMPGameRoom::CheckStartConditions()
 		SUISlot &slot = slots[i];
 
 		if ( slot.info.bPresent )
+		{
 			nTeams[slot.info.nTeam] += 1;
+		}
 
 		if ( slot.info.bPresent && !slot.info.bAccept )
 		{
 			bCanBeginGame = false;
 			if ( eState == E_OK )
+			{
 				eState = E_ACCEPT;
+			}
 		}
 
 		if ( slot.info.bPresent )
@@ -754,11 +844,17 @@ void CInterfaceMPGameRoom::CheckStartConditions()
 	pButtonBeginGame->Enable( bCanBeginGame );
 
 	if ( pCantStartAccept )
+	{
 		pCantStartAccept->ShowWindow( eState == E_ACCEPT );
+	}
 	if ( pCantStartSide )
+	{
 		pCantStartSide->ShowWindow( eState == E_SIDE );
+	}
 	if ( pCantStartColour )
+	{
 		pCantStartColour->ShowWindow( eState == E_COLOUR );
+	}
 }
 
 bool CInterfaceMPGameRoom::OnInterruptReaction()

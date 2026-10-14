@@ -63,7 +63,9 @@ bool CSkeletonExporter::FormScript( std::string *pScriptText,
 	*pScriptText += ";\n";
 	// store all existed animations and remove references
 	if ( PatMat( szRootJoint.c_str(), "*section??" ) )
+	{
 		return true;
+	}
 	animations.clear();
 	int nRefCount = 0;
 	CManipulatorManager::GetValue( &nRefCount, pManipulator, "Animations" );
@@ -72,7 +74,9 @@ bool CSkeletonExporter::FormScript( std::string *pScriptText,
 		std::string szRef;
 		CManipulatorManager::GetValue( &szRef, pManipulator, fmt::format( "Animations.[{}]", nRefIndex ) );
 		if ( !szRef.empty() )
+		{
 			animations[szRef] = 1;
+		}
 	}
 	pManipulator->RemoveNode( "Animations" );
 	//
@@ -106,7 +110,9 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 	CManipulatorManager::GetValue( &szRootJoint, pManipulator, "RootJoint" );
 	//
 	if ( PatMat( szRootJoint.c_str(), "*section??" ) )
+	{
 		return true;
+	}
 	//
 	std::string szAnimationNamePrefix = NFile::CutFileExt( szObjName, 0 );
 	const std::string szSkeletonPostfix = "_skeleton";
@@ -160,13 +166,19 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 					std::string szMnemonic = typeMayaAnimationMnemonics.GetMnemonic( animationType );
 					NStr::ToLowerASCII( &szMnemonic );
 					if ( nNumber != INVALID_NODE_ID )
+					{
 						szAnimationName = fmt::format( "{}_{:02d}", szMnemonic.c_str(), nNumber );
+					}
 					else
+					{
 						szAnimationName = szMnemonic;
+					}
 					bResult = bResult && itAttribute->GetAttribute( "starttime", &nFirstFrame );
 					bResult = bResult && itAttribute->GetAttribute( "endtime", &nLastFrame );
 					if ( itAttribute->GetAttribute( "speed", &fSpeed ) == false )
+					{
 						fSpeed = 1.0f;
+					}
 					//
 					if ( bResult )
 					{
@@ -183,7 +195,9 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 					itAttribute->GetAttribute( "actiontime", &nActionFrame );
 					nActionFrame -= nFirstFrame;
 					if ( nActionFrame < 0 )
+					{
 						nActionFrame = 0;
+					}
 				}
 			}
 			szAnimationName = szAnimationNamePrefix + szAnimationName + "_animb2.xdb";
@@ -205,7 +219,9 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 							&szTypeAndName, szAnimationTypeName, szAnimationName, TYPE_SEPARATOR_CHAR );
 					CAnimationRefMap::iterator posAnimationName = animations.find( szAnimationName );
 					if ( posAnimationName != animations.end() )
+					{
 						animations.erase( posAnimationName );
+					}
 					// Запишем свойства инимации
 					bResult = bResult && pAnimationManipulator->SetValue( "SrcName", szSrcName );
 					bResult = bResult && pAnimationManipulator->SetValue( "RootJoint", szRootJoint );
@@ -226,7 +242,9 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 				}
 			}
 			if ( bResult )
+			{
 				++nAnimationRefCount;
+			}
 		}
 		//
 		// remove left animations
@@ -297,7 +315,9 @@ bool GetFrame( const SGrannyBoneAttributes &attributes, const char *key, int *fr
 	float value;
 	if ( !attributes.GetAttribute( key, &value ) || !std::isfinite( value ) || value < 0 ||
 	     static_cast<double>( value ) > ( std::numeric_limits<int>::max )() || std::floor( value ) != value )
+	{
 		return false;
+	}
 	*frame = static_cast<int>( value );
 	return true;
 }
@@ -315,14 +335,20 @@ CPtr<IManipulator> PrepareAnimation( const std::string &name )
 		if ( animation )
 		{
 			if ( !exists )
+			{
 				animation->GetObjMan()->SetChanged();
+			}
 			return animation;
 		}
 		if ( exists || !folder->RemoveObject( "AnimB2", name, false ) )
+		{
 			return nullptr;
+		}
 	}
 	if ( !folder->InsertObject( "AnimB2", name ) )
+	{
 		return nullptr;
+	}
 	return manager->CreateObjectManipulator( "AnimB2", name );
 }
 
@@ -331,14 +357,18 @@ bool ImportGltfMarkers( IManipulator *resource, const NGltf::TGltfFilePtr &file,
 	CGrannyBoneAttributesList attributes;
 	// Without a root filter, ReadAttributes preserves the document's node indices.
 	if ( !NEditorGltf::ReadAttributes( resource, &attributes ) || attributes.size() != file->asset.nodes.size() )
+	{
 		return false;
+	}
 	std::string prefix = NFile::CutFileExt( NDb::GetFileName( resource->GetDBID() ), 0 );
 	std::string lowerPrefix = prefix;
 	NStr::ToLowerASCII( &lowerPrefix );
 	const std::string suffix = "_skeleton";
 	if ( lowerPrefix.size() >= suffix.size() &&
 	     lowerPrefix.compare( lowerPrefix.size() - suffix.size(), suffix.size(), suffix ) == 0 )
+	{
 		prefix.resize( prefix.size() - suffix.size() );
+	}
 	prefix += "_";
 
 	std::vector<SGltfAnimationMarker> markers;
@@ -382,7 +412,9 @@ bool ImportGltfMarkers( IManipulator *resource, const NGltf::TGltfFilePtr &file,
 		NStr::ToLowerASCII( &mnemonic );
 		marker.name = prefix + mnemonic;
 		if ( number != INVALID_NODE_ID )
+		{
 			marker.name += fmt::format( "_{:02d}", number );
+		}
 		marker.name += "_animb2.xdb";
 		if ( !names.insert( marker.name ).second )
 		{
@@ -422,14 +454,18 @@ bool ImportGltfMarkers( IManipulator *resource, const NGltf::TGltfFilePtr &file,
 	CManipulatorManager::GetValue( &root, resource, "RootJoint" );
 	int count = 0;
 	if ( !CManipulatorManager::GetValue( &count, resource, "Animations" ) )
+	{
 		return false;
+	}
 	std::set<CDBID> linked;
 	for ( int i = 0; i < count; ++i )
 	{
 		std::string name;
 		CManipulatorManager::GetValue( &name, resource, fmt::format( "Animations.[{}]", i ) );
 		if ( !name.empty() )
+		{
 			linked.insert( CDBID( name ) );
+		}
 	}
 	for ( const auto &marker : markers )
 	{
@@ -446,13 +482,17 @@ bool ImportGltfMarkers( IManipulator *resource, const NGltf::TGltfFilePtr &file,
 		     !animation->SetValue( "ActionFrame", marker.action ) || !animation->SetValue( "Looped", marker.looped ) ||
 		     !animation->SetValue( "MoveSpeed", marker.speed ) || !animation->SetValue( "AABBAName", marker.attackBox ) ||
 		     !animation->SetValue( "AABBDName", marker.defenceBox ) || !NEditorGltf::Export( animation, "AnimB2", true ) )
+		{
 			return false;
+		}
 		// Keep manually assigned animations and make repeated exports idempotent.
 		if ( linked.insert( CDBID( marker.name ) ).second )
 		{
 			if ( !resource->InsertNode( "Animations" ) ||
 			     !resource->SetValue( fmt::format( "Animations.[{}]", count ), marker.name ) )
+			{
 				return false;
+			}
 			++count;
 		}
 		NLog::Log( LT_IMPORTANT,
@@ -472,12 +512,16 @@ bool CSkeletonExporter::ImportGltfInfo( IManipulator *resource )
 {
 	const auto file = NEditorGltf::Load( resource );
 	if ( !file )
+	{
 		return false;
+	}
 	int markerRoot = -1;
 	for ( size_t i = 0; i < file->asset.nodes.size(); ++i )
 	{
 		if ( std::string( file->asset.nodes[i].name ) != ANIMATIONS_ROOT_JOINT )
+		{
 			continue;
+		}
 		if ( markerRoot >= 0 )
 		{
 			NLog::Log( LT_ERROR, "GLTF has more than one Animations node.\n" );
@@ -491,14 +535,18 @@ bool CSkeletonExporter::ImportGltfInfo( IManipulator *resource )
 		CManipulatorManager::GetValue( &root, resource, "RootJoint" );
 		// Building sections keep their separately generated damage-stage animations.
 		if ( PatMat( root.c_str(), "*section??" ) )
+		{
 			return true;
+		}
 		return ImportGltfMarkers( resource, file, markerRoot );
 	}
 	int count = 0;
 	CManipulatorManager::GetValue( &count, resource, "Animations" );
 	// A populated list may deliberately use frame slices rather than named clips.
 	if ( count != 0 )
+	{
 		return true;
+	}
 	std::string reference, root;
 	CManipulatorManager::GetValue( &reference, resource, "ModelFileRef" );
 	CManipulatorManager::GetValue( &root, resource, "RootJoint" );
@@ -507,7 +555,9 @@ bool CSkeletonExporter::ImportGltfInfo( IManipulator *resource )
 	{
 		const std::string name( clip.name );
 		if ( name.empty() || !added.insert( name ).second )
+		{
 			continue;
+		}
 		std::string mnemonic = name;
 		NStr::ToUpper( &mnemonic );
 		unsigned number = INVALID_NODE_ID;
@@ -519,25 +569,37 @@ bool CSkeletonExporter::ImportGltfInfo( IManipulator *resource )
 		}
 		std::string safeName = name;
 		for ( char &c : safeName )
+		{
 			if ( !( ( c >= 'a' && c <= 'z' ) || ( c >= 'A' && c <= 'Z' ) || ( c >= '0' && c <= '9' ) || c == '_' ) )
+			{
 				c = '_';
+			}
+		}
 		const std::string animationName = NFile::CutFileExt( NDb::GetFileName( resource->GetDBID() ), 0 ) + "_" + safeName +
 		                                  "_" + std::to_string( count ) + "_animb2.xdb";
 		IFolderCallback *folder = Singleton<IFolderCallback>();
 		if ( folder->IsUniqueName( "AnimB2", animationName ) && !folder->InsertObject( "AnimB2", animationName ) )
+		{
 			return false;
+		}
 		CPtr<IManipulator> animation = Singleton<IResourceManager>()->CreateObjectManipulator( "AnimB2", animationName );
 		if ( !animation )
+		{
 			return false;
+		}
 		if ( !CManipulatorManager::SetValue( reference, animation, "ModelFileRef" ) ||
 		     !CManipulatorManager::SetValue( root, animation, "RootJoint" ) ||
 		     !CManipulatorManager::SetValue( name, animation, "ClipName" ) ||
 		     !CManipulatorManager::SetValue( typeAnimationMnemonics.GetMnemonic( type ), animation, "Type" ) ||
 		     !NEditorGltf::Export( animation, "AnimB2", true ) )
+		{
 			return false;
+		}
 		if ( !resource->InsertNode( "Animations" ) ||
 		     !CManipulatorManager::SetValue( animationName, resource, fmt::format( "Animations.[{}]", count ), true ) )
+		{
 			return false;
+		}
 		++count;
 	}
 	return true;

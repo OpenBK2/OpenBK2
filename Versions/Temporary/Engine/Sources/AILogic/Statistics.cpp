@@ -17,13 +17,19 @@ void CStatistics::Init() {}
 int CStatistics::GetUnitLevel( const NDb::EReinforcementType eType, const int nPlayer ) const
 {
 	if ( !GetScenarioTracker() )
+	{
 		return 0;
+	}
 
 	IAIScenarioTracker *pScenarioTracker = GetScenarioTracker();
 	if ( pScenarioTracker )
+	{
 		return pScenarioTracker->GetReinforcementXPLevel( nPlayer, eType );
+	}
 	else
+	{
 		return 0;
+	}
 }
 
 float CStatistics::GetValue( const int nValue, const int nPlayer ) const
@@ -50,7 +56,9 @@ void CStatistics::UnitKilled( const int nPlayer,
                               const bool bInfantry )
 {
 	if ( !GetScenarioTracker() )
+	{
 		return;
+	}
 
 	IAIScenarioTracker *pScenarioTracker = GetScenarioTracker();
 
@@ -69,7 +77,9 @@ void CStatistics::UnitKilled( const int nPlayer,
 	info.bInfantryKill = bInfantry;
 
 	if ( nPlayer == theDipl.GetMyNumber() )
+	{
 		updater.AddUpdate( EFB_GAIN_EXP, eKillerType, 0 );
+	}
 
 	if ( pScenarioTracker->RegisterUnitKill( info ) )
 	{
@@ -84,17 +94,23 @@ void CStatistics::UnitKilled( const int nPlayer,
 		{
 			const NDb::SAIExpLevel *pLevels = pConsts->common.expLevels[i];
 			if ( !pLevels )
+			{
 				continue;
+			}
 
 			if ( pLevels->eDBType == eKillerType )
 			{
 				int nXPLevel = (std::min<int>)( pLevels->levels.size() - 1, nOldLevel );
 				if ( nXPLevel >= 0 )
+				{
 					pOldBonus = pLevels->levels[nXPLevel].pStatsBonus;
+				}
 
 				nXPLevel = (std::min<int>)( pLevels->levels.size() - 1, nNewLevel );
 				if ( nXPLevel >= 0 )
+				{
 					pNewBonus = pLevels->levels[nXPLevel].pStatsBonus;
+				}
 
 				for ( CGlobalIter iter( theDipl.GetNParty( nPlayer ), EDI_FRIEND ); !iter.IsFinished(); iter.Iterate() )
 				{
@@ -104,9 +120,13 @@ void CStatistics::UnitKilled( const int nPlayer,
 						if ( nOldLevel != nNewLevel ) // Only if the own level changed. Don't bother if only leader's level changed
 						{
 							if ( pOldBonus )
+							{
 								pUnit->ApplyStatsModifier( pOldBonus, false );
+							}
 							if ( pNewBonus )
+							{
 								pUnit->ApplyStatsModifier( pNewBonus, true );
+							}
 						}
 						if ( nOldLeaderLevel !=
 						     nNewLeaderLevel ) // Only if the leader's level changed. Don't bother if only own level changed
@@ -130,11 +150,17 @@ void CStatistics::UnitKilled( const int nPlayer,
 		{
 			CPtr<SFeedBackUnitsArray> pParam = new SFeedBackUnitsArray;
 			for ( CGlobalIter iter( theDipl.GetNParty( nPlayer ), EDI_FRIEND ); !iter.IsFinished(); iter.Iterate() )
+			{
 				if ( ( *iter )->GetPlayer() == nPlayer && ( *iter )->GetReinforcementType() == eKillerType )
+				{
 					pParam->unitIDs.push_back( ( *iter )->GetUniqueID() );
+				}
+			}
 
 			if ( nPlayer == theDipl.GetMyNumber() )
+			{
 				updater.AddUpdate( EFB_COMMANDER_LEVELUP, eKillerType, pParam );
+			}
 		}
 	}
 }
@@ -142,13 +168,17 @@ void CStatistics::UnitKilled( const int nPlayer,
 const int CStatistics::GetXPLevel( const int nPlayer, const NDb::EReinforcementType eType )
 {
 	if ( !GetScenarioTracker() )
+	{
 		return 0;
+	}
 
 	//return 4;		//for debug: all abilities
 
 	IAIScenarioTracker *pScenarioTracker = GetScenarioTracker();
 	if ( pScenarioTracker )
+	{
 		return pScenarioTracker->GetReinforcementXPLevel( nPlayer, eType );
+	}
 
 	return 0;
 }
@@ -158,7 +188,9 @@ const int CStatistics::GetAbilityLevel( const int nPlayer, const NDb::EReinforce
 	IAIScenarioTracker *pScenarioTracker = GetScenarioTracker();
 
 	if ( !pScenarioTracker )
+	{
 		return 0;
+	}
 
 	const int nXPLevel = pScenarioTracker->GetReinforcementXPLevel( nPlayer, eType );
 	const int nLeaderLevel = pScenarioTracker->GetLeaderLevel( nPlayer, eType );

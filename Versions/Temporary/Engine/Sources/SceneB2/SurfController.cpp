@@ -77,7 +77,9 @@ void CVisSurfPatch::UpdateGeomData()
 void CVisSurfPatch::Recalc()
 {
 	if ( pValue == 0 )
+	{
 		pValue = new NGScene::CObjectInfo;
+	}
 
 	UpdateGeomData();
 
@@ -180,24 +182,34 @@ static void AddPoints( const CVec2 &vWind, const std::vector<NDb::SVSOPoint> &po
 		if ( IsCCW( pCurPatch->data.vertices[nVertsOffs + nInd].pos,
 		            pCurPatch->data.vertices[nVertsOffs + nInd + 1].pos,
 		            pCurPatch->data.vertices[nVertsOffs + nInd + 3].pos ) )
+		{
 			pCurPatch->data.triangles.push_back(
 					STriangle( nVertsOffs + nInd, nVertsOffs + nInd + 1, nVertsOffs + nInd + 3 ) );
+		}
 		else
+		{
 			pCurPatch->data.triangles.push_back(
 					STriangle( nVertsOffs + nInd, nVertsOffs + nInd + 3, nVertsOffs + nInd + 1 ) );
+		}
 		if ( IsCCW( pCurPatch->data.vertices[nVertsOffs + nInd + 3].pos,
 		            pCurPatch->data.vertices[nVertsOffs + nInd + 2].pos,
 		            pCurPatch->data.vertices[nVertsOffs + nInd].pos ) )
+		{
 			pCurPatch->data.triangles.push_back(
 					STriangle( nVertsOffs + nInd + 3, nVertsOffs + nInd + 2, nVertsOffs + nInd ) );
+		}
 		else
+		{
 			pCurPatch->data.triangles.push_back(
 					STriangle( nVertsOffs + nInd + 2, nVertsOffs + nInd + 3, nVertsOffs + nInd ) );
+		}
 	}
 
 	// set offsets
 	for ( int i = 0; i < ( points.size() - 1 ); ++i )
+	{
 		pCurPatch->texYOffsets.push_back( NWin32Random::Random( 0.0f, 3.0f ) );
+	}
 }
 
 void CSurfController::Init( const float fAngle,
@@ -268,7 +280,9 @@ void CSurfController::Init( const float fAngle,
 		}
 
 		if ( !bNeedCycle )
+		{
 			points.resize( points.size() - 1 );
+		}
 
 		AddPoints( vWind, points, pCurPatch );
 

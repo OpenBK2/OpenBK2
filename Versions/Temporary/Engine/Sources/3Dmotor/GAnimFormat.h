@@ -54,7 +54,9 @@ public:
 	void SetKey( const CDBPtr<TResource> &pResource )
 	{
 		if ( !pResource )
+		{
 			return;
+		}
 		bool bDelayedLoad = IsDelayedLoad();
 		NGScene::SResKey<NGScene::SGrannyFileLoaderInfo> uidKey(
 				pResource->uid, NGScene::SGrannyFileLoaderInfo( szResName, pResource->GetRecordID(), bDelayedLoad ) );

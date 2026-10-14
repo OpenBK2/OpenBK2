@@ -19,7 +19,9 @@ void SetSizes( const int nSizeX, const int nSizeY )
 {
 	data.resize( nSizeY );
 	for ( int i = 0; i < nSizeY; ++i )
+	{
 		data[i].data.resize( nSizeX );
+	}
 }
 
 bool IsEmpty() const
@@ -35,19 +37,25 @@ void PostLoad( bool bInEditor )
 	{
 		// first, correct size
 		for ( int i = 0; i < data.size(); ++i )
+		{
 			data[i].data.resize( nSizeX );
+		}
 		// second (for non-in-editor (game) case), transpose 2d array
 		if ( !bInEditor )
 		{
 			const int nSizeY = GetSizeY();
 			std::vector<SByteArray1> newData( nSizeX );
 			for ( int i = 0; i < nSizeX; ++i )
+			{
 				newData[i].data.resize( nSizeY );
+			}
 			//
 			for ( int i = 0; i < nSizeX; ++i )
 			{
 				for ( int j = 0; j < nSizeY; ++j )
+				{
 					newData[i].data[j] = data[j].data[i];
+				}
 			}
 			newData.swap( data );
 		}

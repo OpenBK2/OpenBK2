@@ -42,13 +42,17 @@ CAICommand *CQueueUnit::GetCurCmd() const
 void CQueueUnit::CheckCmdsSize( const int id )
 {
 	if ( id >= cmds.GetDecksNum() )
+	{
 		cmds.IncreaseDecksNum( id * 1.5 );
+	}
 }
 
 void CQueueUnit::DelCmdQueue( const int id )
 {
 	for ( int i = cmds.begin( id ); i != cmds.end(); i = cmds.GetNext( i ) )
+	{
 		cmds.GetEl( i ) = 0;
+	}
 	cmds.DelDeck( id );
 }
 
@@ -62,7 +66,9 @@ void CQueueUnit::InitWCommands( CQueueUnit *pUnit )
 	DelCmdQueue( wThisID );
 
 	if ( pUnit->GetCurCmd() && CanCommandBeExecuted( pUnit->GetCurCmd() ) )
+	{
 		cmds.Push( wThisID, pUnit->GetCurCmd() );
+	}
 
 	while ( !cmds.IsEmpty( wUnitID ) )
 	{
@@ -70,7 +76,9 @@ void CQueueUnit::InitWCommands( CQueueUnit *pUnit )
 		PopCmd( wUnitID );
 
 		if ( CanCommandBeExecuted( pCmd ) )
+		{
 			cmds.Push( wThisID, pCmd );
+		}
 	}
 }
 
@@ -82,7 +90,9 @@ void CQueueUnit::InsertUnitCommand( CAICommand *pCommand )
 
 	if ( !cmds.IsEmpty( GetUniqueIdQU() ) &&
 	     cmds.Peek( GetUniqueIdQU() )->ToUnitCmd().nCmdType == ACTION_COMMAND_DISAPPEAR )
+	{
 		return;
+	}
 
 	if ( CanCommandBeExecuted( pCommand ) && GetStatesFactory()->CanCommandBeExecuted( pCommand ) )
 	{
@@ -120,7 +130,9 @@ void CQueueUnit::PushFrontUnitCommand( CAICommand *pCommand )
 
 	if ( !cmds.IsEmpty( GetUniqueIdQU() ) &&
 	     cmds.Peek( GetUniqueIdQU() )->ToUnitCmd().nCmdType == ACTION_COMMAND_DISAPPEAR )
+	{
 		return;
+	}
 
 	if ( CanCommandBeExecuted( pCommand ) && GetStatesFactory()->CanCommandBeExecuted( pCommand ) )
 	{
@@ -145,7 +157,9 @@ void CQueueUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOn
 	{
 		const EActionCommand &cmd = pCommand->ToUnitCmd().nCmdType;
 		if ( cmd == ACTION_COMMAND_MOVE_TO || cmd == ACTION_COMMAND_REVERSE_TO || cmd == ACTION_COMMAND_SWARM_TO )
+		{
 			SendAcknowledgement( pCommand, ACK_NEGATIVE );
+		}
 
 		return;
 	}
@@ -155,10 +169,14 @@ void CQueueUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOn
 
 	if ( !cmds.IsEmpty( GetUniqueIdQU() ) &&
 	     cmds.Peek( GetUniqueIdQU() )->ToUnitCmd().nCmdType == ACTION_COMMAND_DISAPPEAR )
+	{
 		return;
+	}
 
 	if ( bPlaceInQueue )
+	{
 		cmds.Push( GetUniqueIdQU(), pCmd.GetPtr() );
+	}
 	//если текущее состояние завершено
 	else if ( bCmdFinished || !pState )
 	{
@@ -196,10 +214,14 @@ void CQueueUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOn
 
 				const NDb::SUnitSpecialAblityDesc *pSA = GetUnitAbilityDesc( eAbility );
 				if ( !bCommandAdded && pSA )
+				{
 					bNeedToInterruptsState = pSA->bStopCurrentAction;
+				}
 			}
 			else
+			{
 				bCommandAdded = true;
+			}
 
 			const NDb::ESpecialAbilityParam eSAaction = NDb::ESpecialAbilityParam( int( pCmd->ToUnitCmd().fNumber ) );
 
@@ -235,7 +257,9 @@ void CQueueUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOn
 void CQueueUnit::SetCommandFinished()
 {
 	if ( !bDoNotDeleteMeFromCommand && IsValid( pCmdCurrent ) )
+	{
 		pCmdCurrent->DeleteUnit( GetUniqueIdQU() );
+	}
 
 	bCmdFinished = true;
 	pCmdCurrent = 0;
@@ -326,7 +350,9 @@ void CQueueUnit::Segment()
 
 						pNewState = GetStatesFactory()->ProduceState( this, pCmd );
 						if ( pNewState )
+						{
 							pCmdCurrent = pCmd;
+						}
 
 						lastChangeStateTime = curTime;
 
@@ -344,23 +370,33 @@ void CQueueUnit::Segment()
 		bCmdFinished = false;
 	}
 	else
+	{
 		pState->Segment();
+	}
 }
 
 CAICommand *CQueueUnit::GetNextCommand() const
 {
 	if ( cmds.IsEmpty( GetUniqueIdQU() ) )
+	{
 		return 0;
+	}
 	else
+	{
 		return cmds.Peek( GetUniqueIdQU() );
+	}
 }
 
 CAICommand *CQueueUnit::GetLastCommand() const
 {
 	if ( cmds.IsEmpty( GetUniqueIdQU() ) )
+	{
 		return 0;
+	}
 	else
+	{
 		return cmds.GetLastEl( GetUniqueIdQU() );
+	}
 }
 
 void CQueueUnit::KillStatesAndCmdsInfo()

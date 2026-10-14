@@ -61,7 +61,9 @@ CInterfaceMessageBox::CInterfaceMessageBox() : CInterfaceScreenBase( "MessageBox
 CInterfaceMessageBox::~CInterfaceMessageBox()
 {
 	if ( pScreen )
+	{
 		Scene()->RemoveScreen( pScreen );
+	}
 }
 
 int CInterfaceMessageBox::CReactions::Check( const std::string &szCheckName ) const
@@ -75,10 +77,14 @@ bool CInterfaceMessageBox::Init()
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
 	pReactions = new CReactions( pScreen );
 	if ( AddUIScreen( pScreen, "MessageBoxScreen", pReactions ) == false )
+	{
 		return false;
+	}
 
 	if ( CInterfaceScreenBase::Init() == false )
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -151,13 +157,17 @@ void CInterfaceMessageBox::ResizeTextView( ITextView *pTextView, const std::wstr
 	pTextView->SetWidth( nNiceX );
 	const CTPoint<int> &size2 = pTextView->GetSize();
 	if ( size2.x < nNiceX )
+	{
 		pTextView->SetWidth( size2.x );
+	}
 }
 
 bool CInterfaceMessageBox::StepLocal( bool bAppActive )
 {
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )
+	{
 		pInterface->Step( bAppActive );
+	}
 
 	return CInterfaceScreenBase::StepLocal( bAppActive );
 }
@@ -215,13 +225,17 @@ void CICPreviousMenu::Exec()
 	NI_ASSERT( NMainLoop::GetTopInterface(), "No interface to pop" );
 	NMainLoop::PopInterface();
 	if ( !szResult.empty() )
+	{
 		NInput::PostEvent( szResult, 0, 0 );
+	}
 }
 
 void CICPreviousMenu::Configure( const char *pszConfig )
 {
 	if ( pszConfig )
+	{
 		szResult = pszConfig;
+	}
 }
 
 // CICRemoveInterfacesUpTo
@@ -234,7 +248,9 @@ void CICRemoveInterfacesUpTo::Exec()
 		if ( pInterface )
 		{
 			if ( pInterface->GetInterfaceType() == szInterfaceID )
+			{
 				break;
+			}
 		}
 		NMainLoop::PopInterface();
 	}
@@ -250,7 +266,9 @@ void CICRemoveInterfacesUpTo::Exec()
 void CICRemoveInterfacesUpTo::Configure( const char *pszConfig )
 {
 	if ( pszConfig )
+	{
 		szInterfaceID = pszConfig;
+	}
 }
 
 // CICClearInterfaces

@@ -122,13 +122,17 @@ public:
 	int GetSizeX() const
 	{
 		if ( nRotation == 0 || nRotation == 2 )
+		{
 			return array.GetSizeX();
+		}
 		return array.GetSizeY();
 	}
 	int GetSizeY() const
 	{
 		if ( nRotation == 0 || nRotation == 2 )
+		{
 			return array.GetSizeY();
+		}
 		return array.GetSizeX();
 	}
 };
@@ -215,7 +219,9 @@ public:
 		const CVec2 vPassabilityPoint( vRotatedPoint + vOrigin );
 		const SVector vP( vPassabilityPoint.x / SConsts::TILE_SIZE, vPassabilityPoint.y / SConsts::TILE_SIZE );
 		if ( vP.x >= 0 && vP.y >= 0 && vP.x < array->GetSizeX() && vP.y < array->GetSizeY() )
+		{
 			return ( *array )[vP.y][vP.x];
+		}
 		return TCont( 0 );
 	}
 };

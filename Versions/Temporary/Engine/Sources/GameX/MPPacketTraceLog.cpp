@@ -62,7 +62,9 @@ namespace
 		for ( size_t i = 0; i < out.size(); ++i )
 		{
 			if ( out[i] == '\n' || out[i] == '\r' || out[i] == '\t' )
+			{
 				out[i] = ' ';
+			}
 		}
 		return out;
 	}
@@ -148,7 +150,9 @@ void MatchPacketTrace_SetHeader( int nGameID,
                                  const std::vector<SMatchPacketTraceSlot> &slots )
 {
 	if ( !g_trace.bActive )
+	{
 		MatchPacketTrace_Reset();
+	}
 
 	g_trace.nGameID = nGameID;
 	g_trace.szSessionName = szSessionName;
@@ -179,7 +183,9 @@ void MatchPacketTrace_Log(
 		int nCommonSegment, const char *szEventType, const char *szName, int nFromClientID, const std::string &szDetails )
 {
 	if ( !g_trace.bActive || g_trace.bFlushed )
+	{
 		return;
+	}
 
 	const std::string eventType = szEventType ? szEventType : "UNKNOWN";
 	const std::string eventName = szName ? szName : "UNKNOWN";
@@ -193,7 +199,9 @@ void MatchPacketTrace_Log(
 	line << "#" << std::setw( 6 ) << std::setfill( '0' ) << g_trace.nEventID << " seg=" << nCommonSegment
 			 << " type=" << eventType << " name=" << eventName << " from=" << nFromClientID;
 	if ( !details.empty() )
+	{
 		line << " " << details;
+	}
 	g_trace.events.push_back( line.str() );
 	if ( g_trace.pActiveFile )
 	{
@@ -212,21 +220,29 @@ void MatchPacketTrace_Log(
 void MatchPacketTrace_RecordDropScheduled( int nSlot, int nSegment )
 {
 	if ( !g_trace.bActive || g_trace.bFlushed || nSlot < 0 )
+	{
 		return;
+	}
 
 	SDropTrace &drop = g_trace.drops[nSlot];
 	if ( drop.nScheduledSegment < 0 || nSegment < drop.nScheduledSegment )
+	{
 		drop.nScheduledSegment = nSegment;
+	}
 }
 
 void MatchPacketTrace_RecordDropApplied( int nSlot, int nSegment )
 {
 	if ( !g_trace.bActive || g_trace.bFlushed || nSlot < 0 )
+	{
 		return;
+	}
 
 	SDropTrace &drop = g_trace.drops[nSlot];
 	if ( drop.nAppliedSegment < 0 || nSegment < drop.nAppliedSegment )
+	{
 		drop.nAppliedSegment = nSegment;
+	}
 }
 
 void MatchPacketTrace_SetFinalState( unsigned long dwPresentMask,
@@ -234,7 +250,9 @@ void MatchPacketTrace_SetFinalState( unsigned long dwPresentMask,
                                      unsigned long dwTransceiverMask )
 {
 	if ( !g_trace.bActive || g_trace.bFlushed )
+	{
 		return;
+	}
 	g_trace.dwFinalPresentMask = dwPresentMask;
 	g_trace.dwFinalLaggersMask = dwLaggersMask;
 	g_trace.dwFinalTransceiverMask = dwTransceiverMask;
@@ -243,7 +261,9 @@ void MatchPacketTrace_SetFinalState( unsigned long dwPresentMask,
 void MatchPacketTrace_Flush( const char *szReason )
 {
 	if ( !g_trace.bActive || g_trace.bFlushed )
+	{
 		return;
+	}
 
 	g_trace.szFlushReason = szReason ? szReason : "unknown";
 	CloseActiveTrace();
@@ -251,7 +271,9 @@ void MatchPacketTrace_Flush( const char *szReason )
 	// Keep latest match trace in one deterministic file so logs can be diffed across clients.
 	FILE *file = fopen( "last_match_packets.txt", "w" );
 	if ( !file )
+	{
 		return;
+	}
 
 	// Preserve the existing completed-trace format, including all counters and
 	// drop summaries, while retaining in-memory events if this write fails.

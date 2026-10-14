@@ -91,7 +91,9 @@ static struct SEditorAckTypesAutoMagic
 	SEditorAckTypesAutoMagic()
 	{
 		for ( SAckDesc *pAck = s_AckDescs; pAck->pszExcelName != 0; ++pAck )
+		{
 			s_AckTypesMap[pAck->pszExcelName] = pAck->pszCodeName;
+		}
 	}
 } aEditorAckTypesAutoMagic;
 
@@ -111,7 +113,9 @@ void CollectEntries( CDBIDMap *pRes, const std::string &szFolderInEditor, const 
 					{
 						CDBID dbid2( szName.substr( 0, szFolderInEditor.size() ) );
 						if ( dbid2 == dbid1 )
+						{
 							( *pRes )[szName] = szName;
+						}
 					}
 				}
 			}
@@ -205,7 +209,9 @@ bool UpdateAckSets( const std::string &szExcelFileName,
 						CDBID dbidSoundDesc;
 						pComplexSoundDescMan->GetValue( fmt::format( "sounds.[{}].PathName", j ), &dbidSoundDesc );
 						if ( !dbidSoundDesc.IsEmpty() )
+						{
 							oldSoundDescs[dbidSoundDesc] = dbidSoundDesc.ToString();
+						}
 					}
 				}
 			}
@@ -224,11 +230,15 @@ bool UpdateAckSets( const std::string &szExcelFileName,
 		SAckSetKey key;
 		const int nTypeNamePos = it->szRecordCode.find_first_of( "1234567890" );
 		if ( nTypeNamePos == std::string::npos )
+		{
 			continue;
+		}
 		key.szTypeName = it->szRecordCode.substr( 0, nTypeNamePos );
 		const int nSubtypePos = it->szRecordCode.find_first_not_of( "1234567890", nTypeNamePos );
 		if ( nSubtypePos == std::string::npos )
+		{
 			continue;
+		}
 		key.nSubtype = atoi( it->szRecordCode.substr( nTypeNamePos, nSubtypePos - nTypeNamePos ).c_str() );
 		key.nVoiceID = it->nSubsetCode;
 		//
@@ -253,9 +263,13 @@ bool UpdateAckSets( const std::string &szExcelFileName,
 		//		DebugTrace( szAckSetName.c_str() );
 		//
 		if ( oldAcksSets.find( dbidAckSet ) == oldAcksSets.end() )
+		{
 			pFolderCallback->InsertObject( ACK_SET_TYPE_NAME, szAckSetName );
+		}
 		else
+		{
 			oldAcksSets.erase( dbidAckSet );
+		}
 		//
 		if ( CObj<NDb::IObjMan> pAckSetMan = NDb::GetManipulator( dbidAckSet ) )
 		{
@@ -272,15 +286,21 @@ bool UpdateAckSets( const std::string &szExcelFileName,
 				const std::string szComplexSoundDescName = szAckSetFolder + szAckSituationName + ".xdb";
 				const CDBID dbidComplexSoundDesc( szComplexSoundDescName );
 				if ( oldComplexSoundDescs.find( dbidComplexSoundDesc ) == oldComplexSoundDescs.end() )
+				{
 					pFolderCallback->InsertObject( COMPLEX_SOUND_DESC_TYPE_NAME, szComplexSoundDescName );
+				}
 				else
+				{
 					oldComplexSoundDescs.erase( dbidComplexSoundDesc );
+				}
 				//				DebugTrace( "\t%s", szComplexSoundDescName.c_str() );
 				//
 				if ( CObj<NDb::IObjMan> pComplexSoundDescMan = NDb::GetManipulator( dbidComplexSoundDesc ) )
 				{
 					if ( pAckSetMan->Insert( "types", MAN_APPEND ) == false )
+					{
 						continue;
+					}
 					const std::string szAckEntryName = fmt::format( "types.[{}]", nTypeNumber );
 					pAckSetMan->SetValue( szAckEntryName + ".AckType", szAckSituationName );
 					pAckSetMan->SetValue( szAckEntryName + ".Ack", dbidComplexSoundDesc );
@@ -295,14 +315,20 @@ bool UpdateAckSets( const std::string &szExcelFileName,
 						const std::string szSoundDescName = szSoundDescBase + ".xdb";
 						const CDBID dbidSoundDesc( szSoundDescName );
 						if ( oldSoundDescs.find( dbidSoundDesc ) == oldSoundDescs.end() )
+						{
 							pFolderCallback->InsertObject( SOUND_DESC_TYPE_NAME, szSoundDescName );
+						}
 						else
+						{
 							oldSoundDescs.erase( dbidSoundDesc );
+						}
 						//						DebugTrace( "\t\t%s", szSoundDescName.c_str() );
 						if ( CObj<NDb::IObjMan> pSoundDescMan = NDb::GetManipulator( dbidSoundDesc ) )
 						{
 							if ( pComplexSoundDescMan->Insert( "sounds", MAN_APPEND ) == false )
+							{
 								continue;
+							}
 							const std::string szSoundEntryName = fmt::format( "sounds.[{}]", nSoundNumber );
 							pComplexSoundDescMan->SetValue( szSoundEntryName + ".Probability", itAck->fProbability );
 							pComplexSoundDescMan->SetValue( szSoundEntryName + ".soundType", std::string( "NORMAL" ) );
@@ -334,11 +360,17 @@ bool UpdateAckSets( const std::string &szExcelFileName,
 	}
 	// delete old entries
 	for ( CDBIDMap::const_iterator it = oldSoundDescs.begin(); it != oldSoundDescs.end(); ++it )
+	{
 		NDb::RemoveObject( it->first );
+	}
 	for ( CDBIDMap::const_iterator it = oldComplexSoundDescs.begin(); it != oldComplexSoundDescs.end(); ++it )
+	{
 		NDb::RemoveObject( it->first );
+	}
 	for ( CDBIDMap::const_iterator it = oldAcksSets.begin(); it != oldAcksSets.end(); ++it )
+	{
 		NDb::RemoveObject( it->first );
+	}
 	//
 	return true;
 }

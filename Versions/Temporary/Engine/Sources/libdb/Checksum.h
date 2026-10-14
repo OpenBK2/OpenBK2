@@ -79,16 +79,22 @@ public:
 		const int nSize = vec.size();
 		DataCheckSum( &nSize, sizeof( nSize ) );
 		if ( nSize == 0 )
+		{
 			return *this;
+		}
 
 		// const_cast is ok, needed only to determine the type of T
 		T &el = const_cast<T &>( vec[0] );
 		if ( sizeof( TestType( &vec[0] ) ) == 1 && sizeof( el & ( *p ) ) == 1 )
+		{
 			DataCheckSum( &( vec[0] ), vec.size() * sizeof( T ) );
+		}
 		else
 		{
 			for ( typename std::vector<T>::const_iterator iter = vec.begin(); iter != vec.end(); ++iter )
+			{
 				( *this ) << *iter;
+			}
 		}
 
 		return *this;
@@ -99,7 +105,9 @@ public:
 		const int nSize = sz.size();
 		DataCheckSum( &nSize, sizeof( nSize ) );
 		if ( nSize != 0 )
+		{
 			DataCheckSum( &( sz[0] ), sz.size() * sizeof( sz[0] ) );
+		}
 
 		return *this;
 	}
@@ -109,7 +117,9 @@ public:
 		const int nSize = wsz.size();
 		DataCheckSum( &nSize, sizeof( nSize ) );
 		if ( nSize != 0 )
+		{
 			DataCheckSum( &( wsz[0] ), wsz.size() * sizeof( wsz[0] ) );
+		}
 
 		return *this;
 	}
@@ -123,11 +133,15 @@ template <class TUserObj, typename TPtr>
 uint32_t CDBPtr<TUserObj, TPtr>::CalcCheckSum() const
 {
 	if ( pObj == 0 )
+	{
 		// qualified: CDBPtr is declared at global scope, so this body is outside NDb
 		// and unqualified lookup does not reach NDb::GetDefaultCheckSum. The call does
 		// not depend on the template parameters either, so it is looked up here rather
 		// than at each instantiation, which is what MSVC does and how it found it.
 		return NDb::GetDefaultCheckSum();
+	}
 	else
+	{
 		return GetBarePtr()->CalcCheckSum();
+	}
 }

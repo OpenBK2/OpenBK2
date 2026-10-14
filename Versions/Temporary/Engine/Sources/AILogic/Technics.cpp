@@ -67,7 +67,9 @@ BASIC_REGISTER_CLASS( AILOGIC, CMilitaryCar );
 const bool CMilitaryCar::IsIdle() const
 {
 	if ( GetState()->GetName() == EUSN_MECHUNIT_REST_ON_BOARD )
+	{
 		return false;
+	}
 	return CAIUnit::IsIdle();
 }
 
@@ -89,24 +91,32 @@ void CMilitaryCar::Init( const CVec2 &center,
 
 	//медицинские грузовички лечат пехоту в радиусе
 	if ( CanCommandBeExecutedByStats( ACTION_COMMAND_HEAL_INFANTRY ) )
+	{
 		pTheExecutorsContainer->Add( new CExecutorTransportHealInfantry( this ) );
+	}
 
 	onBoard.resize( pStats->boardedMechUnitPosition.size() );
 	// from time to time AI should scan for enemies and unload
 	// passengers if enemy found
 	if ( theDipl.IsAIPlayer( GetPlayer() ) && pStats->nPassangers != 0 && !pStats->IsAviation() )
+	{
 		theExecutorContainer.Add( new CExecutorWatchForEnemyUnloadPassangers( this ) );
+	}
 }
 
 const bool CMilitaryCar::CanBoard( CAIUnit *pUnit ) const
 {
 	if ( boarding.find( pUnit->GetUniqueId() ) != boarding.end() )
+	{
 		return true;
+	}
 
 	for ( int i = 0; i < onBoard.size(); ++i )
 	{
 		if ( !IsValidObj( onBoard[i] ) )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -231,7 +241,9 @@ const CVec3 CMilitaryCar::GetBoardedPosition( CAIUnit *pUnit, const NTimer::STim
 		return CVec3( vCenter2D + ( vBoardPos2D ^ vDir ), vCenter.z + vBoardPos.z );
 	}
 	else
+	{
 		return VNULL3;
+	}
 }
 
 void CMilitaryCar::InitGuns()
@@ -248,7 +260,9 @@ void CMilitaryCar::InitGuns()
 			for ( int n = 0; n < platform.guns.size() && bBackGuns; ++n )
 			{
 				if ( platform.guns[n].wDirection < 16384 || platform.guns[n].wDirection > 49152 )
+				{
 					bBackGuns = false;
+				}
 			}
 			turrets[i] = new CUnitTurret( this,
 			                              i + 1,
@@ -288,7 +302,9 @@ const CVec2 CMilitaryCar::GetEntrancePoint() const
 		vResult += vDir * SConsts::TILE_SIZE / 2;
 
 		if ( GetTerrain()->IsLocked( tile, EAC_HUMAN ) )
+		{
 			vResult += vDir * SConsts::TILE_SIZE / 2;
+		}
 	}
 
 	return vResult;
@@ -299,7 +315,9 @@ void CMilitaryCar::AddPassenger( CSoldier *pUnit )
 	if ( pass.empty() )
 	{
 		for ( int i = 0; i < GetNTurrets(); ++i )
+		{
 			GetTurret( i )->SetRotateTurretState( false );
+		}
 	}
 
 	pass.push_back( pUnit );
@@ -311,12 +329,16 @@ void CMilitaryCar::PrepareToDelete()
 {
 	// всех сидящих внутри - убить.
 	while ( GetNPassengers() )
+	{
 		GetPassenger( 0 )->Die( false, 0 );
+	}
 
 	for ( std::vector<CPtr<CAIUnit>>::iterator it = onBoard.begin(); it != onBoard.end(); ++it )
 	{
 		if ( IsValidObj( *it ) )
+		{
 			( *it )->Die( false, 0 );
+		}
 	}
 	CAIUnit::PrepareToDelete();
 }
@@ -361,14 +383,20 @@ void CMilitaryCar::Segment()
 	CAIUnit::Segment();
 
 	for ( CSupportAAGuns::iterator it = supportAAGuns.begin(); it != supportAAGuns.end(); ++it )
+	{
 		it->second->Segment();
+	}
 
 	pGuns->Segment();
 	for ( int i = 0; i < GetNTurrets(); ++i )
+	{
 		GetTurret( i )->Segment();
+	}
 
 	if ( pLockingUnit != 0 && ( !pLockingUnit->IsRefValid() || !pLockingUnit->IsAlive() ) )
+	{
 		pLockingUnit = 0;
+	}
 
 	// CRAR{ соптимизировать!, не посылать, если координаты не изменились
 	int i = 0;
@@ -392,7 +420,9 @@ void CMilitaryCar::Segment()
 	                     !GetTerrain()->IsLocked( vEntranceTile, EAC_TERRAIN ) /*&& !IsTowing()*/;
 
 	if ( !bNewCanUnload )
+	{
 		bNewCanUnload = IsTowing();
+	}
 	if ( bNewCanUnload != bCanUnload )
 	{
 		updater.AddUpdate( 0, ACTION_NOTIFY_MODIFY_ENTRANCE_STATE, this, bNewCanUnload );
@@ -425,7 +455,9 @@ void CMilitaryCar::DelPassenger( const int n )
 	if ( pass.empty() )
 	{
 		for ( int i = 0; i < GetNTurrets(); ++i )
+		{
 			GetTurret( i )->SetRotateTurretState( true );
+		}
 	}
 }
 
@@ -439,7 +471,9 @@ void CMilitaryCar::DelPassenger( CSoldier *pSoldier )
 	if ( pass.empty() )
 	{
 		for ( int i = 0; i < GetNTurrets(); ++i )
+		{
 			GetTurret( i )->SetRotateTurretState( true );
+		}
 	}
 }
 
@@ -590,7 +624,9 @@ void CTank::TakeDamage( const float fDamage,
 		CMilitaryCar::TakeDamage( fDamage * fTrackDamageCoeff, pShell, nPlayerOfShoot, pShotUnit );
 	}
 	else
+	{
 		CMilitaryCar::TakeDamage( fDamage, pShell, nPlayerOfShoot, pShotUnit );
+	}
 
 	// обработать specials
 	if ( IsAlive() && theCheats.GetImmortals( theDipl.GetNParty( nPlayerOfShoot ) ) != 1 )
@@ -606,11 +642,15 @@ void CTank::TakeDamage( const float fDamage,
 			updater.AddUpdate( CreateStatusUpdate( EUS_TRACK_DAMAGED, true, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
 
 			if ( GetPlayer() == theDipl.GetMyNumber() && pShotUnit == 0 ) // only mines are needed
+			{
 				theFeedBackSystem.AddFeedbackAndForget( GetUniqueID(), GetCenterPlain(), EFB_TRACK_BROKEN, -1 );
+			}
 			bTrackDamaged = true;
 			TrackDamagedState( true );
 			if ( pShotUnit )
+			{
 				pShotUnit->SetTrackTargeting( false ); // CRAP: Turn TT off immediately
+			}
 		}
 	}
 }
@@ -689,10 +729,14 @@ void CTank::ScanForDangerousDir()
 			lastTimeOfDangerousDirChanged = curTime;
 
 			if ( bNewDangerousDirSet || lastTimeOfDangerousDirChanged + 3000 < curTime )
+			{
 				bDangerousDirSetInertia = bNewDangerousDirSet;
+			}
 		}
 		else if ( bDangerousDirSetInertia != bDangerousDirSet && lastTimeOfDangerousDirChanged + 3000 < curTime )
+		{
 			bDangerousDirSetInertia = bDangerousDirSet;
+		}
 
 		bDangerousDirSet = bNewDangerousDirSet;
 		nextTimeOfDangerousDirScan = curTime + 1000 + NRandom::Random( 0, 2000 );
@@ -816,9 +860,13 @@ bool CAITransportUnit::UpdateExternalLoaders()
 	for ( CExternLoaders::iterator it = externLoaders.begin(); it != externLoaders.end(); )
 	{
 		if ( !IsValidObj( *it ) )
+		{
 			it = externLoaders.erase( it );
+		}
 		else
+		{
 			++it;
+		}
 	}
 	return externLoaders.empty();
 }
@@ -837,13 +885,17 @@ void CAITransportUnit::GetRPGStats( SAINotifyRPGStats *pStats )
 {
 	CMilitaryCar::GetRPGStats( pStats );
 	if ( GetNCommonGuns() == 0 )
+	{
 		pStats->nSupply = fResursUnits / SConsts::TRANSPORT_RU_CAPACITY * 1000.0f;
+	}
 }
 
 void CAITransportUnit::SetTowedArtillery( CArtillery *_pTowedArtillery )
 {
 	if ( IsValid( pTowedArtillery ) && !IsValid( _pTowedArtillery ) )
+	{
 		pTowedArtillery->SetBeingHooked( 0 );
+	}
 	pTowedArtillery = _pTowedArtillery;
 	updater.AddUpdate( 0, ACTION_NOTIFY_STATE_CHANGED, this, GetUnitState() );
 }
@@ -851,9 +903,13 @@ void CAITransportUnit::SetTowedArtillery( CArtillery *_pTowedArtillery )
 const int CAITransportUnit::GetUnitState() const
 {
 	if ( pTowedArtillery )
+	{
 		return ECS_HOOK_CANNON;
+	}
 	else
+	{
 		return ECS_UNHOOK_CANNON;
+	}
 }
 
 void CAITransportUnit::FreeLoaders( CFormation *pLoaderSquad, CAITransportUnit *pTransport )
@@ -867,7 +923,9 @@ void CAITransportUnit::FreeLoaders( CFormation *pLoaderSquad, CAITransportUnit *
 		{
 			CSoldier *pSold = ( *pLoaderSquad )[i];
 			if ( pSold->IsInSolidPlace() )
+			{
 				soldiersInside.push_back( pSold );
+			}
 		}
 		while ( !soldiersInside.empty() )
 		{
@@ -885,7 +943,9 @@ void CAITransportUnit::FreeLoaders( CFormation *pLoaderSquad, CAITransportUnit *
 				SAIUnitCmd( ACTION_COMMAND_MOVE_TO, pLoaderSquad->GetCenterPlain() ), pLoaderSquad, false );
 	}
 	if ( pTransport && pTransport->IsRefValid() && pTransport->IsAlive() )
+	{
 		pTransport->Unlock();
+	}
 }
 
 void CAITransportUnit::PrepareLoaders( CFormation *pLoaderSquad, CAITransportUnit *pTransport )
@@ -908,9 +968,13 @@ void CAITransportUnit::PrepareLoaders( CFormation *pLoaderSquad, CAITransportUni
 		updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, pLandUnit, -1 );
 
 		if ( pLandUnit->IsInSolidPlace() )
+		{
 			pLandUnit->SetCenter( vEntrancePoint, false );
+		}
 		else
+		{
 			pLandUnit->SetCenter( vEntrancePoint );
+		}
 
 		pLandUnit->SetFree();
 	}
@@ -920,7 +984,9 @@ void CAITransportUnit::PrepareLoaders( CFormation *pLoaderSquad, CAITransportUni
 void CAITransportUnit::AddExternLoaders( CFormation *pLoaders )
 {
 	if ( pLoaders && pLoaders->IsRefValid() && pLoaders->IsAlive() )
+	{
 		externLoaders.push_back( pLoaders );
+	}
 }
 
 bool CAITransportUnit::CanHookUnit( CAIUnit *pUnitToHook ) const
@@ -933,7 +999,9 @@ bool CAITransportUnit::CanHookUnit( CAIUnit *pUnitToHook ) const
 		return fWeight <= fTowForce;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 const int CAITransportUnit::GetNUnitToTakeArtillery( bool bPlaceInQueue, CAIUnit *pUnitToTake )
@@ -965,9 +1033,13 @@ const int CAITransportUnit::GetNUnitToTakeArtillery( bool bPlaceInQueue, CAIUnit
 	}
 
 	if ( pBestUnit == 0 )
+	{
 		return -2;
+	}
 	else
+	{
 		return pBestUnit->GetUniqueId();
+	}
 }
 
 void CAITransportUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand )
@@ -994,17 +1066,25 @@ void CAITransportUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bo
 			if ( nUnitToTakeArtillery == -2 )
 			{
 				if ( !CanHookUnit( pArtillery ) & !bPlaceInQueue )
+				{
 					SendAcknowledgement( pCommand, ACK_NEGATIVE_NOTIFICATION );
+				}
 			}
 
 			if ( nUnitToTakeArtillery == GetUniqueId() )
+			{
 				CMilitaryCar::UnitCommand( pCommand, bPlaceInQueue, bOnlyThisUnitCommand );
+			}
 			else if ( !bPlaceInQueue )
+			{
 				UnitCommand( new CAICommand( SAIUnitCmd( ACTION_COMMAND_STOP ) ), false, bOnlyThisUnitCommand );
+			}
 		}
 	}
 	else
+	{
 		CMilitaryCar::UnitCommand( pCommand, bPlaceInQueue, bOnlyThisUnitCommand );
+	}
 }
 
 const bool CAITransportUnit::CheckTurn( const float fRectCoeff,
@@ -1013,13 +1093,17 @@ const bool CAITransportUnit::CheckTurn( const float fRectCoeff,
                                         const bool bCanGoBackward ) const
 {
 	if ( pTowedArtillery )
+	{
 		GetTerrain()->TemporaryUnlockUnitProfile(
 				pTowedArtillery->GetUniqueID(), pTowedArtillery->GetUnitProfile(), pTowedArtillery->IsLockingTiles(), false );
+	}
 
 	const bool bResult = CMilitaryCar::CheckTurn( fRectCoeff, vDir, bWithUnits, bCanGoBackward );
 
 	if ( pTowedArtillery )
+	{
 		GetTerrain()->RemoveTemporaryUnlocking( pTowedArtillery->GetUniqueID() );
+	}
 
 	return bResult;
 }
@@ -1027,7 +1111,11 @@ const bool CAITransportUnit::CheckTurn( const float fRectCoeff,
 bool CAITransportUnit::CalculateUnitVisibility4Party( const uint8_t party )
 {
 	if ( IsTowing() )
+	{
 		return IsVisible( party );
+	}
 	else
+	{
 		return CMilitaryCar::CalculateUnitVisibility4Party( party );
+	}
 }

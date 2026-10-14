@@ -61,10 +61,14 @@ void CHeightFogHolder::Recalc()
 {
 	CObjectInfo *pMesh = pGeom->GetValue();
 	if ( !pMesh )
+	{
 		return;
+	}
 
 	if ( !pValue )
+	{
 		pValue = new CObjectInfo( *pMesh );
+	}
 
 	if ( pHeightFog )
 	{
@@ -105,7 +109,9 @@ CPtrFuncBase<CObjectInfo> *
 CreateHeightFogHolder( CPtrFuncBase<CObjectInfo> *pGeom, const NDb::SHeightFog *pHeightFog, const SFBTransform &place )
 {
 	if ( pGeom )
+	{
 		return new CHeightFogHolder( pGeom, pHeightFog, place );
+	}
 	return 0;
 }
 
@@ -114,7 +120,9 @@ CPtrFuncBase<CObjectInfo> *CreateHeightFogHolder( CPtrFuncBase<CObjectInfo> *pGe
                                                   CFuncBase<SFBTransform> *pPlace )
 {
 	if ( pGeom )
+	{
 		return new CHeightFogHolder( pGeom, pHeightFog, pPlace );
+	}
 	return 0;
 }
 

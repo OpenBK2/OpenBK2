@@ -40,11 +40,15 @@ bool CWingScaleMutator::Setup( ISkeletonAnimator *pAnimator,
 		for ( std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); ++it )
 		{
 			if ( StartsWithNoCase( *it, szScaledWingPrefix ) )
+			{
 				scaledWings.push_back( pGetBone->GetBoneIndex( it->c_str() ) );
+			}
 		}
 		nStaticWing = pGetBone->GetBoneIndex( szStaticWingName.c_str() );
 		if ( !scaledWings.empty() && nStaticWing != -1 )
+		{
 			pAnimator->SetSpecialMutator( this );
+		}
 	}
 	return !scaledWings.empty() && nStaticWing != -1;
 }

@@ -18,11 +18,15 @@ int CExecutorTransportHealInfantry::Segment()
 		      iter.Iterate() )
 		{
 			if ( ( *iter )->GetStats()->IsInfantry() )
+			{
 				( *iter )->IncreaseHitPoints( SConsts::MED_TRUCK_HEAL_PER_UPDATEDURATION );
+			}
 		}
 	}
 	else
+	{
 		return -1;
+	}
 
 	return GetNextTime();
 }

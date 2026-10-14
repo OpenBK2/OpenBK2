@@ -47,7 +47,9 @@ void CScene::FadeObject( int nID, bool bFade )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
 	if ( pos == data[eScene]->visObjects.end() )
+	{
 		return;
+	}
 
 	if ( pos->second->pObj )
 	{
@@ -64,7 +66,9 @@ void CScene::FadeObject( int nID, float fFade )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
 	if ( pos == data[eScene]->visObjects.end() )
+	{
 		return;
+	}
 
 	if ( pos->second->pObj )
 	{

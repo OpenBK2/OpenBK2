@@ -10,9 +10,13 @@ virtual void ToAIUnits( bool bInEditor )
 		      itChange != itFormation->changesByEvent.end(); )
 		{
 			if ( *itChange >= formations.size() )
+			{
 				itChange = itFormation->changesByEvent.erase( itChange );
+			}
 			else
+			{
 				++itChange;
+			}
 		}
 	}
 	// check for orders and resize it to fit members size for each formation
@@ -22,9 +26,13 @@ virtual void ToAIUnits( bool bInEditor )
 		for ( std::vector<CDBPtr<SInfantryRPGStats>>::iterator itMember = members.begin(); itMember != members.end(); )
 		{
 			if ( ( *itMember ) == 0 )
+			{
 				itMember = members.erase( itMember );
+			}
 			else
+			{
 				++itMember;
+			}
 		}
 		it->order.resize( members.size() );
 		if ( nOldSize < members.size() )
@@ -55,7 +63,9 @@ virtual void ToAIUnits( bool bInEditor )
 		availUserActions.SetAction( USER_ACTION_FORM_SQUAD );
 	}
 	else if ( members.empty() )
+	{
 		availUserActions.Clear();
+	}
 }
 //
 virtual const CUserActions *GetUserActions( bool bActionsBy ) const

@@ -26,7 +26,9 @@ CInterfaceMPLadderStatistics::~CInterfaceMPLadderStatistics() {}
 bool CInterfaceMPLadderStatistics::Init()
 {
 	if ( CInterfaceScreenBase::Init() == false )
+	{
 		return false;
+	}
 
 	AddScreen( this );
 	pMain = GetChildChecked<IWindow>( pScreen, "Main", true );
@@ -34,7 +36,9 @@ bool CInterfaceMPLadderStatistics::Init()
 
 	IInterfaceBase *pPrevInterface = NMainLoop::GetPrevInterface( this );
 	if ( pPrevInterface )
+	{
 		pPrevMPScreen = dynamic_cast<CInterfaceMPScreenBase *>( pPrevInterface );
+	}
 
 	pWaiting = GetChildChecked<ITextView>( pMain, "WaitingLine", true );
 	pAdvList = GetChildChecked<IScrollableContainer>( pMain, "RightPanel", true );
@@ -49,10 +53,14 @@ bool CInterfaceMPLadderStatistics::Init()
 bool CInterfaceMPLadderStatistics::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_on_back" )
+	{
 		return OnBackReaction();
+	}
 
 	if ( szReaction == "react_on_medal" )
+	{
 		return OnShowMedal( szSender );
+	}
 
 	if ( szReaction == "react_on_close" )
 	{
@@ -81,20 +89,28 @@ bool CInterfaceMPLadderStatistics::StepLocal( bool bAppActive )
 		{
 			CPtr<SMPUIMessage> pMsg = Singleton<IMPToUIManager>()->GetUIMessage();
 			if ( !pMsg )
+			{
 				break;
+			}
 			if ( pMsg->eMessageType == EMUI_NIVAL_NET_LADDER_STATS )
 			{
 				SMPUILadderStatsMessage *pStatsMsg = dynamic_cast_ptr<SMPUILadderStatsMessage *>( pMsg );
 				if ( pStatsMsg )
+				{
 					OnLadderStatsMessage( pStatsMsg );
+				}
 			}
 			else if ( pPrevMPScreen )
+			{
 				pPrevMPScreen->HandleMessage( pMsg );
+			}
 		}
 	}
 
 	if ( pPrevMPScreen )
+	{
 		pPrevMPScreen->Step( bAppActive );
+	}
 	return bResult;
 }
 
@@ -169,14 +185,18 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 		for ( int i = 0; i < 16; ++i )
 		{
 			if ( !SLadderStatistics::HasMedal( info.medals, nCountry, i ) )
+			{
 				continue;
+			}
 
 			if ( !bHeaderAdded )
 			{
 				IWindow *pCountryItem = AddWindowCopy( pMedalsList, pMedalCountryTemplate );
 				ITextView *pCountryName = GetChildChecked<ITextView>( pCountryItem, "ItemCountryName", true );
 				if ( pCountryName )
+				{
 					pCountryName->SetText( pCountryName->GetDBText() + countryNames[nCountry] );
+				}
 				pCountryItem->ShowWindow( true );
 				pMedalsList->PushBack( pCountryItem, false );
 				bHeaderAdded = true;
@@ -193,16 +213,22 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 			if ( i < side.medals.size() )
 			{
 				if ( pMedalName )
+				{
 					pMedalName->SetText( pMedalName->GetDBText() + GET_TEXT_PRE( side.medals[i]->, LocalizedName ) );
+				}
 				if ( pMedalIcon )
+				{
 					pMedalIcon->SetTexture( side.medals[i]->pIconTexture );
+				}
 
 				aMedal.pMedal = side.medals[i];
 			}
 			else
 			{
 				if ( pMedalName )
+				{
 					pMedalName->SetText( pMedalName->GetDBText() + NStr::ToUnicode( fmt::format( "Medal {}", i ) ) );
+				}
 			}
 			medals.push_back( aMedal );
 			pItem->ShowWindow( true );
@@ -243,7 +269,9 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 			{
 				const NDb::SReinforcement *pReinf = reinfSet.reinforcements[i];
 				if ( !pReinf )
+				{
 					continue;
+				}
 				if ( pReinf->eType == info.nFavouriteReinforcement && CHECK_TEXT_NOT_EMPTY_PRE( pReinf->, LocalizedName ) )
 				{
 					wszReinfName = GET_TEXT_PRE( pReinf->, LocalizedName );
@@ -258,11 +286,15 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 
 	std::wstring wszName = L"-";
 	if ( info.nStrongestAgainst >= 0 && info.nStrongestAgainst < pMPConsts->sides.size() )
+	{
 		wszName = GET_TEXT_PRE( pMPConsts->sides[info.nStrongestAgainst]., Name );
+	}
 	Add2Line( GetScreen()->GetTextEntry( "T_HDR_MOST_EFFECTIVE" ), wszName );
 	wszName = L"-";
 	if ( info.nWeakestAgainst >= 0 && info.nWeakestAgainst < pMPConsts->sides.size() )
+	{
 		wszName = GET_TEXT_PRE( pMPConsts->sides[info.nWeakestAgainst]., Name );
+	}
 	Add2Line( GetScreen()->GetTextEntry( "T_HDR_LEAST_EFFECTIVE" ), wszName );
 
 	pAdvList->Update();
@@ -307,20 +339,30 @@ void CInterfaceMPLadderStatistics::Add4Line( const std::wstring &wszItem1,
 {
 	IWindow *pItem = AddWindowCopy( pAdvList, pAdv4Template );
 	if ( !pItem )
+	{
 		return;
+	}
 
 	ITextView *pItem41 = GetChildChecked<ITextView>( pItem, "Item41", true );
 	if ( pItem41 )
+	{
 		pItem41->SetText( pItem41->GetDBText() + wszItem1 );
+	}
 	ITextView *pItem42 = GetChildChecked<ITextView>( pItem, "Item42", true );
 	if ( pItem42 )
+	{
 		pItem42->SetText( pItem42->GetDBText() + wszItem2 );
+	}
 	ITextView *pItem43 = GetChildChecked<ITextView>( pItem, "Item43", true );
 	if ( pItem43 )
+	{
 		pItem43->SetText( pItem43->GetDBText() + wszItem3 );
+	}
 	ITextView *pItem44 = GetChildChecked<ITextView>( pItem, "Item44", true );
 	if ( pItem44 )
+	{
 		pItem44->SetText( pItem44->GetDBText() + wszItem4 );
+	}
 
 	pItem->ShowWindow( true );
 	pAdvList->PushBack( pItem, false );
@@ -330,14 +372,20 @@ void CInterfaceMPLadderStatistics::Add2Line( const std::wstring &wszItem1, const
 {
 	IWindow *pItem = AddWindowCopy( pAdvList, pAdv2Template );
 	if ( !pItem )
+	{
 		return;
+	}
 
 	ITextView *pItem21 = GetChildChecked<ITextView>( pItem, "Item21", true );
 	if ( pItem21 )
+	{
 		pItem21->SetText( pItem21->GetDBText() + wszItem1 );
+	}
 	ITextView *pItem22 = GetChildChecked<ITextView>( pItem, "Item22", true );
 	if ( pItem22 )
+	{
 		pItem22->SetText( pItem22->GetDBText() + wszItem2 );
+	}
 
 	pItem->ShowWindow( true );
 	pAdvList->PushBack( pItem, false );
@@ -347,7 +395,9 @@ void CInterfaceMPLadderStatistics::Add1Line( const std::wstring &wszItem )
 {
 	ITextView *pItem = dynamic_cast<ITextView *>( AddWindowCopy( pAdvList, pAdv1Template ) );
 	if ( !pItem )
+	{
 		return;
+	}
 	pItem->ShowWindow( true );
 	pItem->SetText( pItem->GetDBText() + wszItem );
 	pAdvList->PushBack( pItem, false );
@@ -365,18 +415,26 @@ bool CInterfaceMPLadderStatistics::OnShowMedal( const std::string &szSender )
 		}
 	}
 	if ( !pMedal )
+	{
 		return true;
+	}
 
 	IWindow *pIcon = GetChildChecked<IWindow>( pMedalPopup, "PopupPicture", true );
 	ITextView *pName = GetChildChecked<ITextView>( pMedalPopup, "MedalPopupName", true );
 	ITextView *pDesc = GetChildChecked<ITextView>( pMedalPopup, "MedalPopupDesc", true );
 
 	if ( pIcon )
+	{
 		pIcon->SetTexture( pMedal->pPictureTexture );
+	}
 	if ( pName )
+	{
 		pName->SetText( pName->GetDBText() + GET_TEXT_PRE( pMedal->, LocalizedName ) );
+	}
 	if ( pDesc )
+	{
 		pDesc->SetText( pDesc->GetDBText() + GET_TEXT_PRE( pMedal->, LocalizedDesc ) );
+	}
 
 	pMedalPopup->ShowWindow( true );
 	return true;
@@ -391,7 +449,9 @@ void CICMPLadderStatistics::PostCreate( IInterface *pInterface )
 	NMainLoop::PushInterface( pInterface );
 	CInterfaceMPLadderStatistics *pLS = dynamic_cast<CInterfaceMPLadderStatistics *>( pInterface );
 	if ( pLS )
+	{
 		pLS->RequestInfo( szNick );
+	}
 }
 
 void CICMPLadderStatistics::Configure( const char *pszConfig )

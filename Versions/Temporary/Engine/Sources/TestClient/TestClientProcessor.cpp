@@ -81,7 +81,9 @@ bool CTestClientProcessor::ProcessConnectServerResult( CConnectServerPacket *pPa
 
 	std::string szMessage;
 	if ( pPacket->eConnectionState == CConnectServerPacket::ECS_SUCCESS )
+	{
 		szMessage = "Connected!\n";
+	}
 	else
 	{
 		szMessage = "Connection failed, ";
@@ -247,8 +249,10 @@ bool CTestClientProcessor::ProcessChatChannelByNickPacket( CChatChannelByNickPac
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, szOutString.c_str() );
 	}
 	else
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE,
 		                                         fmt::format( "User {} is not in chat.\n", pPacket->szNick ).c_str() );
+	}
 	return true;
 }
 
@@ -296,8 +300,10 @@ bool CTestClientProcessor::ProcessRemoveClient( CNetRemoveClient *pPacket )
 
 	NI_ASSERT( pPacket->nClientID == 0, fmt::format( "wrong client {} removed, 0 expected\n", pPacket->nClientID ) );
 	if ( pPacket->nClientID == 0 )
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE,
 		                                         fmt::format( "connection with server was lost\n" ).c_str() );
+	}
 
 	return true;
 }
@@ -317,9 +323,13 @@ bool CTestClientProcessor::ProcessGetLobbyClientsPacket( CGetLobbyClientsPacket 
 
 	pPacket->dwVersion = dwClientsVersion;
 	if ( pServerClient )
+	{
 		pServerClient->SendPacket( pPacket );
+	}
 	else
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
+	}
 
 	return true;
 }
@@ -330,13 +340,19 @@ bool CTestClientProcessor::ProcessCustomLobbyClients( CCustomLobbyClientsPacket 
 
 	dwClientsVersion = pPacket->dwVersion;
 	if ( pPacket->bFullUpdate )
+	{
 		lobbyClients.clear();
+	}
 
 	for ( std::list<int>::iterator iter = pPacket->removed.begin(); iter != pPacket->removed.end(); ++iter )
+	{
 		lobbyClients.erase( *iter );
+	}
 
 	if ( pPacket->added.empty() && pPacket->changed.empty() && lobbyClients.empty() )
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "no clients except me\n" );
+	}
 	else
 	{
 		for ( std::list<SCustomLobbyClientInfo>::iterator iter = pPacket->added.begin(); iter != pPacket->added.end();
@@ -355,7 +371,9 @@ bool CTestClientProcessor::ProcessCustomLobbyClients( CCustomLobbyClientsPacket 
 
 		std::string szStr = fmt::format( "lobby clients received, version {}", dwClientsVersion );
 		if ( pPacket->bFullUpdate )
+		{
 			szStr += ", fullupdate";
+		}
 		szStr += ":\n";
 
 		for ( std::unordered_map<int, SCustomLobbyClientInfo>::iterator iter = lobbyClients.begin();
@@ -366,9 +384,13 @@ bool CTestClientProcessor::ProcessCustomLobbyClients( CCustomLobbyClientsPacket 
 			szStr += fmt::format( "    client {}, ", info.szNick );
 
 			if ( info.bWant2ReceiveChat )
+			{
 				szStr += "receiving chat, ";
+			}
 			else
+			{
 				szStr += "is not receiving chat, ";
+			}
 
 			switch ( info.eState )
 			{
@@ -386,9 +408,13 @@ bool CTestClientProcessor::ProcessCustomLobbyClients( CCustomLobbyClientsPacket 
 			}
 
 			if ( info.nGameID == -1 )
+			{
 				szStr += ", not in a game";
+			}
 			else
+			{
 				szStr += fmt::format( ", in game {}", info.nGameID );
+			}
 
 			szStr += "\n";
 		}
@@ -404,7 +430,9 @@ bool CTestClientProcessor::ProcessCreateGame( CCreateGamePacket *pPacket )
 	CPtr<CNetPacket> pDelete = pPacket;
 
 	if ( nGameID != -1 )
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "cannot create game, in game now\n" );
+	}
 	else
 	{
 		pServerClient->SendPacket( pPacket );
@@ -420,7 +448,9 @@ bool CTestClientProcessor::ProcessKillGame( CKillGamePacket *pPacket )
 	CPtr<CNetPacket> pDelete = pPacket;
 
 	if ( pPacket->nGameID == -1 && nGameID == -1 )
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "cannot kill game, not in a game now\n" );
+	}
 	else
 	{
 		pPacket->nClientID = 0;
@@ -442,7 +472,9 @@ bool CTestClientProcessor::ProcessUpdateGameInfo( CUpdateGameInfo *pPacket )
 	CPtr<CNetPacket> pDelete = pPacket;
 
 	if ( nGameID == -1 )
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "cannot update game info, not in a game now\n" );
+	}
 	else
 	{
 		pPacket->nClientID = 0;
@@ -470,13 +502,19 @@ bool CTestClientProcessor::ProcessCustomLobbyGamesPacket( CLobbyGamesPacket *pPa
 
 	dwGamesVersion = pPacket->dwVersion;
 	if ( pPacket->bFullUpdate )
+	{
 		lobbyGames.clear();
+	}
 
 	for ( std::list<int>::iterator iter = pPacket->removed.begin(); iter != pPacket->removed.end(); ++iter )
+	{
 		lobbyGames.erase( *iter );
+	}
 
 	if ( pPacket->added.empty() && pPacket->changed.empty() && lobbyGames.empty() )
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "no games in the lobby\n" );
+	}
 	else
 	{
 		for ( std::list<SGameInfo>::iterator iter = pPacket->added.begin(); iter != pPacket->added.end(); ++iter )
@@ -493,7 +531,9 @@ bool CTestClientProcessor::ProcessCustomLobbyGamesPacket( CLobbyGamesPacket *pPa
 
 		std::string szStr = fmt::format( "lobby games received, version {}", dwGamesVersion );
 		if ( pPacket->bFullUpdate )
+		{
 			szStr += ", fullupdate";
+		}
 		szStr += ":\n";
 
 		for ( std::unordered_map<int, SGameInfo>::iterator iter = lobbyGames.begin(); iter != lobbyGames.end(); ++iter )
@@ -501,9 +541,13 @@ bool CTestClientProcessor::ProcessCustomLobbyGamesPacket( CLobbyGamesPacket *pPa
 			SGameInfo &info = iter->second;
 			szStr += fmt::format( "    \"{}\", id {}, max players {}", info.szName, info.nID, info.nMaxPlayers );
 			if ( info.bCanConnect )
+			{
 				szStr += ", can connect";
+			}
 			else
+			{
 				szStr += ", cannot connect";
+			}
 
 			szStr += "\n";
 		}
@@ -519,7 +563,9 @@ bool CTestClientProcessor::ProcessLeaveGame( CLeaveGamePacket *pPacket )
 	CPtr<CNetPacket> pDelete = pPacket;
 
 	if ( nGameID == -1 )
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "cannot leave game, not in a game now\n" );
+	}
 	else
 	{
 		pPacket->nGameID = nGameID;
@@ -657,7 +703,9 @@ bool CTestClientProcessor::ProcessGameKickClient( CGameKickClient *pPacket )
 	if ( pServerClient )
 	{
 		if ( nGameID == -1 )
+		{
 			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "cannot kick client, not in a game now\n" );
+		}
 		else
 		{
 			pPacket->nGameID = nGameID;
@@ -682,9 +730,13 @@ bool CTestClientProcessor::ProcessSendSpecGameInfo( CTestSpecGameInfo *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
 	if ( nGameID == -1 )
+	{
 		WriteMSG( "not in a game now\n" );
+	}
 	else
+	{
 		pServerClient->SendPacket( new CSpecificGameInfo( 0, nGameID, pPacket ) );
+	}
 
 	return true;
 }
@@ -693,14 +745,20 @@ bool CTestClientProcessor::ProcessReceiveSpecificGameInfo( CSpecificGameInfo *pP
 {
 	CPtr<CNetPacket> pDelete = pPacket;
 	if ( pPacket->pInfo == 0 )
+	{
 		WriteMSG( "null specific game info received\n" );
+	}
 	else
 	{
 		CTestSpecGameInfo *pTestInfo = dynamic_cast_ptr<CTestSpecGameInfo *>( pPacket->pInfo );
 		if ( pTestInfo == 0 )
+		{
 			WriteMSG( "unknown specific game info received\n" );
+		}
 		else
+		{
 			WriteMSG( "test specific game info recieved: map name \"%s\"\n", pTestInfo->szMapName.c_str() );
+		}
 	}
 
 	return true;
@@ -710,12 +768,16 @@ bool CTestClientProcessor::ProcessShowGameClients( CTestShowGameClients *pPacket
 {
 	CPtr<CNetPacket> pDelete = pPacket;
 	if ( nGameID == -1 )
+	{
 		WriteMSG( "not in a game now" );
+	}
 	else
 	{
 		std::string szStr = fmt::format( "game {} clients: {}", nGameID, nMyID );
 		for ( std::unordered_set<int>::iterator iter = gameClients.begin(); iter != gameClients.end(); ++iter )
+		{
 			szStr += fmt::format( ", {}", *iter );
+		}
 		szStr += "\n";
 
 		WriteMSG( szStr.c_str() );
@@ -750,7 +812,9 @@ bool CTestClientProcessor::ProcessLadderInvitePacket( CLadderInvitePacket *pPack
 
 	CPtr<CNetPacket> pDelete = pPacket;
 	if ( pServerClient )
+	{
 		pServerClient->SendPacket( new CConnectGamePacket( 0, pPacket->nGameID, "" ) );
+	}
 
 	return true;
 }

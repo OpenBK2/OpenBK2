@@ -69,9 +69,13 @@ CVec3 CManuver::GetProspectiveSpeed( NTimer::STime nTime ) const
 	const float fDiff = fAdd + fProgress - pPath->GetLength();
 
 	if ( fDiff > 0.0f ) // assume that further movement is by line
+	{
 		return pPath->GetEndTangent();
+	}
 	else
+	{
 		return pPath->GetTangent( fAdd + fProgress );
+	}
 }
 
 CVec3 CManuver::GetProspectivePoint( const NTimer::STime nTime ) const
@@ -81,9 +85,13 @@ CVec3 CManuver::GetProspectivePoint( const NTimer::STime nTime ) const
 	const float fDiff = fAdd + fProgress - pPath->GetLength();
 
 	if ( fDiff > 0.0f ) // assume that further movement is by line
+	{
 		return pPath->GetEndPoint() + pPath->GetEndTangent() * fSpeed * fDiff;
+	}
 	else
+	{
 		return pPath->GetPoint( fProgress + fAdd );
+	}
 }
 
 void CManuver::InitCommon( struct IPathFraction *_pPath, CPlanesFormation *_pPlane, const bool _bToHorisontal )
@@ -173,7 +181,9 @@ void CManuver::AdjustNormale( const NTimer::STime timeDiff,
 		const uint16_t wCalculatedDir( wCur + uint16_t( timeDiff * fCurTiltSpeed ) );
 		CVec2 vCalculatedNormale( GetVectorByDirection( wCalculatedDir ) );
 		if ( timeDiff != 0 )
+		{
 			*vNormal = vCalculatedNormale.x * vDesiredNormale + vCalculatedNormale.y * k;
+		}
 		*pfTiltToGo = DirsDifference( wDesiredDir, wCalculatedDir );
 	}
 }
@@ -195,14 +205,20 @@ void CManuver::CalcNormale( const NTimer::STime timeDiff )
 	const bool bNeedDecSpeed = fTiltToGo < 2.0f * fCurTiltSpeed * fCurTiltSpeed / fTiltAccel;
 
 	if ( ( 1 == nRotation && !bNeedDecSpeed ) || ( -1 == nRotation && bNeedDecSpeed ) )
+	{
 		fPositiveAccel = 1.0f;
+	}
 	else if ( ( -1 == nRotation && !bNeedDecSpeed ) || ( 1 == nRotation && bNeedDecSpeed ) )
+	{
 		fPositiveAccel = -1.0f;
+	}
 
 	const float fTiltSpeedDelta = fPositiveAccel * fTiltAccel * timeDiff;
 	if ( /*0.0f == fTiltToGo && */ 0 != fCurTiltSpeed &&
 	     boost::math::sign( fCurTiltSpeed + fTiltSpeedDelta ) != boost::math::sign( fCurTiltSpeed ) )
+	{
 		fCurTiltSpeed = 0;
+	}
 	else
 	{
 		const float fMaxTiltSpeed = pPlane->GetPreferencesB2().GetTiltSpeed();
@@ -267,7 +283,9 @@ bool CManuver::AdvanceCommon( const NTimer::STime timeDiff )
 	CVec3 vTmp = vNormal;
 	CalcNormale( timeDiff );
 	if ( vNormal == VNULL3 )
+	{
 		vNormal = vTmp;
+	}
 
 	CheckToHorisontal();
 
@@ -277,7 +295,9 @@ bool CManuver::AdvanceCommon( const NTimer::STime timeDiff )
 void CManuver::CheckToHorisontal()
 {
 	if ( bToHorisontal ) // already going to horisontal
+	{
 		return;
+	}
 
 	CVec3 vNewTarget;
 	const CPlanePreferences &pref = pPlane->GetPreferencesB2();

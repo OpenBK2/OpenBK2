@@ -43,14 +43,22 @@ bool CMapInfoEditor::CreateMinimapImage()
 	CManipulatorManager::GetValue( &materialName, GetViewManipulator(), "MiniMap" );
 	CPtr<IManipulator> material;
 	if ( !materialName.empty() && materialName != " " )
+	{
 		material = pRM->CreateObjectManipulator( "Material", materialName );
+	}
 	if ( material )
+	{
 		CManipulatorManager::GetValue( &textureName, material, "Texture" );
+	}
 	CPtr<IManipulator> texture;
 	if ( !textureName.empty() && textureName != " " )
+	{
 		texture = pRM->CreateObjectManipulator( "Texture", textureName );
+	}
 	if ( texture )
+	{
 		CManipulatorManager::GetValue( &source, texture, "SrcName" );
+	}
 	if ( !pMapInfo || !texture || source.empty() || source == " " )
 	{
 		szSaveError = "The map has no valid minimap material, texture or source image path.";
@@ -69,7 +77,9 @@ bool CMapInfoEditor::CreateMinimapImage()
 	parameters.emplace_back( source, CTPoint<int>( 256, 256 ) );
 	if ( !NMinimapImage::Create(
 					 pMapInfo, Scene()->GetTerraManager()->GetTerraInfo(), minimap, parameters, &szSaveError ) )
+	{
 		return false;
+	}
 	const EXPORT_RESULT result =
 			Singleton<IExporterContainer>()->ExportObject( texture, "Texture", textureName, true, false );
 	if ( result != ER_SUCCESS )

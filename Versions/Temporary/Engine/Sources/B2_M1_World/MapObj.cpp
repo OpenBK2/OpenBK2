@@ -75,9 +75,13 @@ void SObjectStatus::AddWeapon( const SWeapon &weapon )
 	else
 	{
 		if ( weapon.bPrimary )
+		{
 			weapons.insert( weapons.begin(), weapon );
+		}
 		else
+		{
 			weapons.push_back( weapon );
+		}
 	}
 }
 
@@ -87,17 +91,23 @@ CMapObj::CMapObj()
 			nKeyObjectPlayer( -1 ), nParentID( -1 ), nPlayer( -1 ), nColorIndex( 0 )
 {
 	for ( int i = 0; i < __EAST_COUNTER__; ++i )
+	{
 		attachedSounds[i] = 0;
+	}
 }
 
 CMapObj::~CMapObj()
 {
 	for ( int i = 0; i < attachedSounds.size(); ++i )
+	{
 		DetachSound( (EAttachedSoundType)i );
+	}
 
 	auto scene = Scene();
 	if ( scene )
+	{
 		scene->RemoveAllAttached( GetID(), ESSOT_LIGHT );
+	}
 }
 
 void CMapObj::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
@@ -117,15 +127,23 @@ void CMapObj::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
 				// Fences play death effect when disappearing
 				CDynamicCast<const NDb::SObjectBaseRPGStats> pObjectStats = pStaticObjectStats;
 				if ( pObjectStats && pObjectStats->pSeasonedEffectExplosion )
+				{
 					PlayComplexSeasonedEffect(
 							OBJECT_ID_FORGET, pObjectStats->pSeasonedEffectExplosion, pUpdate->nUpdateTime, vPos, eSeason );
+				}
 				else if ( pStaticObjectStats->pEffectDeath != 0 )
+				{
 					PlayComplexEffect( OBJECT_ID_FORGET, pStaticObjectStats->pEffectDeath, pUpdate->nUpdateTime, vPos );
+				}
 				else if ( pStaticObjectStats->pEffectDisappear != 0 )
+				{
 					PlayComplexEffect( OBJECT_ID_FORGET, pStaticObjectStats->pEffectDisappear, pUpdate->nUpdateTime, vPos );
+				}
 			}
 			else if ( pStaticObjectStats->pEffectDisappear != 0 )
+			{
 				PlayComplexEffect( OBJECT_ID_FORGET, pStaticObjectStats->pEffectDisappear, pUpdate->nUpdateTime, vPos );
+			}
 		}
 	}
 }
@@ -133,7 +151,9 @@ void CMapObj::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
 void CMapObj::AttachSound( EAttachedSoundType eType, const NDb::SComplexSoundDesc *pSound, bool bLooped )
 {
 	if ( attachedSounds[eType] != 0 )
+	{
 		DetachSound( eType );
+	}
 	attachedSounds[eType] =
 			SoundScene()->AddSound( pSound, GetCenter(), SFX_MIX_ALWAYS, bLooped ? SAM_LOOPED_NEED_ID : SAM_NEED_ID, 0, 2 );
 }
@@ -188,7 +208,9 @@ void CMapObj::SwitchLightFX( const bool bNewState,
 			{
 				if ( ( GetStats()->lightEffects[i].bOnAtNight && bIsNight ) ||
 				     ( GetStats()->lightEffects[i].bOnAtDay && !bIsNight ) )
+				{
 					Scene()->AttachLightEffect( GetID(), &( GetStats()->lightEffects[i] ), currTime, ESAT_NO_REPLACE, bInEditor );
+				}
 			}
 		}
 		else // Switch off
@@ -206,7 +228,9 @@ void CMapObj::ForceSwitchLightFX( const bool bNewState, const bool bInEditor )
 	{
 		const NTimer::STime currTime = GameTimer()->GetGameTime();
 		for ( int i = 0; i < GetStats()->lightEffects.size(); ++i )
+		{
 			Scene()->AttachLightEffect( GetID(), &( GetStats()->lightEffects[i] ), currTime, ESAT_NO_REPLACE, bInEditor );
+		}
 	}
 }
 
@@ -220,13 +244,17 @@ void CMapObj::ForceSwitchLightFX( int nEffect, const bool bNewState, const bool 
 				GetID(), &( GetStats()->lightEffects[nEffect] ), currTime, ESAT_NO_REPLACE, bInEditor, nEffect );
 	}
 	else
+	{
 		Scene()->RemoveAttached( GetID(), ESSOT_LIGHT, nEffect );
+	}
 }
 
 void CMapObj::SetDeathState()
 {
 	if ( fHP > 0.0f )
+	{
 		fHP = 0.0f;
+	}
 }
 
 const NDb::SVisObj *CMapObj::ChooseVisObjForHP( float fHP )
@@ -314,11 +342,15 @@ int CMapObj::CommonUpdateHP( const float fNewHP, const SAINotifyRPGStats &stats,
 						RunDefaultObjectAnimation( GetModelDesc()->pSkeleton, Scene()->GetAnimator( GetID() ) );
 					}
 					else
+					{
 						ChangeModelToDamaged( nResult, GetModel( pNewVO, eSeason ), eSeason );
+					}
 				}
 			}
 			if ( fCurHPVO == fNewHPVO )
+			{
 				nResult = -1;
+			}
 		}
 		fHP = fNewHP;
 		if ( fHP <= 0.0f ) // Dead, remove attached objects
@@ -335,7 +367,9 @@ int CMapObj::CommonUpdateHP( const float fNewHP, const SAINotifyRPGStats &stats,
 void CMapObj::AIUpdateHit( const NDb::SComplexEffect *pEffect, uint16_t wDir, NTimer::STime time )
 {
 	if ( pEffect == 0 )
+	{
 		return;
+	}
 	const NTimer::STime timeEffect = (std::min)( time, GameTimer()->GetGameTime() );
 	if ( !pStats->surfacePoints.empty() )
 	{
@@ -370,7 +404,9 @@ void CMapObj::AIUpdateHit( const NDb::SComplexEffect *pEffect, uint16_t wDir, NT
 			PlayComplexEffect( OBJECT_ID_FORGET, pEffect, timeEffect, mPlace );
 		}
 		else
+		{
 			PlayComplexEffect( OBJECT_ID_FORGET, pEffect, timeEffect, vPos );
+		}
 	}
 	else
 	{
@@ -395,7 +431,9 @@ void CMapObj::AINewUnitInfo( const struct SNewUnitInfo &info,
 	AIUpdatePlacement( info, pScene, pSoundScene, eSeason );
 
 	if ( info.fHitPoints == 0.0f )
+	{
 		fHP = 0.0f;
+	}
 }
 
 void CMapObj::AIUpdatePlacement( const SAINotifyPlacement &placement,
@@ -420,31 +458,43 @@ void CMapObj::AIUpdatePlacement( const SAINotifyPlacement &placement,
 	for ( int i = 0; i < __EAST_COUNTER__; ++i )
 	{
 		if ( attachedSounds[i] != 0 )
+		{
 			pSoundScene->SetSoundPos( attachedSounds[i], GetCenter() );
+		}
 	}
 }
 
 const NDb::SAnimB2 *CMapObj::GetAnimation( const int _nAnimation )
 {
 	if ( _nAnimation < 0 )
+	{
 		return 0;
+	}
 
 	if ( GetTypeID() == NDb::SInfantryRPGStats::typeID )
 	{
 		CDynamicCast<NDb::SInfantryRPGStats> pStats = GetStats();
 		if ( !pStats )
+		{
 			return 0;
+		}
 
 		int nAnimation = _nAnimation;
 		if ( pStats->animdescs.size() <= nAnimation )
+		{
 			nAnimation = NDb::ANIMATION_IDLE;
+		}
 
 		if ( pStats->animdescs.size() <= nAnimation )
+		{
 			return 0;
+		}
 
 		const std::vector<NDb::SAnimDesc> &anims = pStats->animdescs[nAnimation].anims;
 		if ( anims.empty() )
+		{
 			return 0;
+		}
 
 		return checked_cast_ptr<const NDb::SAnimB2 *>( anims[0].pAnimation );
 	}
@@ -455,7 +505,9 @@ const NDb::SAnimB2 *CMapObj::GetAnimation( const int _nAnimation )
 			return checked_cast_ptr<const NDb::SAnimB2 *>( pModel->pSkeleton->animations[_nAnimation] );
 		}
 		else
+		{
 			return 0;
+		}
 	}
 
 	return 0;
@@ -517,7 +569,9 @@ std::pair<int, bool> CMapObj::PlayAnimation( const int nAnimation )
 				SetLoopedAnimation( false );
 
 				if ( AddAnimation( pAnimation, startTime, pAnimator ) )
+				{
 					return std::pair<int, bool>( pAnimation->nLength, pAnimation->bLooped );
+				}
 			}
 
 			return std::pair<int, bool>( 0, false );
@@ -532,13 +586,17 @@ void CMapObj::GetStatus( SObjectStatus *pStatus ) const
 	pStatus->Clear();
 
 	if ( !GetStats() )
+	{
 		return;
+	}
 
 	pStatus->nHP = fHP;
 	pStatus->nMaxHP = GetStats()->fMaxHP;
 
 	if ( CHECK_TEXT_NOT_EMPTY_PRE( GetStats()->, LocalizedName ) )
+	{
 		pStatus->szLocalizedName = GET_TEXT_PRE( GetStats()->, LocalizedName );
+	}
 }
 
 void CMapObj::SetVisible( bool _bVisible, const NDb::ESeason _eSeason, const bool _bIsNight )
@@ -611,10 +669,14 @@ CMapObj::GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pAction
 	{
 		// если в списке встретилось NDb::USER_ACTION_UNKNOWN, выберем нейтральное действие по умолчанию
 		if ( priority[i] == NDb::USER_ACTION_UNKNOWN )
+		{
 			return NDb::USER_ACTION_UNKNOWN;
+		}
 
 		if ( actions.HasAction( priority[i] ) )
+		{
 			return priority[i];
+		}
 	}
 	return NDb::USER_ACTION_UNKNOWN;
 }
@@ -632,8 +694,12 @@ NDb::EUserAction CMapObj::GetBestSelfAction( const CUserActions &actionsBy, bool
 	const NDb::SClientGameConsts *pClient = Singleton<IClientGameConsts>()->GetClientGameConsts();
 
 	for ( int i = 0; i < pClient->actionsPriority.selfActions.size(); ++i )
+	{
 		if ( actionsBy.HasAction( pClient->actionsPriority.selfActions[i] ) )
+		{
 			return static_cast<NDb::EUserAction>( pClient->actionsPriority.selfActions[i] );
+		}
+	}
 	return NDb::USER_ACTION_UNKNOWN;
 }
 
@@ -642,7 +708,9 @@ void CMapObj::SetColorIndex( int _nColorIndex, bool bForceUpdate )
 	nColorIndex = _nColorIndex;
 	AIUpdateKeyObjectCaptureProgress( 0.0f, 0 );
 	if ( bForceUpdate )
+	{
 		UpdateIcons();
+	}
 }
 
 void CMapObj::UpdateIcons()
@@ -654,7 +722,9 @@ void CMapObj::UpdateIcons()
 		Scene()->SetIcon( iconInfo );
 	}
 	else
+	{
 		Scene()->RemoveIcon( GetID() );
+	}
 }
 
 // CMOSelectable
@@ -677,28 +747,46 @@ void CMOSelectable::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 	}
 
 	if ( HasVisualGroup( EUS_KEY_POINT ) )
+	{
 		iconInfo.eIconDamagedBuilding = NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NEED_REPAIR_KEY_OBJECT;
+	}
 
 	if ( IsFriend() )
 	{
 		iconInfo.eIconGroup = eIconGroup;
 
 		if ( HasVisualGroup( EUS_PROCESS_GROUP ) )
+		{
 			iconInfo.icons.push_back( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_PROCESS );
+		}
 		if ( HasVisualGroup( EUS_GRUAD_GROUP ) )
+		{
 			iconInfo.icons.push_back( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_GUARD );
+		}
 		if ( HasVisualGroup( EUS_REPAIRS_GROUP ) )
+		{
 			iconInfo.icons.push_back( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_BROKENTRUCK );
+		}
 		if ( HasVisualGroup( EUS_RESUPPLY_GROUP ) )
+		{
 			iconInfo.icons.push_back( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NEED_RESUPPLY );
+		}
 		if ( HasVisualGroup( EUS_AGGRESSIVE_GROUP ) )
+		{
 			iconInfo.icons.push_back( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_AGRESSIVE );
+		}
 		if ( HasVisualGroup( EUS_BEST_SHOT_GROUP ) )
+		{
 			iconInfo.icons.push_back( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_BEST_SHOT );
+		}
 		if ( HasVisualGroup( EUS_PACIFIC_GROUP ) )
+		{
 			iconInfo.icons.push_back( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_PACIFIST );
+		}
 		if ( HasVisualGroup( EUS_INVISIBLE_GROUP ) )
+		{
 			iconInfo.icons.push_back( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_INVISIBLE );
+		}
 	}
 }
 
@@ -716,7 +804,9 @@ void CMOSelectable::SetIconsGroup( int nGroup, bool _bHighlighted )
 				NDb::SVisObjIconsSet::SVisObjIcon::VOIT_GROUP00 + nGroup );
 	}
 	else
+	{
 		eIconGroup = NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE;
+	}
 	bHighlighted = _bHighlighted;
 }
 
@@ -724,7 +814,9 @@ void CMOSelectable::DisableIcons( bool bDisable )
 {
 	bDisableIcons = bDisable;
 	if ( !CanShowIcons() )
+	{
 		Scene()->RemoveIcon( GetID() );
+	}
 }
 
 bool CMOSelectable::CanShowIcons() const
@@ -754,7 +846,9 @@ NDb::EUserAction
 CMOSelectable::GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const
 {
 	if ( bAltMode && pActionsWith->HasAction( NDb::USER_ACTION_FOLLOW ) )
+	{
 		return NDb::USER_ACTION_FOLLOW;
+	}
 
 	return CMapObj::GetBestAutoAction( actionsBy, pActionsWith, bAltMode );
 }
@@ -805,9 +899,13 @@ IMOContainer *CMOSelectable::GetTopContainer() const
 	while ( pTopContainer )
 	{
 		if ( IMOContainer *pContainer = pTopContainer->GetContainer() )
+		{
 			pTopContainer = pContainer;
+		}
 		else
+		{
 			break;
+		}
 	}
 	return pTopContainer;
 }
@@ -820,7 +918,9 @@ void IMOContainer::GetPassangers( std::vector<IB2MapObj *> *pPassangers ) const
 	GetPassangers( &passangers );
 	pPassangers->resize( passangers.size() );
 	for ( int i = 0; i < passangers.size(); ++i )
+	{
 		( *pPassangers )[i] = passangers[i];
+	}
 }
 
 void IMOContainer::FillIconsInfo( SSceneObjIconInfo &iconInfo )
@@ -932,12 +1032,14 @@ int PlayComplexSeasonedEffect( const int nID,
 {
 	const NTimer::STime currTime = GameTimer()->GetGameTime();
 	if ( pEffect->pSoundEffect )
+	{
 		SoundScene()->AddSound( pEffect->pSoundEffect,
 		                        vPos,
 		                        SFX_MIX_IF_TIME_EQUALS,
 		                        SAM_ADD_N_FORGET,
 		                        currTime > timeStart ? currTime - timeStart : 0,
 		                        2 );
+	}
 	for ( int i = 0; i < pEffect->seasons.size(); ++i )
 	{
 		const NDb::SSeasonEffect &sceneEffect = pEffect->seasons[i];
@@ -961,17 +1063,21 @@ int PlayComplexSeasonedEffect( const int nID,
 {
 	const NTimer::STime currTime = GameTimer()->GetGameTime();
 	if ( pEffect->pSoundEffect )
+	{
 		SoundScene()->AddSound( pEffect->pSoundEffect,
 		                        vPos,
 		                        SFX_MIX_IF_TIME_EQUALS,
 		                        SAM_ADD_N_FORGET,
 		                        currTime > timeStart ? currTime - timeStart : 0,
 		                        2 );
+	}
 	for ( int i = 0; i < pEffect->seasons.size(); ++i )
 	{
 		const NDb::SSeasonEffect &sceneEffect = pEffect->seasons[i];
 		if ( sceneEffect.eSeasonToUse == eSeason && sceneEffect.pSceneEffect != 0 )
+		{
 			return Scene()->AddEffect( nID, sceneEffect.pSceneEffect, (std::min)( timeStart, currTime ), vPos, qRot );
+		}
 	}
 	return -1;
 }
@@ -997,7 +1103,9 @@ int PlayComplexSeasonedEffect( const int nID,
 	{
 		const NDb::SSeasonEffect &sceneEffect = pEffect->seasons[i];
 		if ( sceneEffect.eSeasonToUse == eSeason && sceneEffect.pSceneEffect != 0 )
+		{
 			return Scene()->AddEffect( nID, sceneEffect.pSceneEffect, (std::min)( timeStart, currTime ), mPlace );
+		}
 	}
 	return -1;
 }
@@ -1020,7 +1128,9 @@ int PlayComplexEffect( const int nID,
 		                        2 );
 	}
 	if ( const NDb::SEffect *pSceneEffect = pEffect->GetSceneEffect() )
+	{
 		return Scene()->AddEffect( nID, pSceneEffect, (std::min)( timeStart, currTime ), mPlace );
+	}
 	return -1;
 }
 
@@ -1049,13 +1159,17 @@ void PlayComplexEffect( const int nID,
 		}
 	}
 	if ( const NDb::SEffect *pSceneEffect = pEffect->GetSceneEffect() )
+	{
 		Scene()->AttachEffect( nID, eType, szBoneName, pSceneEffect, (std::min)( timeStart, currTime ), eMode );
+	}
 }
 
 bool RunDefaultObjectAnimation( const NDb::SSkeleton *pSkeleton, NAnimation::ISkeletonAnimator *pAnimator )
 {
 	if ( pAnimator == 0 )
+	{
 		return false;
+	}
 	//
 	for ( int i = 0; i < pSkeleton->animations.size(); ++i )
 	{
@@ -1119,7 +1233,9 @@ int CMapObj::operator&( IBinSaver &saver )
 	if ( saver.IsReading() )
 	{
 		if ( attachedSounds.size() != __EAST_COUNTER__ )
+		{
 			attachedSounds.resize( __EAST_COUNTER__, 0 );
+		}
 	}
 
 	return 0;
@@ -1174,7 +1290,9 @@ void CombineAbilities( CAbilityInfo *pAbilities, NDb::EUnitSpecialAbility eAbili
 void CombineAbilities( CAbilityInfo *pAbilities, const CAbilityInfo &abilities )
 {
 	for ( CAbilityInfo::const_iterator it = abilities.begin(); it != abilities.end(); ++it )
+	{
 		CombineAbilities( pAbilities, it->first, it->second );
+	}
 }
 
 START_REGISTER( MapObjectCommands )

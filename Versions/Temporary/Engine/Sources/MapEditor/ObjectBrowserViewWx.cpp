@@ -1689,7 +1689,9 @@ private:
 		auto *layout = new wxBoxSizer( wxVERTICAL );
 		const int padding = settings.FromDIP( 12 );
 		for ( auto *option : { separate, tga, mirror } )
+		{
 			layout->Add( option, wxSizerFlags().Border( wxLEFT | wxRIGHT | wxTOP, padding ) );
+		}
 		layout->Add( settings.CreateStdDialogButtonSizer( wxOK | wxCANCEL ),
 		             wxSizerFlags().Right().Border( wxALL, padding ) );
 		settings.FindWindow( wxID_OK )->SetLabel( "Export" );
@@ -1711,7 +1713,9 @@ private:
 			                         "glTF Binary (*.glb)|*.glb",
 			                         wxFD_SAVE | wxFD_OVERWRITE_PROMPT );
 					if ( dialog.ShowModal() != wxID_OK )
+					{
 						return;
+					}
 					options.separateTextures = separate->GetValue();
 					options.convertTexturesToTga = tga->GetValue();
 					options.mirrorX = mirror->GetValue();
@@ -1723,10 +1727,14 @@ private:
 								NEditorGltf::ExportGrannyModel( resource, dialog.GetPath().ToStdString( wxConvUTF8 ), options, &error );
 					}
 					if ( success )
+					{
 						settings.EndModal( wxID_OK );
+					}
 					else
+					{
 						wxMessageBox(
 								wxString::FromUTF8( error.c_str() ), "Export Granny3D to GLB", wxOK | wxICON_ERROR, &settings );
+					}
 				},
 				wxID_OK );
 		settings.ShowModal();

@@ -28,11 +28,15 @@ void CSCamDMoveFlightMutator::Recalc()
 {
 	static bool bIsFinishing = false;
 	if ( pTimer == 0 )
+	{
 		return;
+	}
 
 	NTimer::STime currTime = pTimer->GetValue();
 	if ( IsPaused() )
+	{
 		currTime = timeStart;
+	}
 
 	if ( currTime <= timeStart )
 	{
@@ -48,7 +52,9 @@ void CSCamDMoveFlightMutator::Recalc()
 		this->fPitch = placementFinish.fPitch;
 		this->fFOV = placementFinish.fFOV;
 		if ( !bSmoothEnd )
+		{
 			Camera()->FinishMovie( false );
+		}
 	}
 	else
 	{
@@ -89,11 +95,15 @@ void CSCamDMoveFlightMutator::Recalc()
 void CSCamDFollowFlightMutator::Recalc()
 {
 	if ( pTimer == 0 || pBaseFlight == 0 )
+	{
 		return;
+	}
 
 	NTimer::STime currTime = pTimer->GetValue();
 	if ( IsPaused() )
+	{
 		currTime = timeStart;
+	}
 
 	if ( currTime < timeStart )
 	{
@@ -123,7 +133,9 @@ void CSCamDFollowFlightMutator::Recalc()
 	else
 	{
 		if ( !bSmoothEnd )
+		{
 			Camera()->FinishMovie( false );
+		}
 		return;
 	}
 
@@ -136,21 +148,29 @@ void CSCamDFollowFlightMutator::Recalc()
 void CSCamDRotateFlightMutator::Recalc()
 {
 	if ( pTimer == 0 || pBaseFlight == 0 )
+	{
 		return;
+	}
 
 	const NCamera::CCameraPlacement &basePlacement = pBaseFlight->GetValue();
 
 	NTimer::STime currTime = pTimer->GetValue();
 	if ( IsPaused() )
+	{
 		currTime = timeStart;
+	}
 
 	if ( currTime <= timeStart )
+	{
 		this->fYaw = basePlacement.fYaw;
+	}
 	else if ( currTime > timeFinish )
 	{
 		currTime = timeFinish;
 		if ( !bSmoothEnd )
+		{
 			Camera()->FinishMovie( false );
+		}
 	}
 
 	this->vPosition = basePlacement.vPosition;
@@ -168,7 +188,9 @@ void CSCamDRotateFlightMutator::Recalc()
 	CVec3 vOldDir = CVec3( sin( -fYaw ) * cos( -fPitch ), cos( -fYaw ) * cos( -fPitch ), sin( -fPitch ) );
 
 	if ( vOldDir.z != 0 ) //	We cannot rotate horizontal camera
+	{
 		vOldDir *= fabs( Vis2AI( basePlacement.vPosition.z ) / vOldDir.z );
+	}
 
 	const float fCoeff = float( currTime - timeStart ) / float( timeFinish - timeStart );
 	const float fNewYaw = fStartYaw + fAngle * fCoeff;
@@ -191,11 +213,15 @@ void CSCamDRotateFlightMutator::Recalc()
 void CSCamSplineMutator::Recalc()
 {
 	if ( pTimer == 0 )
+	{
 		return;
+	}
 
 	NTimer::STime currTime = pTimer->GetValue();
 	if ( IsPaused() )
+	{
 		currTime = timeStart;
+	}
 
 	if ( currTime <= timeStart )
 	{
@@ -211,7 +237,9 @@ void CSCamSplineMutator::Recalc()
 		this->fPitch = placementFinish.fPitch;
 		this->fFOV = placementFinish.fFOV;
 		if ( !bSmoothEnd )
+		{
 			Camera()->FinishMovie( false );
+		}
 	}
 	else
 	{
@@ -294,7 +322,9 @@ void CScriptMoviesMutatorHolder::Recalc()
 	NI_VERIFY( pTimer, "CScriptMoviesMutatorHolder::Recalc() >> pTimer == 0!", return );
 
 	if ( IsFinished() )
+	{
 		return;
+	}
 
 	pTimer.Refresh();
 	NTimer::STime timeCurrent = pTimer->GetValue();

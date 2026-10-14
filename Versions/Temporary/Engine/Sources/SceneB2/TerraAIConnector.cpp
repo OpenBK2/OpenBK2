@@ -36,7 +36,9 @@ void AddRiverCliffBankTiles( std::list<SVector> *pTiles,
 {
 	const int nCount = (std::min)( int( verts.size() ), int( heights.size() ) );
 	if ( nCount < 2 )
+	{
 		return;
+	}
 
 	for ( int i = 0; i < nCount - 1; ++i )
 	{
@@ -44,7 +46,9 @@ void AddRiverCliffBankTiles( std::list<SVector> *pTiles,
 		const bool bCliffEnd = fabs( verts[i + 1].z - heights[i + 1] ) > RIVER_CLIFF_MASK_MIN_HEIGHT;
 
 		if ( bCliffStart || bCliffEnd )
+		{
 			AddRiverCliffSegmentTiles( pTiles, GetAIRiverCliffTile( verts[i] ), GetAIRiverCliffTile( verts[i + 1] ) );
+		}
 	}
 }
 }
@@ -61,7 +65,9 @@ void CTerraGen::RegenerateAIInfo()
 	UpdateAllAIInfo();
 	PutAllFeaturesToAI();
 	if ( pAIObserver )
+	{
 		pAIObserver->FinalizeUpdates();
+	}
 }
 
 void CTerraGen::UpdateAIInfo()
@@ -75,7 +81,9 @@ void CTerraGen::UpdateAITerraTypes( const bool bForceUpdateAll )
 	//NI_VERIFY( pAIObserver, "UpdateAITerraTypes - AI Observer does not exist", return )
 	//
 	if ( !bForceUpdateAll && ( vTexModMin.x < 0 ) )
+	{
 		return;
+	}
 
 	if ( bForceUpdateAll )
 	{
@@ -100,7 +108,9 @@ void CTerraGen::UpdateAITerraTypes( const bool bForceUpdateAll )
 	}
 
 	if ( pAIObserver )
+	{
 		pAIObserver->UpdateTypes( vTexModMin.x, vTexModMin.y, vTexModMax.x + 1, vTexModMax.y + 1, terrainAIInfo.terrTypes );
+	}
 }
 
 void CTerraGen::SetTerraTypesToAI( const std::vector<NDb::STerrainAIProperties> &params ) const
@@ -148,14 +158,20 @@ void CTerraGen::UpdateAllAIInfo()
 	for ( std::vector<CDBPtr<NDb::STGTerraType>>::const_iterator it = pDesc->pTerraSet->terraTypes.begin();
 	      it != pDesc->pTerraSet->terraTypes.end();
 	      ++it )
+	{
 		params.push_back( ( *it )->aIProperty );
+	}
 	if ( pAIObserver )
+	{
 		pAIObserver->SetTerraTypes( params );
+	}
 
 	UpdateAITerraTypes( true );
 
 	if ( pAIObserver )
+	{
 		pAIObserver->UpdateHeights( 0, 0, nMaxX, nMaxY, terrainAIInfo.heights );
+	}
 
 	TIME_STAT_FINISH( CTerraGen__UpdateAllAIInfo )
 }
@@ -185,14 +201,18 @@ void CTerraGen::PutRiverToAI( const NDb::SVSOInstance *pRiverInstance ) const
 void CTerraGen::PutRiverCliffsToAI( const STerrainInfo::SRiver &river ) const
 {
 	if ( !pAIObserver )
+	{
 		return;
+	}
 
 	std::list<SVector> tiles;
 	AddRiverCliffBankTiles( &tiles, river.precVertsL, river.precHeightsL );
 	AddRiverCliffBankTiles( &tiles, river.precVertsR, river.precHeightsR );
 
 	if ( !tiles.empty() )
+	{
 		pAIObserver->AddRiverCliffTiles( tiles );
+	}
 }
 
 void CTerraGen::PutRoadToAI( const NDb::SVSOInstance *pRoadInstance ) const
@@ -217,7 +237,9 @@ void CTerraGen::PutAllCragsToAI() const
 		{
 			const NDb::SVSOInstance *pInstance = FindCrag( it->nID );
 			if ( pInstance )
+			{
 				PutCragToAI( pInstance );
+			}
 		}
 	}
 }
@@ -253,7 +275,9 @@ void CTerraGen::PutAllRoadsToAI() const
 		{
 			const NDb::SVSOInstance *pInstance = FindRoad( it->nID );
 			if ( pInstance )
+			{
 				PutRoadToAI( pInstance );
+			}
 		}
 	}
 }
@@ -266,7 +290,9 @@ void CTerraGen::PutAllWaterToAI() const
 	{
 		// coast
 		if ( pDesc->coast.points.size() >= 2 )
+		{
 			pAIObserver->AddWaterLine( &( pDesc->coast ), false );
+		}
 		// lakes & islands
 		for ( int i = 0; i < pDesc->lakes.size(); ++i )
 		{
@@ -282,7 +308,9 @@ void CTerraGen::PutAllWaterToAI() const
 void CTerraGen::PutAllFeaturesToAI() const
 {
 	if ( pAIObserver )
+	{
 		pAIObserver->ClearRiverCliffTiles();
+	}
 
 	PutAllRoadsToAI();
 	PutAllWaterToAI();

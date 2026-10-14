@@ -150,9 +150,13 @@ void CStObjIter<bOnlyContainers>::Init( const int _downX, const int _upX, const 
 	y = downY;
 	x = downX;
 	if ( GetAreaMap().GetSizeX() > 0 && GetAreaMap().GetSizeY() > 0 && !GetAreaMap()[y][x].empty() )
+	{
 		iter = GetAreaMap()[y][x].begin();
+	}
 	else
+	{
 		IterateToNextCell();
+	}
 
 	static int nUpdate = 0;
 	if ( !IsFinished() )
@@ -170,7 +174,9 @@ void CStObjIter<bOnlyContainers>::IterateToNextCell()
 	} while ( !IsFinished() && GetAreaMap()[y][x].empty() );
 
 	if ( !IsFinished() )
+	{
 		iter = GetAreaMap()[y][x].begin();
+	}
 }
 
 template <bool bOnlyContainers>
@@ -195,7 +201,9 @@ void CStObjIter<bOnlyContainers>::Iterate()
 	do
 	{
 		if ( ++iter == GetAreaMap()[y][x].end() )
+		{
 			IterateToNextCell();
+		}
 	} while ( !IsFinished() && ( *iter )->IsGlobalUpdated() );
 
 	if ( !IsFinished() )

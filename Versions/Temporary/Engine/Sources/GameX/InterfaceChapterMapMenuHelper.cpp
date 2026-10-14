@@ -34,9 +34,13 @@ SChapterMapMenuHelper::SChapterMapMenuHelper( const NDb::SChapter *_pChapter, IW
 	if ( pDetailsMap )
 	{
 		if ( nSizeX > 0 )
+		{
 			vDetailsCoeff.x = float( nSizeX ) / ( pDetailsMap->nNumPatchesX * AI_TILE_SIZE * AI_TILES_IN_PATCH );
+		}
 		if ( nSizeY > 0 )
+		{
 			vDetailsCoeff.y = float( nSizeY ) / ( pDetailsMap->nNumPatchesY * AI_TILE_SIZE * AI_TILES_IN_PATCH );
+		}
 	}
 
 	missions.resize( pChapter->missionPath.size() );
@@ -82,7 +86,9 @@ SChapterMapMenuHelper::SChapterMapMenuHelper( const NDb::SChapter *_pChapter, IW
 				const NDb::SVSOInstance &road = pDetailsMap->roads[nRoad];
 
 				if ( road.nCMArrowMission /*points[0].fReserved*/ != nMission )
+				{
 					continue;
+				}
 
 				int nArrowIndex = road.nCMArrowType /*road.points[0].fRadius*/;
 				if ( pChapter )
@@ -117,7 +123,9 @@ SChapterMapMenuHelper::SChapterMapMenuHelper( const NDb::SChapter *_pChapter, IW
 						}
 					}
 					else
+					{
 						NI_ASSERT( 0, "Designers: not enough textures for chapter arrows" );
+					}
 				}
 			}
 		}

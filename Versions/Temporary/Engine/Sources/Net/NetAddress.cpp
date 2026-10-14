@@ -32,7 +32,9 @@ bool CNodeAddress::SetInetName( const char *pszHost, int nDefaultPort )
 		hostent *he;
 		he = gethostbyname( szAddr.c_str() ); // m.b. it is string comp.domain
 		if ( he == NULL )
+		{
 			return false;
+		}
 		nameRemote.sin_addr.s_addr = *(unsigned long *)( he->h_addr_list[0] );
 	}
 	nameRemote.sin_port = htons( nPort );
@@ -45,7 +47,9 @@ std::string CNodeAddress::GetName( bool bResolve ) const
 
 	hostent *he = 0;
 	if ( bResolve )
+	{
 		he = gethostbyaddr( (const char *)&addr, sizeof( addr ), AF_INET ); // m.b. it is string comp.domain
+	}
 	char szBuf[1024];
 	if ( he == 0 || he->h_name == 0 )
 	{

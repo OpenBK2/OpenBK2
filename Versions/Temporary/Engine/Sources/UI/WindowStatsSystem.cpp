@@ -51,9 +51,13 @@ void CWindowStatsSystem::UpdateEntry( const std::wstring &szEntry, const std::ws
 	FillWindowRect( &wndRect );
 
 	if ( entryPos == entries.end() )
+	{
 		entries[szEntry].Init( szTmp.c_str(), dwColor, wndRect.Width() );
+	}
 	else
+	{
 		entryPos->second.SetText( szTmp.c_str(), dwColor, wndRect.Width() );
+	}
 }
 
 void CWindowStatsSystem::Visit( struct IUIVisitor *pVisitor )

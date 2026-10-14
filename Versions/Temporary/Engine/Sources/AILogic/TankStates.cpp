@@ -35,7 +35,9 @@ CPtr<CTankStatesFactory> CTankStatesFactory::pFactory = 0;
 IStatesFactory *CTankStatesFactory::Instance()
 {
 	if ( pFactory == 0 )
+	{
 		pFactory = new CTankStatesFactory();
+	}
 
 	return pFactory;
 }
@@ -106,14 +108,18 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 							CMechUnitInsideMechUnitState *pState(
 									checked_cast<CMechUnitInsideMechUnitState *>( pUnitToUnload->GetState() ) );
 							if ( pState )
+							{
 								pState->Unload( pUnit->GetCenterPlain() );
+							}
 						}
 						pResult = 0;
 					}
 				}
 				else
+				{
 					pResult = new CTransportLandState(
 							pUnit, ALP_POSITION_VALID, cmd.vPos, checked_cast<CFormation *>( GetObjectByCmd( cmd ) ) );
+				}
 			}
 		}
 
@@ -171,7 +177,9 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 			pUnit->UnsetFollowState();
 
 			if ( pUnit->IsTrackDamaged() )
+			{
 				pUnit->SendAcknowledgement( pCommand, ACK_CANNOT_MOVE_TRACK_DAMAGED, !pCommand->IsFromAI() );
+			}
 			else
 			{
 				pUnit->ResetHoldSector();
@@ -189,7 +197,9 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 					theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pUnit );
 				}
 				else
+				{
 					pResult = CSoldierMoveToState::Instance( pUnit, cmd.vPos, cmd.nCmdType == ACTION_COMMAND_REVERSE_TO );
+				}
 			}
 		}
 		break;
@@ -218,7 +228,9 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 					theGroupLogic.InsertUnitCommand( newCmd, pUnit );
 					theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ROTATE_TO, cmd.vPos ), pUnit );
 					if ( pUnit->IsInTankPit() )
+					{
 						theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pUnit );
+					}
 				}
 				break;
 				case 1:
@@ -243,15 +255,21 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 				if ( pTarget->IsAlive() )
 				{
 					if ( pTarget->GetStats()->IsInfantry() && checked_cast<CSoldier *>( pTarget )->IsInBuilding() )
+					{
 						pResult = CSoldierAttackUnitInBuildingState::Instance(
 								pUnit, checked_cast<CSoldier *>( pTarget ), cmd.fNumber == 0, bSwarmAttack );
+					}
 					else
+					{
 						pResult = CMechAttackUnitState::Instance(
 								pUnit, checked_cast<CAIUnit *>( GetObjectByCmd( cmd ) ), cmd.fNumber == 0, bSwarmAttack );
+					}
 				}
 			}
 			else
+			{
 				pUnit->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, !pCommand->IsFromAI() );
+			}
 		}
 
 		break;
@@ -271,7 +289,9 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 				pResult = ProduceState( pObj, pCommand );
 			}
 			else
+			{
 				pResult = CSoldierAttackCommonStatObjState::Instance( pUnit, pStaticObj, bSwarmAttack );
+			}
 		}
 
 		break;
@@ -299,7 +319,9 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 				else
 				{
 					if ( cmd.nCmdType == ACTION_COMMAND_ROTATE_TO )
+					{
 						pResult = CSoldierTurnToPointState::Instance( pUnit, cmd.vPos );
+					}
 					else
 					{
 						CVec2 vDir = cmd.vPos;
@@ -312,12 +334,16 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 			break;
 		case ACTION_MOVE_BY_DIR:
 			if ( !pUnit->NeedDeinstall() )
+			{
 				pResult = CSoldierMoveByDirState::Instance( pUnit, cmd.vPos );
+			}
 
 			break;
 		case ACTION_COMMAND_SWARM_TO:
 			if ( pUnit->IsTrackDamaged() )
+			{
 				pUnit->SendAcknowledgement( pCommand, ACK_CANNOT_MOVE_TRACK_DAMAGED, !pCommand->IsFromAI() );
+			}
 			else
 			{
 				pUnit->ResetHoldSector();
@@ -333,7 +359,9 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 					//theGroupLogic.InsertUnitCommand( SAIUnitCmd(ACTION_COMMAND_ENTRENCH_SELF, float(int(PARAM_ABILITY_OFF)), false ), pUnit );
 				}
 				else
+				{
 					pResult = CCommonSwarmState::Instance( pUnit, cmd.vPos, cmd.fNumber );
+				}
 			}
 
 			break;
@@ -346,7 +374,9 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 			}
 			CONVERT_OBJECT( CAIUnit, pTarget, GetObjectByCmd( cmd ), "Wrong unit to support" );
 			if ( pTarget )
+			{
 				pResult = CMechUnitSupportFireState::Instance( pUnit, pTarget );
+			}
 		}
 		break;
 		case ACTION_COMMAND_GUARD:
@@ -368,8 +398,10 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 					pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, nBurstCount );
 				}
 				else
+				{
 					pUnit->SendAcknowledgement(
 							pCommand, pUnit->GetFirstArtilleryGun()->GetRejectReason(), !pCommand->IsFromAI() );
+				}
 			}
 
 			break;
@@ -381,14 +413,18 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 		case ACTION_COMMAND_RANGE_AREA:
 			if ( pUnit->GetFirstArtilleryGun() != 0 &&
 			     pUnit->GetFirstArtilleryGun()->CanShootToPointWOMove( cmd.vPos, 0.0f ) )
+			{
 				pResult = CArtilleryRangeAreaState::Instance( pUnit, cmd.vPos );
+			}
 
 			break;
 		case ACTION_COMMAND_FOLLOW:
 		{
 			CONVERT_OBJECT( CCommonUnit, pUnitToFollow, GetObjectByCmd( cmd ), "Wrong unit to follow" );
 			if ( pUnit->IsTrackDamaged() )
+			{
 				pUnit->SendAcknowledgement( pCommand, ACK_CANNOT_MOVE_TRACK_DAMAGED, !pCommand->IsFromAI() );
+			}
 			else
 			{
 				pUnit->ResetHoldSector();
@@ -404,7 +440,9 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 					//theGroupLogic.InsertUnitCommand( SAIUnitCmd(ACTION_COMMAND_ENTRENCH_SELF, float(int(PARAM_ABILITY_OFF)), false ), pUnit );
 				}
 				else
+				{
 					pUnit->SetFollowState( pUnitToFollow );
+				}
 			}
 		}
 
@@ -425,7 +463,9 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 		break;
 		case ACTION_COMMAND_CHANGE_SHELLTYPE:
 			if ( pUnit->GetFirstArtilleryGun() != 0 )
+			{
 				pUnit->SetActiveShellType( static_cast<NDb::SWeaponRPGStats::SShell::EShellDamageType>( int( cmd.fNumber ) ) );
+			}
 
 			break;
 		case ACTION_COMMAND_STAND_GROUND:
@@ -460,7 +500,9 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 		{
 			CVec2 vTarget( cmd.vPos );
 			if ( pUnit->CanMove() && !pUnit->IsTrackDamaged() )
+			{
 				pResult = CCommonPatrolState::Instance( pUnit, vTarget );
+			}
 			else
 			{
 				if ( pUnit->IsTrackDamaged() )
@@ -530,7 +572,9 @@ CMechUnitSupportFireState::CMechUnitSupportFireState( CAIUnit *_pUnit, CAIUnit *
 		const EUnitAckType eReject = pUnit->GetFirstArtilleryGun()->GetRejectReason();
 		pUnit->SendAcknowledgement( eReject );
 		if ( eReject == ACK_NO_AMMO && pUnit->GetPlayer() == theDipl.GetMyNumber() )
+		{
 			theFeedBackSystem.AddFeedbackAndForget( pUnit->GetUniqueID(), pUnit->GetCenterPlain(), EFB_NO_AMMO, -1 );
+		}
 
 		pUnit->SetCommandFinished();
 		bFinish = true;
@@ -561,7 +605,9 @@ CMechUnitSupportFireState::CMechUnitSupportFireState( CAIUnit *_pUnit, CAIUnit *
 		if ( pSA )
 		{
 			if ( pSA->pStatsBonus )
+			{
 				pUnit->ApplyStatsModifier( pSA->pStatsBonus, true );
+			}
 		}
 	}
 }
@@ -578,7 +624,9 @@ void CMechUnitSupportFireState::CheckArea()
 		if ( pTarget->IsVisible( pUnit->GetParty() ) &&
 		     fabs2( pTarget->GetCenterPlain() - pFriend->GetCenterPlain() ) <= sqr( fSearchRadius ) &&
 		     pGun->CanShootToUnitWOMove( pTarget ) )
+		{
 			pUnit->AddUnitToShootEstimator( pTarget );
+		}
 	}
 
 	// враг найден
@@ -628,7 +676,9 @@ void CMechUnitSupportFireState::Segment()
 		if ( !bFiringNow )
 		{
 			if ( bFinish )
+			{
 				FinishCommand();
+			}
 			else
 			{
 				switch ( eState )
@@ -658,7 +708,9 @@ void CMechUnitSupportFireState::Segment()
 						{
 							// Look for targets
 							if ( curTime - lastCheck >= CHECK_TIME )
+							{
 								CheckArea();
+							}
 						}
 					}
 					break;
@@ -666,7 +718,9 @@ void CMechUnitSupportFireState::Segment()
 						if ( IsValidObj( pEnemy ) && pEnemy->IsVisible( pUnit->GetParty() ) &&
 						     pGun->CanShootToUnitWOMove( pEnemy ) &&
 						     fabs2( pEnemy->GetCenterPlain() - pFriend->GetCenterPlain() ) <= sqr( fSearchRadius ) )
+						{
 							pGun->StartEnemyBurst( pEnemy, false );
+						}
 						else
 						{
 							eState = ESFS_WAITING;
@@ -677,7 +731,9 @@ void CMechUnitSupportFireState::Segment()
 						break;
 					case ESFS_SHOOT_OBJECT:
 						if ( IsValidObj( pObj ) && theDipl.GetDiplStatus( pObj->GetPlayer(), pUnit->GetPlayer() ) == EDI_ENEMY )
+						{
 							pGun->StartPointBurst( pObj->GetAttackCenter( pUnit->GetCenterPlain() ), false );
+						}
 						else
 						{
 							eState = ESFS_WAITING;
@@ -695,7 +751,9 @@ void CMechUnitSupportFireState::Segment()
 			{
 				pUnit->SendAcknowledgement( ACK_NO_AMMO );
 				if ( pUnit->GetPlayer() == theDipl.GetMyNumber() )
+				{
 					theFeedBackSystem.AddFeedbackAndForget( pUnit->GetUniqueID(), pUnit->GetCenterPlain(), EFB_NO_AMMO, -1 );
+				}
 			}
 		}
 	}
@@ -704,7 +762,9 @@ void CMechUnitSupportFireState::Segment()
 void CMechUnitSupportFireState::FinishCommand()
 {
 	if ( IsValid( pGun ) )
+	{
 		pGun->StopFire();
+	}
 
 	pGun->UnlockCurAngle();
 	pUnit->SetCommandFinished();
@@ -714,7 +774,9 @@ void CMechUnitSupportFireState::FinishCommand()
 	if ( pSA )
 	{
 		if ( pSA->pStatsBonus )
+		{
 			pUnit->ApplyStatsModifier( pSA->pStatsBonus, false );
+		}
 	}
 }
 
@@ -737,9 +799,13 @@ bool CMechUnitSupportFireState::IsAttacksUnit() const
 CAIUnit *CMechUnitSupportFireState::GetTargetUnit() const
 {
 	if ( IsAttacksUnit() )
+	{
 		return pEnemy;
+	}
 	else
+	{
 		return 0;
+	}
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1915D340, CMechUnitSupportFireState );

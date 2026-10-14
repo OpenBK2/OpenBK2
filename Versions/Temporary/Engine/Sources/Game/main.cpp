@@ -279,7 +279,9 @@ static int RunGame( const std::vector<std::string> &arguments )
 #endif
 	//
 	if ( ProcessCommandLine( arguments ) == false )
+	{
 		return 0xDEAD;
+	}
 
 	std::string szLogFileName, szErrorFileName;
 	{
@@ -353,9 +355,13 @@ static int RunGame( const std::vector<std::string> &arguments )
 	std::string szMOD2Attach =
 			szEditorMap.empty() ? NStr::ToMBCS( NGlobal::GetVar( "current_attached_mod", "" ) ) : szEditorMod;
 	if ( szEditorMap.empty() && !szMOD2Attach.empty() )
+	{
 		szMOD2Attach = NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_MODS, szMOD2Attach );
+	}
 	if ( NMOD::DoesMODAttached( szMOD2Attach ) == false )
+	{
 		NMOD::InstantAttachMOD( szMOD2Attach, NDb::DATABASE_MODE_GAME );
+	}
 	//
 	NGlobal::LoadConfig( NFile::JoinPath( "..", NFile::DIR_PROFILES, "autoexec.cfg" ) );
 	NGlobal::LoadConfig( NFile::JoinPath( "..", NFile::DIR_PROFILES, "game.cfg" ) );
@@ -394,12 +400,16 @@ static int RunGame( const std::vector<std::string> &arguments )
 	// Run the normal mission command only after the game, profile and mod DB
 	// are initialized. Quoting preserves map folders and filenames with spaces.
 	if ( !szEditorMap.empty() )
+	{
 		NGlobal::ProcessCommand( L"map \"" + UTF8ToWide( szEditorMap ) + L"\"" );
+	}
 	// Same point in startup for the same reason: the replay command reaches
 	// CICMission, which needs the database loaded. The file name is resolved by
 	// ReplayHistory, so this passes it through unchanged.
 	else if ( !szReplayFile.empty() )
+	{
 		NGlobal::ProcessCommand( L"replay \"" + UTF8ToWide( szReplayFile ) + L"\"" );
+	}
 	// start
 	Cursor()->Acquire( true );
 	while ( 1 )
@@ -426,12 +436,18 @@ static int RunGame( const std::vector<std::string> &arguments )
 			NMainLoop::Command( CreateICExitGame() ); // generate 'EXIT' command
 		}
 		if ( bAppActive )
+		{
 			NGfx::CheckBackBufferSize();
+		}
 		NGfx::SetGamma( bAppActive ); //bSetGamma );
 		if ( !NMainLoop::StepApp( bAppActive ) )
+		{
 			break;
+		}
 		if ( !bAppActive )
+		{
 			std::this_thread::sleep_for( std::chrono::milliseconds( 40 ) );
+		}
 	}
 	//
 	// Read before the singletons go, since that is where the variable lives.
@@ -463,7 +479,9 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 		// get string
 		std::string szString = *it;
 		if ( szString.empty() )
+		{
 			continue;
+		}
 
 		// Keep the old command-line syntax, adding unambiguous named map/mod
 		// arguments. WinMain retains quotes; POSIX shells already remove them.
@@ -546,7 +564,9 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 			szString.erase( 0, 1 );
 			NStr::TrimBoth( szString );
 			if ( szString.empty() )
+			{
 				continue;
+			}
 		}
 		// check for spacial cases - save (.sav) and map (.b2m or .b2x)
 		if ( szString.size() > 4 )

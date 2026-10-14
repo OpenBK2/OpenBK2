@@ -82,7 +82,9 @@ SDL_Scancode ScanCode( unsigned nHardwareCode )
 	                                     nullptr,
 	                                     nullptr );
 	if ( key >= GDK_KEY_F1 && key <= GDK_KEY_F12 )
+	{
 		return static_cast<SDL_Scancode>( SDL_SCANCODE_F1 + key - GDK_KEY_F1 );
+	}
 	switch ( key )
 	{
 		case GDK_KEY_Control_L:
@@ -341,7 +343,9 @@ void *CNativeViewport::GetHandle() const
 void CNativeViewport::PumpEvents()
 {
 	if ( pImpl->pSdlWindow == nullptr )
+	{
 		return;
+	}
 	auto *pTop = wxDynamicCast( wxGetTopLevelParent( pImpl->pWindow ), wxTopLevelWindow );
 	SetFocus( pImpl->pWindow->HasFocus() && pTop != nullptr && pTop->IsActive() );
 	// MapNotify and ConfigureNotify update SDL's visibility and pixel size.
@@ -357,11 +361,15 @@ void CNativeViewport::PumpEvents()
 void CNativeViewport::SetFocus( bool bFocused )
 {
 	if ( pImpl->pSdlWindow == nullptr || pImpl->bFocused == bFocused )
+	{
 		return;
+	}
 	pImpl->bFocused = bFocused;
 	pImpl->bHasMousePosition = false;
 	for ( bool &key : pImpl->keys )
+	{
 		key = false;
+	}
 	if ( bFocused )
 	{
 		// A modifier can already be held when the viewport gains wx focus.
@@ -371,7 +379,9 @@ void CNativeViewport::SetFocus( bool bFocused )
 		for ( unsigned code = 8; code < 256; ++code )
 		{
 			if ( keymap[code / 8] & ( 1 << ( code % 8 ) ) )
+			{
 				pImpl->keys[ScanCode( code )] = true;
+			}
 		}
 	}
 	NInput::UpdateHostedKeyboard( pImpl->pSdlWindow, pImpl->keys, bFocused );
@@ -380,10 +390,14 @@ void CNativeViewport::SetFocus( bool bFocused )
 void CNativeViewport::OnKey( unsigned nHardwareCode, bool bDown )
 {
 	if ( pImpl->pSdlWindow == nullptr || !pImpl->bFocused )
+	{
 		return;
+	}
 	const SDL_Scancode code = ScanCode( nHardwareCode );
 	if ( code == SDL_SCANCODE_UNKNOWN )
+	{
 		return;
+	}
 	pImpl->keys[code] = bDown;
 	NInput::UpdateHostedKeyboard( pImpl->pSdlWindow, pImpl->keys, true );
 }
@@ -391,7 +405,9 @@ void CNativeViewport::OnKey( unsigned nHardwareCode, bool bDown )
 void CNativeViewport::OnMouse( const wxMouseEvent &event )
 {
 	if ( pImpl->pSdlWindow == nullptr )
+	{
 		return;
+	}
 	if ( event.Entering() || event.Leaving() )
 	{
 		pImpl->bHasMousePosition = false;
@@ -413,7 +429,9 @@ void CNativeViewport::OnMouse( const wxMouseEvent &event )
 	else if ( event.GetEventType() == wxEVT_MOUSEWHEEL )
 	{
 		if ( event.GetWheelAxis() != wxMOUSE_WHEEL_VERTICAL || event.GetWheelDelta() == 0 )
+		{
 			return;
+		}
 		input.type = SDL_EVENT_MOUSE_WHEEL;
 		input.wheel.y = static_cast<float>( event.GetWheelRotation() ) / event.GetWheelDelta();
 	}

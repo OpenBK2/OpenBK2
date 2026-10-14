@@ -45,7 +45,9 @@ void GetAllSingletonIDs( std::vector<int> *pRes )
 {
 	pRes->resize( 0 );
 	for ( CObjectsMap::iterator i = objects.begin(); i != objects.end(); ++i )
+	{
 		pRes->push_back( i->first );
+	}
 }
 
 // here we are using a cheat to save singleton's data without re-creating singletons itself
@@ -68,7 +70,9 @@ struct SSingletonSerializer
 			saver.Add( 1, &nID );
 			// find target singleton if reading
 			if ( saver.IsReading() )
+			{
 				pObject = Singleton( nID );
+			}
 			if ( pObject && SSingletonSerializer::saved.find( pObject ) == SSingletonSerializer::saved.end() )
 			{
 				saver.AddPolymorphicBase( 2, pObject );
@@ -81,11 +85,15 @@ struct SSingletonSerializer
 	{
 		std::vector<CSingleObject> singles;
 		if ( saver.IsReading() )
+		{
 			saver.Add( 1, &singles );
+		}
 		else
 		{
 			for ( CObjectsMap::iterator it = objects.begin(); it != objects.end(); ++it )
+			{
 				singles.push_back( CSingleObject( it->first, it->second.GetPtr() ) );
+			}
 			saver.Add( 1, &singles );
 		}
 		saved.clear();

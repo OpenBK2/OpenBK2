@@ -58,7 +58,9 @@ public:
 	void operator()( int x, int y )
 	{
 		if ( x >= 0 && y >= 0 && x < nWidth && y < nHeight && pMaskMiniMap->GetData( x, y ) )
+		{
 			pMiniMapLayer->PutPixel( x, y, color );
+		}
 	}
 };
 

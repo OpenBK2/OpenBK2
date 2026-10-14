@@ -45,7 +45,9 @@ class CBufferedStream
 	{
 		const int nToRead = (std::min)( int( BUFFER_SIZE ), nStreamSize - nBytesRead );
 		if ( nToRead == 0 )
+		{
 			return;
+		}
 		pStream->Read( buffer, nToRead );
 		nBytesRead += nToRead;
 		nBytesInBuffer = nToRead;
@@ -66,9 +68,13 @@ public:
 		while ( 1 )
 		{
 			if ( IsEnd() )
+			{
 				return false;
+			}
 			if ( !IsWhiteSpace( buffer[nCurrPos] ) )
+			{
 				return true;
+			}
 			Next();
 		}
 	}
@@ -78,9 +84,13 @@ public:
 		while ( 1 )
 		{
 			if ( IsEnd() )
+			{
 				return false;
+			}
 			if ( !IsWhiteSpace( buffer[nCurrPos] ) )
+			{
 				return true;
+			}
 			( *pszBuff ) += buffer[nCurrPos];
 			Next();
 		}
@@ -92,7 +102,9 @@ public:
 	{
 		++nCurrPos;
 		if ( IsBufferEmpty() )
+		{
 			ReadPortion();
+		}
 	}
 	char GetChar() const { return buffer[nCurrPos]; }
 	bool CheckNextChar( const char cCheckChar )
@@ -383,17 +395,23 @@ bool ReadText( std::string *pszText, CBufferedStream &stream, const char *pszEnd
 		if ( chr == '&' )
 		{
 			if ( stream.GetNumCharsToEnd() < 3 )
+			{
 				return false;
+			}
 			std::string szSysChar;
 			chr = ReadSysChar( &szSysChar, stream );
 			if ( chr == char( 0xff ) )
 			{
 				if ( szSysChar.empty() )
+				{
 					return false;
+				}
 				( *pszText ) += szSysChar;
 			}
 			else
+			{
 				( *pszText ) += chr;
+			}
 		}
 		else if ( chr == pszEndTag[0] )
 		{
@@ -405,9 +423,13 @@ bool ReadText( std::string *pszText, CBufferedStream &stream, const char *pszEnd
 			for ( int i = 1; 1; ++i, stream.Next() )
 			{
 				if ( pszEndTag[i] == 0 )
+				{
 					return true;
+				}
 				if ( stream.IsEnd() )
+				{
 					return false;
+				}
 				chr = stream.GetChar();
 				if ( chr != pszEndTag[i] )
 				{
@@ -441,46 +463,68 @@ bool ReadText( std::string *pszText, CBufferedStream &stream, const char *pszEnd
 EXmlNodeType Identify( CBufferedStream &stream )
 {
 	if ( stream.SkipWhiteSpaces() == false )
+	{
 		return XML_NODE_TYPE_NONE;
+	}
 	const int nNumChars = stream.GetNumCharsToEnd();
 	if ( nNumChars < 4 /*|| stream.GetChar() != '<'*/ )
+	{
 		return XML_NODE_TYPE_NONE;
+	}
 	//
 	if ( stream.GetChar() == '<' )
+	{
 		stream.Next();
+	}
 	char chr = stream.GetChar();
 	switch ( chr )
 	{
 		case '?': // header: <?xml
 			if ( nNumChars < 7 )
+			{
 				return XML_NODE_TYPE_NONE;
+			}
 			stream.Next();
 			if ( stream.GetChar() != 'x' )
+			{
 				return XML_NODE_TYPE_NONE;
+			}
 			stream.Next();
 			if ( stream.GetChar() != 'm' )
+			{
 				return XML_NODE_TYPE_NONE;
+			}
 			stream.Next();
 			if ( stream.GetChar() != 'l' )
+			{
 				return XML_NODE_TYPE_NONE;
+			}
 			stream.Next();
 			return XML_NODE_TYPE_HEADER;
 
 		case '!': // comment: <!--
 			if ( nNumChars < 7 )
+			{
 				return XML_NODE_TYPE_NONE;
+			}
 			stream.Next();
 			if ( stream.GetChar() != '-' )
+			{
 				return XML_NODE_TYPE_NONE;
+			}
 			stream.Next();
 			if ( stream.GetChar() != '-' )
+			{
 				return XML_NODE_TYPE_NONE;
+			}
 			stream.Next();
 			return XML_NODE_TYPE_COMMENT;
 
 		default:
 			if ( nNumChars < 4 )
+			{
 				return XML_NODE_TYPE_NONE;
+			}
 			return XML_NODE_TYPE_ELEMENT;
 	}
 }
@@ -497,28 +541,40 @@ EXmlNodeType Identify( CBufferedStream &stream )
 bool ParseAttribute( std::string *pszName, std::string *pszText, CBufferedStream &stream )
 {
 	if ( stream.SkipWhiteSpaces() == false )
+	{
 		return false;
+	}
 	// read attribute name
 	if ( ReadName( pszName, stream ) == false )
+	{
 		return false;
+	}
 	// skip '='
 	if ( stream.SkipWhiteSpaces() == false || stream.GetChar() != '=' )
+	{
 		return false;
+	}
 	stream.Next();
 	if ( stream.SkipWhiteSpaces() == false )
+	{
 		return false;
+	}
 	// read attribute value
 	if ( stream.GetChar() == '\'' ) // try text in single quotes
 	{
 		stream.Next();
 		if ( ReadText( pszText, stream, "\'" ) == false )
+		{
 			return false;
+		}
 	}
 	else if ( stream.GetChar() == '\"' ) // try text in double quotes
 	{
 		stream.Next();
 		if ( ReadText( pszText, stream, "\"" ) == false )
+		{
 			return false;
+		}
 	}
 	else
 	{
@@ -543,25 +599,41 @@ bool ParseHeader( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 	{
 		std::string szName, szText;
 		if ( ParseAttribute( &szName, &szText, stream ) == false )
+		{
 			return false;
+		}
 		if ( szName == "version" )
+		{
 			szVersion = szText;
+		}
 		else if ( szName == "encoding" )
+		{
 			szEncoding = szText;
+		}
 		else if ( szName == "standalone" )
+		{
 			szStandalone = szText;
+		}
 	}
 	//
 	if ( stream.IsEnd() || pVisitor->VisitHeader( szVersion, szEncoding, szStandalone ) == false )
+	{
 		return false;
+	}
 	// skip close tag: ?>
 	if ( stream.GetChar() != '?' )
+	{
 		return false;
+	}
 	stream.Next();
 	if ( stream.IsEnd() )
+	{
 		return false;
+	}
 	if ( stream.GetChar() != '>' )
+	{
 		return false;
+	}
 	stream.Next();
 	//
 	return !stream.IsEnd();
@@ -572,7 +644,9 @@ bool ParseComment( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 {
 	std::string szText;
 	if ( ReadText( &szText, stream, "-->" ) == false )
+	{
 		return false;
+	}
 	return pVisitor->VisitComment( szText );
 }
 
@@ -583,13 +657,17 @@ bool ParseElementValue( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 	while ( stream.ReadUntilNonspace( &szBuffer ) != false )
 	{
 		if ( stream.GetChar() == '/' )
+		{
 			return true;
+		}
 		else if ( stream.GetChar() != '<' )
 		{
 			// take what we have - read an element's text
 			std::string szText;
 			if ( ReadText( &szText, stream, "<" ) == false || pVisitor->VisitText( szBuffer + szText ) == false )
+			{
 				return false;
+			}
 		}
 		else
 		{
@@ -605,15 +683,21 @@ bool ParseElementValue( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 			if ( eType == XML_NODE_TYPE_ELEMENT )
 			{
 				if ( ParseElement( pVisitor, stream ) == false )
+				{
 					return false;
+				}
 			}
 			else if ( eType == XML_NODE_TYPE_COMMENT )
 			{
 				if ( ParseComment( pVisitor, stream ) == false )
+				{
 					return false;
+				}
 			}
 			else
+			{
 				return false;
+			}
 		}
 		//
 		szBuffer.resize( 0 );
@@ -624,11 +708,15 @@ bool ParseElementValue( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 bool ParseElement( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 {
 	if ( stream.SkipWhiteSpaces() == false )
+	{
 		return false;
+	}
 	// read chunk start name
 	std::string szName;
 	if ( ReadName( &szName, stream ) == false || pVisitor->VisitChunkStart( szName ) == false )
+	{
 		return false;
+	}
 	// read attributes
 	while ( stream.SkipWhiteSpaces() != false )
 	{
@@ -637,9 +725,13 @@ bool ParseElement( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 		{
 			stream.Next();
 			if ( stream.IsEnd() )
+			{
 				return false;
+			}
 			if ( stream.GetChar() != '>' || pVisitor->VisitChunkFinish( szName ) == false )
+			{
 				return false;
+			}
 			stream.Next();
 			return !stream.IsEnd();
 		}
@@ -647,13 +739,17 @@ bool ParseElement( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 		{
 			stream.Next();
 			if ( ParseElementValue( pVisitor, stream ) == false || stream.IsEnd() || stream.GetChar() != '/' )
+			{
 				return false;
+			}
 			// check for the end tag
 			stream.Next();
 			std::string szEndName;
 			if ( stream.IsEnd() || ReadName( &szEndName, stream ) == false ||
 			     pVisitor->VisitChunkFinish( szEndName ) == false )
+			{
 				return false;
+			}
 			stream.Next();
 			//
 			return szEndName == szName;
@@ -662,7 +758,9 @@ bool ParseElement( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 		{
 			std::string szName, szText;
 			if ( ParseAttribute( &szName, &szText, stream ) == false || pVisitor->VisitAttribute( szName, szText ) == false )
+			{
 				return false;
+			}
 		}
 	}
 	return !stream.IsEnd();
@@ -685,17 +783,23 @@ bool ParseXMLImpl( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 		{
 			case XML_NODE_TYPE_HEADER:
 				if ( ParseHeader( pVisitor, stream ) == false )
+				{
 					return false;
+				}
 				break;
 
 			case XML_NODE_TYPE_COMMENT:
 				if ( ParseComment( pVisitor, stream ) == false )
+				{
 					return false;
+				}
 				break;
 
 			case XML_NODE_TYPE_ELEMENT:
 				if ( ParseElement( pVisitor, stream ) == false )
+				{
 					return false;
+				}
 				break;
 
 			default:

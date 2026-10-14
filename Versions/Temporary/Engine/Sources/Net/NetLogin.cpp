@@ -42,9 +42,13 @@ bool CLoginSupport::ProcessLogin( const CNodeAddress &addr, CBitStream &bits, SL
 	unsigned short nSize;
 	bits.Read( nSize );
 	if ( nSize >= 500 )
+	{
 		return false;
+	}
 	if ( acceptedList.size() > N_MAX_ACCEPTED_LIST_SIZE )
+	{
 		return false;
+	}
 	pRes->pwd.SetSizeDiscard( nSize );
 	bits.Read( pRes->pwd.GetBufferForWrite(), nSize );
 	return true;
@@ -88,7 +92,9 @@ void CLoginSupport::AcceptLogin( const CNodeAddress &addr,
 			i = acceptedList.erase( i );
 		}
 		else
+		{
 			++i;
+		}
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////
@@ -104,7 +110,9 @@ void CLoginSupport::RejectLogin( const CNodeAddress &addr, CBitStream *pBits, co
 			i = acceptedList.erase( i );
 		}
 		else
+		{
 			++i;
+		}
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////
@@ -113,7 +121,9 @@ bool CLoginSupport::HasAccepted( const CNodeAddress &addr, const SLoginInfo &inf
 	for ( std::list<SAcceptedLogin>::iterator i = acceptedList.begin(); i != acceptedList.end(); ++i )
 	{
 		if ( i->addr == addr && i->nLoginAttempt == info.nLoginAttempt )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -190,9 +200,13 @@ void CLoginSupport::Step( float fDeltaTime )
 	{
 		i->fTimeLeft -= fDeltaTime;
 		if ( i->fTimeLeft < 0 )
+		{
 			i = acceptedList.erase( i );
+		}
 		else
+		{
 			++i;
+		}
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////

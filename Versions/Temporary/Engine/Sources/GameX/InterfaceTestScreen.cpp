@@ -30,7 +30,9 @@ void CInterfaceTestScreen::SetScreen( const CDBID &_dbid )
 {
 	dbid = _dbid;
 	if ( dbid.IsEmpty() )
+	{
 		return;
+	}
 
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
 
@@ -44,7 +46,9 @@ void CInterfaceTestScreen::SetScreen( const CDBID &_dbid )
 bool CInterfaceTestScreen::StepLocal( bool bAppActive )
 {
 	if ( !CInterfaceScreenBase::StepLocal( bAppActive ) )
+	{
 		return false;
+	}
 
 	return true;
 }

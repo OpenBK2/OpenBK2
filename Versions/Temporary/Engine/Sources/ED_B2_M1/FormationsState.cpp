@@ -29,28 +29,38 @@ static bool SetOrderPosition( IManipulator *pSquadManip,
 	CVariant v;
 
 	if ( !pSquadManip->GetValue( "formations", &v ) )
+	{
 		return false;
+	}
 
 	int nFormationsNumber = v;
 
 	int nFormationIdx = static_cast<int>( eSelectedFormation );
 	if ( ( nFormationIdx < 0 ) || ( nFormationIdx > nFormationsNumber ) )
+	{
 		return false;
+	}
 
 	std::string szOrderDBA = fmt::format( "formations.[{}].order", nFormationIdx );
 
 	if ( !pSquadManip->GetValue( szOrderDBA, &v ) )
+	{
 		return false;
+	}
 
 	int nOrderElemNum = v;
 
 	if ( ( nMemberIdx < 0 ) || ( nMemberIdx > nOrderElemNum ) )
+	{
 		return false;
+	}
 
 	std::string szOrderPosDBA = fmt::format( "formations.[{}].order.[{}].Pos", nFormationIdx, nMemberIdx );
 
 	if ( !CManipulatorManager::SetVec2( rvPos, pSquadManip, szOrderPosDBA ) )
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -63,28 +73,38 @@ static bool GetOrderPosition( CVec2 *pPos,
 	CVariant v;
 
 	if ( !pSquadManip->GetValue( "formations", &v ) )
+	{
 		return false;
+	}
 
 	int nFormationsNumber = v;
 
 	int nFormationIdx = static_cast<int>( eSelectedFormation );
 	if ( ( nFormationIdx < 0 ) || ( nFormationIdx > nFormationsNumber ) )
+	{
 		return false;
+	}
 
 	std::string szOrderDBA = fmt::format( "formations.[{}].order", nFormationIdx );
 
 	if ( !pSquadManip->GetValue( szOrderDBA, &v ) )
+	{
 		return false;
+	}
 
 	int nOrderElemNum = v;
 
 	if ( ( nMemberIdx < 0 ) || ( nMemberIdx > nOrderElemNum ) )
+	{
 		return false;
+	}
 
 	std::string szOrderPosDBA = fmt::format( "formations.[{}].order.[{}].Pos", nFormationIdx, nMemberIdx );
 
 	if ( !CManipulatorManager::GetVec2<CVec2, float>( pPos, pSquadManip, szOrderPosDBA ) )
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -100,7 +120,9 @@ static bool SetFormationsAndOrders( IManipulator *pSquadManip )
 	CVariant v;
 
 	if ( !pSquadManip->GetValue( "formations", &v ) )
+	{
 		return false;
+	}
 
 	int nFormationsNumber = v;
 
@@ -112,7 +134,9 @@ static bool SetFormationsAndOrders( IManipulator *pSquadManip )
 		for ( int d = 0; d < nNumForDel; ++d )
 		{
 			if ( !pSquadManip->RemoveNode( "formations", nDeletedIdx ) )
+			{
 				return false;
+			}
 		}
 	}
 	else if ( nFormationsNumber < typeFormationMnemonics.Size() )
@@ -121,7 +145,9 @@ static bool SetFormationsAndOrders( IManipulator *pSquadManip )
 	}
 
 	if ( !pSquadManip->GetValue( "members", &v ) )
+	{
 		return false;
+	}
 
 	int nMembersNumber = v;
 
@@ -131,7 +157,9 @@ static bool SetFormationsAndOrders( IManipulator *pSquadManip )
 
 		CVariant numOrders;
 		if ( !pSquadManip->GetValue( szOrdersDBA, &numOrders ) )
+		{
 			return false;
+		}
 
 		int nNumOrders = numOrders;
 
@@ -143,7 +171,9 @@ static bool SetFormationsAndOrders( IManipulator *pSquadManip )
 			for ( int d = 0; d < nNumForDel; ++d )
 			{
 				if ( !pSquadManip->RemoveNode( szOrdersDBA, nDeletedIdx ) )
+				{
 					return false;
+				}
 			}
 		}
 		else if ( nNumOrders < nMembersNumber )
@@ -153,7 +183,9 @@ static bool SetFormationsAndOrders( IManipulator *pSquadManip )
 			for ( int a = 0; a < nNumForAdd; ++a )
 			{
 				if ( !pSquadManip->InsertNode( szOrdersDBA ) )
+				{
 					return false;
+				}
 			}
 		}
 	}
@@ -170,7 +202,9 @@ static int GetMembersNum( IManipulator *pSquadManip )
 	std::string szDBA = fmt::format( "members" );
 	CVariant v;
 	if ( pSquadManip->GetValue( szDBA, &v ) )
+	{
 		return (int)v;
+	}
 	return 0;
 }
 
@@ -216,7 +250,9 @@ void GetExistingFormations( SFormationWindowDialogData *pData, IManipulator *pSq
 
 	CVariant numForm;
 	if ( !pSquadManip->GetValue( "formations", &numForm ) )
+	{
 		return;
+	}
 
 	int nNumForm = numForm;
 
@@ -227,7 +263,9 @@ void GetExistingFormations( SFormationWindowDialogData *pData, IManipulator *pSq
 		CVariant type;
 
 		if ( !pSquadManip->GetValue( szTypeDBA, &type ) )
+		{
 			continue;
+		}
 
 		NDb::SSquadRPGStats::SFormation::EFormationMoveType eType =
 				(NDb::SSquadRPGStats::SFormation::EFormationMoveType)typeFormationMnemonics.GetValue( type.GetStr() );
@@ -312,16 +350,24 @@ void CFormationsState::RefreshState( bool bForce )
 		{
 			ReloadSquad( data.eSelectedFormation );
 			if ( data.bChkPropmask )
+			{
 				SetMaskManipulator( data.eSelectedFormation );
+			}
 			else
+			{
 				ClearMaskManipulator();
+			}
 		}
 		if ( currDialogData.bChkPropmask != data.bChkPropmask )
 		{
 			if ( data.bChkPropmask )
+			{
 				SetMaskManipulator( data.eSelectedFormation );
+			}
 			else
+			{
 				ClearMaskManipulator();
+			}
 		}
 		currDialogData = data;
 	}
@@ -382,7 +428,9 @@ void CFormationsState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMous
 void CFormationsState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( nFlags & MK_RBUTTON )
+	{
 		return;
+	}
 
 	if ( !pickObjects.empty() )
 	{
@@ -415,10 +463,14 @@ void CFormationsState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMouseP
 void CFormationsState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( nFlags & MK_RBUTTON )
+	{
 		return;
+	}
 
 	if ( pickObjects.empty() )
+	{
 		return;
+	}
 
 	CVec3 vPos = VNULL3;
 	Get3DPosOnMapHeights( &vPos, CVec2( rMousePoint.x, rMousePoint.y ) );
@@ -440,7 +492,9 @@ void CFormationsState::ReloadSquad( NDb::SSquadRPGStats::SFormation::EFormationM
 
 	std::vector<const NDb::SModel *> memberModels;
 	for ( std::vector<std::string>::iterator it = memberModelNameList.begin(); it != memberModelNameList.end(); ++it )
+	{
 		memberModels.push_back( NDb::Get<NDb::SModel>( CDBID( *it ) ) );
+	}
 
 	// позиции
 	std::vector<CVec2> positions;
@@ -473,7 +527,9 @@ void CFormationsState::ReloadSquad( NDb::SSquadRPGStats::SFormation::EFormationM
 void CFormationsState::SetMaskManipulator( NDb::SSquadRPGStats::SFormation::EFormationMoveType eSelectedFormation )
 {
 	if ( pMaskManipulator != 0 )
+	{
 		ClearMaskManipulator();
+	}
 
 	IView *pView = 0;
 	Singleton<ICommandHandlerContainer>()->HandleCommand(

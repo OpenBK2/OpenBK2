@@ -143,7 +143,9 @@ protected:
 		                         IMODContainer::tidTypeID,
 		                         IUserDataContainer::tidTypeID };
 		for ( unsigned id : ids )
+		{
 			NSingleton::UnRegisterSingleton( id );
+		}
 		IResourceManager::UninitSingleton();
 		NLog::SetLogger( nullptr );
 		NDb::CloseDatabase();
@@ -197,7 +199,9 @@ protected:
 		                           "model_Geometry.xdb",
 		                           "model_AIGeometry.xdb",
 		                           "model_Skeleton.xdb" } )
+		{
 			EXPECT_TRUE( fs::is_regular_file( root / "Unit" / file ) ) << file;
+		}
 	}
 };
 

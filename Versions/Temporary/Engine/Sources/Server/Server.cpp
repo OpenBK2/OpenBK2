@@ -166,7 +166,9 @@ CGameServer::CGameServer( CCommands *_pCommands,
 			std::string szPwd = passwords[i];
 			std::string szEmail = emails[i];
 			if ( !pClients->IsNickRegistered( szName ) )
+			{
 				pClients->Register( szName, szPwd, szName + szPwd + std::to_string( names.size() ), szEmail );
+			}
 		}
 	}
 
@@ -180,7 +182,9 @@ CGameServer::CGameServer( CCommands *_pCommands,
 	CNet::SetTimeOut( 20.0f );
 	const bool bSuccess = pNet->InitAsServer();
 	if ( !bSuccess )
+	{
 		WriteMSG( "Cannot bind socket to the port %d\n", nPort );
+	}
 
 	pNet->StartGame();
 	pNet->StartNewPlayerAccept();
@@ -210,7 +214,9 @@ void CGameServer::ProcessCommands()
 		//		NI_ASSERT( iter != processCmdsFuncs.end(), fmt::format( "Can't process cmd {}", cmd.nCmd ) );
 
 		if ( iter == processCmdsFuncs.end() )
+		{
 			continue;
+		}
 
 		PROCESS_CMD_FUNC pfnFunc = iter->second;
 		( this->*pfnFunc )( cmd );
@@ -223,7 +229,9 @@ void CGameServer::ProcessCommands()
 
 		int i = 0;
 		while ( i < lobbies.size() && !lobbies[i]->ProcessPacket( pPacket ) )
+		{
 			++i;
+		}
 	}
 }
 
@@ -238,7 +246,9 @@ void CGameServer::RecievePackets()
 		if ( bOnline && !bControlProcessed )
 		{
 			while ( i < lobbies.size() && !lobbies[i]->ProcessPacket( pPacket ) )
+			{
 				++i;
+			}
 		}
 #ifndef _FINALRELEASE
 		pClients->Log( pPacket->nClientID, fmt::format( "receive {}, {}", GetPacketInfo( pPacket ), i ) );
@@ -259,7 +269,9 @@ void CGameServer::SendPackets()
 			pNet->SendPacket( pPacket );
 			--nPacketsPerLobbyLeft;
 			if ( nPacketsPerLobbyLeft == 0 && lobbies[i]->CanBePaused() )
+			{
 				break;
+			}
 		}
 	}
 }
@@ -268,7 +280,9 @@ void CGameServer::Segment()
 {
 	RecievePackets();
 	for ( int i = 0; i < lobbies.size(); ++i )
+	{
 		lobbies[i]->Segment();
+	}
 	SendPackets();
 
 	ProcessCommands();
@@ -312,7 +326,9 @@ void CGameServer::CommandClientsList( const SCommand &cmd )
 		const std::unordered_map<int, SCommonClientInfo> &onLine = pClients->GetOnLine();
 		std::string szList;
 		if ( onLine.empty() )
+		{
 			szList = "no clients online\n";
+		}
 		else
 		{
 			if ( onLine.size() < 20 )
@@ -323,9 +339,13 @@ void CGameServer::CommandClientsList( const SCommand &cmd )
 				{
 					std::string szNick;
 					if ( !pClients->GetNick( iter->first, &szNick ) )
+					{
 						szList += fmt::format( "  something wrong with client {}\n", iter->first );
+					}
 					else
+					{
 						szList += "  " + szNick + "\n";
+					}
 				}
 			}
 			szList += fmt::format( "Total clients: {}\n", onLine.size() );
@@ -348,10 +368,14 @@ void CGameServer::CommandKick( const SCommand &cmd )
 			szStr = "kicked " + cmd.GetStr( 0 ) + "\n";
 		}
 		else
+		{
 			szStr = "something wrong with " + cmd.GetStr( 0 ) + "\n";
+		}
 	}
 	else
+	{
 		szStr = "unknown client " + cmd.GetStr( 0 ) + "\n";
+	}
 
 	WriteMSG( "%s", szStr.c_str() );
 }
@@ -368,19 +392,27 @@ void CGameServer::CommandClientState( const SCommand &cmd )
 
 	int nID;
 	if ( !pClients->GetClientID( cmd.GetStr( 0 ), &nID ) )
+	{
 		szStr = fmt::format( "Nick {} isn't online", cmd.GetStr( 0 ) );
+	}
 	else
 	{
 		SCommonClientInfo clientInfo;
 		if ( !pClients->GetCommonClientInfo( nID, &clientInfo ) )
+		{
 			szStr = fmt::format( "Something wrong with nick {}", cmd.GetStr( 0 ) );
+		}
 		else
 		{
 			szStr = fmt::format( "client {}: ", cmd.GetStr( 0 ) );
 			if ( clientInfo.bWant2ReceiveChat )
+			{
 				szStr += "chat open, ";
+			}
 			else
+			{
 				szStr += "chat closed, ";
+			}
 
 			switch ( clientInfo.eState )
 			{
@@ -408,9 +440,13 @@ void CGameServer::CommandClientState( const SCommand &cmd )
 			}
 
 			if ( clientInfo.nGameID == -1 )
+			{
 				szStr += ", not in a game";
+			}
 			else
+			{
 				szStr += fmt::format( ", in game {}", clientInfo.nGameID );
+			}
 
 			WriteMSG( "%s", ( szStr + "\n" ).c_str() );
 		}
@@ -441,7 +477,9 @@ void CGameServer::CommandBroadcast( const SCommand &cmd )
 		CFileStream stream( szFileName, CFileStream::WIN_READ_ONLY );
 		CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ );
 		if ( pSaver )
+		{
 			pSaver->Add( "Text", &szText );
+		}
 	}
 	std::wstring wszText = NStr::ToUnicode( szText );
 	CChatLobby::SetWelcomeText( wszText );

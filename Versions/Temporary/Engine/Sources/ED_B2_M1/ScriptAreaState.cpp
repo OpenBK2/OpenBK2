@@ -342,19 +342,25 @@ void CScriptAreaState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 unsigned CScriptAreaState::InsertPolygon( const CControlPointList &rControlPointList )
 {
 	if ( rControlPointList.size() != 2 || !pMapInfoEditor || !pMapInfoEditor->GetViewManipulator() )
+	{
 		return INVALID_NODE_ID;
+	}
 	std::string szName;
 	while ( NEnterName::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), "Area name", "Area name", &szName ) )
 	{
 		if ( szName.empty() )
+		{
 			return INVALID_NODE_ID;
+		}
 		// Scripts use exact, case-sensitive names as keys; a duplicate would
 		// silently replace another area at mission startup. Read the live DB
 		// so names changed in the property editor are included too.
 		IManipulator *pManipulator = pMapInfoEditor->GetViewManipulator();
 		int count = 0;
 		if ( !CManipulatorManager::GetValue( &count, pManipulator, "ScriptAreas" ) )
+		{
 			return INVALID_NODE_ID;
+		}
 		bool duplicate = false;
 		for ( int i = 0; i < count; ++i )
 		{
@@ -367,7 +373,9 @@ unsigned CScriptAreaState::InsertPolygon( const CControlPointList &rControlPoint
 			}
 		}
 		if ( !duplicate )
+		{
 			return InsertScriptArea( dialogData.eAreaType, szName, rControlPointList.front(), rControlPointList.back() );
+		}
 		NMessage::Warning( "A script area named \"" + szName + "\" already exists. Please choose a different name." );
 	}
 	return INVALID_NODE_ID;
@@ -674,7 +682,9 @@ void CScriptAreaState::PostDraw( IPaintContext *pPaintDC )
 	ICamera *pCam = Camera();
 	CPtr<IEditorScene> pScene = EditorScene();
 	if ( !pCam )
+	{
 		return;
+	}
 	//
 	for ( CScriptAreaMap::iterator itScriptArea = scriptAreaMap.begin(); itScriptArea != scriptAreaMap.end();
 	      ++itScriptArea )

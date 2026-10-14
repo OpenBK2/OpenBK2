@@ -56,11 +56,15 @@ class CNetSaver : public IBinSaver
 	virtual void DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber )
 	{
 		if ( mode == SAVER_MODE_READ )
+		{
 			pRes->Read( pData, nSize );
+		}
 		else
 		{
 			if ( !pRes )
+			{
 				return;
+			}
 			pRes->Write( pData, nSize );
 		}
 	}
@@ -72,16 +76,22 @@ class CNetSaver : public IBinSaver
 			pRes->Read( &nSize, 4 );
 			data.resize( nSize );
 			if ( nSize != 0 )
+			{
 				pRes->Read( &data[0], nSize );
+			}
 		}
 		else
 		{
 			if ( !pRes )
+			{
 				return;
+			}
 			nSize = data.size();
 			pRes->Write( &nSize, 4 );
 			if ( !data.empty() )
+			{
 				pRes->Write( &data[0], nSize );
+			}
 		}
 	}
 	virtual void DataChunkString( std::wstring &data )
@@ -93,17 +103,23 @@ class CNetSaver : public IBinSaver
 			data.resize( nSize );
 
 			if ( nSize != 0 )
+			{
 				pRes->Read( &data[0], nSize * 2 );
+			}
 		}
 		else
 		{
 			if ( !pRes )
+			{
 				return;
+			}
 			nSize = data.size();
 			pRes->Write( &nSize, 4 );
 
 			if ( !data.empty() )
+			{
 				pRes->Write( &data[0], nSize * 2 );
+			}
 		}
 	}
 	// storing/loading pointers to objects
@@ -111,7 +127,9 @@ class CNetSaver : public IBinSaver
 	{
 		ASSERT( pObject == 0 || IsValid( pObject ) );
 		if ( !pRes )
+		{
 			return;
+		}
 
 		if ( pObject == 0 )
 		{
@@ -147,14 +165,18 @@ class CNetSaver : public IBinSaver
 		TPACKET_ID cTypeID;
 		pRes->Read( &cTypeID, sizeof( cTypeID ) );
 		if ( cTypeID == 255 )
+		{
 			return 0;
+		}
 		else
 		{
 			if ( NObjectFactory::IsRegistered( cTypeID ) )
 			{
 				CObjectBase *pObject = MakeObject<CObjectBase>( cTypeID );
 				if ( pObject )
+				{
 					pObject->operator&( *this );
+				}
 
 				return pObject;
 			}

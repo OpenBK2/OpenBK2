@@ -24,7 +24,9 @@ void CFreeFireManager::Analyze( CCommonUnit *pUnit, CBasicGun *pActiveGun )
 			RecordRandomCall();
 		}
 		else
+		{
 			lastCheck = curTime;
+		}
 
 		const float fSightRadius = pUnit->GetSightRadius();
 		uint32_t dwForbidden = 0;
@@ -51,7 +53,9 @@ void CFreeFireManager::Analyze( CCommonUnit *pUnit, CBasicGun *pActiveGun )
 			      iter.Iterate() )
 			{
 				if ( ( *iter )->IsAlive() && ( *iter )->IsNoticableByUnit( pUnit, fSightRadius ) )
+				{
 					pUnit->AddUnitToShootEstimator( *iter );
+				}
 			}
 
 			CAIUnit *pTarget = pUnit->GetBestShootEstimatedUnit();
@@ -64,7 +68,9 @@ void CFreeFireManager::Analyze( CCommonUnit *pUnit, CBasicGun *pActiveGun )
 				if ( CTurret *pTurret = pGun->GetTurret() )
 				{
 					if ( !pTurret->IsLocked( pGun ) )
+					{
 						pTurret->Lock( pGun );
+					}
 				}
 
 				pGun->StartEnemyBurst( pTarget, shootInfo[nGun].NeedAim( pTarget, pGun ) );
@@ -74,7 +80,9 @@ void CFreeFireManager::Analyze( CCommonUnit *pUnit, CBasicGun *pActiveGun )
 				dwForbidden |= ( 1 << nGun );
 			}
 			else
+			{
 				return;
+			}
 		}
 	}
 }

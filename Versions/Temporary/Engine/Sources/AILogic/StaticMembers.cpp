@@ -38,11 +38,15 @@ int CStaticMembers::operator&( IBinSaver &saver )
 		saver.Add( 18, &objs );
 		int nMax = 0;
 		for ( det_map<int, CPtr<CLinkObject>>::iterator it = objs.begin(); it != objs.end(); ++it )
+		{
 			nMax = (std::max)( nMax, it->first );
+		}
 
 		SLinkObjDataAutoMagic::pLinkObjData->link2object.resize( nMax + 1, 0 );
 		for ( det_map<int, CPtr<CLinkObject>>::iterator it = objs.begin(); it != objs.end(); ++it )
+		{
 			SLinkObjDataAutoMagic::pLinkObjData->link2object[it->first] = it->second;
+		}
 	}
 	else if ( !saver.IsChecksum() )
 	{
@@ -50,7 +54,9 @@ int CStaticMembers::operator&( IBinSaver &saver )
 		for ( int i = 0; i < SLinkObjDataAutoMagic::pLinkObjData->link2object.size(); ++i )
 		{
 			if ( SLinkObjDataAutoMagic::pLinkObjData->link2object[i] != 0 )
+			{
 				objs[i] = SLinkObjDataAutoMagic::pLinkObjData->link2object[i];
+			}
 		}
 		saver.Add( 18, &objs );
 	}

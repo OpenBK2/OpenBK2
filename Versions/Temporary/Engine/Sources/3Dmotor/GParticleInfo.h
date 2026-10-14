@@ -37,7 +37,9 @@ struct SParticleLightInfo
 			vStep = vTrueStep;
 		}
 		else
+		{
 			StopIncrementing();
+		}
 	}
 	void StopIncrementing()
 	{
@@ -48,13 +50,17 @@ struct SParticleLightInfo
 	{
 		vStart.nU += vTrueStep.nU;
 		if ( vStart.nU == nCheckStart )
+		{
 			vStart.nV += vTrueStep.nV;
+		}
 	}
 	void Inc()
 	{
 		vStart.nU += vStep.nU;
 		if ( vStart.nU == nCheckStart )
+		{
 			vStart.nV += vStep.nV;
+		}
 	}
 };
 

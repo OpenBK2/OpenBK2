@@ -28,7 +28,9 @@ void CNetLogger::OpenLogFile( const std::string &szNick )
 
 	logs[szNick] = fopen( szFullName.c_str(), "a" );
 	if ( logs[szNick] == 0 )
+	{
 		logs.erase( szNick );
+	}
 #endif
 }
 
@@ -48,7 +50,9 @@ CNetLogger::~CNetLogger()
 {
 #ifndef _DONT_LOG_PACKETS
 	for ( std::unordered_map<std::string, FILE *>::iterator iter = logs.begin(); iter != logs.end(); ++iter )
+	{
 		fclose( iter->second );
+	}
 #endif
 }
 

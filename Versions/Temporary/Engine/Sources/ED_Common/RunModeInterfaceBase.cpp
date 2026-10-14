@@ -19,11 +19,15 @@ void CRunModeInterfaceBase::Step( bool bAppActive )
 	if ( !bAppActive )
 	{
 		if ( pTimer != 0 )
+		{
 			pTimer->ResetTiming();
+		}
 		return;
 	}
 	if ( pTimer != 0 )
+	{
 		pTimer->Advance( 1.f, GetTime() );
+	}
 
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }

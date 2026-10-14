@@ -15,7 +15,9 @@ void SMechUnitRPGStats::ToAIUnits( bool bInEditor )
 		fMaxHeight *= float( 32.0f );
 		// move entrance point in front direction outside bounding box
 		if ( vEntrancePoint == VNULL2 )
+		{
 			vEntrancePoint.y = vAABBCenter.y + vAABBHalfSize.y;
+		}
 	}
 
 	// armor
@@ -37,23 +39,31 @@ void SMechUnitRPGStats::ToAIUnits( bool bInEditor )
 	if ( !bInEditor )
 	{
 		if ( nPriority == 0 )
+		{
 			nPriority = 1;
+		}
 	}
 	//
 	nPrimaryGun = -1;
 	nPrimaryPlatform = -1;
 	for ( int i = 0; i < platforms.size(); ++i )
+	{
 		CountPrimaryGuns( -1, i );
+	}
 	//
 	wDivingAngle = fDivingAngle * 65535.0f / 360.0f;
 	wClimbingAngle = fClimbAngle * 65535.0f / 360.0f;
 	wTiltAngle = fTiltAngle * 65535.0f / 360.0f;
 	// make action flags, based on available shells
 	for ( int i = 0; i < platforms.size(); ++i )
+	{
 		CountShellTypes( -1, i );
+	}
 
 	for ( int i = 0; i < allowedPlaneManuvers.size(); ++i )
+	{
 		manuverMap[int( allowedPlaneManuvers[i] )] = true;
+	}
 }
 
 }

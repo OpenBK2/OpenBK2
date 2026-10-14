@@ -12,7 +12,9 @@ void EnumConglomerates( const int nMaxRank, const SIntThree &vCenter, const int 
 	const int nMaxY = Clamp( vCenter.y + nRadius, 0, ( *pEnumerator ).GetSizeY() );
 
 	if ( nMinX == nMaxX || nMinY == nMaxY )
+	{
 		return; // nothing to do
+	}
 
 	// for better performance
 	const int nAreaUnderSound = ( nMaxX - nMinX ) * ( nMaxY - nMinY );

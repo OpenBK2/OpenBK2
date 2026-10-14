@@ -67,7 +67,9 @@ protected:
 		NSingleton::RegisterSingleton( CreateUIInitialization(), IUIInitialization::tidTypeID );
 		NVFS::SetMainVFS( NVFS::CreateWinVFS( std::string( GAME_DATA_DIR ) + "/" ) );
 		if ( !std::ifstream( std::string( GAME_DATA_DIR ) + "/Fonts/Files/LiberationSans-Regular.ttf" ) )
+		{
 			GTEST_SKIP() << "Shipped font is unavailable";
+		}
 
 		// Exercise the real edit control and layout, without a graphics device.
 		font = MakeObject<NDb::SFont>( NDb::SFont::typeID );
@@ -90,7 +92,9 @@ protected:
 	void TearDown() override
 	{
 		if ( window )
+		{
 			window->SetFocus( false );
+		}
 		window = nullptr;
 		screen = nullptr;
 		NInput::PurgeEvents();
@@ -124,7 +128,9 @@ protected:
 		NInput::PostEvent( name, character, 0 );
 		SGameMessage event;
 		while ( NInput::GetEvent( &event ) )
+		{
 			window->ProcessEvent( event );
+		}
 	}
 
 	void Type( const std::wstring &text )
@@ -161,7 +167,9 @@ TEST_F( UnicodeEditLine, UnicodeEventIsAcceptedWithoutByteConversion )
 	MakeEdit();
 	// Isolate the edit filter from the converter, including Linux's C locale.
 	for ( wchar_t character : sample )
+	{
 		Send( "win_char", character );
+	}
 	EXPECT_EQ( std::wstring( edit->GetText() ), sample );
 }
 
@@ -170,7 +178,9 @@ TEST_F( UnicodeEditLine, ControlsAndMarkupRemainRejected )
 	MakeEdit();
 	Type( L"OK" );
 	for ( int control : { 0, 8, 9, 10, 13, 27, 31, 0x7f, 0x85, 0x9f, 0x2028, 0x2029 } )
+	{
 		Send( "win_char", control );
+	}
 	Type( L"<>" );
 	EXPECT_EQ( std::wstring( edit->GetText() ), L"OK" );
 }

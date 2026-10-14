@@ -27,7 +27,9 @@ void CTerraGen::ApplyBridgeTerraForm( const CVec2 &_p1, const CVec2 &_p2, const 
 
 	NI_ASSERT( fabs2( vNorm ) > DEF_EPS, "Wrong bridge's stayed points" );
 	if ( fabs2( vNorm ) <= DEF_EPS )
+	{
 		return;
+	}
 
 	Normalize( &vNorm );
 

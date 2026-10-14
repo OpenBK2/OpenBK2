@@ -70,17 +70,25 @@ CTypeNode *CNamespace::FindForward( const std::string &szTypeName )
 void CNamespace::AddInsideDef( CLangNode *pNode )
 {
 	if ( pNode == 0 )
+	{
 		return;
+	}
 
 	if ( CDynamicCast<CTypeNode> pTypeNode = pNode )
 	{
 		if ( pTypeNode->IsForward() )
+		{
 			insideForwards[pNode->GetName()].push_back( pTypeNode.GetPtr() );
+		}
 		else
+		{
 			insideDefs[pNode->GetName()] = pNode;
+		}
 	}
 	else
+	{
 		insideDefs[pNode->GetName()] = pNode;
+	}
 
 	insideDefList.push_back( pNode );
 }
@@ -97,13 +105,17 @@ CLangNode *CNamespace::FindInsideDef( const std::string &szDefName )
 			{
 				CComplexTypeNode *pTypeNode = *iter;
 				if ( pTypeNode->GetName() == szDefName )
+				{
 					return pTypeNode;
+				}
 				if ( CDynamicCast<CComplexTypeNode> pComplexTypeNode = pTypeNode )
 				{
 					CNamespace *pVisibleNM = pComplexTypeNode->GetNamespace();
 					CLangNode *pNodeInVisibleNamespace = pVisibleNM->FindInsideDef( szDefName );
 					if ( pNodeInVisibleNamespace != 0 )
+					{
 						return pNodeInVisibleNamespace;
+					}
 				}
 			}
 		}
@@ -111,13 +123,17 @@ CLangNode *CNamespace::FindInsideDef( const std::string &szDefName )
 		return 0;
 	}
 	else
+	{
 		return iter->second;
+	}
 }
 
 void CNamespace::MergeFiles( CNamespace *pNM, const std::string &szFileName )
 {
 	if ( files.find( szFileName ) != files.end() )
+	{
 		return;
+	}
 	// merge insideDefs
 	for ( std::unordered_map<std::string, CObj<CLangNode>>::iterator iter = pNM->insideDefs.begin();
 	      iter != pNM->insideDefs.end();
@@ -126,7 +142,9 @@ void CNamespace::MergeFiles( CNamespace *pNM, const std::string &szFileName )
 		const std::string &szDefName = iter->first;
 		CLangNode *pNode = iter->second;
 		if ( files.find( pNode->GetFile() ) != files.end() )
+		{
 			continue;
+		}
 
 		VERIFY_NOLINE( insideDefs.find( szDefName ) == insideDefs.end(),
 		               fmt::format( "{}({}) error: type {} redifinition, see \n\t\t{}({}):",
@@ -163,7 +181,9 @@ void CNamespace::MergeFiles( CNamespace *pNM, const std::string &szFileName )
 		CAttributeDefNode *pAttr = iter->second;
 
 		if ( files.find( pAttr->GetFile() ) != files.end() )
+		{
 			continue;
+		}
 
 		VERIFY_NOLINE( insideAttrs.find( szAttrrDefName ) == insideAttrs.end(),
 		               fmt::format( "{}({}): type {} redifinition, see\n\t\t {}({})",
@@ -211,14 +231,18 @@ void CNamespace::MergeFiles( CNamespace *pNM, const std::string &szFileName )
 		{
 			CTypeNode *pNode = *forwardIter;
 			if ( files.find( pNode->GetFile() ) == files.end() )
+			{
 				forwToMerge.push_back( pNode );
+			}
 		}
 		ourForwList.insert( ourForwList.begin(), forwToMerge.begin(), forwToMerge.end() );
 	}
 
 	files.insert( szFileName );
 	for ( std::unordered_set<std::string>::iterator iter = pNM->files.begin(); iter != pNM->files.end(); ++iter )
+	{
 		files.insert( *iter );
+	}
 }
 
 void CNamespace::ResolveForwards()
@@ -272,7 +296,9 @@ CEnumEntryNode *CNamespace::FindEnumEntry( const std::string &szEnumEntry ) cons
 		{
 			CEnumEntryNode *pEntry = pEnumNode->GetEnumEntry( szEnumEntry );
 			if ( pEntry )
+			{
 				return pEntry;
+			}
 		}
 	}
 
@@ -308,7 +334,9 @@ CTypeDefNode::TAttrIter CTypeDefNode::AttrEnd() const
 CTypeNode *CTypeDefNode::GetReferencedType( bool bRecursive ) const
 {
 	if ( !bRecursive )
+	{
 		return pReferencedType;
+	}
 	else
 	{
 		NI_VERIFY( pReferencedType != 0, "null referenced type", return 0 );
@@ -322,7 +350,9 @@ bool CTypeDefNode::IsPointer() const
 {
 	CDynamicCast<CTypeDefNode> pType = pReferencedType;
 	if ( !pType )
+	{
 		return bPointer;
+	}
 	else
 	{
 		bool bRefPointer = pType->IsPointer();
@@ -402,7 +432,9 @@ CEnumEntryNode *CEnumNode::GetEnumEntry( const std::string &szEntryName ) const
 	{
 		CEnumEntryNode *pEntry = *iter;
 		if ( pEntry->GetName() == szEntryName )
+		{
 			return pEntry;
+		}
 	}
 
 	return 0;
@@ -416,7 +448,9 @@ CEnumEntryNode *CEnumNode::FindAnyWithCrossedEntries( CNamespace *pNM ) const
 		CEnumEntryNode *pEntry = *iter;
 		CEnumEntryNode *pEntryInNM = pNM->FindEnumEntry( pEntry->GetName() );
 		if ( pEntryInNM )
+		{
 			return pEntryInNM;
+		}
 	}
 
 	return 0;

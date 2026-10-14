@@ -39,9 +39,13 @@ const float GetCoeffByDeltaTime( const float fDeltaTime, const float fUpperBound
 {
 	float fCoeff = 1.0f - ( fDeltaTime / fUpperBound ) / 3.0f;
 	if ( bNeedDeinstall )
+	{
 		fCoeff = (std::min)( 1.0f, fCoeff * 1.2f );
+	}
 	if ( !bCanMove )
+	{
 		fCoeff = (std::min)( 1.0f, fCoeff * 1.1f );
+	}
 
 	return fCoeff;
 }
@@ -50,7 +54,9 @@ const float GetWeightByVisiblePos( CAIUnit *pUnit, const NTimer::STime deltaTime
 {
 	const float fTimeToForgetUnit = pUnit->GetTimeToForget();
 	if ( deltaTime > fTimeToForgetUnit )
+	{
 		return 0.0f;
+	}
 	else
 	{
 		// коэффициент, обеспечивающий вероятность того, что юнит ушёл
@@ -69,7 +75,9 @@ GetWeightByAntiArtPos( CAIUnit *pUnit, const NTimer::STime deltaTime, const floa
 {
 	const float fTimeToForget = SGeneralConsts::TIME_TO_FORGET_ANTI_ARTILLERY;
 	if ( deltaTime > fTimeToForget )
+	{
 		return 0.0f;
+	}
 	else
 	{
 		// коэффициент, обеспечивающий вероятность того, что юнит ушёл
@@ -113,9 +121,13 @@ void CResistancesContainer::UpdateEnemyUnitInfo( CAIUnitInfoForGeneral *pInfo,
 			const float fNew = (std::max)( 0.0f, cellsWeights[nLastCell].fCellWeight - pInfo->GetWeight() );
 			cellsWeights[nLastCell].fCellWeight = fNew;
 			if ( pos != resistances.end() )
+			{
 				pos->SetWeight( fNew );
+			}
 			if ( pInfo->GetWeight() > SGeneralConsts::MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES )
+			{
 				--goodWeight[nLastCell];
+			}
 		}
 
 		CVec2 vNewPos;
@@ -146,16 +158,24 @@ void CResistancesContainer::UpdateEnemyUnitInfo( CAIUnitInfoForGeneral *pInfo,
 			posCells = cellsWeights.find( nNewCell );
 		}
 		else
+		{
 			posCells->second.fCellWeight += fNewWeight;
+		}
 
 		if ( fNewWeight > SGeneralConsts::MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES )
+		{
 			++goodWeight[nLastCell];
+		}
 
 		CResistance::iterator posRes = find( resistances.begin(), resistances.end(), SResistance( nNewCell, 0, 0 ) );
 		if ( posRes == resistances.end() )
+		{
 			resistances.push_back( SResistance( nNewCell, posCells->second.fCellWeight, goodWeight[nLastCell] ) );
+		}
 		else
+		{
 			posRes->SetWeight( posCells->second.fCellWeight );
+		}
 	}
 
 	for ( CResistance::iterator iter = resistances.begin(); iter != resistances.end(); ++iter )
@@ -177,11 +197,15 @@ void CResistancesContainer::UnitDied( CAIUnitInfoForGeneral *pInfo )
 		const int nCell = GetResistanceCellNumber( pInfo->GetRegisteredPos() );
 		CResistance::iterator pos = find( resistances.begin(), resistances.end(), SResistance( nCell, 0, 0 ) );
 		if ( pos == resistances.end() )
+		{
 			return;
+		}
 		cellsWeights[nCell].fCellWeight = (std::max)( 0.0f, cellsWeights[nCell].fCellWeight - pInfo->GetWeight() );
 		pos->SetWeight( cellsWeights[nCell].fCellWeight );
 		if ( pInfo->GetWeight() > SGeneralConsts::MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES )
+		{
 			--goodWeight[nCell];
+		}
 	}
 }
 
@@ -192,19 +216,25 @@ void CResistancesContainer::UnitChangedParty( CAIUnitInfoForGeneral *pInfo )
 		const int nCell = GetResistanceCellNumber( pInfo->GetRegisteredPos() );
 		CResistance::iterator pos = find( resistances.begin(), resistances.end(), SResistance( nCell, 0, 0 ) );
 		if ( pos == resistances.end() )
+		{
 			return;
+		}
 
 		cellsWeights[nCell].fCellWeight = (std::max)( 0.0f, cellsWeights[nCell].fCellWeight - pInfo->GetWeight() );
 		pos->SetWeight( cellsWeights[nCell].fCellWeight );
 		if ( pInfo->GetWeight() > SGeneralConsts::MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES )
+		{
 			--goodWeight[nCell];
+		}
 	}
 }
 
 void CResistancesContainer::SetCellInUse( const int nResistanceCellNumber, bool bInUse )
 {
 	if ( cellsWeights.find( nResistanceCellNumber ) != cellsWeights.end() )
+	{
 		cellsWeights[nResistanceCellNumber].bInUse = bInUse;
+	}
 }
 
 void CResistancesContainer::RemoveExcluded( const CVec2 &vCenter )
@@ -223,13 +253,17 @@ void CResistancesContainer::RemoveExcluded( const CVec2 &vCenter )
 			for ( CCellsWeights::iterator iter = cellsWeights.begin(); iter != cellsWeights.end(); ++iter )
 			{
 				if ( IsCellInExcludingCircle( SResistance::GetResistanceCellCenter( iter->first ), circle ) )
+				{
 					iter->second.bAllowShoot = true;
+				}
 			}
 
 			it = excluded.erase( it );
 		}
 		else
+		{
 			++it;
+		}
 	}
 }
 
@@ -241,8 +275,12 @@ void CResistancesContainer::AddExcluded( const CVec2 &vCenter, const float fRadi
 bool CResistancesContainer::IsCellExcluded( const CVec2 &vCellCenter )
 {
 	for ( std::list<CCircle>::const_iterator it = excluded.begin(); it != excluded.end(); ++it )
+	{
 		if ( IsCellInExcludingCircle( vCellCenter, *it ) )
+		{
 			return true;
+		}
+	}
 	return false;
 }
 
@@ -255,14 +293,18 @@ bool CResistancesContainer::IsInUse( const int nResistanceCellNumber )
 		return cell.bInUse || !cell.bAllowShoot;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 bool CResistancesContainer::IsInResistanceCircle( const CVec2 &vCenter ) const
 {
 	std::list<CCircle>::const_iterator iter = excluded.begin();
 	while ( iter != excluded.end() && fabs2( vCenter - iter->center ) >= sqr( iter->r ) )
+	{
 		++iter;
+	}
 
 	return iter != excluded.end();
 }
@@ -274,7 +316,9 @@ bool CResistancesContainer::IsInResistanceCircle( const CVec2 &vCenter ) const
 void CResistancesContainer::CIter::IterateToNotInUse()
 {
 	while ( iter != pContainter->resistances.end() && pContainter->IsInUse( ( *iter ).GetCellNumber() ) )
+	{
 		++iter;
+	}
 }
 
 void CResistancesContainer::CIter::Iterate()

@@ -10,7 +10,9 @@ SUnitStatusUpdate::SUnitStatusUpdate( const EUnitStatus _eStatus, const bool bEn
 		: SAIBasicUpdate( ACTION_NOTIFY_UPDATE_STATUS, 0 ), eStatus( _eStatus ), nUnitID( -1 ), fRadius( _fRadius )
 {
 	if ( !bEnabled )
+	{
 		eStatus = (EUnitStatus)( (int)eStatus & EUS_GROUP_MASK );
+	}
 }
 
 SUnitStatusUpdate *CreateStatusUpdate( const EUnitStatus eStatus, const bool bEnabled )

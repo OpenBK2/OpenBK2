@@ -21,7 +21,9 @@ void AttachIntersection( std::vector<NDb::SVSOPoint> *pIntersection,
                          const bool bSetFlag )
 {
 	if ( pIntersection->size() < 2 )
+	{
 		return;
+	}
 
 	static std::vector<SIntersectPoint> inters( 16 );
 	static std::vector<NDb::SVSOPoint> newPoints( 128 );
@@ -78,7 +80,9 @@ bool IsInside( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV, bool bInc
 			{
 				const double x = (double)v1.x + ( v2.x - v1.x ) * t;
 				if ( fabs( x - rV.x ) < DEF_EPS ) // point is placed on the border
+				{
 					return bIncludeBorders;
+				}
 				if ( i == 0 )
 				{
 					fFirstX = fLastX = x;
@@ -86,27 +90,39 @@ bool IsInside( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV, bool bInc
 				else
 				{
 					if ( fabs( x - fLastX ) < DEF_EPS )
+					{
 						continue;
+					}
 					if ( i == ( rPoly.size() - 1 ) )
 					{
 						if ( fabs( x - fFirstX ) < DEF_EPS )
+						{
 							continue;
+						}
 					}
 				}
 				fLastX = x;
 				if ( x > rV.x )
+				{
 					++nRightInters;
+				}
 				else
+				{
 					++nLeftInters;
+				}
 			}
 			else
+			{
 				fLastX = -FP_MAX_VALUE;
+			}
 		}
 		else
 		{
 			if ( ( fabs( v1.y - rV.y ) < DEF_EPS ) && ( rV.x >= (std::min)( v1.x, v2.x ) ) &&
 			     ( rV.x <= (std::max)( v1.x, v2.x ) ) )
+			{
 				return false;
+			}
 			fLastX = -FP_MAX_VALUE;
 		}
 	}
@@ -133,7 +149,9 @@ bool IsOutside( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV )
 			{
 				const double x = (double)v1.x + ( v2.x - v1.x ) * t;
 				if ( fabs( x - rV.x ) < DEF_EPS ) // point is placed on the border
+				{
 					return false;
+				}
 				if ( i == 0 )
 				{
 					fFirstX = fLastX = x;
@@ -141,27 +159,39 @@ bool IsOutside( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV )
 				else
 				{
 					if ( fabs( x - fLastX ) < DEF_EPS )
+					{
 						continue;
+					}
 					if ( i == ( rPoly.size() - 1 ) )
 					{
 						if ( fabs( x - fFirstX ) < DEF_EPS )
+						{
 							continue;
+						}
 					}
 				}
 				fLastX = x;
 				if ( x > rV.x )
+				{
 					++nRightInters;
+				}
 				else
+				{
 					++nLeftInters;
+				}
 			}
 			else
+			{
 				fLastX = -FP_MAX_VALUE;
+			}
 		}
 		else
 		{
 			if ( ( fabs( v1.y - rV.y ) < DEF_EPS ) && ( rV.x >= (std::min)( v1.x, v2.x ) ) &&
 			     ( rV.x <= (std::max)( v1.x, v2.x ) ) )
+			{
 				return false;
+			}
 			fLastX = -FP_MAX_VALUE;
 		}
 	}
@@ -227,7 +257,9 @@ void GetIntersection( std::vector<SIntersectPoint> *pIntersection,
                       const CVec3 &rV2 )
 {
 	if ( rPoly.size() < 2 )
+	{
 		return;
+	}
 
 	std::vector<NDb::SVSOPoint>::const_iterator itVec1 = rPoly.begin();
 	std::vector<NDb::SVSOPoint>::const_iterator itVec2 = itVec1;
@@ -309,7 +341,9 @@ bool IsIntersect( const std::vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const
 			const double k =
 					( (double)( vert1.x - rV1.x ) * ( rV2.y - rV1.y ) - ( vert1.y - rV1.y ) * ( rV2.x - rV1.x ) ) * fInvDet;
 			if ( ( t > DEF_EPS ) && ( t < ( 1.0 - DEF_EPS ) ) && ( k > -DEF_EPS ) && ( k < ( 1.0 + DEF_EPS ) ) )
+			{
 				return true;
+			}
 		}
 	}
 	return false;
@@ -324,11 +358,17 @@ bool IsIntersect( const std::vector<STriangle> &rTriangles,
 	for ( std::vector<STriangle>::const_iterator it = rTriangles.begin(); it != rTriangles.end(); ++it )
 	{
 		if ( IsIntersect( rVerts[it->i1], rVerts[it->i2], rV1, rV2 ) )
+		{
 			return true;
+		}
 		if ( IsIntersect( rVerts[it->i2], rVerts[it->i3], rV1, rV2 ) )
+		{
 			return true;
+		}
 		if ( IsIntersect( rVerts[it->i3], rVerts[it->i1], rV1, rV2 ) )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -339,7 +379,9 @@ void CreateConvexHull( std::vector<CVec3> *pResPoints, const std::vector<CVec3> 
 {
 	pResPoints->resize( 0 );
 	if ( rSourcePoints.empty() )
+	{
 		return;
+	}
 	flags.resize( rSourcePoints.size() );
 	fill( flags.begin(), flags.end(), 0 );
 	normVects.SetSizes( rSourcePoints.size(), rSourcePoints.size() );
@@ -368,7 +410,9 @@ void CreateConvexHull( std::vector<CVec3> *pResPoints, const std::vector<CVec3> 
 	for ( int i = 1; i < rSourcePoints.size(); ++i )
 	{
 		if ( rSourcePoints[i].y < rSourcePoints[nFirstPnt].y )
+		{
 			nFirstPnt = i;
+		}
 	}
 
 	pResPoints->resize( 0 );

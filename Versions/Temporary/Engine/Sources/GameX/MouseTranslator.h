@@ -140,7 +140,9 @@ public:
 	void DoMouseMove( const CVec2 &vPos, bool bMouseMoveDirect )
 	{
 		if ( eActionState != AS_NONE )
+		{
 			OnMouseMove( vPos, bMouseMoveDirect );
+		}
 	}
 	void DoLButtonDown( const CVec2 &vPos, class CMapObj *pMO, bool bTargetMode );
 	void DoLButtonUp( const CVec2 &vPos, class CMapObj *pMO, bool bTargetMode );
@@ -207,7 +209,9 @@ private:
 	void OnSerialize( IBinSaver &f )
 	{
 		if ( f.IsReading() )
+		{
 			ResetState();
+		}
 	}
 	void ResetState();
 	void CheckForcedAction();

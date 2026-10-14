@@ -50,17 +50,25 @@ float CSound::GetVolume( const NTimer::STime time, const float fDist ) const
 	// сначала - затухание удаленного звука
 	float fVolDim = 0.0f;
 	if ( bDimMark )
+	{
 		fVolDim = 1.0f * ( time - timeBeginDim ) / SSoundSceneConsts::SS_SOUND_DIM_TIME;
+	}
 	if ( fVolDim > 1.0f )
+	{
 		return 0.0f;
+	}
 
 	// теперь зависимость от расстояния
 	float fVolDist = 0.0f;
 	if ( fDist / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE > nMinRadius )
+	{
 		fVolDist = 1.0f * ( fDist - SSoundSceneConsts::SS_SOUND_CELL_SIZE * SSoundSceneConsts::SS_TILE_SIZE * nMinRadius ) /
 		           ( nMaxRadius - nMinRadius ) / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE;
+	}
 	if ( fVolDist > 1.0f )
+	{
 		return 0.0f;
+	}
 
 	return ( 1.0f - fVolDim ) * ( 1.0f - fVolDist );
 }
@@ -101,7 +109,9 @@ void CSound::SetPos( const CVec3 &_vPos )
 {
 	int nTime = CSoundScene2D::GetCurTime() - timeLastPosUpdate;
 	if ( nTime != 0 )
+	{
 		vSpeed = ( _vPos - vPos ) / nTime;
+	}
 	vPos = _vPos;
 	timeLastPosUpdate = CSoundScene2D::GetCurTime();
 }
@@ -129,6 +139,8 @@ CSubstSound *CSound::GetSubst()
 ISound *CSound::GetSound()
 {
 	if ( pSubstitute )
+	{
 		return pSubstitute->GetSound();
+	}
 	return pSample;
 }

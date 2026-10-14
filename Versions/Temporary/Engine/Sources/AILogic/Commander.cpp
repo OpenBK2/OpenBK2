@@ -63,7 +63,9 @@ void CCommander::Segment()
 
 	// у тасков, которых все хорошо попытаться забрать лишние юниты
 	for ( Tasks::iterator i = tasks.begin(); i != tasks.end(); ++i )
+	{
 		( *i )->ReleaseWorker( this, calcSeverity.nNumberNegative ? -1.0f : fMeanSeverity );
+	}
 
 	if ( !tasks.empty() )
 	{
@@ -72,7 +74,9 @@ void CCommander::Segment()
 			--it;
 			( *it )->AskForWorker( this, fMeanSeverity );
 			if ( it == tasks.begin() )
+			{
 				break;
+			}
 		}
 	}
 	/*
@@ -94,7 +98,9 @@ void CCommander::EnumWorkersInternal( const enum EForceType eType, IWorkerEnumer
 	{
 		std::vector<std::pair<float, CPtr<CCommonUnit>>> units;
 		for ( CommonUnits::iterator it = pUnits->begin(); it != pUnits->end(); ++it )
+		{
 			units.push_back( std::pair<float, CPtr<CCommonUnit>>( 0, *it ) );
+		}
 		pUnits->clear();
 		SCalcRatingPredicate calcRating( pEn, eType );
 		for_each( units.begin(), units.end(), calcRating );
@@ -106,10 +112,14 @@ void CCommander::EnumWorkersInternal( const enum EForceType eType, IWorkerEnumer
 			if ( bNeedMore && pEn->EvaluateWorker( units[i].second, eType ) )
 			{
 				if ( pEn->EnumWorker( units[i].second, eType ) )
+				{
 					bNeedMore = true;
+				}
 			}
 			else
+			{
 				pUnits->push_back( units[i].second );
+			}
 		}
 	}
 	else if ( 1 == pEn->NeedNBest( eType ) )

@@ -46,9 +46,13 @@ void CSinglePlayerTransceiver::StartMission( const NDb::SMapInfo *_pMap, IAILogi
 	nCommonSegment = 0;
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	if ( !pST || pST->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
+	{
 		pAI->SetNetGame( false );
+	}
 	else
+	{
 		pAI->SetNetGame( true );
+	}
 
 	pCmdsHistory->StartNewGame( _pMap );
 }
@@ -72,9 +76,13 @@ void CSinglePlayerTransceiver::DoSegments()
 	{
 		DebugTrace( "Got type: %s\n", WideToUTF8( szString ).c_str() );
 		if ( ReadFromPipe( PIPE_NET_CHAT, &szString, 0 ) )
+		{
 			DebugTrace( "Got msg: %s\n", WideToUTF8( szString ).c_str() );
+		}
 		else
+		{
 			DebugTrace( "Error: no msg" );
+		}
 	}
 	// segment calling through segment timer
 	IGameTimer *pTimer = Singleton<IGameTimer>();
@@ -102,9 +110,13 @@ void CSinglePlayerTransceiver::DoSegments()
 				const float fFPS = float( nFrames - 1 ) / ( nCurTime - nStartCountingTime ) * 1000;
 				const float fSlowdownFPS = NGlobal::GetVar( "AI_SLOWDOWN_FPS", 15.0f );
 				if ( fFPS > fSlowdownFPS )
+				{
 					AdjustGameSpeed( +1 );
+				}
 				else
+				{
 					AdjustGameSpeed( -1 );
+				}
 				nFrames = 0;
 			}
 		}
@@ -112,10 +124,14 @@ void CSinglePlayerTransceiver::DoSegments()
 
 	// no segments to do
 	if ( !pTimer->BeginSegments() )
+	{
 		return;
+	}
 
 	if ( nCommonSegment > 14 )
+	{
 		pAI->NetGameStarted();
+	}
 
 	while ( pTimer->NextSegment() )
 	{
@@ -135,7 +151,9 @@ void CSinglePlayerTransceiver::SendCommand( IAILogicCommandB2 *pCmd )
 	pCmdsHistory->AddCommand( nCommonSegment, pCmd );
 
 	if ( NGlobal::GetVar( "History.Playing", 0 ) == 0 || bCommandsFromHistory )
+	{
 		pCmd->Execute();
+	}
 }
 
 void CSinglePlayerTransceiver::CommandClientTogglePause()

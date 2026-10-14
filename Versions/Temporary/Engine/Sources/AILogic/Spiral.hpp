@@ -58,12 +58,18 @@ struct SSpiralPointSort
 		if ( pPoint1.nRadius == pPoint2.nRadius )
 		{
 			if ( pPoint1.sector.wStartAngle == pPoint2.sector.wStartAngle )
+			{
 				return false;
+			}
 			else
+			{
 				return ( pPoint1.sector.wStartAngle < pPoint2.sector.wStartAngle );
+			}
 		}
 		else
+		{
 			return ( pPoint1.nRadius < pPoint2.nRadius );
+		}
 	}
 };
 
@@ -98,7 +104,9 @@ void GenerateSpiral( std::vector<SSpiralPoint> &spiral,
 			{
 				funcCurrentRadius( x, y );
 				if ( d < 0 )
+				{
 					d += 4 * x + 6;
+				}
 				else
 				{
 					d += 4 * ( x - y ) + 10;
@@ -123,7 +131,9 @@ void GenerateSpiral( std::vector<SSpiralPoint> &spiral,
 			{
 				int nAngle = ( spiral[nStartCell].sector.wStartAngle - ( 65535 - spiral[i].sector.wEndAngle ) ) / 2;
 				if ( nAngle < 0 )
+				{
 					nAngle += 65535;
+				}
 				spiral[i].sector.wEndAngle = nAngle;
 				spiral[nStartCell].sector.wStartAngle = nAngle;
 				nStartCell = i + 1;

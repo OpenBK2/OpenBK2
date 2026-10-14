@@ -59,7 +59,9 @@ std::string CLogger::GetStackTrace() const
 {
 	std::string szResult = "";
 	for ( std::list<std::string>::const_iterator it = stkTrace.begin(); it != stkTrace.end(); ++it )
+	{
 		szResult += *it + ":";
+	}
 	return szResult;
 }
 
@@ -67,9 +69,13 @@ void CLogger::SetReferenceChecking( bool bCheck )
 {
 	bCheckReferences = bCheck;
 	if ( bCheck )
+	{
 		WriteLog( "Reference checking on." );
+	}
 	else
+	{
 		WriteLog( "Reference checking off." );
+	}
 }
 
 void CLogger::SetLogStream( CDataStream *_pStream )

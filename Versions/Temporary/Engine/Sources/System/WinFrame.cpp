@@ -50,7 +50,9 @@ static NWinFrame::SWindowViewport GetMouseViewport( float *pScaleX, float *pScal
 	*pScaleX = *pScaleY = 1;
 	RECT client = {};
 	if ( !hWnd || !GetClientRect( hWnd, &client ) || client.right <= 0 || client.bottom <= 0 )
+	{
 		return {};
+	}
 #if !BOOST_OS_WINDOWS
 	int width = 0, height = 0;
 	if ( SDL_GetWindowSize( AsSdlWindow( hWnd ), &width, &height ) && width > 0 && height > 0 )
@@ -65,7 +67,9 @@ static NWinFrame::SWindowViewport GetMouseViewport( float *pScaleX, float *pScal
 static void ClientToGame( float *px, float *py )
 {
 	if ( nRenderWidth <= 0 || nRenderHeight <= 0 )
+	{
 		return;
+	}
 	float scaleX, scaleY;
 	const auto viewport = GetMouseViewport( &scaleX, &scaleY );
 	*px *= scaleX;
@@ -76,7 +80,9 @@ static void ClientToGame( float *px, float *py )
 static void GameToClient( float *px, float *py )
 {
 	if ( nRenderWidth <= 0 || nRenderHeight <= 0 )
+	{
 		return;
+	}
 	float scaleX, scaleY;
 	const auto viewport = GetMouseViewport( &scaleX, &scaleY );
 	viewport.GameToClient( px, py );
@@ -109,7 +115,9 @@ void NWinFrame::GetMousePos( float *px, float *py )
 	POINT point = {};
 	::GetCursorPos( &point );
 	if ( IsGameWindow( hWnd ) )
+	{
 		::ScreenToClient( hWnd, &point );
+	}
 	*px = float( point.x );
 	*py = float( point.y );
 #else
@@ -124,18 +132,24 @@ void NWinFrame::SetMousePos( float x, float y )
 #if BOOST_OS_WINDOWS
 	POINT point = { LONG( std::lround( x ) ), LONG( std::lround( y ) ) };
 	if ( IsGameWindow( hWnd ) )
+	{
 		::ClientToScreen( hWnd, &point );
+	}
 	::SetCursorPos( point.x, point.y );
 #else
 	if ( hWnd )
+	{
 		SDL_WarpMouseInWindow( AsSdlWindow( hWnd ), x, y );
+	}
 #endif
 }
 
 static void ApplyMouseBounds()
 {
 	if ( !hWnd )
+	{
 		return;
+	}
 	float left = float( mouseBounds.left ), top = float( mouseBounds.top );
 	float right = float( mouseBounds.right ), bottom = float( mouseBounds.bottom );
 	const bool bCameraDrag = right - left == 1 && bottom - top == 1;
@@ -156,7 +170,9 @@ static void ApplyMouseBounds()
 	}
 	POINT origin = {};
 	if ( NWinFrame::IsGameWindow( hWnd ) )
+	{
 		::ClientToScreen( hWnd, &origin );
+	}
 	OffsetRect( &rect, origin.x, origin.y );
 	::ClipCursor( &rect );
 #else
@@ -174,7 +190,9 @@ static void ApplyMouseBounds()
 			SDL_SetWindowMouseRect( pWindow, &sdlRect );
 			SDL_SetHint( SDL_HINT_MOUSE_RELATIVE_CURSOR_VISIBLE, "1" );
 			if ( !SDL_SetWindowRelativeMouseMode( pWindow, true ) )
+			{
 				DebugTrace( "INPUT: Cannot enable relative mouse mode: %s\n", SDL_GetError() );
+			}
 		}
 		else
 		{
@@ -186,7 +204,9 @@ static void ApplyMouseBounds()
 		// grab as well, so it cannot escape to another monitor. Leave keyboard
 		// shortcuts available to the desktop (Alt+Tab, workspace switching, etc.).
 		if ( !SDL_SetWindowMouseGrab( pWindow, true ) )
+		{
 			DebugTrace( "INPUT: Cannot confine mouse to game window: %s\n", SDL_GetError() );
+		}
 	}
 	else
 	{
@@ -200,7 +220,9 @@ static void ApplyMouseBounds()
 void NWinFrame::FitGameWindowToMonitor()
 {
 	if ( !IsGameWindow( hWnd ) )
+	{
 		return;
+	}
 #if BOOST_OS_WINDOWS
 	MONITORINFO monitor = {};
 	monitor.cbSize = sizeof( monitor );
@@ -244,9 +266,13 @@ static void Report( const char *pszText, int nVal = -0x7fffffff )
 {
 	std::string message;
 	if ( nVal != -0x7fffffff )
+	{
 		message = fmt::format( "{}{}", pszText, nVal );
+	}
 	else
+	{
 		message = pszText;
+	}
 	DebugTrace( "%s", message.c_str() );
 }
 #endif
@@ -319,13 +345,17 @@ static void SetActive( bool _bActive )
 	return; // no mimising/sleep allowed!
 
 	if ( bAppAlwaysActive )
+	{
 		return;
+	}
 
 	bActive = _bActive; // activation flag
 	if ( s_bMinimizeOnDeactivate )
 	{
 		if ( !bActive )
+		{
 			ShowWindow( hWnd, SW_MINIMIZE );
+		}
 	}
 }
 
@@ -348,7 +378,9 @@ void NWinFrame::PumpMessages()
 			//Report( "...finish msg process", msg.message );
 		}
 		else
+		{
 			bExit = true;
+		}
 	}
 }
 
@@ -509,7 +541,9 @@ static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM
 			memset( &info, 0, sizeof( WINDOWINFO ) );
 			info.cbSize = sizeof( WINDOWINFO );
 			if ( hWnd && GetWindowInfo( hWnd, &info ) && info.dwWindowStatus == WS_ACTIVECAPTION )
+			{
 				ApplyMouseBounds();
+			}
 			break;
 		}
 		case WM_ACTIVATE:
@@ -522,14 +556,18 @@ static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM
 						if ( ( HIWORD( wParam ) ) == 0 )
 						{
 							if ( hWnd )
+							{
 								ApplyMouseBounds();
+							}
 						}
 						break;
 					case WA_INACTIVE: // deactivate window
 						// Keeping simulation active must not trap the desktop pointer.
 						ClipCursor( 0 );
 						if ( always_active.GetFloat() != 0 )
+						{
 							break;
+						}
 						SetActive( false );
 						//Report( "WndProc::WM_activate, WA_INACTIVE ", wParam );
 						break;
@@ -592,7 +630,9 @@ bool NWinFrame::SFLB1_InitApplication( const char *pszAppName, const char *pszWn
 	// when it was the only entry point this game had.
 	::hInstance = GetModuleHandle( 0 );
 	if ( !SFLB2_CreateWin( pszAppName, pszWndName, nXSize, nYSize, nIcon ) )
+	{
 		return false;
+	}
 	return true;
 }
 
@@ -604,10 +644,14 @@ void NWinFrame::SetIcon( const std::string & )
 void NWinFrame::SetCursor( HCURSOR _hCursor )
 {
 	if ( !bManageCursor )
+	{
 		return;
+	}
 
 	if ( hCursor == _hCursor )
+	{
 		return;
+	}
 	hCursor = _hCursor;
 	::SetCursor( hCursor );
 }
@@ -615,10 +659,14 @@ void NWinFrame::SetCursor( HCURSOR _hCursor )
 void NWinFrame::ShowCursor( bool bShow )
 {
 	if ( !bManageCursor )
+	{
 		return;
+	}
 	static bool bIsShown = (bool)3;
 	if ( bIsShown == bShow )
+	{
 		return;
+	}
 	bIsShown = bShow;
 	if ( bShow )
 	{
@@ -626,7 +674,9 @@ void NWinFrame::ShowCursor( bool bShow )
 		::SetCursor( hCursor );
 	}
 	else
+	{
 		::ShowCursor( FALSE );
+	}
 }
 
 void NWinFrame::FlashTaskbarIfInactive()
@@ -901,7 +951,9 @@ void NWinFrame::PumpMessages()
 			case SDL_EVENT_WINDOW_FOCUS_LOST:
 				// Release on focus loss and restore the requested bounds on return.
 				if ( hWnd && event.window.windowID == SDL_GetWindowID( AsSdlWindow( hWnd ) ) )
+				{
 					ApplyMouseBounds();
+				}
 				break;
 
 			default:

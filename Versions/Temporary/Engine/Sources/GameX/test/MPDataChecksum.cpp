@@ -53,7 +53,9 @@ protected:
 		CObj<NDb::IObjMan> record = NDb::CreateNewObject( name );
 		EXPECT_NE( record, nullptr ) << name;
 		if ( !record )
+		{
 			return nullptr;
+		}
 		T *object = dynamic_cast<T *>( record->GetObject() );
 		EXPECT_NE( object, nullptr ) << name;
 		records.push_back( record );
@@ -93,7 +95,9 @@ TEST_F( MPDataChecksum, MenuReadsReuseSnapshotUntilTheNextAttempt )
 	++pNet->nMaxLatency;
 	// A fresh traversal would see this edit: repeated menu reads must not do one.
 	for ( int i = 0; i < 100; ++i )
+	{
 		EXPECT_EQ( initial, pConsts->GetMPDataVersionChecksum() );
+	}
 	const uint32_t refreshed = pConsts->RecalculateMPDataVersionChecksum();
 	EXPECT_NE( initial, refreshed );
 	EXPECT_EQ( refreshed, pConsts->GetMPDataVersionChecksum() );
@@ -140,7 +144,9 @@ TEST_F( MPDataChecksum, MapIsHashedOncePerAttemptAndAgainWhenItChanges )
 	const uint32_t initial = pConsts->GetMPDataVersionChecksumWithMap( pFirst );
 	pFirst->nPlayers = 3;
 	for ( int i = 0; i < 100; ++i )
+	{
 		EXPECT_EQ( initial, pConsts->GetMPDataVersionChecksumWithMap( pFirst ) );
+	}
 	pConsts->RecalculateMPDataVersionChecksum();
 	const uint32_t refreshed = pConsts->GetMPDataVersionChecksumWithMap( pFirst );
 	EXPECT_NE( initial, refreshed );

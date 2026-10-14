@@ -165,7 +165,9 @@ void CPassabilityProfileCreator::GenerateStartSegments( const NEditorGltf::SMesh
 			const CVec2 vSecond( points[i + 1].x, points[i + 1].y );
 
 			if ( cFirst )
+			{
 				prjPoints.push_back( vFirst );
+			}
 
 			if ( cFirst ^ cSecond && points[i].z != points[i + 1].z )
 			{
@@ -174,26 +176,34 @@ void CPassabilityProfileCreator::GenerateStartSegments( const NEditorGltf::SMesh
 			}
 
 			if ( cSecond )
+			{
 				prjPoints.push_back( vSecond );
+			}
 		}
 
 		if ( !prjPoints.empty() )
 		{
 			for ( int i = 0; i < prjPoints.size(); ++i )
+			{
 				Vis2AI( &( prjPoints[i] ) );
+			}
 
 			prjPoints.push_back( prjPoints[0] );
 			for ( int i = 0; i < prjPoints.size() - 1; ++i )
 			{
 				if ( prjPoints[i] != prjPoints[i + 1] )
+				{
 					segments.push_back( CSegment( prjPoints[i], prjPoints[i + 1] ) );
+				}
 			}
 		}
 	}
 
 #ifdef _DEBUG_GENERATION
 	for ( std::list<CSegment>::iterator iter = segments.begin(); iter != segments.end(); ++iter )
+	{
 		mask.DrawLine( iter->p1, iter->p2, NImage::SColor( 100, 0, 255, 0 ) );
+	}
 
 	const std::string szImageName = NFile::GetFilePath( szGrannyFileName ) + NFile::GetFileTitle( szGrannyFileName );
 	mask.SaveImage( szImageName + "_1.tga" );
@@ -210,21 +220,33 @@ static bool IsEqual( const T &fVar, const T &fValue )
 static const float Sign( const float x )
 {
 	if ( fabs( x ) < fEps )
+	{
 		return 0;
+	}
 	else if ( x < 0 )
+	{
 		return -1;
+	}
 	else
+	{
 		return 1;
+	}
 }
 
 static const float ExactSign( const float fX )
 {
 	if ( fX > 0 )
+	{
 		return 1;
+	}
 	else if ( fX < 0 )
+	{
 		return -1;
+	}
 	else
+	{
 		return 0;
+	}
 }
 
 bool IsPointInside( const CVec2 &vPoint, const CVec2 &v1, const CVec2 &v2 )
@@ -245,13 +267,21 @@ GetIntersections( const CVec2 &v11, const CVec2 &v12, const CVec2 &v21, const CV
 	const float fDet = Det( line1.a, line2.a, line1.b, line2.b );
 
 	if ( IsPointInside( v11, v21, v22 ) )
+	{
 		pRes->push_back( v11 );
+	}
 	if ( IsPointInside( v12, v21, v22 ) )
+	{
 		pRes->push_back( v12 );
+	}
 	if ( IsPointInside( v21, v11, v12 ) )
+	{
 		pRes->push_back( v21 );
+	}
 	if ( IsPointInside( v22, v11, v12 ) )
+	{
 		pRes->push_back( v22 );
+	}
 
 	if ( fDet != 0.0f )
 	{
@@ -260,7 +290,9 @@ GetIntersections( const CVec2 &v11, const CVec2 &v12, const CVec2 &v21, const CV
 		vRes.y = -Det( line1.a, line2.a, line1.c, line2.c ) / fDet;
 
 		if ( IsPointInside( vRes, v11, v12 ) && IsPointInside( vRes, v21, v22 ) )
+		{
 			pRes->push_back( vRes );
+		}
 	}
 }
 
@@ -299,7 +331,9 @@ void CPassabilityProfileCreator::GenerateAllSegments()
 			for ( ; cur != newPoints.end(); ++cur, ++pred )
 			{
 				if ( *pred != *cur )
+				{
 					newSegments.push_back( CSegment( *pred, *cur ) );
+				}
 			}
 		}
 	}
@@ -308,7 +342,9 @@ void CPassabilityProfileCreator::GenerateAllSegments()
 
 #ifdef _DEBUG_GENERATION
 	for ( std::list<CSegment>::iterator iter = segments.begin(); iter != segments.end(); ++iter )
+	{
 		mask.DrawLine( iter->p1, iter->p2, NImage::SColor( 255, 0, 255, 0 ) );
+	}
 	mask.SaveImage( "c:\\m1\\Geometries\\debug.tga" );
 #endif //_DEBUG_GENERATION
 }
@@ -322,7 +358,9 @@ const int CPassabilityProfileCreator::FindNumberForPoint( const CVec2 &vPoint )
 	      ++iter )
 	{
 		if ( IsEqual( vPoint, iter->vPoint ) )
+		{
 			nNumber = iter->nNumber;
+		}
 
 		nMaxNumber = (std::max)( nMaxNumber, iter->nNumber );
 	}
@@ -414,7 +452,9 @@ void CPassabilityProfileCreator::DelNotBreaks()
 					bFoundLine = true;
 				}
 				else
+				{
 					bOnOneLine = fabs( line.DistToPoint( connNum2Point[j] ) ) < fEps;
+				}
 			}
 
 			//mask.DrawPoint( connNum2Point[j], NImage::SColor( 255, 0, 0, 0 ) );
@@ -422,7 +462,9 @@ void CPassabilityProfileCreator::DelNotBreaks()
 		}
 
 		if ( !bOnOneLine )
+		{
 			goodPoints.insert( i );
+		}
 
 		//mask.DrawPoint( connNum2Point[i], NImage::SColor( 255, 0, 0, 0 ) );
 		//mask.SaveImage( "c:\\m1\\Geometries\\debug.tga" );
@@ -441,7 +483,9 @@ void CPassabilityProfileCreator::DelNotBreaks()
 				for ( int j = 0; j < connections.GetSizeY(); ++j )
 				{
 					if ( connections[i][k] == 1 && connections[k][j] == 1 )
+					{
 						connections[i][j] = 1;
+					}
 				}
 			}
 		}
@@ -455,7 +499,9 @@ void CPassabilityProfileCreator::DelNotBreaks()
 			for ( int j = 0; j < connections.GetSizeX(); ++j )
 			{
 				if ( i != j && connections[i][j] == 1 && goodPoints.find( j ) != goodPoints.end() )
+				{
 					connTable[i].insert( j );
+				}
 			}
 		}
 	}
@@ -464,7 +510,9 @@ void CPassabilityProfileCreator::DelNotBreaks()
 	for ( int i = 0; i < connections.GetSizeX(); ++i )
 	{
 		if ( !connTable.empty() && connTable[i].size() < 2 )
+		{
 			toDelete.insert( i );
+		}
 	}
 
 	while ( !toDelete.empty() )
@@ -478,7 +526,9 @@ void CPassabilityProfileCreator::DelNotBreaks()
 				const int j = *iter1;
 				connTable[j].erase( i );
 				if ( !connTable[j].empty() && connTable[j].size() < 2 )
+				{
 					toDeleteNew.insert( j );
+				}
 			}
 			connTable[i].clear();
 		}
@@ -490,11 +540,15 @@ void CPassabilityProfileCreator::DelNotBreaks()
 	for ( int i = 0; i < connections.GetSizeX(); ++i )
 	{
 		if ( connTable[i].empty() )
+		{
 			connNum2Point.erase( i );
+		}
 		else
 		{
 			for ( std::unordered_set<int>::iterator iter = connTable[i].begin(); iter != connTable[i].end(); ++iter )
+			{
 				connections[i][*iter] = 1;
+			}
 		}
 	}
 }
@@ -595,7 +649,9 @@ void CPassabilityProfileCreator::FormPolygon()
 		//mask.DrawPoint( predPoint.vPoint, NImage::SColor( 255, 0, 0, 0 ) );
 		// polygon not found
 		if ( bestPoint.nNumber == -1 )
+		{
 			return;
+		}
 
 		predPoint = point;
 		point = bestPoint;
@@ -614,7 +670,9 @@ void CPassabilityProfileCreator::DelPointsInsideOfPolygon( SPolygon &polygon )
 		{
 			const CVec2 &vPoint = iter->second;
 			if ( IsEqual( vPoint, polygon.points.front() ) )
+			{
 				deleted.insert( iter->first );
+			}
 		}
 	}
 	else
@@ -629,7 +687,9 @@ void CPassabilityProfileCreator::DelPointsInsideOfPolygon( SPolygon &polygon )
 			for ( int i = 0; i < points.size() - 1 && !bInside; ++i )
 			{
 				if ( IsPointInside( vPoint, points[i], points[i + 1] ) )
+				{
 					bInside = true;
+				}
 				else if ( points[i].y != points[i + 1].y )
 				{
 					if ( points[i].y == vPoint.y || points[i + 1].y == vPoint.y )
@@ -646,13 +706,17 @@ void CPassabilityProfileCreator::DelPointsInsideOfPolygon( SPolygon &polygon )
 						const float fX = points[i].x + fT * ( points[i + 1].x - points[i].x );
 
 						if ( fX > vPoint.x )
+						{
 							++nCount;
+						}
 					}
 				}
 			}
 
 			if ( bInside || nCount % 2 == 1 )
+			{
 				deleted.insert( iter->first );
+			}
 		}
 	}
 }
@@ -714,7 +778,9 @@ void CPassabilityProfileCreator::SimplifyPolygons()
 				for ( int i = 0; i < polygon.points.size(); ++i )
 				{
 					if ( toDelete[i] != 1 )
+					{
 						polygon.points[j++] = polygon.points[i];
+					}
 				}
 
 				polygon.points.resize( j );
@@ -722,9 +788,13 @@ void CPassabilityProfileCreator::SimplifyPolygons()
 		}
 
 		if ( polygon.points.size() < 3 )
+		{
 			iter = cover.erase( iter );
+		}
 		else
+		{
 			++iter;
+		}
 	}
 }
 
@@ -758,7 +828,9 @@ CPassabilityProfileCreator::CPassabilityProfileCreator( const NEditorGltf::SMesh
 				DelPointsInsideOfPolygon( polygon );
 				// don't need the polygon from only one point
 				if ( polygon.points.size() == 1 )
+				{
 					cover.pop_back();
+				}
 			}
 		}
 	}
@@ -783,7 +855,9 @@ bool CreateObjectPassabilityProfile( const std::string &szGrannyFileName,
 	std::vector<STriangle> legacyTriangles;
 	LoadGrannyModel( szGrannyFileName, &mesh.vertices, &legacyTriangles, &mesh.minimum, &mesh.maximum );
 	for ( const auto &triangle : legacyTriangles )
+	{
 		mesh.triangles.emplace_back( triangle.i1, triangle.i2, triangle.i3 );
+	}
 	CPassabilityProfileCreator profileCreator( mesh, fZEps, pPassProfile );
 
 #ifdef _DEBUG_GENERATION
@@ -806,7 +880,9 @@ bool CreateObjectPassabilityProfile( const std::string &szGrannyFileName,
 bool CreateObjectPassabilityProfile( const NEditorGltf::SMeshData &mesh, float zEpsilon, NDb::SPassProfile *profile )
 {
 	if ( mesh.vertices.empty() || mesh.triangles.empty() )
+	{
 		return false;
+	}
 	CPassabilityProfileCreator creator( mesh, zEpsilon, profile );
 	return true;
 }

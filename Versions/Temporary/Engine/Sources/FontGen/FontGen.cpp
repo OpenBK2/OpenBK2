@@ -94,7 +94,9 @@ bool Generate( const char *pszDstPngFile,
 {
 	std::vector<uint16_t> &chars = *pChars;
 	if ( find( chars.begin(), chars.end(), W_DEFAULT_CHAR ) == chars.end() )
+	{
 		chars.push_back( W_DEFAULT_CHAR );
+	}
 	sort( chars.begin(), chars.end() );
 	// The engine looks glyphs up by code point, so the bytes are translated first;
 	// a byte the code page does not define has no code point to be stored under
@@ -107,11 +109,17 @@ bool Generate( const char *pszDstPngFile,
 	{
 		uint32_t nCodePoint = 0;
 		if ( nChar == W_DEFAULT_CHAR )
+		{
 			codePoints.push_back( W_DEFAULT_CHAR );
+		}
 		else if ( nChar <= 0xFF && NCodePages::Translate( nCharset, static_cast<uint8_t>( nChar ), &nCodePoint ) )
+		{
 			codePoints.push_back( nCodePoint );
+		}
 		else
+		{
 			++nUnmapped;
+		}
 	}
 	if ( nUnmapped > 0 )
 	{
@@ -149,12 +157,16 @@ bool Generate( const char *pszDstPngFile,
 	for ( const uint32_t nCodePoint : font.missing )
 	{
 		if ( nCodePoint != W_DEFAULT_CHAR )
+		{
 			fmt::print( "WARNING: U+{:04X} is not in the font and got its .notdef glyph\n",
 			            static_cast<unsigned>( nCodePoint ) );
+		}
 	}
 	for ( const uint32_t nCodePoint : font.clipped )
+	{
 		fmt::print( "WARNING: U+{:04X} reaches outside its cell and was clipped to it\n",
 		            static_cast<unsigned>( nCodePoint ) );
+	}
 
 	fmt::print( "image...\n" );
 	// white, with the coverage as alpha
@@ -163,7 +175,9 @@ bool Generate( const char *pszDstPngFile,
 	for ( int y = 0; y < font.nAtlasHeight; ++y )
 	{
 		for ( int x = 0; x < font.nAtlasWidth; ++x )
+		{
 			image[y][x] = CVec4( 1, 1, 1, font.atlas[static_cast<size_t>( y ) * font.nAtlasWidth + x] / 255.0f );
+		}
 	}
 	CFileStream stream( pszDstPngFile, CFileStream::WIN_CREATE );
 	if ( stream.IsOk() )
@@ -222,7 +236,9 @@ int PORT_CDECL main( int argc, char *argv[] )
 	{
 		szParams[i] = argv[i + 1];
 		if ( !szParams[i].empty() && szParams[i][0] == '-' )
+		{
 			NStr::ToLower( &szParams[i] );
+		}
 		//
 		if ( szParams[i] == "-show-version" )
 		{
@@ -273,17 +289,25 @@ int PORT_CDECL main( int argc, char *argv[] )
 		// both are still accepted so that older command lines keep working.
 		// "-default" is taken as the charset below, as it always was.
 		if ( *pos == "-ft" || *pos == "-fixed" || *pos == "-variable" )
+		{
 			continue;
+		}
 		// before the -h test below, which would otherwise take -hint=... for a height
 		if ( pos->find( "-hint=" ) == 0 )
 		{
 			const std::string szMode = pos->substr( 6 );
 			if ( szMode == "none" )
+			{
 				options.eHinting = NFontRaster::HINTING_NONE;
+			}
 			else if ( szMode == "light" )
+			{
 				options.eHinting = NFontRaster::HINTING_LIGHT;
+			}
 			else if ( szMode == "normal" )
+			{
 				options.eHinting = NFontRaster::HINTING_NORMAL;
+			}
 			else
 			{
 				fmt::print( "ERROR: unknown hinting mode \"{}\"\n", szMode );
@@ -305,9 +329,13 @@ int PORT_CDECL main( int argc, char *argv[] )
 		{
 			const std::string szMode = pos->substr( 6 );
 			if ( szMode == "win" )
+			{
 				options.eCellMetrics = NFontRaster::CELL_WIN;
+			}
 			else if ( szMode == "ink" )
+			{
 				options.eCellMetrics = NFontRaster::CELL_INK;
+			}
 			else
 			{
 				fmt::print( "ERROR: unknown cell metrics \"{}\"\n", szMode );
@@ -329,15 +357,25 @@ int PORT_CDECL main( int argc, char *argv[] )
 			continue;
 		}
 		if ( charsets.find( *pos ) != charsets.end() )
+		{
 			nCharset = charsets[*pos];
+		}
 		else if ( pos->find( "-h" ) == 0 )
+		{
 			nHeight = atoi( &( ( *pos )[2] ) );
+		}
 		else if ( pos->find( "-w" ) == 0 )
+		{
 			nWeight = atoi( &( ( *pos )[2] ) );
+		}
 		else if ( *pos == "-it" )
+		{
 			bItalic = true;
+		}
 		else if ( *pos == "-aa" )
+		{
 			bAntialias = true;
+		}
 		else if ( !pos->empty() && ( *pos )[0] == '-' )
 		{
 			fmt::print( "ERROR: unknown option \"{}\"\n", *pos );
@@ -385,13 +423,17 @@ int PORT_CDECL main( int argc, char *argv[] )
 	else
 	{
 		for ( const std::string &szDirectory : NFontRaster::GetSystemFontDirectories() )
+		{
 			fontDirectories.push_back( szDirectory );
+		}
 		NFontRaster::SFontMatch match;
 		if ( !NFontRaster::FindFont( szFaceName, nWeight, bItalic, fontDirectories, &match ) )
 		{
 			fmt::print( "ERROR: no font file with the family name \"{}\" in:\n", szFaceName );
 			for ( const std::string &szDirectory : fontDirectories )
+			{
 				fmt::print( "   {}\n", szDirectory );
+			}
 			return 1;
 		}
 		fmt::print( "face \"{} {}\", weight {}{}, from {}{}\n",
@@ -405,11 +447,15 @@ int PORT_CDECL main( int argc, char *argv[] )
 		// GDI would have synthesised a bold or slanted face from a regular one;
 		// FreeType rasterises what the file holds, so say when that differs
 		if ( std::abs( match.nWeight - nWeight ) > 150 || match.bItalic != bItalic )
+		{
 			fmt::print( "WARNING: the closest face installed is not the weight or slant asked for\n" );
+		}
 		options.szFontFile = match.szFile;
 		// an explicit -instance wins over the one the search found
 		if ( ( options.nFaceIndex >> 16 ) == 0 )
+		{
 			options.nFaceIndex = match.nFaceIndex;
+		}
 	}
 
 	// characters from the chars file, or 32..255 by default

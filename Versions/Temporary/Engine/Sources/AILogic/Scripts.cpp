@@ -104,9 +104,13 @@ FINISH_REGISTER
 static const std::string Convert2Param( const Script::Object &object )
 {
 	if ( object.IsNumber() )
+	{
 		return object.GetString();
+	}
 	else
+	{
 		return std::string( "\"" ) + object.GetString() + "\"";
+	}
 }
 
 class CUnitsInScriptAreaEnumerator : public IScriptAreaEnumerator
@@ -177,10 +181,14 @@ int CScripts::GlobeCommand( struct lua_State *pState )
 		szFuncCall = std::string( script.GetObject( 1 ).GetString() ) + "(";
 
 		if ( script.GetTop() >= 2 )
+		{
 			szFuncCall += Convert2Param( script.GetObject( 2 ) );
+		}
 
 		for ( int i = 3; i <= script.GetTop(); ++i )
+		{
 			szFuncCall += "," + Convert2Param( script.GetObject( i ) );
+		}
 		szFuncCall += ");";
 
 		return pGlobeScriptHandler->CallGlobeScriptFunction( szFuncCall );
@@ -391,7 +399,9 @@ CScripts::~CScripts()
 int CScripts::GetScriptID( CUpdatableObj *pObj ) const
 {
 	if ( groupUnits.find( pObj->GetUniqueId() ) != groupUnits.end() )
+	{
 		return groupUnits.find( pObj->GetUniqueId() )->second;
+	}
 
 	return -1;
 }
@@ -457,13 +467,17 @@ void CScripts::Clear()
 void CScripts::InitAreas( const NDb::SScriptArea scriptAreas[], const int nLen )
 {
 	for ( int i = 0; i < nLen; ++i )
+	{
 		areas[scriptAreas[i].szName] = scriptAreas[i];
+	}
 }
 
 void CScripts::RunScriptFromFile( const std::string &szScriptFileName )
 {
 	if ( szScriptFileName.empty() )
+	{
 		return;
+	}
 	std::string szScriptText;
 	CFileStream stream( NVFS::GetMainVFS(), szScriptFileName );
 	if ( stream.IsOk() )
@@ -476,7 +490,9 @@ void CScripts::RunScriptFromFile( const std::string &szScriptFileName )
 		}
 	}
 	if ( !szScriptText.empty() )
+	{
 		pScript->RunScript( szScriptText.c_str() );
+	}
 }
 
 void CScripts::Load( const std::string &szScriptFileName, const NDb::SAIGameConsts *pConsts )
@@ -486,10 +502,14 @@ void CScripts::Load( const std::string &szScriptFileName, const NDb::SAIGameCons
 	pScript->AddRegFunctions( pRegList );
 
 	for ( int i = 0; i < pConsts->commonScriptFileRefs.size(); ++i )
+	{
 		RunScriptFromFile( pConsts->commonScriptFileRefs[i].szScriptFileRef );
+	}
 	// to launch all default functions and constants
 	if ( pScript )
+	{
 		pScript->Segment();
+	}
 	//
 	RunScriptFromFile( szScriptFileName );
 }
@@ -545,9 +565,13 @@ bool CScripts::ParseCommand( SAIUnitCmd *pCmd, Script &script, bool bIDsAreScrip
 				{
 					pScripts->DelInvalidBegin( targetId );
 					if ( !pScripts->groups[targetId].empty() )
+					{
 						command.nObjectID = pScripts->groups[targetId].back()->GetUniqueId();
+					}
 					else
+					{
 						bValid = false;
+					}
 				}
 				else
 				{
@@ -563,9 +587,13 @@ bool CScripts::ParseCommand( SAIUnitCmd *pCmd, Script &script, bool bIDsAreScrip
 			const int targetId = script.GetObject( 3 );
 
 			if ( bIDsAreScriptIDs )
+			{
 				command.nObjectID = pScripts->groups[targetId].back()->GetUniqueId();
+			}
 			else
+			{
 				command.nObjectID = targetId;
+			}
 			bValid = command.nObjectID != 0;
 		}
 
@@ -593,10 +621,14 @@ bool CScripts::ParseCommand( SAIUnitCmd *pCmd, Script &script, bool bIDsAreScrip
 				{
 					pScripts->DelInvalidBegin( targetId );
 					if ( !pScripts->groups[targetId].empty() )
+					{
 						command.nObjectID = pScripts->groups[targetId].back()->GetUniqueId();
+					}
 				}
 				else
+				{
 					command.nObjectID = targetId;
+				}
 				bValid = command.nObjectID != 0;
 			}
 
@@ -624,24 +656,36 @@ bool CScripts::ParseCommand( SAIUnitCmd *pCmd, Script &script, bool bIDsAreScrip
 				{
 					pScripts->DelInvalidBegin( targetId );
 					if ( !pScripts->groups[targetId].empty() )
+					{
 						command.nObjectID = pScripts->groups[targetId].back()->GetUniqueId();
+					}
 				}
 				else
+				{
 					command.nObjectID = targetId;
+				}
 
 				if ( command.nObjectID )
 				{
 					if ( dynamic_cast<CBuilding *>( GetObjectByCmd( command ) ) )
+					{
 						command.fNumber = 0;
+					}
 					else if ( dynamic_cast<CEntrenchmentPart *>( GetObjectByCmd( command ) ) )
+					{
 						command.fNumber = 2;
+					}
 					else
+					{
 						CHECK_ERROR( false,
 						             "Give ACTION_COMMAND_ENTER command : the object to enter to is not buliding or entrenchment",
 						             script );
+					}
 				}
 				else
+				{
 					bValid = false;
+				}
 			}
 
 			break;
@@ -698,10 +742,14 @@ bool CScripts::ParseCommand( SAIUnitCmd *pCmd, Script &script, bool bIDsAreScrip
 					pScripts->DelInvalidBegin( targetId );
 
 					if ( !pScripts->groups[targetId].empty() )
+					{
 						command.nObjectID = pScripts->groups[targetId].back()->GetUniqueId();
+					}
 				}
 				else
+				{
 					command.nObjectID = targetId;
+				}
 				bValid = command.nObjectID != 0;
 			}
 
@@ -716,10 +764,14 @@ bool CScripts::ParseCommand( SAIUnitCmd *pCmd, Script &script, bool bIDsAreScrip
 				{
 					pScripts->DelInvalidBegin( targetId );
 					if ( !pScripts->groups[targetId].empty() )
+					{
 						command.nObjectID = pScripts->groups[targetId].back()->GetUniqueId();
+					}
 				}
 				else
+				{
 					command.nObjectID = targetId;
+				}
 				bValid = command.nObjectID != 0;
 			}
 
@@ -747,10 +799,14 @@ bool CScripts::ParseCommand( SAIUnitCmd *pCmd, Script &script, bool bIDsAreScrip
 				{
 					pScripts->DelInvalidBegin( targetId );
 					if ( !pScripts->groups[targetId].empty() )
+					{
 						command.nObjectID = pScripts->groups[targetId].back()->GetUniqueId();
+					}
 				}
 				else
+				{
 					command.nObjectID = targetId;
+				}
 				bValid = command.nObjectID != 0;
 			}
 
@@ -766,10 +822,14 @@ bool CScripts::ParseCommand( SAIUnitCmd *pCmd, Script &script, bool bIDsAreScrip
 				{
 					pScripts->DelInvalidBegin( targetId );
 					if ( !pScripts->groups[targetId].empty() )
+					{
 						command.nObjectID = pScripts->groups[targetId].back()->GetUniqueId();
+					}
 				}
 				else
+				{
 					command.nObjectID = targetId;
+				}
 				bValid = command.nObjectID != 0;
 			}
 
@@ -865,10 +925,14 @@ bool CScripts::ParseCommand( SAIUnitCmd *pCmd, Script &script, bool bIDsAreScrip
 				{
 					pScripts->DelInvalidBegin( targetId );
 					if ( !pScripts->groups[targetId].empty() )
+					{
 						command.nObjectID = pScripts->groups[targetId].back()->GetUniqueId();
+					}
 				}
 				else
+				{
 					command.nObjectID = targetId;
+				}
 				bValid = command.nObjectID != 0;
 			}
 
@@ -899,10 +963,14 @@ bool CScripts::ParseCommand( SAIUnitCmd *pCmd, Script &script, bool bIDsAreScrip
 				{
 					pScripts->DelInvalidBegin( targetId );
 					if ( !pScripts->groups[targetId].empty() )
+					{
 						command.nObjectID = pScripts->groups[targetId].back()->GetUniqueId();
+					}
 				}
 				else
+				{
 					command.nObjectID = targetId;
+				}
 				command.fNumber = true; // use formation part
 				bValid = command.nObjectID != 0;
 			}
@@ -993,13 +1061,17 @@ bool CScripts::CanUnitLand( const SMapObjectInfo &mapObject, const CVec2 &vShift
 			CAIUnit *pUnit = *iter;
 			if ( ( !pStats->IsInfantry() || !pUnit->GetStats()->IsInfantry() ) &&
 			     unitRect.IsIntersected( pUnit->GetUnitRect() ) )
+			{
 				return false;
+			}
 		}
 
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 bool CScripts::CanFormationLand( const SMapObjectInfo &mapObject, const CVec2 &vShift )
@@ -1021,7 +1093,9 @@ bool CScripts::CanFormationLand( const SMapObjectInfo &mapObject, const CVec2 &v
 	{
 		soldierMapObject.vPos = CVec3( *iter, 0 );
 		if ( !CanUnitLand( soldierMapObject ) )
+		{
 			return false;
+		}
 	}
 
 	return true;
@@ -1034,7 +1108,9 @@ bool CScripts::CanLandWithShift( const SMapObjectInfo &mapObject, CVec2 *pvShift
 	{
 		*pvShift = VNULL2;
 		if ( CanUnitLand( mapObject, *pvShift ) )
+		{
 			return true;
+		}
 
 		if ( !pStats->IsTrain() )
 		{
@@ -1046,7 +1122,9 @@ bool CScripts::CanLandWithShift( const SMapObjectInfo &mapObject, CVec2 *pvShift
 					pvShift->y = y * 2 * SConsts::TILE_SIZE;
 
 					if ( CanUnitLand( mapObject, *pvShift ) )
+					{
 						return true;
+					}
 				}
 			}
 		}
@@ -1055,7 +1133,9 @@ bool CScripts::CanLandWithShift( const SMapObjectInfo &mapObject, CVec2 *pvShift
 	{
 		*pvShift = VNULL2;
 		if ( CanFormationLand( mapObject, *pvShift ) )
+		{
 			return true;
+		}
 
 		for ( int x = -4; x <= 4; ++x )
 		{
@@ -1065,12 +1145,16 @@ bool CScripts::CanLandWithShift( const SMapObjectInfo &mapObject, CVec2 *pvShift
 				pvShift->y = y * 2 * SConsts::TILE_SIZE;
 
 				if ( CanFormationLand( mapObject, *pvShift ) )
+				{
 					return true;
+				}
 			}
 		}
 	}
 	else
+	{
 		return true;
+	}
 
 	return false;
 }
@@ -1086,7 +1170,9 @@ void CScripts::LandSuspendedReiforcements()
 	{
 		lastTimeToCheckSuspendedReinforcs = curTime;
 		if ( reinforcsIter == suspendedReinforcs.end() )
+		{
 			reinforcsIter = suspendedReinforcs.begin();
+		}
 
 		int cnt = 0;
 		while ( reinforcsIter != suspendedReinforcs.end() && cnt < 1 )
@@ -1137,7 +1223,9 @@ void CScripts::LandSuspendedReiforcements()
 								}
 							}
 							else
+							{
 								++candreinforcsIter;
+							}
 						}
 					} while ( bAdded && bCanLand );
 
@@ -1148,13 +1236,19 @@ void CScripts::LandSuspendedReiforcements()
 						reinforcsIter = suspendedReinforcs.erase( reinforcsIter );
 					}
 					else
+					{
 						++reinforcsIter;
+					}
 				}
 				else
+				{
 					++reinforcsIter;
+				}
 			}
 			else
+			{
 				++reinforcsIter;
+			}
 		}
 	}
 }
@@ -1176,7 +1270,9 @@ void CScripts::Segment()
 	NHPTimer::STime time;
 	NHPTimer::GetTime( &time );
 	if ( pScript )
+	{
 		pScript->Segment();
+	}
 	const double tPassed = NHPTimer::GetTimePassed( &time );
 
 	if ( bScriptTimeCalculate )
@@ -1197,15 +1293,19 @@ void CScripts::Segment()
 		{
 			double tFullTime = 0;
 			for ( int i = 0; i < 20; ++i )
+			{
 				tFullTime += times[i];
+			}
 
 			IDebugSingleton *pDebug = Singleton<IDebugSingleton>();
 			if ( pDebug )
 			{
 				IStatsSystemWindow *pStatsSystemWindow = pDebug->GetStatsWindow();
 				if ( pStatsSystemWindow )
+				{
 					pStatsSystemWindow->UpdateEntry(
 							L"ScriptTime", NStr::ToUnicode( fmt::format( "{:.2f}%", float( 100.0f * tFullTime ) ) ), 0xff00ff00 );
+				}
 			}
 		}
 	}
@@ -1225,9 +1325,13 @@ void CScripts::DelInvalidBegin( const int targetId )
 		{
 			CUpdatableObj *pObj = groups[targetId].back();
 			if ( pObj == 0 || !pObj->IsRefValid() || dynamic_cast<CStaticObject *>( pObj ) == 0 && !pObj->IsAlive() )
+			{
 				groups[targetId].pop_back();
+			}
 			else
+			{
 				break;
+			}
 		}
 
 		int nDeleted = INT32_MIN;
@@ -1244,13 +1348,19 @@ void CScripts::DelInvalidBegin( const int targetId )
 			const int nUniqueId = sorted[i];
 			CLinkObject *pObj = GetObjectByUniqueIdSafe<CLinkObject>( nUniqueId );
 			if ( !pObj || !pObj->IsRefValid() || dynamic_cast<CStaticObject *>( pObj ) == 0 && !pObj->IsAlive() )
+			{
 				nDeleted = nUniqueId;
+			}
 			else
+			{
 				break;
+			}
 		}
 
 		if ( nDeleted > INT32_MIN )
+		{
 			groupUnits.erase( nDeleted );
+		}
 	}
 }
 
@@ -1263,9 +1373,13 @@ void CScripts::DelInvalidUnits( const int scriptId )
 		{
 			CUpdatableObj *pObj = *iter;
 			if ( pObj == 0 || !pObj->IsRefValid() || dynamic_cast<CStaticObject *>( pObj ) == 0 && !pObj->IsAlive() )
+			{
 				iter = groups[scriptId].erase( iter );
+			}
 			else
+			{
 				++iter;
+			}
 		}
 
 		std::list<int> deleted;
@@ -1274,7 +1388,9 @@ void CScripts::DelInvalidUnits( const int scriptId )
 			const int nUniqueId = it->first;
 			CLinkObject *pObj = GetObjectByUniqueIdSafe<CLinkObject>( nUniqueId );
 			if ( !pObj || !pObj->IsRefValid() || dynamic_cast<CStaticObject *>( pObj ) == 0 && !pObj->IsAlive() )
+			{
 				deleted.push_back( nUniqueId );
+			}
 		}
 
 		while ( !deleted.empty() )
@@ -1294,7 +1410,9 @@ int CScripts::GetCheckObjectsInScriptArea( const SScriptArea &area, const struct
 	{
 		CExistingObject *pObj = *iter;
 		if ( pObj->IsRefValid() && pObj->IsAlive() && check.IsGoodObj( pObj ) )
+		{
 			++nResult;
+		}
 	}
 
 	return nResult;
@@ -1344,7 +1462,9 @@ int CScripts::GetNUnitsInCircle( struct lua_State *state )
 		if ( pUnit->IsRefValid() && pUnit->IsAlive() && pUnit->GetPlayer() == nPlayer && !pUnit->GetStats()->IsAviation() )
 		{
 			if ( fabs2( ( *iter )->GetCenterPlain() - center ) <= fR * fR )
+			{
 				++cnt;
+			}
 		}
 	}
 
@@ -1416,7 +1536,9 @@ int CScripts::GetNUnitsInScriptGroup( struct lua_State *state )
 			      ++it )
 			{
 				if ( ( *it )->GetPlayer() == nPlayer )
+				{
 					++nNumber;
+				}
 			}
 		}
 		else
@@ -1426,7 +1548,9 @@ int CScripts::GetNUnitsInScriptGroup( struct lua_State *state )
 			      ++it )
 			{
 				if ( ( *it )->IsAlive() )
+				{
 					++nNumber;
+				}
 			}
 		}
 	}
@@ -1452,7 +1576,9 @@ void CScripts::SetNewLinksToReinforcement( CReinfList *pReinf, det_map<int, int>
 	{
 		const int nLinkWith = iter->mapObject.link.nLinkWith;
 		if ( pOld2NewLinks->find( nLinkWith ) != pOld2NewLinks->end() )
+		{
 			iter->mapObject.link.nLinkWith = ( *pOld2NewLinks )[nLinkWith];
+		}
 	}
 }
 
@@ -1487,7 +1613,9 @@ void CScripts::LandReinforcementWithoutLandCheck( CReinfList *pReinf, const CVec
 			}
 		}
 		else
+		{
 			transports.push_back( *iter );
+		}
 	}
 
 	//
@@ -1501,7 +1629,9 @@ void CScripts::LandReinforcementWithoutLandCheck( CReinfList *pReinf, const CVec
 		if ( pUnit )
 		{
 			if ( CCommonUnit *pUnit1 = dynamic_cast<CCommonUnit *>( pUnit ) )
+			{
 				pUnits.push_back( pUnit1 );
+			}
 		}
 	}
 
@@ -1519,7 +1649,9 @@ void CScripts::SendShowReinoforcementPlacementFeedback( std::list<CVec2> *pCente
 	for ( std::list<CVec2>::iterator iter = pCenters->begin(); iter != pCenters->end(); ++iter )
 	{
 		if ( vMostLeftCenter.x > iter->x )
+		{
 			vMostLeftCenter = *iter;
+		}
 	}
 
 	int nUnits = 0;
@@ -1536,7 +1668,9 @@ void CScripts::SendShowReinoforcementPlacementFeedback( std::list<CVec2> *pCente
 			iter = pCenters->erase( iter );
 		}
 		else
+		{
 			++iter;
+		}
 	}
 
 	vGroupCenter /= nUnits;
@@ -1568,10 +1702,14 @@ int CScripts::LandReinforcementOLD( struct lua_State *state )
 
 			//
 			if ( nPlayer == theDipl.GetMyNumber() )
+			{
 				bSendAck = true;
+			}
 
 			if ( nPlayer == theDipl.GetMyNumber() )
+			{
 				centers.push_back( CVec2( iter->mapObject.vPos.x, iter->mapObject.vPos.y ) );
+			}
 
 			playersOfReinforcement = playersOfReinforcement | ( 1 << nPlayer );
 		}
@@ -1581,7 +1719,9 @@ int CScripts::LandReinforcementOLD( struct lua_State *state )
 	{
 		updater.AddUpdate( EFB_REINFORCEMENT_ARRIVED );
 		while ( !centers.empty() )
+		{
 			pScripts->SendShowReinoforcementPlacementFeedback( &centers );
+		}
 	}
 
 	for ( int i = 0; i < theDipl.GetNPlayers(); ++i )
@@ -1624,18 +1764,26 @@ int CScripts::Win( struct lua_State *state )
 	if ( nParty == theDipl.GetMyParty() )
 	{
 		if ( GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
+		{
 			NInput::PostEvent( "local_win", 0, 0 );
+		}
 		else
+		{
 			NInput::PostEvent( "multiplayer_win", 0, 0 );
+		}
 		//Singleton<IMPToUIManager>()->AddUIMessage( new SMPUISimpleMessage( EMUI_CRAP_END_GAME ) );
 		//updater.AddUpdate( EFB_WIN );
 	}
 	else
 	{
 		if ( GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
+		{
 			NInput::PostEvent( "local_loose", 0, 0 );
+		}
 		else
+		{
 			NInput::PostEvent( "multiplayer_loose", 0, 0 );
+		}
 		//Singleton<IMPToUIManager>()->AddUIMessage( new SMPUISimpleMessage( EMUI_CRAP_END_GAME ) );
 		//updater.AddUpdate( EFB_LOOSE );
 	}
@@ -1646,7 +1794,9 @@ int CScripts::Win( struct lua_State *state )
 int CScripts::Loose( struct lua_State *state )
 {
 	if ( GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
+	{
 		NInput::PostEvent( "local_loose", 0, 0 );
+	}
 	//else
 	//Singleton<IMPToUIManager>()->AddUIMessage( new SMPUISimpleMessage( EMUI_CRAP_END_GAME ) );
 
@@ -1762,7 +1912,9 @@ int CScripts::ProcessCommand( struct lua_State *state, const bool bPlaceInQueue,
 
 	for ( std::list<std::pair<CCommonUnit *, int>>::iterator iter = oldUnitsGroups.begin(); iter != oldUnitsGroups.end();
 	      ++iter )
+	{
 		theGroupLogic.AddUnitToGroup( iter->first, iter->second );
+	}
 
 	return 0;
 }
@@ -1805,7 +1957,9 @@ public:
 			}
 		}
 		else
+		{
 			++nResult;
+		}
 		return false;
 	}
 
@@ -1926,7 +2080,9 @@ void CScripts::EnumUnitsInScriptArea( IScriptAreaEnumerator *pEnumerator, const 
 {
 	const NDb::SScriptArea &area = pEnumerator->GetArea();
 	if ( area.eType == EAT_CIRCLE )
+	{
 		EnumUnitsInCircle( pEnumerator, nPlayer, bCountPlanes, area.vCenter, area.fR );
+	}
 	else
 	{
 		SRect areaRect;
@@ -2062,7 +2218,9 @@ int CScripts::GetNScriptUnitsInArea( struct lua_State *state )
 	pScripts->DelInvalidUnits( nScriptGroup );
 
 	if ( pScripts->groups.find( nScriptGroup ) == pScripts->groups.end() || pScripts->groups[nScriptGroup].empty() )
+	{
 		script.PushNumber( 0 );
+	}
 	else
 	{
 		int nResult = 0;
@@ -2087,7 +2245,9 @@ int CScripts::GetNScriptUnitsInArea( struct lua_State *state )
 				else if ( CAIUnit *pUnit = dynamic_cast_ptr<CAIUnit *>( *iter ) )
 				{
 					if ( IsUnitQualified( bCountPlanes, pUnit ) && pUnit->GetUnitRect().IsIntersectCircle( vCenter, fR ) )
+					{
 						++nResult;
+					}
 				}
 			}
 			// }CRAP
@@ -2116,7 +2276,9 @@ int CScripts::GetNScriptUnitsInArea( struct lua_State *state )
 				else if ( CAIUnit *pUnit = dynamic_cast_ptr<CAIUnit *>( *iter ) )
 				{
 					if ( IsUnitQualified( bCountPlanes, pUnit ) && IsUnitInRectArea( pUnit, areaRect, -1 ) )
+					{
 						++nResult;
+					}
 				}
 			}
 			// }CRAP
@@ -2173,7 +2335,9 @@ int CScripts::ChangePlayer( struct lua_State *state )
 				NI_ASSERT( pBuilding->GetNDefenders() == 0,
 				           fmt::format( "cannot change player for building {}, soldiers are inside", nUniqueID ) );
 				if ( pBuilding->GetNDefenders() == 0 )
+				{
 					pBuilding->ChangePlayer( nPlayer );
+				}
 			}
 		}
 	}
@@ -2203,11 +2367,17 @@ int CScripts::GetPassangers( struct lua_State *state )
 				for ( int i = 0; i < pUnit->GetNPassengers(); ++i )
 				{
 					if ( pUnit->GetPlayer() == nPlayer && pUnit->GetPassenger( i ) && pUnit->GetPassenger( i )->GetFormation() )
+					{
 						ids[pUnit->GetPassenger( i )->GetFormation()->GetUniqueID()] = true;
+					}
 				}
 				for ( int i = 0; i < pUnit->GetNBoarded(); ++i )
+				{
 					if ( pUnit->GetPlayer() == nPlayer && pUnit->GetBoarded( i ) )
+					{
 						ids[pUnit->GetBoarded( i )->GetUniqueID()] = true;
+					}
+				}
 			}
 		}
 		{
@@ -2218,14 +2388,18 @@ int CScripts::GetPassangers( struct lua_State *state )
 				{
 					if ( pBuilding->GetUnit( i ) && pBuilding->GetUnit( i )->GetPlayer() == nPlayer &&
 					     pBuilding->GetUnit( i )->GetFormation() )
+					{
 						ids[pBuilding->GetUnit( i )->GetFormation()->GetUniqueID()] = true;
+					}
 				}
 			}
 		}
 	}
 
 	for ( det_map<int, bool>::const_iterator it = ids.begin(); it != ids.end(); ++it )
+	{
 		script.PushNumber( it->first );
+	}
 	return ids.size();
 }
 
@@ -2367,21 +2541,31 @@ int CScripts::GetObjectHPs( struct lua_State *state )
 		CStaticObject *pStatObj = dynamic_cast<CStaticObject *>( pObj );
 		CAIUnit *pUnit = dynamic_cast<CAIUnit *>( pObj );
 		if ( pStatObj )
+		{
 			script.PushNumber( pStatObj->GetHitPoints() );
+		}
 		else if ( pUnit )
+		{
 			script.PushNumber( pUnit->GetHitPoints() );
+		}
 		else if ( CDynamicCast<CFormation> pFormation = pObj )
 		{
 			float fHP = 0;
 			for ( int i = 0; i < pFormation->Size(); ++i )
+			{
 				fHP += ( *pFormation )[i]->GetHitPoints();
+			}
 			script.PushNumber( fHP );
 		}
 		else
+		{
 			script.PushNumber( 0 );
+		}
 	}
 	else
+	{
 		script.PushNumber( 0 );
+	}
 
 	return 1;
 }
@@ -2466,9 +2650,13 @@ int CScripts::IsUnitNearScriptObject( struct lua_State *state )
 			CDynamicCast<CStaticObject> pStatObj( *it );
 			CDynamicCast<CCommonUnit> pUnit( *it );
 			if ( pStatObj )
+			{
 				vCenter = CVec2( pStatObj->GetCenter().x, pStatObj->GetCenter().y );
+			}
 			if ( pUnit )
+			{
 				vCenter = pUnit->GetCenterPlain();
+			}
 			for ( CUnitsIter<0, 2> iter( 0, ANY_PARTY, vCenter, nRadius ); !iter.IsFinished(); iter.Iterate() )
 			{
 				if ( IsValidObj( *iter ) && ( *iter )->GetPlayer() == nPlayer )
@@ -2500,7 +2688,9 @@ int CScripts::GetNUnitsInParty( struct lua_State *state )
 		{
 			IUnitState *pState = pUnit->GetStats()->IsInfantry() ? pUnit->GetFormation()->GetState() : pUnit->GetState();
 			if ( !pState || pState->GetName() != EUSN_GUN_CREW_STATE )
+			{
 				++cnt;
+			}
 		}
 	}
 
@@ -2526,7 +2716,9 @@ int CScripts::GetNUnitsInPartyUF( struct lua_State *state )
 		{
 			IUnitState *pState = pUnit->GetStats()->IsInfantry() ? pUnit->GetFormation()->GetState() : pUnit->GetState();
 			if ( !pState || pState->GetName() != EUSN_GUN_CREW_STATE )
+			{
 				++cnt;
+			}
 		}
 	}
 
@@ -2551,7 +2743,9 @@ int CScripts::GetNUnitsInPlayerUF( struct lua_State *state )
 		{
 			IUnitState *pState = pUnit->GetStats()->IsInfantry() ? pUnit->GetFormation()->GetState() : pUnit->GetState();
 			if ( !pState || pState->GetName() != EUSN_GUN_CREW_STATE )
+			{
 				++cnt;
+			}
 		}
 	}
 
@@ -2607,8 +2801,10 @@ int CScripts::DisplayTrace( struct lua_State *state )
 
 	CHECK_ERROR( script.GetObject( 1 ).IsString(), "DisplayTrace: the first parameter is not a number", script );
 	for ( int i = 2; i <= script.GetTop(); ++i )
+	{
 		CHECK_ERROR(
 				script.GetObject( i ).IsNumber(), fmt::format( "DisplayTrace: the {} parameter is not a number", i ), script );
+	}
 
 	std::string result;
 	GetTraceFormatResult( &script, &result );
@@ -2643,7 +2839,9 @@ int CScripts::ChangeFormation( struct lua_State *state )
 		if ( CFormation *pFormation = dynamic_cast_ptr<CFormation *>( *iter ) )
 		{
 			if ( nGeometry < pFormation->GetGeometriesCount() )
+			{
 				pFormation->ChangeGeometry( nGeometry );
+			}
 		}
 	}
 
@@ -2698,9 +2896,13 @@ int CScripts::GetNAmmo( struct lua_State *state )
 			for ( int i = 0; i < pUnit->GetNCommonGuns(); ++i )
 			{
 				if ( pUnit->GetCommonGunStats( i ).bIsPrimary )
+				{
 					nMainAmmo += pUnit->GetNAmmo( i );
+				}
 				else
+				{
 					nSecondaryAmmo += pUnit->GetNAmmo( i );
+				}
 			}
 		}
 		else if ( CDynamicCast<CFormation> pFormation = pObj )
@@ -2711,9 +2913,13 @@ int CScripts::GetNAmmo( struct lua_State *state )
 				for ( int i = 0; i < pUnit->GetNCommonGuns(); ++i )
 				{
 					if ( pUnit->GetCommonGunStats( i ).bIsPrimary )
+					{
 						nMainAmmo += pUnit->GetNAmmo( i );
+					}
 					else
+					{
 						nSecondaryAmmo += pUnit->GetNAmmo( i );
+					}
 				}
 			}
 		}
@@ -2763,7 +2969,9 @@ int CScripts::SetCatchArtFlag( struct lua_State *pState )
 		for ( std::list<CPtr<CUpdatableObj>>::iterator it = pos->second.begin(); it != pos->second.end(); ++it )
 		{
 			if ( CDynamicCast<CFormation> pFormation = *it )
+			{
 				pFormation->SetCatchArtFlag( dwCatchArtFlag );
+			}
 		}
 	}
 
@@ -2784,36 +2992,56 @@ int CScripts::DamageObject( struct lua_State *pState )
 	if ( CStaticObject *pObj = dynamic_cast<CStaticObject *>( pUpdatableObj ) )
 	{
 		if ( fDamage == 0.0f )
+		{
 			pObj->TakeDamage( pObj->GetHitPoints() * 2, true, theDipl.GetNeutralPlayer(), 0 );
+		}
 		else if ( fDamage < 0.0f )
+		{
 			pObj->SetHitPoints( pObj->GetHitPoints() - fDamage );
+		}
 		else
+		{
 			pObj->TakeDamage( fDamage, true, theDipl.GetNeutralPlayer(), 0 );
+		}
 	}
 	else if ( CAIUnit *pUnit = dynamic_cast<CAIUnit *>( pUpdatableObj ) )
 	{
 		if ( fDamage == 0.0f )
+		{
 			pUnit->TakeDamage( pUnit->GetHitPoints() * 2, 0, theDipl.GetNeutralPlayer(), 0 );
+		}
 		else if ( fDamage < 0.0f )
+		{
 			pUnit->IncreaseHitPoints( -fDamage );
+		}
 		else
+		{
 			pUnit->TakeDamage( fDamage, 0, theDipl.GetNeutralPlayer(), 0 );
+		}
 	}
 	else if ( CFormation *pFormation = dynamic_cast<CFormation *>( pUpdatableObj ) )
 	{
 		std::list<CSoldier *> soldiers;
 		for ( int i = 0; i < pFormation->Size(); ++i )
+		{
 			soldiers.push_back( ( *pFormation )[i] );
+		}
 		for ( std::list<CSoldier *>::iterator iter = soldiers.begin(); iter != soldiers.end(); ++iter )
 		{
 			CSoldier *pSoldier = *iter;
 
 			if ( fDamage == 0.0f )
+			{
 				pSoldier->TakeDamage( pSoldier->GetHitPoints() * 2, 0, theDipl.GetNeutralPlayer(), 0 );
+			}
 			else if ( fDamage < 0.0f )
+			{
 				pSoldier->IncreaseHitPoints( -fDamage );
+			}
 			else
+			{
 				pSoldier->TakeDamage( fDamage, 0, theDipl.GetNeutralPlayer(), 0 );
+			}
 		}
 	}
 
@@ -2859,7 +3087,9 @@ int CScripts::GetUnitRPGStats( struct lua_State *pState )
 				script.PushNumber( pStats->eSquadType ); // 3
 				float fPrice = 0;
 				for ( int i = 0; i < pFormation->Size(); ++i )
+				{
 					fPrice += ( *pFormation )[i]->GetPrice();
+				}
 				script.PushNumber( fPrice ); // 4
 				script.PushNumber( 0 );      // 5
 				script.PushNumber( 0 );      // 6
@@ -2883,7 +3113,9 @@ int CScripts::GetUnitRPGStats( struct lua_State *pState )
 		}
 	}
 	else
+	{
 		script.PushNumber( -1 );
+	}
 
 	return script.GetPushCount();
 }
@@ -2896,7 +3128,9 @@ int CScripts::GetSquadStates( struct lua_State *pState )
 	const int nUniqueID = script.GetObject( 1 );
 
 	if ( !CLinkObject::IsLinkObjectExists( nUniqueID ) )
+	{
 		script.PushNumber( -1 );
+	}
 	else
 	{
 		CDynamicCast<CFormation> pFormation = CLinkObject::GetObjectByUniqueId( nUniqueID );
@@ -2909,12 +3143,18 @@ int CScripts::GetSquadStates( struct lua_State *pState )
 			{
 				IUnitState *pState = pSoldier->GetState();
 				if ( IsValid( pState ) )
+				{
 					script.PushNumber( pState->GetName() );
+				}
 				else
+				{
 					script.PushNumber( -1 );
+				}
 			}
 			else
+			{
 				script.PushNumber( -1 );
+			}
 		}
 	}
 
@@ -2929,7 +3169,9 @@ int CScripts::GetUnitState( struct lua_State *pState )
 	const int nUniqueID = script.GetObject( 1 );
 
 	if ( !CLinkObject::IsLinkObjectExists( nUniqueID ) )
+	{
 		script.PushNumber( -1 );
+	}
 	else
 	{
 		CLinkObject *pObj = CLinkObject::GetObjectByUniqueId( nUniqueID );
@@ -2940,9 +3182,13 @@ int CScripts::GetUnitState( struct lua_State *pState )
 		IUnitState *pState = pUnit->GetState();
 
 		if ( pState == 0 || !pState->IsRefValid() )
+		{
 			script.PushNumber( -1 );
+		}
 		else
+		{
 			script.PushNumber( pState->GetName() );
+		}
 	}
 
 	return 1;
@@ -2958,17 +3204,25 @@ int CScripts::GetSquadInfo( struct lua_State *pState )
 	pScripts->DelInvalidUnits( nScriptID );
 
 	if ( pScripts->groups.find( nScriptID ) == pScripts->groups.end() || pScripts->groups[nScriptID].empty() )
+	{
 		script.PushNumber( -3 );
+	}
 	else
 	{
 		CUpdatableObj *pObj = pScripts->groups[nScriptID].front();
 		CFormation *pFormation = dynamic_cast<CFormation *>( pObj );
 		if ( pFormation == 0 )
+		{
 			script.PushNumber( -2 );
+		}
 		else if ( pFormation->IsDisabled() || pFormation->Size() == 1 && ( *pFormation )[0]->GetMemFormation() != 0 )
+		{
 			script.PushNumber( -1 );
+		}
 		else
+		{
 			script.PushNumber( pFormation->GetCurrentGeometry() );
+		}
 	}
 
 	return 1;
@@ -2984,17 +3238,25 @@ int CScripts::IsFollowing( struct lua_State *pState )
 	pScripts->DelInvalidUnits( nScriptID );
 
 	if ( pScripts->groups.find( nScriptID ) == pScripts->groups.end() || pScripts->groups[nScriptID].empty() )
+	{
 		script.PushNumber( -1 );
+	}
 	else
 	{
 		CUpdatableObj *pObj = pScripts->groups[nScriptID].front();
 		CCommonUnit *pUnit = dynamic_cast<CCommonUnit *>( pObj );
 		if ( pUnit == 0 )
+		{
 			script.PushNumber( -1 );
+		}
 		else if ( pUnit->IsInFollowState() )
+		{
 			script.PushNumber( 1 );
+		}
 		else
+		{
 			script.PushNumber( 0 );
+		}
 	}
 
 	return 1;
@@ -3008,16 +3270,22 @@ int CScripts::GetFrontDir( struct lua_State *pState )
 	const int nUniqueID = script.GetObject( 1 );
 
 	if ( !CLinkObject::IsLinkObjectExists( nUniqueID ) )
+	{
 		script.PushNumber( 0 );
+	}
 	else
 	{
 		CLinkObject *pObj = CLinkObject::GetObjectByUniqueId( nUniqueID );
 
 		CBasePathUnit *pUnit = dynamic_cast<CBasePathUnit *>( pObj );
 		if ( pUnit == 0 )
+		{
 			script.PushNumber( 0 );
+		}
 		else
+		{
 			script.PushNumber( pUnit->GetFrontDirection() );
+		}
 	}
 
 	return 1;
@@ -3080,9 +3348,13 @@ int CScripts::RandomInt( struct lua_State *pState )
 	CHECK_ERROR( n >= 1, fmt::format( "RandomInt: upper parameter ({}) is too small", n ), script );
 
 	if ( n == 1 )
+	{
 		script.PushNumber( 0 );
+	}
 	else
+	{
 		script.PushNumber( NRandom::Random( 0, n - 1 ) );
+	}
 	RecordRandomCall();
 
 	return 1;
@@ -3105,7 +3377,9 @@ int CScripts::ChangeSelection( struct lua_State *pState )
 		for ( std::list<CPtr<CUpdatableObj>>::iterator iter = pScripts->groups[nScriptID].begin();
 		      iter != pScripts->groups[nScriptID].end();
 		      ++iter )
+		{
 			updater.AddUpdate( 0, ACTION_NOTIFY_CHANGE_SELECTION, *iter, nParam );
+		}
 	}
 
 	return 0;
@@ -3119,7 +3393,9 @@ int CScripts::GetPlayersMask( struct lua_State *pState )
 	for ( int i = 0; i < theDipl.GetNPlayers(); ++i )
 	{
 		if ( theDipl.IsPlayerExist( i ) )
+		{
 			wMask |= ( 1UL << i );
+		}
 	}
 
 	script.PushNumber( wMask );
@@ -3148,9 +3424,13 @@ int CScripts::ObjectGetCoord( struct lua_State *pState )
 	if ( pObj )
 	{
 		if ( CStaticObject *pStaticObj = dynamic_cast<CStaticObject *>( pObj ) )
+		{
 			vCenter = CVec2( pStaticObj->GetCenter().x, pStaticObj->GetCenter().y );
+		}
 		else if ( CBasePathUnit *pPathUnit = dynamic_cast<CBasePathUnit *>( pObj ) )
+		{
 			vCenter = pPathUnit->GetCenterPlain();
+		}
 	}
 
 	script.PushNumber( vCenter.x );
@@ -3263,7 +3543,9 @@ int CScripts::UnitRemove( struct lua_State *pState )
 		if ( CCommonUnit *pUnit = dynamic_cast<CCommonUnit *>( CLinkObject::GetObjectByUniqueId( nUniqueID ) ) )
 		{
 			if ( pUnit->IsAlive() )
+			{
 				pUnit->Disappear();
+			}
 		}
 	}
 	return 0;
@@ -3310,7 +3592,9 @@ int CScripts::IsStandGround( struct lua_State *pState )
 	if ( pScripts->groups.find( nScriptID ) != pScripts->groups.end() && !pScripts->groups[nScriptID].empty() )
 	{
 		if ( CCommonUnit *pUnit = dynamic_cast_ptr<CCommonUnit *>( pScripts->groups[nScriptID].front() ) )
+		{
 			nAnswer = pUnit->GetBehaviourMoving() == SBehaviour::EMHoldPos;
+		}
 	}
 	script.PushNumber( nAnswer );
 
@@ -3330,7 +3614,9 @@ int CScripts::IsEntrenched( struct lua_State *pState )
 	if ( pScripts->groups.find( nScriptID ) != pScripts->groups.end() && !pScripts->groups[nScriptID].empty() )
 	{
 		if ( CAIUnit *pUnit = dynamic_cast_ptr<CAIUnit *>( pScripts->groups[nScriptID].front() ) )
+		{
 			nAnswer = pUnit->IsInTankPit();
+		}
 	}
 	script.PushNumber( nAnswer );
 
@@ -3467,7 +3753,9 @@ int CScripts::Password( struct lua_State *pState )
 	Script script( pState );
 
 	if ( script.GetObject( 1 ).IsString() )
+	{
 		theCheats.CheckPassword( std::string( script.GetObject( 1 ).GetString() ) );
+	}
 
 	return 0;
 }
@@ -3537,8 +3825,12 @@ int CScripts::GetUnitListOfPlayer( struct lua_State *state )
 
 	CUnitsInScriptAreaEnumerator enumerator( &script, 0 );
 	for ( CGlobalIter iter( theDipl.GetNParty( nPlayer ), EDI_FRIEND ); !iter.IsFinished(); iter.Iterate() )
+	{
 		if ( ( *iter )->GetPlayer() == nPlayer )
+		{
 			enumerator.AddUnit( *iter );
+		}
+	}
 
 	return enumerator.GetNUnits();
 }
@@ -3565,11 +3857,13 @@ int CScripts::GetUnitListInArea( struct lua_State *state )
 			CAIUnit *pUnit = *iter;
 			if ( pUnit->IsRefValid() && pUnit->IsAlive() && pUnit->GetPlayer() == nPlayer &&
 			     IsUnitQualified( bCountPlanes, pUnit ) )
+			{
 				if ( fabs2( ( *iter )->GetCenterPlain() - center ) <= fR * fR )
 				{
 					script.PushNumber( pUnit->GetUniqueId() );
 					++cnt;
 				}
+			}
 		}
 		return cnt;
 	}
@@ -3677,7 +3971,9 @@ int CScripts::IsUnitInArea( struct lua_State *state )
 		}
 
 		if ( bCircle )
+		{
 			script.PushBool( IsUnitInCirlceArea( pUnit, vCenter, fR, nPlayer ) );
+		}
 		else
 		{
 			CHECK_ERROR( pScripts->areas.find( szName ) != pScripts->areas.end(),
@@ -3752,7 +4048,9 @@ int CScripts::GetFreeArtillery( struct lua_State *state )
 		fRadius = script.GetObject( 3 );
 	}
 	else
+	{
 		CHECK_ERROR( false, "GetFreeArtillery: wrong params: GetFreeArtillery( ScriptArea | [ x, y, radius ] )", script );
+	}
 
 	std::vector<CPtr<CArtillery>> artilleries;
 	for ( CUnitsIter<0, 2> iter( 0, ANY_PARTY, vCenter, fRadius ); !iter.IsFinished(); iter.Iterate() )
@@ -3761,7 +4059,9 @@ int CScripts::GetFreeArtillery( struct lua_State *state )
 		if ( pArtillery )
 		{
 			if ( !pArtillery->HasServeCrew() )
+			{
 				artilleries.push_back( pArtillery );
+			}
 		}
 	}
 	sort( artilleries.begin(), artilleries.end(), SArtillerySort( vCenter ) );
@@ -3843,7 +4143,9 @@ int CScripts::LandReinforcementFromMap( struct lua_State *state )
 		for ( int i = 0; i < pMapInfo->players[nPlayer].scriptReinforcementsTextID.size(); ++i )
 		{
 			if ( szName == pMapInfo->players[nPlayer].scriptReinforcementsTextID[i].szName )
+			{
 				pReinf = pMapInfo->players[nPlayer].scriptReinforcementsTextID[i].pReinforcement;
+			}
 		}
 		CHECK_ERROR( pReinf != 0,
 		             fmt::format( "MAP DESIGN: no reinforcement with name \"{}\" player = {}", szName, nPlayer ),
@@ -3891,7 +4193,9 @@ int CScripts::GetReinforcementCallsLeft( struct lua_State *state )
 		script.PushNumber( 0 );
 	}
 	else
+	{
 		script.PushNumber( theReinfArray[nPlayer].GetReinforcementCallsLeft() );
+	}
 
 	return 1;
 }
@@ -4088,9 +4392,13 @@ int CScripts::IsSomeBodyAlive( struct lua_State *pState )
 				if ( pBuilding->IsAlive() && pBuilding->GetPlayer() == nPlayer )
 				{
 					if ( theBonusSystem.IsKeyBuilding( pBuilding->GetUniqueId() ) )
+					{
 						script.PushNumber( true );
+					}
 					else if ( pBuilding->IsUnitsInside() )
+					{
 						script.PushNumber( true );
+					}
 					return 1;
 				}
 				else
@@ -4127,12 +4435,18 @@ int CScripts::IsAlive( struct lua_State *pState )
 		const int nUniqueID = script.GetObject( 1 );
 
 		if ( CLinkObject::IsLinkObjectExists( nUniqueID ) )
+		{
 			script.PushNumber( CLinkObject::GetObjectByUniqueId( nUniqueID )->IsAlive() );
+		}
 		else
+		{
 			script.PushNumber( 0 );
+		}
 	}
 	else
+	{
 		script.PushNumber( 0 );
+	}
 
 	return 1;
 }
@@ -4152,7 +4466,9 @@ int CScripts::SwitchUnitLightFX( struct lua_State *pState )
 		CExistingObject *pEObj = dynamic_cast<CExistingObject *>( pObject );
 
 		if ( !pEObj || pEObj && !pEObj->IsTrampled() )
+		{
 			updater.AddUpdate( 0, ACTION_NOTIFY_HEADLIGHT, pObject, nNewState );
+		}
 	}
 
 	return 0;
@@ -4178,11 +4494,15 @@ int CScripts::SwitchSquadLightFX( struct lua_State *pState )
 	{
 		CUpdatableObj *pObj = *it;
 		if ( !pObj || pObj && !pObj->IsAlive() )
+		{
 			continue;
+		}
 		CExistingObject *pEObj = dynamic_cast<CExistingObject *>( pObj );
 
 		if ( !pEObj || pEObj && !pEObj->IsTrampled() )
+		{
 			updater.AddUpdate( 0, ACTION_NOTIFY_HEADLIGHT, pObj, nNewState );
+		}
 	}
 
 	return 0;
@@ -4191,14 +4511,18 @@ int CScripts::SwitchSquadLightFX( struct lua_State *pState )
 void CScripts::SendUpdateToObjects( int nScriptID, EActionNotify eUpdateType, int nParam )
 {
 	if ( pScripts->groups.find( nScriptID ) == pScripts->groups.end() )
+	{
 		return;
+	}
 
 	pScripts->DelInvalidUnits( nScriptID );
 
 	CScriptGroup &scriptGroup = pScripts->groups[nScriptID];
 
 	for ( std::list<CPtr<CUpdatableObj>>::iterator it = scriptGroup.begin(); it != scriptGroup.end(); ++it )
+	{
 		updater.AddUpdate( 0, eUpdateType, *it, nParam );
+	}
 
 	return;
 }
@@ -4295,7 +4619,9 @@ int CScripts::WaitForGroupInArea( struct lua_State *pState )
 						CDynamicCast<CCommonUnit> pUnit( *it );
 						if ( pUnit && pUnit->IsAlive() && pUnit->GetPlayer() == nPlayer &&
 						     !pUnit->GetUnitRect().IsIntersected( areaRect ) )
+						{
 							continue;
+						}
 					}
 				}
 				else
@@ -4312,10 +4638,14 @@ int CScripts::WaitForGroupInArea( struct lua_State *pState )
 		{
 			CDynamicCast<CCommonUnit> pUnit( *it );
 			if ( !pUnit->GetUnitRect().IsIntersectCircle( vCenter, fR ) )
+			{
 				bFoundNotInArea = true;
+			}
 		}
 		if ( bFoundNotInArea )
+		{
 			continue;
+		}
 		bAllInarea = true;
 	}
 
@@ -4352,7 +4682,9 @@ int CScripts::SCRunTime( struct lua_State *pState )
 	pUpdate->nTargetID = -1;
 	NI_ASSERT( pUpdate->fTime >= 0, "Script movie length < 0!\n" );
 	if ( szFinish == szStart )
+	{
 		pUpdate->eRunType = SCRT_DIRECT_ROTATE;
+	}
 	//
 	if ( script.GetTop() > 3 )
 	{
@@ -4397,7 +4729,9 @@ int CScripts::SCRunTime( struct lua_State *pState )
 		}
 	}
 	else
+	{
 		updater.AddUpdate( pUpdate, ACTION_NOTIFY_SCAMERA_RUN, 0, 0 );
+	}
 
 	return 0;
 }
@@ -4421,7 +4755,9 @@ int CScripts::SCRunSpeed( struct lua_State *pState )
 	pUpdate->fAngle = 0;
 	pUpdate->nTargetID = -1;
 	if ( szFinish == szStart )
+	{
 		pUpdate->eRunType = SCRT_DIRECT_ROTATE;
+	}
 	//
 	if ( script.GetTop() > 3 )
 	{
@@ -4447,7 +4783,9 @@ int CScripts::SCRunSpeed( struct lua_State *pState )
 				if ( pScripts->groups.find( nScriptID ) != pScripts->groups.end() && !pScripts->groups[nScriptID].empty() )
 				{
 					if ( CCommonUnit *pUnit = dynamic_cast_ptr<CCommonUnit *>( pScripts->groups[nScriptID].front() ) )
+					{
 						nScriptID = pUnit->GetUniqueID();
+					}
 					pUpdate->nTargetID = nScriptID;
 					updater.AddUpdate( pUpdate, ACTION_NOTIFY_SCAMERA_RUN, 0, 0 );
 				}
@@ -4464,7 +4802,9 @@ int CScripts::SCRunSpeed( struct lua_State *pState )
 		}
 	}
 	else
+	{
 		updater.AddUpdate( pUpdate, ACTION_NOTIFY_SCAMERA_RUN, 0, 0 );
+	}
 
 	return 0;
 }
@@ -4489,11 +4829,15 @@ int CScripts::SCStartMovie( struct lua_State *pState )
 
 	std::string szCallbackFuncName = "";
 	if ( script.GetTop() > 1 )
+	{
 		szCallbackFuncName = script.GetObject( 2 ).GetString();
+	}
 
 	bool bLoopPlayback = false;
 	if ( script.GetTop() > 2 )
+	{
 		bLoopPlayback = ( script.GetObject( 3 ) == 1 );
+	}
 
 	CPtr<SScriptCameraStartMovieUpdate> pUpdate = new SScriptCameraStartMovieUpdate;
 	pUpdate->nMovieIndex = nMovieIndex;
@@ -4559,14 +4903,18 @@ int CScripts::AttackGroupAddUnit( struct lua_State *pState )
 			{
 				const CScriptGroup &group = groupPos->second;
 				for ( CScriptGroup::const_iterator it = group.begin(); it != group.end(); ++it )
+				{
 					AttackGroupAddUnit( dynamic_cast_ptr<CCommonUnit *>( *it ), nID );
+				}
 			}
 		}
 		if ( nUniqueID != -1 )
 		{
 			CCommonUnit *pUnit = dynamic_cast<CCommonUnit *>( CLinkObject::GetObjectByUniqueIdSafe( nUniqueID ) );
 			if ( pUnit )
+			{
 				AttackGroupAddUnit( pUnit, nID );
+			}
 		}
 	}
 	return 0;
@@ -4623,9 +4971,13 @@ int CScripts::PlayerCanSee( struct lua_State *pState )
 
 	CDynamicCast<CCommonUnit> pUnit = CLinkObject::GetObjectByUniqueIdSafe( nUniqueID );
 	if ( pUnit )
+	{
 		script.PushNumber( pUnit->IsVisible( theDipl.GetNParty( nPlayer ) ) );
+	}
 	else
+	{
 		script.PushNumber( false );
+	}
 	return 1;
 }
 
@@ -4645,9 +4997,13 @@ int CScripts::UnitCanSee( struct lua_State *pState )
 		CDynamicCast<CCommonUnit> pUnit( CLinkObject::GetObjectByUniqueIdSafe( nTargetID ) );
 		if ( pLooker && pUnit && pUnit->IsVisible( pLooker->GetParty() ) &&
 		     fabs2( pUnit->GetCenterPlain() - pLooker->GetCenterPlain() ) <= sqr( pLooker->GetSightRadius() ) )
+		{
 			script.PushNumber( true );
+		}
 		else
+		{
 			script.PushNumber( false );
+		}
 	}
 	else
 	{
@@ -4662,9 +5018,13 @@ int CScripts::UnitCanSee( struct lua_State *pState )
 				CDynamicCast<CCommonUnit> pUnit( *iter );
 				if ( pLooker && pUnit && pUnit->IsVisible( pLooker->GetParty() ) &&
 				     fabs2( pUnit->GetCenterPlain() - pLooker->GetCenterPlain() ) <= sqr( pLooker->GetSightRadius() ) )
+				{
 					script.PushNumber( true );
+				}
 				else
+				{
 					script.PushNumber( false );
+				}
 			}
 		}
 	}
@@ -4734,13 +5094,19 @@ int CScripts::PlayEffect( struct lua_State *pState )
 	const CVec2 vPlanePos( script.GetObject( 2 ), script.GetObject( 3 ) );
 	CVec3 vPos;
 	if ( !script.GetObject( 4 ).IsNumber() )
+	{
 		vPos = GetHeights()->Get3DPoint( vPlanePos );
+	}
 	else
+	{
 		vPos = CVec3( vPlanePos, script.GetObject( 4 ) );
+	}
 
 	if ( pMapInfo->scriptEffects.size() > nEffect )
+	{
 		updater.AddUpdate(
 				new SPlayEffectUpdate( pMapInfo->scriptEffects[nEffect], vPos ), ACTION_NOTIFY_PLAY_EFFECT, 0, -1 );
+	}
 
 	return 0;
 }
@@ -4755,7 +5121,9 @@ int CScripts::GetAmmo( struct lua_State *pState )
 	{
 		const int nGuns = pUnit->GetNCommonGuns();
 		for ( int i = 0; i < nGuns; ++i )
+		{
 			script.PushNumber( pUnit->GetNAmmo( i ) );
+		}
 		return nGuns;
 	}
 	if ( CDynamicCast<CFormation> pFormation = pObj )
@@ -4790,7 +5158,9 @@ int CScripts::EnablePlayerReinforcement( struct lua_State *pState )
 	{
 		pCur = pMapInfo->players[theDipl.GetMyNumber()].reinforcementTypes[i];
 		if ( pCur && eType == pCur->eType )
+		{
 			break;
+		}
 	}
 
 	if ( pCur )
@@ -4828,12 +5198,18 @@ int CScripts::GiveReinforcementCalls( struct lua_State *pState )
 	const int nCalls = int( script.GetObject( 2 ).GetNumber() );
 
 	if ( Singleton<IAIScenarioTracker>()->GetGameType() != IAIScenarioTracker::EGT_SINGLE )
+	{
 		return 0;
+	}
 
 	if ( nCalls > 0 )
+	{
 		Singleton<IAIScenarioTracker>()->IncreaseReinforcementCallsLeft( nPlayer, nCalls );
+	}
 	else if ( nCalls < 0 )
+	{
 		Singleton<IAIScenarioTracker>()->DecreaseReinforcementCallsLeft( nPlayer, -nCalls );
+	}
 
 	if ( nPlayer == theDipl.GetMyNumber() )
 	{
@@ -4876,17 +5252,25 @@ int CScripts::GiveXPToReinforcement( struct lua_State *pState )
 	if ( pST )
 	{
 		if ( nPlayer == theDipl.GetMyNumber() )
+		{
 			updater.AddUpdate( EFB_GAIN_EXP, eType, 0 );
+		}
 
 		if ( pST->GiveXP( nPlayer, eType, nXP ) )
 		{
 			CPtr<SFeedBackUnitsArray> pParam = new SFeedBackUnitsArray;
 			for ( CGlobalIter iter( theDipl.GetNParty( nPlayer ), EDI_FRIEND ); !iter.IsFinished(); iter.Iterate() )
+			{
 				if ( ( *iter )->GetPlayer() == nPlayer && ( *iter )->GetReinforcementType() == eType )
+				{
 					pParam->unitIDs.push_back( ( *iter )->GetUniqueID() );
+				}
+			}
 
 			if ( nPlayer == theDipl.GetMyNumber() )
+			{
 				updater.AddUpdate( EFB_COMMANDER_LEVELUP, eType, pParam );
+			}
 		}
 	}
 
@@ -4904,7 +5288,9 @@ int CScripts::GiveXPToPlayer( struct lua_State *pState )
 	IAIScenarioTracker *pST = Singleton<IAIScenarioTracker>();
 
 	if ( pST )
+	{
 		pST->GiveXPToPlayer( nPlayer, nXP );
+	}
 
 	return 0;
 }
@@ -4926,7 +5312,9 @@ int CScripts::GetMultiplayerMatchTechLevel( struct lua_State *pState )
 	if ( theDipl.IsNetGame() )
 	{
 		if ( IAIScenarioTracker *pScenarioTracker = GetScenarioTracker() )
+		{
 			nTechLevel = pScenarioTracker->GetMultiplayerTechLevel();
+		}
 	}
 
 	script.PushNumber( nTechLevel );
@@ -4948,7 +5336,9 @@ int CScripts::GetPlayerMultiplayerNation( struct lua_State *pState )
 	if ( theDipl.IsNetGame() )
 	{
 		if ( IAIScenarioTracker *pScenarioTracker = GetScenarioTracker() )
+		{
 			nNation = pScenarioTracker->GetPlayerMultiplayerNation( nPlayer );
+		}
 	}
 
 	script.PushNumber( nNation );
@@ -4993,17 +5383,23 @@ int CScripts::RemoveAllUnitsTmp( struct lua_State *pState )
 	Script script( pState );
 	det_map<int, bool> excluded;
 	for ( int i = 1; script.GetObject( i ).IsNumber(); ++i )
+	{
 		excluded[script.GetObject( i ).GetNumber()] = true;
+	}
 
 	for ( CGlobalIter iter( 2, EDI_NEUTRAL ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CAIUnit *pUnit = *iter;
 		if ( excluded.find( pScripts->GetScriptID( pUnit ) ) == excluded.end() )
+		{
 			rememberedUnits.push_back( pUnit );
+		}
 	}
 
 	for ( std::list<CObj<CAIUnit>>::iterator it = rememberedUnits.begin(); it != rememberedUnits.end(); ++it )
+	{
 		RemoveUnit( *it );
+	}
 	return 0;
 }
 
@@ -5028,7 +5424,9 @@ int CScripts::ReturnAllUnits( struct lua_State *pState )
 		theGroupLogic.RegisterPathSegments( pUnit, false );
 		pUnit->UpdateVisibilityForced();
 		if ( pUnit->IsInfantry() )
+		{
 			updater.AddUpdate( 0, ACTION_NOTIFY_NEW_FORMATION, checked_cast_ptr<CSoldier *>( pUnit ), -1 );
+		}
 	}
 	return 0;
 }
@@ -5067,8 +5465,10 @@ int CScripts::SetDynamicObjectiveScriptGroup( struct lua_State *pState )
 			{
 				CDynamicCast<CCommonUnit> pUnit( *it );
 				if ( pUnit )
+				{
 					theFeedBackSystem.AddFeedback(
 							pUnit->GetUniqueID(), pUnit->GetCenterPlain(), EFB_OBJECTIVE_MOVED, nObjective );
+				}
 			}
 		}
 	}
@@ -5102,7 +5502,9 @@ int CScripts::DamageAllUnits( struct lua_State *pState )
 	{
 		CAIUnit *pUnit = *iter;
 		if ( pUnit->IsRefValid() && pUnit->IsAlive() && pUnit->GetPlayer() == nPlayer )
+		{
 			pUnit->TakeDamage( fDamage, 0, nNeutralPlayer, 0 );
+		}
 	}
 	return 0;
 }

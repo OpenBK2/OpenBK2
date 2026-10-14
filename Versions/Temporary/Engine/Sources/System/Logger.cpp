@@ -161,7 +161,9 @@ std::string CLogger::GetLoggerFullName() const
 	std::string szName = GetLoggerLocalName();
 	const CLogger *pParent = this;
 	while ( pParent = pParent->GetParent() )
+	{
 		szName = pParent->GetLoggerLocalName() + "." + szName;
+	}
 	return szName;
 }
 
@@ -170,7 +172,9 @@ CLogger &CLogger::Dump()
 	if ( !wszLogBuffer.empty() )
 	{
 		if ( Dump( GetLoggerFullName(), wszLogBuffer ) )
+		{
 			wszLogBuffer.clear();
+		}
 	}
 	return *this;
 }
@@ -180,7 +184,9 @@ bool CLogger::Dump( const std::string &szLoggerFullName, const std::wstring &wsz
 	for ( CDumpersList::iterator it = dumpers.begin(); it != dumpers.end(); ++it )
 	{
 		if ( ( *it ) )
+		{
 			( *it )->Dump( wszString );
+		}
 	}
 	bool bRes = !dumpers.empty();
 	if ( pParent )

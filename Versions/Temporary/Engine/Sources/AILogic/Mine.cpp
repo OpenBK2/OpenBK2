@@ -126,7 +126,9 @@ void CMineStaticObject::Segment()
 		while ( !it.IsFinished() )
 		{
 			if ( CheckToDetonate( *it ) )
+			{
 				return;
+			}
 
 			it.Iterate();
 		}
@@ -152,7 +154,9 @@ void CMineStaticObject::TakeDamage( const float fDamage,
 			Detonate();
 		}
 		else
+		{
 			updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
+		}
 	}
 }
 
@@ -172,8 +176,10 @@ void CMineStaticObject::SetVisible( int nParty, bool bVis )
 		{
 			RegisterInWorld();
 			if ( theDipl.GetNParty( player ) != nParty )
+			{
 				theFeedBackSystem.AddFeedbackAndForget(
 						nUniqueID, CVec2( GetCenter().x, GetCenter().y ), EFB_MINE_SIGHTED, -1 );
+			}
 		}
 	}
 }

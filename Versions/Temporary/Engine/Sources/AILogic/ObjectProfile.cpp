@@ -27,7 +27,9 @@ struct STilesCollector
 	{
 		const SVector tile( x, y );
 		if ( GetAIMap()->IsTileInside( tile ) )
+		{
 			pTilesUnder->insert( tile );
+		}
 	}
 };
 
@@ -42,7 +44,9 @@ struct STilesArray2DCollector
 	{
 		const SVector tile( x, y );
 		if ( GetAIMap()->IsTileInside( tile ) )
+		{
 			( *pTiles )[y - vTile.y][x - vTile.x] = true;
+		}
 	}
 };
 
@@ -54,7 +58,9 @@ void CObjectProfile::AddCentersOfSmallPolygons()
 
 		CVec2 vMassCenter( VNULL2 );
 		for ( int i = 0; i < points.size() - 1; ++i )
+		{
 			vMassCenter += points[i];
+		}
 
 		vMassCenter /= float( points.size() - 1 );
 
@@ -70,7 +76,9 @@ void CObjectProfile::AddCentersOfSmallPolygons()
 		{
 			const SVector tile = AICellsTiles::GetTile( vCenter + ( vMassCenter ^ vRotation ) );
 			if ( GetAIMap()->IsTileInside( tile ) )
+			{
 				tilesUnder.insert( tile );
+			}
 		}
 	}
 }
@@ -103,7 +111,9 @@ void CObjectProfile::Init( const NDb::SPassProfile &_profile,
 		}
 	}
 	if ( !bInitted )
+	{
 		return;
+	}
 	aabbRect.Set( vLeftDown, vRightUp );
 
 	SVector leftDownTile( vLeftDown.x / SConsts::TILE_SIZE, vLeftDown.y / SConsts::TILE_SIZE );
@@ -143,7 +153,9 @@ void CObjectProfile::Init( const NDb::SPassProfile &_profile,
 				const CVec2 vLeftDown( tile.x * SAIConsts::TILE_SIZE, tile.y * SAIConsts::TILE_SIZE );
 				const CVec2 v5( vLeftDown.x + SAIConsts::TILE_SIZE / 2, vLeftDown.y + SAIConsts::TILE_SIZE / 2 );
 				if ( IsPointInside( v5 ) )
+				{
 					tilesUnder.insert( tile );
+				}
 			}
 		}
 	}
@@ -152,26 +164,34 @@ void CObjectProfile::Init( const NDb::SPassProfile &_profile,
 	{
 		// OR with border
 		for ( int x = 0; x < passArray.GetSizeX(); ++x )
+		{
 			for ( int y = 0; y < passArray.GetSizeY(); ++y )
 			{
 				passArray[y][x] |= passBorder[y][x];
 				if ( passArray[y][x] )
+				{
 					tilesUnder.insert( SVector( leftDownTile.x + x, leftDownTile.y + y ) );
+				}
 			}
+		}
 	}
 
 	if ( IsPointInside( vCenter ) )
 	{
 		const SVector tile = AICellsTiles::GetTile( vCenter );
 		if ( GetAIMap()->IsTileInside( tile ) )
+		{
 			tilesUnder.insert( tile );
+		}
 	}
 
 	AddCentersOfSmallPolygons();
 
 	tilesUnderVector.reserve( tilesUnder.size() );
 	for ( det_set<SVector, STilesHash>::iterator iter = tilesUnder.begin(); iter != tilesUnder.end(); ++iter )
+	{
 		tilesUnderVector.push_back( *iter );
+	}
 }
 
 CObjectProfile::CObjectProfile( const NDb::SPassProfile &profile,
@@ -207,11 +227,17 @@ static const float fEps = 0.00001f;
 static const float SignEps( const float x )
 {
 	if ( fabs( x ) < fEps )
+	{
 		return 0;
+	}
 	else if ( x < 0 )
+	{
 		return -1;
+	}
 	else
+	{
 		return 1;
+	}
 }
 
 static bool IsPointInsideSegment( const CVec2 &vPoint, const CVec2 &v1, const CVec2 &v2 )
@@ -235,7 +261,9 @@ bool CObjectProfile::IsPointInside( const CVec2 &_vPoint ) const
 		for ( int i = 0; i < points.size() - 1; ++i )
 		{
 			if ( IsPointInsideSegment( vPoint, points[i], points[i + 1] ) )
+			{
 				return true;
+			}
 
 			if ( points[i].y != points[i + 1].y )
 			{
@@ -253,13 +281,17 @@ bool CObjectProfile::IsPointInside( const CVec2 &_vPoint ) const
 					const float fX = points[i].x + fT * ( points[i + 1].x - points[i].x );
 
 					if ( fX > vPoint.x )
+					{
 						++nCount;
+					}
 				}
 			}
 		}
 
 		if ( nCount % 2 == 1 )
+		{
 			return true;
+		}
 	}
 
 	return false;
@@ -274,7 +306,9 @@ bool CObjectProfile::IsWeakIntersected( const SRect &unitRect ) const
 {
 	if ( IsPointInside( unitRect.v1() ) || IsPointInside( unitRect.v2() ) || IsPointInside( unitRect.v3() ) ||
 	     IsPointInside( unitRect.v4() ) )
+	{
 		return true;
+	}
 
 	for ( int k = 0; k < profile.polygons.size(); ++k )
 	{
@@ -283,7 +317,9 @@ bool CObjectProfile::IsWeakIntersected( const SRect &unitRect ) const
 		{
 			const CVec2 vPoint = vCenter + ( points[i] ^ vRotation );
 			if ( unitRect.IsPointInside( vPoint ) )
+			{
 				return true;
+			}
 		}
 	}
 

@@ -30,6 +30,8 @@ CPrimeNumbers::CPrimeNumbers()
 
 		++nNum;
 		while ( nNum < canBePrime.size() && canBePrime[nNum] == 0 )
+		{
 			++nNum;
+		}
 	}
 }

@@ -30,7 +30,9 @@ void StartEffectAndDeleteIfNeeded( CStateSequiences::iterator &ss,
 	if ( ss->IsEnd() )
 	{
 		if ( ss->IsToBeDeleted() || !dst )
+		{
 			ss = src.erase( ss );
+		}
 		else
 		{
 			// animation finished, but may be reversed.
@@ -61,7 +63,9 @@ void CWindowScreen::UpdateResolution()
 	Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( vpSize.x, vpSize.y );
 	p2DGameView->SetWindowSize( vpSize );
 	if ( GetInstance() )
+	{
 		Reposition();
+	}
 }
 
 void CWindowScreen::InitByDesc( const struct NDb::SUIDesc *_pDesc )
@@ -90,7 +94,9 @@ bool CWindowScreen::ProcessEvent( const struct SGameMessage &msg )
 	bindCtrl.ProcessEvent( msg );
 	bindAlt.ProcessEvent( msg );
 	if ( msg.mMessage.cType == NInput::CT_UNKNOWN && !CUIFactory::IsMessageRegistered( msg ) )
+	{
 		return false;
+	}
 
 	return CWindow::ProcessEvent( msg );
 }
@@ -137,9 +143,13 @@ bool CWindowScreen::OnKey( const SGameMessage &msg )
 	if ( msg.nParam1 == VK_TAB )
 	{
 		if ( tabOrder.Size() == 0 )
+		{
 			return false;
+		}
 		else
+		{
 			return ActivateNextInTabOrder();
+		}
 	}
 	return false;
 }
@@ -166,7 +176,9 @@ CButtonGroup *CWindowScreen::CreateButtonGroup( const int nID, IWindow *pButton,
 {
 	SButtonGroupID id( nID, pParent );
 	if ( !buttonGroups[id] )
+	{
 		buttonGroups[id] = new CButtonGroup();
+	}
 	return buttonGroups[id];
 }
 
@@ -220,9 +232,13 @@ void CWindowScreen::OnGetFocus( const bool bFocus )
 	SetFocus( bFocus );
 	bIsScreenFocused = bFocus;
 	if ( bFocus )
+	{
 		InitSingletonWindows();
+	}
 	else
+	{
 		tooltips.HideTooltip();
+	}
 }
 
 void CWindowScreen::InitSingletonWindows()
@@ -242,7 +258,9 @@ void CWindowScreen::InitSingletonWindows()
 	if ( pDebug )
 	{
 		if ( !GetChild( pDebug->GetName(), false ) )
+		{
 			AddChild( pDebug, true );
+		}
 		pDebug->Init();
 	}
 
@@ -250,7 +268,9 @@ void CWindowScreen::InitSingletonWindows()
 	if ( pStatSystem )
 	{
 		if ( !GetChild( pStatSystem->GetName(), false ) )
+		{
 			AddChild( pStatSystem, true );
+		}
 		pStatSystem->Init();
 	}
 }
@@ -311,10 +331,14 @@ void CWindowScreen::Segment( const int timeDiff )
 	ProcessMessage( msg );
 	}*/
 	for ( CSegmentObjs::iterator it = segmentObjs.begin(); it != segmentObjs.end(); ++it )
+	{
 		( *it )->Segment( timeDiff );
+	}
 
 	if ( bIsScreenFocused )
+	{
 		tooltips.Segment( timeDiff, this );
+	}
 }
 
 void CWindowScreen::ProcessStateSequiences( const int timeDiff )
@@ -332,15 +356,23 @@ void CWindowScreen::ProcessStateSequiences( const int timeDiff )
 			CWatingForAnimation::const_iterator wating = watingForAnimation.find( id );
 			const bool bWaitForAnim = wating != watingForAnimation.end();
 			if ( bWaitForAnim )
+			{
 				resumed.push_back( id );
+			}
 
 			if ( states.IsToBeDeleted() )
+			{
 				ss = stateSequiences.erase( ss );
+			}
 			else // animation finished, but may be reversed.
+			{
 				finishedAnimations.splice( finishedAnimations.end(), stateSequiences, ss++ );
+			}
 		}
 		else
+		{
 			++ss;
+		}
 	}
 
 	// move resumed to running states.
@@ -362,9 +394,13 @@ void CWindowScreen::ProcessStateSequiences( const int timeDiff )
 			if ( ( *ss ).IsEnd() )
 			{
 				if ( ( *ss ).IsToBeDeleted() )
+				{
 					ss = stateSequiences.erase( ss );
+				}
 				else // animation finished, but may be reversed.
+				{
 					finishedAnimations.splice( finishedAnimations.end(), stateSequiences, ss++ );
+				}
 				continue;
 			}
 		}
@@ -375,9 +411,13 @@ void CWindowScreen::ProcessStateSequiences( const int timeDiff )
 void CWindowScreen::RegisterToSegment( struct IWindow *pWnd, const bool bRegister )
 {
 	if ( bRegister )
+	{
 		segmentObjs.insert( pWnd );
+	}
 	else
+	{
 		segmentObjs.erase( pWnd );
+	}
 }
 
 bool CWindowScreen::IsRegisteredToSegment( struct IWindow *pWnd ) const
@@ -388,7 +428,9 @@ bool CWindowScreen::IsRegisteredToSegment( struct IWindow *pWnd ) const
 void CWindowScreen::RunAnimationSequienceBack( const int nAnimationID )
 {
 	if ( 0 == nAnimationID )
+	{
 		return;
+	}
 
 	// first search in finished animations
 	auto it = std::find_if( finishedAnimations.begin(),
@@ -414,7 +456,9 @@ void CWindowScreen::RunAnimationSequienceBack( const int nAnimationID )
 			ss->Reverse();
 			ss->Segment( 1, this ); // advance a little (to run all imidiate reactions)
 			if ( ss->IsEnd() )
+			{
 				ss = stateSequiences.erase( ss );
+			}
 			return;
 		}
 	}
@@ -425,18 +469,26 @@ uint16_t CWindowScreen::GetKeyboardFlags() const
 {
 	uint16_t wRes = (uint16_t)EKF_NONE;
 	if ( bindShift.IsActive() )
+	{
 		wRes |= (uint16_t)EKF_SHIFT;
+	}
 	if ( bindCtrl.IsActive() )
+	{
 		wRes |= (uint16_t)EKF_CTRL;
+	}
 	if ( bindCtrl.IsActive() )
+	{
 		wRes |= (uint16_t)EKF_CTRL;
+	}
 	return wRes;
 }
 
 int CWindowScreen::RunAnimationSequienceForward( const NDb::SUIStateSequence &seq, class CWindow *pWindow )
 {
 	if ( seq.commands.empty() )
+	{
 		return 0;
+	}
 	const int nID = animationIDs.Get();
 	stateSequiences.push_front( CStates( seq, "", seq.bReversable, GetKeyboardFlags() ) );
 	CStateSequiences::iterator ss = stateSequiences.begin();
@@ -454,7 +506,9 @@ void CWindowScreen::RunStateCommandSequience( const std::string &szCmdSeq,
 	if ( CDynamicCast<CWindow> pSequenceParent = _pSequenceParent )
 	{
 		if ( 0 == nAnimationToWait )
+		{
 			RunStateCommandSequienceImmidiate( szCmdSeq, pSequenceParent, pContext, bForward );
+		}
 		else
 		{
 			CCommandSequiences::const_iterator cs = commandSequiences.find( szCmdSeq );
@@ -478,7 +532,9 @@ void CWindowScreen::RunStateCommandSequienceImmidiate( const std::string &szCmdS
                                                        const bool bForward )
 {
 	if ( szCmdSeq.empty() )
+	{
 		return;
+	}
 
 	CCommandSequiences::const_iterator cs = commandSequiences.find( szCmdSeq );
 	NI_ASSERT( cs != commandSequiences.end(), fmt::format( "unknown commad sequience number \"{}\"", szCmdSeq ) );
@@ -494,7 +550,9 @@ void CWindowScreen::RunStateCommandSequienceImmidiate( const std::string &szCmdS
 			{
 				bFound = true;
 				if ( !it->IsForward() ) // reversed one found
+				{
 					it->Reverse();
+				}
 			}
 		}
 		// run fresh effect
@@ -533,13 +591,19 @@ void CWindowScreen::RunStateCommandSequienceImmidiate( const std::string &szCmdS
 				it->SetContext( pContext );
 				it->Segment( 1, this ); // advance a little (to run all imidiate reactions)
 				if ( it->IsEnd() )
+				{
 					it = finishedAnimations.erase( it );
+				}
 				else
+				{
 					stateSequiences.splice( stateSequiences.end(), finishedAnimations, it++ );
+				}
 				bFound = true;
 			}
 			else
+			{
 				++it;
+			}
 		}
 		NI_ASSERT( bFound, fmt::format( "sequience \"{}\" not found in reversable list", szCmdSeq ) );
 	}
@@ -557,7 +621,9 @@ void CWindowScreen::SetWindowText( const std::string &szWindowName, const std::w
 		                        NStr::ToMBCS( szText.c_str() ),
 		                        szWindowName ) );
 		if ( pText )
+		{
 			pText->SetText( szText );
+		}
 	}
 }
 
@@ -639,12 +705,16 @@ const std::wstring &CWindowScreen::GetTextEntry( const std::string &szName ) con
 {
 	static std::wstring empty;
 	if ( !pInstance )
+	{
 		return empty;
+	}
 
 	for ( int i = 0; i < pInstance->relatedTexts.size(); ++i )
 	{
 		if ( pInstance->relatedTexts[i].szName == szName && CHECK_TEXT_NOT_EMPTY_PRE( pInstance->relatedTexts[i]., Text ) )
+		{
 			return GET_TEXT_PRE( pInstance->relatedTexts[i]., Text );
+		}
 	}
 	return empty;
 }
@@ -682,5 +752,7 @@ bool CWindowScreen::ActivateNextInTabOrder()
 void CWindowScreen::RegisterTabOrder( IWindow *pWindow, int nTabOrder )
 {
 	if ( nTabOrder != -1 )
+	{
 		tabOrder.Push( std::pair<CObj<CWindow>, int>( dynamic_cast<CWindow *>( pWindow ), nTabOrder ) );
+	}
 }

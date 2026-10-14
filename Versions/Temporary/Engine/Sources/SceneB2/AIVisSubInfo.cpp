@@ -109,9 +109,13 @@ void CScene::AddLineMarker( int nID, const CVec2 &vStart, const CVec2 &vEnd, con
 void CScene::ClearMarkers( ESceneMarkerType eType, int nID )
 {
 	if ( nID == -1 )
+	{
 		data[eScene]->markers[eType].clear();
+	}
 	else
+	{
 		data[eScene]->markers[eType].erase( nID );
+	}
 }
 
 CObjectBase *
@@ -131,10 +135,14 @@ void CScene::SetCircle( int nID, float fRadius, const CVec3 &vColor, float fWidt
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
 	if ( pos == data[eScene]->visObjects.end() )
+	{
 		return;
+	}
 	CDynamicCast<SModelVisObjDesc> pVO = data[eScene]->visObjects[nID];
 	if ( !pVO )
+	{
 		return;
+	}
 
 	if ( pVO->bHidden )
 	{
@@ -144,7 +152,11 @@ void CScene::SetCircle( int nID, float fRadius, const CVec3 &vColor, float fWidt
 
 	Vis2AI( &fRadius );
 	if ( fRadius > 0.0f )
+	{
 		pVO->pCircle = CreateCircle( pos->second->GetTransform(), fRadius, vColor, fWidth );
+	}
 	else
+	{
 		pVO->pCircle = 0;
+	}
 }

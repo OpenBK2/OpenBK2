@@ -68,16 +68,22 @@ public:
 	void Clear()
 	{
 		if ( pBuffer )
+		{
 			delete[] pBuffer;
+		}
 		pBuffer = 0;
 		nSize = 0;
 	}
 	void Resize( int n )
 	{
 		if ( nSize == n )
+		{
 			return;
+		}
 		if ( n == 0 )
+		{
 			Clear();
+		}
 		else
 		{
 			delete[] pBuffer;
@@ -236,7 +242,9 @@ protected:
 	bool RealNeedUpdate()
 	{
 		if ( pAnimation )
+		{
 			return pAnimation.Refresh() | pCombiner.Refresh();
+		}
 		return pCombiner.Refresh();
 	}
 	bool NeedXForm()
@@ -261,13 +269,17 @@ public:
 	virtual const SBound &GetBound()
 	{
 		if ( NeedXForm() )
+		{
 			XFormPosition();
+		}
 		return bound;
 	}
 	virtual const std::vector<SSphere> &GetBounds()
 	{
 		if ( NeedXForm() )
+		{
 			XFormPosition();
+		}
 		return partBVs;
 	}
 	virtual CFuncBase<std::vector<CPtr<IPart>>> *GetCombiner() const { return pCombiner; }
@@ -301,7 +313,9 @@ protected:
 	virtual bool NeedUpdate()
 	{
 		if ( pAnimation )
+		{
 			return pAnimation.Refresh() | pCombiner.Refresh();
+		}
 		return pCombiner.Refresh();
 	}
 	virtual void Recalc();

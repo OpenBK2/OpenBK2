@@ -75,11 +75,15 @@ bool CArtilleryCrewPath::Init( IMemento *pMemento, CBasePathUnit *_pUnit, CAIMap
 void CArtilleryCrewPath::Segment( const NTimer::STime timeDiff )
 {
 	if ( vEndPoint == vCurPoint || bNotInitialized ) // уже дошли
+	{
 		fSpeedLen = 0.0f;
+	}
 	else
 	{
 		if ( bSelfSpeed )
+		{
 			fSpeedLen = pUnit->GetMaxSpeedHere();
+		}
 
 		float fPassedLenght = fSpeedLen * timeDiff;
 		CVec2 vDir = vEndPoint - vCurPoint;
@@ -92,7 +96,9 @@ void CArtilleryCrewPath::Segment( const NTimer::STime timeDiff )
 			pUnit->SetDirectionVec( vDir );
 		}
 		else
+		{
 			vCurPoint = vEndPoint;
+		}
 	}
 	pUnit->SetCenter( GetHeights()->Get3DPoint( vCurPoint ) );
 }

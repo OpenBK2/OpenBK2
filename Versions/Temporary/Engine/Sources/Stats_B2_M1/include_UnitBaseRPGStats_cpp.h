@@ -31,7 +31,9 @@ void SUnitBaseRPGStats::CountShellTypes( const int nUniqueID, const int nPlatfor
 			for ( std::vector<SWeaponRPGStats::SShell>::const_iterator shell = gun.pWeapon->shells.begin();
 			      shell != gun.pWeapon->shells.end();
 			      ++shell )
+			{
 				nDamagetypes[shell->eDamageType] = 1;
+			}
 		}
 	}
 	// set actions
@@ -56,7 +58,9 @@ void SUnitBaseRPGStats::CountShellTypes( const int nUniqueID, const int nPlatfor
 void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 {
 	if ( eGameType != SGVOGT_TANK_PIT )
+	{
 		eGameType = SGVOGT_UNIT;
+	}
 	SHPObjectRPGStats::ToAIUnits( bInEditor );
 	etype = NDb::ReMapRPGType( eDBtype );
 	//
@@ -85,7 +89,9 @@ void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 	//PATHFINDING}
 
 	if ( vAABBHalfSize.y / vAABBHalfSize.x > 1.5 )
+	{
 		boundCircle.bIsRound = false;
+	}
 	else
 	{
 		boundCircle.bIsRound = true;
@@ -102,7 +108,9 @@ void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 		const SSkeleton *pSkeleton = 0;
 
 		if ( !pvisualObject )
+		{
 			return;
+		}
 
 		for ( int i = 0; i < pvisualObject->models.size(); ++i )
 		{
@@ -113,7 +121,9 @@ void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 			}
 		}
 		if ( pSkeleton == 0 && !pvisualObject->models.empty() )
+		{
 			pSkeleton = pvisualObject->models[0].pModel->pSkeleton;
+		}
 		//
 		if ( pSkeleton )
 		{
@@ -125,9 +135,13 @@ void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 				pos->nLength = pAnim->nLength;
 				pos->nAction = pAnim->nAction;
 				if ( IsInfantry() )
+				{
 					pos->pAnimation = pAnim;
+				}
 				else
+				{
 					pos->nFrameIndex = i;
+				}
 				pos->nAABB_A = -1;
 				if ( pAnim->aabb_a.vHalfSize != VNULL3 )
 				{

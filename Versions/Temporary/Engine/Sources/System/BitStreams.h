@@ -77,7 +77,9 @@ public:
 		{
 			nBitsCount = 0;
 			if ( pBitPtr )
+			{
 				pBitPtr[0] = (char)nBits;
+			}
 		}
 	}
 	// not more then 24 bits per call

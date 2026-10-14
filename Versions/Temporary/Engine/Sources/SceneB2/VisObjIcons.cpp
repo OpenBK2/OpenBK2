@@ -65,7 +65,9 @@ void CVisObjIconInfo::OrientToViewer()
 void CVisObjIconInfo::Recalc()
 {
 	if ( pValue == 0 )
+	{
 		pValue = new NGScene::CObjectInfo;
+	}
 
 	OrientToViewer();
 
@@ -115,7 +117,9 @@ inline void AddSingleIcon( CVisObjIconInfo *pIconInfo,
 void SVisObjIcons::CreateIcons( NGScene::IGameView *pGameView, const NDb::SIconsSet *pIconSet, const CVec3 &vPos )
 {
 	if ( iconHolder.pPatch == 0 )
+	{
 		iconHolder.pPatch = new CVisObjIconInfo( Camera() );
+	}
 
 	iconHolder.pPatch->data.vertices.reserve( 16 );
 	iconHolder.pPatch->data.vertices.resize( 0 );
@@ -213,7 +217,9 @@ void SVisObjIcons::CreateIcons( NGScene::IGameView *pGameView, const NDb::SIcons
 	               CVec3( vPos.x + fIconHalfWidth, vPos.y + fIconHalfWidth, vPos.z + fWidth2 ) );
 
 	if ( pBound == 0 )
+	{
 		pBound = new CCSBound();
+	}
 	pBound->Set( bound );
 
 	NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_SKIP_LIGHTING, -100 ), 0, 0 );
@@ -230,7 +236,9 @@ void SVisObjIcons::CreateIcons( NGScene::IGameView *pGameView, const NDb::SIcons
 void SVisObjIcons::MoveIcons( const CVec3 &vPos, const float fObjHeight )
 {
 	if ( iconHolder.pPatch == 0 )
+	{
 		iconHolder.pPatch = new CVisObjIconInfo( Camera() );
+	}
 
 	const CVec3 vIconPos( vPos.x,
 	                      vPos.y,
@@ -241,7 +249,9 @@ void SVisObjIcons::MoveIcons( const CVec3 &vPos, const float fObjHeight )
 	for ( std::vector<NGScene::SVertex>::iterator it = iconHolder.pPatch->data.vertices.begin();
 	      it != iconHolder.pPatch->data.vertices.end();
 	      ++it )
+	{
 		it->pos += vCurDiffer;
+	}
 
 	iconHolder.pPatch->vCenter = vIconPos;
 
@@ -250,7 +260,9 @@ void SVisObjIcons::MoveIcons( const CVec3 &vPos, const float fObjHeight )
 			CVec3( vIconPos.x - fIconHalfWidth, vIconPos.y - fIconHalfWidth, vIconPos.z ),
 			CVec3( vIconPos.x + fIconHalfWidth, vIconPos.y + fIconHalfWidth, vIconPos.z + fIconHalfWidth * 2.0f ) );
 	if ( pBound == 0 )
+	{
 		pBound = new CCSBound();
+	}
 	pBound->Set( bound );
 
 	iconHolder.pPatch->ForceUpdate();
@@ -285,11 +297,15 @@ void CScene::SetIcon( const SSceneObjIconInfo &iconInfo )
 	}
 
 	if ( !( data[eScene]->pVisObjIconsManager ) )
+	{
 		return;
+	}
 
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( iconInfo.nID );
 	if ( pos == data[eScene]->visObjects.end() ) // such object is not existed
+	{
 		return;
+	}
 
 	if ( const SModelVisObjDesc *pVOD = dynamic_cast_ptr<SModelVisObjDesc *>( pos->second ) )
 	{
@@ -302,7 +318,9 @@ void CScene::SetIcon( const SSceneObjIconInfo &iconInfo )
 void CScene::RemoveIcon( const int nID )
 {
 	if ( data[eScene]->pVisObjIconsManager )
+	{
 		data[eScene]->pVisObjIconsManager->RemoveIcon( nID );
+	}
 }
 
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x1311E302, CVisObjIconInfo );

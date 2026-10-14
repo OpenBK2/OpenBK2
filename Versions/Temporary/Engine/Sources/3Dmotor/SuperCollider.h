@@ -111,9 +111,13 @@ public:
 			const SGlobalTriangle &t = tris[fetchRes[i]];
 			float fDist = CollideSphereTriangle( sphere, velocity, t, &ptCollision );
 			if ( fDist == F_NO_COLLISION ) // not collides
+			{
 				continue;
+			}
 			if ( ( *pResult )( fDist, ptCollision, t.plane, userData[t.nUserDataIndex] ) )
+			{
 				break;
+			}
 		}
 	}
 
@@ -131,7 +135,9 @@ public:
 			if ( DoesTriSphereIntersect( ptCenter, fR, t ) )
 			{
 				if ( ( *pResult )( userData[t.nUserDataIndex] ) )
+				{
 					return true;
+				}
 			}
 		}
 		return false;

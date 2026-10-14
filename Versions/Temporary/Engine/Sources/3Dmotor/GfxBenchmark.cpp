@@ -36,7 +36,9 @@ struct STestData
 			for ( int y = 0; y < nSizeY; ++y )
 			{
 				for ( int x = 0; x < nSizeX; ++x )
+				{
 					t[y][x].dwColor = x * x + y * x + y * y + nRnd;
+				}
 			}
 		}
 	}
@@ -110,7 +112,9 @@ static float TimeRender( NGfx::CRenderContext &rc, int nPasses, CGeometry *pGeom
 		NHPTimer::STime tBegin;
 		NHPTimer::GetTime( &tBegin );
 		for ( int i = 0; i < nPasses; ++i )
+		{
 			rc.AddPrimitive( pGeom, pTris );
+		}
 		rc.Flush();
 		FlushQueue();
 		times.push_back( NHPTimer::GetTimePassed( &tBegin ) );

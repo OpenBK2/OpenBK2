@@ -61,7 +61,9 @@ void CWindowSimpleSharedEditor::Destroy()
 
 	// call PopState for last state only
 	if ( HasPushedStates() )
+	{
 		PopState();
+	}
 
 	// just remove other states
 	while ( HasPushedStates() )

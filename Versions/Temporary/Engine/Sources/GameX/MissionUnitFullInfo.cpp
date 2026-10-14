@@ -64,7 +64,9 @@ void CMissionUnitFullInfo::InitPrivate( IWindow *_pInfo, IWindow *pAppearanceWnd
 	pFuelPanel = GetChildChecked<IWindow>( pAppearanceWnd, "Fuel", true );
 	pFuelBar = GetChildChecked<IProgressBar>( pFuelPanel, "ProgressBar", true );
 	if ( pFuelPanel )
+	{
 		pFuelPanel->ShowWindow( false );
+	}
 
 	pArmorsWnd = GetChildChecked<IWindow>( pAppearanceWnd, "Armors", true );
 	pArmorFrontView = GetChildChecked<ITextView>( pArmorsWnd, "ArmorFront", true );
@@ -83,7 +85,9 @@ void CMissionUnitFullInfo::InitPrivate( IWindow *_pInfo, IWindow *pAppearanceWnd
 		{
 			IWindow *pItem = pWeaponsWnd->GetChild( fmt::format( "WeaponBrief{:02d}", i + 1 ), true );
 			if ( !pItem )
+			{
 				break;
+			}
 
 			weaponItems.push_back( SWeaponItem() );
 
@@ -115,7 +119,9 @@ void CMissionUnitFullInfo::InitPrivate( IWindow *_pInfo, IWindow *pAppearanceWnd
 			IWindow *pWnd = pMembersWnd->GetChild( fmt::format( "Member{:02d}", i ), true );
 			IButton *pBtn = dynamic_cast<IButton *>( pWnd );
 			if ( !pBtn )
+			{
 				break;
+			}
 
 			SViewMember viewMember;
 			viewMember.pBtn = pBtn;
@@ -126,9 +132,13 @@ void CMissionUnitFullInfo::InitPrivate( IWindow *_pInfo, IWindow *pAppearanceWnd
 		IWindow *pTransportTooltipHolderWnd = GetChildChecked<IWindow>( pMembersWnd, "TransportTooltipHolder", true );
 		IWindow *pBuildingTooltipHolderWnd = GetChildChecked<IWindow>( pMembersWnd, "BuildingTooltipHolder", true );
 		if ( pTransportTooltipHolderWnd )
+		{
 			wszTooltipMemberInTransport = pTransportTooltipHolderWnd->GetDBTooltipStr();
+		}
 		if ( pBuildingTooltipHolderWnd )
+		{
 			wszTooltipMemberInBuilding = pBuildingTooltipHolderWnd->GetDBTooltipStr();
+		}
 	}
 
 	if ( pSuppliesWnd )
@@ -138,17 +148,25 @@ void CMissionUnitFullInfo::InitPrivate( IWindow *_pInfo, IWindow *pAppearanceWnd
 	}
 
 	if ( pInfo )
+	{
 		pInfo->ShowWindow( true );
+	}
 
 	ClearInfo();
 
 	int nBaseID;
 	if ( eType == ET_OBJECT )
+	{
 		nBaseID = BASE_ID_3D_OBJECT;
+	}
 	else if ( eType == BASE_ID_3D_REINF )
+	{
 		nBaseID = BASE_ID_3D_REINF;
+	}
 	else
+	{
 		nBaseID = BASE_ID_3D_SUPER_WEAPON;
+	}
 	SetBaseID3D( nBaseID );
 }
 
@@ -182,36 +200,56 @@ void CMissionUnitFullInfo::HideSpecific()
 	{
 		SWeaponItem &item = *it;
 		if ( item.pItem )
+		{
 			item.pItem->ShowWindow( false );
+		}
 	}
 
 	for ( std::vector<SViewMember>::iterator it = viewMembers.begin(); it != viewMembers.end(); ++it )
 	{
 		SViewMember &viewMember = *it;
 		if ( viewMember.pBtn )
+		{
 			viewMember.pBtn->ShowWindow( false );
+		}
 	}
 
 	if ( pWeaponsWnd )
+	{
 		pWeaponsWnd->ShowWindow( false );
+	}
 	if ( pSuppliesWnd )
+	{
 		pSuppliesWnd->ShowWindow( false );
+	}
 	if ( pMembersWnd )
+	{
 		pMembersWnd->ShowWindow( false );
+	}
 	if ( pFlagWnd )
+	{
 		pFlagWnd->ShowWindow( false );
+	}
 	if ( pArmorsWnd )
+	{
 		pArmorsWnd->ShowWindow( false );
+	}
 	if ( pHitbarPanel )
+	{
 		pHitbarPanel->ShowWindow( false );
+	}
 	if ( pFuelPanel )
+	{
 		pFuelPanel->ShowWindow( false );
+	}
 }
 
 void CMissionUnitFullInfo::Clear3DView()
 {
 	if ( p3DCtrl )
+	{
 		p3DCtrl->SetObjects( std::vector<IWindow3DControl::SObject>() );
+	}
 }
 
 void CMissionUnitFullInfo::SetReinfUnit( const NDb::SHPObjectRPGStats *pStats )
@@ -219,7 +257,9 @@ void CMissionUnitFullInfo::SetReinfUnit( const NDb::SHPObjectRPGStats *pStats )
 	ClearInfo();
 
 	if ( !pStats )
+	{
 		return;
+	}
 
 	pBaseStats = pStats;
 	pSelStats = pStats;
@@ -248,7 +288,9 @@ void CMissionUnitFullInfo::SetObject( CMapObj *pMO )
 	ClearInfo();
 
 	if ( !pMO )
+	{
 		return;
+	}
 
 	pBaseMO = pMO;
 	pSelMO = pMO;
@@ -273,9 +315,13 @@ void CMissionUnitFullInfo::SetObject( CMapObj *pMO )
 void CMissionUnitFullInfo::UpdateObject( CMapObj *pMO )
 {
 	if ( !pMO )
+	{
 		return;
+	}
 	if ( pMO != pBaseMO && pMO != pSelMO )
+	{
 		return;
+	}
 
 	const NDb::SHPObjectRPGStats *pStats = pMO->GetStats();
 	NI_VERIFY( pStats, "Incorrect unit's stats", return );
@@ -329,7 +375,9 @@ void CMissionUnitFullInfo::UpdateObject( CMapObj *pMO )
 			}
 		}
 		else
+		{
 			MakeCurrentSupplies();
+		}
 
 		MakeCurrentHP();
 		MakeCurrentFuel();
@@ -347,9 +395,13 @@ void CMissionUnitFullInfo::MakeName()
 	if ( pSelStats )
 	{
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pSelStats->, LocalizedName ) )
+		{
 			wszLocalizedName = GET_TEXT_PRE( pSelStats->, LocalizedName );
+		}
 		else
+		{
 			wszLocalizedName = L"";
+		}
 	}
 }
 
@@ -371,7 +423,9 @@ void CMissionUnitFullInfo::MakeMembers( std::vector<SMember> *pMembers )
 		{
 			CMOSelectable *pPassenger = *it;
 			if ( !pPassenger )
+			{
 				continue;
+			}
 
 			NI_ASSERT( pPassenger->IsAlive(), "Programmers: dead unit inside container" );
 
@@ -440,7 +494,9 @@ void CMissionUnitFullInfo::MakeCurrentSupplies()
 		else if ( CDynamicCast<CMOBuilding> pBuilding = pSelMO )
 		{
 			if ( pBuilding->IsStorage() )
+			{
 				nMaxSupplies = SUPPLIES_COUNT_INFINITE;
+			}
 		}
 	}
 	else if ( const NDb::SMechUnitRPGStats *pMechStats = dynamic_cast_ptr<const NDb::SMechUnitRPGStats *>( pSelStats ) )
@@ -448,7 +504,9 @@ void CMissionUnitFullInfo::MakeCurrentSupplies()
 		if ( pMechStats->IsTransport() )
 		{
 			if ( pMechStats->pActions && NUnitFullInfo::IsResourcesCarrier( pMechStats->pActions->availUserActions ) )
+			{
 				nMaxSupplies = SUPPLIES_COUNT;
+			}
 		}
 	}
 }
@@ -478,7 +536,9 @@ void CMissionUnitFullInfo::MakeCurrentFlag()
 void CMissionUnitFullInfo::MakeCurrent3DObjects()
 {
 	if ( !p3DCtrl )
+	{
 		return;
+	}
 	objects.clear();
 
 	if ( const NDb::SSquadRPGStats *pSquadStats = dynamic_cast_ptr<const NDb::SSquadRPGStats *>( pSelStats ) )
@@ -491,7 +551,9 @@ void CMissionUnitFullInfo::MakeCurrent3DObjects()
 			{
 				CMOSelectable *pSO = passengers[i];
 				if ( !pSO )
+				{
 					continue;
+				}
 				IWindow3DControl::SParam param = p3DCtrl->GetDBObjectParam( i + 1 );
 				IWindow3DControl::SObject object;
 				object.nID = i;
@@ -511,13 +573,17 @@ void CMissionUnitFullInfo::MakeCurrent3DObjects()
 			{
 				const NDb::SInfantryRPGStats *pMember = pSquadStats->members[i];
 				if ( !pMember )
+				{
 					continue;
+				}
 				IWindow3DControl::SParam param = p3DCtrl->GetDBObjectParam( i + 1 );
 				IWindow3DControl::SObject object;
 				object.nID = i;
 				const NDb::SVisObj *pVisObj = pMember->pinfoVisualObject;
 				if ( !pVisObj )
+				{
 					pVisObj = pMember->pvisualObject;
+				}
 				object.pModel = GetModel( pVisObj, eSeason );
 				object.vPos = param.vPos;
 				object.vSize = param.vSize;
@@ -536,7 +602,9 @@ void CMissionUnitFullInfo::MakeCurrent3DObjects()
 		{
 			pVisObj = pSelStats->pinfoVisualObject;
 			if ( !pVisObj )
+			{
 				pVisObj = pSelStats->pvisualObject;
+			}
 		}
 		object.pModel = pSelMO ? pSelMO->GetModelDesc() : ( pSelStats ? GetModel( pVisObj, eSeason ) : 0 );
 		object.vPos = param.vPos;
@@ -667,13 +735,19 @@ void CMissionUnitFullInfo::UpdateWeaponsAmmo( const struct SObjectStatus &status
 bool CMissionUnitFullInfo::IsSameWeapons( const struct SObjectStatus &status ) const
 {
 	if ( weapons.size() != status.weapons.size() )
+	{
 		return false;
+	}
 	for ( int i = 0; i < weapons.size(); ++i )
 	{
 		if ( weapons[i].pWeapon != status.weapons[i].pWeaponID )
+		{
 			return false;
+		}
 		if ( weapons[i].nCount != status.weapons[i].nCount )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -683,12 +757,16 @@ void CMissionUnitFullInfo::ShowArmor()
 	if ( armors.size() < NUnitFullInfo::ES_ARMOR_COUNT )
 	{
 		if ( pArmorsWnd )
+		{
 			pArmorsWnd->ShowWindow( false );
+		}
 		return;
 	}
 
 	if ( pArmorsWnd )
+	{
 		pArmorsWnd->ShowWindow( true );
+	}
 
 	std::wstring wszArmorFront = NStr::ToUnicode( std::to_string( armors[NUnitFullInfo::ES_ARMOR_FRONT] ) );
 	std::wstring wszArmorSide = NStr::ToUnicode( std::to_string( armors[NUnitFullInfo::ES_ARMOR_SIDE] ) );
@@ -726,24 +804,32 @@ void CMissionUnitFullInfo::ShowWeapons()
 	if ( weapons.empty() )
 	{
 		if ( pWeaponsWnd )
+		{
 			pWeaponsWnd->ShowWindow( false );
+		}
 		return;
 	}
 
 	if ( pWeaponsWnd )
+	{
 		pWeaponsWnd->ShowWindow( true );
+	}
 
 	for ( int i = 0; i < weaponItems.size(); ++i )
 	{
 		if ( i >= weapons.size() )
 		{
 			if ( weaponItems[i].pItem )
+			{
 				weaponItems[i].pItem->ShowWindow( false );
+			}
 			continue;
 		}
 
 		if ( weaponItems[i].pItem )
+		{
 			weaponItems[i].pItem->ShowWindow( true );
+		}
 
 		std::wstring wszDamage = NStr::ToUnicode( std::to_string( weapons[i].nDamage ) );
 		std::wstring wszPenetration = NStr::ToUnicode( std::to_string( weapons[i].nPenetration ) );
@@ -751,11 +837,17 @@ void CMissionUnitFullInfo::ShowWeapons()
 		std::wstring wszCount = NStr::ToUnicode( std::to_string( weapons[i].nCount ) );
 
 		if ( weaponItems[i].pDamage )
+		{
 			weaponItems[i].pDamage->SetText( weaponItems[i].pDamage->GetDBText() + wszDamage );
+		}
 		if ( weaponItems[i].pPenetration )
+		{
 			weaponItems[i].pPenetration->SetText( weaponItems[i].pPenetration->GetDBText() + wszPenetration );
+		}
 		if ( weaponItems[i].pAmmo )
+		{
 			weaponItems[i].pAmmo->SetText( weaponItems[i].pAmmo->GetDBText() + wszAmmo );
+		}
 		if ( weaponItems[i].pCount )
 		{
 			weaponItems[i].pCount->SetText( weaponItems[i].pCount->GetDBText() + wszCount );
@@ -769,7 +861,9 @@ void CMissionUnitFullInfo::ShowWeapons()
 		if ( weaponItems[i].pIcon )
 		{
 			if ( weapons[i].pWeapon )
+			{
 				weaponItems[i].pIcon->SetTexture( weapons[i].pWeapon->pWeaponTypeTexture );
+			}
 		}
 
 		if ( i == nSelWeapon )
@@ -777,16 +871,26 @@ void CMissionUnitFullInfo::ShowWeapons()
 			if ( pWeaponFullName )
 			{
 				if ( weapons[i].nCount <= 1 )
+				{
 					pWeaponFullName->SetText( pWeaponFullName->GetDBText() + weapons[i].wszLocalizedName );
+				}
 				else
+				{
 					pWeaponFullName->SetText( pWeaponFullName->GetDBText() + wszCount + L"x " + weapons[i].wszLocalizedName );
+				}
 			}
 			if ( pWeaponFullDamage )
+			{
 				pWeaponFullDamage->SetText( pWeaponFullDamage->GetDBText() + wszDamage );
+			}
 			if ( pWeaponFullPenetration )
+			{
 				pWeaponFullPenetration->SetText( pWeaponFullPenetration->GetDBText() + wszPenetration );
+			}
 			if ( pWeaponFullAmmo )
+			{
 				pWeaponFullAmmo->SetText( pWeaponFullAmmo->GetDBText() + wszAmmo );
+			}
 		}
 	}
 }
@@ -796,25 +900,35 @@ void CMissionUnitFullInfo::ShowResources()
 	if ( !weapons.empty() || nMaxSupplies < 0 )
 	{
 		if ( pSuppliesWnd )
+		{
 			pSuppliesWnd->ShowWindow( false );
+		}
 		return;
 	}
 
 	if ( pSuppliesWnd )
+	{
 		pSuppliesWnd->ShowWindow( true );
+	}
 
 	if ( nMaxSupplies == SUPPLIES_COUNT_INFINITE )
 	{
 		if ( pSuppliesCountView )
+		{
 			pSuppliesCountView->SetText( pSuppliesCountView->GetDBText() + pSuppliesCountInfinite->GetDBText() );
+		}
 	}
 	else
 	{
 		std::wstring wszValue = NStr::ToUnicode( std::to_string( nMaxSupplies ) );
 		if ( nCurSupplies >= 0 )
+		{
 			wszValue = NStr::ToUnicode( std::to_string( nCurSupplies ) ) + L"/" + wszValue;
+		}
 		if ( pSuppliesCountView )
+		{
 			pSuppliesCountView->SetText( pSuppliesCountView->GetDBText() + wszValue );
+		}
 	}
 }
 
@@ -823,12 +937,16 @@ void CMissionUnitFullInfo::ShowMembers()
 	if ( members.empty() )
 	{
 		if ( pMembersWnd )
+		{
 			pMembersWnd->ShowWindow( false );
+		}
 		return;
 	}
 
 	if ( pMembersWnd )
+	{
 		pMembersWnd->ShowWindow( true );
+	}
 
 	for ( int i = 0; i < viewMembers.size(); ++i )
 	{
@@ -836,7 +954,9 @@ void CMissionUnitFullInfo::ShowMembers()
 		if ( i >= members.size() )
 		{
 			if ( viewMember.pBtn )
+			{
 				viewMember.pBtn->ShowWindow( false );
+			}
 			continue;
 		}
 
@@ -848,7 +968,9 @@ void CMissionUnitFullInfo::ShowMembers()
 			SetMemberTooltip( viewMember.pBtn );
 		}
 		if ( viewMember.pIconWnd && member.pStats )
+		{
 			viewMember.pIconWnd->SetTexture( member.pStats->pIconTexture );
+		}
 	}
 }
 
@@ -857,21 +979,29 @@ void CMissionUnitFullInfo::ShowFlag()
 	if ( !pKeyObjectTexture )
 	{
 		if ( pFlagWnd )
+		{
 			pFlagWnd->ShowWindow( false );
+		}
 		return;
 	}
 
 	if ( pFlagWnd )
+	{
 		pFlagWnd->ShowWindow( true );
+	}
 
 	if ( pFlagWnd )
+	{
 		pFlagWnd->SetTexture( pKeyObjectTexture );
+	}
 }
 
 void CMissionUnitFullInfo::ShowName()
 {
 	if ( pName )
+	{
 		pName->SetText( pName->GetDBText() + wszLocalizedName );
+	}
 }
 
 void CMissionUnitFullInfo::Show3DObjects()
@@ -887,22 +1017,34 @@ void CMissionUnitFullInfo::ShowHP()
 	if ( hps.size() != 1 )
 	{
 		if ( pHitbarPanel )
+		{
 			pHitbarPanel->ShowWindow( false );
+		}
 		if ( pHPView )
+		{
 			pHPView->ShowWindow( false );
+		}
 		if ( pHPBarUnit )
+		{
 			pHPBarUnit->ShowWindow( false );
+		}
 		return;
 	}
 
 	if ( hps[0].nHP >= 0 )
 	{
 		if ( pHitbarPanel )
+		{
 			pHitbarPanel->ShowWindow( true );
+		}
 		if ( pHPView )
+		{
 			pHPView->ShowWindow( true );
+		}
 		if ( pHPBarUnit )
+		{
 			pHPBarUnit->ShowWindow( true );
+		}
 
 		//		float fHP = hps[0].fFraction * hps[0].fMax;
 		//		int nHP = fHP > 1.0f ? fHP : ( fHP != 0.0f ? 1.0f : 0.0f );
@@ -926,14 +1068,20 @@ void CMissionUnitFullInfo::ShowFuel()
 	if ( fFuel == -1.0f )
 	{
 		if ( pFuelPanel )
+		{
 			pFuelPanel->ShowWindow( false );
+		}
 	}
 	else
 	{
 		if ( pFuelPanel )
+		{
 			pFuelPanel->ShowWindow( true );
+		}
 		if ( pFuelBar )
+		{
 			pFuelBar->SetPosition( fFuel );
+		}
 	}
 }
 
@@ -1010,24 +1158,36 @@ void CMissionUnitFullInfo::OnWeaponOverOff( const std::string &szSender )
 void CMissionUnitFullInfo::SetBaseID3D( int nID )
 {
 	if ( p3DCtrl )
+	{
 		p3DCtrl->SetBaseID3D( nID );
+	}
 }
 
 void CMissionUnitFullInfo::SetMemberTooltip( IWindow *pWnd )
 {
 	if ( !pWnd )
+	{
 		return;
+	}
 	if ( !pWnd->IsVisible() )
+	{
 		return;
+	}
 
 	bool bInBuilding = false;
 	if ( dynamic_cast_ptr<CMOBuilding *>( pBaseMO ) != 0 )
+	{
 		bInBuilding = true;
+	}
 
 	if ( !bInBuilding )
+	{
 		pWnd->SetTooltip( wszTooltipMemberInTransport );
+	}
 	else
+	{
 		pWnd->SetTooltip( wszTooltipMemberInBuilding );
+	}
 }
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x17169340, CMissionUnitFullInfo )

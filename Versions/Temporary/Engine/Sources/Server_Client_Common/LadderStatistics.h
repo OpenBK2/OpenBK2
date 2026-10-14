@@ -81,7 +81,9 @@ struct SLadderStatistics
 	{
 		const int nMedalType = Clamp( _nMedalType, 0, 15 );
 		if ( medals.size() < ( nRace + 1 ) )
+		{
 			return false;
+		}
 		return ( medals[nRace] & ( 0x0001 << nMedalType ) );
 	}
 
@@ -89,7 +91,9 @@ struct SLadderStatistics
 	{
 		const int nMedalType = Clamp( _nMedalType, 0, 15 );
 		if ( pMedals->size() < ( nRace + 1 ) )
+		{
 			pMedals->resize( nRace, 0 );
+		}
 		( *pMedals )[nRace] |= 0x0001 << nMedalType;
 	}
 };

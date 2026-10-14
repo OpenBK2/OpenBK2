@@ -23,7 +23,9 @@ void CStormableObject::AddInsider( CSoldier *pUnit )
 	// aeieiiaoey niaiaaaao n aeieiiaoeae caueoieeia iauaeoa
 	if ( GetNDefenders() > 0 && theDipl.GetDiplStatus( GetPlayer(), nPlayer ) != EDI_ENEMY ||
 	     GetNDefenders() == 0 && !bAttackers )
+	{
 		AddSoldier( pUnit );
+	}
 	else
 	{
 		if ( pUnit->GetUnitAbilityDesc( NDb::ABILITY_MASTER_OF_STREETS ) )
@@ -40,14 +42,18 @@ void CStormableObject::AddInsider( CSoldier *pUnit )
 
 		// oaeeo au? iao
 		if ( attackers.begin( nParty ) == attackers.end() )
+		{
 			startTimes[nParty] = curTime;
+		}
 
 		attackers.Add( nParty, pUnit );
 		++nAttackers[nParty];
 
 		// yoa party o?a aoaeoao
 		if ( startTimes[nParty] == 0 )
+		{
 			++nActiveAttackers;
+		}
 
 		pUnit->SetToSolidPlace();
 
@@ -56,7 +62,9 @@ void CStormableObject::AddInsider( CSoldier *pUnit )
 		{
 			bAttackers = true;
 			for ( int i = 0; i < GetNDefenders(); ++i )
+			{
 				GetUnit( i )->WarFogChanged();
+			}
 		}
 	}
 }
@@ -68,7 +76,9 @@ void CStormableObject::DelFromAttackers( CSoldier *pUnit )
 
 	int i = attackers.begin( nParty );
 	while ( i != attackers.end() && attackers.GetEl( i ) != pUnit )
+	{
 		i = attackers.GetNext( i );
+	}
 
 	NI_ASSERT( i != attackers.end(), "Trying to delete non-existing unit from stormable object" );
 
@@ -77,14 +87,18 @@ void CStormableObject::DelFromAttackers( CSoldier *pUnit )
 	--nAttackers[nParty];
 	// yoa party o?a aoaeoao
 	if ( startTimes[nParty] == 0 )
+	{
 		--nActiveAttackers;
+	}
 
 	// anao aeoeaiuo oaaeeee - i?iaa?eou, ia oaaeeee ee anao aoaeo?ueo
 	if ( nActiveAttackers == 0 )
 	{
 		int i = 0;
 		while ( i < 3 && nAttackers[i] == 0 )
+		{
 			++i;
+		}
 
 		if ( i >= 3 )
 		{
@@ -92,7 +106,9 @@ void CStormableObject::DelFromAttackers( CSoldier *pUnit )
 
 			// eciaieou warfog aey anao caueoieeia
 			for ( int i = 0; i < GetNDefenders(); ++i )
+			{
 				GetUnit( i )->WarFogChanged();
+			}
 		}
 	}
 }
@@ -101,11 +117,15 @@ bool CStormableObject::FindInAttackers( CSoldier *pUnit ) const
 {
 	const int nParty = pUnit->GetParty();
 	if ( attackers.begin( nParty ) == attackers.end() )
+	{
 		return false;
+	}
 
 	int i = attackers.begin( nParty );
 	while ( i != attackers.end() && attackers.GetEl( i ) != pUnit )
+	{
 		i = attackers.GetNext( i );
+	}
 
 	return i != attackers.end();
 }
@@ -113,16 +133,22 @@ bool CStormableObject::FindInAttackers( CSoldier *pUnit ) const
 void CStormableObject::DelInsider( CSoldier *pUnit )
 {
 	if ( FindInAttackers( pUnit ) )
+	{
 		DelFromAttackers( pUnit );
+	}
 	else
+	{
 		DelSoldier( pUnit, true );
+	}
 }
 
 void CStormableObject::InsiderDamaged( CSoldier *pUnit )
 {
 	// caueoiee iauaeoa
 	if ( !FindInAttackers( pUnit ) )
+	{
 		SoldierDamaged( pUnit );
+	}
 }
 
 const float CStormableObject::GetDamage( CBasicGun *pGun, CSoldier *pTarget ) const
@@ -181,7 +207,9 @@ bool CStormableObject::Segment()
 {
 	// iao aoaeo?ueo
 	if ( !bAttackers )
+	{
 		return false;
+	}
 	else
 	{
 		if ( curTime - lastSegment >= SConsts::INSIDE_OBJ_COMBAT_PERIOD )
@@ -220,7 +248,9 @@ bool CStormableObject::Segment()
 				--nParty;
 				// aoaeo?uea anou, a caueua?ueony iao
 				if ( GetNDefenders() == 0 )
+				{
 					MakeDefenders( nParty );
+				}
 				else
 				{
 					i = attackers.begin( nParty );
@@ -256,15 +286,21 @@ const int CStormableObject::GetNFriendlyAttackers( const int nPlayer ) const
 const bool CStormableObject::IsAnyInsiderVisible() const
 {
 	if ( IsAnyAttackers() )
+	{
 		return true;
+	}
 	else if ( GetNDefenders() == 0 )
+	{
 		return false;
+	}
 	else
 	{
 		for ( int i = 0; i < GetNDefenders(); ++i )
 		{
 			if ( GetUnit( i )->IsVisible( theDipl.GetMyParty() ) )
+			{
 				return true;
+			}
 		}
 
 		return false;

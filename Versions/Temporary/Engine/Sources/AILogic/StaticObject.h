@@ -161,7 +161,9 @@ public:
 	{
 		SetAlive( fHP > 0.0f );
 		if ( !CExistingObjectModifyAI::IsProhibited() )
+		{
 			SetUniqueIdForObjects();
+		}
 	}
 
 	void SetTrampled() { bTrampled = true; }

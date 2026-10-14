@@ -74,7 +74,9 @@ public:
 	bool Recv( CNodeAddress *pSource, CMemoryStream *pPacket ) const override
 	{
 		if ( incoming.empty() )
+		{
 			return false;
+		}
 		*pSource = incoming.front().address;
 		*pPacket = incoming.front().data;
 		pPacket->Seek( 0 );
@@ -136,7 +138,9 @@ std::vector<unsigned char> Payload( int id, int size )
 {
 	std::vector<unsigned char> result( size );
 	for ( int i = 0; i < size; ++i )
+	{
 		result[i] = static_cast<unsigned char>( id + i * 37 );
+	}
 	return result;
 }
 
@@ -288,7 +292,9 @@ TEST( NetTransport, ReliableStreamSurvivesLossReorderingAndSequenceWrap )
 			CBitStream bits( packet.GetBufferForWrite(), CBitStream::read, packet.GetSize() );
 			std::vector<PACKET_ID> acknowledged;
 			if ( !acks.ReadAcks( &acknowledged, bits ) )
+			{
 				return false;
+			}
 			stream.ReadMsg( bits );
 			stream.Commit( acknowledged );
 			return true;
@@ -316,7 +322,9 @@ TEST( NetTransport, ReliableStreamSurvivesLossReorderingAndSequenceWrap )
 	const int frameSize = 20005;
 	const auto expected = LargeFrames( 10, frameSize - 5 );
 	for ( size_t offset = 0; offset < expected.size(); offset += frameSize )
+	{
 		sender.stream.outList.emplace_back().Write( expected.data() + offset, frameSize );
+	}
 	std::vector<std::pair<int, CMemoryStream>> delayed;
 	std::vector<unsigned char> received;
 	unsigned int highestOffset = 0;
@@ -337,12 +345,16 @@ TEST( NetTransport, ReliableStreamSurvivesLossReorderingAndSequenceWrap )
 			// Keep one gap open until more than a ring has arrived, and also
 			// lose ordinary packets so real timers must roll back their blocks.
 			if ( ( size && offset == 0 && highestOffset < 40000 ) || sent % 11 == 0 )
+			{
 				++dropped;
+			}
 			else
 			{
 				delayed.emplace_back( round + ( sent % 7 == 0 ? 3 : 0 ), packet );
 				if ( sent % 13 == 0 )
+				{
 					delayed.emplace_back( round + 1, packet ); // duplicate delivery
+				}
 			}
 		}
 		// Reverse delivery order for packets whose delays expire together.
@@ -360,19 +372,25 @@ TEST( NetTransport, ReliableStreamSurvivesLossReorderingAndSequenceWrap )
 			unsigned char bytes[1537];
 			const int size = receiver.stream.channelInBuf.Read( bytes, sizeof( bytes ) );
 			if ( !size )
+			{
 				break;
+			}
 			received.insert( received.end(), bytes, bytes + size );
 		}
 		if ( receiver.acks.CanSend() )
 		{
 			auto packet = receiver.Send();
 			if ( ++acknowledgements % 5 != 0 )
+			{
 				sender.Receive( packet ); // lose some ACK datagrams as well
+			}
 		}
 		// HasOutData excludes blocks still in flight; a dropped final block
 		// must get its timeout and retransmission before the test can finish.
 		if ( received.size() == expected.size() && !sender.stream.HasOutData() && delayed.empty() )
+		{
 			break;
+		}
 	}
 	EXPECT_GT( dropped, 0 );
 	EXPECT_GT( rolledBack, 0 );
@@ -494,7 +512,9 @@ TEST( NetTransport, ReorderedAcknowledgementsAtBitmapBoundaryAreNotLost )
 			CBitStream bits( header, CBitStream::write, sizeof( header ) );
 			const PACKET_ID id = sender.WrtieAcks( &bits, 500 );
 			if ( !sent.empty() || ( id >= 64 && id < 65500 ) )
+			{
 				sent.push_back( id );
+			}
 		}
 		const auto receive = [&sender]( PACKET_ID incomingID, PACKET_ID lastAcknowledged )
 		{
@@ -524,9 +544,15 @@ TEST( NetTransport, ThreePeersAcknowledgeBroadcastWithDifferentLocalPeerIDs )
 	peers.try_emplace( 41 );
 	CMemoryStream addressInfo;
 	for ( auto &sender : peers )
+	{
 		for ( const auto &receiver : peers )
+		{
 			if ( sender.first != receiver.first )
+			{
 				sender.second.AddNewClient( receiver.first, addressInfo, true );
+			}
+		}
+	}
 
 	const auto exchange = [&peers]()
 	{
@@ -544,7 +570,9 @@ TEST( NetTransport, ThreePeersAcknowledgeBroadcastWithDifferentLocalPeerIDs )
 				}
 			}
 			if ( !delivered )
+			{
 				return;
+			}
 		}
 		FAIL() << "Peer protocol did not settle";
 	};

@@ -37,7 +37,9 @@ private:
 	void OnSerialize( IBinSaver &saver )
 	{
 		if ( saver.IsReading() && dwHashKey == 0 )
+		{
 			dwHashKey = MakeHashKey();
+		}
 	}
 	//
 	BOOST_FORCEINLINE char ConvertChar( const char chr ) const
@@ -52,12 +54,16 @@ private:
 	{
 		const int nSize = szOtherKeyName.size();
 		if ( nSize != szKeyName.size() )
+		{
 			return false;
+		}
 		// compare from the tail - where we can have more differences
 		for ( int i = nSize - 1; i >= 0; --i )
 		{
 			if ( ConvertChar( szOtherKeyName[i] ) != ConvertChar( szKeyName[i] ) )
+			{
 				return false;
+			}
 		}
 		return true;
 	}
@@ -65,7 +71,9 @@ private:
 	{
 		unsigned int __uHashKey = 0;
 		for ( std::string::const_iterator it = szKeyName.begin(); it != szKeyName.end(); ++it )
+		{
 			__uHashKey = 5 * __uHashKey + ConvertChar( *it );
+		}
 		return __uHashKey;
 	}
 	//
@@ -101,9 +109,13 @@ public:
 			const char c1 = ConvertChar( szKeyName[i] );
 			const char c2 = ConvertChar( dbid.szKeyName[i] );
 			if ( c1 < c2 )
+			{
 				return true;
+			}
 			if ( c2 < c1 )
+			{
 				return false;
+			}
 		}
 		return nSize1 < nSize2;
 	}
@@ -204,7 +216,9 @@ inline std::string GetFolderName( const CDBID &dbid )
 	while ( --nPos >= 0 )
 	{
 		if ( szFileName[nPos] == '\\' || szFileName[nPos] == '/' )
+		{
 			break;
+		}
 	}
 	return szFileName.substr( 0, nPos );
 }
@@ -281,7 +295,9 @@ class CDBPtr
 		if ( !bLoaded )
 		{
 			if ( pObj && !CastToDBResource( pObj.GetPtr() )->IsLoaded() )
+			{
 				NDb::GetObject( CastToDBResource( pObj.GetPtr() )->GetDBID() );
+			}
 			bLoaded = true;
 		}
 	}
@@ -346,19 +362,27 @@ public:
 			if ( !szString.empty() ) // new DBPtr
 			{
 				if ( szString == "empty object placeholder" )
+				{
 					pObj = 0;
+				}
 				else
+				{
 					pObj = const_cast<TUserObj *>( CastToDBUserObject( NDb::GetObject( CDBID( szString ) ), (TUserObj *)0 ) );
+				}
 			}
 			else
+			{
 				pObj = 0;
+			}
 		}
 		else
 		{
 			// always save new DBPtr
 			std::string szString;
 			if ( pObj )
+			{
 				szString = CastToDBResource( pObj.GetPtr() )->GetDBID().ToString();
+			}
 			saver.Add( 3, &szString );
 		}
 		return 0;

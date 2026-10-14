@@ -37,7 +37,9 @@ void CWeather::Init()
 const float CWeather::GetNextTimeRandom()
 {
 	if ( !theUnitCreation.GetMap() || theUnitCreation.GetMap()->weather.fWeatherPeriod == 0.0f ) // No bad weather
+	{
 		return 0;
+	}
 
 	RecordRandomCall();
 	return 1000 * ( theUnitCreation.GetMap()->weather.fWeatherPeriod +
@@ -59,9 +61,13 @@ void CWeather::SwitchAutomatic( const bool bSwitchAutomatic )
 void CWeather::Switch( const bool bActive )
 {
 	if ( bActive )
+	{
 		On();
+	}
 	else
+	{
 		Off();
+	}
 }
 
 void CWeather::Off()
@@ -97,10 +103,14 @@ void CWeather::On()
 
 		bool bReturnPlane = false;
 		for ( CPlanesIter it; !it.IsFinished() && !bReturnPlane; it.Iterate() )
+		{
 			bReturnPlane = ( *it )->GetPlayer() == theDipl.GetMyNumber() &&
 			               ( *it )->GetUnitAbilityDesc( NDb::ABILITY_MASTER_PILOT ) == 0;
+		}
 		if ( bReturnPlane )
+		{
 			updater.AddUpdate( new SPlaneReturnsUpdate, ACTION_NOTIFY_PLANE_RETURNS_DUE_WEATHER, 0, 0 );
+		}
 		DebugTrace( "Bad weather turning on" );
 	}
 }
@@ -116,12 +126,16 @@ void CWeather::Segment()
 	{
 		case EWS_CLEAR:
 			if ( bAutoChangeWeather && timeNextCheck < curTime )
+			{
 				On();
+			}
 			break;
 			//
 		case EWS_BAD:
 			if ( bAutoChangeWeather && timeNextCheck < curTime + SConsts::TIME_TO_WEATHER_FADE_OFF * 1000 )
+			{
 				Off();
+			}
 			break;
 			//
 		case EWS_FADE_IN:

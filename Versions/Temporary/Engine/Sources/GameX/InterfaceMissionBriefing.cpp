@@ -23,7 +23,9 @@ CInterfaceMissionBriefing::CInterfaceMissionBriefing() : CInterfaceScreenBase( "
 bool CInterfaceMissionBriefing::Init()
 {
 	if ( !CInterfaceScreenBase::Init() )
+	{
 		return false;
+	}
 
 	AddScreen( this );
 
@@ -50,14 +52,20 @@ void CInterfaceMissionBriefing::MakeInterior()
 	{
 		std::wstring wszName;
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pMapInfo->, LocalizedName ) )
+		{
 			wszName = GET_TEXT_PRE( pMapInfo->, LocalizedName );
+		}
 		if ( wszName.empty() )
 		{
 			if ( IScreen *pScreen = GetScreen() )
+			{
 				wszName = pScreen->GetTextEntry( "TEXT_DEFAULT_HEADER" );
+			}
 		}
 		if ( pHeaderView )
+		{
 			pHeaderView->SetText( pHeaderView->GetDBText() + wszName );
+		}
 	}
 
 	pMissionDescCont = GetChildChecked<IScrollableContainer>( pMissionDescPanel, "MissionDescCont", true );
@@ -67,13 +75,19 @@ void CInterfaceMissionBriefing::MakeInterior()
 	{
 		std::wstring wszMissionDesc;
 		if ( pMapInfo && CHECK_TEXT_NOT_EMPTY_PRE( pMapInfo->, LoadingDescription ) )
+		{
 			wszMissionDesc = GET_TEXT_PRE( pMapInfo->, LoadingDescription );
+		}
 		if ( pMissionDescView )
+		{
 			pMissionDescView->SetText( pMissionDescView->GetDBText() + wszMissionDesc );
+		}
 	}
 
 	if ( pMissionDescCont && pMissionDescView )
+	{
 		pMissionDescCont->PushBack( pMissionDescView, false );
+	}
 
 	pMinimap = GetChildChecked<IMiniMap>( pMinimapPanel, "Minimap", true );
 
@@ -84,13 +98,19 @@ void CInterfaceMissionBriefing::MakeInterior()
 	{
 		std::wstring wszDesc;
 		if ( pMapInfo && CHECK_TEXT_NOT_EMPTY_PRE( pMapInfo->, LocalizedDescription ) )
+		{
 			wszDesc = GET_TEXT_PRE( pMapInfo->, LocalizedDescription );
+		}
 		if ( pObjectivesView )
+		{
 			pObjectivesView->SetText( pObjectivesView->GetDBText() + wszDesc );
+		}
 	}
 
 	if ( pObjectivesListCont && pObjectivesView )
+	{
 		pObjectivesListCont->PushBack( pObjectivesView, false );
+	}
 
 	if ( pMinimap && pMapInfo )
 	{
@@ -99,22 +119,30 @@ void CInterfaceMissionBriefing::MakeInterior()
 
 		const NDb::STexture *pTexture = 0;
 		if ( pMapInfo->pMiniMap )
+		{
 			pTexture = pMapInfo->pMiniMap->pTexture;
+		}
 
 		pMinimap->SetLoadingMapParams( x, y );
 		pMinimap->SetTexture( pTexture );
 	}
 
 	if ( pMainWnd )
+	{
 		SetMainWindowTexture( pMainWnd, InterfaceState()->GetMenuBackgroundTexture() );
+	}
 }
 
 bool CInterfaceMissionBriefing::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "menu_back" )
+	{
 		return OnBack();
+	}
 	if ( szReaction == "menu_play" )
+	{
 		return OnPlay();
+	}
 
 	return false;
 }
@@ -141,7 +169,9 @@ bool CInterfaceMissionBriefing::OnPlay()
 void CInterfaceMissionBriefing::MissionStart()
 {
 	if ( !pMapInfo )
+	{
 		return;
+	}
 
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );

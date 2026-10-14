@@ -25,7 +25,9 @@ int CGroupLogic::operator&( IBinSaver &saver )
 	}
 
 	if ( segmUnits.empty() )
+	{
 		segmUnits.resize( 2 );
+	}
 
 	return 0;
 }

@@ -56,12 +56,16 @@ struct IObjMan : public CObjectBase
 	bool SetValue( const std::string &szName, const TContainer<TValue> &container )
 	{
 		if ( SetValue( szName, int( container.size() ) ) == false )
+		{
 			return false;
+		}
 		int i = 0;
 		for ( typename TContainer<TValue>::const_iterator it = container.begin(); it != container.end(); ++it, ++i )
 		{
 			if ( SetValue( szName + fmt::format( ".[{}]", i ), *it ) == false )
+			{
 				return false;
+			}
 		}
 		return true;
 	}
@@ -71,7 +75,9 @@ struct IObjMan : public CObjectBase
 	{
 		CVariant value;
 		if ( GetValue( szName, &value ) == false )
+		{
 			return false;
+		}
 		*pValue = (TYPE)value;
 		return true;
 	}
@@ -81,13 +87,17 @@ struct IObjMan : public CObjectBase
 	{
 		int nSize = 0;
 		if ( GetValue( szName, &nSize ) == false )
+		{
 			return false;
+		}
 		pContainer->resize( nSize );
 		for ( int i = 0; i < nSize; ++i )
 		{
 			TValue value;
 			if ( GetValue( szName + fmt::format( ".[{}]", i ), &( ( *pContainer )[i] ) ) == false )
+			{
 				return false;
+			}
 		}
 		return true;
 	}
@@ -137,7 +147,9 @@ inline bool IObjMan::GetValue<std::string>( const std::string &szName, std::stri
 {
 	CVariant value;
 	if ( GetValue( szName, &value ) == false )
+	{
 		return false;
+	}
 	*pValue = value.GetStr();
 	return true;
 }
@@ -146,7 +158,9 @@ inline bool IObjMan::GetValue<std::wstring>( const std::string &szName, std::wst
 {
 	CVariant value;
 	if ( GetValue( szName, &value ) == false )
+	{
 		return false;
+	}
 	*pValue = value.GetWStr();
 	return true;
 }
@@ -155,7 +169,9 @@ inline bool IObjMan::GetValue<boost::uuids::uuid>( const std::string &szName, bo
 {
 	CVariant value;
 	if ( GetValue( szName, &value ) == false )
+	{
 		return false;
+	}
 	NI_VERIFY( value.GetType() == CVariant::VT_POINTER && value.GetBlobSize() == sizeof( boost::uuids::uuid ),
 	           "Incorrect BLOB for GUID",
 	           return false );
@@ -167,7 +183,9 @@ inline bool IObjMan::GetValue<CDBID>( const std::string &szName, CDBID *pValue )
 {
 	CVariant value;
 	if ( GetValue( szName, &value ) == false )
+	{
 		return false;
+	}
 	*pValue = value.GetDBID();
 	return true;
 }
@@ -176,10 +194,14 @@ inline bool IObjMan::GetValue<CVec2>( const std::string &szName, CVec2 *pValue )
 {
 	CVariant value;
 	if ( GetValue( szName + ".x", &value ) == false )
+	{
 		return false;
+	}
 	pValue->x = (float)value;
 	if ( GetValue( szName + ".y", &value ) == false )
+	{
 		return false;
+	}
 	pValue->y = (float)value;
 	return true;
 }
@@ -188,13 +210,19 @@ inline bool IObjMan::GetValue<CVec3>( const std::string &szName, CVec3 *pValue )
 {
 	CVariant value;
 	if ( GetValue( szName + ".x", &value ) == false )
+	{
 		return false;
+	}
 	pValue->x = (float)value;
 	if ( GetValue( szName + ".y", &value ) == false )
+	{
 		return false;
+	}
 	pValue->y = (float)value;
 	if ( GetValue( szName + ".z", &value ) == false )
+	{
 		return false;
+	}
 	pValue->z = (float)value;
 	return true;
 }
@@ -203,16 +231,24 @@ inline bool IObjMan::GetValue<CVec4>( const std::string &szName, CVec4 *pValue )
 {
 	CVariant value;
 	if ( GetValue( szName + ".x", &value ) == false )
+	{
 		return false;
+	}
 	pValue->x = (float)value;
 	if ( GetValue( szName + ".y", &value ) == false )
+	{
 		return false;
+	}
 	pValue->y = (float)value;
 	if ( GetValue( szName + ".z", &value ) == false )
+	{
 		return false;
+	}
 	pValue->z = (float)value;
 	if ( GetValue( szName + ".w", &value ) == false )
+	{
 		return false;
+	}
 	pValue->w = (float)value;
 	return true;
 }
@@ -221,7 +257,9 @@ inline bool IObjMan::GetValue<CQuat>( const std::string &szName, CQuat *pValue )
 {
 	CVec4 vRes;
 	if ( GetValue( szName, &vRes ) == false )
+	{
 		return false;
+	}
 	*pValue = CQuat( vRes );
 	return true;
 }
@@ -230,7 +268,9 @@ inline bool IObjMan::GetValue<std::basic_string, char>( const std::string &szNam
 {
 	CVariant var;
 	if ( GetValue( szName, &var ) == false )
+	{
 		return false;
+	}
 	*pValue = var.GetStr();
 	return true;
 }
@@ -240,7 +280,9 @@ inline bool IObjMan::GetValue<std::basic_string, wchar_t>( const std::string &sz
 {
 	CVariant var;
 	if ( GetValue( szName, &var ) == false )
+	{
 		return false;
+	}
 	*pValue = var.GetWStr();
 	return true;
 }

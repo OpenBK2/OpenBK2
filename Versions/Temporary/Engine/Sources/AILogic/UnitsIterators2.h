@@ -57,11 +57,15 @@ class CUnitsIter
 			if ( nYCell > nUpY )
 			{
 				if ( !cOnlyOneTypeVisibility && cCurVis < 1 )
+				{
 					cCurVis = 1;
+				}
 				else
 				{
 					if ( !cOnlyOneTypeVisibility )
+					{
 						cCurVis = 0;
+					}
 
 					++cCurDipl;
 					if ( cCurDipl >= cDiplEnd )
@@ -69,7 +73,9 @@ class CUnitsIter
 						cCurDipl = cStartDipl;
 						++cCurMech;
 						if ( cCurMech >= cMechEnd )
+						{
 							return;
+						}
 					}
 				}
 
@@ -118,7 +124,9 @@ public:
 		uint8_t cMechs = 1;
 
 		if ( !bOnlyMech )
+		{
 			cMechs = 2;
+		}
 
 		uint8_t cStartDipl = 0;
 		uint8_t cDiplomacies = 0;
@@ -180,17 +188,25 @@ public:
 		while ( !bFinished )
 		{
 			if ( !iter.IsFinished() )
+			{
 				iter.Iterate();
+			}
 
 			while ( iter.IsFinished() && !IsFinished() )
 			{
 				if ( iter.IsFinished() )
+				{
 					IterateByCells();
+				}
 
 				while ( !IsFinished() && units.numUnits[cCurVis][NSize - 1][cCurDipl][cCurMech][nYCell][nXCell] == 0 )
+				{
 					IterateByCells();
+				}
 				if ( !IsFinished() )
+				{
 					InitLowIterator();
+				}
 			}
 
 			bFinished = IsFinished();
@@ -241,11 +257,15 @@ class CUnitsIter<1, 0>
 			if ( nYCell > nUpY )
 			{
 				if ( !cOnlyOneTypeVisibility && cCurVis < 1 )
+				{
 					cCurVis = 1;
+				}
 				else
 				{
 					if ( !cOnlyOneTypeVisibility )
+					{
 						cCurVis = 0;
+					}
 
 					++cCurDipl;
 					if ( cCurDipl >= cDiplEnd )
@@ -253,7 +273,9 @@ class CUnitsIter<1, 0>
 						cCurDipl = cStartDipl;
 						++cCurMech;
 						if ( cCurMech >= cMechEnd )
+						{
 							return;
+						}
 					}
 				}
 
@@ -290,7 +312,9 @@ class CUnitsIter<1, 0>
 		} while ( !IsFinished() && ( units.nUnitsCell[nYCell][nXCell] == 0 || GetCurCellIter() == 0 ) );
 
 		if ( !IsFinished() )
+		{
 			nIter = GetCurCellIter();
+		}
 	}
 
 	void InitAll( const CVec2 &vCenter,
@@ -317,7 +341,9 @@ public:
 		uint8_t cMechs = 1;
 
 		if ( !bOnlyMech )
+		{
 			cMechs = 2;
+		}
 
 		uint8_t cStartDipl, cDiplomacies;
 		if ( cDiplFilter == ANY_PARTY )
@@ -385,7 +411,9 @@ public:
 				} while ( !IsFinished() && ( units.nUnitsCell[nYCell][nXCell] == 0 || GetCurCellIter() == 0 ) );
 
 				if ( !IsFinished() )
+				{
 					nIter = GetCurCellIter();
+				}
 			}
 			bFinished = IsFinished();
 			if ( !bFinished )
@@ -435,11 +463,15 @@ class CUnitsIter<0, 0>
 			if ( nYCell > nUpY )
 			{
 				if ( !cOnlyOneTypeVisibility && cCurVis < 1 )
+				{
 					cCurVis = 1;
+				}
 				else
 				{
 					if ( !cOnlyOneTypeVisibility )
+					{
 						cCurVis = 0;
+					}
 
 					++cCurDipl;
 					if ( cCurDipl >= cDiplEnd )
@@ -447,7 +479,9 @@ class CUnitsIter<0, 0>
 						cCurDipl = cStartDipl;
 						++cCurMech;
 						if ( cCurMech >= cMechEnd )
+						{
 							return;
+						}
 					}
 				}
 
@@ -484,7 +518,9 @@ class CUnitsIter<0, 0>
 		} while ( !IsFinished() && ( units.nUnitsCell[nYCell][nXCell] == 0 || GetCurCellIter() == 0 ) );
 
 		if ( !IsFinished() )
+		{
 			nIter = GetCurCellIter();
+		}
 	}
 
 	void InitAll( const CVec2 &vCenter,
@@ -511,7 +547,9 @@ public:
 		uint8_t cMechs = 1;
 
 		if ( !bOnlyMech )
+		{
 			cMechs = 2;
+		}
 
 		uint8_t cStartDipl = 0, cDiplomacies = 0;
 		if ( cDiplFilter == ANY_PARTY )
@@ -579,7 +617,9 @@ public:
 				} while ( !IsFinished() && ( units.nUnitsCell[nYCell][nXCell] == 0 || GetCurCellIter() == 0 ) );
 
 				if ( !IsFinished() )
+				{
 					nIter = GetCurCellIter();
+				}
 			}
 
 			bFinished = IsFinished();

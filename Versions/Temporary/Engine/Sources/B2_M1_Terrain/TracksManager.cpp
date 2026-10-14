@@ -49,7 +49,9 @@ void CTrackObjInfo::InitData()
 void CTrackObjInfo::Recalc()
 {
 	if ( pValue == 0 )
+	{
 		pValue = new NGScene::CObjectInfo();
+	}
 	if ( pTimer )
 	{
 		data.verts.resize( 0 );
@@ -76,16 +78,22 @@ void CTrackObjInfo::Recalc()
 					data.verts.back().texU.dw = 0xffffffff;
 				}
 				else
+				{
 					data.verts.back().texU.dw = PackAndDupBYTE2DWORD( nCol );
+				}
 			}
 
 			for ( std::vector<STriangle>::const_iterator it = itCur->triangles.begin(); it != itCur->triangles.end(); ++it )
+			{
 				data.geometry.push_back( STriangle( nVertsOffs + it->i1, nVertsOffs + it->i2, nVertsOffs + it->i3 ) );
+			}
 
 			if ( bDelFlag )
 			{
 				if ( ++nStartInd >= DEF_MAX_TRACKS_IN_BUFFER )
+				{
 					nStartInd = 0;
+				}
 				if ( nStartInd == nFinalInd )
 				{
 					pTrackManager->FreeTrackBuffer( nID );
@@ -125,12 +133,16 @@ void CTrackObjInfo::UpdateNode( const NMeshData::SMeshData &meshData )
 	startTimes[nFinalInd] = pTimer->GetValue();
 
 	if ( ++nFinalInd >= DEF_MAX_TRACKS_IN_BUFFER )
+	{
 		nFinalInd = 0;
+	}
 
 	if ( nFinalInd == nStartInd )
 	{
 		if ( ++nStartInd >= DEF_MAX_TRACKS_IN_BUFFER )
+		{
 			nStartInd = 0;
+		}
 	}
 	bNeedUpdate = true;
 }
@@ -181,7 +193,9 @@ void CTracksManager::AddTrack(
 			//
 			//			NI_ASSERT( pTracksMaterial, "Tracks material are empty" );
 			if ( !pTracksMaterial )
+			{
 				return;
+			}
 			//
 			tracks[nTrackID].trackHolder.pHolder =
 					pGScene->CreateDynamicMesh( pGScene->MakeMeshInfo( tracks[nTrackID].trackHolder.pPatch, pTracksMaterial ),
@@ -236,7 +250,9 @@ void CTracksManager::AfterLoad( CFuncBase<STime> *_pTimer, NGScene::IGameView *_
 	pGScene = _pGScene;
 	pTimer = _pTimer;
 	for ( std::vector<STrackObj>::iterator it = tracks.begin(); it != tracks.end(); ++it )
+	{
 		it->trackHolder.pPatch->AttachTimer( pTimer );
+	}
 
 	NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_SKIP_LIGHTING, -100 ), 0, 0 );
 	for ( std::vector<int>::const_iterator it = updatedTracks.begin(); it != updatedTracks.end(); ++it )

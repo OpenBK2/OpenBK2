@@ -258,14 +258,22 @@ void CModelState::UpdateModels( bool bUpdateAll )
 					std::vector<const NDb::SEffect *> effects;
 					const CDBID dbid = pModelEditor->GetObjectSet().objectNameSet.begin()->first;
 					if ( type == "Effect" )
+					{
 						effects.push_back( NDb::Get<NDb::SEffect>( dbid ) );
+					}
 					else if ( const NDb::SComplexEffect *complex = NDb::Get<NDb::SComplexEffect>( dbid ) )
 					{
 						if ( complex->sceneEffects.empty() )
+						{
 							effects.push_back( complex->pSceneEffect );
+						}
 						else
+						{
 							for ( const auto &effect : complex->sceneEffects )
+							{
 								effects.push_back( effect );
+							}
+						}
 					}
 					const int gridSize = Clamp<int>( pModelEditor->editorSettings.nGridSize, 8, 64 );
 					const CVec3 center( gridSize * VIS_TILE_SIZE / 2, gridSize * VIS_TILE_SIZE / 2, 0 );
@@ -276,7 +284,9 @@ void CModelState::UpdateModels( bool bUpdateAll )
 					{
 						const NDb::SEffect *effect = effects[i % effects.size()];
 						if ( !effect )
+						{
 							continue;
+						}
 						float angle = 0;
 						CVec3 pos = center;
 						if ( i > 0 && pModelEditor->editorSettings.bAnimationsCircle )
@@ -286,7 +296,9 @@ void CModelState::UpdateModels( bool bUpdateAll )
 							RotatePoint( &pos, angle, center );
 						}
 						else if ( i > 0 )
+						{
 							pos.x += i * pModelEditor->editorSettings.fAnimationsBetweenDistance * VIS_TILE_SIZE;
+						}
 						SFBTransform placement;
 						MakeMatrix( &placement.forward,
 						            pos + pModelEditor->editorSettings.vShift,
@@ -375,7 +387,9 @@ void CModelState::UpdateModels( bool bUpdateAll )
 							}
 
 							if ( !pModel && !pUnitStats->pvisualObject->models.empty() )
+							{
 								pModel = pUnitStats->pvisualObject->models.begin()->pModel;
+							}
 						}
 					}
 
@@ -520,21 +534,27 @@ void CModelState::UpdateSceneColor( bool bReset )
 void CModelState::UpdateAIGeometry( bool bReset )
 {
 	if ( pModelEditor == 0 )
+	{
 		return;
+	}
 
 	IEditorScene *pScene = EditorScene();
 	// ToggleAIGeometryMode disables either visible mode in one step. Avoid
 	// cycling through visible modes when AI geometry is already hidden: each
 	// such step synchronously loads collision geometry and builds its meshes.
 	if ( pScene->IsShowOn( SCENE_SHOW_AI_GEOM ) )
+	{
 		pScene->ToggleAIGeometryMode();
+	}
 
 	if ( !bReset && pModelEditor->editorSettings.bDrawAIGeometry )
 	{
 		// ToggleShow cycles NONE -> OVER -> SOLID -> NONE.
 		pScene->ToggleShow( SCENE_SHOW_AI_GEOM );
 		if ( pModelEditor->editorSettings.bShowSolidAIGeometry )
+		{
 			pScene->ToggleShow( SCENE_SHOW_AI_GEOM );
+		}
 	}
 }
 

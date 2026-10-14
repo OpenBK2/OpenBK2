@@ -29,7 +29,9 @@ const NDb::SMaterial *GetReplacedMaterial( const string &szName, int nInd )
 		{
 			const SDefMaterials &defMat = defMaterials[k];
 			if ( strncmp( szName.c_str(), defMat.szPrefix.c_str(), defMat.szPrefix.size() ) == 0 )
+			{
 				return NDb::Get<NDb::SMaterial>( defMat.dbMaterials[nInd] );
+			}
 		}
 	}
 	return 0;

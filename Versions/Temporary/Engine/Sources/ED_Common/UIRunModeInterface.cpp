@@ -31,7 +31,9 @@ void CUIRunModeInterface::Step( bool bAppActive )
 	if ( bAppActive )
 	{
 		if ( pScreen )
+		{
 			pScreen->Segment( 10 );
+		}
 	}
 }
 
@@ -40,7 +42,9 @@ bool CUIRunModeInterface::ProcessEvent( const struct SGameMessage &msg )
 	if ( !CRunModeInterfaceBase::ProcessEvent( msg ) )
 	{
 		if ( pScreen )
+		{
 			return pScreen->ProcessEvent( msg );
+		}
 	}
 	return false;
 }

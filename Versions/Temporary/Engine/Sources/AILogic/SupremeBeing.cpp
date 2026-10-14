@@ -24,13 +24,17 @@ struct IEnemyContainer *CSupremeBeing::GetEnemyConatiner( int nParty )
 void CSupremeBeing::SetAAVisible( class CAIUnit *pUnit, const int nGeneralParty, const bool bVisible )
 {
 	if ( generals.find( nGeneralParty ) != generals.end() )
+	{
 		generals[nGeneralParty]->SetAAVisible( pUnit, bVisible );
+	}
 }
 
 void CSupremeBeing::SetUnitVisible( class CAIUnit *pUnit, const int nGeneralParty, const bool bVisible )
 {
 	if ( generals.find( nGeneralParty ) != generals.end() )
+	{
 		generals[nGeneralParty]->SetUnitVisible( pUnit, bVisible );
+	}
 }
 
 bool CSupremeBeing::MustShootToObstacles( const int nPlayer )
@@ -92,7 +96,9 @@ bool CSupremeBeing::IsMobileReinforcement( int nParty, int nGroup ) const
 void CSupremeBeing::AddReinforcement( class CAIUnit *pUnit )
 {
 	if ( generals.find( pUnit->GetPlayer() ) != generals.end() )
+	{
 		generals[pUnit->GetPlayer()]->Give( pUnit );
+	}
 }
 
 void CSupremeBeing::Segment()
@@ -111,12 +117,16 @@ void CSupremeBeing::Segment()
 					it = delayedTasks.erase( it );
 				}
 				else
+				{
 					++it;
+				}
 			}
 
 			// вызывать не каждый сегмент и разнести по сегментам.
 			for ( Generals::iterator it = generals.begin(); it != generals.end(); ++it )
+			{
 				it->second->Segment();
+			}
 		}
 	}
 }
@@ -168,19 +178,25 @@ void CSupremeBeing::UnitChangedPosition( class CCommonUnit *pUnit, const CVec2 &
 	{
 		Generals::iterator it = generals.find( pUnit->GetParty() );
 		if ( it != generals.end() )
+		{
 			it->second->UnitChangedPosition( pUnit, vNewPos );
+		}
 	}
 }
 
 void CSupremeBeing::UnitAskedForResupply( class CCommonUnit *pUnit, const EResupplyType eType, const bool bSet )
 {
 	if ( !pScripts || IsIronman( pScripts->GetScriptID( pUnit ) ) )
+	{
 		return;
+	}
 
 	if ( pUnit->GetParty() == theDipl.GetNeutralParty() )
 	{
 		for ( Generals::iterator it = generals.begin(); it != generals.end(); ++it )
+		{
 			it->second->UnitAskedForResupply( pUnit, eType, bSet );
+		}
 	}
 	else
 	{
@@ -198,12 +214,16 @@ void CSupremeBeing::UnitChangedParty( CAIUnit *pUnit, const int nNewParty )
 	//if ( nGeneralParty == 1 && generals.find( nGeneralParty ) != generals.end() )
 	//generals[nGeneralParty]->UnitChangedParty( pUnit, nNewParty );
 	for ( Generals::iterator it = generals.begin(); it != generals.end(); ++it )
+	{
 		it->second->UnitChangedParty( pUnit, nNewParty );
+	}
 }
 
 bool CSupremeBeing::IsInResistanceCircle( const CVec2 &vPoint, const int nGeneralParty )
 {
 	if ( generals.find( nGeneralParty ) != generals.end() )
+	{
 		return generals[nGeneralParty]->IsInResistanceCircle( vPoint );
+	}
 	return false;
 }

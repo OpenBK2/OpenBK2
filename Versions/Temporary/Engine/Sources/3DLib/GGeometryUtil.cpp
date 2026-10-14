@@ -17,7 +17,9 @@ void CTriVertexCacheOptimizer::CountVertices( const std::vector<STriangle> &tris
 {
 	int nMax = 0;
 	for ( int k = 0; k < tris.size(); ++k )
+	{
 		nMax = (std::max)( nMax, (std::max)( (int)tris[k].i1, (std::max)( (int)tris[k].i2, (int)tris[k].i3 ) ) );
+	}
 	nVertices = nMax + 1;
 }
 
@@ -42,7 +44,9 @@ void CTriVertexCacheOptimizer::Init( const std::vector<STriangle> &tris )
 	}
 	tpvIndex[0] = 0;
 	for ( int k = 1; k < tpvIndex.size(); ++k )
+	{
 		tpvIndex[k] = tpvIndex[k - 1] + freeLinks[k - 1];
+	}
 	triPerVertex.resize( tpvIndex.back() );
 	std::vector<int> writePtr( tpvIndex );
 	for ( int k = 0; k < tris.size(); ++k )
@@ -68,18 +72,26 @@ int CTriVertexCacheOptimizer::SearchBest( const std::vector<STriangle> &tris )
 	{
 		int nVertex = cache[cache.size() - nDistance - 1];
 		if ( nVertex < 0 )
+		{
 			continue;
+		}
 		for ( int k = tpvIndex[nVertex]; k < tpvIndex[nVertex + 1]; ++k )
 		{
 			int nTri = triPerVertex[k];
 			if ( isUsed[nTri] )
+			{
 				continue;
+			}
 			if ( lastTry[nTri] == nTryCount )
+			{
 				continue;
+			}
 			lastTry[nTri] = nTryCount;
 			bs.Try( nTri );
 			if ( bs.HasFound() )
+			{
 				break;
+			}
 		}
 	}
 	if ( bs.nBestIdx == -1 || bs.nBestCached == 0 )
@@ -89,7 +101,9 @@ int CTriVertexCacheOptimizer::SearchBest( const std::vector<STriangle> &tris )
 		for ( int k = 0; k < tris.size(); ++k )
 		{
 			if ( isUsed[k] )
+			{
 				continue;
+			}
 			start.Try( k );
 		}
 		return start.nBestIdx;
@@ -106,13 +120,19 @@ void CTriVertexCacheOptimizer::MeasureEfficiency( const std::vector<STriangle> &
 	{
 		const STriangle &q = tris[k];
 		if ( !cache.IsIn( q.i1 ) )
+		{
 			++nMisses;
+		}
 		cache.Push( q.i1 );
 		if ( !cache.IsIn( q.i2 ) )
+		{
 			++nMisses;
+		}
 		cache.Push( q.i2 );
 		if ( !cache.IsIn( q.i3 ) )
+		{
 			++nMisses;
+		}
 		cache.Push( q.i3 );
 		nTotal += 3;
 	}
@@ -173,14 +193,18 @@ int CTriVertexCacheOptimizer::CountNotCachedFL( const std::vector<STriangle> &tr
 	{
 		int nTri = triPerVertex[k];
 		if ( isUsed[nTri] )
+		{
 			continue;
+		}
 		const STriangle &t = tris[nTri];
 		nRes += !OutputVertex( t.i1 );
 		nRes += !OutputVertex( t.i2 );
 		nRes += !OutputVertex( t.i3 );
 	}
 	while ( nState != nOutQueueSize )
+	{
 		ReverseVertex();
+	}
 	return nRes;
 }
 
@@ -196,18 +220,26 @@ void CTriVertexCacheOptimizer::OptimizeVertexOrder( std::vector<STriangle> &tris
 	{
 		const STriangle &q = tris[k];
 		if ( position[q.i1] == 0xffff )
+		{
 			position[q.i1] = nPos++;
+		}
 		if ( position[q.i2] == 0xffff )
+		{
 			position[q.i2] = nPos++;
+		}
 		if ( position[q.i3] == 0xffff )
+		{
 			position[q.i3] = nPos++;
+		}
 	}
 	*pnResVerts = nPos;
 	// clean up to avoid crashes
 	for ( int k = 0; k < position.size(); ++k )
 	{
 		if ( position[k] == 0xffff )
+		{
 			position[k] = nPos++;
+		}
 	}
 	ASSERT( nPos <= position.size() );
 }

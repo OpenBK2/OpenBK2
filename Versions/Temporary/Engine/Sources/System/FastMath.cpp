@@ -179,12 +179,16 @@ static float fASinTable[ N_SIN_TABLE_PERIOD + 2 ] =
 float ASin( float f )
 {
 	if ( f < 0 )
+	{
 		return -ASin( -f );
+	}
 	float fA = f * N_SIN_TABLE_PERIOD;
 	int n = fA - 0.5f;
 	float fResidual = fA - n;
 	if ( n > N_SIN_TABLE_PERIOD )
+	{
 		n = N_SIN_TABLE_PERIOD;
+	}
 	n &= N_SIN_TABLE_PERIOD - 1;
 	return fASinTable[n] + ( fASinTable[n + 1] - fASinTable[n] ) * fResidual;
 }
@@ -192,12 +196,16 @@ float ASin( float f )
 float FastASin( float f )
 {
 	if ( f < 0 )
+	{
 		return -ASin( -f );
+	}
 	float fA = f * N_SIN_TABLE_PERIOD;
 	int n = Float2Int( fA - 0.5f );
 	float fResidual = fA - n;
 	if ( n > N_SIN_TABLE_PERIOD )
+	{
 		n = N_SIN_TABLE_PERIOD;
+	}
 	n &= N_SIN_TABLE_PERIOD - 1;
 	return fASinTable[n] + ( fASinTable[n + 1] - fASinTable[n] ) * fResidual;
 }
@@ -252,7 +260,9 @@ static struct SFastMathInit
 float Sqrt( float n )
 {
 	if ( FP_BITS( n ) == 0 )
+	{
 		return 0.0f; // check for square root of 0
+	}
 
 	FP_BITS( n ) = gs_FastSqrtTable[( FP_BITS( n ) >> 8 ) & 0xFFFF] |
 	               ( ( ( ( FP_BITS( n ) - 0x3F800000 ) >> 1 ) + 0x3F800000 ) & 0x7F800000 );

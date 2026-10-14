@@ -21,11 +21,17 @@ void CMissionSuperWeapon::Init( IWindow *pScr, CWorldClient *_pWorld, NDb::ESeas
 	pSuperWeaponProgress = GetChildChecked<IWindowRoundProgressBar>( pSuperWeaponBtn, "Progress", true );
 	pSuperWeaponMaskWnd = GetChildChecked<IWindow>( pSuperWeaponBtn, "Mask", true );
 	if ( pSuperWeaponBtn )
+	{
 		pSuperWeaponBtn->ShowWindow( false );
+	}
 	if ( pSuperWeaponProgress )
+	{
 		pSuperWeaponProgress->ShowWindow( false );
+	}
 	if ( pSuperWeaponMaskWnd )
+	{
 		pSuperWeaponMaskWnd->ShowWindow( false );
+	}
 
 	pUnitFullInfo = new CMissionUnitFullInfo();
 	IWindow *pSuperWeaponInfoPanel = GetChildChecked<IWindow>( pScr, "SuperWeaponInfoPanel", true );
@@ -59,9 +65,13 @@ void CMissionSuperWeapon::OnUpdateSuperWeaponControl( CMapObj *_pMO,
 	pDBUnit = _pDBUnit;
 
 	if ( pMO )
+	{
 		pUnitFullInfo->SetObject( pMO );
+	}
 	else if ( pDBUnit )
+	{
 		pUnitFullInfo->SetReinfUnit( pDBUnit );
+	}
 
 	bDisabledByInterface = false;
 
@@ -115,27 +125,39 @@ void CMissionSuperWeapon::UpdateVisual()
 	//		pSuperWeaponBtn->ShowWindow( bExist );
 
 	if ( !bExist )
+	{
 		return;
+	}
 
 	if ( pSuperWeaponBtn )
 	{
 		int nTargetState = bActive ? 1 : 0;
 		if ( pSuperWeaponBtn->GetState() != nTargetState )
+		{
 			pSuperWeaponBtn->SetStateWithVisual( nTargetState );
+		}
 		if ( pSuperWeaponBtn->IsEnabled() != IsEnabled() )
+		{
 			pSuperWeaponBtn->Enable( IsEnabled() );
+		}
 	}
 
 	bool bClockVisible = !IsEnabled();
 	if ( pSuperWeaponProgress )
+	{
 		pSuperWeaponProgress->ShowWindow( bClockVisible );
+	}
 	if ( pSuperWeaponMaskWnd )
+	{
 		pSuperWeaponMaskWnd->ShowWindow( bClockVisible );
+	}
 
 	if ( bClockVisible )
 	{
 		if ( pSuperWeaponProgress )
+		{
 			pSuperWeaponProgress->SetAngles( FP_PI2, FP_PI2 - fProgress * FP_2PI );
+		}
 	}
 }
 
@@ -152,7 +174,9 @@ bool CMissionSuperWeapon::CanActivate() const
 void CMissionSuperWeapon::UpdateObject( CMapObj *_pMO )
 {
 	if ( pMO && pMO == _pMO )
+	{
 		pUnitFullInfo->UpdateObject( pMO );
+	}
 }
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x17249BC0, CMissionSuperWeapon )

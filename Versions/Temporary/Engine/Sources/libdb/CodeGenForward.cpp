@@ -27,7 +27,9 @@ void CForwardDefinition::GenerateCode( SCodeStreams *pCode,
                                        const std::string &szQualifiedName )
 {
 	if ( IsNoCode( pType->GetAttributes() ) )
+	{
 		return;
+	}
 
 	// An enum can only be forward declared with its underlying type, which is int
 	// for every generated one (see GenerateEnum in CodeGenType.cpp).

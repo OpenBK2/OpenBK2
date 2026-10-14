@@ -120,7 +120,9 @@ private:
 int CGlobalSerializer::operator&( IBinSaver &saver )
 {
 	if ( saver.IsReading() )
+	{
 		SConsts::Load();
+	}
 
 	saver.Add( 4, &theGroupLogic );
 	saver.Add( 5, &units );
@@ -151,7 +153,9 @@ int CGlobalSerializer::operator&( IBinSaver &saver )
 	saver.Add( 29, &theManuverBuilder );
 
 	if ( !saver.IsChecksum() )
+	{
 		saver.Add( 30, &theUnderConstructionObject );
+	}
 
 	saver.Add( 31, &theBridgeHeightsRemover );
 	saver.Add( 32, &theBonusSystem );

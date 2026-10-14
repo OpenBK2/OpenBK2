@@ -103,7 +103,9 @@ void CML::SetHandler( const std::wstring &tag, IHandler *pHandler )
 void CML::SetFade( float fFade, int nWidth )
 {
 	if ( fFade != sFadeValue->fFadeValue )
+	{
 		sFadeValue->fFadeValue = fFade;
+	}
 }
 
 void CML::Generate( NGScene::ILayoutFakeView *pView, int nWidth )
@@ -134,33 +136,57 @@ void CML::Generate( NGScene::ILayoutFakeView *pView, int nWidth )
 	{
 		wchar_t wcChar = 0;
 		if ( !pStream->IsEof() )
+		{
 			wcChar = pStream->GetChar();
+		}
 		else
+		{
 			bContinue = false;
+		}
 		thisChar = CHAR_NULL;
 		if ( wcChar == '>' )
+		{
 			thisChar = CHAR_TAG_END;
+		}
 		else if ( wcChar == '<' )
+		{
 			thisChar = CHAR_TAG_BEGIN;
+		}
 		else if ( bTAG && ( wcChar == '\"' ) )
+		{
 			bBracketsBlock = !bBracketsBlock;
+		}
 		else if ( iswalnum( wcChar ) != 0 )
+		{
 			thisChar = CHAR_ALNUM;
+		}
 		else if ( iswpunct( wcChar ) )
+		{
 			thisChar = bTAG ? CHAR_PUNCTUATION : CHAR_ALNUM; //// CRAP: Tag need separate '='
+		}
 		else if ( !bBracketsBlock && ( wcChar == L' ' ) )
+		{
 			thisChar = CHAR_SPACE;
+		}
 		else if ( bBracketsBlock && ( wcChar == L' ' ) )
+		{
 			thisChar = lastChar;
+		}
 		else if ( ( wcChar == L'\0' ) || ( wcChar == L'\n' ) )
+		{
 			thisChar = CHAR_EOL;
+		}
 
 		if ( lastChar != thisChar )
 		{
 			if ( !bTAG && ( ( lastChar == CHAR_ALNUM ) || ( lastChar == CHAR_PUNCTUATION ) ) )
+			{
 				pLayout->AddObject( CreateTextObject( pStream, nWordBegin, pStream->GetSeek() - nWordBegin ) );
+			}
 			else if ( !bTAG && ( lastChar == CHAR_SPACE ) )
+			{
 				pLayout->AddObject( CreateSpringObject( pStream->GetSeek() - nWordBegin ) );
+			}
 			else if ( bTAG && ( ( lastChar == CHAR_ALNUM ) || ( lastChar == CHAR_PUNCTUATION ) ) )
 			{
 				std::wstring &wsTemp = paramsSet.emplace_back();
@@ -181,7 +207,9 @@ void CML::Generate( NGScene::ILayoutFakeView *pView, int nWidth )
 			{
 				std::unordered_map<std::wstring, CObj<IHandler>>::const_iterator iTemp = tagsMap.find( paramsSet.front() );
 				if ( ( iTemp != tagsMap.end() ) && ( iTemp->second != 0 ) )
+				{
 					iTemp->second->Exec( pStream, pLayout, paramsSet );
+				}
 			}
 		}
 		else if ( lastChar == CHAR_TAG_BEGIN )

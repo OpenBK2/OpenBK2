@@ -27,7 +27,9 @@ struct SCacheInit
 			nFibbonachiSeries[i] = nSum > INT_MAX ? INT_MAX : static_cast<int>( nSum );
 		}
 		for ( int i = 1; i < N_MAX_FIB; ++i )
+		{
 			nFibbonachiSeries[i - 1] = nFibbonachiSeries[i];
+		}
 	}
 } init;
 }

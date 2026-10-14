@@ -62,7 +62,9 @@ void CWindow3DControl::SetObjects( const std::vector<SObject> &_objects )
 		UpdateObjects( true );
 	}
 	else
+	{
 		UpdateObjects( false );
+	}
 }
 
 void CWindow3DControl::HideObjects()
@@ -83,7 +85,9 @@ void CWindow3DControl::UpdateObjects( bool bForced )
 	bool bShow = IsVisible();
 	CTRect<float> rect = GetWindowRect();
 	if ( bIsObjectsVisible == bShow && rectPrev == rect && !bForced )
+	{
 		return;
+	}
 
 	HideObjects();
 
@@ -94,7 +98,9 @@ void CWindow3DControl::UpdateObjects( bool bForced )
 			struct SObject &obj = objects[i];
 			//			NI_ASSERT( obj.pModel, "No model" );
 			if ( !obj.pModel )
+			{
 				continue;
+			}
 			Scene()->AddInterfaceObject(
 					GetScreen(), nBaseID3D + i, obj.pModel, CVec2( obj.vPos.x + rect.x1, obj.vPos.y + rect.y1 ), obj.vSize );
 

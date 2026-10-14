@@ -20,9 +20,13 @@ class CTerrainManager : public ITerraManager
 	{
 		pTerraGen = new CTerraGen();
 		if ( pGameView )
+		{
 			pTerraGen->AttachGameView( pGameView );
+		}
 		if ( pTimer )
+		{
 			pTerraGen->AttachTimer( pTimer );
+		}
 	}
 	//
 public:

@@ -210,7 +210,9 @@ TEST_F( GltfBounds, BundledExamplesContainExportedBounds )
 			EXPECT_NEAR( stored.size.y, size.y, 0.0001f );
 			EXPECT_NEAR( stored.size.z, size.z, 0.0001f );
 			if ( !ai )
+			{
 				EXPECT_EQ( stored.meshes, static_cast<int>( nodes.size() ) );
+			}
 		}
 	}
 }

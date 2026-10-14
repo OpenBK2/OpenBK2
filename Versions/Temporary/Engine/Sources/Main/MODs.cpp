@@ -28,7 +28,9 @@ void ReadMODInfo( SMOD *pMOD, const std::string &_szFullFolderName )
 {
 	std::string szFullFolderName = _szFullFolderName;
 	if ( !szFullFolderName.empty() && szFullFolderName[szFullFolderName.size() - 1] != '/' )
+	{
 		szFullFolderName += '/';
+	}
 	//
 	pMOD->szFullFolderPath = szFullFolderName;
 	NFile::MakeRelativePath( &pMOD->szRelativePath,
@@ -58,7 +60,9 @@ void GetAllMODs( std::vector<SMOD> *pMODs )
 			ReadMODInfo( &mod, it.GetFullName() );
 			// check and add MOD to list
 			if ( !mod.wszName.empty() )
+			{
 				pMODs->push_back( mod );
+			}
 		}
 	}
 }
@@ -71,16 +75,24 @@ void AttachMODInternal( const NFile::CFilePath &szBaseResourcePath,
 	NVFS::ICombinerVFS *pMainVFS = pVFS == 0 ? 0 : dynamic_cast<NVFS::ICombinerVFS *>( pVFS );
 	CPtr<NVFS::IFileCreator> pMainFileCreator = NVFS::GetMainFileCreator();
 	if ( pMainVFS == 0 )
+	{
 		pMainVFS = NVFS::CreateCombinerVFS( pVFS );
+	}
 	if ( pMainFileCreator == 0 )
+	{
 		pMainFileCreator = NVFS::CreateWinFileCreator( szBaseResourcePath );
+	}
 	//
 	std::vector<CObj<NVFS::IVFS>> vfses = pMainVFS->GetVFSList();
 	if ( vfses.empty() )
+	{
 		vfses.push_back( NVFS::CreateWinVFS( szBaseResourcePath ) );
+	}
 	// remove all VFSes but one (base storage VFS)
 	while ( vfses.size() > 1 )
+	{
 		vfses.pop_back();
+	}
 	// add new MOD VFS
 	if ( !szMODPath.empty() && szMODPath != szBaseResourcePath )
 	{
@@ -88,7 +100,9 @@ void AttachMODInternal( const NFile::CFilePath &szBaseResourcePath,
 		vfses.push_back( NVFS::CreateWinVFS( szMODPath ) );
 	}
 	else if ( szMODPath.empty() )
+	{
 		pMainFileCreator = NVFS::CreateWinFileCreator( szBaseResourcePath );
+	}
 	//
 	pMainVFS->SetVFSList( vfses );
 	//
@@ -97,7 +111,9 @@ void AttachMODInternal( const NFile::CFilePath &szBaseResourcePath,
 	//
 	SMOD mod;
 	if ( !szMODPath.empty() )
+	{
 		ReadMODInfo( &mod, szMODPath );
+	}
 	//
 	NGlobal::SetVar( "current_attached_mod", mod.szRelativePath, STORAGE_USER );
 	NGlobal::SetVar( "MOD.RelativePath", mod.szRelativePath, STORAGE_SAVE );
@@ -168,9 +184,13 @@ void InstantAttachMOD( const NFile::CFilePath &path, NDb::EDatabaseMode _eMode )
 NFile::CFilePath GetAbsolutePath( const NFile::CFilePath &path )
 {
 	if ( path.empty() )
+	{
 		return path;
+	}
 	if ( !IsPathRelative( path ) )
+	{
 		return path;
+	}
 	const std::string szMODsBaseDir = NMainLoop::GetBaseDir() + "Mods\\";
 	NFile::CFilePath pathAbsolute;
 	MakeFullPath( &pathAbsolute, path, szMODsBaseDir );

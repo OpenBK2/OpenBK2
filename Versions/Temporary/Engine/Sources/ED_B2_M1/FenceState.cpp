@@ -435,7 +435,9 @@ static CVec3 AlignToAIGridCellCenter( const CVec3 &p )
 CVec3 CFenceDesignTool::GetFencePlace( const CVec3 &p )
 {
 	if ( !bFitToAIGrid )
+	{
 		return p;
+	}
 
 	return AlignToAIGridCellCenter( p );
 }
@@ -443,7 +445,9 @@ CVec3 CFenceDesignTool::GetFencePlace( const CVec3 &p )
 void CFenceDesignTool::SetUp( bool _bFitToAIGrid, const NDb::SFenceRPGStats *pStats )
 {
 	if ( !pStats )
+	{
 		return;
+	}
 	//
 	bEnabled = true;
 	bComplete = false;
@@ -571,7 +575,9 @@ void CFenceDesignTool::Complete()
 bool CFenceDesignTool::IsComplete()
 {
 	if ( !bEnabled )
+	{
 		return false;
+	}
 
 	return bComplete;
 }

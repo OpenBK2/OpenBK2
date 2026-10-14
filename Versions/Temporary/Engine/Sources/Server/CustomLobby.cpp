@@ -36,7 +36,9 @@ const bool CCustomLobby::GetClientInfo( const int nClientID, SCustomLobbyClientI
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 void CCustomLobby::GetLobbyClients( CGetLobbyClientsPacket *pPacket )

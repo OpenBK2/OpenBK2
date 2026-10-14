@@ -54,7 +54,9 @@ public:
 			// write file
 			CFileStream stream( "acklog.bin", CFileStream::WIN_CREATE );
 			if ( !stream.IsOk() )
+			{
 				return;
+			}
 
 			CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
 			operator&( *pSaver.GetPtr() );
@@ -112,7 +114,9 @@ void CSoundScene2D::CSoundsCollector::operator()( CSound *sound, bool bHearable 
 			sounds[sound->GetDesc()].push_back( sound );
 		}
 		else
+		{
 			sounds[( *it ).second].push_back( sound );
+		}
 	}
 	else
 	{
@@ -156,24 +160,34 @@ void CSoundScene2D::Init(
 	//
 	vLimit.x = _nMaxX / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE;
 	if ( vLimit.x == 0 )
+	{
 		vLimit.x = 1;
+	}
 
 	vLimit.y = _nMaxY / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE;
 	if ( vLimit.y == 0 )
+	{
 		vLimit.y = 1;
+	}
 
 	vLimit.z = _nMaxZ / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE;
 	nMinZ = _nMinZ / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE;
 	if ( nMinZ >= vLimit.z )
+	{
 		vLimit.z = nMinZ + 1;
+	}
 
 	soundCellsInBounds.resize( vLimit.z - nMinZ );
 	for ( int z = 0; z < soundCellsInBounds.size(); ++z )
 	{
 		soundCellsInBounds[z].SetSizes( vLimit.x, vLimit.y );
 		for ( int x = 0; x < vLimit.x; ++x )
+		{
 			for ( int y = 0; y < vLimit.y; ++y )
+			{
 				soundCellsInBounds[z][y][x] = new CSoundCell;
+			}
+		}
 	}
 	curTime = 0;
 	vFormerCameraCell.x = -1;
@@ -209,15 +223,21 @@ uint16_t CSoundScene2D::AddSound( const NDb::SComplexSoundDesc *pStats,
                                   int nVolumeType )
 {
 	if ( !pSFX->IsSFXEnabled() || 0 == pStats )
+	{
 		return 0;
+	}
 
 	const NDb::SComplexSoundDesc::SSoundStats *pRandomSound = pStats->GetRandomSound();
 
 	if ( !pRandomSound )
+	{
 		return 0;
+	}
 
 	if ( !pRandomSound->pPathName ) // empty sound rolled, don't add it to SoundScene
+	{
 		return 0;
+	}
 
 	const bool bLooped = eAddMode == SAM_LOOPED_NEED_ID;
 	const bool bNeedID = eAddMode == SAM_NEED_ID || eAddMode == SAM_LOOPED_NEED_ID;
@@ -230,7 +250,9 @@ uint16_t CSoundScene2D::AddSound( const NDb::SComplexSoundDesc *pStats,
 		const bool bToCell = eMixMode != SFX_INTERFACE;
 #ifndef _FINALRELEASE
 		if ( nVolumeType == 1 )
+		{
 			theAckTuning.Add( pRandomSound->pPathName->szSoundPath );
+		}
 #endif
 		pSound->SetVolumeType( nVolumeType );
 		CPtr<CSound> pSnd = new CSound( wID,
@@ -255,7 +277,9 @@ uint16_t CSoundScene2D::AddSound( const NDb::SComplexSoundDesc *pStats,
 		else
 		{
 			if ( bNeedID )
+			{
 				freeIDs.Return( wID );
+			}
 			return 0;
 		}
 		return wID;
@@ -333,13 +357,17 @@ CSoundCell *CSoundScene2D::GetSoundCell( const SIntThree &vCell )
 	if ( IsInBounds( vCell.x, vCell.y, vCell.z ) )
 	{
 		if ( !soundCellsInBounds[vCell.z - nMinZ][vCell.y][vCell.x] )
+		{
 			soundCellsInBounds[vCell.z - nMinZ][vCell.y][vCell.x] = new CSoundCell;
+		}
 		return soundCellsInBounds[vCell.z - nMinZ][vCell.y][vCell.x];
 	}
 	else
 	{
 		if ( !soundCellsOutOfBounds[vCell] )
+		{
 			soundCellsOutOfBounds[vCell] = new CSoundCell;
+		}
 		return soundCellsOutOfBounds[vCell];
 	}
 }
@@ -355,7 +383,9 @@ void CSoundScene2D::AddSound( const SIntThree &vCell, CSound *pSound )
 	UpdatePHSMap( vCell, fFormerRadius, fNewRadius );
 	UpdateCombatMap( vCell, pSound );
 	if ( 0 != pSound->GetID() )
+	{
 		soundIDs[pSound->GetID()] = vCell;
+	}
 }
 
 void CSoundScene2D::UpdateCombatMap( const SIntThree &vCell, CSound *pSound )
@@ -398,18 +428,26 @@ void CSoundScene2D::UpdatePHSMap( const SIntThree &vCell, const int nFormerRadiu
 void CSoundScene2D::RemoveSound( const uint16_t wID )
 {
 	if ( !pSFX->IsSFXEnabled() || 0 == wID )
+	{
 		return;
+	}
 
 	if ( soundIDs.find( wID ) == soundIDs.end() )
 	{
 		if ( finishedInterfaceSounds.find( wID ) == finishedInterfaceSounds.end() )
+		{
 			deletedInterfaceSounds.insert( wID );
+		}
 		else
+		{
 			finishedInterfaceSounds.erase( wID );
+		}
 		return;
 	}
 	if ( soundCellsWithSound.find( soundIDs[wID] ) == soundCellsWithSound.end() )
+	{
 		return;
+	}
 
 	const SIntThree vCell = soundIDs[wID];
 	CSoundCell *pCell = GetSoundCell( vCell );
@@ -420,7 +458,9 @@ void CSoundScene2D::RemoveSound( const uint16_t wID )
 		const uint16_t wID = pSound->GetID();
 
 		if ( pSound->IsLooped() )
+		{
 			pSound->MarkToDim( GetCurTime() );
+		}
 		else
 		{
 			const int nFormerRadius = pCell->GetRadius();
@@ -441,14 +481,18 @@ void CSoundScene2D::SetSoundPos( const uint16_t wID, const CVec3 &vPos )
 {
 	if ( !pSFX->IsSFXEnabled() || 0 == wID || soundIDs.find( wID ) == soundIDs.end() ||
 	     soundCellsWithSound.find( soundIDs[wID] ) == soundCellsWithSound.end() )
+	{
 		return;
+	}
 
 	const SIntThree &vFormerCell = soundIDs[wID];
 	CSoundCell *pFormerCell = GetSoundCell( vFormerCell );
 	CSound *pSound = pFormerCell->GetSound( wID );
 
 	if ( !pSound )
+	{
 		return;
+	}
 	NI_ASSERT( pSound != 0, "sound doesn't exist" );
 
 	const SIntThree vNewCell( vPos / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE );
@@ -482,16 +526,22 @@ void CSoundScene2D::SetSoundPos( const uint16_t wID, const CVec3 &vPos )
 bool CSoundScene2D::IsSoundFinished( const uint16_t wID ) const
 {
 	if ( !pSFX->IsSFXEnabled() || 0 == wID )
+	{
 		return true;
+	}
 
 	CSoundIDs::const_iterator posID = soundIDs.find( wID );
 
 	if ( posID == soundIDs.end() ) // sound is from interface.
+	{
 		return finishedInterfaceSounds.find( wID ) != finishedInterfaceSounds.end();
+	}
 
 	CSoundCellsWithSound::const_iterator pos = soundCellsWithSound.find( posID->second );
 	if ( pos == soundCellsWithSound.end() )
+	{
 		return true;
+	}
 
 	const CSound *pSound = pos->second->GetSound( wID );
 	return !pSound || pSound->IsTimeToFinish();
@@ -500,7 +550,9 @@ bool CSoundScene2D::IsSoundFinished( const uint16_t wID ) const
 void CSoundScene2D::UpdateSound( const CVec3 &_vListener, const CVec3 &_vCameraDir, const float fViewRadius )
 {
 	if ( !pSFX || !pGameTimer )
+	{
 		return;
+	}
 	pSFX->Update( _vListener, _vCameraDir, GetCurTime() - timeLastUpdate ); // ВЫЗЫВАТЬ РАНЬШЕ ВСЯКОЙ РАБОТЫ СО ЗВУКОМ!
 
 	const CVec3 vListener( _vListener.x, _vListener.y, 0 );
@@ -544,7 +596,9 @@ void CSoundScene2D::UpdateSound( const CVec3 &_vListener, const CVec3 &_vCameraD
 					pCell->Update( pSFX );
 					const int nNewRadius = pCell->GetRadius();
 					if ( nFormerRadius != nNewRadius ) // collect updated
+					{
 						updatedCells.push_back( SUpdatedCell( ( *it ).first, nFormerRadius, nNewRadius ) );
+					}
 				}
 
 				for ( CUpdatedCells::iterator it = updatedCells.begin(); it != updatedCells.end(); )
@@ -565,7 +619,9 @@ void CSoundScene2D::UpdateSound( const CVec3 &_vListener, const CVec3 &_vCameraD
 				timeLastUpdate = CSoundScene2D::GetCurTime();
 			}
 			else
+			{
 				cellsPHS.EnumHearableCells( collector, vListenerCell );
+			}
 
 			MuteSounds( &muteSounds );
 			MixMixedAlways( sounds, vListener );
@@ -590,11 +646,15 @@ void CSoundScene2D::MixInterfaceSounds()
 				const uint16_t wID = pSound->GetID();
 
 				if ( wID && deletedInterfaceSounds.end() == deletedInterfaceSounds.find( wID ) )
+				{
 					finishedInterfaceSounds.insert( pSound->GetID() );
+				}
 				soundIter = ( *it ).second.erase( soundIter );
 			}
 			else
+			{
 				++soundIter;
+			}
 		}
 
 		// mix not started
@@ -690,7 +750,9 @@ void CSoundScene2D::PlaySubstSound( ISound *pSubstSound,
 		{
 			nStartSample = nStartSample % nSoundLenght;
 			if ( nStartSample > nSoundLenght * 8 / 10 )
+			{
 				nStartSample = 0;
+			}
 		}
 
 		if ( !pSFX->IsPlaying( pSubstSound ) && ( nStartSample < nSoundLenght ) )
@@ -699,7 +761,9 @@ void CSoundScene2D::PlaySubstSound( ISound *pSubstSound,
 			const int nChannel = pSFX->PlaySample( pSubstSound, bLooped, nStartSample );
 		}
 		else
+		{
 			pSFX->UpdateSample( pSubstSound );
+		}
 	}
 }
 
@@ -738,7 +802,9 @@ void CSoundScene2D::Mix( CSoundsList &curSounds,
 			++nSounds;
 			bLooped |= sound.IsLooped(); // замена зациклена если хоть один звучок зациклен
 			if ( !pSound )
+			{
 				pSound = &sound;
+			}
 
 			if ( !pSubstStruct && sound.IsSubstituted() && sound.IsMarkedStarted() )
 			{ // звук - уже заменени и он уже играет
@@ -757,7 +823,9 @@ void CSoundScene2D::Mix( CSoundsList &curSounds,
 			// замену создать заново и запустить на проигрыш
 			CPtr<ISound> pSubstituteSound = CSoundManager::CreateSound2D( pSubst, pSound->IsLooped() );
 			if ( pSubstituteSound == 0 ) // значит звук замены не задан
+			{
 				pSubstituteSound = pSound->GetSound();
+			}
 			pSubstStruct = new CSubstSound( pSubstituteSound );
 			pSubstituteSound->SetVolumeType( pSound->GetSound()->GetVolumeType() );
 		}
@@ -774,7 +842,9 @@ void CSoundScene2D::Mix( CSoundsList &curSounds,
 				nStartSample = (std::max)( nStartSample, sound.GetSamplesPassed() );
 				const NTimer::STime tmp = sound.GetBeginTime();
 				if ( tmp < nStartTime || nStartTime == 0 )
+				{
 					nStartTime = tmp;
+				}
 			}
 		}
 
@@ -791,12 +861,18 @@ void CSoundScene2D::Mix( CSoundsList &curSounds,
 				}
 				sound.MarkStarted();
 				if ( bDelete )
+				{
 					soundsIter = curSounds.erase( soundsIter );
+				}
 				else
+				{
 					++soundsIter;
+				}
 			}
 			else
+			{
 				++soundsIter;
+			}
 		}
 
 		// проапдейтить звук в соответствии с тем, что намикшировали
@@ -887,15 +963,21 @@ uint16_t CSoundScene3D::AddSound( const NDb::SComplexSoundDesc *pStats,
                                   int nVolumeType )
 {
 	if ( !pSFX->IsSFXEnabled() || 0 == pStats )
+	{
 		return 0;
+	}
 
 	const NDb::SComplexSoundDesc::SSoundStats *pRandomSound = pStats->GetRandomSound();
 
 	if ( !pRandomSound )
+	{
 		return 0;
+	}
 
 	if ( !pRandomSound->pPathName ) // empty sound rolled, don't add it to SoundScene
+	{
 		return 0;
+	}
 
 	const bool bLooped = eAddMode == SAM_LOOPED_NEED_ID;
 	const bool bNeedID = eAddMode == SAM_NEED_ID || eAddMode == SAM_LOOPED_NEED_ID;
@@ -908,7 +990,9 @@ uint16_t CSoundScene3D::AddSound( const NDb::SComplexSoundDesc *pStats,
 		pSound = CSoundManager::CreateSound2D( pRandomSound->pPathName, bLooped );
 #ifndef _FINALRELEASE
 		if ( nVolumeType == 1 )
+		{
 			theAckTuning.Add( pRandomSound->pPathName->szSoundPath );
+		}
 #endif
 
 		if ( pSound )
@@ -933,11 +1017,15 @@ uint16_t CSoundScene3D::AddSound( const NDb::SComplexSoundDesc *pStats,
 		pSound = CSoundManager::CreateSound3D( pRandomSound->pPathName, bLooped );
 
 		if ( !pSound )
+		{
 			return 0;
+		}
 
 #ifndef _FINALRELEASE
 		if ( nVolumeType == 1 )
+		{
 			theAckTuning.Add( pRandomSound->pPathName->szSoundPath );
+		}
 #endif
 		pSound->SetPos( vPos );
 		pSound->SetVolumeType( nVolumeType );
@@ -952,11 +1040,15 @@ uint16_t CSoundScene3D::AddSound( const NDb::SComplexSoundDesc *pStats,
 				movingSounds[wID].second = curTime;
 			}
 			else
+			{
 				forgottenSounds.push_back( CSoundWithStartTime( pSound, curTime ) );
+			}
 		}
 	}
 	if ( pSound )
+	{
 		pSFX->PlaySample( pSound, bLooped, nTimeAfterStart );
+	}
 
 	return wID;
 }
@@ -999,7 +1091,9 @@ void CSoundScene3D::SetSoundPos( const uint16_t wID, const class CVec3 &_vPos )
 
 		int nTime = curTime - timeLastPosUpdate;
 		if ( nTime != 0 )
+		{
 			pSound->SetSpeed( ( _vPos - pSound->GetPos() ) / nTime );
+		}
 		pSound->SetPos( _vPos );
 		pSFX->UpdateSample( pSound );
 	}
@@ -1014,7 +1108,9 @@ bool CSoundScene3D::IsSoundFinished( const uint16_t wID ) const
 		{
 			CPtr<ISound> pSound = pos->second.first;
 			if ( pSFX->IsPlaying( pSound ) )
+			{
 				return false;
+			}
 		}
 	}
 	{
@@ -1023,7 +1119,9 @@ bool CSoundScene3D::IsSoundFinished( const uint16_t wID ) const
 		{
 			CPtr<ISound> pSound = pos->second.first;
 			if ( pSFX->IsPlaying( pSound ) )
+			{
 				return false;
+			}
 		}
 	}
 	return true;
@@ -1044,12 +1142,18 @@ void CSoundScene3D::UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir
 		++nUpdated;
 
 		if ( !pSFX->IsPlaying( currentUnderUpdate->first ) )
+		{
 			currentUnderUpdate = forgottenSounds.erase( currentUnderUpdate );
+		}
 		else
+		{
 			++currentUnderUpdate;
+		}
 	}
 	if ( currentUnderUpdate == forgottenSounds.end() )
+	{
 		currentUnderUpdate = forgottenSounds.begin();
+	}
 
 	timeLastPosUpdate = curTime;
 }
@@ -1072,19 +1176,25 @@ void CSoundScene3D::ClearSounds()
 		for ( CMovingSounds::iterator it = movingSounds.begin(); it != movingSounds.end(); ++it )
 		{
 			if ( IsValid( it->second.first ) )
+			{
 				pSFX->StopSample( it->second.first );
+			}
 		}
 
 		for ( CInterfaceSounds::iterator it = interfaceSounds.begin(); it != interfaceSounds.end(); ++it )
 		{
 			if ( IsValid( it->second.first ) )
+			{
 				pSFX->StopSample( it->second.first );
+			}
 		}
 
 		for ( CForgottenSounds::iterator it = forgottenSounds.begin(); it != forgottenSounds.end(); ++it )
 		{
 			if ( IsValid( it->first ) )
+			{
 				pSFX->StopSample( it->first );
+			}
 		}
 	}
 
@@ -1104,16 +1214,22 @@ void CSoundScene3D::LaunchAfterLoad()
 	const NTimer::STime curTime = pGameTimer->GetAbsTime();
 
 	for ( CMovingSounds::iterator it = movingSounds.begin(); it != movingSounds.end(); ++it )
+	{
 		LaunchSound( pSFX, it->second.first, curTime - it->second.second, true );
+	}
 
 	for ( CInterfaceSounds::iterator it = interfaceSounds.begin(); it != interfaceSounds.end(); ++it )
+	{
 		LaunchSound( pSFX, it->second.first, curTime - it->second.second, false );
+	}
 
 	for ( CForgottenSounds::iterator it = forgottenSounds.begin(); it != forgottenSounds.end(); ++it )
 	{
 		int nPlayedSoFar = curTime - it->second;
 		if ( nPlayedSoFar * it->first->GetSampleRate() / 1000 < it->first->GetLenght() )
+		{
 			LaunchSound( pSFX, it->first, nPlayedSoFar, false );
+		}
 	}
 }
 
@@ -1137,7 +1253,9 @@ void CSoundScene::Init(
 		pScene = new CSoundScene3D;
 	}
 	else
+	{
 		pScene = new CSoundScene2D;
+	}
 	pScene->Init();
 	pScene->SetSoundSceneMode( eMode );
 	pScene->Init( _nMaxX, _nMaxY, _nMinZ, _nMaxZ, _VIS_TILE_SIZE );
@@ -1172,7 +1290,9 @@ uint16_t CSoundScene::AddSound( const NDb::SComplexSoundDesc *pStats,
 void CSoundScene::RemoveSound( const uint16_t wID )
 {
 	if ( !dynamicSounds.empty() )
+	{
 		dynamicSounds.erase( wID );
+	}
 	pScene->RemoveSound( wID );
 }
 
@@ -1198,7 +1318,9 @@ void CSoundScene::UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, 
 			++it;
 		}
 		else
+		{
 			dynamicSounds.erase( it++ );
+		}
 	}
 	pScene->UpdateSound( vListener, vCameraDir, fViewRadius );
 }

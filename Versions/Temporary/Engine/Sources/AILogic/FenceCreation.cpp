@@ -63,7 +63,9 @@ bool CFenceCreation::CanPlaceOnTerrain( CGivenPassabilityStObject *pObj ) const
 	for ( std::list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 	{
 		if ( !GetAIMap()->IsTileInside( *it ) || ( EAC_TERRAIN & GetTerrain()->GetTileLockInfo( *it ) ) )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -71,7 +73,9 @@ bool CFenceCreation::CanPlaceOnTerrain( CGivenPassabilityStObject *pObj ) const
 void CFenceCreation::CreateObjects( SAIObjectsUnderConstructionUpdate *pUpdate )
 {
 	if ( vPoints.empty() )
+	{
 		return;
+	}
 
 	// add all objects, check if tiles are locked and mark objects and tiles.
 	pUpdate->objects.resize( fenceSegements.size() );
@@ -86,7 +90,9 @@ void CFenceCreation::CreateObjects( SAIObjectsUnderConstructionUpdate *pUpdate )
 		for ( std::list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 		{
 			if ( !GetAIMap()->IsTileInside( *it ) || ( EAC_TERRAIN & GetTerrain()->GetTileLockInfo( *it ) ) )
+			{
 				pUpdate->impossibleToBuildTiles.push_back( CVec2( it->x, it->y ) );
+			}
 			else
 			{
 				pUpdate->buildTiles.push_back( CVec2( it->x, it->y ) );
@@ -98,7 +104,9 @@ void CFenceCreation::CreateObjects( SAIObjectsUnderConstructionUpdate *pUpdate )
 		pUpdate->bCanBuild |= pUpdate->objects[i].bCanBuild;
 	}
 	if ( !pUpdate->objects[0].bCanBuild )
+	{
 		pUpdate->bCanBuild = false;
+	}
 }
 
 bool CFenceCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock )
@@ -116,7 +124,9 @@ bool CFenceCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool
 	const uint16_t wDir = GetDirectionByVector( vTo - vFrom );
 	wAngle = GetLineAngle( vFrom, vTo );
 	if ( vPoints.size() <= 1 )
+	{
 		return false;
+	}
 
 	bool switcher = false;
 	for ( int i = 0; i < vPoints.size() - 1; ++i )
@@ -127,10 +137,14 @@ bool CFenceCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool
 		{
 			fenceSegements.push_back( pObj );
 			if ( IsAIModificationAllowed() )
+			{
 				pObj->Mem2UniqueIdObjs();
+			}
 		}
 		else
+		{
 			fenceSegements.push_back( 0 );
+		}
 		//
 	}
 	while ( nCurIndex < fenceSegements.size() && fenceSegements[nCurIndex] == 0 )
@@ -139,7 +153,9 @@ bool CFenceCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool
 	}
 
 	if ( fenceSegements.empty() )
+	{
 		return false;
+	}
 	return true;
 }
 
@@ -169,7 +185,9 @@ bool CFenceCreation::IsCegmentToBeBuilt( class CFence *pObj ) const
 			if ( r1.IsIntersected( rect ) )
 			{
 				if ( pUnit->GetPlayer() == GetPlayer() && EUSN_REST == pUnit->GetState()->GetName() && pUnit->CanMove() )
+				{
 					( *iter )->UnlockTiles();
+				}
 			}
 		}
 	}
@@ -179,7 +197,9 @@ bool CFenceCreation::IsCegmentToBeBuilt( class CFence *pObj ) const
 	{
 		const SStaticObjectRPGStats *pStats = checked_cast<const SStaticObjectRPGStats *>( pObj->GetStats() );
 		if ( GetTerrain()->IsLocked( *it, (EAIClasses)pStats->nAIPassabilityClass ) )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -211,7 +231,9 @@ const int CFenceCreation::GetCurIndex() const
 bool CFenceCreation::CanBuildNext() const
 {
 	if ( bCannot || nCurIndex >= fenceSegements.size() || fenceSegements[nCurIndex] == 0 )
+	{
 		return false;
+	}
 
 	SRect r1;
 	fenceSegements[nCurIndex]->GetBoundRect( &r1 );

@@ -37,24 +37,32 @@ CInterfaceNivalNet::CInterfaceNivalNet() : CInterfaceMPScreenBase( "MPNivalNet",
 CInterfaceNivalNet::~CInterfaceNivalNet()
 {
 	if ( pScreen )
+	{
 		Scene()->RemoveScreen( pScreen );
+	}
 }
 
 bool CInterfaceNivalNet::Init()
 {
 	if ( CInterfaceScreenBase::Init() == false )
+	{
 		return false;
+	}
 
 	RegisterObservers();
 
 	// load screen
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
 	if ( AddUIScreen( pScreen, "MPNivalNet", this ) == false )
+	{
 		return false;
+	}
 
 	pMain = GetChildChecked<IWindow>( pScreen, "Main", true );
 	if ( !pMain )
+	{
 		return false;
+	}
 
 	MakeInterior();
 
@@ -108,10 +116,14 @@ void CInterfaceNivalNet::MakeInterior()
 	pRememberPassword->SetState( ( wszStoredLogin == L"" ) ? 0 : 1 );
 
 	if ( pFrameRecovery )
+	{
 		pFrameRecovery->ShowWindow( false );
+	}
 
 	if ( pFrameRegister )
+	{
 		pFrameRegister->ShowWindow( false );
+	}
 	eState = ES_NORMAL;
 }
 
@@ -158,10 +170,14 @@ void CInterfaceNivalNet::OnGetFocus( bool bFocus )
 bool CInterfaceNivalNet::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "back" )
+	{
 		return OnBackReaction( szSender );
+	}
 
 	if ( szReaction == "login" )
+	{
 		return OnLoginReaction( szSender );
+	}
 
 	if ( szReaction == "login_register" )
 	{
@@ -173,17 +189,27 @@ bool CInterfaceNivalNet::Execute( const std::string &szSender, const std::string
 	}
 
 	if ( szReaction == "register" )
+	{
 		return OnRegisterReaction( szSender );
+	}
 
 	if ( szReaction == "register_ok" )
+	{
 		return OnRegisterOkReaction( szSender );
+	}
 	if ( szReaction == "register_cancel" )
+	{
 		return OnRegisterCancelReaction( szSender );
+	}
 
 	if ( szReaction == "recovery_ok" )
+	{
 		return OnRecoveryOkReaction( szSender );
+	}
 	if ( szReaction == "recovery_cancel" )
+	{
 		return OnRecoveryCancelReaction( szSender );
+	}
 
 	return false;
 }
@@ -275,7 +301,9 @@ bool CInterfaceNivalNet::OnRegisterReaction( const std::string &szSender )
 	eState = ES_REGISTER;
 
 	if ( pFrameRegister )
+	{
 		pFrameRegister->ShowWindow( true );
+	}
 
 	UpdateInterior();
 
@@ -334,10 +362,14 @@ bool CInterfaceNivalNet::IsEmailValid( const std::wstring &wszEmail )
 	std::vector<std::string> parts;
 	NStr::SplitString( szEmail, &parts, '@' );
 	if ( parts.size() != 2 )
+	{
 		return false;
+	}
 
 	if ( parts[0].empty() || parts[1].empty() )
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -395,7 +427,9 @@ bool CInterfaceNivalNet::OnRecoveryOkReaction( const std::string &szSender )
 
 	std::wstring text;
 	if ( pUserNameRecovery )
+	{
 		text = pUserNameRecovery->GetText();
+	}
 	// validate text
 	if ( text.empty() )
 	{

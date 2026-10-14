@@ -148,15 +148,19 @@ void CSquadEditor::ResetGUI( bool bActive )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	if ( !bActive )
+	{
 		pUserData->SerializeSettings(
 				editorSettings, "SquadRPGStatsEditor", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
+	}
 	// Copy only GUI fields from the defaults, preserving all editing settings.
 	const CSquadEditorSettings defaults;
 	editorSettings.bShowShortcutBar = defaults.bShowShortcutBar;
 	pUserData->SerializeSettings( editorSettings, "SquadRPGStatsEditor", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
 
 	if ( pwndShortcutBar )
+	{
 		pwndShortcutBar->Show( bActive && editorSettings.bShowShortcutBar );
+	}
 }
 
 void CSquadEditor::CreateControls()
@@ -210,7 +214,9 @@ void CSquadEditor::DestroyControls()
 void CSquadEditor::RemoveAllModels()
 {
 	while ( !membersInfo.empty() )
+	{
 		RemoveModel( membersInfo.front().nSceneObjectID );
+	}
 }
 
 IManipulator *CSquadEditor::CreateSquadManipulator()
@@ -283,7 +289,9 @@ int CSquadEditor::GetMemberIndexBySceneID( int nSceneID )
 	{
 		const SSquadMemberInfo *pMembInf = &( *it );
 		if ( pMembInf->nSceneObjectID == nSceneID )
+		{
 			return pMembInf->nMemberIndex;
+		}
 	}
 	return -1;
 }

@@ -281,7 +281,9 @@ struct SUserData
 		if ( xs.IsReading() )
 		{
 			if ( dbidMainOptions.IsEmpty() )
+			{
 				dbidMainOptions = CDBID( "Editor/EditorOptions.xdb" );
+			}
 		}
 		//
 		return 0;

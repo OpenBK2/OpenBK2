@@ -65,7 +65,9 @@ SmoothColor( CArray2D<uint8_t> *pImage, const int nRadius, const uint8_t nSrcCol
 					for ( int ii = -nRadius; ii <= nRadius; ++ii )
 					{
 						if ( ( *pImage )[g + gg][i + ii] != nSrcColor )
+						{
 							( *pImage )[g + gg][i + ii] = nDstColor;
+						}
 					}
 				}
 			}
@@ -80,7 +82,9 @@ inline void ReplaceColor( CArray2D<uint8_t> *pImage, const uint8_t nSrcColor, co
 		for ( int i = 0; i < pImage->GetSizeX(); ++i )
 		{
 			if ( ( *pImage )[g][i] == nSrcColor )
+			{
 				( *pImage )[g][i] = nDstColor;
+			}
 		}
 	}
 }

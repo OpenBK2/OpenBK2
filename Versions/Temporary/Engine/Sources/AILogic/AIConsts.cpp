@@ -928,7 +928,9 @@ void SConsts::Load()
 
 	if ( PLANE_PARADROP_INTERVAL_PERP_MAX <=
 	     PLANE_PARADROP_INTERVAL_PERP_MIN ) // to avoid zero division during random form min to max
+	{
 		PLANE_PARADROP_INTERVAL_PERP_MAX += 2.0f;
+	}
 
 	FIGHTER_PATROL_TIME = 1000 * nFighterPatrolTime;
 
@@ -975,5 +977,7 @@ void SConsts::InitPriorities( const std::vector<NDb::SUnitTypePriority> &priorit
 {
 	PRIORITIES.clear();
 	for ( std::vector<SUnitTypePriority>::const_iterator it = priorities.begin(); it != priorities.end(); ++it )
+	{
 		PRIORITIES[it->eUnitType] = it->nPriority;
+	}
 }

@@ -64,14 +64,18 @@ void CGroupMover::SSubGroup::Delete( const int nUnitID )
 {
 	TSubGroupUnits::iterator pos = units.find( nUnitID );
 	if ( pos != units.end() )
+	{
 		units.erase( pos );
+	}
 }
 
 void CGroupMover::SSubGroup::BalanceGroup( const CVec2 &vPosition )
 {
 	// special cases for empty and one-unit groups
 	if ( IsEmpty() )
+	{
 		return;
+	}
 	else if ( units.size() == 1 )
 	{
 		units.begin()->second.vPosition = vPosition;
@@ -82,25 +86,35 @@ void CGroupMover::SSubGroup::BalanceGroup( const CVec2 &vPosition )
 	for ( TSubGroupUnits::iterator it = units.begin(); it != units.end(); )
 	{
 		if ( IsValid( it->second.pUnit ) )
+		{
 			++it;
+		}
 		else
+		{
 			units.erase( it++ );
+		}
 	}
 
 	// calculate group center
 	CVec2 vGroupCenter( VNULL2 );
 	for ( TSubGroupUnits::const_iterator it = units.begin(); it != units.end(); ++it )
+	{
 		vGroupCenter += it->second.pUnit->GetCenterPlain();
+	}
 	vGroupCenter /= units.size();
 
 	for ( TSubGroupUnits::iterator it = units.begin(); it != units.end(); ++it )
+	{
 		it->second.vPosition = vPosition + it->second.pUnit->GetCenterPlain() - vGroupCenter;
+	}
 
 	// balance group
 	std::vector<SForce> forces;
 	forces.reserve( units.size() );
 	for ( TSubGroupUnits::iterator it = units.begin(); it != units.end(); ++it )
+	{
 		forces.push_back( SForce( it->second.pUnit->GetUniqueID(), it->second.vPosition ) );
+	}
 
 	// sort forces by uniqueID for determinism
 	std::sort(
@@ -121,7 +135,9 @@ void CGroupMover::SSubGroup::BalanceGroup( const CVec2 &vPosition )
 				if ( fDistance < DIST_THRESHOLD )
 				{
 					if ( fDistance >= FP_EPSILON )
+					{
 						vDirection /= fDistance;
+					}
 					else
 					{
 						vDirection = GetVectorByDirection( NRandom::Random( 0, 65535 ) );
@@ -167,9 +183,13 @@ IStaticPath *CGroupMover::SSubGroup::CreateStaticPath( CCommonUnit *pUnit, const
 {
 	TSubGroupUnits::const_iterator pos = units.find( pUnit->GetUniqueID() );
 	if ( pos == units.end() )
+	{
 		return CreatePathToPoint( pUnit, vDefaultPoint );
+	}
 	else
+	{
 		return paths[pUnit->GetAIPassabilityClass()].CreateStaticPath( pUnit, pos->second.vPosition );
+	}
 }
 
 IStaticPath *CGroupMover::SSubGroup::SSubGroupPathInfo::CreateStaticPath( CCommonUnit *pUnit, const CVec2 &vPoint )
@@ -204,11 +224,15 @@ void CGroupMover::DeleteUnit( const int nUnitID )
 {
 	TGroup::iterator posGroup = group.find( nUnitID );
 	if ( posGroup == group.end() )
+	{
 		return;
+	}
 
 	const int nUnitSubGroup = posGroup->second->GetSubGroup();
 	if ( nUnitSubGroup >= 0 && nUnitSubGroup < subGroups.size() )
+	{
 		subGroups[nUnitSubGroup].Delete( nUnitID );
+	}
 
 	group.erase( posGroup );
 }
@@ -216,7 +240,9 @@ void CGroupMover::DeleteUnit( const int nUnitID )
 const bool CGroupMover::CalcPositions()
 {
 	if ( !bNeedCalcPositions )
+	{
 		return true;
+	}
 
 	// reset subgroups for units
 	typedef std::map<int, CPtr<CCommonUnit>> TUnitsHashSet;
@@ -255,7 +281,9 @@ const bool CGroupMover::CalcPositions()
 					sortedUnits.erase( it++ );
 				}
 				else
+				{
 					++it;
+				}
 			}
 			unitsToCheck.erase( pos );
 		}
@@ -279,7 +307,9 @@ const bool CGroupMover::CalcPositions()
 
 	// balance every group to center
 	for ( int i = 0; i < subGroups.size(); ++i )
+	{
 		subGroups[i].BalanceGroup( vPosition );
+	}
 
 	bNeedCalcPositions = false;
 	return true;
@@ -288,21 +318,31 @@ const bool CGroupMover::CalcPositions()
 IStaticPath *CGroupMover::CreateStaticPath( CCommonUnit *pUnit )
 {
 	if ( !CalcPositions() )
+	{
 		return 0;
+	}
 	if ( !IsValid( pUnit ) )
+	{
 		return 0;
+	}
 
 	const int nUnitSubGroup = pUnit->GetSubGroup();
 	if ( nUnitSubGroup >= 0 && nUnitSubGroup < subGroups.size() )
+	{
 		return subGroups[nUnitSubGroup].CreateStaticPath( pUnit, vPosition );
+	}
 	else
+	{
 		return CreatePathToPoint( pUnit, vPosition );
+	}
 }
 
 CVec2 CGroupMover::GetMoveTarget( CCommonUnit *pUnit )
 {
 	if ( !CalcPositions() || !IsValid( pUnit ) )
+	{
 		return vPosition;
+	}
 
 	const int nUnitSubGroup = pUnit->GetSubGroup();
 	if ( nUnitSubGroup >= 0 && nUnitSubGroup < subGroups.size() )
@@ -315,7 +355,9 @@ CVec2 CGroupMover::GetMoveTarget( CCommonUnit *pUnit )
 			// generic mover splits distant helicopters into one-unit subgroups. Capture
 			// that shift in the persistent slot before CAICommand clears it.
 			if ( fabs2( pUnit->GetGroupShift() ) > FP_EPSILON )
+			{
 				pos->second.vPosition = vPosition + pUnit->GetGroupShift();
+			}
 			return pos->second.vPosition;
 		}
 	}
@@ -330,7 +372,9 @@ CGroupMover *CreateGroupMover( const SAIUnitCmd &command )
 	     command.nCmdType == ACTION_COMMAND_CLEARMINE || command.nCmdType == ACTION_COMMAND_DEPLOY_ARTILLERY ||
 	     command.nCmdType == ACTION_COMMAND_UNLOAD || command.nCmdType == ACTION_COMMAND_RESUPPLY_HR ||
 	     command.nCmdType == ACTION_COMMAND_RESUPPLY || command.nCmdType == ACTION_COMMAND_REPAIR )
+	{
 		return new CGroupMover( command.vPos );
+	}
 	return 0;
 }
 

@@ -49,20 +49,28 @@ void CInterfaceMissionBase::OnGetFocus( bool bFocus )
 	CInterfaceScreenBase::OnGetFocus( false );
 
 	if ( pWorld )
+	{
 		pWorld->OnGetFocus( true );
+	}
 }
 
 bool CInterfaceMissionBase::StepLocal( bool bAppActive )
 {
 	const bool bRet = CInterfaceScreenBase::StepLocal( bAppActive );
 	if ( !bAppActive )
+	{
 		return false;
+	}
 
 	if ( IsValid( pTransceiver ) )
+	{
 		pTransceiver->DoSegments();
+	}
 
 	if ( pWorld )
+	{
 		pWorld->Update();
+	}
 
 	return bRet;
 }
@@ -90,7 +98,9 @@ void CInterfaceMissionBase::NewMap( const NDb::SMapInfo *_pMap,
 			new CWorldClient( pTransceiver, new CVisualNotificationsEmpty(), Singleton<IAILogic>(), _pScenarioTracker, 0 );
 
 	if ( pMap->pMusic )
+	{
 		Singleton<IMusicSystem>()->Init( pMap->pMusic, 0 );
+	}
 
 	Singleton<IAILogic>()->Init( pTransceiver->GetCheckSumLogger(), pMap, NGameX::GetAIConsts(), _pScenarioTracker );
 	pWorld->LoadMap( pMap );
@@ -130,7 +140,9 @@ void CInterfaceMissionBase::AfterLoad()
 	CInterfaceScreenBase::AfterLoad();
 
 	if ( pWorld )
+	{
 		pWorld->AfterLoad( pMap );
+	}
 }
 
 int CInterfaceMissionBase::operator&( IBinSaver &saver )

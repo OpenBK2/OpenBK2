@@ -32,7 +32,9 @@ public:
 	{
 		CTRect<float> clip = box;
 		if ( bTextClipApplied )
+		{
 			clip.Intersect( textClip );
+		}
 		return clip;
 	}
 	virtual void ClipSet( const CTRect<float> &rClip ) = 0;
@@ -74,7 +76,9 @@ public:
 				bPreviousTextClipApplied( _pVisitor->bTextClipApplied )
 	{
 		if ( bScrollViewport )
+		{
 			pVisitor->bTextClipApplied = false;
+		}
 		else
 		{
 			pVisitor->textClip = pVisitor->GetTextClip( rNewClip );

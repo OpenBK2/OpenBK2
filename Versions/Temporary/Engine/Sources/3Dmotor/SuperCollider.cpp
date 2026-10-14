@@ -9,13 +9,19 @@ bool DoesTriSphereIntersect( const CVec3 &a1, const CVec3 &b1, const CVec3 &c1, 
 	float fR2 = sqr( fR );
 	CVec3 a = ptCenter - a1;
 	if ( fabs2( a ) < fR2 )
+	{
 		return true;
+	}
 	CVec3 b = ptCenter - b1;
 	if ( fabs2( b ) < fR2 )
+	{
 		return true;
+	}
 	CVec3 c = ptCenter - c1;
 	if ( fabs2( c ) < fR2 )
+	{
 		return true;
+	}
 	CVec3 sideAB = b1 - a1;
 	CVec3 sideBC = c1 - b1;
 	CVec3 sideCA = a1 - c1;
@@ -25,31 +31,43 @@ bool DoesTriSphereIntersect( const CVec3 &a1, const CVec3 &b1, const CVec3 &c1, 
 	if ( fAB2 < 1e-6f )
 	{
 		if ( fBC2 < 1e-6f ) // degenerated triangle -> point
+		{
 			return false;
+		}
 		// only b-c edge exists
 		float tBC = b * sideBC / fBC2;
 		if ( tBC <= 0 || tBC >= 1 )
+		{
 			return false;
+		}
 		return ( fabs2( b - tBC * sideBC ) < fR2 );
 	}
 	if ( fBC2 < 1e-6f )
 	{
 		if ( fCA2 < 1e-6f ) // degenerated triangle -> point
+		{
 			return false;
+		}
 		// only c-a edge exists
 		float tCA = c * sideCA / fCA2;
 		if ( tCA <= 0 || tCA >= 1 )
+		{
 			return false;
+		}
 		return ( fabs2( c - tCA * sideCA ) < fR2 );
 	}
 	if ( fCA2 < 1e-6f )
 	{
 		if ( fAB2 < 1e-6f ) // degenerated triangle -> point
+		{
 			return false;
+		}
 		// only a-b edge exists
 		float tAB = a * sideAB / fAB2;
 		if ( tAB <= 0 || tAB >= 1 )
+		{
 			return false;
+		}
 		return ( fabs2( a - tAB * sideAB ) < fR2 );
 	}
 	// projections to edges - 0 = 1st vertex; 1 = 2nd vertex
@@ -58,24 +76,40 @@ bool DoesTriSphereIntersect( const CVec3 &a1, const CVec3 &b1, const CVec3 &c1, 
 	float tCA = c * sideCA / fCA2;
 	// voronoi regions check for vertices
 	if ( tAB >= 1 && tBC <= 0 )
+	{
 		return false;
+	}
 	if ( tBC >= 1 && tCA <= 0 )
+	{
 		return false;
+	}
 	if ( tCA >= 1 && tAB <= 0 )
+	{
 		return false;
+	}
 	CVec3 normal = sideCA ^ sideAB;
 	float fLeng2 = fabs2( normal );
 	if ( fLeng2 < 1e-6f ) // degenerated triangle -> segment, but no coinsiding points
+	{
 		return ( fabs2( a - tAB * sideAB ) < fR2 );
+	}
 	float fDist2 = sqr( a * normal );
 	if ( fDist2 >= fR2 * fLeng2 ) // distance to triangle plane check
+	{
 		return false;
-	if ( ( a ^ sideAB ) * normal > 0 )                                  // projection outside of triangle
+	}
+	if ( ( a ^ sideAB ) * normal > 0 ) // projection outside of triangle
+	{
 		return ( tAB > 0 && tAB < 1 && fabs2( a - tAB * sideAB ) < fR2 ); // edge cylinder
-	if ( ( b ^ sideBC ) * normal > 0 )                                  // projection outside of triangle
+	}
+	if ( ( b ^ sideBC ) * normal > 0 ) // projection outside of triangle
+	{
 		return ( tBC > 0 && tBC < 1 && fabs2( b - tBC * sideBC ) < fR2 ); // edge cylinder
-	if ( ( c ^ sideCA ) * normal > 0 )                                  // projection outside of triangle
+	}
+	if ( ( c ^ sideCA ) * normal > 0 ) // projection outside of triangle
+	{
 		return ( tCA > 0 && tCA < 1 && fabs2( c - tCA * sideCA ) < fR2 ); // edge cylinder
+	}
 	return true;
 }
 
@@ -131,18 +165,26 @@ float CSuperCollider::CollideSphereTriangle( const SSphere &sphere,
 	float scal;
 	scal = plane.n * velocity.normVel;
 	if ( scal > -1e-6f )
+	{
 		return F_NO_COLLISION; // velocity parallel to plane or in opposite direction
+	}
 	CVec3 spherePoint;
 	CalcAplusBC( &spherePoint, sphere.ptCenter, -sphere.fRadius, plane.n );
 	// calculate plane contact point
 	CVec3 planePoint;
 	float fDistToPlane = plane.GetDistanceToPoint( spherePoint );
 	if ( fDistToPlane > -scal * velocity.fVel )
+	{
 		return F_NO_COLLISION; // too far
+	}
 	else if ( fDistToPlane < 0 )
+	{
 		CalcAplusBC( &planePoint, spherePoint, -fDistToPlane, plane.n ); // embedded sphere
+	}
 	else
+	{
 		CalcAplusBC( &planePoint, spherePoint, -( fDistToPlane / scal ), velocity.normVel );
+	}
 
 	const CVec3 &v0 = points[tri.n1];
 	const CVec3 &v1 = points[tri.n2];
@@ -172,20 +214,28 @@ float CSuperCollider::CollideSphereTriangle( const SSphere &sphere,
 		}
 		fDist = fabs2( p2 - planePoint );
 		if ( fDist < fMin )
+		{
 			pTriPoint = &p2;
+		}
 	}
 	CVec3 q;
 	CalcDif( &q, *pTriPoint, sphere.ptCenter );
 	float c = fabs2( q );
 	float v = q * velocity.normVel;
 	if ( v < 0 )
+	{
 		return F_NO_COLLISION; // different direction
+	}
 	float d = sphere.fRadius * sphere.fRadius - c + v * v;
 	if ( d < 0 )
+	{
 		return F_NO_COLLISION; // no intersection
+	}
 	float fDistToSphere = v - sqrt( d );
 	if ( fDistToSphere > velocity.fVel )
+	{
 		return F_NO_COLLISION; // too far
+	}
 	*pIntersect = *pTriPoint;
 	return fDistToSphere;
 }
@@ -226,9 +276,13 @@ void CSuperCollider::AddEntity( const SHMatrix &pos,
 		CVolumeContainer::SVolumeBounds bounds;
 		volume.MakeVolume( &bounds, clipped[t.i1], clipped[t.i2], clipped[t.i3] );
 		if ( volume.IsOut( bounds ) )
+		{
 			continue;
+		}
 		if ( !tout.plane.Set( points[tout.n1], points[tout.n2], points[tout.n3], true ) )
+		{
 			continue; // bad triangle
+		}
 		volume.ClipVolume( &bounds );
 		int nTri = tris.size();
 		tris.push_back( tout );

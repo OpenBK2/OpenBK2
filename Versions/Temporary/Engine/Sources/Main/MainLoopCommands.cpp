@@ -155,7 +155,9 @@ void CICLoadBase::Exec()
 {
 	const std::string szPathName = GetSavePathName( szFileName );
 	if ( !NVFS::DoesWinFileExist( szPathName ) )
+	{
 		return;
+	}
 	OnProgress( STG_START );
 	{
 		NMainLoop::ResetStack();
@@ -163,7 +165,9 @@ void CICLoadBase::Exec()
 		CFileStream stream( szPathName, CFileStream::WIN_READ_ONLY );
 		CPtr<IBinSaver> pSaver = CreateSaveLoadSaver( &stream, SAVER_MODE_READ_64 );
 		if ( pSaver == 0 )
+		{
 			return;
+		}
 		NMainLoop::Serialize( *pSaver );
 		OnProgress( STG_SERIALIZE_DONE );
 	}
@@ -191,14 +195,18 @@ const std::string CICSaveBase::GetPathName()
 void CICSaveBase::Exec()
 {
 	if ( szFileName.empty() )
+	{
 		return;
+	}
 	OnProgress( STG_START );
 	// save
 	{
 		CFileStream stream( GetSavePathName( szFileName ), CFileStream::WIN_CREATE );
 		CPtr<IBinSaver> pSaver = CreateSaveLoadSaver( &stream, SAVER_MODE_WRITE_64 );
 		if ( pSaver == 0 )
+		{
 			return;
+		}
 		NMainLoop::Serialize( *pSaver );
 	}
 

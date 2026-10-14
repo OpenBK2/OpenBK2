@@ -27,20 +27,26 @@ CInterfaceMPLadderGame::CInterfaceMPLadderGame() : CInterfaceScreenBase( "MPLadd
 CInterfaceMPLadderGame::~CInterfaceMPLadderGame()
 {
 	if ( pScreen )
+	{
 		Scene()->RemoveScreen( pScreen );
+	}
 }
 
 bool CInterfaceMPLadderGame::Init()
 {
 	if ( CInterfaceScreenBase::Init() == false )
+	{
 		return false;
+	}
 
 	RegisterObservers();
 
 	// load screen
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
 	if ( AddUIScreen( pScreen, "MPLadderGame", this ) == false )
+	{
 		return false;
+	}
 	pMain = GetChildChecked<IWindow>( pScreen, "Main", true );
 	NI_VERIFY( pMain, "No main window found", return false );
 
@@ -57,7 +63,9 @@ void CInterfaceMPLadderGame::FillMapData()
 
 	maps.resize( pGR->multiplayerMaps.size() );
 	for ( int i = 0; i < pGR->multiplayerMaps.size(); ++i )
+	{
 		maps[i] = new CLadderMapData( pGR->multiplayerMaps[i] );
+	}
 
 	UpdateInterior();
 }
@@ -71,11 +79,15 @@ void CInterfaceMPLadderGame::InitControls()
 	pMapName = GetChildChecked<ITextView>( pMain, "MapName", true );
 	pStartButton = GetChildChecked<IButton>( pMain, "ButtonStartGame", true );
 	if ( pStartButton )
+	{
 		pStartButton->Enable( false );
+	}
 
 	pChecksumPWL = GetChildChecked<IWindow>( pMain, "ChecksumPWL", true );
 	if ( pChecksumPWL )
+	{
 		pChecksumPWL->ShowWindow( false );
+	}
 
 	SetControls();
 }
@@ -158,7 +170,9 @@ void CInterfaceMPLadderGame::SetControls()
 	}
 
 	if ( pPicture )
+	{
 		pPicture->SetTexture( 0 );
+	}
 
 	FillMapData();
 	CheckEnableStartButton();
@@ -172,7 +186,9 @@ void CInterfaceMPLadderGame::CheckEnableStartButton()
 		CLadderMapData &mapData = *( maps[i] );
 		mapData.bSelected = ( mapData.pSwitch->GetState() == 1 );
 		if ( mapData.bSelected && mapData.bAllowed )
+		{
 			++nMaps;
+		}
 	}
 
 	pStartButton->Enable( nMaps > 0 );
@@ -215,19 +231,29 @@ void CInterfaceMPLadderGame::CItemLadderMapListViewer::MakeInterior( CObjectBase
 bool CInterfaceMPLadderGame::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_on_back" )
+	{
 		return OnBackReaction( szSender );
+	}
 
 	if ( szReaction == "react_on_start" )
+	{
 		return OnStartGameReaction( szSender );
+	}
 
 	if ( szReaction == "react_on_select_map" )
+	{
 		return OnSelectMapReaction( szSender );
+	}
 
 	if ( szReaction == "react_on_team_size" )
+	{
 		return OnTeamSizeChanged();
+	}
 
 	if ( szReaction == "react_on_map_checked" )
+	{
 		return OnChangeMapStatusReaction();
+	}
 
 	return false;
 }
@@ -255,26 +281,38 @@ bool CInterfaceMPLadderGame::OnStartGameReaction( const std::string &szSender )
 	CPtr<SMPUILadderGameMessage> pMsg = new SMPUILadderGameMessage();
 	CPtr<IButton> pHistoricalOpponents = GetChildChecked<IButton>( pMain, "HistoricalOpponents", true );
 	if ( pHistoricalOpponents )
+	{
 		pMsg->bHistoricity = ( pHistoricalOpponents->GetState() == 1 );
+	}
 	if ( pGameTypeBox )
+	{
 		pMsg->nTeamSize = pGameTypeBox->GetSelectedIndex();
+	}
 	if ( pSide )
+	{
 		pMsg->nCountry = pSide->GetSelectedIndex();
+	}
 	// Tech Levels
 	int nTechLevel = 0;
 	if ( pTechLevel )
+	{
 		nTechLevel = pTechLevel->GetSelectedIndex();
+	}
 	for ( int i = 0; i < pMPConsts->techLevels.size(); ++i )
 	{
 		if ( nTechLevel <= 0 || nTechLevel - 1 == i )
+		{
 			pMsg->techLevels.push_back( i );
+		}
 	}
 	// Maps
 	for ( int i = 0; i < maps.size(); ++i )
 	{
 		CLadderMapData &mapData = *( maps[i] );
 		if ( mapData.pSwitch->GetState() == 1 && mapData.bAllowed )
+		{
 			pMsg->maps.push_back( i );
+		}
 	}
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	Singleton<IMPToUIManager>()->AddUIMessage( pMsg );
@@ -312,7 +350,9 @@ bool CInterfaceMPLadderGame::OnSelectMapReaction( const std::string &szSender )
 	}
 	NMPSetData::SetText( pMapName, wszName );
 	if ( pPicture )
+	{
 		pPicture->SetTexture( pMiniMapTexture );
+	}
 
 	return true;
 }
@@ -348,7 +388,9 @@ bool CInterfaceMPLadderGame::OnChangeMapStatusReaction()
 bool CInterfaceMPLadderGame::StepLocal( bool bAppActive )
 {
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )
+	{
 		pInterface->Step( bAppActive );
+	}
 
 	return CInterfaceScreenBase::StepLocal( bAppActive );
 }

@@ -25,7 +25,9 @@ void RenderTnL( CTransformStack *pTS,
 		for ( int i = 1; i < fragments.size(); ++i )
 		{
 			if ( scene.IsFilteredFragment( i ) )
+			{
 				continue;
+			}
 			const SRenderFragmentInfo &frag = *fragments[i];
 			COpGenContext op( &lightOps.ops, &frag );
 			frag.pMaterial->AddOperations( &op, &rpc );

@@ -55,7 +55,9 @@ void SearchAvalableReinforcements( const NDb::SMapInfo *pCurMission,
                                    int nPlayer )
 {
 	if ( !pCurMission )
+	{
 		return;
+	}
 
 	// find out what reinforcement types are allowed in this map
 	pMissionReinf->clear();
@@ -75,7 +77,9 @@ void SearchAvalableReinforcements( const NDb::SMapInfo *pCurMission,
 				}
 			}
 			else // no chapter reinforcements at all. use mission ones
+			{
 				( *pMissionReinf )[( *it )->eType] = *it;
+			}
 		}
 	}
 }
@@ -105,7 +109,9 @@ void CScenarioTracker::GiveChapterReinforcement( CReinforcementTypes *pChapterRe
 		{
 			const NDb::SReinforcement *pReinf = pChapter->basePlayerReinforcements[nPlayer].reinforcements[i];
 			if ( pReinf )
+			{
 				( *pChapterReinf )[pReinf->eType] = pReinf;
+			}
 		}
 	}
 }
@@ -113,7 +119,9 @@ void CScenarioTracker::GiveChapterReinforcement( CReinforcementTypes *pChapterRe
 void CScenarioTracker::MapStart()
 {
 	if ( !GetCurrentMission() )
+	{
 		return;
+	}
 
 	ClearMissionScriptVars();
 
@@ -140,7 +148,9 @@ void CScenarioTracker::MapStart()
 
 	// Init reinf-calls statistics
 	for ( int i = 0; i < pMission->players.size(); ++i )
+	{
 		SetStatistics( i, ESK_REINFORCEMENTS_CALLED, 0 );
+	}
 
 	kills.SetSizes( pMission->players.size(), pMission->players.size() );
 	kills.FillZero();
@@ -152,10 +162,12 @@ void CScenarioTracker::MapStart()
 	SearchAvalableReinforcements(
 			GetCurrentMission(), &playerMission, pChapter && pChapter->bUseMapReinforcements ? 0 : &playerChapter, 0 );
 	if ( nMainEnemy >= 0 )
+	{
 		SearchAvalableReinforcements( GetCurrentMission(),
 		                              &enemyMission,
 		                              0 /*&enemyChapter*/,
 		                              nMainEnemy ); // Don't give chapter reinfs to enemy, use from map
+	}
 	SearchPotentialReinforcements();
 
 	if ( !pChapter && pMission ) // Map started directly
@@ -166,7 +178,9 @@ void CScenarioTracker::MapStart()
 		{
 			NI_ASSERT( *it != 0, "empty reinforcement entry for player 0" );
 			if ( *it )
+			{
 				playerMission[( *it )->eType] = *it;
+			}
 		}
 
 		if ( nMainEnemy >= 0 )
@@ -178,7 +192,9 @@ void CScenarioTracker::MapStart()
 			{
 				NI_ASSERT( *it != 0, fmt::format( "empty reinforcement entry for player {}", nMainEnemy ) );
 				if ( *it )
+				{
 					enemyMission[( *it )->eType] = *it;
+				}
 			}
 		}
 
@@ -188,10 +204,14 @@ void CScenarioTracker::MapStart()
 	if ( pChapter )
 	{
 		if ( pChapter->bUseMapReinforcements )
+		{
 			nReinforcementCallsLeftInMission = pMission->players[0].nReinforcementCalls;
+		}
 		else
+		{
 			nReinforcementCallsLeftInMission =
 					(std::min)( nReinforcementCallsLeftInChapter, GetMissionRecommendedReinfCalls() );
+		}
 	}
 
 	objectives.resize( GetCurrentMission()->objectives.size() );
@@ -281,7 +301,9 @@ void CScenarioTracker::ApplyMissionBonus( const NDb::SChapterBonus *pBonus, SMis
 					playerChapter[pBonus->pReinforcementSet->eType] = pBonus->pReinforcementSet;
 					playerReinfPotential[pBonus->pReinforcementSet->eType] = ERS_ENABLED;
 					if ( pMissionStats )
+					{
 						pMissionStats->bonusReinforcements.push_back( pBonus->pReinforcementSet );
+					}
 
 					// chapter reinf
 					chapterCurrentReinfs[pBonus->pReinforcementSet->eType].eState = ERS_ENABLED;
@@ -381,16 +403,22 @@ void CScenarioTracker::MissionWin()
 
 				// Issue bonuses if chapter did not end
 				for ( int j = 0; j < pChapter->missionPath[i].reward.size(); ++j )
+				{
 					ApplyMissionBonus( pChapter->missionPath[i].reward[j], &missionStats );
+				}
 			}
 		}
 
 		CMissions enabledMissions;
 		GetEnabledMissions( &enabledMissions );
 		if ( enabledMissions.empty() )
+		{
 			bChapterFinished = true;
+		}
 		if ( pChapter )
+		{
 			nReinforcementCallsLeftOld = nReinforcementCallsLeftInChapter;
+		}
 		//nReinforcementCallsLeftInChapter -= nReinforcementCallsUsed + pMission->players[0].nReinforcementCalls - nReinforcementCallsLeftInMission;
 		int nChapterCallsUsed = (std::max)( 0, nRecommendedCalls - nReinforcementCallsLeftInMission ); //
 		nReinforcementCallsLeftInChapter -= nChapterCallsUsed;
@@ -455,7 +483,9 @@ void CScenarioTracker::MissionWin()
 					DebugTrace( "---- Kills Value %f, giving medal %d", fValue, nMedalKillsGiven );
 				}
 				else
+				{
 					DebugTrace( "---- Kills Value %f, not giving medal", fValue );
+				}
 			}
 			// Kill Ratio
 			if ( !bMedalGiven && pCampaign->medalsForTactics.size() > nMedalTacticsGiven )
@@ -463,7 +493,9 @@ void CScenarioTracker::MissionWin()
 				const NDb::SMedalConditions &conditions = pCampaign->medalsForTactics[nMedalTacticsGiven];
 				float fUnitsLost = GetStatistics( 0, ESK_UNITS_LOST );
 				if ( fUnitsLost == 0.0f )
+				{
 					fUnitsLost = 1.0f; // To avoid division by 0
+				}
 				float fValue = GetStatistics( 0, ESK_UNITS_KILLED ) / fUnitsLost;
 				if ( nChapterIndex >= conditions.nStartingChapter && fValue > conditions.fParameter )
 				{
@@ -473,7 +505,9 @@ void CScenarioTracker::MissionWin()
 					DebugTrace( "---- Kills Ratio Value %f, giving medal %d", fValue, nMedalTacticsGiven );
 				}
 				else
+				{
 					DebugTrace( "---- Kills Ratio Value %f, not giving medal", fValue );
+				}
 			}
 			// Reinforcements
 			if ( !bMedalGiven && pCampaign->medalsForEconomy.size() > nMedalEconomyGiven )
@@ -481,8 +515,10 @@ void CScenarioTracker::MissionWin()
 				const NDb::SMedalConditions &conditions = pCampaign->medalsForEconomy[nMedalEconomyGiven];
 				float fValue = 0;
 				if ( nRecommendedCalls > 0 )
+				{
 					fValue =
 							( nRecommendedCalls - GetStatistics( 0, ESK_REINFORCEMENTS_CALLED ) ) * 100 / nRecommendedCalls; // In %%
+				}
 				if ( nChapterIndex >= conditions.nStartingChapter && fValue > conditions.fParameter )
 				{
 					bMedalGiven = true;
@@ -491,7 +527,9 @@ void CScenarioTracker::MissionWin()
 					DebugTrace( "---- Economy Value %f, giving medal %d", fValue, nMedalEconomyGiven );
 				}
 				else
+				{
 					DebugTrace( "---- Economy Value %f, not giving medal", fValue );
+				}
 			}
 			// Maxing Reinforcements
 			if ( nMedalMunchkinGiven == 0 )
@@ -520,7 +558,9 @@ void CScenarioTracker::MissionWin()
 	{
 		const int nLocalPlayer = 0;
 		if ( GetReinforcement( nLocalPlayer, (NDb::EReinforcementType)( i ) ) != 0 )
+		{
 			knownReinfs[i] = true;
+		}
 	}
 
 	for ( int i = 0; i < favoriteReinfs.size(); ++i )
@@ -534,14 +574,18 @@ void CScenarioTracker::MissionWin()
 	bMissionWon = true;
 
 	if ( IsTutorialMission() )
+	{
 		InterfaceState()->ApplyTutorialRecommendedMission();
+	}
 }
 
 const IScenarioTracker::SMissionStats *CScenarioTracker::GetMissionStats( const NDb::SMapInfo *pMission ) const
 {
 	CMissionsStats::const_iterator it = missionsStats.find( pMission );
 	if ( it != missionsStats.end() )
+	{
 		return &( it->second );
+	}
 	return 0;
 }
 
@@ -556,7 +600,9 @@ int CScenarioTracker::GetMissionRecommendedReinfCalls() const
 			const NDb::SMissionEnableInfo &info = *it;
 
 			if ( info.pMap == pMission )
+			{
 				return info.nRecommendedCalls;
+			}
 		}
 	}
 	return -1;
@@ -591,7 +637,9 @@ void CScenarioTracker::ClearMissionScriptVars()
 void CScenarioTracker::GetEnabledMissions( CMissions *_pMissions )
 {
 	if ( !pChapter )
+	{
 		return;
+	}
 
 	_pMissions->clear();
 
@@ -626,7 +674,9 @@ void CScenarioTracker::GetEnabledMissions( CMissions *_pMissions )
 			}
 
 			if ( !bEnable )
+			{
 				continue;
+			}
 
 			// Check reinforcement requirements
 			bool bReinfEnable = false;
@@ -642,10 +692,14 @@ void CScenarioTracker::GetEnabledMissions( CMissions *_pMissions )
 			}
 
 			if ( !pMission->players[0].reinforcementTypes.size() )
+			{
 				bReinfEnable = true; // No reinforcements required = enable
+			}
 
 			if ( bReinfEnable || ( pChapter && pChapter->bUseMapReinforcements ) )
+			{
 				_pMissions->push_back( pMission );
+			}
 		}
 	}
 }
@@ -653,7 +707,9 @@ void CScenarioTracker::GetEnabledMissions( CMissions *_pMissions )
 void CScenarioTracker::GetCompletedMissions( CMissions *_pMissions )
 {
 	if ( !pChapter )
+	{
 		return;
+	}
 
 	_pMissions->clear();
 	for ( CWonMissions::const_iterator itWon = wonMissions.begin(); itWon != wonMissions.end(); ++itWon )
@@ -665,7 +721,9 @@ void CScenarioTracker::GetCompletedMissions( CMissions *_pMissions )
 int CScenarioTracker::GetMissionToEnableCount() const
 {
 	if ( !pChapter || pChapter->missionPath.empty() )
+	{
 		return 0;
+	}
 	const int nMissionsToEnable = pChapter->missionPath[0].nMissionsToEnable;
 	const int nWonMissions = wonMissions.size();
 	const int nCount = (std::max)( 0, nMissionsToEnable - nWonMissions );
@@ -708,7 +766,9 @@ void CScenarioTracker::CampaignStart( const NDb::SCampaign *_pCampaign,
 
 		freeLeaders.resize( pCampaign->leaders.size() );
 		for ( int i = 0; i < pCampaign->leaders.size(); ++i )
+		{
 			freeLeaders[i] = i;
+		}
 	}
 
 	chapterCurrentReinfs.resize( NDb::_RT_NONE );
@@ -736,7 +796,9 @@ void CScenarioTracker::NextChapter()
 {
 	NI_ASSERT( pCampaign != 0, "no campaign started" );
 	if ( !pCampaign )
+	{
 		return;
+	}
 
 	InterfaceState()->SetFirstTimeInChapter( true );
 	InterfaceState()->SetAutoShowCommanderScreen( true );
@@ -747,7 +809,9 @@ void CScenarioTracker::NextChapter()
 	const bool bKRIDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
 
 	if ( !pChapter )
+	{
 		pChapter = pCampaign->chapters[0];
+	}
 	else
 	{
 		for ( int i = 0; i < pCampaign->chapters.size(); ++i )
@@ -784,7 +848,9 @@ void CScenarioTracker::NextChapter()
 		{
 			SChapterReinf &reinf = chapterCurrentReinfs[i];
 			if ( reinf.eState == ERS_ENABLED )
+			{
 				reinf.eState = ERS_NOT_ENABLED;
+			}
 			reinf.bFromPrevChapter = true;
 		}
 
@@ -851,20 +917,26 @@ const NDb::SReinforcement *CScenarioTracker::GetReinforcement( int nPlayer, NDb:
 		{
 			CReinforcementTypes::const_iterator pos = playerMission.find( eType );
 			if ( pos != playerMission.end() )
+			{
 				return pos->second;
+			}
 		}
 		else if ( pChapter ) // Give chapter reinf
 		{
 			CReinforcementTypes::const_iterator pos = playerChapter.find( eType );
 			if ( pos != playerChapter.end() )
+			{
 				return pos->second;
+			}
 		}
 	}
 	else if ( nPlayer == nMainEnemy )
 	{
 		CReinforcementTypes::const_iterator pos = enemyMission.find( eType );
 		if ( pos != enemyMission.end() )
+		{
 			return pos->second;
+		}
 	}
 	return 0;
 }
@@ -872,14 +944,18 @@ const NDb::SReinforcement *CScenarioTracker::GetReinforcement( int nPlayer, NDb:
 int CScenarioTracker::GetNPlayers() const
 {
 	if ( GetCurrentMission() )
+	{
 		return GetCurrentMission()->players.size();
+	}
 	return 0;
 }
 
 int CScenarioTracker::GetPlayerSide( int nPlayer ) const
 {
 	if ( GetCurrentMission() && GetCurrentMission()->players.size() > nPlayer )
+	{
 		return GetCurrentMission()->players[nPlayer].nDiplomacySide;
+	}
 	return 2;
 }
 
@@ -915,20 +991,26 @@ int CScenarioTracker::GetReinforcementXPLevel( int nPlayer, NDb::EReinforcementT
 	}
 
 	if ( nPlayer != GetLocalPlayer() )
+	{
 		return 0;
+	}
 
 	if ( !pCampaign || !pChapter )
 	{
 #ifndef _FINALRELEASE
 		if ( NGlobal::GetVar( "debug_unit_levels", 0 ) != 0 )
+		{
 			return N_MAX_XP_LEVEL;
+		}
 #endif // _FINALRELEASE
 		return 0;
 	}
 
 	const SLeaderInfo *pLeader = GetLeaderInfo( eType );
 	if ( pLeader )
+	{
 		return pLeader->info.nRank;
+	}
 
 	return 0;
 }
@@ -936,18 +1018,26 @@ int CScenarioTracker::GetReinforcementXPLevel( int nPlayer, NDb::EReinforcementT
 float CScenarioTracker::GetReinforcementXPForLevel( NDb::EReinforcementType eType, int nLevel ) const
 {
 	if ( !pAIConsts )
+	{
 		return 0.0f;
+	}
 
 	for ( int i = 0; i < pAIConsts->common.expLevels.size(); ++i )
 	{
 		const NDb::SAIExpLevel *pLevels = pAIConsts->common.expLevels[i];
 		if ( !pLevels )
+		{
 			continue;
+		}
 		if ( pLevels->eDBType != eType )
+		{
 			continue;
+		}
 		int nCheckedLevel = (std::min<int>)( pLevels->levels.size() - 1, nLevel );
 		if ( nCheckedLevel < 0 )
+		{
 			break;
+		}
 
 		// Get it
 		return pLevels->levels[nCheckedLevel].fExperience;
@@ -965,10 +1055,14 @@ int CScenarioTracker::GetReinforcementCallsLeft( int nPlayer )
 	}
 
 	if ( nPlayer == 0 )
+	{
 		return nReinforcementCallsLeftInMission;
+	}
 
 	if ( nPlayer == nMainEnemy )
+	{
 		return nEnemyReinfCallsLeft;
+	}
 
 	return 0;
 }
@@ -1001,7 +1095,9 @@ enum EMissionObjectiveState CScenarioTracker::GetObjectiveState( const int nID )
 void CScenarioTracker::SetObjectiveState( const int nID, const EMissionObjectiveState eState )
 {
 	if ( !GetCurrentMission() )
+	{
 		return; // запущена карта без миссии
+	}
 
 	NI_VERIFY( nID >= 0 && nID < objectives.size(),
 	           fmt::format( "Objective ID ({}) out of range [0..{}]", nID, objectives.size() ),
@@ -1016,19 +1112,27 @@ void CScenarioTracker::SetObjectiveState( const int nID, const EMissionObjective
 	{
 		std::vector<int>::iterator it = find( known_objectives.begin(), known_objectives.end(), nID );
 		if ( it == known_objectives.end() )
+		{
 			known_objectives.push_back( nID );
+		}
 	}
 	else if ( objectives[nID] != EMOS_WAITING && eState == EMOS_WAITING )
 	{
 		std::vector<int>::iterator it = find( known_objectives.begin(), known_objectives.end(), nID );
 		if ( it != known_objectives.end() )
+		{
 			known_objectives.erase( it );
+		}
 	}
 
 	if ( objectives[nID] != EMOS_COMPLETED && eState == EMOS_COMPLETED )
+	{
 		GiveXPToPlayer( GetLocalPlayer(), GetCurrentMission()->objectives[nID]->nExperience );
+	}
 	else if ( objectives[nID] == EMOS_COMPLETED && eState != EMOS_COMPLETED )
+	{
 		GiveXPToPlayer( GetLocalPlayer(), -GetCurrentMission()->objectives[nID]->nExperience );
+	}
 
 	objectives[nID] = eState;
 }
@@ -1055,9 +1159,13 @@ bool CScenarioTracker::GetObjectivePlaces( int nID, std::vector<CVec3> *pPlaces 
 	pPlaces->clear();
 	const NDb::SMissionObjective *pObjective = 0;
 	if ( pMission && nID >= 0 && nID < pMission->objectives.size() )
+	{
 		pObjective = pMission->objectives[nID];
+	}
 	if ( !pObjective )
+	{
 		return false;
+	}
 
 	IAILogic *pAILogic = Singleton<IAILogic>();
 
@@ -1094,20 +1202,30 @@ IScenarioTracker::EReinforcementState CScenarioTracker::GetReinforcementEnableSt
                                                                                      NDb::EReinforcementType eType )
 {
 	if ( !GetCurrentMission() )
+	{
 		return ERS_DISABLED;
+	}
 
 	if ( nPlayer == 0 )
+	{
 		return playerReinfPotential[eType];
+	}
 	else
+	{
 		return ERS_DISABLED;
+	}
 }
 
 void CScenarioTracker::GetChapterCurrentReinforcements( std::vector<SChapterReinf> *pReinf, int nPlayer ) const
 {
 	if ( nPlayer == 0 )
+	{
 		*pReinf = chapterCurrentReinfs;
+	}
 	else
+	{
 		pReinf->clear();
+	}
 }
 
 void CScenarioTracker::SearchPotentialReinforcements()
@@ -1115,10 +1233,14 @@ void CScenarioTracker::SearchPotentialReinforcements()
 	// Clear
 	playerReinfPotential.resize( NDb::_RT_NONE );
 	for ( int i = 0; i < NDb::_RT_NONE; ++i )
+	{
 		playerReinfPotential[i] = ERS_DISABLED;
+	}
 
 	if ( !pChapter )
+	{
 		return;
+	}
 
 	// Add all bonuses
 	for ( int i = 0; i < pChapter->missionPath.size(); ++i )
@@ -1126,7 +1248,9 @@ void CScenarioTracker::SearchPotentialReinforcements()
 		for ( int j = 0; j < pChapter->missionPath[i].reward.size(); ++j )
 		{
 			if ( pChapter->missionPath[i].pMap == GetCurrentMission() )
+			{
 				continue; // Can not apply potential bonuses to mission itself
+			}
 
 			const NDb::SChapterBonus *pBonus = pChapter->missionPath[i].reward[j];
 
@@ -1143,7 +1267,9 @@ void CScenarioTracker::SearchPotentialReinforcements()
 				const NDb::EReinforcementType eType = pBonus->pReinforcementSet->eType;
 
 				if ( !pBonus->bApplyToEnemy )
+				{
 					playerReinfPotential[eType] = ERS_NOT_ENABLED;
+				}
 			}
 			else if ( pBonus->eBonusType == NDb::CBT_REINF_DISABLE )
 			{
@@ -1156,7 +1282,9 @@ void CScenarioTracker::SearchPotentialReinforcements()
 	for ( int i = 0; i < NDb::_RT_NONE; ++i )
 	{
 		if ( GetReinforcement( 0, NDb::EReinforcementType( i ) ) )
+		{
 			playerReinfPotential[i] = ERS_ENABLED;
+		}
 		else if ( playerReinfPotential[i] == ERS_NOT_ENABLED )
 		{
 			EReinforcementState eState = ERS_DISABLED;
@@ -1176,7 +1304,9 @@ void CScenarioTracker::SearchPotentialReinforcements()
 			playerReinfPotential[i] = eState;
 		}
 		else
+		{
 			playerReinfPotential[i] = ERS_DISABLED;
+		}
 	}
 }
 
@@ -1184,7 +1314,9 @@ void CScenarioTracker::DecreaseReinforcementCallsLeft( int nPlayer, int nCalls )
 {
 	int nActualCalls = ( nCalls == 0 ) ? 1 : nCalls;
 	if ( nPlayer == 0 )
+	{
 		nReinforcementCallsLeftInMission = (std::max)( 0, nReinforcementCallsLeftInMission - nActualCalls );
+	}
 	else if ( nPlayer == nMainEnemy )
 	{
 		nEnemyReinfCallsLeft = (std::max)( 0, nEnemyReinfCallsLeft - nActualCalls );
@@ -1194,7 +1326,9 @@ void CScenarioTracker::DecreaseReinforcementCallsLeft( int nPlayer, int nCalls )
 	if ( nCalls == 0 )
 	{
 		if ( nPlayer == GetLocalPlayer() )
+		{
 			++nReinforcementCallsUsed;
+		}
 		int nOldValue = GetStatistics( nPlayer, ESK_REINFORCEMENTS_CALLED );
 		SetStatistics( nPlayer, ESK_REINFORCEMENTS_CALLED, nOldValue + 1 );
 	}
@@ -1207,7 +1341,9 @@ void CScenarioTracker::IncreaseReinforcementCallsLeft( int nPlayer, int nCalls )
 		nReinforcementCallsLeftInMission += nCalls;
 	}
 	else if ( nPlayer == nMainEnemy )
+	{
 		nEnemyReinfCallsLeft += nCalls;
+	}
 }
 
 void CScenarioTracker::RegisterReinforcementCall( int nPlayer, NDb::EReinforcementType eType )
@@ -1225,12 +1361,18 @@ bool CScenarioTracker::RegisterUnitKill( const SKillInfo &info )
 
 	// register kill
 	if ( info.nPlayer < kills.GetSizeY() && info.nKilledUnitPlayer < kills.GetSizeX() )
+	{
 		++kills[info.nPlayer][info.nKilledUnitPlayer];
+	}
 	if ( info.nPlayer < priceKills.GetSizeY() && info.nKilledUnitPlayer < priceKills.GetSizeX() )
+	{
 		priceKills[info.nPlayer][info.nKilledUnitPlayer] += info.fExpPrice;
+	}
 
 	if ( info.eReinfType == NDb::_RT_NONE )
+	{
 		return false;
+	}
 
 	if ( IsCampaignActive() && info.nKilledUnitPlayer == GetLocalPlayer() ) // Leader who lost
 	{
@@ -1244,7 +1386,9 @@ bool CScenarioTracker::RegisterUnitKill( const SKillInfo &info )
 	}
 
 	if ( info.nPlayer != 0 )
+	{
 		return false;
+	}
 
 	fPlayerXPAdds += info.fExpPrice;
 
@@ -1271,10 +1415,14 @@ bool CScenarioTracker::RegisterUnitKill( const SKillInfo &info )
 				{
 					const SLeaderInfo &leader = it->second;
 					if ( leader.info.nRank + 1 < pCampaign->leaderRanks.size() )
+					{
 						++nCount;
+					}
 				}
 				if ( nCount == 0 )
+				{
 					break;
+				}
 
 				const float fExpPart = fRestExp / nCount;
 				fRestExp = 0.0f;
@@ -1336,7 +1484,9 @@ bool CScenarioTracker::AddLeaderExp( float *pExp, SLeaderInfo *pLeader, NDb::ERe
 			*pExp = fExtraExp;
 			pLeader->info.fExp = fRequiredXP;
 			if ( pLeader->info.nRank < pCampaign->leaderRanks.size() - 1 )
+			{
 				pLeader->info.nRank++;
+			}
 			bResult = true;
 		}
 	}
@@ -1349,7 +1499,9 @@ int CScenarioTracker::GetUnitKills( const int nPlayer ) const
 	int nSum = 0;
 
 	for ( int i = 0; i < kills.GetSizeX(); ++i )
+	{
 		nSum += kills[nPlayer][i];
+	}
 
 	return nSum;
 }
@@ -1369,12 +1521,16 @@ const NDb::SDifficultyLevel *CScenarioTracker::GetDifficultyLevelDB() const
 	if ( pCampaign )
 	{
 		if ( nDifficulty >= 0 && nDifficulty < pCampaign->difficultyLevels.size() )
+		{
 			return pCampaign->difficultyLevels[nDifficulty];
+		}
 	}
 	else if ( pMission )
 	{
 		if ( nDifficulty >= 0 && nDifficulty < pMission->customDifficultyLevels.size() )
+		{
 			return pMission->customDifficultyLevels[nDifficulty];
+		}
 	}
 
 	return 0;
@@ -1384,7 +1540,9 @@ const NDb::SUnitStatsModifier *CScenarioTracker::GetEnemyDifficultyModifier()
 {
 	const NDb::SDifficultyLevel *pDifficultyLevel = GetDifficultyLevelDB();
 	if ( pDifficultyLevel )
+	{
 		return pDifficultyLevel->pEnemyStatModifier;
+	}
 
 	return 0;
 }
@@ -1393,7 +1551,9 @@ const NDb::SUnitStatsModifier *CScenarioTracker::GetPlayerDifficultyModifier()
 {
 	const NDb::SDifficultyLevel *pDifficultyLevel = GetDifficultyLevelDB();
 	if ( pDifficultyLevel )
+	{
 		return pDifficultyLevel->pPlayerStatModifier;
+	}
 
 	return 0;
 }
@@ -1402,7 +1562,9 @@ const float CScenarioTracker::GetEnemyDifficultyRCallsModifier()
 {
 	const NDb::SDifficultyLevel *pDifficultyLevel = GetDifficultyLevelDB();
 	if ( pDifficultyLevel )
+	{
 		return pDifficultyLevel->fEnemyReinfCallsCoeff;
+	}
 
 	return 1.0f;
 }
@@ -1411,7 +1573,9 @@ const float CScenarioTracker::GetEnemyDifficultyRTimeModifier()
 {
 	const NDb::SDifficultyLevel *pDifficultyLevel = GetDifficultyLevelDB();
 	if ( pDifficultyLevel )
+	{
 		return pDifficultyLevel->fEnemyReinfRecycleCoeff;
+	}
 
 	return 1.0f;
 }
@@ -1419,11 +1583,15 @@ const float CScenarioTracker::GetEnemyDifficultyRTimeModifier()
 const NDb::SPlayerRank *CScenarioTracker::GetPlayerRank() const
 {
 	if ( !pCampaign )
+	{
 		return 0;
+	}
 
 	int nIndex = GetPlayerRankIndex();
 	if ( nIndex < 0 || nIndex >= pCampaign->rankExperiences.size() )
+	{
 		return 0;
+	}
 
 	return pCampaign->rankExperiences[nIndex].pRank;
 }
@@ -1431,15 +1599,21 @@ const NDb::SPlayerRank *CScenarioTracker::GetPlayerRank() const
 int CScenarioTracker::GetPlayerRankIndex( int nXP ) const
 {
 	if ( !pCampaign || pCampaign->rankExperiences.empty() )
+	{
 		return -1;
+	}
 
 	int nChosenRank = 0;
 	for ( int i = 1; i < pCampaign->rankExperiences.size(); ++i )
 	{
 		if ( pCampaign->rankExperiences[i].fExperience > nXP )
+		{
 			break;
+		}
 		else
+		{
 			nChosenRank = i;
+		}
 	}
 
 	return nChosenRank;
@@ -1453,7 +1627,9 @@ int CScenarioTracker::GetPlayerRankIndex() const
 int CScenarioTracker::CalcPossibleEnemyExp( int nPlayer ) const
 {
 	if ( !pMission )
+	{
 		return 0;
+	}
 
 	float fTotalExp = 0;
 
@@ -1462,14 +1638,18 @@ int CScenarioTracker::CalcPossibleEnemyExp( int nPlayer ) const
 	{
 		const NDb::SMapPlayerInfo &opponent = pMission->players[i];
 		if ( i == nPlayer || opponent.nDiplomacySide == 2 || opponent.nDiplomacySide == player.nDiplomacySide )
+		{
 			continue;
+		}
 
 		float fMaxReinfExp = 0;
 		for ( int j = 0; j < opponent.reinforcementTypes.size(); ++j )
 		{
 			const NDb::SReinforcement *pReinf = opponent.reinforcementTypes[j];
 			if ( !pReinf )
+			{
 				continue;
+			}
 
 			float fReinfExp = 0;
 			for ( int k = 0; k < pReinf->entries.size(); ++k )
@@ -1479,7 +1659,9 @@ int CScenarioTracker::CalcPossibleEnemyExp( int nPlayer ) const
 				if ( entry.pMechUnit )
 				{
 					if ( entry.pMechUnit->fExpPrice > 0.0f )
+					{
 						fReinfExp += entry.pMechUnit->fExpPrice;
+					}
 				}
 				else if ( entry.pSquad )
 				{
@@ -1487,29 +1669,41 @@ int CScenarioTracker::CalcPossibleEnemyExp( int nPlayer ) const
 					{
 						const NDb::SInfantryRPGStats *pInf = entry.pSquad->members[m];
 						if ( !pInf )
+						{
 							continue;
+						}
 
 						if ( pInf->fExpPrice > FP_EPSILON )
+						{
 							fReinfExp += pInf->fExpPrice;
+						}
 					}
 				}
 			}
 			if ( fReinfExp > fMaxReinfExp )
+			{
 				fMaxReinfExp = fReinfExp;
+			}
 		}
 
 		if ( opponent.nReinforcementCalls > 0 )
+		{
 			fTotalExp += fMaxReinfExp * opponent.nReinforcementCalls;
+		}
 
 		for ( int j = 0; j < pMission->objects.size(); ++j )
 		{
 			const NDb::SMapObjectInfo &objInfo = pMission->objects[j];
 			if ( objInfo.nPlayer != i && !objInfo.pObject )
+			{
 				continue;
+			}
 
 			const NDb::SUnitBaseRPGStats *pObj = dynamic_cast_ptr<const NDb::SUnitBaseRPGStats *>( objInfo.pObject );
 			if ( pObj && pObj->fExpPrice > FP_EPSILON )
+			{
 				fTotalExp += pObj->fExpPrice;
+			}
 		}
 	}
 
@@ -1538,10 +1732,14 @@ void CScenarioTracker::SetStatistics( int nPlayer, EStatisticsKind eKind, int nV
 	NI_ASSERT( nValue >= 0, "Wrong statistics value" );
 
 	if ( nPlayer >= statistic.size() )
+	{
 		statistic.resize( nPlayer + 1 );
+	}
 
 	if ( eKind >= statistic[nPlayer].size() )
+	{
 		statistic[nPlayer].insert( statistic[nPlayer].end(), eKind + 1 - statistic[nPlayer].size(), 0 );
+	}
 
 	statistic[nPlayer][eKind] = nValue;
 }
@@ -1555,15 +1753,23 @@ bool CScenarioTracker::IsNewReinf( NDb::EReinforcementType eType ) const
 const IScenarioTracker::SPlayerColor &CScenarioTracker::GetPlayerColor( int nPlayer ) const
 {
 	if ( nPlayer == GetLocalPlayer() )
+	{
 		return playerColorUser;
+	}
 
 	int nSide = GetPlayerSide( nPlayer );
 	if ( nSide == 0 )
+	{
 		return playerColorFriend;
+	}
 	else if ( nSide == 1 )
+	{
 		return playerColorEnemy;
+	}
 	else
+	{
 		return playerColorNeutral;
+	}
 }
 
 int CScenarioTracker::CalcScore(
@@ -1606,7 +1812,9 @@ void CScenarioTracker::UpdateStatistics( bool bWin )
 		int nExp = fPlayerXP + fPlayerXPAdds;
 		int nIndex = GetPlayerRankIndex( nExp );
 		if ( nIndex >= 0 && nIndex < pCampaign->rankExperiences.size() )
+		{
 			nExp -= pCampaign->rankExperiences[nIndex].fExperience;
+		}
 
 		SetStatistics( nLocalPlayer, ESK_CAMPAIGN_EXP_CURRENT, nExp );
 	}
@@ -1617,7 +1825,9 @@ void CScenarioTracker::UpdateStatistics( bool bWin )
 		int nExp = 0;
 		int nIndex = GetPlayerRankIndex( fPlayerXP + fPlayerXPAdds );
 		if ( nIndex >= 0 && nIndex + 1 < pCampaign->rankExperiences.size() )
+		{
 			nExp = pCampaign->rankExperiences[nIndex + 1].fExperience - pCampaign->rankExperiences[nIndex].fExperience;
+		}
 
 		SetStatistics( nLocalPlayer, ESK_CAMPAIGN_EXP_NEXT_LEVEL, nExp );
 	}
@@ -1717,12 +1927,18 @@ const NDb::SPartyDependentInfo *CScenarioTracker::GetPlayerParty( const int nPla
 {
 	CDBPtr<NDb::SMapInfo> pMapInfo;
 	if ( IsMissionActive() )
+	{
 		pMapInfo = GetCurrentMission();
+	}
 	else
+	{
 		pMapInfo = GetLastMission();
+	}
 
 	if ( !pMapInfo )
+	{
 		return 0;
+	}
 
 	NI_VERIFY( nPlayer >= 0 && nPlayer < pMapInfo->players.size(),
 	           fmt::format( "PRG: Player No {} not in bounds (max {})", nPlayer, pMapInfo->players.size() ),
@@ -1735,7 +1951,9 @@ const IScenarioTracker::SLeaderInfo *CScenarioTracker::GetLeaderInfo( const NDb:
 {
 	CLeaderList::const_iterator it = leaders.find( eReinf );
 	if ( it == leaders.end() )
+	{
 		return 0;
+	}
 
 	return &( it->second );
 }
@@ -1766,7 +1984,9 @@ bool CScenarioTracker::AssignLeader( const NDb::EReinforcementType eReinf,
                                      SUndoLeaderInfo *pUndo )
 {
 	if ( !IsCampaignActive() )
+	{
 		return false;
+	}
 	NI_VERIFY( nAvailablePromotions > 0, "No available promotions to assign a leader", return false );
 
 	--nAvailablePromotions;
@@ -1810,14 +2030,18 @@ float CScenarioTracker::GetLeaderRankExp( NDb::EReinforcementType eType, int nLe
 void CScenarioTracker::UndoAssignLeader( const SUndoLeaderInfo &undo )
 {
 	if ( !IsCampaignActive() )
+	{
 		return;
+	}
 
 	CLeaderList::iterator it = leaders.find( undo.eReinf );
 	if ( it != leaders.end() )
 	{
 		++nAvailablePromotions;
 		if ( undo.nValue >= 0 )
+		{
 			freeLeaders.push_back( undo.nValue );
+		}
 
 		leaders.erase( it );
 	}
@@ -1844,20 +2068,26 @@ int CScenarioTracker::GetLeaderLevel( int nPlayer, NDb::EReinforcementType eType
 	}
 
 	if ( nPlayer != GetLocalPlayer() )
+	{
 		return -1;
+	}
 
 	if ( !pCampaign || !pChapter )
 	{
 #ifndef _FINALRELEASE
 		if ( NGlobal::GetVar( "debug_unit_levels", 0 ) != 0 )
+		{
 			return N_MAX_XP_LEVEL;
+		}
 #endif // _FINALRELEASE
 		return -1;
 	}
 
 	CLeaderList::const_iterator it = leaders.find( eType );
 	if ( it == leaders.end() )
+	{
 		return -1;
+	}
 
 	return ( it->second ).info.nRank;
 }
@@ -1865,11 +2095,15 @@ int CScenarioTracker::GetLeaderLevel( int nPlayer, NDb::EReinforcementType eType
 const NDb::SUnitStatsModifier *CScenarioTracker::GetLeaderModifier( int nPlayer, NDb::EReinforcementType eType )
 {
 	if ( !IsCampaignActive() || nPlayer != GetLocalPlayer() )
+	{
 		return 0;
+	}
 
 	CLeaderList::const_iterator it = leaders.find( eType );
 	if ( it == leaders.end() )
+	{
 		return 0;
+	}
 
 	NI_ASSERT(
 			0 <= it->second.info.nRank && it->second.info.nRank < pCampaign->leaderRanks.size(),
@@ -1886,7 +2120,9 @@ const std::wstring &CScenarioTracker::GetLeaderRankName( int nRank ) const
 		{
 			const NDb::SLeaderExpLevel &level = pCampaign->leaderRanks[nRank];
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( level., RankName ) )
+			{
 				return GET_TEXT_PRE( level., RankName );
+			}
 		}
 	}
 
@@ -1911,7 +2147,9 @@ bool CScenarioTracker::GiveXP( const int nPlayer, NDb::EReinforcementType eReinf
 		bool bResult = false;
 		float fXP = nXP;
 		if ( AddReinfExp( &fXP, eReinf ) )
+		{
 			bResult = true;
+		}
 
 		fXP = nXP;
 		if ( IsCampaignActive() )
@@ -1921,7 +2159,9 @@ bool CScenarioTracker::GiveXP( const int nPlayer, NDb::EReinforcementType eReinf
 			{
 				SLeaderInfo &leader = it->second;
 				if ( AddLeaderExp( &fXP, &leader, eReinf ) )
+				{
 					bResult = true;
+				}
 			}
 		}
 
@@ -1934,7 +2174,9 @@ bool CScenarioTracker::GiveXP( const int nPlayer, NDb::EReinforcementType eReinf
 bool CScenarioTracker::GiveXPToPlayer( const int nPlayer, const int nXP )
 {
 	if ( nPlayer != 0 )
+	{
 		return false;
+	}
 
 	fPlayerXPAdds = (std::max)( 0.0f, fPlayerXPAdds + nXP );
 
@@ -1944,7 +2186,9 @@ bool CScenarioTracker::GiveXPToPlayer( const int nPlayer, const int nXP )
 void CScenarioTracker::GetAllMissionStats( std::vector<const SMissionStats *> *pMissions ) const
 {
 	if ( !pMissions )
+	{
 		return;
+	}
 	pMissions->resize( 0 );
 	pMissions->reserve( missionsStats.size() );
 	for ( CMissionsStats::const_iterator it = missionsStats.begin(); it != missionsStats.end(); ++it )
@@ -1973,7 +2217,9 @@ NDb::EReinforcementType CScenarioTracker::GetFavoriteReinf() const
 void CScenarioTracker::MarkFavoriteReinf( NDb::EReinforcementType eType )
 {
 	if ( eType < 0 || eType >= favoriteReinfs.size() )
+	{
 		return;
+	}
 	favoriteReinfs[eType].nCurrentCount++;
 }
 
@@ -1993,7 +2239,9 @@ std::wstring CScenarioTracker::GetReinfName( NDb::EReinforcementType eType ) con
 {
 	std::wstring wszReinf;
 	if ( eType == NDb::_RT_NONE )
+	{
 		return wszReinf;
+	}
 
 	for ( int i = 0; i < chapterCurrentReinfs.size(); ++i )
 	{
@@ -2001,7 +2249,9 @@ std::wstring CScenarioTracker::GetReinfName( NDb::EReinforcementType eType ) con
 		if ( reinf.pDBReinf && reinf.pDBReinf->eType == eType )
 		{
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( reinf.pDBReinf->, LocalizedName ) )
+			{
 				wszReinf = GET_TEXT_PRE( reinf.pDBReinf->, LocalizedName );
+			}
 			break;
 		}
 	}
@@ -2012,7 +2262,9 @@ std::wstring CScenarioTracker::GetReinfName( NDb::EReinforcementType eType ) con
 const NDb::SUnitStatsModifier *CScenarioTracker::GetPlayerChapterModifier( NDb::EReinforcementType eReinf )
 {
 	if ( !pChapter )
+	{
 		return 0;
+	}
 
 	return ( pChapter->general.eReinforcementType == eReinf ) ? pChapter->general.pStatBonus : 0;
 }

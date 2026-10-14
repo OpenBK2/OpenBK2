@@ -64,16 +64,22 @@ void CSFXSound::SetChannel( int _nChannel )
 bool CSFXSound::IsPlaying()
 {
 	if ( ( nChannel != -1 ) && FSOUND_IsPlaying( nChannel ) )
+	{
 		return FSOUND_GetCurrentSample( nChannel ) == pSample->GetInternalContainer();
+	}
 	else
+	{
 		return false;
+	}
 }
 
 void CSFXSound::SetLooping( bool bEnable, int nStart, int nEnd )
 {
 	FSOUND_Sample_SetMode( pSample->GetInternalContainer(), bEnable ? FSOUND_LOOP_NORMAL : FSOUND_LOOP_OFF );
 	if ( ( nStart != -1 ) && ( nEnd != -1 ) )
+	{
 		FSOUND_Sample_SetLoopPoints( pSample->GetInternalContainer(), nStart, nEnd );
+	}
 }
 
 unsigned int CSFXSound::GetLenght()

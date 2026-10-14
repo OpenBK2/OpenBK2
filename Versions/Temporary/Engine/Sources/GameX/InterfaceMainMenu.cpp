@@ -47,7 +47,9 @@ CInterfaceMainMenu::CInterfaceMainMenu() : CInterfaceScreenBase( "MainMenu", "in
 bool CInterfaceMainMenu::Init()
 {
 	if ( CInterfaceScreenBase::Init() == false )
+	{
 		return false;
+	}
 
 	Singleton<IGameTimer>()->Pause( false, PAUSE_TYPE_USER_PAUSE );
 
@@ -77,7 +79,9 @@ bool CInterfaceMainMenu::Init()
 	pLoadGameBtn = GetChildChecked<IButton>( pSinglePlayerMenuWnd, "LoadGameBtn", true );
 
 	if ( pTutorialBtn )
+	{
 		pTutorialBtn->Enable( pGameRoot && !pGameRoot->tutorialMaps.empty() );
+	}
 
 #ifndef _FINALRELEASE
 	ITextView *pVersionView = GetChildChecked<ITextView>( GetScreen(), "VersionNumber", true );
@@ -100,7 +104,9 @@ bool CInterfaceMainMenu::Init()
 
 	// music
 	if ( pGameRoot && pGameRoot->pMainMenuMusic )
+	{
 		Singleton<IMusicSystem>()->Init( pGameRoot->pMainMenuMusic, 0 );
+	}
 
 	const bool bKRIDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
 	if ( bKRIDemo )
@@ -120,26 +126,42 @@ bool CInterfaceMainMenu::Init()
 		IButton *pProfileManagerBtn = GetChildChecked<IButton>( pSinglePlayerMenuWnd, "ProfileManagerBtn", true );
 
 		if ( pMultiplayerBtn )
+		{
 			pMultiplayerBtn->Enable( false );
+		}
 		//		if ( pOptionsBtn )
 		//			pOptionsBtn->Enable( false );
 		if ( pLoadMODBtn )
+		{
 			pLoadMODBtn->Enable( false );
+		}
 		//		if ( pCreditsBtn )
 		//			pCreditsBtn->Enable( false );
 		if ( pEncyclopediaBtn )
+		{
 			pEncyclopediaBtn->Enable( false );
+		}
 
 		if ( pTutorialBtn )
+		{
 			pTutorialBtn->Enable( false );
+		}
 		if ( pLoadGameBtn )
+		{
 			pLoadGameBtn->Enable( false );
+		}
 		if ( pCustomMissionBtn )
+		{
 			pCustomMissionBtn->Enable( false );
+		}
 		if ( pCustomCampaignBtn )
+		{
 			pCustomCampaignBtn->Enable( false );
+		}
 		if ( pProfileManagerBtn )
+		{
 			pProfileManagerBtn->Enable( false );
+		}
 	}
 
 	const bool bMPDemo = NGlobal::GetVar( "MP_DEMO", 0 ) != 0;
@@ -152,11 +174,17 @@ bool CInterfaceMainMenu::Init()
 		IButton *pEncyclopediaBtn = GetChildChecked<IButton>( pMainWnd, "EncyclopediaBtn", true );
 
 		if ( pSinglePlayerBtn )
+		{
 			pSinglePlayerBtn->Enable( false );
+		}
 		if ( pLoadMODBtn )
+		{
 			pLoadMODBtn->Enable( false );
+		}
 		if ( pEncyclopediaBtn )
+		{
 			pEncyclopediaBtn->Enable( false );
+		}
 	}
 
 	return true;
@@ -171,9 +199,13 @@ void CInterfaceMainMenu::OnGetFocus( bool bFocus )
 	if ( bFocus )
 	{
 		if ( GetScreen() )
+		{
 			GetScreen()->ShowWindow( true );
+		}
 		if ( pLoadGameBtn )
+		{
 			pLoadGameBtn->Enable( !NSaveLoad::IsSaveListEmpty() );
+		}
 	}
 }
 
@@ -182,7 +214,9 @@ bool CInterfaceMainMenu::StepLocal( bool bAppActive )
 	bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );
 
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )
+	{
 		pInterface->Step( bAppActive );
+	}
 
 	return bResult;
 }
@@ -226,7 +260,9 @@ void CInterfaceMainMenu::MsgCampaignSelectionMenu( const SGameMessage &msg )
 void CInterfaceMainMenu::MsgProfileManagerMenu( const SGameMessage &msg )
 {
 	if ( GetScreen() )
+	{
 		GetScreen()->ShowWindow( false );
+	}
 	NMainLoop::Command( ML_COMMAND_PROFILE_MENU, "" );
 }
 
@@ -315,12 +351,16 @@ void CInterfaceMainMenu::OnLoadMod( const std::string &szSender )
 void CInterfaceMainMenu::MsgSinglePlayer( const SGameMessage &msg )
 {
 	if ( bVisited )
+	{
 		return;
+	}
 
 	std::wstring wszProfileName = NProfile::GetCurrentProfileName();
 	std::wstring wszDefaultProfileName;
 	if ( IScreen *pScreen = GetScreen() )
+	{
 		wszDefaultProfileName = pScreen->GetTextEntry( "T_DEFAULT_PROFILE_NAME" );
+	}
 	if ( wszProfileName != wszDefaultProfileName )
 	{
 		bVisited = true;
@@ -329,12 +369,16 @@ void CInterfaceMainMenu::MsgSinglePlayer( const SGameMessage &msg )
 
 	bVisited = NGlobal::GetVar( PROFILE_MANAGER_VISITED, 0 ) != 0;
 	if ( bVisited )
+	{
 		return;
+	}
 
 	bVisited = true;
 	NGlobal::SetVar( PROFILE_MANAGER_VISITED, 1, STORAGE_USER );
 	if ( GetScreen() )
+	{
 		GetScreen()->ShowWindow( false );
+	}
 	NMainLoop::Command( ML_COMMAND_PROFILE_MENU, "" );
 }
 
@@ -351,9 +395,13 @@ void CICMainMenu::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 	if ( !szConfig.empty() )
+	{
 		NInput::PostEvent( szConfig, 0, 0 );
+	}
 	else
+	{
 		NInput::PostEvent( "main_menu_init", 0, 0 );
+	}
 }
 
 void CICMainMenu::Configure( const char *pszConfig )
@@ -405,7 +453,9 @@ void StartMainMenuIntro( const std::string &szID, const std::vector<std::wstring
 			NGlobal::SetVar( "main_loop_on_exit_command", L"demo_screen_final" );
 		}
 		else
+		{
 			szText += ";menu";
+		}
 		NMainLoop::Command( ML_COMMAND_CLEAR_INTERFACES, "" );
 		NMainLoop::Command( ML_COMMAND_PLAY_MOVIE, szText.c_str() );
 	}

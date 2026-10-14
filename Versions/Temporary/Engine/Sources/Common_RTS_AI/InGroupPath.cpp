@@ -61,7 +61,9 @@ void CInGroupPathBasis::CantFindPathToFormation()
 void CInGroupPathBasis::CutDriveToFormationPath( IStaticPath *pPath )
 {
 	if ( pPath->GetLength() >= 4 )
+	{
 		pPath->MoveFinishTileTo( pPath->GetLength() / 2 );
+	}
 }
 
 bool CInGroupPathBasis::CanGoToFormationPos( const CVec2 &newCenter, const CVec2 &vDesPos, const CVec2 &vFormPos )
@@ -103,7 +105,9 @@ bool CInGroupPathBasis::CanGoToFormationPos( const CVec2 &newCenter, const CVec2
 				{
 					pPath = CreateStaticPathToPoint( newCenter, vDesPos, VNULL2, pUnit, false, pAIMap );
 					if ( !pPath )
+					{
 						return false;
+					}
 					pStandartPath = new CStandartPath2( pUnit, pPath, newCenter, pPath->GetFinishPoint(), pAIMap );
 					if ( pUnitOwnPath->Init( pUnit, pStandartPath, false, true, pAIMap ) )
 					{
@@ -111,7 +115,9 @@ bool CInGroupPathBasis::CanGoToFormationPos( const CVec2 &newCenter, const CVec2
 						//DebugTrace( "Unit %d goes by own path (2)", pUnit->GetUniqueID() );
 					}
 					else
+					{
 						return false;
+					}
 				}
 				return true;
 			}
@@ -142,7 +148,9 @@ void CInGroupPathBasis::ValidateCurPath( const CVec2 &newCenter )
 	const SVector vNewCenterTile = pAIMap->GetTile( newCenter );
 	CVec2 vCenterAhead = newCenter + pUnit->GetDirectionVector() * pAIMap->GetTileSize() / 2;
 	if ( pAIMap->GetTile( vCenterAhead ) == vNewCenterTile )
+	{
 		vCenterAhead += pUnit->GetDirectionVector() * pAIMap->GetTileSize() / 2;
+	}
 
 	if ( !pUnit->CanMoveBetweenTiles( vNewCenterTile, pAIMap->GetTile( vCenterAhead ) ) ||
 	     pAIMap->GetTerrain()->CanUnitGoToPoint(
@@ -200,18 +208,24 @@ bool CInGroupPathBasis::DriveToFormation( const CVec2 &newCenter, const bool bAn
 					//DebugTrace( "Unit %d goes by own path (3)", pUnit->GetUniqueID() );
 				}
 				else
+				{
 					return false;
+				}
 
 				return true;
 			}
 			else
+			{
 				return false;
+			}
 		}
 		//DebugTrace( "CanGoToFormationPos returns true (4)" );
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 const CVec2 CInGroupPathBasis::MoveUnit( const NTimer::STime timeDiff, const float fSpeed )
@@ -222,9 +236,13 @@ const CVec2 CInGroupPathBasis::MoveUnit( const NTimer::STime timeDiff, const flo
 	if ( timeToSearchPathToBack > 0 )
 	{
 		if ( timeToSearchPathToBack < timeDiff )
+		{
 			timeToSearchPathToBack -= timeDiff;
+		}
 		else
+		{
 			timeToSearchPathToBack = 0;
+		}
 		return vCenter;
 	}
 
@@ -232,7 +250,9 @@ const CVec2 CInGroupPathBasis::MoveUnit( const NTimer::STime timeDiff, const flo
 	{
 		Stop();
 		if ( pFormation->IsPathFinished() )
+		{
 			bFinished = true;
+		}
 	}
 
 	if ( bFinished )
@@ -245,7 +265,9 @@ const CVec2 CInGroupPathBasis::MoveUnit( const NTimer::STime timeDiff, const flo
 
 	// стоим впереди
 	if ( lineShift > 0 )
+	{
 		result += pFormation->GetDirectionVector() * lineShift;
+	}
 
 	const float fDist = fabs( result - vCenter );
 	const float fDiff = fDist - fSpeed * timeDiff;
@@ -266,7 +288,9 @@ const CVec2 CInGroupPathBasis::MoveUnit( const NTimer::STime timeDiff, const flo
 	}
 
 	if ( fDist == 0.0f && pSmoothGroupPath->IsFinished() )
+	{
 		bFinished = true;
+	}
 
 	pSmoothGroupPath->NotifyPathShift( -lineShift );
 
@@ -280,7 +304,9 @@ const CVec2 CInGroupPathBasis::MoveUnit( const NTimer::STime timeDiff, const flo
 		if ( lineShift <= 0 && fDiff > 6 * pAIMap->GetTileSize() && bCanGoToPoint )
 		{
 			if ( DriveToFormation( result, true ) )
+			{
 				return result;
+			}
 			else
 			{
 				CantFindPathToFormation();
@@ -314,13 +340,19 @@ const CVec2 CInGroupPathBasis::MoveUnit( const NTimer::STime timeDiff, const flo
 
 	// прошли слишком мало
 	if ( bGoByOwnPath && fabs2( vCenter - result ) < sqr( pFormation->GetMaxSpeedHere() * timeDiff / 1.5f ) )
+	{
 		return vCenter;
+	}
 	else if ( result != vCenter && !bFinished )
 	{
 		if ( fabs2( result - vCenter ) > sqr( pFormation->GetMaxSpeedHere() * timeDiff / 1.5f ) )
+		{
 			pUnit->SetDirectionVec( result - vCenter );
+		}
 		else
+		{
 			pUnit->SetDirectionVec( pSmoothGroupPath->GetFarCenter() + pSmoothGroupPath->GetUnitShift( pUnit ) - result );
+		}
 	}
 
 	return result;
@@ -331,7 +363,9 @@ void CInGroupPathBasis::Segment( const NTimer::STime timeDiff )
 	if ( bGoByOwnPath )
 	{
 		if ( !pUnitOwnPath->IsFinished() )
+		{
 			pUnitOwnPath->Segment( timeDiff );
+		}
 		if ( pUnitOwnPath->IsFinished() )
 		{
 			bGoByOwnPath = false;
@@ -342,7 +376,9 @@ void CInGroupPathBasis::Segment( const NTimer::STime timeDiff )
 	if ( !bGoByOwnPath )
 	{
 		if ( IsFinished() )
+		{
 			pUnit->RestoreSmoothPath();
+		}
 		else
 		{
 			const CVec3 vCenter = pUnit->GetCenter();
@@ -351,7 +387,9 @@ void CInGroupPathBasis::Segment( const NTimer::STime timeDiff )
 			pUnit->SetCenter( CVec3( vNewCenter, pAIMap->GetHeights()->GetZ( vNewCenter ) ) );
 
 			if ( bFinished )
+			{
 				pUnit->RestoreSmoothPath();
+			}
 		}
 	}
 }

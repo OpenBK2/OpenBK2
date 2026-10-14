@@ -25,7 +25,9 @@ namespace
 		{
 			const std::vector<float> &times = file.ScalarAccessor( sampler.inputAccessor );
 			if ( times.empty() )
+			{
 				continue;
+			}
 			if ( !haveTimes )
 			{
 				*pStart = times.front();
@@ -54,15 +56,21 @@ namespace
 		for ( const fastgltf::AnimationSampler &sampler : animation.samplers )
 		{
 			if ( !visitedAccessors.insert( sampler.inputAccessor ).second )
+			{
 				continue;
+			}
 			const std::vector<float> &times = file.ScalarAccessor( sampler.inputAccessor );
 			if ( times.size() < 3 || times.back() - times.front() <= FP_EPSILON )
+			{
 				continue;
+			}
 
 			const float secondsPerFrame = ( times.back() - times.front() ) / static_cast<float>( times.size() - 1 );
 			const float tolerance = (std::max)( 0.00001f, secondsPerFrame * 0.001f );
 			if ( fabsf( times.front() - animationStart ) > tolerance || fabsf( times.back() - animationEnd ) > tolerance )
+			{
 				continue;
+			}
 
 			bool uniformlySampled = true;
 			for ( std::size_t i = 1; i < times.size(); ++i )
@@ -98,9 +106,13 @@ namespace
 	SKeyInterval FindInterval( const std::vector<float> &times, float time )
 	{
 		if ( times.size() < 2 || time <= times.front() )
+		{
 			return SKeyInterval{ 0, 0, 0.0f, 0.0f };
+		}
 		if ( time >= times.back() )
+		{
 			return SKeyInterval{ times.size() - 1, times.size() - 1, 0.0f, 0.0f };
+		}
 		const auto upper = std::upper_bound( times.begin(), times.end(), time );
 		const std::size_t second = static_cast<std::size_t>( upper - times.begin() );
 		const std::size_t first = second - 1;
@@ -121,27 +133,35 @@ namespace
 	                                    fastgltf::AnimationInterpolation interpolation )
 	{
 		if ( values.empty() )
+		{
 			return fastgltf::math::fvec3( 0.0f );
+		}
 		if ( interpolation == fastgltf::AnimationInterpolation::CubicSpline )
 		{
 			const std::size_t first = key.first * 3;
 			const std::size_t second = key.second * 3;
 			if ( second + 1 >= values.size() )
+			{
 				return values[(std::min)( first + 1, values.size() - 1 )];
+			}
 			fastgltf::math::fvec3 result;
 			for ( int i = 0; i < 3; ++i )
+			{
 				result[i] = Hermite( values[first + 1][i],
 				                     values[first + 2][i],
 				                     values[second + 1][i],
 				                     values[second][i],
 				                     key.factor,
 				                     key.delta );
+			}
 			return result;
 		}
 		const fastgltf::math::fvec3 &first = values[(std::min)( key.first, values.size() - 1 )];
 		const fastgltf::math::fvec3 &second = values[(std::min)( key.second, values.size() - 1 )];
 		if ( interpolation == fastgltf::AnimationInterpolation::Step || key.first == key.second )
+		{
 			return first;
+		}
 		return first * ( 1.0f - key.factor ) + second * key.factor;
 	}
 
@@ -156,26 +176,34 @@ namespace
 	                        fastgltf::AnimationInterpolation interpolation )
 	{
 		if ( values.empty() )
+		{
 			return QNULL;
+		}
 		if ( interpolation == fastgltf::AnimationInterpolation::CubicSpline )
 		{
 			const std::size_t first = key.first * 3;
 			const std::size_t second = key.second * 3;
 			if ( second + 1 >= values.size() )
+			{
 				return ConvertQuaternion( values[(std::min)( first + 1, values.size() - 1 )] );
+			}
 			fastgltf::math::fvec4 result;
 			for ( int i = 0; i < 4; ++i )
+			{
 				result[i] = Hermite( values[first + 1][i],
 				                     values[first + 2][i],
 				                     values[second + 1][i],
 				                     values[second][i],
 				                     key.factor,
 				                     key.delta );
+			}
 			return ConvertQuaternion( result );
 		}
 		const CQuat first = ConvertQuaternion( values[(std::min)( key.first, values.size() - 1 )] );
 		if ( interpolation == fastgltf::AnimationInterpolation::Step || key.first == key.second )
+		{
 			return first;
+		}
 		const CQuat second = ConvertQuaternion( values[(std::min)( key.second, values.size() - 1 )] );
 		CQuat result;
 		result.Interpolate( first, second, key.factor );
@@ -213,7 +241,9 @@ namespace
 	                     NGScene::SSkeletonMatrices *pWorld )
 	{
 		if ( boneIndex >= pose.localPose.size() || ( *pState )[boneIndex] == 2 )
+		{
 			return;
+		}
 		const SHMatrix local = NGltf::MakeLocalMatrix( pose.localPose[boneIndex] );
 		if ( ( *pState )[boneIndex] == 1 )
 		{
@@ -231,7 +261,9 @@ namespace
 			( *pWorld )[boneIndex] = ( *pWorld )[parent] * local;
 		}
 		else
+		{
 			( *pWorld )[boneIndex] = global * local;
+		}
 		( *pState )[boneIndex] = 2;
 	}
 }
@@ -283,18 +315,24 @@ void CGltfSkeletonAnimator::Create( const SSkeletonHandle &_skeletonH, CFuncBase
 	skeleton = NGltf::SSkeletonDefinition();
 	pSkeletonFile.reset();
 	if ( !_skeletonH.pSkeleton || _skeletonH.pSkeleton->szModelFileRef.empty() )
+	{
 		return;
+	}
 	pSkeletonFile = NGltf::LoadFile( _skeletonH.pSkeleton, _skeletonH.pSkeleton->szModelFileRef );
 	if ( !NGltf::BuildSkeleton( pSkeletonFile, _skeletonH.pSkeleton->szRootJoint, _skeletonH.nModelInFile, &skeleton ) )
 	{
 		if ( _skeletonH.pSkeleton->szRootJoint.empty() )
+		{
 			DebugTrace( "glTF: could not create skin %d from %s",
 			            _skeletonH.nModelInFile,
 			            _skeletonH.pSkeleton->szModelFileRef.c_str() );
+		}
 		else
+		{
 			DebugTrace( "glTF: could not create skeleton for RootJoint %s from %s",
 			            _skeletonH.pSkeleton->szRootJoint.c_str(),
 			            _skeletonH.pSkeleton->szModelFileRef.c_str() );
+		}
 		pSkeletonFile.reset();
 		return;
 	}
@@ -303,9 +341,13 @@ void CGltfSkeletonAnimator::Create( const SSkeletonHandle &_skeletonH, CFuncBase
 	value.compositePose.resize( skeleton.restPose.size() );
 	boneMutators.resize( skeleton.restPose.size() );
 	for ( SSimpleBoneMutator &mutator : boneMutators )
+	{
 		mutator.Enable( false );
+	}
 	for ( SAnimationHolder &holder : animations )
+	{
 		BindAnimation( &holder );
+	}
 	bJustLoaded = false;
 	bSmthChanged = true;
 }
@@ -382,7 +424,9 @@ void CGltfSkeletonAnimator::ResolveBoundChannels( SAnimationHolder *pHolder )
 bool CGltfSkeletonAnimator::SelectAnimationRange( SAnimationHolder *pHolder )
 {
 	if ( !pHolder->hAnimation.pAnimFile )
+	{
 		return false;
+	}
 	const auto *source = pHolder->hAnimation.pAnimFile.GetPtr();
 	return SelectAnimationRange( pHolder,
 	                             NGltf::LoadFile( source, source->GetModelFileRef() ),
@@ -398,7 +442,9 @@ bool CGltfSkeletonAnimator::GetSourceDuration(
 	animator.pSkeletonFile = file;
 	SAnimationHolder holder;
 	if ( !animator.SelectAnimationRange( &holder, file, clipName, firstFrame, lastFrame, false ) )
+	{
 		return false;
+	}
 	*seconds = holder.fDuration;
 	return true;
 }
@@ -415,7 +461,9 @@ bool CGltfSkeletonAnimator::SelectAnimationRange( SAnimationHolder *pHolder,
 	pHolder->fSourceStart = 0.0f;
 	pHolder->fDuration = 0.0f;
 	if ( !file || file->asset.animations.empty() )
+	{
 		return false;
+	}
 	const bool rangeWasSpecified = firstFrame != 0 || lastFrame != 0;
 	const bool bNodeSkeleton = pSkeletonFile && pSkeletonFile->asset.skins.empty();
 	if ( !clipName.empty() )
@@ -423,7 +471,9 @@ bool CGltfSkeletonAnimator::SelectAnimationRange( SAnimationHolder *pHolder,
 		for ( std::size_t i = 0; i < pHolder->pFile->asset.animations.size(); ++i )
 		{
 			if ( std::string( pHolder->pFile->asset.animations[i].name ) != clipName )
+			{
 				continue;
+			}
 			pHolder->animationIndices.push_back( static_cast<int>( i ) );
 		}
 		if ( pHolder->animationIndices.empty() )
@@ -445,7 +495,9 @@ bool CGltfSkeletonAnimator::SelectAnimationRange( SAnimationHolder *pHolder,
 			// Blender may store one action per animated object. Frame slicing
 			// denotes a shared timeline, so compose all of those records.
 			for ( std::size_t i = 1; i < pHolder->pFile->asset.animations.size(); ++i )
+			{
 				pHolder->animationIndices.push_back( static_cast<int>( i ) );
+			}
 		}
 	}
 
@@ -538,7 +590,9 @@ bool CGltfSkeletonAnimator::SelectAnimationRange( SAnimationHolder *pHolder,
 		const int roundedFirstFrame = static_cast<int>( floorf( firstFrameEstimate + 0.5f ) );
 		const float tolerance = (std::max)( 0.00001f, secondsPerFrame * 0.001f );
 		if ( fabsf( timelineStart - roundedFirstFrame * secondsPerFrame ) <= tolerance )
+		{
 			timelineFirstFrame = roundedFirstFrame;
+		}
 	}
 	const int timelineLastFrame = timelineFirstFrame + static_cast<int>( frameCount ) - 1;
 	if ( lastFrame > firstFrame && firstFrame >= 0 && haveBakedTimeline && firstFrame >= timelineFirstFrame &&
@@ -554,10 +608,13 @@ bool CGltfSkeletonAnimator::SelectAnimationRange( SAnimationHolder *pHolder,
 	if ( rangeWasSpecified )
 	{
 		if ( !haveBakedTimeline )
+		{
 			DebugTrace(
 					"glTF: cannot infer a baked frame timeline in %s; export with animation sampling enabled or use ClipName",
 					pHolder->pFile->sourcePath.c_str() );
+		}
 		else
+		{
 			DebugTrace( "glTF: invalid frame range %d..%d for the inferred %d..%d Blender timeline in %s; %s",
 			            firstFrame,
 			            lastFrame,
@@ -565,9 +622,12 @@ bool CGltfSkeletonAnimator::SelectAnimationRange( SAnimationHolder *pHolder,
 			            timelineLastFrame,
 			            pHolder->pFile->sourcePath.c_str(),
 			            allowRangeFallback ? "using the full selected animation" : "export rejected" );
+		}
 		// Preserve runtime fallback for legacy metadata; newly exported stages must be valid.
 		if ( !allowRangeFallback )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -576,11 +636,15 @@ float CGltfSkeletonAnimator::GetEffectiveWeight( const SAnimationHolder &holder,
 {
 	float weight = holder.fWeight;
 	if ( holder.bFadeIn && holder.tFadeDuration > 0 )
+	{
 		weight *= (std::clamp)( ( time - holder.tFadeStart ) / static_cast<float>( holder.tFadeDuration ), 0.0f, 1.0f );
+	}
 	if ( holder.bFadeOut )
 	{
 		if ( holder.tFadeDuration <= 0 )
+		{
 			return 0.0f;
+		}
 		weight *=
 				1.0f - (std::clamp)( ( time - holder.tFadeStart ) / static_cast<float>( holder.tFadeDuration ), 0.0f, 1.0f );
 	}
@@ -588,7 +652,9 @@ float CGltfSkeletonAnimator::GetEffectiveWeight( const SAnimationHolder &holder,
 	{
 		weight *= (std::clamp)( ( time - holder.tStartTime ) / static_cast<float>( tTransitDuration ), 0.0f, 1.0f );
 		if ( holder.tEndTime != -1 )
+		{
 			weight *= (std::clamp)( ( holder.tEndTime - time ) / static_cast<float>( tTransitDuration ), 0.0f, 1.0f );
+		}
 	}
 	return (std::clamp)( weight, 0.0f, 1.0f );
 }
@@ -598,10 +664,14 @@ float CGltfSkeletonAnimator::GetLocalTime( const SAnimationHolder &holder, STime
 	*pActive = holder.pFile && time >= holder.tStartTime && ( holder.tEndTime == -1 || time <= holder.tEndTime ) &&
 	           holder.fDuration > 0.0f;
 	if ( !*pActive )
+	{
 		return 0.0f;
+	}
 	float local = ( time - holder.tStartTime ) * 0.001f * holder.fSpeed;
 	if ( holder.nLoopCount == 0 )
+	{
 		return fmodf( (std::max)( local, 0.0f ), holder.fDuration );
+	}
 	const float total = holder.fDuration * holder.nLoopCount;
 	if ( local >= total )
 	{
@@ -610,7 +680,9 @@ float CGltfSkeletonAnimator::GetLocalTime( const SAnimationHolder &holder, STime
 		return holder.fDuration;
 	}
 	if ( holder.nLoopCount > 1 )
+	{
 		local = fmodf( (std::max)( local, 0.0f ), holder.fDuration );
+	}
 	return (std::clamp)( local, 0.0f, holder.fDuration );
 }
 
@@ -682,11 +754,15 @@ void CGltfSkeletonAnimator::ApplyAnimation( const SAnimationHolder &holder, floa
 void CGltfSkeletonAnimator::ApplyBoneMutators( STime time )
 {
 	if ( !bBoneMutatorsEnabled )
+	{
 		return;
+	}
 	for ( int i = 0; i < static_cast<int>( boneMutators.size() ); ++i )
 	{
 		if ( !boneMutators[i].IsEnabled() )
+		{
 			continue;
+		}
 		CQuat deltaRotation;
 		CVec3 deltaPosition;
 		boneMutators[i].GetAtTime( time, &deltaRotation, &deltaPosition );
@@ -733,11 +809,15 @@ void CGltfSkeletonAnimator::BuildMatrices()
 	value.compositePose.resize( value.localPose.size() );
 	std::vector<unsigned char> state( value.localPose.size(), 0 );
 	for ( std::size_t i = 0; i < value.localPose.size(); ++i )
+	{
 		BuildBoneWorld( i, skeleton, value, global, &state, &value.worldPose );
+	}
 	for ( std::size_t i = 0; i < value.localPose.size(); ++i )
+	{
 		value.compositePose[i] = i < skeleton.inverseBindMatrices.size()
 		                             ? value.worldPose[i] * skeleton.inverseBindMatrices[i]
 		                             : value.worldPose[i];
+	}
 }
 
 bool CGltfSkeletonAnimator::NeedUpdate()
@@ -751,9 +831,13 @@ bool CGltfSkeletonAnimator::NeedUpdate()
 		return true;
 	}
 	if ( transformChanged )
+	{
 		return true;
+	}
 	if ( IsValid( pSpecMutator ) && pSpecMutator->NeedUpdate() )
+	{
 		return true;
+	}
 	return timeChanged;
 }
 
@@ -779,13 +863,19 @@ void CGltfSkeletonAnimator::Recalc()
 		const float local = GetLocalTime( holder, time, &active );
 		const float weight = GetEffectiveWeight( holder, time );
 		if ( active && weight > FP_EPSILON )
+		{
 			ApplyAnimation( holder, local, weight );
+		}
 	}
 	ApplyBoneMutators( time );
 	if ( IsValid( pSpecMutator ) )
+	{
 		pSpecMutator->MutateSkeletonPose( &value );
+	}
 	else
+	{
 		pSpecMutator = 0;
+	}
 
 	if ( nAnimWithMovement >= 0 && nAnimWithMovement < static_cast<int>( animations.size() ) )
 	{
@@ -817,7 +907,9 @@ CGltfSkeletonAnimator::SAnimID CGltfSkeletonAnimator::AddAnimation(
 	if ( !BindAnimation( &holder ) )
 	{
 		if ( h.pAnimFile )
+		{
 			DebugTrace( "glTF: failed to bind animation resource %s", h.pAnimFile->GetDBID().ToString().c_str() );
+		}
 		return -1;
 	}
 	animations.push_back( holder );
@@ -830,7 +922,9 @@ void CGltfSkeletonAnimator::ClearAllAnimations()
 	animations.clear();
 	nAnimWithMovement = -1;
 	if ( !bBoneMutatorsEnabled || !IsValid( pTime ) )
+	{
 		return;
+	}
 
 	// Granny freezes active mutators when controls are cleared. Turret aiming
 	// therefore survives routine idle/movement animation changes.
@@ -838,7 +932,9 @@ void CGltfSkeletonAnimator::ClearAllAnimations()
 	for ( SSimpleBoneMutator &mutator : boneMutators )
 	{
 		if ( !mutator.IsEnabled() )
+		{
 			continue;
+		}
 		CQuat rotation;
 		CVec3 position;
 		mutator.GetAtTime( freezeTime, &rotation, &position );
@@ -850,7 +946,9 @@ void CGltfSkeletonAnimator::ClearAllAnimations()
 void CGltfSkeletonAnimator::FadeIn( const STime &duration, SAnimID id )
 {
 	if ( id < 0 || id >= static_cast<int>( animations.size() ) )
+	{
 		return;
+	}
 	Touch();
 	animations[id].bFadeIn = true;
 	animations[id].bFadeOut = false;
@@ -861,7 +959,9 @@ void CGltfSkeletonAnimator::FadeIn( const STime &duration, SAnimID id )
 void CGltfSkeletonAnimator::FadeOut( const STime &duration, SAnimID id )
 {
 	if ( id < 0 || id >= static_cast<int>( animations.size() ) )
+	{
 		return;
+	}
 	Touch();
 	animations[id].bFadeOut = true;
 	animations[id].bFadeIn = false;
@@ -872,7 +972,9 @@ void CGltfSkeletonAnimator::FadeOut( const STime &duration, SAnimID id )
 void CGltfSkeletonAnimator::FadeOutAllAnimations( const STime &duration )
 {
 	for ( int i = 0; i < static_cast<int>( animations.size() ); ++i )
+	{
 		FadeOut( duration, i );
+	}
 }
 
 void CGltfSkeletonAnimator::SetSpeedFactorForAllAnimations( const STime &currentTime, float speed )
@@ -883,7 +985,9 @@ void CGltfSkeletonAnimator::SetSpeedFactorForAllAnimations( const STime &current
 		const float localMilliseconds = ( currentTime - holder.tStartTime ) * holder.fSpeed;
 		holder.fSpeed = speed;
 		if ( fabsf( speed ) > FP_EPSILON )
+		{
 			holder.tStartTime = currentTime - static_cast<STime>( localMilliseconds / speed );
+		}
 	}
 	Touch();
 }
@@ -917,7 +1021,9 @@ void CGltfSkeletonAnimator::SetSpeedFactor( const SAnimID id, float speed )
 		const float localMilliseconds = ( currentTime - holder.tStartTime ) * holder.fSpeed;
 		holder.fSpeed = speed;
 		if ( fabsf( speed ) > FP_EPSILON )
+		{
 			holder.tStartTime = currentTime - static_cast<STime>( localMilliseconds / speed );
+		}
 	}
 }
 
@@ -994,7 +1100,9 @@ bool CGltfSkeletonAnimator::GetBonePosition( int index, SHMatrix *pResult )
 	CheckJustLoaded();
 	BuildMatrices();
 	if ( index < 0 || index >= static_cast<int>( value.worldPose.size() ) )
+	{
 		return false;
+	}
 	*pResult = value.worldPose[index];
 	return true;
 }
@@ -1003,7 +1111,9 @@ bool CGltfSkeletonAnimator::GetBonePosition( int index, CVec3 *pResult )
 {
 	SHMatrix matrix;
 	if ( !GetBonePosition( index, &matrix ) )
+	{
 		return false;
+	}
 	*pResult = matrix.GetTranslation();
 	return true;
 }
@@ -1024,7 +1134,9 @@ bool CGltfSkeletonAnimator::GetLocalBonePosition( const char *name, SHMatrix *pR
 	BuildMatrices();
 	const int index = GetBoneIndex( name );
 	if ( index < 0 || index >= static_cast<int>( value.localPose.size() ) )
+	{
 		return false;
+	}
 	*pResult = NGltf::MakeLocalMatrix( value.localPose[index] );
 	return true;
 }
@@ -1041,13 +1153,17 @@ void CGltfSkeletonAnimator::SetBoneMutator( const int index,
                                             const std::vector<SDesiredBoneMove> &mutation )
 {
 	if ( index < 0 || index >= static_cast<int>( boneMutators.size() ) )
+	{
 		return;
+	}
 	Touch();
 	bBoneMutatorsEnabled = true;
 	CQuat currentRotation = QNULL;
 	CVec3 currentPosition = VNULL3;
 	if ( boneMutators[index].IsEnabled() )
+	{
 		boneMutators[index].GetAtTime( start, &currentRotation, &currentPosition );
+	}
 	boneMutators[index].Clear();
 	boneMutators[index].AddBoneTimePose( start, currentRotation, currentPosition );
 	STime end = start;
@@ -1072,7 +1188,9 @@ CFuncBase<SFBTransform> *CGltfSkeletonAnimator::CreateTransform( const std::stri
 CFuncBase<SFBTransform> *CGltfSkeletonAnimator::CreateTransform( int index )
 {
 	if ( index < 0 || index >= static_cast<int>( skeleton.boneNames.size() ) )
+	{
 		return 0;
+	}
 	return new CAddBoneFilter( this, skeletonH, index );
 }
 
@@ -1083,7 +1201,9 @@ int CGltfSkeletonAnimator::operator&( CStructureSaver &f )
 	f.Add( 4, &pSpecMutator );
 	f.Add( 5, &animations );
 	for ( int i = 0; i < 16; ++i )
+	{
 		f.Add( 6, &value.poseGlobal[i], i + 1 );
+	}
 	f.Add( 7, &pGlobalTransform );
 	f.Add( 8, &nAnimWithMovement );
 	f.Add( 9, &fGlobalMovementSpeed );
@@ -1091,18 +1211,24 @@ int CGltfSkeletonAnimator::operator&( CStructureSaver &f )
 	f.Add( 11, &boneMutators );
 	f.Add( 12, &bBoneMutatorsEnabled );
 	if ( f.IsReading() )
+	{
 		bJustLoaded = true;
+	}
 	return 0;
 }
 
 void CGltfSkeletonAnimator::CheckJustLoaded()
 {
 	if ( !bJustLoaded )
+	{
 		return;
+	}
 	const std::vector<SSimpleBoneMutator> savedMutators = boneMutators;
 	Create( skeletonH, pTime );
 	if ( savedMutators.size() == boneMutators.size() )
+	{
 		boneMutators = savedMutators;
+	}
 	bJustLoaded = false;
 }
 

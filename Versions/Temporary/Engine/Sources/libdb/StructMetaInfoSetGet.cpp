@@ -20,7 +20,9 @@ namespace NMetaInfo
 			CVariant var;
 			pType->FromString( &var, value.GetStr() );
 			if ( var.GetType() != CVariant::VT_INT )
+			{
 				return false;
+			}
 			*pRes = (int)var;
 			return true;
 		}
@@ -47,10 +49,14 @@ namespace NMetaInfo
 		if ( nPos == std::string::npos )
 		{
 			if ( pRes != &szRefName )
+			{
 				*pRes = szRefName;
+			}
 		}
 		else
+		{
 			pRes->assign( szRefName.begin() + nPos + 1, szRefName.end() );
+		}
 	}
 	// CRAP}
 
@@ -126,7 +132,9 @@ namespace NMetaInfo
 	bool SStructMetaInfo::SField::SetValueToStructGUID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 	{
 		if ( value.GetBlobSize() != sizeof( boost::uuids::uuid ) )
+		{
 			return false;
+		}
 		void *pData = pThis + GetBinaryShift();
 		memcpy( pData, value.GetPtr(), sizeof( boost::uuids::uuid ) );
 		return true;
@@ -162,12 +170,16 @@ namespace NMetaInfo
 		const CDBID dbid = GetDBIDFromValue( value );
 		CResource *pRes = NDb::GetObject( dbid );
 		if ( !dbid.IsEmpty() && pRes == 0 )
+		{
 			return false;
+		}
 
 		if ( pRes && pTypeDef )
 		{
 			if ( checked_cast_ptr<const NTypeDef::STypeRef *>( pTypeDef )->CheckRefType( pRes->GetTypeID() ) == false )
+			{
 				return false;
+			}
 		}
 
 		*( (CDBPtr<CResource> *)pData ) = pRes;
@@ -181,11 +193,17 @@ namespace NMetaInfo
 		const int nDesiredSize = (std::max)( 0, (int)value );
 		//
 		if ( nDesiredSize == 0 )
+		{
 			return data.pArray->Remove( 0, -1, *this, pThis );
+		}
 		if ( nDesiredSize > nSize )
+		{
 			return data.pArray->Insert( nSize, nDesiredSize - nSize, *this, pThis, true );
+		}
 		if ( nDesiredSize < nSize )
+		{
 			return data.pArray->Remove( nSize - nDesiredSize, -1, *this, pThis );
+		}
 		return true;
 	}
 
@@ -258,9 +276,13 @@ namespace NMetaInfo
 	{
 		void *pData = pThis + GetBinaryShift();
 		if ( const CResource *pObj = ( (CDBPtr<CResource> *)pData )->GetPtrNoLoad() )
+		{
 			*pValue = pObj->GetDBID();
+		}
 		else
+		{
 			*pValue = CDBID();
+		}
 		return true;
 	}
 	bool
@@ -312,7 +334,9 @@ namespace NMetaInfo
 	bool SStructMetaInfo::SField::SetValueToOwnGUID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 	{
 		if ( value.GetBlobSize() != sizeof( boost::uuids::uuid ) )
+		{
 			return false;
+		}
 		NBind::UValue &data = ownValues[GetOwnValueIndex()];
 		memcpy( data.pGUID, value.GetPtr(), sizeof( boost::uuids::uuid ) );
 		return true;
@@ -350,7 +374,9 @@ namespace NMetaInfo
 		const CDBID dbid = GetDBIDFromValue( value );
 		CPtr<IObjMan> pObjMan = NDb::GetManipulator( dbid );
 		if ( !dbid.IsEmpty() && pObjMan == 0 )
+		{
 			return false;
+		}
 
 		if ( pObjMan && pTypeDef )
 		{
@@ -359,7 +385,9 @@ namespace NMetaInfo
 				const int nClassTypeID =
 						checked_cast_ptr<const NTypeDef::STypeClass *>( pBind->GetMetaInfo()->pStructTypeDef )->nClassTypeID;
 				if ( checked_cast_ptr<const NTypeDef::STypeRef *>( pTypeDef )->CheckRefType( nClassTypeID ) == false )
+				{
 					return false;
+				}
 			}
 		}
 
@@ -439,9 +467,13 @@ namespace NMetaInfo
 	{
 		const NBind::UValue &data = ownValues[GetOwnValueIndex()];
 		if ( data.pObjMan )
+		{
 			*pValue = data.pObjMan->GetDBID();
+		}
 		else
+		{
 			*pValue = CDBID();
+		}
 		return true;
 	}
 

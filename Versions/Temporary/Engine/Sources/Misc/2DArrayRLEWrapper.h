@@ -130,7 +130,9 @@ inline int CArray2DRLEWrapper<T>::operator&( IBinSaver &saver )
 						{
 							// тип неопределён, поставить в тип "последовательность нулей"
 							if ( nType == -1 )
+							{
 								nType = 0;
+							}
 							//тип "уникальная последовательность", последовательность закончилась,
 							//сдвинуть указатель назад и выйти из цикла
 							else if ( nType == 1 )
@@ -145,10 +147,14 @@ inline int CArray2DRLEWrapper<T>::operator&( IBinSaver &saver )
 						nZeros = 0;
 						// тип неопределён, поставить в тип "уникальная последовательность"
 						if ( nType == -1 )
+						{
 							nType = 1;
+						}
 						// "последовательность нулей" закончилась, выйти из цикла
 						else if ( nType == 0 )
+						{
 							break;
+						}
 					}
 
 					++i;
@@ -157,10 +163,14 @@ inline int CArray2DRLEWrapper<T>::operator&( IBinSaver &saver )
 				const int nLength = i - cnt;
 				NI_ASSERT( nLength < 0x7fffffff, "Arra is too big, can't save" );
 				if ( !( nLength < 0x7fffffff ) )
+				{
 					return 0;
+				}
 
 				if ( nType == 0 )
+				{
 					SaveCode( pRLE, &nRLECnt, nLength );
+				}
 				else
 				{
 					SaveCode( pRLE, &nRLECnt, 0x80000000 | nLength );
@@ -187,9 +197,13 @@ inline int CArray2DRLEWrapper<T>::operator&( IBinSaver &saver )
 
 		a.SetSizes( nSizeX, nSizeY );
 		if ( packingData == 0 )
+		{
 			a.FillZero();
+		}
 		else
+		{
 			a.FillEvery( packingData );
+		}
 
 		if ( nSizeX * nSizeY != 0 )
 		{
@@ -216,7 +230,9 @@ inline int CArray2DRLEWrapper<T>::operator&( IBinSaver &saver )
 				}
 				// sequence of zeros
 				else
+				{
 					cnt += nCode;
+				}
 			}
 
 			delete[] pRLE;

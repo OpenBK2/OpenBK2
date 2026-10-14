@@ -93,21 +93,33 @@ struct SMapObjectLessFunctional
 					if ( pMO1->CanSelect() == pMO2->CanSelect() )
 					{
 						if ( pMO1->GetStats()->eVisType == pMO2->GetStats()->eVisType )
+						{
 							return pickObj1.nOrder < pickObj2.nOrder;
+						}
 						else
+						{
 							return pMO1->GetStats()->eVisType == pMO2->GetStats()->eVisType;
+						}
 					}
 					else
+					{
 						return pMO1->CanSelect() > pMO2->CanSelect();
+					}
 				}
 				else
+				{
 					return pMO1->GetDiplomacy() > pMO2->GetDiplomacy();
+				}
 			}
 			else
+			{
 				return pMO1->GetStats()->eGameType < pMO2->GetStats()->eGameType;
+			}
 		}
 		else
+		{
 			return pMO1->GetHP() > pMO2->GetHP();
+		}
 	}
 };
 
@@ -146,7 +158,9 @@ static bool ProjectWorldPointToScreen( CVec2 *pScreenPos,
 
 	const float fW = fabs( vProjected.w );
 	if ( fW < 0.000001f )
+	{
 		return false;
+	}
 
 	pScreenPos->x = vProjected.x / fW * vScreenRect.x * 0.5f + vScreenRect.x * 0.5f;
 	pScreenPos->y = -vProjected.y / fW * vScreenRect.y * 0.5f + vScreenRect.y * 0.5f;
@@ -162,7 +176,9 @@ static bool AddProjectedPointToScreenRect( CVec2 *pMin,
 {
 	CVec2 vScreenPos;
 	if ( !ProjectWorldPointToScreen( &vScreenPos, transform, vScreenRect, vWorldPos ) )
+	{
 		return false;
+	}
 
 	if ( !*pHasRect )
 	{
@@ -293,7 +309,9 @@ void CWorldClient::SUISelection::CalcCurrentState( const std::vector<CMOSelectab
 		object.bCanRotate = actionsBy.HasAction( NDb::USER_ACTION_ROTATE );
 
 		if ( !object.bCanMove && !object.bCanRotate )
+		{
 			continue;
+		}
 
 		if ( object.bCanMove )
 		{
@@ -314,7 +332,9 @@ void CWorldClient::SUISelection::CalcCurrentState( const std::vector<CMOSelectab
 					object.vPos /= members.size();
 				}
 				else
+				{
 					continue;
+				}
 
 				vCenter += object.vPos;
 				nCount++;
@@ -333,7 +353,9 @@ void CWorldClient::SUISelection::CalcCurrentState( const std::vector<CMOSelectab
 		objects.push_back( object );
 	}
 	if ( nCount > 0 )
+	{
 		vCenter /= nCount;
+	}
 }
 
 void CWorldClient::SUISelection::CalcTargetState( const CVec2 &vMovePos,
@@ -382,7 +404,9 @@ CWorldClient::CWorldClient( ITransceiver *pTransceiver,
 	if ( const NDb::SVisObj *pVisObj = pClient->mapCommandAck.pVisObj )
 	{
 		if ( !pVisObj->models.empty() )
+		{
 			mapCommandAck.pModel = pVisObj->models.front().pModel;
+		}
 	}
 	mapCommandAck.bPlaced = false;
 	mapCommandAck.fShowTime = pClient->mapCommandAck.fShowTime;
@@ -391,7 +415,9 @@ CWorldClient::CWorldClient( ITransceiver *pTransceiver,
 	if ( const NDb::SVisObj *pVisObj = pClient->mapCommandAckDir.pVisObj )
 	{
 		if ( !pVisObj->models.empty() )
+		{
 			mapCommandAckDir.pModel = pVisObj->models.front().pModel;
+		}
 	}
 	mapCommandAckDir.bPlaced = false;
 	mapCommandAckDir.fShowTime = pClient->mapCommandAckDir.fShowTime;
@@ -589,9 +615,13 @@ void CWorldClient::InitPrivate()
 
 	pSelector = new CSelector();
 	if ( NGlobal::GetVar( "History.Playing", 0 ) )
+	{
 		pMouseTranslator = new CMouseTranslatorB2Replay( pSelector );
+	}
 	else
+	{
 		pMouseTranslator = new CMouseTranslatorB2Game( pSelector );
+	}
 
 	//	bPlaceCommandInQuery = false;
 
@@ -639,9 +669,13 @@ void CWorldClient::Update()
 bool CWorldClient::ProcessEvent( const struct SGameMessage &msg )
 {
 	if ( CGMORegContainer::ProcessEvent( msg, this ) == false )
+	{
 		return pMouseTranslator->ProcessEvent( msg );
+	}
 	else
+	{
 		return true;
+	}
 }
 
 // CRAP
@@ -761,8 +795,12 @@ void CWorldClient::OnGetFocus( bool bFocus )
 void CWorldClient::Select( CMapObj *pMapObj )
 {
 	if ( pSelector->CanSelect( pMapObj ) )
+	{
 		if ( pSelector->Select( checked_cast<CMOSelectable *>( pMapObj ), true ) )
+		{
 			pSelector->UpdateSelection( true, false );
+		}
+	}
 }
 
 void CWorldClient::DeSelect( CMapObj *pMapObj )
@@ -770,9 +808,13 @@ void CWorldClient::DeSelect( CMapObj *pMapObj )
 	if ( pSelector->CanSelect( pMapObj ) )
 	{
 		if ( pSelector->Select( checked_cast<CMOSelectable *>( pMapObj ), false ) )
+		{
 			pSelector->UpdateSelection( true, false );
+		}
 		if ( pSelector->IsEmpty() && eActionMode == EAM_SELECT )
+		{
 			SetForcedAction( NDb::USER_ACTION_UNKNOWN );
+		}
 	}
 }
 
@@ -782,14 +824,20 @@ void CWorldClient::DeSelectDead( CMapObj *pMapObj )
 	{
 		pSelector->UpdateSelection( true, true );
 		if ( pSelector->IsEmpty() && eActionMode == EAM_SELECT )
+		{
 			SetForcedAction( NDb::USER_ACTION_UNKNOWN );
+		}
 	}
 	else
 	{
 		if ( pSelector->IsSelectedOrInSelectedContainer( pMapObj ) )
+		{
 			pSelector->DoUpdateSelectedUnits();
+		}
 		if ( pSelector->IsPreselectedOrInPreselectedContainer( pMapObj ) )
+		{
 			pSelector->DoUpdatePreselectedUnits();
+		}
 	}
 }
 
@@ -812,25 +860,33 @@ void CWorldClient::DoUpdateObjectStats( CMapObj *pMO )
 {
 	pSelector->DoUpdateStats( pMO ); // обновить статv объекта можно только через селектор
 	if ( IsSuperWeapon( pMO ) )
+	{
 		NInput::PostEvent( "mission_update_super_weapon_stats", pMO->GetID(), 0 );
+	}
 }
 
 void CWorldClient::RemoveFromSelectionGroup( CMapObj *pMapObj )
 {
 	if ( pSelector->CanSelect( pMapObj ) )
+	{
 		pSelector->RemoveFromGroups( checked_cast<CMOSelectable *>( pMapObj ) );
+	}
 }
 
 void CWorldClient::HideFromSelectionGroup( CMapObj *pMapObj )
 {
 	if ( pSelector->CanSelect( pMapObj ) )
+	{
 		pSelector->HideFromGroups( checked_cast<CMOSelectable *>( pMapObj ) );
+	}
 }
 
 void CWorldClient::UnHideFromSelectionGroup( CMapObj *pMapObj )
 {
 	if ( pSelector->CanSelect( pMapObj ) )
+	{
 		pSelector->UnHideForGroups( checked_cast<CMOSelectable *>( pMapObj ) );
+	}
 }
 
 void CWorldClient::RegisterUserAction( NDb::EUserAction nAction, uint32_t flags, USER_ACTION pfnUserAction )
@@ -847,7 +903,9 @@ NDb::EUserAction CWorldClient::DetermineBestAutoAction( CMapObj *pMO, bool bAltM
 	if ( !pMO )
 	{
 		if ( bAltMode )
+		{
 			return NDb::USER_ACTION_MOVE;
+		}
 		return NDb::USER_ACTION_UNKNOWN;
 	}
 
@@ -857,9 +915,13 @@ NDb::EUserAction CWorldClient::DetermineBestAutoAction( CMapObj *pMO, bool bAltM
 	pSelector->FilterActions( &actionsBy, pMO );
 
 	if ( pSelector->IsSuperActive( dynamic_cast<CMOSelectable *>( pMO ) ) )
+	{
 		return pMO->GetBestSelfAction( actionsBy, bAltMode );
+	}
 	else
+	{
 		return pMO->GetBestAutoAction( actionsBy, bAltMode );
+	}
 }
 
 NDb::EUserAction CWorldClient::DetermineBestCtrlAction( CMapObj *pMO )
@@ -867,7 +929,9 @@ NDb::EUserAction CWorldClient::DetermineBestCtrlAction( CMapObj *pMO )
 	CUserActions actions;
 	pSelector->GetEnabledSuperActiveActions( &actions );
 	if ( actions.HasAction( NDb::USER_ACTION_SUPPRESS ) )
+	{
 		return NDb::USER_ACTION_SUPPRESS;
+	}
 
 	CUserActions actionsBy;
 	pSelector->GetEnabledActions( &actionsBy );
@@ -876,16 +940,22 @@ NDb::EUserAction CWorldClient::DetermineBestCtrlAction( CMapObj *pMO )
 	{
 		pSelector->FilterActions( &actionsBy, pMO );
 		if ( actionsBy.HasAction( NDb::USER_ACTION_ATTACK ) )
+		{
 			return NDb::USER_ACTION_ATTACK;
+		}
 	}
 	else
 	{
 		if ( actionsBy.HasAction( NDb::USER_ACTION_SWARM ) )
+		{
 			return NDb::USER_ACTION_SWARM;
+		}
 	}
 
 	if ( actionsBy.HasAction( NDb::USER_ACTION_MOVE ) )
+	{
 		return NDb::USER_ACTION_MOVE;
+	}
 
 	return NDb::USER_ACTION_UNKNOWN;
 }
@@ -898,7 +968,9 @@ void CWorldClient::SetCursor( NDb::EUserAction _eAction )
 		if ( eActionMode == EAM_REINF )
 		{
 			if ( !IsOnMinimap() )
+			{
 				eCursor = NDb::USER_ACTION_UNKNOWN;
+			}
 		}
 		else
 		{
@@ -914,11 +986,17 @@ void CWorldClient::SetForcedAction( NDb::EUserAction _eForcedAction )
 	           fmt::format( "Can't set user action {} as forced - no execution function", int( _eForcedAction ) ) );
 	NDb::EUserAction eOldForcedAction = eForcedAction;
 	if ( _eForcedAction != NDb::USER_ACTION_UNKNOWN && GetAction( _eForcedAction, SActionDesc::FORCED ) == 0 )
+	{
 		eForcedAction = NDb::USER_ACTION_UNKNOWN;
+	}
 	else
+	{
 		eForcedAction = _eForcedAction;
+	}
 	if ( eOldForcedAction != eForcedAction )
+	{
 		OnChangeForcedAction( eOldForcedAction );
+	}
 	ResetFirstCommandPoint();
 	//If starting to build, send command requesting "ghost objects"
 	switch ( eForcedAction )
@@ -948,7 +1026,9 @@ void CWorldClient::MsgSetForcedAction( const SGameMessage &msg )
 			SetForcedAction( NDb::USER_ACTION_UNKNOWN );
 		}
 		else
+		{
 			SetForcedAction( static_cast<NDb::EUserAction>( msg.nParam1 ) );
+		}
 	}
 }
 
@@ -1011,12 +1091,16 @@ void CWorldClient::MsgSetSpecialAbility( const SGameMessage &msg )
 		{
 			USER_ACTION pfnAction = GetAction( static_cast<NDb::EUserAction>( msg.nParam1 ), SActionDesc::INSTANT );
 			if ( pfnAction && ( this->*pfnAction )( VNULL2, 0, true ) )
+			{
 				SetForcedAction( NDb::USER_ACTION_UNKNOWN );
+			}
 			else
 			{
 				USER_ACTION pfnAction = GetAction( static_cast<NDb::EUserAction>( msg.nParam1 ), SActionDesc::FORCED );
 				if ( pfnAction && ( this->*pfnAction )( VNULL2, 0, true ) )
+				{
 					SetForcedAction( static_cast<NDb::EUserAction>( msg.nParam1 ) );
+				}
 			}
 		}
 		break;
@@ -1025,9 +1109,13 @@ void CWorldClient::MsgSetSpecialAbility( const SGameMessage &msg )
 			USER_ACTION pfnAction =
 					GetAction( static_cast<NDb::EUserAction>( msg.nParam1 ), SActionDesc::INSTANT | SActionDesc::FORCED );
 			if ( pfnAction && ( this->*pfnAction )( VNULL2, 0, true ) )
+			{
 				SetForcedAction( NDb::USER_ACTION_UNKNOWN );
+			}
 			else
+			{
 				SetForcedAction( static_cast<NDb::EUserAction>( msg.nParam1 ) );
+			}
 		}
 		break;
 		case NDb::PARAM_ABILITY_AUTOCAST_ON:
@@ -1054,7 +1142,9 @@ CWorldClient::USER_ACTION CWorldClient::GetAction( NDb::EUserAction eUserAction,
 	NI_ASSERT( eUserAction != NDb::USER_ACTION_UNKNOWN, "Illegal user action" );
 	CActionsMap::const_iterator pos = userActionsMap.find( eUserAction );
 	if ( pos == userActionsMap.end() )
+	{
 		return 0;
+	}
 	return pos->second.flags & nType ? pos->second.pfnAction : 0;
 }
 
@@ -1088,15 +1178,23 @@ void CWorldClient::DoAction( const CVec2 &vPos, bool bMiniMap, enum EKeyboardFla
 			bLikeForced = true;
 		}
 		else
+		{
 			eUserAction = DetermineBestAutoAction( pMO, ( eFlags & EKF_ALT ) != 0 );
+		}
 		if ( eUserAction == NDb::USER_ACTION_UNKNOWN )
 		{
 			if ( pMO && pMO->GetTypeID() == NDb::SObjectRPGStats::typeID )
+			{
 				eUserAction = NDb::USER_ACTION_MOVE;
+			}
 			else if ( pMO && pMO->GetTypeID() == NDb::SBuildingRPGStats::typeID )
+			{
 				eUserAction = NDb::USER_ACTION_MOVE;
+			}
 			else
+			{
 				return;
+			}
 		}
 		pfnAction = GetAction( eUserAction, ( eFlags & EKF_CTRL ) != 0 ? SActionDesc::FORCED : SActionDesc::AUTO );
 		NI_ASSERT( pfnAction != 0, fmt::format( "Auto action ({}) not registred", int( eUserAction ) ) );
@@ -1113,9 +1211,13 @@ void CWorldClient::DoAction( const CVec2 &vPos, bool bMiniMap, enum EKeyboardFla
 						: PickTopMapObj( vPos, eUserAction );
 		CVec2 vTarget;
 		if ( bMiniMap )
+		{
 			vTarget = vPos;
+		}
 		else
+		{
 			ScreenToAI( &vTarget, vPos );
+		}
 
 		DoAction( pfnAction,
 		          eUserAction,
@@ -1140,19 +1242,27 @@ void CWorldClient::DoAction( USER_ACTION pfnAction,
 		if ( !pMO )
 		{
 			if ( !bSelfAction )
+			{
 				PlaceMapCommandAck( vTarget );
+			}
 		}
 		else
 		{
 			if ( pMO->IsPlaceMapCommandAck( eUserAction ) )
+			{
 				PlaceMapCommandAck( vTarget );
+			}
 		}
 		if ( IsForcedAction() )
 		{
 			if ( !bShiftState )
+			{
 				NInput::PostEvent( "new_reset_forced_action", 0, 0 );
+			}
 			else
+			{
 				NInput::PostEvent( "notify_forced_action", 0, 0 );
+			}
 		}
 		if ( pMO == 0 && ( eUserAction == NDb::USER_ACTION_MOVE || eUserAction == NDb::USER_ACTION_REVERSE ||
 		                   eUserAction == NDb::USER_ACTION_ATTACK ) )
@@ -1164,7 +1274,9 @@ void CWorldClient::DoAction( USER_ACTION pfnAction,
 	{
 		const NDb::SComplexSoundDesc *pSound = InterfaceState()->GetSoundEntry( "SOUND_CANT_PERFORM_COMMAND" );
 		if ( pSound )
+		{
 			SoundScene()->AddSound( pSound, VNULL3, SFX_INTERFACE, SAM_ADD_N_FORGET, 0, 1.0f );
+		}
 	}
 }
 
@@ -1265,14 +1377,22 @@ bool CWorldClient::IsInsideAIMap( const CVec2 &vPos )
 void CWorldClient::ClampToAIMap( CVec2 &vPos )
 {
 	if ( vPos.x < 0.0f )
+	{
 		vPos.x = 0.0f;
+	}
 	else if ( vPos.x > vMapSize.x )
+	{
 		vPos.x = vMapSize.x;
+	}
 
 	if ( vPos.y < 0.0f )
+	{
 		vPos.y = 0.0f;
+	}
 	else if ( vPos.y > vMapSize.y )
+	{
 		vPos.y = vMapSize.y;
+	}
 }
 
 // ************************************************************************************************************************ //
@@ -1318,7 +1438,9 @@ void CWorldClient::MsgEndSelection( const SGameMessage &msg )
 				const bool bOverlapsSelectionRect =
 						DoesMapObjectOverlapScreenRect( pMO, vSelectionMin, vSelectionMax, cameraTransform, vScreenRect );
 				if ( !bOverlapsSelectionRect )
+				{
 					continue;
+				}
 
 				const int nSelectionRate = GetObjectRate( *pMO );
 				if ( nSelectionRate > nCurrentSelectionRate )
@@ -1335,13 +1457,19 @@ void CWorldClient::MsgEndSelection( const SGameMessage &msg )
 		}
 
 		if ( ( msg.nParam1 & SA_PREVIOS_SELECTION ) == SA_CLEAR_ALWAYS )
+		{
 			pSelector->Empty();
+		}
 
 		if ( objects.empty() )
+		{
 			return;
+		}
 
 		if ( ( msg.nParam1 & SA_PREVIOS_SELECTION ) == SA_CLEAR_IF_NEW_NOT_EMPTY )
+		{
 			pSelector->Empty();
+		}
 
 		for ( std::list<CMapObj *>::iterator it = objects.begin(); it != objects.end(); ++it )
 		{
@@ -1355,18 +1483,24 @@ void CWorldClient::MsgEndSelection( const SGameMessage &msg )
 		CMapObj *pMO = PickTopMapObj( vSelectionFirstPoint );
 
 		if ( ( msg.nParam1 & SA_PREVIOS_SELECTION ) == SA_CLEAR_ALWAYS )
+		{
 			pSelector->Empty();
+		}
 
 		if ( ( pMO == 0 ) || ( !pSelector->CanSelect( pMO ) ) )
 		{
 			const NDb::SComplexSoundDesc *pSound = InterfaceState()->GetSoundEntry( "SOUND_CANT_PERFORM_COMMAND" );
 			if ( pSound )
+			{
 				SoundScene()->AddSound( pSound, VNULL3, SFX_INTERFACE, SAM_ADD_N_FORGET, 0, 1.0f );
+			}
 			return;
 		}
 
 		if ( ( msg.nParam1 & SA_PREVIOS_SELECTION ) == SA_CLEAR_IF_NEW_NOT_EMPTY )
+		{
 			pSelector->Empty();
+		}
 
 		CMOSelectable *pMOSel = checked_cast<CMOSelectable *>( pMO );
 		if ( ( msg.nParam1 & SA_PREVIOS_SELECTION ) == SA_INVERSE )
@@ -1381,9 +1515,13 @@ void CWorldClient::MsgEndSelection( const SGameMessage &msg )
 			{
 				std::list<int> ids;
 				if ( msg.nParam1 & SA_ON_WORLD )
+				{
 					GetObjects( &ids );
+				}
 				else
+				{
 					Scene()->PickObjects( ids, CVec2( 0, 0 ), Scene()->GetScreenRect(), IScene::PO_CENTER_INSIDE );
+				}
 
 				std::list<CMapObj *> objects;
 				for ( std::list<int>::iterator it = ids.begin(); it != ids.end(); ++it )
@@ -1410,9 +1548,13 @@ void CWorldClient::MsgEndSelection( const SGameMessage &msg )
 	Scene()->ClearMarkers( ESMT_SHOOT_AREA, -1 );
 
 	if ( bAreasShown )
+	{
 		pSelector->SetShowAreas( ACTION_NOTIFY_SHOOT_AREA, true );
+	}
 	if ( bRangesShown )
+	{
 		pSelector->SetShowAreas( ACTION_NOTIFY_RANGE_AREA, true );
+	}
 }
 
 void CWorldClient::MsgCancelSelection( const SGameMessage &msg ) {}
@@ -1463,7 +1605,9 @@ void CWorldClient::MsgUpdateDirection( const SGameMessage &msg )
 		PlaceMapCommandAckDir( vTarget );
 
 		if ( !bUISelectionDir )
+		{
 			vUISelectionStartDir = vTarget;
+		}
 		bUISelectionDir = true;
 
 		SUISelection uiSelection;
@@ -1488,7 +1632,9 @@ void CWorldClient::MsgSetDirection( const SGameMessage &msg )
 	PlaceMapCommandAckDir( vTarget );
 
 	if ( !bUISelectionDir )
+	{
 		vUISelectionStartDir = vTarget;
+	}
 
 	bUISelectionMode = false;
 
@@ -1547,10 +1693,14 @@ bool CWorldClient::PickMapObj( const CVec2 &vPos, std::list<int> *pPickObjects )
 			if ( CMOEntrenchmentPart *pMOPart = dynamic_cast<CMOEntrenchmentPart *>( pickObj.pMO ) )
 			{
 				if ( pMOPart->GetParent() != 0 )
+				{
 					lastPickObjects.push_back( pMOPart->GetParent()->GetID() );
+				}
 			}
 			else
+			{
 				lastPickObjects.push_back( pickObj.pMO->GetID() );
+			}
 		}
 	}
 	*pPickObjects = lastPickObjects;
@@ -1563,7 +1713,9 @@ CMapObj *CWorldClient::PickTopMapObj( const CVec2 &vPos, const NDb::EUserAction 
 {
 	std::list<int> objects;
 	if ( !PickMapObj( vPos, &objects ) )
+	{
 		return 0;
+	}
 	else
 	{
 		CUserActions actions;
@@ -1573,7 +1725,9 @@ CMapObj *CWorldClient::PickTopMapObj( const CVec2 &vPos, const NDb::EUserAction 
 			{
 				pObj->GetEnabledActions( &actions, ACTIONS_WITH );
 				if ( actions.HasAction( eAction ) )
+				{
 					return pObj;
+				}
 			}
 		}
 	}
@@ -1584,9 +1738,13 @@ CMapObj *CWorldClient::PickTopMapObj( const CVec2 &vPos )
 {
 	std::list<int> objects;
 	if ( !PickMapObj( vPos, &objects ) )
+	{
 		return 0;
+	}
 	else
+	{
 		return GetMapObj( objects.front() );
+	}
 }
 
 void CWorldClient::ScreenToAI( CVec2 *pvAI, const CVec2 &vScreen )
@@ -1630,9 +1788,13 @@ void CWorldClient::DoMouseMove( const CVec2 &vPos )
 				if ( pSelector->CanSelect( pMO ) )
 				{
 					if ( !pSelector->IsSelected( pMO ) )
+					{
 						eUserAction = NDb::USER_ACTION_ADD_UNIT;
+					}
 					else
+					{
 						eUserAction = NDb::USER_ACTION_REMOVE_UNIT;
+					}
 				}
 			}
 			SetCursor( eUserAction );
@@ -1663,9 +1825,13 @@ void CWorldClient::DoMouseMove( const CVec2 &vPos )
 
 	// preselection: show info about the object under cursor
 	if ( bActive )
+	{
 		pSelector->SetPreselection( PickTopMapObj( vPos ) );
+	}
 	else
+	{
 		pSelector->SetPreselection( 0 );
+	}
 
 	switch ( eBuildObjectState )
 	{
@@ -1673,13 +1839,17 @@ void CWorldClient::DoMouseMove( const CVec2 &vPos )
 		case EBS_FIRST_POINT_SELECTED:
 		{
 			if ( abs( long( GameTimer()->GetAbsTime() - lastUpdate ) ) <= 100 ) //Ten times a second!
+			{
 				break;
+			}
 
 			CVec2 vAIPos;
 			ScreenToAI( &vAIPos, vPos );
 
 			if ( fabs2( vAIPos - vLastBuildPos ) < 50 ) //Some distance
+			{
 				break;
+			}
 
 			const auto message = fmt::format( "TerrainPos ( {}, {} )", vAIPos.x, vAIPos.y );
 			CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 2, message.c_str() );
@@ -1688,9 +1858,13 @@ void CWorldClient::DoMouseMove( const CVec2 &vPos )
 
 			const EActionCommand eBuildCommand = GetCommandByAction( GetForcedAction() );
 			if ( IsFirstCommandPointDefined() )
+			{
 				pAI->RequestBuildPreview( eBuildCommand, GetFirstCommandPoint(), vAIPos, false ); //For long objects
+			}
 			else //CRAP: later add position and direction (for buildings)
+			{
 				pAI->RequestBuildPreview( eBuildCommand, vAIPos, vAIPos, false ); //For simple objects
+			}
 
 			lastUpdate = GameTimer()->GetAbsTime();
 			vLastBuildPos = vAIPos;
@@ -1786,9 +1960,13 @@ void CWorldClient::MsgMinimapDown( const SGameMessage &msg )
 	NI_ASSERT( IsPacked2DCoords( msg.nParam1 ), "param is not a packed 2D coords!" );
 	CVec2 vPos = UnPackCoords( msg.nParam1 );
 	if ( msg.nParam2 == MSTATE_BUTTON1 )
+	{
 		pMouseTranslator->DoMinimapLButtonDown( vPos, IsForcedAction() );
+	}
 	else if ( msg.nParam2 == MSTATE_BUTTON2 )
+	{
 		pMouseTranslator->DoMinimapRButtonDown( vPos, IsForcedAction() );
+	}
 }
 
 void CWorldClient::MsgMinimapUp( const SGameMessage &msg )
@@ -1796,9 +1974,13 @@ void CWorldClient::MsgMinimapUp( const SGameMessage &msg )
 	NI_ASSERT( IsPacked2DCoords( msg.nParam1 ), "param is not a packed 2D coords!" );
 	CVec2 vPos = UnPackCoords( msg.nParam1 );
 	if ( msg.nParam2 == MSTATE_BUTTON1 )
+	{
 		pMouseTranslator->DoLButtonUp( CVec2( -1, -1 ), 0, IsForcedAction() );
+	}
 	else if ( msg.nParam2 == MSTATE_BUTTON2 )
+	{
 		pMouseTranslator->DoRButtonUp( CVec2( -1, -1 ), 0, IsForcedAction() );
+	}
 }
 
 void CWorldClient::MsgSetDestinationMinimap( const SGameMessage &msg )
@@ -1839,7 +2021,9 @@ void CWorldClient::MsgUpdateSelectedUnit( const SGameMessage &msg )
 void CWorldClient::MsgAssignSelectionGroup( const SGameMessage &msg, int nParam )
 {
 	if ( eActionMode != EAM_SELECT )
+	{
 		return;
+	}
 
 	pSelector->AssignSelectionToGroup( nParam );
 }
@@ -1847,7 +2031,9 @@ void CWorldClient::MsgAssignSelectionGroup( const SGameMessage &msg, int nParam 
 void CWorldClient::MsgRestoreSelectionGroup( const SGameMessage &msg, int nParam )
 {
 	if ( eActionMode != EAM_SELECT )
+	{
 		return;
+	}
 
 	pSelector->AssignGroupToSelection( nParam, false );
 
@@ -1856,15 +2042,21 @@ void CWorldClient::MsgRestoreSelectionGroup( const SGameMessage &msg, int nParam
 	Scene()->ClearMarkers( ESMT_SHOOT_AREA, -1 );
 
 	if ( bAreasShown )
+	{
 		pSelector->SetShowAreas( ACTION_NOTIFY_SHOOT_AREA, true );
+	}
 	if ( bRangesShown )
+	{
 		pSelector->SetShowAreas( ACTION_NOTIFY_RANGE_AREA, true );
+	}
 }
 
 void CWorldClient::MsgCenterSelectionGroup( const SGameMessage &msg, int nParam )
 {
 	if ( eActionMode != EAM_SELECT )
+	{
 		return;
+	}
 
 	std::vector<CMOSelectable *> members;
 	pSelector->GetGroupMembers( nParam, &members );
@@ -1882,7 +2074,9 @@ void CWorldClient::CenterSelectionGroupPrivate( const std::vector<CMOSelectable 
 	// TODO: надо сделать нормальное центрирование, чтобv в поле видимости (лучше в центр) попадал хотя бv один _нит
 
 	if ( group.empty() )
+	{
 		return;
+	}
 
 	CVec3 vCenter( 0.0f, 0.0f, 0.0f );
 	for ( std::vector<CMOSelectable *>::const_iterator it = group.begin(); it != group.end(); ++it )
@@ -1954,14 +2148,22 @@ struct SObstacleObjectFilter : public SObjectFilter
 	{
 		CMapObj *pMO = pClient->GetMapObj( nID );
 		if ( !pMO )
+		{
 			return false;
+		}
 		const NDb::SHPObjectRPGStats *pStats = pMO->GetStats();
 		if ( !pStats || pStats->eGameType == NDb::SGVOGT_TERRAOBJ )
+		{
 			return false;
+		}
 		if ( dynamic_cast<IMOUnit *>( pMO ) )
+		{
 			return false;
+		}
 		if ( dynamic_cast<CMOBridge *>( pMO ) )
+		{
 			return false;
+		}
 		return true;
 	};
 };
@@ -2042,9 +2244,13 @@ void CWorldClient::UpdateCursorObjects( const CVec2 &vPos )
 			{
 				std::list<int>::const_iterator itNearObjects = find( nearObjects.begin(), nearObjects.end(), *it );
 				if ( itNearObjects == nearObjects.end() )
+				{
 					it = coveredList.erase( it );
+				}
 				else
+				{
 					++it;
+				}
 			}
 		}
 		if ( s_bXRayFastFade )
@@ -2082,7 +2288,9 @@ void CWorldClient::UpdateCursorObjects( const CVec2 &vPos )
 
 			CVec4 vColor = COVERED_OBJECT_COLOR;
 			if ( nPlayer >= 0 && nPlayer < minimapColors.size() )
+			{
 				vColor = minimapColors[nPlayer];
+			}
 			Scene()->AddPostEffectObjects( objects, vColor );
 		}
 
@@ -2135,14 +2343,22 @@ void CWorldClient::UpdateCursorObjects( const CVec2 &vPos )
 bool CWorldClient::IsObstacleObject( CMapObj *pMO ) const
 {
 	if ( !pMO )
+	{
 		return false;
+	}
 	const NDb::SHPObjectRPGStats *pStats = pMO->GetStats();
 	if ( !pStats || pStats->eGameType == NDb::SGVOGT_TERRAOBJ )
+	{
 		return false;
+	}
 	if ( dynamic_cast<IMOUnit *>( pMO ) )
+	{
 		return false;
+	}
 	if ( dynamic_cast<CMOBridge *>( pMO ) )
+	{
 		return false;
+	}
 	return true;
 }
 
@@ -2168,7 +2384,9 @@ bool CWorldClient::IsFighter( CMapObj *pMO ) const
 	if ( CDynamicCast<const NDb::SUnitBaseRPGStats> pStats = pMO->GetStats() )
 	{
 		if ( pStats->eDBtype == NDb::DB_RPG_TYPE_AVIA_FIGHTER )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -2178,7 +2396,9 @@ bool CWorldClient::IsGroundAttackPlane( CMapObj *pMO ) const
 	if ( CDynamicCast<const NDb::SUnitBaseRPGStats> pStats = pMO->GetStats() )
 	{
 		if ( pStats->eDBtype == NDb::DB_RPG_TYPE_AVIA_ATTACK )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -2188,7 +2408,9 @@ bool CWorldClient::IsReconPlane( CMapObj *pMO ) const
 	if ( CDynamicCast<const NDb::SUnitBaseRPGStats> pStats = pMO->GetStats() )
 	{
 		if ( pStats->eDBtype == NDb::DB_RPG_TYPE_AVIA_SCOUT )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -2200,7 +2422,9 @@ bool CWorldClient::IsSuperWeapon( CMapObj *pMO ) const
 		if ( pStats->eDBtype == NDb::DB_RPG_TYPE_ART_SUPER || pStats->eDBtype == NDb::DB_RPG_TYPE_SPG_SUPER ||
 		     pStats->eDBtype == NDb::DB_RPG_TYPE_ARM_SUPER || pStats->eDBtype == NDb::DB_RPG_TYPE_AVIA_SUPER ||
 		     pStats->eDBtype == NDb::DB_RPG_TYPE_TRAIN_SUPER )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -2210,7 +2434,9 @@ bool CWorldClient::IsStratBomber( CMapObj *pMO ) const
 	if ( CDynamicCast<const NDb::SUnitBaseRPGStats> pStats = pMO->GetStats() )
 	{
 		if ( pStats->eDBtype == NDb::DB_RPG_TYPE_AVIA_STRAT_BOMBER )
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -2220,7 +2446,9 @@ bool CWorldClient::IsHelicopter( CMapObj *pMO ) const
 	if ( CDynamicCast<const NDb::SUnitBaseRPGStats> pStats = pMO->GetStats() )
 	{
 		if ( pStats->eDBtype == NDb::DB_RPG_TYPE_AVIA_HELICOPTER )
+		{
 			return true;
+		}
 	}
 
 	return false;
@@ -2229,7 +2457,9 @@ bool CWorldClient::IsHelicopter( CMapObj *pMO ) const
 bool CWorldClient::IsAviation( CMapObj *pMO ) const
 {
 	if ( CDynamicCast<const NDb::SUnitBaseRPGStats> pStats = pMO->GetStats() )
+	{
 		return pStats->IsAviation();
+	}
 	return false;
 }
 
@@ -2276,37 +2506,49 @@ void CWorldClient::UpdateSpecialGroups( int nID, CMapObj *pMO )
 		{
 			sgFighters.erase( nID );
 			if ( sgFighters.empty() )
+			{
 				NInput::PostEvent( "mission_update_special_select_btn", 0, 0 );
+			}
 		}
 		if ( !sgGroundAttackPlanes.empty() )
 		{
 			sgGroundAttackPlanes.erase( nID );
 			if ( sgGroundAttackPlanes.empty() )
+			{
 				NInput::PostEvent( "mission_update_special_select_btn", 1, 0 );
+			}
 		}
 		if ( !sgReconPlanes.empty() )
 		{
 			sgReconPlanes.erase( nID );
 			if ( sgReconPlanes.empty() )
+			{
 				NInput::PostEvent( "mission_update_special_select_btn", 2, 0 );
+			}
 		}
 		if ( !sgSuperWeapons.empty() )
 		{
 			sgSuperWeapons.erase( nID );
 			if ( sgSuperWeapons.empty() )
+			{
 				NInput::PostEvent( "mission_update_special_select_btn", 3, 0 );
+			}
 		}
 		if ( !sgStratBombers.empty() )
 		{
 			sgStratBombers.erase( nID );
 			if ( sgStratBombers.empty() )
+			{
 				NInput::PostEvent( "mission_update_special_select_btn", 4, 0 );
+			}
 		}
 		if ( !sgHelicopters.empty() )
 		{
 			sgHelicopters.erase( nID );
 			if ( sgHelicopters.empty() )
+			{
 				NInput::PostEvent( "mission_update_special_select_btn", 5, 0 );
+			}
 		}
 	}
 }
@@ -2509,7 +2751,9 @@ void CWorldClient::OnUpdateNotifyFeedback( const struct SAIFeedbackUpdate *pUpda
 #endif
 			//DEBUG}
 			if ( pDesc == 0 )
+			{
 				break;
+			}
 			SoundScene()->AddSoundToMap( pDesc, vPos );
 
 			break;
@@ -2549,11 +2793,15 @@ void CWorldClient::OnUpdateNotifyFeedback( const struct SAIFeedbackUpdate *pUpda
 int CWorldClient::GetHPBarColorIndex( const CMapObj *pMO, const int nPlayer )
 {
 	if ( nPlayer == -2 )
+	{
 		return 20;
+	}
 
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	if ( !pST )
+	{
 		return 0;
+	}
 	const IScenarioTracker::SPlayerColor &color = pST->GetPlayerColor( nPlayer );
 	int nColour = color.nColorIndex;
 	if ( pST->GetGameType() == IScenarioTracker::EGT_MULTI_FLAG_CONTROL && pMO->IsKeyObject() )
@@ -2561,9 +2809,13 @@ int CWorldClient::GetHPBarColorIndex( const CMapObj *pMO, const int nPlayer )
 		const int nTeam = pST->GetPlayerSide( nPlayer );
 		nColour = 3;
 		if ( nTeam == 0 )
+		{
 			nColour = 0;
+		}
 		else if ( nTeam == 1 )
+		{
 			nColour = 2;
+		}
 	}
 
 	return nColour;
@@ -2590,15 +2842,21 @@ void CWorldClient::OnUpdateNewUnit( const SAINewUnitUpdate *pUpdate, CMapObj *pM
 		     || eType == NDb::RT_EXTRA_MAXLVL_MIXED_1 || eType == NDb::RT_EXTRA_MAXLVL_MIXED_2 ||
 		     eType == NDb::RT_EXTRA_MAXLVL_MIXED_3 || eType == NDb::RT_EXTRA_MAXLVL_MIXED_4 ||
 		     eType == NDb::RT_EXTRA_MAXLVL_MIXED_5 )
+		{
 			pUnit->SetUnitLevel( pUpdate->info.nExpLevel, false );
+		}
 		else if ( pST )
 		{
 			if ( pST->GetGameType() == IScenarioTracker::EGT_SINGLE )
 			{
 				if ( const IScenarioTracker::SLeaderInfo *pLeader = pST->GetLeaderInfo( pUpdate->info.eReinfType ) )
+				{
 					pUnit->SetUnitLevel( pLeader->info.nRank, false );
+				}
 				else
+				{
 					pUnit->SetUnitLevel( pUpdate->info.nExpLevel, false );
+				}
 			}
 			else
 			{
@@ -2606,7 +2864,9 @@ void CWorldClient::OnUpdateNewUnit( const SAINewUnitUpdate *pUpdate, CMapObj *pM
 			}
 		}
 		else // in main menu
+		{
 			pUnit->SetUnitLevel( 0, false );
+		}
 		pUnit->UpdateIcons();
 	}
 	pMO->SetColorIndex( GetHPBarColorIndex( pMO, pUpdate->info.nPlayer ), true );
@@ -2632,7 +2892,9 @@ void CWorldClient::OnNewMapObj( int nID, CMapObj *pMO )
 	UpdateSpecialGroups( nID, pMO );
 
 	if ( IsAviation( pMO ) && pMO->IsFriend() )
+	{
 		ownAvia[pMO->GetID()] = pMO;
+	}
 }
 
 void CWorldClient::OnDeadOrRemoveMapObj( int nID )
@@ -2716,15 +2978,20 @@ int CWorldClient::operator&( IBinSaver &saver )
 void CWorldClient::SMapCommandAck::Place( const CVec3 &_vPos )
 {
 	if ( !pModel )
+	{
 		return;
+	}
 
 	vPos = _vPos;
 	if ( bPlaced )
+	{
 		Scene()->RemoveObject( nUniqueID );
+	}
 	Scene()->AddObject( nUniqueID, pModel, vPos, QNULL, CVec3( 1, 1, 1 ), OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC_ABS, 0 );
 	if ( pModel->pSkeleton != 0 )
 	{
 		if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( nUniqueID ) )
+		{
 			for ( int i = 0; i < pModel->pSkeleton->animations.size(); ++i )
 			{
 				const NDb::SAnimB2 *pAnim = checked_cast_ptr<const NDb::SAnimB2 *>( pModel->pSkeleton->animations[i] );
@@ -2734,6 +3001,7 @@ void CWorldClient::SMapCommandAck::Place( const CVec3 &_vPos )
 					break;
 				}
 			}
+		}
 	}
 	bPlaced = true;
 	nTime = Singleton<IGameTimer>()->GetAbsTime();
@@ -2754,7 +3022,9 @@ void CWorldClient::SMapCommandAck::Place( const CVec3 &_vPos, const CVec3 &vStar
 void CWorldClient::SMapCommandAck::Update()
 {
 	if ( !bPlaced )
+	{
 		return;
+	}
 
 	NTimer::STime nCurrentTime = Singleton<IGameTimer>()->GetAbsTime();
 	if ( nTime == 0 )
@@ -2784,7 +3054,9 @@ void CWorldClient::SetOnMinimap( bool _bOnMinimap )
 	else
 	{
 		if ( bOnMinimapOff )
+		{
 			bOnMinimap = _bOnMinimap;
+		}
 		bOnMinimapOff = true;
 	}
 }
@@ -2849,7 +3121,9 @@ const NDb::SComplexSoundDesc *CWorldClient::GetTerrainSound( int nTerrainType )
 	// ask terrain stats about sounds
 	const std::vector<CDBPtr<NDb::STGTerraType>> &terraTypes = pTerraManager->GetDesc()->pTerraSet->terraTypes;
 	if ( nTerrainType >= terraTypes.size() )
+	{
 		return 0;
+	}
 	return terraTypes[nTerrainType]->pSound;
 }
 
@@ -2859,7 +3133,9 @@ const NDb::SComplexSoundDesc *CWorldClient::GetTerrainCycleSound( int nTerrainTy
 	// ask terrain stats about sounds
 	const std::vector<CDBPtr<NDb::STGTerraType>> &terraTypes = pTerraManager->GetDesc()->pTerraSet->terraTypes;
 	if ( nTerrainType >= terraTypes.size() )
+	{
 		return 0;
+	}
 	return terraTypes[nTerrainType]->pCycledSound;
 }
 
@@ -2868,7 +3144,9 @@ void CWorldClient::OnSelectSlot( int nSlot, uint16_t wKeyboardFlags )
 	NI_VERIFY( nSlot >= 0, "Wrong slot", return );
 
 	if ( pSelector->IsUnloadMode() )
+	{
 		ActionLeaveOneSquad( nSlot );
+	}
 	else
 	{
 		pSelector->SetShowAreas( ACTION_NOTIFY_SHOOT_AREA, false );
@@ -2876,32 +3154,48 @@ void CWorldClient::OnSelectSlot( int nSlot, uint16_t wKeyboardFlags )
 		Scene()->ClearMarkers( ESMT_SHOOT_AREA, -1 );
 
 		if ( ( wKeyboardFlags & EKF_SHIFT ) != 0 )
+		{
 			pSelector->UnselectSlot( nSlot );
+		}
 		else if ( ( wKeyboardFlags & EKF_CTRL ) != 0 )
+		{
 			pSelector->SelectSameType( nSlot );
+		}
 		else
+		{
 			pSelector->SelectSameSlots( nSlot );
+		}
 
 		if ( bAreasShown )
+		{
 			pSelector->SetShowAreas( ACTION_NOTIFY_SHOOT_AREA, true );
+		}
 		if ( bRangesShown )
+		{
 			pSelector->SetShowAreas( ACTION_NOTIFY_RANGE_AREA, true );
+		}
 	}
 }
 
 void CWorldClient::OnClickMultiSelectUnit( int nSlot, uint16_t wKeyboardFlags )
 {
 	if ( !IsForcedAction() )
+	{
 		OnSelectSlot( nSlot, wKeyboardFlags );
+	}
 	else
+	{
 		OnActionOnSlot( nSlot, wKeyboardFlags );
+	}
 }
 
 void CWorldClient::OnActionOnSlot( int nSlot, uint16_t wKeyboardFlags )
 {
 	const CMapObj *pMO = pSelector->GetFirstSlotUnit( nSlot );
 	if ( !pMO )
+	{
 		return;
+	}
 
 	NDb::EUserAction eUserAction = GetForcedAction();
 	USER_ACTION pfnAction = GetAction( eUserAction, SActionDesc::FORCED );
@@ -2940,7 +3234,9 @@ void CWorldClient::OnSelectSpecialGroup( int nIndex )
 			break;
 	}
 	if ( !pGroup )
+	{
 		return;
+	}
 
 	pSelector->SetShowAreas( ACTION_NOTIFY_SHOOT_AREA, false );
 	pSelector->SetShowAreas( ACTION_NOTIFY_RANGE_AREA, false );
@@ -2948,7 +3244,9 @@ void CWorldClient::OnSelectSpecialGroup( int nIndex )
 
 	std::vector<CMOSelectable *> prevSelection;
 	if ( eActionMode == EAM_SELECT )
+	{
 		pSelector->GetSelectionMembers( &prevSelection );
+	}
 
 	pSelector->Empty();
 	for ( CSpecialGroup::iterator it = pGroup->begin(); it != pGroup->end(); ++it )
@@ -2964,13 +3262,19 @@ void CWorldClient::OnSelectSpecialGroup( int nIndex )
 		pSelector->GetSelectionMembers( &selection );
 
 		if ( selection == prevSelection )
+		{
 			CenterSelectionGroupPrivate( selection );
+		}
 	}
 
 	if ( bAreasShown )
+	{
 		pSelector->SetShowAreas( ACTION_NOTIFY_SHOOT_AREA, true );
+	}
 	if ( bRangesShown )
+	{
 		pSelector->SetShowAreas( ACTION_NOTIFY_RANGE_AREA, true );
+	}
 }
 
 void CWorldClient::CenterSelectedUnit()
@@ -2981,7 +3285,9 @@ void CWorldClient::CenterSelectedUnit()
 		pSelector->GetSelectionMembers( &selection );
 
 		if ( !selection.empty() )
+		{
 			CenterSelectionGroupPrivate( selection );
+		}
 	}
 }
 
@@ -3076,7 +3382,9 @@ void CWorldClient::OnNotifyEvent( const struct SAIFeedbackUpdate *pUpdate,
 		{
 			CMapObj *pMO = GetMapObj( pParam->unitIDs[i] );
 			if ( pMO )
+			{
 				params.objects.push_back( pMO );
+			}
 		}
 	}
 	GetNotifications()->OnEvent( params );
@@ -3087,12 +3395,16 @@ void CWorldClient::OnObjectiveMoved( const struct SAIFeedbackUpdate *pUpdate )
 	const SFeedBackUnitsArray *pParam = checked_cast_ptr<SFeedBackUnitsArray *>( pUpdate->info.pParam );
 	NI_ASSERT( pParam != 0, "Programmers: pParam = 0" );
 	if ( !pParam )
+	{
 		return;
+	}
 
 	int nID = pUpdate->info.nParam;
 	//{ CRAP
 	if ( nID < 0 )
+	{
 		nID = 0;
+	}
 	//}
 
 	std::vector<CMapObj *> objects;
@@ -3101,7 +3413,9 @@ void CWorldClient::OnObjectiveMoved( const struct SAIFeedbackUpdate *pUpdate )
 	{
 		CMapObj *pMO = GetMapObj( pParam->unitIDs[i] );
 		if ( pMO )
+		{
 			objects.push_back( pMO );
+		}
 		CDynamicCast<IMOUnit> pUnit = pMO;
 
 		const NDb::SClientGameConsts *pClientConsts = NGameX::GetClientConsts();
@@ -3109,7 +3423,9 @@ void CWorldClient::OnObjectiveMoved( const struct SAIFeedbackUpdate *pUpdate )
 		const NDb::SModel *pModel = ( pVisObj != 0 && !pVisObj->models.empty() ) ? pVisObj->models.front().pModel : 0;
 
 		if ( pUnit )
+		{
 			pUnit->SetPointer( pModel );
+		}
 	}
 	Singleton<IScenarioTracker>()->SetObjectiveObjects( nID, objects );
 
@@ -3117,7 +3433,9 @@ void CWorldClient::OnObjectiveMoved( const struct SAIFeedbackUpdate *pUpdate )
 	params.nID = nID;
 	//{ CRAP
 	if ( params.nID < 0 )
+	{
 		params.nID = 0;
+	}
 	//}
 	params.eEventType = NDb::NEVT_OBJECTIVE_MOVED;
 
@@ -3162,7 +3480,9 @@ void CWorldClient::UpdateXRayUnits( int nDeltaTime )
 		{
 			it->second += nDeltaTime;
 			if ( it->second > MAX_XRAY_TIME )
+			{
 				toRemoveUnits.push_back( it->first );
+			}
 		}
 		for ( std::vector<int>::iterator it = toRemoveUnits.begin(); it != toRemoveUnits.end(); ++it )
 		{
@@ -3185,7 +3505,9 @@ void CWorldClient::OnUpdateSuperWeaponControl( const struct SSuperWeaponControl 
 		{
 			CMapObj *pMO = 0;
 			if ( update.nUnitID != -1 )
+			{
 				pMO = GetMapObj( update.nUnitID );
+			}
 			pSuperWeapon->OnUpdateSuperWeaponControl( pMO, update.pUnit, update.bEnabled );
 		}
 	}
@@ -3242,21 +3564,37 @@ static void CommandDumpMaxes( const std::string &szID, const std::vector<std::ws
 	NStr::ToLowerASCII( &szParam );
 	EAIClasses aiClass = EAC_NONE;
 	if ( szParam == "human" )
+	{
 		aiClass = EAC_HUMAN;
+	}
 	else if ( szParam == "wheel" )
+	{
 		aiClass = EAC_WHELL;
+	}
 	else if ( szParam == "track" )
+	{
 		aiClass = EAC_TRACK;
+	}
 	else if ( szParam == "river" )
+	{
 		aiClass = EAC_RIVER;
+	}
 	else if ( szParam == "sea" )
+	{
 		aiClass = EAC_SEA;
+	}
 	else if ( szParam == "terrain" )
+	{
 		aiClass = EAC_TERRAIN;
+	}
 	else if ( szParam == "water" )
+	{
 		aiClass = EAC_WATER;
+	}
 	else if ( szParam == "any" )
+	{
 		aiClass = EAC_ANY;
+	}
 
 	NStr::ToMBCS( &szParam, paramsSet[0] );
 	NStr::ToLowerASCII( &szParam );
@@ -3280,11 +3618,17 @@ static void CommandPassMarker( const std::string &szID, const std::vector<std::w
 	NStr::ToLowerASCII( &szParam );
 	NDebugInfo::EColor color = NDebugInfo::GREEN;
 	if ( szParam == "red" )
+	{
 		color = NDebugInfo::RED;
+	}
 	else if ( szParam == "green" )
+	{
 		color = NDebugInfo::GREEN;
+	}
 	else if ( szParam == "blue" )
+	{
 		color = NDebugInfo::BLUE;
+	}
 	else
 	{
 		csSystem << "error: invalid color, use RED, GREEN or BLUE" << endl;
@@ -3295,23 +3639,41 @@ static void CommandPassMarker( const std::string &szID, const std::vector<std::w
 	NStr::ToLowerASCII( &szParam );
 	EAIClasses aiClass = EAC_TERRAIN;
 	if ( szParam == "human" )
+	{
 		aiClass = EAC_HUMAN;
+	}
 	else if ( szParam == "wheel" )
+	{
 		aiClass = EAC_WHELL;
+	}
 	else if ( szParam == "track" )
+	{
 		aiClass = EAC_TRACK;
+	}
 	else if ( szParam == "river" )
+	{
 		aiClass = EAC_RIVER;
+	}
 	else if ( szParam == "sea" )
+	{
 		aiClass = EAC_SEA;
+	}
 	else if ( szParam == "terrain" )
+	{
 		aiClass = EAC_TERRAIN;
+	}
 	else if ( szParam == "water" )
+	{
 		aiClass = EAC_WATER;
+	}
 	else if ( szParam == "any" )
+	{
 		aiClass = EAC_ANY;
+	}
 	else
+	{
 		aiClass = EAC_NONE;
+	}
 
 	EFreeTileInfo freeClass = FREE_NONE;
 	if ( paramsSet.size() > 2 )
@@ -3319,13 +3681,21 @@ static void CommandPassMarker( const std::string &szID, const std::vector<std::w
 		NStr::ToMBCS( &szParam, paramsSet[2] );
 		NStr::ToLowerASCII( &szParam );
 		if ( szParam == "none" )
+		{
 			freeClass = FREE_NONE;
+		}
 		else if ( szParam == "terrain" )
+		{
 			freeClass = FREE_TERRAIN;
+		}
 		else if ( szParam == "water" )
+		{
 			freeClass = FREE_WATER;
+		}
 		else
+		{
 			freeClass = FREE_ANY;
+		}
 	}
 
 	int nBoundTileRadius = 0;

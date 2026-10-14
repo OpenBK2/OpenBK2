@@ -12,7 +12,9 @@ int GetIndexLocal( int nIndex, const std::vector<int> &indices, const char *pszN
 	if ( nIndex == -1 )
 	{
 		if ( pCurRandomSeed == 0 )
+		{
 			return indices[rand() % indices.size()];
+		}
 		else
 		{
 			*pCurRandomSeed %= indices.size();
@@ -20,7 +22,9 @@ int GetIndexLocal( int nIndex, const std::vector<int> &indices, const char *pszN
 		}
 	}
 	else
+	{
 		return indices[nIndex];
+	}
 }
 //
 int GetLineIndex( int nIndex = -1 ) const
@@ -74,13 +78,21 @@ virtual void ToAIUnits( bool bInEditor )
 virtual const int GetTypeFromIndex( const int nIndex ) const
 {
 	if ( find( lines.begin(), lines.end(), nIndex ) != lines.end() )
+	{
 		return ENTRENCHMENT_LINE;
+	}
 	if ( find( fireplaces.begin(), fireplaces.end(), nIndex ) != fireplaces.end() )
+	{
 		return ENTRENCHMENT_FIREPLACE;
+	}
 	if ( find( terminators.begin(), terminators.end(), nIndex ) != terminators.end() )
+	{
 		return ENTRENCHMENT_TERMINATOR;
+	}
 	if ( find( arcs.begin(), arcs.end(), nIndex ) != arcs.end() )
+	{
 		return ENTRENCHMENT_ARC;
+	}
 	NI_ASSERT( false, fmt::format( "Wrong index {} in entrenchment \"{}\"", nIndex, szParentName ) );
 	return -1;
 }

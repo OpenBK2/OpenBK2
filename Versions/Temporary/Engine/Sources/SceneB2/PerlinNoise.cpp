@@ -116,7 +116,9 @@ static void InitNoiseParameters( void )
 		g1[i] = (float)( ( rand() % ( B + B ) ) - B ) / B;
 
 		for ( j = 0; j < 2; j++ )
+		{
 			g2[i][j] = (float)( ( rand() % ( B + B ) ) - B ) / B;
+		}
 		Normalize2( g2[i] );
 	}
 
@@ -132,9 +134,13 @@ static void InitNoiseParameters( void )
 		p[B + i] = p[i];
 		g1[B + i] = g1[i];
 		for ( j = 0; j < 2; j++ )
+		{
 			g2[B + i][j] = g2[i][j];
+		}
 		for ( j = 0; j < 3; j++ )
+		{
 			g3[B + i][j] = g3[i][j];
+		}
 	}
 }
 
@@ -144,7 +150,9 @@ int CPerlinNoise::Create(
 	NI_ASSERT( ( nSizeX > 0 ) && ( nSizeY > 0 ) && ( nOctsNum > 0 ) && ( fScale > 0 ), "Wrong parameters" );
 
 	if ( ( noise.GetSizeX() != nSizeX ) || ( noise.GetSizeY() != nSizeY ) )
+	{
 		noise.SetSizes( nSizeX, nSizeY );
+	}
 
 	float fXCoor, fYCoor, fFreq;
 	float fMin = 1000000.0f, fMax = -1000000.0f;
@@ -152,9 +160,13 @@ int CPerlinNoise::Create(
 	float fTexOffsX = NWin32Random::Random( 0.1f, 10000.0f );
 	float fTexOffsY = NWin32Random::Random( 0.1f, 10000.0f );
 	if ( ( fTexOffsX - int( fTexOffsX ) ) < DEF_NOISE_EPS )
+	{
 		fTexOffsX += 0.1f;
+	}
 	if ( ( fTexOffsY - int( fTexOffsY ) ) < DEF_NOISE_EPS )
+	{
 		fTexOffsY += 0.1f;
+	}
 
 	// create noise
 	for ( int g = 0; g < noise.GetSizeY(); ++g )
@@ -175,17 +187,25 @@ int CPerlinNoise::Create(
 			}
 
 			if ( noise[g][i] < fMin )
+			{
 				fMin = noise[g][i];
+			}
 			if ( noise[g][i] > fMax )
+			{
 				fMax = noise[g][i];
+			}
 		}
 	}
 
 	// normalize noise
 	const float fInvDisp = fabs( fMax - fMin ) > DEF_NOISE_EPS ? ( 1.0f / ( fMax - fMin ) ) : 1.0f;
 	for ( int g = 0; g < noise.GetSizeY(); ++g )
+	{
 		for ( int i = 0; i < noise.GetSizeX(); ++i )
+		{
 			noise[g][i] = ( noise[g][i] - fMin ) * fInvDisp;
+		}
+	}
 
 	return true;
 }
@@ -220,7 +240,9 @@ int CPerlinNoise::CreateTiled(
 	NI_ASSERT( ( nSizeX > 0 ) && ( nSizeY > 0 ) && ( nOctsNum > 0 ) && ( fScale > 0 ), "Wrong parameters" );
 
 	if ( ( noise.GetSizeX() != nSizeX ) || ( noise.GetSizeY() != nSizeY ) )
+	{
 		noise.SetSizes( nSizeX, nSizeY );
+	}
 
 	//float fFreq;
 	float fMin = 1000000.0f, fMax = -1000000.0f;
@@ -228,9 +250,13 @@ int CPerlinNoise::CreateTiled(
 	float fTexOffsX = NWin32Random::Random( 0.1f, 10000.0f );
 	float fTexOffsY = NWin32Random::Random( 0.1f, 10000.0f );
 	if ( ( fTexOffsX - int( fTexOffsX ) ) < DEF_NOISE_EPS )
+	{
 		fTexOffsX += 0.1f;
+	}
 	if ( ( fTexOffsY - int( fTexOffsY ) ) < DEF_NOISE_EPS )
+	{
 		fTexOffsY += 0.1f;
+	}
 
 	const float fInvSizesMult = 1.0f / ( noise.GetSizeX() * noise.GetSizeY() );
 
@@ -273,17 +299,25 @@ int CPerlinNoise::CreateTiled(
 			}*/
 
 			if ( noise[g][i] < fMin )
+			{
 				fMin = noise[g][i];
+			}
 			if ( noise[g][i] > fMax )
+			{
 				fMax = noise[g][i];
+			}
 		}
 	}
 
 	// normalize noise
 	const float fInvDisp = fabs( fMax - fMin ) > DEF_NOISE_EPS ? ( 1.0f / ( fMax - fMin ) ) : 1.0f;
 	for ( int g = 0; g < noise.GetSizeY(); ++g )
+	{
 		for ( int i = 0; i < noise.GetSizeX(); ++i )
+		{
 			noise[g][i] = ( noise[g][i] - fMin ) * fInvDisp;
+		}
+	}
 
 	return true;
 }

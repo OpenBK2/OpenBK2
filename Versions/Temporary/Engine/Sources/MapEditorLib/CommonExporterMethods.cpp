@@ -36,11 +36,15 @@ std::string GetGrannyExportSettingsFileName( const std::string &szTypeName )
 bool CheckFilesUpdated( const std::string &szSrc, const std::string &szDst, bool bForced )
 {
 	if ( bForced )
+	{
 		return false;
+	}
 
 	NVFS::SFileStats src, dst;
 	if ( !NVFS::GetWinFileStats( &src, szSrc ) || !NVFS::GetWinFileStats( &dst, szDst ) )
+	{
 		return false;
+	}
 
 	return src.mtime < dst.mtime;
 }
@@ -50,6 +54,7 @@ void MakeDoubleSlash( std::string *pszPath )
 	NI_ASSERT( pszPath != 0, "MakeDoubleSlash() pszPath == 0" );
 	//
 	for ( std::string::iterator itChar = pszPath->begin(); itChar != pszPath->end(); ++itChar )
+	{
 		if ( ( *itChar ) == '\\' )
 		{
 			int nCount = 0;
@@ -63,6 +68,7 @@ void MakeDoubleSlash( std::string *pszPath )
 				itChar = pszPath->insert( itChar, '\\' );
 			}
 		}
+	}
 }
 
 void MEStartScript( std::string *pszScriptText, bool bGUIMode )
@@ -219,10 +225,14 @@ void CutExtension( std::string *pFileName, const char *pszExt )
 {
 	const int nPos = pFileName->rfind( '.' );
 	if ( nPos == std::string::npos )
+	{
 		return;
+	}
 	//
 	if ( pFileName->compare( nPos + 1, -1, pszExt ) == 0 )
+	{
 		pFileName->resize( nPos );
+	}
 }
 
 void NormalizeFilePath( std::string *pszPath )
@@ -357,7 +367,9 @@ bool WaitForFile( const std::string &szFileName, const double fMaxWaitTime, bool
 		{
 			CFileStream stream( NVFS::GetMainVFS(), szFileName );
 			if ( stream.IsOk() && stream.GetSize() != 0 )
+			{
 				return true;
+			}
 		}
 		std::this_thread::sleep_for( std::chrono::milliseconds( 1000 ) );
 	} while ( NHPTimer::GetTimePassed( &timeCurr ) < fMaxWaitTime * 0.001 );

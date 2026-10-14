@@ -12,7 +12,9 @@ static int GetGrannyTypedefOffset( granny_data_type_definition *pType, const cha
 	while ( pType && pType->Type != GrannyEndMember )
 	{
 		if ( strcmp( name, pType->Name ) == 0 )
+		{
 			return nRet;
+		}
 		nRet += GrannyGetMemberTypeSize( pType );
 		++pType;
 	}
@@ -51,10 +53,14 @@ void GetTriangles( granny_mesh *pMesh, std::vector<STriangle> *pRes )
 	granny_tri_topology *pTopol = pMesh->PrimaryTopology;
 	int nTriCount = 0;
 	for ( int i = 0; i < pTopol->GroupCount; ++i )
+	{
 		nTriCount += pTopol->Groups[i].TriCount;
+	}
 	pRes->resize( nTriCount );
 	if ( nTriCount == 0 )
+	{
 		return;
+	}
 	int ind = 0;
 	for ( int i = 0; i < nTriCount; ++i )
 	{
@@ -115,9 +121,13 @@ void ScanFill( CArray2D<uint8_t> *pMask, const uint8_t nColor )
 			while ( ( *pMask )[y][x] != nColor )
 			{
 				if ( bFill )
+				{
 					( *pMask )[y][x] = nColor;
+				}
 				if ( ++x >= pMask->GetSizeX() )
+				{
 					break;
+				}
 			}
 			if ( x < pMask->GetSizeX() )
 			{
@@ -126,34 +136,62 @@ void ScanFill( CArray2D<uint8_t> *pMask, const uint8_t nColor )
 				if ( x > 0 )
 				{
 					if ( y > 0 )
+					{
 						if ( ( *pMask )[y - 1][x - 1] == nColor )
+						{
 							++nLow;
+						}
+					}
 					if ( y < ( pMask->GetSizeY() - 1 ) )
+					{
 						if ( ( *pMask )[y + 1][x - 1] == nColor )
+						{
 							++nHigh;
+						}
+					}
 				}
 				while ( ( *pMask )[y][x] == nColor )
 				{
 					if ( y > 0 )
+					{
 						if ( ( *pMask )[y - 1][x] == nColor )
+						{
 							++nLow;
+						}
+					}
 					if ( y < ( pMask->GetSizeY() - 1 ) )
+					{
 						if ( ( *pMask )[y + 1][x] == nColor )
+						{
 							++nHigh;
+						}
+					}
 					if ( ++x >= pMask->GetSizeX() )
+					{
 						break;
+					}
 				}
 				if ( x < pMask->GetSizeX() )
 				{
 					if ( y > 0 )
+					{
 						if ( ( *pMask )[y - 1][x] == nColor )
+						{
 							++nLow;
+						}
+					}
 					if ( y < ( pMask->GetSizeY() - 1 ) )
+					{
 						if ( ( *pMask )[y + 1][x] == nColor )
+						{
 							++nHigh;
+						}
+					}
 				}
 				if ( ( nLow > 0 ) && ( nHigh > 0 ) )
+				{
 					bFill = !bFill;
+				}
 			}
 		}
 	}
@@ -176,9 +214,13 @@ void ScanFillInArea(
 			while ( ( *pMask )[y][x] != nColor )
 			{
 				if ( bFill )
+				{
 					( *pMask )[y][x] = nColor;
+				}
 				if ( ++x > nMaxX )
+				{
 					break;
+				}
 			}
 			if ( x <= nMaxX )
 			{
@@ -187,34 +229,62 @@ void ScanFillInArea(
 				if ( x > nMinX )
 				{
 					if ( y > nMinY )
+					{
 						if ( ( *pMask )[y - 1][x - 1] == nColor )
+						{
 							++nLow;
+						}
+					}
 					if ( y < nMaxY )
+					{
 						if ( ( *pMask )[y + 1][x - 1] == nColor )
+						{
 							++nHigh;
+						}
+					}
 				}
 				while ( ( *pMask )[y][x] == nColor )
 				{
 					if ( y > nMinY )
+					{
 						if ( ( *pMask )[y - 1][x] == nColor )
+						{
 							++nLow;
+						}
+					}
 					if ( y < nMaxY )
+					{
 						if ( ( *pMask )[y + 1][x] == nColor )
+						{
 							++nHigh;
+						}
+					}
 					if ( ++x > nMaxX )
+					{
 						break;
+					}
 				}
 				if ( x <= nMaxX )
 				{
 					if ( y > nMinY )
+					{
 						if ( ( *pMask )[y - 1][x] == nColor )
+						{
 							++nLow;
+						}
+					}
 					if ( y < nMaxY )
+					{
 						if ( ( *pMask )[y + 1][x] == nColor )
+						{
 							++nHigh;
+						}
+					}
 				}
 				if ( ( nLow > 0 ) && ( nHigh > 0 ) )
+				{
 					bFill = !bFill;
+				}
 			}
 		}
 	}
@@ -233,7 +303,9 @@ void DrawLine(
 		const int d1 = nDy << 1;
 		const int d2 = ( nDy - nDx ) << 1;
 		if ( ( nX1 >= 0 ) && ( nX1 < pArray->GetSizeX() ) && ( nY1 >= 0 ) && ( nY1 < pArray->GetSizeY() ) )
+		{
 			( *pArray )[nY1][nX1] = nColor;
+		}
 		for ( int x = nX1 + nSx, y = nY1, i = 1; i <= nDx; i++, x += nSx )
 		{
 			if ( d > 0 )
@@ -242,9 +314,13 @@ void DrawLine(
 				y += nSy;
 			}
 			else
+			{
 				d += d1;
+			}
 			if ( ( x >= 0 ) && ( x < pArray->GetSizeX() ) && ( y >= 0 ) && ( y < pArray->GetSizeY() ) )
+			{
 				( *pArray )[y][x] = nColor;
+			}
 		}
 	}
 	else
@@ -253,7 +329,9 @@ void DrawLine(
 		const int d1 = nDx << 1;
 		const int d2 = ( nDx - nDy ) << 1;
 		if ( ( nX1 >= 0 ) && ( nX1 < pArray->GetSizeX() ) && ( nY1 >= 0 ) && ( nY1 < pArray->GetSizeY() ) )
+		{
 			( *pArray )[nY1][nX1] = nColor;
+		}
 		for ( int x = nX1, y = nY1 + nSy, i = 1; i <= nDy; i++, y += nSy )
 		{
 			if ( d > 0 )
@@ -262,9 +340,13 @@ void DrawLine(
 				x += nSx;
 			}
 			else
+			{
 				d += d1;
+			}
 			if ( ( x >= 0 ) && ( x < pArray->GetSizeX() ) && ( y >= 0 ) && ( y < pArray->GetSizeY() ) )
+			{
 				( *pArray )[y][x] = nColor;
+			}
 		}
 	}
 }
@@ -278,7 +360,9 @@ static int LineFill( CArray2D<uint8_t> *pArray,
                      const uint8_t nColor )
 {
 	if ( ( x < 0 ) || ( y < 0 ) || ( x >= pArray->GetSizeX() ) || ( y >= pArray->GetSizeY() ) )
+	{
 		return x;
+	}
 
 	int xl = x;
 	int xr = x;
@@ -292,7 +376,9 @@ static int LineFill( CArray2D<uint8_t> *pArray,
 	/*do c = arr[y][--xl];
 	while ( ( c != nColor ) && ( xl > 0 ) );*/
 	if ( c == nColor )
+	{
 		xl++;
+	}
 
 	c = nColor + 1;
 	while ( ( c != nColor ) && ( xr < ( pArray->GetSizeX() - 1 ) ) )
@@ -302,10 +388,14 @@ static int LineFill( CArray2D<uint8_t> *pArray,
 	/*do c = arr[y][++xr];
 	while ( ( c != nColor ) && ( xr < ( arr.GetSizeX() - 1 ) ) );*/
 	if ( c == nColor )
+	{
 		xr--;
+	}
 
 	for ( int i = xl; i <= xr; ++i )
+	{
 		( *pArray )[y][i] = nColor;
+	}
 
 	if ( ( ( y + nDir ) >= 0 ) && ( ( y + nDir ) < pArray->GetSizeY() ) )
 	{
@@ -313,7 +403,9 @@ static int LineFill( CArray2D<uint8_t> *pArray,
 		{
 			c = ( *pArray )[y + nDir][i];
 			if ( c != nColor )
+			{
 				i = LineFill( pArray, i, y + nDir, nDir, xl, xr, nColor );
+			}
 		}
 	}
 	if ( ( ( y - nDir ) >= 0 ) && ( ( y - nDir ) < pArray->GetSizeY() ) )
@@ -322,13 +414,17 @@ static int LineFill( CArray2D<uint8_t> *pArray,
 		{
 			c = ( *pArray )[y - nDir][i];
 			if ( c != nColor )
+			{
 				i = LineFill( pArray, i, y - nDir, -nDir, xl, xr, nColor );
+			}
 		}
 		for ( int i = nPrevXr; i <= xr; ++i )
 		{
 			c = ( *pArray )[y - nDir][i];
 			if ( c != nColor )
+			{
 				i = LineFill( pArray, i, y - nDir, -nDir, xl, xr, nColor );
+			}
 		}
 	}
 	return xr;
@@ -344,7 +440,9 @@ static int LineFillEx( CArray2D<uint8_t> *pArray,
                        const uint8_t nBorderColor )
 {
 	if ( ( x < 0 ) || ( y < 0 ) || ( x >= pArray->GetSizeX() ) || ( y >= pArray->GetSizeY() ) )
+	{
 		return x;
+	}
 
 	int xl = x;
 	int xr = x;
@@ -356,7 +454,9 @@ static int LineFillEx( CArray2D<uint8_t> *pArray,
 		c = ( *pArray )[y][--xl];
 	}
 	if ( xl > 0 )
+	{
 		xl++;
+	}
 
 	c = nColor + 1;
 	while ( ( c != nColor ) && ( c != nBorderColor ) && ( xr < ( pArray->GetSizeX() - 1 ) ) )
@@ -364,10 +464,14 @@ static int LineFillEx( CArray2D<uint8_t> *pArray,
 		c = ( *pArray )[y][++xr];
 	}
 	if ( xr < ( pArray->GetSizeX() - 1 ) )
+	{
 		xr--;
+	}
 
 	for ( int i = xl; i <= xr; ++i )
+	{
 		( *pArray )[y][i] = nColor;
+	}
 
 	if ( ( ( y + nDir ) >= 0 ) && ( ( y + nDir ) < pArray->GetSizeY() ) )
 	{
@@ -375,7 +479,9 @@ static int LineFillEx( CArray2D<uint8_t> *pArray,
 		{
 			c = ( *pArray )[y + nDir][i];
 			if ( ( c != nColor ) && ( c != nBorderColor ) )
+			{
 				i = LineFillEx( pArray, i, y + nDir, nDir, xl, xr, nColor, nBorderColor );
+			}
 		}
 	}
 	if ( ( ( y - nDir ) >= 0 ) && ( ( y - nDir ) < pArray->GetSizeY() ) )
@@ -384,13 +490,17 @@ static int LineFillEx( CArray2D<uint8_t> *pArray,
 		{
 			c = ( *pArray )[y - nDir][i];
 			if ( ( c != nColor ) && ( c != nBorderColor ) )
+			{
 				i = LineFillEx( pArray, i, y - nDir, -nDir, xl, xr, nColor, nBorderColor );
+			}
 		}
 		for ( int i = nPrevXr; i <= xr; ++i )
 		{
 			c = ( *pArray )[y - nDir][i];
 			if ( ( c != nColor ) && ( c != nBorderColor ) )
+			{
 				i = LineFillEx( pArray, i, y - nDir, -nDir, xl, xr, nColor, nBorderColor );
+			}
 		}
 	}
 	return xr;
@@ -409,7 +519,9 @@ static int LineFillInArea( CArray2D<uint8_t> *pArray,
                            const uint8_t nColor )
 {
 	if ( ( x < nMinX ) || ( y < nMinY ) || ( x > nMaxX ) || ( y >= nMaxY ) )
+	{
 		return x;
+	}
 
 	int xl = x;
 	int xr = x;
@@ -422,7 +534,9 @@ static int LineFillInArea( CArray2D<uint8_t> *pArray,
 	}
 
 	if ( c == nColor )
+	{
 		xl++;
+	}
 
 	c = nColor + 1;
 	while ( ( c != nColor ) && ( xr < nMaxX ) )
@@ -431,10 +545,14 @@ static int LineFillInArea( CArray2D<uint8_t> *pArray,
 	}
 
 	if ( c == nColor )
+	{
 		xr--;
+	}
 
 	for ( int i = xl; i <= xr; ++i )
+	{
 		( *pArray )[y][i] = nColor;
+	}
 
 	if ( ( ( y + nDir ) >= nMinY ) && ( ( y + nDir ) <= nMaxY ) )
 	{
@@ -442,7 +560,9 @@ static int LineFillInArea( CArray2D<uint8_t> *pArray,
 		{
 			c = ( *pArray )[y + nDir][i];
 			if ( c != nColor )
+			{
 				i = LineFill( pArray, i, y + nDir, nDir, xl, xr, nColor );
+			}
 		}
 	}
 	if ( ( ( y - nDir ) >= nMinY ) && ( ( y - nDir ) <= nMaxY ) )
@@ -451,13 +571,17 @@ static int LineFillInArea( CArray2D<uint8_t> *pArray,
 		{
 			c = ( *pArray )[y - nDir][i];
 			if ( c != nColor )
+			{
 				i = LineFill( pArray, i, y - nDir, -nDir, xl, xr, nColor );
+			}
 		}
 		for ( int i = nPrevXr; i <= xr; ++i )
 		{
 			c = ( *pArray )[y - nDir][i];
 			if ( c != nColor )
+			{
 				i = LineFill( pArray, i, y - nDir, -nDir, xl, xr, nColor );
+			}
 		}
 	}
 	return xr;
@@ -485,7 +609,9 @@ static int CheckFill( CArray2D<uint8_t> *pArray,
 	}
 
 	if ( ( y == 0 ) || ( y == ( pArray->GetSizeY() - 1 ) ) )
+	{
 		( *nFlag ) = false;
+	}
 
 	int xl = x;
 	int xr = x;
@@ -497,9 +623,13 @@ static int CheckFill( CArray2D<uint8_t> *pArray,
 		c = ( *pArray )[y][--xl];
 	}
 	if ( ( c != nColor ) && ( c != nBorderColor ) )
+	{
 		( *nFlag ) = false;
+	}
 	else
+	{
 		++xl;
+	}
 
 	c = 65535;
 	while ( ( c != nColor ) && ( c != nBorderColor ) && ( xr < ( pArray->GetSizeX() - 1 ) ) )
@@ -507,12 +637,18 @@ static int CheckFill( CArray2D<uint8_t> *pArray,
 		c = ( *pArray )[y][++xr];
 	}
 	if ( ( c != nColor ) && ( c != nBorderColor ) )
+	{
 		( *nFlag ) = false;
+	}
 	else
+	{
 		--xr;
+	}
 
 	for ( int i = xl; i <= xr; ++i )
+	{
 		( *pArray )[y][i] = nColor;
+	}
 
 	if ( ( ( y + nDir ) >= 0 ) && ( ( y + nDir ) < pArray->GetSizeY() ) )
 	{
@@ -520,7 +656,9 @@ static int CheckFill( CArray2D<uint8_t> *pArray,
 		{
 			c = ( *pArray )[y + nDir][i];
 			if ( ( c != nColor ) && ( c != nBorderColor ) )
+			{
 				i = CheckFill( pArray, i, y + nDir, nDir, xl, xr, nColor, nBorderColor, nFlag );
+			}
 		}
 	}
 	if ( ( ( y - nDir ) >= 0 ) && ( ( y - nDir ) < pArray->GetSizeY() ) )
@@ -529,13 +667,17 @@ static int CheckFill( CArray2D<uint8_t> *pArray,
 		{
 			c = ( *pArray )[y - nDir][i];
 			if ( ( c != nColor ) && ( c != nBorderColor ) )
+			{
 				i = CheckFill( pArray, i, y - nDir, -nDir, xl, xr, nColor, nBorderColor, nFlag );
+			}
 		}
 		for ( int i = nPrevXr; i <= xr; ++i )
 		{
 			c = ( *pArray )[y - nDir][i];
 			if ( ( c != nColor ) && ( c != nBorderColor ) )
+			{
 				i = CheckFill( pArray, i, y - nDir, -nDir, xl, xr, nColor, nBorderColor, nFlag );
+			}
 		}
 	}
 	return xr;
@@ -562,7 +704,9 @@ static int CheckFillInArea( CArray2D<uint8_t> *pArray,
 	}
 
 	if ( ( y == nMinY ) || ( y == nMaxY ) )
+	{
 		( *nFlag ) = false;
+	}
 
 	int xl = x;
 	int xr = x;
@@ -574,9 +718,13 @@ static int CheckFillInArea( CArray2D<uint8_t> *pArray,
 		c = ( *pArray )[y][--xl];
 	}
 	if ( ( c != nColor ) && ( c != nBorderColor ) )
+	{
 		( *nFlag ) = false;
+	}
 	else
+	{
 		++xl;
+	}
 
 	c = 65535;
 	while ( ( c != nColor ) && ( c != nBorderColor ) && ( xr < nMaxX ) )
@@ -584,12 +732,18 @@ static int CheckFillInArea( CArray2D<uint8_t> *pArray,
 		c = ( *pArray )[y][++xr];
 	}
 	if ( ( c != nColor ) && ( c != nBorderColor ) )
+	{
 		( *nFlag ) = false;
+	}
 	else
+	{
 		--xr;
+	}
 
 	for ( int i = xl; i <= xr; ++i )
+	{
 		( *pArray )[y][i] = nColor;
+	}
 
 	if ( ( ( y + nDir ) >= nMinY ) && ( ( y + nDir ) <= nMaxY ) )
 	{
@@ -597,8 +751,10 @@ static int CheckFillInArea( CArray2D<uint8_t> *pArray,
 		{
 			c = ( *pArray )[y + nDir][i];
 			if ( ( c != nColor ) && ( c != nBorderColor ) )
+			{
 				i = CheckFillInArea(
 						pArray, nMinX, nMinY, nMaxX, nMaxY, i, y + nDir, nDir, xl, xr, nColor, nBorderColor, nFlag );
+			}
 		}
 	}
 	if ( ( ( y - nDir ) >= nMinY ) && ( ( y - nDir ) <= nMaxY ) )
@@ -607,15 +763,19 @@ static int CheckFillInArea( CArray2D<uint8_t> *pArray,
 		{
 			c = ( *pArray )[y - nDir][i];
 			if ( ( c != nColor ) && ( c != nBorderColor ) )
+			{
 				i = CheckFillInArea(
 						pArray, nMinX, nMinY, nMaxX, nMaxY, i, y - nDir, -nDir, xl, xr, nColor, nBorderColor, nFlag );
+			}
 		}
 		for ( int i = nPrevXr; i <= xr; ++i )
 		{
 			c = ( *pArray )[y - nDir][i];
 			if ( ( c != nColor ) && ( c != nBorderColor ) )
+			{
 				i = CheckFillInArea(
 						pArray, nMinX, nMinY, nMaxX, nMaxY, i, y - nDir, -nDir, xl, xr, nColor, nBorderColor, nFlag );
+			}
 		}
 	}
 	return xr;
@@ -633,23 +793,33 @@ void WiseFill( CArray2D<uint8_t> *pMask, const uint8_t nColor )
 			while ( ( *pMask )[y][x] != nColor )
 			{
 				if ( ++x >= pMask->GetSizeX() )
+				{
 					break;
+				}
 			}
 			if ( x >= pMask->GetSizeX() )
+			{
 				break;
+			}
 			while ( ( *pMask )[y][x] == nColor )
 			{
 				if ( ++x >= pMask->GetSizeX() )
+				{
 					break;
+				}
 			}
 			if ( x >= pMask->GetSizeX() )
+			{
 				break;
+			}
 			if ( ( *pMask )[y][x] != 0xff )
 			{
 				nFlag = true;
 				CheckFill( pMask, x, y, 1, x, x, 0xff, nColor, &nFlag );
 				if ( nFlag )
+				{
 					LineFill( pMask, x, y, 1, x, x, nColor );
+				}
 			}
 		}
 	}
@@ -658,7 +828,9 @@ void WiseFill( CArray2D<uint8_t> *pMask, const uint8_t nColor )
 		for ( int i = 0; i < pMask->GetSizeX(); ++i )
 		{
 			if ( ( *pMask )[g][i] != nColor )
+			{
 				( *pMask )[g][i] = 0;
+			}
 		}
 	}
 }
@@ -679,23 +851,33 @@ void WiseFillInArea(
 			while ( ( *pMask )[y][x] != nColor )
 			{
 				if ( ++x > nMaxX )
+				{
 					break;
+				}
 			}
 			if ( x > nMaxX )
+			{
 				break;
+			}
 			while ( ( *pMask )[y][x] == nColor )
 			{
 				if ( ++x > nMaxX )
+				{
 					break;
+				}
 			}
 			if ( x > nMaxX )
+			{
 				break;
+			}
 			if ( ( *pMask )[y][x] != 0xff )
 			{
 				nFlag = true;
 				CheckFillInArea( pMask, nMinX, nMinY, nMaxX, nMaxY, x, y, 1, x, x, 0xff, nColor, &nFlag );
 				if ( nFlag )
+				{
 					LineFillInArea( pMask, nMinX, nMinY, nMaxX, nMaxY, x, y, 1, x, x, nColor );
+				}
 			}
 		}
 	}
@@ -704,7 +886,9 @@ void WiseFillInArea(
 		for ( int i = nMinX; i <= nMaxX; ++i )
 		{
 			if ( ( *pMask )[g][i] != nColor )
+			{
 				( *pMask )[g][i] = 0;
+			}
 		}
 	}
 }

@@ -9,7 +9,9 @@ int CScene::AddPolyline( const int nID, const std::vector<CVec3> &_points, const
 	// translate to Vis coords
 	std::vector<CVec3> points( _points.size() );
 	for ( int i = 0; i < _points.size(); ++i )
+	{
 		AI2Vis( &( points[i] ), _points[i] );
+	}
 
 	//	vector<CVec3> points( _points );
 	//
@@ -32,7 +34,9 @@ int CScene::AddIndexedPolyline( const int nID,
 	// translate to Vis coords
 	std::vector<CVec3> points( _points.size() );
 	for ( int i = 0; i < _points.size(); ++i )
+	{
 		AI2Vis( &( points[i] ), _points[i] );
+	}
 	//
 	return AddIndexedPolylineInternal( nID, points, indices, vColor, bDepthCheck );
 }

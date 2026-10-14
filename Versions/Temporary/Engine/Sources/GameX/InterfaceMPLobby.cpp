@@ -35,11 +35,15 @@ CInterfaceMPLobby::CInterfaceMPLobby() : CInterfaceMPScreenBase( "MPGameLobby", 
 bool CInterfaceMPLobby::Init()
 {
 	if ( CInterfaceScreenBase::Init() == false )
+	{
 		return false;
+	}
 	AddScreen( this );
 	pMain = GetChildChecked<IWindow>( pScreen, "Main", true );
 	if ( !pMain )
+	{
 		return false;
+	}
 	SetMainWindowTexture( pMain, InterfaceState()->GetMenuBackgroundTexture() );
 	InitControls();
 	TryToJoinChatChannel( "Common" );
@@ -89,55 +93,95 @@ void CInterfaceMPLobby::InitControls()
 bool CInterfaceMPLobby::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "react_on_back" )
+	{
 		return OnBackReaction();
+	}
 
 	if ( szReaction == "custom_game_enter" )
+	{
 		return OnCustomGameReaction();
+	}
 
 	if ( szReaction == "chat_enter" )
+	{
 		return OnPostChatMessageReaction();
+	}
 	if ( szReaction == "chat_escape" )
+	{
 		return OnChatEscape();
+	}
 
 	if ( szReaction == "react_on_begin_game" )
+	{
 		return OnLadderGameReaction();
+	}
 
 	if ( szReaction == "react_on_select_channel" )
+	{
 		return OnChatSelectChannel();
+	}
 	if ( szReaction == "react_on_join_channel" )
+	{
 		return OnChatJoinNamedChannel();
+	}
 	if ( szReaction == "react_on_cancel_join_channel" )
+	{
 		return OnChatCancelJoinChannel();
+	}
 
 	if ( szReaction == "react_on_channels_open" )
+	{
 		return OnChatShowChannels();
+	}
 	if ( szReaction == "react_on_channels_close" )
+	{
 		return OnChatHideChannels();
+	}
 
 	if ( szReaction == "react_on_client_menu" )
+	{
 		return OnClientMenu( szSender );
+	}
 	if ( szReaction == "react_client_cancel" )
+	{
 		return OnClientInfoClose( false );
+	}
 	if ( szReaction == "react_client_ok" )
+	{
 		return OnClientInfoClose( true );
+	}
 
 	if ( szReaction == "react_client_friend_change" )
+	{
 		return OnClientInfoFriendChange();
+	}
 	if ( szReaction == "react_client_ignore_change" )
+	{
 		return OnClientInfoIgnoreChange();
+	}
 
 	if ( szReaction == "react_cancel_ladder" )
+	{
 		return OnLadderCancelReaction();
+	}
 	if ( szReaction == "react_on_my_ladder_stats" )
+	{
 		return OnLadderStatsReaction();
+	}
 
 	if ( szReaction == "client_selected" )
+	{
 		return OnClientSelected();
+	}
 
 	if ( szReaction == "react_on_show_friends" )
+	{
 		return OnFriendsSwitch( true );
+	}
 	if ( szReaction == "react_on_show_all" )
+	{
 		return OnFriendsSwitch( false );
+	}
 
 	return false;
 }
@@ -179,20 +223,26 @@ bool CInterfaceMPLobby::OnClientMenu( const std::string &szSender )
 	CChatClientsList *pCurrentList = bShowingFriends ? &chatFriends : &chatClients;
 	CChatClientsList::iterator it = pCurrentList->find( szSender );
 	if ( it == pCurrentList->end() )
+	{
 		return true;
+	}
 	CClientListData *pClientData = it->second;
 	szSelectedClient = pClientData->szName;
 
 	ITextView *pClientName = GetChildChecked<ITextView>( pClientInfoWindow, "Client_Name", true );
 	if ( !pClientName )
+	{
 		return true;
+	}
 	pClientName->SetText( pClientName->GetDBText() + NStr::ToUnicode( szSelectedClient ) );
 
 	IButton *pStatusButton = GetChildChecked<IButton>( pClientInfoWindow, "Client_Status", true );
 	ITextView *pStatusText = GetChildChecked<ITextView>( pClientInfoWindow, "Client_StatusText", true );
 	int nStatusCode = GetButtonState( szSelectedClient );
 	if ( pStatusButton )
+	{
 		pStatusButton->SetState( nStatusCode );
+	}
 	std::string szStatusCode;
 	switch ( nStatusCode )
 	{
@@ -212,14 +262,20 @@ bool CInterfaceMPLobby::OnClientMenu( const std::string &szSender )
 			szStatusCode = "T_STATUS_ONLINE";
 	}
 	if ( pStatusText )
+	{
 		pStatusText->SetText( pStatusText->GetDBText() + GetScreen()->GetTextEntry( szStatusCode ) );
+	}
 
 	IWindow *pInfoArea = GetChildChecked<IWindow>( pClientInfoWindow, "Client_InfoArea", true );
 	if ( pInfoArea )
+	{
 		pInfoArea->ShowWindow( false );
+	}
 	ITextView *pWaitText = GetChildChecked<ITextView>( pClientInfoWindow, "GettingInfo", true );
 	if ( pWaitText )
+	{
 		pWaitText->ShowWindow( true );
+	}
 
 	bool bFriendNow = ( chatFriends.find( szSelectedClient ) != chatFriends.end() );
 	bool bIgnoreNow = ( chatIgnores.find( szSelectedClient ) != chatIgnores.end() );
@@ -238,18 +294,26 @@ bool CInterfaceMPLobby::OnClientMenu( const std::string &szSender )
 
 	ITextView *pFriendLabel = GetChildChecked<ITextView>( pClientInfoWindow, "Client_FriendLabel", true );
 	if ( pFriendLabel )
+	{
 		pFriendLabel->ShowWindow( !bOwnInfo );
+	}
 	ITextView *pIgnoreLabel = GetChildChecked<ITextView>( pClientInfoWindow, "Client_IgnoreLabel", true );
 	if ( pIgnoreLabel )
+	{
 		pIgnoreLabel->ShowWindow( !bOwnInfo );
+	}
 
 	if ( pClientInfoWindow )
+	{
 		pClientInfoWindow->ShowWindow( true );
+	}
 
 	Singleton<IMPToUIManager>()->AddUIMessage( new SMPUILadderInfoRequestMessage( szSelectedClient, true ) );
 	pNicksList->SelectItem( 0 );
 	if ( pPostMessage )
+	{
 		pPostMessage->SetState( 0 );
+	}
 
 	return true;
 }
@@ -257,17 +321,23 @@ bool CInterfaceMPLobby::OnClientMenu( const std::string &szSender )
 bool CInterfaceMPLobby::OnClientInfoClose( const bool bApply )
 {
 	if ( pClientInfoWindow )
+	{
 		pClientInfoWindow->ShowWindow( false );
+	}
 
 	if ( !bApply )
+	{
 		return true;
+	}
 
 	bool bNeedUpdate = false;
 
 	IButton *pFriendCheck = GetChildChecked<IButton>( pClientInfoWindow, "Client_Friend", true );
 	IButton *pIgnoreCheck = GetChildChecked<IButton>( pClientInfoWindow, "Client_Ignore", true );
 	if ( !pFriendCheck || !pIgnoreCheck )
+	{
 		return true;
+	}
 	bool bFriendOld = ( chatFriends.find( szSelectedClient ) != chatFriends.end() );
 	bool bIgnoreOld = ( chatIgnores.find( szSelectedClient ) != chatIgnores.end() );
 	bool bFriendNew = ( pFriendCheck->GetState() == 1 );
@@ -306,7 +376,9 @@ bool CInterfaceMPLobby::OnClientInfoClose( const bool bApply )
 	}
 
 	if ( bNeedUpdate )
+	{
 		RebuildClientList();
+	}
 
 	return true;
 }
@@ -315,17 +387,25 @@ bool CInterfaceMPLobby::OnShortInfoMessage( struct SMPUIShortInfoMessage *pMsg )
 {
 	IWindow *pInfoArea = GetChildChecked<IWindow>( pClientInfoWindow, "Client_InfoArea", true );
 	if ( pInfoArea )
+	{
 		pInfoArea->ShowWindow( true );
+	}
 	ITextView *pWaitText = GetChildChecked<ITextView>( pClientInfoWindow, "GettingInfo", true );
 	if ( pWaitText )
+	{
 		pWaitText->ShowWindow( false );
+	}
 
 	ITextView *pInfoLevel = GetChildChecked<ITextView>( pInfoArea, "Client_Level", true );
 	if ( pInfoLevel )
+	{
 		pInfoLevel->SetText( pInfoLevel->GetDBText() + NStr::ToUnicode( std::to_string( pMsg->nLevel ) ) );
+	}
 	ITextView *pInfoRank = GetChildChecked<ITextView>( pInfoArea, "Client_Rank", true );
 	if ( pInfoRank )
+	{
 		pInfoRank->SetText( pInfoRank->GetDBText() + pMsg->wszRank );
+	}
 
 	return true;
 }
@@ -335,9 +415,13 @@ bool CInterfaceMPLobby::OnClientInfoFriendChange()
 	IButton *pFriendCheck = GetChildChecked<IButton>( pClientInfoWindow, "Client_Friend", true );
 	IButton *pIgnoreCheck = GetChildChecked<IButton>( pClientInfoWindow, "Client_Ignore", true );
 	if ( !pFriendCheck || !pIgnoreCheck )
+	{
 		return true;
+	}
 	if ( pIgnoreCheck->GetState() == 1 && pFriendCheck->GetState() == 1 )
+	{
 		pIgnoreCheck->SetState( 0 );
+	}
 	return true;
 }
 
@@ -346,9 +430,13 @@ bool CInterfaceMPLobby::OnClientInfoIgnoreChange()
 	IButton *pFriendCheck = GetChildChecked<IButton>( pClientInfoWindow, "Client_Friend", true );
 	IButton *pIgnoreCheck = GetChildChecked<IButton>( pClientInfoWindow, "Client_Ignore", true );
 	if ( !pFriendCheck || !pIgnoreCheck )
+	{
 		return true;
+	}
 	if ( pIgnoreCheck->GetState() == 1 && pFriendCheck->GetState() == 1 )
+	{
 		pFriendCheck->SetState( 0 );
+	}
 	return true;
 }
 
@@ -391,8 +479,10 @@ bool CInterfaceMPLobby::OnLadderMessage( struct SMPUILadderStatusChangeMessage *
 			bLadderGameFound = false;
 			std::wstring wszReason = GetScreen()->GetTextEntry( "LADDER_GAME_CANCELLED" );
 			if ( wszReason.length() > 0 )
+			{
 				NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
 				                    CICMessageBox::MakeConfigString( "MessageBoxWindowOk", wszReason ).c_str() );
+			}
 		}
 		break;
 	}
@@ -412,7 +502,9 @@ bool CInterfaceMPLobby::StepLocal( bool bAppActive )
 			std::wstring wszText =
 					pWaitingForLadder->GetDBText() + NStr::ToUnicode( fmt::format( " {}:{:02d}", nElapsedMin, nElapsedSec ) );
 			if ( bLadderGameFound )
+			{
 				wszText = wszText + GetScreen()->GetTextEntry( "T_LADDER_GAME_FOUND" );
+			}
 			pWaitingForLadder->SetText( wszText );
 		}
 	}
@@ -447,7 +539,9 @@ bool CInterfaceMPLobby::OnClientSelected()
 	{
 		pNicksList->SelectItem( 0 );
 		if ( pPostMessage )
+		{
 			pPostMessage->SetState( 0 );
+		}
 		pSelection = 0;
 		return true;
 	}
@@ -461,7 +555,9 @@ bool CInterfaceMPLobby::OnClientSelected()
 		{
 			pSelection = pItem;
 			if ( pPostMessage )
+			{
 				pPostMessage->SetState( 1 );
+			}
 			break;
 		}
 	}
@@ -469,7 +565,9 @@ bool CInterfaceMPLobby::OnClientSelected()
 	{
 		pNicksList->SelectItem( 0 );
 		if ( pPostMessage )
+		{
 			pPostMessage->SetState( 0 );
+		}
 		return true;
 	}
 
@@ -481,7 +579,9 @@ bool CInterfaceMPLobby::OnFriendsSwitch( bool bShowFriends )
 	bShowingFriends = bShowFriends;
 	pSelection = 0;
 	if ( pPostMessage )
+	{
 		pPostMessage->SetState( 0 );
+	}
 	RebuildClientList();
 	return true;
 }

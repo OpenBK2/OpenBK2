@@ -35,20 +35,26 @@ IPart::IPart( CPtrFuncBase<CObjectInfo> *pData, CPerMaterialCombiner *_pCombiner
 		: pObjInfo( pData ), pCombiner( _pCombiner ), fAverageTriArea( 0 )
 {
 	if ( IsValid( pCombiner ) )
+	{
 		pCombiner->AddPart( this );
+	}
 }
 
 IPart::~IPart()
 {
 	if ( IsValid( pCombiner ) )
+	{
 		pCombiner->RemovePart( this );
+	}
 }
 
 void IPart::RefreshObjectInfo()
 {
 	pObjInfo.Refresh();
 	while ( !pObjInfo->GetValue() )
+	{
 		std::this_thread::yield();
+	}
 }
 
 void IPart::ResetCachedTransform()
@@ -61,19 +67,27 @@ void IPart::ResetCachedTransform()
 void IPart::SetCombiner( CPerMaterialCombiner *_pCombiner )
 {
 	if ( pCombiner == _pCombiner )
+	{
 		return;
+	}
 	if ( IsValid( pCombiner ) )
+	{
 		pCombiner->RemovePart( this );
+	}
 	pCombiner = _pCombiner;
 	if ( IsValid( pCombiner ) )
+	{
 		pCombiner->AddPart( this );
+	}
 }
 
 void IPart::SetObjectInfoNode( CPtrFuncBase<CObjectInfo> *p )
 {
 	pObjInfo = p;
 	if ( pCombiner )
+	{
 		pCombiner->MarkWasted( this );
+	}
 	ResetCachedTransform();
 }
 
@@ -93,17 +107,23 @@ bool CAnimationWatch::NeedUpdate()
 		{
 			parts[k]->AddChangeTrackers( this, bAnimationOnly );
 			while ( indices.size() < watch.size() )
+			{
 				indices.push_back( k );
+			}
 		}
 		// sync with previous trackers
 		std::unordered_map<void *, int> old;
 		for ( int k = 0; k < oldWatch.size(); ++k )
+		{
 			old[oldWatch[k]] = k;
+		}
 		for ( int k = 0; k < watch.size(); ++k )
 		{
 			std::unordered_map<void *, int>::iterator i = old.find( watch[k] );
 			if ( i != old.end() )
+			{
 				watch[k].Sync( oldWatch[i->second] );
+			}
 		}
 	}
 	bool bRes = false;
@@ -135,7 +155,9 @@ void CPerMaterialCombiner::Recalc()
 {
 	bHasChanged = false;
 	if ( value.size() < 4 )
+	{
 		return;
+	}
 
 	boost::sort::spreadsort::integer_sort(
 			std::begin( value ),
@@ -155,7 +177,9 @@ void CPerMaterialCombiner::RemovePart( IPart *pPart )
 {
 	std::vector<CPtr<IPart>>::iterator i = find( value.begin(), value.end(), pPart );
 	if ( i == value.end() )
+	{
 		return;
+	}
 	value.erase( i );
 	bHasChanged = true;
 }
@@ -181,7 +205,9 @@ void CMMXAnimationMatrices::Recalc()
 	const std::vector<SHMatrix> &blends = pAnimation->GetValue();
 	value.resize( blends.size() );
 	for ( int k = 0; k < value.size(); ++k )
+	{
 		Assign( &value[k], blends[k] );
+	}
 }
 
 CFuncBase<std::vector<NGfx::SCompactTransformer>> *MakeMMXAnimation( CFuncBase<std::vector<SHMatrix>> *pAnim )
@@ -207,11 +233,15 @@ static void TransformPosition( const std::vector<CVec3> &srcPos, CVec3 *pRes, co
 {
 	int nCount = srcPos.size();
 	if ( nCount > 3 && bIsSSEPresent )
+	{
 		SSEBatchTransform( m, &srcPos[0], pRes, nCount );
+	}
 	else
 	{
 		for ( int k = 0; k < nCount; ++k )
+		{
 			m.RotateHVector( pRes++, srcPos[k] );
+		}
 	}
 }
 
@@ -292,7 +322,9 @@ struct STGenericTransformer
 	{
 		xformedNormals.resize( nVertices );
 		for ( int k = 0, nSize = xformedNormals.size(); k < nSize; ++k )
+		{
 			xformedNormals[k] = pSrc[k].normal;
+		}
 		CalcPerVertexLight( pRes, pObjInfo, pObjInfo->GetPositions(), pSrc, xformedNormals, ls, pCache, bv );
 	}
 	void SimpleTransform( CObjectInfo *pObjInfo,
@@ -310,7 +342,9 @@ struct STGenericTransformer
 		xformedNormals.resize( nVertices );
 		// most of these are often very small in size.. (less than 128 elements - not very worthy of parallelization here)
 		for ( int k = 0, nSize = xformedNormals.size(); k < nSize; ++k )
+		{
 			MMXTransformVector( xformedNormals[k], pSrc[k].normal, transformer );
+		}
 
 		CalcPerVertexLight( pRes, pObjInfo, transformed, pSrc, xformedNormals, ls, pCache, bv );
 	}
@@ -379,7 +413,9 @@ struct SGenericPosTransformer
 	{
 		const std::vector<CVec3> &srcPos = pObjInfo->GetPositions();
 		for ( int k = 0; k < srcPos.size(); ++k )
+		{
 			pRes[k] = srcPos[k];
+		}
 	}
 	void SimpleTransform( CObjectInfo *pObjInfo,
 	                      const std::vector<CVec3> &_fake,
@@ -423,10 +459,14 @@ struct SPartTransformer : public T
 	{
 		CObjectInfo *pObjInfo = p->GetObjectInfo();
 		if ( !pObjInfo )
+		{
 			return 0;
+		}
 		const std::vector<SUVInfo> &srcVerts = pObjInfo->GetVertices();
 		if ( srcVerts.empty() )
+		{
 			return 0;
+		}
 		SBound bv;
 		bv.BoxInit( p->vBVMin, p->vBVMax );
 		switch ( p->GetTransformType() )
@@ -440,6 +480,7 @@ struct SPartTransformer : public T
 				break;
 			case TT_SINGLE_SKIN:
 				if ( T::PASS_MMX_BLENDS )
+				{
 					this->SingleSkinTransform( pObjInfo,
 					                           transformed,
 					                           &srcVerts[0],
@@ -450,7 +491,9 @@ struct SPartTransformer : public T
 					                           p->GetAnimation(),
 					                           p->GetMMXAnimation(),
 					                           pRes );
+				}
 				else
+				{
 					this->SingleSkinTransform( pObjInfo,
 					                           transformed,
 					                           &srcVerts[0],
@@ -461,6 +504,7 @@ struct SPartTransformer : public T
 					                           p->GetAnimation(),
 					                           noMMXTransformers,
 					                           pRes );
+				}
 				break;
 			default:
 				ASSERT( 0 );
@@ -488,7 +532,9 @@ struct STGfxCacheTransformer : public SPartTransformer<STGenericTransformer<TVer
 	{
 		CObjectInfo *pObjInfo = p->GetObjectInfo();
 		if ( !pObjInfo )
+		{
 			return;
+		}
 		int nPartVerts = pObjInfo->GetVertices().size();
 		if ( nPartVerts == 0 )
 		{
@@ -523,10 +569,14 @@ void TransformPart( IPart *p, std::vector<CVec3> *pRes, std::vector<STriangle> *
 	p->RefreshObjectInfo();
 	CObjectInfo *pObjInfo = p->GetObjectInfo();
 	if ( pTris )
+	{
 		pObjInfo->GetPosTriangles( pTris );
+	}
 	pRes->resize( pObjInfo->GetPositions().size() );
 	if ( pRes->empty() )
+	{
 		return;
+	}
 	SPartTransformer<SGenericPosTransformer> trans;
 	trans.DoTransform( p, &( ( *pRes )[0] ), *pRes );
 }
@@ -546,7 +596,9 @@ void CVBCombiner::XFormPosition()
 		CObjectInfo *pObjInfo = pPart->GetObjectInfo();
 		Zero( partBVs[i] ); //SBoundCalcer bc; bc.Add( CVec3(0,0,0) ); bc.Make( &partBVs[i] );
 		if ( !pObjInfo )
+		{
 			continue;
+		}
 		// xform
 		std::vector<CVec3> *pRes = &pPart->xformedPositions;
 		int nSize = pObjInfo->GetPositions().size();
@@ -605,7 +657,9 @@ void CVBCombiner::SimpleTransform( TTrans *p )
 void CVBCombiner::DoRecalc()
 {
 	if ( bNeedXForm || bDroppedXForm )
+	{
 		XFormPosition();
+	}
 	bNeedRecalc = false;
 	ASSERT( NGfx::N_VEC_FULL_TEX_SIZE == N_VERTEX_TEX_SIZE );
 	const std::vector<CPtr<IPart>> &parts = pCombiner->GetValue();
@@ -618,7 +672,9 @@ void CVBCombiner::DoRecalc()
 		( *i )->RefreshObjectInfo();
 		CObjectInfo *pObjInfo = ( *i )->GetObjectInfo();
 		if ( !pObjInfo )
+		{
 			continue;
+		}
 		nPositions += pObjInfo->GetPositions().size();
 		nVerts += pObjInfo->GetVertices().size();
 	}
@@ -628,7 +684,9 @@ void CVBCombiner::DoRecalc()
 		pValue = 0;
 		bound.BoxInit( CVec3( 0, 0, 0 ), CVec3( 0, 0, 0 ) );
 		for ( int k = 0; k < partBVs.size(); ++k )
+		{
 			partBVs[k] = bound.s;
+		}
 		return;
 	}
 	NGfx::EBufferUsage bufUsage = NGfx::DYNAMIC; //ct == CT_STATIC ? NGfx::STATIC : NGfx::DYNAMIC;
@@ -653,7 +711,9 @@ bool CVBCombiner::NeedUpdate()
 		for ( int i = 0; i < parts.size(); ++i )
 		{
 			if ( parts[i] )
+			{
 				parts[i]->ResetCachedLighting();
+			}
 		}
 	}
 	return NeedXForm() | bNeedRecalc | bLightState;
@@ -663,18 +723,24 @@ void CVBCombiner::Recalc()
 {
 	DoRecalc();
 	if ( bLowRAM )
+	{
 		FreeMemory();
+	}
 }
 
 void CVBCombiner::FreeMemory()
 {
 	if ( bDroppedXForm )
+	{
 		return;
+	}
 	const std::vector<CPtr<IPart>> &parts = pCombiner->GetValue();
 	for ( int i = 0; i < parts.size(); ++i )
 	{
 		if ( parts[i] )
+		{
 			parts[i]->ResetCachedTransform();
+		}
 	}
 	bDroppedXForm = true;
 }
@@ -693,12 +759,18 @@ void CIBCombiner::Recalc()
 		parts[i]->RefreshObjectInfo();
 		CObjectInfo *pObjInfo = parts[i]->GetObjectInfo();
 		if ( !pObjInfo )
+		{
 			continue;
+		}
 		bIs2Sided[i] = parts[i]->Is2Sided();
 		if ( bIs2Sided[i] )
+		{
 			nTotalTris += pObjInfo->GetTrisCount() * 2;
+		}
 		else
+		{
 			nTotalTris += pObjInfo->GetTrisCount();
+		}
 	}
 
 	triBuffer.resize( nTotalTris + 1 );
@@ -722,16 +794,26 @@ void CIBCombiner::Recalc()
 		}
 		std::vector<STriangle> tris;
 		if ( ibt == IBTT_POSITIONS )
+		{
 			pObjInfo->GetVxPositionTriangles( &tris );
+		}
 		else if ( ibt == IBTT_VERTICES )
+		{
 			tris = pObjInfo->GetGeometry();
+		}
 		else
+		{
 			ASSERT( 0 );
+		}
 		bool b2Sided = bIs2Sided[i];
 		if ( b2Sided )
+		{
 			value[i].nTris = tris.size() * 2;
+		}
 		else
+		{
 			value[i].nTris = tris.size();
+		}
 		value[i].nOffset = nOffset;
 		value[i].nBaseIndex = nLargeOffset; //nOffset;
 		unsigned short nUseOffset = nOffset;

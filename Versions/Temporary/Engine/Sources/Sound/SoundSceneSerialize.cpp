@@ -25,7 +25,9 @@ int CSoundScene2D::operator&( IBinSaver &saver )
 
 	saver.Add( 16, &mapSounds );
 	if ( saver.IsReading() )
+	{
 		mapSounds.SetSoundScene( this );
+	}
 	saver.Add( 18, &soundCellsWithSound );
 	saver.Add( 19, &soundCellsOutOfBounds );
 	saver.Add( 20, &eSoundSceneMode );

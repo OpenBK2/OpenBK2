@@ -57,17 +57,23 @@ void SetSection( const std::string &_szSection, bool bUpdate )
 void SetSection( const std::vector<std::string> &_sections, bool bUpdate )
 {
 	if ( sections == _sections )
+	{
 		return;
+	}
 
 	sections = _sections;
 	if ( bUpdate )
+	{
 		UpdateBinds();
+	}
 }
 
 static bool IsSectionInSet( const std::string &szSection )
 {
 	if ( szSection.empty() )
+	{
 		return true;
+	}
 
 	return find( sections.begin(), sections.end(), szSection ) != sections.end();
 }
@@ -84,19 +90,29 @@ void Bind( EMappingType eType,
 	SCommand &sCommand = sCommandsMap[sCmd];
 
 	if ( szControlsSet.empty() )
+	{
 		return;
+	}
 
 	sMapping.mType = eType;
 	if ( eType == MTYPE_EVENT_UP )
+	{
 		sMapping.mType = MTYPE_EVENT;
+	}
 	if ( eType == MTYPE_SLIDER_MINUS )
+	{
 		sMapping.mType = MTYPE_SLIDER;
+	}
 
 	sMapping.nPower = 100;
 	if ( eType == MTYPE_EVENT_UP )
+	{
 		sMapping.bActive = true;
+	}
 	if ( ( eType == MTYPE_EVENT_UP ) || ( eType == MTYPE_SLIDER_MINUS ) )
+	{
 		sMapping.nPower = -sMapping.nPower;
+	}
 
 	sMapping.szSection = szSection;
 	sMapping.actionsSet.resize( szControlsSet.size() );
@@ -111,8 +127,9 @@ void Bind( EMappingType eType,
 		if ( sInfo.eState != STATE_INITIALIZED )
 		{
 			if ( sInfo.eState != STATE_CONFIGPRESET )
+			{
 				sInfo.fCoeff = 1.0f;
-			;
+			};
 
 			sInfo.eState = STATE_INITIALIZED;
 			sInfo.szName = szControlsSet[nTemp];
@@ -121,7 +138,9 @@ void Bind( EMappingType eType,
 	}
 
 	if ( IsSameMappingExist( sCommand, sMapping ) )
+	{
 		return;
+	}
 
 	sCommand.mappingsList.push_back( sMapping );
 }
@@ -132,7 +151,9 @@ void Unbind( const std::string &szCmd )
 
 	TCommandsMap::iterator iTemp = sCommandsMap.find( szCmd );
 	if ( iTemp == sCommandsMap.end() )
+	{
 		return;
+	}
 
 	SCommand &sCommand = iTemp->second;
 	for ( std::list<SMapping>::iterator iMapping = sCommand.mappingsList.begin();
@@ -145,9 +166,13 @@ void Unbind( const std::string &szCmd )
 		}
 
 		if ( iMapping->mType != MTYPE_UNKNOWN )
+		{
 			iMapping = sCommand.mappingsList.erase( iMapping );
+		}
 		else
+		{
 			iMapping++;
+		}
 	}
 }
 
@@ -156,7 +181,9 @@ void UnbindAll()
 	TCommandsMap &sCommandsMap = GetCommands();
 
 	for ( TCommandsMap::iterator iTemp = sCommandsMap.begin(); iTemp != sCommandsMap.end(); iTemp++ )
+	{
 		Unbind( iTemp->first );
+	}
 }
 
 void GetBind( const std::string &szCmd, std::list<SBind> *pRes )
@@ -167,7 +194,9 @@ void GetBind( const std::string &szCmd, std::list<SBind> *pRes )
 	pRes->clear();
 
 	if ( sCommandsMap.find( szCmd ) == sCommandsMap.end() )
+	{
 		return;
+	}
 
 	SCommand &sCommand = sCommandsMap[szCmd];
 	for ( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin();
@@ -198,7 +227,9 @@ void UpdateBinds()
 		for ( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin();
 		      iTempMapping != sCommand.mappingsList.end();
 		      ++iTempMapping )
+		{
 			iTempMapping->blockingGroupsSet.clear();
+		}
 	}
 
 	for ( std::unordered_map<std::string, SCommand>::iterator iTempCommand = sCommandsMap.begin();
@@ -244,12 +275,18 @@ void UpdateBinds()
 				      ++iTempMapping2 )
 				{
 					if ( iTempMapping1->bDisabled || iTempMapping2->bDisabled )
+					{
 						continue;
+					}
 
 					if ( IsMappingBSubsetA( *iTempMapping1, *iTempMapping2 ) )
+					{
 						CrossMappings( *iTempMapping1, &( *iTempMapping2 ) );
+					}
 					if ( IsMappingBSubsetA( *iTempMapping2, *iTempMapping1 ) )
+					{
 						CrossMappings( *iTempMapping2, &( *iTempMapping1 ) );
+					}
 				}
 			}
 		}
@@ -262,11 +299,15 @@ float GetControlCoeff( const std::string &szControl )
 
 	int nAction = GetControlID( szControl );
 	if ( nAction == -1 )
+	{
 		return 1.0f;
+	}
 
 	TActionsMap::iterator iTemp = sActions.find( nAction );
 	if ( iTemp == sActions.end() )
+	{
 		return 1.0f;
+	}
 
 	return iTemp->second.fCoeff;
 }
@@ -277,11 +318,15 @@ void SetControlCoeff( const std::string &szControl, float fCoeff )
 
 	int nAction = GetControlID( szControl );
 	if ( nAction == -1 )
+	{
 		return;
+	}
 
 	SActionInfo &sInfo = sActions[nAction];
 	if ( sInfo.eState == STATE_DEFAULT )
+	{
 		sInfo.eState = STATE_CONFIGPRESET;
+	}
 
 	sInfo.fCoeff = fCoeff;
 }
@@ -311,7 +356,9 @@ void MakeEvent( SGameMessage *pMsg, const std::string &szGameMessage, int _nPara
 	*pMsg = SGameMessage();
 	TCommandsMap::iterator iTemp = GetCommands().find( szGameMessage );
 	if ( iTemp != GetCommands().end() )
+	{
 		pMsg->commands.push_back( &( iTemp->second ) );
+	}
 
 	pMsg->mMessage.cType = ct;
 	pMsg->mMessage.tTime = GetCurrentTimeMilliseconds();
@@ -356,14 +403,18 @@ void PurgeUIEvents()
 	{
 		NInput::SMessage msg;
 		if ( !NInput::GetMessage( &msg ) )
+		{
 			break;
+		}
 		NInput::ProcessMessage( msg );
 	}
 	for ( std::list<SGameMessage>::iterator it = events.begin(); it != events.end(); )
 	{
 		SGameMessage &msg = *it;
 		if ( msg.mMessage.cType == CT_UNKNOWN )
+		{
 			++it;
+		}
 		else
 		{
 			it = events.erase( it );
@@ -375,7 +426,9 @@ float GetCommandCoeff( const std::string &szControl )
 {
 	TCommandsMap::iterator iTemp = GetCommands().find( szControl );
 	if ( iTemp != GetCommands().end() )
+	{
 		return iTemp->second.fCoeff;
+	}
 
 	return 1.0f;
 }
@@ -384,7 +437,9 @@ void SetCommandCoeff( const std::string &szControl, float fCoeff )
 {
 	TCommandsMap::iterator iTemp = GetCommands().find( szControl );
 	if ( iTemp == GetCommands().end() )
+	{
 		return;
+	}
 
 	iTemp->second.fCoeff = fCoeff;
 }
@@ -428,11 +483,15 @@ bool CBind::ProcessEvent( const SGameMessage &eEvent )
 	}
 
 	if ( find( eEvent.commands.begin(), eEvent.commands.end(), pBindCommand ) == eEvent.commands.end() )
+	{
 		return false;
+	}
 
 	if ( ( eEvent.mMessage.cType == CT_UNKNOWN || eEvent.mMessage.cType == CT_WINDOWS ) &&
 	     ( eEvent.mMessage.nAction == -1 ) )
+	{
 		return true;
+	}
 
 	return ProcessCommandMessage( eEvent.mMessage, *pBindCommand );
 }
@@ -457,7 +516,9 @@ static void Update( uint32_t dwTime )
 		      ++iTempMapping )
 		{
 			if ( iTempMapping->bDisabled )
+			{
 				continue;
+			}
 
 			nValue += iTempMapping->sAccumulator.Sample( dwTime );
 			bActive |= iTempMapping->bActive;
@@ -480,11 +541,15 @@ static bool IsBindActive( const SMapping &sMapping )
 	{
 		const SActionInfo &sTempInfo = sActions[sMapping.actionsSet[nTemp]];
 		if ( sTempInfo.bActive )
+		{
 			nCount++;
+		}
 	}
 
 	if ( nCount != sMapping.actionsSet.size() )
+	{
 		bSetActive = false;
+	}
 
 	if ( bSetActive )
 	{
@@ -500,9 +565,13 @@ static bool IsBindActive( const SMapping &sMapping )
 				const SActionInfo &sTempInfo = sActions[sBlockingSet[nTemp]];
 
 				if ( sTempInfo.bActive )
+				{
 					nBlockingCount++;
+				}
 				else if ( ( sTempInfo.eType == CT_AXIS ) || ( sTempInfo.eType == CT_LIMAXIS ) )
+				{
 					nBlockingCount++;
+				}
 			}
 
 			if ( nBlockingCount == sBlockingSet.size() )
@@ -514,7 +583,9 @@ static bool IsBindActive( const SMapping &sMapping )
 	}
 
 	if ( ( sMapping.mType == MTYPE_EVENT ) && ( sMapping.nPower < 0 ) )
+	{
 		bSetActive = !bSetActive;
+	}
 
 	return bSetActive;
 }
@@ -543,17 +614,23 @@ static void ProcessMessage( const NInput::SMessage &mMsg )
 		      ++iTempMapping )
 		{
 			if ( iTempMapping->bDisabled || iTempMapping->actionsSet.empty() )
+			{
 				continue;
+			}
 			if ( find( iTempMapping->fullActionsSet.begin(), iTempMapping->fullActionsSet.end(), mMsg.nAction ) ==
 			     iTempMapping->fullActionsSet.end() )
+			{
 				continue;
+			}
 
 			SActionInfo &sActionInfo = sActions[mMsg.nAction];
 			sActionInfo.bActive = mMsg.bState;
 			bool bSetActive = IsBindActive( *iTempMapping );
 
 			if ( ( mMsg.cType == CT_AXIS ) || ( mMsg.cType == CT_LIMAXIS ) )
+			{
 				sActionInfo.bActive = false;
+			}
 
 			if ( !bSetActive )
 			{
@@ -565,7 +642,9 @@ static void ProcessMessage( const NInput::SMessage &mMsg )
 			}
 
 			if ( iTempMapping->bActive && ( iTempMapping->mType == MTYPE_EVENT ) )
+			{
 				continue;
+			}
 
 			iTempMapping->bActive = true;
 			gameMessage.commands.push_back( &sCommand );
@@ -589,10 +668,14 @@ static bool ProcessCommandMessage( const NInput::SMessage &mMsg, SCommand &sComm
 	      ++iTempMapping )
 	{
 		if ( iTempMapping->bDisabled || iTempMapping->actionsSet.empty() )
+		{
 			continue;
+		}
 		if ( find( iTempMapping->fullActionsSet.begin(), iTempMapping->fullActionsSet.end(), mMsg.nAction ) ==
 		     iTempMapping->fullActionsSet.end() )
+		{
 			continue;
+		}
 
 		SActionInfo &sActionInfo = sActions[mMsg.nAction];
 		sActionInfo.bActive = mMsg.bState;
@@ -600,32 +683,48 @@ static bool ProcessCommandMessage( const NInput::SMessage &mMsg, SCommand &sComm
 		bool bSetActive = IsBindActive( *iTempMapping );
 
 		if ( ( mMsg.cType == CT_AXIS ) || ( mMsg.cType == CT_LIMAXIS ) )
+		{
 			sActionInfo.bActive = false;
+		}
 
 		if ( !bSetActive )
+		{
 			continue;
+		}
 
 		if ( ( iTempMapping->mType == MTYPE_SLIDER ) && ( mMsg.cType == CT_KEY ) )
+		{
 			iTempMapping->sAccumulator.sKeyAccumulator.Activate( iTempMapping->nPower * sActionInfo.fCoeff, mMsg.tTime );
+		}
 		else if ( ( iTempMapping->mType == MTYPE_SLIDER ) && ( mMsg.cType == CT_AXIS ) )
+		{
 			iTempMapping->sAccumulator.sAxisAccumulator.Add(
 					iTempMapping->nPower * sActionInfo.fCoeff * mMsg.nParam / sActionInfo.fGranularity, mMsg.tTime );
+		}
 		else if ( ( iTempMapping->mType == MTYPE_SLIDER ) && ( mMsg.cType == CT_LIMAXIS ) )
+		{
 			iTempMapping->sAccumulator.sLimAxisAccumulator.Add(
 					iTempMapping->nPower * sActionInfo.fCoeff * mMsg.nParam / sActionInfo.fGranularity, mMsg.tTime );
+		}
 		else if ( ( iTempMapping->mType == MTYPE_SLIDER ) && ( mMsg.cType == CT_POV ) )
 		{
 			if ( mMsg.nParam != -1 )
+			{
 				iTempMapping->sAccumulator.sPOVAccumulator.Activate(
 						iTempMapping->nPower * sActionInfo.fCoeff * mMsg.nParam / sActionInfo.fGranularity, mMsg.tTime );
+			}
 			else
+			{
 				iTempMapping->sAccumulator.sPOVAccumulator.Deactivate( mMsg.tTime );
+			}
 		}
 		else if ( ( iTempMapping->mType == MTYPE_EVENT ) && ( mMsg.cType == CT_KEY ) )
 		{
 			int nPower = iTempMapping->nPower * ( mMsg.bState ? 1 : -1 );
 			if ( nPower < 0 )
+			{
 				return false;
+			}
 
 			iTempMapping->sAccumulator.sKeyAccumulator.Activate( 0, mMsg.tTime );
 			return true;
@@ -648,11 +747,15 @@ static bool IsMappingBSubsetA( const SMapping &mSetA, const SMapping &mSetB )
 		      ++iTempA )
 		{
 			if ( *iTempB == *iTempA )
+			{
 				bInSet = true;
+			}
 		}
 
 		if ( !bInSet )
+		{
 			return false;
+		}
 	}
 
 	return true;
@@ -666,9 +769,13 @@ static bool IsSameMappingExist( const SCommand &sCommand, const SMapping &sMappi
 	{
 		if ( ( sMapping.mType != iTempMapping->mType ) || ( sMapping.nPower != iTempMapping->nPower ) ||
 		     ( sMapping.bActive != iTempMapping->bActive ) || ( sMapping.szSection != iTempMapping->szSection ) )
+		{
 			continue;
+		}
 		if ( iTempMapping->actionsSet.size() != sMapping.actionsSet.size() )
+		{
 			continue;
+		}
 
 		int nSameActionsCount = 0;
 		for ( std::vector<int>::const_iterator iTempAction = iTempMapping->actionsSet.begin();
@@ -676,11 +783,15 @@ static bool IsSameMappingExist( const SCommand &sCommand, const SMapping &sMappi
 		      iTempAction++ )
 		{
 			if ( find( sMapping.actionsSet.begin(), sMapping.actionsSet.end(), *iTempAction ) != sMapping.actionsSet.end() )
+			{
 				nSameActionsCount++;
+			}
 		}
 
 		if ( nSameActionsCount == sMapping.actionsSet.size() )
+		{
 			return true;
+		}
 	}
 
 	return false;
@@ -699,7 +810,9 @@ static void CrossMappings( const SMapping &sBaseSet, SMapping *pSubSet )
 		for ( int nSubTemp = 0; nSubTemp < pSubSet->actionsSet.size(); nSubTemp++ )
 		{
 			if ( pSubSet->actionsSet[nSubTemp] == nAction )
+			{
 				bCrossover = true;
+			}
 		}
 
 		const SActionInfo &sTempInfo = sActions[nAction];
@@ -711,7 +824,9 @@ static void CrossMappings( const SMapping &sBaseSet, SMapping *pSubSet )
 	}
 
 	if ( !blockingGroupSet.empty() )
+	{
 		pSubSet->blockingGroupsSet.push_back( blockingGroupSet );
+	}
 }
 
 }; // NAMESPACE
@@ -758,7 +873,9 @@ static void CommandBindInner( const std::string &szID, const std::vector<std::ws
 	for ( std::vector<std::wstring>::const_iterator iTemp = paramsSet.begin(); iTemp != paramsSet.end(); iTemp++ )
 	{
 		if ( iTemp->compare( L"+" ) == 0 )
+		{
 			continue;
+		}
 
 		std::string szWord( NStr::ToMBCS( *iTemp ) );
 		NStr::TrimBoth( szWord, "\t\n\r\'" );
@@ -770,10 +887,14 @@ static void CommandBindInner( const std::string &szID, const std::vector<std::ws
 	if ( !sections.empty() )
 	{
 		for ( int nTemp = 0; nTemp < sections.size(); ++nTemp )
+		{
 			NInput::Bind( eType, szCommand, sections[nTemp], controlsSet );
+		}
 	}
 	else
+	{
 		NInput::Bind( eType, szCommand, "", controlsSet );
+	}
 }
 
 static void CommandBind( const std::string &szID, const std::vector<std::wstring> &_paramsSet, void *pContext )
@@ -830,7 +951,9 @@ static void CommandBindSection( const std::string &szID, const std::vector<std::
 	std::string szSection;
 
 	if ( paramsSet.size() >= 1 )
+	{
 		szSection = NStr::ToMBCS( paramsSet.front() );
+	}
 
 	NInput::SetSection( szSection, false );
 }
@@ -866,7 +989,9 @@ static void CommandShowBind( const std::string &szID, const std::vector<std::wst
 	for ( std::list<NInput::SBind>::const_iterator iTemp = bindsList.begin(); iTemp != bindsList.end(); iTemp++ )
 	{
 		for ( int nTemp = 0; nTemp < iTemp->controlsSet.size(); nTemp++ )
+		{
 			csSystem << iTemp->controlsSet[nTemp] << " ";
+		}
 		csSystem << endl;
 	}
 }

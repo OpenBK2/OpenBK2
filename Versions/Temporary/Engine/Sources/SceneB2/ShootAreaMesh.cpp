@@ -9,7 +9,9 @@ void AppendToVector( std::vector<NGScene::SVertex> &dst, const std::vector<NGSce
 	int nStart = dst.size();
 	dst.resize( nStart + src.size() );
 	for ( int i = 0; i < src.size(); ++i )
+	{
 		dst[nStart + i] = src[i];
+	}
 }
 
 void AppendToVector( std::vector<STriangle> &dst, const std::vector<STriangle> &src, int nOffset )
@@ -31,7 +33,9 @@ struct SRadianHeightFunctor : public SLinearHeightFunctor
 	float GetGrid( float t )
 	{
 		if ( t < 0.5f )
+		{
 			return t;
+		}
 		return 1.0f - 2.0f * sqr( 1 - t );
 	}
 };
@@ -42,7 +46,9 @@ struct SCircleHeightFunctor : public SLinearHeightFunctor
 	float GetGrid( float t )
 	{
 		if ( t < 0.5f )
+		{
 			return 2.0f * t * t;
+		}
 		return 1.0f - 2.0f * sqr( 1 - t );
 	}
 };
@@ -52,7 +58,9 @@ void CShootAreaMesh::FillGrid( std::vector<float> &grid, int nNumPoints, SLinear
 	grid.resize( nNumPoints );
 	const float fStep = 1.0f / ( nNumPoints - 1 );
 	for ( int i = 0; i < nNumPoints; ++i )
+	{
 		grid[i] = func.GetGrid( i * fStep );
+	}
 }
 
 void CShootAreaMesh::LinearTransform( std::vector<float> &output,
@@ -62,13 +70,17 @@ void CShootAreaMesh::LinearTransform( std::vector<float> &output,
 {
 	output.resize( input.size() );
 	for ( int i = 0; i < input.size(); ++i )
+	{
 		output[i] = fMin + input[i] * ( fMax - fMin );
+	}
 }
 
 void CShootAreaMesh::Recalc()
 {
 	if ( pValue == 0 )
+	{
 		pValue = new NGScene::CObjectInfo;
+	}
 	NGScene::CObjectInfo::SData objData;
 	std::vector<NGScene::SVertex> verts;
 	std::vector<STriangle> allTris;

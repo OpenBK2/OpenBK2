@@ -10,15 +10,21 @@ void CTooltips::AdjustTooltipPos( const CVec2 &vMousePos )
 {
 	CDynamicCast<CWindowTooltip> pWindowToolTip = pTooltip;
 	if ( pWindowToolTip )
+	{
 		pWindowToolTip->AdjustPosByMousePos( vMousePos );
+	}
 	else
+	{
 		pTooltip->SetPlacement( vMousePos.x, vMousePos.y, 0, 0, EWPF_POS_X | EWPF_POS_Y );
+	}
 }
 
 void CTooltips::Segment( const int timeDiff, class CWindowScreen *pScreen )
 {
 	if ( nContext == -1 )
+	{
 		return;
+	}
 
 	if ( pTooltip ) // tool tip is on screen
 	{
@@ -28,13 +34,17 @@ void CTooltips::Segment( const int timeDiff, class CWindowScreen *pScreen )
 		// check if another window now have tool tip (a child of current pTooltipedWindow)
 		CWindow *pNewTooltiped = dynamic_cast<CWindow *>( pScreen->Pick( vLastMousePos, true ) );
 		while ( pNewTooltiped && !pNewTooltiped->DemandTooltip() )
+		{
 			pNewTooltiped = pNewTooltiped->GetParent();
+		}
 
 		const bool bShouldHideTooltip = pNewTooltiped != pTooltipedWindow || !pTooltipedWindow->IsInside( vMousePos ) ||
 		                                !pScreen->IsEnabled() || !pNewTooltiped->DemandTooltip();
 
 		if ( bShouldHideTooltip )
+		{
 			HideTooltip();
+		}
 		else if ( pNewTooltiped->DemandTooltip() != pTooltip )
 		{
 			pTooltip->ShowWindow( false );
@@ -54,7 +64,9 @@ void CTooltips::Segment( const int timeDiff, class CWindowScreen *pScreen )
 
 			// check if tooltip exists and if not, check parents untill some of them have tooltip
 			while ( pTooltipedWindow && !pTooltipedWindow->DemandTooltip() )
+			{
 				pTooltipedWindow = pTooltipedWindow->GetParent();
+			}
 
 			if ( pTooltipedWindow && pTooltipedWindow->DemandTooltip() )
 			{
@@ -75,12 +87,16 @@ void CTooltips::Segment( const int timeDiff, class CWindowScreen *pScreen )
 IWindow *CTooltips::CreateTooltipWindow( const std::wstring &wszTooltipText, IWindow *pTooltipOwner, IScreen *pScreen )
 {
 	if ( nContext == -1 )
+	{
 		return new CWindowTooltip( wszTooltipText );
+	}
 
 	CDynamicCast<CWindowTooltip> pTooltip =
 			CUIFactory::MakeWindow( CUIFactory::GetConsts()->contexts[nContext]->pWindow );
 	if ( !pTooltip )
+	{
 		return 0;
+	}
 
 	pTooltip->Init();
 
@@ -103,10 +119,14 @@ IWindow *CTooltips::CreateTooltipWindow( const std::wstring &wszTooltipText, IWi
 void CTooltips::OnMouseMove( const CVec2 &vPos, const int nButton, class CWindowScreen *pScreen )
 {
 	if ( nContext == -1 )
+	{
 		return;
+	}
 
 	if ( fabs( vLastMousePos - vPos ) > CUIFactory::GetConsts()->contexts[nContext]->nMouseMaxOffsetToAppear )
+	{
 		timeMouseFreese = 0;
+	}
 
 	vLastMousePos = vPos;
 }
@@ -125,13 +145,19 @@ void CTooltips::HideTooltip()
 void CTooltips::SetTooltipContext( const int _nContext, class CWindowScreen *pScreen )
 {
 	if ( !CUIFactory::GetConsts() )
+	{
 		return;
+	}
 	nContext = _nContext;
 	if ( CUIFactory::GetConsts()->contexts[nContext] == 0 )
+	{
 		return;
+	}
 
 	if ( CUIFactory::GetConsts()->contexts[nContext]->pWindow == 0 )
+	{
 		return;
+	}
 
 	NI_ASSERT( CUIFactory::GetConsts()->contexts.size() > nContext, "no such context" );
 }

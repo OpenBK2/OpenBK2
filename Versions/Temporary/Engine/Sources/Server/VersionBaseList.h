@@ -67,7 +67,9 @@ const std::list<TData> TVersionBaseList<TData>::GetAddDiff( const uint32_t _dwVe
 		for ( uint32_t v = _dwVersion + 1; v <= dwVersion; ++v )
 		{
 			if ( dataAdded[v % MAX_HISTORY_LENGTH] )
+			{
 				result.push_back( history[v % MAX_HISTORY_LENGTH] );
+			}
 		}
 		return result;
 	}
@@ -86,7 +88,9 @@ const std::list<TData> TVersionBaseList<TData>::GetRemoveDiff( const uint32_t _d
 		for ( uint32_t v = _dwVersion + 1; v <= dwVersion; ++v )
 		{
 			if ( !dataAdded[v % MAX_HISTORY_LENGTH] )
+			{
 				result.push_back( history[v % MAX_HISTORY_LENGTH] );
+			}
 		}
 	}
 	return result;

@@ -52,7 +52,9 @@ void CManuverBuilder::Init( const NDb::SAIGameConsts *_pConsts )
 	const int nDescs = pConsts->planeManuvers.size();
 	suitableIndeces.reserve( nDescs );
 	for ( int i = 0; i < pConsts->planeManuvers.size(); ++i )
+	{
 		manuvers[pConsts->planeManuvers[i]->eAttitude].push_back( i );
+	}
 }
 
 const SManuverDescriptor *CManuverBuilder::Choose( const CManuverStateDesc &current,
@@ -70,7 +72,9 @@ const SManuverDescriptor *CManuverBuilder::Choose( const CManuverStateDesc &curr
 		{
 			const NDb::SManuverDescriptor *pDesc = pConsts->planeManuvers[*it];
 			if ( pref.IsManuverAllowed( pDesc->eManuverID ) && current.CheckSuitable( pDesc ) )
+			{
 				suitableIndeces.push_back( *it );
+			}
 		}
 	}
 	if ( !suitableIndeces.empty() )
@@ -137,7 +141,9 @@ int CManuverBuilder::RegisterAsAttacker( class CPlanesFormation *pAttacker, clas
 		for ( int i = 0; i < it->second.size(); ++i )
 		{
 			if ( it->second[i].first == pAttacker->GetFormationID() )
+			{
 				return i;
+			}
 		}
 		for ( int i = 0; i < it->second.size(); ++i )
 		{
@@ -178,7 +184,9 @@ CManuverBuilder::CreatePointManuver( class CPlanesFormation *pPos, const CVec3 &
 EPlanesAttitude CManuverBuilder::GetAttitude( class CPlanesFormation *pPlane, class CPlanesFormation *pEnemy ) const
 {
 	if ( pPlane->IsBeingAttackedB2() )
+	{
 		return EPA_RETREAT;
+	}
 	return EPA_ATTACK;
 }
 
@@ -193,8 +201,12 @@ struct IManuver *CManuverBuilder::CreateManuver( class CPlanesFormation *pPos, c
 	while ( true )
 	{
 		for ( int i = 0; i < target.nMaxAttakers; ++i )
+		{
 			if ( target.attackers[i] == nFormationID )
+			{
 				return target.CreateManuver( pPos, vPos, i );
+			}
+		}
 
 		for ( int i = 0; i < target.nMaxAttakers; ++i )
 		{

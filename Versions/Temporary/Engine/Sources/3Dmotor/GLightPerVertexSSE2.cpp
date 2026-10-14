@@ -192,7 +192,9 @@ namespace
 	static void SampleWarFogCoords( const CVec3 *pSrcPos, int nVertices, float fScale, int *pIntCoords )
 	{
 		if ( nVertices <= 0 )
+		{
 			return;
+		}
 
 		// Multiplied in single precision, as the reference is: it computes
 		// v.x * fpScale with both operands float and rounds that, so the product is
@@ -273,7 +275,9 @@ namespace
 	{
 		ASSERT( GetNextPow2( nFogSizeX - 1 ) + 1 == nFogSizeX );
 		if ( nVertices <= 0 )
+		{
 			return;
+		}
 
 		const int nMask = nFogSizeX - 2;
 		int k = 0;
@@ -305,7 +309,9 @@ namespace
 			NGfx::SMMXWord *pRes, const CVec3 *pSrcPos, int nCount, const CVec3 &vCenter, float fRadius )
 	{
 		if ( nCount == 0 )
+		{
 			return;
+		}
 
 		const float fAttScale = F_PL_RADIUS2 / sqr( fRadius );
 		const float fRadius2 = sqr( fRadius );
@@ -497,7 +503,9 @@ namespace
 	static void AddColors( uint32_t *pRes, const uint32_t *pSrc, const NGfx::SMMXWord *pAdd, int nCount )
 	{
 		if ( nCount == 0 )
+		{
 			return;
+		}
 
 		int k = 0;
 		for ( ; k + 1 < nCount; k += 2 )
@@ -565,7 +573,9 @@ namespace
 	                         bool bMultiplyOnTransparency )
 	{
 		if ( nCount == 0 )
+		{
 			return;
+		}
 
 		NGfx::SMMXWord alpha{};
 		alpha.nW = 0x1ff;
@@ -615,5 +625,4 @@ const SLightingKernels sse2LightingKernels = {
 	&AddColors,
 	&ScaleColors,
 };
-
 }

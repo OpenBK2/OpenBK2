@@ -25,9 +25,13 @@ bool SPixelConvertInfo::InitMaskInfo( uint32_t dwABitMask,
 	if ( dwMask )
 	{
 		for ( ; ( dwMask & 0x1 ) == 0; dwMask >>= 1 )
+		{
 			dwBitShift++;
+		}
 		for ( ; ( dwMask & 0x1 ) == 1; dwMask >>= 1 )
+		{
 			dwBitCount++;
+		}
 	}
 	dwAMask = dwABitMask;
 	dwABits = dwBitCount;
@@ -38,9 +42,13 @@ bool SPixelConvertInfo::InitMaskInfo( uint32_t dwABitMask,
 	if ( dwMask )
 	{
 		for ( ; ( dwMask & 0x1 ) == 0; dwMask >>= 1 )
+		{
 			dwBitShift++;
+		}
 		for ( ; ( dwMask & 0x1 ) == 1; dwMask >>= 1 )
+		{
 			dwBitCount++;
+		}
 	}
 	dwRMask = dwRBitMask;
 	dwRBits = dwBitCount;
@@ -51,9 +59,13 @@ bool SPixelConvertInfo::InitMaskInfo( uint32_t dwABitMask,
 	if ( dwMask )
 	{
 		for ( ; ( dwMask & 0x1 ) == 0; dwMask >>= 1 )
+		{
 			dwBitShift++;
+		}
 		for ( ; ( dwMask & 0x1 ) == 1; dwMask >>= 1 )
+		{
 			dwBitCount++;
+		}
 	}
 	dwGMask = dwGBitMask;
 	dwGBits = dwBitCount;
@@ -64,9 +76,13 @@ bool SPixelConvertInfo::InitMaskInfo( uint32_t dwABitMask,
 	if ( dwMask )
 	{
 		for ( ; ( dwMask & 0x1 ) == 0; dwMask >>= 1 )
+		{
 			dwBitShift++;
+		}
 		for ( ; ( dwMask & 0x1 ) == 1; dwMask >>= 1 )
+		{
 			dwBitCount++;
+		}
 	}
 	dwBMask = dwBBitMask;
 	dwBBits = dwBitCount;

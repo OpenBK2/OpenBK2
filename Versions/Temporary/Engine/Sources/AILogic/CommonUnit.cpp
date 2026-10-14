@@ -47,7 +47,9 @@ const float CCommonUnit::GetMaxDamage( CCommonUnit *pTarget ) const
 	for ( int i = 0; i < GetNGuns(); ++i )
 	{
 		if ( GetGun( i )->CanBreach( pTarget ) && GetGun( i )->GetDamage() > fMaxDamage )
+		{
 			fMaxDamage = GetGun( i )->GetDamage();
+		}
 	}
 
 	return fMaxDamage;
@@ -97,8 +99,10 @@ const bool CCommonUnit::CanGoToPoint( const CVec2 &point ) const
 		       fabs2( pFormation->GetCenterPlain() - point ) < sqr( (float)SConsts::RADIUS_OF_FORMATION );
 	}
 	else if ( GetState()->GetName() == EUSN_REST )
+	{
 		return fabs2( checked_cast<CCommonRestState *>( GetState() )->GetGuardPoint() - point ) <
 		       sqr( SConsts::GUARD_STATE_RADIUS );
+	}
 
 	return true;
 }
@@ -107,7 +111,9 @@ void CCommonUnit::SetSelectable( bool _bSelectable, bool bSendToWorld )
 {
 	bSelectable = _bSelectable;
 	if ( !bSendToWorld )
+	{
 		return;
+	}
 	updater.AddUpdate( 0, ACTION_NOTIFY_SELECTABLE_CHANGED, this, IsSelectable() );
 }
 
@@ -124,9 +130,13 @@ void CCommonUnit::Lock( const CBasicGun *pGun )
 void CCommonUnit::Unlock( const CBasicGun *pGun )
 {
 	if ( pLockingGun != 0 && !IsValidObj( pLockingGun ) )
+	{
 		pLockingGun = 0;
+	}
 	else if ( pGun == pLockingGun )
+	{
 		pLockingGun = 0;
+	}
 }
 
 bool CCommonUnit::IsLocked( const CBasicGun *pGun ) const
@@ -169,7 +179,9 @@ float CCommonUnit::GetDesirableSpeed() const
 void CCommonUnit::AdjustWithDesirableSpeed( float *pfMaxSpeed ) const
 {
 	if ( fDesirableSpeed != -1.0f && !IsIdle() )
+	{
 		*pfMaxSpeed = (std::min)( fDesirableSpeed, *pfMaxSpeed );
+	}
 }
 
 void CCommonUnit::SetFollowState( CCommonUnit *_pFollowedUnit )
@@ -190,7 +202,9 @@ void CCommonUnit::UnsetFollowState()
 bool CCommonUnit::IsInFollowState()
 {
 	if ( !IsValidObj( pFollowedUnit ) )
+	{
 		pFollowedUnit = 0;
+	}
 
 	return pFollowedUnit != 0;
 }
@@ -206,9 +220,13 @@ void CCommonUnit::FollowingByYou( CCommonUnit *pFollowingUnit )
 	float fDesirableSpeed = GetSpeedForFollowing();
 
 	if ( fDist > SConsts::FOLLOW_WAIT_RADIUS )
+	{
 		fDesirableSpeed = 0.0f;
+	}
 	else if ( fDist > SConsts::FOLLOW_STOP_RADIUS )
+	{
 		fDesirableSpeed = (std::min)( fDesirableSpeed, pFollowingUnit->GetSpeedForFollowing() );
+	}
 
 	fMinFollowingSpeed = (std::min)( fDesirableSpeed, fMinFollowingSpeed );
 }
@@ -220,9 +238,13 @@ void CCommonUnit::Segment()
 					 ->IsAttackingState() ) //|| !theWarFog.IsTileVisible( AICellsTiles::GetTile( GetState()->GetPurposePoint() ), GetParty() ) )
 	{
 		if ( fDesirableSpeed == -1.0f )
+		{
 			SetDesirableSpeed( fMinFollowingSpeed );
+		}
 		else
+		{
 			SetDesirableSpeed( (std::min)( fDesirableSpeed, fMinFollowingSpeed ) );
+		}
 	}
 
 	fMinFollowingSpeed = 1e10;
@@ -237,7 +259,9 @@ void CCommonUnit::FreezeSegment()
 		RecordRandomCall();
 
 		if ( !IsIdle() )
+		{
 			bCanBeFrozenByScan = false;
+		}
 		else
 		{
 			CUnitsIter<0, 3> iter( GetParty(), EDI_ENEMY, GetCenterPlain(), GetTargetScanRadius() );
@@ -245,7 +269,9 @@ void CCommonUnit::FreezeSegment()
 		}
 
 		if ( !CanBeFrozen() )
+		{
 			theGroupLogic.RegisterSegments( this, false, false );
+		}
 	}
 }
 
@@ -301,7 +327,9 @@ void CCommonUnit::FreezeByState( const bool bFreeze )
 		bCanBeFrozenByState = bFreeze;
 
 		if ( !bFreeze )
+		{
 			theGroupLogic.RegisterSegments( this, false, false );
+		}
 	}
 }
 
@@ -335,12 +363,16 @@ void CCommonUnit::CheckForDestroyedObjects( const CVec2 &center ) const
 				const CVec3 &vObjPos = pObj->GetCenter();
 				bool bIntersected = false;
 				if ( g_bNewLock == 0 )
+				{
 					bIntersected = unitProfile.IsPointInside( CVec2( vObjPos.x, vObjPos.y ) );
+				}
 				else
 				{
 					CObjectProfile *pProfile = pObj->GetPassProfile();
 					if ( pProfile )
+					{
 						bIntersected = pProfile->IsWeakIntersected( GetUnitRect() );
+					}
 				}
 
 				if ( bIntersected )
@@ -371,9 +403,13 @@ void CCommonUnit::CheckForDestroyedObjects( const CVec2 &center ) const
 
 						const SStaticObjectRPGStats *pStats = dynamic_cast<const SStaticObjectRPGStats *>( pObj->GetStats() );
 						if ( !pStats || !pStats->bLeaveCorpse )
+						{
 							pObj->Delete();
+						}
 						else
+						{
 							CFakeCorpseStaticObject::CreateFakeCorpseStaticObject( pObj );
+						}
 					}
 					pObj->SetHitPoints( 0 );
 				}
@@ -391,13 +427,17 @@ const bool CCommonUnit::IterateUnits( const CVec2 &vCenter,
 	{
 		CAIUnit *pAIUnit = *iter;
 		if ( !pAIUnit || !pAIUnit->IsAlive() )
+		{
 			continue;
+		}
 
 		CBasePathUnit *pUnit = pAIUnit;
 		if ( pUnit->GetUniqueID() != GetUniqueID() )
 		{
 			if ( !callback.Iterate( pUnit ) )
+			{
 				return false;
+			}
 		}
 	}
 	return true;
@@ -431,10 +471,14 @@ IStaticPath *CCommonUnit::GetPathToBuilding( CBuilding *pBuilding, int *pnEntran
 					*pnEntrance = i;
 				}
 				else
+				{
 					pGarbage = pPath;
+				}
 			}
 			else
+			{
 				pGarbage = pPath;
+			}
 		}
 	}
 
@@ -470,7 +514,9 @@ void CCommonUnit::UpdatePlacement( const CVec3 &_vOldPosition, const uint16_t _w
 		MakeOrientation( &qStart, DWORDToVec3( GetNormale( CVec2( vOldPlacement.x, vOldPlacement.y ) ) ) );
 
 		if ( bNeedUpdate )
+		{
 			updater.AddUpdate( 0, ACTION_NOTIFY_PLACEMENT, this, -1 );
+		}
 	}
 	else
 	{
@@ -520,9 +566,13 @@ void CCommonUnit::SetBehaviourMoving( const SBehaviour::EMoving _moving )
 	if ( !IsInfantry() || IsFormation() )
 	{
 		if ( _moving == SBehaviour::EMHoldPos && beh.moving != SBehaviour::EMHoldPos )
+		{
 			updater.AddUpdate( CreateStatusUpdate( EUS_STAND_GROUND, true, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
+		}
 		else if ( _moving != SBehaviour::EMHoldPos && beh.moving == SBehaviour::EMHoldPos )
+		{
 			updater.AddUpdate( CreateStatusUpdate( EUS_STAND_GROUND, false, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
+		}
 	}
 
 	beh.moving = _moving;
@@ -534,7 +584,9 @@ void CCommonUnit::ProduceEventByAction( const NDb::EUnitSpecialAbility eAbility,
 {
 	const NDb::SUnitSpecialAblityDesc *pDesc = GetUnitAbilityDesc( eAbility );
 	if ( !pDesc )
+	{
 		return;
+	}
 
 	switch ( action )
 	{
@@ -580,7 +632,9 @@ const bool CCommonUnit::TryExecuteCommand( CAICommand *pCommand, const bool bPla
 			for ( int i = 0; i < theDipl.GetNPlayers(); ++i )
 			{
 				if ( theDipl.IsPlayerExist( i ) && theDipl.GetDiplStatus( GetPlayer(), i ) == EDI_ENEMY )
+				{
 					availEnemies.push_back( i );
+				}
 			}
 			if ( !availEnemies.empty() )
 			{
@@ -591,7 +645,9 @@ const bool CCommonUnit::TryExecuteCommand( CAICommand *pCommand, const bool bPla
 			return false;
 		}
 		if ( nCommandLeft > 0 )
+		{
 			--nCommandLeft;
+		}
 	}
 	UnitCommand( pCommand, bPlaceInQueue, bOnlyThisUnitCommand );
 	return true;

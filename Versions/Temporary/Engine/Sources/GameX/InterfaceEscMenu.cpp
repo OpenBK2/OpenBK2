@@ -27,19 +27,31 @@ bool CInterfaceEscMenu::CReactions::Execute( const std::string &szSender, const 
 		return true;
 	}
 	if ( szReaction == "restart_mission" )
+	{
 		return pInterface->OnRestartMission( szSender );
+	}
 	if ( szReaction == "end_mission_submenu" )
+	{
 		return pInterface->OnEndMissionSubMenu( szSender );
+	}
 
 	if ( szReaction == "reaction_on_end_mission_return" )
+	{
 		return pInterface->OnEndMissionReturnToGame( szSender );
+	}
 	if ( szReaction == "menu_back" )
+	{
 		return pInterface->OnMenuBack( szSender );
+	}
 	if ( szReaction == "mp_menu_back" )
+	{
 		return pInterface->OnMPMenuBack( szSender );
+	}
 
 	if ( szReaction == "react_on_finish_replay" )
+	{
 		return pInterface->OnFinishReplay();
+	}
 
 	return false;
 }
@@ -82,11 +94,15 @@ bool CInterfaceEscMenu::Init()
 	AddScreen( pReactions );
 
 	if ( CInterfaceScreenBase::Init() == false )
+	{
 		return false;
+	}
 
 	IWindow *pScreenWnd = dynamic_cast_ptr<IWindow *>( pScreen );
 	if ( !pScreenWnd )
+	{
 		return false;
+	}
 
 	IWindow *pWinnedMenu = GetChildChecked<IWindow>( pScreenWnd, "WinnedMenu", true );
 
@@ -99,12 +115,18 @@ bool CInterfaceEscMenu::Init()
 	{
 		if ( Singleton<IScenarioTracker>() &&
 		     Singleton<IScenarioTracker>()->GetGameType() != IAIScenarioTracker::EGT_SINGLE )
+		{
 			pEsc = GetChildChecked<IWindow>( pScreenWnd, "MultiplayerEscapeMenu", true );
+		}
 		else
+		{
 			pEsc = GetChildChecked<IWindow>( pScreenWnd, "EscapeMenu", true );
+		}
 	}
 	if ( pEsc )
+	{
 		pEsc->ShowWindow( true );
+	}
 
 	if ( !Singleton<IScenarioTracker>() ||
 	     Singleton<IScenarioTracker>()->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
@@ -113,13 +135,17 @@ bool CInterfaceEscMenu::Init()
 		IWindow *pWinMissionButton = GetChildChecked<IWindow>( pScreenWnd, "WinMissionButton", true );
 		pWinMissionButton->Enable( bWinned );
 		if ( !bWinned )
+		{
 			NInput::PostEvent( "esc_menu_init", 0, 0 );
+		}
 
 		if ( bWinned )
 		{
 			IButton *pRestartBtn = GetChildChecked<IButton>( pScreenWnd, "RestartMissionBtn", true );
 			if ( pRestartBtn )
+			{
 				pRestartBtn->Enable( false );
+			}
 		}
 	}
 
@@ -157,10 +183,14 @@ bool CInterfaceEscMenu::Init()
 		//			pExitBtn->Enable( false );
 
 		if ( pMPOptionsBtn )
+		{
 			pMPOptionsBtn->Enable( false );
+		}
 
 		if ( pMPExitBtn )
+		{
 			pMPExitBtn->Enable( false );
+		}
 	}
 
 	eMode = EMODE_UNKNOWN;
@@ -175,7 +205,9 @@ void CInterfaceEscMenu::OnGetFocus( bool bFocus )
 	if ( bFocus )
 	{
 		if ( pLoadBtn )
+		{
 			pLoadBtn->Enable( !NSaveLoad::IsSaveListEmpty() );
+		}
 	}
 }
 
@@ -183,10 +215,14 @@ void CInterfaceEscMenu::MsgMultiplayerEndMission( const SGameMessage &msg )
 {
 	IWindow *pMEnd = GetChildChecked<IWindow>( pScreen, "MultiplayerEndMissionMenu", true );
 	if ( pMEnd )
+	{
 		pMEnd->ShowWindow( true );
+	}
 	IWindow *pMEsc = GetChildChecked<IWindow>( pScreen, "MultiplayerEscapeMenu", true );
 	if ( pMEsc )
+	{
 		pMEsc->ShowWindow( false );
+	}
 }
 
 void CInterfaceEscMenu::MsgHelpButton( const SGameMessage &msg )
@@ -220,7 +256,9 @@ void CInterfaceEscMenu::MsgTryExitMainMenu( const SGameMessage &msg )
 void CInterfaceEscMenu::MsgTryExitWindows( const SGameMessage &msg )
 {
 	if ( eMode == EMODE_EXIT_WINDOWS )
+	{
 		return;
+	}
 
 	eMode = EMODE_EXIT_WINDOWS;
 
@@ -293,27 +331,41 @@ bool CInterfaceEscMenu::OnRestartMission( const std::string &szSender )
 bool CInterfaceEscMenu::OnEndMissionSubMenu( const std::string &szSender )
 {
 	if ( pEscMenu )
+	{
 		pEscMenu->ShowWindow( false );
+	}
 	if ( pMPEscMenu )
+	{
 		pMPEscMenu->ShowWindow( false );
+	}
 
 	if ( pEndMissionSubMenu )
+	{
 		pEndMissionSubMenu->ShowWindow( true );
+	}
 
 	bool bCustomMission = Singleton<IScenarioTracker>()->IsCustomMission();
 
 	if ( pEndMissionExitToMainMenuBtn )
+	{
 		pEndMissionExitToMainMenuBtn->ShowWindow( bCustomMission );
+	}
 	if ( pEndMissionExitToChapterMapBtn )
+	{
 		pEndMissionExitToChapterMapBtn->ShowWindow( !bCustomMission );
+	}
 
 	const bool bKRIDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
 	if ( bKRIDemo )
 	{
 		if ( pEndMissionExitToMainMenuBtn )
+		{
 			pEndMissionExitToMainMenuBtn->ShowWindow( true );
+		}
 		if ( pEndMissionExitToChapterMapBtn )
+		{
 			pEndMissionExitToChapterMapBtn->ShowWindow( false );
+		}
 	}
 
 	return true;
@@ -329,9 +381,13 @@ bool CInterfaceEscMenu::OnEndMissionReturnToGame( const std::string &szSender )
 bool CInterfaceEscMenu::OnMenuBack( const std::string &szSender )
 {
 	if ( pEscMenu )
+	{
 		pEscMenu->ShowWindow( true );
+	}
 	if ( pEndMissionSubMenu )
+	{
 		pEndMissionSubMenu->ShowWindow( false );
+	}
 
 	return true;
 }
@@ -339,9 +395,13 @@ bool CInterfaceEscMenu::OnMenuBack( const std::string &szSender )
 bool CInterfaceEscMenu::OnMPMenuBack( const std::string &szSender )
 {
 	if ( pMPEscMenu )
+	{
 		pMPEscMenu->ShowWindow( true );
+	}
 	if ( pMPEndMissionSubMenu )
+	{
 		pMPEndMissionSubMenu->ShowWindow( false );
+	}
 
 	return true;
 }
@@ -377,15 +437,23 @@ void CInterfaceEscMenu::MsgOk( const SGameMessage &msg )
 			}
 
 			if ( Singleton<IScenarioTracker>()->IsCustomMission() )
+			{
 				GoMainMenu();
+			}
 			else
+			{
 				GoChapterMap();
+			}
 		}
 	}
 	else if ( eMode == EMODE_EXIT_WINDOWS )
+	{
 		NInput::PostEvent( "exit", 0, 0 );
+	}
 	else if ( eMode == EMODE_RESTART_MISSION )
+	{
 		DoRestartMission();
+	}
 	else if ( eMode == EMODE_FINISH_REPLAY )
 	{
 		NGlobal::SetVar( "History.Playing", 0 );
@@ -399,7 +467,9 @@ void CInterfaceEscMenu::MsgOk( const SGameMessage &msg )
 void CInterfaceEscMenu::MsgCancel( const SGameMessage &msg )
 {
 	if ( eMode == EMODE_EXIT_WINDOWS )
+	{
 		eMode = EMODE_UNKNOWN;
+	}
 }
 
 void CInterfaceEscMenu::MsgWinned( const SGameMessage &msg )
@@ -423,7 +493,9 @@ void CInterfaceEscMenu::DoRestartMission()
 {
 	const NDb::SMapInfo *pMapInfo = Singleton<IScenarioTracker>()->GetCurrentMission();
 	if ( !pMapInfo )
+	{
 		pMapInfo = Singleton<IScenarioTracker>()->GetLastMission();
+	}
 	NI_VERIFY( pMapInfo, "Wrong mission info", return );
 
 	Singleton<IScenarioTracker>()->MissionCancel();
@@ -443,7 +515,9 @@ bool CInterfaceEscMenu::ProcessEvent( const SGameMessage &msg )
 bool CInterfaceEscMenu::StepLocal( bool bAppActive )
 {
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )
+	{
 		pInterface->Step( bAppActive );
+	}
 
 	return CInterfaceScreenBase::StepLocal( bAppActive );
 }

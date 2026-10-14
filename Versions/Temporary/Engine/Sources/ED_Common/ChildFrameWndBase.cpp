@@ -783,7 +783,9 @@ void CChildFrameWndBase::OnHScroll( EScrollAction eAction, unsigned nPos )
 
 		int nStep = ( nMax - nMin ) / 20;
 		if ( nStep == 0 )
+		{
 			nStep = 1;
+		}
 
 		switch ( eAction )
 		{
@@ -807,9 +809,13 @@ void CChildFrameWndBase::OnHScroll( EScrollAction eAction, unsigned nPos )
 				return;
 		}
 		if ( (int)nPos < nMin )
+		{
 			nPos = nMin;
+		}
 		else if ( (int)nPos > nMax )
+		{
 			nPos = nMax;
+		}
 
 		if ( nPos != nCurrentPos )
 		{
@@ -837,7 +843,9 @@ void CChildFrameWndBase::OnVScroll( EScrollAction eAction, unsigned nPos )
 
 		int nStep = ( nMax - nMin ) / 20;
 		if ( nStep == 0 )
+		{
 			nStep = 1;
+		}
 
 		switch ( eAction )
 		{
@@ -861,9 +869,13 @@ void CChildFrameWndBase::OnVScroll( EScrollAction eAction, unsigned nPos )
 				return;
 		}
 		if ( (int)nPos < nMin )
+		{
 			nPos = nMin;
+		}
 		else if ( (int)nPos > nMax )
+		{
 			nPos = nMax;
+		}
 
 		if ( nPos != nCurrentPos )
 		{

@@ -37,7 +37,9 @@ int CCommandsSender::CommandRegisterGroup( const std::vector<int> &_vIDs )
 		std::sort( vIDs.begin(), vIDs.end() );
 
 		if ( !Singleton<IAILogic>()->NeedNewGroupNumber() && vIDs == lastGroup )
+		{
 			return nLastGroupID;
+		}
 
 		pTransciver->SendCommand( new CUnregisterGroupCommand( nLastGroupID ) );
 		const int nID = Singleton<IAILogic>()->GenerateGroupNumber();
@@ -51,7 +53,9 @@ int CCommandsSender::CommandRegisterGroup( const std::vector<int> &_vIDs )
 		return nID;
 	}
 	else
+	{
 		return 0;
+	}
 }
 
 // unregister group
@@ -120,7 +124,9 @@ int CCommandsSender::CommandUnitCommand( const SAIUnitCmd *pCommand )
 		return nID;
 	}
 	else
+	{
 		return 0;
+	}
 }
 
 void CCommandsSender::CommandGeneralCommand( const SAIUnitCmd *pCommand )

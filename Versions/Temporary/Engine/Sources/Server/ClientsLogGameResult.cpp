@@ -85,7 +85,9 @@ void CClients::DBLogRawGameResult( const std::unordered_map<std::string, int> &i
 		{
 			const std::string &szStatsName = it->first;
 			if ( availableColumns.find( szStatsName ) == availableColumns.end() )
+			{
 				columnsToCreate.push_back( szStatsName );
+			}
 		}
 		columnsToCreate.sort();
 		// One statement per column: a list of ADD COLUMN clauses in a single

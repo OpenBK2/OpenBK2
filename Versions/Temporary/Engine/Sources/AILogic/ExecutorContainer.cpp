@@ -125,7 +125,9 @@ void CExecutorContainer::Segment()
 				it = cur.erase( it );
 			}
 			else // delete executor
+			{
 				it = cur.erase( it );
+			}
 		}
 	}
 	NI_ASSERT( cur.empty(), "must be empty container after processing" );
@@ -135,14 +137,20 @@ void CExecutorContainer::Segment()
 
 	// clear invalid sleeping executors
 	if ( checkIter == sleeping.end() )
+	{
 		checkIter = sleeping.begin();
+	}
 	int nIter = CHECK_SLEEPING_PER_SEGMENT;
 	for ( ; checkIter != sleeping.end() && nIter >= 0; --nIter )
 	{
 		if ( !checkIter->first->IsExecutorValid() )
+		{
 			sleeping.erase( checkIter++ );
+		}
 		else
+		{
 			++checkIter;
+		}
 	}
 }
 
@@ -150,6 +158,8 @@ void CExecutorContainer::RemoveSleeping( CExecutor *pExecutor )
 {
 	CSleepingExecutors::iterator pos = sleeping.find( pExecutor );
 	if ( pos != sleeping.end() )
+	{
 		sleeping.erase( pos );
+	}
 	checkIter = sleeping.end();
 }

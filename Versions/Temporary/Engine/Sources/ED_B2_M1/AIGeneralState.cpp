@@ -89,11 +89,17 @@ void CAIGeneralPointsState::Draw( IPaintContext *pPaintDC )
 {
 	sceneDrawTool.Clear();
 	if ( dialogData.nCurrentPlayer == -1 )
+	{
 		return;
+	}
 	else if ( dialogData.players.size() < 1 )
+	{
 		return;
+	}
 	else if ( dialogData.players[dialogData.nCurrentPlayer].parcels.size() < 1 )
+	{
 		return;
+	}
 
 	//GetDataFromDB();
 	//RefreshWindowData();
@@ -114,7 +120,9 @@ void CAIGeneralPointsState::Draw( IPaintContext *pPaintDC )
 		float fDir = AI2VisRad( currentParcel.fDefenceDirection );
 		fDir += FP_PI2;
 		if ( fDir >= FP_2PI )
+		{
 			fDir -= FP_2PI;
+		}
 		const CVec3 vDirPos = CreateFromPolarCoord( currentParcel.fRadius, fDir, 0 ) + vPos;
 
 		sceneDrawTool.DrawCircle(
@@ -156,7 +164,9 @@ void CAIGeneralPointsState::Draw( IPaintContext *pPaintDC )
 			float fDir = AI2VisRad( currentReinfPoint.fDirection );
 			fDir += FP_PI2;
 			if ( fDir >= FP_2PI )
+			{
 				fDir -= FP_2PI;
+			}
 			const CVec3 vDirPos = CreateFromPolarCoord( PARCEL_REINFORCE_RAD, fDir, 0 ) + vPos;
 
 			sceneDrawTool.DrawCircle( vPos, PARCEL_REINFORCE_RAD, PARCEL_POINT_PARTS, dwParcelColor, false );
@@ -288,7 +298,9 @@ bool CAIGeneralPointsState::UpdateCommand( unsigned nCommandID, bool *pbEnable, 
 void CAIGeneralPointsState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( dialogData.players[dialogData.nCurrentPlayer].parcels.size() == 0 )
+	{
 		return;
+	}
 
 	CVec3 vPickedPosOnTerrain = VNULL3;
 	Get2DPosOnMapHeights( &vPickedPosOnTerrain, CVec2( rMousePoint.x, rMousePoint.y ) );
@@ -314,7 +326,9 @@ void CAIGeneralPointsState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &
 		float fDir = AI2VisRad( currentParcel.fDefenceDirection );
 		fDir += FP_PI2;
 		if ( fDir >= FP_2PI )
+		{
 			fDir -= FP_2PI;
+		}
 		const CVec2 vDirRad = CreateFromPolarCoord( currentParcel.fRadius, fDir );
 		if ( fabs( CVec3( currentParcel.vCenter + vDirRad, 0 ) - vPickedPosOnTerrain ) < SELECTION_POINT_RADIUS )
 		{
@@ -351,7 +365,9 @@ void CAIGeneralPointsState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &
 			float fDir = AI2VisRad( currentPoint.fDirection );
 			fDir += FP_PI2;
 			if ( fDir >= FP_2PI )
+			{
 				fDir -= FP_2PI;
+			}
 			const CVec2 vDirRad = CreateFromPolarCoord( PARCEL_REINFORCE_RAD, fDir );
 			if ( fabs( CVec3( currentParcel.vCenter + currentPoint.vCenter + vDirRad, 0 ) - vPickedPosOnTerrain ) <
 			     SELECTION_POINT_RADIUS )
@@ -398,7 +414,9 @@ void CAIGeneralPointsState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rM
 void CAIGeneralPointsState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( !( bMoveParcel || bMovePoint || bRotateParcel || bRotatePoint ) )
+	{
 		return;
+	}
 
 	CVec3 vPickedPosOnTerrain = VNULL3;
 	Get2DPosOnMapHeights( &vPickedPosOnTerrain, CVec2( rMousePoint.x, rMousePoint.y ) );
@@ -429,28 +447,42 @@ void CAIGeneralPointsState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rM
 
 			float fNewPointDir = GetPolarAngle( itReinfPoint->vCenter ) + fDirOff;
 			if ( fNewPointDir < 0 )
+			{
 				fNewPointDir += FP_2PI;
+			}
 			else if ( fNewPointDir >= FP_2PI )
+			{
 				fNewPointDir -= FP_2PI;
+			}
 			itReinfPoint->vCenter = CreateFromPolarCoord( fabs( itReinfPoint->vCenter ), fNewPointDir );
 
 			float fNewDir = fOldPointDir + fDirOff;
 			if ( fNewDir < 0 )
+			{
 				fNewDir += FP_2PI;
+			}
 			else if ( fNewDir >= FP_2PI )
+			{
 				fNewDir -= FP_2PI;
+			}
 			itReinfPoint->fDirection = Vis2AIRad( fNewDir );
 		}
 		float fNewParcelDir = fOldParcelDir + fDirOff;
 		if ( fNewParcelDir < 0 )
+		{
 			fNewParcelDir += FP_2PI;
+		}
 		else if ( fNewParcelDir >= FP_2PI )
+		{
 			fNewParcelDir -= FP_2PI;
+		}
 		currentParcel.fDefenceDirection = Vis2AIRad( fNewParcelDir );
 
 		currentParcel.fRadius = fabs( vPickPos - currentParcel.vCenter );
 		if ( currentParcel.fRadius < PARCEL_REINFORCE_RAD )
+		{
 			currentParcel.fRadius = PARCEL_REINFORCE_RAD;
+		}
 	}
 	else if ( bRotatePoint )
 	{
@@ -458,9 +490,13 @@ void CAIGeneralPointsState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rM
 		                                            currentParcel.reinforcePoints[dialogData.CurrentPoint()].vCenter ) ) -
 		                FP_PI2;
 		if ( fNewDir < 0 )
+		{
 			fNewDir += FP_2PI;
+		}
 		else if ( fNewDir >= FP_2PI )
+		{
 			fNewDir -= FP_2PI;
+		}
 		currentParcel.reinforcePoints[dialogData.CurrentPoint()].fDirection = Vis2AIRad( fNewDir );
 	}
 }
@@ -472,7 +508,9 @@ void CAIGeneralPointsState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigne
 		case VK_SPACE:
 		{
 			if ( ( dialogData.CurrentPlayer() < 0 ) || ( dialogData.CurrentParcel() < 0 ) )
+			{
 				return;
+			}
 
 			SAIGeneralPointsWindowData::SAIPlayerInfo &currentPlayer = dialogData.players[dialogData.CurrentPlayer()];
 			SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &currentParcel =
@@ -608,7 +646,9 @@ void CAIGeneralPointsState::SaveDataToDB()
 void CAIGeneralPointsState::RefreshWindowData()
 {
 	if ( dialogData.nCurrentPlayer == -1 )
+	{
 		return;
+	}
 
 	Singleton<ICommandHandlerContainer>()->HandleCommand(
 			CHID_AIGEN_POINTS_WINDOW, ID_WINDOW_SET_DIALOG_DATA, reinterpret_cast<uintptr_t>( &dialogData ) );
@@ -618,7 +658,9 @@ void CAIGeneralPointsState::RefreshWindowData()
 void CAIGeneralPointsState::AddID()
 {
 	if ( dialogData.CurrentPlayer() < 0 )
+	{
 		return;
+	}
 
 	int nNewMobileID = 0;
 	if ( NAIGenMobileDialog::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), &nNewMobileID ) )
@@ -656,7 +698,9 @@ void CAIGeneralPointsState::AddID()
 void CAIGeneralPointsState::AddParcel()
 {
 	if ( dialogData.CurrentPlayer() < 0 )
+	{
 		return;
+	}
 
 	CVec3 vCamAnchor;
 	GetCameraPosition( &vCamAnchor );
@@ -724,7 +768,9 @@ void CAIGeneralPointsState::AddPoint( const CTPoint<int> &rMousePoint )
 {
 	if ( ( dialogData.CurrentParcel() < 0 ) ||
 	     ( dialogData.CurrentParcel() >= dialogData.players[dialogData.CurrentPlayer()].parcels.size() ) )
+	{
 		return;
+	}
 
 	CVec3 vPickedPosOnTerrain = VNULL3;
 	Get2DPosOnMapHeights( &vPickedPosOnTerrain, CVec2( rMousePoint.x, rMousePoint.y ) );
@@ -784,7 +830,9 @@ void CAIGeneralPointsState::AddPoint( const CTPoint<int> &rMousePoint )
 void CAIGeneralPointsState::DeletePoint()
 {
 	if ( ( dialogData.CurrentPlayer() < 0 ) || ( dialogData.CurrentParcel() < 0 ) || ( dialogData.CurrentPoint() < 0 ) )
+	{
 		return;
+	}
 
 	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
 	if ( NMessage::AskYesNo( strMessage ) )
@@ -824,7 +872,9 @@ void CAIGeneralPointsState::DeletePoint()
 void CAIGeneralPointsState::DeleteID()
 {
 	if ( ( dialogData.CurrentPlayer() < 0 ) || ( dialogData.CurrentID() < 0 ) )
+	{
 		return;
+	}
 
 	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
 	if ( NMessage::AskYesNo( strMessage ) )
@@ -862,7 +912,9 @@ void CAIGeneralPointsState::DeleteID()
 void CAIGeneralPointsState::DeleteParcel()
 {
 	if ( ( dialogData.CurrentPlayer() < 0 ) || ( dialogData.CurrentParcel() < 0 ) )
+	{
 		return;
+	}
 
 	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
 	if ( NMessage::AskYesNo( strMessage ) )

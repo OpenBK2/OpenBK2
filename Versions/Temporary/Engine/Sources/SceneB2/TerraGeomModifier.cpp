@@ -65,11 +65,15 @@ void CTerraGen::ModifyTerraGeometryByBrush( const int nVisTileX,
 
 			const float fReallyAdded = fVal - terrainInfo.heights[nIndY][nIndX];
 			if ( terraBrushUpdate == NTerraBrush::TERRA_BRUSH_OVERRIDE )
+			{
 				diffHeights[nIndY][nIndX] += fReallyAdded;
+			}
 
 			terrainInfo.heights[nIndY][nIndX] = fVal;
 			if ( terrainInfo.waterHeightCoeffs[nIndY][nIndX] < ( 1.0f - EPS_VALUE ) )
+			{
 				terrainInfo.waterAddHeights[nIndY][nIndX] = fReallyAdded;
+			}
 
 			terrainAIInfo.heights[nIndY][nIndX] = Vis2AI( GetFullTerraHeight( nIndX, nIndY ) );
 		}
@@ -113,7 +117,9 @@ void CTerraGen::ModifyTerraGeometryByBrush( const int nVisTileX,
 
 	// grid updater (intellectual)
 	if ( IScene *pScene = Scene() )
+	{
 		pScene->UpdateGrid( nFirstTileX, nFirstTileY, nLastTileX, nLastTileY );
+	}
 }
 
 void CTerraGen::GetTerraGeometryUpdateDifferences( int *pOffsX, int *pOffsY, CArray2D<float> *pDiffs )
@@ -240,7 +246,9 @@ void CTerraGen::UpdateTileHeights( const int nTileX1, const int nTileY1, const i
 void CTerraGen::UpdateAllObjectsInGeomModifyingArea()
 {
 	if ( vGeomModAreaMin.x == -1 )
+	{
 		return;
+	}
 
 	UpdateVectorAreaInfo(
 			vGeomModAreaMin.x, vGeomModAreaMin.y, vGeomModAreaMax.x, vGeomModAreaMax.y, TERRAIN_UPDATE_ALL );

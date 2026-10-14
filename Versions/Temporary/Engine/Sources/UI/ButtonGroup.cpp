@@ -51,7 +51,9 @@ bool CButtonGroup::TrySwitchState( IWindow *pButton )
 	}
 	// depress pressed
 	if ( pPressed )
+	{
 		dynamic_cast_ptr<IButton *>( pPressed )->SetState( 0 );
+	}
 	// remember new pressed
 	pPressed = pButton;
 	return true;
@@ -63,7 +65,9 @@ void CButtonGroup::Init()
 	// depress all others.
 	pPressed = ChooseDefault();
 	for ( CButtons::iterator it = buttons.begin(); it != buttons.end(); ++it )
+	{
 		( *it )->SetState( *it == pPressed ? 1 : 0 );
+	}
 }
 
 IWindow *CButtonGroup::GetPressed() const
@@ -78,7 +82,9 @@ IWindow *CButtonGroup::GetButton( int i )
 	{
 		++k;
 		if ( k == i )
+		{
 			return *it;
+		}
 	}
 	return 0;
 }

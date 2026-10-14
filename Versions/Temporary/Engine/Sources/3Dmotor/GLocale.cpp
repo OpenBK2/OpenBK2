@@ -30,13 +30,17 @@ void CTextLocaleInfo::AddAllAvailableFonts()
 	CPtr<NDb::IDBIterator> pFontIterator = NDb::CreateDBIterator( NDb::SFont::typeID );
 	NI_ASSERT( pFontIterator != 0, "cannot create font iterator" );
 	for ( ; !pFontIterator->IsEnd(); pFontIterator->MoveNext() )
+	{
 		AddFont( static_cast<const NDb::SFont *>( pFontIterator->Get() ) );
+	}
 }
 
 void CTextLocaleInfo::AddFont( const NDb::SFont *pFont )
 {
 	if ( pFont == 0 )
+	{
 		return;
+	}
 	CDGPtr<CPtrFuncBase<CFontFormatInfo>> pFormatInfo(
 			shareFonts.Get( SResKey<int>( pFont->uid, pFont->GetRecordID() ) ) );
 	pFormatInfo.Refresh();
@@ -44,11 +48,15 @@ void CTextLocaleInfo::AddFont( const NDb::SFont *pFont )
 	// The baked font is registered even when the record names a font file, so
 	// that it still answers should that file turn out to be unusable
 	if ( pInfo != nullptr )
+	{
 		fonts.push_back( new CFontInfo( SFont( pInfo->GetHeight(), pFont->szName ),
 		                                shareTextures.Get( STextureKey( pFont->pTexture ) ),
 		                                pFormatInfo ) );
+	}
 	if ( !pFont->szFontFile.empty() )
+	{
 		runtimeRecords[pFont->szName] = pFont;
+	}
 }
 
 void CTextLocaleInfo::ClearAllFonts()
@@ -77,7 +85,9 @@ float GetRuntimeFontScale( bool bHud )
 	// Console/config values must stay finite and bounded before they become
 	// integer pixel sizes and atlas allocations. Invalid input uses the default.
 	if ( !std::isfinite( fScale ) || fScale <= 0 )
+	{
 		return fDefault;
+	}
 	return std::clamp( fScale, 0.25f, 4.0f );
 }
 
@@ -89,10 +99,14 @@ FINISH_REGISTER
 CFontInfo *CTextLocaleInfo::GetRuntimeFont( const SFont &sFont )
 {
 	if ( sFont.nSize < N_MIN_RUNTIME_FONT_SIZE )
+	{
 		return 0;
+	}
 	std::unordered_map<std::string, const NDb::SFont *>::const_iterator record = runtimeRecords.find( sFont.szName );
 	if ( record == runtimeRecords.end() )
+	{
 		return 0;
+	}
 	const float fScale = sFont.bOriginalScale ? 1.0f : GetRuntimeFontScale( sFont.bHud );
 	const int nCache = sFont.bOriginalScale ? 2 : ( sFont.bHud ? 1 : 0 );
 	auto &cache = runtimeFonts[nCache];
@@ -119,10 +133,14 @@ CFontInfo *CTextLocaleInfo::GetRuntimeFont( const SFont &sFont )
 		// The atlas saves these final dimensions, so loading a save never applies
 		// the multiplier a second time to its already laid out text.
 		if ( pAtlas->Init( record->second, nRasterHeight, nRasterWidth ) )
+		{
 			pFont = new CRuntimeFontInfo( sFont, pAtlas );
+		}
 		else
+		{
 			DebugTrace(
 					"runtime font \"%s\" %d px could not be made, the baked font is used", sFont.szName.c_str(), sFont.nSize );
+		}
 		made = cache.insert( std::make_pair( key, pFont ) ).first;
 	}
 	return made->second;
@@ -131,7 +149,9 @@ CFontInfo *CTextLocaleInfo::GetRuntimeFont( const SFont &sFont )
 void CTextLocaleInfo::Setup( const CVec2 &_vScreenRect )
 {
 	if ( vScreenRect == _vScreenRect )
+	{
 		return;
+	}
 
 	//	fontCache.clear();
 	vScreenRect = _vScreenRect;
@@ -146,7 +166,9 @@ CFontInfo *CTextLocaleInfo::SearchFont( const SFont &sFont )
 	{
 		const SFont &sDBFont = ( *iTemp )->GetType();
 		if ( sDBFont.szName != sFont.szName )
+		{
 			continue;
+		}
 
 		if ( IsValid( pResFontInfo ) )
 		{
@@ -170,11 +192,15 @@ CFontInfo *CTextLocaleInfo::GetFont( const SFont &sFont )
 {
 	CPtr<CFontInfo> pResFontInfo = GetRuntimeFont( sFont );
 	if ( pResFontInfo )
+	{
 		return pResFontInfo;
+	}
 
 	pResFontInfo = SearchFont( sFont );
 	if ( !pResFontInfo )
+	{
 		pResFontInfo = SearchFont( SFont( 16, "System" ) );
+	}
 
 	return pResFontInfo;
 }

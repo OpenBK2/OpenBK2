@@ -250,7 +250,9 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 									itAttribute->GetAttribute( "actiontime", &nActionFrame );
 									nActionFrame -= nFirstFrame;
 									if ( nActionFrame < 0 )
+									{
 										nActionFrame = 0;
+									}
 								}
 							}
 						}

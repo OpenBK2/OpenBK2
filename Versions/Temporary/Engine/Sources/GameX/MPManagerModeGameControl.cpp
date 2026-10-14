@@ -44,7 +44,9 @@ void CMPManagerMode::StartGame()
 	IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
 
 	if ( nOwnSlot >= 0 && nOwnSlot < slots.size() )
+	{
 		slots[nOwnSlot].nClientID = GetOwnClientID();
+	}
 
 	Scene()->ResetTimer( GetCurrentTimeMilliseconds() );
 	IScenarioTracker::SMultiplayerInfo scenarioInfo;
@@ -68,7 +70,9 @@ void CMPManagerMode::StartGame()
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( !IsPlayerPresent( i ) )
+		{
 			continue;
+		}
 		SMPSlot &slot = slots[i];
 
 		dwInitialPlayers |= 1UL << i;
@@ -178,7 +182,9 @@ void CMPManagerMode::LoseGame()
 void CMPManagerMode::ScheduleWinGame()
 {
 	if ( bOutcomeKnown || !IsValid( pTransceiver ) )
+	{
 		return;
+	}
 
 	NGameX::MatchPacketTrace_Log( pTransceiver->GetCurrentCommonSegment(),
 	                              "DECISION",
@@ -192,7 +198,9 @@ void CMPManagerMode::ScheduleWinGame()
 	{
 		if ( ( dwInitialPlayers & ( 1UL << i ) ) != 0 && slots[i].nTeam != slots[nOwnSlot].nTeam &&
 		     i < scheduledDropSegmentBySlot.size() )
+		{
 			nLastOpponentDrop = (std::max)( nLastOpponentDrop, scheduledDropSegmentBySlot[i] );
+		}
 	}
 	pTransceiver->ScheduleGameEnd( nLastOpponentDrop );
 	bWinOnGameEnd = true;
@@ -249,9 +257,13 @@ void CMPManagerMode::EndGame()
 	NGameX::MatchPacketTrace_Flush( "match_end" );
 
 	if ( IsValid( pTransceiver ) )
+	{
 		pCommandsHistory = dynamic_cast<CCommandsHistory *>( pTransceiver->GetCommandsHistory() );
+	}
 	else
+	{
 		pCommandsHistory = 0;
+	}
 	// Improve the replay file name
 	std::string Filename = GenerateDateTimeReplayFilename();
 	SaveReplay( Filename );
@@ -261,31 +273,45 @@ void CMPManagerMode::EndGame()
 void CMPManagerMode::CheckEndGameConditions()
 {
 	if ( !IsGameRunning() )
+	{
 		return;
+	}
 
 	if ( bOutcomeKnown )
 	{
 		if ( pTransceiver->IsGameEnded() )
 		{
 			if ( bWinOnGameEnd )
+			{
 				WinGame();
+			}
 			else
+			{
 				LoseGame();
+			}
 		}
 		return;
 	}
 
 	if ( CheckAllLeftWin() )
+	{
 		return;
+	}
 
 	if ( CheckKeyBuildingsWinLose() )
+	{
 		return;
+	}
 
 	if ( CheckScoreWinLose() )
+	{
 		return;
+	}
 
 	if ( CheckInstantLose() )
+	{
 		return;
+	}
 
 	return;
 }
@@ -293,14 +319,18 @@ void CMPManagerMode::CheckEndGameConditions()
 bool CMPManagerMode::CheckAllLeftWin()
 {
 	if ( !pTransceiver || pTransceiver->IsGameEnded() )
+	{
 		return true;
+	}
 	if ( IsGameRunning() )
 	{
 		int nOppositePlayers = 0;
 		for ( int i = 0; i < slots.size(); ++i )
 		{
 			if ( IsPlayerPresent( i ) && slots[nOwnSlot].nTeam + slots[i].nTeam == 1 )
+			{
 				++nOppositePlayers; // one of them is 1 and another is 0, i.e. enemies
+			}
 		}
 
 		if ( nOppositePlayers == 0 )
@@ -319,17 +349,27 @@ bool CMPManagerMode::CheckScoreWinLose()
 	float fTimeSpeedMultiplier = 1.0f;
 
 	if ( gameDesc.nGameSpeed > 0 )
+	{
 		fTimeSpeedMultiplier += gameDesc.nGameSpeed;
+	}
 	else if ( gameDesc.nGameSpeed < 0 )
+	{
 		fTimeSpeedMultiplier /= 1 - gameDesc.nGameSpeed;
+	}
 
 	if ( timeEndMatch == 0 )
+	{
 		timeEndMatch = curGameTime + gameDesc.nTimeLimit * 60000 * fTimeSpeedMultiplier;
+	}
 
 	if ( curGameTime > timeEndMatch )
+	{
 		NGlobal::SetVar( "multiplayer_time_limit", -1 );
+	}
 	else
+	{
 		NGlobal::SetVar( "multiplayer_time_limit", int( timeEndMatch ) / 1000 );
+	}
 
 	if ( timeEndMatch > 0 && curGameTime > timeEndMatch )
 	{
@@ -357,17 +397,25 @@ int CMPManagerMode::GetTeamWithLowestScore()
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( !IsPlayerPresent( i ) )
+		{
 			continue;
+		}
 		nScores[slots[i].nTeam] += pScenarioTracker->GetStatistics( i, IScenarioTracker::ESK_SCORE );
 	}
 
 	if ( nScores[0] == nScores[1] )
+	{
 		nScores[slots[0].nTeam] += 1;
+	}
 
 	if ( nScores[0] > nScores[1] )
+	{
 		return 1;
+	}
 	else
+	{
 		return 0;
+	}
 }
 
 bool CMPManagerMode::CheckKeyBuildingsWinLose()
@@ -380,9 +428,13 @@ bool CMPManagerMode::CheckKeyBuildingsWinLose()
 
 	int nNewWinningSide = 2;
 	if ( flags.first > 0 && flags.second == 0 )
+	{
 		nNewWinningSide = 0;
+	}
 	else if ( flags.first == 0 && flags.second > 0 )
+	{
 		nNewWinningSide = 1;
+	}
 
 	int nSecondsLeft = -1;
 	if ( nNewWinningSide == nWinningSide )
@@ -409,7 +461,9 @@ bool CMPManagerMode::CheckKeyBuildingsWinLose()
 			timeResolution = curGameTime + nSecondsLeft * 1000;
 		}
 		else
+		{
 			timeResolution = 0;
+		}
 	}
 	nWinningSide = nNewWinningSide;
 
@@ -445,7 +499,9 @@ void CMPManagerMode::AnalyzeLaggers()
 	if ( bInitialLoadInProgress )
 	{
 		if ( lagsUpdate.CheckNeedUpdate() )
+		{
 			SendLagInfo();
+		}
 		return;
 	}
 
@@ -457,21 +513,27 @@ void CMPManagerMode::AnalyzeLaggers()
 		int nTimeLeft = lagInfo.nLagLeft - ( curTime - lagInfo.timeStartLag );
 
 		if ( nTimeLeft <= NGameX::GetMPConsts()->nTimeUserMPLag * 1000 )
+		{
 			SetUserPause( false );
+		}
 	}
 
 	uint32_t dwPlayers = 0;
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( IsPlayerPresent( i ) )
+		{
 			dwPlayers |= ( 1UL << i );
+		}
 	}
 
 	// Analyze other laggers
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( i == nOwnSlot || !IsPlayerPresent( i ) )
+		{
 			continue;
+		}
 
 		SLagInfo &lagInfo = lags[i];
 		const bool bLaggingGameControlHost = ( GetSlotClientID( i ) == nHostClientID );
@@ -533,9 +595,13 @@ void CMPManagerMode::AnalyzeLaggers()
 					     scheduledDropSegmentBySlot[i] < 0 )
 					{
 						if ( bLaggingGameControlHost )
+						{
 							PromoteGameControlHostAfterRemoval( nHostClientID );
+						}
 						else
+						{
 							KickPlayerFromSlot( i );
+						}
 						const int nDropSegment = pTransceiver->GetCurrentCommonSegment();
 						NGameX::MatchPacketTrace_Log(
 								nDropSegment,
@@ -559,7 +625,9 @@ void CMPManagerMode::AnalyzeLaggers()
 	dwLaggersOld = dwLaggers;
 
 	if ( lagsUpdate.CheckNeedUpdate() )
+	{
 		SendLagInfo();
+	}
 }
 
 void CMPManagerMode::CreateRehash( std::vector<uint8_t> *pOrder )
@@ -568,10 +636,14 @@ void CMPManagerMode::CreateRehash( std::vector<uint8_t> *pOrder )
 	int nSize = slots.size();
 	order.resize( nSize, -1 );
 	for ( int i = 0; i < nSize; ++i )
+	{
 		order[i] = i;
+	}
 
 	if ( !gameDesc.bRandomPlacement )
+	{
 		return;
+	}
 
 	for ( int i = 0; i < 2 * nSize; ++i )
 	{
@@ -604,13 +676,17 @@ void CMPManagerMode::RehashSlots( const std::vector<uint8_t> &order )
 		slot = newSlots[i];
 		slot.nClientID = newSlots[i].nClientID;
 		if ( !slot.bPresent )
+		{
 			DebugTrace( "+++ New Slot %d: empty", i );
+		}
 		else
+		{
 			DebugTrace( "+++ New Slot %d: %s, CID %d, side %d, team %d",
 			            i,
 			            slot.szName.c_str(),
 			            slot.nClientID,
 			            slot.nCountry,
 			            slot.nTeam );
+		}
 	}
 }

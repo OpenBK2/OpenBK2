@@ -66,10 +66,14 @@ EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator *pManipulator,
 						for ( CGrannyBoneAttributesList::const_iterator it = attribs.begin(); it != attribs.end(); ++it )
 						{
 							if ( !PatMat( it->szBoneName.c_str(), "lfireplace??" ) )
+							{
 								continue;
+							}
 
 							if ( !pManipulator->InsertNode( "fireplaces" ) )
+							{
 								continue;
+							}
 
 							std::string szNodeName = szSegmentName + fmt::format( "fireplaces.[{}]", nFireplaceIndex );
 							CVec2 vPos( 0, 0 );

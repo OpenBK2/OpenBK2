@@ -43,7 +43,9 @@ const int CFreeIds::Get()
 	//	NI_ASSERT_T( firstEl < nexts.size(), NStr::Format( "Wrong first element (%d)", firstEl ) );
 	firstEl = nexts[firstEl] == 0 ? firstEl + 1 : nexts[firstEl];
 	if ( firstEl >= nexts.size() )
+	{
 		nexts.resize( firstEl * 2, 0 );
+	}
 
 	return nResult;
 }

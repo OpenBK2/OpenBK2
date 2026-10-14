@@ -31,7 +31,9 @@ CPtr<CInBuildingStatesFactory> CInBuildingStatesFactory::pFactory = 0;
 IStatesFactory *CInBuildingStatesFactory::Instance()
 {
 	if ( pFactory == 0 )
+	{
 		pFactory = new CInBuildingStatesFactory();
+	}
 
 	return pFactory;
 }
@@ -113,22 +115,32 @@ void CSoldierRestInBuildingState::SendUnitTo( CBuilding *pBuilding )
 	if ( pBuilding != 0 )
 	{
 		if ( pBuilding->IsRefValid() && pBuilding->IsAlive() && pBuilding->GetNFreePlaces() != 0 )
+		{
 			pSoldier->SetInBuilding( pBuilding );
+		}
 		else
+		{
 			pSoldier->SetCommandFinished();
+		}
 	}
 	else
+	{
 		NI_ASSERT( pSoldier->IsInBuilding(), "Wrong unit state" );
+	}
 }
 
 void CSoldierRestInBuildingState::Segment()
 {
 	if ( pSoldier->IsInFollowState() &&
 	     fabs( pSoldier->GetCenter() - pSoldier->GetFollowedUnit()->GetCenter() ) >= SConsts::FOLLOW_GO_RADIUS )
+	{
 		theGroupLogic.UnitCommand(
 				SAIUnitCmd( ACTION_COMMAND_FOLLOW_NOW, pSoldier->GetFollowedUnit()->GetUniqueId() ), pSoldier, false );
+	}
 	else if ( pSoldier->GetSlot() != -1 )
+	{
 		pSoldier->AnalyzeTargetScan( 0, false, false );
+	}
 }
 
 ETryStateInterruptResult CSoldierRestInBuildingState::TryInterruptState( class CAICommand *pCommand )
@@ -140,9 +152,13 @@ ETryStateInterruptResult CSoldierRestInBuildingState::TryInterruptState( class C
 const CVec2 CSoldierRestInBuildingState::GetPurposePoint() const
 {
 	if ( pSoldier && pSoldier->IsRefValid() && pSoldier->IsAlive() )
+	{
 		return pSoldier->GetCenterPlain();
+	}
 	else
+	{
 		return CVec2( -1.0f, -1.0f );
+	}
 }
 
 //*******************************************************************
@@ -160,7 +176,9 @@ CSoldierAttackInBuildingState::CSoldierAttackInBuildingState( class CSoldier *_p
 	pSoldier->GetBuilding()->Alarm();
 
 	if ( !pEnemy->IsAlive() )
+	{
 		pSoldier->SendAcknowledgement( ACK_INVALID_TARGET, true );
+	}
 }
 
 void CSoldierAttackInBuildingState::AnalyzeCurrentState()
@@ -178,7 +196,9 @@ void CSoldierAttackInBuildingState::AnalyzeCurrentState()
 		const EUnitAckType eReject = pGun->GetRejectReason();
 		pSoldier->SendAcknowledgement( eReject );
 		if ( eReject == ACK_NO_AMMO && pSoldier->GetPlayer() == theDipl.GetMyNumber() )
+		{
 			theFeedBackSystem.AddFeedbackAndForget( pSoldier->GetUniqueID(), pSoldier->GetCenterPlain(), EFB_NO_AMMO, -1 );
+		}
 
 		pGun->StopFire();
 
@@ -193,7 +213,9 @@ void CSoldierAttackInBuildingState::Segment()
 	if ( !pSoldier->GetBuilding()->IsAnyAttackers() || bFinish )
 	{
 		if ( bFinish && ( !IsValid( pGun ) || !pGun->IsFiring() ) )
+		{
 			pSoldier->SetCommandFinished();
+		}
 		else if ( !IsValid( pGun ) && !bFinish )
 		{
 			if ( IsValidObj( pEnemy ) )
@@ -201,7 +223,9 @@ void CSoldierAttackInBuildingState::Segment()
 				pSoldier->ResetShootEstimator( pEnemy, false, pSoldier->GetForbiddenGuns() );
 				pGun = pSoldier->GetBestShootEstimatedGun();
 				if ( pGun == 0 )
+				{
 					pSoldier->SendAcknowledgement( pSoldier->GetGunsRejectReason() );
+				}
 			}
 
 			if ( pGun == 0 )
@@ -222,7 +246,9 @@ void CSoldierAttackInBuildingState::Segment()
 			     nEnemyParty != pEnemy->GetParty() )
 			{
 				if ( IsValidObj( pEnemy ) && !pEnemy->IsNoticableByUnit( pSoldier, pGun->GetFireRange( 0 ) ) )
+				{
 					pSoldier->SendAcknowledgement( ACK_DONT_SEE_THE_ENEMY );
+				}
 
 				pSoldier->UnRegisterAsBored( ACK_BORED_ATTACK );
 				damageToEnemyUpdater.UnsetDamageFromEnemy( pEnemy );
@@ -230,7 +256,9 @@ void CSoldierAttackInBuildingState::Segment()
 				pGun->StopFire();
 			}
 			else
+			{
 				AnalyzeCurrentState();
+			}
 		}
 	}
 }
@@ -250,7 +278,9 @@ ETryStateInterruptResult CSoldierAttackInBuildingState::TryInterruptState( class
 		if ( cmd.nCmdType != ACTION_COMMAND_ATTACK_UNIT || GetObjectByCmd( cmd ) != pEnemy )
 		{
 			if ( IsValid( pGun ) )
+			{
 				pGun->StopFire();
+			}
 
 			bFinish = true;
 			return TSIR_YES_WAIT;
@@ -263,9 +293,13 @@ ETryStateInterruptResult CSoldierAttackInBuildingState::TryInterruptState( class
 const CVec2 CSoldierAttackInBuildingState::GetPurposePoint() const
 {
 	if ( IsValidObj( pEnemy ) )
+	{
 		return pEnemy->GetCenterPlain();
+	}
 	else
+	{
 		return CVec2( -1.0f, -1.0f );
+	}
 }
 
 CAIUnit *CSoldierAttackInBuildingState::GetTargetUnit() const

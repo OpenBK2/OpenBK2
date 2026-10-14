@@ -37,7 +37,9 @@ bool CInterfaceWinLoose::Init()
 	}
 
 	if ( CInterfaceScreenBase::Init() == false )
+	{
 		return false;
+	}
 
 	AddScreen( this );
 
@@ -63,7 +65,9 @@ bool CInterfaceWinLoose::ProcessEvent( const SGameMessage &msg )
 	}
 
 	if ( msg.mMessage.cType != NInput::CT_UNKNOWN )
+	{
 		return true;
+	}
 
 	return CInterfaceScreenBase::ProcessEvent( msg );
 }
@@ -73,9 +77,13 @@ void CInterfaceWinLoose::SetMode( bool _bWin )
 	bWin = _bWin;
 
 	if ( pWinView )
+	{
 		pWinView->ShowWindow( bWin );
+	}
 	if ( pLostView )
+	{
 		pLostView->ShowWindow( !bWin );
+	}
 
 	EndGameRotation();
 
@@ -85,7 +93,9 @@ void CInterfaceWinLoose::SetMode( bool _bWin )
 	{
 		const NDb::SMapMusic *pMusic = bWin ? pMapInfo->pMusicWin : pMapInfo->pMusicLost;
 		if ( pMusic )
+		{
 			Singleton<IMusicSystem>()->Init( pMusic, 0 );
+		}
 	}
 }
 
@@ -117,7 +127,9 @@ bool CInterfaceWinLoose::StepLocal( bool bAppActive )
 	float fStepAbsTime = 0.0f;
 	NTimer::STime timeAbsCur = Singleton<IGameTimer>()->GetAbsTime();
 	if ( bAppActive && timeAbsLast > 0 )
+	{
 		fStepAbsTime = (float)( timeAbsCur - timeAbsLast ) / 1000.0f;
+	}
 	timeAbsLast = timeAbsCur;
 
 	InterfaceStateStep( fStepAbsTime );
@@ -183,7 +195,9 @@ void CInterfaceWinLoose::EndGameRotation()
 		Camera()->SetYaw( 0.0f );
 	}
 	else
+	{
 		Camera()->SetAnchor( Camera()->GetAnchor() );
+	}
 	Camera()->SwitchManualScrolling( END_GAME_CAMERA_LOCKER, false );
 	nSetYawSpeedStep = SET_YAW_SPEED_STEPS;
 }
@@ -214,19 +228,25 @@ CVec3 CInterfaceWinLoose::GetAnchor() const
 
 	const NDb::SMapInfo *pMapInfo = pST->GetLastMission();
 	if ( !pMapInfo )
+	{
 		return VNULL3;
+	}
 
 	if ( !pMapInfo->finalPositions.empty() )
 	{
 		int nIndex = 0;
 		if ( !bWin && pMapInfo->finalPositions.size() >= 2 )
+		{
 			nIndex = 1;
+		}
 		CVec2 vPosVis2;
 		AI2Vis( &vPosVis2, pMapInfo->finalPositions[nIndex] );
 		return CVec3( vPosVis2.x, vPosVis2.y, 0.0f );
 	}
 	else
+	{
 		return VNULL3;
+	}
 }
 
 // CICWinLooseDialog
@@ -244,10 +264,14 @@ void CICWinLooseDialog::Configure( const char *pszConfig )
 	bWin = false;
 
 	if ( !pszConfig )
+	{
 		return;
+	}
 
 	if ( strcmp( pszConfig, "win" ) == 0 )
+	{
 		bWin = true;
+	}
 }
 
 START_REGISTER( WinLooseCommands )

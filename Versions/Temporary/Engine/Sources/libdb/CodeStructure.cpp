@@ -19,7 +19,9 @@ CCodeStructure::CCodeStructure( NLang::CFileNode *pRootFile,
                                 NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
 {
 	for ( NLang::CFileNode::TIncludesIter iter = pRootFile->BeginIncludes(); iter != pRootFile->EndIncludes(); ++iter )
+	{
 		files.push_back( new CFile( iter->second, nodes2TypeDefs, szRootDir, pTermTypesDesc ) );
+	}
 }
 
 void CCodeStructure::GenerateCode( const std::string &szRootDir )
@@ -43,7 +45,9 @@ CXmlResource *GenerateCodeStructure( NLang::CFileNode *pRootFile,
 	std::string szRootDir( szRawRootDir );
 	NStr::ReplaceAllChars( &szRootDir, '\\', '/' );
 	if ( szRootDir[szRootDir.size() - 1] != '/' )
+	{
 		szRootDir += "/";
+	}
 	return new CCodeStructure( pRootFile, nodes2TypeDefs, szRootDir, pTermTypesDesc );
 }
 
@@ -52,7 +56,9 @@ void GenerateCode( CCodeStructure *pCodeStructure, const std::string &szRawRootD
 	std::string szRootDir( szRawRootDir );
 	NStr::ReplaceAllChars( &szRootDir, '\\', '/' );
 	if ( szRootDir[szRootDir.size() - 1] != '/' )
+	{
 		szRootDir += "/";
+	}
 
 	pCodeStructure->GenerateCode( szRootDir );
 }

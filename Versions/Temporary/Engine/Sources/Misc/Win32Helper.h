@@ -27,7 +27,9 @@ class com_ptr
 	void Free()
 	{
 		if ( pData )
+		{
 			pData->Release();
+		}
 	}
 
 public:
@@ -37,7 +39,9 @@ public:
 	com_ptr &operator=( const com_ptr &a )
 	{
 		if ( pData == a.pData )
+		{
 			return *this;
+		}
 		Free();
 		Assign( a.pData );
 		return *this;
@@ -45,7 +49,9 @@ public:
 	com_ptr &operator=( T *pObj )
 	{
 		if ( pData == pObj )
+		{
 			return *this;
+		}
 		Free();
 		Assign( pObj );
 		return *this;

@@ -158,7 +158,9 @@ public:
 		for ( int i = 0; i < 4; i++ )
 		{
 			if ( actions[i] )
+			{
 				return GetLSB( actions[i] ) + i * 32;
+			}
 		}
 
 		return 0;

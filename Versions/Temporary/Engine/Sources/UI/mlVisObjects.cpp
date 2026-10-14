@@ -41,9 +41,13 @@ static void GetFontFormatInfo( const NGScene::SFont &font, int nMinSize, SFontIn
 		search.nWidth = NGScene::FontPointsToPixelWidth( font.nSize & FONT_SIZE_MASK, screenSize.x );
 	}
 	else if ( font.nSize & FONT_SIZE_PIXELS )
+	{
 		search.nSize = font.nSize & FONT_SIZE_MASK;
+	}
 	else
+	{
 		ASSERT( 0 );
+	}
 
 	search.nSize = (std::max)( search.nSize, nMinSize );
 
@@ -180,7 +184,9 @@ void CTextObject::Render( NGScene::ILayoutFakeView *pView,
 	CTPoint<float> pos = _position + position;
 
 	if ( !outlineRects.rects.empty() )
+	{
 		pView->CreateDynamicRects( pTexture, outlineRects, pos, window );
+	}
 
 	pView->CreateDynamicRects( pTexture, normalRects, pos, window );
 }
@@ -263,7 +269,9 @@ void CImageObject::Update( IReflowState *pState )
 	size.y = imageScreenSize.y + borderScreenSize.y * 2;
 
 	if ( !pTexture )
+	{
 		return;
+	}
 
 	CTRect<float> texRect;
 	texRect.x1 = 0;

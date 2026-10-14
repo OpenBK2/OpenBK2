@@ -24,14 +24,22 @@ CNamespace::CNamespace( NLang::CNamespace *pNM,
 		if ( pTypeNode )
 		{
 			if ( pTypeNode->IsForward() )
+			{
 				definitions.push_back( new CForwardDefinition( pTypeNode, nodes2TypeDefs ) );
+			}
 			else if ( CDynamicCast<NLang::CComplexTypeNode> pComplexTypeNode = pDef )
+			{
 				definitions.push_back( new CTypeDefinition( pComplexTypeNode, nodes2TypeDefs, pTermTypesDesc ) );
+			}
 			else if ( CDynamicCast<NLang::CEnumNode> pEnumNode = pDef )
+			{
 				definitions.push_back( new CTypeDefinition( pEnumNode, nodes2TypeDefs ) );
+			}
 		}
 		else if ( CDynamicCast<NLang::CVariable> pVariableNode = pDef )
+		{
 			definitions.push_back( new CFieldDefinition( pVariableNode, nodes2TypeDefs ) );
+		}
 	}
 
 	badIncludes = pNM->GetBadIncludes();
@@ -43,13 +51,17 @@ void CNamespace::GenerateCode( SCodeStreams *pCode,
                                const std::string &szQualifiedName )
 {
 	for ( std::list<CObj<ICode>>::iterator iter = definitions.begin(); iter != definitions.end(); ++iter )
+	{
 		( *iter )->GenerateCode( pCode, szTabs + "\t", pParentType, szQualifiedName );
+	}
 
 	if ( !badIncludes.empty() )
 	{
 		pCode->h << endl;
 		for ( std::list<std::string>::iterator iter = badIncludes.begin(); iter != badIncludes.end(); ++iter )
+		{
 			pCode->h << szTabs << tab << "#include " << qcomma << *iter << qcomma << endl;
+		}
 	}
 }
 

@@ -89,7 +89,9 @@ static CTexShare<NGfx::CCubeTexture> texCubeShare;
 NGfx::CTexture *CRTPtr::GetTexture()
 {
 	if ( IsValid( pRes ) )
+	{
 		return pRes;
+	}
 	pRes = texShare.GetTexture( szName );
 	return pRes;
 }
@@ -97,7 +99,9 @@ NGfx::CTexture *CRTPtr::GetTexture()
 NGfx::CCubeTexture *CCubeRTPtr::GetTexture()
 {
 	if ( IsValid( pRes ) )
+	{
 		return pRes;
+	}
 	pRes = texCubeShare.GetTexture( szName );
 	return pRes;
 }

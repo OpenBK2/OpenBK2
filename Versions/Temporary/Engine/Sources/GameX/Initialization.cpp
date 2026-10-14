@@ -51,7 +51,9 @@ static bool bMPDataVersionChecksumInitialized = false;
 void InitializeMPDataVersionChecksum()
 {
 	if ( const NDb::SGameConsts *pConsts = GetGameConsts() )
+	{
 		pConsts->RecalculateMPDataVersionChecksum();
+	}
 	bMPDataVersionChecksumInitialized = true;
 }
 
@@ -131,9 +133,13 @@ void InitConsts()
 		for ( std::vector<NDb::SCursor>::const_iterator it = pClientConsts->cursors.begin();
 		      it != pClientConsts->cursors.end();
 		      ++it )
+		{
 			Cursor()->RegisterMode( it->eAction, it->szFileName );
+		}
 		if ( pUIConsts )
+		{
 			Singleton<IUIInitialization>()->SetUIConsts( pUIConsts );
+		}
 		Singleton<IClientAckManager>()->SetClientConsts( pClientConsts );
 		Singleton<IScene>()->SetSceneConsts( pSceneConsts );
 	}
@@ -144,7 +150,9 @@ GAMEX_EXPORT void PostStorageInitialize()
 	InitConsts();
 	// This common hook also handles campaign/tutorial selection detaching a mod.
 	if ( bMPDataVersionChecksumInitialized )
+	{
 		InitializeMPDataVersionChecksum();
+	}
 }
 
 // ************************************************************************************************************************ //
@@ -160,7 +168,9 @@ const TYPE *GetConsts( const std::string &szVarName )
 {
 	std::string szValue = NStr::ToMBCS( NGlobal::GetVar( szVarName, "" ) );
 	if ( szValue.empty() )
+	{
 		return 0;
+	}
 	NI_VERIFY( !NStr::IsDecNumber( szValue ), "Deprecated way to identify resources. Use DBID instead!", return 0 );
 	return NDb::Get<TYPE>( CDBID( szValue ) );
 }
@@ -174,63 +184,91 @@ const NDb::SGameRoot *GetGameRoot()
 const NDb::SGameConsts *GetGameConsts()
 {
 	if ( const NDb::SGameConsts *pConsts = GetConsts<NDb::SGameConsts>( "game_consts" ) )
+	{
 		return pConsts;
+	}
 	else if ( const NDb::SGameRoot *pGameRoot = GetGameRoot() )
+	{
 		return pGameRoot->pConsts;
+	}
 	return 0;
 }
 // scene consts
 const NDb::SSceneConsts *GetSceneConsts()
 {
 	if ( const NDb::SSceneConsts *pConsts = GetConsts<NDb::SSceneConsts>( "scene_consts" ) )
+	{
 		return pConsts;
+	}
 	else if ( const NDb::SGameConsts *pGameConsts = GetGameConsts() )
+	{
 		return pGameConsts->pScene;
+	}
 	return 0;
 }
 // client
 const NDb::SClientGameConsts *GetClientConsts()
 {
 	if ( const NDb::SClientGameConsts *pConsts = GetConsts<NDb::SClientGameConsts>( "client_consts" ) )
+	{
 		return pConsts;
+	}
 	else if ( const NDb::SGameConsts *pGameConsts = GetGameConsts() )
+	{
 		return pGameConsts->pClient;
+	}
 	return 0;
 }
 // UI
 const NDb::SUIConstsB2 *GetUIConsts()
 {
 	if ( const NDb::SUIConstsB2 *pConsts = GetConsts<NDb::SUIConstsB2>( "ui_consts" ) )
+	{
 		return pConsts;
+	}
 	else if ( const NDb::SGameConsts *pGameConsts = GetGameConsts() )
+	{
 		return static_cast_ptr<const NDb::SUIConstsB2 *>( pGameConsts->pUI );
+	}
 	return 0;
 }
 // AI
 const NDb::SAIGameConsts *GetAIConsts()
 {
 	if ( const NDb::SAIGameConsts *pConsts = GetConsts<NDb::SAIGameConsts>( "ai_consts" ) )
+	{
 		return pConsts;
+	}
 	else if ( const NDb::SGameConsts *pGameConsts = GetGameConsts() )
+	{
 		return pGameConsts->pAI;
+	}
 	return 0;
 }
 // Net
 const NDb::SNetGameConsts *GetNetConsts()
 {
 	if ( const NDb::SNetGameConsts *pConsts = GetConsts<NDb::SNetGameConsts>( "net_consts" ) )
+	{
 		return pConsts;
+	}
 	else if ( const NDb::SGameConsts *pGameConsts = GetGameConsts() )
+	{
 		return pGameConsts->pNet;
+	}
 	return 0;
 }
 // MP
 const NDb::SMultiplayerConsts *GetMPConsts()
 {
 	if ( const NDb::SMultiplayerConsts *pConsts = GetConsts<NDb::SMultiplayerConsts>( "mp_consts" ) )
+	{
 		return pConsts;
+	}
 	else if ( const NDb::SGameConsts *pGameConsts = GetGameConsts() )
+	{
 		return pGameConsts->pMultiplayer;
+	}
 	return 0;
 }
 

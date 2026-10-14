@@ -35,7 +35,9 @@ struct SFormationWindowDialogData
 		for ( int k = 0; k < squadFormations.size(); ++k )
 		{
 			if ( squadFormations[k] == e )
+			{
 				return;
+			}
 		}
 		squadFormations.push_back( e );
 	}

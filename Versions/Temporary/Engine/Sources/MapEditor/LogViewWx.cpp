@@ -96,9 +96,13 @@ public:
 		pText->AppendText( wxString::FromUTF8( rszText.c_str() ) );
 		const long to = pText->GetLastPosition();
 		if ( !styledRanges.empty() && styledRanges.back().type == eLogOutputType )
+		{
 			styledRanges.back().to = to;
+		}
 		else if ( to > from )
+		{
 			styledRanges.push_back( { from, to, eLogOutputType } );
+		}
 	}
 
 	virtual void Clear()
@@ -157,7 +161,9 @@ private:
 			// Style in place: Freeze/Thaw detaches GTK's text buffer and can
 			// reset the selection and scroll position during a theme change.
 			for ( const auto &range : styledRanges )
+			{
 				pText->SetStyle( range.from, range.to, Style( range.type ) );
+			}
 		}
 	}
 

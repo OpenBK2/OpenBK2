@@ -173,15 +173,25 @@ void CFontObject::Update( IReflowState *pState )
 	SState state = pState->GetState();
 
 	if ( nFlags & N_FONTOBJECT_NAME )
+	{
 		state.font.szName = font.szName;
+	}
 	if ( nFlags & N_FONTOBJECT_SIZE )
+	{
 		state.font.nSize = font.nSize;
+	}
 	if ( nFlags & N_FONTOBJECT_OUTLINESIZE )
+	{
 		state.nOutlineBorder = nOutlineSize;
+	}
 	if ( nFlags & N_FONTOBJECT_OUTLINECOLOR )
+	{
 		state.outlineColor = outlineColor;
+	}
 	if ( nFlags & N_FONTOBJECT_FORCEFONTSIZE )
+	{
 		state.bForceFontSize = bForceFontSize;
+	}
 
 	pState->SetState( state );
 }

@@ -96,9 +96,13 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 		bool operator()( const SUnitInfo unitInfo1, const SUnitInfo unitInfo2 ) const
 		{
 			if ( unitInfo1.nPriority == unitInfo2.nPriority )
+			{
 				return unitInfo1.pUnit->GetUniqueID() > unitInfo2.pUnit->GetUniqueID();
+			}
 			else
+			{
 				return unitInfo1.nPriority > unitInfo2.nPriority;
+			}
 		}
 	};
 	typedef det_map<int, SUnitInfo> CUnitsMap;

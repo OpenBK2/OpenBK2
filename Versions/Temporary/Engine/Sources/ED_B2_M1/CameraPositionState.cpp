@@ -20,14 +20,20 @@
 static bool GetStartCameraPositionFromDB( SCameraPos *pResult, IManipulator *pMapInfoMan, int nPlayerIndex )
 {
 	if ( !pResult || !pMapInfoMan )
+	{
 		return false;
+	}
 	//
 	int n = 0;
 	if ( !CManipulatorManager::GetValue( &n, pMapInfoMan, "Players" ) )
+	{
 		return false;
+	}
 	//
 	if ( nPlayerIndex < 0 || nPlayerIndex >= n )
+	{
 		return false;
+	}
 	//
 	const std::string szCamera = fmt::format( "Players.[{}].Camera.", nPlayerIndex );
 	//
@@ -56,14 +62,20 @@ static bool GetStartCameraPositionFromDB( SCameraPos *pResult, IManipulator *pMa
 static bool SetStartCameraPositionInDB( IManipulator *pMapInfoMan, const SCameraPos &rCamPos, int nPlayerIndex )
 {
 	if ( !pMapInfoMan )
+	{
 		return false;
+	}
 	//
 	int n = 0;
 	if ( !CManipulatorManager::GetValue( &n, pMapInfoMan, "Players" ) )
+	{
 		return false;
+	}
 	//
 	if ( nPlayerIndex < 0 || nPlayerIndex >= n )
+	{
 		return false;
+	}
 	//
 	const std::string szCamera = fmt::format( "Players.[{}].Camera.", nPlayerIndex );
 	//
@@ -82,7 +94,9 @@ static bool SetStartCameraPositionInDB( IManipulator *pMapInfoMan, const SCamera
 static bool GetCameraPosition( SCameraPos *pCamPos )
 {
 	if ( !Camera() || !pCamPos )
+	{
 		return false;
+	}
 	//
 	SCameraPos camPos;
 	camPos.vAnchor = Camera()->GetAnchor();
@@ -160,7 +174,9 @@ bool CCameraPositionState::HandleCommand( unsigned nCommandID, uintptr_t dwData 
 			nCurrentPlayer = data.nPlayerIndex;
 			// A map may have no players, or a combo may have no selection yet.
 			if ( nCurrentPlayer < 0 || nCurrentPlayer >= cameraPositions.size() )
+			{
 				return true;
+			}
 			cameraPositions[nCurrentPlayer].bUseAnchorOnly = !data.bAllParams;
 			SavePosition();
 			RefreshWindow( true );
@@ -216,7 +232,9 @@ void CCameraPositionState::RefreshWindow( bool bGetFromDB )
 	// maps with no players without indexing an empty camera list.
 	data.nPlayerCount = cameraPositions.size();
 	if ( nCurrentPlayer < 0 || nCurrentPlayer >= data.nPlayerCount )
+	{
 		nCurrentPlayer = data.nPlayerCount > 0 ? 0 : -1;
+	}
 	data.nPlayerIndex = nCurrentPlayer;
 	data.bAllParams = nCurrentPlayer >= 0 && !cameraPositions[nCurrentPlayer].bUseAnchorOnly;
 	Singleton<ICommandHandlerContainer>()->HandleCommand(
@@ -229,7 +247,9 @@ void CCameraPositionState::Draw( IPaintContext *pPaintDC )
 {
 	CPtr<IEditorScene> pScene = EditorScene();
 	if ( !pScene )
+	{
 		return;
+	}
 
 	ICamera *pCamera = Camera();
 	//
@@ -269,7 +289,9 @@ void CCameraPositionState::PostDraw( IPaintContext *pPaintDC )
 {
 	CPtr<IEditorScene> pScene = EditorScene();
 	if ( !pScene )
+	{
 		return;
+	}
 
 	ICamera *pCamera = Camera();
 	//
@@ -286,18 +308,24 @@ void CCameraPositionState::PostDraw( IPaintContext *pPaintDC )
 		AI2Vis( &pos, pos );
 
 		if ( TestRayInFrustrum( pos, ts, pScene->GetScreenRect(), &res ) )
+		{
 			NDrawToolsDC::DrawLabelDC( pPaintDC, fmt::format( "Player {} camera", i ), res );
+		}
 	}
 }
 
 void CCameraPositionState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( cameraPositions.size() == 0 ) // no points
+	{
 		return;
+	}
 
 	CPtr<IEditorScene> pScene = EditorScene();
 	if ( !pScene )
+	{
 		return;
+	}
 
 	CVec3 vPickedPosOnTerrain = VNULL3;
 	Get2DPosOnMapHeights( &vPickedPosOnTerrain, CVec2( rMousePoint.x, rMousePoint.y ) );
@@ -324,9 +352,13 @@ void CCameraPositionState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &r
 void CCameraPositionState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( cameraPositions.size() == 0 ) // no points
+	{
 		return;
+	}
 	if ( nCurrentPlayer < 0 ) // empty selection
+	{
 		return;
+	}
 
 	CVec3 *pMovingPoint = &( cameraPositions[nCurrentPlayer].vAnchor );
 
@@ -351,10 +383,14 @@ void CCameraPositionState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMo
 void CCameraPositionState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( !bMove )
+	{
 		return;
+	}
 
 	if ( cameraPositions.size() == 0 ) // no points
+	{
 		return;
+	}
 
 	SetStartCameraPositionInDB( pMapInfoEditor->GetViewManipulator(), cameraPositions[nCurrentPlayer], nCurrentPlayer );
 	bMove = false;

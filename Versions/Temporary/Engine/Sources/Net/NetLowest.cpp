@@ -8,7 +8,9 @@ bool CNodeAddressSet::GetAddress( int n, CNodeAddress *pRes ) const
 {
 	pRes->Clear();
 	if ( n < 0 || n >= N_MAX_HOST_HOMES || ips[n] == 0 )
+	{
 		return false;
+	}
 	sockaddr_in *p = (sockaddr_in *)pRes->GetSockAddr();
 	p->sin_family = AF_INET;
 	p->sin_port = nPort;

@@ -127,7 +127,9 @@ void CFence::Delete()
 	}
 
 	for ( std::list<CPtr<CFence>>::iterator it = neighFences.begin(); it != neighFences.end(); ++it )
+	{
 		( *it )->DamagePartially( this );
+	}
 }
 
 void CFence::Die( const float fDamage )

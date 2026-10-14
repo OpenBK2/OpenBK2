@@ -30,9 +30,13 @@ bool CMPManagerMode::OnCreateGameMessage( SMPUICreateGameMessage *pMsg )
 	gameDesc = pMsg->specificInfo;
 	szSessionName = pMsg->info.szSessionName;
 	if ( pMsg->info.bPwdReq )
+	{
 		szPassword = pMsg->szPassword;
+	}
 	else
+	{
 		szPassword = "";
+	}
 	gameDesc.eType = SB2GameSpecificData::EGT_FLAG_CONTROL_2;
 
 	gameDesc.nPlayers = pMsg->info.nPlayersMax;
@@ -68,7 +72,9 @@ bool CMPManagerMode::OnJoinGameMessage( SMPUIJoinGameMessage *pMsg )
 		{
 			if ( game.nMaxPlayers < 2 ||
 			     game.nMaxPlayers - game.nPlayers < 1 ) // Do not join games with less than 2 players, or full games
+			{
 				break;
+			}
 
 			bFound = true;
 			// Init all necessary data
@@ -79,9 +85,13 @@ bool CMPManagerMode::OnJoinGameMessage( SMPUIJoinGameMessage *pMsg )
 
 			szSessionName = game.szSessionName;
 			if ( game.bPasswordRequired )
+			{
 				szPassword = pMsg->szPassword;
+			}
 			else
+			{
 				szPassword = "";
+			}
 
 			ulGameCheckSum = 0;
 
@@ -176,7 +186,9 @@ bool CMPManagerMode::OnLagMessage( SMPUILagMessage *pMsg )
 {
 	// A queued report must not reopen the wait screen after ending the match.
 	if ( !IsGameRunning() || !IsValid( pTransceiver ) || pTransceiver->IsGameEnded() )
+	{
 		return true;
+	}
 
 	const uint32_t dwLaggersBefore = dwLaggers;
 	// Lockstep reports are queued independently of UI pause requests. A report
@@ -194,7 +206,9 @@ bool CMPManagerMode::OnLagMessage( SMPUILagMessage *pMsg )
 	else if ( dwLaggers == dwReportedLaggers )
 	{
 		if ( dwReportedLaggers == 0 )
+		{
 			ShowWaitWindow( false );
+		}
 		return true;
 	}
 
@@ -225,7 +239,9 @@ bool CMPManagerMode::OnLeaveGameMessage( SMPUIMessage *pMsg )
 	if ( IsGameRunning() )
 	{
 		if ( IsGameControlHost() && IsValid( pTransceiver ) )
+		{
 			BroadcastSynchronizedPlayerDrop( nOwnSlot, pTransceiver->GetCurrentCommonSegment(), "control_host_leave" );
+		}
 		OnSurrender();
 		LoseGame();
 	}
@@ -246,13 +262,17 @@ bool CMPManagerMode::OnInterruptMessage( SMPUIMessage *pMsg )
 bool CMPManagerMode::OnPauseMessage( SMPUIMessage *pMsg )
 {
 	if ( !IsGameRunning() || nOwnSlot < 0 || nOwnSlot >= slots.size() )
+	{
 		return true;
+	}
 
 	// Only an explicit local pause controls CommandTimeOut; lag reports can
 	// change independently while delayed segment packets are being processed.
 	const bool bPausedNow = ( dwUserPausedPlayers & ( 1UL << nOwnSlot ) ) != 0;
 	if ( !bPausedNow && lags[nOwnSlot].nLagLeft < NGameX::GetMPConsts()->nTimeUserMPLag * 1000 )
+	{
 		return true;
+	}
 
 	SetUserPause( !bPausedNow );
 	return true;
@@ -262,9 +282,13 @@ void CMPManagerMode::SetUserPause( bool bPauseOn )
 {
 	const NTimer::STime curTime = GameTimer()->GetAbsTime();
 	if ( bPauseOn )
+	{
 		dwUserPausedPlayers |= ( 1UL << nOwnSlot );
+	}
 	else
+	{
 		dwUserPausedPlayers &= ~( 1UL << nOwnSlot );
+	}
 	// Automatic pause expiry must publish the same state change as Resume.
 	pClient->SendGamePacket( new CB2UserPausePacket( 0, bPauseOn ), true );
 	NGameX::MatchPacketTrace_Log(
@@ -299,9 +323,13 @@ bool CMPManagerMode::OnInGameChatMessage( SMPUIInGameChatMessage *pMsg )
 	{
 		SMPSlot &slot = slots[i];
 		if ( !slot.bPresent )
+		{
 			continue;
+		}
 		if ( pMsg->bTeamOnly && slot.nTeam != slots[nOwnSlot].nTeam )
+		{
 			continue;
+		}
 
 		pClient->SendGamePacket(
 				new CChatPacket( slot.nClientID, wszFilteredText, szMPName, slot.nClientID, !pMsg->bTeamOnly ), false );
@@ -330,7 +358,9 @@ bool CMPManagerMode::OnInGameChatMessage( SMPUIInGameChatMessage *pMsg )
 
 	std::wstring teamOnly = L"";
 	if ( pMsg->bTeamOnly )
+	{
 		teamOnly = L" (Team)";
+	}
 
 	std::wstring txt = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + colorStr +
 	                   NStr::ToUnicode( szMPName ) + colorEndStr + teamOnly + L": " + wszFilteredText;

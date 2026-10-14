@@ -83,11 +83,15 @@ public:
 		if ( !pLocked )
 		{
 			if ( !obj )
+			{
 				ThrowD3DBufferError( "Vertex buffer Lock: buffer unavailable", E_POINTER );
+			}
 			void *pData = 0;
 			const HRESULT hr = obj->Lock( 0, 0, &pData, dwFlags );
 			if ( FAILED( hr ) )
+			{
 				ThrowD3DBufferError( "Vertex buffer Lock", hr );
+			}
 			pLocked = static_cast<unsigned char *>( pData );
 			bWasLinearBufferLock = true;
 		}
@@ -115,9 +119,13 @@ template <class T>
 inline void TryLockBuffer( T *p, ETrueBufferUsage eUsage )
 {
 	if ( eUsage == TBU_DYNAMIC )
+	{
 		p->Lock( D3DLOCK_DISCARD );
+	}
 	else
+	{
 		p->Lock( 0 );
+	}
 	p->Unlock();
 }
 
@@ -137,7 +145,9 @@ public:
 		bInitOk &= SUCCEEDED( hRes );
 
 		if ( bInitOk )
+		{
 			TryLockBuffer( this, eUsage );
+		}
 	}
 };
 
@@ -167,17 +177,23 @@ public:
 		bInitOk &= SUCCEEDED( hRes );
 
 		if ( bInitOk )
+		{
 			TryLockBuffer( this, eUsage );
+		}
 	}
 	void Lock( uint32_t dwFlags )
 	{
 		ASSERT( !pLocked );
 		if ( !obj )
+		{
 			ThrowD3DBufferError( "Index buffer Lock: buffer unavailable", E_POINTER );
+		}
 		void *pData = 0;
 		const HRESULT hr = obj->Lock( 0, 0, &pData, dwFlags );
 		if ( FAILED( hr ) )
+		{
 			ThrowD3DBufferError( "Index buffer Lock", hr );
+		}
 		pLocked = static_cast<unsigned char *>( pData );
 	}
 	void Unlock()

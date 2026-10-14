@@ -10,9 +10,13 @@ void CTracer::InitProjection( const CVec3 &_ptOrigin, const CVec3 &_ptDir )
 	CVec3 v = _ptDir, vAxis1, vAxis2;
 	ASSERT( fabs2( v ) > 0 );
 	if ( fabs( v.x ) > fabs( v.y ) && fabs( v.x ) > fabs( v.z ) )
+	{
 		vAxis1 = v ^ CVec3( 0, 1, 0 );
+	}
 	else
+	{
 		vAxis1 = v ^ CVec3( 1, 0, 0 );
+	}
 	Normalize( &vAxis1 );
 	vAxis2 = v ^ vAxis1;
 	Normalize( &vAxis2 );
@@ -55,9 +59,13 @@ CTracer::SRefTriangle CTracer::GetTriangle( const SConvexHull &e, const SHMatrix
 		i2 = e.tris.edges[t.i1 & 0x7fff].wFinish;
 	}
 	if ( t.i2 & 0x8000 )
+	{
 		i3 = e.tris.edges[t.i2 & 0x7fff].wStart;
+	}
 	else
+	{
 		i3 = e.tris.edges[t.i2 & 0x7fff].wFinish;
+	}
 	CVec3 v1, v2, v3;
 	pos.RotateHVector( &v1, e.points[i1] );
 	pos.RotateHVector( &v2, e.points[i2] );
@@ -140,7 +148,9 @@ void CTracer::TraceEntity( const SConvexHull &e,
 		dst.x = Dot( src, vAxis1 );
 		dst.y = Dot( src, vAxis2 );
 		if ( fabs2( dst ) < 1e-6 )
+		{
 			dst.x = -1e-3f; // handle degenerate case via converting it to non degenerate :)
+		}
 	}
 	// calc cross products for edges
 	edgeSide.resize( e.tris.edges.size() );
@@ -148,7 +158,9 @@ void CTracer::TraceEntity( const SConvexHull &e,
 	{
 		edgeSide[i] = CrossProduct( transformed[e.tris.edges[i].wStart], transformed[e.tris.edges[i].wFinish] );
 		if ( edgeSide[i] == 0 )
+		{
 			edgeSide[i] = 1e-6f; // same as with points, somebody has to win ;)
+		}
 	}
 	// check tris
 	for ( std::vector<STriangle>::const_iterator i = e.tris.mesh.begin(); i != e.tris.mesh.end(); ++i )
@@ -157,9 +169,13 @@ void CTracer::TraceEntity( const SConvexHull &e,
 		float f2 = edgeSide[i->i2 & 0x7fff] * fTraceSign[i->i2 >> 15];
 		float f3 = edgeSide[i->i3 & 0x7fff] * fTraceSign[i->i3 >> 15];
 		if ( f1 > 0 && f2 > 0 && f3 > 0 )
+		{
 			exit.push_back( CalcCross( GetTriangle( e, e.trans, *i ) ) );
+		}
 		if ( f1 < 0 && f2 < 0 && f3 < 0 )
+		{
 			enter.push_back( CalcCross( GetTriangle( e, e.trans, *i ) ) );
+		}
 	}
 }
 
@@ -178,7 +194,9 @@ void CTracer::TraceEntity( const std::vector<SConvexHull> &hulls, bool bTerrain 
 	std::vector<SInterval::SCrossPoint> enter;
 	std::vector<SInterval::SCrossPoint> exit;
 	for ( int i = 0; i < hulls.size(); ++i )
+	{
 		TraceEntity( hulls[i], &enter, &exit );
+	}
 	// fill intervals structure
 	if ( !hulls.empty() )
 	{

@@ -20,7 +20,9 @@ void CTreeWindMutator::Setup( ISkeletonAnimator *pAnimator,
 
 	CDynamicCast<NAnimation::IGetBone> pGetBone = pAnimator;
 	for ( std::vector<std::string>::const_iterator it = leafNames.begin(); it != leafNames.end(); ++it )
+	{
 		leafBones.push_back( pGetBone->GetBoneIndex( it->c_str() ) );
+	}
 }
 
 void CTreeWindMutator::MutateSkeletonPose( NAnimation::SSkeletonPose *pPose )
@@ -34,7 +36,9 @@ void CTreeWindMutator::MutateSkeletonPose( NAnimation::SSkeletonPose *pPose )
 	}
 
 	if ( fMagnitude == 0.0f )
+	{
 		return;
+	}
 
 	const float fIntensity = Scene()->GetWindController()->GetWindIntensity();
 	const float fMaxTurn = ( fIntensity + 1.0f ) * 0.002f;
@@ -59,7 +63,9 @@ void CTreeWindMutator::MutateSkeletonPose( NAnimation::SSkeletonPose *pPose )
 	for ( std::vector<int>::const_iterator it = leafBones.begin(); it != leafBones.end(); ++it )
 	{
 		if ( *it == -1 )
+		{
 			continue;
+		}
 		pTransform = pPose->GetBone( *it );
 		TransformLeafBone( pTransform, qInverseRot * qRndRot );
 	}
@@ -90,7 +96,9 @@ void CTreeWindMutator::TransformRootBone( NAnimation::SBoneTransform *pTransform
 void CTreeWindMutator::TransformLeafBone( NAnimation::SBoneTransform *pTransform, const CQuat &qRot )
 {
 	if ( !pTransform )
+	{
 		return;
+	}
 	CQuat qBoneOrientation( CVec4( pTransform->Orientation[0],
 	                               pTransform->Orientation[1],
 	                               pTransform->Orientation[2],
@@ -109,13 +117,17 @@ bool CTreeWindMutator::NeedUpdate()
 	NTimer::STime curTime = Singleton<IGameTimer>()->GetGameTime();
 
 	if ( curTime <= lastUpdateTime )
+	{
 		return false;
+	}
 
 	lastUpdateTime = curTime;
 	fMagnitude = Scene()->GetWindController()->GetWindCoeff( vPos );
 
 	if ( fMagnitude == 0.0f )
+	{
 		return false;
+	}
 
 	return true;
 }

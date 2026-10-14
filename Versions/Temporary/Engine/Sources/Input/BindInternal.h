@@ -52,9 +52,13 @@ public:
 		dwTime = _dwTime;
 
 		if ( bActive )
+		{
 			return nTemp + int64_t( dwTimeDelta ) * nPower;
+		}
 		else
+		{
 			return nTemp;
+		}
 	}
 	void Reset() { bActive = false; }
 };
@@ -74,7 +78,9 @@ protected:
 	{
 		// не надо так делать, из-за этого в aiMap камера дергается
 		if ( nPower > -POWER_MIN_LIMIT && nPower < POWER_MIN_LIMIT )
+		{
 			return 0;
+		}
 
 		return int64_t( _dwTime - dwTime ) * nPower;
 	}
@@ -101,7 +107,9 @@ public:
 	void Deactivate( uint32_t _dwTime )
 	{
 		if ( !bActive )
+		{
 			return;
+		}
 
 		nValue += GetDelta( _dwTime );
 		nPower = 0;

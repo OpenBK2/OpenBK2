@@ -51,7 +51,9 @@ CInterfaceMissionObjectives::~CInterfaceMissionObjectives()
 bool CInterfaceMissionObjectives::Init()
 {
 	if ( CInterfaceScreenBase::Init() == false )
+	{
 		return false;
+	}
 
 	// load screen
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
@@ -84,9 +86,13 @@ bool CInterfaceMissionObjectives::Init()
 	pNextObjective = GetChildChecked<IWindow>( pObjectivesPanel, "NextObjective", true );
 
 	if ( pObjectiveItem )
+	{
 		pObjectiveItem->ShowWindow( false );
+	}
 	if ( pNextObjective )
+	{
 		pNextObjective->ShowWindow( false );
+	}
 
 	pDescName = GetChildChecked<ITextView>( pMainWnd, "DescName", true );
 	pDescBrief = GetChildChecked<ITextView>( pMainWnd, "DescBrief", true );
@@ -96,9 +102,13 @@ bool CInterfaceMissionObjectives::Init()
 	if ( pDescScrollableWnd )
 	{
 		if ( pDescBrief )
+		{
 			pDescScrollableWnd->PushBack( pDescBrief, false );
+		}
 		if ( pDescFull )
+		{
 			pDescScrollableWnd->PushBack( pDescFull, false );
+		}
 	}
 
 	if ( pScreen )
@@ -111,9 +121,13 @@ bool CInterfaceMissionObjectives::Init()
 	if ( pMapInfo )
 	{
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pMapInfo->, LocalizedDescription ) )
+		{
 			wszMissionBriefing = GET_TEXT_PRE( pMapInfo->, LocalizedDescription );
+		}
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pMapInfo->, LocalizedName ) )
+		{
 			wszMissionName = GET_TEXT_PRE( pMapInfo->, LocalizedName );
+		}
 	}
 
 	bIsModal = true;
@@ -133,7 +147,9 @@ void CInterfaceMissionObjectives::MsgBack( const SGameMessage &msg )
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "minimap_hide_objectives" );
 
 	if ( bCameraBack )
+	{
 		NInput::PostEvent( "notifications_camera_back", 0, 0 );
+	}
 }
 
 void CInterfaceMissionObjectives::MsgSetModality( const SGameMessage &msg )
@@ -162,15 +178,21 @@ void CInterfaceMissionObjectives::MakeObjectives()
 	objectives.resize( N_OBJECTIVES_ROW_COUNT );
 
 	if ( pHeader )
+	{
 		pHeader->SetText( pHeader->GetDBText() + wszMissionName );
+	}
 
 	if ( pObjectivesPanel )
 	{
 		if ( pObjectiveItem )
+		{
 			pObjectiveItem->ShowWindow( false );
+		}
 
 		if ( pNextObjective )
+		{
 			pNextObjective->ShowWindow( false );
+		}
 
 		if ( pObjectiveItem && pNextObjective )
 		{
@@ -186,7 +208,9 @@ void CInterfaceMissionObjectives::MakeObjectives()
 			{
 				IWindow *pWnd = AddWindowCopy( pObjectivesPanel, pObjectiveItem );
 				if ( !pWnd )
+				{
 					continue;
+				}
 
 				pWnd->ShowWindow( true );
 				pWnd->SetPlacement( nStartX, nStartY + nDeltaY * i, 0, 0, EWPF_POS_X | EWPF_POS_Y );
@@ -197,7 +221,9 @@ void CInterfaceMissionObjectives::MakeObjectives()
 				objective.pStatus = GetChildChecked<IButton>( pWnd, "ObjectiveItemStatus", true );
 				objective.pButton = GetChildChecked<IButton>( pWnd, "ObjectiveItemButton", true );
 				if ( objective.pButton )
+				{
 					objective.pButton->SetName( fmt::format( "ObjectiveItemButton{}", i ) );
+				}
 			}
 		}
 	}
@@ -208,7 +234,9 @@ void CInterfaceMissionObjectives::UpdateKnownObjectives()
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	const NDb::SMapInfo *pDBInfo = pST->GetCurrentMission();
 	if ( !pDBInfo )
+	{
 		return;
+	}
 
 	for ( int i = 0; i < objectives.size(); ++i )
 	{
@@ -228,7 +256,9 @@ void CInterfaceMissionObjectives::UpdateKnownObjectives()
 	objective.wszDescFull = wszMissionBriefing;
 	objective.nButtonIndex = 0;
 	if ( objective.pButton )
+	{
 		objective.pButton->SetTooltip( wszObjectivesSummaryTooltip );
+	}
 
 	const int known_count = pST->GetKnownObjectiveCount();
 	for ( int i = 0; i < known_count; ++i )
@@ -244,22 +274,34 @@ void CInterfaceMissionObjectives::UpdateKnownObjectives()
 		objective.nID = nID;
 		objective.bAutoSelect = ( pST->GetObjectiveState( nID ) == EMOS_RECEIVED );
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBObjective->, Header ) )
+		{
 			objective.wszHeader = GET_TEXT_PRE( pDBObjective->, Header );
+		}
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBObjective->, Briefing ) )
+		{
 			objective.wszDescBrief = GET_TEXT_PRE( pDBObjective->, Briefing );
+		}
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBObjective->, Description ) )
+		{
 			objective.wszDescFull = GET_TEXT_PRE( pDBObjective->, Description );
+		}
 		objective.nButtonIndex = GetButtonIndex( pST->GetObjectiveState( nID ) );
 		if ( objective.pButton )
+		{
 			objective.pButton->SetTooltip( objective.pButton->GetDBTooltipStr() );
+		}
 	}
 
 	float fDeltaHeight = fItemHeight * ( N_OBJECTIVES_ROW_COUNT - nIndex );
 	if ( pMainWnd )
+	{
 		pMainWnd->SetPlacement(
 				0, fMainInitialTop + fDeltaHeight * 0.5f, 0, fMainInitialHeight - fDeltaHeight, EWPF_POS_Y | EWPF_SIZE_Y );
+	}
 	if ( pObjectivesPanel )
+	{
 		pObjectivesPanel->SetPlacement( 0, 0, 0, fListInitialHeight - fDeltaHeight, EWPF_SIZE_Y );
+	}
 }
 
 void CInterfaceMissionObjectives::UpdateObjectives( int _nSelected )
@@ -299,13 +341,19 @@ void CInterfaceMissionObjectives::UpdateObjectives( int _nSelected )
 		const bool bIsObjectiveVisible = ( objective.nID >= 0 ) && ( i < N_OBJECTIVES_ROW_COUNT );
 
 		if ( objective.pWnd )
+		{
 			objective.pWnd->ShowWindow( bIsObjectiveVisible );
+		}
 
 		if ( !bIsObjectiveVisible )
+		{
 			continue;
+		}
 
 		if ( objective.pText )
+		{
 			objective.pText->SetText( objective.pText->GetDBText() + objective.wszHeader );
+		}
 
 		if ( objective.pStatus )
 		{
@@ -314,19 +362,25 @@ void CInterfaceMissionObjectives::UpdateObjectives( int _nSelected )
 		}
 
 		if ( objective.pButton )
+		{
 			objective.pButton->SetStateWithVisual( ( nSelected == i ) ? 1 : 0 );
+		}
 	}
 
 	const bool bIsSelectedObjective = ( nSelected >= 0 && objectives[nSelected].nID >= 0 );
 	if ( pDescPanel )
+	{
 		pDescPanel->ShowWindow( bIsSelectedObjective );
+	}
 
 	if ( bIsSelectedObjective )
 	{
 		SObjective &objective = objectives[nSelected];
 
 		if ( pDescName )
+		{
 			pDescName->SetText( pDescName->GetDBText() + objective.wszHeader );
+		}
 
 		int nSizeY = 0;
 		if ( pDescBrief )
@@ -341,7 +395,9 @@ void CInterfaceMissionObjectives::UpdateObjectives( int _nSelected )
 			pDescFull->SetPlacement( 0, nSizeY, 0, 0, EWPF_POS_Y );
 		}
 		if ( pDescScrollableWnd )
+		{
 			pDescScrollableWnd->Update();
+		}
 
 		if ( pDescStatus )
 		{
@@ -374,7 +430,9 @@ int CInterfaceMissionObjectives::GetButtonIndex( enum EMissionObjectiveState eSt
 bool CInterfaceMissionObjectives::StepLocal( bool bAppActive )
 {
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )
+	{
 		pInterface->Step( bAppActive );
+	}
 
 	return CInterfaceScreenBase::StepLocal( bAppActive );
 }
@@ -445,9 +503,13 @@ void CICMissionObjectives::PostCreate( IInterface *pInterface )
 void CICMissionObjectives::Configure( const char *pszConfig )
 {
 	if ( pszConfig[0] == 0 )
+	{
 		nID = -1;
+	}
 	else
+	{
 		nID = NStr::ToInt( pszConfig );
+	}
 }
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x170CEC41, CInterfaceMissionObjectives );

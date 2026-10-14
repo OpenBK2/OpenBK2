@@ -25,7 +25,9 @@ void CPacketProcessorBase::PushPacket( CNetPacket *pPacket )
 CNetPacket *CPacketProcessorBase::GetPacket()
 {
 	if ( packets.empty() )
+	{
 		return 0;
+	}
 	else
 	{
 		CPtr<CNetPacket> pPacket = packets.front();

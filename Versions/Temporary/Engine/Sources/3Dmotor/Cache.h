@@ -61,7 +61,9 @@ public:
 		}
 		//ASSERT( nLast < 0xff00 );
 		if ( nLast == buffer.size() )
+		{
 			buffer.resize( buffer.size() * 2 + 16 );
+		}
 		return nLast++;
 	}
 	void free( pointer p )
@@ -123,7 +125,9 @@ public:
 	MRU_TYPE GetMRU() const
 	{
 		if ( pTracker.IsValid() )
+		{
 			return pTracker->GetMRU( p );
+		}
 		return 0;
 	}
 	friend class CGatheringCache<TAlloc, TElement, TUser>;
@@ -179,7 +183,9 @@ private:
 	void EraseNode( pointer pNode )
 	{
 		if ( pNode == Alloc::NIL )
+		{
 			return;
+		}
 		Unlink( pNode );
 		MakeFreeLeaf( pNode );
 		alloc.free( pNode );
@@ -200,14 +206,18 @@ private:
 				p1 = alloc( p1 ).pNextPeer;
 				EraseNode( pHold );
 				if ( p1 == Alloc::NIL )
+				{
 					break;
+				}
 			}
 			alloc( pNode ).pDown = Alloc::NIL;
 		}
 		else
 		{
 			if ( IsValid( node.pUser ) )
+			{
 				node.pUser->pTracker = 0; // prevent destructor from wasting stuff up
+			}
 			node.pUser = 0;
 		}
 	}
@@ -265,7 +275,9 @@ private:
 	pointer GetAllocNode( pointer p, const TElement &_elem )
 	{
 		if ( alloc( p ).elem.SameSize( _elem ) )
+		{
 			return p;
+		}
 		TElement elem( _elem );
 		typename TElement::ESplitType t = elem.Up();
 		ASSERT( _elem.GetHash() < nodes.size() );
@@ -274,7 +286,9 @@ private:
 		for ( pointer pRes = alloc( pHigher ).pDown; pRes != Alloc::NIL; pRes = alloc( pRes ).pNextPeer )
 		{
 			if ( alloc( pRes ).elem.SameSize( _elem ) )
+			{
 				return pRes;
+			}
 		}
 		ASSERT( 0 ); // trouble happened - Split()/Up() for TElement are not reversible
 		return p;
@@ -300,7 +314,9 @@ private:
 		{
 			SElement &node = alloc( p );
 			if ( node.nRU == nCurrentRU )
+			{
 				return p != _p;
+			}
 			Unlink( p );
 			int nHash = node.elem.GetHash();
 			ASSERT( nHash >= 0 && nHash < nodes.size() );
@@ -315,7 +331,9 @@ private:
 		SElement &node = alloc( pNode );
 		pointer pRoot = nodes[node.elem.GetHash()], pTest = node.pPrev;
 		while ( pTest != pRoot && alloc( pTest ).nRU > node.nRU )
+		{
 			pTest = alloc( pTest ).pPrev;
+		}
 		Unlink( pNode );
 		Link( pTest, pNode );
 		/*
@@ -339,13 +357,19 @@ private:
 	void RecalcRU( pointer pNode )
 	{
 		if ( pNode == Alloc::NIL )
+		{
 			return;
+		}
 		SElement &node = alloc( pNode );
 		MRU_TYPE bestRU = 0;
 		for ( pointer pDown = node.pDown; pDown != Alloc::NIL; pDown = alloc( pDown ).pNextPeer )
+		{
 			bestRU = (std::max)( bestRU, alloc( pDown ).nRU );
+		}
 		if ( bestRU == node.nRU )
+		{
 			return;
+		}
 		node.nRU = bestRU;
 		//ASSERT( bestRU != 0 );
 		PlaceNodeSorted( pNode );
@@ -355,7 +379,9 @@ private:
 	{
 		typename TElement::ESplitType t = alloc( pNode ).elem.GetUsableSplit();
 		if ( t != TElement::NONE )
+		{
 			Split( pNode, t );
+		}
 	}
 	// to be called only from ~CCacheElement
 	void Free( pointer pNode )
@@ -414,7 +440,9 @@ public:
 		for ( int k = nodes.size() - 1; k >= 0; --k )
 		{
 			for ( pointer p = alloc( nodes[k] ).pNext; p != nodes[k]; p = alloc( p ).pNext )
+			{
 				MakeFreeLeaf( p );
+			}
 		}
 	}
 	void AddRoot( TElement root )
@@ -454,7 +482,9 @@ public:
 						pStats->nBlocks++;
 					}
 					else
+					{
 						pStats->nFree += n.elem.GetSize();
+					}
 				}
 				pRes = alloc( pRes ).pNext;
 			}
@@ -469,7 +499,9 @@ public:
 	bool GetPlace( const TElement &_elem, SCachePlace *pRes )
 	{
 		if ( nodes.empty() )
+		{
 			return false;
+		}
 		// search for node with minimal RU
 		TElement elem( _elem );
 		pointer pBest = Alloc::NIL;
@@ -478,7 +510,9 @@ public:
 		{
 			int n = elem.GetHash();
 			if ( n >= nodes.size() )
+			{
 				break;
+			}
 			pointer pRes = alloc( nodes[n] ).pNext;
 			if ( pRes != nodes[n] )
 			{
@@ -492,7 +526,9 @@ public:
 		}
 		//ASSERT( pBest != Alloc::NIL );
 		if ( pBest == Alloc::NIL )
+		{
 			return false;
+		}
 		pRes->nMRU = nBestMRU;
 		pRes->pBest = pBest;
 		pRes->requestSize = _elem;
@@ -530,7 +566,9 @@ public:
 			{
 				SElement &e = alloc( p );
 				if ( e.pDown == Alloc::NIL )
+				{
 					pState->push_back( SStatePlace( e.elem, e.pUser, e.nRU ) );
+				}
 			}
 		}
 	}
@@ -556,9 +594,13 @@ public:
 	int GetHash() const
 	{
 		if ( nXSize > nYSize )
+		{
 			return nXSize * ( nXSize + 1 ) + nYSize * 2;
+		}
 		else
+		{
 			return nYSize * ( nYSize + 1 ) + nXSize * 2 + 1;
+		}
 	}
 	ESplitType Up()
 	{
@@ -579,9 +621,13 @@ public:
 	ESplitType GetUsableSplit() const
 	{
 		if ( nXSize > nYSize )
+		{
 			return XSPLIT;
+		}
 		if ( nXSize < nYSize )
+		{
 			return YSPLIT;
+		}
 		return NONE;
 	}
 	bool SameSize( const CQuadTreeElement &a ) const { return nXSize == a.nXSize && nYSize == a.nYSize; }
@@ -642,7 +688,9 @@ inline int GetMajorFib( int _n )
 {
 	int k = 0;
 	while ( fib( k ) < _n )
+	{
 		++k;
+	}
 	return k;
 }
 

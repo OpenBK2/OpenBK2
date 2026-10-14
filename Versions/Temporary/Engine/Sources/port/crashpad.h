@@ -42,15 +42,21 @@ inline std::filesystem::path UserDatabasePath()
 {
 #if BOOST_OS_WINDOWS
 	if ( const wchar_t *directory = _wgetenv( L"LOCALAPPDATA" ) )
+	{
 		return std::filesystem::path( directory ) / L"OpenBK2" / L"crashpad_db";
+	}
 #else
 	if ( const char *directory = std::getenv( "XDG_STATE_HOME" ) )
 	{
 		if ( std::filesystem::path( directory ).is_absolute() )
+		{
 			return std::filesystem::path( directory ) / "OpenBK2" / "crashpad_db";
+		}
 	}
 	if ( const char *directory = std::getenv( "HOME" ) )
+	{
 		return std::filesystem::path( directory ) / ".local" / "state" / "OpenBK2" / "crashpad_db";
+	}
 #endif
 	return {};
 }
@@ -58,11 +64,15 @@ inline std::filesystem::path UserDatabasePath()
 inline std::unique_ptr<crashpad::CrashReportDatabase> OpenDatabase( const std::filesystem::path &path )
 {
 	if ( path.empty() || !path.is_absolute() )
+	{
 		return nullptr;
+	}
 	std::error_code error;
 	std::filesystem::create_directories( path, error );
 	if ( error )
+	{
 		return nullptr;
+	}
 	return crashpad::CrashReportDatabase::Initialize( base::FilePath( path.native() ) );
 }
 
@@ -77,9 +87,13 @@ inline void WriteStatus()
 	// GUI launches may have no stderr. Leave a diagnostic even when the game
 	// never reaches its own log setup; also record the selected fallback path.
 	if ( !state.executableDirectory.empty() )
+	{
 		std::ofstream( state.executableDirectory / "crashpad-status.txt" ) << state.status << '\n';
+	}
 	if ( !state.databasePath.empty() )
+	{
 		std::ofstream( state.databasePath / "crashpad-status.txt" ) << state.status << '\n';
+	}
 }
 
 #if BOOST_COMP_MSVC
@@ -104,7 +118,9 @@ inline bool InitCrashpad( const char *application = "OpenBK2", const char *build
 	using namespace NCrashpadDetail;
 	SState &state = State();
 	if ( state.attempted )
+	{
 		return state.ready;
+	}
 	state.attempted = true;
 	try
 	{
@@ -134,11 +150,17 @@ inline bool InitCrashpad( const char *application = "OpenBK2", const char *build
 		const std::string paths = "; handler=" + handler.u8string() + "; database=" + state.databasePath.u8string();
 		std::error_code error;
 		if ( !database )
+		{
 			state.status = "Crashpad disabled: cannot create a writable report database" + paths;
+		}
 		else if ( !database->GetSettings()->SetUploadsEnabled( false ) )
+		{
 			state.status = "Crashpad disabled: cannot disable report uploads" + paths;
+		}
 		else if ( !std::filesystem::is_regular_file( handler, error ) )
+		{
 			state.status = "Crashpad disabled: handler executable is missing or inaccessible" + paths;
+		}
 		else
 		{
 			// All paths are absolute: shortcuts and editor dialogs can use or
@@ -180,7 +202,9 @@ inline const std::string &GetCrashpadStatus()
 inline void DumpCrashpadWithoutCrash()
 {
 	if ( !NCrashpadDetail::State().ready )
+	{
 		return;
+	}
 	// Fatal C++ exceptions caught by the entry point never reach Crashpad's
 	// unhandled-exception filter. Capture before logging/dialogs allocate more
 	// memory. This records the catch site, not the already-unwound throw site.

@@ -235,15 +235,25 @@ bool CInterfaceMission::CReactions::Execute( const std::string &szSender,
                                              uint16_t wKeyboardFlags )
 {
 	if ( szReaction == "FullInfoMember" )
+	{
 		return pInterface->OnClickFullInfoMember( szSender );
+	}
 	if ( szReaction == "FullInfoMemberOverOn" )
+	{
 		return pInterface->OnFullInfoMemberOverOn( szSender );
+	}
 	if ( szReaction == "FullInfoMemberOverOff" )
+	{
 		return pInterface->OnFullInfoMemberOverOff( szSender );
+	}
 	if ( szReaction == "FullInfoWeaponOverOn" )
+	{
 		return pInterface->OnFullInfoWeaponOverOn( szSender );
+	}
 	if ( szReaction == "FullInfoWeaponOverOff" )
+	{
 		return pInterface->OnFullInfoWeaponOverOff( szSender );
+	}
 
 	if ( szReaction == "objective_notify_closed" )
 	{
@@ -252,52 +262,94 @@ bool CInterfaceMission::CReactions::Execute( const std::string &szSender,
 	}
 
 	if ( szReaction == "ReinfSelect" )
+	{
 		return pInterface->OnReinfSelect( szSender );
+	}
 	if ( szReaction == "ReinfSelectDblClick" )
+	{
 		return pInterface->OnReinfSelectDblClick( szSender );
+	}
 	if ( szReaction == "ToggleReinf" )
+	{
 		return pInterface->OnToggleReinf( szSender );
+	}
 	if ( szReaction == "reinf_unit_info" )
+	{
 		return pInterface->OnReinfUnitInfo( szSender );
+	}
 	if ( szReaction == "ReinfFullInfoBack" )
+	{
 		return pInterface->OnReinfFullInfoBack( szSender );
+	}
 	if ( szReaction == "ReinfMouseOverForward" )
+	{
 		return pInterface->OnReinfMouseOverForward( szSender );
+	}
 	if ( szReaction == "ReinfMouseOverBackward" )
+	{
 		return pInterface->OnReinfMouseOverBackward( szSender );
+	}
 	if ( szReaction == "call_reinf_mode" )
+	{
 		return pInterface->OnReinfCallMode( szSender );
+	}
 	if ( szReaction == "auto_show_reinf_on" )
+	{
 		return pInterface->OnReinfAutoShowReinf( szSender, true );
+	}
 	if ( szReaction == "auto_show_reinf_off" )
+	{
 		return pInterface->OnReinfAutoShowReinf( szSender, false );
+	}
 
 	if ( szReaction == "MissionSelectUnit" )
+	{
 		return pInterface->OnClickMultiSelectUnit( szSender, wKeyboardFlags );
+	}
 
 	if ( szReaction == "MissionSelectSpecialGroup" )
+	{
 		return pInterface->OnSelectSpecialGroup( szSender, wKeyboardFlags );
+	}
 	if ( szReaction == "MissionUnselectSpecialGroup" )
+	{
 		return pInterface->OnUnselectSpecialGroup( szSender, wKeyboardFlags );
+	}
 
 	if ( szReaction == "MissionNewActionButtonClick" )
+	{
 		return pInterface->OnNewActionButtonClick( szSender, wKeyboardFlags );
+	}
 	if ( szReaction == "MissionNewActionButtonRightClick" )
+	{
 		return pInterface->OnNewActionButtonRightClick( szSender, wKeyboardFlags );
+	}
 
 	if ( szReaction == "NotificationEventLeft" )
+	{
 		return pInterface->OnNotificationEventBtn( szSender, false );
+	}
 	if ( szReaction == "NotificationEventRight" )
+	{
 		return pInterface->OnNotificationEventBtn( szSender, true );
+	}
 
 	if ( szReaction == "enter_pressed" )
+	{
 		return pInterface->OnEnterPressed( wKeyboardFlags );
+	}
 	if ( szReaction == "chat_input_enter_pressed" )
+	{
 		return pInterface->OnChatInputEnterPressed();
+	}
 	if ( szReaction == "chat_input_esc_pressed" )
+	{
 		return pInterface->OnChatInputEscPressed();
+	}
 	if ( szReaction == "chat_input_focus_lost" )
+	{
 		return pInterface->OnChatInputFocusLost();
+	}
 
 	return false;
 }
@@ -391,7 +443,9 @@ CInterfaceMission::~CInterfaceMission()
 	pReactions = 0;
 	pNotifications = 0;
 	if ( pWorld )
+	{
 		pWorld->Clear();
+	}
 	pWorld = 0;
 
 	if ( pMovieBorder )
@@ -430,7 +484,9 @@ bool CInterfaceMission::Init()
 	pSuperWeapon = new CMissionSuperWeapon();
 
 	if ( CInterfaceScreenBase::Init() == false )
+	{
 		return false;
+	}
 	//
 	return true;
 }
@@ -507,7 +563,9 @@ void CInterfaceMission::InitMinimapColors( const NDb::SUIConstsB2 *pUIConsts )
 		                            ( dwColor & 0xFF ) / 255.0f,
 		                            1.0f );
 		if ( pMiniMap )
+		{
 			pMiniMap->SetPlayerColor( nID, NGfx::SPixel8888( dwColor ) );
+		}
 	}
 	pWorld->SetMinimapColors( minimapColors );
 }
@@ -521,20 +579,28 @@ void CInterfaceMission::OnGetFocus( bool bFocus )
 	}
 
 	if ( !bFocus )
+	{
 		NInput::PostEvent( "camera_mouse_rotate_finish", 0, 0 );
+	}
 	//
 	bool bIsSuppressEnableFocus = InterfaceState()->IsSuppressEnableFocus();
 
 	CInterfaceScreenBase::OnGetFocus( bFocus );
 
 	if ( bIsSuppressEnableFocus )
+	{
 		return;
+	}
 
 	if ( pWorld )
+	{
 		pWorld->OnGetFocus( bFocus );
+	}
 	bAllowBorderScroll = bFocus;
 	if ( !bAllowBorderScroll )
+	{
 		CheckMouseBorder( VNULL2, bAllowBorderScroll );
+	}
 
 	UpdateInterfacePause();
 }
@@ -545,7 +611,9 @@ void CInterfaceMission::RestoreBindSection()
 	sections.push_back( GetBindSection() );
 	szButtonsBindSection = NStr::ToMBCS( MISSION_BUTTONS_BIND_SECTION );
 	if ( !szButtonsBindSection.empty() )
+	{
 		sections.push_back( szButtonsBindSection );
+	}
 	NInput::SetSection( sections );
 }
 
@@ -562,15 +630,21 @@ bool CInterfaceMission::ProcessEvent( const struct SGameMessage &msg )
 	     ( NGlobal::GetVar( "temp.script_movie", false ) != 0 || ( pMovieBorder && pMovieBorder->IsVisible() ) ) )
 	{
 		if ( scriptMovieMessageProcessor.ProcessEvent( msg, this ) )
+		{
 			return true;
+		}
 		return false;
 	}
 
 	if ( CInterfaceScreenBase::ProcessEvent( msg ) )
+	{
 		return true;
+	}
 
 	if ( !pWorld )
+	{
 		return false;
+	}
 
 	return pWorld->ProcessEvent( msg );
 }
@@ -593,23 +667,33 @@ void CInterfaceMission::SetAbilityState( const NDb::EUserAction eUserAction, con
 		SNewActionButton &action = it->second;
 
 		if ( state.eState == EASS_CHANGE_AUTOCAST_ONLY )
+		{
 			action.curState.bAutocast = state.bAutocast;
+		}
 		else
+		{
 			action.curState = state;
+		}
 
 		if ( !action.bPassive )
 		{
 			if ( action.pActiveBorderWnd )
+			{
 				action.pActiveBorderWnd->ShowWindow( action.curState.eState == EASS_ACTIVE );
+			}
 
 			action.Enable( action.curState.eState == EASS_ACTIVE || action.curState.eState == EASS_READY_TO_ON );
 
 			bool bClock = action.curState.eState == EASS_SWITCHING_ON || action.curState.eState == EASS_SWITCHING_OFF ||
 			              action.curState.eState == EASS_OFF;
 			if ( action.pClockWnd )
+			{
 				action.pClockWnd->ShowWindow( bClock );
+			}
 			if ( action.pIconFgWnd )
+			{
 				action.pIconFgWnd->ShowWindow( bClock );
+			}
 
 			if ( action.pAutocastWnd )
 			{
@@ -617,7 +701,9 @@ void CInterfaceMission::SetAbilityState( const NDb::EUserAction eUserAction, con
 				action.pAutocastWnd->Run( action.bAutocast && action.curState.bAutocast );
 			}
 			if ( action.pAutocastBorderWnd )
+			{
 				action.pAutocastBorderWnd->ShowWindow( action.bAutocast && !action.curState.bAutocast );
+			}
 		}
 	}
 }
@@ -632,14 +718,18 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 	{
 		std::wstring wszText = InterfaceState()->GetMPChatMessage();
 		if ( wszText.empty() )
+		{
 			break;
+		}
 	}
 	while ( true )
 	{
 		std::string szReadText;
 		uint32_t dwColor;
 		if ( !ReadFromPipe( PIPE_CHAT, &szReadText, &dwColor ) )
+		{
 			break;
+		}
 	}
 
 	// show mission id (for testers and debug purpose)
@@ -675,7 +765,9 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 			{
 				std::wstring wszDesc;
 				if ( CHECK_TEXT_NOT_EMPTY_PRE( pMapInfo->, LoadingDescription ) )
+				{
 					wszDesc = GET_TEXT_PRE( pMapInfo->, LoadingDescription );
+				}
 				std::wstring wszCitation = InterfaceState()->GetRandomCitation();
 				pProgress = new CInterfaceLoadingSingle2D( pMapInfo->pLoadingPicture, wszDesc, wszCitation, false );
 			}
@@ -688,9 +780,13 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 
 				params.pMapPicture = pMapInfo->pLoadingPicture;
 				if ( pMapInfo->pMiniMap )
+				{
 					params.pMinimap = pMapInfo->pMiniMap->pTexture;
+				}
 				if ( CHECK_TEXT_NOT_EMPTY_PRE( pMapInfo->, LocalizedName ) )
+				{
 					params.wszMapName = GET_TEXT_PRE( pMapInfo->, LocalizedName );
+				}
 
 				if ( const IScenarioTracker::SMultiplayerInfo *pInfo = pScenarioTracker->GetMultiplayerInfo() )
 				{
@@ -710,15 +806,23 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 						player.nTeam = scenarioPlayer.nTeam;
 
 						if ( pMPConsts && scenarioPlayer.nCountry >= 0 && scenarioPlayer.nCountry < pMPConsts->sides.size() )
+						{
 							player.pSideListItemIcon = pMPConsts->sides[scenarioPlayer.nCountry].pListItemIcon;
+						}
 						else
+						{
 							player.pSideListItemIcon = 0;
+						}
 
 						const NDb::SPartyDependentInfo *pPartyInfo = pScenarioTracker->GetPlayerParty( scenarioPlayer.nIndex );
 						if ( pPartyInfo )
+						{
 							player.pSideMinimapIcon = pPartyInfo->pMinimapKeyObjectIcon;
+						}
 						else
+						{
 							player.pSideMinimapIcon = 0;
+						}
 
 						if ( scenarioPlayer.nIndex >= 0 && scenarioPlayer.nIndex < pMapInfo->players.size() )
 						{
@@ -726,7 +830,9 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 							player.vMinimapPos = mapPlayer.vMPStartPos;
 						}
 						else
+						{
 							player.vMinimapPos = VNULL2;
+						}
 					}
 				}
 				pProgress = new CInterfaceMPLoading2D( params );
@@ -740,12 +846,16 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 	const int nUpdateAISubSteps = 6;
 	const int nDrawSubSteps = 6;
 	if ( pProgress )
+	{
 		pProgress->SetNumSteps( nCommonSteps + nLoadMapSubSteps + nLoadAISubSteps + nUpdateAISubSteps + nDrawSubSteps );
+	}
 	//
 	const NDb::SMapInfo *pMapInfo = pMission;
 	NI_ASSERT( pMapInfo, fmt::format( "No map info available for mission {}", pMission->GetDBID().ToString() ) );
 	if ( !pMapInfo )
+	{
 		return;
+	}
 
 	uint32_t dwChatColor = 0xFFFFFFFF;
 	if ( const NDb::SUIConstsB2 *pUIConsts = InterfaceState()->GetUIConsts() )
@@ -793,35 +903,51 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 	pSuperWeapon->Init( pScreen, pWorld, pMapInfo->eSeason );
 	//
 	if ( s_bDeepMapLoad )
+	{
 		NDb::SetLoadDepth( 100 );
+	}
 	//
 	if ( /*AI*/ true )
 	{
 		Singleton<IAILogic>()->Init( pTransceiver->GetCheckSumLogger(), pMapInfo, NGameX::GetAIConsts(), pScenarioTracker );
 		if ( pProgress )
+		{
 			pProgress->Step(); // step 1
+		}
 
 		if ( pProgress )
+		{
 			pProgress->LockRange( nLoadMapSubSteps );
+		}
 		pWorld->LoadMap( pMapInfo );
 		if ( pProgress )
+		{
 			pProgress->UnlockRange(); // step 2
+		}
 
 		if ( pProgress )
+		{
 			pProgress->LockRange( nLoadAISubSteps );
+		}
 		Singleton<IAILogic>()->SetProgressHook( pProgress );
 		Singleton<IAILogic>()->SetMyDiplomacyInfo( Singleton<IScenarioTracker>()->GetPlayerSide( nPlayer ), nPlayer );
 		Singleton<IAILogic>()->InitAfterMapLoad( pMapInfo );
 
 		Singleton<IAILogic>()->SetProgressHook( 0 );
 		if ( pProgress )
+		{
 			pProgress->UnlockRange(); // step 3
+		}
 	}
 	else
+	{
 		pWorld->LoadMap( pMapInfo );
+	}
 	//
 	if ( s_bDeepMapLoad )
+	{
 		NDb::SetLoadDepth( 1 );
+	}
 	//
 	// Set camera
 	if ( nPlayer < pMapInfo->players.size() )
@@ -835,31 +961,43 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 		}
 	}
 	else
+	{
 		Camera()->SetAnchor( CVec3( 10, 10, 0 ) );
+	}
 
 	InitMinimapColors( pUIConsts );
 
 	UpdateWarFog( 0, true, false );
 	if ( NGlobal::GetVar( "no_warfog", 0 ) != 0 )
+	{
 		SetWarForVisibility( false );
+	}
 
 	if ( pProgress )
+	{
 		pProgress->Step(); // step 4
+	}
 
 	// вызовем первый раз этот апдейт при загрузке, поскольку первоначальное создание
 	// юнитов занимает ощутимое время
 	if ( pProgress )
+	{
 		pProgress->LockRange( nUpdateAISubSteps );
+	}
 	pWorld->Update();
 	if ( pProgress )
+	{
 		pProgress->UnlockRange(); // step 5
+	}
 
 	Singleton<IAILogic>()->PostMapLoad();
 	pWorld->Update();
 
 	// загрузим всю графику до старта миссии
 	if ( pProgress )
+	{
 		pProgress->LockRange( nDrawSubSteps );
+	}
 	Scene()->SwitchScene( SCENE_MISSION );
 	Scene()->GetGView()->WaitForLoad( true );
 	CObj<CDrawProgress> pDrawProgress = new CDrawProgress( pProgress );
@@ -868,7 +1006,9 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 	pDrawProgress = 0;
 	Scene()->GetGView()->SetLoadingCounter( 0, 0, 0 );
 	if ( pProgress )
+	{
 		pProgress->UnlockRange(); // step 6
+	}
 
 	Singleton<IStatSystem>()->UpdateEntry( "MapDesigner", NStr::ToMBCS( GET_TEXT_PRE( pMapInfo->, MapDesigner ) ) );
 
@@ -928,9 +1068,13 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 		IWindow *pTooltipSlotWnd = GetChildChecked<IWindow>( pMultiselectWnd, "SlotTooltipHolder", true );
 		IWindow *pTooltipSlotUnitWnd = GetChildChecked<IWindow>( pMultiselectWnd, "SlotUnitTooltipHolder", true );
 		if ( pTooltipSlotWnd )
+		{
 			wszTooltipSlot = pTooltipSlotWnd->GetDBTooltipStr();
+		}
 		if ( pTooltipSlotUnitWnd )
+		{
 			wszTooltipSlotUnit = pTooltipSlotUnitWnd->GetDBTooltipStr();
+		}
 
 		IScenarioTracker *pST = Singleton<IScenarioTracker>();
 		const IScenarioTracker::SPlayerColor &color = pST->GetPlayerColor( pST->GetLocalPlayer() );
@@ -942,7 +1086,9 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 		{
 			IButton *pBtn = dynamic_cast<IButton *>( pWnd );
 			if ( !pBtn )
+			{
 				break;
+			}
 			pBtn->ShowWindow( false );
 
 			SIconSlot slot;
@@ -957,7 +1103,9 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 				slot.pProgressBar->SetForward( pBackground );
 			}
 			if ( slot.pFlagBgWnd )
+			{
 				slot.pFlagBgWnd->ShowWindow( false );
+			}
 
 			iconSlots.push_back( slot );
 		}
@@ -966,7 +1114,9 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 
 		pChatMessages = pScreen->GetElement( "chat_messages", true );
 		if ( pChatMessages )
+		{
 			pChatMessagesElement = pChatMessages->GetChild( "chat_messages_element", true );
+		}
 
 		pMultiFunctionTab = GetChildChecked<ITabControl>( pScreen, "multifunction_tab_control", true );
 		pActionTab = GetChildChecked<ITabControl>( pScreen, "action_tab_control", true );
@@ -982,13 +1132,19 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 			NI_ASSERT( pUIConsts->actionButtons[i].pButton != 0,
 			           fmt::format( "Empty button {} in pUIConsts->actionButtons", i ) );
 			if ( pUIConsts->actionButtons[i].pButton == 0 )
+			{
 				continue;
+			}
 			const NDb::EUserAction eAction = pUIConsts->actionButtons[i].eAction;
 			if ( eAction == NDb::USER_ACTION_ABILITY )
+			{
 				continue;
+			}
 			IWindow *pButton = pScreen->GetElement( pUIConsts->actionButtons[i].pButton->szName, true );
 			if ( pButton )
+			{
 				pButton->ShowWindow( false );
+			}
 		}
 		//}
 
@@ -1000,7 +1156,9 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 				{
 					IWindow *pWnd = pSlotsWnd->GetChild( fmt::format( "Slot{:02d}", i ), true );
 					if ( !pWnd )
+					{
 						break;
+					}
 					int nX;
 					int nY;
 					pWnd->GetPlacement( &nX, &nY, 0, 0 );
@@ -1018,9 +1176,13 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 					{
 						const NDb::SActionButtonInfo *pDBAction = *it;
 						if ( !pDBAction )
+						{
 							continue;
+						}
 						if ( pDBAction->bNoButton )
+						{
 							continue;
+						}
 
 						if ( IButton *pBtn = dynamic_cast<IButton *>( AddWindowCopy( pTabCtrl, pTemplateActionBtn ) ) )
 						{
@@ -1041,7 +1203,9 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 							action.bCurPresent = false;
 							action.szHotkeyCmd = pDBAction->szHotkeyCmd;
 							if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBAction->, Tooltip ) )
+							{
 								action.wszTooltip = GET_TEXT_PRE( pDBAction->, Tooltip );
+							}
 
 							//							action.pIconBgWnd = GetChildChecked<IWindow>( pBtn, "IconBg", true );
 							action.pIconFgWnd = GetChildChecked<IWindow>( pBtn, "IconFg", true );
@@ -1063,21 +1227,31 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 							if ( pTabCtrl )
 							{
 								if ( action.ePanel == NDb::ACTION_BTN_PANEL_DEFAULT )
+								{
 									pTabCtrl->AddElement( ACTION_TAB_SELECT, pBtn );
+								}
 								else if ( action.ePanel == NDb::ACTION_BTN_PANEL_FORMATIONS )
+								{
 									pTabCtrl->AddElement( ACTION_TAB_FORMATIONS, pBtn );
+								}
 								else if ( action.ePanel == NDb::ACTION_BTN_PANEL_RADIO_CONTROLLED )
+								{
 									pTabCtrl->AddElement( ACTION_TAB_RADIO_CONTROLLED, pBtn );
+								}
 							}
 
 							if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBAction->, Tooltip ) )
+							{
 								pBtn->SetTooltip( GET_TEXT_PRE( pDBAction->, Tooltip ) );
+							}
 
 #ifndef _FINALRELEASE
 							if ( !CHECK_TEXT_NOT_EMPTY_PRE( pDBAction->, Tooltip ) )
+							{
 								pBtn->SetTooltip( NStr::ToUnicode(
 										fmt::format( "UserAction id: {}", (int)( pDBAction->eAction ) ) ) ); // CRAP - test only
-#endif                                                                                   //_FINALRELEASE
+							}
+#endif //_FINALRELEASE
 
 							pBtn->ShowWindow( false );
 							pBtn->SetName( fmt::format( "NewActionButton{}", (int)( pDBAction->eAction ) ) );
@@ -1088,26 +1262,44 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 							//							if ( action.pIconBgWnd )
 							//								action.pIconBgWnd->ShowWindow( false );
 							if ( action.pIconFgWnd )
+							{
 								action.pIconFgWnd->ShowWindow( false );
+							}
 							if ( action.pClockWnd )
+							{
 								action.pClockWnd->ShowWindow( false );
+							}
 
 							if ( action.pAutocastWnd )
+							{
 								action.pAutocastWnd->ShowWindow( action.bAutocast && false );
+							}
 							if ( action.pAutocastBorderWnd )
+							{
 								action.pAutocastBorderWnd->ShowWindow( action.bAutocast && true );
+							}
 
 							if ( action.pStaticBorderWnd )
+							{
 								action.pStaticBorderWnd->ShowWindow( action.bPassive );
+							}
 
 							if ( action.pActiveBorderWnd )
+							{
 								action.pActiveBorderWnd->ShowWindow( false );
+							}
 							if ( action.pIconBgDisabledWnd )
+							{
 								action.pIconBgDisabledWnd->ShowWindow( false );
+							}
 							if ( action.pIconFgDisabledWnd )
+							{
 								action.pIconFgDisabledWnd->ShowWindow( false );
+							}
 							if ( action.pBlinkWnd )
+							{
 								action.pBlinkWnd->ShowWindow( false );
+							}
 
 							// textures
 							if ( !action.bPassive )
@@ -1115,21 +1307,29 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 								// !passive
 
 								if ( action.pIcon )
+								{
 									pBtn->SetTexture( action.pIcon );
+								}
 								if ( action.pIconFgWnd )
 								{
 									if ( action.pForegroundIcon )
+									{
 										action.pIconFgWnd->SetTexture( action.pForegroundIcon );
+									}
 								}
 								if ( action.pIconBgDisabledWnd )
 								{
 									if ( action.pIconDisabled )
+									{
 										action.pIconBgDisabledWnd->SetTexture( action.pIconDisabled );
+									}
 								}
 								if ( action.pIconFgDisabledWnd )
 								{
 									if ( action.pForegroundIconDisabled )
+									{
 										action.pIconFgDisabledWnd->SetTexture( action.pForegroundIconDisabled );
+									}
 								}
 							}
 							else
@@ -1137,7 +1337,9 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 								// passive
 
 								if ( action.pIcon )
+								{
 									action.pIconBgDisabledWnd->SetTexture( action.pIcon );
+								}
 							}
 
 							action.Enable( true );
@@ -1172,11 +1374,15 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 
 			pFlareBtn = GetChildChecked<IButton>( pLeftPanel, "FlareBtn", true );
 			if ( pFlareBtn )
+			{
 				pFlareBtn->Enable( Singleton<IScenarioTracker>()->GetGameType() != IAIScenarioTracker::EGT_SINGLE );
+			}
 
 			pObjectivesBlink = GetChildChecked<IWindow>( pLeftPanel, "ObjectivesBlink", true );
 			if ( pObjectivesBlink )
+			{
 				pObjectivesBlink->ShowWindow( false );
+			}
 		}
 
 		const CVec2 vScreenSize = Scene()->GetScreenRect();
@@ -1213,7 +1419,9 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 			{
 				CDynamicCast<IButton> pBtn = pScreen->GetChild( fmt::format( "Button{:02d}", i ), true );
 				if ( !pBtn )
+				{
 					break;
+				}
 				pBtn->ShowWindow( false );
 				specialSelectBtns.push_back( pBtn.GetPtr() );
 			}
@@ -1223,7 +1431,9 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 		{
 			IWindow *pScoreBoard = GetChildChecked<IWindow>( pScreen, "MultiplayerScoreBoard", true );
 			if ( pScoreBoard )
+			{
 				pScoreBoard->ShowWindow( true );
+			}
 		}
 
 		chatInput.pPanel = GetChildChecked<IWindow>( pScreen, "ChatInputPanel", true );
@@ -1245,7 +1455,9 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 			chatInput.fEditBaseWidth = nWidth;
 		}
 		if ( chatInput.pPanel )
+		{
 			chatInput.pPanel->ShowWindow( false );
+		}
 
 		InterfaceState()->ClearMPChatMessages();
 
@@ -1278,23 +1490,31 @@ void CInterfaceMission::MsgUpdateMinimapPos( const SGameMessage &msg )
 void CInterfaceMission::MsgReinfMode( const SGameMessage &msg )
 {
 	if ( msg.nParam1 == 0 )
+	{
 		SetActionMode( EAM_SELECT );
+	}
 	else
+	{
 		SetActionMode( EAM_REINF );
+	}
 }
 
 void CInterfaceMission::MsgBadWeather( const SGameMessage &msg )
 {
 	bool bBadWeather = msg.nParam1;
 	if ( pReinf )
+	{
 		pReinf->BadWeather( bBadWeather );
+	}
 }
 
 void CInterfaceMission::MsgAviaReturns( const SGameMessage &msg )
 {
 	const NDb::SComplexSoundDesc *pSound = InterfaceState()->GetSoundEntry( "SOUND_BAD_WEATHER_AVIA_BACK" );
 	if ( pSound )
+	{
 		SoundScene()->AddSound( pSound, VNULL3, SFX_INTERFACE, SAM_ADD_N_FORGET, 0, 2 );
+	}
 
 	IVisualNotifications::SEventParams params;
 	params.nID = -1;
@@ -1313,7 +1533,9 @@ void CInterfaceMission::MsgAviaReturns( const SGameMessage &msg )
 void CInterfaceMission::MsgUserAbilitySlot( const SGameMessage &msg, int nParam )
 {
 	if ( nParam >= lActiveAbilities.size() )
+	{
 		return;
+	}
 
 	CActionButtons::iterator it = lActiveAbilities.begin();
 	advance( it, nParam );
@@ -1330,7 +1552,9 @@ void CInterfaceMission::MsgUserAbilitySlot( const SGameMessage &msg, int nParam 
 		}
 
 		if ( bEnabled )
+		{
 			OnNewActionButtonClick( pWnd->GetName(), 0 );
+		}
 	}
 }
 
@@ -1343,7 +1567,9 @@ void CInterfaceMission::MsgMultistatePanelMinimize( const SGameMessage &msg )
 	else
 	{
 		if ( pMinimizeBtn )
+		{
 			pMinimizeBtn->Enable( true );
+		}
 	}
 }
 
@@ -1356,19 +1582,27 @@ void CInterfaceMission::MsgMultistatePanelMaximize( const SGameMessage &msg )
 	else
 	{
 		if ( pMinimizeBtn )
+		{
 			pMinimizeBtn->Enable( true );
+		}
 	}
 }
 
 void CInterfaceMission::MsgMultistatePanelToggle( const SGameMessage &msg )
 {
 	if ( !pMinimizeBtn->IsEnabled() )
+	{
 		return;
+	}
 
 	if ( bMultifunctionPanelMinimized )
+	{
 		MultifunctionPanelMaximize();
+	}
 	else
+	{
 		MultifunctionPanelMinimize();
+	}
 }
 
 void CInterfaceMission::MultifunctionPanelMinimize()
@@ -1417,7 +1651,9 @@ void CInterfaceMission::BlinkActionButton( int nButton, bool bOn )
 	}
 	SNewActionButton &button = it->second;
 	if ( button.pBlinkWnd )
+	{
 		button.pBlinkWnd->ShowWindow( bOn );
+	}
 }
 
 void CInterfaceMission::MsgUpdateSpecialSelectBtn( const SGameMessage &msg )
@@ -1428,7 +1664,9 @@ void CInterfaceMission::MsgUpdateSpecialSelectBtn( const SGameMessage &msg )
 	{
 		IButton *pBtn = specialSelectBtns[nIndex];
 		if ( pBtn )
+		{
 			pBtn->ShowWindow( bEnable );
+		}
 	}
 }
 
@@ -1444,7 +1682,9 @@ void CInterfaceMission::MsgResetForcedAction( const SGameMessage &msg )
 void CInterfaceMission::MsgUnitViewClick( const SGameMessage &msg )
 {
 	if ( pWorld )
+	{
 		pWorld->CenterSelectedUnit();
+	}
 }
 
 void CInterfaceMission::MsgUpdateWinLooseState( const SGameMessage &msg )
@@ -1456,13 +1696,17 @@ void CInterfaceMission::UpdateWinLooseState()
 {
 	// reinforcements
 	if ( pReinf )
+	{
 		pReinf->UpdateWinLooseState();
+	}
 
 	SetActionMode( EAM_SELECT );
 
 	// objectives
 	if ( pShowObjectives && !pScenarioTracker->IsMissionActive() )
+	{
 		pShowObjectives->Enable( false );
+	}
 	//	NInput::PostEvent( "mission_objectives_close", 0, 0 );
 }
 
@@ -1498,9 +1742,13 @@ void CInterfaceMission::SetWarForVisibility( const bool _bShowWarFog )
 		bShowWarFog = _bShowWarFog;
 		Singleton<IAILogic>()->ToggleWarFog( bShowWarFog );
 		if ( _bShowWarFog )
+		{
 			bNeedWarFogRecalc = true;
+		}
 		else if ( NGlobal::GetVar( "no_warfog", 0 ) == 0 )
+		{
 			SetRawWarfog( 255 );
+		}
 	}
 }
 
@@ -1515,7 +1763,9 @@ void CInterfaceMission::UpdateChat( NTimer::STime nDeltaTime )
 void CInterfaceMission::UpdateChatAbs( NTimer::STime nDeltaTime )
 {
 	if ( !pChatMessages || !pChatMessagesElement )
+	{
 		return;
+	}
 
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	if ( pST->GetGameType() == IScenarioTracker::EGT_MULTI_FLAG_CONTROL )
@@ -1524,7 +1774,9 @@ void CInterfaceMission::UpdateChatAbs( NTimer::STime nDeltaTime )
 		{
 			std::wstring wszText = InterfaceState()->GetMPChatMessage();
 			if ( wszText.empty() )
+			{
 				break;
+			}
 			InterfaceState()->WriteToMissionConsole( wszText );
 		}
 	}
@@ -1537,7 +1789,9 @@ void CInterfaceMission::UpdateChatAbs( NTimer::STime nDeltaTime )
 		std::wstring szReadText;
 		uint32_t dwColor;
 		if ( !ReadFromPipe( PIPE_CHAT, &szReadText, &dwColor ) )
+		{
 			break;
+		}
 
 		IWindow *pElement = Singleton<IUIInitialization>()->CreateWindowFromDesc( pChatMessagesElement->GetDesc() );
 		pElement->Init();
@@ -1558,7 +1812,9 @@ void CInterfaceMission::UpdateChatAbs( NTimer::STime nDeltaTime )
 		int nX, nY, nSizeX, nSizeY;
 		pViewWindow->GetPlacement( &nX, &nY, &nSizeX, &nSizeY );
 		if ( chatMessages.empty() )
+		{
 			nY = 0;
+		}
 		else
 		{
 			int nX2, nY2, nSizeX2, nSizeY2;
@@ -1597,7 +1853,9 @@ void CInterfaceMission::UpdateChatAbs( NTimer::STime nDeltaTime )
 				it = chatMessages.erase( it );
 			}
 			else
+			{
 				++it;
+			}
 		}
 	}
 }
@@ -1622,17 +1880,23 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 		{
 			bWarFogUpdated = Singleton<IAILogic>()->GetMiniMapWarForInfo( &pWarFogInfo, bNeedWarFogRecalc || bFirst );
 			if ( bWarFogUpdated )
+			{
 				timeLastWarFogUpdate = timeCurrent;
+			}
 		}
 		else
+		{
 			bWarFogUpdated = false;
+		}
 
 		bNeedWarFogRecalc = false;
 
 		if ( pMiniMap )
 		{
 			if ( bWarFogUpdated )
+			{
 				pMiniMap->SetWarFog( pWarFogInfo );
+			}
 			else if ( bFirst )
 			{
 				CArray2D<uint8_t> warfog( 1, 1 );
@@ -1642,7 +1906,9 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 		}
 
 		if ( !bWarFogUpdated && !bFirst )
+		{
 			fBlend = Clamp( 1.0f * ( timeCurrent - timeLastWarFogUpdate ) / WARFOG_UPDATE_PERIOD, 0.0f, 1.0f );
+		}
 		else
 		{
 			const int nWarFogX = 0;
@@ -1662,12 +1928,18 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 			{
 				const int nVisPower = Singleton<IAILogic>()->VIS_POWER();
 				for ( int x = 0; x < pWarFogInfo->GetSizeX(); ++x )
+				{
 					for ( int y = 0; y < pWarFogInfo->GetSizeY(); ++y )
+					{
 						sceneWarFogInfo[y + nWarFogY][x + nWarFogX] =
 								WARFOG_MIN_VALUE + ( 255 - WARFOG_MIN_VALUE ) * ( *pWarFogInfo )[y][x] / nVisPower;
+					}
+				}
 			}
 			else
+			{
 				sceneWarFogInfo.FillEvery( 255 );
+			}
 
 			// заполним бордюр
 			int nDensity = 0;
@@ -1697,14 +1969,18 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 	std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
 
 	if ( IsValid( pTransceiver ) )
+	{
 		pTransceiver->DoSegments();
+	}
 
 	bEscMenuPressed = false;
 
 	UpdateMissionTime( bAppActive );
 
 	if ( !bAppActive )
+	{
 		return false;
+	}
 
 	bool bResult = false;
 	//
@@ -1713,7 +1989,9 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 	const NTimer::STime nCurrentTime = GameTimer()->GetGameTime();
 	const bool bScriptMovieNow = NGlobal::GetVar( "temp.script_movie", false );
 	if ( bScriptMoivie && !bScriptMovieNow ) // just finished
+	{
 		EndScriptMovieSequence();
+	}
 	bScriptMoivie = bScriptMovieNow;
 
 	/*	if ( bCheckShowHelpScreen )
@@ -1776,14 +2054,18 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 	float fStepAbsTime = 0.0f;
 	NTimer::STime timeAbsCur = Singleton<IGameTimer>()->GetAbsTime();
 	if ( bAppActive && timeAbsLast > 0 )
+	{
 		fStepAbsTime = (float)( timeAbsCur - timeAbsLast ) / 1000.0f;
+	}
 	timeAbsLast = timeAbsCur;
 
 	if ( !bFrozen )
 	{
 		// multi player score
 		if ( pScenarioTracker && pScenarioTracker->GetGameType() != IAIScenarioTracker::EGT_SINGLE )
+		{
 			UpdateMultiplayerScoreBoard();
+		}
 
 		if ( pMiniMap )
 		{
@@ -1799,7 +2081,9 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 			Scene()->PickZeroHeight( &vPos, CVec2( 0, fViewportBottom ) );
 			viewport.push_back( CVec2( vPos.x, vPos.y ) );
 			if ( pMiniMap )
+			{
 				pMiniMap->SetViewport( viewport );
+			}
 			//
 
 			CVec3 vCameraLine;
@@ -1821,7 +2105,9 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 			Singleton<IAILogic>()->GetMiniMapUnitsInfo( s_unitsForMiniMap );
 
 			if ( fabs( vCameraLine.z ) < FP_EPSILON )
+			{
 				pMiniMap->SetUnits( s_unitsForMiniMap );
+			}
 			else
 			{
 				std::vector<SMiniMapUnitInfo> units2;
@@ -1835,7 +2121,9 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 					float x = info.x + vCameraLine.x * t;
 					float y = info.y + vCameraLine.y * t;
 					if ( !pWorld->IsInsideAIMap( CVec2( x, y ) ) )
+					{
 						continue;
+					}
 					units2.push_back( SMiniMapUnitInfo( x, y, 0, info.player, info.radius ) );
 				}
 				pMiniMap->SetUnits( units2 );
@@ -1865,17 +2153,23 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 		nLastStepTime = nCurrentTime;
 
 		if ( pNotifications )
+		{
 			pNotifications->Step( nDeltaTime, bAppActive );
+		}
 
 		if ( fStepAbsTime > 0.0f )
+		{
 			pWorld->UpdateUnitIcons( fStepAbsTime );
+		}
 
 		if ( pShowObjectives )
 		{
 			bool bEnable =
 					pScenarioTracker && pScenarioTracker->IsMissionActive() && pScenarioTracker->GetKnownObjectiveCount() != 0;
 			if ( pShowObjectives->IsEnabled() != bEnable )
+			{
 				pShowObjectives->Enable( bEnable );
+			}
 		}
 
 		bResult = true;
@@ -1888,7 +2182,9 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 	}
 
 	if ( pReinf )
+	{
 		pReinf->Step();
+	}
 
 	CInterfaceScreenBase::StepLocal( bAppActive );
 
@@ -1913,7 +2209,9 @@ void CInterfaceMission::CheckInactiveInput()
 
 				std::string szRes = NStr::ToMBCS( NGlobal::GetVar( "input_inactive_command", "" ).GetString() );
 				if ( szRes.size() > 2 )
+				{
 					NStr::TrimBoth( szRes, '\"' );
+				}
 				WriteToPipe( PIPE_CONSOLE_CMDS, szRes );
 			}
 		}
@@ -1925,7 +2223,9 @@ void CInterfaceMission::CheckInactiveInput()
 
 				std::string szRes = NStr::ToMBCS( NGlobal::GetVar( "input_active_again_command", "" ).GetString() );
 				if ( szRes.size() > 2 )
+				{
 					NStr::TrimBoth( szRes, '\"' );
+				}
 				WriteToPipe( PIPE_CONSOLE_CMDS, szRes );
 			}
 		}
@@ -1935,7 +2235,9 @@ void CInterfaceMission::CheckInactiveInput()
 void CInterfaceMission::UpdateMultiplayerScoreBoard()
 {
 	if ( !pScenarioTracker )
+	{
 		return;
+	}
 	pScenarioTracker->UpdateStatistics();
 
 	const int nPlayer = pScenarioTracker->GetLocalPlayer();
@@ -2053,9 +2355,13 @@ void CInterfaceMission::OnMouseMove( const CVec2 &vPos )
 	if ( bIsActiveScreen != IsScreenControl( vPos ) )
 	{
 		if ( bIsActiveScreen )
+		{
 			pWorld->OnEnter();
+		}
 		else
+		{
 			pWorld->OnLeave();
+		}
 
 		bIsActiveScreen = !bIsActiveScreen;
 	}
@@ -2087,11 +2393,15 @@ void CInterfaceMission::OnMouseMove( const CVec2 &vPos )
 			}
 		}
 		else if ( !pWorld->IsOnMinimap() )
+		{
 			pReinf->SetTrackMousePos( false );
+		}
 	}
 
 	if ( eActiveControl != AC_SCREEN )
+	{
 		pWorld->DoMouseMove( vPos );
+	}
 	//if ( eActiveControl != AC_WORLD )
 	//	pScreen->OnMouseMove( vPos, 0 );
 #ifndef _FINALRELEASE
@@ -2099,7 +2409,9 @@ void CInterfaceMission::OnMouseMove( const CVec2 &vPos )
 	if ( pWorld->PickMapObj( vPos, &objects ) )
 	{
 		if ( objects.empty() )
+		{
 			Singleton<IAILogic>()->PickEmpty();
+		}
 		else
 		{
 			while ( !objects.empty() )
@@ -2110,7 +2422,9 @@ void CInterfaceMission::OnMouseMove( const CVec2 &vPos )
 		}
 	}
 	else
+	{
 		Singleton<IAILogic>()->PickEmpty();
+	}
 #endif
 
 	CheckMouseBorder( vPos, bAllowBorderScroll && !NGlobal::GetVar( "script_movie_on", false ) );
@@ -2130,15 +2444,25 @@ void CInterfaceMission::CheckMouseBorder( const CVec2 &vPos, const bool bAllowSc
 	int nDX = 0;
 	int nDY = 0;
 	if ( vPos.x - nX == 0 )
+	{
 		nDX = -1;
+	}
 	if ( vPos.y - nY == 0 )
+	{
 		nDY = 1;
+	}
 	if ( vPos.x - nX == nSizeX - 1 )
+	{
 		nDX = 1;
+	}
 	if ( vPos.y - nY == nSizeY - 1 )
+	{
 		nDY = -1;
+	}
 	if ( nDX == 0 && nDY == 0 )
+	{
 		pCamera->ResetScrolling();
+	}
 	else
 	{
 		pCamera->SetScrollSpeedX( nDX * fBorderScrollX );
@@ -2157,9 +2481,13 @@ void CInterfaceMission::OnButtonDown( const CVec2 &vPos, int nButton )
 	{
 		eActiveControl = AC_WORLD;
 		if ( nButton == MSTATE_BUTTON1 )
+		{
 			pWorld->DoLButtonDown( vPos );
+		}
 		else if ( nButton == MSTATE_BUTTON2 )
+		{
 			pWorld->DoRButtonDown( vPos );
+		}
 	}
 }
 
@@ -2168,9 +2496,13 @@ void CInterfaceMission::OnButtonUp( const CVec2 &vPos, int nButton )
 	if ( eActiveControl != AC_SCREEN )
 	{
 		if ( nButton == MSTATE_BUTTON1 )
+		{
 			pWorld->DoLButtonUp( vPos );
+		}
 		else if ( nButton == MSTATE_BUTTON2 )
+		{
 			pWorld->DoRButtonUp( vPos );
+		}
 	}
 	//if ( eActiveControl != AC_WORLD )
 	//	pScreen->OnButtonUp( vPos, nButton );
@@ -2184,9 +2516,13 @@ void CInterfaceMission::OnButtonDblClk( const CVec2 &vPos, int nButton )
 	//else
 	{
 		if ( nButton == MSTATE_BUTTON1 )
+		{
 			pWorld->DoLButtonDblClk( vPos );
+		}
 		else if ( nButton == MSTATE_BUTTON2 )
+		{
 			pWorld->DoRButtonDblClk( vPos );
+		}
 	}
 }
 
@@ -2207,7 +2543,9 @@ void CInterfaceMission::AddAbilityButton( NDb::EUserAction eAction,
                                           const NDb::SUnitSpecialAblityDesc *pAbilityDesc )
 {
 	if ( !pWnd )
+	{
 		return;
+	}
 
 	CNewActionButtons::iterator it = newActionButtons.find( eAction );
 	if ( it != newActionButtons.end() )
@@ -2220,29 +2558,47 @@ void CInterfaceMission::AddAbilityButton( NDb::EUserAction eAction,
 		if ( pAbilityDesc )
 		{
 			if ( pAbilityDesc->pAbilityIconTextureNormal )
+			{
 				pNormalIcon = pAbilityDesc->pAbilityIconTextureNormal;
+			}
 			if ( pAbilityDesc->pAbilityIconTextureDisabled )
+			{
 				pDisabledIcon = pAbilityDesc->pAbilityIconTextureDisabled;
+			}
 			if ( pAbilityDesc->pAbilityIconTextureForegroundNormal )
+			{
 				pForegroundNormalIcon = pAbilityDesc->pAbilityIconTextureForegroundNormal;
+			}
 			if ( pAbilityDesc->pAbilityIconTextureForegroundDisabled )
+			{
 				pForegroundDisabledIcon = pAbilityDesc->pAbilityIconTextureForegroundDisabled;
+			}
 		}
 
 		// Restore the action textures when the selected ability does not override them.
 		if ( !action.bPassive )
 		{
 			if ( action.pBtn )
+			{
 				action.pBtn->SetTexture( pNormalIcon );
+			}
 			if ( action.pIconFgWnd )
+			{
 				action.pIconFgWnd->SetTexture( pForegroundNormalIcon );
+			}
 			if ( action.pIconBgDisabledWnd )
+			{
 				action.pIconBgDisabledWnd->SetTexture( pDisabledIcon );
+			}
 			if ( action.pIconFgDisabledWnd )
+			{
 				action.pIconFgDisabledWnd->SetTexture( pForegroundDisabledIcon );
+			}
 		}
 		else if ( action.pIconBgDisabledWnd )
+		{
 			action.pIconBgDisabledWnd->SetTexture( pNormalIcon );
+		}
 	}
 	if ( bFixedPlace )
 	{
@@ -2317,7 +2673,9 @@ void CInterfaceMission::MsgBlinkObjectiveBtn( const SGameMessage &msg )
 {
 	bool bBlink = msg.nParam1;
 	if ( pObjectivesBlink )
+	{
 		pObjectivesBlink->ShowWindow( bBlink );
+	}
 }
 
 void CInterfaceMission::MsgOnRemovePlayer( const SGameMessage &msg )
@@ -2362,12 +2720,16 @@ static std::string MakeAutoSaveReplayName( const NDb::SMapInfo *pMap, const bool
 		const bool bSafe =
 				( c >= 'a' && c <= 'z' ) || ( c >= 'A' && c <= 'Z' ) || ( c >= '0' && c <= '9' ) || c == '.' || c == '-';
 		if ( !bSafe )
+		{
 			c = '_';
+		}
 	}
 
 	SSystemTime now;
 	if ( !GetLocalSystemTime( &now ) )
+	{
 		now = SSystemTime();
+	}
 
 	return fmt::format( "auto_{}_{}_{:04d}{:02d}{:02d}-{:02d}{:02d}{:02d}",
 	                    szMap,
@@ -2383,7 +2745,9 @@ static std::string MakeAutoSaveReplayName( const NDb::SMapInfo *pMap, const bool
 void CInterfaceMission::MsgWinLoose( const SGameMessage &msg )
 {
 	if ( !Singleton<IScenarioTracker>()->IsMissionActive() )
+	{
 		return;
+	}
 
 	bool bWin = ( msg.nParam1 == 1 );
 
@@ -2412,20 +2776,28 @@ void CInterfaceMission::MsgWinLoose( const SGameMessage &msg )
 	NMainLoop::Command( ML_COMMAND_WIN_LOOSE, bWin ? "win" : "lose" );
 
 	if ( bWin )
+	{
 		Singleton<IScenarioTracker>()->MissionWin();
+	}
 	else
+	{
 		Singleton<IScenarioTracker>()->MissionCancel();
+	}
 	UpdateWinLooseState();
 
 	IWindow *pScreen = GetScreen();
 	if ( pScreen )
+	{
 		pScreen->ShowWindow( false );
+	}
 }
 
 void CInterfaceMission::MsgEscMenu( const SGameMessage &msg )
 {
 	if ( bEscMenuPressed )
+	{
 		return;
+	}
 	bEscMenuPressed = true;
 	NMainLoop::Command( ML_COMMAND_ESC_MENU, "" );
 	//if ( IsMoveSequence() )
@@ -2435,7 +2807,9 @@ void CInterfaceMission::MsgEscMenu( const SGameMessage &msg )
 void CInterfaceMission::MsgOk( const SGameMessage &msg )
 {
 	if ( bTryExitWindows )
+	{
 		NInput::PostEvent( "exit", 0, 0 );
+	}
 }
 
 void CInterfaceMission::MsgCancel( const SGameMessage &msg )
@@ -2487,7 +2861,9 @@ void CInterfaceMission::MsgPreSelectMode( const SGameMessage &msg )
 void CInterfaceMission::UpdateSelectMode()
 {
 	if ( pWorld->GetActionMode() != EAM_SELECT )
+	{
 		return;
+	}
 
 	if ( !bMultiSelectSubMode )
 	{
@@ -2495,7 +2871,9 @@ void CInterfaceMission::UpdateSelectMode()
 		{
 			pMultiFunctionTab->SetActive( TAB_SINGLE_SELECT );
 			if ( pAppearanceTab )
+			{
 				pAppearanceTab->SetActive( TAB_APPEARANCE_SINGLE_SELECT );
+			}
 			return;
 		}
 	}
@@ -2504,7 +2882,9 @@ void CInterfaceMission::UpdateSelectMode()
 	{
 		pMultiFunctionTab->SetActive( TAB_MULTI_SELECT );
 		if ( pAppearanceTab )
+		{
 			pAppearanceTab->SetActive( TAB_APPEARANCE_SINGLE_SELECT );
+		}
 	}
 
 	UpdateActionPanel();
@@ -2559,7 +2939,9 @@ void CInterfaceMission::MsgUnpdateIcon( const SGameMessage &msg )
 		{
 			CMapObj *pMO = pWorld->GetMapObj( msg.nParam1 );
 			if ( pMO )
+			{
 				UpdateMultiUnitsInfo( pMO, msg.nParam2 );
+			}
 		}
 	}
 	else
@@ -2575,7 +2957,9 @@ void CInterfaceMission::MsgHighlightUnits( const SGameMessage &msg )
 	{
 		IButton *pBtn = iconSlots[i].pBtn;
 		if ( !pBtn->IsVisible() )
+		{
 			return;
+		}
 		pBtn->SetState( ( msg.nParam1 <= i && i <= msg.nParam2 ) ? 1 : 0 );
 	}
 }
@@ -2605,7 +2989,9 @@ void CInterfaceMission::SetArmyPoints( int nPoints ) {}
 void CInterfaceMission::GetObjectHPs( const CMapObj *pMO, std::vector<float> *pHPs, bool *pIsSquad )
 {
 	if ( !pMO )
+	{
 		return;
+	}
 
 	pHPs->clear();
 	bool bSquad = false;
@@ -2670,7 +3056,9 @@ void CInterfaceMission::UpdateMultiUnitsInfo( CMapObj *pMO, int nCount )
 		{
 			slot.pCountView->ShowWindow( nCount != 1 );
 			if ( nCount != 1 )
+			{
 				slot.pCountView->SetText( slot.pCountView->GetDBText() + NStr::ToUnicode( std::to_string( nCount ) ) );
+			}
 		}
 
 		bool bSquad;
@@ -2680,7 +3068,9 @@ void CInterfaceMission::UpdateMultiUnitsInfo( CMapObj *pMO, int nCount )
 		if ( !progresses.empty() )
 		{
 			if ( slot.pProgressBar )
+			{
 				slot.pProgressBar->SetPosition( progresses.front() );
+			}
 		}
 
 		/*		IWindow *pWndUnit = vIconSlots[nCurrentIconSlot]->GetChild( "multi_bar_unit", true );
@@ -2715,45 +3105,65 @@ void CInterfaceMission::UpdateMultiUnitsInfo( CMapObj *pMO, int nCount )
 bool CInterfaceMission::OnClickFullInfoMember( const std::string &szSender )
 {
 	if ( pReinf->IsOpen() )
+	{
 		pReinf->OnClickFullInfoMember( szSender );
+	}
 	else
+	{
 		pUnitFullInfo->OnClickMember( szSender );
+	}
 	return true;
 }
 
 bool CInterfaceMission::OnFullInfoMemberOverOn( const std::string &szSender )
 {
 	if ( pReinf->IsOpen() )
+	{
 		pReinf->OnFullInfoMemberOverOn( szSender );
+	}
 	else
+	{
 		pUnitFullInfo->OnMemberOverOn( szSender );
+	}
 	return true;
 }
 
 bool CInterfaceMission::OnFullInfoMemberOverOff( const std::string &szSender )
 {
 	if ( pReinf->IsOpen() )
+	{
 		pReinf->OnFullInfoMemberOverOff( szSender );
+	}
 	else
+	{
 		pUnitFullInfo->OnMemberOverOff( szSender );
+	}
 	return true;
 }
 
 bool CInterfaceMission::OnFullInfoWeaponOverOn( const std::string &szSender )
 {
 	if ( pReinf->IsOpen() )
+	{
 		pReinf->OnFullInfoWeaponOverOn( szSender );
+	}
 	else
+	{
 		pUnitFullInfo->OnWeaponOverOn( szSender );
+	}
 	return true;
 }
 
 bool CInterfaceMission::OnFullInfoWeaponOverOff( const std::string &szSender )
 {
 	if ( pReinf->IsOpen() )
+	{
 		pReinf->OnFullInfoWeaponOverOff( szSender );
+	}
 	else
+	{
 		pUnitFullInfo->OnWeaponOverOff( szSender );
+	}
 	return true;
 }
 
@@ -2838,7 +3248,9 @@ void CInterfaceMission::MakeActionTooltip( NDb::EUserAction eUserAction,
 						std::string szControlLocalName =
 								NInput::GetControlLocalName( NInput::GetControlID( bind.controlsSet.front() ) );
 						if ( szControlLocalName.empty() )
+						{
 							szControlLocalName = bind.controlsSet.front();
+						}
 						wszTooltip += L"<br><val hotkey>" + NStr::ToUnicode( "'" + szControlLocalName + "'" );
 						break;
 					}
@@ -2848,14 +3260,20 @@ void CInterfaceMission::MakeActionTooltip( NDb::EUserAction eUserAction,
 
 #ifndef _FINALRELEASE
 		if ( wszTooltip.empty() )
+		{
 			wszTooltip = NStr::ToUnicode( fmt::format( "UserAction id: {}", (int)( eUserAction ) ) );
+		}
 #endif //_FINALRELEASE
 
 		// Set even an empty tooltip so a previous ability-specific description is cleared.
 		if ( action.pBtn )
+		{
 			action.pBtn->SetTooltip( wszTooltip );
+		}
 		if ( action.pIconBgDisabledWnd )
+		{
 			action.pIconBgDisabledWnd->SetTooltip( wszTooltip );
+		}
 	}
 }
 
@@ -2874,7 +3292,9 @@ void CInterfaceMission::MakeAbilityTooltip( NDb::EUserAction eUserAction,
 		{
 			wszAbilityTooltip = GET_TEXT_PRE( pAbilityDesc->, LocalizedDesc );
 			if ( !wszAbilityTooltip.empty() )
+			{
 				pTooltipOverride = &wszAbilityTooltip;
+			}
 		}
 
 		const std::string szCommand = bFixedPlace ? action.szHotkeyCmd : fmt::format( "user_ability_slot_{:02d}", nSlot );
@@ -2897,7 +3317,9 @@ bool CInterfaceMission::IsAbility( NDb::EUserAction eAction ) const
 {
 	// Reverse was added after the ability range, but it is a fixed movement command like Move.
 	if ( eAction == NDb::USER_ACTION_REVERSE )
+	{
 		return false;
+	}
 	//	if ( eAction == NDb::USER_ACTION_RADIO_CONTROLLED_MODE )
 	//		return false;
 	return eAction > NDb::USER_ACTION_ABILITY || eAction == NDb::USER_ACTION_AMBUSH ||
@@ -2910,7 +3332,9 @@ NDb::EUserAction CInterfaceMission::GetActionByButtonName( const std::string &sz
 {
 	int nLen = strlen( "NewActionButton" );
 	if ( szName.substr( 0, nLen ) != "NewActionButton" )
+	{
 		nLen = strlen( "NewActionDisabledButton" );
+	}
 
 	NDb::EUserAction eAction = (NDb::EUserAction)( NStr::ToInt( szName.substr( nLen ) ) );
 	return eAction;
@@ -2919,7 +3343,9 @@ NDb::EUserAction CInterfaceMission::GetActionByButtonName( const std::string &sz
 void CInterfaceMission::UpdateActionPanel()
 {
 	if ( pWorld->GetActionMode() != EAM_SELECT )
+	{
 		return;
+	}
 
 	int nActionTab = ACTION_TAB_SELECT;
 	switch ( eActivePanel )
@@ -2942,7 +3368,9 @@ void CInterfaceMission::UpdateActionPanel()
 	}
 
 	if ( pActionTab )
+	{
 		pActionTab->SetActive( nActionTab );
+	}
 
 	CUserActions actions;
 	pWorld->GetSelectionEnabledActions( &actions );
@@ -2950,7 +3378,9 @@ void CInterfaceMission::UpdateActionPanel()
 	{
 		eActivePanel = NDb::ACTION_BTN_PANEL_DEFAULT;
 		if ( pActionTab )
+		{
 			pActionTab->SetActive( ACTION_TAB_SELECT );
+		}
 	}
 
 	UpdateActionButtons();
@@ -3021,7 +3451,9 @@ void CInterfaceMission::UpdateActionButtons()
 					SNewActionButton &action = it2->second;
 
 					if ( !action.bAbility )
+					{
 						ability.bFixedPlace = true;
+					}
 					ability.bEnabled = action.bEnabled;
 				}
 
@@ -3031,7 +3463,9 @@ void CInterfaceMission::UpdateActionButtons()
 				abilities.push_back( ability );
 			}
 			else
+			{
 				pWnd->ShowWindow( false );
+			}
 		}
 	}
 
@@ -3055,7 +3489,9 @@ void CInterfaceMission::RegisterActionObservers()
 		NDb::EUserAction eAction = it->first;
 
 		if ( !action.szHotkeyCmd.empty() )
+		{
 			AddObserver( action.szHotkeyCmd, &CInterfaceMission::MsgActionCmd, (int)( eAction ) );
+		}
 	}
 }
 
@@ -3087,7 +3523,9 @@ bool CInterfaceMission::MsgActionCmd( const SGameMessage &msg, int nAction )
 			NewActionButtonClick( eAction );
 
 			if ( action.bPressEffect )
+			{
 				pScreen->RunStateCommandSequience( "PressActionButtonTemplate", action.pBtn, 0, true );
+			}
 
 			return true;
 		}
@@ -3100,12 +3538,18 @@ void CInterfaceMission::UpdateMissionTime( bool bAppActive )
 {
 	NTimer::STime timeCurrent = Singleton<IGameTimer>()->GetAbsTime();
 	if ( timeCurrent > timeMissionLastCheck && timeMissionLastCheck > 0 )
+	{
 		nMissionTimeMSec += timeCurrent - timeMissionLastCheck;
+	}
 
 	if ( bAppActive )
+	{
 		timeMissionLastCheck = timeCurrent;
+	}
 	else
+	{
 		timeMissionLastCheck = 0;
+	}
 
 	if ( pScenarioTracker )
 	{
@@ -3150,11 +3594,15 @@ void CInterfaceMission::MsgForcedActionCallSuperWeapon( const SGameMessage &msg 
 void CInterfaceMission::MsgResetTarget( const SGameMessage &msg )
 {
 	if ( pWorld->GetActionMode() == EAM_SELECT )
+	{
 		NInput::PostEvent( "reset_target2", 0, 0 );
+	}
 	else if ( pWorld->GetActionMode() == EAM_REINF )
 	{
 		if ( pReinf->ResetReinfMode() )
+		{
 			SetActionMode( EAM_SELECT );
+		}
 	}
 }
 
@@ -3199,15 +3647,21 @@ void CInterfaceMission::MsgMiniMapHideObjectives( const SGameMessage &msg )
 void CInterfaceMission::MsgQuickSave( const SGameMessage &msg )
 {
 	if ( pMovieBorder && pMovieBorder->IsVisible() )
+	{
 		return;
+	}
 	if ( !NGlobal::GetVar( "Multiplayer.Host" ) && NGlobal::GetVar( "Multiplayer.Client", "" ).GetString() == L"" )
+	{
 		DoQuickSave();
+	}
 }
 
 void CInterfaceMission::MsgQuickLoad( const SGameMessage &msg )
 {
 	if ( pMovieBorder && pMovieBorder->IsVisible() )
+	{
 		return;
+	}
 	DoQuickLoad();
 }
 
@@ -3216,7 +3670,9 @@ void CInterfaceMission::MsgShowGamePaused( const SGameMessage &msg )
 	bool bUserPaused = Singleton<IGameTimer>()->HasPause( PAUSE_TYPE_USER_PAUSE );
 	bool bInterfacePaused = Singleton<IGameTimer>()->HasPause( PAUSE_TYPE_INTERFACE );
 	if ( pPause )
+	{
 		pPause->ShowWindow( bUserPaused && !bInterfacePaused );
+	}
 
 	Singleton<ISFX>()->Pause( bUserPaused || bInterfacePaused ); // на паузе выключаются только эффекты, музыка остается
 }
@@ -3229,7 +3685,9 @@ bool CInterfaceMission::MsgBeginScriptMovieSequence( const SGameMessage &msg )
 
 	NGlobal::SetVar( "MissionIconsMovieMode", 1.0f );
 	if ( pWorld )
+	{
 		pWorld->UpdateIcons();
+	}
 
 	nGameSpeed = Singleton<IGameTimer>()->GetSpeed();
 	Singleton<IGameTimer>()->SetSpeed( 0 );
@@ -3242,7 +3700,9 @@ bool CInterfaceMission::MsgBeginScriptMovieSequence( const SGameMessage &msg )
 		return false;
 	}
 	if ( pMovieBorder )
+	{
 		pMovieBorder->ShowWindow( true );
+	}
 	//NMainLoop::Command( ML_COMMAND_MISSION_BORDER, "" );
 
 	return false;
@@ -3254,7 +3714,9 @@ void CInterfaceMission::EndScriptMovieSequence()
 
 	NGlobal::SetVar( "MissionIconsMovieMode", 0.0f );
 	if ( pWorld )
+	{
 		pWorld->UpdateIcons();
+	}
 
 	Singleton<IGameTimer>()->SetSpeed( nGameSpeed );
 	pScreen->ShowWindow( true );
@@ -3263,7 +3725,9 @@ void CInterfaceMission::EndScriptMovieSequence()
 	//	CheckedShowHelpScreen( false );
 
 	if ( pMovieBorder )
+	{
 		pMovieBorder->ShowWindow( false );
+	}
 	/*
 	if ( eSkipState != ESMS_NONE )
 		eSkipState = ESMS_DONE;
@@ -3290,9 +3754,13 @@ bool CInterfaceMission::OnReinfSelectDblClick( const std::string &szSender )
 bool CInterfaceMission::OnToggleReinf( const std::string &szSender )
 {
 	if ( !pReinf->IsOpen() )
+	{
 		pReinf->Show();
+	}
 	else
+	{
 		pReinf->Close( true );
+	}
 
 	return true;
 }
@@ -3347,11 +3815,17 @@ bool CInterfaceMission::OnClickMultiSelectUnit( const std::string &szSender, uin
 bool CInterfaceMission::OnSelectSpecialGroup( const std::string &szSender, uint16_t wKeyboardFlags )
 {
 	if ( szSender == "Button01" )
+	{
 		pWorld->OnSelectSpecialGroup( 0 );
+	}
 	else if ( szSender == "Button02" )
+	{
 		pWorld->OnSelectSpecialGroup( 1 );
+	}
 	else if ( szSender == "Button03" )
+	{
 		pWorld->OnSelectSpecialGroup( 2 );
+	}
 	// Keep superweapons on Button04 for compatibility with vanilla UI data.
 	else if ( szSender == "Button04" )
 	{
@@ -3365,9 +3839,13 @@ bool CInterfaceMission::OnSelectSpecialGroup( const std::string &szSender, uint1
 		}
 	}
 	else if ( szSender == "Button05" )
+	{
 		pWorld->OnSelectSpecialGroup( 4 );
+	}
 	else if ( szSender == "Button06" )
+	{
 		pWorld->OnSelectSpecialGroup( 5 );
+	}
 
 	return true;
 }
@@ -3404,7 +3882,9 @@ void CInterfaceMission::NewActionButtonClick( NDb::EUserAction eAction )
 		{
 			if ( action.eTargetPanel != NDb::ACTION_BTN_PANEL_FORMATIONS &&
 			     action.eTargetPanel != NDb::ACTION_BTN_PANEL_RADIO_CONTROLLED )
+			{
 				NInput::PostEvent( "set_forced_action", eAction, 0 );
+			}
 		}
 		else
 		{
@@ -3415,9 +3895,13 @@ void CInterfaceMission::NewActionButtonClick( NDb::EUserAction eAction )
 			else
 			{
 				if ( action.curState.eState == EASS_READY_TO_ON )
+				{
 					NInput::PostEvent( "set_special_ability", eAction, NDb::PARAM_ABILITY_ON );
+				}
 				else if ( action.curState.eState == EASS_ACTIVE )
+				{
 					NInput::PostEvent( "set_special_ability", eAction, NDb::PARAM_ABILITY_OFF );
+				}
 			}
 		}
 	}
@@ -3453,13 +3937,19 @@ bool CInterfaceMission::OnEnterPressed( uint16_t wKeyboardFlags )
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	if ( pST->GetGameType() != IScenarioTracker::EGT_MULTI_FLAG_CONTROL )
+	{
 		return true;
+	}
 
 	bool bTeam = chatInput.bTeamByDefault;
 	if ( ( wKeyboardFlags & EKF_CTRL ) != 0 )
+	{
 		bTeam = true;
+	}
 	else if ( ( wKeyboardFlags & EKF_SHIFT ) != 0 )
+	{
 		bTeam = false;
+	}
 	StartChatInput( bTeam );
 
 	return true;
@@ -3468,7 +3958,9 @@ bool CInterfaceMission::OnEnterPressed( uint16_t wKeyboardFlags )
 bool CInterfaceMission::OnChatInputEnterPressed()
 {
 	if ( chatInput.pEdit )
+	{
 		SendChat( chatInput.pEdit->GetText(), chatInput.bTeam );
+	}
 
 	CloseChatInput();
 
@@ -3494,16 +3986,22 @@ void CInterfaceMission::StartChatInput( bool _bTeam )
 	chatInput.bTeam = _bTeam;
 
 	if ( !pMinimizeBtn || !pMinimizeBtn->IsEnabled() )
+	{
 		return;
+	}
 
 	chatInput.bMultifunctionPanelMinimized = bMultifunctionPanelMinimized;
 	if ( !chatInput.bMultifunctionPanelMinimized )
+	{
 		FastMinimizePanels();
+	}
 
 	if ( chatInput.pPanel && !chatInput.pPanel->IsVisible() )
 	{
 		if ( chatInput.pPanel )
+		{
 			chatInput.pPanel->ShowWindow( true );
+		}
 		int nViewWidth = 0;
 		if ( chatInput.pView )
 		{
@@ -3525,7 +4023,9 @@ void CInterfaceMission::StartChatInput( bool _bTeam )
 void CInterfaceMission::SendChat( const std::wstring &wszText, bool bTeam )
 {
 	if ( wszText.empty() )
+	{
 		return;
+	}
 
 	CPtr<SMPUIInGameChatMessage> pChatMsg = new SMPUIInGameChatMessage( wszText, bTeam );
 	Singleton<IMPToUIManager>()->AddUIMessage( pChatMsg );
@@ -3561,7 +4061,9 @@ void CInterfaceMission::CloseChatInput()
 		chatInput.pEdit->SetFocus( false );
 
 		if ( !chatInput.bMultifunctionPanelMinimized )
+		{
 			FastMaximizePanels();
+		}
 	}
 }
 
@@ -3569,9 +4071,13 @@ void CInterfaceMission::AfterLoad()
 {
 	// Older saves predate per-screen font scaling. Restore it before UI reflow.
 	if ( pScreen )
+	{
 		pScreen->SetHudFontScale( true );
+	}
 	if ( pMovieBorder )
+	{
 		pMovieBorder->SetHudFontScale( true );
+	}
 	if ( pMission == 0 )
 	{
 		NGlobal::ProcessCommand( L"main_menu" );
@@ -3591,7 +4097,9 @@ void CInterfaceMission::AfterLoad()
 	{
 		SIconSlot &slot = iconSlots[i];
 		if ( slot.pProgressBar )
+		{
 			slot.pProgressBar->SetForward( pBackground );
+		}
 	}
 
 	CInterfaceScreenBase::AfterLoad();
@@ -3642,7 +4150,9 @@ void CInterfaceMission::Draw( NGScene::CRTPtr *pTexture )
 	}
 
 	if ( nFrameTransition == 0 )
+	{
 		CInterfaceScreenBase::Draw();
+	}
 	else if ( nFrameTransition == 1 )
 	{
 		const CVec3 &vFrom = Camera()->GetAnchor();
@@ -3652,7 +4162,9 @@ void CInterfaceMission::Draw( NGScene::CRTPtr *pTexture )
 		float fDistance = fabs( vTo );
 		NGScene::SFrameTransitionInfo ftInfo;
 		if ( fDistance > 0 )
+		{
 			vTo /= fDistance;
+		}
 
 		SHMatrix matr = Camera()->GetViewMatrix();
 		matr._14 = matr._24 = matr._31 = matr._32 = matr._34 = 0.0f;
@@ -3663,7 +4175,9 @@ void CInterfaceMission::Draw( NGScene::CRTPtr *pTexture )
 
 		fDistance /= 50.0f;
 		if ( fDistance > 3.0f )
+		{
 			fDistance = 3.0f;
+		}
 		ftInfo.fTransitionLength = fDistance;
 		ftInfo.bRandomDir = false;
 		ftInfo.nEffectDuration = s_nTransitionEffectDuration;
@@ -3702,7 +4216,9 @@ void CInterfaceMission::SetActionMode( EActionMode eActionMode )
 		case EAM_SELECT:
 		{
 			if ( pActionTab )
+			{
 				pActionTab->SetActive( ACTION_TAB_SELECT );
+			}
 
 			UpdateSelectMode();
 
@@ -3713,11 +4229,17 @@ void CInterfaceMission::SetActionMode( EActionMode eActionMode )
 		case EAM_REINF:
 		{
 			if ( pMultiFunctionTab )
+			{
 				pMultiFunctionTab->SetActive( TAB_REINF_SELECT );
+			}
 			if ( pActionTab )
+			{
 				pActionTab->SetActive( ACTION_TAB_REINF );
+			}
 			if ( pAppearanceTab )
+			{
 				pAppearanceTab->SetActive( TAB_APPEARANCE_REINF );
+			}
 
 			eActivePanel = NDb::ACTION_BTN_PANEL_DEFAULT;
 			eActiveAction = NDb::USER_ACTION_UNKNOWN;
@@ -3729,11 +4251,17 @@ void CInterfaceMission::SetActionMode( EActionMode eActionMode )
 		case EAM_SUPER_WEAPON:
 		{
 			if ( pMultiFunctionTab )
+			{
 				pMultiFunctionTab->SetActive( TAB_SUPER_WEAPON_SELECT );
+			}
 			if ( pActionTab )
+			{
 				pActionTab->SetActive( ACTION_TAB_SUPER_WEAPON );
+			}
 			if ( pAppearanceTab )
+			{
 				pAppearanceTab->SetActive( TAB_APPEARANCE_SUPER_WEAPON );
+			}
 
 			eActivePanel = NDb::ACTION_BTN_PANEL_DEFAULT;
 			eActiveAction = NDb::USER_ACTION_UNKNOWN;
@@ -3863,7 +4391,9 @@ void CDrawProgress::OnTotalCount( ECounter eCounter, int nTotalCount )
 		case EC_TEXTURES:
 		{
 			if ( pProgress )
+			{
 				pProgress->SetNumSteps( nTotalCount );
+			}
 		}
 		break;
 	};
@@ -3876,7 +4406,9 @@ void CDrawProgress::OnCount( ECounter eCounter, int nCount )
 		case EC_TEXTURES:
 		{
 			if ( pProgress )
+			{
 				pProgress->SetCurrentStep( nCount );
+			}
 		}
 		break;
 	};
@@ -3935,22 +4467,30 @@ void CICLoadB2::OnProgress( EStage eStage )
 			}
 
 			if ( pProgress )
+			{
 				pProgress->SetNumSteps( 2 + 3 );
+			}
 		}
 		break;
 		case STG_SERIALIZE_DONE:
 		{
 			if ( pProgress )
+			{
 				pProgress->Step();
+			}
 		}
 		break;
 		case STG_AFTER_LOAD_DONE:
 		{
 			if ( pProgress )
+			{
 				pProgress->Step();
+			}
 
 			if ( pProgress )
+			{
 				pProgress->LockRange( 3 );
+			}
 			Scene()->SwitchScene( SCENE_MISSION );
 			Scene()->GetGView()->WaitForLoad( true );
 			Scene()->ToggleShow( SCENE_SHOW_NO_FLIP ); // no flip
@@ -3961,7 +4501,9 @@ void CICLoadB2::OnProgress( EStage eStage )
 			Scene()->GetGView()->SetLoadingCounter( 0, 0, 0 );
 			Scene()->ToggleShow( SCENE_SHOW_NO_FLIP ); // flip
 			if ( pProgress )
+			{
 				pProgress->UnlockRange();
+			}
 
 			pProgress = 0;
 
@@ -4018,12 +4560,16 @@ void MsgChangeGameSpeed( const SGameMessage &msg, int nAdd )
 {
 	if ( Singleton<IScenarioTracker>()->GetGameType() != IAIScenarioTracker::EGT_SINGLE &&
 	     NGlobal::GetVar( "History.Playing", 0 ) == 0 )
+	{
 		return;
+	}
 
 	int nPrevSpeed = GameTimer()->GetSpeed();
 	GameTimer()->SetSpeed( nPrevSpeed + nAdd );
 	if ( GameTimer()->GetSpeed() == nPrevSpeed )
+	{
 		return;
+	}
 
 	// report about game speed changed to chat
 	std::wstring wszText = InterfaceState()->GetTextEntry( "T_GAME_SPEED_CHANGED" ) +
@@ -4047,7 +4593,9 @@ static void CmdQuickLoad( const std::string &szID, const std::vector<std::wstrin
 static void CmdLoadGame( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() != 1 )
+	{
 		csSystem << "usage: " << szID << "game_name" << endl;
+	}
 	else
 	{
 		std::string szParam;
@@ -4064,9 +4612,13 @@ static void CmdLoadGame( const std::string &szID, const std::vector<std::wstring
 void DoQuickSave()
 {
 	if ( Singleton<IScenarioTracker>()->GetGameType() != IAIScenarioTracker::EGT_SINGLE )
+	{
 		return;
+	}
 	if ( !Singleton<IScenarioTracker>()->IsMissionActive() )
+	{
 		return;
+	}
 
 	std::wstring wszName01 = InterfaceState()->GetTextEntry( "T_QUICK_SAVE_NAME_01" );
 	std::wstring wszName02 = InterfaceState()->GetTextEntry( "T_QUICK_SAVE_NAME_02" );
@@ -4117,7 +4669,9 @@ void DoQuickLoad()
 	info.SetLoadInfo();
 
 	if ( !szName01.empty() )
+	{
 		NMainLoop::Command( ML_COMMAND_LOAD_GAME, szName01.c_str() );
+	}
 }
 
 void CmdQuickSave( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
@@ -4129,26 +4683,36 @@ void DoAutosaveInMission( const bool bOnWin )
 {
 	const bool bKRIDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
 	if ( bKRIDemo )
+	{
 		return;
+	}
 
 	if ( Singleton<IScenarioTracker>()->GetGameType() != IAIScenarioTracker::EGT_SINGLE )
+	{
 		return;
+	}
 
 	if ( const NDb::SMapInfo *pMission = Singleton<IScenarioTracker>()->GetCurrentMission() )
 	{
 		std::wstring wszMissionName;
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pMission->, LocalizedName ) )
+		{
 			wszMissionName = GET_TEXT_PRE( pMission->, LocalizedName );
+		}
 
 		std::wstring wszCampaignName;
 		const NDb::SCampaign *pCampaign = Singleton<IScenarioTracker>()->GetCurrentCampaign();
 		if ( pCampaign )
+		{
 			wszCampaignName = GET_TEXT_PRE( pCampaign->, LocalizedName ) + L" - ";
+		}
 
 		std::wstring wszName = InterfaceState()->GetTextEntry( "T_AUTO_SAVE_NAME" );
 		if ( !wszName.empty() )
+		{
 			NSaveLoad::MakeUniqueSave(
 					wszName + wszCampaignName + wszMissionName + ( bOnWin ? L" 1" : L" 2" ), true, false, false );
+		}
 	}
 }
 
@@ -4179,12 +4743,16 @@ void CICMission::PostCreate( CICMission::IInterface *pInterface )
 	{
 		SReplayInfo replay;
 		if ( bReplay )
+		{
 			replay = SReplayInfo( szReplayFileName );
+		}
 
 		pTrans = CreateSinglePlayerTransceiver( replay, Singleton<IAILogic>() );
 
 		if ( bReplay )
+		{
 			pMap = pTrans->GetMap();
+		}
 
 		// A replay that did not load leaves the history empty, so there is no
 		// map, and everything below this dereferences one. CreateCommandsHistory
@@ -4200,15 +4768,21 @@ void CICMission::PostCreate( CICMission::IInterface *pInterface )
 			// Leaves Replay.Result at the failure the flag set, so a
 			// verification run reports this rather than looking like a pass.
 			if ( NGlobal::GetVar( "Replay.ExitWhenFinished", 0 ) != 0 )
+			{
 				NMainLoop::Command( CreateICExitGame() );
+			}
 			return;
 		}
 	}
 
 	if ( nPlayerForWarFog < 0 )
+	{
 		nPlayerForWarFog = Singleton<IAIScenarioTracker>()->GetLocalPlayer();
+	}
 	else
+	{
 		Singleton<IAIScenarioTracker>()->SetLocalPlayer( nPlayerForWarFog );
+	}
 	pTrans->StartMission( pMap, Singleton<IAILogic>() );
 	pInterface->NewMission( pMap, pTrans, Singleton<IScenarioTracker>(), nPlayerForWarFog );
 
@@ -4218,7 +4792,9 @@ void CICMission::PostCreate( CICMission::IInterface *pInterface )
 void CICMission::Configure( const char *pszConfig )
 {
 	if ( pTrans )
+	{
 		return;
+	}
 
 	std::vector<std::string> szStrings;
 	for ( NStr::CStringIterator<char, std::string> it( pszConfig, ';' ); !it.IsEnd(); it.Next() )
@@ -4274,25 +4850,35 @@ void CInterfaceMission::SNewActionButton::Enable( bool _bEnable )
 	bEnabled = _bEnable;
 
 	if ( pBtn )
+	{
 		//		pBtn->Enable( !bPassive && bEnable );
 		pBtn->Enable( !bPassive );
+	}
 
 	if ( pIconBgDisabledWnd )
+	{
 		pIconBgDisabledWnd->ShowWindow( bPassive || !bEnabled );
+	}
 	if ( pIconFgDisabledWnd )
+	{
 		pIconFgDisabledWnd->ShowWindow( !bPassive && !bEnabled );
+	}
 }
 
 void CInterfaceMission::SNewActionButton::SetProgress( float fProgress )
 {
 	if ( pClockWnd )
+	{
 		pClockWnd->SetAngles( FP_PI2, FP_2PI + FP_PI2 - fProgress * FP_2PI );
+	}
 }
 
 void StartNewMap( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )
+	{
 		return;
+	}
 	const std::string szVal = NStr::ToMBCS( paramsSet[0] );
 
 	NGlobal::RemoveVar( "Multiplayer.Host" );
@@ -4306,8 +4892,10 @@ void StartNewMap( const std::string &szID, const std::vector<std::wstring> &para
 		szStrings.push_back( szString );
 	}
 	if ( szStrings.size() == 0 || szStrings.size() > 3 )
+	{
 		NI_ASSERT( szStrings.size() >= 1,
 		           "Illegal usage of \"map\" command (i.e. map <map_id> <player>|\"replay\";<file_name>;" );
+	}
 	if ( szStrings[0] == "replay" )
 	{
 	}
@@ -4317,7 +4905,9 @@ void StartNewMap( const std::string &szID, const std::vector<std::wstring> &para
 		// don't brake replay syncronization :)
 		int nLocalPlayer = 0;
 		if ( paramsSet.size() >= 2 )
+		{
 			nLocalPlayer = NStr::ToInt( NStr::ToMBCS( paramsSet[1] ) );
+		}
 
 		InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_SINGLE );
 		Singleton<IAIScenarioTracker>()->SetLocalPlayer( nLocalPlayer );
@@ -4341,20 +4931,26 @@ void BalanceTest( const std::string &szID, const std::vector<std::wstring> &para
 {
 	NGlobal::SetVar( "balance_test", NStr::ToInt( NStr::ToMBCS( paramsSet[0] ) ) );
 	if ( paramsSet.size() == 1 )
+	{
 		NGlobal::SetVar( "balance_test_n_iteration", 0 );
+	}
 	StartNewMap( szID, paramsSet, pContext );
 }
 
 bool CInterfaceMission::SaveReplay( const std::string &szFileName )
 {
 	if ( !IsValid( pTransceiver ) )
+	{
 		return false;
+	}
 
 	// Both transceivers hand their commands history out as the checksum logger,
 	// and SaveReplay is on the concrete class rather than on ICommandsHistory.
 	CCommandsHistory *pHistory = dynamic_cast<CCommandsHistory *>( pTransceiver->GetCheckSumLogger() );
 	if ( pHistory == 0 )
+	{
 		return false;
+	}
 
 	// Lobby metadata a single-player mission does not have. SaveReplay only
 	// reads the tech level, the capture time and the unit-experience flag out of
@@ -4394,7 +4990,9 @@ void CmdSaveReplay( const std::string &szID, const std::vector<std::wstring> &pa
 void ReplayHistory( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )
+	{
 		return;
+	}
 
 	const std::string szVal = NStr::ToMBCS( paramsSet[0] );
 	std::string szPlayerForWarFog = "0";
@@ -4437,7 +5035,9 @@ public:
 			}
 		}
 		else
+		{
 			entries1[nEntry] = ulChecksum;
+		}
 		return true;
 	}
 };
@@ -4445,7 +5045,9 @@ public:
 void CompareSaves( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() != 2 )
+	{
 		csSystem << "usage: " << szID << "save_1" << "save_2" << endl;
+	}
 	else
 	{
 	OMG_I_USE_GOTO_AGAIN:
@@ -4465,7 +5067,9 @@ void CompareSaves( const std::string &szID, const std::vector<std::wstring> &par
 				CFileStream stream( szPathName, CFileStream::WIN_READ_ONLY );
 				CPtr<IBinSaver> pSaver = CreateSaveLoadSaver( &stream, SAVER_MODE_READ_64 );
 				if ( pSaver == 0 )
+				{
 					return;
+				}
 				NMainLoop::Serialize( *pSaver );
 			}
 
@@ -4483,7 +5087,9 @@ void CompareSaves( const std::string &szID, const std::vector<std::wstring> &par
 				CFileStream stream( szPathName, CFileStream::WIN_READ_ONLY );
 				CPtr<IBinSaver> pSaver = CreateSaveLoadSaver( &stream, SAVER_MODE_READ_64 );
 				if ( pSaver == 0 )
+				{
 					return;
+				}
 				NMainLoop::Serialize( *pSaver );
 			}
 

@@ -245,7 +245,9 @@ bool CStandartSmoothMechPath::BuildSmoothTurn( const CVec2 &vUnitMoveDir, const 
 		while ( bres.GetDirection() != tile )
 		{
 			if ( GetAIMap()->GetTerrain()->CanUnitGo( nTileRadius, bres.GetDirection(), cAIClass ) == FREE_NONE )
+			{
 				break;
+			}
 
 			bres.MakePointStep();
 		}
@@ -259,7 +261,9 @@ bool CStandartSmoothMechPath::BuildSmoothTurn( const CVec2 &vUnitMoveDir, const 
 			while ( bres.GetDirection() != tile )
 			{
 				if ( GetAIMap()->GetTerrain()->CanUnitGo( nTileRadius, bres.GetDirection(), cAIClass ) == FREE_NONE )
+				{
 					break;
+				}
 
 				insertedTiles.push_back( bres.GetDirection() );
 				bres.MakePointStep();
@@ -278,7 +282,9 @@ bool CStandartSmoothMechPath::BuildSmoothTurn( const CVec2 &vUnitMoveDir, const 
 		return false;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 void CStandartSmoothMechPath::AddSmoothTurn()
@@ -309,7 +315,9 @@ bool CStandartSmoothMechPath::CheckTurn( const uint16_t wNewDir )
 	const uint16_t wBackDirsDiff = DirsDifference( wUnitDir + 32768, wNewDir );
 	// поворот небольшой
 	if ( wRightDirsDiff < DIR_DIFF_TO_SMOOTH_TURNING || bCanBackward && wBackDirsDiff < DIR_DIFF_TO_SMOOTH_TURNING )
+	{
 		return true;
+	}
 	else
 	{
 		const CVec2 vNewDir = GetVectorByDirection( wNewDir );
@@ -336,11 +344,17 @@ bool CStandartSmoothMechPath::CheckTurn( const uint16_t wNewDir )
 		}
 
 		if ( nResult == -1 && bCanRotateForward && bCanRotateBackward )
+		{
 			nResult = 1;
+		}
 		if ( nResult == -1 && !bCanBackward && bCanRotateForward )
+		{
 			nResult = 1;
+		}
 		if ( nResult == -1 && bCanBackward && wBackDirsDiff < wRightDirsDiff && bCanRotateBackward )
+		{
 			nResult = 1;
+		}
 
 		if ( nResult == -1 && bCanRotateForward )
 		{
@@ -355,7 +369,9 @@ bool CStandartSmoothMechPath::CheckTurn( const uint16_t wNewDir )
 		}
 
 		if ( nResult == -1 && GetUnit()->CanTurnTo( wNewDir, false ) )
+		{
 			nResult = 1;
+		}
 
 		return ( nResult == 1 );
 	}
@@ -443,13 +459,19 @@ bool CStandartSmoothMechPath::Init(
 		bCanGoBackward = ( GetUnit() != 0 && GetUnit()->CanGoBackward() );
 
 		if ( bForceGoBackward )
+		{
 			SetForceGoBackward( true );
+		}
 
 		if ( !bForceGoBackward && _bCheckTurn && GetPath()->ShouldCheckTurn() )
+		{
 			CheckTurn( GetDirectionByVector( GetSplineDX() ) );
+		}
 
 		if ( !bForceGoBackward && GetPath() && _bSmoothTurn )
+		{
 			AddSmoothTurn();
+		}
 	}
 
 	return bResult;
@@ -466,17 +488,21 @@ const bool CStandartSmoothMechPath::ValidateCurrentPath( const CVec2 &vCenter, c
 		SUnitProfile unitProfile( GetUnit()->GetUnitProfile() );
 		SRect unitRect;
 		if ( unitProfile.bRect )
+		{
 			unitRect.InitRect( vCenter,
 			                   GetUnit()->GetDirectionVector(),
 			                   unitProfile.rect.lengthAhead + GetAIMap()->GetTileSize() * 0.85f,
 			                   0,
 			                   unitProfile.rect.width * 0.9f );
+		}
 		else
+		{
 			unitRect.InitRect( vCenter,
 			                   GetUnit()->GetDirectionVector(),
 			                   unitProfile.circle.r + GetAIMap()->GetTileSize() * 0.85f,
 			                   0,
 			                   unitProfile.circle.r * 0.6f );
+		}
 
 		const EAIClasses aiClass = GetUnit()->GetAIPassabilityClass();
 		if ( GetAIMap()->IsRectOnLockedTiles( unitRect, aiClass ) )
@@ -493,14 +519,18 @@ const bool CStandartSmoothMechPath::ValidateCurrentPath( const CVec2 &vCenter, c
 				const SVector &tile = iter->tile;
 				if ( abs( tile.x - unitTileCenter.x ) <= nBoundTileRadius ||
 				     abs( tile.y - unitTileCenter.y ) <= nBoundTileRadius )
+				{
 					iter = tiles.erase( iter );
+				}
 				else
 				{
 					const CVec2 vTileCenter = GetAIMap()->GetPointByTile( tile );
 					CVec2 vDiff = vTileCenter - vCenter;
 					Normalize( &vDiff );
 					if ( fabs( vDiff * GetUnit()->GetDirectionVector() ) > 1 / FP_SQRT_2 )
+					{
 						iter = tiles.erase( iter );
+					}
 					else
 					{
 						iter->lockInfo = EAC_ANY;
@@ -511,7 +541,9 @@ const bool CStandartSmoothMechPath::ValidateCurrentPath( const CVec2 &vCenter, c
 
 			const float fDist2 = fabs2( vCenter - GetPath()->GetFinishPoint() );
 			if ( fDist2 <= sqr( 3 * GetUnit()->GetUnitProfile().GetHalfLength() ) )
+			{
 				FinishPath();
+			}
 			else
 			{
 				const int nLockID = GetAIMap()->GetTerrain()->TemporaryLockTiles( tiles );
@@ -522,9 +554,13 @@ const bool CStandartSmoothMechPath::ValidateCurrentPath( const CVec2 &vCenter, c
 				{
 					if ( GetUnit()->GetCollision()->GetName() == NCollision::ECN_FREE &&
 					     ( vLastStopPosition.x == -1 || mDistance( vLastStopPosition, GetUnit()->GetCenterTile() ) > 4 ) )
+					{
 						CPtr<ICollision> pCollison = CreateCollision( GetUnit(), 0, -1, NCollision::ECN_STOP );
+					}
 					else
+					{
 						FinishPath();
+					}
 				}
 				GetAIMap()->GetTerrain()->RemoveTemporaryLock( nLockID );
 			}
@@ -547,17 +583,23 @@ bool CStandartSmoothMechPath::UpdateDirection()
 	if ( GetSplineDX() != VNULL2 )
 	{
 		if ( bForceGoBackward )
+		{
 			GetUnit()->SetGoForward( false );
+		}
 
 		// слишком велика разница между старым и новым направлениями, нужно повернуться
 		const uint16_t wDirsDiff = DirsDifference( GetUnit()->GetDirection(), GetDirectionByVector( GetSplineDX() ) );
 		if ( wDirsDiff != 0 && ( GetUnit()->IsTurning() || wDirsDiff > DIR_DIFF_TO_SMOOTH_TURNING ) )
 		{
 			if ( !GetUnit()->TurnToDirection( GetDirectionByVector( GetSplineDX() ), true, !bForceGoBackward ) )
+			{
 				return true;
+			}
 		}
 		else
+		{
 			GetUnit()->SetDirection( GetDirectionByVector( GetSplineDX() ) );
+		}
 	}
 	return false;
 }
@@ -570,7 +612,9 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 	if ( IsFinished() || ( circles.empty() && IsSplinePointsEqual() ) )
 	{
 		if ( !IsFinished() )
+		{
 			FinishPath();
+		}
 		return GetUnit()->GetCenterPlain();
 	}
 
@@ -632,19 +676,25 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 					bCanGoForward = true;
 					//					GetUnit()->ForceGoForward();
 					if ( !GetPath()->CanGoBackward( GetUnit() ) && GetUnit()->CanTurnRound() )
+					{
 						GetUnit()->TurnToDirection( wFrontDir, false, true );
+					}
 				}
 			}
 		}
 		else
+		{
 			lastCheckToRightTurn += timeDiff;
+		}
 	}
 
 	const float fRemain = fMoveSpeed * timeDiff;
 	while ( !IsFinished() && fabs( GetSplinePoint() - vCenter ) < fRemain )
 	{
 		while ( fabs( GetSplinePoint() - vCenter ) < fRemain && GetNIter() < CBSpline::N_OF_ITERATONS )
+		{
 			IterateSpline();
+		}
 
 		if ( GetPath()->IsFinished() && mDistance( GetSplinePoint(), GetPath()->GetFinishPoint() ) < 2 )
 		{
@@ -655,7 +705,9 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 		else
 		{
 			if ( fabs( GetSplinePoint() - vCenter ) < fRemain && GetNIter() >= CBSpline::N_OF_ITERATONS )
+			{
 				InitSpline();
+			}
 		}
 	}
 
@@ -670,15 +722,21 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 	}
 
 	if ( UpdateDirection() )
+	{
 		return vCenter;
+	}
 
 	CVec2 vResult( vCenter );
 	if ( fabs( GetSplinePoint() - vCenter ) > fRemain )
+	{
 		// прошли чуть дальше, нужно точно отсчитать fRemain
 		vResult = vCenter + Norm( GetSplinePoint() - vCenter ) * fRemain;
+	}
 	else
+	{
 		// так и не прошли по сплайну, сколько надо
 		vResult = GetSplinePoint();
+	}
 
 	// для юнитов с ненулевой скоростью поворота
 	// до конца пути осталось совсем немного
@@ -710,19 +768,27 @@ const bool CStandartSmoothMechPath::CanGoBackward() const
 	if ( GetPath() != 0 )
 	{
 		if ( bCanGoBackward && !bCanGoForward )
+		{
 			return true;
+		}
 		else
+		{
 			return GetPath()->CanGoBackward( GetUnit() );
+		}
 	}
 	else
+	{
 		return false;
+	}
 }
 
 void CStandartSmoothMechPath::SetForceGoBackward( const bool bForce )
 {
 	bForceGoBackward = bForce;
 	if ( !bForceGoBackward || GetUnit() == 0 )
+	{
 		return;
+	}
 
 	// Forced reverse never consumes a forward smooth-turn arc or switches back to forward travel.
 	circles.clear();

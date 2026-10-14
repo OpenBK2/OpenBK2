@@ -9,7 +9,9 @@ bool CConstructorInfo::GetUnitPlatforms( const int nUniqueID, const std::vector<
 {
 	std::unordered_map<int, std::vector<SUnitPlatform>>::iterator posUnits = units.find( nUniqueID );
 	if ( posUnits == units.end() )
+	{
 		return false;
+	}
 	*pPlatforms = &( posUnits->second );
 
 	return true;
@@ -38,9 +40,13 @@ static void ConstructPlatforms( std::vector<CConstructorInfo::SUnitPlatform> *pP
 				if ( pProfile->platforms[i].guns[j].bAttached )
 				{
 					if ( platform.gunIndexes.size() <= j )
+					{
 						platform.gunIndexes.insert( platform.gunIndexes.end(), j );
+					}
 					else if ( platform.gunIndexes[j] > j )
+					{
 						platform.gunIndexes.insert( platform.gunIndexes.begin() + j, j );
+					}
 
 					NI_VERIFY( platform.gunIndexes.size() > j || platform.gunIndexes[platform.gunIndexes.size() - 1] == j,
 					           "Wrong gun index",
@@ -94,20 +100,30 @@ int CConstructorInfo::GetSlotsSize( const int nUniqueID ) const
 {
 	std::unordered_map<int, std::vector<int>>::const_iterator pos = slots.find( nUniqueID );
 	if ( pos == slots.end() )
+	{
 		return 0;
+	}
 	else
+	{
 		return pos->second.size();
+	}
 }
 
 int CConstructorInfo::GetSlotObject( const int nUniqueID, const int nSlot ) const
 {
 	std::unordered_map<int, std::vector<int>>::const_iterator pos = slots.find( nUniqueID );
 	if ( pos == slots.end() )
+	{
 		return -1;
+	}
 	else if ( nSlot < 0 || nSlot >= pos->second.size() )
+	{
 		return -1;
+	}
 	else
+	{
 		return pos->second[nSlot];
+	}
 }
 
 CConstructorInfo *CreateConstructorInfo()

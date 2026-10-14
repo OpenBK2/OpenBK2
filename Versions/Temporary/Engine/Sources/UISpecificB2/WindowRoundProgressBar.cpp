@@ -64,7 +64,9 @@ void CWindowRoundProgressBar::SetAngles( float _fStartAngle, float _fFinishAngle
 
 	float fStartAngle = _fStartAngle;
 	if ( fStartAngle > fFinishAngle )
+	{
 		fStartAngle -= FP_2PI;
+	}
 	float fAngle = ( fStartAngle + fFinishAngle ) * 0.5f;
 	roundVisitor.SetAngles( fStartAngle, fAngle );
 	roundVisitor2.SetAngles( fAngle, fFinishAngle );

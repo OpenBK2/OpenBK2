@@ -41,7 +41,9 @@ public:
 	{
 		NTimer::STime dT = prevTime == 0 ? 0 : time - prevTime;
 		if ( dT > timeMaxDelta )
+		{
 			dT = timeMaxDelta;
+		}
 		prevTime = time;
 		if ( !bPaused )
 		{
@@ -60,7 +62,9 @@ public:
 		saver.Add( 4, &fError );
 		saver.Add( 5, &bPaused );
 		if ( saver.IsReading() )
+		{
 			prevTime = 0;
+		}
 		return 0;
 	}
 };

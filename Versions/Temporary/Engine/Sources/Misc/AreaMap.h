@@ -37,17 +37,23 @@ private:
 		CDataList &data = ( *this )[nY][nX];
 		typename CDataList::const_iterator pos = find_if( data.begin(), data.end(), CObjEqualFunctional( pObj ) );
 		if ( pos == data.end() )
+		{
 			data.push_back( pObj );
+		}
 	}
 	// remove object from the (nX, nY) cell
 	void RemoveFrom( int nX, int nY, TYPE *pObj )
 	{
 		if ( ( nX < 0 ) || ( nX >= this->GetSizeX() ) || ( nY < 0 ) || ( nY >= this->GetSizeY() ) )
+		{
 			return;
+		}
 		CDataList &data = ( *this )[nY][nX];
 		typename CDataList::iterator pos = find_if( data.begin(), data.end(), CObjEqualFunctional( pObj ) );
 		if ( pos != data.end() )
+		{
 			data.erase( pos );
+		}
 	}
 
 public:
@@ -150,17 +156,23 @@ private:
 		CDataList &data = ( *this )[nY][nX];
 		typename CDataList::const_iterator pos = find_if( data.begin(), data.end(), TComparator( obj ) );
 		if ( pos == data.end() )
+		{
 			data.push_back( obj );
+		}
 	}
 	// remove object from the (nX, nY) cell
 	void RemoveFrom( int nX, int nY, const TYPE &obj )
 	{
 		if ( ( nX < 0 ) || ( nX >= this->GetSizeX() ) || ( nY < 0 ) || ( nY >= this->GetSizeY() ) )
+		{
 			return;
+		}
 		CDataList &data = ( *this )[nY][nX];
 		typename CDataList::iterator pos = find_if( data.begin(), data.end(), TComparator( obj ) );
 		if ( pos != data.end() )
+		{
 			data.erase( pos );
+		}
 	}
 	// diable copy constructor and assignment operator
 	CStructAreaMap( const CStructAreaMap &a ) {}

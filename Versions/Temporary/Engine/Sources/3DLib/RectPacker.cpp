@@ -34,7 +34,9 @@ struct SStripeBuilder
 	SStripeBuilder( std::vector<SRect> &_res ) : res( _res ), indices( _res.size() )
 	{
 		for ( int k = 0; k < indices.size(); ++k )
+		{
 			indices[k] = k;
+		}
 		std::sort( indices.begin(), indices.end(), SRectOrder( res ) );
 	}
 	void FillStripe( SStripe *pRes, int nStartFrom )
@@ -45,34 +47,46 @@ struct SStripeBuilder
 		for ( int i = nStartFrom; i < taken.size(); ++i )
 		{
 			if ( taken[i] )
+			{
 				continue;
+			}
 			const SRect &r = res[indices[i]];
 			ASSERT( r.nYSize <= nHeight );
 			if ( r.nYSize * 2 <= nHeight )
+			{
 				break;
+			}
 			if ( nTail + r.nXSize <= nWidth )
 			{
 				pRes->rects.push_back( indices[i] );
 				taken[i] = 1;
 				nTail += r.nXSize;
 				if ( nTail == nWidth )
+				{
 					return;
+				}
 			}
 		}
 		// split height in 2 and try to fill the gap
 		if ( nHeight == 1 )
+		{
 			return;
+		}
 		int nOriginalHeight = nHeight, nYShift = 0, nYStart = pRes->nYShift;
 		for ( ;; )
 		{
 			nHeight /= 2;
 			if ( nHeight == 0 )
+			{
 				return;
+			}
 			while ( BuildStripe( nTail, nYStart + nYShift, nHeight, nStartFrom ) )
 			{
 				nYShift += nHeight;
 				if ( nYShift + nHeight > nOriginalHeight )
+				{
 					return;
+				}
 			}
 		}
 	}
@@ -82,15 +96,23 @@ struct SStripeBuilder
 		for ( int i = nStartFrom; i < taken.size(); ++i )
 		{
 			if ( taken[i] )
+			{
 				continue;
+			}
 			const SRect &r = res[indices[i]];
 			if ( r.nYSize > nHeight )
+			{
 				continue;
+			}
 			if ( r.nYSize * 2 <= nHeight )
+			{
 				break;
+			}
 			ASSERT( r.nXSize <= nWidth );
 			if ( nXShift + r.nXSize > nWidth )
+			{
 				continue;
+			}
 			SStripe &stripe = stripes.emplace_back();
 			stripe.nXShift = nXShift;
 			stripe.nYShift = nYShift;
@@ -118,12 +140,16 @@ struct SStripeBuilder
 				r.nXShift = r.nYShift = 0;
 			}
 			else
+			{
 				break;
+			}
 		}
 		for ( int i = 0; i < taken.size(); ++i )
 		{
 			if ( taken[i] )
+			{
 				continue;
+			}
 			const SRect &r = res[indices[i]];
 			int nHeight = r.nYSize;
 			bool bTest = BuildStripe( 0, nYShift, nHeight, i );
@@ -181,9 +207,13 @@ void PackRects( std::vector<SRect> *pRes, CTPoint<int> *pSize )
 	}
 	int nXWidthLog2 = 0;
 	while ( ( 1 << ( 2 * nXWidthLog2 ) ) < nArea )
+	{
 		++nXWidthLog2;
+	}
 	while ( ( 1 << nXWidthLog2 ) < nMaxWidth )
+	{
 		++nXWidthLog2;
+	}
 	int nWidth = 1 << nXWidthLog2;
 	SStripeBuilder sb( *pRes );
 	sb.Pack( nWidth );

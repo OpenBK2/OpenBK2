@@ -54,9 +54,13 @@ struct SMaskVisitor
 		const int nY = vOffset.y + nMaxRadius;
 
 		if ( !bVisible )
+		{
 			mask.RemoveData( nX, nY );
+		}
 		else if ( !visit.GetData( nX, nY ) )
+		{
 			mask.SetData( nX, nY );
+		}
 
 		visit.SetData( nX, nY );
 		return true;
@@ -90,7 +94,9 @@ CGlobalWarFog::SWarForFullUnitInfo::SWarForFullUnitInfo( const SWarFogUnitInfo &
 void CGlobalWarFog::OnSerialize( IBinSaver &saver )
 {
 	if ( saver.IsReading() )
+	{
 		ReInit();
+	}
 }
 
 void CGlobalWarFog::ReInit()
@@ -148,7 +154,9 @@ void CGlobalWarFog::Init( const int _nSizeX, const int _nSizeY, const int _nMaxR
 
 	warFog.resize( 2 ); // only two parties, see comment for CGlobalWarFog::SWarForFullUnitInfo.nParty !!!
 	for ( int i = 0; i < warFog.size(); ++i )
+	{
 		warFog[i].SetSizes( GetSizeX(), GetSizeY() );
+	}
 
 	areasOpenTiles.SetSizes( GetSizeX() * AI_TILES_IN_VIS_TILE, GetSizeY() * AI_TILES_IN_VIS_TILE );
 	areasOpenTiles.FillZero();
@@ -194,7 +202,9 @@ void CGlobalWarFog::RecalculateArea( const SVector &vTile )
 		{
 			if ( mask.GetData( GetSpiralPoint( i ).vOffset.x + GetMaxRadius(),
 			                   GetSpiralPoint( i ).vOffset.y + GetMaxRadius() ) )
+			{
 				areas[vTile.y][vTile.x].SetData( i );
+			}
 		}
 
 		valid.SetData( vTile.x, vTile.y );
@@ -213,7 +223,9 @@ void CGlobalWarFog::RemoveTileValid( const int x, const int y )
 			const int x1 = GetSpiralPoint( i ).vOffset.x + x;
 			const int y1 = GetSpiralPoint( i ).vOffset.y + y;
 			if ( IsTileInside( x1, y1 ) )
+			{
 				valid.RemoveData( x1, y1 );
+			}
 		}
 		bHasInvalidTile = true;
 	}
@@ -240,7 +252,9 @@ void CGlobalWarFog::AddUnit( const int nID, const SWarFogUnitInfo &updateInfo, c
 	NI_ASSERT( units.find( nID ) == units.end(), fmt::format( "Unit with id = {} already exists in warfog.", nID ) );
 
 	if ( !IsValidParty( nParty ) )
+	{
 		return;
+	}
 
 	units[nID] = SWarForFullUnitInfo( updateInfo, nParty, GetSpiralLength() );
 	units[nID].nRadius = (std::min)( units[nID].nRadius, GetMaxRadius() );
@@ -253,7 +267,9 @@ void CGlobalWarFog::DeleteUnit( const int nID )
 	if ( pos != units.end() )
 	{
 		if ( pos->second.updateFlag == UPD_CREATE_NEW_UNIT )
+		{
 			units.erase( pos );
+		}
 		else
 		{
 			pos->second.updateFlag = UPD_DELETE_UNIT;
@@ -270,7 +286,9 @@ void CGlobalWarFog::UpdateUnit( const int nID, const SWarFogUnitInfo &updateInfo
 	TWarFogUnitsMap::iterator pos = units.find( nID );
 #ifdef _FINALRELEASE
 	if ( pos == units.end() )
+	{
 		DebugTrace( "CCommonWarFog::UpdateUnit( %d ) : unit not found in warfog !!!", nID );
+	}
 #endif
 
 	if ( pos != units.end() && pos->second.updateFlag != UPD_DELETE_UNIT )
@@ -278,7 +296,9 @@ void CGlobalWarFog::UpdateUnit( const int nID, const SWarFogUnitInfo &updateInfo
 		if ( pos->second.nRadius != updateInfo.nRadius || pos->second.sector != updateInfo.sector )
 		{
 			if ( pos->second.updateFlag == UPD_UPDATED )
+			{
 				pos->second.updateFlag = UPD_UPDATE_PROPERTIES;
+			}
 
 			pos->second.nRadius = (std::min)( updateInfo.nRadius, GetMaxRadius() );
 			pos->second.sector = updateInfo.sector;
@@ -288,7 +308,9 @@ void CGlobalWarFog::UpdateUnit( const int nID, const SWarFogUnitInfo &updateInfo
 		else if ( mDistance( updateInfo.vPos, pos->second.vOldPos ) >= 1 )
 		{
 			if ( pos->second.updateFlag == UPD_UPDATED )
+			{
 				pos->second.updateFlag = UPD_UPDATE_POSITION;
+			}
 
 			pos->second.nRadius = (std::min)( updateInfo.nRadius, GetMaxRadius() );
 			pos->second.sector = updateInfo.sector;
@@ -304,14 +326,20 @@ void CGlobalWarFog::ChangeParty( const int nID, const SWarFogUnitInfo &unitInfo,
 	if ( pos == units.end() )
 	{
 		if ( IsValidParty( nNewParty ) )
+		{
 			AddUnit( nID, unitInfo, nNewParty );
+		}
 	}
 	else if ( pos->second.updateFlag != UPD_DELETE_UNIT && pos->second.nParty != nNewParty )
 	{
 		if ( !IsValidParty( nNewParty ) )
+		{
 			DeleteUnit( nID );
+		}
 		else if ( pos->second.updateFlag == UPD_CREATE_NEW_UNIT )
+		{
 			pos->second.nParty = nNewParty;
+		}
 		else
 		{
 			pos->second.updateFlag = UPD_CHANGE_PARTY;
@@ -340,7 +368,9 @@ void CGlobalWarFog::SynchronizeHeights( const SVector &vUpLeftTile, const SVecto
 const CArray1Bit &CGlobalWarFog::GetVisibleInfoForTile( const SVector &tile )
 {
 	if ( !IsTileValid( tile ) )
+	{
 		RecalculateArea( tile );
+	}
 
 	return areas[tile.y][tile.x];
 }
@@ -348,7 +378,9 @@ const CArray1Bit &CGlobalWarFog::GetVisibleInfoForTile( const SVector &tile )
 void CGlobalWarFog::OnTileChangeVisibility( const SVector &vTile, const bool bVisible, const int nParty )
 {
 	if ( bVisible )
+	{
 		updater.TileBecameVisibleFromWarFog( vTile, nParty );
+	}
 }
 
 void CGlobalWarFog::AddVisibleTiles( const int nID, SWarForFullUnitInfo &unitInfo )
@@ -371,12 +403,16 @@ void CGlobalWarFog::AddVisibleTiles( const int nID, SWarForFullUnitInfo &unitInf
 		{
 			SWarFogTileInfo &thisTileWarFog = thisPartyWarFog[vTile.y][vTile.x];
 			if ( ++thisTileWarFog.nVisible == 1 )
+			{
 				OnTileChangeVisibility( vTile, true, unitInfo.nParty );
+			}
 			++thisTileWarFog.nCloseVisible;
 			unitInfo.visValues.SetData( i );
 		}
 		else
+		{
 			unitInfo.visValues.RemoveData( i );
+		}
 	}
 
 	const int nLength = lengths[unitInfo.nRadius];
@@ -387,11 +423,15 @@ void CGlobalWarFog::AddVisibleTiles( const int nID, SWarForFullUnitInfo &unitInf
 		{
 			SWarFogTileInfo &thisTileWarFog = thisPartyWarFog[vTile.y][vTile.x];
 			if ( ++thisTileWarFog.nVisible == 1 )
+			{
 				OnTileChangeVisibility( vTile, true, unitInfo.nParty );
+			}
 			unitInfo.visValues.SetData( i );
 		}
 		else
+		{
 			unitInfo.visValues.RemoveData( i );
+		}
 	}
 
 	unitInfo.Update();
@@ -409,7 +449,9 @@ void CGlobalWarFog::RemoveVisibleTiles( const int nID, SWarForFullUnitInfo &unit
 			const SVector vTile = unitInfo.vOldPos + GetSpiralPoint( i ).vOffset;
 			SWarFogTileInfo &thisTileWarFog = thisPartyWarFog[vTile.y][vTile.x];
 			if ( --thisTileWarFog.nVisible == 0 )
+			{
 				OnTileChangeVisibility( vTile, false, unitInfo.nParty );
+			}
 			--thisTileWarFog.nCloseVisible;
 		}
 	}
@@ -421,7 +463,9 @@ void CGlobalWarFog::RemoveVisibleTiles( const int nID, SWarForFullUnitInfo &unit
 			const SVector vTile = unitInfo.vOldPos + GetSpiralPoint( i ).vOffset;
 			SWarFogTileInfo &thisTileWarFog = thisPartyWarFog[vTile.y][vTile.x];
 			if ( --thisTileWarFog.nVisible == 0 )
+			{
 				OnTileChangeVisibility( vTile, false, unitInfo.nParty );
+			}
 		}
 	}
 }
@@ -436,7 +480,9 @@ void CGlobalWarFog::Segment()
 			if ( IsTileInside( it->second.vPos ) && !IsTileValid( it->second.vPos ) )
 			{
 				if ( it->second.updateFlag == UPD_UPDATED )
+				{
 					it->second.updateFlag = UPD_UPDATE_VISIBILITY;
+				}
 				updateUnitList.Push( it->first, UPD_UPDATE_VISIBILITY, 0.0f );
 			}
 		}
@@ -448,7 +494,9 @@ void CGlobalWarFog::Segment()
 	{
 		TWarFogUnitsMap::iterator pos = units.find( updateUnitList.Pop() );
 		if ( pos == units.end() )
+		{
 			break;
+		}
 		else if ( pos->second.updateFlag != UPD_UPDATED )
 		{
 			switch ( pos->second.updateFlag )
@@ -478,11 +526,17 @@ void CGlobalWarFog::Segment()
 bool CGlobalWarFog::IsTileVisible( const SVector &tile, const int nParty ) const
 {
 	if ( theCheats.GetTurnOffWarFog() )
+	{
 		return true;
+	}
 	if ( theDipl.GetNeutralParty() == nParty || !GetAIMap()->IsTileInside( tile ) )
+	{
 		return false;
+	}
 	if ( !theDipl.IsNetGame() && IsOpenBySriptArea( tile ) && theDipl.GetMyParty() == nParty )
+	{
 		return true;
+	}
 
 	return warFog[nParty][tile.y / AI_TILES_IN_VIS_TILE][tile.x / AI_TILES_IN_VIS_TILE].nVisible != 0;
 }
@@ -490,16 +544,26 @@ bool CGlobalWarFog::IsTileVisible( const SVector &tile, const int nParty ) const
 bool CGlobalWarFog::IsUnitVisible( const SVector &tile, const int nParty, bool bCamouflated ) const
 {
 	if ( theCheats.GetTurnOffWarFog() )
+	{
 		return true;
+	}
 	if ( theDipl.GetNeutralParty() == nParty || !GetAIMap()->IsTileInside( tile ) )
+	{
 		return false;
+	}
 	if ( !theDipl.IsNetGame() && IsOpenBySriptArea( tile ) && theDipl.GetMyParty() == nParty )
+	{
 		return true;
+	}
 
 	if ( bCamouflated )
+	{
 		return warFog[nParty][tile.y / AI_TILES_IN_VIS_TILE][tile.x / AI_TILES_IN_VIS_TILE].nCloseVisible != 0;
+	}
 	else
+	{
 		return warFog[nParty][tile.y / AI_TILES_IN_VIS_TILE][tile.x / AI_TILES_IN_VIS_TILE].nVisible != 0;
+	}
 }
 
 void CGlobalWarFog::ToggleOpenForScriptAreaTiles( const NDb::SScriptArea &scriptArea, bool bOpen )
@@ -507,9 +571,13 @@ void CGlobalWarFog::ToggleOpenForScriptAreaTiles( const NDb::SScriptArea &script
 	if ( bOpen == ( scriptAreas.find( scriptArea.szName ) == scriptAreas.end() ) )
 	{
 		if ( bOpen )
+		{
 			scriptAreas.insert( scriptArea.szName );
+		}
 		else
+		{
 			scriptAreas.erase( scriptArea.szName );
+		}
 
 		std::vector<SVector> tiles;
 		if ( scriptArea.eType == EAT_RECTANGLE )
@@ -519,17 +587,23 @@ void CGlobalWarFog::ToggleOpenForScriptAreaTiles( const NDb::SScriptArea &script
 			GetAIMap()->GetTilesCoveredByRect( rect, &tiles );
 		}
 		else
+		{
 			GetAIMap()->GetTilesCoveredByLargeCircle( scriptArea.vCenter, scriptArea.fR, &tiles );
+		}
 
 		if ( bOpen )
 		{
 			for ( std::vector<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
+			{
 				areasOpenTiles.SetData( it->x, it->y );
+			}
 		}
 		else
 		{
 			for ( std::vector<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
+			{
 				areasOpenTiles.RemoveData( it->x, it->y );
+			}
 		}
 	}
 }
@@ -561,7 +635,9 @@ void CGlobalWarFog::ReplaceStaticObjects( const int nNewID, const det_set<int> &
 		for ( int y = 0; y < GetSizeY(); ++y )
 		{
 			if ( oldIDs.find( staticObjects[y][x] ) != oldIDs.end() )
+			{
 				staticObjects[y][x] = nNewID;
+			}
 		}
 	}
 }
@@ -569,10 +645,14 @@ void CGlobalWarFog::ReplaceStaticObjects( const int nNewID, const det_set<int> &
 bool CGlobalWarFog::IsTraceable( const SVector &tile1, const SVector &tile2 )
 {
 	if ( !IsTileInside( tile1 ) || !IsTileInside( tile2 ) )
+	{
 		return false;
+	}
 	const SVector vOffset = tile2 - tile1;
 	if ( abs( vOffset.x ) < 2 && abs( vOffset.y ) < 2 )
+	{
 		return true;
+	}
 	else if ( abs( vOffset.x ) > GetMaxRadius() || abs( vOffset.y ) > GetMaxRadius() )
 	{
 		CWarFogTracerInternal<SGetLastVisitor> traceableTracer( this, SGetLastVisitor() );
@@ -589,7 +669,9 @@ bool CGlobalWarFog::IsTraceable( const SVector &tile1, const SVector &tile2 )
 		else
 		{
 			if ( !IsTileValid( tile1 ) )
+			{
 				RecalculateArea( tile1 );
+			}
 			return areas[tile1.y][tile1.x].GetData( nSpiralPointIndex );
 		}
 	}
@@ -604,7 +686,9 @@ bool CGlobalWarFog::GetWarForInfo( CArray2D<uint8_t> **pWarFogInfo, const int nP
 					? ( miniMapWarFog.GetSizeY() )
 					: ( miniMapWarFog.GetSizeY() * ( nFogCalcTime - nLastFogCalcTime ) / SConsts::WAR_FOG_FULL_UPDATE + 1 );
 	if ( bFirstTime )
+	{
 		nMiniMapY = 0;
+	}
 	nLastFogCalcTime = nFogCalcTime;
 	bNeedFullCalc = false;
 	const int nLastY = (std::min)( nMiniMapY + nShift, miniMapWarFog.GetSizeY() );
@@ -651,7 +735,9 @@ bool CGlobalWarFog::GetWarForInfo( CArray2D<uint8_t> **pWarFogInfo, const int nP
 	}
 	nMiniMapY = nLastY;
 	if ( nMiniMapY == miniMapWarFog.GetSizeY() )
+	{
 		nMiniMapY = 0;
+	}
 	return nMiniMapY == 0;
 }
 
@@ -660,11 +746,13 @@ void CGlobalWarFog::DumpWarFog()
 	int nMinHeight = heights[0][0];
 	int nMaxHeight = heights[0][0];
 	for ( int x = 0; x < GetSizeX(); ++x )
+	{
 		for ( int y = 0; y < GetSizeY(); ++y )
 		{
 			nMinHeight = (std::min)( nMinHeight, heights[y][x] );
 			nMaxHeight = (std::max)( nMaxHeight, heights[y][x] );
 		}
+	}
 
 	DebugTrace( "Min height = %d, Max height = %d", nMinHeight, nMaxHeight );
 	/*

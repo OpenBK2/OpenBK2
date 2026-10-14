@@ -76,7 +76,9 @@ void CScriptCameraState::Enter()
 void CScriptCameraState::Leave()
 {
 	if ( CScriptMoviesMutatorHolder *pMoviesHolder = Camera()->GetScriptMutatorsHolder() )
+	{
 		pMoviesHolder->Stop();
+	}
 
 	dialogData.scriptCameras.clear();
 	moviesData.Clear();
@@ -164,14 +166,18 @@ bool CScriptCameraState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 					case SScriptCameraWindowData::SCA_CAMERA_ADD:
 					{
 						if ( AddScriptPlacement() )
+						{
 							RefreshDialogData( true );
+						}
 						break;
 					}
 					//
 					case SScriptCameraWindowData::SCA_CAMERA_SAVE:
 					{
 						if ( UpdateScriptPlacement( dialogData.nCurrentCamera ) )
+						{
 							RefreshDialogData( true );
+						}
 
 						NCamera::CCameraPlacement newCamera;
 						GetCameraPlacementByID( &newCamera, dialogData.nCurrentCamera );
@@ -182,7 +188,9 @@ bool CScriptCameraState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 					case SScriptCameraWindowData::SCA_CAMERA_DELETE:
 					{
 						if ( DeleteScriptPlacement( dialogData.nCurrentCamera ) )
+						{
 							RefreshDialogData( true );
+						}
 						break;
 					}
 					//
@@ -315,14 +323,18 @@ bool CScriptCameraState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 					case SScriptMovieEditorData::ME_ADD_SEQ:
 					{
 						if ( AddSequence() )
+						{
 							RefreshDialogData( true );
+						}
 						break;
 					}
 					//
 					case SScriptMovieEditorData::ME_DEL_SEQ:
 					{
 						if ( DeleteSequence( moviesData.nActiveMovie ) )
+						{
 							RefreshDialogData( true );
+						}
 						break;
 					}
 					//
@@ -336,14 +348,18 @@ bool CScriptCameraState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 					case SScriptMovieEditorData::ME_INSERT_KEY:
 					{
 						if ( AddPosKey( moviesData.fCursorTime, moviesData.nActiveMovie ) )
+						{
 							RefreshDialogData( true );
+						}
 						break;
 					}
 					//
 					case SScriptMovieEditorData::ME_SAVE_KEY:
 					{
 						if ( UpdateScriptPlacement( dialogData.nCurrentCamera ) )
+						{
 							RefreshDialogData( true );
+						}
 						break;
 					}
 					//
@@ -560,7 +576,9 @@ bool CScriptCameraState::DeleteSequence( int nSeqIndex )
 				if ( DeleteKeys( listOfAllKeys, nSeqIndex, true ) )
 				{
 					if ( pManipulator->RemoveNode( "ScriptMovies.ScriptMovieSequences", nSeqIndex ) )
+					{
 						bReturn = true;
+					}
 				}
 			}
 		}
@@ -635,7 +653,9 @@ bool CScriptCameraState::UpdateScriptPlacement( int nCamera )
 	bool bReturn = false;
 
 	if ( !IsCameraPlacementInDB( nCamera ) )
+	{
 		return bReturn;
+	}
 
 	NCamera::CCameraPlacement updatedCamera;
 	GetCameraPlacement( &updatedCamera );
@@ -678,13 +698,17 @@ bool CScriptCameraState::DeleteScriptPlacement( int nCamera )
 	bool bReturn = false;
 
 	if ( nCamera == -1 )
+	{
 		return bReturn;
+	}
 
 	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
 	if ( NMessage::AskYesNo( strMessage ) )
 	{
 		if ( !IsCameraPlacementInDB( nCamera ) )
+		{
 			return bReturn;
+		}
 
 		CPtr<IManipulator> pManipulator = GetMapInfoEditor()->GetViewManipulator();
 		CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController();
@@ -971,7 +995,9 @@ bool CScriptCameraState::MoveKeys( const CArray1Bit &moveList, float fMoveValue,
 				      ++itKey, ++i )
 				{
 					if ( i == 0 )
+					{
 						continue;
+					}
 
 					if ( moveList.GetData( i ) )
 					{
@@ -989,7 +1015,9 @@ bool CScriptCameraState::MoveKeys( const CArray1Bit &moveList, float fMoveValue,
 								posKeys[j + 1] = posJ;
 							}
 							else
+							{
 								break;
+							}
 						}
 					}
 				}
@@ -1039,15 +1067,21 @@ void CScriptCameraState::Draw( IPaintContext *pPaintDC )
 	sceneDrawTool.Clear();
 
 	if ( dialogData.scriptCameras.empty() )
+	{
 		return; // nothing to draw
+	}
 
 	if ( CScriptMoviesMutatorHolder *pMoviesHolder = Camera()->GetScriptMutatorsHolder() )
 	{
 		if ( !pMoviesHolder->IsStopped() )
+		{
 			return;
+		}
 	}
 	if ( !bDrawMarkers )
+	{
 		return;
+	}
 
 	int i = 0;
 	//
@@ -1070,7 +1104,9 @@ void CScriptCameraState::Draw( IPaintContext *pPaintDC )
 		                    sin( ToRadian( it->fPitch ) ) );
 
 		if ( vDir.z != 0 )
+		{
 			vNewDir = CVec3( vEyePos.z * ( vDir.x / vDir.z ), vEyePos.z * ( vDir.y / vDir.z ), vEyePos.z );
+		}
 
 		sceneDrawTool.DrawLine( vEyePos, vEyePos - vNewDir, 0x0000FF00, false ); // green
 	}
@@ -1090,7 +1126,9 @@ void CScriptCameraState::PostDraw( IPaintContext *pPaintDC )
 		}
 	}
 	if ( !bDrawMarkers )
+	{
 		return;
+	}
 
 	for ( std::vector<NCamera::CCameraPlacement>::const_iterator it = dialogData.scriptCameras.begin();
 	      it < dialogData.scriptCameras.end();
@@ -1102,13 +1140,17 @@ void CScriptCameraState::PostDraw( IPaintContext *pPaintDC )
 
 		CPtr<ICamera> pCam = Camera();
 		if ( !pCam )
+		{
 			continue;
+		}
 
 		CPtr<IEditorScene> pScene = EditorScene();
 		CVec2 res = VNULL2;
 
 		if ( TestRayInFrustrum( vEyePos, pCam->GetTransform(), EditorScene()->GetScreenRect(), &res ) )
+		{
 			NDrawToolsDC::DrawLabelDC( pPaintDC, fmt::format( "{}", it->szName ), res );
+		}
 	}
 }
 
@@ -1144,10 +1186,14 @@ void CScriptCameraState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned n
 		case VK_SPACE: // save screen camera
 		{
 			if ( dialogData.nCurrentCamera == -1 )
+			{
 				return;
+			}
 
 			if ( UpdateScriptPlacement( dialogData.nCurrentCamera ) )
+			{
 				RefreshDialogData( true );
+			}
 
 			NCamera::CCameraPlacement newCamera;
 			GetCameraPlacementByID( &newCamera, dialogData.nCurrentCamera );
@@ -1158,7 +1204,9 @@ void CScriptCameraState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned n
 		case VK_RETURN: // set camera
 		{
 			if ( dialogData.nCurrentCamera == -1 )
+			{
 				return;
+			}
 
 			NCamera::CCameraPlacement newCamera;
 			GetCameraPlacementByID( &newCamera, dialogData.nCurrentCamera );
@@ -1211,7 +1259,9 @@ void CScriptCameraState::GetDBData()
 	else
 	{
 		if ( dialogData.nCurrentCamera >= GetMapInfoEditor()->pMapInfo->scriptMovies.scriptCameraPlacements.size() )
+		{
 			dialogData.nCurrentCamera = GetMapInfoEditor()->pMapInfo->scriptMovies.scriptCameraPlacements.size() - 1;
+		}
 
 		for ( std::vector<NDb::SScriptCameraPlacement>::const_iterator itCamPos =
 		          GetMapInfoEditor()->pMapInfo->scriptMovies.scriptCameraPlacements.begin();
@@ -1230,9 +1280,13 @@ void CScriptCameraState::GetDBData()
 	moviesData.Reset();
 	moviesData.scriptMoviesData = GetMapInfoEditor()->pMapInfo->scriptMovies;
 	if ( moviesData.nActiveMovie < 0 )
+	{
 		moviesData.nActiveMovie = 0;
+	}
 	if ( moviesData.nActiveMovie >= moviesData.scriptMoviesData.scriptMovieSequences.size() )
+	{
 		moviesData.nActiveMovie = moviesData.scriptMoviesData.scriptMovieSequences.size() - 1;
+	}
 }
 
 void CScriptCameraState::GetCameraPlacementByID( NCamera::CCameraPlacement *pCamera, int nID )
@@ -1253,7 +1307,9 @@ void CScriptCameraState::DeleteScriptCameraMarkers()
 {
 	CPtr<IEditorScene> pScene = EditorScene();
 	if ( !pScene )
+	{
 		return;
+	}
 	for ( std::vector<SCameraMarker>::const_iterator it = cameraMarkers.begin(); it < cameraMarkers.end(); ++it )
 	{
 		pScene->RemoveObject( ( *it ).nMarkerID );
@@ -1267,22 +1323,32 @@ void CScriptCameraState::RefreshScriptCameraMarkers()
 
 	CPtr<IEditorScene> pScene = EditorScene();
 	if ( !pScene )
+	{
 		return;
+	}
 	CPtr<IManipulator> pManipulator = NEditorOptions::CreateOptionsManipulator();
 	if ( !pManipulator )
+	{
 		return;
+	}
 
 	std::string szModelName;
 	if ( !CManipulatorManager::GetParamsFromReference( "UtilityModels.CameraModel", pManipulator, 0, &szModelName, 0 ) )
+	{
 		return;
+	}
 	const NDb::SModel *pModel = NDb::Get<const NDb::SModel>( CDBID( szModelName ) );
 	if ( !pModel )
+	{
 		return;
+	}
 
 	int i = 0;
 	cameraMarkers.clear();
 	if ( dialogData.scriptCameras.size() == 0 )
+	{
 		return;
+	}
 
 	for ( std::vector<NCamera::CCameraPlacement>::const_iterator it = dialogData.scriptCameras.begin();
 	      it < dialogData.scriptCameras.end();
@@ -1326,9 +1392,13 @@ void CScriptCameraState::ChangeCurrentFOV( float fFOVdelta )
 	float fNewFOV = Camera()->GetFOV() + fFOVdelta;
 
 	if ( fNewFOV >= 180.0f )
+	{
 		fNewFOV = 180.0f - fFOVeps;
+	}
 	else if ( fNewFOV < fFOVeps )
+	{
 		fNewFOV = fFOVeps;
+	}
 
 	Camera()->SetFOV( fNewFOV );
 	nFOV = (int)( fNewFOV );
@@ -1351,8 +1421,12 @@ void CScriptCameraState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMo
 			{
 				int nObjID = ( *itObj );
 				if ( ( dialogData.nCurrentCamera != -1 ) && ( cameraMarkers.size() > dialogData.nCurrentCamera ) )
+				{
 					if ( cameraMarkers[dialogData.nCurrentCamera].nMarkerID == nObjID )
+					{
 						continue;
+					}
+				}
 
 				for ( std::vector<SCameraMarker>::const_iterator it = cameraMarkers.begin(); it < cameraMarkers.end(); ++it )
 				{
@@ -1410,7 +1484,9 @@ void CScriptCameraState::SetCameraPlacement( const NCamera::CCameraPlacement &rC
 	if ( CObj<ICamera> pCamera = Camera() )
 	{
 		if ( CScriptMoviesMutatorHolder *pMoviesHolder = Camera()->GetScriptMutatorsHolder() )
+		{
 			pMoviesHolder->Stop();
+		}
 
 		CVec3 vCamNewAnchor = rCameraPlacement.GetAnchor();
 		AI2Vis( &vCamNewAnchor );
@@ -1450,7 +1526,9 @@ int CScriptCameraState::SelectCameraByMovieParams( int nMovieID, float fTime ) c
 	      ++itKey )
 	{
 		if ( fabs( itKey->fStartTime - fTime ) <= DEF_SEL_RAD )
+		{
 			return itKey->nPositionIndex;
+		}
 	}
 	return -1;
 }

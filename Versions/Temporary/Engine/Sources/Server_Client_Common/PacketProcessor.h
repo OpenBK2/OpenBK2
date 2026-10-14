@@ -34,7 +34,9 @@ public:
 		{
 			TPacket *pPacket = CastToUserObject( pRawPacket, (TPacket *)0 );
 			if ( pPacket )
+			{
 				return ( pObj->*pfnProcessFun )( pPacket );
+			}
 		}
 
 		return false;

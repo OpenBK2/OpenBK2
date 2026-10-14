@@ -46,7 +46,9 @@ void SplitStringWithMultipleBracketsT( const std::basic_string<TChar> &szString,
 	          it( szString, cSeparator );
 	      !it.IsEnd();
 	      it.Next() )
+	{
 		szVector.push_back( it.Get() );
+	}
 }
 
 void SplitStringWithMultipleBrackets( const std::string &szString,
@@ -69,10 +71,14 @@ void TrimRight( std::string &szString, const char cTrim )
 	if ( nPos == std::string::npos )
 	{
 		if ( szString.find_first_of( cTrim ) == 0 )
+		{
 			szString.clear();
+		}
 	}
 	else
+	{
 		szString.erase( nPos + 1, std::string::npos );
+	}
 }
 void TrimRight( std::string &szString, const char *pszTrim )
 {
@@ -80,10 +86,14 @@ void TrimRight( std::string &szString, const char *pszTrim )
 	if ( nPos == std::string::npos )
 	{
 		if ( szString.find_first_of( pszTrim ) == 0 )
+		{
 			szString.clear();
+		}
 	}
 	else
+	{
 		szString.erase( nPos + 1, std::string::npos );
+	}
 }
 // вырезать все символы 'cTrim' из строки
 class CSymbolCheckFunctional
@@ -98,7 +108,9 @@ public:
 		for ( const char *p = pszSymbols; *p != 0; ++p )
 		{
 			if ( *p == cSymbol )
+			{
 				return true;
+			}
 		}
 		return false;
 	}
@@ -242,13 +254,19 @@ unsigned long ToULong( const char *pszString )
 bool IsDecNumber( const std::string &szString )
 {
 	if ( szString.empty() )
+	{
 		return false;
+	}
 	int i, nFirstDigit = IsSign( szString[0] ) ? 1 : 0;
 	int nNumDigits = szString.size() - nFirstDigit;
 	if ( nNumDigits == 0 )
+	{
 		return false; // this is not a number at all => zero length digits
+	}
 	if ( ( nNumDigits > 1 ) && ( szString[nFirstDigit] == '0' ) )
+	{
 		return false; // hex number
+	}
 	for ( i = nFirstDigit; ( i < szString.size() ) && IsDecDigit( szString[i] ); ++i )
 	{
 		;
@@ -259,15 +277,23 @@ bool IsDecNumber( const std::string &szString )
 bool IsOctNumber( const std::string &szString )
 {
 	if ( szString.empty() )
+	{
 		return false;
+	}
 	int i, nFirstDigit = IsSign( szString[0] ) ? 1 : 0;
 	int nNumDigits = szString.size() - nFirstDigit;
 	if ( nNumDigits == 0 )
+	{
 		return false;
+	}
 	if ( szString[nFirstDigit] != '0' )
+	{
 		return false;
+	}
 	if ( nNumDigits < 2 )
+	{
 		return false;
+	}
 
 	for ( i = nFirstDigit; ( i < szString.size() ) && IsOctDigit( szString[i] ); ++i )
 	{
@@ -279,13 +305,19 @@ bool IsOctNumber( const std::string &szString )
 bool IsHexNumber( const std::string &szString )
 {
 	if ( szString.empty() )
+	{
 		return false;
+	}
 	int i, nFirstDigit = IsSign( szString[0] ) ? 1 : 0;
 	int nNumDigits = szString.size() - nFirstDigit;
 	if ( nNumDigits < 3 )
+	{
 		return false;
+	}
 	if ( ( szString[nFirstDigit] != '0' ) || ( szString[nFirstDigit + 1] != 'x' ) )
+	{
 		return false;
+	}
 	for ( i = nFirstDigit + 2; ( i < szString.size() ) && IsHexDigit( szString[i] ); ++i )
 	{
 		;
@@ -315,9 +347,13 @@ void *StringToBin( const char *pszData, void *pBuffer, int *pnSize )
 {
 	uint8_t *pData = (uint8_t *)pBuffer;
 	for ( const char *it = pszData; *it != 0; it += 2 )
+	{
 		*pData++ = ( HexSymbolToHalfByte( *it ) << 4 ) | HexSymbolToHalfByte( *( it + 1 ) );
+	}
 	if ( pnSize )
+	{
 		*pnSize = int( pData - (uint8_t *)pBuffer );
+	}
 	return pBuffer;
 }
 

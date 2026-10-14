@@ -23,13 +23,17 @@ CInterfaceMultiplayer::CInterfaceMultiplayer() : CInterfaceScreenBase( "Multipla
 CInterfaceMultiplayer::~CInterfaceMultiplayer()
 {
 	if ( pScreen )
+	{
 		Scene()->RemoveScreen( pScreen );
+	}
 }
 
 bool CInterfaceMultiplayer::Init()
 {
 	if ( CInterfaceScreenBase::Init() == false )
+	{
 		return false;
+	}
 
 	RegisterObservers();
 
@@ -51,7 +55,9 @@ bool CInterfaceMultiplayer::Init()
 	{
 		IButton *pNivalNet = GetChildChecked<IButton>( pScreen, "ButtonNivalNet", true );
 		if ( pNivalNet )
+		{
 			pNivalNet->Enable( false );
+		}
 	}
 
 	const bool bMPDemo = NGlobal::GetVar( "MP_DEMO", 0 ) != 0;
@@ -60,7 +66,9 @@ bool CInterfaceMultiplayer::Init()
 		IButton *pLANBtn = GetChildChecked<IButton>( pScreen, "button_lan", true );
 
 		if ( pLANBtn )
+		{
 			pLANBtn->Enable( false );
+		}
 	}
 
 	return true;
@@ -71,7 +79,9 @@ bool CInterfaceMultiplayer::StepLocal( bool bAppActive )
 	bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );
 
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )
+	{
 		pInterface->Step( bAppActive );
+	}
 
 	return bResult;
 }
@@ -86,19 +96,29 @@ void CInterfaceMultiplayer::OnGetFocus( bool bFocus )
 bool CInterfaceMultiplayer::Execute( const std::string &szSender, const std::string &szReaction )
 {
 	if ( szReaction == "reaction_on_multiplayer_back" )
+	{
 		return OnBack( szSender );
+	}
 
 	if ( szReaction == "reaction_on_lan" )
+	{
 		return OnLAN( szSender );
+	}
 
 	if ( szReaction == "nival_net" )
+	{
 		return OnNivalNet( szSender );
+	}
 
 	if ( szReaction == "react_on_load_replay" )
+	{
 		return OnLoadReplay( szSender );
+	}
 
 	if ( szReaction == "reaction_on_profile_manager" )
+	{
 		return OnProfileManagerMenu();
+	}
 
 	return false;
 }

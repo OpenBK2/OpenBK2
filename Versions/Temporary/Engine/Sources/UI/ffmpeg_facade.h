@@ -246,7 +246,9 @@ struct FFmpeg
 	static std::unique_ptr<FFmpeg> Open( const uint8_t *buffer, size_t size )
 	{
 		if ( !buffer || size == 0 )
+		{
 			return nullptr;
+		}
 
 		auto video = std::make_unique<FFmpeg>();
 
@@ -425,10 +427,14 @@ struct FFmpeg
 	void Play()
 	{
 		if ( !format_ )
+		{
 			return;
+		}
 
 		if ( !audio_stream_index_.has_value() || !audio_codec_context_ )
+		{
 			return;
+		}
 
 		// Ensure we have a mixer. Create default playback mixer if necessary.
 		if ( !mixer_ )
@@ -464,7 +470,9 @@ struct FFmpeg
 		// Set up swr_ctx similar to your original code but using out_spec info
 		swr_context_ = SwrContextPtr( swr_alloc() );
 		if ( !swr_context_ )
+		{
 			return;
+		}
 
 		av_opt_set_chlayout( swr_context_.get(), "in_chlayout", &audio_codec_context_->ch_layout, 0 );
 		av_opt_set_chlayout( swr_context_.get(), "out_chlayout", &out_ch_layout, 0 );
@@ -594,7 +602,9 @@ struct FFmpeg
 						// Set volume/gain: convert your 0-10000 scale to 0.0-1.0
 						float gain = 1.0f;
 						if ( sound_volume_ > 0 )
+						{
 							gain = static_cast<float>( sound_volume_ ) / 32768.0f;
+						}
 						MIX_SetTrackGain( track_.get(), gain );
 
 						// Start playback (NULL properties = defaults)
@@ -630,7 +640,9 @@ struct FFmpeg
 	void Goto( int target_frame )
 	{
 		if ( !format_ || !video_codec_context_ )
+		{
 			return;
+		}
 
 		// Bounds check
 		if ( target_frame < 0 )
@@ -755,10 +767,14 @@ struct FFmpeg
 	void DoFrame()
 	{
 		if ( !format_ || !video_codec_context_ )
+		{
 			return;
+		}
 
 		if ( !video_steam_index_.has_value() )
+		{
 			return;
+		}
 
 		// Free previous frame if it exists
 		decoded_frame_.reset();
@@ -766,7 +782,9 @@ struct FFmpeg
 		// Allocate new frame
 		auto frame = AVFramePtr( av_frame_alloc() );
 		if ( !frame )
+		{
 			return;
+		}
 
 		const auto packet = AVPacketPtr( av_packet_alloc() );
 		if ( !packet )
@@ -815,7 +833,9 @@ struct FFmpeg
 	void NextFrame()
 	{
 		if ( !format_ || !video_codec_context_ )
+		{
 			return;
+		}
 
 		// Bounds check
 		if ( Frames > 0 && FrameNum >= Frames - 1 )
@@ -946,7 +966,9 @@ struct FFmpeg
 		{
 			float gain = 1.0f;
 			if ( volume > 0 )
+			{
 				gain = static_cast<float>( volume ) / 32768.0f;
+			}
 			MIX_SetTrackGain( track_.get(), gain );
 		}
 	}

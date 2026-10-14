@@ -9,9 +9,13 @@ namespace NAnimation
 void CGrannyFileInfo::InitMe()
 {
 	if ( pFile )
+	{
 		pData = GrannyGetFileInfo( pFile );
+	}
 	else
+	{
 		pData = 0;
+	}
 }
 
 static CBasicShare<NGScene::SResKey<NGScene::SGrannyFileLoaderInfo>,
@@ -27,9 +31,13 @@ void CGrannyBaseStuffLoader::TrueSetKey( const NGScene::SResKey<NGScene::SGranny
 void CGrannyBaseStuffLoader::Recalc()
 {
 	if ( pGrannyFile->GetValue() == 0 )
+	{
 		pValue = 0;
+	}
 	else
+	{
 		pValue = new CGrannyFileInfo( pGrannyFile->GetValue()->pFile );
+	}
 }
 
 } // namespace NAnimation

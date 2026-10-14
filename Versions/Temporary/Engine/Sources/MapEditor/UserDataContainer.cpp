@@ -20,19 +20,25 @@ void ReplaceToken( std::string *pInput, const std::string &szToken, const std::s
 {
 	const int nPos = pInput->find( szToken );
 	if ( nPos != std::string::npos )
+	{
 		pInput->replace( pInput->begin() + nPos, pInput->begin() + szToken.size(), szReplace );
+	}
 }
 
 void ReplaceTokens( std::string *pszString )
 {
 	const int nPos = pszString->find( '%' );
 	if ( nPos == std::string::npos )
+	{
 		return;
+	}
 	const int nLastPos = pszString->find( '%', nPos + 1 );
 	const std::string szTokenName = pszString->substr( nPos + 1, nLastPos - nPos - 1 );
 	CTokensMap::const_iterator posToken = s_TokensMap.find( szTokenName );
 	if ( posToken != s_TokensMap.end() )
+	{
 		pszString->replace( pszString->begin() + nPos, pszString->begin() + nLastPos + 1, posToken->second );
+	}
 	ReplaceTokens( pszString );
 }
 

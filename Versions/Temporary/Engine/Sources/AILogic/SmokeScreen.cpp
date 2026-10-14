@@ -51,7 +51,9 @@ void CSmokeScreen::TraceToPoint( const int x, const int y, const bool bAdd )
 	{
 		bres.MakePointStep();
 		if ( !GetAIMap()->IsTileInside( bres.GetDirection() ) )
+		{
 			break;
+		}
 		//theWarFog.SetTransparency( bres.GetDirection(), !bAdd );
 	} while ( bres.GetDirection() != finishPoint );
 }
@@ -90,7 +92,9 @@ void CSmokeScreen::Trace( const bool bAdd )
 	do
 	{
 		if ( d < 0 )
+		{
 			d += 4 * x + 6;
+		}
 		else
 		{
 			d += 4 * ( x - y ) + 10;
@@ -112,7 +116,9 @@ void CSmokeScreen::SetTransparencies()
 void CSmokeScreen::RestoreTransparenciesImmidiately()
 {
 	if ( bTransparencySet )
+	{
 		SetTransparencies();
+	}
 }
 
 void CSmokeScreen::RemoveTransparencies()
@@ -136,7 +142,9 @@ void CSmokeScreen::GetCoveredTiles( std::list<SVector> *pTiles ) const
 		{
 			const SVector tile( x, y );
 			if ( GetAIMap()->IsTileInside( tile ) )
+			{
 				pTiles->push_back( tile );
+			}
 		}
 	}
 }

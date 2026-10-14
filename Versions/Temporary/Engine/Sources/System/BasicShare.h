@@ -32,7 +32,9 @@ private:
 	virtual void CreateHolder( std::list<CObj<CObjectBase>> *pHolder )
 	{
 		for ( typename CDataHash::const_iterator i = data.begin(); i != data.end(); ++i )
+		{
 			pHolder->push_back( i->second.GetPtr() );
+		}
 	}
 
 protected:
@@ -58,14 +60,18 @@ public:
 			return pRes;
 		}
 		if ( !IsValid( i->second ) )
+		{
 			i->second = Create( key );
+		}
 		return i->second;
 	}
 	const CDataHash &GetAll() { return data; }
 	int operator&( IBinSaver &f )
 	{
 		if ( !bKeepData )
+		{
 			return 0;
+		}
 		if ( f.IsReading() )
 		{
 			CDataHash keeper( data );
@@ -74,7 +80,9 @@ public:
 			{
 				typename CDataHash::iterator r = data.find( i->first );
 				if ( r != data.end() && IsValid( i->second ) )
+				{
 					*r->second = *i->second;
+				}
 			}
 		}
 		else
@@ -83,7 +91,9 @@ public:
 			for ( typename CDataHash::const_iterator i = data.begin(); i != data.end(); ++i )
 			{
 				if ( IsValid( i->second ) )
+				{
 					saveData.insert( *i );
+				}
 			}
 
 			f.Add( GetID(), &saveData );

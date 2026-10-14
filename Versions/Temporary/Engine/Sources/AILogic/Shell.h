@@ -793,7 +793,9 @@ struct SInvisShellCompare
 		const NTimer::STime s1e = s1.ptr->GetExplTime();
 		const NTimer::STime s2e = s2.ptr->GetExplTime();
 		if ( s1e != s2e )
+		{
 			return s1e > s2e;
+		}
 		return s1.ptr->GetOrder() > s2.ptr->GetOrder();
 	}
 };
@@ -805,9 +807,13 @@ struct SVisShellCompare
 		const NTimer::STime s1e = s1->GetExplTime();
 		const NTimer::STime s2e = s2->GetExplTime();
 		if ( s1e != s2e )
+		{
 			return s1e < s2e;
+		}
 		if ( s1->GetOrder() != s2->GetOrder() )
+		{
 			return s1->GetOrder() < s2->GetOrder();
+		}
 		return s1->GetUniqueId() < s2->GetUniqueId();
 	}
 };

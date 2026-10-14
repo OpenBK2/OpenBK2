@@ -107,12 +107,16 @@ protected:
 		{
 			int top = capital.y2, bottom = capital.y1;
 			for ( int y = capital.y1; y < capital.y2; ++y )
+			{
 				for ( int x = capital.x1; x < capital.x2; ++x )
+				{
 					if ( pixels[y][x] >> 24 )
 					{
 						top = (std::min)( top, y );
 						bottom = (std::max)( bottom, y + 1 );
 					}
+				}
+			}
 			capRatio = double( bottom - top ) / bakedFormat->GetValue()->GetLineSpace();
 		}
 		NGlobal::SetVar( "ui_font_scale", 1.2f );
@@ -588,7 +592,9 @@ TEST_F( TextVerticalAlignment, LoadingAdviceKeepsItsScaleWhenTheLettersFit )
 			SCOPED_TRACE( std::to_string( resolution.y ) + " citation " + std::to_string( i ) );
 			// Only these shipped placeholders are empty; missing fixtures must fail.
 			if ( i == 23 || i == 28 )
+			{
 				continue;
+			}
 			const std::string path = "Citations/" + std::string( i < 10 ? "0" : "" ) + std::to_string( i ) + ".txt";
 			const std::wstring advice = NText::GetText( path );
 			ASSERT_FALSE( advice.empty() ) << path;
@@ -598,7 +604,9 @@ TEST_F( TextVerticalAlignment, LoadingAdviceKeepsItsScaleWhenTheLettersFit )
 			// Same font/advance/wrapping, with only the decorative border removed.
 			CObj<IML> letters = MakeText( L"<font face=h2 size=20>" + advice, box.Width() + 0.5f );
 			if ( letters->HasVisibleTextOutside( box.GetLeftTop(), box ) )
+			{
 				continue;
+			}
 			++fittingAdvice;
 			label->SetText( style + advice );
 			CObj<IML> preferred = MakeText( style + advice, box.Width() + 0.5f );
@@ -670,7 +678,9 @@ TEST_F( TextVerticalAlignment, LoadingAdviceFitsItsActualParentClipAtEveryResolu
 		{
 			CTRect<float> actualClip = box;
 			for ( const auto &clip : clips )
+			{
 				actualClip.Intersect( clip );
+			}
 			TextVisitor::VisitUIText( text, origin, actualClip );
 			lettersClipped = text->HasVisibleTextOutside( origin, actualClip, false );
 		}
@@ -690,7 +700,9 @@ TEST_F( TextVerticalAlignment, LoadingAdviceFitsItsActualParentClipAtEveryResolu
 			SCOPED_TRACE( std::to_string( resolution.y ) + " citation " + std::to_string( i ) );
 			// Only these shipped placeholders are empty; missing fixtures must fail.
 			if ( i == 23 || i == 28 )
+			{
 				continue;
+			}
 			const std::string path = "Citations/" + std::string( i < 10 ? "0" : "" ) + std::to_string( i ) + ".txt";
 			const std::wstring advice = NText::GetText( path );
 			ASSERT_FALSE( advice.empty() ) << path;

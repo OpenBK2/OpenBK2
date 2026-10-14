@@ -212,7 +212,9 @@ class CEntrenchmentPart : public CExistingObject
 		f.Add( 11, &pFullEntrenchment );
 		f.Add( 12, &nextSegmTime );
 		if ( !f.IsChecksum() )
+		{
 			f.Add( 13, &bSuspendedAppear );
+		}
 		f.Add( 14, &bPlayerCreates );
 		return 0;
 	}

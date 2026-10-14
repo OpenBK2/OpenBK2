@@ -39,7 +39,9 @@ void CRndRunUpToEnemy::Init( CAIUnit *_pOwner, CAIUnit *_pEnemy, bool bCanMove )
 void CRndRunUpToEnemy::SendOwnerToRandomRun()
 {
 	if ( bForceStaying )
+	{
 		return;
+	}
 	NI_ASSERT( !bForceStaying, "Wrong force staying value ( false expected )" );
 
 	const CVec2 vDirToEnemy = pEnemy->GetCenterPlain() - pOwner->GetCenterPlain();
@@ -50,9 +52,13 @@ void CRndRunUpToEnemy::SendOwnerToRandomRun()
 	uint16_t wResultDir;
 	RecordRandomCall();
 	if ( NRandom::Random( 0.0f, 1.0f ) < 0.5f )
+	{
 		wResultDir = wDirToEnemy - wRandomAngle;
+	}
 	else
+	{
 		wResultDir = wDirToEnemy + wRandomAngle;
+	}
 
 	float fRandomDist;
 	// ползти
@@ -81,7 +87,9 @@ void CRndRunUpToEnemy::SendOwnerToRandomRun()
 			bRunningToEnemy = true;
 
 			if ( bForceStaying )
+			{
 				pOwner->AllowLieDown( false );
+			}
 
 			pOwner->SendAlongPath( pStaticPath, VNULL2, false );
 		}
@@ -101,7 +109,9 @@ void CRndRunUpToEnemy::SendOwnerToRandomRun()
 void CRndRunUpToEnemy::Segment()
 {
 	if ( bForceStaying )
+	{
 		return;
+	}
 	if ( bCheck && pOwner->IsFree() && IsValidObj( pEnemy ) &&
 	     ( bRunningToEnemy || fabs2( pOwner->GetCenter() - pEnemy->GetCenter() ) >=
 	                              sqr( 0.7f ) * sqr( pOwner->GetGun( 0 )->GetFireRange( 0 ) ) ) )
@@ -112,7 +122,9 @@ void CRndRunUpToEnemy::Segment()
 			{
 				if ( pOwner->IsIdle() && vLastOwnerPos == pOwner->GetCenterPlain() &&
 				     ( ( NRandom::Random( 0.0f, 1.0f ) <= 0.7f ) & RecordRandomCall() ) )
+				{
 					SendOwnerToRandomRun();
+				}
 
 				if ( !bRunningToEnemy )
 				{
@@ -143,7 +155,9 @@ void CRndRunUpToEnemy::Segment()
 void CRndRunUpToEnemy::Finish()
 {
 	if ( pOwner )
+	{
 		pOwner->AllowLieDown( true );
+	}
 }
 
 void CRndRunUpToEnemy::OnSerialize( IBinSaver &saver )

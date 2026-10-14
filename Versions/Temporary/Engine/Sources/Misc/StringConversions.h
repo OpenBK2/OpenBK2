@@ -27,12 +27,16 @@ static std::string RGBA_to_hex( uint32_t bgra, bool includeAlpha = true, bool in
 
 	std::ostringstream oss;
 	if ( includeHashtag )
+	{
 		oss << "#";
+	}
 	oss << std::uppercase << std::hex << std::setfill( '0' ) << std::setw( 2 ) << (int)r << std::setw( 2 ) << (int)g
 			<< std::setw( 2 ) << (int)b;
 
 	if ( includeAlpha )
+	{
 		oss << std::setw( 2 ) << (int)a;
+	}
 
 	return oss.str();
 }

@@ -19,7 +19,9 @@ float CMechUnitJoggingMutator::SJoggingParams2::GetValue( const NTimer::STime nD
 	if ( s_bJogTweakMode )
 	{
 		if ( ( s_fJogPeriod1 == 0 ) || ( s_fJogPeriod2 == 0 ) )
+		{
 			return 0;
+		}
 		const float fAngle1 = fmod( (float)nDeltaTime * FP_2PI / s_fJogPeriod1, FP_2PI ) + s_fJogPhaze1;
 		const float fAngle2 = fmod( (float)nDeltaTime * FP_2PI / s_fJogPeriod2, FP_2PI ) + s_fJogPhaze2;
 		return s_fJogAmp1 * NMath::Cos( fAngle1 ) + s_fJogAmp2 * NMath::Cos( fAngle2 );
@@ -27,7 +29,9 @@ float CMechUnitJoggingMutator::SJoggingParams2::GetValue( const NTimer::STime nD
 	else
 	{
 		if ( ( fPeriod1 == 0 ) || ( fPeriod2 == 0 ) )
+		{
 			return 0;
+		}
 		const float fAngle1 = fmod( (float)nDeltaTime * FP_2PI / fPeriod1, FP_2PI ) + fPhaze1;
 		const float fAngle2 = fmod( (float)nDeltaTime * FP_2PI / fPeriod2, FP_2PI ) + fPhaze2;
 		return fAmp1 * NMath::Cos( fAngle1 ) + fAmp2 * NMath::Cos( fAngle2 );
@@ -67,7 +71,9 @@ void CMechUnitJoggingMutator::SetupPropellers( ISkeletonAnimator *pAnimator,
 
 	CDynamicCast<IGetBone> pGetBone = pAnimator;
 	if ( !pGetBone )
+	{
 		return;
+	}
 
 	// Pair the configuration by index and keep only names present in this model's skeleton.
 	const int nPropellerCount = (int)(std::min)( propellerObjects.size(), speedsRad.size() );
@@ -75,7 +81,9 @@ void CMechUnitJoggingMutator::SetupPropellers( ISkeletonAnimator *pAnimator,
 	{
 		const int nBoneIndex = pGetBone->GetBoneIndex( propellerObjects[i].c_str() );
 		if ( nBoneIndex < 0 )
+		{
 			continue;
+		}
 
 		propellerBoneIndices.push_back( nBoneIndex );
 		propellerSpeedsRad.push_back( speedsRad[i] );

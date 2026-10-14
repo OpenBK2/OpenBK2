@@ -93,10 +93,14 @@ protected:
 					return;
 				}
 				else
+				{
 					value = 1.0f;
+				}
 			}
 			else
+			{
 				value = 0.0f;
+			}
 			bNeedUpdate = false;
 		}
 	}
@@ -144,7 +148,9 @@ public:
 		{
 			pTimer.Refresh();
 			if ( ( eFadeType == E_FORCE_HIDE ) && ( value < EPS_VALUE ) )
+			{
 				nStartTime = pTimer->GetValue();
+			}
 			else
 			{
 				bNeedUpdate = true;
@@ -165,7 +171,9 @@ public:
 		{
 			pTimer.Refresh();
 			if ( ( eFadeType == E_FORCE_SHOW ) && ( value > ( 1.0f - EPS_VALUE ) ) )
+			{
 				nStartTime = pTimer->GetValue();
+			}
 			else
 			{
 				bNeedUpdate = true;
@@ -198,7 +206,9 @@ IFader *CreateSimpleFader( const SFaderInfo &faderInfo )
 				faderInfo.bFadeToBlack ? E_FADE_TO_BLACK : E_FADE_TO_WHITE, faderInfo.nStartTime, fOnTime, faderInfo.pOwner );
 	}
 	else
+	{
 		return new CSimpleFader( E_FADE_NONE, faderInfo.pOwner );
+	}
 }
 
 } // namespace NGScene

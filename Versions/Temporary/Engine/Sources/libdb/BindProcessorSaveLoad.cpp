@@ -65,14 +65,20 @@ namespace NBind
 	                              IObjMan *pParent )
 	{
 		if ( field.pType->eType == NTypeDef::TYPE_TYPE_REF )
+		{
 			LoadRefFromNode( pRes, pNode, pParent->GetDBID() );
+		}
 		else if ( field.pType->eType == NTypeDef::TYPE_TYPE_STRING && field.HasAttribute( "filepath" ) )
+		{
 			LoadFilePathFromNode( pRes, pNode, pParent->GetDBID() );
+		}
 		else
 		{
 			std::string szValue = pNode->GetValue().ToString();
 			if ( field.pType->eType == NTypeDef::TYPE_TYPE_STRING || field.pType->eType == NTypeDef::TYPE_TYPE_WSTRING )
+			{
 				NXml::ConvertToString( &szValue );
+			}
 
 			field.pType->FromString( pRes, szValue );
 			NI_VERIFY( pRes->GetType() != CVariant::VT_NULL,
@@ -108,7 +114,9 @@ namespace NBind
 				{
 					CVariant value;
 					if ( LoadSimpleValueFromNode( &value, pNode, *itField, szFullFieldName, pParent ) == false )
+					{
 						continue;
+					}
 					const bool bValueSet = SetValue( szFullFieldName, value );
 					NI_VERIFY( bValueSet != false,
 					           fmt::format( "Can't set value \"{}\" for field \"{}\"",
@@ -169,7 +177,9 @@ namespace NBind
 							{
 								CVariant value;
 								if ( LoadSimpleValueFromNode( &value, nodes[i], pTypeArray->field, szFullFieldName, pParent ) == false )
+								{
 									continue;
+								}
 								const bool bValueSet = pBindArray->SetValue( "", i, value, arrReqs.pRawVector, arrReqs.pContained );
 								NI_VERIFY( bValueSet != false,
 								           fmt::format( "Can't set value \"{}\" for field \"{}.[{}]\"",
@@ -241,9 +251,13 @@ namespace NBind
 	                            IObjMan *pParent )
 	{
 		if ( field.pType->eType == NTypeDef::TYPE_TYPE_REF )
+		{
 			SaveRefToNode( pElement, value, pParent->GetDBID() );
+		}
 		else if ( field.pType->eType == NTypeDef::TYPE_TYPE_STRING && field.HasAttribute( "filepath" ) )
+		{
 			SaveFilePathToNode( pElement, value, pParent->GetDBID() );
+		}
 		else
 		{
 			std::string szRes;
@@ -281,7 +295,9 @@ namespace NBind
 				           ( "Can't get field value for " + szFullFieldName ).c_str(),
 				           continue );
 				if ( SaveSimpleValueToNode( value, pElement, *itField, pParent ) == false )
+				{
 					continue;
+				}
 			}
 			else if ( itField->pType->eType == NTypeDef::TYPE_TYPE_STRUCT )
 			{
@@ -314,7 +330,9 @@ namespace NBind
 						//
 						pBindArray->GetValue( "", i, &value, arrReqs.pRawVector, arrReqs.pContained );
 						if ( SaveSimpleValueToNode( value, pItem, arrReqs.pTypeArray->field, pParent ) == false )
+						{
 							continue;
+						}
 					}
 				}
 				else

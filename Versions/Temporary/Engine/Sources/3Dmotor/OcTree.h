@@ -47,7 +47,9 @@ class COcTreeNode : public CObjectBase
 			{
 				pOldRoot->links[i] = links[i];
 				if ( links[i] )
+				{
 					links[i]->SetUpLink( pOldRoot );
+				}
 				links[i] = 0;
 			}
 			links[nOldRootIndex] = pOldRoot;
@@ -75,9 +77,13 @@ public:
 			if ( links[i] )
 			{
 				if ( links[i]->Walk() )
+				{
 					links[i] = 0;
+				}
 				else
+				{
 					bRes = false;
+				}
 			}
 		}
 		return bRes;
@@ -110,30 +116,46 @@ public:
 		if constexpr ( B_GROW_ROOT )
 		{
 			if ( !pUpLink )
+			{
 				GrowRootToContain( ptCenter );
+			}
 		}
 		TFinal *pThis = static_cast<TFinal *>( this );
 		float fLowerSize = 0.5f * GetMaxElementSize();
 		if ( fSize <= N_MIN_NODE || fRadius >= fLowerSize )
+		{
 			return pThis;
+		}
 		else
 		{
 			int nIdx = 0;
 			if ( ptCenter.x >= ptBase.x + fSize * 0.5f )
+			{
 				nIdx += 1;
+			}
 			if ( ptCenter.y >= ptBase.y + fSize * 0.5f )
+			{
 				nIdx += 2;
+			}
 			if ( ptCenter.z >= ptBase.z + fSize * 0.5f )
+			{
 				nIdx += 4;
+			}
 			if ( !links[nIdx] )
 			{
 				CVec3 ptNewBase( ptBase );
 				if ( nIdx & 1 )
+				{
 					ptNewBase.x += fSize * 0.5f;
+				}
 				if ( nIdx & 2 )
+				{
 					ptNewBase.y += fSize * 0.5f;
+				}
 				if ( nIdx & 4 )
+				{
 					ptNewBase.z += fSize * 0.5f;
+				}
 				TFinal *pNewFinal = new TFinal;
 				pNewFinal->SetSize( ptNewBase, fSize * 0.5f );
 				links[nIdx] = pNewFinal;
@@ -147,7 +169,9 @@ public:
 		f.Add( 1, &ptBase );
 		f.Add( 2, &fSize );
 		for ( int i = 0; i < 8; ++i )
+		{
 			f.Add( 10 + i, &links[i] );
+		}
 		f.Add( 20, &pUpLink );
 		return 0;
 	}

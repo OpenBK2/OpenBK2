@@ -14,13 +14,21 @@ float CWindController::CoeffFunc( int nParam )
 	float fParam = nParam / fWindIntensity * 0.5f; // Multiplied by speed
 
 	if ( fParam < nPoint1 )
+	{
 		fRes = 0.0f;
+	}
 	else if ( fParam < nPoint2 )
+	{
 		fRes = fParam / nPoint2;
+	}
 	else if ( fParam < nPoint3 )
+	{
 		fRes = 1.0f;
+	}
 	else if ( fParam < nPoint4 )
+	{
 		fRes = 1.0f - ( fParam - nPoint3 ) / ( nPoint4 - nPoint3 );
+	}
 
 	//elsewhere
 	return fRes;
@@ -51,7 +59,9 @@ void CWindController::SetWindParams( const float _fWindDirection, const float _f
 float CWindController::GetWindCoeff( const CVec2 &vPos )
 {
 	if ( fWindIntensity == 0.0f ) //No intensity = no wind
+	{
 		return 0.0f;
+	}
 
 	int nWindCoord = int( ( vPos.y * fCoeffY + vPos.x * fCoeffX ) + pTimer->GetGameTime() * fSpeedCoeff ) % nCycleLength;
 	int nWindWaveCoord = int( NMath::Sin( ( vPos.x * fCoeffY - vPos.y * fCoeffX ) * 0.01f ) * 300 );

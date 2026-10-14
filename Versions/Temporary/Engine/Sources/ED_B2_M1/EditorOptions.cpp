@@ -40,10 +40,14 @@ int FindBySeason( const std::string &szDesiredSeason, const std::string &szName,
 	int nAmount = 0;
 	CManipulatorManager::GetValue( &nAmount, pOptsMan, szName );
 	if ( nAmount == 0 )
+	{
 		return -1;
+	}
 	//
 	if ( szDesiredSeason == "SEASON_ANY" )
+	{
 		return 0;
+	}
 	//
 	for ( int i = 0; i < nAmount; ++i )
 	{
@@ -64,16 +68,22 @@ std::pair<int, int> FindBySeasonAndTime( const std::string &szDesiredSeason,
 {
 	const int nSeason = FindBySeason( szDesiredSeason, szName, pOptsMan );
 	if ( nSeason == -1 )
+	{
 		return std::pair<int, int>( -1, -1 );
+	}
 	const std::string szAddName = fmt::format( "{}.[{}].DayTimes", szName.c_str(), nSeason );
 	//
 	int nAmount = 0;
 	CManipulatorManager::GetValue( &nAmount, pOptsMan, szAddName );
 	if ( nAmount == 0 )
+	{
 		return std::pair<int, int>( nSeason, -1 );
+	}
 	//
 	if ( szDesiredTime == "DAY_ANY" )
+	{
 		return std::pair<int, int>( nSeason, 0 );
+	}
 	//
 	for ( int i = 0; i < nAmount; ++i )
 	{
@@ -97,10 +107,14 @@ bool GetFromOptionsForSeason( TYPE *pRes,
 {
 	const int nIndex = FindBySeason( szDesiredSeason, szPreName, pOptsMan );
 	if ( nIndex == -1 )
+	{
 		return false;
+	}
 	if ( CManipulatorManager::GetValue(
 					 pRes, pOptsMan, fmt::format( "{}.[{}].{}", szPreName.c_str(), nIndex, szPostName.c_str() ) ) )
+	{
 		return true;
+	}
 	return false;
 }
 
@@ -114,7 +128,9 @@ bool GetFromOptionsForSeasonAndTime( TYPE *pRes,
 {
 	const std::pair<int, int> seasonTime = FindBySeasonAndTime( szDesiredSeason, szDesiredTime, szPreName, pOptsMan );
 	if ( seasonTime.first == -1 || seasonTime.second == -1 )
+	{
 		return false;
+	}
 	if ( CManipulatorManager::GetValue( pRes,
 	                                    pOptsMan,
 	                                    fmt::format( "{}.[{}].DayTimes.[{}].{}",
@@ -122,7 +138,9 @@ bool GetFromOptionsForSeasonAndTime( TYPE *pRes,
 	                                                 seasonTime.first,
 	                                                 seasonTime.second,
 	                                                 szPostName.c_str() ) ) )
+	{
 		return true;
+	}
 	return false;
 }
 
@@ -135,9 +153,13 @@ bool GetFromOptions( TYPE *pRes,
 	if ( CPtr<IManipulator> pOptsMan = CreateOptionsManipulator() )
 	{
 		if ( GetFromOptionsForSeason( pRes, szPreName, szPostName, szDesiredSeason, pOptsMan ) == true )
+		{
 			return true;
+		}
 		if ( GetFromOptionsForSeason( pRes, szPreName, szPostName, "SEASON_SUMMER", pOptsMan ) == true )
+		{
 			return true;
+		}
 		return GetFromOptionsForSeason( pRes, szPreName, szPostName, "SEASON_ANY", pOptsMan );
 	}
 	return false;
@@ -154,10 +176,14 @@ bool GetFromOptions( TYPE *pRes,
 	{
 		if ( GetFromOptionsForSeasonAndTime( pRes, szPreName, szPostName, szDesiredSeason, szDesiredTime, pOptsMan ) ==
 		     true )
+		{
 			return true;
+		}
 		if ( GetFromOptionsForSeasonAndTime( pRes, szPreName, szPostName, "SEASON_SUMMER", szDesiredTime, pOptsMan ) ==
 		     true )
+		{
 			return true;
+		}
 		return GetFromOptionsForSeasonAndTime( pRes, szPreName, szPostName, "SEASON_ANY", "DAY_ANY", pOptsMan );
 	}
 	return false;
@@ -170,7 +196,9 @@ std::string GetStringFromOptions( const std::string &szPreName,
 {
 	std::string szValue;
 	if ( GetFromOptions( &szValue, szPreName, szPostName, szDesiredSeason, szDesiredDayTime ) )
+	{
 		return szValue;
+	}
 	return "";
 }
 
@@ -179,7 +207,9 @@ GetStringFromOptions( const std::string &szPreName, const std::string &szPostNam
 {
 	std::string szValue;
 	if ( GetFromOptions( &szValue, szPreName, szPostName, szDesiredSeason ) )
+	{
 		return szValue;
+	}
 	return "";
 }
 
@@ -187,7 +217,9 @@ int GetIntFromOptions( const std::string &szPreName, const std::string &szPostNa
 {
 	int nValue;
 	if ( GetFromOptions( &nValue, szPreName, szPostName, szDesiredSeason ) )
+	{
 		return nValue;
+	}
 	return 0;
 }
 
@@ -197,7 +229,9 @@ float GetFloatFromOptions( const std::string &szPreName,
 {
 	float fValue;
 	if ( GetFromOptions( &fValue, szPreName, szPostName, szDesiredSeason ) )
+	{
 		return fValue;
+	}
 	return 0.0f;
 }
 
@@ -207,7 +241,9 @@ CVec2 GetVec2FromOptions( const std::string &szPreName,
 {
 	CVec2 vValue;
 	if ( GetFromOptions( &vValue, szPreName, szPostName, szDesiredSeason ) )
+	{
 		return vValue;
+	}
 	return VNULL2;
 }
 
@@ -217,7 +253,9 @@ CVec3 GetVec3FromOptions( const std::string &szPreName,
 {
 	CVec3 vValue;
 	if ( GetFromOptions( &vValue, szPreName, szPostName, szDesiredSeason ) )
+	{
 		return vValue;
+	}
 	return VNULL3;
 }
 
@@ -282,9 +320,13 @@ std::string GetMiscString( const std::string &szName )
 	CPtr<IManipulator> pMan = CreateOptionsManipulator();
 	std::string szValue;
 	if ( CManipulatorManager::GetValue( &szValue, pMan, "Misc." + szName ) )
+	{
 		return szValue;
+	}
 	else
+	{
 		return "";
+	}
 }
 
 }

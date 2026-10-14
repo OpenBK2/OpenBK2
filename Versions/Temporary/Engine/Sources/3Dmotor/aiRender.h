@@ -106,16 +106,22 @@ private:
 		for ( ; p < pFinal; ++p, fZ += fDZ, ++pDistMul, ++pFrames )
 		{
 			if ( *pFrames == nTraceFrame )
+			{
 				continue;
+			}
 
 			*pFrames = nTraceFrame;
 
 			float fDist = fZ;
 			if ( fZ < FP_EPSILON )
+			{
 				return;
+			}
 
 			if ( bPerspective )
+			{
 				fDist = pDistMul[0] / fZ;
+			}
 
 			SResult **pResGrid = p;
 			SResult *pResult = *pResGrid;
@@ -138,7 +144,9 @@ private:
 				else
 				{
 					while ( pResult->pNext && pResult->pNext->fDist[0] > fDist )
+					{
 						pResult = pResult->pNext;
+					}
 
 					pNode->pNext = pResult->pNext;
 					pResult->pNext = pNode;

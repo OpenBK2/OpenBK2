@@ -200,15 +200,21 @@ int RecognizeFormatPSD( CDataStream *pStream )
 
 	nTmp = rPS.Get32();
 	if ( nTmp != 0x38425053 ) // File should start with "8BPS" - Official PSD signature
+	{
 		return 0;
+	}
 
 	nTmp = rPS.Get32();
 	if ( nTmp != 0x00010000 ) // Then - should be 0x00000100
+	{
 		return 0;
+	}
 
 	nTmp = rPS.Get32();
 	if ( nTmp != 0x00000000 ) // Then - should be 0x00000000
+	{
 		return 0;
+	}
 
 	// Ok, this file is realy PSD.
 
@@ -219,12 +225,16 @@ int RecognizeFormatPSD( CDataStream *pStream )
 
 	nTmp = rPS.Get16();
 	if ( nTmp != 8 )
+	{
 		return 2;
+	}
 
 	// And is it in RGB mode?
 	nTmp = rPS.Get16();
 	if ( nTmp != 3 )
+	{
 		return 2;
+	}
 
 	// Ok, then!
 	return 1;

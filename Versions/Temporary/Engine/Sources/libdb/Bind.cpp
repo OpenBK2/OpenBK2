@@ -23,7 +23,9 @@ uint64_t GetPropertyChangeVersion()
 bool IsPropertyModified( const CDBID &dbid, const std::string &szName )
 {
 	if ( dbid.IsEmpty() )
+	{
 		return false;
+	}
 	NBind::CBindStruct *pBind = dynamic_cast<NBind::CBindStruct *>( GetManipulator( dbid ) );
 	return pBind && pBind->IsPropertyModified( szName );
 }
@@ -49,14 +51,18 @@ namespace NBind
 				bLoaded( false ), bChanged( false ), bNewObject( false )
 	{
 		if ( pMetaInfo->nNumOwnValues > 0 )
+		{
 			pMetaInfo->ConstructStruct( (uint8_t *)( pStruct.GetPtr() ), ownValues.empty() ? 0 : &( ownValues[0] ), true );
+		}
 		bool bSuccess = pMetaInfo->fields.find( "flags" ) != pMetaInfo->fields.end();
 	}
 
 	CBindStruct::~CBindStruct()
 	{
 		if ( pMetaInfo && pMetaInfo->nNumOwnValues > 0 )
+		{
 			pMetaInfo->DestructStruct( (uint8_t *)( pStruct.GetPtr() ), ownValues.empty() ? 0 : &( ownValues[0] ), true );
+		}
 	}
 
 	void CBindStruct::SetDBID( const CDBID &_dbid )
@@ -82,7 +88,9 @@ namespace NBind
 					// Struct rows have no scalar getter (array elements assert if
 					// queried as one); their children are visited by the iterator.
 					if ( pField && pField->pType->eType != NTypeDef::TYPE_TYPE_STRUCT && GetValue( szName, &value ) )
+					{
 						savedPropertyValues.emplace( szName, value );
+					}
 					pIterator->Next();
 				}
 				bHaveSavedValues = true;
@@ -106,20 +114,28 @@ namespace NBind
 	{
 		bTrackPropertyChanges = true;
 		if ( !bHaveSavedValues )
+		{
 			return false;
+		}
 
 		const NTypeDef::STypeStructBase::SField *pField = GetDesc( szName );
 		if ( !pField )
+		{
 			return false;
+		}
 		CVariant value;
 		const auto saved = savedPropertyValues.find( szName );
 		if ( pField->pType->eType != NTypeDef::TYPE_TYPE_STRUCT && GetValue( szName, &value ) )
 		{
 			if ( saved == savedPropertyValues.end() || saved->second != value )
+			{
 				return true;
+			}
 		}
 		else if ( saved != savedPropertyValues.end() )
+		{
 			return true;
+		}
 
 		// Containers (including colour vectors) also represent their descendants.
 		// Compare full names with a separator so Foo cannot match FooBar.
@@ -129,7 +145,9 @@ namespace NBind
 		      ++it )
 		{
 			if ( !GetValue( it->first, &value ) || value != it->second )
+			{
 				return true;
+			}
 		}
 		return false;
 	}
@@ -139,7 +157,9 @@ namespace NBind
 		for ( CAttributesList::const_iterator it = attributes.begin(); it != attributes.end(); ++it )
 		{
 			if ( it->first == szName )
+			{
 				return it->second;
+			}
 		}
 		return L"";
 	}
@@ -173,11 +193,15 @@ namespace NBind
 		{
 			levels.pop_back();
 			if ( levels.empty() )
+			{
 				return false;
+			}
 		}
 		//
 		if ( !bShowHidden && levels.back().pTypeStruct->fields[levels.back().nCurrField].HasAttribute( "hidden" ) != false )
+		{
 			return GotoNextFieldInLevels();
+		}
 		return true;
 	}
 
@@ -201,7 +225,9 @@ namespace NBind
 	bool CStructIterator::Next()
 	{
 		if ( levels.empty() )
+		{
 			return false;
+		}
 		SLevel &level = levels.back();
 		if ( level.pAggregatedIterator )
 		{
@@ -211,12 +237,16 @@ namespace NBind
 				return GotoNextFieldInLevels();
 			}
 			else
+			{
 				return true;
+			}
 		}
 		else if ( level.nCurrField < level.pTypeStruct->fields.size() )
 		{
 			if ( !bShowHidden && level.pTypeStruct->fields[level.nCurrField].HasAttribute( "hidden" ) != false )
+			{
 				return GotoNextFieldInLevels();
+			}
 			//
 			switch ( level.pTypeStruct->fields[level.nCurrField].pType->eType )
 			{
@@ -228,7 +258,9 @@ namespace NBind
 						return GotoNextFieldInLevels();
 					}
 					else
+					{
 						return true;
+					}
 
 				case NTypeDef::TYPE_TYPE_ARRAY:
 					level.pAggregatedIterator = new CArrayIterator(
@@ -243,14 +275,18 @@ namespace NBind
 						return GotoNextFieldInLevels();
 					}
 					else
+					{
 						return true;
+					}
 
 				default:
 					return GotoNextFieldInLevels();
 			}
 		}
 		else
+		{
 			return GotoNextFieldInLevels();
+		}
 	}
 
 }

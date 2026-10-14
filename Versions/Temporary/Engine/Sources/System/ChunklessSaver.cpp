@@ -29,7 +29,9 @@ class CChunklessSerializer : public IBinSaver
 		else
 		{
 			if ( !pRes )
+			{
 				return;
+			}
 			pRes->Write( &idChunk, 1 );
 			pRes->Write( &nChunkNumber, 4 );
 		}
@@ -51,20 +53,28 @@ class CChunklessSerializer : public IBinSaver
 	{
 		CheckChunk( idChunk, nChunkNumber );
 		if ( mode == SAVER_MODE_READ )
+		{
 			pRes->Read( pData, nSize );
+		}
 		else
 		{
 			if ( !pRes )
+			{
 				return;
+			}
 #ifdef PARANOID_UNITIALIZED_CHECK
 			// check unitialized
 			int nCount = 0;
 			for ( int k = 0; k < nSize; ++k )
+			{
 				nCount += ( (const unsigned char *)pData )[k] == 0xcd;
+			}
 			ASSERT( nCount != nSize );
 			nCount = 0;
 			for ( int k = 0; k < nSize; ++k )
+			{
 				nCount += ( (const unsigned char *)pData )[k] == 0xcc;
+			}
 			ASSERT( nCount != nSize );
 #endif
 			pRes->Write( pData, nSize );
@@ -78,16 +88,22 @@ class CChunklessSerializer : public IBinSaver
 			pRes->Read( &nSize, 4 );
 			data.resize( nSize );
 			if ( nSize != 0 )
+			{
 				pRes->Read( &data[0], nSize );
+			}
 		}
 		else
 		{
 			if ( !pRes )
+			{
 				return;
+			}
 			nSize = data.size();
 			pRes->Write( &nSize, 4 );
 			if ( !data.empty() )
+			{
 				pRes->Write( &data[0], nSize );
+			}
 		}
 	}
 	virtual void DataChunkString( std::wstring &data )
@@ -99,17 +115,23 @@ class CChunklessSerializer : public IBinSaver
 			data.resize( nSize );
 
 			if ( nSize != 0 )
+			{
 				pRes->Read( &data[0], nSize * 2 );
+			}
 		}
 		else
 		{
 			if ( !pRes )
+			{
 				return;
+			}
 			nSize = data.size();
 			pRes->Write( &nSize, 4 );
 
 			if ( !data.empty() )
+			{
 				pRes->Write( &data[0], nSize * 2 );
+			}
 		}
 	}
 	// storing/loading pointers to objects
@@ -120,16 +142,22 @@ class CChunklessSerializer : public IBinSaver
 #endif
 		ASSERT( IsValid( pTracker ) );
 		if ( !IsValid( pTracker ) )
+		{
 			return;
+		}
 		int nID = pTracker->GetObjectID( pObject );
 		if ( pRes )
+		{
 			pRes->Write( &nID, 4 );
+		}
 	}
 	virtual CObjectBase *LoadObject()
 	{
 		ASSERT( IsValid( pTracker ) );
 		if ( !IsValid( pTracker ) )
+		{
 			return 0;
+		}
 		int nID;
 		pRes->Read( &nID, 4 );
 		CObjectBase *pRes = pTracker->GetObject( nID );

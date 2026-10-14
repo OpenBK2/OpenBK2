@@ -16,9 +16,13 @@ void CBackgroundMutableTexture::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 void CBackgroundMutableTexture::Visit( struct IUIVisitor *pVisitor )
 {
 	if ( !pData )
+	{
 		return;
+	}
 	if ( pData->picture.IsEmpty() )
+	{
 		return;
+	}
 
 	CRectLayout rects;
 	const CTRect<float> rectTexture = CTRect<float>( 0.0f, 0.0f, pData->picture.GetSizeX(), pData->picture.GetSizeY() );
@@ -70,7 +74,9 @@ void CBackgroundMutableTexture::CTextureData::Recalc()
 	                            NGfx::CLAMP );
 
 	if ( !IsValid( pValue ) )
+	{
 		return;
+	}
 
 	NGfx::CTextureLock<NGfx::SPixel8888> sLock( pValue, 0, NGfx::INPLACE );
 

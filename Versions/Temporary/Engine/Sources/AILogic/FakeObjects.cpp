@@ -84,7 +84,9 @@ void CFakeCorpseStaticObject::CreateFakeCorpseStaticObject( class CAIUnit *pUnit
 	theStatObjs.AddStaticObject( pFakeStObj, false );
 
 	if ( SConsts::TIME_TO_DISAPPEAR != 0 )
+	{
 		theExecutorContainer.Add( new CKillCorpseExecutor( pFakeStObj ) );
+	}
 }
 
 CFakeCorpseStaticObject::CFakeCorpseStaticObject( const CVec3 &center,
@@ -100,7 +102,9 @@ CFakeCorpseStaticObject::CFakeCorpseStaticObject( const CVec3 &center,
 			bDestructByTracks( _bDestructByTracks )
 {
 	for ( std::list<SObjTileInfo>::iterator it = tilesToLock.begin(); it != tilesToLock.end(); ++it )
+	{
 		it->lockInfo = bDestructByTracks ? EAIClasses( it->lockInfo & ( ~EAC_TRACK ) ) : EAIClasses( it->lockInfo );
+	}
 }
 
 const uint8_t CFakeCorpseStaticObject::GetPlayer() const
@@ -133,7 +137,9 @@ void CFakeCorpseStaticObject::GetCoveredTiles( std::list<SVector> *pTiles ) cons
 	for ( std::list<SObjTileInfo>::const_iterator it = tilesToLock.begin(); it != tilesToLock.end(); ++it )
 	{
 		if ( it->lockInfo )
+		{
 			pTiles->push_back( it->tile );
+		}
 	}
 }
 

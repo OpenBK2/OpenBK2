@@ -26,13 +26,19 @@ const NDb::SModel *GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSea
 bool SWeaponsSort::operator()( const SWeapon &weapon1, const SWeapon &weapon2 ) const
 {
 	if ( weapon1.bPrimary != weapon2.bPrimary )
+	{
 		return weapon1.bPrimary;
+	}
 	int nPriority1 = GetWeaponPriority( weapon1 );
 	int nPriority2 = GetWeaponPriority( weapon2 );
 	if ( nPriority1 != nPriority2 )
+	{
 		return nPriority1 > nPriority2;
+	}
 	if ( weapon1.nPenetration != weapon2.nPenetration )
+	{
 		return weapon1.nPenetration > weapon2.nPenetration;
+	}
 	return weapon1.nDamage > weapon2.nDamage;
 }
 
@@ -100,7 +106,9 @@ void MakeMechWeapons( std::vector<SWeapon> &weapons, const NDb::SMechUnitRPGStat
 		{
 			const NDb::SBaseGunRPGStats &gun = pStats->GetGun( nID, i, j );
 			if ( !gun.pWeapon )
+			{
 				continue;
+			}
 
 			SWeapon weapon;
 
@@ -110,7 +118,9 @@ void MakeMechWeapons( std::vector<SWeapon> &weapons, const NDb::SMechUnitRPGStat
 			weapon.bPrimary = gun.bIsPrimary;
 
 			if ( CHECK_TEXT_NOT_EMPTY_PRE( gun.pWeapon->, LocalizedName ) )
+			{
 				weapon.wszLocalizedName = GET_TEXT_PRE( gun.pWeapon->, LocalizedName );
+			}
 
 			weapon.nDamage = pShell->fDamagePower;
 			weapon.nPenetration = pShell->nPiercing;
@@ -145,7 +155,9 @@ void AddInfantryWeapons( std::vector<SWeapon> &weapons, const NDb::SInfantryRPGS
 	{
 		const NDb::SBaseGunRPGStats &gun = pStats->GetGun( nID, 0, i );
 		if ( !gun.pWeapon )
+		{
 			continue;
+		}
 
 		SWeapon weapon;
 
@@ -155,7 +167,9 @@ void AddInfantryWeapons( std::vector<SWeapon> &weapons, const NDb::SInfantryRPGS
 		weapon.bPrimary = gun.bIsPrimary;
 
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( gun.pWeapon->, LocalizedName ) )
+		{
 			weapon.wszLocalizedName = GET_TEXT_PRE( gun.pWeapon->, LocalizedName );
+		}
 
 		weapon.nDamage = pShell->fDamagePower;
 		weapon.nPenetration = pShell->nPiercing;
@@ -164,7 +178,9 @@ void AddInfantryWeapons( std::vector<SWeapon> &weapons, const NDb::SInfantryRPGS
 
 		if ( weapon.pWeapon &&
 		     weapon.pWeapon->eWeaponType != NDb::SWeaponRPGStats::WEAPON_HEAVY_CANNON ) // exclude grenades
+		{
 			AddWeapon( weapons, weapon );
+		}
 	}
 }
 
@@ -181,9 +197,13 @@ void AddWeapon( std::vector<SWeapon> &weapons, const SWeapon &weapon )
 	else
 	{
 		if ( weapon.bPrimary )
+		{
 			weapons.insert( weapons.begin(), weapon );
+		}
 		else
+		{
 			weapons.push_back( weapon );
+		}
 	}
 }
 
@@ -261,7 +281,9 @@ void MakeSquadArmors( std::vector<int> &armors, const NDb::SSquadRPGStats *pStat
 		armors[ES_ARMOR_TOP] /= nCount;
 	}
 	if ( armors[ES_ARMOR_FRONT] + armors[ES_ARMOR_SIDE] + armors[ES_ARMOR_BACK] + armors[ES_ARMOR_TOP] <= 0 )
+	{
 		armors.resize( 0 );
+	}
 }
 
 int MakeHP( const NDb::SHPObjectRPGStats *pStats )
@@ -279,7 +301,9 @@ int MakeHP( const NDb::SHPObjectRPGStats *pStats )
 const NDb::SAnimB2 *FindAnimation( const NDb::SInfantryRPGStats *pStats )
 {
 	if ( !pStats )
+	{
 		return 0;
+	}
 
 	const NDb::SAnimB2 *pAnim = 0;
 	if ( NDb::ANIMATION_MARCH < pStats->animdescs.size() )
@@ -289,7 +313,9 @@ const NDb::SAnimB2 *FindAnimation( const NDb::SInfantryRPGStats *pStats )
 		{
 			const NDb::SAnimDesc &animDesc = animDescs.anims[0];
 			if ( animDesc.pAnimation )
+			{
 				pAnim = checked_cast_ptr<const NDb::SAnimB2 *>( animDesc.pAnimation );
+			}
 		}
 	}
 	if ( !pAnim && NDb::ANIMATION_IDLE < pStats->animdescs.size() )
@@ -299,7 +325,9 @@ const NDb::SAnimB2 *FindAnimation( const NDb::SInfantryRPGStats *pStats )
 		{
 			const NDb::SAnimDesc &animDesc = animDescs.anims[0];
 			if ( animDesc.pAnimation )
+			{
 				pAnim = checked_cast_ptr<const NDb::SAnimB2 *>( animDesc.pAnimation );
+			}
 		}
 	}
 	return pAnim;
@@ -314,7 +342,9 @@ const NDb::SModel *GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSea
 		      ++it )
 		{
 			if ( it->eSeason == eSeason )
+			{
 				return it->pModel;
+			}
 		}
 	}
 

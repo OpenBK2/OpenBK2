@@ -15,7 +15,9 @@ namespace NMusicSystem
 CPlayTime::CPlayTime( const NDb::SPlayTime *_pPlayTime, const NDb::SMusicTrack *pTrack ) : nPlayTime( 0 )
 {
 	if ( !pTrack || !_pPlayTime )
+	{
 		return;
+	}
 	const float fRandom( NWin32Random::Random( 0.0f, 1.0f ) );
 	if ( _pPlayTime->nNumer != 0 )
 	{
@@ -30,7 +32,9 @@ CPlayTime::CPlayTime( const NDb::SPlayTime *_pPlayTime, const NDb::SMusicTrack *
 		}
 	}
 	else if ( _pPlayTime->nPlayTime != 0 )
+	{
 		nPlayTime = _pPlayTime->nPlayTime + int( _pPlayTime->nPlayTimeRandom * fRandom );
+	}
 }
 
 NTimer::STime CPlayTime::GetPlayTime() const

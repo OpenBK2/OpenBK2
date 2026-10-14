@@ -16,14 +16,18 @@ template <class T>
 inline bool operator==( const CArray2D<T> &a, const CArray2D<T> &b )
 {
 	if ( a.GetSizeX() != b.GetSizeX() || a.GetSizeY() != b.GetSizeY() )
+	{
 		return false;
+	}
 	int nTotal = a.GetSizeX() * a.GetSizeY();
 	const T *pAData = &a[0][0];
 	const T *pBData = &b[0][0];
 	for ( int k = 0; k < nTotal; ++k )
 	{
 		if ( pAData[k] != pBData[k] )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -121,7 +125,9 @@ void SPerVertexLightState::SetWarFogBlend( float _fBlend )
 float SPerVertexLightState::GetWarFogBlend() const
 {
 	if ( warFogNew.GetSizeX() <= 1 )
+	{
 		return 1;
+	}
 	return bWarFogUseOnlyNew ? 1 : fWarFogBlend;
 }
 
@@ -129,7 +135,9 @@ bool SPerVertexLightState::SetWarFog( const CArray2D<unsigned char> &_fog, float
 {
 	bool bRes = false;
 	if ( warFogNew == _fog )
+	{
 		bWarFogUseOnlyNew = true;
+	}
 	else
 	{
 		bRes = true;
@@ -154,7 +162,9 @@ bool SPerVertexLightState::SetWarFog( const CArray2D<unsigned char> &_fog, float
 static void MultiplyOnColor( std::vector<uint32_t> *pRes, const std::vector<uint32_t> &mult )
 {
 	if ( mult.empty() )
+	{
 		return;
+	}
 	uint32_t *pDst = &( *pRes )[0], *pDstEnd = pDst + pRes->size();
 	const uint32_t *pSrc = &mult[0];
 	for ( ; pDst < pDstEnd; ++pDst, ++pSrc )
@@ -194,10 +204,14 @@ static void CalcDirectionalLighting( const std::vector<uint16_t> &posIndices,
 	pResColors->resize( posIndices.size() );
 	pResShadow->resize( posIndices.size() );
 	if ( posIndices.empty() )
+	{
 		return;
+	}
 	NGfx::SMMXWord translucentShade = ls.shadeColor;
 	if ( bTranslucent )
+	{
 		ConvertColor( &translucentShade, MulPerComp( ls.vLightColor, vTranslucentColor ) );
+	}
 	GetLightingKernels().pCalcDirectionalLighting(
 			&_normals[0], posIndices.size(), ls, translucentShade, &( *pResColors )[0], &( *pResShadow )[0] );
 }
@@ -210,16 +224,24 @@ static void SampleWarFog( const std::vector<CVec3> &srcPos,
                           const CArray2D<unsigned char> &fog2 )
 {
 	if ( srcPos.empty() )
+	{
 		return;
+	}
 	int nVertices = srcPos.size();
 	if ( _pRes1->size() < nVertices )
+	{
 		_pRes1->resize( nVertices );
+	}
 	if ( _pRes2 && _pRes2->size() < nVertices )
+	{
 		_pRes2->resize( nVertices );
+	}
 
 	static std::vector<int> tmp;
 	if ( tmp.size() < nVertices * 2 )
+	{
 		tmp.resize( nVertices * 2 );
+	}
 
 	const SLightingKernels &kernels = GetLightingKernels();
 	kernels.pSampleWarFogCoords( &srcPos[0], nVertices, fScale, &tmp[0] );
@@ -241,7 +263,9 @@ static void CalcPointLightAttenuation( std::vector<NGfx::SMMXWord> *pRes,
 	int nSize = srcPos.size();
 	pRes->resize( nSize );
 	if ( nSize == 0 )
+	{
 		return;
+	}
 	GetLightingKernels().pCalcPointLightAttenuation( &( *pRes )[0], &srcPos[0], nSize, _vCenter, _fRadius );
 }
 
@@ -262,7 +286,9 @@ static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
                                   const CVec3 &_vColor )
 {
 	if ( posIndices.empty() )
+	{
 		return;
+	}
 	GetLightingKernels().pCalcPointLightColorsIndexed(
 			&( *pRes )[0], &attenuation[0], &posIndices[0], &_normals[0], posIndices.size(), MakePointLightColor( _vColor ) );
 }
@@ -274,7 +300,9 @@ static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
                                   const CVec3 &_vColor )
 {
 	if ( _nSize <= 0 )
+	{
 		return;
+	}
 	// The kernel walks normals with a stride, so it never needs to know SUVInfo.
 	GetLightingKernels().pCalcPointLightColorsUniform(
 			&( *pRes )[0], attenuation, &pSrc[0].normal, sizeof( SUVInfo ), _nSize, MakePointLightColor( _vColor ) );
@@ -286,7 +314,9 @@ AddColors( std::vector<uint32_t> *pRes, const std::vector<uint32_t> &src, const 
 	ASSERT( pRes->size() >= add.size() );
 	ASSERT( src.size() >= add.size() );
 	if ( add.empty() )
+	{
 		return;
+	}
 	// pRes and src alias at two call sites; every kernel reads a block before it
 	// writes that same block, so in-place accumulation is safe.
 	GetLightingKernels().pAddColors( &( *pRes )[0], &src[0], &add[0], add.size() );
@@ -303,9 +333,13 @@ static void ScaleColors( std::vector<uint32_t> *pRes,
 {
 	int nSize = posIndices.size();
 	if ( pRes->size() < nSize )
+	{
 		pRes->resize( nSize );
+	}
 	if ( nSize == 0 )
+	{
 		return;
+	}
 	ASSERT( sizeof( uint32_t ) == sizeof( transp[0] ) );
 	GetLightingKernels().pScaleColors( &( *pRes )[0],
 	                                   _pSrc,
@@ -387,7 +421,9 @@ struct SPVLightCalcer
 				{
 					const SPerVertexLightState::SPointLightInfo &p = ls.staticPointLights[k];
 					if ( !DoesIntersect( SSphere( p.vCenter, p.fRadius ), bv ) )
+					{
 						continue;
+					}
 					pl.push_back( p.nID );
 					plIdx.push_back( k );
 				}
@@ -417,7 +453,9 @@ struct SPVLightCalcer
 				CalcDirectionalLighting(
 						posIndices, _normals, ls, pCache->bTranslucent, pCache->vTranslucentColor, pColors, pShadowColors );
 				if ( !pCache->bDoNotCacheLighting )
+				{
 					pCache->nDirectionalLightID = ls.nDirectionalID;
+				}
 
 				MultiplyOnColor( pShadowColors, vertexColor );
 				MultiplyOnColor( pColors, vertexColor );
@@ -429,7 +467,9 @@ struct SPVLightCalcer
 					if ( pl != pCache->pointLightIDs )
 					{
 						if ( pCache->bDoNotCacheLighting )
+						{
 							pPointColors = &pointColors;
+						}
 
 						pPointColors->resize( 0 );
 						NGfx::SMMXWord zero;
@@ -442,10 +482,14 @@ struct SPVLightCalcer
 						}
 
 						if ( !pCache->bDoNotCacheLighting )
+						{
 							pCache->pointLightIDs = pl;
+						}
 					}
 					else
+					{
 						ASSERT( !pCache->bDoNotCacheLighting );
+					}
 					AddColors( pColors, *pColors, *pPointColors );
 					AddColors( pShadowColors, *pShadowColors, *pPointColors );
 				}
@@ -459,7 +503,9 @@ struct SPVLightCalcer
 					// ~150 clocks / vertex / point light if replace with directional is not used
 					const SPerVertexLightState::SPointLightInfo &p = ls.dynamicPointLights[k];
 					if ( !DoesIntersect( SSphere( p.vCenter, p.fRadius ), bv ) )
+					{
 						continue;
+					}
 					if ( pointColors.empty() )
 					{
 						NGfx::SMMXWord zero;
@@ -471,9 +517,13 @@ struct SPVLightCalcer
 				if ( !pointColors.empty() )
 				{
 					if ( colorsHold.size() < nVertices )
+					{
 						colorsHold.resize( nVertices );
+					}
 					if ( shadowColorsHold.size() < nVertices )
+					{
 						shadowColorsHold.resize( nVertices );
+					}
 					AddColors( &colorsHold, *pColors, pointColors );
 					AddColors( &shadowColorsHold, *pShadowColors, pointColors );
 					pColors = &colorsHold;
@@ -527,14 +577,18 @@ struct SPVLightCalcer
 						// ~50 clocks / vertex
 						SampleWarFog( srcPos, ls.fWarFogScale, pNew, ls.warFogNew, 0, ls.warFogNew );
 						if ( !pCache->bDoNotCacheLighting )
+						{
 							pCache->nWarFogNewID = ls.nWarFogNewID;
+						}
 					}
 					if ( ls.nWarFogOldID != pCache->nWarFogOldID )
 					{
 						// ~50 clocks / vertex
 						SampleWarFog( srcPos, ls.fWarFogScale, pOld, ls.warFogOld, 0, ls.warFogNew );
 						if ( !pCache->bDoNotCacheLighting )
+						{
 							pCache->nWarFogOldID = ls.nWarFogOldID;
+						}
 					}
 				}
 				nWarFogMask = 0xffffffff;
@@ -562,7 +616,9 @@ void SampleWarFog( const std::vector<CVec3> &vPos, const SPerVertexLightState &l
 		return;
 	}
 	if ( pRes->size() < vPos.size() )
+	{
 		pRes->resize( vPos.size() );
+	}
 	std::vector<unsigned char> newFog, oldFog;
 	SampleWarFog( vPos, ls.fWarFogScale, &newFog, ls.warFogNew, &oldFog, ls.warFogOld );
 	float fBlend = ls.GetWarFogBlend();
@@ -589,7 +645,9 @@ void CalcPerVertexLight( NGfx::SGeomVecFull *pRes,
                          const SBound &bv )
 {
 	if ( posIndices.empty() )
+	{
 		return;
+	}
 	SPVLightCalcer l;
 	l.CalcLight( srcPos, pSrc, posIndices, _normals, vertexColor, ls, pCache, bv );
 	//NHPTimer::STime tStart, tFinish;
@@ -663,7 +721,9 @@ void CalcPerVertexLight( NGfx::SGeomVecT2C1 *pRes,
                          const SBound &bv )
 {
 	if ( posIndices.empty() )
+	{
 		return;
+	}
 	SPVLightCalcer l;
 	l.CalcLight( srcPos, pSrc, posIndices, _normals, vertexColor, ls, pCache, bv );
 
@@ -682,6 +742,7 @@ void CalcPerVertexLight( NGfx::SGeomVecT2C1 *pRes,
 			             pCache->bMultiplyOnTransparency );
 		}
 		else
+		{
 			ScaleColors( &l.colorsHold,
 			             &pSrc->texU.dw,
 			             sizeof( *pSrc ),
@@ -690,6 +751,7 @@ void CalcPerVertexLight( NGfx::SGeomVecT2C1 *pRes,
 			             posIndices,
 			             _normals,
 			             pCache->bMultiplyOnTransparency );
+		}
 	}
 	else
 	{

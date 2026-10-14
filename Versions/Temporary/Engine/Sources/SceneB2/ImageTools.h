@@ -48,7 +48,9 @@ static void SaveImageAsZip( CDataStream *pStream, const CArray2D<T> &image )
 		deflateEnd( &stream );
 		//CRAP{ почему-то иногда при распаковке возвращается "buffer error" всесто "stream end"...
 		if ( ( err == Z_STREAM_END ) || ( err == Z_BUF_ERROR ) )
+		{
 			err = Z_OK;
+		}
 		// CRAP}
 		deflateEnd( &stream );
 	}
@@ -98,7 +100,9 @@ static void LoadImageFromZip( CDataStream *pStream, CArray2D<T> &image )
 		inflateEnd( &stream );
 		// CRAP{ почему-то иногда при распаковке возвращается "buffer error" всесто "stream end"...
 		if ( ( err == Z_STREAM_END ) || ( err == Z_BUF_ERROR ) )
+		{
 			err = Z_OK;
+		}
 		// CRAP}
 		inflateEnd( &stream );
 	}

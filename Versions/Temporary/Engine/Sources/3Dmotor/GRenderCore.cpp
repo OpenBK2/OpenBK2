@@ -30,7 +30,9 @@ int CSceneFragments::AddGeometry( CObjectBase *pHandle,
 	geometries.push_back( pGeometry );
 
 	if ( !bNotAddBound )
+	{
 		bc.Add( _bv );
+	}
 
 	return geometries.size() - 1;
 }
@@ -41,7 +43,9 @@ void CSceneFragments::AddElement( int _nGeometryIndex,
                                   const SPerPartVariables &_vars )
 {
 	if ( _parts.IsEmpty() )
+	{
 		return;
+	}
 	// search for suitable fragment
 	SRenderFragmentKey k;
 	k.pMat = pMaterial;
@@ -60,12 +64,16 @@ void CSceneFragments::AddElement( int _nGeometryIndex,
 		pFragment->elements.reserve( 8 );
 	}
 	else
+	{
 		pFragment = fragments[i->second];
+	}
 	for ( int i = 0; i < _parts.GetBlocksNumber(); ++i )
 	{
 		int nFlags = _parts.GetBlock( i );
 		if ( nFlags )
+		{
 			pFragment->elements.push_back( SRenderFragmentInfo::SElement( _nGeometryIndex, i, nFlags ) );
+		}
 	}
 }
 
@@ -94,7 +102,9 @@ void CSceneFragments::SetLitParticlesMaterial( IMaterial *p )
 bool CSceneFragments::HasSelectedFragments() const
 {
 	if ( fragments.size() == 1 && fragments[0]->elements.empty() )
+	{
 		return false;
+	}
 	if ( filterFragment.size() )
 	{
 		bool bAllAreFiltered = true;
@@ -107,7 +117,9 @@ bool CSceneFragments::HasSelectedFragments() const
 			}
 		}
 		if ( bAllAreFiltered )
+		{
 			return false;
+		}
 	}
 	if ( filterGeometry.size() )
 	{
@@ -121,7 +133,9 @@ bool CSceneFragments::HasSelectedFragments() const
 			}
 		}
 		if ( bAllAreFiltered )
+		{
 			return false;
+		}
 	}
 	return true;
 }
@@ -140,11 +154,17 @@ void CSceneFragments::HideGeometry( const std::vector<CPartFlags> &flags )
 		filter.Invert(); // taken are set
 		char &f = filterGeometry[k];
 		if ( f == FST_REJECT )
+		{
 			continue;
+		}
 		if ( f == FST_SPLIT )
+		{
 			filter.CalcAnd( selectedParts[k] );
+		}
 		if ( filter.IsEmpty() )
+		{
 			f = FST_REJECT;
+		}
 		else
 		{
 			f = FST_SPLIT;
@@ -159,15 +179,21 @@ inline EFragmentsSplit GetIntersectLevel( const SBound &bound, const SBound &tes
 	// fast outside
 	float fDif2 = fabs2( ptDif );
 	if ( fDif2 > sqr( bound.s.fRadius + test.s.fRadius ) )
+	{
 		return FST_REJECT;
+	}
 	// fast inside, fDif + test.s.fRadius < bound.s.fRadius
 	float fRDif = bound.s.fRadius - test.s.fRadius;
 	if ( fDif2 < fRDif * fabs( fRDif ) )
+	{
 		return FST_ACCEPT;
+	}
 	if ( fabs( ptDif.x ) + test.ptHalfBox.x < bound.ptHalfBox.x &&
 	     fabs( ptDif.y ) + test.ptHalfBox.y < bound.ptHalfBox.y &&
 	     fabs( ptDif.z ) + test.ptHalfBox.z < bound.ptHalfBox.z )
+	{
 		return FST_ACCEPT;
+	}
 	return FST_SPLIT;
 }
 
@@ -177,11 +203,15 @@ inline EFragmentsSplit GetIntersectLevel( const SSphere &bound, const SSphere &t
 	// fast outside
 	float fDif2 = fabs2( ptDif );
 	if ( fDif2 > sqr( bound.fRadius + test.fRadius ) )
+	{
 		return FST_REJECT;
+	}
 	// fast inside, fDif + test.s.fRadius < bound.s.fRadius
 	float fRDif = bound.fRadius - test.fRadius;
 	if ( fDif2 < fRDif * fabs( fRDif ) )
+	{
 		return FST_ACCEPT;
+	}
 	return FST_SPLIT;
 }
 
@@ -197,9 +227,13 @@ SBoundIntersectFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryIn
 		for ( int k = 0; k < bounds.size(); ++k )
 		{
 			if ( !pRes->IsSet( k ) )
+			{
 				continue;
+			}
 			if ( !DoesIntersect( bounds[k], bv ) )
+			{
 				pRes->Reset( k );
+			}
 		}
 	}
 	return res;
@@ -209,7 +243,9 @@ EFragmentsSplit
 SFrustrumFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const
 {
 	if ( !pTS->PushClipHint( pStatic->bv ) )
+	{
 		return FST_REJECT;
+	}
 	if ( pTS->IsFullGet() )
 	{
 		pTS->PopClipHint();
@@ -219,9 +255,13 @@ SFrustrumFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pG
 	for ( int k = 0; k < bounds.size(); ++k )
 	{
 		if ( !pRes->IsSet( k ) )
+		{
 			continue;
+		}
 		if ( !pTS->IsIn( bounds[k] ) )
+		{
 			pRes->Reset( k );
+		}
 	}
 	pTS->PopClipHint();
 	return FST_SPLIT;
@@ -250,7 +290,9 @@ SSphereFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeo
 		{
 			int nBlock = res2.GetBlock( k >> 5 );
 			if ( nBlock == 0 )
+			{
 				continue;
+			}
 			int nFinal = (std::min)( k + 32, nPartsNum );
 			int nStart = k;
 			for ( int i = k, nTest = 1; i < nFinal; ++i )
@@ -258,7 +300,9 @@ SSphereFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeo
 				if ( nBlock & nTest )
 				{
 					if ( !DoesIntersect( bounds[i], sph ) )
+					{
 						nBlock &= ~nTest;
+					}
 				}
 				nTest <<= 1;
 			}
@@ -278,7 +322,9 @@ void SIgnorePartsInfo::Init( const CPartFlags &_flags, const std::vector<CPtr<IP
 	for ( int k = 0; k < pParts->size(); ++k )
 	{
 		if ( !_flags.IsSet( k ) )
+		{
 			ignore[nRes++] = ( *pParts )[k];
+		}
 	}
 	ignore.resize( nRes );
 }
@@ -287,13 +333,19 @@ EFragmentsSplit
 SIgnoredSphereFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const
 {
 	if ( !pIgnoreList )
+	{
 		return sph( pStatic, pGeom, pRes );
+	}
 	CFullIgnorePartsHash::iterator i = pIgnoreList->find( pStatic->pHandle );
 	if ( i == pIgnoreList->end() )
+	{
 		return FST_REJECT; //sph( pStatic, pGeom, pRes );
+	}
 	SIgnorePartsInfo &ipi = i->second;
 	if ( !ipi.pTrackCombiner )
+	{
 		ipi.pTrackCombiner = pGeom->pVertices->GetCombiner();
+	}
 	ASSERT( ipi.pTrackCombiner == pGeom->pVertices->GetCombiner() );
 	if ( ipi.pTrackCombiner == 0 )
 	{
@@ -313,7 +365,9 @@ SIgnoredSphereFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInf
 			IPart *p = ipi.ignore[k];
 			ipi.ignore[nDst] = p;
 			if ( !IsValid( p ) )
+			{
 				continue;
+			}
 			ignore[p];
 			++nDst;
 		}
@@ -322,9 +376,13 @@ SIgnoredSphereFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInf
 		for ( int k = 0; k < parts.size(); ++k )
 		{
 			if ( ignore.find( parts[k] ) != ignore.end() )
+			{
 				ipi.flags.Reset( k );
+			}
 			if ( !DoesIntersect( bounds[k], sph.sph ) )
+			{
 				ipi.flags.Reset( k );
+			}
 		}
 	}
 	pRes->CalcAnd( ipi.flags );
@@ -346,10 +404,14 @@ void MakeSingleOp( CRenderCmdList *pRes,
 	for ( int k = bTakeLitParticles ? 0 : 1; k < fragments.size(); ++k )
 	{
 		if ( src.IsFilteredFragment( k ) )
+		{
 			continue;
+		}
 		const SRenderFragmentInfo &f = *fragments[k];
 		if ( f.vars.fFade < fMinFade )
+		{
 			continue;
+		}
 
 		COpGenContext fi( &pRes->ops, &f );
 		if ( f.pMaterial )
@@ -366,9 +428,13 @@ void MakeSingleOp( CRenderCmdList *pRes,
 			{
 
 				if ( f.pMaterial->DoesBackFaceCastShadow() )
+				{
 					fi.AddOperation( op, 100, nStencilOp | SHADOW_CULL_CCW, 0, _p1, _p2, _p3 );
+				}
 				else
+				{
 					fi.AddOperation( op, 100, nStencilOp, 0, _p1, _p2, _p3 );
+				}
 
 				continue;
 			}

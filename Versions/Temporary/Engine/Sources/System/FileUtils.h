@@ -76,7 +76,9 @@ void EnumerateFiles( const std::string &szStartDir, const char *pszMask, TEnumFu
 	for ( CFileIterator it( ( szDir + pszMask ).c_str() ); !it.IsEnd(); ++it )
 	{
 		if ( !it.IsDirectory() )
+		{
 			callback( it );
+		}
 	}
 	// iterate throug all dirs by "*.*"
 	for ( CFileIterator it( ( szDir + "*.*" ).c_str() ); !it.IsEnd(); ++it )
@@ -85,9 +87,11 @@ void EnumerateFiles( const std::string &szStartDir, const char *pszMask, TEnumFu
 		{
 			// dive into recurse
 			if ( bRecurse )
+			{
 				// '/' rather than a backslash: off Windows a backslash is an ordinary
 				// character in a file name, and this path is about to be split again
 				EnumerateFiles( ( it.GetFullName() + "/" ).c_str(), pszMask, callback, bRecurse );
+			}
 			//
 			callback( it );
 		}

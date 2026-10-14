@@ -17,7 +17,9 @@ void CBackgroundTiledTexture::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	if ( CHECK_UI_TEXTURES_INSTANT_LOAD != 0 )
 	{
 		if ( pDesc )
+		{
 			CheckInstantLoadTexture( pDesc->pTexture );
+		}
 	}
 #endif
 }
@@ -33,7 +35,9 @@ int CBackgroundTiledTexture::operator&( IBinSaver &saver )
 void CBackgroundTiledTexture::DivideSubrects( const NDb::SSubRect &in, CRectLayout *pLayout )
 {
 	if ( in.ptSize.x == 0 || in.ptSize.y == 0 || in.ptSize.x == -4.3160208e+008 || in.ptSize.y == -4.3160208e+008 )
+	{
 		return;
+	}
 
 	CRectLayout::SRect sub;
 	sub.sColor = FadeColor( pDesc->nColor, GetFadeValue() );

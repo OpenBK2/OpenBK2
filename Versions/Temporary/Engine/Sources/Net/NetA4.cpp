@@ -94,17 +94,23 @@ bool CSendPacket::bLastPacket;
 static bool CanReadPacket( CRingBuffer<N_STREAM_BUFFER> &buf )
 {
 	if ( buf.GetSize() < 1 )
+	{
 		return false;
+	}
 	int nSize = 0;
 	buf.Peek( &nSize, 1 );
 	// Short frames have only a one-byte header, including the final segment marker.
 	const int nHeaderSize = ( nSize & 1 ) ? 1 : 4;
 	if ( buf.GetSize() < nHeaderSize )
+	{
 		return false;
+	}
 	buf.Peek( &nSize, nHeaderSize );
 	nSize >>= 1;
 	if ( nSize >= 0 && nSize <= buf.GetSize() - nHeaderSize )
+	{
 		return true;
+	}
 	return false;
 }
 
@@ -132,7 +138,9 @@ static void ReadPacket( CRingBuffer<N_STREAM_BUFFER> &src, CMemoryStream *pDst )
 	int nSize = 0;
 	src.Read( &nSize, 1 );
 	if ( ( nSize & 1 ) == 0 )
+	{
 		src.Read( ( (char *)&nSize ) + 1, 3 );
+	}
 	nSize >>= 1;
 	pDst->SetSizeDiscard( nSize );
 	src.Read( pDst->GetBufferForWrite(), nSize );
@@ -212,18 +220,24 @@ CNetDriver::~CNetDriver()
 		case ACTIVE:
 		{
 			if ( ( !bIsClient ) || ( bIsBroadcast ) )
+			{
 				for ( CPeerList::iterator i = clients.begin(); i != clients.end(); ++i )
 				{
 					// LOGOUT identifies the departing client, never the recipient.
 					CSendPacket p( i->second.currentAddr, LOGOUT, login.GetSelfClientID(), pLinks );
 				}
+			}
 			else
+			{
 				//sends message to server only
 				for ( CPeerList::iterator i = clients.begin(); i != clients.end(); ++i )
 				{
 					if ( i->second.clientID == 0 )
+					{
 						CSendPacket p( i->second.currentAddr, LOGOUT, login.GetSelfClientID(), pLinks );
+					}
 				}
+			}
 			break;
 		}
 		case CONNECTING:
@@ -278,7 +292,9 @@ CNetDriver::SPeer *CNetDriver::GetClientByAddr( const CNodeAddress &addr )
 	for ( CPeerList::iterator i = clients.begin(); i != clients.end(); ++i )
 	{
 		if ( i->second.currentAddr == addr )
+		{
 			return &( i->second );
+		}
 	}
 	return 0;
 }
@@ -287,7 +303,9 @@ CNetDriver::SPeer *CNetDriver::GetClient( CP2PTracker::UCID nID )
 {
 	CPeerList::iterator i = clients.find( nID );
 	if ( i != clients.end() )
+	{
 		return &( i->second );
+	}
 	return 0;
 }
 
@@ -321,7 +339,9 @@ bool CNetDriver::SendBroadcast( const CMemoryStream &_pkt )
 	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 
 	if ( state != ACTIVE )
+	{
 		return false;
+	}
 	//
 	CMemoryStream pkt = _pkt;
 	// CRAP{ for traffic measurement
@@ -343,10 +363,14 @@ bool CNetDriver::SendDirect( int nClient, const CMemoryStream &_pkt )
 
 	SPeer *pDst = GetClient( nClient );
 	if ( pDst == 0 || state != ACTIVE )
+	{
 		return false;
+	}
 
 	if ( pDst )
+	{
 		p2p.SendDirect( pDst->clientID, pkt );
+	}
 
 	return true;
 }
@@ -359,24 +383,32 @@ void CNetDriver::Kick( int nClient )
 	//	NI_ASSERT( pDst != 0, "pDst == 0 " );
 	NI_ASSERT( state == ACTIVE, "Wrong state of the game" );
 	if ( pDst )
+	{
 		p2p.KickClient( nClient, bIsBroadcast );
+	}
 }
 
 #ifdef __TEST_LAGS__
 bool CNetDriver::AnalyzeLags()
 {
 	if ( bPaused )
+	{
 		return false;
+	}
 
 	if ( bReceiveNow )
+	{
 		return true;
+	}
 
 	if ( Singleton<IGameTimer>() )
 	{
 		const NTimer::STime curTime = Singleton<IGameTimer>()->GetAbsTime();
 		// all messages are received and it's lag now
 		if ( nMsgCanReceive == 0 && lastReceiveTime + lagPeriod > curTime )
+		{
 			return false;
+		}
 		// lag finished
 		if ( lastReceiveTime + lagPeriod <= curTime )
 		{
@@ -384,14 +416,20 @@ bool CNetDriver::AnalyzeLags()
 			if ( bMultiChannel )
 			{
 				for ( int i = 0; i < channelMsgs.size(); ++i )
+				{
 					nMsgCanReceive += channelMsgs[i].size();
+				}
 			}
 			else
+			{
 				nMsgCanReceive += msgQueue.size();
+			}
 		}
 
 		if ( nMsgCanReceive > 0 )
+		{
 			--nMsgCanReceive;
+		}
 	}
 
 	return true;
@@ -404,18 +442,24 @@ bool CNetDriver::GetMessage( EMessage *pMsg, int *pClientID, std::vector<int> *p
 
 #ifdef __TEST_LAGS__
 	if ( !AnalyzeLags() )
+	{
 		return false;
+	}
 #endif // __TEST_LAGS__
 
 	if ( msgQueue.empty() )
+	{
 		return false;
+	}
 	else
 	{
 		SMessage &msg = msgQueue.front();
 		*pMsg = msg.msg;
 		*pClientID = msg.nClientID;
 		if ( pReceived )
+		{
 			*pReceived = msg.received;
+		}
 		*pPkt = msg.pkt;
 		//
 		msgQueue.pop_front();
@@ -433,23 +477,33 @@ void CNetDriver::ProcessLogin( const CNodeAddress &addr, CBitStream &bits )
 		bool bAddp2pClient = false;
 		EReject reject = NONE;
 		if ( info.bWrongVersion )
+		{
 			reject = WRONG_VERSION;
+		}
 		else
 		{
 			SPeer *pPeer = GetClientByAddr( addr );
 			if ( pPeer )
 			{
 				if ( !login.HasAccepted( addr, info ) )
+				{
 					return; // ignore obsolete or too new request
+				}
 			}
 			else if ( info.pwd.GetSize() ) // wrong password
+			{
 				reject = PASSWORD_FAILED;
+			}
 			else
 			{
 				if ( !bAcceptNewClients )
+				{
 					reject = FORBIDDEN;
+				}
 				else
+				{
 					bAddp2pClient = true;
+				}
 			}
 		}
 		if ( reject != NONE )
@@ -470,7 +524,9 @@ void CNetDriver::ProcessLogin( const CNodeAddress &addr, CBitStream &bits )
 			login.AcceptLogin( addr, pkt.GetBits(), info, &nClientID, localAddr );
 
 			if ( bAddp2pClient )
+			{
 				AddNewP2PClient( SClientAddressInfo( addr, info.localAddr ), nClientID );
+			}
 		}
 	}
 }
@@ -480,7 +536,9 @@ void CNetDriver::ProcessNormal( const CNodeAddress &addr, CBitStream &bits )
 	CP2PTracker::UCID clientID = -1;
 	bits.Read( &clientID, sizeof( clientID ) );
 	if ( !p2p.IsActive( clientID ) )
+	{
 		return;
+	}
 	SPeer *pPeer = GetClient( clientID );
 	if ( pPeer )
 	{
@@ -552,7 +610,9 @@ void CNetDriver::ProcessIncomingMessages()
 				// connection by its address so another peer cannot be removed as well.
 				SPeer *pPeer = GetClientByAddr( addr );
 				if ( pPeer )
+				{
 					p2p.KickClient( pPeer->clientID, bIsBroadcast );
+				}
 			}
 			break;
 			case TRY_SHORTCUT:
@@ -564,7 +624,9 @@ void CNetDriver::ProcessIncomingMessages()
 				if ( uniqueServerID == login.GetUniqueServerID() )
 				{
 					if ( !p2p.IsActive( clientID ) )
+					{
 						return;
+					}
 					SPeer *pPeer = GetClient( clientID );
 					if ( pPeer )
 					{
@@ -588,7 +650,9 @@ void CNetDriver::ProcessIncomingMessages()
 						CP2PTracker::UCID clientID = clients.begin()->first;
 						AddOutputMessage( REMOVE_CLIENT, clientID, fake, fake1 );
 						if ( clientID == 0 )
+						{
 							AddOutputMessage( SERVER_DEAD, 0, fake, fake1 );
+						}
 						RemoveClient( clientID );
 					}
 				}
@@ -669,7 +733,9 @@ void CNetDriver::AddOutputMessage( EMessage msg,
 	SPeer *pPeer = GetClient( _from );
 	NI_ASSERT( pPeer != 0, "NULL peer" );
 	if ( !pPeer )
+	{
 		return;
+	}
 	SMessage &res = msgQueue.emplace_back();
 	res.msg = msg;
 	res.pkt = data;
@@ -679,7 +745,9 @@ void CNetDriver::AddOutputMessage( EMessage msg,
 		SPeer *pTest = GetClient( received[i] );
 		NI_ASSERT( pTest != 0, "NULL pTest" );
 		if ( pTest )
+		{
 			res.received.push_back( pTest->clientID );
+		}
 	}
 }
 
@@ -693,7 +761,9 @@ void CNetDriver::PollMessages( SPeer *pPeer )
 		// blocks fit. Each consumed frame makes room for the remaining blocks.
 		pPeer->data.PumpIncoming();
 		if ( !CanReadPacket( pPeer->data.channelInBuf ) )
+		{
 			break;
+		}
 		CMemoryStream pkt;
 		ReadPacket( pPeer->data.channelInBuf, &pkt );
 #ifdef LOG
@@ -724,7 +794,9 @@ void CNetDriver::ProcessP2PMessages()
 				AddOutputMessage( REMOVE_CLIENT, msg.from, msg.pkt, msg.received );
 
 				if ( msg.from == 0 )
+				{
 					AddOutputMessage( SERVER_DEAD, msg.from, msg.pkt, msg.received );
+				}
 
 				RemoveClient( msg.from );
 
@@ -754,14 +826,18 @@ void CNetDriver::StepPeerTimers( float fDeltaTime )
 void CNetDriver::StepActive( float fDeltaTime )
 {
 	for ( CPeerList::iterator i = clients.begin(); i != clients.end(); ++i )
+	{
 		PollMessages( &( i->second ) );
+	}
 
 	// give out kicks
 	for ( int k = 0; k < p2p.kicks.size(); ++k )
 	{
 		SPeer *pPeer = GetClient( p2p.kicks[k] );
 		if ( pPeer )
+		{
 			CSendPacket pkt( pPeer->currentAddr, KICK, login.GetSelfClientID(), pLinks );
+		}
 	}
 	p2p.kicks.clear();
 
@@ -815,7 +891,9 @@ void CNetDriver::StepActive( float fDeltaTime )
 					{
 						CNodeAddress dest;
 						if ( !it->second.addrInfo.localAddress.GetAddress( k, &dest ) )
+						{
 							break;
+						}
 						CSendPacket pkt( dest, TRY_SHORTCUT, login.GetSelfClientID(), pLinks );
 						pkt.GetBits()->Write( login.GetUniqueServerID() );
 					}
@@ -855,7 +933,9 @@ void CNetDriver::Step()
 	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 
 	if ( !CanWork() )
+	{
 		return;
+	}
 
 	{
 		// CRAP{
@@ -893,7 +973,9 @@ void CNetDriver::Step()
 		// Age existing peers before incoming packets reset their receive timers.
 		// Otherwise returning from a stalled frame can time out a peer just heard from.
 		if ( state == ACTIVE )
+		{
 			StepPeerTimers( fSeconds );
+		}
 		ProcessIncomingMessages();
 		//
 		switch ( state )
@@ -1007,9 +1089,13 @@ const float CNetDriver::GetPing( int nClientID )
 
 	CPeerList::const_iterator iter = clients.find( nClientID );
 	if ( iter == clients.end() )
+	{
 		return -1.0f;
+	}
 	else
+	{
 		return iter->second.acks.GetPing();
+	}
 }
 
 const float CNetDriver::GetTimeSinceLastRecv( const int nClientID )
@@ -1018,9 +1104,13 @@ const float CNetDriver::GetTimeSinceLastRecv( const int nClientID )
 
 	CPeerList::const_iterator iter = clients.find( nClientID );
 	if ( iter == clients.end() )
+	{
 		return -1.0f;
+	}
 	else
+	{
 		return iter->second.acks.GetTimeSinceLastRecv();
+	}
 }
 
 const std::string CNetDriver::GetIP( const int nClientID )

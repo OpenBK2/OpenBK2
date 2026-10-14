@@ -84,7 +84,9 @@ public:
 	{
 		// Match GetChar's replacement glyph when a character is unavailable.
 		if ( !HasChar( c ) )
+		{
 			c = HasChar( wDefaultChar ) ? wDefaultChar : ( chars.empty() ? c : chars.begin()->first );
+		}
 		const auto found = inkBounds.find( c );
 		return found == inkBounds.end() ? nullptr : &found->second;
 	}

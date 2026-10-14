@@ -28,9 +28,13 @@ void CScreenshotTexture::Set( const CScreenshotTexture &_sScreenShot )
 void CScreenshotTexture::Generate( bool bMakeItSafe )
 {
 	if ( !bMakeItSafe )
+	{
 		NGfx::MakeFast32BitScreenShot( &sScreenShot, false );
+	}
 	else
+	{
 		NGfx::MakeScreenShot( &sScreenShot, false );
+	}
 }
 
 void CScreenshotTexture::GetSize( CTPoint<int> *pSize )
@@ -53,7 +57,9 @@ void CScreenshotTexture::Recalc()
 	pValue = NGfx::MakeTexture( sSize.x, sSize.y, 1, NGfx::SPixel8888::ID, NGfx::REGULAR, NGfx::CLAMP );
 
 	if ( !IsValid( pValue ) )
+	{
 		return;
+	}
 
 	if ( eMode == COLOR )
 	{

@@ -16,15 +16,21 @@ int CScene::AddEffect(
 	//
 	CPtr<SEffectVisObjBase> pVOD;
 	if ( nID == OBJECT_ID_FORGET )
+	{
 		pVOD = new SStaticEffectVisObj();
+	}
 	else
+	{
 		pVOD = new SDynamicEffectVisObj();
+	}
 	pVOD->UpdatePlacement( data[eScene]->GetGScene(), vPos, qRot, CVec3( 1, 1, 1 ) );
 	pVOD->timeStart = timeStart;
 	pVOD->pEffect = pEffect;
 	pVOD->ReCreateObject( data[eScene]->GetGScene(), 0, data[eScene]->pGameTimer, false );
 	if ( pVOD->pObj == 0 )
+	{
 		return -1;
+	}
 	if ( nID == OBJECT_ID_FORGET )
 	{
 		pVOD->nID = -1;
@@ -48,15 +54,21 @@ int CScene::AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime
 	//
 	CPtr<SEffectVisObjBase> pVOD;
 	if ( nID == OBJECT_ID_FORGET )
+	{
 		pVOD = new SStaticEffectVisObj();
+	}
 	else
+	{
 		pVOD = new SDynamicEffectVisObj();
+	}
 	pVOD->UpdatePlacement( data[eScene]->GetGScene(), mPlace );
 	pVOD->timeStart = timeStart;
 	pVOD->pEffect = pEffect;
 	pVOD->ReCreateObject( data[eScene]->GetGScene(), 0, data[eScene]->pGameTimer, false );
 	if ( pVOD->pObj == 0 )
+	{
 		return -1;
+	}
 	if ( nID == OBJECT_ID_FORGET )
 	{
 		pVOD->nID = -1;
@@ -83,10 +95,14 @@ void CScene::AddEffect( const int nID,
 	NI_VERIFY( pEffect != 0, fmt::format( "Adding effect {} with empty descriptor", nID ), return );
 	NAnimation::ISkeletonAnimator *pAnimator = GetAnimator( nID );
 	if ( pAnimator == 0 )
+	{
 		return;
+	}
 	SHMatrix mBone;
 	if ( !pAnimator->GetBonePosition( szBoneName.c_str(), &mBone ) )
+	{
 		return;
+	}
 	SHMatrix mPlacement;
 	Multiply( &mPlacement, mBone, mPlace );
 	//
@@ -97,7 +113,9 @@ void CScene::StopEffectGeneration( const int nID, NTimer::STime time )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
 	if ( pos == data[eScene]->visObjects.end() )
+	{
 		return; // No such effect
+	}
 	if ( pos->second->pObj == 0 )
 	{
 		data[eScene]->visObjects.erase( pos );

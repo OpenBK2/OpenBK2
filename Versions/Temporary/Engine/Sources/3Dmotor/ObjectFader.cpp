@@ -15,7 +15,9 @@ CObjectFader::CObjectFader( CObjectBase *_pObj,
 	{
 		transpChannels.reserve( _pTranspChannels->size() );
 		for ( int k = 0; k < _pTranspChannels->size(); ++k )
+		{
 			transpChannels.push_back( ( *_pTranspChannels )[k].GetPtr() );
+		}
 	}
 }
 
@@ -36,7 +38,9 @@ bool CObjectFader::Update( void *p )
 					SetPartFade( pNode->parts[k], fFadeVal * transpChannels[k]->GetValue() );
 				}
 				else
+				{
 					SetPartFade( pNode->parts[k], fFadeVal );
+				}
 			}
 			return true;
 		}

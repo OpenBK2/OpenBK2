@@ -41,7 +41,9 @@ void CSpriteEffect::AddParticles( IParticleOutput *pRender )
 	////
 	CDGPtr<CPtrFuncBase<NGfx::CTexture>> pTex( textures[0] );
 	if ( !IsValid( pTex ) )
+	{
 		return;
+	}
 	pTex.Refresh();
 	STransparentTexturePlace sTexPlace;
 	GetTransparentTexturePlace( &sTexPlace, pTex->GetValue() );

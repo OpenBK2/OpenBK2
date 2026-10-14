@@ -22,26 +22,38 @@ static int nConsoleSize = 100;
 void ShowStatsWindow( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )
+	{
 		return;
+	}
 	const std::string szVal = NStr::ToMBCS( paramsSet[0] );
 	const int nVal = NStr::ToInt( szVal );
 
 	if ( nVal == 1 )
+	{
 		Singleton<IDebugSingleton>()->ShowStatsWindow( true );
+	}
 	else
+	{
 		Singleton<IDebugSingleton>()->ShowStatsWindow( false );
+	}
 }
 
 void ShowDebugInfo( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )
+	{
 		return;
+	}
 	const std::string szVal = NStr::ToMBCS( paramsSet[0] );
 	const int nVal = NStr::ToInt( szVal );
 	if ( nVal == 1 )
+	{
 		Singleton<IDebugSingleton>()->ShowDebugInfo( true );
+	}
 	else
+	{
 		Singleton<IDebugSingleton>()->ShowDebugInfo( false );
+	}
 }
 
 // Construction/Destruction
@@ -121,7 +133,9 @@ void CWindowConsole::ReadConsoleStrings()
 		if ( l.nStream == CONSOLE_STREAM_CONSOLE )
 		{
 			if ( nBeginString != 0 )
+			{
 				nBeginString++;
+			}
 			vectorOfStrings.push_back( SColorString( l.szText.c_str(), l.dwColor, 1024 ) );
 		}
 		else if ( l.nStream >= CONSOLE_STREAM_DEBUG_WINDOW && l.nStream < CONSOLE_STREAM_DEBUG_WINDOW + 2 )
@@ -130,7 +144,9 @@ void CWindowConsole::ReadConsoleStrings()
 			IConsoleOutput *pTextView =
 					dynamic_cast<IConsoleOutput *>( pDebug->GetDebugInfoWindow( l.nStream - CONSOLE_STREAM_DEBUG_WINDOW ) );
 			if ( pTextView )
+			{
 				pTextView->AddString( l.szText, l.dwColor );
+			}
 		}
 		else if ( l.nStream >= CONSOLE_STREAM_DEBUG_WINDOW + 2 && l.nStream < CONSOLE_STREAM_DEBUG_WINDOW + 6 )
 		{
@@ -138,7 +154,9 @@ void CWindowConsole::ReadConsoleStrings()
 			ITextView *pTextView =
 					dynamic_cast<ITextView *>( pDebug->GetDebugInfoWindow( l.nStream - CONSOLE_STREAM_DEBUG_WINDOW ) );
 			if ( pTextView )
+			{
 				pTextView->SetText( l.szText );
+			}
 		}
 	}
 }
@@ -155,7 +173,9 @@ void CWindowConsole::Segment( const int timeDiff )
 	{
 		vectorOfCommands.push_back( szCmd );
 		if ( nBeginString != 0 )
+		{
 			nBeginString++;
+		}
 		vectorOfStrings.push_back( SColorString( szCmd.c_str(), color, 1024 ) );
 		ParseCommand( szCmd );
 
@@ -167,7 +187,9 @@ void CWindowConsole::Segment( const int timeDiff )
 		const int nNewSize = (std::max)( nBeginString + 1, nConsoleSize );
 		const int nStrToCut = vectorOfStrings.size() - nNewSize;
 		if ( nStrToCut > nConsoleSize / 2 )
+		{
 			vectorOfStrings.erase( vectorOfStrings.begin(), vectorOfStrings.begin() + nStrToCut );
+		}
 	}
 }
 
@@ -204,7 +226,9 @@ void CWindowConsole::Visit( struct IUIVisitor *pVisitor )
 			pVisitor->VisitUIText( vectorOfStrings[nSize - i - 1].pGfxText, vPosition, tmp );
 			nCurrentY -= TEXT_VERTICAL_SIZE;
 			if ( nCurrentY < 0 )
+			{
 				break;
+			}
 		}
 	}
 }
@@ -212,17 +236,23 @@ void CWindowConsole::Visit( struct IUIVisitor *pVisitor )
 bool CWindowConsole::ProcessEvent( const struct SGameMessage &msg )
 {
 	if ( !IsVisible() )
+	{
 		return false;
+	}
 
 	if ( impotantMsgs.ProcessEvent( msg, this ) )
+	{
 		return true;
+	}
 	return CWindow::ProcessEvent( msg );
 }
 
 bool CWindowConsole::OnKeyDown( const SGameMessage &msg )
 {
 	if ( !IsVisible() )
+	{
 		return false;
+	}
 	//Autocomplete instead of tabulate
 	if ( msg.nParam1 == VK_TAB )
 	{
@@ -237,10 +267,14 @@ bool CWindowConsole::OnKeyDown( const SGameMessage &msg )
 			{
 				std::wstring wsTemp = NStr::ToUnicode( varsSet[nTemp] );
 				if ( wsTemp.length() < wsInput.length() )
+				{
 					continue;
+				}
 
 				if ( wsInput == wsTemp.substr( 0, wsInput.length() ) )
+				{
 					resultList.push_back( wsTemp );
+				}
 			}
 
 			if ( resultList.size() > 1 )
@@ -254,7 +288,9 @@ bool CWindowConsole::OnKeyDown( const SGameMessage &msg )
 					for ( int nTemp = 0; nTemp < (std::min)( iTemp->length(), wsSamePart.length() ); nTemp++ )
 					{
 						if ( ( *iTemp )[nTemp] == wsSamePart[nTemp] )
+						{
 							continue;
+						}
 
 						wsNewSame = wsSamePart.substr( 0, nTemp );
 						break;
@@ -280,16 +316,24 @@ bool CWindowConsole::OnKeyDown( const SGameMessage &msg )
 	}
 
 	if ( msg.nParam1 == VK_PRIOR )
+	{
 		return OnPgUp( msg );
+	}
 
 	if ( msg.nParam1 == VK_NEXT )
+	{
 		return OnPgDn( msg );
+	}
 
 	if ( msg.nParam1 == VK_UP )
+	{
 		return OnUp( msg );
+	}
 
 	if ( msg.nParam1 == VK_DOWN )
+	{
 		return OnDown( msg );
+	}
 
 	return false;
 }
@@ -297,11 +341,15 @@ bool CWindowConsole::OnKeyDown( const SGameMessage &msg )
 bool CWindowConsole::OnChar( const SGameMessage &msg )
 {
 	if ( !IsVisible() )
+	{
 		return false;
+	}
 
 	//Чтобы тильда, с помощью которой открыли консоль, не попадала в строку ввода
 	if ( msg.nParam1 == '`' )
+	{
 		return true;
+	}
 
 	return false;
 }
@@ -309,16 +357,24 @@ bool CWindowConsole::OnChar( const SGameMessage &msg )
 bool CWindowConsole::OnUp( const struct SGameMessage &msg )
 {
 	if ( !IsVisible() )
+	{
 		return false;
+	}
 
 	if ( vectorOfCommands.empty() )
+	{
 		return true;
+	}
 
 	if ( nBeginCommand < 0 || nBeginCommand >= vectorOfCommands.size() )
+	{
 		nBeginCommand = vectorOfCommands.size();
+	}
 
 	if ( nBeginCommand > 0 )
+	{
 		nBeginCommand--;
+	}
 
 	pEditLine->SetText( vectorOfCommands[nBeginCommand].c_str() );
 
@@ -344,13 +400,19 @@ bool CWindowConsole::OnUp( const struct SGameMessage &msg )
 bool CWindowConsole::OnDown( const struct SGameMessage &msg )
 {
 	if ( !IsVisible() )
+	{
 		return false;
+	}
 
 	if ( vectorOfCommands.empty() )
+	{
 		return true;
+	}
 
 	if ( nBeginCommand < 0 )
+	{
 		return true;
+	}
 
 	if ( nBeginCommand < vectorOfCommands.size() - 1 )
 	{
@@ -378,10 +440,14 @@ bool CWindowConsole::OnDown( const struct SGameMessage &msg )
 bool CWindowConsole::OnCtrlHome( const struct SGameMessage &msg )
 {
 	if ( !IsVisible() )
+	{
 		return false;
+	}
 
 	if ( vectorOfStrings.size() > CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE )
+	{
 		nBeginString = vectorOfStrings.size() - CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE + MINUS_PAGE_SIZE;
+	}
 
 	return true;
 }
@@ -389,7 +455,9 @@ bool CWindowConsole::OnCtrlHome( const struct SGameMessage &msg )
 bool CWindowConsole::OnCtrlEnd( const struct SGameMessage &msg )
 {
 	if ( !IsVisible() )
+	{
 		return false;
+	}
 
 	nBeginString = 0;
 
@@ -399,12 +467,18 @@ bool CWindowConsole::OnCtrlEnd( const struct SGameMessage &msg )
 bool CWindowConsole::OnPgUp( const struct SGameMessage &msg )
 {
 	if ( !IsVisible() )
+	{
 		return false;
+	}
 
 	if ( nBeginString + CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE < vectorOfStrings.size() )
+	{
 		nBeginString += CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE - MINUS_PAGE_SIZE;
+	}
 	else
+	{
 		nBeginString = vectorOfStrings.size() - CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE + MINUS_PAGE_SIZE;
+	}
 
 	return true;
 }
@@ -412,12 +486,18 @@ bool CWindowConsole::OnPgUp( const struct SGameMessage &msg )
 bool CWindowConsole::OnPgDn( const struct SGameMessage &msg )
 {
 	if ( !IsVisible() )
+	{
 		return false;
+	}
 
 	if ( nBeginString - CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE > 0 )
+	{
 		nBeginString -= CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE - MINUS_PAGE_SIZE;
+	}
 	else
+	{
 		nBeginString = 0;
+	}
 
 	return true;
 }
@@ -435,7 +515,9 @@ void CWindowConsole::SetParent( CWindow *_pParent )
 				ASSERT( 0 );
 			}
 			else
+			{
 				pIScreen->UndoStateCommandSequence( "ShowConsole" );
+			}
 		}
 	}
 	CWindow::SetParent( _pParent );
@@ -444,7 +526,9 @@ void CWindowConsole::SetParent( CWindow *_pParent )
 bool CWindowConsole::OnShowConsole( const struct SGameMessage &msg )
 {
 	if ( !IsVisible() )
+	{
 		return false;
+	}
 
 	IScreen *pIScreen = GetScreen();
 	if ( !pIScreen )
@@ -492,7 +576,9 @@ void CWindowConsole::ParseCommand( const std::wstring &szExtCommand )
 	NStr::ToMBCS( &szCommandString, szExtCommand );
 	NStr::TrimLeft( szCommandString );
 	if ( szCommandString.empty() )
+	{
 		return;
+	}
 	// check for special commands
 	if ( szCommandString[0] == '@' )
 	{
@@ -543,29 +629,39 @@ void CDebugSingleton::CreateDebugInfo()
 void CDebugSingleton::CreateConsole()
 {
 	if ( 0 != CUIFactory::GetConsts() )
+	{
 		pConsole = checked_cast<IWindow *>( CUIFactory::MakeWindow( CUIFactory::GetConsts()->pConsole ) );
+	}
 }
 
 IWindow *CDebugSingleton::GetConsole()
 {
 	if ( !pConsole )
+	{
 		CreateConsole();
+	}
 	return pConsole;
 }
 
 IWindow *CDebugSingleton::GetDebug()
 {
 	if ( !pDebugInfo )
+	{
 		CreateDebugInfo();
+	}
 	return pDebugInfo;
 }
 
 IWindow *CDebugSingleton::GetDebugInfoWindow( const int nWindow )
 {
 	if ( !pDebugInfo )
+	{
 		CreateDebugInfo();
+	}
 	if ( !pDebugInfo )
+	{
 		return 0;
+	}
 	return pDebugInfo->GetChild( fmt::format( "DebugWindow{}", nWindow ), false );
 }
 
@@ -573,29 +669,41 @@ void CDebugSingleton::ShowDebugInfo( const bool bShow )
 {
 	bDebugShown = bShow;
 	if ( !pDebugInfo )
+	{
 		CreateDebugInfo();
+	}
 	if ( pDebugInfo )
+	{
 		pDebugInfo->ShowWindow( bShow );
+	}
 }
 
 void CDebugSingleton::CreateStatsWindow()
 {
 	if ( 0 != CUIFactory::GetConsts() && CUIFactory::GetConsts()->pStatsWindow != 0 )
+	{
 		pStatsWindow = checked_cast<IWindow *>( CUIFactory::MakeWindow( CUIFactory::GetConsts()->pStatsWindow ) );
+	}
 }
 
 void CDebugSingleton::ShowStatsWindow( const bool bShow )
 {
 	if ( !pStatsWindow )
+	{
 		CreateStatsWindow();
+	}
 	if ( pStatsWindow )
+	{
 		pStatsWindow->ShowWindow( bShow );
+	}
 }
 
 struct IStatsSystemWindow *CDebugSingleton::GetStatsWindow()
 {
 	if ( !pStatsWindow )
+	{
 		CreateStatsWindow();
+	}
 	return dynamic_cast_ptr<IStatsSystemWindow *>( pStatsWindow );
 }
 

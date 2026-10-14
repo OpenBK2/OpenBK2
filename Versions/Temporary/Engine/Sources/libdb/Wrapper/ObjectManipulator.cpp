@@ -66,18 +66,26 @@ const char *ConvertEditorType2String( EEditorType eEditorType )
 static bool FillPropertyDescFromField( SPropertyDesc *pDesc, const STypeStructBase::SField &field )
 {
 	if ( field.pType == 0 )
+	{
 		return false;
+	}
 	//
 	if ( !field.wszDesc.empty() )
+	{
 		NStr::ToMBCS( &pDesc->szDesc, field.wszDesc );
+	}
 	if ( field.defaultValue.GetType() != CVariant::VT_NULL )
+	{
 		field.pType->ToString( &pDesc->szDefault, field.defaultValue );
+	}
 	pDesc->szTypeName = field.pType->GetTypeName();
 	if ( field.pType->eType == TYPE_TYPE_ENUM )
 	{
 		const STypeEnum *pEnum = checked_cast_ptr<const STypeEnum *>( field.pType );
 		for ( int i = 0; i < pEnum->entries.size(); ++i )
+		{
 			pDesc->values.push_back( pEnum->entries[i].szName );
+		}
 		pDesc->szEnumName = pEnum->szTypeName;
 	}
 	//
@@ -95,26 +103,42 @@ static bool FillPropertyDescFromField( SPropertyDesc *pDesc, const STypeStructBa
 	pDesc->bUnsafe = field.HasAttribute( "unsafe" );
 	//
 	if ( const CVariant *pVal = field.GetAttribute( "editorControl" ) )
+	{
 		pDesc->szPropControlType = pVal->GetStr();
+	}
 	if ( const CVariant *pVal = field.GetAttribute( "stringParam" ) )
+	{
 		pDesc->szStringParam = pVal->GetStr();
+	}
 	if ( const CVariant *pVal = field.GetAttribute( "intParam" ) )
+	{
 		pDesc->nIntParam = *pVal;
+	}
 	if ( pDesc->szPropControlType.empty() )
+	{
 		pDesc->szPropControlType = ConvertEditorType2String( field.GetEditorType() );
+	}
 	// array must have the same editor type as contained element :(
 	if ( field.pType->eType == TYPE_TYPE_ARRAY )
 	{
 		if ( const STypeArray *pArray = checked_cast_ptr<const STypeArray *>( field.pType ) )
 		{
 			if ( const CVariant *pVal = pArray->field.GetAttribute( "editorControl" ) )
+			{
 				pDesc->szPropControlType = pVal->GetStr();
+			}
 			if ( const CVariant *pVal = pArray->field.GetAttribute( "stringParam" ) )
+			{
 				pDesc->szStringParam = pVal->GetStr();
+			}
 			if ( const CVariant *pVal = pArray->field.GetAttribute( "intParam" ) )
+			{
 				pDesc->nIntParam = *pVal;
+			}
 			if ( pDesc->szPropControlType.empty() )
+			{
 				pDesc->szPropControlType = ConvertEditorType2String( pArray->field.GetEditorType() );
+			}
 		}
 	}
 	//
@@ -124,7 +148,9 @@ static bool FillPropertyDescFromField( SPropertyDesc *pDesc, const STypeStructBa
 		std::vector<const STypeClass *> classes;
 		pTypeRef->GetRefTypesList( &classes );
 		for ( int i = 0; i < classes.size(); ++i )
+		{
 			pDesc->refTypes[classes[i]->szTypeName] = classes[i]->nClassTypeID;
+		}
 	}
 	//
 	return true;
@@ -143,7 +169,9 @@ CDBID CObjectManipulatorWrapper::GetDBID() const
 bool CObjectManipulatorWrapper::GetType( const std::string &rszName, std::string *pszType ) const
 {
 	if ( pszType == 0 )
+	{
 		return false;
+	}
 	if ( rszName.empty() )
 	{
 		*pszType = dynamic_cast_ptr<const NDb::NBind::CBindStruct *>( pObjMan )->GetTypeName();
@@ -168,7 +196,9 @@ const SPropertyDesc *GetPropertyDesc( const STypeStructBase::SField *pField )
 {
 	CPropertyDescMap::const_iterator pos = s_propertyDescMap.find( (void *)pField );
 	if ( pos != s_propertyDescMap.end() )
+	{
 		return &( pos->second );
+	}
 	SPropertyDesc *pDesc = &( s_propertyDescMap[(void *)pField] );
 	FillPropertyDescFromField( pDesc, *pField );
 	return pDesc;
@@ -178,7 +208,9 @@ const SIteratorDesc *CObjectManipulatorWrapper::GetDesc( const std::string &szNa
 {
 	const STypeStructBase::SField *pField = pObjMan->GetDesc( szName );
 	if ( pField == 0 )
+	{
 		return 0;
+	}
 	return GetPropertyDesc( pField );
 }
 
@@ -198,7 +230,9 @@ bool CObjectManipulatorWrapper::GetValue( const std::string &szName, CVariant *p
 		return true;
 	}
 	else
+	{
 		return false;
+	}
 }
 
 bool CObjectManipulatorWrapper::SetValue( const std::string &szName, const CVariant &value )
@@ -220,9 +254,13 @@ bool CObjectManipulatorWrapper::InsertNode( const std::string &szName, int nNode
 bool CObjectManipulatorWrapper::RemoveNode( const std::string &szName, int nNodeIndex )
 {
 	if ( nNodeIndex == NODE_REMOVEALL_INDEX )
+	{
 		return pObjMan->Remove( szName, 0, -1 );
+	}
 	else
+	{
 		return pObjMan->Remove( szName, nNodeIndex, 1 );
+	}
 }
 
 bool CObjectManipulatorWrapper::RemoveNodeByID( const std::string &szName, int nNodeID )
@@ -241,7 +279,9 @@ void CObjectManipulatorWrapper::ClearCache() {}
 bool CObjectManipulatorWrapper::GetName( unsigned nID, std::string *pszName ) const
 {
 	if ( nID != -1 )
+	{
 		return false;
+	}
 	*pszName = pObjMan->GetDBID().ToString();
 	return true;
 }
@@ -257,7 +297,9 @@ const SIteratorDesc *CObjectManipulatorIteratorWrapper::GetDesc() const
 {
 	const STypeStructBase::SField *pField = pIterator->GetDesc();
 	if ( pField == 0 )
+	{
 		return 0;
+	}
 	return GetPropertyDesc( pField );
 }
 
