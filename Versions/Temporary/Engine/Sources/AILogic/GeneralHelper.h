@@ -32,7 +32,10 @@ struct SGeneralHelper
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		float fCount = {};
 
-		SSeverityCountPredicate() : fCount( 0 ) {}
+		SSeverityCountPredicate()
+			: fCount( 0 )
+		{
+		}
 
 		void operator()( const CCommonUnit *pUnit );
 	};
@@ -46,7 +49,8 @@ struct SGeneralHelper
 		enum EForceType eType = {};
 
 		SFindByEnumeratorPredicate( struct IWorkerEnumerator *pEnumerator, const enum EForceType eType )
-				: pEn( pEnumerator ), eType( eType )
+			: pEn( pEnumerator )
+			, eType( eType )
 		{
 		}
 
@@ -64,7 +68,8 @@ struct SGeneralHelper
 		CPtr<CCommonUnit> pBest;
 
 		SFindBestByEnumeratorPredicate( struct IWorkerEnumerator *pEn, const enum EForceType eType )
-				: pEn( pEn ), eType( eType )
+			: pEn( pEn )
+			, eType( eType )
 		{
 		}
 
@@ -76,7 +81,10 @@ struct SGeneralHelper
 	{
 		int nCount = {};
 
-		SCountPredicate() : nCount( 0 ) {}
+		SCountPredicate()
+			: nCount( 0 )
+		{
+		}
 
 		void operator()( void * )
 		{
@@ -95,7 +103,10 @@ struct SGeneralHelper
 	{
 		int nParty = {};
 
-		SInactiveUnitPredicate( int _nParty ) : nParty( _nParty ) {}
+		SInactiveUnitPredicate( int _nParty )
+			: nParty( _nParty )
+		{
+		}
 
 		bool operator()( class CCommonUnit *pUnit );
 	};

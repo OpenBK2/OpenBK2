@@ -8,7 +8,11 @@
 extern IExecutorContainer *pTheExecutorsContainer;
 
 CExecutor::CExecutor( const EExecutorTypeID _eTypeID, const int _nNextTime )
-		: eTypeID( _eTypeID ), nNextTime( _nNextTime ), nID( 0 ), bActive( true ), nUniqueID( -1 )
+	: eTypeID( _eTypeID )
+	, nNextTime( _nNextTime )
+	, nID( 0 )
+	, bActive( true )
+	, nUniqueID( -1 )
 {
 	if ( pTheExecutorsContainer )
 	{
@@ -24,7 +28,14 @@ CExecutor::CExecutor( const EExecutorTypeID _eTypeID, const int _nNextTime )
 	}
 }
 
-CExecutor::CExecutor() : nUniqueID( -1 ), nID( 0 ), nNextTime( 0 ), bActive( true ), eTypeID( TID_NONE ) {}
+CExecutor::CExecutor()
+	: nUniqueID( -1 )
+	, nID( 0 )
+	, nNextTime( 0 )
+	, bActive( true )
+	, eTypeID( TID_NONE )
+{
+}
 
 CExecutor::~CExecutor()
 {

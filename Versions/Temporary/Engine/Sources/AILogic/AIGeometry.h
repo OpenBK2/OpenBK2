@@ -52,10 +52,17 @@ struct SLine
 
 	SLine() {}
 
-	SLine( int _a, int _b, int _c ) : a( _a ), b( _b ), c( _c ) {}
+	SLine( int _a, int _b, int _c )
+		: a( _a )
+		, b( _b )
+		, c( _c )
+	{
+	}
 
 	SLine( const SVector &ptStart, const SVector &ptFinish )
-			: a( ptFinish.y - ptStart.y ), b( ptStart.x - ptFinish.x ), c( ptFinish.x * ptStart.y - ptStart.x * ptFinish.y )
+		: a( ptFinish.y - ptStart.y )
+		, b( ptStart.x - ptFinish.x )
+		, c( ptFinish.x * ptStart.y - ptStart.x * ptFinish.y )
 	{
 	}
 

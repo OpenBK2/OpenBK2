@@ -23,10 +23,19 @@ CDirectionalLight::CDirectionalLight( CFuncBase<CVec3> *_pColor,
                                       CFuncBase<SHMatrix> *_pCloudsProjection,
                                       float _fShadowsMaxDetailLength,
                                       const CVec3 &_vDymanicLightsModification )
-		: pColor( _pColor ), pGlossColor( _pGlossColor ), pAmbient( _pAmbient ), vDepth( 0, 0, 1 / _fMaxHeight, 0 ),
-			fMaxHeight( _fMaxHeight ), pShadeColor( _pShadeColor ), pIncidentShadeColor( _pIncidentShadeColor ),
-			nVersionID( 0 ), fSmoothedSceneHeight( 0 ), pClouds( _pClouds ), pCloudsProjection( _pCloudsProjection ),
-			fShadowsMaxDetailLength( _fShadowsMaxDetailLength ), vDymanicLightsModification( _vDymanicLightsModification )
+	: pColor( _pColor )
+	, pGlossColor( _pGlossColor )
+	, pAmbient( _pAmbient )
+	, vDepth( 0, 0, 1 / _fMaxHeight, 0 )
+	, fMaxHeight( _fMaxHeight )
+	, pShadeColor( _pShadeColor )
+	, pIncidentShadeColor( _pIncidentShadeColor )
+	, nVersionID( 0 )
+	, fSmoothedSceneHeight( 0 )
+	, pClouds( _pClouds )
+	, pCloudsProjection( _pCloudsProjection )
+	, fShadowsMaxDetailLength( _fShadowsMaxDetailLength )
+	, vDymanicLightsModification( _vDymanicLightsModification )
 {
 	vLightDir = _vLightDir;
 	vShadowsLightDir = _vShadowsLightDir;
@@ -116,10 +125,16 @@ void CDirectionalLight::CalcCloudProjection( SHMatrix *pRes )
 
 // CPointLight
 
-CPointLight::CPointLight() : nThisPointLightID( ++nPointLightID ) {}
+CPointLight::CPointLight()
+	: nThisPointLightID( ++nPointLightID )
+{
+}
 
 CPointLight::CPointLight( const CVec3 &_vColor, const CVec3 &_ptCenter, float _fRadius )
-		: vColor( _vColor ), vCenter( _ptCenter ), fRadius( _fRadius ), nThisPointLightID( ++nPointLightID )
+	: vColor( _vColor )
+	, vCenter( _ptCenter )
+	, fRadius( _fRadius )
+	, nThisPointLightID( ++nPointLightID )
 {
 	sTransform.MakeParallel( 2 * _fRadius, 2 * _fRadius, -_fRadius, _fRadius );
 	SHMatrix cameraPos;

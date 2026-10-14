@@ -58,7 +58,11 @@ private:
 		IWorkerEnumerator *pEn = {};
 		EForceType eType = {};
 
-		SCalcRatingPredicate( IWorkerEnumerator *_pEn, EForceType _eType ) : pEn( _pEn ), eType( _eType ) {}
+		SCalcRatingPredicate( IWorkerEnumerator *_pEn, EForceType _eType )
+			: pEn( _pEn )
+			, eType( _eType )
+		{
+		}
 
 		void operator()( std::pair<float, CPtr<CCommonUnit>> &value )
 		{
@@ -106,7 +110,10 @@ private:
 			pT->ReleaseWorker( pManager, 0 );
 		}
 
-		STakeWorkersPredicate( struct ICommander *pManager ) : pManager( pManager ) {}
+		STakeWorkersPredicate( struct ICommander *pManager )
+			: pManager( pManager )
+		{
+		}
 	};
 
 protected:

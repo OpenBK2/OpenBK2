@@ -90,7 +90,10 @@ class CPointsSort
 	CVec2 vStart;
 
 public:
-	CPointsSort( const CVec2 &v1 ) : vStart( v1 ) {}
+	CPointsSort( const CVec2 &v1 )
+		: vStart( v1 )
+	{
+	}
 
 	bool operator()( const CVec2 &v1, const CVec2 &v2 ) const
 	{
@@ -105,7 +108,11 @@ struct SConnectedPoint
 
 	SConnectedPoint() {}
 
-	SConnectedPoint( const CVec2 &_vPoint, const int _nNumber ) : vPoint( _vPoint ), nNumber( _nNumber ) {}
+	SConnectedPoint( const CVec2 &_vPoint, const int _nNumber )
+		: vPoint( _vPoint )
+		, nNumber( _nNumber )
+	{
+	}
 };
 
 struct SPolygon
@@ -810,7 +817,7 @@ void CPassabilityProfileCreator::SimplifyPolygons()
 CPassabilityProfileCreator::CPassabilityProfileCreator( const NEditorGltf::SMeshData &mesh,
                                                         const float fZEps,
                                                         NDb::SPassProfile *pPassProfile )
-		: fInfinity( 0.0f )
+	: fInfinity( 0.0f )
 {
 	GenerateStartSegments( mesh, fZEps );
 	GenerateAllSegments();

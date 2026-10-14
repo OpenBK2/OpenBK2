@@ -41,7 +41,9 @@ IUnitState *CTankPitLeaveState::Instance( class CAIUnit *pTank )
 }
 
 CTankPitLeaveState::CTankPitLeaveState( class CAIUnit *pTank )
-		: eState( TLTPS_ESTIMATING ), pUnit( pTank ), timeStartLeave( curTime )
+	: eState( TLTPS_ESTIMATING )
+	, pUnit( pTank )
+	, timeStartLeave( curTime )
 {
 }
 
@@ -89,8 +91,11 @@ IUnitState *CMechUnitEntrenchSelfState::Instance( class CAIUnit *pUnit )
 }
 
 CMechUnitEntrenchSelfState::CMechUnitEntrenchSelfState( class CAIUnit *_pUnit )
-		: CStatusUpdatesHelper( EUS_ENTRENCH, _pUnit ), pUnit( _pUnit ), eState( ESHD_ESTIMATE ), timeStartBuild( 0 ),
-			fOldProgress( 0.0f )
+	: CStatusUpdatesHelper( EUS_ENTRENCH, _pUnit )
+	, pUnit( _pUnit )
+	, eState( ESHD_ESTIMATE )
+	, timeStartBuild( 0 )
+	, fOldProgress( 0.0f )
 {
 	if ( pUnit->IsInTankPit() )
 	{
@@ -403,7 +408,8 @@ IUnitState *CSoldierEnterHoldSectorState::Instance( class CAIUnit *pUnit )
 	return new CSoldierEnterHoldSectorState( pUnit );
 }
 
-CSoldierEnterHoldSectorState::CSoldierEnterHoldSectorState( class CAIUnit *_pUnit ) : pUnit( _pUnit )
+CSoldierEnterHoldSectorState::CSoldierEnterHoldSectorState( class CAIUnit *_pUnit )
+	: pUnit( _pUnit )
 {
 	nTimeStart = curTime;
 }
@@ -438,8 +444,12 @@ ETryStateInterruptResult CSoldierEnterHoldSectorState::TryInterruptState( class 
 CMechUnitInsideMechUnitState::CMechUnitInsideMechUnitState( class CAIUnit *_pUnit,
                                                             class CMilitaryCar *_pTransport,
                                                             const bool bImmidiate )
-		: pUnit( _pUnit ), pTransport( _pTransport ), timeNextCheck( curTime ), vEntrancePoint( VNULL2 ),
-			eState( EMEM_APPROACHING ), vDestination( VNULL2 )
+	: pUnit( _pUnit )
+	, pTransport( _pTransport )
+	, timeNextCheck( curTime )
+	, vEntrancePoint( VNULL2 )
+	, eState( EMEM_APPROACHING )
+	, vDestination( VNULL2 )
 {
 	if ( !pTransport->CanBoard( pUnit ) )
 	{

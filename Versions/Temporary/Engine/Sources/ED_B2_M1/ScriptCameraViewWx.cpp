@@ -90,7 +90,8 @@ class CScriptCameraWxWindow : public CWxHostWindow, public CScriptCameraCommands
 
 	public:
 		CDebounceTimer( CScriptCameraWxWindow *_pOwner, unsigned _nCommandID )
-				: pOwner( _pOwner ), nCommandID( _nCommandID )
+			: pOwner( _pOwner )
+			, nCommandID( _nCommandID )
 		{
 		}
 
@@ -120,8 +121,9 @@ class CScriptCameraWxWindow : public CWxHostWindow, public CScriptCameraCommands
 
 public:
 	CScriptCameraWxWindow()
-			: yawTimer( this, ID_SCRIPT_CAMERA_GET_YAW ), pitchTimer( this, ID_SCRIPT_CAMERA_GET_PITCH ),
-				fovTimer( this, ID_SCRIPT_CAMERA_GET_FOV )
+		: yawTimer( this, ID_SCRIPT_CAMERA_GET_YAW )
+		, pitchTimer( this, ID_SCRIPT_CAMERA_GET_PITCH )
+		, fovTimer( this, ID_SCRIPT_CAMERA_GET_FOV )
 	{
 		dialogData.nCurrentCamera = -1;
 		Singleton<ICommandHandlerContainer>()->Set( CHID_SCRIPT_CAMERA_WINDOW, this );

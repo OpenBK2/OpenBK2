@@ -11,7 +11,10 @@
 
 REGISTER_EXPORTER_IN_DLL( AnimLight, CLightExporter )
 
-CLightExporter::CLightExporter() : bNeedExport( false ) {}
+CLightExporter::CLightExporter()
+	: bNeedExport( false )
+{
+}
 
 bool CLightExporter::StartExport( const std::string &rszObjectTypeName, bool bForce )
 {

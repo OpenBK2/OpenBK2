@@ -23,9 +23,15 @@ protected:
 	}
 
 public:
-	CWarFogVisibility() : pWarFog( 0 ) {}
+	CWarFogVisibility()
+		: pWarFog( 0 )
+	{
+	}
 
-	CWarFogVisibility( CGlobalWarFog *_pWarFog ) : pWarFog( _pWarFog ) {}
+	CWarFogVisibility( CGlobalWarFog *_pWarFog )
+		: pWarFog( _pWarFog )
+	{
+	}
 
 	virtual const bool IsVisible( const SVector &vTile, const int nSpiralIndex ) const = 0;
 };
@@ -35,9 +41,15 @@ class CVisForPlane : public CWarFogVisibility
 {
 	OBJECT_NOCOPY_METHODS( CVisForPlane )
 public:
-	CVisForPlane() : CWarFogVisibility() {}
+	CVisForPlane()
+		: CWarFogVisibility()
+	{
+	}
 
-	CVisForPlane( CGlobalWarFog *pWarFog ) : CWarFogVisibility( pWarFog ) {}
+	CVisForPlane( CGlobalWarFog *pWarFog )
+		: CWarFogVisibility( pWarFog )
+	{
+	}
 
 	const bool IsVisible( const SVector &vTile, const int nSpiralIndex ) const
 	{
@@ -52,10 +64,14 @@ class CVisForGroundUnitBasis : public CWarFogVisibility
 	const CArray1Bit *pVisibleInfo = nullptr;
 
 public:
-	CVisForGroundUnitBasis() : CWarFogVisibility() {}
+	CVisForGroundUnitBasis()
+		: CWarFogVisibility()
+	{
+	}
 
 	CVisForGroundUnitBasis( CGlobalWarFog *pWarFog, const SVector &vTile )
-			: CWarFogVisibility( pWarFog ), pVisibleInfo( &GetVisibleInfoForTile( vTile ) )
+		: CWarFogVisibility( pWarFog )
+		, pVisibleInfo( &GetVisibleInfoForTile( vTile ) )
 	{
 	}
 
@@ -70,9 +86,15 @@ class CVisForGroundUnit : public CVisForGroundUnitBasis
 {
 	OBJECT_NOCOPY_METHODS( CVisForGroundUnit )
 public:
-	CVisForGroundUnit() : CVisForGroundUnitBasis() {}
+	CVisForGroundUnit()
+		: CVisForGroundUnitBasis()
+	{
+	}
 
-	CVisForGroundUnit( CGlobalWarFog *pWarFog, const SVector &vTile ) : CVisForGroundUnitBasis( pWarFog, vTile ) {}
+	CVisForGroundUnit( CGlobalWarFog *pWarFog, const SVector &vTile )
+		: CVisForGroundUnitBasis( pWarFog, vTile )
+	{
+	}
 };
 
 // CVisForGroundUnitWithSector
@@ -82,10 +104,15 @@ class CVisForGroundUnitWithSector : public CVisForGroundUnitBasis
 	SSector sector;
 
 public:
-	CVisForGroundUnitWithSector() : CVisForGroundUnitBasis(), sector() {}
+	CVisForGroundUnitWithSector()
+		: CVisForGroundUnitBasis()
+		, sector()
+	{
+	}
 
 	CVisForGroundUnitWithSector( CGlobalWarFog *pWarFog, const SVector &vTile, const SSector &_sector )
-			: CVisForGroundUnitBasis( pWarFog, vTile ), sector( _sector )
+		: CVisForGroundUnitBasis( pWarFog, vTile )
+		, sector( _sector )
 	{
 	}
 

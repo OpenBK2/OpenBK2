@@ -9,7 +9,8 @@
 // Moved from DW_Log.cpp unchanged, but that a missing view no longer crashes a
 // log call: the buffer is kept either way.
 
-CLogPaneContents::CLogPaneContents() : pLogView( 0 )
+CLogPaneContents::CLogPaneContents()
+	: pLogView( 0 )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_LOG, this );
 }

@@ -150,7 +150,10 @@ class CEditorDatabase : public CBasicDatabase
 	void RegisterObject( const SFullTypeHeader &hdr );
 
 public:
-	CEditorDatabase() : bIndexChanged( false ) {}
+	CEditorDatabase()
+		: bIndexChanged( false )
+	{
+	}
 
 	//
 	bool OpenDatabase( NVFS::IVFS *pVFS, NVFS::IFileCreator *pFileCreator );

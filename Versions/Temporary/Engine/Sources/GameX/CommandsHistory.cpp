@@ -49,8 +49,11 @@ static void ReportReplayLine( const std::string &szLine )
 // CCommandsHistory
 
 CCommandsHistory::CCommandsHistory()
-		: bFinishedHistory( false ), bGameFinished( true ), bLoadedHistory( false ), bCanAddCommand( true ),
-			dwLastCheckSum( 0 )
+	: bFinishedHistory( false )
+	, bGameFinished( true )
+	, bLoadedHistory( false )
+	, bCanAddCommand( true )
+	, dwLastCheckSum( 0 )
 {
 	pStartSeed = NRandom::CreateRandomSeedCopy();
 	pStartSeed->Init();

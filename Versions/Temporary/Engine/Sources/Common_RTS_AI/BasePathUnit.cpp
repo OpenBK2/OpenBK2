@@ -26,7 +26,10 @@ struct SCheckTurnIterateUnitsCallback : public SIterateUnitsCallback
 	std::vector<SRect> mediateRects;
 
 	//
-	SCheckTurnIterateUnitsCallback( const std::vector<SRect> &_mediateRects ) : mediateRects( _mediateRects ) {}
+	SCheckTurnIterateUnitsCallback( const std::vector<SRect> &_mediateRects )
+		: mediateRects( _mediateRects )
+	{
+	}
 
 	//
 	bool Iterate( CBasePathUnit *unit ) const

@@ -14,20 +14,34 @@ struct SHeightPattern
 	bool bOdd;
 
 	//
-	SHeightPattern() : pos( 0, 0 ), fRatio( 1.0f ), bOdd( false ) {}
+	SHeightPattern()
+		: pos( 0, 0 )
+		, fRatio( 1.0f )
+		, bOdd( false )
+	{
+	}
 
 	SHeightPattern( const CTPoint<int> &rPos, float _fRatio, const CArray2D<float> &rHeights, bool _bOdd )
-			: pos( rPos ), fRatio( _fRatio ), heights( rHeights ), bOdd( _bOdd )
+		: pos( rPos )
+		, fRatio( _fRatio )
+		, heights( rHeights )
+		, bOdd( _bOdd )
 	{
 	}
 
 	SHeightPattern( int nPosX, int nPosY, float _fRatio, const CArray2D<float> &rHeights, bool _bOdd )
-			: pos( nPosX, nPosY ), fRatio( _fRatio ), heights( rHeights ), bOdd( _bOdd )
+		: pos( nPosX, nPosY )
+		, fRatio( _fRatio )
+		, heights( rHeights )
+		, bOdd( _bOdd )
 	{
 	}
 
 	SHeightPattern( const SHeightPattern &rPattern )
-			: pos( rPattern.pos ), fRatio( rPattern.fRatio ), heights( rPattern.heights ), bOdd( rPattern.bOdd )
+		: pos( rPattern.pos )
+		, fRatio( rPattern.fRatio )
+		, heights( rPattern.heights )
+		, bOdd( rPattern.bOdd )
 	{
 	}
 
@@ -61,8 +75,10 @@ struct SCreateHeightPatternByGradientFunctional
 	                                          const SGradient *_pGradient,
 	                                          float _fRatio,
 	                                          bool _bSquareInterpolated )
-			: pHeightPattern( _pHeightPattern ), pGradient( _pGradient ), fRatio( _fRatio ),
-				bSquareInterpolated( _bSquareInterpolated )
+		: pHeightPattern( _pHeightPattern )
+		, pGradient( _pGradient )
+		, fRatio( _fRatio )
+		, bSquareInterpolated( _bSquareInterpolated )
 	{
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 		NI_ASSERT( pGradient != 0, "Wrong parameter: pGradient == 0" );
@@ -84,7 +100,8 @@ struct SCreateHeightPatternByValueFunctional
 
 	//
 	SCreateHeightPatternByValueFunctional( SHeightPattern *_pHeightPattern, float _fValue )
-			: pHeightPattern( _pHeightPattern ), fValue( _fValue )
+		: pHeightPattern( _pHeightPattern )
+		, fValue( _fValue )
 	{
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
@@ -105,7 +122,9 @@ struct SCreateHeightPatternToLevelFunctional
 	float fLevelRatio;
 
 	SCreateHeightPatternToLevelFunctional( SHeightPattern *_pHeightPattern, float _fAverageHeight, float _fLevelRatio )
-			: fAverageHeight( _fAverageHeight ), fLevelRatio( _fLevelRatio ), pHeightPattern( _pHeightPattern )
+		: fAverageHeight( _fAverageHeight )
+		, fLevelRatio( _fLevelRatio )
+		, pHeightPattern( _pHeightPattern )
 	{
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
@@ -134,7 +153,9 @@ struct SCreateHeightPatternToLevelOverZeroFunctional
 	SCreateHeightPatternToLevelOverZeroFunctional( SHeightPattern *_pHeightPattern,
 	                                               float _fAverageHeight,
 	                                               float _fLevelRatio )
-			: fAverageHeight( _fAverageHeight ), fLevelRatio( _fLevelRatio ), pHeightPattern( _pHeightPattern )
+		: fAverageHeight( _fAverageHeight )
+		, fLevelRatio( _fLevelRatio )
+		, pHeightPattern( _pHeightPattern )
 	{
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 		if ( fAverageHeight < 0 )
@@ -170,7 +191,8 @@ struct SCreateHeightPatternFunctional
 {
 	SHeightPattern *pHeightPattern;
 
-	SCreateHeightPatternFunctional( SHeightPattern *_pHeightPattern ) : pHeightPattern( _pHeightPattern )
+	SCreateHeightPatternFunctional( SHeightPattern *_pHeightPattern )
+		: pHeightPattern( _pHeightPattern )
 	{
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
@@ -196,7 +218,11 @@ struct SCalculateAverageHeightFunctional
 	int nPointCount;
 
 	//
-	SCalculateAverageHeightFunctional() : fTotalHeight( 0.0f ), nPointCount( 0 ) {}
+	SCalculateAverageHeightFunctional()
+		: fTotalHeight( 0.0f )
+		, nPointCount( 0 )
+	{
+	}
 
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )

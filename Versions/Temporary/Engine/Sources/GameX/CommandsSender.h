@@ -36,8 +36,11 @@ class CCommandsSender : public CObjectBase
 
 public:
 	CCommandsSender()
-			: bHistoryPlaying( false ), nLastGroupID( -1 ), lastCommandTime( 0 ), bGroupChanged( false ),
-				bLastCommandSkipped( false )
+		: bHistoryPlaying( false )
+		, nLastGroupID( -1 )
+		, lastCommandTime( 0 )
+		, bGroupChanged( false )
+		, bLastCommandSkipped( false )
 	{
 	}
 

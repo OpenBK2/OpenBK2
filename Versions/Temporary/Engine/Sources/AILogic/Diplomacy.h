@@ -23,7 +23,11 @@ private:
 	bool bNetGame = {};
 
 public:
-	CDiplomacy() : nMyNumber( 0 ), bNetGame( false ) {}
+	CDiplomacy()
+		: nMyNumber( 0 )
+		, bNetGame( false )
+	{
+	}
 
 	void Load( const std::vector<int> &playerParty );
 

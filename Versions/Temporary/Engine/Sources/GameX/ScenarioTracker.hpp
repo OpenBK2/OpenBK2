@@ -51,7 +51,11 @@ class CScenarioTracker : public IScenarioTracker
 			return 0;
 		}
 
-		SFavoriteReinf() : nTotalCount( 0 ), nCurrentCount( 0 ) {}
+		SFavoriteReinf()
+			: nTotalCount( 0 )
+			, nCurrentCount( 0 )
+		{
+		}
 	};
 
 	ZDATA
@@ -498,7 +502,12 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 			return 0;
 		}
 
-		SPlayerInfo() : nReinforcementCallsLeft( 0 ), nReinforcementCallsUsed( 0 ), bPresent( false ) {}
+		SPlayerInfo()
+			: nReinforcementCallsLeft( 0 )
+			, nReinforcementCallsUsed( 0 )
+			, bPresent( false )
+		{
+		}
 	};
 
 	ZDATA

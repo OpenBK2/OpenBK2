@@ -24,7 +24,15 @@ private:
 	int nSpecialPos = {};
 
 public:
-	CGroupUnit() : nGroup( 0 ), nPos( 0 ), nSubGroup( -1 ), vShift( VNULL2 ), nSpecialGroup( 0 ), nSpecialPos( -1 ) {}
+	CGroupUnit()
+		: nGroup( 0 )
+		, nPos( 0 )
+		, nSubGroup( -1 )
+		, vShift( VNULL2 )
+		, nSpecialGroup( 0 )
+		, nSpecialPos( -1 )
+	{
+	}
 
 	void Init() {}
 

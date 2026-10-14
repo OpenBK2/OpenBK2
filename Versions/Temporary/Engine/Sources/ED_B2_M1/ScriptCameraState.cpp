@@ -47,7 +47,9 @@ static void GetCameraPlacement( NCamera::CCameraPlacement *pCameraPlacement )
 //
 
 CScriptCameraState::CScriptCameraState( CMapInfoEditor *_pMapInfoEditor )
-		: pMapInfoEditor( _pMapInfoEditor ), nFOV( 26 ), bDrawMarkers( true )
+	: pMapInfoEditor( _pMapInfoEditor )
+	, nFOV( 26 )
+	, bDrawMarkers( true )
 {
 	NI_ASSERT( pMapInfoEditor != 0, "CScriptCameraState(): Invalid parameter: pMapInfoEditor == 0" );
 }

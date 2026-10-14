@@ -38,13 +38,19 @@ public:
 	int nPlayer;
 	int nParam;
 
-	CMultiplayerCommand() : nPlayer( -1 ) {}
+	CMultiplayerCommand()
+		: nPlayer( -1 )
+	{
+	}
 
 	CMultiplayerCommand( const EMultiplayerCommand _eCommand,
 	                     const int _nPlayer,
 	                     const int _nParam,
 	                     CObjectBase *_pAILogicCommand )
-			: eCommand( _eCommand ), pAILogicCommand( _pAILogicCommand ), nPlayer( _nPlayer ), nParam( _nParam )
+		: eCommand( _eCommand )
+		, pAILogicCommand( _pAILogicCommand )
+		, nPlayer( _nPlayer )
+		, nParam( _nParam )
 	{
 	}
 };

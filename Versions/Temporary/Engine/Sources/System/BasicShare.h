@@ -16,7 +16,8 @@ protected:
 	virtual void CreateHolder( std::list<CObj<CObjectBase>> *pHolder ) = 0;
 
 public:
-	CBasicShareBase( int _nID ) : nID( _nID )
+	CBasicShareBase( int _nID )
+		: nID( _nID )
 	{
 		RegisterBasicShareBase( this );
 	}
@@ -55,7 +56,11 @@ protected:
 	}
 
 public:
-	CBasicShare( int nID, bool _bKeepData = true ) : CBasicShareBase( nID ), bKeepData( _bKeepData ) {}
+	CBasicShare( int nID, bool _bKeepData = true )
+		: CBasicShareBase( nID )
+		, bKeepData( _bKeepData )
+	{
+	}
 
 	//DEBUG{
 	void Clear()

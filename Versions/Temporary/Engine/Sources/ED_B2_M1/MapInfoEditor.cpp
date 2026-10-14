@@ -81,9 +81,16 @@ ED_B2_M1_EXPORT const unsigned TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID[TOOLBAR_MAPINFO_
 };
 
 CMapInfoEditor::CMapInfoEditor()
-		: nMapInfoToolsToolbarID( 0xFFFFFFFF ), nMapInfoViewToolbarID( 0xFFFFFFFF ), pMapInfo( 0 ), pwndShortcutBar( 0 ),
-			pwndMiniMap( 0 ), pwndMoviesEditor( 0 ), pMiniMapView( 0 ), pMoviesEditorView( 0 ), pMapInfoState( 0 ),
-			heightContainer( AI_TILE_SIZE * AI_TILES_IN_VIS_TILE * 1.0f )
+	: nMapInfoToolsToolbarID( 0xFFFFFFFF )
+	, nMapInfoViewToolbarID( 0xFFFFFFFF )
+	, pMapInfo( 0 )
+	, pwndShortcutBar( 0 )
+	, pwndMiniMap( 0 )
+	, pwndMoviesEditor( 0 )
+	, pMiniMapView( 0 )
+	, pMoviesEditorView( 0 )
+	, pMapInfoState( 0 )
+	, heightContainer( AI_TILE_SIZE * AI_TILES_IN_VIS_TILE * 1.0f )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_EDITOR, this );
 	//

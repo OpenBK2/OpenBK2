@@ -35,10 +35,17 @@ protected:
 	}
 
 public:
-	CWindowTooltip() : bInitializedByText( false ) {}
+	CWindowTooltip()
+		: bInitializedByText( false )
+	{
+	}
 
 	// {CRAP: for compatibility with H5 ugly tooltips
-	CWindowTooltip( const std::wstring &_wszText ) : wszText( _wszText ), bInitializedByText( true ) {}
+	CWindowTooltip( const std::wstring &_wszText )
+		: wszText( _wszText )
+		, bInitializedByText( true )
+	{
+	}
 
 	// CRAP}
 

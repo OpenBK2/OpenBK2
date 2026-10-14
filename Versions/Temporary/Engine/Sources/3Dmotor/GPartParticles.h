@@ -39,7 +39,11 @@ public:
 	            const SBound &_bound,
 	            const SGroupInfo &_g,
 	            int _nFlags )
-			: pParticles( _pParticles ), pPlacement( _pPlacement ), bound( _bound ), groupInfo( _g ), nFlags( _nFlags )
+		: pParticles( _pParticles )
+		, pPlacement( _pPlacement )
+		, bound( _bound )
+		, groupInfo( _g )
+		, nFlags( _nFlags )
 	{
 	}
 

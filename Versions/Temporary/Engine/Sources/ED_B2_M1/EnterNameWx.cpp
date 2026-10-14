@@ -41,12 +41,12 @@ public:
 	                    const std::string &rszCaption,
 	                    const std::string &rszLabel,
 	                    const std::string &rszName )
-			: CWxToolDialog( pParent,
-	                     wxID_ANY,
-	                     wxString::FromUTF8( rszCaption.c_str() ),
-	                     wxDefaultPosition,
-	                     wxDefaultSize,
-	                     wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+		: CWxToolDialog( pParent,
+	                   wxID_ANY,
+	                   wxString::FromUTF8( rszCaption.c_str() ),
+	                   wxDefaultPosition,
+	                   wxDefaultSize,
+	                   wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
 	{
 		wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 		wxBoxSizer *pRow = new wxBoxSizer( wxHORIZONTAL );

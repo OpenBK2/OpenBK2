@@ -11,8 +11,12 @@ namespace NMusicSystem
 //	CFade
 
 CFade::CFade( const NDb::SFade *_pFade, EMusicSystemVolume _eVolumeType, CTrack *_pTrackToEnd )
-		: pFade( _pFade ), eVolumeType( _eVolumeType ), fStartVolume( -1 ), eState( EFS_NOT_STARTED ),
-			pTrackToEnd( _pTrackToEnd ), timeFaded( 0 )
+	: pFade( _pFade )
+	, eVolumeType( _eVolumeType )
+	, fStartVolume( -1 )
+	, eState( EFS_NOT_STARTED )
+	, pTrackToEnd( _pTrackToEnd )
+	, timeFaded( 0 )
 {
 }
 

@@ -78,7 +78,10 @@ CAttackStObjectChecking::CAttackStObjectChecking( const float _fRangeMin,
                                                   const float _fRangeMax,
                                                   CStaticObject *_pObj,
                                                   const bool _bIgnoreObstacles )
-		: fRangeMin( _fRangeMin ), fRangeMax( _fRangeMax ), pObj( _pObj ), bIgnoreObstacles( _bIgnoreObstacles )
+	: fRangeMin( _fRangeMin )
+	, fRangeMax( _fRangeMax )
+	, pObj( _pObj )
+	, bIgnoreObstacles( _bIgnoreObstacles )
 {
 }
 

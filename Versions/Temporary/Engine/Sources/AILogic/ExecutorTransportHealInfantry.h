@@ -21,8 +21,8 @@ public:
 
 public:
 	CExecutorTransportHealInfantry( CAIUnit *_pUnit )
-			: CExecutor( TID_TRANSPORT_HEAL_INFANTRY, SConsts::BEH_UPDATE_DURATION / SConsts::AI_SEGMENT_DURATION ),
-				pUnit( _pUnit )
+		: CExecutor( TID_TRANSPORT_HEAL_INFANTRY, SConsts::BEH_UPDATE_DURATION / SConsts::AI_SEGMENT_DURATION )
+		, pUnit( _pUnit )
 	{
 	}
 

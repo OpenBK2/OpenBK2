@@ -22,7 +22,9 @@ struct SCombinedKey
 
 	SCombinedKey() {}
 
-	SCombinedKey( IMaterial *_pMaterial, const SFullGroupInfo &_info ) : pMaterial( _pMaterial ), fullGroupInfo( _info )
+	SCombinedKey( IMaterial *_pMaterial, const SFullGroupInfo &_info )
+		: pMaterial( _pMaterial )
+		, fullGroupInfo( _info )
 	{
 		SGroupInfo &groupInfo = fullGroupInfo.groupInfo;
 		if ( !pMaterial->DoesCastShadow() )
@@ -142,7 +144,7 @@ public:
 	CNonePart() {}
 
 	CNonePart( CPtrFuncBase<CObjectInfo> *pData, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo )
-			: ISomePart( pData, _pMaterial, _gInfo )
+		: ISomePart( pData, _pMaterial, _gInfo )
 	{
 	}
 
@@ -172,7 +174,8 @@ public:
 	             IMaterial *_pMaterial,
 	             const SFullGroupInfo &_gInfo,
 	             const SFBTransform &_pos )
-			: ISomePart( pData, _pMaterial, _gInfo ), pos( _pos )
+		: ISomePart( pData, _pMaterial, _gInfo )
+		, pos( _pos )
 	{
 	}
 
@@ -269,7 +272,10 @@ public:
 	}
 
 public:
-	CGenericDynamicPart() : bt( BT_NONE ) {}
+	CGenericDynamicPart()
+		: bt( BT_NONE )
+	{
+	}
 
 	CGenericDynamicPart( CPtrFuncBase<CObjectInfo> *pData, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo );
 };
@@ -349,7 +355,9 @@ public:
 	                    const SFullGroupInfo &_gInfo,
 	                    CFuncBase<SBound> *_pBound,
 	                    CVersioningBase *_pChange )
-			: CGenericDynamicPart( pData, _pMaterial, _gInfo ), pBound( _pBound ), pChanges( pData )
+		: CGenericDynamicPart( pData, _pMaterial, _gInfo )
+		, pBound( _pBound )
+		, pChanges( pData )
 	{
 	}
 
@@ -586,7 +594,11 @@ private:
 	void InitGeometry();
 
 public:
-	CCombinedPart() : nIgnoreMark( 0 ), bRecalcPartInfo( false ) {}
+	CCombinedPart()
+		: nIgnoreMark( 0 )
+		, bRecalcPartInfo( false )
+	{
+	}
 
 	CCombinedPart( SFullStaticTrackers *pTrackers, int _nFloorMask, bool bIsDynamic );
 
@@ -726,7 +738,10 @@ public:
 			return 0;
 		}
 
-		SUpdatableObjects() : nLastFrame( 0 ) {}
+		SUpdatableObjects()
+			: nLastFrame( 0 )
+		{
+		}
 
 		bool IsEmpty();
 		void Update( int nFrame, CVolumeNode *pVolume, SFullStaticTrackers *pTrackers );

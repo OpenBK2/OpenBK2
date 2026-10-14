@@ -75,7 +75,10 @@ public:
 	static IUnitState *
 	Instance( class CFormation *pFormation, const CVec2 &guardPoint, const uint16_t wDir, const float fTimeToWait );
 
-	CFormationRestState() : pFormation( 0 ) {}
+	CFormationRestState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationRestState( class CFormation *pFormation,
 	                     const CVec2 &guardPoint,
@@ -137,7 +140,10 @@ class CFormationMoveToState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pFormation, const CVec2 &point );
 
-	CFormationMoveToState() : pFormation( 0 ) {}
+	CFormationMoveToState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationMoveToState( class CFormation *pFormation, const CVec2 &point );
 
@@ -185,7 +191,10 @@ class CFormationParaDropState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pFormation );
 
-	CFormationParaDropState() : pFormation( 0 ) {}
+	CFormationParaDropState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationParaDropState( class CFormation *pFormation );
 
@@ -245,7 +254,10 @@ class CFormationEnterBuildingState : public IUnitState, public CStatusUpdatesHel
 public:
 	static IUnitState *Instance( class CFormation *pFormation, class CBuilding *pBuilding );
 
-	CFormationEnterBuildingState() : pFormation( 0 ) {}
+	CFormationEnterBuildingState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationEnterBuildingState( class CFormation *pFormation, class CBuilding *pBuilding );
 
@@ -302,7 +314,10 @@ class CFormationEnterEntrenchmentState : public IUnitState, public CStatusUpdate
 public:
 	static IUnitState *Instance( class CFormation *pFormation, class CEntrenchment *pEntrenchment );
 
-	CFormationEnterEntrenchmentState() : pFormation( 0 ) {}
+	CFormationEnterEntrenchmentState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationEnterEntrenchmentState( class CFormation *pFormation, class CEntrenchment *pEntrenchment );
 
@@ -340,7 +355,10 @@ class CFormationIdleBuildingState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pFormation, class CBuilding *pBuilding );
 
-	CFormationIdleBuildingState() : pFormation( 0 ) {}
+	CFormationIdleBuildingState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationIdleBuildingState( class CFormation *pFormation, class CBuilding *pBuilding );
 
@@ -387,7 +405,10 @@ class CFormationIdleEntrenchmentState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pFormation, class CEntrenchment *pEntrenchment );
 
-	CFormationIdleEntrenchmentState() : pFormation( 0 ) {}
+	CFormationIdleEntrenchmentState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationIdleEntrenchmentState( class CFormation *pFormation, class CEntrenchment *pEntrenchment );
 
@@ -440,7 +461,10 @@ public:
 	                             const enum EActionLeaveParam param,
 	                             const CVec2 &point );
 
-	CFormationLeaveBuildingState() : pFormation( 0 ) {}
+	CFormationLeaveBuildingState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationLeaveBuildingState( class CFormation *pFormation,
 	                              class CBuilding *pBuilding,
@@ -491,7 +515,10 @@ public:
 	                             const enum EActionLeaveParam param,
 	                             const CVec2 &point );
 
-	CFormationLeaveEntrenchmentState() : pFormation( 0 ) {}
+	CFormationLeaveEntrenchmentState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationLeaveEntrenchmentState( class CFormation *pFormation,
 	                                  class CEntrenchment *pEntrenchment,
@@ -552,7 +579,10 @@ class CFormationPlaceMine : public IEngineerFormationState
 public:
 	static IUnitState *Instance( class CFormation *pFormation, const CVec2 &point, const EMineType nType );
 
-	CFormationPlaceMine() : pFormation( 0 ) {}
+	CFormationPlaceMine()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationPlaceMine( class CFormation *pFormation, const CVec2 &point, const EMineType nType );
 
@@ -600,7 +630,10 @@ class CFormationClearMine : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pFormation, const CVec2 &point );
 
-	CFormationClearMine() : pFormation( 0 ) {}
+	CFormationClearMine()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationClearMine( class CFormation *pFormation, const CVec2 &point );
 
@@ -868,7 +901,10 @@ class CFormationIdleTransportState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pFormation, class CMilitaryCar *pTransport );
 
-	CFormationIdleTransportState() : pFormation( 0 ) {}
+	CFormationIdleTransportState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationIdleTransportState( class CFormation *pFormation, class CMilitaryCar *pTransport );
 
@@ -910,7 +946,10 @@ class CFormationEnterTransportNowState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pFormation, class CMilitaryCar *pTransport );
 
-	CFormationEnterTransportNowState() : pFormation( 0 ) {}
+	CFormationEnterTransportNowState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationEnterTransportNowState( class CFormation *pFormation, class CMilitaryCar *pTransport );
 
@@ -942,7 +981,10 @@ class CFormationEnterTransportByCheatPathState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pFormation, class CMilitaryCar *pTransport );
 
-	CFormationEnterTransportByCheatPathState() : pFormation( 0 ) {}
+	CFormationEnterTransportByCheatPathState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationEnterTransportByCheatPathState( class CFormation *pFormation, class CMilitaryCar *pTransport );
 
@@ -983,7 +1025,10 @@ public:
 		bool bNotEnoughtRu = {};
 
 	public:
-		CFindFirstUnitPredicate() : bNotEnoughtRu( false ) {}
+		CFindFirstUnitPredicate()
+			: bNotEnoughtRu( false )
+		{
+		}
 
 		virtual bool HasUnit()
 		{
@@ -1015,7 +1060,11 @@ public:
 		float fCurWeight = {};
 
 	public:
-		CFindBestUnitPredicate() : bNotEnoughtRu( false ), fCurWeight( 0.0f ) {}
+		CFindBestUnitPredicate()
+			: bNotEnoughtRu( false )
+			, fCurWeight( 0.0f )
+		{
+		}
 
 		virtual bool HasUnit()
 		{
@@ -1083,8 +1132,10 @@ public:
 
 public:
 	CFormationServeUnitState( CAIUnit *_pPreferredUnit )
-			: eState( EFRUS_WAIT_FOR_HOME_TRANSPORT ), fWorkLeft( 0 ), fWorkAccumulator( 0 ),
-				pPreferredUnit( _pPreferredUnit )
+		: eState( EFRUS_WAIT_FOR_HOME_TRANSPORT )
+		, fWorkLeft( 0 )
+		, fWorkAccumulator( 0 )
+		, pPreferredUnit( _pPreferredUnit )
 	{
 	}
 
@@ -1145,7 +1196,9 @@ public:
 		const float fMaxRu = {}; // такой запас ресурсов
 	public:
 		CFindFirstStorageToRepearPredicate( const float fMaxRu )
-				: fMaxRu( fMaxRu ), bNotEnoughRu( false ), bHasStor( false )
+			: fMaxRu( fMaxRu )
+			, bNotEnoughRu( false )
+			, bHasStor( false )
 		{
 		}
 
@@ -1176,7 +1229,11 @@ public:
 
 	static IUnitState *Instance( class CFormation *pUnit, CAIUnit *_pPreferredUnit );
 
-	CFormationRepairUnitState() : CFormationServeUnitState( 0 ), pUnit( 0 ) {}
+	CFormationRepairUnitState()
+		: CFormationServeUnitState( 0 )
+		, pUnit( 0 )
+	{
+	}
 
 	CFormationRepairUnitState( class CFormation *pUnit, CAIUnit *_pPreferredUnit );
 
@@ -1237,7 +1294,11 @@ class CFormationResupplyUnitState : public CFormationServeUnitState
 public:
 	static IUnitState *Instance( class CFormation *pUnit, CAIUnit *pPreferredUnit );
 
-	CFormationResupplyUnitState() : CFormationServeUnitState( 0 ), pUnit( 0 ) {}
+	CFormationResupplyUnitState()
+		: CFormationServeUnitState( 0 )
+		, pUnit( 0 )
+	{
+	}
 
 	CFormationResupplyUnitState( class CFormation *pUnit, CAIUnit *pPreferredUnit );
 
@@ -1297,7 +1358,11 @@ class CFormationLoadRuState : public CFormationServeUnitState
 public:
 	static IUnitState *Instance( class CFormation *pUnit, class CBuilding *pStorage );
 
-	CFormationLoadRuState() : CFormationServeUnitState( 0 ), pUnit( 0 ) {}
+	CFormationLoadRuState()
+		: CFormationServeUnitState( 0 )
+		, pUnit( 0 )
+	{
+	}
 
 	CFormationLoadRuState( class CFormation *pUnit, class CBuilding *pStorage );
 
@@ -1356,7 +1421,11 @@ class CFormationCatchTransportState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pUnit, class CAITransportUnit *pTransport, float fResursPerSoldier );
 
-	CFormationCatchTransportState() : pUnit( 0 ), fResursPerSoldier( 0 ) {}
+	CFormationCatchTransportState()
+		: pUnit( 0 )
+		, fResursPerSoldier( 0 )
+	{
+	}
 
 	CFormationCatchTransportState( class CFormation *pUnit, class CAITransportUnit *pTransport, float fResursPerSoldier );
 
@@ -1413,7 +1482,10 @@ class CFormationPlaceAntitankState : public IEngineerFormationState
 public:
 	static IUnitState *Instance( class CFormation *pUnit, const CVec2 &vDesiredPoint );
 
-	CFormationPlaceAntitankState() : pUnit( 0 ) {}
+	CFormationPlaceAntitankState()
+		: pUnit( 0 )
+	{
+	}
 
 	CFormationPlaceAntitankState( class CFormation *pUnit, const CVec2 &vDesiredPoint );
 
@@ -1488,7 +1560,10 @@ class CFormationBuildLongObjectState : public IEngineerFormationState
 public:
 	static IUnitState *Instance( class CFormation *pUnit, class CLongObjectCreation *pCreation );
 
-	CFormationBuildLongObjectState() : pUnit( 0 ) {}
+	CFormationBuildLongObjectState()
+		: pUnit( 0 )
+	{
+	}
 
 	CFormationBuildLongObjectState( class CFormation *pUnit, class CLongObjectCreation *pCreation );
 
@@ -1565,7 +1640,10 @@ class CFormationBuildEntrenchmentState : public IUnitState
 public:
 	static IUnitState *Instance( CFormation *pUnit, CLongObjectCreation *pCreation, const CVec2 &vStartPoint );
 
-	CFormationBuildEntrenchmentState() : pFormation( 0 ) {}
+	CFormationBuildEntrenchmentState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationBuildEntrenchmentState( CFormation *pUnit, CLongObjectCreation *pCreation, const CVec2 &vStartPoint );
 
@@ -1657,9 +1735,17 @@ class CFormationGunCrewState : public IUnitState
 		SAIAngle wDirection;
 
 		//
-		SCrewAnimation() : eAction( ACTION_NOTIFY_NONE ), wDirection( 0 ) {}
+		SCrewAnimation()
+			: eAction( ACTION_NOTIFY_NONE )
+			, wDirection( 0 )
+		{
+		}
 
-		SCrewAnimation( EActionNotify eAction, uint16_t wDirection ) : eAction( eAction ), wDirection( wDirection ) {}
+		SCrewAnimation( EActionNotify eAction, uint16_t wDirection )
+			: eAction( eAction )
+			, wDirection( wDirection )
+		{
+		}
 	};
 
 	struct SUnit
@@ -1814,7 +1900,10 @@ class CFormationGunCrewState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pUnit, CArtillery *pArtillery );
 
-	CFormationGunCrewState() : pUnit( 0 ) {}
+	CFormationGunCrewState()
+		: pUnit( 0 )
+	{
+	}
 
 	CFormationGunCrewState( class CFormation *pUnit, CArtillery *pArtillery );
 
@@ -1862,7 +1951,10 @@ class CFormationInstallMortarState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pUnit );
 
-	CFormationInstallMortarState() : pUnit( 0 ) {}
+	CFormationInstallMortarState()
+		: pUnit( 0 )
+	{
+	}
 
 	CFormationInstallMortarState( class CFormation *pUnit );
 	virtual void Segment();
@@ -1894,7 +1986,10 @@ class CFormationUseSpyglassState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pFormation, const CVec2 &point );
 
-	CFormationUseSpyglassState() : pFormation( 0 ) {}
+	CFormationUseSpyglassState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationUseSpyglassState( class CFormation *pFormation, const CVec2 &point );
 
@@ -1937,7 +2032,10 @@ class CFormationAttackFormationState : public IUnitAttackingState
 public:
 	static IUnitState *Instance( class CFormation *pFormation, class CFormation *pTarget, const bool bSwarmAttack );
 
-	CFormationAttackFormationState() : pUnit( 0 ) {}
+	CFormationAttackFormationState()
+		: pUnit( 0 )
+	{
+	}
 
 	CFormationAttackFormationState( class CFormation *pFormation, class CFormation *pTarget, const bool bSwarmAttack );
 
@@ -1981,7 +2079,10 @@ class CFormationParadeState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pFormation, const int nType );
 
-	CFormationParadeState() : pFormation( 0 ) {}
+	CFormationParadeState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationParadeState( class CFormation *pFormation, const int nType );
 
@@ -2017,7 +2118,10 @@ class CFormationDisbandState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pFormation );
 
-	CFormationDisbandState() : pFormation( 0 ) {}
+	CFormationDisbandState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationDisbandState( class CFormation *pFormation );
 
@@ -2048,7 +2152,10 @@ class CFormationFormState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pFormation );
 
-	CFormationFormState() : pFormation( 0 ) {}
+	CFormationFormState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationFormState( class CFormation *pFormation );
 
@@ -2091,7 +2198,10 @@ class CFormationWaitToFormState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pFormation, const float fMain, class CSoldier *pMainSoldier );
 
-	CFormationWaitToFormState() : pFormation( 0 ) {}
+	CFormationWaitToFormState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationWaitToFormState( class CFormation *pFormation, const float fMain, class CSoldier *pMainSoldier );
 
@@ -2163,7 +2273,10 @@ class CCatchFormationState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pCatchingFormation, class CFormation *pFormation );
 
-	CCatchFormationState() : pCatchingFormation( 0 ) {}
+	CCatchFormationState()
+		: pCatchingFormation( 0 )
+	{
+	}
 
 	CCatchFormationState( class CFormation *pCatchingFormation, class CFormation *pFormation );
 
@@ -2223,7 +2336,10 @@ class CFormationSwarmState : public IUnitAttackingState
 public:
 	static IUnitState *Instance( class CFormation *pFormation, const CVec2 &point, const float fContinue );
 
-	CFormationSwarmState() : pFormation( 0 ) {}
+	CFormationSwarmState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationSwarmState( class CFormation *pFormation, const CVec2 &point, const float fContinue );
 
@@ -2299,7 +2415,10 @@ class CFormationRepairBridgeState : public IEngineerFormationState
 public:
 	static IUnitState *Instance( class CFormation *pFormation, class CBridgeSpan *pBridge );
 
-	CFormationRepairBridgeState() : pUnit( 0 ) {}
+	CFormationRepairBridgeState()
+		: pUnit( 0 )
+	{
+	}
 
 	CFormationRepairBridgeState( class CFormation *pFormation, class CBridgeSpan *pBridge );
 
@@ -2366,7 +2485,10 @@ class CFormationRepairBuildingState : public IEngineerFormationState
 public:
 	static IUnitState *Instance( class CFormation *pFormation, class CBuilding *pBuilding );
 
-	CFormationRepairBuildingState() : pUnit( 0 ) {}
+	CFormationRepairBuildingState()
+		: pUnit( 0 )
+	{
+	}
 
 	CFormationRepairBuildingState( class CFormation *pFormation, class CBuilding *pBuilding );
 
@@ -2410,7 +2532,10 @@ class CFormationEnterBuildingNowState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pFormation, class CBuilding *pBuilding );
 
-	CFormationEnterBuildingNowState() : pFormation( 0 ) {}
+	CFormationEnterBuildingNowState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationEnterBuildingNowState( class CFormation *pFormation, class CBuilding *pBuilding );
 
@@ -2444,7 +2569,10 @@ class CFormationEnterEntrenchmentNowState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pFormation, class CEntrenchment *pEntrenchment );
 
-	CFormationEnterEntrenchmentNowState() : pFormation( 0 ) {}
+	CFormationEnterEntrenchmentNowState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationEnterEntrenchmentNowState( class CFormation *pFormation, class CEntrenchment *pEntrenchment );
 
@@ -2505,7 +2633,10 @@ public:
 	                             NDb::EUnitSpecialAbility _eChargeType,
 	                             int nTimeOffset );
 
-	CFormationPlaceChargeState() : pFormation( 0 ) {}
+	CFormationPlaceChargeState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationPlaceChargeState( class CFormation *pUnit,
 	                            const CVec2 &vDesiredPoint,
@@ -2544,7 +2675,10 @@ class CFormationDetonateChargeState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pUnit );
 
-	CFormationDetonateChargeState() : pFormation( 0 ) {}
+	CFormationDetonateChargeState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationDetonateChargeState( class CFormation *pUnit );
 
@@ -2581,9 +2715,17 @@ class CFormationThrowGrenadeState : public IUnitState
 		}
 
 	public:
-		SThrowInfo() : bPassSegment( true ), pSoilder( 0 ) {}
+		SThrowInfo()
+			: bPassSegment( true )
+			, pSoilder( 0 )
+		{
+		}
 
-		SThrowInfo( class CSoldier *_pSoilder ) : bPassSegment( true ), pSoilder( _pSoilder ) {}
+		SThrowInfo( class CSoldier *_pSoilder )
+			: bPassSegment( true )
+			, pSoilder( _pSoilder )
+		{
+		}
 	};
 
 	ZDATA
@@ -2600,7 +2742,10 @@ class CFormationThrowGrenadeState : public IUnitState
 public:
 	static IUnitState *Instance( class CFormation *pUnit );
 
-	CFormationThrowGrenadeState() : pFormation( 0 ) {}
+	CFormationThrowGrenadeState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationThrowGrenadeState( class CFormation *pUnit );
 
@@ -2645,7 +2790,10 @@ public:
 	}
 
 public:
-	CFormationEntrenchSelfState() : pFormation( 0 ) {}
+	CFormationEntrenchSelfState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationEntrenchSelfState( class CFormation *_pFormation );
 
@@ -2678,7 +2826,10 @@ class CFormationLeaveSelfEntrenchState : public IUnitState
 	}
 
 public:
-	CFormationLeaveSelfEntrenchState() : pFormation( 0 ) {}
+	CFormationLeaveSelfEntrenchState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationLeaveSelfEntrenchState( class CFormation *_pFormation );
 	void Segment();
@@ -2759,7 +2910,10 @@ class CFormationFirstAidState : public IUnitState
 	static bool IsSoldierNeedHealing( CAIUnit *pUnit );
 
 public:
-	CFormationFirstAidState() : pFormation( 0 ) {}
+	CFormationFirstAidState()
+		: pFormation( 0 )
+	{
+	}
 
 	CFormationFirstAidState( class CFormation *_pFormation, CSoldier *pPriorityUnit );
 

@@ -50,7 +50,11 @@ public:
 		return 0;
 	}
 
-	CShortPtrAllocator() : nFree( NIL ), nLast( 0 ) {}
+	CShortPtrAllocator()
+		: nFree( NIL )
+		, nLast( 0 )
+	{
+	}
 
 	T &operator()( pointer p )
 	{
@@ -263,7 +267,12 @@ private:
 		CGatheringCache *pThis;
 		pointer pLast, pUp;
 
-		SSplitter( CGatheringCache *_pThis, pointer _pUp ) : pLast( Alloc::NIL ), pThis( _pThis ), pUp( _pUp ) {}
+		SSplitter( CGatheringCache *_pThis, pointer _pUp )
+			: pLast( Alloc::NIL )
+			, pThis( _pThis )
+			, pUp( _pUp )
+		{
+		}
 
 		void operator()( const TElement &_e, typename TElement::ESplitType t )
 		{
@@ -458,7 +467,9 @@ public:
 	};
 
 	CGatheringCache( MRU_TYPE _nCurrentRU = N_START_RU )
-			: nCurrentRU( _nCurrentRU ), nLatestAllocRU( 0 ), bThrashing( false )
+		: nCurrentRU( _nCurrentRU )
+		, nLatestAllocRU( 0 )
+		, bThrashing( false )
 	{
 	}
 
@@ -607,7 +618,12 @@ public:
 
 		SStatePlace() {}
 
-		SStatePlace( const TElement &_e, TUser *_p, MRU_TYPE _nMRU ) : place( _e ), pUser( _p ), nMRU( _nMRU ) {}
+		SStatePlace( const TElement &_e, TUser *_p, MRU_TYPE _nMRU )
+			: place( _e )
+			, pUser( _p )
+			, nMRU( _nMRU )
+		{
+		}
 	};
 
 	void GetState( std::vector<SStatePlace> *pState )
@@ -738,7 +754,10 @@ public:
 	CQuadTreeElement() {}
 
 	CQuadTreeElement( int _nXSize, int _nYSize, int _nShiftX, int _nShiftY )
-			: nXSize( _nXSize ), nYSize( _nYSize ), nShiftX( _nShiftX ), nShiftY( _nShiftY )
+		: nXSize( _nXSize )
+		, nYSize( _nYSize )
+		, nShiftX( _nShiftX )
+		, nShiftY( _nShiftY )
 	{
 	}
 };
@@ -809,7 +828,11 @@ public:
 
 	CFibElement() {}
 
-	CFibElement( int _nSize, int _nShift ) : nSize( _nSize ), nShift( _nShift ) {}
+	CFibElement( int _nSize, int _nShift )
+		: nSize( _nSize )
+		, nShift( _nShift )
+	{
+	}
 };
 
 } // namespace NCache

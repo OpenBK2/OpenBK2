@@ -10,7 +10,10 @@
 
 //
 
-CEditorTestState::CEditorTestState( CEditorTestEditor *_pEditorTestEditor ) : pEditorTestEditor( _pEditorTestEditor ) {}
+CEditorTestState::CEditorTestState( CEditorTestEditor *_pEditorTestEditor )
+	: pEditorTestEditor( _pEditorTestEditor )
+{
+}
 
 void CEditorTestState::Enter()
 {

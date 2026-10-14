@@ -13,7 +13,10 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4C3, CTankPitPath );
 //*******************************************************************
 
 CTankPitPath::CTankPitPath( CBasePathUnit *_pUnit, const class CVec2 &vStartPoint, const class CVec2 &vEndPoint )
-		: vCurPoint( vStartPoint ), vEndPoint( vEndPoint ), fSpeedLen( 0.0f ), pUnit( _pUnit )
+	: vCurPoint( vStartPoint )
+	, vEndPoint( vEndPoint )
+	, fSpeedLen( 0.0f )
+	, pUnit( _pUnit )
 {
 }
 

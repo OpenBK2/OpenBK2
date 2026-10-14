@@ -9,7 +9,8 @@
 CExecutorUnitCombatBonus::CExecutorUnitCombatBonus( EUnitSpecialAbility eAbility,
                                                     CAIUnit *_pUnit,
                                                     EExecutorTypeID eTID )
-		: CExecutorUnitBonus( eAbility, _pUnit, eTID ), modeFlags( 0 )
+	: CExecutorUnitBonus( eAbility, _pUnit, eTID )
+	, modeFlags( 0 )
 {
 }
 

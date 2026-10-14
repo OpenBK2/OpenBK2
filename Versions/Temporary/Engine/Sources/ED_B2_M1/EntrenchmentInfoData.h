@@ -36,7 +36,10 @@ struct SEntrenchmentInfo : public SObjectInfo
 	OBJECT_BASIC_METHODS( SEntrenchmentInfo );
 
 public:
-	SEntrenchmentInfo() : nEntrenchmentID( INVALID_NODE_ID ) {}
+	SEntrenchmentInfo()
+		: nEntrenchmentID( INVALID_NODE_ID )
+	{
+	}
 
 	// SObjectInfo
 	SObjectInfo *CallDuplicate() const

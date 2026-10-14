@@ -11,7 +11,11 @@ REGISTER_SAVELOAD_CLASS( SOUND, 0x110793C2, CSoundCell );
 //*															CSoundCell::*
 //*******************************************************************
 
-CSoundCell::CSoundCell() : nRadius( 0 ), timeLastCombatHear( 0 ) {}
+CSoundCell::CSoundCell()
+	: nRadius( 0 )
+	, timeLastCombatHear( 0 )
+{
+}
 
 void CSoundCell::SetLastHearCombat( const NTimer::STime hearTime )
 {

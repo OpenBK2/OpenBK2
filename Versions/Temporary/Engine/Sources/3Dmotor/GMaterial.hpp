@@ -84,11 +84,26 @@ struct SMaterialCreateInfo
 	EDynamicType eDynamicType;
 
 	SMaterialCreateInfo()
-			: pColor( 0 ), vAvrgTexColor( 1, 1, 1, 1 ), vTranslucentColor( 0, 0, 0 ), fMetalMirror( 0 ), fDielMirror( 0 ),
-				alphaMode( MF_GENERIC | MF_OPAQUE ), bDoesCastShadow( true ), nPriority( 0 ), fSpecPower( 32 ),
-				fFloatParam( 0 ), fDetailScale( 1 ), bProjectOnTerrain( false ), bSelfIllum( false ), b2Sided( false ),
-				bApplyFog( true ), bAddPlaced( false ), bIgnoreZ( false ), bBackFaceCastShadow( false ), bReceiveShadow( true ),
-				eDynamicType( DT_DONT_CARE )
+		: pColor( 0 )
+		, vAvrgTexColor( 1, 1, 1, 1 )
+		, vTranslucentColor( 0, 0, 0 )
+		, fMetalMirror( 0 )
+		, fDielMirror( 0 )
+		, alphaMode( MF_GENERIC | MF_OPAQUE )
+		, bDoesCastShadow( true )
+		, nPriority( 0 )
+		, fSpecPower( 32 )
+		, fFloatParam( 0 )
+		, fDetailScale( 1 )
+		, bProjectOnTerrain( false )
+		, bSelfIllum( false )
+		, b2Sided( false )
+		, bApplyFog( true )
+		, bAddPlaced( false )
+		, bIgnoreZ( false )
+		, bBackFaceCastShadow( false )
+		, bReceiveShadow( true )
+		, eDynamicType( DT_DONT_CARE )
 	{
 	}
 };

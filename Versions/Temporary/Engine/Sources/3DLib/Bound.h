@@ -13,7 +13,11 @@ struct SBoundCalcer
 {
 	CVec3 ptMin, ptMax;
 
-	SBoundCalcer() : ptMin( 1e38f, 1e38f, 1e38f ), ptMax( -1e38f, -1e38f, -1e38f ) {}
+	SBoundCalcer()
+		: ptMin( 1e38f, 1e38f, 1e38f )
+		, ptMax( -1e38f, -1e38f, -1e38f )
+	{
+	}
 
 	template <class TSet, class TGetPoint>
 	void LookSet( const TSet &a, TGetPoint GetPoint )

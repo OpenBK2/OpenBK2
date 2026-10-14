@@ -154,7 +154,8 @@ class SYSTEM_EXPORT CBitLocker : public CBitStream
 	unsigned char *pBuffer = nullptr;
 
 public:
-	CBitLocker() : CBitStream( 0, read, 0 )
+	CBitLocker()
+		: CBitStream( 0, read, 0 )
 	{
 		pData = 0;
 	}
@@ -176,14 +177,13 @@ class CBitEmbedded : public CBitStream
 
 public:
 	CBitEmbedded( CBitStream &_bits )
-			:
+		:
 #ifdef _DEBUG
-				CBitStream( _bits.pCurrent, _bits.mode, _bits.pReservedEnd - _bits.pCurrent )
+		CBitStream( _bits.pCurrent, _bits.mode, _bits.pReservedEnd - _bits.pCurrent )
 #else
-				CBitStream( _bits.pCurrent, read, 0 )
+		CBitStream( _bits.pCurrent, read, 0 )
 #endif
-				,
-				bits( _bits )
+		, bits( _bits )
 	{
 	}
 

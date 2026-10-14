@@ -168,11 +168,20 @@ class CFilePath : public std::string
 public:
 	CFilePath() {}
 
-	CFilePath( const char *_pszFilePath ) : std::string( _pszFilePath ) {}
+	CFilePath( const char *_pszFilePath )
+		: std::string( _pszFilePath )
+	{
+	}
 
-	CFilePath( const std::string &_szFilePath ) : std::string( _szFilePath ) {}
+	CFilePath( const std::string &_szFilePath )
+		: std::string( _szFilePath )
+	{
+	}
 
-	CFilePath( const CFilePath &path ) : std::string( path ) {}
+	CFilePath( const CFilePath &path )
+		: std::string( path )
+	{
+	}
 
 	//
 	const CFilePath &operator=( const char *_pszFilePath )

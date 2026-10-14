@@ -26,7 +26,10 @@
 // CChapterState
 
 CChapterState::CChapterState( CChapterEditor *_pChapterEditor )
-		: pChapterEditor( _pChapterEditor ), bDragging( false ), pPickedMission( 0 ), pPickedArrow( 0 )
+	: pChapterEditor( _pChapterEditor )
+	, bDragging( false )
+	, pPickedMission( 0 )
+	, pPickedArrow( 0 )
 {
 }
 

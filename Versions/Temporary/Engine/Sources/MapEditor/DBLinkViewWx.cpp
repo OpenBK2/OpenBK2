@@ -95,13 +95,15 @@ class CDBLinkWxDialog : public CWxOwnerDialog, public CPCBaseDialog, public IObj
 
 public:
 	CDBLinkWxDialog( wxWindow *pParent, const NDBLink::SRequest &rRequest )
-			: CWxOwnerDialog( pParent,
-	                      wxID_ANY,
-	                      "Game Data Base Link",
-	                      wxDefaultPosition,
-	                      wxDefaultSize,
-	                      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
-				request( rRequest ), szCurrentTable( rRequest.szTable ), szCurrentObject( rRequest.szObject )
+		: CWxOwnerDialog( pParent,
+	                    wxID_ANY,
+	                    "Game Data Base Link",
+	                    wxDefaultPosition,
+	                    wxDefaultSize,
+	                    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+		, request( rRequest )
+		, szCurrentTable( rRequest.szTable )
+		, szCurrentObject( rRequest.szObject )
 	{
 		// IDD_PC_DB_LINK: "Objects:" over the tables on the left, "Properties:"
 		// over the grid and its status line on the right, the two selections

@@ -8,10 +8,11 @@
 extern CGroupLogic theGroupLogic;
 
 CExecutorSoldierEntrench::CExecutorSoldierEntrench( CAIUnit *_pUnit )
-		: pUnit( _pUnit ), fEntrenchTimeCoeff( 1.0f ),
-			CExecutorUnitBase( TID_SOLDIER_ENTRENCH_SELF,
-                         ( 1000 + NRandom::Random( 1000 ) ) / SConsts::AI_SEGMENT_DURATION,
-                         NDb::ABILITY_ENTRENCH_SELF )
+	: pUnit( _pUnit )
+	, fEntrenchTimeCoeff( 1.0f )
+	, CExecutorUnitBase( TID_SOLDIER_ENTRENCH_SELF,
+                       ( 1000 + NRandom::Random( 1000 ) ) / SConsts::AI_SEGMENT_DURATION,
+                       NDb::ABILITY_ENTRENCH_SELF )
 {
 	RecordRandomCall();
 	// The legacy coefficient is still serialized, even though the base handles speed.

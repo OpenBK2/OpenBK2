@@ -230,9 +230,15 @@ protected:
 	void OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMode );
 
 public:
-	CMouseTranslatorB1() : CMouseTranslator( 0 ) {}
+	CMouseTranslatorB1()
+		: CMouseTranslator( 0 )
+	{
+	}
 
-	CMouseTranslatorB1( CSelector *_pSelector ) : CMouseTranslator( _pSelector ) {}
+	CMouseTranslatorB1( CSelector *_pSelector )
+		: CMouseTranslator( _pSelector )
+	{
+	}
 };
 
 class CMouseTranslatorB2Base : public CMouseTranslator
@@ -297,7 +303,10 @@ class CMouseTranslatorB2Game : public CMouseTranslatorB2Base
 public:
 	CMouseTranslatorB2Game() {}
 
-	CMouseTranslatorB2Game( CSelector *_pSelector ) : CMouseTranslatorB2Base( _pSelector ) {}
+	CMouseTranslatorB2Game( CSelector *_pSelector )
+		: CMouseTranslatorB2Base( _pSelector )
+	{
+	}
 };
 
 class CMouseTranslatorB2Replay : public CMouseTranslatorB2Base
@@ -337,5 +346,8 @@ protected:
 public:
 	CMouseTranslatorB2Replay() {}
 
-	CMouseTranslatorB2Replay( CSelector *_pSelector ) : CMouseTranslatorB2Base( _pSelector ) {}
+	CMouseTranslatorB2Replay( CSelector *_pSelector )
+		: CMouseTranslatorB2Base( _pSelector )
+	{
+	}
 };

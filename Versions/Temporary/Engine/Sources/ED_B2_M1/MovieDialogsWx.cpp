@@ -47,7 +47,7 @@ class CMovieSettingsWxDialog : public CWxToolDialog
 
 public:
 	CMovieSettingsWxDialog( wxWindow *pParent, float fLength )
-			: CWxToolDialog( pParent, wxID_ANY, "Script movie settings" )
+		: CWxToolDialog( pParent, wxID_ANY, "Script movie settings" )
 	{
 		wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 		wxBoxSizer *pRow = new wxBoxSizer( wxHORIZONTAL );
@@ -107,7 +107,7 @@ class CMovieKeySettingsWxDialog : public CWxToolDialog
 
 public:
 	CMovieKeySettingsWxDialog( wxWindow *pParent, const NDb::SScriptMovieKeyPos &rKey, const std::string &rszName )
-			: CWxToolDialog( pParent, wxID_ANY, "Key settings" )
+		: CWxToolDialog( pParent, wxID_ANY, "Key settings" )
 	{
 		wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 

@@ -43,7 +43,10 @@ public:
 	CButtonSubStateVisual rightButtonDown;
 	NDb::EButtonSubstateType eSubState;
 
-	CButtonState() : eSubState( NDb::BST_NORMAL ) {}
+	CButtonState()
+		: eSubState( NDb::BST_NORMAL )
+	{
+	}
 
 	void Init( const NDb::SButtonVisualState &state )
 	{
@@ -190,7 +193,13 @@ public:
 
 	void OnActivatePushedState( const SGameMessage &msg );
 
-	CWindowMSButton() : bPressed( 4, false ), pButtonNotify( 0 ), bMouseEntered( false ), nAnimationID( 0 ) {}
+	CWindowMSButton()
+		: bPressed( 4, false )
+		, pButtonNotify( 0 )
+		, bMouseEntered( false )
+		, nAnimationID( 0 )
+	{
+	}
 
 	bool OnMouseMove( const CVec2 &vPos, const int nButton );
 	bool OnButtonDown( const CVec2 &vPos, const int nButton );

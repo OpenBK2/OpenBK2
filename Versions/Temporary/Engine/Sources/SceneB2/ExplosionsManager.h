@@ -22,7 +22,10 @@ class CExplosionObjInfo : public CPtrFuncBase<NGScene::CObjectInfo>
 public:
 	CExplosionObjInfo() {}
 
-	CExplosionObjInfo( const NMeshData::SMeshData &_data ) : data( _data ) {}
+	CExplosionObjInfo( const NMeshData::SMeshData &_data )
+		: data( _data )
+	{
+	}
 };
 
 typedef NMeshData::SPatchHolder<CExplosionObjInfo> CExplosionObjHolder;
@@ -46,7 +49,10 @@ class CExplosionsManager
 	CObj<NGScene::IGameView> pGScene;
 	//
 public:
-	CExplosionsManager() : nLastID( 0 ) {}
+	CExplosionsManager()
+		: nLastID( 0 )
+	{
+	}
 
 	int AddExplosion( const NMeshData::SMeshData &_data, const NDb::SMaterial *pMaterial );
 	void RemoveExplosion( const int nID );

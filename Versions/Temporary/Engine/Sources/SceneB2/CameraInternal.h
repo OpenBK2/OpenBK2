@@ -20,7 +20,10 @@ struct SEarthQuake
 	SEarthQuake() {}
 
 	SEarthQuake( float _fAmplitude, float _fAttenuation, float _fDuration )
-			: fAmplitude( _fAmplitude ), fAttenuation( _fAttenuation ), fDuration( _fDuration ), fTime( 0 )
+		: fAmplitude( _fAmplitude )
+		, fAttenuation( _fAttenuation )
+		, fDuration( _fDuration )
+		, fTime( 0 )
 	{
 	}
 };

@@ -33,19 +33,29 @@ struct SObjectInfo : public CObjectBase
 
 		//
 		SMapInfoElement()
-				: nFrameIndex( INVALID_NODE_ID ), nPlayer( INVALID_NODE_ID ), fHP( 1.0f ), vPosition( VNULL3 ),
-					fDirection( 0.0f ), vAdditionalPosition( VNULL3 ), fAdditionalDirection( 0.0f ),
-					nLinkToLinkID( INVALID_NODE_ID )
+			: nFrameIndex( INVALID_NODE_ID )
+			, nPlayer( INVALID_NODE_ID )
+			, fHP( 1.0f )
+			, vPosition( VNULL3 )
+			, fDirection( 0.0f )
+			, vAdditionalPosition( VNULL3 )
+			, fAdditionalDirection( 0.0f )
+			, nLinkToLinkID( INVALID_NODE_ID )
 		{
 		}
 
 		SMapInfoElement( const SMapInfoElement &rMapInfoElement )
-				: szRPGStatsTypeName( rMapInfoElement.szRPGStatsTypeName ), rpgStatsDBID( rMapInfoElement.rpgStatsDBID ),
-					nFrameIndex( rMapInfoElement.nFrameIndex ), nPlayer( rMapInfoElement.nPlayer ), fHP( rMapInfoElement.fHP ),
-					vPosition( rMapInfoElement.vPosition ), fDirection( rMapInfoElement.fDirection ),
-					vAdditionalPosition( rMapInfoElement.vAdditionalPosition ),
-					fAdditionalDirection( rMapInfoElement.fAdditionalDirection ),
-					linkedLinkIDIist( rMapInfoElement.linkedLinkIDIist ), nLinkToLinkID( rMapInfoElement.nLinkToLinkID )
+			: szRPGStatsTypeName( rMapInfoElement.szRPGStatsTypeName )
+			, rpgStatsDBID( rMapInfoElement.rpgStatsDBID )
+			, nFrameIndex( rMapInfoElement.nFrameIndex )
+			, nPlayer( rMapInfoElement.nPlayer )
+			, fHP( rMapInfoElement.fHP )
+			, vPosition( rMapInfoElement.vPosition )
+			, fDirection( rMapInfoElement.fDirection )
+			, vAdditionalPosition( rMapInfoElement.vAdditionalPosition )
+			, fAdditionalDirection( rMapInfoElement.fAdditionalDirection )
+			, linkedLinkIDIist( rMapInfoElement.linkedLinkIDIist )
+			, nLinkToLinkID( rMapInfoElement.nLinkToLinkID )
 		{
 		}
 
@@ -141,14 +151,18 @@ struct SObjectInfo : public CObjectBase
 
 		//
 		SSceneElement()
-				: vPosition( VNULL3 ), fDirection( 0.0f ), vAdditionalPosition( VNULL3 ), fAdditionalDirection( 0.0f )
+			: vPosition( VNULL3 )
+			, fDirection( 0.0f )
+			, vAdditionalPosition( VNULL3 )
+			, fAdditionalDirection( 0.0f )
 		{
 		}
 
 		SSceneElement( const SSceneElement &rSceneElement )
-				: vPosition( rSceneElement.vPosition ), fDirection( rSceneElement.fDirection ),
-					vAdditionalPosition( rSceneElement.vAdditionalPosition ),
-					fAdditionalDirection( rSceneElement.fAdditionalDirection )
+			: vPosition( rSceneElement.vPosition )
+			, fDirection( rSceneElement.fDirection )
+			, vAdditionalPosition( rSceneElement.vAdditionalPosition )
+			, fAdditionalDirection( rSceneElement.fAdditionalDirection )
 		{
 		}
 

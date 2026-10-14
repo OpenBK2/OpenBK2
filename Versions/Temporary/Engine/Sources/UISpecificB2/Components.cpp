@@ -37,7 +37,9 @@ IWindow *AddWindowCopy( IWindow *pParent, const IWindow *pSample )
 // CTextureRoundSegmentVisitor
 
 CTextureRoundSegmentVisitor::CTextureRoundSegmentVisitor()
-		: fStartAngle( 0 ), fFinishAngle( FP_2PI ), colors( 4, 0xFFFFFFFF )
+	: fStartAngle( 0 )
+	, fFinishAngle( FP_2PI )
+	, colors( 4, 0xFFFFFFFF )
 {
 }
 

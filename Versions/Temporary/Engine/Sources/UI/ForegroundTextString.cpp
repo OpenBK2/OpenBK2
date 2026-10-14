@@ -168,7 +168,8 @@ void CForegroundTextString::SetInternalFadeValue( float fValue ) {}
 
 // CPlacedText
 
-CPlacedText::CPlacedText() : vScreenRect( VNULL2 )
+CPlacedText::CPlacedText()
+	: vScreenRect( VNULL2 )
 {
 	rcParent.SetEmpty();
 }

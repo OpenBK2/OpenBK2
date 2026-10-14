@@ -15,7 +15,11 @@ class CCombatEstimator
 		//
 		SShellInfo() {}
 
-		SShellInfo( NTimer::STime time, float fDamage ) : time( time ), fDamage( fDamage ) {}
+		SShellInfo( NTimer::STime time, float fDamage )
+			: time( time )
+			, fDamage( fDamage )
+		{
+		}
 	};
 
 	typedef det_set<int> CRegisteredUnits;

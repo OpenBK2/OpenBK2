@@ -528,7 +528,7 @@ IUnitState *CTransportWaitPassengerState::Instance( CMilitaryCar *pTransport, CF
 }
 
 CTransportWaitPassengerState::CTransportWaitPassengerState( CMilitaryCar *_pTransport, CFormation *pFormation )
-		: pTransport( _pTransport )
+	: pTransport( _pTransport )
 {
 	for ( int i = 0; i < pTransport->GetNTurrets(); ++i )
 	{
@@ -597,8 +597,11 @@ CTransportLandState::CTransportLandState( CMilitaryCar *_pTransport,
                                           const enum EActionLeaveParam param,
                                           const CVec2 &_vLandPoint,
                                           CFormation *_pUnload )
-		: CStatusUpdatesHelper( EUS_UNLOAD, _pTransport ), pTransport( _pTransport ), vLandPoint( _vLandPoint ),
-			state( ELS_STARTING ), pUnload( _pUnload )
+	: CStatusUpdatesHelper( EUS_UNLOAD, _pTransport )
+	, pTransport( _pTransport )
+	, vLandPoint( _vLandPoint )
+	, state( ELS_STARTING )
+	, pUnload( _pUnload )
 {
 	if ( ALP_POSITION_VALID == param )
 	{
@@ -850,9 +853,14 @@ CTransportHookArtilleryState::Instance( CAITransportUnit *pTransport, CArtillery
 CTransportHookArtilleryState::CTransportHookArtilleryState( class CAITransportUnit *_pTransport,
                                                             class CArtillery *_pArtillery,
                                                             const CVec2 &vHookPoint )
-		: CStatusUpdatesHelper( EUS_HOOK_ARTILLERY, _pTransport ), pArtillery( _pArtillery ), pTransport( _pTransport ),
-			eState( TTGS_ESTIMATING ), timeLast( 0 ), wDesiredTransportDir( 0 ), bInterrupted( false ),
-			vArtilleryPoint( _pArtillery ? _pArtillery->GetCenterPlain() : vHookPoint )
+	: CStatusUpdatesHelper( EUS_HOOK_ARTILLERY, _pTransport )
+	, pArtillery( _pArtillery )
+	, pTransport( _pTransport )
+	, eState( TTGS_ESTIMATING )
+	, timeLast( 0 )
+	, wDesiredTransportDir( 0 )
+	, bInterrupted( false )
+	, vArtilleryPoint( _pArtillery ? _pArtillery->GetCenterPlain() : vHookPoint )
 {
 	// find nearest artillery and hook it
 	if ( pArtillery == 0 )
@@ -1256,8 +1264,13 @@ CTransportUnhookArtilleryState::Instance( CAITransportUnit *pTransport, const CV
 CTransportUnhookArtilleryState::CTransportUnhookArtilleryState( CAITransportUnit *_pTransport,
                                                                 const CVec2 &_vDestPoint,
                                                                 const bool _bNow )
-		: CStatusUpdatesHelper( EUS_DEPLOY_ARTILLERY, _pTransport ), pTransport( _pTransport ),
-			eState( TUAS_START_APPROACH ), vDestPoint( _vDestPoint ), bInterrupted( false ), nAttempt( 0 ), bNow( _bNow )
+	: CStatusUpdatesHelper( EUS_DEPLOY_ARTILLERY, _pTransport )
+	, pTransport( _pTransport )
+	, eState( TUAS_START_APPROACH )
+	, vDestPoint( _vDestPoint )
+	, bInterrupted( false )
+	, nAttempt( 0 )
+	, bNow( _bNow )
 {
 	NI_ASSERT( pTransport->IsTowing(), "wrong towed artillery" );
 	// if clicked near current transport position, then unload now
@@ -1496,7 +1509,9 @@ CMoveToPointNotPresize::Instance( class CAIUnit *_pTransport, const CVec2 &_vGen
 CMoveToPointNotPresize::CMoveToPointNotPresize( class CAIUnit *_pTransport,
                                                 const CVec2 &vGeneralCell,
                                                 const float _fRadius )
-		: vPurposePoint( vGeneralCell ), fRadius( _fRadius ), pTransport( _pTransport )
+	: vPurposePoint( vGeneralCell )
+	, fRadius( _fRadius )
+	, pTransport( _pTransport )
 {
 	SendToPurposePoint();
 }
@@ -1548,7 +1563,8 @@ IUnitState *CTransportWaitForUnload::Instance( class CAIUnit *_pTransport, const
 }
 
 CTransportWaitForUnload::CTransportWaitForUnload( class CMilitaryCar *_pTransport, const CVec2 &vTarget )
-		: pTransport( _pTransport ), vPurposePoint( vTarget )
+	: pTransport( _pTransport )
+	, vPurposePoint( vTarget )
 {
 	pTransport->Stop();
 	CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW, "Transport unloading started" );

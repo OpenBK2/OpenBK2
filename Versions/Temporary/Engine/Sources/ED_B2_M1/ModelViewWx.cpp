@@ -89,7 +89,11 @@ class CModelWxWindow : public CWxHostWindow, public CModelCommands
 		unsigned nFlag;
 
 	public:
-		CDebounceTimer( CModelWxWindow *_pOwner, unsigned _nFlag ) : pOwner( _pOwner ), nFlag( _nFlag ) {}
+		CDebounceTimer( CModelWxWindow *_pOwner, unsigned _nFlag )
+			: pOwner( _pOwner )
+			, nFlag( _nFlag )
+		{
+		}
 
 		virtual void Notify()
 		{
@@ -133,8 +137,10 @@ class CModelWxWindow : public CWxHostWindow, public CModelCommands
 
 public:
 	CModelWxWindow()
-			: sceneColourTimer( this, MODEL_EP_COLOR ), fovTimer( this, MODEL_EP_FOV ),
-				terrainColourTimer( this, MODEL_EP_TERRAIN_COLOR ), terrainOpacityTimer( this, MODEL_EP_TERRAIN_COLOR_OPACITY )
+		: sceneColourTimer( this, MODEL_EP_COLOR )
+		, fovTimer( this, MODEL_EP_FOV )
+		, terrainColourTimer( this, MODEL_EP_TERRAIN_COLOR )
+		, terrainOpacityTimer( this, MODEL_EP_TERRAIN_COLOR_OPACITY )
 	{
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MODEL_WINDOW, this );
 	}

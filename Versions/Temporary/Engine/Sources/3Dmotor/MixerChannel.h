@@ -23,7 +23,10 @@ private:
 	}
 
 protected:
-	CMixerChannel() : CFuncBase<float>( 0.f ) {}
+	CMixerChannel()
+		: CFuncBase<float>( 0.f )
+	{
+	}
 
 	virtual bool NeedUpdate()
 	{
@@ -43,7 +46,9 @@ protected:
 
 public:
 	CMixerChannel( CFuncBase<float> *_pMasterChannel, CFuncBase<float> *_pAnimatedChannel, float fDefaultValue = 0.f )
-			: CFuncBase<float>( fDefaultValue ), pMasterChannel( _pMasterChannel ), pAnimatedChannel( _pAnimatedChannel )
+		: CFuncBase<float>( fDefaultValue )
+		, pMasterChannel( _pMasterChannel )
+		, pAnimatedChannel( _pAnimatedChannel )
 	{
 		ASSERT( IsValid( pMasterChannel ) );
 	}

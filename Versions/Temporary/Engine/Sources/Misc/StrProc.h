@@ -439,7 +439,10 @@ class CCharSeparator
 	const TChar tChr{};
 
 public:
-	CCharSeparator( const TChar chr ) : tChr( chr ) {}
+	CCharSeparator( const TChar chr )
+		: tChr( chr )
+	{
+	}
 
 	bool operator()( const TChar tSymbol ) const
 	{
@@ -538,7 +541,8 @@ class CBracketSeparator
 	const TChar cSeparator{}; // separator char
 	std::vector<TChar> stc;   // close brackets stack
 public:
-	CBracketSeparator( const TChar _chr ) : cSeparator( _chr )
+	CBracketSeparator( const TChar _chr )
+		: cSeparator( _chr )
 	{
 		stc.reserve( 32 );
 	}
@@ -578,13 +582,19 @@ class CStringIterator
 	TSeparator separator; // separator functional
 public:
 	CStringIterator( const TChar *pszString, const TChar cSeparator )
-			: szInput( pszString ), nPrevPos( -1 ), nCurrPos( -1 ), separator( cSeparator )
+		: szInput( pszString )
+		, nPrevPos( -1 )
+		, nCurrPos( -1 )
+		, separator( cSeparator )
 	{
 		Next();
 	}
 
 	CStringIterator( const std::basic_string<TChar> &szString, const TChar cSeparator )
-			: szInput( szString ), nPrevPos( -1 ), nCurrPos( -1 ), separator( cSeparator )
+		: szInput( szString )
+		, nPrevPos( -1 )
+		, nCurrPos( -1 )
+		, separator( cSeparator )
 	{
 		Next();
 	}
@@ -649,7 +659,9 @@ namespace NImplementation
 		const std::string &szSample;
 
 		SSearchStr( const char *_pszBegin, const int _nLength, const std::string &_szSample )
-				: pszBegin( _pszBegin ), nLength( _nLength ), szSample( _szSample )
+			: pszBegin( _pszBegin )
+			, nLength( _nLength )
+			, szSample( _szSample )
 		{
 		}
 
@@ -676,7 +688,11 @@ namespace NImplementation
 		const int nSampleSize = 0;
 		std::vector<int> sizes;
 
-		SPrefixesArray( const int _nSampleSize ) : nSampleSize( _nSampleSize ), sizes( nSampleSize + 2, 0 ) {}
+		SPrefixesArray( const int _nSampleSize )
+			: nSampleSize( _nSampleSize )
+			, sizes( nSampleSize + 2, 0 )
+		{
+		}
 
 		int &operator[]( const int nIndex )
 		{

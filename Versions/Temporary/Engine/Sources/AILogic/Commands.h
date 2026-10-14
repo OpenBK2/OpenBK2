@@ -32,7 +32,12 @@ struct SGroupPathInfo
 	}
 
 public:
-	SGroupPathInfo() : nSubGroup( -1 ), cTileSize( 0 ), aiClass( EAC_NONE ) {}
+	SGroupPathInfo()
+		: nSubGroup( -1 )
+		, cTileSize( 0 )
+		, aiClass( EAC_NONE )
+	{
+	}
 };
 
 class CAICommand : public CObjectBase
@@ -63,7 +68,11 @@ private:
 	void InitCmdId();
 
 public:
-	CAICommand() : id( 0 ), nFlag( -1 ) {}
+	CAICommand()
+		: id( 0 )
+		, nFlag( -1 )
+	{
+	}
 
 	CAICommand( const SAIUnitCmd &unitCmd );
 	CAICommand( const CAICommand &cmd );

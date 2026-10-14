@@ -32,7 +32,11 @@ public:
 
 			SSoundInfo() {}
 
-			SSoundInfo( CPtr<ISound> pSound, bool bPeaceful ) : pSound( pSound ), bPeaceful( bPeaceful ) {}
+			SSoundInfo( CPtr<ISound> pSound, bool bPeaceful )
+				: pSound( pSound )
+				, bPeaceful( bPeaceful )
+			{
+			}
 		};
 
 		typedef std::list<SSoundInfo> CCycledSounds;
@@ -50,8 +54,14 @@ public:
 
 	public:
 		CTerrainSound()
-				: fVolume( 0.0f ), fPan( 0.0f ), bMustPlay( false ), timeRestart( 0 ), vOffset( VNULL2 ), bNeedUpdate( false ),
-					vSoundPos( VNULL3 ), wSound( 0 )
+			: fVolume( 0.0f )
+			, fPan( 0.0f )
+			, bMustPlay( false )
+			, timeRestart( 0 )
+			, vOffset( VNULL2 )
+			, bNeedUpdate( false )
+			, vSoundPos( VNULL3 )
+			, wSound( 0 )
 		{
 		}
 
@@ -103,7 +113,12 @@ private:
 	NTimer::STime lastUpdateTime;
 	bool bMuteAll; // mute terrain sounds
 public:
-	CTerrainSounds() : vListener( CVec3( -1, -1, -1 ) ), lastUpdateTime( 0 ), bMuteAll( false ) {}
+	CTerrainSounds()
+		: vListener( CVec3( -1, -1, -1 ) )
+		, lastUpdateTime( 0 )
+		, bMuteAll( false )
+	{
+	}
 
 	void Init( struct ITerrainSounds *pTerrain );
 	void Update( const CVec3 &vNewListener, const float fViewSize, const bool bCombat, struct ISoundScene *pScene );

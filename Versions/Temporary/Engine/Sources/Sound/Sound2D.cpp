@@ -106,7 +106,9 @@ int CSound2D::operator&( IBinSaver &saver )
 }
 
 CSound2D::CSound2D( const NDb::SSoundDesc *_pDesc, const bool _bLooped )
-		: CSFXSound( _pDesc, _bLooped ), fVolume( 0.0f ), fPan( 0.0f )
+	: CSFXSound( _pDesc, _bLooped )
+	, fVolume( 0.0f )
+	, fPan( 0.0f )
 {
 	Init();
 }
@@ -147,8 +149,12 @@ void CSound2D::Init()
 // CSound3D
 
 CSound3D::CSound3D( const NDb::SSoundDesc *_pDesc, const bool _bLooped )
-		: CSFXSound( _pDesc, _bLooped ), vPos( VNULL3 ), vSpeed( VNULL3 ), fMax( 1000000000.0f ), fMin( 1.0f ),
-			fVolume( 1.0f )
+	: CSFXSound( _pDesc, _bLooped )
+	, vPos( VNULL3 )
+	, vSpeed( VNULL3 )
+	, fMax( 1000000000.0f )
+	, fMin( 1.0f )
+	, fVolume( 1.0f )
 {
 	Init();
 }

@@ -288,9 +288,14 @@ CUnitTurret::CUnitTurret( CAIUnit *_pOwner,
                           const uint16_t _wHorConstraint,
                           const uint16_t _wVerConstraint,
                           const bool _bBuckGunsDirection )
-		: CTurret( wHorRotationSpeed, wVerRotationSpeed, _pOwner->GetStats()->etype != RPG_TYPE_ART_AAGUN ),
-			pOwner( _pOwner ), nPlatform( _nPlatform ), wHorConstraint( _wHorConstraint ), wVerConstraint( _wVerConstraint ),
-			bCanRotateTurret( true ), wOldHorConstraint( _wHorConstraint ), bBuckGunsDirection( _bBuckGunsDirection )
+	: CTurret( wHorRotationSpeed, wVerRotationSpeed, _pOwner->GetStats()->etype != RPG_TYPE_ART_AAGUN )
+	, pOwner( _pOwner )
+	, nPlatform( _nPlatform )
+	, wHorConstraint( _wHorConstraint )
+	, wVerConstraint( _wVerConstraint )
+	, bCanRotateTurret( true )
+	, wOldHorConstraint( _wHorConstraint )
+	, bBuckGunsDirection( _bBuckGunsDirection )
 {
 }
 
@@ -376,13 +381,14 @@ const int CUnitTurret::GetOwnerParty() const
 //BASIC_REGISTER_CLASS( CMountedTurret );
 
 CMountedTurret::CMountedTurret( CBuilding *_pBuilding, const int _nSlot )
-		: CTurret(
-					checked_cast<const SBuildingRPGStats *>( _pBuilding->GetStats() )->aiSlots[_nSlot].wRotationSpeed, 0, true ),
-			pBuilding( _pBuilding ),
-			dir( checked_cast<const SBuildingRPGStats *>( _pBuilding->GetStats() )->aiSlots[_nSlot].wDirection +
-           _pBuilding->GetDir() ),
-			wHorTurnConstraint( checked_cast<const SBuildingRPGStats *>( _pBuilding->GetStats() )->aiSlots[_nSlot].wAngle ),
-			wVerTurnConstraint( 16384 ), wOldHorConstraint( wHorTurnConstraint )
+	: CTurret(
+				checked_cast<const SBuildingRPGStats *>( _pBuilding->GetStats() )->aiSlots[_nSlot].wRotationSpeed, 0, true )
+	, pBuilding( _pBuilding )
+	, dir( checked_cast<const SBuildingRPGStats *>( _pBuilding->GetStats() )->aiSlots[_nSlot].wDirection +
+         _pBuilding->GetDir() )
+	, wHorTurnConstraint( checked_cast<const SBuildingRPGStats *>( _pBuilding->GetStats() )->aiSlots[_nSlot].wAngle )
+	, wVerTurnConstraint( 16384 )
+	, wOldHorConstraint( wHorTurnConstraint )
 {
 	center.x = checked_cast<const SBuildingRPGStats *>( pBuilding->GetStats() )->aiSlots[_nSlot].vPos.x;
 	center.y = checked_cast<const SBuildingRPGStats *>( pBuilding->GetStats() )->aiSlots[_nSlot].vPos.y;

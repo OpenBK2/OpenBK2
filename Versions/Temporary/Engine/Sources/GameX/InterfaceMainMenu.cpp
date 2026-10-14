@@ -20,7 +20,8 @@ static bool bVisited = false;
 
 const char *PROFILE_MANAGER_VISITED = "ProfileManagerVisited";
 
-CInterfaceMainMenu::CInterfaceMainMenu() : CInterfaceScreenBase( "MainMenu", "intermission" )
+CInterfaceMainMenu::CInterfaceMainMenu()
+	: CInterfaceScreenBase( "MainMenu", "intermission" )
 {
 	AddObserver( "options_menu", &CInterfaceMainMenu::MsgOptionsMenu );
 	AddObserver( "credits_screen", &CInterfaceMainMenu::MsgCreditsScreen );

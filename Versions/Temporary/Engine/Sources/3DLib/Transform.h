@@ -47,7 +47,10 @@ protected:
 	int nCurrentMatrix = 0;
 
 public:
-	CBaseMatrixStack() : nCurrentMatrix( -1 ) {}
+	CBaseMatrixStack()
+		: nCurrentMatrix( -1 )
+	{
+	}
 
 	//
 	bool IsEmpty() const
@@ -166,7 +169,11 @@ class _3DLIB_EXPORT CTransformStack : public CFBMatrixStack<8>
 	bool CheckParallelepiped( const CVec3 &ptCenter, const CVec3 &ptXAxis, const CVec3 &ptYAxis, const CVec3 &ptZAxis );
 
 public:
-	CTransformStack() : nClipFlagsPtr( 0 ), nClipPlanes( 0 ) {}
+	CTransformStack()
+		: nClipFlagsPtr( 0 )
+		, nClipPlanes( 0 )
+	{
+	}
 
 	void SetCamera( const SHMatrix &pos );
 	// aspect = ysize/xsize

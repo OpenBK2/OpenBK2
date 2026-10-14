@@ -75,9 +75,14 @@ public:
 	                   CFuncBase<SFBTransform> *_pPlacement,
 	                   bool _bLeaveParticlesWhereStarted,
 	                   bool _bPerParticleFog )
-			: pInstance( _pInstance ), stBeginTime( t ), pFilter( _pFilter ), pTime( _pTime ), pInfo( _pInfo ),
-				pPlacement( _pPlacement ), bLeaveParticlesWhereStarted( _bLeaveParticlesWhereStarted ),
-				bPerParticleFog( _bPerParticleFog )
+		: pInstance( _pInstance )
+		, stBeginTime( t )
+		, pFilter( _pFilter )
+		, pTime( _pTime )
+		, pInfo( _pInfo )
+		, pPlacement( _pPlacement )
+		, bLeaveParticlesWhereStarted( _bLeaveParticlesWhereStarted )
+		, bPerParticleFog( _bPerParticleFog )
 	{
 	}
 

@@ -55,7 +55,10 @@ public:
 		                  CHearableSounds &sounds,
 		                  CSoundCellsWithSound &cellsWSound,
 		                  CSoundsList &muteSounds )
-				: substTable( substTable ), sounds( sounds ), cellsWSound( cellsWSound ), muteSounds( muteSounds )
+			: substTable( substTable )
+			, sounds( sounds )
+			, cellsWSound( cellsWSound )
+			, muteSounds( muteSounds )
 		{
 		}
 
@@ -217,7 +220,10 @@ class CSoundScene3D : public ISoundScene
 	}
 
 public:
-	CSoundScene3D() : bLaunchAfterLoad( false ) {}
+	CSoundScene3D()
+		: bLaunchAfterLoad( false )
+	{
+	}
 
 	//
 	void Init();

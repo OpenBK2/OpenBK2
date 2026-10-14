@@ -32,7 +32,10 @@ struct SWin32Time
 	//
 	SWin32Time() {}
 
-	SWin32Time( const uint32_t _dwFulltime ) : dwFulltime( _dwFulltime ) {}
+	SWin32Time( const uint32_t _dwFulltime )
+		: dwFulltime( _dwFulltime )
+	{
+	}
 
 	uint16_t GetDate() const
 	{

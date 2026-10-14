@@ -34,7 +34,11 @@ namespace NScenarioTracker
 
 // CScenarioTrackerMultiplayer
 
-CScenarioTrackerMultiplayer::CScenarioTrackerMultiplayer() : nLocalPlayer( -1 ), eType( EGT_MULTI_FLAG_CONTROL ) {}
+CScenarioTrackerMultiplayer::CScenarioTrackerMultiplayer()
+	: nLocalPlayer( -1 )
+	, eType( EGT_MULTI_FLAG_CONTROL )
+{
+}
 
 const NDb::SReinforcement *CScenarioTrackerMultiplayer::GetReinforcement( int nPlayer,
                                                                           NDb::EReinforcementType eType ) const

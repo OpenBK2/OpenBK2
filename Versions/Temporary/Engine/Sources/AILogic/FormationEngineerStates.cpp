@@ -83,7 +83,10 @@ IUnitState *CFormationPlaceMine::Instance( CFormation *pFormation, const CVec2 &
 }
 
 CFormationPlaceMine::CFormationPlaceMine( CFormation *_pFormation, const CVec2 &_point, const enum EMineType _eType )
-		: pFormation( _pFormation ), point( _point ), eType( _eType ), eState( EPM_WAIT_FOR_HOMETRANSPORT )
+	: pFormation( _pFormation )
+	, point( _point )
+	, eType( _eType )
+	, eState( EPM_WAIT_FOR_HOMETRANSPORT )
 {
 }
 
@@ -197,7 +200,9 @@ IUnitState *CFormationClearMine::Instance( CFormation *pFormation, const CVec2 &
 }
 
 CFormationClearMine::CFormationClearMine( CFormation *_pFormation, const CVec2 &_point )
-		: pFormation( _pFormation ), point( _point ), eState( EPM_START )
+	: pFormation( _pFormation )
+	, point( _point )
+	, eState( EPM_START )
 {
 }
 
@@ -288,8 +293,12 @@ IUnitState *CFormationRepairUnitState::Instance( class CFormation *_pUnit, CAIUn
 }
 
 CFormationRepairUnitState::CFormationRepairUnitState( class CFormation *pUnit, CAIUnit *_pPreferredUnit )
-		: CFormationServeUnitState( _pPreferredUnit ), pUnit( pUnit ), lastRepearTime( curTime ),
-			vPointInQuestion( VNULL2 ), fRepCost( 0 ), bNearTruck( true )
+	: CFormationServeUnitState( _pPreferredUnit )
+	, pUnit( pUnit )
+	, lastRepearTime( curTime )
+	, vPointInQuestion( VNULL2 )
+	, fRepCost( 0 )
+	, bNearTruck( true )
 {
 }
 
@@ -630,7 +639,10 @@ IUnitState *CFormationResupplyUnitState::Instance( class CFormation *_pUnit, cla
 }
 
 CFormationResupplyUnitState::CFormationResupplyUnitState( class CFormation *pUnit, class CAIUnit *_pPreferredUnit )
-		: pUnit( pUnit ), vPointInQuestion( VNULL2 ), CFormationServeUnitState( _pPreferredUnit ), bNearTruck( true )
+	: pUnit( pUnit )
+	, vPointInQuestion( VNULL2 )
+	, CFormationServeUnitState( _pPreferredUnit )
+	, bNearTruck( true )
 {
 }
 
@@ -995,7 +1007,10 @@ IUnitState *CFormationLoadRuState::Instance( class CFormation *pUnit, class CBui
 }
 
 CFormationLoadRuState::CFormationLoadRuState( class CFormation *pUnit, class CBuilding *pStorage )
-		: pUnit( pUnit ), pStorage( pStorage ), nEntrance( -1 ), CFormationServeUnitState( 0 )
+	: pUnit( pUnit )
+	, pStorage( pStorage )
+	, nEntrance( -1 )
+	, CFormationServeUnitState( 0 )
 {
 }
 
@@ -1144,7 +1159,9 @@ IUnitState *CFormationPlaceAntitankState::Instance( class CFormation *_pUnit, co
 }
 
 CFormationPlaceAntitankState::CFormationPlaceAntitankState( class CFormation *_pUnit, const CVec2 &vDesiredPoint )
-		: pUnit( _pUnit ), eState( FPAS_WAIT_FOR_HOMETRANSPORT ), vDesiredPoint( vDesiredPoint )
+	: pUnit( _pUnit )
+	, eState( FPAS_WAIT_FOR_HOMETRANSPORT )
+	, vDesiredPoint( vDesiredPoint )
 {
 }
 
@@ -1316,8 +1333,11 @@ IUnitState *CFormationBuildLongObjectState::Instance( class CFormation *pUnit, c
 
 CFormationBuildLongObjectState::CFormationBuildLongObjectState( class CFormation *pUnit,
                                                                 class CLongObjectCreation *pCreation )
-		: pUnit( pUnit ), eState( ETBS_WAITING_FOR_HOMETRANSPORT ), lastTime( curTime ), pCreation( pCreation ),
-			fCompletion( 0 )
+	: pUnit( pUnit )
+	, eState( ETBS_WAITING_FOR_HOMETRANSPORT )
+	, lastTime( curTime )
+	, pCreation( pCreation )
+	, fCompletion( 0 )
 {
 	nCurrentSegment = pCreation->GetCurIndex();
 }
@@ -1593,8 +1613,12 @@ IUnitState *CFormationBuildEntrenchmentState::Instance( CFormation *pUnit,
 CFormationBuildEntrenchmentState::CFormationBuildEntrenchmentState( CFormation *pUnit,
                                                                     CLongObjectCreation *_pCreation,
                                                                     const CVec2 &_vStartPoint )
-		: pFormation( pUnit ), eState( EBES_START_APPROACHING ), lastTime( curTime ), fCompletion( 0.0f ),
-			bEndPointSelected( false ), vStartPoint( _vStartPoint )
+	: pFormation( pUnit )
+	, eState( EBES_START_APPROACHING )
+	, lastTime( curTime )
+	, fCompletion( 0.0f )
+	, bEndPointSelected( false )
+	, vStartPoint( _vStartPoint )
 {
 	DebugTrace( ">>>> CFormationBuildEntrenchmentState::CFormationBuildEntrenchmentState( %d, ..., %2.3f x %2.3f )",
 	            pUnit->GetUniqueID(),
@@ -1827,23 +1851,36 @@ bool CFormationGunCrewState::SUnit::IsAlive() const
 }
 
 CFormationGunCrewState::SUnit::SUnit()
-		: eAction( ACTION_NOTIFY_IDLE ), eNewAction( ACTION_NOTIFY_NONE ), bForce( true ), vServePoint( VNULL2 ),
-			wDirection( 0 ), timeNextUpdate( 0 )
+	: eAction( ACTION_NOTIFY_IDLE )
+	, eNewAction( ACTION_NOTIFY_NONE )
+	, bForce( true )
+	, vServePoint( VNULL2 )
+	, wDirection( 0 )
+	, timeNextUpdate( 0 )
 {
 }
 
 CFormationGunCrewState::SUnit::SUnit( class CSoldier *pUnit, const CVec2 &vServePoint, const EActionNotify eAction )
-		: pUnit( pUnit ), eAction( eAction ), eNewAction( ACTION_NOTIFY_NONE ), bForce( true ), vServePoint( vServePoint ),
-			wDirection( 0 ), timeNextUpdate( 0 )
+	: pUnit( pUnit )
+	, eAction( eAction )
+	, eNewAction( ACTION_NOTIFY_NONE )
+	, bForce( true )
+	, vServePoint( vServePoint )
+	, wDirection( 0 )
+	, timeNextUpdate( 0 )
 {
 }
 
-CFormationGunCrewState::SCrewMember::SCrewMember() : bOnPlace( false ) {}
+CFormationGunCrewState::SCrewMember::SCrewMember()
+	: bOnPlace( false )
+{
+}
 
 CFormationGunCrewState::SCrewMember::SCrewMember( const CVec2 &vServePoint,
                                                   CSoldier *pUnit,
                                                   const EActionNotify eAction )
-		: SUnit( pUnit, vServePoint, eAction ), bOnPlace( false )
+	: SUnit( pUnit, vServePoint, eAction )
+	, bOnPlace( false )
 {
 }
 
@@ -1853,8 +1890,14 @@ IUnitState *CFormationGunCrewState::Instance( class CFormation *pUnit, CArtiller
 }
 
 CFormationGunCrewState::CFormationGunCrewState( class CFormation *_pUnit, CArtillery *_pArtillery )
-		: pUnit( _pUnit ), pArtillery( _pArtillery ), startTime( curTime ), fReloadProgress( 0 ), eGunState( EGSS_OPERATE ),
-			timeLastUpdate( curTime ), nFormationSize( 0 ), nReloadPhaze( 0 )
+	: pUnit( _pUnit )
+	, pArtillery( _pArtillery )
+	, startTime( curTime )
+	, fReloadProgress( 0 )
+	, eGunState( EGSS_OPERATE )
+	, timeLastUpdate( curTime )
+	, nFormationSize( 0 )
+	, nReloadPhaze( 0 )
 {
 	pUnit->SetSelectable( false, true );
 	pArtillery->SetSelectable( pArtillery->GetPlayer() == theDipl.GetMyNumber(), true );
@@ -2732,7 +2775,9 @@ IUnitState *CFormationInstallMortarState::Instance( class CFormation *pUnit )
 }
 
 CFormationInstallMortarState::CFormationInstallMortarState( class CFormation *pUnit )
-		: pUnit( pUnit ), timeInstall( curTime + 200 ), nStage( 0 )
+	: pUnit( pUnit )
+	, timeInstall( curTime + 200 )
+	, nStage( 0 )
 {
 	CAIUnit *pMortar = pUnit->InstallCarryedMortar();
 	if ( pMortar )
@@ -2793,7 +2838,7 @@ IUnitState *CFormationUseSpyglassState::Instance( CFormation *pFormation, const 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CFormationUseSpyglassState::CFormationUseSpyglassState( CFormation *_pFormation, const CVec2 &point )
-		: pFormation( _pFormation )
+	: pFormation( _pFormation )
 {
 	bool bHoldPos = false;
 	for ( int i = 0; i < pFormation->Size(); ++i )
@@ -2852,8 +2897,10 @@ CFormationCaptureArtilleryState::Instance( CFormation *pUnit, CArtillery *pArtil
 CFormationCaptureArtilleryState::CFormationCaptureArtilleryState( class CFormation *_pUnit,
                                                                   CArtillery *_pArtillery,
                                                                   const bool bUseFormationPart )
-		: CStatusUpdatesHelper( EUS_TAKE_ARTILLERY, _pUnit ), pUnit( _pUnit ), pArtillery( _pArtillery ),
-			eState( FCAS_ESTIMATING )
+	: CStatusUpdatesHelper( EUS_TAKE_ARTILLERY, _pUnit )
+	, pUnit( _pUnit )
+	, pArtillery( _pArtillery )
+	, eState( FCAS_ESTIMATING )
 {
 	if ( ( pArtillery->IsBeingCaptured() && pArtillery->GetCapturedUnit() != pUnit ) ||
 	     ( pArtillery->HasServeCrew() && pArtillery->GetCrew() != pUnit ) || !pArtillery->MustHaveCrewToOperate() )
@@ -3012,8 +3059,11 @@ IUnitState *CFormationRepairBridgeState::Instance( class CFormation *pFormation,
 }
 
 CFormationRepairBridgeState::CFormationRepairBridgeState( class CFormation *pFormation, class CBridgeSpan *pBridge )
-		: pBridgeToRepair( pBridge->GetFullBridge() ), pUnit( pFormation ), eState( FRBS_WAIT_FOR_HOMETRANSPORT ),
-			fWorkLeft( 0 ), fWorkDone( 0 )
+	: pBridgeToRepair( pBridge->GetFullBridge() )
+	, pUnit( pFormation )
+	, eState( FRBS_WAIT_FOR_HOMETRANSPORT )
+	, fWorkLeft( 0 )
+	, fWorkDone( 0 )
 {
 	pBridge->GetFullBridge()->EnumSpans( &bridgeSpans );
 	// убрать все непостроенные сегменты ( если команда на починку недостроенного моста )
@@ -3156,8 +3206,13 @@ IUnitState *CFormationRepairBuildingState::Instance( class CFormation *pFormatio
 }
 
 CFormationRepairBuildingState::CFormationRepairBuildingState( class CFormation *pFormation, class CBuilding *pBuilding )
-		: pUnit( pFormation ), eState( EFRBS_WAIT_FOR_HOME_TRANSPORT ), pBuilding( pBuilding ), pHomeTransport( 0 ),
-			fWorkAccumulator( 0.0f ), fWorkLeft( 0.0f ), lastRepearTime( 0 )
+	: pUnit( pFormation )
+	, eState( EFRBS_WAIT_FOR_HOME_TRANSPORT )
+	, pBuilding( pBuilding )
+	, pHomeTransport( 0 )
+	, fWorkAccumulator( 0.0f )
+	, fWorkLeft( 0.0f )
+	, lastRepearTime( 0 )
 {
 }
 

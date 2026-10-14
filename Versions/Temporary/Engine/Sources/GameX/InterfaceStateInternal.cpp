@@ -548,7 +548,11 @@ struct SVar
 
 	SVar() {}
 
-	SVar( const std::string &_szName, const NGlobal::CValue &_value ) : szName( _szName ), value( _value ) {}
+	SVar( const std::string &_szName, const NGlobal::CValue &_value )
+		: szName( _szName )
+		, value( _value )
+	{
+	}
 };
 
 void CInterfaceState::OnSerialize( IBinSaver &saver )

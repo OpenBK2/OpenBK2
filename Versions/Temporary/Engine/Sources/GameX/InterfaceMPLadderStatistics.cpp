@@ -17,7 +17,7 @@
 // CInterfaceMPLadderStatistics
 
 CInterfaceMPLadderStatistics::CInterfaceMPLadderStatistics()
-		: CInterfaceScreenBase( "MPLadderStatistics", "ladder_statistics" )
+	: CInterfaceScreenBase( "MPLadderStatistics", "ladder_statistics" )
 {
 }
 

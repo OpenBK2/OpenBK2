@@ -18,7 +18,11 @@ public:
 
 		~CReactions() {}
 
-		CReactions( IWindow *_pScreen, CInterfaceEscMenu *_pInterface ) : pScreen( _pScreen ), pInterface( _pInterface ) {}
+		CReactions( IWindow *_pScreen, CInterfaceEscMenu *_pInterface )
+			: pScreen( _pScreen )
+			, pInterface( _pInterface )
+		{
+		}
 
 		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
 		virtual int Check( const std::string &szCheckName ) const;

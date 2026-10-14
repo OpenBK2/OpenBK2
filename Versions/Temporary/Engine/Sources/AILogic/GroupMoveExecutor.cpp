@@ -46,7 +46,8 @@ struct SUnitsSortByDirection
 	CVec2 vStartPoint, vDirection;
 
 	SUnitsSortByDirection( const CVec2 &_vStartPoint, const CVec2 &_vDirection )
-			: vStartPoint( _vStartPoint ), vDirection( _vDirection )
+		: vStartPoint( _vStartPoint )
+		, vDirection( _vDirection )
 	{
 	}
 
@@ -70,7 +71,8 @@ struct SUnitsSortByPriority
 	CVec2 vStartPoint, vDirection;
 
 	SUnitsSortByPriority( const CVec2 &_vStartPoint, const CVec2 &_vDirection )
-			: vStartPoint( _vStartPoint ), vDirection( _vDirection )
+		: vStartPoint( _vStartPoint )
+		, vDirection( _vDirection )
 	{
 	}
 

@@ -87,7 +87,11 @@ struct SFeedBackObjectiveState : public CObjectBase
 public:
 	SFeedBackObjectiveState() {}
 
-	SFeedBackObjectiveState( int _nState, const CVec2 &_vPos ) : nState( _nState ), vPos( _vPos ) {}
+	SFeedBackObjectiveState( int _nState, const CVec2 &_vPos )
+		: nState( _nState )
+		, vPos( _vPos )
+	{
+	}
 };
 
 struct SFeedBackUnitsArray : public CObjectBase
@@ -109,7 +113,10 @@ public:
 		return 0;
 	}
 
-	SFeedBackUnitsArray() : nParam( -1 ) {}
+	SFeedBackUnitsArray()
+		: nParam( -1 )
+	{
+	}
 };
 
 struct SAIFeedBack
@@ -130,15 +137,23 @@ struct SAIFeedBack
 public:
 	SAIFeedBack() {}
 
-	SAIFeedBack( const EFeedBack _feedBackType ) : feedBackType( _feedBackType ), nParam( uint32_t( -1 ) ) {}
+	SAIFeedBack( const EFeedBack _feedBackType )
+		: feedBackType( _feedBackType )
+		, nParam( uint32_t( -1 ) )
+	{
+	}
 
 	SAIFeedBack( const EFeedBack _feedBackType, uint32_t _nParam, CObjectBase *_pParam )
-			: feedBackType( _feedBackType ), nParam( _nParam ), pParam( _pParam )
+		: feedBackType( _feedBackType )
+		, nParam( _nParam )
+		, pParam( _pParam )
 	{
 	}
 
 	SAIFeedBack( const SAIFeedBack &feedBack )
-			: feedBackType( feedBack.feedBackType ), nParam( feedBack.nParam ), pParam( feedBack.pParam )
+		: feedBackType( feedBack.feedBackType )
+		, nParam( feedBack.nParam )
+		, pParam( feedBack.pParam )
 	{
 	}
 

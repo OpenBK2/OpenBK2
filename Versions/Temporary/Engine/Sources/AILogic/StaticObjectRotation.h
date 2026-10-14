@@ -19,7 +19,11 @@ class CRotatedArray2D
 		return 0;
 	} // dissalow serialize
 public:
-	CRotatedArray2D( TArray2D &_array, const int _nRotation ) : array( _array ), nRotation( _nRotation ) {}
+	CRotatedArray2D( TArray2D &_array, const int _nRotation )
+		: array( _array )
+		, nRotation( _nRotation )
+	{
+	}
 
 	int GetMinX() const
 	{
@@ -146,7 +150,7 @@ class CRotatedVec2 : public CVec2
 {
 public:
 	CRotatedVec2( const CVec2 &_vOrigin, const uint16_t _wAngle )
-			: CVec2( CVec2( _vOrigin.y, -_vOrigin.x ) ^ GetVectorByDirection( _wAngle ) )
+		: CVec2( CVec2( _vOrigin.y, -_vOrigin.x ) ^ GetVectorByDirection( _wAngle ) )
 	{
 	}
 };

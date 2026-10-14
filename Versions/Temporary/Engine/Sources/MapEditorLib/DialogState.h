@@ -30,7 +30,10 @@ struct MAPEDITORLIB_EXPORT SDialogState
 	std::vector<std::string> szParameters;
 	std::vector<float> fParameters;
 
-	SDialogState() : rect( 0, 0, 0, 0 ) {}
+	SDialogState()
+		: rect( 0, 0, 0, 0 )
+	{
+	}
 
 	virtual ~SDialogState() {}
 

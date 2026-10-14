@@ -16,7 +16,10 @@ struct SFileStreamHolder
 {
 	CDataStream *pStream;
 
-	SFileStreamHolder() : pStream( 0 ) {}
+	SFileStreamHolder()
+		: pStream( 0 )
+	{
+	}
 
 	~SFileStreamHolder()
 	{
@@ -185,7 +188,10 @@ struct SEnumFolderStructureParameter
 	int nIgnoreFolderCount;
 	CEnumFolderMap enumFolderMap;
 
-	SEnumFolderStructureParameter() : nIgnoreFolderCount( 1 ) {}
+	SEnumFolderStructureParameter()
+		: nIgnoreFolderCount( 1 )
+	{
+	}
 
 	bool IsFolderRelative( const std::string &rszFolder, const std::string &rszRelativeFolder );
 	void SetRelativeFolder( const std::string &rszFolder, const std::string &rszRelativeFolder );

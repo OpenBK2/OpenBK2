@@ -56,13 +56,13 @@ class COpenModWxDialog : public CWxToolDialog
 
 public:
 	COpenModWxDialog( wxWindow *pParent, const std::vector<NMOD::SMOD> &_rModList )
-			: CWxToolDialog( pParent,
-	                     wxID_ANY,
-	                     "Open MOD",
-	                     wxDefaultPosition,
-	                     wxSize( 380, 260 ),
-	                     wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
-				rModList( _rModList )
+		: CWxToolDialog( pParent,
+	                   wxID_ANY,
+	                   "Open MOD",
+	                   wxDefaultPosition,
+	                   wxSize( 380, 260 ),
+	                   wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+		, rModList( _rModList )
 	{
 		NMOD::SMOD attachedMOD;
 		bHasAttached = NMOD::GetAttachedMOD( &attachedMOD );

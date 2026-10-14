@@ -14,7 +14,11 @@ struct SEdge
 	//
 	SEdge() {}
 
-	SEdge( uint16_t _wS, uint16_t _wF ) : wStart( _wS ), wFinish( _wF ) {}
+	SEdge( uint16_t _wS, uint16_t _wF )
+		: wStart( _wS )
+		, wFinish( _wF )
+	{
+	}
 };
 
 class _3DMOTOR_EXPORT CEdgesInfo
@@ -50,7 +54,11 @@ struct SJunction
 
 	SJunction() {}
 
-	SJunction( const CVec3 &_pt, bool _bGr = false ) : pt( _pt ), bGround( _bGr ) {}
+	SJunction( const CVec3 &_pt, bool _bGr = false )
+		: pt( _pt )
+		, bGround( _bGr )
+	{
+	}
 };
 
 //class CPrecalcSpheres;
@@ -114,7 +122,11 @@ struct SConvexHull
 	             const SHMatrix &_trans,
 	             SSourceInfo &_src,
 	             int _nUserID ) //, const vector<CPtr<CPrecalcSpheres> > &_precalc )
-			: points( _points ), tris( _tris ), trans( _trans ), src( _src ), nUserID( _nUserID )
+		: points( _points )
+		, tris( _tris )
+		, trans( _trans )
+		, src( _src )
+		, nUserID( _nUserID )
 	{
 	} //, precalc(_precalc) {}
 

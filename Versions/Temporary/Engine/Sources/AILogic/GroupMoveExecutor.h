@@ -25,10 +25,21 @@ public:
 	}
 
 public:
-	SUnitListInfo() : pUnit( 0 ), bCanGo( false ), bGoAway( false ), bAtPlace( false ), nCell( -1 ) {}
+	SUnitListInfo()
+		: pUnit( 0 )
+		, bCanGo( false )
+		, bGoAway( false )
+		, bAtPlace( false )
+		, nCell( -1 )
+	{
+	}
 
 	SUnitListInfo( CCommonUnit *_pUnit )
-			: pUnit( _pUnit ), bCanGo( false ), bGoAway( false ), bAtPlace( false ), nCell( -1 )
+		: pUnit( _pUnit )
+		, bCanGo( false )
+		, bGoAway( false )
+		, bAtPlace( false )
+		, nCell( -1 )
 	{
 	}
 };
@@ -52,11 +63,23 @@ public:
 	}
 
 public:
-	SPriorityGroupPosition() : nCount( 0 ), vUnitSize( VNULL2 ) {}
+	SPriorityGroupPosition()
+		: nCount( 0 )
+		, vUnitSize( VNULL2 )
+	{
+	}
 
-	SPriorityGroupPosition( const CVec2 &_vUnitSize ) : nCount( 1 ), vUnitSize( _vUnitSize ) {}
+	SPriorityGroupPosition( const CVec2 &_vUnitSize )
+		: nCount( 1 )
+		, vUnitSize( _vUnitSize )
+	{
+	}
 
-	SPriorityGroupPosition( const float x, const float y ) : nCount( 1 ), vUnitSize( x, y ) {}
+	SPriorityGroupPosition( const float x, const float y )
+		: nCount( 1 )
+		, vUnitSize( x, y )
+	{
+	}
 };
 
 typedef det_map<int, SPriorityGroupPosition> CPriorityGroupMap;
@@ -77,10 +100,14 @@ public:
 	}
 
 public:
-	CGroupMoveExecutorEvent() : nUnitID( -1 ) {}
+	CGroupMoveExecutorEvent()
+		: nUnitID( -1 )
+	{
+	}
 
 	CGroupMoveExecutorEvent( const SExecutorEventParam &_param, const int _nUnitID )
-			: nUnitID( _nUnitID ), CExecutorEvent( _param )
+		: nUnitID( _nUnitID )
+		, CExecutorEvent( _param )
 	{
 	}
 
@@ -164,7 +191,10 @@ public:
 	void DeleteDeadUnits();
 
 public:
-	CGroupMoveExecutor() : CExecutor( TID_MOVE_BY_FORMATION, 1 ) {}
+	CGroupMoveExecutor()
+		: CExecutor( TID_MOVE_BY_FORMATION, 1 )
+	{
+	}
 
 	const bool Init( const std::vector<CCommonUnit *> &units, const struct SAIUnitCmd &cmd );
 

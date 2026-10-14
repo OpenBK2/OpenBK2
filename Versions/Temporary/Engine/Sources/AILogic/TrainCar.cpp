@@ -500,7 +500,10 @@ IUnitState *CTrainCarMoveToState::Instance( CAIUnit *_pUnit )
 }
 
 CTrainCarMoveToState::CTrainCarMoveToState( CTrainCar *_pUnit )
-		: CFreeFireManager( _pUnit ), pUnit( _pUnit ), bWaiting( true ), pPath( 0 )
+	: CFreeFireManager( _pUnit )
+	, pUnit( _pUnit )
+	, bWaiting( true )
+	, pPath( 0 )
 {
 	//pUnit->UnlockTiles();
 	//pUnit->FixUnlocking();
@@ -561,7 +564,10 @@ IUnitState *CTrainCarAttackUnitState::Instance( CAIUnit *_pUnit, CAIUnit *_pTarg
 }
 
 CTrainCarAttackUnitState::CTrainCarAttackUnitState( CTrainCar *_pUnit, CAIUnit *_pTarget )
-		: pUnit( _pUnit ), pTarget( _pTarget ), eState( EAS_STARTING ), pPath( 0 )
+	: pUnit( _pUnit )
+	, pTarget( _pTarget )
+	, eState( EAS_STARTING )
+	, pPath( 0 )
 {
 	//pUnit->UnlockTiles();
 	//pUnit->FixUnlocking();
@@ -692,7 +698,10 @@ IUnitState *CTrainCarAttackObjectState::Instance( CAIUnit *_pUnit, CStaticObject
 }
 
 CTrainCarAttackObjectState::CTrainCarAttackObjectState( CTrainCar *_pUnit, CStaticObject *_pTarget )
-		: pUnit( _pUnit ), pTarget( _pTarget ), eState( EAS_STARTING ), pPath( 0 )
+	: pUnit( _pUnit )
+	, pTarget( _pTarget )
+	, eState( EAS_STARTING )
+	, pPath( 0 )
 {
 	//pUnit->UnlockTiles();
 	//pUnit->FixUnlocking();

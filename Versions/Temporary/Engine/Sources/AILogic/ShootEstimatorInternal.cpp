@@ -59,7 +59,10 @@ const float F( const float fHPPercent, const float fT0, const float fT1, const f
 }
 
 CTankShootEstimator::CTankShootEstimator( CAIUnit *_pOwner )
-		: pOwner( _pOwner ), fBestRating( -1.0f ), bDamageToCurTargetUpdated( false ), nBestGun( -1 )
+	: pOwner( _pOwner )
+	, fBestRating( -1.0f )
+	, bDamageToCurTargetUpdated( false )
+	, nBestGun( -1 )
 {
 	dwForbidden = 0;
 	dwDefaultForbidden = 0;
@@ -505,9 +508,15 @@ const int CTankShootEstimator::GetNumberOfBestGun() const
 const int CSoldierShootEstimator::N_GOOD_NUMBER_ATTACKING_GRENADES = 6;
 
 CSoldierShootEstimator::CSoldierShootEstimator( CAIUnit *_pOwner )
-		: pOwner( _pOwner ), bHasGrenades( pOwner->GetNGuns() >= 2 ), bUseGrenadeAutocast( false ),
-			bUseGrenadeFixed( false ), fBestRating( -1.0f ), bDamageToCurTargetUpdated( false ), nBestGun( -1 ),
-			bThrowGrenade( false ), dwForbidden( 0 )
+	: pOwner( _pOwner )
+	, bHasGrenades( pOwner->GetNGuns() >= 2 )
+	, bUseGrenadeAutocast( false )
+	, bUseGrenadeFixed( false )
+	, fBestRating( -1.0f )
+	, bDamageToCurTargetUpdated( false )
+	, nBestGun( -1 )
+	, bThrowGrenade( false )
+	, dwForbidden( 0 )
 {
 	pMosinStats = theUnitCreation.GetMosinStats();
 }
@@ -882,7 +891,9 @@ void CPlaneDeffensiveFireShootEstimator::SetGun( CBasicGun *_pGun )
 }
 
 CPlaneDeffensiveFireShootEstimator::CPlaneDeffensiveFireShootEstimator( class CAIUnit *pOwner )
-		: pOwner( pOwner ), fBestRating( -1.0f ), bDamageToCurTargetUpdated( false )
+	: pOwner( pOwner )
+	, fBestRating( -1.0f )
+	, bDamageToCurTargetUpdated( false )
 {
 }
 
@@ -953,7 +964,8 @@ const int CPlaneDeffensiveFireShootEstimator::GetNumberOfBestGun() const
 //*******************************************************************
 
 CPlaneShturmovikShootEstimator::CPlaneShturmovikShootEstimator( class CAIUnit *pOwner )
-		: pOwner( pOwner ), vCenter( VNULL2 )
+	: pOwner( pOwner )
+	, vCenter( VNULL2 )
 {
 }
 
@@ -1194,7 +1206,10 @@ struct IObstacle *CShootEstimatorForObstacles::GetBest() const
 //*******************************************************************
 
 CShootEstimatorSupportAAGun::CShootEstimatorSupportAAGun( class CAIUnit *_pOwner )
-		: pOwner( _pOwner ), fBestRating( 0.f ), dwForbidden( 0 ), bDamageToCurTargetUpdated( false )
+	: pOwner( _pOwner )
+	, fBestRating( 0.f )
+	, dwForbidden( 0 )
+	, bDamageToCurTargetUpdated( false )
 {
 }
 

@@ -162,7 +162,10 @@ void CDrawMapPixelFunctional::DrawOctoCircle( int nX0, int nY0, float fR )
 #define STEP2 8*/
 #define STEP_TWIN_OFFSET 0
 
-CWindowPotentialLines::CWindowPotentialLines() : bValid( false ), bLayerInit( false ), bDrawDashes( false )
+CWindowPotentialLines::CWindowPotentialLines()
+	: bValid( false )
+	, bLayerInit( false )
+	, bDrawDashes( false )
 {
 	pTerritoryLayer = new CWindowChapterMapLayer;
 }

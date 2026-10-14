@@ -66,7 +66,10 @@ class CDirectionalLight : public ILight
 	int nVersionID;
 
 public:
-	CDirectionalLight() : nVersionID( 0 ) {}
+	CDirectionalLight()
+		: nVersionID( 0 )
+	{
+	}
 
 	CDirectionalLight( CFuncBase<CVec3> *pColor,
 	                   CFuncBase<CVec3> *pGlossColor,
@@ -165,9 +168,16 @@ class CDynamicPointLight : public ILight
 	}
 
 public:
-	CDynamicPointLight() : bIsOn( true ) {}
+	CDynamicPointLight()
+		: bIsOn( true )
+	{
+	}
 
-	CDynamicPointLight( CPtrFuncBase<CAnimLight> *_p ) : pLight( _p ), bIsOn( true ) {}
+	CDynamicPointLight( CPtrFuncBase<CAnimLight> *_p )
+		: pLight( _p )
+		, bIsOn( true )
+	{
+	}
 
 	virtual bool CheckCulling( CTransformStack *pTS );
 	void AddToState( SPerVertexLightState *pRes );
@@ -211,7 +221,10 @@ protected:
 	virtual void Recalc();
 
 public:
-	CLightStateNode() : bForceRecalc( false ) {}
+	CLightStateNode()
+		: bForceRecalc( false )
+	{
+	}
 
 	//
 	void SetWarFogBlend( float fBlend );

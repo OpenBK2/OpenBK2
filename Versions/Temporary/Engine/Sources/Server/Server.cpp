@@ -33,7 +33,7 @@ CGameServer::CGameServer( CCommands *_pCommands,
                           const std::string &szCfgFile,
                           const std::string &szBackendOverride,
                           const std::string &szDatabaseFileOverride )
-		: pCommands( _pCommands )
+	: pCommands( _pCommands )
 {
 	REGISTER_CMD_FUNC( ESC_CLIENTS, CommandClientsList );
 	REGISTER_CMD_FUNC( ESC_CLIENT_STATE, CommandClientState );

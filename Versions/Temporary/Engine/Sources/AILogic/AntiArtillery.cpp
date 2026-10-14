@@ -22,7 +22,11 @@ extern SCheats theCheats;
 extern CFeedBackSystem theFeedBackSystem;
 
 CAntiArtillery::CAntiArtillery( CAIUnit *_pOwner )
-		: pOwner( _pOwner ), fMaxRadius( 0.0f ), nParty( -1 ), lastScan( 0 ), bIsAA( false )
+	: pOwner( _pOwner )
+	, fMaxRadius( 0.0f )
+	, nParty( -1 )
+	, lastScan( 0 )
+	, bIsAA( false )
 {
 	SetUniqueIdForObjects();
 }

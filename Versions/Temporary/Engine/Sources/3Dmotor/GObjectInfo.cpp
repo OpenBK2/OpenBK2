@@ -621,8 +621,10 @@ namespace
 		              NAnimation::CGrannyFileInfo *_pGrannySkeletonFile,
 		              const NGltf::TGltfFilePtr &_geometryFile,
 		              std::size_t _sourceSkin )
-				: key( _key ), pGrannySkeletonFile( _pGrannySkeletonFile ), geometryFile( _geometryFile ),
-					sourceSkin( _sourceSkin )
+			: key( _key )
+			, pGrannySkeletonFile( _pGrannySkeletonFile )
+			, geometryFile( _geometryFile )
+			, sourceSkin( _sourceSkin )
 		{
 		}
 

@@ -278,7 +278,11 @@ struct CGlyphAtlas::SState
 	int nDirtyTop = 0, nDirtyBottom = 0;
 };
 
-CGlyphAtlas::CGlyphAtlas() : pRecord( 0 ), nCellHeight( 0 ) {}
+CGlyphAtlas::CGlyphAtlas()
+	: pRecord( 0 )
+	, nCellHeight( 0 )
+{
+}
 
 CGlyphAtlas::~CGlyphAtlas() {}
 
@@ -705,7 +709,8 @@ int CRuntimeFontFormat::operator&( IBinSaver &saver )
 }
 
 CRuntimeFontInfo::CRuntimeFontInfo( const SFont &sFont, CGlyphAtlas *_pAtlas )
-		: CFontInfo( sFont, _pAtlas, new CRuntimeFontFormat( _pAtlas ) ), pAtlas( _pAtlas )
+	: CFontInfo( sFont, _pAtlas, new CRuntimeFontFormat( _pAtlas ) )
+	, pAtlas( _pAtlas )
 {
 }
 

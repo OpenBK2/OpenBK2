@@ -25,10 +25,10 @@ class CBitFieldWxDialog : public CWxToolDialog
 
 public:
 	CBitFieldWxDialog( wxWindow *pParent, const std::string &rszFieldsFile, const uint8_t *pData, int nSize )
-			// "name" is IDD_BIT_FIELD's caption, and nothing ever replaces it.
-			: CWxToolDialog(
-						pParent, wxID_ANY, "name", wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
-				placement( "CBinaryBitFieldDialog" )
+		// "name" is IDD_BIT_FIELD's caption, and nothing ever replaces it.
+		: CWxToolDialog(
+					pParent, wxID_ANY, "name", wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+		, placement( "CBinaryBitFieldDialog" )
 	{
 		NBitField::LoadFields( rszFieldsFile, &fields );
 

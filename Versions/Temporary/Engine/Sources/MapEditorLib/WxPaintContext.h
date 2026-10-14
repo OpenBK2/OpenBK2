@@ -142,7 +142,10 @@ public:
 		       ( static_cast<TWidgetColor>( rColour.Blue() ) << 16 );
 	}
 
-	CWxPaintContext( wxDC &_rDC, const wxWindow *_pWindow ) : rDC( _rDC ), pWindow( _pWindow ), currentPosition( 0, 0 )
+	CWxPaintContext( wxDC &_rDC, const wxWindow *_pWindow )
+		: rDC( _rDC )
+		, pWindow( _pWindow )
+		, currentPosition( 0, 0 )
 	{
 		rDC.SetTextForeground( *wxBLACK );
 		rDC.SetTextBackground( *wxWHITE );

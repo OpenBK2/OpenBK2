@@ -51,8 +51,13 @@ public:
 
 public:
 	CAviation()
-			: bBombsAutocast( false ), fFuel( 0.0f ), vPlanesShift( VNULL3 ), vSpeed( VNULL3 ), vPos( VNULL3 ),
-				vNormale( VNULL3 ), vInitialPoint( VNULL2 )
+		: bBombsAutocast( false )
+		, fFuel( 0.0f )
+		, vPlanesShift( VNULL3 )
+		, vSpeed( VNULL3 )
+		, vPos( VNULL3 )
+		, vNormale( VNULL3 )
+		, vInitialPoint( VNULL2 )
 	{
 	}
 

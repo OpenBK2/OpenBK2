@@ -128,7 +128,10 @@ void CStaticMapHeights::Init( const int nSizeXInTiles, const int nSizeYInTiles, 
 }
 
 CStaticMapHeights::CStaticMapHeights( const int nSizeXInTiles, const int nSizeYInTiles, const int nTileSize )
-		: nStaticMapSizeX( -1 ), nStaticMapSizeY( -1 ), nLastHeightsID( -1 ), nTileSize( -1 )
+	: nStaticMapSizeX( -1 )
+	, nStaticMapSizeY( -1 )
+	, nLastHeightsID( -1 )
+	, nTileSize( -1 )
 {
 	Init( nSizeXInTiles, nSizeYInTiles, nTileSize );
 }

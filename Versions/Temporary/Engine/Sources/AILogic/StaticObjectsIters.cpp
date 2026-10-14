@@ -8,7 +8,9 @@
 //*******************************************************************
 
 CMinesIter::CMinesIter( const CVec2 &vCenter, float fR, const int _nParty, const bool _bAllMines )
-		: CStObjCircleIter<false>( vCenter, fR ), nParty( _nParty ), bAllMines( _bAllMines )
+	: CStObjCircleIter<false>( vCenter, fR )
+	, nParty( _nParty )
+	, bAllMines( _bAllMines )
 {
 	Reset();
 }

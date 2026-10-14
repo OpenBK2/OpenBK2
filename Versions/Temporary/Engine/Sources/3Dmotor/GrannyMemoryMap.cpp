@@ -12,10 +12,19 @@ struct SMemoryInfo
 	granny_int32x nAlignment;
 	granny_int32x nSize;
 
-	SMemoryInfo() : pszFile( 0 ), nLine( 0 ), nAlignment( 0 ), nSize( 0 ) {}
+	SMemoryInfo()
+		: pszFile( 0 )
+		, nLine( 0 )
+		, nAlignment( 0 )
+		, nSize( 0 )
+	{
+	}
 
 	SMemoryInfo( char const *_pszFile, granny_int32x _nLine, granny_int32x _nAlignment, granny_int32x _nSize )
-			: pszFile( _pszFile ), nLine( _nLine ), nAlignment( _nAlignment ), nSize( _nSize )
+		: pszFile( _pszFile )
+		, nLine( _nLine )
+		, nAlignment( _nAlignment )
+		, nSize( _nSize )
 	{
 	}
 };

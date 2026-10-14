@@ -32,7 +32,9 @@ static const std::vector<NGfx::SCompactTransformer> noMMXTransformers;
 // IPart
 
 IPart::IPart( CPtrFuncBase<CObjectInfo> *pData, CPerMaterialCombiner *_pCombiner )
-		: pObjInfo( pData ), pCombiner( _pCombiner ), fAverageTriArea( 0 )
+	: pObjInfo( pData )
+	, pCombiner( _pCombiner )
+	, fAverageTriArea( 0 )
 {
 	if ( IsValid( pCombiner ) )
 	{
@@ -140,7 +142,8 @@ bool CAnimationWatch::NeedUpdate()
 
 // CPerMaterialCombiner
 
-CPerMaterialCombiner::CPerMaterialCombiner( int ) : bHasChanged( false )
+CPerMaterialCombiner::CPerMaterialCombiner( int )
+	: bHasChanged( false )
 {
 	pAnimation = new CAnimationWatch( this, true );
 	pFullChange = new CAnimationWatch( this, false );
@@ -314,7 +317,10 @@ struct STGenericTransformer
 	typedef TParam TRes;
 	const SPerVertexLightState &ls;
 
-	STGenericTransformer( const SPerVertexLightState &_ls ) : ls( _ls ) {}
+	STGenericTransformer( const SPerVertexLightState &_ls )
+		: ls( _ls )
+	{
+	}
 
 	void CopyTransform( CObjectInfo *pObjInfo,
 	                    const SUVInfo *pSrc,
@@ -463,7 +469,10 @@ struct SPartTransformer : public T
 {
 	SPartTransformer() {}
 
-	SPartTransformer( const SPerVertexLightState &_ls ) : T( _ls ) {}
+	SPartTransformer( const SPerVertexLightState &_ls )
+		: T( _ls )
+	{
+	}
 
 	int DoTransform( IPart *p, typename T::TRes *pRes, const std::vector<CVec3> &transformed )
 	{
@@ -535,7 +544,9 @@ struct STGfxCacheTransformer : public SPartTransformer<STGenericTransformer<TVer
 	                       int nTotal,
 	                       const SPerVertexLightState &_ls,
 	                       NGfx::EBufferUsage usage )
-			: TParent( _ls ), geom( pGeom, nTotal, usage ), nVert( 0 )
+		: TParent( _ls )
+		, geom( pGeom, nTotal, usage )
+		, nVert( 0 )
 	{
 	}
 

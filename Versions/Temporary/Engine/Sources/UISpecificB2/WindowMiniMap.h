@@ -22,7 +22,13 @@ protected:
 	void Recalc();
 
 public:
-	CMiniMapLayer() : nWidth( 0 ), nHeight( 0 ), bNeedUpdate( false ), nLastUpdateTime( 0 ) {}
+	CMiniMapLayer()
+		: nWidth( 0 )
+		, nHeight( 0 )
+		, bNeedUpdate( false )
+		, nLastUpdateTime( 0 )
+	{
+	}
 
 	void SetSize( const int nWidth, const int nHeight );
 
@@ -64,7 +70,9 @@ class CDrawMiniMapPixelFunctional
 
 public:
 	CDrawMiniMapPixelFunctional( CMiniMapLayer *_pMiniMapLayer, NGfx::SPixel8888 _color, CArray2D1Bit *_pMaskMiniMap )
-			: pMiniMapLayer( _pMiniMapLayer ), color( _color ), pMaskMiniMap( _pMaskMiniMap )
+		: pMiniMapLayer( _pMiniMapLayer )
+		, color( _color )
+		, pMaskMiniMap( _pMaskMiniMap )
 	{
 		nWidth = pMiniMapLayer->GetWidth();
 		nHeight = pMiniMapLayer->GetHeight();

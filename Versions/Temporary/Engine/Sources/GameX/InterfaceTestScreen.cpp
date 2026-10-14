@@ -16,7 +16,10 @@
 
 // CInterfaceTestScreen
 
-CInterfaceTestScreen::CInterfaceTestScreen() : CInterfaceScreenBase( "TestScreen", "default" ) {}
+CInterfaceTestScreen::CInterfaceTestScreen()
+	: CInterfaceScreenBase( "TestScreen", "default" )
+{
+}
 
 bool CInterfaceTestScreen::Init()
 {

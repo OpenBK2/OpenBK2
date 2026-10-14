@@ -34,7 +34,10 @@ class CGameLobby : public CPacketProcessor
 	{
 		CGameLobby *pThis;
 
-		SGetGameInfoFunc( CGameLobby *_pThis ) : pThis( _pThis ) {}
+		SGetGameInfoFunc( CGameLobby *_pThis )
+			: pThis( _pThis )
+		{
+		}
 
 		const bool operator()( const int nGameID, struct SGameInfo *pInfo ) const
 		{
@@ -85,7 +88,10 @@ protected:
 	virtual bool PlayerNeedSpecificGameInfo() const = 0;
 
 public:
-	CGameLobby() : nGamesCounter( 0 ) {}
+	CGameLobby()
+		: nGamesCounter( 0 )
+	{
+	}
 
 	CGameLobby( class CClients *pClients, const std::string &szCfgFile );
 

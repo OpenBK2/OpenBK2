@@ -35,7 +35,8 @@ public:
 		CReactions() {}
 
 		CReactions( IWindow *_pScreen, CInterfaceSaveLoadMenu *_pInterface )
-				: pScreen( _pScreen ), pInterface( _pInterface )
+			: pScreen( _pScreen )
+			, pInterface( _pInterface )
 		{
 		}
 

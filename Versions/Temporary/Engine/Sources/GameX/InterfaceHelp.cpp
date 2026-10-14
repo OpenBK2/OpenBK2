@@ -9,7 +9,10 @@
 
 // CInterfaceHelp
 
-CInterfaceHelp::CInterfaceHelp() : CInterfaceScreenBase( "Help", "help" ) {}
+CInterfaceHelp::CInterfaceHelp()
+	: CInterfaceScreenBase( "Help", "help" )
+{
+}
 
 CInterfaceHelp::~CInterfaceHelp() {}
 

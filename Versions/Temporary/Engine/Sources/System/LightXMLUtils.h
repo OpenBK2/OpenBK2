@@ -215,7 +215,11 @@ class CWriteStream
 	}
 
 public:
-	CWriteStream( CDataStream *_pStream ) : pStream( _pStream ), buffer( 2048 ) {}
+	CWriteStream( CDataStream *_pStream )
+		: pStream( _pStream )
+		, buffer( 2048 )
+	{
+	}
 
 	~CWriteStream()
 	{

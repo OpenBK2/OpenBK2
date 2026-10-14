@@ -27,7 +27,9 @@ class CWindowScrollableContainerBase : public CWindow,
 		SElement() {}
 
 		SElement( CWindow *_pChild, const int _bSelectable, const int _nPos, CWindow *pNegativeSelecion )
-				: szName( _pChild->GetName() ), bSelectable( _bSelectable ), nPos( _nPos )
+			: szName( _pChild->GetName() )
+			, bSelectable( _bSelectable )
+			, nPos( _nPos )
 		{
 			if ( pNegativeSelecion )
 			{
@@ -51,7 +53,11 @@ class CWindowScrollableContainerBase : public CWindow,
 		CPtr<IWindowSorter> pSorter;
 		CWindow *pContainer;
 
-		SSortPred( IWindowSorter *_pSorter, CWindow *_pContainer ) : pSorter( _pSorter ), pContainer( _pContainer ) {}
+		SSortPred( IWindowSorter *_pSorter, CWindow *_pContainer )
+			: pSorter( _pSorter )
+			, pContainer( _pContainer )
+		{
+		}
 
 		bool operator()( const SElement &e1, const SElement &e2 ) const
 		{
@@ -100,7 +106,10 @@ protected:
 	bool IsHorisontal() const;
 
 public:
-	CWindowScrollableContainerBase() : nPosSize( 0 ) {}
+	CWindowScrollableContainerBase()
+		: nPosSize( 0 )
+	{
+	}
 
 	virtual void SliderPosition( const float fPosition, class CWindow *pWho );
 

@@ -14,8 +14,12 @@ CDecalFader::CDecalFader( CObjectBase *_pDecal,
                           STime _tFadeOutStart,
                           STime _tFadeOutEnd,
                           CFuncBase<STime> *_pTime )
-		: pTime( _pTime ), tFadeInStart( _tFadeInStart ), tFadeInEnd( _tFadeInEnd ), tFadeOutStart( _tFadeOutStart ),
-			tFadeOutEnd( _tFadeOutEnd ), bFrozen( false )
+	: pTime( _pTime )
+	, tFadeInStart( _tFadeInStart )
+	, tFadeInEnd( _tFadeInEnd )
+	, tFadeOutStart( _tFadeOutStart )
+	, tFadeOutEnd( _tFadeOutEnd )
+	, bFrozen( false )
 {
 	ASSERT( tFadeInStart <= tFadeInEnd );
 	ASSERT( tFadeInEnd <= tFadeOutStart );

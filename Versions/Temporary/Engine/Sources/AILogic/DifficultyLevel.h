@@ -42,7 +42,11 @@ public:
 	void OnSerialize( IBinSaver &f );
 
 public:
-	CDifficultyLevel() : nLevel( 1 ), nCheatLevel( 255 ) {}
+	CDifficultyLevel()
+		: nLevel( 1 )
+		, nCheatLevel( 255 )
+	{
+	}
 
 	void Clear()
 	{

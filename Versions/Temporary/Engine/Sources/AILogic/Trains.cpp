@@ -587,7 +587,9 @@ IUnitState *CTrainRestState::Instance( CAIUnit *_pUnit )
 	return new CTrainRestState( _pUnit );
 }
 
-CTrainRestState::CTrainRestState( CAIUnit *_pUnit ) : CFreeFireManager( _pUnit ), pUnit( _pUnit )
+CTrainRestState::CTrainRestState( CAIUnit *_pUnit )
+	: CFreeFireManager( _pUnit )
+	, pUnit( _pUnit )
 {
 	CTrainLocomotive *pUnit = dynamic_cast<CTrainLocomotive *>( _pUnit );
 	if ( pUnit )
@@ -629,7 +631,12 @@ IUnitState *CLocomotiveMoveState::Instance( CAIUnit *_pUnit, const CVec2 &point 
 }
 
 CLocomotiveMoveState::CLocomotiveMoveState( CTrainLocomotive *_pUnit, const CVec2 &_point )
-		: CFreeFireManager( _pUnit ), pUnit( _pUnit ), point( _point ), startTime( curTime ), bWaiting( true ), pPath( 0 )
+	: CFreeFireManager( _pUnit )
+	, pUnit( _pUnit )
+	, point( _point )
+	, startTime( curTime )
+	, bWaiting( true )
+	, pPath( 0 )
 {
 	pUnit->SetMovingTileLocks( true );
 
@@ -841,7 +848,10 @@ IUnitState *CLocomotiveAttackUnitState::Instance( CAIUnit *_pUnit, CAIUnit *_pTa
 }
 
 CLocomotiveAttackUnitState::CLocomotiveAttackUnitState( CTrainLocomotive *_pUnit, CAIUnit *_pTarget )
-		: pUnit( _pUnit ), pTarget( _pTarget ), eState( EAS_STARTING ), pPath( 0 )
+	: pUnit( _pUnit )
+	, pTarget( _pTarget )
+	, eState( EAS_STARTING )
+	, pPath( 0 )
 {
 	pUnit->SetMovingTileLocks( true );
 
@@ -955,7 +965,10 @@ IUnitState *CLocomotiveAttackObjState::Instance( CAIUnit *_pUnit, CStaticObject 
 }
 
 CLocomotiveAttackObjState::CLocomotiveAttackObjState( CTrainLocomotive *_pUnit, CStaticObject *_pTarget )
-		: pUnit( _pUnit ), pTarget( _pTarget ), eState( EAS_STARTING ), pPath( 0 )
+	: pUnit( _pUnit )
+	, pTarget( _pTarget )
+	, eState( EAS_STARTING )
+	, pPath( 0 )
 {
 	pUnit->SetMovingTileLocks( true );
 

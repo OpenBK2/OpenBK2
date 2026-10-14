@@ -23,7 +23,10 @@ class CKillCorpseExecutor : public CExecutor
 	}
 
 public:
-	CKillCorpseExecutor() : killTime( 0 ) {}
+	CKillCorpseExecutor()
+		: killTime( 0 )
+	{
+	}
 
 	CKillCorpseExecutor( CFakeCorpseStaticObject *pObject );
 

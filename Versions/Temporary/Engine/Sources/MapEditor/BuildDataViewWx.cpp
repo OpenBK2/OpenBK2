@@ -68,13 +68,14 @@ class CBuildDataWxDialog : public CWxOwnerDialog, public CPCBaseDialog
 
 public:
 	CBuildDataWxDialog( wxWindow *pParent, SBuildDataParams *_pBuildDataParams, IBuildDataCallback *_pBuildDataCallback )
-			: CWxOwnerDialog( pParent,
-	                      wxID_ANY,
-	                      "Create Game Data Base Object",
-	                      wxDefaultPosition,
-	                      wxDefaultSize,
-	                      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
-				pBuildDataParams( _pBuildDataParams ), pBuildDataCallback( _pBuildDataCallback )
+		: CWxOwnerDialog( pParent,
+	                    wxID_ANY,
+	                    "Create Game Data Base Object",
+	                    wxDefaultPosition,
+	                    wxDefaultSize,
+	                    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+		, pBuildDataParams( _pBuildDataParams )
+		, pBuildDataCallback( _pBuildDataCallback )
 	{
 		// IDD_PC_BD, top to bottom: the name, "Properties:" over the grid, the
 		// status line, then the export check with OK and Cancel on its line.

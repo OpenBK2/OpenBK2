@@ -29,7 +29,11 @@ public:
 
 private:
 protected:
-	CIdleMechProcess() : nID( 0 ), bRandomLocator( false ) {}
+	CIdleMechProcess()
+		: nID( 0 )
+		, bRandomLocator( false )
+	{
+	}
 
 public:
 	CIdleMechProcess( int nObjectID,

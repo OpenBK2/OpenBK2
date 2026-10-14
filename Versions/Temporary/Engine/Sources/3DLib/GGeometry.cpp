@@ -107,7 +107,11 @@ struct SCompoundPosKey
 
 	SCompoundPosKey() {}
 
-	SCompoundPosKey( const CVec3 &_v, const SRealVertexWeight &_w ) : v( _v ), w( _w ) {}
+	SCompoundPosKey( const CVec3 &_v, const SRealVertexWeight &_w )
+		: v( _v )
+		, w( _w )
+	{
+	}
 
 	bool operator==( const SCompoundPosKey &k ) const
 	{
@@ -415,7 +419,9 @@ struct SVertexShift
 	int nXShift, nYShift;
 
 	SVertexShift( int _nVertex, int _nXShift, int _nYShift )
-			: nVertex( _nVertex ), nXShift( _nXShift ), nYShift( _nYShift )
+		: nVertex( _nVertex )
+		, nXShift( _nXShift )
+		, nYShift( _nYShift )
 	{
 	}
 };

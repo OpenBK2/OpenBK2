@@ -109,7 +109,10 @@ private:
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit );
 
-	CMechUnitEntrenchSelfState() : pUnit( 0 ) {}
+	CMechUnitEntrenchSelfState()
+		: pUnit( 0 )
+	{
+	}
 
 	CMechUnitEntrenchSelfState( class CAIUnit *pUnit );
 	virtual void Segment();
@@ -149,7 +152,10 @@ class CSoldierEnterHoldSectorState : public IUnitState
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit );
 
-	CSoldierEnterHoldSectorState() : pUnit( 0 ) {}
+	CSoldierEnterHoldSectorState()
+		: pUnit( 0 )
+	{
+	}
 
 	CSoldierEnterHoldSectorState( class CAIUnit *_pUnit );
 
@@ -217,7 +223,10 @@ public:
 	void SendToDestination( const CVec2 &vDropPoint, const CVec2 &vDir );
 
 public:
-	CMechUnitInsideMechUnitState() : pUnit( 0 ) {}
+	CMechUnitInsideMechUnitState()
+		: pUnit( 0 )
+	{
+	}
 
 	CMechUnitInsideMechUnitState( class CAIUnit *_pUnit, class CMilitaryCar *pTransport, const bool bImmidiate );
 

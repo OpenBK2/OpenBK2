@@ -76,7 +76,9 @@ public:
 	CConnectServerPacket() {}
 
 	CConnectServerPacket( const EConnectionState _eConnectionState, const ERejectReason _eRejectReason )
-			: eConnectionState( _eConnectionState ), eRejectReason( _eRejectReason ), CNetPacket( 0 )
+		: eConnectionState( _eConnectionState )
+		, eRejectReason( _eRejectReason )
+		, CNetPacket( 0 )
 	{
 	}
 };
@@ -99,7 +101,11 @@ public:
 
 	CMyIDPacket() {}
 
-	CMyIDPacket( const int nClientID ) : CNetPacket( nClientID ), nMyID( nClientID ) {}
+	CMyIDPacket( const int nClientID )
+		: CNetPacket( nClientID )
+		, nMyID( nClientID )
+	{
+	}
 };
 
 class CSystemBroadcastPacket : public CNetPacket
@@ -118,7 +124,8 @@ public:
 	CSystemBroadcastPacket() {}
 
 	CSystemBroadcastPacket( const int nClientID, const std::wstring &_wszText )
-			: CNetPacket( nClientID ), wszText( _wszText )
+		: CNetPacket( nClientID )
+		, wszText( _wszText )
 	{
 	}
 };
@@ -141,7 +148,11 @@ public:
 
 	CEnterLobbyPacket() {}
 
-	CEnterLobbyPacket( const int nClientID, const int _nLobbyID ) : CNetPacket( nClientID ), nLobbyID( _nLobbyID ) {}
+	CEnterLobbyPacket( const int nClientID, const int _nLobbyID )
+		: CNetPacket( nClientID )
+		, nLobbyID( _nLobbyID )
+	{
+	}
 };
 
 /**
@@ -159,7 +170,10 @@ public:
 
 	CLeaveLobbyPacket() {}
 
-	CLeaveLobbyPacket( const int nClientID ) : CNetPacket( nClientID ) {}
+	CLeaveLobbyPacket( const int nClientID )
+		: CNetPacket( nClientID )
+	{
+	}
 };
 
 /** set new client state */
@@ -179,7 +193,8 @@ public:
 	CCommonClientStatePacket() {}
 
 	CCommonClientStatePacket( const int nClientID, const ECommonClientState _eState )
-			: CNetPacket( nClientID ), eState( _eState )
+		: CNetPacket( nClientID )
+		, eState( _eState )
 	{
 	}
 };
@@ -202,7 +217,8 @@ public:
 	CGetLobbyClientsPacket() {}
 
 	CGetLobbyClientsPacket( const int nClientID, const uint32_t _dwVersion )
-			: CNetPacket( nClientID ), dwVersion( _dwVersion )
+		: CNetPacket( nClientID )
+		, dwVersion( _dwVersion )
 	{
 	}
 };
@@ -225,7 +241,8 @@ public:
 	CGetLobbyGamesPacket() {}
 
 	CGetLobbyGamesPacket( const int nClientID, const uint32_t _dwVersion )
-			: CNetPacket( nClientID ), dwVersion( _dwVersion )
+		: CNetPacket( nClientID )
+		, dwVersion( _dwVersion )
 	{
 	}
 };
@@ -250,7 +267,9 @@ public:
 	CDirectPacketToClient() {}
 
 	CDirectPacketToClient( const int nClient, const int nClientTo, CNetPacket *_pPacket )
-			: CNetPacket( nClient ), nClient( nClientTo ), pPacket( _pPacket )
+		: CNetPacket( nClient )
+		, nClient( nClientTo )
+		, pPacket( _pPacket )
 	{
 	}
 };
@@ -268,5 +287,8 @@ public:
 
 	CTestDirectPacket() {}
 
-	CTestDirectPacket( const int nClientID ) : CNetPacket( nClientID ) {}
+	CTestDirectPacket( const int nClientID )
+		: CNetPacket( nClientID )
+	{
+	}
 };

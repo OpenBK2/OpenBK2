@@ -12,7 +12,11 @@ protected:
 public:
 	typedef _Container container_type;
 
-	insert_iterator( _Container &__x, typename _Container::iterator __i ) : container( &__x ), iter( __i ) {}
+	insert_iterator( _Container &__x, typename _Container::iterator __i )
+		: container( &__x )
+		, iter( __i )
+	{
+	}
 
 	insert_iterator<_Container> &operator=( const typename _Container::value_type &__value )
 	{

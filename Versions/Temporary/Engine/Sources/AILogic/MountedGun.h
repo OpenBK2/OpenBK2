@@ -68,7 +68,8 @@ public:
 	                   const uint8_t nShellType,
 	                   SCommonGunInfo *pCommonGunInfo,
 	                   IGunsFactory::EGunTypes eType )
-			: CCommonMountedGun( pObject, pTurret, nSlot ), CBaseGun( 0, nShellType, pCommonGunInfo, eType )
+		: CCommonMountedGun( pObject, pTurret, nSlot )
+		, CBaseGun( 0, nShellType, pCommonGunInfo, eType )
 	{
 	}
 
@@ -129,7 +130,9 @@ class CMountedGunsFactory : public IGunsFactory
 
 public:
 	CMountedGunsFactory( class CBuilding *_pBuilding, class CMountedTurret *_pMountedTurret, const int _nCommonGun )
-			: pBuilding( _pBuilding ), pMountedTurret( _pMountedTurret ), nCommonGun( _nCommonGun )
+		: pBuilding( _pBuilding )
+		, pMountedTurret( _pMountedTurret )
+		, nCommonGun( _nCommonGun )
 	{
 	}
 

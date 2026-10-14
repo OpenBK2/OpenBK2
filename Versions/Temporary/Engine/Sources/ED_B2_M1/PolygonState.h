@@ -17,12 +17,14 @@ class CPolygonSelectState : public CDefaultInputState
 	class CPolygonState *pParentState;
 
 	//конструкторы и операторы присваивания
-	CPolygonSelectState() : pParentState( 0 )
+	CPolygonSelectState()
+		: pParentState( 0 )
 	{
 		NI_ASSERT( pParentState != 0, "CPolygonSelectState(): Invalid parameter: pParentState == 0" );
 	}
 
-	CPolygonSelectState( CPolygonState *_pParentState ) : pParentState( _pParentState )
+	CPolygonSelectState( CPolygonState *_pParentState )
+		: pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CPolygonSelectState(): Invalid parameter: pParentState == 0" );
 	}
@@ -41,12 +43,14 @@ class CPolygonEditState : public CDefaultInputState
 	class CPolygonState *pParentState;
 
 	//конструкторы и операторы присваивания
-	CPolygonEditState() : pParentState( 0 )
+	CPolygonEditState()
+		: pParentState( 0 )
 	{
 		NI_ASSERT( pParentState != 0, "CPolygonEditState(): Invalid parameter: pParentState == 0" );
 	}
 
-	CPolygonEditState( CPolygonState *_pParentState ) : pParentState( _pParentState )
+	CPolygonEditState( CPolygonState *_pParentState )
+		: pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CPolygonEditState(): Invalid parameter: pParentState == 0" );
 	}
@@ -67,12 +71,14 @@ class CPolygonAddState : public CDefaultInputState
 	class CPolygonState *pParentState;
 
 	//конструкторы и операторы присваивания
-	CPolygonAddState() : pParentState( 0 )
+	CPolygonAddState()
+		: pParentState( 0 )
 	{
 		NI_ASSERT( pParentState != 0, "CPolygonAddState(): Invalid parameter: pParentState == 0" );
 	}
 
-	CPolygonAddState( CPolygonState *_pParentState ) : pParentState( _pParentState )
+	CPolygonAddState( CPolygonState *_pParentState )
+		: pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CPolygonAddState(): Invalid parameter: pParentState == 0" );
 	}
@@ -207,7 +213,9 @@ protected:
 public:
 	//
 	//конструкторы и операторы присваивания
-	CPolygonState() : nSelectedIndex( INVALID_NODE_ID ), nSelectedControlPoint( INVALID_NODE_ID )
+	CPolygonState()
+		: nSelectedIndex( INVALID_NODE_ID )
+		, nSelectedControlPoint( INVALID_NODE_ID )
 	{
 		pStoreInputState = new CMapInfoStoreInputState();
 		NI_ASSERT( pStoreInputState != 0, fmt::format( "CPolygonState(): pStoreInputState == 0" ) );

@@ -44,10 +44,21 @@ public:
 		return 0;
 	}
 
-	SGameInfo() : bCanConnect( true ), nPlayers( 0 ), nMaxPlayers( 0 ), bHasPassword( false ) {}
+	SGameInfo()
+		: bCanConnect( true )
+		, nPlayers( 0 )
+		, nMaxPlayers( 0 )
+		, bHasPassword( false )
+	{
+	}
 
 	SGameInfo( const int _nID )
-			: nID( _nID ), szName( "" ), nPlayers( 0 ), nMaxPlayers( 0 ), bCanConnect( true ), bHasPassword( false )
+		: nID( _nID )
+		, szName( "" )
+		, nPlayers( 0 )
+		, nMaxPlayers( 0 )
+		, bCanConnect( true )
+		, bHasPassword( false )
 	{
 	}
 };

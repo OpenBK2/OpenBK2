@@ -19,7 +19,11 @@ class CBalanceTest
 	void AllignSizes( std::string *szTitle, std::string *szSide0, std::string *szSide1, int nAdd = 0 );
 
 public:
-	CBalanceTest() : bTest( false ), shoot( 3, false ) {}
+	CBalanceTest()
+		: bTest( false )
+		, shoot( 3, false )
+	{
+	}
 
 	void Clear()
 	{

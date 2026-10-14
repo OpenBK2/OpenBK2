@@ -1397,7 +1397,11 @@ struct SRiverVertsArrOrder
 	//
 	SRiverVertsArrOrder() {}
 
-	SRiverVertsArrOrder( const int _nNumber, const float _fDist ) : nNumber( _nNumber ), fDist( _fDist ) {}
+	SRiverVertsArrOrder( const int _nNumber, const float _fDist )
+		: nNumber( _nNumber )
+		, fDist( _fDist )
+	{
+	}
 
 	bool operator<( const SRiverVertsArrOrder &v ) const
 	{

@@ -17,9 +17,11 @@ BASIC_REGISTER_CLASS( COMMON_RTS_AI, IStaticPath );
 //*******************************************************************
 
 CCommonStaticPath::CCommonStaticPath( CCommonPathFinder *pStaticPathFinder, CAIMap *_pAIMap )
-		: nLen( pStaticPathFinder->GetPathLength() ), startTile( pStaticPathFinder->GetStartTile() ),
-			finishTile( pStaticPathFinder->GetFinishTile() ), finishPoint( pStaticPathFinder->GetFinishPoint() ),
-			pAIMap( _pAIMap )
+	: nLen( pStaticPathFinder->GetPathLength() )
+	, startTile( pStaticPathFinder->GetStartTile() )
+	, finishTile( pStaticPathFinder->GetFinishTile() )
+	, finishPoint( pStaticPathFinder->GetFinishPoint() )
+	, pAIMap( _pAIMap )
 {
 	NI_ASSERT( nLen >= 0 && nLen <= pStaticPathFinder->GetPathLength(), "Wrong length" );
 

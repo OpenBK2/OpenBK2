@@ -25,11 +25,21 @@ extern CDiplomacy theDipl;
 extern CGroupLogic theGroupLogic;
 
 CPlayerReinforcement::CPlayerReinforcement()
-		: bReinfButtonEnabled( false ), timeReinfButtonEnable( curTime ), nMapReinforcementBonus( 0 ),
-			fRecycleTimeCoeff( 1.0f ), timeToCall( 0 ), fStoredProgress( 0.0f ), timeReinfIncrease( 0 ),
-			superWeaponType( NDb::SUPER_WEAPON_BOMBER ), nSuperWeaponShots( -1 ), timeSuperWeaponRecycleTime( 0 ),
-			timeSuperWeaponFlyTime( 0 ), nSuperWeaponShotsLeft( -1 ), vSuperWeaponCallPoint( VNULL2 ),
-			timeSuperWeaponFire( 0 ), superWeaponState( SWS_WAIT_FOR_CALL )
+	: bReinfButtonEnabled( false )
+	, timeReinfButtonEnable( curTime )
+	, nMapReinforcementBonus( 0 )
+	, fRecycleTimeCoeff( 1.0f )
+	, timeToCall( 0 )
+	, fStoredProgress( 0.0f )
+	, timeReinfIncrease( 0 )
+	, superWeaponType( NDb::SUPER_WEAPON_BOMBER )
+	, nSuperWeaponShots( -1 )
+	, timeSuperWeaponRecycleTime( 0 )
+	, timeSuperWeaponFlyTime( 0 )
+	, nSuperWeaponShotsLeft( -1 )
+	, vSuperWeaponCallPoint( VNULL2 )
+	, timeSuperWeaponFire( 0 )
+	, superWeaponState( SWS_WAIT_FOR_CALL )
 {
 	recycleTimes.clear();
 }

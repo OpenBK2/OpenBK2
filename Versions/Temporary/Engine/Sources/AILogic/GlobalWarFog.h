@@ -23,10 +23,15 @@ struct SSector
 		return 0;
 	}
 
-	SSector() : wStartAngle( 0 ), wEndAngle( 65535 ) {}
+	SSector()
+		: wStartAngle( 0 )
+		, wEndAngle( 65535 )
+	{
+	}
 
 	SSector( const uint32_t _wStartAngle, const uint32_t _wEndAngle )
-			: wStartAngle( _wStartAngle ), wEndAngle( _wEndAngle )
+		: wStartAngle( _wStartAngle )
+		, wEndAngle( _wEndAngle )
 	{
 	}
 
@@ -67,9 +72,16 @@ struct SSpiralPoint
 		return 0;
 	}
 
-	SSpiralPoint() : vOffset( 0, 0 ), nRadius( 0 ), sector() {}
+	SSpiralPoint()
+		: vOffset( 0, 0 )
+		, nRadius( 0 )
+		, sector()
+	{
+	}
 
-	SSpiralPoint( const int x, const int y, const int r ) : vOffset( x, y ), nRadius( r )
+	SSpiralPoint( const int x, const int y, const int r )
+		: vOffset( x, y )
+		, nRadius( r )
 	{
 		wAngle = sector.wStartAngle = sector.wEndAngle = GetDirectionByVector( x, y );
 	}
@@ -92,7 +104,13 @@ struct SWarFogUnitInfo
 		return 0;
 	}
 
-	SWarFogUnitInfo() : vPos( 0, 0 ), sector(), nRadius( 0 ), bPlane( false ) {}
+	SWarFogUnitInfo()
+		: vPos( 0, 0 )
+		, sector()
+		, nRadius( 0 )
+		, bPlane( false )
+	{
+	}
 };
 
 class CGlobalWarFog : public CAIObjectBase
@@ -120,7 +138,12 @@ class CGlobalWarFog : public CAIObjectBase
 			return 0;
 		}
 
-		SWarForFullUnitInfo() : SWarFogUnitInfo(), vOldPos( 0, 0 ), nOldRadius( 0 ), nParty( 0 ), updateFlag( UPD_UPDATED )
+		SWarForFullUnitInfo()
+			: SWarFogUnitInfo()
+			, vOldPos( 0, 0 )
+			, nOldRadius( 0 )
+			, nParty( 0 )
+			, updateFlag( UPD_UPDATED )
 		{
 		}
 
@@ -139,7 +162,11 @@ class CGlobalWarFog : public CAIObjectBase
 		int nVisible = {};
 		int nCloseVisible = {};
 
-		SWarFogTileInfo() : nVisible( 0 ), nCloseVisible( 0 ) {}
+		SWarFogTileInfo()
+			: nVisible( 0 )
+			, nCloseVisible( 0 )
+		{
+		}
 	};
 
 	// internal types

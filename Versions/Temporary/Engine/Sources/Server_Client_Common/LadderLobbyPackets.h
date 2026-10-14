@@ -46,8 +46,13 @@ public:
 	                   const std::list<int> &_techLevels,
 	                   const std::list<int> &_maps,
 	                   const unsigned _uCheckSum )
-			: CNetPacket( nClientID ), nSide( _nSide ), bHistoricity( _bHistoricity ), nTeamSize( _nTeamSize ),
-				techLevels( _techLevels ), maps( _maps ), uCheckSum( _uCheckSum )
+		: CNetPacket( nClientID )
+		, nSide( _nSide )
+		, bHistoricity( _bHistoricity )
+		, nTeamSize( _nTeamSize )
+		, techLevels( _techLevels )
+		, maps( _maps )
+		, uCheckSum( _uCheckSum )
 	{
 	}
 };
@@ -94,7 +99,10 @@ public:
 	                         const int _nGameID,
 	                         const std::unordered_set<int> &_winners,
 	                         const std::unordered_map<int, int> &_races )
-			: CNetPacket( nClientID ), nGameID( _nGameID ), winners( _winners ), races( _races )
+		: CNetPacket( nClientID )
+		, nGameID( _nGameID )
+		, winners( _winners )
+		, races( _races )
 	{
 	}
 
@@ -103,7 +111,11 @@ public:
 	                         const std::unordered_set<int> &_winners,
 	                         const std::unordered_map<int, int> &_races,
 	                         const std::unordered_map<int, std::vector<int>> &_reinfUsed )
-			: CNetPacket( nClientID ), nGameID( _nGameID ), winners( _winners ), races( _races ), reinfUsed( _reinfUsed )
+		: CNetPacket( nClientID )
+		, nGameID( _nGameID )
+		, winners( _winners )
+		, races( _races )
+		, reinfUsed( _reinfUsed )
 	{
 	}
 };
@@ -145,8 +157,12 @@ public:
 	                     const int _nTechLevel,
 	                     const std::list<int> &_team1,
 	                     const std::list<int> &_team2 )
-			: CNetPacket( nClientID ), nGameID( _nGameID ), nMapID( _nMapID ), nTechLevel( _nTechLevel ), team1( _team1 ),
-				team2( _team2 )
+		: CNetPacket( nClientID )
+		, nGameID( _nGameID )
+		, nMapID( _nMapID )
+		, nTechLevel( _nTechLevel )
+		, team1( _team1 )
+		, team2( _team2 )
 	{
 	}
 };
@@ -169,7 +185,9 @@ public:
 	CLadderStatisticsRequestPacket() {}
 
 	CLadderStatisticsRequestPacket( int nClientID, const std::string &_szNick, const bool &_bSendFullStatistics )
-			: CNetPacket( nClientID ), szNick( _szNick ), bSendFullStatistics( _bSendFullStatistics )
+		: CNetPacket( nClientID )
+		, szNick( _szNick )
+		, bSendFullStatistics( _bSendFullStatistics )
 	{
 	}
 };
@@ -192,7 +210,9 @@ public:
 	CLadderStatisticsPacket() {}
 
 	CLadderStatisticsPacket( int nClientID, const std::string &_szNick, const SLadderStatistics &_info )
-			: CNetPacket( nClientID ), szNick( _szNick ), info( _info )
+		: CNetPacket( nClientID )
+		, szNick( _szNick )
+		, info( _info )
 	{
 	}
 };
@@ -217,7 +237,10 @@ public:
 	CLadderShortStatisticsPacket() {}
 
 	CLadderShortStatisticsPacket( const int nClientID, const std::string &_szNick, const int _nLevel, const int _nRace )
-			: CNetPacket( nClientID ), szNick( _szNick ), nLevel( _nLevel ), nRace( _nRace )
+		: CNetPacket( nClientID )
+		, szNick( _szNick )
+		, nLevel( _nLevel )
+		, nRace( _nRace )
 	{
 	}
 };
@@ -237,7 +260,11 @@ public:
 
 	CLadderSurrenderPacket() {}
 
-	CLadderSurrenderPacket( const int nClientID, const int _nGameID ) : CNetPacket( nClientID ), nGameID( _nGameID ) {}
+	CLadderSurrenderPacket( const int nClientID, const int _nGameID )
+		: CNetPacket( nClientID )
+		, nGameID( _nGameID )
+	{
+	}
 };
 
 class CLadderInvalidStatisticsPacket : public CNetPacket
@@ -258,7 +285,9 @@ public:
 	CLadderInvalidStatisticsPacket() {}
 
 	CLadderInvalidStatisticsPacket( const int nClientID, const int _nGameID, const int _nReason )
-			: CNetPacket( nClientID ), nGameID( _nGameID ), nReason( _nReason )
+		: CNetPacket( nClientID )
+		, nGameID( _nGameID )
+		, nReason( _nReason )
 	{
 	}
 };

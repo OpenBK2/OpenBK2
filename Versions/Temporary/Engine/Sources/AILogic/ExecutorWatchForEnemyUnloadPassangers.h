@@ -21,7 +21,8 @@ public:
 
 public:
 	CExecutorWatchForEnemyUnloadPassangers( CMilitaryCar *_pUnit )
-			: CExecutor( TID_TRANSPORT_LOOK_FOR_ENEMY_UNLOAD_INFANTRY, 20 ), pUnit( _pUnit )
+		: CExecutor( TID_TRANSPORT_LOOK_FOR_ENEMY_UNLOAD_INFANTRY, 20 )
+		, pUnit( _pUnit )
 	{
 	}
 

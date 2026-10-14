@@ -20,7 +20,11 @@ class CWinVFS : public IVFS
 		bool bChecked;
 
 	public:
-		CFileEntry( const uint32_t _dwCheckTime ) : dwCheckTime( _dwCheckTime ), bChecked( false ) {}
+		CFileEntry( const uint32_t _dwCheckTime )
+			: dwCheckTime( _dwCheckTime )
+			, bChecked( false )
+		{
+		}
 
 		virtual ~CFileEntry() {}
 
@@ -61,7 +65,9 @@ class CWinVFS : public IVFS
 
 	public:
 		CWinFileEntry( const uint32_t _dwCheckTime, const std::string &_szBasePath, const NFile::CFilePath &_szRealPath )
-				: CFileEntry( _dwCheckTime ), szBasePath( _szBasePath ), szRealPath( _szRealPath )
+			: CFileEntry( _dwCheckTime )
+			, szBasePath( _szBasePath )
+			, szRealPath( _szRealPath )
 		{
 		}
 
@@ -75,7 +81,9 @@ class CWinVFS : public IVFS
 		const int nIndex;  // this file index in the zipfile
 	public:
 		CZipFileEntry( const uint32_t _dwCheckTime, CZipFile &_zipfile, const int _nIndex )
-				: CFileEntry( _dwCheckTime ), zipfile( _zipfile ), nIndex( _nIndex )
+			: CFileEntry( _dwCheckTime )
+			, zipfile( _zipfile )
+			, nIndex( _nIndex )
 		{
 		}
 
@@ -109,7 +117,11 @@ class CWinVFS : public IVFS
 		CWinVFS *pVFS;
 
 	public:
-		CWinFileAdder( const std::string &_szBasePath, CWinVFS *_pVFS ) : szBasePath( _szBasePath ), pVFS( _pVFS ) {}
+		CWinFileAdder( const std::string &_szBasePath, CWinVFS *_pVFS )
+			: szBasePath( _szBasePath )
+			, pVFS( _pVFS )
+		{
+		}
 
 		//
 		void operator()( NFile::CFileIterator &it ) const

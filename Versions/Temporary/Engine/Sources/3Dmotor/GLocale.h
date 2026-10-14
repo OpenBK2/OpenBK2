@@ -49,7 +49,11 @@ struct SFont
 
 	SFont() {}
 
-	SFont( int _nSize, const std::string &_szName ) : nSize( _nSize ), szName( _szName ) {}
+	SFont( int _nSize, const std::string &_szName )
+		: nSize( _nSize )
+		, szName( _szName )
+	{
+	}
 };
 
 //! Описание шрифта
@@ -75,7 +79,9 @@ public:
 	CFontInfo() {}
 
 	CFontInfo( const SFont &_sFont, CPtrFuncBase<NGfx::CTexture> *_pTexture, CPtrFuncBase<CFontFormatInfo> *_pInfo )
-			: sFont( _sFont ), pTexture( _pTexture ), pInfo( _pInfo )
+		: sFont( _sFont )
+		, pTexture( _pTexture )
+		, pInfo( _pInfo )
 	{
 	}
 

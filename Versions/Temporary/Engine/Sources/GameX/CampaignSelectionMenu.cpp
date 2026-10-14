@@ -77,7 +77,7 @@ void CListItemTextViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase 
 // CInterfaceCampaignSelectionMenu
 
 CInterfaceCampaignSelectionMenu::CInterfaceCampaignSelectionMenu()
-		: CInterfaceScreenBase( "CampaignSelectionMenu2", "campaign_selection_menu" )
+	: CInterfaceScreenBase( "CampaignSelectionMenu2", "campaign_selection_menu" )
 {
 }
 

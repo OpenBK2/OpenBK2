@@ -15,7 +15,10 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4A0, CEnemyRememberer );
 //*											CEnemyRememberer*
 //*******************************************************************
 
-CEnemyRememberer::CEnemyRememberer( const int timeBeforeForget ) : timeBeforeForget( timeBeforeForget ) {}
+CEnemyRememberer::CEnemyRememberer( const int timeBeforeForget )
+	: timeBeforeForget( timeBeforeForget )
+{
+}
 
 void CEnemyRememberer::SetVisible( const class CCommonUnit *pUnit, const bool bVisible )
 {

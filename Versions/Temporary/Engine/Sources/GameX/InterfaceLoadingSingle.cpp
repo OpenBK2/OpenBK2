@@ -168,9 +168,16 @@ void CInterfaceLoadingBase::CLoadingScene::Draw( NGfx::CTexture *pTexture )
 
 // CInterfaceLoadingBase::CReactions
 
-CInterfaceLoadingBase::CReactions::CReactions() : bIsEffectFinished( false ) {}
+CInterfaceLoadingBase::CReactions::CReactions()
+	: bIsEffectFinished( false )
+{
+}
 
-CInterfaceLoadingBase::CReactions::CReactions( IWindow *_pScreen ) : pScreen( _pScreen ), bIsEffectFinished( false ) {}
+CInterfaceLoadingBase::CReactions::CReactions( IWindow *_pScreen )
+	: pScreen( _pScreen )
+	, bIsEffectFinished( false )
+{
+}
 
 CInterfaceLoadingBase::CReactions::~CReactions() {}
 
@@ -201,7 +208,10 @@ void CInterfaceLoadingBase::ShowFirstElement()
 // CInterfaceLoadingBase
 
 CInterfaceLoadingBase::CInterfaceLoadingBase()
-		: nTotalFrames( 2 ), nCurrFrame( 1 ), fCurrProgress( 0.0f ), bInitialized( false )
+	: nTotalFrames( 2 )
+	, nCurrFrame( 1 )
+	, fCurrProgress( 0.0f )
+	, bInitialized( false )
 {
 }
 
@@ -578,7 +588,10 @@ int CProgressHookHelper::GetProgress( int nMin, int nMax ) const
 // CInterfaceLoadingSingleFinished
 
 CInterfaceLoadingSingleFinished::CInterfaceLoadingSingleFinished()
-		: CInterfaceScreenBase( "no_interface", "no_section" ), eUIState( EUIS_NORMAL ), timeAbs( 0 ), bFormat1( true )
+	: CInterfaceScreenBase( "no_interface", "no_section" )
+	, eUIState( EUIS_NORMAL )
+	, timeAbs( 0 )
+	, bFormat1( true )
 {
 }
 

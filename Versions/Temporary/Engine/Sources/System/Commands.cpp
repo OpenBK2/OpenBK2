@@ -9,7 +9,9 @@ namespace NGlobal
 // Dependent command
 
 CCmd::CCmd( const std::string &_szID, CmdHandler _pHandler, void *_pContext )
-		: szID( _szID ), pHandler( _pHandler ), pContext( _pContext )
+	: szID( _szID )
+	, pHandler( _pHandler )
+	, pContext( _pContext )
 {
 	nID = RegisterCmd( szID, pHandler, pContext );
 }

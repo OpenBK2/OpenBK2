@@ -24,7 +24,10 @@ class CZipFile : public CObjectBase
 		const char *pszFileName; // filename
 
 		//
-		SFileHeader() : pszFileName( 0 ) {}
+		SFileHeader()
+			: pszFileName( 0 )
+		{
+		}
 
 		SFileHeader( const SZipFileHeader &hdr );
 

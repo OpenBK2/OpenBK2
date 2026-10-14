@@ -179,7 +179,11 @@ class CProgramParser
 	}
 
 public:
-	CProgramParser( SProgram &_p ) : prog( _p ), state( PROCEDURE ) {}
+	CProgramParser( SProgram &_p )
+		: prog( _p )
+		, state( PROCEDURE )
+	{
+	}
 
 	bool IsError() const
 	{
@@ -291,13 +295,18 @@ struct CVSCompiler
 		vector<string> args;
 
 		SStkFrame( const SProcedure *_pProc, int _nBaseRegister )
-				: pProc( _pProc ), nBaseRegister( _nBaseRegister ), nIP( 0 )
+			: pProc( _pProc )
+			, nBaseRegister( _nBaseRegister )
+			, nIP( 0 )
 		{
 		}
 	};
 
 public:
-	CVSCompiler( const SProgram &_p ) : prog( _p ) {}
+	CVSCompiler( const SProgram &_p )
+		: prog( _p )
+	{
+	}
 
 	void GenerateShader( string *pRes, const char *pszProcName )
 	{

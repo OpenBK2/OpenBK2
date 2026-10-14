@@ -13,7 +13,10 @@
 
 // CInterfacePlayerStats
 
-CInterfacePlayerStats::CInterfacePlayerStats() : CInterfaceScreenBase( "PlayerStats", "player_stats_menu" ) {}
+CInterfacePlayerStats::CInterfacePlayerStats()
+	: CInterfaceScreenBase( "PlayerStats", "player_stats_menu" )
+{
+}
 
 bool CInterfacePlayerStats::Init()
 {

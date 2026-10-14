@@ -10,8 +10,13 @@
 BASIC_REGISTER_CLASS( SCENEB2, ICursor );
 
 CCursor::CCursor()
-		: nCurrMode( 0 ), hCurrCursor( 0 ), nCurrStep( 0 ), nStepCount( 0 ), bAcquired( false ), bShow( true ),
-			bCanShow( true )
+	: nCurrMode( 0 )
+	, hCurrCursor( 0 )
+	, nCurrStep( 0 )
+	, nStepCount( 0 )
+	, bAcquired( false )
+	, bShow( true )
+	, bCanShow( true )
 {
 	Show( false );
 }

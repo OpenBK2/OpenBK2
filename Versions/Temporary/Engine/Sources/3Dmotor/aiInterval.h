@@ -27,7 +27,10 @@ struct SSourceInfo
 	SSourceInfo() {}
 
 	SSourceInfo( CObjectBase *_p, const NDb::CResource *_pArmor, int _nFloor, int _nTSFlags )
-			: pUserData( _p ), pArmor( _pArmor ), nFloor( _nFloor ), nTSFlags( _nTSFlags )
+		: pUserData( _p )
+		, pArmor( _pArmor )
+		, nFloor( _nFloor )
+		, nTSFlags( _nTSFlags )
 	{
 	}
 };
@@ -42,7 +45,11 @@ struct SInterval
 		//
 		SCrossPoint() {}
 
-		SCrossPoint( float _fT, const CVec3 &_ptNormal ) : fT( _fT ), ptNormal( _ptNormal ) {}
+		SCrossPoint( float _fT, const CVec3 &_ptNormal )
+			: fT( _fT )
+			, ptNormal( _ptNormal )
+		{
+		}
 	};
 
 	//
@@ -52,7 +59,10 @@ struct SInterval
 
 	//
 	SInterval( const SSourceInfo &_src, int _nUserID, const SCrossPoint &_enter, const SCrossPoint &_exit )
-			: pSrc( &_src ), enter( _enter ), exit( _exit ), nUserID( _nUserID )
+		: pSrc( &_src )
+		, enter( _enter )
+		, exit( _exit )
+		, nUserID( _nUserID )
 	{
 	}
 };
@@ -64,7 +74,10 @@ struct SSimpleInterval
 	int nUserID;
 
 	SSimpleInterval( const SSourceInfo &_src, int _nUserID, float _fEnter, float _fExit )
-			: pSrc( &_src ), fEnter( _fEnter ), fExit( _fExit ), nUserID( _nUserID )
+		: pSrc( &_src )
+		, fEnter( _fEnter )
+		, fExit( _fExit )
+		, nUserID( _nUserID )
 	{
 	}
 };

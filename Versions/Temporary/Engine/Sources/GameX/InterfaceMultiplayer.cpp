@@ -18,7 +18,10 @@
 
 // CInterfaceMultiplayer
 
-CInterfaceMultiplayer::CInterfaceMultiplayer() : CInterfaceScreenBase( "Multiplayer", "multiplayer" ) {}
+CInterfaceMultiplayer::CInterfaceMultiplayer()
+	: CInterfaceScreenBase( "Multiplayer", "multiplayer" )
+{
+}
 
 CInterfaceMultiplayer::~CInterfaceMultiplayer()
 {

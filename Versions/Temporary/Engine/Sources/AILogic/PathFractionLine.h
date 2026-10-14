@@ -24,7 +24,10 @@ public:
 	}
 
 public:
-	CPathFractionLine() : fLength( 0 ) {}
+	CPathFractionLine()
+		: fLength( 0 )
+	{
+	}
 
 	// FOR 2D PATH
 	void Init( const CVec2 &_x0, const CVec2 &_x1, const float _fZ );

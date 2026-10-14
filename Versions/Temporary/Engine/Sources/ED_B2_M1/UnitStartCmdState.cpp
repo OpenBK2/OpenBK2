@@ -246,10 +246,11 @@ void SStartCommandList::RemoveCommands( const std::vector<int> &rIndices )
 //
 
 CUnitStartCmdState::CUnitStartCmdState( CMapInfoEditor *_pMapInfoEditor )
-		: pMapInfoEditor( _pMapInfoEditor ),
-			// ResetStateData below reads it, and it is a plain pointer now rather than a
-			// CPtr that nulls itself.
-			pEdUnitStartCmd( 0 )
+	: pMapInfoEditor( _pMapInfoEditor )
+	,
+	// ResetStateData below reads it, and it is a plain pointer now rather than a
+	// CPtr that nulls itself.
+	pEdUnitStartCmd( 0 )
 {
 	NI_ASSERT( GetMapInfoEditor() != 0, "CUnitStartCmdState(): Invalid parameter: pMapInfoEditor == 0" );
 	//

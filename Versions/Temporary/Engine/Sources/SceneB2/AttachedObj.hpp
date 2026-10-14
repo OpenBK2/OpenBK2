@@ -51,7 +51,9 @@ protected:
 	CAttachedObject() {}
 
 	CAttachedObject( CFuncBase<SFBTransform> *_pTransform, const int _nBoneIndex, CFuncBase<SBound> *_pBounder )
-			: pTransform( _pTransform ), nBoneIndex( _nBoneIndex ), pBounder( _pBounder )
+		: pTransform( _pTransform )
+		, nBoneIndex( _nBoneIndex )
+		, pBounder( _pBounder )
 	{
 	}
 
@@ -113,7 +115,9 @@ public:
 	                    const int nBoneIndex,
 	                    CFuncBase<SBound> *pBounder,
 	                    bool _bUseLOD )
-			: CAttachedObject( pTransform, nBoneIndex, pBounder ), pModel( _pModel ), bUseLOD( _bUseLOD )
+		: CAttachedObject( pTransform, nBoneIndex, pBounder )
+		, pModel( _pModel )
+		, bUseLOD( _bUseLOD )
 	{
 	}
 
@@ -152,7 +156,9 @@ public:
 	                      NAnimation::ISkeletonAnimator *_pAnimator,
 	                      const int nBoneIndex,
 	                      CFuncBase<SBound> *pBounder )
-			: CAttachedObject( pTransform, nBoneIndex, pBounder ), pModel( _pModel ), pAnimator( _pAnimator )
+		: CAttachedObject( pTransform, nBoneIndex, pBounder )
+		, pModel( _pModel )
+		, pAnimator( _pAnimator )
 	{
 	}
 
@@ -190,7 +196,9 @@ public:
 	                 CFuncBase<SFBTransform> *pTransform,
 	                 const NTimer::STime _nStartTime,
 	                 const int nBoneIndex )
-			: CAttachedObject( pTransform, nBoneIndex, 0 ), pEffect( _pEffect ), nStartTime( _nStartTime )
+		: CAttachedObject( pTransform, nBoneIndex, 0 )
+		, pEffect( _pEffect )
+		, nStartTime( _nStartTime )
 	{
 	}
 
@@ -235,7 +243,10 @@ public:
 		return 0;
 	}
 
-	CAlwaysVerticalTransform() : pBaseTransform( 0 ) {}
+	CAlwaysVerticalTransform()
+		: pBaseTransform( 0 )
+	{
+	}
 
 	CAlwaysVerticalTransform( CFuncBase<SFBTransform> *_pBaseTransform, const bool _bKeepVertical = false );
 };
@@ -269,7 +280,8 @@ public:
 	CAttachedLightEffectPos() {}
 
 	CAttachedLightEffectPos( CFuncBase<SFBTransform> *_pTransform, const SHMatrix &_mAddTransform )
-			: pTransform( _pTransform ), mAddTransform( _mAddTransform )
+		: pTransform( _pTransform )
+		, mAddTransform( _mAddTransform )
 	{
 	}
 };
@@ -301,7 +313,10 @@ protected:
 public:
 	CAttachedSoundPos() {}
 
-	CAttachedSoundPos( CFuncBase<SFBTransform> *_pTransform ) : pTransform( _pTransform ) {}
+	CAttachedSoundPos( CFuncBase<SFBTransform> *_pTransform )
+		: pTransform( _pTransform )
+	{
+	}
 };
 
 // CAttachedLightEffectDir
@@ -330,7 +345,10 @@ protected:
 public:
 	CAttachedLightEffectDir() {}
 
-	CAttachedLightEffectDir( CFuncBase<SFBTransform> *_pTransform ) : pTransform( _pTransform ) {}
+	CAttachedLightEffectDir( CFuncBase<SFBTransform> *_pTransform )
+		: pTransform( _pTransform )
+	{
+	}
 };
 
 struct CAttachedLightEffect : public CAttachedObject
@@ -372,7 +390,12 @@ struct CAttachedLightEffect : public CAttachedObject
 	void RegeneratePositions();
 
 public:
-	CAttachedLightEffect() : nPointLightID( OBJECT_ID_GENERATE ), bNeedRecalc( false ), nSoundID( -1 ) {}
+	CAttachedLightEffect()
+		: nPointLightID( OBJECT_ID_GENERATE )
+		, bNeedRecalc( false )
+		, nSoundID( -1 )
+	{
+	}
 
 	CAttachedLightEffect( const NDb::SAttachedLightEffect *_pEffect,
 	                      CFuncBase<SFBTransform> *pTransform,
@@ -433,7 +456,11 @@ struct CAttachedStaticLightEffect : public CAttachedObject
 	void RegeneratePositions();
 
 public:
-	CAttachedStaticLightEffect() : nPointLightID( OBJECT_ID_GENERATE ), bNeedRecalc( false ) {}
+	CAttachedStaticLightEffect()
+		: nPointLightID( OBJECT_ID_GENERATE )
+		, bNeedRecalc( false )
+	{
+	}
 
 	CAttachedStaticLightEffect( const NDb::SAttachedLightEffect *_pEffect,
 	                            const int _nObjectID,

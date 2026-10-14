@@ -60,8 +60,12 @@ class CMOProjectile : public CMapObj
 
 public:
 	CMOProjectile()
-			: fDamage( -1 ), bModelExists( false ), bHitTarget( false ), nShell( 0 ), bTraceTargetIntersection( false ),
-				vRotationSpeedRad( VNULL3 )
+		: fDamage( -1 )
+		, bModelExists( false )
+		, bHitTarget( false )
+		, nShell( 0 )
+		, bTraceTargetIntersection( false )
+		, vRotationSpeedRad( VNULL3 )
 	{
 	}
 

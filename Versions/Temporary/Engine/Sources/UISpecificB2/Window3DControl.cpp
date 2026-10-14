@@ -16,7 +16,10 @@
 
 // CWindow3DControl
 
-CWindow3DControl::CWindow3DControl() : bIsObjectsVisible( false ) {}
+CWindow3DControl::CWindow3DControl()
+	: bIsObjectsVisible( false )
+{
+}
 
 CWindow3DControl::~CWindow3DControl()
 {

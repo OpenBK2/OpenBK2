@@ -48,7 +48,12 @@ namespace NBind
 		std::map<std::string, CVariant> savedPropertyValues;
 
 	public:
-		CBindStruct() : bLoaded( false ), bChanged( false ), bNewObject( false ) {}
+		CBindStruct()
+			: bLoaded( false )
+			, bChanged( false )
+			, bNewObject( false )
+		{
+		}
 
 		CBindStruct( CResource *_pStruct, NMetaInfo::SStructMetaInfo *_pMetaInfo );
 		~CBindStruct();
@@ -236,14 +241,18 @@ namespace NBind
 		bool AddLevel( const std::string &_szAddName, NTypeDef::STypeStructBase *_pTypeStruct );
 
 		//
-		CStructIterator() : bShowHidden( false ) {}
+		CStructIterator()
+			: bShowHidden( false )
+		{
+		}
 
 	public:
 		CStructIterator( const std::string &_szAddName,
 		                 NTypeDef::STypeStructBase *_pTypeStruct,
 		                 IObjMan *_pObjMan,
 		                 bool _bShowHidden )
-				: pObjMan( _pObjMan ), bShowHidden( _bShowHidden )
+			: pObjMan( _pObjMan )
+			, bShowHidden( _bShowHidden )
 		{
 			AddLevel( _szAddName, _pTypeStruct );
 		}

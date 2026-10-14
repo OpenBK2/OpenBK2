@@ -12,15 +12,20 @@ struct SObjectSelectionPart
 	bool bBackupCreated;
 
 	SObjectSelectionPart()
-			: vPosition( VNULL3 ), fDirection( 0.0f ), vBackupPosition( VNULL3 ), fBackupDirection( 0.0f ),
-				bBackupCreated( false )
+		: vPosition( VNULL3 )
+		, fDirection( 0.0f )
+		, vBackupPosition( VNULL3 )
+		, fBackupDirection( 0.0f )
+		, bBackupCreated( false )
 	{
 	}
 
 	SObjectSelectionPart( const SObjectSelectionPart &rObjectSelectionPart )
-			: vPosition( rObjectSelectionPart.vPosition ), fDirection( rObjectSelectionPart.fDirection ),
-				vBackupPosition( rObjectSelectionPart.vBackupPosition ),
-				fBackupDirection( rObjectSelectionPart.fBackupDirection ), bBackupCreated( rObjectSelectionPart.bBackupCreated )
+		: vPosition( rObjectSelectionPart.vPosition )
+		, fDirection( rObjectSelectionPart.fDirection )
+		, vBackupPosition( rObjectSelectionPart.vBackupPosition )
+		, fBackupDirection( rObjectSelectionPart.fBackupDirection )
+		, bBackupCreated( rObjectSelectionPart.bBackupCreated )
 	{
 	}
 
@@ -71,17 +76,27 @@ struct SObjectSelection
 
 	//
 	SObjectSelection()
-			: vPosition( VNULL3 ), fDirection( 0.0f ), eSelectionType( ST_UNKNOWN ), vBackupPosition( VNULL3 ),
-				fBackupDirection( 0.0f ), bBackupCreated( false ), vPositionDifference( VNULL3 ), fDirectionDifference( 0.0f )
+		: vPosition( VNULL3 )
+		, fDirection( 0.0f )
+		, eSelectionType( ST_UNKNOWN )
+		, vBackupPosition( VNULL3 )
+		, fBackupDirection( 0.0f )
+		, bBackupCreated( false )
+		, vPositionDifference( VNULL3 )
+		, fDirectionDifference( 0.0f )
 	{
 	}
 
 	SObjectSelection( const SObjectSelection &rObjectSelection )
-			: objectSelectionPartMap( rObjectSelection.objectSelectionPartMap ), vPosition( rObjectSelection.vPosition ),
-				fDirection( rObjectSelection.fDirection ), vBackupPosition( rObjectSelection.vBackupPosition ),
-				fBackupDirection( rObjectSelection.fBackupDirection ), bBackupCreated( rObjectSelection.bBackupCreated ),
-				eSelectionType( rObjectSelection.eSelectionType ), vPositionDifference( rObjectSelection.vPositionDifference ),
-				fDirectionDifference( rObjectSelection.fDirectionDifference )
+		: objectSelectionPartMap( rObjectSelection.objectSelectionPartMap )
+		, vPosition( rObjectSelection.vPosition )
+		, fDirection( rObjectSelection.fDirection )
+		, vBackupPosition( rObjectSelection.vBackupPosition )
+		, fBackupDirection( rObjectSelection.fBackupDirection )
+		, bBackupCreated( rObjectSelection.bBackupCreated )
+		, eSelectionType( rObjectSelection.eSelectionType )
+		, vPositionDifference( rObjectSelection.vPositionDifference )
+		, fDirectionDifference( rObjectSelection.fDirectionDifference )
 	{
 	}
 

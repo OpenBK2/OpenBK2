@@ -85,7 +85,10 @@ struct SLinkObjData
 	det_map<int, CObj<CLinkObject>> unitsID2object;
 	int nCurUniqueID = {};
 
-	SLinkObjData() : nCurUniqueID( 0 ) {}
+	SLinkObjData()
+		: nCurUniqueID( 0 )
+	{
+	}
 };
 
 struct SLinkObjDataAutoMagic

@@ -43,9 +43,15 @@ public:
 		return 0;
 	}
 
-	CHelicopterBaseState() : pHelicopter( 0 ) {}
+	CHelicopterBaseState()
+		: pHelicopter( 0 )
+	{
+	}
 
-	CHelicopterBaseState( CHelicopter *pUnit ) : pHelicopter( pUnit ) {}
+	CHelicopterBaseState( CHelicopter *pUnit )
+		: pHelicopter( pUnit )
+	{
+	}
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
@@ -87,7 +93,10 @@ class CHelicopterRestState : public CHelicopterBaseState
 public:
 	CHelicopterRestState() {}
 
-	CHelicopterRestState( CHelicopter *pUnit ) : CHelicopterBaseState( pUnit ) {}
+	CHelicopterRestState( CHelicopter *pUnit )
+		: CHelicopterBaseState( pUnit )
+	{
+	}
 
 	virtual void Segment();
 
@@ -119,7 +128,11 @@ class CHelicopterMoveState : public CHelicopterBaseState
 	}
 
 public:
-	CHelicopterMoveState() : vTarget( VNULL2 ), bScanTargets( false ) {}
+	CHelicopterMoveState()
+		: vTarget( VNULL2 )
+		, bScanTargets( false )
+	{
+	}
 
 	CHelicopterMoveState( CHelicopter *pUnit, const CVec2 &_vTarget, const bool _bScanTargets );
 	virtual void Segment();
@@ -170,8 +183,12 @@ class CHelicopterUnloadState : public CHelicopterBaseState
 
 public:
 	CHelicopterUnloadState()
-			: vTarget( VNULL2 ), pUnload( 0 ), bUnloadOneSquad( false ), timeNextDrop( 0 ), nNextPassenger( 0 ),
-				bFinishAfterSquad( false )
+		: vTarget( VNULL2 )
+		, pUnload( 0 )
+		, bUnloadOneSquad( false )
+		, timeNextDrop( 0 )
+		, nNextPassenger( 0 )
+		, bFinishAfterSquad( false )
 	{
 	}
 
@@ -204,7 +221,10 @@ class CHelicopterRotateState : public CHelicopterBaseState
 	}
 
 public:
-	CHelicopterRotateState() : vTarget( VNULL2 ) {}
+	CHelicopterRotateState()
+		: vTarget( VNULL2 )
+	{
+	}
 
 	CHelicopterRotateState( CHelicopter *pUnit, const CVec2 &_vTarget );
 	virtual void Segment();
@@ -248,7 +268,13 @@ class CHelicopterAttackUnitState : public CHelicopterBaseState
 	void StopAllGuns();
 
 public:
-	CHelicopterAttackUnitState() : pTarget( 0 ), pGun( 0 ), bSwarmAttack( false ), bAirModifierApplied( false ) {}
+	CHelicopterAttackUnitState()
+		: pTarget( 0 )
+		, pGun( 0 )
+		, bSwarmAttack( false )
+		, bAirModifierApplied( false )
+	{
+	}
 
 	CHelicopterAttackUnitState( CHelicopter *pUnit, CAIUnit *pTarget, const bool _bSwarmAttack );
 
@@ -297,7 +323,11 @@ class CHelicopterLeaveState : public CHelicopterBaseState
 	}
 
 public:
-	CHelicopterLeaveState() : vTarget( VNULL2 ), bScanTargets( false ) {}
+	CHelicopterLeaveState()
+		: vTarget( VNULL2 )
+		, bScanTargets( false )
+	{
+	}
 
 	CHelicopterLeaveState( CHelicopter *pUnit, const CVec2 &_vTarget, const bool _bScanTargets );
 	virtual void Segment();
@@ -332,7 +362,10 @@ class CHelicopterFlyDeadState : public CHelicopterBaseState
 	}
 
 public:
-	CHelicopterFlyDeadState() : bStarted( false ) {}
+	CHelicopterFlyDeadState()
+		: bStarted( false )
+	{
+	}
 
 	CHelicopterFlyDeadState( CHelicopter *pUnit );
 	virtual void Segment();

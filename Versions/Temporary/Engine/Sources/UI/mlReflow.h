@@ -56,8 +56,14 @@ struct SState
 	}
 
 	SState()
-			: nHAlign( EHA_LEFT ), nVAlign( EVA_MIDDLE ), nMinFontSize( 0 ), nOutlineBorder( 0 ), bForceFontSize( false ),
-				font( 16 | FONT_SIZE_POINTS, "System" ), color( 0xFF, 0xFF, 0xFF, 0xFF ), outlineColor( 0xFF, 0xFF, 0xFF, 0xFF )
+		: nHAlign( EHA_LEFT )
+		, nVAlign( EVA_MIDDLE )
+		, nMinFontSize( 0 )
+		, nOutlineBorder( 0 )
+		, bForceFontSize( false )
+		, font( 16 | FONT_SIZE_POINTS, "System" )
+		, color( 0xFF, 0xFF, 0xFF, 0xFF )
+		, outlineColor( 0xFF, 0xFF, 0xFF, 0xFF )
 	{
 	}
 };

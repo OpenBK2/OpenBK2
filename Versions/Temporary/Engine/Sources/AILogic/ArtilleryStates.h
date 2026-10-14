@@ -78,7 +78,11 @@ class CArtilleryMoveToState : public IUnitState
 public:
 	static IUnitState *Instance( class CArtillery *pArtillery, const CVec2 &point, const bool bForceReverse = false );
 
-	CArtilleryMoveToState() : pArtillery( 0 ), bForceReverse( false ) {}
+	CArtilleryMoveToState()
+		: pArtillery( 0 )
+		, bForceReverse( false )
+	{
+	}
 
 	CArtilleryMoveToState( class CArtillery *pArtillery, const CVec2 &point, const bool bForceReverse );
 
@@ -135,7 +139,10 @@ class CArtilleryTurnToPointState : public IUnitState, public CStatusUpdatesHelpe
 public:
 	static IUnitState *Instance( class CArtillery *pArtillery, const CVec2 &targCenter );
 
-	CArtilleryTurnToPointState() : pArtillery( 0 ) {}
+	CArtilleryTurnToPointState()
+		: pArtillery( 0 )
+	{
+	}
 
 	CArtilleryTurnToPointState( class CArtillery *pArtillery, const CVec2 &targCenter );
 
@@ -202,7 +209,12 @@ public:
 	static IUnitState *
 	Instance( class CAIUnit *pUnit, const CVec2 &point, const int nShotCount, const bool bFlamethrowerOnly = false );
 
-	CArtilleryBombardmentState() : pUnit( 0 ), bFlamethrowerOnly( false ), bBurstStarted( false ) {}
+	CArtilleryBombardmentState()
+		: pUnit( 0 )
+		, bFlamethrowerOnly( false )
+		, bBurstStarted( false )
+	{
+	}
 
 	CArtilleryBombardmentState( class CAIUnit *pUnit,
 	                            const CVec2 &point,
@@ -295,7 +307,10 @@ class CArtilleryRangeAreaState : public IUnitAttackingState, public CStatusUpdat
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit, const CVec2 &point );
 
-	CArtilleryRangeAreaState() : pUnit( 0 ) {}
+	CArtilleryRangeAreaState()
+		: pUnit( 0 )
+	{
+	}
 
 	CArtilleryRangeAreaState( class CAIUnit *pUnit, const CVec2 &point );
 
@@ -349,7 +364,10 @@ class CArtilleryInstallTransportState : public IUnitState
 public:
 	static IUnitState *Instance( class CArtillery *pArtillery );
 
-	CArtilleryInstallTransportState() : pArtillery( 0 ) {}
+	CArtilleryInstallTransportState()
+		: pArtillery( 0 )
+	{
+	}
 
 	CArtilleryInstallTransportState( class CArtillery *pArtillery );
 
@@ -391,7 +409,10 @@ class CArtilleryUninstallTransportState : public IUnitState
 public:
 	static IUnitState *Instance( class CArtillery *pArtillery );
 
-	CArtilleryUninstallTransportState() : pArtillery( 0 ) {}
+	CArtilleryUninstallTransportState()
+		: pArtillery( 0 )
+	{
+	}
 
 	CArtilleryUninstallTransportState( class CArtillery *pArtillery );
 
@@ -440,7 +461,10 @@ class CArtilleryBeingTowedState : public IUnitState
 public:
 	static IUnitState *Instance( class CArtillery *pArtillery, class CAITransportUnit *pTransport );
 
-	CArtilleryBeingTowedState() : pArtillery( 0 ) {}
+	CArtilleryBeingTowedState()
+		: pArtillery( 0 )
+	{
+	}
 
 	CArtilleryBeingTowedState( class CArtillery *pArtillery, class CAITransportUnit *pTransport );
 	virtual void Segment();
@@ -511,7 +535,10 @@ public:
 	static IUnitState *
 	Instance( class CArtillery *pArtillery, class CAIUnit *pEnemy, bool bAim, const bool bSwarmAttack );
 
-	CArtilleryAttackState() : pArtillery( 0 ) {}
+	CArtilleryAttackState()
+		: pArtillery( 0 )
+	{
+	}
 
 	CArtilleryAttackState( class CArtillery *pArtillery, class CAIUnit *pEnemy, bool bAim, const bool bSwarmAttack );
 
@@ -580,7 +607,10 @@ class CArtilleryAttackCommonStatObjState : public IUnitAttackingState, public CF
 public:
 	static IUnitState *Instance( class CArtillery *pArtillery, class CStaticObject *pObj );
 
-	CArtilleryAttackCommonStatObjState() : pArtillery( 0 ) {}
+	CArtilleryAttackCommonStatObjState()
+		: pArtillery( 0 )
+	{
+	}
 
 	CArtilleryAttackCommonStatObjState( class CArtillery *pArtillery, class CStaticObject *pObj );
 
@@ -630,7 +660,10 @@ public:
 	static IUnitState *
 	Instance( class CArtillery *pArtillery, const CVec2 &guardPoint, const uint16_t wDir, const float fTimeToWait );
 
-	CArtilleryRestState() : pArtillery( 0 ) {}
+	CArtilleryRestState()
+		: pArtillery( 0 )
+	{
+	}
 
 	CArtilleryRestState( class CArtillery *pArtillery,
 	                     const CVec2 &guardPoint,
@@ -657,7 +690,10 @@ class CArtilleryAttackAviationState : public CSoldierAttackAviationState
 public:
 	static IUnitState *Instance( class CArtillery *pArtillery, class CAviation *pPlane );
 
-	CArtilleryAttackAviationState() : pArtillery( 0 ) {}
+	CArtilleryAttackAviationState()
+		: pArtillery( 0 )
+	{
+	}
 
 	CArtilleryAttackAviationState( class CArtillery *pArtillery, class CAviation *pPlane );
 

@@ -35,5 +35,10 @@ struct SSoundTerrainInfo
 	float fWeight;    // weight of this terrain on screen
 	int nTerrainType; // type of this terrain
 
-	SSoundTerrainInfo() : fWeight( 0.0f ), vPos( VNULL3 ), nTerrainType( -1 ) {}
+	SSoundTerrainInfo()
+		: fWeight( 0.0f )
+		, vPos( VNULL3 )
+		, nTerrainType( -1 )
+	{
+	}
 };

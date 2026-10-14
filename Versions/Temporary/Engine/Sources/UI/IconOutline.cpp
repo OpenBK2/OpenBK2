@@ -77,13 +77,20 @@ struct SRLBuilder : public NGScene::ILayoutFakeView
 		ASSERT( 0 );
 	}
 
-	SRLBuilder( NGScene::ISW2DScene *_pScene ) : pScene( _pScene ) {}
+	SRLBuilder( NGScene::ISW2DScene *_pScene )
+		: pScene( _pScene )
+	{
+	}
 };
 
 //vector<int> CIconOutliner::OutlineIDs;
 
 CIconOutliner::CIconOutliner( CDBID _nOutlineType, NGfx::ETextureUsage _eUsage, const CTPoint<int> &_size )
-		: bNeedUpdate( true ), fixedSize( _size ), eUsage( _eUsage ), nOutlineType( _nOutlineType ), size( 1, 1 )
+	: bNeedUpdate( true )
+	, fixedSize( _size )
+	, eUsage( _eUsage )
+	, nOutlineType( _nOutlineType )
+	, size( 1, 1 )
 {
 	//ASSERT( OutlineIDs.size() ); //call before SetOutlineIDs
 }

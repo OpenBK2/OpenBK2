@@ -35,7 +35,8 @@ class CBridgeState : public CMapObjectState
 	void InsertBridge( NMapInfoEditor::SBridgeInfo::EDirection direction, bool bFixStartPoint, bool bPlace );
 
 	//конструкторы и операторы присваивания
-	CBridgeState( CMapObjectMultiState *_pParentState = 0 ) : CMapObjectState( _pParentState )
+	CBridgeState( CMapObjectMultiState *_pParentState = 0 )
+		: CMapObjectState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, fmt::format( "CBridgeState(): pParentState == 0" ) );
 		ClearData();

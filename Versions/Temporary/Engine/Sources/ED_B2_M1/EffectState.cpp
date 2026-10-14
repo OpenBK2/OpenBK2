@@ -23,7 +23,10 @@
 
 #include <zconf.h>
 
-CEffectState::CEffectState( CEffectEditor *_pEffectEditor ) : pEffectEditor( _pEffectEditor ) {}
+CEffectState::CEffectState( CEffectEditor *_pEffectEditor )
+	: pEffectEditor( _pEffectEditor )
+{
+}
 
 void CEffectState::Enter()
 {

@@ -79,7 +79,10 @@ public:
 	bool CanDigTile( const SVector &tile ) const;
 
 public:
-	CEntrenchmentCreation() : CLongObjectCreation( -1, false ) {}
+	CEntrenchmentCreation()
+		: CLongObjectCreation( -1, false )
+	{
+	}
 
 	CEntrenchmentCreation( const int nPlayer, const bool bAllowAIModification );
 

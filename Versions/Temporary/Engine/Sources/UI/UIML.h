@@ -58,9 +58,14 @@ struct SState
 	int nMinFontSize;
 
 	SState()
-			: eHAlign( HORALIGN_DEFAULT ), eVAlign( VERTALIGN_MIDDLE ), sFont( 16, "System" ),
-				sColor( 0xFF, 0xFF, 0xFF, 0xFF ), nOutlineBorder( 0 ), sOutlineColor( 0xFF, 0xFF, 0xFF, 0xFF ),
-				bForceFontSize( false ), nMinFontSize( 0 )
+		: eHAlign( HORALIGN_DEFAULT )
+		, eVAlign( VERTALIGN_MIDDLE )
+		, sFont( 16, "System" )
+		, sColor( 0xFF, 0xFF, 0xFF, 0xFF )
+		, nOutlineBorder( 0 )
+		, sOutlineColor( 0xFF, 0xFF, 0xFF, 0xFF )
+		, bForceFontSize( false )
+		, nMinFontSize( 0 )
 	{
 	}
 
@@ -85,7 +90,11 @@ struct SRange
 
 	SRange() {}
 
-	SRange( float _fValue, float _fHeight ) : fValue( _fValue ), fHeight( _fHeight ) {}
+	SRange( float _fValue, float _fHeight )
+		: fValue( _fValue )
+		, fHeight( _fHeight )
+	{
+	}
 
 	int operator&( IBinSaver &saver )
 	{
@@ -130,7 +139,11 @@ private:
 	int nSize;
 
 public:
-	CMLStream() : nPos( 0 ), nSize( 0 ) {}
+	CMLStream()
+		: nPos( 0 )
+		, nSize( 0 )
+	{
+	}
 
 	int GetSeek() const
 	{

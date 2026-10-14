@@ -606,7 +606,8 @@ struct SAddFunctional
 	SHeightPattern *pHeightPattern;
 
 	//
-	SAddFunctional( SHeightPattern *_pHeightPattern ) : pHeightPattern( _pHeightPattern )
+	SAddFunctional( SHeightPattern *_pHeightPattern )
+		: pHeightPattern( _pHeightPattern )
 	{
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
@@ -624,7 +625,8 @@ struct SSubstractFunctional
 	SHeightPattern *pHeightPattern;
 
 	//
-	SSubstractFunctional( SHeightPattern *_pHeightPattern ) : pHeightPattern( _pHeightPattern )
+	SSubstractFunctional( SHeightPattern *_pHeightPattern )
+		: pHeightPattern( _pHeightPattern )
 	{
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
@@ -814,7 +816,9 @@ struct ModifyTilesFunctional
 	PointType bValue;
 	Type *pLockArray;
 
-	ModifyTilesFunctional( PointType _bValue, Type *_pLockArray ) : bValue( _bValue ), pLockArray( _pLockArray )
+	ModifyTilesFunctional( PointType _bValue, Type *_pLockArray )
+		: bValue( _bValue )
+		, pLockArray( _pLockArray )
 	{
 		NI_ASSERT( pLockArray != 0, "Wrong parameter: pLockArray == 0" );
 	}
@@ -834,7 +838,9 @@ struct CheckTilesFunctional
 	bool isPresent;
 
 	CheckTilesFunctional( PointType _bValue, const Type *_pLockArray )
-			: bValue( _bValue ), pLockArray( _pLockArray ), isPresent( false )
+		: bValue( _bValue )
+		, pLockArray( _pLockArray )
+		, isPresent( false )
 	{
 		NI_ASSERT( pLockArray != 0, "Wrong parameter: pLockArray == 0" );
 	}

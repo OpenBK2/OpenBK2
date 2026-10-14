@@ -23,7 +23,10 @@ namespace NBind
 		IObjMan *pObjMan;
 
 		//
-		UValue() : pBLOB( 0 ) {}
+		UValue()
+			: pBLOB( 0 )
+		{
+		}
 	};
 
 } // namespace NBind

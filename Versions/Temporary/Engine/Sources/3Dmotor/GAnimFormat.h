@@ -15,9 +15,14 @@ class CGrannyFileInfo : public CObjectBase
 	granny_file_info *pData;
 
 public:
-	CGrannyFileInfo() : pData( 0 ), pFile( 0 ) {}
+	CGrannyFileInfo()
+		: pData( 0 )
+		, pFile( 0 )
+	{
+	}
 
-	CGrannyFileInfo( granny_file *_pFile ) : pFile( _pFile )
+	CGrannyFileInfo( granny_file *_pFile )
+		: pFile( _pFile )
 	{
 		InitMe();
 	}
@@ -64,7 +69,10 @@ protected:
 	}
 
 public:
-	CGrannyBaseStuffLoader( const std::string &_szResName ) : szResName( _szResName ) {}
+	CGrannyBaseStuffLoader( const std::string &_szResName )
+		: szResName( _szResName )
+	{
+	}
 
 	template <class TResource>
 	void SetKey( const CDBPtr<TResource> &pResource )
@@ -90,7 +98,10 @@ class CGrannyAnimationLoader : public CGrannyBaseStuffLoader
 	}
 
 public:
-	CGrannyAnimationLoader() : CGrannyBaseStuffLoader( "Animations" ) {}
+	CGrannyAnimationLoader()
+		: CGrannyBaseStuffLoader( "Animations" )
+	{
+	}
 };
 
 class CGrannyAIGeomLoader : public CGrannyBaseStuffLoader
@@ -103,7 +114,10 @@ class CGrannyAIGeomLoader : public CGrannyBaseStuffLoader
 	}
 
 public:
-	CGrannyAIGeomLoader() : CGrannyBaseStuffLoader( "AIGeometries" ) {}
+	CGrannyAIGeomLoader()
+		: CGrannyBaseStuffLoader( "AIGeometries" )
+	{
+	}
 };
 
 class CGrannySkeletonLoader : public CGrannyBaseStuffLoader
@@ -116,7 +130,10 @@ class CGrannySkeletonLoader : public CGrannyBaseStuffLoader
 	}
 
 public:
-	CGrannySkeletonLoader() : CGrannyBaseStuffLoader( "Skeletons" ) {}
+	CGrannySkeletonLoader()
+		: CGrannyBaseStuffLoader( "Skeletons" )
+	{
+	}
 };
 
 } // namespace NAnimation

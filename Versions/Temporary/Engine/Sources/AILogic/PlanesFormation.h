@@ -78,7 +78,10 @@ protected:
 	virtual void CheckForDestroyedObjects( const CVec2 &vCenter ) const {}
 
 public:
-	CPlanesFormation() : nID( -1 ) {}
+	CPlanesFormation()
+		: nID( -1 )
+	{
+	}
 
 	CPlanesFormation( int )
 	{

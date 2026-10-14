@@ -56,7 +56,10 @@ private:
 public:
 	CColorObject() {}
 
-	CColorObject( const NGfx::SPixel8888 &_color ) : color( _color ) {}
+	CColorObject( const NGfx::SPixel8888 &_color )
+		: color( _color )
+	{
+	}
 
 	void Update( IReflowState *pState );
 };
@@ -91,7 +94,10 @@ private:
 public:
 	CHAlignObject() {}
 
-	CHAlignObject( EHAlign _nAlign ) : nAlign( _nAlign ) {}
+	CHAlignObject( EHAlign _nAlign )
+		: nAlign( _nAlign )
+	{
+	}
 
 	void Update( IReflowState *pState );
 };
@@ -126,7 +132,10 @@ private:
 public:
 	CVAlignObject() {}
 
-	CVAlignObject( EVAlign _nAlign ) : nAlign( _nAlign ) {}
+	CVAlignObject( EVAlign _nAlign )
+		: nAlign( _nAlign )
+	{
+	}
 
 	void Update( IReflowState *pState );
 };
@@ -174,8 +183,11 @@ public:
 	             const NGfx::SPixel8888 &_outlineColor,
 	             int _nOutlineSize,
 	             bool _bForceFontSize )
-			: nFlags( _nFlags ), font( _font ), outlineColor( _outlineColor ), nOutlineSize( _nOutlineSize ),
-				bForceFontSize( _bForceFontSize )
+		: nFlags( _nFlags )
+		, font( _font )
+		, outlineColor( _outlineColor )
+		, nOutlineSize( _nOutlineSize )
+		, bForceFontSize( _bForceFontSize )
 	{
 	}
 
@@ -237,7 +249,10 @@ private:
 public:
 	CMinFontSizeObject() {}
 
-	CMinFontSizeObject( int _nSize ) : nSize( _nSize ) {}
+	CMinFontSizeObject( int _nSize )
+		: nSize( _nSize )
+	{
+	}
 
 	void Update( IReflowState *pState );
 };

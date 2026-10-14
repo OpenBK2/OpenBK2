@@ -27,7 +27,8 @@ public:
 	bool ProcessConnectServerPacket( class CConnectServerPacket *pPacket );
 };
 
-CFinishConnectionFilter::CFinishConnectionFilter() : bConnectionAlive( true )
+CFinishConnectionFilter::CFinishConnectionFilter()
+	: bConnectionAlive( true )
 {
 	REGISTER_PACKET_PROCESSOR( &CFinishConnectionFilter::ProcessRemoveClient );
 	REGISTER_PACKET_PROCESSOR( &CFinishConnectionFilter::ProcessConnectServerPacket );
@@ -83,7 +84,8 @@ public:
 	CTestConnectionPacket() {}
 
 	CTestConnectionPacket( const int nClientID, const int _nClientServerID )
-			: CNetPacket( nClientID ), nClientServerID( _nClientServerID )
+		: CNetPacket( nClientID )
+		, nClientServerID( _nClientServerID )
 	{
 	}
 };
@@ -96,8 +98,12 @@ REGISTER_SAVELOAD_CLASS( CLIENT, 92, CTestConnectionPacket );
 
 CSimpleConnection::CSimpleConnection(
 		CNet *_pNet, bool _bAsClient, const int _nClientServerID, const int _nClientLocalID, const int _nMyServerID )
-		: pNet( _pNet ), bAsClient( _bAsClient ), nClientServerID( _nClientServerID ), nClientLocalID( _nClientLocalID ),
-			nMyServerID( _nMyServerID ), bConnectionTested( false )
+	: pNet( _pNet )
+	, bAsClient( _bAsClient )
+	, nClientServerID( _nClientServerID )
+	, nClientLocalID( _nClientLocalID )
+	, nMyServerID( _nMyServerID )
+	, bConnectionTested( false )
 {
 	pFinishConnection = new CFinishConnectionFilter();
 	pNet->SendPacket( new CTestConnectionPacket( nClientLocalID, nMyServerID ) );
@@ -230,7 +236,9 @@ void CSimpleConnection::TogglePauseNet( const bool bPause ) const
 //*******************************************************************
 
 CThroughServerConnection::CThroughServerConnection( const int _nClientServerID, CNet *_pNet )
-		: nClientServerID( _nClientServerID ), pNet( _pNet ), bConnectionTested( false )
+	: nClientServerID( _nClientServerID )
+	, pNet( _pNet )
+	, bConnectionTested( false )
 {
 	pNet->SendPacket( new CThroughServerGamePacket(
 			0, nClientServerID, new CTestConnectionPacket( nClientServerID, nClientServerID ) ) );

@@ -11,7 +11,8 @@
 extern CGroupLogic theGroupLogic;
 
 CExecutorFormationFirstAid::CExecutorFormationFirstAid( CFormation *_pUnit )
-		: CExecutorUnitBase( TID_FIRST_AID, 10, NDb::ABILITY_FIRST_AID ), pFormation( _pUnit )
+	: CExecutorUnitBase( TID_FIRST_AID, 10, NDb::ABILITY_FIRST_AID )
+	, pFormation( _pUnit )
 {
 	SetAbilityDesc( pFormation->GetUnitAbilityDesc( NDb::ABILITY_FIRST_AID ) );
 }

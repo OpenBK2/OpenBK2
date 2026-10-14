@@ -22,7 +22,10 @@ class _3DLIB_EXPORT CMemObject : public CObjectBase
 	}
 
 public:
-	CMemObject() : bPolyLine( false ) {}
+	CMemObject()
+		: bPolyLine( false )
+	{
+	}
 
 	void Clear();
 	void CreateCube( const CVec3 &base, const CVec3 &size, bool bTwoSided = false );

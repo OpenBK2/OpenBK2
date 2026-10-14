@@ -46,7 +46,11 @@ private:
 	}
 
 protected:
-	CProgrammableChannel() : CFuncBase<float>( 0.f ), fDefaultValue( 0.f ) {}
+	CProgrammableChannel()
+		: CFuncBase<float>( 0.f )
+		, fDefaultValue( 0.f )
+	{
+	}
 
 	virtual bool NeedUpdate()
 	{
@@ -70,7 +74,9 @@ protected:
 
 public:
 	CProgrammableChannel( CFuncBase<STime> *_pTime, float _fDefaultValue = 0.f )
-			: CFuncBase<float>( _fDefaultValue ), pTime( _pTime ), fDefaultValue( _fDefaultValue )
+		: CFuncBase<float>( _fDefaultValue )
+		, pTime( _pTime )
+		, fDefaultValue( _fDefaultValue )
 	{
 		ASSERT( IsValid( pTime ) );
 	}

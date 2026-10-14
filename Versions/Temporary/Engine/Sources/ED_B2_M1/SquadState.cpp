@@ -33,7 +33,9 @@ const char *GetDesiredMapSeason()
 //
 //
 
-CSquadState::CSquadState( CSquadEditor *_pSquadEditor ) : pSquadEditor( _pSquadEditor ), bNeedLoadEnterConfig( true )
+CSquadState::CSquadState( CSquadEditor *_pSquadEditor )
+	: pSquadEditor( _pSquadEditor )
+	, bNeedLoadEnterConfig( true )
 {
 	int nStateIndex = INVALID_INPUT_STATE_INDEX;
 	// IS_FORMATION

@@ -114,7 +114,8 @@ IUnitState *CSoldierRestInEntrenchmentState::Instance( CSoldier *pSoldier, CEntr
 	return pRest;
 }
 
-CSoldierRestInEntrenchmentState::CSoldierRestInEntrenchmentState( CSoldier *_pSoldier ) : pSoldier( _pSoldier )
+CSoldierRestInEntrenchmentState::CSoldierRestInEntrenchmentState( CSoldier *_pSoldier )
+	: pSoldier( _pSoldier )
 {
 	startTime = curTime;
 	pSoldier->StartCamouflating();
@@ -187,8 +188,12 @@ IUnitState *CSoldierAttackInEtrenchState::Instance( CSoldier *pSoldier, CAIUnit 
 CSoldierAttackInEtrenchState::CSoldierAttackInEtrenchState( CSoldier *_pSoldier,
                                                             CAIUnit *_pEnemy,
                                                             const bool _bSwarmAttack )
-		: pSoldier( _pSoldier ), pEnemy( _pEnemy ), bFinish( false ), bAim( true ), bSwarmAttack( _bSwarmAttack ),
-			nEnemyParty( _pEnemy->GetParty() )
+	: pSoldier( _pSoldier )
+	, pEnemy( _pEnemy )
+	, bFinish( false )
+	, bAim( true )
+	, bSwarmAttack( _bSwarmAttack )
+	, nEnemyParty( _pEnemy->GetParty() )
 {
 	if ( !pEnemy->IsAlive() )
 	{

@@ -34,7 +34,10 @@ class CMariaDbDatabase : public IDatabase
 	bool StoreResult( CDbResult *pResult );
 
 public:
-	CMariaDbDatabase() : pMySQL( 0 ) {}
+	CMariaDbDatabase()
+		: pMySQL( 0 )
+	{
+	}
 
 	virtual ~CMariaDbDatabase()
 	{

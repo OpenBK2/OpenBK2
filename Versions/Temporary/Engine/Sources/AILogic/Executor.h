@@ -98,10 +98,17 @@ public:
 		return 0;
 	}
 
-	SExecutorEventParam() : eEventID( (EExecutorEventID)0 ), nExecutorID( 0 ), nUnitID( 0 ) {}
+	SExecutorEventParam()
+		: eEventID( (EExecutorEventID)0 )
+		, nExecutorID( 0 )
+		, nUnitID( 0 )
+	{
+	}
 
 	SExecutorEventParam( const EExecutorEventID _eEventID, const int _nExecutorID, const int _nUnitID )
-			: eEventID( _eEventID ), nExecutorID( _nExecutorID ), nUnitID( _nUnitID )
+		: eEventID( _eEventID )
+		, nExecutorID( _nExecutorID )
+		, nUnitID( _nUnitID )
 	{
 	}
 
@@ -130,7 +137,10 @@ public:
 	}
 
 public:
-	CExecutorEvent( const SExecutorEventParam &_param ) : param( _param ) {}
+	CExecutorEvent( const SExecutorEventParam &_param )
+		: param( _param )
+	{
+	}
 
 	CExecutorEvent() {}
 
@@ -153,7 +163,8 @@ class CExecutorEventAddToRestoreTransparencyQueue : public CExecutorEvent
 
 public:
 	CExecutorEventAddToRestoreTransparencyQueue( const SExecutorEventParam &_param, const int _nID )
-			: nID( _nID ), CExecutorEvent( _param )
+		: nID( _nID )
+		, CExecutorEvent( _param )
 	{
 	}
 
@@ -193,7 +204,8 @@ public:
 	CExecutorEventSpecialAbility() {}
 
 	CExecutorEventSpecialAbility( const SExecutorEventParam &param, const NDb::EUnitSpecialAbility _eAbility )
-			: CExecutorEvent( param ), eAbility( _eAbility )
+		: CExecutorEvent( param )
+		, eAbility( _eAbility )
 	{
 	}
 };
@@ -230,7 +242,9 @@ public:
 	                                      const NDb::EUnitSpecialAbility _eAbility,
 	                                      class CAICommand *_pCommand,
 	                                      const NDb::SUnitSpecialAblityDesc *_pDesc )
-			: CExecutorEventSpecialAbility( _param, _eAbility ), pDesc( _pDesc ), pCommand( _pCommand )
+		: CExecutorEventSpecialAbility( _param, _eAbility )
+		, pDesc( _pDesc )
+		, pCommand( _pCommand )
 	{
 	}
 };
@@ -249,7 +263,7 @@ public:
 	CExecutorEventSpecialAbilityDeactivate() {}
 
 	CExecutorEventSpecialAbilityDeactivate( const SExecutorEventParam &param, const NDb::EUnitSpecialAbility _eAbility )
-			: CExecutorEventSpecialAbility( param, _eAbility )
+		: CExecutorEventSpecialAbility( param, _eAbility )
 	{
 	}
 };
@@ -275,14 +289,17 @@ public:
 	CExecutorEventSpecialAbilitySetTarget( const SExecutorEventParam &param,
 	                                       const NDb::EUnitSpecialAbility _eAbility,
 	                                       const CVec2 _vCoords )
-			: CExecutorEventSpecialAbility( param, _eAbility ), vCoords( _vCoords )
+		: CExecutorEventSpecialAbility( param, _eAbility )
+		, vCoords( _vCoords )
 	{
 	}
 
 	CExecutorEventSpecialAbilitySetTarget( const SExecutorEventParam &param,
 	                                       const NDb::EUnitSpecialAbility _eAbility,
 	                                       const NDb::SHPObjectRPGStats *_pTarget )
-			: CExecutorEventSpecialAbility( param, _eAbility ), vCoords( VNULL2 ), pTarget( _pTarget )
+		: CExecutorEventSpecialAbility( param, _eAbility )
+		, vCoords( VNULL2 )
+		, pTarget( _pTarget )
 	{
 	}
 
@@ -314,11 +331,18 @@ public:
 		return 0;
 	}
 
-	CExecutorEventSuperWeaponControl() : nPlayer( -1 ), bEnabled( false ), nUnitID( -1 ) {}
+	CExecutorEventSuperWeaponControl()
+		: nPlayer( -1 )
+		, bEnabled( false )
+		, nUnitID( -1 )
+	{
+	}
 
 	CExecutorEventSuperWeaponControl( const int _nPlayer, const bool _bEnabled, const int _nUnitID )
-			: CExecutorEvent( SExecutorEventParam( EID_SUPER_WEAPON_CONTROL, -1, -1 ) ), nPlayer( _nPlayer ),
-				bEnabled( _bEnabled ), nUnitID( _nUnitID )
+		: CExecutorEvent( SExecutorEventParam( EID_SUPER_WEAPON_CONTROL, -1, -1 ) )
+		, nPlayer( _nPlayer )
+		, bEnabled( _bEnabled )
+		, nUnitID( _nUnitID )
 	{
 	}
 
@@ -353,10 +377,16 @@ public:
 		return 0;
 	}
 
-	CExecutorEventSuperWeaponUse() : nPlayer( -1 ), vTarget( VNULL2 ) {}
+	CExecutorEventSuperWeaponUse()
+		: nPlayer( -1 )
+		, vTarget( VNULL2 )
+	{
+	}
 
 	CExecutorEventSuperWeaponUse( const int _nPlayer, const CVec2 &_vTarget )
-			: CExecutorEvent( SExecutorEventParam( EID_SUPER_WEAPON_USE, -1, -1 ) ), nPlayer( _nPlayer ), vTarget( _vTarget )
+		: CExecutorEvent( SExecutorEventParam( EID_SUPER_WEAPON_USE, -1, -1 ) )
+		, nPlayer( _nPlayer )
+		, vTarget( _vTarget )
 	{
 	}
 

@@ -55,7 +55,7 @@ CTransportResupplyState::Instance( CAITransportUnit *pTransport, const CVec2 &vS
 CTransportResupplyState::CTransportResupplyState( CAITransportUnit *_pTransport,
                                                   const CVec2 &vServePoint,
                                                   CAIUnit *_pPreferredUnit )
-		: CTransportServeState( _pTransport, vServePoint, _pPreferredUnit )
+	: CTransportServeState( _pTransport, vServePoint, _pPreferredUnit )
 {
 	SetStatus( EUS_RESUPPLY );
 }
@@ -107,7 +107,7 @@ CTransportRepairState::Instance( CAITransportUnit *pTransport, const CVec2 &vSer
 CTransportRepairState::CTransportRepairState( CAITransportUnit *pTransport,
                                               const CVec2 &vServePoint,
                                               CAIUnit *_pPreferredUnit )
-		: CTransportServeState( pTransport, vServePoint, _pPreferredUnit )
+	: CTransportServeState( pTransport, vServePoint, _pPreferredUnit )
 {
 	SetStatus( EUS_REPAIR );
 }
@@ -156,8 +156,12 @@ CTransportLoadRuState::Instance( CAITransportUnit *pTransport, const bool bSubSt
 CTransportLoadRuState::CTransportLoadRuState( CAITransportUnit *_pTransport,
                                               const bool bSubState,
                                               CBuilding *_pPreferredStorage )
-		: CStatusUpdatesHelper( EUS_FILL_RESOURCE, _pTransport ), pTransport( _pTransport ),
-			eState( ETLRS_SEARCH_FOR_STORAGE ), nEntrance( -1 ), bSubState( bSubState ), pStorage( _pPreferredStorage )
+	: CStatusUpdatesHelper( EUS_FILL_RESOURCE, _pTransport )
+	, pTransport( _pTransport )
+	, eState( ETLRS_SEARCH_FOR_STORAGE )
+	, nEntrance( -1 )
+	, bSubState( bSubState )
+	, pStorage( _pPreferredStorage )
 {
 	if ( pTransport->GetResursUnitsLeft() == SConsts::TRANSPORT_RU_CAPACITY )
 	{
@@ -175,7 +179,10 @@ CBuilding *CTransportLoadRuState::FindNearestSource()
 		float fPathLength = {};
 
 	public:
-		CFindNearestConnected() : fPathLength( 0 ) {}
+		CFindNearestConnected()
+			: fPathLength( 0 )
+		{
+		}
 
 		virtual bool OnlyConnected() const
 		{
@@ -418,10 +425,15 @@ ETryStateInterruptResult CTransportLoadRuState::TryInterruptState( class CAIComm
 CTransportServeState::CTransportServeState( class CAITransportUnit *_pTransport,
                                             const CVec2 &_vServePoint,
                                             CAIUnit *_pPreferredUnit )
-		: CStatusUpdatesHelper( EUS_UNDEFINED, _pTransport ), pTransport( _pTransport ), eState( ETRS_WAIT_FOR_UNLOCK ),
-			timeLastUpdate( curTime ), vServePoint( _vServePoint + _pTransport->GetGroupShift() ),
-			bUpdatedActionsBegin( false ), pPreferredUnit( _pPreferredUnit ), bWaitForPath( false ),
-			bSendFinishFeedback( false )
+	: CStatusUpdatesHelper( EUS_UNDEFINED, _pTransport )
+	, pTransport( _pTransport )
+	, eState( ETRS_WAIT_FOR_UNLOCK )
+	, timeLastUpdate( curTime )
+	, vServePoint( _vServePoint + _pTransport->GetGroupShift() )
+	, bUpdatedActionsBegin( false )
+	, pPreferredUnit( _pPreferredUnit )
+	, bWaitForPath( false )
+	, bSendFinishFeedback( false )
 {
 	if ( IsValidObj( pPreferredUnit ) )
 	{
@@ -694,8 +706,10 @@ ETryStateInterruptResult CTransportServeState::TryInterruptState( class CAIComma
 //*******************************************************************
 
 CTransportBuildState::CTransportBuildState( class CAITransportUnit *pTransport, const class CVec2 &vDestPoint )
-		: CStatusUpdatesHelper( EUS_UNDEFINED, pTransport ), eState( ETBS_ESTIMATE ), pUnit( pTransport ),
-			vStartPoint( vDestPoint + pTransport->GetGroupShift() )
+	: CStatusUpdatesHelper( EUS_UNDEFINED, pTransport )
+	, eState( ETBS_ESTIMATE )
+	, pUnit( pTransport )
+	, vStartPoint( vDestPoint + pTransport->GetGroupShift() )
 {
 }
 
@@ -947,7 +961,8 @@ ETryStateInterruptResult CTransportBuildState::TryInterruptState( class CAIComma
 CTransportBuildLongObjectState::CTransportBuildLongObjectState( class CAITransportUnit *pTransport,
                                                                 const class CVec2 &vDestPoint,
                                                                 class CLongObjectCreation *_pCreation )
-		: pCreation( _pCreation ), CTransportBuildState( pTransport, vDestPoint )
+	: pCreation( _pCreation )
+	, CTransportBuildState( pTransport, vDestPoint )
 {
 }
 
@@ -1067,10 +1082,10 @@ IUnitState *CTransportBuildFenceState::Instance( class CAITransportUnit *pTransp
 
 CTransportBuildFenceState::CTransportBuildFenceState( class CAITransportUnit *pTransport,
                                                       const class CVec2 &vStartPoint )
-		: CTransportBuildLongObjectState(
-					pTransport,
-					vStartPoint,
-					NLongObjectCreation::Create<CComplexObstacleCreation>( vStartPoint, pTransport->GetPlayer(), true ) )
+	: CTransportBuildLongObjectState(
+				pTransport,
+				vStartPoint,
+				NLongObjectCreation::Create<CComplexObstacleCreation>( vStartPoint, pTransport->GetPlayer(), true ) )
 {
 	SetStatus( EUS_BUILD_OBSTACLES );
 }
@@ -1086,10 +1101,10 @@ void CTransportBuildFenceState::PreCreate()
 
 CTransportBuildEntrenchmentState::CTransportBuildEntrenchmentState( class CAITransportUnit *pTransport,
                                                                     const class CVec2 &vStartPoint )
-		: CTransportBuildLongObjectState(
-					pTransport,
-					vStartPoint,
-					NLongObjectCreation::Create<CEntrenchmentCreation>( vStartPoint, pTransport->GetPlayer(), true ) )
+	: CTransportBuildLongObjectState(
+				pTransport,
+				vStartPoint,
+				NLongObjectCreation::Create<CEntrenchmentCreation>( vStartPoint, pTransport->GetPlayer(), true ) )
 {
 	SetStatus( EUS_DIG_TRENCHES );
 }
@@ -1110,7 +1125,9 @@ void CTransportBuildEntrenchmentState::PreCreate()
 //*******************************************************************
 
 CTransportClearMineState::CTransportClearMineState( class CAITransportUnit *pTransport, const class CVec2 &vDestPoint )
-		: CTransportBuildState( pTransport, vDestPoint ), timeNextCheck( curTime ), bWorkDone( false )
+	: CTransportBuildState( pTransport, vDestPoint )
+	, timeNextCheck( curTime )
+	, bWorkDone( false )
 {
 	// посчитать время, которое нужно для того, чтобы проехать 1 длину грузовичка
 	SetStatus( EUS_DEMINE );
@@ -1250,8 +1267,13 @@ bool CTransportPlaceMineState::IsEndPointNeeded() const
 }
 
 CTransportPlaceMineState::CTransportPlaceMineState( class CAITransportUnit *pTransport, const class CVec2 &vDestPoint )
-		: CTransportBuildState( pTransport, vDestPoint ), bWorkDone( false ), bTransportSent( false ),
-			eCurrType( MT_TECHNICS ), nSqI( 0 ), nSqJ( 0 ), nSquareSize( 2 )
+	: CTransportBuildState( pTransport, vDestPoint )
+	, bWorkDone( false )
+	, bTransportSent( false )
+	, eCurrType( MT_TECHNICS )
+	, nSqI( 0 )
+	, nSqJ( 0 )
+	, nSquareSize( 2 )
 {
 	const float fShift = float( SAIConsts::TILE_SIZE * ( nSquareSize - 1 ) );
 	vCorner.Set( vDestPoint.x - fShift, vDestPoint.y - fShift );
@@ -1274,7 +1296,9 @@ IUnitState *CTransportPlaceAntitankState::Instance( class CAITransportUnit *pTra
 
 CTransportPlaceAntitankState::CTransportPlaceAntitankState( class CAITransportUnit *pTransport,
                                                             const class CVec2 &vDestPoint )
-		: CTransportBuildState( pTransport, vDestPoint ), bWorkFinished( false ), bSent( false )
+	: CTransportBuildState( pTransport, vDestPoint )
+	, bWorkFinished( false )
+	, bSent( false )
 {
 }
 
@@ -1343,7 +1367,9 @@ IUnitState *CTransportRepairBridgeState::Instance( class CAITransportUnit *pTran
 
 CTransportRepairBridgeState::CTransportRepairBridgeState( class CAITransportUnit *pTransport,
                                                           class CBridgeSpan *pFullBridge )
-		: CTransportBuildState( pTransport, VNULL2 ), pBridgeToRepair( pFullBridge ), bSentToBuildPoint( false )
+	: CTransportBuildState( pTransport, VNULL2 )
+	, pBridgeToRepair( pFullBridge )
+	, bSentToBuildPoint( false )
 {
 	std::vector<CObj<CBridgeSpan>> spans;
 	pBridgeToRepair->GetFullBridge()->EnumSpans( &spans );
@@ -1400,8 +1426,10 @@ IUnitState *CTransportBuildBridgeState::Instance( class CAITransportUnit *pTrans
 
 CTransportBuildBridgeState::CTransportBuildBridgeState( class CAITransportUnit *_pTransport,
                                                         class CFullBridge *_pFullBridge )
-		: CTransportBuildState( _pTransport, VNULL2 ), pFullBridge( _pFullBridge ),
-			pCreation( new CBridgeCreation( _pFullBridge, _pTransport, true ) ), bTransportSent( false )
+	: CTransportBuildState( _pTransport, VNULL2 )
+	, pFullBridge( _pFullBridge )
+	, pCreation( new CBridgeCreation( _pFullBridge, _pTransport, true ) )
+	, bTransportSent( false )
 {
 	SetStartPoint( pCreation->GetStartPoint() );
 }
@@ -1465,8 +1493,9 @@ IUnitState *CTransportRepairBuildingState::Instance( class CAITransportUnit *pTr
 
 CTransportRepairBuildingState::CTransportRepairBuildingState( class CAITransportUnit *pTransport,
                                                               class CBuilding *pStaticObject )
-		: CTransportBuildState( pTransport, CVec2( pStaticObject->GetCenter().x, pStaticObject->GetCenter().y ) ),
-			pBuilding( pStaticObject ), bSentToBuildPoint( false )
+	: CTransportBuildState( pTransport, CVec2( pStaticObject->GetCenter().x, pStaticObject->GetCenter().y ) )
+	, pBuilding( pStaticObject )
+	, bSentToBuildPoint( false )
 {
 	SetStatus( EUS_REPAIR_OBJECT );
 }

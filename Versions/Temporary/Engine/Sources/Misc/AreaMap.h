@@ -30,7 +30,10 @@ private:
 		const TYPE *pObj = nullptr;
 
 	public:
-		explicit CObjEqualFunctional( const TYPE *_pObj ) : pObj( _pObj ) {}
+		explicit CObjEqualFunctional( const TYPE *_pObj )
+			: pObj( _pObj )
+		{
+		}
 
 		bool operator()( const TStorageType &ptr ) const
 		{
@@ -70,7 +73,10 @@ public:
 	//CAreaMap( const CAreaMap &a ) {  }
 	//CAreaMap& operator=( const CAreaMap &a ) { return *this; }
 
-	explicit CAreaMap( TCoeffType _tCellSize ) : tCellSize( _tCellSize ) {}
+	explicit CAreaMap( TCoeffType _tCellSize )
+		: tCellSize( _tCellSize )
+	{
+	}
 
 	// move object to the new position.
 	// if this is a new object, this will be added to the area map
@@ -139,7 +145,10 @@ class CStructAreaMapComparator
 	const TYPE &obj;
 
 public:
-	CStructAreaMapComparator( const TYPE &_obj ) : obj( _obj ) {}
+	CStructAreaMapComparator( const TYPE &_obj )
+		: obj( _obj )
+	{
+	}
 
 	const bool operator()( const TYPE &obj2 ) const
 	{
@@ -203,7 +212,10 @@ private:
 	}
 
 public:
-	explicit CStructAreaMap( TCoeffType _tCellSize ) : tCellSize( _tCellSize ) {}
+	explicit CStructAreaMap( TCoeffType _tCellSize )
+		: tCellSize( _tCellSize )
+	{
+	}
 
 	// move object to the new position.
 	// if this is a new object, this will be added to the area map

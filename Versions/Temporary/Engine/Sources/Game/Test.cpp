@@ -72,7 +72,10 @@ class CConsoleFunc0 : public IConsoleFunc
 	CConsoleFunc0() {}
 
 public:
-	CConsoleFunc0( void ( *_pfnFunc )() ) : pfnFunc( _pfnFunc ) {}
+	CConsoleFunc0( void ( *_pfnFunc )() )
+		: pfnFunc( _pfnFunc )
+	{
+	}
 
 	//
 	bool Execute( const std::string &szID, const std::vector<std::wstring> &paramsSet )
@@ -100,7 +103,11 @@ class CConsoleFunc1 : public IConsoleFunc
 	CConsoleFunc1() {}
 
 public:
-	CConsoleFunc1( void ( *_pfnFunc )( T1 _p1 ), const TS1 &_def1 ) : pfnFunc( _pfnFunc ), def1( _def1 ) {}
+	CConsoleFunc1( void ( *_pfnFunc )( T1 _p1 ), const TS1 &_def1 )
+		: pfnFunc( _pfnFunc )
+		, def1( _def1 )
+	{
+	}
 
 	//
 	bool Execute( const std::string &szID, const std::vector<std::wstring> &paramsSet )
@@ -133,7 +140,9 @@ class CConsoleFunc2 : public IConsoleFunc
 
 public:
 	CConsoleFunc2( void ( *_pfnFunc )( T1 _p1, T2 _p2 ), const TS1 &_def1, const TS2 &_def2 )
-			: pfnFunc( _pfnFunc ), def1( _def1 ), def2( _def2 )
+		: pfnFunc( _pfnFunc )
+		, def1( _def1 )
+		, def2( _def2 )
 	{
 	}
 

@@ -37,7 +37,12 @@ class MAPEDITORLIB_EXPORT CMultiManipulator : public IManipulator
 
 public:
 	// Конструирование манипулятора
-	CMultiManipulator() : pActiveManipulator( 0 ), pPropertyDescManipulator( 0 ), pFirstManipulator( 0 ) {}
+	CMultiManipulator()
+		: pActiveManipulator( 0 )
+		, pPropertyDescManipulator( 0 )
+		, pFirstManipulator( 0 )
+	{
+	}
 
 	// Добавить манипулятор в список
 	void InsertManipulator( const CDBID &rDBID, IManipulator *pManipulator, bool bActive, bool bPropertyDesc );

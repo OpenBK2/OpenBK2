@@ -102,7 +102,8 @@ struct SRealRectInfoLock : public S2DRectInfoLock
 {
 	CBufferLock<T> data;
 
-	SRealRectInfoLock() : data( &pGeom, N_RECTS_PER_BUF * 4 )
+	SRealRectInfoLock()
+		: data( &pGeom, N_RECTS_PER_BUF * 4 )
 	{
 		nRects = 0;
 	}
@@ -114,7 +115,9 @@ struct SRealRectInfoLock : public S2DRectInfoLock
 };
 
 C2DQuadsRenderer::C2DQuadsRenderer( const NGfx::CRenderContext &_rc, const CVec2 &vSize, int _dm )
-		: dm( _dm ), rc( _rc ), pLock( 0 )
+	: dm( _dm )
+	, rc( _rc )
+	, pLock( 0 )
 {
 	SetupRC( vSize );
 }

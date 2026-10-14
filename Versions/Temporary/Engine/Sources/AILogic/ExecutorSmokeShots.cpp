@@ -5,7 +5,7 @@
 #include "AILogic_export.h"
 
 CExecutorSmokeShots::CExecutorSmokeShots( CAIUnit *_pUnit )
-		: CExecutorUnitBonus( NDb::ABILITY_SMOKE_SHOTS, _pUnit, TID_SMOKE_SHOTS )
+	: CExecutorUnitBonus( NDb::ABILITY_SMOKE_SHOTS, _pUnit, TID_SMOKE_SHOTS )
 {
 }
 

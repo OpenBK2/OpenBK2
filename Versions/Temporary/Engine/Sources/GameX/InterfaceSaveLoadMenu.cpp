@@ -67,7 +67,8 @@ bool CInterfaceSaveLoadMenu::SSortByDate::operator()( const NSaveLoad::SSavegame
 
 // CInterfaceSaveLoadMenu
 
-CInterfaceSaveLoadMenu::CInterfaceSaveLoadMenu() : CInterfaceScreenBase( "SaveLoadMenu", "save_load_menu" )
+CInterfaceSaveLoadMenu::CInterfaceSaveLoadMenu()
+	: CInterfaceScreenBase( "SaveLoadMenu", "save_load_menu" )
 {
 	pScreenShotTexture = new CBackgroundMutableTexture;
 

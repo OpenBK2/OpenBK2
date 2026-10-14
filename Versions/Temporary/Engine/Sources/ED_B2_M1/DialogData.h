@@ -13,8 +13,12 @@ struct SPointListDialogData
 	NDb::ESeason eSeason;
 
 	SPointListDialogData()
-			: nInstanceID( -1 ), nNumPoints( 0 ), nSelectedPoint( -1 ), bChkPassability( false ), bChkPropmask( false ),
-				eSeason( NDb::ESeason( -1 ) )
+		: nInstanceID( -1 )
+		, nNumPoints( 0 )
+		, nSelectedPoint( -1 )
+		, bChkPassability( false )
+		, bChkPropmask( false )
+		, eSeason( NDb::ESeason( -1 ) )
 	{
 	}
 };
@@ -26,7 +30,8 @@ struct SFormationWindowDialogData
 	bool bChkPropmask;
 
 	SFormationWindowDialogData()
-			: eSelectedFormation( NDb::SSquadRPGStats::SFormation::EFormationMoveType( -1 ) ), bChkPropmask( false )
+		: eSelectedFormation( NDb::SSquadRPGStats::SFormation::EFormationMoveType( -1 ) )
+		, bChkPropmask( false )
 	{
 	}
 

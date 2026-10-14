@@ -23,7 +23,9 @@ protected:
 
 public:
 	CAddPointFunctional( std::vector<SSpiralPoint> *_pPoints, CArray2D1Bit *_pMask, int _nRadius )
-			: pPoints( _pPoints ), pMask( _pMask ), nRadius( _nRadius )
+		: pPoints( _pPoints )
+		, pMask( _pMask )
+		, nRadius( _nRadius )
 	{
 		nOffset = ( pMask->GetSizeX() - 1 ) / 2;
 	}
@@ -38,7 +40,7 @@ class CAddPoint8Functional : public CAddPointFunctional
 {
 public:
 	CAddPoint8Functional( std::vector<SSpiralPoint> *_pPoints, CArray2D1Bit *_pMask, int _nRadius )
-			: CAddPointFunctional( _pPoints, _pMask, _nRadius )
+		: CAddPointFunctional( _pPoints, _pMask, _nRadius )
 	{
 	}
 

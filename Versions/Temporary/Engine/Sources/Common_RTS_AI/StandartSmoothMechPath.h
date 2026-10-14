@@ -72,8 +72,14 @@ protected:
 
 public:
 	CStandartSmoothMechPath()
-			: vLastValidatedPoint( VNULL2 ), bSmoothTurn( false ), bSkipNextSegment( false ), bCanGoForward( false ),
-				bCanGoBackward( false ), bForceGoBackward( false ), lastCheckToRightTurn( 0 ), vLastStopPosition( -1, -1 )
+		: vLastValidatedPoint( VNULL2 )
+		, bSmoothTurn( false )
+		, bSkipNextSegment( false )
+		, bCanGoForward( false )
+		, bCanGoBackward( false )
+		, bForceGoBackward( false )
+		, lastCheckToRightTurn( 0 )
+		, vLastStopPosition( -1, -1 )
 	{
 	}
 

@@ -24,7 +24,10 @@ class CTypeDefinition : public ICode
 	bool bTerminal;
 
 public:
-	CTypeDefinition() : bTerminal( true ) {}
+	CTypeDefinition()
+		: bTerminal( true )
+	{
+	}
 
 	CTypeDefinition( NLang::CComplexTypeNode *pComplexTypeNode,
 	                 const CNodes2TypeDefs &nodes2TypeDefs,

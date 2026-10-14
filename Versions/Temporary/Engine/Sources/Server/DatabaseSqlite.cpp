@@ -45,7 +45,10 @@ class CSqliteDatabase : public IDatabase
 	bool CreateSchema();
 
 public:
-	CSqliteDatabase() : pDb( 0 ) {}
+	CSqliteDatabase()
+		: pDb( 0 )
+	{
+	}
 
 	virtual ~CSqliteDatabase()
 	{

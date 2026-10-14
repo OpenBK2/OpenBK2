@@ -20,13 +20,18 @@ CFreeIds CAICommand::cmdIds;
 
 //BASIC_REGISTER_CLASS( CAICommand );
 
-CAICommand::CAICommand( const SAIUnitCmd &_unitCmd ) : unitCmd( _unitCmd ), nFlag( -1 )
+CAICommand::CAICommand( const SAIUnitCmd &_unitCmd )
+	: unitCmd( _unitCmd )
+	, nFlag( -1 )
 {
 	InitCmdId();
 	pMover = CreateGroupMover( _unitCmd );
 }
 
-CAICommand::CAICommand( const CAICommand &cmd ) : unitCmd( cmd.unitCmd ), nFlag( cmd.nFlag ), pMover( cmd.pMover )
+CAICommand::CAICommand( const CAICommand &cmd )
+	: unitCmd( cmd.unitCmd )
+	, nFlag( cmd.nFlag )
+	, pMover( cmd.pMover )
 {
 	InitCmdId();
 }

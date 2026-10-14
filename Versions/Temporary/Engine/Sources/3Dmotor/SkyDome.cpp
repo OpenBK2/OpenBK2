@@ -23,7 +23,8 @@ protected:
 	}
 
 public:
-	CSkyDomeTransferer() : bUpdate( false )
+	CSkyDomeTransferer()
+		: bUpdate( false )
 	{
 		Identity( &value.forward );
 		Identity( &value.backward );

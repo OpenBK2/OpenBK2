@@ -216,7 +216,9 @@ public:
 	CButtonProperty( const wxString &rName,
 	                 const std::vector<NPropertyButton::EButton> &rButtons,
 	                 const TPressed &rPressed )
-			: wxStringProperty( rName, rName, wxString() ), buttons( rButtons ), pressed( rPressed )
+		: wxStringProperty( rName, rName, wxString() )
+		, buttons( rButtons )
+		, pressed( rPressed )
 	{
 	}
 

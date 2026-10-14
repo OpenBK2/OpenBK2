@@ -55,10 +55,15 @@ CWeatherVisual::CWeatherVisual( const NDb::SWeatherDesc *_pWeatherDesc,
                                 IFullScreenFader *_pScreenFader,
                                 CDBPtr<NDb::SAmbientLight> _pNormalWeatherLight,
                                 CDBPtr<NDb::SAmbientLight> _pBadWeatherLight )
-		: pDesc( _pWeatherDesc ), pTimer( _pTimer ), bActive( false ),
-			//bExistLightning( false ),
-			eState( NDb::EWS_UNKNOWN ), pScreenFader( _pScreenFader ), pNormalWeatherLight( _pNormalWeatherLight ),
-			pBadWeatherLight( _pBadWeatherLight )
+	: pDesc( _pWeatherDesc )
+	, pTimer( _pTimer )
+	, bActive( false )
+	,
+	//bExistLightning( false ),
+	eState( NDb::EWS_UNKNOWN )
+	, pScreenFader( _pScreenFader )
+	, pNormalWeatherLight( _pNormalWeatherLight )
+	, pBadWeatherLight( _pBadWeatherLight )
 {
 	InitParts();
 }

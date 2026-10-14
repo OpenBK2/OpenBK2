@@ -47,7 +47,7 @@ CAnimObjBounder::CAnimObjBounder()
 }
 
 CAnimObjBounder::CAnimObjBounder( const NDb::SModel *pModel, CFuncBase<SFBTransform> *_pPosition )
-		: pPosition( _pPosition )
+	: pPosition( _pPosition )
 {
 	Zero( value );
 
@@ -416,7 +416,10 @@ void SDynamicVisObjDesc::ReCreateObject( NGScene::IGameView *pGScene,
 // **
 // ************************************************************************************************************************ //
 
-SAnimatedVisObjDescBase::SAnimatedVisObjDescBase() : SModelVisObjDesc() {}
+SAnimatedVisObjDescBase::SAnimatedVisObjDescBase()
+	: SModelVisObjDesc()
+{
+}
 
 void SAnimatedVisObjDescBase::UpdatePlacement( NGScene::IGameView *pGScene,
                                                const CVec3 &vPos,

@@ -75,7 +75,8 @@ IVideoPlayer *CreateVideoPlayer( const std::string &filename, uint32_t dwFlags )
 }
 
 CBinkVideoPlayer::CBinkVideoPlayer( const std::string &filename, uint32_t _dwFlags )
-		: dwPlayFlags( _dwFlags ), szFileName( filename )
+	: dwPlayFlags( _dwFlags )
+	, szFileName( filename )
 {
 }
 

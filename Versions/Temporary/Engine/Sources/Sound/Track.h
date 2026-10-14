@@ -42,11 +42,21 @@ public:
 	int operator&( IBinSaver &f );
 
 public:
-	CTrack() : pStreamingSound( 0 ), pTrackStream( 0 ) {}
+	CTrack()
+		: pStreamingSound( 0 )
+		, pTrackStream( 0 )
+	{
+	}
 
 	CTrack( const NDb::SMusicTrack *_pTrack, const NDb::SPlayTime *_pPlayTime, EStreamType _eType )
-			: playTime( _pPlayTime, _pTrack ), eType( _eType ), pTrack( _pTrack ), pStreamingSound( 0 ),
-				eState( ETS_NOT_STARTED ), timePlayed( 0 ), timeLastCall( 0 ), pTrackStream( 0 )
+		: playTime( _pPlayTime, _pTrack )
+		, eType( _eType )
+		, pTrack( _pTrack )
+		, pStreamingSound( 0 )
+		, eState( ETS_NOT_STARTED )
+		, timePlayed( 0 )
+		, timeLastCall( 0 )
+		, pTrackStream( 0 )
 	{
 	}
 

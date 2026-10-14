@@ -30,7 +30,10 @@ FINISH_REGISTER
 
 // CMPManagerMode - general methods
 
-CMPManagerMode::CMPManagerMode() : nGameID( -1 ), nHostClientID( -1 ), dwUserPausedPlayers( 0 )
+CMPManagerMode::CMPManagerMode()
+	: nGameID( -1 )
+	, nHostClientID( -1 )
+	, dwUserPausedPlayers( 0 )
 {
 	// Messages
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CREATE_GAME, SMPUICreateGameMessage, &CMPManagerMode::OnCreateGameMessage );

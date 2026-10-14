@@ -5,7 +5,7 @@
 #include "AILogic_export.h"
 
 CExecutorLinkedGrenades::CExecutorLinkedGrenades( CAIUnit *_pUnit )
-		: CExecutorUnitBonus( NDb::ABILITY_LINKED_GRENADES, _pUnit, TID_LINKED_GRENADES )
+	: CExecutorUnitBonus( NDb::ABILITY_LINKED_GRENADES, _pUnit, TID_LINKED_GRENADES )
 {
 }
 

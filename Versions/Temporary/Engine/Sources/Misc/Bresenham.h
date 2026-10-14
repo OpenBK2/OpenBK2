@@ -12,9 +12,17 @@ class CBresenham2
 
 public:
 	CBresenham2( int _x1, int _y1, int _x2, int _y2 )
-			: x1( _x1 ), y1( _y1 ), x2( _x2 ), y2( _y2 ), xlen( abs( x2 - x1 ) + 1 ), ylen( abs( y2 - y1 ) + 1 ),
-				len( (std::max)( xlen, ylen ) ), xinc( boost::math::sign( x2 - x1 ) ), yinc( boost::math::sign( y2 - y1 ) ),
-				xerr( 0 ), yerr( 0 )
+		: x1( _x1 )
+		, y1( _y1 )
+		, x2( _x2 )
+		, y2( _y2 )
+		, xlen( abs( x2 - x1 ) + 1 )
+		, ylen( abs( y2 - y1 ) + 1 )
+		, len( (std::max)( xlen, ylen ) )
+		, xinc( boost::math::sign( x2 - x1 ) )
+		, yinc( boost::math::sign( y2 - y1 ) )
+		, xerr( 0 )
+		, yerr( 0 )
 	{
 	}
 

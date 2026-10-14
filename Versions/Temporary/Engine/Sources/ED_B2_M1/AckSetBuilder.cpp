@@ -137,10 +137,16 @@ struct SAckSetKey
 	int nVoiceID;
 
 	//
-	SAckSetKey() : nSubtype( -1 ), nVoiceID( -1 ) {}
+	SAckSetKey()
+		: nSubtype( -1 )
+		, nVoiceID( -1 )
+	{
+	}
 
 	SAckSetKey( const std::string &_szTypeName, int _nSubtype, int _nVoiceID )
-			: szTypeName( _szTypeName ), nSubtype( _nSubtype ), nVoiceID( _nVoiceID )
+		: szTypeName( _szTypeName )
+		, nSubtype( _nSubtype )
+		, nVoiceID( _nVoiceID )
 	{
 	}
 

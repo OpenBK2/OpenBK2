@@ -60,7 +60,11 @@ public:
 	//
 	CVisObjSelectionInfo() {}
 
-	CVisObjSelectionInfo( CTerrainManager *_pTerraManager ) : pTerraManager( _pTerraManager ), bUpdate( true ) {}
+	CVisObjSelectionInfo( CTerrainManager *_pTerraManager )
+		: pTerraManager( _pTerraManager )
+		, bUpdate( true )
+	{
+	}
 
 	//
 	void SetInfo( const SSelectionInfo &_info );

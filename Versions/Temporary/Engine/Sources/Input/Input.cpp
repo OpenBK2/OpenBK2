@@ -230,14 +230,22 @@ struct SKey
 	uint32_t dwLastPressed;
 
 	SKey()
-			: ePOVAxis( PA_UNKNOWN ), nAction( 0 ), nDevType( 0 ), dwLastValue( 0xBAD ), eType( CT_UNKNOWN ),
-				dwLastPressed( 0 )
+		: ePOVAxis( PA_UNKNOWN )
+		, nAction( 0 )
+		, nDevType( 0 )
+		, dwLastValue( 0xBAD )
+		, eType( CT_UNKNOWN )
+		, dwLastPressed( 0 )
 	{
 	}
 
 	SKey( int _nAction, int _nDevType, EControlType _eType, EPOVAxis _ePOVAxis = PA_UNKNOWN )
-			: dwLastValue( 0xBAD ), nAction( _nAction ), nDevType( _nDevType ), eType( _eType ), ePOVAxis( _ePOVAxis ),
-				dwLastPressed( 0 )
+		: dwLastValue( 0xBAD )
+		, nAction( _nAction )
+		, nDevType( _nDevType )
+		, eType( _eType )
+		, ePOVAxis( _ePOVAxis )
+		, dwLastPressed( 0 )
 	{
 	}
 };
@@ -265,9 +273,22 @@ struct SInputDevice
 #endif
 	//
 #if BOOST_OS_WINDOWS
-	SInputDevice() : bPoll( false ), bNeedResync( false ), dwDevType( 0 ), pdiDevice( 0 ) {}
+	SInputDevice()
+		: bPoll( false )
+		, bNeedResync( false )
+		, dwDevType( 0 )
+		, pdiDevice( 0 )
+	{
+	}
 #else
-	SInputDevice() : bPoll( false ), bNeedResync( false ), dwDevType( 0 ), pJoystick( 0 ), joystickID( 0 ) {}
+	SInputDevice()
+		: bPoll( false )
+		, bNeedResync( false )
+		, dwDevType( 0 )
+		, pJoystick( 0 )
+		, joystickID( 0 )
+	{
+	}
 #endif
 };
 #if BOOST_OS_WINDOWS
@@ -278,7 +299,12 @@ struct SInputDeviceEnum
 	std::string szName;
 	std::vector<DIOBJECTDATAFORMAT> vectorObjects;
 
-	SInputDeviceEnum() : nID( 0 ), nNumControls( 0 ), szName( "" ) {}
+	SInputDeviceEnum()
+		: nID( 0 )
+		, nNumControls( 0 )
+		, szName( "" )
+	{
+	}
 };
 #endif
 struct SInputDataFormat

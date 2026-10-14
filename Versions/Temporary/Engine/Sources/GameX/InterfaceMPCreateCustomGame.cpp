@@ -27,7 +27,7 @@
 // CInterfaceMPCreateCustomGame
 
 CInterfaceMPCreateCustomGame::CInterfaceMPCreateCustomGame()
-		: CInterfaceMPScreenBase( "MPCreateCustomGame", "create_custom_game" )
+	: CInterfaceMPScreenBase( "MPCreateCustomGame", "create_custom_game" )
 {
 }
 

@@ -10,7 +10,10 @@ struct STypeObjectHeader
 	int nObjectID = 0; // legacy - ObjectID from database - remove it ASAP
 
 	//
-	STypeObjectHeader() : nObjectID( -1 ) {}
+	STypeObjectHeader()
+		: nObjectID( -1 )
+	{
+	}
 
 	//
 	int operator&( IBinSaver &saver )

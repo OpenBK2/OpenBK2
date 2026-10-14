@@ -196,11 +196,15 @@ struct SLakeInfo
 	CLakePointList pointList;
 	CLakePointListPtrList islandPointListPtrList;
 
-	SLakeInfo() : pDescriptor( 0 ) {}
+	SLakeInfo()
+		: pDescriptor( 0 )
+	{
+	}
 
 	SLakeInfo( const SLakeInfo &rLakeInfo )
-			: pDescriptor( rLakeInfo.pDescriptor ), pointList( rLakeInfo.pointList ),
-				islandPointListPtrList( rLakeInfo.islandPointListPtrList )
+		: pDescriptor( rLakeInfo.pDescriptor )
+		, pointList( rLakeInfo.pointList )
+		, islandPointListPtrList( rLakeInfo.islandPointListPtrList )
 	{
 	}
 
@@ -224,15 +228,20 @@ struct SCreateParameter
 	CTPoint<int> size;
 
 	//
-	SCreateParameter() : size( 0, 0 ) {}
+	SCreateParameter()
+		: size( 0, 0 )
+	{
+	}
 
 	SCreateParameter( const std::string &rszImageFileName, const CTPoint<int> &rSize )
-			: szImageFileName( rszImageFileName ), size( rSize )
+		: szImageFileName( rszImageFileName )
+		, size( rSize )
 	{
 	}
 
 	SCreateParameter( const SCreateParameter &rCreateParameter )
-			: szImageFileName( rCreateParameter.szImageFileName ), size( rCreateParameter.size )
+		: szImageFileName( rCreateParameter.szImageFileName )
+		, size( rCreateParameter.size )
 	{
 	}
 

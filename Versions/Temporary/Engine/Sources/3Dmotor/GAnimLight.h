@@ -124,7 +124,9 @@ public:
 	CLightAnimator() {}
 
 	CLightAnimator( const NDb::SLightInstance *_pInstance, STime t, float _fScale )
-			: pInstance( _pInstance ), stBeginTime( t ), fScale( _fScale )
+		: pInstance( _pInstance )
+		, stBeginTime( t )
+		, fScale( _fScale )
 	{
 	}
 };

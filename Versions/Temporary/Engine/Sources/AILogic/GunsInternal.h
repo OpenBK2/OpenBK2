@@ -48,7 +48,10 @@ protected:
 	virtual bool AnalyzeTurning();
 
 public:
-	CTurretGun() : bCircularAttack( false ) {}
+	CTurretGun()
+		: bCircularAttack( false )
+	{
+	}
 
 	CTurretGun( class CAIUnit *pOwner,
 	            const uint8_t nShellType,
@@ -122,7 +125,7 @@ public:
 	          const uint8_t nShellType,
 	          SCommonGunInfo *pCommonGunInfo,
 	          const IGunsFactory::EGunTypes eType )
-			: CBasicGun( pOwner, nShellType, pCommonGunInfo, eType )
+		: CBasicGun( pOwner, nShellType, pCommonGunInfo, eType )
 	{
 	}
 
@@ -170,7 +173,9 @@ class CUnitsGunsFactory : public IGunsFactory
 
 public:
 	CUnitsGunsFactory( class CAIUnit *_pUnit, const int _nCommonGun, const int _nTurret )
-			: pUnit( _pUnit ), nCommonGun( _nCommonGun ), nTurret( _nTurret )
+		: pUnit( _pUnit )
+		, nCommonGun( _nCommonGun )
+		, nTurret( _nTurret )
 	{
 	}
 

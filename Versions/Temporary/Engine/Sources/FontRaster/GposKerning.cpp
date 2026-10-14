@@ -162,7 +162,8 @@ namespace
 
 } // namespace
 
-CGposKerning::CGposKerning( std::vector<uint8_t> _table ) : table( std::move( _table ) )
+CGposKerning::CGposKerning( std::vector<uint8_t> _table )
+	: table( std::move( _table ) )
 {
 	uint16_t nMajor = 0, nFeatureList = 0, nLookupList = 0;
 	if ( !ReadU16( table, 0, &nMajor ) || nMajor != 1 || !ReadU16( table, 6, &nFeatureList ) ||

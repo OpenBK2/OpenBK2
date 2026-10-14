@@ -366,12 +366,28 @@ bool CInterfaceMission::CReactions::Execute( const std::string &szSender,
 // CInterfaceMission
 
 CInterfaceMission::CInterfaceMission()
-		: CInterfaceScreenBase( "Mission", "mission" ), nCurrentSlot( 0 ), nCurrentIconSlot( 0 ), bScreenLoaded( false ),
-			nCurrentReinfPoint( -1 ), bFrozen( false ), bEscMenuPressed( false ), nGameSpeed( 0 ),
-			bMultifunctionPanelMinimized( false ), eActivePanel( NDb::ACTION_BTN_PANEL_DEFAULT ),
-			eActiveAction( NDb::USER_ACTION_UNKNOWN ), vPrevCameraLine( VNULL3 ), timeMissionLastCheck( 0 ),
-			nFrameTransition( 0 ), eUIState( EUIS_NORMAL ), timeAbsLast( 0 ), eSkipState( ESMS_NONE ), bScriptMoivie( false ),
-			fFormerVolume( 0 ), bCheckShowHelpScreen( true ), bMovieMode( false ), bTryExitWindows( false )
+	: CInterfaceScreenBase( "Mission", "mission" )
+	, nCurrentSlot( 0 )
+	, nCurrentIconSlot( 0 )
+	, bScreenLoaded( false )
+	, nCurrentReinfPoint( -1 )
+	, bFrozen( false )
+	, bEscMenuPressed( false )
+	, nGameSpeed( 0 )
+	, bMultifunctionPanelMinimized( false )
+	, eActivePanel( NDb::ACTION_BTN_PANEL_DEFAULT )
+	, eActiveAction( NDb::USER_ACTION_UNKNOWN )
+	, vPrevCameraLine( VNULL3 )
+	, timeMissionLastCheck( 0 )
+	, nFrameTransition( 0 )
+	, eUIState( EUIS_NORMAL )
+	, timeAbsLast( 0 )
+	, eSkipState( ESMS_NONE )
+	, bScriptMoivie( false )
+	, fFormerVolume( 0 )
+	, bCheckShowHelpScreen( true )
+	, bMovieMode( false )
+	, bTryExitWindows( false )
 {
 	pMission = 0;
 	AddObserver( "inc_game_speed", &MsgChangeGameSpeed, +1 );
@@ -4386,7 +4402,8 @@ int CInterfaceMission::operator&( IBinSaver &saver )
 
 // CDrawProgress
 
-CDrawProgress::CDrawProgress( IProgressHookB2 *_pProgress ) : pProgress( _pProgress )
+CDrawProgress::CDrawProgress( IProgressHookB2 *_pProgress )
+	: pProgress( _pProgress )
 {
 	pMaterials = new CLoadingCounter( this, EC_MATERIALS );
 	pTerrains = new CLoadingCounter( this, EC_TERRAINS );
@@ -4426,7 +4443,8 @@ void CDrawProgress::OnCount( ECounter eCounter, int nCount )
 // CDrawProgress::CLoadingCounter
 
 CDrawProgress::CLoadingCounter::CLoadingCounter( CDrawProgress *_pOwner, ECounter _eCounter )
-		: pOwner( _pOwner ), eCounter( _eCounter )
+	: pOwner( _pOwner )
+	, eCounter( _eCounter )
 {
 }
 
@@ -4456,7 +4474,10 @@ void CDrawProgress::CLoadingCounter::Step()
 
 // CICLoadB2
 
-CICLoadB2::CICLoadB2( const std::string &szFileName ) : CICLoadBase( szFileName ) {}
+CICLoadB2::CICLoadB2( const std::string &szFileName )
+	: CICLoadBase( szFileName )
+{
+}
 
 void CICLoadB2::OnProgress( EStage eStage )
 {
@@ -4540,7 +4561,10 @@ void CICLoadB2::OnProgress( EStage eStage )
 
 // CICSaveB2
 
-CICSaveB2::CICSaveB2( const std::string &szFileName ) : CICSaveBase( szFileName ) {}
+CICSaveB2::CICSaveB2( const std::string &szFileName )
+	: CICSaveBase( szFileName )
+{
+}
 
 void CICSaveB2::OnProgress( EStage eStage )
 {
@@ -4729,7 +4753,8 @@ void DoAutosaveInMission( const bool bOnWin )
 //*                     CICMission                                  *
 //*******************************************************************
 
-CICMission::CICMission( ITransceiver *pTransceiver ) : nPlayerForWarFog( -1 )
+CICMission::CICMission( ITransceiver *pTransceiver )
+	: nPlayerForWarFog( -1 )
 {
 	pTrans = pTransceiver;
 	pMap = pTrans->GetMap();
@@ -5027,7 +5052,10 @@ class CSimpleChecksumLog : public ICheckSumLog
 	bool bEntries2;
 
 public:
-	CSimpleChecksumLog() : bEntries2( false ) {}
+	CSimpleChecksumLog()
+		: bEntries2( false )
+	{
+	}
 
 	void SetEntries2()
 	{

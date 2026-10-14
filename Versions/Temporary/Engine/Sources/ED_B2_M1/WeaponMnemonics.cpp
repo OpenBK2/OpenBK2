@@ -6,7 +6,8 @@
 
 #include <zconf.h>
 
-CMayaWeaponMnemonics::CMayaWeaponMnemonics() : CMnemonicsCollector<int>( NDb::SWeaponRPGStats::WEAPON_PISTOL, "PISTOL" )
+CMayaWeaponMnemonics::CMayaWeaponMnemonics()
+	: CMnemonicsCollector<int>( NDb::SWeaponRPGStats::WEAPON_PISTOL, "PISTOL" )
 {
 	Insert( NDb::SWeaponRPGStats::WEAPON_PISTOL, "PISTOL" );
 	Insert( NDb::SWeaponRPGStats::WEAPON_MACHINEGUN, "MACHINEGUN" );
@@ -24,7 +25,8 @@ CMayaWeaponMnemonics::CMayaWeaponMnemonics() : CMnemonicsCollector<int>( NDb::SW
 	Insert( NDb::SWeaponRPGStats::WEAPON_LUFTFAUST, "LUFTFAUST" );
 }
 
-CWeaponMnemonics::CWeaponMnemonics() : CMnemonicsCollector<int>( NDb::SWeaponRPGStats::WEAPON_PISTOL, "WEAPON_PISTOL" )
+CWeaponMnemonics::CWeaponMnemonics()
+	: CMnemonicsCollector<int>( NDb::SWeaponRPGStats::WEAPON_PISTOL, "WEAPON_PISTOL" )
 {
 	Insert( NDb::SWeaponRPGStats::WEAPON_PISTOL, "WEAPON_PISTOL" );
 	Insert( NDb::SWeaponRPGStats::WEAPON_MACHINEGUN, "WEAPON_MACHINEGUN" );

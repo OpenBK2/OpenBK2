@@ -37,15 +37,34 @@ public:
 	}
 
 	//
-	CLUACallParam() : type( PT_UNDEFINED ) {}
+	CLUACallParam()
+		: type( PT_UNDEFINED )
+	{
+	}
 
-	CLUACallParam( CObjectBase *_pObject ) : type( PT_POINTER ), pObject( _pObject ) {}
+	CLUACallParam( CObjectBase *_pObject )
+		: type( PT_POINTER )
+		, pObject( _pObject )
+	{
+	}
 
-	CLUACallParam( const std::string &_szString ) : type( PT_STRING ), szString( _szString ) {}
+	CLUACallParam( const std::string &_szString )
+		: type( PT_STRING )
+		, szString( _szString )
+	{
+	}
 
-	CLUACallParam( int _nInt ) : type( PT_INT ), nInt( _nInt ) {}
+	CLUACallParam( int _nInt )
+		: type( PT_INT )
+		, nInt( _nInt )
+	{
+	}
 
-	CLUACallParam( float _fFloat ) : type( PT_FLOAT ), fFloat( _fFloat ) {}
+	CLUACallParam( float _fFloat )
+		: type( PT_FLOAT )
+		, fFloat( _fFloat )
+	{
+	}
 };
 
 void luaCallFunction( const std::string &szName, char *szParams, ... );

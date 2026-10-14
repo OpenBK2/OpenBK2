@@ -63,8 +63,11 @@ class CBufferedStream
 public:
 	// A caller may already have consumed a UTF-8 BOM; count only unread bytes.
 	CBufferedStream( CDataStream *_pStream )
-			: nStreamSize( _pStream->GetSize() - _pStream->GetPosition() ), nBytesRead( 0 ), nCurrPos( 0 ),
-				nBytesInBuffer( 0 ), pStream( _pStream )
+		: nStreamSize( _pStream->GetSize() - _pStream->GetPosition() )
+		, nBytesRead( 0 )
+		, nCurrPos( 0 )
+		, nBytesInBuffer( 0 )
+		, pStream( _pStream )
 	{
 		ReadPortion();
 	}

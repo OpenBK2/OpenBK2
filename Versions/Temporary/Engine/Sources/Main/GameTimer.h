@@ -20,7 +20,14 @@ class CScaleTimer
 	float fError = {};           // time rounding error (for scaling)
 	bool bPaused = {};           // is this timer paused
 public:
-	CScaleTimer() : prevTime( 0 ), currTime( 0 ), fScale( 1 ), fError( 0 ), bPaused( false ) {}
+	CScaleTimer()
+		: prevTime( 0 )
+		, currTime( 0 )
+		, fScale( 1 )
+		, fError( 0 )
+		, bPaused( false )
+	{
+	}
 
 	// scale
 	void SetScale( const float _fScale )

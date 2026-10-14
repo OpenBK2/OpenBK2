@@ -23,9 +23,17 @@ public:
 	//
 	CVec2i() {}
 
-	CVec2i( const int _x, const int _y ) : x( _x ), y( _y ) {}
+	CVec2i( const int _x, const int _y )
+		: x( _x )
+		, y( _y )
+	{
+	}
 
-	CVec2i( const CVec2i &v ) : x( v.x ), y( v.y ) {}
+	CVec2i( const CVec2i &v )
+		: x( v.x )
+		, y( v.y )
+	{
+	}
 
 	//
 	void Set( const int _x, const int _y )
@@ -75,13 +83,28 @@ public:
 	CVec3Ex() {}
 
 	CVec3Ex( const TReal _x, const TReal _y, const TReal _z, const uint8_t _flag )
-			: x( _x ), y( _y ), z( _z ), flag( _flag )
+		: x( _x )
+		, y( _y )
+		, z( _z )
+		, flag( _flag )
 	{
 	}
 
-	CVec3Ex( const CVec3 &v, const uint8_t _flag ) : x( v.x ), y( v.y ), z( v.z ), flag( _flag ) {}
+	CVec3Ex( const CVec3 &v, const uint8_t _flag )
+		: x( v.x )
+		, y( v.y )
+		, z( v.z )
+		, flag( _flag )
+	{
+	}
 
-	CVec3Ex( const CVec3Ex &v ) : x( v.x ), y( v.y ), z( v.z ), flag( v.flag ) {}
+	CVec3Ex( const CVec3Ex &v )
+		: x( v.x )
+		, y( v.y )
+		, z( v.z )
+		, flag( v.flag )
+	{
+	}
 
 	//
 	void Set( const TReal _x, const TReal _y, const TReal _z, const uint8_t _flag )
@@ -137,13 +160,28 @@ public:
 
 	//
 	CVec3fEx( const float _x, const float _y, const float _z, const uint8_t _flag )
-			: x( _x ), y( _y ), z( _z ), flag( _flag )
+		: x( _x )
+		, y( _y )
+		, z( _z )
+		, flag( _flag )
 	{
 	}
 
-	CVec3fEx( const CVec3 &v, const uint8_t _flag = 0 ) : x( v.x ), y( v.y ), z( v.z ), flag( _flag ) {}
+	CVec3fEx( const CVec3 &v, const uint8_t _flag = 0 )
+		: x( v.x )
+		, y( v.y )
+		, z( v.z )
+		, flag( _flag )
+	{
+	}
 
-	CVec3fEx( const CVec3fEx &v ) : x( v.x ), y( v.y ), z( v.z ), flag( v.flag ) {}
+	CVec3fEx( const CVec3fEx &v )
+		: x( v.x )
+		, y( v.y )
+		, z( v.z )
+		, flag( v.flag )
+	{
+	}
 
 	//
 	void Set( const float _x, const float _y, const float _z, const uint8_t _flag )
@@ -210,13 +248,28 @@ public:
 
 	//
 	CVec3dEx( const double _x, const double _y, const double _z, const uint8_t _flag )
-			: x( _x ), y( _y ), z( _z ), flag( _flag )
+		: x( _x )
+		, y( _y )
+		, z( _z )
+		, flag( _flag )
 	{
 	}
 
-	CVec3dEx( const CVec3 &v, const uint8_t _flag = 0 ) : x( v.x ), y( v.y ), z( v.z ), flag( _flag ) {}
+	CVec3dEx( const CVec3 &v, const uint8_t _flag = 0 )
+		: x( v.x )
+		, y( v.y )
+		, z( v.z )
+		, flag( _flag )
+	{
+	}
 
-	CVec3dEx( const CVec3fEx &v ) : x( v.x ), y( v.y ), z( v.z ), flag( v.flag ) {}
+	CVec3dEx( const CVec3fEx &v )
+		: x( v.x )
+		, y( v.y )
+		, z( v.z )
+		, flag( v.flag )
+	{
+	}
 
 	//
 	void Set( const double _x, const double _y, const double _z, const uint8_t _flag )
@@ -280,9 +333,17 @@ struct SIntersectPoint
 	//
 	SIntersectPoint() {}
 
-	SIntersectPoint( const SIntersectPoint &p ) : vPoint( p.vPoint ), fDist( p.fDist ) {}
+	SIntersectPoint( const SIntersectPoint &p )
+		: vPoint( p.vPoint )
+		, fDist( p.fDist )
+	{
+	}
 
-	SIntersectPoint( const CVec3 &_vPoint, const float _fDist ) : vPoint( _vPoint ), fDist( _fDist ) {}
+	SIntersectPoint( const CVec3 &_vPoint, const float _fDist )
+		: vPoint( _vPoint )
+		, fDist( _fDist )
+	{
+	}
 
 	//
 	void Set( const CVec3 &_vPoint, const float _fDist )

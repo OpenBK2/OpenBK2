@@ -93,7 +93,9 @@ public:
 	CButtonStateSaver( bool read,
 	                   NDb::SWindowMSButton *desc = nullptr,
 	                   std::vector<NDb::EButtonSubstateType> states = {} )
-			: reading( read ), instance( desc ), substates( std::move( states ) )
+		: reading( read )
+		, instance( desc )
+		, substates( std::move( states ) )
 	{
 	}
 

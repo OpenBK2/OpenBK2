@@ -87,7 +87,12 @@ public:
 		return 0;
 	}
 
-	SUnitStatusUpdate() : eStatus( EUS_UNDEFINED ), nUnitID( -1 ), fRadius( 0.0f ) {}
+	SUnitStatusUpdate()
+		: eStatus( EUS_UNDEFINED )
+		, nUnitID( -1 )
+		, fRadius( 0.0f )
+	{
+	}
 
 	SUnitStatusUpdate( const EUnitStatus eStatus, const bool bEnabled, const float fRadius );
 };

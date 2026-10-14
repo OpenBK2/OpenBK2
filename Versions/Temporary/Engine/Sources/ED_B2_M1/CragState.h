@@ -14,7 +14,9 @@ class CCragState : public CVSOStateEx
 	const NDb::SCragDesc *pSelectedCragDesc;
 
 	//конструкторы и операторы присваивания
-	CCragState( class CVSOMultiState *_pParentState = 0 ) : CVSOStateEx( _pParentState ), pSelectedCragDesc( 0 )
+	CCragState( class CVSOMultiState *_pParentState = 0 )
+		: CVSOStateEx( _pParentState )
+		, pSelectedCragDesc( 0 )
 	{
 		NI_ASSERT( _pParentState != 0, "CCragState(): Invalid parameter: _pParentState == 0" );
 	}

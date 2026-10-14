@@ -15,7 +15,10 @@ struct CFocusMemory::SImpl
 	wxWindowRef previous;
 };
 
-CFocusMemory::CFocusMemory() : pImpl( new SImpl ) {}
+CFocusMemory::CFocusMemory()
+	: pImpl( new SImpl )
+{
+}
 
 CFocusMemory::~CFocusMemory() = default;
 

@@ -447,7 +447,8 @@ void SetCommandCoeff( const std::string &szControl, float fCoeff )
 
 // CBind
 
-CBind::CBind( const std::string &sCmd ) : fDelta( 0 )
+CBind::CBind( const std::string &sCmd )
+	: fDelta( 0 )
 {
 
 #ifndef _FINALRELEASE

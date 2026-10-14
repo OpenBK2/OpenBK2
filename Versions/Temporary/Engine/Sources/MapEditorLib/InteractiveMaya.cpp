@@ -24,9 +24,11 @@ const std::string CInteractiveMaya::INTERACTIVE_MAYA_PROMPT( "mel: " );         
 const std::string CInteractiveMaya::INTERACTIVE_MAYA_RESULT_MARK( "Result: " ); // leading space is important
 
 CInteractiveMaya::CInteractiveMaya()
-		: INTERACTIVE_MAYA_INVOKE( "mayabatch -prompt" ),
-			INTERACTIVE_MAYA_QUIT_DIRECTIVE( "quit -f\n" ), // leading \n is important
-			nExecutionQuota( 0 ), nExecutionCounter( 0 )
+	: INTERACTIVE_MAYA_INVOKE( "mayabatch -prompt" )
+	, INTERACTIVE_MAYA_QUIT_DIRECTIVE( "quit -f\n" )
+	, // leading \n is important
+	nExecutionQuota( 0 )
+	, nExecutionCounter( 0 )
 {
 }
 

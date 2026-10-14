@@ -34,12 +34,20 @@ public:
 		bool isEmpty;
 		bool isValid;
 
-		SReferenceInfo() : nFlags( 0x00000000 ), isEmpty( true ), isValid( true ) {}
+		SReferenceInfo()
+			: nFlags( 0x00000000 )
+			, isEmpty( true )
+			, isValid( true )
+		{
+		}
 
 		SReferenceInfo( const SReferenceInfo &rReferenceInfo )
-				: nFlags( rReferenceInfo.nFlags ), szName( rReferenceInfo.szName ),
-					szObjectTypeName( rReferenceInfo.szObjectTypeName ), szObjectName( rReferenceInfo.szObjectName ),
-					isEmpty( rReferenceInfo.isEmpty ), isValid( rReferenceInfo.isValid )
+			: nFlags( rReferenceInfo.nFlags )
+			, szName( rReferenceInfo.szName )
+			, szObjectTypeName( rReferenceInfo.szObjectTypeName )
+			, szObjectName( rReferenceInfo.szObjectName )
+			, isEmpty( rReferenceInfo.isEmpty )
+			, isValid( rReferenceInfo.isValid )
 		{
 		}
 

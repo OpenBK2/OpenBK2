@@ -181,7 +181,11 @@ public:
 		pData->bIsLightmappable = bIsLightmappable;
 	}
 
-	CObjectInfo() : nTris( 0 ), bIsLightmappable( true ) {}
+	CObjectInfo()
+		: nTris( 0 )
+		, bIsLightmappable( true )
+	{
+	}
 
 	void Assign( const SData &data, bool bOptimizeVCache );
 	// will modify pData

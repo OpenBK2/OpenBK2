@@ -28,8 +28,13 @@ CTransparentRenderer::CTransparentRenderer( const CTransformStack &ts,
                                             uint32_t _dwLitColor,
                                             uint32_t _dwNormalColor,
                                             const SPerVertexLightState *_pLightState )
-		: nTotalParticles( 0 ), nLitParticles( 0 ), dwLitColor( _dwLitColor ), dwNormalColor( _dwNormalColor ),
-			nElementPtr( 0 ), nInfoIdx( -( 1 << N_PARTICLES_PER_EFFECT_LG2 ) ), pLightState( _pLightState )
+	: nTotalParticles( 0 )
+	, nLitParticles( 0 )
+	, dwLitColor( _dwLitColor )
+	, dwNormalColor( _dwNormalColor )
+	, nElementPtr( 0 )
+	, nInfoIdx( -( 1 << N_PARTICLES_PER_EFFECT_LG2 ) )
+	, pLightState( _pLightState )
 {
 	infos.reserve( 100 );
 	depths.resize( N_RESERVE_DEPTH_BUFFER * 2 );
@@ -405,7 +410,10 @@ public:
 	                      std::vector<STransparentInfo> *pInfos,
 	                      std::vector<float> *pDepths,
 	                      std::vector<int> *pSrcPtrs )
-			: infos( *pInfos ), depths( *pDepths ), sourcePtrs( *pSrcPtrs ), pRC( _pRC )
+		: infos( *pInfos )
+		, depths( *pDepths )
+		, sourcePtrs( *pSrcPtrs )
+		, pRC( _pRC )
 	{
 	}
 
@@ -487,7 +495,10 @@ struct SCmpFragments
 {
 	const std::vector<STransparentInfo> &infos;
 
-	SCmpFragments( const std::vector<STransparentInfo> &_infos ) : infos( _infos ) {}
+	SCmpFragments( const std::vector<STransparentInfo> &_infos )
+		: infos( _infos )
+	{
+	}
 
 	bool operator()( int n1, int n2 )
 	{

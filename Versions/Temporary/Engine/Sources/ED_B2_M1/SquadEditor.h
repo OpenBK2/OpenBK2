@@ -23,7 +23,11 @@ public:
 	bool bShowShortcutBar;
 	CVec3 vLastBECameraAnchor;
 
-	CSquadEditorSettings() : bShowShortcutBar( true ), vLastBECameraAnchor( VNULL3 ) {}
+	CSquadEditorSettings()
+		: bShowShortcutBar( true )
+		, vLastBECameraAnchor( VNULL3 )
+	{
+	}
 
 	// serializing...
 	int operator&( IXmlSaver &xs )
@@ -47,7 +51,12 @@ struct SSquadMemberInfo
 	CVec3 pos;
 
 	//
-	SSquadMemberInfo() : nSceneObjectID( -1 ), nMemberIndex( -1 ), pos( VNULL3 ) {}
+	SSquadMemberInfo()
+		: nSceneObjectID( -1 )
+		, nMemberIndex( -1 )
+		, pos( VNULL3 )
+	{
+	}
 
 	bool operator==( const SSquadMemberInfo &rOther )
 	{

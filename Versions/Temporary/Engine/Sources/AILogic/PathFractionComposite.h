@@ -55,7 +55,10 @@ class CPathFractionComposite : public CPathFractionComplexBase
 	}
 
 public:
-	CPathFractionComposite() : fSplineProgress( 0 ) {}
+	CPathFractionComposite()
+		: fSplineProgress( 0 )
+	{
+	}
 
 	CPathFractionComposite( struct IPlane *pPlane, struct IPathFraction *pPath );
 

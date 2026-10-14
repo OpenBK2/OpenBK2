@@ -67,7 +67,9 @@ struct SColor565
 	unsigned nRed;
 
 	explicit SColor565( const uint16_t uPacked )
-			: nBlue( uPacked & 0x1f ), nGreen( ( uPacked >> 5 ) & 0x3f ), nRed( ( uPacked >> 11 ) & 0x1f )
+		: nBlue( uPacked & 0x1f )
+		, nGreen( ( uPacked >> 5 ) & 0x3f )
+		, nRed( ( uPacked >> 11 ) & 0x1f )
 	{
 	}
 };

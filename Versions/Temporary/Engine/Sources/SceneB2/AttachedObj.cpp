@@ -209,7 +209,8 @@ CAttachedEffect::~CAttachedEffect()
 
 CAlwaysVerticalTransform::CAlwaysVerticalTransform( CFuncBase<SFBTransform> *_pBaseTransform,
                                                     const bool _bKeepVertical )
-		: pBaseTransform( _pBaseTransform ), bKeepVertical( _bKeepVertical )
+	: pBaseTransform( _pBaseTransform )
+	, bKeepVertical( _bKeepVertical )
 {
 }
 
@@ -234,7 +235,8 @@ void CAlwaysVerticalTransform::Recalc()
 
 CAttachedLightEffectTransform::CAttachedLightEffectTransform( CFuncBase<SFBTransform> *_pBaseTransform,
                                                               const SHMatrix &_mMultiplier )
-		: pBaseTransform( _pBaseTransform ), mMultiplier( _mMultiplier )
+	: pBaseTransform( _pBaseTransform )
+	, mMultiplier( _mMultiplier )
 {
 	pvTranslatePart = new CCCVec3();
 }
@@ -254,8 +256,11 @@ void CAttachedLightEffectTransform::Recalc()
 CConstantOffsetTransform::CConstantOffsetTransform( const int _nTargetID,
                                                     const std::string &_szBoneName,
                                                     CFuncBase<SFBTransform> *_pBaseTransform )
-		: pBaseTransform( _pBaseTransform ), nTargetID( _nTargetID ), szBoneName( _szBoneName ), bNeedCalcMatrix( true ),
-			pParentTransform( 0 )
+	: pBaseTransform( _pBaseTransform )
+	, nTargetID( _nTargetID )
+	, szBoneName( _szBoneName )
+	, bNeedCalcMatrix( true )
+	, pParentTransform( 0 )
 {
 	Identity( &mMultiplier );
 }
@@ -264,7 +269,10 @@ CConstantOffsetTransform::CConstantOffsetTransform( const int _nTargetID,
                                                     const std::string &_szBoneName,
                                                     CFuncBase<SFBTransform> *_pBaseTransform,
                                                     CFuncBase<SFBTransform> *_pParentTransform )
-		: pBaseTransform( _pBaseTransform ), nTargetID( _nTargetID ), szBoneName( _szBoneName ), bNeedCalcMatrix( true )
+	: pBaseTransform( _pBaseTransform )
+	, nTargetID( _nTargetID )
+	, szBoneName( _szBoneName )
+	, bNeedCalcMatrix( true )
 {
 	pParentTransform = dynamic_cast<CConstantOffsetTransform *>( _pParentTransform );
 	Identity( &mMultiplier );
@@ -306,7 +314,9 @@ void CConstantOffsetTransform::Recalc()
 CCenterOffsetTransform::CCenterOffsetTransform( const int _nTargetID,
                                                 CFuncBase<SFBTransform> *_pBaseTransform,
                                                 const SHMatrix &_mMultiplier )
-		: pBaseTransform( _pBaseTransform ), nTargetID( _nTargetID ), mMultiplier( _mMultiplier )
+	: pBaseTransform( _pBaseTransform )
+	, nTargetID( _nTargetID )
+	, mMultiplier( _mMultiplier )
 {
 	mMultiplierInv.HomogeneousInverse( mMultiplier );
 }
@@ -348,8 +358,12 @@ CAttachedLightEffect::CAttachedLightEffect( const NDb::SAttachedLightEffect *_pE
                                             const NTimer::STime _nStartTime,
                                             const int nBoneIndex,
                                             const bool _bInEditor )
-		: CAttachedObject( pTransform, nBoneIndex, 0 ), nStartTime( _nStartTime ), nPointLightID( OBJECT_ID_GENERATE ),
-			pFlareHolder( 0 ), nSoundID( -1 ), bInEditor( _bInEditor )
+	: CAttachedObject( pTransform, nBoneIndex, 0 )
+	, nStartTime( _nStartTime )
+	, nPointLightID( OBJECT_ID_GENERATE )
+	, pFlareHolder( 0 )
+	, nSoundID( -1 )
+	, bInEditor( _bInEditor )
 {
 	lightEffect = *_pEffect;
 	////
@@ -517,8 +531,11 @@ CAttachedStaticLightEffect::CAttachedStaticLightEffect( const NDb::SAttachedLigh
                                                         const int _nObjectID,
                                                         const NTimer::STime _nStartTime,
                                                         const bool _bInEditor )
-		: nStartTime( _nStartTime ), nPointLightID( OBJECT_ID_GENERATE ), nObjectUniqueID( _nObjectID ),
-			nConeID( OBJECT_ID_GENERATE ), bInEditor( _bInEditor )
+	: nStartTime( _nStartTime )
+	, nPointLightID( OBJECT_ID_GENERATE )
+	, nObjectUniqueID( _nObjectID )
+	, nConeID( OBJECT_ID_GENERATE )
+	, bInEditor( _bInEditor )
 {
 	lightEffect = *_pEffect;
 

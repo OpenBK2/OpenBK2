@@ -182,7 +182,8 @@ void CZipFile::SFileHeader::Init( const SZipFileHeader &hdr )
 	( (char *)pszFileName )[hdr.wFileNameLen] = 0;
 }
 
-CZipFile::CZipFile( const char *pszName ) : mmf( pszName, STREAM_ACCESS_READ )
+CZipFile::CZipFile( const char *pszName )
+	: mmf( pszName, STREAM_ACCESS_READ )
 {
 	NI_ASSERT( pszName != 0, "NULL stream passed to zip file" );
 	if ( !mmf.IsOk() )

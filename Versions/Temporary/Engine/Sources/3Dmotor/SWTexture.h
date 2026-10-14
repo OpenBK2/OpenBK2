@@ -53,7 +53,10 @@ protected:
 	virtual void Recalc();
 
 public:
-	CSWTexture() : bIsReady( false ) {}
+	CSWTexture()
+		: bIsReady( false )
+	{
+	}
 
 	bool IsReady();
 };
@@ -80,7 +83,9 @@ public:
 	CBilinearTexture() {}
 
 	CBilinearTexture( const CArray2D<NGfx::SPixel8888> &_data, int _nXSize, int _nYSize )
-			: pic( _data ), nXSize( _nXSize ), nYSize( _nYSize )
+		: pic( _data )
+		, nXSize( _nXSize )
+		, nYSize( _nYSize )
 	{
 	}
 };

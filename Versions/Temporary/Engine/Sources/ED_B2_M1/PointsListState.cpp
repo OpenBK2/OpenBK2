@@ -27,8 +27,11 @@
 //
 
 CPointsListState::CPointsListState( unsigned _nCHID, unsigned _nInstanceID, CBuildingEditor *_pBuildingEditor )
-		: pBuildingEditor( _pBuildingEditor ), pMaskManipulator( 0 ), nCHID( _nCHID ), nInstanceID( _nInstanceID ),
-			pMarkers( 0 )
+	: pBuildingEditor( _pBuildingEditor )
+	, pMaskManipulator( 0 )
+	, nCHID( _nCHID )
+	, nInstanceID( _nInstanceID )
+	, pMarkers( 0 )
 {
 	NI_ASSERT( pBuildingEditor != 0, "CPointsListState(): Invalid parameter: pBuildingEditor == 0" );
 	Singleton<ICommandHandlerContainer>()->Set( nCHID, this );

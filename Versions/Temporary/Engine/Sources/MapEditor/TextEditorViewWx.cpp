@@ -169,7 +169,9 @@ class CFindWxDialog : public wxDialog
 	IFindTarget *pTarget = nullptr;
 
 public:
-	CFindWxDialog( wxWindow *pParent, IFindTarget *_pTarget ) : wxDialog( pParent, wxID_ANY, "Find" ), pTarget( _pTarget )
+	CFindWxDialog( wxWindow *pParent, IFindTarget *_pTarget )
+		: wxDialog( pParent, wxID_ANY, "Find" )
+		, pTarget( _pTarget )
 	{
 		wxBoxSizer *pSizer = new wxBoxSizer( wxHORIZONTAL );
 		wxBoxSizer *pLeft = new wxBoxSizer( wxVERTICAL );
@@ -229,7 +231,8 @@ class CReplaceWxDialog : public wxDialog
 
 public:
 	CReplaceWxDialog( wxWindow *pParent, IFindTarget *_pTarget )
-			: wxDialog( pParent, wxID_ANY, "Replace" ), pTarget( _pTarget )
+		: wxDialog( pParent, wxID_ANY, "Replace" )
+		, pTarget( _pTarget )
 	{
 		wxBoxSizer *pSizer = new wxBoxSizer( wxHORIZONTAL );
 		wxBoxSizer *pLeft = new wxBoxSizer( wxVERTICAL );
@@ -315,12 +318,12 @@ class CScriptEditorWxDialog : public CWxToolDialog, private IFindTarget
 
 public:
 	CScriptEditorWxDialog( wxWindow *pParent, const std::string &rszTitle, const std::string &rszText, bool bEnableEdit )
-			: CWxToolDialog( pParent,
-	                     wxID_ANY,
-	                     "Script Editor",
-	                     wxDefaultPosition,
-	                     wxDefaultSize,
-	                     wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+		: CWxToolDialog( pParent,
+	                   wxID_ANY,
+	                   "Script Editor",
+	                   wxDefaultPosition,
+	                   wxDefaultSize,
+	                   wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
 	{
 		// The editor over a fixed-height error box, and OK and Cancel in the
 		// bottom right -- what CScriptEditor::OnSize keeps them as by hand.
@@ -759,13 +762,9 @@ public:
 	                     const std::string &rszEditor,
 	                     const std::string &rszText,
 	                     bool bEnableEdit )
-			: CWxToolDialog( pParent,
-	                     wxID_ANY,
-	                     "Text Editor",
-	                     wxDefaultPosition,
-	                     wxDefaultSize,
-	                     wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
-				placement( PlacementName( rszEditor ) )
+		: CWxToolDialog(
+					pParent, wxID_ANY, "Text Editor", wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+		, placement( PlacementName( rszEditor ) )
 	{
 		// IDD_TEXT_EDITOR's gaps in the pixels MFC lays it out at, for the
 		// reason the script editor gives.

@@ -74,14 +74,14 @@ static inline bool DoesFileExist( const char *pszResName, const boost::uuids::uu
 // CFileResource
 
 CFileResource::CFileResource( const char *pszResName, int nFileID )
-		: f( NVFS::GetMainVFS(), GetFileResourceName( pszResName, nFileID ) )
+	: f( NVFS::GetMainVFS(), GetFileResourceName( pszResName, nFileID ) )
 {
 }
 
 CFileResource::CFileResource( const char *pszResName, const SResKey<int> &key )
-		: f( NVFS::GetMainVFS(),
-         DoesFileExist( pszResName, key.uidKey ) ? GetFileResourceUidName( pszResName, key.uidKey )
-                                                 : GetFileResourceName( pszResName, key.tKey ) )
+	: f( NVFS::GetMainVFS(),
+       DoesFileExist( pszResName, key.uidKey ) ? GetFileResourceUidName( pszResName, key.uidKey )
+                                               : GetFileResourceName( pszResName, key.tKey ) )
 {
 }
 
@@ -92,7 +92,11 @@ struct SDoesExistKey
 
 	SDoesExistKey() {}
 
-	SDoesExistKey( const char *_pszRes, const SResKey<int> &_k ) : szRes( _pszRes ), key( _k ) {}
+	SDoesExistKey( const char *_pszRes, const SResKey<int> &_k )
+		: szRes( _pszRes )
+		, key( _k )
+	{
+	}
 };
 
 inline bool operator==( const SDoesExistKey &a, const SDoesExistKey &b )
@@ -134,13 +138,20 @@ void CResourceFileOpener::Clear()
 }
 
 CFileRequest::CFileRequest( const char *_pszResName, int _nID, bool _bDelayedLoad )
-		: pszResName( _pszResName ), nID( _nID ), bIsReady( false ), bDelayedLoad( _bDelayedLoad )
+	: pszResName( _pszResName )
+	, nID( _nID )
+	, bIsReady( false )
+	, bDelayedLoad( _bDelayedLoad )
 {
 	Zero( uid );
 }
 
 CFileRequest::CFileRequest( const char *_pszResName, const SResKey<int> &key, bool _bDelayedLoad )
-		: pszResName( _pszResName ), nID( key.tKey ), uid( key.uidKey ), bIsReady( false ), bDelayedLoad( _bDelayedLoad )
+	: pszResName( _pszResName )
+	, nID( key.tKey )
+	, uid( key.uidKey )
+	, bIsReady( false )
+	, bDelayedLoad( _bDelayedLoad )
 {
 }
 

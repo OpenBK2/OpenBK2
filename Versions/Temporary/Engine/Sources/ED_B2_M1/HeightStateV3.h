@@ -29,7 +29,8 @@ class CHeightTileStateV3 : public CDefaultInputState
 
 	class CHeightStateV3 *pParentState;
 
-	CHeightTileStateV3( CHeightStateV3 *_pParentState = 0 ) : pParentState( _pParentState )
+	CHeightTileStateV3( CHeightStateV3 *_pParentState = 0 )
+		: pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CHeightUpStateV3(): Invalid parameter: pParentState == 0" );
 	}
@@ -46,7 +47,8 @@ class CHeightUpStateV3 : public CDefaultInputState
 
 	class CHeightStateV3 *pParentState;
 
-	CHeightUpStateV3( CHeightStateV3 *_pParentState = 0 ) : pParentState( _pParentState )
+	CHeightUpStateV3( CHeightStateV3 *_pParentState = 0 )
+		: pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CHeightUpStateV3(): Invalid parameter: pParentState == 0" );
 	}
@@ -65,7 +67,8 @@ class CHeightDownStateV3 : public CDefaultInputState
 
 	class CHeightStateV3 *pParentState;
 
-	CHeightDownStateV3( CHeightStateV3 *_pParentState = 0 ) : pParentState( _pParentState )
+	CHeightDownStateV3( CHeightStateV3 *_pParentState = 0 )
+		: pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CHeightDownStateV3(): Invalid parameter: pParentState == 0" );
 	}
@@ -84,7 +87,8 @@ class CHeightRoundStateV3 : public CDefaultInputState
 
 	class CHeightStateV3 *pParentState;
 
-	CHeightRoundStateV3( CHeightStateV3 *_pParentState = 0 ) : pParentState( _pParentState )
+	CHeightRoundStateV3( CHeightStateV3 *_pParentState = 0 )
+		: pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CHeightRoundStateV3(): Invalid parameter: pParentState == 0" );
 	}
@@ -103,7 +107,8 @@ class CHeightPlatoStateV3 : public CDefaultInputState
 
 	class CHeightStateV3 *pParentState;
 
-	CHeightPlatoStateV3( CHeightStateV3 *_pParentState = 0 ) : pParentState( _pParentState )
+	CHeightPlatoStateV3( CHeightStateV3 *_pParentState = 0 )
+		: pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CHeightPlatoStateV3(): Invalid parameter: pParentState == 0" );
 	}
@@ -177,8 +182,14 @@ public:
 		std::vector<int> heightBrushSizeList;
 
 		SEditParameters()
-				: nFlags( MITHV3EP_ALL ), eBrush( B_TILE ), eBrushSize( BS_1 ), eBrushType( BT_CIRCLE ), fLevelTo( 0.0f ),
-					bUpdateHeight( true ), nTileIndex( -1 ), bThumbnails( false )
+			: nFlags( MITHV3EP_ALL )
+			, eBrush( B_TILE )
+			, eBrushSize( BS_1 )
+			, eBrushType( BT_CIRCLE )
+			, fLevelTo( 0.0f )
+			, bUpdateHeight( true )
+			, nTileIndex( -1 )
+			, bThumbnails( false )
 		{
 		}
 
@@ -248,7 +259,10 @@ protected:
 
 public:
 	CHeightStateV3( CMapInfoEditor *_pMapInfoEditor = 0 )
-			: pMapInfoEditor( _pMapInfoEditor ), bEscaped( false ), bTileEditStarted( false ), bHeightEditStarted( false )
+		: pMapInfoEditor( _pMapInfoEditor )
+		, bEscaped( false )
+		, bTileEditStarted( false )
+		, bHeightEditStarted( false )
 	{
 		NI_ASSERT( pMapInfoEditor != 0, "CHeightState(): Invalid parameter: pMapInfoEditor == 0" );
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_TERRAIN_HEIGHT_STATE_V3, this );

@@ -82,7 +82,10 @@ public:
 	{
 		uint8_t cMask = {};
 
-		SSortByResupplyMaskPredicate( const uint8_t cMask ) : cMask( cMask ) {}
+		SSortByResupplyMaskPredicate( const uint8_t cMask )
+			: cMask( cMask )
+		{
+		}
 
 		bool operator()( const CPtr<CResupplyCellInfo> &s1, const CPtr<CResupplyCellInfo> &s2 ) const
 		{
@@ -249,7 +252,10 @@ class CGeneralTaskToResupplyCell : public IGeneralTask, public IWorkerEnumerator
 	void OnSerialize( IBinSaver &saver );
 
 public:
-	CGeneralTaskToResupplyCell() : pCells( 0 ) {}
+	CGeneralTaskToResupplyCell()
+		: pCells( 0 )
+	{
+	}
 
 	CGeneralTaskToResupplyCell( CResupplyCellInfo *pCell,
 	                            const int nParty,
@@ -309,7 +315,10 @@ public:
 	                             class CResupplyCellInfo *_pCell,
 	                             enum EResupplyType _eResupplyType,
 	                             struct ICommander *_pCommander )
-			: pTask( _pTask ), pCell( _pCell ), eResupplyType( _eResupplyType ), pCommander( _pCommander )
+		: pTask( _pTask )
+		, pCell( _pCell )
+		, eResupplyType( _eResupplyType )
+		, pCommander( _pCommander )
 	{
 	}
 
@@ -348,9 +357,17 @@ class CFreeArtilleryHolder : public CAIObjectBase
 			return 0;
 		}
 
-		SArtilleryInfo() : pArtillery( 0 ), pCatchingFormation( 0 ) {}
+		SArtilleryInfo()
+			: pArtillery( 0 )
+			, pCatchingFormation( 0 )
+		{
+		}
 
-		SArtilleryInfo( CArtillery *_pArtillery ) : pArtillery( _pArtillery ), pCatchingFormation( 0 ) {}
+		SArtilleryInfo( CArtillery *_pArtillery )
+			: pArtillery( _pArtillery )
+			, pCatchingFormation( 0 )
+		{
+		}
 	};
 
 	typedef det_map<int, SArtilleryInfo> TArtilleries;
@@ -380,7 +397,8 @@ private:
 	void OnSerialize( IBinSaver &f );
 
 public:
-	CFreeArtilleryHolder() : timeFromReset( 0 )
+	CFreeArtilleryHolder()
+		: timeFromReset( 0 )
 	{
 		itCurrent = artilleries.end();
 	}
@@ -456,7 +474,10 @@ private:
 	void SearchCrewForArtillery();
 
 public:
-	CGeneralIntendant() : pGeneral( 0 ) {}
+	CGeneralIntendant()
+		: pGeneral( 0 )
+	{
+	}
 
 	CGeneralIntendant( const int nPlayer, CCommander *pGeneral );
 

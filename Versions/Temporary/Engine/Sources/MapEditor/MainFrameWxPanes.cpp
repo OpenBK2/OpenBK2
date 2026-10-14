@@ -385,7 +385,7 @@ bool CToolBar::IsVisible() const
 }
 
 CContentPanel::CContentPanel( wxWindow *pParent )
-		: wxPanel( pParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE | wxCLIP_CHILDREN )
+	: wxPanel( pParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE | wxCLIP_CHILDREN )
 {
 }
 

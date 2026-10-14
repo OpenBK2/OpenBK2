@@ -19,7 +19,8 @@ static int AUTOSAVE_ID = 0;
 const int MIN_DISTANCE_BETWEEN_DIFFERENT_COMMANDS = 300;
 const int MIN_TIME_BETWEEN_DIFFERENT_COMMANDS = 1000;
 
-CCommandsSender::CCommandsSender( ITransceiver *_pTransciver ) : nLastGroupID( -1 )
+CCommandsSender::CCommandsSender( ITransceiver *_pTransciver )
+	: nLastGroupID( -1 )
 {
 	pTransciver = _pTransciver;
 	bHistoryPlaying = false;

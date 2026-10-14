@@ -392,8 +392,10 @@ CWorldClient::CWorldClient( ITransceiver *pTransceiver,
                             IAILogic *_pAI,
                             IScenarioTracker *_pScenarioTracker,
                             IMissionSuperWeapon *_pSuperWeapon )
-		: pAI( _pAI ), CUpdatableWorld( pNotifications, _pAI ), pScenarioTracker( _pScenarioTracker ),
-			pSuperWeapon( _pSuperWeapon )
+	: pAI( _pAI )
+	, CUpdatableWorld( pNotifications, _pAI )
+	, pScenarioTracker( _pScenarioTracker )
+	, pSuperWeapon( _pSuperWeapon )
 {
 	InitPrivate();
 
@@ -2143,7 +2145,10 @@ struct SObstacleObjectFilter : public SObjectFilter
 {
 	const CWorldClient *pClient;
 
-	SObstacleObjectFilter( CWorldClient *_pClient ) : pClient( _pClient ) {}
+	SObstacleObjectFilter( CWorldClient *_pClient )
+		: pClient( _pClient )
+	{
+	}
 
 	virtual bool operator()( int nID ) const
 	{
@@ -2174,7 +2179,9 @@ struct SCanSelectObjectFilter : public SObjectFilter
 	const CWorldClient *pClient;
 	const CSelector *pSelector;
 
-	SCanSelectObjectFilter( CWorldClient *_pClient, CSelector *_pSelector ) : pClient( _pClient ), pSelector( _pSelector )
+	SCanSelectObjectFilter( CWorldClient *_pClient, CSelector *_pSelector )
+		: pClient( _pClient )
+		, pSelector( _pSelector )
 	{
 	}
 
@@ -2189,7 +2196,10 @@ struct SCoveredObjectFilter : public SObjectFilter
 {
 	const CWorldClient *pClient;
 
-	SCoveredObjectFilter( CWorldClient *_pClient ) : pClient( _pClient ) {}
+	SCoveredObjectFilter( CWorldClient *_pClient )
+		: pClient( _pClient )
+	{
+	}
 
 	virtual bool operator()( int nID ) const
 	{

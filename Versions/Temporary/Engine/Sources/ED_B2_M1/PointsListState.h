@@ -95,7 +95,7 @@ public:
 	}
 
 	CSmokePointsState( CBuildingEditor *_pBuildingEditor )
-			: CPointsListState( CHID_BUILDING_SMOKE_POINTS_STATE, 0, _pBuildingEditor )
+		: CPointsListState( CHID_BUILDING_SMOKE_POINTS_STATE, 0, _pBuildingEditor )
 	{
 	}
 
@@ -123,7 +123,7 @@ public:
 	}
 
 	CSlotPointsState( CBuildingEditor *_pBuildingEditor )
-			: CPointsListState( CHID_BUILDING_SLOT_POINTS_STATE, 1, _pBuildingEditor )
+		: CPointsListState( CHID_BUILDING_SLOT_POINTS_STATE, 1, _pBuildingEditor )
 	{
 	}
 
@@ -151,7 +151,7 @@ public:
 	}
 
 	CEntrancePointsState( CBuildingEditor *_pBuildingEditor )
-			: CPointsListState( CHID_BUILDING_ENTRANCE_POINTS_STATE, 2, _pBuildingEditor )
+		: CPointsListState( CHID_BUILDING_ENTRANCE_POINTS_STATE, 2, _pBuildingEditor )
 	{
 	}
 
@@ -181,7 +181,7 @@ public:
 	}
 
 	CSurfacePointsState( CBuildingEditor *_pBuildingEditor )
-			: CPointsListState( CHID_BUILDING_SURFACE_POINTS_STATE, 3, _pBuildingEditor )
+		: CPointsListState( CHID_BUILDING_SURFACE_POINTS_STATE, 3, _pBuildingEditor )
 	{
 	}
 
@@ -213,7 +213,7 @@ public:
 	}
 
 	CDamageLevelsState( CBuildingEditor *_pBuildingEditor )
-			: CPointsListState( CHID_DAMAGE_LEVELS_STATE, 4, _pBuildingEditor )
+		: CPointsListState( CHID_DAMAGE_LEVELS_STATE, 4, _pBuildingEditor )
 	{
 	}
 

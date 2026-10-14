@@ -51,14 +51,14 @@ class CWxSkeletonFrame : public wxFrame
 {
 public:
 	explicit CWxSkeletonFrame( const wxString &rstrDetails )
-			: wxFrame( nullptr,
-	               wxID_ANY,
-	               // The title carries the version so that windump.py can read it
-	               // from outside the process, which is how everything else in this
-	               // port gets checked.
-	               wxString::Format( "wx skeleton - %s", wxVERSION_STRING ),
-	               wxDefaultPosition,
-	               wxSize( 560, 320 ) )
+		: wxFrame( nullptr,
+	             wxID_ANY,
+	             // The title carries the version so that windump.py can read it
+	             // from outside the process, which is how everything else in this
+	             // port gets checked.
+	             wxString::Format( "wx skeleton - %s", wxVERSION_STRING ),
+	             wxDefaultPosition,
+	             wxSize( 560, 320 ) )
 	{
 		wxTextCtrl *pDetails = new wxTextCtrl(
 				this, wxID_ANY, rstrDetails, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY | wxTE_DONTWRAP );

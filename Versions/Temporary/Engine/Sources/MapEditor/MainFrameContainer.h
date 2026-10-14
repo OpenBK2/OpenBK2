@@ -12,7 +12,11 @@ class CMainFrameContainer : public IMainFrameContainer
 	CObj<CMainFrameLoggerSink> pLoggerSink;
 
 public:
-	CMainFrameContainer() : pMainFrame( 0 ), pMainWindow( 0 ) {}
+	CMainFrameContainer()
+		: pMainFrame( 0 )
+		, pMainWindow( 0 )
+	{
+	}
 
 	~CMainFrameContainer() {}
 

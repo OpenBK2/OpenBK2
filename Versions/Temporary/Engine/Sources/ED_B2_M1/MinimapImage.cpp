@@ -32,7 +32,8 @@ struct SSetColorFunctional
 
 	//
 	SSetColorFunctional( CArray2D<uint32_t> *_pDestImage, uint32_t _dwColor )
-			: pDestImage( _pDestImage ), dwColor( _dwColor )
+		: pDestImage( _pDestImage )
+		, dwColor( _dwColor )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 	}
@@ -51,7 +52,8 @@ struct SBooleanSetColorFunctional
 
 	//
 	SBooleanSetColorFunctional( CArray2D<uint32_t> *_pDestImage, uint32_t _dwColor )
-			: pDestImage( _pDestImage ), dwColor( _dwColor )
+		: pDestImage( _pDestImage )
+		, dwColor( _dwColor )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 	}
@@ -73,7 +75,8 @@ struct SWBCSetColorFunctional
 
 	//
 	SWBCSetColorFunctional( CArray2D<uint32_t> *_pDestImage, uint32_t _dwColor )
-			: pDestImage( _pDestImage ), dwColor( _dwColor )
+		: pDestImage( _pDestImage )
+		, dwColor( _dwColor )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 		size.x = pDestImage->GetSizeX();

@@ -32,7 +32,13 @@ class CCommonStaticPath : public IStaticPath
 	}
 
 public:
-	CCommonStaticPath() : nLen( -1 ), startTile( -1, -1 ), finishTile( -1, -1 ), finishPoint( VNULL2 ) {}
+	CCommonStaticPath()
+		: nLen( -1 )
+		, startTile( -1, -1 )
+		, finishTile( -1, -1 )
+		, finishPoint( VNULL2 )
+	{
+	}
 
 	CCommonStaticPath( class CCommonPathFinder *pStaticPathFinder, CAIMap *pAIMap );
 

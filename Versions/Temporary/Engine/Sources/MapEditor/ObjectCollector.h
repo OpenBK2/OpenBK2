@@ -36,12 +36,20 @@ class CObjectFilterCollector : public IObjectFilterCollector
 		mutable int nObjectCollectionCount;
 
 		//
-		SObjectFilter() : bSeparator( false ), bCached( false ), nObjectCollectionCount( 0 ) {}
+		SObjectFilter()
+			: bSeparator( false )
+			, bCached( false )
+			, nObjectCollectionCount( 0 )
+		{
+		}
 
 		SObjectFilter( const SObjectFilter &rObjectFilter )
-				: szName( rObjectFilter.szName ), partList( rObjectFilter.partList ), bSeparator( rObjectFilter.bSeparator ),
-					bCached( rObjectFilter.bCached ), objectCollection( rObjectFilter.objectCollection ),
-					nObjectCollectionCount( rObjectFilter.nObjectCollectionCount )
+			: szName( rObjectFilter.szName )
+			, partList( rObjectFilter.partList )
+			, bSeparator( rObjectFilter.bSeparator )
+			, bCached( rObjectFilter.bCached )
+			, objectCollection( rObjectFilter.objectCollection )
+			, nObjectCollectionCount( rObjectFilter.nObjectCollectionCount )
 		{
 		}
 
@@ -163,7 +171,8 @@ protected:
 	IImageList *GetImageList( int nImageListType );
 
 public:
-	CObjectCollector() : nDefaultImageIndex( INVALID_NODE_ID )
+	CObjectCollector()
+		: nDefaultImageIndex( INVALID_NODE_ID )
 	{
 		CreateImageLists();
 	}

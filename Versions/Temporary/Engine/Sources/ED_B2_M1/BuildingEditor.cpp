@@ -36,8 +36,11 @@ const int N_POINT_TYPES_NUM = 5;
 std::string listLabels[N_POINT_TYPES_NUM];
 
 CBuildingEditor::CBuildingEditor()
-		: pBuildingState( 0 ), pwndShortcutBar( 0 ), vLastCameraAnchor( VNULL3 ), szCurrSeason( "SEASON_SUMMER" ),
-			bDrawPassability( false )
+	: pBuildingState( 0 )
+	, pwndShortcutBar( 0 )
+	, vLastCameraAnchor( VNULL3 )
+	, szCurrSeason( "SEASON_SUMMER" )
+	, bDrawPassability( false )
 {
 	listLabels[0] = NResources::GetString( IDS_SMOKE_POINTS );
 	listLabels[1] = NResources::GetString( IDS_FIRE_POINTS );

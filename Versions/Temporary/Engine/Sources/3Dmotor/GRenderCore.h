@@ -221,7 +221,10 @@ struct SRenderPartSet
 	                const std::vector<CPtr<IPart>> *_pParts,
 	                SRenderGeometryInfo *_pGeometry,
 	                int _nFloorMask )
-			: pNode( _pNode ), pParts( _pParts ), pGeometry( _pGeometry ), nFloorMask( _nFloorMask )
+		: pNode( _pNode )
+		, pParts( _pParts )
+		, pGeometry( _pGeometry )
+		, nFloorMask( _nFloorMask )
 	{
 		parts.Clear();
 	}
@@ -377,7 +380,10 @@ struct SPerspDirectionalDepthInfo
 	CVec4 vDepth;
 	SNLProjectionInfo nlp;
 
-	SPerspDirectionalDepthInfo() : vDepth( 0, 0, 0, 1 ) {}
+	SPerspDirectionalDepthInfo()
+		: vDepth( 0, 0, 0, 1 )
+	{
+	}
 };
 
 struct SSkyDepth3Info
@@ -475,7 +481,11 @@ struct SPerPartVariables
 		return 0;
 	}
 
-	SPerPartVariables() : fFade( 1 ), nPriority( 0 ) {}
+	SPerPartVariables()
+		: fFade( 1 )
+		, nPriority( 0 )
+	{
+	}
 
 	intptr_t GetSortValue() const
 	{
@@ -497,7 +507,12 @@ struct SRenderFragmentInfo
 
 		SElement() {}
 
-		SElement( short _nGeom, short _nBlock, int _nFlags ) : nGeometry( _nGeom ), nBlock( _nBlock ), nFlags( _nFlags ) {}
+		SElement( short _nGeom, short _nBlock, int _nFlags )
+			: nGeometry( _nGeom )
+			, nBlock( _nBlock )
+			, nFlags( _nFlags )
+		{
+		}
 	};
 
 	std::vector<SElement> elements;
@@ -656,7 +671,8 @@ class CSelectGeometries
 
 public:
 	template <class T>
-	CSelectGeometries( CSceneFragments *_pScene, const T &select ) : pScene( _pScene )
+	CSelectGeometries( CSceneFragments *_pScene, const T &select )
+		: pScene( _pScene )
 	{
 		holdFlags = pScene->filterGeometry;
 		holdParts = pScene->selectedParts;
@@ -697,7 +713,8 @@ class CSelectFragments
 
 public:
 	template <class T>
-	CSelectFragments( CSceneFragments *_pScene, const T &select ) : pScene( _pScene )
+	CSelectFragments( CSceneFragments *_pScene, const T &select )
+		: pScene( _pScene )
 	{
 		holdFilter = pScene->filterFragment;
 		if ( holdFilter.empty() )
@@ -724,7 +741,10 @@ struct SBoundIntersectFilter
 {
 	SBound bv;
 
-	SBoundIntersectFilter( const SBound &_bv ) : bv( _bv ) {}
+	SBoundIntersectFilter( const SBound &_bv )
+		: bv( _bv )
+	{
+	}
 
 	EFragmentsSplit operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const;
 };
@@ -733,7 +753,10 @@ struct SFrustrumFilter
 {
 	CTransformStack *pTS;
 
-	SFrustrumFilter( CTransformStack *_pTS ) : pTS( _pTS ) {}
+	SFrustrumFilter( CTransformStack *_pTS )
+		: pTS( _pTS )
+	{
+	}
 
 	EFragmentsSplit operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const;
 };
@@ -743,7 +766,8 @@ struct SSphereFilter
 	SBound bound;
 	SSphere sph;
 
-	SSphereFilter( const SSphere &_sph ) : sph( _sph )
+	SSphereFilter( const SSphere &_sph )
+		: sph( _sph )
 	{
 		bound.SphereInit( sph.ptCenter, sph.fRadius );
 	}
@@ -778,7 +802,8 @@ struct SIgnoredSphereFilter
 	SSphereFilter sph;
 
 	SIgnoredSphereFilter( CFullIgnorePartsHash *_pIgnoreList, const SSphere &_sph )
-			: pIgnoreList( _pIgnoreList ), sph( _sph )
+		: pIgnoreList( _pIgnoreList )
+		, sph( _sph )
 	{
 	}
 
@@ -805,33 +830,75 @@ public:
 		float f;
 		int nData;
 
-		UParameter() : f( 0 ) {}
+		UParameter()
+			: f( 0 )
+		{
+		}
 
-		UParameter( const CVec3 *v3 ) : pVec3( v3 ) {}
+		UParameter( const CVec3 *v3 )
+			: pVec3( v3 )
+		{
+		}
 
-		UParameter( const CVec4 *v4 ) : pVec4( v4 ) {}
+		UParameter( const CVec4 *v4 )
+			: pVec4( v4 )
+		{
+		}
 
-		UParameter( NGfx::CTexture *_pTex ) : pTex( _pTex ) {}
+		UParameter( NGfx::CTexture *_pTex )
+			: pTex( _pTex )
+		{
+		}
 
-		UParameter( NGfx::CCubeTexture *_pTex ) : pCubeTex( _pTex ) {}
+		UParameter( NGfx::CCubeTexture *_pTex )
+			: pCubeTex( _pTex )
+		{
+		}
 
-		UParameter( const SDirectionalDepthInfo *_pDirDepth ) : pDirDepth( _pDirDepth ) {}
+		UParameter( const SDirectionalDepthInfo *_pDirDepth )
+			: pDirDepth( _pDirDepth )
+		{
+		}
 
-		UParameter( const SPerspDirectionalDepthInfo *_pDirDepth ) : pPDirDepth( _pDirDepth ) {}
+		UParameter( const SPerspDirectionalDepthInfo *_pDirDepth )
+			: pPDirDepth( _pDirDepth )
+		{
+		}
 
-		UParameter( const SSkyDepth3Info *_p ) : pSkyDepth3( _p ) {}
+		UParameter( const SSkyDepth3Info *_p )
+			: pSkyDepth3( _p )
+		{
+		}
 
-		UParameter( const SFillDiffuseBumpSpecInfo *_pFill ) : pFill( _pFill ) {}
+		UParameter( const SFillDiffuseBumpSpecInfo *_pFill )
+			: pFill( _pFill )
+		{
+		}
 
-		UParameter( const SPPSpecularInfo *_pPPSpec ) : pPPSpec( _pPPSpec ) {}
+		UParameter( const SPPSpecularInfo *_pPPSpec )
+			: pPPSpec( _pPPSpec )
+		{
+		}
 
-		UParameter( const SFastGf3RenderInfo *_pFastInfo ) : pFastInfo( _pFastInfo ) {}
+		UParameter( const SFastGf3RenderInfo *_pFastInfo )
+			: pFastInfo( _pFastInfo )
+		{
+		}
 
-		UParameter( const SPntLightShadowedInfo *_pInfo ) : pPSInfo( _pInfo ) {}
+		UParameter( const SPntLightShadowedInfo *_pInfo )
+			: pPSInfo( _pInfo )
+		{
+		}
 
-		UParameter( IMaterial *_pMaterial ) : pMaterial( _pMaterial ) {}
+		UParameter( IMaterial *_pMaterial )
+			: pMaterial( _pMaterial )
+		{
+		}
 
-		UParameter( float _f ) : f( _f ) {}
+		UParameter( float _f )
+			: f( _f )
+		{
+		}
 	};
 
 	struct SOperation
@@ -855,8 +922,15 @@ public:
 		            UParameter _p1 = UParameter( float( 0 ) ),
 		            UParameter _p2 = UParameter( float( 0 ) ),
 		            UParameter _p3 = UParameter( float( 0 ) ) )
-				: pFrag( _pFrag ), op( _op ), nPass( _nPass ), nStencilBlendMode( _nSBM ), nDestRegister( _nRegister ),
-					nPartPriority( _nPartPriority ), p1( _p1 ), p2( _p2 ), p3( _p3 )
+			: pFrag( _pFrag )
+			, op( _op )
+			, nPass( _nPass )
+			, nStencilBlendMode( _nSBM )
+			, nDestRegister( _nRegister )
+			, nPartPriority( _nPartPriority )
+			, p1( _p1 )
+			, p2( _p2 )
+			, p3( _p3 )
 		{
 		}
 
@@ -888,7 +962,10 @@ class COpGenContext
 
 public:
 	COpGenContext( std::vector<CRenderCmdList::SOperation> *_pRes, const SRenderFragmentInfo *_pTarget )
-			: pRes( _pRes ), pCurFragment( _pTarget ), bHasAddedOps( false ), nPartPriority( _pTarget->vars.nPriority )
+		: pRes( _pRes )
+		, pCurFragment( _pTarget )
+		, bHasAddedOps( false )
+		, nPartPriority( _pTarget->vars.nPriority )
 	{
 	}
 
@@ -938,8 +1015,9 @@ struct SRenderPathContext
 	bool bTnL;
 
 	SRenderPathContext( bool _bTnL, NGfx::CTexture *_pDepthTex, NGfx::CTexture *_pCurrentWaterReflectionTexture )
-			: bTnL( _bTnL ), pCurrentDepthTexture( _pDepthTex ),
-				pCurrentWaterReflectionTexture( _pCurrentWaterReflectionTexture )
+		: bTnL( _bTnL )
+		, pCurrentDepthTexture( _pDepthTex )
+		, pCurrentWaterReflectionTexture( _pCurrentWaterReflectionTexture )
 	{
 	}
 };
@@ -1071,7 +1149,11 @@ struct SParticleLMRenderTargetInfo
 	CObj<NGfx::CTexture> pParticleLMs;
 	CVec2 vParticleLMSize, vKernelSize;
 
-	SParticleLMRenderTargetInfo() : vParticleLMSize( 0, 0 ), vKernelSize( 0, 0 ) {}
+	SParticleLMRenderTargetInfo()
+		: vParticleLMSize( 0, 0 )
+		, vKernelSize( 0, 0 )
+	{
+	}
 };
 
 } // namespace NGScene

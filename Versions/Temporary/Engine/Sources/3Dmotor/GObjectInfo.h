@@ -55,8 +55,12 @@ struct SPartAndSkeletonKey
 	                     const NDb::SSkeleton *_pSkeleton,
 	                     int _nSkeletonPart,
 	                     int _nLightMapped )
-			: pGeometry( _pGeometry ), nGeometryPart( _nGeometryPart ), nMaterialPart( _nMaterialPart ),
-				pSkeleton( _pSkeleton ), nSkeletonPart( _nSkeletonPart ), nLightMapped( _nLightMapped )
+		: pGeometry( _pGeometry )
+		, nGeometryPart( _nGeometryPart )
+		, nMaterialPart( _nMaterialPart )
+		, pSkeleton( _pSkeleton )
+		, nSkeletonPart( _nSkeletonPart )
+		, nLightMapped( _nLightMapped )
 	{
 	}
 
@@ -79,7 +83,10 @@ public:
 	granny_file *pFile = {};
 
 	//
-	CGrannyFile() : pFile( 0 ) {}
+	CGrannyFile()
+		: pFile( 0 )
+	{
+	}
 
 	~CGrannyFile();
 };
@@ -100,10 +107,16 @@ struct SGrannyFileLoaderInfo
 	}
 
 	//
-	SGrannyFileLoaderInfo() : nID( -1 ), bAllowDelayedLoad( false ) {}
+	SGrannyFileLoaderInfo()
+		: nID( -1 )
+		, bAllowDelayedLoad( false )
+	{
+	}
 
 	SGrannyFileLoaderInfo( const std::string &_szResName, int _nID, bool _bAllowDelayedLoad )
-			: szResName( _szResName ), nID( _nID ), bAllowDelayedLoad( _bAllowDelayedLoad )
+		: szResName( _szResName )
+		, nID( _nID )
+		, bAllowDelayedLoad( _bAllowDelayedLoad )
 	{
 	}
 

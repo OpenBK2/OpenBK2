@@ -43,7 +43,10 @@ class CPostColorer : public IPostProcess
 	}
 
 public:
-	CPostColorer( CFuncBase<CVec4> *_p = 0 ) : pColor( _p ) {}
+	CPostColorer( CFuncBase<CVec4> *_p = 0 )
+		: pColor( _p )
+	{
+	}
 
 	virtual void Render( SPostProcessData *pDst, const std::vector<SObject> &render );
 };
@@ -61,7 +64,10 @@ class _3DMOTOR_EXPORT COccludedColorer : public IPostProcess
 	}
 
 public:
-	COccludedColorer( CFuncBase<CVec4> *_p = 0 ) : pColor( _p ) {}
+	COccludedColorer( CFuncBase<CVec4> *_p = 0 )
+		: pColor( _p )
+	{
+	}
 
 	virtual void Render( SPostProcessData *pDst, const std::vector<SObject> &render );
 };

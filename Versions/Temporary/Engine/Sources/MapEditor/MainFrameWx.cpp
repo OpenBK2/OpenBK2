@@ -89,7 +89,7 @@ class CClassicStatusBar : public wxStatusBar
 {
 public:
 	CClassicStatusBar( wxWindow *pParent, wxWindowID id, long nStyle, const wxString &rName )
-			: wxStatusBar( pParent, id, nStyle, rName )
+		: wxStatusBar( pParent, id, nStyle, rName )
 	{
 		// wxStatusBar's constructor already asked for the best size and wx
 		// kept the answer, which was wxStatusBar's own: this class's
@@ -534,10 +534,9 @@ class CWxMainFrame : public wxFrame, public IMainFrame, public ICommandHandler, 
 
 public:
 	CWxMainFrame()
-			: wxFrame(
-						nullptr,
-						wxID_ANY,
-						wxString::FromUTF8( Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str() ) )
+		: wxFrame( nullptr,
+	             wxID_ANY,
+	             wxString::FromUTF8( Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str() ) )
 	{
 		Singleton<ICommandHandlerContainer>()->Set( CHID_VIEW, this );
 		Bind( wxEVT_CLOSE_WINDOW, &CWxMainFrame::OnCloseWindow, this );

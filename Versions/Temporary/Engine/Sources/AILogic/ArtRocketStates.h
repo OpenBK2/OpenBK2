@@ -66,7 +66,10 @@ public:
 public:
 	static IUnitState *Instance( class CArtillery *pArtillery, const CVec2 &point );
 
-	CArtRocketAttackGroundState() : pArtillery( 0 ) {}
+	CArtRocketAttackGroundState()
+		: pArtillery( 0 )
+	{
+	}
 
 	CArtRocketAttackGroundState( class CArtillery *pArtillery, const CVec2 &point );
 

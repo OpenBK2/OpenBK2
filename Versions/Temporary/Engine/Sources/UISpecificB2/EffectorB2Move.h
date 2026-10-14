@@ -21,7 +21,11 @@ public:
 		return 0;
 	}
 
-	SWindowContextB2Move() : bGoOut( true ), fMaxMoveTime( 0.0f ) {}
+	SWindowContextB2Move()
+		: bGoOut( true )
+		, fMaxMoveTime( 0.0f )
+	{
+	}
 };
 
 class CEffectorB2Move : public IUIEffector
@@ -107,8 +111,13 @@ private:
 
 public:
 	CEffectorB2Move()
-			: bFinished( false ), bForward( false ), fElapsedTime( 0.0f ), fMoveTime( 0.0f ), fMoveTime2( 0.0f ),
-				fWaitTime( 0.0f ), bGoOut( 0.0f )
+		: bFinished( false )
+		, bForward( false )
+		, fElapsedTime( 0.0f )
+		, fMoveTime( 0.0f )
+		, fMoveTime2( 0.0f )
+		, fWaitTime( 0.0f )
+		, bGoOut( 0.0f )
 	{
 	}
 

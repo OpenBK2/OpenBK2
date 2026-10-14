@@ -8,7 +8,9 @@
 
 extern NTimer::STime curTime;
 
-CSupportAAGun::CSupportAAGun( CAIUnit *_pUnit ) : timeNextTargetSearch( curTime ), predictedFire( _pUnit, 0 )
+CSupportAAGun::CSupportAAGun( CAIUnit *_pUnit )
+	: timeNextTargetSearch( curTime )
+	, predictedFire( _pUnit, 0 )
 {
 	pShootEstimator = new CShootEstimatorSupportAAGun( _pUnit );
 }

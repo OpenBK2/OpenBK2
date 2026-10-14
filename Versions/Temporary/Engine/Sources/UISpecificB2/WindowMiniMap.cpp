@@ -177,8 +177,11 @@ int CMiniMapLayer::operator&( IBinSaver &saver )
 // ************************************************************************************************************************ //
 
 CWindowMiniMap::CWindowMiniMap()
-		: bButtonDown( 4, false ), bNeedScreenToMapRefresh( true ), vOldDir( VNULL2 ), fAspect( 1.0f ),
-			vLastMousePos( VNULL2 )
+	: bButtonDown( 4, false )
+	, bNeedScreenToMapRefresh( true )
+	, vOldDir( VNULL2 )
+	, fAspect( 1.0f )
+	, vLastMousePos( VNULL2 )
 {
 	AddObserver( "mission_win_mouse_move_emit", &CWindowMiniMap::MsgMouseMoveEmit );
 }

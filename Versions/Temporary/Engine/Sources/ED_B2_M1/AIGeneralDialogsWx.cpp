@@ -52,7 +52,8 @@ class CAIGenMobileWxDialog : public CWxToolDialog
 	wxTextCtrl *pMobileID = nullptr;
 
 public:
-	CAIGenMobileWxDialog( wxWindow *pParent, int nMobileID ) : CWxToolDialog( pParent, wxID_ANY, "Mobile reinforcement" )
+	CAIGenMobileWxDialog( wxWindow *pParent, int nMobileID )
+		: CWxToolDialog( pParent, wxID_ANY, "Mobile reinforcement" )
 	{
 		wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 		wxBoxSizer *pRow = new wxBoxSizer( wxHORIZONTAL );
@@ -88,7 +89,7 @@ class CAIGenParcelWxDialog : public CWxToolDialog
 
 public:
 	CAIGenParcelWxDialog( wxWindow *pParent, NDb::EParcelType eType, float fImportance )
-			: CWxToolDialog( pParent, wxID_ANY, "Parcel properties" )
+		: CWxToolDialog( pParent, wxID_ANY, "Parcel properties" )
 	{
 		wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 		wxFlexGridSizer *pGrid = new wxFlexGridSizer( 2, wxSize( 6, 4 ) );

@@ -11,15 +11,23 @@ struct SBUIMessage
 
 	SBUIMessage() {}
 
-	SBUIMessage( const std::string &_szMessageID ) : szMessageID( _szMessageID ), nParam( 0 ) {}
+	SBUIMessage( const std::string &_szMessageID )
+		: szMessageID( _szMessageID )
+		, nParam( 0 )
+	{
+	}
 
 	SBUIMessage( const std::string &_szMessageID, const std::string &_szParam )
-			: szMessageID( _szMessageID ), szParam( _szParam ), nParam( 0 )
+		: szMessageID( _szMessageID )
+		, szParam( _szParam )
+		, nParam( 0 )
 	{
 	}
 
 	SBUIMessage( const std::string &_szMessageID, const std::string &_szParam, const int _nParam )
-			: szMessageID( _szMessageID ), szParam( _szParam ), nParam( _nParam )
+		: szMessageID( _szMessageID )
+		, szParam( _szParam )
+		, nParam( _nParam )
 	{
 	}
 

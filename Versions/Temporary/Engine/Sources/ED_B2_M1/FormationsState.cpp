@@ -279,7 +279,9 @@ void GetExistingFormations( SFormationWindowDialogData *pData, IManipulator *pSq
 //
 //
 
-CFormationsState::CFormationsState( CSquadEditor *_pSquadEditor ) : pSquadEditor( _pSquadEditor ), pMaskManipulator( 0 )
+CFormationsState::CFormationsState( CSquadEditor *_pSquadEditor )
+	: pSquadEditor( _pSquadEditor )
+	, pMaskManipulator( 0 )
 {
 	NI_ASSERT( pSquadEditor != 0, "CFormationsState(): Invalid parameter: pSquadEditor == 0" );
 }

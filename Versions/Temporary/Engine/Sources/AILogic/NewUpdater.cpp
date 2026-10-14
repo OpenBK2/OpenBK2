@@ -663,7 +663,11 @@ struct SUpdateInfo
 	int nValidCount = {};
 	int nInvalidCount = {};
 
-	SUpdateInfo() : nValidCount( 0 ), nInvalidCount( 0 ) {}
+	SUpdateInfo()
+		: nValidCount( 0 )
+		, nInvalidCount( 0 )
+	{
+	}
 };
 
 typedef det_map<EActionNotify, SUpdateInfo, SEnumHash> TDumpUpdatesHash; // update id -> update info

@@ -18,10 +18,15 @@ public:
 
 	//float fFocusRangeBackward;
 	//
-	SDepthOfField() : fFocalDist( 5.0f ), fFocusRange( 20.0f ) /*, fFocusRangeBackward(3.0f)*/ {}
+	SDepthOfField()
+		: fFocalDist( 5.0f )
+		, fFocusRange( 20.0f ) /*, fFocusRangeBackward(3.0f)*/
+	{
+	}
 
 	SDepthOfField( float _fFocalDist, float _fFocusRange /*, float _fFocusRangeBackward*/ )
-			: fFocalDist( _fFocalDist ), fFocusRange( _fFocusRange ) /*, fFocusRangeBackward(_fFocusRangeBackward)*/
+		: fFocalDist( _fFocalDist )
+		, fFocusRange( _fFocusRange ) /*, fFocusRangeBackward(_fFocusRangeBackward)*/
 	{
 	}
 };

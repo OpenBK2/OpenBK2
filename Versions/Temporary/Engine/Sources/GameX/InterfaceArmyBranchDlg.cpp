@@ -11,7 +11,10 @@
 
 // CInterfaceArmyBranchDlg
 
-CInterfaceArmyBranchDlg::CInterfaceArmyBranchDlg() : CInterfaceScreenBase( "ArmyBranchDlg", "army_branch_dlg" ) {}
+CInterfaceArmyBranchDlg::CInterfaceArmyBranchDlg()
+	: CInterfaceScreenBase( "ArmyBranchDlg", "army_branch_dlg" )
+{
+}
 
 bool CInterfaceArmyBranchDlg::Init()
 {

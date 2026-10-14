@@ -53,7 +53,8 @@ IUnitState *CTorpedoStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 
 // CTorpedoAttackState
 
-CTorpedoAttackState::CTorpedoAttackState( CUnitTorpedo *pUnit, const CVec2 &_vPoint ) : pTorpedo( pUnit )
+CTorpedoAttackState::CTorpedoAttackState( CUnitTorpedo *pUnit, const CVec2 &_vPoint )
+	: pTorpedo( pUnit )
 {
 	// Calculate movement parameters
 

@@ -40,8 +40,11 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4AE, CGeneralAirForce );
 //*******************************************************************
 
 CGeneralAirForce::CGeneralAirForce( const int nParty, IEnemyContainer *pEnemyContainer )
-		: pEnemyContainer( pEnemyContainer ), nParty( nParty ), bOurTurn( false ), nCurrentRequest( FT_NONE ),
-			timeWaitForReinforceSystem( curTime )
+	: pEnemyContainer( pEnemyContainer )
+	, nParty( nParty )
+	, bOurTurn( false )
+	, nCurrentRequest( FT_NONE )
+	, timeWaitForReinforceSystem( curTime )
 {
 	for ( int i = 0; i < theDipl.GetNPlayers(); ++i )
 	{

@@ -36,8 +36,8 @@ public:
 	det_map() = default;
 
 	det_map( const det_map &other )
-			: items_( other.items_ ),
-				index_( other.index_.bucket_count(), other.index_.hash_function(), other.index_.key_eq() )
+		: items_( other.items_ )
+		, index_( other.index_.bucket_count(), other.index_.hash_function(), other.index_.key_eq() )
 	{
 		// Copied list nodes have new addresses. Never copy the source's iterators
 		// into our index, or lookups and erases would still access the source.

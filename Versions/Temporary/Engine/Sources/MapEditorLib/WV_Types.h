@@ -43,7 +43,8 @@ public:
 
 	//
 	CWeightVector( const CWeightVector &rWeightVector )
-			: elements( rWeightVector.elements ), weights( rWeightVector.weights )
+		: elements( rWeightVector.elements )
+		, weights( rWeightVector.weights )
 	{
 	}
 

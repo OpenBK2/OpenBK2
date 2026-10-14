@@ -26,7 +26,11 @@ struct SLevelDesc
 	//
 	SLevelDesc() {}
 
-	SLevelDesc( const std::string &_szName, const std::string &_szType ) : szName( _szName ), szType( _szType ) {}
+	SLevelDesc( const std::string &_szName, const std::string &_szType )
+		: szName( _szName )
+		, szType( _szType )
+	{
+	}
 };
 
 typedef std::vector<SLevelDesc> CLevelsList;

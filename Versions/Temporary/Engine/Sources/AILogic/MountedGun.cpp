@@ -12,8 +12,10 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4B6, CMountedToBaseGun );
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CCommonMountedGun::CCommonMountedGun( CBuilding *_pObject, CMountedTurret *_pTurret, const int _nSlot )
-		: nSlot( _nSlot ), pBuildingStats( checked_cast<const SBuildingRPGStats *>( _pObject->GetStats() ) ),
-			pTurret( _pTurret ), pBuilding( _pObject )
+	: nSlot( _nSlot )
+	, pBuildingStats( checked_cast<const SBuildingRPGStats *>( _pObject->GetStats() ) )
+	, pTurret( _pTurret )
+	, pBuilding( _pObject )
 {
 }
 

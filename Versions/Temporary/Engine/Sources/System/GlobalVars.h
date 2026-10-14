@@ -86,28 +86,43 @@ public:
 		return ParseFloat( szNarrow.c_str(), szNarrow.size() );
 	}
 
-	CValue() : fVal( 0 ) {}
+	CValue()
+		: fVal( 0 )
+	{
+	}
 
-	CValue( float _fVal ) : fVal( _fVal )
+	CValue( float _fVal )
+		: fVal( _fVal )
 	{
 		SetVal( fmt::format( "{:g}", _fVal ).c_str() );
 	}
 
-	CValue( int _n ) : fVal( _n )
+	CValue( int _n )
+		: fVal( _n )
 	{
 		SetVal( fmt::format( "{:g}", fVal ).c_str() );
 	}
 
-	CValue( const std::wstring &_szVal ) : fVal( ParseFloat( _szVal.c_str(), _szVal.size() ) ), szVal( _szVal ) {}
+	CValue( const std::wstring &_szVal )
+		: fVal( ParseFloat( _szVal.c_str(), _szVal.size() ) )
+		, szVal( _szVal )
+	{
+	}
 
-	CValue( const wchar_t *pszVal ) : fVal( ParseFloat( pszVal, wcslen( pszVal ) ) ), szVal( pszVal ) {}
+	CValue( const wchar_t *pszVal )
+		: fVal( ParseFloat( pszVal, wcslen( pszVal ) ) )
+		, szVal( pszVal )
+	{
+	}
 
-	CValue( const std::string &_szVal ) : fVal( ParseFloat( _szVal.c_str(), _szVal.size() ) )
+	CValue( const std::string &_szVal )
+		: fVal( ParseFloat( _szVal.c_str(), _szVal.size() ) )
 	{
 		SetVal( _szVal.c_str() );
 	}
 
-	CValue( const char *pszVal ) : fVal( ParseFloat( pszVal, strlen( pszVal ) ) )
+	CValue( const char *pszVal )
+		: fVal( ParseFloat( pszVal, strlen( pszVal ) ) )
 	{
 		SetVal( pszVal );
 	}

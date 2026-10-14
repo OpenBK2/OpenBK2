@@ -16,7 +16,10 @@
 int g_nTimeStatLevel = 0;
 
 CTerraGen::CTerraGen()
-		: vGeomModAreaMin( -1, -1 ), vGeomModAreaMax( -1, -1 ), vTexModMin( -1, -1 ), vTexModMax( -1, -1 )
+	: vGeomModAreaMin( -1, -1 )
+	, vGeomModAreaMax( -1, -1 )
+	, vTexModMin( -1, -1 )
+	, vTexModMax( -1, -1 )
 {
 	needAddFoots.reserve( 128 );
 	needAddFoots.resize( 0 );

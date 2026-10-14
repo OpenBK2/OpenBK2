@@ -14,7 +14,9 @@ struct SConfigFile
 		SConfigEntry() {}
 
 		SConfigEntry( const SConfigEntry &rConfigEntry )
-				: szLine( rConfigEntry.szLine ), szKeyword( rConfigEntry.szKeyword ), szParams( rConfigEntry.szParams )
+			: szLine( rConfigEntry.szLine )
+			, szKeyword( rConfigEntry.szKeyword )
+			, szParams( rConfigEntry.szParams )
 		{
 		}
 

@@ -58,7 +58,8 @@ CServerClient::CServerClient( const char *pServerIPAddress,
                               const int nNetGameVersion,
                               const int nServerPort,
                               const int _nTimeOut )
-		: bDebugPaused( false ), nTimeOut( _nTimeOut )
+	: bDebugPaused( false )
+	, nTimeOut( _nTimeOut )
 {
 	pNet = new CNet( nNetGameVersion, nServerPort, nTimeOut );
 	pNet->InitAsClient();

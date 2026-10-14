@@ -31,8 +31,10 @@ public:
 	                      const float _fRangeMax,
 	                      const SVector &_targetTile,
 	                      const bool _bIgnoreObstacles )
-			: fRangeMin( _fRangeMin ), fRangeMax( (std::max)( 0.0f, _fRangeMax - 5 * SConsts::TILE_SIZE ) ),
-				targetTile( _targetTile ), bIgnoreObstacles( _bIgnoreObstacles )
+		: fRangeMin( _fRangeMin )
+		, fRangeMax( (std::max)( 0.0f, _fRangeMax - 5 * SConsts::TILE_SIZE ) )
+		, targetTile( _targetTile )
+		, bIgnoreObstacles( _bIgnoreObstacles )
 	{
 	}
 
@@ -70,9 +72,12 @@ public:
 	                     const uint16_t _wAttackDir,
 	                     const uint16_t _wHalfAngle,
 	                     const bool _bIgnoreObstacles )
-			: wAttackDir( _wAttackDir ), wHalfAngle( _wHalfAngle * 4 / 5 ), fRangeMin( _fRangeMin ),
-				fRangeMax( (std::max)( 0.0f, _fRangeMax - 5 * SConsts::TILE_SIZE ) ), targetTile( _targetTile ),
-				bIgnoreObstacles( _bIgnoreObstacles )
+		: wAttackDir( _wAttackDir )
+		, wHalfAngle( _wHalfAngle * 4 / 5 )
+		, fRangeMin( _fRangeMin )
+		, fRangeMax( (std::max)( 0.0f, _fRangeMax - 5 * SConsts::TILE_SIZE ) )
+		, targetTile( _targetTile )
+		, bIgnoreObstacles( _bIgnoreObstacles )
 	{
 	}
 
@@ -91,7 +96,8 @@ public:
 
 	// дистанция задаётся в тайлах
 	CGoToDistance( const float tileDistance, const SVector &_targetTile )
-			: tileDistance2( sqr( tileDistance ) ), targetTile( _targetTile )
+		: tileDistance2( sqr( tileDistance ) )
+		, targetTile( _targetTile )
 	{
 	}
 

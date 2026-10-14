@@ -14,7 +14,8 @@ bool CKillCorpseExecutor::IsExecutorValid() const
 }
 
 CKillCorpseExecutor::CKillCorpseExecutor( CFakeCorpseStaticObject *_pObject )
-		: pObject( _pObject ), CExecutor( TID_FAKE_CORPSE, 0 )
+	: pObject( _pObject )
+	, CExecutor( TID_FAKE_CORPSE, 0 )
 {
 	killTime = curTime + SConsts::TIME_TO_DISAPPEAR;
 }

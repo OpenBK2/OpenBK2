@@ -64,9 +64,16 @@ CPointGlowAnimator::CPointGlowAnimator( IGScene *_pScene,
                                         float _fLightSize,
                                         float _fOnTime,
                                         float _fOffTime )
-		: pScene( _pScene ), pTime( _pTime ), pPlacement( _pPlace ), pTexture( _pTexture ), fLightSize( _fLightSize ),
-			expFader( _fOnTime, _fOffTime, 0 ), pCamera( pScene->GetCamera() ), nLastMaskAny( 0 ), tNextCheck( 0 ),
-			bIsVisible( false )
+	: pScene( _pScene )
+	, pTime( _pTime )
+	, pPlacement( _pPlace )
+	, pTexture( _pTexture )
+	, fLightSize( _fLightSize )
+	, expFader( _fOnTime, _fOffTime, 0 )
+	, pCamera( pScene->GetCamera() )
+	, nLastMaskAny( 0 )
+	, tNextCheck( 0 )
+	, bIsVisible( false )
 {
 }
 

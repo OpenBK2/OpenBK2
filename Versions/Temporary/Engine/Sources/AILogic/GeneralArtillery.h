@@ -162,7 +162,11 @@ public:
 	void SetBombardmentFinished();
 
 public:
-	CGeneralArtilleryTask() : bBombardmentFinished( true ), bIsAntiArtilleryFight( false ) {}
+	CGeneralArtilleryTask()
+		: bBombardmentFinished( true )
+		, bIsAntiArtilleryFight( false )
+	{
+	}
 
 	CGeneralArtilleryTask( CGeneralArtillery *pOwner,
 	                       std::list<CAIUnit *> &givenUnits,

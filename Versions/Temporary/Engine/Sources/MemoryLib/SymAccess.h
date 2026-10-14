@@ -59,7 +59,11 @@ struct SCallStackEntry
 	CSymString szFile, szFunc;
 	int nLine;
 
-	SCallStackEntry() : dwAddress( 0 ), nLine( -1 ) {}
+	SCallStackEntry()
+		: dwAddress( 0 )
+		, nLine( -1 )
+	{
+	}
 };
 
 MEMORYLIB_EXPORT int CollectCallStack( EXCEPTION_POINTERS *pExPtrs, SCallStackEntry *pRes, int nMaxEntries );

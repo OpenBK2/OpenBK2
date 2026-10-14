@@ -80,7 +80,9 @@ void CAntiArtilleryManager::Clear()
 //*									CAntiArtilleryManager::SIterator								*
 //*******************************************************************
 
-CAntiArtilleryManager::CIterator::CIterator( const int nParty ) : nIterParty( nParty ), nCurParty( 0 )
+CAntiArtilleryManager::CIterator::CIterator( const int nParty )
+	: nIterParty( nParty )
+	, nCurParty( 0 )
 {
 	while ( nCurParty < 3 && ( theDipl.GetDiplStatusForParties( nCurParty, nIterParty ) != EDI_ENEMY ||
 	                           theAAManager.antiArtilleries[nCurParty].empty() ) )

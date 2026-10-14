@@ -15,7 +15,9 @@
 //
 
 SMarkerSet::SMarkerSet( const CVec3 &rvBuildingPos, const CVec2 &rvBuildingOrigin )
-		: bIsInScene( false ), vBuildingPos( rvBuildingPos ), vBuildingOrigin( rvBuildingOrigin )
+	: bIsInScene( false )
+	, vBuildingPos( rvBuildingPos )
+	, vBuildingOrigin( rvBuildingOrigin )
 {
 	xAxisID[0] = -1;
 	xAxisID[1] = -1;

@@ -31,7 +31,10 @@ protected:
 	}
 
 public:
-	CWarFogTracer( CGlobalWarFog *_pWarFog ) : pWarFog( _pWarFog ) {}
+	CWarFogTracer( CGlobalWarFog *_pWarFog )
+		: pWarFog( _pWarFog )
+	{
+	}
 };
 
 template <class TVisitor>
@@ -41,7 +44,8 @@ class CWarFogTracerInternal : public CWarFogTracer
 
 public:
 	CWarFogTracerInternal( CGlobalWarFog *pWarFog, const TVisitor &_visitor )
-			: CWarFogTracer( pWarFog ), visitor( _visitor )
+		: CWarFogTracer( pWarFog )
+		, visitor( _visitor )
 	{
 	}
 

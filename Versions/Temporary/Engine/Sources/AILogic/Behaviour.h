@@ -39,7 +39,13 @@ public:
 	}
 
 public:
-	CShootEstimatorLighAA() : fWorstDamage( -1 ), bestTime( 100000 ), fMinDistance( 1e10 ), bCanShootNow( false ) {}
+	CShootEstimatorLighAA()
+		: fWorstDamage( -1 )
+		, bestTime( 100000 )
+		, fMinDistance( 1e10 )
+		, bCanShootNow( false )
+	{
+	}
 
 	void Init( class CCommonUnit *pUnit );
 	// выбрать оптимальный юнит для данного gun, приоценки времени, чтобы пристрелить,
@@ -79,8 +85,11 @@ public:
 
 public:
 	CStandartBehaviour()
-			: camouflateTime( 0 ), underFireAnalyzeTime( 0 ), nLastSign( 1 ), lastTimeOfRotate( NTimer::STime( -1 ) ),
-				fleeTraceEnemyTime( 0 )
+		: camouflateTime( 0 )
+		, underFireAnalyzeTime( 0 )
+		, nLastSign( 1 )
+		, lastTimeOfRotate( NTimer::STime( -1 ) )
+		, fleeTraceEnemyTime( 0 )
 	{
 	}
 

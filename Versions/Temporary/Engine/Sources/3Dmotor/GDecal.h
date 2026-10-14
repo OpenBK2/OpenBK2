@@ -20,9 +20,16 @@ struct SDecalTargetPart
 		return 0;
 	}
 
-	SDecalTargetPart() : nUserID( 0 ) {}
+	SDecalTargetPart()
+		: nUserID( 0 )
+	{
+	}
 
-	SDecalTargetPart( CObjectBase *_pUser, int _nUserID ) : pUser( _pUser ), nUserID( _nUserID ) {}
+	SDecalTargetPart( CObjectBase *_pUser, int _nUserID )
+		: pUser( _pUser )
+		, nUserID( _nUserID )
+	{
+	}
 
 	bool operator==( const SDecalTargetPart &a ) const
 	{
@@ -60,10 +67,15 @@ struct SSrcPosInfo
 		return 0;
 	}
 
-	SSrcPosInfo() : nUserID( 0 ) {}
+	SSrcPosInfo()
+		: nUserID( 0 )
+	{
+	}
 
 	SSrcPosInfo( CObjectBase *_pUser, int _nUserID, CObjectBase *_pSource )
-			: pUser( _pUser ), nUserID( _nUserID ), pSource( _pSource )
+		: pUser( _pUser )
+		, nUserID( _nUserID )
+		, pSource( _pSource )
 	{
 	}
 
@@ -111,7 +123,10 @@ public:
 
 	CDecalTarget() {}
 
-	CDecalTarget( const SDecalMappingInfo &_mapInfo ) : mapInfo( _mapInfo ) {}
+	CDecalTarget( const SDecalMappingInfo &_mapInfo )
+		: mapInfo( _mapInfo )
+	{
+	}
 };
 
 class CDecalsManager;
@@ -180,7 +195,10 @@ public:
 	}
 
 public:
-	CDecalsManager( IDecalQuery *_pScene = 0 ) : pScene( _pScene ) {}
+	CDecalsManager( IDecalQuery *_pScene = 0 )
+		: pScene( _pScene )
+	{
+	}
 
 	IDecalQuery *GetScene() const
 	{

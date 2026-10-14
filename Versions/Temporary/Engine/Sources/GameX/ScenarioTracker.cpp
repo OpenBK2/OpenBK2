@@ -87,10 +87,18 @@ void SearchAvalableReinforcements( const NDb::SMapInfo *pCurMission,
 // CScenarioTracker
 
 CScenarioTracker::CScenarioTracker()
-		: bCampaignFinished( false ), bChapterFinished( false ), nReinforcementCallsLeftInChapter( 0 ),
-			nReinforcementCallsLeftInMission( 0 ), nMainEnemy( -1 ), fPlayerXP( 0.0f ), nEnemyReinfCallsLeft( 0 ),
-			nDifficulty( 0 ), bMissionWon( false ), nReinforcementCallsUsed( 0 ), knownReinfs( NDb::_RT_NONE, false ),
-			bIsCustomCampaign( false )
+	: bCampaignFinished( false )
+	, bChapterFinished( false )
+	, nReinforcementCallsLeftInChapter( 0 )
+	, nReinforcementCallsLeftInMission( 0 )
+	, nMainEnemy( -1 )
+	, fPlayerXP( 0.0f )
+	, nEnemyReinfCallsLeft( 0 )
+	, nDifficulty( 0 )
+	, bMissionWon( false )
+	, nReinforcementCallsUsed( 0 )
+	, knownReinfs( NDb::_RT_NONE, false )
+	, bIsCustomCampaign( false )
 {
 	favoriteReinfs.resize( NDb::_RT_NONE );
 }

@@ -11,7 +11,10 @@ extern NAI::CTimeCounter timeCounter;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CCommander::STaskCalcSeverityPredicate::STaskCalcSeverityPredicate()
-		: nNumberNegative( 0 ), fSeverityNegative( 0 ), nNumberPositive( 0 ), fSeverityPositive( 0 )
+	: nNumberNegative( 0 )
+	, fSeverityNegative( 0 )
+	, nNumberPositive( 0 )
+	, fSeverityPositive( 0 )
 {
 }
 
@@ -30,7 +33,10 @@ const float CCommander::STaskCalcSeverityPredicate::GetSeverity() const
 //*											CCommander*
 //*******************************************************************
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-CCommander::CCommander() : fMeanSeverity( 0 ) {}
+CCommander::CCommander()
+	: fMeanSeverity( 0 )
+{
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float CCommander::GetMeanSeverity() const
@@ -94,7 +100,10 @@ struct SCommonUnitCompare
 {
 	CPtr<CCommonUnit> pUnit;
 
-	SCommonUnitCompare( CCommonUnit *_pUnit ) : pUnit( _pUnit ) {}
+	SCommonUnitCompare( CCommonUnit *_pUnit )
+		: pUnit( _pUnit )
+	{
+	}
 
 	bool operator()( const CPtr<CCommonUnit> _pUnit ) const
 	{

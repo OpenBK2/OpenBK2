@@ -15,7 +15,10 @@ struct SUIState
 
 	SUIState() {}
 
-	SUIState( const NDb::SUIStateBase *_pCmd ) : pCmd( _pCmd ) {}
+	SUIState( const NDb::SUIStateBase *_pCmd )
+		: pCmd( _pCmd )
+	{
+	}
 
 	int operator&( IBinSaver &saver )
 	{
@@ -60,7 +63,13 @@ class CStates
 	void Play( const int timeDiff, class CWindowScreen *pScreen, const bool bFastForward );
 
 public:
-	CStates() : nCurIndex( 0 ), bForward( true ), bEnd( true ), bReversable( false ) {}
+	CStates()
+		: nCurIndex( 0 )
+		, bForward( true )
+		, bEnd( true )
+		, bReversable( false )
+	{
+	}
 
 	CStates( const NDb::SUIStateSequence &seq, const std::string &_szCmdName, const bool _bReversable, uint16_t wFlags );
 

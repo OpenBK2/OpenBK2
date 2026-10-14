@@ -276,8 +276,14 @@ void CSCamSplineMutator::Recalc()
 CScriptMoviesMutatorHolder::CScriptMoviesMutatorHolder( const NDb::SScriptMovies &rMoviesData,
                                                         int _nMovieIndex,
                                                         CFuncBase<STime> *_pTimer )
-		: moviesData( rMoviesData ), nMovieIndex( _nMovieIndex ), pTimer( _pTimer ), fCurrTime( 0.0f ), fSpeedCoeff( 1.0f ),
-			bLoopPlayback( true ), eMode( PM_STOPPED ), nLastKeyID( -1 )
+	: moviesData( rMoviesData )
+	, nMovieIndex( _nMovieIndex )
+	, pTimer( _pTimer )
+	, fCurrTime( 0.0f )
+	, fSpeedCoeff( 1.0f )
+	, bLoopPlayback( true )
+	, eMode( PM_STOPPED )
+	, nLastKeyID( -1 )
 {
 	pTimer.Refresh();
 	movieStartTime = pTimer->GetValue();

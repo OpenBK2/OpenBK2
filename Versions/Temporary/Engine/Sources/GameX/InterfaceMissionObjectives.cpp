@@ -36,7 +36,9 @@ int CInterfaceMissionObjectives::CReactions::Check( const std::string &szCheckNa
 // CInterfaceMissionObjectives
 
 CInterfaceMissionObjectives::CInterfaceMissionObjectives()
-		: CInterfaceScreenBase( "MissionObjectives", "mission_objectives" ), bIsModal( true ), bCameraBack( false )
+	: CInterfaceScreenBase( "MissionObjectives", "mission_objectives" )
+	, bIsModal( true )
+	, bCameraBack( false )
 {
 	AddObserver( "menu_close", &CInterfaceMissionObjectives::MsgBack );
 	AddObserver( "set_modality", &CInterfaceMissionObjectives::MsgSetModality );

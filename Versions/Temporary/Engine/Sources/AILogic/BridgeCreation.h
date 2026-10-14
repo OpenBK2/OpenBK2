@@ -41,7 +41,10 @@ public:
 	void LockTiles();
 
 public:
-	CBridgeCreation() : CLongObjectCreation( -1, false ) {}
+	CBridgeCreation()
+		: CLongObjectCreation( -1, false )
+	{
+	}
 
 	CBridgeCreation( class CFullBridge *pBridge, class CCommonUnit *pUnit, const bool bAllowAIModification );
 

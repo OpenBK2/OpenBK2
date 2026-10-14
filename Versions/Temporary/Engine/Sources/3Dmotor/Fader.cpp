@@ -119,24 +119,37 @@ protected:
 
 private:
 	CSimpleFader()
-			: nStartTime( 0 ), bHide( false ), eFadeType( E_FADE_NONE ), bForceWOTimer( false ), expFader( 0 ),
-				bNeedUpdate( false )
+		: nStartTime( 0 )
+		, bHide( false )
+		, eFadeType( E_FADE_NONE )
+		, bForceWOTimer( false )
+		, expFader( 0 )
+		, bNeedUpdate( false )
 	{
 		value = 1.0f;
 	}
 
 public:
 	CSimpleFader( EFadeType _eFadeType, CObjectBase *_pOwner )
-			: nStartTime( 0 ), eFadeType( _eFadeType ), bHide( false ), bNeedUpdate( true ),
-				expFader( _eFadeType == E_FADE_TO_WHITE ? 0 : 1 ), pOwner( _pOwner ), bForceWOTimer( false )
+		: nStartTime( 0 )
+		, eFadeType( _eFadeType )
+		, bHide( false )
+		, bNeedUpdate( true )
+		, expFader( _eFadeType == E_FADE_TO_WHITE ? 0 : 1 )
+		, pOwner( _pOwner )
+		, bForceWOTimer( false )
 	{
 		value = 1;
 	}
 
 	//
 	CSimpleFader( EFadeType _eFadeType, int _nStartTime, float _fLatency, CObjectBase *_pOwner )
-			: expFader( _fLatency, _fLatency, _eFadeType == E_FADE_TO_WHITE ? 0 : 1 ), eFadeType( _eFadeType ),
-				bHide( false ), bNeedUpdate( true ), pOwner( _pOwner ), bForceWOTimer( false )
+		: expFader( _fLatency, _fLatency, _eFadeType == E_FADE_TO_WHITE ? 0 : 1 )
+		, eFadeType( _eFadeType )
+		, bHide( false )
+		, bNeedUpdate( true )
+		, pOwner( _pOwner )
+		, bForceWOTimer( false )
 	{
 		value = 1;
 		SetStartTime( _nStartTime );

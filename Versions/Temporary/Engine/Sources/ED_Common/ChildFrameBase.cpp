@@ -9,7 +9,12 @@
 #include "ChildFrameWndBase.h"
 #include "SceneSurface.h"
 
-CChildFrameBase::CChildFrameBase() : pSurface( 0 ), pwndChildFrame( 0 ), pChildWnd( 0 ) {}
+CChildFrameBase::CChildFrameBase()
+	: pSurface( 0 )
+	, pwndChildFrame( 0 )
+	, pChildWnd( 0 )
+{
+}
 
 CChildFrameBase::~CChildFrameBase()
 {

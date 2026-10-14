@@ -51,7 +51,10 @@ public:
 public:
 	static IUnitState *Instance( class CSoldier *pSoldier, class CEntrenchment *pEntrenchment );
 
-	CSoldierRestInEntrenchmentState() : pSoldier( 0 ) {}
+	CSoldierRestInEntrenchmentState()
+		: pSoldier( 0 )
+	{
+	}
 
 	CSoldierRestInEntrenchmentState( class CSoldier *pSoldier );
 
@@ -119,7 +122,10 @@ public:
 public:
 	static IUnitState *Instance( class CSoldier *pSoldier, class CAIUnit *pEnemy, const bool bSwarmAttack );
 
-	CSoldierAttackInEtrenchState() : pSoldier( 0 ) {}
+	CSoldierAttackInEtrenchState()
+		: pSoldier( 0 )
+	{
+	}
 
 	CSoldierAttackInEtrenchState( class CSoldier *pSoldier, class CAIUnit *pEnemy, const bool bSwarmAttack );
 	virtual void Segment();

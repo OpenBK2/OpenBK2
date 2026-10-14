@@ -33,8 +33,9 @@ CExecutorTransportReinforcement::CExecutorTransportReinforcement( std::list<CAIU
                                                                   const CVec2 &_vStart,
                                                                   const CVec2 &_vUnload,
                                                                   const CVec2 &_vTarget )
-		: CExecutor( TID_TRANSPORT_REINFORCEMENT, SConsts::BEH_UPDATE_DURATION / SConsts::AI_SEGMENT_DURATION ),
-			vStart( _vStart ), vTarget( _vTarget )
+	: CExecutor( TID_TRANSPORT_REINFORCEMENT, SConsts::BEH_UPDATE_DURATION / SConsts::AI_SEGMENT_DURATION )
+	, vStart( _vStart )
+	, vTarget( _vTarget )
 {
 	// Assign transports
 	transports.resize( pTransports->size() );

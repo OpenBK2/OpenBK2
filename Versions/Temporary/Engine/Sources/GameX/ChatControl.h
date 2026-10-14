@@ -28,7 +28,11 @@ public:
 
 private:
 public:
-	CChatControlWrapper() : nMaxItems( 1 ), nItems( 0 ) {}
+	CChatControlWrapper()
+		: nMaxItems( 1 )
+		, nItems( 0 )
+	{
+	}
 
 	CChatControlWrapper( IScrollableContainer *_pList, int _nMaxItems );
 

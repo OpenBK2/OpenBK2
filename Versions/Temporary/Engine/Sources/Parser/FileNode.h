@@ -44,11 +44,19 @@ class PARSER_EXPORT CFileNode : public CObjectBase
 	std::list<CObj<CNamespace>> namespaces;
 
 public:
-	CFileNode() : eParseState( EPS_NOPARSED ), bFileExist( false ), bIncludedInOtherFile( false ) {}
+	CFileNode()
+		: eParseState( EPS_NOPARSED )
+		, bFileExist( false )
+		, bIncludedInOtherFile( false )
+	{
+	}
 
 	CFileNode( const std::string &_szFullFileName, bool _bRootFile )
-			: bFileExist( false ), eParseState( EPS_NOPARSED ), szFullFileName( _szFullFileName ),
-				bIncludedInOtherFile( false ), bRootFile( _bRootFile )
+		: bFileExist( false )
+		, eParseState( EPS_NOPARSED )
+		, szFullFileName( _szFullFileName )
+		, bIncludedInOtherFile( false )
+		, bRootFile( _bRootFile )
 	{
 	}
 

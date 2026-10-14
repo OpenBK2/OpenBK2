@@ -131,7 +131,10 @@ public:
 			return 0;
 		}
 
-		SLastSeen() : eState( ST_NONE ) {}
+		SLastSeen()
+			: eState( ST_NONE )
+		{
+		}
 	};
 
 	ZDATA
@@ -273,7 +276,11 @@ void CInterfaceArmyScreen::CReinfViewer::MakeInterior( CObjectBase *pWindow, con
 
 // CInterfaceArmyScreen
 
-CInterfaceArmyScreen::CInterfaceArmyScreen() : CInterfaceScreenBase( "ArmyScreen", "army_screen_menu" ), timeAbs( 0 ) {}
+CInterfaceArmyScreen::CInterfaceArmyScreen()
+	: CInterfaceScreenBase( "ArmyScreen", "army_screen_menu" )
+	, timeAbs( 0 )
+{
+}
 
 CInterfaceArmyScreen::~CInterfaceArmyScreen()
 {

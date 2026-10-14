@@ -97,9 +97,12 @@ CFakeCorpseStaticObject::CFakeCorpseStaticObject( const CVec3 &center,
                                                   const bool _bDestructByTracks,
                                                   CUpdatableObj *_pDeadObj,
                                                   CObjectProfile *_pPassProfile )
-		: CCommonStaticObject( center, fHP, wDir, nFrameIndex, ESOT_FAKE_CORPSE ), pDeadObj( _pDeadObj ),
-			tilesToLock( tiles ), eType( ESOT_FAKE_CORPSE ), pPassProfile( _pPassProfile ),
-			bDestructByTracks( _bDestructByTracks )
+	: CCommonStaticObject( center, fHP, wDir, nFrameIndex, ESOT_FAKE_CORPSE )
+	, pDeadObj( _pDeadObj )
+	, tilesToLock( tiles )
+	, eType( ESOT_FAKE_CORPSE )
+	, pPassProfile( _pPassProfile )
+	, bDestructByTracks( _bDestructByTracks )
 {
 	for ( std::list<SObjTileInfo>::iterator it = tilesToLock.begin(); it != tilesToLock.end(); ++it )
 	{

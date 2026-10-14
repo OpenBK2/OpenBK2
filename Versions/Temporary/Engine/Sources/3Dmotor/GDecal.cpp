@@ -9,7 +9,9 @@ namespace NGScene
 // CDecal
 
 CDecal::CDecal( CDecalsManager *_pOwner, CDecalTarget *_pTarget, IMaterial *_pMaterial )
-		: pOwner( _pOwner ), pTarget( _pTarget ), pMaterial( _pMaterial )
+	: pOwner( _pOwner )
+	, pTarget( _pTarget )
+	, pMaterial( _pMaterial )
 {
 	// create target geometry
 	if ( !pTarget->parts.empty() )

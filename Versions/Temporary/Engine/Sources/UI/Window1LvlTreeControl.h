@@ -19,7 +19,10 @@ class CWindow1LvlTreeControl : public CWindowScrollableContainerBase, public IBu
 
 		SItem() {}
 
-		SItem( CWindowMSButton *_pItem ) : pItem( _pItem ) {}
+		SItem( CWindowMSButton *_pItem )
+			: pItem( _pItem )
+		{
+		}
 
 		int operator&( IBinSaver &saver )
 		{

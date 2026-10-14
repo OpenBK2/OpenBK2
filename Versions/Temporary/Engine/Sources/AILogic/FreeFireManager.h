@@ -32,7 +32,12 @@ class CFreeFireManager
 			return 0;
 		}
 
-		SShotInfo() : shootingPos( VNULL2 ), unitDir( 0 ), gunDir( 0 ) {}
+		SShotInfo()
+			: shootingPos( VNULL2 )
+			, unitDir( 0 )
+			, gunDir( 0 )
+		{
+		}
 
 		bool NeedAim( CAIUnit *pNewTarget, class CBasicGun *pGun ) const;
 		void SetInfo( CAIUnit *pNewTarget, class CBasicGun *pGun );
@@ -53,7 +58,10 @@ public:
 	}
 
 public:
-	CFreeFireManager() : lastCheck( 0 ) {}
+	CFreeFireManager()
+		: lastCheck( 0 )
+	{
+	}
 
 	CFreeFireManager( class CCommonUnit *pOwner );
 	// считается, что base уже залокана pActiveGun-ом

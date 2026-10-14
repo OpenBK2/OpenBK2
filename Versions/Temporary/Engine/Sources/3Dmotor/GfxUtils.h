@@ -38,7 +38,10 @@ public:
 class _3DMOTOR_EXPORT C2DQuadsRenderer : INew2DTexAllocCallback
 {
 public:
-	C2DQuadsRenderer() : pLock( 0 ) {}
+	C2DQuadsRenderer()
+		: pLock( 0 )
+	{
+	}
 
 	C2DQuadsRenderer( const NGfx::CRenderContext &rc, const CVec2 &vSize, int _dm );
 
@@ -136,7 +139,11 @@ class CCopyShadowsAndCloudsEffect : public I2DEffect
 public:
 	CCopyShadowsAndCloudsEffect() {}
 
-	CCopyShadowsAndCloudsEffect( NGfx::CTexture *_pCloud, const CVec4 &_vMAD ) : pCloud( _pCloud ), vMAD( _vMAD ) {}
+	CCopyShadowsAndCloudsEffect( NGfx::CTexture *_pCloud, const CVec4 &_vMAD )
+		: pCloud( _pCloud )
+		, vMAD( _vMAD )
+	{
+	}
 
 	virtual void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV );
 };

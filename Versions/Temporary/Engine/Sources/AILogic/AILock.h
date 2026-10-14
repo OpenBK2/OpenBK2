@@ -23,7 +23,10 @@ struct SStaticObjectLockInfo
 	std::list<SObjTileInfo> &lockedTiles;
 
 	SStaticObjectLockInfo( CArray2D<uint8_t> &_lockInfo, std::list<SObjTileInfo> &_lockedTiles )
-			: lockInfo( _lockInfo ), lockedTiles( _lockedTiles ), bNewLockingWay( true ), pNewLock( 0 )
+		: lockInfo( _lockInfo )
+		, lockedTiles( _lockedTiles )
+		, bNewLockingWay( true )
+		, pNewLock( 0 )
 	{
 	}
 };

@@ -18,10 +18,16 @@ class COMMON_RTS_AI_EXPORT CStaticMapHeights : public CObjectBase
 		int nX1 = 0, nY1 = 0;
 		CArray2D<float> heights;
 
-		SOldHeights() : nX1( -1 ), nY1( -1 ) {}
+		SOldHeights()
+			: nX1( -1 )
+			, nY1( -1 )
+		{
+		}
 
 		SOldHeights( const int _nX1, const int _nY1, const CArray2D<float> &_heights )
-				: nX1( _nX1 ), nY1( _nY1 ), heights( _heights )
+			: nX1( _nX1 )
+			, nY1( _nY1 )
+			, heights( _heights )
 		{
 		}
 	};
@@ -49,7 +55,13 @@ class COMMON_RTS_AI_EXPORT CStaticMapHeights : public CObjectBase
 	}
 
 public:
-	CStaticMapHeights() : nStaticMapSizeX( 0 ), nStaticMapSizeY( 0 ), nTileSize( 0 ), nLastHeightsID( -1 ) {}
+	CStaticMapHeights()
+		: nStaticMapSizeX( 0 )
+		, nStaticMapSizeY( 0 )
+		, nTileSize( 0 )
+		, nLastHeightsID( -1 )
+	{
+	}
 
 	CStaticMapHeights( const int nSizeXInTiles, const int nSizeYInTiles, const int nTileSize );
 	void Init4Editor( const int nSizeXInTiles, const int nSizeYInTiles, const int nTileSize );

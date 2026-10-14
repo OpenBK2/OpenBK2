@@ -19,9 +19,16 @@ public:
 		return 0;
 	}
 
-	CZipPacket() : nUnzippedSize( 0 ) {}
+	CZipPacket()
+		: nUnzippedSize( 0 )
+	{
+	}
 
-	CZipPacket( const int nClientID ) : CNetPacket( nClientID ), nUnzippedSize( 0 ) {}
+	CZipPacket( const int nClientID )
+		: CNetPacket( nClientID )
+		, nUnzippedSize( 0 )
+	{
+	}
 
 	void Zip( const CMemoryStream &inStream );
 	void UnZip( CMemoryStream *pOutStream ) const;

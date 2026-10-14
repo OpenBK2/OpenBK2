@@ -21,7 +21,10 @@ struct SProlog
 {
 	float fFadeIn;
 
-	SProlog() : fFadeIn( 0.0f ) {}
+	SProlog()
+		: fFadeIn( 0.0f )
+	{
+	}
 
 	int operator&( IXmlSaver &saver )
 	{
@@ -90,8 +93,11 @@ void CICPlayMovie::PostCreate( IInterface *pInterface )
 // ************************************************************************************************************************ //
 
 CPlayMovieInterface::CPlayMovieInterface()
-		: CInterfaceScreenBase( "InterMission", "play_movies" ), bProlog( false ), bFadeIn( false ), bFadeOut( false ),
-			fFadeIn( 0.0f )
+	: CInterfaceScreenBase( "InterMission", "play_movies" )
+	, bProlog( false )
+	, bFadeIn( false )
+	, bFadeOut( false )
+	, fFadeIn( 0.0f )
 {
 	AddObserver( "movie_skip_sequence", &CPlayMovieInterface::MsgSkipSequence );
 	AddObserver( "movie_skip_movie", &CPlayMovieInterface::MsgSkipMovie );

@@ -63,16 +63,24 @@ public:
 
 		//
 		SEditParameters()
-				: nFlags( 0 ), ePointNumber( PN_SINGLE ), eStatsType( STATS_CUSTOM ), fWidth( CVSOManager::DEFAULT_WIDTH ),
-					fOpacity( CVSOManager::DEFAULT_OPACITY ), fHeight( CVSOManager::DEFAULT_HEIGHT ), bThumbnails( true )
+			: nFlags( 0 )
+			, ePointNumber( PN_SINGLE )
+			, eStatsType( STATS_CUSTOM )
+			, fWidth( CVSOManager::DEFAULT_WIDTH )
+			, fOpacity( CVSOManager::DEFAULT_OPACITY )
+			, fHeight( CVSOManager::DEFAULT_HEIGHT )
+			, bThumbnails( true )
 		{
 		}
 
 		SEditParameters( const SEditParameters &rEditParameters )
-				: nFlags( rEditParameters.nFlags ), ePointNumber( rEditParameters.ePointNumber ),
-					eStatsType( rEditParameters.eStatsType ), fWidth( rEditParameters.fWidth ),
-					fOpacity( rEditParameters.fOpacity ), fHeight( rEditParameters.fHeight ),
-					bThumbnails( rEditParameters.bThumbnails )
+			: nFlags( rEditParameters.nFlags )
+			, ePointNumber( rEditParameters.ePointNumber )
+			, eStatsType( rEditParameters.eStatsType )
+			, fWidth( rEditParameters.fWidth )
+			, fOpacity( rEditParameters.fOpacity )
+			, fHeight( rEditParameters.fHeight )
+			, bThumbnails( rEditParameters.bThumbnails )
 		{
 		}
 

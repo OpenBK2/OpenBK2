@@ -211,9 +211,16 @@ public:
 		return N_SAVELOAD_VERSION;
 	}
 
-	CNetSaver() : pRes( 0 ) {}
+	CNetSaver()
+		: pRes( 0 )
+	{
+	}
 
-	CNetSaver( CMemoryStream *_pRes, ESaverMode _mode ) : pRes( _pRes ), mode( _mode ) {}
+	CNetSaver( CMemoryStream *_pRes, ESaverMode _mode )
+		: pRes( _pRes )
+		, mode( _mode )
+	{
+	}
 };
 
 IBinSaver *CreateNetSaver( CMemoryStream *pStream, ESaverMode mode )

@@ -30,7 +30,11 @@ public:
 		float fAmplitude;
 		float fPhase;
 
-		SWaveParams() : fAmplitude( 0 ), fPhase( 0 ) {}
+		SWaveParams()
+			: fAmplitude( 0 )
+			, fPhase( 0 )
+		{
+		}
 
 		// Need to sort by decreasing amplitude but our ripped stl doesn't have greater functor.
 		friend bool operator<( const SWaterNode::SWaveParams &a, const SWaterNode::SWaveParams &b )
@@ -56,7 +60,10 @@ public:
 	//
 	std::vector<SWaveParams> waveParams;
 
-	SWaterNode() : bIsLargeAlpha( false ) {}
+	SWaterNode()
+		: bIsLargeAlpha( false )
+	{
+	}
 
 	void SetAlpha( float _f )
 	{

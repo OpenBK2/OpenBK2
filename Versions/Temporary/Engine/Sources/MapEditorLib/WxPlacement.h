@@ -48,7 +48,8 @@ class CPlacement
 public:
 	// pszStateName is the MFC dialog's class name, which is what
 	// CResizeDialog::GetXMLFilePath answers and so what the file is called.
-	explicit CPlacement( const char *pszStateName ) : pszName( pszStateName )
+	explicit CPlacement( const char *pszStateName )
+		: pszName( pszStateName )
 	{
 		NDialogState::Load( pszName, &state );
 	}
@@ -91,7 +92,8 @@ class CSizedPlacement
 	bool bPlaced = false;
 
 public:
-	explicit CSizedPlacement( const std::string &rszStateName ) : szName( rszStateName )
+	explicit CSizedPlacement( const std::string &rszStateName )
+		: szName( rszStateName )
 	{
 		NDialogState::Load( szName, &state );
 	}

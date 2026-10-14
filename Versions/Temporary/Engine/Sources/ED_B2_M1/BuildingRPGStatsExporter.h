@@ -13,9 +13,17 @@ class CBuildingRPGStatsExporter : public CObjectBaseRPGStatsExporter
 		int nStartTime;
 		int nEndTime;
 
-		SAnimationInfo() : nStartTime( -1 ), nEndTime( -1 ) {}
+		SAnimationInfo()
+			: nStartTime( -1 )
+			, nEndTime( -1 )
+		{
+		}
 
-		SAnimationInfo( const int _nStartTime, const int _nEndTime ) : nStartTime( _nStartTime ), nEndTime( _nEndTime ) {}
+		SAnimationInfo( const int _nStartTime, const int _nEndTime )
+			: nStartTime( _nStartTime )
+			, nEndTime( _nEndTime )
+		{
+		}
 	};
 
 	// Include model and source folder so seasonal sections never share the wrong texture.

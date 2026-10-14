@@ -104,7 +104,9 @@ public:
 	CLinearBuffer() {}
 
 	CLinearBuffer( int _nSize, int _nStride, int _nFormatID, ETrueBufferUsage usage )
-			: nFormatID( _nFormatID ), nStride( _nStride ), bIsThrashing( false )
+		: nFormatID( _nFormatID )
+		, nStride( _nStride )
+		, bIsThrashing( false )
 	{
 		int nFibSize = NCache::GetMajorFib( _nSize );
 		int nSize = NCache::fib( nFibSize );
@@ -330,8 +332,8 @@ public:
 
 template <class TBuffer, class TDXBuffer, class TUserObject>
 class CLinearBufferElement
-		: public NCache::CGatherElementBase<NCache::CShortPtrAllocator, NCache::CFibElement, TUserObject>,
-			public ILinearBuffer
+	: public NCache::CGatherElementBase<NCache::CShortPtrAllocator, NCache::CFibElement, TUserObject>,
+		public ILinearBuffer
 {
 	OBJECT_NOCOPY_METHODS( CLinearBufferElement );
 
@@ -341,7 +343,11 @@ public:
 	int nSize;
 	int nLocked;
 
-	CLinearBufferElement( TBuffer *_p = 0 ) : pBuffer( _p ), nLocked( 0 ) {}
+	CLinearBufferElement( TBuffer *_p = 0 )
+		: pBuffer( _p )
+		, nLocked( 0 )
+	{
+	}
 
 	~CLinearBufferElement()
 	{
@@ -400,7 +406,10 @@ class CUserGeometry : public CLinearBufferElement<CGeometryBuffer, CVB, CUserGeo
 	typedef CLinearBufferElement<CGeometryBuffer, CVB, CUserGeometry> TParent;
 
 public:
-	CUserGeometry( CGeometryBuffer *_p = 0 ) : TParent( _p ) {}
+	CUserGeometry( CGeometryBuffer *_p = 0 )
+		: TParent( _p )
+	{
+	}
 
 	virtual void *GetVertexStream()
 	{
@@ -467,7 +476,11 @@ class CTriListCore : public ILinearBuffer, public CTriList, public CTriListWrapp
 	int nSize;
 
 public:
-	CTriListCore( int _nSize = 0 ) : data( _nSize ), nSize( _nSize ) {}
+	CTriListCore( int _nSize = 0 )
+		: data( _nSize )
+		, nSize( _nSize )
+	{
+	}
 
 	virtual int GetFormatID() const
 	{
@@ -562,7 +575,11 @@ class CTriListWrapper : public CTriList, public ISomeBuffer
 public:
 	CTriListWrapper() {}
 
-	CTriListWrapper( ISomeBuffer *_p, int _nTris ) : pParent( _p ), nTris( _nTris ) {}
+	CTriListWrapper( ISomeBuffer *_p, int _nTris )
+		: pParent( _p )
+		, nTris( _nTris )
+	{
+	}
 
 	virtual const std::vector<S3DTriangle> &GetTris() const
 	{
@@ -619,10 +636,17 @@ public:
 	bool bIsDynamic;
 
 	//
-	CTB() : nLOD( 0 ) {}
+	CTB()
+		: nLOD( 0 )
+	{
+	}
 
 	CTB( int _nXSize, int _nYSize, int _nLevels, D3DFORMAT _format, ETextureUsage usage )
-			: format( _format ), nXSize( _nXSize ), nYSize( _nYSize ), nLevels( _nLevels ), nLOD( 0 )
+		: format( _format )
+		, nXSize( _nXSize )
+		, nYSize( _nYSize )
+		, nLevels( _nLevels )
+		, nLOD( 0 )
 	{
 		uint32_t dwUsage = 0;
 		if ( usage == TARGET )
@@ -858,7 +882,10 @@ CTextureLocker::CTextureLocker( IDirect3DSurface9 *_pObj,
                                 EAccess _access,
                                 D3DFORMAT format,
                                 IDirect3DTexture9 *_pTexture )
-		: pObj( _pObj ), rect( _rect ), access( _access ), pTexture( _pTexture )
+	: pObj( _pObj )
+	, rect( _rect )
+	, access( _access )
+	, pTexture( _pTexture )
 {
 	if ( !pObj )
 	{
@@ -978,9 +1005,16 @@ public:
 		return bRes;
 	}
 
-	CTexture() : bPointFiltered( false ) {}
+	CTexture()
+		: bPointFiltered( false )
+	{
+	}
 
-	CTexture( CTB *_pTB, EWrap _wrap ) : pTB( _pTB ), nFrameUsed( 0 ), wrap( _wrap ), bPointFiltered( false )
+	CTexture( CTB *_pTB, EWrap _wrap )
+		: pTB( _pTB )
+		, nFrameUsed( 0 )
+		, wrap( _wrap )
+		, bPointFiltered( false )
 	{
 		region.SetRect( 0, 0, _pTB->GetSizeX(), _pTB->GetSizeY() );
 	}
@@ -1086,7 +1120,9 @@ public:
 	CCubeTB() {}
 
 	CCubeTB( int _nSize, int _nMipLevels, D3DFORMAT _format, ETextureUsage usage )
-			: format( _format ), nSize( _nSize ), nMipLevels( _nMipLevels )
+		: format( _format )
+		, nSize( _nSize )
+		, nMipLevels( _nMipLevels )
 	{
 		if ( bNoCubeMapMipLevels )
 		{
@@ -1134,7 +1170,11 @@ class CCubeTexture : public ICubeBuffer
 	int nFrameUsed;
 
 public:
-	CCubeTexture( CCubeTB *_p = 0 ) : pTB( _p ), nFrameUsed( 0 ) {}
+	CCubeTexture( CCubeTB *_p = 0 )
+		: pTB( _p )
+		, nFrameUsed( 0 )
+	{
+	}
 
 	CCubeTB *GetTB() const
 	{
@@ -1359,7 +1399,10 @@ class CLRUBuffersSet
 		CPtr<TBuf> pTB;
 		CMObj<THandle> pTexture;
 
-		STex( TBuf *_pTB ) : pTB( _pTB ) {}
+		STex( TBuf *_pTB )
+			: pTB( _pTB )
+		{
+		}
 	};
 
 	std::vector<STex> textures;
@@ -1753,7 +1796,11 @@ struct SGeometryType
 	EBufferUsage usage;
 	int nID;
 
-	SGeometryType( EBufferUsage _usage, int _nID ) : usage( _usage ), nID( _nID ) {}
+	SGeometryType( EBufferUsage _usage, int _nID )
+		: usage( _usage )
+		, nID( _nID )
+	{
+	}
 
 	bool operator==( const SGeometryType &a ) const
 	{
@@ -2121,7 +2168,12 @@ struct STextureSize
 {
 	int nXSize, nYSize, nMips;
 
-	STextureSize( int _nXSize, int _nYSize, int _nMips ) : nXSize( _nXSize ), nYSize( _nYSize ), nMips( _nMips ) {}
+	STextureSize( int _nXSize, int _nYSize, int _nMips )
+		: nXSize( _nXSize )
+		, nYSize( _nYSize )
+		, nMips( _nMips )
+	{
+	}
 
 	bool operator==( const STextureSize &a ) const
 	{

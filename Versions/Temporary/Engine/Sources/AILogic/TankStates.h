@@ -85,7 +85,10 @@ private:
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit, class CAIUnit *pFriend );
 
-	CMechUnitSupportFireState() : pUnit( 0 ) {}
+	CMechUnitSupportFireState()
+		: pUnit( 0 )
+	{
+	}
 
 	CMechUnitSupportFireState( class CAIUnit *_pUnit, class CAIUnit *_pFriend );
 

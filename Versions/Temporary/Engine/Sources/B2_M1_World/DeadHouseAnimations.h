@@ -12,9 +12,17 @@ class CDeadHouseAnimations : public IClientUpdatableProcess
 		int nID = 0;
 		NTimer::STime nEndTime = 0;
 
-		SAnimationInfo() : nID( -1 ), nEndTime( 0 ) {}
+		SAnimationInfo()
+			: nID( -1 )
+			, nEndTime( 0 )
+		{
+		}
 
-		SAnimationInfo( const int _nID, const NTimer::STime _nEndTime ) : nID( _nID ), nEndTime( _nEndTime ) {}
+		SAnimationInfo( const int _nID, const NTimer::STime _nEndTime )
+			: nID( _nID )
+			, nEndTime( _nEndTime )
+		{
+		}
 	};
 
 	struct SSortAnimationsByTime

@@ -2,7 +2,8 @@
 
 #include "PCIEMnemonics.h"
 
-CPCIEMnemonics::CPCIEMnemonics() : CMnemonicsCollector<int>( PCIE_UNKNOWN, "" )
+CPCIEMnemonics::CPCIEMnemonics()
+	: CMnemonicsCollector<int>( PCIE_UNKNOWN, "" )
 {
 	Insert( PCIE_INT_INPUT, "int_input" );
 	Insert( PCIE_INT_SLIDER, "int_slider" );

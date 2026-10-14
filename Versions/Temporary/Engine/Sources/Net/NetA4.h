@@ -54,7 +54,8 @@ private:
 		SClientAddressInfo() {}
 
 		SClientAddressInfo( const CNodeAddress &_inetAddress, const CNodeAddressSet &_localAddress )
-				: inetAddress( _inetAddress ), localAddress( _localAddress )
+			: inetAddress( _inetAddress )
+			, localAddress( _localAddress )
 		{
 		}
 	};
@@ -70,7 +71,10 @@ private:
 		bool bTryShortcut;
 		float fTimeToSendData;
 
-		SPeer() : fTimeToSendData( 0.0f ) {}
+		SPeer()
+			: fTimeToSendData( 0.0f )
+		{
+		}
 	};
 
 	//

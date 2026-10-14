@@ -16,7 +16,9 @@ inline uint32_t PackAndDupBYTE2DWORD( const uint8_t elem )
 }
 
 CTrackObjInfo::CTrackObjInfo( CFuncBase<STime> *_pTimer, CTracksManager *_pTrackManager, const int _nID )
-		: pTimer( _pTimer ), pTrackManager( _pTrackManager ), nID( _nID )
+	: pTimer( _pTimer )
+	, pTrackManager( _pTrackManager )
+	, nID( _nID )
 {
 	tracksBuf.resize( DEF_MAX_TRACKS_IN_BUFFER );
 	for ( std::vector<NMeshData::SMeshData>::iterator it = tracksBuf.begin(); it != tracksBuf.end(); ++it )
@@ -148,7 +150,8 @@ void CTrackObjInfo::UpdateNode( const NMeshData::SMeshData &meshData )
 }
 
 CTracksManager::CTracksManager( CFuncBase<STime> *_pTimer, NGScene::IGameView *_pGScene )
-		: pTimer( _pTimer ), pGScene( _pGScene )
+	: pTimer( _pTimer )
+	, pGScene( _pGScene )
 {
 	tracks.resize( DEF_MAX_TRACK_BUFFERS );
 	freeTracks.reserve( tracks.size() );

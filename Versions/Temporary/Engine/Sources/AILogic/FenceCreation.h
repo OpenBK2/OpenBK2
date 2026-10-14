@@ -57,7 +57,10 @@ private:
 	bool CanPlaceOnTerrain( CGivenPassabilityStObject *pObj ) const;
 
 public:
-	CFenceCreation() : CLongObjectCreation( -1, false ) {}
+	CFenceCreation()
+		: CLongObjectCreation( -1, false )
+	{
+	}
 
 	CFenceCreation( const int nPlayer, const bool bAllowAIModification );
 

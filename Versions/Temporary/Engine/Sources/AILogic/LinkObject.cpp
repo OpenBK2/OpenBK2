@@ -22,7 +22,11 @@ CObjectBase *GetObjectByCmd( const SAIUnitCmd &cmd )
 	}
 }
 
-CLinkObject::CLinkObject() : nLink( -1 ), nUniqueID( -1 ) {}
+CLinkObject::CLinkObject()
+	: nLink( -1 )
+	, nUniqueID( -1 )
+{
+}
 
 CLinkObject::~CLinkObject()
 {

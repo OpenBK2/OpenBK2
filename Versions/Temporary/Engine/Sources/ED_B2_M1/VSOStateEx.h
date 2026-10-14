@@ -42,7 +42,9 @@ protected:
 
 public:
 	//конструкторы и операторы присваивания
-	CVSOStateEx( class CVSOMultiState *_pParentState = 0 ) : CVSOState( _pParentState ), bVSOChanged( false )
+	CVSOStateEx( class CVSOMultiState *_pParentState = 0 )
+		: CVSOState( _pParentState )
+		, bVSOChanged( false )
 	{
 		NI_ASSERT( _pParentState != 0, "CVSOStateEx(): Invalid parameter: _pParentState == 0" );
 		ClearOldVSOInstance();

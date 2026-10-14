@@ -495,8 +495,11 @@ IUnitState *CArtilleryMoveToState::Instance( CArtillery *pArtillery, const CVec2
 }
 
 CArtilleryMoveToState::CArtilleryMoveToState( CArtillery *_pArtillery, const CVec2 &_point, const bool _bForceReverse )
-		: pArtillery( _pArtillery ), startTime( curTime ), eState( EAMTS_WAIT_FOR_PATH ), bToFinish( false ),
-			bForceReverse( _bForceReverse )
+	: pArtillery( _pArtillery )
+	, startTime( curTime )
+	, eState( EAMTS_WAIT_FOR_PATH )
+	, bToFinish( false )
+	, bForceReverse( _bForceReverse )
 {
 	pArtillery->UnlockTiles();
 	pArtillery->FixUnlocking();
@@ -647,8 +650,12 @@ IUnitState *CArtilleryTurnToPointState::Instance( CArtillery *pArtillery, const 
 }
 
 CArtilleryTurnToPointState::CArtilleryTurnToPointState( CArtillery *_pArtillery, const CVec2 &_targCenter )
-		: CStatusUpdatesHelper( EUS_ROTATE, _pArtillery ), pArtillery( _pArtillery ), targCenter( _targCenter ),
-			eState( EATRS_ESTIMATING ), lastCheck( 0 ), timeStart( curTime )
+	: CStatusUpdatesHelper( EUS_ROTATE, _pArtillery )
+	, pArtillery( _pArtillery )
+	, targCenter( _targCenter )
+	, eState( EATRS_ESTIMATING )
+	, lastCheck( 0 )
+	, timeStart( curTime )
 {
 	pArtillery->Stop();
 }
@@ -771,9 +778,15 @@ CArtilleryBombardmentState::CArtilleryBombardmentState( CAIUnit *_pUnit,
                                                         const CVec2 &_point,
                                                         const int _nShotCount,
                                                         const bool _bFlamethrowerOnly )
-		: CStatusUpdatesHelper( EUS_SUPPRESSIVE_FIRE, _pUnit ), pUnit( _pUnit ), point( _point ), bStop( false ),
-			eState( EABS_START ), bSaidNoAmmo( false ), nShotCount( _nShotCount ), bFlamethrowerOnly( _bFlamethrowerOnly ),
-			bBurstStarted( false )
+	: CStatusUpdatesHelper( EUS_SUPPRESSIVE_FIRE, _pUnit )
+	, pUnit( _pUnit )
+	, point( _point )
+	, bStop( false )
+	, eState( EABS_START )
+	, bSaidNoAmmo( false )
+	, nShotCount( _nShotCount )
+	, bFlamethrowerOnly( _bFlamethrowerOnly )
+	, bBurstStarted( false )
 {
 	if ( nShotCount == 0 )
 	{
@@ -1084,8 +1097,14 @@ IUnitState *CArtilleryRangeAreaState::Instance( CAIUnit *pUnit, const CVec2 &poi
 }
 
 CArtilleryRangeAreaState::CArtilleryRangeAreaState( CAIUnit *_pUnit, const CVec2 &_point )
-		: CStatusUpdatesHelper( EUS_ZEROING_IN, _pUnit ), pUnit( _pUnit ), point( _point ), eState( ERAS_RANGING ),
-			bFinish( false ), pGun( _pUnit->GetFirstArtilleryGun() ), nShootsLast( SConsts::SHOOTS_TO_RANGE ), bFired( true )
+	: CStatusUpdatesHelper( EUS_ZEROING_IN, _pUnit )
+	, pUnit( _pUnit )
+	, point( _point )
+	, eState( ERAS_RANGING )
+	, bFinish( false )
+	, pGun( _pUnit->GetFirstArtilleryGun() )
+	, nShootsLast( SConsts::SHOOTS_TO_RANGE )
+	, bFired( true )
 {
 	pUnit->Stop();
 
@@ -1343,7 +1362,8 @@ IUnitState *CArtilleryInstallTransportState::Instance( CArtillery *pArtillery )
 }
 
 CArtilleryInstallTransportState::CArtilleryInstallTransportState( CArtillery *_pArtillery )
-		: pArtillery( _pArtillery ), eState( AITS_WAITING_FOR_CREW )
+	: pArtillery( _pArtillery )
+	, eState( AITS_WAITING_FOR_CREW )
 {
 }
 
@@ -1404,7 +1424,7 @@ IUnitState *CArtilleryUninstallTransportState::Instance( CArtillery *pArtillery 
 }
 
 CArtilleryUninstallTransportState::CArtilleryUninstallTransportState( CArtillery *_pArtillery )
-		: pArtillery( _pArtillery )
+	: pArtillery( _pArtillery )
 {
 	if ( pArtillery->IsUninstalled() && pArtillery->GetCurUninstallAction() == ACTION_NOTIFY_UNINSTALL_TRANSPORT )
 	{
@@ -1488,8 +1508,12 @@ IUnitState *CArtilleryBeingTowedState::Instance( class CArtillery *pArtillery, c
 }
 
 CArtilleryBeingTowedState::CArtilleryBeingTowedState( CArtillery *pArtillery, CAITransportUnit *_pTransport )
-		: pArtillery( pArtillery ), pTransport( _pTransport ), wLastTagDir( _pTransport->GetFrontDirection() ),
-			vLastTagCenter( _pTransport->GetCenterPlain() ), bInterrupted( false ), timeLastUpdate( curTime )
+	: pArtillery( pArtillery )
+	, pTransport( _pTransport )
+	, wLastTagDir( _pTransport->GetFrontDirection() )
+	, vLastTagCenter( _pTransport->GetCenterPlain() )
+	, bInterrupted( false )
+	, timeLastUpdate( curTime )
 {
 	pArtillery->SetSelectable( false, true );
 
@@ -1609,8 +1633,14 @@ CArtilleryAttackState::CArtilleryAttackState( CArtillery *_pArtillery,
                                               CAIUnit *_pEnemy,
                                               bool _bAim,
                                               bool _bSwarmAttack )
-		: pArtillery( _pArtillery ), pEnemy( _pEnemy ), bAim( _bAim ), eState( EAS_NONE ), CFreeFireManager( _pArtillery ),
-			bFinish( false ), bSwarmAttack( _bSwarmAttack ), nEnemyParty( _pEnemy->GetParty() )
+	: pArtillery( _pArtillery )
+	, pEnemy( _pEnemy )
+	, bAim( _bAim )
+	, eState( EAS_NONE )
+	, CFreeFireManager( _pArtillery )
+	, bFinish( false )
+	, bSwarmAttack( _bSwarmAttack )
+	, nEnemyParty( _pEnemy->GetParty() )
 {
 	pArtillery->Stop();
 	if ( _pEnemy->GetStats()->IsAviation() )
@@ -1826,8 +1856,12 @@ IUnitState *CArtilleryAttackCommonStatObjState::Instance( CArtillery *pArtillery
 }
 
 CArtilleryAttackCommonStatObjState::CArtilleryAttackCommonStatObjState( CArtillery *_pArtillery, CStaticObject *_pObj )
-		: pArtillery( _pArtillery ), pObj( _pObj ), eState( EAS_NONE ), CFreeFireManager( _pArtillery ), bFinish( false ),
-			bAim( true )
+	: pArtillery( _pArtillery )
+	, pObj( _pObj )
+	, eState( EAS_NONE )
+	, CFreeFireManager( _pArtillery )
+	, bFinish( false )
+	, bAim( true )
 {
 	pArtillery->Stop();
 }
@@ -1995,7 +2029,8 @@ CArtilleryRestState::CArtilleryRestState( CArtillery *_pArtillery,
                                           const CVec2 &guardPoint,
                                           const uint16_t _wDir,
                                           const float _fTimeToWait )
-		: pArtillery( _pArtillery ), CMechUnitRestState( _pArtillery, guardPoint, _wDir, 0, _fTimeToWait )
+	: pArtillery( _pArtillery )
+	, CMechUnitRestState( _pArtillery, guardPoint, _wDir, 0, _fTimeToWait )
 {
 	pArtillery->Stop();
 }
@@ -2019,7 +2054,8 @@ IUnitState *CArtilleryAttackAviationState::Instance( CArtillery *pArtillery, CAv
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CArtilleryAttackAviationState::CArtilleryAttackAviationState( CArtillery *_pArtillery, CAviation *pPlane )
-		: pArtillery( _pArtillery ), CSoldierAttackAviationState( _pArtillery, pPlane )
+	: pArtillery( _pArtillery )
+	, CSoldierAttackAviationState( _pArtillery, pPlane )
 {
 }
 

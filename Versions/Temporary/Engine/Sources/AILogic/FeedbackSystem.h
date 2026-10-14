@@ -42,9 +42,18 @@ class CFeedBackSystem
 		}
 
 	public:
-		SFeedBackCell() : vCenter( -1, -1 ), timeToForget( 0 ), timeNextTalk( 0 ) {}
+		SFeedBackCell()
+			: vCenter( -1, -1 )
+			, timeToForget( 0 )
+			, timeNextTalk( 0 )
+		{
+		}
 
-		SFeedBackCell( const CVec2 &_vCenter ) : vCenter( _vCenter ), nClientID( -1 ), timeToForget( 0 ), timeNextTalk( 0 )
+		SFeedBackCell( const CVec2 &_vCenter )
+			: vCenter( _vCenter )
+			, nClientID( -1 )
+			, timeToForget( 0 )
+			, timeNextTalk( 0 )
 		{
 		}
 	};

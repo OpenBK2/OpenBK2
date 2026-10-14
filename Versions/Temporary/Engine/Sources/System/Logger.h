@@ -34,7 +34,11 @@ class CLogger
 	std::string GetLoggerFullName() const;
 
 public:
-	CLogger( const std::string &_szLoggerName, CLogger *_pParent ) : szLoggerName( _szLoggerName ), pParent( _pParent ) {}
+	CLogger( const std::string &_szLoggerName, CLogger *_pParent )
+		: szLoggerName( _szLoggerName )
+		, pParent( _pParent )
+	{
+	}
 
 	~CLogger()
 	{

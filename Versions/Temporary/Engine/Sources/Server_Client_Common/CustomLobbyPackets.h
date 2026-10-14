@@ -34,5 +34,8 @@ public:
 
 	CCustomLobbyClientsPacket() {}
 
-	CCustomLobbyClientsPacket( const int nClientID ) : CNetPacket( nClientID ) {}
+	CCustomLobbyClientsPacket( const int nClientID )
+		: CNetPacket( nClientID )
+	{
+	}
 };

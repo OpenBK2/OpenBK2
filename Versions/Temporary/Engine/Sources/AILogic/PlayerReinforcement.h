@@ -29,7 +29,8 @@ class CPlayerReinforcement
 		SCallReinforcementCommand() {}
 
 		SCallReinforcementCommand( NDb::EReinforcementType _eType, const CVec2 &_vPoint )
-				: eType( _eType ), vPoint( _vPoint )
+			: eType( _eType )
+			, vPoint( _vPoint )
 		{
 		}
 	};

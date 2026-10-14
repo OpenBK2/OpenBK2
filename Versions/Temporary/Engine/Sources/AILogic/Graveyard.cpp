@@ -57,19 +57,28 @@ public:
 	}
 
 	SKilledUnit()
-			: endFogTime( 0 ), timeToEndDieAnimation( 0 ), bAnimFinished( false ), bRemoveCorpseAfterAnimation( false )
+		: endFogTime( 0 )
+		, timeToEndDieAnimation( 0 )
+		, bAnimFinished( false )
+		, bRemoveCorpseAfterAnimation( false )
 	{
 	}
 
 	SKilledUnit( CAIUnit *_pUnit, const NTimer::STime _timeToEndDieAnimation )
-			: pUnit( _pUnit ), timeToEndDieAnimation( _timeToEndDieAnimation ), endFogTime( 0 ), bAnimFinished( false ),
-				bRemoveCorpseAfterAnimation( false )
+		: pUnit( _pUnit )
+		, timeToEndDieAnimation( _timeToEndDieAnimation )
+		, endFogTime( 0 )
+		, bAnimFinished( false )
+		, bRemoveCorpseAfterAnimation( false )
 	{
 	}
 
 	SKilledUnit( CAIUnit *_pUnit, const NTimer::STime _timeToEndDieAnimation, const NTimer::STime _endFogTime )
-			: pUnit( _pUnit ), timeToEndDieAnimation( _timeToEndDieAnimation ), endFogTime( _endFogTime ),
-				bAnimFinished( false ), bRemoveCorpseAfterAnimation( false )
+		: pUnit( _pUnit )
+		, timeToEndDieAnimation( _timeToEndDieAnimation )
+		, endFogTime( _endFogTime )
+		, bAnimFinished( false )
+		, bRemoveCorpseAfterAnimation( false )
 	{
 	}
 };
@@ -426,8 +435,13 @@ CDeadUnit::CDeadUnit( CCommonUnit *_pDieObj,
                       const EActionNotify _dieAction,
                       bool _bPutMud,
                       const int _nDeathAnimType )
-		: pDieObj( _pDieObj ), dieTime( _dieTime ), dieAction( _dieAction ), nFatality( -1 ),
-			nDeathAnimType( _nDeathAnimType ), tileCenter( _pDieObj->GetCenterTile() ), bPutMud( _bPutMud )
+	: pDieObj( _pDieObj )
+	, dieTime( _dieTime )
+	, dieAction( _dieAction )
+	, nFatality( -1 )
+	, nDeathAnimType( _nDeathAnimType )
+	, tileCenter( _pDieObj->GetCenterTile() )
+	, bPutMud( _bPutMud )
 {
 	SetUniqueIdForObjects();
 	bVisibleWhenDie = pDieObj->IsVisible( theDipl.GetMyParty() );
@@ -439,8 +453,13 @@ CDeadUnit::CDeadUnit( CCommonUnit *_pDieObj,
                       const int _nFatality,
                       bool _bPutMud,
                       const int _nDeathAnimType )
-		: pDieObj( _pDieObj ), dieTime( _dieTime ), dieAction( _dieAction ), nFatality( _nFatality ),
-			nDeathAnimType( _nDeathAnimType ), tileCenter( _pDieObj->GetCenterTile() ), bPutMud( _bPutMud )
+	: pDieObj( _pDieObj )
+	, dieTime( _dieTime )
+	, dieAction( _dieAction )
+	, nFatality( _nFatality )
+	, nDeathAnimType( _nDeathAnimType )
+	, tileCenter( _pDieObj->GetCenterTile() )
+	, bPutMud( _bPutMud )
 {
 	SetUniqueIdForObjects();
 	bVisibleWhenDie = pDieObj->IsVisible( theDipl.GetMyParty() );

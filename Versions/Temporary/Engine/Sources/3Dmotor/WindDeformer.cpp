@@ -41,10 +41,15 @@ protected:
 	void Recalc();
 
 public:
-	CWindDeformer( CPtrFuncBase<CObjectInfo> *_pGeom, const SFBTransform &_place ) : pGeom( _pGeom ), place( _place ) {}
+	CWindDeformer( CPtrFuncBase<CObjectInfo> *_pGeom, const SFBTransform &_place )
+		: pGeom( _pGeom )
+		, place( _place )
+	{
+	}
 
 	CWindDeformer( CPtrFuncBase<CObjectInfo> *_pGeom, CFuncBase<SFBTransform> *_pPlace )
-			: pGeom( _pGeom ), pPlace( _pPlace )
+		: pGeom( _pGeom )
+		, pPlace( _pPlace )
 	{
 		Identity( &( place.forward ) );
 		Identity( &( place.backward ) );

@@ -25,7 +25,14 @@ public:
 			return 0;
 		}
 
-		SPlayer() : pSideListItemIcon( 0 ), pSideMinimapIcon( 0 ), nLevel( 0 ), nTeam( 0 ), vMinimapPos( VNULL2 ) {}
+		SPlayer()
+			: pSideListItemIcon( 0 )
+			, pSideMinimapIcon( 0 )
+			, nLevel( 0 )
+			, nTeam( 0 )
+			, vMinimapPos( VNULL2 )
+		{
+		}
 	};
 
 	struct SParams
@@ -43,7 +50,11 @@ public:
 			return 0;
 		}
 
-		SParams() : pMapPicture( 0 ), pMinimap( 0 ) {}
+		SParams()
+			: pMapPicture( 0 )
+			, pMinimap( 0 )
+		{
+		}
 	};
 
 protected:

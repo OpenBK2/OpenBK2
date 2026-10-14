@@ -22,7 +22,8 @@ public:
 		~CReactions() {}
 
 		CReactions( IWindow *_pScreen, CInterfaceMissionObjectives *_pInterface )
-				: pScreen( _pScreen ), pInterface( _pInterface )
+			: pScreen( _pScreen )
+			, pInterface( _pInterface )
 		{
 		}
 
@@ -67,7 +68,11 @@ private:
 			return 0;
 		}
 
-		SObjective() : nID( -1 ), nButtonIndex( 0 ) {}
+		SObjective()
+			: nID( -1 )
+			, nButtonIndex( 0 )
+		{
+		}
 	};
 
 	CObj<CReactions> pReactions;

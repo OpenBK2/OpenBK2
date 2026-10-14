@@ -163,8 +163,10 @@ void CAILogic::PickEmpty()
 }
 
 CAILogic::CAILogic()
-		: timeLocalPlayerUnitCheck( 0 ), bLocalPlayerUnitsPresent( false ), timeLastMiniMapUpdateUnits( 0 ),
-			bNeedNewGroupNumber( true )
+	: timeLocalPlayerUnitCheck( 0 )
+	, bLocalPlayerUnitsPresent( false )
+	, timeLastMiniMapUpdateUnits( 0 )
+	, bNeedNewGroupNumber( true )
 {
 	CScripts::RegisterScriptForSaveLoad();
 	bMissionLoaded = false;

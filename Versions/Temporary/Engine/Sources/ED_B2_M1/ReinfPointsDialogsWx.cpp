@@ -66,8 +66,11 @@ public:
 	                               CMapInfoEditor *_pMapInfoEditor,
 	                               int _nPlayer,
 	                               int _nReinfPoint )
-			: CWxToolDialog( pParent, wxID_ANY, "Typed templates" ), pTemplates( _pTemplates ),
-				pMapInfoEditor( _pMapInfoEditor ), nPlayer( _nPlayer ), nReinfPoint( _nReinfPoint )
+		: CWxToolDialog( pParent, wxID_ANY, "Typed templates" )
+		, pTemplates( _pTemplates )
+		, pMapInfoEditor( _pMapInfoEditor )
+		, nPlayer( _nPlayer )
+		, nReinfPoint( _nReinfPoint )
 	{
 		wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 
@@ -198,7 +201,9 @@ class CAddTemplateWxDialog : public CWxToolDialog
 
 public:
 	CAddTemplateWxDialog( wxWindow *pParent, const std::string &rszNode, CMapInfoEditor *_pMapInfoEditor )
-			: CWxToolDialog( pParent, wxID_ANY, "Add Typed Template" ), pMapInfoEditor( _pMapInfoEditor ), szNode( rszNode )
+		: CWxToolDialog( pParent, wxID_ANY, "Add Typed Template" )
+		, pMapInfoEditor( _pMapInfoEditor )
+		, szNode( rszNode )
 	{
 		std::string szCurrentType;
 		CManipulatorManager::GetValue( &szCurrentType, pMapInfoEditor->GetViewManipulator(), szNode + ".Type" );

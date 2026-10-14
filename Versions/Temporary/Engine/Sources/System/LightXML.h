@@ -59,10 +59,15 @@ class CXMLAttribute : public CXMLBase
 	}
 
 public:
-	CXMLAttribute() : dwHashCode( 0 ) {}
+	CXMLAttribute()
+		: dwHashCode( 0 )
+	{
+	}
 
 	CXMLAttribute( const std::string &_szName, const std::string &_szValue )
-			: szName( _szName ), szValue( _szValue ), dwHashCode( 0 )
+		: szName( _szName )
+		, szValue( _szValue )
+		, dwHashCode( 0 )
 	{
 	}
 
@@ -202,7 +207,10 @@ protected:
 	CXMLNode *Identify( const char *pszBegin, const char *pszEnd );
 
 public:
-	CXMLMultiNode( const CXMLNode::EType _eType ) : CXMLNode( _eType ) {}
+	CXMLMultiNode( const CXMLNode::EType _eType )
+		: CXMLNode( _eType )
+	{
+	}
 
 	virtual ~CXMLMultiNode();
 	//

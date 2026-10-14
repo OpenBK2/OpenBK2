@@ -17,7 +17,10 @@ public:
 	}
 
 public:
-	CObstacle() : fFirePower( 0 ) {}
+	CObstacle()
+		: fFirePower( 0 )
+	{
+	}
 
 	virtual void UpdateTakenDamagePower( const float fUpdate )
 	{
@@ -49,7 +52,10 @@ public:
 public:
 	CObstacleStaticObject() {}
 
-	CObstacleStaticObject( class CStaticObject *pObj ) : pObj( pObj ) {}
+	CObstacleStaticObject( class CStaticObject *pObj )
+		: pObj( pObj )
+	{
+	}
 
 	virtual class CBasicGun *ChooseGunToShootToSelf( class CCommonUnit *pUnit, NTimer::STime *pTime );
 	virtual int GetPlayer() const;

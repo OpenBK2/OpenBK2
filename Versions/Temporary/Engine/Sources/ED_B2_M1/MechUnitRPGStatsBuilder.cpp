@@ -35,16 +35,30 @@ struct SPropellerInfo
 	bool bDynamicDefined;
 
 	SPropellerInfo()
-			: szLocatorName( "" ), nLocatorIndex( -1 ), nScaledStart( -1 ), nScaledEnd( -1 ), nDynamicStart( -1 ),
-				nDynamicEnd( -1 ), fScaledSpeed( 0.0f ), fDynamicSpeed( 0.0f ), bScaledDefined( false ),
-				bDynamicDefined( false )
+		: szLocatorName( "" )
+		, nLocatorIndex( -1 )
+		, nScaledStart( -1 )
+		, nScaledEnd( -1 )
+		, nDynamicStart( -1 )
+		, nDynamicEnd( -1 )
+		, fScaledSpeed( 0.0f )
+		, fDynamicSpeed( 0.0f )
+		, bScaledDefined( false )
+		, bDynamicDefined( false )
 	{
 	}
 
 	SPropellerInfo( const int _nLocatorIndex, const std::string &_szLocatorName )
-			: szLocatorName( _szLocatorName ), nLocatorIndex( _nLocatorIndex ), nScaledStart( -1 ), nScaledEnd( -1 ),
-				nDynamicStart( -1 ), nDynamicEnd( -1 ), fScaledSpeed( 0.0f ), fDynamicSpeed( 0.0f ), bScaledDefined( false ),
-				bDynamicDefined( false )
+		: szLocatorName( _szLocatorName )
+		, nLocatorIndex( _nLocatorIndex )
+		, nScaledStart( -1 )
+		, nScaledEnd( -1 )
+		, nDynamicStart( -1 )
+		, nDynamicEnd( -1 )
+		, fScaledSpeed( 0.0f )
+		, fDynamicSpeed( 0.0f )
+		, bScaledDefined( false )
+		, bDynamicDefined( false )
 	{
 	}
 

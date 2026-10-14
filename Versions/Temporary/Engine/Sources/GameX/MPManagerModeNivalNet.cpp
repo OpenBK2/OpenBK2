@@ -50,7 +50,10 @@ REGISTER_VAR_EX(
 FINISH_REGISTER
 
 CMPManagerModeNivalNet::CMPManagerModeNivalNet()
-		: nMyClientID( -1 ), eState( EGS_LOGGING_IN ), bLadderGame( false ), timeNextGameHeartbeat( 0 )
+	: nMyClientID( -1 )
+	, eState( EGS_LOGGING_IN )
+	, bLadderGame( false )
+	, timeNextGameHeartbeat( 0 )
 {
 	// Messages
 	REGISTER_MPUI_MESSAGE_HANDLER(

@@ -54,9 +54,15 @@ class CPlayList : public CObjectBase
 	void LaunchComposition( const NDb::SComposition *_pComposition );
 
 public:
-	CPlayList() : eState( EPSS_OUT ), nStillSong( -1 ) {}
+	CPlayList()
+		: eState( EPSS_OUT )
+		, nStillSong( -1 )
+	{
+	}
 
-	CPlayList( const NDb::SPlayList *_pList ) : eState( EPSS_OUT ), nStillSong( -1 )
+	CPlayList( const NDb::SPlayList *_pList )
+		: eState( EPSS_OUT )
+		, nStillSong( -1 )
 	{
 		Init( _pList );
 	}

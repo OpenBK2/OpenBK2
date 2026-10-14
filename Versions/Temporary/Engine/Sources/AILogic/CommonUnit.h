@@ -55,9 +55,17 @@ public:
 	}
 
 public:
-	SBehaviour() : moving( EMRoaming ), fire( EFAtWill ) {}
+	SBehaviour()
+		: moving( EMRoaming )
+		, fire( EFAtWill )
+	{
+	}
 
-	SBehaviour( const EMoving _moving, const EFire _fire ) : moving( _moving ), fire( _fire ) {}
+	SBehaviour( const EMoving _moving, const EFire _fire )
+		: moving( _moving )
+		, fire( _fire )
+	{
+	}
 };
 
 struct IShootEstimator;
@@ -110,7 +118,11 @@ protected:
 	                           class CAICommand *pCommand );
 
 public:
-	CCommonUnit() : wReserveDir( 0 ), vFollowShift( VNULL2 ) {}
+	CCommonUnit()
+		: wReserveDir( 0 )
+		, vFollowShift( VNULL2 )
+	{
+	}
 
 	int operator&( IBinSaver &f );
 

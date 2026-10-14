@@ -34,7 +34,11 @@ struct STextureKey
 
 	STextureKey() {}
 
-	STextureKey( const NDb::STexture *_pTexture, int _nFlags = 0 ) : pTexture( _pTexture ), nFlags( _nFlags ) {}
+	STextureKey( const NDb::STexture *_pTexture, int _nFlags = 0 )
+		: pTexture( _pTexture )
+		, nFlags( _nFlags )
+	{
+	}
 
 	bool operator==( const STextureKey &a ) const
 	{
@@ -65,7 +69,10 @@ protected:
 	virtual bool NeedUpdate();
 
 public:
-	CFileTexture() : bIsFakeTexture( false ) {}
+	CFileTexture()
+		: bIsFakeTexture( false )
+	{
+	}
 
 	void CreateChecker();
 
@@ -104,7 +111,10 @@ protected:
 public:
 	CColorTexture() {}
 
-	CColorTexture( const CVec4 &_v ) : vColor( _v ) {}
+	CColorTexture( const CVec4 &_v )
+		: vColor( _v )
+	{
+	}
 };
 
 } // namespace NGScene

@@ -56,8 +56,10 @@ bool AddUIScreen( IScreen *pWindowScreen,
 }
 
 CInterfaceScreenBase::CInterfaceScreenBase( const std::string &_szInterfaceType, const std::string &_szBindSection )
-		: szInterfaceType( _szInterfaceType ), szBindSection( _szBindSection ), bShowScreenOnGetFocus( false ),
-			bIsTransparent( true )
+	: szInterfaceType( _szInterfaceType )
+	, szBindSection( _szBindSection )
+	, bShowScreenOnGetFocus( false )
+	, bIsTransparent( true )
 {
 	bInFocus = false;
 	nTime = 0; // 0 - need to set abs time at the appropriate place

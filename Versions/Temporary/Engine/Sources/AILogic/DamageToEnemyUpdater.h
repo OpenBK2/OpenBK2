@@ -26,7 +26,11 @@ public:
 	}
 
 public:
-	CDamageToEnemyUpdater() : nTakenDamageUpdated( 0 ), fTakenDamagePower( 0.0f ) {}
+	CDamageToEnemyUpdater()
+		: nTakenDamageUpdated( 0 )
+		, fTakenDamagePower( 0.0f )
+	{
+	}
 
 	void SetDamageToEnemy( CAIUnit *pOwner, CAIUnit *pEnemy, const uint32_t dwGuns );
 	void SetDamageToEnemy( class CAIUnit *pOwner, class CAIUnit *pEnemy, class CBasicGun *pGun );

@@ -15,7 +15,11 @@ struct STraceImageFunctor
 	uint32_t dwColor;
 	CArray2D<uint32_t> *pImage;
 
-	STraceImageFunctor( uint32_t _dwColor, CArray2D<uint32_t> *_pImage ) : dwColor( _dwColor ), pImage( _pImage ) {}
+	STraceImageFunctor( uint32_t _dwColor, CArray2D<uint32_t> *_pImage )
+		: dwColor( _dwColor )
+		, pImage( _pImage )
+	{
+	}
 
 	void operator()( int x, int y )
 	{
@@ -63,7 +67,10 @@ void CHeightContainer::MarkTraceImageGrid( CArray2D<uint32_t> *pImage, uint32_t 
 }
 
 CHeightContainer::CHeightContainer( const float _fTileSize )
-		: fTileSize( _fTileSize ), planeSize( 0, 0 ), nStackCount( 0 ), bTraceToImage( false )
+	: fTileSize( _fTileSize )
+	, planeSize( 0, 0 )
+	, nStackCount( 0 )
+	, bTraceToImage( false )
 {
 }
 
@@ -149,7 +156,9 @@ struct SModifyBitFunctional
 	int nBit;
 	CArray2D<uint32_t> *pPlaneArray;
 
-	SModifyBitFunctional( const int _nBit, CArray2D<uint32_t> *_pPlaneArray ) : nBit( _nBit ), pPlaneArray( _pPlaneArray )
+	SModifyBitFunctional( const int _nBit, CArray2D<uint32_t> *_pPlaneArray )
+		: nBit( _nBit )
+		, pPlaneArray( _pPlaneArray )
 	{
 	}
 

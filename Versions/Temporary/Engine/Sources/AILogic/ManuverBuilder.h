@@ -49,7 +49,10 @@ class CManuverBuilder
 			attackers.resize( nMaxAttakers, 0 );
 		}
 
-		SGRoundAttackTarget() : nMaxAttakers( 9 ), attackers( nMaxAttakers, 0 ), wStartAngle( NRandom::Random( 65535 ) )
+		SGRoundAttackTarget()
+			: nMaxAttakers( 9 )
+			, attackers( nMaxAttakers, 0 )
+			, wStartAngle( NRandom::Random( 65535 ) )
 		{
 			RecordRandomCall();
 		}

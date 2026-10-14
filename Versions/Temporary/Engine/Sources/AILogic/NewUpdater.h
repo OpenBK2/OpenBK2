@@ -302,14 +302,24 @@ public:
 		bool bValid = {};
 
 		CUpdateData( const NTimer::STime &nTime, int nCounter, EActionNotify eType, CUpdatableObj *_pObj, int _nParam )
-				: nUpdateTime( nTime ), nOrder( nCounter ), eUpdateType( eType ), pObj( _pObj ), nParam( _nParam ),
-					bValid( true ), pData( 0 )
+			: nUpdateTime( nTime )
+			, nOrder( nCounter )
+			, eUpdateType( eType )
+			, pObj( _pObj )
+			, nParam( _nParam )
+			, bValid( true )
+			, pData( 0 )
 		{
 		}
 
 		CUpdateData( const CUpdateData &data )
-				: nUpdateTime( data.nUpdateTime ), nOrder( data.nOrder ), eUpdateType( data.eUpdateType ), pObj( data.pObj ),
-					nParam( data.nParam ), bValid( data.bValid ), pData( data.pData )
+			: nUpdateTime( data.nUpdateTime )
+			, nOrder( data.nOrder )
+			, eUpdateType( data.eUpdateType )
+			, pObj( data.pObj )
+			, nParam( data.nParam )
+			, bValid( data.bValid )
+			, pData( data.pData )
 		{
 		}
 

@@ -34,7 +34,10 @@ public:
 	bool bRay; // зафиксирована точка начала куска забора или нет
 	CVec3 vLastPos;
 
-	CFenceDesignTool() : bEnabled( false ) {}
+	CFenceDesignTool()
+		: bEnabled( false )
+	{
+	}
 
 	//
 	void SetUp( bool bFitToAIGrd, const NDb::SFenceRPGStats *pStats );
@@ -89,7 +92,10 @@ class CFenceState : public CMapObjectState
 		CDBID rpgStatsDBID;
 		const NDb::SFenceRPGStats *pFenceRPGStats;
 
-		SSelectedFenceInfo() : pFenceRPGStats( 0 ) {}
+		SSelectedFenceInfo()
+			: pFenceRPGStats( 0 )
+		{
+		}
 	};
 
 	SSelectedFenceInfo selectedFenceInfo;
@@ -104,7 +110,8 @@ class CFenceState : public CMapObjectState
 	void FillScene( unsigned nFlags, const CVec3 &rTerrainPos );
 	//
 public:
-	CFenceState( CMapObjectMultiState *_pParentState = 0 ) : CMapObjectState( _pParentState )
+	CFenceState( CMapObjectMultiState *_pParentState = 0 )
+		: CMapObjectState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, fmt::format( "CFenceState(): pParentState == 0" ) );
 		ClearData();

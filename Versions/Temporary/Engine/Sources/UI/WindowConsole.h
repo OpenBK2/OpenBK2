@@ -34,7 +34,10 @@ class CWindowConsole : public CWindow, public IConsole
 			return 0;
 		}
 
-		SColorString() : dwColor( 0xffffffff ) {}
+		SColorString()
+			: dwColor( 0xffffffff )
+		{
+		}
 
 		SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth );
 	};
@@ -134,7 +137,10 @@ class CDebugSingleton : public IDebugSingleton
 	void CreateStatsWindow();
 
 public:
-	CDebugSingleton() : bDebugShown( false ) {}
+	CDebugSingleton()
+		: bDebugShown( false )
+	{
+	}
 
 	int operator&( IBinSaver &saver )
 	{

@@ -37,7 +37,12 @@ public:
 	}
 
 public:
-	CAIUnitInfoForGeneral() : pOwner( 0 ), fWeight( 0 ), vLastRegisteredGeneralPos( VNULL2 ) {}
+	CAIUnitInfoForGeneral()
+		: pOwner( 0 )
+		, fWeight( 0 )
+		, vLastRegisteredGeneralPos( VNULL2 )
+	{
+	}
 
 	CAIUnitInfoForGeneral( class CAIUnit *pOwner );
 

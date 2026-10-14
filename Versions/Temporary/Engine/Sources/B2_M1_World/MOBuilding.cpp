@@ -58,7 +58,11 @@ const SIconsSetInfo &GetDBIconsSet( NDb::EDesignBuildingType eType )
 // CMOBuilding
 
 CMOBuilding::CMOBuilding()
-		: wAmbientSound( 0 ), wCycledSound( 0 ), wCycledSoundTimed( 0 ), fCapturingProgress( 0.0f ), bCanEnter( true )
+	: wAmbientSound( 0 )
+	, wCycledSound( 0 )
+	, wCycledSoundTimed( 0 )
+	, fCapturingProgress( 0.0f )
+	, bCanEnter( true )
 {
 	SetCanSelect( false );
 }

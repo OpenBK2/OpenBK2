@@ -20,7 +20,10 @@ class CLIENT_EXPORT CLANClient : public IServerClient
 	bool bTryingConnect;
 
 public:
-	CLANClient() : bTryingConnect( false ) {}
+	CLANClient()
+		: bTryingConnect( false )
+	{
+	}
 
 	~CLANClient();
 

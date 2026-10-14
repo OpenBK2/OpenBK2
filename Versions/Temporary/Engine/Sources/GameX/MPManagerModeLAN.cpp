@@ -51,7 +51,8 @@ public:
 	CLANPasswordPacket() {}
 
 	CLANPasswordPacket( const int nClientID, const std::string &_szPassword )
-			: CNetPacket( nClientID ), szPassword( _szPassword )
+		: CNetPacket( nClientID )
+		, szPassword( _szPassword )
 	{
 	}
 };
@@ -71,12 +72,17 @@ public:
 
 	CRequestLANPasswordPacket() {}
 
-	CRequestLANPasswordPacket( const int nClientID ) : CNetPacket( nClientID ) {}
+	CRequestLANPasswordPacket( const int nClientID )
+		: CNetPacket( nClientID )
+	{
+	}
 };
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x19256441, CRequestLANPasswordPacket );
 
-CMPManagerModeLAN::CMPManagerModeLAN() : wGameUniqueID( 0 ), eCurrentState( EGS_NOT_IN_GAME )
+CMPManagerModeLAN::CMPManagerModeLAN()
+	: wGameUniqueID( 0 )
+	, eCurrentState( EGS_NOT_IN_GAME )
 {
 	pLANClient = CLANClient::Create( NGlobal::GetVar( "NetGameVersion", 1 ), LAN_PORT, LAN_TIMEOUT_SEC );
 	if ( !pLANClient )

@@ -6,7 +6,7 @@
 #include <zconf.h>
 
 CFormationMnemonics::CFormationMnemonics()
-		: CMnemonicsCollector<int>( NDb::SWeaponRPGStats::WEAPON_PISTOL, "WEAPON_PISTOL" )
+	: CMnemonicsCollector<int>( NDb::SWeaponRPGStats::WEAPON_PISTOL, "WEAPON_PISTOL" )
 {
 	Insert( NDb::SSquadRPGStats::SFormation::DEFAULT, "DEFAULT" );
 	Insert( NDb::SSquadRPGStats::SFormation::MOVEMENT, "MOVEMENT" );

@@ -10,7 +10,8 @@
 extern CEventUpdater updater;
 
 CExecutorSpyMode::CExecutorSpyMode( CAIUnit *_pUnit )
-		: CExecutorUnitCombatBonus( NDb::ABILITY_SPY_MODE, _pUnit, TID_SPY_MODE ), bMasked( false )
+	: CExecutorUnitCombatBonus( NDb::ABILITY_SPY_MODE, _pUnit, TID_SPY_MODE )
+	, bMasked( false )
 {
 }
 

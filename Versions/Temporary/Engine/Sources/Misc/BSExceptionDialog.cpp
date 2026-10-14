@@ -23,8 +23,10 @@ struct SExceptionDlgInitParams
 	                         const char *pszNewDescription,
 	                         const std::vector<SCallStackEntry> &_entries,
 	                         const char *szExtInfo )
-			: pszCondition( pszNewCondition ), pszDescription( pszNewDescription ), entries( _entries ),
-				pszExtInfo( szExtInfo )
+		: pszCondition( pszNewCondition )
+		, pszDescription( pszNewDescription )
+		, entries( _entries )
+		, pszExtInfo( szExtInfo )
 	{
 	}
 };

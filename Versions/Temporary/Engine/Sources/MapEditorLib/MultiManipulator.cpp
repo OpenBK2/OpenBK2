@@ -674,7 +674,7 @@ void CMultiManipulator::GetNameList( IManipulator::CNameMap *pNameMap ) const
 CMultiManipulatorIterator::CMultiManipulatorIterator( CMultiManipulator *_pMultiManipulator,
                                                       bool bShowHidden,
                                                       ECacheType eCache )
-		: pMultiManipulator( _pMultiManipulator )
+	: pMultiManipulator( _pMultiManipulator )
 {
 	NI_ASSERT( pMultiManipulator != 0, "CMultiManipulatorIterator::CMultiManipulatorIterator(): pMultiManipulator == 0" );
 	pManipulatorIterator = 0;

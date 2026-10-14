@@ -76,7 +76,12 @@ protected:
 
 public:
 	CUnitTorpedo()
-			: pShooterStats( 0 ), pTorpedoStats( 0 ), fSpeed( 0 ), timeLaunched( 0 ), pOwner( 0 ), vContactPoint( VNULL2 )
+		: pShooterStats( 0 )
+		, pTorpedoStats( 0 )
+		, fSpeed( 0 )
+		, timeLaunched( 0 )
+		, pOwner( 0 )
+		, vContactPoint( VNULL2 )
 	{
 	}
 

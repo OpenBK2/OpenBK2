@@ -148,9 +148,15 @@ public:
 		return 0;
 	}
 
-	SFadeValue() : fFadeValue( 1.0f ) {}
+	SFadeValue()
+		: fFadeValue( 1.0f )
+	{
+	}
 
-	SFadeValue( float _fFadeValue ) : fFadeValue( _fFadeValue ) {}
+	SFadeValue( float _fFadeValue )
+		: fFadeValue( _fFadeValue )
+	{
+	}
 };
 
 class CCOLORHandler : public IMLHandler
@@ -170,7 +176,10 @@ private:
 public:
 	CCOLORHandler() {}
 
-	CCOLORHandler( SFadeValue *pFadeValue ) : sFadeValue( pFadeValue ) {}
+	CCOLORHandler( SFadeValue *pFadeValue )
+		: sFadeValue( pFadeValue )
+	{
+	}
 
 	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 	{
@@ -428,7 +437,10 @@ private:
 public:
 	CStateStack() {}
 
-	CStateStack( bool _bSave ) : bSave( _bSave ) {}
+	CStateStack( bool _bSave )
+		: bSave( _bSave )
+	{
+	}
 
 	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 	{

@@ -827,7 +827,11 @@ namespace
 		}
 
 	public:
-		CAssembler( std::vector<uint32_t> &_tokens ) : tokens( _tokens ), nLine( 0 ) {}
+		CAssembler( std::vector<uint32_t> &_tokens )
+			: tokens( _tokens )
+			, nLine( 0 )
+		{
+		}
 
 		bool Run( std::string_view source, std::string *pszError )
 		{

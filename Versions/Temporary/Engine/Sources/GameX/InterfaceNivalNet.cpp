@@ -28,7 +28,9 @@ const int nMIN_USERNAME = 4;
 
 // CInterfaceNivalNet
 
-CInterfaceNivalNet::CInterfaceNivalNet() : CInterfaceMPScreenBase( "MPNivalNet", "nival_net" ), eState( ES_NORMAL )
+CInterfaceNivalNet::CInterfaceNivalNet()
+	: CInterfaceMPScreenBase( "MPNivalNet", "nival_net" )
+	, eState( ES_NORMAL )
 {
 	REGISTER_MPUI_MESSAGE_HANDLER(
 			EMUI_CONNECT_RESULT, SMPUIConnectResultMessage, &CInterfaceNivalNet::OnConnectResultMessage );

@@ -24,7 +24,9 @@ public:
 
 	CB2SlotInfoPacket() {}
 
-	CB2SlotInfoPacket( int nClientID, int _nSlot, const SMPSlot &_info ) : CNetPacket( nClientID ), nSlot( _nSlot )
+	CB2SlotInfoPacket( int nClientID, int _nSlot, const SMPSlot &_info )
+		: CNetPacket( nClientID )
+		, nSlot( _nSlot )
 	{
 		info = _info;
 	}
@@ -79,7 +81,10 @@ public:
 
 	CB2GameRoomStartGamePacket() {}
 
-	CB2GameRoomStartGamePacket( int nClientID ) : CNetPacket( nClientID ) {}
+	CB2GameRoomStartGamePacket( int nClientID )
+		: CNetPacket( nClientID )
+	{
+	}
 };
 
 class CB2SuggestKickPacket : public CNetPacket
@@ -98,7 +103,11 @@ public:
 
 	CB2SuggestKickPacket() {}
 
-	CB2SuggestKickPacket( int nClientID, int nSlot ) : CNetPacket( nClientID ), nSlotToKick( nSlot ) {}
+	CB2SuggestKickPacket( int nClientID, int nSlot )
+		: CNetPacket( nClientID )
+		, nSlotToKick( nSlot )
+	{
+	}
 };
 
 class CB2LagTimeUpdatePacket : public CNetPacket
@@ -120,7 +129,9 @@ public:
 	CB2LagTimeUpdatePacket() {}
 
 	CB2LagTimeUpdatePacket( int nClientID, int _nPlayer, int _nTimeLeft )
-			: CNetPacket( nClientID ), nPlayer( _nPlayer ), nTimeLeft( _nTimeLeft )
+		: CNetPacket( nClientID )
+		, nPlayer( _nPlayer )
+		, nTimeLeft( _nTimeLeft )
 	{
 	}
 };
@@ -139,9 +150,16 @@ public:
 		return 0;
 	}
 
-	CB2UserPausePacket() : bPaused( false ) {}
+	CB2UserPausePacket()
+		: bPaused( false )
+	{
+	}
 
-	CB2UserPausePacket( int nClientID, bool _bPaused ) : CNetPacket( nClientID ), bPaused( _bPaused ) {}
+	CB2UserPausePacket( int nClientID, bool _bPaused )
+		: CNetPacket( nClientID )
+		, bPaused( _bPaused )
+	{
+	}
 };
 
 // Game-control-host packet: stop waiting for a player at a deterministic segment.
@@ -164,10 +182,16 @@ public:
 		return 0;
 	}
 
-	CB2DropPlayerAtSegmentPacket() : nSlotToDrop( 0 ), nSegment( 0 ) {}
+	CB2DropPlayerAtSegmentPacket()
+		: nSlotToDrop( 0 )
+		, nSegment( 0 )
+	{
+	}
 
 	CB2DropPlayerAtSegmentPacket( int nClientID, int _nSlotToDrop, int _nSegment )
-			: CNetPacket( nClientID ), nSlotToDrop( uint8_t( _nSlotToDrop ) ), nSegment( _nSegment )
+		: CNetPacket( nClientID )
+		, nSlotToDrop( uint8_t( _nSlotToDrop ) )
+		, nSegment( _nSegment )
 	{
 	}
 };

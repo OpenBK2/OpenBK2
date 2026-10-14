@@ -44,7 +44,8 @@ protected:
 public:
 	CWaterPatchLayer() {}
 
-	CWaterPatchLayer( CWaterPatch *_pPatch ) : pPatch( _pPatch )
+	CWaterPatchLayer( CWaterPatch *_pPatch )
+		: pPatch( _pPatch )
 	{
 		pValue = new NGScene::CObjectInfo();
 	}
@@ -203,7 +204,11 @@ class CWater : public CObjectBase
 public:
 	CWater() {}
 
-	CWater( const NDb::SWater *_pDesc, CFuncBase<STime> *_pTimer ) : pDesc( _pDesc ), pTimer( _pTimer ) {}
+	CWater( const NDb::SWater *_pDesc, CFuncBase<STime> *_pTimer )
+		: pDesc( _pDesc )
+		, pTimer( _pTimer )
+	{
+	}
 
 	void Create( NGScene::IGameView *pGView, const int nPatchesX, const int nPatchesY );
 	//

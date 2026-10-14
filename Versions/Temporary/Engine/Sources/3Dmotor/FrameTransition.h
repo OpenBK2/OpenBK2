@@ -56,19 +56,21 @@ struct SFrameTransitionInfo
 
 	//
 	SFrameTransitionInfo()
-			: nEffectDuration( NDefFTVals::N_DEF_FT_EFFECT_DURATION ), bZoom( NDefFTVals::B_DEF_FT_ZOOM ),
-				bRandomDir( NDefFTVals::B_DEF_FT_RANDOM_DIR ), vTransitionDir( NDefFTVals::V_DEF_FT_TRANSITION_DIR ),
-				fTransitionLength( NDefFTVals::F_DEF_FT_TRANSITION_LENGTH ),
-				nQuadsGroup1Num( NDefFTVals::N_DEF_FT_QUADS_GROUP1_NUM ),
-				fQuadsGroup1MinZ( NDefFTVals::F_DEF_FT_QUADS_GROUP1_MIN_Z ),
-				fQuadsGroup1MaxZ( NDefFTVals::F_DEF_FT_QUADS_GROUP1_MAX_Z ),
-				fQuadsGroup1MinAlpha( NDefFTVals::F_DEF_FT_QUADS_GROUP1_MIN_ALPHA ),
-				fQuadsGroup1MaxAlpha( NDefFTVals::F_DEF_FT_QUADS_GROUP1_MAX_ALPHA ),
-				nQuadsGroup2Num( NDefFTVals::N_DEF_FT_QUADS_GROUP2_NUM ),
-				fQuadsGroup2MinZ( NDefFTVals::F_DEF_FT_QUADS_GROUP2_MIN_Z ),
-				fQuadsGroup2MaxZ( NDefFTVals::F_DEF_FT_QUADS_GROUP2_MAX_Z ),
-				fQuadsGroup2MinAlpha( NDefFTVals::F_DEF_FT_QUADS_GROUP2_MIN_ALPHA ),
-				fQuadsGroup2MaxAlpha( NDefFTVals::F_DEF_FT_QUADS_GROUP2_MAX_ALPHA )
+		: nEffectDuration( NDefFTVals::N_DEF_FT_EFFECT_DURATION )
+		, bZoom( NDefFTVals::B_DEF_FT_ZOOM )
+		, bRandomDir( NDefFTVals::B_DEF_FT_RANDOM_DIR )
+		, vTransitionDir( NDefFTVals::V_DEF_FT_TRANSITION_DIR )
+		, fTransitionLength( NDefFTVals::F_DEF_FT_TRANSITION_LENGTH )
+		, nQuadsGroup1Num( NDefFTVals::N_DEF_FT_QUADS_GROUP1_NUM )
+		, fQuadsGroup1MinZ( NDefFTVals::F_DEF_FT_QUADS_GROUP1_MIN_Z )
+		, fQuadsGroup1MaxZ( NDefFTVals::F_DEF_FT_QUADS_GROUP1_MAX_Z )
+		, fQuadsGroup1MinAlpha( NDefFTVals::F_DEF_FT_QUADS_GROUP1_MIN_ALPHA )
+		, fQuadsGroup1MaxAlpha( NDefFTVals::F_DEF_FT_QUADS_GROUP1_MAX_ALPHA )
+		, nQuadsGroup2Num( NDefFTVals::N_DEF_FT_QUADS_GROUP2_NUM )
+		, fQuadsGroup2MinZ( NDefFTVals::F_DEF_FT_QUADS_GROUP2_MIN_Z )
+		, fQuadsGroup2MaxZ( NDefFTVals::F_DEF_FT_QUADS_GROUP2_MAX_Z )
+		, fQuadsGroup2MinAlpha( NDefFTVals::F_DEF_FT_QUADS_GROUP2_MIN_ALPHA )
+		, fQuadsGroup2MaxAlpha( NDefFTVals::F_DEF_FT_QUADS_GROUP2_MAX_ALPHA )
 	{
 	}
 };

@@ -79,7 +79,10 @@ private:
 		const std::vector<STriangle> &tris;
 
 		SStartSearch( CTriVertexCacheOptimizer *pO, const std::vector<STriangle> &_tris )
-				: nBestIdx( -1 ), nBestFreeLinks( 1000000 ), pOptimizer( pO ), tris( _tris )
+			: nBestIdx( -1 )
+			, nBestFreeLinks( 1000000 )
+			, pOptimizer( pO )
+			, tris( _tris )
 		{
 		}
 
@@ -106,7 +109,10 @@ private:
 		const std::vector<STriangle> &tris;
 
 		SBestSearch( CTriVertexCacheOptimizer *pO, const std::vector<STriangle> &_tris )
-				: nBestIdx( -1 ), nBestCached( -1 ), pOptimizer( pO ), tris( _tris )
+			: nBestIdx( -1 )
+			, nBestCached( -1 )
+			, pOptimizer( pO )
+			, tris( _tris )
 		{
 		}
 

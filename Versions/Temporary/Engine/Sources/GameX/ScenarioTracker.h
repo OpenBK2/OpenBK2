@@ -201,7 +201,10 @@ struct IScenarioTracker : public IAIScenarioTracker
 				return 0;
 			}
 
-			SLeaderStatSet() : fExpDebt( 0.0f ) {}
+			SLeaderStatSet()
+				: fExpDebt( 0.0f )
+			{
+			}
 		};
 
 		ZDATA
@@ -223,7 +226,10 @@ struct IScenarioTracker : public IAIScenarioTracker
 			return 0;
 		}
 
-		SLeaderInfo() : wszName( L"" ) {}
+		SLeaderInfo()
+			: wszName( L"" )
+		{
+		}
 	};
 
 	struct SGenerateLeaderInfo
@@ -256,7 +262,10 @@ struct IScenarioTracker : public IAIScenarioTracker
 			return 0;
 		}
 
-		SGenerateLeaderInfo() : nID( -1 ) {}
+		SGenerateLeaderInfo()
+			: nID( -1 )
+		{
+		}
 	};
 
 	struct SUndoLeaderInfo
@@ -309,7 +318,11 @@ struct IScenarioTracker : public IAIScenarioTracker
 			return 0;
 		}
 
-		SPlayerColor() : dwColor( 0 ), nColorIndex( 0 ) {}
+		SPlayerColor()
+			: dwColor( 0 )
+			, nColorIndex( 0 )
+		{
+		}
 	};
 
 	virtual bool IsCustomMission() const = 0;

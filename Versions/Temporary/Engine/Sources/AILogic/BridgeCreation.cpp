@@ -92,7 +92,8 @@ bool CBridgeCreation::IsFirstSegmentBuilt() const
 CBridgeCreation::CBridgeCreation( class CFullBridge *pBridge,
                                   class CCommonUnit *pUnit,
                                   const bool bAllowAIModification )
-		: pFullBridge( pBridge ), CLongObjectCreation( pUnit->GetPlayer(), bAllowAIModification )
+	: pFullBridge( pBridge )
+	, CLongObjectCreation( pUnit->GetPlayer(), bAllowAIModification )
 {
 	// просто отсортировать по координатам все участки
 	pBridge->EnumSpans( &spans );

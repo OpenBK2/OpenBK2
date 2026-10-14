@@ -133,7 +133,10 @@ class CStandardParticleEffect : public CParticleEffect
 	OBJECT_BASIC_METHODS( CStandardParticleEffect );
 
 protected:
-	CStandardParticleEffect() : fFade( 1.0f ) {}
+	CStandardParticleEffect()
+		: fFade( 1.0f )
+	{
+	}
 
 public:
 	CVec2 pivot;
@@ -156,7 +159,11 @@ public:
 	float fFade;
 	int nPriority;
 
-	CStandardParticleEffect( int _nPriority ) : fFade( 1.0f ), nPriority( _nPriority ) {}
+	CStandardParticleEffect( int _nPriority )
+		: fFade( 1.0f )
+		, nPriority( _nPriority )
+	{
+	}
 
 	void AddParticles( IParticleOutput *pRender );
 

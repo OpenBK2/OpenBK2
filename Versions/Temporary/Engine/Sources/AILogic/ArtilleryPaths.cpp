@@ -19,7 +19,8 @@ CArtilleryCrewPath::CArtilleryCrewPath( CBasePathUnit *_pUnit,
                                         const CVec2 &vStartPoint,
                                         const CVec2 &_vEndPoint,
                                         const float fMaxSpeed )
-		: pUnit( _pUnit ), vCurPoint( vStartPoint )
+	: pUnit( _pUnit )
+	, vCurPoint( vStartPoint )
 {
 	SetParams( _vEndPoint, fMaxSpeed );
 }

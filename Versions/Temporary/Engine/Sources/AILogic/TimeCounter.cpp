@@ -10,7 +10,13 @@ extern NTimer::STime curTime;
 namespace NAI
 {
 CTimeCounter::CTimeCounter()
-		: printTime( 0 ), counters( 100 ), startTimes( 100 ), names( 100 ), variables( 100 ), nMaxIndex( -1 ), nMaxVar( -1 )
+	: printTime( 0 )
+	, counters( 100 )
+	, startTimes( 100 )
+	, names( 100 )
+	, variables( 100 )
+	, nMaxIndex( -1 )
+	, nMaxVar( -1 )
 {
 	memset( &counters[0], 0, sizeof( counters[0] * counters.size() ) );
 	memset( &startTimes[0], 0, sizeof( startTimes[0] * startTimes.size() ) );

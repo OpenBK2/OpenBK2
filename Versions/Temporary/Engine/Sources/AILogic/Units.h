@@ -35,9 +35,15 @@ private:
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		int nValue = {};
 
-		SInitializedWord() : nValue( 0 ) {}
+		SInitializedWord()
+			: nValue( 0 )
+		{
+		}
 
-		SInitializedWord( int _nValue ) : nValue( _nValue ) {}
+		SInitializedWord( int _nValue )
+			: nValue( _nValue )
+		{
+		}
 	};
 
 	typedef det_map<int /*UniqueID*/, int /*CUnits internal ID*/> CIDsRemap;
@@ -66,7 +72,12 @@ private:
 		int nUnitPos = {};
 		SVector cell;
 
-		SUnitPosition() : nCellID( 0 ), nUnitPos( 0 ), cell( 0, 0 ) {}
+		SUnitPosition()
+			: nCellID( 0 )
+			, nUnitPos( 0 )
+			, cell( 0, 0 )
+		{
+		}
 	};
 
 	std::vector<SUnitPosition> posUnitInCell;

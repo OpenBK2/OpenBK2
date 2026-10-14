@@ -33,7 +33,11 @@ struct SVideoModeInfo
 
 	SVideoModeInfo() {}
 
-	SVideoModeInfo( D3DDISPLAYMODE &_m, SVideoMode &_info ) : mode( _m ), info( _info ) {}
+	SVideoModeInfo( D3DDISPLAYMODE &_m, SVideoMode &_info )
+		: mode( _m )
+		, info( _info )
+	{
+	}
 };
 
 NWin32Helper::com_ptr<IDirect3D9> pD3D;

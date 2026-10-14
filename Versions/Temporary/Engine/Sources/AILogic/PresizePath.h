@@ -54,8 +54,12 @@ public:
 
 public:
 	CPresizePath()
-			: pUnit( 0 ), fSpeedLen( 0.0f ), wDesiredDir( 0 ), vEndDir( VNULL2 ), vEndPoint( VNULL2 ),
-				eState( EPPS_WAIT_FOR_INIT )
+		: pUnit( 0 )
+		, fSpeedLen( 0.0f )
+		, wDesiredDir( 0 )
+		, vEndDir( VNULL2 )
+		, vEndPoint( VNULL2 )
+		, eState( EPPS_WAIT_FOR_INIT )
 	{
 	}
 
@@ -121,7 +125,10 @@ public:
 	void OnSerialize( IBinSaver &saver );
 
 public:
-	CMechUnitRestOnBoardPath() : pUnit( 0 ) {}
+	CMechUnitRestOnBoardPath()
+		: pUnit( 0 )
+	{
+	}
 
 	CMechUnitRestOnBoardPath( CBasePathUnit *pUnit, CMilitaryCar *pTransport );
 

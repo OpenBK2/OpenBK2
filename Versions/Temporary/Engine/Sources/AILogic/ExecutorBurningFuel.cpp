@@ -8,7 +8,10 @@ extern CShellsStore theShellsStore;
 extern NTimer::STime curTime;
 
 CExecutorBurningFuel::CExecutorBurningFuel( const CVec3 &_vPos, const NDb::SBurningFuel *_pStats )
-		: CExecutor( TID_BURNING_FUEL, 20 ), vPos( _vPos ), pStats( _pStats ), timeBurn( curTime + _pStats->nBurnTime )
+	: CExecutor( TID_BURNING_FUEL, 20 )
+	, vPos( _vPos )
+	, pStats( _pStats )
+	, timeBurn( curTime + _pStats->nBurnTime )
 {
 	if ( pStats->pWeaponFireOnDesctruction )
 	{

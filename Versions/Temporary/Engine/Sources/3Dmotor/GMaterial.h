@@ -133,11 +133,26 @@ class CGenericMaterial : public IMaterial
 
 public:
 	CGenericMaterial( bool _bDoesCastShadow = true, bool _bBackFaceCastShadow = false )
-			: bDoesCastShadow( _bDoesCastShadow ), bSelfIllum( false ), bProjectOnTerrain( false ),
-				vAvrgTexColor( 1, 1, 1, 1 ), mt( NORMAL ), nPriority( 0 ), nDecalDepthTest( 0 ), vMirrorParam( 0, 0, 0, 0 ),
-				bAlphaTest( false ), fSpecPower( 0 ), vTranslucentColor( 0, 0, 0 ), fDetailScale( 1 ), b2Sided( false ),
-				bApplyFog( true ), bAddPlaced( false ), bIgnoreZ( false ), bBackFaceCastShadow( _bBackFaceCastShadow ),
-				bWindAffected( false ), bReceiveShadows( true ), fAngVel( 0 )
+		: bDoesCastShadow( _bDoesCastShadow )
+		, bSelfIllum( false )
+		, bProjectOnTerrain( false )
+		, vAvrgTexColor( 1, 1, 1, 1 )
+		, mt( NORMAL )
+		, nPriority( 0 )
+		, nDecalDepthTest( 0 )
+		, vMirrorParam( 0, 0, 0, 0 )
+		, bAlphaTest( false )
+		, fSpecPower( 0 )
+		, vTranslucentColor( 0, 0, 0 )
+		, fDetailScale( 1 )
+		, b2Sided( false )
+		, bApplyFog( true )
+		, bAddPlaced( false )
+		, bIgnoreZ( false )
+		, bBackFaceCastShadow( _bBackFaceCastShadow )
+		, bWindAffected( false )
+		, bReceiveShadows( true )
+		, fAngVel( 0 )
 	{
 	}
 
@@ -382,8 +397,11 @@ public:
 	                int _nPriority,
 	                bool _bApplyFog,
 	                bool _bAddPlaced )
-			: pTex( _pTex ), pSecondTex( _pSecondTex ), nPriority( _nPriority ), bApplyFog( _bApplyFog ),
-				bAddPlaced( _bAddPlaced )
+		: pTex( _pTex )
+		, pSecondTex( _pSecondTex )
+		, nPriority( _nPriority )
+		, bApplyFog( _bApplyFog )
+		, bAddPlaced( _bAddPlaced )
 	{
 	}
 
@@ -565,8 +583,12 @@ public:
 	               CFuncBase<STime> *_pTime,
 	               bool _bApplyFog,
 	               bool _bAddPlaced )
-			: pTex( _pTex ), pSecondTex( _pSecondTex ), nPriority( _nPriority ), pTime( _pTime ), bApplyFog( _bApplyFog ),
-				bAddPlaced( _bAddPlaced )
+		: pTex( _pTex )
+		, pSecondTex( _pSecondTex )
+		, nPriority( _nPriority )
+		, pTime( _pTime )
+		, bApplyFog( _bApplyFog )
+		, bAddPlaced( _bAddPlaced )
 	{
 	}
 
@@ -665,8 +687,15 @@ public:
 	                       float _fMetalMirror,
 	                       CPtrFuncBase<NGfx::CCubeTexture> *_pSky,
 	                       float _fReflectionZ )
-			: pTex( _pTex ), pBump( _pBump ), nPriority( _nPriority ), bApplyFog( _bApplyFog ), bAddPlaced( _bAddPlaced ),
-				fDielMirror( _fDielMirror ), fMetalMirror( _fMetalMirror ), pSky( _pSky ), fReflectionZ( _fReflectionZ )
+		: pTex( _pTex )
+		, pBump( _pBump )
+		, nPriority( _nPriority )
+		, bApplyFog( _bApplyFog )
+		, bAddPlaced( _bAddPlaced )
+		, fDielMirror( _fDielMirror )
+		, fMetalMirror( _fMetalMirror )
+		, pSky( _pSky )
+		, fReflectionZ( _fReflectionZ )
 	{
 	}
 
@@ -751,7 +780,9 @@ public:
 	CTracksMaterial() {}
 
 	CTracksMaterial( CPtrFuncBase<NGfx::CTexture> *_pTex, int _nPriority, bool _bApplyFog, bool _bAddPlaced )
-			: pTex( _pTex ), bApplyFog( _bApplyFog ), bAddPlaced( _bAddPlaced )
+		: pTex( _pTex )
+		, bApplyFog( _bApplyFog )
+		, bAddPlaced( _bAddPlaced )
 	{
 	}
 
@@ -843,8 +874,13 @@ public:
 	                  bool _bAddPlaced,
 	                  bool _bCastShadow,
 	                  bool _bBackFaceCastShadow )
-			: pTex( _pTex ), pMask( _pMask ), nPriority( _nPriority ), bApplyFog( _bApplyFog ), bAddPlaced( _bAddPlaced ),
-				bCastShadow( _bCastShadow ), bBackFaceCastShadow( _bBackFaceCastShadow )
+		: pTex( _pTex )
+		, pMask( _pMask )
+		, nPriority( _nPriority )
+		, bApplyFog( _bApplyFog )
+		, bAddPlaced( _bAddPlaced )
+		, bCastShadow( _bCastShadow )
+		, bBackFaceCastShadow( _bBackFaceCastShadow )
 	{
 	}
 
@@ -939,8 +975,13 @@ public:
 	                   bool _bAddPlaced,
 	                   bool _bDoesCastShadow,
 	                   bool _bProjectOnTerrain )
-			: pClouds( _pTex ), nPriority( _nPriority ), fWrapsPerSecond( _fWrapsPerSecond ), bApplyFog( _bApplyFog ),
-				bAddPlaced( _bAddPlaced ), bDoesCastShadow( _bDoesCastShadow ), bProjectOnTerrain( _bProjectOnTerrain )
+		: pClouds( _pTex )
+		, nPriority( _nPriority )
+		, fWrapsPerSecond( _fWrapsPerSecond )
+		, bApplyFog( _bApplyFog )
+		, bAddPlaced( _bAddPlaced )
+		, bDoesCastShadow( _bDoesCastShadow )
+		, bProjectOnTerrain( _bProjectOnTerrain )
 	{
 	}
 
@@ -1025,8 +1066,11 @@ public:
 
 	CSimpleSkyMaterial(
 			CPtrFuncBase<NGfx::CTexture> *_pTex, int _nPriority, bool _bApplyFog, float _fFOVZoom, bool _bAddPlaced )
-			: pTex( _pTex ), nPriority( _nPriority ), bApplyFog( _bApplyFog ), fFOVZoom( _fFOVZoom ),
-				bAddPlaced( _bAddPlaced )
+		: pTex( _pTex )
+		, nPriority( _nPriority )
+		, bApplyFog( _bApplyFog )
+		, fFOVZoom( _fFOVZoom )
+		, bAddPlaced( _bAddPlaced )
 	{
 	}
 

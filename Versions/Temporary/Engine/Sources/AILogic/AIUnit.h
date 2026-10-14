@@ -166,8 +166,14 @@ protected:
 
 public:
 	CAIUnit()
-			: pObjInside( 0 ), bTrampled( false ), nMultipleShots( 1 ), bTargetingTrack( false ), bIgnoreAABBCoeff( false ),
-				timeLastAttackedAck( 0 ), timeLastAttacked( 0 ), bAmphibianWaterModifierApplied( false )
+		: pObjInside( 0 )
+		, bTrampled( false )
+		, nMultipleShots( 1 )
+		, bTargetingTrack( false )
+		, bIgnoreAABBCoeff( false )
+		, timeLastAttackedAck( 0 )
+		, timeLastAttacked( 0 )
+		, bAmphibianWaterModifierApplied( false )
 	{
 	}
 

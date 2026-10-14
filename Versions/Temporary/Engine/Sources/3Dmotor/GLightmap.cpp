@@ -50,7 +50,7 @@ public:
 };
 
 class CLightmapTextureCache
-		: public NCache::CGatheringCache<NCache::CShortPtrAllocator, NCache::CQuadTreeElement, CLMRegion>
+	: public NCache::CGatheringCache<NCache::CShortPtrAllocator, NCache::CQuadTreeElement, CLMRegion>
 {
 	OBJECT_NOCOPY_METHODS( CLightmapTextureCache );
 	typedef NCache::CGatheringCache<NCache::CShortPtrAllocator, NCache::CQuadTreeElement, CLMRegion> CParent;

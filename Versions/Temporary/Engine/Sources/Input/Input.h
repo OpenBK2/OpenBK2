@@ -43,8 +43,12 @@ struct SMessage
 	SMessage() {}
 
 	SMessage( int _nAction, EPOVAxis _ePOVAxis, EControlType _cType, int _nParam, bool _bState, STime _tTime )
-			: nAction( _nAction ), ePOVAxis( _ePOVAxis ), cType( _cType ), nParam( _nParam ), bState( _bState ),
-				tTime( _tTime )
+		: nAction( _nAction )
+		, ePOVAxis( _ePOVAxis )
+		, cType( _cType )
+		, nParam( _nParam )
+		, bState( _bState )
+		, tTime( _tTime )
 	{
 	}
 };

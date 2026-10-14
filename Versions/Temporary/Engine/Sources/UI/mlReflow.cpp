@@ -25,7 +25,11 @@ private:
 
 		SRange() {}
 
-		SRange( float _fValue, float _fHeight ) : fValue( _fValue ), fHeight( _fHeight ) {}
+		SRange( float _fValue, float _fHeight )
+			: fValue( _fValue )
+			, fHeight( _fHeight )
+		{
+		}
 	};
 
 	struct SLine
@@ -49,8 +53,14 @@ private:
 		       EHAlign _nHAlign,
 		       EVAlign _nVAlign,
 		       const TVisObjects &_line )
-				: fLeft( _fLeft ), fRight( _fRight ), fY( _fY ), fWidth( _fWidth ), fHeight( _fHeight ), nHAlign( _nHAlign ),
-					nVAlign( _nVAlign ), line( _line )
+			: fLeft( _fLeft )
+			, fRight( _fRight )
+			, fY( _fY )
+			, fWidth( _fWidth )
+			, fHeight( _fHeight )
+			, nHAlign( _nHAlign )
+			, nVAlign( _nVAlign )
+			, line( _line )
 		{
 		}
 	};
@@ -99,8 +109,13 @@ public:
 };
 
 CReflowState::CReflowState( NGScene::ILayoutFakeView *_pView, float _fWidth )
-		: pView( _pView ), fWidth( _fWidth ), fLineWidth( 0 ), fLineHeight( 0 ), rangeLeft( 0, -1 ),
-			rangeRight( _fWidth, -1 ), size( 0, 0 )
+	: pView( _pView )
+	, fWidth( _fWidth )
+	, fLineWidth( 0 )
+	, fLineHeight( 0 )
+	, rangeLeft( 0, -1 )
+	, rangeRight( _fWidth, -1 )
+	, size( 0, 0 )
 {
 }
 
@@ -339,7 +354,10 @@ public:
 	}
 };
 
-CReflowLayout::CReflowLayout() : size( 0, 0 ) {}
+CReflowLayout::CReflowLayout()
+	: size( 0, 0 )
+{
+}
 
 void CReflowLayout::AddObject( IReflowObject *pObject )
 {

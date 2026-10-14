@@ -16,9 +16,15 @@ class CBasePathUnitHolder : public CAIObjectBase
 	CBasePathUnit *pUnit = nullptr;
 
 public:
-	CBasePathUnitHolder() : pUnit( 0 ) {}
+	CBasePathUnitHolder()
+		: pUnit( 0 )
+	{
+	}
 
-	CBasePathUnitHolder( CBasePathUnit *_pUnit ) : pUnit( _pUnit ) {}
+	CBasePathUnitHolder( CBasePathUnit *_pUnit )
+		: pUnit( _pUnit )
+	{
+	}
 
 	CBasePathUnit *operator->() const
 	{
@@ -59,10 +65,16 @@ class CCollisionsCollector : public ICollisionsCollector
 			return 0;
 		}
 
-		SPusherInfo() : pUnit( 0 ), fDistance( 0.0f ), eCollideType( NCollision::ECT_NONE ) {}
+		SPusherInfo()
+			: pUnit( 0 )
+			, fDistance( 0.0f )
+			, eCollideType( NCollision::ECT_NONE )
+		{
+		}
 
 		SPusherInfo( CBasePathUnit *_pUnit, const float _fDistance, const NCollision::ECollideType _eCollideType )
-				: fDistance( _fDistance ), eCollideType( _eCollideType )
+			: fDistance( _fDistance )
+			, eCollideType( _eCollideType )
 		{
 			pUnit = new CBasePathUnitHolder( _pUnit );
 		}
@@ -86,7 +98,10 @@ class CCollisionsCollector : public ICollisionsCollector
 			return 0;
 		}
 
-		SCollision() : pUnit( 0 ) {}
+		SCollision()
+			: pUnit( 0 )
+		{
+		}
 
 		SCollision( CBasePathUnit *_pUnit )
 		{
@@ -177,7 +192,13 @@ protected:
 	const bool CanFindCandidates() const;
 
 public:
-	CCollisionBase() : pUnit( 0 ), pPushUnit( 0 ), nPriority( -1 ), pPath( 0 ) {}
+	CCollisionBase()
+		: pUnit( 0 )
+		, pPushUnit( 0 )
+		, nPriority( -1 )
+		, pPath( 0 )
+	{
+	}
 
 	virtual void Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority );
 
@@ -226,7 +247,11 @@ public:
 		return 0;
 	}
 
-	CWaitingCollision() : CCollisionBase(), bIsSolved( false ) {}
+	CWaitingCollision()
+		: CCollisionBase()
+		, bIsSolved( false )
+	{
+	}
 
 	void Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority, const float fDistance );
 	void Segment( const NTimer::STime timeDiff );
@@ -278,7 +303,11 @@ public:
 		return 0;
 	}
 
-	CStopCollision() : CCollisionBase(), timeLeft( 0 ) {}
+	CStopCollision()
+		: CCollisionBase()
+		, timeLeft( 0 )
+	{
+	}
 
 	void Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority );
 	void Segment( const NTimer::STime timeDiff );

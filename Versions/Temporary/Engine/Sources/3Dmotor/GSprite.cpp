@@ -57,7 +57,11 @@ CSpriteAnimator::CSpriteAnimator( IGScene *_pScene,
                                   CFuncBase<CVec3> *_pDir,
                                   CPtrFuncBase<NGfx::CTexture> *_pTexture,
                                   CFuncBase<CVec2> *_pSize )
-		: pScene( _pScene ), pPosition( _pPosition ), pDir( _pDir ), pTexture( _pTexture ), pSize( _pSize )
+	: pScene( _pScene )
+	, pPosition( _pPosition )
+	, pDir( _pDir )
+	, pTexture( _pTexture )
+	, pSize( _pSize )
 {
 	pCamera = pScene->GetCamera();
 }

@@ -31,7 +31,10 @@ struct CNativeViewport::SImpl
 	HWND hWindow = 0;
 };
 
-CNativeViewport::CNativeViewport() : pImpl( new SImpl ) {}
+CNativeViewport::CNativeViewport()
+	: pImpl( new SImpl )
+{
+}
 
 CNativeViewport::~CNativeViewport() = default;
 
@@ -208,7 +211,10 @@ struct CNativeViewport::SImpl
 	int nHeight = 0;
 };
 
-CNativeViewport::CNativeViewport() : pImpl( new SImpl ) {}
+CNativeViewport::CNativeViewport()
+	: pImpl( new SImpl )
+{
+}
 
 CNativeViewport::~CNativeViewport()
 {

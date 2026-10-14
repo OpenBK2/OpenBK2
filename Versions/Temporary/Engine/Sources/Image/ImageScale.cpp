@@ -25,7 +25,11 @@ struct CONTRIB
 	double weight;
 
 	//
-	CONTRIB() : pixel( 0 ), weight( 0 ) {}
+	CONTRIB()
+		: pixel( 0 )
+		, weight( 0 )
+	{
+	}
 };
 
 struct CLIST
@@ -34,7 +38,11 @@ struct CLIST
 	CONTRIB *p; /* pointer to list of contributions */
 
 	//
-	CLIST() : n( 0 ), p( 0 ) {}
+	CLIST()
+		: n( 0 )
+		, p( 0 )
+	{
+	}
 };
 
 inline SARGB get_pixel( const CArray2D<uint32_t> &img, int x, int y )

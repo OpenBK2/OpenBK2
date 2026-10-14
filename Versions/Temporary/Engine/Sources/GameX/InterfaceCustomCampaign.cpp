@@ -69,7 +69,10 @@ void CDifficultyTextViewer::MakeInterior( CObjectBase *pWindow, const CObjectBas
 
 // CInterfaceCustomCampaign
 
-CInterfaceCustomCampaign::CInterfaceCustomCampaign() : CInterfaceScreenBase( "CustomCampaign", "custom_campaign" ) {}
+CInterfaceCustomCampaign::CInterfaceCustomCampaign()
+	: CInterfaceScreenBase( "CustomCampaign", "custom_campaign" )
+{
+}
 
 bool CInterfaceCustomCampaign::Init()
 {

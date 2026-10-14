@@ -15,8 +15,15 @@ struct SLightInfo
 	float fWarFogBlend;
 
 	SLightInfo()
-			: bNeedSet( false ), vLightColor( VNULL3 ), vGlossColor( VNULL3 ), vLightPos( VNULL4 ), vRadius( 1, 1, 1, 1 ),
-				vAmbientColor( 0, 0, 0 ), fWarFogBlend( 0 ), vShadeColor( VNULL3 ), vIncidentShadeColor( VNULL3 )
+		: bNeedSet( false )
+		, vLightColor( VNULL3 )
+		, vGlossColor( VNULL3 )
+		, vLightPos( VNULL4 )
+		, vRadius( 1, 1, 1, 1 )
+		, vAmbientColor( 0, 0, 0 )
+		, fWarFogBlend( 0 )
+		, vShadeColor( VNULL3 )
+		, vIncidentShadeColor( VNULL3 )
 	{
 	}
 };

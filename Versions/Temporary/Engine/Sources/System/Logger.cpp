@@ -28,7 +28,10 @@ class CFileDumper : public ILogDumper
 	CFileDumper() {}
 
 public:
-	CFileDumper( const std::string &_szFullFileName ) : szFullFileName( _szFullFileName ) {}
+	CFileDumper( const std::string &_szFullFileName )
+		: szFullFileName( _szFullFileName )
+	{
+	}
 
 	void Dump( const std::wstring &wszString )
 	{

@@ -15,7 +15,13 @@ class CCameraMovement
 	NTimer::STime timeMoveStart;
 
 public:
-	CCameraMovement() : nTimeToMove( 0 ), bMovementFinished( true ), timeMoveStart( 0 ), nFinishPoint( -1 ) {}
+	CCameraMovement()
+		: nTimeToMove( 0 )
+		, bMovementFinished( true )
+		, timeMoveStart( 0 )
+		, nFinishPoint( -1 )
+	{
+	}
 
 	int operator&( IBinSaver &saver );
 	void Init( const NDb::SMapInfo *_pMapInfo );

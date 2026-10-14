@@ -38,9 +38,15 @@ struct SSuspendedUpdate
 	}
 
 public:
-	SSuspendedUpdate() : nObjUniqueID( 0 ) {}
+	SSuspendedUpdate()
+		: nObjUniqueID( 0 )
+	{
+	}
 
-	SSuspendedUpdate( const int _nObjUniqueID ) : nObjUniqueID( _nObjUniqueID ) {}
+	SSuspendedUpdate( const int _nObjUniqueID )
+		: nObjUniqueID( _nObjUniqueID )
+	{
+	}
 };
 
 // for chage unit's visual representation
@@ -82,7 +88,9 @@ public:
 	SAINotifyAction() {}
 
 	SAINotifyAction( const uint8_t _typeID, const int nObjUniqueID )
-			: SSuspendedUpdate( nObjUniqueID ), typeID( _typeID ), nParam( -1 )
+		: SSuspendedUpdate( nObjUniqueID )
+		, typeID( _typeID )
+		, nParam( -1 )
 	{
 	}
 };
@@ -143,7 +151,8 @@ public:
 	SAINotifyRPGStats() {}
 
 	SAINotifyRPGStats( const int nObjUniqueID, const float _fHitPoints )
-			: SSuspendedUpdate( nObjUniqueID ), fHitPoints( _fHitPoints )
+		: SSuspendedUpdate( nObjUniqueID )
+		, fHitPoints( _fHitPoints )
 	{
 	}
 };
@@ -166,7 +175,9 @@ public:
 	SAINotifyDiplomacy() {}
 
 	SAINotifyDiplomacy( EDiplomacyInfo _eDiplomacy, const int nObjUniqueID, const int _nPlayer )
-			: SSuspendedUpdate( nObjUniqueID ), eDiplomacy( _eDiplomacy ), nPlayer( _nPlayer )
+		: SSuspendedUpdate( nObjUniqueID )
+		, eDiplomacy( _eDiplomacy )
+		, nPlayer( _nPlayer )
 	{
 	}
 };
@@ -192,8 +203,11 @@ public:
 	SAINotifyKeyBuilding() {}
 
 	SAINotifyKeyBuilding( const int nObjUniqueID, bool _bStorage, const int _nPlayer, const int _nPrevPlayer )
-			: SSuspendedUpdate( nObjUniqueID ), nPlayer( _nPlayer ), nPrevPlayer( _nPrevPlayer ), bStorage( _bStorage ),
-				bFriendLost( false )
+		: SSuspendedUpdate( nObjUniqueID )
+		, nPlayer( _nPlayer )
+		, nPrevPlayer( _nPrevPlayer )
+		, bStorage( _bStorage )
+		, bFriendLost( false )
 	{
 	}
 };
@@ -215,10 +229,16 @@ struct SAINotifyEntranceState
 	}
 
 public:
-	SAINotifyEntranceState() : nInfantryUniqueID( 0 ), nTargetUniqueID( 0 ) {}
+	SAINotifyEntranceState()
+		: nInfantryUniqueID( 0 )
+		, nTargetUniqueID( 0 )
+	{
+	}
 
 	SAINotifyEntranceState( const int _nInfantryUniqueID, const int _nTargetUniqueID, const bool _bEnter )
-			: nInfantryUniqueID( _nInfantryUniqueID ), nTargetUniqueID( _nTargetUniqueID ), bEnter( _bEnter )
+		: nInfantryUniqueID( _nInfantryUniqueID )
+		, nTargetUniqueID( _nTargetUniqueID )
+		, bEnter( _bEnter )
 	{
 	}
 };
@@ -244,12 +264,23 @@ struct SAINotifyPlacement : public SSuspendedUpdate
 	float fWaterCoeff = {}; // 0 - dry/shore, 1 - full amphibian water offset
 	uint8_t cSoil = {};     // параметры почвы: дым из-под колёс, следы и т.д.
 
-	SAINotifyPlacement() : bNewFormat( false ), fWaterCoeff( 0.0f ), cSoil( 0 ) {}
+	SAINotifyPlacement()
+		: bNewFormat( false )
+		, fWaterCoeff( 0.0f )
+		, cSoil( 0 )
+	{
+	}
 
 	SAINotifyPlacement(
 			const int nObjUniqueID, const CVec2 &_center, const short _z, const uint16_t _dir, const float _fSpeed )
-			: SSuspendedUpdate( nObjUniqueID ), bNewFormat( false ), center( _center ), z( _z ), dir( _dir ),
-				fSpeed( _fSpeed ), fWaterCoeff( 0.0f ), cSoil( 0 )
+		: SSuspendedUpdate( nObjUniqueID )
+		, bNewFormat( false )
+		, center( _center )
+		, z( _z )
+		, dir( _dir )
+		, fSpeed( _fSpeed )
+		, fWaterCoeff( 0.0f )
+		, cSoil( 0 )
 	{
 	}
 
@@ -350,15 +381,21 @@ struct SAINotifyHitInfo
 	}
 
 public:
-	SAINotifyHitInfo() : pWeapon( 0 ) {}
+	SAINotifyHitInfo()
+		: pWeapon( 0 )
+	{
+	}
 
 	SAINotifyHitInfo( const NDb::SWeaponRPGStats *_pWeapon,
 	                  const uint16_t _wShell,
 	                  const uint16_t &_wDir,
 	                  const int _nVictimUniqueID,
 	                  const CVec3 &_explCoord )
-			: pWeapon( _pWeapon ), wShell( _wShell ), wDir( _wDir ), nVictimUniqueID( _nVictimUniqueID ),
-				explCoord( _explCoord )
+		: pWeapon( _pWeapon )
+		, wShell( _wShell )
+		, wDir( _wDir )
+		, nVictimUniqueID( _nVictimUniqueID )
+		, explCoord( _explCoord )
 	{
 	}
 
@@ -366,7 +403,11 @@ public:
 	                  const uint16_t _wShell,
 	                  const uint16_t &_wDir,
 	                  const CVec3 &_explCoord )
-			: pWeapon( _pWeapon ), wShell( _wShell ), wDir( _wDir ), nVictimUniqueID( 0 ), explCoord( _explCoord )
+		: pWeapon( _pWeapon )
+		, wShell( _wShell )
+		, wDir( _wDir )
+		, nVictimUniqueID( 0 )
+		, explCoord( _explCoord )
 	{
 	}
 };
@@ -390,13 +431,19 @@ struct SAINotifyTurretTurn
 	}
 
 public:
-	SAINotifyTurretTurn() : nObjUniqueID( 0 ) {}
+	SAINotifyTurretTurn()
+		: nObjUniqueID( 0 )
+	{
+	}
 
 	SAINotifyTurretTurn( const int _nObjUniqueID,
 	                     const int &_nPlantform,
 	                     const uint16_t &_wAngle,
 	                     const NTimer::STime &_endTime )
-			: nObjUniqueID( _nObjUniqueID ), nPlantform( _nPlantform ), wAngle( _wAngle ), endTime( _endTime )
+		: nObjUniqueID( _nObjUniqueID )
+		, nPlantform( _nPlantform )
+		, wAngle( _wAngle )
+		, endTime( _endTime )
 	{
 	}
 };
@@ -421,14 +468,21 @@ struct SAINotifyBaseShot
 	}
 
 public:
-	SAINotifyBaseShot() : nObjUniqueID( 0 ) {}
+	SAINotifyBaseShot()
+		: nObjUniqueID( 0 )
+	{
+	}
 
 	SAINotifyBaseShot( const uint8_t _typeID,
 	                   const int _nObjUniqueID,
 	                   const uint8_t _cShell,
 	                   const NTimer::STime &_time,
 	                   const CVec3 &_vDestPos )
-			: typeID( _typeID ), nObjUniqueID( _nObjUniqueID ), cShell( _cShell ), time( _time ), vDestPos( _vDestPos )
+		: typeID( _typeID )
+		, nObjUniqueID( _nObjUniqueID )
+		, cShell( _cShell )
+		, time( _time )
+		, vDestPos( _vDestPos )
 	{
 	}
 };
@@ -456,7 +510,8 @@ public:
 	                   const uint8_t _cShell,
 	                   const NTimer::STime &_time,
 	                   const CVec3 &_vDestPos )
-			: SAINotifyBaseShot( _typeID, _nObjUniqueID, _cShell, _time, _vDestPos ), cGun( _cGun )
+		: SAINotifyBaseShot( _typeID, _nObjUniqueID, _cShell, _time, _vDestPos )
+		, cGun( _cGun )
 	{
 	}
 };
@@ -484,7 +539,13 @@ public:
 	int nGun = {};
 
 	// CRAP}
-	SAINotifyInfantryShot() : pWeapon( 0 ), nSlot( -1 ), nPlatform( 0 ), nGun( 0 ) {}
+	SAINotifyInfantryShot()
+		: pWeapon( 0 )
+		, nSlot( -1 )
+		, nPlatform( 0 )
+		, nGun( 0 )
+	{
+	}
 
 	SAINotifyInfantryShot( const uint8_t _typeID,
 	                       const int nObjUniqueID,
@@ -492,8 +553,10 @@ public:
 	                       const uint8_t _cShell,
 	                       const NTimer::STime &_time,
 	                       const CVec3 &_vDestPos )
-			: SAINotifyBaseShot( _typeID, nObjUniqueID, _cShell, _time, _vDestPos ), nSlot( _nSlot ), nPlatform( 0 ),
-				nGun( 0 )
+		: SAINotifyBaseShot( _typeID, nObjUniqueID, _cShell, _time, _vDestPos )
+		, nSlot( _nSlot )
+		, nPlatform( 0 )
+		, nGun( 0 )
 	{
 	}
 };
@@ -540,7 +603,10 @@ struct SAINotifyNewProjectile
 	}
 
 public:
-	SAINotifyNewProjectile() : nObjUniqueID( 0 ) {}
+	SAINotifyNewProjectile()
+		: nObjUniqueID( 0 )
+	{
+	}
 
 	SAINotifyNewProjectile( const int _nObjUniqueID,
 	                        const int _nSourceUniqueID,
@@ -549,8 +615,13 @@ public:
 	                        const int _nShell,
 	                        const CVec3 &_vAIStartPos,
 	                        const NTimer::STime _timeToEqualizePos )
-			: nObjUniqueID( _nObjUniqueID ), nSourceUniqueID( _nSourceUniqueID ), nPlatform( _nPlatform ), nGun( _nGun ),
-				nShell( _nShell ), vAIStartPos( _vAIStartPos ), timeToEqualizePos( _timeToEqualizePos )
+		: nObjUniqueID( _nObjUniqueID )
+		, nSourceUniqueID( _nSourceUniqueID )
+		, nPlatform( _nPlatform )
+		, nGun( _nGun )
+		, nShell( _nShell )
+		, vAIStartPos( _vAIStartPos )
+		, timeToEqualizePos( _timeToEqualizePos )
 	{
 	}
 };
@@ -577,11 +648,22 @@ struct SAINotifyUpdateLaseMark
 	}
 
 public:
-	SAINotifyUpdateLaseMark() : nLaserMarkID( -1 ), nUnitID( -1 ), nPlatform( -1 ), nGun( -1 ), vTarget( VNULL3 ) {}
+	SAINotifyUpdateLaseMark()
+		: nLaserMarkID( -1 )
+		, nUnitID( -1 )
+		, nPlatform( -1 )
+		, nGun( -1 )
+		, vTarget( VNULL3 )
+	{
+	}
 
 	SAINotifyUpdateLaseMark(
 			const int _nLaserMarkID, const int _nUnitID, const int _nPlatform, const int _nGun, const CVec3 &_vTarget )
-			: nLaserMarkID( _nLaserMarkID ), nUnitID( _nUnitID ), nPlatform( _nPlatform ), nGun( _nGun ), vTarget( _vTarget )
+		: nLaserMarkID( _nLaserMarkID )
+		, nUnitID( _nUnitID )
+		, nPlatform( _nPlatform )
+		, nGun( _nGun )
+		, vTarget( _vTarget )
 	{
 	}
 };

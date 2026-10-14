@@ -35,8 +35,11 @@ struct SReinfPointsWindowData
 
 		//
 		SReinfPoint()
-				: vPosition( VNULL2 ), eType( NDb::EReinforcementType( -1 ) ), bIsDefault( false ), nNumPoints( 0 ),
-					szDeployTemplate( "" )
+			: vPosition( VNULL2 )
+			, eType( NDb::EReinforcementType( -1 ) )
+			, bIsDefault( false )
+			, nNumPoints( 0 )
+			, szDeployTemplate( "" )
 		{
 		}
 	};
@@ -63,8 +66,11 @@ struct SReinfPointsWindowData
 
 	//
 	SReinfPointsWindowData()
-			: nPlayerIndex( -1 ), nPlayerCount( 0 ), nSelectedPoint( -1 ), bAviationPointSelected( false ),
-				eLastAction( RWA_NO_ACTIONS )
+		: nPlayerIndex( -1 )
+		, nPlayerCount( 0 )
+		, nSelectedPoint( -1 )
+		, bAviationPointSelected( false )
+		, eLastAction( RWA_NO_ACTIONS )
 	{
 	}
 

@@ -59,7 +59,13 @@ public:
 	                          CUnitGuns::SWeaponPathInfo &pInfo ) const;
 
 public:
-	CUnitGuns() : fMaxFireRange( -1 ), bCanShootToPlanes( false ), nCommonGuns( 0 ), nMainGun( 0 ) {}
+	CUnitGuns()
+		: fMaxFireRange( -1 )
+		, bCanShootToPlanes( false )
+		, nCommonGuns( 0 )
+		, nMainGun( 0 )
+	{
+	}
 
 	virtual void Init( class CCommonUnit *pCommonUnit ) = 0;
 
@@ -144,7 +150,10 @@ public:
 	}
 
 public:
-	CMechUnitGuns() : nFirstArtGun( -1 ) {}
+	CMechUnitGuns()
+		: nFirstArtGun( -1 )
+	{
+	}
 
 	virtual void Init( class CCommonUnit *pCommonUnit );
 

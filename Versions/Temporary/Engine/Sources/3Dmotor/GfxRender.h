@@ -131,7 +131,9 @@ struct SStencilMode
 	SStencilMode() {}
 
 	SStencilMode( EStencilMode _mode, int _nVal = 0, int _nMask = 0xffffffff )
-			: mode( _mode ), nVal( _nVal ), nMask( _nMask )
+		: mode( _mode )
+		, nVal( _nVal )
+		, nMask( _nMask )
 	{
 	}
 
@@ -147,10 +149,21 @@ struct SFogParams
 	float fMinDist, fMaxDist;
 	float fMinZDis, fMaxZDis;
 
-	SFogParams() : vColor( 0, 0, 0 ), fMinDist( 0 ), fMaxDist( 1e20f ), fMinZDis( -10000 ), fMaxZDis( -100001 ) {}
+	SFogParams()
+		: vColor( 0, 0, 0 )
+		, fMinDist( 0 )
+		, fMaxDist( 1e20f )
+		, fMinZDis( -10000 )
+		, fMaxZDis( -100001 )
+	{
+	}
 
 	SFogParams( const CVec3 &_vColor, float _fMinDist, float _fMaxDist, float _fMinZDis, float _fMaxZDis )
-			: vColor( _vColor ), fMinDist( _fMinDist ), fMaxDist( _fMaxDist ), fMinZDis( _fMinZDis ), fMaxZDis( _fMaxZDis )
+		: vColor( _vColor )
+		, fMinDist( _fMinDist )
+		, fMaxDist( _fMaxDist )
+		, fMinZDis( _fMinZDis )
+		, fMaxZDis( _fMaxZDis )
 	{
 	}
 

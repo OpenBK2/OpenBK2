@@ -62,9 +62,9 @@ class CAboutWxDialog : public CWxToolDialog
 {
 public:
 	explicit CAboutWxDialog( wxWindow *pParent )
-			// IDD_ABOUT has no WS_THICKFRAME, so no wxRESIZE_BORDER. The caption
-			// is built the way OnInitDialog builds it.
-			: CWxToolDialog( pParent, wxID_ANY, wxString::FromUTF8( ( "About " + Title() ).c_str() ) )
+		// IDD_ABOUT has no WS_THICKFRAME, so no wxRESIZE_BORDER. The caption
+		// is built the way OnInitDialog builds it.
+		: CWxToolDialog( pParent, wxID_ANY, wxString::FromUTF8( ( "About " + Title() ).c_str() ) )
 	{
 		wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 		wxBoxSizer *pTop = new wxBoxSizer( wxHORIZONTAL );

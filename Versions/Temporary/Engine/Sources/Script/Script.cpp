@@ -261,7 +261,8 @@ bool Script::CheckArgs( const char *szArgList,
 }
 
 Script::Script( const char *instanceName, bool initStandardLibrary, lua_CFunction logFunction )
-		: m_ownState( false ), nPushCount( 0 )
+	: m_ownState( false )
+	, nPushCount( 0 )
 {
 	m_state = lua_open( 0, instanceName );
 	m_ownState = true;

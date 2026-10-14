@@ -46,8 +46,11 @@ public:
 	                              const NDb::SAnimB2 *_pUnitAnim,
 	                              int _nParachuteID,
 	                              const NDb::SAnimB2 *_pParaAnim )
-			: pInfantry( _pInfantry ), timeToChange( _timeToChange ), nParachuteID( _nParachuteID ), pUnitAnim( _pUnitAnim ),
-				pParaAnim( _pParaAnim )
+		: pInfantry( _pInfantry )
+		, timeToChange( _timeToChange )
+		, nParachuteID( _nParachuteID )
+		, pUnitAnim( _pUnitAnim )
+		, pParaAnim( _pParaAnim )
 	{
 	}
 
@@ -82,7 +85,10 @@ public:
 	                         NTimer::STime _timeToChange,
 	                         const NDb::SAnimB2 *_pIdleAnim,
 	                         NDb::ESeason _eSeason )
-			: pInfantry( _pInfantry ), timeToChange( _timeToChange ), pIdleAnim( _pIdleAnim ), eSeason( _eSeason )
+		: pInfantry( _pInfantry )
+		, timeToChange( _timeToChange )
+		, pIdleAnim( _pIdleAnim )
+		, eSeason( _eSeason )
 	{
 	}
 

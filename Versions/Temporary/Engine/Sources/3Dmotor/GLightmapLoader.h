@@ -37,7 +37,10 @@ public:
 
 	CLightmapsHolder *GetHolder();
 
-	CLightmapsLoader( const std::string &_szName ) : szName( _szName ) {}
+	CLightmapsLoader( const std::string &_szName )
+		: szName( _szName )
+	{
+	}
 
 	void ReleaseHint();
 };

@@ -316,7 +316,10 @@ class CGeneralSwarmWaitForReady : public IGeneralDelayedTask
 public:
 	CGeneralSwarmWaitForReady() {}
 
-	CGeneralSwarmWaitForReady( class CGeneralTaskToSwarmToPoint *pTask ) : pGeneralTask( pTask ) {}
+	CGeneralSwarmWaitForReady( class CGeneralTaskToSwarmToPoint *pTask )
+		: pGeneralTask( pTask )
+	{
+	}
 
 	virtual bool IsTimeToRun() const
 	{

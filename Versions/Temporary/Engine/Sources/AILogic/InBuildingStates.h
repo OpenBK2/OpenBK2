@@ -49,7 +49,10 @@ public:
 public:
 	static IUnitState *Instance( class CSoldier *pSoldier, class CBuilding *pBuilding );
 
-	CSoldierRestInBuildingState() : pSoldier( 0 ) {}
+	CSoldierRestInBuildingState()
+		: pSoldier( 0 )
+	{
+	}
 
 	CSoldierRestInBuildingState( class CSoldier *pSoldier );
 
@@ -115,7 +118,10 @@ public:
 public:
 	static IUnitState *Instance( class CSoldier *pSoldier, class CAIUnit *pEnemy );
 
-	CSoldierAttackInBuildingState() : pSoldier( 0 ) {}
+	CSoldierAttackInBuildingState()
+		: pSoldier( 0 )
+	{
+	}
 
 	CSoldierAttackInBuildingState( class CSoldier *pSoldier, class CAIUnit *pEnemy );
 	virtual void Segment();

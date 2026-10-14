@@ -12,11 +12,22 @@ extern CEventUpdater updater;
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11082300, CExecutorSniperCamouflage )
 
 CExecutorSniperCamouflage::CExecutorSniperCamouflage( CAIUnit *_pUnit, bool _bAdvanced )
-		: CExecutor( TID_SNIPER_CAMOUFLAGE, 1000 / SConsts::AI_SEGMENT_DURATION ), pUnit( _pUnit ), nEnemysAround( 0 ),
-			bWasSomeAction( false ), fCamoflage( 0.0f ), eState( EASS_OFF ), timeLastUpdate( 0 ), timeDisableGroup( 0 ),
-			eStateBeforeDisable( EASS_OFF ), bMoving( false ), bAdvanced( _bAdvanced ), nBeginActionTime( curTime ),
-			nLastActionTime( curTime ), bInAction( false ), bStartCounting( false ),
-			eAbilityType( _bAdvanced ? NDb::ABILITY_ADAVNCED_CAMOFLAGE_MODE : NDb::ABILITY_CAMOFLAGE_MODE )
+	: CExecutor( TID_SNIPER_CAMOUFLAGE, 1000 / SConsts::AI_SEGMENT_DURATION )
+	, pUnit( _pUnit )
+	, nEnemysAround( 0 )
+	, bWasSomeAction( false )
+	, fCamoflage( 0.0f )
+	, eState( EASS_OFF )
+	, timeLastUpdate( 0 )
+	, timeDisableGroup( 0 )
+	, eStateBeforeDisable( EASS_OFF )
+	, bMoving( false )
+	, bAdvanced( _bAdvanced )
+	, nBeginActionTime( curTime )
+	, nLastActionTime( curTime )
+	, bInAction( false )
+	, bStartCounting( false )
+	, eAbilityType( _bAdvanced ? NDb::ABILITY_ADAVNCED_CAMOFLAGE_MODE : NDb::ABILITY_CAMOFLAGE_MODE )
 {
 }
 

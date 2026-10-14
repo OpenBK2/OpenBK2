@@ -103,7 +103,9 @@ static BOOST_FORCEINLINE void SetupColors( NGScene::SVertex *pRes,
 }
 
 CWaterPatch::CWaterPatch( const NDb::SWater *_pDesc, CFuncBase<STime> *_pTimer, CCSBound *_pBound )
-		: pDesc( _pDesc ), pTimer( _pTimer ), pBound( _pBound )
+	: pDesc( _pDesc )
+	, pTimer( _pTimer )
+	, pBound( _pBound )
 {
 	fBaseHeight = 0.5f;
 

@@ -19,7 +19,10 @@ class CEffectorPlaySound : public IUIEffector
 	bool bFinished;
 
 public:
-	CEffectorPlaySound() : bFinished( false ) {}
+	CEffectorPlaySound()
+		: bFinished( false )
+	{
+	}
 
 	virtual bool IsFinished() const;
 	virtual void Configure( const NDb::SUIStateBase *_pCmd,

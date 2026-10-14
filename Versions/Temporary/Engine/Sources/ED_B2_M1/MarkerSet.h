@@ -20,7 +20,11 @@ struct SMarkerPoint
 	CVec3 pos;
 	float fDir;
 
-	SMarkerPoint() : pos( VNULL3 ), fDir( 0 ) {}
+	SMarkerPoint()
+		: pos( VNULL3 )
+		, fDir( 0 )
+	{
+	}
 };
 
 struct SMarkerSet : public CObjectBase

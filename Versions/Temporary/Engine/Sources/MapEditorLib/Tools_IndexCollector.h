@@ -17,7 +17,10 @@ private:
 	CIDToIndexMap idToIndexMap;
 
 public:
-	CIndexCollector( const TID &rInvalidID ) : invalidID( rInvalidID ) {}
+	CIndexCollector( const TID &rInvalidID )
+		: invalidID( rInvalidID )
+	{
+	}
 
 	const CIDToIndexMap &GetIDToIndexMap()
 	{

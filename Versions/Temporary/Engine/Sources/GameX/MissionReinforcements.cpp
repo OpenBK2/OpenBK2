@@ -64,8 +64,14 @@ void CMissionReinf::SReinfInfo::ShowChevron( int nIndex )
 // CMissionReinf
 
 CMissionReinf::CMissionReinf()
-		: bTrackMousePos( false ), ePreSelected( NDb::_RT_NONE ), bDisabledByInterface( false ), nPrevReinfCount( 0 ),
-			bIsOpen( false ), bIsLight( false ), timeBlinkAbs( 0 ), bWasEnabled( false )
+	: bTrackMousePos( false )
+	, ePreSelected( NDb::_RT_NONE )
+	, bDisabledByInterface( false )
+	, nPrevReinfCount( 0 )
+	, bIsOpen( false )
+	, bIsLight( false )
+	, timeBlinkAbs( 0 )
+	, bWasEnabled( false )
 {
 }
 

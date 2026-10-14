@@ -78,7 +78,11 @@ public:
 
 		SButtonGroupID() {}
 
-		SButtonGroupID( const int _nGroupID, IWindow *_pParent ) : nGroupID( _nGroupID ), pParent( _pParent ) {}
+		SButtonGroupID( const int _nGroupID, IWindow *_pParent )
+			: nGroupID( _nGroupID )
+			, pParent( _pParent )
+		{
+		}
 
 		bool operator==( const SButtonGroupID &id ) const
 		{

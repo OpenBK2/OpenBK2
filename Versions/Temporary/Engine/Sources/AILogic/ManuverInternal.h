@@ -112,7 +112,12 @@ public:
 	// to init next manuver with this params - will be smooth transition between manuvers
 	void GetManuverParams( struct SPrevPathParams *pParams ) const;
 
-	CManuver() : bUsed( false ), fCurTiltSpeed( 0 ), bToHorisontal( 0 ) {}
+	CManuver()
+		: bUsed( false )
+		, fCurTiltSpeed( 0 )
+		, bToHorisontal( 0 )
+	{
+	}
 
 	//CRAP{ FOR TEST
 	// preferred top direction

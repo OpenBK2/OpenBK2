@@ -22,7 +22,10 @@ public:
 		int nPlatformIndex = {};
 		std::vector<int> gunIndexes;
 
-		SUnitPlatform() : nPlatformIndex( -1 ) {}
+		SUnitPlatform()
+			: nPlatformIndex( -1 )
+		{
+		}
 
 		ZEND int operator&( IBinSaver &f )
 		{

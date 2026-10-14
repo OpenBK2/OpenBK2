@@ -79,8 +79,9 @@ class CClipStore
 
 public:
 	CClipStore( IUIVisitor *_pVisitor, const CTRect<float> &rNewClip, bool bScrollViewport = false )
-			: pVisitor( _pVisitor ), previousTextClip( _pVisitor->textClip ),
-				bPreviousTextClipApplied( _pVisitor->bTextClipApplied )
+		: pVisitor( _pVisitor )
+		, previousTextClip( _pVisitor->textClip )
+		, bPreviousTextClipApplied( _pVisitor->bTextClipApplied )
 	{
 		if ( bScrollViewport )
 		{

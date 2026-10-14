@@ -35,7 +35,11 @@ protected:
 	}
 
 public:
-	CWindowTabControl() : nActiveTab( -1 ), nTabNumber( 0 ) {}
+	CWindowTabControl()
+		: nActiveTab( -1 )
+		, nTabNumber( 0 )
+	{
+	}
 
 	void Reposition( const CTRect<float> &rcParent );
 	void Init();

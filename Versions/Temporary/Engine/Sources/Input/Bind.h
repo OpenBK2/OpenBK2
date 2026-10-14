@@ -26,7 +26,11 @@ struct SGameMessage
 		int nParam2 = {}; //union { int nParam2; uint32_t dwParam2; float fParam2; };
 	};
 
-	SGameMessage() : nParam1( 0 ), nParam2( 0 ) {}
+	SGameMessage()
+		: nParam1( 0 )
+		, nParam2( 0 )
+	{
+	}
 };
 
 namespace NInput

@@ -27,7 +27,10 @@ public:
 
 	CRTPtr() {}
 
-	CRTPtr( const std::string &_szName ) : szName( _szName ) {}
+	CRTPtr( const std::string &_szName )
+		: szName( _szName )
+	{
+	}
 
 	void SetName( const std::string &_szName )
 	{
@@ -53,7 +56,10 @@ public:
 
 	CCubeRTPtr() {}
 
-	CCubeRTPtr( const std::string &_szName ) : szName( _szName ) {}
+	CCubeRTPtr( const std::string &_szName )
+		: szName( _szName )
+	{
+	}
 
 	void SetName( const std::string &_szName )
 	{

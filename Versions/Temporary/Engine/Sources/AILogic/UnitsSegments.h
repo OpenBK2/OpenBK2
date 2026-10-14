@@ -12,7 +12,10 @@ class CFreezeSegments
 public:
 	typedef CCommonUnit *TObjType;
 
-	CFreezeSegments() : pUnit( 0 ) {}
+	CFreezeSegments()
+		: pUnit( 0 )
+	{
+	}
 
 	bool ShouldBeUnregistered() const
 	{
@@ -34,7 +37,11 @@ class CStateSegments
 public:
 	typedef CCommonUnit *TObjType;
 
-	CStateSegments() : pUnit( 0 ), bCheck( false ) {}
+	CStateSegments()
+		: pUnit( 0 )
+		, bCheck( false )
+	{
+	}
 
 	bool ShouldBeUnregistered() const;
 
@@ -50,7 +57,10 @@ class CFirstPathSegments
 public:
 	typedef CAIUnit *TObjType;
 
-	CFirstPathSegments() : pUnit( 0 ) {}
+	CFirstPathSegments()
+		: pUnit( 0 )
+	{
+	}
 
 	bool ShouldBeUnregistered() const
 	{
@@ -69,7 +79,10 @@ class CSecondPathSegments
 public:
 	typedef CAIUnit *TObjType;
 
-	CSecondPathSegments() : pUnit( 0 ) {}
+	CSecondPathSegments()
+		: pUnit( 0 )
+	{
+	}
 
 	bool ShouldBeUnregistered() const
 	{
@@ -88,7 +101,10 @@ class CStayTimeSegments
 public:
 	typedef CAIUnit *TObjType;
 
-	CStayTimeSegments() : pUnit( 0 ) {}
+	CStayTimeSegments()
+		: pUnit( 0 )
+	{
+	}
 
 	void SetSegmentObject( CAIUnit *pUnit );
 	bool Check();

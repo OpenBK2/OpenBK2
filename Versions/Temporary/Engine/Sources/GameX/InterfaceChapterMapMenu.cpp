@@ -172,9 +172,15 @@ bool CInterfaceChapterMapMenu::CReactions::Execute( const std::string &szSender,
 // CInterfaceChapterMapMenu
 
 CInterfaceChapterMapMenu::CInterfaceChapterMapMenu()
-		: CInterfaceScreenBase( "ChapterMapMenu", "chapter_map_menu" ), eUIState( EUIS_NORMAL ),
-			eReinfDescState( ERDWS_NONE ), nDelay( 0 ), pChapter( 0 ), eExitDir( EED_ENTER ), nSelectedMission( -1 ),
-			nRecommendedTarget( 0 ), bInitialDialogVisible( false )
+	: CInterfaceScreenBase( "ChapterMapMenu", "chapter_map_menu" )
+	, eUIState( EUIS_NORMAL )
+	, eReinfDescState( ERDWS_NONE )
+	, nDelay( 0 )
+	, pChapter( 0 )
+	, eExitDir( EED_ENTER )
+	, nSelectedMission( -1 )
+	, nRecommendedTarget( 0 )
+	, bInitialDialogVisible( false )
 {
 	AddObserver( "message_box_ok", &CInterfaceChapterMapMenu::MsgMessageBoxOk );
 

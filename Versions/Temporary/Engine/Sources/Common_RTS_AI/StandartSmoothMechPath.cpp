@@ -21,7 +21,10 @@ class CPushTileFunctional
 	std::list<SVector> *pTiles = nullptr;
 
 public:
-	CPushTileFunctional( std::list<SVector> *_pTiles ) : pTiles( _pTiles ) {}
+	CPushTileFunctional( std::list<SVector> *_pTiles )
+		: pTiles( _pTiles )
+	{
+	}
 
 	bool operator()( const SVector tile )
 	{
@@ -36,7 +39,11 @@ class CCheckTileFunctional
 	CTerrain *pTerrain = nullptr;
 
 public:
-	CCheckTileFunctional( CBasePathUnit *_pUnit, CTerrain *_pTerrain ) : pUnit( _pUnit ), pTerrain( _pTerrain ) {}
+	CCheckTileFunctional( CBasePathUnit *_pUnit, CTerrain *_pTerrain )
+		: pUnit( _pUnit )
+		, pTerrain( _pTerrain )
+	{
+	}
 
 	bool operator()( const SVector tile )
 	{
@@ -53,7 +60,9 @@ class CCheckTileFunctionalWithMark
 
 public:
 	CCheckTileFunctionalWithMark( CBasePathUnit *_pUnit, std::vector<SVector> *_pTiles, CTerrain *_pTerrain )
-			: pUnit( _pUnit ), pTiles( _pTiles ), pTerrain( _pTerrain )
+		: pUnit( _pUnit )
+		, pTiles( _pTiles )
+		, pTerrain( _pTerrain )
 	{
 	}
 

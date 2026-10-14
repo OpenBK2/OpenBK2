@@ -10,8 +10,9 @@ extern CEventUpdater updater;
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x120A4B00, CExecutorPlaceCharge )
 
 CExecutorPlaceCharge::CExecutorPlaceCharge( CAIUnit *_pSoldier, NDb::EUnitSpecialAbility _eAbility )
-		: CExecutor( TID_PLACE_CHARGE, 1000 / SConsts::AI_SEGMENT_DURATION ), eState( EASS_READY_TO_ON ),
-			eAbility( _eAbility )
+	: CExecutor( TID_PLACE_CHARGE, 1000 / SConsts::AI_SEGMENT_DURATION )
+	, eState( EASS_READY_TO_ON )
+	, eAbility( _eAbility )
 {
 	pSoldier = checked_cast<CSoldier *>( _pSoldier );
 	UpdateState( EASS_READY_TO_ON );

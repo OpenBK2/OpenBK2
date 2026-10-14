@@ -36,7 +36,12 @@ struct SBuildDataParams
 	bool bNeedExport; // Необходимо ли экспортировать объект после создания
 	bool bNeedEdit;   // Необходимо ли загружать одъект после экспорта или создания
 
-	SBuildDataParams() : nFlags( BDF_ALL ), bNeedExport( false ), bNeedEdit( false ) {}
+	SBuildDataParams()
+		: nFlags( BDF_ALL )
+		, bNeedExport( false )
+		, bNeedEdit( false )
+	{
+	}
 
 	void GetObjectName( std::string *pszObjectName )
 	{

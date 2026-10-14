@@ -68,7 +68,10 @@ void CDifficultyTextViewer::MakeInterior( CObjectBase *pWindow, const CObjectBas
 
 // CInterfaceCustomMissions
 
-CInterfaceCustomMissions::CInterfaceCustomMissions() : CInterfaceScreenBase( "CustomMissions", "custom_missions" ) {}
+CInterfaceCustomMissions::CInterfaceCustomMissions()
+	: CInterfaceScreenBase( "CustomMissions", "custom_missions" )
+{
+}
 
 bool CInterfaceCustomMissions::Init()
 {

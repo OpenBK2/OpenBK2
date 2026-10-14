@@ -25,7 +25,7 @@ public:
 	// IDD_MENU_DROP_DOWN_LIST is a WS_POPUP with DS_MODALFRAME and no
 	// caption, which is the raised dialog frame and nothing else.
 	explicit CMenuDropDownWxWindow( wxWindow *pParent )
-			: CWxToolDialog( pParent, wxID_ANY, wxString(), wxDefaultPosition, wxDefaultSize, wxBORDER_RAISED )
+		: CWxToolDialog( pParent, wxID_ANY, wxString(), wxDefaultPosition, wxDefaultSize, wxBORDER_RAISED )
 	{
 		// IDC_MDDL_OPERATIONS_LIST: single selection, client edge, 1 dlu in
 		// from the frame. In pixels as MFC lays the template out, measured:

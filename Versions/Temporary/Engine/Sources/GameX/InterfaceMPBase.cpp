@@ -7,7 +7,7 @@
 // CInterfaceMPScreenBase
 
 CInterfaceMPScreenBase::CInterfaceMPScreenBase( const std::string &szInterfaceType, const std::string &szBindSection )
-		: CInterfaceScreenBase( szInterfaceType, szBindSection )
+	: CInterfaceScreenBase( szInterfaceType, szBindSection )
 {
 }
 

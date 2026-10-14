@@ -39,7 +39,13 @@ namespace NBind
 			NTypeDef::STypeArray *pTypeArray;
 			UValue *pUValue;
 
-			SArrayRequisites() : pRawVector( 0 ), pContained( 0 ), pTypeArray( 0 ), pUValue( 0 ) {}
+			SArrayRequisites()
+				: pRawVector( 0 )
+				, pContained( 0 )
+				, pTypeArray( 0 )
+				, pUValue( 0 )
+			{
+			}
 		};
 
 		struct SArrayCallParams : public SArrayRequisites
@@ -47,7 +53,10 @@ namespace NBind
 			std::string szRestName;
 			int nArrayIndex;
 
-			SArrayCallParams() : nArrayIndex( 0 ) {}
+			SArrayCallParams()
+				: nArrayIndex( 0 )
+			{
+			}
 		};
 
 		uint8_t *pThis;
@@ -55,10 +64,17 @@ namespace NBind
 		NMetaInfo::SStructMetaInfo *pMetaInfo;
 
 		//
-		SBindProcessor() : pThis( 0 ), ownValues( 0 ), pMetaInfo( 0 ) {}
+		SBindProcessor()
+			: pThis( 0 )
+			, ownValues( 0 )
+			, pMetaInfo( 0 )
+		{
+		}
 
 		SBindProcessor( uint8_t *_pThis, UValue *_ownValues, NMetaInfo::SStructMetaInfo *_pMetaInfo )
-				: pThis( _pThis ), ownValues( _ownValues ), pMetaInfo( _pMetaInfo )
+			: pThis( _pThis )
+			, ownValues( _ownValues )
+			, pMetaInfo( _pMetaInfo )
 		{
 		}
 

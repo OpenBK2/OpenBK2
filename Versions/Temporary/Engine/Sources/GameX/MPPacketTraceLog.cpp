@@ -16,7 +16,11 @@ namespace
 		int nScheduledSegment;
 		int nAppliedSegment;
 
-		SDropTrace() : nScheduledSegment( -1 ), nAppliedSegment( -1 ) {}
+		SDropTrace()
+			: nScheduledSegment( -1 )
+			, nAppliedSegment( -1 )
+		{
+		}
 	};
 
 	struct STraceState
@@ -47,10 +51,21 @@ namespace
 		std::chrono::steady_clock::time_point timeLastFlush;
 
 		STraceState()
-				: bActive( false ), bFlushed( false ), nEventID( 0 ), nGameID( -1 ), ulMapChecksum( 0 ), nOwnClientID( -1 ),
-					nOwnSlot( -1 ), nHostClientID( -1 ), dwInitialPlayers( 0 ), dwInitialPresentMask( 0 ),
-					dwInitialTransceiverMask( 0 ), dwFinalPresentMask( 0 ), dwFinalLaggersMask( 0 ), dwFinalTransceiverMask( 0 ),
-					pActiveFile( nullptr )
+			: bActive( false )
+			, bFlushed( false )
+			, nEventID( 0 )
+			, nGameID( -1 )
+			, ulMapChecksum( 0 )
+			, nOwnClientID( -1 )
+			, nOwnSlot( -1 )
+			, nHostClientID( -1 )
+			, dwInitialPlayers( 0 )
+			, dwInitialPresentMask( 0 )
+			, dwInitialTransceiverMask( 0 )
+			, dwFinalPresentMask( 0 )
+			, dwFinalLaggersMask( 0 )
+			, dwFinalTransceiverMask( 0 )
+			, pActiveFile( nullptr )
 		{
 		}
 	};

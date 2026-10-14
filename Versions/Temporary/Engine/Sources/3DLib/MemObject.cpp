@@ -35,7 +35,10 @@ class CMemObjectBuilder
 	CMemObject *p;
 
 public:
-	CMemObjectBuilder( CMemObject *_p ) : p( _p ) {}
+	CMemObjectBuilder( CMemObject *_p )
+		: p( _p )
+	{
+	}
 
 	uint16_t GetPointIndex( const CVec3 &point, const CVec3 &normal );
 	void AddSphereTriangle( const CVec3 &a, const CVec3 &b, const CVec3 &c, int nSubs );
@@ -168,7 +171,9 @@ struct SMOTessPoint
 	CVec2 vPoint;
 
 	SMOTessPoint( float _fNormal, const CVec2 &_vPoint, int _nIndex )
-			: fNormal( _fNormal ), vPoint( _vPoint ), nIndex( _nIndex )
+		: fNormal( _fNormal )
+		, vPoint( _vPoint )
+		, nIndex( _nIndex )
 	{
 	}
 };

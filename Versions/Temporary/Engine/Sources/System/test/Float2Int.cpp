@@ -31,7 +31,8 @@ class CRoundingModeGuard
 	const int nPrevMode;
 
 public:
-	explicit CRoundingModeGuard( const int nMode ) : nPrevMode( std::fegetround() )
+	explicit CRoundingModeGuard( const int nMode )
+		: nPrevMode( std::fegetround() )
 	{
 		std::fesetround( nMode );
 	}

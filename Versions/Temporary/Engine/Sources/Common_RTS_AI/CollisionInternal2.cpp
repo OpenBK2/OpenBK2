@@ -166,12 +166,17 @@ struct SCheckRect : public SIterateUnitsCallback
 	// Defensive defaults preserve explicit constructor values below.
 	int nSkipID = 0;
 
-	SCheckRect() : nSkipID( -1 )
+	SCheckRect()
+		: nSkipID( -1 )
 	{
 		unitRect.InitRect( VNULL2, VNULL2, VNULL2, VNULL2 );
 	}
 
-	SCheckRect( const SRect &_unitRect, const int _nSkipID ) : nSkipID( _nSkipID ), unitRect( _unitRect ) {}
+	SCheckRect( const SRect &_unitRect, const int _nSkipID )
+		: nSkipID( _nSkipID )
+		, unitRect( _unitRect )
+	{
+	}
 
 	bool Iterate( CBasePathUnit *pCand ) const
 	{
@@ -296,10 +301,15 @@ struct SFindCandidates : public SIterateUnitsCallback
 	SRect unitRect;
 	ICollisionsCollector *pCollisionsCollector = nullptr;
 
-	SFindCandidates() : pUnit( 0 ), pCollisionsCollector( 0 ) {}
+	SFindCandidates()
+		: pUnit( 0 )
+		, pCollisionsCollector( 0 )
+	{
+	}
 
 	SFindCandidates( CBasePathUnit *_pUnit, ICollisionsCollector *_pCollisionsCollector )
-			: pUnit( _pUnit ), pCollisionsCollector( _pCollisionsCollector )
+		: pUnit( _pUnit )
+		, pCollisionsCollector( _pCollisionsCollector )
 	{
 		unitRect = GetUnitRect( pUnit, 1.0f );
 	}
@@ -448,9 +458,15 @@ struct SSortCollisions
 {
 	CPtr<CCollisionsCollector> pCollector;
 
-	SSortCollisions() : pCollector( 0 ) {}
+	SSortCollisions()
+		: pCollector( 0 )
+	{
+	}
 
-	SSortCollisions( CCollisionsCollector *_pCollector ) : pCollector( _pCollector ) {}
+	SSortCollisions( CCollisionsCollector *_pCollector )
+		: pCollector( _pCollector )
+	{
+	}
 
 	const bool operator()( const int nIndex1, const int nIndex2 )
 	{

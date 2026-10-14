@@ -329,7 +329,9 @@ void CTerraSpot::CreatePatches( NGScene::IGameView *pGView )
 CSceneTerrain::CSceneTerrain( const NDb::STerrain *_pDBDesc,
                               NGScene::IGameView *_pGameView,
                               CFuncBase<STime> *_pAbsTimer )
-		: pDBDesc( _pDBDesc ), pGameView( _pGameView ), pAbsTimer( _pAbsTimer )
+	: pDBDesc( _pDBDesc )
+	, pGameView( _pGameView )
+	, pAbsTimer( _pAbsTimer )
 {
 	//patches.resize( pDBDesc->nNumPatchesX * pDBDesc->nNumPatchesY );
 	patches.resize( pDBDesc->nNumPatchesX * pDBDesc->nNumPatchesY * DEF_BREAK_TERRA_PATCHES );

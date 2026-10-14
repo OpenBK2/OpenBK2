@@ -29,9 +29,16 @@ struct SAnimHandle
 		return 0;
 	}
 
-	SAnimHandle() : nAnimNumber( -1 ) {}
+	SAnimHandle()
+		: nAnimNumber( -1 )
+	{
+	}
 
-	SAnimHandle( const NDb::SAnimBase *pAnim, int _nAnimNumber ) : pAnimFile( pAnim ), nAnimNumber( _nAnimNumber ) {}
+	SAnimHandle( const NDb::SAnimBase *pAnim, int _nAnimNumber )
+		: pAnimFile( pAnim )
+		, nAnimNumber( _nAnimNumber )
+	{
+	}
 };
 
 struct IAnimMutator : public CObjectBase
@@ -93,7 +100,9 @@ struct ISkeletonAnimator : public CFuncBase<SSkeletonPose>, public IChannelAnima
 		const CVec3 finalPos;
 
 		SDesiredBoneMove( const STime &_tDuration = 0, const CQuat &_finalRot = QNULL, const CVec3 &_finalPos = VNULL3 )
-				: tDuration( _tDuration ), finalRot( _finalRot ), finalPos( _finalPos )
+			: tDuration( _tDuration )
+			, finalRot( _finalRot )
+			, finalPos( _finalPos )
 		{
 		}
 	};

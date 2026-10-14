@@ -24,7 +24,10 @@ class SYSTEM_EXPORT CLogStream
 	const int nStream = 0;
 
 public:
-	CLogStream( const int _nStream ) : nStream( _nStream ) {}
+	CLogStream( const int _nStream )
+		: nStream( _nStream )
+	{
+	}
 
 	CLogStream &operator<<( const std::size_t &n );
 	CLogStream &operator<<( const int &n );
@@ -55,7 +58,10 @@ struct SConsoleLine
 	std::wstring szText;
 
 	SConsoleLine( int _nID, const int _nStream, bool _bCommand, const std::wstring &_szText )
-			: nID( _nID ), nStream( _nStream ), bCommand( _bCommand ), szText( _szText )
+		: nID( _nID )
+		, nStream( _nStream )
+		, bCommand( _bCommand )
+		, szText( _szText )
 	{
 	}
 };

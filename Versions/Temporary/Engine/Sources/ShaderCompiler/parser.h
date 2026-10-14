@@ -6,9 +6,15 @@ struct SLexem
 
 	SLexem() {}
 
-	SLexem( const string &_szData ) : szData( _szData ) {}
+	SLexem( const string &_szData )
+		: szData( _szData )
+	{
+	}
 
-	SLexem( const char *pStart, const char *pFinish ) : szData( pStart, pFinish ) {}
+	SLexem( const char *pStart, const char *pFinish )
+		: szData( pStart, pFinish )
+	{
+	}
 };
 
 char *GetNextLine( char *p, int *pnLines );

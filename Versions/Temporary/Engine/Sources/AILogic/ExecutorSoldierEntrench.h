@@ -42,7 +42,10 @@ public:
 public:
 	CExecutorSoldierEntrench( CAIUnit *_pUnit );
 
-	CExecutorSoldierEntrench() : fEntrenchTimeCoeff( 1.0f ) {}
+	CExecutorSoldierEntrench()
+		: fEntrenchTimeCoeff( 1.0f )
+	{
+	}
 
 	~CExecutorSoldierEntrench();
 

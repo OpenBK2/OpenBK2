@@ -45,7 +45,11 @@ public:
 		//
 		SObjIcon() {}
 
-		SObjIcon( const int _nID, const float _fDepth ) : nID( _nID ), fDepth( _fDepth ) {}
+		SObjIcon( const int _nID, const float _fDepth )
+			: nID( _nID )
+			, fDepth( _fDepth )
+		{
+		}
 
 		//
 		bool operator<( const SObjIcon &v ) const

@@ -35,7 +35,9 @@ class CMOEntrenchmentPart : public CMOSelectable
 	void DeriveTransform( const CVec3 &_vPos, const uint16_t _wDir );
 
 public:
-	CMOEntrenchmentPart() : pParent( 0 ), nFrameIndex( 0 )
+	CMOEntrenchmentPart()
+		: pParent( 0 )
+		, nFrameIndex( 0 )
 	{
 		cached.vPos.Set( 0, 0, 0 );
 		cached.wDir = 0;

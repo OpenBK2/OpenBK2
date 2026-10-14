@@ -23,8 +23,15 @@ REGISTER_SAVELOAD_CLASS( UI, 0x11075B83, CWindowEditLine )
 // CWindowEditLine
 
 CWindowEditLine::CWindowEditLine()
-		: timeSegment( 0 ), nCursorPos( 0 ), bShowCursor( 1 ), nBeginSel( -1 ), nEndSel( -1 ), m_nBeginDragSel( -1 ),
-			nBeginText( 0 ), bRegistered( false ), bMouseButton1Down( false )
+	: timeSegment( 0 )
+	, nCursorPos( 0 )
+	, bShowCursor( 1 )
+	, nBeginSel( -1 )
+	, nEndSel( -1 )
+	, m_nBeginDragSel( -1 )
+	, nBeginText( 0 )
+	, bRegistered( false )
+	, bMouseButton1Down( false )
 {
 	impotantMsgs.AddObserver( "editline_wordleft", &CWindowEditLine::OnCtrlLeft );
 	impotantMsgs.AddObserver( "editline_wordright", &CWindowEditLine::OnCtrlRight );

@@ -61,7 +61,11 @@ public:
 	// проверить врагов и начать отстреливаться
 	void AnalyzeBSU();
 
-	CPlaneDeffensiveFire() : pOwner( 0 ), timeLastBSUUpdate( 0 ) {}
+	CPlaneDeffensiveFire()
+		: pOwner( 0 )
+		, timeLastBSUUpdate( 0 )
+	{
+	}
 
 	CPlaneDeffensiveFire( class CAviation *pPlane );
 };
@@ -97,9 +101,18 @@ public:
 		}
 
 	public:
-		CEnemyContainer() : fTakenDamage( 0.0f ), bModifApplied( false ) {}
+		CEnemyContainer()
+			: fTakenDamage( 0.0f )
+			, bModifApplied( false )
+		{
+		}
 
-		CEnemyContainer( CAIUnit *pOwner ) : pOwner( pOwner ), fTakenDamage( 0.0f ), bModifApplied( false ) {}
+		CEnemyContainer( CAIUnit *pOwner )
+			: pOwner( pOwner )
+			, fTakenDamage( 0.0f )
+			, bModifApplied( false )
+		{
+		}
 
 		bool CanBreakTarget( const bool bBombsAllowed );
 		CVec2 GetCenter() const;
@@ -173,7 +186,13 @@ protected:
 	void InitPathToEnemyPlane( class CPlanesFormation *_pEnemy );
 	// was command to attack or drop. not MOVE
 public:
-	CPlanePatrolState() : nCurPointIndex( 0 ), pPlane( 0 ), bEconomyMode( true ), timeNextScan( 0 ) {}
+	CPlanePatrolState()
+		: nCurPointIndex( 0 )
+		, pPlane( 0 )
+		, bEconomyMode( true )
+		, timeNextScan( 0 )
+	{
+	}
 
 	CPlanePatrolState( CAviation *pPlane );
 
@@ -339,7 +358,10 @@ class CPlaneBombState : public CPlanePatrolState, public CPlaneDeffensiveFire
 	float RecalcStartAttack() const;
 
 public:
-	CPlaneBombState() : bSingleSalvo( false ) {}
+	CPlaneBombState()
+		: bSingleSalvo( false )
+	{
+	}
 
 	CPlaneBombState( CAviation *pUnit, const CVec2 &vPoint, bool bSingleSalvo = false );
 
@@ -587,7 +609,10 @@ private:
 	void FinishState();
 
 public:
-	CPlaneShturmovikPatrolState() : pPlane( 0 ) {}
+	CPlaneShturmovikPatrolState()
+		: pPlane( 0 )
+	{
+	}
 
 	CPlaneShturmovikPatrolState(
 			CAviation *_pPlane, const CVec2 &vPoint, CAIUnit *pTarget, CBuilding *pBuilding, const bool bMustDropBombs );
@@ -718,7 +743,13 @@ class CPlaneFlyDeadState : public CPlanePatrolState
 		float fMinY = {}, fMaxY = {};
 
 	public:
-		CDeadZone() : fMaxX( 0.0f ), fMinX( 0.0f ), fMaxY( 0.0f ), fMinY( 0.0f ) {}
+		CDeadZone()
+			: fMaxX( 0.0f )
+			, fMinX( 0.0f )
+			, fMaxY( 0.0f )
+			, fMinY( 0.0f )
+		{
+		}
 
 		void Init();
 		bool IsInZone( const CVec2 &vPoint );
@@ -809,7 +840,10 @@ public:
 
 private:
 public:
-	CPlaneSuicideState() : pPlane( 0 ) {}
+	CPlaneSuicideState()
+		: pPlane( 0 )
+	{
+	}
 
 	CPlaneSuicideState( CAviation *pPlane, const CVec2 &vTarget );
 

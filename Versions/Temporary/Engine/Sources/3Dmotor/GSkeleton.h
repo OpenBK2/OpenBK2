@@ -36,7 +36,8 @@ struct SBoneTransform
 	float Orientation[4] = {};
 	float ScaleShear[3][3] = {};
 
-	SBoneTransform() : Flags( HAS_POSITION | HAS_ORIENTATION | HAS_SCALE_SHEAR )
+	SBoneTransform()
+		: Flags( HAS_POSITION | HAS_ORIENTATION | HAS_SCALE_SHEAR )
 	{
 		Position[0] = Position[1] = Position[2] = 0.0f;
 		Orientation[0] = Orientation[1] = Orientation[2] = 0.0f;
@@ -84,10 +85,14 @@ struct SSkeletonHandle
 		return 0;
 	}
 
-	SSkeletonHandle() : nModelInFile( 0 ) {}
+	SSkeletonHandle()
+		: nModelInFile( 0 )
+	{
+	}
 
 	SSkeletonHandle( const NDb::SSkeleton *_pSkeleton, int _nModelInFile )
-			: pSkeleton( _pSkeleton ), nModelInFile( _nModelInFile )
+		: pSkeleton( _pSkeleton )
+		, nModelInFile( _nModelInFile )
 	{
 	}
 };

@@ -106,7 +106,8 @@ class CPointListWxWindow : public CWxHostWindow, public NPointListView::IPointLi
 
 public:
 	CPointListWxWindow( unsigned _nInstanceID, const std::string &rszLabel )
-			: nInstanceID( _nInstanceID ), szLabel( rszLabel )
+		: nInstanceID( _nInstanceID )
+		, szLabel( rszLabel )
 	{
 		NPointListView::Register( this );
 	}

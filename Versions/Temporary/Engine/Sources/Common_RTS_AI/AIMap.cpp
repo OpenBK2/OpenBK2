@@ -65,8 +65,11 @@ CVec2 CAIMap::GetPointByTile( const SObjTileInfo &tileInfo ) const
 
 CAIMap::CAIMap(
 		const int _nSizeX, const int _nSizeY, const int _nTileSize, const int _nMaxUnitTileRadius, const int _nMaxMapSize )
-		: nSizeX( _nSizeX ), nSizeY( _nSizeY ), nTileSize( _nTileSize ), nMaxUnitTileRadius( _nMaxUnitTileRadius ),
-			nMaxMapSize( _nMaxMapSize )
+	: nSizeX( _nSizeX )
+	, nSizeY( _nSizeY )
+	, nTileSize( _nTileSize )
+	, nMaxUnitTileRadius( _nMaxUnitTileRadius )
+	, nMaxMapSize( _nMaxMapSize )
 {
 	pHeights = new CStaticMapHeights( nSizeX, nSizeY, nTileSize );
 	pTerrain = new CTerrain( this, true );

@@ -18,7 +18,12 @@ struct SVectorStripeObjectPoint
 
 	//----------------------------------------------------------------------------------------------------
 	SVectorStripeObjectPoint()
-			: vPos( VNULL3 ), vNorm( VNULL3 ), fRadius( 0.0f ), fWidth( 0.0f ), bKeyPoint( false ), fOpacity( 1.0f )
+		: vPos( VNULL3 )
+		, vNorm( VNULL3 )
+		, fRadius( 0.0f )
+		, fWidth( 0.0f )
+		, bKeyPoint( false )
+		, fOpacity( 1.0f )
 	{
 	}
 
@@ -51,8 +56,14 @@ struct SVectorStripeObjectDesc
 		float fRelWidth = 0.0f;    // relative width
 
 		SLayer()
-				: opacityCenter( 0xff ), opacityBorder( 0x80 ), fStreamSpeed( 0.1f ), fTextureStep( 0.1f ),
-					fDisturbance( 0.3f ), fRelWidth( 1 ), nNumCells( 4 ), bAnimated( false )
+			: opacityCenter( 0xff )
+			, opacityBorder( 0x80 )
+			, fStreamSpeed( 0.1f )
+			, fTextureStep( 0.1f )
+			, fDisturbance( 0.3f )
+			, fRelWidth( 1 )
+			, nNumCells( 4 )
+			, bAnimated( false )
 		{
 		}
 
@@ -90,8 +101,13 @@ struct SVectorStripeObjectDesc
 
 	//----------------------------------------------------------------------------------------------------
 	SVectorStripeObjectDesc()
-			: eType( TYPE_UNKNOUN ), nPriority( 0 ), miniMapCenterColor( 0x00000000 ), miniMapBorderColor( 0x00000000 ),
-				fPassability( 1.0f ), dwAIClasses( 0 ), cSoilParams( 0 )
+		: eType( TYPE_UNKNOUN )
+		, nPriority( 0 )
+		, miniMapCenterColor( 0x00000000 )
+		, miniMapBorderColor( 0x00000000 )
+		, fPassability( 1.0f )
+		, dwAIClasses( 0 )
+		, cSoilParams( 0 )
 	{
 	}
 

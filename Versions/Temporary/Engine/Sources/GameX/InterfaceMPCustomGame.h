@@ -56,7 +56,10 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase, public IProgrammed
 
 		CCustomGameListData() {}
 
-		CCustomGameListData( SMPGameInfo &_info ) : info( _info ) {}
+		CCustomGameListData( SMPGameInfo &_info )
+			: info( _info )
+		{
+		}
 	};
 
 	//--------------
@@ -75,7 +78,13 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase, public IProgrammed
 		int nGameType;
 		int nTechLevel;
 
-		SFilterData() : nMapSize( 0 ), nPlayers( 0 ), nGameType( 0 ), nTechLevel( 0 ) {}
+		SFilterData()
+			: nMapSize( 0 )
+			, nPlayers( 0 )
+			, nGameType( 0 )
+			, nTechLevel( 0 )
+		{
+		}
 	};
 
 	struct SGameEntry

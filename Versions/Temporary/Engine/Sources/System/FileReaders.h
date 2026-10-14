@@ -97,7 +97,8 @@ public:
 	CMemoryMappedFile( const CMemoryMappedFile & ) = delete;
 	void operator=( const CMemoryMappedFile & ) = delete;
 
-	CMemoryMappedFile( const char *pszName, EStreamAccess access = STREAM_ACCESS_READ_WRITE ) : file( pszName, access )
+	CMemoryMappedFile( const char *pszName, EStreamAccess access = STREAM_ACCESS_READ_WRITE )
+		: file( pszName, access )
 	{
 		if ( !file.IsOk() )
 		{
@@ -153,7 +154,9 @@ class SYSTEM_EXPORT CMemoryMappedFileFragment : public CMappedStream
 
 public:
 	CMemoryMappedFileFragment( CMMFile *_pFile, int _nOffset, int _nSize )
-			: pFile( _pFile ), nOffset( _nOffset ), nSize( _nSize )
+		: pFile( _pFile )
+		, nOffset( _nOffset )
+		, nSize( _nSize )
 	{
 		StartAccess( F_CanRead );
 	}

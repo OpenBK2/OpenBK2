@@ -78,7 +78,10 @@ class CICSave : public CICSaveBase
 public:
 	CICSave() {}
 
-	CICSave( const std::string &szFileName ) : CICSaveBase( szFileName ) {}
+	CICSave( const std::string &szFileName )
+		: CICSaveBase( szFileName )
+	{
+	}
 
 #ifndef _FINALRELEASE
 	void OnProgress( EStage eStage )
@@ -115,7 +118,10 @@ class CICLoad : public CICLoadBase
 public:
 	CICLoad() {}
 
-	CICLoad( const std::string &szFileName ) : CICLoadBase( szFileName ) {}
+	CICLoad( const std::string &szFileName )
+		: CICLoadBase( szFileName )
+	{
+	}
 
 #ifndef _FINALRELEASE
 	void OnProgress( EStage eStage )
@@ -149,7 +155,10 @@ public:
 
 CICLoadBase::CICLoadBase() {}
 
-CICLoadBase::CICLoadBase( const std::string &_szFileName ) : szFileName( _szFileName ) {}
+CICLoadBase::CICLoadBase( const std::string &_szFileName )
+	: szFileName( _szFileName )
+{
+}
 
 void CICLoadBase::Configure( const char *pszConfig )
 {
@@ -185,7 +194,10 @@ void CICLoadBase::Exec()
 
 CICSaveBase::CICSaveBase() {}
 
-CICSaveBase::CICSaveBase( const std::string &_szFileName ) : szFileName( _szFileName ) {}
+CICSaveBase::CICSaveBase( const std::string &_szFileName )
+	: szFileName( _szFileName )
+{
+}
 
 void CICSaveBase::Configure( const char *pszConfig )
 {

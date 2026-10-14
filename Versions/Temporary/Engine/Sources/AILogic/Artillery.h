@@ -68,7 +68,10 @@ protected:
 	virtual CUnitGuns *GetGuns();
 
 public:
-	CArtillery() : bBulletStorageVisible( false ) {}
+	CArtillery()
+		: bBulletStorageVisible( false )
+	{
+	}
 
 	virtual void Init( const CVec2 &center,
 	                   const int z,

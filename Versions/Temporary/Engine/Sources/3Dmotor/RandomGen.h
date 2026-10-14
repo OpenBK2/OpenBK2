@@ -13,7 +13,10 @@ struct SRand
 
 	SRand();
 
-	SRand( const SRandomSeed &rseed ) : seed( rseed ) {}
+	SRand( const SRandomSeed &rseed )
+		: seed( rseed )
+	{
+	}
 
 	int Get( int nMax );
 	float GetFloat( float fpMin, float fpMax );
@@ -24,7 +27,10 @@ class CRoulette
 	std::vector<float> m_aSectors;
 
 public:
-	CRoulette() : m_aSectors( 1, 0.0f ) {}
+	CRoulette()
+		: m_aSectors( 1, 0.0f )
+	{
+	}
 
 	void AddSector( float fValue );
 	int GetRandomSector( SRand *pRand ) const;

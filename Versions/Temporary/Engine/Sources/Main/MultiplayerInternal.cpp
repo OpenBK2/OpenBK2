@@ -20,7 +20,8 @@ const int N_PACKET_SIZE = 32768; // Must be equal with buffer size from Net/NetS
 //const int N_PACKET_SIZE = 128000;	// Must be equal with buffer size from Net/NetStream.h
 
 CMultiplayerInternal::CMultiplayerInternal( const NDb::SNetGameConsts *_pConsts, IAICmdsAutoMagic *pCmds )
-		: pConsts( _pConsts ), pCmdsSerialize( pCmds )
+	: pConsts( _pConsts )
+	, pCmdsSerialize( pCmds )
 {
 }
 

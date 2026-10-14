@@ -207,7 +207,9 @@ void CScriptAreaState::RemoveScriptArea( unsigned nScriptAreaID )
 }
 
 CScriptAreaState::CScriptAreaState( CMapInfoEditor *_pMapInfoEditor )
-		: pMapInfoEditor( _pMapInfoEditor ), bShift( false ), scriptAreaIDToIndexCollector( INVALID_NODE_ID )
+	: pMapInfoEditor( _pMapInfoEditor )
+	, bShift( false )
+	, scriptAreaIDToIndexCollector( INVALID_NODE_ID )
 {
 	NI_ASSERT( pMapInfoEditor, "CScriptAreaState::CScriptAreaState(): pMapInfoEditor == 0" );
 }
@@ -546,7 +548,12 @@ void CScriptAreaState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMous
 	CPolygonState::OnLButtonDown( nFlags, rMousePoint );
 }
 
-CScriptAreaState::SScriptArea::SScriptArea() : eType( NDb::EAT_CIRCLE ), nScriptAreaID( -1 ), bSelected( false ) {}
+CScriptAreaState::SScriptArea::SScriptArea()
+	: eType( NDb::EAT_CIRCLE )
+	, nScriptAreaID( -1 )
+	, bSelected( false )
+{
+}
 
 void CScriptAreaState::SScriptArea::Draw( IPaintContext *pPaintDC, CSceneDrawTool *pSceneDrawTool ) const
 {

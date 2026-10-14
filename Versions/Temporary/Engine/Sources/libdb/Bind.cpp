@@ -46,9 +46,13 @@ namespace NBind
 	// ************************************************************************************************************************ //
 
 	CBindStruct::CBindStruct( CResource *_pStruct, NMetaInfo::SStructMetaInfo *_pMetaInfo )
-			: pStruct( _pStruct ), pMetaInfo( _pMetaInfo ), ownValues( _pMetaInfo->nNumOwnValues ),
-				bindProcessor( (uint8_t *)_pStruct, _pMetaInfo->nNumOwnValues == 0 ? 0 : &( ownValues[0] ), _pMetaInfo ),
-				bLoaded( false ), bChanged( false ), bNewObject( false )
+		: pStruct( _pStruct )
+		, pMetaInfo( _pMetaInfo )
+		, ownValues( _pMetaInfo->nNumOwnValues )
+		, bindProcessor( (uint8_t *)_pStruct, _pMetaInfo->nNumOwnValues == 0 ? 0 : &( ownValues[0] ), _pMetaInfo )
+		, bLoaded( false )
+		, bChanged( false )
+		, bNewObject( false )
 	{
 		if ( pMetaInfo->nNumOwnValues > 0 )
 		{

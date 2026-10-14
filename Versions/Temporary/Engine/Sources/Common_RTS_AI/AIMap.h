@@ -100,7 +100,10 @@ private:
 	void OnSerialize( IBinSaver &saver );
 
 public:
-	CAIMap() : nMaxMapSize( 0 ) {}
+	CAIMap()
+		: nMaxMapSize( 0 )
+	{
+	}
 
 	CAIMap(
 			const int nSizeX, const int nSizeY, const int nTileSize, const int nMaxUnitTileRadius, const int nMaxMapSize );

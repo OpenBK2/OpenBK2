@@ -7,7 +7,8 @@
 
 #define MNEMO( e ) Insert( NDb::DB_RPG_TYPE_##e, #e );
 
-CUnitDesignTypeMnemonics::CUnitDesignTypeMnemonics() : CMnemonicsCollector<int>( -1, "UNIT_TYPE_UNKNOWN" )
+CUnitDesignTypeMnemonics::CUnitDesignTypeMnemonics()
+	: CMnemonicsCollector<int>( -1, "UNIT_TYPE_UNKNOWN" )
 {
 	MNEMO( SOLDIER );
 	MNEMO( ENGINEER );

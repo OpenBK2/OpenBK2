@@ -47,8 +47,14 @@ int SAnimationIDHash::operator()( const CWindowAnimationID &p ) const
 // CWindow
 
 CWindow::CWindow()
-		: pClickNotify( 0 ), vScreenPos( VNULL2 ), bIsModal( false ), bFocused( false ), bDelayChildRemove( false ),
-			fFadeValue( 1.0f ), fInternalFadeValue( 1.0f ), nIDForMLHandler( -1 )
+	: pClickNotify( 0 )
+	, vScreenPos( VNULL2 )
+	, bIsModal( false )
+	, bFocused( false )
+	, bDelayChildRemove( false )
+	, fFadeValue( 1.0f )
+	, fInternalFadeValue( 1.0f )
+	, nIDForMLHandler( -1 )
 {
 	delayedReposition.second = false;
 }

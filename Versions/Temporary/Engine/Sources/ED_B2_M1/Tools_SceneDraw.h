@@ -35,10 +35,19 @@ class CSceneDrawTool
 		CVec3 vScale;
 
 		//
-		SModelInfo() : pModel( 0 ), vPos( VNULL3 ), qRot( QNULL ), vScale( VNULL3 ) {}
+		SModelInfo()
+			: pModel( 0 )
+			, vPos( VNULL3 )
+			, qRot( QNULL )
+			, vScale( VNULL3 )
+		{
+		}
 
 		SModelInfo( const SModelInfo &rModelInfo )
-				: pModel( rModelInfo.pModel ), vPos( rModelInfo.vPos ), qRot( rModelInfo.qRot ), vScale( rModelInfo.vScale )
+			: pModel( rModelInfo.pModel )
+			, vPos( rModelInfo.vPos )
+			, qRot( rModelInfo.qRot )
+			, vScale( rModelInfo.vScale )
 		{
 		}
 
@@ -66,10 +75,16 @@ class CSceneDrawTool
 		bool bDepthCheck;
 
 		//
-		SPolylineInfo() : vColor( VNULL3 ), bDepthCheck( true ) {}
+		SPolylineInfo()
+			: vColor( VNULL3 )
+			, bDepthCheck( true )
+		{
+		}
 
 		SPolylineInfo( const SPolylineInfo &rPolylineInfo )
-				: points( rPolylineInfo.points ), vColor( rPolylineInfo.vColor ), bDepthCheck( rPolylineInfo.bDepthCheck )
+			: points( rPolylineInfo.points )
+			, vColor( rPolylineInfo.vColor )
+			, bDepthCheck( rPolylineInfo.bDepthCheck )
 		{
 		}
 

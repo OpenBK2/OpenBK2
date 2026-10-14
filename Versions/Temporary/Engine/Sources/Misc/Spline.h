@@ -94,7 +94,11 @@ public:
 		Setup( p0, p1, p2, p3 );
 	}
 
-	CAnalyticBSpline2( const CAnalyticBSpline2 &bs ) : x( bs.x ), y( bs.y ) {}
+	CAnalyticBSpline2( const CAnalyticBSpline2 &bs )
+		: x( bs.x )
+		, y( bs.y )
+	{
+	}
 
 	//
 	void Setup( const CVec3 &p0, const CVec3 &p1, const CVec3 &p2, const CVec3 &p3 )

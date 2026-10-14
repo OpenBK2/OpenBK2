@@ -13,7 +13,10 @@ class CScanLimiter
 	int nScannedUnits = {};
 
 public:
-	CScanLimiter() : nScannedUnits( 0 ) {}
+	CScanLimiter()
+		: nScannedUnits( 0 )
+	{
+	}
 
 	void SegmentsFinished();
 	void TargetScanning( const EUnitRPGType &scanUnitType );

@@ -58,7 +58,11 @@ const char *tblPushableTypes[] = { "WindowSimpleShared",
 }; // namespace
 
 CWindowSimpleSharedState::CWindowSimpleSharedState( CWindowSimpleSharedEditor *_pEditor )
-		: pEditor( _pEditor ), pScreen( 0 ), pMainWindow( 0 ), pPickedWindow( 0 ), bDragging( false )
+	: pEditor( _pEditor )
+	, pScreen( 0 )
+	, pMainWindow( 0 )
+	, pPickedWindow( 0 )
+	, bDragging( false )
 {
 }
 

@@ -39,9 +39,16 @@ public:
 
 public:
 	// Initialize one union storage arm; the overlapping aliases stay plain fields.
-	CVec2() : m{} {}
+	CVec2()
+		: m{}
+	{
+	}
 
-	CVec2( const float _x, const float _y ) : x( _x ), y( _y ) {}
+	CVec2( const float _x, const float _y )
+		: x( _x )
+		, y( _y )
+	{
+	}
 
 	// setup
 	void Set( const float _x, const float _y )
@@ -279,12 +286,25 @@ public:
 	};
 
 public:
-	CVec3() : m{} {}
+	CVec3()
+		: m{}
+	{
+	}
 
-	CVec3( const float _x, const float _y, const float _z ) : x( _x ), y( _y ), z( _z ) {}
+	CVec3( const float _x, const float _y, const float _z )
+		: x( _x )
+		, y( _y )
+		, z( _z )
+	{
+	}
 
 	//CVec3( const float _x, const float _y, const float _z = 0.0f ) : x( _x ), y( _y ), z( _z ) {  }
-	CVec3( const CVec2 &v2, const float _z ) : x( v2.x ), y( v2.y ), z( _z ) {}
+	CVec3( const CVec2 &v2, const float _z )
+		: x( v2.x )
+		, y( v2.y )
+		, z( _z )
+	{
+	}
 
 	// cross-vector assignment
 	//CVec3& operator=( const CVec2 &v ) { x = v.x; y = v.y; z = 0.0f; return *this; }
@@ -541,14 +561,35 @@ public:
 	};
 
 public:
-	CVec4() : m{} {}
+	CVec4()
+		: m{}
+	{
+	}
 
-	CVec4( const float _x, const float _y, const float _z, const float _w ) : x( _x ), y( _y ), z( _z ), w( _w ) {}
+	CVec4( const float _x, const float _y, const float _z, const float _w )
+		: x( _x )
+		, y( _y )
+		, z( _z )
+		, w( _w )
+	{
+	}
 
 	//CVec4( const float _x, const float _y, const float _z = 0.0f, const float _w = 0.0f ) : x( _x ), y( _y ), z( _z ), w( _w ) {  }
-	CVec4( const CVec2 &v2, const float _z, const float _w ) : x( v2.x ), y( v2.y ), z( _z ), w( _w ) {}
+	CVec4( const CVec2 &v2, const float _z, const float _w )
+		: x( v2.x )
+		, y( v2.y )
+		, z( _z )
+		, w( _w )
+	{
+	}
 
-	CVec4( const CVec3 &v3, const float _w ) : x( v3.x ), y( v3.y ), z( v3.z ), w( _w ) {}
+	CVec4( const CVec3 &v3, const float _w )
+		: x( v3.x )
+		, y( v3.y )
+		, z( v3.z )
+		, w( _w )
+	{
+	}
 
 	// setup
 	void Set( const float _x, const float _y, const float _z, const float _w )
@@ -770,7 +811,11 @@ public:
 
 	CVecPolar() {}
 
-	CVecPolar( const float _fLat, const float _fLong ) : fLat( _fLat ), fLong( _fLong ) {}
+	CVecPolar( const float _fLat, const float _fLong )
+		: fLat( _fLat )
+		, fLong( _fLong )
+	{
+	}
 
 	CVecPolar &operator+=( const CVecPolar &v )
 	{
@@ -814,11 +859,23 @@ struct SVector
 	//
 	SVector() {}
 
-	SVector( const int _x, const int _y ) : x( _x ), y( _y ) {}
+	SVector( const int _x, const int _y )
+		: x( _x )
+		, y( _y )
+	{
+	}
 
-	SVector( const SVector &vec ) : x( vec.x ), y( vec.y ) {}
+	SVector( const SVector &vec )
+		: x( vec.x )
+		, y( vec.y )
+	{
+	}
 
-	SVector( const CVec2 &vec ) : x( vec.x ), y( vec.y ) {}
+	SVector( const CVec2 &vec )
+		: x( vec.x )
+		, y( vec.y )
+	{
+	}
 
 	const CVec2 ToCVec2() const
 	{
@@ -1058,10 +1115,19 @@ public:
 	//
 	CLine2() {}
 
-	CLine2( const float _a, const float _b, const float _c ) : a( _a ), b( _b ), c( _c ), dummy( 0 ) {}
+	CLine2( const float _a, const float _b, const float _c )
+		: a( _a )
+		, b( _b )
+		, c( _c )
+		, dummy( 0 )
+	{
+	}
 
 	CLine2( const CVec2 &p1, const CVec2 &p2 )
-			: a( p2.y - p1.y ), b( p1.x - p2.x ), c( p2.x * p1.y - p1.x * p2.y ), dummy( 0 )
+		: a( p2.y - p1.y )
+		, b( p1.x - p2.x )
+		, c( p2.x * p1.y - p1.x * p2.y )
+		, dummy( 0 )
 	{
 	}
 
@@ -1102,10 +1168,17 @@ public:
 	//
 	CSegment() {}
 
-	CSegment( const CVec2 &_p1, const CVec2 &_p2 ) : p1( _p1 ), p2( _p2 ), dir( p2 - p1 ) {}
+	CSegment( const CVec2 &_p1, const CVec2 &_p2 )
+		: p1( _p1 )
+		, p2( _p2 )
+		, dir( p2 - p1 )
+	{
+	}
 
 	CSegment( const float x1, const float y1, const float x2, const float y2 )
-			: p1( x1, y1 ), p2( x2, y2 ), dir( p2 - p1 )
+		: p1( x1, y1 )
+		, p2( x2, y2 )
+		, dir( p2 - p1 )
 	{
 	}
 
@@ -1124,7 +1197,11 @@ public:
 	//
 	CCircle() {}
 
-	CCircle( const CVec2 &_center, const float _r ) : center( _center ), r( _r ) {}
+	CCircle( const CVec2 &_center, const float _r )
+		: center( _center )
+		, r( _r )
+	{
+	}
 
 	//
 	const CVec2 &GetCenter() const
@@ -1178,11 +1255,23 @@ public:
 
 	SPlane() {}
 
-	SPlane( const CVec3 &vNormale, const float fDist ) : n( vNormale ), d( fDist ) {}
+	SPlane( const CVec3 &vNormale, const float fDist )
+		: n( vNormale )
+		, d( fDist )
+	{
+	}
 
-	SPlane( const CVec4 &v ) : n( v.x, v.y, v.z ), d( v.w ) {}
+	SPlane( const CVec4 &v )
+		: n( v.x, v.y, v.z )
+		, d( v.w )
+	{
+	}
 
-	SPlane( const SPlane &plane ) : n( plane.n ), d( plane.d ) {}
+	SPlane( const SPlane &plane )
+		: n( plane.n )
+		, d( plane.d )
+	{
+	}
 
 	// setup functions
 	bool Set( const CVec3 &pt0, const CVec3 &pt1, const CVec3 &pt2, bool bNormalize );
@@ -1333,7 +1422,10 @@ public:
 
 public:
 	// Zero storage is the default; callers requesting identity still use Identity.
-	SHMatrix() : m{} {}
+	SHMatrix()
+		: m{}
+	{
+	}
 
 	SHMatrix( float __11,
 	          float __12,
@@ -1351,8 +1443,22 @@ public:
 	          float __42,
 	          float __43,
 	          float __44 )
-			: _11( __11 ), _12( __12 ), _13( __13 ), _14( __14 ), _21( __21 ), _22( __22 ), _23( __23 ), _24( __24 ),
-				_31( __31 ), _32( __32 ), _33( __33 ), _34( __34 ), _41( __41 ), _42( __42 ), _43( __43 ), _44( __44 )
+		: _11( __11 )
+		, _12( __12 )
+		, _13( __13 )
+		, _14( __14 )
+		, _21( __21 )
+		, _22( __22 )
+		, _23( __23 )
+		, _24( __24 )
+		, _31( __31 )
+		, _32( __32 )
+		, _33( __33 )
+		, _34( __34 )
+		, _41( __41 )
+		, _42( __42 )
+		, _43( __43 )
+		, _44( __44 )
 	{
 	}
 
@@ -1470,7 +1576,10 @@ class CQuat
 
 	// for use in the internal functions
 	// to avoid ambiguity with angle-axis constructor
-	CQuat( float fX, float fY, float fZ, float fW, int, int ) : vec4( fX, fY, fZ, fW ) {}
+	CQuat( float fX, float fY, float fZ, float fW, int, int )
+		: vec4( fX, fY, fZ, fW )
+	{
+	}
 
 public:
 	CQuat( float fAngle, float fAxisX, float fAxisY, float fAxisZ, const bool bNormalizeAxis = false );
@@ -1699,11 +1808,23 @@ public:
 
 	//
 	// Constructor initialization avoids nontrivial fields in anonymous structs.
-	CTPoint() : x{}, y{} {}
+	CTPoint()
+		: x{}
+		, y{}
+	{
+	}
 
-	CTPoint( TYPE _x, TYPE _y ) : x( _x ), y( _y ) {}
+	CTPoint( TYPE _x, TYPE _y )
+		: x( _x )
+		, y( _y )
+	{
+	}
 
-	CTPoint( const TPoint &pt ) : x( pt.x ), y( pt.y ) {}
+	CTPoint( const TPoint &pt )
+		: x( pt.x )
+		, y( pt.y )
+	{
+	}
 
 	//
 	bool operator==( const TPoint &v ) const
@@ -1828,23 +1949,54 @@ public:
 	};
 
 	//
-	CTRect() : minx{}, miny{}, maxx{}, maxy{} {}
+	CTRect()
+		: minx{}
+		, miny{}
+		, maxx{}
+		, maxy{}
+	{
+	}
 
 	CTRect( const TYPE _minx, const TYPE _miny, const TYPE _maxx, const TYPE _maxy )
-			: minx( _minx ), miny( _miny ), maxx( _maxx ), maxy( _maxy )
+		: minx( _minx )
+		, miny( _miny )
+		, maxx( _maxx )
+		, maxy( _maxy )
 	{
 	}
 
-	CTRect( const TPoint &vLT, const TPoint &vRB ) : minx( vLT.x ), miny( vLT.y ), maxx( vRB.x ), maxy( vRB.y ) {}
+	CTRect( const TPoint &vLT, const TPoint &vRB )
+		: minx( vLT.x )
+		, miny( vLT.y )
+		, maxx( vRB.x )
+		, maxy( vRB.y )
+	{
+	}
 
-	CTRect( const CVec2 &vLT, const CVec2 &vRB ) : minx( vLT.x ), miny( vLT.y ), maxx( vRB.x ), maxy( vRB.y ) {}
+	CTRect( const CVec2 &vLT, const CVec2 &vRB )
+		: minx( vLT.x )
+		, miny( vLT.y )
+		, maxx( vRB.x )
+		, maxy( vRB.y )
+	{
+	}
 
 	template <class T1>
-	CTRect( const CTRect<T1> &rect ) : x1( rect.x1 ), y1( rect.y1 ), x2( rect.x2 ), y2( rect.y2 )
+	CTRect( const CTRect<T1> &rect )
+		: x1( rect.x1 )
+		, y1( rect.y1 )
+		, x2( rect.x2 )
+		, y2( rect.y2 )
 	{
 	}
 
-	CTRect( const TRect &rect ) : x1( rect.x1 ), y1( rect.y1 ), x2( rect.x2 ), y2( rect.y2 ) {}
+	CTRect( const TRect &rect )
+		: x1( rect.x1 )
+		, y1( rect.y1 )
+		, x2( rect.x2 )
+		, y2( rect.y2 )
+	{
+	}
 
 	// assignment
 	template <class T1>
@@ -2138,7 +2290,12 @@ struct STriangle
 	//
 	STriangle() {}
 
-	STriangle( uint16_t _i1, uint16_t _i2, uint16_t _i3 ) : i1( _i1 ), i2( _i2 ), i3( _i3 ) {}
+	STriangle( uint16_t _i1, uint16_t _i2, uint16_t _i3 )
+		: i1( _i1 )
+		, i2( _i2 )
+		, i3( _i3 )
+	{
+	}
 
 	//
 	void Set( const uint16_t _i1, const uint16_t _i2, const uint16_t _i3 )
@@ -2163,7 +2320,11 @@ public:
 	//
 	CRay() {}
 
-	CRay( const CVec3 &_ptOrigin, const CVec3 &_ptDir ) : ptOrigin( _ptOrigin ), ptDir( _ptDir ) {}
+	CRay( const CVec3 &_ptOrigin, const CVec3 &_ptDir )
+		: ptOrigin( _ptOrigin )
+		, ptDir( _ptDir )
+	{
+	}
 
 	CVec3 Get( float fT ) const
 	{
@@ -2178,7 +2339,11 @@ struct SSphere
 
 	SSphere() {}
 
-	SSphere( const CVec3 &_ptCenter, float _fRadius ) : ptCenter( _ptCenter ), fRadius( _fRadius ) {}
+	SSphere( const CVec3 &_ptCenter, float _fRadius )
+		: ptCenter( _ptCenter )
+		, fRadius( _fRadius )
+	{
+	}
 };
 
 struct SMassSphere
@@ -2190,7 +2355,9 @@ struct SMassSphere
 	SMassSphere() {}
 
 	SMassSphere( const CVec3 &_ptCenter, float _fRadius, float _fMass )
-			: ptCenter( _ptCenter ), fRadius( _fRadius ), fMass( _fMass )
+		: ptCenter( _ptCenter )
+		, fRadius( _fRadius )
+		, fMass( _fMass )
 	{
 	}
 };
@@ -3403,7 +3570,12 @@ struct MISC_EXPORT SRect
 
 	void Compress( const float fFactor );
 
-	SRect() : lengthAhead( 0 ), lengthBack( 0 ), width( 0 ) {}
+	SRect()
+		: lengthAhead( 0 )
+		, lengthBack( 0 )
+		, width( 0 )
+	{
+	}
 };
 
 MISC_EXPORT const float fabs( const SRect rect1, const SRect rect2 );

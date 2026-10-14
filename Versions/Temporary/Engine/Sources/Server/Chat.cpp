@@ -12,7 +12,8 @@
 std::wstring CChatLobby::wszWelcomeText;
 
 CChatLobby::CChatLobby( CClients *_pClients, const std::string &_szCfgFileName )
-		: pClients( _pClients ), szCfgFile( _szCfgFileName )
+	: pClients( _pClients )
+	, szCfgFile( _szCfgFileName )
 {
 	Initialize();
 

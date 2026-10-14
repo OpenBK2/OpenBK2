@@ -13,7 +13,13 @@ struct SMatchPacketTraceSlot
 	int nTeam = {};
 	bool bPresent = {};
 
-	SMatchPacketTraceSlot() : nSlot( -1 ), nClientID( -1 ), nTeam( -1 ), bPresent( false ) {}
+	SMatchPacketTraceSlot()
+		: nSlot( -1 )
+		, nClientID( -1 )
+		, nTeam( -1 )
+		, bPresent( false )
+	{
+	}
 };
 
 void MatchPacketTrace_Reset();

@@ -115,7 +115,11 @@ struct SMaterialInfo
 	//
 	SMaterialInfo() {}
 
-	SMaterialInfo( const std::string &_szName, const std::string &_szType ) : szName( _szName ), szType( _szType ) {}
+	SMaterialInfo( const std::string &_szName, const std::string &_szType )
+		: szName( _szName )
+		, szType( _szType )
+	{
+	}
 };
 
 bool CModelExporter::MakeMaterialsList( IManipulator *pModelMan, IManipulator *pGeomMan, CGrannyFileInfoGuard &pInfo )

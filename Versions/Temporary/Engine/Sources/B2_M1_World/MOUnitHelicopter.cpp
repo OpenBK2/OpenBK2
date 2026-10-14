@@ -23,7 +23,10 @@ class CHelicopterDeviationProcess : public IClientUpdatableProcess
 	CHelicopterDeviationProcess() {}
 
 public:
-	CHelicopterDeviationProcess( CMOUnitHelicopter *_pUnit ) : pUnit( _pUnit ) {}
+	CHelicopterDeviationProcess( CMOUnitHelicopter *_pUnit )
+		: pUnit( _pUnit )
+	{
+	}
 
 	bool Update( const NTimer::STime &time )
 	{

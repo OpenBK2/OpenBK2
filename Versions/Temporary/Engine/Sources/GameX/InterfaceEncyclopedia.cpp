@@ -128,7 +128,8 @@ bool CInterfaceEncyclopedia::SDataSorter::operator()( const CUnitData *pData1, c
 
 // CInterfaceEncyclopedia
 
-CInterfaceEncyclopedia::CInterfaceEncyclopedia() : CInterfaceScreenBase( "Encyclopedia", "encyclopedia" )
+CInterfaceEncyclopedia::CInterfaceEncyclopedia()
+	: CInterfaceScreenBase( "Encyclopedia", "encyclopedia" )
 {
 	AddObserver( "menu_back", &CInterfaceEncyclopedia::MsgBack );
 	AddObserver( "StepBackward", &CInterfaceEncyclopedia::MsgStepBackward );
@@ -802,7 +803,7 @@ bool CInterfaceEncyclopedia::StepLocal( bool bAppActive )
 // CInterfaceEncyclopediaWait
 
 CInterfaceEncyclopediaWait::CInterfaceEncyclopediaWait()
-		: CInterfaceScreenBase( "EncyclopediaWait", "encyclopedia_wait" )
+	: CInterfaceScreenBase( "EncyclopediaWait", "encyclopedia_wait" )
 {
 }
 

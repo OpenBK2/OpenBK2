@@ -5,7 +5,8 @@
 
 const char CMayaAnimationMnemonics::DECIMAL_NUMBERS[] = "0123456789";
 
-CMayaAnimationMnemonics::CMayaAnimationMnemonics() : CMnemonicsCollector<int>( NDb::ANIMATION_UNKNOWN, "" )
+CMayaAnimationMnemonics::CMayaAnimationMnemonics()
+	: CMnemonicsCollector<int>( NDb::ANIMATION_UNKNOWN, "" )
 {
 	Insert( NDb::ANIMATION_IDLE, "IDLE" );
 	Insert( NDb::ANIMATION_IDLE_DOWN, "IDLE_DOWN" );
@@ -51,7 +52,8 @@ CMayaAnimationMnemonics::CMayaAnimationMnemonics() : CMnemonicsCollector<int>( N
 	Insert( NDb::ANIMATION_UNINSTALL_PUSH, "UNINSTALL_PUSH" );
 }
 
-CAnimationMnemonics::CAnimationMnemonics() : CMnemonicsCollector<int>( NDb::ANIMATION_UNKNOWN, "" )
+CAnimationMnemonics::CAnimationMnemonics()
+	: CMnemonicsCollector<int>( NDb::ANIMATION_UNKNOWN, "" )
 {
 	Insert( NDb::ANIMATION_IDLE, "ANIMATION_IDLE" );
 	Insert( NDb::ANIMATION_IDLE_DOWN, "ANIMATION_IDLE_DOWN" );

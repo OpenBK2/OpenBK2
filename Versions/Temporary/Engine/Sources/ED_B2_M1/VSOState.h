@@ -45,12 +45,14 @@ class CVSOSelectState : public CDefaultInputState
 	class CVSOState *pParentState;
 
 	//конструкторы и операторы присваивания
-	CVSOSelectState() : pParentState( 0 )
+	CVSOSelectState()
+		: pParentState( 0 )
 	{
 		NI_ASSERT( pParentState != 0, "CVSOSelectState(): Invalid parameter: pParentState == 0" );
 	}
 
-	CVSOSelectState( CVSOState *_pParentState ) : pParentState( _pParentState )
+	CVSOSelectState( CVSOState *_pParentState )
+		: pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CVSOSelectState(): Invalid parameter: pParentState == 0" );
 	}
@@ -69,12 +71,14 @@ class CVSOEditState : public CDefaultInputState
 	class CVSOState *pParentState;
 
 	//конструкторы и операторы присваивания
-	CVSOEditState() : pParentState( 0 )
+	CVSOEditState()
+		: pParentState( 0 )
 	{
 		NI_ASSERT( pParentState != 0, "CVSOEditState(): Invalid parameter: pParentState == 0" );
 	}
 
-	CVSOEditState( CVSOState *_pParentState ) : pParentState( _pParentState )
+	CVSOEditState( CVSOState *_pParentState )
+		: pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CVSOEditState(): Invalid parameter: pParentState == 0" );
 	}
@@ -97,12 +101,14 @@ class CVSOAddState : public CDefaultInputState
 	class CVSOState *pParentState;
 
 	//конструкторы и операторы присваивания
-	CVSOAddState() : pParentState( 0 )
+	CVSOAddState()
+		: pParentState( 0 )
 	{
 		NI_ASSERT( pParentState != 0, "CVSOAddState(): Invalid parameter: pParentState == 0" );
 	}
 
-	CVSOAddState( CVSOState *_pParentState ) : pParentState( _pParentState )
+	CVSOAddState( CVSOState *_pParentState )
+		: pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CVSOAddState(): Invalid parameter: pParentState == 0" );
 	}
@@ -284,7 +290,9 @@ public:
 	//
 	//конструкторы и операторы присваивания
 	CVSOState( class CVSOMultiState *_pParentState = 0 )
-			: pParentState( _pParentState ), nSelectedIndex( INVALID_NODE_ID ), mapRect( 0.0f, 0.0f, 0.0f, 0.0f )
+		: pParentState( _pParentState )
+		, nSelectedIndex( INVALID_NODE_ID )
+		, mapRect( 0.0f, 0.0f, 0.0f, 0.0f )
 	{
 		pStoreInputState = new CMapInfoStoreInputState();
 		NI_ASSERT( pStoreInputState != 0, fmt::format( "CVSOState(): pStoreInputState == 0" ) );

@@ -21,7 +21,11 @@ struct SModelSurfacePoint
 	std::string szBodyPart;
 
 	//
-	SModelSurfacePoint() : vPos( VNULL3 ), vNormal( VNULL3 ) {}
+	SModelSurfacePoint()
+		: vPos( VNULL3 )
+		, vNormal( VNULL3 )
+	{
+	}
 };
 
 struct granny_file_info;

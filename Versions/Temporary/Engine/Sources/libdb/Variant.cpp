@@ -10,7 +10,8 @@
 
 // variant type
 
-CVariant::CVariant( const CVariant &var ) : m_pblob( NULL )
+CVariant::CVariant( const CVariant &var )
+	: m_pblob( NULL )
 {
 	Copy( var );
 }

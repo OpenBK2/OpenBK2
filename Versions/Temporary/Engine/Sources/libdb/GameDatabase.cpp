@@ -97,7 +97,10 @@ class CGameDatabase : public CBasicDatabase
 	bool LoadTypesMap();
 
 public:
-	CGameDatabase() : bIndexChanged( false ) {}
+	CGameDatabase()
+		: bIndexChanged( false )
+	{
+	}
 
 	//
 	bool OpenDatabase( NVFS::IVFS *pVFS, NVFS::IFileCreator *pFileCreator );
@@ -371,7 +374,11 @@ class CProfiler
 	const uint32_t dwStartTime = 0;
 
 public:
-	CProfiler( const CDBID &dbID ) : szObjName( dbID.ToString() ), dwStartTime( GetCurrentTimeMilliseconds() ) {}
+	CProfiler( const CDBID &dbID )
+		: szObjName( dbID.ToString() )
+		, dwStartTime( GetCurrentTimeMilliseconds() )
+	{
+	}
 
 	~CProfiler()
 	{

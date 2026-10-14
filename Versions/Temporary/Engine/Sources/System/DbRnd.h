@@ -30,9 +30,17 @@ class CRndInstance
 		float fValue;
 		int nIndex;
 
-		SSector() : fValue( 0.0f ), nIndex( 0 ) {}
+		SSector()
+			: fValue( 0.0f )
+			, nIndex( 0 )
+		{
+		}
 
-		SSector( int _nIndex, float _fValue ) : fValue( _fValue ), nIndex( _nIndex ) {}
+		SSector( int _nIndex, float _fValue )
+			: fValue( _fValue )
+			, nIndex( _nIndex )
+		{
+		}
 	};
 
 	template <class TGetFloatRandomFunc>
@@ -153,9 +161,17 @@ struct SDBRndSector
 	float fValue;
 	int nIndex;
 
-	SDBRndSector() : fValue( 0.0f ), nIndex( 0 ) {}
+	SDBRndSector()
+		: fValue( 0.0f )
+		, nIndex( 0 )
+	{
+	}
 
-	SDBRndSector( int _nIndex, float _fValue ) : fValue( _fValue ), nIndex( _nIndex ) {}
+	SDBRndSector( int _nIndex, float _fValue )
+		: fValue( _fValue )
+		, nIndex( _nIndex )
+	{
+	}
 };
 
 template <class TRndType, class TGetFloatRandomFunc>

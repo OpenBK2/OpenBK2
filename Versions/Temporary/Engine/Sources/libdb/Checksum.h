@@ -72,7 +72,10 @@ class CCheckSum
 	}
 
 public:
-	CCheckSum() : dwCheckSum( GetDefaultCheckSum() ) {}
+	CCheckSum()
+		: dwCheckSum( GetDefaultCheckSum() )
+	{
+	}
 
 	template <class T>
 	CCheckSum &operator<<( const T &data )

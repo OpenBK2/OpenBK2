@@ -17,9 +17,17 @@ struct SCheckSumBufferStorage
 	int nCnt = 0;
 
 	//
-	SCheckSumBufferStorage() : buf( 10 ), nCnt( 0 ) {}
+	SCheckSumBufferStorage()
+		: buf( 10 )
+		, nCnt( 0 )
+	{
+	}
 
-	SCheckSumBufferStorage( const int nBufSize ) : buf( nBufSize ), nCnt( 0 ) {}
+	SCheckSumBufferStorage( const int nBufSize )
+		: buf( nBufSize )
+		, nCnt( 0 )
+	{
+	}
 
 	//
 	void Clear()

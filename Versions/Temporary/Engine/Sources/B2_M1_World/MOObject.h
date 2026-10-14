@@ -22,7 +22,12 @@ class CMOObject : public CMapObj
 	}
 
 public:
-	CMOObject() : wAmbientSound( 0 ), wCycledSound( 0 ), wCycledSoundTimed( 0 ) {}
+	CMOObject()
+		: wAmbientSound( 0 )
+		, wCycledSound( 0 )
+		, wCycledSoundTimed( 0 )
+	{
+	}
 
 	//
 	virtual bool Create( const int nUniqueID,

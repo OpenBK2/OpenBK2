@@ -32,7 +32,10 @@ class CPlaneCreation : public IPlaneCreation
 	CVec2 vDestPoint;
 
 public:
-	CPlaneCreation( const CVec2 &vDestPoint ) : vDestPoint( vDestPoint ) {}
+	CPlaneCreation( const CVec2 &vDestPoint )
+		: vDestPoint( vDestPoint )
+	{
+	}
 
 	virtual const CVec2 &GetDestPoint() const
 	{
@@ -44,7 +47,10 @@ public:
 class CLightPlaneCreation : public CPlaneCreation
 {
 public:
-	CLightPlaneCreation( const CVec2 &vDestPoint ) : CPlaneCreation( vDestPoint ) {}
+	CLightPlaneCreation( const CVec2 &vDestPoint )
+		: CPlaneCreation( vDestPoint )
+	{
+	}
 
 	virtual void CalcPositions( const int nMax,
 	                            const CVec2 &vAABBbox,
@@ -62,7 +68,8 @@ class CHeavyPlaneCreation : public CPlaneCreation
 
 public:
 	CHeavyPlaneCreation( const CVec2 &vDestPoint, const bool _bNeedFormation = false )
-			: CPlaneCreation( vDestPoint ), bNeedFormation( _bNeedFormation )
+		: CPlaneCreation( vDestPoint )
+		, bNeedFormation( _bNeedFormation )
 	{
 	}
 
@@ -102,7 +109,11 @@ public:
 	{
 		int eEnable = {}, eDisable = {};
 
-		SFeedBack( const int eEnable, const int eDisable ) : eEnable( eEnable ), eDisable( eDisable ) {}
+		SFeedBack( const int eEnable, const int eDisable )
+			: eEnable( eEnable )
+			, eDisable( eDisable )
+		{
+		}
 	};
 
 	std::vector<SFeedBack> feedbacks;

@@ -38,8 +38,16 @@ struct SMPSlot
 	}
 
 	SMPSlot()
-			: nClientID( -1 ), bPresent( false ), szName( "" ), nTeam( 0 ), nCountry( 0 ), bRandomCountry( true ),
-				nColour( 0 ), bAccept( false ), nPing( -1 ), wConnectedTo( 0 )
+		: nClientID( -1 )
+		, bPresent( false )
+		, szName( "" )
+		, nTeam( 0 )
+		, nCountry( 0 )
+		, bRandomCountry( true )
+		, nColour( 0 )
+		, bAccept( false )
+		, nPing( -1 )
+		, wConnectedTo( 0 )
 	{
 	}
 
@@ -107,8 +115,14 @@ public:
 	}
 
 	SB2GameSpecificData()
-			: nPlayers( 0 ), nTimeLimit( 0 ), nGameSpeed( 0 ), nTechLevel( 0 ), bUnitExp( false ), nCaptureTime( 0 ),
-				eType( EGT_FLAG_CONTROL_2 ), bRandomPlacement( true )
+		: nPlayers( 0 )
+		, nTimeLimit( 0 )
+		, nGameSpeed( 0 )
+		, nTechLevel( 0 )
+		, bUnitExp( false )
+		, nCaptureTime( 0 )
+		, eType( EGT_FLAG_CONTROL_2 )
+		, bRandomPlacement( true )
 	{
 	}
 

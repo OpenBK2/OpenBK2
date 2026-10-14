@@ -33,7 +33,8 @@ struct SAISkinKey
 	SAISkinKey() {}
 
 	SAISkinKey( const NDb::SAIGeometry *_pGeometry, const NAnimation::SSkeletonHandle &_skeletonH )
-			: pGeometry( _pGeometry ), skeletonH( _skeletonH )
+		: pGeometry( _pGeometry )
+		, skeletonH( _skeletonH )
 	{
 	}
 
@@ -106,7 +107,10 @@ protected:
 	virtual void Recalc();
 
 public:
-	CMemGeometryInfo( CMemObject *p = 0 ) : pMemObject( p ) {}
+	CMemGeometryInfo( CMemObject *p = 0 )
+		: pMemObject( p )
+	{
+	}
 };
 
 class CFileSkinPoints : public CObjectBase
@@ -191,7 +195,8 @@ public:
 	CSkinner() {}
 
 	CSkinner( CPtrFuncBase<CFileSkinPoints> *_pSkin, CFuncBase<NGScene::SSkeletonMatrices> *_pAnimation )
-			: pSkin( _pSkin ), pAnimation( _pAnimation )
+		: pSkin( _pSkin )
+		, pAnimation( _pAnimation )
 	{
 	} //, bDoPrecalc(false) {}
 

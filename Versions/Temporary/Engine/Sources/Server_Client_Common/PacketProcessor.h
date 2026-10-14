@@ -27,7 +27,11 @@ class CPacketProcessorFun : public IPacketProcessorFun
 public:
 	CPacketProcessorFun() {}
 
-	CPacketProcessorFun( TObj *_pObj, ProcessFun _pfnProcessFun ) : pObj( _pObj ), pfnProcessFun( _pfnProcessFun ) {}
+	CPacketProcessorFun( TObj *_pObj, ProcessFun _pfnProcessFun )
+		: pObj( _pObj )
+		, pfnProcessFun( _pfnProcessFun )
+	{
+	}
 
 	virtual bool Process( CNetPacket *pRawPacket )
 	{

@@ -45,14 +45,24 @@ struct SCameraLimits
 
 	bool bCyclic = {};
 
-	SCameraLimits() : fMin( 0.0f ), fMax( 0.0f ), fAve( 0.0f ), fAutoSpeed( 0.0f ), fManualSpeed( 0.0f ), bCyclic( false )
+	SCameraLimits()
+		: fMin( 0.0f )
+		, fMax( 0.0f )
+		, fAve( 0.0f )
+		, fAutoSpeed( 0.0f )
+		, fManualSpeed( 0.0f )
+		, bCyclic( false )
 	{
 	}
 
 	SCameraLimits(
 			const float _fMin, const float _fMax, const float _fAve, const float _fAutoSpeed, const float _fManualSpeed )
-			: fMin( _fMin ), fMax( _fMax ), fAve( _fAve ), fAutoSpeed( _fAutoSpeed ), fManualSpeed( _fManualSpeed ),
-				bCyclic( false )
+		: fMin( _fMin )
+		, fMax( _fMax )
+		, fAve( _fAve )
+		, fAutoSpeed( _fAutoSpeed )
+		, fManualSpeed( _fManualSpeed )
+		, bCyclic( false )
 	{
 	}
 
@@ -62,8 +72,12 @@ struct SCameraLimits
 	               const float _fAutoSpeed,
 	               const float _fManualSpeed,
 	               const bool _bCyclic )
-			: fMin( _fMin ), fMax( _fMax ), fAve( _fAve ), fAutoSpeed( _fAutoSpeed ), fManualSpeed( _fManualSpeed ),
-				bCyclic( _bCyclic )
+		: fMin( _fMin )
+		, fMax( _fMax )
+		, fAve( _fAve )
+		, fAutoSpeed( _fAutoSpeed )
+		, fManualSpeed( _fManualSpeed )
+		, bCyclic( _bCyclic )
 	{
 	}
 };

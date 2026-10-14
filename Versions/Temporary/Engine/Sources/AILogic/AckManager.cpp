@@ -21,7 +21,10 @@ int CAckManager::operator&( IBinSaver &saver )
 	return 0;
 }
 
-CAckManager::CAckManager() : ackIndex( 0 ) {}
+CAckManager::CAckManager()
+	: ackIndex( 0 )
+{
+}
 
 CAckManager::~CAckManager() {}
 

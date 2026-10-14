@@ -12,7 +12,8 @@ class CRoadState : public CVSOStateEx
 	friend class CVSOMultiState;
 
 	//конструкторы и операторы присваивания
-	CRoadState( class CVSOMultiState *_pParentState = 0 ) : CVSOStateEx( _pParentState )
+	CRoadState( class CVSOMultiState *_pParentState = 0 )
+		: CVSOStateEx( _pParentState )
 	{
 		NI_ASSERT( _pParentState != 0, "CRoadState(): Invalid parameter: _pParentState == 0" );
 	}

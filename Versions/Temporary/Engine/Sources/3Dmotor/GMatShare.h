@@ -85,7 +85,10 @@ class CMaterialShare : public CObjectBase
 	}
 
 public:
-	CMaterialShare() : pSky( new CSkyAdapter ) {}
+	CMaterialShare()
+		: pSky( new CSkyAdapter )
+	{
+	}
 
 	void SetSky( CPtrFuncBase<NGfx::CCubeTexture> *_pSky )
 	{

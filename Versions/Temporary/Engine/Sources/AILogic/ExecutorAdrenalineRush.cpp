@@ -7,7 +7,7 @@
 #include <cstdint>
 
 CExecutorAdrenalineRush::CExecutorAdrenalineRush( CAIUnit *_pUnit )
-		: CExecutorUnitCombatBonus( NDb::ABILITY_ADRENALINE_RUSH, _pUnit, TID_ADRENALINE_RUSH )
+	: CExecutorUnitCombatBonus( NDb::ABILITY_ADRENALINE_RUSH, _pUnit, TID_ADRENALINE_RUSH )
 {
 }
 

@@ -94,7 +94,12 @@ class CClientAckManager : public IClientAckManager
 		int /*EUnitAckType*/ eCurrentAck = 0; // этот  Ack сейчас играет
 		NTimer::STime timeRun = 0;            // время когда можно проиграть AckPisitive
 
-		SUnitAck() : wSoundID( 0 ), eCurrentAck( -1 ), timeRun( 0 ) {}
+		SUnitAck()
+			: wSoundID( 0 )
+			, eCurrentAck( -1 )
+			, timeRun( 0 )
+		{
+		}
 	};
 
 	// acknowledgement of dead unit
@@ -108,7 +113,9 @@ class CClientAckManager : public IClientAckManager
 		SDeathAck() {}
 
 		SDeathAck( const CVec3 &_vPos, const NDb::SComplexSoundDesc *_pSound, const unsigned int nTimeSinceStart )
-				: vPos( _vPos ), pSound( _pSound ), timeSinceStart( nTimeSinceStart )
+			: vPos( _vPos )
+			, pSound( _pSound )
+			, timeSinceStart( nTimeSinceStart )
 		{
 		}
 	};
@@ -127,7 +134,9 @@ class CClientAckManager : public IClientAckManager
 
 	public:
 		CAckPredicate( const NDb::EAckClass _eType, const CUnitAcksInfo &_acksInfo, const NDb::SClientGameConsts *_pConsts )
-				: acksInfo( _acksInfo ), eType( _eType ), pConsts( _pConsts )
+			: acksInfo( _acksInfo )
+			, eType( _eType )
+			, pConsts( _pConsts )
 		{
 		}
 

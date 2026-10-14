@@ -28,7 +28,9 @@ public:
 	}
 
 	SResistance( const int _nCellNumber, const float fWeight, int _nWeightExceed )
-			: nCellNumber( _nCellNumber ), nWeight( fWeight * 100 ), nWeightExceed( _nWeightExceed )
+		: nCellNumber( _nCellNumber )
+		, nWeight( fWeight * 100 )
+		, nWeightExceed( _nWeightExceed )
 	{
 	}
 
@@ -99,10 +101,17 @@ class CResistancesContainer
 		bool bInUse = {};       // this cell is being attacked
 		bool bAllowShoot = {};  // shooting to the cell is allowed
 
-		SSellInfo() : fCellWeight( 0.0f ), bInUse( false ), bAllowShoot( true ) {}
+		SSellInfo()
+			: fCellWeight( 0.0f )
+			, bInUse( false )
+			, bAllowShoot( true )
+		{
+		}
 
 		SSellInfo( const float _fCellWeight, const bool _bInUse, const bool _bAllowShoot )
-				: fCellWeight( _fCellWeight ), bInUse( _bInUse ), bAllowShoot( _bAllowShoot )
+			: fCellWeight( _fCellWeight )
+			, bInUse( _bInUse )
+			, bAllowShoot( _bAllowShoot )
 		{
 		}
 	};
@@ -138,7 +147,8 @@ public:
 		void IterateToNotInUse();
 
 	public:
-		CIter( CResistancesContainer *_pContainter ) : pContainter( _pContainter )
+		CIter( CResistancesContainer *_pContainter )
+			: pContainter( _pContainter )
 		{
 			SResistanceCmp cmp;
 			std::sort( pContainter->resistances.begin(), pContainter->resistances.end(), cmp );

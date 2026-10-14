@@ -13,7 +13,9 @@ namespace NGScene
 
 // CSceneFragments
 
-CSceneFragments::CSceneFragments() : nSceneTris( 0 ), bNeedHSR( false ) //, pRejected(0), nRejectedUsed(0)
+CSceneFragments::CSceneFragments()
+	: nSceneTris( 0 )
+	, bNeedHSR( false ) //, pRejected(0), nRejectedUsed(0)
 {
 	fragments.push_back( fragmentInfos.Alloc() );
 	ASSERT( fragments.size() == 1 );

@@ -18,7 +18,8 @@ static int nInterfaceMissionBackgroundCount = 0; // sanity check
 
 // CInterfaceMissionBackground
 
-CInterfaceMissionBackground::CInterfaceMissionBackground() : CInterfaceMissionBase( "MissionBackground", "no_section" )
+CInterfaceMissionBackground::CInterfaceMissionBackground()
+	: CInterfaceMissionBase( "MissionBackground", "no_section" )
 {
 #ifndef _FINALRELEASE
 	NI_ASSERT( nInterfaceMissionBackgroundCount == 0, "Duplicate background mission" );

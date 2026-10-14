@@ -39,8 +39,13 @@ public:
 
 public:
 	CArtilleryCrewPath()
-			: pUnit( 0 ), vCurPoint( VNULL2 ), vEndPoint( VNULL2 ), fSpeedLen( 0.0f ), bSelfSpeed( false ),
-				bNotInitialized( true ), vSpeed3( VNULL3 )
+		: pUnit( 0 )
+		, vCurPoint( VNULL2 )
+		, vEndPoint( VNULL2 )
+		, fSpeedLen( 0.0f )
+		, bSelfSpeed( false )
+		, bNotInitialized( true )
+		, vSpeed3( VNULL3 )
 	{
 	}
 
@@ -134,7 +139,13 @@ public:
 	}
 
 public:
-	CArtilleryBeingTowedPath() : fSpeedLen( 0.0f ), vCurPoint( VNULL3 ), vCurPoint2D( VNULL2 ), vSpeed( VNULL2 ) {}
+	CArtilleryBeingTowedPath()
+		: fSpeedLen( 0.0f )
+		, vCurPoint( VNULL3 )
+		, vCurPoint2D( VNULL2 )
+		, vSpeed( VNULL2 )
+	{
+	}
 
 	CArtilleryBeingTowedPath( const float fSpeedLen, const CVec2 &vCurPoint, const CVec2 &vSpeed );
 	bool Init( float fSpeedLen, const class CVec2 &vCurPoint, const CVec2 &vSpeed );

@@ -198,7 +198,9 @@ void CHelicopterRestState::Segment()
 }
 
 CHelicopterMoveState::CHelicopterMoveState( CHelicopter *pUnit, const CVec2 &_vTarget, const bool _bScanTargets )
-		: CHelicopterBaseState( pUnit ), vTarget( _vTarget ), bScanTargets( _bScanTargets )
+	: CHelicopterBaseState( pUnit )
+	, vTarget( _vTarget )
+	, bScanTargets( _bScanTargets )
 {
 	pHelicopter->BeginMoveTo( vTarget );
 	// A swarm order must inspect its route immediately instead of inheriting an old scan cooldown.
@@ -235,8 +237,13 @@ void CHelicopterMoveState::Segment()
 }
 
 CHelicopterUnloadState::CHelicopterUnloadState( CHelicopter *pUnit, const CVec2 &_vTarget, CFormation *_pUnload )
-		: CHelicopterBaseState( pUnit ), vTarget( _vTarget ), pUnload( _pUnload ), bUnloadOneSquad( _pUnload != 0 ),
-			timeNextDrop( 0 ), nNextPassenger( 0 ), bFinishAfterSquad( false )
+	: CHelicopterBaseState( pUnit )
+	, vTarget( _vTarget )
+	, pUnload( _pUnload )
+	, bUnloadOneSquad( _pUnload != 0 )
+	, timeNextDrop( 0 )
+	, nNextPassenger( 0 )
+	, bFinishAfterSquad( false )
 {
 }
 
@@ -444,7 +451,8 @@ ETryStateInterruptResult CHelicopterUnloadState::TryInterruptState( CAICommand *
 }
 
 CHelicopterRotateState::CHelicopterRotateState( CHelicopter *pUnit, const CVec2 &_vTarget )
-		: CHelicopterBaseState( pUnit ), vTarget( _vTarget )
+	: CHelicopterBaseState( pUnit )
+	, vTarget( _vTarget )
 {
 }
 
@@ -471,8 +479,11 @@ void CHelicopterRotateState::Segment()
 CHelicopterAttackUnitState::CHelicopterAttackUnitState( CHelicopter *pUnit,
                                                         CAIUnit *_pTarget,
                                                         const bool _bSwarmAttack )
-		: CHelicopterBaseState( pUnit ), pTarget( _pTarget ), pGun( 0 ), bSwarmAttack( _bSwarmAttack ),
-			bAirModifierApplied( false )
+	: CHelicopterBaseState( pUnit )
+	, pTarget( _pTarget )
+	, pGun( 0 )
+	, bSwarmAttack( _bSwarmAttack )
+	, bAirModifierApplied( false )
 {
 	RefreshGun();
 }
@@ -671,7 +682,9 @@ const CVec2 CHelicopterAttackUnitState::GetPurposePoint() const
 }
 
 CHelicopterLeaveState::CHelicopterLeaveState( CHelicopter *pUnit, const CVec2 &_vTarget, const bool _bScanTargets )
-		: CHelicopterBaseState( pUnit ), vTarget( _vTarget ), bScanTargets( _bScanTargets )
+	: CHelicopterBaseState( pUnit )
+	, vTarget( _vTarget )
+	, bScanTargets( _bScanTargets )
 {
 	// The target is serialized with the state so save/load and multiplayer keep the same exit route.
 }
@@ -687,7 +700,8 @@ void CHelicopterLeaveState::Segment()
 }
 
 CHelicopterFlyDeadState::CHelicopterFlyDeadState( CHelicopter *pUnit )
-		: CHelicopterBaseState( pUnit ), bStarted( false )
+	: CHelicopterBaseState( pUnit )
+	, bStarted( false )
 {
 }
 

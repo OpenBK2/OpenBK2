@@ -33,7 +33,10 @@ struct SVisObjDescBase : public IVisObj
 	CObj<CObjectBase> pObj;
 
 	//
-	SVisObjDescBase() : bHidden( false ) {}
+	SVisObjDescBase()
+		: bHidden( false )
+	{
+	}
 
 	virtual ~SVisObjDescBase()
 	{
@@ -136,7 +139,9 @@ struct SModelVisObjDesc : public SVisObjDescBase
 	CSyncSrcBind<IVisObj> srcBind;
 	CObj<CObjectBase> pBBPolyLine;
 
-	SModelVisObjDesc() : bSelected( false ), fFade( -1.0f )
+	SModelVisObjDesc()
+		: bSelected( false )
+		, fFade( -1.0f )
 	{
 		n2Attach.resize( __ESSOT_COUNTER, 0 );
 	}

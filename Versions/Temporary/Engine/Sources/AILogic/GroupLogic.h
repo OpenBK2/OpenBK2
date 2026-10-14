@@ -23,7 +23,10 @@ public:
 		return 0;
 	}
 
-	CFreeGroupIDs() : nMaxID( 1 ) {}
+	CFreeGroupIDs()
+		: nMaxID( 1 )
+	{
+	}
 
 	const int Get()
 	{
@@ -62,10 +65,19 @@ private:
 		SAIAngle wAmbushDir;
 		bool bGivenCommandToRestore = {};
 
-		SAmbushInfo() : nUniqueId( -1 ), vAmbushCenter( VNULL2 ), wAmbushDir( 0 ), bGivenCommandToRestore( false ) {}
+		SAmbushInfo()
+			: nUniqueId( -1 )
+			, vAmbushCenter( VNULL2 )
+			, wAmbushDir( 0 )
+			, bGivenCommandToRestore( false )
+		{
+		}
 
 		SAmbushInfo( const int _nUniqueId )
-				: nUniqueId( _nUniqueId ), vAmbushCenter( -1.0f, -1.0f ), wAmbushDir( 0 ), bGivenCommandToRestore( false )
+			: nUniqueId( _nUniqueId )
+			, vAmbushCenter( -1.0f, -1.0f )
+			, wAmbushDir( 0 )
+			, bGivenCommandToRestore( false )
 		{
 		}
 	};

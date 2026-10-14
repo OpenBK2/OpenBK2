@@ -183,8 +183,12 @@ public:
 static CPlayVisitor thePlayVisitor;
 
 CSoundEngine::CSoundEngine()
-		: bInited( false ), bPaused( false ), bEnableSFX( true ), bEnableStreaming( true ), bSoundCardPresent( false ),
-			timeLastUpdate( -1 )
+	: bInited( false )
+	, bPaused( false )
+	, bEnableSFX( true )
+	, bEnableStreaming( true )
+	, bSoundCardPresent( false )
+	, timeLastUpdate( -1 )
 {
 }
 

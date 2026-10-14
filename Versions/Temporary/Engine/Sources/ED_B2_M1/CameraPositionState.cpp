@@ -113,7 +113,8 @@ static bool GetCameraPosition( SCameraPos *pCamPos )
 //
 
 CCameraPositionState::CCameraPositionState( CMapInfoEditor *_pMapInfoEditor )
-		: pMapInfoEditor( _pMapInfoEditor ), nCurrentPlayer( 0 )
+	: pMapInfoEditor( _pMapInfoEditor )
+	, nCurrentPlayer( 0 )
 {
 	NI_ASSERT( pMapInfoEditor != 0, "CCameraPositionState(): Invalid parameter: pMapInfoEditor == 0" );
 }

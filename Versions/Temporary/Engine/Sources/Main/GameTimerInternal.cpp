@@ -8,7 +8,11 @@
 namespace NGameTimer
 {
 
-CGameTimer::CGameTimer() : nSegmentDuration( 50 ), nGameTimerSpeed( 0 ), nSegmentsCounter( 0 ), timeSegment( 0 )
+CGameTimer::CGameTimer()
+	: nSegmentDuration( 50 )
+	, nGameTimerSpeed( 0 )
+	, nSegmentsCounter( 0 )
+	, timeSegment( 0 )
 {
 	CreateDGTimers();
 }

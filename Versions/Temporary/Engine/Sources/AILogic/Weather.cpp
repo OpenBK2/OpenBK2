@@ -24,7 +24,10 @@ void CWeather::Clear()
 	Init();
 }
 
-CWeather::CWeather() : eState( EWS_CLEAR ), bAutoChangeWeather( true ), timeNextCheck( 0 )
+CWeather::CWeather()
+	: eState( EWS_CLEAR )
+	, bAutoChangeWeather( true )
+	, timeNextCheck( 0 )
 {
 	Init();
 }

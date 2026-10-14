@@ -87,14 +87,24 @@ struct STerrainInfo
 		float fReserved;
 
 		SVSOPoint()
-				: vPos( VNULL3 ), vNorm( VNULL3 ), fWidth( 0.0f ), fOpacity( 0.0f ), bKeyPoint( false ), fRadius( 0.0f ),
-					fReserved( 0.0f )
+			: vPos( VNULL3 )
+			, vNorm( VNULL3 )
+			, fWidth( 0.0f )
+			, fOpacity( 0.0f )
+			, bKeyPoint( false )
+			, fRadius( 0.0f )
+			, fReserved( 0.0f )
 		{
 		}
 
 		SVSOPoint( const NDb::SVSOPoint &rPoint )
-				: vPos( rPoint.vPos ), vNorm( rPoint.vNorm ), fWidth( rPoint.fWidth ), fOpacity( rPoint.fOpacity ),
-					bKeyPoint( rPoint.bKeyPoint ), fRadius( rPoint.fRadius ), fReserved( rPoint.fReserved )
+			: vPos( rPoint.vPos )
+			, vNorm( rPoint.vNorm )
+			, fWidth( rPoint.fWidth )
+			, fOpacity( rPoint.fOpacity )
+			, bKeyPoint( rPoint.bKeyPoint )
+			, fRadius( rPoint.fRadius )
+			, fReserved( rPoint.fReserved )
 		{
 		}
 

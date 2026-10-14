@@ -38,7 +38,10 @@ class CFakeCorpseStaticObject : public CCommonStaticObject
 	                         CUpdatableObj *pDeadObj,
 	                         CObjectProfile *pPassProfile );
 
-	CFakeCorpseStaticObject() : bDestructByTracks( false ) {}
+	CFakeCorpseStaticObject()
+		: bDestructByTracks( false )
+	{
+	}
 
 public:
 	static void CreateFakeCorpseStaticObject( class CExistingObject *pObj );

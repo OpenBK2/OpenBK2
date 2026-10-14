@@ -23,7 +23,13 @@ class SYSTEM_EXPORT CDataStream
 		unsigned char *pBuffer = nullptr, *pBufferEnd = nullptr, *pFileEnd = nullptr, *pCurrent = nullptr;
 		int nFlags = 0;
 
-		SData() : pBuffer( 0 ), pBufferEnd( 0 ), pFileEnd( 0 ), pCurrent( 0 ) {}
+		SData()
+			: pBuffer( 0 )
+			, pBufferEnd( 0 )
+			, pFileEnd( 0 )
+			, pCurrent( 0 )
+		{
+		}
 	};
 
 	SData data;
@@ -234,7 +240,8 @@ protected:
 	void AllocBuf( int nOldFileSize, int nSize );
 
 public:
-	CMemoryStream() : CDataStream( F_CanRW )
+	CMemoryStream()
+		: CDataStream( F_CanRW )
 	{
 		AllocBuf( 0, 32 );
 	}
@@ -248,7 +255,8 @@ public:
 
 class CMappedStream : public CDataStream
 {
-	CMappedStream( const CMappedStream &a ) : CDataStream( 0 )
+	CMappedStream( const CMappedStream &a )
+		: CDataStream( 0 )
 	{
 		ASSERT( 0 );
 	}
@@ -277,7 +285,10 @@ protected:
 	}
 
 public:
-	CMappedStream() : CDataStream( 0 ) {}
+	CMappedStream()
+		: CDataStream( 0 )
+	{
+	}
 
 	void Flush();
 	//void CloseFile();
@@ -318,7 +329,10 @@ class CTextStream
 public:
 	typedef CTextStream &( *OpFunc )( CTextStream & );
 
-	CTextStream( CDataStream &_f ) : f( _f ) {}
+	CTextStream( CDataStream &_f )
+		: f( _f )
+	{
+	}
 
 	CTextStream &operator<<( const char *p )
 	{
@@ -387,7 +401,10 @@ class CStreamHolder
 	}
 
 public:
-	CStreamHolder( CDataStream *_pStream ) : pStream( _pStream ) {}
+	CStreamHolder( CDataStream *_pStream )
+		: pStream( _pStream )
+	{
+	}
 
 	~CStreamHolder()
 	{

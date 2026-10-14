@@ -23,7 +23,9 @@ public:
 	CLoginPacket() {}
 
 	CLoginPacket( const int nClient, const std::string &_szNick, const std::string &_szPassword )
-			: CNetPacket( nClient ), szNick( _szNick ), szPassword( _szPassword )
+		: CNetPacket( nClient )
+		, szNick( _szNick )
+		, szPassword( _szPassword )
 	{
 	}
 };
@@ -54,7 +56,11 @@ public:
 	                 const std::string &_szPassword,
 	                 const std::string &_szCDKey,
 	                 const std::string &_szEmail )
-			: CNetPacket( nClient ), szNick( _szNick ), szPassword( _szPassword ), szCDKey( _szCDKey ), szEmail( _szEmail )
+		: CNetPacket( nClient )
+		, szNick( _szNick )
+		, szPassword( _szPassword )
+		, szCDKey( _szCDKey )
+		, szEmail( _szEmail )
 	{
 	}
 };
@@ -77,7 +83,9 @@ public:
 	CForgottenPasswordPacket() {}
 
 	CForgottenPasswordPacket( const std::string &_szNick, const std::string &_szEMail )
-			: CNetPacket( 0 ), szNick( _szNick ), szEMail( _szEMail )
+		: CNetPacket( 0 )
+		, szNick( _szNick )
+		, szEMail( _szEMail )
 	{
 	}
 };
@@ -106,7 +114,8 @@ public:
 	CForgottenPasswordAnswerPacket() {}
 
 	CForgottenPasswordAnswerPacket( const int nClient, const EAnswer _eAnswer )
-			: CNetPacket( nClient ), eAnswer( _eAnswer )
+		: CNetPacket( nClient )
+		, eAnswer( _eAnswer )
 	{
 	}
 };
@@ -128,7 +137,10 @@ public:
 
 	CCheckConnectPacket() {}
 
-	CCheckConnectPacket( const int64_t _nNumber ) : nNumber( _nNumber ) {}
+	CCheckConnectPacket( const int64_t _nNumber )
+		: nNumber( _nNumber )
+	{
+	}
 };
 
 class CCheckConnectAnswerPacket : public CNetPacket
@@ -170,8 +182,13 @@ public:
 	                           const std::string &_szPassword,
 	                           const std::string &_szCDKey,
 	                           const std::string &_szEmail )
-			: nPrime1( _nPrime1 ), nPrime2( _nPrime2 ), eConnectType( _eConnectType ), szNick( _szNick ),
-				szPassword( _szPassword ), szCDKey( _szCDKey ), szEmail( _szEmail )
+		: nPrime1( _nPrime1 )
+		, nPrime2( _nPrime2 )
+		, eConnectType( _eConnectType )
+		, szNick( _szNick )
+		, szPassword( _szPassword )
+		, szCDKey( _szCDKey )
+		, szEmail( _szEmail )
 	{
 	}
 };

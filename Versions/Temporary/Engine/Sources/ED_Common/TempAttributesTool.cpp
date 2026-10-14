@@ -30,7 +30,11 @@ class CTempAttributesTool : public IExportTool
 		granny_file_info *pFileInfo;
 
 		//
-		SDesc() : pFile( 0 ), pFileInfo( 0 ) {}
+		SDesc()
+			: pFile( 0 )
+			, pFileInfo( 0 )
+		{
+		}
 
 		~SDesc()
 		{

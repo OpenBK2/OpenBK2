@@ -22,7 +22,11 @@ private:
 
 	SElInfo() {}
 
-	SElInfo( const int _id, const T &_value ) : id( _id ), value( _value ) {}
+	SElInfo( const int _id, const T &_value )
+		: id( _id )
+		, value( _value )
+	{
+	}
 };
 
 template <class T>

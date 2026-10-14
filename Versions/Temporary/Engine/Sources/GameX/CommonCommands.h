@@ -22,7 +22,8 @@ public:
 	CControlSumCheckCommand() {}
 
 	CControlSumCheckCommand( const int _nPlayer, const unsigned long _ulCheckSum )
-			: nPlayer( _nPlayer ), ulCheckSum( _ulCheckSum )
+		: nPlayer( _nPlayer )
+		, ulCheckSum( _ulCheckSum )
 	{
 	}
 
@@ -58,7 +59,9 @@ public:
 	CControlSumHistoryCommand() {}
 
 	CControlSumHistoryCommand( const int _nPlayer, const int _nSegment, const unsigned long _ulCheckSum )
-			: nPlayer( _nPlayer ), nSegment( _nSegment ), ulCheckSum( _ulCheckSum )
+		: nPlayer( _nPlayer )
+		, nSegment( _nSegment )
+		, ulCheckSum( _ulCheckSum )
 	{
 	}
 
@@ -95,9 +98,15 @@ class CDropPlayerCommand : public IAILogicCommandB2
 	}
 
 public:
-	CDropPlayerCommand() : nPlayerToDrop( -1 ) {}
+	CDropPlayerCommand()
+		: nPlayerToDrop( -1 )
+	{
+	}
 
-	explicit CDropPlayerCommand( int _nPlayerToDrop ) : nPlayerToDrop( _nPlayerToDrop ) {}
+	explicit CDropPlayerCommand( int _nPlayerToDrop )
+		: nPlayerToDrop( _nPlayerToDrop )
+	{
+	}
 
 	//
 	void Execute();

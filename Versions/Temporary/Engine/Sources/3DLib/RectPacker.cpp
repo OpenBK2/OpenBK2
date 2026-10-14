@@ -10,7 +10,10 @@ struct SRectOrder
 {
 	const std::vector<SRect> &s;
 
-	SRectOrder( const std::vector<SRect> &_s ) : s( _s ) {}
+	SRectOrder( const std::vector<SRect> &_s )
+		: s( _s )
+	{
+	}
 
 	bool operator()( int a, int b )
 	{
@@ -33,7 +36,9 @@ struct SStripeBuilder
 	int nWidth;
 	int nTotalHeight;
 
-	SStripeBuilder( std::vector<SRect> &_res ) : res( _res ), indices( _res.size() )
+	SStripeBuilder( std::vector<SRect> &_res )
+		: res( _res )
+		, indices( _res.size() )
 	{
 		for ( int k = 0; k < indices.size(); ++k )
 		{

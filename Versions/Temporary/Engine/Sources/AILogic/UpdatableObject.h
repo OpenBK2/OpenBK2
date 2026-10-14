@@ -38,7 +38,11 @@ protected:
 	}
 
 public:
-	CUpdatableObj() : bIsAlive( true ), bIsAliveSet( false ) {}
+	CUpdatableObj()
+		: bIsAlive( true )
+		, bIsAliveSet( false )
+	{
+	}
 
 	bool IsAlive() const
 	{

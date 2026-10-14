@@ -16,9 +16,15 @@ class CStandartSmoothPathMemento : public IMemento
 	CPtr<IPath> pPath;
 
 public:
-	CStandartSmoothPathMemento() : pPath( 0 ) {}
+	CStandartSmoothPathMemento()
+		: pPath( 0 )
+	{
+	}
 
-	CStandartSmoothPathMemento( IPath *_pPath ) : pPath( _pPath ) {}
+	CStandartSmoothPathMemento( IPath *_pPath )
+		: pPath( _pPath )
+	{
+	}
 
 	IPath *GetPath() const
 	{
@@ -157,8 +163,17 @@ protected:
 
 public:
 	CStandartSmoothPathBasis()
-			: pPath( 0 ), pUnit( 0 ), bFinished( true ), bStopped( true ), p0( VNULL2 ), p1( VNULL2 ), p2( VNULL2 ),
-				p3( VNULL2 ), predPoint( VNULL2 ), nIter( 0 ), nPoints( 0 )
+		: pPath( 0 )
+		, pUnit( 0 )
+		, bFinished( true )
+		, bStopped( true )
+		, p0( VNULL2 )
+		, p1( VNULL2 )
+		, p2( VNULL2 )
+		, p3( VNULL2 )
+		, predPoint( VNULL2 )
+		, nIter( 0 )
+		, nPoints( 0 )
 	{
 	}
 

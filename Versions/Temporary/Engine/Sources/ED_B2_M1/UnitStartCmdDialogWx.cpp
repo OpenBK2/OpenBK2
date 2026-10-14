@@ -62,8 +62,9 @@ class CUnitStartCmdWxDialog : public CWxToolDialog
 
 public:
 	CUnitStartCmdWxDialog( wxWindow *pParent, NUnitStartCmdDialog::IListener *_pListener )
-			: CWxToolDialog( pParent, wxID_ANY, "Unit Start Command" ), pListener( _pListener ),
-				placement( "CEdUnitStartCmd" )
+		: CWxToolDialog( pParent, wxID_ANY, "Unit Start Command" )
+		, pListener( _pListener )
+		, placement( "CEdUnitStartCmd" )
 	{
 		LoadUnitCommandTypesFromXML( &cmdTypes );
 
@@ -299,7 +300,7 @@ class CWxUnitStartCmdDialog : public NUnitStartCmdDialog::IDialog
 
 public:
 	CWxUnitStartCmdDialog( IWidget *pParent, NUnitStartCmdDialog::IListener *pListener )
-			: dialog( NWx::TopLevel<CUnitStartCmdWxDialog>( ToWxOwnerWindow( pParent ), pListener ) )
+		: dialog( NWx::TopLevel<CUnitStartCmdWxDialog>( ToWxOwnerWindow( pParent ), pListener ) )
 	{
 		// The frame is its parent, which is what keeps it above the frame and
 		// out of the taskbar without disabling anything: this window is

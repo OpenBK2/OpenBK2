@@ -16,7 +16,8 @@ public:
 	CMnemonicsCollector() {}
 
 	CMnemonicsCollector( const TValue &rDefaultValue, const std::string &rszDefaultMnemonic )
-			: defaultValue( rDefaultValue ), defaultMnemonic( rszDefaultMnemonic )
+		: defaultValue( rDefaultValue )
+		, defaultMnemonic( rszDefaultMnemonic )
 	{
 	}
 

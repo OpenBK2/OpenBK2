@@ -143,7 +143,8 @@ namespace NMetaInfo
 		pStruct->fields[szName].pContained->pArrayOperations = pOperations;
 	}
 
-	STerminalClassReporter::STerminalClassReporter( CResource *pRes, IXmlSaver &_saver ) : saver( _saver )
+	STerminalClassReporter::STerminalClassReporter( CResource *pRes, IXmlSaver &_saver )
+		: saver( _saver )
 	{
 		saver.PushCurrentObject( pRes->GetDBID() );
 	}

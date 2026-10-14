@@ -31,8 +31,13 @@ class CTurret : public CLinkObject
 
 		// Finished turrets are serialized before their first turn, too.
 		SRotating()
-				: wRotationSpeed( 0 ), wCurAngle( 0 ), wFinalAngle( 0 ), sign( 0 ), startTime( 0 ), endTime( 0 ),
-					bFinished( true )
+			: wRotationSpeed( 0 )
+			, wCurAngle( 0 )
+			, wFinalAngle( 0 )
+			, sign( 0 )
+			, startTime( 0 )
+			, endTime( 0 )
+			, bFinished( true )
 		{
 		}
 	};

@@ -21,7 +21,10 @@ struct STilesCollector
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	det_set<SVector, STilesHash> *pTilesUnder = {};
 
-	STilesCollector( det_set<SVector, STilesHash> *_pTilesUnder ) : pTilesUnder( _pTilesUnder ) {}
+	STilesCollector( det_set<SVector, STilesHash> *_pTilesUnder )
+		: pTilesUnder( _pTilesUnder )
+	{
+	}
 
 	void operator()( const int x, const int y )
 	{
@@ -38,7 +41,11 @@ struct STilesArray2DCollector
 	CArray2D<uint8_t> *pTiles = {};
 	SVector vTile;
 
-	STilesArray2DCollector( SVector &_vTile, CArray2D<uint8_t> *_pTiles ) : pTiles( _pTiles ), vTile( _vTile ) {}
+	STilesArray2DCollector( SVector &_vTile, CArray2D<uint8_t> *_pTiles )
+		: pTiles( _pTiles )
+		, vTile( _vTile )
+	{
+	}
 
 	void operator()( const int x, const int y )
 	{

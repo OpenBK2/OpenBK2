@@ -124,9 +124,16 @@ protected:
 
 public:
 	CSoldier()
-			: pFormation( 0 ), eInsideType( EOIO_NONE ), wMinAngle( 0 ), wMaxAngle( 0 ), bInFirePlace( false ),
-				bInSolidPlace( false ), fOwnSightRadius( -1 ), numBlastingCharges( 0, 0 ), numControlledCharges( 0, 0 ),
-				numLandMines( 0, 0 )
+		: pFormation( 0 )
+		, eInsideType( EOIO_NONE )
+		, wMinAngle( 0 )
+		, wMaxAngle( 0 )
+		, bInFirePlace( false )
+		, bInSolidPlace( false )
+		, fOwnSightRadius( -1 )
+		, numBlastingCharges( 0, 0 )
+		, numControlledCharges( 0, 0 )
+		, numLandMines( 0, 0 )
 	{
 	}
 
@@ -523,7 +530,12 @@ protected:
 	virtual bool CalculateUnitVisibility4Party( const uint8_t cParty );
 
 public:
-	CSniper() : lastVisibilityCheck( 0 ), bVisible( false ), bSneak( false ) {}
+	CSniper()
+		: lastVisibilityCheck( 0 )
+		, bVisible( false )
+		, bSneak( false )
+	{
+	}
 
 	virtual void Init( const CVec2 &center,
 	                   const int z,

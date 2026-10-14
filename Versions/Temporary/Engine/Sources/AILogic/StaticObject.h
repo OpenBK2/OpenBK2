@@ -55,7 +55,10 @@ public:
 	}
 
 public:
-	CStaticObject() : bTerminateSegmentFlag( false ) {}
+	CStaticObject()
+		: bTerminateSegmentFlag( false )
+	{
+	}
 
 	void SetTerminateExecutorFlag( const bool _bTerminateSegmentFlag )
 	{
@@ -194,10 +197,17 @@ public:
 
 	static void Clear() {}
 
-	CExistingObject() : bTrampled( false ) {}
+	CExistingObject()
+		: bTrampled( false )
+	{
+	}
 
 	CExistingObject( const int _nFrameIndex, const float _fHP )
-			: nFrameIndex( _nFrameIndex ), fHP( _fHP ), mark( 0 ), burningEnd( 0 ), bTrampled( false )
+		: nFrameIndex( _nFrameIndex )
+		, fHP( _fHP )
+		, mark( 0 )
+		, burningEnd( 0 )
+		, bTrampled( false )
 	{
 		SetAlive( fHP > 0.0f );
 		if ( !CExistingObjectModifyAI::IsProhibited() )
@@ -385,7 +395,10 @@ public:
 		center = _center;
 	}
 
-	CGivenPassabilityStObject() : bTransparencySet( false ) {}
+	CGivenPassabilityStObject()
+		: bTransparencySet( false )
+	{
+	}
 
 	CGivenPassabilityStObject( const CVec3 &center, const float fHP, const uint16_t wAngle, const int nFrameIndex );
 	virtual void Init();
@@ -474,7 +487,9 @@ public:
 
 	CCommonStaticObject(
 			const CVec3 &center, const float fHP, const uint16_t wDir, const int nFrameIndex, EStaticObjType _eType )
-			: CGivenPassabilityStObject( center, fHP, wDir, nFrameIndex ), eType( _eType ), bFallen( false )
+		: CGivenPassabilityStObject( center, fHP, wDir, nFrameIndex )
+		, eType( _eType )
+		, bFallen( false )
 	{
 		//CLinkObject::SetUniqueIdForObjects();
 	}
@@ -547,8 +562,11 @@ public:
 	                     EStaticObjType eType,
 	                     const int nPlayer = -1,
 	                     const bool bDelayedUpdate = false )
-			: pStats( _pStats ), CCommonStaticObject( center, fHP, _wDir, nFrameIndex, eType ), nPlayer( nPlayer ),
-				bDelayedUpdate( bDelayedUpdate ), wDir( _wDir )
+		: pStats( _pStats )
+		, CCommonStaticObject( center, fHP, _wDir, nFrameIndex, eType )
+		, nPlayer( nPlayer )
+		, bDelayedUpdate( bDelayedUpdate )
+		, wDir( _wDir )
 	{
 	}
 
@@ -597,7 +615,9 @@ public:
 	                        const float fHP,
 	                        const int nFrameIndex,
 	                        EStaticObjType eType )
-			: pStats( _pStats ), wDir( _wDir ), CCommonStaticObject( center, fHP, _wDir, nFrameIndex, eType )
+		: pStats( _pStats )
+		, wDir( _wDir )
+		, CCommonStaticObject( center, fHP, _wDir, nFrameIndex, eType )
 	{
 	}
 

@@ -27,7 +27,10 @@ public:
 	}
 
 public:
-	CArtilleryBulletStorage() : pOwner( 0 ) {}
+	CArtilleryBulletStorage()
+		: pOwner( 0 )
+	{
+	}
 
 	CArtilleryBulletStorage( const SStaticObjectRPGStats *pStats,
 	                         const CVec3 &center,

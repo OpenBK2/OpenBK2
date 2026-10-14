@@ -11,7 +11,12 @@
 
 // CWindowRoundProgressBar
 
-CWindowRoundProgressBar::CWindowRoundProgressBar() : fPosition( 0 ), fStartAngle( -1 ), fFinishAngle( -1 ) {}
+CWindowRoundProgressBar::CWindowRoundProgressBar()
+	: fPosition( 0 )
+	, fStartAngle( -1 )
+	, fFinishAngle( -1 )
+{
+}
 
 void CWindowRoundProgressBar::Visit( struct IUIVisitor *pVisitor )
 {

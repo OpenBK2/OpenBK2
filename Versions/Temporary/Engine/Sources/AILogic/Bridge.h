@@ -87,7 +87,10 @@ protected:
 	}
 
 public:
-	CBridgeSpan() : nScriptID( -1 ) {}
+	CBridgeSpan()
+		: nScriptID( -1 )
+	{
+	}
 
 	CBridgeSpan( const SBridgeRPGStats *pStats,
 	             const CVec3 &center,
@@ -197,7 +200,10 @@ public:
 
 	public:
 		//
-		SSpanLock() : pSpan( 0 ) {}
+		SSpanLock()
+			: pSpan( 0 )
+		{
+		}
 
 		SSpanLock( CBridgeSpan *pSpan, const uint16_t wDir );
 		void Unlock();
@@ -215,7 +221,10 @@ private:
 	bool bLockingBridge = {};
 
 public:
-	CFullBridge() : bGivingDamage( false ), nSpans( 0 ), bLockingBridge( true )
+	CFullBridge()
+		: bGivingDamage( false )
+		, nSpans( 0 )
+		, bLockingBridge( true )
 	{
 		SetUniqueIdForObjects();
 	}

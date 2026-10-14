@@ -105,7 +105,9 @@ private:
 
 public:
 	CPredictedAntiAviationFire( CAIUnit *_pOwner, CAviation *_pPlane )
-			: pUnit( _pOwner ), pPlane( _pPlane ), eState( SAAS_ESITMATING )
+		: pUnit( _pOwner )
+		, pPlane( _pPlane )
+		, eState( SAAS_ESITMATING )
 	{
 	}
 

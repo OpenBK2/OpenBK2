@@ -76,10 +76,17 @@ struct SRoomInfo
 	short nLODFlags = {};
 
 	//
-	SRoomInfo() : nLightFlags( 0 ), nFloor( 0 ), nLODFlags( 0 ) {}
+	SRoomInfo()
+		: nLightFlags( 0 )
+		, nFloor( 0 )
+		, nLODFlags( 0 )
+	{
+	}
 
 	SRoomInfo( int _nLightFlags, int _nFloor, int _nLODFlags = 0 )
-			: nLightFlags( _nLightFlags ), nFloor( _nFloor ), nLODFlags( _nLODFlags )
+		: nLightFlags( _nLightFlags )
+		, nFloor( _nFloor )
+		, nLODFlags( _nLODFlags )
 	{
 	}
 
@@ -105,11 +112,23 @@ struct SFullRoomInfo
 	}
 
 	//
-	SFullRoomInfo() : nUserID( 0 ) {}
+	SFullRoomInfo()
+		: nUserID( 0 )
+	{
+	}
 
-	SFullRoomInfo( int _nFloor, int _nLODFlags = 0 ) : room( 0, _nFloor, _nLODFlags ), nUserID( 0 ) {}
+	SFullRoomInfo( int _nFloor, int _nLODFlags = 0 )
+		: room( 0, _nFloor, _nLODFlags )
+		, nUserID( 0 )
+	{
+	}
 
-	SFullRoomInfo( const SRoomInfo &_r, CObjectBase *_p, int _nUserID ) : room( _r ), pUser( _p ), nUserID( _nUserID ) {}
+	SFullRoomInfo( const SRoomInfo &_r, CObjectBase *_p, int _nUserID )
+		: room( _r )
+		, pUser( _p )
+		, nUserID( _nUserID )
+	{
+	}
 };
 
 class CCreateMeshTransform
@@ -118,9 +137,14 @@ class CCreateMeshTransform
 	CPtr<CFuncBase<SFBTransform>> pTransformer;
 
 public:
-	CCreateMeshTransform( const SFBTransform &_place ) : place( _place ), pTransformer( 0 ) {}
+	CCreateMeshTransform( const SFBTransform &_place )
+		: place( _place )
+		, pTransformer( 0 )
+	{
+	}
 
-	CCreateMeshTransform( CFuncBase<SFBTransform> *_pTransformer ) : pTransformer( _pTransformer )
+	CCreateMeshTransform( CFuncBase<SFBTransform> *_pTransformer )
+		: pTransformer( _pTransformer )
 	{
 		Identity( &place.forward );
 		Identity( &place.backward );
@@ -153,15 +177,22 @@ public:
 	}
 
 public:
-	CCreateMeshBound() : pBounder( 0 )
+	CCreateMeshBound()
+		: pBounder( 0 )
 	{
 		Zero( bound );
 		hintBV = MakeLargeHintBound();
 	}
 
-	CCreateMeshBound( const SBound &_bound ) : bound( _bound ), hintBV( _bound ), pBounder( 0 ) {}
+	CCreateMeshBound( const SBound &_bound )
+		: bound( _bound )
+		, hintBV( _bound )
+		, pBounder( 0 )
+	{
+	}
 
-	CCreateMeshBound( CFuncBase<SBound> *_pBounder ) : pBounder( _pBounder )
+	CCreateMeshBound( CFuncBase<SBound> *_pBounder )
+		: pBounder( _pBounder )
 	{
 		bound.BoxExInit( VNULL3, VNULL3 );
 		hintBV = MakeLargeHintBound();
@@ -209,11 +240,18 @@ public:
 	CMeshAnimStuff( const NDb::SModel *pM,
 	                CFuncBase<NAnimation::SGrannySkeletonPose> *pA,
 	                std::vector<CPtr<CFuncBase<float>>> *pTA = 0 )
-			: pModel( pM ), pAnimation( pA ), pTransparencyAnimations( pTA )
+		: pModel( pM )
+		, pAnimation( pA )
+		, pTransparencyAnimations( pTA )
 	{
 	}
 
-	CMeshAnimStuff( void * ) : pModel( 0 ), pAnimation( 0 ), pTransparencyAnimations( 0 ) {}
+	CMeshAnimStuff( void * )
+		: pModel( 0 )
+		, pAnimation( 0 )
+		, pTransparencyAnimations( 0 )
+	{
+	}
 
 	const NDb::SModel *GetModel() const
 	{
@@ -243,7 +281,12 @@ public:
 		bool bUseDefaultClearColor = {}, bShadows = {};
 
 		SDrawInfo()
-				: pTS( 0 ), vOrigin( 0, 0 ), vSize( 1, 1 ), bUseDefaultClearColor( true ), pTarget( 0 ), bShadows( true )
+			: pTS( 0 )
+			, vOrigin( 0, 0 )
+			, vSize( 1, 1 )
+			, bUseDefaultClearColor( true )
+			, pTarget( 0 )
+			, bShadows( true )
 		{
 		}
 	};
@@ -267,11 +310,19 @@ public:
 			return 0;
 		}
 
-		SPartInfo() : nOrigMeshIndex( -1 ), bAnimated( true ), bWindAffected( false ) {}
+		SPartInfo()
+			: nOrigMeshIndex( -1 )
+			, bAnimated( true )
+			, bWindAffected( false )
+		{
+		}
 
 		SPartInfo( CPtrFuncBase<CObjectInfo> *_pGeom, IMaterial *_pMat, int _nOrigMeshIndex = ( -1 ) )
-				: pGeometry( _pGeom ), pMaterial( _pMat ), nOrigMeshIndex( _nOrigMeshIndex ), bAnimated( true ),
-					bWindAffected( false )
+			: pGeometry( _pGeom )
+			, pMaterial( _pMat )
+			, nOrigMeshIndex( _nOrigMeshIndex )
+			, bAnimated( true )
+			, bWindAffected( false )
 		{
 		}
 	};

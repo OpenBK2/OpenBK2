@@ -28,11 +28,17 @@ public:
 	int operator&( IBinSaver &saver );
 
 	CSFXSound( const NDb::SSoundDesc *_pDesc, const bool _bLooped )
-			: pDesc( _pDesc ), bLooped( _bLooped ), nVolumeType( 2 )
+		: pDesc( _pDesc )
+		, bLooped( _bLooped )
+		, nVolumeType( 2 )
 	{
 	}
 
-	CSFXSound() : nChannel( -1 ), bLooped( false ) {}
+	CSFXSound()
+		: nChannel( -1 )
+		, bLooped( false )
+	{
+	}
 
 	virtual ~CSFXSound() {}
 
@@ -70,7 +76,11 @@ public:
 
 	CSound2D( const NDb::SSoundDesc *pDesc, const bool bLooped );
 
-	CSound2D() : fVolume( 0.0f ), fPan( 0.0f ) {}
+	CSound2D()
+		: fVolume( 0.0f )
+		, fPan( 0.0f )
+	{
+	}
 
 	int Visit( struct ISFXVisitor *pVisitor );
 	void Update( ISFX *pSFX );
@@ -162,7 +172,12 @@ public:
 
 	CSound3D( const NDb::SSoundDesc *pDesc, const bool bLooped );
 
-	CSound3D() : vPos( VNULL3 ), vSpeed( VNULL3 ), fVolume( 1.0f ) {}
+	CSound3D()
+		: vPos( VNULL3 )
+		, vSpeed( VNULL3 )
+		, fVolume( 1.0f )
+	{
+	}
 
 	int Visit( struct ISFXVisitor *pVisitor );
 	void Update( ISFX *pSFX );

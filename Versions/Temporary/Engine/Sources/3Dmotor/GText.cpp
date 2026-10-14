@@ -58,7 +58,11 @@ struct SState
 
 	SState() {}
 
-	SState( const SFont &_sFont, const NGfx::SPixel8888 &_sColor ) : sFont( _sFont ), sColor( _sColor ) {}
+	SState( const SFont &_sFont, const NGfx::SPixel8888 &_sColor )
+		: sFont( _sFont )
+		, sColor( _sColor )
+	{
+	}
 };
 
 struct SFontInfo
@@ -99,12 +103,18 @@ struct SChunk
 	SChunk() {}
 
 	SChunk( ECharType _eType, int _nIndex, const SState &_sState, int _nCount )
-			: eType( _eType ), nIndex( _nIndex ), sState( _sState ), nCount( _nCount )
+		: eType( _eType )
+		, nIndex( _nIndex )
+		, sState( _sState )
+		, nCount( _nCount )
 	{
 	}
 
 	SChunk( ECharType _eType, int _nIndex, const SState &_sState, const std::wstring &_wsText )
-			: eType( _eType ), nIndex( _nIndex ), sState( _sState ), wsText( _wsText )
+		: eType( _eType )
+		, nIndex( _nIndex )
+		, sState( _sState )
+		, wsText( _wsText )
 	{
 	}
 };
@@ -504,7 +514,11 @@ struct SWString
 
 	SWString() {}
 
-	SWString( ECharType _eType, const std::wstring &_wsString ) : eType( _eType ), wsString( _wsString ) {}
+	SWString( ECharType _eType, const std::wstring &_wsString )
+		: eType( _eType )
+		, wsString( _wsString )
+	{
+	}
 };
 
 void SplitString( const std::wstring &wsString, std::vector<SWString> *pParts )

@@ -22,10 +22,15 @@ public:
 
 	CCreateGamePacket() {}
 
-	CCreateGamePacket( const int nClientID ) : CNetPacket( nClientID ), pInitialGameInfo( 0 ) {}
+	CCreateGamePacket( const int nClientID )
+		: CNetPacket( nClientID )
+		, pInitialGameInfo( 0 )
+	{
+	}
 
 	CCreateGamePacket( const int nClientID, SGameInfo *_pInitialGameInfo )
-			: CNetPacket( nClientID ), pInitialGameInfo( _pInitialGameInfo )
+		: CNetPacket( nClientID )
+		, pInitialGameInfo( _pInitialGameInfo )
 	{
 	}
 };
@@ -47,7 +52,11 @@ public:
 
 	CGameHeartBeatPacket() {}
 
-	CGameHeartBeatPacket( const int nClientID, const int _nGameID ) : CNetPacket( nClientID ), nGameID( _nGameID ) {}
+	CGameHeartBeatPacket( const int nClientID, const int _nGameID )
+		: CNetPacket( nClientID )
+		, nGameID( _nGameID )
+	{
+	}
 };
 
 class CGameStartLoadingPacket : public CNetPacket
@@ -65,7 +74,11 @@ public:
 
 	CGameStartLoadingPacket() {}
 
-	CGameStartLoadingPacket( const int nClientID, const int _nGameID ) : CNetPacket( nClientID ), nGameID( _nGameID ) {}
+	CGameStartLoadingPacket( const int nClientID, const int _nGameID )
+		: CNetPacket( nClientID )
+		, nGameID( _nGameID )
+	{
+	}
 };
 
 /** kill the game */
@@ -84,7 +97,11 @@ public:
 
 	CKillGamePacket() {}
 
-	CKillGamePacket( const int nClientID, const int _nGameID ) : CNetPacket( nClientID ), nGameID( _nGameID ) {}
+	CKillGamePacket( const int nClientID, const int _nGameID )
+		: CNetPacket( nClientID )
+		, nGameID( _nGameID )
+	{
+	}
 };
 
 /** connect to game */
@@ -106,7 +123,9 @@ public:
 	CConnectGamePacket() {}
 
 	CConnectGamePacket( const int nClientID, const int _nGameID, const std::string &_szPassword )
-			: CNetPacket( nClientID ), nGameID( _nGameID ), szPassword( _szPassword )
+		: CNetPacket( nClientID )
+		, nGameID( _nGameID )
+		, szPassword( _szPassword )
 	{
 	}
 };
@@ -128,7 +147,11 @@ public:
 
 	CConnectedGameID() {}
 
-	CConnectedGameID( const int nClientID, const int _nGameID ) : CNetPacket( nClientID ), nGameID( _nGameID ) {}
+	CConnectedGameID( const int nClientID, const int _nGameID )
+		: CNetPacket( nClientID )
+		, nGameID( _nGameID )
+	{
+	}
 };
 
 /** leave the game */
@@ -147,7 +170,11 @@ public:
 
 	CLeaveGamePacket() {}
 
-	CLeaveGamePacket( const int nClientID, const int _nGameID ) : CNetPacket( nClientID ), nGameID( _nGameID ) {}
+	CLeaveGamePacket( const int nClientID, const int _nGameID )
+		: CNetPacket( nClientID )
+		, nGameID( _nGameID )
+	{
+	}
 };
 
 /** connect with game failed */
@@ -172,9 +199,16 @@ public:
 		return 0;
 	}
 
-	CConnectGameFailed() : eReason( ER_UNKNOWN ) {}
+	CConnectGameFailed()
+		: eReason( ER_UNKNOWN )
+	{
+	}
 
-	CConnectGameFailed( const int nClientID, const EReason _eReason ) : CNetPacket( nClientID ), eReason( _eReason ) {}
+	CConnectGameFailed( const int nClientID, const EReason _eReason )
+		: CNetPacket( nClientID )
+		, eReason( _eReason )
+	{
+	}
 };
 
 /** game was killed */
@@ -194,7 +228,11 @@ public:
 
 	CGameKilled() {}
 
-	CGameKilled( const int nClientID, const int _nGame ) : CNetPacket( nClientID ), nGame( _nGame ) {}
+	CGameKilled( const int nClientID, const int _nGame )
+		: CNetPacket( nClientID )
+		, nGame( _nGame )
+	{
+	}
 };
 
 /** client left the game */
@@ -210,7 +248,10 @@ public:
 
 	CGameClientRemoved() {}
 
-	CGameClientRemoved( const int nClient ) : CNetPacket( nClient ) {}
+	CGameClientRemoved( const int nClient )
+		: CNetPacket( nClient )
+	{
+	}
 };
 
 /** new client connected */
@@ -226,7 +267,10 @@ public:
 
 	CNewGameClient() {}
 
-	CNewGameClient( const int nClient ) : CNetPacket( nClient ) {}
+	CNewGameClient( const int nClient )
+		: CNetPacket( nClient )
+	{
+	}
 };
 
 /** kick client from game*/
@@ -248,7 +292,9 @@ public:
 	CGameKickClient() {}
 
 	CGameKickClient( const int nClientID, const int _nGameID, const int _nKicked )
-			: CNetPacket( nClientID ), nKicked( _nKicked ), nGameID( _nGameID )
+		: CNetPacket( nClientID )
+		, nKicked( _nKicked )
+		, nGameID( _nGameID )
 	{
 	}
 };
@@ -270,7 +316,11 @@ public:
 
 	CGameClientWasKicked() {}
 
-	CGameClientWasKicked( const int nClientID, const int _nKicked ) : CNetPacket( nClientID ), nKicked( _nKicked ) {}
+	CGameClientWasKicked( const int nClientID, const int _nKicked )
+		: CNetPacket( nClientID )
+		, nKicked( _nKicked )
+	{
+	}
 };
 
 /** info to server that game info was updated */
@@ -289,7 +339,11 @@ public:
 
 	CUpdateGameInfo() {}
 
-	CUpdateGameInfo( const int nClientID, const SGameInfo &_gameInfo ) : CNetPacket( nClientID ), gameInfo( _gameInfo ) {}
+	CUpdateGameInfo( const int nClientID, const SGameInfo &_gameInfo )
+		: CNetPacket( nClientID )
+		, gameInfo( _gameInfo )
+	{
+	}
 };
 
 /** specific internal info about game, sent to connected users */
@@ -311,7 +365,9 @@ public:
 	CSpecificGameInfo() {}
 
 	CSpecificGameInfo( const int nClientID, const int _nGameID, CNetPacket *_pInfo )
-			: CNetPacket( nClientID ), nGameID( _nGameID ), pInfo( _pInfo )
+		: CNetPacket( nClientID )
+		, nGameID( _nGameID )
+		, pInfo( _pInfo )
 	{
 	}
 };
@@ -340,7 +396,10 @@ public:
 
 	CLobbyGamesPacket() {}
 
-	CLobbyGamesPacket( const int nClientID ) : CNetPacket( nClientID ) {}
+	CLobbyGamesPacket( const int nClientID )
+		: CNetPacket( nClientID )
+	{
+	}
 };
 
 // game room debug support
@@ -361,7 +420,11 @@ public:
 
 	CGameTestBroadcastMsg() {}
 
-	CGameTestBroadcastMsg( const int _nNumber, const std::string &_szStr ) : nNumber( _nNumber ), szStr( _szStr ) {}
+	CGameTestBroadcastMsg( const int _nNumber, const std::string &_szStr )
+		: nNumber( _nNumber )
+		, szStr( _szStr )
+	{
+	}
 };
 
 // game room debug support
@@ -383,7 +446,9 @@ public:
 	CGameTestDirectMsg() {}
 
 	CGameTestDirectMsg( const int nClientID, const int _nNumber, const std::string &_szStr )
-			: CNetPacket( nClientID ), nNumber( _nNumber ), szStr( _szStr )
+		: CNetPacket( nClientID )
+		, nNumber( _nNumber )
+		, szStr( _szStr )
 	{
 	}
 };
@@ -408,7 +473,9 @@ public:
 	CNewGameConnectingClient() {}
 
 	CNewGameConnectingClient( const int nClientID, const int _nServerID, const int _nConnection )
-			: CNetPacket( nClientID ), nServerID( _nServerID ), nConnection( _nConnection )
+		: CNetPacket( nClientID )
+		, nServerID( _nServerID )
+		, nConnection( _nConnection )
 	{
 	}
 };
@@ -430,7 +497,8 @@ public:
 	CGameConnectingClientAccepted() {}
 
 	CGameConnectingClientAccepted( const int nClientID, const int _nConnection )
-			: CNetPacket( nClientID ), nConnection( _nConnection )
+		: CNetPacket( nClientID )
+		, nConnection( _nConnection )
 	{
 	}
 };
@@ -454,7 +522,9 @@ public:
 	CWant2Connect2Client() {}
 
 	CWant2Connect2Client( const int nClientID, const int _nClient2Connect, const int _nMyConnect )
-			: CNetPacket( nClientID ), nClient2Connect( _nClient2Connect ), nMyConnect( _nMyConnect )
+		: CNetPacket( nClientID )
+		, nClient2Connect( _nClient2Connect )
+		, nMyConnect( _nMyConnect )
 	{
 	}
 };
@@ -475,7 +545,10 @@ public:
 
 	CAnswerConnectGame() {}
 
-	CAnswerConnectGame( const int nClientID ) : CNetPacket( nClientID ) {}
+	CAnswerConnectGame( const int nClientID )
+		: CNetPacket( nClientID )
+	{
+	}
 };
 
 /** info from server about asked client, goes to connection effort */
@@ -499,7 +572,10 @@ public:
 	CClientGameConnectInfo() {}
 
 	CClientGameConnectInfo( const int nClientID, const std::string &_szIP, const int _nPort, const int _nClient2Connect )
-			: CNetPacket( nClientID ), szIP( _szIP ), nPort( _nPort ), nClient2Connect( _nClient2Connect )
+		: CNetPacket( nClientID )
+		, szIP( _szIP )
+		, nPort( _nPort )
+		, nClient2Connect( _nClient2Connect )
 	{
 	}
 };
@@ -525,7 +601,10 @@ public:
 	CClientWantToConnect() {}
 
 	CClientWantToConnect( const int nClientID, const int _nWantedClient, const std::string &_szIP, const int _nPort )
-			: CNetPacket( nClientID ), nWantedClient( _nWantedClient ), szIP( _szIP ), nPort( _nPort )
+		: CNetPacket( nClientID )
+		, nWantedClient( _nWantedClient )
+		, szIP( _szIP )
+		, nPort( _nPort )
 	{
 	}
 };
@@ -546,7 +625,11 @@ public:
 
 	CIndentityPacket() {}
 
-	CIndentityPacket( const int nClientID, const int _nServerID ) : CNetPacket( nClientID ), nServerID( _nServerID ) {}
+	CIndentityPacket( const int nClientID, const int _nServerID )
+		: CNetPacket( nClientID )
+		, nServerID( _nServerID )
+	{
+	}
 };
 
 class CThroughServerConnectionPacket : public CNetPacket
@@ -567,7 +650,9 @@ public:
 	CThroughServerConnectionPacket() {}
 
 	CThroughServerConnectionPacket( const int nClientID, const int _nClientWith, const int _nGameID )
-			: CNetPacket( nClientID ), nClientWith( _nClientWith ), nGameID( _nGameID )
+		: CNetPacket( nClientID )
+		, nClientWith( _nClientWith )
+		, nGameID( _nGameID )
 	{
 	}
 };
@@ -587,7 +672,9 @@ public:
 
 	CGameClientDead() {}
 
-	CGameClientDead( const int nClientID, const int _nDeadClient ) : CNetPacket( nClientID ), nDeadClient( _nDeadClient )
+	CGameClientDead( const int nClientID, const int _nDeadClient )
+		: CNetPacket( nClientID )
+		, nDeadClient( _nDeadClient )
 	{
 	}
 };
@@ -611,7 +698,9 @@ public:
 	CThroughServerGamePacket() {}
 
 	CThroughServerGamePacket( const int nClientID, const int nClientTo, CNetPacket *_pGamePacket )
-			: CNetPacket( nClientID ), nClient( nClientTo ), pGamePacket( _pGamePacket )
+		: CNetPacket( nClientID )
+		, nClient( nClientTo )
+		, pGamePacket( _pGamePacket )
 	{
 	}
 };
@@ -635,7 +724,9 @@ public:
 	CPingPacket() {}
 
 	CPingPacket( const int nClientID, const int _nFromID, const int _nSendTime )
-			: CNetPacket( nClientID ), nFromID( _nFromID ), nSendTime( _nSendTime )
+		: CNetPacket( nClientID )
+		, nFromID( _nFromID )
+		, nSendTime( _nSendTime )
 	{
 	}
 };

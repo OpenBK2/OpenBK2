@@ -53,7 +53,9 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D49C, CGeneralIntendant );
 CGeneralTaskToDefendStorage::CWaitForChangePlayer::CWaitForChangePlayer( CBuilding *pStorage,
                                                                          CGeneralTaskToDefendStorage *pMainTask,
                                                                          const int nParty )
-		: pStorage( pStorage ), pMainTask( pMainTask ), nParty( nParty )
+	: pStorage( pStorage )
+	, pMainTask( pMainTask )
+	, nParty( nParty )
 {
 }
 
@@ -72,9 +74,12 @@ void CGeneralTaskToDefendStorage::CWaitForChangePlayer::Run()
 //*******************************************************************
 
 CGeneralTaskToDefendStorage::CGeneralTaskToDefendStorage( CBuilding *pStorage, const int nParty )
-		: pStorage( pStorage ), fSeverity( 0 ), nParty( nParty ),
-			//eState( TS_OPERATE ),
-			wRequestID( 0 )
+	: pStorage( pStorage )
+	, fSeverity( 0 )
+	, nParty( nParty )
+	,
+	//eState( TS_OPERATE ),
+	wRequestID( 0 )
 {
 	eState = EDI_FRIEND == theDipl.GetDiplStatusForParties( theDipl.GetNParty( pStorage->GetPlayer() ), nParty )
 	             ? TS_OPERATE
@@ -289,8 +294,13 @@ CGeneralTaskToResupplyCell::CGeneralTaskToResupplyCell( CResupplyCellInfo *pCell
                                                         const int nParty,
                                                         const enum EResupplyType _eResupplyType,
                                                         class CGeneralIntendant *_pCells )
-		: pCell( pCell ), fSeverity( 1.0f ), eResupplyType( _eResupplyType ), bFinished( false ), nParty( nParty ),
-			timeNextCheck( curTime ), pCells( _pCells )
+	: pCell( pCell )
+	, fSeverity( 1.0f )
+	, eResupplyType( _eResupplyType )
+	, bFinished( false )
+	, nParty( nParty )
+	, timeNextCheck( curTime )
+	, pCells( _pCells )
 {
 	pCell->MarkUnderSupply( eResupplyType );
 	vResupplyCenter = pCell->CalcResupplyPos( eResupplyType );
@@ -379,7 +389,10 @@ float CGeneralTaskToResupplyCell::EvaluateWorkerRating( CCommonUnit *pUnit, cons
 //*								CResupplyCellInfo*
 //*******************************************************************
 
-CResupplyCellInfo::CResupplyCellInfo() : cMarkedUnderSupply( 0 ), fCount( 0.0f ), timeLastDanger( 0 )
+CResupplyCellInfo::CResupplyCellInfo()
+	: cMarkedUnderSupply( 0 )
+	, fCount( 0.0f )
+	, timeLastDanger( 0 )
 {
 	resupplyCount.resize( _ERT_COUNT, 0.0f );
 }
@@ -726,7 +739,9 @@ void CFreeArtilleryHolder::OnSerialize( IBinSaver &f )
 //*******************************************************************
 
 CGeneralIntendant::CGeneralIntendant( const int nParty, CCommander *pGeneral )
-		: nParty( nParty ), pGeneral( pGeneral ), bInitedByParcel( false )
+	: nParty( nParty )
+	, pGeneral( pGeneral )
+	, bInitedByParcel( false )
 {
 	cells.SetSizes( GetAIMap()->GetSizeX() * SConsts::TILE_SIZE / SConsts::GENERAL_CELL_SIZE + 1,
 	                GetAIMap()->GetSizeY() * SConsts::TILE_SIZE / SConsts::GENERAL_CELL_SIZE + 1 );

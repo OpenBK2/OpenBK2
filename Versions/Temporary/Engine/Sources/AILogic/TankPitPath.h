@@ -25,7 +25,10 @@ private:
 	CBasePathUnit *pUnit = {};
 
 public:
-	CTankPitPath() : pUnit( 0 ) {}
+	CTankPitPath()
+		: pUnit( 0 )
+	{
+	}
 
 	CTankPitPath( CBasePathUnit *pUnit, const class CVec2 &vStartPoint, const class CVec2 &vEndPoint );
 	virtual bool IsFinished() const;

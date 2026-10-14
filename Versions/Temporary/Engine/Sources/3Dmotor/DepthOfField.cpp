@@ -20,7 +20,10 @@ protected:
 
 public:
 	CDepthOfFieldEffect( NGfx::CTexture *_pColor, NGfx::CTexture *_pDepth, int _nWidth, int _nHeight )
-			: pColor( _pColor ), pDepth( _pDepth ), nWidth( _nWidth ), nHeight( _nHeight )
+		: pColor( _pColor )
+		, pDepth( _pDepth )
+		, nWidth( _nWidth )
+		, nHeight( _nHeight )
 	{
 	}
 

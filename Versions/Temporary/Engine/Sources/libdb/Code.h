@@ -29,7 +29,10 @@ struct ICode : public CXmlResource
 		std::string szModule;
 
 		SCodeStreams( std::string *pszHFile, std::string *pszCPPFile, std::string *pszHEOFFile, std::string *pszCPPEOFFile )
-				: h( pszHFile ), cpp( pszCPPFile ), hEOF( pszHEOFFile ), cppEOF( pszCPPEOFFile )
+			: h( pszHFile )
+			, cpp( pszCPPFile )
+			, hEOF( pszHEOFFile )
+			, cppEOF( pszCPPEOFFile )
 		{
 		}
 

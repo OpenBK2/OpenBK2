@@ -25,7 +25,12 @@ class CAllAnimationsPlayer : public CObjectBase
 
 	private:
 	public:
-		SAnimationInfo() : nAnimation( -1 ), nStartNextAnimTime( 0 ), bLooped( false ) {}
+		SAnimationInfo()
+			: nAnimation( -1 )
+			, nStartNextAnimTime( 0 )
+			, bLooped( false )
+		{
+		}
 	};
 
 	ZDATA

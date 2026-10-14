@@ -18,7 +18,15 @@ class CMechUnitJoggingMutator : public IMechUnitJoggingMutator
 		//
 #if !defined( _FINALRELEASE ) && !defined( _BETARELEASE )
 		// for uninitialized hunt
-		SJoggingParams2() : fPeriod1( 0 ), fPeriod2( 0 ), fAmp1( 0 ), fAmp2( 0 ), fPhaze1( 0 ), fPhaze2( 0 ) {}
+		SJoggingParams2()
+			: fPeriod1( 0 )
+			, fPeriod2( 0 )
+			, fAmp1( 0 )
+			, fAmp2( 0 )
+			, fPhaze1( 0 )
+			, fPhaze2( 0 )
+		{
+		}
 #endif
 		float GetValue( const NTimer::STime nDeltaTime ) const;
 	};
@@ -39,7 +47,11 @@ class CMechUnitJoggingMutator : public IMechUnitJoggingMutator
 
 public:
 	CMechUnitJoggingMutator()
-			: nStartTime( 0 ), nStopTime( 0 ), bStopped( true ), nBasisBoneIndex( -1 ), nPropellerStartTime( 0 )
+		: nStartTime( 0 )
+		, nStopTime( 0 )
+		, bStopped( true )
+		, nBasisBoneIndex( -1 )
+		, nPropellerStartTime( 0 )
 	{
 	}
 

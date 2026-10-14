@@ -60,12 +60,26 @@ IUnitState *CMechAttackUnitState::Instance( CAIUnit *pOwner, CAIUnit *pEnemy, bo
 }
 
 CMechAttackUnitState::CMechAttackUnitState( CAIUnit *_pOwner, CAIUnit *_pEnemy, bool _bAim, const bool _bSwarmAttack )
-		: CFreeFireManager( _pOwner ), lastShootCheck( 0 ), lastEnemyTile( -1, -1 ), bAim( _bAim ), wLastEnemyDir( 0 ),
-			pEnemy( _pEnemy ), pUnit( _pOwner ), pGun( 0 ), bFinish( false ), bSwarmAttack( _bSwarmAttack ),
-			bTurningToBest( false ), nBestAngle( -1 ), lastEnemyCenter( -1, -1 ), nEnemyParty( _pEnemy->GetParty() ),
-			vEnemyCenter( _pEnemy->GetCenterPlain() ), wEnemyDir( _pEnemy->GetFrontDirection() ),
-			eAttackType( EAT_POOR_PROB ), nBestSide( 0 ), state( ESAS_ESTIMATING ),
-			bAllowMove( g_bAgressiveMovement || theDipl.IsAIPlayer( _pOwner->GetPlayer() ) ? true : bSwarmAttack )
+	: CFreeFireManager( _pOwner )
+	, lastShootCheck( 0 )
+	, lastEnemyTile( -1, -1 )
+	, bAim( _bAim )
+	, wLastEnemyDir( 0 )
+	, pEnemy( _pEnemy )
+	, pUnit( _pOwner )
+	, pGun( 0 )
+	, bFinish( false )
+	, bSwarmAttack( _bSwarmAttack )
+	, bTurningToBest( false )
+	, nBestAngle( -1 )
+	, lastEnemyCenter( -1, -1 )
+	, nEnemyParty( _pEnemy->GetParty() )
+	, vEnemyCenter( _pEnemy->GetCenterPlain() )
+	, wEnemyDir( _pEnemy->GetFrontDirection() )
+	, eAttackType( EAT_POOR_PROB )
+	, nBestSide( 0 )
+	, state( ESAS_ESTIMATING )
+	, bAllowMove( g_bAgressiveMovement || theDipl.IsAIPlayer( _pOwner->GetPlayer() ) ? true : bSwarmAttack )
 {
 	fProb.resize( 4, 0 );
 	ResetTime( pEnemy );
@@ -805,8 +819,13 @@ void CMechAttackUnitState::StopFire()
 CCommonAttackCommonStatObjState::CCommonAttackCommonStatObjState( CAIUnit *pOwner,
                                                                   CStaticObject *_pObj,
                                                                   bool _bSwarmAttack )
-		: CFreeFireManager( pOwner ), pObj( _pObj ), pGun( 0 ), bAim( true ), bFinish( false ),
-			bSwarmAttack( _bSwarmAttack ), nStartObjParty( theDipl.GetNParty( _pObj->GetPlayer() ) )
+	: CFreeFireManager( pOwner )
+	, pObj( _pObj )
+	, pGun( 0 )
+	, bAim( true )
+	, bFinish( false )
+	, bSwarmAttack( _bSwarmAttack )
+	, nStartObjParty( theDipl.GetNParty( _pObj->GetPlayer() ) )
 {
 }
 
@@ -1058,8 +1077,9 @@ CMechUnitRestState::CMechUnitRestState( CAIUnit *_pUnit,
                                         const uint16_t _wDir,
                                         const bool _bFinishWnenCanMove,
                                         const float _fTimeToWait )
-		: pUnit( _pUnit ), CCommonRestState( _guardPoint, _wDir, _pUnit, _fTimeToWait ),
-			bFinishWhenCanMove( _bFinishWnenCanMove )
+	: pUnit( _pUnit )
+	, CCommonRestState( _guardPoint, _wDir, _pUnit, _fTimeToWait )
+	, bFinishWhenCanMove( _bFinishWnenCanMove )
 {
 	pUnit->StartCamouflating();
 }
@@ -1111,8 +1131,13 @@ CCommonRestState::CCommonRestState( const CVec2 &_guardPoint,
                                     const uint16_t _wDir,
                                     CCommonUnit *_pUnit,
                                     const float fTimeToWait )
-		: pUnit( _pUnit ), nextMove( 0 ), guardPoint( _guardPoint ), wDir( _wDir ), startMoveTime( curTime ),
-			bWait( fTimeToWait >= 0 ), timeToFinishState( fTimeToWait >= 0 ? curTime + fTimeToWait * 1000 : 0 )
+	: pUnit( _pUnit )
+	, nextMove( 0 )
+	, guardPoint( _guardPoint )
+	, wDir( _wDir )
+	, startMoveTime( curTime )
+	, bWait( fTimeToWait >= 0 )
+	, timeToFinishState( fTimeToWait >= 0 ? curTime + fTimeToWait * 1000 : 0 )
 {
 	ResetTime( pUnit );
 	pUnit->ResetTargetScan();
@@ -1254,7 +1279,10 @@ IUnitState *CCommonAmbushState::Instance( CCommonUnit *pUnit )
 	return new CCommonAmbushState( pUnit );
 }
 
-CCommonAmbushState::CCommonAmbushState( CCommonUnit *_pUnit ) : pUnit( _pUnit ), pTarget( 0 ), eState( EAS_COMMON )
+CCommonAmbushState::CCommonAmbushState( CCommonUnit *_pUnit )
+	: pUnit( _pUnit )
+	, pTarget( 0 )
+	, eState( EAS_COMMON )
 {
 	pUnit->Stop();
 	//	pUnit->SetAmbush();
@@ -1455,7 +1483,9 @@ CCommonAttackUnitInBuildingState::CCommonAttackUnitInBuildingState( CAIUnit *pOw
                                                                     CSoldier *_pTarget,
                                                                     bool _bAim,
                                                                     const bool _bSwarmAttack )
-		: CFreeFireManager( pOwner ), pTarget( _pTarget ), bSwarmAttack( _bSwarmAttack )
+	: CFreeFireManager( pOwner )
+	, pTarget( _pTarget )
+	, bSwarmAttack( _bSwarmAttack )
 {
 	StartState( pOwner );
 }
@@ -1685,7 +1715,10 @@ IUnitState *CFollowState::Instance( CCommonUnit *pUnit, CCommonUnit *pHeadUnit )
 }
 
 CFollowState::CFollowState( CCommonUnit *_pUnit, CCommonUnit *_pHeadUnit )
-		: pUnit( _pUnit ), pHeadUnit( _pHeadUnit ), lastHeadUnitPos( -1.0f, -1.0f ), lastCheck( 0 )
+	: pUnit( _pUnit )
+	, pHeadUnit( _pHeadUnit )
+	, lastHeadUnitPos( -1.0f, -1.0f )
+	, lastCheck( 0 )
 {
 }
 
@@ -1762,8 +1795,13 @@ IUnitState *CCommonSwarmState::Instance( CAIUnit *pUnit, const CVec2 &point, con
 }
 
 CCommonSwarmState::CCommonSwarmState( CAIUnit *_pUnit, const CVec2 &_point, const float fContinue )
-		: CStatusUpdatesHelper( EUS_SWARM_TO, _pUnit ), pUnit( _pUnit ), state( ESSS_WAIT ), startTime( curTime ),
-			bContinue( fContinue ), point( _point ), wDirToPoint( _pUnit->GetFrontDirection() )
+	: CStatusUpdatesHelper( EUS_SWARM_TO, _pUnit )
+	, pUnit( _pUnit )
+	, state( ESSS_WAIT )
+	, startTime( curTime )
+	, bContinue( fContinue )
+	, point( _point )
+	, wDirToPoint( _pUnit->GetFrontDirection() )
 {
 	pUnit->ResetTargetScan();
 	pUnit->UnlockTiles();
@@ -1860,8 +1898,11 @@ IUnitState *CCommonMoveToGridState::Instance( CCommonUnit *pUnit, const CVec2 &v
 }
 
 CCommonMoveToGridState::CCommonMoveToGridState( CCommonUnit *_pUnit, const CVec2 &_vPoint, const CVec2 &_vDir )
-		: pUnit( _pUnit ), vPoint( _vPoint ), vDir( _vDir ), startMoveTime( curTime + NRandom::Random( 200, 600 ) ),
-			eState( ES_WAIT )
+	: pUnit( _pUnit )
+	, vPoint( _vPoint )
+	, vDir( _vDir )
+	, startMoveTime( curTime + NRandom::Random( 200, 600 ) )
+	, eState( ES_WAIT )
 {
 	RecordRandomCall();
 }
@@ -1911,7 +1952,9 @@ IUnitState *CMoveByFormationState::Instance( CCommonUnit *pUnit, const int nExec
 }
 
 CMoveByFormationState::CMoveByFormationState( CCommonUnit *_pUnit, const int _nExecutorID )
-		: pUnit( _pUnit ), nExecutorID( _nExecutorID ), bNeedIdleNotification( false )
+	: pUnit( _pUnit )
+	, nExecutorID( _nExecutorID )
+	, bNeedIdleNotification( false )
 {
 }
 

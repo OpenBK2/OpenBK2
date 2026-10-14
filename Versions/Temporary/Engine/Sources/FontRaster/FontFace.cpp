@@ -204,7 +204,10 @@ struct CFace::SImpl
 	}
 };
 
-CFace::CFace() : pImpl( new SImpl ) {}
+CFace::CFace()
+	: pImpl( new SImpl )
+{
+}
 
 CFace::~CFace() = default;
 

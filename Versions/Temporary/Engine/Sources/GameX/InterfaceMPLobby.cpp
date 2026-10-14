@@ -18,7 +18,8 @@
 
 #include <fmt/format.h>
 
-CInterfaceMPLobby::CInterfaceMPLobby() : CInterfaceMPScreenBase( "MPGameLobby", "game_lobby" )
+CInterfaceMPLobby::CInterfaceMPLobby()
+	: CInterfaceMPScreenBase( "MPGameLobby", "game_lobby" )
 {
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_MESSAGE, SMPUIChatMessage, &CInterfaceMPLobby::OnChatMessage );
 	REGISTER_MPUI_MESSAGE_HANDLER(

@@ -38,7 +38,17 @@ struct SAbilitySwitchState
 		dwStateValue = src.dwStateValue;
 	}
 
-	SAbilitySwitchState( const EAbilitySwitchState _eState ) : eState( _eState ), bAutocast( false ), crap( 0 ) {}
+	SAbilitySwitchState( const EAbilitySwitchState _eState )
+		: eState( _eState )
+		, bAutocast( false )
+		, crap( 0 )
+	{
+	}
 
-	SAbilitySwitchState() : eState( EASS_READY_TO_ON ), bAutocast( false ), crap( 0 ) {}
+	SAbilitySwitchState()
+		: eState( EASS_READY_TO_ON )
+		, bAutocast( false )
+		, crap( 0 )
+	{
+	}
 };

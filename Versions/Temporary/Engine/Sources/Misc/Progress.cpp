@@ -12,10 +12,16 @@ struct SLockInfo
 	int nLine;
 	uint32_t dwTime;
 
-	SLockInfo() : nLine( 0 ), dwTime( 0 ) {}
+	SLockInfo()
+		: nLine( 0 )
+		, dwTime( 0 )
+	{
+	}
 
 	SLockInfo( const std::string &_szFileName, const int _nLine, const uint32_t _dwTime )
-			: szFileName( _szFileName ), nLine( _nLine ), dwTime( _dwTime )
+		: szFileName( _szFileName )
+		, nLine( _nLine )
+		, dwTime( _dwTime )
 	{
 	}
 };

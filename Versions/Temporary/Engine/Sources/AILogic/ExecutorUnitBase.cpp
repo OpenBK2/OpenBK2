@@ -10,9 +10,15 @@ extern CEventUpdater updater;
 CExecutorUnitBase::CExecutorUnitBase( const EExecutorTypeID _eTypeID,
                                       const int _nNextTime,
                                       const EUnitSpecialAbility _eAbility )
-		: timeLastUpdate( curTime ), timeDisableGroup( curTime ), eAbility( _eAbility ), state( EASS_READY_TO_ON ),
-			stateBeforeDisable( EASS_DISABLE ), CExecutor( _eTypeID, _nNextTime ), fSpeedCoeff( 1.0f ), pAbilityDesc( 0 ),
-			fOldProgress( -1.0f )
+	: timeLastUpdate( curTime )
+	, timeDisableGroup( curTime )
+	, eAbility( _eAbility )
+	, state( EASS_READY_TO_ON )
+	, stateBeforeDisable( EASS_DISABLE )
+	, CExecutor( _eTypeID, _nNextTime )
+	, fSpeedCoeff( 1.0f )
+	, pAbilityDesc( 0 )
+	, fOldProgress( -1.0f )
 {
 }
 

@@ -65,7 +65,11 @@ class CConsoleBuffer : public IConsoleBuffer
 	void CompressLines();
 
 public:
-	CConsoleBuffer() : szLogFileName( "console_log.txt" ), nSlowCompress( 0 ) {}
+	CConsoleBuffer()
+		: szLogFileName( "console_log.txt" )
+		, nSlowCompress( 0 )
+	{
+	}
 
 	// write string to console's stream
 	void Write( const int nStreamID,

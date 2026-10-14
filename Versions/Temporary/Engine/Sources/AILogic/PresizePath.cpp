@@ -20,8 +20,12 @@ CPresizePath::CPresizePath( CBasePathUnit *_pUnit,
                             const class CVec2 &vEndPoint,
                             const class CVec2 &vEndDir,
                             ISmoothPath *pApproachPath )
-		: vEndPoint( vEndPoint ), vEndDir( vEndDir ), eState( EPPS_APPROACH_BY_STANDART ), fSpeedLen( 0.0f ),
-			pUnit( _pUnit ), pPathStandart( pApproachPath )
+	: vEndPoint( vEndPoint )
+	, vEndDir( vEndDir )
+	, eState( EPPS_APPROACH_BY_STANDART )
+	, fSpeedLen( 0.0f )
+	, pUnit( _pUnit )
+	, pPathStandart( pApproachPath )
 {
 	wDesiredDir = GetDirectionByVector( vEndDir );
 
@@ -236,7 +240,9 @@ void CPresizePath::SetOwner( CBasePathUnit *_pUnit )
 //*******************************************************************
 
 CMechUnitRestOnBoardPath::CMechUnitRestOnBoardPath( CBasePathUnit *_pUnit, CMilitaryCar *_pTransport )
-		: pUnit( _pUnit ), pTransport( _pTransport ), fSpeedLen( 0.0f )
+	: pUnit( _pUnit )
+	, pTransport( _pTransport )
+	, fSpeedLen( 0.0f )
 {
 	vFormerPlacement = vCurrentPlacement = pTransport->GetBoardedPosition( checked_cast<CAIUnit *>( pUnit ), 0 );
 }

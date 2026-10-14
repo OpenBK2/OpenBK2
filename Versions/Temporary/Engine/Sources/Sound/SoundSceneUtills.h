@@ -15,7 +15,9 @@ struct SUpdatedCell
 	SIntThree vCell;
 
 	SUpdatedCell( const SIntThree &vCell, const int nFormerRadius, const int nNewRadius )
-			: vCell( vCell ), nFormerRadius( nFormerRadius ), nNewRadius( nNewRadius )
+		: vCell( vCell )
+		, nFormerRadius( nFormerRadius )
+		, nNewRadius( nNewRadius )
 	{
 	}
 };
@@ -34,7 +36,8 @@ class CSoundsWithinDeltaPredicate
 	NTimer::STime timeToCompare;
 
 public:
-	CSoundsWithinDeltaPredicate( NTimer::STime timeBase, NTimer::STime timeDelta ) : timeToCompare( timeBase + timeDelta )
+	CSoundsWithinDeltaPredicate( NTimer::STime timeBase, NTimer::STime timeDelta )
+		: timeToCompare( timeBase + timeDelta )
 	{
 	}
 

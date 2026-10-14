@@ -15,7 +15,10 @@
 
 #include <zconf.h>
 
-CTerrainState::CTerrainState( CTerrainEditor *_pTerrainEditor ) : pTerrainEditor( _pTerrainEditor ) {}
+CTerrainState::CTerrainState( CTerrainEditor *_pTerrainEditor )
+	: pTerrainEditor( _pTerrainEditor )
+{
+}
 
 void CTerrainState::Enter()
 {

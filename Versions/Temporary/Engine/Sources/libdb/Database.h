@@ -104,7 +104,10 @@ protected:
 
 	//
 public:
-	CBasicDatabase() : bDataChanged( false ) {}
+	CBasicDatabase()
+		: bDataChanged( false )
+	{
+	}
 
 	//
 	virtual bool OpenDatabase( NVFS::IVFS *pVFS, NVFS::IFileCreator *pFileCreator ) = 0;

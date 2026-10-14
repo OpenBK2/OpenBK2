@@ -87,9 +87,19 @@ void SObjectStatus::AddWeapon( const SWeapon &weapon )
 }
 
 CMapObj::CMapObj()
-		: vScale( 1, 1, 1 ), fHP( 1 ), eDiplomacy( EDI_NEUTRAL ), bLoopedAnimation( false ), bVisible( false ),
-			bIsSilentlyDead( false ), bHasMoveAnimation( false ), fAnimationSpeed( 1.0f ), attachedSounds( __EAST_COUNTER__ ),
-			nKeyObjectPlayer( -1 ), nParentID( -1 ), nPlayer( -1 ), nColorIndex( 0 )
+	: vScale( 1, 1, 1 )
+	, fHP( 1 )
+	, eDiplomacy( EDI_NEUTRAL )
+	, bLoopedAnimation( false )
+	, bVisible( false )
+	, bIsSilentlyDead( false )
+	, bHasMoveAnimation( false )
+	, fAnimationSpeed( 1.0f )
+	, attachedSounds( __EAST_COUNTER__ )
+	, nKeyObjectPlayer( -1 )
+	, nParentID( -1 )
+	, nPlayer( -1 )
+	, nColorIndex( 0 )
 {
 	for ( int i = 0; i < __EAST_COUNTER__; ++i )
 	{

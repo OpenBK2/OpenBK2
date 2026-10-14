@@ -85,9 +85,17 @@ class CSyncSrc : public CObjectBase
 			return 0;
 		}
 
-		SObject() : nNext( 0 ), nPrev( 0 ), nVersion( 0 ) {}
+		SObject()
+			: nNext( 0 )
+			, nPrev( 0 )
+			, nVersion( 0 )
+		{
+		}
 
-		explicit SObject( T *_pObject ) : pObject( _pObject ) {}
+		explicit SObject( T *_pObject )
+			: pObject( _pObject )
+		{
+		}
 	};
 
 	ZDATA
@@ -178,7 +186,8 @@ protected:
 	virtual void Refresh() {}
 
 public:
-	CSyncSrc() : nVersion( 1 )
+	CSyncSrc()
+		: nVersion( 1 )
 	{
 		objects.resize( 1 );
 	}
@@ -227,7 +236,11 @@ public:
 		nVersion = src.nVersion;
 	}
 
-	CSyncDst( CSyncSrc<T> *_pSrc = 0 ) : pSource( _pSrc ), nVersion( -1 ) {}
+	CSyncDst( CSyncSrc<T> *_pSrc = 0 )
+		: pSource( _pSrc )
+		, nVersion( -1 )
+	{
+	}
 
 	virtual void SetNewSource( CSyncSrc<T> *_pSrc )
 	{
@@ -254,7 +267,10 @@ class IVisitorBase
 	}
 
 public:
-	IVisitorBase() : pStuff( 0 ) {}
+	IVisitorBase()
+		: pStuff( 0 )
+	{
+	}
 
 	template <class TR>
 	TR *Register( TR *p )
@@ -330,9 +346,16 @@ protected:
 	}
 
 public:
-	COrdinarySyncDst() : CSyncDst<T>( 0 ) {}
+	COrdinarySyncDst()
+		: CSyncDst<T>( 0 )
+	{
+	}
 
-	COrdinarySyncDst( CSyncSrc<T> *p, TVisitor *_pVisitor ) : CSyncDst<T>( p ), pVisitor( _pVisitor ) {}
+	COrdinarySyncDst( CSyncSrc<T> *p, TVisitor *_pVisitor )
+		: CSyncDst<T>( p )
+		, pVisitor( _pVisitor )
+	{
+	}
 
 	virtual void SetNewSource( CSyncSrc<T> *_pSrc, TVisitor *_pVisitor )
 	{
@@ -450,7 +473,12 @@ private:
 public:
 	CBoolSyncDstUtil() {}
 
-	CBoolSyncDstUtil( CSyncSrc<T> *pSrc, TUplink *p, int _nMask ) : CSyncDst<T>( pSrc ), pRes( p ), nMask( _nMask ) {}
+	CBoolSyncDstUtil( CSyncSrc<T> *pSrc, TUplink *p, int _nMask )
+		: CSyncDst<T>( pSrc )
+		, pRes( p )
+		, nMask( _nMask )
+	{
+	}
 };
 
 template <class T, class TFunc>
@@ -541,7 +569,11 @@ class CBoolSyncSrc : public CSyncSrc<T>
 public:
 	CBoolSyncSrc() {}
 
-	CBoolSyncSrc( CSyncSrc<T> *pA, CSyncSrc<T> *pB ) : syncA( pA, this, 1 ), syncB( pB, this, 2 ) {}
+	CBoolSyncSrc( CSyncSrc<T> *pA, CSyncSrc<T> *pB )
+		: syncA( pA, this, 1 )
+		, syncB( pB, this, 2 )
+	{
+	}
 
 	friend class CBoolSyncDstUtil<T, TThis>;
 };

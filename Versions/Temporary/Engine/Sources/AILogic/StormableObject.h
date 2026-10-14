@@ -53,8 +53,12 @@ protected:
 
 public:
 	CStormableObject()
-			: attackers( SAIConsts::MAX_NUM_OF_PLAYERS ), nAttackers( SAIConsts::MAX_NUM_OF_PLAYERS, 0 ),
-				startTimes( SAIConsts::MAX_NUM_OF_PLAYERS, 0 ), nActiveAttackers( 0 ), bAttackers( false ), lastSegment( 0 )
+		: attackers( SAIConsts::MAX_NUM_OF_PLAYERS )
+		, nAttackers( SAIConsts::MAX_NUM_OF_PLAYERS, 0 )
+		, startTimes( SAIConsts::MAX_NUM_OF_PLAYERS, 0 )
+		, nActiveAttackers( 0 )
+		, bAttackers( false )
+		, lastSegment( 0 )
 	{
 		memset( &nAttackers[0], 0, sizeof( nAttackers[0] * nAttackers.size() ) );
 	}

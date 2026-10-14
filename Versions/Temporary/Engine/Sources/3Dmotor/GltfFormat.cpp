@@ -270,8 +270,10 @@ namespace
 } // namespace
 
 CGltfFile::CGltfFile( fastgltf::Asset &&_asset, const NFile::CFilePath &_sourcePath )
-		: asset( std::move( _asset ) ), sourcePath( _sourcePath ), nodeParents( asset.nodes.size(), -1 ),
-			nodeWorldTransforms( asset.nodes.size() )
+	: asset( std::move( _asset ) )
+	, sourcePath( _sourcePath )
+	, nodeParents( asset.nodes.size(), -1 )
+	, nodeWorldTransforms( asset.nodes.size() )
 {
 	for ( std::size_t parent = 0; parent < asset.nodes.size(); ++parent )
 	{

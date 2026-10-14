@@ -16,7 +16,8 @@
 
 // CSinglePlayerTransceiver
 
-CSinglePlayerTransceiver::CSinglePlayerTransceiver() : bCommandsFromHistory( false )
+CSinglePlayerTransceiver::CSinglePlayerTransceiver()
+	: bCommandsFromHistory( false )
 {
 	nAdjustedGameSpeed = 0;
 	nGameSpeed = 0;
@@ -25,7 +26,7 @@ CSinglePlayerTransceiver::CSinglePlayerTransceiver() : bCommandsFromHistory( fal
 }
 
 CSinglePlayerTransceiver::CSinglePlayerTransceiver( ICommandsHistory *_pCommandHistory, IAILogic *_pAI )
-		: bCommandsFromHistory( false )
+	: bCommandsFromHistory( false )
 {
 	pCmdsHistory = _pCommandHistory;
 	pAI = _pAI;

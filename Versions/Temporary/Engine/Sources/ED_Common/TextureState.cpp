@@ -13,7 +13,10 @@
 #include "MapEditorLib/CommonEditorMethods.h"
 #include "3Dmotor/DBScene.h"
 
-CTextureState::CTextureState( CTextureEditor *_pEditor ) : pEditor( _pEditor ) {}
+CTextureState::CTextureState( CTextureEditor *_pEditor )
+	: pEditor( _pEditor )
+{
+}
 
 CTextureState::~CTextureState() {}
 

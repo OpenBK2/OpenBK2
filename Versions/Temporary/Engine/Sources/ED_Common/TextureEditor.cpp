@@ -5,7 +5,10 @@
 
 REGISTER_EDITOR_IN_DLL( Texture, CTextureEditor )
 
-CTextureEditor::CTextureEditor() : pState( 0 ) {}
+CTextureEditor::CTextureEditor()
+	: pState( 0 )
+{
+}
 
 CTextureEditor::~CTextureEditor()
 {

@@ -44,7 +44,10 @@ private:
 			std::unordered_map<uint16_t, CVec3> instanceIDs;
 			int nCount;
 
-			SMapSounds() : nCount( 0 ) {}
+			SMapSounds()
+				: nCount( 0 )
+			{
+			}
 		};
 
 		struct SMaxCountPredicate
@@ -87,7 +90,10 @@ private:
 		void RemoveSound( CellSounds *pCellSounds, const uint16_t wInstanceID );
 
 	public:
-		CMapSoundCell() : timeNextRun( 0 ) {}
+		CMapSoundCell()
+			: timeNextRun( 0 )
+		{
+		}
 
 		void AddSound( const uint16_t wSoundID,
 		               const CVec3 &vPos,
@@ -111,7 +117,11 @@ private:
 	NTimer::STime timeNextUpdate;
 
 public:
-	CMapSounds() : pSoundScene( 0 ), timeNextUpdate( 0 ) {}
+	CMapSounds()
+		: pSoundScene( 0 )
+		, timeNextUpdate( 0 )
+	{
+	}
 
 	void SetSoundScene( struct ISoundScene *pSoundScene );
 	void Update( const CVec3 &vListener, const float fViewRadius );

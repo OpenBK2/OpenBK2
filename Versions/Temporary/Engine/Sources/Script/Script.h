@@ -47,9 +47,16 @@ public:
 		int m_stackIndex = {}; // The stack index representing this object.
 
 	public:
-		Object( Script *pParent, int index ) : m_parent( pParent ), m_stackIndex( index ) {}
+		Object( Script *pParent, int index )
+			: m_parent( pParent )
+			, m_stackIndex( index )
+		{
+		}
 
-		Object() : m_parent( pCurrentScript ) {}
+		Object()
+			: m_parent( pCurrentScript )
+		{
+		}
 
 		int operator&( IBinSaver &f );
 
@@ -284,12 +291,14 @@ public:
 	class AutoBlock
 	{
 	public:
-		AutoBlock( Script &script ) : m_script( script )
+		AutoBlock( Script &script )
+			: m_script( script )
 		{
 			m_stackTop = m_script.GetTop();
 		}
 
-		AutoBlock( Object &object ) : m_script( object.GetParent() )
+		AutoBlock( Object &object )
+			: m_script( object.GetParent() )
 		{
 			m_stackTop = m_script.GetTop();
 		}
@@ -325,7 +334,12 @@ public:
 
 	Script( const char *name = 0, bool initStandardLibrary = true, lua_CFunction logFunction = 0 );
 
-	Script( lua_State *state ) : m_state( state ), m_ownState( false ), nPushCount( 0 ) {}
+	Script( lua_State *state )
+		: m_state( state )
+		, m_ownState( false )
+		, nPushCount( 0 )
+	{
+	}
 
 	virtual ~Script()
 	{

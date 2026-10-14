@@ -102,7 +102,9 @@ class CAmbientAnimator : public CFuncBase<CVec3>
 public:
 	CAmbientAnimator() {}
 
-	CAmbientAnimator( CPtrFuncBase<CAnimLight> *_pAnim, CFuncBase<CVec3> *pColor ) : pAmbient( pColor ), pAnim( _pAnim )
+	CAmbientAnimator( CPtrFuncBase<CAnimLight> *_pAnim, CFuncBase<CVec3> *pColor )
+		: pAmbient( pColor )
+		, pAnim( _pAnim )
 	{
 	}
 
@@ -205,7 +207,10 @@ CPolyline::CPolyline( CPtrFuncBase<NGfx::CGeometry> *_pGeometry,
                       const std::vector<unsigned short> &_indices,
                       const CVec4 &_color,
                       bool _bCheckDepth )
-		: pGeometry( _pGeometry ), indices( _indices ), color( _color ), bCheckDepth( _bCheckDepth )
+	: pGeometry( _pGeometry )
+	, indices( _indices )
+	, color( _color )
+	, bCheckDepth( _bCheckDepth )
 {
 	while ( ( indices.size() % 6 ) != 0 )
 	{
@@ -237,15 +242,26 @@ void CFakeParticleLMTexture::Recalc()
 // CGScene
 
 CGScene::CGScene()
-		: holdMask( 0, 0 ), nFrameCounter( 100 ), lastMask( 0, 0 ), bWaitForLoad( true ), nReuseIgnoreList( 0 ),
-			nGfxDeviceCreationID( -1 ), nIgnoreListWasCalced( 0 )
+	: holdMask( 0, 0 )
+	, nFrameCounter( 100 )
+	, lastMask( 0, 0 )
+	, bWaitForLoad( true )
+	, nReuseIgnoreList( 0 )
+	, nGfxDeviceCreationID( -1 )
+	, nIgnoreListWasCalced( 0 )
 {
 	Identity( &mHoldTransform );
 }
 
 CGScene::CGScene( int )
-		: holdMask( 0, 0 ), nFrameCounter( 100 ), lastMask( 0, 0 ), nReuseIgnoreList( 0 ), nGfxDeviceCreationID( -1 ),
-			nIgnoreListWasCalced( 0 ), fSunFlareCoeff( 0 ), sSunFlareTime( 0 )
+	: holdMask( 0, 0 )
+	, nFrameCounter( 100 )
+	, lastMask( 0, 0 )
+	, nReuseIgnoreList( 0 )
+	, nGfxDeviceCreationID( -1 )
+	, nIgnoreListWasCalced( 0 )
+	, fSunFlareCoeff( 0 )
+	, sSunFlareTime( 0 )
 {
 	Identity( &mHoldTransform );
 	pVolume = new CVolumeNode;
@@ -1141,7 +1157,10 @@ void CGScene::SSceneFragmentGroupInfo::AddStaticLMElement( CCombinedPart *p,
 CGScene::SSceneFragmentGroupInfo::SSceneFragmentGroupInfo( const SGroupSelect &_mask,
                                                            CSceneFragments *_pList,
                                                            CTransparentRenderer *_pTransp )
-		: mask( _mask ), pList( _pList ), pTransp( _pTransp ), pHZBuffer( 0 )
+	: mask( _mask )
+	, pList( _pList )
+	, pTransp( _pTransp )
+	, pHZBuffer( 0 )
 {
 }
 
@@ -1149,7 +1168,11 @@ CGScene::SSceneFragmentGroupInfo::SSceneFragmentGroupInfo( const SGroupSelect &_
                                                            CSceneFragments *_pList,
                                                            CTransparentRenderer *_pTransp,
                                                            IHZBuffer *_pHZBuffer )
-		: mask( _mask ), pList( _pList ), pTransp( _pTransp ), nLMTextureUsed( 0 ), pHZBuffer( _pHZBuffer )
+	: mask( _mask )
+	, pList( _pList )
+	, pTransp( _pTransp )
+	, nLMTextureUsed( 0 )
+	, pHZBuffer( _pHZBuffer )
 {
 }
 
@@ -1194,7 +1217,10 @@ struct SPerFloorStuff
 	int nFloorMask;
 	std::vector<CCombinedPart *> normal;
 
-	SPerFloorStuff( int _n = 0 ) : nFloorMask( _n ) {}
+	SPerFloorStuff( int _n = 0 )
+		: nFloorMask( _n )
+	{
+	}
 
 	void Add( CCombinedPart *p )
 	{
@@ -1219,7 +1245,11 @@ struct SLitParticlesAdder : public IReportParticlesGeometry
 	CSceneFragments *pList;
 	CTransformStack *pTS;
 
-	SLitParticlesAdder( CSceneFragments *_pList, CTransformStack *_pTS ) : pList( _pList ), pTS( _pTS ) {}
+	SLitParticlesAdder( CSceneFragments *_pList, CTransformStack *_pTS )
+		: pList( _pList )
+		, pTS( _pTS )
+	{
+	}
 
 	virtual void AddParticles( IVBCombiner *pVertices,
 	                           CFuncBase<std::vector<NGfx::STriangleList>> *pTrilists,

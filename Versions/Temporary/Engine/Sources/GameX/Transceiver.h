@@ -40,9 +40,16 @@ struct SReplayInfo
 	bool bDoReplay = {};
 	std::string szReplayName;
 
-	SReplayInfo() : bDoReplay( false ) {}
+	SReplayInfo()
+		: bDoReplay( false )
+	{
+	}
 
-	SReplayInfo( const std::string &_sz ) : bDoReplay( true ), szReplayName( _sz ) {}
+	SReplayInfo( const std::string &_sz )
+		: bDoReplay( true )
+		, szReplayName( _sz )
+	{
+	}
 };
 
 ITransceiver *CreateSinglePlayerTransceiver( const SReplayInfo &replay, IAILogic *pAI );

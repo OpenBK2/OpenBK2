@@ -76,9 +76,18 @@ public:
 	unsigned char *pLocked;
 	int nSize; // size in bytes
 
-	CRBase() : nLockCount( 0 ), pLocked( 0 ) {}
+	CRBase()
+		: nLockCount( 0 )
+		, pLocked( 0 )
+	{
+	}
 
-	CRBase( int _nSize ) : nSize( _nSize ), nLockCount( 0 ), pLocked( 0 ) {}
+	CRBase( int _nSize )
+		: nSize( _nSize )
+		, nLockCount( 0 )
+		, pLocked( 0 )
+	{
+	}
 
 	~CRBase()
 	{
@@ -153,7 +162,8 @@ public:
 	CVB() {}
 
 	// size in bytes
-	CVB( int _nSize, ETrueBufferUsage eUsage ) : CRBase<IDirect3DVertexBuffer9>( _nSize )
+	CVB( int _nSize, ETrueBufferUsage eUsage )
+		: CRBase<IDirect3DVertexBuffer9>( _nSize )
 	{
 		HRESULT hRes =
 				pDevice->CreateVertexBuffer( nSize, GetUsageFlags( eUsage ), 0, GetPool( eUsage ), obj.GetAddr(), 0 );
@@ -178,10 +188,14 @@ public:
 	unsigned char *pLocked;
 	int nSize; // size in bytes
 
-	CIBFast() : pLocked( 0 ) {}
+	CIBFast()
+		: pLocked( 0 )
+	{
+	}
 
 	// size in bytes
-	CIBFast( int _nSize, ETrueBufferUsage eUsage ) : nSize( _nSize )
+	CIBFast( int _nSize, ETrueBufferUsage eUsage )
+		: nSize( _nSize )
 	{
 		pLocked = 0;
 		HRESULT hRes = pDevice->CreateIndexBuffer(

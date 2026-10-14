@@ -25,11 +25,30 @@ AccessModifierOffset: -2
 # A continuation is indented deeper than a nesting level, so a wrapped line
 # cannot be mistaken for the start of a block.
 ContinuationIndentWidth: 4
-ConstructorInitializerIndentWidth: 4
+
+# An initializer list is one level in from the constructor, which is where this
+# tree already put it, and it does not need the deeper continuation indent: the
+# leading : and , below mark it unmistakably without help.
+ConstructorInitializerIndentWidth: 2
 
 # A braced list's elements sit one level in from the declaration, not two: they
 # are the contents of the braces rather than the continuation of a statement.
 BracedInitializerIndentWidth: 2
+
+# One member initializer per line, for the reason every other list here is one
+# per line, plus one of its own: an initializer sharing a line with three others
+# cannot be commented. `: a_( a ), b_( b )` leaves nowhere to say what b_ means
+# or why it starts at that value, and these constructors are where the
+# invariants of a class get established.
+PackConstructorInitializers: Never
+
+# The separator leads the line, so every initializer is indented the same.
+# BeforeColon, which is what LLVM and Google use, indents the first one to the
+# colon and the rest to the name after it: three tabs then four, which lines up
+# only if a tab happens to be two columns wide and reads as a mistake at any
+# other width. Leading separators also mean adding an initializer is a one-line
+# diff, which is the whole reason for one per line.
+BreakConstructorInitializers: BeforeComma
 
 # Wide enough for this code, which carries long type and member names, and
 # narrow enough to read without scrolling and to put two files side by side.

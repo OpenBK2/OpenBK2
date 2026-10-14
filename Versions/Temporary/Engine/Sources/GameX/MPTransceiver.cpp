@@ -62,7 +62,10 @@ public:
 		return 0;
 	}
 
-	CAISegmentFinishedPacket() : CNetPacket( 0 ) {}
+	CAISegmentFinishedPacket()
+		: CNetPacket( 0 )
+	{
+	}
 };
 
 class CTransciverCommonPacket : public CNetPacket
@@ -86,7 +89,11 @@ public:
 
 	CTransciverCommonPacket() {}
 
-	CTransciverCommonPacket( EType _eType ) : CNetPacket( 0 ), eType( _eType ) {}
+	CTransciverCommonPacket( EType _eType )
+		: CNetPacket( 0 )
+		, eType( _eType )
+	{
+	}
 };
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 111, CAISegmentFinishedPacket );
@@ -94,7 +101,8 @@ REGISTER_SAVELOAD_CLASS( GAMEX, 112, CTransciverCommonPacket );
 
 // CMPTransceiver
 
-CMPTransceiver::CMPTransceiver() : nGameSpeed( 0 )
+CMPTransceiver::CMPTransceiver()
+	: nGameSpeed( 0 )
 {
 	REGISTER_PACKET_PROCESSOR( &CMPTransceiver::OnTransciverCommonPacket );
 	REGISTER_PACKET_PROCESSOR( &CMPTransceiver::OnAISegmentFinishedPacket );

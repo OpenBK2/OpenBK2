@@ -35,7 +35,10 @@ public:
 	CIconv( const CIconv & ) = delete;
 	void operator=( const CIconv & ) = delete;
 
-	CIconv( const char *pszTo, const char *pszFrom ) : cd( ::iconv_open( pszTo, pszFrom ) ) {}
+	CIconv( const char *pszTo, const char *pszFrom )
+		: cd( ::iconv_open( pszTo, pszFrom ) )
+	{
+	}
 
 	// Marked closed as well as closed, so that a conversion asked for after this
 	// has run reports failure instead of handing libc a freed descriptor.

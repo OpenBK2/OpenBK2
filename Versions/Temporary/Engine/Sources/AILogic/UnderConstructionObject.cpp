@@ -34,7 +34,10 @@ class CSimpleChecksumLog : public ICheckSumLog
 	bool bEntries2 = {};
 
 public:
-	CSimpleChecksumLog() : bEntries2( false ) {}
+	CSimpleChecksumLog()
+		: bEntries2( false )
+	{
+	}
 
 	void SetEntries2()
 	{

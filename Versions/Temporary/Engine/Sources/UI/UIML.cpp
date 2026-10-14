@@ -127,7 +127,10 @@ private:
 	CTRect<float> sLetterBounds = CTRect<float>( 0, 0, 0, 0 );
 
 public:
-	CMLTextObject() : sPosition( 0.0f, 0.0f ) {}
+	CMLTextObject()
+		: sPosition( 0.0f, 0.0f )
+	{
+	}
 
 	CMLTextObject( CMLStream *pStream, int nStart, int nSize );
 
@@ -160,7 +163,10 @@ IMLObject *CreateIMLTextObject( CMLStream *pStream, int nStart, int nSize )
 }
 
 CMLTextObject::CMLTextObject( CMLStream *_pStream, int _nStart, int _nSize )
-		: pStream( _pStream ), nStrStart( _nStart ), nStrSize( _nSize ), sPosition( 0.0f, 0.0f )
+	: pStream( _pStream )
+	, nStrStart( _nStart )
+	, nStrSize( _nSize )
+	, sPosition( 0.0f, 0.0f )
 {
 	sSize = CTPoint<float>( 20, 20 );
 }
@@ -406,8 +412,12 @@ CreateIMLImageObject( NDb::STexture *pTexture, SState::EHORAlign eAlign, int nBo
 
 CMLImageObject::CMLImageObject(
 		NDb::STexture *_pTexture, SState::EHORAlign _eAlign, int _nBorder, int _nWidth, int _nHeight )
-		: pTexture( _pTexture ), eAlign( _eAlign ), nBorder( _nBorder ), nWidth( _nWidth ), nHeight( _nHeight ),
-			sSize( 0, 0 )
+	: pTexture( _pTexture )
+	, eAlign( _eAlign )
+	, nBorder( _nBorder )
+	, nWidth( _nWidth )
+	, nHeight( _nHeight )
+	, sSize( 0, 0 )
 {
 }
 
@@ -539,7 +549,10 @@ IMLObject *CreateIMLTabObject()
 	return new CMLTabObject();
 }
 
-CMLTabObject::CMLTabObject() : sSize( 0, 0 ) {}
+CMLTabObject::CMLTabObject()
+	: sSize( 0, 0 )
+{
+}
 
 void CMLTabObject::DynamicGenerate( const SReflowInfo &sInfo )
 {
@@ -598,7 +611,11 @@ private:
 
 		SCmdPair() {}
 
-		SCmdPair( ECommand _eCmd, IMLObject *_pObject ) : eCmd( _eCmd ), pObject( _pObject ) {}
+		SCmdPair( ECommand _eCmd, IMLObject *_pObject )
+			: eCmd( _eCmd )
+			, pObject( _pObject )
+		{
+		}
 
 		int operator&( IBinSaver &saver )
 		{
@@ -653,7 +670,8 @@ public:
 	int operator&( IBinSaver &saver );
 };
 
-CMLLayout::CMLLayout() : sSize( 0, 0 )
+CMLLayout::CMLLayout()
+	: sSize( 0, 0 )
 {
 	sState.sFont = NGScene::SFont( 16 | FONT_SIZE_POINTS, s_DefaultFontName );
 	sState.sColor = NGfx::SPixel8888( 0xFF, 0xFF, 0xFF, 0xFF );
@@ -1084,7 +1102,9 @@ public:
 	int operator&( IBinSaver &saver );
 };
 
-CML::CML() : sSize( 0, 0 ), nIDForHandler( -1 )
+CML::CML()
+	: sSize( 0, 0 )
+	, nIDForHandler( -1 )
 {
 	sFadeValue = new SFadeValue( 1.0f );
 	pLayout = new CMLLayout();

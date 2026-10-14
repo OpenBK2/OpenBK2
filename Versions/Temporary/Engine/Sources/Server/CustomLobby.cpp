@@ -7,7 +7,8 @@
 #include "Server_Client_Common/LobbiesIDs.h"
 #include "Statistics.h"
 
-CCustomLobby::CCustomLobby( class CClients *pClients, const std::string &szCfgFile ) : CGameLobby( pClients, szCfgFile )
+CCustomLobby::CCustomLobby( class CClients *pClients, const std::string &szCfgFile )
+	: CGameLobby( pClients, szCfgFile )
 {
 	nLobbyID = ERID_CUSTOM;
 	pStatisticsCollector = NStatistics::CreateCollector( "CUSTOM" );

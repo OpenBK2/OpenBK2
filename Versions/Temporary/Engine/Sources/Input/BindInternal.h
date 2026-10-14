@@ -16,7 +16,13 @@ protected:
 	uint32_t dwTime;
 
 public:
-	CKeyAccumulator() : bActive( false ), nValue( 0 ), nPower( 0 ), dwTime( 0 ) {}
+	CKeyAccumulator()
+		: bActive( false )
+		, nValue( 0 )
+		, nPower( 0 )
+		, dwTime( 0 )
+	{
+	}
 
 	void Activate( int _nPower, uint32_t _dwTime )
 	{
@@ -91,7 +97,13 @@ protected:
 	}
 
 public:
-	CDoubleAccumulator() : bActive( false ), nValue( 0 ), nPower( 0 ), dwTime( 0 ) {}
+	CDoubleAccumulator()
+		: bActive( false )
+		, nValue( 0 )
+		, nPower( 0 )
+		, dwTime( 0 )
+	{
+	}
 
 	void Add( int _nPower, uint32_t _dwTime )
 	{
@@ -147,7 +159,11 @@ protected:
 	uint32_t dwActivationTime;
 
 public:
-	CAxisAccumulator() : nValue( 0 ), dwActivationTime( 0 ) {}
+	CAxisAccumulator()
+		: nValue( 0 )
+		, dwActivationTime( 0 )
+	{
+	}
 
 	void Add( int nPoint, uint32_t dwTime )
 	{
@@ -200,7 +216,12 @@ struct SActionInfo
 	std::string szName;
 	EControlType eType;
 
-	SActionInfo() : eState( STATE_DEFAULT ), bActive( false ), fCoeff( 1.0f ), fGranularity( 1.0f ), eType( CT_UNKNOWN )
+	SActionInfo()
+		: eState( STATE_DEFAULT )
+		, bActive( false )
+		, fCoeff( 1.0f )
+		, fGranularity( 1.0f )
+		, eType( CT_UNKNOWN )
 	{
 	}
 };
@@ -217,7 +238,13 @@ struct SMapping
 	SAccumulator sAccumulator;
 	std::list<std::vector<int>> blockingGroupsSet;
 
-	SMapping() : nPower( 0 ), bActive( false ), bDisabled( true ), mType( MTYPE_UNKNOWN ) {}
+	SMapping()
+		: nPower( 0 )
+		, bActive( false )
+		, bDisabled( true )
+		, mType( MTYPE_UNKNOWN )
+	{
+	}
 };
 
 struct SCommand
@@ -229,7 +256,14 @@ struct SCommand
 	float fCoeff;
 	std::list<SMapping> mappingsList;
 
-	SCommand() : bActive( false ), fCoeff( 1.0f ), fDelta( 0.0f ), fSpeed( 0.0f ), dwTime( 0 ) {}
+	SCommand()
+		: bActive( false )
+		, fCoeff( 1.0f )
+		, fDelta( 0.0f )
+		, fSpeed( 0.0f )
+		, dwTime( 0 )
+	{
+	}
 };
 
 }; // namespace NInput

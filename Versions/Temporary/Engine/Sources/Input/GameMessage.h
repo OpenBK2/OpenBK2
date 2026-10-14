@@ -22,7 +22,10 @@ class CGMMemFunBoolObserver : public IGMObserver
 public:
 	CGMMemFunBoolObserver() {}
 
-	CGMMemFunBoolObserver( bool ( TObj::*_pfnMemFun )( const TMsg &_msg ) ) : pfnMemFun( _pfnMemFun ) {}
+	CGMMemFunBoolObserver( bool ( TObj::*_pfnMemFun )( const TMsg &_msg ) )
+		: pfnMemFun( _pfnMemFun )
+	{
+	}
 
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
@@ -46,7 +49,8 @@ public:
 	CGMMemFunBoolObserver1() {}
 
 	CGMMemFunBoolObserver1( bool ( TObj::*_pfnMemFun )( const TMsg &_msg, T1 _p1 ), T1 _p1 )
-			: pfnMemFun( _pfnMemFun ), p1( _p1 )
+		: pfnMemFun( _pfnMemFun )
+		, p1( _p1 )
 	{
 	}
 
@@ -73,7 +77,9 @@ public:
 	CGMMemFunBoolObserver2() {}
 
 	CGMMemFunBoolObserver2( void ( TObj::*_pfnMemFun )( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
-			: pfnMemFun( _pfnMemFun ), p1( _p1 ), p2( _p2 )
+		: pfnMemFun( _pfnMemFun )
+		, p1( _p1 )
+		, p2( _p2 )
 	{
 	}
 
@@ -98,7 +104,10 @@ class CGMMemFunObserver : public IGMObserver
 public:
 	CGMMemFunObserver() {}
 
-	CGMMemFunObserver( void ( TObj::*_pfnMemFun )( const TMsg &msg ) ) : pfnMemFun( _pfnMemFun ) {}
+	CGMMemFunObserver( void ( TObj::*_pfnMemFun )( const TMsg &msg ) )
+		: pfnMemFun( _pfnMemFun )
+	{
+	}
 
 	//
 	bool Execute( const SGameMessage &msg, CObjectBase *pThis )
@@ -123,7 +132,8 @@ public:
 	CGMMemFunObserver1() {}
 
 	CGMMemFunObserver1( void ( TObj::*_pfnMemFun )( const TMsg &_msg, T1 _p1 ), T1 _p1 )
-			: pfnMemFun( _pfnMemFun ), p1( _p1 )
+		: pfnMemFun( _pfnMemFun )
+		, p1( _p1 )
 	{
 	}
 
@@ -151,7 +161,9 @@ public:
 	CGMMemFunObserver2() {}
 
 	CGMMemFunObserver2( void ( TObj::*_pfnMemFun )( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
-			: pfnMemFun( _pfnMemFun ), p1( _p1 ), p2( _p2 )
+		: pfnMemFun( _pfnMemFun )
+		, p1( _p1 )
+		, p2( _p2 )
 	{
 	}
 
@@ -177,7 +189,10 @@ class CGMFunBoolObserver : public IGMObserver
 public:
 	CGMFunBoolObserver() {}
 
-	CGMFunBoolObserver( bool ( *_pfnFun )( const TMsg &_msg ) ) : pfnFun( _pfnFun ) {}
+	CGMFunBoolObserver( bool ( *_pfnFun )( const TMsg &_msg ) )
+		: pfnFun( _pfnFun )
+	{
+	}
 
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
@@ -196,7 +211,11 @@ class CGMFunBoolObserver1 : public IGMObserver
 public:
 	CGMFunBoolObserver1() {}
 
-	CGMFunBoolObserver1( bool ( *_pfnFun )( const TMsg &_msg, T1 _p1 ), T1 _p1 ) : pfnFun( _pfnFun ), p1( _p1 ) {}
+	CGMFunBoolObserver1( bool ( *_pfnFun )( const TMsg &_msg, T1 _p1 ), T1 _p1 )
+		: pfnFun( _pfnFun )
+		, p1( _p1 )
+	{
+	}
 
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
@@ -217,7 +236,9 @@ public:
 	CGMFunBoolObserver2() {}
 
 	CGMFunBoolObserver2( bool ( *_pfnFun )( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
-			: pfnFun( _pfnFun ), p1( _p1 ), p2( _p2 )
+		: pfnFun( _pfnFun )
+		, p1( _p1 )
+		, p2( _p2 )
 	{
 	}
 
@@ -238,7 +259,10 @@ class CGMFunObserver : public IGMObserver
 public:
 	CGMFunObserver() {}
 
-	CGMFunObserver( void ( *_pfnFun )( const TMsg &_msg ) ) : pfnFun( _pfnFun ) {}
+	CGMFunObserver( void ( *_pfnFun )( const TMsg &_msg ) )
+		: pfnFun( _pfnFun )
+	{
+	}
 
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
@@ -258,7 +282,11 @@ class CGMFunObserver1 : public IGMObserver
 public:
 	CGMFunObserver1() {}
 
-	CGMFunObserver1( void ( *_pfnFun )( const TMsg &_msg, T1 _p1 ), T1 _p1 ) : pfnFun( _pfnFun ), p1( _p1 ) {}
+	CGMFunObserver1( void ( *_pfnFun )( const TMsg &_msg, T1 _p1 ), T1 _p1 )
+		: pfnFun( _pfnFun )
+		, p1( _p1 )
+	{
+	}
 
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
@@ -280,7 +308,9 @@ public:
 	CGMFunObserver2() {}
 
 	CGMFunObserver2( void ( *_pfnFun )( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
-			: pfnFun( _pfnFun ), p1( _p1 ), p2( _p2 )
+		: pfnFun( _pfnFun )
+		, p1( _p1 )
+		, p2( _p2 )
 	{
 	}
 
@@ -301,7 +331,11 @@ class CGMOReg
 	CObj<IGMObserver> pObserver;
 
 public:
-	CGMOReg( const std::string &szEventName, IGMObserver *_pObserver ) : bind( szEventName ), pObserver( _pObserver ) {}
+	CGMOReg( const std::string &szEventName, IGMObserver *_pObserver )
+		: bind( szEventName )
+		, pObserver( _pObserver )
+	{
+	}
 
 	bool ProcessEvent( const SGameMessage &event, CObjectBase *pThis )
 	{

@@ -357,7 +357,10 @@ public:
 	}
 
 public:
-	CCommonRestState() : pUnit( 0 ) {}
+	CCommonRestState()
+		: pUnit( 0 )
+	{
+	}
 
 	CCommonRestState( const CVec2 &guardPoint, const uint16_t wDir, CCommonUnit *pUnit, const float fTimeToWait );
 
@@ -425,7 +428,10 @@ public:
 	                             const bool bFinishWnenCanMove,
 	                             const float fTimeToWait );
 
-	CMechUnitRestState() : pUnit( 0 ) {}
+	CMechUnitRestState()
+		: pUnit( 0 )
+	{
+	}
 
 	CMechUnitRestState( CAIUnit *pUnit,
 	                    const CVec2 &guardPoint,
@@ -603,7 +609,10 @@ class CCommonSwarmState : public IUnitState, public CStatusUpdatesHelper
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit, const CVec2 &point, const float fContinue );
 
-	CCommonSwarmState() : pUnit( 0 ) {}
+	CCommonSwarmState()
+		: pUnit( 0 )
+	{
+	}
 
 	CCommonSwarmState( class CAIUnit *pUnit, const CVec2 &point, const float fContinue );
 
@@ -657,7 +666,11 @@ class CCommonMoveToGridState : public IUnitState
 public:
 	static IUnitState *Instance( class CCommonUnit *pUnit, const CVec2 &vPoint, const CVec2 &vDir );
 
-	CCommonMoveToGridState() : pUnit( 0 ), eState( ES_WAIT ) {}
+	CCommonMoveToGridState()
+		: pUnit( 0 )
+		, eState( ES_WAIT )
+	{
+	}
 
 	CCommonMoveToGridState( class CCommonUnit *pUnit, const CVec2 &vPoint, const CVec2 &vDir );
 
@@ -701,7 +714,12 @@ class CMoveByFormationState : public IUnitState
 public:
 	static IUnitState *Instance( CCommonUnit *pUnit, const int nExecutorID );
 
-	CMoveByFormationState() : pUnit( 0 ), nExecutorID( -1 ), bNeedIdleNotification( false ) {}
+	CMoveByFormationState()
+		: pUnit( 0 )
+		, nExecutorID( -1 )
+		, bNeedIdleNotification( false )
+	{
+	}
 
 	CMoveByFormationState( CCommonUnit *pUnit, const int nExecutorID );
 

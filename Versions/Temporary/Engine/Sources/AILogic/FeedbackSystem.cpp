@@ -78,7 +78,10 @@ struct SEqualTo
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nID = {};
 
-	SEqualTo( int _nID ) : nID( _nID ) {}
+	SEqualTo( int _nID )
+		: nID( _nID )
+	{
+	}
 
 	bool operator()( CIDAndParam _nTry ) const
 	{

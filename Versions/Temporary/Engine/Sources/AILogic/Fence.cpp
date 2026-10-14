@@ -26,8 +26,9 @@ CFence::CFence( const SFenceRPGStats *_pStats,
                 const uint16_t wDir,
                 const int nDiplomacy,
                 const int nFrameIndex )
-		: pStats( _pStats ), CCommonStaticObject( center, fHP, wDir, nFrameIndex, ESOT_FENCE ),
-			eLifeType( NDb::SFenceRPGStats::ETOL_SAFE )
+	: pStats( _pStats )
+	, CCommonStaticObject( center, fHP, wDir, nFrameIndex, ESOT_FENCE )
+	, eLifeType( NDb::SFenceRPGStats::ETOL_SAFE )
 {
 	eLifeType = pStats->GetDamageTypeByFrameIndex( GetFrameIndex() );
 	SetAlive( eLifeType != NDb::SFenceRPGStats::ETOL_DESTROYED && CCommonStaticObject::IsAlive() );

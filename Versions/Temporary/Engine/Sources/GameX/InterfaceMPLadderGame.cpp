@@ -22,7 +22,10 @@
 
 // CInterfaceMPLadderGame
 
-CInterfaceMPLadderGame::CInterfaceMPLadderGame() : CInterfaceScreenBase( "MPLadderGame", "ladder_game" ) {}
+CInterfaceMPLadderGame::CInterfaceMPLadderGame()
+	: CInterfaceScreenBase( "MPLadderGame", "ladder_game" )
+{
+}
 
 CInterfaceMPLadderGame::~CInterfaceMPLadderGame()
 {

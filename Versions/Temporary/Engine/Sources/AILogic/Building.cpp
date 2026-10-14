@@ -155,8 +155,11 @@ CBuildingSimple::CBuildingSimple( const SBuildingRPGStats *pStats,
                                   const int nFrameIndex,
                                   int nPlayerIndex,
                                   int _nLinkID )
-		: CBuilding( pStats, center, wDir, fHP, nFrameIndex, _nLinkID ), nPlayer( nPlayerIndex ), nSideToCapture( -1 ),
-			timeToChangeOwner( 0 ), timeToChangeOwnerTotal( 0 )
+	: CBuilding( pStats, center, wDir, fHP, nFrameIndex, _nLinkID )
+	, nPlayer( nPlayerIndex )
+	, nSideToCapture( -1 )
+	, timeToChangeOwner( 0 )
+	, timeToChangeOwnerTotal( 0 )
 {
 	SetAlive( fHP > 0.0f );
 
@@ -517,14 +520,32 @@ CBuilding::CBuilding( const SBuildingRPGStats *_pStats,
                       const float fHP,
                       const int nFrameIndex,
                       int _nLinkID )
-		: pStats( _pStats ), CGivenPassabilityStObject( center, fHP, _wDir, nFrameIndex ), pLockingUnit( 0 ),
-			nOveralPlaces( _pStats->nRestSlots + _pStats->nMedicalSlots + _pStats->aiSlots.size() ),
-			medical( _pStats->nMedicalSlots ), fire( _pStats->aiSlots.size() ), rest( _pStats->nRestSlots ), bAlarm( false ),
-			nLinkID( _nLinkID ), turrets( _pStats->aiSlots.size() ), guns( _pStats->aiSlots.size() ), nextSegmTime( curTime ),
-			lastDistibution( 0 ), nLastFreeFireSoldierChoice( 0 ), firePlace2Soldier( _pStats->aiSlots.size() ),
-			nLastPlayer( theDipl.GetNeutralPlayer() ), nScriptID( -1 ), bShouldEscape( false ), bEscaped( false ),
-			timeOfDeath( 0 ), lastLeave( theDipl.GetNPlayers() ), bKeyBuilding( false ), wDir( _wDir ), nIterator( -1 ),
-			startOfRest( 0 ), bNewtralInfantryInside( false )
+	: pStats( _pStats )
+	, CGivenPassabilityStObject( center, fHP, _wDir, nFrameIndex )
+	, pLockingUnit( 0 )
+	, nOveralPlaces( _pStats->nRestSlots + _pStats->nMedicalSlots + _pStats->aiSlots.size() )
+	, medical( _pStats->nMedicalSlots )
+	, fire( _pStats->aiSlots.size() )
+	, rest( _pStats->nRestSlots )
+	, bAlarm( false )
+	, nLinkID( _nLinkID )
+	, turrets( _pStats->aiSlots.size() )
+	, guns( _pStats->aiSlots.size() )
+	, nextSegmTime( curTime )
+	, lastDistibution( 0 )
+	, nLastFreeFireSoldierChoice( 0 )
+	, firePlace2Soldier( _pStats->aiSlots.size() )
+	, nLastPlayer( theDipl.GetNeutralPlayer() )
+	, nScriptID( -1 )
+	, bShouldEscape( false )
+	, bEscaped( false )
+	, timeOfDeath( 0 )
+	, lastLeave( theDipl.GetNPlayers() )
+	, bKeyBuilding( false )
+	, wDir( _wDir )
+	, nIterator( -1 )
+	, startOfRest( 0 )
+	, bNewtralInfantryInside( false )
 {
 	SetAlive( fHP > 0.0f );
 	memset( &lastLeave[0], 0, sizeof( lastLeave[0] ) * lastLeave.size() );

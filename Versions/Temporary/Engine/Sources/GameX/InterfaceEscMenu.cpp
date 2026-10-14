@@ -58,7 +58,9 @@ bool CInterfaceEscMenu::CReactions::Execute( const std::string &szSender, const 
 
 // CInterfaceEscMenu
 
-CInterfaceEscMenu::CInterfaceEscMenu() : CInterfaceScreenBase( "MissionEscMenu", "esc_menu" ), bClosed( false )
+CInterfaceEscMenu::CInterfaceEscMenu()
+	: CInterfaceScreenBase( "MissionEscMenu", "esc_menu" )
+	, bClosed( false )
 {
 	AddObserver( "try_exit_main_menu", &CInterfaceEscMenu::MsgTryExitMainMenu );
 	AddObserver( "try_exit_windows", &CInterfaceEscMenu::MsgTryExitWindows );

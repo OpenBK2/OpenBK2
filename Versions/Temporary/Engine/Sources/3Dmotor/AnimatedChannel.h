@@ -40,7 +40,11 @@ private:
 	}
 
 protected:
-	CAnimatedChannel() : nChannelID( INVALID_CHANNEL_ID ), CFuncBase<float>( 0.f ) {}
+	CAnimatedChannel()
+		: nChannelID( INVALID_CHANNEL_ID )
+		, CFuncBase<float>( 0.f )
+	{
+	}
 
 	virtual bool NeedUpdate()
 	{
@@ -58,8 +62,10 @@ protected:
 
 public:
 	CAnimatedChannel( ISkeletonAnimator *_pAnimator, const std::string &_szChannelName, float fDefaultValue = 0.f )
-			: CFuncBase<float>( fDefaultValue ), pAnimator( _pAnimator ), szChannelName( _szChannelName ),
-				nChannelID( INVALID_CHANNEL_ID )
+		: CFuncBase<float>( fDefaultValue )
+		, pAnimator( _pAnimator )
+		, szChannelName( _szChannelName )
+		, nChannelID( INVALID_CHANNEL_ID )
 	{
 	}
 };

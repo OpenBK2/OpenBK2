@@ -10,14 +10,15 @@ namespace NGScene
 // CBind
 
 CBind::CBind( CFuncBase<NAnimation::SSkeletonPose> *_pAnimation, const NDb::SSkeleton *pSkeleton, int _nModelInFile )
-		: pAnimation( _pAnimation )
+	: pAnimation( _pAnimation )
 {
 	skeletonH.pSkeleton = pSkeleton;
 	skeletonH.nModelInFile = _nModelInFile;
 }
 
 CBind::CBind( CFuncBase<NAnimation::SSkeletonPose> *_pAnimation, const NAnimation::SSkeletonHandle &_skeletonH )
-		: pAnimation( _pAnimation ), skeletonH( _skeletonH )
+	: pAnimation( _pAnimation )
+	, skeletonH( _skeletonH )
 {
 }
 
@@ -32,7 +33,8 @@ CBind::~CBind() {}
 // CAnimatedBound
 
 CAnimatedBound::CAnimatedBound( const SBound &_bv, CFuncBase<NAnimation::SSkeletonPose> *_pAnimation )
-		: bv( _bv ), pAnimation( _pAnimation )
+	: bv( _bv )
+	, pAnimation( _pAnimation )
 {
 	Zero( value );
 	Zero( prevValue );

@@ -67,7 +67,12 @@ struct S3DTriangle
 
 	S3DTriangle() {}
 
-	S3DTriangle( uint16_t _i1, uint16_t _i2, uint16_t _i3 ) : i1( _i1 ), i2( _i2 ), i3( _i3 ) {}
+	S3DTriangle( uint16_t _i1, uint16_t _i2, uint16_t _i3 )
+		: i1( _i1 )
+		, i2( _i2 )
+		, i3( _i3 )
+	{
+	}
 };
 
 //struct SGeomVecT1C1

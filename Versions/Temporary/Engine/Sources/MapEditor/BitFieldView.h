@@ -36,7 +36,10 @@ struct SField
 	std::string szName;
 	int nValue;
 
-	SField() : nValue( -1 ) {}
+	SField()
+		: nValue( -1 )
+	{
+	}
 
 	int operator&( IXmlSaver &saver );
 };

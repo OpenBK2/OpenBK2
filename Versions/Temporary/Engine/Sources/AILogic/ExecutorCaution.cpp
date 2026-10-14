@@ -7,7 +7,7 @@
 #include <cstdint>
 
 CExecutorCaution::CExecutorCaution( CAIUnit *_pUnit )
-		: CExecutorUnitCombatBonus( NDb::ABILITY_CAUTION, _pUnit, TID_CAUTION )
+	: CExecutorUnitCombatBonus( NDb::ABILITY_CAUTION, _pUnit, TID_CAUTION )
 {
 }
 

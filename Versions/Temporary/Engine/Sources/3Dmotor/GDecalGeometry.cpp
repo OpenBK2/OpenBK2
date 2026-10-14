@@ -14,7 +14,12 @@ struct STriangleCreator
 	std::vector<STriangle> *pDst;
 	int nRoot, nPrev;
 
-	STriangleCreator( std::vector<STriangle> *_pDst ) : pDst( _pDst ), nRoot( -1 ), nPrev( -1 ) {}
+	STriangleCreator( std::vector<STriangle> *_pDst )
+		: pDst( _pDst )
+		, nRoot( -1 )
+		, nPrev( -1 )
+	{
+	}
 
 	void AddVertex( int n )
 	{
@@ -123,7 +128,9 @@ class CShadowBuilder
 
 public:
 	CShadowBuilder( CObjectInfo *_pRes, float _fNormalEdge, float _fDepthMargin )
-			: pRes( _pRes ), fNormalEdge( _fNormalEdge ), fDepthMargin( _fDepthMargin )
+		: pRes( _pRes )
+		, fNormalEdge( _fNormalEdge )
+		, fDepthMargin( _fDepthMargin )
 	{
 		info.geometry.resize( 0 );
 	}
@@ -351,8 +358,15 @@ CDecalGeometry::CDecalGeometry( CPtrFuncBase<CObjectInfo> *p,
                                 const CVec2 &_vShift,
                                 float _fNormalEdge,
                                 float _fDepthMargin )
-		: pSource( p ), srcPos( _srcPos ), vOrigin( _vOrigin ), vNormal( _vNormal ), vSize( _vSize ), fRotation( _fR ),
-			vShift( _vShift ), fNormalEdge( _fNormalEdge ), fDepthMargin( _fDepthMargin )
+	: pSource( p )
+	, srcPos( _srcPos )
+	, vOrigin( _vOrigin )
+	, vNormal( _vNormal )
+	, vSize( _vSize )
+	, fRotation( _fR )
+	, vShift( _vShift )
+	, fNormalEdge( _fNormalEdge )
+	, fDepthMargin( _fDepthMargin )
 {
 }
 
@@ -372,7 +386,8 @@ void CDecalGeometry::Recalc()
 // CPerPolyDecal
 
 CPerPolyDecal::CPerPolyDecal( IPart *_pPart, const std::vector<CVec3> &_srcPositions )
-		: pPart( _pPart ), srcPositions( _srcPositions )
+	: pPart( _pPart )
+	, srcPositions( _srcPositions )
 {
 	data.geometry.resize( 0 );
 }
@@ -426,9 +441,13 @@ protected:
 
 public:
 	CObjectInfoProcessor( CObjectInfo::SData *pInfo, const CObjectInfo &src )
-			: info( *pInfo ), srcPositions( src.GetPositions() ), srcVertices( src.GetVertices() ),
-				posIndices( src.GetPositionIndices() ), vertMap( src.GetVertices().size(), -1 ), srcTris( src.GetGeometry() ),
-				srcWeights( src.GetWeights() )
+		: info( *pInfo )
+		, srcPositions( src.GetPositions() )
+		, srcVertices( src.GetVertices() )
+		, posIndices( src.GetPositionIndices() )
+		, vertMap( src.GetVertices().size(), -1 )
+		, srcTris( src.GetGeometry() )
+		, srcWeights( src.GetWeights() )
 	{
 		info = CObjectInfo::SData();
 	}
@@ -520,7 +539,7 @@ CExplosionShadowBuilder::CExplosionShadowBuilder( CObjectInfo::SData *pInfo,
                                                   const CVec3 &vOrigin,
                                                   float fSize,
                                                   float _fRotation )
-		: CObjectInfoProcessor( pInfo, src )
+	: CObjectInfoProcessor( pInfo, src )
 {
 	float fSin = sin( _fRotation ), fCos = cos( _fRotation );
 	for ( int k = 0; k < srcTris.size(); ++k )
@@ -626,7 +645,7 @@ CPerPolyDecalBuilder::CPerPolyDecalBuilder( CObjectInfo::SData *pInfo,
                                             const CVec2 &vSize,
                                             float fRotation,
                                             const CVec2 vShift )
-		: CObjectInfoProcessor( pInfo, src )
+	: CObjectInfoProcessor( pInfo, src )
 {
 	projection.Setup( vOrigin, _vNormal, vSize, fRotation, vShift );
 	for ( int k = 0; k < srcTris.size(); ++k )

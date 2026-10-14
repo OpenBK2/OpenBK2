@@ -36,8 +36,11 @@ void CPathFractionComposite::GetPrevPoints( struct SPrevPathParams *pParams ) co
 }
 
 CPathFractionComposite::CPathFractionComposite( struct IPlane *pPlane, struct IPathFraction *pPath )
-		: vSpeed( pPlane->GetSpeedB2() ), vNormale( pPlane->GetNormalB2() ), pInitialPath( pPath ), nIndex( 0 ),
-			fSplineProgress( 0 )
+	: vSpeed( pPlane->GetSpeedB2() )
+	, vNormale( pPlane->GetNormalB2() )
+	, pInitialPath( pPath )
+	, nIndex( 0 )
+	, fSplineProgress( 0 )
 {
 	Normalize( &vSpeed );
 	CPathList pathList;

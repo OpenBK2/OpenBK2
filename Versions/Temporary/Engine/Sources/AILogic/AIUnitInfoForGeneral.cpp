@@ -17,9 +17,14 @@ extern CSupremeBeing theSupremeBeing;
 //BASIC_REGISTER_CLASS( CAIUnitInfoForGeneral );
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CAIUnitInfoForGeneral::CAIUnitInfoForGeneral( CAIUnit *_pOwner )
-		: pOwner( _pOwner ), lastVisibleTime( 0 ), vLastVisiblePosition( VNULL2 ), lastVisibleAntiArtTime( 0 ),
-			vLastVisibleAntiArtCenter( VNULL2 ), fDistToLastVisibleAntiArt( -1.0f ), fWeight( 0 ),
-			vLastRegisteredGeneralPos( VNULL2 )
+	: pOwner( _pOwner )
+	, lastVisibleTime( 0 )
+	, vLastVisiblePosition( VNULL2 )
+	, lastVisibleAntiArtTime( 0 )
+	, vLastVisibleAntiArtCenter( VNULL2 )
+	, fDistToLastVisibleAntiArt( -1.0f )
+	, fWeight( 0 )
+	, vLastRegisteredGeneralPos( VNULL2 )
 {
 	nextTimeToReportGeneral = curTime + NRandom::Random( 2000, 5000 );
 	RecordRandomCall();

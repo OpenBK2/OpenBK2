@@ -31,7 +31,10 @@ class CConnectServerProcessor : public CPacketProcessor
 	EConnectType eConnectType;
 
 public:
-	CConnectServerProcessor() : eConnectState( ECS_INACTIVE ) {}
+	CConnectServerProcessor()
+		: eConnectState( ECS_INACTIVE )
+	{
+	}
 
 	CConnectServerProcessor( class CNet *pServer, bool bCheckConnect );
 

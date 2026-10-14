@@ -18,7 +18,10 @@ class CCommandHandlerContainer : public ICommandHandlerContainer
 
 		SCommandRange() {}
 
-		SCommandRange( const SCommandRange &rCommandRange ) : commandIDSet( rCommandRange.commandIDSet ) {}
+		SCommandRange( const SCommandRange &rCommandRange )
+			: commandIDSet( rCommandRange.commandIDSet )
+		{
+		}
 
 		SCommandRange &operator=( const SCommandRange &rCommandRange )
 		{

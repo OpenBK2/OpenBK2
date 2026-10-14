@@ -65,7 +65,10 @@ public:
 		}
 	}
 
-	CAckTuning() : bInitted( false ) {}
+	CAckTuning()
+		: bInitted( false )
+	{
+	}
 
 	void Add( const std::string &szAck )
 	{
@@ -138,7 +141,10 @@ void CSoundScene2D::InitConsts()
 	Init();
 }
 
-CSoundScene2D::CSoundScene2D() : pSFX( 0 ), pGameTimer( 0 ), bMapInitted( false )
+CSoundScene2D::CSoundScene2D()
+	: pSFX( 0 )
+	, pGameTimer( 0 )
+	, bMapInitted( false )
 {
 	mapSounds.SetSoundScene( this );
 	InitConsts();

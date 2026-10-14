@@ -4,7 +4,12 @@
 #include "UIScreen.h"
 #include "DBUIConsts.h"
 
-CTooltips::CTooltips() : vLastMousePos( -1, -1 ), timeMouseFreese( 0 ), nContext( -1 ) {}
+CTooltips::CTooltips()
+	: vLastMousePos( -1, -1 )
+	, timeMouseFreese( 0 )
+	, nContext( -1 )
+{
+}
 
 void CTooltips::AdjustTooltipPos( const CVec2 &vMousePos )
 {

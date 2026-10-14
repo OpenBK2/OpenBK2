@@ -14,7 +14,11 @@ const int NO_MOD = -1;
 
 // CInterfaceLoadMod
 
-CInterfaceLoadMod::CInterfaceLoadMod() : CInterfaceScreenBase( "LoadMod", "load_mod" ), nInitialMod( NO_MOD ) {}
+CInterfaceLoadMod::CInterfaceLoadMod()
+	: CInterfaceScreenBase( "LoadMod", "load_mod" )
+	, nInitialMod( NO_MOD )
+{
+}
 
 bool CInterfaceLoadMod::Init()
 {

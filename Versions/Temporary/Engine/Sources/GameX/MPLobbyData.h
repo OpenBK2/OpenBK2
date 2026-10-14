@@ -25,7 +25,9 @@ public:
 
 	CClientListData() {}
 
-	CClientListData( const std::string &_szName, const EMPChatStatus _eStatus ) : szName( _szName ), eStatus( _eStatus )
+	CClientListData( const std::string &_szName, const EMPChatStatus _eStatus )
+		: szName( _szName )
+		, eStatus( _eStatus )
 	{
 	}
 };
@@ -45,7 +47,10 @@ public:
 
 	CClientListViewer() {}
 
-	CClientListViewer( class CInterfaceMPLobby *_pInterface ) : pInterface( _pInterface ) {}
+	CClientListViewer( class CInterfaceMPLobby *_pInterface )
+		: pInterface( _pInterface )
+	{
+	}
 
 	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
 	void SetData( CObjectBase *pWindow, const CObjectBase *pData ) const;

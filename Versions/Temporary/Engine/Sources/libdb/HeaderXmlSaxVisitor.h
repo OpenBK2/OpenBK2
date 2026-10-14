@@ -15,9 +15,17 @@ class CObjectHeaderXmlSaxVisitor : public NLXML::IXmlSaxVisitor
 	STypeObjectHeader *pHeader = nullptr;
 
 public:
-	CObjectHeaderXmlSaxVisitor() : bNeedMoreChunks( true ), pHeader( 0 ) {}
+	CObjectHeaderXmlSaxVisitor()
+		: bNeedMoreChunks( true )
+		, pHeader( 0 )
+	{
+	}
 
-	CObjectHeaderXmlSaxVisitor( STypeObjectHeader *_pHeader ) : bNeedMoreChunks( true ), pHeader( _pHeader ) {}
+	CObjectHeaderXmlSaxVisitor( STypeObjectHeader *_pHeader )
+		: bNeedMoreChunks( true )
+		, pHeader( _pHeader )
+	{
+	}
 
 	//
 	bool VisitHeader( const std::string &szVersion, const std::string &szEncoding, const std::string &szStandalone )

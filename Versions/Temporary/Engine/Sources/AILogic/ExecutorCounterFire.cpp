@@ -20,8 +20,13 @@ extern CAntiArtilleryManager theAAManager;
 #define RETARGET_DELTA 10.0f
 
 CExecutorCounterFire::CExecutorCounterFire( CArtillery *_pUnit )
-		: pUnit( _pUnit ), CExecutor( TID_COUNTER_FIRE, 1000 / SConsts::AI_SEGMENT_DURATION ), fSearchRadius( 0.0f ),
-			bBonusApplied( false ), vSearchCenter( VNULL2 ), vLastCirclePos( VNULL2 ), timeLastHeard( curTime )
+	: pUnit( _pUnit )
+	, CExecutor( TID_COUNTER_FIRE, 1000 / SConsts::AI_SEGMENT_DURATION )
+	, fSearchRadius( 0.0f )
+	, bBonusApplied( false )
+	, vSearchCenter( VNULL2 )
+	, vLastCirclePos( VNULL2 )
+	, timeLastHeard( curTime )
 {
 	state.eState = EASS_READY_TO_ON;
 	state.bAutocast = false;

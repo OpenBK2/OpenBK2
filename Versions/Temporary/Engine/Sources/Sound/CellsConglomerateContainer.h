@@ -14,7 +14,11 @@ class CCellsConglomerateContainer
 		const SIntThree vCenter;
 		CConglomerates *pConglomerates;
 
-		SAddCellEnumerator( const SIntThree &_vCenter ) : vCenter( _vCenter ), pConglomerates( 0 ) {}
+		SAddCellEnumerator( const SIntThree &_vCenter )
+			: vCenter( _vCenter )
+			, pConglomerates( 0 )
+		{
+		}
 
 		void operator()( const int nCurRank, const int nX, const int nY )
 		{
@@ -37,7 +41,11 @@ class CCellsConglomerateContainer
 		const SIntThree vCenter;
 		CConglomerates *pConglomerates;
 
-		SRemoveCellEnumerator( const SIntThree &_vCenter ) : vCenter( _vCenter ), pConglomerates( 0 ) {}
+		SRemoveCellEnumerator( const SIntThree &_vCenter )
+			: vCenter( _vCenter )
+			, pConglomerates( 0 )
+		{
+		}
 
 		void operator()( const int nCurRank, const int nX, const int nY )
 		{
@@ -63,7 +71,10 @@ class CCellsConglomerateContainer
 	int nMinZ;
 
 public:
-	CCellsConglomerateContainer() : bInitted( false ) {}
+	CCellsConglomerateContainer()
+		: bInitted( false )
+	{
+	}
 
 	void Init( const int nMaxX, const int nMaxY, const int nMinZ, const int nMaxZ );
 

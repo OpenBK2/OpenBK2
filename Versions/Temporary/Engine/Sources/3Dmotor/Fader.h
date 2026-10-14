@@ -31,24 +31,42 @@ struct SFaderInfo
 
 	//
 	SFaderInfo()
-			: bCreate( true ), bStartFade( false ), bFadeToBlack( false ), pOwner( 0 ), nStartTime( 0 ), fLatency( 0.f )
+		: bCreate( true )
+		, bStartFade( false )
+		, bFadeToBlack( false )
+		, pOwner( 0 )
+		, nStartTime( 0 )
+		, fLatency( 0.f )
 	{
 	}
 
 	SFaderInfo( bool _bCreate )
-			: bCreate( _bCreate ), bStartFade( false ), bFadeToBlack( false ), pOwner( 0 ), nStartTime( 0 ), fLatency( 0.f )
+		: bCreate( _bCreate )
+		, bStartFade( false )
+		, bFadeToBlack( false )
+		, pOwner( 0 )
+		, nStartTime( 0 )
+		, fLatency( 0.f )
 	{
 	}
 
 	SFaderInfo( bool _bCreate, CObjectBase *_pOwner )
-			: bCreate( _bCreate ), bStartFade( false ), bFadeToBlack( false ), pOwner( _pOwner ), nStartTime( 0 ),
-				fLatency( 0.f )
+		: bCreate( _bCreate )
+		, bStartFade( false )
+		, bFadeToBlack( false )
+		, pOwner( _pOwner )
+		, nStartTime( 0 )
+		, fLatency( 0.f )
 	{
 	}
 
 	SFaderInfo( CObjectBase *_pOwner, bool _bFadeToBlack, int _nStartTime, float _fLatency )
-			: bCreate( true ), bStartFade( true ), pOwner( _pOwner ), bFadeToBlack( _bFadeToBlack ),
-				nStartTime( _nStartTime ), fLatency( _fLatency )
+		: bCreate( true )
+		, bStartFade( true )
+		, pOwner( _pOwner )
+		, bFadeToBlack( _bFadeToBlack )
+		, nStartTime( _nStartTime )
+		, fLatency( _fLatency )
 	{
 	}
 };

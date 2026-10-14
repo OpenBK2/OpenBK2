@@ -15,10 +15,15 @@ class CFullScreenFader : public IFullScreenFader
 		CDGPtr<CFuncBase<CVec3>> pModificator;
 		bool bModifyInterfaces;
 
-		SColorModificatorDescr() : pModificator( 0 ), bModifyInterfaces( true ) {}
+		SColorModificatorDescr()
+			: pModificator( 0 )
+			, bModifyInterfaces( true )
+		{
+		}
 
 		SColorModificatorDescr( CFuncBase<CVec3> *pColor, bool _bModifyInterfaces )
-				: pModificator( pColor ), bModifyInterfaces( _bModifyInterfaces )
+			: pModificator( pColor )
+			, bModifyInterfaces( _bModifyInterfaces )
 		{
 		}
 	};
@@ -46,7 +51,11 @@ class CFullScreenFader : public IFullScreenFader
 	//
 public:
 	CFullScreenFader()
-			: startTime( 0 ), fDuration( 0.0f ), fStartValue( 1.0f ), fEndValue( 1.0f ), bFadeInterfaces( true )
+		: startTime( 0 )
+		, fDuration( 0.0f )
+		, fStartValue( 1.0f )
+		, fEndValue( 1.0f )
+		, bFadeInterfaces( true )
 	{
 	}
 

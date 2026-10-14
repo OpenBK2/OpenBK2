@@ -43,7 +43,15 @@ struct SImageInfo
 	// because knowing an image is there and unreadable is worth more than a gap.
 	bool bSupported;
 
-	SImageInfo() : nWidth( 0 ), nHeight( 0 ), nBpp( 0 ), nHotX( 0 ), nHotY( 0 ), bSupported( false ) {}
+	SImageInfo()
+		: nWidth( 0 )
+		, nHeight( 0 )
+		, nBpp( 0 )
+		, nHotX( 0 )
+		, nHotY( 0 )
+		, bSupported( false )
+	{
+	}
 };
 
 // One decoded image. 32-bit ARGB, top-down, nWidth pixels per row, so
@@ -56,7 +64,13 @@ struct SImage
 	int nHotY;
 	std::vector<uint32_t> pixels;
 
-	SImage() : nWidth( 0 ), nHeight( 0 ), nHotX( 0 ), nHotY( 0 ) {}
+	SImage()
+		: nWidth( 0 )
+		, nHeight( 0 )
+		, nHotX( 0 )
+		, nHotY( 0 )
+	{
+	}
 };
 
 // What a .ani says about its animation, once the RIFF has been walked.

@@ -7,11 +7,18 @@
 
 #include <cstdint>
 
-SRandomSeed::SRandomSeed() : nSeed( GetCurrentTimeMilliseconds() ) {}
+SRandomSeed::SRandomSeed()
+	: nSeed( GetCurrentTimeMilliseconds() )
+{
+}
 
-SRandomSeed::SRandomSeed( int seed ) : nSeed( seed ) {}
+SRandomSeed::SRandomSeed( int seed )
+	: nSeed( seed )
+{
+}
 
-SRand::SRand() : seed( GetCurrentTimeMilliseconds() )
+SRand::SRand()
+	: seed( GetCurrentTimeMilliseconds() )
 {
 	Get( 4 );
 }

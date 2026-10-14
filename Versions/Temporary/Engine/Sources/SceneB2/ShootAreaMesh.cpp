@@ -130,8 +130,13 @@ CShootAreaMesh::CShootAreaMesh( CFuncBase<SFBTransform> *_pTransform,
                                 float _fMaxRadius,
                                 CTerrainManager *_pTerraManager,
                                 float _fWidth )
-		: pTransform( _pTransform ), fStartAngle( _fStartAngle ), fEndAngle( _fEndAngle ), fMinRadius( _fMinRadius ),
-			fMaxRadius( _fMaxRadius ), pTerraManager( _pTerraManager ), fWidth( _fWidth )
+	: pTransform( _pTransform )
+	, fStartAngle( _fStartAngle )
+	, fEndAngle( _fEndAngle )
+	, fMinRadius( _fMinRadius )
+	, fMaxRadius( _fMaxRadius )
+	, pTerraManager( _pTerraManager )
+	, fWidth( _fWidth )
 {
 }
 
@@ -142,8 +147,12 @@ CShootAreaMesh::CShootAreaMesh( const CVec2 &vCenter,
                                 float _fMaxRadius,
                                 CTerrainManager *_pTerraManager,
                                 float _fWidth )
-		: fStartAngle( _fStartAngle ), fEndAngle( _fEndAngle ), fMinRadius( _fMinRadius ), fMaxRadius( _fMaxRadius ),
-			pTerraManager( _pTerraManager ), fWidth( _fWidth )
+	: fStartAngle( _fStartAngle )
+	, fEndAngle( _fEndAngle )
+	, fMinRadius( _fMinRadius )
+	, fMaxRadius( _fMaxRadius )
+	, pTerraManager( _pTerraManager )
+	, fWidth( _fWidth )
 {
 	SFBTransform transform;
 	transform.forward.Set( CVec3( vCenter.x, vCenter.y, 0 ), QNULL );

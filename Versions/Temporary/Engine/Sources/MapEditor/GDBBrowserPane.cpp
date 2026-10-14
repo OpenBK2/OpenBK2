@@ -27,7 +27,10 @@
 // commented out and which nothing called, did not come along.
 
 CGDBBrowserContents::CGDBBrowserContents( IPane *_pPane, int _nGDBBrowserID )
-		: pPane( _pPane ), nGDBBrowserID( _nGDBBrowserID ), bCreateControls( true ), pContents( 0 )
+	: pPane( _pPane )
+	, nGDBBrowserID( _nGDBBrowserID )
+	, bCreateControls( true )
+	, pContents( 0 )
 {
 }
 

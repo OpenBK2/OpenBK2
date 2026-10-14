@@ -168,9 +168,17 @@ struct SMultiplayerReplayInfo
 	}
 
 	SMultiplayerReplayInfo()
-			: nTechLevel( -1 ), nTimeLimit( -1 ), nCaptureTime( -1 ), bUnitExperience( false ), nLastCommandSegment( -1 ),
-				nLastGameSegment( -1 ), nWinningSide( -1 ), bSinglePlayer( false ), nStartKind( 0 ), nDifficulty( 0 ),
-				bIsTutorial( false )
+		: nTechLevel( -1 )
+		, nTimeLimit( -1 )
+		, nCaptureTime( -1 )
+		, bUnitExperience( false )
+		, nLastCommandSegment( -1 )
+		, nLastGameSegment( -1 )
+		, nWinningSide( -1 )
+		, bSinglePlayer( false )
+		, nStartKind( 0 )
+		, nDifficulty( 0 )
+		, bIsTutorial( false )
 	{
 	}
 

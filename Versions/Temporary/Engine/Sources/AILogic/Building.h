@@ -46,7 +46,12 @@ class CBuilding : public CGivenPassabilityStObject, public ILoadableObject, publ
 		// количество солдат в observation points стороны
 		int nSoldiersInObservationPoints = {};
 
-		SSideInfo() : nFireSlots( 0 ), nObservationPoints( 0 ), nSoldiersInObservationPoints( 0 ) {}
+		SSideInfo()
+			: nFireSlots( 0 )
+			, nObservationPoints( 0 )
+			, nSoldiersInObservationPoints( 0 )
+		{
+		}
 	};
 
 	ZDATA_( CGivenPassabilityStObject )
@@ -221,7 +226,11 @@ protected:
 	void SoldierDamaged( class CSoldier *pUnit );
 
 	CBuilding()
-			: pLockingUnit( 0 ), nextSegmTime( 0 ), nScriptID( -1 ), bKeyBuilding( false ), bNewtralInfantryInside( false )
+		: pLockingUnit( 0 )
+		, nextSegmTime( 0 )
+		, nScriptID( -1 )
+		, bKeyBuilding( false )
+		, bNewtralInfantryInside( false )
 	{
 	}
 

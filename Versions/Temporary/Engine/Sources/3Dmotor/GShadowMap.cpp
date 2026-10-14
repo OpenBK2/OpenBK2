@@ -25,7 +25,11 @@ struct SEdge
 
 	SEdge() {}
 
-	SEdge( const CVec4 &_s, const CVec4 &_e ) : vStart( _s ), vEnd( _e ) {}
+	SEdge( const CVec4 &_s, const CVec4 &_e )
+		: vStart( _s )
+		, vEnd( _e )
+	{
+	}
 };
 
 static void CalcIntersection( CVec4 *p, const CVec4 &_a, float fa, const CVec4 &_b, float fb )
@@ -226,7 +230,11 @@ struct SHashedHedron
 
 		SEdge() {}
 
-		SEdge( int _s, int _e ) : nStart( _s ), nEnd( _e ) {}
+		SEdge( int _s, int _e )
+			: nStart( _s )
+			, nEnd( _e )
+		{
+		}
 	};
 
 	struct SPolygon

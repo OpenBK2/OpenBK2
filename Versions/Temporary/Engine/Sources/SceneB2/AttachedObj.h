@@ -91,7 +91,11 @@ public:
 		return 0;
 	}
 
-	CAttachedLightEffectTransform() : pBaseTransform( 0 ), pvTranslatePart( 0 ) {}
+	CAttachedLightEffectTransform()
+		: pBaseTransform( 0 )
+		, pvTranslatePart( 0 )
+	{
+	}
 
 	CAttachedLightEffectTransform( CFuncBase<SFBTransform> *_pBaseTransform, const SHMatrix &_mMultiplier );
 };
@@ -128,7 +132,12 @@ protected:
 	virtual void Recalc();
 
 public:
-	CConstantOffsetTransform() : pBaseTransform( 0 ), nTargetID( -1 ), bNeedCalcMatrix( true ) {}
+	CConstantOffsetTransform()
+		: pBaseTransform( 0 )
+		, nTargetID( -1 )
+		, bNeedCalcMatrix( true )
+	{
+	}
 
 	CConstantOffsetTransform( const int _nTargetID,
 	                          const std::string &_szBoneName,
@@ -167,7 +176,11 @@ protected:
 	virtual void Recalc();
 
 public:
-	CCenterOffsetTransform() : pBaseTransform( 0 ), nTargetID( -1 ) {}
+	CCenterOffsetTransform()
+		: pBaseTransform( 0 )
+		, nTargetID( -1 )
+	{
+	}
 
 	CCenterOffsetTransform( const int _nTargetID,
 	                        CFuncBase<SFBTransform> *_pBaseTransform,

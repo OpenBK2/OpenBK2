@@ -67,15 +67,37 @@ uint16_t InterpolateDirection( const uint16_t wStart, const uint16_t wFinish, co
 } // namespace
 
 CHelicopter::CHelicopter()
-		: vHeliNextPos( VNULL3 ), vHeliNextSpeed( VNULL3 ), vHeliNextNormal( V3_AXIS_Z ), vMoveTarget( VNULL2 ),
-			vVisualAimPoint( VNULL3 ), bMoveTargetSet( false ), bVisualAimPointSet( false ), bAttackTilt( false ),
-			bDeadSpiralStarted( false ), vDeathStartPos( VNULL3 ), vDeathVelocity( VNULL3 ), fDeathGroundZ( 0.0f ),
-			fDeathSpiralRadius( 11.0f ), fDeathSpiralSteps( 2.5f ), fDeathSpiralDownAcceleration( 15.0f ),
-			fDeathSpiralAngle( 0.0f ), fDeathSelfRotation( 0.0f ), fMovementVisualAngle( 0.0f ), fSideVisualAngle( 0.0f ),
-			fVisualStartMovementAngle( 0.0f ), fVisualFinishMovementAngle( 0.0f ), fVisualStartSideAngle( 0.0f ),
-			fVisualFinishSideAngle( 0.0f ), fAttackVisualAngle( 0.0f ), fVisualStartAttackAngle( 0.0f ),
-			fVisualFinishAttackAngle( 0.0f ), timeDeathStarted( 0 ), wVisualStartDirection( 0 ), wVisualFinishDirection( 0 ),
-			wDesiredDirection( 0 ), bDesiredDirectionSet( false )
+	: vHeliNextPos( VNULL3 )
+	, vHeliNextSpeed( VNULL3 )
+	, vHeliNextNormal( V3_AXIS_Z )
+	, vMoveTarget( VNULL2 )
+	, vVisualAimPoint( VNULL3 )
+	, bMoveTargetSet( false )
+	, bVisualAimPointSet( false )
+	, bAttackTilt( false )
+	, bDeadSpiralStarted( false )
+	, vDeathStartPos( VNULL3 )
+	, vDeathVelocity( VNULL3 )
+	, fDeathGroundZ( 0.0f )
+	, fDeathSpiralRadius( 11.0f )
+	, fDeathSpiralSteps( 2.5f )
+	, fDeathSpiralDownAcceleration( 15.0f )
+	, fDeathSpiralAngle( 0.0f )
+	, fDeathSelfRotation( 0.0f )
+	, fMovementVisualAngle( 0.0f )
+	, fSideVisualAngle( 0.0f )
+	, fVisualStartMovementAngle( 0.0f )
+	, fVisualFinishMovementAngle( 0.0f )
+	, fVisualStartSideAngle( 0.0f )
+	, fVisualFinishSideAngle( 0.0f )
+	, fAttackVisualAngle( 0.0f )
+	, fVisualStartAttackAngle( 0.0f )
+	, fVisualFinishAttackAngle( 0.0f )
+	, timeDeathStarted( 0 )
+	, wVisualStartDirection( 0 )
+	, wVisualFinishDirection( 0 )
+	, wDesiredDirection( 0 )
+	, bDesiredDirectionSet( false )
 {
 }
 

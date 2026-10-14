@@ -13,10 +13,14 @@ class CInGroupPathMemento : public IMemento
 	CPtr<ISmoothPath> pUnitOwnPath;
 
 public:
-	CInGroupPathMemento() : pGroupSmoothPath() {}
+	CInGroupPathMemento()
+		: pGroupSmoothPath()
+	{
+	}
 
 	CInGroupPathMemento( CGroupSmoothPath *_pGroupSmoothPath, ISmoothPath *_pUnitOwnPath )
-			: pGroupSmoothPath( _pGroupSmoothPath ), pUnitOwnPath( _pUnitOwnPath )
+		: pGroupSmoothPath( _pGroupSmoothPath )
+		, pUnitOwnPath( _pUnitOwnPath )
 	{
 	}
 

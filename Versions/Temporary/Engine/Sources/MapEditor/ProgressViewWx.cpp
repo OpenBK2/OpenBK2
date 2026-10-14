@@ -41,7 +41,8 @@ public:
 	// returns, and an IWidget is borrowed -- holding one is what crashed
 	// opening an object from the recent list, through a widget that had left
 	// the stack. wx keeps the parent, and GetParent answers with it.
-	explicit CProgressWxDialog( wxWindow *pOwner ) : CWxToolDialog( pOwner, wxID_ANY, "Progress" )
+	explicit CProgressWxDialog( wxWindow *pOwner )
+		: CWxToolDialog( pOwner, wxID_ANY, "Progress" )
 	{
 		wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 		// SS_LEFTNOWORDWRAP: one line, clipped rather than wrapped.

@@ -34,9 +34,21 @@ inline const bool CompareDistance( const SVector &vEndPoint1, const SVector &vEn
 }
 
 CStandartPath2::CStandartPath2()
-		: pPathFinder( 0 ), pAIMap( 0 ), nBoundTileRadius( -1 ), aiClass( EAC_NONE ), pStaticPath( 0 ),
-			nCurStaticPathTile( -1 ), vStartPoint( VNULL2 ), vFinishPoint( VNULL2 ), vShift( VNULL2 ), nCurInsTile( 0 ),
-			nCurPathTile( 0 ), nLastPathTile( -1 ), vShiftTile( 0, 0 ), vFinishTile( 0, 0 ), nUnitID( -1 )
+	: pPathFinder( 0 )
+	, pAIMap( 0 )
+	, nBoundTileRadius( -1 )
+	, aiClass( EAC_NONE )
+	, pStaticPath( 0 )
+	, nCurStaticPathTile( -1 )
+	, vStartPoint( VNULL2 )
+	, vFinishPoint( VNULL2 )
+	, vShift( VNULL2 )
+	, nCurInsTile( 0 )
+	, nCurPathTile( 0 )
+	, nLastPathTile( -1 )
+	, vShiftTile( 0, 0 )
+	, vFinishTile( 0, 0 )
+	, nUnitID( -1 )
 {
 	pathTiles.resize( MAX_PATH_TILES_COUNT, SVector( 0, 0 ) );
 }
@@ -46,8 +58,13 @@ CStandartPath2::CStandartPath2( const CBasePathUnit *pUnit,
                                 const CVec2 &_vStartPoint,
                                 const CVec2 &_vFinishPoint,
                                 CAIMap *_pAIMap )
-		: pPathFinder( pUnit->GetPathFinder() ), pAIMap( _pAIMap ), nBoundTileRadius( pUnit->GetBoundTileRadius() ),
-			aiClass( pUnit->GetAIPassabilityClass() ), nCurInsTile( 0 ), vFinishTile( 0, 0 ), nUnitID( pUnit->GetUniqueID() )
+	: pPathFinder( pUnit->GetPathFinder() )
+	, pAIMap( _pAIMap )
+	, nBoundTileRadius( pUnit->GetBoundTileRadius() )
+	, aiClass( pUnit->GetAIPassabilityClass() )
+	, nCurInsTile( 0 )
+	, vFinishTile( 0, 0 )
+	, nUnitID( pUnit->GetUniqueID() )
 {
 	const int nUnitID = pUnit->GetUniqueID();
 	pathTiles.resize( MAX_PATH_TILES_COUNT );

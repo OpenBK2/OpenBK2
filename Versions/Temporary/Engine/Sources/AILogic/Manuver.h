@@ -30,7 +30,10 @@ public:
 
 public:
 	SFormationMemberInfo()
-			: lastMoveTime( NTimer::STime( -1 ) ), vWorldPosition( VNULL3 ), vSpeed( VNULL3 ), vNormal( VNULL3 )
+		: lastMoveTime( NTimer::STime( -1 ) )
+		, vWorldPosition( VNULL3 )
+		, vSpeed( VNULL3 )
+		, vNormal( VNULL3 )
 	{
 	}
 };

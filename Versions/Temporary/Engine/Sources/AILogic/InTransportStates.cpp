@@ -76,7 +76,7 @@ IUnitState *CSoldierRestOnBoardState::Instance( CSoldier *pSoldier, CMilitaryCar
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CSoldierRestOnBoardState::CSoldierRestOnBoardState( CSoldier *_pSoldier, CMilitaryCar *pTransport )
-		: pSoldier( _pSoldier )
+	: pSoldier( _pSoldier )
 {
 	// если ещё не внутри транспорта
 	if ( pTransport != 0 )

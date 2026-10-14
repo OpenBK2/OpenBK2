@@ -82,9 +82,15 @@ struct SMPUIMessage : public CObjectBase
 		return 0;
 	}
 
-	SMPUIMessage() : eMessageType( EMUI_UNKNOWN ) {}
+	SMPUIMessage()
+		: eMessageType( EMUI_UNKNOWN )
+	{
+	}
 
-	SMPUIMessage( const EMPUIMessageType _eMessageType ) : eMessageType( _eMessageType ) {}
+	SMPUIMessage( const EMPUIMessageType _eMessageType )
+		: eMessageType( _eMessageType )
+	{
+	}
 };
 
 // Interface with UI
@@ -117,7 +123,10 @@ struct SMPUISimpleMessage : public SMPUIMessage
 public:
 	SMPUISimpleMessage() {} // serialize only
 
-	SMPUISimpleMessage( const EMPUIMessageType _eMessageType ) : SMPUIMessage( _eMessageType ) {}
+	SMPUISimpleMessage( const EMPUIMessageType _eMessageType )
+		: SMPUIMessage( _eMessageType )
+	{
+	}
 };
 
 struct SMPUILoginNivalNetMessage : public SMPUIMessage
@@ -142,8 +151,10 @@ public:
 	SMPUILoginNivalNetMessage() {} // serialization only
 
 	SMPUILoginNivalNetMessage( const std::wstring &_wszLogin, const std::wstring &_wszPassword, const bool _bRemember )
-			: SMPUIMessage( EMUI_LOGIN_NIVAL_NET ), wszLogin( _wszLogin ), wszPassword( _wszPassword ),
-				bRememberPassword( _bRemember )
+		: SMPUIMessage( EMUI_LOGIN_NIVAL_NET )
+		, wszLogin( _wszLogin )
+		, wszPassword( _wszPassword )
+		, bRememberPassword( _bRemember )
 	{
 	}
 };
@@ -167,10 +178,16 @@ public:
 
 	SMPUIJoinGameMessage() {} // serialization only
 
-	SMPUIJoinGameMessage( int _nGameID ) : SMPUIMessage( EMUI_JOIN_GAME ), nGameID( _nGameID ) {}
+	SMPUIJoinGameMessage( int _nGameID )
+		: SMPUIMessage( EMUI_JOIN_GAME )
+		, nGameID( _nGameID )
+	{
+	}
 
 	SMPUIJoinGameMessage( int _nGameID, const std::string &_szPassword )
-			: SMPUIMessage( EMUI_JOIN_GAME ), nGameID( _nGameID ), szPassword( _szPassword )
+		: SMPUIMessage( EMUI_JOIN_GAME )
+		, nGameID( _nGameID )
+		, szPassword( _szPassword )
 	{
 	}
 };
@@ -225,10 +242,15 @@ public:
 		return 0;
 	}
 
-	SMPUIGameListMessage() : SMPUIMessage( EMUI_UPDATE_GAME_LIST ), bSendUpdates( false ) {}
+	SMPUIGameListMessage()
+		: SMPUIMessage( EMUI_UPDATE_GAME_LIST )
+		, bSendUpdates( false )
+	{
+	}
 
 	SMPUIGameListMessage( const bool _bSendUpdates )
-			: SMPUIMessage( EMUI_UPDATE_GAME_LIST ), bSendUpdates( _bSendUpdates )
+		: SMPUIMessage( EMUI_UPDATE_GAME_LIST )
+		, bSendUpdates( _bSendUpdates )
 	{
 	}
 };
@@ -252,7 +274,10 @@ public:
 		return 0;
 	}
 
-	SMPUICreateGameMessage() : SMPUIMessage( EMUI_CREATE_GAME ) {}
+	SMPUICreateGameMessage()
+		: SMPUIMessage( EMUI_CREATE_GAME )
+	{
+	}
 };
 
 struct SMPUIUpdateSlotMessage : public SMPUIMessage
@@ -272,7 +297,11 @@ public:
 		return 0;
 	}
 
-	SMPUIUpdateSlotMessage() : SMPUIMessage( EMUI_UPDATE_SLOT ), nSlot( -1 ) {}
+	SMPUIUpdateSlotMessage()
+		: SMPUIMessage( EMUI_UPDATE_SLOT )
+		, nSlot( -1 )
+	{
+	}
 };
 
 struct SMPUIGameRoomInitMessage : public SMPUIMessage
@@ -308,9 +337,16 @@ public:
 		return 0;
 	}
 
-	SMPUIGameRoomInitMessage() : SMPUIMessage( EMUI_GAME_ROOM_INIT ) {}
+	SMPUIGameRoomInitMessage()
+		: SMPUIMessage( EMUI_GAME_ROOM_INIT )
+	{
+	}
 
-	SMPUIGameRoomInitMessage( const ERejectReason _eResult ) : SMPUIMessage( EMUI_GAME_ROOM_INIT ), eResult( _eResult ) {}
+	SMPUIGameRoomInitMessage( const ERejectReason _eResult )
+		: SMPUIMessage( EMUI_GAME_ROOM_INIT )
+		, eResult( _eResult )
+	{
+	}
 };
 
 struct SMPUILagMessage : public SMPUIMessage
@@ -330,10 +366,17 @@ public:
 		return 0;
 	}
 
-	SMPUILagMessage() : SMPUIMessage( EMUI_WAITING_FOR_PLAYERS ), dwLaggingPlayers( 0 ), bInitialWait( false ) {}
+	SMPUILagMessage()
+		: SMPUIMessage( EMUI_WAITING_FOR_PLAYERS )
+		, dwLaggingPlayers( 0 )
+		, bInitialWait( false )
+	{
+	}
 
 	SMPUILagMessage( const uint32_t dwPlayerMask, const bool bOnStart )
-			: SMPUIMessage( EMUI_WAITING_FOR_PLAYERS ), dwLaggingPlayers( dwPlayerMask ), bInitialWait( bOnStart )
+		: SMPUIMessage( EMUI_WAITING_FOR_PLAYERS )
+		, dwLaggingPlayers( dwPlayerMask )
+		, bInitialWait( bOnStart )
 	{
 	}
 };
@@ -364,9 +407,17 @@ public:
 		return 0;
 	}
 
-	SMPUILagInfoMessage() : SMPUIMessage( EMUI_WAITING_INFO ), bOwnLag( false ) {}
+	SMPUILagInfoMessage()
+		: SMPUIMessage( EMUI_WAITING_INFO )
+		, bOwnLag( false )
+	{
+	}
 
-	SMPUILagInfoMessage( const bool _bOwnLag ) : SMPUIMessage( EMUI_WAITING_INFO ), bOwnLag( _bOwnLag ) {}
+	SMPUILagInfoMessage( const bool _bOwnLag )
+		: SMPUIMessage( EMUI_WAITING_INFO )
+		, bOwnLag( _bOwnLag )
+	{
+	}
 };
 
 struct SMPUILadderGameMessage : public SMPUIMessage
@@ -392,7 +443,10 @@ public:
 		return 0;
 	}
 
-	SMPUILadderGameMessage() : SMPUIMessage( EMUI_NIVAL_NET_LADDER_GAME ) {}
+	SMPUILadderGameMessage()
+		: SMPUIMessage( EMUI_NIVAL_NET_LADDER_GAME )
+	{
+	}
 };
 
 struct SMPUIConnectResultMessage : public SMPUIMessage
@@ -412,10 +466,16 @@ public:
 		return 0;
 	}
 
-	SMPUIConnectResultMessage() : SMPUIMessage( EMUI_CONNECT_RESULT ), bSuccess( false ) {}
+	SMPUIConnectResultMessage()
+		: SMPUIMessage( EMUI_CONNECT_RESULT )
+		, bSuccess( false )
+	{
+	}
 
 	SMPUIConnectResultMessage( const bool _bSuccess, const std::string &_szTextTag )
-			: SMPUIMessage( EMUI_CONNECT_RESULT ), bSuccess( _bSuccess ), szTextTag( _szTextTag )
+		: SMPUIMessage( EMUI_CONNECT_RESULT )
+		, bSuccess( _bSuccess )
+		, szTextTag( _szTextTag )
 	{
 	}
 };
@@ -435,9 +495,14 @@ public:
 		return 0;
 	}
 
-	SMPUIServerMessageMessage() : SMPUIMessage( EMUI_SERVER_MESSAGE ) {}
+	SMPUIServerMessageMessage()
+		: SMPUIMessage( EMUI_SERVER_MESSAGE )
+	{
+	}
 
-	SMPUIServerMessageMessage( const std::wstring &_wszText ) : SMPUIMessage( EMUI_SERVER_MESSAGE ), wszText( _wszText )
+	SMPUIServerMessageMessage( const std::wstring &_wszText )
+		: SMPUIMessage( EMUI_SERVER_MESSAGE )
+		, wszText( _wszText )
 	{
 	}
 };
@@ -461,15 +526,23 @@ public:
 		return 0;
 	}
 
-	SMPUIChatMessage() : SMPUIMessage( EMUI_CHAT_MESSAGE ) {} // serialize only
+	SMPUIChatMessage()
+		: SMPUIMessage( EMUI_CHAT_MESSAGE )
+	{
+	} // serialize only
 
 	SMPUIChatMessage( const std::wstring &_wszText )
-			: SMPUIMessage( EMUI_CHAT_MESSAGE ), wszText( _wszText ), bPrivate( false )
+		: SMPUIMessage( EMUI_CHAT_MESSAGE )
+		, wszText( _wszText )
+		, bPrivate( false )
 	{
 	}
 
 	SMPUIChatMessage( const std::string &_szName, const std::wstring &_wszText )
-			: SMPUIMessage( EMUI_CHAT_MESSAGE ), szName( _szName ), wszText( _wszText ), bPrivate( true )
+		: SMPUIMessage( EMUI_CHAT_MESSAGE )
+		, szName( _szName )
+		, wszText( _wszText )
+		, bPrivate( true )
 	{
 	}
 };
@@ -489,10 +562,14 @@ public:
 		return 0;
 	}
 
-	SMPUIJoinChannelMessage() : SMPUIMessage( EMUI_JOIN_CHAT_CHANNEL ) {} // serialization only
+	SMPUIJoinChannelMessage()
+		: SMPUIMessage( EMUI_JOIN_CHAT_CHANNEL )
+	{
+	} // serialization only
 
 	SMPUIJoinChannelMessage( const std::string &_szChannel )
-			: SMPUIMessage( EMUI_JOIN_CHAT_CHANNEL ), szChannel( _szChannel )
+		: SMPUIMessage( EMUI_JOIN_CHAT_CHANNEL )
+		, szChannel( _szChannel )
 	{
 	}
 };
@@ -512,7 +589,10 @@ public:
 		return 0;
 	}
 
-	SMPUIChatChannelListMessage() : SMPUIMessage( EMUI_CHAT_CHANNELS ) {} // serialization only
+	SMPUIChatChannelListMessage()
+		: SMPUIMessage( EMUI_CHAT_CHANNELS )
+	{
+	} // serialization only
 };
 
 struct SMPUIChatChannelNicksMessage : public SMPUIMessage
@@ -538,7 +618,10 @@ public:
 		return 0;
 	}
 
-	SMPUIChatChannelNicksMessage() : SMPUIMessage( EMUI_CHAT_NICKS ) {} // serialization only
+	SMPUIChatChannelNicksMessage()
+		: SMPUIMessage( EMUI_CHAT_NICKS )
+	{
+	} // serialization only
 };
 
 enum EMPChatStatus : int
@@ -567,10 +650,16 @@ public:
 		return 0;
 	}
 
-	SMPUIChatChannelNicksChangeMessage() : SMPUIMessage( EMUI_CHAT_NICKS_CHANGE ) {} // serialization only
+	SMPUIChatChannelNicksChangeMessage()
+		: SMPUIMessage( EMUI_CHAT_NICKS_CHANGE )
+	{
+	} // serialization only
 
 	SMPUIChatChannelNicksChangeMessage( const std::string &_szNick, const EMPChatStatus _eStatus, const bool _bFriend )
-			: SMPUIMessage( EMUI_CHAT_NICKS_CHANGE ), szNick( _szNick ), eStatus( _eStatus ), bFriend( _bFriend )
+		: SMPUIMessage( EMUI_CHAT_NICKS_CHANGE )
+		, szNick( _szNick )
+		, eStatus( _eStatus )
+		, bFriend( _bFriend )
 	{
 	}
 };
@@ -592,10 +681,15 @@ public:
 		return 0;
 	}
 
-	SMPUILadderInfoRequestMessage() : SMPUIMessage( EMUI_REQUEST_INFO ) {} // serialization only
+	SMPUILadderInfoRequestMessage()
+		: SMPUIMessage( EMUI_REQUEST_INFO )
+	{
+	} // serialization only
 
 	SMPUILadderInfoRequestMessage( const std::string &_szNick, const bool _bShort )
-			: SMPUIMessage( EMUI_REQUEST_INFO ), szNick( _szNick ), bShort( _bShort )
+		: SMPUIMessage( EMUI_REQUEST_INFO )
+		, szNick( _szNick )
+		, bShort( _bShort )
 	{
 	}
 };
@@ -617,7 +711,10 @@ public:
 		return 0;
 	}
 
-	SMPUIShortInfoMessage() : SMPUIMessage( EMUI_SHORT_INFO ) {} // serialization only
+	SMPUIShortInfoMessage()
+		: SMPUIMessage( EMUI_SHORT_INFO )
+	{
+	} // serialization only
 };
 
 struct SMPUIChangeFriendIgnoreStatusMessage : public SMPUIMessage
@@ -644,10 +741,15 @@ public:
 		return 0;
 	}
 
-	SMPUIChangeFriendIgnoreStatusMessage() : SMPUIMessage( EMUI_CHANGE_FRIEND_IGNORE ) {} // serialization only
+	SMPUIChangeFriendIgnoreStatusMessage()
+		: SMPUIMessage( EMUI_CHANGE_FRIEND_IGNORE )
+	{
+	} // serialization only
 
 	SMPUIChangeFriendIgnoreStatusMessage( const std::string &_szNick, const EAction _eAction )
-			: SMPUIMessage( EMUI_CHANGE_FRIEND_IGNORE ), szNick( _szNick ), eAction( _eAction )
+		: SMPUIMessage( EMUI_CHANGE_FRIEND_IGNORE )
+		, szNick( _szNick )
+		, eAction( _eAction )
 	{
 	}
 };
@@ -690,10 +792,14 @@ public:
 		return 0;
 	}
 
-	SMPUIGameAftemathMessage() : SMPUIMessage( EMUI_GAME_AFTERMATH ) {} // serialization only
+	SMPUIGameAftemathMessage()
+		: SMPUIMessage( EMUI_GAME_AFTERMATH )
+	{
+	} // serialization only
 
 	SMPUIGameAftemathMessage( const bool &_bIsLadder )
-			: SMPUIMessage( EMUI_GAME_AFTERMATH ), bShowLadderInfo( _bIsLadder )
+		: SMPUIMessage( EMUI_GAME_AFTERMATH )
+		, bShowLadderInfo( _bIsLadder )
 	{
 	}
 };
@@ -719,14 +825,20 @@ public:
 		return 0;
 	}
 
-	SMPUIRegisterMessage() : SMPUIMessage( EMUI_REGISTER_NIVAL_NET ) {} // serialization only
+	SMPUIRegisterMessage()
+		: SMPUIMessage( EMUI_REGISTER_NIVAL_NET )
+	{
+	} // serialization only
 
 	SMPUIRegisterMessage( const std::wstring &_wszName,
 	                      const std::wstring &_wszPassword,
 	                      const std::wstring &_wszCDKey,
 	                      const std::wstring &_wszEmail )
-			: SMPUIMessage( EMUI_REGISTER_NIVAL_NET ), wszName( _wszName ), wszPassword( _wszPassword ),
-				wszCDKey( _wszCDKey ), wszEmail( _wszEmail )
+		: SMPUIMessage( EMUI_REGISTER_NIVAL_NET )
+		, wszName( _wszName )
+		, wszPassword( _wszPassword )
+		, wszCDKey( _wszCDKey )
+		, wszEmail( _wszEmail )
 	{
 	}
 };
@@ -748,9 +860,14 @@ public:
 		return 0;
 	}
 
-	SMPUILadderStatsMessage() : SMPUIMessage( EMUI_NIVAL_NET_LADDER_STATS ) {} // serialization only
+	SMPUILadderStatsMessage()
+		: SMPUIMessage( EMUI_NIVAL_NET_LADDER_STATS )
+	{
+	} // serialization only
 
-	SMPUILadderStatsMessage( const SLadderStatistics &_info ) : SMPUIMessage( EMUI_NIVAL_NET_LADDER_STATS ), info( _info )
+	SMPUILadderStatsMessage( const SLadderStatistics &_info )
+		: SMPUIMessage( EMUI_NIVAL_NET_LADDER_STATS )
+		, info( _info )
 	{
 	}
 };
@@ -776,10 +893,16 @@ public:
 		return 0;
 	}
 
-	SMPUILadderStatusChangeMessage() : SMPUIMessage( EMUI_NIVAL_NET_LADDER ) {} // serialization only
+	SMPUILadderStatusChangeMessage()
+		: SMPUIMessage( EMUI_NIVAL_NET_LADDER )
+	{
+	} // serialization only
 
 	SMPUILadderStatusChangeMessage( const EState _eState )
-			: SMPUIMessage( EMUI_NIVAL_NET_LADDER ), eState( _eState ) {} // serialization only
+		: SMPUIMessage( EMUI_NIVAL_NET_LADDER )
+		, eState( _eState )
+	{
+	} // serialization only
 };
 
 struct SMPUIInGameChatMessage : public SMPUIMessage
@@ -799,10 +922,15 @@ public:
 		return 0;
 	}
 
-	SMPUIInGameChatMessage() : SMPUIMessage( EMUI_IN_GAME_CHAT_MESSAGE ) {} // serialize only
+	SMPUIInGameChatMessage()
+		: SMPUIMessage( EMUI_IN_GAME_CHAT_MESSAGE )
+	{
+	} // serialize only
 
 	SMPUIInGameChatMessage( const std::wstring &_wszText, bool _bTeamOnly )
-			: SMPUIMessage( EMUI_IN_GAME_CHAT_MESSAGE ), wszText( _wszText ), bTeamOnly( _bTeamOnly )
+		: SMPUIMessage( EMUI_IN_GAME_CHAT_MESSAGE )
+		, wszText( _wszText )
+		, bTeamOnly( _bTeamOnly )
 	{
 	}
 };

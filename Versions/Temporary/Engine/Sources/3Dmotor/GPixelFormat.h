@@ -71,7 +71,10 @@ struct SPixelFloat
 
 	SPixelFloat() {}
 
-	SPixelFloat( float _r ) : r( _r ) {}
+	SPixelFloat( float _r )
+		: r( _r )
+	{
+	}
 };
 
 struct SPixelFFFF
@@ -87,7 +90,13 @@ struct SPixelFFFF
 
 	SPixelFFFF() {}
 
-	SPixelFFFF( float _r, float _g, float _b, float _a ) : r( _r ), g( _g ), b( _b ), a( _a ) {}
+	SPixelFFFF( float _r, float _g, float _b, float _a )
+		: r( _r )
+		, g( _g )
+		, b( _b )
+		, a( _a )
+	{
+	}
 };
 
 struct SPixel8888
@@ -113,14 +122,23 @@ struct SPixel8888
 	};
 
 	// Zero one full union arm, leaving the overlapping component fields plain.
-	SPixel8888() : dwColor( 0 ) {}
-
-	SPixel8888( unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a = 0xFF )
-			: b( _b ), g( _g ), r( _r ), a( _a )
+	SPixel8888()
+		: dwColor( 0 )
 	{
 	}
 
-	SPixel8888( uint32_t _dwColor ) : dwColor( _dwColor ) {}
+	SPixel8888( unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a = 0xFF )
+		: b( _b )
+		, g( _g )
+		, r( _r )
+		, a( _a )
+	{
+	}
+
+	SPixel8888( uint32_t _dwColor )
+		: dwColor( _dwColor )
+	{
+	}
 };
 
 inline bool operator==( const SPixel8888 &a, const SPixel8888 &b )
@@ -150,10 +168,16 @@ struct SPixel1555
 		};
 	};
 
-	SPixel1555() : wColor( 0 ) {}
+	SPixel1555()
+		: wColor( 0 )
+	{
+	}
 
 	SPixel1555( unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a = 1 )
-			: b( _b ), g( _g ), r( _r ), a( _a )
+		: b( _b )
+		, g( _g )
+		, r( _r )
+		, a( _a )
 	{
 	}
 };
@@ -179,9 +203,17 @@ struct SPixel565
 		};
 	};
 
-	SPixel565() : wColor( 0 ) {}
+	SPixel565()
+		: wColor( 0 )
+	{
+	}
 
-	SPixel565( unsigned char _r, unsigned char _g, unsigned char _b ) : b( _b ), g( _g ), r( _r ) {}
+	SPixel565( unsigned char _r, unsigned char _g, unsigned char _b )
+		: b( _b )
+		, g( _g )
+		, r( _r )
+	{
+	}
 };
 
 struct SPixel4444
@@ -206,10 +238,16 @@ struct SPixel4444
 		};
 	};
 
-	SPixel4444() : wColor( 0 ) {}
+	SPixel4444()
+		: wColor( 0 )
+	{
+	}
 
 	SPixel4444( unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a = 0xF )
-			: b( _b ), g( _g ), r( _r ), a( _a )
+		: b( _b )
+		, g( _g )
+		, r( _r )
+		, a( _a )
 	{
 	}
 };
@@ -356,12 +394,27 @@ struct STriangleList
 	int nBaseIndex = 0;
 	int nOffset = 0;
 
-	STriangleList() : pTri( 0 ), nTris( 0 ), nBaseIndex( 0 ), nOffset( 0 ) {}
+	STriangleList()
+		: pTri( 0 )
+		, nTris( 0 )
+		, nBaseIndex( 0 )
+		, nOffset( 0 )
+	{
+	}
 
-	STriangleList( const std::vector<STriangle> &t ) : pTri( &t[0] ), nTris( t.size() ), nBaseIndex( 0 ), nOffset( 0 ) {}
+	STriangleList( const std::vector<STriangle> &t )
+		: pTri( &t[0] )
+		, nTris( t.size() )
+		, nBaseIndex( 0 )
+		, nOffset( 0 )
+	{
+	}
 
 	STriangleList( const STriangle *_pTri, int _nTris, int _nBaseIndex = 0, int _nOffset = 0 )
-			: pTri( _pTri ), nTris( _nTris ), nBaseIndex( _nBaseIndex ), nOffset( _nOffset )
+		: pTri( _pTri )
+		, nTris( _nTris )
+		, nBaseIndex( _nBaseIndex )
+		, nOffset( _nOffset )
 	{
 	}
 };

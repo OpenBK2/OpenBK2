@@ -53,9 +53,15 @@ struct SInRangeFunctional
 	// Defaults cover these geometry helpers; explicit constructor values take precedence.
 	float fRange = 0.0f;
 
-	SInRangeFunctional() : fRange( 0 ) {}
+	SInRangeFunctional()
+		: fRange( 0 )
+	{
+	}
 
-	SInRangeFunctional( float _fRange ) : fRange( _fRange ) {}
+	SInRangeFunctional( float _fRange )
+		: fRange( _fRange )
+	{
+	}
 
 	bool operator()( const TElement &rElement1, const TElement &rElement2 ) const
 	{
@@ -1755,7 +1761,9 @@ struct SModifyTilesFunctional
 	TElement value;
 	TArray *pLockArray = nullptr;
 
-	SModifyTilesFunctional( const TElement &rValue, TArray *_pLockArray ) : value( rValue ), pLockArray( _pLockArray )
+	SModifyTilesFunctional( const TElement &rValue, TArray *_pLockArray )
+		: value( rValue )
+		, pLockArray( _pLockArray )
 	{
 		NI_ASSERT( pLockArray != 0, "Wrong parameter: pLockArray == 0" );
 	}
@@ -1776,7 +1784,9 @@ struct SCheckTilesFunctional
 	bool isPresent = false;
 
 	SCheckTilesFunctional( const TElement &rValue, TArray *_pLockArray )
-			: value( rValue ), pLockArray( _pLockArray ), isPresent( false )
+		: value( rValue )
+		, pLockArray( _pLockArray )
+		, isPresent( false )
 	{
 		NI_ASSERT( pLockArray != 0, "Wrong parameter: pLockArray == 0" );
 	}

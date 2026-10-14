@@ -4,10 +4,17 @@
 
 #include <cstdint>
 
-CUIWindow::CUIWindow() : pos( 0, 0, 0, 0 ), pTexture( 0 ), color( 0 ) {}
+CUIWindow::CUIWindow()
+	: pos( 0, 0, 0, 0 )
+	, pTexture( 0 )
+	, color( 0 )
+{
+}
 
 CUIWindow::CUIWindow( int x, int y, int w, int h, uint32_t _color, const NDb::STexture *_pTexture )
-		: pos( x, y, w, h ), pTexture( _pTexture ), color( _color )
+	: pos( x, y, w, h )
+	, pTexture( _pTexture )
+	, color( _color )
 {
 }
 

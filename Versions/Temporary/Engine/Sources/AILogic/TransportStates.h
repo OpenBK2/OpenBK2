@@ -59,7 +59,10 @@ public:
 public:
 	static IUnitState *Instance( class CMilitaryCar *pTransport, class CFormation *pFormation );
 
-	CTransportWaitPassengerState() : pTransport( 0 ) {}
+	CTransportWaitPassengerState()
+		: pTransport( 0 )
+	{
+	}
 
 	CTransportWaitPassengerState( class CMilitaryCar *pTransport, class CFormation *pFormation );
 
@@ -121,7 +124,10 @@ private:
 	bool FindAllowedDropPoint( CFormation *pUnit, CVec2 *vDropPoint );
 
 public:
-	CTransportLandState() : pTransport( 0 ) {}
+	CTransportLandState()
+		: pTransport( 0 )
+	{
+	}
 
 	CTransportLandState( class CMilitaryCar *pTransport,
 	                     const enum EActionLeaveParam param,
@@ -190,7 +196,10 @@ public:
 	static IUnitState *
 	Instance( class CAITransportUnit *pTransport, const bool bSubState = false, CBuilding *_pPreferredStorage = 0 );
 
-	CTransportLoadRuState() : pTransport( 0 ) {}
+	CTransportLoadRuState()
+		: pTransport( 0 )
+	{
+	}
 
 	CTransportLoadRuState( class CAITransportUnit *pTransport, const bool bSubState, CBuilding *_pPreferredStorage );
 
@@ -276,7 +285,11 @@ public:
 	virtual void UpdateActionBegin() = 0;
 
 public:
-	CTransportServeState() : pTransport( 0 ), bUpdatedActionsBegin( false ) {}
+	CTransportServeState()
+		: pTransport( 0 )
+		, bUpdatedActionsBegin( false )
+	{
+	}
 
 	CTransportServeState( class CAITransportUnit *pTransport, const CVec2 &_vServePoint, CAIUnit *_pPreferredUnit );
 

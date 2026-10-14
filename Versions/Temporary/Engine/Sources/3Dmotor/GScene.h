@@ -37,7 +37,8 @@ struct SGroupSelect
 	unsigned short nMaskAny, nMaskEvery;
 
 	SGroupSelect( unsigned short _nMaskAny, unsigned short _nMaskEvery )
-			: nMaskAny( _nMaskAny ), nMaskEvery( _nMaskEvery )
+		: nMaskAny( _nMaskAny )
+		, nMaskEvery( _nMaskEvery )
 	{
 	}
 
@@ -71,9 +72,17 @@ struct SGroupInfo
 	unsigned short nLightFlags, nObjectGroup;
 
 	//
-	SGroupInfo() : nLightFlags( 0 ), nObjectGroup( 0xffff ) {}
+	SGroupInfo()
+		: nLightFlags( 0 )
+		, nObjectGroup( 0xffff )
+	{
+	}
 
-	SGroupInfo( int _nLG, int _nOG ) : nLightFlags( _nLG ), nObjectGroup( _nOG ) {}
+	SGroupInfo( int _nLG, int _nOG )
+		: nLightFlags( _nLG )
+		, nObjectGroup( _nOG )
+	{
+	}
 
 	bool operator==( const SGroupInfo &a ) const
 	{
@@ -103,10 +112,15 @@ struct SFullGroupInfo
 		return 0;
 	}
 
-	SFullGroupInfo() : nUserID( 0 ) {}
+	SFullGroupInfo()
+		: nUserID( 0 )
+	{
+	}
 
 	SFullGroupInfo( const SGroupInfo &_g, CObjectBase *_p, int _nUserID )
-			: groupInfo( _g ), pUser( _p ), nUserID( _nUserID )
+		: groupInfo( _g )
+		, pUser( _p )
+		, nUserID( _nUserID )
 	{
 	}
 };
@@ -184,7 +198,11 @@ public:
 		SRenderGeometryInfo *pInfo;
 		int nIdx;
 
-		SObject( SRenderGeometryInfo *_pInfo, int _nIdx ) : pInfo( _pInfo ), nIdx( _nIdx ) {}
+		SObject( SRenderGeometryInfo *_pInfo, int _nIdx )
+			: pInfo( _pInfo )
+			, nIdx( _nIdx )
+		{
+		}
 	};
 
 	virtual void Render( SPostProcessData *pDst, const std::vector<SObject> &render ) = 0;

@@ -18,7 +18,8 @@ const float STANDART_HEIGHT = 250.0f;
 
 CSortedGridUnits *CSortedGridUnits::SUnitsCompare::pSortedUnits = 0;
 
-CSortedGridUnits::CSortedGridUnits() : units( 10 )
+CSortedGridUnits::CSortedGridUnits()
+	: units( 10 )
 {
 	nUnits = 0;
 
@@ -134,7 +135,8 @@ CCommonUnit *CSortedGridUnits::GetUnit( const int n ) const
 CGrid *CGrid::SColumnCompare::pGrid;
 
 CGrid::CGrid( const CVec2 &vGridCenter, const int nGroup, const CVec2 &vGridDir )
-		: vCenter( vGridCenter ), fMaxWidth( 0.0f )
+	: vCenter( vGridCenter )
+	, fMaxWidth( 0.0f )
 {
 	SColumnCompare::pGrid = this;
 	for ( int i = theGroupLogic.BeginGroup( nGroup ); i != theGroupLogic.EndGroup(); i = theGroupLogic.Next( i ) )

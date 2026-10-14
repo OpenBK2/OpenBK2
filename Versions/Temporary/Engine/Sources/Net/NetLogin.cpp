@@ -13,7 +13,10 @@ namespace NNet
 // CLoginSupport
 /////////////////////////////////////////////////////////////////////////////////////
 CLoginSupport::CLoginSupport( APPLICATION_ID _applicationID )
-		: applicationID( _applicationID ), state( INACTIVE ), nClientIDTrack( 0 ), nSelfClientID( 0 )
+	: applicationID( _applicationID )
+	, state( INACTIVE )
+	, nClientIDTrack( 0 )
+	, nSelfClientID( 0 )
 {
 	NHPTimer::STime time;
 	NHPTimer::GetTime( &time );

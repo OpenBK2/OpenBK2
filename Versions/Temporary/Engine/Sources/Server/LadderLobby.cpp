@@ -102,7 +102,8 @@ public:
 };
 
 CLadderCacheLocker::CLadderCacheLocker( CClients *_pClients, const std::string &_szNick )
-		: pClients( _pClients ), szNick( _szNick )
+	: pClients( _pClients )
+	, szNick( _szNick )
 {
 	pClients->LockLadderInfo( szNick );
 }

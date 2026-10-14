@@ -110,10 +110,13 @@ private:
 	}
 
 public:
-	CStructureSaver() : pRes( 0 ) {}
+	CStructureSaver()
+		: pRes( 0 )
+	{
+	}
 
 	CStructureSaver( CDataStream *_pRes, ESaverMode mode, const std::vector<SBinSaverExternalObject> &ext )
-			: pRes( _pRes )
+		: pRes( _pRes )
 	{
 		SetMode( mode );
 		Start( ext );
@@ -123,7 +126,9 @@ public:
 	                 ESaverMode mode,
 	                 const std::vector<SBinSaverExternalObject> &ext,
 	                 std::vector<CPtr<IDebugSaveCheckObj>> &_checkers )
-			: pRes( _pRes ), checkers( _checkers ), bDestroy( false )
+		: pRes( _pRes )
+		, checkers( _checkers )
+		, bDestroy( false )
 	{
 		SetMode( mode );
 		Start( ext );

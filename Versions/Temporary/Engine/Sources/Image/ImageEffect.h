@@ -141,7 +141,10 @@ struct SApplyFilterFunctional
 	                        const CArray2D<uint32_t> *_pSourceImage,
 	                        const CArray2D<int> *_pFilter,
 	                        int _nDivider )
-			: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), pFilter( _pFilter ), nDivider( _nDivider )
+		: pDestImage( _pDestImage )
+		, pSourceImage( _pSourceImage )
+		, pFilter( _pFilter )
+		, nDivider( _nDivider )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 		NI_ASSERT( pSourceImage != 0, "Wrong parameter: pSourceImage == 0" );
@@ -204,7 +207,10 @@ struct SWBCApplyFilterFunctional
 	                           const CArray2D<uint32_t> *_pSourceImage,
 	                           const CArray2D<int> *_pFilter,
 	                           int _nDivider )
-			: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), pFilter( _pFilter ), nDivider( _nDivider )
+		: pDestImage( _pDestImage )
+		, pSourceImage( _pSourceImage )
+		, pFilter( _pFilter )
+		, nDivider( _nDivider )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 		NI_ASSERT( pSourceImage != 0, "Wrong parameter: pSourceImage == 0" );
@@ -270,7 +276,10 @@ struct SMarkOutsideEdgeFunctional
 	                            const CArray2D<uint32_t> *_pSourceImage,
 	                            uint32_t _dwEdgeColor,
 	                            uint32_t _dwMinAlpha )
-			: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), dwEdgeColor( _dwEdgeColor ), dwMinAlpha( _dwMinAlpha )
+		: pDestImage( _pDestImage )
+		, pSourceImage( _pSourceImage )
+		, dwEdgeColor( _dwEdgeColor )
+		, dwMinAlpha( _dwMinAlpha )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 		NI_ASSERT( pSourceImage != 0, "Wrong parameter: pSourceImage == 0" );
@@ -313,7 +322,10 @@ struct SWBCMarkOutsideEdgeFunctional
 	                               const CArray2D<uint32_t> *_pSourceImage,
 	                               uint32_t _dwEdgeColor,
 	                               uint32_t _dwMinAlpha )
-			: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), dwEdgeColor( _dwEdgeColor ), dwMinAlpha( _dwMinAlpha )
+		: pDestImage( _pDestImage )
+		, pSourceImage( _pSourceImage )
+		, dwEdgeColor( _dwEdgeColor )
+		, dwMinAlpha( _dwMinAlpha )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 		NI_ASSERT( pSourceImage != 0, "Wrong parameter: pSourceImage == 0" );
@@ -360,7 +372,10 @@ struct SMarkInsideEdgeFunctional
 	                           const CArray2D<uint32_t> *_pSourceImage,
 	                           uint32_t _dwEdgeColor,
 	                           uint32_t _dwMinAlpha )
-			: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), dwEdgeColor( _dwEdgeColor ), dwMinAlpha( _dwMinAlpha )
+		: pDestImage( _pDestImage )
+		, pSourceImage( _pSourceImage )
+		, dwEdgeColor( _dwEdgeColor )
+		, dwMinAlpha( _dwMinAlpha )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 		NI_ASSERT( pSourceImage != 0, "Wrong parameter: pSourceImage == 0" );
@@ -403,7 +418,10 @@ struct SWBCMarkInsideEdgeFunctional
 	                              const CArray2D<uint32_t> *_pSourceImage,
 	                              uint32_t _dwEdgeColor,
 	                              uint32_t _dwMinAlpha )
-			: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), dwEdgeColor( _dwEdgeColor ), dwMinAlpha( _dwMinAlpha )
+		: pDestImage( _pDestImage )
+		, pSourceImage( _pSourceImage )
+		, dwEdgeColor( _dwEdgeColor )
+		, dwMinAlpha( _dwMinAlpha )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 		NI_ASSERT( pSourceImage != 0, "Wrong parameter: pSourceImage == 0" );
@@ -445,7 +463,8 @@ struct SEraseEdgeFunctional
 	const CArray2D<uint32_t> *pSourceImage;
 
 	SEraseEdgeFunctional( CArray2D<uint32_t> *_pDestImage, const CArray2D<uint32_t> *_pSourceImage )
-			: pDestImage( _pDestImage ), pSourceImage( _pSourceImage )
+		: pDestImage( _pDestImage )
+		, pSourceImage( _pSourceImage )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 		NI_ASSERT( pSourceImage != 0, "Wrong parameter: pSourceImage == 0" );
@@ -484,7 +503,8 @@ struct SWBCEraseEdgeFunctional
 	CTPoint<int> size;
 
 	SWBCEraseEdgeFunctional( CArray2D<uint32_t> *_pDestImage, const CArray2D<uint32_t> *_pSourceImage )
-			: pDestImage( _pDestImage ), pSourceImage( _pSourceImage )
+		: pDestImage( _pDestImage )
+		, pSourceImage( _pSourceImage )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 		NI_ASSERT( pSourceImage != 0, "Wrong parameter: pSourceImage == 0" );

@@ -40,7 +40,13 @@ protected:
 		NTimer::STime timeUpdatePeriod;
 		uint32_t dwVersion;
 
-		SAutoUpdate() : bUpdating( false ), timeNextUpdate( 0 ), timeUpdatePeriod( 1000 ), dwVersion( 0 ) {}
+		SAutoUpdate()
+			: bUpdating( false )
+			, timeNextUpdate( 0 )
+			, timeUpdatePeriod( 1000 )
+			, dwVersion( 0 )
+		{
+		}
 
 		bool CheckNeedUpdate();
 
@@ -76,7 +82,12 @@ protected:
 		int nLagLeft;               // Remaining lag time
 		uint32_t dwHatedBy;         // They want him kicked already
 
-		SLagInfo() : timeStartLag( 0 ), nLagLeft( 0 ), dwHatedBy( 0 ) {}
+		SLagInfo()
+			: timeStartLag( 0 )
+			, nLagLeft( 0 )
+			, dwHatedBy( 0 )
+		{
+		}
 	};
 
 	typedef std::vector<SLagInfo> CLaggerList;
@@ -268,7 +279,9 @@ public:
 	CSlotNumberPacket() {}
 
 	CSlotNumberPacket( const int nClientID, const int _nSlot, const unsigned long _ulCheckSum )
-			: CNetPacket( nClientID ), nSlot( _nSlot ), ulCheckSum( _ulCheckSum )
+		: CNetPacket( nClientID )
+		, nSlot( _nSlot )
+		, ulCheckSum( _ulCheckSum )
 	{
 	}
 };
@@ -292,7 +305,9 @@ public:
 	CB2GameLostPacket() {}
 
 	CB2GameLostPacket( const int nClientID, const int _nGameID, const int _nSegment )
-			: CNetPacket( nClientID ), nGameID( _nGameID ), nSegment( _nSegment )
+		: CNetPacket( nClientID )
+		, nGameID( _nGameID )
+		, nSegment( _nSegment )
 	{
 	}
 };

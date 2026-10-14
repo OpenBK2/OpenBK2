@@ -32,7 +32,12 @@ public:
 		Setup( p0, p1, p2, p3 );
 	}
 
-	CAnalyticBSpline3( const CAnalyticBSpline3 &bs ) : x( bs.x ), y( bs.y ), z( bs.z ) {}
+	CAnalyticBSpline3( const CAnalyticBSpline3 &bs )
+		: x( bs.x )
+		, y( bs.y )
+		, z( bs.z )
+	{
+	}
 
 	//
 	void Setup( const CVec3 &p0, const CVec3 &p1, const CVec3 &p2, const CVec3 &p3 )
@@ -116,9 +121,16 @@ struct CDirectedCircle : public CCircle
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nDir = {}; // direction of circle rotation
 
-	CDirectedCircle() : nDir( 0 ) {}
+	CDirectedCircle()
+		: nDir( 0 )
+	{
+	}
 
-	CDirectedCircle( const CVec2 &_center, const float _r, const int _nDir ) : CCircle( _center, _r ), nDir( _nDir ) {}
+	CDirectedCircle( const CVec2 &_center, const float _r, const int _nDir )
+		: CCircle( _center, _r )
+		, nDir( _nDir )
+	{
+	}
 };
 
 void GetDirectedCirclesByTangent(

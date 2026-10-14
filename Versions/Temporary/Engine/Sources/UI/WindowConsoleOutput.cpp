@@ -27,7 +27,8 @@ CWindowConsoleOutput::SColorString::SColorString( const wchar_t *pszStr,
                                                   uint32_t col,
                                                   const int nWidth,
                                                   IWindow *pFontScaleWindow )
-		: szString( pszStr ), dwColor( col )
+	: szString( pszStr )
+	, dwColor( col )
 {
 	const std::wstring szText = NStr::ToUnicode( fmt::format( "<color={:08X}>", col ) ) + pszStr;
 	pGfxText = CreateML( pFontScaleWindow );

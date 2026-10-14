@@ -28,9 +28,15 @@ struct SDebugInfoUpdate : public CObjectBase
 		return DEBUG_INFO_UNKNOWN;
 	}
 
-	SDebugInfoUpdate() : nID( NDebugInfo::OBJECT_ID_GENERATE ) {}
+	SDebugInfoUpdate()
+		: nID( NDebugInfo::OBJECT_ID_GENERATE )
+	{
+	}
 
-	SDebugInfoUpdate( const int _nID ) : nID( _nID ) {}
+	SDebugInfoUpdate( const int _nID )
+		: nID( _nID )
+	{
+	}
 };
 
 struct SDebugInfoObject : public SDebugInfoUpdate
@@ -42,9 +48,17 @@ struct SDebugInfoObject : public SDebugInfoUpdate
 		return DEBUG_INFO_UNKNOWN;
 	}
 
-	SDebugInfoObject() : SDebugInfoUpdate(), color( WHITE ) {}
+	SDebugInfoObject()
+		: SDebugInfoUpdate()
+		, color( WHITE )
+	{
+	}
 
-	SDebugInfoObject( const int _nID, const EColor _color ) : SDebugInfoUpdate( _nID ), color( _color ) {}
+	SDebugInfoObject( const int _nID, const EColor _color )
+		: SDebugInfoUpdate( _nID )
+		, color( _color )
+	{
+	}
 };
 
 struct SDebugInfoMarker : public SDebugInfoObject
@@ -59,10 +73,14 @@ public:
 		return DEBUG_INFO_MARKER;
 	}
 
-	SDebugInfoMarker() : SDebugInfoObject() {}
+	SDebugInfoMarker()
+		: SDebugInfoObject()
+	{
+	}
 
 	SDebugInfoMarker( const int nID, const std::vector<SVector> &_tiles, const EColor color )
-			: SDebugInfoObject( nID, color ), tiles( _tiles )
+		: SDebugInfoObject( nID, color )
+		, tiles( _tiles )
 	{
 	}
 };
@@ -79,10 +97,14 @@ public:
 		return DEBUG_INFO_CIRCLE;
 	}
 
-	SDebugInfoCircle() : SDebugInfoObject() {}
+	SDebugInfoCircle()
+		: SDebugInfoObject()
+	{
+	}
 
 	SDebugInfoCircle( const int nID, const CCircle _circle, const EColor color )
-			: SDebugInfoObject( nID, color ), circle( _circle )
+		: SDebugInfoObject( nID, color )
+		, circle( _circle )
 	{
 	}
 };
@@ -100,10 +122,16 @@ public:
 		return DEBUG_INFO_SEGMENT;
 	}
 
-	SDebugInfoSegment() : SDebugInfoObject(), nThickness( -1 ) {}
+	SDebugInfoSegment()
+		: SDebugInfoObject()
+		, nThickness( -1 )
+	{
+	}
 
 	SDebugInfoSegment( const int nID, const CSegment &_segment, const int _nThickness, const EColor color )
-			: SDebugInfoObject( nID, color ), segment( _segment ), nThickness( _nThickness )
+		: SDebugInfoObject( nID, color )
+		, segment( _segment )
+		, nThickness( _nThickness )
 	{
 	}
 };
@@ -123,15 +151,22 @@ public:
 		return DEBUG_INFO_LINE;
 	}
 
-	SDebugInfoLine() : vColor( CVec4( 255, 255, 255, 255 ) ), bDepthCheck( false ) {}
+	SDebugInfoLine()
+		: vColor( CVec4( 255, 255, 255, 255 ) )
+		, bDepthCheck( false )
+	{
+	}
 
 	SDebugInfoLine( const int nID,
 	                const NDebugInfo::SArrowHead &_arrowStart,
 	                const NDebugInfo::SArrowHead &_arrowEnd,
 	                const CVec4 &_vColor,
 	                const bool _bDepthCheck )
-			: SDebugInfoUpdate( nID ), arrowStart( _arrowStart ), arrowEnd( _arrowEnd ), vColor( _vColor ),
-				bDepthCheck( _bDepthCheck )
+		: SDebugInfoUpdate( nID )
+		, arrowStart( _arrowStart )
+		, arrowEnd( _arrowEnd )
+		, vColor( _vColor )
+		, bDepthCheck( _bDepthCheck )
 	{
 	}
 };
@@ -151,13 +186,20 @@ public:
 		return DEBUG_INFO_RECT;
 	}
 
-	SDebugInfoRect() : vColor( CVec4( 255, 255, 255, 255 ) ), fZ( 0.0f ), bDepthCheck( false )
+	SDebugInfoRect()
+		: vColor( CVec4( 255, 255, 255, 255 ) )
+		, fZ( 0.0f )
+		, bDepthCheck( false )
 	{
 		rect.InitRect( VNULL2, VNULL2, VNULL2, VNULL2 );
 	}
 
 	SDebugInfoRect( const int nID, const SRect _rect, const float _fZ, const CVec4 &_vColor, const bool _bDepthCheck )
-			: SDebugInfoUpdate( nID ), rect( _rect ), fZ( _fZ ), vColor( _vColor ), bDepthCheck( _bDepthCheck )
+		: SDebugInfoUpdate( nID )
+		, rect( _rect )
+		, fZ( _fZ )
+		, vColor( _vColor )
+		, bDepthCheck( _bDepthCheck )
 	{
 	}
 };
@@ -172,9 +214,15 @@ public:
 		return DEBUG_INFO_DELETE;
 	}
 
-	SDebugInfoDeleteObject() : SDebugInfoUpdate() {}
+	SDebugInfoDeleteObject()
+		: SDebugInfoUpdate()
+	{
+	}
 
-	SDebugInfoDeleteObject( const int nID ) : SDebugInfoUpdate( nID ) {}
+	SDebugInfoDeleteObject( const int nID )
+		: SDebugInfoUpdate( nID )
+	{
+	}
 };
 
 struct SDebugInfoDeleteLine : public SDebugInfoUpdate
@@ -187,9 +235,15 @@ public:
 		return DEBUG_INFO_DELETE_LINE;
 	}
 
-	SDebugInfoDeleteLine() : SDebugInfoUpdate() {}
+	SDebugInfoDeleteLine()
+		: SDebugInfoUpdate()
+	{
+	}
 
-	SDebugInfoDeleteLine( const int nID ) : SDebugInfoUpdate( nID ) {}
+	SDebugInfoDeleteLine( const int nID )
+		: SDebugInfoUpdate( nID )
+	{
+	}
 };
 
 } // namespace NDebugInfo

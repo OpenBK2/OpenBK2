@@ -26,7 +26,10 @@ class CQuery : public IQuery
 public:
 	CQuery() {}
 
-	CQuery( IDirect3DQuery9 *p ) : pQuery( p ) {}
+	CQuery( IDirect3DQuery9 *p )
+		: pQuery( p )
+	{
+	}
 
 	virtual void Start()
 	{
@@ -71,7 +74,10 @@ struct SRenderParam
 {
 	T value;
 
-	SRenderParam( const T &_a ) : value( _a ) {}
+	SRenderParam( const T &_a )
+		: value( _a )
+	{
+	}
 
 	void Set( const T &_a )
 	{
@@ -975,9 +981,19 @@ static void SetRT( IDirect3DSurface9 *pTB, IDirect3DSurface9 *pZB )
 static const CRenderContext *pCurrentRenderContext;
 
 CRenderContext::CRenderContext()
-		: alpha( COMBINE_NONE ), stencil( SStencilMode( STENCIL_NONE ) ), depth( DEPTH_NORMAL ), cull( CULL_CW ),
-			colorWrite( COLORWRITE_ALL ), targetMode( RTM_SCREEN ), fog( FOG_NONE ), pTarget( 0 ), nMipLevel( 0 ),
-			pPixelShader( &psDiffuse ), nVertexShader( 1 ), nRegister( 0 ), pOutstandingStream( 0 )
+	: alpha( COMBINE_NONE )
+	, stencil( SStencilMode( STENCIL_NONE ) )
+	, depth( DEPTH_NORMAL )
+	, cull( CULL_CW )
+	, colorWrite( COLORWRITE_ALL )
+	, targetMode( RTM_SCREEN )
+	, fog( FOG_NONE )
+	, pTarget( 0 )
+	, nMipLevel( 0 )
+	, pPixelShader( &psDiffuse )
+	, nVertexShader( 1 )
+	, nRegister( 0 )
+	, pOutstandingStream( 0 )
 {
 	Identity( &transform.forward );
 	Identity( &transform.backward );

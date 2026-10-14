@@ -16,7 +16,10 @@
 
 // CBackgroundFrameSequence
 
-CBackgroundFrameSequence::CBackgroundFrameSequence() : timeStart( 0 ) {}
+CBackgroundFrameSequence::CBackgroundFrameSequence()
+	: timeStart( 0 )
+{
+}
 
 void CBackgroundFrameSequence::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {

@@ -32,9 +32,13 @@ struct ThrowOnCopy
 	static bool bThrow;
 	int nValue;
 
-	explicit ThrowOnCopy( int n = 0 ) : nValue( n ) {}
+	explicit ThrowOnCopy( int n = 0 )
+		: nValue( n )
+	{
+	}
 
-	ThrowOnCopy( const ThrowOnCopy &other ) : nValue( other.nValue )
+	ThrowOnCopy( const ThrowOnCopy &other )
+		: nValue( other.nValue )
 	{
 		if ( bThrow )
 		{

@@ -83,7 +83,11 @@ void CClientAckManager::CBoredUnitsContainer::Clear()
 	nCounter = 0;
 }
 
-CClientAckManager::CBoredUnitsContainer::CBoredUnitsContainer() : nCounter( 0 ), timeLastBored( 0 ) {}
+CClientAckManager::CBoredUnitsContainer::CBoredUnitsContainer()
+	: nCounter( 0 )
+	, timeLastBored( 0 )
+{
+}
 
 void CClientAckManager::CBoredUnitsContainer::Copy( const CClientAckManager::CBoredUnitsContainer &cp )
 {
@@ -220,7 +224,11 @@ bool CClientAckManager::IsNegative( const NDb::EUnitAckType eAck )
 	return GetParam( eAck ) && GetParam( eAck )->eAckClass == NDb::ACKT_NEGATIVE;
 }
 
-CClientAckManager::CClientAckManager() : TIME_ACK_WAIT( 0 ), nSelectionCounter( 0 ) {}
+CClientAckManager::CClientAckManager()
+	: TIME_ACK_WAIT( 0 )
+	, nSelectionCounter( 0 )
+{
+}
 
 void CClientAckManager::InitConsts()
 {

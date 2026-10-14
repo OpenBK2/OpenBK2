@@ -19,14 +19,19 @@ struct SObjectClipboard
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	SObjectClipboard()
-			: vPosition( VNULL3 ), vBackupPosition( VNULL3 ), bBackupCreated( false ), vPositionDifference( VNULL3 )
+		: vPosition( VNULL3 )
+		, vBackupPosition( VNULL3 )
+		, bBackupCreated( false )
+		, vPositionDifference( VNULL3 )
 	{
 	}
 
 	SObjectClipboard( const SObjectClipboard &rObjectClipboard )
-			: objectClipboardPartlist( rObjectClipboard.objectClipboardPartlist ), vPosition( rObjectClipboard.vPosition ),
-				vBackupPosition( rObjectClipboard.vBackupPosition ), bBackupCreated( rObjectClipboard.bBackupCreated ),
-				vPositionDifference( rObjectClipboard.vPositionDifference )
+		: objectClipboardPartlist( rObjectClipboard.objectClipboardPartlist )
+		, vPosition( rObjectClipboard.vPosition )
+		, vBackupPosition( rObjectClipboard.vBackupPosition )
+		, bBackupCreated( rObjectClipboard.bBackupCreated )
+		, vPositionDifference( rObjectClipboard.vPositionDifference )
 	{
 	}
 

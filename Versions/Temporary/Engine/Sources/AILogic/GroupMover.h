@@ -23,9 +23,16 @@ class CGroupMover : public CAIObjectBase
 				return 0;
 			}
 
-			SSubGroupUnitInfo() : vPosition( VNULL2 ) {}
+			SSubGroupUnitInfo()
+				: vPosition( VNULL2 )
+			{
+			}
 
-			SSubGroupUnitInfo( CCommonUnit *_pUnit ) : pUnit( _pUnit ), vPosition( VNULL2 ) {}
+			SSubGroupUnitInfo( CCommonUnit *_pUnit )
+				: pUnit( _pUnit )
+				, vPosition( VNULL2 )
+			{
+			}
 		};
 
 		typedef det_map<int, SSubGroupUnitInfo> TSubGroupUnits;
@@ -50,7 +57,13 @@ class CGroupMover : public CAIObjectBase
 				return 0;
 			}
 
-			SSubGroupPathInfo() : timeCalced( 0 ), vStartPoint( VNULL2 ), vFinishPoint( VNULL2 ), nBoundTileRadius( 0 ) {}
+			SSubGroupPathInfo()
+				: timeCalced( 0 )
+				, vStartPoint( VNULL2 )
+				, vFinishPoint( VNULL2 )
+				, nBoundTileRadius( 0 )
+			{
+			}
 
 			IStaticPath *CreateStaticPath( CCommonUnit *pUnit, const CVec2 &vPoint );
 		};
@@ -105,9 +118,17 @@ private:
 	const bool CalcPositions();
 
 public:
-	CGroupMover() : vPosition( VNULL2 ), bNeedCalcPositions( true ) {}
+	CGroupMover()
+		: vPosition( VNULL2 )
+		, bNeedCalcPositions( true )
+	{
+	}
 
-	CGroupMover( const CVec2 &_vPosition ) : vPosition( _vPosition ), bNeedCalcPositions( true ) {}
+	CGroupMover( const CVec2 &_vPosition )
+		: vPosition( _vPosition )
+		, bNeedCalcPositions( true )
+	{
+	}
 
 	void AddUnit( CCommonUnit *pUnit );
 	void DeleteUnit( const int nUnitID );

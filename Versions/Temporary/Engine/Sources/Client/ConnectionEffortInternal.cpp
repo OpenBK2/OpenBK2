@@ -26,8 +26,13 @@ CSimpleClientEffort::CSimpleClientEffort( const int _nMyServerID,
                                           const int nServerPort,
                                           const int _nGameNetVersion,
                                           const int _nTimeOut )
-		: nMyServerID( _nMyServerID ), nClientServerID( _nClientServerID ), nGameNetVersion( _nGameNetVersion ),
-			pNet( _pNet ), eState( ES_CONNECTING ), eSubState( ECONNECT_SERVER ), nTimeOut( _nTimeOut )
+	: nMyServerID( _nMyServerID )
+	, nClientServerID( _nClientServerID )
+	, nGameNetVersion( _nGameNetVersion )
+	, pNet( _pNet )
+	, eState( ES_CONNECTING )
+	, eSubState( ECONNECT_SERVER )
+	, nTimeOut( _nTimeOut )
 {
 	REGISTER_PACKET_PROCESSOR( &CSimpleClientEffort::ProcessClientAccepted );
 	REGISTER_PACKET_PROCESSOR( &CSimpleClientEffort::ProcessClientConnectInfo );
@@ -189,8 +194,13 @@ CSimpleServerEffort::CSimpleServerEffort( const int _nMyServerID,
                                           const int _nClientPort,
                                           CNet *_pNet,
                                           CNet *_pAcceptGamersNet )
-		: nMyServerID( _nMyServerID ), nClientServerID( _nClientServerID ), pNet( _pNet ), eState( ES_CONNECTING ),
-			szClientIP( _szClientIP ), nClientPort( _nClientPort ), pAcceptGamersNet( _pAcceptGamersNet )
+	: nMyServerID( _nMyServerID )
+	, nClientServerID( _nClientServerID )
+	, pNet( _pNet )
+	, eState( ES_CONNECTING )
+	, szClientIP( _szClientIP )
+	, nClientPort( _nClientPort )
+	, pAcceptGamersNet( _pAcceptGamersNet )
 {
 	REGISTER_PACKET_PROCESSOR( &CSimpleServerEffort::ProcessClientIdentity );
 
@@ -255,7 +265,10 @@ CThroughServerEffort::CThroughServerEffort( const int _nClientServerID,
                                             const int _nMyServerID,
                                             const int _nOurGameID,
                                             CNet *_pNet )
-		: nClientServerID( _nClientServerID ), nMyServerID( _nMyServerID ), nOurGameID( _nOurGameID ), pNet( _pNet )
+	: nClientServerID( _nClientServerID )
+	, nMyServerID( _nMyServerID )
+	, nOurGameID( _nOurGameID )
+	, pNet( _pNet )
 {
 	pNet->SendPacket( new CThroughServerConnectionPacket( 0, nClientServerID, nOurGameID ) );
 }

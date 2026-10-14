@@ -35,7 +35,11 @@ struct SVideoMode
 	}
 
 	SVideoMode( int _nXSize, int _nYSize, int _nBpp, EFS _fullScreen, int _nRefreshRate = 0 )
-			: nXSize( _nXSize ), nYSize( _nYSize ), nBpp( _nBpp ), nRefreshRate( _nRefreshRate ), fullScreen( _fullScreen )
+		: nXSize( _nXSize )
+		, nYSize( _nYSize )
+		, nBpp( _nBpp )
+		, nRefreshRate( _nRefreshRate )
+		, fullScreen( _fullScreen )
 	{
 	}
 };
@@ -50,9 +54,17 @@ struct SRenderTargetDesc
 {
 	int nResolution = {}, nFormatID = {};
 
-	SRenderTargetDesc() : nResolution( -1 ), nFormatID( -1 ) {}
+	SRenderTargetDesc()
+		: nResolution( -1 )
+		, nFormatID( -1 )
+	{
+	}
 
-	SRenderTargetDesc( int _nResolution, int _nFormatID ) : nResolution( _nResolution ), nFormatID( _nFormatID ) {}
+	SRenderTargetDesc( int _nResolution, int _nFormatID )
+		: nResolution( _nResolution )
+		, nFormatID( _nFormatID )
+	{
+	}
 
 	bool operator==( const SRenderTargetDesc &a ) const
 	{
@@ -76,7 +88,11 @@ struct SRenderTargetsInfo
 	int nRegisters = {};
 	int nFloatRegisters = {};
 
-	SRenderTargetsInfo() : nRegisters( 0 ), nFloatRegisters( 0 ) {}
+	SRenderTargetsInfo()
+		: nRegisters( 0 )
+		, nFloatRegisters( 0 )
+	{
+	}
 
 	void Clear()
 	{
@@ -171,7 +187,12 @@ struct SRenderStats
 {
 	int nVertices = {}, nTris = {}, nDIPs = {};
 
-	SRenderStats() : nVertices( 0 ), nTris( 0 ), nDIPs( 0 ) {}
+	SRenderStats()
+		: nVertices( 0 )
+		, nTris( 0 )
+		, nDIPs( 0 )
+	{
+	}
 
 	void Clear()
 	{

@@ -7,10 +7,17 @@ struct SAIAcknowledgment
 	int nObjUniqueID = {}; // кто звучит
 	int nSet = {};         // number of acknowledgement set
 
-	SAIAcknowledgment() : nAck( 0 ), nObjUniqueID( -1 ), nSet( 0 ) {}
+	SAIAcknowledgment()
+		: nAck( 0 )
+		, nObjUniqueID( -1 )
+		, nSet( 0 )
+	{
+	}
 
 	SAIAcknowledgment( const int _nAck, const int _nObjUniqueID, const int _nSet )
-			: nAck( _nAck ), nObjUniqueID( _nObjUniqueID ), nSet( _nSet )
+		: nAck( _nAck )
+		, nObjUniqueID( _nObjUniqueID )
+		, nSet( _nSet )
 	{
 	}
 };
@@ -22,10 +29,17 @@ struct SAIBoredAcknowledgement
 	int nObjUniqueID = {}; // кто звучит
 	bool bPresent = {};    // новое состояние
 
-	SAIBoredAcknowledgement() : nAck( 0 ), nObjUniqueID( -1 ), bPresent( false ) {}
+	SAIBoredAcknowledgement()
+		: nAck( 0 )
+		, nObjUniqueID( -1 )
+		, bPresent( false )
+	{
+	}
 
 	SAIBoredAcknowledgement( int _nAck, const int _nObjUniqueID, bool _bPresent )
-			: nAck( _nAck ), nObjUniqueID( _nObjUniqueID ), bPresent( _bPresent )
+		: nAck( _nAck )
+		, nObjUniqueID( _nObjUniqueID )
+		, bPresent( _bPresent )
 	{
 	}
 };

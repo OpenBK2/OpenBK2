@@ -16,7 +16,8 @@ const float TEXTURE_POINT_Y = 7.0f;
 
 // CInterfaceMissionBriefing
 
-CInterfaceMissionBriefing::CInterfaceMissionBriefing() : CInterfaceScreenBase( "MissionBriefing", "mission_briefing" )
+CInterfaceMissionBriefing::CInterfaceMissionBriefing()
+	: CInterfaceScreenBase( "MissionBriefing", "mission_briefing" )
 {
 }
 

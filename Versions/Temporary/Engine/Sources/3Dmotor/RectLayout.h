@@ -20,7 +20,10 @@ public:
 
 		STextureCoord() {}
 
-		STextureCoord( const CTRect<float> &_rcTexRect ) : rcTexRect( _rcTexRect ) {}
+		STextureCoord( const CTRect<float> &_rcTexRect )
+			: rcTexRect( _rcTexRect )
+		{
+		}
 
 		STextureCoord( float fx, float fy, float fw, float fh )
 		{
@@ -68,7 +71,12 @@ public:
 		       float _fSizeY,
 		       const STextureCoord &_sTex,
 		       const NGfx::SPixel8888 &_sColor )
-				: fX( _fX ), fY( _fY ), fSizeX( _fSizeX ), fSizeY( _fSizeY ), sTex( _sTex ), sColor( _sColor )
+			: fX( _fX )
+			, fY( _fY )
+			, fSizeX( _fSizeX )
+			, fSizeY( _fSizeY )
+			, sTex( _sTex )
+			, sColor( _sColor )
 		{
 		}
 	};
@@ -85,7 +93,10 @@ public:
 	}
 
 	//
-	CRectLayout() : fZ( 0 ) {}
+	CRectLayout()
+		: fZ( 0 )
+	{
+	}
 
 	CRectLayout( float fScrX,
 	             float fScrY,

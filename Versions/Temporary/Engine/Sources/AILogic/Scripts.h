@@ -61,7 +61,13 @@ private:
 			return 0;
 		}
 
-		SScriptInfo() : period( 0 ), lastUpdate( 0 ), nRepetitions( -1 ), szName( "" ) {}
+		SScriptInfo()
+			: period( 0 )
+			, lastUpdate( 0 )
+			, nRepetitions( -1 )
+			, szName( "" )
+		{
+		}
 	};
 
 	//Script script;
@@ -89,7 +95,8 @@ private:
 
 		SReinforcementObject( const SMapObjectInfo &_mapObject,
 		                      const SHPObjectRPGStats *_pStats /*, IScenarioUnit *_pScenarioUnit*/ )
-				: mapObject( _mapObject ), pStats( _pStats ) /*, pScenarioUnit( _pScenarioUnit ) */
+			: mapObject( _mapObject )
+			, pStats( _pStats ) /*, pScenarioUnit( _pScenarioUnit ) */
 		{
 		}
 	};

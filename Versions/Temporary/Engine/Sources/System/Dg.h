@@ -80,7 +80,10 @@ protected:
 public:
 	CFuncBase() {}
 
-	CFuncBase( const TResult &_t ) : value( _t ) {}
+	CFuncBase( const TResult &_t )
+		: value( _t )
+	{
+	}
 
 	const TResult &GetValue() const
 	{
@@ -136,7 +139,10 @@ protected:
 	}
 
 public:
-	CHoldedPtrFuncBase() : nDeleteFrame( -1 ) {}
+	CHoldedPtrFuncBase()
+		: nDeleteFrame( -1 )
+	{
+	}
 };
 
 template <class TResult>
@@ -160,34 +166,38 @@ protected:
 	}
 
 public:
-	CHoldedFuncBase() : nDeleteFrame( -1 ) {}
+	CHoldedFuncBase()
+		: nDeleteFrame( -1 )
+	{
+	}
 };
 
-#define DEFINE_DG_CONSTANT_NODE( ClassName, Type )      \
-	class ClassName : public CFuncBase<Type>              \
-	{                                                     \
-		OBJECT_BASIC_METHODS( ClassName );                  \
-                                                        \
-	public:                                               \
-		ClassName() {}                                      \
-		ClassName( const Type &_t ) : CFuncBase<Type>( _t ) \
-		{                                                   \
-			Updated();                                        \
-		}                                                   \
-		const Type &GetValue() const                        \
-		{                                                   \
-			return value;                                     \
-		}                                                   \
-		void Set( const Type &_t )                          \
-		{                                                   \
-			value = _t;                                       \
-			Updated();                                        \
-		}                                                   \
-		int operator&( IBinSaver &f )                       \
-		{                                                   \
-			f.Add( 1, &value );                               \
-			return 0;                                         \
-		}                                                   \
+#define DEFINE_DG_CONSTANT_NODE( ClassName, Type ) \
+	class ClassName : public CFuncBase<Type>         \
+	{                                                \
+		OBJECT_BASIC_METHODS( ClassName );             \
+                                                   \
+	public:                                          \
+		ClassName() {}                                 \
+		ClassName( const Type &_t )                    \
+			: CFuncBase<Type>( _t )                      \
+		{                                              \
+			Updated();                                   \
+		}                                              \
+		const Type &GetValue() const                   \
+		{                                              \
+			return value;                                \
+		}                                              \
+		void Set( const Type &_t )                     \
+		{                                              \
+			value = _t;                                  \
+			Updated();                                   \
+		}                                              \
+		int operator&( IBinSaver &f )                  \
+		{                                              \
+			f.Add( 1, &value );                          \
+			return 0;                                    \
+		}                                              \
 	};
 
 // for use in CDGPtr only!
@@ -224,12 +234,14 @@ public:
 		nVersion = 0;
 	}
 
-	CDGPtr( const CDGPtr<TFunc, CPtrType> &a ) : pNode( a.pNode )
+	CDGPtr( const CDGPtr<TFunc, CPtrType> &a )
+		: pNode( a.pNode )
 	{
 		nVersion = 0;
 	}
 
-	CDGPtr( TFunc *_pNode ) : pNode( _pNode )
+	CDGPtr( TFunc *_pNode )
+		: pNode( _pNode )
 	{
 		nVersion = 0;
 	}
@@ -321,11 +333,25 @@ class CChangeTrackPtr
 	int nFrame = 0;
 
 public:
-	CChangeTrackPtr() : nVersion( 0 ), nFrame( 0 ) {}
+	CChangeTrackPtr()
+		: nVersion( 0 )
+		, nFrame( 0 )
+	{
+	}
 
-	CChangeTrackPtr( const CChangeTrackPtr &a ) : p( a.p ), nVersion( 0 ), nFrame( 0 ) {}
+	CChangeTrackPtr( const CChangeTrackPtr &a )
+		: p( a.p )
+		, nVersion( 0 )
+		, nFrame( 0 )
+	{
+	}
 
-	CChangeTrackPtr( CVersioningBase *_p ) : p( _p ), nVersion( 0 ), nFrame( 0 ) {}
+	CChangeTrackPtr( CVersioningBase *_p )
+		: p( _p )
+		, nVersion( 0 )
+		, nFrame( 0 )
+	{
+	}
 
 	CChangeTrackPtr &operator=( const CChangeTrackPtr &a )
 	{

@@ -15,15 +15,20 @@ class CTypeNode : public CLangNode
 	CPtr<CTypeNode> pRealTypeIfForward;
 
 public:
-	CTypeNode() : bForward( false ) {}
+	CTypeNode()
+		: bForward( false )
+	{
+	}
 
 	CTypeNode( const std::string &szName, const std::string &szFile, int nLine )
-			: CLangNode( szName, szFile, nLine ), bForward( false )
+		: CLangNode( szName, szFile, nLine )
+		, bForward( false )
 	{
 	}
 
 	CTypeNode( const std::string &szName, bool _bForward, const std::string &szFile, int nLine )
-			: CLangNode( szName, szFile, nLine ), bForward( _bForward )
+		: CLangNode( szName, szFile, nLine )
+		, bForward( _bForward )
 	{
 	}
 
@@ -50,7 +55,8 @@ public:
 
 	CAttributeNode(
 			const std::string &szName, const std::string &szValue, bool bStringValue, const std::string &szFile, int nLine )
-			: CLangNode( szName, szFile, nLine ), value( szValue, bStringValue )
+		: CLangNode( szName, szFile, nLine )
+		, value( szValue, bStringValue )
 	{
 	}
 
@@ -79,7 +85,10 @@ class PARSER_EXPORT CTypeDefNode : public CTypeNode
 	CPtr<CNodesList<CAttributeNode>> pAttrList;
 
 public:
-	CTypeDefNode() : bPointer( false ) {}
+	CTypeDefNode()
+		: bPointer( false )
+	{
+	}
 
 	CTypeDefNode( const std::string &szName,
 	              CNodesList<CAttributeNode> *_pAttrList,
@@ -87,8 +96,10 @@ public:
 	              bool _bPointer,
 	              const std::string &szFile,
 	              int nLine )
-			: CTypeNode( szName, szFile, nLine ), pAttrList( _pAttrList ), pReferencedType( _pReferencedType ),
-				bPointer( _bPointer )
+		: CTypeNode( szName, szFile, nLine )
+		, pAttrList( _pAttrList )
+		, pReferencedType( _pReferencedType )
+		, bPointer( _bPointer )
 	{
 	}
 
@@ -113,15 +124,23 @@ class CEnumEntryNode : public CLangNode
 	bool bValueDefined;
 
 public:
-	CEnumEntryNode() : nValue( -1 ), bValueDefined( false ) {}
+	CEnumEntryNode()
+		: nValue( -1 )
+		, bValueDefined( false )
+	{
+	}
 
 	CEnumEntryNode( const std::string &szName, int _nValue, const std::string &szFile, int nLine )
-			: CLangNode( szName, szFile, nLine ), nValue( _nValue ), bValueDefined( true )
+		: CLangNode( szName, szFile, nLine )
+		, nValue( _nValue )
+		, bValueDefined( true )
 	{
 	}
 
 	CEnumEntryNode( const std::string &szName, const std::string &szFile, int nLine )
-			: CLangNode( szName, szFile, nLine ), nValue( -1 ), bValueDefined( false )
+		: CLangNode( szName, szFile, nLine )
+		, nValue( -1 )
+		, bValueDefined( false )
 	{
 	}
 
@@ -157,13 +176,14 @@ class PARSER_EXPORT CEnumNode : public CTypeNode
 public:
 	CEnumNode() {}
 
-	CEnumNode( const std::string &szFile, int nLine ) : CTypeNode( "", szFile, nLine )
+	CEnumNode( const std::string &szFile, int nLine )
+		: CTypeNode( "", szFile, nLine )
 	{
 		pEntriesList = new CNodesList<CEnumEntryNode>();
 	}
 
 	CEnumNode( const std::string &szName, bool bForward, const std::string &szFile, int nLine )
-			: CTypeNode( szName, bForward, szFile, nLine )
+		: CTypeNode( szName, bForward, szFile, nLine )
 	{
 		pEntriesList = new CNodesList<CEnumEntryNode>();
 	}
@@ -208,10 +228,18 @@ class PARSER_EXPORT CVariable : public CLangNode
 	std::string szComplexDefaultValue;
 
 public:
-	CVariable() : bIsPointer( false ), bHasDefault( false ), bHasComplexDefault( false ) {}
+	CVariable()
+		: bIsPointer( false )
+		, bHasDefault( false )
+		, bHasComplexDefault( false )
+	{
+	}
 
 	CVariable( const std::string &szName, const std::string &szFile, int nLine )
-			: CLangNode( szName, szFile, nLine ), bIsPointer( false ), bHasDefault( false ), bHasComplexDefault( false )
+		: CLangNode( szName, szFile, nLine )
+		, bIsPointer( false )
+		, bHasDefault( false )
+		, bHasComplexDefault( false )
 	{
 	}
 
@@ -301,7 +329,8 @@ class CVariableNode : public CVariable
 public:
 	CVariableNode() {}
 
-	CVariableNode( const std::string &szName, const std::string &szFile, int nLine ) : CVariable( szName, szFile, nLine )
+	CVariableNode( const std::string &szName, const std::string &szFile, int nLine )
+		: CVariable( szName, szFile, nLine )
 	{
 	}
 
@@ -322,7 +351,9 @@ public:
 	CVectorNode() {}
 
 	CVectorNode( const std::string &szName, int _nMinAmount, int _nMaxAmount, const std::string &szFile, int nLine )
-			: CVariable( szName, szFile, nLine ), nMinAmount( _nMinAmount ), nMaxAmount( _nMaxAmount )
+		: CVariable( szName, szFile, nLine )
+		, nMinAmount( _nMinAmount )
+		, nMaxAmount( _nMaxAmount )
 	{
 	}
 
@@ -352,7 +383,8 @@ public:
 	CAttributeDefNode() {}
 
 	CAttributeDefNode( ESimpleType _eNodeType, const std::string &szFile, int nLine )
-			: CTypeNode( "", szFile, nLine ), eNodeType( _eNodeType )
+		: CTypeNode( "", szFile, nLine )
+		, eNodeType( _eNodeType )
 	{
 	}
 
@@ -387,7 +419,8 @@ public:
 	CNamespace() {}
 
 	CNamespace( CNodesList<CComplexTypeNode> *_pVisibleTypes, const std::string &szFile, int nLine )
-			: pVisibleTypes( _pVisibleTypes ), CLangNode( "", szFile, nLine )
+		: pVisibleTypes( _pVisibleTypes )
+		, CLangNode( "", szFile, nLine )
 	{
 	}
 
@@ -455,7 +488,8 @@ public:
 	CComplexTypeNode() {}
 
 	CComplexTypeNode( const std::string &szName, bool _bClass, bool bForward, const std::string &szFile, int nLine )
-			: CTypeNode( szName, bForward, szFile, nLine ), bClass( _bClass )
+		: CTypeNode( szName, bForward, szFile, nLine )
+		, bClass( _bClass )
 	{
 	}
 
@@ -505,10 +539,14 @@ class CBaseTypeNode : public CTypeNode
 	bool bClass;
 
 public:
-	CBaseTypeNode() : bClass( false ) {}
+	CBaseTypeNode()
+		: bClass( false )
+	{
+	}
 
 	CBaseTypeNode( const std::string &szTypeName, bool _bClass, const std::string &szFile, int nLine )
-			: CTypeNode( szTypeName, szFile, nLine ), bClass( _bClass )
+		: CTypeNode( szTypeName, szFile, nLine )
+		, bClass( _bClass )
 	{
 	}
 

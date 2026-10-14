@@ -22,8 +22,11 @@ const int CONNECTION_TIMEOUT = 20;
 
 CPlayGameProcessor::CPlayGameProcessor(
 		CNet *_pNet, const char *pszServerIP, const int _nNetGameVersion, const int _nServerPort, const int _nTimeOut )
-		: pNet( _pNet ), nNetGameVersion( _nNetGameVersion ), szServerIP( pszServerIP ), nServerPort( _nServerPort ),
-			nTimeOut( _nTimeOut )
+	: pNet( _pNet )
+	, nNetGameVersion( _nNetGameVersion )
+	, szServerIP( pszServerIP )
+	, nServerPort( _nServerPort )
+	, nTimeOut( _nTimeOut )
 {
 	REGISTER_PACKET_PROCESSOR( &CPlayGameProcessor::ProcessCreateGame );
 	REGISTER_PACKET_PROCESSOR( &CPlayGameProcessor::ProcessConnectGame );

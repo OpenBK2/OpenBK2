@@ -39,10 +39,14 @@ class CPlayGameProcessor : public CPacketProcessor
 		CPtr<CNetPacket> pPacket;
 		uint32_t dwStartTime;
 
-		SWaitingPacket() : dwStartTime( 0 ) {}
+		SWaitingPacket()
+			: dwStartTime( 0 )
+		{
+		}
 
 		SWaitingPacket( CNetPacket *_pPacket, const uint32_t _dwStartTime )
-				: pPacket( _pPacket ), dwStartTime( _dwStartTime )
+			: pPacket( _pPacket )
+			, dwStartTime( _dwStartTime )
 		{
 		}
 	};

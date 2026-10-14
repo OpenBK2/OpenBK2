@@ -27,7 +27,10 @@ private:
 	class CAviation *pOwner = {};
 
 public:
-	CPlaneInFormationSmoothPath() : pOwner( 0 ) {}
+	CPlaneInFormationSmoothPath()
+		: pOwner( 0 )
+	{
+	}
 
 	void Init( class CAviation *_pOwner );
 

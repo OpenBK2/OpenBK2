@@ -85,7 +85,10 @@ protected:
 public:
 	CRuntimeFontFormat() {}
 
-	explicit CRuntimeFontFormat( CGlyphAtlas *_pAtlas ) : pAtlas( _pAtlas ) {}
+	explicit CRuntimeFontFormat( CGlyphAtlas *_pAtlas )
+		: pAtlas( _pAtlas )
+	{
+	}
 
 	int operator&( IBinSaver &saver );
 };

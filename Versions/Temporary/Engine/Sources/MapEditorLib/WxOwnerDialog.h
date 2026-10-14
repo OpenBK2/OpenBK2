@@ -26,7 +26,7 @@ public:
 	                const wxPoint &rPos = wxDefaultPosition,
 	                const wxSize &rSize = wxDefaultSize,
 	                long nStyle = wxDEFAULT_DIALOG_STYLE )
-			: CWxToolDialog( pParent, id, rTitle, rPos, rSize, nStyle )
+		: CWxToolDialog( pParent, id, rTitle, rPos, rSize, nStyle )
 	{
 	}
 

@@ -16,7 +16,11 @@ struct SText
 
 		SCharRect() {}
 
-		SCharRect( int _nIndex, CTRect<int> _sRect ) : nIndex( _nIndex ), sRect( _sRect ) {}
+		SCharRect( int _nIndex, CTRect<int> _sRect )
+			: nIndex( _nIndex )
+			, sRect( _sRect )
+		{
+		}
 	};
 
 	struct SFontLayout
@@ -37,7 +41,11 @@ struct SText
 
 		SFontLayout() {}
 
-		SFontLayout( CFontInfo *pInfo, const CRectLayout &_sLayout ) : sLayout( _sLayout ), pFontInfo( pInfo ) {}
+		SFontLayout( CFontInfo *pInfo, const CRectLayout &_sLayout )
+			: sLayout( _sLayout )
+			, pFontInfo( pInfo )
+		{
+		}
 	};
 
 	ZDATA

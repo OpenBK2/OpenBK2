@@ -15,7 +15,9 @@ struct SUserRTInfo
 		STex() {}
 
 		STex( int _nResolution, const std::string &_szName, int _nPixelFormatID )
-				: nResolution( _nResolution ), szName( _szName ), nPixelFormatID( _nPixelFormatID )
+			: nResolution( _nResolution )
+			, szName( _szName )
+			, nPixelFormatID( _nPixelFormatID )
 		{
 		}
 	};

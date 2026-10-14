@@ -22,7 +22,8 @@ struct CWxThumbnailList::SImpl
 	wxImageList *normal = nullptr, *small = nullptr;
 	long style = 0;
 
-	explicit SImpl( CWxThumbnailList *window ) : owner( window )
+	explicit SImpl( CWxThumbnailList *window )
+		: owner( window )
 	{
 		// Keep callbacks' widget alive until we disconnect them, even if its
 		// native parent starts destruction before the wx wrapper is released.
@@ -83,7 +84,7 @@ struct CWxThumbnailList::SImpl
 
 CWxThumbnailList::CWxThumbnailList(
 		wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size, long style )
-		: impl( new SImpl( this ) )
+	: impl( new SImpl( this ) )
 {
 	GtkWidget *scroll = gtk_scrolled_window_new( nullptr, nullptr );
 	gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scroll ), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC );

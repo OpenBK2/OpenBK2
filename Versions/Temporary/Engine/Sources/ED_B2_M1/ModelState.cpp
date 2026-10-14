@@ -74,7 +74,8 @@ class CEffectPreviewTime : public CFuncBase<NTimer::STime>
 public:
 	CEffectPreviewTime() {}
 
-	CEffectPreviewTime( CFuncBase<NTimer::STime> *source, float seconds ) : clock( source )
+	CEffectPreviewTime( CFuncBase<NTimer::STime> *source, float seconds )
+		: clock( source )
 	{
 		duration = static_cast<NTimer::STime>( Clamp( seconds, 0.1f, 3600.0f ) * 1000 );
 	}
@@ -82,7 +83,10 @@ public:
 } // namespace
 
 CModelState::CModelState( CModelEditor *_pModelEditor )
-		: nModelSceneID( INVALID_NODE_ID ), pModelEditor( _pModelEditor ), pMutableModel( 0 ), eModelEditorType( ET_MODEL )
+	: nModelSceneID( INVALID_NODE_ID )
+	, pModelEditor( _pModelEditor )
+	, pMutableModel( 0 )
+	, eModelEditorType( ET_MODEL )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_MODEL_STATE, this );
 	Singleton<ICommandHandlerContainer>()->Register( CHID_MODEL_STATE, ID_MODEL_RELOAD_EDITOR, ID_MODEL_SPEED_UP );

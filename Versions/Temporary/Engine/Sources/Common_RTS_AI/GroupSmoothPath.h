@@ -14,10 +14,15 @@ struct SGeometryCellInfo
 	CVec2 vCellPosition;
 	int nPriority = 0;
 
-	SGeometryCellInfo() : vCellPosition( VNULL2 ), nPriority( -1 ) {}
+	SGeometryCellInfo()
+		: vCellPosition( VNULL2 )
+		, nPriority( -1 )
+	{
+	}
 
 	SGeometryCellInfo( const CVec2 &_vCellPosition, const int _nPriority )
-			: vCellPosition( _vCellPosition ), nPriority( _nPriority )
+		: vCellPosition( _vCellPosition )
+		, nPriority( _nPriority )
 	{
 	}
 };
@@ -33,7 +38,11 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 		//! проекция смещения юнита относительно центра формации на направление формации
 		float fUnitProjShift = 0.0f;
 
-		SCellInfo() : vUnitShift( VNULL2 ), fUnitProjShift( 0.0f ) {}
+		SCellInfo()
+			: vUnitShift( VNULL2 )
+			, fUnitProjShift( 0.0f )
+		{
+		}
 
 		SCellInfo( const CVec2 &vUnitPosition )
 		{
@@ -62,10 +71,16 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 		float fMaxProjection = 0.0f;
 		float fRadius = 0.0f;
 
-		SGeometry() : fMaxProjection( 0.0f ), fRadius( 0.0f ) {}
+		SGeometry()
+			: fMaxProjection( 0.0f )
+			, fRadius( 0.0f )
+		{
+		}
 
 		SGeometry( const CPriorityCells &_geometry, const float _fMaxProjection, const float _fRadius )
-				: geometry( _geometry ), fMaxProjection( _fMaxProjection ), fRadius( _fRadius )
+			: geometry( _geometry )
+			, fMaxProjection( _fMaxProjection )
+			, fRadius( _fRadius )
 		{
 		}
 
@@ -86,9 +101,19 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 		int nCell = 0;
 		int nPriority = 0;
 
-		SUnitInfo() : pUnit( 0 ), nCell( -1 ), nPriority( -1 ) {}
+		SUnitInfo()
+			: pUnit( 0 )
+			, nCell( -1 )
+			, nPriority( -1 )
+		{
+		}
 
-		SUnitInfo( CBasePathUnit *_pUnit, const int _nPriority ) : pUnit( _pUnit ), nCell( -1 ), nPriority( _nPriority ) {}
+		SUnitInfo( CBasePathUnit *_pUnit, const int _nPriority )
+			: pUnit( _pUnit )
+			, nCell( -1 )
+			, nPriority( _nPriority )
+		{
+		}
 
 		int operator&( IBinSaver &saver )
 		{
@@ -159,7 +184,11 @@ protected:
 
 public:
 	CGroupSmoothPath()
-			: nCurrentGeometry( 0 ), nUnitsCount( 0 ), nCellsCount( 0 ), fMaxPathShift( 0.0f ), fSpeedCoeff( 1.0f )
+		: nCurrentGeometry( 0 )
+		, nUnitsCount( 0 )
+		, nCellsCount( 0 )
+		, fMaxPathShift( 0.0f )
+		, fSpeedCoeff( 1.0f )
 	{
 	}
 

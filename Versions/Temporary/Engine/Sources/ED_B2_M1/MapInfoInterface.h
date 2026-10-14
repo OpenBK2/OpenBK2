@@ -10,7 +10,10 @@ class CMapInfoInterface : public CEditorInterfaceBase
 	class CMapInfoState *pMapInfoState;
 
 public:
-	CMapInfoInterface( class CMapInfoState *_pMapInfoState = 0 ) : pMapInfoState( _pMapInfoState ) {}
+	CMapInfoInterface( class CMapInfoState *_pMapInfoState = 0 )
+		: pMapInfoState( _pMapInfoState )
+	{
+	}
 };
 
 INTERFACE_COMMAND_DECLARE( CMapInfoInterfaceCommand, CMapInfoInterface )

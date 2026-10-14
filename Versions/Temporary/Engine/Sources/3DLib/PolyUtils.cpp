@@ -255,10 +255,15 @@ protected:
 		EPolygon eType;
 		CRing<SEdge>::iterator iEdge;
 
-		SLink() : fAngle( 0.0f ) {}
+		SLink()
+			: fAngle( 0.0f )
+		{
+		}
 
 		SLink( float _fAngle, EPolygon _eType, CRing<SEdge>::iterator _iEdge )
-				: fAngle( _fAngle ), eType( _eType ), iEdge( _iEdge )
+			: fAngle( _fAngle )
+			, eType( _eType )
+			, iEdge( _iEdge )
 		{
 		}
 	};
@@ -268,7 +273,10 @@ protected:
 		CVec2 vPoint;
 		CRing<SLink> listLinks;
 
-		SPoint( const CVec2 &_vPoint ) : vPoint( _vPoint ) {}
+		SPoint( const CVec2 &_vPoint )
+			: vPoint( _vPoint )
+		{
+		}
 	};
 
 	struct SEdge
@@ -279,7 +287,10 @@ protected:
 		std::list<SPoint>::iterator iEndPoint;
 		EPolygon polygon;
 
-		SEdge() : nFlags( CLIP_UNKNOWN ) {}
+		SEdge()
+			: nFlags( CLIP_UNKNOWN )
+		{
+		}
 	};
 
 	struct SPolygon
@@ -819,7 +830,10 @@ struct SCrossSort
 {
 	CVec2 vDir;
 
-	SCrossSort( const CVec2 &_vDir ) : vDir( _vDir ) {}
+	SCrossSort( const CVec2 &_vDir )
+		: vDir( _vDir )
+	{
+	}
 
 	bool operator()( const CVec2 &a, const CVec2 &b )
 	{

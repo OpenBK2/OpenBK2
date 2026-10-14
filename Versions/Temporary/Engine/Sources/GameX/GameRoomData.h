@@ -24,7 +24,10 @@ public:
 
 	CColorData() {}
 
-	CColorData( int _nColor ) : nColor( _nColor ) {}
+	CColorData( int _nColor )
+		: nColor( _nColor )
+	{
+	}
 };
 
 class CColorViewer : public IDataViewer
@@ -58,7 +61,10 @@ public:
 
 	CTextData() {}
 
-	CTextData( const std::wstring &_wszText ) : wszText( _wszText ) {}
+	CTextData( const std::wstring &_wszText )
+		: wszText( _wszText )
+	{
+	}
 
 	CTextData( int i );
 };
@@ -89,7 +95,8 @@ public:
 	CTextureData() {}
 
 	CTextureData( const NDb::STexture *_pTexture, const std::wstring &_wszTooltip )
-			: pTexture( _pTexture ), wszTooltip( _wszTooltip )
+		: pTexture( _pTexture )
+		, wszTooltip( _wszTooltip )
 	{
 	}
 };

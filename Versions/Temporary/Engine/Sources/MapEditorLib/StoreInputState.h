@@ -60,16 +60,24 @@ public:
 		unsigned nRepCnt;
 
 		SInputStateEventInfo()
-				: nType( IST_UNKNOWN ), nEventType( ISE_UNKNOWN ), nFlags( 0 ), zDelta( 0 ), point( 0, 0 ), nChar( 0 ),
-					nRepCnt( 0 )
+			: nType( IST_UNKNOWN )
+			, nEventType( ISE_UNKNOWN )
+			, nFlags( 0 )
+			, zDelta( 0 )
+			, point( 0, 0 )
+			, nChar( 0 )
+			, nRepCnt( 0 )
 		{
 		}
 
 		SInputStateEventInfo( const SInputStateEventInfo &rInputStateEventInfo )
-				: nType( rInputStateEventInfo.nType ), nEventType( rInputStateEventInfo.nEventType ),
-					nFlags( rInputStateEventInfo.nFlags ), zDelta( rInputStateEventInfo.zDelta ),
-					point( rInputStateEventInfo.point ), nChar( rInputStateEventInfo.nChar ),
-					nRepCnt( rInputStateEventInfo.nRepCnt )
+			: nType( rInputStateEventInfo.nType )
+			, nEventType( rInputStateEventInfo.nEventType )
+			, nFlags( rInputStateEventInfo.nFlags )
+			, zDelta( rInputStateEventInfo.zDelta )
+			, point( rInputStateEventInfo.point )
+			, nChar( rInputStateEventInfo.nChar )
+			, nRepCnt( rInputStateEventInfo.nRepCnt )
 		{
 		}
 

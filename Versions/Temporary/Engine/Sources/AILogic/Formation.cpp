@@ -144,11 +144,28 @@ void CFormation::CCarryedMortar::Init( const class CAIUnit *pArt )
 //BASIC_REGISTER_CLASS( CFormation );
 
 CFormation::CFormation()
-		: nInUnitsID( -1 ), pObjInside( 0 ), bWithMoraleOfficer( false ), bUsedCharge( false ), pCharge( 0 ),
-			fSpeedCoeff( 1.0f ), nBoundTileRadius( 0 ), timeLastCatchArt( 0 ), dwCatchArtFlag( 0 ), fPass( 0.0f ),
-			timeToCamouflage( 0 ), cPlayer( 0 ), bWaiting( false ), bDisabled( false ), eInsideType( EOIO_NONE ),
-			fMaxFireRange( 0.0f ), nVirtualUnits( 0 ), bCanBeResupplied( false ), bBoredInMoveFormationSent( false ),
-			lastBoredInMoveFormationCheck( 0 ), fMaxSpeed( 0.0f ), vAABBHalfSize( VNULL2 )
+	: nInUnitsID( -1 )
+	, pObjInside( 0 )
+	, bWithMoraleOfficer( false )
+	, bUsedCharge( false )
+	, pCharge( 0 )
+	, fSpeedCoeff( 1.0f )
+	, nBoundTileRadius( 0 )
+	, timeLastCatchArt( 0 )
+	, dwCatchArtFlag( 0 )
+	, fPass( 0.0f )
+	, timeToCamouflage( 0 )
+	, cPlayer( 0 )
+	, bWaiting( false )
+	, bDisabled( false )
+	, eInsideType( EOIO_NONE )
+	, fMaxFireRange( 0.0f )
+	, nVirtualUnits( 0 )
+	, bCanBeResupplied( false )
+	, bBoredInMoveFormationSent( false )
+	, lastBoredInMoveFormationCheck( 0 )
+	, fMaxSpeed( 0.0f )
+	, vAABBHalfSize( VNULL2 )
 {
 }
 
@@ -823,7 +840,12 @@ struct SEdge
 	CAICommand *pCmd = {};
 	float fDist = {};
 
-	SEdge() : pFormation( 0 ), pCmd( 0 ), fDist( 0.0f ) {}
+	SEdge()
+		: pFormation( 0 )
+		, pCmd( 0 )
+		, fDist( 0.0f )
+	{
+	}
 
 	operator float() const
 	{

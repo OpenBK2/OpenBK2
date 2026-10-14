@@ -25,7 +25,10 @@ public:
 	}
 
 public:
-	SAIReinfPointUpdate() : bEnable( false ) {}
+	SAIReinfPointUpdate()
+		: bEnable( false )
+	{
+	}
 };
 
 struct SAIAvailableReinfUpdate : public SAIBasicUpdate
@@ -48,7 +51,11 @@ public:
 	}
 
 public:
-	SAIAvailableReinfUpdate() : bEnabled( false ), nReinforcementCallsLeft( 0 ) {}
+	SAIAvailableReinfUpdate()
+		: bEnabled( false )
+		, nReinforcementCallsLeft( 0 )
+	{
+	}
 };
 
 struct SAIReinfRecycleUpdate : public SAIBasicUpdate
@@ -71,5 +78,10 @@ public:
 	}
 
 public:
-	SAIReinfRecycleUpdate() : bEnabled( false ), fProgress( 0.0f ), timeRecycleEnd( 0 ) {}
+	SAIReinfRecycleUpdate()
+		: bEnabled( false )
+		, fProgress( 0.0f )
+		, timeRecycleEnd( 0 )
+	{
+	}
 };

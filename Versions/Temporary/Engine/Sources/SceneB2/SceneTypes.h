@@ -34,9 +34,11 @@ struct SSceneObjIconInfo
 	}
 
 	SSceneObjIconInfo( int _nID )
-			: nID( _nID ), nHPBarBaseLength( 0 ), eIconGroup( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE ),
-				eIconLevelup( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE ),
-				eIconDamagedBuilding( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE )
+		: nID( _nID )
+		, nHPBarBaseLength( 0 )
+		, eIconGroup( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE )
+		, eIconLevelup( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE )
+		, eIconDamagedBuilding( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE )
 	{
 	}
 };

@@ -18,7 +18,11 @@ public:
 
 		~CReactions() {}
 
-		CReactions( IWindow *_pScreen, CInterfaceCredits *_pInterface ) : pScreen( _pScreen ), pInterface( _pInterface ) {}
+		CReactions( IWindow *_pScreen, CInterfaceCredits *_pInterface )
+			: pScreen( _pScreen )
+			, pInterface( _pInterface )
+		{
+		}
 
 		bool Execute( const std::string &szSender, const std::string &szReaction );
 		int Check( const std::string &szCheckName ) const;
@@ -51,7 +55,11 @@ private:
 	}
 
 public:
-	CInterfaceCredits() : CInterfaceScreenBase( "CreditsScreen", "credits_screen" ), bClosed( false ) {}
+	CInterfaceCredits()
+		: CInterfaceScreenBase( "CreditsScreen", "credits_screen" )
+		, bClosed( false )
+	{
+	}
 
 	bool Init();
 	bool StepLocal( bool bAppActive );

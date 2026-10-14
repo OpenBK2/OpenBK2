@@ -19,11 +19,22 @@ CSound::CSound( int wID,
                 const NDb::ESoundType eCombatType,
                 float fMinRadius,
                 float fMaxRadius )
-		: pSample( pSound ), eMixType( eMixType ), bLooped( bLooped ), wID( wID ), timeBegin( 0 ), timeBeginDim( 0 ),
-			bStartedMark( false ), bFinishedMark( false ), bDimMark( false ), vPos( vPos ), vSpeed( VNULL3 ), pDesc( _pDesc ),
-			nMinRadius( fMinRadius / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE ),
-			nMaxRadius( fMaxRadius / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE ),
-			eCombatType( eCombatType ), timeLastPosUpdate( CSoundScene2D::GetCurTime() )
+	: pSample( pSound )
+	, eMixType( eMixType )
+	, bLooped( bLooped )
+	, wID( wID )
+	, timeBegin( 0 )
+	, timeBeginDim( 0 )
+	, bStartedMark( false )
+	, bFinishedMark( false )
+	, bDimMark( false )
+	, vPos( vPos )
+	, vSpeed( VNULL3 )
+	, pDesc( _pDesc )
+	, nMinRadius( fMinRadius / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE )
+	, nMaxRadius( fMaxRadius / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE )
+	, eCombatType( eCombatType )
+	, timeLastPosUpdate( CSoundScene2D::GetCurTime() )
 {
 	nMaxRadius = nMaxRadius == 0 ? 1 : nMaxRadius;
 	nMinRadius = nMinRadius == 0 ? 1 : nMinRadius;

@@ -27,7 +27,10 @@ static float s_fValidateTime = 3000.0f;
 static float s_fValidateDifference = 0.0001f;
 
 CCamera::CCamera()
-		: bMayaHandleType( false ), bIsMovieFinished( false ), bUseMovieMutator( false ), bIsPlayingFinal( false )
+	: bMayaHandleType( false )
+	, bIsMovieFinished( false )
+	, bUseMovieMutator( false )
+	, bIsPlayingFinal( false )
 {
 	SetupDefaultMouseMutator();
 	//

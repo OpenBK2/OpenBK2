@@ -10,7 +10,11 @@
 
 extern NTimer::STime curTime;
 
-CFreeFireManager::CFreeFireManager( CCommonUnit *pOwner ) : shootInfo( 2 * pOwner->GetNGuns() ), lastCheck( 0 ) {}
+CFreeFireManager::CFreeFireManager( CCommonUnit *pOwner )
+	: shootInfo( 2 * pOwner->GetNGuns() )
+	, lastCheck( 0 )
+{
+}
 
 void CFreeFireManager::Analyze( CCommonUnit *pUnit, CBasicGun *pActiveGun )
 {

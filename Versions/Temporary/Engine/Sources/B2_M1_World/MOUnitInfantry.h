@@ -42,7 +42,11 @@ protected:
 	void SetVisible( const bool bVisible, const NDb::ESeason eSeason, const bool bIsNight );
 
 public:
-	CMOUnitInfantry() : nParachuteID( -1 ), bEntrenched( false ) {}
+	CMOUnitInfantry()
+		: nParachuteID( -1 )
+		, bEntrenched( false )
+	{
+	}
 
 	//
 	bool Create( const int nUniqueID,

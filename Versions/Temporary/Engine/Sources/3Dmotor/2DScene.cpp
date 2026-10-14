@@ -26,7 +26,10 @@ class C2DScene : public I2DScene
 	}
 
 public:
-	C2DScene() : pLastQR( 0 ) {}
+	C2DScene()
+		: pLastQR( 0 )
+	{
+	}
 
 	void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture,
 	                         const CRectLayout &sLayout,

@@ -47,7 +47,10 @@ struct SMaskVisitor
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nMaxRadius = {};
 
-	SMaskVisitor() : nMaxRadius( theWarFog.GetMaxRadius() ) {}
+	SMaskVisitor()
+		: nMaxRadius( theWarFog.GetMaxRadius() )
+	{
+	}
 
 	bool operator()( const SVector &vOffset, const bool bVisible )
 	{
@@ -77,7 +80,10 @@ struct SGetLastVisitor
 {
 	bool bLastVisit = {};
 
-	SGetLastVisitor() : bLastVisit( false ) {}
+	SGetLastVisitor()
+		: bLastVisit( false )
+	{
+	}
 
 	bool operator()( const SVector &vOffset, const bool bVisible )
 	{
@@ -94,8 +100,11 @@ struct SGetLastVisitor
 CGlobalWarFog::SWarForFullUnitInfo::SWarForFullUnitInfo( const SWarFogUnitInfo &unitInfo,
                                                          const int _nParty,
                                                          const int nSpiralLength )
-		: SWarFogUnitInfo( unitInfo ), vOldPos( unitInfo.vPos ), nOldRadius( unitInfo.nRadius ), nParty( _nParty ),
-			updateFlag( UPD_CREATE_NEW_UNIT )
+	: SWarFogUnitInfo( unitInfo )
+	, vOldPos( unitInfo.vPos )
+	, nOldRadius( unitInfo.nRadius )
+	, nParty( _nParty )
+	, updateFlag( UPD_CREATE_NEW_UNIT )
 {
 	visValues.SetSize( nSpiralLength );
 	visValues.FillZero();

@@ -41,7 +41,10 @@ class CPathFractionComplex : public CPathFractionComplexBase
 public:
 	CPathFractionComplex() {}
 
-	CPathFractionComplex( const CPathList &pathList ) : CPathFractionComplexBase( pathList ) {}
+	CPathFractionComplex( const CPathList &pathList )
+		: CPathFractionComplexBase( pathList )
+	{
+	}
 
 	virtual void GetSimplePath( CPathList *paths )
 	{

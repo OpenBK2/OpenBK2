@@ -15,7 +15,10 @@ BASIC_REGISTER_CLASS( SERVER_CLIENT_COMMON, CNet );
 float CNet::fTimeOut = 60;
 
 CNet::CNet( const int _nApplicationID, const int _nServerPort, const int _nTimeOut )
-		: nApplicationID( _nApplicationID ), nServerPort( _nServerPort ), bDebugNetPaused( false ), nTimeOut( _nTimeOut )
+	: nApplicationID( _nApplicationID )
+	, nServerPort( _nServerPort )
+	, bDebugNetPaused( false )
+	, nTimeOut( _nTimeOut )
 {
 }
 

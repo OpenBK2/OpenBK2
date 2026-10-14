@@ -131,7 +131,9 @@ inline const int GetID2<SAINewUnitUpdate>( const SAIBasicUpdate *pUpdate )
 // **
 // ************************************************************************************************************************ //
 
-CCombatMusic::CCombatMusic() : eState( ESSS_IDLE ), timeLastCombatNotify( 0 )
+CCombatMusic::CCombatMusic()
+	: eState( ESSS_IDLE )
+	, timeLastCombatNotify( 0 )
 {
 	combatPlayWONotify = NGlobal::GetVar( "Scene.Sound.StreamingSounds.CombatMusicPlayWONotify", 30000 );
 }

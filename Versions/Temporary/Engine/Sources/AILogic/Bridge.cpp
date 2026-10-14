@@ -84,8 +84,12 @@ void CBridgeHeightRemover::Segment()
 
 CBridgeSpan::CBridgeSpan(
 		const SBridgeRPGStats *_pStats, const CVec3 &center, const float _fHP, const uint16_t _nDir, const int nFrameIndex )
-		: CGivenPassabilityStObject( center, _fHP, _nDir, nFrameIndex ), pStats( _pStats ), bNewBuilt( false ),
-			bLocked( false ), bDeletingAround( false ), nScriptID( -1 )
+	: CGivenPassabilityStObject( center, _fHP, _nDir, nFrameIndex )
+	, pStats( _pStats )
+	, bNewBuilt( false )
+	, bLocked( false )
+	, bDeletingAround( false )
+	, nScriptID( -1 )
 {
 	Init();
 	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> pass;
@@ -573,7 +577,10 @@ public:
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	std::list<SVector> *pTiles = {};
 
-	CTilesColl( std::list<SVector> *_pTiles ) : pTiles( _pTiles ) {}
+	CTilesColl( std::list<SVector> *_pTiles )
+		: pTiles( _pTiles )
+	{
+	}
 
 	void operator()( const int x, const int y )
 	{
@@ -632,7 +639,8 @@ GetTilesUnderRectSide( const SRect &rect, std::list<SVector> *pTiles, const uint
 	}
 }
 
-CFullBridge::SSpanLock::SSpanLock( CBridgeSpan *pSpan, const uint16_t wDir ) : pSpan( pSpan )
+CFullBridge::SSpanLock::SSpanLock( CBridgeSpan *pSpan, const uint16_t wDir )
+	: pSpan( pSpan )
 {
 	// найти тайлы. запомнить состояние залоченности.
 	SRect rect;

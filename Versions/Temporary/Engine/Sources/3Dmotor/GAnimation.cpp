@@ -80,7 +80,7 @@ CSkeletonAnimator::CSkeletonAnimator()
 // matters because Create() gives up without assigning anything when the skeleton resource is
 // missing, and CreateSkeletonAnimator() then destroys the half-built object.
 CSkeletonAnimator::CSkeletonAnimator( const SSkeletonHandle &_skeletonH, CFuncBase<STime> *_pTime )
-		: CSkeletonAnimator()
+	: CSkeletonAnimator()
 {
 	Create( _skeletonH, _pTime );
 

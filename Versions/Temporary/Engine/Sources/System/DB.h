@@ -81,13 +81,28 @@ private:
 
 	//
 public:
-	CDBID() : dwHashKey( 0 ) {}
+	CDBID()
+		: dwHashKey( 0 )
+	{
+	}
 
-	CDBID( const char *_pszKeyName ) : szKeyName( _pszKeyName ), dwHashKey( MakeHashKey() ) {}
+	CDBID( const char *_pszKeyName )
+		: szKeyName( _pszKeyName )
+		, dwHashKey( MakeHashKey() )
+	{
+	}
 
-	CDBID( const std::string &_szKeyName ) : szKeyName( _szKeyName ), dwHashKey( MakeHashKey() ) {}
+	CDBID( const std::string &_szKeyName )
+		: szKeyName( _szKeyName )
+		, dwHashKey( MakeHashKey() )
+	{
+	}
 
-	CDBID( const CDBID &dbid ) : szKeyName( dbid.szKeyName ), dwHashKey( dbid.dwHashKey ) {}
+	CDBID( const CDBID &dbid )
+		: szKeyName( dbid.szKeyName )
+		, dwHashKey( dbid.dwHashKey )
+	{
+	}
 
 	//
 	const CDBID &operator=( const CDBID &dbid )
@@ -187,9 +202,15 @@ protected:
 	virtual void PostLoad( bool bInEditor ) {}
 
 public:
-	CResource() : bLoaded( false ) {}
+	CResource()
+		: bLoaded( false )
+	{
+	}
 
-	CResource( const CResource &res ) : bLoaded( res.bLoaded ) {}
+	CResource( const CResource &res )
+		: bLoaded( res.bLoaded )
+	{
+	}
 
 	//
 	bool IsLoaded() const
@@ -362,11 +383,23 @@ class CDBPtr
 	}
 
 public:
-	CDBPtr() : pObj( 0 ), bLoaded( false ) {}
+	CDBPtr()
+		: pObj( 0 )
+		, bLoaded( false )
+	{
+	}
 
-	CDBPtr( const TUserObj *_pObj ) : pObj( const_cast<TUserObj *>( _pObj ) ), bLoaded( false ) {}
+	CDBPtr( const TUserObj *_pObj )
+		: pObj( const_cast<TUserObj *>( _pObj ) )
+		, bLoaded( false )
+	{
+	}
 
-	CDBPtr( const CDBPtr<TUserObj, TPtr> &ptr ) : pObj( ptr.pObj ), bLoaded( ptr.bLoaded ) {}
+	CDBPtr( const CDBPtr<TUserObj, TPtr> &ptr )
+		: pObj( ptr.pObj )
+		, bLoaded( ptr.bLoaded )
+	{
+	}
 
 	// assignment operators
 	const CDBPtr<TUserObj, TPtr> &operator=( const TUserObj *_pObj )

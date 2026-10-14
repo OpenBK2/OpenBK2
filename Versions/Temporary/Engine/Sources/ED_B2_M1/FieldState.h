@@ -56,19 +56,33 @@ public:
 
 		//
 		SEditParameters()
-				: nFlags( MITFEP_ALL ), eMoveType( MT_SINGLE ), nFieldIndex( 0 ), fMinLength( 10.0f ), fWidth( 0.5f ),
-					fDisturbance( 0.2f ), bRandomize( true ), bFillTerrain( true ), bFillObjects( true ), bFillHeights( true ),
-					bUpdateMap( false )
+			: nFlags( MITFEP_ALL )
+			, eMoveType( MT_SINGLE )
+			, nFieldIndex( 0 )
+			, fMinLength( 10.0f )
+			, fWidth( 0.5f )
+			, fDisturbance( 0.2f )
+			, bRandomize( true )
+			, bFillTerrain( true )
+			, bFillObjects( true )
+			, bFillHeights( true )
+			, bUpdateMap( false )
 		{
 		}
 
 		SEditParameters( const SEditParameters &rEditParameters )
-				: nFlags( rEditParameters.nFlags ), eMoveType( rEditParameters.eMoveType ),
-					fieldList( rEditParameters.fieldList ), nFieldIndex( rEditParameters.nFieldIndex ),
-					fMinLength( rEditParameters.fMinLength ), fWidth( rEditParameters.fWidth ),
-					fDisturbance( rEditParameters.fDisturbance ), bRandomize( rEditParameters.bRandomize ),
-					bFillTerrain( rEditParameters.bFillTerrain ), bFillObjects( rEditParameters.bFillObjects ),
-					bFillHeights( rEditParameters.bFillHeights ), bUpdateMap( rEditParameters.bUpdateMap )
+			: nFlags( rEditParameters.nFlags )
+			, eMoveType( rEditParameters.eMoveType )
+			, fieldList( rEditParameters.fieldList )
+			, nFieldIndex( rEditParameters.nFieldIndex )
+			, fMinLength( rEditParameters.fMinLength )
+			, fWidth( rEditParameters.fWidth )
+			, fDisturbance( rEditParameters.fDisturbance )
+			, bRandomize( rEditParameters.bRandomize )
+			, bFillTerrain( rEditParameters.bFillTerrain )
+			, bFillObjects( rEditParameters.bFillObjects )
+			, bFillHeights( rEditParameters.bFillHeights )
+			, bUpdateMap( rEditParameters.bUpdateMap )
 		{
 		}
 
@@ -213,13 +227,15 @@ public:
 
 	//
 	// CFieldState
-	CFieldState() : pMapInfoEditor( 0 )
+	CFieldState()
+		: pMapInfoEditor( 0 )
 	{
 		NI_ASSERT( pMapInfoEditor != 0, "CFieldState(): Invalid parameter: pMapInfoEditor == 0" );
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_TERRAIN_FIELD_STATE, this );
 	}
 
-	CFieldState( CMapInfoEditor *_pMapInfoEditor ) : pMapInfoEditor( _pMapInfoEditor )
+	CFieldState( CMapInfoEditor *_pMapInfoEditor )
+		: pMapInfoEditor( _pMapInfoEditor )
 	{
 		NI_ASSERT( pMapInfoEditor != 0, "CFieldState(): Invalid parameter: pMapInfoEditor == 0" );
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_TERRAIN_FIELD_STATE, this );

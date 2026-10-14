@@ -127,7 +127,9 @@ public:
 };
 
 CTextObject::CTextObject( CMLStream *_pStream, int _nStart, int _nSize )
-		: pStream( _pStream ), nStrStart( _nStart ), nStrSize( _nSize )
+	: pStream( _pStream )
+	, nStrStart( _nStart )
+	, nStrSize( _nSize )
 {
 	size = CTPoint<float>( 20, 20 );
 }
@@ -276,7 +278,9 @@ public:
 };
 
 CImageObject::CImageObject( NDb::STexture *_pTexture, const CTPoint<int> &_size, int _nBorder )
-		: pTexture( _pTexture ), imageSize( _size ), nBorder( _nBorder )
+	: pTexture( _pTexture )
+	, imageSize( _size )
+	, nBorder( _nBorder )
 {
 }
 
@@ -367,7 +371,10 @@ public:
 	}
 };
 
-CTabObject::CTabObject() : size( 0, 0 ) {}
+CTabObject::CTabObject()
+	: size( 0, 0 )
+{
+}
 
 void CTabObject::Update( IReflowState *pState )
 {
@@ -438,7 +445,11 @@ public:
 	}
 };
 
-CSpringObject::CSpringObject( int _nSize ) : nSize( _nSize ), size( 0, 0 ) {}
+CSpringObject::CSpringObject( int _nSize )
+	: nSize( _nSize )
+	, size( 0, 0 )
+{
+}
 
 void CSpringObject::Update( IReflowState *pState )
 {

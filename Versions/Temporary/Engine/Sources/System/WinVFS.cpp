@@ -139,7 +139,9 @@ bool CWinVFS::CWinFileEntry::GetStats( SFileStats *pStats, const std::string &sz
 	return pStats == 0 ? false : GetWinFileStats( pStats, szBasePath + szRealPath );
 }
 
-CWinVFS::CWinVFS( const std::string &_szBasePath ) : bAllWinFilesChecked( false ), bArchiveOnly( false )
+CWinVFS::CWinVFS( const std::string &_szBasePath )
+	: bAllWinFilesChecked( false )
+	, bArchiveOnly( false )
 {
 	if ( _szBasePath.empty() )
 	{
@@ -345,7 +347,11 @@ public:
 	// that garbage happened to be. Undefined behaviour since it was written;
 	// MSVC left values benign enough to survive it, and GCC at -O0 handed over
 	// a two terabyte length, which mimalloc then tried to zero.
-	CProfiler( const std::string &_szPath ) : szPath( _szPath ), dwStartTime( GetCurrentTimeMilliseconds() ) {}
+	CProfiler( const std::string &_szPath )
+		: szPath( _szPath )
+		, dwStartTime( GetCurrentTimeMilliseconds() )
+	{
+	}
 
 	~CProfiler()
 	{
@@ -451,7 +457,8 @@ void CWinVFS::GetAllFileNames( std::vector<std::string> *pFileNames, const std::
 	sort( pFileNames->begin(), pFileNames->end() );
 }
 
-CWinFileCreator::CWinFileCreator( const std::string &_szBasePath ) : szBasePath( _szBasePath )
+CWinFileCreator::CWinFileCreator( const std::string &_szBasePath )
+	: szBasePath( _szBasePath )
 {
 	// The VFS reader accepts old Windows separators on every platform. Its
 	// writer must use the same interpretation, including the storage root.

@@ -28,7 +28,8 @@ CHallOfFame theHallOfFame;
 
 // CInterfaceHallOfFame
 
-CInterfaceHallOfFame::CInterfaceHallOfFame() : CInterfaceScreenBase( "HallOfFame", "hall_of_fame" )
+CInterfaceHallOfFame::CInterfaceHallOfFame()
+	: CInterfaceScreenBase( "HallOfFame", "hall_of_fame" )
 {
 	AddObserver( "esc_pressed", &CInterfaceHallOfFame::MsgBack );
 }

@@ -42,7 +42,10 @@ public:
 	virtual void OnContextMenu( const CTPoint<int> &rMousePoint );
 
 public:
-	CMultiInputState() : nActiveInputState( INVALID_INPUT_STATE_INDEX ) {}
+	CMultiInputState()
+		: nActiveInputState( INVALID_INPUT_STATE_INDEX )
+	{
+	}
 
 	~CMultiInputState()
 	{

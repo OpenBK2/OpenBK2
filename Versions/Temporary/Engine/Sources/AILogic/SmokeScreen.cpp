@@ -15,9 +15,13 @@ extern CGlobalWarFog theWarFog;
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4B5, CSmokeScreen );
 
 CSmokeScreen::CSmokeScreen( const CVec3 &_vCenter, const float _fRadius, const int _nTransparency, const int nTime )
-		: vCenter( _vCenter ), fRadius( _fRadius ), nTransparency( _nTransparency ), timeOfDissapear( curTime + nTime ),
-			CExistingObject( 0, 1.0f ), tileCenter( AICellsTiles::GetTile( CVec2( _vCenter.x, _vCenter.y ) ) ),
-			bTransparencySet( false )
+	: vCenter( _vCenter )
+	, fRadius( _fRadius )
+	, nTransparency( _nTransparency )
+	, timeOfDissapear( curTime + nTime )
+	, CExistingObject( 0, 1.0f )
+	, tileCenter( AICellsTiles::GetTile( CVec2( _vCenter.x, _vCenter.y ) ) )
+	, bTransparencySet( false )
 {
 }
 

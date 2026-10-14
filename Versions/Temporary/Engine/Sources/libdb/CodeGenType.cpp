@@ -78,7 +78,7 @@ CTypeDefinition::CTypeDefinition( NLang::CComplexTypeNode *pComplexTypeNode,
 }
 
 CTypeDefinition::CTypeDefinition( NLang::CEnumNode *pEnumNode, const CNodes2TypeDefs &nodes2TypeDefs )
-		: bTerminal( false )
+	: bTerminal( false )
 {
 	CNodes2TypeDefs::const_iterator iter = nodes2TypeDefs.find( pEnumNode );
 	NI_VERIFY(

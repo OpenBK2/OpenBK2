@@ -23,7 +23,12 @@ public:
 
 private:
 public:
-	CWingScaleMutator() : fScale( 0.0f ), bShowStatic( true ), nStaticWing( -1 ) {}
+	CWingScaleMutator()
+		: fScale( 0.0f )
+		, bShowStatic( true )
+		, nStaticWing( -1 )
+	{
+	}
 
 	bool
 	Setup( ISkeletonAnimator *pAnimator, const std::string &szScaledWingPrefix, const std::string &szStaticWingName );

@@ -823,7 +823,8 @@ CFormationRestState::CFormationRestState( CFormation *_pFormation,
                                           const CVec2 &guardPoint,
                                           const uint16_t wDir,
                                           const float _fTimeToWait )
-		: pFormation( _pFormation ), CCommonRestState( guardPoint, wDir, _pFormation, _fTimeToWait )
+	: pFormation( _pFormation )
+	, CCommonRestState( guardPoint, wDir, _pFormation, _fTimeToWait )
 {
 	pFormation->SetToWaitingState();
 }
@@ -856,7 +857,10 @@ IUnitState *CFormationMoveToState::Instance( CFormation *pFormation, const CVec2
 }
 
 CFormationMoveToState::CFormationMoveToState( CFormation *_pFormation, const CVec2 &_point )
-		: pFormation( _pFormation ), startTime( curTime ), bWaiting( true ), eMoveToState( EMTS_FORMATION_MOVING )
+	: pFormation( _pFormation )
+	, startTime( curTime )
+	, bWaiting( true )
+	, eMoveToState( EMTS_FORMATION_MOVING )
 {
 }
 
@@ -947,8 +951,11 @@ IUnitState *CFormationEnterBuildingState::Instance( CFormation *pFormation, CBui
 }
 
 CFormationEnterBuildingState::CFormationEnterBuildingState( CFormation *_pFormation, CBuilding *_pBuilding )
-		: CStatusUpdatesHelper( EUS_LOAD, _pFormation ), pFormation( _pFormation ), pBuilding( _pBuilding ),
-			state( EES_START ), timeSent( curTime )
+	: CStatusUpdatesHelper( EUS_LOAD, _pFormation )
+	, pFormation( _pFormation )
+	, pBuilding( _pBuilding )
+	, state( EES_START )
+	, timeSent( curTime )
 {
 	int i = 0;
 	while ( i < pBuilding->GetNEntrancePoints() )
@@ -1193,8 +1200,11 @@ IUnitState *CFormationEnterEntrenchmentState::Instance( CFormation *pFormation, 
 
 CFormationEnterEntrenchmentState::CFormationEnterEntrenchmentState( CFormation *_pFormation,
                                                                     CEntrenchment *_pEntrenchment )
-		: CStatusUpdatesHelper( EUS_LOAD, _pFormation ), pFormation( _pFormation ), pEntrenchment( _pEntrenchment ),
-			state( EES_START ), timeToWait( curTime )
+	: CStatusUpdatesHelper( EUS_LOAD, _pFormation )
+	, pFormation( _pFormation )
+	, pEntrenchment( _pEntrenchment )
+	, state( EES_START )
+	, timeToWait( curTime )
 {
 	if ( IsAnyPartCloseToEntrenchment() )
 	{
@@ -1389,7 +1399,8 @@ IUnitState *CFormationIdleBuildingState::Instance( CFormation *pFormation, CBuil
 }
 
 CFormationIdleBuildingState::CFormationIdleBuildingState( CFormation *_pFormation, CBuilding *_pBuilding )
-		: pFormation( _pFormation ), pBuilding( _pBuilding )
+	: pFormation( _pFormation )
+	, pBuilding( _pBuilding )
 {
 	pFormation->StopFormationCenter();
 	pFormation->SetInBuilding( pBuilding );
@@ -1507,7 +1518,8 @@ IUnitState *CFormationIdleEntrenchmentState::Instance( CFormation *pFormation, C
 
 CFormationIdleEntrenchmentState::CFormationIdleEntrenchmentState( CFormation *_pFormation,
                                                                   CEntrenchment *_pEntrenchment )
-		: pFormation( _pFormation ), pEntrenchment( _pEntrenchment )
+	: pFormation( _pFormation )
+	, pEntrenchment( _pEntrenchment )
 {
 	pFormation->StopFormationCenter();
 	pFormation->SetInEntrenchment( pEntrenchment );
@@ -1626,7 +1638,9 @@ CFormationLeaveBuildingState::CFormationLeaveBuildingState( CFormation *_pFormat
                                                             CBuilding *_pBuilding,
                                                             const enum EActionLeaveParam param,
                                                             const CVec2 &_point )
-		: CStatusUpdatesHelper( EUS_LEAVE, _pFormation ), pFormation( _pFormation ), pBuilding( _pBuilding )
+	: CStatusUpdatesHelper( EUS_LEAVE, _pFormation )
+	, pFormation( _pFormation )
+	, pBuilding( _pBuilding )
 {
 	if ( ALP_POSITION_VALID == param )
 	{
@@ -1709,7 +1723,9 @@ CFormationLeaveEntrenchmentState::CFormationLeaveEntrenchmentState( CFormation *
                                                                     CEntrenchment *_pEntrenchment,
                                                                     const enum EActionLeaveParam param,
                                                                     const CVec2 &_point )
-		: CStatusUpdatesHelper( EUS_LEAVE, _pFormation ), pFormation( _pFormation ), pEntrenchment( _pEntrenchment )
+	: CStatusUpdatesHelper( EUS_LEAVE, _pFormation )
+	, pFormation( _pFormation )
+	, pEntrenchment( _pEntrenchment )
 {
 	if ( ALP_POSITION_VALID == param )
 	{
@@ -1792,8 +1808,11 @@ IUnitState *CFormationAttackUnitState::Instance( CFormation *pFormation, CAIUnit
 CFormationAttackUnitState::CFormationAttackUnitState( CFormation *_pFormation,
                                                       CAIUnit *_pEnemy,
                                                       const bool _bSwarmAttack )
-		: pFormation( _pFormation ), pEnemy( _pEnemy ), eState( EPM_MOVING ), bSwarmAttack( _bSwarmAttack ),
-			nEnemyParty( _pEnemy->GetParty() )
+	: pFormation( _pFormation )
+	, pEnemy( _pEnemy )
+	, eState( EPM_MOVING )
+	, bSwarmAttack( _bSwarmAttack )
+	, nEnemyParty( _pEnemy->GetParty() )
 {
 	/*
 	if ( bSwarmAttack )
@@ -1933,7 +1952,9 @@ IUnitState *CFormationAttackCommonStatObjState::Instance( CFormation *pFormation
 }
 
 CFormationAttackCommonStatObjState::CFormationAttackCommonStatObjState( CFormation *_pFormation, CStaticObject *_pObj )
-		: pFormation( _pFormation ), pObj( _pObj ), eState( EPM_START )
+	: pFormation( _pFormation )
+	, pObj( _pObj )
+	, eState( EPM_START )
 {
 }
 
@@ -2030,7 +2051,8 @@ IUnitState *CFormationRotateState::Instance( CFormation *pFormation, const uint1
 	return new CFormationRotateState( pFormation, wDir );
 }
 
-CFormationRotateState::CFormationRotateState( CFormation *_pFormation, const uint16_t wDir ) : pFormation( _pFormation )
+CFormationRotateState::CFormationRotateState( CFormation *_pFormation, const uint16_t wDir )
+	: pFormation( _pFormation )
 {
 	// повернуть формацию
 	pFormation->TurnToDirection( wDir, false, true );
@@ -2078,9 +2100,13 @@ IUnitState *CFormationEnterTransportState::Instance( CFormation *pFormation, CMi
 }
 
 CFormationEnterTransportState::CFormationEnterTransportState( CFormation *_pFormation, CMilitaryCar *_pTransport )
-		: CStatusUpdatesHelper( EUS_LOAD, _pFormation ), pFormation( _pFormation ), pTransport( _pTransport ),
-			eState( EETS_START ), lastCheck( curTime ), lastTransportPos( _pTransport->GetCenterPlain() ),
-			lastTransportDir( _pTransport->GetFrontDirection() )
+	: CStatusUpdatesHelper( EUS_LOAD, _pFormation )
+	, pFormation( _pFormation )
+	, pTransport( _pTransport )
+	, eState( EETS_START )
+	, lastCheck( curTime )
+	, lastTransportPos( _pTransport->GetCenterPlain() )
+	, lastTransportDir( _pTransport->GetFrontDirection() )
 {
 }
 
@@ -2297,7 +2323,8 @@ IUnitState *CFormationIdleTransportState::Instance( CFormation *pFormation, CMil
 }
 
 CFormationIdleTransportState::CFormationIdleTransportState( CFormation *_pFormation, CMilitaryCar *_pTransport )
-		: pFormation( _pFormation ), pTransport( _pTransport )
+	: pFormation( _pFormation )
+	, pTransport( _pTransport )
 {
 	pFormation->SetInTransport( pTransport );
 }
@@ -2343,7 +2370,8 @@ IUnitState *CFormationEnterTransportByCheatPathState::Instance( class CFormation
 
 CFormationEnterTransportByCheatPathState::CFormationEnterTransportByCheatPathState( class CFormation *_pFormation,
                                                                                     class CMilitaryCar *_pTransport )
-		: pFormation( _pFormation ), pTransport( _pTransport )
+	: pFormation( _pFormation )
+	, pTransport( _pTransport )
 {
 	// send all squad soldiers to transport via cheat path
 	const int nSoldiers = pFormation->Size();
@@ -2416,7 +2444,8 @@ IUnitState *CFormationEnterTransportNowState::Instance( CFormation *pFormation, 
 }
 
 CFormationEnterTransportNowState::CFormationEnterTransportNowState( CFormation *_pFormation, CMilitaryCar *_pTransport )
-		: pFormation( _pFormation ), pTransport( _pTransport )
+	: pFormation( _pFormation )
+	, pTransport( _pTransport )
 {
 	for ( int i = 0; i < pFormation->Size(); ++i )
 	{
@@ -2465,8 +2494,11 @@ IUnitState *CFormationCatchTransportState::Instance( CFormation *pUnit,
 CFormationCatchTransportState::CFormationCatchTransportState( class CFormation *_pUnit,
                                                               class CAITransportUnit *_pTransportToCatch,
                                                               float fResursPerSoldier )
-		: pUnit( _pUnit ), pTransportToCatch( _pTransportToCatch ), vEnterPoint( -1, -1 ),
-			fResursPerSoldier( fResursPerSoldier ), timeLastUpdate( curTime )
+	: pUnit( _pUnit )
+	, pTransportToCatch( _pTransportToCatch )
+	, vEnterPoint( -1, -1 )
+	, fResursPerSoldier( fResursPerSoldier )
+	, timeLastUpdate( curTime )
 {
 	if ( !pTransportToCatch || !IsValidObj( pTransportToCatch ) )
 	{
@@ -2626,7 +2658,8 @@ IUnitState *CFormationParaDropState::Instance( CFormation *pFormation )
 }
 
 CFormationParaDropState::CFormationParaDropState( class CFormation *pFormation )
-		: pFormation( pFormation ), eState( EPS_WAIT_FOR_PARADROP_BEGIN )
+	: pFormation( pFormation )
+	, eState( EPS_WAIT_FOR_PARADROP_BEGIN )
 {
 	pFormation->SetSelectable( false, true );
 }
@@ -2716,7 +2749,10 @@ CFormationAttackFormationState::Instance( CFormation *pFormation, CFormation *pT
 CFormationAttackFormationState::CFormationAttackFormationState( CFormation *pFormation,
                                                                 CFormation *_pTarget,
                                                                 const bool _bSwarmAttack )
-		: pUnit( pFormation ), pTarget( _pTarget ), bSwarmAttack( _bSwarmAttack ), nEnemyParty( _pTarget->GetParty() )
+	: pUnit( pFormation )
+	, pTarget( _pTarget )
+	, bSwarmAttack( _bSwarmAttack )
+	, nEnemyParty( _pTarget->GetParty() )
 {
 }
 
@@ -2773,7 +2809,8 @@ IUnitState *CFormationParadeState::Instance( CFormation *pFormation, const int n
 }
 
 CFormationParadeState::CFormationParadeState( CFormation *_pFormation, const int nType )
-		: pFormation( _pFormation ), startTime( curTime )
+	: pFormation( _pFormation )
+	, startTime( curTime )
 {
 	if ( nType != -1 )
 	{
@@ -2831,7 +2868,10 @@ IUnitState *CFormationDisbandState::Instance( CFormation *pFormation )
 	return new CFormationDisbandState( pFormation );
 }
 
-CFormationDisbandState::CFormationDisbandState( CFormation *_pFormation ) : pFormation( _pFormation ) {}
+CFormationDisbandState::CFormationDisbandState( CFormation *_pFormation )
+	: pFormation( _pFormation )
+{
+}
 
 void CFormationDisbandState::Segment()
 {
@@ -2902,7 +2942,10 @@ IUnitState *CFormationFormState::Instance( CFormation *pFormation )
 	return new CFormationFormState( pFormation );
 }
 
-CFormationFormState::CFormationFormState( CFormation *_pFormation ) : pFormation( _pFormation ) {}
+CFormationFormState::CFormationFormState( CFormation *_pFormation )
+	: pFormation( _pFormation )
+{
+}
 
 void CFormationFormState::Segment()
 {
@@ -3001,7 +3044,9 @@ CFormationWaitToFormState::Instance( CFormation *pFormation, const float fMain, 
 CFormationWaitToFormState::CFormationWaitToFormState( CFormation *_pFormation,
                                                       const float fMain,
                                                       class CSoldier *_pMainSoldier )
-		: pFormation( _pFormation ), bMain( fMain == 1.0f ), pMainSoldier( _pMainSoldier )
+	: pFormation( _pFormation )
+	, bMain( fMain == 1.0f )
+	, pMainSoldier( _pMainSoldier )
 {
 	pFormFormation = pMainSoldier->GetMemFormation();
 	startTime = curTime;
@@ -3153,8 +3198,12 @@ IUnitState *CCatchFormationState::Instance( CFormation *pCatchingFormation, CFor
 }
 
 CCatchFormationState::CCatchFormationState( CFormation *_pCatchingFormation, CFormation *_pFormation )
-		: pCatchingFormation( _pCatchingFormation ), pFormation( _pFormation ), lastUpdateTime( 0 ), eState( ECFS_NONE ),
-			lastFormationPos( _pFormation->GetCenterPlain() ), pLastFormationObject( 0 )
+	: pCatchingFormation( _pCatchingFormation )
+	, pFormation( _pFormation )
+	, lastUpdateTime( 0 )
+	, eState( ECFS_NONE )
+	, lastFormationPos( _pFormation->GetCenterPlain() )
+	, pLastFormationObject( 0 )
 {
 }
 
@@ -3462,7 +3511,11 @@ IUnitState *CFormationSwarmState::Instance( CFormation *pFormation, const CVec2 
 }
 
 CFormationSwarmState::CFormationSwarmState( CFormation *_pFormation, const CVec2 &_point, const float fContinue )
-		: pFormation( _pFormation ), point( _point ), state( EFSS_START ), startTime( curTime ), bContinue( fContinue )
+	: pFormation( _pFormation )
+	, point( _point )
+	, state( EFSS_START )
+	, startTime( curTime )
+	, bContinue( fContinue )
 {
 	for ( int i = 0; i < pFormation->Size(); ++i )
 	{
@@ -3572,7 +3625,7 @@ IUnitState *CFormationEnterBuildingNowState::Instance( CFormation *pFormation, C
 }
 
 CFormationEnterBuildingNowState::CFormationEnterBuildingNowState( CFormation *_pFormation, CBuilding *pBuilding )
-		: pFormation( _pFormation )
+	: pFormation( _pFormation )
 {
 	NI_ASSERT(
 			pBuilding->GetNEntrancePoints() != 0,
@@ -3617,7 +3670,7 @@ IUnitState *CFormationEnterEntrenchmentNowState::Instance( CFormation *pFormatio
 
 CFormationEnterEntrenchmentNowState::CFormationEnterEntrenchmentNowState( CFormation *_pFormation,
                                                                           CEntrenchment *pEntrenchment )
-		: pFormation( _pFormation )
+	: pFormation( _pFormation )
 {
 	for ( int i = 0; i < pFormation->Size(); ++i )
 	{
@@ -3656,8 +3709,12 @@ CFormationPlaceChargeState::CFormationPlaceChargeState( class CFormation *pUnit,
                                                         const CVec2 &vDesiredPoint,
                                                         NDb::EUnitSpecialAbility _eChargeType,
                                                         int nTimeOffset )
-		: CStatusUpdatesHelper( EUS_BLASTING_CHARGE, pUnit ), pFormation( pUnit ), vTarget( vDesiredPoint ),
-			nOffset( nTimeOffset ), eState( EPCS_MOVING_TO ), eChargeType( _eChargeType )
+	: CStatusUpdatesHelper( EUS_BLASTING_CHARGE, pUnit )
+	, pFormation( pUnit )
+	, vTarget( vDesiredPoint )
+	, nOffset( nTimeOffset )
+	, eState( EPCS_MOVING_TO )
+	, eChargeType( _eChargeType )
 {
 	pSapper = 0;
 	for ( int i = 0; i < pFormation->Size(); ++i )
@@ -3784,7 +3841,8 @@ IUnitState *CFormationDetonateChargeState::Instance( class CFormation *pUnit )
 	return new CFormationDetonateChargeState( pUnit );
 }
 
-CFormationDetonateChargeState::CFormationDetonateChargeState( class CFormation *pUnit ) : pFormation( pUnit )
+CFormationDetonateChargeState::CFormationDetonateChargeState( class CFormation *pUnit )
+	: pFormation( pUnit )
 {
 	NI_ASSERT( pFormation->Size() > 0, "Detonating charge for empty formation!" );
 	nBeginAnimTime = curTime;
@@ -3843,7 +3901,10 @@ ETryStateInterruptResult CFormationDetonateChargeState::TryInterruptState( class
 // ** CFormationThrowGrenadeState
 // ************************************************************************************************************************ //
 
-CFormationThrowGrenadeState::CFormationThrowGrenadeState( class CFormation *_pUnit ) : pFormation( _pUnit ) {}
+CFormationThrowGrenadeState::CFormationThrowGrenadeState( class CFormation *_pUnit )
+	: pFormation( _pUnit )
+{
+}
 
 void CFormationThrowGrenadeState::AddTarget( CAIUnit *pEnemy, const CVec2 &vTarget, const int nParam )
 {
@@ -3930,8 +3991,10 @@ ETryStateInterruptResult CFormationThrowGrenadeState::TryInterruptState( class C
 // ************************************************************************************************************************ //
 
 CFormationEntrenchSelfState::CFormationEntrenchSelfState( class CFormation *_pFormation )
-		: CStatusUpdatesHelper( EUS_ENTRENCH, _pFormation ), pFormation( _pFormation ), timeStart( curTime + 200 ),
-			bWaitForSoldiers( false )
+	: CStatusUpdatesHelper( EUS_ENTRENCH, _pFormation )
+	, pFormation( _pFormation )
+	, timeStart( curTime + 200 )
+	, bWaitForSoldiers( false )
 {
 	pFormation->Stop();
 }
@@ -4008,7 +4071,8 @@ ETryStateInterruptResult CFormationEntrenchSelfState::TryInterruptState( class C
 // ************************************************************************************************************************ //
 
 CFormationLeaveSelfEntrenchState::CFormationLeaveSelfEntrenchState( class CFormation *_pFormation )
-		: pFormation( _pFormation ), timeStart( curTime + 200 )
+	: pFormation( _pFormation )
+	, timeStart( curTime + 200 )
 {
 	for ( int i = 0; i < pFormation->Size(); ++i )
 	{
@@ -4057,7 +4121,10 @@ CFormationFirstAidState::SHealingPair::~SHealingPair()
 }
 
 CFormationFirstAidState::SHealingPair::SHealingPair( CSoldier *_pPatient, CSoldier *_pDoctor )
-		: pPatient( _pPatient ), pDoctor( _pDoctor ), timeHealed( 0 ), eState( EPS_JUST_CREATED )
+	: pPatient( _pPatient )
+	, pDoctor( _pDoctor )
+	, timeHealed( 0 )
+	, eState( EPS_JUST_CREATED )
 {
 }
 
@@ -4080,7 +4147,9 @@ void CFormationFirstAidState::SHealingPair::Heal()
 }
 
 CFormationFirstAidState::CFormationFirstAidState( class CFormation *_pFormation, CSoldier *pPriorityUnit )
-		: pFormation( _pFormation ), vStartPoint( _pFormation->GetCenterPlain() ), timeNextCheck( curTime )
+	: pFormation( _pFormation )
+	, vStartPoint( _pFormation->GetCenterPlain() )
+	, timeNextCheck( curTime )
 {
 	// choose doctors from current squad and assign them to jobs
 	for ( int i = 0; i < pFormation->Size(); ++i )

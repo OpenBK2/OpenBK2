@@ -50,7 +50,10 @@ namespace NTypeDef
 
 		SAttributes() {}
 
-		SAttributes( const std::map<std::string, CVariant> &_attributes ) : attributes( _attributes ) {}
+		SAttributes( const std::map<std::string, CVariant> &_attributes )
+			: attributes( _attributes )
+		{
+		}
 
 		//
 		bool HashAttribute( const std::string &szName ) const
@@ -79,7 +82,10 @@ namespace NTypeDef
 		ETypeType eType; // type's type :)
 
 		//
-		STypeDef( ETypeType _eType ) : eType( _eType ) {}
+		STypeDef( ETypeType _eType )
+			: eType( _eType )
+		{
+		}
 
 		//
 		virtual EEditorType GetDefaultEditorType() const
@@ -131,7 +137,10 @@ namespace NTypeDef
 
 	struct STypeSimple : public STypeDef
 	{
-		STypeSimple( ETypeType _eType ) : STypeDef( _eType ) {}
+		STypeSimple( ETypeType _eType )
+			: STypeDef( _eType )
+		{
+		}
 
 		//
 		virtual CVariant GetDefaultValue() const = 0;
@@ -159,7 +168,10 @@ namespace NTypeDef
 		OBJECT_NOCOPY_METHODS( STypeInt );
 
 	public:
-		STypeInt() : STypeSimple( TYPE_TYPE_INT ) {}
+		STypeInt()
+			: STypeSimple( TYPE_TYPE_INT )
+		{
+		}
 
 		//
 		CVariant GetDefaultValue() const
@@ -194,7 +206,10 @@ namespace NTypeDef
 		OBJECT_NOCOPY_METHODS( STypeFloat );
 
 	public:
-		STypeFloat() : STypeSimple( TYPE_TYPE_FLOAT ) {}
+		STypeFloat()
+			: STypeSimple( TYPE_TYPE_FLOAT )
+		{
+		}
 
 		//
 		CVariant GetDefaultValue() const
@@ -229,7 +244,10 @@ namespace NTypeDef
 		OBJECT_NOCOPY_METHODS( STypeBool );
 
 	public:
-		STypeBool() : STypeSimple( TYPE_TYPE_BOOL ) {}
+		STypeBool()
+			: STypeSimple( TYPE_TYPE_BOOL )
+		{
+		}
 
 		//
 		CVariant GetDefaultValue() const
@@ -269,7 +287,10 @@ namespace NTypeDef
 		OBJECT_NOCOPY_METHODS( STypeString );
 
 	public:
-		STypeString() : STypeSimple( TYPE_TYPE_STRING ) {}
+		STypeString()
+			: STypeSimple( TYPE_TYPE_STRING )
+		{
+		}
 
 		//
 		CVariant GetDefaultValue() const
@@ -309,7 +330,10 @@ namespace NTypeDef
 		OBJECT_NOCOPY_METHODS( STypeWString );
 
 	public:
-		STypeWString() : STypeSimple( TYPE_TYPE_WSTRING ) {}
+		STypeWString()
+			: STypeSimple( TYPE_TYPE_WSTRING )
+		{
+		}
 
 		//
 		CVariant GetDefaultValue() const
@@ -349,7 +373,10 @@ namespace NTypeDef
 		OBJECT_NOCOPY_METHODS( STypeGUID );
 
 	public:
-		STypeGUID() : STypeSimple( TYPE_TYPE_GUID ) {}
+		STypeGUID()
+			: STypeSimple( TYPE_TYPE_GUID )
+		{
+		}
 
 		//
 		CVariant GetDefaultValue() const;
@@ -392,10 +419,16 @@ namespace NTypeDef
 		CObj<SAttributes> pAttributes;
 
 		//
-		STypeBinary() : STypeSimple( TYPE_TYPE_BINARY ), nBinaryObjectSize( 0 ) {}
+		STypeBinary()
+			: STypeSimple( TYPE_TYPE_BINARY )
+			, nBinaryObjectSize( 0 )
+		{
+		}
 
 		STypeBinary( const std::string &_szTypeName )
-				: STypeSimple( TYPE_TYPE_BINARY ), szTypeName( _szTypeName ), nBinaryObjectSize( 0 )
+			: STypeSimple( TYPE_TYPE_BINARY )
+			, szTypeName( _szTypeName )
+			, nBinaryObjectSize( 0 )
 		{
 		}
 
@@ -449,9 +482,16 @@ namespace NTypeDef
 			int nVal;
 
 			//
-			SEnumEntry() : nVal( -1 ) {}
+			SEnumEntry()
+				: nVal( -1 )
+			{
+			}
 
-			SEnumEntry( const std::string &_szName, int _nVal ) : szName( _szName ), nVal( _nVal ) {}
+			SEnumEntry( const std::string &_szName, int _nVal )
+				: szName( _szName )
+				, nVal( _nVal )
+			{
+			}
 
 			//
 			int operator&( IXmlSaver &saver )
@@ -467,9 +507,16 @@ namespace NTypeDef
 		std::vector<SEnumEntry> entries;
 
 		//
-		STypeEnum() : STypeSimple( TYPE_TYPE_ENUM ) {}
+		STypeEnum()
+			: STypeSimple( TYPE_TYPE_ENUM )
+		{
+		}
 
-		STypeEnum( const std::string &_szTypeName ) : STypeSimple( TYPE_TYPE_ENUM ), szTypeName( _szTypeName ) {}
+		STypeEnum( const std::string &_szTypeName )
+			: STypeSimple( TYPE_TYPE_ENUM )
+			, szTypeName( _szTypeName )
+		{
+		}
 
 		//
 		CVariant GetDefaultValue() const
@@ -536,7 +583,10 @@ namespace NTypeDef
 			CVariant complexDefaultValue;
 
 			//
-			SField() : nChunkID( -1 ) {}
+			SField()
+				: nChunkID( -1 )
+			{
+			}
 
 			//
 			bool CheckValueCorrect( const CVariant &value ) const;
@@ -571,7 +621,9 @@ namespace NTypeDef
 		CFieldsList fields; // complex type's fields
 
 		//
-		STypeStructBase( ETypeType _eType, const std::string &_szTypeName ) : STypeDef( _eType ), szTypeName( _szTypeName )
+		STypeStructBase( ETypeType _eType, const std::string &_szTypeName )
+			: STypeDef( _eType )
+			, szTypeName( _szTypeName )
 		{
 		}
 
@@ -623,9 +675,15 @@ namespace NTypeDef
 		OBJECT_NOCOPY_METHODS( STypeStruct );
 
 	public:
-		STypeStruct() : STypeStructBase( TYPE_TYPE_STRUCT, "" ) {}
+		STypeStruct()
+			: STypeStructBase( TYPE_TYPE_STRUCT, "" )
+		{
+		}
 
-		STypeStruct( const std::string &_szTypeName ) : STypeStructBase( TYPE_TYPE_STRUCT, _szTypeName ) {}
+		STypeStruct( const std::string &_szTypeName )
+			: STypeStructBase( TYPE_TYPE_STRUCT, _szTypeName )
+		{
+		}
 
 		//
 		int operator&( IXmlSaver &saver )
@@ -645,9 +703,15 @@ namespace NTypeDef
 		CDerivedTerminalTypesList derivedTerminalTypes;
 
 		//
-		STypeClass() : STypeStructBase( TYPE_TYPE_CLASS, "" ), nClassTypeID( -1 ) {}
+		STypeClass()
+			: STypeStructBase( TYPE_TYPE_CLASS, "" )
+			, nClassTypeID( -1 )
+		{
+		}
 
-		STypeClass( const std::string &_szTypeName ) : STypeStructBase( TYPE_TYPE_CLASS, _szTypeName ), nClassTypeID( -1 )
+		STypeClass( const std::string &_szTypeName )
+			: STypeStructBase( TYPE_TYPE_CLASS, _szTypeName )
+			, nClassTypeID( -1 )
 		{
 		}
 
@@ -679,9 +743,13 @@ namespace NTypeDef
 		STypeStructBase::SField field;
 
 		//
-		STypeArray() : STypeDef( TYPE_TYPE_ARRAY ) {}
+		STypeArray()
+			: STypeDef( TYPE_TYPE_ARRAY )
+		{
+		}
 
-		STypeArray( STypeDef *pType ) : STypeDef( TYPE_TYPE_ARRAY )
+		STypeArray( STypeDef *pType )
+			: STypeDef( TYPE_TYPE_ARRAY )
 		{
 			field.pType = pType;
 		}
@@ -719,9 +787,16 @@ namespace NTypeDef
 		CPtr<STypeDef> pRefType;
 
 		//
-		STypeRef() : STypeSimple( TYPE_TYPE_REF ) {}
+		STypeRef()
+			: STypeSimple( TYPE_TYPE_REF )
+		{
+		}
 
-		STypeRef( STypeDef *_pRefType ) : STypeSimple( TYPE_TYPE_REF ), pRefType( _pRefType ) {}
+		STypeRef( STypeDef *_pRefType )
+			: STypeSimple( TYPE_TYPE_REF )
+			, pRefType( _pRefType )
+		{
+		}
 
 		//
 		EEditorType GetDefaultEditorType() const
@@ -796,9 +871,17 @@ namespace NTypeDef
 		TYPE tMin, tMax;
 
 		//
-		SConstraintsMinMax() : tMin( 0 ), tMax( 0 ) {}
+		SConstraintsMinMax()
+			: tMin( 0 )
+			, tMax( 0 )
+		{
+		}
 
-		SConstraintsMinMax( TYPE _tMin, TYPE _tMax ) : tMin( _tMin ), tMax( _tMax ) {}
+		SConstraintsMinMax( TYPE _tMin, TYPE _tMax )
+			: tMin( _tMin )
+			, tMax( _tMax )
+		{
+		}
 
 		//
 		bool CheckValueCorrect( const CVariant &value ) const
@@ -833,7 +916,10 @@ namespace NTypeDef
 		//
 		SConstraintsValuesList() {}
 
-		SConstraintsValuesList( const std::vector<TYPE> &_values ) : values( _values ) {}
+		SConstraintsValuesList( const std::vector<TYPE> &_values )
+			: values( _values )
+		{
+		}
 
 		//
 		bool CheckValueCorrect( const CVariant &value ) const
@@ -864,10 +950,15 @@ namespace NTypeDef
 		int nMaxElements;
 
 		//
-		SConstraintsArrayMinMax() : nMinElements( -1 ), nMaxElements( -1 ) {}
+		SConstraintsArrayMinMax()
+			: nMinElements( -1 )
+			, nMaxElements( -1 )
+		{
+		}
 
 		SConstraintsArrayMinMax( int _nMinElements, int _nMaxElements )
-				: nMinElements( _nMinElements ), nMaxElements( _nMaxElements )
+			: nMinElements( _nMinElements )
+			, nMaxElements( _nMaxElements )
 		{
 		}
 
@@ -936,7 +1027,10 @@ namespace NTypeDef
 		//
 		SConstraintsTypeRef() {}
 
-		SConstraintsTypeRef( STypeDef *_pType ) : pType( _pType ) {}
+		SConstraintsTypeRef( STypeDef *_pType )
+			: pType( _pType )
+		{
+		}
 
 		//
 		bool CheckValueCorrect( const CVariant &value ) const

@@ -52,7 +52,10 @@ class CUpdateTimer : public wxTimer
 	std::function<void()> tick;
 
 public:
-	explicit CUpdateTimer( std::function<void()> _tick ) : tick( std::move( _tick ) ) {}
+	explicit CUpdateTimer( std::function<void()> _tick )
+		: tick( std::move( _tick ) )
+	{
+	}
 
 	virtual void Notify()
 	{
@@ -394,17 +397,17 @@ public:
 	std::function<void( const wxMouseEvent & )> mouseHook;
 
 	CSceneWxWindow( wxWindow *pParent, CChildFrameWndBase *_pCore )
-			// wxBORDER_SUNKEN is WS_EX_CLIENTEDGE, the MFC view's edge, which
-			// AlignWndAspect counts on: it sizes the window four pixels larger
-			// than the client. wxWANTS_CHARS so no key is taken for navigation
-			// before the viewport sees it. Made with no size, as the MFC view was,
-			// so the renderer starts on the client the frame then gives it.
-			: wxWindow( pParent,
-	                wxID_ANY,
-	                wxDefaultPosition,
-	                wxSize( 0, 0 ),
-	                wxBORDER_SUNKEN | wxWANTS_CHARS | wxFULL_REPAINT_ON_RESIZE ),
-				pCore( _pCore )
+		// wxBORDER_SUNKEN is WS_EX_CLIENTEDGE, the MFC view's edge, which
+		// AlignWndAspect counts on: it sizes the window four pixels larger
+		// than the client. wxWANTS_CHARS so no key is taken for navigation
+		// before the viewport sees it. Made with no size, as the MFC view was,
+		// so the renderer starts on the client the frame then gives it.
+		: wxWindow( pParent,
+	              wxID_ANY,
+	              wxDefaultPosition,
+	              wxSize( 0, 0 ),
+	              wxBORDER_SUNKEN | wxWANTS_CHARS | wxFULL_REPAINT_ON_RESIZE )
+		, pCore( _pCore )
 	{
 		// Map-tool cursors apply only to this window. The cursor boundary
 		// holds a weak wx reference, so closing the surface clears the target.
@@ -510,15 +513,15 @@ protected:
 
 public:
 	CWxSceneSurface()
-			: updateTimer(
-						[this]()
+		: updateTimer(
+					[this]()
+					{
+						if ( bCoreHasWindow )
 						{
-							if ( bCoreHasWindow )
-							{
-								nativeViewport.PumpEvents();
-								pCore->OnTimer();
-							}
-						} )
+							nativeViewport.PumpEvents();
+							pCore->OnTimer();
+						}
+					} )
 	{
 	}
 

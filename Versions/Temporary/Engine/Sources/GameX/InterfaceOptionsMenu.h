@@ -19,7 +19,9 @@ public:
 
 		~CReactions() {}
 
-		CReactions( IWindow *_pScreen, CInterfaceOptionsMenu *_pInterface ) : pScreen( _pScreen ), pInterface( _pInterface )
+		CReactions( IWindow *_pScreen, CInterfaceOptionsMenu *_pInterface )
+			: pScreen( _pScreen )
+			, pInterface( _pInterface )
 		{
 		}
 

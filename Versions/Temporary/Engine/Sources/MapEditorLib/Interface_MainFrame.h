@@ -50,7 +50,12 @@ struct SSWTParams
 	bool bFillMODFromBase;
 
 	//
-	SSWTParams() : dwFlags( SWT_ALL ), bModified( false ), bFillMODFromBase( true ) {}
+	SSWTParams()
+		: dwFlags( SWT_ALL )
+		, bModified( false )
+		, bFillMODFromBase( true )
+	{
+	}
 };
 
 struct ILogger

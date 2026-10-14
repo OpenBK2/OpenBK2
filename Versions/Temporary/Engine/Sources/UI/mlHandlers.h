@@ -18,9 +18,15 @@ public:
 		return 0;
 	}
 
-	SFadeValue() : fFadeValue( 1.0f ) {}
+	SFadeValue()
+		: fFadeValue( 1.0f )
+	{
+	}
 
-	SFadeValue( float _fFadeValue ) : fFadeValue( _fFadeValue ) {}
+	SFadeValue( float _fFadeValue )
+		: fFadeValue( _fFadeValue )
+	{
+	}
 };
 
 class CBRHandler : public IHandler
@@ -71,7 +77,10 @@ private:
 public:
 	CColorHandler() {}
 
-	CColorHandler( SFadeValue *pFadeValue ) : sFadeValue( pFadeValue ) {}
+	CColorHandler( SFadeValue *pFadeValue )
+		: sFadeValue( pFadeValue )
+	{
+	}
 
 	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet );
 };

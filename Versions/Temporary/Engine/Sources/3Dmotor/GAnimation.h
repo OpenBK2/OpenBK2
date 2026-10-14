@@ -66,7 +66,10 @@ public:
 	}
 
 public:
-	SSimpleBoneMutator() : bEnabled( false ) {}
+	SSimpleBoneMutator()
+		: bEnabled( false )
+	{
+	}
 
 	void GetAtTime( const STime &t, CQuat *qRot, CVec3 *vPos );
 	void AddBoneTimePose( const STime &tEnd, const CQuat &finalRot, const CVec3 &finalPos );
@@ -93,7 +96,8 @@ class CSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 		int nChannelIndex;
 
 		STrackChannelBinding( granny_vector_track *_pTrack, int _nChannelIndex )
-				: pTrack( _pTrack ), nChannelIndex( _nChannelIndex )
+			: pTrack( _pTrack )
+			, nChannelIndex( _nChannelIndex )
 		{
 		}
 	};
@@ -149,7 +153,10 @@ class CSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 	{
 		const std::string &szName;
 
-		SChannelByName( const std::string &_szName ) : szName( _szName ) {}
+		SChannelByName( const std::string &_szName )
+			: szName( _szName )
+		{
+		}
 
 		bool operator()( const SScalarChannel &channel )
 		{

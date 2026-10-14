@@ -10,7 +10,10 @@ extern NTimer::STime curTime;
 //*		 								   CCombatEstimator														*
 //*******************************************************************
 
-CCombatEstimator::CCombatEstimator() : fDamage( 0 ) {}
+CCombatEstimator::CCombatEstimator()
+	: fDamage( 0 )
+{
+}
 
 void CCombatEstimator::AddShell( NTimer::STime time, float _fDamage )
 {

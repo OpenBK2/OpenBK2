@@ -42,7 +42,11 @@ ED_B2_M1_EXPORT const unsigned TOOLBAR_MODEL_ELEMENTS_ID[TOOLBAR_MODEL_ELEMENTS_
 };
 
 CModelEditor::CModelEditor()
-		: pModelState( 0 ), nModelToolbarID( 0xFFFFFFFF ), pwndTool( 0 ), bPreviousCameraHandleType( false ), fFOV( 26.0f )
+	: pModelState( 0 )
+	, nModelToolbarID( 0xFFFFFFFF )
+	, pwndTool( 0 )
+	, bPreviousCameraHandleType( false )
+	, fFOV( 26.0f )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_MODEL_EDITOR, this );
 	Singleton<ICommandHandlerContainer>()->Register( CHID_MODEL_EDITOR, ID_MODEL_VIEW_TOOLBAR, ID_MODEL_VIEW_TOOL );

@@ -7,7 +7,10 @@ struct SRingNode
 	SRingNode<Type> *pPrev;
 	SRingNode<Type> *pNext;
 
-	SRingNode( const Type &_sData ) : sData( _sData ) {}
+	SRingNode( const Type &_sData )
+		: sData( _sData )
+	{
+	}
 };
 
 template <class Type, class TNode>
@@ -17,11 +20,20 @@ struct SRingIterator
 
 	TNode *pNode;
 
-	SRingIterator() : pNode( 0 ) {}
+	SRingIterator()
+		: pNode( 0 )
+	{
+	}
 
-	SRingIterator( TNode *pStart ) : pNode( pStart ) {}
+	SRingIterator( TNode *pStart )
+		: pNode( pStart )
+	{
+	}
 
-	SRingIterator( const TSelf &sIter ) : pNode( sIter.pNode ) {}
+	SRingIterator( const TSelf &sIter )
+		: pNode( sIter.pNode )
+	{
+	}
 
 	TSelf &operator++()
 	{
@@ -92,7 +104,11 @@ public:
 	typedef SRingIterator<Type, SRingNode<Type>> iterator;
 	typedef SRingIterator<const Type, const SRingNode<Type>> const_iterator;
 
-	CRing() : nCount( 0 ), pList( 0 ) {}
+	CRing()
+		: nCount( 0 )
+		, pList( 0 )
+	{
+	}
 
 	~CRing()
 	{

@@ -49,7 +49,13 @@ protected:
 	}
 
 public:
-	CWindowListHeader() : bResizable( false ), nResizingIndex( -1 ), nSelectedColumn( -1 ), pHeaderNotify( 0 ) {}
+	CWindowListHeader()
+		: bResizable( false )
+		, nResizingIndex( -1 )
+		, nSelectedColumn( -1 )
+		, pHeaderNotify( 0 )
+	{
+	}
 
 	int operator&( IBinSaver &saver );
 	void Reposition( const CTRect<float> &parentRect );
@@ -174,7 +180,11 @@ protected:
 	void Select( IWindow *pElement );
 	//}
 public:
-	CWindowListCtrl() : nSortColumn( 0 ), bSelectable( true ) {}
+	CWindowListCtrl()
+		: nSortColumn( 0 )
+		, bSelectable( true )
+	{
+	}
 
 	//{ CWindow
 	virtual int operator&( IBinSaver &saver );

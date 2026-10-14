@@ -37,7 +37,8 @@ public:
 		~CReactions() {}
 
 		CReactions( IWindow *_pScreen, CInterfaceChapterMapMenu *_pInterface )
-				: pScreen( _pScreen ), pInterface( _pInterface )
+			: pScreen( _pScreen )
+			, pInterface( _pInterface )
 		{
 		}
 

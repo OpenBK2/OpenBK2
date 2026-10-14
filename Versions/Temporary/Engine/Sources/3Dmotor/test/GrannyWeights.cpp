@@ -18,7 +18,9 @@ struct SSkinnedMesh
 	std::vector<granny_uint8> bytes;
 	int width;
 
-	explicit SSkinnedMesh( int nWidth ) : bytes( 4 * nWidth ), width( nWidth )
+	explicit SSkinnedMesh( int nWidth )
+		: bytes( 4 * nWidth )
+		, width( nWidth )
 	{
 		const char *names[] = { "root", "arm", "leg", "head" };
 		for ( int i = 0; i < 4; ++i )

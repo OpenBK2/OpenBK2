@@ -11,7 +11,8 @@
 
 #include <cstdint>
 
-CControllerContainer::CControllerContainer() : pMenuDropDown( 0 )
+CControllerContainer::CControllerContainer()
+	: pMenuDropDown( 0 )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_CONTROLLER_CONTAINER, this );
 }
@@ -23,7 +24,8 @@ CControllerContainer::~CControllerContainer()
 	pMenuDropDown = 0;
 }
 
-CControllerContainer::CEditSession::CEditSession( CControllerContainer *_pContainer ) : pContainer( _pContainer )
+CControllerContainer::CEditSession::CEditSession( CControllerContainer *_pContainer )
+	: pContainer( _pContainer )
 {
 	pContainer->BeginEditSession();
 }

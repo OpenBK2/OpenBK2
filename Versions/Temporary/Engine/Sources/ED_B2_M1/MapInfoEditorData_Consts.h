@@ -98,12 +98,21 @@ struct SControllerChangeInfo
 	int nIndex;
 	unsigned nFlags;
 
-	SControllerChangeInfo() : nIndex( INVALID_NODE_ID ), nFlags( 0 ) {}
+	SControllerChangeInfo()
+		: nIndex( INVALID_NODE_ID )
+		, nFlags( 0 )
+	{
+	}
 
-	SControllerChangeInfo( int _nIndex ) : nIndex( _nIndex ), nFlags( 0 ) {}
+	SControllerChangeInfo( int _nIndex )
+		: nIndex( _nIndex )
+		, nFlags( 0 )
+	{
+	}
 
 	SControllerChangeInfo( const SControllerChangeInfo &rControllerChangeInfo )
-			: nIndex( rControllerChangeInfo.nIndex ), nFlags( rControllerChangeInfo.nFlags )
+		: nIndex( rControllerChangeInfo.nIndex )
+		, nFlags( rControllerChangeInfo.nFlags )
 	{
 	}
 
@@ -139,11 +148,18 @@ struct SObjectLoadInfo
 
 	//
 	SObjectLoadInfo()
-			: nObjectIndex( INVALID_NODE_ID ), nLinkID( INVALID_NODE_ID ), nLinkWith( INVALID_NODE_ID ),
-				bSearchIndices( true ),
-				//
-				bAdditionalDataFilled( false ), vPosition( VNULL3 ), fDirection( 0.0f ), nFrameIndex( -1 ), nPlayer( 0 ),
-				fHP( 1.0f )
+		: nObjectIndex( INVALID_NODE_ID )
+		, nLinkID( INVALID_NODE_ID )
+		, nLinkWith( INVALID_NODE_ID )
+		, bSearchIndices( true )
+		,
+		//
+		bAdditionalDataFilled( false )
+		, vPosition( VNULL3 )
+		, fDirection( 0.0f )
+		, nFrameIndex( -1 )
+		, nPlayer( 0 )
+		, fHP( 1.0f )
 	{
 	}
 
@@ -168,11 +184,17 @@ struct SObjectCreateInfo
 
 	//
 	SObjectCreateInfo()
-			: vPosition( VNULL3 ), fDirection( 0.0f ),
-				//
-				nFrameIndex( -1 ), nPlayer( 0 ), fHP( 1.0f ),
-				//
-				bFitToGrid( false ), bRotateTo90Degree( false )
+		: vPosition( VNULL3 )
+		, fDirection( 0.0f )
+		,
+		//
+		nFrameIndex( -1 )
+		, nPlayer( 0 )
+		, fHP( 1.0f )
+		,
+		//
+		bFitToGrid( false )
+		, bRotateTo90Degree( false )
 	{
 	}
 

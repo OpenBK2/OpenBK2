@@ -49,13 +49,15 @@ public:
 	                      const std::string &rszTypeName,
 	                      const std::string &rszName,
 	                      std::list<std::string> *_pResultList )
-			: CWxToolDialog( pParent,
-	                     wxID_ANY,
-	                     "Requesting info from XDBWatcher",
-	                     wxDefaultPosition,
-	                     wxDefaultSize,
-	                     wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
-				szTargetTypeName( rszTypeName ), szTargetName( rszName ), pResultList( _pResultList )
+		: CWxToolDialog( pParent,
+	                   wxID_ANY,
+	                   "Requesting info from XDBWatcher",
+	                   wxDefaultPosition,
+	                   wxDefaultSize,
+	                   wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+		, szTargetTypeName( rszTypeName )
+		, szTargetName( rszName )
+		, pResultList( _pResultList )
 	{
 		wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 		pSizer->Add( NWx::Child<wxStaticText>( this, wxID_ANY, "Waiting for XDBWatcher to finish file scan.." ),
@@ -141,13 +143,10 @@ public:
 	                  const std::string &rszTypeName,
 	                  const std::string &rszName,
 	                  std::list<std::string> *pReferenceObjects )
-			: CWxToolDialog( pParent,
-	                     wxID_ANY,
-	                     "References",
-	                     wxDefaultPosition,
-	                     wxDefaultSize,
-	                     wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
-				szTargetTypeName( rszTypeName ), szTargetName( rszName )
+		: CWxToolDialog(
+					pParent, wxID_ANY, "References", wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+		, szTargetTypeName( rszTypeName )
+		, szTargetName( rszName )
 	{
 		// The title carries the object, as OnInitDialog appends it.
 		SetTitle(

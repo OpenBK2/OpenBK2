@@ -46,74 +46,134 @@ private:
 
 public:
 	SAIUnitCmd()
-			: nCmdType( ACTION_COMMAND_MOVE_TO ), vPos( -1, -1 ), bFromAI( true ), nObjectID( 0 ), fNumber( 0 ),
-				bFromExplosion( 0 ), nNumber( 0 )
+		: nCmdType( ACTION_COMMAND_MOVE_TO )
+		, vPos( -1, -1 )
+		, bFromAI( true )
+		, nObjectID( 0 )
+		, fNumber( 0 )
+		, bFromExplosion( 0 )
+		, nNumber( 0 )
 	{
 	}
 
 	explicit SAIUnitCmd( const EActionCommand &_nCmdType )
-			: nCmdType( _nCmdType ), vPos( -1, -1 ), fNumber( 0 ), bFromExplosion( false ), bFromAI( true ), nObjectID( 0 ),
-				nNumber( 0 )
+		: nCmdType( _nCmdType )
+		, vPos( -1, -1 )
+		, fNumber( 0 )
+		, bFromExplosion( false )
+		, bFromAI( true )
+		, nObjectID( 0 )
+		, nNumber( 0 )
 	{
 	}
 
 	SAIUnitCmd( const EActionCommand &_nCmdType, const int _nObjectID )
-			: nCmdType( _nCmdType ), nObjectID( _nObjectID ), vPos( -1, -1 ), fNumber( 0 ), bFromExplosion( false ),
-				bFromAI( true ), nNumber( 0 )
+		: nCmdType( _nCmdType )
+		, nObjectID( _nObjectID )
+		, vPos( -1, -1 )
+		, fNumber( 0 )
+		, bFromExplosion( false )
+		, bFromAI( true )
+		, nNumber( 0 )
 	{
 	}
 
 	SAIUnitCmd( const EActionCommand &_nCmdType, const int _nObjectID, const float _fNumber )
-			: nCmdType( _nCmdType ), nObjectID( _nObjectID ), fNumber( _fNumber ), vPos( -1, -1 ), bFromExplosion( false ),
-				bFromAI( true ), nNumber( 0 )
+		: nCmdType( _nCmdType )
+		, nObjectID( _nObjectID )
+		, fNumber( _fNumber )
+		, vPos( -1, -1 )
+		, bFromExplosion( false )
+		, bFromAI( true )
+		, nNumber( 0 )
 	{
 	}
 
 	SAIUnitCmd( const EActionCommand &_nCmdType, const CVec2 &_vPos )
-			: nCmdType( _nCmdType ), vPos( _vPos ), fNumber( 0 ), bFromExplosion( false ), bFromAI( true ), nObjectID( 0 ),
-				nNumber( 0 )
+		: nCmdType( _nCmdType )
+		, vPos( _vPos )
+		, fNumber( 0 )
+		, bFromExplosion( false )
+		, bFromAI( true )
+		, nObjectID( 0 )
+		, nNumber( 0 )
 	{
 	}
 
 	SAIUnitCmd( const EActionCommand &_nCmdType, const float x, const float y )
-			: nCmdType( _nCmdType ), vPos( x, y ), fNumber( 0 ), bFromExplosion( false ), bFromAI( true ), nObjectID( 0 ),
-				nNumber( 0 )
+		: nCmdType( _nCmdType )
+		, vPos( x, y )
+		, fNumber( 0 )
+		, bFromExplosion( false )
+		, bFromAI( true )
+		, nObjectID( 0 )
+		, nNumber( 0 )
 	{
 	}
 
 	SAIUnitCmd( const EActionCommand &_nCmdType, const CVec2 &_vPos, const float _fNumber )
-			: nCmdType( _nCmdType ), vPos( _vPos ), fNumber( _fNumber ), bFromExplosion( false ), bFromAI( true ),
-				nObjectID( 0 ), nNumber( 0 )
+		: nCmdType( _nCmdType )
+		, vPos( _vPos )
+		, fNumber( _fNumber )
+		, bFromExplosion( false )
+		, bFromAI( true )
+		, nObjectID( 0 )
+		, nNumber( 0 )
 	{
 	}
 
 	SAIUnitCmd( const EActionCommand &_nCmdType, const float x, const float y, const float _fNumber )
-			: nCmdType( _nCmdType ), vPos( x, y ), fNumber( _fNumber ), bFromExplosion( false ), bFromAI( true ),
-				nObjectID( 0 ), nNumber( 0 )
+		: nCmdType( _nCmdType )
+		, vPos( x, y )
+		, fNumber( _fNumber )
+		, bFromExplosion( false )
+		, bFromAI( true )
+		, nObjectID( 0 )
+		, nNumber( 0 )
 	{
 	}
 
 	SAIUnitCmd( const EActionCommand &_nCmdType, const float _fNumber )
-			: nCmdType( _nCmdType ), fNumber( _fNumber ), vPos( -1, -1 ), bFromExplosion( false ), bFromAI( true ),
-				nObjectID( 0 ), nNumber( 0 )
+		: nCmdType( _nCmdType )
+		, fNumber( _fNumber )
+		, vPos( -1, -1 )
+		, bFromExplosion( false )
+		, bFromAI( true )
+		, nObjectID( 0 )
+		, nNumber( 0 )
 	{
 	}
 
 	SAIUnitCmd( const EActionCommand &_nCmdType, bool _fromExpl )
-			: nCmdType( _nCmdType ), bFromExplosion( _fromExpl ), vPos( -1, -1 ), fNumber( 0 ), bFromAI( true ),
-				nObjectID( 0 ), nNumber( 0 )
+		: nCmdType( _nCmdType )
+		, bFromExplosion( _fromExpl )
+		, vPos( -1, -1 )
+		, fNumber( 0 )
+		, bFromAI( true )
+		, nObjectID( 0 )
+		, nNumber( 0 )
 	{
 	}
 
 	SAIUnitCmd( const EActionCommand &_nCmdType, const float _fNumber, bool _fromExpl )
-			: nCmdType( _nCmdType ), bFromExplosion( _fromExpl ), vPos( -1, -1 ), fNumber( _fNumber ), bFromAI( true ),
-				nObjectID( 0 ), nNumber( 0 )
+		: nCmdType( _nCmdType )
+		, bFromExplosion( _fromExpl )
+		, vPos( -1, -1 )
+		, fNumber( _fNumber )
+		, bFromAI( true )
+		, nObjectID( 0 )
+		, nNumber( 0 )
 	{
 	}
 
 	SAIUnitCmd( const EActionCommand &_nCmdType, const CVec2 &_vPos, const float _fNumber, const bool _bFromExplosion )
-			: nCmdType( _nCmdType ), vPos( _vPos ), fNumber( _fNumber ), bFromExplosion( _bFromExplosion ), bFromAI( true ),
-				nObjectID(), nNumber( 0 )
+		: nCmdType( _nCmdType )
+		, vPos( _vPos )
+		, fNumber( _fNumber )
+		, bFromExplosion( _bFromExplosion )
+		, bFromAI( true )
+		, nObjectID()
+		, nNumber( 0 )
 	{
 	}
 

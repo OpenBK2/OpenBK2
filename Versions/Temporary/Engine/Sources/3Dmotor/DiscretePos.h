@@ -16,7 +16,10 @@ public:
 
 	CFBTransform() {}
 
-	CFBTransform( const SFBTransform &_pos ) : pos( _pos ) {}
+	CFBTransform( const SFBTransform &_pos )
+		: pos( _pos )
+	{
+	}
 
 	const SFBTransform &GetValue() const
 	{
@@ -56,7 +59,9 @@ struct SDiscretePos
 	SDiscretePos() {}
 
 	SDiscretePos( CFBTransform *_pTransform, const CVec3 &_ptMove, int nRotationID )
-			: ptMove( _ptMove ), nRotation( nRotationID ), pTransform( _pTransform )
+		: ptMove( _ptMove )
+		, nRotation( nRotationID )
+		, pTransform( _pTransform )
 	{
 	}
 

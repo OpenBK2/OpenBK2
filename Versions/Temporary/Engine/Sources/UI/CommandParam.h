@@ -13,7 +13,10 @@ public:
 		this->second = false;
 	}
 
-	CParam( const TParamType &par ) : std::pair<TParamType, bool>( par, true ) {}
+	CParam( const TParamType &par )
+		: std::pair<TParamType, bool>( par, true )
+	{
+	}
 
 	const CParam &operator=( const TParamType &par )
 	{

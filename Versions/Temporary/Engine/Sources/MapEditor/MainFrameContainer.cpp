@@ -14,7 +14,10 @@ class CMainFrameLoggerSink : public NLog::ILoggerSink
 	CMainFrameLoggerSink() {}
 
 public:
-	CMainFrameLoggerSink( ILogger *_pLogger ) : pLogger( _pLogger ) {}
+	CMainFrameLoggerSink( ILogger *_pLogger )
+		: pLogger( _pLogger )
+	{
+	}
 
 	ILogger *GetLogger()
 	{

@@ -12,7 +12,10 @@ class CStrStream
 public:
 	typedef CStrStream &( *OpFunc )( CStrStream & );
 
-	CStrStream( std::string *_pszStr ) : pszStr( _pszStr ) {}
+	CStrStream( std::string *_pszStr )
+		: pszStr( _pszStr )
+	{
+	}
 
 	CStrStream &operator<<( const char *psz )
 	{

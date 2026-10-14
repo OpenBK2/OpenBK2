@@ -34,7 +34,13 @@ REGISTER_EDITOR_IN_DLL( SquadRPGStats, CSquadEditor )
 //
 //
 
-CSquadEditor::CSquadEditor() : pSquadState( 0 ), pMarkers( 0 ), pwndShortcutBar( 0 ), vSquadCenterPos( VNULL3 ) {}
+CSquadEditor::CSquadEditor()
+	: pSquadState( 0 )
+	, pMarkers( 0 )
+	, pwndShortcutBar( 0 )
+	, vSquadCenterPos( VNULL3 )
+{
+}
 
 CSquadEditor::~CSquadEditor() {}
 

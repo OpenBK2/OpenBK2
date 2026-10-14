@@ -71,10 +71,17 @@ public:
 			float fOpacity;
 
 			//
-			SKeyPoint() : fWidth( DEFAULT_WIDTH ), fHeight( DEFAULT_HEIGHT ), fOpacity( DEFAULT_OPACITY ) {}
+			SKeyPoint()
+				: fWidth( DEFAULT_WIDTH )
+				, fHeight( DEFAULT_HEIGHT )
+				, fOpacity( DEFAULT_OPACITY )
+			{
+			}
 
 			SKeyPoint( const SKeyPoint &rKeyPoint )
-					: fWidth( rKeyPoint.fWidth ), fHeight( rKeyPoint.fHeight ), fOpacity( rKeyPoint.fOpacity )
+				: fWidth( rKeyPoint.fWidth )
+				, fHeight( rKeyPoint.fHeight )
+				, fOpacity( rKeyPoint.fOpacity )
 			{
 			}
 
@@ -130,11 +137,19 @@ public:
 		float fOpacity;
 
 		//
-		SVSOSelection() : eSelectionType( ST_UNKNOWN ), nIndex( 0 ), vDifference( VNULL3 ), fOpacity( 0.0f ) {}
+		SVSOSelection()
+			: eSelectionType( ST_UNKNOWN )
+			, nIndex( 0 )
+			, vDifference( VNULL3 )
+			, fOpacity( 0.0f )
+		{
+		}
 
 		SVSOSelection( const SVSOSelection &rVSOSelection )
-				: eSelectionType( rVSOSelection.eSelectionType ), nIndex( rVSOSelection.nIndex ),
-					vDifference( rVSOSelection.vDifference ), fOpacity( rVSOSelection.fOpacity )
+			: eSelectionType( rVSOSelection.eSelectionType )
+			, nIndex( rVSOSelection.nIndex )
+			, vDifference( rVSOSelection.vDifference )
+			, fOpacity( rVSOSelection.fOpacity )
 		{
 		}
 
@@ -181,15 +196,21 @@ public:
 		SVSOSelection::ESelectionType eSelectionType;
 		float fRadius;
 
-		SVSOSelectionParam() : eSelectionType( SVSOSelection::ST_UNKNOWN ), fRadius( 0.0f ) {}
+		SVSOSelectionParam()
+			: eSelectionType( SVSOSelection::ST_UNKNOWN )
+			, fRadius( 0.0f )
+		{
+		}
 
 		SVSOSelectionParam( SVSOSelection::ESelectionType _eSelectionType, float _fRadus )
-				: eSelectionType( _eSelectionType ), fRadius( _fRadus )
+			: eSelectionType( _eSelectionType )
+			, fRadius( _fRadus )
 		{
 		}
 
 		SVSOSelectionParam( const SVSOSelectionParam &rVSOSelectionParam )
-				: eSelectionType( rVSOSelectionParam.eSelectionType ), fRadius( rVSOSelectionParam.fRadius )
+			: eSelectionType( rVSOSelectionParam.eSelectionType )
+			, fRadius( rVSOSelectionParam.fRadius )
 		{
 		}
 

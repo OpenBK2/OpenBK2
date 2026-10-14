@@ -344,7 +344,10 @@ CGivenPassabilityStObject::CGivenPassabilityStObject( const CVec3 &_center,
                                                       const float _fHP,
                                                       const uint16_t _wAngle,
                                                       const int nFrameIndex )
-		: CExistingObject( nFrameIndex, _fHP ), center( _center ), bTransparencySet( false ), wDir( _wAngle )
+	: CExistingObject( nFrameIndex, _fHP )
+	, center( _center )
+	, bTransparencySet( false )
+	, wDir( _wAngle )
 {
 	// unitialized hunt
 	boundRect.InitRect( VNULL2, V2_AXIS_X, 0, 0, 0 );

@@ -26,7 +26,11 @@ class CMPUIMessageHandler : public IMPUIMessageHandler
 public:
 	CMPUIMessageHandler() {}
 
-	CMPUIMessageHandler( TObj *_pObj, TMFn _pMFn ) : pObj( _pObj ), pMFn( _pMFn ) {}
+	CMPUIMessageHandler( TObj *_pObj, TMFn _pMFn )
+		: pObj( _pObj )
+		, pMFn( _pMFn )
+	{
+	}
 
 	bool HandleMessage( SMPUIMessage *_pMsg )
 	{

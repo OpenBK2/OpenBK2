@@ -22,7 +22,8 @@ class CStatisticsCollector : public IStatisticsCollector
 public:
 	CStatisticsCollector() {}
 
-	CStatisticsCollector( const std::string &szCollectorName ) : szSpecificName( szCollectorName )
+	CStatisticsCollector( const std::string &szCollectorName )
+		: szSpecificName( szCollectorName )
 	{
 		collectors[szCollectorName] = this;
 		nStartTime = GetLongTickCount();
@@ -64,7 +65,11 @@ class CAverageTimeBetweenEvents : public IStatisticsData
 	uint64_t nStartTime;
 
 public:
-	CAverageTimeBetweenEvents() : nStartTime( 0ULL ), nEvents( 0ULL ) {}
+	CAverageTimeBetweenEvents()
+		: nStartTime( 0ULL )
+		, nEvents( 0ULL )
+	{
+	}
 
 	virtual float GetValue() const;
 	virtual void Add( const float &fValue );
@@ -84,7 +89,11 @@ class CAverageValuePerTime : public IStatisticsData
 	uint64_t nStartTime;
 
 public:
-	CAverageValuePerTime() : nStartTime( 0ULL ), fEventsSum( 0 ) {}
+	CAverageValuePerTime()
+		: nStartTime( 0ULL )
+		, fEventsSum( 0 )
+	{
+	}
 
 	virtual float GetValue() const;
 	virtual void Add( const float &fValue );
@@ -103,7 +112,11 @@ class CAverageValue : public IStatisticsData
 	float fSum;
 
 public:
-	CAverageValue() : fSum( 0.0f ), nEvents( 0U ) {}
+	CAverageValue()
+		: fSum( 0.0f )
+		, nEvents( 0U )
+	{
+	}
 
 	virtual float GetValue() const
 	{
@@ -129,7 +142,10 @@ class CEventsCount : public IStatisticsData
 	unsigned int nEvents;
 
 public:
-	CEventsCount() : nEvents( 0U ) {}
+	CEventsCount()
+		: nEvents( 0U )
+	{
+	}
 
 	virtual float GetValue() const
 	{

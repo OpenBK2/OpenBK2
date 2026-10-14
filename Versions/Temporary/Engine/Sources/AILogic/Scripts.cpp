@@ -123,7 +123,9 @@ class CUnitsInScriptAreaEnumerator : public IScriptAreaEnumerator
 
 public:
 	CUnitsInScriptAreaEnumerator( Script *_pScript, const NDb::SScriptArea *_pArea )
-			: pScript( _pScript ), pArea( _pArea ), nUnits( 0 )
+		: pScript( _pScript )
+		, pArea( _pArea )
+		, nUnits( 0 )
 	{
 	}
 
@@ -168,7 +170,9 @@ class CIsSomeUnitInScriptAreaEnumerator : public IScriptAreaEnumerator
 
 public:
 	CIsSomeUnitInScriptAreaEnumerator( Script *_pScript, const NDb::SScriptArea *_pArea )
-			: pScript( _pScript ), pArea( _pArea ), bPresent( false )
+		: pScript( _pScript )
+		, pArea( _pArea )
+		, bPresent( false )
 	{
 	}
 
@@ -1964,7 +1968,11 @@ class CUnitsEnumerator : public IEnumerator
 	det_set<int> squads;
 
 public:
-	CUnitsEnumerator( Script *_pScript ) : pScript( _pScript ), nResult( 0 ) {}
+	CUnitsEnumerator( Script *_pScript )
+		: pScript( _pScript )
+		, nResult( 0 )
+	{
+	}
 
 	bool AddUnit( CAIUnit *pUnit )
 	{
@@ -1996,7 +2004,9 @@ class CUnitsInScriptAreaCounter : public IScriptAreaEnumerator
 	const NDb::SScriptArea &area;
 
 public:
-	CUnitsInScriptAreaCounter( Script *_pScript, const NDb::SScriptArea &_area ) : enumerator( _pScript ), area( _area )
+	CUnitsInScriptAreaCounter( Script *_pScript, const NDb::SScriptArea &_area )
+		: enumerator( _pScript )
+		, area( _area )
 	{
 	}
 
@@ -4066,9 +4076,15 @@ struct SArtillerySort
 {
 	CVec2 vCenter;
 
-	SArtillerySort() : vCenter( VNULL2 ) {}
+	SArtillerySort()
+		: vCenter( VNULL2 )
+	{
+	}
 
-	SArtillerySort( const CVec2 &_vCenter ) : vCenter( _vCenter ) {}
+	SArtillerySort( const CVec2 &_vCenter )
+		: vCenter( _vCenter )
+	{
+	}
 
 	bool operator()( const CArtillery *pArt1, const CArtillery *pArt2 ) const
 	{

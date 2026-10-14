@@ -16,7 +16,10 @@ REGISTER_SAVELOAD_CLASS( UI, 0x17122340, CWindowComboBox );
 // корневого с заданным приоритетом (надо задавать выше чем у всех "обычных" окон, но не тултипов),
 // получает фокус и убирается при его потере.
 
-CWindowComboBox::CWindowComboBox() : nSelected( -1 ), bSuppressPopupList( false ), nMaxVisibleRows( 0 )
+CWindowComboBox::CWindowComboBox()
+	: nSelected( -1 )
+	, bSuppressPopupList( false )
+	, nMaxVisibleRows( 0 )
 {
 	AddObserver( "window_combo_box_close", &CWindowComboBox::OnEscape );
 }

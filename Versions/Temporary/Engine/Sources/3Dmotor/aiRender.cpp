@@ -12,7 +12,11 @@ inline CVec3 Unhomogen( const CVec4 &v )
 
 // CFastRenderer
 
-CFastRenderer::CFastRenderer() : bUseInvertOrder( false ), bPerspective( false ) {}
+CFastRenderer::CFastRenderer()
+	: bUseInvertOrder( false )
+	, bPerspective( false )
+{
+}
 
 void CFastRenderer::SetRegion( const CTRect<int> &_region )
 {

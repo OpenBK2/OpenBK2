@@ -87,7 +87,11 @@ protected:
 public:
 	CMNode() {}
 
-	CMNode( CFuncBase<SFBTransform> *_pA, CFuncBase<CVec3> *_pM ) : pAncestor( _pA ), pMove( _pM ) {}
+	CMNode( CFuncBase<SFBTransform> *_pA, CFuncBase<CVec3> *_pM )
+		: pAncestor( _pA )
+		, pMove( _pM )
+	{
+	}
 };
 
 // scale node
@@ -158,7 +162,10 @@ protected:
 	}
 
 public:
-	CExtractTranslation( CFuncBase<SFBTransform> *_p = 0 ) : pTrans( _p ) {}
+	CExtractTranslation( CFuncBase<SFBTransform> *_p = 0 )
+		: pTrans( _p )
+	{
+	}
 };
 
 class CVec3Convert : public CFuncBase<CVec3>

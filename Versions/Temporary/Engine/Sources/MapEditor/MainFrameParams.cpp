@@ -10,7 +10,10 @@
 
 #include <cstdio>
 
-SMainFrameParams::SMainFrameParams() : bMaximized( false ) {}
+SMainFrameParams::SMainFrameParams()
+	: bMaximized( false )
+{
+}
 
 // The section of the application's profile these live in.
 std::string SMainFrameParams::GetSection()

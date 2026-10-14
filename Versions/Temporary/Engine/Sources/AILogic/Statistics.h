@@ -18,7 +18,10 @@ private:
 	bool bEnablePlayerExp = {}; // can we add player exp? (false in tutorial mode - initialized in the Init())
 
 public:
-	CStatistics() : bEnablePlayerExp( false ) {}
+	CStatistics()
+		: bEnablePlayerExp( false )
+	{
+	}
 
 	void Init();
 

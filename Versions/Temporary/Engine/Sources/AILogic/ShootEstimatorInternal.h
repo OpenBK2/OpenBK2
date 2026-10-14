@@ -59,7 +59,10 @@ class CTankShootEstimator : public IShootEstimator
 	const float GetRating( const SUnitBaseRPGStats *pStats, const CVec2 &vCenter, CBasicGun *pGun ) const;
 
 public:
-	CTankShootEstimator() : pOwner( 0 ) {}
+	CTankShootEstimator()
+		: pOwner( 0 )
+	{
+	}
 
 	explicit CTankShootEstimator( class CAIUnit *pOwner );
 
@@ -122,7 +125,10 @@ class CSoldierShootEstimator : public IShootEstimator
 	const float GetRating( const SUnitBaseRPGStats *pStats, const CVec2 &vCenter, CBasicGun *pGun ) const;
 
 public:
-	CSoldierShootEstimator() : pOwner( 0 ) {}
+	CSoldierShootEstimator()
+		: pOwner( 0 )
+	{
+	}
 
 	explicit CSoldierShootEstimator( class CAIUnit *pOwner );
 
@@ -167,7 +173,10 @@ class CPlaneDeffensiveFireShootEstimator : public IShootEstimator
 	const float CalcRating( CAIUnit *pEnemy, CBasicGun *pGun ) const;
 
 public:
-	CPlaneDeffensiveFireShootEstimator() : pOwner( 0 ) {}
+	CPlaneDeffensiveFireShootEstimator()
+		: pOwner( 0 )
+	{
+	}
 
 	explicit CPlaneDeffensiveFireShootEstimator( class CAIUnit *pOwner );
 
@@ -262,7 +271,10 @@ class CPlaneShturmovikShootEstimator : public IShootEstimator
 	const float CalcRating( CAIUnit *pEnemy, const uint32_t dwPossibleGuns ) const;
 
 public:
-	CPlaneShturmovikShootEstimator() : pOwner( 0 ) {}
+	CPlaneShturmovikShootEstimator()
+		: pOwner( 0 )
+	{
+	}
 
 	CPlaneShturmovikShootEstimator( class CAIUnit *pOwner );
 
@@ -315,7 +327,11 @@ class CShootEstimatorForObstacles : public IObstacleEnumerator
 	}
 
 public:
-	CShootEstimatorForObstacles( class CCommonUnit *pOwner ) : pOwner( pOwner ), fCurRating( 0 ) {}
+	CShootEstimatorForObstacles( class CCommonUnit *pOwner )
+		: pOwner( pOwner )
+		, fCurRating( 0 )
+	{
+	}
 
 	virtual bool AddObstacle( IObstacle *pObstacle );
 	virtual struct IObstacle *GetBest() const;

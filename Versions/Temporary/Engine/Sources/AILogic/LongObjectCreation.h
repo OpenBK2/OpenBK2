@@ -46,7 +46,9 @@ protected:
 
 public:
 	CLongObjectCreation( const int _nPlayer, const bool _bAllowAIModification )
-			: nPlayer( _nPlayer ), fWorkAccumulated( 0.0f ), bAllowAIModification( _bAllowAIModification )
+		: nPlayer( _nPlayer )
+		, fWorkAccumulated( 0.0f )
+		, bAllowAIModification( _bAllowAIModification )
 	{
 		if ( bAllowAIModification )
 		{
@@ -120,7 +122,9 @@ struct SCreationData
 	CPtr<CLongObjectCreation> pCreation;
 
 	SCreationData( const CVec2 &_vStart, CPtr<CLongObjectCreation> _pCreation )
-			: vStart( _vStart ), pCreation( _pCreation ), vFinish( -1, -1 )
+		: vStart( _vStart )
+		, pCreation( _pCreation )
+		, vFinish( -1, -1 )
 	{
 	}
 };

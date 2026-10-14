@@ -84,7 +84,8 @@ const unsigned CMapInfoState::DEFAULT_INPUT_SUBSTATE[IS_COUNT] = {
 	SCRIPT_ISS_SCRIPT_AREAS,
 };
 
-CMapInfoState::CMapInfoState( CMapInfoEditor *_pMapInfoEditor ) : pMapInfoEditor( _pMapInfoEditor )
+CMapInfoState::CMapInfoState( CMapInfoEditor *_pMapInfoEditor )
+	: pMapInfoEditor( _pMapInfoEditor )
 {
 	int nStateIndex = INVALID_INPUT_STATE_INDEX;
 

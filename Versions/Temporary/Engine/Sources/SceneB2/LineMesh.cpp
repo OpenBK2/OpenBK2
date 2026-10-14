@@ -17,7 +17,9 @@ void CLineMesh::Recalc()
 }
 
 CLineMesh::CLineMesh( const CVec2 &_vStart, const CVec2 &_vEnd, CTerrainManager *_pTerraManager )
-		: vStart( _vStart ), vEnd( _vEnd ), pTerraManager( _pTerraManager )
+	: vStart( _vStart )
+	, vEnd( _vEnd )
+	, pTerraManager( _pTerraManager )
 {
 }
 

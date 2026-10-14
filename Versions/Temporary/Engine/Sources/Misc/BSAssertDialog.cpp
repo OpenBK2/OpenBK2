@@ -44,8 +44,13 @@ struct SAssertionDlgParams
 	                     const std::vector<SCallStackEntry> &_entries,
 	                     SIgnoresList &newIgnores,
 	                     const char *szExtInfo )
-			: pszFileName( pszNewFileName ), nLineNumber( nNewLineNumber ), szCondition( pszNewCondition ),
-				szDescription( pszNewDescription ), entries( _entries ), ignores( newIgnores ), pszExtInfo( szExtInfo )
+		: pszFileName( pszNewFileName )
+		, nLineNumber( nNewLineNumber )
+		, szCondition( pszNewCondition )
+		, szDescription( pszNewDescription )
+		, entries( _entries )
+		, ignores( newIgnores )
+		, pszExtInfo( szExtInfo )
 	{
 	}
 };

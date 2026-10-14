@@ -107,7 +107,10 @@ private:
 	const char *pszSymbols;
 
 public:
-	explicit CSymbolCheckFunctional( const char *pszNewSymbols ) : pszSymbols( pszNewSymbols ) {}
+	explicit CSymbolCheckFunctional( const char *pszNewSymbols )
+		: pszSymbols( pszNewSymbols )
+	{
+	}
 
 	bool operator()( const char cSymbol )
 	{

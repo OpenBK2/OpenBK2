@@ -23,8 +23,12 @@ const float SET_YAW_SPEED_STEP_TIME = 0.1f;
 // CInterfaceWinLoose
 
 CInterfaceWinLoose::CInterfaceWinLoose()
-		: CInterfaceScreenBase( "WinLooseDialog", "esc_menu" ), eUIState( EUIS_NORMAL ), timeAbsLast( 0 ), bWin( false ),
-			nSetYawSpeedStep( 0 ), fSetYawSpeedTime( 0.0f )
+	: CInterfaceScreenBase( "WinLooseDialog", "esc_menu" )
+	, eUIState( EUIS_NORMAL )
+	, timeAbsLast( 0 )
+	, bWin( false )
+	, nSetYawSpeedStep( 0 )
+	, fSetYawSpeedTime( 0.0f )
 {
 }
 

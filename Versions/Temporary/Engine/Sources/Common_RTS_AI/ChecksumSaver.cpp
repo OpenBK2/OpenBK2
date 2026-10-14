@@ -63,8 +63,14 @@ IBinSaver *CreateCheckSumSaver( unsigned long *pCheckSum, ICheckSumLog *pLog, co
 }
 
 CCheckSumSaver::CCheckSumSaver( uLong *_pCheckSum, ICheckSumLog *pLog, const NTimer::STime segmentTime )
-		: checkSumData( _pCheckSum ), checkSumString( _pCheckSum ), checkSumObjects( _pCheckSum ), nAddedObjects( 0 ),
-			bDissalowStoreObjects( false ), nCount( 0 ), nSegment( segmentTime ), pCommandsHistory( pLog )
+	: checkSumData( _pCheckSum )
+	, checkSumString( _pCheckSum )
+	, checkSumObjects( _pCheckSum )
+	, nAddedObjects( 0 )
+	, bDissalowStoreObjects( false )
+	, nCount( 0 )
+	, nSegment( segmentTime )
+	, pCommandsHistory( pLog )
 {
 }
 
@@ -97,8 +103,13 @@ CCheckSumSaver::~CCheckSumSaver()
 }
 
 CCheckSumSaver::CCheckSumSaver()
-		: checkSumData( &nLocalCheckSum ), checkSumString( &nLocalCheckSum ), checkSumObjects( &nLocalCheckSum ),
-			nAddedObjects( 0 ), bDissalowStoreObjects( false ), nCount( 0 ), nSegment( 0 )
+	: checkSumData( &nLocalCheckSum )
+	, checkSumString( &nLocalCheckSum )
+	, checkSumObjects( &nLocalCheckSum )
+	, nAddedObjects( 0 )
+	, bDissalowStoreObjects( false )
+	, nCount( 0 )
+	, nSegment( 0 )
 {
 	nLocalCheckSum = adler32( 0L, Z_NULL, 0 );
 }

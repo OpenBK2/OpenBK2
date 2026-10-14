@@ -36,8 +36,13 @@ void CEntrenchmentCreation::OnSerialize( IBinSaver &saver )
 }
 
 CEntrenchmentCreation::CEntrenchmentCreation( const int nPlayer, const bool bAllowAIModification )
-		: CLongObjectCreation( nPlayer, bAllowAIModification ), nStartIndex( 0 ), nCurIndex( -1 ), line( 0, 0, 0 ),
-			wAngle( 0 ), bCannot( false ), bSayAck( false )
+	: CLongObjectCreation( nPlayer, bAllowAIModification )
+	, nStartIndex( 0 )
+	, nCurIndex( -1 )
+	, line( 0, 0, 0 )
+	, wAngle( 0 )
+	, bCannot( false )
+	, bSayAck( false )
 {
 	InitConsts();
 }

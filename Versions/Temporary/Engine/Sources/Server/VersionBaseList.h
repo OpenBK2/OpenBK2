@@ -38,7 +38,8 @@ template <class TData>
 // a constructor names the class, and cannot carry a template argument list of
 // its own. MSVC took the second form; gcc says it names the constructor, not
 // the type.
-TVersionBaseList<TData>::TVersionBaseList() : dwVersion( MAX_HISTORY_LENGTH + 1 )
+TVersionBaseList<TData>::TVersionBaseList()
+	: dwVersion( MAX_HISTORY_LENGTH + 1 )
 {
 	history = std::vector<TData>( MAX_HISTORY_LENGTH );
 	dataAdded = std::vector<bool>( MAX_HISTORY_LENGTH );

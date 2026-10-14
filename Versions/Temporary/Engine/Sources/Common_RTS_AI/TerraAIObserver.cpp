@@ -12,7 +12,9 @@ static bool bShowWater = false;
 static std::list<SObjTileInfo> steepTiles;
 static float s_fHeightsDiffToLock = 20.0f;
 
-CTerraAIObserver::CTerraAIObserver() : bShowPassability( false ), pMarkers( new CPassMarkersDraw() )
+CTerraAIObserver::CTerraAIObserver()
+	: bShowPassability( false )
+	, pMarkers( new CPassMarkersDraw() )
 {
 	steepTiles.clear();
 	bShowWater = false;

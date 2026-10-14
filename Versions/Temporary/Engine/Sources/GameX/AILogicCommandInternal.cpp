@@ -17,7 +17,8 @@
 // ************************************************************************************************************************ //
 
 CRegisterGroupCommand::CRegisterGroupCommand( const std::vector<int> &vIDs, const int _nID )
-		: nID( _nID ), unitsIDs( vIDs )
+	: nID( _nID )
+	, unitsIDs( vIDs )
 {
 }
 
@@ -34,7 +35,10 @@ void CRegisterGroupCommand::Execute()
 // **
 // ************************************************************************************************************************ //
 
-CUnregisterGroupCommand::CUnregisterGroupCommand( const int _nGroup ) : nGroup( _nGroup ) {}
+CUnregisterGroupCommand::CUnregisterGroupCommand( const int _nGroup )
+	: nGroup( _nGroup )
+{
+}
 
 void CUnregisterGroupCommand::Execute()
 {
@@ -50,7 +54,9 @@ void CUnregisterGroupCommand::Execute()
 // ************************************************************************************************************************ //
 
 CB2GroupCommand::CB2GroupCommand( const SAIUnitCmd *pCommand, const uint16_t _wGroup, bool _bPlaceInQueue )
-		: command( *pCommand ), wGroup( _wGroup ), bPlaceInQueue( _bPlaceInQueue )
+	: command( *pCommand )
+	, wGroup( _wGroup )
+	, bPlaceInQueue( _bPlaceInQueue )
 {
 }
 
@@ -68,7 +74,9 @@ void CB2GroupCommand::Execute()
 // ************************************************************************************************************************ //
 
 CUnitCommand::CUnitCommand( const struct SAIUnitCmd *pCommand, const uint16_t _wID, const int _nPlayer )
-		: command( *pCommand ), wID( _wID ), nPlayer( _nPlayer )
+	: command( *pCommand )
+	, wID( _wID )
+	, nPlayer( _nPlayer )
 {
 }
 

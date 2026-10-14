@@ -53,7 +53,9 @@ void DumpStats()
 }
 
 CProfiler::CProfiler( const char *pszFile, const int _nLine )
-		: szFile( pszFile ), nLine( _nLine ), dwStartTime( GetCurrentTimeMilliseconds() )
+	: szFile( pszFile )
+	, nLine( _nLine )
+	, dwStartTime( GetCurrentTimeMilliseconds() )
 {
 }
 

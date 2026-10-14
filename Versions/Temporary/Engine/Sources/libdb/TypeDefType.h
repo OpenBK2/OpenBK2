@@ -25,9 +25,16 @@ namespace NTypeDef
 			return 0;
 		}
 
-		STypedefType() : STypeDef( TYPE_TYPE_UNKNOWN ) {}
+		STypedefType()
+			: STypeDef( TYPE_TYPE_UNKNOWN )
+		{
+		}
 
-		STypedefType( const std::string &_szName ) : STypeDef( TYPE_TYPE_UNKNOWN ), szName( _szName ) {}
+		STypedefType( const std::string &_szName )
+			: STypeDef( TYPE_TYPE_UNKNOWN )
+			, szName( _szName )
+		{
+		}
 
 		virtual bool IsSimpleType() const
 		{

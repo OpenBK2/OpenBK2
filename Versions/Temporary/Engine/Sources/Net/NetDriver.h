@@ -13,9 +13,17 @@ struct SNetDriverConsts
 	// время, после которого удаление сервера из serverslist
 	float fServerListTimeout;
 
-	SNetDriverConsts() : fTimeout( 60 ), fServerListTimeout( 20 ) {}
+	SNetDriverConsts()
+		: fTimeout( 60 )
+		, fServerListTimeout( 20 )
+	{
+	}
 
-	SNetDriverConsts( const int _nTimeOut ) : fTimeout( _nTimeOut ), fServerListTimeout( 20 ) {}
+	SNetDriverConsts( const int _nTimeOut )
+		: fTimeout( _nTimeOut )
+		, fServerListTimeout( 20 )
+	{
+	}
 };
 
 // abstraction from SOCKET
@@ -103,8 +111,16 @@ struct IDriver : public CObjectBase
 		}
 
 		SGameInfo()
-				: wszServerName( L"" ), nHostPort( 0 ), wszMapName( L"" ), szGameType( "" ), nCurPlayers( 0 ), nMaxPlayers( 0 ),
-					eGameMode( ESGM_SETTINGS ), bPasswordRequired( false ), szModName( "" ), szModVersion( "" )
+			: wszServerName( L"" )
+			, nHostPort( 0 )
+			, wszMapName( L"" )
+			, szGameType( "" )
+			, nCurPlayers( 0 )
+			, nMaxPlayers( 0 )
+			, eGameMode( ESGM_SETTINGS )
+			, bPasswordRequired( false )
+			, szModName( "" )
+			, szModVersion( "" )
 		{
 		}
 	};

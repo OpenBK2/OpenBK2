@@ -123,14 +123,20 @@ public:
 
 public:
 	CGeneral()
-			: nParty( -1 ), lastBombardmentCheck( 0 ), timeNextUpdate( 1000 ), nAirReinfTurnCounter( 0 ),
-				nMaxAllowedMobileTanks( 0 )
+		: nParty( -1 )
+		, lastBombardmentCheck( 0 )
+		, timeNextUpdate( 1000 )
+		, nAirReinfTurnCounter( 0 )
+		, nMaxAllowedMobileTanks( 0 )
 	{
 		curProcessed = enemys.end();
 	}
 
 	CGeneral( const int _nParty )
-			: nParty( _nParty ), lastBombardmentCheck( 0 ), timeNextUpdate( 1000 ), nAirReinfTurnCounter( 0 )
+		: nParty( _nParty )
+		, lastBombardmentCheck( 0 )
+		, timeNextUpdate( 1000 )
+		, nAirReinfTurnCounter( 0 )
 	{
 		curProcessed = enemys.end();
 	}

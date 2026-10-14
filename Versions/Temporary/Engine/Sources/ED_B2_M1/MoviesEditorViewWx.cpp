@@ -140,7 +140,8 @@ public:
 	STimeSliderData data;
 
 	CTimelineWxPanel( wxWindow *pParent, ITimelineHost *_pHost )
-			: wxPanel( pParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_SUNKEN ), pHost( _pHost )
+		: wxPanel( pParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_SUNKEN )
+		, pHost( _pHost )
 	{
 		// SS_BLACKFRAME in the template is a filled frame, not a control that
 		// paints itself; everything visible here is painted below.

@@ -35,13 +35,13 @@ class CSearchObjectWxDialog : public CWxToolDialog
 
 public:
 	CSearchObjectWxDialog( wxWindow *pParent, const std::string &rszText )
-			// "Find Object" is the CAPTION in the template. The class has always
-			// been called CSearchObjectDialog and the window has never said so.
-			//
-			// No wxRESIZE_BORDER: the template has no WS_THICKFRAME, so this
-			// dialog has never been resizable and there is nothing in it that
-			// would use the room.
-			: CWxToolDialog( pParent, wxID_ANY, "Find Object" )
+		// "Find Object" is the CAPTION in the template. The class has always
+		// been called CSearchObjectDialog and the window has never said so.
+		//
+		// No wxRESIZE_BORDER: the template has no WS_THICKFRAME, so this
+		// dialog has never been resizable and there is nothing in it that
+		// would use the room.
+		: CWxToolDialog( pParent, wxID_ANY, "Find Object" )
 	{
 		wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 

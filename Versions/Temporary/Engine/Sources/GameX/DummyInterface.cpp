@@ -13,7 +13,10 @@
 // **
 // ************************************************************************************************************************ //
 
-CDummyInterface::CDummyInterface() : CInterfaceScreenBase( "dummy_interface", "default" ) {}
+CDummyInterface::CDummyInterface()
+	: CInterfaceScreenBase( "dummy_interface", "default" )
+{
+}
 
 CDummyInterface::~CDummyInterface() {}
 

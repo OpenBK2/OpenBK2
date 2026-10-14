@@ -25,10 +25,17 @@ struct SMiniMapUnitInfo
 	uint8_t player = {};
 	uint8_t radius = {}; // tiles
 
-	SMiniMapUnitInfo() : radius( 0 ) {}
+	SMiniMapUnitInfo()
+		: radius( 0 )
+	{
+	}
 
 	SMiniMapUnitInfo( const uint16_t _x, const uint16_t _y, const float _z, const uint8_t _player, uint8_t _radius )
-			: x( _x ), y( _y ), z( _z ), player( _player ), radius( _radius )
+		: x( _x )
+		, y( _y )
+		, z( _z )
+		, player( _player )
+		, radius( _radius )
 	{
 	}
 };

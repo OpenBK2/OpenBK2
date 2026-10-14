@@ -14,7 +14,14 @@ struct SCameraPos
 	bool bUseAnchorOnly;
 
 	//
-	SCameraPos() : vAnchor( VNULL3 ), fYaw( 45.0f ), fPitch( 45.0f ), fDistance( 170.0f ), bUseAnchorOnly( true ) {}
+	SCameraPos()
+		: vAnchor( VNULL3 )
+		, fYaw( 45.0f )
+		, fPitch( 45.0f )
+		, fDistance( 170.0f )
+		, bUseAnchorOnly( true )
+	{
+	}
 };
 
 //

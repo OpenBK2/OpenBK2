@@ -75,7 +75,10 @@ IScene *CreateScene()
 // CScene
 
 CScene::CScene()
-		: eScene( ES_UNKNOWN ), vBackgroundColor( vDefaultColor ), timeBadWeatherLeft( 0 ), bGetSizesFromTarget( false )
+	: eScene( ES_UNKNOWN )
+	, vBackgroundColor( vDefaultColor )
+	, timeBadWeatherLeft( 0 )
+	, bGetSizesFromTarget( false )
 {
 	observers.AddObserver( "scene_show_bboxes", &CScene::ToggleShowMsg, SCENE_SHOW_BBOXES );
 	observers.AddObserver( "scene_show_grid", &CScene::ToggleShowMsg, SCENE_SHOW_GRID );
@@ -988,7 +991,9 @@ class CCameraPlacementGuard
 	float fLimitsX, fLimitsY;
 
 public:
-	CCameraPlacementGuard( float _fLimitsX, float _fLimitsY ) : fLimitsX( _fLimitsX ), fLimitsY( _fLimitsY )
+	CCameraPlacementGuard( float _fLimitsX, float _fLimitsY )
+		: fLimitsX( _fLimitsX )
+		, fLimitsY( _fLimitsY )
 	{
 		Camera()->GetPlacement( &fDist, &fPitch, &fYaw );
 		vAnchor = Camera()->GetAnchor();

@@ -16,7 +16,10 @@ bool CSoundSample::b3DSoundShare = false;
 // **
 // ************************************************************************************************************************ //
 
-CSoundSample::CSoundSample() : sample( 0 ) {}
+CSoundSample::CSoundSample()
+	: sample( 0 )
+{
+}
 
 CSoundSample::~CSoundSample()
 {

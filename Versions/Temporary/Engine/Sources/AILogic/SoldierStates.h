@@ -66,7 +66,10 @@ class CSoldierRestState : public IUnitState
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit );
 
-	CSoldierRestState() : pUnit( 0 ) {}
+	CSoldierRestState()
+		: pUnit( 0 )
+	{
+	}
 
 	CSoldierRestState( class CAIUnit *pUnit );
 
@@ -187,7 +190,10 @@ public:
 	static IUnitState *Instance(
 			class CAIUnit *pUnit, class CAIUnit *pEnemy, bool bAim, const bool bSwarmAttack, const bool bPreferGrenade );
 
-	CSoldierAttackState() : pUnit( 0 ) {}
+	CSoldierAttackState()
+		: pUnit( 0 )
+	{
+	}
 
 	CSoldierAttackState(
 			class CAIUnit *pUnit, class CAIUnit *pEnemy, bool bAim, const bool bSwarmAttack, const bool bPreferGrenade );
@@ -261,7 +267,11 @@ class CSoldierMoveToState : public IUnitState, public CFreeFireManager
 public:
 	static IUnitState *Instance( CAIUnit *pUnit, const CVec2 &point, const bool bForceReverse = false );
 
-	CSoldierMoveToState() : pUnit( 0 ), bForceReverse( false ) {}
+	CSoldierMoveToState()
+		: pUnit( 0 )
+		, bForceReverse( false )
+	{
+	}
 
 	CSoldierMoveToState( class CAIUnit *pUnit, const CVec2 &point, const bool bForceReverse );
 
@@ -306,7 +316,10 @@ class CSoldierTurnToPointState : public IUnitState, public CStatusUpdatesHelper
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit, const CVec2 &targCenter );
 
-	CSoldierTurnToPointState() : pUnit( 0 ) {}
+	CSoldierTurnToPointState()
+		: pUnit( 0 )
+	{
+	}
 
 	CSoldierTurnToPointState( class CAIUnit *pUnit, const CVec2 &targCenter );
 
@@ -346,7 +359,10 @@ class CSoldierMoveByDirState : public IUnitState
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit, const CVec2 &vTarget );
 
-	CSoldierMoveByDirState() : pUnit( 0 ) {}
+	CSoldierMoveByDirState()
+		: pUnit( 0 )
+	{
+	}
 
 	CSoldierMoveByDirState( class CAIUnit *pUnit, const CVec2 &vTarget );
 
@@ -400,7 +416,10 @@ class CSoldierEnterState : public IUnitState
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit, class CBuilding *pBuilding );
 
-	CSoldierEnterState() : pUnit( 0 ) {}
+	CSoldierEnterState()
+		: pUnit( 0 )
+	{
+	}
 
 	CSoldierEnterState( class CAIUnit *pUnit, class CBuilding *pBuilding );
 
@@ -454,7 +473,10 @@ class CSoldierEnterEntrenchmentState : public IUnitState
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit, class CEntrenchment *pEntrenchment );
 
-	CSoldierEnterEntrenchmentState() : pUnit( 0 ) {}
+	CSoldierEnterEntrenchmentState()
+		: pUnit( 0 )
+	{
+	}
 
 	CSoldierEnterEntrenchmentState( class CAIUnit *pUnit, class CEntrenchment *pEntrenchment );
 
@@ -496,7 +518,10 @@ protected:
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit, class CStaticObject *pObj, bool bSwarmAttack );
 
-	CSoldierAttackCommonStatObjState() : pUnit( 0 ) {}
+	CSoldierAttackCommonStatObjState()
+		: pUnit( 0 )
+	{
+	}
 
 	CSoldierAttackCommonStatObjState( class CAIUnit *pUnit, class CStaticObject *pObj, bool bSwarmAttack );
 
@@ -531,7 +556,10 @@ class CSoldierParadeState : public IUnitState
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit );
 
-	CSoldierParadeState() : pUnit( 0 ) {}
+	CSoldierParadeState()
+		: pUnit( 0 )
+	{
+	}
 
 	CSoldierParadeState( CAIUnit *pUnit );
 
@@ -575,7 +603,10 @@ class CSoldierPlaceMineNowState : public IUnitState
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit, const CVec2 &point, const EMineType nType );
 
-	CSoldierPlaceMineNowState() : pUnit( 0 ) {}
+	CSoldierPlaceMineNowState()
+		: pUnit( 0 )
+	{
+	}
 
 	CSoldierPlaceMineNowState( class CAIUnit *pUnit, const CVec2 &point, const EMineType nType );
 
@@ -627,7 +658,10 @@ class CSoldierClearMineRadiusState : public IUnitState
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit, const CVec2 &clearCenter );
 
-	CSoldierClearMineRadiusState() : pUnit( 0 ) {}
+	CSoldierClearMineRadiusState()
+		: pUnit( 0 )
+	{
+	}
 
 	CSoldierClearMineRadiusState( class CAIUnit *pUnit, const CVec2 &clearCenter );
 
@@ -668,7 +702,10 @@ protected:
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit, class CSoldier *pTarget, bool bAim, const bool bSwarmAttack );
 
-	CSoldierAttackUnitInBuildingState() : pUnit( 0 ) {}
+	CSoldierAttackUnitInBuildingState()
+		: pUnit( 0 )
+	{
+	}
 
 	CSoldierAttackUnitInBuildingState( class CAIUnit *pUnit,
 	                                   class CSoldier *pTarget,
@@ -727,7 +764,10 @@ class CSoldierEnterTransportNowState : public IUnitState
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit, class CMilitaryCar *pTransport );
 
-	CSoldierEnterTransportNowState() : pUnit( 0 ) {}
+	CSoldierEnterTransportNowState()
+		: pUnit( 0 )
+	{
+	}
 
 	CSoldierEnterTransportNowState( class CAIUnit *pUnit, class CMilitaryCar *pTransport );
 
@@ -780,7 +820,10 @@ class CSoldierParaDroppingState : public IUnitState
 public:
 	static IUnitState *Instance( class CSoldier *pUnit, class CAviation *pPlane );
 
-	CSoldierParaDroppingState() : pUnit( 0 ) {}
+	CSoldierParaDroppingState()
+		: pUnit( 0 )
+	{
+	}
 
 	CSoldierParaDroppingState( class CSoldier *pUnit, class CAviation *pPlane );
 
@@ -830,7 +873,11 @@ class CSoldierUseSpyglassState : public IUnitState, public CStandartBehaviour, p
 public:
 	static IUnitState *Instance( class CSoldier *pSoldier, const CVec2 &point );
 
-	CSoldierUseSpyglassState() : pSoldier( 0 ), vPoint2Look( VNULL2 ) {}
+	CSoldierUseSpyglassState()
+		: pSoldier( 0 )
+		, vPoint2Look( VNULL2 )
+	{
+	}
 
 	CSoldierUseSpyglassState( class CSoldier *pSoldier, const CVec2 &point );
 
@@ -867,7 +914,10 @@ class CSoldierAttackFormationState : public IUnitAttackingState
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit, class CFormation *pTarget, const bool bSwarmAttack );
 
-	CSoldierAttackFormationState() : pUnit( 0 ) {}
+	CSoldierAttackFormationState()
+		: pUnit( 0 )
+	{
+	}
 
 	CSoldierAttackFormationState( class CAIUnit *pUnit, class CFormation *pTarget, const bool bSwarmAttack );
 
@@ -908,7 +958,10 @@ class CSoldierIdleState : public IUnitState
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit );
 
-	CSoldierIdleState() : pUnit( 0 ) {}
+	CSoldierIdleState()
+		: pUnit( 0 )
+	{
+	}
 
 	CSoldierIdleState( class CAIUnit *pUnit );
 
@@ -943,7 +996,10 @@ public:
 	}
 
 public:
-	CSoldierAttackAviationState() : predictedFire( 0, 0 ) {}
+	CSoldierAttackAviationState()
+		: predictedFire( 0, 0 )
+	{
+	}
 
 	// if nGun == -1, then state chooses gun. if gun != -1 then state don't set
 	CSoldierAttackAviationState( class CAIUnit *pUnit, class CAviation *pPlane );
@@ -989,7 +1045,10 @@ class CSoldierFireMoraleShellState : public IUnitState
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit, const class CVec2 &vTarget );
 
-	CSoldierFireMoraleShellState() : pUnit( 0 ) {}
+	CSoldierFireMoraleShellState()
+		: pUnit( 0 )
+	{
+	}
 
 	CSoldierFireMoraleShellState( class CAIUnit *pUnit, const class CVec2 &vTarget );
 
@@ -1026,7 +1085,11 @@ class CSoldierUseState : public IUnitState
 public:
 	static IUnitState *Instance( class CAIUnit *pUnit, const EActionNotify &eState );
 
-	CSoldierUseState() : eState( ACTION_NOTIFY_NONE ), pUnit( 0 ) {}
+	CSoldierUseState()
+		: eState( ACTION_NOTIFY_NONE )
+		, pUnit( 0 )
+	{
+	}
 
 	CSoldierUseState( class CAIUnit *pUnit, const EActionNotify &eState );
 
@@ -1069,7 +1132,10 @@ public:
 	}
 
 public:
-	CSoldierEntrenchSelfState() : pSoldier( 0 ) {}
+	CSoldierEntrenchSelfState()
+		: pSoldier( 0 )
+	{
+	}
 
 	CSoldierEntrenchSelfState( class CSoldier *_pSoldier );
 	void Segment();
@@ -1101,7 +1167,10 @@ class CSoldierLeaveSelfEntrenchState : public IUnitState
 	}
 
 public:
-	CSoldierLeaveSelfEntrenchState() : pSoldier( 0 ) {}
+	CSoldierLeaveSelfEntrenchState()
+		: pSoldier( 0 )
+	{
+	}
 
 	CSoldierLeaveSelfEntrenchState( class CAIUnit *_pSoldier );
 	void Segment();

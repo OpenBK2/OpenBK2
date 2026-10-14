@@ -72,7 +72,10 @@ bool IsArtilleryBeingTowed( CAIUnit *pUnit )
 
 //BASIC_REGISTER_CLASS( CGeneralArtillery );
 
-CGeneralArtillery::CGeneralArtillery( CGeneral *_pOwner ) : pOwner( _pOwner ) {}
+CGeneralArtillery::CGeneralArtillery( CGeneral *_pOwner )
+	: pOwner( _pOwner )
+{
+}
 
 void CGeneralArtillery::Segment()
 {
@@ -220,8 +223,12 @@ void CGeneralArtillery::SetCellInUse( const int nResistanceCell, bool bInUse )
 CGeneralArtilleryGoToPosition::CGeneralArtilleryGoToPosition( CAIUnit *_pUnit,
                                                               const CVec2 &_vPos,
                                                               bool _bToReservePosition )
-		: pUnit( _pUnit ), vPos( _vPos ), bToReservePosition( _bToReservePosition ), eState( EBS_START ),
-			bFinished( false ), startTime( curTime )
+	: pUnit( _pUnit )
+	, vPos( _vPos )
+	, bToReservePosition( _bToReservePosition )
+	, eState( EBS_START )
+	, bFinished( false )
+	, startTime( curTime )
 {
 	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP ), pUnit, false );
 }
@@ -352,7 +359,8 @@ void CGeneralArtilleryGoToPosition::Segment()
 //*							CGeneralArtilleryTask::SBombardmentUnitState				*
 //*******************************************************************
 
-CGeneralArtilleryTask::SBombardmentUnitState::SBombardmentUnitState( CAIUnit *_pUnit ) : pUnit( _pUnit )
+CGeneralArtilleryTask::SBombardmentUnitState::SBombardmentUnitState( CAIUnit *_pUnit )
+	: pUnit( _pUnit )
 {
 	vReservePosition = pUnit->GetCenterPlain();
 }
@@ -367,9 +375,14 @@ CGeneralArtilleryTask::CGeneralArtilleryTask( CGeneralArtillery *_pOwner,
                                               const CVec2 &vCenter,
                                               const float fRadius,
                                               const int _nCellNumber )
-		: pOwner( _pOwner ), bIsAntiArtilleryFight( bAntiArtilleryFight ), bBombardmentFinished( false ),
-			eState( EBS_START ), vBombardmentCenter( vCenter ), fBombardmentRadius( fRadius ),
-			timeToSendAntiArtilleryAck( 0 ), nCellNumber( _nCellNumber )
+	: pOwner( _pOwner )
+	, bIsAntiArtilleryFight( bAntiArtilleryFight )
+	, bBombardmentFinished( false )
+	, eState( EBS_START )
+	, vBombardmentCenter( vCenter )
+	, fBombardmentRadius( fRadius )
+	, timeToSendAntiArtilleryAck( 0 )
+	, nCellNumber( _nCellNumber )
 {
 	for ( std::list<CAIUnit *>::iterator iter = givenUnits.begin(); iter != givenUnits.end(); ++iter )
 	{

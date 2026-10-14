@@ -39,7 +39,12 @@ namespace NGScene
 
 // SPerVertexLightState
 
-SPerVertexLightState::SPerVertexLightState() : bWarFogUseOnlyNew( false ), nWarFogNewID( 0 ), nWarFogOldID( 0 ) {}
+SPerVertexLightState::SPerVertexLightState()
+	: bWarFogUseOnlyNew( false )
+	, nWarFogNewID( 0 )
+	, nWarFogOldID( 0 )
+{
+}
 
 static void ConvertColor( NGfx::SMMXWord *p, const CVec3 &v )
 {
@@ -408,7 +413,13 @@ struct SPVLightCalcer
 	static std::vector<NGfx::SMMXWord> pointColors;
 	static std::vector<unsigned char> warFogNewHold, warFogOldHold;
 
-	SPVLightCalcer() : pWarFogNew( 0 ), pWarFogOld( 0 ), pColors( 0 ), pShadowColors( 0 ) {}
+	SPVLightCalcer()
+		: pWarFogNew( 0 )
+		, pWarFogOld( 0 )
+		, pColors( 0 )
+		, pShadowColors( 0 )
+	{
+	}
 
 	void CalcLight( const std::vector<CVec3> &srcPos,
 	                const SUVInfo *pSrc,

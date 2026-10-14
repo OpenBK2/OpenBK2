@@ -42,7 +42,11 @@ public:
 		SetSize( size );
 	}
 
-	CArray1Bit( const CArray1Bit &a ) : xSize( a.xSize ), array( a.array ) {}
+	CArray1Bit( const CArray1Bit &a )
+		: xSize( a.xSize )
+		, array( a.array )
+	{
+	}
 
 	~CArray1Bit() {}
 
@@ -346,7 +350,11 @@ public:
 		SetSize( size );
 	}
 
-	CArray4Bit( const CArray4Bit &a ) : nSize( a.nSize ), array( a.array ) {}
+	CArray4Bit( const CArray4Bit &a )
+		: nSize( a.nSize )
+		, array( a.array )
+	{
+	}
 
 	~CArray4Bit() {}
 
@@ -427,14 +435,21 @@ public:
 		return 0;
 	}
 
-	CArray2D4Bit() : xSize( 0 ) {}
+	CArray2D4Bit()
+		: xSize( 0 )
+	{
+	}
 
 	CArray2D4Bit( const int xsize, const int ysize )
 	{
 		SetSizes( xsize, ysize );
 	}
 
-	CArray2D4Bit( const CArray2D4Bit &a ) : xSize( a.xSize ), array( a.array ) {}
+	CArray2D4Bit( const CArray2D4Bit &a )
+		: xSize( a.xSize )
+		, array( a.array )
+	{
+	}
 
 	~CArray2D4Bit() {}
 
@@ -518,14 +533,21 @@ public:
 		return 0;
 	}
 
-	CArray2D1Bit() : xSize( 0 ) {}
+	CArray2D1Bit()
+		: xSize( 0 )
+	{
+	}
 
 	CArray2D1Bit( const int xsize, const int ysize )
 	{
 		SetSizes( xsize, ysize );
 	}
 
-	CArray2D1Bit( const CArray2D1Bit &a ) : xSize( a.xSize ), array( a.array ) {}
+	CArray2D1Bit( const CArray2D1Bit &a )
+		: xSize( a.xSize )
+		, array( a.array )
+	{
+	}
 
 	~CArray2D1Bit() {}
 

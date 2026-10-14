@@ -8,7 +8,10 @@ class CListControlSorterAlphabet : public IWindowSorter
 	int nColumn;
 
 public:
-	CListControlSorterAlphabet() : bAscending( true ) {}
+	CListControlSorterAlphabet()
+		: bAscending( true )
+	{
+	}
 
 	int operator&( IBinSaver &saver )
 	{

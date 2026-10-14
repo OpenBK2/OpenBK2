@@ -27,8 +27,12 @@ int CInterfaceDemo::SFrame::operator&( IXmlSaver &saver )
 // CInterfaceDemo
 
 CInterfaceDemo::CInterfaceDemo()
-		: CInterfaceScreenBase( "DemoScreen", "demo_screen" ), fDelay( 0.0f ), timeAbs( 0 ), bFinished( false ),
-			nNextPicture( 0 ), bFinal( false )
+	: CInterfaceScreenBase( "DemoScreen", "demo_screen" )
+	, fDelay( 0.0f )
+	, timeAbs( 0 )
+	, bFinished( false )
+	, nNextPicture( 0 )
+	, bFinal( false )
 {
 }
 

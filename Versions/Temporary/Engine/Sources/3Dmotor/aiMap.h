@@ -44,7 +44,10 @@ public:
 		}
 	}
 
-	CFloorsSet( const std::vector<int> &_floors ) : floors( _floors ) {}
+	CFloorsSet( const std::vector<int> &_floors )
+		: floors( _floors )
+	{
+	}
 };
 
 struct SObjectInfo

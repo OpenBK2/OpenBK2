@@ -17,7 +17,12 @@ class CWindowPlayer : public CWindow, public IPlayer
 		bool bCanSkipSequence;  // we can skip all movies sequence with ESC button
 		bool bSlideShowMode;    // "SlideShow" mode (wait for complete loading of each frame)
 
-		SMovie() : bCanSkipMovie( false ), bCanSkipSequence( false ), bSlideShowMode( false ) {}
+		SMovie()
+			: bCanSkipMovie( false )
+			, bCanSkipSequence( false )
+			, bSlideShowMode( false )
+		{
+		}
 
 		//
 		int operator&( IXmlSaver &saver );

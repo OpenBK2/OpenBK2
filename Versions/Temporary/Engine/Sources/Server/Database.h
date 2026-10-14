@@ -25,7 +25,10 @@ class CDbRow
 	const std::vector<std::string> *pValues;
 
 public:
-	explicit CDbRow( const std::vector<std::string> &values ) : pValues( &values ) {}
+	explicit CDbRow( const std::vector<std::string> &values )
+		: pValues( &values )
+	{
+	}
 
 	const std::string &operator[]( const int nColumn ) const
 	{
@@ -112,7 +115,10 @@ struct SDbConnection
 	std::string szDatabase;
 	int nPort;
 
-	SDbConnection() : nPort( 0 ) {}
+	SDbConnection()
+		: nPort( 0 )
+	{
+	}
 };
 
 struct IDatabase : public CObjectBase

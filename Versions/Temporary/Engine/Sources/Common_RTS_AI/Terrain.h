@@ -35,13 +35,29 @@ struct SObjTileInfo
 	SVector tile;
 	EAIClasses lockInfo{};
 
-	SObjTileInfo() : tile( 0, 0 ), lockInfo( EAC_ANY ) {}
+	SObjTileInfo()
+		: tile( 0, 0 )
+		, lockInfo( EAC_ANY )
+	{
+	}
 
-	SObjTileInfo( const SVector &_tile ) : tile( _tile ), lockInfo( EAC_ANY ) {}
+	SObjTileInfo( const SVector &_tile )
+		: tile( _tile )
+		, lockInfo( EAC_ANY )
+	{
+	}
 
-	SObjTileInfo( const SVector &_tile, const uint8_t _lockInfo ) : tile( _tile ), lockInfo( (EAIClasses)_lockInfo ) {}
+	SObjTileInfo( const SVector &_tile, const uint8_t _lockInfo )
+		: tile( _tile )
+		, lockInfo( (EAIClasses)_lockInfo )
+	{
+	}
 
-	SObjTileInfo( const SVector &_tile, const EAIClasses _lockInfo ) : tile( _tile ), lockInfo( _lockInfo ) {}
+	SObjTileInfo( const SVector &_tile, const EAIClasses _lockInfo )
+		: tile( _tile )
+		, lockInfo( _lockInfo )
+	{
+	}
 };
 
 class CAIMap;
@@ -53,19 +69,32 @@ struct SUnitProfile
 	CCircle circle;
 
 	//
-	SUnitProfile() : bRect( false ), circle( VNULL2, 0 )
+	SUnitProfile()
+		: bRect( false )
+		, circle( VNULL2, 0 )
 	{
 		rect.InitRect( VNULL2, VNULL2, VNULL2, VNULL2 );
 	}
 
-	SUnitProfile( const SRect &_rect ) : bRect( true ), rect( _rect ), circle( VNULL2, 0 ) {}
+	SUnitProfile( const SRect &_rect )
+		: bRect( true )
+		, rect( _rect )
+		, circle( VNULL2, 0 )
+	{
+	}
 
-	SUnitProfile( const CCircle &_circle ) : bRect( false ), circle( _circle ), rect()
+	SUnitProfile( const CCircle &_circle )
+		: bRect( false )
+		, circle( _circle )
+		, rect()
 	{
 		rect.InitRect( VNULL2, VNULL2, VNULL2, VNULL2 );
 	}
 
-	SUnitProfile( const CVec2 &vCenter, const float fRadius ) : bRect( false ), circle( vCenter, fRadius ), rect()
+	SUnitProfile( const CVec2 &vCenter, const float fRadius )
+		: bRect( false )
+		, circle( vCenter, fRadius )
+		, rect()
 	{
 		rect.InitRect( VNULL2, VNULL2, VNULL2, VNULL2 );
 	}
@@ -159,7 +188,13 @@ struct STerrainLockInfo
 	int bLock = 0;
 	SUnitProfile profile;
 
-	STerrainLockInfo() : nCount( -1 ), nUnitID( -1 ), bLock( false ), profile() {}
+	STerrainLockInfo()
+		: nCount( -1 )
+		, nUnitID( -1 )
+		, bLock( false )
+		, profile()
+	{
+	}
 };
 
 struct SUnitTileInfo
@@ -167,11 +202,23 @@ struct SUnitTileInfo
 	SUnitProfile profile;
 	bool bWater = false;
 
-	SUnitTileInfo() : bWater(), profile() {}
+	SUnitTileInfo()
+		: bWater()
+		, profile()
+	{
+	}
 
-	SUnitTileInfo( const SRect _rect, const bool _bWater ) : profile( _rect ), bWater( _bWater ) {}
+	SUnitTileInfo( const SRect _rect, const bool _bWater )
+		: profile( _rect )
+		, bWater( _bWater )
+	{
+	}
 
-	SUnitTileInfo( const SUnitProfile _profile, const bool _bWater ) : profile( _profile ), bWater( _bWater ) {}
+	SUnitTileInfo( const SUnitProfile _profile, const bool _bWater )
+		: profile( _profile )
+		, bWater( _bWater )
+	{
+	}
 };
 
 typedef std::unordered_map<int, SUnitTileInfo> CUnitsRects;
@@ -186,10 +233,17 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 		int nUnitsBuf = 0;
 		EAIClasses aiClass{};
 
-		STmpLockInfo() : tile( -1, -1 ), nUnitsBuf( -1 ), aiClass( EAC_FORCE_DWORD ) {}
+		STmpLockInfo()
+			: tile( -1, -1 )
+			, nUnitsBuf( -1 )
+			, aiClass( EAC_FORCE_DWORD )
+		{
+		}
 
 		STmpLockInfo( const SVector &_tile, const int _nUnitsBuf, const EAIClasses _aiClass )
-				: tile( _tile ), nUnitsBuf( _nUnitsBuf ), aiClass( _aiClass )
+			: tile( _tile )
+			, nUnitsBuf( _nUnitsBuf )
+			, aiClass( _aiClass )
 		{
 		}
 	};
@@ -199,9 +253,17 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 		SVector tile;
 		EAIClasses aiClass{};
 
-		STmpLockInfo2() : tile( 0, 0 ), aiClass( EAC_NONE ) {}
+		STmpLockInfo2()
+			: tile( 0, 0 )
+			, aiClass( EAC_NONE )
+		{
+		}
 
-		STmpLockInfo2( const SVector &_tile, const EAIClasses _aiClass ) : tile( _tile ), aiClass( _aiClass ) {}
+		STmpLockInfo2( const SVector &_tile, const EAIClasses _aiClass )
+			: tile( _tile )
+			, aiClass( _aiClass )
+		{
+		}
 	};
 
 	typedef std::list<STmpLockInfo2> CTmpLockInfoBuf2;

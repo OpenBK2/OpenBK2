@@ -58,7 +58,8 @@ CVolumeNode *GetUpdatable( CVolumeNode *pRoot, const SBound &hintBV )
 }
 
 ISomePart::ISomePart( CPtrFuncBase<CObjectInfo> *pData, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo )
-		: IPart( pData, 0 ), group( _pMaterial, _gInfo )
+	: IPart( pData, 0 )
+	, group( _pMaterial, _gInfo )
 {
 	SetCacheLightFlags();
 }
@@ -150,7 +151,10 @@ CStaticAnimatedPart::CStaticAnimatedPart( CPtrFuncBase<CObjectInfo> *pData,
                                           const SBound &_bv,
                                           IMaterial *_pMaterial,
                                           const SFullGroupInfo &_gInfo )
-		: ISomePart( pData, _pMaterial, _gInfo ), pAnimation( pAnim ), pMMXAnimation( pMMXAnim ), bv( _bv )
+	: ISomePart( pData, _pMaterial, _gInfo )
+	, pAnimation( pAnim )
+	, pMMXAnimation( pMMXAnim )
+	, bv( _bv )
 {
 }
 
@@ -159,7 +163,9 @@ CStaticAnimatedPart::CStaticAnimatedPart( CPtrFuncBase<CObjectInfo> *pData,
 CGenericDynamicPart::CGenericDynamicPart( CPtrFuncBase<CObjectInfo> *pData,
                                           IMaterial *_pMaterial,
                                           const SFullGroupInfo &_gInfo )
-		: ISomePart( pData, _pMaterial, _gInfo ), nStillCounter( 0 ), bt( BT_NONE )
+	: ISomePart( pData, _pMaterial, _gInfo )
+	, nStillCounter( 0 )
+	, bt( BT_NONE )
 {
 }
 
@@ -169,7 +175,9 @@ CDynamicPart::CDynamicPart( CPtrFuncBase<CObjectInfo> *pData,
                             CFuncBase<SFBTransform> *pPos,
                             IMaterial *_pMaterial,
                             const SFullGroupInfo &_gInfo )
-		: CGenericDynamicPart( pData, _pMaterial, _gInfo ), pTransform( pPos ), pTrackObjInfo( pData )
+	: CGenericDynamicPart( pData, _pMaterial, _gInfo )
+	, pTransform( pPos )
+	, pTrackObjInfo( pData )
 {
 	bound.SphereInit( CVec3( 0, 0, 0 ), 1e20f );
 	//	RefreshObjectInfo();
@@ -218,7 +226,8 @@ CDynamicPartWithAnimatedBound::CDynamicPartWithAnimatedBound( CPtrFuncBase<CObje
                                                               CFuncBase<SBound> *_pBound,
                                                               IMaterial *_pMaterial,
                                                               const SFullGroupInfo &_gInfo )
-		: CAnimatedBoundPart( pData, _pMaterial, _gInfo, _pBound, pPos ), pTransform( pPos )
+	: CAnimatedBoundPart( pData, _pMaterial, _gInfo, _pBound, pPos )
+	, pTransform( pPos )
 {
 }
 
@@ -230,7 +239,9 @@ CAnimatedPart::CAnimatedPart( CPtrFuncBase<CObjectInfo> *pData,
                               CFuncBase<SBound> *_pBound,
                               IMaterial *_pMaterial,
                               const SFullGroupInfo &_gInfo )
-		: CAnimatedBoundPart( pData, _pMaterial, _gInfo, _pBound, _pAnim ), pAnimation( _pAnim ), pMMXAnimation( _pMMXAnim )
+	: CAnimatedBoundPart( pData, _pMaterial, _gInfo, _pBound, _pAnim )
+	, pAnimation( _pAnim )
+	, pMMXAnimation( _pMMXAnim )
 {
 }
 
@@ -308,7 +319,10 @@ CDynamicGeometryPart::CDynamicGeometryPart( CPtrFuncBase<CObjectInfo> *pData,
                                             CFuncBase<SBound> *_pBound,
                                             IMaterial *_pMaterial,
                                             const SFullGroupInfo &_gInfo )
-		: CGenericDynamicPart( pData, _pMaterial, _gInfo ), pBound( _pBound ), pTransform( _pTransform ), pChanges( pData )
+	: CGenericDynamicPart( pData, _pMaterial, _gInfo )
+	, pBound( _pBound )
+	, pTransform( _pTransform )
+	, pChanges( pData )
 {
 }
 
@@ -388,8 +402,12 @@ bool CDynamicGeometryPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pT
 // CCombinedPart
 
 CCombinedPart::CCombinedPart( SFullStaticTrackers *pTrackers, int _nFloorMask, bool _bIsDynamic )
-		: nIgnoreMark( 0 ), pCombiner( new CPerMaterialCombiner( 0 ) ), nFloorMask( _nFloorMask ),
-			pPervertexLightState( pTrackers->pLightState ), bRecalcPartInfo( false ), bIsDynamic( _bIsDynamic )
+	: nIgnoreMark( 0 )
+	, pCombiner( new CPerMaterialCombiner( 0 ) )
+	, nFloorMask( _nFloorMask )
+	, pPervertexLightState( pTrackers->pLightState )
+	, bRecalcPartInfo( false )
+	, bIsDynamic( _bIsDynamic )
 {
 }
 

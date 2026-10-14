@@ -38,7 +38,10 @@ public:
 	void SendOwnerToRandomRun();
 
 public:
-	CRndRunUpToEnemy() : pOwner( 0 ) {}
+	CRndRunUpToEnemy()
+		: pOwner( 0 )
+	{
+	}
 
 	CRndRunUpToEnemy( CAIUnit *pOwner, CAIUnit *pEnemy, bool bCanMove );
 	void Init( CAIUnit *pOwner, CAIUnit *pEnemy, bool bCanMove );

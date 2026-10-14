@@ -89,7 +89,8 @@ static SStringToCommand szCommandsList[] = {
 	if ( _bServer == bServer )                      \
 		parseCmdFuncs[cmd] = &CCommands::FuncName;
 
-CCommands::CCommands( const bool _bServer ) : bServer( _bServer )
+CCommands::CCommands( const bool _bServer )
+	: bServer( _bServer )
 {
 	// client
 	REGISTER_PARSE( ESC_REGISTER, ParseRegisterServer, false );

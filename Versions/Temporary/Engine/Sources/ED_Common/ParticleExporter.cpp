@@ -22,7 +22,10 @@ REGISTER_EXPORTER_IN_DLL( Particle, CParticleExporter )
 //
 #define ADD_PATH "bin\\effects\\"
 
-CParticleExporter::CParticleExporter() : bNeedExport( false ) {}
+CParticleExporter::CParticleExporter()
+	: bNeedExport( false )
+{
+}
 
 bool CParticleExporter::StartExport( const std::string &rszObjectTypeName, bool bForce )
 {

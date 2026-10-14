@@ -35,7 +35,8 @@ static bool s_bMPAllowStartGame;
 
 // CInterfaceMPGameRoom
 
-CInterfaceMPGameRoom::CInterfaceMPGameRoom() : CInterfaceMPScreenBase( "MPGameRoom", "game_room" )
+CInterfaceMPGameRoom::CInterfaceMPGameRoom()
+	: CInterfaceMPScreenBase( "MPGameRoom", "game_room" )
 {
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_MESSAGE, SMPUIChatMessage, &CInterfaceMPGameRoom::OnChatMessage );
 	REGISTER_MPUI_MESSAGE_HANDLER(

@@ -10,8 +10,11 @@ extern CEventUpdater updater;
 extern NTimer::STime curTime;
 
 CExecutorUnitBonus::CExecutorUnitBonus( EUnitSpecialAbility eAbility, CAIUnit *_pUnit, EExecutorTypeID eTID )
-		: CExecutorUnitBase( eTID, /*SConsts::AI_SEGMENT_DURATION **/ NRandom::Random( 1, 10 ), eAbility ), pUnit( _pUnit ),
-			timeLastUpdate( curTime ), bBonusApplied( false ), eStatus( EUS_UNDEFINED )
+	: CExecutorUnitBase( eTID, /*SConsts::AI_SEGMENT_DURATION **/ NRandom::Random( 1, 10 ), eAbility )
+	, pUnit( _pUnit )
+	, timeLastUpdate( curTime )
+	, bBonusApplied( false )
+	, eStatus( EUS_UNDEFINED )
 {
 	RecordRandomCall();
 	//Init bonus pointer

@@ -63,7 +63,9 @@ class CSendPacket
 	static bool bLastPacket;
 
 public:
-	CSendPacket( const CNodeAddress &_addr, EPacket packet, ILinksManager *_pLinks ) : addr( _addr ), pLinks( _pLinks )
+	CSendPacket( const CNodeAddress &_addr, EPacket packet, ILinksManager *_pLinks )
+		: addr( _addr )
+		, pLinks( _pLinks )
 	{
 		pkt.Seek( 0 );
 		bits.LockWrite( pkt, N_MAX_PACKET_SIZE + 1024 );
@@ -71,7 +73,8 @@ public:
 	}
 
 	CSendPacket( const CNodeAddress &_addr, EPacket packet, CP2PTracker::UCID clientID, ILinksManager *_pLinks )
-			: addr( _addr ), pLinks( _pLinks )
+		: addr( _addr )
+		, pLinks( _pLinks )
 	{
 		pkt.Seek( 0 );
 		bits.LockWrite( pkt, N_MAX_PACKET_SIZE + 1024 );
@@ -203,13 +206,20 @@ void CNetDriver::FinishThread()
 	// does.
 }
 
-CNetDriver::CNetDriver() : serverInfo( 0 ), login( 0 ), state( INACTIVE )
+CNetDriver::CNetDriver()
+	: serverInfo( 0 )
+	, login( 0 )
+	, state( INACTIVE )
 {
 	bIsBroadcast = true;
 }
 
 CNetDriver::CNetDriver( const SNetDriverConsts &_consts, bool _bIsBroadcast )
-		: serverInfo( 0 ), login( 0 ), state( INACTIVE ), consts( _consts ), bIsBroadcast( _bIsBroadcast )
+	: serverInfo( 0 )
+	, login( 0 )
+	, state( INACTIVE )
+	, consts( _consts )
+	, bIsBroadcast( _bIsBroadcast )
 {
 }
 

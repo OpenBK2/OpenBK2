@@ -28,8 +28,20 @@ private:
 
 public:
 	CBSpline()
-			: a( VNULL2 ), b( VNULL2 ), c( VNULL2 ), d( VNULL2 ), x( VNULL2 ), dx( VNULL2 ), d2x( VNULL2 ), d3x( VNULL2 ),
-				fw_dx( VNULL2 ), fw_d2x( VNULL2 ), fw_d3x( VNULL2 ), t( 0 ), tForward( 0 ), cntToForward( 0 )
+		: a( VNULL2 )
+		, b( VNULL2 )
+		, c( VNULL2 )
+		, d( VNULL2 )
+		, x( VNULL2 )
+		, dx( VNULL2 )
+		, d2x( VNULL2 )
+		, d3x( VNULL2 )
+		, fw_dx( VNULL2 )
+		, fw_d2x( VNULL2 )
+		, fw_d3x( VNULL2 )
+		, t( 0 )
+		, tForward( 0 )
+		, cntToForward( 0 )
 	{
 	}
 
@@ -86,8 +98,17 @@ class CCirclePath
 
 public:
 	CCirclePath()
-			: fStartDir( 0 ), fDirDiff( 0 ), vCenter( 0, 0 ), fRadius( 0.0f ), bClockWise( false ), fCurrentDelta( 0 ),
-				vX( 0, 0 ), vDX( 0, 0 ), vLastX( 0, 0 ), vLastDX( 0, 0 ), bForwardDir( true )
+		: fStartDir( 0 )
+		, fDirDiff( 0 )
+		, vCenter( 0, 0 )
+		, fRadius( 0.0f )
+		, bClockWise( false )
+		, fCurrentDelta( 0 )
+		, vX( 0, 0 )
+		, vDX( 0, 0 )
+		, vLastX( 0, 0 )
+		, vLastDX( 0, 0 )
+		, bForwardDir( true )
 	{
 	}
 
@@ -97,7 +118,10 @@ public:
 	             const float _fRadius,
 	             const bool _bClockWise,
 	             const bool _bForward )
-			: fRadius( _fRadius ), bClockWise( _bClockWise ), fCurrentDelta( 0 ), bForwardDir( _bForward )
+		: fRadius( _fRadius )
+		, bClockWise( _bClockWise )
+		, fCurrentDelta( 0 )
+		, bForwardDir( _bForward )
 	{
 		const uint16_t wPerpDir = ( bClockWise == bForwardDir ) ? ( _wStartDir + 16386 ) : ( _wStartDir - 16386 );
 		vCenter = _vPoint - fRadius * GetVectorByDirection( wPerpDir );

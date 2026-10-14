@@ -9,7 +9,9 @@
 extern NTimer::STime curTime;
 
 CAllowFakeObjToCrushExecutor::CAllowFakeObjToCrushExecutor()
-		: changeTypeTime( 0 ), eNewType( ESOT_FAKE_CORPSE ), CExecutor( TID_ALLOW_FAKE_OBJ_TO_CRUSH, 0 )
+	: changeTypeTime( 0 )
+	, eNewType( ESOT_FAKE_CORPSE )
+	, CExecutor( TID_ALLOW_FAKE_OBJ_TO_CRUSH, 0 )
 {
 }
 
@@ -21,7 +23,8 @@ bool CAllowFakeObjToCrushExecutor::IsExecutorValid() const
 CAllowFakeObjToCrushExecutor::CAllowFakeObjToCrushExecutor( CFakeCorpseStaticObject *_pObject,
                                                             const int nTimeDelta,
                                                             const EStaticObjType eType )
-		: pObject( _pObject ), eNewType( eType )
+	: pObject( _pObject )
+	, eNewType( eType )
 {
 	changeTypeTime = curTime + nTimeDelta;
 }

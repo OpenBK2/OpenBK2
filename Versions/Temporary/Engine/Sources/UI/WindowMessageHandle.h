@@ -9,9 +9,15 @@ class CUIMessageHandler
 {
 	MESSAGE_HANDLER pH; // message handler to call
 public:
-	CUIMessageHandler() : pH( 0 ) {}
+	CUIMessageHandler()
+		: pH( 0 )
+	{
+	}
 
-	CUIMessageHandler( MESSAGE_HANDLER _pH ) : pH( _pH ) {}
+	CUIMessageHandler( MESSAGE_HANDLER _pH )
+		: pH( _pH )
+	{
+	}
 
 	bool Execute( const struct SBUIMessage &msg, void *pObj )
 	{

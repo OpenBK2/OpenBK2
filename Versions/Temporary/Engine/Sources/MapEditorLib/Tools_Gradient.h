@@ -19,17 +19,35 @@ public:
 	CTPoint<float> range;
 	CTPoint<float> heightRange;
 
-	SGradient() : a( 0.0f ), b( 0.0f ), c( 0.0f ), nPreviousIndex( -1 ), range( 0.0f, 0.0f ), heightRange( 0.0f, 0.0f ) {}
+	SGradient()
+		: a( 0.0f )
+		, b( 0.0f )
+		, c( 0.0f )
+		, nPreviousIndex( -1 )
+		, range( 0.0f, 0.0f )
+		, heightRange( 0.0f, 0.0f )
+	{
+	}
 
 	SGradient( const CHeightList &rHeightList, const CTPoint<float> &rRange, const CTPoint<float> &rHeightRange )
-			: a( 0.0f ), b( 0.0f ), c( 0.0f ), nPreviousIndex( -1 ), heightList( rHeightList ), range( rRange ),
-				heightRange( rHeightRange )
+		: a( 0.0f )
+		, b( 0.0f )
+		, c( 0.0f )
+		, nPreviousIndex( -1 )
+		, heightList( rHeightList )
+		, range( rRange )
+		, heightRange( rHeightRange )
 	{
 	}
 
 	SGradient( const SGradient &rGradient )
-			: a( 0.0f ), b( 0.0f ), c( 0.0f ), nPreviousIndex( -1 ), heightList( rGradient.heightList ),
-				range( rGradient.range ), heightRange( rGradient.heightRange )
+		: a( 0.0f )
+		, b( 0.0f )
+		, c( 0.0f )
+		, nPreviousIndex( -1 )
+		, heightList( rGradient.heightList )
+		, range( rGradient.range )
+		, heightRange( rGradient.heightRange )
 	{
 	}
 

@@ -37,7 +37,10 @@ class CPathFractionArc3D : public CPathFractionComplexBase
 	}
 
 public:
-	CPathFractionArc3D() : fLength( 0 ) {}
+	CPathFractionArc3D()
+		: fLength( 0 )
+	{
+	}
 
 	void Init( const CVec3 &_i,
 	           const CVec3 &_j,

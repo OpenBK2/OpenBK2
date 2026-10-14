@@ -22,7 +22,12 @@ class CRotatingFireplacesObject
 			return 0;
 		}
 
-		SUnitInfo() : pSoldier( 0 ), nLastFireplace( 0 ), lastFireplaceChange( 0 ) {}
+		SUnitInfo()
+			: pSoldier( 0 )
+			, nLastFireplace( 0 )
+			, lastFireplaceChange( 0 )
+		{
+		}
 	};
 
 	ZDATA

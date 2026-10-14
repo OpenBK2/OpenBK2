@@ -9,7 +9,8 @@ namespace NGScene
 CObjectFader::CObjectFader( CObjectBase *_pObj,
                             CFuncBase<float> *_pFader,
                             std::vector<CPtr<CFuncBase<float>>> *_pTranspChannels )
-		: pObj( _pObj ), pFader( _pFader )
+	: pObj( _pObj )
+	, pFader( _pFader )
 {
 	if ( _pTranspChannels )
 	{

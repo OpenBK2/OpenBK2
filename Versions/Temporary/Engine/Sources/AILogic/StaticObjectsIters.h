@@ -32,7 +32,15 @@ protected:
 	int GetCellSize() const;
 
 public:
-	CStObjIter() : x( 0 ), y( 0 ), downX( 0 ), downY( 0 ), upX( 0 ), upY( 0 ) {}
+	CStObjIter()
+		: x( 0 )
+		, y( 0 )
+		, downX( 0 )
+		, downY( 0 )
+		, upX( 0 )
+		, upY( 0 )
+	{
+	}
 
 	CStObjIter( const int downX, const int upX, const int downY, const int upY );
 
@@ -232,7 +240,7 @@ CExistingObject *CStObjIter<bOnlyContainers>::operator*()
 
 template <bool bOnlyContainers>
 CStObjGlobalIter<bOnlyContainers>::CStObjGlobalIter()
-		: CStObjIter<bOnlyContainers>( 0, this->GetAreaMap().GetSizeX() - 1, 0, this->GetAreaMap().GetSizeY() - 1 )
+	: CStObjIter<bOnlyContainers>( 0, this->GetAreaMap().GetSizeX() - 1, 0, this->GetAreaMap().GetSizeY() - 1 )
 {
 }
 

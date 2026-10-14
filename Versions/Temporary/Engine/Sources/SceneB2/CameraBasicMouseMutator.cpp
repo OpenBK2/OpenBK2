@@ -56,11 +56,20 @@ float IncrementValue(
 }
 
 CCameraBasicMouseMutator::CCameraBasicMouseMutator()
-		: vAnchor( VNULL3 ), sliderFwd( "camera_forward" ), sliderStrafe( "camera_strafe" ), sliderZoom( "camera_zoom" ),
-			sliderPitch( "camera_pitch" ), sliderYaw( "camera_yaw" ), sliderMouseForward( "camera_mouse_forward" ),
-			sliderMouseStrafe( "camera_mouse_strafe" ), sliderMousePitch( "camera_mouse_pitch" ),
-			sliderMouseYaw( "camera_mouse_yaw" ), sliderMouseZoom( "camera_mouse_zoom" ), fScrollSpeedX( 0 ),
-			fScrollSpeedY( 0 ), fYawSpeed( 0.0f )
+	: vAnchor( VNULL3 )
+	, sliderFwd( "camera_forward" )
+	, sliderStrafe( "camera_strafe" )
+	, sliderZoom( "camera_zoom" )
+	, sliderPitch( "camera_pitch" )
+	, sliderYaw( "camera_yaw" )
+	, sliderMouseForward( "camera_mouse_forward" )
+	, sliderMouseStrafe( "camera_mouse_strafe" )
+	, sliderMousePitch( "camera_mouse_pitch" )
+	, sliderMouseYaw( "camera_mouse_yaw" )
+	, sliderMouseZoom( "camera_mouse_zoom" )
+	, fScrollSpeedX( 0 )
+	, fScrollSpeedY( 0 )
+	, fYawSpeed( 0.0f )
 {
 	//
 	rcAnchorLimit.SetEmpty();

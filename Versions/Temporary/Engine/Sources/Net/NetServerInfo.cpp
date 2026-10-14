@@ -5,7 +5,10 @@ namespace NNet
 {
 
 CServerInfoSupport::CServerInfoSupport( APPLICATION_ID _nApplicationID )
-		: applicationID( _nApplicationID ), fTime( 0 ), bDoReply( false ), fRequestDelay( 0 )
+	: applicationID( _nApplicationID )
+	, fTime( 0 )
+	, bDoReply( false )
+	, fRequestDelay( 0 )
 {
 }
 

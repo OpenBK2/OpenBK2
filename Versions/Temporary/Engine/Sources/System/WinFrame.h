@@ -54,7 +54,11 @@ struct SWindowsMsg
 	uint32_t dwFlags = 0;
 
 	// Initialize one anonymous-struct union arm; the key fields alias this storage.
-	SWindowsMsg() : x( 0 ), y( 0 ) {}
+	SWindowsMsg()
+		: x( 0 )
+		, y( 0 )
+	{
+	}
 };
 
 // WinFrame interface

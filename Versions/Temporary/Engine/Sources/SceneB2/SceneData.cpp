@@ -50,7 +50,8 @@ void TakeScreenShotMsg( const SGameMessage &msg )
 
 // SSceneData::SScreenData
 
-SSceneData::SScreenData::SScreenData( IWindow *_pScreen ) : pScreen( _pScreen )
+SSceneData::SScreenData::SScreenData( IWindow *_pScreen )
+	: pScreen( _pScreen )
 {
 	p3DView = NGScene::CreateNewView();
 	p3DView->WaitForLoad( true );
@@ -66,7 +67,9 @@ void SSceneData::SScreenData::SetSceneConsts( const NDb::SSceneConsts *pSceneCon
 
 // SSceneData
 
-SSceneData::SSceneData() : bIsInternal( false ), nFreeSelectionID( 0 )
+SSceneData::SSceneData()
+	: bIsInternal( false )
+	, nFreeSelectionID( 0 )
 {
 	eAIGeomMode = EAI_GEOM_NONE;
 	timeStatLastShow = 0;

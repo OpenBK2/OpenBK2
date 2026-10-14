@@ -37,7 +37,10 @@ protected:
 	bool TryLockAlongTheWay( const bool bLock, const uint8_t _bAIClass );
 
 public:
-	CLockWithUnlockPossibilities() : bLocked( false ) {}
+	CLockWithUnlockPossibilities()
+		: bLocked( false )
+	{
+	}
 
 	bool LockRect( const SRect &rect, const uint8_t _bAIClass )
 	{

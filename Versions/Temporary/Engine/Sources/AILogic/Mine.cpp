@@ -32,8 +32,12 @@ CMineStaticObject::CMineStaticObject() {}
 
 CMineStaticObject::CMineStaticObject(
 		const SMineRPGStats *_pStats, const CVec3 &center, const float fHP, const int nFrameIndex, int _player )
-		: pStats( _pStats ), bIfWillBeDeleted( false ), bAlive( true ),
-			CGivenPassabilityStObject( center, fHP, 0, nFrameIndex ), player( _player ), bIfRegisteredInCWorld( false )
+	: pStats( _pStats )
+	, bIfWillBeDeleted( false )
+	, bAlive( true )
+	, CGivenPassabilityStObject( center, fHP, 0, nFrameIndex )
+	, player( _player )
+	, bIfRegisteredInCWorld( false )
 {
 	SetAlive( bAlive );
 }

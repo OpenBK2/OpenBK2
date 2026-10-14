@@ -61,7 +61,8 @@ class CScopedStatsModifier
 
 public:
 	CScopedStatsModifier( CAIUnit *_pUnit, const NDb::SUnitStatsModifier *_pModifier )
-			: pUnit( _pUnit ), pModifier( _pModifier )
+		: pUnit( _pUnit )
+		, pModifier( _pModifier )
 	{
 		// AA modifier affects only values read while the shot objects are being created.
 		if ( pUnit && pModifier )
@@ -105,10 +106,25 @@ CBasicGun::CBasicGun( class CAIUnit *_pOwner,
                       const uint8_t _nShellType,
                       SCommonGunInfo *_pCommonGunInfo,
                       const IGunsFactory::EGunTypes _eType )
-		: pOwner( _pOwner ), shootState( EST_REST ), nShellType( _nShellType ), bAngleLocked( false ), bCanShoot( true ),
-			pCommonGunInfo( _pCommonGunInfo ), eType( _eType ), eRejectReason( ACK_NONE ), bWaitForReload( false ),
-			lastCheck( 0 ), bParallelGun( false ), lastCheckTurnTime( 0 ), nShotsLast( 0 ), vLastShotPoint( VNULL3 ),
-			pAntiAviationTarget( 0 ), target( VNULL2 ), bAim( false ), lastEnemyPos( VNULL2 ), bCanShootToUnitWOMove( false )
+	: pOwner( _pOwner )
+	, shootState( EST_REST )
+	, nShellType( _nShellType )
+	, bAngleLocked( false )
+	, bCanShoot( true )
+	, pCommonGunInfo( _pCommonGunInfo )
+	, eType( _eType )
+	, eRejectReason( ACK_NONE )
+	, bWaitForReload( false )
+	, lastCheck( 0 )
+	, bParallelGun( false )
+	, lastCheckTurnTime( 0 )
+	, nShotsLast( 0 )
+	, vLastShotPoint( VNULL3 )
+	, pAntiAviationTarget( 0 )
+	, target( VNULL2 )
+	, bAim( false )
+	, lastEnemyPos( VNULL2 )
+	, bCanShootToUnitWOMove( false )
 {
 	SetUniqueIdForObjects();
 	bGrenade = pOwner && pOwner->GetStats()->IsInfantry() && pCommonGunInfo->nGun == 1;
@@ -1951,8 +1967,10 @@ CTurretGun::CTurretGun( CAIUnit *pOwner,
                         SCommonGunInfo *pCommonGunInfo,
                         const IGunsFactory::EGunTypes eType,
                         const int nTurret )
-		: CBasicGun( pOwner, nShellType, pCommonGunInfo, eType ), bCircularAttack( false ), bTurnByBestWay( false ),
-			wBestWayDir( 0 )
+	: CBasicGun( pOwner, nShellType, pCommonGunInfo, eType )
+	, bCircularAttack( false )
+	, bTurnByBestWay( false )
+	, wBestWayDir( 0 )
 {
 	pTurret = pOwner->GetTurret( nTurret );
 }

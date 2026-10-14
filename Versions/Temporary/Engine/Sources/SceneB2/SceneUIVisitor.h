@@ -19,7 +19,10 @@ class CClipSetCmd : public IUIVisitorCmd
 public:
 	CClipSetCmd() {}
 
-	CClipSetCmd( const CTRect<float> &_rClip ) : rClip( _rClip ) {}
+	CClipSetCmd( const CTRect<float> &_rClip )
+		: rClip( _rClip )
+	{
+	}
 
 	//
 	void Visit( IUIVisitor *pVisitor )
@@ -57,7 +60,10 @@ public:
 	                     const CTPoint<float> &_sPosition,
 	                     const CTRect<float> &_sClipWindow,
 	                     float _fZ )
-			: sLayout( _sLayout ), sPosition( _sPosition ), sClipWindow( _sClipWindow ), fZ( _fZ )
+		: sLayout( _sLayout )
+		, sPosition( _sPosition )
+		, sClipWindow( _sClipWindow )
+		, fZ( _fZ )
 	{
 	}
 
@@ -80,7 +86,9 @@ public:
 	CVisitUIRectCmd() {}
 
 	CVisitUIRectCmd( const NDb::STexture *_pTexture, const int _nShadingEffect, const class CRectLayout &_rects )
-			: pTexture( _pTexture ), nShadingEffect( _nShadingEffect ), rects( _rects )
+		: pTexture( _pTexture )
+		, nShadingEffect( _nShadingEffect )
+		, rects( _rects )
 	{
 	}
 
@@ -109,7 +117,9 @@ public:
 	                  const CVec2 *_pPos4,
 	                  const NGfx::SPixel8888 *_pColors4,
 	                  const CTRect<float> &_rectTexture )
-			: pTexture( _pTexture ), nShadingEffect( _nShadingEffect ), rectTexture( _rectTexture )
+		: pTexture( _pTexture )
+		, nShadingEffect( _nShadingEffect )
+		, rectTexture( _rectTexture )
 	{
 		memcpy( pPos4, _pPos4, 4 * sizeof( pPos4[0] ) );
 		memcpy( pColors4, _pColors4, 4 * sizeof( pColors4[0] ) );
@@ -136,7 +146,9 @@ public:
 	CVisitUITextureRectCmd( CPtrFuncBase<NGfx::CTexture> *_pTexture,
 	                        const int _nShadingEffect,
 	                        const class CRectLayout &_rects )
-			: pTexture( _pTexture ), nShadingEffect( _nShadingEffect ), rects( _rects )
+		: pTexture( _pTexture )
+		, nShadingEffect( _nShadingEffect )
+		, rects( _rects )
 	{
 	}
 
@@ -159,7 +171,9 @@ public:
 	CVisitUITextCmd() {}
 
 	CVisitUITextCmd( IML *_pML, const CTPoint<float> &_sPosition, const CTRect<float> &_sWindow )
-			: pML( _pML ), sPosition( _sPosition ), sWindow( _sWindow )
+		: pML( _pML )
+		, sPosition( _sPosition )
+		, sWindow( _sWindow )
 	{
 	}
 
@@ -218,9 +232,15 @@ class CUIVisitor : public IUIVisitor
 	}
 
 public:
-	CUIVisitor() : rcClip( 0, 0, 1024, 768 ), bClipApplied( false ), bLowerLevel( true ) {}
+	CUIVisitor()
+		: rcClip( 0, 0, 1024, 768 )
+		, bClipApplied( false )
+		, bLowerLevel( true )
+	{
+	}
 
-	CUIVisitor( NGScene::I2DGameView *p2D ) : bLowerLevel( true )
+	CUIVisitor( NGScene::I2DGameView *p2D )
+		: bLowerLevel( true )
 	{
 		SetGView( p2D );
 	}

@@ -13,7 +13,8 @@
 
 // CInterfaceSelectTutorial
 
-CInterfaceSelectTutorial::CInterfaceSelectTutorial() : CInterfaceScreenBase( "SelectTutorial", "select_tutorial_menu" )
+CInterfaceSelectTutorial::CInterfaceSelectTutorial()
+	: CInterfaceScreenBase( "SelectTutorial", "select_tutorial_menu" )
 {
 }
 

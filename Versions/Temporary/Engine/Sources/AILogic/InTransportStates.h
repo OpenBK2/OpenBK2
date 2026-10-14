@@ -45,7 +45,10 @@ public:
 public:
 	static IUnitState *Instance( class CSoldier *pSoldier, class CMilitaryCar *pTransport );
 
-	CSoldierRestOnBoardState() : pSoldier( 0 ) {}
+	CSoldierRestOnBoardState()
+		: pSoldier( 0 )
+	{
+	}
 
 	CSoldierRestOnBoardState( class CSoldier *pSoldier, class CMilitaryCar *pTransport );
 

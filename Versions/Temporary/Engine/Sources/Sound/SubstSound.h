@@ -12,7 +12,8 @@ class CSubstSound : public CObjectBase
 public:
 	CSubstSound() {}
 
-	CSubstSound( ISound *pSound ) : pSample( pSound )
+	CSubstSound( ISound *pSound )
+		: pSample( pSound )
 	{
 		pSFX = Singleton<ISFX>();
 	}

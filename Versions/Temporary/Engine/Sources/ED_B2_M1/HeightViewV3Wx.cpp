@@ -85,7 +85,10 @@ class CHeightWxWindowV3 : public CWxHostWindow, public CHeightCommandsV3
 		CHeightWxWindowV3 *pOwner;
 
 	public:
-		explicit CHeightTimer( CHeightWxWindowV3 *_pOwner ) : pOwner( _pOwner ) {}
+		explicit CHeightTimer( CHeightWxWindowV3 *_pOwner )
+			: pOwner( _pOwner )
+		{
+		}
 
 		virtual void Notify()
 		{
@@ -133,7 +136,8 @@ class CHeightWxWindowV3 : public CWxHostWindow, public CHeightCommandsV3
 	std::vector<std::string> tileList;
 
 public:
-	CHeightWxWindowV3() : heightTimer( this )
+	CHeightWxWindowV3()
+		: heightTimer( this )
 	{
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, this );
 		Singleton<ICommandHandlerContainer>()->Register(

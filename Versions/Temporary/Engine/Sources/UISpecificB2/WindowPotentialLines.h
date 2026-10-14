@@ -45,7 +45,11 @@ protected:
 	void Recalc();
 
 public:
-	CWindowChapterMapLayer() : nLastUpdateTime( 0 ), bNeedUpdate( false ) {}
+	CWindowChapterMapLayer()
+		: nLastUpdateTime( 0 )
+		, bNeedUpdate( false )
+	{
+	}
 
 	void SetSize( const int nWidth, const int nHeight );
 
@@ -96,7 +100,10 @@ public:
 	                         NGfx::SPixel8888 _color,
 	                         CArray2D1Bit *_pMask,
 	                         int _nLineWidth = 0 ) // Negative DashLen gives solid wide line
-			: pMapLayer( _pMapLayer ), color( _color ), nLineWidth( _nLineWidth ), pMask( _pMask )
+		: pMapLayer( _pMapLayer )
+		, color( _color )
+		, nLineWidth( _nLineWidth )
+		, pMask( _pMask )
 	{
 		nWidth = pMapLayer->GetWidth();
 		nHeight = pMapLayer->GetHeight();

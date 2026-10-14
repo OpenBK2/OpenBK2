@@ -51,8 +51,15 @@ class CSquarePacker
 		STriInfo() {}
 
 		STriInfo( int _n1, int _n2, int _n3, bool _bInverse, char _nFirst, uint16_t _nXSize, uint16_t _nYSize )
-				: n1( _n1 ), n2( _n2 ), n3( _n3 ), bInverse( _bInverse ), nFirst( _nFirst ), nFirst1( 0 ), bInverse1( false ),
-					nXSize( _nXSize ), nYSize( _nYSize )
+			: n1( _n1 )
+			, n2( _n2 )
+			, n3( _n3 )
+			, bInverse( _bInverse )
+			, nFirst( _nFirst )
+			, nFirst1( 0 )
+			, bInverse1( false )
+			, nXSize( _nXSize )
+			, nYSize( _nYSize )
 		{
 		}
 	};
@@ -68,7 +75,9 @@ class CSquarePacker
 
 public:
 	CSquarePacker( int _nMaxSize, const CObjectInfo::SData &_info, float _fTexelPerMeter )
-			: info( _info ), fTexelsPerMeter( _fTexelPerMeter ), nMaxSize( _nMaxSize )
+		: info( _info )
+		, fTexelsPerMeter( _fTexelPerMeter )
+		, nMaxSize( _nMaxSize )
 	{
 	}
 

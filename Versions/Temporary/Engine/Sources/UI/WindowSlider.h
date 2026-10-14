@@ -57,9 +57,17 @@ protected:
 
 public:
 	CWindowSlider()
-			: fMin( 0.0f ), fMax( 0.0f ), fCur( 0.0f ), fPageSize( 100.0f ), bPressed( false ), bFastScrolling( false ),
-				pNotifySink( 0 ), bManualScrolling( false ), bMouseScrollingAllowed( false ),
-				inputScroll( "mouse_wheel_scroll" ), bLeverOn( false )
+		: fMin( 0.0f )
+		, fMax( 0.0f )
+		, fCur( 0.0f )
+		, fPageSize( 100.0f )
+		, bPressed( false )
+		, bFastScrolling( false )
+		, pNotifySink( 0 )
+		, bManualScrolling( false )
+		, bMouseScrollingAllowed( false )
+		, inputScroll( "mouse_wheel_scroll" )
+		, bLeverOn( false )
 	{
 	}
 

@@ -649,7 +649,10 @@ struct SClipPolygon
 	int n[128];
 	int nSize;
 
-	SClipPolygon() : nSize( 0 ) {}
+	SClipPolygon()
+		: nSize( 0 )
+	{
+	}
 
 	void push_back( int _n )
 	{

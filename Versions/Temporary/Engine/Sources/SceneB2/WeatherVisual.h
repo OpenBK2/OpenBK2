@@ -41,9 +41,16 @@ class CWeatherVisual : public CFuncBase<bool>
 		int nNumPart = {};
 
 	public:
-		CWeatherPart() : nNumPart( -1 ) {}
+		CWeatherPart()
+			: nNumPart( -1 )
+		{
+		}
 
-		CWeatherPart( CWeatherVisual *_pWeather, int _nNumPart ) : pWeather( _pWeather ), nNumPart( _nNumPart ) {}
+		CWeatherPart( CWeatherVisual *_pWeather, int _nNumPart )
+			: pWeather( _pWeather )
+			, nNumPart( _nNumPart )
+		{
+		}
 
 		bool NeedUpdate()
 		{

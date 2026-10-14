@@ -13,8 +13,10 @@ extern NTimer::STime curTime;
 extern CEventUpdater updater;
 
 CExecutorTrackTargetting::CExecutorTrackTargetting( CAIUnit *_pUnit )
-		: state( EASS_READY_TO_ON ), CExecutor( TID_TRACK_TARGETTING, 1000 / SConsts::AI_SEGMENT_DURATION ),
-			timeLastUpdate( curTime ), pUnit( _pUnit )
+	: state( EASS_READY_TO_ON )
+	, CExecutor( TID_TRACK_TARGETTING, 1000 / SConsts::AI_SEGMENT_DURATION )
+	, timeLastUpdate( curTime )
+	, pUnit( _pUnit )
 {
 	NI_ASSERT( _pUnit, "Attempt to create TrackTargetting executor for null unit" );
 }

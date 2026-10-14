@@ -95,7 +95,10 @@ class CEntrenchmentState : public CMapObjectState
 		const NDb::SEntrenchmentRPGStats *pEntrenchmentRPGStats;
 
 		//
-		SSelectedEntrenchmentInfo() : pEntrenchmentRPGStats( 0 ) {}
+		SSelectedEntrenchmentInfo()
+			: pEntrenchmentRPGStats( 0 )
+		{
+		}
 	};
 
 	SSelectedEntrenchmentInfo selectedEntrenchmentInfo;
@@ -107,7 +110,8 @@ class CEntrenchmentState : public CMapObjectState
 	void InsertEntrenchment();
 
 	///
-	CEntrenchmentState( CMapObjectMultiState *_pParentState = 0 ) : CMapObjectState( _pParentState )
+	CEntrenchmentState( CMapObjectMultiState *_pParentState = 0 )
+		: CMapObjectState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, fmt::format( "CEntrenchmentState(): pParentState == 0" ) );
 		ClearData();

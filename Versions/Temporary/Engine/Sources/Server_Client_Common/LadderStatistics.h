@@ -73,9 +73,21 @@ struct SLadderStatistics
 	}
 
 	SLadderStatistics()
-			: nLevel( -1 ), nXP( 0 ), nLevelXP( 0 ), nNextLevelXP( 0 ), nMaxXPEarned( 0 ), nMaxXPLost( 0 ),
-				nFavouriteReinforcement( -1 ), nUnitsKilled( 0 ), nUnitsLost( 0 ), nUnitEff( 0 ), nKeyPointEff( 0 ),
-				nStrongestAgainst( -1 ), nWeakestAgainst( -1 ), nTotalPlayTime( 0 ), nRace( -1 )
+		: nLevel( -1 )
+		, nXP( 0 )
+		, nLevelXP( 0 )
+		, nNextLevelXP( 0 )
+		, nMaxXPEarned( 0 )
+		, nMaxXPLost( 0 )
+		, nFavouriteReinforcement( -1 )
+		, nUnitsKilled( 0 )
+		, nUnitsLost( 0 )
+		, nUnitEff( 0 )
+		, nKeyPointEff( 0 )
+		, nStrongestAgainst( -1 )
+		, nWeakestAgainst( -1 )
+		, nTotalPlayTime( 0 )
+		, nRace( -1 )
 	{
 	}
 

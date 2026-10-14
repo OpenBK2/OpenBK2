@@ -88,7 +88,10 @@ namespace NBind
 
 		//
 		CArrayIterator()
-				: bArrayElementLocked( false ), nCurrElementIndex( -1 ), nNumArrayElements( -1 ), bShowHidden( false )
+			: bArrayElementLocked( false )
+			, nCurrElementIndex( -1 )
+			, nNumArrayElements( -1 )
+			, bShowHidden( false )
 		{
 		}
 

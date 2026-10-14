@@ -104,7 +104,11 @@ void CXMLAttribute::Store( NLXML_STREAM &stream ) const
 // **
 // ************************************************************************************************************************ //
 
-CXMLNode::CXMLNode( const EType _eType ) : eType( _eType ), dwHashCode( 0 ) {}
+CXMLNode::CXMLNode( const EType _eType )
+	: eType( _eType )
+	, dwHashCode( 0 )
+{
+}
 
 CXMLNode::~CXMLNode() {}
 
@@ -221,7 +225,10 @@ CXMLNode *CXMLMultiNode::FindChild( const std::string &_szValue ) const
 // **
 // ************************************************************************************************************************ //
 
-CXMLElement::CXMLElement() : CXMLMultiNode( CXMLNode::ELEMENT ) {}
+CXMLElement::CXMLElement()
+	: CXMLMultiNode( CXMLNode::ELEMENT )
+{
+}
 
 CXMLElement::~CXMLElement() {}
 
@@ -437,7 +444,10 @@ void CXMLElement::Store( NLXML_STREAM &stream, const std::string &szIndention ) 
 // **
 // ************************************************************************************************************************ //
 
-CXMLText::CXMLText() : CXMLNode( CXMLNode::TEXT ) {}
+CXMLText::CXMLText()
+	: CXMLNode( CXMLNode::TEXT )
+{
+}
 
 CXMLText::~CXMLText() {}
 
@@ -463,7 +473,10 @@ void CXMLText::Store( NLXML_STREAM &stream, const std::string &szIndention ) con
 // **
 // ************************************************************************************************************************ //
 
-CXMLComment::CXMLComment() : CXMLNode( CXMLNode::COMMENT ) {}
+CXMLComment::CXMLComment()
+	: CXMLNode( CXMLNode::COMMENT )
+{
+}
 
 CXMLComment::~CXMLComment() {}
 
@@ -499,7 +512,12 @@ void CXMLComment::Store( NLXML_STREAM &stream, const std::string &szIndention ) 
 // **
 // ************************************************************************************************************************ //
 
-CXMLDeclaration::CXMLDeclaration() : CXMLNode( CXMLNode::DECLARATION ), szVersion( "1.0" ), szEncoding( "UTF-8" ) {}
+CXMLDeclaration::CXMLDeclaration()
+	: CXMLNode( CXMLNode::DECLARATION )
+	, szVersion( "1.0" )
+	, szEncoding( "UTF-8" )
+{
+}
 
 CXMLDeclaration::~CXMLDeclaration() {}
 
@@ -595,7 +613,10 @@ void CXMLDeclaration::Store( NLXML_STREAM &stream, const std::string &szIndentio
 // **
 // ************************************************************************************************************************ //
 
-CXMLUnknown::CXMLUnknown() : CXMLNode( CXMLNode::UNKNOWN ) {}
+CXMLUnknown::CXMLUnknown()
+	: CXMLNode( CXMLNode::UNKNOWN )
+{
+}
 
 CXMLUnknown::~CXMLUnknown() {}
 
@@ -636,7 +657,10 @@ void CXMLUnknown::Store( NLXML_STREAM &stream, const std::string &szIndention ) 
 // **
 // ************************************************************************************************************************ //
 
-CXMLDocument::CXMLDocument() : CXMLMultiNode( CXMLNode::DOCUMENT ) {}
+CXMLDocument::CXMLDocument()
+	: CXMLMultiNode( CXMLNode::DOCUMENT )
+{
+}
 
 CXMLDocument::~CXMLDocument() {}
 

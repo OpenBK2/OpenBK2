@@ -13,7 +13,10 @@ class CReactionObserver : public CObjectBase
 public:
 	CReactionObserver() {}
 
-	CReactionObserver( void ( TObj::*_pfnMemFun )( const std::string & ) ) : pfnMemFun( _pfnMemFun ) {}
+	CReactionObserver( void ( TObj::*_pfnMemFun )( const std::string & ) )
+		: pfnMemFun( _pfnMemFun )
+	{
+	}
 
 	void Execute( CObjectBase *pThis, const std::string &szSender )
 	{
@@ -33,7 +36,10 @@ class CCheckObserver : public CObjectBase
 public:
 	CCheckObserver() {}
 
-	CCheckObserver( int ( TObj::*_pfnMemFun )() const ) : pfnMemFun( _pfnMemFun ) {}
+	CCheckObserver( int ( TObj::*_pfnMemFun )() const )
+		: pfnMemFun( _pfnMemFun )
+	{
+	}
 
 	int Execute( const CObjectBase *pThis ) const
 	{

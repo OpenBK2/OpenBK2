@@ -150,7 +150,8 @@ CMemoryStream::~CMemoryStream()
 	delete[] GetBufferPtr();
 }
 
-CMemoryStream::CMemoryStream( const CMemoryStream &src ) : CDataStream( 0 )
+CMemoryStream::CMemoryStream( const CMemoryStream &src )
+	: CDataStream( 0 )
 {
 	CopyMemoryStream( src );
 }
@@ -287,7 +288,8 @@ void TraceFileOpen( const char *pszHow, const std::string &szFileName, const boo
 
 } // namespace
 
-CFileStream::CFileStream( NVFS::IVFS *pVFS, const std::string &szFileName ) : CDataStream( F_Broken )
+CFileStream::CFileStream( NVFS::IVFS *pVFS, const std::string &szFileName )
+	: CDataStream( F_Broken )
 {
 	//	NI_ASSERT( szFileName.find( ":" ) == string::npos, StrFmt( "\":\" found in file name %s passed to VFS! WIN_READ_ONLY should've been used", szFileName.c_str() ) );
 	pStream = pVFS->OpenFile( szFileName );
@@ -298,7 +300,8 @@ CFileStream::CFileStream( NVFS::IVFS *pVFS, const std::string &szFileName ) : CD
 	TraceFileOpen( "vfs", szFileName, pStream != 0, "no such entry in the VFS" );
 }
 
-CFileStream::CFileStream( NVFS::IFileCreator *pFileCreator, const std::string &szFileName ) : CDataStream( F_Broken )
+CFileStream::CFileStream( NVFS::IFileCreator *pFileCreator, const std::string &szFileName )
+	: CDataStream( F_Broken )
 {
 	//	NI_ASSERT( szFileName.find( ":" ) == string::npos, StrFmt( "\":\" found in file name %s passed to VFS! WIN_CREATE should've been used", szFileName.c_str() ) );
 	pStream = pFileCreator->CreateFile( szFileName );
@@ -309,7 +312,8 @@ CFileStream::CFileStream( NVFS::IFileCreator *pFileCreator, const std::string &s
 	TraceFileOpen( "create", szFileName, pStream != 0, "the file creator refused it" );
 }
 
-CFileStream::CFileStream( const std::string &szFileName, const EWinMode eWinMode ) : CDataStream( F_Broken )
+CFileStream::CFileStream( const std::string &szFileName, const EWinMode eWinMode )
+	: CDataStream( F_Broken )
 {
 	// Captured before anything else can overwrite it, since the checks below and
 	// the tracing itself both make calls of their own.

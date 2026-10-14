@@ -7,7 +7,10 @@
 REGISTER_SAVELOAD_CLASS( STATS_B2_M1, 0x31247300, SUnitStatusUpdate );
 
 SUnitStatusUpdate::SUnitStatusUpdate( const EUnitStatus _eStatus, const bool bEnabled, const float _fRadius )
-		: SAIBasicUpdate( ACTION_NOTIFY_UPDATE_STATUS, 0 ), eStatus( _eStatus ), nUnitID( -1 ), fRadius( _fRadius )
+	: SAIBasicUpdate( ACTION_NOTIFY_UPDATE_STATUS, 0 )
+	, eStatus( _eStatus )
+	, nUnitID( -1 )
+	, fRadius( _fRadius )
 {
 	if ( !bEnabled )
 	{

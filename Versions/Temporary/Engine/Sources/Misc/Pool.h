@@ -43,7 +43,12 @@ public:
 		typename std::list<SBlock>::iterator i;
 		CPool *pPool;
 
-		SIterator() : pPool( 0 ), p( 0 ), pBlockStart( 0 ) {}
+		SIterator()
+			: pPool( 0 )
+			, p( 0 )
+			, pBlockStart( 0 )
+		{
+		}
 
 		SIterator( CPool *_pPool )
 		{
@@ -95,7 +100,11 @@ public:
 		}
 	};
 
-	CPool() : pCurrent( 0 ), pLast( 0 ) {}
+	CPool()
+		: pCurrent( 0 )
+		, pLast( 0 )
+	{
+	}
 
 	T *Alloc()
 	{

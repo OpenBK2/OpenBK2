@@ -7,7 +7,11 @@
 #define MAX_CHANGES 8192
 #define MASK ( MAX_CHANGES - 1 )
 
-CUpdatableList::CUpdatableList() : dwVersion( 0 ), changes( MAX_CHANGES ) {}
+CUpdatableList::CUpdatableList()
+	: dwVersion( 0 )
+	, changes( MAX_CHANGES )
+{
+}
 
 void CUpdatableList::Add( const int nID )
 {

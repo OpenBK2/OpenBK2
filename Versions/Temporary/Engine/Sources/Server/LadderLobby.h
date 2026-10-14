@@ -150,10 +150,14 @@ protected:
 	}
 
 public:
-	CLadderLobby() : CGameLobby() {}
+	CLadderLobby()
+		: CGameLobby()
+	{
+	}
 
 	CLadderLobby( class CClients *_pClients, const std::string &szCfgFile )
-			: CGameLobby( _pClients, szCfgFile ), pClients( _pClients )
+		: CGameLobby( _pClients, szCfgFile )
+		, pClients( _pClients )
 	{
 		Initialize( szCfgFile );
 	}

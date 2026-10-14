@@ -29,7 +29,9 @@ static void TheTerminalThreadProc( CTerminal *pTerminal )
 }
 
 CTerminal::CTerminal( CCommands *_pCommands, const int _nPort )
-		: pCommands( _pCommands ), nPort( _nPort ), bClientIsOK( false )
+	: pCommands( _pCommands )
+	, nPort( _nPort )
+	, bClientIsOK( false )
 {
 	pTheTerminal = this;
 

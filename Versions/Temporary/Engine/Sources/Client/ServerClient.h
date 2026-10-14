@@ -25,9 +25,14 @@ class CLIENT_EXPORT CServerClient : public IServerClient
 		CPtr<class CNetPacket> pPacket;
 		bool bBroadcast;
 
-		SPausedGamePacket() : bBroadcast( false ) {}
+		SPausedGamePacket()
+			: bBroadcast( false )
+		{
+		}
 
-		SPausedGamePacket( class CNetPacket *_pPacket, bool _bBroadcast ) : pPacket( _pPacket ), bBroadcast( _bBroadcast )
+		SPausedGamePacket( class CNetPacket *_pPacket, bool _bBroadcast )
+			: pPacket( _pPacket )
+			, bBroadcast( _bBroadcast )
 		{
 		}
 	};

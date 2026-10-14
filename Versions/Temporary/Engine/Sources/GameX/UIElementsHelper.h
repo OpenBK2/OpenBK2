@@ -32,7 +32,10 @@ struct SExpProgressCareer
 
 	NTimer::STime timePrev; // don't save
 
-	SExpProgressCareer() : timePrev( 0 ) {}
+	SExpProgressCareer()
+		: timePrev( 0 )
+	{
+	}
 
 	void Init();
 	void Step( bool bWait );
@@ -73,7 +76,10 @@ struct SExpProgressRank
 
 	NTimer::STime timePrev; // don't save
 
-	SExpProgressRank() : timePrev( 0 ) {}
+	SExpProgressRank()
+		: timePrev( 0 )
+	{
+	}
 
 	void Init();
 	void Step( bool bWait );

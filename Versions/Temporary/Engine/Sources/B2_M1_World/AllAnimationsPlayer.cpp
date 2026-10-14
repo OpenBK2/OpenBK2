@@ -5,7 +5,8 @@
 #include "Main/GameTimer.h"
 
 CAllAnimationsPlayer::CAllAnimationsPlayer( const std::unordered_map<int, CObj<CMapObj>> &_objects )
-		: objects( _objects ), bSwitchToNextAnimation( true )
+	: objects( _objects )
+	, bSwitchToNextAnimation( true )
 {
 }
 

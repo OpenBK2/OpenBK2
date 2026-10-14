@@ -20,7 +20,8 @@ class CSpotState : public CMapObjectState
 	}
 
 	//конструкторы и операторы присваивания
-	CSpotState( CMapObjectMultiState *_pParentState = 0 ) : CMapObjectState( _pParentState )
+	CSpotState( CMapObjectMultiState *_pParentState = 0 )
+		: CMapObjectState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, fmt::format( "CSpotState(): pParentState == 0" ) );
 	}

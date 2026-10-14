@@ -142,7 +142,8 @@ class CMapInfoViewFilterWxDialog : public CWxToolDialog
 
 public:
 	CMapInfoViewFilterWxDialog( wxWindow *pParent, CMapInfoEditorSettings::SViewFilterData *_pFilter )
-			: CWxToolDialog( pParent, wxID_ANY, "MapInfo View Filter" ), pFilter( _pFilter )
+		: CWxToolDialog( pParent, wxID_ANY, "MapInfo View Filter" )
+		, pFilter( _pFilter )
 	{
 		wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 

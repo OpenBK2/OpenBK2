@@ -63,7 +63,10 @@ struct SDepthCompare
 {
 	const std::vector<SRenderFragmentInfo::SElement> &elems;
 
-	SDepthCompare( const std::vector<SRenderFragmentInfo::SElement> &_elems ) : elems( _elems ) {}
+	SDepthCompare( const std::vector<SRenderFragmentInfo::SElement> &_elems )
+		: elems( _elems )
+	{
+	}
 
 	bool operator()( int a, int b ) const
 	{

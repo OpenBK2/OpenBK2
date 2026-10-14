@@ -55,14 +55,21 @@ public:
 		bool bThumbnails;
 
 		SEditParameters()
-				: nFlags( MIMOSEP_ALL ), nPlayerIndex( 0 ), eDirectionType( DT_RANDOM ), fDirection( 0.0f ), bThumbnails( true )
+			: nFlags( MIMOSEP_ALL )
+			, nPlayerIndex( 0 )
+			, eDirectionType( DT_RANDOM )
+			, fDirection( 0.0f )
+			, bThumbnails( true )
 		{
 		}
 
 		SEditParameters( const SEditParameters &rEditParameters )
-				: nFlags( rEditParameters.nFlags ), playerList( rEditParameters.playerList ),
-					nPlayerIndex( rEditParameters.nPlayerIndex ), eDirectionType( rEditParameters.eDirectionType ),
-					fDirection( rEditParameters.fDirection ), bThumbnails( rEditParameters.bThumbnails )
+			: nFlags( rEditParameters.nFlags )
+			, playerList( rEditParameters.playerList )
+			, nPlayerIndex( rEditParameters.nPlayerIndex )
+			, eDirectionType( rEditParameters.eDirectionType )
+			, fDirection( rEditParameters.fDirection )
+			, bThumbnails( rEditParameters.bThumbnails )
 		{
 		}
 

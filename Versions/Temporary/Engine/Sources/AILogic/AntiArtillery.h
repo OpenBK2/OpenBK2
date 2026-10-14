@@ -22,12 +22,14 @@ public:
 public:
 	CRevealCircle() {}
 
-	CRevealCircle( const CVec2 &center, const float fR ) : circle( center, fR )
+	CRevealCircle( const CVec2 &center, const float fR )
+		: circle( center, fR )
 	{
 		SetUniqueIdForObjects();
 	}
 
-	CRevealCircle( const CCircle &_circle ) : circle( _circle )
+	CRevealCircle( const CCircle &_circle )
+		: circle( _circle )
 	{
 		SetUniqueIdForObjects();
 	}

@@ -77,7 +77,13 @@ class CArray2D
 	}
 
 public:
-	CArray2D() : data( 0 ), pData( 0 ), nXSize( 0 ), nYSize( 0 ) {}
+	CArray2D()
+		: data( 0 )
+		, pData( 0 )
+		, nXSize( 0 )
+		, nYSize( 0 )
+	{
+	}
 
 	CArray2D( int xsize, int ysize )
 	{
@@ -209,7 +215,11 @@ class CArray3DFetcher
 	CArray3D<T> &a;
 
 public:
-	CArray3DFetcher( T *_pData, CArray3D<T> &_a ) : pData( _pData ), a( _a ) {}
+	CArray3DFetcher( T *_pData, CArray3D<T> &_a )
+		: pData( _pData )
+		, a( _a )
+	{
+	}
 #ifdef _DEBUG
 	CBoundCheck<T> operator[]( int i ) const
 	{
@@ -245,7 +255,13 @@ public:
 		return 0;
 	}
 
-	CArray3D() : nXSize( 0 ), nYSize( 0 ), nZSize( 0 ), nXYSize( 0 ) {}
+	CArray3D()
+		: nXSize( 0 )
+		, nYSize( 0 )
+		, nZSize( 0 )
+		, nXYSize( 0 )
+	{
+	}
 
 	int GetXSize() const
 	{

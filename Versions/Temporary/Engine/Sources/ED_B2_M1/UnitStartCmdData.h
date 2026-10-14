@@ -20,7 +20,11 @@ struct SUnitStartCmdWindowData
 		std::string szTarget; // местоназначение команды - имя юнита или координаты
 
 		//
-		SCmd() : nIndex( -1 ), szType( RCSTR( "<UNKNOWN>" ) ) {}
+		SCmd()
+			: nIndex( -1 )
+			, szType( RCSTR( "<UNKNOWN>" ) )
+		{
+		}
 
 		bool operator==( const SCmd &cmd ) const
 		{

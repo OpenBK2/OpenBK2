@@ -9,7 +9,10 @@ struct SViewFilterData
 		bool bShow;
 
 		///
-		SObjTypeFilter() : bShow( false ) {}
+		SObjTypeFilter()
+			: bShow( false )
+		{
+		}
 
 		///
 		int operator&( IXmlSaver &xs )
@@ -34,9 +37,16 @@ struct SViewFilterData
 
 	///
 	SViewFilterData()
-			: bShowGrid( false ), szGridSize( RCSTR( "Visual tile" ) ), bShowBBoxes( false ), bWireFrame( false ),
-				bShowTerrain( true ), bShowShadows( true ), bShowWarfog( true ), bShowStats( false ), bMipmap( false ),
-				bOverdraw( false )
+		: bShowGrid( false )
+		, szGridSize( RCSTR( "Visual tile" ) )
+		, bShowBBoxes( false )
+		, bWireFrame( false )
+		, bShowTerrain( true )
+		, bShowShadows( true )
+		, bShowWarfog( true )
+		, bShowStats( false )
+		, bMipmap( false )
+		, bOverdraw( false )
 	{
 		std::vector<std::string> typeNames;
 		GetObjectTypesForFiltering( &typeNames );

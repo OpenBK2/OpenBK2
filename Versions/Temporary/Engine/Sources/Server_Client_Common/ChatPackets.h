@@ -32,8 +32,11 @@ public:
 	             const std::string &_szNick,
 	             const int _nID,
 	             bool _bIsBroadcast )
-			: CNetPacket( nClientID ), wszMessage( _wszMessage ), szNick( _szNick ), nID( _nID ),
-				bIsBroadcast( _bIsBroadcast )
+		: CNetPacket( nClientID )
+		, wszMessage( _wszMessage )
+		, szNick( _szNick )
+		, nID( _nID )
+		, bIsBroadcast( _bIsBroadcast )
 	{
 	}
 };
@@ -51,7 +54,10 @@ public:
 
 	CChatAFKPacket() {}
 
-	CChatAFKPacket( const int nClientID ) : CNetPacket( nClientID ) {}
+	CChatAFKPacket( const int nClientID )
+		: CNetPacket( nClientID )
+	{
+	}
 };
 
 class CChatAFKResponsePacket : public CNetPacket
@@ -70,7 +76,8 @@ public:
 	CChatAFKResponsePacket() {}
 
 	CChatAFKResponsePacket( const int nClientID, const std::string &_szAFKNick )
-			: CNetPacket( nClientID ), szAFKNick( _szAFKNick )
+		: CNetPacket( nClientID )
+		, szAFKNick( _szAFKNick )
 	{
 	}
 };
@@ -92,7 +99,8 @@ public:
 	CChatChannelPacket() {}
 
 	CChatChannelPacket( const int nClientID, const std::string &_szChannelName )
-			: CNetPacket( nClientID ), szChannelName( _szChannelName )
+		: CNetPacket( nClientID )
+		, szChannelName( _szChannelName )
 	{
 	}
 };
@@ -129,7 +137,8 @@ public:
 	CChatChannelClientsListPacket() {}
 
 	CChatChannelClientsListPacket( const int nClientID, const std::list<SIDNickPair> &_clientsList )
-			: CNetPacket( nClientID ), clientsList( _clientsList )
+		: CNetPacket( nClientID )
+		, clientsList( _clientsList )
 	{
 	}
 };
@@ -155,7 +164,10 @@ public:
 	CChatClientListChangeNotifyPacket() {}
 
 	CChatClientListChangeNotifyPacket( const int nClientID, const int _nID, const std::string &_szNick, bool _bJoined )
-			: CNetPacket( nClientID ), nID( _nID ), szNick( _szNick ), bJoined( _bJoined )
+		: CNetPacket( nClientID )
+		, nID( _nID )
+		, szNick( _szNick )
+		, bJoined( _bJoined )
 	{
 	}
 };
@@ -176,7 +188,8 @@ public:
 	CChatChannelsListRequestPacket() {}
 
 	CChatChannelsListRequestPacket( const int nClientID, const uint32_t _dwVersion )
-			: CNetPacket( nClientID ), dwVersion( _dwVersion )
+		: CNetPacket( nClientID )
+		, dwVersion( _dwVersion )
 	{
 	}
 };
@@ -207,8 +220,11 @@ public:
 	                         const std::list<std::string> &_added,
 	                         const std::list<std::string> &_removed,
 	                         bool _bIsFullUpdate )
-			: CNetPacket( nClientID ), dwVersion( _dwVersion ), added( _added ), removed( _removed ),
-				bIsFullUpdate( _bIsFullUpdate )
+		: CNetPacket( nClientID )
+		, dwVersion( _dwVersion )
+		, added( _added )
+		, removed( _removed )
+		, bIsFullUpdate( _bIsFullUpdate )
 	{
 	}
 };
@@ -240,7 +256,9 @@ public:
 	CChatModifyIgnoreFriendListPacket() {}
 
 	CChatModifyIgnoreFriendListPacket( const int nClientID, const std::string &_szPlayer, const EFriendIgnore _eChange )
-			: CNetPacket( nClientID ), szPlayer( _szPlayer ), eChange( _eChange )
+		: CNetPacket( nClientID )
+		, szPlayer( _szPlayer )
+		, eChange( _eChange )
 	{
 	}
 };
@@ -265,7 +283,9 @@ public:
 	CChatIgnoreFriendListPacket( const int nClientID,
 	                             const std::list<std::string> &_ignoreList,
 	                             const std::list<std::string> &_friendList )
-			: CNetPacket( nClientID ), ignoreList( _ignoreList ), friendList( _friendList )
+		: CNetPacket( nClientID )
+		, ignoreList( _ignoreList )
+		, friendList( _friendList )
 	{
 	}
 };
@@ -282,7 +302,10 @@ public:
 
 	CChatGetIgnoreFriendListPacket() {}
 
-	CChatGetIgnoreFriendListPacket( const int nClientID ) : CNetPacket( nClientID ) {}
+	CChatGetIgnoreFriendListPacket( const int nClientID )
+		: CNetPacket( nClientID )
+	{
+	}
 };
 
 enum EChatStatus
@@ -310,7 +333,9 @@ public:
 	CChatFriendNotifyPacket() {}
 
 	CChatFriendNotifyPacket( const int nClientID, const std::string &_szNick, const char _cStatus )
-			: CNetPacket( nClientID ), szNick( _szNick ), cChatStatus( _cStatus )
+		: CNetPacket( nClientID )
+		, szNick( _szNick )
+		, cChatStatus( _cStatus )
 	{
 	}
 };
@@ -333,7 +358,9 @@ public:
 	CChatChannelByNickPacket() {}
 
 	CChatChannelByNickPacket( const int nClientID, const std::string &_szNick, const std::string &_szChannel )
-			: CNetPacket( nClientID ), szNick( _szNick ), szChannel( _szChannel )
+		: CNetPacket( nClientID )
+		, szNick( _szNick )
+		, szChannel( _szChannel )
 	{
 	}
 };

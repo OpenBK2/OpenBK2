@@ -27,7 +27,10 @@ public:
 	}
 
 public:
-	CExecutorRestoreTransparencyQueue() : CExecutor( TID_RESTORE_TRANSPARENCY, 1 ) {}
+	CExecutorRestoreTransparencyQueue()
+		: CExecutor( TID_RESTORE_TRANSPARENCY, 1 )
+	{
+	}
 
 	int Segment();
 	bool NotifyEvent( const CExecutorEvent &event );

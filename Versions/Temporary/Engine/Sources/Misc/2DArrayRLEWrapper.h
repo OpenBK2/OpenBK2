@@ -24,7 +24,11 @@ public:
 	const int ReadCode( T *pRes, int *pNResCnt );
 
 public:
-	CArray2DRLEWrapper( CArray2D<T> &_a, const T _packingData ) : a( _a ), packingData( _packingData ) {}
+	CArray2DRLEWrapper( CArray2D<T> &_a, const T _packingData )
+		: a( _a )
+		, packingData( _packingData )
+	{
+	}
 };
 
 template <class T>
@@ -36,7 +40,11 @@ class CBitArray2DRLEWrapper
 	CBitArray2DRLEWrapper();
 
 public:
-	CBitArray2DRLEWrapper( T &_a, const uint8_t _packingData ) : a( _a ), packingData( _packingData ) {}
+	CBitArray2DRLEWrapper( T &_a, const uint8_t _packingData )
+		: a( _a )
+		, packingData( _packingData )
+	{
+	}
 
 	int operator&( struct IBinSaver &saver )
 	{

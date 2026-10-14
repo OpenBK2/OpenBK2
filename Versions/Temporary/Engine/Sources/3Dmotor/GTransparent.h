@@ -29,7 +29,10 @@ struct SMaterialParams
 	IMaterial *pMaterial;
 	SPerPartVariables vars;
 
-	SMaterialParams() : pMaterial( 0 ) {}
+	SMaterialParams()
+		: pMaterial( 0 )
+	{
+	}
 
 	bool operator==( const SMaterialParams &a ) const
 	{
@@ -67,7 +70,7 @@ public:
 };
 
 class CTranspLightTexture
-		: public NCache::CGatherElementBase<NCache::CShortPtrAllocator, NCache::CQuadTreeElement, CTranspLightTexture>
+	: public NCache::CGatherElementBase<NCache::CShortPtrAllocator, NCache::CQuadTreeElement, CTranspLightTexture>
 {
 	typedef NCache::CGatherElementBase<NCache::CShortPtrAllocator, NCache::CQuadTreeElement, CTranspLightTexture> CBase;
 	OBJECT_NOCOPY_METHODS( CTranspLightTexture );
@@ -119,8 +122,13 @@ struct STransparentRenderContext
 	                           ERenderPath _renderPath,
 	                           SRenderPathContext *_pRPC,
 	                           const SLightInfo &_lightInfo )
-			: bTnLMode( _bTnLMode ), pRC( _pRC ), pParticleLight( _pParticleLight ), pSky( _pSky ), renderPath( _renderPath ),
-				pRPC( _pRPC ), lightInfo( _lightInfo )
+		: bTnLMode( _bTnLMode )
+		, pRC( _pRC )
+		, pParticleLight( _pParticleLight )
+		, pSky( _pSky )
+		, renderPath( _renderPath )
+		, pRPC( _pRPC )
+		, lightInfo( _lightInfo )
 	{
 	}
 };
@@ -171,7 +179,11 @@ public:
 	}
 
 public:
-	CTransparentRenderer() : nTotalParticles( 0 ), nLitParticles( 0 ) {}
+	CTransparentRenderer()
+		: nTotalParticles( 0 )
+		, nLitParticles( 0 )
+	{
+	}
 
 	CTransparentRenderer( const CTransformStack &ts,
 	                      const CTPoint<int> &vLightBuffersize,

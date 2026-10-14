@@ -30,14 +30,23 @@ public:
 		return 0;
 	}
 
-	SSuperWeaponControl() : nPlayer( -1 ), nUnitID( -1 ), pUnit( 0 ), bEnabled( false ) {}
+	SSuperWeaponControl()
+		: nPlayer( -1 )
+		, nUnitID( -1 )
+		, pUnit( 0 )
+		, bEnabled( false )
+	{
+	}
 
 	SSuperWeaponControl( const int _nPlayer,
 	                     const int _nUnitID,
 	                     const NDb::SHPObjectRPGStats *_pUnit,
 	                     const bool _bEnabled )
-			: SAIBasicUpdate( ACTION_NOTIFY_SUPERWEAPON_CONTROL, 0 ), nPlayer( _nPlayer ), nUnitID( _nUnitID ),
-				pUnit( _pUnit ), bEnabled( _bEnabled )
+		: SAIBasicUpdate( ACTION_NOTIFY_SUPERWEAPON_CONTROL, 0 )
+		, nPlayer( _nPlayer )
+		, nUnitID( _nUnitID )
+		, pUnit( _pUnit )
+		, bEnabled( _bEnabled )
 	{
 	}
 };
@@ -58,10 +67,16 @@ public:
 		return 0;
 	}
 
-	SSuperWeaponRecycle() : nPlayer( -1 ), fPartComplete( 0.0f ) {}
+	SSuperWeaponRecycle()
+		: nPlayer( -1 )
+		, fPartComplete( 0.0f )
+	{
+	}
 
 	SSuperWeaponRecycle( const int _nPlayer, const float _fPartComplete )
-			: SAIBasicUpdate( ACTION_NOTIFY_SUPERWEAPON_RECYCLE, 0 ), nPlayer( _nPlayer ), fPartComplete( _fPartComplete )
+		: SAIBasicUpdate( ACTION_NOTIFY_SUPERWEAPON_RECYCLE, 0 )
+		, nPlayer( _nPlayer )
+		, fPartComplete( _fPartComplete )
 	{
 	}
 };

@@ -20,7 +20,10 @@ class CWindowConsoleOutput : public CWindow, public IConsoleOutput
 		uint32_t dwColor;
 		CPtr<IML> pGfxText;
 
-		SColorString() : dwColor( 0xffffffff ) {}
+		SColorString()
+			: dwColor( 0xffffffff )
+		{
+		}
 
 		SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth, IWindow *pFontScaleWindow );
 		int operator&( IBinSaver &saver );
@@ -42,7 +45,10 @@ protected:
 	}
 
 public:
-	CWindowConsoleOutput() : nBeginString( 0 ) {}
+	CWindowConsoleOutput()
+		: nBeginString( 0 )
+	{
+	}
 
 	int operator&( IBinSaver &saver );
 	void InitByDesc( const struct NDb::SUIDesc *_pDesc );

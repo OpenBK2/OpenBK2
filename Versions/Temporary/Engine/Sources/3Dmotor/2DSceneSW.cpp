@@ -25,7 +25,10 @@ template <class T, class TElement>
 class CSomeRender : public CArrayRasterizer<T, TElement>
 {
 public:
-	CSomeRender() : fScale( 1 ) {}
+	CSomeRender()
+		: fScale( 1 )
+	{
+	}
 
 	bool DoRenderBackface() const
 	{
@@ -309,7 +312,8 @@ public:
 	CSWRects() {}
 
 	CSWRects( const CRectLayout &_layout, CPtrFuncBase<CSWTextureData> *_pTexture )
-			: layout( _layout ), pTexture( _pTexture )
+		: layout( _layout )
+		, pTexture( _pTexture )
 	{
 	}
 
@@ -387,7 +391,10 @@ public:
 	CSWSpot() {}
 
 	CSWSpot( const CVec2 &_ptPos, const CVec2 &_ptSize, float _fAngle, CPtrFuncBase<CSWTextureData> *_pTexture )
-			: ptPos( _ptPos ), ptSize( _ptSize ), fAngle( _fAngle ), pTexture( _pTexture )
+		: ptPos( _ptPos )
+		, ptSize( _ptSize )
+		, fAngle( _fAngle )
+		, pTexture( _pTexture )
 	{
 	}
 
@@ -426,7 +433,9 @@ public:
 	C2DPostFilter() {}
 
 	C2DPostFilter( CPtrFuncBase<CSWTextureData> *_pMask, int _nCenterX, int _nCenterY )
-			: pMask( _pMask ), nCenterX( _nCenterX ), nCenterY( _nCenterY )
+		: pMask( _pMask )
+		, nCenterX( _nCenterX )
+		, nCenterY( _nCenterY )
 	{
 	}
 
@@ -532,7 +541,10 @@ public:
 
 	CGrayingFilter() {}
 
-	CGrayingFilter( const CVec4 &_vConv ) : vConvolution( _vConv ) {}
+	CGrayingFilter( const CVec4 &_vConv )
+		: vConvolution( _vConv )
+	{
+	}
 
 	void Draw( CTrueColorRender *pRes )
 	{

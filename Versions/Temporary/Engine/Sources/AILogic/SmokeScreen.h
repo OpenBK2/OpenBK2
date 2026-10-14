@@ -42,7 +42,10 @@ protected:
 	virtual void SetNewPlaceWithoutMapUpdate( const CVec3 &center, const uint16_t dir = 0 ) {}
 
 public:
-	CSmokeScreen() : bTransparencySet( false ) {}
+	CSmokeScreen()
+		: bTransparencySet( false )
+	{
+	}
 
 	CSmokeScreen( const CVec3 &vCenter, const float fRadius, const int nTransparency, const int nTime );
 	virtual void Init();

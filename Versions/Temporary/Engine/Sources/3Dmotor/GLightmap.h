@@ -78,7 +78,11 @@ class CLightmapTexture : public CPtrFuncBase<NGfx::CTexture>
 	void Recalc();
 
 public:
-	CLightmapTexture( CObj<CLightmapsLoader> _pLD, int _nTex ) : pLD( _pLD ), nTex( _nTex ) {}
+	CLightmapTexture( CObj<CLightmapsLoader> _pLD, int _nTex )
+		: pLD( _pLD )
+		, nTex( _nTex )
+	{
+	}
 
 	CLightmapTexture() {}
 
@@ -116,14 +120,22 @@ class CLMGeometryGen : public CPtrFuncBase<CObjectInfo>
 	virtual void Recalc();
 
 public:
-	CLMGeometryGen() : shift( 0, 0 ), bLMCalc( false ) {}
+	CLMGeometryGen()
+		: shift( 0, 0 )
+		, bLMCalc( false )
+	{
+	}
 
 	CLMGeometryGen( CPtrFuncBase<CObjectInfo> *p,
 	                const CTPoint<int> &_shift,
 	                float _fLMResolution,
 	                bool _bLMCalc,
 	                bool _bDump = false )
-			: pSrc( p ), shift( _shift ), bLMCalc( _bLMCalc ), fLMResolution( _fLMResolution ), bDump( _bDump )
+		: pSrc( p )
+		, shift( _shift )
+		, bLMCalc( _bLMCalc )
+		, fLMResolution( _fLMResolution )
+		, bDump( _bDump )
 	{
 	}
 

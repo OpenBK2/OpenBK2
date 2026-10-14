@@ -42,14 +42,18 @@ protected:
 
 public:
 	CHeightFogHolder( CPtrFuncBase<CObjectInfo> *_pGeom, const NDb::SHeightFog *_pHeightFog, const SFBTransform &_place )
-			: pGeom( _pGeom ), pHeightFog( _pHeightFog ), place( _place )
+		: pGeom( _pGeom )
+		, pHeightFog( _pHeightFog )
+		, place( _place )
 	{
 	}
 
 	CHeightFogHolder( CPtrFuncBase<CObjectInfo> *_pGeom,
 	                  const NDb::SHeightFog *_pHeightFog,
 	                  CFuncBase<SFBTransform> *_pPlace )
-			: pGeom( _pGeom ), pHeightFog( _pHeightFog ), pPlace( _pPlace )
+		: pGeom( _pGeom )
+		, pHeightFog( _pHeightFog )
+		, pPlace( _pPlace )
 	{
 		Identity( &( place.forward ) );
 		Identity( &( place.backward ) );

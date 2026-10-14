@@ -971,9 +971,16 @@ CAnimWaterMaterial::CAnimWaterMaterial( CPtrFuncBase<NGfx::CTexture> *_pTex,
                                         bool _bApplyFog,
                                         bool _bAddPlaced,
                                         bool _bDrawHorses )
-		: pTex( _pTex ), pSecondTex( _pSecondTex ), nPriority( _nPriority ), pTime( _pTime ),
-			bProjectOnTerrain( _bProjectOnTerrain ), nNumFramesX( _nNumFramesX ), nNumFramesY( _nNumFramesY ),
-			bApplyFog( _bApplyFog ), bAddPlaced( _bAddPlaced ), bDrawHorses( _bDrawHorses )
+	: pTex( _pTex )
+	, pSecondTex( _pSecondTex )
+	, nPriority( _nPriority )
+	, pTime( _pTime )
+	, bProjectOnTerrain( _bProjectOnTerrain )
+	, nNumFramesX( _nNumFramesX )
+	, nNumFramesY( _nNumFramesY )
+	, bApplyFog( _bApplyFog )
+	, bAddPlaced( _bAddPlaced )
+	, bDrawHorses( _bDrawHorses )
 {
 	fTexScaleX = 1.0f / nNumFramesX;
 	fTexScaleY = 1.0f / nNumFramesY;

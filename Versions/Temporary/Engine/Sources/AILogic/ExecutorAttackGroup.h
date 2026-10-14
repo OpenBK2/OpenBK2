@@ -37,7 +37,10 @@ public:
 	}
 
 public:
-	CExecutorAttackGroup( int _nGroupID ) : CExecutor( TID_ATTACKGROUP, 20 ), nGroupID( _nGroupID ), eState( EAGS_BEGIN )
+	CExecutorAttackGroup( int _nGroupID )
+		: CExecutor( TID_ATTACKGROUP, 20 )
+		, nGroupID( _nGroupID )
+		, eState( EAGS_BEGIN )
 	{
 	}
 

@@ -23,11 +23,23 @@
 const int CChildFrameWndBase::DEFAULT_REFRESH_RATE = 50;
 
 CChildFrameWndBase::CChildFrameWndBase()
-		: pSurface( 0 ), bUpdateSceneTimer( false ), nUpdateSceneTimerInterval( 0 ), bRunModeEnabled( false ),
-			bGameInputEnabled( false ), bInputEnabled( true ), bRenderEnabled( true ), bShowStatistic( false ),
-			bShowMovieBorders( false ), bEnableSceneUpdate( true ), bEnableScroll( false ), bIsSettingUp( false ),
-			bWasResized( true ), rectBorder1( 0, 0, 0, 0 ), rectBorder2( 0, 0, 0, 0 ), rectWindow( 0, 0, 0, 0 ),
-			rectMain( 0, 0, 0, 0 )
+	: pSurface( 0 )
+	, bUpdateSceneTimer( false )
+	, nUpdateSceneTimerInterval( 0 )
+	, bRunModeEnabled( false )
+	, bGameInputEnabled( false )
+	, bInputEnabled( true )
+	, bRenderEnabled( true )
+	, bShowStatistic( false )
+	, bShowMovieBorders( false )
+	, bEnableSceneUpdate( true )
+	, bEnableScroll( false )
+	, bIsSettingUp( false )
+	, bWasResized( true )
+	, rectBorder1( 0, 0, 0, 0 )
+	, rectBorder2( 0, 0, 0, 0 )
+	, rectWindow( 0, 0, 0, 0 )
+	, rectMain( 0, 0, 0, 0 )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SCENE, this );
 }

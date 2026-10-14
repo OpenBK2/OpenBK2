@@ -222,7 +222,10 @@ class CRowData : public wxTreeItemData
 public:
 	const EGDBOType eType;
 
-	explicit CRowData( EGDBOType _eType ) : eType( _eType ) {}
+	explicit CRowData( EGDBOType _eType )
+		: eType( _eType )
+	{
+	}
 };
 
 // A tree whose SortChildren orders rows as CompareRows does, which is what
@@ -235,7 +238,7 @@ class CSortedTreeCtrl : public wxTreeCtrl
 
 public:
 	CSortedTreeCtrl( wxWindow *pParent, wxWindowID nID, const wxPoint &rPosition, const wxSize &rSize, long nStyle )
-			: wxTreeCtrl( pParent, nID, rPosition, rSize, nStyle )
+		: wxTreeCtrl( pParent, nID, rPosition, rSize, nStyle )
 	{
 	}
 
@@ -315,7 +318,10 @@ public:
 	               IObjectBrowser::IListener *_pListener,
 	               IWidget *_pOwner,
 	               int _nGDBBrowserID )
-			: eKind( _eKind ), pListener( _pListener ), pOwner( _pOwner ), nGDBBrowserID( _nGDBBrowserID )
+		: eKind( _eKind )
+		, pListener( _pListener )
+		, pOwner( _pOwner )
+		, nGDBBrowserID( _nGDBBrowserID )
 	{
 		buildTimer.Bind( wxEVT_TIMER, [this]( wxTimerEvent & ) { BuildBatch(); } );
 	}
@@ -2482,7 +2488,8 @@ private:
 
 	public:
 		explicit CRowDropTarget( CWxObjectTree *_pTreeView )
-				: wxDropTarget( new wxCustomDataObject( wxDataFormat( ROW_DRAG_FORMAT ) ) ), pTreeView( _pTreeView )
+			: wxDropTarget( new wxCustomDataObject( wxDataFormat( ROW_DRAG_FORMAT ) ) )
+			, pTreeView( _pTreeView )
 		{
 		}
 

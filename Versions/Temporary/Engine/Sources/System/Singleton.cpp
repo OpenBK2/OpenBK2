@@ -74,9 +74,17 @@ struct SSingletonSerializer
 		CObjectBase *pObject;
 
 	public:
-		CSingleObject() : nID( 0 ), pObject( 0 ) {}
+		CSingleObject()
+			: nID( 0 )
+			, pObject( 0 )
+		{
+		}
 
-		CSingleObject( int _nID, CObjectBase *_pObject ) : nID( _nID ), pObject( _pObject ) {}
+		CSingleObject( int _nID, CObjectBase *_pObject )
+			: nID( _nID )
+			, pObject( _pObject )
+		{
+		}
 
 		//
 		int operator&( IBinSaver &saver )

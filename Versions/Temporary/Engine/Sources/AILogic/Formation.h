@@ -46,7 +46,11 @@ class CFormation : public CCommonUnit
 		}
 
 	public:
-		CCarryedMortar() : bHasMortar( false ), fHP( 0.0f ) {}
+		CCarryedMortar()
+			: bHasMortar( false )
+			, fHP( 0.0f )
+		{
+		}
 
 		bool HasMortar() const
 		{
@@ -61,9 +65,17 @@ class CFormation : public CCommonUnit
 		int nUnit = {};
 		int nUnitGun = {};
 
-		SGunInfo() : nUnit( -1 ), nUnitGun( -1 ) {}
+		SGunInfo()
+			: nUnit( -1 )
+			, nUnitGun( -1 )
+		{
+		}
 
-		SGunInfo( const int _nUnit, const int _nUnitGun ) : nUnit( _nUnit ), nUnitGun( _nUnitGun ) {}
+		SGunInfo( const int _nUnit, const int _nUnitGun )
+			: nUnit( _nUnit )
+			, nUnitGun( _nUnitGun )
+		{
+		}
 	};
 
 	enum EObjectInsideOf
@@ -88,7 +100,10 @@ class CFormation : public CCommonUnit
 			return 0;
 		}
 
-		SVirtualUnit() : pSoldier( 0 ) {}
+		SVirtualUnit()
+			: pSoldier( 0 )
+		{
+		}
 	};
 
 	ZDATA_( CCommonUnit )

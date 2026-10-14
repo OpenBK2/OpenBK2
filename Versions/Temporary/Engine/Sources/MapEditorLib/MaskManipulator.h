@@ -31,11 +31,19 @@ private:
 		unsigned nID;       // ID (если есть)
 		bool bHidden;       // Скрытое ли поле?
 
-		SProperty() : bFilled( false ), nID( INVALID_NODE_ID ), bHidden( false ) {}
+		SProperty()
+			: bFilled( false )
+			, nID( INVALID_NODE_ID )
+			, bHidden( false )
+		{
+		}
 
 		SProperty( const SProperty &rProperty )
-				: bFilled( rProperty.bFilled ), szName( rProperty.szName ), szType( rProperty.szType ), nID( rProperty.nID ),
-					bHidden( rProperty.bHidden )
+			: bFilled( rProperty.bFilled )
+			, szName( rProperty.szName )
+			, szType( rProperty.szType )
+			, nID( rProperty.nID )
+			, bHidden( rProperty.bHidden )
 		{
 		}
 

@@ -24,7 +24,8 @@ public:
 		STextureCoord() {}
 
 		STextureCoord( const CTRect<short> &_rcTexRect, ERectOrient _eOrient = NORMAL )
-				: eOrient( _eOrient ), rcTexRect( _rcTexRect )
+			: eOrient( _eOrient )
+			, rcTexRect( _rcTexRect )
 		{
 		}
 
@@ -54,7 +55,11 @@ public:
 
 		SRect(
 				short _nX, short _nY, const STextureCoord &_sTex, const STextureCoord &_sMask, const NGfx::SPixel8888 &_sColor )
-				: nX( _nX ), nY( _nY ), sTex( _sTex ), sMask( _sMask ), sColor( _sColor )
+			: nX( _nX )
+			, nY( _nY )
+			, sTex( _sTex )
+			, sMask( _sMask )
+			, sColor( _sColor )
 		{
 		}
 	};
@@ -64,7 +69,10 @@ public:
 	std::vector<SRect> rects;
 
 	//
-	CSWRectLayout() : scale( 1, 1 ) {}
+	CSWRectLayout()
+		: scale( 1, 1 )
+	{
+	}
 
 	void AddRect( short nScreenX,
 	              short nScreenY,

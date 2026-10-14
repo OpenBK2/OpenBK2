@@ -31,7 +31,11 @@ struct SScriptAreaWindowData
 		NDb::EScriptAreaTypes eType;
 
 		//
-		SScriptArea() : nScriptAreaID( INVALID_NODE_ID ), eType( NDb::EAT_CIRCLE ) {}
+		SScriptArea()
+			: nScriptAreaID( INVALID_NODE_ID )
+			, eType( NDb::EAT_CIRCLE )
+		{
+		}
 	};
 
 	std::vector<SScriptArea> scriptAreaList;        // содержимое лист-контрола

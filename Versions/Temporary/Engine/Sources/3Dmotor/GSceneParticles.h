@@ -44,8 +44,11 @@ protected:
 		             const SParticleLightInfo &lm,
 		             uint32_t _dwPColor,
 		             int _nBufferPlace )
-				: pEffect( _pEffect ), nStartParticle( _nStartParticle ), lmPlacement( lm ), dwPColor( _dwPColor ),
-					nBufferPlace( _nBufferPlace )
+			: pEffect( _pEffect )
+			, nStartParticle( _nStartParticle )
+			, lmPlacement( lm )
+			, dwPColor( _dwPColor )
+			, nBufferPlace( _nBufferPlace )
 		{
 		}
 	};
@@ -77,7 +80,11 @@ protected:
 	bool bIsAddingPart;
 
 public:
-	CBaseParticlesGeometry( IParticleOutput *_pRootOutput = 0 ) : bIsAddingPart( false ), pRootOutput( _pRootOutput ) {}
+	CBaseParticlesGeometry( IParticleOutput *_pRootOutput = 0 )
+		: bIsAddingPart( false )
+		, pRootOutput( _pRootOutput )
+	{
+	}
 
 	void RealStart( CParticleEffect *pEffect,
 	                int nStartParticle,
@@ -151,7 +158,11 @@ protected:
 		NGfx::CBufferLock<TFormat> res;
 		int nTarget;
 
-		SWriteBuffer( CObj<NGfx::CGeometry> *pGeom ) : res( pGeom, N_PARTICLES_BUFFER_SIZE ), nTarget( 0 ) {}
+		SWriteBuffer( CObj<NGfx::CGeometry> *pGeom )
+			: res( pGeom, N_PARTICLES_BUFFER_SIZE )
+			, nTarget( 0 )
+		{
+		}
 	};
 
 	SWriteBuffer *pWriteBuffer;
@@ -188,7 +199,11 @@ protected:
 	}
 
 public:
-	CParticlesGeometry( IParticleOutput *_pRootOutput = 0 ) : CBaseParticlesGeometry( _pRootOutput ), pWriteBuffer( 0 ) {}
+	CParticlesGeometry( IParticleOutput *_pRootOutput = 0 )
+		: CBaseParticlesGeometry( _pRootOutput )
+		, pWriteBuffer( 0 )
+	{
+	}
 
 	virtual void Start(
 			CParticleEffect *pEffect, int nStartParticle, const SBound &bv, const SParticleLightInfo &lm, uint32_t dwPColor )
@@ -232,7 +247,7 @@ public:
 	CShaderParticlesGeometry( IParticleOutput *_pRootOutput,
 	                          const SParticleOrientationInfo &_orientation,
 	                          const NGfx::SCompactVector &_vNormal )
-			: CParticlesGeometry<NGfx::SGeomVecFull>( _pRootOutput )
+		: CParticlesGeometry<NGfx::SGeomVecFull>( _pRootOutput )
 	{
 		orientation = _orientation;
 		vNormal = _vNormal;
@@ -292,7 +307,7 @@ public:
 	CTnLParticlesGeometry() {}
 
 	CTnLParticlesGeometry( IParticleOutput *_pRootOutput, const SParticleOrientationInfo &_orientation )
-			: CParticlesGeometry<NGfx::SGeomVecT2C1>( _pRootOutput )
+		: CParticlesGeometry<NGfx::SGeomVecT2C1>( _pRootOutput )
 	{
 		orientation = _orientation;
 	}

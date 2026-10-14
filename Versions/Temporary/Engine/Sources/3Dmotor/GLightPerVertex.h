@@ -28,7 +28,10 @@ struct SPerVertexLightState
 		SPointLightInfo() {}
 
 		SPointLightInfo( const CVec3 &_vCenter, float _fRadius, const CVec3 &_vColor, int _nID )
-				: vCenter( _vCenter ), fRadius( _fRadius ), vColor( _vColor ), nID( _nID )
+			: vCenter( _vCenter )
+			, fRadius( _fRadius )
+			, vColor( _vColor )
+			, nID( _nID )
 		{
 		}
 	};
@@ -141,9 +144,14 @@ struct SCacheLightingInfo
 	int nWarFogNewID, nWarFogOldID;
 
 	SCacheLightingInfo()
-			: bReplaceWithDirectional( false ), bDoNotCacheLighting( false ), bSkipLighting( false ), bSelfIllum( false ),
-				bMultiplyOnTransparency( true ), bSkipStaticPointLights( false ), bTranslucent( false ),
-				vTranslucentColor( 0, 0, 0 )
+		: bReplaceWithDirectional( false )
+		, bDoNotCacheLighting( false )
+		, bSkipLighting( false )
+		, bSelfIllum( false )
+		, bMultiplyOnTransparency( true )
+		, bSkipStaticPointLights( false )
+		, bTranslucent( false )
+		, vTranslucentColor( 0, 0, 0 )
 	{
 		Clear();
 	}

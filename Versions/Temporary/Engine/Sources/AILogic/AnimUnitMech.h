@@ -32,7 +32,11 @@ class CAnimUnitMech : public IAnimUnit
 			return 0;
 		}
 
-		SMovingState() : state( EMS_STOPPED ), timeOfIntentionStart( 0 ) {}
+		SMovingState()
+			: state( EMS_STOPPED )
+			, timeOfIntentionStart( 0 )
+		{
+		}
 	};
 
 	ZDATA
@@ -48,7 +52,10 @@ public:
 	}
 
 public:
-	CAnimUnitMech() : pOwner( 0 ) {}
+	CAnimUnitMech()
+		: pOwner( 0 )
+	{
+	}
 
 	virtual void Init( class CAIUnit *pOwner );
 

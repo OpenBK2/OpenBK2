@@ -185,10 +185,15 @@ public:
 		return N_SAVELOAD_VERSION;
 	}
 
-	CChunklessSerializer() : pRes( 0 ) {}
+	CChunklessSerializer()
+		: pRes( 0 )
+	{
+	}
 
 	CChunklessSerializer( IPointerSerialization *_pTracker, CMemoryStream *_pRes, ESaverMode _mode )
-			: pTracker( _pTracker ), pRes( _pRes ), mode( _mode )
+		: pTracker( _pTracker )
+		, pRes( _pRes )
+		, mode( _mode )
 	{
 	}
 };

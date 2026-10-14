@@ -7,7 +7,7 @@
 #include <cstdint>
 
 CExecutorAmbush::CExecutorAmbush( CAIUnit *_pUnit )
-		: CExecutorUnitCombatBonus( NDb::ABILITY_AMBUSH, _pUnit, TID_AMBUSH )
+	: CExecutorUnitCombatBonus( NDb::ABILITY_AMBUSH, _pUnit, TID_AMBUSH )
 {
 }
 

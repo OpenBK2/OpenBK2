@@ -56,7 +56,13 @@ std::string GetReplayPath()
 
 // SSaveInfo
 
-SSaveInfo::SSaveInfo() : bCustomMission( false ), bQuickSave( false ), bFromChapter( false ), bAutoSave( false ) {}
+SSaveInfo::SSaveInfo()
+	: bCustomMission( false )
+	, bQuickSave( false )
+	, bFromChapter( false )
+	, bAutoSave( false )
+{
+}
 
 void SSaveInfo::Read( const std::string &szFullFileName )
 {

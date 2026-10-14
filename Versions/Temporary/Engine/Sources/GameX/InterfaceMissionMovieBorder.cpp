@@ -7,7 +7,7 @@
 // CInterfaceMissionMovieBorder
 
 CInterfaceMissionMovieBorder::CInterfaceMissionMovieBorder()
-		: CInterfaceScreenBase( "MissionMovieBorder", "no_section" )
+	: CInterfaceScreenBase( "MissionMovieBorder", "no_section" )
 {
 }
 

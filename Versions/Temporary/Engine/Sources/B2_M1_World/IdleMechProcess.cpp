@@ -16,7 +16,10 @@ CIdleMechProcess::CIdleMechProcess( int nObjectID,
                                     const std::vector<std::string> &effectBones,
                                     const NDb::SComplexEffect *pComplexEffect,
                                     const bool _bRandomLocator )
-		: nID( nObjectID ), pEffect( pComplexEffect->GetSceneEffect() ), times( 0 ), bRandomLocator( _bRandomLocator )
+	: nID( nObjectID )
+	, pEffect( pComplexEffect->GetSceneEffect() )
+	, times( 0 )
+	, bRandomLocator( _bRandomLocator )
 {
 	bones.resize( effectBones.size() );
 	for ( int i = 0; i < effectBones.size(); ++i )

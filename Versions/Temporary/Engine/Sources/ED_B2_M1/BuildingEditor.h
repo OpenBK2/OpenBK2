@@ -17,7 +17,10 @@ class CBuildingRPGStatsEditorSettings
 public:
 	bool bShowShortcutBar;
 
-	CBuildingRPGStatsEditorSettings() : bShowShortcutBar( true ) {}
+	CBuildingRPGStatsEditorSettings()
+		: bShowShortcutBar( true )
+	{
+	}
 
 	// serializing...
 	int operator&( IXmlSaver &xs );

@@ -112,7 +112,10 @@ public:
 
 	CExplosionDecalGeometry(
 			IPart *_pPart, const std::vector<CVec3> &positions, const CVec3 &_vOrigin, float _fSize, float _fRotation )
-			: CPerPolyDecal( _pPart, positions ), vOrigin( _vOrigin ), fSize( _fSize ), fRotation( _fRotation )
+		: CPerPolyDecal( _pPart, positions )
+		, vOrigin( _vOrigin )
+		, fSize( _fSize )
+		, fRotation( _fRotation )
 	{
 	}
 };
@@ -151,8 +154,12 @@ public:
 	                       const CVec2 &_vSize,
 	                       float _fRotation,
 	                       const CVec2 &_vShift = VNULL2 )
-			: CPerPolyDecal( _pPart, positions ), vOrigin( _vOrigin ), vNormal( _vNormal ), vSize( _vSize ),
-				fRotation( _fRotation ), vShift( _vShift )
+		: CPerPolyDecal( _pPart, positions )
+		, vOrigin( _vOrigin )
+		, vNormal( _vNormal )
+		, vSize( _vSize )
+		, fRotation( _fRotation )
+		, vShift( _vShift )
 	{
 	}
 };

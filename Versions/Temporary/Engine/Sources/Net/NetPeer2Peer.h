@@ -35,7 +35,11 @@ public:
 
 		SPacket() {}
 
-		SPacket( UCID _addr, CMemoryStream &_pkt ) : addr( _addr ), pkt( _pkt ) {}
+		SPacket( UCID _addr, CMemoryStream &_pkt )
+			: addr( _addr )
+			, pkt( _pkt )
+		{
+		}
 	};
 
 	std::vector<SPacket> packets;
@@ -49,7 +53,10 @@ public:
 	void KickClient( UCID addr, bool bIsBroadcast );
 	bool IsActive( UCID addr );
 
-	CP2PTracker() : maxPeerID( 0 ) {}
+	CP2PTracker()
+		: maxPeerID( 0 )
+	{
+	}
 
 private:
 	struct SAck
@@ -81,7 +88,11 @@ private:
 
 		SPeerClient() {}
 
-		SPeerClient( UCID _addr, PEER_ID _id ) : addr( _addr ), id( _id ) {}
+		SPeerClient( UCID _addr, PEER_ID _id )
+			: addr( _addr )
+			, id( _id )
+		{
+		}
 	};
 
 	struct SPeer

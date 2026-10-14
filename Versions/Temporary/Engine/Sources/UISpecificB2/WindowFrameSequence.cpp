@@ -16,7 +16,10 @@
 
 // CWindowFrameSequence
 
-CWindowFrameSequence::CWindowFrameSequence() : timeStart( 0 ) {}
+CWindowFrameSequence::CWindowFrameSequence()
+	: timeStart( 0 )
+{
+}
 
 CWindowFrameSequence::~CWindowFrameSequence() {}
 

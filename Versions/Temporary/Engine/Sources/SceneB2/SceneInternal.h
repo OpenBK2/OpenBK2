@@ -79,7 +79,10 @@ public:
 
 	CAIMapVisitor() {}
 
-	CAIMapVisitor( CSyncSrc<IVisObj> *pSrc, NAI::IAIMap *pAIMap ) : dst( pSrc, pAIMap ) {}
+	CAIMapVisitor( CSyncSrc<IVisObj> *pSrc, NAI::IAIMap *pAIMap )
+		: dst( pSrc, pAIMap )
+	{
+	}
 
 	void Sync( NAI::IAIMap::ESyncType st = NAI::IAIMap::ST_NORMAL )
 	{
@@ -113,7 +116,11 @@ protected:
 	CSceneIconInfo() {}
 
 public:
-	CSceneIconInfo( ICamera *_pCamera ) : pCamera( _pCamera ), bUpdate( true ) {}
+	CSceneIconInfo( ICamera *_pCamera )
+		: pCamera( _pCamera )
+		, bUpdate( true )
+	{
+	}
 
 	//
 	void CreateIcon( const int _nID,
@@ -203,9 +210,16 @@ public:
 	CPtr<NGScene::IMaterial> pMaterial;
 
 	//
-	CVisObjReflectionInfo() : bWasUpdate( false ) {}
+	CVisObjReflectionInfo()
+		: bWasUpdate( false )
+	{
+	}
 
-	CVisObjReflectionInfo( CTerrainManager *_pTerraManager ) : pTerraManager( _pTerraManager ), bWasUpdate( false ) {}
+	CVisObjReflectionInfo( CTerrainManager *_pTerraManager )
+		: pTerraManager( _pTerraManager )
+		, bWasUpdate( false )
+	{
+	}
 
 	void SetGeometry( CPtrFuncBase<NGScene::CObjectInfo> *_pGeometry )
 	{
@@ -251,7 +265,10 @@ public:
 
 	CIconAIMapVisitor() {}
 
-	CIconAIMapVisitor( CSyncSrc<CSceneIconInfo> *pSrc, NAI::IAIMap *pAIMap ) : dst( pSrc, pAIMap ) {}
+	CIconAIMapVisitor( CSyncSrc<CSceneIconInfo> *pSrc, NAI::IAIMap *pAIMap )
+		: dst( pSrc, pAIMap )
+	{
+	}
 
 	void Sync( NAI::IAIMap::ESyncType st = NAI::IAIMap::ST_NORMAL )
 	{

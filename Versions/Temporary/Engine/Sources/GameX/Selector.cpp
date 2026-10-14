@@ -108,10 +108,19 @@ bool CSelector::IsAllUnitsCommand( EActionCommand eCommand )
 }
 
 CSelector::CSelector()
-		: groups( 10 ), eSelectionState( ssNone ), nCurrentAbilityGroup( -1 ), bUnloadMode( false ),
-			uaAllCommonActions( MakeCommonActions() ), uaMultiClassActions( MakeMultiClassActions() ), nMaxUnitSlots( 0 ),
-			nMaxUnitPerSlot( 0 ), bNeedUpdateSelectedUnits( false ), bNeedUpdatePreselectedObject( false ),
-			bNeedUpdateAbilityIcons( false ), bNeedUpdateActionButtons( false ), bNeedUpdateSelectionInterior( false )
+	: groups( 10 )
+	, eSelectionState( ssNone )
+	, nCurrentAbilityGroup( -1 )
+	, bUnloadMode( false )
+	, uaAllCommonActions( MakeCommonActions() )
+	, uaMultiClassActions( MakeMultiClassActions() )
+	, nMaxUnitSlots( 0 )
+	, nMaxUnitPerSlot( 0 )
+	, bNeedUpdateSelectedUnits( false )
+	, bNeedUpdatePreselectedObject( false )
+	, bNeedUpdateAbilityIcons( false )
+	, bNeedUpdateActionButtons( false )
+	, bNeedUpdateSelectionInterior( false )
 {
 	for ( int i = 0; i < groups.size(); ++i )
 	{

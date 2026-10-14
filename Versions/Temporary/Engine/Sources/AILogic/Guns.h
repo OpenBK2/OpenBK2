@@ -43,7 +43,11 @@ public:
 	SCommonGunInfo() {}
 
 	SCommonGunInfo( bool _bFiring, const int _nAmmo, const int _nPlatform, const int _nGun )
-			: bFiring( _bFiring ), nAmmo( _nAmmo ), nPlatform( _nPlatform ), lastShoot( 0 ), nGun( _nGun )
+		: bFiring( _bFiring )
+		, nAmmo( _nAmmo )
+		, nPlatform( _nPlatform )
+		, lastShoot( 0 )
+		, nGun( _nGun )
 	{
 	}
 };
@@ -226,8 +230,12 @@ protected:
 
 public:
 	CBasicGun()
-			: pOwner( 0 ), pAntiAviationTarget( 0 ), bParallelGun( false ), vLastShotPoint( VNULL3 ), lastCheckTurnTime( 0 ),
-				bCanShootToUnitWOMove( false )
+		: pOwner( 0 )
+		, pAntiAviationTarget( 0 )
+		, bParallelGun( false )
+		, vLastShotPoint( VNULL3 )
+		, lastCheckTurnTime( 0 )
+		, bCanShootToUnitWOMove( false )
 	{
 	}
 

@@ -2,7 +2,8 @@
 #include "Stats_B2_M1/Season.h"
 #include "SeasonMnemonics.h"
 
-CSeasonMnemonics::CSeasonMnemonics() : CMnemonicsCollector<int>( NDB_DEFAULT_SEASON, NDB_DEFAULT_SEASON_MNEMONIC )
+CSeasonMnemonics::CSeasonMnemonics()
+	: CMnemonicsCollector<int>( NDB_DEFAULT_SEASON, NDB_DEFAULT_SEASON_MNEMONIC )
 {
 	Insert( NDb::SEASON_WINTER, "SEASON_WINTER" );
 	Insert( NDb::SEASON_SPRING, "SEASON_SPRING" );
@@ -13,7 +14,7 @@ CSeasonMnemonics::CSeasonMnemonics() : CMnemonicsCollector<int>( NDB_DEFAULT_SEA
 }
 
 CSeasonFilePostfixMnemonics::CSeasonFilePostfixMnemonics()
-		: CMnemonicsCollector<int>( NDB_DEFAULT_SEASON, NDB_DEFAULT_SEASON_FILE_POSTFIX_MNEMONIC )
+	: CMnemonicsCollector<int>( NDB_DEFAULT_SEASON, NDB_DEFAULT_SEASON_FILE_POSTFIX_MNEMONIC )
 {
 	Insert( NDb::SEASON_WINTER, "w" );
 	Insert( NDb::SEASON_SPRING, "s" );
@@ -24,7 +25,7 @@ CSeasonFilePostfixMnemonics::CSeasonFilePostfixMnemonics()
 }
 
 CSeasonFolderPostfixMnemonics::CSeasonFolderPostfixMnemonics()
-		: CMnemonicsCollector<int>( NDB_DEFAULT_SEASON, NDB_DEFAULT_SEASON_OBJECT_POSTFIX_MNEMONIC )
+	: CMnemonicsCollector<int>( NDB_DEFAULT_SEASON, NDB_DEFAULT_SEASON_OBJECT_POSTFIX_MNEMONIC )
 {
 	Insert( NDb::SEASON_WINTER, "Winter" );
 	Insert( NDb::SEASON_SPRING, "Spring" );

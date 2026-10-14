@@ -51,11 +51,16 @@ public:
 	void AdvanceToNextIndex();
 
 public:
-	CComplexObstacleCreation() : CLongObjectCreation( -1, false ) {}
+	CComplexObstacleCreation()
+		: CLongObjectCreation( -1, false )
+	{
+	}
 
 	CComplexObstacleCreation( const int _nPlayer, const bool bAllowAIModification )
-			: nCurIndex( 0 ), CLongObjectCreation( _nPlayer, bAllowAIModification ), bTmpNonCheatPath( false ),
-				bCannot( false )
+		: nCurIndex( 0 )
+		, CLongObjectCreation( _nPlayer, bAllowAIModification )
+		, bTmpNonCheatPath( false )
+		, bCannot( false )
 	{
 	}
 

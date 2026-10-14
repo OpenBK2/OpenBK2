@@ -37,7 +37,8 @@ struct CNativeDockHint::SImpl
 	}
 };
 
-CNativeDockHint::CNativeDockHint( wxWindow *pParent ) : pImpl( new SImpl )
+CNativeDockHint::CNativeDockHint( wxWindow *pParent )
+	: pImpl( new SImpl )
 {
 	pImpl->nBorder = pParent->FromDIP( 3 );
 	pImpl->pWindow = gtk_window_new( GTK_WINDOW_POPUP );

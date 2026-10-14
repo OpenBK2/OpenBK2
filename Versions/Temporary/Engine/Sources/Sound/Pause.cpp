@@ -53,8 +53,10 @@ bool CPause::IsFinished() const
 }
 
 CPause::CPause( const NDb::SPlayPause &_Pause )
-		: timeToPause( _Pause.nPauseTime + NWin32Random::Random( 0, _Pause.nPauseRandom ) ), eState( EPS_NOT_STARTED ),
-			timeLastCall( 0 ), timePaused( 0 )
+	: timeToPause( _Pause.nPauseTime + NWin32Random::Random( 0, _Pause.nPauseRandom ) )
+	, eState( EPS_NOT_STARTED )
+	, timeLastCall( 0 )
+	, timePaused( 0 )
 {
 }
 } // namespace NMusicSystem

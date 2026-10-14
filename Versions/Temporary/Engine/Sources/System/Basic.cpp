@@ -58,7 +58,10 @@ static struct STracker
 {
 	bool bIsRunning;
 
-	STracker() : bIsRunning( true ) {}
+	STracker()
+		: bIsRunning( true )
+	{
+	}
 
 	~STracker()
 	{
@@ -175,7 +178,14 @@ struct STypeStats
 	int nSizeOf;
 	int nSerializeSize;
 
-	STypeStats() : nObjectsNumber( 0 ), nValidsNumber( 0 ), nInvalidsNumber( 0 ), nSizeOf( 0 ), nSerializeSize( 0 ) {}
+	STypeStats()
+		: nObjectsNumber( 0 )
+		, nValidsNumber( 0 )
+		, nInvalidsNumber( 0 )
+		, nSizeOf( 0 )
+		, nSerializeSize( 0 )
+	{
+	}
 };
 
 struct STypeStatsComparer

@@ -44,8 +44,11 @@ void StartEffectAndDeleteIfNeeded( CStateSequiences::iterator &ss,
 }
 
 CWindowScreen::CWindowScreen()
-		: nMouseButtonState( 0 ), bindShift( "shift_key" ), bindCtrl( "ctrl_key" ), bindAlt( "alt_key" ),
-			bIsScreenFocused( false )
+	: nMouseButtonState( 0 )
+	, bindShift( "shift_key" )
+	, bindCtrl( "ctrl_key" )
+	, bindAlt( "alt_key" )
+	, bIsScreenFocused( false )
 {
 	priorityEvents.AddObserver( "win_left_button_down", &CWindowScreen::MsgOnLMouseDown );
 	priorityEvents.AddObserver( "win_left_button_up", &CWindowScreen::MsgOnLMouseUp );

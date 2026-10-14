@@ -31,7 +31,11 @@ public:
 	std::vector<CVec2> iconsSizesMax;
 
 	//
-	CVisObjIconInfo( ICamera *_pCamera ) : pCamera( _pCamera ), bUpdate( true ) {}
+	CVisObjIconInfo( ICamera *_pCamera )
+		: pCamera( _pCamera )
+		, bUpdate( true )
+	{
+	}
 
 	//
 	void ForceUpdate()
@@ -66,7 +70,9 @@ struct SVisObjIcons
 		SPresentIcon() {}
 
 		SPresentIcon( const NDb::SIconsSet::SIconType::EIconTypeEnum _eType, const float _fValue, const uint8_t _cAlpha )
-				: eType( _eType ), fValue( _fValue ), cAlpha( _cAlpha )
+			: eType( _eType )
+			, fValue( _fValue )
+			, cAlpha( _cAlpha )
 		{
 		}
 

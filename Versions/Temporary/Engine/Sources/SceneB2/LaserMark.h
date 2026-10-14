@@ -41,7 +41,8 @@ public:
 	CLaserMarkTrace() {}
 
 	CLaserMarkTrace( const CVec3 &vStart, const CVec3 &vEnd, CFuncBase<STime> *_pTimer )
-			: timeStart( 0 ), pTimer( _pTimer )
+		: timeStart( 0 )
+		, pTimer( _pTimer )
 	{
 		timeStart = pTimer->GetValue();
 		UpdatePoints( vStart, vEnd );

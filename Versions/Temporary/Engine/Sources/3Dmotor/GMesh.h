@@ -18,7 +18,10 @@ protected:
 	virtual void Recalc();
 
 public:
-	CMeshBound( CFuncBase<SSkeletonMatrices> *_pAnimation = 0 ) : pAnimation( _pAnimation ) {}
+	CMeshBound( CFuncBase<SSkeletonMatrices> *_pAnimation = 0 )
+		: pAnimation( _pAnimation )
+	{
+	}
 
 	int operator&( CStructureSaver &f );
 };

@@ -101,7 +101,11 @@ public:
 
 		SMap() {}
 
-		SMap( int _nPieceID, int _nUserID ) : nPieceID( _nPieceID ), nUserID( _nUserID ) {}
+		SMap( int _nPieceID, int _nUserID )
+			: nPieceID( _nPieceID )
+			, nUserID( _nUserID )
+		{
+		}
 	};
 
 	ZDATA
@@ -135,7 +139,10 @@ public:
 	             CObjectBase *_pSrc,
 	             int _nMask,
 	             int _nFloor )
-			: pGeometry( _pGeometry ), pos( _pos ), src( _pSrc, _pArmor, _nFloor, _nMask ), pUserHulls( _pUserHulls )
+		: pGeometry( _pGeometry )
+		, pos( _pos )
+		, src( _pSrc, _pArmor, _nFloor, _nMask )
+		, pUserHulls( _pUserHulls )
 	{
 		if ( IsValid( pUserHulls ) )
 		{
@@ -165,7 +172,7 @@ public:
 	                   CObjectBase *_pSrc,
 	                   int _nMask,
 	                   int _nFloor )
-			: CConvexHull( _pUserHulls, _pGeometry, _pos, _pArmor, _pSrc, _nMask, _nFloor )
+		: CConvexHull( _pUserHulls, _pGeometry, _pos, _pArmor, _pSrc, _nMask, _nFloor )
 	{
 	}
 
@@ -202,8 +209,9 @@ public:
 	                    int _nFloor,
 	                    CFuncBase<SBound> *_pBound,
 	                    CFuncBase<NAnimation::SGrannySkeletonPose> *_pAnimation )
-			: CConvexHull( _pUserHulls, _pGeometry, _pos, _pArmor, _pSrc, _nMask, _nFloor ), pBound( _pBound ),
-				pAnimationTracker( _pAnimation )
+		: CConvexHull( _pUserHulls, _pGeometry, _pos, _pArmor, _pSrc, _nMask, _nFloor )
+		, pBound( _pBound )
+		, pAnimationTracker( _pAnimation )
 	{
 	}
 
@@ -430,7 +438,10 @@ public:
 		STrackerDescr() {}
 
 		STrackerDescr( IAIMapTracker *_p, const SBound &_b, int _nMask, bool _bInform )
-				: pTracker( _p ), bound( _b ), nMask( _nMask ), bInformOnDoorFlip( _bInform )
+			: pTracker( _p )
+			, bound( _b )
+			, nMask( _nMask )
+			, bInformOnDoorFlip( _bInform )
 		{
 		}
 	};
@@ -472,7 +483,11 @@ public:
 		return 0;
 	}
 
-	CVolumeNode() : nFree( -1 ), nInformMask( 0 ) {}
+	CVolumeNode()
+		: nFree( -1 )
+		, nInformMask( 0 )
+	{
+	}
 
 	int AddHull( CConvexHull *pHull, const SBound &bound );
 	void RemoveHull( int nIndex ); //CConvexHull *pHull );
@@ -591,7 +606,11 @@ class CAIMap : public IAIMap
 			std::vector<CPtr<CObjectBase>> *pRes, const SBound &b, int nMaskOr, int nMaskNot, CVolumeNode *pNode );
 
 public:
-	CAIMap() : nMaxFloor( 0 ), nAllTrackersMask( 0 ) {}
+	CAIMap()
+		: nMaxFloor( 0 )
+		, nAllTrackersMask( 0 )
+	{
+	}
 
 	CAIMap( int );
 	virtual void Sync( ESyncType st );
@@ -909,7 +928,9 @@ void CVolumeNode::AddTracker( IAIMapTracker *_pTracker, const SBound &_bound, in
 
 // CAIMap
 
-CAIMap::CAIMap( int ) : nMaxFloor( 0 ), nAllTrackersMask( 0 )
+CAIMap::CAIMap( int )
+	: nMaxFloor( 0 )
+	, nAllTrackersMask( 0 )
 {
 	//pStability = CreateStabilityTrackers( _pWorld );
 	pUserHullsTracker = new CUserHullsTracker;
@@ -1152,7 +1173,10 @@ struct STestSphere
 {
 	T *p;
 
-	STestSphere( T *_p ) : p( _p ) {}
+	STestSphere( T *_p )
+		: p( _p )
+	{
+	}
 
 	bool operator()( const CVec3 &ptCenter, float fRadius, bool ) const
 	{
@@ -1211,7 +1235,11 @@ struct SFrustrumSelect
 	CTransformStack &ts;
 	float fRadiusKoef;
 
-	SFrustrumSelect( CTransformStack &_ts, float _f ) : ts( _ts ), fRadiusKoef( _f ) {}
+	SFrustrumSelect( CTransformStack &_ts, float _f )
+		: ts( _ts )
+		, fRadiusKoef( _f )
+	{
+	}
 
 	bool operator()( const CVec3 &ptCenter, float fRadius, bool bCheckPiece ) const
 	{
@@ -1275,7 +1303,11 @@ struct SSphereSphere
 	CVec3 ptCenter;
 	float fRadius;
 
-	SSphereSphere( const CVec3 &_ptCenter, float _fRadius ) : ptCenter( _ptCenter ), fRadius( _fRadius ) {}
+	SSphereSphere( const CVec3 &_ptCenter, float _fRadius )
+		: ptCenter( _ptCenter )
+		, fRadius( _fRadius )
+	{
+	}
 
 	bool operator()( const CVec3 &_ptCenter, float _fRadius, bool ) const
 	{

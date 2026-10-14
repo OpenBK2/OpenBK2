@@ -154,7 +154,11 @@ struct SIconsSetInfo
 
 	SIconsSetInfo() {}
 
-	SIconsSetInfo( float _fRaising, float _fHPBarLen ) : fRaising( _fRaising ), fHPBarLen( _fHPBarLen ) {}
+	SIconsSetInfo( float _fRaising, float _fHPBarLen )
+		: fRaising( _fRaising )
+		, fHPBarLen( _fHPBarLen )
+	{
+	}
 };
 
 struct SAbilityInfo
@@ -162,9 +166,17 @@ struct SAbilityInfo
 	SAbilitySwitchState abilityState;
 	float fParam = 0.0f;
 
-	SAbilityInfo() : abilityState( EASS_READY_TO_ON ), fParam( 0.0f ) {}
+	SAbilityInfo()
+		: abilityState( EASS_READY_TO_ON )
+		, fParam( 0.0f )
+	{
+	}
 
-	SAbilityInfo( SAbilitySwitchState _abilityState, float _fParam ) : abilityState( _abilityState ), fParam( _fParam ) {}
+	SAbilityInfo( SAbilitySwitchState _abilityState, float _fParam )
+		: abilityState( _abilityState )
+		, fParam( _fParam )
+	{
+	}
 };
 
 typedef std::unordered_map<NDb::EUnitSpecialAbility, SAbilityInfo, SEnumHash> CAbilityInfo;
@@ -703,9 +715,16 @@ protected:
 
 public:
 	CMOSelectable()
-			: bSelected( false ), bCanSelect( true ), nSelectionGroup( -1 ), bIconHitbar( false ),
-				eIconGroup( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE ), bDisableIcons( false ), bIsMousePicked( false ),
-				bHighlighted( false ), dwVisualStatus( 0 ), fVisualRadius( -1.0f )
+		: bSelected( false )
+		, bCanSelect( true )
+		, nSelectionGroup( -1 )
+		, bIconHitbar( false )
+		, eIconGroup( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE )
+		, bDisableIcons( false )
+		, bIsMousePicked( false )
+		, bHighlighted( false )
+		, dwVisualStatus( 0 )
+		, fVisualRadius( -1.0f )
 	{
 	}
 

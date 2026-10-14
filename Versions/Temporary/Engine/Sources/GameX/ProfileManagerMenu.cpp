@@ -13,7 +13,8 @@
 // CInterfaceProfileManager
 
 CInterfaceProfileManager::CInterfaceProfileManager()
-		: CInterfaceScreenBase( "ProfileManager", "profile_manager_menu" ), bNoUpdateSelection( false )
+	: CInterfaceScreenBase( "ProfileManager", "profile_manager_menu" )
+	, bNoUpdateSelection( false )
 {
 	AddObserver( "message_box_ok", &CInterfaceProfileManager::MsgOk );
 	AddObserver( "message_box_cancel", &CInterfaceProfileManager::MsgCancel );

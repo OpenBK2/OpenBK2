@@ -53,7 +53,11 @@ class CVisitor : public NLang::IVisitor
 	void ParseImportantStructBaseAttr( NDb::NTypeDef::STypeStructBase *pStruct );
 
 public:
-	CVisitor() : pTypes( 0 ), bFailed( false ) {}
+	CVisitor()
+		: pTypes( 0 )
+		, bFailed( false )
+	{
+	}
 
 	CVisitor( std::vector<CObj<NDb::NTypeDef::STypeDef>> *pTypes,
 	          NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );

@@ -410,7 +410,8 @@ bool CReinfPointsState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool
 	return false;
 }
 
-CReinfPointsState::CReinfPointsState( CMapInfoEditor *_pMapInfoEditor ) : pMapInfoEditor( _pMapInfoEditor )
+CReinfPointsState::CReinfPointsState( CMapInfoEditor *_pMapInfoEditor )
+	: pMapInfoEditor( _pMapInfoEditor )
 {
 	nSelectedPlayer = 0;
 	nSelectedReinfPoint = -1;

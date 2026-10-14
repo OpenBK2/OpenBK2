@@ -94,7 +94,9 @@ LRESULT CALLBACK SplashScreenWndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, L
 	return 0;
 }
 
-CSplashScreen::CBitmap::CBitmap() : hBitmap( 0 ), hPalette( 0 )
+CSplashScreen::CBitmap::CBitmap()
+	: hBitmap( 0 )
+	, hPalette( 0 )
 {
 	bitmapInfo.bmHeight = 0;
 	bitmapInfo.bmWidth = 0;
@@ -195,7 +197,10 @@ bool CSplashScreen::CBitmap::Draw( HDC *pHDC )
 	return true;
 }
 
-CSplashScreen::CSplashScreen() : hWnd( 0 ) {}
+CSplashScreen::CSplashScreen()
+	: hWnd( 0 )
+{
+}
 
 CSplashScreen::~CSplashScreen()
 {
@@ -338,7 +343,11 @@ namespace
 		SDL_Surface *pImage;
 
 	public:
-		CSplashScreen() : pWindow( 0 ), pImage( 0 ) {}
+		CSplashScreen()
+			: pWindow( 0 )
+			, pImage( 0 )
+		{
+		}
 
 		~CSplashScreen();
 

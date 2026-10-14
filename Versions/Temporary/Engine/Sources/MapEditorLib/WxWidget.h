@@ -60,7 +60,10 @@ class CWxWindowWidget : public IWidget, public IWxWidget
 	wxWindow *pWindow;
 
 public:
-	explicit CWxWindowWidget( wxWindow *_pWindow ) : pWindow( _pWindow ) {}
+	explicit CWxWindowWidget( wxWindow *_pWindow )
+		: pWindow( _pWindow )
+	{
+	}
 
 	virtual void *GetNativeWidget()
 	{

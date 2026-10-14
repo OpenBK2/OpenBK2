@@ -23,7 +23,10 @@
 
 //REGISTER_EDITOR_IN_DLL( Effect, CEffectEditor )
 
-CEffectEditor::CEffectEditor() : pEffectState( 0 ) {}
+CEffectEditor::CEffectEditor()
+	: pEffectState( 0 )
+{
+}
 
 const char *CEffectEditor::GetDesiredMapSeason() const
 {

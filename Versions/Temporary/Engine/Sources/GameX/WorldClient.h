@@ -84,7 +84,10 @@ private:
 		NTimer::STime nTime;
 
 	public:
-		SMapCommandAck() : nTime( 0 ) {}
+		SMapCommandAck()
+			: nTime( 0 )
+		{
+		}
 
 		void Place( const CVec3 &vPos );
 		void Place( const CVec3 &vPos, const CVec3 &vStartPos );

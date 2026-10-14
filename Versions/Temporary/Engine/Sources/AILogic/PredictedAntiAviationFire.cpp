@@ -16,7 +16,9 @@ CPredictedAntiAviationFire::SPredict::SPredict( const CVec3 &pt,
                                                 const float _fRange,
                                                 const NTimer::STime _timeToFire,
                                                 CAIUnit *pOwner )
-		: vPt( pt ), fRange( _fRange ), timeToFire( _timeToFire )
+	: vPt( pt )
+	, fRange( _fRange )
+	, timeToFire( _timeToFire )
 {
 	const CVec2 vCenter( pOwner->GetCenterPlain() );
 	const CVec2 vDir( pt.x - vCenter.x, pt.y - vCenter.y );

@@ -39,9 +39,15 @@ struct SSimpleType
 {
 	ObjectFactoryNewFunc pfnFunc;
 
-	SSimpleType() : pfnFunc( 0 ) {}
+	SSimpleType()
+		: pfnFunc( 0 )
+	{
+	}
 
-	SSimpleType( ObjectFactoryNewFunc _pfnFunc ) : pfnFunc( _pfnFunc ) {}
+	SSimpleType( ObjectFactoryNewFunc _pfnFunc )
+		: pfnFunc( _pfnFunc )
+	{
+	}
 };
 
 CObjectBase *NewResource()
@@ -81,7 +87,9 @@ void ClearStruct( T *pT )
 
 CVisitor::CVisitor( std::vector<CObj<NDb::NTypeDef::STypeDef>> *_pTypes,
                     NDb::NTypeDef::CTerminalTypesDescriptor *_pTermTypesDesc )
-		: pTypes( _pTypes ), pTermTypesDesc( _pTermTypesDesc ), bFailed( false )
+	: pTypes( _pTypes )
+	, pTermTypesDesc( _pTermTypesDesc )
+	, bFailed( false )
 {
 }
 

@@ -47,8 +47,11 @@ static uint32_t CalcColor( NDb::EParcelType eType )
 //
 
 CAIGeneralPointsState::CAIGeneralPointsState( CMapInfoEditor *_pMapInfoEditor )
-		: pMapInfoEditor( _pMapInfoEditor ), bMoveParcel( false ), bMovePoint( false ), bRotateParcel( false ),
-			bRotatePoint( false )
+	: pMapInfoEditor( _pMapInfoEditor )
+	, bMoveParcel( false )
+	, bMovePoint( false )
+	, bRotateParcel( false )
+	, bRotatePoint( false )
 {
 	NI_ASSERT( pMapInfoEditor, "CAIGeneralPointsState::CAIGeneralPointsState(): pMapInfoEditor == 0" );
 	dialogData.nCurrentPlayer = 0;

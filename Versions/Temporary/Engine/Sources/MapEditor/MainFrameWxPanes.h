@@ -110,7 +110,10 @@ class CFrameWindow : public IFrameWindow, public IWxWidget
 	wxWeakRef<CContentPanel> pPanel;
 
 public:
-	explicit CFrameWindow( CContentPanel *_pPanel ) : pPanel( _pPanel ) {}
+	explicit CFrameWindow( CContentPanel *_pPanel )
+		: pPanel( _pPanel )
+	{
+	}
 
 	CContentPanel *GetPanel() const
 	{
@@ -147,7 +150,9 @@ class CDockPanel : public IDockPanel, public IWxWidget
 
 public:
 	CDockPanel( CAuiManager *_pManager, CContentPanel *_pPanel, const bool *_pbLaidOut )
-			: pManager( _pManager ), pPanel( _pPanel ), pbLaidOut( _pbLaidOut )
+		: pManager( _pManager )
+		, pPanel( _pPanel )
+		, pbLaidOut( _pbLaidOut )
 	{
 	}
 
@@ -207,7 +212,9 @@ class CToolBar : public IToolBar
 
 public:
 	CToolBar( CAuiManager *_pManager, wxAuiToolBar *_pToolBar, const bool *_pbLaidOut )
-			: pManager( _pManager ), pToolBar( _pToolBar ), pbLaidOut( _pbLaidOut )
+		: pManager( _pManager )
+		, pToolBar( _pToolBar )
+		, pbLaidOut( _pbLaidOut )
 	{
 	}
 
@@ -250,7 +257,10 @@ class CPropertiesPane
 	wxWeakRef<wxPanel> pPanel;
 
 public:
-	CPropertiesPane() : pPropertyPane( 0 ) {}
+	CPropertiesPane()
+		: pPropertyPane( 0 )
+	{
+	}
 
 	~CPropertiesPane();
 
@@ -275,7 +285,11 @@ class CGDBBrowserPane : public CGDBBrowserContents::IPane
 	wxWeakRef<wxPanel> pEmpty;
 
 public:
-	CGDBBrowserPane( int nGDBBrowserID, IWidget *_pOwner ) : contents( this, nGDBBrowserID ), pOwner( _pOwner ) {}
+	CGDBBrowserPane( int nGDBBrowserID, IWidget *_pOwner )
+		: contents( this, nGDBBrowserID )
+		, pOwner( _pOwner )
+	{
+	}
 
 	// Creates the pane in pFrame, adds it to pManager captioned for its place
 	// in the list, and fills it.

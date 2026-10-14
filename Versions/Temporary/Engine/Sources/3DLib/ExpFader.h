@@ -23,11 +23,20 @@ public:
 	}
 
 	//
-	SExpFader( float _fStartSize = 0 ) : tPrev( 0 ), fOnTime( 1 ), fOffTime( 1 ), fSize( _fStartSize ) {}
+	SExpFader( float _fStartSize = 0 )
+		: tPrev( 0 )
+		, fOnTime( 1 )
+		, fOffTime( 1 )
+		, fSize( _fStartSize )
+	{
+	}
 
 	//
 	SExpFader( float _fOnTime, float _fOffTime, float _fStartSize = 0 )
-			: tPrev( 0 ), fOnTime( _fOnTime ), fOffTime( _fOffTime ), fSize( _fStartSize )
+		: tPrev( 0 )
+		, fOnTime( _fOnTime )
+		, fOffTime( _fOffTime )
+		, fSize( _fStartSize )
 	{
 		fOnTime = (std::max)( 1e-3f, fOnTime );
 		fOffTime = (std::max)( 1e-3f, fOffTime );

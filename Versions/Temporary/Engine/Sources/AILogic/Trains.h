@@ -535,7 +535,10 @@ public:
 
 	static IUnitState *Instance( CAIUnit *_pUnit );
 
-	CTrainRestState() : pUnit( 0 ) {}
+	CTrainRestState()
+		: pUnit( 0 )
+	{
+	}
 
 	CTrainRestState( CAIUnit *_pUnit );
 
@@ -591,7 +594,10 @@ public:
 
 	static IUnitState *Instance( CAIUnit *_pUnit, const CVec2 &_point );
 
-	CLocomotiveMoveState() : pUnit( 0 ) {}
+	CLocomotiveMoveState()
+		: pUnit( 0 )
+	{
+	}
 
 	CLocomotiveMoveState( CTrainLocomotive *_pUnit, const CVec2 &point );
 
@@ -660,7 +666,10 @@ private:
 public:
 	static IUnitState *Instance( CAIUnit *_pUnit, CAIUnit *_pTarget );
 
-	CLocomotiveAttackUnitState() : pUnit( 0 ) {}
+	CLocomotiveAttackUnitState()
+		: pUnit( 0 )
+	{
+	}
 
 	CLocomotiveAttackUnitState( CTrainLocomotive *_pUnit, CAIUnit *_pTarget );
 
@@ -739,7 +748,10 @@ private:
 public:
 	static IUnitState *Instance( CAIUnit *_pUnit, CStaticObject *_pTarget );
 
-	CLocomotiveAttackObjState() : pUnit( 0 ) {}
+	CLocomotiveAttackObjState()
+		: pUnit( 0 )
+	{
+	}
 
 	CLocomotiveAttackObjState( CTrainLocomotive *_pUnit, CStaticObject *_pTarget );
 
@@ -811,7 +823,10 @@ public:
 
 	static IUnitState *Instance( CAIUnit *_pUnit );
 
-	CTrainCarMoveToState() : pUnit( 0 ) {}
+	CTrainCarMoveToState()
+		: pUnit( 0 )
+	{
+	}
 
 	CTrainCarMoveToState( CTrainCar *_pUnit );
 
@@ -867,7 +882,10 @@ public:
 
 	static IUnitState *Instance( CAIUnit *_pUnit, CAIUnit *_pTarget );
 
-	CTrainCarAttackUnitState() : pUnit( 0 ) {}
+	CTrainCarAttackUnitState()
+		: pUnit( 0 )
+	{
+	}
 
 	CTrainCarAttackUnitState( CTrainCar *_pUnit, CAIUnit *_pTarget );
 
@@ -936,7 +954,10 @@ public:
 
 	static IUnitState *Instance( CAIUnit *_pUnit, CStaticObject *_pTarget );
 
-	CTrainCarAttackObjectState() : pUnit( 0 ) {}
+	CTrainCarAttackObjectState()
+		: pUnit( 0 )
+	{
+	}
 
 	CTrainCarAttackObjectState( CTrainCar *_pUnit, CStaticObject *_pTarget );
 

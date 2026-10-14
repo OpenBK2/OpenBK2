@@ -147,12 +147,14 @@ void CMouseTranslatorB1::OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMo
 // **
 // ************************************************************************************************************************ //
 
-CMouseTranslatorB2Base::CMouseTranslatorB2Base() : CMouseTranslator( 0 )
+CMouseTranslatorB2Base::CMouseTranslatorB2Base()
+	: CMouseTranslator( 0 )
 {
 	InitPrivate();
 }
 
-CMouseTranslatorB2Base::CMouseTranslatorB2Base( CSelector *_pSelector ) : CMouseTranslator( _pSelector )
+CMouseTranslatorB2Base::CMouseTranslatorB2Base( CSelector *_pSelector )
+	: CMouseTranslator( _pSelector )
 {
 	InitPrivate();
 }
@@ -336,7 +338,10 @@ void CMouseTranslatorB2Base::CheckForcedAction()
 // ************************************************************************************************************************ //
 
 CMouseTranslator::CMouseTranslator( CSelector *_pSelector )
-		: pSelector( _pSelector ), bindShift( "shift_key" ), bindCtrl( "ctrl_key" ), bindAlt( "alt_key" )
+	: pSelector( _pSelector )
+	, bindShift( "shift_key" )
+	, bindCtrl( "ctrl_key" )
+	, bindAlt( "alt_key" )
 {
 	ResetState();
 

@@ -35,7 +35,7 @@ float CWindController::CoeffFunc( int nParam )
 }
 
 CWindController::CWindController( IGameTimer *_pTimer, const float _fWindDirection, const float _fWindIntensity )
-		: pTimer( _pTimer )
+	: pTimer( _pTimer )
 {
 
 	SetWindParams( _fWindDirection, _fWindIntensity );

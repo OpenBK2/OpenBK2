@@ -30,9 +30,13 @@ public:
 	}
 
 public:
-	CGlobalIter() : parties( 3 /*SAIConsts::MAX_NUM_OF_PARTIES*/ ) {}
+	CGlobalIter()
+		: parties( 3 /*SAIConsts::MAX_NUM_OF_PARTIES*/ )
+	{
+	}
 
-	CGlobalIter( const uint8_t cStartDipl, const uint8_t cFilter ) : parties( 3 /*SAIConsts::MAX_NUM_OF_PARTIES*/ )
+	CGlobalIter( const uint8_t cStartDipl, const uint8_t cFilter )
+		: parties( 3 /*SAIConsts::MAX_NUM_OF_PARTIES*/ )
 	{
 		Init( cStartDipl, cFilter );
 	}

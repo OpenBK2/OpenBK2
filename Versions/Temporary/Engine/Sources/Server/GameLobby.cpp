@@ -15,7 +15,9 @@
 #include <fmt/format.h>
 
 CGameLobby::CGameLobby( CClients *_pClients, const std::string &_szCfgFile )
-		: pClients( _pClients ), nGamesCounter( 0 ), szCfgFile( _szCfgFile )
+	: pClients( _pClients )
+	, nGamesCounter( 0 )
+	, szCfgFile( _szCfgFile )
 {
 	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessCommonClientStatePacket );
 	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessGameHeartBeatPacket );

@@ -1473,7 +1473,12 @@ class CCountCalcTerrain : public ILoadingCounter
 	CPtr<ILoadingCounter> pForward;
 
 public:
-	CCountCalcTerrain() : pForward( 0 ), nTerrains( 0 ), nTotal( 0 ) {}
+	CCountCalcTerrain()
+		: pForward( 0 )
+		, nTerrains( 0 )
+		, nTotal( 0 )
+	{
+	}
 
 	virtual void LeftToLoad( int nCount )
 	{
@@ -2258,7 +2263,10 @@ struct SSetFade
 {
 	float f;
 
-	SSetFade( float _f ) : f( _f ) {}
+	SSetFade( float _f )
+		: f( _f )
+	{
+	}
 
 	void operator()( CObjectBase *p ) const
 	{
@@ -2276,7 +2284,10 @@ struct SSetPriority
 {
 	int n;
 
-	SSetPriority( int _n ) : n( _n ) {}
+	SSetPriority( int _n )
+		: n( _n )
+	{
+	}
 
 	void operator()( CObjectBase *p ) const
 	{
@@ -2293,7 +2304,10 @@ struct SStopParticlesGeneration
 {
 	STime tTime;
 
-	SStopParticlesGeneration( STime _t ) : tTime( _t ) {}
+	SStopParticlesGeneration( STime _t )
+		: tTime( _t )
+	{
+	}
 
 	void operator()( CObjectBase *_p ) const
 	{

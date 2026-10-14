@@ -66,28 +66,56 @@ struct SFormattingInfo
 			return 0;
 		}
 
-		SCmd() : type( ELEM_TEXT ), vPos( 0, 0 ), vSize( 0, 0 ), dwColor( 0 ), nFlags( 0 ), nChainX( -1 ) {}
+		SCmd()
+			: type( ELEM_TEXT )
+			, vPos( 0, 0 )
+			, vSize( 0, 0 )
+			, dwColor( 0 )
+			, nFlags( 0 )
+			, nChainX( -1 )
+		{
+		}
 
 		SCmd( const std::wstring &_szText, const CVec2 &_vPos, int _nFlags )
-				: type( ELEM_TEXT ), vPos( _vPos ), vSize( 0, 0 ), dwColor( 0 ), szText( _szText ), nFlags( _nFlags ),
-					nChainX( -1 )
+			: type( ELEM_TEXT )
+			, vPos( _vPos )
+			, vSize( 0, 0 )
+			, dwColor( 0 )
+			, szText( _szText )
+			, nFlags( _nFlags )
+			, nChainX( -1 )
 		{
 		}
 
 		SCmd( const NDb::STexture *_pTexture, const CVec2 &_vPos, const CVec2 &_vSize, uint32_t _dwColor )
-				: type( ELEM_PICTURE ), pTexture( _pTexture ), vPos( _vPos ), vSize( _vSize ), dwColor( _dwColor ), nFlags( 0 ),
-					nChainX( -1 )
+			: type( ELEM_PICTURE )
+			, pTexture( _pTexture )
+			, vPos( _vPos )
+			, vSize( _vSize )
+			, dwColor( _dwColor )
+			, nFlags( 0 )
+			, nChainX( -1 )
 		{
 		}
 
 		SCmd( const CDBID &_nOutlineType )
-				: type( ELEM_OUTLINE ), nOutlineType( _nOutlineType ), vPos( 0, 0 ), vSize( 0, 0 ), dwColor( 0 ), nFlags( 0 ),
-					nChainX( -1 )
+			: type( ELEM_OUTLINE )
+			, nOutlineType( _nOutlineType )
+			, vPos( 0, 0 )
+			, vSize( 0, 0 )
+			, dwColor( 0 )
+			, nFlags( 0 )
+			, nChainX( -1 )
 		{
 		}
 
 		SCmd( uint32_t _dwColor )
-				: type( ELEM_GRAY_FILTER ), vPos( 0, 0 ), vSize( 0, 0 ), dwColor( _dwColor ), nFlags( 0 ), nChainX( -1 )
+			: type( ELEM_GRAY_FILTER )
+			, vPos( 0, 0 )
+			, vSize( 0, 0 )
+			, dwColor( _dwColor )
+			, nFlags( 0 )
+			, nChainX( -1 )
 		{
 		}
 

@@ -93,9 +93,17 @@ class CHeap
 public:
 	int operator&( IBinSaver &saver );
 
-	CHeap() : nEl( 0 ), heap( 1 ) {}
+	CHeap()
+		: nEl( 0 )
+		, heap( 1 )
+	{
+	}
 
-	CHeap( const int nSize ) : heap( nSize + 1 ), nEl( 0 ) {}
+	CHeap( const int nSize )
+		: heap( nSize + 1 )
+		, nEl( 0 )
+	{
+	}
 
 	void Reserve( const int nSize )
 	{

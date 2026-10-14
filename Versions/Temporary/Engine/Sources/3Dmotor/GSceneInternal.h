@@ -94,7 +94,11 @@ struct SRayInfo
 	CVec3 vOrigin, vDir, vDirOrt;
 	float fLength;
 
-	SRayInfo( const CRay &r ) : vOrigin( r.ptOrigin ), vDir( r.ptDir ), vDirOrt( r.ptDir ), fLength( fabs( r.ptDir ) )
+	SRayInfo( const CRay &r )
+		: vOrigin( r.ptOrigin )
+		, vDir( r.ptDir )
+		, vDirOrt( r.ptDir )
+		, fLength( fabs( r.ptDir ) )
 	{
 		Normalize( &vDirOrt );
 	}
@@ -459,7 +463,10 @@ class CRenderWrapper : public IRender
 	CGScene *pScene;
 
 public:
-	CRenderWrapper( CGScene *_pScene ) : pScene( _pScene ) {}
+	CRenderWrapper( CGScene *_pScene )
+		: pScene( _pScene )
+	{
+	}
 
 	virtual CFuncBase<SPerVertexLightState> *GetLightState() const
 	{

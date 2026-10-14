@@ -10,7 +10,10 @@ class CListControlSorterMapSize : public IWindowSorter
 	int nColumn;
 
 public:
-	CListControlSorterMapSize() : bAscending( true ) {}
+	CListControlSorterMapSize()
+		: bAscending( true )
+	{
+	}
 
 	int operator&( IBinSaver &saver )
 	{

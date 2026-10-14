@@ -38,7 +38,10 @@ class CTreeFallingMutator : public ITreeFallingMutator
 	void TransformLeafBone( NAnimation::SBoneTransform *pTransform, const CQuat &qRot );
 
 public:
-	CTreeFallingMutator() : bFinished( false ) {}
+	CTreeFallingMutator()
+		: bFinished( false )
+	{
+	}
 
 	void Setup( ISkeletonAnimator *pAnimator,
 	            const CVec2 &vDir,

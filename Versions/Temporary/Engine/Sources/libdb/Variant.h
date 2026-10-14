@@ -42,18 +42,32 @@ private:
 		size_t m_nSize;
 		bool m_bDelete;
 
-		SBlob() : m_ptr( 0 ), m_nSize( 0 ), m_bDelete( false ) {}
+		SBlob()
+			: m_ptr( 0 )
+			, m_nSize( 0 )
+			, m_bDelete( false )
+		{
+		}
 
-		SBlob( void *_ptr ) : m_ptr( _ptr ), m_nSize( 0 ), m_bDelete( false ) {}
+		SBlob( void *_ptr )
+			: m_ptr( _ptr )
+			, m_nSize( 0 )
+			, m_bDelete( false )
+		{
+		}
 
 		SBlob( const void *_ptr, size_t _nSize, bool _bDelete = true )
-				: m_ptr( new uint8_t[_nSize] ), m_nSize( _nSize ), m_bDelete( _bDelete )
+			: m_ptr( new uint8_t[_nSize] )
+			, m_nSize( _nSize )
+			, m_bDelete( _bDelete )
 		{
 			ASSERT( _ptr != 0 );
 			memcpy( m_ptr, _ptr, m_nSize );
 		}
 
-		SBlob( const SBlob &_blob ) : m_nSize( _blob.m_nSize ), m_bDelete( _blob.m_bDelete )
+		SBlob( const SBlob &_blob )
+			: m_nSize( _blob.m_nSize )
+			, m_bDelete( _blob.m_bDelete )
 		{
 			if ( m_bDelete )
 			{
@@ -141,7 +155,11 @@ private:
 
 public:
 	//конструкторы
-	CVariant() : m_eType( VT_NULL ), m_pblob( NULL ) {}
+	CVariant()
+		: m_eType( VT_NULL )
+		, m_pblob( NULL )
+	{
+	}
 
 	CVariant( const CVariant &var );
 	CVariant &operator=( const CVariant &var );
@@ -156,38 +174,95 @@ public:
 	}
 
 	//конструкторы с приведением типов
-	CVariant( const int nVal ) : m_eType( VT_INT ), m_int( nVal ) {}
+	CVariant( const int nVal )
+		: m_eType( VT_INT )
+		, m_int( nVal )
+	{
+	}
 
-	CVariant( const float fVal ) : m_eType( VT_FLOAT ), m_float( fVal ) {}
+	CVariant( const float fVal )
+		: m_eType( VT_FLOAT )
+		, m_float( fVal )
+	{
+	}
 
-	CVariant( const std::string &szVal ) : m_eType( VT_STR ), m_pstr( new std::string( szVal ) ) {}
+	CVariant( const std::string &szVal )
+		: m_eType( VT_STR )
+		, m_pstr( new std::string( szVal ) )
+	{
+	}
 
-	CVariant( const char *pszVal ) : m_eType( VT_STR ), m_pstr( new std::string( pszVal ) ) {}
+	CVariant( const char *pszVal )
+		: m_eType( VT_STR )
+		, m_pstr( new std::string( pszVal ) )
+	{
+	}
 
-	CVariant( const std::wstring &wszVal ) : m_eType( VT_WSTR ), m_pwstr( new std::wstring( wszVal ) ) {}
+	CVariant( const std::wstring &wszVal )
+		: m_eType( VT_WSTR )
+		, m_pwstr( new std::wstring( wszVal ) )
+	{
+	}
 
-	CVariant( const wchar_t *pwszVal ) : m_eType( VT_WSTR ), m_pwstr( new std::wstring( pwszVal ) ) {}
+	CVariant( const wchar_t *pwszVal )
+		: m_eType( VT_WSTR )
+		, m_pwstr( new std::wstring( pwszVal ) )
+	{
+	}
 
-	CVariant( const bool bVal ) : m_eType( VT_BOOL ), m_bool( bVal ) {}
+	CVariant( const bool bVal )
+		: m_eType( VT_BOOL )
+		, m_bool( bVal )
+	{
+	}
 
-	CVariant( const CDBID &dbid ) : m_eType( VT_DBID ), m_dbid( new CDBID( dbid ) ) {}
+	CVariant( const CDBID &dbid )
+		: m_eType( VT_DBID )
+		, m_dbid( new CDBID( dbid ) )
+	{
+	}
 
 	//
-	CVariant( const uint32_t dwVal ) : m_eType( VT_INT ), m_int( dwVal ) {}
+	CVariant( const uint32_t dwVal )
+		: m_eType( VT_INT )
+		, m_int( dwVal )
+	{
+	}
 
-	CVariant( const long lVal ) : m_eType( VT_INT ), m_int( lVal ) {}
+	CVariant( const long lVal )
+		: m_eType( VT_INT )
+		, m_int( lVal )
+	{
+	}
 
-	CVariant( const uint16_t wVal ) : m_eType( VT_INT ), m_int( wVal ) {}
+	CVariant( const uint16_t wVal )
+		: m_eType( VT_INT )
+		, m_int( wVal )
+	{
+	}
 
-	CVariant( const short nVal ) : m_eType( VT_INT ), m_int( nVal ) {}
+	CVariant( const short nVal )
+		: m_eType( VT_INT )
+		, m_int( nVal )
+	{
+	}
 
-	CVariant( const char cVal ) : m_eType( VT_INT ), m_int( cVal ) {}
+	CVariant( const char cVal )
+		: m_eType( VT_INT )
+		, m_int( cVal )
+	{
+	}
 
-	CVariant( const uint8_t cVal ) : m_eType( VT_INT ), m_int( cVal ) {}
+	CVariant( const uint8_t cVal )
+		: m_eType( VT_INT )
+		, m_int( cVal )
+	{
+	}
 
 	//
 	CVariant( const boost::uuids::uuid &guid )
-			: m_eType( VT_POINTER ), m_pblob( new SBlob( (void *)&guid, sizeof( guid ) ) )
+		: m_eType( VT_POINTER )
+		, m_pblob( new SBlob( (void *)&guid, sizeof( guid ) ) )
 	{
 	}
 
@@ -195,13 +270,21 @@ private:
 	//CVariant не может определить размер блока по указателю, поэтому без указания размера
 	//конструктор от void* не имеет смысла
 	// Намеренно его закрываем, чтобы не происходило неявного преобразования void * к bool
-	CVariant( void *pVar ) : m_eType( VT_POINTER ) {}
+	CVariant( void *pVar )
+		: m_eType( VT_POINTER )
+	{
+	}
 
 public:
-	CVariant( const void *pVar, int nBlobSize ) : m_eType( VT_POINTER ), m_pblob( new SBlob( pVar, nBlobSize ) ) {}
+	CVariant( const void *pVar, int nBlobSize )
+		: m_eType( VT_POINTER )
+		, m_pblob( new SBlob( pVar, nBlobSize ) )
+	{
+	}
 
 	CVariant( CMultiVariantMap *pMultiVariantMap /*, bool bDelete = false*/ )
-			: m_eType( VT_MULTIVARIANT ), m_pmvar( new SMultiVariant( pMultiVariantMap ) )
+		: m_eType( VT_MULTIVARIANT )
+		, m_pmvar( new SMultiVariant( pMultiVariantMap ) )
 	{
 	}
 

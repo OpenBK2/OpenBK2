@@ -115,7 +115,11 @@ class CUnitsIter
 	}
 
 public:
-	CUnitsIter() : cMechEnd( 0 ), cCurMech( 1 ) {}
+	CUnitsIter()
+		: cMechEnd( 0 )
+		, cCurMech( 1 )
+	{
+	}
 
 	CUnitsIter(
 			const uint8_t _cStartDipl, uint8_t cDiplFilter, const CVec2 &vCenter, const float &fR, bool bOnlyMech = false )
@@ -340,7 +344,11 @@ class CUnitsIter<1, 0>
 	}
 
 public:
-	CUnitsIter() : cMechEnd( 0 ), cCurMech( 1 ) {}
+	CUnitsIter()
+		: cMechEnd( 0 )
+		, cCurMech( 1 )
+	{
+	}
 
 	CUnitsIter(
 			const uint8_t _cStartDipl, uint8_t cDiplFilter, const CVec2 &vCenter, const float &fR, bool bOnlyMech = false )
@@ -554,7 +562,11 @@ class CUnitsIter<0, 0>
 	}
 
 public:
-	CUnitsIter() : cMechEnd( 0 ), cCurMech( 1 ) {}
+	CUnitsIter()
+		: cMechEnd( 0 )
+		, cCurMech( 1 )
+	{
+	}
 
 	CUnitsIter(
 			const uint8_t _cStartDipl, uint8_t cDiplFilter, const CVec2 &vCenter, const float &fR, bool bOnlyMech = false )

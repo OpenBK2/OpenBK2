@@ -19,7 +19,10 @@ class CWindowStatsSystem : public CWindow, public IStatsSystemWindow
 		void Init( const wchar_t *pszStr, uint32_t col, const int nWidth );
 		void SetText( const wchar_t *pszStr, uint32_t col, const int nWidth );
 
-		SColorString() : dwColor( 0xffffffff ) {}
+		SColorString()
+			: dwColor( 0xffffffff )
+		{
+		}
 
 		SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth );
 		int operator&( IBinSaver &saver );

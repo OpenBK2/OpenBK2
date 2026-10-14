@@ -61,13 +61,14 @@ public:
 	                    const std::vector<std::string> &rObjectTypeNameList,
 	                    int nObjectTypeNameIndex,
 	                    SBuildDataParams *_pBuildDataParams )
-			: CWxToolDialog( pParent,
-	                     wxID_ANY,
-	                     "Create Game Data Base Object",
-	                     wxDefaultPosition,
-	                     wxDefaultSize,
-	                     wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
-				objectTypeNameList( rObjectTypeNameList ), pBuildDataParams( _pBuildDataParams )
+		: CWxToolDialog( pParent,
+	                   wxID_ANY,
+	                   "Create Game Data Base Object",
+	                   wxDefaultPosition,
+	                   wxDefaultSize,
+	                   wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+		, objectTypeNameList( rObjectTypeNameList )
+		, pBuildDataParams( _pBuildDataParams )
 	{
 		// CNewObjectDialog::SetBuildDataParams, which runs before the window
 		// exists there and before the controls are made here. Note what it

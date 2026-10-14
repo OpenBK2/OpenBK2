@@ -58,7 +58,10 @@ class CICMODPostSetup : public IInterfaceCommand
 	NDb::EDatabaseMode eMode;
 	//
 public:
-	CICMODPostSetup() : eMode( NDb::DATABASE_MODE_GAME ) {}
+	CICMODPostSetup()
+		: eMode( NDb::DATABASE_MODE_GAME )
+	{
+	}
 
 	void Exec()
 	{

@@ -172,7 +172,11 @@ class CDeleteFiles
 	bool bDeleteDir;
 
 public:
-	CDeleteFiles( bool _bDeleteRO, bool _bDeleteDir ) : bDeleteRO( _bDeleteRO ), bDeleteDir( _bDeleteDir ) {}
+	CDeleteFiles( bool _bDeleteRO, bool _bDeleteDir )
+		: bDeleteRO( _bDeleteRO )
+		, bDeleteDir( _bDeleteDir )
+	{
+	}
 
 	//
 	void operator()( const CFileIterator &it )
@@ -213,7 +217,10 @@ class CDirFileEnum
 {
 	std::list<std::string> *pNames; // store names here
 public:
-	CDirFileEnum( std::list<std::string> *_pNames ) : pNames( _pNames ) {}
+	CDirFileEnum( std::list<std::string> *_pNames )
+		: pNames( _pNames )
+	{
+	}
 
 	void operator()( const CFileIterator &it )
 	{

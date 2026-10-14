@@ -42,7 +42,11 @@ protected:
 	}
 
 public:
-	CWindowTextView() : vScreenRect( VNULL2 ), nIDForMLHandler( -1 ) {}
+	CWindowTextView()
+		: vScreenRect( VNULL2 )
+		, nIDForMLHandler( -1 )
+	{
+	}
 
 	virtual void Visit( struct IUIVisitor *pVisitor );
 	virtual int operator&( struct IBinSaver &saver );

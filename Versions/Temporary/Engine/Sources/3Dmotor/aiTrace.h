@@ -12,7 +12,12 @@ class CTracer
 		const CVec3 a, a2, a3;
 
 		//
-		SRefTriangle( const CVec3 &_a, const CVec3 &_a2, const CVec3 &_a3 ) : a( _a ), a2( _a2 ), a3( _a3 ) {}
+		SRefTriangle( const CVec3 &_a, const CVec3 &_a2, const CVec3 &_a3 )
+			: a( _a )
+			, a2( _a2 )
+			, a3( _a3 )
+		{
+		}
 	};
 
 	CVec4 ptAxis1, ptAxis2;
@@ -26,7 +31,10 @@ class CTracer
 	                  std::vector<SInterval::SCrossPoint> *pExit );
 
 public:
-	CTracer( std::vector<SInterval> &_intersections ) : intersections( _intersections ) {}
+	CTracer( std::vector<SInterval> &_intersections )
+		: intersections( _intersections )
+	{
+	}
 
 	bool TestSphere( const CVec3 &ptCenter, float fR );
 

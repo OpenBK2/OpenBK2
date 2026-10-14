@@ -491,7 +491,10 @@ struct CInteractiveProcess::SImpl
 	SChild child;
 	int RESPONSEWAIT_TIMEOUT;
 
-	SImpl( int nResponseWaitTimeout ) : RESPONSEWAIT_TIMEOUT( nResponseWaitTimeout ) {}
+	SImpl( int nResponseWaitTimeout )
+		: RESPONSEWAIT_TIMEOUT( nResponseWaitTimeout )
+	{
+	}
 
 	void CleanupHandles();
 	void InternalStop();
@@ -510,7 +513,10 @@ struct CInteractiveProcess::SImpl
 	bool Stop( const std::string &szQuitScript );
 };
 
-CInteractiveProcess::CInteractiveProcess( int nResponseWaitTimeout ) : pImpl( new SImpl( nResponseWaitTimeout ) ) {}
+CInteractiveProcess::CInteractiveProcess( int nResponseWaitTimeout )
+	: pImpl( new SImpl( nResponseWaitTimeout ) )
+{
+}
 
 CInteractiveProcess::~CInteractiveProcess() = default;
 

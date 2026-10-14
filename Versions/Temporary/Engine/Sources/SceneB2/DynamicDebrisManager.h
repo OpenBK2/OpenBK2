@@ -11,7 +11,10 @@ class CVisDynamicDebrisPatch : public CPtrFuncBase<NGScene::CObjectInfo>
 public:
 	CVisDynamicDebrisPatch() {}
 
-	CVisDynamicDebrisPatch( const NMeshData::SMeshDataTex2 &_data ) : data( _data ) {}
+	CVisDynamicDebrisPatch( const NMeshData::SMeshDataTex2 &_data )
+		: data( _data )
+	{
+	}
 };
 
 typedef NMeshData::SPatchHolder<CVisDynamicDebrisPatch> CVisDynamicDebrisPatchHolder;

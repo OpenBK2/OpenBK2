@@ -93,7 +93,10 @@ struct SSceneHoldQueueSerializer
 	std::vector<std::list<CObj<CObjectBase>>> data;
 
 	//
-	SSceneHoldQueueSerializer() : data( N_HOLD_TIME ) {}
+	SSceneHoldQueueSerializer()
+		: data( N_HOLD_TIME )
+	{
+	}
 
 	int operator&( IBinSaver &saver )
 	{

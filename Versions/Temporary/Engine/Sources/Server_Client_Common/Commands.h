@@ -142,7 +142,10 @@ class SERVER_CLIENT_COMMON_EXPORT CCommands : public CCommandsBase
 	}
 
 public:
-	CCommands() : bServer( false ) {}
+	CCommands()
+		: bServer( false )
+	{
+	}
 
 	CCommands( const bool bServer );
 

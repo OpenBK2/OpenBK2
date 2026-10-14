@@ -32,7 +32,13 @@ private:
 	}
 
 public:
-	CStandartDirectPath() : nCurrentTile( -1 ), fTileSize( 0.0f ), vStartPoint( VNULL2 ), vFinishPoint( VNULL2 ) {}
+	CStandartDirectPath()
+		: nCurrentTile( -1 )
+		, fTileSize( 0.0f )
+		, vStartPoint( VNULL2 )
+		, vFinishPoint( VNULL2 )
+	{
+	}
 
 	void Init( const std::vector<SVector> &tiles, const int nTileSize );
 

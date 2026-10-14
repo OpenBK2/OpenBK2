@@ -32,10 +32,15 @@ protected:
 	virtual void Recalc();
 
 public:
-	CAddBoneFilter() : nAddBone( 0 ) {}
+	CAddBoneFilter()
+		: nAddBone( 0 )
+	{
+	}
 
 	CAddBoneFilter( CFuncBase<SSkeletonPose> *_pAnim, const NAnimation::SSkeletonHandle &_skel, int _nAddBone )
-			: pAnimation( _pAnim ), skelHandle( _skel ), nAddBone( _nAddBone )
+		: pAnimation( _pAnim )
+		, skelHandle( _skel )
+		, nAddBone( _nAddBone )
 	{
 	}
 

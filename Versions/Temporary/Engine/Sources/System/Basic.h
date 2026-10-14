@@ -111,7 +111,9 @@ protected:
 	}
 
 public:
-	CObjectBase() : nObjData( 0 ), nRefData( 0 )
+	CObjectBase()
+		: nObjData( 0 )
+		, nRefData( 0 )
 	{
 #ifdef TRACK_OBJECTS_STATISTICS
 		RegisterInObjectsSet( this );
@@ -119,7 +121,9 @@ public:
 	}
 
 	// do not copy refcount when copy object
-	CObjectBase( const CObjectBase &a ) : nObjData( 0 ), nRefData( 0 )
+	CObjectBase( const CObjectBase &a )
+		: nObjData( 0 )
+		, nRefData( 0 )
 	{
 		CopyValidFlag( a );
 #ifdef TRACK_OBJECTS_STATISTICS
@@ -414,14 +418,19 @@ protected:
 	}
 
 public:
-	CPtrBase() : ptr( 0 ) {}
+	CPtrBase()
+		: ptr( 0 )
+	{
+	}
 
-	CPtrBase( TUserObj *_ptr ) : ptr( _ptr )
+	CPtrBase( TUserObj *_ptr )
+		: ptr( _ptr )
 	{
 		AddRef( ptr );
 	}
 
-	CPtrBase( const CPtrBase &a ) : ptr( a.ptr )
+	CPtrBase( const CPtrBase &a )
+		: ptr( a.ptr )
 	{
 		AddRef( ptr );
 	}
@@ -495,31 +504,37 @@ inline bool IsValid( const CPtrBase<T, TRef> &p )
 	return p.GetPtr() && !p.GetBarePtr()->IsRefInvalid();
 }
 
-#define BASIC_PTR_DECLARE( TPtrName, TRef )       \
-	template <class T>                              \
-	class TPtrName : public CPtrBase<T, TRef>       \
-	{                                               \
-		typedef CPtrBase<T, TRef> CBase;              \
-                                                  \
-	public:                                         \
-		typedef T CDestType;                          \
-		TPtrName() {}                                 \
-		TPtrName( T *_ptr ) : CBase( _ptr ) {}        \
-		TPtrName( const TPtrName &a ) : CBase( a ) {} \
-		TPtrName &operator=( T *_ptr )                \
-		{                                             \
-			CBase::Set( _ptr );                         \
-			return *this;                               \
-		}                                             \
-		TPtrName &operator=( const TPtrName &a )      \
-		{                                             \
-			CBase::SetObject( a.Get() );                \
-			return *this;                               \
-		}                                             \
-		int operator&( IBinSaver &f )                 \
-		{                                             \
-			return ( *(CBase *)this ) & ( f );          \
-		}                                             \
+#define BASIC_PTR_DECLARE( TPtrName, TRef )  \
+	template <class T>                         \
+	class TPtrName : public CPtrBase<T, TRef>  \
+	{                                          \
+		typedef CPtrBase<T, TRef> CBase;         \
+                                             \
+	public:                                    \
+		typedef T CDestType;                     \
+		TPtrName() {}                            \
+		TPtrName( T *_ptr )                      \
+			: CBase( _ptr )                        \
+		{                                        \
+		}                                        \
+		TPtrName( const TPtrName &a )            \
+			: CBase( a )                           \
+		{                                        \
+		}                                        \
+		TPtrName &operator=( T *_ptr )           \
+		{                                        \
+			CBase::Set( _ptr );                    \
+			return *this;                          \
+		}                                        \
+		TPtrName &operator=( const TPtrName &a ) \
+		{                                        \
+			CBase::SetObject( a.Get() );           \
+			return *this;                          \
+		}                                        \
+		int operator&( IBinSaver &f )            \
+		{                                        \
+			return ( *(CBase *)this ) & ( f );     \
+		}                                        \
 	};
 //
 BASIC_PTR_DECLARE( CPtr, CObjectBase::SRef );
@@ -577,7 +592,10 @@ struct SPtrTest
 {
 	CObjectBase *pTest = nullptr;
 
-	SPtrTest( CObjectBase *_pTest ) : pTest( _pTest ) {}
+	SPtrTest( CObjectBase *_pTest )
+		: pTest( _pTest )
+	{
+	}
 
 	template <class T, class T1>
 	bool operator()( const CPtrBase<T, T1> &a ) const
@@ -622,7 +640,8 @@ class CFWContext
 
 public:
 	template <class T>
-	CFWContext( T **pF, T *pData ) : pFrameworkPtr( (void **)pF )
+	CFWContext( T **pF, T *pData )
+		: pFrameworkPtr( (void **)pF )
 	{
 		*pF = pData;
 	}

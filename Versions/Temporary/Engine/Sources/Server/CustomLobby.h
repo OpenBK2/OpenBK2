@@ -16,7 +16,10 @@ class CCustomLobby : public CGameLobby
 	{
 		CCustomLobby *pThis;
 
-		SGetClientInfoFunc( CCustomLobby *_pThis ) : pThis( _pThis ) {}
+		SGetClientInfoFunc( CCustomLobby *_pThis )
+			: pThis( _pThis )
+		{
+		}
 
 		const bool operator()( const int nClientID, struct SCustomLobbyClientInfo *pInfo ) const
 		{

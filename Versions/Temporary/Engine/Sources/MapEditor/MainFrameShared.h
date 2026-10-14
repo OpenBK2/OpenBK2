@@ -75,7 +75,10 @@ class CProgressHost
 	CFocusMemory previousFocus;
 
 public:
-	CProgressHost() : pView( 0 ) {}
+	CProgressHost()
+		: pView( 0 )
+	{
+	}
 
 	~CProgressHost();
 

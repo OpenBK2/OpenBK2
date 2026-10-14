@@ -29,7 +29,12 @@ public:
 
 private:
 public:
-	CStandartDirPath() : dir( VNULL2 ), startPoint( VNULL2 ), finishPoint( VNULL2 ), curPoint( VNULL2 ), nTileSize( -1 )
+	CStandartDirPath()
+		: dir( VNULL2 )
+		, startPoint( VNULL2 )
+		, finishPoint( VNULL2 )
+		, curPoint( VNULL2 )
+		, nTileSize( -1 )
 	{
 	}
 

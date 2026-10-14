@@ -28,7 +28,8 @@
 //
 
 CBuildingState::CBuildingState( CBuildingEditor *_pBuildingEditor )
-		: pBuildingEditor( _pBuildingEditor ), bNeedLoadEnterConfig( true )
+	: pBuildingEditor( _pBuildingEditor )
+	, bNeedLoadEnterConfig( true )
 {
 	int nStateIndex = INVALID_INPUT_STATE_INDEX;
 	// IS_POINTS

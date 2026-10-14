@@ -33,7 +33,11 @@ class CMPManagerModeLAN : public CMPManagerMode
 			return 0;
 		}
 
-		SGameSettings() : nGameType( 0 ), nTechLevel( 0 ) {}
+		SGameSettings()
+			: nGameType( 0 )
+			, nTechLevel( 0 )
+		{
+		}
 	};
 
 	CPtr<CLANClient> pLANClient;

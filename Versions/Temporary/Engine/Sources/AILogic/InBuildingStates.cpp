@@ -102,7 +102,8 @@ IUnitState *CSoldierRestInBuildingState::Instance( CSoldier *pSoldier, CBuilding
 	return pRest;
 }
 
-CSoldierRestInBuildingState::CSoldierRestInBuildingState( CSoldier *_pSoldier ) : pSoldier( _pSoldier )
+CSoldierRestInBuildingState::CSoldierRestInBuildingState( CSoldier *_pSoldier )
+	: pSoldier( _pSoldier )
 {
 	startTime = curTime;
 
@@ -171,7 +172,11 @@ IUnitState *CSoldierAttackInBuildingState::Instance( CSoldier *pSoldier, CAIUnit
 }
 
 CSoldierAttackInBuildingState::CSoldierAttackInBuildingState( class CSoldier *_pSoldier, CAIUnit *_pEnemy )
-		: pSoldier( _pSoldier ), pEnemy( _pEnemy ), bFinish( false ), bAim( true ), nEnemyParty( _pEnemy->GetParty() )
+	: pSoldier( _pSoldier )
+	, pEnemy( _pEnemy )
+	, bFinish( false )
+	, bAim( true )
+	, nEnemyParty( _pEnemy->GetParty() )
 {
 	pSoldier->GetBuilding()->Alarm();
 

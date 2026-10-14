@@ -14,7 +14,9 @@
 CUIRunModeState::CUIRunModeState( CWindowSimpleSharedEditor *_pEditor,
                                   const std::string &rszTypeName,
                                   const CDBID &rDBID )
-		: pEditor( _pEditor ), szTypeName( rszTypeName ), dbid( rDBID )
+	: pEditor( _pEditor )
+	, szTypeName( rszTypeName )
+	, dbid( rDBID )
 {
 }
 

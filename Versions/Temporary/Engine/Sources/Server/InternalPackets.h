@@ -16,9 +16,15 @@ public:
 		return 0;
 	}
 
-	CGetLobbyClientsListPacket() : nLobbyID( 0 ) {}
+	CGetLobbyClientsListPacket()
+		: nLobbyID( 0 )
+	{
+	}
 
-	CGetLobbyClientsListPacket( const int _nLobbyID ) : nLobbyID( _nLobbyID ) {}
+	CGetLobbyClientsListPacket( const int _nLobbyID )
+		: nLobbyID( _nLobbyID )
+	{
+	}
 };
 
 class CShowLobbyGamesPacket : public CNetPacket
@@ -35,7 +41,13 @@ public:
 		return 0;
 	}
 
-	CShowLobbyGamesPacket() : nLobbyID( 0 ) {}
+	CShowLobbyGamesPacket()
+		: nLobbyID( 0 )
+	{
+	}
 
-	CShowLobbyGamesPacket( const int _nLobbyID ) : nLobbyID( _nLobbyID ) {}
+	CShowLobbyGamesPacket( const int _nLobbyID )
+		: nLobbyID( _nLobbyID )
+	{
+	}
 };

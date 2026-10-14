@@ -35,7 +35,11 @@ class CExecutorContainer : public IExecutorContainer
 	public:
 		SExID() {}
 
-		SExID( const int _nID, CExecutor *_pEx ) : nID( _nID ), pEx( _pEx ) {}
+		SExID( const int _nID, CExecutor *_pEx )
+			: nID( _nID )
+			, pEx( _pEx )
+		{
+		}
 	};
 
 	// executor lauched only when SExID::nID == pExecutor->GetID()

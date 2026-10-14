@@ -15,10 +15,16 @@ namespace NMapInfoEditor
 {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 SObjectInfoCollector::SObjectInfoCollector()
-		: linkIDToIndexCollector( INVALID_NODE_ID ), bridgeIDToIndexCollector( INVALID_NODE_ID ),
-			trenchIDToIndexCollector( INVALID_NODE_ID ), spotIDToIndexCollector( INVALID_NODE_ID ), pPropertyManipulator( 0 ),
-			mapSize( 0, 0, 0, 0 ), eSeason( NDb::SEASON_SUMMER ), eDayNight( NDb::DAY_DAY ), pMapInfoEditor( 0 ),
-			pEditorUpdatableWorld( 0 )
+	: linkIDToIndexCollector( INVALID_NODE_ID )
+	, bridgeIDToIndexCollector( INVALID_NODE_ID )
+	, trenchIDToIndexCollector( INVALID_NODE_ID )
+	, spotIDToIndexCollector( INVALID_NODE_ID )
+	, pPropertyManipulator( 0 )
+	, mapSize( 0, 0, 0, 0 )
+	, eSeason( NDb::SEASON_SUMMER )
+	, eDayNight( NDb::DAY_DAY )
+	, pMapInfoEditor( 0 )
+	, pEditorUpdatableWorld( 0 )
 {
 }
 

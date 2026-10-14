@@ -269,8 +269,17 @@ namespace
 } // namespace
 
 CGltfSkeletonAnimator::SAnimationHolder::SAnimationHolder()
-		: tStartTime( 0 ), tEndTime( -1 ), tFadeStart( 0 ), tFadeDuration( 0 ), fSpeed( 1.0f ), fWeight( 1.0f ),
-			fDuration( 0.0f ), fSourceStart( 0.0f ), bFadeIn( false ), bFadeOut( false ), nLoopCount( 1 )
+	: tStartTime( 0 )
+	, tEndTime( -1 )
+	, tFadeStart( 0 )
+	, tFadeDuration( 0 )
+	, fSpeed( 1.0f )
+	, fWeight( 1.0f )
+	, fDuration( 0.0f )
+	, fSourceStart( 0.0f )
+	, bFadeIn( false )
+	, bFadeOut( false )
+	, nLoopCount( 1 )
 {
 }
 
@@ -291,14 +300,24 @@ int CGltfSkeletonAnimator::SAnimationHolder::operator&( IBinSaver &f )
 }
 
 CGltfSkeletonAnimator::CGltfSkeletonAnimator()
-		: bBoneMutatorsEnabled( false ), bSmthChanged( true ), bJustLoaded( false ), bMatricesValid( false ),
-			nAnimWithMovement( -1 ), fGlobalMovementSpeed( 0.0f ), tTransitDuration( 0 )
+	: bBoneMutatorsEnabled( false )
+	, bSmthChanged( true )
+	, bJustLoaded( false )
+	, bMatricesValid( false )
+	, nAnimWithMovement( -1 )
+	, fGlobalMovementSpeed( 0.0f )
+	, tTransitDuration( 0 )
 {
 }
 
 CGltfSkeletonAnimator::CGltfSkeletonAnimator( const SSkeletonHandle &_skeletonH, CFuncBase<STime> *_pTime )
-		: bBoneMutatorsEnabled( false ), bSmthChanged( true ), bJustLoaded( false ), bMatricesValid( false ),
-			nAnimWithMovement( -1 ), fGlobalMovementSpeed( 0.0f ), tTransitDuration( 0 )
+	: bBoneMutatorsEnabled( false )
+	, bSmthChanged( true )
+	, bJustLoaded( false )
+	, bMatricesValid( false )
+	, nAnimWithMovement( -1 )
+	, fGlobalMovementSpeed( 0.0f )
+	, tTransitDuration( 0 )
 {
 	Create( _skeletonH, _pTime );
 	SHMatrix identity;

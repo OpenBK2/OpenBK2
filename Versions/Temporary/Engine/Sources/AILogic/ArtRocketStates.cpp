@@ -298,8 +298,13 @@ IUnitState *CArtRocketAttackGroundState::Instance( CArtillery *pArtillery, const
 }
 
 CArtRocketAttackGroundState::CArtRocketAttackGroundState( CArtillery *_pArtillery, const CVec2 &_point )
-		: pArtillery( _pArtillery ), point( _point ), bFired( false ), eState( EAGS_FIRING ), wDirToRotate( 0 ),
-			bFinished( false ), bSaidNoAmmo( false )
+	: pArtillery( _pArtillery )
+	, point( _point )
+	, bFired( false )
+	, eState( EAGS_FIRING )
+	, wDirToRotate( 0 )
+	, bFinished( false )
+	, bSaidNoAmmo( false )
 {
 	pArtillery->Stop();
 	NI_ASSERT( pArtillery->GetFirstArtilleryGun() != 0, "ArtRocket unit doesn't have an aritillery gun" );

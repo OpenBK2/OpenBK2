@@ -17,10 +17,15 @@ struct SUpdateUnitInfo
 	EUpdateWarFogUnitInfoFlag updateFlag = {};
 	float fDist = {};
 
-	SUpdateUnitInfo() : updateFlag(), fDist( 0.0f ) {}
+	SUpdateUnitInfo()
+		: updateFlag()
+		, fDist( 0.0f )
+	{
+	}
 
 	SUpdateUnitInfo( const EUpdateWarFogUnitInfoFlag _updateFlag, const float _fDist )
-			: updateFlag( _updateFlag ), fDist( _fDist )
+		: updateFlag( _updateFlag )
+		, fDist( _fDist )
 	{
 	}
 };
@@ -35,7 +40,11 @@ class CUpdateUnitContainer : public CAIObjectBase
 	float f2MaxRadius = {}, fMaxRadius2 = {};
 
 public:
-	CUpdateUnitContainer() : f2MaxRadius( 0.0f ), fMaxRadius2( 0.0f ) {}
+	CUpdateUnitContainer()
+		: f2MaxRadius( 0.0f )
+		, fMaxRadius2( 0.0f )
+	{
+	}
 
 	void Init( const float fMaxRadius );
 	void Clear();

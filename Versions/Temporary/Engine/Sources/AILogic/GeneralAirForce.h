@@ -35,7 +35,11 @@ class CGeneralAirForce : public CCommander
 		CVec2 vPoint;                   // куда вызвали
 		int nResistanceCellNumber = {}; // если вызвали пробомбить точку сопротивления, то > 0
 
-		SSupportInfo() : vPoint( VNULL2 ), nResistanceCellNumber( -1 ) {}
+		SSupportInfo()
+			: vPoint( VNULL2 )
+			, nResistanceCellNumber( -1 )
+		{
+		}
 	};
 
 	ZDATA_( CCommander )

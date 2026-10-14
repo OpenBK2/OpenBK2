@@ -13,7 +13,9 @@ CArtilleryBulletStorage::CArtilleryBulletStorage( const SStaticObjectRPGStats *_
                                                   const float fHP,
                                                   const int nFrameIndex,
                                                   CAIUnit *_pOwner )
-		: CGivenPassabilityStObject( center, fHP, 0, nFrameIndex ), pStats( _pStats ), pOwner( _pOwner )
+	: CGivenPassabilityStObject( center, fHP, 0, nFrameIndex )
+	, pStats( _pStats )
+	, pOwner( _pOwner )
 {
 }
 

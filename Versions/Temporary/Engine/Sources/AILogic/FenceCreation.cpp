@@ -31,8 +31,13 @@ float CFenceCreation::GetPrice()
 }
 
 CFenceCreation::CFenceCreation( const int nPlayer, const bool bAllowAIModification )
-		: CLongObjectCreation( nPlayer, bAllowAIModification ), bCannot( false ), bSayAck( false ),
-			bTmpNonCheatPath( false ), line( 0, 0, 0 ), nCurIndex( -1 ), wAngle( 0 )
+	: CLongObjectCreation( nPlayer, bAllowAIModification )
+	, bCannot( false )
+	, bSayAck( false )
+	, bTmpNonCheatPath( false )
+	, line( 0, 0, 0 )
+	, nCurIndex( -1 )
+	, wAngle( 0 )
 {
 }
 

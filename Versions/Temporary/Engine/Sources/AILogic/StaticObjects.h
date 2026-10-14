@@ -172,8 +172,10 @@ public:
 
 public:
 	CStaticObjects()
-			: areaMap( SConsts::STATIC_OBJ_CELL ), containersAreaMap( SConsts::STATIC_CONTAINER_OBJ_CELL ),
-				obstacles( SConsts::STATIC_OBJ_CELL ), bIterCreated( false )
+		: areaMap( SConsts::STATIC_OBJ_CELL )
+		, containersAreaMap( SConsts::STATIC_CONTAINER_OBJ_CELL )
+		, obstacles( SConsts::STATIC_OBJ_CELL )
+		, bIterCreated( false )
 	{
 	}
 

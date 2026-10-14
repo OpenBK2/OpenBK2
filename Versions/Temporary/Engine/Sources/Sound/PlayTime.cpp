@@ -12,7 +12,8 @@ namespace NMusicSystem
 
 //	CPlayTime
 
-CPlayTime::CPlayTime( const NDb::SPlayTime *_pPlayTime, const NDb::SMusicTrack *pTrack ) : nPlayTime( 0 )
+CPlayTime::CPlayTime( const NDb::SPlayTime *_pPlayTime, const NDb::SMusicTrack *pTrack )
+	: nPlayTime( 0 )
 {
 	if ( !pTrack || !_pPlayTime )
 	{

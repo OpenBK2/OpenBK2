@@ -20,10 +20,9 @@ bool CExecutorPlaneDropBombsObject::IsExecutorValidInternal() const
 }
 
 CExecutorPlaneDropBombsObject::CExecutorPlaneDropBombsObject( CAIUnit *_pUnit )
-		: CExecutorUnitBase( TID_PLANE_DROP_BOMBS_OBJECT,
-                         SConsts::BEH_UPDATE_DURATION / SConsts::AI_SEGMENT_DURATION,
-                         ABILITY_DROP_BOMBS ),
-			pUnit( _pUnit )
+	: CExecutorUnitBase(
+				TID_PLANE_DROP_BOMBS_OBJECT, SConsts::BEH_UPDATE_DURATION / SConsts::AI_SEGMENT_DURATION, ABILITY_DROP_BOMBS )
+	, pUnit( _pUnit )
 {
 	if ( theDipl.IsAIPlayer( pUnit->GetPlayer() ) )
 	{

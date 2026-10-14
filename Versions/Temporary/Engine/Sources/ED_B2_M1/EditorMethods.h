@@ -79,7 +79,12 @@ struct SUnitCommandTypeInfo
 	int nNeedTargetUnit;
 
 	///
-	SUnitCommandTypeInfo() : szName( "" ), nValue( -1 ), nNeedTargetUnit( 0 ) {}
+	SUnitCommandTypeInfo()
+		: szName( "" )
+		, nValue( -1 )
+		, nNeedTargetUnit( 0 )
+	{
+	}
 
 	///
 	int operator&( IXmlSaver &saver );

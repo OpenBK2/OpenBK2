@@ -19,7 +19,10 @@ using namespace NGScene;
 
 //CBackground
 
-CBackground::CBackground() : fFadeValue( 1.0f ) {}
+CBackground::CBackground()
+	: fFadeValue( 1.0f )
+{
+}
 
 void CBackground::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {

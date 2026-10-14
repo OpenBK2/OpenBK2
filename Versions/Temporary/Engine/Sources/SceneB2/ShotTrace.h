@@ -55,15 +55,23 @@ class CShotTraceObj : public CPtrFuncBase<NGScene::CObjectInfo>
 	}
 
 public:
-	CShotTraceObj() : pShellStats( 0 ) {}
+	CShotTraceObj()
+		: pShellStats( 0 )
+	{
+	}
 
 	CShotTraceObj( const CVec3 &_vStart,
 	               const CVec3 &_vEnd,
 	               NTimer::STime _timeStart,
 	               const NDb::SWeaponRPGStats::SShell *pShell,
 	               CFuncBase<STime> *_pTimer )
-			: vStart( _vStart ), vEnd( _vEnd ), pShellStats( pShell ), fSpeed( pShell->fSpeed * pShell->fTraceSpeedCoeff ),
-				fHalfWidth( AI2Vis( pShell->fTraceWidth / 2.0f ) ), timeStart( _timeStart ), pTimer( _pTimer )
+		: vStart( _vStart )
+		, vEnd( _vEnd )
+		, pShellStats( pShell )
+		, fSpeed( pShell->fSpeed * pShell->fTraceSpeedCoeff )
+		, fHalfWidth( AI2Vis( pShell->fTraceWidth / 2.0f ) )
+		, timeStart( _timeStart )
+		, pTimer( _pTimer )
 	{
 		fTimeTotal = Vis2AI( fabs( vEnd - vStart ) ) / fSpeed; // time, bullet flies from gun to target
 		fTimeQuant = pShellStats->fTraceLength / fSpeed;       // trace quant pass time

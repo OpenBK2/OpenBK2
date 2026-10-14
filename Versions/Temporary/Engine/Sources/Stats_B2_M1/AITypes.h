@@ -37,10 +37,15 @@ ZEND public : int operator&( IBinSaver &f )
 
 private:
 public:
-	SSegment2Trench() : nSegmentID( 0 ), nEntrenchID( 0 ) {}
+	SSegment2Trench()
+		: nSegmentID( 0 )
+		, nEntrenchID( 0 )
+	{
+	}
 
 	SSegment2Trench( const int _nSegmentID, const int _nEntrenchID )
-			: nSegmentID( _nSegmentID ), nEntrenchID( _nEntrenchID )
+		: nSegmentID( _nSegmentID )
+		, nEntrenchID( _nEntrenchID )
 	{
 	}
 };
@@ -60,10 +65,15 @@ ZEND public : int operator&( IBinSaver &f )
 
 private:
 public:
-	SSoldier2Formation() : nSoldierID( 0 ), nFormationID( 0 ) {}
+	SSoldier2Formation()
+		: nSoldierID( 0 )
+		, nFormationID( 0 )
+	{
+	}
 
 	SSoldier2Formation( const int _nSoldierID, const int _nFormationID )
-			: nSoldierID( _nSoldierID ), nFormationID( _nFormationID )
+		: nSoldierID( _nSoldierID )
+		, nFormationID( _nFormationID )
 	{
 	}
 };
@@ -89,8 +99,12 @@ struct SShootArea
 
 	//
 	SShootArea()
-			: vCenter3D( VNULL3 ), fMinR( 0.0f ), fMaxR( 0.0f ), wStartAngle( 65535 ), wFinishAngle( 65535 ),
-				eType( ESAT_LINE )
+		: vCenter3D( VNULL3 )
+		, fMinR( 0.0f )
+		, fMaxR( 0.0f )
+		, wStartAngle( 65535 )
+		, wFinishAngle( 65535 )
+		, eType( ESAT_LINE )
 	{
 	}
 

@@ -81,7 +81,11 @@ public:
 	public:
 		CReactions() {}
 
-		CReactions( IWindow *_pScreen, CInterfaceMission *_pInterface ) : pScreen( _pScreen ), pInterface( _pInterface ) {}
+		CReactions( IWindow *_pScreen, CInterfaceMission *_pInterface )
+			: pScreen( _pScreen )
+			, pInterface( _pInterface )
+		{
+		}
 
 		//
 		bool NeedFlags() const
@@ -599,10 +603,16 @@ public:
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
 
-	CICMission() : nPlayerForWarFog( -1 ) {}
+	CICMission()
+		: nPlayerForWarFog( -1 )
+	{
+	}
 
 	CICMission( const NDb::SMapInfo *_pMap, const std::string &_szReplay, bool _bFromInterface )
-			: pMap( _pMap ), szReplayFileName( _szReplay ), bFromInterface( _bFromInterface ), nPlayerForWarFog( -1 )
+		: pMap( _pMap )
+		, szReplayFileName( _szReplay )
+		, bFromInterface( _bFromInterface )
+		, nPlayerForWarFog( -1 )
 	{
 		bReplay = szReplayFileName != "";
 	}

@@ -40,7 +40,10 @@ private:
 	typedef TPObj TObjType;
 
 public:
-	CContainer() : container( SEGM_UNITS_SIZE ) {}
+	CContainer()
+		: container( SEGM_UNITS_SIZE )
+	{
+	}
 
 	void Clear()
 	{

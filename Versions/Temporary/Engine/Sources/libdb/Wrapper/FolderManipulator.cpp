@@ -109,7 +109,9 @@ void RemoveEmptyFolders( const std::vector<fs::path> &paths )
 CFolderManipulatorWrapper::CFolderManipulatorWrapper( const std::string &_szClassTypeName,
                                                       const std::string &_szSrcPath,
                                                       const std::string &_szDstPath )
-		: szClassTypeName( _szClassTypeName ), szSrcPath( _szSrcPath ), szDstPath( _szDstPath )
+	: szClassTypeName( _szClassTypeName )
+	, szSrcPath( _szSrcPath )
+	, szDstPath( _szDstPath )
 {
 }
 

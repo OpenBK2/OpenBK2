@@ -102,9 +102,15 @@ public:
 		return N_SAVELOAD_VERSION;
 	}
 
-	CLogSaver() : pszLog( 0 ) {}
+	CLogSaver()
+		: pszLog( 0 )
+	{
+	}
 
-	CLogSaver( std::string *_pszLog ) : pszLog( _pszLog ) {}
+	CLogSaver( std::string *_pszLog )
+		: pszLog( _pszLog )
+	{
+	}
 };
 
 IBinSaver *CreateLogSaver( std::string *pszLog )

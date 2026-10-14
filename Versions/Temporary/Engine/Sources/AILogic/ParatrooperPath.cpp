@@ -17,7 +17,9 @@ extern NTimer::STime curTime;
 //*******************************************************************
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CParatrooperPath::CParatrooperPath( const CVec3 &startPoint, CAIUnit *_pUnit )
-		: vStartPoint( startPoint ), vCurPoint( startPoint ), pUnit( _pUnit )
+	: vStartPoint( startPoint )
+	, vCurPoint( startPoint )
+	, pUnit( _pUnit )
 {
 	Init();
 }

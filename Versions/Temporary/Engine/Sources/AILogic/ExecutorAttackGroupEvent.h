@@ -9,7 +9,8 @@ class CExecutorAttackGroupAddUnitEvent : public CExecutorEvent
 
 public:
 	CExecutorAttackGroupAddUnitEvent( const SExecutorEventParam &param, int _nUnitID )
-			: nUnitID( _nUnitID ), CExecutorEvent( param )
+		: nUnitID( _nUnitID )
+		, CExecutorEvent( param )
 	{
 	}
 
@@ -43,7 +44,10 @@ public:
 	                                      const CVec2 &_vPoint,
 	                                      float _fRange,
 	                                      const SExecutorEventParam &_param )
-			: nGroupID( _nGroupID ), CExecutorEvent( _param ), vPoint( _vPoint ), fRange( _fRange )
+		: nGroupID( _nGroupID )
+		, CExecutorEvent( _param )
+		, vPoint( _vPoint )
+		, fRange( _fRange )
 	{
 	}
 

@@ -38,7 +38,9 @@ public:
 
 	//
 	CVisSurfPatch( CFuncBase<STime> *_pTimer, const CVec2 &vBounds )
-			: bUpdate( true ), pTimer( _pTimer ), vMaxMapCoords( vBounds )
+		: bUpdate( true )
+		, pTimer( _pTimer )
+		, vMaxMapCoords( vBounds )
 	{
 	}
 };

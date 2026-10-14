@@ -17,10 +17,17 @@
 
 static const SVector offsets[4] = { SVector( 1, 0 ), SVector( 0, -1 ), SVector( -1, 0 ), SVector( 0, 1 ) };
 
-CTerrain::CTerrain() : eMode( ELM_ALL ), bInitMode( false ), nTmpLockUnitID( -1 ) {}
+CTerrain::CTerrain()
+	: eMode( ELM_ALL )
+	, bInitMode( false )
+	, nTmpLockUnitID( -1 )
+{
+}
 
 CTerrain::CTerrain( CAIMap *_pAIMap, const bool _bInitMode )
-		: eMode( ELM_ALL ), bInitMode( false ), nTmpLockUnitID( -1 )
+	: eMode( ELM_ALL )
+	, bInitMode( false )
+	, nTmpLockUnitID( -1 )
 {
 	pAIMap = _pAIMap;
 	eMode = ELM_ALL;
@@ -598,7 +605,9 @@ struct SUpDownFinder
 	CAIMap *pAIMap = nullptr;
 
 	SUpDownFinder( SVector &_downTile, SVector &_upTile, CAIMap *_pAIMap )
-			: downTile( _downTile ), upTile( _upTile ), pAIMap( _pAIMap )
+		: downTile( _downTile )
+		, upTile( _upTile )
+		, pAIMap( _pAIMap )
 	{
 		downTile.x = downTile.y = 2 * pAIMap->GetMaxMapSize();
 		//

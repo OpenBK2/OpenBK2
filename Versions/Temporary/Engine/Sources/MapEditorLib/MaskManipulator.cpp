@@ -3,7 +3,9 @@
 #include "MaskManipulator.h"
 
 CMaskManipulator::CMaskManipulator( const std::string &rszMask, IManipulator *_pTargetManipulator, EMaskMode _maskMode )
-		: szMask( rszMask ), pTargetManipulator( _pTargetManipulator ), maskMode( _maskMode )
+	: szMask( rszMask )
+	, pTargetManipulator( _pTargetManipulator )
+	, maskMode( _maskMode )
 {
 	NI_ASSERT( _pTargetManipulator != 0, "CMaskManipulator::CMaskManipulator() pTargetManipulator == 0" );
 }
@@ -272,7 +274,7 @@ void CMaskManipulator::GetNameList( IManipulator::CNameMap *pNameMap ) const
 }
 
 CMaskManipulatorIterator::CMaskManipulatorIterator( CMaskManipulator *_pMaskManipulator )
-		: pMaskManipulator( _pMaskManipulator )
+	: pMaskManipulator( _pMaskManipulator )
 {
 	NI_ASSERT( pMaskManipulator != 0, "CMaskManipulatorIterator::CMaskManipulatorIterator() pMaskManipulator == 0" );
 	propertyIterator = pMaskManipulator->propertyList.begin();

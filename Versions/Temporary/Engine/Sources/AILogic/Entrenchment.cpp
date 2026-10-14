@@ -50,9 +50,16 @@ CEntrenchmentPart::CEntrenchmentPart( const SEntrenchmentRPGStats *_pStats,
                                       float fHP,
                                       int nPlayer,
                                       bool _bPlayerCreates )
-		: CExistingObject( nFrameIndex, fHP ), pStats( _pStats ), center( _center ), dir( _dir ), bDigBySegment( false ),
-			bOwnerChanged( false ), bVisible( false ), nextSegmTime( 0 ),
-			bSuspendedAppear( nPlayer != theDipl.GetMyNumber() ), bPlayerCreates( _bPlayerCreates )
+	: CExistingObject( nFrameIndex, fHP )
+	, pStats( _pStats )
+	, center( _center )
+	, dir( _dir )
+	, bDigBySegment( false )
+	, bOwnerChanged( false )
+	, bVisible( false )
+	, nextSegmTime( 0 )
+	, bSuspendedAppear( nPlayer != theDipl.GetMyNumber() )
+	, bPlayerCreates( _bPlayerCreates )
 {
 	boundRect.InitRect( VNULL2, VNULL2, 0, 0, 0 );
 }
@@ -267,7 +274,8 @@ CEntrenchment::CEntrenchment( CObjectBase **_segments,
                               const int nLen,
                               CFullEntrenchment *pFullEntrenchment,
                               const bool bPiecewise )
-		: nBusyFireplaces( 0 ), nextSegmTime( 0 )
+	: nBusyFireplaces( 0 )
+	, nextSegmTime( 0 )
 {
 	SetAlive( true );
 	NI_ASSERT( nLen != 0, "Окоп из нуля сегментов" );
@@ -707,8 +715,12 @@ CEntrenchmentTankPit::CEntrenchmentTankPit( const SMechUnitRPGStats *_pStats,
                                             const class CVec2 &vHalfSize,
                                             const std::list<SObjTileInfo> &tiles,
                                             class CAIUnit *_pOwner )
-		: wDir( dir ), vHalfSize( vHalfSize ), pStats( _pStats ), pOwner( _pOwner ), tilesToLock( tiles ),
-			CGivenPassabilityStObject( center, 1.0f, dir, nFrameIndex )
+	: wDir( dir )
+	, vHalfSize( vHalfSize )
+	, pStats( _pStats )
+	, pOwner( _pOwner )
+	, tilesToLock( tiles )
+	, CGivenPassabilityStObject( center, 1.0f, dir, nFrameIndex )
 {
 	boundRect.InitRect( CVec2( center.x, center.y ), GetVectorByDirection( dir ), vHalfSize.y, vHalfSize.x );
 	SetUniqueIdForObjects();

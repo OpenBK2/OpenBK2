@@ -538,8 +538,13 @@ IUnitState *CMechUnitSupportFireState::Instance( CAIUnit *pUnit, CAIUnit *pFrien
 }
 
 CMechUnitSupportFireState::CMechUnitSupportFireState( CAIUnit *_pUnit, CAIUnit *_pFriend )
-		: CStatusUpdatesHelper( EUS_SUPPORT_FIRE, _pUnit ), pUnit( _pUnit ), eState( ESFS_WAITING ), bFinish( false ),
-			pFriend( _pFriend ), pGun( pUnit->GetFirstArtilleryGun() ), pFriendFormation( 0 )
+	: CStatusUpdatesHelper( EUS_SUPPORT_FIRE, _pUnit )
+	, pUnit( _pUnit )
+	, eState( ESFS_WAITING )
+	, bFinish( false )
+	, pFriend( _pFriend )
+	, pGun( pUnit->GetFirstArtilleryGun() )
+	, pFriendFormation( 0 )
 {
 	pUnit->Stop();
 

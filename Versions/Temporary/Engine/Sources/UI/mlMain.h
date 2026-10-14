@@ -26,7 +26,11 @@ private:
 	}
 
 public:
-	CMLStream() : nPos( 0 ), nSize( 0 ) {}
+	CMLStream()
+		: nPos( 0 )
+		, nSize( 0 )
+	{
+	}
 
 	int GetSeek() const
 	{

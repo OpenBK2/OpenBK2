@@ -8,7 +8,11 @@
 
 LIBDB_EXPORT CLogger theLogger;
 
-CLogger::CLogger() : bCheckReferences( false ), pStream( 0 ) {}
+CLogger::CLogger()
+	: bCheckReferences( false )
+	, pStream( 0 )
+{
+}
 
 CLogger::~CLogger()
 {

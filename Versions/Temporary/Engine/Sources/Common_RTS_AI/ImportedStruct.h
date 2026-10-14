@@ -8,11 +8,21 @@ class CLine
 	SVector p1, p2;
 
 public:
-	CLine() : a( 0 ), b( 0 ), c( 0 ), p1( -1, -1 ), p2( -1, -1 ) {}
+	CLine()
+		: a( 0 )
+		, b( 0 )
+		, c( 0 )
+		, p1( -1, -1 )
+		, p2( -1, -1 )
+	{
+	}
 
 	CLine( const SVector &ptStart, const SVector &ptFinish )
-			: a( ptFinish.y - ptStart.y ), b( ptStart.x - ptFinish.x ), c( ptFinish.x * ptStart.y - ptStart.x * ptFinish.y ),
-				p1( ptStart ), p2( ptFinish )
+		: a( ptFinish.y - ptStart.y )
+		, b( ptStart.x - ptFinish.x )
+		, c( ptFinish.x * ptStart.y - ptStart.x * ptFinish.y )
+		, p1( ptStart )
+		, p2( ptFinish )
 	{
 	}
 

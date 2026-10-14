@@ -16,7 +16,12 @@ struct SCameraPositionWindowData
 	bool bAllParams;
 
 	//
-	SCameraPositionWindowData() : nPlayerIndex( -1 ), nPlayerCount( 0 ), bAllParams( false ) {}
+	SCameraPositionWindowData()
+		: nPlayerIndex( -1 )
+		, nPlayerCount( 0 )
+		, bAllParams( false )
+	{
+	}
 
 	//
 	void Clear()

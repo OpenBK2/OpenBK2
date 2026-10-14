@@ -130,10 +130,16 @@ class CICAttachMOD : public IInterfaceCommand
 	NDb::EDatabaseMode eMode;
 
 	//
-	CICAttachMOD() : eMode( NDb::DATABASE_MODE_GAME ) {}
+	CICAttachMOD()
+		: eMode( NDb::DATABASE_MODE_GAME )
+	{
+	}
 
 public:
-	CICAttachMOD( NDb::EDatabaseMode _eMode ) : eMode( _eMode ) {}
+	CICAttachMOD( NDb::EDatabaseMode _eMode )
+		: eMode( _eMode )
+	{
+	}
 
 	void Configure( const char *pszConfig )
 	{

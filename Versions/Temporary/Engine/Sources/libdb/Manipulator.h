@@ -102,12 +102,34 @@ struct SPropertyDesc : public SIteratorDesc
 	int nIntParam;                 // additional parameter
 
 	SPropertyDesc()
-			: fLeftBorder( 0.0f ), fRightBorder( 0.0f ), nMinOccurs( 0 ), nMaxOccurs( -1 ), dwChecks( PCT_NONE ),
-				bArray( false ), bStruct( false ), bMultiArray( false ), bHidden( false ), bReadOnly( false ), szLocalDef( "" ),
-				bCheckSum( false ), nTypeID( 0 ), bNoCode( false ), bNoHeader( false ), bNoBase( false ), nIntParam( 0 ),
-				szHSection( "" ), szStringParam( "" ), szTypeRename( "" ), szTypePath( "" ), bDescInitialized( false ),
-				bUseUpperType( false ), bUnsafe( false ), bPrivate( false ), nSize( 0 ), szRndType( "" ),
-				szEnumName( "Unknown" )
+		: fLeftBorder( 0.0f )
+		, fRightBorder( 0.0f )
+		, nMinOccurs( 0 )
+		, nMaxOccurs( -1 )
+		, dwChecks( PCT_NONE )
+		, bArray( false )
+		, bStruct( false )
+		, bMultiArray( false )
+		, bHidden( false )
+		, bReadOnly( false )
+		, szLocalDef( "" )
+		, bCheckSum( false )
+		, nTypeID( 0 )
+		, bNoCode( false )
+		, bNoHeader( false )
+		, bNoBase( false )
+		, nIntParam( 0 )
+		, szHSection( "" )
+		, szStringParam( "" )
+		, szTypeRename( "" )
+		, szTypePath( "" )
+		, bDescInitialized( false )
+		, bUseUpperType( false )
+		, bUnsafe( false )
+		, bPrivate( false )
+		, nSize( 0 )
+		, szRndType( "" )
+		, szEnumName( "Unknown" )
 	{
 	}
 

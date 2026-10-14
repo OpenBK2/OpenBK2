@@ -34,7 +34,8 @@ bool TryMake( T *pDest, TMake makeIt )
 
 // CMMFile
 
-CMMFile::CMMFile( const char *pszName, EStreamAccess access ) : szFileName( pszName )
+CMMFile::CMMFile( const char *pszName, EStreamAccess access )
+	: szFileName( pszName )
 {
 	const std::filesystem::path path( szFileName );
 	std::error_code ec;

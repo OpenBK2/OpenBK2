@@ -105,15 +105,27 @@ struct SRecord
 	VarHandler pVarHandler;
 	int nUniqueID;
 
-	SRecord() : pContext( 0 ), pCmdHandler( 0 ), pVarHandler( 0 ), nUniqueID( -1 ) {}
+	SRecord()
+		: pContext( 0 )
+		, pCmdHandler( 0 )
+		, pVarHandler( 0 )
+		, nUniqueID( -1 )
+	{
+	}
 
 	SRecord( void *_pCmdContext, CmdHandler _pCmd, int _nID )
-			: pContext( _pCmdContext ), pCmdHandler( _pCmd ), pVarHandler( 0 ), nUniqueID( _nID )
+		: pContext( _pCmdContext )
+		, pCmdHandler( _pCmd )
+		, pVarHandler( 0 )
+		, nUniqueID( _nID )
 	{
 	}
 
 	SRecord( void *_pVarContext, VarHandler _pCmd, int _nID )
-			: pContext( _pVarContext ), pCmdHandler( 0 ), pVarHandler( _pCmd ), nUniqueID( _nID )
+		: pContext( _pVarContext )
+		, pCmdHandler( 0 )
+		, pVarHandler( _pCmd )
+		, nUniqueID( _nID )
 	{
 	}
 };
@@ -122,7 +134,10 @@ struct SRecordCheck
 {
 	int n;
 
-	SRecordCheck( int _n ) : n( _n ) {}
+	SRecordCheck( int _n )
+		: n( _n )
+	{
+	}
 
 	bool operator()( const SRecord &r ) const
 	{
@@ -137,7 +152,11 @@ struct SCommandInfo
 	CValue sValue, sDefaultValue;
 	bool bIsRegistered;
 
-	SCommandInfo() : storage( STORAGE_NONE ), bIsRegistered( false ) {}
+	SCommandInfo()
+		: storage( STORAGE_NONE )
+		, bIsRegistered( false )
+	{
+	}
 };
 
 typedef std::unordered_map<std::string, SCommandInfo> TRecordsMap;

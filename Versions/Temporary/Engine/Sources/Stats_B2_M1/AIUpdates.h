@@ -74,10 +74,15 @@ struct SAIBasicUpdate : public CObjectBase
 	}
 
 public:
-	SAIBasicUpdate() : eUpdateType( ACTION_NOTIFY_NONE ), nUpdateTime( 0 ) {}
+	SAIBasicUpdate()
+		: eUpdateType( ACTION_NOTIFY_NONE )
+		, nUpdateTime( 0 )
+	{
+	}
 
 	SAIBasicUpdate( const EActionNotify _eUpdateType, const NTimer::STime _nUpdateTime )
-			: eUpdateType( _eUpdateType ), nUpdateTime( _nUpdateTime )
+		: eUpdateType( _eUpdateType )
+		, nUpdateTime( _nUpdateTime )
 	{
 	}
 
@@ -111,7 +116,9 @@ public:
 	                 const EActionNotify eUpdateType,
 	                 const int _nParam,
 	                 const NTimer::STime nUpdateTime )
-			: SAIBasicUpdate( eUpdateType, nUpdateTime ), nObjUniqueID( _nObjUniqueID ), nParam( _nParam )
+		: SAIBasicUpdate( eUpdateType, nUpdateTime )
+		, nObjUniqueID( _nObjUniqueID )
+		, nParam( _nParam )
 	{
 	}
 };
@@ -192,10 +199,15 @@ public:
 		return 0;
 	}
 
-	SParentOfAtomObjectUpdate() : nAtomObjectID( -1 ), nParentID( -1 ) {}
+	SParentOfAtomObjectUpdate()
+		: nAtomObjectID( -1 )
+		, nParentID( -1 )
+	{
+	}
 
 	SParentOfAtomObjectUpdate( int _nAtomObjectID, int _nParentID )
-			: nAtomObjectID( _nAtomObjectID ), nParentID( _nParentID )
+		: nAtomObjectID( _nAtomObjectID )
+		, nParentID( _nParentID )
 	{
 		eUpdateType = ACTION_NOTIFY_PARENT_OF_ATOM_OBJ;
 	}
@@ -223,14 +235,21 @@ public:
 	}
 
 public:
-	SAIDamageUpdate() : nObjUniqueID( -1 ), nProjectileUniqueID( -1 ), fDamage( 0.0f ) {}
+	SAIDamageUpdate()
+		: nObjUniqueID( -1 )
+		, nProjectileUniqueID( -1 )
+		, fDamage( 0.0f )
+	{
+	}
 
 	SAIDamageUpdate( const int _nObjUniqueID,
 	                 const int _nProjectileUniqueID,
 	                 const float _fDamage,
 	                 const CVec3 &vExplosionPos )
-			: SAIBasicUpdate( ACTION_NOTIFY_DAMAGE, 0 ), nObjUniqueID( _nObjUniqueID ),
-				nProjectileUniqueID( _nProjectileUniqueID ), fDamage( _fDamage )
+		: SAIBasicUpdate( ACTION_NOTIFY_DAMAGE, 0 )
+		, nObjUniqueID( _nObjUniqueID )
+		, nProjectileUniqueID( _nProjectileUniqueID )
+		, fDamage( _fDamage )
 	{
 	}
 };
@@ -448,7 +467,11 @@ public:
 		return 0;
 	}
 
-	SAIDissapearObjUpdate() : nDissapearObjID( -1 ), bShowEffects( true ) {}
+	SAIDissapearObjUpdate()
+		: nDissapearObjID( -1 )
+		, bShowEffects( true )
+	{
+	}
 };
 
 struct SAITrenchUpdate : public SAIBasicUpdate
@@ -470,7 +493,10 @@ public:
 	}
 
 public:
-	SAITrenchUpdate() : bLast( false ) {}
+	SAITrenchUpdate()
+		: bLast( false )
+	{
+	}
 };
 
 struct SAIFormationUpdate : public SAIBasicUpdate
@@ -587,10 +613,15 @@ public:
 	}
 
 public:
-	SAIModifyEntranceStateUpdate() : nObjUniqueID( 0 ), bOpen( true ) {}
+	SAIModifyEntranceStateUpdate()
+		: nObjUniqueID( 0 )
+		, bOpen( true )
+	{
+	}
 
 	SAIModifyEntranceStateUpdate( const int _nObjUniqueID, const bool _bOpen )
-			: nObjUniqueID( _nObjUniqueID ), bOpen( _bOpen )
+		: nObjUniqueID( _nObjUniqueID )
+		, bOpen( _bOpen )
 	{
 	}
 };
@@ -614,10 +645,16 @@ public:
 	}
 
 public:
-	SAIPointLightUpdate() : nPointLight( 0 ), bLight( false ) {}
+	SAIPointLightUpdate()
+		: nPointLight( 0 )
+		, bLight( false )
+	{
+	}
 
 	SAIPointLightUpdate( const int _nObjUniqueID, const int _nPointLight, const bool _bLight )
-			: nObjUniqueID( _nObjUniqueID ), nPointLight( _nPointLight ), bLight( _bLight )
+		: nObjUniqueID( _nObjUniqueID )
+		, nPointLight( _nPointLight )
+		, bLight( _bLight )
 	{
 	}
 
@@ -643,10 +680,17 @@ public:
 	}
 
 public:
-	SAIHeadLightUpdate() : nObjUniqueID( 0 ), nHeadLight( 0 ), bLight( false ) {}
+	SAIHeadLightUpdate()
+		: nObjUniqueID( 0 )
+		, nHeadLight( 0 )
+		, bLight( false )
+	{
+	}
 
 	SAIHeadLightUpdate( const int _nObjUniqueID, const int _nHeadLight, const bool _bLight )
-			: nObjUniqueID( _nObjUniqueID ), nHeadLight( _nHeadLight ), bLight( _bLight )
+		: nObjUniqueID( _nObjUniqueID )
+		, nHeadLight( _nHeadLight )
+		, bLight( _bLight )
 	{
 	}
 
@@ -670,10 +714,15 @@ public:
 	}
 
 public:
-	SAIToggleDayNightWindowsUpdate() : nObjUniqueID( 0 ), bNightOn( false ) {}
+	SAIToggleDayNightWindowsUpdate()
+		: nObjUniqueID( 0 )
+		, bNightOn( false )
+	{
+	}
 
 	SAIToggleDayNightWindowsUpdate( const int _nObjUniqueID, const bool _bNightOn )
-			: nObjUniqueID( _nObjUniqueID ), bNightOn( _bNightOn )
+		: nObjUniqueID( _nObjUniqueID )
+		, bNightOn( _bNightOn )
 	{
 	}
 
@@ -697,10 +746,15 @@ public:
 	}
 
 public:
-	SAIBreakWindowUpdate() : nObjUniqueID( 0 ), nWindow( -1 ) {}
+	SAIBreakWindowUpdate()
+		: nObjUniqueID( 0 )
+		, nWindow( -1 )
+	{
+	}
 
 	SAIBreakWindowUpdate( const int _nObjUniqueID, const int _nWindow )
-			: nObjUniqueID( _nObjUniqueID ), nWindow( _nWindow )
+		: nObjUniqueID( _nObjUniqueID )
+		, nWindow( _nWindow )
 	{
 	}
 
@@ -755,7 +809,11 @@ public:
 	}
 
 public:
-	SAINewProjectileM1() : nTargetID( -1 ), fDamage( 0 ) {}
+	SAINewProjectileM1()
+		: nTargetID( -1 )
+		, fDamage( 0 )
+	{
+	}
 
 	SAINewProjectileM1( int _nTargetID,
 	                    float _fDamage,
@@ -763,8 +821,12 @@ public:
 	                    int _nWeaponID,
 	                    const CVec2 &vDir,
 	                    const SAINotifyNewProjectile &_info )
-			: nTargetID( _nTargetID ), fDamage( _fDamage ), info( _info ), nWeaponID( _nWeaponID ), vDirection( vDir ),
-				bTraceTargetIntersection( _bTraceTargetIntersection )
+		: nTargetID( _nTargetID )
+		, fDamage( _fDamage )
+		, info( _info )
+		, nWeaponID( _nWeaponID )
+		, vDirection( vDir )
+		, bTraceTargetIntersection( _bTraceTargetIntersection )
 	{
 	}
 
@@ -786,9 +848,15 @@ public:
 	}
 
 public:
-	SAIDeadProjectileUpdate() : nProjectileUnqiueID( 0 ) {}
+	SAIDeadProjectileUpdate()
+		: nProjectileUnqiueID( 0 )
+	{
+	}
 
-	SAIDeadProjectileUpdate( const int _nProjectileUnqiueID ) : nProjectileUnqiueID( _nProjectileUnqiueID ) {}
+	SAIDeadProjectileUpdate( const int _nProjectileUnqiueID )
+		: nProjectileUnqiueID( _nProjectileUnqiueID )
+	{
+	}
 
 	REGISTER_TO_UPDATES
 };
@@ -814,13 +882,21 @@ public:
 	}
 
 public:
-	SExplodeProjectileUpdate() : vExplCenter( VNULL3 ), vExplDir( VNULL3 ), nProjectileID( -1 ) {}
+	SExplodeProjectileUpdate()
+		: vExplCenter( VNULL3 )
+		, vExplDir( VNULL3 )
+		, nProjectileID( -1 )
+	{
+	}
 
 	SExplodeProjectileUpdate( int _nProjectileID,
 	                          const CVec3 &_vExplCenter,
 	                          const CVec3 &_vExplDir,
 	                          SAINotifyHitInfo::EHitType _eHitType )
-			: nProjectileID( _nProjectileID ), vExplCenter( _vExplCenter ), vExplDir( _vExplDir ), eHitType( _eHitType )
+		: nProjectileID( _nProjectileID )
+		, vExplCenter( _vExplCenter )
+		, vExplDir( _vExplDir )
+		, eHitType( _eHitType )
 	{
 	}
 
@@ -861,7 +937,9 @@ public:
 	SScriptCameraRunUpdate() {}
 
 	SScriptCameraRunUpdate( const std::string &_szStartCam, const std::string &_szFinshCam, float _fTime )
-			: szStartCam( _szStartCam ), szFinishCam( _szFinshCam ), fTime( _fTime )
+		: szStartCam( _szStartCam )
+		, szFinishCam( _szFinshCam )
+		, fTime( _fTime )
 	{
 	}
 
@@ -991,9 +1069,16 @@ public:
 	}
 
 public:
-	SAIObjectsUnderConstructionUpdate() : bCanBuild( true ) {}
+	SAIObjectsUnderConstructionUpdate()
+		: bCanBuild( true )
+	{
+	}
 
-	SAIObjectsUnderConstructionUpdate( const bool _bSet ) : bSet( _bSet ), bCanBuild( true ) {}
+	SAIObjectsUnderConstructionUpdate( const bool _bSet )
+		: bSet( _bSet )
+		, bCanBuild( true )
+	{
+	}
 };
 
 struct SClientUpdateButtonsUpdate : public SAIBasicUpdate
@@ -1028,7 +1113,10 @@ public:
 
 	SClientUpdateSingleUnitUpdate() {}
 
-	SClientUpdateSingleUnitUpdate( const int &_nUnitID ) : nUnitID( _nUnitID ) {}
+	SClientUpdateSingleUnitUpdate( const int &_nUnitID )
+		: nUnitID( _nUnitID )
+	{
+	}
 
 	REGISTER_TO_UPDATES
 };
@@ -1056,7 +1144,9 @@ public:
 	}
 
 	SPlayEffectUpdate( const NDb::SComplexEffect *_pEffect, const CVec3 &_vPos )
-			: SAIBasicUpdate( ACTION_NOTIFY_PLAY_EFFECT, 0 ), pEffect( _pEffect ), vPos( _vPos )
+		: SAIBasicUpdate( ACTION_NOTIFY_PLAY_EFFECT, 0 )
+		, pEffect( _pEffect )
+		, vPos( _vPos )
 	{
 	}
 
@@ -1078,11 +1168,14 @@ public:
 		return 0;
 	}
 
-	SLaserMarkUpdate() : info() {}
+	SLaserMarkUpdate()
+		: info()
+	{
+	}
 
 	SLaserMarkUpdate(
 			const int _nLaserMarkID, const int _nUnitID, const int _nPlatform, const int _nGun, const CVec3 &_vTarget )
-			: info( _nLaserMarkID, _nUnitID, _nPlatform, _nGun, _vTarget )
+		: info( _nLaserMarkID, _nUnitID, _nPlatform, _nGun, _vTarget )
 	{
 	}
 
@@ -1111,7 +1204,9 @@ public:
 	SChatMessageUpdate() {}
 
 	SChatMessageUpdate( const std::wstring &_wszMessage, const uint32_t &_dwColor, const bool &_bAnotherChat )
-			: wszMessage( _wszMessage ), dwColor( _dwColor ), bAnotherChat( _bAnotherChat )
+		: wszMessage( _wszMessage )
+		, dwColor( _dwColor )
+		, bAnotherChat( _bAnotherChat )
 	{
 	}
 
@@ -1135,7 +1230,10 @@ public:
 
 	SWinLoseUpdate() {}
 
-	SWinLoseUpdate( const bool &_bWin ) : bWin( _bWin ) {}
+	SWinLoseUpdate( const bool &_bWin )
+		: bWin( _bWin )
+	{
+	}
 
 	REGISTER_TO_UPDATES
 };
@@ -1175,7 +1273,10 @@ public:
 
 	SStartStopSequenceUpdate() {}
 
-	SStartStopSequenceUpdate( const bool &_bStart ) : bStart( _bStart ) {}
+	SStartStopSequenceUpdate( const bool &_bStart )
+		: bStart( _bStart )
+	{
+	}
 
 	REGISTER_TO_UPDATES
 };
@@ -1199,7 +1300,10 @@ public:
 
 	SMSPlayVoiceUpdate() {}
 
-	SMSPlayVoiceUpdate( const int &_nVoiceID ) : nVoiceID( _nVoiceID ) {}
+	SMSPlayVoiceUpdate( const int &_nVoiceID )
+		: nVoiceID( _nVoiceID )
+	{
+	}
 
 	//	REGISTER_TO_UPDATES
 };
@@ -1221,7 +1325,10 @@ public:
 
 	SMSChangePlaylistUpdate() {}
 
-	SMSChangePlaylistUpdate( const int &_nPlayList ) : nPlayList( _nPlayList ) {}
+	SMSChangePlaylistUpdate( const int &_nPlayList )
+		: nPlayList( _nPlayList )
+	{
+	}
 
 	REGISTER_TO_UPDATES
 };
@@ -1246,7 +1353,8 @@ public:
 	SMSSetVolumeUpdate() {}
 
 	SMSSetVolumeUpdate( const int &_nVolumeType, const float &_fVolume )
-			: nVolumeType( _nVolumeType ), fVolume( _fVolume )
+		: nVolumeType( _nVolumeType )
+		, fVolume( _fVolume )
 	{
 	}
 
@@ -1272,7 +1380,9 @@ public:
 
 	SMSPauseMusicUpdate() {}
 
-	SMSPauseMusicUpdate( const int &_nVolumeType, const bool &_bPause ) : nVolumeType( _nVolumeType ), bPause( _bPause )
+	SMSPauseMusicUpdate( const int &_nVolumeType, const bool &_bPause )
+		: nVolumeType( _nVolumeType )
+		, bPause( _bPause )
 	{
 	}
 
@@ -1299,7 +1409,8 @@ public:
 	SObjectiveChanged() {}
 
 	SObjectiveChanged( const int &_nObjectiveNumber, const int &_nStatus )
-			: nObjectiveNumber( _nObjectiveNumber ), nStatus( _nStatus )
+		: nObjectiveNumber( _nObjectiveNumber )
+		, nStatus( _nStatus )
 	{
 	}
 
@@ -1323,7 +1434,10 @@ public:
 
 	SEnableAirStrike() {}
 
-	SEnableAirStrike( const bool &_bEnable ) : bEnable( _bEnable ) {}
+	SEnableAirStrike( const bool &_bEnable )
+		: bEnable( _bEnable )
+	{
+	}
 
 	REGISTER_TO_UPDATES
 };
@@ -1342,9 +1456,15 @@ public:
 		return 0;
 	}
 
-	SMemCameraPos() : nPos( -1 ) {}
+	SMemCameraPos()
+		: nPos( -1 )
+	{
+	}
 
-	SMemCameraPos( const int _nPos ) : nPos( _nPos ) {}
+	SMemCameraPos( const int _nPos )
+		: nPos( _nPos )
+	{
+	}
 
 	REGISTER_TO_UPDATES
 };
@@ -1363,9 +1483,15 @@ public:
 		return 0;
 	}
 
-	SSetCameraToMemPos() : nPos( -1 ) {}
+	SSetCameraToMemPos()
+		: nPos( -1 )
+	{
+	}
 
-	SSetCameraToMemPos( const int _nPos ) : nPos( _nPos ) {}
+	SSetCameraToMemPos( const int _nPos )
+		: nPos( _nPos )
+	{
+	}
 
 	REGISTER_TO_UPDATES
 };

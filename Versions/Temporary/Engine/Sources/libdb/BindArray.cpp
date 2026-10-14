@@ -44,8 +44,13 @@ namespace NBind
 		                          NTypeDef::STypeArray *_pTypeArray,
 		                          IObjMan *_pParent,
 		                          CBindArray *_pBindArray )
-				: pContained( _pContained ), pTypeArray( _pTypeArray ), pRawVector( _pRawVector ), pBindArray( _pBindArray ),
-					pParent( _pParent ), szAddName( _szAddName ), nIndex( _nIndex )
+			: pContained( _pContained )
+			, pTypeArray( _pTypeArray )
+			, pRawVector( _pRawVector )
+			, pBindArray( _pBindArray )
+			, pParent( _pParent )
+			, szAddName( _szAddName )
+			, nIndex( _nIndex )
 		{
 			pBindArray->AddArrayElementManipulator( this );
 		}
@@ -563,8 +568,11 @@ namespace NBind
 	                                NTypeDef::STypeArray *_pTypeArray,
 	                                IObjMan *_pParent,
 	                                bool _bShowHidden )
-			: szAddName( _szAddName ), pTypeArray( _pTypeArray ), pParent( _pParent ), nCurrElementIndex( nIndex ),
-				bArrayElementLocked( true )
+		: szAddName( _szAddName )
+		, pTypeArray( _pTypeArray )
+		, pParent( _pParent )
+		, nCurrElementIndex( nIndex )
+		, bArrayElementLocked( true )
 	{
 		if ( nCurrElementIndex == -1 )
 		{

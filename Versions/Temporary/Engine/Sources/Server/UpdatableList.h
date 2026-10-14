@@ -35,7 +35,10 @@ class CUpdatableList
 		int nID;
 		uint8_t change;
 
-		SChange() : change( EC_NOP ) {}
+		SChange()
+			: change( EC_NOP )
+		{
+		}
 	};
 
 	std::vector<SChange> changes;

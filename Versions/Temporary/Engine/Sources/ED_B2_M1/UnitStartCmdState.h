@@ -95,7 +95,12 @@ class CUnitStartCmdState : public CMapObjectState, public NUnitStartCmdDialog::I
 		bool bTargetSelected;
 
 		//
-		SCmdMarker() : vTargetPos( VNULL3 ), bTargetIsUnit( false ), bTargetSelected( false ) {}
+		SCmdMarker()
+			: vTargetPos( VNULL3 )
+			, bTargetIsUnit( false )
+			, bTargetSelected( false )
+		{
+		}
 	};
 
 	std::vector<SCmdMarker> markers;

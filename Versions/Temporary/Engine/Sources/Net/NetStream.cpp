@@ -9,7 +9,11 @@ namespace NNet
 /////////////////////////////////////////////////////////////////////////////////////
 // CStreamTracker
 /////////////////////////////////////////////////////////////////////////////////////
-CStreamTracker::CStreamTracker() : nChannelOutputOffset( 0 ), nChannelInputOffset( 0 ) {}
+CStreamTracker::CStreamTracker()
+	: nChannelOutputOffset( 0 )
+	, nChannelInputOffset( 0 )
+{
+}
 
 // return true if test offset is before border
 bool CStreamTracker::IsBefore( CHANNEL_DATA_OFFSET border, CHANNEL_DATA_OFFSET test )

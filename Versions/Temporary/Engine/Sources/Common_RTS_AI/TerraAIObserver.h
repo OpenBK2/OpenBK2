@@ -20,10 +20,15 @@ struct SSingleSide
 	float fOffset1 = 0.0f;
 	float fOffset2 = 0.0f;
 
-	SSingleSide() : bSingleSide( false ) {}
+	SSingleSide()
+		: bSingleSide( false )
+	{
+	}
 
 	SSingleSide( const bool _bSingleSide, const float _fOffset1, const float _fOffset2 )
-			: bSingleSide( _bSingleSide ), fOffset1( _fOffset1 ), fOffset2( _fOffset2 )
+		: bSingleSide( _bSingleSide )
+		, fOffset1( _fOffset1 )
+		, fOffset2( _fOffset2 )
 	{
 	}
 };

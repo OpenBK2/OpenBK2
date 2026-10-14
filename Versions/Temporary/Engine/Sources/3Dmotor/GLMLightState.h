@@ -11,7 +11,10 @@ struct SLightStateCalcSeed
 {
 	int nSeed;
 
-	SLightStateCalcSeed() : nSeed( 0 ) {}
+	SLightStateCalcSeed()
+		: nSeed( 0 )
+	{
+	}
 };
 
 class CLightState
@@ -31,7 +34,10 @@ public:
 		SSemiPointLight() {}
 
 		SSemiPointLight( const CVec3 &_vColor, const CVec3 &_vCenter, const CVec3 &_vNormal, float _fRadius )
-				: vColor( _vColor ), vCenter( _vCenter ), vNormal( _vNormal ), fRadius( _fRadius )
+			: vColor( _vColor )
+			, vCenter( _vCenter )
+			, vNormal( _vNormal )
+			, fRadius( _fRadius )
 		{
 		}
 	};
@@ -46,7 +52,9 @@ public:
 		SPointLight() {}
 
 		SPointLight( const CVec3 &_vColor, const CVec3 &_vCenter, float _fR ) //, bool _bCastShadow )
-				: vColor( _vColor ), vCenter( _vCenter ), fRadius( _fR )
+			: vColor( _vColor )
+			, vCenter( _vCenter )
+			, fRadius( _fR )
 		{
 		} //, bCastShadow(_bCastShadow) {}
 	};

@@ -18,7 +18,13 @@ struct SCommonClientInfo
 	uint8_t cLobbyID;
 	int nGameID;
 
-	SCommonClientInfo() : eState( ES_ONLINE ), bWant2ReceiveChat( true ), cLobbyID( 255 ), nGameID( -1 ) {}
+	SCommonClientInfo()
+		: eState( ES_ONLINE )
+		, bWant2ReceiveChat( true )
+		, cLobbyID( 255 )
+		, nGameID( -1 )
+	{
+	}
 };
 
 struct SGameConnection
@@ -28,7 +34,10 @@ struct SGameConnection
 		std::string szIP;
 		int nPort;
 
-		SAddressInfo() : nPort( 0 ) {}
+		SAddressInfo()
+			: nPort( 0 )
+		{
+		}
 	};
 
 	std::unordered_map<int, SAddressInfo> connections;

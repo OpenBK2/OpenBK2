@@ -52,8 +52,12 @@ public:
 	          CObjectBase *_pVictim,
 	          const SAINotifyHitInfo::EHitType _eHitType,
 	          const CVec3 &_explCoord )
-			: pWeapon( _pWeapon ), wShell( _wShell ), wDir( _wDir ), pVictim( _pVictim ), eHitType( _eHitType ),
-				explCoord( _explCoord )
+		: pWeapon( _pWeapon )
+		, wShell( _wShell )
+		, wDir( _wDir )
+		, pVictim( _pVictim )
+		, eHitType( _eHitType )
+		, explCoord( _explCoord )
 	{
 		SetUniqueIdForObjects();
 	}
@@ -63,8 +67,12 @@ public:
 	          const uint16_t &_wDir,
 	          const CVec3 &_explCoord,
 	          const SAINotifyHitInfo::EHitType _eHitType )
-			: pWeapon( _pWeapon ), wShell( _wShell ), wDir( _wDir ), pVictim( 0 ), explCoord( _explCoord ),
-				eHitType( _eHitType )
+		: pWeapon( _pWeapon )
+		, wShell( _wShell )
+		, wDir( _wDir )
+		, pVictim( 0 )
+		, explCoord( _explCoord )
+		, eHitType( _eHitType )
 	{
 		SetUniqueIdForObjects();
 	}
@@ -465,9 +473,17 @@ class CATGMTraj : public IBallisticTraj
 
 public:
 	CATGMTraj()
-			: nShooterParty( -1 ), eTrajectoryType( NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE ), fSpeed( 0.0f ),
-				fTurnRateRad( 0.0f ), fStrayModeTime( 0.0f ), fTopTargetingHeight( 0.0f ), fProximityRadius( 0.0f ),
-				bAimsForTop( false ), bStrayMode( false ), bFinished( false ), bAirBurst( false )
+		: nShooterParty( -1 )
+		, eTrajectoryType( NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE )
+		, fSpeed( 0.0f )
+		, fTurnRateRad( 0.0f )
+		, fStrayModeTime( 0.0f )
+		, fTopTargetingHeight( 0.0f )
+		, fProximityRadius( 0.0f )
+		, bAimsForTop( false )
+		, bStrayMode( false )
+		, bFinished( false )
+		, bAirBurst( false )
 	{
 	}
 
@@ -593,7 +609,11 @@ protected:
 	}
 
 public:
-	CExplosion() : nPlayerOfShoot( -1 ), bForceAirEffect( false ) {}
+	CExplosion()
+		: nPlayerOfShoot( -1 )
+		, bForceAirEffect( false )
+	{
+	}
 
 	CExplosion( CAIUnit *pUnit,
 	            const class CBasicGun *pGun,
@@ -783,9 +803,10 @@ class CFlameThrowerExpl : public CExplosion
 	CVec3 vTargetPos;
 
 ZEND public :
-		// Loading older saves must not leave the flame path dependent on heap contents.
-		CFlameThrowerExpl()
-		: vShooterPos( VNULL3 ), vTargetPos( VNULL3 )
+	// Loading older saves must not leave the flame path dependent on heap contents.
+	CFlameThrowerExpl()
+	: vShooterPos( VNULL3 )
+	, vTargetPos( VNULL3 )
 	{
 	}
 
@@ -817,7 +838,10 @@ class CMomentShell
 	}
 
 public:
-	CMomentShell( CExplosion *_expl ) : expl( _expl ) {}
+	CMomentShell( CExplosion *_expl )
+		: expl( _expl )
+	{
+	}
 
 	const CVec3 &GetExplCoordinates() const
 	{
@@ -938,10 +962,14 @@ class CInvisShell : public CAIObjectBase, public CShell
 	}
 
 public:
-	CInvisShell() : nOrder( 0 ) {}
+	CInvisShell()
+		: nOrder( 0 )
+	{
+	}
 
 	CInvisShell( const NTimer::STime &explTime, CExplosion *expl, const int nGun )
-			: CShell( explTime, expl, nGun ), nOrder( 0 )
+		: CShell( explTime, expl, nGun )
+		, nOrder( 0 )
 	{
 	}
 
@@ -975,7 +1003,10 @@ private:
 	void CalcVisibility();
 
 public:
-	CVisShell() : nOrder( 0 ) {}
+	CVisShell()
+		: nOrder( 0 )
+	{
+	}
 
 	CVisShell( CExplosion *_expl, IBallisticTraj *_pTraj, const int nGun, const int nPlatform );
 
@@ -1059,9 +1090,15 @@ struct SInvisShell
 public:
 	SInvisShell() {}
 
-	SInvisShell( CInvisShell *p ) : ptr( p ) {}
+	SInvisShell( CInvisShell *p )
+		: ptr( p )
+	{
+	}
 
-	SInvisShell( CPtr<CInvisShell> &s ) : ptr( s ) {}
+	SInvisShell( CPtr<CInvisShell> &s )
+		: ptr( s )
+	{
+	}
 
 	CInvisShell *operator->() const
 	{
@@ -1131,7 +1168,11 @@ public:
 	}
 
 public:
-	CShellsStore() : nNextInvisShellOrder( 0 ), nNextVisShellOrder( 0 ) {}
+	CShellsStore()
+		: nNextInvisShellOrder( 0 )
+		, nNextVisShellOrder( 0 )
+	{
+	}
 
 	void Clear();
 

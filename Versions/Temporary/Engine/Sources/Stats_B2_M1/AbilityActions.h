@@ -21,7 +21,12 @@ struct SSpecialAbilityInfo : public SSuspendedUpdate
 	}
 
 public:
-	SSpecialAbilityInfo() : nAbilityType( 0 ), fCurValue( 0.0f ), state( (EAbilitySwitchState)0 ) {}
+	SSpecialAbilityInfo()
+		: nAbilityType( 0 )
+		, fCurValue( 0.0f )
+		, state( (EAbilitySwitchState)0 )
+	{
+	}
 };
 
 struct SAISpecialAbilityUpdate : public SAIBasicUpdate

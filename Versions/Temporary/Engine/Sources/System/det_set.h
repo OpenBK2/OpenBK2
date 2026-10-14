@@ -38,8 +38,8 @@ public:
 	det_set() = default;
 
 	det_set( const det_set &other )
-			: items_( other.items_ ),
-				index_( other.index_.bucket_count(), other.index_.hash_function(), other.index_.key_eq() )
+		: items_( other.items_ )
+		, index_( other.index_.bucket_count(), other.index_.hash_function(), other.index_.key_eq() )
 	{
 		// Rebuild lookup iterators for the copied nodes; source iterators cannot
 		// be used to erase from this list or survive destruction of the source.

@@ -38,10 +38,15 @@ class CEntrenchment : public CStaticObject,
 		}
 
 	public:
-		SFireplaceInfo() : nFrameIndex( -1 ) {}
+		SFireplaceInfo()
+			: nFrameIndex( -1 )
+		{
+		}
 
 		SFireplaceInfo( const CVec2 &_center, CSoldier *_pUnit, const int _nFrameIndex )
-				: pUnit( _pUnit ), center( _center ), nFrameIndex( _nFrameIndex )
+			: pUnit( _pUnit )
+			, center( _center )
+			, nFrameIndex( _nFrameIndex )
 		{
 		}
 	};
@@ -63,7 +68,11 @@ class CEntrenchment : public CStaticObject,
 	public:
 		SInsiderInfo() {}
 
-		SInsiderInfo( CSoldier *_pUnit, const int _nFireplace ) : pUnit( _pUnit ), nFireplace( _nFireplace ) {}
+		SInsiderInfo( CSoldier *_pUnit, const int _nFireplace )
+			: pUnit( _pUnit )
+			, nFireplace( _nFireplace )
+		{
+		}
 	};
 
 	typedef std::list<CPtr<CEntrenchmentPart>> CSegmentList;

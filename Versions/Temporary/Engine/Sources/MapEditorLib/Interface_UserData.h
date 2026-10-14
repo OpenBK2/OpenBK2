@@ -65,7 +65,11 @@ struct SUserData
 		std::string szScriptFileName;
 		std::string szOldPluginParticleFixYZOption;
 
-		SMayaExportData() : nMayaResponseTimeout( 0 ), nMayaExecutionQuota( 0 ) {}
+		SMayaExportData()
+			: nMayaResponseTimeout( 0 )
+			, nMayaExecutionQuota( 0 )
+		{
+		}
 
 		// serializing...
 		int operator&( IXmlSaver &xs )
@@ -259,7 +263,12 @@ struct SUserData
 	bool bShowLogErrors;
 
 	//
-	SUserData() : bShowLogMessages( true ), bShowLogWarnings( true ), bShowLogErrors( true ) {}
+	SUserData()
+		: bShowLogMessages( true )
+		, bShowLogWarnings( true )
+		, bShowLogErrors( true )
+	{
+	}
 
 	//
 	int operator&( IXmlSaver &xs )

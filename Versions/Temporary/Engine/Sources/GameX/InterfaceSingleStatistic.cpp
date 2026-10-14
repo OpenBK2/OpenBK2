@@ -27,7 +27,8 @@ const wchar_t *DYNAMIC_TAG_PLAYER_RANK = L"player_rank";
 // CInterfaceSingleStatistic
 
 CInterfaceSingleStatistic::CInterfaceSingleStatistic()
-		: CInterfaceScreenBase( "SingleStatistics2", "single_statistic" ), timePrevPopup( 0 )
+	: CInterfaceScreenBase( "SingleStatistics2", "single_statistic" )
+	, timePrevPopup( 0 )
 {
 	AddObserver( "message_box_ok", &CInterfaceSingleStatistic::MsgOk );
 	AddObserver( "message_box_cancel", &CInterfaceSingleStatistic::MsgCancel );

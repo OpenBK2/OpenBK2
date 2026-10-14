@@ -25,9 +25,14 @@ struct SResKey
 
 	SResKey() {}
 
-	SResKey( const boost::uuids::uuid &uid, const TKey &key ) : uidKey( uid ), tKey( key ) {}
+	SResKey( const boost::uuids::uuid &uid, const TKey &key )
+		: uidKey( uid )
+		, tKey( key )
+	{
+	}
 
-	SResKey( const TKey &key ) : tKey( key )
+	SResKey( const TKey &key )
+		: tKey( key )
 	{
 		Zero( uidKey );
 	} // TODO: create a uid field in NDb resources and remove this constructor
@@ -108,7 +113,8 @@ class CResourcePrecache : public IPrecache
 	}
 
 public:
-	CResourcePrecache( T *_pStuff = 0 ) : pStuff( _pStuff )
+	CResourcePrecache( T *_pStuff = 0 )
+		: pStuff( _pStuff )
 	{
 		TryUpdate();
 	}
@@ -170,7 +176,10 @@ public:
 	CFileResource f;
 
 public:
-	CResourceFileOpener( const char *pszResName, const SResKey<int> &key ) : f( pszResName, key ) {}
+	CResourceFileOpener( const char *pszResName, const SResKey<int> &key )
+		: f( pszResName, key )
+	{
+	}
 
 	CFileStream &GetFileStream()
 	{
@@ -189,7 +198,8 @@ class CResourceOpener
 	CObj<IBinSaver> pSaver;
 
 public:
-	CResourceOpener( const char *pszResName, const SResKey<int> &key ) : file( pszResName, key )
+	CResourceOpener( const char *pszResName, const SResKey<int> &key )
+		: file( pszResName, key )
 	{
 		if ( file.IsOk() )
 		{
@@ -227,7 +237,13 @@ class SYSTEM_EXPORT CFileRequest : public CObjectBase
 	CMemoryStream data;
 
 public:
-	CFileRequest() : pszResName( 0 ), nID( 0 ), bIsReady( true ), bDelayedLoad( true ) {}
+	CFileRequest()
+		: pszResName( 0 )
+		, nID( 0 )
+		, bIsReady( true )
+		, bDelayedLoad( true )
+	{
+	}
 
 	CFileRequest( const char *pszResName, int nID, bool bDelayedLoad );
 	CFileRequest( const char *pszResName, const SResKey<int> &key, bool bDelayedLoad );

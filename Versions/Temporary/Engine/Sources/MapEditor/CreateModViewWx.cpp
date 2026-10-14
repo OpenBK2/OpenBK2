@@ -42,12 +42,12 @@ class CCreateModWxDialog : public CWxToolDialog
 
 public:
 	explicit CCreateModWxDialog( wxWindow *pParent )
-			: CWxToolDialog( pParent,
-	                     wxID_ANY,
-	                     "Create MOD",
-	                     wxDefaultPosition,
-	                     wxSize( 430, 240 ),
-	                     wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+		: CWxToolDialog( pParent,
+	                   wxID_ANY,
+	                   "Create MOD",
+	                   wxDefaultPosition,
+	                   wxSize( 430, 240 ),
+	                   wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
 	{
 		// The anchors from CCreateMODDialog's constructor, translated:
 		//   IDC_CM_FOLDER_LABEL ANCHORE_LEFT_TOP                  -> fixed

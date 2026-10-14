@@ -28,12 +28,14 @@ class CMapObjectSelectState : public CDefaultInputState
 	class CMapObjectState *pParentState;
 
 	//конструкторы и операторы присваивания
-	CMapObjectSelectState() : pParentState( 0 )
+	CMapObjectSelectState()
+		: pParentState( 0 )
 	{
 		NI_ASSERT( pParentState != 0, "CMapObjectSelectState(): Invalid parameter: pParentState == 0" );
 	}
 
-	CMapObjectSelectState( CMapObjectState *_pParentState ) : pParentState( _pParentState )
+	CMapObjectSelectState( CMapObjectState *_pParentState )
+		: pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CMapObjectSelectState(): Invalid parameter: pParentState == 0" );
 	}
@@ -60,12 +62,14 @@ class CMapObjectEditState : public CDefaultInputState
 	class CMapObjectState *pParentState;
 
 	//конструкторы и операторы присваивания
-	CMapObjectEditState() : pParentState( 0 )
+	CMapObjectEditState()
+		: pParentState( 0 )
 	{
 		NI_ASSERT( pParentState != 0, "CMapObjectEditState(): Invalid parameter: pParentState == 0" );
 	}
 
-	CMapObjectEditState( CMapObjectState *_pParentState ) : pParentState( _pParentState )
+	CMapObjectEditState( CMapObjectState *_pParentState )
+		: pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CMapObjectEditState(): Invalid parameter: pParentState == 0" );
 	}
@@ -91,12 +95,14 @@ class CMapObjectAddState : public CDefaultInputState
 	class CMapObjectState *pParentState;
 
 	//конструкторы и операторы присваивания
-	CMapObjectAddState() : pParentState( 0 )
+	CMapObjectAddState()
+		: pParentState( 0 )
 	{
 		NI_ASSERT( pParentState != 0, "CMapObjectAddState(): Invalid parameter: pParentState == 0" );
 	}
 
-	CMapObjectAddState( CMapObjectState *_pParentState ) : pParentState( _pParentState )
+	CMapObjectAddState( CMapObjectState *_pParentState )
+		: pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CMapObjectAddState(): Invalid parameter: pParentState == 0" );
 	}
@@ -129,12 +135,14 @@ class CMapObjectPasteState : public CDefaultInputState
 	class CMapObjectState *pParentState;
 
 	//конструкторы и операторы присваивания
-	CMapObjectPasteState() : pParentState( 0 )
+	CMapObjectPasteState()
+		: pParentState( 0 )
 	{
 		NI_ASSERT( pParentState != 0, "CMapObjectPasteState(): Invalid parameter: pParentState == 0" );
 	}
 
-	CMapObjectPasteState( CMapObjectState *_pParentState ) : pParentState( _pParentState )
+	CMapObjectPasteState( CMapObjectState *_pParentState )
+		: pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CMapObjectPasteState(): Invalid parameter: pParentState == 0" );
 	}
@@ -182,8 +190,11 @@ protected:
 
 		//
 		SSelector()
-				: bTerrainSelector( true ), frameRect( 0, 0, 0, 0 ), vTerrainPos0( VNULL3 ), vTerrainPos1( VNULL3 ),
-					bValid( false )
+			: bTerrainSelector( true )
+			, frameRect( 0, 0, 0, 0 )
+			, vTerrainPos0( VNULL3 )
+			, vTerrainPos1( VNULL3 )
+			, bValid( false )
 		{
 		}
 
@@ -331,7 +342,9 @@ public:
 	//
 	//конструкторы и операторы присваивания
 	CMapObjectState( class CMapObjectMultiState *_pParentState = 0 )
-			: pParentState( _pParentState ), nSelectedSceneID( INVALID_NODE_ID ), bDrawShootAreas( true )
+		: pParentState( _pParentState )
+		, nSelectedSceneID( INVALID_NODE_ID )
+		, bDrawShootAreas( true )
 	{
 		pStoreInputState = new CMapInfoStoreInputState();
 		NI_ASSERT( pStoreInputState != 0, fmt::format( "CMapObjectState(): pStoreInputState == 0" ) );

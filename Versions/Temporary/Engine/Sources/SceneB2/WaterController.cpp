@@ -105,9 +105,16 @@ struct SAnimWaterMaterialKey
 	                       bool _bApplyFog,
 	                       bool _bAddPlaced,
 	                       bool _bDrawHorses )
-			: pTex( _pTex ), pSecondTex( _pSecondTex ), nPriority( _nPriority ), pTime( _pTime ),
-				bProjectOnTerrain( _bProjectOnTerrain ), nNumFramesX( _nNumFramesX ), nNumFramesY( _nNumFramesY ),
-				bApplyFog( _bApplyFog ), bAddPlaced( _bAddPlaced ), bDrawHorses( _bDrawHorses )
+		: pTex( _pTex )
+		, pSecondTex( _pSecondTex )
+		, nPriority( _nPriority )
+		, pTime( _pTime )
+		, bProjectOnTerrain( _bProjectOnTerrain )
+		, nNumFramesX( _nNumFramesX )
+		, nNumFramesY( _nNumFramesY )
+		, bApplyFog( _bApplyFog )
+		, bAddPlaced( _bAddPlaced )
+		, bDrawHorses( _bDrawHorses )
 	{
 	}
 
@@ -180,9 +187,16 @@ CVisWaterPatch::CVisWaterPatch( const CWaterController *pContr,
                                 const bool _bUseNoise,
                                 const float _fNoiseCoeff,
                                 const uint8_t _nParamInd )
-		: bUpdate( true ), pController( pContr ), pTimer( _pTimer ), bUseWaves( _bUseWaves ),
-			fHorDeformMinRadius( fMinRad ), fHorDeformMaxRadius( fMaxRad ), pLight( _pLight ), bUseNoise( _bUseNoise ),
-			fNoiseCoeff( _fNoiseCoeff ), nParamInd( _nParamInd )
+	: bUpdate( true )
+	, pController( pContr )
+	, pTimer( _pTimer )
+	, bUseWaves( _bUseWaves )
+	, fHorDeformMinRadius( fMinRad )
+	, fHorDeformMaxRadius( fMaxRad )
+	, pLight( _pLight )
+	, bUseNoise( _bUseNoise )
+	, fNoiseCoeff( _fNoiseCoeff )
+	, nParamInd( _nParamInd )
 {
 	if ( _pLight )
 	{
@@ -1078,8 +1092,13 @@ public:
 	              float _fRadius,
 	              int _nNumFramesX,
 	              int _nNumFramesY )
-			: nOriginX( _nOriginX ), nOriginY( _nOriginY ), alphaMap( _alphaMap ), fSpeed( _fSpeed ), fRadius( _fRadius ),
-				nNumFramesX( _nNumFramesX ), nNumFramesY( _nNumFramesY )
+		: nOriginX( _nOriginX )
+		, nOriginY( _nOriginY )
+		, alphaMap( _alphaMap )
+		, fSpeed( _fSpeed )
+		, fRadius( _fRadius )
+		, nNumFramesX( _nNumFramesX )
+		, nNumFramesY( _nNumFramesY )
 	{
 	}
 };

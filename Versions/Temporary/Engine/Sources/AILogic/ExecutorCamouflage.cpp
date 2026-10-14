@@ -13,7 +13,8 @@ extern NTimer::STime curTime;
 extern CDiplomacy theDipl;
 
 CExecutorCamouflage::CExecutorCamouflage( CAIUnit *_pUnit )
-		: CExecutorUnitCombatBonus( NDb::ABILITY_CAMOFLAGE_MODE, _pUnit, TID_CAMOUFLAGE ), nextCheckTime( 0 )
+	: CExecutorUnitCombatBonus( NDb::ABILITY_CAMOFLAGE_MODE, _pUnit, TID_CAMOUFLAGE )
+	, nextCheckTime( 0 )
 {
 }
 

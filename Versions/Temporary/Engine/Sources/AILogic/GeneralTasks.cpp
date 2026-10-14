@@ -40,7 +40,10 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4B2, CGeneralTaskToDefendPatch );
 //*******************************************************************
 
 CGeneralTaskToDefendPatch::CGeneralTaskToDefendPatch()
-		: nCurReinforcePoint( 0 ), pOwner( 0 ), bFinished( false ), bResistanceRemoved( false )
+	: nCurReinforcePoint( 0 )
+	, pOwner( 0 )
+	, bFinished( false )
+	, bResistanceRemoved( false )
 {
 }
 
@@ -450,7 +453,11 @@ bool CGeneralTaskToDefendPatch::EnumEnemy( class CAIUnit *pEnemy )
 //*											CGeneralTaskToHoldReinforcement							*
 //*******************************************************************
 
-CGeneralTaskToHoldReinforcement::CGeneralTaskToHoldReinforcement() : fSeverity( 0 ), nCurReinforcePoint( 0 ) {}
+CGeneralTaskToHoldReinforcement::CGeneralTaskToHoldReinforcement()
+	: fSeverity( 0 )
+	, nCurReinforcePoint( 0 )
+{
+}
 
 void CGeneralTaskToHoldReinforcement::Init( const NDb::SAIGeneralParcel &_patchInfo )
 {
@@ -584,8 +591,9 @@ bool CGeneralTaskToHoldReinforcement::EvaluateWorker( CCommonUnit *pUnit, const 
 //*******************************************************************
 
 CGeneralTaskRecaptureStorage::CGeneralTaskRecaptureStorage( const CVec2 &vReinforcePoint )
-		: vReinforcePoint( vReinforcePoint ), fSeverity( -SGeneralConsts::RECAPTURE_ARTILLERY_TANKS_NUMBER ),
-			bFinished( false )
+	: vReinforcePoint( vReinforcePoint )
+	, fSeverity( -SGeneralConsts::RECAPTURE_ARTILLERY_TANKS_NUMBER )
+	, bFinished( false )
 {
 }
 
@@ -652,13 +660,23 @@ bool CGeneralTaskRecaptureStorage::EvaluateWorker( CCommonUnit *pUnit, const enu
 //*******************************************************************
 
 CGeneralTaskToSwarmToPoint::CGeneralTaskToSwarmToPoint( CGeneral *_pOwner )
-		: nAdditionalIterations( 0 ), fSeverity( 0 ), bFinished( false ), bReleaseWorkers( false ), timeNextCheck( 0 ),
-			eState( ESS_REST ), pOwner( _pOwner ), bResistanesBusyByUs( false )
+	: nAdditionalIterations( 0 )
+	, fSeverity( 0 )
+	, bFinished( false )
+	, bReleaseWorkers( false )
+	, timeNextCheck( 0 )
+	, eState( ESS_REST )
+	, pOwner( _pOwner )
+	, bResistanesBusyByUs( false )
 {
 	ClearResistanceToAcceptNewTask();
 }
 
-CGeneralTaskToSwarmToPoint::CGeneralTaskToSwarmToPoint() : pOwner( 0 ), bResistanesBusyByUs( false ) {}
+CGeneralTaskToSwarmToPoint::CGeneralTaskToSwarmToPoint()
+	: pOwner( 0 )
+	, bResistanesBusyByUs( false )
+{
+}
 
 bool CGeneralTaskToSwarmToPoint::IsTimeToRun() const
 {

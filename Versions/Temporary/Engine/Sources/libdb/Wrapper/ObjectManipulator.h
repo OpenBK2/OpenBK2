@@ -16,7 +16,10 @@ class CObjectManipulatorWrapper : public IManipulator
 	CObjectManipulatorWrapper() {}
 
 public:
-	CObjectManipulatorWrapper( NDb::IObjMan *_pObjMan ) : pObjMan( _pObjMan ) {}
+	CObjectManipulatorWrapper( NDb::IObjMan *_pObjMan )
+		: pObjMan( _pObjMan )
+	{
+	}
 
 	// IManipulator
 	IManipulatorIterator *Iterate( bool bShowHidden, ECacheType eCache );
@@ -60,7 +63,10 @@ protected:
 	CObjectManipulatorIteratorWrapper() {}
 
 public:
-	CObjectManipulatorIteratorWrapper( NDb::IObjManIterator *_pIterator ) : pIterator( _pIterator ) {}
+	CObjectManipulatorIteratorWrapper( NDb::IObjManIterator *_pIterator )
+		: pIterator( _pIterator )
+	{
+	}
 
 	//interface functions
 	bool Next();

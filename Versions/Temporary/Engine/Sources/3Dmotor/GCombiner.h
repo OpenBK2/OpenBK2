@@ -57,7 +57,10 @@ protected:
 	virtual void Recalc();
 
 public:
-	CMMXAnimationMatrices( CFuncBase<std::vector<SHMatrix>> *p = 0 ) : pAnimation( p ) {}
+	CMMXAnimationMatrices( CFuncBase<std::vector<SHMatrix>> *p = 0 )
+		: pAnimation( p )
+	{
+	}
 };
 
 template <class T>
@@ -77,7 +80,11 @@ class CBuffer
 	}
 
 public:
-	CBuffer() : pBuffer( 0 ), nSize( 0 ) {}
+	CBuffer()
+		: pBuffer( 0 )
+		, nSize( 0 )
+	{
+	}
 
 	~CBuffer()
 	{
@@ -161,7 +168,10 @@ public:
 	CVec3 vBVMin, vBVMax;
 	float fAverageTriArea;
 
-	IPart() : fAverageTriArea( 0 ) {}
+	IPart()
+		: fAverageTriArea( 0 )
+	{
+	}
 
 	IPart( CPtrFuncBase<CObjectInfo> *pData, CPerMaterialCombiner *_pCombiner );
 	~IPart();
@@ -259,7 +269,11 @@ class CAnimationWatch : public CVersioningBase
 public:
 	CAnimationWatch() {}
 
-	CAnimationWatch( TMaterialCombiner *_p, bool _bAnimationOnly ) : pCombiner( _p ), bAnimationOnly( _bAnimationOnly ) {}
+	CAnimationWatch( TMaterialCombiner *_p, bool _bAnimationOnly )
+		: pCombiner( _p )
+		, bAnimationOnly( _bAnimationOnly )
+	{
+	}
 
 	void AddHandle( CVersioningBase *p )
 	{
@@ -277,7 +291,10 @@ class CPerMaterialCombiner : public CFuncBase<std::vector<CPtr<IPart>>>
 	virtual void Recalc();
 
 public:
-	CPerMaterialCombiner() : bHasChanged( false ) {}
+	CPerMaterialCombiner()
+		: bHasChanged( false )
+	{
+	}
 
 	CPerMaterialCombiner( int );
 	// for use with IPart like objects only
@@ -362,7 +379,10 @@ public:
 	             ECombinerType _ct,
 	             CVersioningBase *_pAnimation,
 	             CFuncBase<SPerVertexLightState> *_pLightState )
-			: pCombiner( _pCombiner ), ct( _ct ), pAnimation( _pAnimation ), pLightState( _pLightState )
+		: pCombiner( _pCombiner )
+		, ct( _ct )
+		, pAnimation( _pAnimation )
+		, pLightState( _pLightState )
 	{
 	}
 
@@ -434,7 +454,9 @@ public:
 	CIBCombiner() {}
 
 	CIBCombiner( CFuncBase<std::vector<CPtr<IPart>>> *_pCombiner, CVersioningBase *_pAnimation, EIBTargetType _ibt )
-			: pCombiner( _pCombiner ), pAnimation( _pAnimation ), ibt( _ibt )
+		: pCombiner( _pCombiner )
+		, pAnimation( _pAnimation )
+		, ibt( _ibt )
 	{
 	}
 };

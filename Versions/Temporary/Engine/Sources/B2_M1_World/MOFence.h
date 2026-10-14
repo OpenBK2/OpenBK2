@@ -15,7 +15,10 @@ class CMOFence : public CMapObj
 	}
 
 public:
-	CMOFence() : nSceneID( -1 ) {}
+	CMOFence()
+		: nSceneID( -1 )
+	{
+	}
 
 	bool Create( const int nUniqueID,
 	             const SAIBasicUpdate *pUpdate,

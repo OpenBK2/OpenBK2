@@ -41,7 +41,8 @@ public:
 	CLMPart() {}
 
 	CLMPart( ISomePart *_pPart, CPtrFuncBase<CObjectInfo> *pData, CPerMaterialCombiner *_pCombiner )
-			: IPart( pData, _pCombiner ), pPart( _pPart )
+		: IPart( pData, _pCombiner )
+		, pPart( _pPart )
 	{
 	}
 
@@ -96,10 +97,17 @@ public:
 			return 0;
 		}
 
-		SLightmap() : nLightmap( -1 ), lmShift( 0, 0 ), fLMResolution( 0.001f ) {}
+		SLightmap()
+			: nLightmap( -1 )
+			, lmShift( 0, 0 )
+			, fLMResolution( 0.001f )
+		{
+		}
 
 		SLightmap( int _nLightmap, const CTPoint<int> &_lmShift, float _fLMResolution )
-				: nLightmap( _nLightmap ), lmShift( _lmShift ), fLMResolution( _fLMResolution )
+			: nLightmap( _nLightmap )
+			, lmShift( _lmShift )
+			, fLMResolution( _fLMResolution )
 		{
 		}
 	};
@@ -154,8 +162,12 @@ struct SLMPartCalc
 	             float _fLMResolution,
 	             const SBound &_geomBound,
 	             const std::vector<SLMQuad> &_lmQuads )
-			: pPart( _p ), lmShift( _lmShift ), lmSize( _lmSize ), fLMResolution( _fLMResolution ), geomBound( _geomBound ),
-				lmQuads( _lmQuads )
+		: pPart( _p )
+		, lmShift( _lmShift )
+		, lmSize( _lmSize )
+		, fLMResolution( _fLMResolution )
+		, geomBound( _geomBound )
+		, lmQuads( _lmQuads )
 	{
 	}
 };
@@ -166,7 +178,11 @@ struct SLMGroup
 	CSingleTexAlloc lmAlloc;
 	float fResolution;
 
-	SLMGroup( float _fResolution = 0 ) : lmAlloc( N_LM_TEXTURE_SIZE ), fResolution( _fResolution ) {}
+	SLMGroup( float _fResolution = 0 )
+		: lmAlloc( N_LM_TEXTURE_SIZE )
+		, fResolution( _fResolution )
+	{
+	}
 };
 
 class CLightmapsTempHolder : public CObjectBase
@@ -336,7 +352,9 @@ struct SLightmapTargetGeom
 	//	int nTargetRegister;
 
 	SLightmapTargetGeom( CSceneFragments *_pGeom, NGfx::CRenderContext *_pRC, CTransformStack *_pTS )
-			: pGeom( _pGeom ), pRC( _pRC ), pTS( _pTS )
+		: pGeom( _pGeom )
+		, pRC( _pRC )
+		, pTS( _pTS )
 	{
 	}
 };

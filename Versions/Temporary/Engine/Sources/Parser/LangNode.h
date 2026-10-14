@@ -16,10 +16,15 @@ class CLangNode : public CObjectBase
 	int nLineWhereDefined;
 
 public:
-	CLangNode() : nLineWhereDefined( -1 ) {}
+	CLangNode()
+		: nLineWhereDefined( -1 )
+	{
+	}
 
 	CLangNode( const std::string &_szName, const std::string &_szFileWhereDefined, int _nLineWhereDefined )
-			: szName( _szName ), szFileWhereDefined( _szFileWhereDefined ), nLineWhereDefined( _nLineWhereDefined )
+		: szName( _szName )
+		, szFileWhereDefined( _szFileWhereDefined )
+		, nLineWhereDefined( _nLineWhereDefined )
 	{
 	}
 
@@ -74,7 +79,13 @@ class CSimpleValue
 	std::string szName;
 
 public:
-	CSimpleValue() : eType( EST_UNKNOWN ), bValue( false ), fValue( 0.0f ), dwHexValue( 0 ) {}
+	CSimpleValue()
+		: eType( EST_UNKNOWN )
+		, bValue( false )
+		, fValue( 0.0f )
+		, dwHexValue( 0 )
+	{
+	}
 
 	CSimpleValue( const std::string &szValue, bool bString )
 	{

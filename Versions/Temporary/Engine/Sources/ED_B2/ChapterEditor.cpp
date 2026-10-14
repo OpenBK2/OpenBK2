@@ -12,7 +12,10 @@ REGISTER_EDITOR_IN_DLL( Chapter, CChapterEditor )
 
 // CChapterEditor
 
-CChapterEditor::CChapterEditor() : pChapterState( 0 ) {}
+CChapterEditor::CChapterEditor()
+	: pChapterState( 0 )
+{
+}
 
 CChapterEditor::~CChapterEditor()
 {

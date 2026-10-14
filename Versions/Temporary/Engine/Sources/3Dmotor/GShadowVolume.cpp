@@ -272,7 +272,9 @@ class CPartsRender : public CRasterizer<CPartsRender>
 
 public:
 	CPartsRender( int _nWidth, int _nHeight, float _fZBufScale )
-			: nWidth( _nWidth ), nHeight( _nHeight ), fZBufScale( _fZBufScale )
+		: nWidth( _nWidth )
+		, nHeight( _nHeight )
+		, fZBufScale( _fZBufScale )
 	{
 		pHZBuffer = new CHZBuffer;
 		pHZBuffer->Initialize( nWidth, nHeight, fZBufScale );
@@ -357,7 +359,10 @@ struct SCompareRPS
 {
 	CVec3 vZ;
 
-	SCompareRPS( const CVec4 &_vZ ) : vZ( _vZ.x, _vZ.y, _vZ.z ) {}
+	SCompareRPS( const CVec4 &_vZ )
+		: vZ( _vZ.x, _vZ.y, _vZ.z )
+	{
+	}
 
 	bool operator()( const SRenderPartSet &a, const SRenderPartSet &b ) const
 	{
@@ -684,7 +689,10 @@ class CShadowVolumeBuilder
 		CVec3 points[N_MAX_POINTS];
 		int nSize;
 
-		SPoly() : nSize( 0 ) {}
+		SPoly()
+			: nSize( 0 )
+		{
+		}
 
 		int GetSize() const
 		{
@@ -723,8 +731,11 @@ public:
 	                      float _fRadius,
 	                      std::vector<CVec3> *_pResPoints,
 	                      std::vector<STriangle> *_pResTris )
-			: vCenter( _vCenter ), fRadius( _fRadius ), resPoints( *_pResPoints ), resTris( *_pResTris ),
-				fHullRadius( _fRadius * FP_SQRT_3 )
+		: vCenter( _vCenter )
+		, fRadius( _fRadius )
+		, resPoints( *_pResPoints )
+		, resTris( *_pResTris )
+		, fHullRadius( _fRadius * FP_SQRT_3 )
 	{
 		resPoints.resize( 0 );
 		resTris.resize( 0 );
@@ -875,7 +886,11 @@ struct SEdge
 {
 	int nStart, nFinish;
 
-	SEdge( int _nStart, int _nFinish ) : nStart( _nStart ), nFinish( _nFinish ) {}
+	SEdge( int _nStart, int _nFinish )
+		: nStart( _nStart )
+		, nFinish( _nFinish )
+	{
+	}
 };
 
 inline bool operator==( const SEdge &a, const SEdge &b )

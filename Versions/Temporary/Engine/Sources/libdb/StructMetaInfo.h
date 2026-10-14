@@ -30,7 +30,11 @@ namespace NMetaInfo
 				uint32_t size : 24;
 
 				//
-				STypeSize() : type( 0 ), size( 0 ) {}
+				STypeSize()
+					: type( 0 )
+					, size( 0 )
+				{
+				}
 			};
 
 			//
@@ -50,7 +54,12 @@ namespace NMetaInfo
 			GetValue pfnGetValue;
 
 			//
-			SField() : nShift( 0x0000ffff ), pfnSetValue( 0 ), pfnGetValue( 0 ) {}
+			SField()
+				: nShift( 0x0000ffff )
+				, pfnSetValue( 0 )
+				, pfnGetValue( 0 )
+			{
+			}
 
 			//
 			NTypeDef::ETypeType GetType() const
@@ -128,7 +137,12 @@ namespace NMetaInfo
 		CPtr<NTypeDef::STypeStructBase> pStructTypeDef;
 
 		//
-		SStructMetaInfo() : nStructSize( 0 ), nNumOwnValues( 0 ), nNumCodeValues( 0 ) {}
+		SStructMetaInfo()
+			: nStructSize( 0 )
+			, nNumOwnValues( 0 )
+			, nNumCodeValues( 0 )
+		{
+		}
 
 		//
 		void AddField( const std::string &szName, int nShift, int nSize, NTypeDef::ETypeType eType );

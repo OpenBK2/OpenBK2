@@ -777,7 +777,11 @@ struct SBinSaverExternalObject
 
 	SBinSaverExternalObject() {}
 
-	SBinSaverExternalObject( int _nID, CObjectBase *_pObj ) : nID( _nID ), pObj( _pObj ) {}
+	SBinSaverExternalObject( int _nID, CObjectBase *_pObj )
+		: nID( _nID )
+		, pObj( _pObj )
+	{
+	}
 };
 
 // objects checker in debug mode

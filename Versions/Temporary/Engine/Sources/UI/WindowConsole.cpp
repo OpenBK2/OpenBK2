@@ -65,7 +65,11 @@ static const int MINUS_PAGE_SIZE = 5;         //Специальная конс�
 static const int CURSOR_ANIMATION_TIME = 400; //период переключения курсора
 static const wchar_t szPrefix[] = L">>";
 
-CWindowConsole::CWindowConsole() : currTime( 0 ), nBeginCommand( 0 ), nBeginString( 0 ), nConsoleSequenceID( 0 )
+CWindowConsole::CWindowConsole()
+	: currTime( 0 )
+	, nBeginCommand( 0 )
+	, nBeginString( 0 )
+	, nConsoleSequenceID( 0 )
 {
 	impotantMsgs.AddObserver( "show_console", &CWindowConsole::OnShowConsole );
 	impotantMsgs.AddObserver( "win_char", &CWindowConsole::OnChar );
@@ -75,7 +79,8 @@ CWindowConsole::CWindowConsole() : currTime( 0 ), nBeginCommand( 0 ), nBeginStri
 }
 
 CWindowConsole::SColorString::SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth )
-		: szString( pszStr ), dwColor( col )
+	: szString( pszStr )
+	, dwColor( col )
 {
 	const std::wstring szText = pszStr;
 	pGfxText = CreateML();

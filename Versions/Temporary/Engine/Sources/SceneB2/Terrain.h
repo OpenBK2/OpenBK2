@@ -29,7 +29,10 @@ protected:
 public:
 	CMeshDataPatch() {}
 
-	CMeshDataPatch( NMeshData::SMeshData *_pInfo ) : pInfo( _pInfo ) {}
+	CMeshDataPatch( NMeshData::SMeshData *_pInfo )
+		: pInfo( _pInfo )
+	{
+	}
 };
 
 typedef SPatchHolder<CMeshDataPatch> SPrecipicePatchHolder;
@@ -41,9 +44,16 @@ class CPrecipice
 	int nID;
 
 public:
-	CPrecipice() : pInfo( 0 ) {}
+	CPrecipice()
+		: pInfo( 0 )
+	{
+	}
 
-	CPrecipice( SPrecipiceGFXInfo *_pInfo, const int _nID ) : pInfo( _pInfo ), nID( _nID ) {}
+	CPrecipice( SPrecipiceGFXInfo *_pInfo, const int _nID )
+		: pInfo( _pInfo )
+		, nID( _nID )
+	{
+	}
 
 	//
 	void CreatePatches( NGScene::IGameView *pGView );
@@ -72,7 +82,10 @@ protected:
 public:
 	CPeakPatch() {}
 
-	CPeakPatch( NMeshData::SMeshDataTex2 *_pInfo ) : pInfo( _pInfo ) {}
+	CPeakPatch( NMeshData::SMeshDataTex2 *_pInfo )
+		: pInfo( _pInfo )
+	{
+	}
 };
 
 typedef SPatchHolder<CPeakPatch> SPeakPatchHolder;
@@ -84,9 +97,16 @@ class CPeak
 	int nID;
 
 public:
-	CPeak() : pInfo( 0 ) {}
+	CPeak()
+		: pInfo( 0 )
+	{
+	}
 
-	CPeak( SPeakGFXInfo *_pInfo, const int _nID ) : pInfo( _pInfo ), nID( _nID ) {}
+	CPeak( SPeakGFXInfo *_pInfo, const int _nID )
+		: pInfo( _pInfo )
+		, nID( _nID )
+	{
+	}
 
 	//
 	void CreatePatches( NGScene::IGameView *pGView, const NDb::STerrain *pTerraDesc );
@@ -114,9 +134,16 @@ class CFoot
 	int nID;
 
 public:
-	CFoot() : pInfo( 0 ) {}
+	CFoot()
+		: pInfo( 0 )
+	{
+	}
 
-	CFoot( SFootGFXInfo *_pInfo, const int _nID ) : pInfo( _pInfo ), nID( _nID ) {}
+	CFoot( SFootGFXInfo *_pInfo, const int _nID )
+		: pInfo( _pInfo )
+		, nID( _nID )
+	{
+	}
 
 	//
 	void CreatePatches( NGScene::IGameView *pGView, const NDb::STerrain *pTerraDesc );
@@ -150,10 +177,16 @@ protected:
 	void Recalc();
 
 public:
-	CRiverPatch() : pInfo( 0 ), fStreamSpeed( 0 ) {}
+	CRiverPatch()
+		: pInfo( 0 )
+		, fStreamSpeed( 0 )
+	{
+	}
 
 	CRiverPatch( const NMeshData::SMeshData *_pInfo, float _fStreamSpeed, CFuncBase<STime> *_pTimer )
-			: pInfo( _pInfo ), fStreamSpeed( _fStreamSpeed ), pTimer( _pTimer )
+		: pInfo( _pInfo )
+		, fStreamSpeed( _fStreamSpeed )
+		, pTimer( _pTimer )
 	{
 	}
 };
@@ -170,10 +203,15 @@ class CRiver
 	CDGPtr<CFuncBase<STime>> pTimer;
 
 public:
-	CRiver() : pInfo( 0 ) {}
+	CRiver()
+		: pInfo( 0 )
+	{
+	}
 
 	CRiver( const SRiverGFXInfo *_pInfo, const int _nID, CFuncBase<STime> *_pTimer )
-			: pInfo( _pInfo ), nID( _nID ), pTimer( _pTimer )
+		: pInfo( _pInfo )
+		, nID( _nID )
+		, pTimer( _pTimer )
 	{
 	}
 
@@ -203,9 +241,16 @@ class CRoad
 	int nID;
 
 public:
-	CRoad() : pInfo( 0 ) {}
+	CRoad()
+		: pInfo( 0 )
+	{
+	}
 
-	CRoad( SRoadGFXInfo *_pInfo, const int _nID ) : pInfo( _pInfo ), nID( _nID ) {}
+	CRoad( SRoadGFXInfo *_pInfo, const int _nID )
+		: pInfo( _pInfo )
+		, nID( _nID )
+	{
+	}
 
 	//
 	void CreatePatches( NGScene::IGameView *pGView );
@@ -233,9 +278,16 @@ class CTerraSpot
 	int nID;
 
 public:
-	CTerraSpot() : pInfo( 0 ) {}
+	CTerraSpot()
+		: pInfo( 0 )
+	{
+	}
 
-	CTerraSpot( STerraSpotGFXInfo *_pInfo, const int _nID ) : pInfo( _pInfo ), nID( _nID ) {}
+	CTerraSpot( STerraSpotGFXInfo *_pInfo, const int _nID )
+		: pInfo( _pInfo )
+		, nID( _nID )
+	{
+	}
 
 	//
 	void CreatePatches( NGScene::IGameView *pGView );

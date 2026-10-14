@@ -50,7 +50,8 @@ bool CInterfaceMessageBox::CReactions::Execute( const std::string &szSender, con
 
 // CInterfaceMessageBox
 
-CInterfaceMessageBox::CInterfaceMessageBox() : CInterfaceScreenBase( "MessageBoxScreen", "message_box_screen" )
+CInterfaceMessageBox::CInterfaceMessageBox()
+	: CInterfaceScreenBase( "MessageBoxScreen", "message_box_screen" )
 {
 	AddObserver( "message_box_ok", &CInterfaceMessageBox::MsgOk );
 	AddObserver( "message_box_cancel", &CInterfaceMessageBox::MsgCancel );
