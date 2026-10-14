@@ -34,18 +34,16 @@
  * Build and run:
  *   see surfaceprobe.sh next to this file
  */
-#include <gtk/gtk.h>
 #include <gdk/gdkx.h>
+#include <gtk/gtk.h>
 
 /* Before SDL_vulkan.h, which otherwise forward declares the handles itself and
  * leaves out everything an instance is created with. */
-#include <vulkan/vulkan.h>
-
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_vulkan.h>
-
 #include <stdio.h>
 #include <string.h>
+#include <vulkan/vulkan.h>
 
 static int nFailures = 0;
 

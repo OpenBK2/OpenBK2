@@ -13,12 +13,12 @@
 // the shape of the measurement matches. Build and run it standalone:
 //
 //   g++ -O2 -std=c++17 scripts/port/bench-scancode-lookup.cpp //       -o /tmp/bench $(pkg-config --cflags sdl3) && /tmp/bench
-#include <SDL3/SDL.h>
-
 #include <chrono>
 #include <cstdint>
 #include <cstdio>
 #include <vector>
+
+#include <SDL3/SDL.h>
 
 struct SDirectInputKey
 {
@@ -187,7 +187,8 @@ struct SForwardTable
 {
 	uint8_t nKey[SDL_SCANCODE_COUNT];
 
-	constexpr SForwardTable() : nKey()
+	constexpr SForwardTable()
+		: nKey()
 	{
 		for ( int i = 0; i < COUNT; ++i )
 		{
