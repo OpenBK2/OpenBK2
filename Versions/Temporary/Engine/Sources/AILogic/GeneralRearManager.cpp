@@ -70,7 +70,7 @@ void CGeneral::CheckAvailableReinforcement()
 		{
 			fMaxEffect = enemyByRType[i];
 			nReinfTypeNeeded = i;
-		};
+		}
 
 	// if time has come, select one and call
 	fMaxEffect = -2.0f; //Since effectiveness is [-1 .. 1]
