@@ -79,25 +79,25 @@ inline NGfx::SPixel8888 StringToColor( const std::wstring &wsColor, float fFade 
 	return sColor;
 }
 
-#define DECALRE_SIMPLE_HANDLER( Name, Var, Value )                                         \
-	class Name : public IMLHandler                                                           \
-	{                                                                                        \
-		OBJECT_BASIC_METHODS( Name );                                                          \
-                                                                                           \
-	private:                                                                                 \
-		ZDATA                                                                                  \
-		ZEND int operator&( IBinSaver &f )                                                     \
-		{                                                                                      \
-			return 0;                                                                            \
-		}                                                                                      \
-                                                                                           \
-	public:                                                                                  \
-		void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet ) \
-		{                                                                                      \
-			SState sState = pLayout->GetState();                                                 \
-			sState.Var = Value;                                                                  \
-			pLayout->SetState( sState );                                                         \
-		}                                                                                      \
+#define DECALRE_SIMPLE_HANDLER( Name, Var, Value )                                                  \
+	class Name : public IMLHandler                                                                    \
+	{                                                                                                 \
+		OBJECT_BASIC_METHODS( Name );                                                                   \
+                                                                                                    \
+	private:                                                                                          \
+		ZDATA                                                                                           \
+		ZEND int operator&( IBinSaver &f ) override                                                     \
+		{                                                                                               \
+			return 0;                                                                                     \
+		}                                                                                               \
+                                                                                                    \
+	public:                                                                                           \
+		void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet ) override \
+		{                                                                                               \
+			SState sState = pLayout->GetState();                                                          \
+			sState.Var = Value;                                                                           \
+			pLayout->SetState( sState );                                                                  \
+		}                                                                                               \
 	};
 
 DECALRE_SIMPLE_HANDLER( CLEFTHandler, eHAlign, SState::HORALIGN_LEFT )

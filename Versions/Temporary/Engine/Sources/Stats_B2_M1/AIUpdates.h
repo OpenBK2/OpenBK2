@@ -48,10 +48,10 @@ struct IUpdatableClient
 	virtual void ProcessUpdate( const struct SChatClear *pUpdate ) = 0;
 };
 
-#define REGISTER_TO_UPDATES                                     \
-	virtual void ProcessClient( IUpdatableClient *pClient ) const \
-	{                                                             \
-		pClient->ProcessUpdate( this );                             \
+#define REGISTER_TO_UPDATES                                      \
+	void ProcessClient( IUpdatableClient *pClient ) const override \
+	{                                                              \
+		pClient->ProcessUpdate( this );                              \
 	}
 
 //*******************************************************************

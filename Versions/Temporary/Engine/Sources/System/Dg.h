@@ -193,7 +193,7 @@ public:
 			value = _t;                                  \
 			Updated();                                   \
 		}                                              \
-		int operator&( IBinSaver &f )                  \
+		int operator&( IBinSaver &f ) override         \
 		{                                              \
 			f.Add( 1, &value );                          \
 			return 0;                                    \

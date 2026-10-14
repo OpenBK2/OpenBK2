@@ -120,22 +120,22 @@ public:
 	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet ) override;
 };
 
-#define DECALRE_SIMPLE_HANDLER( Name, Fnc, Value )                                                      \
-	class Name : public IHandler                                                                          \
-	{                                                                                                     \
-		OBJECT_BASIC_METHODS( Name );                                                                       \
-                                                                                                        \
-	private:                                                                                              \
-		int operator&( IBinSaver &f )                                                                       \
-		{                                                                                                   \
-			return 0;                                                                                         \
-		}                                                                                                   \
-                                                                                                        \
-	public:                                                                                               \
-		void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet ) \
-		{                                                                                                   \
-			pLayout->AddObject( Fnc( Value ) );                                                               \
-		}                                                                                                   \
+#define DECALRE_SIMPLE_HANDLER( Name, Fnc, Value )                                                               \
+	class Name : public IHandler                                                                                   \
+	{                                                                                                              \
+		OBJECT_BASIC_METHODS( Name );                                                                                \
+                                                                                                                 \
+	private:                                                                                                       \
+		int operator&( IBinSaver &f ) override                                                                       \
+		{                                                                                                            \
+			return 0;                                                                                                  \
+		}                                                                                                            \
+                                                                                                                 \
+	public:                                                                                                        \
+		void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet ) override \
+		{                                                                                                            \
+			pLayout->AddObject( Fnc( Value ) );                                                                        \
+		}                                                                                                            \
 	};
 
 DECALRE_SIMPLE_HANDLER( CLEFTHandler, CreateHAlignObject, EHA_LEFT )
