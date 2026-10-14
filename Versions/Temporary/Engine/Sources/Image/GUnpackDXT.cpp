@@ -49,6 +49,31 @@ struct SColor8888
 	uint8_t a;
 };
 
+//! Packs a decoded colour into the 0xAARRGGBB word the image buffer holds.
+//!
+//! The four block colours used to be handed on as `uint32_t *` cast from
+//! `SColor8888`, and the alpha mask was read the same way. That is a strict
+//! aliasing violation in both directions: the object is written through
+//! `SColor8888` and read back through `uint32_t`, so a compiler is entitled to
+//! assume the two accesses cannot name the same memory and to keep the stale
+//! value. TypeSanitizer reports it as "READ of size 4 with type int accesses an
+//! existing object of type NImage::SColor8888", once per colour per block.
+//!
+//! It was not theoretical. clang at -O2 decoded every DXT1 and DXT3 block to
+//! near-black, while GCC at -O2 happened to produce the right answer from the
+//! same source, so the defect was invisible until a second compiler built the
+//! tree. -O0, -O1 and -fno-strict-aliasing all also hid it.
+//!
+//! Composing the word with shifts fixes the aliasing and stops the result
+//! resting on the field order of the struct or on the byte order of the host,
+//! which the old reinterpretation needed to be exactly this little-endian
+//! layout to come out right.
+inline uint32_t Pack8888( const SColor8888 &col )
+{
+	return ( static_cast<uint32_t>( col.a ) << 24 ) | ( static_cast<uint32_t>( col.r ) << 16 ) |
+	       ( static_cast<uint32_t>( col.g ) << 8 ) | static_cast<uint32_t>( col.b );
+}
+
 //! Splits a packed 16 bit 565 colour into its channels.
 //!
 //! This was a bitfield struct that the two colour fields of a block were cast
@@ -198,14 +223,19 @@ inline void GetColorBlockColors( SDXTColBlock *pBlock,
 inline void DecodeColorBlock( uint32_t *pImPos,
                               SDXTColBlock *pColorBlock,
                               int width,
-                              uint32_t *col_0,
-                              uint32_t *col_1,
-                              uint32_t *col_2,
-                              uint32_t *col_3 )
+                              const SColor8888 *col_0,
+                              const SColor8888 *col_1,
+                              const SColor8888 *col_2,
+                              const SColor8888 *col_3 )
 {
 	// width is width of image in pixels
 	uint32_t bits;
 	int r, n;
+
+	// Packed once rather than per pixel: the index selects between four colours
+	// and a block has sixteen pixels. See Pack8888 for why these are not read
+	// back out of the SColor8888 as words.
+	const uint32_t packed[] = { Pack8888( *col_0 ), Pack8888( *col_1 ), Pack8888( *col_2 ), Pack8888( *col_3 ) };
 
 	// bit masks = 00000011, 00001100, 00110000, 11000000
 	const uint32_t masks[] = { 3, 12, 3 << 4, 3 << 6 };
@@ -229,19 +259,19 @@ inline void DecodeColorBlock( uint32_t *pImPos,
 			switch ( bits )
 			{
 				case 0:
-					*pImPos = *col_0;
+					*pImPos = packed[0];
 					pImPos++; // increment to next uint32_t
 					break;
 				case 1:
-					*pImPos = *col_1;
+					*pImPos = packed[1];
 					pImPos++;
 					break;
 				case 2:
-					*pImPos = *col_2;
+					*pImPos = packed[2];
 					pImPos++;
 					break;
 				case 3:
-					*pImPos = *col_3;
+					*pImPos = packed[3];
 					pImPos++;
 					break;
 				default:
@@ -448,8 +478,7 @@ void DecompressDXT1( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t *pComp
 
 			pImPos = (uint32_t *)( (uintptr_t)pBase + i * 16 + ( j * 4 ) * hdr.dwWidth * 4 );
 
-			DecodeColorBlock(
-					pImPos, pBlock, hdr.dwWidth, (uint32_t *)&col_0, (uint32_t *)&col_1, (uint32_t *)&col_2, (uint32_t *)&col_3 );
+			DecodeColorBlock( pImPos, pBlock, hdr.dwWidth, &col_0, &col_1, &col_2, &col_3 );
 		}
 	}
 }
@@ -474,7 +503,7 @@ void DecompressDXT3( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t *pComp
 	//  alphazero is ANDed with the image color 32 bit uint32_t:
 	col_0.a = 0;
 	col_0.r = col_0.g = col_0.b = 0xff;
-	uint32_t alphazero = *( (uint32_t *)&col_0 );
+	uint32_t alphazero = Pack8888( col_0 );
 
 	//	TRACE("blocks: x: %d    y: %d\n", xblocks, yblocks );
 
@@ -503,8 +532,7 @@ void DecompressDXT3( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t *pComp
 
 			pImPos = (uint32_t *)( (uintptr_t)pBase + i * 16 + ( j * 4 ) * hdr.dwWidth * 4 );
 
-			DecodeColorBlock(
-					pImPos, pBlock, hdr.dwWidth, (uint32_t *)&col_0, (uint32_t *)&col_1, (uint32_t *)&col_2, (uint32_t *)&col_3 );
+			DecodeColorBlock( pImPos, pBlock, hdr.dwWidth, &col_0, &col_1, &col_2, &col_3 );
 
 			// Overwrite the previous alpha bits with the alpha block
 			//  info
@@ -540,7 +568,7 @@ void DecompressDXT5( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t *pComp
 	//  alphazero is ANDed with the image color 32 bit uint32_t:
 	col_0.a = 0;
 	col_0.r = col_0.g = col_0.b = 0xff;
-	uint32_t alphazero = *( (uint32_t *)&col_0 );
+	uint32_t alphazero = Pack8888( col_0 );
 
 	////////////////////////////////
 	//	TRACE("blocks: x: %d    y: %d\n", xblocks, yblocks );
@@ -573,8 +601,7 @@ void DecompressDXT5( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t *pComp
 
 			pImPos = (uint32_t *)( (uintptr_t)pBase + i * 16 + ( j * 4 ) * hdr.dwWidth * 4 );
 
-			DecodeColorBlock(
-					pImPos, pBlock, hdr.dwWidth, (uint32_t *)&col_0, (uint32_t *)&col_1, (uint32_t *)&col_2, (uint32_t *)&col_3 );
+			DecodeColorBlock( pImPos, pBlock, hdr.dwWidth, &col_0, &col_1, &col_2, &col_3 );
 
 			// Overwrite the previous alpha bits with the alpha block
 			//  info
