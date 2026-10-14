@@ -18,8 +18,92 @@ Few rules:
 - Projects like AILogic, Stats_B2_M1, B2_M1_World and similar need to be deterministic!
 - Linux exports every function by default, but windows does not! So make sure to mark function for exporting in appropriate header file
 - The game database schema and its C++ structs are generated from the .cll files by dbcodegen: change the .cll and regenerate, never the generated DB*.h/.cpp or types.xml. See "adding things to the game database" in Contributing.md
-- Sources are UTF-8 with LF endings, a newline on the last line, no whitespace at the end of a line, and tabs two columns wide. `.editorconfig` declares it, `.gitattributes` pins the endings and `.pre-commit-config.yaml` enforces it, locally and in CI. Install it once per clone with `pre-commit install`. See "file hygiene" in Contributing.md for what is deliberately left alone
-- `.clang-format` is enforced on the lines a change writes, never on whole files: a full pass would rewrite about a third of every source file. Run `python scripts/hygiene/clang-format-changed.py --base origin/port` to check a branch. Generated sources, the vendored Lua in `Script/` and the parser fixture corpus are never formatted
+- Write code in the house style from the first line rather than leaving it to the formatter. It is in `.clang-format` and spelled out under "Code style" below
+- Sources are UTF-8 with LF endings, a newline on the last line, no whitespace at the end of a line, and tabs two columns wide. `.editorconfig` declares it, `.gitattributes` pins the endings and `.pre-commit-config.yaml` enforces it, locally and in CI. Install it once per clone with `pre-commit install`. See "file hygiene" in Contributing.md
+
+### Code style
+
+The whole tree is formatted, and `.clang-format` is enforced on whole files before a
+commit and again in CI. Write it this way to begin with: a patch that needs reformatting
+is a patch whose diff is bigger than the change it makes.
+
+```cpp
+// Allman braces. Spaces inside the parentheses of a call and a condition, none
+// in a C-style cast. Tabs to indent, two columns wide.
+const float GetDistance( const CVec2 &vStart, const CVec2 &vEnd )
+{
+	// Braces on every control statement, however short the body. This is a
+	// safety rule, not a style one: the next person to add a line here must not
+	// be able to add it outside the condition.
+	if ( fDiff > 0.0f )
+	{
+		return (std::min)( fDist1, fDist2 );
+	}
+	else
+	{
+		return 0.0f;
+	}
+
+	// One statement per line. Never if ( x ) { f(); } on one line, and never a
+	// one-line loop.
+	for ( int i = 0; i < nCount; ++i )
+	{
+		Use( i );
+	}
+}
+
+// One enumerator per line, so adding one is a one-line diff.
+enum EKind
+{
+	KIND_FIRST,
+	KIND_SECOND
+};
+
+class CThing
+{
+	OBJECT_NOCOPY_METHODS( CThing );
+	int nID;     // trailing comments line up with their neighbours,
+	float fGain; // in a column of spaces rather than tabs
+
+public:
+	// A one-line accessor inside a class stays on one line.
+	int GetID() const { return nID; }
+};
+```
+
+The rest of it, and the reasons, are the comments in `.clang-format`. What it will do to
+your code if you do not:
+
+- wrap at 120 columns, aligning the continuation under what it continues
+- put one argument, parameter or list element per line once they do not fit on one line,
+  so a long call and an array both read as a single column
+- put a `template <...>` header on its own line
+- leave your includes and `using` declarations in the order you wrote them, since
+  `stdafx.h` has to come first; it never sorts them
+- leave comments alone: it does not rewrap them, and it does not split a long string
+  literal, so a log line stays greppable
+
+Run it on what you wrote:
+
+```bash
+python scripts/hygiene/clang-format-sources.py path/to/File.cpp
+python scripts/hygiene/clang-format-sources.py --check            # whole tree, no writes
+```
+
+Do not add an exemption for code we own. Generated sources, third-party code and the
+parser's fixture corpus are skipped already; if a table genuinely reads better as a grid,
+wrap that block in `// clang-format off` and `// clang-format on` with a line above
+saying why. The directive has to be the whole comment: anything appended to it and it
+does nothing.
+
+Other things worth knowing before writing a line:
+
+- `ASSERT` and `NI_ASSERT` never evaluate their argument in this build, so nothing with a
+  side effect belongs inside one
+- use `boost/predef` for platform and compiler detection (`BOOST_OS_WINDOWS`, not
+  `_WIN32`), and note these are `#if`, not `#ifdef`
+- no em-dashes or en-dashes anywhere, including comments; a plain hyphen
+- comments carry information. A row of punctuation is not a section heading
 
 ### Determinism coding rules
 1. Do not iterate over `std::unordered_map` and `std::unordered_set`, since the iteration order is not specified! Use `det_map` and `det_set` instead or thier sorted std variants. It is allowed to use their iteration to make a sorted (by Unique IDs and with no ties!) vector/list and then iterate over that for simulation.

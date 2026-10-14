@@ -454,17 +454,22 @@ carry them, are in `docs/Determinism.md`.
 # file hygiene
 
 the sources are UTF-8 without a byte order mark, end their lines with LF, end their last
-line with a newline, carry no whitespace at the end of a line, and indent with tabs two
-columns wide. three things hold that in place, and they agree with each other:
+line with a newline, carry no whitespace at the end of a line, indent with tabs two
+columns wide, and are formatted by clang-format. four things hold that in place, and they
+agree with each other:
 
 - [.editorconfig](.editorconfig) is what visual studio, clion, vs code and rider all read
   without a plugin, so an editor stops reintroducing what the hooks strip
+- [.clang-format](.clang-format) is the code style, applied to whole files. see
+  [formatting](#formatting) below
 - [.gitattributes](.gitattributes) pins the sources to LF on checkout. this is the part
   that does not depend on anyone's local settings: a default git for windows, and the
   github windows runners, check text out as CRLF
 - [.pre-commit-config.yaml](.pre-commit-config.yaml) is the enforcement, before a commit
   is made locally and again in CI through
   [.github/workflows/hygiene.yml](.github/workflows/hygiene.yml)
+
+## setting up the hooks
 
 hooks are not cloned, so install them once per clone:
 
@@ -473,15 +478,23 @@ pipx install pre-commit     # or pip install pre-commit
 pre-commit install
 ```
 
-they then run on staged files only, which costs about as long as reading the files the
-commit touches. to check the tree the way CI does:
+the first run downloads the hooks, including the pinned clang-format, and takes a minute.
+after that they run on staged files only, which costs about as long as reading the files
+the commit touches. a hook that changes a file fails the commit and leaves the fix in the
+working tree: look at it, `git add` it and commit again.
+
+to check the tree the way CI does, or to see what a hook would do without committing:
 
 ```bash
 pre-commit run --all-files
+pre-commit run clang-format --all-files     # one hook
 ```
 
 needs pre-commit 3.2 or newer. debian still packages 2.21, which refuses the pinned hook
 revision with an error that names a config key rather than the cause.
+
+nothing stops you committing without the hooks installed; CI runs the same checks and
+will say so.
 
 while there, install the commit message hook too. it strips the assistant attribution
 trailers this history does not use:
@@ -496,66 +509,104 @@ to install at all while that is set ("cowardly refusing to install hooks with
 
 ## formatting
 
-[.clang-format](.clang-format) is the style the tree is already written in: allman braces,
-`void Foo( int n )` and `if ( x )` with spaces inside the parentheses, tabs two columns
-wide, no line length limit, and no include sorting, since `stdafx.h` has to come first and
-several headers need a type an earlier include declares.
+[.clang-format](.clang-format) is the one style, and it applies to whole files. it was
+not chosen to leave the old layout alone: it is chosen for code that is easy to read,
+easy to maintain and hard to make a mistake in, which is why the commit that introduced
+it touched nearly every source.
 
-it is enforced **on the lines a change writes, and no others**. a whole-tree pass would
-rewrite about a third of every source file, because the tree was never formatted
-mechanically; that diff is not reviewable, it would bury every real change made in the
-same release, and it would make `git blame` useless. so the style applies from here on
-rather than retroactively, through
-[scripts/hygiene/clang-format-changed.py](scripts/hygiene/clang-format-changed.py), which
-asks git which lines the change wrote and passes those to `clang-format --lines`.
+what it does, in the parts worth knowing before you write a line:
 
-"wrote" ignores whitespace: a line whose indentation or trailing space alone moved was not
-written here, so it is not reformatted. without that, stripping a trailing space off a
-thousand files would queue a thousand files up for reformatting.
+- allman braces; `void Foo( int n )` and `if ( x )`, with spaces inside the parentheses
+- tabs for indentation, two columns wide, spaces for alignment
+- a 120 column limit, comments exempt
+- **braces on every control statement**, inserted if you leave them out. this is the one
+  setting that changes code rather than layout, and it is deliberate: a braceless body is
+  how "goto fail" shipped
+- one statement per line: no `if ( x ) { f(); }` on one line, no one-line loops
+- one argument, parameter, list element and enumerator per line once they do not fit on
+  one line. enums and arrays therefore read as a single column
+- a one-line accessor inside a class stays on one line; a free function does not
+- includes and `using` declarations are never reordered, since `stdafx.h` has to come
+  first and several headers need a type an earlier include declared
+- comments are never rewrapped, and a long string is never split into adjacent literals
 
-the clang-format version is pinned to 22.1.8, because its output changes between releases
-and an unpinned one reformats lines it disagreed with the last release about. pre-commit
-installs that exact wheel, so nobody needs clang-format installed to commit.
+### running it
 
-to check or fix a branch by hand:
+the hook does it for you on commit. to do it by hand, over the whole tree or over
+particular files:
 
 ```bash
-python scripts/hygiene/clang-format-changed.py --base origin/port --check
-python scripts/hygiene/clang-format-changed.py --base origin/port
+python scripts/hygiene/clang-format-sources.py                 # format everything
+python scripts/hygiene/clang-format-sources.py --check         # report, change nothing
+python scripts/hygiene/clang-format-sources.py path/to/File.cpp
 ```
 
-two things to know when it fires:
+the script is a thin wrapper around `clang-format --style=file`; what it adds is the skip
+list, which cannot be written as a path pattern because most of it is decided by the
+banner a generator wrote at the top of the file. its docstring lists what it skips.
 
-- a braced initialiser with a trailing comma after its last element is formatted one
-  element per line, by clang-format's own rule. editing a line inside a long byte table
-  therefore expands the whole table. wrap it in `// clang-format off` and
-  `// clang-format on`
-- sixteen files in the engine sources still indent partly with spaces, mostly original
-  nival files such as `Misc/Tools.h` and `Image/ImageScale.cpp`. a line edited in one of
-  them comes out tab-indented, since that is what the tree declares. converting the files
-  wholesale would mean reformatting determinism-critical headers and original code for
-  cosmetic reasons, so it is not done. the test and benchmark directories, which are
-  space-indented end to end, carry a nested `.clang-format` instead
+it uses whatever `clang-format` is on PATH, or `$CLANG_FORMAT`. the hook instead installs
+**clang-format 22.1.8** and uses that, because the output changes between releases: a
+different version will reformat lines it disagrees with 22.1.8 about, and then the hook
+will disagree with you. to match it exactly by hand:
 
-generated sources are never formatted: the 101 dbcodegen outputs, `3Dmotor/GfxShaders.*`
-and the bison and flex output in `Parser`. the generator decides their layout, and
-formatting one only makes the next `regenerate-db` revert it and CI fail on the
-difference. nor is the vendored lua in `Script/` (`lsaver.cpp` is nival's and is
-formatted).
+```bash
+pipx install clang-format==22.1.8
+```
 
-four things are left alone on purpose, and the hook config says so too:
+an editor that formats on save should be pointed at the same version. clion and visual
+studio both read `.clang-format` from the repository root on their own; vs code needs the
+`xaver.clang-format` extension or `C_Cpp.formatting: clangFormat`.
 
-- `Parser/test/cases`, the `.cll` grammar's fixture corpus. every byte is input to
+### when the formatter is wrong
+
+a table whose rows carry meaning is the case where one element per line says less than a
+grid. wrap it:
+
+```cpp
+// Laid out as a table on purpose: sin( i * 2pi / 512 ), eight to a row
+// clang-format off
+static float fSinTable[ N_SIN_TABLE_PERIOD + 1 ] =
+{
+	0, 0.0122715f, 0.0245412f, ...
+};
+// clang-format on
+```
+
+the directive has to be the whole comment. `// clang-format off -- because reasons` does
+nothing at all, so put the reason on its own line above it. four tables in the tree use
+this: the sine and arcsine tables in `System/FastMath.cpp`, the bit mask table in
+`System/BitStreams.cpp` and the embedded cursor in `MapEditorLib/CursorsWx.cpp`. prefer
+it over reaching for an exemption: it is local, it is visible, and it says why.
+
+### what is left alone
+
+nothing here is an exemption for our own code. everything under
+`Versions/Temporary/Engine/Sources` that we wrote is formatted, including the tests and
+the benchmarks. what is skipped is skipped because somebody or something else owns its
+layout:
+
+- **generated sources**, because the generator decides their shape and would undo the
+  edit on its next run, which is how CI would find out: the 101 dbcodegen outputs,
+  `3Dmotor/GfxShaders.*` from ShaderCompiler, the bison and flex output in `Parser`, and
+  the editor resource tables `scripts/port/rc2*.py` write. change the generator, not its
+  output
+- **third-party code**: the vendored Lua in `Script` (but not Nival's own `lsaver.cpp`
+  beside it), `Sources/vendor`, `third_party`, and the 1990s STL documentation under
+  `Soft`
+- **`Parser/test/cases`**, the `.cll` grammar's fixture corpus. every byte is input to
   `NLang::Parse`, including the mixed line endings and the missing final newlines, so
   tidying one edits the test
-- the `.cll` type descriptions. dbcodegen copies a tooltip comment into `types.xml`
-  verbatim, trailing space included, so rewriting one is a game data change rather than a
-  whitespace one. git still holds them to LF through `.gitattributes`
-- `Versions/Temporary/Engine/Sources/vendor` and `third_party`, which stay comparable with
-  upstream
-- the game data trees. the records are already LF where they are text, the localised text
-  is UTF-16LE from end to end, and both are written by the editor and the database tools
-  rather than by hand
+- **`3Dmotor/test/original`**, by a `.clang-format` of its own with `DisableFormat`.
+  those files are transcriptions of the implementations the ported SIMD routines are
+  checked against, and staying diffable against their source is what they are for
+- the **`.cll` type descriptions** keep their trailing whitespace, because dbcodegen
+  copies a tooltip comment into `types.xml` verbatim, trailing space included, so
+  rewriting one is a game data change rather than a whitespace one. git still holds them
+  to LF through `.gitattributes`
+- the **game data trees**. the records are already LF where they are text, the localised
+  text is UTF-16LE from end to end, and both are written by the editor and the database
+  tools rather than by hand
 
 # branches
 
