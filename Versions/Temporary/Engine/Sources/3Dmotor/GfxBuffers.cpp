@@ -455,18 +455,15 @@ class CTriListWrapperHandle
 	std::vector<CMObj<CTriListWrapper>> wrappers;
 
 public:
+	// Defined below CTriListWrapper. The three classes are a cycle: the handle
+	// constructs a wrapper, the wrapper dispatches back to CTriListCore, and
+	// CTriListCore derives from the handle, so one body has to come after the
+	// definitions. It has to be this one, because a member template body is
+	// parsed where it is written and CTriListWrapper is not dependent on T, so
+	// constructing it here is a new of an incomplete type no matter when the
+	// template is instantiated.
 	template <class T>
-	CTriListWrapper *NewWrapper( T *pThis, int nTris )
-	{
-		if ( ( ( ++nSlowCheck ) & 0xff ) == 0 && !wrappers.empty() )
-		{
-			EraseInvalidRefs( &wrappers );
-		}
-		ASSERT( nTris <= pThis->GetSize() );
-		CTriListWrapper *pRes = new CTriListWrapper( pThis, nTris );
-		wrappers.push_back( pRes );
-		return pRes;
-	}
+	CTriListWrapper *NewWrapper( T *pThis, int nTris );
 };
 
 class CTriListCore : public ILinearBuffer, public CTriList, public CTriListWrapperHandle
@@ -624,6 +621,19 @@ public:
 		ASSERT( 0 );
 	} //dynamic_cast<CTriListCore16*>(pParent.GetPtr())->RealDrawPrimitive( nVBStart, nMinIndex, nMaxIndex, nTris ); }
 };
+
+template <class T>
+CTriListWrapper *CTriListWrapperHandle::NewWrapper( T *pThis, int nTris )
+{
+	if ( ( ( ++nSlowCheck ) & 0xff ) == 0 && !wrappers.empty() )
+	{
+		EraseInvalidRefs( &wrappers );
+	}
+	ASSERT( nTris <= pThis->GetSize() );
+	CTriListWrapper *pRes = new CTriListWrapper( pThis, nTris );
+	wrappers.push_back( pRes );
+	return pRes;
+}
 
 // TEXTURES support classes
 
