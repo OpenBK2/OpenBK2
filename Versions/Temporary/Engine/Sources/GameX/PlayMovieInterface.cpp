@@ -30,7 +30,7 @@ struct SProlog
 	}
 };
 
-} //namespace unnamed
+} // namespace
 
 // ************************************************************************************************************************ //
 // **
@@ -186,6 +186,7 @@ void CPlayMovieInterface::MsgSkipSequence( const SGameMessage &msg )
 		pPlayerControl->SkipSequence();
 	}
 }
+
 void CPlayMovieInterface::MsgSkipMovie( const SGameMessage &msg )
 {
 	const bool bDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;

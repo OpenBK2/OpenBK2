@@ -1,4 +1,5 @@
 #pragma once
+
 namespace NGScene
 {
 
@@ -9,4 +10,4 @@ public:
 	                              const std::vector<char> &skipped,
 	                              std::vector<char> *pFilter ) = 0;
 };
-}
+} // namespace NGScene

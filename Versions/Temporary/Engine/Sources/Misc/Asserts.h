@@ -112,6 +112,7 @@ inline TOut static_cast_ptr( TPtr ptr )
 {
 	return static_cast<TOut>( ptr.GetPtr() );
 }
+
 template <class TOut, class TPtr>
 inline TOut dynamic_cast_ptr( TPtr ptr )
 {
@@ -124,6 +125,7 @@ inline TOut checked_cast( TIn obj )
 	NI_ASSERT( !( ( obj != 0 ) && ( dynamic_cast<TOut>( obj ) == 0 ) ), "Wrong checked cast" );
 	return static_cast<TOut>( obj );
 }
+
 template <class TOut, class TIn>
 inline TOut checked_cast_ptr( TIn ptr )
 {

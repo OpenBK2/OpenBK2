@@ -10,6 +10,7 @@ class CTexture;
 class CRenderContext;
 
 struct S2DRectInfoLock;
+
 enum EDepth
 {
 	QRM_DEPTH_NONE = 0,
@@ -27,6 +28,7 @@ enum EDepth
 	QRM_TEST_STENCIL = 16,
 	QRM_STENCIL_MASK = 16,
 };
+
 class I2DEffect : public CObjectBase
 {
 public:
@@ -37,8 +39,14 @@ class _3DMOTOR_EXPORT C2DQuadsRenderer : INew2DTexAllocCallback
 {
 public:
 	C2DQuadsRenderer() : pLock( 0 ) {}
+
 	C2DQuadsRenderer( const NGfx::CRenderContext &rc, const CVec2 &vSize, int _dm );
-	~C2DQuadsRenderer() { Flush(); }
+
+	~C2DQuadsRenderer()
+	{
+		Flush();
+	}
+
 	void SetTarget( const CVec2 &vSize, int _dm );
 	void SetTarget( NGfx::CTexture *pTarget, const CVec2 &vSize, int _dm );
 	void SetTarget( const NGfx::CRenderContext &rc, const CVec2 &vSize, int _dm );
@@ -53,7 +61,11 @@ public:
 	              const CTRect<float> &rSrc,
 	              float fZ = 1.0f );
 	void Flush();
-	void SetUserEffect( I2DEffect *p ) { pUserEffect = p; }
+
+	void SetUserEffect( I2DEffect *p )
+	{
+		pUserEffect = p;
+	}
 
 private:
 	int dm; // combination of QRM_*
@@ -63,11 +75,24 @@ private:
 	float fUVMult, fScaleU, fScaleV;
 	CObj<I2DEffect> pUserEffect;
 
-	C2DQuadsRenderer( const C2DQuadsRenderer &a ) { ASSERT( 0 ); }
-	void operator=( const C2DQuadsRenderer &a ) { ASSERT( 0 ); }
+	C2DQuadsRenderer( const C2DQuadsRenderer &a )
+	{
+		ASSERT( 0 );
+	}
+
+	void operator=( const C2DQuadsRenderer &a )
+	{
+		ASSERT( 0 );
+	}
+
 	void SetupRC( const CVec2 &vSize );
 	S2DRectInfoLock *GetRectInfoLock( CTexture *pContainer, const STexturePlaceInfo &region );
-	virtual void NewTextureWasAllocated() { Flush(); }
+
+	virtual void NewTextureWasAllocated()
+	{
+		Flush();
+	}
+
 	void FillRect( const CVec2 *pPos4,
 	               const NGfx::SPixel8888 *pColors4,
 	               const CTRect<float> &rSrc,
@@ -85,6 +110,7 @@ class CShowAlphaEffect : public I2DEffect
 public:
 	virtual void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV );
 };
+
 class CLinearToGammaEffect : public I2DEffect
 {
 	OBJECT_NOCOPY_METHODS( CLinearToGammaEffect );
@@ -92,6 +118,7 @@ class CLinearToGammaEffect : public I2DEffect
 public:
 	virtual void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV );
 };
+
 class CShadow16toAlphaEffect : public I2DEffect
 {
 	OBJECT_NOCOPY_METHODS( CShadow16toAlphaEffect );
@@ -99,6 +126,7 @@ class CShadow16toAlphaEffect : public I2DEffect
 public:
 	virtual void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV );
 };
+
 class CCopyShadowsAndCloudsEffect : public I2DEffect
 {
 	OBJECT_NOCOPY_METHODS( CCopyShadowsAndCloudsEffect );
@@ -107,9 +135,12 @@ class CCopyShadowsAndCloudsEffect : public I2DEffect
 
 public:
 	CCopyShadowsAndCloudsEffect() {};
+
 	CCopyShadowsAndCloudsEffect( NGfx::CTexture *_pCloud, const CVec4 &_vMAD ) : pCloud( _pCloud ), vMAD( _vMAD ) {}
+
 	virtual void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV );
 };
+
 /*class CCLAmbientMulDiffuseEffect : public I2DEffect
 {
 	OBJECT_NOCOPY_METHODS(CCLAmbientMulDiffuseEffect);
@@ -138,4 +169,4 @@ void CopyTexture( const NGfx::CRenderContext &_rc,
 const int N_MAX_RECTANGLES = 16000;
 void MakeQuadTriList( int nRects, STriangleList *pRes );
 //void CopyRegister( int nDst, int nSrc );
-}
+} // namespace NGfx

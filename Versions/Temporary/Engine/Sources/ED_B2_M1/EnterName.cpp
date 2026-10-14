@@ -12,7 +12,7 @@ namespace
 // empty one, as CEnterNameDialog::OnOK always stored it. Per process, as the
 // static it replaces was.
 std::string szLastName;
-}
+} // namespace
 
 namespace NEnterName
 {
@@ -31,4 +31,4 @@ bool Run( IWidget *pParent, const std::string &rszCaption, const std::string &rs
 	( *pszName ) = szName;
 	return true;
 }
-}
+} // namespace NEnterName

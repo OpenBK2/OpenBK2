@@ -43,4 +43,4 @@ void Show( const SObjectSet &rObjectSet )
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_CREATE_TREE, 0 );
 	}
 }
-}
+} // namespace NObjectProperties

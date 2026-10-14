@@ -14,6 +14,7 @@ class CInterfaceArmyBranchDlg : public CInterfaceScreenBase, public IProgrammedR
 		CPtr<IWindow> pIconWnd;
 		std::string szBtnName;
 		CPtr<IWindow> pSelectionWnd;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pWnd );
@@ -32,6 +33,7 @@ public:
 		std::wstring wszName;
 		std::wstring wszDesc;
 		CDBPtr<NDb::STexture> pIconTexture;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &wszName );
@@ -53,6 +55,7 @@ private:
 	std::vector<SBranch> branches;
 	int nSelectedBranch;
 	int nLeftBranch;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
@@ -96,18 +99,21 @@ class CICArmyBranchDlg : public CInterfaceCommandBase<CInterfaceArmyBranchDlg>
 
 	ZDATA_( CInterfaceCommandBase<CInterfaceArmyBranchDlg> )
 	std::vector<CInterfaceArmyBranchDlg::SBranch> branches;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceArmyBranchDlg> *)this );
 		f.Add( 2, &branches );
 		return 0;
 	}
+
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
 
 public:
 	CICArmyBranchDlg() {}
+
 	CICArmyBranchDlg( const std::vector<CInterfaceArmyBranchDlg::SBranch> &branches );
 
 	void Configure( const char *pszConfig );

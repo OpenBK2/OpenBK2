@@ -21,6 +21,7 @@ class CLIENT_EXPORT CLANClient : public IServerClient
 
 public:
 	CLANClient() : bTryingConnect( false ) {}
+
 	~CLANClient();
 
 	static CLANClient *Create( const int nNetGameVersion, const int nGamePort, const int _nTimeOut );
@@ -41,5 +42,9 @@ public:
 	void StopGameInfoSend();
 	void StartNewPlayerAccept();
 	void StopNewPlayerAccept();
-	int GetOwnClientID() { return pNetDriver->GetSelfClientID(); }
+
+	int GetOwnClientID()
+	{
+		return pNetDriver->GetSelfClientID();
+	}
 };

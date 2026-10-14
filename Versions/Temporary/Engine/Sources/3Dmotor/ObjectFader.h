@@ -13,6 +13,7 @@ class CObjectFader : public CObjectBase
 	CDGPtr<CFuncBase<float>> pFader;
 	CPtr<CObjectBase> pObj;
 	std::vector<CDGPtr<CFuncBase<float>>> transpChannels;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pFader );
@@ -27,7 +28,11 @@ protected:
 public:
 	CObjectFader( CObjectBase *_pObj, CFuncBase<float> *_pFader, std::vector<CPtr<CFuncBase<float>>> *_pTranspChannels );
 	bool Update( void *p );
-	const CPtr<CObjectBase> &getObj() { return pObj; };
+
+	const CPtr<CObjectBase> &getObj()
+	{
+		return pObj;
+	};
 };
 
 } // namespace NGScene

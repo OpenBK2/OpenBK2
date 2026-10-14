@@ -128,13 +128,16 @@ private:
 
 public:
 	CMLTextObject() : sPosition( 0.0f, 0.0f ) {}
+
 	CMLTextObject( CMLStream *pStream, int nStart, int nSize );
+
 	CTRect<float> GetInkBounds( bool bIncludeOutline ) const override
 	{
 		return bIncludeOutline ? sInkBounds : sLetterBounds;
 	}
 
 	void Generate();
+
 	void DynamicGenerate( const SReflowInfo &sInfo ) {}
 
 	const CTPoint<float> &GetSize() const;
@@ -374,9 +377,11 @@ private:
 
 public:
 	CMLImageObject() {}
+
 	CMLImageObject( NDb::STexture *pTexture, SState::EHORAlign eAlign, int nBorder, int nWidth, int nHeight );
 
 	void Generate();
+
 	void DynamicGenerate( const SReflowInfo &sInfo ) {}
 
 	const CTPoint<float> &GetSize() const;
@@ -509,6 +514,7 @@ public:
 	CMLTabObject();
 
 	void Generate() {}
+
 	void DynamicGenerate( const SReflowInfo &sInfo );
 
 	const CTPoint<float> &GetSize() const;
@@ -522,6 +528,7 @@ public:
 	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow )
 	{
 	}
+
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) {}
 
 	int operator&( IBinSaver &saver );
@@ -590,6 +597,7 @@ private:
 		CPtr<IMLObject> pObject;
 
 		SCmdPair() {}
+
 		SCmdPair( ECommand _eCmd, IMLObject *_pObject ) : eCmd( _eCmd ), pObject( _pObject ) {}
 
 		int operator&( IBinSaver &saver )
@@ -599,6 +607,7 @@ private:
 			return 0;
 		}
 	};
+
 	SState sState;
 	CTPoint<float> sSize;
 	std::list<SCmdPair> itemsList;
@@ -626,11 +635,16 @@ public:
 	void PushState();
 	void PopState();
 
-	bool IsSingleLine() const { return nLineCount == 1; }
+	bool IsSingleLine() const
+	{
+		return nLineCount == 1;
+	}
+
 	const CTRect<float> &GetInkBounds( bool bIncludeOutline = true ) const
 	{
 		return bIncludeOutline ? sInkBounds : sLetterBounds;
 	}
+
 	void Generate( float fWidth );
 
 	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
@@ -1021,13 +1035,22 @@ private:
 	CTRect<float> sPreferredInk = CTRect<float>( 0, 0, 0, 0 );
 	CTPoint<int> sPreferredSize = CTPoint<int>( 0, 0 );
 	bool bPreferredSingleLine = false;
-	bool UsesHudFontScale() const { return pFontScaleWindow && pFontScaleWindow->UsesHudFontScale(); }
+
+	bool UsesHudFontScale() const
+	{
+		return pFontScaleWindow && pFontScaleWindow->UsesHudFontScale();
+	}
+
 	void UpdateFontScale();
 	void GenerateLayout();
 
 public:
 	CML();
-	void SetFontScaleWindow( IWindow *pWindow ) override { pFontScaleWindow = pWindow; }
+
+	void SetFontScaleWindow( IWindow *pWindow ) override
+	{
+		pFontScaleWindow = pWindow;
+	}
 
 	void SetText( const std::wstring &wsText, int nFlags );
 	void SetHandler( const std::wstring &wsTAG, IMLHandler *pHandler );
@@ -1035,13 +1058,19 @@ public:
 	int GetIDForHandler() const;
 	void SetFade( float fFade );
 
-	CMLStream *GetStream() { return pStream; }
+	CMLStream *GetStream()
+	{
+		return pStream;
+	}
+
 	const CTPoint<int> &GetSize();
+
 	CTPoint<int> GetPreferredSize() override
 	{
 		UpdateFontScale();
 		return sPreferredSize;
 	}
+
 	bool IsSingleLine();
 	CTPoint<float> FitToBox( const CTRect<float> &sBox, bool bCenterSingleLine, const CTRect<float> *pClip ) override;
 	bool

@@ -132,7 +132,10 @@ public:
 
 	// Whether the file had a position in it, so the caller knows whether to
 	// centre this instead.
-	bool HasSavedPlacement() const { return bHadPlacement; }
+	bool HasSavedPlacement() const
+	{
+		return bHadPlacement;
+	}
 
 	// There is deliberately no Save. CResizeDialog writes the placement from
 	// its OnOK and OnCancel, and CEdUnitStartCmd overrides both without
@@ -216,7 +219,10 @@ public:
 		pData_->nCommandIndex = nCommandIndex;
 	}
 
-	void UpdateTarget( const std::string &rszTarget ) { pTarget->ChangeValue( wxString::FromUTF8( rszTarget.c_str() ) ); }
+	void UpdateTarget( const std::string &rszTarget )
+	{
+		pTarget->ChangeValue( wxString::FromUTF8( rszTarget.c_str() ) );
+	}
 
 	int GetSelectedCommandType()
 	{
@@ -253,7 +259,10 @@ private:
 		Show( false );
 	}
 
-	void OnClear( wxCommandEvent & ) { Report( NUnitStartCmdDialog::EV_CLEAR ); }
+	void OnClear( wxCommandEvent & )
+	{
+		Report( NUnitStartCmdDialog::EV_CLEAR );
+	}
 
 	void OnTypeChanged( wxCommandEvent & )
 	{
@@ -315,7 +324,10 @@ public:
 		}
 	}
 
-	bool IsAlive() const { return dialog != nullptr; }
+	bool IsAlive() const
+	{
+		return dialog != nullptr;
+	}
 
 	virtual void Show( bool bShow )
 	{
@@ -349,9 +361,12 @@ public:
 		}
 	}
 
-	virtual int GetSelectedCommandType() { return dialog ? dialog->GetSelectedCommandType() : 0; }
+	virtual int GetSelectedCommandType()
+	{
+		return dialog ? dialog->GetSelectedCommandType() : 0;
+	}
 };
-}
+} // namespace
 
 namespace NUnitStartCmdDialog
 {
@@ -368,4 +383,4 @@ IDialog *Create( IWidget *pParent, IListener *pListener )
 	pDialog->Show( false );
 	return pDialog;
 }
-}
+} // namespace NUnitStartCmdDialog

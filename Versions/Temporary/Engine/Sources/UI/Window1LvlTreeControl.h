@@ -16,7 +16,9 @@ class CWindow1LvlTreeControl : public CWindowScrollableContainerBase, public IBu
 		typedef std::list<CObj<IWindow>> CSubItems;
 		CSubItems subitems;
 		bool bCollapsed;
+
 		SItem() {}
+
 		SItem( CWindowMSButton *_pItem ) : pItem( _pItem ) {}
 
 		int operator&( IBinSaver &saver )
@@ -27,6 +29,7 @@ class CWindow1LvlTreeControl : public CWindowScrollableContainerBase, public IBu
 			return 0;
 		}
 	};
+
 	std::vector<SItem> items;
 	//} dinamic data
 	CPtr<NDb::SWindow1LvlTreeControl> pInstance;
@@ -37,7 +40,10 @@ class CWindow1LvlTreeControl : public CWindowScrollableContainerBase, public IBu
 	void Collapse( SItem *pContainer );
 
 protected:
-	NDb::SWindow *GetInstance() { return pInstance; }
+	NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
 
 public:
 	IWindow *AddItem();
@@ -47,9 +53,13 @@ public:
 
 	// IButtonNotify
 	void Released( class CWindow *pWho );
+
 	void Pushed( class CWindow *pWho ) {}
+
 	void Entered( class CWindow *pWho ) {}
+
 	void Leaved( class CWindow *pWho ) {}
+
 	void StateChanged( class CWindow *pWho ) {}
 
 	int operator&( IBinSaver &saver );

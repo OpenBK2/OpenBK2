@@ -21,4 +21,4 @@ void ShowTileProperties( const std::string &rszTileName )
 	InsertHashSetElement( &( objectSet.objectNameSet ), rszTileName );
 	NObjectProperties::Show( objectSet );
 }
-}
+} // namespace NHeightViewV3

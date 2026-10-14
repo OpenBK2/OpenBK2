@@ -21,8 +21,19 @@ public:
 		return *this;
 	}
 
-	insert_iterator<_Container> &operator*() { return *this; }
-	insert_iterator<_Container> &operator++() { return *this; }
-	insert_iterator<_Container> &operator++( int ) { return *this; }
+	insert_iterator<_Container> &operator*()
+	{
+		return *this;
+	}
+
+	insert_iterator<_Container> &operator++()
+	{
+		return *this;
+	}
+
+	insert_iterator<_Container> &operator++( int )
+	{
+		return *this;
+	}
 };
-}
+} // namespace nstl

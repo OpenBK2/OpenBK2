@@ -456,7 +456,7 @@ CEnumEntryNode *CEnumNode::FindAnyWithCrossedEntries( CNamespace *pNM ) const
 	return 0;
 }
 
-}
+} // namespace NLang
 
 using namespace NLang;
 BASIC_REGISTER_CLASS( PARSER, CTypeNode );

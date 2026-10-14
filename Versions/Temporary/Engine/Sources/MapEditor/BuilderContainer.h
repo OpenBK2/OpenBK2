@@ -13,6 +13,7 @@ class CBuilderContainer : public IBuilderContainer
 
 public:
 	CBuilderContainer() {}
+
 	~CBuilderContainer() {}
 
 	// IBuilderContainer

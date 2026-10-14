@@ -17,16 +17,28 @@ struct IInterfaceBase : virtual public CObjectBase
 	//
 	virtual void Step( bool bAppActive ) = 0;
 	virtual bool ProcessEvent( const struct SGameMessage &msg ) = 0;
-	virtual bool ShouldLimitFrameRate() const { return false; }
+
+	virtual bool ShouldLimitFrameRate() const
+	{
+		return false;
+	}
+
 	// переход к этому интерфейсу из другого полноэкранного
 	virtual void StartInterface() {}
+
 	// call it after load form save file
 	virtual void AfterLoad() {}
-	virtual bool IsModal() { return true; }
+
+	virtual bool IsModal()
+	{
+		return true;
+	}
 };
+
 struct IInterfaceCommand : public CObjectBase
 {
 	virtual void Exec() = 0;
+
 	virtual void Configure( const char *pszConfig ) {}
 };
 
@@ -45,7 +57,7 @@ MAIN_EXPORT IInterfaceBase *GetPrevInterface( IInterfaceBase *pCurrentInterface 
 MAIN_EXPORT void SetInputEnabled( bool bEnabled );
 MAIN_EXPORT void Serialize( IBinSaver &saver, struct IProgressHook *pHook = 0 );
 void AfterLoad();
-}
+} // namespace NMainLoop
 
 // ************************************************************************************************************************ //
 // **
@@ -61,6 +73,7 @@ struct IFilesInspector : public CObjectBase
 	{
 		tidTypeID = 0x10075C03
 	};
+
 	// add new entry
 	virtual bool AddEntry( const std::string &szName, struct IFilesInspectorEntry *pEntry ) = 0;
 	// remove entry

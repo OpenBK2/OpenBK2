@@ -5,6 +5,7 @@
 #include "System/Commands.h"
 
 static int nDirectionalLightID, nPointLightID;
+
 namespace NGScene
 {
 
@@ -170,6 +171,7 @@ void CDynamicPointLight::AddToState( SPerVertexLightState *pRes )
 // CLightStateNode
 
 static bool s_bDynamicLights = true;
+
 bool CLightStateNode::NeedUpdate()
 {
 	bool bRes = false;
@@ -265,7 +267,8 @@ START_REGISTER( GRenderLight )
 REGISTER_VAR_EX( "gfx_dynamic_lights", NGlobal::VarBoolHandler, &s_bDynamicLights, true, STORAGE_USER )
 FINISH_REGISTER
 
-}
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x02511009, CDirectionalLight )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x01961170, CPointLight )

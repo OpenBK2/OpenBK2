@@ -111,8 +111,10 @@ struct SMaterialInfo
 {
 	std::string szName;
 	std::string szType;
+
 	//
 	SMaterialInfo() {}
+
 	SMaterialInfo( const std::string &_szName, const std::string &_szType ) : szName( _szName ), szType( _szType ) {}
 };
 
@@ -275,7 +277,7 @@ bool CModelExporter::MakeMaterialsList( IManipulator *pModelMan, IManipulator *p
 	return true;
 }
 
-}
+} // namespace NModelExporter
 
 using namespace NModelExporter;
 REGISTER_EXPORTER_IN_DLL( Model, CModelExporter )

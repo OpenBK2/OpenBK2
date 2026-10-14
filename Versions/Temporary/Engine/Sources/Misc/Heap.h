@@ -10,7 +10,10 @@ class CSortedVector
 	CTElements elements;
 
 public:
-	void Reserve( const size_t size ) { elements.reserve( size ); }
+	void Reserve( const size_t size )
+	{
+		elements.reserve( size );
+	}
 
 	void Push( const T &el )
 	{
@@ -18,6 +21,7 @@ public:
 		typename CTElements::iterator it = lower_bound( elements.begin(), elements.end(), el, cmp );
 		elements.insert( it, el );
 	}
+
 	void Remove( const T &el )
 	{
 		typename CTElements::iterator it = lower_bound( elements.begin(), elements.end(), el, cmp );
@@ -31,11 +35,32 @@ public:
 			++rem;
 		}
 	}
-	const T &operator[]( const int n ) const { return elements[n]; }
-	T &operator[]( const int n ) { return elements[n]; }
-	int Size() const { return elements.size(); }
-	int GetReserved() const { return elements.capacity(); }
-	void Clear() { elements.clear(); }
+
+	const T &operator[]( const int n ) const
+	{
+		return elements[n];
+	}
+
+	T &operator[]( const int n )
+	{
+		return elements[n];
+	}
+
+	int Size() const
+	{
+		return elements.size();
+	}
+
+	int GetReserved() const
+	{
+		return elements.capacity();
+	}
+
+	void Clear()
+	{
+		elements.clear();
+	}
+
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, &elements );
@@ -69,6 +94,7 @@ public:
 	int operator&( IBinSaver &saver );
 
 	CHeap() : nEl( 0 ), heap( 1 ) {}
+
 	CHeap( const int nSize ) : heap( nSize + 1 ), nEl( 0 ) {}
 
 	void Reserve( const int nSize )
@@ -79,12 +105,23 @@ public:
 		}
 	}
 
-	const int Size() const { return nEl; }
-	const int GetReserved() const { return heap.size() - 1; }
+	const int Size() const
+	{
+		return nEl;
+	}
 
-	bool IsEmpty() const { return nEl == 0; }
+	const int GetReserved() const
+	{
+		return heap.size() - 1;
+	}
+
+	bool IsEmpty() const
+	{
+		return nEl == 0;
+	}
 
 	void Erase( const int n );
+
 	void Clear()
 	{
 		heap.clear();
@@ -99,15 +136,26 @@ public:
 	// перебалансировать при увеличении элемента на позиции k
 	int Increased( const int k );
 
-	const T &GetMaxEl() const { return heap[1]; }
+	const T &GetMaxEl() const
+	{
+		return heap[1];
+	}
+
 	T &GetMaxEl()
 	{
 		NI_ASSERT( nEl >= 1, "The heap is empty" );
 		return heap[1];
 	}
 
-	const T &operator[]( const int n ) const { return heap[n + 1]; }
-	T &operator[]( const int n ) { return heap[n + 1]; }
+	const T &operator[]( const int n ) const
+	{
+		return heap[n + 1];
+	}
+
+	T &operator[]( const int n )
+	{
+		return heap[n + 1];
+	}
 
 	void Remove( const T &el );
 };

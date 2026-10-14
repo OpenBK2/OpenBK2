@@ -25,6 +25,7 @@ class CWindowConsole : public CWindow, public IConsole
 		std::wstring szString;
 		uint32_t dwColor;
 		CPtr<IML> pGfxText;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &szString );
@@ -34,6 +35,7 @@ class CWindowConsole : public CWindow, public IConsole
 		}
 
 		SColorString() : dwColor( 0xffffffff ) {}
+
 		SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth );
 	};
 
@@ -54,6 +56,7 @@ class CWindowConsole : public CWindow, public IConsole
 	int nBeginString;  //начальная отображаемая строка из списка строк. 0 считается самой свежей строчкой
 	int nBeginCommand; //текущая команда из лога команд
 	int nConsoleSequenceID;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CWindow *)this );
@@ -76,11 +79,18 @@ class CWindowConsole : public CWindow, public IConsole
 	void ReadConsoleStrings();
 
 protected:
-	virtual NDb::SWindow *GetInstance() { return pInstance; }
+	virtual NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
 
 public:
 	// The developer console stays at the GUI scale when moved between screens.
-	bool UsesHudFontScale() const override { return false; }
+	bool UsesHudFontScale() const override
+	{
+		return false;
+	}
+
 	virtual bool ProcessEvent( const struct SGameMessage &msg );
 
 	CWindowConsole(); // : currTime( 0 ), nBeginCommand( 0 ), nBeginString( 0 ) {  }
@@ -125,6 +135,7 @@ class CDebugSingleton : public IDebugSingleton
 
 public:
 	CDebugSingleton() : bDebugShown( false ) {}
+
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, &pConsole );

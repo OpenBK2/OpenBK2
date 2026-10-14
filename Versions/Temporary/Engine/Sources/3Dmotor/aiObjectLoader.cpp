@@ -274,7 +274,7 @@ namespace
 			}
 		}
 	}
-}
+} // namespace
 
 static CVec3 CalcMassCenter( std::vector<SMassSphere> &spheres )
 {
@@ -424,6 +424,7 @@ struct SMergePoints
 		points.push_back( a );
 		return points.size() - 1;
 	}
+
 	void AddTriangle( const CVec3 &a, const CVec3 &b, const CVec3 &c )
 	{
 		tris.push_back( STriangle( GetPointIndex( a ), GetPointIndex( b ), GetPointIndex( c ) ) );
@@ -460,6 +461,7 @@ struct SStoredSkin
 		return 0;
 	}
 };
+
 typedef std::unordered_map<int, SStoredSkin> CBodypartsStoredHash;
 
 void CFileSkinPointsLoadFromA5Exporter::Recalc()
@@ -641,7 +643,8 @@ void CSkinner::Recalc()
 	}*/
 }
 
-} // namespace
+} // namespace NAI
+
 using namespace NAI;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x012c1160, CLoadAIGeometryFromA5Exporter )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x70493110, CLoadAIGeometryFromGranny )

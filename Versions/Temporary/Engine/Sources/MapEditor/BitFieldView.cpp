@@ -64,4 +64,4 @@ void Store( const std::vector<SField> &rFields, const std::vector<bool> &rChecke
 		}
 	}
 }
-}
+} // namespace NBitField

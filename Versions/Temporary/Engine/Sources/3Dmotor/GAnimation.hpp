@@ -10,7 +10,7 @@ namespace NDb
 {
 struct SSkeleton;
 struct SAnimBase;
-}
+} // namespace NDb
 
 namespace NAnimation
 {
@@ -21,19 +21,26 @@ struct SAnimHandle
 	CDBPtr<NDb::SAnimBase> pAnimFile;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nAnimNumber = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pAnimFile );
 		f.Add( 3, &nAnimNumber );
 		return 0;
 	}
+
 	SAnimHandle() : nAnimNumber( -1 ) {}
+
 	SAnimHandle( const NDb::SAnimBase *pAnim, int _nAnimNumber ) : pAnimFile( pAnim ), nAnimNumber( _nAnimNumber ) {}
 };
 
 struct IAnimMutator : public CObjectBase
 {
-	virtual bool NeedUpdate() { return true; }
+	virtual bool NeedUpdate()
+	{
+		return true;
+	}
+
 	virtual void MutateSkeletonPose( SSkeletonPose *pPose ) = 0;
 };
 
@@ -84,11 +91,13 @@ struct ISkeletonAnimator : public CFuncBase<SSkeletonPose>, public IChannelAnima
 		const STime tDuration = {};
 		const CQuat finalRot;
 		const CVec3 finalPos;
+
 		SDesiredBoneMove( const STime &_tDuration = 0, const CQuat &_finalRot = QNULL, const CVec3 &_finalPos = VNULL3 )
 				: tDuration( _tDuration ), finalRot( _finalRot ), finalPos( _finalPos )
 		{
 		}
 	};
+
 	virtual void
 	SetBoneMutator( const char *pszBoneName, const STime &tStart, const std::vector<SDesiredBoneMove> &boneMutation ) = 0;
 	virtual void
@@ -100,4 +109,4 @@ struct ISkeletonAnimator : public CFuncBase<SSkeletonPose>, public IChannelAnima
 };
 
 _3DMOTOR_EXPORT ISkeletonAnimator *CreateSkeletonAnimator( const SSkeletonHandle &skeleton, CFuncBase<STime> *_pTime );
-} // namespace
+} // namespace NAnimation

@@ -8,6 +8,7 @@ struct SPerformanceInfo
 {
 	float fPSRate, fFillRate, fTriangleRate, fCPUclock; // in millions
 };
+
 void PerformBenchmark();
 _3DMOTOR_EXPORT const SPerformanceInfo &GetPerformanceInfo();
-}
+} // namespace NGfx

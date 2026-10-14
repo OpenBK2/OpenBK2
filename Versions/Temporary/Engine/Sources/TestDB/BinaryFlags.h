@@ -15,9 +15,20 @@ class CBinaryFlags
 	uint32_t flags[2];
 
 public:
-	CBinaryFlags() { flags[0] = flags[1] = 0; }
-	CBinaryFlags( const uint32_t _flags[2] ) { memcpy( flags, _flags, sizeof( flags ) ); }
+	CBinaryFlags()
+	{
+		flags[0] = flags[1] = 0;
+	}
+
+	CBinaryFlags( const uint32_t _flags[2] )
+	{
+		memcpy( flags, _flags, sizeof( flags ) );
+	}
+
 	//
-	operator CVariant() const { return CVariant( this, sizeof( *this ) ); }
+	operator CVariant() const
+	{
+		return CVariant( this, sizeof( *this ) );
+	}
 };
-}
+} // namespace NDb

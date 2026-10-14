@@ -9,4 +9,4 @@ std::string GetDataDir()
 	return TESTDB_DATA_DIR "/";
 }
 
-}
+} // namespace NTestDB

@@ -604,11 +604,13 @@ bool CFieldState::FillTileSet( CArray2D<uint8_t> *pTile2DArray,
 struct SAddFunctional
 {
 	SHeightPattern *pHeightPattern;
+
 	//
 	SAddFunctional( SHeightPattern *_pHeightPattern ) : pHeightPattern( _pHeightPattern )
 	{
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
+
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
 	{
@@ -620,11 +622,13 @@ struct SAddFunctional
 struct SSubstractFunctional
 {
 	SHeightPattern *pHeightPattern;
+
 	//
 	SSubstractFunctional( SHeightPattern *_pHeightPattern ) : pHeightPattern( _pHeightPattern )
 	{
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
+
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
 	{

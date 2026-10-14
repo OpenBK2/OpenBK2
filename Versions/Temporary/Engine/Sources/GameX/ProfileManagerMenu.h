@@ -18,6 +18,7 @@ private:
 		ZDATA
 		std::wstring wszName;
 		CPtr<IWindow> pWindow;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &wszName );
@@ -25,6 +26,7 @@ private:
 			return 0;
 		}
 	};
+
 	typedef std::vector<SProfileEntry> CProfileList;
 
 	ZDATA_( CInterfaceScreenBase )
@@ -43,6 +45,7 @@ private:
 	CPtr<IButton> pSelectBtn;
 	CPtr<IButton> pDeleteBtn;
 	bool bNoUpdateSelection;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );

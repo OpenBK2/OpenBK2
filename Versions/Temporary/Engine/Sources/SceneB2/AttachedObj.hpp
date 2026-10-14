@@ -6,7 +6,7 @@ namespace NDb
 {
 struct SModel;
 struct SEffect;
-}
+} // namespace NDb
 
 namespace NAnimation
 {
@@ -33,23 +33,48 @@ public:
 	}
 
 protected:
-	void SetHolder( CObjectBase *_pHolder ) { pHolder = _pHolder; }
-	CObjectBase *GetHolder() const { return pHolder; }
-	CSyncSrcBind<IVisObj> &GetSrcBind() { return srcBind; }
+	void SetHolder( CObjectBase *_pHolder )
+	{
+		pHolder = _pHolder;
+	}
+
+	CObjectBase *GetHolder() const
+	{
+		return pHolder;
+	}
+
+	CSyncSrcBind<IVisObj> &GetSrcBind()
+	{
+		return srcBind;
+	}
 
 	CAttachedObject() {}
+
 	CAttachedObject( CFuncBase<SFBTransform> *_pTransform, const int _nBoneIndex, CFuncBase<SBound> *_pBounder )
 			: pTransform( _pTransform ), nBoneIndex( _nBoneIndex ), pBounder( _pBounder )
 	{
 	}
 
-	void RefreshTransform() { pTransform.Refresh(); }
+	void RefreshTransform()
+	{
+		pTransform.Refresh();
+	}
 
 public:
-	CFuncBase<SFBTransform> *GetTransform() const { return pTransform; }
-	virtual void SetTransform( CFuncBase<SFBTransform> *_pTransform ) { pTransform = _pTransform; }
+	CFuncBase<SFBTransform> *GetTransform() const
+	{
+		return pTransform;
+	}
 
-	CFuncBase<SBound> *GetBounder() const { return pBounder; }
+	virtual void SetTransform( CFuncBase<SFBTransform> *_pTransform )
+	{
+		pTransform = _pTransform;
+	}
+
+	CFuncBase<SBound> *GetBounder() const
+	{
+		return pBounder;
+	}
 
 	// remove this object from scene
 	virtual void Destroy( const NTimer::STime time );
@@ -58,7 +83,10 @@ public:
 	virtual void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer ) = 0;
 
 	// get bone to which attached
-	virtual const int GetBoneIndex() const { return nBoneIndex; }
+	virtual const int GetBoneIndex() const
+	{
+		return nBoneIndex;
+	}
 };
 
 struct CStaticAttachedObj : public CAttachedObject
@@ -68,6 +96,7 @@ struct CStaticAttachedObj : public CAttachedObject
 	ZDATA_( CAttachedObject )
 	CDBPtr<NDb::SModel> pModel;
 	bool bUseLOD;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CAttachedObject *)this );
@@ -78,6 +107,7 @@ struct CStaticAttachedObj : public CAttachedObject
 
 public:
 	CStaticAttachedObj() {}
+
 	CStaticAttachedObj( const NDb::SModel *_pModel,
 	                    CFuncBase<SFBTransform> *pTransform,
 	                    const int nBoneIndex,
@@ -88,7 +118,11 @@ public:
 	}
 
 	virtual const NDb::SModel *GetModel() const;
-	virtual NAnimation::ISkeletonAnimator *GetAnimator() const { return 0; }
+
+	virtual NAnimation::ISkeletonAnimator *GetAnimator() const
+	{
+		return 0;
+	}
 
 	virtual void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer );
 	virtual void Visit( IAIVisitor *pAIVisitor );
@@ -101,6 +135,7 @@ struct CAnimatedAttachedObj : public CAttachedObject
 	ZDATA_( CAttachedObject )
 	CDBPtr<NDb::SModel> pModel;
 	CObj<NAnimation::ISkeletonAnimator> pAnimator;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CAttachedObject *)this );
@@ -111,6 +146,7 @@ struct CAnimatedAttachedObj : public CAttachedObject
 
 public:
 	CAnimatedAttachedObj() {}
+
 	CAnimatedAttachedObj( const NDb::SModel *_pModel,
 	                      CFuncBase<SFBTransform> *pTransform,
 	                      NAnimation::ISkeletonAnimator *_pAnimator,
@@ -121,7 +157,11 @@ public:
 	}
 
 	virtual const NDb::SModel *GetModel() const;
-	virtual NAnimation::ISkeletonAnimator *GetAnimator() const { return pAnimator; }
+
+	virtual NAnimation::ISkeletonAnimator *GetAnimator() const
+	{
+		return pAnimator;
+	}
 
 	virtual void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer );
 	virtual void Visit( IAIVisitor *pAIVisitor );
@@ -134,6 +174,7 @@ struct CAttachedEffect : public CAttachedObject
 	ZDATA_( CAttachedObject )
 	CDBPtr<NDb::SEffect> pEffect;
 	NTimer::STime nStartTime;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CAttachedObject *)this );
@@ -144,6 +185,7 @@ struct CAttachedEffect : public CAttachedObject
 
 public:
 	CAttachedEffect() {}
+
 	CAttachedEffect( const NDb::SEffect *_pEffect,
 	                 CFuncBase<SFBTransform> *pTransform,
 	                 const NTimer::STime _nStartTime,
@@ -151,10 +193,18 @@ public:
 			: CAttachedObject( pTransform, nBoneIndex, 0 ), pEffect( _pEffect ), nStartTime( _nStartTime )
 	{
 	}
+
 	~CAttachedEffect();
 
-	const NDb::SModel *GetModel() const { return 0; }
-	NAnimation::ISkeletonAnimator *GetAnimator() const { return 0; }
+	const NDb::SModel *GetModel() const
+	{
+		return 0;
+	}
+
+	NAnimation::ISkeletonAnimator *GetAnimator() const
+	{
+		return 0;
+	}
 
 	void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer );
 	void Destroy( const NTimer::STime time );
@@ -166,13 +216,18 @@ class CAlwaysVerticalTransform : public CFuncBase<SFBTransform>
 {
 	OBJECT_NOCOPY_METHODS( CAlwaysVerticalTransform )
 protected:
-	virtual bool NeedUpdate() { return pBaseTransform.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pBaseTransform.Refresh();
+	}
+
 	virtual void Recalc();
 
 public:
 	ZDATA
 	CDGPtr<CFuncBase<SFBTransform>> pBaseTransform;
 	bool bKeepVertical;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pBaseTransform );
@@ -181,6 +236,7 @@ public:
 	}
 
 	CAlwaysVerticalTransform() : pBaseTransform( 0 ) {}
+
 	CAlwaysVerticalTransform( CFuncBase<SFBTransform> *_pBaseTransform, const bool _bKeepVertical = false );
 };
 
@@ -193,6 +249,7 @@ private:
 	ZDATA
 	CDGPtr<CFuncBase<SFBTransform>> pTransform;
 	SHMatrix mAddTransform;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pTransform );
@@ -202,10 +259,15 @@ private:
 
 protected:
 	virtual void Recalc();
-	virtual bool NeedUpdate() { return pTransform.Refresh(); }
+
+	virtual bool NeedUpdate()
+	{
+		return pTransform.Refresh();
+	}
 
 public:
 	CAttachedLightEffectPos() {}
+
 	CAttachedLightEffectPos( CFuncBase<SFBTransform> *_pTransform, const SHMatrix &_mAddTransform )
 			: pTransform( _pTransform ), mAddTransform( _mAddTransform )
 	{
@@ -218,6 +280,7 @@ class CAttachedSoundPos : public CFuncBase<CVec3>
 private:
 	ZDATA
 	CDGPtr<CFuncBase<SFBTransform>> pTransform;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pTransform );
@@ -225,11 +288,19 @@ private:
 	}
 
 protected:
-	virtual bool NeedUpdate() { return pTransform.Refresh(); }
-	virtual void Recalc() { Vis2AI( &value, pTransform->GetValue().forward.GetTrans3() ); }
+	virtual bool NeedUpdate()
+	{
+		return pTransform.Refresh();
+	}
+
+	virtual void Recalc()
+	{
+		Vis2AI( &value, pTransform->GetValue().forward.GetTrans3() );
+	}
 
 public:
 	CAttachedSoundPos() {}
+
 	CAttachedSoundPos( CFuncBase<SFBTransform> *_pTransform ) : pTransform( _pTransform ) {}
 };
 
@@ -241,6 +312,7 @@ class CAttachedLightEffectDir : public CFuncBase<CVec3>
 private:
 	ZDATA
 	CDGPtr<CFuncBase<SFBTransform>> pTransform;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pTransform );
@@ -249,10 +321,15 @@ private:
 
 protected:
 	virtual void Recalc();
-	virtual bool NeedUpdate() { return pTransform.Refresh(); }
+
+	virtual bool NeedUpdate()
+	{
+		return pTransform.Refresh();
+	}
 
 public:
 	CAttachedLightEffectDir() {}
+
 	CAttachedLightEffectDir( CFuncBase<SFBTransform> *_pTransform ) : pTransform( _pTransform ) {}
 };
 
@@ -264,6 +341,7 @@ struct CAttachedLightEffect : public CAttachedObject
 	NDb::SAttachedLightEffect lightEffect;
 	NTimer::STime nStartTime;
 	bool bInEditor;
+
 	ZONSERIALIZE
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -274,6 +352,7 @@ struct CAttachedLightEffect : public CAttachedObject
 		OnSerialize( f );
 		return 0;
 	}
+
 	int nPointLightID;
 	CObj<CObjectBase> pFlareHolder;
 	CObj<CObjectBase> pAddEffectHolder;
@@ -294,14 +373,22 @@ struct CAttachedLightEffect : public CAttachedObject
 
 public:
 	CAttachedLightEffect() : nPointLightID( OBJECT_ID_GENERATE ), bNeedRecalc( false ), nSoundID( -1 ) {}
+
 	CAttachedLightEffect( const NDb::SAttachedLightEffect *_pEffect,
 	                      CFuncBase<SFBTransform> *pTransform,
 	                      const NTimer::STime _nStartTime,
 	                      const int nBoneIndex,
 	                      const bool _bInEditor = false );
 
-	virtual const NDb::SModel *GetModel() const { return 0; }
-	virtual NAnimation::ISkeletonAnimator *GetAnimator() const { return 0; }
+	virtual const NDb::SModel *GetModel() const
+	{
+		return 0;
+	}
+
+	virtual NAnimation::ISkeletonAnimator *GetAnimator() const
+	{
+		return 0;
+	}
 
 	virtual void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer );
 	virtual void Destroy( const NTimer::STime time );
@@ -319,6 +406,7 @@ struct CAttachedStaticLightEffect : public CAttachedObject
 	SHMatrix mConePlace;
 	int nConeID;
 	bool bInEditor;
+
 	ZONSERIALIZE
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -333,6 +421,7 @@ struct CAttachedStaticLightEffect : public CAttachedObject
 		OnSerialize( f );
 		return 0;
 	}
+
 	int nPointLightID;
 	CObj<CObjectBase> pFlareHolder;
 	CObj<CObjectBase> pDirFlareHolder;
@@ -345,13 +434,21 @@ struct CAttachedStaticLightEffect : public CAttachedObject
 
 public:
 	CAttachedStaticLightEffect() : nPointLightID( OBJECT_ID_GENERATE ), bNeedRecalc( false ) {}
+
 	CAttachedStaticLightEffect( const NDb::SAttachedLightEffect *_pEffect,
 	                            const int _nObjectID,
 	                            const NTimer::STime _nStartTime,
 	                            const bool _bInEditor = false );
 
-	virtual const NDb::SModel *GetModel() const { return 0; }
-	virtual NAnimation::ISkeletonAnimator *GetAnimator() const { return 0; }
+	virtual const NDb::SModel *GetModel() const
+	{
+		return 0;
+	}
+
+	virtual NAnimation::ISkeletonAnimator *GetAnimator() const
+	{
+		return 0;
+	}
 
 	virtual void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer );
 	virtual void Destroy( const NTimer::STime time );

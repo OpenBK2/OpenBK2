@@ -28,9 +28,13 @@ CBasicDatabase *CreateGameDatabase();
 // ************************************************************************************************************************ //
 
 static CObj<CBasicDatabase> s_pMainDatabase;
+
 static struct SDatabaseAutoMagic
 {
-	~SDatabaseAutoMagic() { CloseDatabase(); }
+	~SDatabaseAutoMagic()
+	{
+		CloseDatabase();
+	}
 } aDatabaseAutoMagic;
 
 void SetDatabaseDataChanged()
@@ -40,6 +44,7 @@ void SetDatabaseDataChanged()
 		s_pMainDatabase->SetDataChanged();
 	}
 }
+
 void SetDatabaseDataChanged( const CDBID &dbid )
 {
 	if ( s_pMainDatabase )
@@ -303,4 +308,4 @@ bool IsDBIDValid( const CDBID &dbid )
 	return true;
 }
 
-}
+} // namespace NDb

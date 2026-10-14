@@ -43,8 +43,12 @@ public:
 	explicit CFontCatalog( const std::vector<std::string> &directories );
 	// as FindFont below
 	bool Find( const std::string &szFamily, int nWeight, bool bItalic, SFontMatch *pMatch ) const;
+
 	// every face, variable fonts' named instances included, files in sorted order
-	const std::vector<SFontMatch> &GetFaces() const { return faces; }
+	const std::vector<SFontMatch> &GetFaces() const
+	{
+		return faces;
+	}
 };
 
 // Searches every TrueType and OpenType file under directories, recursively,
@@ -67,4 +71,4 @@ bool FindFont( const std::string &szFamily,
 // 0 when the data is not a font.
 int SelectFace( const std::vector<uint8_t> &data, int nWeight, bool bItalic );
 
-}
+} // namespace NFontRaster

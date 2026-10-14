@@ -21,4 +21,4 @@ SYSTEM_EXPORT bool EnsureVideo();
 //! normal case and must not cost the window: the game asks for this only
 //! when Input enumerates devices, and carries on without it.
 SYSTEM_EXPORT bool EnsureJoystick();
-}
+} // namespace NSdl

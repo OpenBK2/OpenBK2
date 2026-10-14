@@ -1,4 +1,5 @@
 #pragma once
+
 namespace NCollider
 {
 
@@ -8,6 +9,7 @@ class CVolumeContainer
 	{
 		std::vector<std::vector<int>> tris;
 	};
+
 	CVec3 ptMin; //, ptMax;  // bounding volume for all triangles
 	std::vector<SLevelContainers> volumeData;
 	std::vector<int> fetchMark;
@@ -22,11 +24,15 @@ public:
 	{
 		int x, y, z;
 	};
+
 	struct SVolumeBounds
 	{
 		SIntCoords mn, mx;
 
-		int GetSize() const { return (std::max)( mx.x - mn.x, (std::max)( mx.y - mn.y, mx.z - mn.z ) ); }
+		int GetSize() const
+		{
+			return (std::max)( mx.x - mn.x, (std::max)( mx.y - mn.y, mx.z - mn.z ) );
+		}
 	};
 
 private:
@@ -43,8 +49,16 @@ public:
 	void ClipVolume( SVolumeBounds *pRes );
 	void Fetch( const SBound &b );
 	void Add( const SVolumeBounds &b, int nData );
-	const std::vector<int> &GetFetchBuffer() const { return *pFetched; }
-	int GetFetchedNum() { return nFetched; }
+
+	const std::vector<int> &GetFetchBuffer() const
+	{
+		return *pFetched;
+	}
+
+	int GetFetchedNum()
+	{
+		return nFetched;
+	}
 };
 
 const float F_NO_COLLISION = -1e20f;
@@ -56,11 +70,13 @@ struct SSkipColliderAnalyzer
 	{
 		return true;
 	}
+
 	template <class T>
 	bool operator()( const T & ) const
 	{
 		return true;
 	}
 };
+
 extern SSkipColliderAnalyzer skipAnalyzer;
-}
+} // namespace NCollider

@@ -43,8 +43,10 @@ private:
 		public:
 			std::unordered_map<uint16_t, CVec3> instanceIDs;
 			int nCount;
+
 			SMapSounds() : nCount( 0 ) {}
 		};
+
 		struct SMaxCountPredicate
 		{
 			bool operator()( const std::pair<uint16_t, SMapSounds> &s1, const std::pair<uint16_t, SMapSounds> &s2 ) const
@@ -58,8 +60,13 @@ private:
 			uint16_t wSoundTypeID; // type of sound
 			uint16_t wInstanceID;  // instance of sound
 			uint16_t wSceneID;     // if added to scene, then scene ID
+
 			//
-			SPlaying() { Clear(); }
+			SPlaying()
+			{
+				Clear();
+			}
+
 			void Clear()
 			{
 				wInstanceID = 0;
@@ -105,6 +112,7 @@ private:
 
 public:
 	CMapSounds() : pSoundScene( 0 ), timeNextUpdate( 0 ) {}
+
 	void SetSoundScene( struct ISoundScene *pSoundScene );
 	void Update( const CVec3 &vListener, const float fViewRadius );
 	void Clear();

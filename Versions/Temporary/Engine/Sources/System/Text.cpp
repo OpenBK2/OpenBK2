@@ -99,4 +99,4 @@ void Reload( const std::string &szTextFileName )
 	}
 }
 
-}
+} // namespace NText

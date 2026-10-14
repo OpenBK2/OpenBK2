@@ -21,7 +21,9 @@ namespace NMetaInfo
 		std::list<CPtr<SStructMetaInfo>> structsStack;
 		CMetaInfoMap knownTypes;
 	};
+
 	static SMetaInfo *s_pMetaInfo = 0;
+
 	static struct SMetaInfoAutoMagic
 	{
 		~SMetaInfoAutoMagic()
@@ -151,5 +153,5 @@ namespace NMetaInfo
 		saver.PopCurrentObject();
 	}
 
-}
-}
+} // namespace NMetaInfo
+} // namespace NDb

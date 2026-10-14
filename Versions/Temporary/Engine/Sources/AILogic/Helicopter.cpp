@@ -64,7 +64,7 @@ uint16_t InterpolateDirection( const uint16_t wStart, const uint16_t wFinish, co
 
 	return uint16_t( int( wStart ) + Float2Int( float( nDelta ) * fCoeff ) );
 }
-}
+} // namespace
 
 CHelicopter::CHelicopter()
 		: vHeliNextPos( VNULL3 ), vHeliNextSpeed( VNULL3 ), vHeliNextNormal( V3_AXIS_Z ), vMoveTarget( VNULL2 ),

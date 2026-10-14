@@ -218,8 +218,15 @@ public:
 		}
 	}
 
-	class CAIUnit *operator*() const { return *iter; }
-	const bool IsFinished() const { return cCurMech >= cMechEnd; }
+	class CAIUnit *operator*() const
+	{
+		return *iter;
+	}
+
+	const bool IsFinished() const
+	{
+		return cCurMech >= cMechEnd;
+	}
 };
 
 template <>
@@ -334,6 +341,7 @@ class CUnitsIter<1, 0>
 
 public:
 	CUnitsIter() : cMechEnd( 0 ), cCurMech( 1 ) {}
+
 	CUnitsIter(
 			const uint8_t _cStartDipl, uint8_t cDiplFilter, const CVec2 &vCenter, const float &fR, bool bOnlyMech = false )
 	{
@@ -424,8 +432,15 @@ public:
 		}
 	}
 
-	class CAIUnit *operator*() const { return units[units.unitsInCells[cCurVis].GetEl( nIter ).nValue]; }
-	const bool IsFinished() const { return cCurMech >= cMechEnd; }
+	class CAIUnit *operator*() const
+	{
+		return units[units.unitsInCells[cCurVis].GetEl( nIter ).nValue];
+	}
+
+	const bool IsFinished() const
+	{
+		return cCurMech >= cMechEnd;
+	}
 };
 
 template <>
@@ -540,6 +555,7 @@ class CUnitsIter<0, 0>
 
 public:
 	CUnitsIter() : cMechEnd( 0 ), cCurMech( 1 ) {}
+
 	CUnitsIter(
 			const uint8_t _cStartDipl, uint8_t cDiplFilter, const CVec2 &vCenter, const float &fR, bool bOnlyMech = false )
 	{
@@ -631,6 +647,13 @@ public:
 		}
 	}
 
-	class CAIUnit *operator*() const { return units[units.unitsInCells[cCurVis].GetEl( nIter ).nValue]; }
-	const bool IsFinished() const { return cCurMech >= cMechEnd; }
+	class CAIUnit *operator*() const
+	{
+		return units[units.unitsInCells[cCurVis].GetEl( nIter ).nValue];
+	}
+
+	const bool IsFinished() const
+	{
+		return cCurMech >= cMechEnd;
+	}
 };

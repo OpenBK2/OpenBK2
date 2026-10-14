@@ -16,6 +16,7 @@ const char *CAnimationExporter::GetAddPath() const
 {
 	return "bin\\animations\\";
 }
+
 static const char PARAMS_AABBA[] = ".aabba";
 static const char PARAMS_AABBD[] = ".aabbd";
 

@@ -469,6 +469,7 @@ class CTilesCollector
 public:
 	TContainter *pTiles = nullptr;
 	CAIMap *pAIMap = nullptr;
+
 	CTilesCollector( TContainter *_pTiles, CAIMap *_pAIMap ) : pTiles( _pTiles ), pAIMap( _pAIMap ) {}
 
 	bool operator()( float x, float y )

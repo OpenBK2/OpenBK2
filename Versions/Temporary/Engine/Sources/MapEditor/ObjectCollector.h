@@ -10,10 +10,12 @@
 class CObjectFilterCollector : public IObjectFilterCollector
 {
 	OBJECT_NOCOPY_METHODS( CObjectFilterCollector );
+
 	//
 	struct SObjectFilter : public IObjectFilter
 	{
 		typedef std::vector<std::string> CNameList;
+
 		struct SPart
 		{
 			std::string szOperation;
@@ -22,6 +24,7 @@ class CObjectFilterCollector : public IObjectFilterCollector
 			//
 			int operator&( IXmlSaver &saver );
 		};
+
 		typedef std::vector<SPart> CPartList;
 
 		//
@@ -31,14 +34,17 @@ class CObjectFilterCollector : public IObjectFilterCollector
 		mutable bool bCached;
 		mutable CObjectCollection objectCollection;
 		mutable int nObjectCollectionCount;
+
 		//
 		SObjectFilter() : bSeparator( false ), bCached( false ), nObjectCollectionCount( 0 ) {}
+
 		SObjectFilter( const SObjectFilter &rObjectFilter )
 				: szName( rObjectFilter.szName ), partList( rObjectFilter.partList ), bSeparator( rObjectFilter.bSeparator ),
 					bCached( rObjectFilter.bCached ), objectCollection( rObjectFilter.objectCollection ),
 					nObjectCollectionCount( rObjectFilter.nObjectCollectionCount )
 		{
 		}
+
 		SObjectFilter &operator=( const SObjectFilter &rObjectFilter )
 		{
 			if ( &rObjectFilter != this )
@@ -52,6 +58,7 @@ class CObjectFilterCollector : public IObjectFilterCollector
 			}
 			return *this;
 		}
+
 		//
 		int operator&( IXmlSaver &saver );
 
@@ -68,6 +75,7 @@ class CObjectFilterCollector : public IObjectFilterCollector
 		int GetObjectCollection( CObjectCollection *pObjectCollection ) const;
 		bool Match( const std::string &szObjectTypeName, const std::string &szObjectName ) const;
 	};
+
 	typedef std::vector<SObjectFilter> CObjectFilterList;
 	typedef std::unordered_map<std::string, CObjectFilterList> CObjectFilterListMap;
 	//
@@ -155,5 +163,8 @@ protected:
 	IImageList *GetImageList( int nImageListType );
 
 public:
-	CObjectCollector() : nDefaultImageIndex( INVALID_NODE_ID ) { CreateImageLists(); }
+	CObjectCollector() : nDefaultImageIndex( INVALID_NODE_ID )
+	{
+		CreateImageLists();
+	}
 };

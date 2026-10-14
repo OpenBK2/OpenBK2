@@ -20,6 +20,7 @@ class CFieldDefinition : public ICode
 
 public:
 	CFieldDefinition() {}
+
 	CFieldDefinition( NLang::CVariable *pVarNode, const CNodes2TypeDefs &nodes2TypeDefs );
 
 	virtual void GenerateCode( SCodeStreams *pCode,
@@ -35,4 +36,4 @@ public:
 	}
 };
 
-}
+} // namespace NCodeGen

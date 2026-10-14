@@ -29,6 +29,7 @@ bool AddAnimation( const NDb::SAnimB2 *pAnim,
 {
 	return pAnimator->AddAnimation( timeStart, NAnimation::SAnimHandle( pAnim, 0 ), bLooped, fSpeed ) != -1;
 }
+
 bool AddAnimation( const NDb::SAnimB2 *pAnim, const NTimer::STime timeStart, NAnimation::ISkeletonAnimator *pAnimator )
 {
 	return AddAnimation( pAnim, timeStart, pAnimator, pAnim->bLooped, 1.0f );

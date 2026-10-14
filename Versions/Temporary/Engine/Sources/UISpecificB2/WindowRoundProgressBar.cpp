@@ -44,6 +44,7 @@ void CWindowRoundProgressBar::InitByDesc( const struct NDb::SUIDesc *pDesc )
 }
 
 #define MIN_DIFFERENCE 0.1f
+
 void CWindowRoundProgressBar::SetAngles( float _fStartAngle, float _fFinishAngle )
 {
 	// CRAP - should fix CTextureRoundSegmentVisitor

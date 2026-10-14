@@ -12,6 +12,7 @@ class CKillCorpseExecutor : public CExecutor
 	CPtr<CFakeCorpseStaticObject> pObject;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	NTimer::STime killTime = {};
+
 	// Keep the original expiry time when resuming a saved simulation.
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -23,10 +24,15 @@ class CKillCorpseExecutor : public CExecutor
 
 public:
 	CKillCorpseExecutor() : killTime( 0 ) {}
+
 	CKillCorpseExecutor( CFakeCorpseStaticObject *pObject );
 
 	virtual bool IsExecutorValid() const;
 
 	virtual int Segment();
-	virtual bool NotifyEvent( const CExecutorEvent &event ) { return false; }
+
+	virtual bool NotifyEvent( const CExecutorEvent &event )
+	{
+		return false;
+	}
 };

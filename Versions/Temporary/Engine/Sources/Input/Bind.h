@@ -25,6 +25,7 @@ struct SGameMessage
 		int nParam1 = {}; //union { int nParam1; uint32_t dwParam1; float fParam1; };
 		int nParam2 = {}; //union { int nParam2; uint32_t dwParam2; float fParam2; };
 	};
+
 	SGameMessage() : nParam1( 0 ), nParam2( 0 ) {}
 };
 
@@ -46,6 +47,7 @@ struct SBind
 	EMappingType eType = {};
 	std::vector<std::string> controlsSet;
 };
+
 class INPUT_EXPORT CBind
 {
 	float fDelta = {};
@@ -85,4 +87,4 @@ INPUT_EXPORT void PostWinEvent( const std::string &szGameMessage, int nParam1, i
 INPUT_EXPORT void PurgeEvents();
 INPUT_EXPORT void PurgeUIEvents();
 
-};
+}; // namespace NInput

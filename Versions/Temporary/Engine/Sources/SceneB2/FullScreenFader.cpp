@@ -14,7 +14,9 @@ class CFullScreenFader : public IFullScreenFader
 	{
 		CDGPtr<CFuncBase<CVec3>> pModificator;
 		bool bModifyInterfaces;
+
 		SColorModificatorDescr() : pModificator( 0 ), bModifyInterfaces( true ) {}
+
 		SColorModificatorDescr( CFuncBase<CVec3> *pColor, bool _bModifyInterfaces )
 				: pModificator( pColor ), bModifyInterfaces( _bModifyInterfaces )
 		{
@@ -29,6 +31,7 @@ class CFullScreenFader : public IFullScreenFader
 	float fStartValue;
 	float fEndValue;
 	bool bFadeInterfaces;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &startTime );
@@ -53,7 +56,11 @@ public:
 	virtual void AddColorModificator( CFuncBase<CVec3> *pvColor, bool bModifyInterfaces );
 	virtual void RemoveColorModificator( CFuncBase<CVec3> *pvColor );
 
-	virtual bool IsInProgress() { return fDuration != 0.0f; };
+	virtual bool IsInProgress()
+	{
+		return fDuration != 0.0f;
+	};
+
 	virtual void Draw( const NTimer::STime &time, bool bAfterDrawingInterfaces );
 
 private:

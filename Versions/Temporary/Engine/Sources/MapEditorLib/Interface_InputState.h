@@ -34,6 +34,7 @@ struct IInputState
 	virtual void OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) = 0;
 	//
 	virtual void OnContextMenu( const CTPoint<int> &rMousePoint ) = 0;
+
 	//
 	virtual ~IInputState() {}
 };

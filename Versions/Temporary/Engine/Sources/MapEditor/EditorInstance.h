@@ -44,4 +44,4 @@ void StartAnswering( TOpenHandler pfnOpen );
 
 // Stop answering and drop the lock. Safe to call without either.
 void Release();
-}
+} // namespace NEditorInstance

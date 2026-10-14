@@ -477,8 +477,9 @@ int StringCountSubstring( const char *s, const char *what, const int whatSize )
 	}
 	return n;
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-} // local namespace
+} // namespace
 
 // Everything the class does. The public class below is a forwarder; see
 // InteractiveProcess.h for why none of this is declared there.
@@ -495,7 +496,10 @@ struct CInteractiveProcess::SImpl
 	void CleanupHandles();
 	void InternalStop();
 
-	bool IsStarted() const { return child.IsRunning(); }
+	bool IsStarted() const
+	{
+		return child.IsRunning();
+	}
 
 	bool Start( const std::string &szCommandLine, std::string *pszErrorMessage );
 	bool Execute( const std::string &szScript,

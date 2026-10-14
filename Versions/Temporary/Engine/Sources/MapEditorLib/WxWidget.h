@@ -22,6 +22,7 @@
 struct IWxWidget
 {
 	virtual ~IWxWidget() {}
+
 	// The wx window the widget stands for, to parent wx windows on or to lay
 	// out; null while it has none.
 	virtual wxWindow *GetWxWindow() = 0;
@@ -60,6 +61,14 @@ class CWxWindowWidget : public IWidget, public IWxWidget
 
 public:
 	explicit CWxWindowWidget( wxWindow *_pWindow ) : pWindow( _pWindow ) {}
-	virtual void *GetNativeWidget() { return ( pWindow != nullptr ) ? pWindow->GetHandle() : nullptr; }
-	virtual wxWindow *GetWxWindow() { return pWindow; }
+
+	virtual void *GetNativeWidget()
+	{
+		return ( pWindow != nullptr ) ? pWindow->GetHandle() : nullptr;
+	}
+
+	virtual wxWindow *GetWxWindow()
+	{
+		return pWindow;
+	}
 };

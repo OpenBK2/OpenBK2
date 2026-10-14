@@ -7,6 +7,7 @@ class CInterfaceCommandDeclare : public IInterfaceCommand
 
 public:
 	CInterfaceCommandDeclare( IInterfaceBase *_pInterface ) : pInterface( _pInterface ) {}
+
 	void Exec()
 	{
 		NMainLoop::ResetStack();

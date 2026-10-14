@@ -19,18 +19,41 @@ public:
 	                           const std::string &_szDstPath );
 	// IManipulator
 	IManipulatorIterator *Iterate( bool bShowHidden, ECacheType eCache );
-	const SIteratorDesc *GetDesc( const std::string &szName ) const { return 0; }
-	bool GetType( const std::string &szName, std::string *pszType ) const { return false; }
+
+	const SIteratorDesc *GetDesc( const std::string &szName ) const
+	{
+		return 0;
+	}
+
+	bool GetType( const std::string &szName, std::string *pszType ) const
+	{
+		return false;
+	}
+
 	unsigned GetID( const std::string &szName ) const;
 	bool GetName( unsigned nID, std::string *pszName ) const;
 	bool InsertNode( const std::string &szName, int nNodeIndex = NODE_ADD_INDEX );
 	bool RemoveNode( const std::string &szName, int nNodeIndex = NODE_REMOVEALL_INDEX );
-	bool RemoveNodeByID( const std::string &szName, int nNodeID ) { return false; }
+
+	bool RemoveNodeByID( const std::string &szName, int nNodeID )
+	{
+		return false;
+	}
+
 	bool RenameNode( const std::string &szName, const std::string &szNewName );
 	bool GetValue( const std::string &szName, CVariant *pValue ) const;
 	bool SetValue( const std::string &szName, const CVariant &value );
-	bool CheckValue( const std::string &szName, const CVariant &value, bool *pResult ) const { return false; }
-	NDb::IObjMan *GetObjMan() { return 0; }
+
+	bool CheckValue( const std::string &szName, const CVariant &value, bool *pResult ) const
+	{
+		return false;
+	}
+
+	NDb::IObjMan *GetObjMan()
+	{
+		return 0;
+	}
+
 	bool IsNameExists( const std::string &rszName ) const;
 	void GetNameList( CNameMap *pNameMap ) const;
 };
@@ -41,15 +64,21 @@ class CFolderManipulatorIteratorWrapper : public IManipulatorIterator
 	//
 	NFile::CFileIterator fileIterator;
 	std::string szBasePath;
+
 	//
 	struct SEntry
 	{
 		CDBID dbid;
 		bool bObject;
 		std::string szFolderName; // Physical empty folders have no DB resource ID.
+
 		//
-		bool IsObject() const { return bObject; }
+		bool IsObject() const
+		{
+			return bObject;
+		}
 	};
+
 	//
 	typedef std::vector<SEntry> CEntriesList;
 	CEntriesList entriesList;

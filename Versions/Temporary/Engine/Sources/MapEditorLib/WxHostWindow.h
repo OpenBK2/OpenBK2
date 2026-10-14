@@ -51,12 +51,21 @@ class CWxHostWindow : public IWidget, public IWxWidget
 
 public:
 	// IWidget. The panel's handle.
-	virtual void *GetNativeWidget() { return pPanel ? pPanel->GetHandle() : nullptr; }
+	virtual void *GetNativeWidget()
+	{
+		return pPanel ? pPanel->GetHandle() : nullptr;
+	}
 
 	// IWxWidget. The panel, which is what the parent lays out.
-	virtual wxWindow *GetWxWindow() { return pPanel.get(); }
+	virtual wxWindow *GetWxWindow()
+	{
+		return pPanel.get();
+	}
 
-	virtual ~CWxHostWindow() { TearDownWx(); }
+	virtual ~CWxHostWindow()
+	{
+		TearDownWx();
+	}
 
 	// Creates the host: a panel of pParent, which has to be wx's -- a pane, the
 	// document window, or a shortcut bar page. False, with nothing made, for
@@ -71,7 +80,10 @@ public:
 	}
 
 	// The wx window to parent content on, or null before CreateHost succeeded.
-	wxWindow *Root() const { return pPanel.get(); }
+	wxWindow *Root() const
+	{
+		return pPanel.get();
+	}
 
 	// Shows or hides the host.
 	void ShowHost( bool bShow )
@@ -88,11 +100,17 @@ public:
 	}
 
 	// Takes the host down.
-	void DestroyHost() { TearDownWx(); }
+	void DestroyHost()
+	{
+		TearDownWx();
+	}
 
 	// Takes the wx side down now, while whatever it calls back into is still
 	// there. The same as DestroyHost, since there is no MFC window to leave.
-	void DestroyContents() { TearDownWx(); }
+	void DestroyContents()
+	{
+		TearDownWx();
+	}
 
 	// A surface filling the host that scrolls vertically and never
 	// horizontally, for a palette to put its controls on. Null before

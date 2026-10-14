@@ -49,9 +49,15 @@ class CAIGeneralWxWindow : public CWxHostWindow, public CAIGeneralPointsCommands
 	SAIGeneralPointsWindowData::EAIGenPointsLastAction eLastAction = SAIGeneralPointsWindowData::AIGP_NO_ACTIONS;
 
 public:
-	CAIGeneralWxWindow() { Singleton<ICommandHandlerContainer>()->Set( CHID_AIGEN_POINTS_WINDOW, this ); }
+	CAIGeneralWxWindow()
+	{
+		Singleton<ICommandHandlerContainer>()->Set( CHID_AIGEN_POINTS_WINDOW, this );
+	}
 
-	virtual ~CAIGeneralWxWindow() { Singleton<ICommandHandlerContainer>()->Remove( CHID_AIGEN_POINTS_WINDOW ); }
+	virtual ~CAIGeneralWxWindow()
+	{
+		Singleton<ICommandHandlerContainer>()->Remove( CHID_AIGEN_POINTS_WINDOW );
+	}
 
 	bool Build( IWidget *pParent )
 	{
@@ -305,7 +311,10 @@ private:
 		eLastAction = SAIGeneralPointsWindowData::AIGP_NO_ACTIONS;
 	}
 
-	void OnPlayerChanged( wxCommandEvent & ) { Notify( SAIGeneralPointsWindowData::AIGP_PLAYER_JUMP ); }
+	void OnPlayerChanged( wxCommandEvent & )
+	{
+		Notify( SAIGeneralPointsWindowData::AIGP_PLAYER_JUMP );
+	}
 
 	void OnIDSelected( wxListEvent & )
 	{
@@ -323,7 +332,10 @@ private:
 		Notify( SAIGeneralPointsWindowData::AIGP_PARCEL_JUMP );
 	}
 
-	void OnParcelActivated( wxListEvent & ) { Notify( SAIGeneralPointsWindowData::AIGP_PARCEL_EDIT ); }
+	void OnParcelActivated( wxListEvent & )
+	{
+		Notify( SAIGeneralPointsWindowData::AIGP_PARCEL_EDIT );
+	}
 
 	void OnIDsResized( wxSizeEvent &rEvent )
 	{
@@ -357,7 +369,7 @@ private:
 		pParcels->SetColumnWidth( 4, nWidth - nUsed );
 	}
 };
-}
+} // namespace
 
 namespace NAIGeneralView
 {
@@ -375,4 +387,4 @@ IWidget *Create( CPaletteList *pPalettes, IWidget *pPage )
 	}
 	return pWindow;
 }
-}
+} // namespace NAIGeneralView

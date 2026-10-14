@@ -31,6 +31,7 @@ class CRndInstance
 		int nIndex;
 
 		SSector() : fValue( 0.0f ), nIndex( 0 ) {}
+
 		SSector( int _nIndex, float _fValue ) : fValue( _fValue ), nIndex( _nIndex ) {}
 	};
 
@@ -153,6 +154,7 @@ struct SDBRndSector
 	int nIndex;
 
 	SDBRndSector() : fValue( 0.0f ), nIndex( 0 ) {}
+
 	SDBRndSector( int _nIndex, float _fValue ) : fValue( _fValue ), nIndex( _nIndex ) {}
 };
 
@@ -225,4 +227,4 @@ struct SRndReference
 	void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const {}
 };
 
-}
+} // namespace NDb

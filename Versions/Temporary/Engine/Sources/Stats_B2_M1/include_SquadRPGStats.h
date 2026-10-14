@@ -67,11 +67,13 @@ virtual void ToAIUnits( bool bInEditor )
 		availUserActions.Clear();
 	}
 }
+
 //
 virtual const CUserActions *GetUserActions( bool bActionsBy ) const
 {
 	return bActionsBy ? &availUserActions : &availUserExposures;
 }
+
 //
 const bool HasCommand( const int nCmd ) const
 {
@@ -79,4 +81,5 @@ const bool HasCommand( const int nCmd ) const
 	return false;
 	//}CRAP
 }
+
 //

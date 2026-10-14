@@ -84,11 +84,17 @@ public:
 	}
 
 	// Whether it opened where it was left last time.
-	bool WasPlaced() const { return placement.WasPlaced(); }
+	bool WasPlaced() const
+	{
+		return placement.WasPlaced();
+	}
 
 	// On the way out whichever button was used, as CResizeDialog's OnDestroy
 	// does.
-	void SaveState() { placement.Save( this ); }
+	void SaveState()
+	{
+		placement.Save( this );
+	}
 
 	void ReadSelection( CTableSet *pSelectedTables ) const
 	{
@@ -103,7 +109,7 @@ public:
 		}
 	}
 };
-}
+} // namespace
 
 namespace NSelectTables
 {
@@ -127,4 +133,4 @@ bool Run( IWidget *pParent, const std::list<std::string> &rTables, CTableSet *pS
 	}
 	return bAccepted;
 }
-}
+} // namespace NSelectTables

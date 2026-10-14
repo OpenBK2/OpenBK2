@@ -1616,6 +1616,7 @@ ETryStateInterruptResult CFormationBuildEntrenchmentState::TryInterruptState( CA
 }
 
 const int nBuildersPerSegment = 3;
+
 void CFormationBuildEntrenchmentState::SetEndPoint( const CVec2 &vPos )
 {
 	vEndPoint = vPos;
@@ -2789,6 +2790,7 @@ IUnitState *CFormationUseSpyglassState::Instance( CFormation *pFormation, const 
 {
 	return new CFormationUseSpyglassState( pFormation, point );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CFormationUseSpyglassState::CFormationUseSpyglassState( CFormation *_pFormation, const CVec2 &point )
 		: pFormation( _pFormation )

@@ -84,6 +84,7 @@ class CGltfSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 	void BuildMatrices();
 	void ApplyBoneMutators( STime time );
 	void CheckJustLoaded();
+
 	void Touch()
 	{
 		CheckJustLoaded();
@@ -100,17 +101,33 @@ public:
 			const NGltf::TGltfFilePtr &file, const std::string &clipName, int firstFrame, int lastFrame, float *seconds );
 	CGltfSkeletonAnimator();
 	CGltfSkeletonAnimator( const SSkeletonHandle &_skeletonH, CFuncBase<STime> *_pTime );
+
 	~CGltfSkeletonAnimator() override {}
 
-	bool HasSkeleton() const { return !skeleton.boneNames.empty(); }
+	bool HasSkeleton() const
+	{
+		return !skeleton.boneNames.empty();
+	}
+
 	int operator&( CStructureSaver &f );
 
 	int GetBoneIndex( const char *pszName ) override;
 	void GetBoneNames( std::vector<std::string> *pBoneNames ) override;
 
-	int GetChannelCount() override { return 0; }
-	int GetChannelIndex( const std::string & ) override { return INVALID_CHANNEL_ID; }
-	float GetChannelValue( int ) override { return 0.0f; }
+	int GetChannelCount() override
+	{
+		return 0;
+	}
+
+	int GetChannelIndex( const std::string & ) override
+	{
+		return INVALID_CHANNEL_ID;
+	}
+
+	float GetChannelValue( int ) override
+	{
+		return 0.0f;
+	}
 
 	SAnimID AddAnimation( STime tStartTime,
 	                      const SAnimHandle &h,
@@ -154,4 +171,4 @@ public:
 	CFuncBase<SFBTransform> *CreateTransform( int nBoneIndex ) override;
 };
 
-}
+} // namespace NAnimation

@@ -31,6 +31,7 @@ struct SSelectionSet
 // Операция Undo сама знает что надо отменить
 // Должна уметь выполнять обратную операцию
 struct IView;
+
 struct IController : public CObjectBase
 {
 	// Выполнить Undo ( кроме указанного View )
@@ -50,12 +51,14 @@ struct IController : public CObjectBase
 // Управляющий операциями Undo
 // Складывает из в буфера и умеет из перекладывать
 typedef std::list<std::string> CDescriptionList;
+
 struct IControllerContainer : public CObjectBase
 {
 	enum
 	{
 		tidTypeID = 0x1408A3C2
 	};
+
 	//
 	// Добавить операцию
 	virtual void Add( IController *pOperation ) = 0;
@@ -73,6 +76,10 @@ struct IControllerContainer : public CObjectBase
 	virtual int GetDescriptionList( CDescriptionList *pDescriptionList, bool bUndoList ) const = 0;
 	// Удалить временные Undo Operations
 	virtual int RemoveTemporaryControllers( const std::string &rszTemporaryLabel ) = 0;
+
 	// Modal property editors need complete undo data until OK or Cancel.
-	virtual bool IsEditSessionActive() const { return false; }
+	virtual bool IsEditSessionActive() const
+	{
+		return false;
+	}
 };

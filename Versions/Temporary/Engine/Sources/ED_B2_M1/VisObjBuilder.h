@@ -18,6 +18,7 @@ class CVisObjBuilder : public CBuildDataBuilder, public ICommandHandler
 		RT_SKELETON = 5,
 		RT_COUNT = 6,
 	};
+
 	//
 	static const char VISOBJ_TYPE_NAME[];
 	static const char MODEL_TYPE_NAME[];
@@ -61,7 +62,11 @@ protected:
 	bool IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView );
 
 	//CBuildDataBuilder
-	const std::string &GetBuildDataTypeName() { return BUILD_DATA_TYPE_NAME; }
+	const std::string &GetBuildDataTypeName()
+	{
+		return BUILD_DATA_TYPE_NAME;
+	}
+
 	bool InternalInsertObject( std::string *pszObjectTypeName,
 	                           std::string *pszUniqueObjectName,
 	                           bool bFromMainMenu,

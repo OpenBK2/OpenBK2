@@ -135,7 +135,7 @@ namespace
 		}
 	}
 
-}
+} // namespace
 
 struct CFace::SImpl
 {
@@ -205,6 +205,7 @@ struct CFace::SImpl
 };
 
 CFace::CFace() : pImpl( new SImpl ) {}
+
 CFace::~CFace() = default;
 
 std::unique_ptr<CFace> CFace::OpenFile( const std::string &szFile, int nFaceIndex, std::string *pszError )
@@ -520,4 +521,4 @@ int CFace::GetKerning( uint32_t nLeft, uint32_t nRight ) const
 	return static_cast<int>( std::lround( delta.x / 64.0 ) );
 }
 
-}
+} // namespace NFontRaster

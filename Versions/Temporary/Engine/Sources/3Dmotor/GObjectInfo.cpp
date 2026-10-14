@@ -929,7 +929,7 @@ namespace
 		}
 		return !pResult->verts.empty() && !pResult->geometry.empty();
 	}
-}
+} // namespace
 
 void SetLoadMode( NGScene::ELoadMode eMode )
 {

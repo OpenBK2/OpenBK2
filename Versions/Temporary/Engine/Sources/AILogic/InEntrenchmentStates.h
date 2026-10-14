@@ -5,6 +5,7 @@
 #include "CommonStates.h"
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CAIUnit;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CInEntrenchmentStatesFactory : public IStatesFactory
 {
@@ -14,7 +15,11 @@ class CInEntrenchmentStatesFactory : public IStatesFactory
 
 public:
 	static IStatesFactory *Instance();
-	int operator&( IBinSaver &saver ) { return 0; }
+
+	int operator&( IBinSaver &saver )
+	{
+		return 0;
+	}
 
 	virtual struct IUnitState *ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
 	virtual struct IUnitState *ProduceRestState( class CQueueUnit *pUnit );
@@ -23,6 +28,7 @@ public:
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CSoldierRestInEntrenchmentState : public IUnitState, public CStandartBehaviour
 {
@@ -46,6 +52,7 @@ public:
 	static IUnitState *Instance( class CSoldier *pSoldier, class CEntrenchment *pEntrenchment );
 
 	CSoldierRestInEntrenchmentState() : pSoldier( 0 ) {}
+
 	CSoldierRestInEntrenchmentState( class CSoldier *pSoldier );
 
 	void SetUnitTo( class CEntrenchment *pEntrenchment );
@@ -53,14 +60,27 @@ public:
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
-	virtual EUnitStateNames GetName() { return EUSN_REST_ENTRENCHMENT; }
-	virtual bool IsRestState() const { return true; }
-	virtual bool IsAttackingState() const { return false; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_REST_ENTRENCHMENT;
+	}
+
+	virtual bool IsRestState() const
+	{
+		return true;
+	}
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CSoldierAttackInEtrenchState : public IUnitAttackingState
 {
@@ -91,6 +111,7 @@ public:
 		f.Add( 9, &damageToEnemyUpdater );
 		return 0;
 	}
+
 	//
 	void AnalyzeCurrentState();
 	void FinishState();
@@ -99,14 +120,27 @@ public:
 	static IUnitState *Instance( class CSoldier *pSoldier, class CAIUnit *pEnemy, const bool bSwarmAttack );
 
 	CSoldierAttackInEtrenchState() : pSoldier( 0 ) {}
+
 	CSoldierAttackInEtrenchState( class CSoldier *pSoldier, class CAIUnit *pEnemy, const bool bSwarmAttack );
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return true; }
+
+	virtual bool IsAttackingState() const
+	{
+		return true;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 
-	virtual bool IsAttacksUnit() const { return true; }
+	virtual bool IsAttacksUnit() const
+	{
+		return true;
+	}
 	virtual class CAIUnit *GetTargetUnit() const;
-	virtual EUnitStateNames GetName() { return EUSN_ATTACK_IN_ENTRENCH; }
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_ATTACK_IN_ENTRENCH;
+	}
 };

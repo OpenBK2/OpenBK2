@@ -23,6 +23,7 @@ class CDeadUnit : public CLinkObject
 
 	SVector tileCenter;
 	bool bVisibleWhenDie = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CLinkObject *)this );
@@ -39,6 +40,7 @@ class CDeadUnit : public CLinkObject
 
 public:
 	CDeadUnit() {}
+
 	CDeadUnit( class CCommonUnit *_pDieObj,
 	           const NTimer::STime _dieTime,
 	           const EActionNotify _dieAction,

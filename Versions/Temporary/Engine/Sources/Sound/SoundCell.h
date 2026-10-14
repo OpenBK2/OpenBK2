@@ -20,8 +20,16 @@ public:
 	void Clear();
 	int operator&( IBinSaver &saver );
 
-	int GetRadius() const { return nRadius; }
-	void SetRadius( int nRad ) { nRadius = nRad; }
+	int GetRadius() const
+	{
+		return nRadius;
+	}
+
+	void SetRadius( int nRad )
+	{
+		nRadius = nRad;
+	}
+
 	void AddSound( class CSound *pSound );                  // добавляет звук и пересчитывает радиус звучания
 	void RemoveSound( const uint16_t wID, ISFX *pSFX = 0 ); // удаляет звук и пересчитывает радиус звучания
 	CSound *GetSound( const uint16_t wID );
@@ -31,7 +39,11 @@ public:
 	// все доигравшие звуки пометить как доигравшие
 	void Update( ISFX *pSFX );
 
-	bool HasSounds() const { return sounds.begin() != sounds.end(); }
+	bool HasSounds() const
+	{
+		return sounds.begin() != sounds.end();
+	}
+
 	//		bool HearSounds() const { return hearableCells.begin() != hearableCells.end(); }
 
 	void SetLastHearCombat( const NTimer::STime hearTime );
@@ -49,6 +61,7 @@ public:
 			}
 		}
 	}
+
 	// для перебора всех звуков.
 	template <class TEnumFunc>
 	void EnumAllSounds( TEnumFunc func, int nRadius )

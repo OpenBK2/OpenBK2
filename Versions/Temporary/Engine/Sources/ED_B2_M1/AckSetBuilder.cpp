@@ -47,6 +47,7 @@ struct SAckDesc
 	const char *pszCodeName;
 	NDb::EUnitAckType eType;
 };
+
 static SAckDesc s_AckDescs[] = {
 	{ "ACK_POSITIVE", "ACK_POSITIVE", NDb::ACK_POSITIVE },
 	{ "ACK_NEGATIVE", "ACK_NEGATIVE", NDb::ACK_NEGATIVE },
@@ -86,6 +87,7 @@ static SAckDesc s_AckDescs[] = {
 	{ 0, 0, NDb::ACK_NONE } };
 static std::unordered_map<std::string, std::string> s_AckTypesMap;
 typedef std::unordered_map<CDBID, std::string> CDBIDMap;
+
 static struct SEditorAckTypesAutoMagic
 {
 	SEditorAckTypesAutoMagic()
@@ -133,19 +135,22 @@ struct SAckSetKey
 	std::string szTypeName;
 	int nSubtype;
 	int nVoiceID;
+
 	//
 	SAckSetKey() : nSubtype( -1 ), nVoiceID( -1 ) {}
+
 	SAckSetKey( const std::string &_szTypeName, int _nSubtype, int _nVoiceID )
 			: szTypeName( _szTypeName ), nSubtype( _nSubtype ), nVoiceID( _nVoiceID )
 	{
 	}
+
 	//
 	bool operator==( const SAckSetKey &key ) const
 	{
 		return key.szTypeName == szTypeName && key.nSubtype == nSubtype && key.nVoiceID == nVoiceID;
 	}
 };
-}
+} // namespace NAcks
 
 // Specialised at namespace scope rather than inside the old nstl namespace:
 // std::hash can only be specialised for std, and C++17 allows the qualified
@@ -169,6 +174,7 @@ struct SAckSet
 		std::string szFileName;
 		float fProbability;
 	};
+
 	std::unordered_map<std::string, std::list<SAck>> acks;
 };
 
@@ -375,7 +381,7 @@ bool UpdateAckSets( const std::string &szExcelFileName,
 	return true;
 }
 
-}
+} // namespace NAcks
 
 // ************************************************************************************************************************ //
 // **
@@ -428,6 +434,7 @@ bool CAcksBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator,
 	}
 	return true;
 }
+
 //CRAP} PLAIN_TEXT
 
 bool CAcksBuilder::IsUniqueObjectName( const std::string &szObjectType, const std::string &szObjectName )

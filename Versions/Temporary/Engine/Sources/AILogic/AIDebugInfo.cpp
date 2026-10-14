@@ -19,6 +19,7 @@ struct SProfileInfo
 	uint16_t wDir = {};
 
 	SProfileInfo() {}
+
 	SProfileInfo( const CVec2 &_vCenter, const uint16_t _wDir, const NDb::SPassProfile &_profile )
 			: vCenter( _vCenter ), wDir( _wDir ), profile( _profile )
 	{
@@ -74,4 +75,4 @@ void ToggleLockProfiles()
 	}
 }
 
-}
+} // namespace NAIVisInfo

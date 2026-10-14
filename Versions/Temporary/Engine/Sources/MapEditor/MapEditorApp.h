@@ -9,7 +9,7 @@ namespace NVFS
 {
 struct IVFS;
 struct IFileCreator;
-}
+} // namespace NVFS
 
 struct IEditorModule;
 
@@ -46,7 +46,10 @@ public:
 	virtual ~CEditorApp();
 
 	// The one application object, or null before it is made.
-	static CEditorApp *Get() { return pInstance; }
+	static CEditorApp *Get()
+	{
+		return pInstance;
+	}
 
 	// What InitInstance did. rArgs is the command line already split and
 	// unquoted, without the program's name: what wx hands its wxApp. It was the

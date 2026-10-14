@@ -71,7 +71,7 @@ inline void UnlockRange( IProgressHook *pProgressHook, const std::string &szFile
 	}
 	DebugUnLock( szFileName, nLine );
 }
-}
+} // namespace NProgressHook
 
 #ifndef _FINALRELEASE
 #define LOCK_RANGE( pProgressHook, nLength ) NProgressHook::LockRange( pProgressHook, nLength, __FILE__, __LINE__ );

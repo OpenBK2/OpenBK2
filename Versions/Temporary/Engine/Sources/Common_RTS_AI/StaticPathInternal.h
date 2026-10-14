@@ -19,6 +19,7 @@ class CCommonStaticPath : public IStaticPath
 	SVector startTile, finishTile;
 	CVec2 finishPoint;
 	CPtr<CAIMap> pAIMap;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &path );
@@ -32,6 +33,7 @@ class CCommonStaticPath : public IStaticPath
 
 public:
 	CCommonStaticPath() : nLen( -1 ), startTile( -1, -1 ), finishTile( -1, -1 ), finishPoint( VNULL2 ) {}
+
 	CCommonStaticPath( class CCommonPathFinder *pStaticPathFinder, CAIMap *pAIMap );
 
 	// передвинуть начальный тайл на path[nStart]
@@ -41,7 +43,10 @@ public:
 	// передвинуть конечную точку на vMove
 	void MoveFinishPointBy( const CVec2 &vMove );
 
-	const int GetLength() const { return nLen; }
+	const int GetLength() const
+	{
+		return nLen;
+	}
 
 	virtual const SVector GetTile( const int n ) const
 	{
@@ -49,9 +54,20 @@ public:
 		return path[n];
 	}
 
-	const SVector GetStartTile() const { return startTile; }
-	const SVector GetFinishTile() const { return finishTile; }
-	const CVec2 &GetFinishPoint() const { return finishPoint; }
+	const SVector GetStartTile() const
+	{
+		return startTile;
+	}
+
+	const SVector GetFinishTile() const
+	{
+		return finishTile;
+	}
+
+	const CVec2 &GetFinishPoint() const
+	{
+		return finishPoint;
+	}
 
 	bool MergePath( IStaticPath *pAppendant, const int nStartTile );
 

@@ -13,6 +13,7 @@ public:
 	EMPChatStatus eStatus;
 	CPtr<IListControlItem> pListItem;
 	CPtr<IButton> pStatusIcon;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szName );
@@ -23,6 +24,7 @@ public:
 	}
 
 	CClientListData() {}
+
 	CClientListData( const std::string &_szName, const EMPChatStatus _eStatus )
 			: szName( _szName ), eStatus( _eStatus ) {};
 };
@@ -33,11 +35,13 @@ class CClientListViewer : public IDataViewer
 public:
 	ZDATA
 	CPtr<class CInterfaceMPLobby> pInterface;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pInterface );
 		return 0;
 	}
+
 	CClientListViewer() {};
 	CClientListViewer( class CInterfaceMPLobby *_pInterface ) : pInterface( _pInterface ) {};
 	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;

@@ -71,4 +71,4 @@ CLangNode *CreateAttributeDefNode( ESimpleType eType );
 void SetNameToAttrDef( CLangNode *pNode, const std::string &szName );
 
 bool IsEqualDefs( CLangNode *pNode1, CLangNode *pNode2 );
-}
+} // namespace NLang

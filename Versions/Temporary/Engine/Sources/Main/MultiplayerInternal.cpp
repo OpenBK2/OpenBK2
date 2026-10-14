@@ -16,6 +16,7 @@ const int nNetTimeout = 60; // As in SNetDriverConsts default constructor.
 //const int nNetTimeout = 300;
 
 const int N_PACKET_SIZE = 32768; // Must be equal with buffer size from Net/NetStream.h
+
 //const int N_PACKET_SIZE = 128000;	// Must be equal with buffer size from Net/NetStream.h
 
 CMultiplayerInternal::CMultiplayerInternal( const NDb::SNetGameConsts *_pConsts, IAICmdsAutoMagic *pCmds )
@@ -217,6 +218,7 @@ IMultiplayer *CreateMultiplayerHost( IAICmdsAutoMagic *pCmds, const NDb::SNetGam
 	pRes->CreateAsHost();
 	return pRes;
 }
+
 IMultiplayer *
 CreateMultiplayerClient( IAICmdsAutoMagic *pCmds, const NDb::SNetGameConsts *pConsts, const char *pszIPAddress )
 {

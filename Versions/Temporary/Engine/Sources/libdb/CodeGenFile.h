@@ -8,8 +8,8 @@ namespace NTypeDef
 {
 	struct STypeDef;
 	class CTerminalTypesDescriptor;
-}
-}
+} // namespace NTypeDef
+} // namespace NDb
 
 namespace NLang
 {
@@ -20,6 +20,7 @@ namespace NCodeGen
 {
 
 class CNamespace;
+
 class CFile : public CXmlResource
 {
 	OBJECT_NOCOPY_METHODS( CFile );
@@ -32,15 +33,19 @@ class CFile : public CXmlResource
 
 public:
 	CFile() {}
+
 	CFile( NLang::CFileNode *pFileNode,
 	       const CNodes2TypeDefs &nodes2TypeDefs,
 	       const std::string &szRootDir,
 	       NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
 
-	const std::string &GetName() const { return szName; }
+	const std::string &GetName() const
+	{
+		return szName;
+	}
 
 	void GenerateCode( const std::string &szRootDir );
 	int operator&( IXmlSaver &saver );
 };
 
-}
+} // namespace NCodeGen

@@ -39,7 +39,10 @@ public:
 		Clear();
 	}
 
-	void Clear() { mask.FillZero(); }
+	void Clear()
+	{
+		mask.FillZero();
+	}
 
 	void GetLocalCoord( const CVec2 &v, int *pnX, int *pnY )
 	{
@@ -77,6 +80,7 @@ public:
 		NImage::SaveImageAsTGA( &imageStream, mask );
 	}
 };
+
 static CDebugMask mask;
 
 #endif //_DEBUG_GENERATION
@@ -88,7 +92,10 @@ class CPointsSort
 public:
 	CPointsSort( const CVec2 &v1 ) : vStart( v1 ) {}
 
-	bool operator()( const CVec2 &v1, const CVec2 &v2 ) const { return fabs2( v1 - vStart ) < fabs2( v2 - vStart ); }
+	bool operator()( const CVec2 &v1, const CVec2 &v2 ) const
+	{
+		return fabs2( v1 - vStart ) < fabs2( v2 - vStart );
+	}
 };
 
 struct SConnectedPoint
@@ -97,6 +104,7 @@ struct SConnectedPoint
 	int nNumber;
 
 	SConnectedPoint() {}
+
 	SConnectedPoint( const CVec2 &_vPoint, const int _nNumber ) : vPoint( _vPoint ), nNumber( _nNumber ) {}
 };
 
@@ -106,6 +114,7 @@ struct SPolygon
 };
 
 static const float fEps = 0.0001f;
+
 class CPassabilityProfileCreator
 {
 	std::list<CSegment> segments;

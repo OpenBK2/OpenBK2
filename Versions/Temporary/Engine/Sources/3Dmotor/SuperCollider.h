@@ -1,5 +1,6 @@
 #pragma once
 #include "VolumeContainer.h"
+
 namespace NCollider
 {
 bool DoesTriSphereIntersect( const CVec3 &a1, const CVec3 &b1, const CVec3 &c1, const CVec3 &ptCenter, float fR );
@@ -10,7 +11,12 @@ struct SSegment
 	float fC0, fC1, fC2, fC3, fC4, fC5; // координаты прямой в 6D пространстве Плюкера
 
 	SSegment() {}
-	SSegment( const CVec3 &p, const CVec3 &q ) { CalcCoords( p, q ); }
+
+	SSegment( const CVec3 &p, const CVec3 &q )
+	{
+		CalcCoords( p, q );
+	}
+
 	// вычисление координат по двум точкам
 	void CalcCoords( const CVec3 &p, const CVec3 &q )
 	{
@@ -37,10 +43,12 @@ protected:
 		int n1, n2, n3, nUserDataIndex;
 		SPlane plane;
 	};
+
 	struct STriangleSegments
 	{
 		SSegment s1, s2, s3;
 	};
+
 	struct SVelocity
 	{
 		CVec3 vel, normVel;
@@ -52,6 +60,7 @@ protected:
 			Normalize( &normVel );
 		}
 	};
+
 	std::vector<SGlobalTriangle> tris;
 	std::vector<STriangleSegments> trisSegments; // CRAP - most of the time this data is not used
 	std::vector<CVec3> points;
@@ -85,6 +94,7 @@ public:
 		userData.clear();
 		volume.Init( b.s.ptCenter - b.ptHalfBox, b.s.ptCenter + b.ptHalfBox, fLeng );
 	}
+
 	void AddEntity( const SHMatrix &pos,
 	                const std::vector<CVec3> &_points,
 	                const std::vector<STriangle> &tris,
@@ -94,6 +104,7 @@ public:
 		userData.push_back( ud );
 		CSuperCollider::AddEntity( pos, _points, tris, nUserDataIndex );
 	}
+
 	template <class TResultAnalyzer>
 	void Collide( const SSphere &sphere, const CVec3 &vel, TResultAnalyzer *pResult )
 	{
@@ -142,6 +153,10 @@ public:
 		}
 		return false;
 	}
-	bool DoesIntersect( const CVec3 &ptCenter, float fR ) { return DoesIntersect( ptCenter, fR, &skipAnalyzer ); }
+
+	bool DoesIntersect( const CVec3 &ptCenter, float fR )
+	{
+		return DoesIntersect( ptCenter, fR, &skipAnalyzer );
+	}
 };
-}
+} // namespace NCollider

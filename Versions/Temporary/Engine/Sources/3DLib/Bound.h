@@ -1,13 +1,20 @@
 #pragma once
+
 template <class T>
 struct SGetSelf
 {
-	const T &operator()( const T &a ) const { return a; }
+	const T &operator()( const T &a ) const
+	{
+		return a;
+	}
 };
+
 struct SBoundCalcer
 {
 	CVec3 ptMin, ptMax;
+
 	SBoundCalcer() : ptMin( 1e38f, 1e38f, 1e38f ), ptMax( -1e38f, -1e38f, -1e38f ) {}
+
 	template <class TSet, class TGetPoint>
 	void LookSet( const TSet &a, TGetPoint GetPoint )
 	{
@@ -22,11 +29,13 @@ struct SBoundCalcer
 			ptMax.z = (std::max)( ptMax.z, p.z );
 		}
 	}
+
 	void Clear()
 	{
 		ptMin = CVec3( 1e38f, 1e38f, 1e38f );
 		ptMax = CVec3( -1e38f, -1e38f, -1e38f );
 	}
+
 	void Add( const CVec3 &p, float fRadius )
 	{
 		ptMin.x = (std::min)( ptMin.x, p.x - fRadius );
@@ -36,6 +45,7 @@ struct SBoundCalcer
 		ptMax.y = (std::max)( ptMax.y, p.y + fRadius );
 		ptMax.z = (std::max)( ptMax.z, p.z + fRadius );
 	}
+
 	void Add( const CVec3 &_p )
 	{
 		ptMin.x = (std::min)( ptMin.x, _p.x );
@@ -45,17 +55,24 @@ struct SBoundCalcer
 		ptMax.y = (std::max)( ptMax.y, _p.y );
 		ptMax.z = (std::max)( ptMax.z, _p.z );
 	}
+
 	void Add( const SBoundCalcer &bc )
 	{
 		ptMin.Minimize( bc.ptMin );
 		ptMax.Maximize( bc.ptMax );
 	}
+
 	void Add( const SBound &bv )
 	{
 		ptMin.Minimize( bv.s.ptCenter - bv.ptHalfBox );
 		ptMax.Maximize( bv.s.ptCenter + bv.ptHalfBox );
 	}
-	bool IsEmpty() const { return ptMin.x > ptMax.x; }
+
+	bool IsEmpty() const
+	{
+		return ptMin.x > ptMax.x;
+	}
+
 	void Make( SBound *pRes ) const
 	{
 		if ( IsEmpty() )
@@ -67,6 +84,7 @@ struct SBoundCalcer
 			pRes->BoxInit( ptMin, ptMax );
 		}
 	}
+
 	void Make( SSphere *pRes ) const
 	{
 		if ( IsEmpty() )

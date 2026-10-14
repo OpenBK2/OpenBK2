@@ -116,6 +116,7 @@ static size_t FindNextSlash( const std::string &szFullFilePath, const int nStart
 	}
 	return std::string::npos;
 }
+
 void SplitPath( std::list<std::string> *pRes, const std::string &szFullFilePath )
 {
 	size_t nLastPos = 0;
@@ -280,6 +281,7 @@ void AppendSlash( std::string *pFilePath, const char cSlash )
 		( *pFilePath ) += cSlash;
 	}
 }
+
 void ConvertSlashes( std::string *pFilePath, const char cFrom, const char cTo )
 {
 	for ( std::string::iterator it = pFilePath->begin(); it != pFilePath->end(); ++it )
@@ -343,4 +345,4 @@ int CFilePath::operator&( IBinSaver &saver )
 	return 0;
 }
 
-}
+} // namespace NFile

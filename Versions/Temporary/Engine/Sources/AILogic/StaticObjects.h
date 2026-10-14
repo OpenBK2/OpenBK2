@@ -21,7 +21,7 @@ struct SEntrenchmentRPGStats;
 struct SBridgeRPGStats;
 struct SMineRPGStats;
 struct SMechUnitRPGStats;
-}
+} // namespace NDb
 template <bool bOnlyContainers>
 class CStObjIter;
 typedef std::list<CPtr<CBuilding>> CStoragesList;
@@ -33,6 +33,7 @@ typedef std::list<CPtr<CBuilding>> CStoragesList;
 struct IObstacle;
 class CUpdatableObj;
 class CBridgeSpan;
+
 class CStaticObjects : public CAIObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CStaticObjects );
@@ -40,6 +41,7 @@ class CStaticObjects : public CAIObjectBase
 	typedef CAreaMap<IObstacle, CPtr<IObstacle>, SVector, int> ObstacleAreaMap;
 	typedef det_map<int, CPtr<IObstacle>> ObstacleObjectMap;
 	typedef CAreaMap<CExistingObject, CObj<CExistingObject>, SVector, int> StaticObjectsAreaMap;
+
 	struct SSegmentObjectsSort
 	{
 		bool operator()( const CPtr<CStaticObject> &segmObj1, const CPtr<CStaticObject> &segmObj2 ) const;
@@ -78,7 +80,12 @@ public:
 		void UpdateForParty( const int nParty );
 		//void Segment();
 		void EnumStoragesForParty( const int nParty, IEnumStoragesPredicate *pPred );
-		void Init() { Clear(); }
+
+		void Init()
+		{
+			Clear();
+		}
+
 		void EnumStoragesInRange( const CVec2 &vCenter,
 		                          const int nParty,
 		                          const float fMaxPathLenght,
@@ -143,10 +150,25 @@ public:
 	void RemoveFromAreaMap( CExistingObject *pObj );
 	void RemoveObjectFromAreaMapTile( CExistingObject *pObj, const SVector &tile );
 
-	StaticObjectsAreaMap &GetAreaMap() { return areaMap; }
-	StaticObjectsAreaMap &GetContainersAreaMap() { return containersAreaMap; }
-	void SetIterCreated( bool _bCreated ) { bIterCreated = _bCreated; }
-	bool IsIterCreated() const { return bIterCreated; }
+	StaticObjectsAreaMap &GetAreaMap()
+	{
+		return areaMap;
+	}
+
+	StaticObjectsAreaMap &GetContainersAreaMap()
+	{
+		return containersAreaMap;
+	}
+
+	void SetIterCreated( bool _bCreated )
+	{
+		bIterCreated = _bCreated;
+	}
+
+	bool IsIterCreated() const
+	{
+		return bIterCreated;
+	}
 
 public:
 	CStaticObjects()
@@ -154,6 +176,7 @@ public:
 				obstacles( SConsts::STATIC_OBJ_CELL ), bIterCreated( false )
 	{
 	}
+
 	void Init( const int nMapTileSizeX, const int nMapTileSizeY );
 
 	void PostAllObjectsInit();

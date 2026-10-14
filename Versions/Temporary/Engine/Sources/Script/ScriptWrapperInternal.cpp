@@ -150,7 +150,8 @@ int CScriptWrapper::RunScriptFile( const char *pszFileName )
 	return ( script.DoBuffer( &( buffer[0] ), nSize, "Script" ) == 0 );
 }
 
-} // namespace
+} // namespace NScript
+
 using namespace NScript;
 REGISTER_SAVELOAD_CLASS( SCRIPT, 0x11061C00, CScriptWrapper )
 BASIC_REGISTER_CLASS( SCRIPT, IScriptWrapper )

@@ -35,6 +35,7 @@ struct SUserData
 		NPT_START = 4,
 		NPT_COUNT = 5,
 	};
+
 	//
 	struct SMayaExportData
 	{
@@ -93,6 +94,7 @@ struct SUserData
 			return 0;
 		}
 	};
+
 	//
 	struct SObjectTypeData
 	{
@@ -106,6 +108,7 @@ struct SUserData
 		//CBrowsePathMap browsePathMap;						// пути для диалогов OpenFile и т.д.
 		CExpandedPropertySet expandedPropertySet; // открытые ветки в Property Control
 		CExpandedObjectSet expandedObjectSet;     // открытые ветки в дереве обьектов
+
 		//std::string szEditorSettingsFileName;					// имя файла с настройками редактора, если не задан генерируется по умолчанию
 		//std::string szExporterSettingsFileName;				// имя файла с настройками экспортера, если не задан генерируется по умолчанию
 		//std::string szBuilderSettingsFileName;					// имя файла с настройками компоновщика, если не задан генерируется по умолчанию
@@ -124,6 +127,7 @@ struct SUserData
 			return 0;
 		}
 	};
+
 	typedef std::list<std::string> CRecentList;
 	typedef std::vector<COLORREF> CColorList;
 	typedef std::unordered_map<std::string, SObjectTypeData> CObjectTypeDataMap;
@@ -138,6 +142,7 @@ struct SUserData
 		struct SPropertyControlData
 		{
 			std::string szLUAKeyWordsFileName;
+
 			// serializing...
 			int operator&( IXmlSaver &xs )
 			{
@@ -164,6 +169,7 @@ struct SUserData
 				return 0;
 			}
 		};
+
 		typedef std::unordered_map<std::string, SObjectTypeData> CObjectTypeDataMap;
 
 		std::string szVersion;
@@ -203,6 +209,7 @@ struct SUserData
 			return 0;
 		}
 	};
+
 	SConstUserData constUserData;
 	//
 	CRecentList recentList;                                 // resent list for next and previous objects
@@ -237,19 +244,23 @@ struct SUserData
 	int nFocusedGDBBrowserID;        // текущее активное окно с каталогамми
 	//
 	std::string szOpenedMODFolder;
+
 	//
 	struct SPCSelectionData
 	{
 		CVariant value;
 	};
+
 	typedef CControlSelection<std::string, SPCSelectionData> CPCSelection;
 	CPCSelection pcSelection;
 	//
 	bool bShowLogMessages;
 	bool bShowLogWarnings;
 	bool bShowLogErrors;
+
 	//
 	SUserData() : bShowLogMessages( true ), bShowLogWarnings( true ), bShowLogErrors( true ) {}
+
 	//
 	int operator&( IXmlSaver &xs )
 	{
@@ -321,6 +332,7 @@ struct SUserData
 		std::string szPathPrefix = GetPath( type );
 		return ::NormalizePath( pszPath, bFile, bExists, bReturnAbsolutePath, szPathPrefix, pbAbsolutePath );
 	}
+
 	//
 	template <class TSettings>
 	bool SerializeSettings( TSettings &rSettings,
@@ -388,6 +400,7 @@ struct IUserDataContainer : public CObjectBase
 	{
 		tidTypeID = 0x1408AB40
 	};
+
 	// Получить User Data
 	virtual SUserData *Get() = 0;
 	//

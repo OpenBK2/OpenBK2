@@ -13,7 +13,7 @@ namespace NDb
 struct SComplexSoundDesc;
 enum EUnitAckType : int;
 enum EReinforcementType : int;
-};
+}; // namespace NDb
 // optimisation (singleton cache)
 typedef class CConstructorInfo *PCConstructorInfo;
 STATS_B2_M1_EXPORT PCConstructorInfo &ConstructorInfo();
@@ -51,6 +51,7 @@ enum EArmorDirection
 	{                                              \
 		arr[i].fun( val );                           \
 	}
+
 /*
 enum EAIClass
 {
@@ -74,6 +75,7 @@ inline int GetRandom( int nAverage, int nRandom )
 	RecordRandomCall();
 	return NRandom::RandomCheck( nAverage - nRandom, nAverage + nRandom );
 }
+
 inline float GetRandom( float fAverage, int nRandom )
 {
 	if ( nRandom <= 0 )
@@ -84,11 +86,13 @@ inline float GetRandom( float fAverage, int nRandom )
 	RecordRandomCall();
 	return NRandom::RandomCheck( fAverage - float( nRandom ), fAverage + float( nRandom ) );
 }
+
 inline int GetPositiveRandom( int nAverage, int nRandom )
 {
 	RecordRandomCall();
 	return (std::max)( 0, NRandom::Random( nAverage - nRandom, nAverage + nRandom ) );
 }
+
 inline float GetPositiveRandom( float fAverage, int nRandom )
 {
 	RecordRandomCall();
@@ -102,7 +106,7 @@ struct SUnitSpecialAblityDesc;
 enum EUnitSpecialAbility : int;
 struct SAIGameConsts;
 struct SAckSetRPGStats;
-};
+}; // namespace NDb
 
 const NDb::SComplexSoundDesc *ChooseAcknowledgement( const NDb::SAckSetRPGStats *pSet, const NDb::EUnitAckType type );
 

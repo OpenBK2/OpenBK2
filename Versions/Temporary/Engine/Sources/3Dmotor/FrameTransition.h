@@ -31,7 +31,7 @@ namespace NDefFTVals
 	const bool B_DEF_FT_RANDOM_DIR = true;
 	const CVec2 V_DEF_FT_TRANSITION_DIR( 0, 0 );
 	const float F_DEF_FT_TRANSITION_LENGTH = 3.0f;
-}
+} // namespace NDefFTVals
 
 struct SFrameTransitionInfo
 {
@@ -53,6 +53,7 @@ struct SFrameTransitionInfo
 	float fQuadsGroup2MaxZ;
 	float fQuadsGroup2MinAlpha;
 	float fQuadsGroup2MaxAlpha;
+
 	//
 	SFrameTransitionInfo()
 			: nEffectDuration( NDefFTVals::N_DEF_FT_EFFECT_DURATION ), bZoom( NDefFTVals::B_DEF_FT_ZOOM ),
@@ -83,4 +84,4 @@ _3DMOTOR_EXPORT CRTPtr *GetFrameTransitionCapture1(
 
 NGfx::CTexture *GetTexture( CRTPtr *pTex );
 
-}
+} // namespace NGScene

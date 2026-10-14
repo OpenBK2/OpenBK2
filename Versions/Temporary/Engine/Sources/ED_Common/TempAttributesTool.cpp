@@ -20,6 +20,7 @@ namespace NMEGeomAttribs
 class CTempAttributesTool : public IExportTool
 {
 	OBJECT_NOCOPY_METHODS( CTempAttributesTool );
+
 	//
 	struct SDesc
 	{
@@ -27,8 +28,10 @@ class CTempAttributesTool : public IExportTool
 		std::string szRootJoint;
 		granny_file *pFile;
 		granny_file_info *pFileInfo;
+
 		//
 		SDesc() : pFile( 0 ), pFileInfo( 0 ) {}
+
 		~SDesc()
 		{
 			if ( pFile )
@@ -37,6 +40,7 @@ class CTempAttributesTool : public IExportTool
 			}
 		}
 	};
+
 	//
 	std::string szAttribsExportTemplate;
 	std::string szAttribsExportSettings;
@@ -44,6 +48,7 @@ class CTempAttributesTool : public IExportTool
 	typedef std::list<SDesc> CDescsList;
 	typedef std::unordered_map<std::string, CDescsList> CDescsMap;
 	CDescsMap descsMap;
+
 	// load export settings and script template
 	bool LoadSettings()
 	{
@@ -64,6 +69,7 @@ class CTempAttributesTool : public IExportTool
 		szAttribsExportSettings = GetGrannyExportSettingsFileName( "Attribs" );
 		return !szAttribsExportTemplate.empty() && !szAttribsExportSettings.empty();
 	}
+
 	// export granny with desired root mesh and root joint and add
 	bool AddGrannyFile( SDesc *pDesc,
 	                    const std::string &szFileName,
@@ -116,7 +122,12 @@ class CTempAttributesTool : public IExportTool
 
 public:
 	void StartExportTool() {}
-	void FinishExportTool() { descsMap.clear(); }
+
+	void FinishExportTool()
+	{
+		descsMap.clear();
+	}
+
 	//
 	granny_file_info *
 	GetAttribs( const std::string &_szFileName, const std::string &szRootMesh, const std::string &szRootJoint )
@@ -175,6 +186,7 @@ public:
 };
 
 static CObj<CTempAttributesTool> pTempAttributesTool;
+
 IExportTool *GetOrCreateTempAttributesExportTool()
 {
 	if ( pTempAttributesTool == 0 )
@@ -183,6 +195,7 @@ IExportTool *GetOrCreateTempAttributesExportTool()
 	}
 	return pTempAttributesTool;
 }
+
 void DestroyTempAttributesExportTool()
 {
 	pTempAttributesTool = 0;
@@ -294,4 +307,4 @@ void GetAttributesFromBone( void *pDstData, granny_bone *pBone, const char **pps
 	GrannyConvertSingleObject( pBone->ExtendedData.Type, pBone->ExtendedData.Object, &( gdtd[0] ), pDstData, nullptr );
 }
 
-};
+}; // namespace NMEGeomAttribs

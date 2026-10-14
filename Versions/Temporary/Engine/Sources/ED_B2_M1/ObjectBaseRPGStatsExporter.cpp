@@ -27,7 +27,7 @@ namespace NDb
 // CRAP{ legacy - remove it ASAP
 const CDBID *GetDBID( const int nClassTypeID, const int nRecordID );
 // CRAP}
-}
+} // namespace NDb
 
 //REGISTER_EXPORTER_IN_DLL( BuildingRPGStats, CObjectBaseRPGStatsExporter )
 

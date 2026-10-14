@@ -51,6 +51,7 @@ NGfx::EPixelFormat GetPixelFormat( const SDDSHeader &hdr )
 }
 
 bool bDXTModeOn = true;
+
 static int GetRealTextureID( const NDb::STexture *pTex )
 {
 	int nID = pTex->GetRecordID();
@@ -131,6 +132,7 @@ void LoadTextureData( NGfx::CTexture *pTexture,
 }
 
 static NGfx::EFace loadFace;
+
 template <class TPixel, class TStream>
 void LoadTextureData( NGfx::CCubeTexture *pTexture,
                       int _nX,
@@ -234,10 +236,12 @@ static NGfx::SPixel565 DoConvert( const NGfx::SPixel8888 &src, NGfx::SPixel565 *
 {
 	return NGfx::SPixel565( src.r >> 3, src.g >> 2, src.b >> 3 );
 }
+
 static NGfx::SPixel1555 DoConvert( const NGfx::SPixel8888 &src, NGfx::SPixel1555 *p = 0 )
 {
 	return NGfx::SPixel1555( src.r >> 3, src.g >> 3, src.b >> 3, src.a >> 7 );
 }
+
 static NGfx::SPixel4444 DoConvert( const NGfx::SPixel8888 &src, NGfx::SPixel4444 *p = 0 )
 {
 	return NGfx::SPixel4444( src.r >> 4, src.g >> 4, src.b >> 4, src.a >> 4 );
@@ -563,6 +567,7 @@ static std::string GetID( const NDb::STexture *p )
 	}
 	return "";
 }
+
 void CFileCubeTexture::Recalc()
 {
 	std::string szTextureIDs[6]; // = {0,0,0,0,0,0};
@@ -673,7 +678,8 @@ REGISTER_VAR_EX( "gfx_texture_mip", NGlobal::VarIntHandler, &nTextureUseMip, 0, 
 REGISTER_VAR_EX( "gfx_low_ram", NGlobal::VarBoolHandler, &bLowRAM, 0, STORAGE_NONE )
 FINISH_REGISTER
 
-} // namespace
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x00821150, CFileTexture )
 //REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x116A1130, CFileTextureComplex )

@@ -10,7 +10,7 @@ struct SReinforcementPosition;
 struct SReinforcement;
 struct SReinforcementEntry;
 enum EReinforcementType : int;
-}
+} // namespace NDb
 
 namespace NAI4Globe
 {
@@ -21,8 +21,12 @@ namespace NReinforcement
 {
 struct SReinforcementTypeHash
 {
-	int operator()( const NDb::EReinforcementType &eType ) const { return static_cast<int>( eType ); }
+	int operator()( const NDb::EReinforcementType &eType ) const
+	{
+		return static_cast<int>( eType );
+	}
 };
+
 // new method
 void PlaceSingleLandReinforcement( const int nPlayer,
                                    const NDb::SReinforcement *_pReinf,
@@ -41,4 +45,4 @@ void PlaceSingleSeaReinforcement( const int nPlayer,
                                   uint16_t wDirection,
                                   const int nScriptID,
                                   const CVec2 &vTarget );
-}
+} // namespace NReinforcement

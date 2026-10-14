@@ -11,13 +11,16 @@ class CZipPacket : public CNetPacket
 public:
 	uLongf nUnzippedSize;
 	CMemoryStream buffer;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nUnzippedSize );
 		f.Add( 3, &buffer );
 		return 0;
 	}
+
 	CZipPacket() : nUnzippedSize( 0 ) {}
+
 	CZipPacket( const int nClientID ) : CNetPacket( nClientID ), nUnzippedSize( 0 ) {}
 
 	void Zip( const CMemoryStream &inStream );

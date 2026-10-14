@@ -31,6 +31,7 @@ inline const SVector GetCell( const int x, const int y )
 
 	return res;
 }
+
 // big cell coordinates by the point coordinates
 inline const SVector GetBigCell( const int x, const int y )
 {
@@ -65,9 +66,10 @@ inline const SVector GetGeneralCell( const SVector &vPos )
 {
 	return SVector( vPos.x / SConsts::GENERAL_CELL_SIZE, vPos.y / SConsts::GENERAL_CELL_SIZE );
 }
+
 inline const CVec2 GetCenterOfGeneralCell( const SVector &vPos )
 {
 	return CVec2( vPos.x * SConsts::GENERAL_CELL_SIZE + SConsts::GENERAL_CELL_SIZE / 2,
 	              vPos.y * SConsts::GENERAL_CELL_SIZE + SConsts::GENERAL_CELL_SIZE / 2 );
 }
-};
+}; // namespace AICellsTiles

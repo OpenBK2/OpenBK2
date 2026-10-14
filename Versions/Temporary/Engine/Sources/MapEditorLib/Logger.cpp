@@ -35,7 +35,11 @@ public:
 			logBufferList.pop_front();
 		}
 	}
-	void ClearLog() { logBufferList.clear(); }
+
+	void ClearLog()
+	{
+		logBufferList.clear();
+	}
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,11 +52,17 @@ class CDefaultLoggerSink : public ILoggerSink
 public:
 	CDefaultLoggerSink() {}
 
-	ILogger *GetLogger() { return &logger; }
+	ILogger *GetLogger()
+	{
+		return &logger;
+	}
 
-	void FlushTo( ILoggerSink *pLoggerSink ) { logger.FlushLogBuffer( pLoggerSink->GetLogger() ); }
+	void FlushTo( ILoggerSink *pLoggerSink )
+	{
+		logger.FlushLogBuffer( pLoggerSink->GetLogger() );
+	}
 };
-}
+} // namespace NLog
 
 namespace NLog
 {
@@ -122,6 +132,6 @@ void ClearLog()
 	GetLogger()->ClearLog();
 }
 
-}
+} // namespace NLog
 
 // basement storage

@@ -46,12 +46,27 @@ public:
 	void MapFile( int nSize, bool bCanWrite );
 	void UnmapFile();
 
-	boost::interprocess::file_mapping &GetMapping() { return mapping; }
+	boost::interprocess::file_mapping &GetMapping()
+	{
+		return mapping;
+	}
+
 	//! Whether MapFile last succeeded. A fragment reads the file directly when
 	//! this is false, which is how archives were read before mapping them.
-	bool IsMapped() const { return bMapped; }
-	bool IsOk() const { return bValid; }
-	const std::string &GetFileName() const { return szFileName; }
+	bool IsMapped() const
+	{
+		return bMapped;
+	}
+
+	bool IsOk() const
+	{
+		return bValid;
+	}
+
+	const std::string &GetFileName() const
+	{
+		return szFileName;
+	}
 };
 
 class SYSTEM_EXPORT CMemoryMappedFile : public CMappedStream
@@ -59,7 +74,11 @@ class SYSTEM_EXPORT CMemoryMappedFile : public CMappedStream
 	CMMFile file;
 	boost::interprocess::mapped_region region;
 
-	int GetFileSize() { return file.GetFileSize(); }
+	int GetFileSize()
+	{
+		return file.GetFileSize();
+	}
+
 	void SetFileSize( int nSize )
 	{
 		ASSERT( CanWrite() );
@@ -69,6 +88,7 @@ class SYSTEM_EXPORT CMemoryMappedFile : public CMappedStream
 		}
 		file.SetFileSize( nSize );
 	}
+
 	void *MapFile( int nSize );
 	void UnmapFile( void *p );
 	void FlushFile( void *p );
@@ -95,7 +115,11 @@ public:
 			}
 		}
 	}
-	~CMemoryMappedFile() { FinishAccess(); }
+
+	~CMemoryMappedFile()
+	{
+		FinishAccess();
+	}
 };
 
 // A window onto part of a file. The offset is arbitrary while a mapping can
@@ -113,8 +137,16 @@ class SYSTEM_EXPORT CMemoryMappedFileFragment : public CMappedStream
 	//! instead, in which case the buffer is owned rather than borrowed.
 	unsigned char *pOwnedBuffer = nullptr;
 
-	virtual int GetFileSize() { return nSize; }
-	virtual void SetFileSize( int nSize ) { ASSERT( 0 ); }
+	virtual int GetFileSize()
+	{
+		return nSize;
+	}
+
+	virtual void SetFileSize( int nSize )
+	{
+		ASSERT( 0 );
+	}
+
 	virtual void *MapFile( int nSize );
 	virtual void UnmapFile( void *p );
 	virtual void FlushFile( void *p );
@@ -125,5 +157,9 @@ public:
 	{
 		StartAccess( F_CanRead );
 	}
-	~CMemoryMappedFileFragment() { FinishAccess(); }
+
+	~CMemoryMappedFileFragment()
+	{
+		FinishAccess();
+	}
 };

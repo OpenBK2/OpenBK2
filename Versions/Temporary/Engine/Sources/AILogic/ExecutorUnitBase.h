@@ -52,7 +52,10 @@ private:
 	void UpdateProgress( const SAbilitySwitchState _state, const float fParam );
 
 protected:
-	bool IsAutocast() const { return state.bAutocast; }
+	bool IsAutocast() const
+	{
+		return state.bAutocast;
+	}
 
 	// if 1.0 then ability must be switched off
 	virtual float OnAbilityActive() = 0;
@@ -69,24 +72,46 @@ protected:
 	// return true if activation is allowed
 	virtual bool ActivateDuringDisable() = 0;
 	virtual CCommonUnit *GetUnit() = 0;
-	const NDb::SUnitSpecialAblityDesc *GetAbilityDesc() const { return pAbilityDesc; }
-	void SetAbilityDesc( const NDb::SUnitSpecialAblityDesc *pDesc ) { pAbilityDesc = pDesc; }
+
+	const NDb::SUnitSpecialAblityDesc *GetAbilityDesc() const
+	{
+		return pAbilityDesc;
+	}
+
+	void SetAbilityDesc( const NDb::SUnitSpecialAblityDesc *pDesc )
+	{
+		pAbilityDesc = pDesc;
+	}
 
 	//Used if something happens, e.g. during switch-on (move while switching on Ambush)
 	virtual void ForceRecharge();
 	virtual void ForceActivate();
 	virtual void ForceDeactivate();
 
-	void SetSpeedCoeff( const float _fSpeedCoeff ) { fSpeedCoeff = _fSpeedCoeff; }
+	void SetSpeedCoeff( const float _fSpeedCoeff )
+	{
+		fSpeedCoeff = _fSpeedCoeff;
+	}
 
 	void RegisterOnUnitEvents( IExecutorContainer *pContainer,
 	                           const std::vector<EExecutorEventID> &unitEvents,
 	                           const int nUnitID );
-	const EUnitSpecialAbility GetAbility() const { return eAbility; }
+
+	const EUnitSpecialAbility GetAbility() const
+	{
+		return eAbility;
+	}
+
 	void Disable();
 	void SetAutocast( const bool _bAutocast );
-	bool GetAutocast() const { return state.bAutocast; }
+
+	bool GetAutocast() const
+	{
+		return state.bAutocast;
+	}
+
 	CExecutorUnitBase( const EExecutorTypeID _eTypeID, const int _nNextTime, const EUnitSpecialAbility eAbility );
+
 	CExecutorUnitBase() {}
 
 public:
@@ -95,5 +120,8 @@ public:
 
 	int Segment();
 
-	const EAbilitySwitchState GetState() const { return EAbilitySwitchState( state.eState ); }
+	const EAbilitySwitchState GetState() const
+	{
+		return EAbilitySwitchState( state.eState );
+	}
 };

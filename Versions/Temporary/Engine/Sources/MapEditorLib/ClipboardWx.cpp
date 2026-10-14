@@ -38,4 +38,4 @@ bool SetText( const std::string &rszText )
 	wxTheClipboard->Close();
 	return bDone;
 }
-}
+} // namespace NClipboard

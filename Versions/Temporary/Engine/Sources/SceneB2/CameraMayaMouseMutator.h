@@ -16,10 +16,15 @@ class CCameraMayaMouseMutator : public CCameraBasicMouseMutator
 	float GetZoomDelta();
 
 public:
-	bool NeedUpdate() { return true; }
+	bool NeedUpdate()
+	{
+		return true;
+	}
+
 	void Recalc();
 
 	int operator&( IBinSaver &saver );
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-}
+} // namespace NCamera

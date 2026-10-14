@@ -39,4 +39,4 @@ struct IVideoPlayer : public CPtrFuncBase<NGfx::CTexture>
 
 IVideoPlayer *CreateVideoPlayer( const std::string &szFileName, uint32_t dwFlags );
 
-}
+} // namespace NGScene

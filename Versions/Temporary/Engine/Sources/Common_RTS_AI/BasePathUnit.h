@@ -171,7 +171,11 @@ private:
 	const bool IterateUnitsProc( const CBasePathUnit *unit ) const;
 	const SRect GetUnitModifiedRect( const float fCompress ) const;
 	void CalculateIdle();
-	void SetNextSecondPathSegmTime( const NTimer::STime time ) { nextSecondPathSegmTime = time; }
+
+	void SetNextSecondPathSegmTime( const NTimer::STime time )
+	{
+		nextSecondPathSegmTime = time;
+	}
 
 protected:
 	//! обновить позицию юнита, это должен делать кто-то из AI
@@ -187,6 +191,7 @@ protected:
 
 	// called when path finished
 	virtual void OnIdle() {}
+
 	// called when unit stopped (no placement update)
 	virtual void OnStopped() {}
 
@@ -199,17 +204,34 @@ public:
 	           CCommonPathFinder *pPathFinder );
 
 	//! информация о позиции юнита в пространстве (3D)
-	const CVec3 &GetCenter() const { return vCenter; }
+	const CVec3 &GetCenter() const
+	{
+		return vCenter;
+	}
+
 	//! информация о позиции юнита на плоскости (2D)
 	// hack to increase FPS :)
-	const CVec2 &GetCenterPlain() const { return *( reinterpret_cast<const CVec2 *>( &vCenter ) ); }
+	const CVec2 &GetCenterPlain() const
+	{
+		return *( reinterpret_cast<const CVec2 *>( &vCenter ) );
+	}
 
-	CCommonPathFinder *GetPathFinder() const { return pPathFinder; }
+	CCommonPathFinder *GetPathFinder() const
+	{
+		return pPathFinder;
+	}
 
 	//! информация о позиции юнита в AI тайлах
-	const SVector GetCenterTile() const { return vTile; }
+	const SVector GetCenterTile() const
+	{
+		return vTile;
+	}
+
 	//! последнйи тайл, на котором юнит ни кому не мешался
-	const SVector GetLastKnownGoodTile() const { return vLastKnownGoodTile; }
+	const SVector GetLastKnownGoodTile() const
+	{
+		return vLastKnownGoodTile;
+	}
 
 	//! проверить, что юнит не будет выходить за пределы карты в новой позиции
 	const bool IsValidCenter( const CVec3 &vCenter );
@@ -218,27 +240,54 @@ public:
 
 	//! проверить, что юнит не будет выходить за пределы карты в новом направлении
 	const bool IsValidDirection( const uint16_t wDirection );
+
 	//! проверить, что юнит не будет выходить за пределы карты в новом направлении (направление задается вектором)
 	const bool IsValidDirection( const CVec2 &vDirection )
 	{
 		return IsValidDirection( GetDirectionByVector( vDirection ) );
 	}
+
 	//! получить направление движения юнита,
-	const uint16_t GetDirection() const { return wDirection; }
-	const float GetDir() const { return float( wFrontDirection ) / 65536.0f * FP_2PI; }
+	const uint16_t GetDirection() const
+	{
+		return wDirection;
+	}
+
+	const float GetDir() const
+	{
+		return float( wFrontDirection ) / 65536.0f * FP_2PI;
+	}
 
 	//! куда смотрит перед юнита
-	const uint16_t GetFrontDirection() const { return wFrontDirection; }
+	const uint16_t GetFrontDirection() const
+	{
+		return wFrontDirection;
+	}
+
 	//! получить напраление движения юнита в векторе
-	const CVec2 GetDirectionVector() const { return GetVectorByDirection( GetDirection() ); }
+	const CVec2 GetDirectionVector() const
+	{
+		return GetVectorByDirection( GetDirection() );
+	}
+
 	//! получить, куда собирается ехать юнит (например на поворотах может несколько отличаться от направления движения)
 	const CVec2 GetMoveDirection() const;
+
 	//! куда смотрит перед юнита в векторе
-	const CVec2 GetFrontDirectionVector() const { return GetVectorByDirection( GetFrontDirection() ); }
+	const CVec2 GetFrontDirectionVector() const
+	{
+		return GetVectorByDirection( GetFrontDirection() );
+	}
+
 	//! установить направление движения юнита
 	virtual void SetDirection( const uint16_t wDirection, const bool bNeedUpdate = true );
+
 	//! установить направление движения юнита вектором
-	void SetDirectionVec( const CVec2 &vDirection ) { SetDirection( GetDirectionByVector( vDirection ) ); }
+	void SetDirectionVec( const CVec2 &vDirection )
+	{
+		SetDirection( GetDirectionByVector( vDirection ) );
+	}
+
 	//! повернуться в указанном направлении
 	virtual const bool TurnToDirection( const uint16_t wDirection, const bool bCanBackward, const bool bCanForward );
 	//! повернуться на указанную точку
@@ -254,44 +303,99 @@ public:
 	//! проверить, можно ли развернуться в направлении vDir, fRectCoeff - коеффициент "растяжения" профайла юнита
 	virtual const bool
 	CheckTurn( const float fRectCoeff, const CVec2 &vDir, const bool bWithUnits, const bool bCanGoBackward ) const;
+
 	//! установить скорость
-	void SetSpeed( const float _fSpeed ) { fSpeed = _fSpeed; }
+	void SetSpeed( const float _fSpeed )
+	{
+		fSpeed = _fSpeed;
+	}
+
 	//! установить скорость, при помощи параметры eAdjust можно определить как именно менять скорость
 	void SetSpeed( const EAdjustSpeedParam eAdjust, const float fValue );
+
 	//! получить текущую скорость
-	const float GetSpeed() const { return fSpeed; }
+	const float GetSpeed() const
+	{
+		return fSpeed;
+	}
+
 	//! задать желаемую скорость
-	void SetDesiredSpeed( const float _fSpeed ) { fDesiredSpeed = _fSpeed; }
+	void SetDesiredSpeed( const float _fSpeed )
+	{
+		fDesiredSpeed = _fSpeed;
+	}
+
 	//! желаемая скорость
-	const float GetDesiredSpeed() const { return fDesiredSpeed; }
+	const float GetDesiredSpeed() const
+	{
+		return fDesiredSpeed;
+	}
+
 	//! установить желаемую скорость равную максимальной
-	void ResetDesiredSpeed() { fDesiredSpeed = GetMaxPossibleSpeed(); }
+	void ResetDesiredSpeed()
+	{
+		fDesiredSpeed = GetMaxPossibleSpeed();
+	}
+
 	//! максимальная скорость движения в указанной точке. bAdjust - выровнять скорость с учетом желаемой
 	const float GetMaxSpeedHere( const CVec2 &vPosition, const bool bAdjust ) const;
+
 	//! максимальная скорость движения в точке, где находиться центр юнита. Результат выравнивается с учетом желаемой скорости
-	const float GetMaxSpeedHere() const { return GetMaxSpeedHere( GetCenterPlain(), true ); }
+	const float GetMaxSpeedHere() const
+	{
+		return GetMaxSpeedHere( GetCenterPlain(), true );
+	}
+
 	//! юнит никуда не собирается ехать
-	virtual const bool IsIdle() const { return bIdle; }
+	virtual const bool IsIdle() const
+	{
+		return bIdle;
+	}
+
 	//! юнит никуда не едет
-	virtual const bool IsMoving() const { return /* GetSmoothPath()->IsUnitMoving() || */ GetSpeed() != 0.0f; }
+	virtual const bool IsMoving() const
+	{
+		return /* GetSmoothPath()->IsUnitMoving() || */ GetSpeed() != 0.0f;
+	}
+
 	//! юнит поворацивается
-	virtual const bool IsTurning() const { return bTurning; }
+	virtual const bool IsTurning() const
+	{
+		return bTurning;
+	}
+
 	//! юнит едет передом
-	virtual const bool IsGoForward() const { return bGoForward; }
+	virtual const bool IsGoForward() const
+	{
+		return bGoForward;
+	}
+
 	//! установить направление движения юнита (передом или задом)
 	void SetGoForward( const bool bGoForward );
+
 	//! принудительно заставить юнит двигаться передом
-	void ForceGoForward() { bGoForward = true; }
+	void ForceGoForward()
+	{
+		bGoForward = true;
+	}
 
 	//! получить "плоскость" движения юнита (вода/земля)
-	virtual const EMovementPlane GetMovementPlane() const { return eMovementPlane; }
+	virtual const EMovementPlane GetMovementPlane() const
+	{
+		return eMovementPlane;
+	}
+
 	//! получить наиболее вероятную "плоскость" движения юнита в заданном AI тайле (вода/земля)
 	virtual const EMovementPlane GetProbablePlane( const SVector &vPos ) const;
 
 	//! остановить юнит
 	virtual void Stop();
+
 	//! остановить поворот юнита
-	virtual void StopTurning() { bTurning = false; }
+	virtual void StopTurning()
+	{
+		bTurning = false;
+	}
 
 	//! залокать тайлы под юнитом
 	void LockTiles();
@@ -300,14 +404,31 @@ public:
 	//! разлокать тайлы под юнитом
 	void UnlockTiles();
 	void StaticLockTiles() const;
+
 	//! блокирует ли юнит тайлы под собой
-	const bool IsLockingTiles() const { return bLocking; }
+	const bool IsLockingTiles() const
+	{
+		return bLocking;
+	}
+
 	//! запретить залокивание тайлов (не работает для ForceLockTiles)
-	void FixUnlocking() { bFixUnlocking = true; }
+	void FixUnlocking()
+	{
+		bFixUnlocking = true;
+	}
+
 	//! разрешить залокивание тайлов (не работает для ForceLockTiles)
-	void UnfixUnlocking() { bFixUnlocking = false; }
+	void UnfixUnlocking()
+	{
+		bFixUnlocking = false;
+	}
+
 	//! может ли юнит локать тайлы
-	virtual const bool CanLockTiles() const { return !bLocking; }
+	virtual const bool CanLockTiles() const
+	{
+		return !bLocking;
+	}
+
 	//! проверить, будет ли указанный профайл (profile) стоять на залоканных тайлах
 	const bool IsOnLockedTiles( const SUnitProfile &profile ) const;
 	//! восстановить залоканость тайлов, вызывается после load'а
@@ -317,38 +438,90 @@ public:
 	virtual void FirstSegment( const NTimer::STime timeDiff );
 	//! второй сегмент перемещения юнита: движение вдоль пути
 	virtual void SecondSegment( const NTimer::STime timeDiff );
+
 	//! промежуток времени, через который стоит вызвать второй сегмент для юнита
-	virtual const NTimer::STime GetNextSecondPathSegmTime() const { return nextSecondPathSegmTime; }
+	virtual const NTimer::STime GetNextSecondPathSegmTime() const
+	{
+		return nextSecondPathSegmTime;
+	}
+
 	void CallUpdatePlacement();
 
 	//! гладкий путь, полученный при создании юнита
-	virtual ISmoothPath *GetDefaultPath() const { return pDefaultPath; }
+	virtual ISmoothPath *GetDefaultPath() const
+	{
+		return pDefaultPath;
+	}
+
 	//! гладкий путь, по которому движется юнит в данный момент
-	virtual ISmoothPath *GetSmoothPath() const { return pSmoothPath; }
+	virtual ISmoothPath *GetSmoothPath() const
+	{
+		return pSmoothPath;
+	}
+
 	//! коллизия в которой участвует юнит
-	virtual ICollision *GetCollision() const { return pCurrentCollision; }
+	virtual ICollision *GetCollision() const
+	{
+		return pCurrentCollision;
+	}
+
 	//! задать коллизию для юнита
 	virtual void SetCollision( ICollision *pCollision, IPath *pPath );
+
 	virtual void SetCollisionOld( ICollisionOld *pCollision, IPath *pPath ) {}
 
-	const int GetStayTime() const { return stayTime; }
+	const int GetStayTime() const
+	{
+		return stayTime;
+	}
+
 	void UpdateCollisionStayTime( const NTimer::STime time )
 	{
 		collStayTime = (std::max)( collStayTime, (std::min)( stayTime, time ) );
 	}
 
-	void SetLastPushUnit( CBasePathUnit *pUnit ) { pLastPushUnit = pUnit; }
-	CBasePathUnit *GetLastPushUnit() const { return pLastPushUnit; }
-	CBasePathUnit *GetLastPusherUnit() const { return pLastPusherUnit; }
+	void SetLastPushUnit( CBasePathUnit *pUnit )
+	{
+		pLastPushUnit = pUnit;
+	}
 
-	void IncCollisionsCount() { ++nCollisionsCount; }
-	void ResetCollisionsCount() { nCollisionsCount = 0; }
-	const int GetCollisionsCount() { return nCollisionsCount; }
+	CBasePathUnit *GetLastPushUnit() const
+	{
+		return pLastPushUnit;
+	}
 
-	virtual void SetSmoothPath( ISmoothPath *_pSmoothPath ) { pSmoothPath = _pSmoothPath; }
+	CBasePathUnit *GetLastPusherUnit() const
+	{
+		return pLastPusherUnit;
+	}
+
+	void IncCollisionsCount()
+	{
+		++nCollisionsCount;
+	}
+
+	void ResetCollisionsCount()
+	{
+		nCollisionsCount = 0;
+	}
+
+	const int GetCollisionsCount()
+	{
+		return nCollisionsCount;
+	}
+
+	virtual void SetSmoothPath( ISmoothPath *_pSmoothPath )
+	{
+		pSmoothPath = _pSmoothPath;
+	}
+
 	virtual void RestoreSmoothPath();
 
-	const bool IsPathFinished() const { return GetSmoothPath()->IsFinished(); }
+	const bool IsPathFinished() const
+	{
+		return GetSmoothPath()->IsFinished();
+	}
+
 	//! эта функция ДОЛЖНА быть переопределена в классах - потомках
 	virtual const int GetUniqueID() const = 0;
 
@@ -368,19 +541,54 @@ public:
 	virtual const float GetSmoothTurnThreshold() const = 0;
 	virtual const float GetPassability() const = 0;
 	virtual const bool CanGoToPoint( const CVec2 &point ) const = 0;
-	virtual const bool CanMoveBetweenTiles( const SVector &fromTile, const SVector &toTile ) const { return true; }
-	virtual const bool CanTurnInstant() const { return false; }
-	virtual const bool CanChangeSpeedInstand() const { return false; }
-	virtual const bool ShouldScatter() const { return false; }
-	virtual const bool IsInfantry() const { return false; }
-	virtual const bool IsAviation() const { return false; }
+
+	virtual const bool CanMoveBetweenTiles( const SVector &fromTile, const SVector &toTile ) const
+	{
+		return true;
+	}
+
+	virtual const bool CanTurnInstant() const
+	{
+		return false;
+	}
+
+	virtual const bool CanChangeSpeedInstand() const
+	{
+		return false;
+	}
+
+	virtual const bool ShouldScatter() const
+	{
+		return false;
+	}
+
+	virtual const bool IsInfantry() const
+	{
+		return false;
+	}
+
+	virtual const bool IsAviation() const
+	{
+		return false;
+	}
 
 	//! может ли юнит двигаться
-	virtual const bool CanMove() const { return true; }
+	virtual const bool CanMove() const
+	{
+		return true;
+	}
+
 	//! может ли юнит двигаться если ОЧЕНЬ надо
-	virtual const bool CanMoveCritical() const { return true; }
+	virtual const bool CanMoveCritical() const
+	{
+		return true;
+	}
+
 	//! может ли юнит поворачиваться
-	virtual const bool CanRotate() const { return true; }
+	virtual const bool CanRotate() const
+	{
+		return true;
+	}
 
 	//! юнит задавлен другим юнитом (pTramplerUnit - юнит, который задавил this)
 	virtual void UnitTrampled( const CBasePathUnit *pTramplerUnit ) = 0;
@@ -393,7 +601,10 @@ public:
 	virtual const uint16_t GetDangerousDir() const = 0;
 
 	//! с кем может коллизиться юнит
-	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const { return ECT_ALL; }
+	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const
+	{
+		return ECT_ALL;
+	}
 
 	//! провести итерацию по юнитам CUnitsIter< 0, 0 >, для каждого юнита будет вызвана функция iterFunc,
 	//! итерирование продолжается до тех пор пока есть юниты и пока iterFunc возвращает true. Возвращаемое
@@ -414,8 +625,16 @@ public:
 
 	virtual IStaticPath *
 	CreateBigStaticPath( const CVec2 &vStartPoint, const CVec2 &vFinishPoint, IPointChecking *pChecking );
-	virtual const NTimer::STime GetCollStayTime() { return collStayTime; }
-	virtual void ResetCollStayTime() { collStayTime = 0; }
+
+	virtual const NTimer::STime GetCollStayTime()
+	{
+		return collStayTime;
+	}
+
+	virtual void ResetCollStayTime()
+	{
+		collStayTime = 0;
+	}
 
 	virtual void NotifyAboutClosestThreat( const CBasePathUnit *pUnit, const float fDistance );
 	virtual const bool IsStaticUnit() const = 0;

@@ -7,6 +7,7 @@ inline bool DoesIntersect( const SSphere &a, const SSphere &b )
 	CVec3 ptDif = a.ptCenter - b.ptCenter;
 	return fabs2( ptDif ) < sqr( a.fRadius + b.fRadius );
 }
+
 namespace NGScene
 {
 
@@ -444,6 +445,6 @@ void MakeSingleOp( CRenderCmdList *pRes,
 	}
 }
 
-}
+} // namespace NGScene
 
 using namespace NGScene;

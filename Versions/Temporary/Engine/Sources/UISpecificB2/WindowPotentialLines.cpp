@@ -122,6 +122,7 @@ static float GetOctoDistance( float fX1, float fX2, float fY1, float fY2 )
 }
 
 #define LINE_BLUR_PART 0.3f
+
 void CDrawMapPixelFunctional::DrawOctoCircle( int nX0, int nY0, float fR )
 {
 	int nX1 = nX0 - fR;
@@ -160,6 +161,7 @@ void CDrawMapPixelFunctional::DrawOctoCircle( int nX0, int nY0, float fR )
 /*#define s_nPotentialGridSize 16
 #define STEP2 8*/
 #define STEP_TWIN_OFFSET 0
+
 CWindowPotentialLines::CWindowPotentialLines() : bValid( false ), bLayerInit( false ), bDrawDashes( false )
 {
 	pTerritoryLayer = new CWindowChapterMapLayer;
@@ -169,8 +171,15 @@ struct STextureEntryEqual
 {
 	std::string szID;
 
-	STextureEntryEqual( const std::string &_szID ) { szID = _szID; }
-	bool operator()( const NDb::SUITextureEntry &value ) const { return szID == value.szTextID; }
+	STextureEntryEqual( const std::string &_szID )
+	{
+		szID = _szID;
+	}
+
+	bool operator()( const NDb::SUITextureEntry &value ) const
+	{
+		return szID == value.szTextID;
+	}
 };
 
 void CWindowPotentialLines::Visit( IUIVisitor *pVisitor )

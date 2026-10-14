@@ -105,6 +105,7 @@ void CScreenshotTexture::Recalc()
 	Updated();
 }
 
-} // namespace
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0xB2030101, CScreenshotTexture );

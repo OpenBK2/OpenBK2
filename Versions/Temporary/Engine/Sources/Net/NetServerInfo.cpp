@@ -134,4 +134,4 @@ bool CServerInfoSupport::CanSendRequest( const CNodeAddress &broadcast, std::vec
 	return false;
 }
 
-}
+} // namespace NNet

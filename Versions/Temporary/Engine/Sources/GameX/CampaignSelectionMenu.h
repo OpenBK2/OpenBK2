@@ -6,7 +6,7 @@ namespace NDb
 {
 struct SCampaign;
 struct SDifficultyLevel;
-}
+} // namespace NDb
 
 void StartCampaign( const NDb::SCampaign *pCampaignDB, int nDifficulty, bool bCustom );
 
@@ -36,6 +36,7 @@ private:
 		CPtr<IWindow> pBackgroundWnd;
 		std::string szOutro;
 		EPlay ePlay;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pWnd );
@@ -65,6 +66,7 @@ private:
 	CPtr<IButton> pPlayBtn;
 	CPtr<IButton> pPlayOutroBtn;
 	CPtr<IScrollableContainer> pCampaignList;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );

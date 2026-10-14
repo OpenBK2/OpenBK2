@@ -11,7 +11,7 @@ namespace NShotTrace
 //static float s_fShotTraceSpeedCoeff = 0.5f;
 //static float s_fShotTraceThikness = 0.1f;
 static bool s_bDisableTracers = false;
-}
+} // namespace NShotTrace
 
 void CShotTraceObj::Recalc()
 {

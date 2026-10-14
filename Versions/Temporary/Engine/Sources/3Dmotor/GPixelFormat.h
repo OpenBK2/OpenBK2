@@ -27,6 +27,7 @@ enum EPixelFormat : int
 
 	CF_FORCE_DWORD = 0x7FFFFFFF
 };
+
 inline int GetBPP( EPixelFormat format )
 {
 	switch ( format )
@@ -64,11 +65,15 @@ struct SPixelFloat
 		XSize = 1,
 		YSize = 1
 	};
+
 	// Defaults initialize the complete pixel storage before filling or loading it.
 	float r = {};
+
 	SPixelFloat() {}
+
 	SPixelFloat( float _r ) : r( _r ) {}
 };
+
 struct SPixelFFFF
 {
 	enum
@@ -77,10 +82,14 @@ struct SPixelFFFF
 		XSize = 1,
 		YSize = 1
 	};
+
 	float b = {}, g = {}, r = {}, a = {};
+
 	SPixelFFFF() {}
+
 	SPixelFFFF( float _r, float _g, float _b, float _a ) : r( _r ), g( _g ), b( _b ), a( _a ) {}
 };
+
 struct SPixel8888
 {
 	enum
@@ -89,9 +98,11 @@ struct SPixel8888
 		XSize = 1,
 		YSize = 1
 	};
+
 	union
 	{
 		uint32_t dwColor;
+
 		struct
 		{
 			uint32_t b : 8;
@@ -100,14 +111,18 @@ struct SPixel8888
 			uint32_t a : 8;
 		};
 	};
+
 	// Zero one full union arm, leaving the overlapping component fields plain.
 	SPixel8888() : dwColor( 0 ) {}
+
 	SPixel8888( unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a = 0xFF )
 			: b( _b ), g( _g ), r( _r ), a( _a )
 	{
 	}
+
 	SPixel8888( uint32_t _dwColor ) : dwColor( _dwColor ) {}
 };
+
 inline bool operator==( const SPixel8888 &a, const SPixel8888 &b )
 {
 	return a.dwColor == b.dwColor;
@@ -121,9 +136,11 @@ struct SPixel1555
 		XSize = 1,
 		YSize = 1
 	};
+
 	union
 	{
 		uint16_t wColor;
+
 		struct
 		{
 			uint16_t b : 5;
@@ -132,12 +149,15 @@ struct SPixel1555
 			uint16_t a : 1;
 		};
 	};
+
 	SPixel1555() : wColor( 0 ) {}
+
 	SPixel1555( unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a = 1 )
 			: b( _b ), g( _g ), r( _r ), a( _a )
 	{
 	}
 };
+
 struct SPixel565
 {
 	enum
@@ -146,9 +166,11 @@ struct SPixel565
 		XSize = 1,
 		YSize = 1
 	};
+
 	union
 	{
 		uint16_t wColor;
+
 		struct
 		{
 			uint16_t b : 5;
@@ -156,9 +178,12 @@ struct SPixel565
 			uint16_t r : 5;
 		};
 	};
+
 	SPixel565() : wColor( 0 ) {}
+
 	SPixel565( unsigned char _r, unsigned char _g, unsigned char _b ) : b( _b ), g( _g ), r( _r ) {}
 };
+
 struct SPixel4444
 {
 	enum
@@ -167,9 +192,11 @@ struct SPixel4444
 		XSize = 1,
 		YSize = 1
 	};
+
 	union
 	{
 		uint16_t wColor;
+
 		struct
 		{
 			uint16_t b : 4;
@@ -178,12 +205,15 @@ struct SPixel4444
 			uint16_t a : 4;
 		};
 	};
+
 	SPixel4444() : wColor( 0 ) {}
+
 	SPixel4444( unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a = 0xF )
 			: b( _b ), g( _g ), r( _r ), a( _a )
 	{
 	}
 };
+
 struct SPixelDXT1
 {
 	enum
@@ -192,9 +222,11 @@ struct SPixelDXT1
 		XSize = 4,
 		YSize = 4
 	};
+
 	uint16_t color1 = {}, color2 = {};
 	uint32_t colors = {};
 };
+
 struct SPixelDXT2
 {
 	enum
@@ -203,8 +235,10 @@ struct SPixelDXT2
 		XSize = 4,
 		YSize = 4
 	};
+
 	uint32_t colors1 = {}, colors2 = {}, colors3 = {}, colors4 = {};
 };
+
 struct SPixelDXT3
 {
 	enum
@@ -213,8 +247,10 @@ struct SPixelDXT3
 		XSize = 4,
 		YSize = 4
 	};
+
 	uint32_t colors1 = {}, colors2 = {}, colors3 = {}, colors4 = {};
 };
+
 struct SPixelDXT4
 {
 	enum
@@ -223,8 +259,10 @@ struct SPixelDXT4
 		XSize = 4,
 		YSize = 4
 	};
+
 	uint32_t colors1 = {}, colors2 = {}, colors3 = {}, colors4 = {};
 };
+
 struct SPixelDXT5
 {
 	enum
@@ -233,6 +271,7 @@ struct SPixelDXT5
 		XSize = 4,
 		YSize = 4
 	};
+
 	uint32_t colors1 = {}, colors2 = {}, colors3 = {}, colors4 = {};
 };
 
@@ -244,6 +283,7 @@ struct SShortTextureUV
 		{
 			short nU, nV;
 		};
+
 		uint32_t dw = 0;
 	};
 };
@@ -257,6 +297,7 @@ struct SCompactVector
 		{
 			unsigned char z, y, x, w;
 		};
+
 		uint32_t dw = 0;
 	};
 };
@@ -278,15 +319,18 @@ inline uint32_t Get255Range( float f )
 {
 	return (std::max)( 0, (std::min)( 255, Float2Int( f * 256 ) ) );
 }
+
 inline uint32_t GetDWORDColor( const CVec4 &color )
 {
 	return Get255Range( color.z ) + ( Get255Range( color.y ) << 8 ) + ( Get255Range( color.x ) << 16 ) +
 	       ( Get255Range( color.w ) << 24 );
 }
+
 inline SPixel8888 Get8888Color( const CVec4 &color )
 {
 	return SPixel8888( Get255Range( color.r ), Get255Range( color.g ), Get255Range( color.b ), Get255Range( color.a ) );
 }
+
 inline CVec4 GetCVec4Color( uint32_t cr )
 {
 	return CVec4( cr >> 16 & 0xff, cr >> 8 & 0xff, cr & 0xff, cr >> 24 & 0xff ) / 255;
@@ -295,6 +339,7 @@ inline CVec4 GetCVec4Color( uint32_t cr )
 struct CInterpolateColor
 {
 	typedef uint32_t RET;
+
 	uint32_t operator()( uint32_t a, uint32_t b, float f ) const
 	{
 		return Float2Int( ( a & 0xff ) * ( 1 - f ) + ( b & 0xff ) * f ) +
@@ -312,7 +357,9 @@ struct STriangleList
 	int nOffset = 0;
 
 	STriangleList() : pTri( 0 ), nTris( 0 ), nBaseIndex( 0 ), nOffset( 0 ) {}
+
 	STriangleList( const std::vector<STriangle> &t ) : pTri( &t[0] ), nTris( t.size() ), nBaseIndex( 0 ), nOffset( 0 ) {}
+
 	STriangleList( const STriangle *_pTri, int _nTris, int _nBaseIndex = 0, int _nOffset = 0 )
 			: pTri( _pTri ), nTris( _nTris ), nBaseIndex( _nBaseIndex ), nOffset( _nOffset )
 	{
@@ -323,6 +370,7 @@ struct SMMXWord
 {
 	short nZ = 0, nY = 0, nX = 0, nW = 0;
 };
+
 struct SCompactTransformer
 {
 	SMMXWord a, b, c;

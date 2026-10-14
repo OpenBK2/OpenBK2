@@ -24,6 +24,7 @@ public:
 		ST_RIGHT_ARC = 3,  // поворот направо
 		ST_COUNT = 4,      // count
 	};
+
 	///
 private:
 	///
@@ -84,6 +85,7 @@ class CEntrenchmentState : public CMapObjectState
 	friend class CMapObjectMultiState;
 	///
 	CEntrenchmentDesignTool designTool;
+
 	///
 	/// выбранный для постановки окоп
 	struct SSelectedEntrenchmentInfo
@@ -91,9 +93,11 @@ class CEntrenchmentState : public CMapObjectState
 		std::string szRPGStatsTypeName;
 		CDBID rpgStatsDBID;
 		const NDb::SEntrenchmentRPGStats *pEntrenchmentRPGStats;
+
 		//
 		SSelectedEntrenchmentInfo() : pEntrenchmentRPGStats( 0 ) {}
 	};
+
 	SSelectedEntrenchmentInfo selectedEntrenchmentInfo;
 	void RefreshSelectedEntrenchmentInfo();
 	///
@@ -101,6 +105,7 @@ class CEntrenchmentState : public CMapObjectState
 	//
 	bool CanBuildEntrenchment();
 	void InsertEntrenchment();
+
 	///
 	CEntrenchmentState( CMapObjectMultiState *_pParentState = 0 ) : CMapObjectState( _pParentState )
 	{
@@ -110,7 +115,11 @@ class CEntrenchmentState : public CMapObjectState
 
 protected:
 	///
-	bool IsDrawSceneDrawTool() { return true; }
+	bool IsDrawSceneDrawTool()
+	{
+		return true;
+	}
+
 	///
 	void InsertObjectEnter();
 	void InsertObjectLeave();

@@ -28,8 +28,14 @@ public:
 
 public:
 	CExecutorRestoreTransparencyQueue() : CExecutor( TID_RESTORE_TRANSPARENCY, 1 ) {}
+
 	int Segment();
 	bool NotifyEvent( const CExecutorEvent &event );
-	bool IsExecutorValid() const { return true; }
+
+	bool IsExecutorValid() const
+	{
+		return true;
+	}
+
 	void RegisterOnEvents( IExecutorContainer *pContainer );
 };

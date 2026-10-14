@@ -22,6 +22,7 @@ class CTableManipulatorWrapper : public IManipulator
 	// non-inherited
 	const STypeClass *GetType( const std::string &szName ) const;
 	const STypeClass *GetType( int nTypeID ) const;
+
 	//
 	CTableManipulatorWrapper() {}
 
@@ -29,20 +30,60 @@ public:
 	CTableManipulatorWrapper( std::vector<STypeClass *> &classes );
 	// IManipulator
 	IManipulatorIterator *Iterate( bool bShowHidden, ECacheType eCache );
-	const SIteratorDesc *GetDesc( const std::string &szName ) const { return 0; }
-	bool GetType( const std::string &rszName, std::string *pszType ) const { return false; }
+
+	const SIteratorDesc *GetDesc( const std::string &szName ) const
+	{
+		return 0;
+	}
+
+	bool GetType( const std::string &rszName, std::string *pszType ) const
+	{
+		return false;
+	}
+
 	unsigned GetID( const std::string &rszName ) const;
 	bool GetName( unsigned nID, std::string *pszName ) const;
-	bool InsertNode( const std::string &szName, int nNodeIndex = NODE_ADD_INDEX ) { return false; }
-	bool RemoveNode( const std::string &szName, int nNodeIndex = NODE_REMOVEALL_INDEX ) { return false; }
-	bool RemoveNodeByID( const std::string &szName, int nNodeID ) { return false; }
-	bool RenameNode( const std::string &szName, const std::string &szNewName ) { return false; }
+
+	bool InsertNode( const std::string &szName, int nNodeIndex = NODE_ADD_INDEX )
+	{
+		return false;
+	}
+
+	bool RemoveNode( const std::string &szName, int nNodeIndex = NODE_REMOVEALL_INDEX )
+	{
+		return false;
+	}
+
+	bool RemoveNodeByID( const std::string &szName, int nNodeID )
+	{
+		return false;
+	}
+
+	bool RenameNode( const std::string &szName, const std::string &szNewName )
+	{
+		return false;
+	}
+
 	bool GetValue( const std::string &szName, CVariant *pValue ) const;
-	bool SetValue( const std::string &szName, const CVariant &value ) { return false; }
+
+	bool SetValue( const std::string &szName, const CVariant &value )
+	{
+		return false;
+	}
+
 	bool IsNameExists( const std::string &rszName ) const;
+
 	void GetNameList( CNameMap *pNameMap ) const {}
-	bool CheckValue( const std::string &szName, const CVariant &value, bool *pResult ) const { return false; }
-	NDb::IObjMan *GetObjMan() { return 0; }
+
+	bool CheckValue( const std::string &szName, const CVariant &value, bool *pResult ) const
+	{
+		return false;
+	}
+
+	NDb::IObjMan *GetObjMan()
+	{
+		return 0;
+	}
 };
 
 class CTableManipulatorIteratorWrapper : public IManipulatorIterator
@@ -52,6 +93,7 @@ class CTableManipulatorIteratorWrapper : public IManipulatorIterator
 	CPtr<CTableManipulatorWrapper> pTableMan;
 	CTableManipulatorWrapper::CNamesMap::const_iterator itCurrType;
 	bool bShowHidden;
+
 	//
 	CTableManipulatorIteratorWrapper() {}
 
@@ -60,9 +102,26 @@ public:
 
 	bool Next();
 	bool IsEnd() const;
-	const SIteratorDesc *GetDesc() const { return 0; }
+
+	const SIteratorDesc *GetDesc() const
+	{
+		return 0;
+	}
+
 	bool GetName( std::string *pszName ) const;
-	bool GetType( std::string *pszType ) const { return false; }
-	unsigned GetID() const { return itCurrType->second->nClassTypeID; }
-	bool IsFolder() const { return false; }
+
+	bool GetType( std::string *pszType ) const
+	{
+		return false;
+	}
+
+	unsigned GetID() const
+	{
+		return itCurrType->second->nClassTypeID;
+	}
+
+	bool IsFolder() const
+	{
+		return false;
+	}
 };

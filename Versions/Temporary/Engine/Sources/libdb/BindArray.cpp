@@ -32,6 +32,7 @@ namespace NBind
 		CObj<IObjMan> pParent;                       // parent object
 		std::string szAddName;                       // additional name (for complete name restructuring)
 		int nIndex;                                  // array element index
+
 		//
 		CArrayElementManipulator() {}
 
@@ -48,10 +49,23 @@ namespace NBind
 		{
 			pBindArray->AddArrayElementManipulator( this );
 		}
-		~CArrayElementManipulator() { pBindArray->RemoveArrayElementManipulator( this ); }
+
+		~CArrayElementManipulator()
+		{
+			pBindArray->RemoveArrayElementManipulator( this );
+		}
+
 		// position-in-array functions
-		void SetIndex( const int _nIndex ) { nIndex = _nIndex; }
-		int GetIndex() const { return nIndex; }
+		void SetIndex( const int _nIndex )
+		{
+			nIndex = _nIndex;
+		}
+
+		int GetIndex() const
+		{
+			return nIndex;
+		}
+
 		int GetSize() const
 		{
 			int nSize = 0;
@@ -64,6 +78,7 @@ namespace NBind
 				return 0;
 			}
 		}
+
 		void ReportArrayInsert( int nPos, int nAmount )
 		{
 			if ( nIndex >= nPos )
@@ -71,6 +86,7 @@ namespace NBind
 				nIndex += nAmount;
 			}
 		}
+
 		void ReportArrayRemove( int nPos, int nAmount )
 		{
 			// A manipulator for an erased element must never refer to its successor.
@@ -83,13 +99,19 @@ namespace NBind
 				nIndex -= nAmount;
 			}
 		}
+
 		//
 		IObjManIterator *CreateIterator( bool bShowHidden )
 		{
 			return new CArrayIterator( nIndex, "", pTypeArray, this, bShowHidden );
 		}
+
 		//
-		void SetChanged() { pParent->SetChanged(); }
+		void SetChanged()
+		{
+			pParent->SetChanged();
+		}
+
 		//
 		IObjMan *CreateManipulator( const std::string &szName )
 		{
@@ -107,6 +129,7 @@ namespace NBind
 				return 0;
 			}
 		}
+
 		std::string GetFullName() const
 		{
 			std::string szFullName = pParent->GetFullName();
@@ -124,6 +147,7 @@ namespace NBind
 			//
 			return !szFullName.empty() ? szFullName + fmt::format( ".[{}]", nIndex ) : fmt::format( "[{}]", nIndex );
 		}
+
 		// main fields manipulation functions
 		bool SetValue( const std::string &szName, const CVariant &value )
 		{
@@ -138,6 +162,7 @@ namespace NBind
 				return false;
 			}
 		}
+
 		bool GetValue( const std::string &szName, CVariant *pValue )
 		{
 			SBindProcessor bindProcessor;
@@ -150,6 +175,7 @@ namespace NBind
 				return false;
 			}
 		}
+
 		// array-specific functions
 		bool Insert( const std::string &szName, const int nPos, const int nAmount = 1, bool bSetDefault = false )
 		{
@@ -171,6 +197,7 @@ namespace NBind
 				}
 			}
 		}
+
 		bool Remove( const std::string &szName, const int nPos, const int nAmount = 1 )
 		{
 			SetChanged();
@@ -191,6 +218,7 @@ namespace NBind
 				}
 			}
 		}
+
 		// get property field descriptor by name
 		const NTypeDef::STypeStructBase::SField *GetDesc( const std::string &szFullFieldName ) const
 		{
@@ -204,15 +232,29 @@ namespace NBind
 						szFullFieldName, 0, checked_cast_ptr<const NTypeDef::STypeStructBase *>( pTypeArray->field.pType ) );
 			}
 		}
+
 		// direct access to embedded struct (if it is)
-		CResource *GetObject() { return pParent->GetObject(); }
-		const CDBID &GetDBID() const { return pParent->GetDBID(); }
+		CResource *GetObject()
+		{
+			return pParent->GetObject();
+		}
+
+		const CDBID &GetDBID() const
+		{
+			return pParent->GetDBID();
+		}
+
 		// additional custom attributes
-		std::wstring GetAttribute( const std::string &szName ) const { return pParent->GetAttribute( szName ); }
+		std::wstring GetAttribute( const std::string &szName ) const
+		{
+			return pParent->GetAttribute( szName );
+		}
+
 		void SetAttribute( const std::string &szName, const std::wstring &szValue )
 		{
 			pParent->SetAttribute( szName, szValue );
 		}
+
 		//
 		bool LoadXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pNode )
 		{
@@ -226,6 +268,7 @@ namespace NBind
 				return false;
 			}
 		}
+
 		bool SaveXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode )
 		{
 			SBindProcessor bindProcessor;
@@ -238,6 +281,7 @@ namespace NBind
 				return false;
 			}
 		}
+
 		bool SetDefault( const std::string &szAddName, NTypeDef::STypeStructBase *pType )
 		{
 			SetChanged();
@@ -649,5 +693,5 @@ namespace NBind
 		}
 	}
 
-}
-}
+} // namespace NBind
+} // namespace NDb

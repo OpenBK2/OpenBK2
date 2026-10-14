@@ -53,6 +53,7 @@ void GetNOPStream( CMemoryStream *pNOP )
 }
 
 const int N_APPLICATIONID = 0x45143100;
+
 class CSendPacket
 {
 	ILinksManager *pLinks;
@@ -68,6 +69,7 @@ public:
 		bits.LockWrite( pkt, N_MAX_PACKET_SIZE + 1024 );
 		bits.Write( &packet, 1 );
 	}
+
 	CSendPacket( const CNodeAddress &_addr, EPacket packet, CP2PTracker::UCID clientID, ILinksManager *_pLinks )
 			: addr( _addr ), pLinks( _pLinks )
 	{
@@ -76,15 +78,25 @@ public:
 		bits.Write( &packet, 1 );
 		bits.Write( &clientID, sizeof( clientID ) );
 	}
+
 	~CSendPacket()
 	{
 		bits.Free();
 		pkt.SetSize( pkt.GetPosition() );
 		bLastPacket = pLinks->Send( addr, pkt );
 	}
-	CBitStream *GetBits() { return &bits; }
-	static bool GetResult() { return bLastPacket; }
+
+	CBitStream *GetBits()
+	{
+		return &bits;
+	}
+
+	static bool GetResult()
+	{
+		return bLastPacket;
+	}
 };
+
 CMemoryStream CSendPacket::pkt;
 CBitLocker CSendPacket::bits;
 bool CSendPacket::bLastPacket;
@@ -132,6 +144,7 @@ static void WritePacket( std::list<CMemoryStream> *pDst, CMemoryStream &pkt )
 	}
 	b.Write( pkt.GetBuffer(), pkt.GetSize() );
 }
+
 static void ReadPacket( CRingBuffer<N_STREAM_BUFFER> &src, CMemoryStream *pDst )
 {
 	NI_ASSERT( CanReadPacket( src ), "Can't read a packet" );
@@ -926,6 +939,7 @@ void CNetDriver::StepActive( float fDeltaTime )
 // CRAP{
 int nTrafficPackets;
 int nTrafficTotalSize;
+
 // CRAP}
 
 void CNetDriver::Step()
@@ -1153,4 +1167,4 @@ IDriver *CreateNetDriver( const SNetDriverConsts &consts, bool bIsBroadcast )
 	return new NNet::CNetDriver( consts, bIsBroadcast );
 }
 
-}
+} // namespace NNet

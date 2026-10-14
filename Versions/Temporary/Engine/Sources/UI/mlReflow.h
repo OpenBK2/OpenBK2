@@ -41,6 +41,7 @@ struct SState
 	NGScene::SFont font;
 	NGfx::SPixel8888 color;
 	NGfx::SPixel8888 outlineColor;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nHAlign );
@@ -82,7 +83,10 @@ class IReflowObject : public CObjectBase
 public:
 	virtual void Update( IReflowState *pState ) {}
 
-	virtual bool IsSpace() const { return false; }
+	virtual bool IsSpace() const
+	{
+		return false;
+	}
 };
 
 // IVisReflowObject
@@ -120,4 +124,4 @@ public:
 
 IReflowLayout *CreateReflowLayout();
 
-} // NAMESPACE
+} // namespace NML

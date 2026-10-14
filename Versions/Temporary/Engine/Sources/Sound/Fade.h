@@ -30,6 +30,7 @@ class CFade : public IPlayListElement
 
 	NTimer::STime timeFaded;
 	NTimer::STime timeLastCall;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pFade );
@@ -46,6 +47,7 @@ class CFade : public IPlayListElement
 
 public:
 	CFade() {}
+
 	// if fade have to be at the end of track, then track is given
 	CFade( const NDb::SFade *_pFade, EMusicSystemVolume _eVolumeType, class CTrack *_pTrackToEnd );
 	void Segment();
@@ -69,4 +71,4 @@ public:
 	void Update();
 };
 
-}
+} // namespace NMusicSystem

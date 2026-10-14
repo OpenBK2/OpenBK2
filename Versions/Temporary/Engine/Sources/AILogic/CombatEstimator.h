@@ -1,6 +1,7 @@
 #pragma once
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CAIUnit;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // для определения комбатной стуации
 class CCombatEstimator
@@ -10,8 +11,10 @@ class CCombatEstimator
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		NTimer::STime time = {};
 		float fDamage = {};
+
 		//
 		SShellInfo() {}
+
 		SShellInfo( NTimer::STime time, float fDamage ) : time( time ), fDamage( fDamage ) {}
 	};
 

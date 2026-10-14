@@ -5,4 +5,4 @@ namespace NDb
 {
 struct SBonusData;
 struct SReinforcement;
-}
+} // namespace NDb

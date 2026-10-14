@@ -6,7 +6,7 @@ namespace NDb
 {
 struct SMaterial;
 struct SPassProfile;
-}
+} // namespace NDb
 
 namespace NAIVisInfo
 {
@@ -22,7 +22,10 @@ class CEngineInfo : public CPtrFuncBase<NGScene::CObjectInfo>
 	bool bNeedUpdate;
 
 protected:
-	virtual bool NeedUpdate() { return bNeedUpdate; }
+	virtual bool NeedUpdate()
+	{
+		return bNeedUpdate;
+	}
 
 	virtual void Recalc();
 
@@ -30,32 +33,66 @@ public:
 	void InitEngineInfo( const NDb::SMaterial *pColor );
 	void Invalidate();
 
-	void SetVerts( std::vector<CVec2> &_aiVerts ) { aiVerts = _aiVerts; }
-	void SetTris( std::vector<STriangle> &_aiTris ) { tris = _aiTris; }
+	void SetVerts( std::vector<CVec2> &_aiVerts )
+	{
+		aiVerts = _aiVerts;
+	}
 
-	void SetNeedUpdate( const bool _bNeedUpdate ) { bNeedUpdate = _bNeedUpdate; }
+	void SetTris( std::vector<STriangle> &_aiTris )
+	{
+		tris = _aiTris;
+	}
+
+	void SetNeedUpdate( const bool _bNeedUpdate )
+	{
+		bNeedUpdate = _bNeedUpdate;
+	}
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CEngineInfoHolder
 {
 	CObj<CEngineInfo> pEngineInfo;
 
 public:
-	CEngineInfoHolder() { pEngineInfo = new CEngineInfo(); }
-	~CEngineInfoHolder() { pEngineInfo->Invalidate(); }
+	CEngineInfoHolder()
+	{
+		pEngineInfo = new CEngineInfo();
+	}
 
-	void InitEngineInfo( const NDb::SMaterial *pColor ) { pEngineInfo->InitEngineInfo( pColor ); }
-	void SetNeedUpdate( const bool bNeedUpdate ) { pEngineInfo->SetNeedUpdate( bNeedUpdate ); }
+	~CEngineInfoHolder()
+	{
+		pEngineInfo->Invalidate();
+	}
 
-	void SetVerts( std::vector<CVec2> &aiVerts ) { pEngineInfo->SetVerts( aiVerts ); }
-	void SetTris( std::vector<STriangle> &aiTris ) { pEngineInfo->SetTris( aiTris ); }
+	void InitEngineInfo( const NDb::SMaterial *pColor )
+	{
+		pEngineInfo->InitEngineInfo( pColor );
+	}
+
+	void SetNeedUpdate( const bool bNeedUpdate )
+	{
+		pEngineInfo->SetNeedUpdate( bNeedUpdate );
+	}
+
+	void SetVerts( std::vector<CVec2> &aiVerts )
+	{
+		pEngineInfo->SetVerts( aiVerts );
+	}
+
+	void SetTris( std::vector<STriangle> &aiTris )
+	{
+		pEngineInfo->SetTris( aiTris );
+	}
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CDebugObject : public CObjectBase
 {
 public:
 	virtual void SetColor( const NDb::SMaterial *pColor ) = 0;
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CDebugSegment : public CDebugObject, public CEngineInfoHolder
 {
@@ -73,8 +110,12 @@ public:
 	void Init( const CSegment &aiSegment, const int nThickness );
 	void SetPosition( const CSegment &aiSegment );
 
-	void SetColor( const NDb::SMaterial *pColor ) { InitEngineInfo( pColor ); }
+	void SetColor( const NDb::SMaterial *pColor )
+	{
+		InitEngineInfo( pColor );
+	}
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CDebugCircle : public CDebugObject, public CEngineInfoHolder
 {
@@ -88,20 +129,32 @@ public:
 	void Init( const CCircle &aiCircle );
 	void SetPosition( const CCircle &aiCircle );
 
-	void SetColor( const NDb::SMaterial *pColor ) { InitEngineInfo( pColor ); }
+	void SetColor( const NDb::SMaterial *pColor )
+	{
+		InitEngineInfo( pColor );
+	}
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CDebugMarker : public CDebugObject, public CEngineInfoHolder
 {
 	OBJECT_BASIC_METHODS( CDebugMarker );
 
 public:
-	void Init( const std::vector<SVector> &tiles ) { Init( tiles, 0, tiles.size() ); }
+	void Init( const std::vector<SVector> &tiles )
+	{
+		Init( tiles, 0, tiles.size() );
+	}
+
 	void Init( const std::vector<SVector> &tiles, const int nStart, const int nEnd );
 	void SetPosition( const std::vector<SVector> &tiles, const int nStart, const int nEnd );
 
-	void SetColor( const NDb::SMaterial *pColor ) { InitEngineInfo( pColor ); }
+	void SetColor( const NDb::SMaterial *pColor )
+	{
+		InitEngineInfo( pColor );
+	}
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CDebugMarkers : public CDebugObject
 {
@@ -116,5 +169,6 @@ public:
 
 	void SetColor( const NDb::SMaterial *pColor );
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-}
+} // namespace NAIVisInfo

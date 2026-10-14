@@ -13,4 +13,4 @@ protected:
 	virtual void Recalc();
 };
 
-}; // namespace
+}; // namespace NGScene

@@ -32,6 +32,7 @@ inline int GetNextPow2( uint32_t n )
 
 	return n + 1;
 }
+
 inline int GetNextPow2( int n )
 {
 	return GetNextPow2( uint32_t( n ) );
@@ -62,10 +63,12 @@ inline int GetMSB( uint32_t n )
 	}
 	return k;
 }
+
 inline int GetMSB( int n )
 {
 	return GetMSB( uint32_t( n ) );
 }
+
 inline int GetMSB( uint16_t n )
 {
 	int k = 0;
@@ -87,6 +90,7 @@ inline int GetMSB( uint16_t n )
 	}
 	return k;
 }
+
 inline int GetMSB( uint8_t n )
 {
 	int k = 0;
@@ -130,10 +134,12 @@ inline int GetLSB( uint32_t n )
 	}
 	return k;
 }
+
 inline int GetLSB( int n )
 {
 	return GetLSB( uint32_t( n ) );
 }
+
 inline int GetLSB( uint16_t n )
 {
 	int k = 0;
@@ -155,6 +161,7 @@ inline int GetLSB( uint16_t n )
 	}
 	return k;
 }
+
 inline int GetLSB( uint8_t n )
 {
 	int k = 0;
@@ -179,17 +186,19 @@ inline int GetNumBits( uint32_t v )
 	v = ( ( v + ( v >> 3 ) ) & 0x381c0e07ul ) + ( ( v >> 6 ) & 0x381c0e07ul );
 	return int( ( v + ( v >> 9 ) + ( v >> 18 ) + ( v >> 27 ) ) & 0x3f );
 }
+
 inline int GetNumBits( int v )
 {
 	return GetNumBits( uint32_t( v ) );
 }
+
 inline int GetNumBits( uint8_t v )
 {
 	v = ( v & 0x55 ) + ( ( v >> 1 ) & 0x55 );
 	v = ( v & 0x33 ) + ( ( v >> 2 ) & 0x33 );
 	return int( ( v & 0x0f ) + ( ( v >> 4 ) & 0x0f ) );
 }
-}
+} // namespace original
 
 enum
 {

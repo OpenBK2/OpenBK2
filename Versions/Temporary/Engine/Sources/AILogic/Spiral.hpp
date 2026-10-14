@@ -27,7 +27,11 @@ public:
 	{
 		nOffset = ( pMask->GetSizeX() - 1 ) / 2;
 	}
-	void operator()( int x, int y ) { SetPoint( x, y ); }
+
+	void operator()( int x, int y )
+	{
+		SetPoint( x, y );
+	}
 };
 
 class CAddPoint8Functional : public CAddPointFunctional

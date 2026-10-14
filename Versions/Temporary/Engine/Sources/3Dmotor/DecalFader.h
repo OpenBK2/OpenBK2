@@ -50,9 +50,14 @@ public:
 	             CFuncBase<STime> *_pTime );
 	bool Update( void *p ); // returns false: it is time to delete this
 	void SetToFadeIn();
-	bool IsFrozen() const { return bFrozen; }
+
+	bool IsFrozen() const
+	{
+		return bFrozen;
+	}
+
 	void Freeze();
 	void Unfreeze();
 };
 
-}
+} // namespace NGScene

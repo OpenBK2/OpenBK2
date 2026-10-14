@@ -192,6 +192,7 @@ IManipulatorIterator *CObjectManipulatorWrapper::Iterate( bool bShowHidden, ECac
 
 typedef std::unordered_map<void *, SPropertyDesc> CPropertyDescMap;
 static CPropertyDescMap s_propertyDescMap;
+
 const SPropertyDesc *GetPropertyDesc( const STypeStructBase::SField *pField )
 {
 	CPropertyDescMap::const_iterator pos = s_propertyDescMap.find( (void *)pField );
@@ -285,6 +286,7 @@ bool CObjectManipulatorWrapper::GetName( unsigned nID, std::string *pszName ) co
 	*pszName = pObjMan->GetDBID().ToString();
 	return true;
 }
+
 // ************************************************************************************************************************ //
 // **
 // ** iterator

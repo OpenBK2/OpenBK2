@@ -57,6 +57,7 @@ static int nRandomTable[32] = { 17,
                                 235,
                                 213,
                                 826 };
+
 void CRainAnimator::Recalc()
 {
 	if ( !IsValid( pValue ) )
@@ -159,6 +160,7 @@ void CRainAnimator::Recalc()
 		pRealValue->directions.swap( directions );
 	}
 }
-}
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x01063120, CRainAnimator )

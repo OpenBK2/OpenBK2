@@ -34,18 +34,28 @@ class CWaterPatchLayer : public CPtrFuncBase<NGScene::CObjectInfo>
 	CDGPtr<CWaterPatch, CPtr<CWaterPatch>> pPatch;
 
 protected:
-	bool NeedUpdate() { return pPatch.Refresh(); }
+	bool NeedUpdate()
+	{
+		return pPatch.Refresh();
+	}
+
 	void Recalc() {}
 
 public:
 	CWaterPatchLayer() {}
-	CWaterPatchLayer( CWaterPatch *_pPatch ) : pPatch( _pPatch ) { pValue = new NGScene::CObjectInfo(); }
+
+	CWaterPatchLayer( CWaterPatch *_pPatch ) : pPatch( _pPatch )
+	{
+		pValue = new NGScene::CObjectInfo();
+	}
+
 	//
 	void UpdateMesh( NGScene::CObjectInfo::SData *pData )
 	{
 		pValue->AssignFast( pData );
 		Updated();
 	}
+
 	//
 	int operator&( IBinSaver &saver );
 };
@@ -64,6 +74,7 @@ class CWaterPatch : public CVersioningBase
 	// geometry for each layer
 	NGScene::CObjectInfo::SData objDataWater;
 	NGScene::CObjectInfo::SData objDataSurf;
+
 	//
 	// This was an anonymous union of two anonymous structs, "float x, y, z" beside
 	// "CVec3 pos", each followed by its own uint32_t color. Neither half is legal:
@@ -75,8 +86,10 @@ class CWaterPatch : public CVersioningBase
 	{
 		CVec3 pos;
 		uint32_t color;
+
 		SGridType() {}
 	};
+
 	//
 	struct SWaveType
 	{
@@ -87,6 +100,7 @@ class CWaterPatch : public CVersioningBase
 		CVec2 direction;
 		float fPhaseOffset;
 	};
+
 	//
 	struct SWaterSurfaceType
 	{
@@ -94,6 +108,7 @@ class CWaterPatch : public CVersioningBase
 		std::vector<float> phase;
 		std::vector<float> amplitude;
 	};
+
 	//
 	struct SFoamParams
 	{
@@ -103,6 +118,7 @@ class CWaterPatch : public CVersioningBase
 		float fFoamTexCoeff;
 		uint32_t nFoamColor;
 	};
+
 	//
 	struct SWaterHorDeform
 	{
@@ -113,6 +129,7 @@ class CWaterPatch : public CVersioningBase
 		float fOffsX;
 		float fOffsY;
 	};
+
 	//
 	CDGPtr<CFuncBase<STime>> pTimer;
 	CDBPtr<NDb::SWater> pDesc;
@@ -146,7 +163,11 @@ class CWaterPatch : public CVersioningBase
 	CVec2 vWaterOffset;
 	//
 protected:
-	bool NeedUpdate() { return pTimer.Refresh(); }
+	bool NeedUpdate()
+	{
+		return pTimer.Refresh();
+	}
+
 	void Recalc();
 	//
 	void ProcessWaveDistribution( const int nWaveNum );
@@ -157,6 +178,7 @@ protected:
 
 public:
 	CWaterPatch() {}
+
 	CWaterPatch( const NDb::SWater *_pDesc, CFuncBase<STime> *_pTimer, CCSBound *_pBound );
 	//
 	int Init(
@@ -180,7 +202,9 @@ class CWater : public CObjectBase
 
 public:
 	CWater() {}
+
 	CWater( const NDb::SWater *_pDesc, CFuncBase<STime> *_pTimer ) : pDesc( _pDesc ), pTimer( _pTimer ) {}
+
 	void Create( NGScene::IGameView *pGView, const int nPatchesX, const int nPatchesY );
 	//
 	int operator&( IBinSaver &saver );

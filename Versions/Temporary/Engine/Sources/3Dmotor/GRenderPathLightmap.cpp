@@ -34,4 +34,4 @@ void RenderShowLightmap( CTransformStack *pTS,
 	}
 	Execute( pRender, pRC, *pTS, lightOps, scene, lightInfo );
 }
-}
+} // namespace NGScene

@@ -12,10 +12,22 @@ static CObjectsMap objects;
 
 struct SSingletonAutoMagic
 {
-	SSingletonAutoMagic() { RegisterSingleton( new CConsoleBuffer(), IConsoleBuffer::tidTypeID ); }
-	~SSingletonAutoMagic() { SSingletonAutoMagic::Clear(); }
-	static void Clear() { objects.clear(); }
+	SSingletonAutoMagic()
+	{
+		RegisterSingleton( new CConsoleBuffer(), IConsoleBuffer::tidTypeID );
+	}
+
+	~SSingletonAutoMagic()
+	{
+		SSingletonAutoMagic::Clear();
+	}
+
+	static void Clear()
+	{
+		objects.clear();
+	}
 };
+
 static SSingletonAutoMagic singletonautomagic;
 
 CObjectBase *Singleton( const int nTypeID )
@@ -63,7 +75,9 @@ struct SSingletonSerializer
 
 	public:
 		CSingleObject() : nID( 0 ), pObject( 0 ) {}
+
 		CSingleObject( int _nID, CObjectBase *_pObject ) : nID( _nID ), pObject( _pObject ) {}
+
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -81,6 +95,7 @@ struct SSingletonSerializer
 			return 0;
 		}
 	};
+
 	int operator&( IBinSaver &saver )
 	{
 		std::vector<CSingleObject> singles;
@@ -109,4 +124,4 @@ void Serialize( const char chunkID, IBinSaver &saver )
 	saver.Add( chunkID, &s );
 }
 
-}
+} // namespace NSingleton

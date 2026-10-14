@@ -24,7 +24,7 @@ namespace NWeather
 {
 static float s_fEffectsSpeedCoeff = 1.0f;
 static float s_fWndAffectsCoeff = 0.05f;
-}
+} // namespace NWeather
 
 void CWeatherVisual::CWeatherPart::Recalc()
 {

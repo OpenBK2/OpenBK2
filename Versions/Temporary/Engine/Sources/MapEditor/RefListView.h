@@ -80,4 +80,4 @@ bool ClearFields( std::list<std::string> *pFields, std::string *pszText, IManipu
 bool ClearAll( const std::vector<SReferenceObject> &rObjects,
                const std::string &rszTargetTypeName,
                const std::string &rszTargetName );
-}
+} // namespace NRefList

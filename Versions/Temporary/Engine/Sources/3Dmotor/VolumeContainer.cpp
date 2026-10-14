@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "VolumeContainer.h"
+
 namespace NCollider
 {
 std::vector<int> fetchBufferArray;
@@ -44,6 +45,7 @@ void CVolumeContainer::GetCoords( SIntCoords *pRes, const CVec3 &src )
 }
 
 std::vector<int> CVolumeContainer::fetchBufferArray;
+
 void CVolumeContainer::Fetch( const SBound &bound )
 {
 	if ( volumeData.size() == 1 )
@@ -218,4 +220,4 @@ void CVolumeContainer::Add( const SVolumeBounds &b, int nData )
 		fetchMark.resize( nData + 1, 0 );
 	}
 }
-}
+} // namespace NCollider

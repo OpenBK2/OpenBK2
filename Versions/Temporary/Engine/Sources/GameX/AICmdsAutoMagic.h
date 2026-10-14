@@ -11,6 +11,7 @@ class CAICmdsAutomagic : public IAICmdsAutoMagic
 	ZDATA
 	std::unordered_map<int, uint8_t> msg2byte;
 	std::vector<int> byte2msg;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &msg2byte );
@@ -22,6 +23,11 @@ public:
 	CAICmdsAutomagic();
 	virtual int GetCommandID( CObjectBase *p );
 	virtual CObjectBase *MakeCommand( int nID );
-	virtual int GetIDSize() const { return 1; }
+
+	virtual int GetIDSize() const
+	{
+		return 1;
+	}
 };
+
 IAICmdsAutoMagic *CreateAICmdsAutoMagic();

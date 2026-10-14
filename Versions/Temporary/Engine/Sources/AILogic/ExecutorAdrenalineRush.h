@@ -14,6 +14,7 @@ protected:
 
 public:
 	CExecutorAdrenalineRush( CAIUnit *_pUnit );
+
 	CExecutorAdrenalineRush() {}
 
 	int operator&( IBinSaver &saver );

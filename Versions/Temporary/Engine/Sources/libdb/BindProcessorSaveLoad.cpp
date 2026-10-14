@@ -406,5 +406,5 @@ namespace NBind
 		return true;
 	}
 
-}
-}
+} // namespace NBind
+} // namespace NDb

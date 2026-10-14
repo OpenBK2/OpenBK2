@@ -36,7 +36,7 @@ constexpr unsigned DOCK_RIGHT = 0xE81D;
 constexpr unsigned DOCK_BOTTOM = 0xE81E;
 // Which sides a bar may dock to (CBRS_ALIGN_ANY): all of them.
 constexpr unsigned ALIGN_ANY = 0xF000;
-}
+} // namespace NMainFrameBar
 
 struct SSWTParams
 {
@@ -48,6 +48,7 @@ struct SSWTParams
 	std::string szParams;
 	bool bModified;
 	bool bFillMODFromBase;
+
 	//
 	SSWTParams() : dwFlags( SWT_ALL ), bModified( false ), bFillMODFromBase( true ) {}
 };
@@ -138,6 +139,7 @@ struct IMainFrameContainer : public CObjectBase
 	{
 		tidTypeID = 0x140943C1
 	};
+
 	// Registration, called by the front-end as it creates its main frame.
 	// Both pointers are the same object; they are passed separately so that
 	// this interface needs no concrete type to cross-cast between them.

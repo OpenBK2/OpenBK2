@@ -20,7 +20,8 @@ void CParticlesTriList::Recalc()
 	}
 }
 
-}
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x01561150, CParticlesTriList )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x01561151, CShaderParticlesGeometry )

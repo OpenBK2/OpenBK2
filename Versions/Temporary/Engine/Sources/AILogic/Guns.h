@@ -9,7 +9,7 @@ namespace NDb
 {
 struct SWeaponRPGStats;
 struct SBaseGunRPGStats;
-}
+} // namespace NDb
 class CAIUnit;
 
 //*******************************************************************
@@ -28,6 +28,7 @@ public:
 	NTimer::STime lastShoot = {};
 	int nGun = {};
 	int nPlatform = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &bFiring );
@@ -40,6 +41,7 @@ public:
 
 public:
 	SCommonGunInfo() {}
+
 	SCommonGunInfo( bool _bFiring, const int _nAmmo, const int _nPlatform, const int _nGun )
 			: bFiring( _bFiring ), nAmmo( _nAmmo ), nPlatform( _nPlatform ), lastShoot( 0 ), nGun( _nGun )
 	{
@@ -228,18 +230,31 @@ public:
 				bCanShootToUnitWOMove( false )
 	{
 	}
+
 	CBasicGun( class CAIUnit *pOwner,
 	           const uint8_t nShellType,
 	           SCommonGunInfo *pCommonGunInfo,
 	           const IGunsFactory::EGunTypes eType );
 
-	virtual int GetShellType() const { return nShellType; }
+	virtual int GetShellType() const
+	{
+		return nShellType;
+	}
 
 	virtual const float GetAimTime( bool bRandomize = true ) const;
 	virtual const float GetRelaxTime( bool bRandomize = true ) const;
-	virtual class CAIUnit *GetOwner() const { return pOwner; }
+
+	virtual class CAIUnit *GetOwner() const
+	{
+		return pOwner;
+	}
+
 	virtual void SetOwner( CAIUnit *pOwner );
-	bool IsGrenade() const { return bGrenade; }
+
+	bool IsGrenade() const
+	{
+		return bGrenade;
+	}
 
 	virtual void GetMechShotInfo( SAINotifyMechShot *pMechShotInfo, const NTimer::STime &time ) const;
 	virtual void GetInfantryShotInfo( SAINotifyInfantryShot *pInfantryShotInfo, const NTimer::STime &time ) const;
@@ -259,12 +274,23 @@ public:
 	void Segment();
 	void SetAntiAviationTarget( class CAIUnit *pTarget );
 
-	bool IsWaitForReload() const { return bWaitForReload; }
-	virtual void ClearWaitForReload() { bWaitForReload = false; }
+	bool IsWaitForReload() const
+	{
+		return bWaitForReload;
+	}
+
+	virtual void ClearWaitForReload()
+	{
+		bWaitForReload = false;
+	}
 
 	// в данный момент в состоянии наводки и стрельбы
 	virtual bool IsFiring() const;
-	bool IsBursting() const { return shootState == WAIT_FOR_ACTION_POINT || shootState == EST_SHOOTING; }
+
+	bool IsBursting() const
+	{
+		return shootState == WAIT_FOR_ACTION_POINT || shootState == EST_SHOOTING;
+	}
 
 	virtual const SBaseGunRPGStats &GetGun() const;
 	virtual const SWeaponRPGStats *GetWeapon() const;
@@ -302,8 +328,16 @@ public:
 	virtual const float GetDispersion() const;
 	virtual const float GetDispRatio( uint8_t nShellType, const float fDist ) const;
 	virtual const int GetFireRate() const;
-	void LockInCurAngle() { bAngleLocked = true; }
-	void UnlockCurAngle() { bAngleLocked = false; }
+
+	void LockInCurAngle()
+	{
+		bAngleLocked = true;
+	}
+
+	void UnlockCurAngle()
+	{
+		bAngleLocked = false;
+	}
 
 	// для самолётов
 	virtual void StartPlaneBurst( class CAIUnit *pEnemy, bool bReAim );
@@ -317,38 +351,89 @@ public:
 	virtual bool CanBreach( const SHPObjectRPGStats *pStats, const int nSide ) const;
 
 	// будет делать все действия, нужные для стрельбы по цели (повороты, прицеливание), но не будет стрелять
-	void DontShoot() { bCanShoot = false; }
+	void DontShoot()
+	{
+		bCanShoot = false;
+	}
+
 	// отменяет DontShoot()
-	void CanShoot() { bCanShoot = true; }
-	bool IsShootAllowed() { return bCanShoot; }
+	void CanShoot()
+	{
+		bCanShoot = true;
+	}
+
+	bool IsShootAllowed()
+	{
+		return bCanShoot;
+	}
 
 	// стреляет ли общий gun ( с учётом патронов - т.е. учитываются все guns, находящиеся с ним в одном стволе )
-	bool IsCommonGunFiring() const { return pCommonGunInfo->bFiring; }
+	bool IsCommonGunFiring() const
+	{
+		return pCommonGunInfo->bFiring;
+	}
+
 	// равен ли pGun ( с учётом патронов )
 	virtual bool IsCommonEqual( const CBasicGun *pGun ) const;
 
 	// "номер ствола" ( gun-ы, отличающиеся только патронами, но находящиеся в одном стволе )
 	// This is a stats-platform slot, not the dense index used by commonGunsInfo.
-	int GetStatsGunNumber() const { return pCommonGunInfo->nGun; }
-	int GetPlatform() const { return pCommonGunInfo->nPlatform; }
+	int GetStatsGunNumber() const
+	{
+		return pCommonGunInfo->nGun;
+	}
 
-	int GetNAmmo() const { return pCommonGunInfo->nAmmo; }
-	void SetNAmmo( int nAmmo ) { pCommonGunInfo->nAmmo = nAmmo; }
+	int GetPlatform() const
+	{
+		return pCommonGunInfo->nPlatform;
+	}
+
+	int GetNAmmo() const
+	{
+		return pCommonGunInfo->nAmmo;
+	}
+
+	void SetNAmmo( int nAmmo )
+	{
+		pCommonGunInfo->nAmmo = nAmmo;
+	}
 
 	virtual struct IBallisticTraj *CreateTraj( const CVec3 &vTarget ) const;
 	virtual void Fire( const CVec2 &target, const float z, const bool bShowBombEffect );
 	virtual uint16_t GetTrajectoryZAngle( const CVec3 &vToAim ) const;
 
 	// сказать, почему отказался стрелять
-	virtual const EUnitAckType &GetRejectReason() const { return eRejectReason; }
+	virtual const EUnitAckType &GetRejectReason() const
+	{
+		return eRejectReason;
+	}
+
 	virtual void SetRejectReason( const EUnitAckType &eReason );
 
-	virtual const bool IsVisible( const uint8_t party ) const { return true; }
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const { pTiles->clear(); }
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const { return false; }
+	virtual const bool IsVisible( const uint8_t party ) const
+	{
+		return true;
+	}
 
-	void AddParallelGun( CBasicGun *pGun ) { parallelGuns.push_back( pGun ); }
-	void SetToParallelGun() { bParallelGun = true; }
+	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const
+	{
+		pTiles->clear();
+	}
+
+	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const
+	{
+		return false;
+	}
+
+	void AddParallelGun( CBasicGun *pGun )
+	{
+		parallelGuns.push_back( pGun );
+	}
+
+	void SetToParallelGun()
+	{
+		bParallelGun = true;
+	}
 
 	// среднее значение
 	virtual const int GetPiercing() const;
@@ -367,7 +452,11 @@ public:
 	virtual const float GetRandomDamage() const;
 
 	virtual bool IsBallisticTrajectory() const;
-	bool IsIgnoreObstacles() const { return bIgnoreObstacles; }
+
+	bool IsIgnoreObstacles() const
+	{
+		return bIgnoreObstacles;
+	}
 
 	virtual bool IsOnTurret() const = 0;
 
@@ -379,15 +468,29 @@ public:
 
 	// направление, по которому в данный момент смотрит орудие
 	virtual const uint16_t GetGlobalDir() const = 0;
+
 	// for AA guns.
-	virtual const NTimer::STime GetTimeToShootToPoint( const CVec3 &vPoint ) const { return 0; }
-	virtual const NTimer::STime GetTimeToShoot( const CVec3 &vPoint ) const { return 0; }
+	virtual const NTimer::STime GetTimeToShootToPoint( const CVec3 &vPoint ) const
+	{
+		return 0;
+	}
+
+	virtual const NTimer::STime GetTimeToShoot( const CVec3 &vPoint ) const
+	{
+		return 0;
+	}
+
 	virtual void TraceAim( class CAIUnit *pUnit ) = 0;
 	// если на турели, то повернуть в относительный угол wAngle
 	virtual void TurnToRelativeDir( const uint16_t wAngle ) = 0;
 	// разрешить/запретить атаковать без учёта ограничения на поворот орудия по горизонтали
 	virtual void SetCircularAttack( const bool bCanAttack ) = 0;
-	virtual class CBuilding *GetMountBuilding() const { return 0; }
+
+	virtual class CBuilding *GetMountBuilding() const
+	{
+		return 0;
+	}
+
 	virtual void StopTracing() = 0;
 	virtual const float GetRotateSpeed() const = 0;
 };

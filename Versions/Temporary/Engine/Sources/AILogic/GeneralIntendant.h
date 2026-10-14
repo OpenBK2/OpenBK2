@@ -20,6 +20,7 @@ class CResupplyCellInfo : public CAIObjectBase
 	uint8_t cMarkedUnderSupply = {};   // indicates that this cell is under supply
 	SVector vCell;                     // coordinates of the cell ( in GetGeneralCell )
 	NTimer::STime timeLastDanger = {}; // time when last truck was killed near this cell
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &resupplyInfo );
@@ -30,12 +31,22 @@ class CResupplyCellInfo : public CAIObjectBase
 		f.Add( 7, &timeLastDanger );
 		return 0;
 	}
+
 	void RemoveUnitResupplyInternal( class CCommonUnit *pUnit, const enum EResupplyType eType );
 
 public:
 	CResupplyCellInfo();
-	void Init( const SVector &_vPos ) { vCell = _vPos; }
-	SVector GetCenter() const { return vCell; }
+
+	void Init( const SVector &_vPos )
+	{
+		vCell = _vPos;
+	}
+
+	SVector GetCenter() const
+	{
+		return vCell;
+	}
+
 	void AddUnitResupply( class CCommonUnit *pUnit, const enum EResupplyType eType );
 	void RemoveUnitResupply( class CCommonUnit *pUnit, const enum EResupplyType eType );
 
@@ -45,14 +56,23 @@ public:
 
 	// for marking that this cell is under supply.
 	void MarkUnderSupply( const enum EResupplyType eType, const bool bSupply = true );
-	const bool IsMarkedUnderSupply( const enum EResupplyType eType ) const { return cMarkedUnderSupply & ( 1 << eType ); }
+
+	const bool IsMarkedUnderSupply( const enum EResupplyType eType ) const
+	{
+		return cMarkedUnderSupply & ( 1 << eType );
+	}
+
 	// dander
 	void SetDanger( const NTimer::STime timeDanger );
 	const bool IsDangerous() const;
 
 	float GetNNeeded( const uint8_t cTypeMask ) const;
 	bool IsEmpty() const;
-	float GetNNeeded( const enum EResupplyType eType ) const { return resupplyCount[eType]; }
+
+	float GetNNeeded( const enum EResupplyType eType ) const
+	{
+		return resupplyCount[eType];
+	}
 
 	static bool IsUnitSuitable( const class CCommonUnit *pUnit, const enum EResupplyType eType );
 	static void MoveUnitToCell( const class CCommonUnit *pUnit, const enum EResupplyType eType );
@@ -61,7 +81,9 @@ public:
 	struct SSortByResupplyMaskPredicate
 	{
 		uint8_t cMask = {};
+
 		SSortByResupplyMaskPredicate( const uint8_t cMask ) : cMask( cMask ) {}
+
 		bool operator()( const CPtr<CResupplyCellInfo> &s1, const CPtr<CResupplyCellInfo> &s2 ) const
 		{
 			float s1n = s1->GetNNeeded( cMask );
@@ -108,6 +130,7 @@ public:
 		CPtr<CGeneralTaskToDefendStorage> pMainTask;
 		CPtr<CBuilding> pStorage;
 		int nParty = {};
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pMainTask );
@@ -118,6 +141,7 @@ public:
 
 	public:
 		CWaitForChangePlayer() {}
+
 		CWaitForChangePlayer( CBuilding *pStorage, CGeneralTaskToDefendStorage *pMainTask, const int nParty );
 		virtual bool IsTimeToRun() const;
 		virtual void Run();
@@ -134,6 +158,7 @@ private:
 		TS_REPAIR,
 		TS_FINISHED,
 	};
+
 	ZDATA
 	ETaskState eState = {};
 
@@ -142,6 +167,7 @@ private:
 	CPtr<CBuilding> pStorage;
 	CPtr<CCommonUnit> pRepairTransport;
 	SAIAngle wRequestID;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &eState );
@@ -157,16 +183,28 @@ private:
 
 public:
 	CGeneralTaskToDefendStorage() {}
+
 	CGeneralTaskToDefendStorage( CBuilding *pStorage, const int nParty );
 
-	virtual ETaskName GetName() const { return ENT_DEFEND_ESTORAGE; }
+	virtual ETaskName GetName() const
+	{
+		return ENT_DEFEND_ESTORAGE;
+	}
+
 	virtual void AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit = false );
 	virtual void ReleaseWorker( ICommander *pManager, const float fMinSeverity );
 	virtual void CancelTask( ICommander *pManager );
 	virtual void Segment();
 
-	virtual float GetSeverity() const { return fSeverity; }
-	virtual bool IsFinished() const { return eState == TS_FINISHED; }
+	virtual float GetSeverity() const
+	{
+		return fSeverity;
+	}
+
+	virtual bool IsFinished() const
+	{
+		return eState == TS_FINISHED;
+	}
 
 	//IWorkerEnumerator
 	virtual bool EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType );
@@ -193,6 +231,7 @@ class CGeneralTaskToResupplyCell : public IGeneralTask, public IWorkerEnumerator
 	float fSeverity = {};
 	NTimer::STime timeNextCheck = {};
 	EResupplyType eResupplyType = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		OnSerialize( f );
@@ -206,23 +245,36 @@ class CGeneralTaskToResupplyCell : public IGeneralTask, public IWorkerEnumerator
 		f.Add( 10, &eResupplyType );
 		return 0;
 	}
+
 	void OnSerialize( IBinSaver &saver );
 
 public:
 	CGeneralTaskToResupplyCell() : pCells( 0 ) {}
+
 	CGeneralTaskToResupplyCell( CResupplyCellInfo *pCell,
 	                            const int nParty,
 	                            const enum EResupplyType eType,
 	                            class CGeneralIntendant *pCells );
 
-	virtual ETaskName GetName() const { return ETN_RESUPPLYCELL; }
+	virtual ETaskName GetName() const
+	{
+		return ETN_RESUPPLYCELL;
+	}
+
 	virtual void AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit = false );
 	virtual void ReleaseWorker( ICommander *pManager, const float fMinSeverity );
 	virtual void CancelTask( ICommander *pManager );
 	virtual void Segment();
 
-	virtual float GetSeverity() const { return fSeverity; }
-	virtual bool IsFinished() const { return bFinished; }
+	virtual float GetSeverity() const
+	{
+		return fSeverity;
+	}
+
+	virtual bool IsFinished() const
+	{
+		return bFinished;
+	}
 
 	//IWorkerEnumerator
 	virtual bool EnumWorker( CCommonUnit *pUnit, const enum EForceType eType );
@@ -252,6 +304,7 @@ public:
 
 public:
 	CGeneralTaskCheckCellDanger() {}
+
 	CGeneralTaskCheckCellDanger( struct IGeneralTask *_pTask,
 	                             class CResupplyCellInfo *_pCell,
 	                             enum EResupplyType _eResupplyType,
@@ -264,6 +317,7 @@ public:
 	{
 		return !pTask || pTask->IsFinished() || pCell->IsDangerous() || pCell->GetNNeeded( eResupplyType ) == 0;
 	}
+
 	virtual void Run()
 	{
 		if ( pTask )
@@ -278,6 +332,7 @@ public:
 
 class CArtillery;
 class CFormation;
+
 class CFreeArtilleryHolder : public CAIObjectBase
 {
 	struct SArtilleryInfo
@@ -285,6 +340,7 @@ class CFreeArtilleryHolder : public CAIObjectBase
 		ZDATA
 		CPtr<CArtillery> pArtillery;
 		CPtr<CFormation> pCatchingFormation;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pArtillery );
@@ -293,8 +349,10 @@ class CFreeArtilleryHolder : public CAIObjectBase
 		}
 
 		SArtilleryInfo() : pArtillery( 0 ), pCatchingFormation( 0 ) {}
+
 		SArtilleryInfo( CArtillery *_pArtillery ) : pArtillery( _pArtillery ), pCatchingFormation( 0 ) {}
 	};
+
 	typedef det_map<int, SArtilleryInfo> TArtilleries;
 	OBJECT_NOCOPY_METHODS( CFreeArtilleryHolder );
 	TArtilleries::iterator itCurrent;
@@ -311,14 +369,22 @@ public:
 	}
 
 private:
-	const bool IsExists( const int nUnitID ) const { return artilleries.find( nUnitID ) != artilleries.end(); }
+	const bool IsExists( const int nUnitID ) const
+	{
+		return artilleries.find( nUnitID ) != artilleries.end();
+	}
+
 	const bool IsValidCurrent() const;
 	const bool IsFreeCurrent() const;
 	void ResetIterator();
 	void OnSerialize( IBinSaver &f );
 
 public:
-	CFreeArtilleryHolder() : timeFromReset( 0 ) { itCurrent = artilleries.end(); }
+	CFreeArtilleryHolder() : timeFromReset( 0 )
+	{
+		itCurrent = artilleries.end();
+	}
+
 	// add artillery to holder
 	void AddArtillery( CArtillery *pArtillery );
 	// remove artillery from holder
@@ -340,7 +406,10 @@ class CGeneralIntendant : public CCommander
 public:
 	struct SVectorHash
 	{
-		int operator()( const SVector &v ) const { return ( v.x << 16 ) & v.y; }
+		int operator()( const SVector &v ) const
+		{
+			return ( v.x << 16 ) & v.y;
+		}
 	};
 
 private:
@@ -365,6 +434,7 @@ private:
 
 	int nParty = {};
 	CFreeArtilleryHolder freeArtilleryHolder;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CCommander *)this );
@@ -387,6 +457,7 @@ private:
 
 public:
 	CGeneralIntendant() : pGeneral( 0 ) {}
+
 	CGeneralIntendant( const int nPlayer, CCommander *pGeneral );
 
 	void Init();
@@ -394,7 +465,12 @@ public:
 	void AddReiforcePosition( const CVec2 &vPos, const uint16_t wDirection );
 
 	virtual void Give( CCommonUnit *pWorker );
-	virtual float GetMeanSeverity() const { return 0; }
+
+	virtual float GetMeanSeverity() const
+	{
+		return 0;
+	}
+
 	virtual void EnumWorkers( const EForceType eType, IWorkerEnumerator *pEnumerator );
 	virtual void Segment();
 

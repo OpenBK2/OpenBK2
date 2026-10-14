@@ -33,14 +33,20 @@ class CBufferedStream
 	{
 		BUFFER_SIZE = 4096
 	};
+
 	char buffer[BUFFER_SIZE];
 	int nStreamSize;
 	int nBytesRead;
 	int nCurrPos;
 	int nBytesInBuffer;
 	CDataStream *pStream;
+
 	//
-	bool IsBufferEmpty() const { return nCurrPos >= nBytesInBuffer; }
+	bool IsBufferEmpty() const
+	{
+		return nCurrPos >= nBytesInBuffer;
+	}
+
 	void ReadPortion()
 	{
 		const int nToRead = (std::min)( int( BUFFER_SIZE ), nStreamSize - nBytesRead );
@@ -62,6 +68,7 @@ public:
 	{
 		ReadPortion();
 	}
+
 	//
 	bool SkipWhiteSpaces()
 	{
@@ -78,6 +85,7 @@ public:
 			Next();
 		}
 	}
+
 	//
 	bool ReadUntilNonspace( std::string *pszBuff )
 	{
@@ -95,8 +103,13 @@ public:
 			Next();
 		}
 	}
+
 	//
-	int GetNumCharsToEnd() const { return ( nStreamSize - nBytesRead ) + ( nBytesInBuffer - nCurrPos ); }
+	int GetNumCharsToEnd() const
+	{
+		return ( nStreamSize - nBytesRead ) + ( nBytesInBuffer - nCurrPos );
+	}
+
 	//
 	void Next()
 	{
@@ -106,7 +119,12 @@ public:
 			ReadPortion();
 		}
 	}
-	char GetChar() const { return buffer[nCurrPos]; }
+
+	char GetChar() const
+	{
+		return buffer[nCurrPos];
+	}
+
 	bool CheckNextChar( const char cCheckChar )
 	{
 		++nCurrPos;
@@ -122,8 +140,12 @@ public:
 		--nCurrPos;
 		return buffer[nCurrPos + 1] == cCheckChar;
 	}
+
 	//
-	bool IsEnd() const { return nBytesRead >= nStreamSize && IsBufferEmpty(); }
+	bool IsEnd() const
+	{
+		return nBytesRead >= nStreamSize && IsBufferEmpty();
+	}
 };
 
 // ************************************************************************************************************************ //
@@ -818,4 +840,4 @@ bool ParseXML( IXmlSaxVisitor *pVisitor, CDataStream *pStream )
 	return true;
 }
 
-}
+} // namespace NLXML

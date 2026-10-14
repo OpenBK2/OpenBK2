@@ -50,7 +50,7 @@ int CollectSyntaxError( lua_State *pState )
 	}
 	return 0;
 }
-}
+} // namespace
 
 namespace NTextEditor
 {
@@ -193,4 +193,4 @@ const char *LuaReservedWords()
 	return "and break do else elseif end false for function global if in local nil not or "
 				 "repeat return then true until while";
 }
-}
+} // namespace NTextEditor

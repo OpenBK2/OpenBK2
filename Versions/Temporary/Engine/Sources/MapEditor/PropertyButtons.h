@@ -70,4 +70,4 @@ bool Press( EButton eButton, const SContext &rContext, const std::string &rszTex
 // True and the colour in *pnResult on OK.
 bool PickColour( IWidget *pOwner, uint32_t nStart, uint32_t *pnResult );
 
-}
+} // namespace NPropertyButton

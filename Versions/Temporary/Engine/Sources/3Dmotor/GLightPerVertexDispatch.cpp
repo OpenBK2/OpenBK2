@@ -12,15 +12,18 @@ namespace
 	{
 		CPUID_1_EDX_SSE2 = 1 << 26
 	};
+
 	enum
 	{
 		CPUID_1_ECX_OSXSAVE = 1 << 27,
 		CPUID_1_ECX_AVX = 1 << 28
 	};
+
 	enum
 	{
 		CPUID_7_EBX_AVX2 = 1 << 5
 	};
+
 	enum
 	{
 		XCR0_SSE_STATE = 1 << 1,
@@ -74,7 +77,7 @@ namespace
 		return refLightingKernels;
 	}
 
-}
+} // namespace
 
 bool IsSSE2Present()
 {
@@ -94,4 +97,4 @@ const SLightingKernels &GetLightingKernels()
 	return kernels;
 }
 
-}
+} // namespace NGScene

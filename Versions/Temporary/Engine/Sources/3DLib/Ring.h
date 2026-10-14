@@ -18,7 +18,9 @@ struct SRingIterator
 	TNode *pNode;
 
 	SRingIterator() : pNode( 0 ) {}
+
 	SRingIterator( TNode *pStart ) : pNode( pStart ) {}
+
 	SRingIterator( const TSelf &sIter ) : pNode( sIter.pNode ) {}
 
 	TSelf &operator++()
@@ -26,17 +28,20 @@ struct SRingIterator
 		pNode = pNode->pNext;
 		return *this;
 	}
+
 	TSelf operator++( int )
 	{
 		TSelf sTmp = *this;
 		pNode = pNode->pNext;
 		return sTmp;
 	}
+
 	TSelf &operator--()
 	{
 		pNode = pNode->pPrev;
 		return *this;
 	}
+
 	TSelf operator--( int )
 	{
 		TSelf sTmp = *this;
@@ -44,14 +49,35 @@ struct SRingIterator
 		return sTmp;
 	}
 
-	Type &operator*() const { return pNode->sData; }
-	Type *operator->() const { return &( operator*() ); }
+	Type &operator*() const
+	{
+		return pNode->sData;
+	}
 
-	bool operator==( const TSelf &sIn ) const { return pNode == sIn.pNode; }
-	bool operator!=( const TSelf &sIn ) const { return pNode != sIn.pNode; }
+	Type *operator->() const
+	{
+		return &( operator*() );
+	}
 
-	TSelf GetPrev() const { return TSelf( pNode->pPrev ); }
-	TSelf GetNext() const { return TSelf( pNode->pNext ); }
+	bool operator==( const TSelf &sIn ) const
+	{
+		return pNode == sIn.pNode;
+	}
+
+	bool operator!=( const TSelf &sIn ) const
+	{
+		return pNode != sIn.pNode;
+	}
+
+	TSelf GetPrev() const
+	{
+		return TSelf( pNode->pPrev );
+	}
+
+	TSelf GetNext() const
+	{
+		return TSelf( pNode->pNext );
+	}
 };
 
 template <class Type>
@@ -67,7 +93,11 @@ public:
 	typedef SRingIterator<const Type, const SRingNode<Type>> const_iterator;
 
 	CRing() : nCount( 0 ), pList( 0 ) {}
-	~CRing() { clear(); }
+
+	~CRing()
+	{
+		clear();
+	}
 
 	void clear()
 	{
@@ -100,6 +130,7 @@ public:
 
 		return iterator( pNew );
 	}
+
 	iterator insert( const iterator &iPos, const Type &sData = Type() )
 	{
 		nCount++;
@@ -128,7 +159,18 @@ public:
 		return *this;
 	}
 
-	int size() const { return nCount; }
-	iterator begin() { return iterator( pList ); }
-	const_iterator begin() const { return const_iterator( pList ); }
+	int size() const
+	{
+		return nCount;
+	}
+
+	iterator begin()
+	{
+		return iterator( pList );
+	}
+
+	const_iterator begin() const
+	{
+		return const_iterator( pList );
+	}
 };

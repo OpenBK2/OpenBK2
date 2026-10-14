@@ -31,12 +31,14 @@ public:
 		float fPhase;
 
 		SWaveParams() : fAmplitude( 0 ), fPhase( 0 ) {}
+
 		// Need to sort by decreasing amplitude but our ripped stl doesn't have greater functor.
 		friend bool operator<( const SWaterNode::SWaveParams &a, const SWaterNode::SWaveParams &b )
 		{
 			return a.fAmplitude > b.fAmplitude;
 		}
 	};
+
 	//
 public:
 	CVec3 vPos;
@@ -55,8 +57,16 @@ public:
 	std::vector<SWaveParams> waveParams;
 
 	SWaterNode() : bIsLargeAlpha( false ) {}
-	void SetAlpha( float _f ) { nAlpha = Clamp( Float2Int( _f * 255.0f ), 0, 255 ); }
-	float GetAlpha() const { return nAlpha / 255.0f; }
+
+	void SetAlpha( float _f )
+	{
+		nAlpha = Clamp( Float2Int( _f * 255.0f ), 0, 255 );
+	}
+
+	float GetAlpha() const
+	{
+		return nAlpha / 255.0f;
+	}
 };
 
 class CWaterController;
@@ -117,6 +127,7 @@ class CWaterController
 		float fDeepWaveNumber;
 		float fPhaseOffset;
 	};
+
 	//
 	CObj<NGScene::IGameView> pGScene;
 	std::vector<CVisWaterPatchHolder> waterPatches;
@@ -150,6 +161,7 @@ public:
 
 	//
 	CWaterController() {}
+
 	void Init( const float fAngle,
 	           const CArray2D<uint8_t> &seaMap,
 	           const std::vector<NWaterStuff::SWaterParams> &waterParams,
@@ -157,6 +169,10 @@ public:
 	           NGScene::IGameView *_pGScene,
 	           //CArray2D<uint8_t> &waterBottomMap,
 	           const NDb::SWater *pWater );
+
 	//const CArray2D<CPtr<SWaterNode> > &GetWaterNodes() const { return waterNodes; }
-	void AttachTimer( CFuncBase<STime> *_pTimer ) { pTimer = _pTimer; }
+	void AttachTimer( CFuncBase<STime> *_pTimer )
+	{
+		pTimer = _pTimer;
+	}
 };

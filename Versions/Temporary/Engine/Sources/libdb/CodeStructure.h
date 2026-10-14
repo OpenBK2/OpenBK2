@@ -9,7 +9,7 @@ namespace NTypeDef
 {
 	class CTerminalTypesDescriptor;
 }
-}
+} // namespace NDb
 
 namespace NLang
 {
@@ -27,12 +27,16 @@ class CCodeStructure : public CXmlResource
 
 public:
 	CCodeStructure() {}
+
 	CCodeStructure( NLang::CFileNode *pRootFile,
 	                const CNodes2TypeDefs &nodes2TypeDefs,
 	                const std::string &szRootDir,
 	                NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
 
-	const std::list<CObj<CFile>> &GetFiles() const { return files; }
+	const std::list<CObj<CFile>> &GetFiles() const
+	{
+		return files;
+	}
 
 	void GenerateCode( const std::string &szRootDir );
 
@@ -42,4 +46,4 @@ public:
 		return 0;
 	}
 };
-}
+} // namespace NCodeGen

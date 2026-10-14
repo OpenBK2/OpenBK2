@@ -47,6 +47,7 @@ class CInterfaceNivalNet : public CInterfaceMPScreenBase, public IProgrammedReac
 
 	EState eState;
 	CPtr<IButton> pRememberPassword;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceMPScreenBase *)this );

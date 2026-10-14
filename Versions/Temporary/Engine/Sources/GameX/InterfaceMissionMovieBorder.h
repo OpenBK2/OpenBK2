@@ -21,7 +21,11 @@ public:
 	bool StepLocal( bool bAppActive );
 	bool ProcessEvent( const SGameMessage &msg );
 	void AfterLoad();
-	bool IsModal() { return false; }
+
+	bool IsModal()
+	{
+		return false;
+	}
 
 	void MsgQuickSave( const SGameMessage &msg );
 	void MsgQuickLoad( const SGameMessage &msg );
@@ -37,11 +41,13 @@ class CICMissionMovieBorder : public CInterfaceCommandBase<CInterfaceMissionMovi
 	OBJECT_BASIC_METHODS( CICMissionMovieBorder );
 
 	ZDATA_( CInterfaceCommandBase<CInterfaceMissionMovieBorder> )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceMissionMovieBorder> *)this );
 		return 0;
 	}
+
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );

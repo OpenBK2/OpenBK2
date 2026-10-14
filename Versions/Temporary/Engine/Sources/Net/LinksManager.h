@@ -13,7 +13,10 @@ class NET_EXPORT CLinksManagerCommon : public ILinksManager
 	CNodeAddress broadcastAddr;
 
 protected:
-	virtual bool IsGoodAddress( const sockaddr &addr ) const { return true; }
+	virtual bool IsGoodAddress( const sockaddr &addr ) const
+	{
+		return true;
+	}
 
 public:
 	CLinksManagerCommon();
@@ -26,4 +29,4 @@ public:
 	virtual bool Recv( class CNodeAddress *pSrc, CMemoryStream *pPkt ) const;
 	virtual bool GetSelfAddress( class CNodeAddressSet *pRes ) const;
 };
-}
+} // namespace NNet

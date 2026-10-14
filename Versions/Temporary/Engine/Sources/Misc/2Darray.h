@@ -6,11 +6,13 @@ struct CBoundCheck
 {
 	T *data = nullptr;
 	int nSize = 0;
+
 	CBoundCheck( T *d, int nS )
 	{
 		data = d;
 		nSize = nS;
 	}
+
 	T &operator[]( int i )
 	{
 		ASSERT( i >= 0 && i < nSize );
@@ -31,6 +33,7 @@ class CArray2D
 	T *data = nullptr;
 	T **pData = nullptr;
 	int nXSize = 0, nYSize = 0;
+
 	void Copy( const CArray2D &a )
 	{
 		if ( !( a.IsEmpty() ) )
@@ -50,6 +53,7 @@ class CArray2D
 			pData = 0;
 		}
 	}
+
 	void Destroy()
 	{
 		if ( data )
@@ -61,6 +65,7 @@ class CArray2D
 			delete[] pData;
 		}
 	}
+
 	void Create()
 	{
 		data = new T[nXSize * nYSize];
@@ -73,13 +78,19 @@ class CArray2D
 
 public:
 	CArray2D() : data( 0 ), pData( 0 ), nXSize( 0 ), nYSize( 0 ) {}
+
 	CArray2D( int xsize, int ysize )
 	{
 		nXSize = xsize;
 		nYSize = ysize;
 		Create();
 	}
-	CArray2D( const CArray2D &a ) { Copy( a ); }
+
+	CArray2D( const CArray2D &a )
+	{
+		Copy( a );
+	}
+
 	CArray2D &operator=( const CArray2D &a )
 	{
 		if ( nXSize == a.nXSize && nYSize == a.nYSize )
@@ -96,7 +107,12 @@ public:
 		}
 		return *this;
 	}
-	~CArray2D() { Destroy(); }
+
+	~CArray2D()
+	{
+		Destroy();
+	}
+
 	void SetSizes( int xsize, int ysize )
 	{
 		if ( nXSize == xsize && nYSize == ysize )
@@ -108,6 +124,7 @@ public:
 		nYSize = ysize;
 		Create();
 	}
+
 	void Clear()
 	{
 		Destroy();
@@ -145,10 +162,26 @@ public:
 		return pData[i];
 	}
 #endif
-	int GetSizeX() const { return nXSize; }
-	int GetSizeY() const { return nYSize; }
-	bool IsEmpty() const { return pData == 0; }
-	void FillZero() { memset( data, 0, sizeof( T ) * nXSize * nYSize ); }
+	int GetSizeX() const
+	{
+		return nXSize;
+	}
+
+	int GetSizeY() const
+	{
+		return nYSize;
+	}
+
+	bool IsEmpty() const
+	{
+		return pData == 0;
+	}
+
+	void FillZero()
+	{
+		memset( data, 0, sizeof( T ) * nXSize * nYSize );
+	}
+
 	void FillEvery( const T &a )
 	{
 		for ( int i = 0; i < nXSize * nYSize; i++ )
@@ -156,6 +189,7 @@ public:
 			data[i] = a;
 		}
 	}
+
 	void Swap( CArray2D<T> &arr )
 	{
 		std::swap( data, arr.data );
@@ -167,6 +201,7 @@ public:
 
 template <class T>
 class CArray3D;
+
 template <class T>
 class CArray3DFetcher
 {
@@ -209,10 +244,24 @@ public:
 		f.Add( 6, &nXYSize );
 		return 0;
 	}
+
 	CArray3D() : nXSize( 0 ), nYSize( 0 ), nZSize( 0 ), nXYSize( 0 ) {}
-	int GetXSize() const { return nXSize; }
-	int GetYSize() const { return nYSize; }
-	int GetZSize() const { return nZSize; }
+
+	int GetXSize() const
+	{
+		return nXSize;
+	}
+
+	int GetYSize() const
+	{
+		return nYSize;
+	}
+
+	int GetZSize() const
+	{
+		return nZSize;
+	}
+
 	void SetSizes( int nX, int nY, int nZ )
 	{
 		nXSize = nX;
@@ -221,7 +270,11 @@ public:
 		nXYSize = nXSize * nYSize;
 		data.resize( nZSize * nXYSize );
 	}
-	void FillEvery( const T &a ) { fill( data.begin(), data.end(), a ); }
+
+	void FillEvery( const T &a )
+	{
+		fill( data.begin(), data.end(), a );
+	}
 #ifdef _DEBUG
 	CArray3DFetcher<T> operator[]( int i )
 	{

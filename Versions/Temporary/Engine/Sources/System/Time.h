@@ -20,10 +20,16 @@ public:
 		f.Add( 2, &pTime );
 		return 0;
 	}
+
 	CTimeCounter();
 	void SetCurrent( STime t );
 	void ResetTiming();
 	void Advance( float fMult, STime currentTime );
-	CCTime *GetTime() const { return pTime; }
+
+	CCTime *GetTime() const
+	{
+		return pTime;
+	}
+
 	int GetDeltaT( float fMult, STime currentTime );
 };

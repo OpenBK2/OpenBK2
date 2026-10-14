@@ -13,7 +13,7 @@ struct Area
 	std::vector<std::string> children;
 	std::shared_ptr<int> resource;
 };
-}
+} // namespace
 
 TEST( ArrayOperations, StringsSurviveGrowthAndInsertionBeforeExistingElements )
 {

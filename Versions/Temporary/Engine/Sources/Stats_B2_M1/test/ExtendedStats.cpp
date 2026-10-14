@@ -173,4 +173,4 @@ TEST_F( ExtendedStats, EditorCanCreateAssignSaveAndReloadSettings )
 	EXPECT_TRUE( stats->pExtendedStats->bForwardTowed );
 	EXPECT_FLOAT_EQ( stats->pExtendedStats->fVerticalOffsetAngleRad, -0.5f );
 }
-}
+} // namespace

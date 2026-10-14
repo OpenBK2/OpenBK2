@@ -15,11 +15,13 @@ const int WAR_FOG_FULL_UPDATE()
 {
 	return SAIConsts::WAR_FOG_FULL_UPDATE;
 }
+
 const int VIS_POWER()
 {
 	return SAIConsts::VIS_POWER;
 }
-}
+} // namespace NAIConsts
+
 bool g_bUseRoundUnits;
 
 float SConsts::PLANE_SPLINE_STEP = 0.1f;

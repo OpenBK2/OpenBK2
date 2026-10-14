@@ -4,7 +4,7 @@ namespace NDb
 {
 struct SMapInfo;
 struct SUnitStatsModifier;
-}
+} // namespace NDb
 
 class CBalanceTest
 {
@@ -20,10 +20,27 @@ class CBalanceTest
 
 public:
 	CBalanceTest() : bTest( false ), shoot( 3, false ) {}
-	void Clear() { bTest = false; }
-	bool IsActive() const { return bTest; }
-	bool HasShoot( int nPlayer ) const { return shoot[nPlayer]; }
-	void SetShoot( int nPlayer ) { shoot[nPlayer] = true; }
+
+	void Clear()
+	{
+		bTest = false;
+	}
+
+	bool IsActive() const
+	{
+		return bTest;
+	}
+
+	bool HasShoot( int nPlayer ) const
+	{
+		return shoot[nPlayer];
+	}
+
+	void SetShoot( int nPlayer )
+	{
+		shoot[nPlayer] = true;
+	}
+
 	void SegmentBalanceTest();
 	void InitBalanceTest( const NDb::SMapInfo *pMapInfo );
 	const NDb::SUnitStatsModifier *GetModifier( int nPlayer ) const;

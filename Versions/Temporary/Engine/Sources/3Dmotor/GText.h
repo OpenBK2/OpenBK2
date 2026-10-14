@@ -3,6 +3,7 @@
 #include "GLocale.h"
 
 class CFontFormatInfo;
+
 namespace NGScene
 {
 
@@ -14,6 +15,7 @@ struct SText
 		CTRect<int> sRect;
 
 		SCharRect() {}
+
 		SCharRect( int _nIndex, CTRect<int> _sRect ) : nIndex( _nIndex ), sRect( _sRect ) {}
 	};
 
@@ -24,6 +26,7 @@ struct SText
 
 		SFont sFont;
 		CPtr<CFontInfo> pFontInfo;
+
 		ZEND int operator&( CStructureSaver &f )
 		{
 			f.Add( 2, &sLayout );
@@ -33,6 +36,7 @@ struct SText
 		}
 
 		SFontLayout() {}
+
 		SFontLayout( CFontInfo *pInfo, const CRectLayout &_sLayout ) : sLayout( _sLayout ), pFontInfo( pInfo ) {}
 	};
 
@@ -40,6 +44,7 @@ struct SText
 	CTPoint<int> sSize;
 	std::vector<SCharRect> charsSet;
 	std::vector<SFontLayout> rectLayouts;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &sSize );
@@ -55,4 +60,4 @@ CFuncBase<SText> *CreateTextFormater( CTextLocaleInfo *pInfo,
                                       CFuncBase<CTPoint<int>> *pSize,
                                       bool bProcessTAGs = true );
 
-}; // namespace
+}; // namespace NGScene

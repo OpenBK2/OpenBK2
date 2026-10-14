@@ -43,6 +43,7 @@ public:
 
 public:
 	CMultiInputState() : nActiveInputState( INVALID_INPUT_STATE_INDEX ) {}
+
 	~CMultiInputState()
 	{
 		for ( int nInputStateIndex = 0; nInputStateIndex < inputStateList.size(); ++nInputStateIndex )
@@ -54,8 +55,13 @@ public:
 			}
 		}
 	}
+
 	//
-	int GetCount() { return inputStateList.size(); }
+	int GetCount()
+	{
+		return inputStateList.size();
+	}
+
 	//
 	int SetActiveInputState( int nNewInputState, bool bSwitchStates, bool bForceSwitch )
 	{
@@ -83,6 +89,7 @@ public:
 		}
 		return nOldInputState;
 	}
+
 	//
 	template <class TINPUTSTATE>
 	int AddInputState( TINPUTSTATE *pDummyInputState )
@@ -117,8 +124,13 @@ public:
 		}
 		return nActiveInputState;
 	}
+
 	//
-	int GetActiveInputStateIndex() { return nActiveInputState; }
+	int GetActiveInputStateIndex()
+	{
+		return nActiveInputState;
+	}
+
 	//
 	IInputState *GetActiveInputState()
 	{
@@ -131,6 +143,7 @@ public:
 			return 0;
 		}
 	}
+
 	//
 	IInputState *GetInputState( int nInputStateIndex )
 	{

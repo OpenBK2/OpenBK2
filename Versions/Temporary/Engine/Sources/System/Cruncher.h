@@ -33,11 +33,13 @@ public:
 	int nCSize;*/
 
 	CNetCompressor();
+
 	void Clear()
 	{
 		CNetCompressor::~CNetCompressor();
 		::new ( this ) CNetCompressor;
 	}
+
 	void Pack( CDataStream &src, CDataStream &appendTo );
 	void StorePack( CDataStream &src, CDataStream &appendTo );
 	void Unpack( CDataStream &src, CDataStream &appendTo );

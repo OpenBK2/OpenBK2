@@ -42,8 +42,13 @@ class CXMLAttribute : public CXMLBase
 	std::string szName;          // name
 	std::string szValue;         // value
 	mutable uint32_t dwHashCode; // internal hash code value (for fast search)
+
 	//
-	void SetValue( const std::string &_szValue ) { szValue = _szValue; }
+	void SetValue( const std::string &_szValue )
+	{
+		szValue = _szValue;
+	}
+
 	uint32_t GetHashCode() const
 	{
 		if ( dwHashCode == 0 )
@@ -55,28 +60,49 @@ class CXMLAttribute : public CXMLBase
 
 public:
 	CXMLAttribute() : dwHashCode( 0 ) {}
+
 	CXMLAttribute( const std::string &_szName, const std::string &_szValue )
 			: szName( _szName ), szValue( _szValue ), dwHashCode( 0 )
 	{
 	}
+
 	virtual ~CXMLAttribute() {}
+
 	//
 	bool operator==( const CXMLAttribute &attr ) const
 	{
 		return GetHashCode() == attr.GetHashCode() ? szName == attr.szName : false;
 	}
+
 	bool operator<( const CXMLAttribute &attr ) const
 	{
 		return GetHashCode() != attr.GetHashCode() ? szName < attr.szName : false;
 	}
+
 	//
 	const char *Parse( const char *pszBegin, const char *pszEnd );
 	void Store( NLXML_STREAM &stream ) const;
+
 	// set/get value
-	void Set( const std::string &_szValue ) { szValue = _szValue; }
-	void Set( const CToStringConvertor &value ) { szValue = value; }
-	const std::string &GetValue() const { return szValue; }
-	const std::string &GetName() const { return szName; }
+	void Set( const std::string &_szValue )
+	{
+		szValue = _szValue;
+	}
+
+	void Set( const CToStringConvertor &value )
+	{
+		szValue = value;
+	}
+
+	const std::string &GetValue() const
+	{
+		return szValue;
+	}
+
+	const std::string &GetName() const
+	{
+		return szName;
+	}
 };
 
 // ************************************************************************************************************************ //
@@ -108,18 +134,29 @@ protected:
 public:
 	CXMLNode( const EType _eType );
 	virtual ~CXMLNode();
+
 	//
-	EType GetType() const { return eType; }
+	EType GetType() const
+	{
+		return eType;
+	}
+
 	//
 	virtual const char *Parse( const char *pszBegin, const char *pszEnd ) = 0;
 	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention ) const = 0;
+
 	//
-	const std::string &GetValue() const { return szValue; }
+	const std::string &GetValue() const
+	{
+		return szValue;
+	}
+
 	void SetValue( const std::string &_szValue )
 	{
 		szValue = _szValue;
 		dwHashCode = 0;
 	}
+
 	bool IsMatch( const std::string &szMatchValue, const uint32_t dwMatchHashCode )
 	{
 		if ( dwHashCode == 0 )
@@ -157,29 +194,68 @@ private:
 	CNodesList children;               // children nodes
 	mutable const_iterator posOptimal; // optimal search position (for fast incremental search)
 protected:
-	void ResetOptimalPos() const { posOptimal = children.begin(); }
+	void ResetOptimalPos() const
+	{
+		posOptimal = children.begin();
+	}
+
 	CXMLNode *Identify( const char *pszBegin, const char *pszEnd );
 
 public:
 	CXMLMultiNode( const CXMLNode::EType _eType ) : CXMLNode( _eType ) {}
+
 	virtual ~CXMLMultiNode();
 	//
 	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention ) const;
+
 	//
-	iterator begin() { return children.begin(); }
-	iterator end() { return children.end(); }
-	const_iterator begin() const { return children.begin(); }
-	const_iterator end() const { return children.end(); }
+	iterator begin()
+	{
+		return children.begin();
+	}
+
+	iterator end()
+	{
+		return children.end();
+	}
+
+	const_iterator begin() const
+	{
+		return children.begin();
+	}
+
+	const_iterator end() const
+	{
+		return children.end();
+	}
+
 	//
 	void AddChild( CXMLNode *pNode )
 	{
 		children.push_back( pNode );
 		ResetOptimalPos();
 	}
-	bool HasChildren() const { return !children.empty(); }
-	CXMLNode *GetChild( const int nIndex ) const { return nIndex < children.size() ? children[nIndex] : 0; }
-	CXMLNode *GetChildFast( const int nIndex ) const { return children[nIndex]; }
-	int CountChildren() const { return children.size(); }
+
+	bool HasChildren() const
+	{
+		return !children.empty();
+	}
+
+	CXMLNode *GetChild( const int nIndex ) const
+	{
+		return nIndex < children.size() ? children[nIndex] : 0;
+	}
+
+	CXMLNode *GetChildFast( const int nIndex ) const
+	{
+		return children[nIndex];
+	}
+
+	int CountChildren() const
+	{
+		return children.size();
+	}
+
 	CXMLNode *FindChild( const std::string &_szValue ) const;
 };
 
@@ -217,6 +293,7 @@ public:
 	//
 	virtual const char *Parse( const char *pszBegin, const char *pszEnd );
 	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention ) const;
+
 	//
 	bool IsBlank() const
 	{
@@ -255,13 +332,37 @@ public:
 	//
 	virtual const char *Parse( const char *pszBegin, const char *pszEnd );
 	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention ) const;
+
 	//
-	void SetVersion( const std::string &szValue ) { szVersion = szValue; }
-	const std::string &GetVersion() const { return szVersion; }
-	void SetStandalone( const std::string &szValue ) { szStandalone = szValue; }
-	const std::string &GetStandalone() const { return szStandalone; }
-	void SetEncoding( const std::string &szValue ) { szEncoding = szValue; }
-	const std::string &GetEncoding() const { return szEncoding; }
+	void SetVersion( const std::string &szValue )
+	{
+		szVersion = szValue;
+	}
+
+	const std::string &GetVersion() const
+	{
+		return szVersion;
+	}
+
+	void SetStandalone( const std::string &szValue )
+	{
+		szStandalone = szValue;
+	}
+
+	const std::string &GetStandalone() const
+	{
+		return szStandalone;
+	}
+
+	void SetEncoding( const std::string &szValue )
+	{
+		szEncoding = szValue;
+	}
+
+	const std::string &GetEncoding() const
+	{
+		return szEncoding;
+	}
 };
 
 // ************************************************************************************************************************ //
@@ -311,14 +412,35 @@ public:
 	// attributes
 	void SetAttribute( const CXMLAttribute &attribute );
 	void SetAttribute( const std::string &szName, const CToStringConvertor &value );
-	void SetAttribute( const std::string &szName, const std::string &szValue ) { SetAttributeLocal( szName, szValue ); }
+
+	void SetAttribute( const std::string &szName, const std::string &szValue )
+	{
+		SetAttributeLocal( szName, szValue );
+	}
+
 	const CXMLAttribute *GetAttribute( const std::string &szName ) const;
 	void RemoveAttribute( const std::string &szName );
-	const std::list<CXMLAttribute> &GetAttributesList() const { return attributes; }
+
+	const std::list<CXMLAttribute> &GetAttributesList() const
+	{
+		return attributes;
+	}
+
 	// text
-	const std::string &GetText() const { return szText; }
-	void SetText( const std::string &_szText ) { szText = _szText; }
-	void RemoveText() { szText.clear(); }
+	const std::string &GetText() const
+	{
+		return szText;
+	}
+
+	void SetText( const std::string &_szText )
+	{
+		szText = _szText;
+	}
+
+	void RemoveText()
+	{
+		szText.clear();
+	}
 };
 
 // ************************************************************************************************************************ //

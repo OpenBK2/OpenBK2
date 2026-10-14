@@ -5,6 +5,7 @@
 
 enum ESoundMixType : int;
 class CSubstSound;
+
 namespace NDb
 {
 enum ESoundType : int;
@@ -39,6 +40,7 @@ class CSound : public CObjectBase
 
 public:
 	CSound() {}
+
 	CSound( int _nID,
 	        const NDb::SSoundDesc *pDesc,
 	        struct ISound *pSound,
@@ -56,41 +58,93 @@ public:
 	bool IsTimeToFinish() const;
 
 	//время проигрыша этого звука
-	NTimer::STime GetPlayTime() const { return timeToPlay; }
+	NTimer::STime GetPlayTime() const
+	{
+		return timeToPlay;
+	}
 
 	// замена звука
-	bool IsSubstituted() const { return pSubstitute != 0; }
+	bool IsSubstituted() const
+	{
+		return pSubstitute != 0;
+	}
+
 	CSubstSound *GetSubst();
 	void Substitute( CSubstSound *_pSubstitute, NTimer::STime nStartTime );
 	void UnSubstitute();
 
-	bool IsLooped() const { return bLooped; }
+	bool IsLooped() const
+	{
+		return bLooped;
+	}
 
 	//начало проигрыша этого звука
 	void MarkStarted();
-	bool IsMarkedStarted() const { return bStartedMark; }
+
+	bool IsMarkedStarted() const
+	{
+		return bStartedMark;
+	}
+
 	//конец проигрыша звука
-	bool IsMarkedFinished() const { return bFinishedMark; }
-	void MarkFinished( bool bFinished = true ) { bFinishedMark = bFinished; }
+	bool IsMarkedFinished() const
+	{
+		return bFinishedMark;
+	}
+
+	void MarkFinished( bool bFinished = true )
+	{
+		bFinishedMark = bFinished;
+	}
+
 	// для затухания звука при удалении
 	void MarkToDim( const NTimer::STime time );
-	bool IsMarkedForDim() const { return bDimMark; }
+
+	bool IsMarkedForDim() const
+	{
+		return bDimMark;
+	}
+
 	// из-за затухания (по времени) или из-за расстояния громкость может быть не полной.
 	float GetVolume( const NTimer::STime time, const float fDist ) const;
 
 	void SetBeginTime( const NTimer::STime time );
-	const NTimer::STime &GetBeginTime() const { return timeBegin; }
+
+	const NTimer::STime &GetBeginTime() const
+	{
+		return timeBegin;
+	}
 
 	int GetRadiusMax() const; // дистанция (в клетках) на котрой этот звук слышен
 	ISound *GetSound();
-	ESoundMixType GetMixType() const { return eMixType; }
-	const int GetID() { return wID; }
+
+	ESoundMixType GetMixType() const
+	{
+		return eMixType;
+	}
+
+	const int GetID()
+	{
+		return wID;
+	}
+
 	const NDb::SSoundDesc *GetDesc() const;
 
 	void SetPos( const class CVec3 &vPos );
 	void SetSpeed( const CVec3 &_vSpeed );
-	const CVec3 &GetPos() const { return vPos; }
-	const CVec3 &GetSpeed() const { return vSpeed; }
 
-	NDb::ESoundType GetCombatType() const { return eCombatType; }
+	const CVec3 &GetPos() const
+	{
+		return vPos;
+	}
+
+	const CVec3 &GetSpeed() const
+	{
+		return vSpeed;
+	}
+
+	NDb::ESoundType GetCombatType() const
+	{
+		return eCombatType;
+	}
 };

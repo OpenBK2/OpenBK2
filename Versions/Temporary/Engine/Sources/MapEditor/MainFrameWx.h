@@ -9,4 +9,4 @@ namespace NMainFrameWx
 bool Create();
 // Shows the frame where the last session left it.
 void Show();
-}
+} // namespace NMainFrameWx

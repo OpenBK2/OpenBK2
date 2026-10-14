@@ -8,7 +8,7 @@ namespace NDb
 {
 struct SMapInfo;
 struct SAIGameConsts;
-}
+} // namespace NDb
 
 enum EActionNotify : unsigned int;
 struct SMiniMapUnitInfo;
@@ -39,8 +39,11 @@ struct IAILogic : public ICommonB2M1AI
 	                   const struct NDb::SMapInfo *pMapInfo,
 	                   const NDb::SAIGameConsts *pConsts,
 	                   struct IAIScenarioTracker *_pScenarioTracker ) = 0;
+
 	virtual void LogCheckSum( ICheckSumLog *pCheckSumLog ) {}
+
 	virtual void InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo ) = 0;
+
 	virtual void PostMapLoad() {}
 
 	virtual void ToggleWarFog( const bool bWarFog ) = 0;

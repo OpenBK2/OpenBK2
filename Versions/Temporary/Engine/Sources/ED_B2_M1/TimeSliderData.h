@@ -40,7 +40,11 @@ struct SMovieKeyData
 	bool bActive;
 	std::string szCameraName;
 
-	SMovieKeyData() { Clear(); }
+	SMovieKeyData()
+	{
+		Clear();
+	}
+
 	//
 	void Clear()
 	{
@@ -71,7 +75,11 @@ public:
 	// keys are not sorted by time!!!
 	std::vector<SMovieKeyData> keys;
 
-	STimeSliderData() { Clear(); }
+	STimeSliderData()
+	{
+		Clear();
+	}
+
 	//
 	void Clear()
 	{
@@ -89,6 +97,7 @@ public:
 
 		keys.resize( 0 );
 	}
+
 	//
 	bool HasActiveKeys() const
 	{
@@ -101,6 +110,7 @@ public:
 		}
 		return false;
 	}
+
 	//
 	bool HasSingleActiveKey() const
 	{
@@ -114,14 +124,20 @@ public:
 		}
 		return ( nCount == 1 );
 	}
+
 	//
-	bool IsSelectionValid() const { return ( fabs( fSelectionLength ) > FP_EPSILON ); }
+	bool IsSelectionValid() const
+	{
+		return ( fabs( fSelectionLength ) > FP_EPSILON );
+	}
+
 	//
 	bool IsPointUnderCursor( const float fPoint ) const
 	{
 		//
 		return ( fabs( fPoint - fCursorTime ) < DEF_SEL_RAD );
 	}
+
 	bool IsPointInsideSelection( const float fPoint ) const
 	{
 		const float fStart = (std::min)( fSelectionStart, fSelectionStart + fSelectionLength );
@@ -129,6 +145,7 @@ public:
 
 		return ( ( IsSelectionValid() && ( fPoint >= fStart ) && ( fPoint <= fEnd ) ) || ( IsPointUnderCursor( fPoint ) ) );
 	}
+
 	//
 	void UpdateSelection()
 	{
@@ -137,6 +154,7 @@ public:
 			itKey->bActive = IsPointInsideSelection( itKey->fTime );
 		}
 	}
+
 	//
 	void ResetSelection()
 	{
@@ -144,10 +162,19 @@ public:
 		fMoveFromValue = 0.0f;
 		fMoveToValue = 0.0f;
 	}
+
 	//
-	void SetCursorPos( float fTime ) { fCursorTime = fTime; }
+	void SetCursorPos( float fTime )
+	{
+		fCursorTime = fTime;
+	}
+
 	//
-	float GetCursorPos() const { return fCursorTime; }
+	float GetCursorPos() const
+	{
+		return fCursorTime;
+	}
+
 	//
 	float GetFirstKeyTime() const
 	{
@@ -160,6 +187,7 @@ public:
 		}
 		return fTime;
 	}
+
 	//
 	float GetLastKeyTime() const
 	{
@@ -172,6 +200,7 @@ public:
 		}
 		return fTime;
 	}
+
 	//
 	float GetPrevKeyTime() const
 	{
@@ -201,6 +230,7 @@ public:
 		//
 		return keys[i].fTime;
 	}
+
 	//
 	float GetNextKeyTime() const
 	{

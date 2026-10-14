@@ -7,6 +7,7 @@
 typedef uint32_t STime;
 
 #include "System/WinFrame.h"
+
 namespace NInput
 {
 
@@ -16,6 +17,7 @@ enum EPOVAxis
 	PA_X,
 	PA_Y
 };
+
 enum EControlType
 {
 	CT_KEY,
@@ -39,6 +41,7 @@ struct SMessage
 	STime tTime = {};
 
 	SMessage() {}
+
 	SMessage( int _nAction, EPOVAxis _ePOVAxis, EControlType _cType, int _nParam, bool _bState, STime _tTime )
 			: nAction( _nAction ), ePOVAxis( _ePOVAxis ), cType( _cType ), nParam( _nParam ), bState( _bState ),
 				tTime( _tTime )
@@ -65,4 +68,4 @@ INPUT_EXPORT bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg,
                                   int *pnParam2,
                                   int *pnCount,
                                   NInput::EControlType *peControlType );
-};
+}; // namespace NInput

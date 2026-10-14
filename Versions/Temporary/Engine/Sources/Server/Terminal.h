@@ -24,6 +24,7 @@ class CTerminal : public CObjectBase
 
 public:
 	CTerminal() {}
+
 	CTerminal( CCommands *_pCommands, const int _nPort );
 	~CTerminal();
 	void Segment();

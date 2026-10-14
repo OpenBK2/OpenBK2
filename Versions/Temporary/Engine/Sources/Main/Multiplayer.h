@@ -8,6 +8,7 @@ namespace NDb
 {
 struct SNetGameConsts;
 };
+
 namespace NNet
 {
 struct IDriver;
@@ -38,6 +39,7 @@ public:
 	int nParam;
 
 	CMultiplayerCommand() : nPlayer( -1 ) {}
+
 	CMultiplayerCommand( const EMultiplayerCommand _eCommand,
 	                     const int _nPlayer,
 	                     const int _nParam,
@@ -55,6 +57,7 @@ struct IMultiplayer : public CObjectBase
 		ACTIVE,
 		INACTIVE
 	};
+
 	virtual void SendAICommand( CObjectBase *pCommand ) = 0;
 	virtual void SendDirect( int nPlayer, CObjectBase *pCommand ) = 0;
 	virtual CMultiplayerCommand *GetCommand() = 0;
@@ -65,6 +68,7 @@ struct IMultiplayer : public CObjectBase
 
 	virtual void SendRecv() = 0;
 };
+
 IMultiplayer *CreateMultiplayerHost( IAICmdsAutoMagic *pCmds, const NDb::SNetGameConsts *pConsts );
 IMultiplayer *
 CreateMultiplayerClient( IAICmdsAutoMagic *pCmds, const NDb::SNetGameConsts *pConsts, const char *pszIPAddress );

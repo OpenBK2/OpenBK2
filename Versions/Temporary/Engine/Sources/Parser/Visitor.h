@@ -26,4 +26,4 @@ struct IVisitor : public CObjectBase
 	virtual void Visit( CAttributeDefNode *pAttrDefNode ) = 0;
 	virtual void Visit( CNamespace *pNM ) = 0;
 };
-}
+} // namespace NLang

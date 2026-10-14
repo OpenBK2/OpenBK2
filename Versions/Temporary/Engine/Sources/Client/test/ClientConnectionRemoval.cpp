@@ -41,7 +41,10 @@ struct CPlayGameProcessorTestAccess
 		client.processors.push_back( client.pPlayGameProcessor.GetPtr() );
 	}
 
-	static void AddRelay( CServerClient &client, int clientID ) { AddRelay( *client.pPlayGameProcessor, clientID ); }
+	static void AddRelay( CServerClient &client, int clientID )
+	{
+		AddRelay( *client.pPlayGameProcessor, clientID );
+	}
 };
 
 namespace
@@ -80,25 +83,52 @@ class CRecordingDriver : public NNet::IDriver
 public:
 	std::vector<CMemoryStream> sent;
 	std::list<CMemoryStream> received;
+
 	void Init( NNet::APPLICATION_ID, int, bool, NNet::ILinksManager * ) override {}
-	EState GetState() const override { return ACTIVE; }
-	EReject GetRejectReason() const override { return NONE; }
+
+	EState GetState() const override
+	{
+		return ACTIVE;
+	}
+
+	EReject GetRejectReason() const override
+	{
+		return NONE;
+	}
+
 	void ConnectGame( const NNet::CNodeAddress &, const CMemoryStream & ) override {}
+
 	void StartGame() override {}
+
 	void StartGameInfoSend( const SGameInfo & ) override {}
+
 	void StopGameInfoSend() override {}
+
 	void StartNewPlayerAccept() override {}
+
 	void StopNewPlayerAccept() override {}
-	bool GetGameInfo( int, NNet::CNodeAddress *, bool *, float *, SGameInfo * ) override { return false; }
+
+	bool GetGameInfo( int, NNet::CNodeAddress *, bool *, float *, SGameInfo * ) override
+	{
+		return false;
+	}
+
 	void RefreshServersList() override {}
-	bool SendBroadcast( const CMemoryStream & ) override { return false; }
+
+	bool SendBroadcast( const CMemoryStream & ) override
+	{
+		return false;
+	}
+
 	bool SendDirect( int clientID, const CMemoryStream &packet ) override
 	{
 		EXPECT_EQ( clientID, 0 ); // every control packet uses the persistent server link
 		sent.push_back( packet );
 		return true;
 	}
+
 	void Kick( int ) override {}
+
 	bool GetMessage( EMessage *type, int *clientID, std::vector<int> *, CMemoryStream *packet ) override
 	{
 		if ( received.empty() )
@@ -111,12 +141,33 @@ public:
 		received.pop_front();
 		return true;
 	}
-	const float GetPing( int ) override { return 0; }
-	const float GetTimeSinceLastRecv( int ) override { return 0; }
+
+	const float GetPing( int ) override
+	{
+		return 0;
+	}
+
+	const float GetTimeSinceLastRecv( int ) override
+	{
+		return 0;
+	}
+
 	void Step() override {}
-	int GetSelfClientID() override { return 0; }
-	const std::string GetIP( int ) override { return "127.0.0.1"; }
-	const int GetPort( int ) override { return 0; }
+
+	int GetSelfClientID() override
+	{
+		return 0;
+	}
+
+	const std::string GetIP( int ) override
+	{
+		return "127.0.0.1";
+	}
+
+	const int GetPort( int ) override
+	{
+		return 0;
+	}
 };
 
 void ReceiveDrop( CPlayGameProcessor &processor, int sender, int slot, int segment )
@@ -143,7 +194,7 @@ void ReceiveDeath( CPlayGameProcessor &processor, int clientID )
 	CPtr<CNetPacket> received = RoundTrip( dead );
 	ASSERT_TRUE( processor.ProcessPacket( received ) );
 }
-}
+} // namespace
 
 TEST( ClientConnectionRemoval, HostFinalDropSurvivesDeathInSameServerBatch )
 {

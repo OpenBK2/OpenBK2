@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Obstacle.h"
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CObstacle : public IObstacle
 {
@@ -18,11 +19,19 @@ public:
 public:
 	CObstacle() : fFirePower( 0 ) {}
 
-	virtual void UpdateTakenDamagePower( const float fUpdate ) { fFirePower += fUpdate; }
-	virtual const float GetTakenDamagePower() const { return fFirePower; }
+	virtual void UpdateTakenDamagePower( const float fUpdate )
+	{
+		fFirePower += fUpdate;
+	}
+
+	virtual const float GetTakenDamagePower() const
+	{
+		return fFirePower;
+	}
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CStaticObject;
+
 class CObstacleStaticObject : public CObstacle
 {
 	OBJECT_BASIC_METHODS( CObstacleStaticObject );
@@ -39,6 +48,7 @@ public:
 
 public:
 	CObstacleStaticObject() {}
+
 	CObstacleStaticObject( class CStaticObject *pObj ) : pObj( pObj ) {}
 
 	virtual class CBasicGun *ChooseGunToShootToSelf( class CCommonUnit *pUnit, NTimer::STime *pTime );
@@ -51,4 +61,5 @@ public:
 	virtual bool CanDeleteByMovingOver( class CAIUnit *pUnit );
 	class CUpdatableObj *GetObject() const;
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

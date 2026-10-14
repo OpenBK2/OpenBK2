@@ -35,6 +35,7 @@ struct SConstUserDataForResMan
 	std::string szExportSourceFolder;
 	std::string szExportDestinationFolder;
 	std::string szObjectRecordIDsFolder;
+
 	//
 	int operator&( IXmlSaver &saver )
 	{
@@ -184,6 +185,7 @@ bool CResourceManagerWrapper::HasReferencingObjects( bool *pServiceIsReady,
 {
 	return false;
 }
+
 // CRAP}
 
 void CResourceManagerWrapper::ResetCache()

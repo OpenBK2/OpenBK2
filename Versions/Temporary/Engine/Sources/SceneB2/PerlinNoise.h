@@ -21,9 +21,20 @@ public:
 	int CreateTiled( const int nSizeX, const int nSizeY, const long nOctsNum, const float fPers, const float fScale );
 
 	// function returns perlin noise array
-	const CArray2D<float> &GetPerlinNoise() const { return noise; }
+	const CArray2D<float> &GetPerlinNoise() const
+	{
+		return noise;
+	}
+
 	// function returns size X of noise array
-	unsigned int GetSizeX() const { return noise.GetSizeX(); }
+	unsigned int GetSizeX() const
+	{
+		return noise.GetSizeX();
+	}
+
 	// function returns size Y of noise array
-	unsigned int GetSizeY() const { return noise.GetSizeY(); }
+	unsigned int GetSizeY() const
+	{
+		return noise.GetSizeY();
+	}
 };

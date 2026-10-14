@@ -12,20 +12,25 @@ struct SHeightPattern
 	float fRatio;
 	CArray2D<float> heights;
 	bool bOdd;
+
 	//
 	SHeightPattern() : pos( 0, 0 ), fRatio( 1.0f ), bOdd( false ) {}
+
 	SHeightPattern( const CTPoint<int> &rPos, float _fRatio, const CArray2D<float> &rHeights, bool _bOdd )
 			: pos( rPos ), fRatio( _fRatio ), heights( rHeights ), bOdd( _bOdd )
 	{
 	}
+
 	SHeightPattern( int nPosX, int nPosY, float _fRatio, const CArray2D<float> &rHeights, bool _bOdd )
 			: pos( nPosX, nPosY ), fRatio( _fRatio ), heights( rHeights ), bOdd( _bOdd )
 	{
 	}
+
 	SHeightPattern( const SHeightPattern &rPattern )
 			: pos( rPattern.pos ), fRatio( rPattern.fRatio ), heights( rPattern.heights ), bOdd( rPattern.bOdd )
 	{
 	}
+
 	SHeightPattern &operator=( const SHeightPattern &rPattern )
 	{
 		if ( &rPattern != this )
@@ -37,6 +42,7 @@ struct SHeightPattern
 		}
 		return *this;
 	}
+
 	//
 	bool CreateByGradient( float fValue, int nGridLines, const SGradient &rGradient );
 	bool CreateByValue( float fValue, int nGridLines, bool bEllipse );
@@ -49,6 +55,7 @@ struct SCreateHeightPatternByGradientFunctional
 	const SGradient *pGradient;
 	float fRatio;
 	float bSquareInterpolated;
+
 	//
 	SCreateHeightPatternByGradientFunctional( SHeightPattern *_pHeightPattern,
 	                                          const SGradient *_pGradient,
@@ -60,6 +67,7 @@ struct SCreateHeightPatternByGradientFunctional
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 		NI_ASSERT( pGradient != 0, "Wrong parameter: pGradient == 0" );
 	}
+
 	//
 	bool operator()( int nXIndex, int nYIndex, float fDistance )
 	{
@@ -73,12 +81,14 @@ struct SCreateHeightPatternByValueFunctional
 {
 	SHeightPattern *pHeightPattern;
 	float fValue;
+
 	//
 	SCreateHeightPatternByValueFunctional( SHeightPattern *_pHeightPattern, float _fValue )
 			: pHeightPattern( _pHeightPattern ), fValue( _fValue )
 	{
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
+
 	//
 	bool operator()( int nXIndex, int nYIndex, float fDistance )
 	{
@@ -109,6 +119,7 @@ struct SCreateHeightPatternToLevelFunctional
 		}
 		return true;
 	}
+
 	//
 	virtual float GetHeight( int nXIndex, int nYIndex ) = 0;
 };
@@ -149,6 +160,7 @@ struct SCreateHeightPatternToLevelOverZeroFunctional
 		}
 		return true;
 	}
+
 	//
 	virtual float GetHeight( int nXIndex, int nYIndex ) = 0;
 };
@@ -172,6 +184,7 @@ struct SCreateHeightPatternFunctional
 		}
 		return true;
 	}
+
 	//
 	virtual float GetHeight( int nXIndex, int nYIndex ) = 0;
 };
@@ -181,8 +194,10 @@ struct SCalculateAverageHeightFunctional
 {
 	float fTotalHeight;
 	int nPointCount;
+
 	//
 	SCalculateAverageHeightFunctional() : fTotalHeight( 0.0f ), nPointCount( 0 ) {}
+
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
 	{
@@ -193,8 +208,13 @@ struct SCalculateAverageHeightFunctional
 		}
 		return true;
 	}
+
 	//
-	float GetAverageHeight() { return ( ( nPointCount != 0 ) ? ( fTotalHeight / nPointCount ) : 0.0f ); }
+	float GetAverageHeight()
+	{
+		return ( ( nPointCount != 0 ) ? ( fTotalHeight / nPointCount ) : 0.0f );
+	}
+
 	//
 	virtual float GetHeight( int nXIndex, int nYIndex ) = 0;
 };

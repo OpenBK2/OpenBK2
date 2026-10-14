@@ -25,7 +25,11 @@ public:
 	}
 
 protected:
-	void SetUnit( CUpdatableObj *_pUnit ) { __pUnit = _pUnit; }
+	void SetUnit( CUpdatableObj *_pUnit )
+	{
+		__pUnit = _pUnit;
+	}
+
 	void SetStatus( const EUnitStatus _eStatus );
 
 public:

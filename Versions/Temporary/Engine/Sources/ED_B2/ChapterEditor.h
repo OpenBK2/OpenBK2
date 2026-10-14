@@ -26,25 +26,46 @@ class CChapterEditor : public CEditorBase, public CDefaultView
 	//
 public:
 	//IEditor
-	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
-	IView *GetView() { return this; }
-	IInputState *GetInputState() { return pChapterState; }
+	void GetTemporaryLabel( std::string *pszTemporaryLabel )
+	{
+		pszTemporaryLabel->clear();
+	}
+
+	IView *GetView()
+	{
+		return this;
+	}
+
+	IInputState *GetInputState()
+	{
+		return pChapterState;
+	}
+
 	void GetChildFrameType( std::string *pszChildFrameTypeName )
 	{
 		( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__";
 	}
+
 	void CreateControls() {}
+
 	void PostCreateControls() {}
+
 	void PreDestroyControls() {}
+
 	void DestroyControls() {}
+
 	void Create();
 	void Destroy();
 
 	//CDefaultView
 	void Undo( IController *pController ) {}
+
 	void Redo( IController *pController );
 
-	const CChapterEditorSettings GetEditorSettings() const { return editorSettings; }
+	const CChapterEditorSettings GetEditorSettings() const
+	{
+		return editorSettings;
+	}
 
 	IManipulator *CreateChapterManipulator();
 };

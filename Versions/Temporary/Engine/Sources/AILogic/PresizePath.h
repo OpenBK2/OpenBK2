@@ -49,6 +49,7 @@ public:
 		f.Add( 9, &fSpeedLen );
 		return 0;
 	}
+
 	void OnSerialize( IBinSaver &f );
 
 public:
@@ -57,11 +58,16 @@ public:
 				eState( EPPS_WAIT_FOR_INIT )
 	{
 	}
+
 	CPresizePath( CBasePathUnit *pUnit,
 	              const class CVec2 &vEndPoint,
 	              const class CVec2 &vEndDir,
 	              ISmoothPath *pApproachPath );
-	virtual const CVec2 &GetFinishPoint() const { return vEndPoint; }
+
+	virtual const CVec2 &GetFinishPoint() const
+	{
+		return vEndPoint;
+	}
 
 	virtual bool IsFinished() const;
 	virtual void Segment( const NTimer::STime timeDiff );
@@ -75,9 +81,15 @@ public:
 	virtual const CVec2 PeekPathPoint( const int nToShift ) const;
 	virtual IMemento *CreateMemento() const;
 
-	virtual float GetCurvatureRadius() const { return 0.0f; }
+	virtual float GetCurvatureRadius() const
+	{
+		return 0.0f;
+	}
 
-	virtual bool IsWithFormation() const { return false; }
+	virtual bool IsWithFormation() const
+	{
+		return false;
+	}
 };
 
 class CMilitaryCar;
@@ -105,10 +117,12 @@ public:
 		f.Add( 6, &vCurrentPlacement );
 		return 0;
 	}
+
 	void OnSerialize( IBinSaver &saver );
 
 public:
 	CMechUnitRestOnBoardPath() : pUnit( 0 ) {}
+
 	CMechUnitRestOnBoardPath( CBasePathUnit *pUnit, CMilitaryCar *pTransport );
 
 	virtual const CVec3 GetPoint( NTimer::STime timeDiff );
@@ -122,22 +136,58 @@ public:
 		static CVec2 vFinish( VNULL2 );
 		return vFinish;
 	}
-	virtual bool IsFinished() const { return false; }
+
+	virtual bool IsFinished() const
+	{
+		return false;
+	}
 
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap )
 	{
 		return false;
 	}
-	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) { return false; }
-	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap ) { return false; }
+
+	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit )
+	{
+		return false;
+	}
+
+	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap )
+	{
+		return false;
+	}
+
 	virtual void Stop() {}
-	virtual const bool CanGoBackward() const { return false; }
-	virtual const bool CanGoForward() const { return true; }
+
+	virtual const bool CanGoBackward() const
+	{
+		return false;
+	}
+
+	virtual const bool CanGoForward() const
+	{
+		return true;
+	}
+
 	virtual void GetNextTiles( std::list<SVector> *pTiles ) {}
-	virtual const CVec2 PeekPathPoint( const int nToShift ) const { return VNULL2; }
-	virtual IMemento *CreateMemento() const { return 0; }
 
-	virtual float GetCurvatureRadius() const { return 0.0f; }
+	virtual const CVec2 PeekPathPoint( const int nToShift ) const
+	{
+		return VNULL2;
+	}
 
-	virtual bool IsWithFormation() const { return false; }
+	virtual IMemento *CreateMemento() const
+	{
+		return 0;
+	}
+
+	virtual float GetCurvatureRadius() const
+	{
+		return 0.0f;
+	}
+
+	virtual bool IsWithFormation() const
+	{
+		return false;
+	}
 };

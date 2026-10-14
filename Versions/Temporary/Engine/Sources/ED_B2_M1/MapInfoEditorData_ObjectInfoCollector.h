@@ -80,6 +80,7 @@ struct SObjectInfoCollector
 		}
 		return pObjectInfo;
 	}
+
 	SObjectInfo *Insert( SObjectInfo *pCreatedObjectInfo, unsigned *pnObjectInfoID )
 	{
 		if ( pCreatedObjectInfo == 0 )
@@ -413,19 +414,49 @@ struct SObjectInfoCollector
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	const CVec3 &GetSelectionPosition() { return objectSelection.vPosition; }
-	const float GetSelectionDirection() { return objectSelection.fDirection; }
-	const SObjectSelection::ESelectionType GetSelectionType() { return objectSelection.eSelectionType; }
+	const CVec3 &GetSelectionPosition()
+	{
+		return objectSelection.vPosition;
+	}
+
+	const float GetSelectionDirection()
+	{
+		return objectSelection.fDirection;
+	}
+
+	const SObjectSelection::ESelectionType GetSelectionType()
+	{
+		return objectSelection.eSelectionType;
+	}
+
 	void SetSelectionType( SObjectSelection::ESelectionType eSelectionType )
 	{
 		objectSelection.eSelectionType = eSelectionType;
 	}
+
 	const SObjectSelection::ESelectionType PickSelection( const CVec3 &rvTerrainPos );
-	void BackupSelectionPosition() { objectSelection.BackupPosition(); }
+
+	void BackupSelectionPosition()
+	{
+		objectSelection.BackupPosition();
+	}
+
 	void RollbackSelectionPosition( const SObjectEditInfo *pObjectEditInfo, IEditorScene *pEditorScene );
-	inline bool IsSelectionEmpty() { return objectSelection.IsEmpty(); }
-	inline void ClearSelection() { objectSelection.Clear(); }
-	inline void ResetPickSelection() { objectSelection.ResetPickSelection(); }
+
+	inline bool IsSelectionEmpty()
+	{
+		return objectSelection.IsEmpty();
+	}
+
+	inline void ClearSelection()
+	{
+		objectSelection.Clear();
+	}
+
+	inline void ResetPickSelection()
+	{
+		objectSelection.ResetPickSelection();
+	}
 
 	void
 	RemoveSelection( IEditorScene *pEditorScene, CObjectBaseController *pObjectController, IManipulator *pManipulator );
@@ -502,10 +533,15 @@ struct SObjectInfoCollector
 	                    IEditorScene *pEditorScene,
 	                    IManipulator *pManipulator );
 	void HideClipboard( IEditorScene *pEditorScene, IManipulator *pManipulator );
+
 	//
-	inline bool IsClipboardEmpty() { return objectClipboard.IsEmpty(); }
+	inline bool IsClipboardEmpty()
+	{
+		return objectClipboard.IsEmpty();
+	}
+
 	void ClearClipboard();
 	//
 	void Trace();
 };
-};
+}; // namespace NMapInfoEditor

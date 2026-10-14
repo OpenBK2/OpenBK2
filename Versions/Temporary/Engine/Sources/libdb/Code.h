@@ -8,13 +8,14 @@ namespace NTypeDef
 {
 	struct STypeDef;
 	class CTerminalTypesDescriptor;
-}
-}
+} // namespace NTypeDef
+} // namespace NDb
 
 namespace NCodeGen
 {
 
 class CStrStream;
+
 struct ICode : public CXmlResource
 {
 	struct SCodeStreams
@@ -57,4 +58,4 @@ struct ICode : public CXmlResource
 	                           const std::string &szQualifiedName ) = 0;
 };
 
-}
+} // namespace NCodeGen

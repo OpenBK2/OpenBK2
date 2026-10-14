@@ -144,4 +144,4 @@ TEST_F( MPPacketTraceLog, FailedFinalOpenAllowsRetryWithAllEvents )
 	EXPECT_NE( complete.find( "name=BeforeFailure" ), std::string::npos );
 	EXPECT_NE( complete.find( "name=AfterFailure" ), std::string::npos );
 }
-}
+} // namespace

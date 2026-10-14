@@ -16,6 +16,7 @@ struct SVxCache
 		memset( nData, 0xffff, sizeof( nData ) );
 		nPos = 0;
 	}
+
 	void Push( uint16_t n )
 	{
 		if ( IsIn( n ) )
@@ -24,6 +25,7 @@ struct SVxCache
 		}
 		nData[( ++nPos ) % N_SIZE] = n;
 	}
+
 	bool IsIn( uint16_t n ) const
 	{
 		for ( int k = 0; k < N_SIZE; ++k )
@@ -35,6 +37,7 @@ struct SVxCache
 		}
 		return false;
 	}
+
 	int GetPos( uint16_t n ) const
 	{
 		for ( int k = 0; k < N_SIZE; ++k )
@@ -68,6 +71,7 @@ private:
 
 	void CountVertices( const std::vector<STriangle> &tris );
 	void Init( const std::vector<STriangle> &tris );
+
 	struct SStartSearch
 	{
 		int nBestIdx, nBestFreeLinks;
@@ -78,6 +82,7 @@ private:
 				: nBestIdx( -1 ), nBestFreeLinks( 1000000 ), pOptimizer( pO ), tris( _tris )
 		{
 		}
+
 		void Try( int nTri )
 		{
 			const STriangle &q = tris[nTri];
@@ -93,15 +98,18 @@ private:
 			}
 		}
 	};
+
 	struct SBestSearch
 	{
 		int nBestIdx, nBestCached, nBestFreeLinks, nBestDistance;
 		CTriVertexCacheOptimizer *pOptimizer;
 		const std::vector<STriangle> &tris;
+
 		SBestSearch( CTriVertexCacheOptimizer *pO, const std::vector<STriangle> &_tris )
 				: nBestIdx( -1 ), nBestCached( -1 ), pOptimizer( pO ), tris( _tris )
 		{
 		}
+
 		bool GetL( int *pnResDistance, int n, int nVertex, int nVCacheSize )
 		{
 			if ( n <= *pnResDistance )
@@ -126,7 +134,12 @@ private:
 			*pnResDistance = n;
 			return true; // - 0 * fl;// - 3 * fl;
 		}
-		bool HasFound() const { return nBestCached == 3; }
+
+		bool HasFound() const
+		{
+			return nBestCached == 3;
+		}
+
 		void Try( int nTri )
 		{
 			const STriangle &q = tris[nTri];
@@ -229,6 +242,7 @@ private:
 			}
 		}
 	};
+
 	int SearchBest( const std::vector<STriangle> &tris );
 	void MeasureEfficiency( const std::vector<STriangle> &tris );
 	bool OutputVertex( int n );
@@ -245,13 +259,18 @@ struct SEdgeInfo
 {
 	int nU, nV, nXSize, nYSize;
 };
+
 inline bool operator==( const SEdgeInfo &a, const SEdgeInfo &b )
 {
 	return memcmp( &a, &b, sizeof( a ) ) == 0;
 }
+
 struct SEdgeInfoHash
 {
-	int operator()( const SEdgeInfo &e ) const { return e.nU ^ e.nV ^ e.nXSize ^ e.nYSize; }
+	int operator()( const SEdgeInfo &e ) const
+	{
+		return e.nU ^ e.nV ^ e.nXSize ^ e.nYSize;
+	}
 };
 
-}
+} // namespace NGScene

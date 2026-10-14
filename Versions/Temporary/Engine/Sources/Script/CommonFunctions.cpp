@@ -4,6 +4,7 @@
 #include "scriptCommon.h"
 
 #define REG_FUNCTION( Name ) { #Name, lua##Name }
+
 //
 namespace NScript
 {
@@ -37,4 +38,4 @@ SRegFunction pCommonRegList[] = {
 	{ 0, 0 } // End
 };
 //
-}
+} // namespace NScript

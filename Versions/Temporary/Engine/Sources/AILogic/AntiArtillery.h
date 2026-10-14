@@ -21,14 +21,36 @@ public:
 
 public:
 	CRevealCircle() {}
-	CRevealCircle( const CVec2 &center, const float fR ) : circle( center, fR ) { SetUniqueIdForObjects(); }
-	CRevealCircle( const CCircle &_circle ) : circle( _circle ) { SetUniqueIdForObjects(); }
 
-	virtual void GetRevealCircle( CCircle *pCircle ) const { *pCircle = circle; }
+	CRevealCircle( const CVec2 &center, const float fR ) : circle( center, fR )
+	{
+		SetUniqueIdForObjects();
+	}
 
-	virtual const bool IsVisible( const uint8_t party ) const { return true; }
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const { pTiles->clear(); }
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const { return false; }
+	CRevealCircle( const CCircle &_circle ) : circle( _circle )
+	{
+		SetUniqueIdForObjects();
+	}
+
+	virtual void GetRevealCircle( CCircle *pCircle ) const
+	{
+		*pCircle = circle;
+	}
+
+	virtual const bool IsVisible( const uint8_t party ) const
+	{
+		return true;
+	}
+
+	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const
+	{
+		pTiles->clear();
+	}
+
+	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const
+	{
+		return false;
+	}
 };
 class CAIUnit;
 
@@ -73,14 +95,19 @@ public:
 		}
 		return 0;
 	}
+
 	//
 	void Scan( const CVec2 &center );
 
 public:
 	CAntiArtillery() {}
+
 	explicit CAntiArtillery( class CAIUnit *pOwner );
 
-	void SetParty( const int _nParty ) { nParty = _nParty; }
+	void SetParty( const int _nParty )
+	{
+		nParty = _nParty;
+	}
 
 	void Init( const float fMaxRadius, const int nParty );
 	void Fired( const float _fGunRadius, const CVec2 &center );
@@ -90,12 +117,27 @@ public:
 
 	const CCircle GetRevealCircle( const int nParty ) const;
 	const NTimer::STime GetLastHeardTime( const int nParty ) const;
-	const CVec2 GetLastRevealCenter( const int nParty ) const { return lastRevealCenter[nParty]; }
+
+	const CVec2 GetLastRevealCenter( const int nParty ) const
+	{
+		return lastRevealCenter[nParty];
+	}
 
 	//
-	virtual const bool IsVisible( const uint8_t party ) const { return true; }
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const { pTiles->clear(); }
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const { return false; }
+	virtual const bool IsVisible( const uint8_t party ) const
+	{
+		return true;
+	}
+
+	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const
+	{
+		pTiles->clear();
+	}
+
+	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const
+	{
+		return false;
+	}
 
 	//
 	friend struct SAntiArtillerySort;

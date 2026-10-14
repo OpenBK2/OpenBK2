@@ -83,4 +83,4 @@ int ReadData( char *pBuf, int nMaxSize )
 	}
 }
 
-}
+} // namespace NLang

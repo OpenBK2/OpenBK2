@@ -30,6 +30,7 @@ struct SObjectInfo : public CObjectBase
 		//
 		CLinkIDList linkedLinkIDIist; // Список залинкованных объектов
 		unsigned nLinkToLinkID;       // Объект к которому залинкованы
+
 		//
 		SMapInfoElement()
 				: nFrameIndex( INVALID_NODE_ID ), nPlayer( INVALID_NODE_ID ), fHP( 1.0f ), vPosition( VNULL3 ),
@@ -37,6 +38,7 @@ struct SObjectInfo : public CObjectBase
 					nLinkToLinkID( INVALID_NODE_ID )
 		{
 		}
+
 		SMapInfoElement( const SMapInfoElement &rMapInfoElement )
 				: szRPGStatsTypeName( rMapInfoElement.szRPGStatsTypeName ), rpgStatsDBID( rMapInfoElement.rpgStatsDBID ),
 					nFrameIndex( rMapInfoElement.nFrameIndex ), nPlayer( rMapInfoElement.nPlayer ), fHP( rMapInfoElement.fHP ),
@@ -46,6 +48,7 @@ struct SObjectInfo : public CObjectBase
 					linkedLinkIDIist( rMapInfoElement.linkedLinkIDIist ), nLinkToLinkID( rMapInfoElement.nLinkToLinkID )
 		{
 		}
+
 		SMapInfoElement &operator=( const SMapInfoElement &rMapInfoElement )
 		{
 			if ( &rMapInfoElement != this )
@@ -66,11 +69,16 @@ struct SObjectInfo : public CObjectBase
 		}
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline CVec3 GetPosition( const CVec3 &rvPosition ) const { return rvPosition + vPosition + vAdditionalPosition; }
+		inline CVec3 GetPosition( const CVec3 &rvPosition ) const
+		{
+			return rvPosition + vPosition + vAdditionalPosition;
+		}
+
 		inline float GetDirection( const float _fDirection ) const
 		{
 			return _fDirection + fDirection + fAdditionalDirection;
 		}
+
 		inline void FixInvalidPos( const CTRect<float> &rSize, const CVec3 &rvPosition )
 		{
 			const CVec3 vPos = GetPosition( rvPosition );
@@ -130,17 +138,20 @@ struct SObjectInfo : public CObjectBase
 		//
 		CVec3 vAdditionalPosition;  // Дополнительное смещение объекта (относительно SMapInfoElement) (в AI точках)
 		float fAdditionalDirection; // Относительное направление объекта (относительно SMapInfoElement) (в радианах)
+
 		//
 		SSceneElement()
 				: vPosition( VNULL3 ), fDirection( 0.0f ), vAdditionalPosition( VNULL3 ), fAdditionalDirection( 0.0f )
 		{
 		}
+
 		SSceneElement( const SSceneElement &rSceneElement )
 				: vPosition( rSceneElement.vPosition ), fDirection( rSceneElement.fDirection ),
 					vAdditionalPosition( rSceneElement.vAdditionalPosition ),
 					fAdditionalDirection( rSceneElement.fAdditionalDirection )
 		{
 		}
+
 		SSceneElement &operator=( const SSceneElement &rSceneElement )
 		{
 			if ( &rSceneElement != this )
@@ -154,11 +165,16 @@ struct SObjectInfo : public CObjectBase
 		}
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline CVec3 GetPosition( const CVec3 &rvPosition ) const { return rvPosition + vPosition + vAdditionalPosition; }
+		inline CVec3 GetPosition( const CVec3 &rvPosition ) const
+		{
+			return rvPosition + vPosition + vAdditionalPosition;
+		}
+
 		inline float GetDirection( const float _fDirection ) const
 		{
 			return _fDirection + fDirection + fAdditionalDirection;
 		}
+
 		void Trace() const
 		{
 			DebugTrace( "pos: ( %g, %g, %g ), dir: %d, addPos: ( %g, %g, %g ), addDir: %d",
@@ -189,8 +205,10 @@ struct SObjectInfo : public CObjectBase
 	CMapInfoElementMap mapInfoElementMap;   // Набор элементов объекта
 	CSceneElementMap sceneElementMap;       // Набор визуальных составляющих
 	CSceneIDToLinkIDMap sceneIDToLinkIDMap; // Пересчет визуальных составляющих в элементы объекта
+
 	//
 	virtual ~SObjectInfo() {}
+
 	//
 	void MakeAbsolute();
 	void MakeRelative();
@@ -246,8 +264,17 @@ struct SObjectInfo : public CObjectBase
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// если присутствует объект сцены с указанным ID возвращает true
 	virtual bool Pick( unsigned nSceneID );
-	virtual bool Pick( const CVec3 &rvPos ) { return false; }
-	virtual bool Pick( const CSelectionSquare &rSelectionSquare ) { return false; }
+
+	virtual bool Pick( const CVec3 &rvPos )
+	{
+		return false;
+	}
+
+	virtual bool Pick( const CSelectionSquare &rSelectionSquare )
+	{
+		return false;
+	}
+
 	// рисует объект
 	virtual bool Draw( CSceneDrawTool *pEditorSceneDrawTool );
 
@@ -283,6 +310,7 @@ struct SObjectInfo : public CObjectBase
 	// абстрактные методы
 	virtual SObjectInfo *CallDuplicate() const = 0;
 	virtual EObjectInfoType GetObjectInfoType() = 0;
+
 	// настройщики
 	virtual void GetDrawSelectionParameters( uint32_t *pdwSceneObject,
 	                                         uint32_t *pdwObject,
@@ -307,6 +335,7 @@ struct SObjectInfo : public CObjectBase
 			( *pdwMainObject ) = 0;
 		}
 	}
+
 	virtual bool NeedMakeOrientation() = 0;
 	virtual bool KeepZeroHeight() = 0;
 	virtual bool KeepCommonHeight() = 0;
@@ -392,4 +421,4 @@ struct SObjectInfo : public CObjectBase
 	//
 	virtual void Trace() const;
 };
-};
+}; // namespace NMapInfoEditor

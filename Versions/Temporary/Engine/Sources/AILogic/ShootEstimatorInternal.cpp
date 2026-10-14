@@ -39,6 +39,7 @@ extern CSupremeBeing theSupremeBeing;
 
 //BASIC_REGISTER_CLASS( AILOGIC, CTankShootEstimator );
 BASIC_REGISTER_CLASS( AILOGIC, IShootEstimator );
+
 //BASIC_REGISTER_CLASS( AILOGIC, CPlaneDeffensiveFireShootEstimator );
 //BASIC_REGISTER_CLASS( AILOGIC, CPlaneShturmovikShootEstimator );
 

@@ -412,4 +412,4 @@ void PlaceSingleSeaReinforcement( const int nPlayer,
 	theExecutorContainer.Add( pEx );
 }
 
-}
+} // namespace NReinforcement

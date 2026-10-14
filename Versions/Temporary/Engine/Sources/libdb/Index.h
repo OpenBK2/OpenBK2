@@ -1,11 +1,13 @@
 #pragma once
 #include "ObjectHeader.h"
+
 namespace NDb
 {
 
 struct SFullTypeHeader : public STypeObjectHeader
 {
 	std::string szFileName;
+
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -31,4 +33,4 @@ inline bool LoadIndexData( std::vector<SFullTypeHeader> *pRes, CDataStream *pStr
 	return true;
 }
 
-}
+} // namespace NDb

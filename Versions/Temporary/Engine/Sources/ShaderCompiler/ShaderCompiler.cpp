@@ -34,6 +34,7 @@ struct SProcedure
 		locals.clear();
 		cmds.clear();
 	}
+
 	int GetLocalVar( const char *p ) const
 	{
 		for ( int k = 0; k < locals.size(); ++k )
@@ -45,6 +46,7 @@ struct SProcedure
 		}
 		return -1;
 	}
+
 	int GetParam( const char *p ) const
 	{
 		for ( int k = 0; k < params.size(); ++k )
@@ -137,6 +139,7 @@ struct SProgram
 		}
 		return -1;
 	}
+
 	bool IsValidCommand( const char *p ) const
 	{
 		if ( IsOneOf( pszCmds, p ) )
@@ -154,6 +157,7 @@ class CProgramParser
 		PROCEDURE,
 		_ERROR
 	};
+
 	SProgram &prog;
 	SProcedure cur;
 	EState state;
@@ -167,6 +171,7 @@ class CProgramParser
 		       IsVSRegister( psz, 'A' ) || cur.GetLocalVar( psz ) != -1 || cur.GetParam( psz ) != -1 ||
 		       IsAddressInstruction( psz );
 	}
+
 	void ShitHappened( const string &szInfo )
 	{
 		szError = szInfo;
@@ -175,8 +180,17 @@ class CProgramParser
 
 public:
 	CProgramParser( SProgram &_p ) : prog( _p ), state( PROCEDURE ) {}
-	bool IsError() const { return state == _ERROR; }
-	const string &GetError() const { return szError; }
+
+	bool IsError() const
+	{
+		return state == _ERROR;
+	}
+
+	const string &GetError() const
+	{
+		return szError;
+	}
+
 	void Finish()
 	{
 		if ( !cur.cmds.empty() )
@@ -185,6 +199,7 @@ public:
 		}
 		cur.Clear();
 	}
+
 	void AddLine( const char *pszLine, const char *pszLineEnd )
 	{
 		vector<SLexem> lexems;
@@ -268,6 +283,7 @@ public:
 struct CVSCompiler
 {
 	const SProgram &prog;
+
 	struct SStkFrame
 	{
 		const SProcedure *pProc;
@@ -282,6 +298,7 @@ struct CVSCompiler
 
 public:
 	CVSCompiler( const SProgram &_p ) : prog( _p ) {}
+
 	void GenerateShader( string *pRes, const char *pszProcName )
 	{
 		string &res = *pRes;
@@ -475,6 +492,7 @@ typedef std::unordered_map<string, string> CPSProcHash;
 CPSProcHash psProcHash;
 
 static char parsedWord[256];
+
 static string PreCompileShader( char *pBuf )
 {
 	int k;

@@ -11,7 +11,7 @@ const std::string text = u8"Boj \u010c\u4e2d\U0001f680";
 // An independent UTF-16LE fixture: BOM, ASCII, two BMP characters, a surrogate pair.
 const std::vector<uint8_t> encoded = {
 	0xff, 0xfe, 'B', 0, 'o', 0, 'j', 0, ' ', 0, 0x0c, 0x01, 0x2d, 0x4e, 0x3d, 0xd8, 0x80, 0xde };
-}
+} // namespace
 
 TEST( TextResourceEncoding, EditorWritesGameCompatibleUtf16FromBothStringTypes )
 {

@@ -57,7 +57,9 @@ static void FreeLists()
 static struct STracker
 {
 	bool bIsRunning;
+
 	STracker() : bIsRunning( true ) {}
+
 	~STracker()
 	{
 		bIsRunning = false;
@@ -188,9 +190,15 @@ class CTrivialPointerSerialization : public IPointerSerialization
 {
 	OBJECT_BASIC_METHODS( CTrivialPointerSerialization );
 
-	virtual int GetObjectID( CObjectBase *p ) { return (int)p; }
+	virtual int GetObjectID( CObjectBase *p )
+	{
+		return (int)p;
+	}
 
-	virtual CObjectBase *GetObject( int nID ) { return (CObjectBase *)nID; }
+	virtual CObjectBase *GetObject( int nID )
+	{
+		return (CObjectBase *)nID;
+	}
 };
 
 static void CollectObjectsStatistics( std::unordered_map<std::string, STypeStats> *pTypesMap )

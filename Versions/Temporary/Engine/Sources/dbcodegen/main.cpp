@@ -82,7 +82,7 @@ bool ReadFileList( std::vector<std::string> *pFiles, const std::string &szFileLi
 	}
 	return true;
 }
-}
+} // namespace
 
 int PORT_CDECL main( int argc, char *argv[] )
 {

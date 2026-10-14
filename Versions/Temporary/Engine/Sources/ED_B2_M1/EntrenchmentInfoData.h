@@ -26,6 +26,7 @@ struct SEntrenchmentCreateInfo : public SObjectCreateInfo
 
 typedef std::list<int> CSegmentLinkIDList;
 typedef std::list<CSegmentLinkIDList> CSegmentLinkIDListList;
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SEntrenchmentInfo : public SObjectInfo
 {
@@ -38,12 +39,36 @@ public:
 	SEntrenchmentInfo() : nEntrenchmentID( INVALID_NODE_ID ) {}
 
 	// SObjectInfo
-	SObjectInfo *CallDuplicate() const { return Duplicate(); }
-	EObjectInfoType GetObjectInfoType() { return OIT_ENTRENCHMENT; }
-	bool NeedMakeOrientation() { return true; }
-	bool KeepZeroHeight() { return true; }
-	bool KeepCommonHeight() { return false; }
-	bool NeedProcessEditParameters() { return false; }
+	SObjectInfo *CallDuplicate() const
+	{
+		return Duplicate();
+	}
+
+	EObjectInfoType GetObjectInfoType()
+	{
+		return OIT_ENTRENCHMENT;
+	}
+
+	bool NeedMakeOrientation()
+	{
+		return true;
+	}
+
+	bool KeepZeroHeight()
+	{
+		return true;
+	}
+
+	bool KeepCommonHeight()
+	{
+		return false;
+	}
+
+	bool NeedProcessEditParameters()
+	{
+		return false;
+	}
+
 	//
 	static const NDb::SModel *GetModel( const NDb::SEntrenchmentRPGStats *pEntrenchmentRPGStats,
 	                                    NDb::EEntrenchSegmType type,
@@ -57,7 +82,9 @@ public:
 	             IEditorScene *pEditorScene,
 	             CObjectBaseController *pObjectController,
 	             IManipulator *pManipulator );
+
 	void FillMaskManipulator( class CMaskManipulator *pMaskManipulator ) {}
+
 	void GetMask( std::string *pszMask ) {}
 
 	static bool GetEntrenchmentSegmentPositionOnTerrain( CVec3 *pPos,
@@ -86,6 +113,7 @@ public:
 	                CObjectBaseController *pObjectController,
 	                IManipulator *pManipulator );
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-} //namespace
+} // namespace NMapInfoEditor

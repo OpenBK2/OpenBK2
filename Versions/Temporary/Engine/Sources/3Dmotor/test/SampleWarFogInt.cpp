@@ -34,7 +34,7 @@ std::vector<const NGScene::SLightingKernels *> AvailableKernels()
 	return kernels;
 }
 
-}
+} // namespace
 
 TEST( SampleWarFogInt, SampleWarFogIntRandom )
 {

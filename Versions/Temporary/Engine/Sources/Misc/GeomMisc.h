@@ -38,6 +38,7 @@
 		r = *(float *)&_i;                         \
 		r = r * ( 2.0f - ( p ) * r );              \
 	}
+
 //#define MAKELONG(x,y) (int32_t((uint16_t(x)&0xffff)))|(int32_t((uint16_t(y)&0xffff)<<16))
 // C/C++ standard conforming fp-bits retrieving
 inline uint32_t GetFloatBits( float fVal )
@@ -47,6 +48,7 @@ inline uint32_t GetFloatBits( float fVal )
 		float f;
 		unsigned char c[4];
 	} u;
+
 	u.f = fVal;
 	return ( uint32_t( u.c[3] ) << 24L ) | ( uint32_t( u.c[2] ) << 16L ) | ( uint32_t( u.c[1] ) << 8L ) |
 	       uint32_t( u.c[0] );
@@ -56,30 +58,37 @@ inline uint32_t PackDWORD( const uint16_t high, const uint16_t low )
 {
 	return ( uint32_t( high ) << 16 ) | uint32_t( low );
 }
+
 inline uint32_t PackDWORD( const uint8_t b3, const uint8_t b2, const uint8_t b1, const uint8_t b0 )
 {
 	return ( uint32_t( b3 ) << 24 ) | ( uint32_t( b2 ) << 16 ) | ( uint32_t( b1 ) << 8 ) | uint32_t( b0 );
 }
+
 inline uint16_t UnpackHighWORD( const uint32_t value )
 {
 	return ( value >> 16 ) & 0x0000ffff;
 }
+
 inline uint16_t UnpackLowWORD( const uint32_t value )
 {
 	return value & 0x0000ffff;
 }
+
 inline uint8_t UnpackBYTE0( const uint32_t value )
 {
 	return value & 0xff;
 }
+
 inline uint8_t UnpackBYTE1( const uint32_t value )
 {
 	return ( value >> 8 ) & 0xff;
 }
+
 inline uint8_t UnpackBYTE2( const uint32_t value )
 {
 	return ( value >> 16 ) & 0xff;
 }
+
 inline uint8_t UnpackBYTE3( const uint32_t value )
 {
 	return ( value >> 24 ) & 0xff;
@@ -90,22 +99,27 @@ inline float fabsxy2( const CVec3 &a )
 {
 	return fabs2( a.x, a.y );
 }
+
 inline float fabsxy( const CVec3 &a )
 {
 	return fabs( a.x, a.y );
 }
+
 inline float fabsxyz2( const CVec4 &a )
 {
 	return fabs2( a.x, a.y, a.z );
 }
+
 inline float fabsxyz( const CVec4 &a )
 {
 	return fabs( a.x, a.y, a.z );
 }
+
 inline float fabsxy2( const CVec4 &a )
 {
 	return fabs2( a.x, a.y );
 }
+
 inline float fabsxy( const CVec4 &a )
 {
 	return fabs( a.x, a.y );
@@ -275,6 +289,7 @@ inline void CreateViewMatrix( SHMatrix *pRes, const CVec3 &vX, const CVec3 &vY, 
 	pRes->_41 = pRes->_42 = pRes->_43 = 0.0f;
 	pRes->_44 = 1.0f;
 }
+
 // from position and rotation as quaternion
 inline void CreateViewMatrixRH( SHMatrix *pRes, const CVec3 &pos, const CQuat &rot )
 {
@@ -286,6 +301,7 @@ inline void CreateViewMatrixRH( SHMatrix *pRes, const CVec3 &pos, const CQuat &r
 	// create matrix
 	CreateViewMatrix( pRes, vX, -vY, -vZ, pos );
 }
+
 inline void CreateViewMatrixLH( SHMatrix *pRes, const CVec3 &pos, const CQuat &rot )
 {
 	// create view axises
@@ -296,6 +312,7 @@ inline void CreateViewMatrixLH( SHMatrix *pRes, const CVec3 &pos, const CQuat &r
 	// create matrix
 	CreateViewMatrix( pRes, vX, vY, vZ, pos );
 }
+
 // from position and rotation as matrix
 inline void CreateViewMatrixRH( SHMatrix *pRes, const CVec3 &pos, const SHMatrix &rot )
 {
@@ -307,6 +324,7 @@ inline void CreateViewMatrixRH( SHMatrix *pRes, const CVec3 &pos, const SHMatrix
 	// create matrix
 	CreateViewMatrix( pRes, vX, -vY, -vZ, pos );
 }
+
 inline void CreateViewMatrixLH( SHMatrix *pRes, const CVec3 &pos, const SHMatrix &rot )
 {
 	// create view axises
@@ -317,6 +335,7 @@ inline void CreateViewMatrixLH( SHMatrix *pRes, const CVec3 &pos, const SHMatrix
 	// create matrix
 	CreateViewMatrix( pRes, vX, vY, vZ, pos );
 }
+
 // from 'look-at'
 inline void CreateViewMatrixRH( SHMatrix *pRes, const CVec3 &vFrom, const CVec3 &vTo, const CVec3 &vUp )
 {
@@ -332,6 +351,7 @@ inline void CreateViewMatrixRH( SHMatrix *pRes, const CVec3 &vFrom, const CVec3 
 	//
 	CreateViewMatrix( pRes, vX, -vY, -vZ, vFrom );
 }
+
 inline void CreateViewMatrixLH( SHMatrix *pRes, const CVec3 &vFrom, const CVec3 &vTo, const CVec3 &vUp )
 {
 	CVec3 vX, vY = vUp, vZ = vTo - vFrom;
@@ -391,6 +411,7 @@ inline void CreatePerspectiveProjectionMatrixLH( SHMatrix *pRes, float fov, floa
 	pRes->_43 = s / s;
 	// NOTE: divide by 's' to be compatible with 'w-buffer' technique and 'w-fog'
 }
+
 inline void CreatePerspectiveProjectionMatrixRH( SHMatrix *pRes, float fov, float fAspect, float fNear, float fFar )
 {
 	const float c = static_cast<float>( cos( fov * 0.5 ) );
@@ -405,6 +426,7 @@ inline void CreatePerspectiveProjectionMatrixRH( SHMatrix *pRes, float fov, floa
 	pRes->_43 = -s / s;
 	// NOTE: divide by 's' to be compatible with 'w-buffer' technique and 'w-fog'
 }
+
 // orthographics projection
 inline void CreateOrthographicProjectionMatrixLH( SHMatrix *pRes, float fWidth, float fHeight, float fNear, float fFar )
 {
@@ -417,6 +439,7 @@ inline void CreateOrthographicProjectionMatrixLH( SHMatrix *pRes, float fWidth, 
 	pRes->_34 = -fNear / ( fFar - fNear );
 	pRes->_44 = 1.0f;
 }
+
 inline void CreateOrthographicProjectionMatrixRH( SHMatrix *pRes, float fWidth, float fHeight, float fNear, float fFar )
 {
 	Zero( *pRes );

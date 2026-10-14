@@ -6,7 +6,7 @@ struct SAIGameConsts;
 enum EDBUnitRPGType : int;
 enum EReinforcementType : int;
 enum EUnitRPGType : int;
-}
+} // namespace NDb
 
 namespace NReinforcement
 {
@@ -15,4 +15,4 @@ const NDb::EReinforcementType GetReinforcementTypeByUnitRPGType( const NDb::EUni
 const NDb::EReinforcementType GetReinforcementType( const NDb::EDBUnitRPGType eUnitRpgType );
 const float GetReinforcementExpediency( const NDb::EReinforcementType eMyType,
                                         const NDb::EReinforcementType eEnemyType );
-}
+} // namespace NReinforcement

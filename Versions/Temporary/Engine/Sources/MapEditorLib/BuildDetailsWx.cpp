@@ -139,7 +139,7 @@ wxWindow *ScaleWindow()
 {
 	return wxTheApp ? wxTheApp->GetTopWindow() : nullptr;
 }
-}
+} // namespace
 
 namespace NBuildDetails
 {
@@ -220,4 +220,4 @@ void Log()
 		nStart = nNext;
 	}
 }
-}
+} // namespace NBuildDetails

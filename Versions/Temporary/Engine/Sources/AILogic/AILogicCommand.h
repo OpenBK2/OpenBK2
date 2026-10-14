@@ -7,6 +7,9 @@ struct IAILogicCommandB2 : public CObjectBase
 	virtual bool NeedToBeStored() const = 0;
 
 #ifndef _FINALRELEASE
-	virtual std::string GetDebugInfo() const { return "\n"; }
+	virtual std::string GetDebugInfo() const
+	{
+		return "\n";
+	}
 #endif
 };

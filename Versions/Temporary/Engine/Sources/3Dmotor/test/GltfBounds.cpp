@@ -18,21 +18,25 @@ class CCountingVFS : public NVFS::IVFS
 public:
 	CObj<NVFS::IVFS> source;
 	int accesses = 0;
+
 	CDataStream *OpenFile( const std::string &path ) override
 	{
 		++accesses;
 		return source->OpenFile( path );
 	}
+
 	bool DoesFileExist( const std::string &path ) override
 	{
 		++accesses;
 		return source->DoesFileExist( path );
 	}
+
 	bool GetFileStats( NVFS::SFileStats *stats, const std::string &path ) override
 	{
 		++accesses;
 		return source->GetFileStats( stats, path );
 	}
+
 	void GetAllFileNames( std::vector<std::string> *names, const std::string &folder ) override
 	{
 		++accesses;
@@ -46,6 +50,7 @@ class GltfBounds : public testing::Test
 
 protected:
 	CObj<CCountingVFS> vfs = new CCountingVFS;
+
 	void SetUp() override
 	{
 		vfs->source = NVFS::CreateWinVFS( GLTF_EXAMPLE_DIR "/ExampleTankUnit/" );
@@ -58,7 +63,11 @@ protected:
 		EXPECT_NE( ( minimum + maximum ).x * 0.5f, 11.25f );
 		vfs->accesses = 0;
 	}
-	void TearDown() override { NVFS::SetMainVFS( savedVFS ); }
+
+	void TearDown() override
+	{
+		NVFS::SetMainVFS( savedVFS );
+	}
 };
 
 void ExpectVec( const CVec3 &actual, const CVec3 &expected )
@@ -83,6 +92,7 @@ void SetBounds( NDb::SGeometry *resource )
 	resource->vSize = CVec3( 4.5f, 6.25f, 8.0f );
 	resource->szRootMesh = "Basis";
 }
+
 void SetBounds( NDb::SAIGeometry *resource )
 {
 	resource->uid = {};
@@ -90,11 +100,13 @@ void SetBounds( NDb::SAIGeometry *resource )
 	resource->vAABBHalfSize = CVec3( 4.5f, 6.25f, 8.0f );
 	resource->szRootMesh = "AABB";
 }
+
 void ExpectBounds( const NDb::SGeometry *resource )
 {
 	ExpectVec( resource->vCenter, CVec3( 11.25f, -2.5f, 3.75f ) );
 	ExpectVec( resource->vSize, CVec3( 4.5f, 6.25f, 8.0f ) );
 }
+
 void ExpectBounds( const NDb::SAIGeometry *resource )
 {
 	ExpectVec( resource->vAABBCenter, CVec3( 11.25f, -2.5f, 3.75f ) );
@@ -138,7 +150,7 @@ void CheckRoundTrip( bool xml, bool wide = false )
 		EXPECT_EQ( loaded->szRootMesh, source->szRootMesh );
 	}
 }
-}
+} // namespace
 
 TEST_F( GltfBounds, XmlPreservesExportedBoundsWithoutReadingTheModel )
 {
@@ -165,6 +177,7 @@ struct SExportedBounds
 	CVec3 center = VNULL3, size = VNULL3;
 	std::string root;
 	int meshes = 0;
+
 	int operator&( IXmlSaver &saver )
 	{
 		saver.Add( ai ? "AABBCenter" : "Center", &center );
@@ -174,7 +187,7 @@ struct SExportedBounds
 		return 0;
 	}
 };
-}
+} // namespace
 
 TEST_F( GltfBounds, BundledExamplesContainExportedBounds )
 {

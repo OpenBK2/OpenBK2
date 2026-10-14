@@ -16,6 +16,7 @@ public:
 		f.Add( 2, &pUnit );
 		return 0;
 	}
+
 	bool IsExecutorValidInternal() const;
 
 public:
@@ -24,8 +25,14 @@ public:
 				pUnit( _pUnit )
 	{
 	}
+
 	CExecutorTransportHealInfantry() {}
+
 	virtual int Segment();
 	virtual bool NotifyEvent( const CExecutorEvent &event );
-	virtual bool IsExecutorValid() const { return IsExecutorValidInternal(); }
+
+	virtual bool IsExecutorValid() const
+	{
+		return IsExecutorValidInternal();
+	}
 };

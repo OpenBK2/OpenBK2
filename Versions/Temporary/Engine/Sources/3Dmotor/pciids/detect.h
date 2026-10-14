@@ -1,6 +1,7 @@
 #pragma once
 
 #define HWLEVEL_ANY -1
+
 struct SAutoDetectCfg
 {
 	int nCard;
@@ -13,6 +14,7 @@ struct SAutoDetectCfg
 	////
 	const char *pszName;
 };
+
 static SAutoDetectCfg configAutoDetect[] = {
 	//// CARD									HW Level		 Speed	  Texture  16bpp mode
 	{ NGfx::VC_KRACKAN_RADEON_840M_860M_GRAPHICS,

@@ -32,7 +32,7 @@ bool IsFilePath( const std::string &rszPath )
 {
 	return !rszPath.empty() && !NFile::IsPathRelative( rszPath );
 }
-}
+} // namespace
 
 void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rszTextPath )
 {
@@ -444,7 +444,7 @@ std::wstring DecodeUnicodeResource( const std::vector<uint8_t> &buffer, bool *ne
 	}
 	return legacy ? UTF16LEToWide( recovered.data(), recovered.size() ) : UTF16LEToWide( buffer.data() + 2, size );
 }
-}
+} // namespace
 
 void File2String( std::string *pstrText,
                   bool *pbUnicode,

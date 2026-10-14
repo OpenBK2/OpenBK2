@@ -33,4 +33,4 @@ namespace NSelectTables
 // ticked on the way out. Returns false if the dialog was cancelled, and then
 // pSelectedTables is untouched.
 bool Run( IWidget *pParent, const std::list<std::string> &rTables, CTableSet *pSelectedTables );
-}
+} // namespace NSelectTables

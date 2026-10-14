@@ -1106,6 +1106,7 @@ ETryStateInterruptResult CMechUnitRestState::TryInterruptState( class CAICommand
 //*******************************************************************
 
 extern CExecutorContainer theExecutorContainer;
+
 CCommonRestState::CCommonRestState( const CVec2 &_guardPoint,
                                     const uint16_t _wDir,
                                     CCommonUnit *_pUnit,

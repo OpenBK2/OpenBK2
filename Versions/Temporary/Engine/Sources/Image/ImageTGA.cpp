@@ -109,4 +109,4 @@ bool SaveImageAsTGA( CDataStream *pStream, const CArray2D<uint32_t> &image )
 	return SaveAsTGA( image, pStream );
 }
 
-}
+} // namespace NImage

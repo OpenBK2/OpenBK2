@@ -11,7 +11,7 @@ namespace NDb
 {
 struct STerrainAIProperties;
 struct SVSOInstance;
-}
+} // namespace NDb
 
 struct SVector;
 
@@ -39,11 +39,23 @@ struct ITerraAIObserver : public CObjectBase
 	virtual void InitHeights4Editor( int nSizeX, int nSizeY ) = 0;
 	//
 	virtual void FinalizeUpdates() = 0;
+
 	//
 	virtual void ToggleShowPassability() {}
+
 	virtual void DrawPassabilities() const = 0;
+
 	virtual void SetPassMarkers( const int color, const int aiClass, const int freeClass, const int nBoundTileRadius ) {}
+
 	virtual void DumpMaxes( const std::string &szFileName, const int aiClass ) {}
-	virtual bool IsPassabilityOn() const { return false; }
-	virtual bool IsBridge( const int nX, const int nY ) const { return false; }
+
+	virtual bool IsPassabilityOn() const
+	{
+		return false;
+	}
+
+	virtual bool IsBridge( const int nX, const int nY ) const
+	{
+		return false;
+	}
 };

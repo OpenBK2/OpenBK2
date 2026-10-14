@@ -9,6 +9,7 @@
 #include <cstdint>
 
 NGfx::EPixelFormat GetPixelFormat( const SDDSHeader &hdr );
+
 namespace NGScene
 {
 
@@ -105,6 +106,7 @@ void LoadDxt( CSWTextureData *pValue, int nDxt, int nSizeX, int nSizeY, int nMip
 }
 
 void FixMips( SDDSHeader *pRes );
+
 void CSWTexture::LoadTexture()
 {
 	pValue = new CSWTextureData;
@@ -270,7 +272,8 @@ void CBilinearTexture::Recalc()
 	}
 }
 
-} // namespace
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0xF0821150, CSWTexture )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x007c1140, CBilinearTexture )

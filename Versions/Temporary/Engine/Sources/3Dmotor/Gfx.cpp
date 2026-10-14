@@ -32,6 +32,7 @@ struct SVideoModeInfo
 	SVideoMode info;
 
 	SVideoModeInfo() {}
+
 	SVideoModeInfo( D3DDISPLAYMODE &_m, SVideoMode &_info ) : mode( _m ), info( _info ) {}
 };
 
@@ -177,10 +178,12 @@ static void DestroyLostableDXObjects()
 	pWindowSwapChain = 0;
 	nPresentWidth = nPresentHeight = 0;
 }
+
 static void DestroyManagedDXObjects()
 {
 	DestroyManagedBuffers();
 }
+
 static HRESULT InitDXObjects()
 {
 	bInitOk = true;
@@ -217,30 +220,37 @@ static HRESULT InitDXObjects()
 	}
 	return bInitOk ? D3D_OK : D3DERR_NOTAVAILABLE;
 }
+
 int GetDeviceCreationID()
 {
 	return nDeviceCreationID;
 }
+
 const SSystemInfo &GetSystemInfo()
 {
 	return systemInfo;
 }
+
 bool CanOverwriteStatic()
 {
 	return bStaticNooverwrite & !bIsDebugRuntime & bHardwareVP;
 }
+
 bool Is16BitMode()
 {
 	return b16BitMode;
 }
+
 bool IsDXTSupported()
 {
 	return bDXTSupported;
 }
+
 bool Is8888FormatSupported()
 {
 	return b8888Supported;
 }
+
 bool Is16BitTextures()
 {
 	return b16BitTextures;
@@ -1152,6 +1162,7 @@ static int nPrevTexLOD = 0;
 const int N_MIN_TEX_MEM = 10000000;
 const int N_TEX_CHECK_FRAMES = 5;
 static int nLastTexCheckFrame = 0;
+
 void Flip()
 {
 	HRESULT hr = pDevice->EndScene();
@@ -1223,6 +1234,7 @@ static std::vector<NGfx::SPixel8888> gammaRamp;
 static float fLastGamma = -1;
 static bool bChangedGammaRamp;
 static D3DGAMMARAMP keptGamma;
+
 void SetGamma( bool bGamma )
 {
 	if ( !pDevice )
@@ -1397,4 +1409,4 @@ REGISTER_VAR_EX( "special_win_x_pos", NGlobal::VarIntHandler, &nWinXPos, 0, STOR
 REGISTER_VAR_EX( "adapter_to_use", NGlobal::VarIntHandler, &nAdapterToUse, D3DADAPTER_DEFAULT, STORAGE_USER );
 FINISH_REGISTER
 
-}
+} // namespace NGfx

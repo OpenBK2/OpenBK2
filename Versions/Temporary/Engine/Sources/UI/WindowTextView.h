@@ -36,7 +36,10 @@ private:
 	const std::wstring &GetDBInstanceText() const;
 	//}
 protected:
-	virtual NDb::SWindow *GetInstance() { return pInstance; }
+	virtual NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
 
 public:
 	CWindowTextView() : vScreenRect( VNULL2 ), nIDForMLHandler( -1 ) {}
@@ -58,11 +61,17 @@ public:
 
 	virtual void SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const uint32_t flags );
 	virtual void Reposition( const CTRect<float> &parentRect );
+
 	virtual void Init()
 	{
 		CWindow::Init();
 		InitText();
 	}
+
 	void SetIDForMLHandler( int nID );
-	int GetIDForMLHandler() const { return nIDForMLHandler; }
+
+	int GetIDForMLHandler() const
+	{
+		return nIDForMLHandler;
+	}
 };

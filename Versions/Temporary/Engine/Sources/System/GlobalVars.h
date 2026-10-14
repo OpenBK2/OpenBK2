@@ -73,6 +73,7 @@ public:
 		}
 		return fRes;
 	}
+
 	// numbers are ASCII, so narrowing is enough to reuse the same parser
 	static float ParseFloat( const wchar_t *pszVal, size_t nLen )
 	{
@@ -86,21 +87,50 @@ public:
 	}
 
 	CValue() : fVal( 0 ) {}
-	CValue( float _fVal ) : fVal( _fVal ) { SetVal( fmt::format( "{:g}", _fVal ).c_str() ); }
-	CValue( int _n ) : fVal( _n ) { SetVal( fmt::format( "{:g}", fVal ).c_str() ); }
+
+	CValue( float _fVal ) : fVal( _fVal )
+	{
+		SetVal( fmt::format( "{:g}", _fVal ).c_str() );
+	}
+
+	CValue( int _n ) : fVal( _n )
+	{
+		SetVal( fmt::format( "{:g}", fVal ).c_str() );
+	}
+
 	CValue( const std::wstring &_szVal ) : fVal( ParseFloat( _szVal.c_str(), _szVal.size() ) ), szVal( _szVal ) {}
+
 	CValue( const wchar_t *pszVal ) : fVal( ParseFloat( pszVal, wcslen( pszVal ) ) ), szVal( pszVal ) {}
+
 	CValue( const std::string &_szVal ) : fVal( ParseFloat( _szVal.c_str(), _szVal.size() ) )
 	{
 		SetVal( _szVal.c_str() );
 	}
-	CValue( const char *pszVal ) : fVal( ParseFloat( pszVal, strlen( pszVal ) ) ) { SetVal( pszVal ); }
 
-	float GetFloat() const { return fVal; }
-	const std::wstring &GetString() const { return szVal; }
+	CValue( const char *pszVal ) : fVal( ParseFloat( pszVal, strlen( pszVal ) ) )
+	{
+		SetVal( pszVal );
+	}
 
-	operator float() const { return fVal; }
-	operator std::wstring() const { return szVal; }
+	float GetFloat() const
+	{
+		return fVal;
+	}
+
+	const std::wstring &GetString() const
+	{
+		return szVal;
+	}
+
+	operator float() const
+	{
+		return fVal;
+	}
+
+	operator std::wstring() const
+	{
+		return szVal;
+	}
 };
 
 typedef void ( *VarHandler )( const std::string &szID, const CValue &sValue, void *pContext );
@@ -123,4 +153,4 @@ SYSTEM_EXPORT void LoadConfig( const std::string &szFileName, EStorageClass _new
 SYSTEM_EXPORT void ResetVarsToDefault( EStorageClass storage );
 SYSTEM_EXPORT void SaveAllVars( const std::string &szGlobalName, const std::string &szUserName );
 
-}
+} // namespace NGlobal

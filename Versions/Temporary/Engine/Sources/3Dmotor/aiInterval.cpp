@@ -10,10 +10,12 @@ static bool CmpCrosses( const SInterval::SCrossPoint &a, const SInterval::SCross
 {
 	return a.fT < b.fT;
 }
+
 static bool CmpFloat( const float &a, const float &b )
 {
 	return a < b;
 }
+
 template <class T, class TFunc, class TCompare>
 void CalcResult( std::vector<T> *pEnter, std::vector<T> *pExit, bool bTerrain, TFunc make, TCompare compare )
 {
@@ -49,10 +51,12 @@ void CalcResult( std::vector<T> *pEnter, std::vector<T> *pExit, bool bTerrain, T
 		}
 	}
 }
+
 static SInterval::SCrossPoint MakeCross( float f )
 {
 	return SInterval::SCrossPoint( f, CVec3( 0, 0, 1 ) );
 }
+
 static float MakeFloat( float f )
 {
 	return f;
@@ -123,4 +127,4 @@ void SortIntervals( std::vector<SInterval> *pRes )
 	std::sort( pRes->begin(), pRes->end(), CompareIntervals );
 }
 
-}
+} // namespace NAI

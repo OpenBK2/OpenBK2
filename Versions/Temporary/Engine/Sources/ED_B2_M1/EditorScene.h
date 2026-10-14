@@ -8,13 +8,14 @@ namespace NDb
 {
 struct SModel;
 struct SAmbientLight;
-}
+} // namespace NDb
+
 namespace NGScene
 {
 class I2DGameView;
 class IGameView;
 class CRTPtr;
-}
+} // namespace NGScene
 
 namespace NAnimation
 {
@@ -100,7 +101,11 @@ struct IEditorScene : public CObjectBase
 	virtual void InitHeights4Editor( int nSizeX, int nSizeY ) = 0;
 
 	virtual void ShowObject( const int nID, const bool bShow ) = 0;
-	virtual bool DoesTerraManagerExist() const { return false; }
+
+	virtual bool DoesTerraManagerExist() const
+	{
+		return false;
+	}
 
 	virtual NAnimation::ISkeletonAnimator *GetAnimator( const int nID ) = 0;
 

@@ -26,6 +26,7 @@ class CStandartSmoothMechPath : public CStandartSmoothPathBasis
 	bool bForceGoBackward = false;
 	NTimer::STime lastCheckToRightTurn = 0;
 	SVector vLastStopPosition;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CStandartSmoothPathBasis *)this );
@@ -40,6 +41,7 @@ class CStandartSmoothMechPath : public CStandartSmoothPathBasis
 		f.Add( 10, &bForceGoBackward );
 		return 0;
 	}
+
 	//
 	void AddSmoothTurn();
 
@@ -80,6 +82,11 @@ public:
 	virtual void Stop();
 
 	virtual const bool CanGoBackward() const;
-	virtual const bool CanGoForward() const { return bCanGoForward; }
+
+	virtual const bool CanGoForward() const
+	{
+		return bCanGoForward;
+	}
+
 	virtual void SetForceGoBackward( const bool bForce );
 };

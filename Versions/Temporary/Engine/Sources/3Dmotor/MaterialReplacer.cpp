@@ -37,4 +37,4 @@ const NDb::SMaterial *GetReplacedMaterial( const string &szName, int nInd )
 	return 0;
 }
 
-}
+} // namespace NGScene

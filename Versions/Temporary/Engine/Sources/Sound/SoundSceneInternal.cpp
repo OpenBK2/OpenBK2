@@ -19,6 +19,7 @@ class CAckTuning
 	typedef std::unordered_map<std::string, int> CPlayedAcks;
 	ZDATA
 	CPlayedAcks playedAcks;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &playedAcks );
@@ -63,7 +64,9 @@ public:
 			SaveAsText( "acklog.txt" );
 		}
 	}
+
 	CAckTuning() : bInitted( false ) {}
+
 	void Add( const std::string &szAck )
 	{
 		if ( !bInitted )

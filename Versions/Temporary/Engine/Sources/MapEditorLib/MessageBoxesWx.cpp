@@ -39,7 +39,7 @@ int Show( const std::string &rszText, const wxString &rTitle, long nStyle )
 {
 	return wxMessageBox( wxString::FromUTF8( rszText.c_str() ), rTitle, nStyle, Owner() );
 }
-}
+} // namespace
 
 namespace NMessage
 {
@@ -84,4 +84,4 @@ void Information( const std::string &rszText, const std::string &rszTitle )
 {
 	Show( rszText, wxString::FromUTF8( rszTitle.c_str() ), wxOK | wxICON_INFORMATION );
 }
-}
+} // namespace NMessage

@@ -791,6 +791,7 @@ void CICOptionsMenu::Configure( const char *pszConfig )
 }
 
 static float s_fQuality = -1.0f;
+
 static void CommandQuality( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )

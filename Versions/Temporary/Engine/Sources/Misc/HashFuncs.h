@@ -16,12 +16,18 @@ struct STilesHash
 
 struct SVec2Hash
 {
-	int operator()( const CVec2 &pos ) const { return ( ( int( pos.x ) << 16 ) | int( pos.y ) ); }
+	int operator()( const CVec2 &pos ) const
+	{
+		return ( ( int( pos.x ) << 16 ) | int( pos.y ) );
+	}
 };
 
 struct SVec2Equ
 {
-	bool operator()( const CVec2 &v1, const CVec2 &v2 ) const { return fabs2( v1.x - v2.x, v1.y - v2.y ) < 0.0000001f; }
+	bool operator()( const CVec2 &v1, const CVec2 &v2 ) const
+	{
+		return fabs2( v1.x - v2.x, v1.y - v2.y ) < 0.0000001f;
+	}
 };
 
 struct SEnumHash

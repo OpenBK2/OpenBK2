@@ -21,6 +21,7 @@ struct SSingleSide
 	float fOffset2 = 0.0f;
 
 	SSingleSide() : bSingleSide( false ) {}
+
 	SSingleSide( const bool _bSingleSide, const float _fOffset1, const float _fOffset2 )
 			: bSingleSide( _bSingleSide ), fOffset1( _fOffset1 ), fOffset2( _fOffset2 )
 	{
@@ -63,6 +64,7 @@ public:
 
 public:
 	CTerraAIObserver();
+
 	virtual ~CTerraAIObserver() {}
 
 	virtual void AddCrag( const NDb::SVSOInstance *pInstance );
@@ -95,6 +97,10 @@ public:
 	virtual void SetPassMarkers( const int color, const int aiClass, const int freeClass, const int nBoundTileRadius );
 	virtual void DumpMaxes( const std::string &szFileName, const int aiClass );
 
-	virtual bool IsPassabilityOn() const { return bShowPassability; }
+	virtual bool IsPassabilityOn() const
+	{
+		return bShowPassability;
+	}
+
 	virtual bool IsBridge( const int nX, const int nY ) const;
 };

@@ -194,7 +194,10 @@ class CEllipsized : public TProperty
 public:
 	using TProperty::TProperty;
 
-	virtual wxPGCellRenderer *GetCellRenderer( int nColumn ) const override { return EllipsisRenderer(); }
+	virtual wxPGCellRenderer *GetCellRenderer( int nColumn ) const override
+	{
+		return EllipsisRenderer();
+	}
 };
 
 // A value row with the buttons its MFC editor had beside the box. It knows
@@ -217,9 +220,15 @@ public:
 	{
 	}
 
-	const std::vector<NPropertyButton::EButton> &GetButtons() const { return buttons; }
+	const std::vector<NPropertyButton::EButton> &GetButtons() const
+	{
+		return buttons;
+	}
 
-	virtual wxPGCellRenderer *GetCellRenderer( int nColumn ) const override { return EllipsisRenderer(); }
+	virtual wxPGCellRenderer *GetCellRenderer( int nColumn ) const override
+	{
+		return EllipsisRenderer();
+	}
 
 	// rszText is what the box holds now, typed but perhaps not committed.
 	void Press( size_t nButton, const std::string &rszText )
@@ -252,7 +261,10 @@ template <class TEditor>
 class CValueEditor : public TEditor
 {
 public:
-	virtual wxString GetName() const override { return wxS( "OBK2Value" ) + TEditor::GetName(); }
+	virtual wxString GetName() const override
+	{
+		return wxS( "OBK2Value" ) + TEditor::GetName();
+	}
 
 	virtual wxPGWindowList CreateControls( wxPropertyGrid *pGrid,
 	                                       wxPGProperty *pProperty,
@@ -301,7 +313,10 @@ wxPGEditor *ValueEditor()
 class CButtonEditor : public CValueEditor<wxPGTextCtrlEditor>
 {
 public:
-	virtual wxString GetName() const override { return wxS( "OBK2PropertyButtons" ); }
+	virtual wxString GetName() const override
+	{
+		return wxS( "OBK2PropertyButtons" );
+	}
 
 	virtual wxPGWindowList CreateControls( wxPropertyGrid *pGrid,
 	                                       wxPGProperty *pProperty,
@@ -551,7 +566,10 @@ public:
 	}
 
 protected:
-	virtual wxPropertyGrid *CreatePropertyGrid() const override { return new CClassicPropertyGrid(); }
+	virtual wxPropertyGrid *CreatePropertyGrid() const override
+	{
+		return new CClassicPropertyGrid();
+	}
 };
 
 // wxHeaderCtrlBase::GetColumn is protected, and the manager's header class
@@ -630,7 +648,10 @@ public:
 		}
 	}
 
-	void SetChangeCallback( const std::function<void()> &rCallback ) { changeCallback = rCallback; }
+	void SetChangeCallback( const std::function<void()> &rCallback )
+	{
+		changeCallback = rCallback;
+	}
 
 	void SetSelectionCallback( const std::function<void( const std::string & )> &rCallback )
 	{
@@ -661,7 +682,10 @@ public:
 		return true;
 	}
 
-	wxPropertyGridManager *GetManager() const { return pManager; }
+	wxPropertyGridManager *GetManager() const
+	{
+		return pManager;
+	}
 
 	void Attach( wxPropertyGridManager *_pManager,
 	             wxStaticText *_pStatus,
@@ -761,9 +785,15 @@ public:
 	}
 
 	// IView, through CDefaultView.
-	virtual void Undo( IController *pController ) { Replay( pController, true ); }
+	virtual void Undo( IController *pController )
+	{
+		Replay( pController, true );
+	}
 
-	virtual void Redo( IController *pController ) { Replay( pController, false ); }
+	virtual void Redo( IController *pController )
+	{
+		Replay( pController, false );
+	}
 
 	// ICommandHandler, registered as CHID_PROPERTY_CONTROL and CHID_SELECTION
 	// when the grid takes the focus, as the tree registered itself.
@@ -1002,7 +1032,10 @@ public:
 	}
 
 private:
-	static std::string FullName( const wxPGProperty *pProperty ) { return ToNarrow( pProperty->GetName() ); }
+	static std::string FullName( const wxPGProperty *pProperty )
+	{
+		return ToNarrow( pProperty->GetName() );
+	}
 
 	wxPGProperty *Find( const std::string &rszName ) const
 	{
@@ -2312,6 +2345,7 @@ class CWxPropertyPane : public IPropertyPane, public CPCBaseDialog
 	struct CPanel
 	{
 		wxWeakRef<wxWindow> pWindow;
+
 		~CPanel()
 		{
 			if ( pWindow )
@@ -2350,7 +2384,10 @@ public:
 		return true;
 	}
 
-	wxWindow *GetWindow() const { return panel.pWindow; }
+	wxWindow *GetWindow() const
+	{
+		return panel.pWindow;
+	}
 
 	void CreateContents( wxWindow *pRoot, IWidget *pOwner, const std::string &rszOptionsLabel )
 	{
@@ -2377,16 +2414,31 @@ public:
 		bRegistered = true;
 	}
 
-	virtual void EnableEdit( bool bEnable ) { view.EnableEdit( bEnable ); }
+	virtual void EnableEdit( bool bEnable )
+	{
+		view.EnableEdit( bEnable );
+	}
 
 	// CPCBaseDialog
-	virtual IView *GetView() { return &view; }
+	virtual IView *GetView()
+	{
+		return &view;
+	}
 
-	virtual ICommandHandler *GetCommandHandler() { return &view; }
+	virtual ICommandHandler *GetCommandHandler()
+	{
+		return &view;
+	}
 
-	virtual void CreateTree() { view.BuildTree(); }
+	virtual void CreateTree()
+	{
+		view.BuildTree();
+	}
 
-	virtual void UpdateValues() { view.UpdateValues(); }
+	virtual void UpdateValues()
+	{
+		view.UpdateValues();
+	}
 };
 
 // The grid alone, laid out by a dialog of its own.
@@ -2400,28 +2452,52 @@ public:
 		view.Attach( CreateGridManager( pParent ), pStatus, pOwner, rszOptionsLabel );
 	}
 
-	virtual wxWindow *GetWindow() { return view.GetManager(); }
+	virtual wxWindow *GetWindow()
+	{
+		return view.GetManager();
+	}
 
-	virtual CDefaultView *GetView() { return &view; }
+	virtual CDefaultView *GetView()
+	{
+		return &view;
+	}
 
-	virtual ICommandHandler *GetCommandHandler() { return &view; }
+	virtual ICommandHandler *GetCommandHandler()
+	{
+		return &view;
+	}
 
-	virtual void BuildTree() { view.BuildTree(); }
+	virtual void BuildTree()
+	{
+		view.BuildTree();
+	}
 
-	virtual void UpdateValues() { view.UpdateValues(); }
+	virtual void UpdateValues()
+	{
+		view.UpdateValues();
+	}
 
-	virtual void EnableEdit( bool bEnable ) { view.EnableEdit( bEnable ); }
+	virtual void EnableEdit( bool bEnable )
+	{
+		view.EnableEdit( bEnable );
+	}
 
-	virtual void SetChangeCallback( const std::function<void()> &rCallback ) { view.SetChangeCallback( rCallback ); }
+	virtual void SetChangeCallback( const std::function<void()> &rCallback )
+	{
+		view.SetChangeCallback( rCallback );
+	}
 
 	virtual void SetSelectionCallback( const std::function<void( const std::string & )> &rCallback )
 	{
 		view.SetSelectionCallback( rCallback );
 	}
 
-	virtual bool GetColumnWidths( int *pnWidths ) const { return view.GetColumnWidths( pnWidths ); }
+	virtual bool GetColumnWidths( int *pnWidths ) const
+	{
+		return view.GetColumnWidths( pnWidths );
+	}
 };
-}
+} // namespace
 
 namespace NPropertyPane
 {
@@ -2444,4 +2520,4 @@ IPropertyPane *CreateWxIn( wxWindow *pParent, IWidget *pOwner, const std::string
 	}
 	return pPane;
 }
-}
+} // namespace NPropertyPane

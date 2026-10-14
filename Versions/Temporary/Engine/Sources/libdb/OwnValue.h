@@ -5,6 +5,7 @@
 namespace NDb
 {
 struct IObjMan;
+
 namespace NBind
 {
 	class CBindArray;
@@ -25,5 +26,5 @@ namespace NBind
 		UValue() : pBLOB( 0 ) {}
 	};
 
-}
-}
+} // namespace NBind
+} // namespace NDb

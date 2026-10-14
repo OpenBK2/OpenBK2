@@ -65,6 +65,7 @@ struct SAIBasicUpdate : public CObjectBase
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	EActionNotify eUpdateType = {};
 	NTimer::STime nUpdateTime = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &eUpdateType );
@@ -74,10 +75,12 @@ struct SAIBasicUpdate : public CObjectBase
 
 public:
 	SAIBasicUpdate() : eUpdateType( ACTION_NOTIFY_NONE ), nUpdateTime( 0 ) {}
+
 	SAIBasicUpdate( const EActionNotify _eUpdateType, const NTimer::STime _nUpdateTime )
 			: eUpdateType( _eUpdateType ), nUpdateTime( _nUpdateTime )
 	{
 	}
+
 	// skip unknown updates, for start word as soon as possible
 	virtual void ProcessClient( IUpdatableClient *pClient ) const
 	{
@@ -93,6 +96,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	int nObjUniqueID = {};
 	int nParam = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -102,6 +106,7 @@ public:
 	}
 
 	SAIActionUpdate() {}
+
 	SAIActionUpdate( const int _nObjUniqueID,
 	                 const EActionNotify eUpdateType,
 	                 const int _nParam,
@@ -115,6 +120,7 @@ struct SAIPlacementUpdateBase : public SAIBasicUpdate
 {
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyPlacement info;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -128,6 +134,7 @@ struct SAIPlacementUpdate : public SAIPlacementUpdateBase
 private:
 	OBJECT_BASIC_METHODS( SAIPlacementUpdate )
 	ZDATA_( SAIPlacementUpdateBase )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIPlacementUpdateBase *)this );
@@ -144,6 +151,7 @@ private:
 public:
 	ZDATA_( SAIPlacementUpdateBase )
 	bool bVisible = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIPlacementUpdateBase *)this );
@@ -159,6 +167,7 @@ private:
 public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyRPGStats info;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -174,6 +183,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	int nAtomObjectID = {};
 	int nParentID = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -183,6 +193,7 @@ public:
 	}
 
 	SParentOfAtomObjectUpdate() : nAtomObjectID( -1 ), nParentID( -1 ) {}
+
 	SParentOfAtomObjectUpdate( int _nAtomObjectID, int _nParentID )
 			: nAtomObjectID( _nAtomObjectID ), nParentID( _nParentID )
 	{
@@ -200,6 +211,7 @@ public:
 	int nProjectileUniqueID = {};
 	float fDamage = {};
 	CVec3 vExplosionPos;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -212,6 +224,7 @@ public:
 
 public:
 	SAIDamageUpdate() : nObjUniqueID( -1 ), nProjectileUniqueID( -1 ), fDamage( 0.0f ) {}
+
 	SAIDamageUpdate( const int _nObjUniqueID,
 	                 const int _nProjectileUniqueID,
 	                 const float _fDamage,
@@ -229,6 +242,7 @@ private:
 public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyMechShot info;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -244,6 +258,7 @@ private:
 public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyInfantryShot info;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -259,6 +274,7 @@ private:
 public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyHitInfo info;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -274,6 +290,7 @@ private:
 public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyTurretTurn info;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -289,6 +306,7 @@ private:
 public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyEntranceState info;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -304,6 +322,7 @@ private:
 public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyDiplomacy info;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -319,6 +338,7 @@ private:
 public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyKeyBuilding info;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -337,6 +357,7 @@ public:
 	int nOldSide = {};
 	int nNewSide = {};
 	float fProgress = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -356,6 +377,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	std::vector<SShootAreas> info;
 	int nObjID = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -372,6 +394,7 @@ private:
 public:
 	ZDATA_( SAIBasicUpdate )
 	SNewUnitInfo info;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -393,6 +416,7 @@ public:
 	int nDeadObj = {};
 	SAINotifyPlacement placement;
 	bool bVisibleWhenDie = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -415,6 +439,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	int nDissapearObjID = {};
 	bool bShowEffects = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -434,6 +459,7 @@ public:
 	SSegment2Trench info;
 	bool bLast = {};
 	bool bDigBySegment = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -453,6 +479,7 @@ struct SAIFormationUpdate : public SAIBasicUpdate
 public:
 	ZDATA_( SAIBasicUpdate )
 	SSoldier2Formation info;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -471,6 +498,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	CCircle info;
 	int nParam = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -488,6 +516,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	SChangeDBIDUpdate info;
 	int nObjUniqueID = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -509,6 +538,7 @@ public:
 	int nObjUniqueID = {}; // soldier ID
 	CDBPtr<NDb::SVisObj> pNewSoldierVisObj;
 	CDBPtr<NDb::SVisObj> pParachuteVisObj;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -529,6 +559,7 @@ public:
 	CVec2 vDir;
 	float fTg = {};
 	int nObjUniqueID = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -546,6 +577,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	int nObjUniqueID = {};
 	bool bOpen = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -556,6 +588,7 @@ public:
 
 public:
 	SAIModifyEntranceStateUpdate() : nObjUniqueID( 0 ), bOpen( true ) {}
+
 	SAIModifyEntranceStateUpdate( const int _nObjUniqueID, const bool _bOpen )
 			: nObjUniqueID( _nObjUniqueID ), bOpen( _bOpen )
 	{
@@ -570,6 +603,7 @@ public:
 	int nObjUniqueID = {};
 	int nPointLight = {};
 	bool bLight = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -581,6 +615,7 @@ public:
 
 public:
 	SAIPointLightUpdate() : nPointLight( 0 ), bLight( false ) {}
+
 	SAIPointLightUpdate( const int _nObjUniqueID, const int _nPointLight, const bool _bLight )
 			: nObjUniqueID( _nObjUniqueID ), nPointLight( _nPointLight ), bLight( _bLight )
 	{
@@ -597,6 +632,7 @@ public:
 	int nObjUniqueID = {};
 	int nHeadLight = {};
 	bool bLight = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -608,6 +644,7 @@ public:
 
 public:
 	SAIHeadLightUpdate() : nObjUniqueID( 0 ), nHeadLight( 0 ), bLight( false ) {}
+
 	SAIHeadLightUpdate( const int _nObjUniqueID, const int _nHeadLight, const bool _bLight )
 			: nObjUniqueID( _nObjUniqueID ), nHeadLight( _nHeadLight ), bLight( _bLight )
 	{
@@ -623,6 +660,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	int nObjUniqueID = {};
 	bool bNightOn = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -633,6 +671,7 @@ public:
 
 public:
 	SAIToggleDayNightWindowsUpdate() : nObjUniqueID( 0 ), bNightOn( false ) {}
+
 	SAIToggleDayNightWindowsUpdate( const int _nObjUniqueID, const bool _bNightOn )
 			: nObjUniqueID( _nObjUniqueID ), bNightOn( _bNightOn )
 	{
@@ -648,6 +687,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	int nObjUniqueID = {};
 	int nWindow = {}; // if -1, when break all windows of the object
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -658,6 +698,7 @@ public:
 
 public:
 	SAIBreakWindowUpdate() : nObjUniqueID( 0 ), nWindow( -1 ) {}
+
 	SAIBreakWindowUpdate( const int _nObjUniqueID, const int _nWindow )
 			: nObjUniqueID( _nObjUniqueID ), nWindow( _nWindow )
 	{
@@ -672,6 +713,7 @@ struct SAINewProjectileUpdate : public SAIBasicUpdate
 public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyNewProjectile info;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -699,6 +741,7 @@ public:
 	bool bTraceTargetIntersection = {};
 	int nWeaponID = {};
 	CVec2 vDirection;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -713,6 +756,7 @@ public:
 
 public:
 	SAINewProjectileM1() : nTargetID( -1 ), fDamage( 0 ) {}
+
 	SAINewProjectileM1( int _nTargetID,
 	                    float _fDamage,
 	                    bool _bTraceTargetIntersection,
@@ -733,6 +777,7 @@ struct SAIDeadProjectileUpdate : public SAIBasicUpdate
 public:
 	ZDATA_( SAIBasicUpdate )
 	int nProjectileUnqiueID = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -742,6 +787,7 @@ public:
 
 public:
 	SAIDeadProjectileUpdate() : nProjectileUnqiueID( 0 ) {}
+
 	SAIDeadProjectileUpdate( const int _nProjectileUnqiueID ) : nProjectileUnqiueID( _nProjectileUnqiueID ) {}
 
 	REGISTER_TO_UPDATES
@@ -756,6 +802,7 @@ public:
 	CVec3 vExplCenter;
 	CVec3 vExplDir;
 	int nProjectileID = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -768,6 +815,7 @@ public:
 
 public:
 	SExplodeProjectileUpdate() : vExplCenter( VNULL3 ), vExplDir( VNULL3 ), nProjectileID( -1 ) {}
+
 	SExplodeProjectileUpdate( int _nProjectileID,
 	                          const CVec3 &_vExplCenter,
 	                          const CVec3 &_vExplDir,
@@ -793,6 +841,7 @@ public:
 	float fSpline1 = {};
 	float fSpline2 = {};
 	NDb::EScriptCameraRunType eRunType = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -810,6 +859,7 @@ public:
 
 public:
 	SScriptCameraRunUpdate() {}
+
 	SScriptCameraRunUpdate( const std::string &_szStartCam, const std::string &_szFinshCam, float _fTime )
 			: szStartCam( _szStartCam ), szFinishCam( _szFinshCam ), fTime( _fTime )
 	{
@@ -824,6 +874,7 @@ struct SScriptCameraResetUpdate : public SAIBasicUpdate
 public:
 	ZDATA_( SAIBasicUpdate )
 	NDb::EScriptCameraRunType eRunType = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -845,6 +896,7 @@ public:
 	int nMovieIndex = {};
 	bool bLoopPlayback = {};
 	std::string szCallbackFuncName;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -876,6 +928,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	bool bActive = {};
 	int nTimeTo = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -900,10 +953,12 @@ public:
 struct SAIObjectsUnderConstructionUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SAIObjectsUnderConstructionUpdate );
+
 	struct SObjectUnderConstruction
 	{
 		SNewUnitInfo info;
 		bool bCanBuild = {};
+
 		int operator&( IBinSaver &saver )
 		{
 			saver.Add( 1, &info );
@@ -911,6 +966,7 @@ struct SAIObjectsUnderConstructionUpdate : public SAIBasicUpdate
 			return 0;
 		}
 	};
+
 	// if bSet == false - delete all objects under construction, all other fields are ignored.
 public:
 	bool bSet = {};
@@ -936,6 +992,7 @@ public:
 
 public:
 	SAIObjectsUnderConstructionUpdate() : bCanBuild( true ) {}
+
 	SAIObjectsUnderConstructionUpdate( const bool _bSet ) : bSet( _bSet ), bCanBuild( true ) {}
 };
 
@@ -943,6 +1000,7 @@ struct SClientUpdateButtonsUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SClientUpdateButtonsUpdate );
 	ZDATA_( SAIBasicUpdate )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -960,13 +1018,16 @@ struct SClientUpdateSingleUnitUpdate : public SAIBasicUpdate
 public:
 	ZDATA_( SAIBasicUpdate )
 	int nUnitID = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nUnitID );
 		return 0;
 	}
+
 	SClientUpdateSingleUnitUpdate() {}
+
 	SClientUpdateSingleUnitUpdate( const int &_nUnitID ) : nUnitID( _nUnitID ) {}
 
 	REGISTER_TO_UPDATES
@@ -985,6 +1046,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	CVec3 vPos;
 	CDBPtr<NDb::SComplexEffect> pEffect;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -992,10 +1054,12 @@ public:
 		f.Add( 3, &pEffect );
 		return 0;
 	}
+
 	SPlayEffectUpdate( const NDb::SComplexEffect *_pEffect, const CVec3 &_vPos )
 			: SAIBasicUpdate( ACTION_NOTIFY_PLAY_EFFECT, 0 ), pEffect( _pEffect ), vPos( _vPos )
 	{
 	}
+
 	SPlayEffectUpdate() {}
 };
 
@@ -1006,13 +1070,16 @@ struct SLaserMarkUpdate : public SAIBasicUpdate
 public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyUpdateLaseMark info;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
 		return 0;
 	}
+
 	SLaserMarkUpdate() : info() {}
+
 	SLaserMarkUpdate(
 			const int _nLaserMarkID, const int _nUnitID, const int _nPlatform, const int _nGun, const CVec3 &_vTarget )
 			: info( _nLaserMarkID, _nUnitID, _nPlatform, _nGun, _vTarget )
@@ -1031,6 +1098,7 @@ public:
 	std::wstring wszMessage;
 	uint32_t dwColor = {};
 	bool bAnotherChat = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -1039,7 +1107,9 @@ public:
 		f.Add( 4, &bAnotherChat );
 		return 0;
 	}
+
 	SChatMessageUpdate() {}
+
 	SChatMessageUpdate( const std::wstring &_wszMessage, const uint32_t &_dwColor, const bool &_bAnotherChat )
 			: wszMessage( _wszMessage ), dwColor( _dwColor ), bAnotherChat( _bAnotherChat )
 	{
@@ -1055,13 +1125,16 @@ struct SWinLoseUpdate : public SAIBasicUpdate
 public:
 	ZDATA_( SAIBasicUpdate )
 	bool bWin = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &bWin );
 		return 0;
 	}
+
 	SWinLoseUpdate() {}
+
 	SWinLoseUpdate( const bool &_bWin ) : bWin( _bWin ) {}
 
 	REGISTER_TO_UPDATES
@@ -1073,11 +1146,13 @@ struct SMoneyChangedUpdate : public SAIBasicUpdate
 
 public:
 	ZDATA_( SAIBasicUpdate )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		return 0;
 	}
+
 	SMoneyChangedUpdate() {}
 
 	REGISTER_TO_UPDATES
@@ -1090,13 +1165,16 @@ struct SStartStopSequenceUpdate : public SAIBasicUpdate
 public:
 	ZDATA_( SAIBasicUpdate )
 	bool bStart = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &bStart );
 		return 0;
 	}
+
 	SStartStopSequenceUpdate() {}
+
 	SStartStopSequenceUpdate( const bool &_bStart ) : bStart( _bStart ) {}
 
 	REGISTER_TO_UPDATES
@@ -1111,13 +1189,16 @@ struct SMSPlayVoiceUpdate : public SAIBasicUpdate
 public:
 	ZDATA_( SAIBasicUpdate )
 	int nVoiceID = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nVoiceID );
 		return 0;
 	}
+
 	SMSPlayVoiceUpdate() {}
+
 	SMSPlayVoiceUpdate( const int &_nVoiceID ) : nVoiceID( _nVoiceID ) {}
 
 	//	REGISTER_TO_UPDATES
@@ -1130,13 +1211,16 @@ struct SMSChangePlaylistUpdate : public SAIBasicUpdate
 public:
 	ZDATA_( SAIBasicUpdate )
 	int nPlayList = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nPlayList );
 		return 0;
 	}
+
 	SMSChangePlaylistUpdate() {}
+
 	SMSChangePlaylistUpdate( const int &_nPlayList ) : nPlayList( _nPlayList ) {}
 
 	REGISTER_TO_UPDATES
@@ -1150,6 +1234,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	int nVolumeType = {};
 	float fVolume = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -1157,7 +1242,9 @@ public:
 		f.Add( 3, &fVolume );
 		return 0;
 	}
+
 	SMSSetVolumeUpdate() {}
+
 	SMSSetVolumeUpdate( const int &_nVolumeType, const float &_fVolume )
 			: nVolumeType( _nVolumeType ), fVolume( _fVolume )
 	{
@@ -1174,6 +1261,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	int nVolumeType = {};
 	bool bPause = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -1181,7 +1269,9 @@ public:
 		f.Add( 3, &bPause );
 		return 0;
 	}
+
 	SMSPauseMusicUpdate() {}
+
 	SMSPauseMusicUpdate( const int &_nVolumeType, const bool &_bPause ) : nVolumeType( _nVolumeType ), bPause( _bPause )
 	{
 	}
@@ -1197,6 +1287,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	int nObjectiveNumber = {};
 	int nStatus = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -1204,7 +1295,9 @@ public:
 		f.Add( 3, &nStatus );
 		return 0;
 	}
+
 	SObjectiveChanged() {}
+
 	SObjectiveChanged( const int &_nObjectiveNumber, const int &_nStatus )
 			: nObjectiveNumber( _nObjectiveNumber ), nStatus( _nStatus )
 	{
@@ -1220,13 +1313,16 @@ struct SEnableAirStrike : public SAIBasicUpdate
 public:
 	ZDATA_( SAIBasicUpdate )
 	bool bEnable = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &bEnable );
 		return 0;
 	}
+
 	SEnableAirStrike() {}
+
 	SEnableAirStrike( const bool &_bEnable ) : bEnable( _bEnable ) {}
 
 	REGISTER_TO_UPDATES
@@ -1238,6 +1334,7 @@ struct SMemCameraPos : public SAIBasicUpdate
 public:
 	ZDATA_( SAIBasicUpdate )
 	int nPos = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -1246,6 +1343,7 @@ public:
 	}
 
 	SMemCameraPos() : nPos( -1 ) {}
+
 	SMemCameraPos( const int _nPos ) : nPos( _nPos ) {}
 
 	REGISTER_TO_UPDATES
@@ -1257,6 +1355,7 @@ struct SSetCameraToMemPos : public SAIBasicUpdate
 public:
 	ZDATA_( SAIBasicUpdate )
 	int nPos = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -1265,6 +1364,7 @@ public:
 	}
 
 	SSetCameraToMemPos() : nPos( -1 ) {}
+
 	SSetCameraToMemPos( const int _nPos ) : nPos( _nPos ) {}
 
 	REGISTER_TO_UPDATES
@@ -1275,6 +1375,7 @@ struct SChatClear : public SAIBasicUpdate
 	OBJECT_NOCOPY_METHODS( SChatClear )
 public:
 	ZDATA_( SAIBasicUpdate )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -1282,5 +1383,6 @@ public:
 	}
 
 	SChatClear() {}
+
 	REGISTER_TO_UPDATES
 };

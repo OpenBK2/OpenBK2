@@ -33,6 +33,7 @@ struct ThrowOnCopy
 	int nValue;
 
 	explicit ThrowOnCopy( int n = 0 ) : nValue( n ) {}
+
 	ThrowOnCopy( const ThrowOnCopy &other ) : nValue( other.nValue )
 	{
 		if ( bThrow )
@@ -40,6 +41,7 @@ struct ThrowOnCopy
 			throw std::runtime_error( "copy failed" );
 		}
 	}
+
 	ThrowOnCopy( ThrowOnCopy && ) = default;
 };
 
@@ -47,15 +49,25 @@ bool ThrowOnCopy::bThrow = false;
 
 // A copy must preserve the existing functors, not default-construct new ones.
 int nDefaultModulus = 10;
+
 struct ModuloHash
 {
 	int nModulus = nDefaultModulus;
-	std::size_t operator()( int n ) const { return std::hash<int>{}( n % nModulus ); }
+
+	std::size_t operator()( int n ) const
+	{
+		return std::hash<int>{}( n % nModulus );
+	}
 };
+
 struct ModuloEqual
 {
 	int nModulus = nDefaultModulus;
-	bool operator()( int a, int b ) const { return a % nModulus == b % nModulus; }
+
+	bool operator()( int a, int b ) const
+	{
+		return a % nModulus == b % nModulus;
+	}
 };
 
 } // namespace

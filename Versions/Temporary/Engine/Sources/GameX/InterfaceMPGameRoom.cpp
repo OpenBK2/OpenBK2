@@ -690,6 +690,7 @@ bool CInterfaceMPGameRoom::OnUpdateSlotMessage( SMPUIUpdateSlotMessage *pMsg )
 
 #define PING_GOOD 200
 #define PING_AVG 400
+
 void CInterfaceMPGameRoom::UpdateInterior()
 {
 	// Rebuild player list
@@ -793,6 +794,7 @@ void CInterfaceMPGameRoom::CheckStartConditions()
 	nTeams[0] = 0;
 	nTeams[1] = 0;
 	int nColourMask = 0;
+
 	enum
 	{
 		E_OK,

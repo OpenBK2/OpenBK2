@@ -43,6 +43,7 @@ void DrawLabelDC( IPaintContext *pPaintContext, const std::string &szLabel, cons
 
 	pPaintContext->RestoreState();
 }
+
 //
 void DrawTextDC( IPaintContext *pPaintContext, const std::string &szText, const CVec2 &vScreenPos )
 {
@@ -55,6 +56,7 @@ void DrawTextDC( IPaintContext *pPaintContext, const std::string &szText, const 
 
 	pPaintContext->RestoreState();
 }
+
 //
 void DrawFrameBorders( IPaintContext *pPaintContext,
                        const CTRect<int> &rBorder1,
@@ -72,4 +74,4 @@ void DrawFrameBorders( IPaintContext *pPaintContext,
 
 	pPaintContext->RestoreState();
 }
-}
+} // namespace NDrawToolsDC

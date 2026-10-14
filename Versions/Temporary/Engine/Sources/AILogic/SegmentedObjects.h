@@ -10,17 +10,20 @@ enum
 {
 	SEGM_UNITS_SIZE = 10000
 };
+
 //
 inline const int GetSegmUnitsIndexByTime( const NTimer::STime &time )
 {
 	return time % SEGM_UNITS_SIZE;
 }
+
 inline const int GetRegisterIndex( const bool bInitialization )
 {
 	return bInitialization ? GetSegmUnitsIndexByTime( curTime - curTime % SConsts::AI_SEGMENT_DURATION )
 	                       : GetSegmUnitsIndexByTime( curTime + SConsts::AI_SEGMENT_DURATION -
 	                                                  curTime % SConsts::AI_SEGMENT_DURATION );
 }
+
 //
 template <class TPObj>
 class CContainer
@@ -38,6 +41,7 @@ private:
 
 public:
 	CContainer() : container( SEGM_UNITS_SIZE ) {}
+
 	void Clear()
 	{
 		container.Clear();
@@ -45,20 +49,52 @@ public:
 	}
 
 	void RegisterSegments( const TPObj pObj, const bool bInitialization );
-	void UnregisterSegments( const TPObj pObj ) { registerdObjects.erase( pObj->GetUniqueId() ); }
+
+	void UnregisterSegments( const TPObj pObj )
+	{
+		registerdObjects.erase( pObj->GetUniqueId() );
+	}
+
 	bool IsRegistered( const TPObj pObj )
 	{
 		return registerdObjects.find( pObj->GetUniqueID() ) != registerdObjects.end();
 	}
 
 	//
-	const int begin( const int nListNum ) const { return container.begin( nListNum ); }
-	const int end() const { return container.end(); }
-	const int GetNext( const int nIter ) { return container.GetNext( nIter ); }
-	TPObj &GetEl( const int nIter ) { return container.GetEl( nIter ); }
-	const TPObj &GetEl( const int nIter ) const { return container.GetEl( nIter ); }
-	void Add( const int nIter, TPObj pObj ) { container.Add( nIter, pObj ); }
-	void DelList( const int nList, const int nLastPos ) { container.DelList( nList, nLastPos ); }
+	const int begin( const int nListNum ) const
+	{
+		return container.begin( nListNum );
+	}
+
+	const int end() const
+	{
+		return container.end();
+	}
+
+	const int GetNext( const int nIter )
+	{
+		return container.GetNext( nIter );
+	}
+
+	TPObj &GetEl( const int nIter )
+	{
+		return container.GetEl( nIter );
+	}
+
+	const TPObj &GetEl( const int nIter ) const
+	{
+		return container.GetEl( nIter );
+	}
+
+	void Add( const int nIter, TPObj pObj )
+	{
+		container.Add( nIter, pObj );
+	}
+
+	void DelList( const int nList, const int nLastPos )
+	{
+		container.DelList( nList, nLastPos );
+	}
 };
 //
 template <class TContainer, class TSegments>
@@ -159,4 +195,4 @@ inline void SegmentWOMove( const NTimer::STime lastSegmTime,
 	}
 }
 
-};
+}; // namespace NSegmObjs

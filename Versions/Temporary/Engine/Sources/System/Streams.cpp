@@ -285,7 +285,7 @@ void TraceFileOpen( const char *pszHow, const std::string &szFileName, const boo
 	}
 }
 
-}
+} // namespace
 
 CFileStream::CFileStream( NVFS::IVFS *pVFS, const std::string &szFileName ) : CDataStream( F_Broken )
 {

@@ -17,11 +17,12 @@ enum ECamouflageRemoveReason
 class CBasicGun;
 class CBuilding;
 class CEntrenchment;
+
 namespace NDb
 {
 enum EUnitSpecialAbility : int;
 enum ESpecialAbilityParam : int;
-}
+} // namespace NDb
 
 struct SBehaviour
 {
@@ -31,6 +32,7 @@ struct SBehaviour
 		EMFollow = 1,
 		EMHoldPos = 2
 	};
+
 	enum EFire
 	{
 		EFAtWill = 0,
@@ -54,6 +56,7 @@ public:
 
 public:
 	SBehaviour() : moving( EMRoaming ), fire( EFAtWill ) {}
+
 	SBehaviour( const EMoving _moving, const EFire _fire ) : moving( _moving ), fire( _fire ) {}
 };
 
@@ -61,6 +64,7 @@ struct IShootEstimator;
 struct ICollisionsCollector;
 //struct IScenarioUnit;
 class CAIUnit;
+
 class CCommonUnit : public CLinkObject, public CBasePathUnit, public CGroupUnit, public CQueueUnit
 {
 	SBehaviour beh;
@@ -91,7 +95,11 @@ class CCommonUnit : public CLinkObject, public CBasePathUnit, public CGroupUnit,
 	int nCommandLeft = {};
 
 protected:
-	IShootEstimator *GetShootEstimator() { return pShootEstimator; }
+	IShootEstimator *GetShootEstimator()
+	{
+		return pShootEstimator;
+	}
+
 	virtual void NullSegmTime() {};
 	virtual void CheckForDestroyedObjects( const CVec2 &vCenter ) const;
 	virtual void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate );
@@ -104,16 +112,33 @@ public:
 	CCommonUnit() : wReserveDir( 0 ), vFollowShift( VNULL2 ) {}
 
 	int operator&( IBinSaver &f );
-	virtual int GetMovingType() const { return 0; }
-	virtual bool IsSelectable() const { return bSelectable; }
+
+	virtual int GetMovingType() const
+	{
+		return 0;
+	}
+
+	virtual bool IsSelectable() const
+	{
+		return bSelectable;
+	}
+
 	virtual void Init( const CVec3 &_vCenter, const uint16_t _wDirection, ICollisionsCollector *pCollisionsCollector );
 
 	virtual int GetNGuns() const = 0;
 	virtual CBasicGun *GetGun( const int n ) const = 0;
 
 	//{ not very nice, but acceptable
-	const int GetUniqueIDPath() const { return GetUniqueId(); }
-	const int GetUniqueIdQU() const { return GetUniqueId(); }
+	const int GetUniqueIDPath() const
+	{
+		return GetUniqueId();
+	}
+
+	const int GetUniqueIdQU() const
+	{
+		return GetUniqueId();
+	}
+
 	//}
 
 	virtual CBasicGun *ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime ) = 0;
@@ -132,25 +157,59 @@ public:
 
 	virtual const float GetSightRadius() const = 0;
 
-	const SBehaviour::EMoving GetBehaviourMoving() const { return beh.moving; }
-	const SBehaviour::EFire GetBehaviourFire() const { return beh.fire; }
-	void SetBehaviourMoving( const SBehaviour::EMoving _moving );
-	void SetBehaviourFire( const SBehaviour::EFire _fire ) { beh.fire = _fire; }
+	const SBehaviour::EMoving GetBehaviourMoving() const
+	{
+		return beh.moving;
+	}
 
-	const NTimer::STime &GetLastBehTime() const { return lastBehTime; }
-	NTimer::STime &GetLastBehTime() { return lastBehTime; }
+	const SBehaviour::EFire GetBehaviourFire() const
+	{
+		return beh.fire;
+	}
+
+	void SetBehaviourMoving( const SBehaviour::EMoving _moving );
+
+	void SetBehaviourFire( const SBehaviour::EFire _fire )
+	{
+		beh.fire = _fire;
+	}
+
+	const NTimer::STime &GetLastBehTime() const
+	{
+		return lastBehTime;
+	}
+
+	NTimer::STime &GetLastBehTime()
+	{
+		return lastBehTime;
+	}
 
 	virtual const bool IsVisible( const uint8_t party ) const = 0;
 
-	virtual const bool NeedDeinstall() const { return false; }
+	virtual const bool NeedDeinstall() const
+	{
+		return false;
+	}
+
 	// может ли сейчас стрелять ( например, если не инсталлирована, то не может )
-	virtual const bool CanShoot() const { return true; }
+	virtual const bool CanShoot() const
+	{
+		return true;
+	}
+
 	virtual const bool CanShootToPlanes() const = 0;
-	virtual const bool CanShootInMovement() { return false; }
+
+	virtual const bool CanShootInMovement()
+	{
+		return false;
+	}
 
 	virtual void Fired( const float fGunRadius, const int nGun ) = 0;
 
-	virtual CBasicGun *GetFirstArtilleryGun() const { return 0; }
+	virtual CBasicGun *GetFirstArtilleryGun() const
+	{
+		return 0;
+	}
 
 	virtual const NTimer::STime GetTimeToCamouflage() const = 0;
 	virtual void SetCamoulfage() = 0;
@@ -176,17 +235,24 @@ public:
 		vBattlePos = vPos;
 		wReserveDir = _wReserveDir;
 	}
-	bool DoesReservePosExist() const { return vBattlePos.x != -1.0f; }
+
+	bool DoesReservePosExist() const
+	{
+		return vBattlePos.x != -1.0f;
+	}
+
 	const CVec2 &GetBattlePos() const
 	{
 		NI_ASSERT( DoesReservePosExist(), "Reserve pos doesn't exist" );
 		return vBattlePos;
 	}
+
 	const uint16_t GetReserveDir() const
 	{
 		NI_ASSERT( DoesReservePosExist(), "Reserve pos doesn't exist" );
 		return wReserveDir;
 	}
+
 	void SetTruck( class CAIUnit *pUnit );
 	class CAIUnit *GetTruck() const;
 
@@ -196,8 +262,15 @@ public:
 	virtual void Die( const bool fromExplosion, const float fDamage ) = 0;
 
 	// true возвращает только формация
-	virtual bool IsFormation() const { return false; }
-	virtual const bool IsInfantry() const { return false; }
+	virtual bool IsFormation() const
+	{
+		return false;
+	}
+
+	virtual const bool IsInfantry() const
+	{
+		return false;
+	}
 
 	virtual void SendAcknowledgement( EUnitAckType ack, bool bForce = false ) = 0;
 	// ack для команды pCommand
@@ -208,10 +281,18 @@ public:
 	virtual void UnsetDesirableSpeed();
 	virtual float GetDesirableSpeed() const;
 	virtual void AdjustWithDesirableSpeed( float *pfMaxSpeed ) const;
+
 	// Used by group-level forward move commands to avoid inheriting a unit's transient reverse state.
-	virtual const float GetMaxPossibleForwardSpeed() const { return GetMaxPossibleSpeed(); }
+	virtual const float GetMaxPossibleForwardSpeed() const
+	{
+		return GetMaxPossibleSpeed();
+	}
+
 	// Used by an explicit reverse command before the unit has switched its movement direction.
-	virtual const float GetMaxPossibleBackwardSpeed() const { return GetMaxPossibleSpeed(); }
+	virtual const float GetMaxPossibleBackwardSpeed() const
+	{
+		return GetMaxPossibleSpeed();
+	}
 
 	// follow state - мы за кем-то следуем
 	void SetFollowState( class CCommonUnit *pFollowedUnit );
@@ -219,7 +300,11 @@ public:
 	bool IsInFollowState();
 	// вернуть юнит, за которым следуем
 	class CCommonUnit *GetFollowedUnit() const;
-	const CVec2 &GetFollowShift() const { return vFollowShift; }
+
+	const CVec2 &GetFollowShift() const
+	{
+		return vFollowShift;
+	}
 
 	// юнит pFollowingUnit следует за нами
 	void FollowingByYou( class CCommonUnit *pFollowingUnit );
@@ -228,7 +313,10 @@ public:
 	virtual void FreezeSegment();
 
 	// управляем ли (н-р, пушка без расчёта неуправляема)
-	virtual bool IsOperable() const { return true; }
+	virtual bool IsOperable() const
+	{
+		return true;
+	}
 
 	virtual const int GetMinArmor() const = 0;
 	virtual const int GetMaxArmor() const = 0;
@@ -254,7 +342,11 @@ public:
 	CBasicGun *GetBestShootEstimatedGun() const;
 	const int GetNumOfBestShootEstimatedGun() const;
 
-	virtual const float GetKillSpeed( class CAIUnit *pEnemy ) const { return 0; }
+	virtual const float GetKillSpeed( class CAIUnit *pEnemy ) const
+	{
+		return 0;
+	}
+
 	// обнулить время для периодов сканирования
 	virtual void ResetTargetScan() = 0;
 	// просканировать, если пора; если нашли цель, то атаковать
@@ -265,8 +357,12 @@ public:
 	// просканировать на поиск цели
 	virtual void
 	LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, CBasicGun **pGun ) = 0;
+
 	// поиск препятствия
-	virtual struct IObstacle *LookForObstacle() { return 0; };
+	virtual struct IObstacle *LookForObstacle()
+	{
+		return 0;
+	};
 
 	// нужно ли пытаться подъезать близко к точке, которую охраняет (н-р, для поездов не нужно)
 	virtual bool CanMoveForGuard() const = 0;
@@ -274,43 +370,96 @@ public:
 	virtual bool CanCommandBeExecutedByStats( int nCmd ) const = 0;
 	virtual void NotifyAbilityRun( class CAICommand *pCommand ) = 0;
 
-	virtual const NTimer::STime GetNextPathSegmTime() const { return 0; }
+	virtual const NTimer::STime GetNextPathSegmTime() const
+	{
+		return 0;
+	}
 
 	virtual float GetPriceMax() const = 0;
 	virtual const NTimer::STime GetBehUpdateDuration() const = 0;
 
 	virtual void AnimationSegment() {}
 
-	virtual const float GetTargetScanRadius() { return 0.0f; }
+	virtual const float GetTargetScanRadius()
+	{
+		return 0.0f;
+	}
 
 	bool CanBeFrozen() const;
 	bool IsFrozenByState() const;
 	virtual void FreezeByState( const bool bFreeze );
 
-	virtual bool CanHookUnit( class CAIUnit *pUnitToHook ) const { return false; }
-	virtual bool IsTowing() const { return false; }
+	virtual bool CanHookUnit( class CAIUnit *pUnitToHook ) const
+	{
+		return false;
+	}
 
-	void SetPrice( float fNewPrice ) { fPrice = fNewPrice; }
-	float GetPrice() { return fPrice; }
+	virtual bool IsTowing() const
+	{
+		return false;
+	}
+
+	void SetPrice( float fNewPrice )
+	{
+		fPrice = fNewPrice;
+	}
+
+	float GetPrice()
+	{
+		return fPrice;
+	}
 
 	virtual bool CanMoveAfterUserCommand() const = 0;
 
-	virtual const CVec2 GetUnitPointInFormation() const { return VNULL2; }
+	virtual const CVec2 GetUnitPointInFormation() const
+	{
+		return VNULL2;
+	}
+
 	virtual const CVec2 &GetAABBHalfSize() const = 0;
 
-	virtual const int GetUnitPriority() const { return 0; }
+	virtual const int GetUnitPriority() const
+	{
+		return 0;
+	}
 
 	//новый PathFinder
-	virtual bool IsInFormation() const { return false; }
-	virtual class CFormation *GetFormation() const { return 0; }
+	virtual bool IsInFormation() const
+	{
+		return false;
+	}
+
+	virtual class CFormation *GetFormation() const
+	{
+		return 0;
+	}
+
 	virtual const float GetSpeedForFollowing();
 	virtual const bool CanGoToPoint( const CVec2 &point ) const;
 	virtual const bool CanRotate() const = 0;
-	virtual const EAIClasses GetAIPassabilityClass() const { return EAC_ANY; }
-	virtual const bool IsDangerousDirExist() const { return false; }
-	virtual const uint16_t GetDangerousDir() const { return 0; }
-	virtual const int GetUniqueID() const { return CLinkObject::GetUniqueId(); }
+
+	virtual const EAIClasses GetAIPassabilityClass() const
+	{
+		return EAC_ANY;
+	}
+
+	virtual const bool IsDangerousDirExist() const
+	{
+		return false;
+	}
+
+	virtual const uint16_t GetDangerousDir() const
+	{
+		return 0;
+	}
+
+	virtual const int GetUniqueID() const
+	{
+		return CLinkObject::GetUniqueId();
+	}
+
 	virtual void UnitTrampled( const CBasePathUnit *pUnit ) {}
+
 	virtual const bool CanUnitTrampled( const CBasePathUnit *pUnit ) const = 0;
 	virtual const bool IterateUnits( const CVec2 &vCenter,
 	                                 const float fRadius,
@@ -321,10 +470,18 @@ public:
 	//старый PathFinder
 	IStaticPath *GetPathToBuilding( CBuilding *pBuilding, int *pnEntrance );
 	IStaticPath *GetPathToEntrenchment( CEntrenchment *pEntrenchment );
-	virtual const int GetFormationSlot() { return 0; }
+
+	virtual const int GetFormationSlot()
+	{
+		return 0;
+	}
 
 	virtual void WarFogChanged() = 0;
 
-	virtual const float GetZ() const { return 0.0f; }
+	virtual const float GetZ() const
+	{
+		return 0.0f;
+	}
+
 	const bool TryExecuteCommand( class CAICommand *pCommand, const bool bPlaceInQueue, bool bOnlyThisUnitCommand );
 };

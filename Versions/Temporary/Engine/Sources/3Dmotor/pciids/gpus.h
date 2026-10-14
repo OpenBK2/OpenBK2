@@ -1948,4 +1948,4 @@ enum EVideoCard
 	VC_WILDCAT_LAKE_INTEL_GRAPHICS,
 	////Intel Corporation
 };
-}
+} // namespace NGfx

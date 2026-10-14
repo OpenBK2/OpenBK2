@@ -16,13 +16,17 @@ struct SXmlValue
 
 	SXmlValue() : pszBegin( 0 ), nSize( 0 ) {}
 
-	const std::string ToString() const { return std::string( pszBegin, nSize ); }
+	const std::string ToString() const
+	{
+		return std::string( pszBegin, nSize );
+	}
 };
 
 inline bool operator==( const SXmlValue &val, const std::string &str )
 {
 	return val.nSize == str.size() && strncmp( val.pszBegin, str.c_str(), val.nSize ) == 0;
 }
+
 inline bool operator==( const std::string &str, const SXmlValue &val )
 {
 	return val.nSize == str.size() && strncmp( val.pszBegin, str.c_str(), val.nSize ) == 0;
@@ -73,11 +77,25 @@ public:
 
 	const char *Parse( const char *pszBegin, SPool *pPool );
 
-	const SXmlValue &GetValue() const { return value; }
-	const SXmlValue &GetName() const { return name; }
+	const SXmlValue &GetValue() const
+	{
+		return value;
+	}
 
-	const std::vector<const SXmlAttribute *> &GetAttributes() const { return attributes; }
-	const std::vector<const CXmlNode *> &GetNodes() const { return nodes; }
+	const SXmlValue &GetName() const
+	{
+		return name;
+	}
+
+	const std::vector<const SXmlAttribute *> &GetAttributes() const
+	{
+		return attributes;
+	}
+
+	const std::vector<const CXmlNode *> &GetNodes() const
+	{
+		return nodes;
+	}
 
 	const CXmlNode *FindChild( const char *pszChild ) const;
 
@@ -102,7 +120,9 @@ class SYSTEM_EXPORT CXmlReader : public CObjectBase
 
 public:
 	CXmlReader() : buf( 0 ) {}
+
 	CXmlReader( const char *pszBegin, const char *pszEnd );
+
 	~CXmlReader()
 	{
 		if ( buf )
@@ -111,6 +131,9 @@ public:
 		}
 	}
 
-	const CXmlNode *GetRootElement() const { return &rootNode; }
+	const CXmlNode *GetRootElement() const
+	{
+		return &rootNode;
+	}
 };
-}
+} // namespace NXml

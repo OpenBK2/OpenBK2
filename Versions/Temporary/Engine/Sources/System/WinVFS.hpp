@@ -21,15 +21,30 @@ class CWinVFS : public IVFS
 
 	public:
 		CFileEntry( const uint32_t _dwCheckTime ) : dwCheckTime( _dwCheckTime ), bChecked( false ) {}
+
 		virtual ~CFileEntry() {}
+
 		//
-		void SetChecked() { bChecked = true; }
-		bool IsChecked() const { return bChecked; }
+		void SetChecked()
+		{
+			bChecked = true;
+		}
+
+		bool IsChecked() const
+		{
+			return bChecked;
+		}
+
 		//
-		uint32_t GetCheckTime() const { return dwCheckTime; }
+		uint32_t GetCheckTime() const
+		{
+			return dwCheckTime;
+		}
+
 		virtual CDataStream *OpenStream( const std::string &szPathName ) = 0;
 		virtual bool GetStats( SFileStats *pStats, const std::string &szPathName ) const = 0;
 	};
+
 	//
 	class CWinFileEntry : public CFileEntry
 	{
@@ -49,6 +64,7 @@ class CWinVFS : public IVFS
 				: CFileEntry( _dwCheckTime ), szBasePath( _szBasePath ), szRealPath( _szRealPath )
 		{
 		}
+
 		CDataStream *OpenStream( const std::string &szPathName );
 		bool GetStats( SFileStats *pStats, const std::string &szPathName ) const;
 	};
@@ -62,7 +78,12 @@ class CWinVFS : public IVFS
 				: CFileEntry( _dwCheckTime ), zipfile( _zipfile ), nIndex( _nIndex )
 		{
 		}
-		CDataStream *OpenStream( const std::string &szPathName ) { return zipfile.OpenFile( nIndex ); }
+
+		CDataStream *OpenStream( const std::string &szPathName )
+		{
+			return zipfile.OpenFile( nIndex );
+		}
+
 		bool GetStats( SFileStats *pStats, const std::string &szPathName ) const
 		{
 			if ( pStats == 0 )
@@ -79,6 +100,7 @@ class CWinVFS : public IVFS
 			return true;
 		}
 	};
+
 	//
 	//! functional for adding/registering win files to storage
 	class CWinFileAdder
@@ -88,6 +110,7 @@ class CWinVFS : public IVFS
 
 	public:
 		CWinFileAdder( const std::string &_szBasePath, CWinVFS *_pVFS ) : szBasePath( _szBasePath ), pVFS( _pVFS ) {}
+
 		//
 		void operator()( NFile::CFileIterator &it ) const
 		{
@@ -117,6 +140,7 @@ class CWinVFS : public IVFS
 			}
 		}
 	};
+
 	typedef std::list<CObj<CZipFile>> CZipFilesList;
 	CZipFilesList zipFiles;
 	typedef std::unordered_map<NFile::CFilePath, CFileEntry *> CStreamEntriesMap;
@@ -128,6 +152,7 @@ class CWinVFS : public IVFS
 	CDataStream *OpenFileDirect( const std::string &szPath );
 	// only for relative path!
 	CFileEntry *UpdateFileEntry( const NFile::CFilePath &szPath );
+
 	//
 	CWinVFS() {}
 
@@ -159,4 +184,4 @@ public:
 	bool RemoveFile( const std::string &szPath );
 };
 
-}
+} // namespace NVFS

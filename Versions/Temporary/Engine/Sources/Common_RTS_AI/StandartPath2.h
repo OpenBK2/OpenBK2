@@ -80,6 +80,7 @@ private:
 		vFinishPoint = _vFinishPoint;
 		vFinishTile = GetTile( vFinishPoint );
 	}
+
 	void SetFinishTile( const SVector &_vFinishTile )
 	{
 		vFinishTile = _vFinishTile;
@@ -101,10 +102,21 @@ public:
 
 	const CVec2 PeekPoint( const int nShift ) const;
 	void Shift( const int nShift );
-	bool IsFinished() const { return nCurPathTile == nLastPathTile; }
 
-	const CVec2 &GetFinishPoint() const { return vFinishPoint; }
-	const CVec2 &GetStartPoint() const { return vStartPoint; }
+	bool IsFinished() const
+	{
+		return nCurPathTile == nLastPathTile;
+	}
+
+	const CVec2 &GetFinishPoint() const
+	{
+		return vFinishPoint;
+	}
+
+	const CVec2 &GetStartPoint() const
+	{
+		return vStartPoint;
+	}
 
 	//! восстановить (пересчитать новый статический путь) путь из новой точки ( vPoint )
 	void RecoverPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &vLastKnownGoodTile );
@@ -114,10 +126,19 @@ public:
 	void InsertTiles( const std::list<SVector> &tiles );
 	//! можно ли проехать весь путь задом
 	const bool CanGoBackward( const CBasePathUnit *pUnit ) const;
+
 	//! необходимо проверить можно ли развернуться для того, что бы ехать по данному пути
-	const bool ShouldCheckTurn() const { return true; }
+	const bool ShouldCheckTurn() const
+	{
+		return true;
+	}
+
 	//! можно ли для этого пути построить сложный разворот (все равно разворотов по окружности ПОКА нет)
-	const bool CanBuildComplexTurn() const { return false; }
+	const bool CanBuildComplexTurn() const
+	{
+		return false;
+	}
+
 	//! отметить путь, и, может быть, вывести различную информацию
 	void MarkPath( const int nID, const NDebugInfo::EColor color ) const;
 };

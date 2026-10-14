@@ -7,6 +7,7 @@ struct SPipeMessage
 	ZDATA
 	std::wstring sz;
 	uint32_t dwColor;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &sz );
@@ -14,11 +15,13 @@ struct SPipeMessage
 		return 0;
 	}
 };
+
 struct SPipeChannel
 {
 	ZDATA
 	std::vector<int> copyToStreams;
 	std::list<SPipeMessage> msgs;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &copyToStreams );
@@ -28,6 +31,7 @@ struct SPipeChannel
 };
 
 const int N_MAX_CONSOLE_LINES = 2000;
+
 class CConsoleBuffer : public IConsoleBuffer
 {
 	OBJECT_NOCOPY_METHODS( CConsoleBuffer );
@@ -52,12 +56,17 @@ class CConsoleBuffer : public IConsoleBuffer
 		return 0;
 	}
 
-	~CConsoleBuffer() { DumpLog(); }
+	~CConsoleBuffer()
+	{
+		DumpLog();
+	}
+
 	void DumpLog();
 	void CompressLines();
 
 public:
 	CConsoleBuffer() : szLogFileName( "console_log.txt" ), nSlowCompress( 0 ) {}
+
 	// write string to console's stream
 	void Write( const int nStreamID,
 	            const std::wstring &szString,
@@ -68,7 +77,16 @@ public:
 	                 const char *pszString,
 	                 const uint32_t color = 0xffffffff,
 	                 const bool bPersistentMsg = false );
-	void SetLogfile( const char *pszFilename ) { szLogFileName = pszFilename; }
+
+	void SetLogfile( const char *pszFilename )
+	{
+		szLogFileName = pszFilename;
+	}
+
 	bool GetNextLine( SConsoleLine *pRes, int *pSequenceID );
-	SPipeChannel &GetPipeChannel( int n ) { return pipes[n]; }
+
+	SPipeChannel &GetPipeChannel( int n )
+	{
+		return pipes[n];
+	}
 };

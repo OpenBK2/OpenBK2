@@ -11,6 +11,7 @@ struct SSurfBorder
 	std::vector<NDb::SVSOPoint> points;
 	CDBPtr<NDb::SMaterial> pSurfMaterial;
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SWaterParams
 {
@@ -28,6 +29,7 @@ struct SWaterParams
 	float fNoiseCoeff;
 	int nSeaMapIndex; // filled during water initialization
 	NDb::SWater::EWaterType eWaterType;
+
 	//
 	SWaterParams &operator=( const NDb::SWater &v )
 	{
@@ -46,6 +48,7 @@ struct SWaterParams
 		eWaterType = v.eWaterType;
 		return *this;
 	}
+
 	//
 	bool operator==( const NDb::SWater &v ) const
 	{
@@ -58,6 +61,7 @@ struct SWaterParams
 		       ( szNoiseFileName == v.pDepthNoise->szFileName ) && ( fNoiseCoeff == v.fDepthNoiseCoeff ) &&
 		       ( eWaterType == v.eWaterType );
 	}
+
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -77,5 +81,6 @@ struct SWaterParams
 		return 0;
 	}
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-};
+}; // namespace NWaterStuff

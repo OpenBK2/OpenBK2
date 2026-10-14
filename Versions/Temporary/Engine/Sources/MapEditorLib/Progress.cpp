@@ -71,6 +71,6 @@ void IteratePosition()
 		Singleton<IMainFrameContainer>()->Get()->IterateProgressDialogPosition();
 	}
 }
-}
+} // namespace NProgress
 
 // basement storage

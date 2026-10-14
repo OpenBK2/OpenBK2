@@ -9,6 +9,7 @@ namespace NDb
 {
 struct IObjMan;
 struct IDbObserver;
+
 namespace NTypeDef
 {
 	struct STypeClass;
@@ -58,4 +59,4 @@ LIBDB_EXPORT bool IsFileRegistered( const std::string &szFileName );
 //! add database observer
 LIBDB_EXPORT void AddDbObserver( IDbObserver *pObserver );
 
-}
+} // namespace NDb

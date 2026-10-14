@@ -53,4 +53,4 @@ CConnectionEffort *CreateFirstServerEffort( const int nMyServerID,
 	return new CSimpleServerEffort( nMyServerID, nClientServerID, szClientIP, nClientPort, pNet, pAcceptGamersNet );
 }
 
-}
+} // namespace NEffortsFactory

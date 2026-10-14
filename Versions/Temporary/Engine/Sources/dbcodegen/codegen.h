@@ -34,5 +34,5 @@ namespace NCodeGenTool
 	bool CopySourceCode( const std::list<std::string> &filetitles,
 	                     const std::string &szSrcPath,
 	                     const std::string &szDstPath );
-}
-}
+} // namespace NCodeGenTool
+} // namespace NDb

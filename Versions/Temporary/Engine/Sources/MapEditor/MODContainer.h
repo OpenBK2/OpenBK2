@@ -8,6 +8,7 @@ class CMODContainer : public IMODContainer
 
 public:
 	CMODContainer() {}
+
 	~CMODContainer() {}
 
 	// IMODContainer

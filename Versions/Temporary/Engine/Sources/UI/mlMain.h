@@ -16,6 +16,7 @@ private:
 	int nPos;
 	std::wstring wsText;
 	int nSize;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nPos );
@@ -27,16 +28,32 @@ private:
 public:
 	CMLStream() : nPos( 0 ), nSize( 0 ) {}
 
-	int GetSeek() const { return nPos; }
+	int GetSeek() const
+	{
+		return nPos;
+	}
+
 	void Seek( int nSeek )
 	{
 		ASSERT( nSeek <= wsText.length() );
 		nPos = nSeek;
 	}
-	void IncSeek() { ++nPos; }
 
-	wchar_t GetChar() const { return wsText[nPos]; }
-	bool IsEof() const { return nPos >= nSize; }
+	void IncSeek()
+	{
+		++nPos;
+	}
+
+	wchar_t GetChar() const
+	{
+		return wsText[nPos];
+	}
+
+	bool IsEof() const
+	{
+		return nPos >= nSize;
+	}
+
 	void GetString( int nStart, int nSize, std::wstring *pRes );
 	void InsertString( const std::wstring &wsText );
 };
@@ -69,4 +86,4 @@ public:
 
 IML *CreateML();
 
-} // Namespace
+} // namespace NML

@@ -55,7 +55,11 @@ public:
 	}
 
 protected:
-	const std::string &GetFileName() const { return szFileName; }
+	const std::string &GetFileName() const
+	{
+		return szFileName;
+	}
+
 	const std::string GetPathName();
 
 public:

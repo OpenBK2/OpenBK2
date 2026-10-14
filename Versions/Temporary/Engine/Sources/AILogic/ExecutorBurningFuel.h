@@ -27,8 +27,18 @@ public:
 
 public:
 	CExecutorBurningFuel( const CVec3 &_vPos, const NDb::SBurningFuel *_pStats );
+
 	CExecutorBurningFuel() {}
+
 	virtual int Segment();
-	virtual bool NotifyEvent( const CExecutorEvent &event ) { return false; }
-	virtual bool IsExecutorValid() const { return true; }
+
+	virtual bool NotifyEvent( const CExecutorEvent &event )
+	{
+		return false;
+	}
+
+	virtual bool IsExecutorValid() const
+	{
+		return true;
+	}
 };

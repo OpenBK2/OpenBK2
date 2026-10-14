@@ -73,9 +73,12 @@ public:
 	}
 
 	// Not GetName: wxWindow has one, and this would hide it.
-	std::string EnteredName() const { return std::string( pName->GetValue().utf8_str() ); }
+	std::string EnteredName() const
+	{
+		return std::string( pName->GetValue().utf8_str() );
+	}
 };
-}
+} // namespace
 
 namespace NEnterName
 {
@@ -90,4 +93,4 @@ bool RunWx( IWidget *pParent, const std::string &rszCaption, const std::string &
 	( *pszName ) = dialog.EnteredName();
 	return true;
 }
-}
+} // namespace NEnterName

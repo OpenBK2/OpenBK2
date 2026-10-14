@@ -3,6 +3,7 @@
 #include "MapEditorLib/DefaultInputState.h"
 
 class CEffectEditor;
+
 class CEffectState : public CDefaultInputState
 {
 	//Данные специфичные для данного редактрора

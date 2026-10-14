@@ -20,7 +20,11 @@ class CWindowSelection : public CWindow, public ISelection
 	CVec2 vSelectionFirstPoint;
 
 protected:
-	virtual NDb::SWindow *GetInstance() { return pInstance; }
+	virtual NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
+
 	CPtr<CBackground> pSelectorRect;
 
 public:

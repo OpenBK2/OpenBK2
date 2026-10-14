@@ -56,4 +56,4 @@ struct SWindowViewport
 		*py = y + *py * height / renderHeight;
 	}
 };
-}
+} // namespace NWinFrame

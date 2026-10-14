@@ -17,5 +17,9 @@ private:
 public:
 	void Register( int nCommand );
 	void Called( int nCommand );
-	void Clear() { registeredCommands.clear(); }
+
+	void Clear()
+	{
+		registeredCommands.clear();
+	}
 };

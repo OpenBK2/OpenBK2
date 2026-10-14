@@ -144,11 +144,17 @@ private:
 		}
 	}
 
-	static const std::string &Title() { return Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle; }
+	static const std::string &Title()
+	{
+		return Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle;
+	}
 
-	static const std::string &Version() { return Singleton<IUserDataContainer>()->Get()->constUserData.szVersion; }
+	static const std::string &Version()
+	{
+		return Singleton<IUserDataContainer>()->Get()->constUserData.szVersion;
+	}
 };
-}
+} // namespace
 
 namespace NAbout
 {
@@ -158,4 +164,4 @@ void Run( IWidget *pParent )
 	dialog.CentreOnParent();
 	dialog.ShowModal();
 }
-}
+} // namespace NAbout

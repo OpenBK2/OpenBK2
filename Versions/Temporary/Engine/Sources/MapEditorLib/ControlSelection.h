@@ -9,6 +9,7 @@ private:
 		TID id;
 		TData data;
 	};
+
 	//
 public:
 	typedef std::unordered_map<TID, SControlSelectionData, TIDHash> CControlSelectionDataMap;
@@ -17,13 +18,25 @@ private:
 	CControlSelectionDataMap controlSelectionDataMap;
 	//
 public:
-	const CControlSelectionDataMap &Get() const { return controlSelectionDataMap; }
+	const CControlSelectionDataMap &Get() const
+	{
+		return controlSelectionDataMap;
+	}
+
 	// GetData is gone: nothing called it, and it looked up an rItem it does not
 	// have, so it had never been instantiated.
 	//
-	void Clear() { controlSelectionDataMap.clear(); }
+	void Clear()
+	{
+		controlSelectionDataMap.clear();
+	}
+
 	//
-	bool IsEmpty() const { return controlSelectionDataMap.empty(); }
+	bool IsEmpty() const
+	{
+		return controlSelectionDataMap.empty();
+	}
+
 	//
 	void Insert( const TID &rID, const TData &rData )
 	{
@@ -36,6 +49,7 @@ public:
 		posControlSelectionData->second.id = rID;
 		posControlSelectionData->second.data = rData;
 	}
+
 	//
 	void Remove( const TID &rID )
 	{
@@ -46,4 +60,5 @@ public:
 		}
 	}
 };
+
 //

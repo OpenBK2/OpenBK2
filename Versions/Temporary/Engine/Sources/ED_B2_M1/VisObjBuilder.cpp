@@ -90,7 +90,7 @@ bool EnsureResourceReference( IManipulator *parent, const std::string &field, co
 			CManipulatorManager::CreateManipulatorFromReference( field, parent, nullptr, nullptr, nullptr );
 	return child || CManipulatorManager::SetValue( name, parent, field, true );
 }
-}
+} // namespace
 
 REGISTER_BUILDER_IN_DLL( VisObj, CVisObjBuilder )
 
@@ -435,6 +435,7 @@ bool CVisObjBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator,
 	}
 	return true;
 }
+
 //CRAP} PLAIN_TEXT
 
 bool CVisObjBuilder::InternalInsertObject( std::string *pszObjectTypeName,

@@ -15,7 +15,10 @@ class CArray1Bit
 	int xSize = 0;
 	std::vector<uint8_t> array;
 
-	const uint8_t GetByteMask( int nIndex ) const { return ( nIndex == 0 ) ? 0xFF : 0xFF >> ( 8 - nIndex ); }
+	const uint8_t GetByteMask( int nIndex ) const
+	{
+		return ( nIndex == 0 ) ? 0xFF : 0xFF >> ( 8 - nIndex );
+	}
 
 public:
 	int operator&( struct IBinSaver &saver )
@@ -24,6 +27,7 @@ public:
 		saver.Add( 2, &xSize );
 		return 0;
 	}
+
 	int operator&( struct IXmlSaver &saver )
 	{
 		saver.Add( "Size", &xSize );
@@ -32,9 +36,16 @@ public:
 	}
 
 	CArray1Bit() {}
-	CArray1Bit( const int size ) { SetSize( size ); }
+
+	CArray1Bit( const int size )
+	{
+		SetSize( size );
+	}
+
 	CArray1Bit( const CArray1Bit &a ) : xSize( a.xSize ), array( a.array ) {}
+
 	~CArray1Bit() {}
+
 	//
 	const CArray1Bit &operator=( const CArray1Bit &a )
 	{
@@ -42,6 +53,7 @@ public:
 		array = a.array;
 		return *this;
 	}
+
 	//
 	void SetSize( const int size )
 	{
@@ -51,11 +63,13 @@ public:
 			array.resize( ( ( size - 1 ) >> 3 ) + 1 );
 		}
 	}
+
 	void Clear()
 	{
 		xSize = 0;
 		array.clear();
 	}
+
 	void FillZero()
 	{
 		if ( !IsEmpty() )
@@ -65,13 +79,31 @@ public:
 	}
 
 	//
-	int GetSize() const { return xSize; }
-	bool IsEmpty() const { return xSize == 0; }
+	int GetSize() const
+	{
+		return xSize;
+	}
+
+	bool IsEmpty() const
+	{
+		return xSize == 0;
+	}
 
 	//
-	void SetData( const int n ) { array[n >> 3] |= 1 << ( n & 7 ); }
-	const uint8_t GetData( const int n ) const { return ( array[n >> 3] >> ( n & 7 ) ) & 1; }
-	void RemoveData( const int n ) { array[n >> 3] &= ~( 1 << ( n & 7 ) ); }
+	void SetData( const int n )
+	{
+		array[n >> 3] |= 1 << ( n & 7 );
+	}
+
+	const uint8_t GetData( const int n ) const
+	{
+		return ( array[n >> 3] >> ( n & 7 ) ) & 1;
+	}
+
+	void RemoveData( const int n )
+	{
+		array[n >> 3] &= ~( 1 << ( n & 7 ) );
+	}
 
 	//
 	bool operator==( const CArray1Bit &a ) const
@@ -95,6 +127,7 @@ public:
 		const int nLastSizeMask = GetByteMask( xSize & 0x00000007 );
 		return ( array[nSize] & nLastSizeMask ) == ( a.array[nSize] & nLastSizeMask );
 	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool operator>( const CArray1Bit &a ) const
 	{
@@ -154,6 +187,7 @@ public:
 		}
 		return false;
 	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool operator<( const CArray1Bit &a ) const
 	{
@@ -233,6 +267,7 @@ public:
 		}
 		array[nSizeA] |= ( a.array[nSizeA] & GetByteMask( nLastSizeA ) );
 	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	int operator&=( const CArray1Bit &a )
 	{
@@ -249,6 +284,7 @@ public:
 		array[nMinSize] &= ( a.array[nMinSize] | ~GetByteMask( nMinLastSize ) );
 		return 0;
 	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	const CArray1Bit operator~() const
 	{
@@ -268,6 +304,7 @@ public:
 		a.array[nSize] = ( ~array[nSize] ) & GetByteMask( nLastSize );
 		return a;
 	}
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	const bool IsZeroFilled() const
 	{
@@ -294,6 +331,7 @@ public:
 		saver.Add( 2, &nSize );
 		return 0;
 	}
+
 	int operator&( struct IXmlSaver &saver )
 	{
 		saver.Add( "Size", &nSize );
@@ -302,9 +340,16 @@ public:
 	}
 
 	CArray4Bit() {}
-	CArray4Bit( const int size ) { SetSize( size ); }
+
+	CArray4Bit( const int size )
+	{
+		SetSize( size );
+	}
+
 	CArray4Bit( const CArray4Bit &a ) : nSize( a.nSize ), array( a.array ) {}
+
 	~CArray4Bit() {}
+
 	//
 	const CArray4Bit &operator=( const CArray4Bit &a )
 	{
@@ -312,6 +357,7 @@ public:
 		array = a.array;
 		return *this;
 	}
+
 	//
 	void SetSize( const int size )
 	{
@@ -325,11 +371,13 @@ public:
 			array.resize( ( ( size - 1 ) >> 1 ) + 1 );
 		}
 	}
+
 	void Clear()
 	{
 		nSize = 0;
 		array.clear();
 	}
+
 	void FillZero()
 	{
 		if ( !IsEmpty() )
@@ -337,9 +385,17 @@ public:
 			memset( &( array[0] ), 0, array.size() );
 		}
 	}
+
 	//
-	int GetSize() const { return nSize; }
-	bool IsEmpty() const { return nSize == 0; }
+	int GetSize() const
+	{
+		return nSize;
+	}
+
+	bool IsEmpty() const
+	{
+		return nSize == 0;
+	}
 
 	void SetData( const int n, const uint8_t cData )
 	{
@@ -347,9 +403,15 @@ public:
 		array[n >> 1] |= cData << ( ( n & 1 ) << 2 );
 	}
 
-	const uint8_t GetData( const int n ) const { return ( array[n >> 1] >> ( ( n & 1 ) << 2 ) ) & 0xf; }
+	const uint8_t GetData( const int n ) const
+	{
+		return ( array[n >> 1] >> ( ( n & 1 ) << 2 ) ) & 0xf;
+	}
 
-	void RemoveData( const int n ) { array[n >> 1] &= 0xf0 >> ( ( n & 1 ) << 2 ); }
+	void RemoveData( const int n )
+	{
+		array[n >> 1] &= 0xf0 >> ( ( n & 1 ) << 2 );
+	}
 };
 
 class CArray2D4Bit
@@ -366,9 +428,16 @@ public:
 	}
 
 	CArray2D4Bit() : xSize( 0 ) {}
-	CArray2D4Bit( const int xsize, const int ysize ) { SetSizes( xsize, ysize ); }
+
+	CArray2D4Bit( const int xsize, const int ysize )
+	{
+		SetSizes( xsize, ysize );
+	}
+
 	CArray2D4Bit( const CArray2D4Bit &a ) : xSize( a.xSize ), array( a.array ) {}
+
 	~CArray2D4Bit() {}
+
 	//
 	const CArray2D4Bit &operator=( const CArray2D4Bit &a )
 	{
@@ -376,25 +445,46 @@ public:
 		array = a.array;
 		return *this;
 	}
+
 	//
 	void SetSizes( const int xsize, const int ysize )
 	{
 		xSize = xsize;
 		array.SetSizes( ( xsize >> 1 ) + 1, ysize );
 	}
+
 	void Clear()
 	{
 		xSize = 0;
 		array.Clear();
 	}
-	void FillZero() { array.FillZero(); }
-	void FillOne() { array.FillEvery( 0xFF ); }
+
+	void FillZero()
+	{
+		array.FillZero();
+	}
+
+	void FillOne()
+	{
+		array.FillEvery( 0xFF );
+	}
 
 	//
-	int GetSizeX() const { return xSize; }
-	int GetSizeY() const { return array.GetSizeY(); }
+	int GetSizeX() const
+	{
+		return xSize;
+	}
+
+	int GetSizeY() const
+	{
+		return array.GetSizeY();
+	}
+
 	//
-	bool IsEmpty() const { return array.IsEmpty(); }
+	bool IsEmpty() const
+	{
+		return array.IsEmpty();
+	}
 
 	void SetData( const int x, const int y, const uint8_t cData )
 	{
@@ -402,9 +492,15 @@ public:
 		array[y][x >> 1] |= cData << ( ( x & 1 ) << 2 );
 	}
 
-	const uint8_t GetData( const int x, const int y ) const { return ( array[y][x >> 1] >> ( ( x & 1 ) << 2 ) ) & 0xf; }
+	const uint8_t GetData( const int x, const int y ) const
+	{
+		return ( array[y][x >> 1] >> ( ( x & 1 ) << 2 ) ) & 0xf;
+	}
 
-	void RemoveData( const int x, const int y ) { array[y][x >> 1] &= 0xf0 >> ( ( x & 1 ) << 2 ); }
+	void RemoveData( const int x, const int y )
+	{
+		array[y][x >> 1] &= 0xf0 >> ( ( x & 1 ) << 2 );
+	}
 
 	friend class CBitArray2DRLEWrapper<CArray2D4Bit>;
 };
@@ -423,9 +519,16 @@ public:
 	}
 
 	CArray2D1Bit() : xSize( 0 ) {}
-	CArray2D1Bit( const int xsize, const int ysize ) { SetSizes( xsize, ysize ); }
+
+	CArray2D1Bit( const int xsize, const int ysize )
+	{
+		SetSizes( xsize, ysize );
+	}
+
 	CArray2D1Bit( const CArray2D1Bit &a ) : xSize( a.xSize ), array( a.array ) {}
+
 	~CArray2D1Bit() {}
+
 	//
 	const CArray2D1Bit &operator=( const CArray2D1Bit &a )
 	{
@@ -433,19 +536,30 @@ public:
 		array = a.array;
 		return *this;
 	}
+
 	//
 	void SetSizes( const int xsize, const int ysize )
 	{
 		xSize = xsize;
 		array.SetSizes( ( xsize >> 3 ) + 1, ysize );
 	}
+
 	void Clear()
 	{
 		xSize = 0;
 		array.Clear();
 	}
-	void FillZero() { array.FillZero(); }
-	void SetZeroFast() { array.FillZero(); }
+
+	void FillZero()
+	{
+		array.FillZero();
+	}
+
+	void SetZeroFast()
+	{
+		array.FillZero();
+	}
+
 	//
 	void CopyEqualSizes( CArray2D1Bit &dest )
 	{
@@ -455,22 +569,43 @@ public:
 		array = dest.array;
 		//memcpy( array.GetBuffer(), dest.array.GetBuffer(), array.GetSizeX() * array.GetSizeY() );
 	}
+
 	void Set1()
 	{
 		//array.FillEvery( unsigned int(-1) );
 		memset( &( array[0][0] ), static_cast<unsigned int>( -1 ), array.GetSizeX() * array.GetSizeY() );
 	};
 
-	int GetSizeX() const { return xSize; }
-	int GetSizeY() const { return array.GetSizeY(); }
+	int GetSizeX() const
+	{
+		return xSize;
+	}
+
+	int GetSizeY() const
+	{
+		return array.GetSizeY();
+	}
+
 	//
-	bool IsEmpty() const { return array.IsEmpty(); }
+	bool IsEmpty() const
+	{
+		return array.IsEmpty();
+	}
 
-	void SetData( const int x, const int y ) { array[y][x >> 3] |= 1 << ( x & 7 ); }
+	void SetData( const int x, const int y )
+	{
+		array[y][x >> 3] |= 1 << ( x & 7 );
+	}
 
-	const uint8_t GetData( const int x, const int y ) const { return ( array[y][x >> 3] >> ( x & 7 ) ) & 1; }
+	const uint8_t GetData( const int x, const int y ) const
+	{
+		return ( array[y][x >> 3] >> ( x & 7 ) ) & 1;
+	}
 
-	void RemoveData( const int x, const int y ) { array[y][x >> 3] &= ~( 1 << ( x & 7 ) ); }
+	void RemoveData( const int x, const int y )
+	{
+		array[y][x >> 3] &= ~( 1 << ( x & 7 ) );
+	}
 
 	friend class CBitArray2DRLEWrapper<CArray2D1Bit>;
 };

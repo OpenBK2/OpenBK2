@@ -45,4 +45,4 @@ MAPEDITORLIB_EXPORT void Set( EShape eShape );
 // wxGetMousePosition. Asked for outside an event, which is why it is this
 // and not the position a wxMouseEvent carries.
 MAPEDITORLIB_EXPORT CTPoint<int> GetPosition();
-}
+} // namespace NCursor

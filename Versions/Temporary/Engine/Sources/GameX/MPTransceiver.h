@@ -11,6 +11,7 @@ struct ICommandsHistory;
 struct IServerClient;
 struct IMPAICommandPacker;
 class CNetPacket;
+
 namespace NDb
 {
 struct SMapInfo;
@@ -27,6 +28,7 @@ struct SB2StartGameParams
 		int nClientID = {};
 		int nPlayer = {}; // logic player
 		int nTeam = {};   // 0 or 1
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nClientID );
@@ -41,6 +43,7 @@ struct SB2StartGameParams
 	CDBPtr<NDb::SMapInfo> pMapInfo;
 	int nGameID = {};
 	int nSpeedAdjustment = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &clients );
@@ -89,6 +92,7 @@ public:
 		ZDATA
 		int nTypeID = {};
 		CMemoryStream cmd;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nTypeID );
@@ -107,8 +111,10 @@ private:
 		bool bLoaded = {};
 		// Reliable peer streams are ordered; keep absolute ticks across ring reuse.
 		int nLastReceivedSegment = -1;
+
 		SPlayer() : nClientID( -1 ), bLoaded( false ) {}
 	};
+
 	typedef std::vector<SPlayer> CPlayersList;
 	CPlayersList players;
 
@@ -124,7 +130,11 @@ private:
 	std::vector<int> playerRemovalSegments;
 
 private:
-	bool Segment() { return false; }
+	bool Segment()
+	{
+		return false;
+	}
+
 	bool IsSegmentPackFinished();
 	bool IsSegmentFinishedByAll( int nSegment );
 	void SetSegmentFinished( int nPlayer, int nSegment, unsigned long ulCheckSum );
@@ -152,7 +162,9 @@ private:
 
 public:
 	CMPTransceiver();
+
 	void StartMission( const NDb::SMapInfo *pMap, IAILogic *pAI ) {}
+
 	void StartMission();
 	void DoSegments();
 	void SendCommand( struct IAILogicCommandB2 *pCommand );
@@ -162,22 +174,46 @@ public:
 	void PlayerRemoved( int nPlayer );
 	void SchedulePlayerRemoval( int nPlayer, int nSegment );
 	static const bool IsGamePacket( const CNetPacket *pPacket );
-	int operator&( IBinSaver &f ) { return 0; }
+
+	int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
+
 	void Init( IServerClient *_pClient, const SB2StartGameParams &params, int nMySlot );
 
 	// client commands
 	void CommandClientTogglePause() {}
+
 	void CommandClientSpeed( int nChange ) {}
+
 	void CommandClientDropPlayer( const std::wstring &szPlayerNick ) {}
+
 	void CommandTimeOut( bool bSet );
 
-	bool IsGameEnded() { return bIsGameEnded; }
+	bool IsGameEnded()
+	{
+		return bIsGameEnded;
+	}
+
 	bool IsGameRunning() const;
-	int GetCurrentCommonSegment() const { return nCommonSegment; }
-	unsigned long GetPlayerMask() const { return wWaitMask; }
+
+	int GetCurrentCommonSegment() const
+	{
+		return nCommonSegment;
+	}
+
+	unsigned long GetPlayerMask() const
+	{
+		return wWaitMask;
+	}
 
 	int ScheduleGameEnd( const int _nSegment );
-	ICommandsHistory *GetCommandsHistory() { return pCmdsHistory; }
+
+	ICommandsHistory *GetCommandsHistory()
+	{
+		return pCmdsHistory;
+	}
 };
 
 CMPTransceiver *CreateMPTransceiver( IServerClient *pClient, const SB2StartGameParams &params, int nMySlot );

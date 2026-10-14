@@ -33,4 +33,4 @@ public:
 
 // The view for this session. Owned by the caller.
 IView *Create();
-}
+} // namespace NModelView

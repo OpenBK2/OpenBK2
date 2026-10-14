@@ -17,15 +17,26 @@ namespace NAnimation
 // the skeleton resource is missing) can no longer reach a manual free of an unassigned handle.
 struct SGrannyModelInstanceDeleter
 {
-	void operator()( granny_model_instance *pInstance ) const { GrannyFreeModelInstance( pInstance ); }
+	void operator()( granny_model_instance *pInstance ) const
+	{
+		GrannyFreeModelInstance( pInstance );
+	}
 };
+
 struct SGrannyLocalPoseDeleter
 {
-	void operator()( granny_local_pose *pPose ) const { GrannyFreeLocalPose( pPose ); }
+	void operator()( granny_local_pose *pPose ) const
+	{
+		GrannyFreeLocalPose( pPose );
+	}
 };
+
 struct SGrannyWorldPoseDeleter
 {
-	void operator()( granny_world_pose *pPose ) const { GrannyFreeWorldPose( pPose ); }
+	void operator()( granny_world_pose *pPose ) const
+	{
+		GrannyFreeWorldPose( pPose );
+	}
 };
 
 using TGrannyModelInstancePtr = std::unique_ptr<granny_model_instance, SGrannyModelInstanceDeleter>;
@@ -41,6 +52,7 @@ private:
 		CVec3 pos;
 		STime tEnd;
 	};
+
 	ZDATA
 	std::vector<SBoneTimePose> positions;
 	bool bEnabled;
@@ -59,8 +71,17 @@ public:
 	void GetAtTime( const STime &t, CQuat *qRot, CVec3 *vPos );
 	void AddBoneTimePose( const STime &tEnd, const CQuat &finalRot, const CVec3 &finalPos );
 	void Clear();
-	void Enable( bool bEnable ) { bEnabled = bEnable; }
-	bool IsEnabled() const { return bEnabled; }
+
+	void Enable( bool bEnable )
+	{
+		bEnabled = bEnable;
+	}
+
+	bool IsEnabled() const
+	{
+		return bEnabled;
+	}
+
 	STime GetEnd() const;
 };
 
@@ -70,6 +91,7 @@ class CSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 	{
 		granny_vector_track *pTrack;
 		int nChannelIndex;
+
 		STrackChannelBinding( granny_vector_track *_pTrack, int _nChannelIndex )
 				: pTrack( _pTrack ), nChannelIndex( _nChannelIndex )
 		{
@@ -94,6 +116,7 @@ class CSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 		ZSKIP
 		STime tEndTime = STime( -1 );
 		int nLoopCount = 0;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &tStartTime );
@@ -107,6 +130,7 @@ class CSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 			f.Add( 14, &nLoopCount );
 			return 0;
 		}
+
 		CDGPtr<CPtrFuncBase<CGrannyFileInfo>> pAnimFileLoader;
 		granny_control *pControl = nullptr;
 		std::vector<STrackChannelBinding> scalarTracks;
@@ -120,12 +144,19 @@ class CSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 		std::string szName;
 		bool bBinded;
 	};
+
 	struct SChannelByName
 	{
 		const std::string &szName;
+
 		SChannelByName( const std::string &_szName ) : szName( _szName ) {}
-		bool operator()( const SScalarChannel &channel ) { return ( channel.szName == szName ); }
+
+		bool operator()( const SScalarChannel &channel )
+		{
+			return ( channel.szName == szName );
+		}
 	};
+
 	std::vector<SScalarChannel> scalarChannels;
 
 	OBJECT_NOCOPY_METHODS( CSkeletonAnimator );
@@ -166,11 +197,13 @@ class CSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 	void ClearAnimVector();
 	void FreezeAllMutators();
 	bool DoesWantToUpdate( const STime &t ) const;
+
 	void Touch()
 	{
 		CheckJustLoaded();
 		bSmthChanged = true;
 	}
+
 	void ApplyGlobalMovementCorrection();
 	void RecalcScalarChannels();
 	void SetGlobalPositionInternal( const SHMatrix &pos );
@@ -237,7 +270,10 @@ public:
 	virtual CFuncBase<SFBTransform> *CreateTransform( const std::string &szBoneName );
 	virtual CFuncBase<SFBTransform> *CreateTransform( int nBoneIndex );
 
-	bool HasSkeleton() const { return pSkeleton != 0; }
+	bool HasSkeleton() const
+	{
+		return pSkeleton != 0;
+	}
 };
 
-} // namespace
+} // namespace NAnimation

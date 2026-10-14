@@ -21,7 +21,11 @@ class CPacketsConvertor : public CPacketProcessor
 public:
 	CPacketsConvertor();
 
-	virtual bool Segment() { return true; }
+	virtual bool Segment()
+	{
+		return true;
+	}
+
 	bool ProcessDirectClientPacket( CDirectPacketToClient *pPacket );
 };
 

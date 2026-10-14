@@ -111,7 +111,10 @@ public:
 		NPointListView::Register( this );
 	}
 
-	virtual ~CPointListWxWindow() { NPointListView::Unregister( this ); }
+	virtual ~CPointListWxWindow()
+	{
+		NPointListView::Unregister( this );
+	}
 
 	bool Build( IWidget *pParent )
 	{
@@ -166,7 +169,10 @@ public:
 	}
 
 	//	NPointListView::IPointList
-	virtual unsigned GetInstanceID() const { return nInstanceID; }
+	virtual unsigned GetInstanceID() const
+	{
+		return nInstanceID;
+	}
 
 	virtual void GetDialogData( SPointListDialogData *pData )
 	{
@@ -255,7 +261,7 @@ public:
 		}
 	}
 };
-}
+} // namespace
 
 namespace NPointListView
 {
@@ -273,4 +279,4 @@ IWidget *Create( CPaletteList *pPalettes, IWidget *pPage, unsigned nInstanceID, 
 	}
 	return pWindow;
 }
-}
+} // namespace NPointListView

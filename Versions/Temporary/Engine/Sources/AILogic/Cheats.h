@@ -34,31 +34,65 @@ public:
 	SCheats();
 
 	void Init();
-	void Clear() { Init(); }
+
+	void Clear()
+	{
+		Init();
+	}
 
 	void SetWarFog( bool bWarFog );
-	bool GetWarFog() const { return bWarFog; }
+
+	bool GetWarFog() const
+	{
+		return bWarFog;
+	}
 
 	void SetNPartyForWarFog( const int nPartyForWarFog, bool bUnconditionly );
-	const int GetNPartyForWarFog() const { return nPartyForWarFog; }
+
+	const int GetNPartyForWarFog() const
+	{
+		return nPartyForWarFog;
+	}
 
 	void SetLoadObjects( bool bLoadObjects );
-	bool GetLoadObjects() const { return bLoadObjects; }
+
+	bool GetLoadObjects() const
+	{
+		return bLoadObjects;
+	}
 
 	void SetTurnOffWarFog( bool bTurnOffWarFog );
 	bool GetTurnOffWarFog() const;
 
 	void SetImmortals( const int nPlayer, const uint8_t cValue );
-	uint8_t GetImmortals( const int nPlayer ) const { return immortals[nPlayer]; }
+
+	uint8_t GetImmortals( const int nPlayer ) const
+	{
+		return immortals[nPlayer];
+	}
 
 	void SetFirstShoot( const int nPlayer, const uint8_t cValue );
-	uint8_t GetFirstShoot( const int nPlayer ) const { return firstShoot[nPlayer]; }
 
-	void SetHistoryPlaying( bool _bHistoryPlaying ) { bHistoryPlaying = _bHistoryPlaying; }
-	bool IsHistoryPlaying() const { return bHistoryPlaying; }
+	uint8_t GetFirstShoot( const int nPlayer ) const
+	{
+		return firstShoot[nPlayer];
+	}
+
+	void SetHistoryPlaying( bool _bHistoryPlaying )
+	{
+		bHistoryPlaying = _bHistoryPlaying;
+	}
+
+	bool IsHistoryPlaying() const
+	{
+		return bHistoryPlaying;
+	}
 
 	const unsigned long MakeCheckSum( const std::string &szPassword );
 	void CheckPassword( const std::string &szPassword );
 
-	bool IsPasswordOk() const { return bPasswordOK; }
+	bool IsPasswordOk() const
+	{
+		return bPasswordOK;
+	}
 };

@@ -14,7 +14,10 @@ class CTestNode : public COcTreeNode<CTestNode, 8, true>
 public:
 	bool occupied = false;
 
-	bool IsEmpty() override { return !occupied; }
+	bool IsEmpty() override
+	{
+		return !occupied;
+	}
 };
 
 CObj<CTestNode> MakeTree()
@@ -59,7 +62,7 @@ bool CanSelect( CTestNode *node, CTestNode *target, CTransformStack *clip )
 	clip->PopClipHint();
 	return found;
 }
-}
+} // namespace
 
 TEST( OcTree, EnclosesGeometryBeyondTwentyPatches )
 {

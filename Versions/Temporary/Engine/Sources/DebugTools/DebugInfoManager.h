@@ -28,13 +28,15 @@ struct SArrowHead
 	float fHeight = 0.0f;
 
 	SArrowHead() : vPosition( VNULL3 ), fWidth( 0.0f ), fHeight( 0.0f ) {}
+
 	SArrowHead( const CVec3 &_vPosition ) : vPosition( _vPosition ), fWidth( 0.0f ), fHeight( 0.0f ) {}
+
 	SArrowHead( const CVec3 &_vPosition, const float _fWidth, const float _fHeight )
 			: vPosition( _vPosition ), fWidth( _fWidth ), fHeight( _fHeight )
 	{
 	}
 };
-}
+} // namespace NDebugInfo
 
 struct IDebugInfoManager : public CObjectBase
 {
@@ -76,6 +78,7 @@ struct IDebugInfoManager : public CObjectBase
 };
 
 DEBUGTOOLS_EXPORT IDebugInfoManager *CreateDebugInfoManager();
+
 inline IDebugInfoManager *DebugInfoManager()
 {
 	return Singleton<IDebugInfoManager>();

@@ -12,18 +12,21 @@ class CMapInfoController : public CObjectBaseController
 
 public:
 	static const char TEMPORARY_LABEL[];
+
 	//
 	struct STileUndoData
 	{
 		CArray2D<uint8_t> brush;
 		CVec3 vBrushPos;
 	};
+
 	//
 	struct SHeightUndoData
 	{
 		CArray2D<float> brush;
 		CTPoint<int> brushPos;
 	};
+
 	//
 	// TYPE_INSERT:
 	// (int)newValue	- ID элемента куда вставлять
@@ -44,18 +47,21 @@ public:
 			VSO_LAKE = 3,
 			VSO_COAST = 4,
 		};
+
 		enum EType
 		{
 			TYPE_INSERT = 0,
 			TYPE_REMOVE = 1,
 			TYPE_CHANGE = 2,
 		};
+
 		//
 		EVSOType eVSOType;
 		EType eType;
 		NDb::SVSOInstance newValue;
 		NDb::SVSOInstance oldValue;
 	};
+
 	//
 	typedef std::list<STileUndoData> CTileUndoDataList;
 	typedef std::list<SHeightUndoData> CHeightUndoDataList;
@@ -65,6 +71,7 @@ public:
 	CTileUndoDataList tileUndoDataList;
 	CHeightUndoDataList heightUndoDataList;
 	CVSOUndoDataList vsoUndoDataList;
+
 	// IManipulator
 	virtual bool IsEmpty() const
 	{
@@ -80,6 +87,7 @@ public:
 		posTileUndoData->vBrushPos = rvBrushPos;
 		return true;
 	}
+
 	inline bool AddChangeHeightOperation( const CArray2D<float> &rBrush, const CTPoint<int> &rBrushPos )
 	{
 		CHeightUndoDataList::iterator posHeightUndoData =
@@ -88,6 +96,7 @@ public:
 		posHeightUndoData->brushPos = rBrushPos;
 		return true;
 	}
+
 	inline bool AddInsertVSOOperation( SVSOUndoData::EVSOType _eVSOType, const NDb::SVSOInstance &rVSOInstance )
 	{
 		CVSOUndoDataList::iterator posVSOUndoData = vsoUndoDataList.insert( vsoUndoDataList.begin(), SVSOUndoData() );
@@ -96,6 +105,7 @@ public:
 		posVSOUndoData->newValue = rVSOInstance;
 		return true;
 	}
+
 	inline bool AddRemoveVSOOperation( SVSOUndoData::EVSOType _eVSOType, const NDb::SVSOInstance &rVSOInstance )
 	{
 		CVSOUndoDataList::iterator posVSOUndoData = vsoUndoDataList.insert( vsoUndoDataList.begin(), SVSOUndoData() );
@@ -104,6 +114,7 @@ public:
 		posVSOUndoData->newValue = rVSOInstance;
 		return true;
 	}
+
 	inline bool AddChangeVSOOperation( SVSOUndoData::EVSOType _eVSOType,
 	                                   const NDb::SVSOInstance &rOldVSOInstance,
 	                                   const NDb::SVSOInstance &rNewVSOInstance )

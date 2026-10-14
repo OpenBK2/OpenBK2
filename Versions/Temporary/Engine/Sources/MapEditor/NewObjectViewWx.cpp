@@ -153,14 +153,23 @@ public:
 		pAddType->Bind( wxEVT_TOGGLEBUTTON, &CNewObjectWxDialog::OnAddTypeChanged, this );
 	}
 
-	bool WasPlaced() const { return placement.WasPlaced(); }
+	bool WasPlaced() const
+	{
+		return placement.WasPlaced();
+	}
 
 	// The size, the position and the Add Type button, as CResizeDialog saves
 	// them from its OnOK and OnCancel -- so on either button, not just OK.
-	void SaveState() { placement.Save( this ); }
+	void SaveState()
+	{
+		placement.Save( this );
+	}
 
 private:
-	bool IsAddingType() const { return ( placement.State().GetIntParameter( N_ADD_TYPE_PARAMETER ) > 0 ) && bEnableType; }
+	bool IsAddingType() const
+	{
+		return ( placement.State().GetIntParameter( N_ADD_TYPE_PARAMETER ) > 0 ) && bEnableType;
+	}
 
 	void ApplyPostfixAndShowName()
 	{
@@ -192,7 +201,10 @@ private:
 		}
 	}
 
-	void UpdateTitle() { SetTitle( wxString::FromUTF8( NNewObject::Title( pBuildDataParams ).c_str() ) ); }
+	void UpdateTitle()
+	{
+		SetTitle( wxString::FromUTF8( NNewObject::Title( pBuildDataParams ).c_str() ) );
+	}
 
 	void OnNameChanged( wxCommandEvent & )
 	{
@@ -220,7 +232,10 @@ private:
 		UpdateTitle();
 	}
 
-	void OnExportChanged( wxCommandEvent & ) { pBuildDataParams->bNeedExport = pExport->GetValue(); }
+	void OnExportChanged( wxCommandEvent & )
+	{
+		pBuildDataParams->bNeedExport = pExport->GetValue();
+	}
 
 	void OnAddTypeChanged( wxCommandEvent & )
 	{
@@ -229,7 +244,7 @@ private:
 		UpdateOkButton();
 	}
 };
-}
+} // namespace
 
 namespace NNewObject
 {
@@ -251,4 +266,4 @@ bool Run( IWidget *pParent,
 	dialog.SaveState();
 	return bAccepted;
 }
-}
+} // namespace NNewObject

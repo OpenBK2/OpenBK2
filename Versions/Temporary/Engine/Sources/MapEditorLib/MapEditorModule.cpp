@@ -10,6 +10,7 @@ class CEditorModuleRegistrator : public IEditorModuleRegistrator
 	typedef std::list<std::pair<std::string, ObjectFactoryNewFunc>> CMapEditorFactoryNewFuncsList;
 	typedef std::unordered_map<std::string, CMapEditorFactoryNewFuncsList> CMapEditorFactoryNewFuncsMap;
 	CMapEditorFactoryNewFuncsMap newFuncs;
+
 	//
 	void AddMapEditorType( const std::string &szType, const std::string &szName, ObjectFactoryNewFunc pfnNewFunc )
 	{
@@ -31,6 +32,7 @@ public:
 			( *pfnRegistrator )( it->first, it->second );
 		}
 	}
+
 	void UnRegisterTypes( const std::string &szType, UnRegisterEditorType pfnUnRegistrator ) const
 	{
 		CMapEditorFactoryNewFuncsMap::const_iterator posList = newFuncs.find( szType );

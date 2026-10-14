@@ -14,22 +14,40 @@ class CTextureEditor : public CEditorBase, public CDefaultView
 
 public:
 	//IEditor
-	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
+	void GetTemporaryLabel( std::string *pszTemporaryLabel )
+	{
+		pszTemporaryLabel->clear();
+	}
+
 	void GetChildFrameType( std::string *pszChildFrameTypeName )
 	{
 		( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__";
 	}
-	IView *GetView() { return this; }
-	IInputState *GetInputState() { return pState; }
+
+	IView *GetView()
+	{
+		return this;
+	}
+
+	IInputState *GetInputState()
+	{
+		return pState;
+	}
+
 	void Create();
 	void Destroy();
+
 	void CreateControls() {}
+
 	void PostCreateControls() {}
+
 	void PreDestroyControls() {}
+
 	void DestroyControls() {}
 
 	//CDefaultView
 	void Undo( IController *pController ) {}
+
 	void Redo( IController *pController ) {}
 
 	// members

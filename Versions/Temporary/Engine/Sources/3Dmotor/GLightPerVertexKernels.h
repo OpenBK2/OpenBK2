@@ -100,4 +100,4 @@ bool IsAVX2Present();
 // Best set the running CPU supports. Resolved once, on first call.
 const SLightingKernels &GetLightingKernels();
 
-}
+} // namespace NGScene

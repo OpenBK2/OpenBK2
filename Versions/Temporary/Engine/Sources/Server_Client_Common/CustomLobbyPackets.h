@@ -21,6 +21,7 @@ public:
 	std::list<SCustomLobbyClientInfo> added;
 	/** changed clients */
 	std::list<SCustomLobbyClientInfo> changed;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &dwVersion );
@@ -32,5 +33,6 @@ public:
 	}
 
 	CCustomLobbyClientsPacket() {}
+
 	CCustomLobbyClientsPacket( const int nClientID ) : CNetPacket( nClientID ) {}
 };

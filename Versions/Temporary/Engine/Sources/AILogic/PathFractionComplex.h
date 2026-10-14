@@ -16,6 +16,7 @@ protected:
 	void AfterSubstitute();
 
 	CPathFractionComplexBase( const CPathList &pathList );
+
 	CPathFractionComplexBase() {}
 
 public:
@@ -39,9 +40,14 @@ class CPathFractionComplex : public CPathFractionComplexBase
 
 public:
 	CPathFractionComplex() {}
+
 	CPathFractionComplex( const CPathList &pathList ) : CPathFractionComplexBase( pathList ) {}
 
-	virtual void GetSimplePath( CPathList *paths ) { NI_ASSERT( false, "wrong call" ); }
+	virtual void GetSimplePath( CPathList *paths )
+	{
+		NI_ASSERT( false, "wrong call" );
+	}
+
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, static_cast<CPathFractionComplexBase *>( this ) );

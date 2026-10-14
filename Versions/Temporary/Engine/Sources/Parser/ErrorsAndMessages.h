@@ -22,7 +22,7 @@ namespace NErrors
 PARSER_EXPORT void ShowWarningNoLine( const std::string &szWarning );
 void ShowError( const std::string &szError );
 PARSER_EXPORT void ShowErrorNoLine( const std::string &szError );
-}
+} // namespace NErrors
 
 // The parser's VERIFY has nothing to do with MFC's or with the one in
 // Misc/Asserts.h: it takes three arguments, reports through NErrors rather than

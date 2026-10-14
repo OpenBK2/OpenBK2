@@ -8,6 +8,7 @@ class CVSOStateEx : public CVSOState
 {
 	const NDb::SCragDesc *pSelectedCragDesc;
 	NDb::SVSOInstance oldVSOInstance;
+
 	void ClearOldVSOInstance()
 	{
 		oldVSOInstance.nVSOID = INVALID_NODE_ID;
@@ -15,6 +16,7 @@ class CVSOStateEx : public CVSOState
 		oldVSOInstance.controlPoints.clear();
 		oldVSOInstance.points.clear();
 	}
+
 	bool bVSOChanged;
 
 protected:
@@ -45,6 +47,7 @@ public:
 		NI_ASSERT( _pParentState != 0, "CVSOStateEx(): Invalid parameter: _pParentState == 0" );
 		ClearOldVSOInstance();
 	}
+
 	//
 	//CVSOStateEx
 	// real time updare in terrain while editing

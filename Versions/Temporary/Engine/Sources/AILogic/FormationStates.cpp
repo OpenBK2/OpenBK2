@@ -1922,6 +1922,7 @@ EUnitStateNames CFormationAttackUnitState::GetName()
 		return EUSN_ATTACK_UNIT_IN_BUILDING;
 	}
 }
+
 //*******************************************************************
 //*										CFormationAttackCommonStatObjState						*
 //*******************************************************************

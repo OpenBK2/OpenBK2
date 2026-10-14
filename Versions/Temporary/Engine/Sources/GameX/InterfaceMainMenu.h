@@ -12,6 +12,7 @@ class CInterfaceMainMenu : public CInterfaceScreenBase, public CProgrammedReacti
 	CPtr<IWindow> pSinglePlayerMenuWnd;
 	CPtr<IButton> pTutorialBtn;
 	CPtr<IButton> pLoadGameBtn;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
@@ -63,6 +64,7 @@ class CICMainMenu : public CInterfaceCommandBase<CInterfaceMainMenu>
 
 	ZDATA_( CInterfaceCommandBase<CInterfaceMainMenu> )
 	std::string szConfig;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceMainMenu> *)this );

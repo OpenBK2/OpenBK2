@@ -30,4 +30,4 @@ void DrawFrameBorders( IPaintContext *pPaintContext,
                        const CTRect<int> &rBorder1,
                        const CTRect<int> &rBorder2,
                        const CTRect<int> &rWindow );
-};
+}; // namespace NDrawToolsDC

@@ -110,7 +110,8 @@ int CSinus::operator&( CStructureSaver &f )
 	return 0;
 }
 
-}
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x02511005, CMSRNode )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x00821180, CMNode )

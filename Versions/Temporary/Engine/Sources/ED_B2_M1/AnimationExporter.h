@@ -24,5 +24,6 @@ class CAnimationExporter : public CBasicSceneExporter
 	                           IManipulator *pManipulator );
 
 	bool ImportGltfInfo( IManipulator *pManipulator ) override;
+
 	CAnimationExporter() {}
 };

@@ -6,6 +6,7 @@
 class CWorldClient;
 struct ITransceiver;
 struct IScenarioTracker;
+
 namespace NDb
 {
 struct SMapInfo;

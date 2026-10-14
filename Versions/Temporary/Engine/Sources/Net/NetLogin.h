@@ -2,6 +2,7 @@
 
 #include "NetDriver.h"
 #include "NetLowest.h"
+
 /////////////////////////////////////////////////////////////////////////////////////
 namespace NNet
 {
@@ -10,6 +11,7 @@ class CLoginSupport
 {
 public:
 	typedef int TServerID;
+
 	enum EState
 	{
 		INACTIVE,
@@ -17,6 +19,7 @@ public:
 		ACCEPTED,
 		REJECTED
 	};
+
 	struct SLoginInfo
 	{
 		int nLoginAttempt;
@@ -26,9 +29,22 @@ public:
 	};
 
 	void Step( float fDeltaTime );
-	bool CanSend() const { return fLoginTimeLeft < 0; }
-	EState GetState() const { return state; }
-	int GetRejectReason() const { return nLastReject; }
+
+	bool CanSend() const
+	{
+		return fLoginTimeLeft < 0;
+	}
+
+	EState GetState() const
+	{
+		return state;
+	}
+
+	int GetRejectReason() const
+	{
+		return nLastReject;
+	}
+
 	void WriteLogin( CBitStream *pBits, const CNodeAddressSet &localAddr );
 	bool ProcessLogin( const CNodeAddress &addr, CBitStream &bits, SLoginInfo *pRes );
 	void AcceptLogin( const CNodeAddress &addr,
@@ -41,13 +57,33 @@ public:
 	void ProcessAccepted( const CNodeAddress &addr, CBitStream &bits );
 	void ProcessRejected( const CNodeAddress &addr, CBitStream &bits );
 	void StartLogin( const CNodeAddress &addr, const CMemoryStream &buf );
-	const CNodeAddress &GetLoginTarget() const { return server; }
-	int GetSelfClientID() const { return nSelfClientID; }
-	const CNodeAddressSet &GetTargetLocalAddr() const { return serverLocalAddr; }
-	TServerID GetUniqueServerID() const { return uniqueServerID; }
+
+	const CNodeAddress &GetLoginTarget() const
+	{
+		return server;
+	}
+
+	int GetSelfClientID() const
+	{
+		return nSelfClientID;
+	}
+
+	const CNodeAddressSet &GetTargetLocalAddr() const
+	{
+		return serverLocalAddr;
+	}
+
+	TServerID GetUniqueServerID() const
+	{
+		return uniqueServerID;
+	}
 
 	CLoginSupport( APPLICATION_ID _applicationID );
-	void Init( APPLICATION_ID _applicationID ) { applicationID = _applicationID; }
+
+	void Init( APPLICATION_ID _applicationID )
+	{
+		applicationID = _applicationID;
+	}
 
 private:
 	struct SAcceptedLogin
@@ -57,6 +93,7 @@ private:
 		float fTimeLeft;
 		int nClientID;
 	};
+
 	APPLICATION_ID applicationID;
 	float fLoginTimeLeft, fLoginInterval;
 	int nLoginAttempt;
@@ -72,5 +109,6 @@ private:
 
 	SAcceptedLogin &GetAcceptedLogin( const CNodeAddress &addr, const SLoginInfo &info );
 };
+
 /////////////////////////////////////////////////////////////////////////////////////
-}
+} // namespace NNet

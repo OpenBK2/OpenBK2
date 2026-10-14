@@ -13,7 +13,10 @@ public:
 	}
 
 private:
-	void OnSerialize( IBinSaver &f ) { NI_ASSERT( false, "CLANTester should not be serialized!" ) }
+	void OnSerialize( IBinSaver &f )
+	{
+		NI_ASSERT( false, "CLANTester should not be serialized!" )
+	}
 
 	bool bIsServer;
 	CPtr<struct IMPToUIManager> pMPManager;
@@ -27,11 +30,25 @@ private:
 
 public:
 	CLANTester();
-	void SetMPManager( IMPToUIManager *_pMPManager ) { pMPManager = _pMPManager; }
-	bool IsStarted() const { return bStarted; }
+
+	void SetMPManager( IMPToUIManager *_pMPManager )
+	{
+		pMPManager = _pMPManager;
+	}
+
+	bool IsStarted() const
+	{
+		return bStarted;
+	}
+
 	void Start();
 	void ClientInfoChanged( const int nClientID, const bool bReady );
-	void SetMySlot( const int _nMySlot ) { nMySlot = _nMySlot; }
+
+	void SetMySlot( const int _nMySlot )
+	{
+		nMySlot = _nMySlot;
+	}
+
 	void ClientRemoved( const int nClientID );
 	void NewGameFound( const int nID, const std::string &szName );
 	void EndGame();

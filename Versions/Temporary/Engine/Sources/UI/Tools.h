@@ -19,4 +19,4 @@ void ApplyTextureAllign( NDb::EPositionAllign eAllign,
                          float *pfPos /* in, out*/ );
 
 void ApplyPlacement( const NDb::SWindowPlacement &placement, const CTRect<float> &parentRect, CTRect<float> *pRect );
-}
+} // namespace NUITools

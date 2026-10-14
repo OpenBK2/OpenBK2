@@ -12,6 +12,7 @@
 
 extern CUnitCreation theUnitCreation;
 extern CStaticObjects theStatObjs;
+
 namespace NLongObjectCreation
 {
 CCreations creations;
@@ -271,4 +272,5 @@ float CComplexObstacleCreation::GetWorkDone() const
 		return pFenceCreation->GetWorkDone();
 	}
 }
+
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11147C00, CComplexObstacleCreation );

@@ -13,6 +13,7 @@
 namespace NGScene
 {
 static CBasicShare<CDBPtr<NDb::STexture>, CSWTexture, SDBPtrHash> shareSWTextures( 112 );
+
 CSWTexture *GetSWTex( const NDb::STexture *pTex )
 {
 	return shareSWTextures.Get( pTex );
@@ -25,17 +26,42 @@ class CSomeRender : public CArrayRasterizer<T, TElement>
 {
 public:
 	CSomeRender() : fScale( 1 ) {}
-	bool DoRenderBackface() const { return true; }
-	void SetMaskMapping( const CVec4 &_ptDU, const CVec4 &_ptDV ) { maskMapping.SetGradient( _ptDU, _ptDV ); }
+
+	bool DoRenderBackface() const
+	{
+		return true;
+	}
+
+	void SetMaskMapping( const CVec4 &_ptDU, const CVec4 &_ptDV )
+	{
+		maskMapping.SetGradient( _ptDU, _ptDV );
+	}
+
 	void SetTexture( CSWTextureData &tex )
 	{
 		pTexture = &tex;
 		bDoMask = 0;
 	}
-	void SetMask() { bDoMask = true; }
-	void SetScale( float _fScale ) { fScale = _fScale; }
-	float GetScale() const { return fScale; }
-	void SetColor( const NGfx::SPixel8888 &_color ) { multColor = _color; }
+
+	void SetMask()
+	{
+		bDoMask = true;
+	}
+
+	void SetScale( float _fScale )
+	{
+		fScale = _fScale;
+	}
+
+	float GetScale() const
+	{
+		return fScale;
+	}
+
+	void SetColor( const NGfx::SPixel8888 &_color )
+	{
+		multColor = _color;
+	}
 
 protected:
 	STextureMapping maskMapping;
@@ -98,6 +124,7 @@ struct STextureIterator
 	}
 };
 class CTrueColorRender;
+
 class CTrueColorRender : public CSomeRender<CTrueColorRender, NGfx::SPixel8888>
 {
 public:
@@ -151,6 +178,7 @@ private:
 };
 
 class CBumpRender;
+
 class CBumpRender : public CSomeRender<CBumpRender, SBumpPixel>
 {
 private:
@@ -187,6 +215,7 @@ private:
 };
 
 class CFogRender;
+
 class CFogRender : public CSomeRender<CFogRender, int>
 {
 private:
@@ -233,6 +262,7 @@ class CSWRects : public ISWRects
 	ZDATA
 	CDGPtr<CPtrFuncBase<CSWTextureData>> pTexture;
 	CRectLayout layout;
+
 	//float fGain;
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -277,13 +307,26 @@ class CSWRects : public ISWRects
 
 public:
 	CSWRects() {}
+
 	CSWRects( const CRectLayout &_layout, CPtrFuncBase<CSWTextureData> *_pTexture )
 			: layout( _layout ), pTexture( _pTexture )
 	{
 	}
-	void Draw( CTrueColorRender *pRes ) { DrawRect( pRes ); }
-	void Draw( CBumpRender *pRes ) { DrawRect( pRes ); }
-	void Draw( CFogRender *pRes ) { DrawRect( pRes ); }
+
+	void Draw( CTrueColorRender *pRes )
+	{
+		DrawRect( pRes );
+	}
+
+	void Draw( CBumpRender *pRes )
+	{
+		DrawRect( pRes );
+	}
+
+	void Draw( CFogRender *pRes )
+	{
+		DrawRect( pRes );
+	}
 };
 
 // CSWSpot
@@ -295,6 +338,7 @@ class CSWSpot : public ISWRects
 	CDGPtr<CPtrFuncBase<CSWTextureData>> pTexture;
 	float fAngle;
 	CVec2 ptPos, ptSize;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pTexture );
@@ -341,13 +385,26 @@ class CSWSpot : public ISWRects
 
 public:
 	CSWSpot() {}
+
 	CSWSpot( const CVec2 &_ptPos, const CVec2 &_ptSize, float _fAngle, CPtrFuncBase<CSWTextureData> *_pTexture )
 			: ptPos( _ptPos ), ptSize( _ptSize ), fAngle( _fAngle ), pTexture( _pTexture )
 	{
 	}
-	void Draw( CTrueColorRender *pRes ) { DrawSpot( pRes ); }
-	void Draw( CBumpRender *pRes ) { DrawSpot( pRes ); }
-	void Draw( CFogRender *pRes ) { DrawSpot( pRes ); }
+
+	void Draw( CTrueColorRender *pRes )
+	{
+		DrawSpot( pRes );
+	}
+
+	void Draw( CBumpRender *pRes )
+	{
+		DrawSpot( pRes );
+	}
+
+	void Draw( CFogRender *pRes )
+	{
+		DrawSpot( pRes );
+	}
 };
 
 class C2DPostFilter : public ISWRects
@@ -365,11 +422,14 @@ public:
 		f.Add( 4, &nCenterY );
 		return 0;
 	}
+
 	C2DPostFilter() {}
+
 	C2DPostFilter( CPtrFuncBase<CSWTextureData> *_pMask, int _nCenterX, int _nCenterY )
 			: pMask( _pMask ), nCenterX( _nCenterX ), nCenterY( _nCenterY )
 	{
 	}
+
 	void Draw( CTrueColorRender *pRes )
 	{
 		CSWTextureData *pTextureData;
@@ -445,8 +505,16 @@ public:
 			}
 		}
 	}
-	void Draw( CBumpRender *pRes ) { ASSERT( 0 ); }
-	void Draw( CFogRender *pRes ) { ASSERT( 0 ); }
+
+	void Draw( CBumpRender *pRes )
+	{
+		ASSERT( 0 );
+	}
+
+	void Draw( CFogRender *pRes )
+	{
+		ASSERT( 0 );
+	}
 };
 
 class CGrayingFilter : public ISWRects
@@ -461,8 +529,11 @@ public:
 		f.Add( 2, &vConvolution );
 		return 0;
 	}
+
 	CGrayingFilter() {}
+
 	CGrayingFilter( const CVec4 &_vConv ) : vConvolution( _vConv ) {}
+
 	void Draw( CTrueColorRender *pRes )
 	{
 		CArray2D<NGfx::SPixel8888> &res = pRes->res;
@@ -479,8 +550,16 @@ public:
 			}
 		}
 	}
-	void Draw( CBumpRender *pRes ) { ASSERT( 0 ); }
-	void Draw( CFogRender *pRes ) { ASSERT( 0 ); }
+
+	void Draw( CBumpRender *pRes )
+	{
+		ASSERT( 0 );
+	}
+
+	void Draw( CFogRender *pRes )
+	{
+		ASSERT( 0 );
+	}
 };
 
 // Software 2D Scene
@@ -492,6 +571,7 @@ class CSW2DScene : public ISW2DScene
 private:
 	ZDATA
 	std::vector<CPtr<ISWRects>> rects;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &rects );
@@ -514,6 +594,7 @@ private:
 			}
 		}
 	}
+
 	template <class T>
 	void InitScene( T *pRes, NGfx::CTexture *pTarget, const CTPoint<int> &vViewport )
 	{
@@ -755,7 +836,7 @@ void CSW2DScene::DrawBump( NGfx::CTexture *pTarget, const CTPoint<int> &vViewpor
 	}
 }
 
-} // NAMESPACE
+} // namespace NGScene
 
 using namespace NGScene;
 BASIC_REGISTER_CLASS( _3DMOTOR, ISWRects );

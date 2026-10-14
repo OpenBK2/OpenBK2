@@ -10,6 +10,7 @@ class CEffectorDirectRunReaction : public IUIEffector
 	bool bFinished;
 	bool bForward;
 	std::string szAnimatedWindow;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pReactionBackward );
@@ -22,12 +23,15 @@ class CEffectorDirectRunReaction : public IUIEffector
 
 public:
 	CEffectorDirectRunReaction() {}
+
 	virtual bool IsFinished() const;
 	virtual void Configure( const NDb::SUIStateBase *_pCmd,
 	                        struct IScreen *pScreen,
 	                        SWindowContext *pContext,
 	                        const std::string &szAnimatedWindow );
 	virtual const int Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward );
+
 	virtual void Visit( struct IUIVisitor *pVisitor ) {}
+
 	virtual void Reverse();
 };

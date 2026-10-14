@@ -22,4 +22,4 @@ CLightmapsHolder *CalcLightmaps( IGScene *pScene,
                                  CLightmapsTempHolder *pTmpHolder );
 void ApplyLightmaps(
 		IGScene *pScene, IRender *pRender, CObjectBase *pUser, CLightmapsHolder *pLightmaps, CLightmapsLoader *pLD );
-}
+} // namespace NGScene

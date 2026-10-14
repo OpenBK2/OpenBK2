@@ -15,7 +15,8 @@ namespace NDb
 {
 struct SMechUnitRPGStats;
 enum EManuverID : int;
-}
+} // namespace NDb
+
 class CPlanePreferences
 {
 	ZDATA
@@ -32,7 +33,12 @@ public:
 	}
 
 	void Init( const SMechUnitRPGStats *_pStats, bool bCanViolateHeghtLimits );
-	void SetCanViolateHeghtLimits() { bCanViolateHeghtLimits = true; }
+
+	void SetCanViolateHeghtLimits()
+	{
+		bCanViolateHeghtLimits = true;
+	}
+
 	float GetPatrolHeight() const;
 	// maneuver radius for current speed
 	float GetR( const float fSpeed ) const;
@@ -46,6 +52,11 @@ public:
 	float GetSpeed( const float fZ ) const;
 	// can do "bochka"
 	bool CanFlip() const;
-	bool CanViolateHeghtLimits() const { return bCanViolateHeghtLimits; }
+
+	bool CanViolateHeghtLimits() const
+	{
+		return bCanViolateHeghtLimits;
+	}
+
 	uint16_t GetDivingAngle() const;
 };

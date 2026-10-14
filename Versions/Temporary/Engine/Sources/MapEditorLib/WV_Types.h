@@ -19,6 +19,7 @@ struct SAIRandom
 		return NRandom::Random( nMax ); //[0...n-1]
 	}
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SClientRandom
 {
@@ -27,6 +28,7 @@ struct SClientRandom
 		return NWin32Random::Random( nMax ); //[0...n-1]
 	}
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template <class TYPE, class TRandom>
 class CWeightVector
@@ -38,11 +40,13 @@ public:
 	//
 	//конструкторы и операторы присваивания
 	CWeightVector() {}
+
 	//
 	CWeightVector( const CWeightVector &rWeightVector )
 			: elements( rWeightVector.elements ), weights( rWeightVector.weights )
 	{
 	}
+
 	//
 	CWeightVector &operator=( const CWeightVector &rWeightVector )
 	{
@@ -74,17 +78,30 @@ public:
 			weights.push_back( nWeight );
 		}
 	}
+
 	//
-	inline int size() const { return elements.size(); }
-	inline int weight() const { return !weights.empty() ? weights[weights.size() - 1] : 0; }
+	inline int size() const
+	{
+		return elements.size();
+	}
+
+	inline int weight() const
+	{
+		return !weights.empty() ? weights[weights.size() - 1] : 0;
+	}
+
 	//
 	inline void clear()
 	{
 		elements.clear();
 		weights.clear();
 	}
+
 	//
-	inline bool empty() const { return elements.empty(); }
+	inline bool empty() const
+	{
+		return elements.empty();
+	}
 
 	//
 	//получить рандомный элемент
@@ -132,5 +149,6 @@ public:
 		return elements[nElementIndex];
 	}
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-};
+}; // namespace NWV

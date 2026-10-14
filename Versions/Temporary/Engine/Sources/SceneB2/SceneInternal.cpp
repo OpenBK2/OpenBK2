@@ -65,7 +65,7 @@ namespace NGamma
 static float s_fBrightness = 0.5f;
 static float s_fContrast = 0.5f;
 static float s_fGamma = 0.5f;
-}
+} // namespace NGamma
 
 IScene *CreateScene()
 {
@@ -994,6 +994,7 @@ public:
 		vAnchor = Camera()->GetAnchor();
 		Camera()->SetAnchorLimits( CTRect<float>( 0, 0, 0, 0 ) );
 	}
+
 	~CCameraPlacementGuard()
 	{
 		Camera()->SetPlacement( fDist, fPitch, fYaw );

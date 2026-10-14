@@ -11,11 +11,12 @@ class CMineStaticObject;
 class CMilitaryCar;
 class CFormation;
 enum EActionNotify : unsigned int;
+
 namespace NDb
 {
 struct SInfantryRPGStats;
 enum EMineType : int;
-}
+} // namespace NDb
 
 class CSoldierStatesFactory : public IStatesFactory
 {
@@ -24,7 +25,10 @@ class CSoldierStatesFactory : public IStatesFactory
 	static CPtr<CSoldierStatesFactory> pFactory;
 
 public:
-	int operator&( IBinSaver &saver ) { return 0; }
+	int operator&( IBinSaver &saver )
+	{
+		return 0;
+	}
 
 	static IStatesFactory *Instance();
 	virtual struct IUnitState *ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
@@ -46,6 +50,7 @@ class CSoldierRestState : public IUnitState
 	NTimer::STime nextMove = {};
 	bool bScanned = {};
 	CVec2 guardPoint;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pUnit );
@@ -54,6 +59,7 @@ class CSoldierRestState : public IUnitState
 		f.Add( 5, &guardPoint );
 		return 0;
 	}
+
 	//float fDistToGuardPoint; // не используется
 	const bool CheckGuardPoint() const;
 
@@ -61,21 +67,43 @@ public:
 	static IUnitState *Instance( class CAIUnit *pUnit );
 
 	CSoldierRestState() : pUnit( 0 ) {}
+
 	CSoldierRestState( class CAIUnit *pUnit );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
-	virtual EUnitStateNames GetName() { return EUSN_REST; }
-	virtual bool IsRestState() const { return true; }
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return guardPoint; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_REST;
+	}
 
-	class CAIUnit *GetTarget() const { return 0; }
+	virtual bool IsRestState() const
+	{
+		return true;
+	}
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return guardPoint;
+	}
+
+	class CAIUnit *GetTarget() const
+	{
+		return 0;
+	}
 
 	// в 1 - некоторое малое время, чтобы произошло обновление, не 0 - т.к. это говорит о первом запуске сегмента
-	void SetNullLastMoveTime() { nextMove = 1; }
+	void SetNullLastMoveTime()
+	{
+		nextMove = 1;
+	}
 };
 
 class CSoldierAttackState : public IUnitAttackingState, public CStandartBehaviour
@@ -87,6 +115,7 @@ class CSoldierAttackState : public IUnitAttackingState, public CStandartBehaviou
 		SHOOTING_CHECK = 3000,
 		ENEMY_DIR_TOLERANCE = 10000
 	};
+
 	enum ESoldierAttackStates
 	{
 		ESAS_BRUTE_MOVING,
@@ -115,6 +144,7 @@ class CSoldierAttackState : public IUnitAttackingState, public CStandartBehaviou
 
 	CDamageToEnemyUpdater damageToEnemyUpdater;
 	CRndRunUpToEnemy runUpToEnemy;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CStandartBehaviour *)this );
@@ -135,6 +165,7 @@ class CSoldierAttackState : public IUnitAttackingState, public CStandartBehaviou
 		f.Add( 16, &runUpToEnemy );
 		return 0;
 	}
+
 	//
 	bool IsBruteMoving();
 	struct IStaticPath *BestSidePath();
@@ -157,6 +188,7 @@ public:
 			class CAIUnit *pUnit, class CAIUnit *pEnemy, bool bAim, const bool bSwarmAttack, const bool bPreferGrenade );
 
 	CSoldierAttackState() : pUnit( 0 ) {}
+
 	CSoldierAttackState(
 			class CAIUnit *pUnit, class CAIUnit *pEnemy, bool bAim, const bool bSwarmAttack, const bool bPreferGrenade );
 
@@ -164,14 +196,32 @@ public:
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
-	virtual EUnitStateNames GetName() { return EUSN_ATTACK_UNIT; }
-	virtual bool IsAttackingState() const { return true; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_ATTACK_UNIT;
+	}
+
+	virtual bool IsAttackingState() const
+	{
+		return true;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 
-	class CAIUnit *GetTarget() const { return pEnemy; }
+	class CAIUnit *GetTarget() const
+	{
+		return pEnemy;
+	}
 
-	virtual bool IsAttacksUnit() const { return true; }
-	virtual class CAIUnit *GetTargetUnit() const { return GetTarget(); }
+	virtual bool IsAttacksUnit() const
+	{
+		return true;
+	}
+
+	virtual class CAIUnit *GetTargetUnit() const
+	{
+		return GetTarget();
+	}
 };
 
 class CSoldierMoveToState : public IUnitState, public CFreeFireManager
@@ -192,6 +242,7 @@ class CSoldierMoveToState : public IUnitState, public CFreeFireManager
 	SAIAngle wDirToPoint;
 	bool bLongMove = {};
 	bool bForceReverse = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CFreeFireManager *)this );
@@ -204,21 +255,31 @@ class CSoldierMoveToState : public IUnitState, public CFreeFireManager
 		f.Add( 8, &bForceReverse );
 		return 0;
 	}
+
 	void SetReversePathMode( const bool bEnable );
 
 public:
 	static IUnitState *Instance( CAIUnit *pUnit, const CVec2 &point, const bool bForceReverse = false );
 
 	CSoldierMoveToState() : pUnit( 0 ), bForceReverse( false ) {}
+
 	CSoldierMoveToState( class CAIUnit *pUnit, const CVec2 &point, const bool bForceReverse );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 
-	virtual EUnitStateNames GetName() { return EUSN_MOVE; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_MOVE;
+	}
 };
 
 class CSoldierTurnToPointState : public IUnitState, public CStatusUpdatesHelper
@@ -231,6 +292,7 @@ class CSoldierTurnToPointState : public IUnitState, public CStatusUpdatesHelper
 	NTimer::STime lastCheck = {};
 	CVec2 targCenter;
 	NTimer::STime timeStart = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CStatusUpdatesHelper *)this );
@@ -245,15 +307,24 @@ public:
 	static IUnitState *Instance( class CAIUnit *pUnit, const CVec2 &targCenter );
 
 	CSoldierTurnToPointState() : pUnit( 0 ) {}
+
 	CSoldierTurnToPointState( class CAIUnit *pUnit, const CVec2 &targCenter );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 
-	virtual EUnitStateNames GetName() { return EUSN_TURN_TO_POINT; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_TURN_TO_POINT;
+	}
 };
 
 class CSoldierMoveByDirState : public IUnitState
@@ -262,11 +333,13 @@ class CSoldierMoveByDirState : public IUnitState
 
 	ZDATA
 	CPtr<CAIUnit> pUnit;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pUnit );
 		return 0;
 	}
+
 	//
 	void Init( class CAIUnit *pUnit, const CVec2 &vTarget );
 
@@ -274,12 +347,18 @@ public:
 	static IUnitState *Instance( class CAIUnit *pUnit, const CVec2 &vTarget );
 
 	CSoldierMoveByDirState() : pUnit( 0 ) {}
+
 	CSoldierMoveByDirState( class CAIUnit *pUnit, const CVec2 &vTarget );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 
 	// for Saving/Loading of static members
@@ -295,6 +374,7 @@ class CSoldierEnterState : public IUnitState
 		EES_START,
 		EES_RUN_UP
 	};
+
 	ZDATA
 	EEnterStates state = {};
 
@@ -303,6 +383,7 @@ class CSoldierEnterState : public IUnitState
 	int nEntrance = {};
 	CPtr<CBuilding> pBuilding;
 	int nEfforts = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &state );
@@ -320,13 +401,22 @@ public:
 	static IUnitState *Instance( class CAIUnit *pUnit, class CBuilding *pBuilding );
 
 	CSoldierEnterState() : pUnit( 0 ) {}
+
 	CSoldierEnterState( class CAIUnit *pUnit, class CBuilding *pBuilding );
 
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
-	virtual EUnitStateNames GetName() { return EUSN_ENTER; }
-	virtual bool IsAttackingState() const { return false; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_ENTER;
+	}
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 };
 
@@ -340,12 +430,14 @@ class CSoldierEnterEntrenchmentState : public IUnitState
 		EES_RUN,
 		EES_FINISHED
 	};
+
 	ZDATA
 	EEnterState state = {};
 
 	CPtr<CAIUnit> pUnit;
 	CPtr<CEntrenchment> pEntrenchment;
 	int nTries = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &state );
@@ -354,6 +446,7 @@ class CSoldierEnterEntrenchmentState : public IUnitState
 		f.Add( 5, &nTries );
 		return 0;
 	}
+
 	//
 	bool SetPathForRunIn();
 	void EnterToEntrenchment();
@@ -362,13 +455,22 @@ public:
 	static IUnitState *Instance( class CAIUnit *pUnit, class CEntrenchment *pEntrenchment );
 
 	CSoldierEnterEntrenchmentState() : pUnit( 0 ) {}
+
 	CSoldierEnterEntrenchmentState( class CAIUnit *pUnit, class CEntrenchment *pEntrenchment );
 
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
-	virtual EUnitStateNames GetName() { return EUSN_ENTER_ENTRENCHMENT; }
-	virtual bool IsAttackingState() const { return false; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_ENTER_ENTRENCHMENT;
+	}
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 };
 
@@ -378,6 +480,7 @@ class CSoldierAttackCommonStatObjState : public CCommonAttackCommonStatObjState
 	ZDATA_( CCommonAttackCommonStatObjState )
 	CPtr<CAIUnit> pUnit;
 	bool bFinishAfterInsidersDead = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CCommonAttackCommonStatObjState *)this );
@@ -394,14 +497,23 @@ public:
 	static IUnitState *Instance( class CAIUnit *pUnit, class CStaticObject *pObj, bool bSwarmAttack );
 
 	CSoldierAttackCommonStatObjState() : pUnit( 0 ) {}
+
 	CSoldierAttackCommonStatObjState( class CAIUnit *pUnit, class CStaticObject *pObj, bool bSwarmAttack );
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
-	virtual bool IsAttackingState() const { return true; }
+	virtual bool IsAttackingState() const
+	{
+		return true;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 	virtual void Segment();
-	virtual EUnitStateNames GetName() { return EUSN_ATTACK_OBJECT; }
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_ATTACK_OBJECT;
+	}
 };
 
 class CSoldierParadeState : public IUnitState
@@ -409,6 +521,7 @@ class CSoldierParadeState : public IUnitState
 	OBJECT_BASIC_METHODS( CSoldierParadeState );
 	ZDATA
 	CPtr<CAIUnit> pUnit;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pUnit );
@@ -419,13 +532,22 @@ public:
 	static IUnitState *Instance( class CAIUnit *pUnit );
 
 	CSoldierParadeState() : pUnit( 0 ) {}
+
 	CSoldierParadeState( CAIUnit *pUnit );
 
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
-	virtual EUnitStateNames GetName() { return EUSN_PARADE; }
-	virtual bool IsAttackingState() const { return false; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_PARADE;
+	}
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 
 	friend class CStaticMembers;
@@ -440,6 +562,7 @@ class CSoldierPlaceMineNowState : public IUnitState
 	CVec2 point;
 	int nType = {};
 	NTimer::STime beginAnimTime = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pUnit );
@@ -453,12 +576,18 @@ public:
 	static IUnitState *Instance( class CAIUnit *pUnit, const CVec2 &point, const EMineType nType );
 
 	CSoldierPlaceMineNowState() : pUnit( 0 ) {}
+
 	CSoldierPlaceMineNowState( class CAIUnit *pUnit, const CVec2 &point, const EMineType nType );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 };
 
@@ -472,6 +601,7 @@ class CSoldierClearMineRadiusState : public IUnitState
 		EPM_MOVE,
 		EPM_WAITING
 	};
+
 	ZDATA
 	EPutMineStates eState = {};
 
@@ -480,6 +610,7 @@ class CSoldierClearMineRadiusState : public IUnitState
 
 	CVec2 clearCenter;
 	NTimer::STime beginAnimTime = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &eState );
@@ -489,6 +620,7 @@ class CSoldierClearMineRadiusState : public IUnitState
 		f.Add( 6, &beginAnimTime );
 		return 0;
 	}
+
 	//
 	bool FindMineToClear();
 
@@ -496,13 +628,22 @@ public:
 	static IUnitState *Instance( class CAIUnit *pUnit, const CVec2 &clearCenter );
 
 	CSoldierClearMineRadiusState() : pUnit( 0 ) {}
+
 	CSoldierClearMineRadiusState( class CAIUnit *pUnit, const CVec2 &clearCenter );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return clearCenter; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return clearCenter;
+	}
 };
 
 class CSoldierAttackUnitInBuildingState : public CCommonAttackUnitInBuildingState
@@ -511,6 +652,7 @@ class CSoldierAttackUnitInBuildingState : public CCommonAttackUnitInBuildingStat
 	ZDATA_( CCommonAttackUnitInBuildingState )
 	CPtr<CAIUnit> pUnit;
 	bool bTriedToShootBuilding = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CCommonAttackUnitInBuildingState *)this );
@@ -527,6 +669,7 @@ public:
 	static IUnitState *Instance( class CAIUnit *pUnit, class CSoldier *pTarget, bool bAim, const bool bSwarmAttack );
 
 	CSoldierAttackUnitInBuildingState() : pUnit( 0 ) {}
+
 	CSoldierAttackUnitInBuildingState( class CAIUnit *pUnit,
 	                                   class CSoldier *pTarget,
 	                                   bool bAim,
@@ -536,8 +679,16 @@ public:
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
-	virtual EUnitStateNames GetName() { return EUSN_ATTACK_UNIT_IN_BUILDING; }
-	virtual bool IsAttackingState() const { return true; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_ATTACK_UNIT_IN_BUILDING;
+	}
+
+	virtual bool IsAttackingState() const
+	{
+		return true;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 };
 
@@ -551,6 +702,7 @@ class CSoldierEnterTransportNowState : public IUnitState
 		EETS_MOVING,
 		EETS_FINISHED
 	};
+
 	ZDATA
 	EEnterTransportStates eState = {};
 
@@ -560,6 +712,7 @@ class CSoldierEnterTransportNowState : public IUnitState
 	NTimer::STime timeLastTrajectoryUpdate = {};
 	CVec2 vLastTransportCenter;
 	SAIAngle wLastTransportDir;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &eState );
@@ -575,12 +728,18 @@ public:
 	static IUnitState *Instance( class CAIUnit *pUnit, class CMilitaryCar *pTransport );
 
 	CSoldierEnterTransportNowState() : pUnit( 0 ) {}
+
 	CSoldierEnterTransportNowState( class CAIUnit *pUnit, class CMilitaryCar *pTransport );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 };
 
@@ -597,6 +756,7 @@ class CSoldierParaDroppingState : public IUnitState
 		ESPDS_FINISH_STATE,
 		ESPDS_WATING_FOR_ALL,
 	};
+
 	ZDATA
 	ESoldierParaDroppingState eState = {};
 	ESoldierParaDroppingState eStateToSwitch = {};
@@ -605,6 +765,7 @@ class CSoldierParaDroppingState : public IUnitState
 	NTimer::STime timeToCloseParashute = {}, timeToFallWithParashute = {};
 
 	CPtr<CSoldier> pUnit;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &eState );
@@ -620,15 +781,29 @@ public:
 	static IUnitState *Instance( class CSoldier *pUnit, class CAviation *pPlane );
 
 	CSoldierParaDroppingState() : pUnit( 0 ) {}
+
 	CSoldierParaDroppingState( class CSoldier *pUnit, class CAviation *pPlane );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
-	virtual EUnitStateNames GetName() { return EUSN_PARTROOP; }
-	bool IsLanded() const { return eState == ESPDS_WATING_FOR_ALL; }
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_PARTROOP;
+	}
+
+	bool IsLanded() const
+	{
+		return eState == ESPDS_WATING_FOR_ALL;
+	}
 };
 
 class CSoldierUseSpyglassState : public IUnitState, public CStandartBehaviour, public CStatusUpdatesHelper
@@ -639,6 +814,7 @@ class CSoldierUseSpyglassState : public IUnitState, public CStandartBehaviour, p
 	CPtr<CSoldier> pSoldier;
 	CVec2 vPoint2Look;
 	ZPARENT( CStatusUpdatesHelper )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CStandartBehaviour *)this );
@@ -647,6 +823,7 @@ class CSoldierUseSpyglassState : public IUnitState, public CStandartBehaviour, p
 		f.Add( 4, (CStatusUpdatesHelper *)this );
 		return 0;
 	}
+
 	//
 	void SetLookAnimation();
 
@@ -654,12 +831,18 @@ public:
 	static IUnitState *Instance( class CSoldier *pSoldier, const CVec2 &point );
 
 	CSoldierUseSpyglassState() : pSoldier( 0 ), vPoint2Look( VNULL2 ) {}
+
 	CSoldierUseSpyglassState( class CSoldier *pSoldier, const CVec2 &point );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 };
 
@@ -672,6 +855,7 @@ class CSoldierAttackFormationState : public IUnitAttackingState
 	CPtr<CAIUnit> pUnit;
 	CPtr<CFormation> pTarget;
 	bool bSwarmAttack = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pUnit );
@@ -684,16 +868,29 @@ public:
 	static IUnitState *Instance( class CAIUnit *pUnit, class CFormation *pTarget, const bool bSwarmAttack );
 
 	CSoldierAttackFormationState() : pUnit( 0 ) {}
+
 	CSoldierAttackFormationState( class CAIUnit *pUnit, class CFormation *pTarget, const bool bSwarmAttack );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return true; }
+
+	virtual bool IsAttackingState() const
+	{
+		return true;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 
-	virtual bool IsAttacksUnit() const { return true; }
-	virtual class CAIUnit *GetTargetUnit() const { return 0; }
+	virtual bool IsAttacksUnit() const
+	{
+		return true;
+	}
+
+	virtual class CAIUnit *GetTargetUnit() const
+	{
+		return 0;
+	}
 };
 
 class CSoldierIdleState : public IUnitState
@@ -701,6 +898,7 @@ class CSoldierIdleState : public IUnitState
 	OBJECT_BASIC_METHODS( CSoldierIdleState );
 	ZDATA
 	CPtr<CAIUnit> pUnit;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pUnit );
@@ -711,12 +909,18 @@ public:
 	static IUnitState *Instance( class CAIUnit *pUnit );
 
 	CSoldierIdleState() : pUnit( 0 ) {}
+
 	CSoldierIdleState( class CAIUnit *pUnit );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 };
 
@@ -740,16 +944,28 @@ public:
 
 public:
 	CSoldierAttackAviationState() : predictedFire( 0, 0 ) {}
+
 	// if nGun == -1, then state chooses gun. if gun != -1 then state don't set
 	CSoldierAttackAviationState( class CAIUnit *pUnit, class CAviation *pPlane );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return true; }
-	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
 
-	virtual bool IsAttacksUnit() const { return true; }
+	virtual bool IsAttackingState() const
+	{
+		return true;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return CVec2( -1.0f, -1.0f );
+	}
+
+	virtual bool IsAttacksUnit() const
+	{
+		return true;
+	}
 	virtual class CAIUnit *GetTargetUnit() const;
 };
 
@@ -761,6 +977,7 @@ class CSoldierFireMoraleShellState : public IUnitState
 	CPtr<CAIUnit> pUnit;
 	int nMoraleGun = {};
 	CVec2 vTarget;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pUnit );
@@ -773,13 +990,22 @@ public:
 	static IUnitState *Instance( class CAIUnit *pUnit, const class CVec2 &vTarget );
 
 	CSoldierFireMoraleShellState() : pUnit( 0 ) {}
+
 	CSoldierFireMoraleShellState( class CAIUnit *pUnit, const class CVec2 &vTarget );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return CVec2( -1.0f, -1.0f );
+	}
 };
 
 class CSoldierUseState : public IUnitState
@@ -789,6 +1015,7 @@ class CSoldierUseState : public IUnitState
 	ZDATA
 	EActionNotify eState = {};
 	CPtr<CAIUnit> pUnit;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &eState );
@@ -800,14 +1027,26 @@ public:
 	static IUnitState *Instance( class CAIUnit *pUnit, const EActionNotify &eState );
 
 	CSoldierUseState() : eState( ACTION_NOTIFY_NONE ), pUnit( 0 ) {}
+
 	CSoldierUseState( class CAIUnit *pUnit, const EActionNotify &eState );
 
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
 
-	virtual EUnitStateNames GetName() { return EUSN_USE; }
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return CVec2( -1.0f, -1.0f );
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_USE;
+	}
 };
 
 class CSoldierEntrenchSelfState : public IUnitState
@@ -831,12 +1070,22 @@ public:
 
 public:
 	CSoldierEntrenchSelfState() : pSoldier( 0 ) {}
+
 	CSoldierEntrenchSelfState( class CSoldier *_pSoldier );
 	void Segment();
 	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	bool IsAttackingState() const { return false; }
+
+	bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	const CVec2 GetPurposePoint() const;
-	EUnitStateNames GetName() { return EUSN_ENTRENCH_SELF; }
+
+	EUnitStateNames GetName()
+	{
+		return EUSN_ENTRENCH_SELF;
+	}
 };
 
 class CSoldierLeaveSelfEntrenchState : public IUnitState
@@ -844,6 +1093,7 @@ class CSoldierLeaveSelfEntrenchState : public IUnitState
 	OBJECT_BASIC_METHODS( CSoldierLeaveSelfEntrenchState )
 	ZDATA
 	CPtr<CAIUnit> pSoldier;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pSoldier );
@@ -852,10 +1102,20 @@ class CSoldierLeaveSelfEntrenchState : public IUnitState
 
 public:
 	CSoldierLeaveSelfEntrenchState() : pSoldier( 0 ) {}
+
 	CSoldierLeaveSelfEntrenchState( class CAIUnit *_pSoldier );
 	void Segment();
 	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	bool IsAttackingState() const { return false; }
+
+	bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	const CVec2 GetPurposePoint() const;
-	EUnitStateNames GetName() { return EUSN_LEAVE_SELF_ENTRENCH; }
+
+	EUnitStateNames GetName()
+	{
+		return EUSN_LEAVE_SELF_ENTRENCH;
+	}
 };

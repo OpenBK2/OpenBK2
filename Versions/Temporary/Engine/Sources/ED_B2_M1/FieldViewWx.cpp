@@ -56,9 +56,15 @@ class CFieldWxWindow : public CWxHostWindow, public CFieldCommands
 	bool bCreateControls = false;
 
 public:
-	CFieldWxWindow() { Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_TERRAIN_FIELD_WINDOW, this ); }
+	CFieldWxWindow()
+	{
+		Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_TERRAIN_FIELD_WINDOW, this );
+	}
 
-	virtual ~CFieldWxWindow() { Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_TERRAIN_FIELD_WINDOW ); }
+	virtual ~CFieldWxWindow()
+	{
+		Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_TERRAIN_FIELD_WINDOW );
+	}
 
 	bool Build( IWidget *pParent )
 	{
@@ -299,14 +305,37 @@ private:
 				CHID_MAPINFO_TERRAIN_FIELD_STATE, ID_GET_EDIT_PARAMETERS, nFlag );
 	}
 
-	void OnMoveType( wxCommandEvent & ) { Report( MITFEP_MOVE_TYPE ); }
-	void OnFieldChanged( wxCommandEvent & ) { Report( MITFEP_FIELD_INDEX ); }
-	void OnRandomize( wxCommandEvent & ) { Report( MITFEP_RANDOMIZE ); }
-	void OnFillTerrain( wxCommandEvent & ) { Report( MITFEP_FILL_TERRAIN ); }
-	void OnFillObjects( wxCommandEvent & ) { Report( MITFEP_FILL_OBJECTS ); }
-	void OnFillHeights( wxCommandEvent & ) { Report( MITFEP_FILL_HEIGHTS ); }
+	void OnMoveType( wxCommandEvent & )
+	{
+		Report( MITFEP_MOVE_TYPE );
+	}
+
+	void OnFieldChanged( wxCommandEvent & )
+	{
+		Report( MITFEP_FIELD_INDEX );
+	}
+
+	void OnRandomize( wxCommandEvent & )
+	{
+		Report( MITFEP_RANDOMIZE );
+	}
+
+	void OnFillTerrain( wxCommandEvent & )
+	{
+		Report( MITFEP_FILL_TERRAIN );
+	}
+
+	void OnFillObjects( wxCommandEvent & )
+	{
+		Report( MITFEP_FILL_OBJECTS );
+	}
+
+	void OnFillHeights( wxCommandEvent & )
+	{
+		Report( MITFEP_FILL_HEIGHTS );
+	}
 };
-}
+} // namespace
 
 namespace NFieldView
 {
@@ -328,4 +357,4 @@ IWidget *Create( CPaletteList *pPalettes, IWidget *pPage )
 	}
 	return pWindow;
 }
-}
+} // namespace NFieldView

@@ -70,4 +70,4 @@ SYSTEM_EXPORT const std::string &GetSimulationImageId();
 // true: here is what recorded it, here is what is running, and these are
 // the ways that can happen. The reader knows which of those they intended.
 SYSTEM_EXPORT const std::string &GetBuildConfiguration();
-}
+} // namespace NBuildStamp

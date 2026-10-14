@@ -11,20 +11,24 @@ inline CVec3 MulPerComp4( const CVec3 &a, const CVec3 &b )
 {
 	return CVec3( a.x * b.x * 4, a.y * b.y * 4, a.z * b.z * 4 );
 }
+
 inline CVec3 MulPerComp2( const CVec3 &a, const CVec3 &b )
 {
 	return CVec3( a.x * b.x * 2, a.y * b.y * 2, a.z * b.z * 2 );
 }
+
 inline CVec3 MulPerComp( const CVec3 &a, const CVec3 &b )
 {
 	return CVec3( a.x * b.x, a.y * b.y, a.z * b.z );
 }
+
 inline CVec4 MulPerComp( const CVec4 &a, const CVec4 &b )
 {
 	return CVec4( a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w );
 }
 
 class CTransformStack;
+
 namespace NGfx
 {
 class CRenderContext;
@@ -32,7 +36,7 @@ class CGeometry;
 class CTexture;
 class CCubeTexture;
 struct SEffect;
-}
+} // namespace NGfx
 
 namespace NGScene
 {
@@ -44,30 +48,45 @@ class CTransparentRenderer;
 //const TPartFlags PF_ALL_PARTS = 0xffffffff;
 const int N_BLOCKS_IN_PART_FLAGS = 8; //16;
 const int PF_MAX_PARTS_PER_COMBINER = N_BLOCKS_IN_PART_FLAGS * 32;
+
 class CPartFlags
 {
 	int flags[N_BLOCKS_IN_PART_FLAGS];
 
-	void Fill( int n ) { memset( flags, n, sizeof( flags ) ); }
+	void Fill( int n )
+	{
+		memset( flags, n, sizeof( flags ) );
+	}
 
 public:
-	void Clear() { Fill( 0 ); }
-	void TakeAll() { Fill( 0xffffffff ); }
+	void Clear()
+	{
+		Fill( 0 );
+	}
+
+	void TakeAll()
+	{
+		Fill( 0xffffffff );
+	}
+
 	void Set( int nIndex )
 	{
 		ASSERT( nIndex >= 0 && nIndex < PF_MAX_PARTS_PER_COMBINER );
 		flags[nIndex / 32] |= 1 << ( nIndex & 31 );
 	}
+
 	void Reset( int nIndex )
 	{
 		ASSERT( nIndex >= 0 && nIndex < PF_MAX_PARTS_PER_COMBINER );
 		flags[nIndex / 32] &= ~( 1 << ( nIndex & 31 ) );
 	}
+
 	int IsSet( int nIndex ) const
 	{
 		ASSERT( nIndex >= 0 && nIndex < PF_MAX_PARTS_PER_COMBINER );
 		return flags[nIndex / 32] & ( 1 << nIndex );
 	}
+
 	bool IsEmpty() const
 	{
 		for ( int k = 0; k < GetBlocksNumber(); ++k )
@@ -79,6 +98,7 @@ public:
 		}
 		return true;
 	}
+
 	bool IsFullGet() const
 	{
 		for ( int k = 0; k < GetBlocksNumber(); ++k )
@@ -90,6 +110,7 @@ public:
 		}
 		return true;
 	}
+
 	void Invert()
 	{
 		for ( int k = 0; k < GetBlocksNumber(); ++k )
@@ -97,17 +118,24 @@ public:
 			flags[k] = ~flags[k];
 		}
 	}
-	int GetBlocksNumber() const { return N_BLOCKS_IN_PART_FLAGS; }
+
+	int GetBlocksNumber() const
+	{
+		return N_BLOCKS_IN_PART_FLAGS;
+	}
+
 	int GetBlock( int n ) const
 	{
 		ASSERT( n >= 0 && n < GetBlocksNumber() );
 		return flags[n];
 	}
+
 	void SetBlock( int nIndex, int n )
 	{
 		ASSERT( nIndex >= 0 && nIndex < GetBlocksNumber() );
 		flags[nIndex] |= n;
 	}
+
 	void CalcAnd( const CPartFlags &a )
 	{
 		ASSERT( GetBlocksNumber() == a.GetBlocksNumber() );
@@ -116,6 +144,7 @@ public:
 			flags[k] &= a.flags[k];
 		}
 	}
+
 	void CalcOr( const CPartFlags &a )
 	{
 		ASSERT( GetBlocksNumber() == a.GetBlocksNumber() );
@@ -124,11 +153,13 @@ public:
 			flags[k] |= a.flags[k];
 		}
 	}
+
 	CPartFlags &operator|=( const CPartFlags &a )
 	{
 		CalcOr( a );
 		return *this;
 	}
+
 	CPartFlags &operator&=( const CPartFlags &a )
 	{
 		CalcAnd( a );
@@ -140,28 +171,33 @@ inline bool operator==( const CPartFlags &a, const CPartFlags &b )
 {
 	return memcmp( &a, &b, sizeof( CPartFlags ) ) == 0;
 }
+
 inline bool operator!=( const CPartFlags &a, const CPartFlags &b )
 {
 	return memcmp( &a, &b, sizeof( CPartFlags ) ) != 0;
 }
+
 inline CPartFlags operator~( const CPartFlags &f )
 {
 	CPartFlags res( f );
 	res.Invert();
 	return res;
 }
+
 inline CPartFlags operator&( const CPartFlags &a, const CPartFlags &b )
 {
 	CPartFlags r( a );
 	r &= b;
 	return r;
 }
+
 inline CPartFlags operator|( const CPartFlags &a, const CPartFlags &b )
 {
 	CPartFlags r( a );
 	r |= b;
 	return r;
 }
+
 inline CPartFlags TakeAllParts()
 {
 	CPartFlags r;
@@ -170,6 +206,7 @@ inline CPartFlags TakeAllParts()
 }
 
 struct SRenderGeometryInfo;
+
 struct SRenderPartSet
 {
 	CPtr<CObjectBase> pNode;
@@ -179,6 +216,7 @@ struct SRenderPartSet
 	int nFloorMask;
 
 	SRenderPartSet() {}
+
 	SRenderPartSet( CObjectBase *_pNode,
 	                const std::vector<CPtr<IPart>> *_pParts,
 	                SRenderGeometryInfo *_pGeometry,
@@ -187,12 +225,17 @@ struct SRenderPartSet
 	{
 		parts.Clear();
 	}
+
 	//SRenderPartSet( CObjectBase *_pNode ): pNode(_pNode) {}
-	IPart *GetPart( int nIndex ) const { return ( *pParts )[nIndex]; }
+	IPart *GetPart( int nIndex ) const
+	{
+		return ( *pParts )[nIndex];
+	}
 };
 
 struct SGroupSelect;
 struct SPerVertexLightState;
+
 class IRender
 {
 public:
@@ -221,6 +264,7 @@ enum ETrilistType
 	TLT_GEOM,
 	TLT_NUMBER
 };
+
 class IVBCombiner : public CPtrFuncBase<NGfx::CGeometry>
 {
 protected:
@@ -235,21 +279,37 @@ public:
 		f.Add( 3, &partBVs );
 		return 0;
 	}
+
 	virtual const SBound &GetBound()
 	{
 		ASSERT( IsFrameMatch() );
 		return bound;
 	}
+
 	virtual const std::vector<SSphere> &GetBounds()
 	{
 		ASSERT( IsFrameMatch() );
 		return partBVs;
 	}
-	int GetPartsNum() const { return partBVs.size(); }
-	virtual CFuncBase<std::vector<CPtr<IPart>>> *GetCombiner() const { return 0; }
+
+	int GetPartsNum() const
+	{
+		return partBVs.size();
+	}
+
+	virtual CFuncBase<std::vector<CPtr<IPart>>> *GetCombiner() const
+	{
+		return 0;
+	}
+
 	virtual void FreeMemory() {}
-	bool IsValidValue() const { return IsValid( pValue ); }
+
+	bool IsValidValue() const
+	{
+		return IsValid( pValue );
+	}
 };
+
 struct SRenderGeometryInfo
 {
 	CDGPtr<IVBCombiner> pVertices;
@@ -316,6 +376,7 @@ struct SPerspDirectionalDepthInfo
 {
 	CVec4 vDepth;
 	SNLProjectionInfo nlp;
+
 	SPerspDirectionalDepthInfo() : vDepth( 0, 0, 0, 1 ) {}
 };
 
@@ -398,12 +459,14 @@ struct SRenderStaticInfo
 };
 
 typedef unsigned char TPartPriority;
+
 struct SPerPartVariables
 {
 	ZDATA
 	float fFade;
 	TPartPriority nPriority;
 	CObj<CPtrFuncBase<NGfx::CTexture>> pLM;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &fFade );
@@ -413,7 +476,12 @@ struct SPerPartVariables
 	}
 
 	SPerPartVariables() : fFade( 1 ), nPriority( 0 ) {}
-	intptr_t GetSortValue() const { return ( *(int *)&fFade ) ^ nPriority ^ ( (intptr_t)pLM.GetPtr() ); }
+
+	intptr_t GetSortValue() const
+	{
+		return ( *(int *)&fFade ) ^ nPriority ^ ( (intptr_t)pLM.GetPtr() );
+	}
+
 	bool operator==( const SPerPartVariables &a ) const
 	{
 		return fFade == a.fFade && nPriority == a.nPriority && pLM == a.pLM;
@@ -428,25 +496,30 @@ struct SRenderFragmentInfo
 		int nFlags;
 
 		SElement() {}
+
 		SElement( short _nGeom, short _nBlock, int _nFlags ) : nGeometry( _nGeom ), nBlock( _nBlock ), nFlags( _nFlags ) {}
 	};
+
 	std::vector<SElement> elements;
 	CPtr<IMaterial> pMaterial;
 	SPerPartVariables vars;
 
 	SRenderFragmentInfo() {} //: pLM(0) {}
 };
+
 struct SRenderFragmentKey
 {
 	IMaterial *pMat;
 	float fFade;
 	int nPriority;
 	CPtrFuncBase<NGfx::CTexture> *pLM;
+
 	bool operator==( const SRenderFragmentKey &a ) const
 	{
 		return pMat == a.pMat && fFade == a.fFade && nPriority == a.nPriority && pLM == a.pLM;
 	}
 };
+
 struct SRenderFragmentHash
 {
 	int operator()( const SRenderFragmentKey &a ) const
@@ -463,6 +536,7 @@ enum EFragmentsSplit
 	FST_REJECT,
 	FST_SPLIT
 };
+
 class CSceneFragments
 {
 private:
@@ -492,7 +566,11 @@ public:
 	                      const SBound &_bv );
 	void SetLitParticlesMaterial( IMaterial *p );
 
-	int GetSceneTris() const { return nSceneTris; }
+	int GetSceneTris() const
+	{
+		return nSceneTris;
+	}
+
 	// starts with 1st element, 0th is lit particles
 	bool IsFilteredFragment( unsigned int n ) const
 	{
@@ -502,6 +580,7 @@ public:
 		}
 		return filterFragment[n];
 	}
+
 	EFragmentsSplit GetGeometryFlags( unsigned int n ) const
 	{
 		if ( n >= filterGeometry.size() )
@@ -510,22 +589,61 @@ public:
 		}
 		return (EFragmentsSplit)filterGeometry[n];
 	}
-	const CPartFlags &GetGeometryParts( unsigned int n ) const { return selectedParts[n]; }
+
+	const CPartFlags &GetGeometryParts( unsigned int n ) const
+	{
+		return selectedParts[n];
+	}
+
 	bool HasSelectedFragments() const;
-	const std::vector<SRenderFragmentInfo *> &GetFragments() const { return fragments; }
-	const SRenderFragmentInfo &GetLitParticles() const { return *fragments[0]; }
-	const SRenderStaticInfo &GetStaticInfo( int nGeom ) const { return *statics[nGeom]; }
-	SRenderGeometryInfo *GetGeometryInfo( int nGeom ) const { return geometries[nGeom]; }
+
+	const std::vector<SRenderFragmentInfo *> &GetFragments() const
+	{
+		return fragments;
+	}
+
+	const SRenderFragmentInfo &GetLitParticles() const
+	{
+		return *fragments[0];
+	}
+
+	const SRenderStaticInfo &GetStaticInfo( int nGeom ) const
+	{
+		return *statics[nGeom];
+	}
+
+	SRenderGeometryInfo *GetGeometryInfo( int nGeom ) const
+	{
+		return geometries[nGeom];
+	}
+
 	int GetGeometriesNum() const
 	{
 		ASSERT( statics.size() == geometries.size() );
 		return geometries.size();
 	}
+
 	void HideGeometry( const std::vector<CPartFlags> &flags );
-	void SetNeedHSR( bool _b ) { bNeedHSR = _b; }
-	bool NeedHSR() const { return bNeedHSR; }
-	void AddGeomBound( const SBound &_b ) { bc.Add( _b ); }
-	void GetBound( SBound *pRes ) { bc.Make( pRes ); }
+
+	void SetNeedHSR( bool _b )
+	{
+		bNeedHSR = _b;
+	}
+
+	bool NeedHSR() const
+	{
+		return bNeedHSR;
+	}
+
+	void AddGeomBound( const SBound &_b )
+	{
+		bc.Add( _b );
+	}
+
+	void GetBound( SBound *pRes )
+	{
+		bc.Make( pRes );
+	}
 	friend class CSelectFragments;
 	friend class CSelectGeometries;
 };
@@ -564,6 +682,7 @@ public:
 			pScene->filterGeometry[k] = res;
 		}
 	}
+
 	~CSelectGeometries()
 	{
 		pScene->filterGeometry = holdFlags;
@@ -594,28 +713,44 @@ public:
 			pScene->filterFragment[k] = select( pScene->fragments[k] );
 		}
 	}
-	~CSelectFragments() { pScene->filterFragment = holdFilter; }
+
+	~CSelectFragments()
+	{
+		pScene->filterFragment = holdFilter;
+	}
 };
 
 struct SBoundIntersectFilter
 {
 	SBound bv;
+
 	SBoundIntersectFilter( const SBound &_bv ) : bv( _bv ) {}
+
 	EFragmentsSplit operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const;
 };
+
 struct SFrustrumFilter
 {
 	CTransformStack *pTS;
+
 	SFrustrumFilter( CTransformStack *_pTS ) : pTS( _pTS ) {}
+
 	EFragmentsSplit operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const;
 };
+
 struct SSphereFilter
 {
 	SBound bound;
 	SSphere sph;
-	SSphereFilter( const SSphere &_sph ) : sph( _sph ) { bound.SphereInit( sph.ptCenter, sph.fRadius ); }
+
+	SSphereFilter( const SSphere &_sph ) : sph( _sph )
+	{
+		bound.SphereInit( sph.ptCenter, sph.fRadius );
+	}
+
 	EFragmentsSplit operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const;
 };
+
 struct SIgnorePartsInfo
 {
 	// bit set to 1 means part is ignored
@@ -623,6 +758,7 @@ struct SIgnorePartsInfo
 	CPartFlags flags;
 	CDGPtr<CFuncBase<std::vector<CPtr<IPart>>>> pTrackCombiner;
 	std::vector<CPtr<IPart>> ignore;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &flags );
@@ -630,17 +766,22 @@ struct SIgnorePartsInfo
 		f.Add( 4, &ignore );
 		return 0;
 	}
+
 	void Init( const CPartFlags &_flags, const std::vector<CPtr<IPart>> *pParts );
 };
+
 typedef std::unordered_map<CPtr<CObjectBase>, SIgnorePartsInfo, SPtrHash> CFullIgnorePartsHash;
+
 struct SIgnoredSphereFilter
 {
 	CFullIgnorePartsHash *pIgnoreList;
 	SSphereFilter sph;
+
 	SIgnoredSphereFilter( CFullIgnorePartsHash *_pIgnoreList, const SSphere &_sph )
 			: pIgnoreList( _pIgnoreList ), sph( _sph )
 	{
 	}
+
 	EFragmentsSplit operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const;
 };
 
@@ -665,20 +806,34 @@ public:
 		int nData;
 
 		UParameter() : f( 0 ) {}
+
 		UParameter( const CVec3 *v3 ) : pVec3( v3 ) {}
+
 		UParameter( const CVec4 *v4 ) : pVec4( v4 ) {}
+
 		UParameter( NGfx::CTexture *_pTex ) : pTex( _pTex ) {}
+
 		UParameter( NGfx::CCubeTexture *_pTex ) : pCubeTex( _pTex ) {}
+
 		UParameter( const SDirectionalDepthInfo *_pDirDepth ) : pDirDepth( _pDirDepth ) {}
+
 		UParameter( const SPerspDirectionalDepthInfo *_pDirDepth ) : pPDirDepth( _pDirDepth ) {}
+
 		UParameter( const SSkyDepth3Info *_p ) : pSkyDepth3( _p ) {}
+
 		UParameter( const SFillDiffuseBumpSpecInfo *_pFill ) : pFill( _pFill ) {}
+
 		UParameter( const SPPSpecularInfo *_pPPSpec ) : pPPSpec( _pPPSpec ) {}
+
 		UParameter( const SFastGf3RenderInfo *_pFastInfo ) : pFastInfo( _pFastInfo ) {}
+
 		UParameter( const SPntLightShadowedInfo *_pInfo ) : pPSInfo( _pInfo ) {}
+
 		UParameter( IMaterial *_pMaterial ) : pMaterial( _pMaterial ) {}
+
 		UParameter( float _f ) : f( _f ) {}
 	};
+
 	struct SOperation
 	{
 		const SRenderFragmentInfo *pFrag;
@@ -690,6 +845,7 @@ public:
 		UParameter p1, p2, p3;
 
 		SOperation() {}
+
 		SOperation( const SRenderFragmentInfo *_pFrag,
 		            unsigned char _op,
 		            TPartPriority _nPartPriority,
@@ -703,6 +859,7 @@ public:
 					nPartPriority( _nPartPriority ), p1( _p1 ), p2( _p2 ), p3( _p3 )
 		{
 		}
+
 		bool IsSame( const SOperation &a ) const
 		{
 			ASSERT( sizeof( p1.f ) == sizeof( p1 ) );
@@ -711,10 +868,15 @@ public:
 			       p2.nData == a.p2.nData && p3.nData == a.p3.nData;
 		}
 	};
+
 	std::vector<SOperation> ops;
 
 	CRenderCmdList() {}
-	bool IsEmpty() const { return ops.empty(); }
+
+	bool IsEmpty() const
+	{
+		return ops.empty();
+	}
 };
 
 class COpGenContext
@@ -729,7 +891,12 @@ public:
 			: pRes( _pRes ), pCurFragment( _pTarget ), bHasAddedOps( false ), nPartPriority( _pTarget->vars.nPriority )
 	{
 	}
-	bool HasAddedOps() const { return bHasAddedOps; }
+
+	bool HasAddedOps() const
+	{
+		return bHasAddedOps;
+	}
+
 	void AddOperation( unsigned char _op,
 	                   unsigned char _nPass,
 	                   int nSBM,
@@ -743,7 +910,11 @@ public:
 				CRenderCmdList::SOperation( pCurFragment, _op, nPartPriority, _nPass, nSBM, nDestRegister, p1, p2, p3 ) );
 		bHasAddedOps = true;
 	}
-	const SRenderFragmentInfo *GetCurFragment() const { return pCurFragment; }
+
+	const SRenderFragmentInfo *GetCurFragment() const
+	{
+		return pCurFragment;
+	}
 };
 
 void MakeSingleOp( CRenderCmdList *pRes,
@@ -778,11 +949,31 @@ struct SLightInfo;
 class IMaterial : public CObjectBase
 {
 public:
-	virtual bool DoesCastShadow() const { return false; }
-	virtual bool IsOpaque() const { return false; }
-	virtual bool IsAlphaTest() const { return false; }
-	virtual NGfx::CTexture *GetAlphaTestTex() { return 0; }
-	virtual bool IsTransparent() const { return false; }
+	virtual bool DoesCastShadow() const
+	{
+		return false;
+	}
+
+	virtual bool IsOpaque() const
+	{
+		return false;
+	}
+
+	virtual bool IsAlphaTest() const
+	{
+		return false;
+	}
+
+	virtual NGfx::CTexture *GetAlphaTestTex()
+	{
+		return 0;
+	}
+
+	virtual bool IsTransparent() const
+	{
+		return false;
+	}
+
 	virtual bool SetRenderMode( NGfx::CRenderContext *pRC,
 	                            const SLightInfo &lightInfo,
 	                            int nROP,
@@ -791,7 +982,9 @@ public:
 	{
 		return false;
 	}
+
 	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) {}
+
 	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC ) = 0;
 	virtual void AddCustomOperation( COpGenContext *pOp,
 	                                 const ERenderOperation &op,
@@ -799,26 +992,77 @@ public:
 	                                 int nSBM,
 	                                 char nDestRegister,
 	                                 CRenderCmdList::UParameter p = CRenderCmdList::UParameter() ) = 0;
+
 	virtual void SetTransparentRenderMode( NGfx::CRenderContext *pRC,
 	                                       const SPerPartVariables &vars,
 	                                       const SLightInfo &lightInfo,
 	                                       SRenderPathContext *pRPC )
 	{
 	}
-	virtual bool Is2Sided() const { return false; }
-	virtual bool IsSelfIllum() const { return false; }
+
+	virtual bool Is2Sided() const
+	{
+		return false;
+	}
+
+	virtual bool IsSelfIllum() const
+	{
+		return false;
+	}
+
 	virtual void Precache() {}
-	virtual CVec3 GetTranslucentColor() const { return CVec3( 0, 0, 0 ); }
-	virtual bool IsProjectOnTerrain() const { return false; }
-	virtual bool DoesSupportLightmaps() const { return false; }
-	virtual bool IsUsingWaterReflection() const { return false; }
-	virtual bool DoesIgnoreZ() const { return false; }
-	virtual bool DoesBackFaceCastShadow() const { return false; }
-	virtual float GetReflectionZ() const { return 0.0f; }
-	virtual IMaterial *GetWindAffected() { return 0; };
-	virtual IMaterial *GetNoReceiveShadows() { return 0; };
+
+	virtual CVec3 GetTranslucentColor() const
+	{
+		return CVec3( 0, 0, 0 );
+	}
+
+	virtual bool IsProjectOnTerrain() const
+	{
+		return false;
+	}
+
+	virtual bool DoesSupportLightmaps() const
+	{
+		return false;
+	}
+
+	virtual bool IsUsingWaterReflection() const
+	{
+		return false;
+	}
+
+	virtual bool DoesIgnoreZ() const
+	{
+		return false;
+	}
+
+	virtual bool DoesBackFaceCastShadow() const
+	{
+		return false;
+	}
+
+	virtual float GetReflectionZ() const
+	{
+		return 0.0f;
+	}
+
+	virtual IMaterial *GetWindAffected()
+	{
+		return 0;
+	};
+
+	virtual IMaterial *GetNoReceiveShadows()
+	{
+		return 0;
+	};
+
 	virtual void SetPriority( int nP ) {};
-	virtual EDynamicType GetDynamicType() { return DT_DONT_CARE; };
+
+	virtual EDynamicType GetDynamicType()
+	{
+		return DT_DONT_CARE;
+	};
 };
 
 struct SParticleLMRenderTargetInfo
@@ -830,4 +1074,4 @@ struct SParticleLMRenderTargetInfo
 	SParticleLMRenderTargetInfo() : vParticleLMSize( 0, 0 ), vKernelSize( 0, 0 ) {}
 };
 
-}
+} // namespace NGScene

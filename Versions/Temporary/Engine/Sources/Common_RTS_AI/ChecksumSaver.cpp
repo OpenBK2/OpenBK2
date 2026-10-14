@@ -40,6 +40,7 @@ void CheckAIObjectBase()
 		( it->second )->operator&( saver );
 	}
 }
+
 /*
 
 CAIObjectBase::~CAIObjectBase()

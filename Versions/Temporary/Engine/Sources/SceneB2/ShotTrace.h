@@ -18,6 +18,7 @@ class CShotTraceObj : public CPtrFuncBase<NGScene::CObjectInfo>
 	const NDb::SWeaponRPGStats::SShell *pShellStats;
 	CVec3 vDir;
 	CVec3 vCameraAnchor, vCameraEye, vViewNormal;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &vStart );
@@ -29,13 +30,18 @@ class CShotTraceObj : public CPtrFuncBase<NGScene::CObjectInfo>
 	}
 
 	void Recalc();
-	bool NeedUpdate() { return pTimer != 0 ? pTimer.Refresh() : false; }
+
+	bool NeedUpdate()
+	{
+		return pTimer != 0 ? pTimer.Refresh() : false;
+	}
 
 	bool WasCameraMoved() const
 	{
 		return ( ( fabs( vCameraAnchor - Camera()->GetAnchor() ) > FP_EPSILON ) ||
 		         ( fabs( vCameraEye - Camera()->GetPos() ) > FP_EPSILON ) );
 	}
+
 	void UpdateViewNormal()
 	{
 		vCameraAnchor = Camera()->GetAnchor();
@@ -50,6 +56,7 @@ class CShotTraceObj : public CPtrFuncBase<NGScene::CObjectInfo>
 
 public:
 	CShotTraceObj() : pShellStats( 0 ) {}
+
 	CShotTraceObj( const CVec3 &_vStart,
 	               const CVec3 &_vEnd,
 	               NTimer::STime _timeStart,

@@ -18,119 +18,142 @@ inline void AI2Vis( CVec3 *pRes, const CVec3 &vPos )
 {
 	pRes->Set( vPos.x * AI_TO_VIS, vPos.y * AI_TO_VIS, vPos.z * AI_TO_VIS );
 }
+
 inline void AI2Vis( CVec3 *pRes, float x, float y, float z )
 {
 	pRes->Set( x * AI_TO_VIS, y * AI_TO_VIS, z * AI_TO_VIS );
 }
+
 inline void AI2Vis( CVec3 *pPos )
 {
 	pPos->x *= AI_TO_VIS;
 	pPos->y *= AI_TO_VIS;
 	pPos->z *= AI_TO_VIS;
 }
+
 // 2D
 inline void AI2Vis( CVec2 *pRes, const CVec2 &vPos )
 {
 	pRes->Set( vPos.x * AI_TO_VIS, vPos.y * AI_TO_VIS );
 }
+
 inline void AI2Vis( CVec2 *pRes, float x, float y )
 {
 	pRes->Set( x * AI_TO_VIS, y * AI_TO_VIS );
 }
+
 inline void AI2Vis( CVec2 *pPos )
 {
 	pPos->x *= AI_TO_VIS;
 	pPos->y *= AI_TO_VIS;
 }
+
 // 1D
 inline const float AI2Vis( const float fVal )
 {
 	return fVal * AI_TO_VIS;
 }
+
 inline void AI2Vis( float *pfVal )
 {
 	*pfVal *= AI_TO_VIS;
 }
+
 // from Vis to AI coords
 // 3D
 inline void Vis2AIFast( CVec3 *pRes, const CVec3 &vPos )
 {
 	pRes->Set( vPos.x * VIS_TO_AI, vPos.y * VIS_TO_AI, vPos.z * VIS_TO_AI );
 }
+
 inline void Vis2AIFast( CVec3 *pRes, float x, float y, float z )
 {
 	pRes->Set( x * VIS_TO_AI, y * VIS_TO_AI, z * VIS_TO_AI );
 }
+
 inline void Vis2AIFast( CVec3 *pPos )
 {
 	pPos->x *= VIS_TO_AI;
 	pPos->y *= VIS_TO_AI;
 	pPos->z *= VIS_TO_AI;
 }
+
 inline void Vis2AI( CVec3 *pPos )
 {
 	Vis2AIFast( pPos );
 	pPos->x = int( pPos->x + 0.3f );
 	pPos->y = int( pPos->y + 0.3f );
 }
+
 inline void Vis2AI( CVec3 *pPos, const CVec3 &vPos )
 {
 	Vis2AIFast( pPos, vPos );
 	pPos->x = int( pPos->x + 0.3f );
 	pPos->y = int( pPos->y + 0.3f );
 }
+
 inline void Vis2AI( CVec3 *pPos, float x, float y, float z )
 {
 	Vis2AIFast( pPos, x, y, z );
 	pPos->x = int( pPos->x + 0.3f );
 	pPos->y = int( pPos->y + 0.3f );
 }
+
 // 2D
 inline void Vis2AIFast( CVec2 *pRes, const CVec2 &vPos )
 {
 	pRes->Set( vPos.x * VIS_TO_AI, vPos.y * VIS_TO_AI );
 }
+
 inline void Vis2AIFast( CVec2 *pRes, float x, float y )
 {
 	pRes->Set( x * VIS_TO_AI, y * VIS_TO_AI );
 }
+
 inline void Vis2AIFast( CVec2 *pPos )
 {
 	pPos->x *= VIS_TO_AI;
 	pPos->y *= VIS_TO_AI;
 }
+
 inline void Vis2AI( CVec2 *pPos )
 {
 	Vis2AIFast( pPos );
 	pPos->x = int( pPos->x + 0.3f );
 	pPos->y = int( pPos->y + 0.3f );
 }
+
 inline void Vis2AI( CVec2 *pPos, const CVec2 &vPos )
 {
 	Vis2AIFast( pPos, vPos );
 	pPos->x = int( pPos->x + 0.3f );
 	pPos->y = int( pPos->y + 0.3f );
 }
+
 inline void Vis2AI( CVec2 *pPos, float x, float y )
 {
 	Vis2AIFast( pPos, x, y );
 	pPos->x = int( pPos->x + 0.3f );
 	pPos->y = int( pPos->y + 0.3f );
 }
+
 // 1D
 inline float Vis2AIFast( float fVal )
 {
 	return fVal * VIS_TO_AI;
 }
+
 inline void Vis2AIFast( float *pfVal )
 {
 	*pfVal *= VIS_TO_AI;
 }
+
 inline float Vis2AI( float fVal )
 {
 	fVal = Vis2AIFast( fVal );
 	return int( fVal + 0.3f );
 }
+
 inline void Vis2AI( float *pfVal )
 {
 	Vis2AIFast( pfVal );
@@ -145,6 +168,7 @@ inline void Fit2Grid( CVec3 *pPos, const float fGridCellSize )
 	pPos->y = int( pPos->y + 0.5f );
 	*pPos *= fGridCellSize;
 }
+
 inline void FitAIOrigin2AIGrid( CVec3 *pPos, const CVec2 &vOrigin )
 {
 	// сдвинем объект на origin
@@ -156,6 +180,7 @@ inline void FitAIOrigin2AIGrid( CVec3 *pPos, const CVec2 &vOrigin )
 	pPos->x += vOrigin.x;
 	pPos->y += vOrigin.y;
 }
+
 inline void FitVisOrigin2AIGrid( CVec3 *pPos, const CVec2 &vOrigin )
 {
 	// vis => AI with rounding to whole AI points
@@ -165,6 +190,7 @@ inline void FitVisOrigin2AIGrid( CVec3 *pPos, const CVec2 &vOrigin )
 	// AI => Vis
 	AI2Vis( pPos );
 }
+
 inline void FitVis2AIGrid( CVec3 *pPos )
 {
 	FitVisOrigin2AIGrid( pPos, VNULL2 );
@@ -175,14 +201,17 @@ inline uint16_t Vis2AIGrad( float fGrad )
 {
 	return uint16_t( Float2Int( fGrad / 360.0f * 65536.0f ) & 0x0000ffff );
 }
+
 inline float AI2VisGrad( uint16_t wGrad )
 {
 	return float( wGrad ) / 65536.0f * 360.0f;
 }
+
 inline uint16_t Vis2AIRad( float fRad )
 {
 	return uint16_t( Float2Int( fRad / FP_2PI * 65536.0f ) & 0x0000ffff );
 }
+
 inline float AI2VisRad( uint16_t wGrad )
 {
 	return float( wGrad ) / 65536.0f * FP_2PI;

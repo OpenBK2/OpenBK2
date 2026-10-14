@@ -1,25 +1,31 @@
 #pragma once
 #include "GScene.h"
+
 namespace NGfx
 {
 class CCubeTexture;
 }
+
 namespace NDb
 {
 struct SMaterial;
 }
+
 namespace NGScene
 {
 const int N_MIN_FLOOR = -3;
 const int N_MAX_FLOOR = 4;
+
 inline int GetFloorMask( int nFloor )
 {
 	return ( 1 << ( nFloor - N_MIN_FLOOR + 1 ) ) - 1;
 }
+
 inline int GetParticlesRequireFlag( bool bShowParticles )
 {
 	return bShowParticles ? 0 : N_MASK_TREECROWN;
 }
+
 inline int GetFloorBit( int nFloor, bool bShadowCast, bool bParticles, int nLODMask = 0 )
 {
 	return ( 1 << (std::max)( nFloor - N_MIN_FLOOR, 0 ) ) | ( bParticles ? 0 : N_MASK_TREECROWN ) |
@@ -42,17 +48,23 @@ class CSkyAdapter : public CPtrFuncBase<NGfx::CCubeTexture>
 	OBJECT_BASIC_METHODS( CSkyAdapter );
 	ZDATA
 	CDGPtr<CPtrFuncBase<NGfx::CCubeTexture>> pTex;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &pTex );
 		return 0;
 	}
+
 	virtual bool NeedUpdate();
 	virtual void Recalc();
 
 public:
 	void SetSource( CPtrFuncBase<NGfx::CCubeTexture> *_pTex );
-	CPtrFuncBase<NGfx::CCubeTexture> *GetSource() const { return pTex; }
+
+	CPtrFuncBase<NGfx::CCubeTexture> *GetSource() const
+	{
+		return pTex;
+	}
 };
 
 class CMaterialShare : public CObjectBase
@@ -63,6 +75,7 @@ class CMaterialShare : public CObjectBase
 	CMatHashmap materials;
 	CObj<CSkyAdapter> pSky;
 	CObj<IMaterial> pOccluder;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &materials );
@@ -73,9 +86,22 @@ class CMaterialShare : public CObjectBase
 
 public:
 	CMaterialShare() : pSky( new CSkyAdapter ) {}
-	void SetSky( CPtrFuncBase<NGfx::CCubeTexture> *_pSky ) { pSky->SetSource( _pSky ); }
-	CPtrFuncBase<NGfx::CCubeTexture> *GetSky() const { return pSky->GetSource(); }
-	CPtrFuncBase<NGfx::CCubeTexture> *GetSkyBinder() const { return pSky; }
+
+	void SetSky( CPtrFuncBase<NGfx::CCubeTexture> *_pSky )
+	{
+		pSky->SetSource( _pSky );
+	}
+
+	CPtrFuncBase<NGfx::CCubeTexture> *GetSky() const
+	{
+		return pSky->GetSource();
+	}
+
+	CPtrFuncBase<NGfx::CCubeTexture> *GetSkyBinder() const
+	{
+		return pSky;
+	}
+
 	IMaterial *CreateMaterial( const NDb::SMaterial *pMaterial );
 	void FillCreateMaterialInfo( const NDb::SMaterial *pMaterial, SMaterialCreateInfo *pRes );
 };
@@ -87,6 +113,7 @@ class CColorMaterialShare
 
 public:
 	IMaterial *CreateMaterial( const CVec3 &color );
+
 	int operator&( CStructureSaver &f )
 	{
 		f.Add( 1, &materials );
@@ -111,6 +138,7 @@ class CTransparentMaterialShare
 
 public:
 	IMaterial *CreateMaterial( const CVec4 &color, bool bDoesCastShadow );
+
 	int operator&( CStructureSaver &f )
 	{
 		f.Add( 1, &materials );
@@ -119,4 +147,4 @@ public:
 	}
 };
 
-}
+} // namespace NGScene

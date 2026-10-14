@@ -64,7 +64,10 @@ class CWindowEditLine : public CWindow, public IEditLine
 	void SetTextToGfx( const std::wstring &szText );
 	//bool ProcessEvent( const struct SGameMessage &msg );
 protected:
-	NDb::SWindow *GetInstance() { return pInstance; }
+	NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
 
 public:
 	CWindowEditLine();
@@ -73,8 +76,12 @@ public:
 
 	//{ CWindow
 	void SetFocus( const bool bFocus );
+
 	//}
-	void SetFocusNotify( IFocusNotify *_pNotify ) { pFocusNotify = _pNotify; }
+	void SetFocusNotify( IFocusNotify *_pNotify )
+	{
+		pFocusNotify = _pNotify;
+	}
 
 	void Init();
 	void InitByDesc( const struct NDb::SUIDesc *pDesc );
@@ -94,7 +101,11 @@ public:
 	void SetCursor( const int nPos );
 	void SetSelection( const int nBegin, const int nEnd );
 	void SetText( const wchar_t *pszText );
-	const wchar_t *GetText() const { return wszFullText.c_str(); }
+
+	const wchar_t *GetText() const
+	{
+		return wszFullText.c_str();
+	}
 
 	void RegisterObservers();
 

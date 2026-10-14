@@ -86,6 +86,7 @@ struct SFeedBackObjectiveState : public CObjectBase
 
 public:
 	SFeedBackObjectiveState() {}
+
 	SFeedBackObjectiveState( int _nState, const CVec2 &_vPos ) : nState( _nState ), vPos( _vPos ) {}
 };
 
@@ -98,6 +99,7 @@ public:
 	int nUpdateID = {};
 	CVec2 vCenterCamera;
 	int nParam = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &unitIDs );
@@ -116,6 +118,7 @@ struct SAIFeedBack
 	EFeedBack feedBackType = {};
 	uint32_t nParam = {};
 	CPtr<CObjectBase> pParam;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &feedBackType );
@@ -126,7 +129,9 @@ struct SAIFeedBack
 
 public:
 	SAIFeedBack() {}
+
 	SAIFeedBack( const EFeedBack _feedBackType ) : feedBackType( _feedBackType ), nParam( uint32_t( -1 ) ) {}
+
 	SAIFeedBack( const EFeedBack _feedBackType, uint32_t _nParam, CObjectBase *_pParam )
 			: feedBackType( _feedBackType ), nParam( _nParam ), pParam( _pParam )
 	{
@@ -136,6 +141,7 @@ public:
 			: feedBackType( feedBack.feedBackType ), nParam( feedBack.nParam ), pParam( feedBack.pParam )
 	{
 	}
+
 	const SAIFeedBack &operator=( const SAIFeedBack &feedBack )
 	{
 		feedBackType = feedBack.feedBackType;
@@ -151,6 +157,7 @@ private:
 public:
 	ZDATA_( SAIBasicUpdate )
 	SAIFeedBack info;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );

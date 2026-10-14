@@ -18,7 +18,11 @@ protected:
 	}
 
 	//CBuildDataBuilder
-	const std::string &GetBuildDataTypeName() { return DEFAULT_BUILD_DATA_TYPE_NAME; }
+	const std::string &GetBuildDataTypeName()
+	{
+		return DEFAULT_BUILD_DATA_TYPE_NAME;
+	}
+
 	bool InternalInsertObject( std::string *pszObjectTypeName,
 	                           std::string *pszUniqueObjectName,
 	                           bool bFromMainMenu,
@@ -29,5 +33,9 @@ protected:
 	{
 		return false;
 	}
-	bool NeedBuildDataDialog() const { return false; }
+
+	bool NeedBuildDataDialog() const
+	{
+		return false;
+	}
 };

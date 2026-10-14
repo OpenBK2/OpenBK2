@@ -29,12 +29,14 @@ class PARSER_EXPORT CFileNode : public CObjectBase
 	std::list<std::string> hExternalIncludes;
 
 	bool bFileExist;
+
 	enum EParseState
 	{
 		EPS_NOPARSED,
 		EPS_INPARSING,
 		EPS_PARSED,
 	};
+
 	EParseState eParseState;
 	bool bIncludedInOtherFile;
 	bool bRootFile;
@@ -43,23 +45,60 @@ class PARSER_EXPORT CFileNode : public CObjectBase
 
 public:
 	CFileNode() : eParseState( EPS_NOPARSED ), bFileExist( false ), bIncludedInOtherFile( false ) {}
+
 	CFileNode( const std::string &_szFullFileName, bool _bRootFile )
 			: bFileExist( false ), eParseState( EPS_NOPARSED ), szFullFileName( _szFullFileName ),
 				bIncludedInOtherFile( false ), bRootFile( _bRootFile )
 	{
 	}
-	void SetExist() { bFileExist = true; }
-	void SetIncludedInOtherFile() { bIncludedInOtherFile = true; }
-	bool IsIncludedInOtherFile() const { return bIncludedInOtherFile; }
-	bool IsParsed() const { return eParseState == EPS_PARSED; }
-	bool IsRootFile() const { return bRootFile; }
 
-	const std::string &GetName() const { return szFullFileName; }
+	void SetExist()
+	{
+		bFileExist = true;
+	}
+
+	void SetIncludedInOtherFile()
+	{
+		bIncludedInOtherFile = true;
+	}
+
+	bool IsIncludedInOtherFile() const
+	{
+		return bIncludedInOtherFile;
+	}
+
+	bool IsParsed() const
+	{
+		return eParseState == EPS_PARSED;
+	}
+
+	bool IsRootFile() const
+	{
+		return bRootFile;
+	}
+
+	const std::string &GetName() const
+	{
+		return szFullFileName;
+	}
+
 	void SetFullName( const std::string &_szFullName );
+
 	// Falls back to the name for a node nothing has recorded a path for.
-	const std::string &GetPathOnDisk() const { return szPathOnDisk.empty() ? szFullFileName : szPathOnDisk; }
-	void SetPathOnDisk( const std::string &_szPathOnDisk ) { szPathOnDisk = _szPathOnDisk; }
-	bool HasPathOnDisk() const { return !szPathOnDisk.empty(); }
+	const std::string &GetPathOnDisk() const
+	{
+		return szPathOnDisk.empty() ? szFullFileName : szPathOnDisk;
+	}
+
+	void SetPathOnDisk( const std::string &_szPathOnDisk )
+	{
+		szPathOnDisk = _szPathOnDisk;
+	}
+
+	bool HasPathOnDisk() const
+	{
+		return !szPathOnDisk.empty();
+	}
 
 	void AddInclude( std::string szFileName );
 	void AddInclude( CFileNode *pNode );
@@ -84,11 +123,26 @@ public:
 	void Parse();
 
 	typedef std::unordered_map<std::string, CObj<CFileNode>>::const_iterator TIncludesIter;
-	TIncludesIter BeginIncludes() const { return includes.begin(); }
-	TIncludesIter EndIncludes() const { return includes.end(); }
 
-	const std::list<std::string> &GetHExternalIncludes() const { return hExternalIncludes; }
-	const std::list<std::string> &GetCPPExternalIncludes() const { return cppExternalIncludes; }
+	TIncludesIter BeginIncludes() const
+	{
+		return includes.begin();
+	}
+
+	TIncludesIter EndIncludes() const
+	{
+		return includes.end();
+	}
+
+	const std::list<std::string> &GetHExternalIncludes() const
+	{
+		return hExternalIncludes;
+	}
+
+	const std::list<std::string> &GetCPPExternalIncludes() const
+	{
+		return cppExternalIncludes;
+	}
 };
 
 // exported for dbcodegen, which walks the parsed tree from here
@@ -101,4 +155,4 @@ void AddHExternal( const std::string &szIncludeName );
 void AddCPPExternal( const std::string &szIncludeName );
 CFileNode *GetCurFileNode();
 
-}
+} // namespace NLang

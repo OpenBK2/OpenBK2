@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SuperCollider.h"
+
 namespace NCollider
 {
 
@@ -292,4 +293,4 @@ void CSuperCollider::AddEntity( const SHMatrix &pos,
 	}
 }
 
-}
+} // namespace NCollider

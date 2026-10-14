@@ -25,6 +25,7 @@ static void OnThrashing();
 // INew2DTexAllocCallback
 
 static std::vector<INew2DTexAllocCallback *> alloc2Dcallback;
+
 INew2DTexAllocCallback::INew2DTexAllocCallback()
 {
 	alloc2Dcallback.push_back( this );
@@ -91,14 +92,17 @@ class CLinearBuffer : public CObjectBase
 	uint32_t dwNextLockFlags, dwLockFlags, dwFirstLockFlags;
 	bool bFlushBufferOnNewFrame, bIsThrashing;
 	bool bAccountQueueDepth;
+
 	struct SBuffersPerFrame
 	{
 		std::vector<CObj<TUserObject>> data;
 	};
+
 	std::deque<SBuffersPerFrame> frames;
 
 public:
 	CLinearBuffer() {}
+
 	CLinearBuffer( int _nSize, int _nStride, int _nFormatID, ETrueBufferUsage usage )
 			: nFormatID( _nFormatID ), nStride( _nStride ), bIsThrashing( false )
 	{
@@ -139,9 +143,22 @@ public:
 		}
 		dwNextLockFlags = dwFirstLockFlags;
 	}
-	TDXBuffer *GetBuffer() const { return pDX; }
-	int GetFormatID() const { return nFormatID; }
-	int GetStride() const { return nStride; }
+
+	TDXBuffer *GetBuffer() const
+	{
+		return pDX;
+	}
+
+	int GetFormatID() const
+	{
+		return nFormatID;
+	}
+
+	int GetStride() const
+	{
+		return nStride;
+	}
+
 	TUserObject *Alloc( int nSize )
 	{
 		ASSERT( IsValid( pCache ) );
@@ -176,6 +193,7 @@ public:
 		WasTouched( pRes );
 		return pRes;
 	}
+
 	void Flush()
 	{
 		// wait till rendered
@@ -186,6 +204,7 @@ public:
 		hr = pDX->obj->Unlock();
 		ASSERT( hr == D3D_OK );
 	}
+
 	void NextFrame( bool bOnThrashing, bool *pbNeedFlush )
 	{
 		pCache->AdvanceFrameCounter();
@@ -224,7 +243,12 @@ public:
 		}
 		dwNextLockFlags = dwFirstLockFlags;
 	}
-	void WasTouched( TUserObject *p ) { frames.front().data.push_back( p ); }
+
+	void WasTouched( TUserObject *p )
+	{
+		frames.front().data.push_back( p );
+	}
+
 	void CalcStats( NCache::SStats *pStats )
 	{
 		if ( IsValid( pCache ) )
@@ -233,6 +257,7 @@ public:
 		}
 		pStats->bThrashing |= bIsThrashing;
 	}
+
 	void DrawRU( CTexture *pTarget )
 	{
 		CTextureLock<SPixel8888> tl( pTarget, 0, INPLACE );
@@ -296,7 +321,11 @@ public:
 		dwNextLockFlags = dwLockFlags;
 		return pDX->pLocked;
 	}
-	void Unlock() { pDX->Unlock(); }
+
+	void Unlock()
+	{
+		pDX->Unlock();
+	}
 };
 
 template <class TBuffer, class TDXBuffer, class TUserObject>
@@ -313,6 +342,7 @@ public:
 	int nLocked;
 
 	CLinearBufferElement( TBuffer *_p = 0 ) : pBuffer( _p ), nLocked( 0 ) {}
+
 	~CLinearBufferElement()
 	{
 		while ( nLocked-- )
@@ -320,14 +350,28 @@ public:
 			pBuffer->Unlock();
 		}
 	}
-	virtual int GetFormatID() const { return pBuffer->GetFormatID(); }
+
+	virtual int GetFormatID() const
+	{
+		return pBuffer->GetFormatID();
+	}
+
 	virtual void SetSize( int _nSize )
 	{
 		ASSERT( _nSize <= nBufSize );
 		nSize = _nSize;
 	}
-	virtual int GetSize() const { return nSize; }
-	virtual int GetBufSize() const { return nBufSize; }
+
+	virtual int GetSize() const
+	{
+		return nSize;
+	}
+
+	virtual int GetBufSize() const
+	{
+		return nBufSize;
+	}
+
 	virtual void *Lock()
 	{
 		unsigned char *pData = pBuffer->Lock();
@@ -335,6 +379,7 @@ public:
 		++nLocked;
 		return pData + pBuffer->GetStride() * nStart;
 	}
+
 	virtual void Unlock()
 	{
 		if ( nLocked == 0 )
@@ -348,6 +393,7 @@ public:
 
 class CUserGeometry;
 typedef CLinearBuffer<CVB, CUserGeometry> CGeometryBuffer;
+
 class CUserGeometry : public CLinearBufferElement<CGeometryBuffer, CVB, CUserGeometry>, public CGeometry
 {
 	OBJECT_NOCOPY_METHODS( CUserGeometry );
@@ -355,9 +401,22 @@ class CUserGeometry : public CLinearBufferElement<CGeometryBuffer, CVB, CUserGeo
 
 public:
 	CUserGeometry( CGeometryBuffer *_p = 0 ) : TParent( _p ) {}
-	virtual void *GetVertexStream() { return pBuffer; }
-	virtual int GetVBStart() const { return nStart; }
-	virtual int GetVBSize() const { return nSize; }
+
+	virtual void *GetVertexStream()
+	{
+		return pBuffer;
+	}
+
+	virtual int GetVBStart() const
+	{
+		return nStart;
+	}
+
+	virtual int GetVBSize() const
+	{
+		return nSize;
+	}
+
 	virtual void DoTouch()
 	{
 		ASSERT( IsValid( this ) );
@@ -366,15 +425,21 @@ public:
 			pBuffer->WasTouched( this );
 		}
 	}
+
 	virtual void SetVertexStream()
 	{
 		ASSERT( IsValid( this ) );
 		RealSetVertexStream( pBuffer->GetBuffer()->obj, pBuffer->GetStride() );
 	}
-	virtual int GetGeometryFormatID() { return GetFormatID(); }
+
+	virtual int GetGeometryFormatID()
+	{
+		return GetFormatID();
+	}
 };
 
 class CTriListWrapper;
+
 class CTriListWrapperHandle
 {
 	int nSlowCheck;
@@ -403,21 +468,54 @@ class CTriListCore : public ILinearBuffer, public CTriList, public CTriListWrapp
 
 public:
 	CTriListCore( int _nSize = 0 ) : data( _nSize ), nSize( _nSize ) {}
-	virtual int GetFormatID() const { return S3DTriangle::ID; }
+
+	virtual int GetFormatID() const
+	{
+		return S3DTriangle::ID;
+	}
+
 	virtual void SetSize( int _nSize )
 	{
 		ASSERT( _nSize <= data.size() );
 		nSize = _nSize;
 	}
-	virtual int GetSize() const { return nSize; }
-	virtual int GetBufSize() const { return data.size(); }
-	virtual void *Lock() { return &data[0]; }
+
+	virtual int GetSize() const
+	{
+		return nSize;
+	}
+
+	virtual int GetBufSize() const
+	{
+		return data.size();
+	}
+
+	virtual void *Lock()
+	{
+		return &data[0];
+	}
+
 	virtual void Unlock() {}
 
-	virtual const std::vector<S3DTriangle> &GetTris() const { return data; }
-	virtual int GetTrisNumber() const { return GetSize(); }
-	virtual CTriListWrapper *CreateWrapper( int nTris ) { return NewWrapper( this, nTris ); }
-	void DrawPrimitive( int nVBStart, int nMinIndex, int nMaxIndex ) { ASSERT( 0 ); }
+	virtual const std::vector<S3DTriangle> &GetTris() const
+	{
+		return data;
+	}
+
+	virtual int GetTrisNumber() const
+	{
+		return GetSize();
+	}
+
+	virtual CTriListWrapper *CreateWrapper( int nTris )
+	{
+		return NewWrapper( this, nTris );
+	}
+
+	void DrawPrimitive( int nVBStart, int nMinIndex, int nMaxIndex )
+	{
+		ASSERT( 0 );
+	}
 };
 
 /*class CTriListCore16;
@@ -463,32 +561,47 @@ class CTriListWrapper : public CTriList, public ISomeBuffer
 
 public:
 	CTriListWrapper() {}
+
 	CTriListWrapper( ISomeBuffer *_p, int _nTris ) : pParent( _p ), nTris( _nTris ) {}
+
 	virtual const std::vector<S3DTriangle> &GetTris() const
 	{
 		return dynamic_cast<CTriList *>( pParent.GetPtr() )->GetTris();
 	}
-	virtual int GetTrisNumber() const { return nTris; }
+
+	virtual int GetTrisNumber() const
+	{
+		return nTris;
+	}
+
 	int GetFormatID() const
 	{
 		ASSERT( IsValid( pParent ) );
 		return pParent->GetFormatID();
 	}
+
 	void SetSize( int _nSize )
 	{
 		ASSERT( IsValid( pParent ) && _nSize <= pParent->GetSize() );
 		nTris = _nSize;
 	}
-	int GetSize() const { return nTris; }
+
+	int GetSize() const
+	{
+		return nTris;
+	}
+
 	int GetBufSize() const
 	{
 		ASSERT( IsValid( pParent ) );
 		return pParent->GetBufSize();
 	}
+
 	virtual CTriListWrapper *CreateWrapper( int nTris )
 	{
 		return dynamic_cast<CTriListCore *>( pParent.GetPtr() )->CreateWrapper( nTris );
 	}
+
 	virtual void DrawPrimitive( int nVBStart, int nMinIndex, int nMaxIndex )
 	{
 		ASSERT( 0 );
@@ -504,8 +617,10 @@ class CTB : public CObjectBase
 public:
 	NWin32Helper::com_ptr<IDirect3DTexture9> obj;
 	bool bIsDynamic;
+
 	//
 	CTB() : nLOD( 0 ) {}
+
 	CTB( int _nXSize, int _nYSize, int _nLevels, D3DFORMAT _format, ETextureUsage usage )
 			: format( _format ), nXSize( _nXSize ), nYSize( _nYSize ), nLevels( _nLevels ), nLOD( 0 )
 	{
@@ -542,10 +657,26 @@ public:
 		bInitOk &= SUCCEEDED( hRes );
 	}
 
-	int GetSizeX() const { return nXSize; }
-	int GetSizeY() const { return nYSize; }
-	D3DFORMAT GetFormat() const { return format; }
-	int GetNumMipLevels() const { return nLevels; }
+	int GetSizeX() const
+	{
+		return nXSize;
+	}
+
+	int GetSizeY() const
+	{
+		return nYSize;
+	}
+
+	D3DFORMAT GetFormat() const
+	{
+		return format;
+	}
+
+	int GetNumMipLevels() const
+	{
+		return nLevels;
+	}
+
 	int GetRawSize() const
 	{
 		int nRes = 0;
@@ -555,6 +686,7 @@ public:
 		}
 		return nRes >> 3;
 	}
+
 	int GetRawSizeNotSetMip( int nMip ) const
 	{
 		if ( nMip != nLOD )
@@ -563,6 +695,7 @@ public:
 		}
 		return 0;
 	}
+
 	void SetLOD( int _nLOD )
 	{
 		const int nMinLOD = (std::min)( _nLOD, nLevels - 1 );
@@ -588,8 +721,13 @@ class CSysTexture : public CObjectBase
 public:
 	NWin32Helper::com_ptr<IDirect3DSurface9> pSurface;
 	NWin32Helper::com_ptr<IDirect3DTexture9> pTexture;
+
 	//
-	CSysTexture() { bBusy = false; }
+	CSysTexture()
+	{
+		bBusy = false;
+	}
+
 	CSysTexture( D3DFORMAT _format )
 	{
 		bBusy = false;
@@ -605,9 +743,21 @@ public:
 			ThrowD3DBufferError( "GetSurfaceLevel for staging buffer", hRes );
 		}
 	}
-	void MarkBusy() { bBusy = true; }
-	void Free() { bBusy = false; }
-	bool IsBusy() const { return bBusy; }
+
+	void MarkBusy()
+	{
+		bBusy = true;
+	}
+
+	void Free()
+	{
+		bBusy = false;
+	}
+
+	bool IsBusy() const
+	{
+		return bBusy;
+	}
 };
 
 // class for ring usage of system memory buffers for texture update operations
@@ -618,10 +768,20 @@ class CSurfaceRing : public CObjectBase
 public:
 	std::vector<CObj<CSysTexture>> textures;
 	int nCurrent;
+
 	//
-	CSurfaceRing() { ASSERT( 0 ); }
+	CSurfaceRing()
+	{
+		ASSERT( 0 );
+	}
+
 	CSurfaceRing( D3DFORMAT _format, int nSize );
-	void Switch() { nCurrent = ( nCurrent + 1 ) % textures.size(); }
+
+	void Switch()
+	{
+		nCurrent = ( nCurrent + 1 ) % textures.size();
+	}
+
 	CSysTexture *GetTexture();
 };
 
@@ -670,14 +830,26 @@ public:
 	                D3DFORMAT format,
 	                IDirect3DTexture9 *_pTexture );
 	~CTextureLocker();
-	virtual void *GetBuffer() { return buf.pBits; }
-	virtual int GetStride() { return buf.Pitch; }
+
+	virtual void *GetBuffer()
+	{
+		return buf.pBits;
+	}
+
+	virtual int GetStride()
+	{
+		return buf.Pitch;
+	}
 };
 
 struct SD3DFormatHash
 {
-	int operator()( D3DFORMAT f ) const { return (int)f; }
+	int operator()( D3DFORMAT f ) const
+	{
+		return (int)f;
+	}
 };
+
 typedef std::unordered_map<D3DFORMAT, CPtr<CSurfaceRing>, SD3DFormatHash> CFormatRingMap;
 static CFormatRingMap sysTextures;
 
@@ -797,6 +969,7 @@ public:
 	CTRect<int> region;
 	EWrap wrap;
 	bool bPointFiltered;
+
 	//
 	bool Touch()
 	{
@@ -804,19 +977,47 @@ public:
 		nFrameUsed = nCurrentFrame;
 		return bRes;
 	}
+
 	CTexture() : bPointFiltered( false ) {}
+
 	CTexture( CTB *_pTB, EWrap _wrap ) : pTB( _pTB ), nFrameUsed( 0 ), wrap( _wrap ), bPointFiltered( false )
 	{
 		region.SetRect( 0, 0, _pTB->GetSizeX(), _pTB->GetSizeY() );
 	}
+
 	//CTexture( int _nXSize, int _nYSize, int nLevels, D3DFORMAT _format, uint32_t dwUsage );
-	virtual int GetPixelID() { return D3DFormat2PixelID( pTB->GetFormat() ); }
+	virtual int GetPixelID()
+	{
+		return D3DFormat2PixelID( pTB->GetFormat() );
+	}
+
 	virtual I2DBufferLock *Lock( int nLevel, EAccess access );
-	virtual int GetSizeX() const { return region.Width(); }  ///pTB->GetSizeX(); }
-	virtual int GetSizeY() const { return region.Height(); } //pTB->GetSizeY(); }
-	virtual int GetNumMipLevels() const { return pTB->GetNumMipLevels(); }
-	virtual int GetFrameMRU() const { return nFrameUsed; }
-	virtual void UserTouch() { Touch(); }
+
+	virtual int GetSizeX() const
+	{
+		return region.Width();
+	} ///pTB->GetSizeX(); }
+
+	virtual int GetSizeY() const
+	{
+		return region.Height();
+	} //pTB->GetSizeY(); }
+
+	virtual int GetNumMipLevels() const
+	{
+		return pTB->GetNumMipLevels();
+	}
+
+	virtual int GetFrameMRU() const
+	{
+		return nFrameUsed;
+	}
+
+	virtual void UserTouch()
+	{
+		Touch();
+	}
+
 	void ReplaceTextureSurface( int nLevel, IDirect3DSurface9 *pSrc )
 	{
 		//NWin32Helper::com_ptr<IDirect3DSurface9> pSurface;
@@ -880,8 +1081,10 @@ class CCubeTB : public CObjectBase
 
 public:
 	NWin32Helper::com_ptr<IDirect3DCubeTexture9> obj;
+
 	//
 	CCubeTB() {}
+
 	CCubeTB( int _nSize, int _nMipLevels, D3DFORMAT _format, ETextureUsage usage )
 			: format( _format ), nSize( _nSize ), nMipLevels( _nMipLevels )
 	{
@@ -907,9 +1110,21 @@ public:
 		}
 		bInitOk &= SUCCEEDED( hRes );
 	}
-	D3DFORMAT GetFormat() const { return format; }
-	int GetSize() const { return nSize; }
-	int GetNumMipLevels() const { return nMipLevels; }
+
+	D3DFORMAT GetFormat() const
+	{
+		return format;
+	}
+
+	int GetSize() const
+	{
+		return nSize;
+	}
+
+	int GetNumMipLevels() const
+	{
+		return nMipLevels;
+	}
 };
 
 class CCubeTexture : public ICubeBuffer
@@ -920,13 +1135,38 @@ class CCubeTexture : public ICubeBuffer
 
 public:
 	CCubeTexture( CCubeTB *_p = 0 ) : pTB( _p ), nFrameUsed( 0 ) {}
-	CCubeTB *GetTB() const { return pTB; }
-	virtual int GetPixelID() { return D3DFormat2PixelID( pTB->GetFormat() ); }
+
+	CCubeTB *GetTB() const
+	{
+		return pTB;
+	}
+
+	virtual int GetPixelID()
+	{
+		return D3DFormat2PixelID( pTB->GetFormat() );
+	}
+
 	virtual I2DBufferLock *Lock( EFace face, int nLevel, EAccess access );
-	virtual int GetSize() const { return pTB->GetSize(); }
-	virtual int GetNumMipLevels() const { return pTB->GetNumMipLevels(); }
-	void Touch() { nFrameUsed = nCurrentFrame; }
-	int GetFrameMRU() const { return nFrameUsed; }
+
+	virtual int GetSize() const
+	{
+		return pTB->GetSize();
+	}
+
+	virtual int GetNumMipLevels() const
+	{
+		return pTB->GetNumMipLevels();
+	}
+
+	void Touch()
+	{
+		nFrameUsed = nCurrentFrame;
+	}
+
+	int GetFrameMRU() const
+	{
+		return nFrameUsed;
+	}
 };
 
 inline D3DCUBEMAP_FACES GetD3DFace( EFace face )
@@ -1008,6 +1248,7 @@ public:
 		root.nShiftY = 0;
 		pCache->AddRoot( root );
 	}
+
 	void NextFrame( bool bOnThrashing )
 	{
 		if ( IsValid( pCache ) )
@@ -1015,9 +1256,22 @@ public:
 			pCache->AdvanceFrameCounter();
 		}
 	}
-	CTB *GetTB() const { return pBuffer; }
-	CTexture *GetTexture() const { return pTexture; }
-	bool IsThrashing() const { return IsValid( pCache ) && pCache->IsThrashing(); }
+
+	CTB *GetTB() const
+	{
+		return pBuffer;
+	}
+
+	CTexture *GetTexture() const
+	{
+		return pTexture;
+	}
+
+	bool IsThrashing() const
+	{
+		return IsValid( pCache ) && pCache->IsThrashing();
+	}
+
 	CTexture *Alloc( int nXSize, int nYSize )
 	{
 		if ( !IsValid( pCache ) )
@@ -1041,6 +1295,7 @@ public:
 		//pRes->Touch();
 		return pRes;
 	}
+
 	void DrawRU()
 	{
 		CTextureLock<SPixel8888> tl( pTexture, 0, INPLACE );
@@ -1106,14 +1361,23 @@ class CLRUBuffersSet
 
 		STex( TBuf *_pTB ) : pTB( _pTB ) {}
 	};
+
 	std::vector<STex> textures;
 
 protected:
-	void AddBuffer( TBuf *_pTB ) { textures.push_back( STex( _pTB ) ); }
+	void AddBuffer( TBuf *_pTB )
+	{
+		textures.push_back( STex( _pTB ) );
+	}
+
 	virtual THandle *CreateHandle( TBuf *p ) = 0;
 
 public:
-	void Clear() { textures.clear(); }
+	void Clear()
+	{
+		textures.clear();
+	}
+
 	void Walk()
 	{
 		for ( typename std::vector<STex>::iterator i = textures.begin(); i != textures.end(); ++i )
@@ -1125,6 +1389,7 @@ public:
 			}
 		}
 	}
+
 	THandle *Alloc()
 	{
 		// pick best
@@ -1167,7 +1432,11 @@ public:
 			AddBuffer( new CTB( nSize, nSize, 1, fmt, TARGET ) );
 		}
 	}
-	virtual CTexture *CreateHandle( CTB *pTB ) { return new CTexture( pTB, CLAMP ); }
+
+	virtual CTexture *CreateHandle( CTB *pTB )
+	{
+		return new CTexture( pTB, CLAMP );
+	}
 };
 
 class CCubemapBufferSet : public CLRUBuffersSet<CCubeTB, CCubeTexture>
@@ -1182,7 +1451,11 @@ public:
 			AddBuffer( new CCubeTB( nSize, 1, fmt, TARGET ) );
 		}
 	}
-	virtual CCubeTexture *CreateHandle( CCubeTB *pTB ) { return new CCubeTexture( pTB ); }
+
+	virtual CCubeTexture *CreateHandle( CCubeTB *pTB )
+	{
+		return new CCubeTexture( pTB );
+	}
 };
 
 static BOOST_FORCEINLINE void ReallyFastShiftingTransfer( const unsigned short *pSrc, int *pDst, int nSize, int nShift )
@@ -1194,7 +1467,9 @@ struct S32Triangle
 {
 	int n1, n2, n3;
 };
+
 const int N_TRIS_BUFFER_SIZE = 65536; // in bytes
+
 template <class T, class TIB>
 class CDynamicTrisBase
 {
@@ -1204,6 +1479,7 @@ protected:
 		TRILIST,
 		LINESTRIP
 	};
+
 	CObj<TIB> pDynamicTrisBuffer;
 	int nLast, nBuf;
 	int nStart; // start of queued triangles and number of them
@@ -1214,7 +1490,12 @@ public:
 		nLast = 0;
 		nBuf = 0;
 	}
-	CDynamicTrisBase() { Clear(); }
+
+	CDynamicTrisBase()
+	{
+		Clear();
+	}
+
 	virtual void Init()
 	{
 		int nBufSize = N_TRIS_BUFFER_SIZE;
@@ -1225,7 +1506,11 @@ public:
 		pDynamicTrisBuffer = new TIB( nBufSize, TBU_DYNAMIC );
 		nStart = n;
 	}
-	TIB *GetBuffer() { return pDynamicTrisBuffer; }
+
+	TIB *GetBuffer()
+	{
+		return pDynamicTrisBuffer;
+	}
 };
 
 class CDynamicTrisIndices32 : public CDynamicTrisBase<CDynamicTrisIndices32, CIB32Fast>
@@ -1240,13 +1525,19 @@ public:
 		N_TRIANGLE_SIZE = 12,
 		N_MIN_BATCH_SIZE = 500
 	};
+
 	virtual void Init()
 	{
 		TBase::Init();
 		nMaxVBIndex = 0;
 		currentPrim = TRILIST;
 	}
-	virtual int GetTriangleSize() const { return 12; }
+
+	virtual int GetTriangleSize() const
+	{
+		return 12;
+	}
+
 	void AddPrimitiveGeometry( const S3DTriangle *pSrcTris, int nTris, int nVBStart, int nVBSize, EPrim _prim = TRILIST )
 	{
 		if ( _prim != currentPrim )
@@ -1286,11 +1577,13 @@ public:
 			nTris -= nToDraw;
 		}
 	}
+
 	void AddLinestrip( int nVBStart, int nVBSize, const unsigned short *pIndices, int nLines )
 	{
 		ASSERT( ( nLines % 3 ) == 0 );
 		AddPrimitiveGeometry( (const S3DTriangle *)pIndices, nLines / 3 * 2, nVBStart, nVBSize, LINESTRIP );
 	}
+
 	void FlushPrimitive()
 	{
 		if ( pDynamicTrisBuffer->pLocked )
@@ -1333,6 +1626,7 @@ public:
 		nMaxVBIndex = 0;
 		nStart = nLast;
 	}
+
 	void NextFrame()
 	{
 		if ( bBan32BitIndices )
@@ -1396,6 +1690,7 @@ public:
 		N_TRIANGLE_SIZE = 6,
 		N_MIN_BATCH_SIZE = 2048
 	};
+
 	void AddPrimitiveGeometry( const S3DTriangle *pSrcTris, int nTris, int nVBStart, int nVBSize, EPrim _prim = TRILIST )
 	{
 		int nSrcStart = 0; //, nSrcInfo = 0;
@@ -1439,11 +1734,13 @@ public:
 			FlushPrimitive( nVBStart, nVBSize, nMin, nMax, _prim );
 		}
 	}
+
 	void AddLinestrip( int nVBStart, int nVBSize, const unsigned short *pIndices, int nLines )
 	{
 		ASSERT( ( nLines % 3 ) == 0 );
 		AddPrimitiveGeometry( (const S3DTriangle *)pIndices, nLines / 3 * 2, nVBStart, nVBSize, LINESTRIP );
 	}
+
 	void NextFrame()
 	{
 		nLast = nBuf;
@@ -1455,12 +1752,21 @@ struct SGeometryType
 {
 	EBufferUsage usage;
 	int nID;
+
 	SGeometryType( EBufferUsage _usage, int _nID ) : usage( _usage ), nID( _nID ) {}
-	bool operator==( const SGeometryType &a ) const { return usage == a.usage && nID == a.nID; }
+
+	bool operator==( const SGeometryType &a ) const
+	{
+		return usage == a.usage && nID == a.nID;
+	}
 };
+
 struct SGeometryTypeHash
 {
-	int operator()( const SGeometryType &s ) const { return s.usage ^ s.nID; }
+	int operator()( const SGeometryType &s ) const
+	{
+		return s.usage ^ s.nID;
+	}
 };
 
 // all DX buffers
@@ -1534,6 +1840,7 @@ void DestroyManagedBuffers()
 }
 
 static bool bFillTransp = false, bFill2d = false;
+
 void NextFrameBuffes( bool bOnThrashing )
 {
 	// render caches RU
@@ -1601,6 +1908,7 @@ void AddGeometryCache( int nSize, EBufferUsage usage, ETrueBufferUsage trueUsage
 {
 	geometries[SGeometryType( usage, T::ID )] = new CGeometryBuffer( nSize, sizeof( T ), T::ID, trueUsage );
 }
+
 void InitBuffers()
 {
 	for ( SRenderTargetsInfo::CRTHash::iterator i = rtInfo.targets.begin(); i != rtInfo.targets.end(); ++i )
@@ -1808,21 +2116,30 @@ static void RealSetVertexStream( IDirect3DVertexBuffer9 *pBuf, int nStride )
 
 static CObj<CTexture> pSmallTexture;
 static bool bDrawMip;
+
 struct STextureSize
 {
 	int nXSize, nYSize, nMips;
+
 	STextureSize( int _nXSize, int _nYSize, int _nMips ) : nXSize( _nXSize ), nYSize( _nYSize ), nMips( _nMips ) {}
+
 	bool operator==( const STextureSize &a ) const
 	{
 		return nXSize == a.nXSize && nYSize == a.nYSize && nMips == a.nMips;
 	}
 };
+
 struct STextureSizeHash
 {
-	int operator()( const STextureSize &a ) const { return ( a.nXSize ^ ( a.nYSize << 9 ) ) * a.nMips; }
+	int operator()( const STextureSize &a ) const
+	{
+		return ( a.nXSize ^ ( a.nYSize << 9 ) ) * a.nMips;
+	}
 };
+
 typedef std::unordered_map<STextureSize, CObj<CTexture>, STextureSizeHash> CTextureMipHash;
 static CTextureMipHash mipDrawTextures;
+
 static CTexture *MakeMipDrawTexture( CTexture *pTex )
 {
 	STextureSize key( pTex->GetSizeX(), pTex->GetSizeY(), pTex->GetNumMipLevels() );
@@ -1877,6 +2194,7 @@ static CTexture *MakeMipDrawTexture( CTexture *pTex )
 	mipDrawTextures[key] = pRes;
 	return pRes;
 }
+
 void SetTexture( int nStage, CTexture *pTex )
 {
 	if ( !bNoTexture )
@@ -1908,6 +2226,7 @@ void SetTexture( int nStage, CTexture *pTex )
 }
 
 static CObj<CCubeTexture> pSmallCubeTexture;
+
 void SetTexture( int nStage, CCubeTexture *pTex )
 {
 	if ( !bNoTexture )
@@ -2265,10 +2584,12 @@ static void ShowCacheStats( const std::string &szID, const std::vector<std::wstr
 		TypeStats( i->second.GetPtr() );
 	}
 }
+
 static void ShowFill2D( const std::string &szID, const std::vector<std::wstring> &szParams, void *pContext )
 {
 	bFill2d = !bFill2d;
 }
+
 static void ShowFillTransp( const std::string &szID, const std::vector<std::wstring> &szParams, void *pContext )
 {
 	bFillTransp = !bFillTransp;
@@ -2281,7 +2602,7 @@ REGISTER_CMD( "gfx_fill_transp", ShowFillTransp )
 REGISTER_VAR_EX( "gfx_draw_mip", NGlobal::VarBoolHandler, &bDrawMip, 0, STORAGE_NONE )
 REGISTER_CMD( "gfx_fill_transp", ShowFillTransp )
 FINISH_REGISTER
-}
+} // namespace NGfx
 
 using namespace NGfx;
 BASIC_REGISTER_CLASS( _3DMOTOR, CTexture )

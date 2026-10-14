@@ -36,8 +36,17 @@ class CButtonStateSaver : public IBinSaver
 		}
 		return false;
 	}
-	void FinishChunk() override { chunks.pop_back(); }
-	int CountChunks( chunk_id ) override { return 0; }
+
+	void FinishChunk() override
+	{
+		chunks.pop_back();
+	}
+
+	int CountChunks( chunk_id ) override
+	{
+		return 0;
+	}
+
 	void DataChunk( chunk_id id, void *data, int size, int ) override
 	{
 		if ( chunks.size() == 1 && chunks[0].first == 8 && id == 2 )
@@ -63,10 +72,18 @@ class CButtonStateSaver : public IBinSaver
 			Transfer( data, size, originalSubstate );
 		}
 	}
+
 	void DataChunkString( std::string & ) override {}
+
 	void DataChunkString( std::wstring & ) override {}
+
 	void StoreObject( CObjectBase * ) override {}
-	CObjectBase *LoadObject() override { return instance; }
+
+	CObjectBase *LoadObject() override
+	{
+		return instance;
+	}
+
 	void DestroyContents() override {}
 
 public:
@@ -79,19 +96,36 @@ public:
 			: reading( read ), instance( desc ), substates( std::move( states ) )
 	{
 	}
-	bool IsReading() override { return reading; }
-	int GetVersion() const override { return 4; }
-	int GetSizeOf() const override { return sizeof( *this ); }
+
+	bool IsReading() override
+	{
+		return reading;
+	}
+
+	int GetVersion() const override
+	{
+		return 4;
+	}
+
+	int GetSizeOf() const override
+	{
+		return sizeof( *this );
+	}
 };
 
 class CAfterLoadChild : public CWindow
 {
 	OBJECT_NOCOPY_METHODS( CAfterLoadChild );
 	CPtr<NDb::SWindowSimple> instance = MakeObject<NDb::SWindowSimple>( NDb::SWindowSimple::typeID );
-	NDb::SWindow *GetInstance() override { return instance; }
+
+	NDb::SWindow *GetInstance() override
+	{
+		return instance;
+	}
 
 public:
 	int afterLoadCalls = 0;
+
 	void AfterLoad() override
 	{
 		++afterLoadCalls;
@@ -126,7 +160,7 @@ protected:
 		EXPECT_EQ( grandchild->GetParent(), child.GetPtr() );
 	}
 };
-}
+} // namespace
 
 TEST_F( WindowAfterLoad, EmptySavedStatesStillRestoreChildren )
 {

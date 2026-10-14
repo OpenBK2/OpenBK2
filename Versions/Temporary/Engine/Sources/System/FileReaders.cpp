@@ -30,7 +30,7 @@ bool TryMake( T *pDest, TMake makeIt )
 		return false;
 	}
 }
-}
+} // namespace
 
 // CMMFile
 

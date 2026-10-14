@@ -163,6 +163,6 @@ LIGHTING_BENCH(
 		pK->pScaleColors(
 				&in.dst[0], &in.src[0], sizeof( uint32_t ), &in.scale[0], 0xff, &in.posIndices[0], &in.transp[0], n, false ) );
 
-}
+} // namespace
 
 BENCHMARK_MAIN();

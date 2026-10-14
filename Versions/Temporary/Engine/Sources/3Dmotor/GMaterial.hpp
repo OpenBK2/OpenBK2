@@ -3,11 +3,12 @@
 #include "3Dmotor_export.h"
 
 #include "System/Dg.h"
+
 namespace NGfx
 {
 class CTexture;
 class CCubeTexture;
-}
+} // namespace NGfx
 
 namespace NGScene
 {
@@ -18,6 +19,7 @@ enum EDynamicType
 	DT_FORCE_STATIC,
 	DT_FORCE_DYNAMIC,
 };
+
 enum EMaterialFlags
 {
 	MF_GENERIC = 0,
@@ -56,6 +58,7 @@ enum EMaterialFlags
 };
 
 class IMaterial;
+
 struct SMaterialCreateInfo
 {
 	CPtr<CFuncBase<CVec4>> pColor;
@@ -89,9 +92,10 @@ struct SMaterialCreateInfo
 	{
 	}
 };
+
 _3DMOTOR_EXPORT IMaterial *CreateMaterial( const SMaterialCreateInfo &m_ );
 // make exact decal from decal material for alpha test geometry
 IMaterial *GetExactDecal( IMaterial *p );
 IMaterial *AttachColor( IMaterial *pSrc, CFuncBase<CVec4> *pColor );
 
-}
+} // namespace NGScene

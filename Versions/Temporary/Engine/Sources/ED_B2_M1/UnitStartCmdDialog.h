@@ -32,7 +32,10 @@ struct SData
 	std::string szTarget;
 	int nCommandIndex;
 
-	SData() { Clear(); }
+	SData()
+	{
+		Clear();
+	}
 
 	void Clear()
 	{
@@ -61,6 +64,7 @@ class IListener
 {
 public:
 	virtual ~IListener() {}
+
 	virtual void OnUnitStartCmdDialogEvent( EEvent eEvent ) = 0;
 };
 
@@ -94,4 +98,4 @@ public:
 // result and destroys it with delete, which destroys the window with it.
 // Null if the window could not be created.
 IDialog *Create( IWidget *pParent, IListener *pListener );
-}
+} // namespace NUnitStartCmdDialog

@@ -6,6 +6,7 @@ namespace NDb
 {
 struct SComplexEffect;
 }
+
 namespace NAnimation
 {
 struct ISkeletonAnimator;
@@ -21,6 +22,7 @@ class CSmokeTrailEffect : public CObjectBase
 	SHMatrix mLocalPos;
 	float fTimeLastUpdate = 0.0f;
 	CVec3 vLastVisPos;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pEffect );
@@ -30,11 +32,13 @@ class CSmokeTrailEffect : public CObjectBase
 		f.Add( 6, &vLastVisPos );
 		return 0;
 	}
+
 	//
 	void CreateEffect( const CVec3 &vPos, const CQuat &qRot, NTimer::STime time, bool bVisible );
 
 public:
 	CSmokeTrailEffect() {}
+
 	CSmokeTrailEffect( const SHMatrix &_mLocalPos,
 	                   float _fInterval,
 	                   const NDb::SComplexEffect *_pEffect,

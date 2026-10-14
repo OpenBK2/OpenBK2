@@ -35,7 +35,9 @@ struct SBuildDataParams
 	//
 	bool bNeedExport; // Необходимо ли экспортировать объект после создания
 	bool bNeedEdit;   // Необходимо ли загружать одъект после экспорта или создания
+
 	SBuildDataParams() : nFlags( BDF_ALL ), bNeedExport( false ), bNeedEdit( false ) {}
+
 	void GetObjectName( std::string *pszObjectName )
 	{
 		if ( pszObjectName )
@@ -45,12 +47,17 @@ struct SBuildDataParams
 			CStringManager::RemoveDoubleSlashes( pszObjectName );
 		}
 	}
-	inline bool DoesNameEmpty() { return szObjectName.empty(); }
+
+	inline bool DoesNameEmpty()
+	{
+		return szObjectName.empty();
+	}
 };
 
 // CRAP{ HASH_SET
 typedef std::unordered_map<std::string, uint32_t> CTableSet;
 typedef std::unordered_map<int, CTableSet> CTableSetMap;
+
 // CRAP} HASH_SET
 
 struct IBuildDataCallback
@@ -110,6 +117,7 @@ struct IBuilderContainer : public CObjectBase
 	{
 		tidTypeID = 0x1408A3C3
 	};
+
 	//
 	// Проверить на существование компоновщика
 	virtual bool CanBuildObject( const std::string &rszObjectTypeName ) = 0;

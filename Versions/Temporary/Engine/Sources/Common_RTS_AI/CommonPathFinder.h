@@ -22,6 +22,7 @@ public:
 	{
 		tidTypeID = 0x3008B3C0
 	};
+
 	int operator&( IBinSaver &saver );
 
 private:
@@ -135,17 +136,34 @@ public:
 	struct IStaticPath *CreatePathAfterExistCheck();
 	struct IStaticPath *CreatePath( const bool bCreateNullPath );
 
-	const CVec2 &GetStartPoint() const { return vStartPoint; }
-	const SVector &GetStartTile() const { return startPoint; }
-	const CVec2 &GetFinishPoint();
-	const SVector &GetFinishTile() const { return finishPoint; }
+	const CVec2 &GetStartPoint() const
+	{
+		return vStartPoint;
+	}
 
-	const int GetPathLength() const { return nLength; }
+	const SVector &GetStartTile() const
+	{
+		return startPoint;
+	}
+
+	const CVec2 &GetFinishPoint();
+
+	const SVector &GetFinishTile() const
+	{
+		return finishPoint;
+	}
+
+	const int GetPathLength() const
+	{
+		return nLength;
+	}
+
 	void GetTiles( void *pBuf, const int nLen ) const
 	{
 		NI_ASSERT( nLength > 0 && nLen > 0 && nLen <= nLength, "Wrong number of stop points" );
 		memcpy( pBuf, &( addPoints[0] ), nLen * sizeof( SVector ) );
 	}
+
 	void GetStopPoints( void *pBuf, const int nLen ) const
 	{
 		NI_ASSERT( nLength > 0 && nLen > 0 && nLen <= nLength, "Wrong number of stop points" );
@@ -154,5 +172,9 @@ public:
 
 	void MarkPathTiles();
 	void MarkPoints();
-	const bool IsPathFound() const { return bPathFound; }
+
+	const bool IsPathFound() const
+	{
+		return bPathFound;
+	}
 };

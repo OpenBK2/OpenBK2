@@ -31,8 +31,16 @@ class CTestLog : public NLog::ILoggerSink, public ILogger
 	OBJECT_NOCOPY_METHODS( CTestLog );
 
 public:
-	ILogger *GetLogger() override { return this; }
-	void Log( ELogOutputType, const std::string &text ) override { std::fputs( text.c_str(), stdout ); }
+	ILogger *GetLogger() override
+	{
+		return this;
+	}
+
+	void Log( ELogOutputType, const std::string &text ) override
+	{
+		std::fputs( text.c_str(), stdout );
+	}
+
 	void ClearLog() override {}
 };
 
@@ -42,8 +50,14 @@ class CTestUserData : public IUserDataContainer
 
 public:
 	SUserData data;
-	SUserData *Get() override { return &data; }
+
+	SUserData *Get() override
+	{
+		return &data;
+	}
+
 	void Load() override {}
+
 	void Save() override {}
 };
 
@@ -53,13 +67,38 @@ class CTestMod : public IMODContainer
 
 public:
 	std::string folder;
-	bool CanNewMOD() override { return false; }
-	bool CanOpenMOD() override { return false; }
-	bool CanCloseMOD() override { return false; }
-	bool NewMOD() override { return false; }
-	bool OpenMOD() override { return false; }
+
+	bool CanNewMOD() override
+	{
+		return false;
+	}
+
+	bool CanOpenMOD() override
+	{
+		return false;
+	}
+
+	bool CanCloseMOD() override
+	{
+		return false;
+	}
+
+	bool NewMOD() override
+	{
+		return false;
+	}
+
+	bool OpenMOD() override
+	{
+		return false;
+	}
+
 	void CloseMOD() override {}
-	std::string GetDataFolder( SUserData::ENormalizePathType ) override { return folder; }
+
+	std::string GetDataFolder( SUserData::ENormalizePathType ) override
+	{
+		return folder;
+	}
 };
 
 // Supply the dialog's accepted settings; all resource creation uses production code.
@@ -68,21 +107,52 @@ class CTestBuilderContainer : public IBuilderContainer
 	OBJECT_NOCOPY_METHODS( CTestBuilderContainer );
 
 public:
-	bool CanBuildObject( const std::string & ) override { return true; }
-	bool CanDefaultBuildObject( const std::string & ) override { return false; }
+	bool CanBuildObject( const std::string & ) override
+	{
+		return true;
+	}
+
+	bool CanDefaultBuildObject( const std::string & ) override
+	{
+		return false;
+	}
+
 	void Create( const std::string & ) override {}
+
 	void Destroy( const std::string & ) override {}
-	bool InsertObject( std::string *, std::string *, bool, bool *, bool *, bool * ) override { return false; }
-	bool CopyObject( const std::string &, const std::string &, const std::string & ) override { return false; }
-	bool RenameObject( const std::string &, const std::string &, const std::string & ) override { return false; }
-	bool RemoveObject( const std::string &, const std::string & ) override { return false; }
+
+	bool InsertObject( std::string *, std::string *, bool, bool *, bool *, bool * ) override
+	{
+		return false;
+	}
+
+	bool CopyObject( const std::string &, const std::string &, const std::string & ) override
+	{
+		return false;
+	}
+
+	bool RenameObject( const std::string &, const std::string &, const std::string & ) override
+	{
+		return false;
+	}
+
+	bool RemoveObject( const std::string &, const std::string & ) override
+	{
+		return false;
+	}
+
 	void GetDefaultFolder( const std::string &, std::string * ) override {}
+
 	bool FillBuildData( std::string *, std::string *name, SBuildDataParams *, IBuildDataCallback * ) override
 	{
 		*name = "builder.xdb";
 		return true;
 	}
-	bool FillNewObjectName( SBuildDataParams * ) override { return false; }
+
+	bool FillNewObjectName( SBuildDataParams * ) override
+	{
+		return false;
+	}
 };
 
 class VisObjBuilder : public testing::Test
@@ -246,4 +316,4 @@ TEST_F( VisObjBuilder, RecreatesMissingChildrenOfExistingResourcesAfterReload )
 	ASSERT_TRUE( NDb::OpenDatabase( NVFS::GetMainVFS(), NVFS::GetMainFileCreator(), NDb::DATABASE_MODE_EDITOR ) );
 	CreateAndCheck( "second.xdb" );
 }
-}
+} // namespace

@@ -25,4 +25,4 @@ MAIN_EXPORT std::string GetCurrentProfileDir();
 //! was ever listed to load.
 MAIN_EXPORT std::string GetSaveDir();
 MAIN_EXPORT std::string GetReplayDir();
-}
+} // namespace NProfile

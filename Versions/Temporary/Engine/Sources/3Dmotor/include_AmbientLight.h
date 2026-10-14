@@ -1,4 +1,5 @@
 #pragma once
+
 void PostLoad( bool bInEditor )
 {
 	// CRAP, to emulate non zero default values

@@ -17,7 +17,11 @@ class CPointGlowAnimator : public CPtrFuncBase<CParticleEffect>
 	OBJECT_BASIC_METHODS( CPointGlowAnimator );
 
 protected:
-	virtual bool NeedUpdate() { return pTime.Refresh() | pPlacement.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pTime.Refresh() | pPlacement.Refresh();
+	}
+
 	virtual void Recalc();
 
 private:
@@ -32,6 +36,7 @@ private:
 	int nLastMaskAny;
 	STime tNextCheck;
 	bool bIsVisible;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pTime );
@@ -46,10 +51,12 @@ private:
 		f.Add( 11, &bIsVisible );
 		return 0;
 	}
+
 	void CalcSize();
 
 public:
 	CPointGlowAnimator() {}
+
 	CPointGlowAnimator( IGScene *_pScene,
 	                    CFuncBase<STime> *_pTime,
 	                    CFuncBase<CVec3> *pPlace,
@@ -59,4 +66,4 @@ public:
 	                    float fOffTime );
 	friend class CPointGlowEffect;
 };
-}
+} // namespace NGScene

@@ -65,7 +65,7 @@ void CNamespace::GenerateCode( SCodeStreams *pCode,
 	}
 }
 
-}
+} // namespace NCodeGen
 
 using namespace NCodeGen;
 REGISTER_SAVELOAD_CLASS( LIBDB, 0x301B6D01, CNamespace );

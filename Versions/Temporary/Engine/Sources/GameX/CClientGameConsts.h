@@ -7,7 +7,10 @@ class CClientGameConsts : public IClientGameConsts
 	OBJECT_NOCOPY_METHODS( CClientGameConsts )
 	ZDATA
 public:
-	ZEND int operator&( IBinSaver &f ) { return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 
 public:
 	CClientGameConsts() {};

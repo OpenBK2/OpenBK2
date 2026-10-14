@@ -125,6 +125,7 @@ bool IsHeader( const char *pszBegin, const char *pszEnd )
 	return ( pszEnd - pszBegin >= 7 ) && ( *( (uint32_t *)pszBegin ) == *( (uint32_t *)pszXMLHeader ) ) &&
 	       ( pszBegin[4] == 'l' );
 }
+
 bool IsComment( const char *pszBegin, const char *pszEnd )
 {
 	// min node <!---->
@@ -221,6 +222,7 @@ CXMLNode *CXMLMultiNode::FindChild( const std::string &_szValue ) const
 // ************************************************************************************************************************ //
 
 CXMLElement::CXMLElement() : CXMLMultiNode( CXMLNode::ELEMENT ) {}
+
 CXMLElement::~CXMLElement() {}
 
 void CXMLElement::SetAttributeLocal( const std::string &szName, const std::string &szValue )
@@ -241,6 +243,7 @@ void CXMLElement::SetAttribute( const CXMLAttribute &attr )
 {
 	SetAttributeLocal( attr.GetName(), attr.GetValue() );
 }
+
 void CXMLElement::SetAttribute( const std::string &szName, const CToStringConvertor &value )
 {
 	SetAttributeLocal( szName, value );
@@ -425,6 +428,7 @@ void CXMLElement::Store( NLXML_STREAM &stream, const std::string &szIndention ) 
 		stream << " />";
 	}
 }
+
 // ************************************************************************************************************************ //
 // **
 // ** text
@@ -434,6 +438,7 @@ void CXMLElement::Store( NLXML_STREAM &stream, const std::string &szIndention ) 
 // ************************************************************************************************************************ //
 
 CXMLText::CXMLText() : CXMLNode( CXMLNode::TEXT ) {}
+
 CXMLText::~CXMLText() {}
 
 const char *CXMLText::Parse( const char *pszBegin, const char *pszEnd )
@@ -459,6 +464,7 @@ void CXMLText::Store( NLXML_STREAM &stream, const std::string &szIndention ) con
 // ************************************************************************************************************************ //
 
 CXMLComment::CXMLComment() : CXMLNode( CXMLNode::COMMENT ) {}
+
 CXMLComment::~CXMLComment() {}
 
 const char *CXMLComment::Parse( const char *pszBegin, const char *pszEnd )
@@ -494,6 +500,7 @@ void CXMLComment::Store( NLXML_STREAM &stream, const std::string &szIndention ) 
 // ************************************************************************************************************************ //
 
 CXMLDeclaration::CXMLDeclaration() : CXMLNode( CXMLNode::DECLARATION ), szVersion( "1.0" ), szEncoding( "UTF-8" ) {}
+
 CXMLDeclaration::~CXMLDeclaration() {}
 
 const char *CXMLDeclaration::Parse( const char *pszBegin, const char *pszEnd )
@@ -589,6 +596,7 @@ void CXMLDeclaration::Store( NLXML_STREAM &stream, const std::string &szIndentio
 // ************************************************************************************************************************ //
 
 CXMLUnknown::CXMLUnknown() : CXMLNode( CXMLNode::UNKNOWN ) {}
+
 CXMLUnknown::~CXMLUnknown() {}
 
 const char *CXMLUnknown::Parse( const char *pszBegin, const char *pszEnd )
@@ -629,6 +637,7 @@ void CXMLUnknown::Store( NLXML_STREAM &stream, const std::string &szIndention ) 
 // ************************************************************************************************************************ //
 
 CXMLDocument::CXMLDocument() : CXMLMultiNode( CXMLNode::DOCUMENT ) {}
+
 CXMLDocument::~CXMLDocument() {}
 
 const char *CXMLDocument::Parse( const char *pszBegin, const char *pszEnd )
@@ -699,4 +708,4 @@ CXMLElement *CXMLDocument::GetRootElement()
 	return pRootNode != 0 ? static_cast<CXMLElement *>( pRootNode ) : 0;
 }
 
-}
+} // namespace NLXML

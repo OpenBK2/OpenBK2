@@ -33,25 +33,30 @@ struct SWindowsMsg
 		TIME,
 		CLOSE,
 	};
+
 	NHPTimer::STime time = 0;
 	EMsg msg{};
+
 	union
 	{
 		struct
 		{
 			int x, y;
 		}; // mouse
+
 		// CHAR carries a UTF-16 unit on Windows, a Unicode code point on SDL.
 		struct
 		{
 			int nKey, nRep;
 		}; // key
 	};
+
 	uint32_t dwFlags = 0;
 
 	// Initialize one anonymous-struct union arm; the key fields alias this storage.
 	SWindowsMsg() : x( 0 ), y( 0 ) {}
 };
+
 // WinFrame interface
 SYSTEM_EXPORT bool( GetMessage )( SWindowsMsg *pRes );
 SYSTEM_EXPORT bool IsAppActive();
@@ -85,4 +90,4 @@ SYSTEM_EXPORT void SetCursor( NWinCursor::TFrame _hCursor );
 void ShowCursor( bool bShow );
 void EnableCursorManagement( bool bEnable );
 SYSTEM_EXPORT void FlashTaskbarIfInactive();
-};
+}; // namespace NWinFrame

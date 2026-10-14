@@ -69,4 +69,4 @@ std::string CNodeAddress::GetName( bool bResolve ) const
 	return szBuf;
 }
 
-}
+} // namespace NNet

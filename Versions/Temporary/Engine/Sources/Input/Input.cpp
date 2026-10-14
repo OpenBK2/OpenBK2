@@ -57,6 +57,7 @@ struct SKeyInfo
 	int nDevAction;
 	EControlType cType;
 };
+
 const SKeyInfo kiKeyInfoList[] = {
 	////// KEYBOARD //////
 	{ "ESC", DI8DEVTYPE_KEYBOARD, DIK_ESCAPE, CT_KEY },
@@ -233,17 +234,20 @@ struct SKey
 				dwLastPressed( 0 )
 	{
 	}
+
 	SKey( int _nAction, int _nDevType, EControlType _eType, EPOVAxis _ePOVAxis = PA_UNKNOWN )
 			: dwLastValue( 0xBAD ), nAction( _nAction ), nDevType( _nDevType ), eType( _eType ), ePOVAxis( _ePOVAxis ),
 				dwLastPressed( 0 )
 	{
 	}
 };
+
 struct SInputEvent
 {
 	uint32_t dwSequence;
 	SMessage sMessage;
 };
+
 struct SInputDevice
 {
 	int nID;
@@ -648,6 +652,7 @@ static void FillEventInfo( SInputEvent &sEvent, SKey &sKey, const DIDEVICEOBJECT
 }
 
 static uint32_t dwPrevPump;
+
 void PumpMessages( bool bFocus )
 {
 	if ( !bInitialized )
@@ -1815,7 +1820,7 @@ namespace
 		devices.push_back( siDevice );
 	}
 
-}
+} // namespace
 
 static bool OpenDevices( int nSampleBufferSize )
 {

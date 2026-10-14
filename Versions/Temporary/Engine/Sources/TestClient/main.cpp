@@ -98,7 +98,7 @@ std::string GetBaseDir()
 	return szBaseDir;
 }
 
-}
+} // namespace
 
 int main()
 {

@@ -15,6 +15,7 @@ public:
 	std::list<int> techLevels;
 	std::list<int> maps;
 	unsigned uCheckSum;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nSide );
@@ -25,6 +26,7 @@ public:
 		f.Add( 7, &uCheckSum );
 		return 0;
 	}
+
 	int operator&( IXmlSaver &f )
 	{
 		f.Add( "nSide", &nSide );
@@ -34,7 +36,9 @@ public:
 		f.Add( "maps", &maps );
 		return 0;
 	}
+
 	CLadderInfoPacket() {}
+
 	CLadderInfoPacket( const int nClientID,
 	                   const int _nSide,
 	                   const bool _bHistoricity,
@@ -61,6 +65,7 @@ public:
 	std::unordered_map<int, int> unitsLost;
 	std::unordered_map<int, int> playerUnitEff;
 	std::unordered_map<int, int> playerKeyPointEff;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nGameID );
@@ -73,6 +78,7 @@ public:
 		f.Add( 9, &playerKeyPointEff );
 		return 0;
 	}
+
 	int operator&( IXmlSaver &f )
 	{
 		f.Add( "nGameID", &nGameID );
@@ -81,7 +87,9 @@ public:
 		f.Add( "units", &reinfUsed );
 		return 0;
 	}
+
 	CLadderGameResultPacket() {}
+
 	CLadderGameResultPacket( const int nClientID,
 	                         const int _nGameID,
 	                         const std::unordered_set<int> &_winners,
@@ -89,6 +97,7 @@ public:
 			: CNetPacket( nClientID ), nGameID( _nGameID ), winners( _winners ), races( _races )
 	{
 	}
+
 	CLadderGameResultPacket( const int nClientID,
 	                         const int _nGameID,
 	                         const std::unordered_set<int> &_winners,
@@ -109,6 +118,7 @@ public:
 	int nTechLevel;
 	std::list<int> team1; // If Historicity is OFF, these are not Germans
 	std::list<int> team2; // If Historicity is ON, these are Germans
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nGameID );
@@ -118,6 +128,7 @@ public:
 		f.Add( 6, &team2 );
 		return 0;
 	}
+
 	int operator&( IXmlSaver &f )
 	{
 		f.Add( "nGameID", &nGameID );
@@ -125,7 +136,9 @@ public:
 		f.Add( "nTechLevel", &nTechLevel );
 		return 0;
 	}
+
 	CLadderInvitePacket() {}
+
 	CLadderInvitePacket( const int nClientID,
 	                     const int _nGameID,
 	                     const int _nMapID,
@@ -145,13 +158,16 @@ class CLadderStatisticsRequestPacket : public CNetPacket
 public:
 	std::string szNick;
 	bool bSendFullStatistics;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szNick );
 		f.Add( 3, &bSendFullStatistics );
 		return 0;
 	}
+
 	CLadderStatisticsRequestPacket() {}
+
 	CLadderStatisticsRequestPacket( int nClientID, const std::string &_szNick, const bool &_bSendFullStatistics )
 			: CNetPacket( nClientID ), szNick( _szNick ), bSendFullStatistics( _bSendFullStatistics )
 	{
@@ -165,13 +181,16 @@ class CLadderStatisticsPacket : public CNetPacket
 public:
 	std::string szNick;
 	SLadderStatistics info;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szNick );
 		f.Add( 3, &info );
 		return 0;
 	}
+
 	CLadderStatisticsPacket() {}
+
 	CLadderStatisticsPacket( int nClientID, const std::string &_szNick, const SLadderStatistics &_info )
 			: CNetPacket( nClientID ), szNick( _szNick ), info( _info )
 	{
@@ -186,6 +205,7 @@ public:
 	std::string szNick;
 	int nLevel;
 	int nRace;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szNick );
@@ -193,7 +213,9 @@ public:
 		f.Add( 4, &nRace );
 		return 0;
 	}
+
 	CLadderShortStatisticsPacket() {}
+
 	CLadderShortStatisticsPacket( const int nClientID, const std::string &_szNick, const int _nLevel, const int _nRace )
 			: CNetPacket( nClientID ), szNick( _szNick ), nLevel( _nLevel ), nRace( _nRace )
 	{
@@ -206,12 +228,15 @@ class CLadderSurrenderPacket : public CNetPacket
 	ZDATA
 public:
 	int nGameID;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nGameID );
 		return 0;
 	}
+
 	CLadderSurrenderPacket() {}
+
 	CLadderSurrenderPacket( const int nClientID, const int _nGameID ) : CNetPacket( nClientID ), nGameID( _nGameID ) {}
 };
 
@@ -222,13 +247,16 @@ class CLadderInvalidStatisticsPacket : public CNetPacket
 public:
 	int nGameID;
 	int nReason;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nGameID );
 		f.Add( 3, &nReason );
 		return 0;
 	}
+
 	CLadderInvalidStatisticsPacket() {}
+
 	CLadderInvalidStatisticsPacket( const int nClientID, const int _nGameID, const int _nReason )
 			: CNetPacket( nClientID ), nGameID( _nGameID ), nReason( _nReason )
 	{

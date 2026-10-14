@@ -1,6 +1,7 @@
 #pragma once
 
 struct SCallStackEntry;
+
 namespace NBSU
 {
 void ListView_AddColumn( HWND hwnd, const std::string &strCaption, int nWidth );
@@ -31,4 +32,4 @@ void WriteReportToFile( const char *pszFileName,
                         const char *pszCondition,
                         const char *pszDescription,
                         const std::vector<SCallStackEntry> &entries );
-}
+} // namespace NBSU

@@ -11,7 +11,7 @@ struct SFade;
 struct SPlayList;
 struct SPlayPause;
 struct SComposition;
-}
+} // namespace NDb
 
 namespace NMusicSystem
 {
@@ -38,6 +38,7 @@ class CPlayList : public CObjectBase
 	CFades fades;
 	EPlayListState eState;
 	CPtr<CFade> pPlaylistFade; // for fading whole playlist
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pList );
@@ -54,7 +55,11 @@ class CPlayList : public CObjectBase
 
 public:
 	CPlayList() : eState( EPSS_OUT ), nStillSong( -1 ) {}
-	CPlayList( const NDb::SPlayList *_pList ) : eState( EPSS_OUT ), nStillSong( -1 ) { Init( _pList ); }
+
+	CPlayList( const NDb::SPlayList *_pList ) : eState( EPSS_OUT ), nStillSong( -1 )
+	{
+		Init( _pList );
+	}
 
 	void Init( const NDb::SPlayList *_pList );
 
@@ -67,10 +72,18 @@ public:
 	// for fading play list in and out
 	void FadeOut();
 	void FadeIn();
-	bool IsIn() const { return eState == EPSS_IN; }
-	bool IsOut() const { return eState == EPSS_OUT; }
+
+	bool IsIn() const
+	{
+		return eState == EPSS_IN;
+	}
+
+	bool IsOut() const
+	{
+		return eState == EPSS_OUT;
+	}
 
 	void OnResetTimer();
 };
 
-}
+} // namespace NMusicSystem

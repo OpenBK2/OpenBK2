@@ -139,4 +139,4 @@ TEST( GposKerning, FaceWithoutKernTableIsKerned )
 	EXPECT_EQ( pFace->GetKerning( 'H', 'H' ), 0 );
 }
 
-}
+} // namespace

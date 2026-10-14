@@ -6,7 +6,7 @@ namespace NVFS
 {
 struct IVFS;
 struct IFileCreator;
-}
+} // namespace NVFS
 
 namespace NDb
 {
@@ -40,4 +40,4 @@ bool IsDBIDValid( const CDBID &dbid );
 //! special function for object load-time profiling
 LIBDB_EXPORT void SegmentProfiler();
 
-}
+} // namespace NDb

@@ -63,4 +63,4 @@ bool CheckDocument( const char *pData, int nSize, std::string *pszRootName, std:
 	*pszRootName = std::string( pRoot->GetName().utf8_str() );
 	return true;
 }
-}
+} // namespace NXdbValidation

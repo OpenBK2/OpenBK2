@@ -11,6 +11,7 @@
 #include "System/FileUtils.h"
 #include "System/FilePath.h"
 #include "Misc/StrProc.h"
+
 //#include "../System/BinaryResources.h"
 
 bool CBasicSceneExporter::Validate( IManipulator *pManipulator )

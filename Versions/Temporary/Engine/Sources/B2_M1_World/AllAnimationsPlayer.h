@@ -14,6 +14,7 @@ class CAllAnimationsPlayer : public CObjectBase
 		int nAnimation = 0;
 		NTimer::STime nStartNextAnimTime = 0;
 		bool bLooped = false;
+
 	ZEND public : int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nAnimation );
@@ -26,10 +27,12 @@ class CAllAnimationsPlayer : public CObjectBase
 	public:
 		SAnimationInfo() : nAnimation( -1 ), nStartNextAnimTime( 0 ), bLooped( false ) {}
 	};
+
 	ZDATA
 	std::unordered_map<int, CObj<CMapObj>> objects;
 	std::unordered_map<int, SAnimationInfo> playingAnimations;
 	bool bSwitchToNextAnimation = false;
+
 ZEND public : int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &objects );
@@ -41,8 +44,13 @@ ZEND public : int operator&( IBinSaver &f )
 private:
 public:
 	CAllAnimationsPlayer() {}
+
 	explicit CAllAnimationsPlayer( const std::unordered_map<int, CObj<CMapObj>> &objects );
 
 	void Update();
-	void SwitchToNextAnimation() { bSwitchToNextAnimation = true; }
+
+	void SwitchToNextAnimation()
+	{
+		bSwitchToNextAnimation = true;
+	}
 };

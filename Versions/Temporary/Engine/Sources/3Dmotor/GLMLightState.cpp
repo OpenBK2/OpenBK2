@@ -43,6 +43,7 @@ static void GenerateRandomSphereVector( CVec3 *pRes )
 const float F_POINT_RADIUS = 16;
 const float F_POINT_STRENGTH =
 		0.5f * 4 * 3.14f * F_POINT_RADIUS * F_POINT_RADIUS / F_POINT_LIGHT_FALLOFF / F_POINT_LIGHT_FALLOFF;
+
 void CLightState::AddRay( const CVec3 &vFrom, const CVec3 &vDir, const CVec3 &_vColor )
 {
 	if ( !IsValid( pVis ) )
@@ -199,6 +200,7 @@ inline float GetLinear( float f )
 {
 	return pow( f, 2.4f );
 }
+
 inline CVec3 GetLinearColor( const CVec3 &_vColor )
 {
 	return CVec3( GetLinear( _vColor.x ), GetLinear( _vColor.y ), GetLinear( _vColor.z ) );
@@ -235,4 +237,4 @@ void CLightState::CreateSimple( SLightStateCalcSeed *pSeed,
 {
 	CreateScattered( pSeed, _bounds, l, 0, nSkyDirs );
 }
-}
+} // namespace NGScene

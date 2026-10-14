@@ -35,6 +35,7 @@ struct STerrainInfo
 		std::vector<CVec3fEx> vertices;
 		std::vector<float> addHeights;
 		std::vector<STriangle> triangles;
+
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -44,6 +45,7 @@ struct STerrainInfo
 			return 0;
 		}
 	};
+
 	//
 	CArray2D<STile> tiles;          // terrain tiles													[N]x[M]
 	CArray2D<float> heights;        // terrain heights												[N+1]x[M+1]
@@ -56,8 +58,13 @@ struct STerrainInfo
 	{
 		int nID;
 		CVec2 vBBMin, vBBMax;
+
 		//
-		bool operator==( const SRoad &v ) const { return nID == v.nID; }
+		bool operator==( const SRoad &v ) const
+		{
+			return nID == v.nID;
+		}
+
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -67,6 +74,7 @@ struct STerrainInfo
 			return 0;
 		}
 	};
+
 	// VSO Point
 	struct SVSOPoint
 	{
@@ -83,6 +91,7 @@ struct STerrainInfo
 					fReserved( 0.0f )
 		{
 		}
+
 		SVSOPoint( const NDb::SVSOPoint &rPoint )
 				: vPos( rPoint.vPos ), vNorm( rPoint.vNorm ), fWidth( rPoint.fWidth ), fOpacity( rPoint.fOpacity ),
 					bKeyPoint( rPoint.bKeyPoint ), fRadius( rPoint.fRadius ), fReserved( rPoint.fReserved )
@@ -114,6 +123,7 @@ struct STerrainInfo
 			return 0;
 		}
 	};
+
 	// crags part
 	struct SCrag
 	{
@@ -129,8 +139,13 @@ struct STerrainInfo
 		std::vector<float> precHeights;
 		std::vector<CVec3> precNorms;
 		CDBPtr<NDb::SCragDesc> pDesc;
+
 		//
-		bool operator==( const SCrag &v ) const { return nID == v.nID; }
+		bool operator==( const SCrag &v ) const
+		{
+			return nID == v.nID;
+		}
+
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -152,14 +167,20 @@ struct STerrainInfo
 			return 0;
 		}
 	};
+
 	// peaks part
 	struct SPeak
 	{
 		int nID;
 		std::vector<std::vector<STerrainInfo::SVSOPoint>> points;
 		CVec2 vBBMin, vBBMax;
+
 		//
-		bool operator==( const SPeak &v ) const { return nID == v.nID; }
+		bool operator==( const SPeak &v ) const
+		{
+			return nID == v.nID;
+		}
+
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -170,6 +191,7 @@ struct STerrainInfo
 			return 0;
 		}
 	};
+
 	// foots part
 	struct SFoot
 	{
@@ -177,8 +199,13 @@ struct STerrainInfo
 		std::vector<std::vector<STerrainInfo::SVSOPoint>> points;
 		float fTexGeomScale;
 		CDBPtr<NDb::SMaterial> pFootMaterial;
+
 		//
-		bool operator==( const SFoot &v ) const { return nID == v.nID; }
+		bool operator==( const SFoot &v ) const
+		{
+			return nID == v.nID;
+		}
+
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -189,6 +216,7 @@ struct STerrainInfo
 			return 0;
 		}
 	};
+
 	// rivers part
 	struct SRiver
 	{
@@ -205,8 +233,13 @@ struct STerrainInfo
 		std::vector<CVec3fEx> ridgeR;
 		int nWaterSamplesNum;
 		int nWater2SamplesNum;
+
 		//
-		bool operator==( const SRiver &v ) const { return nID == v.nID; }
+		bool operator==( const SRiver &v ) const
+		{
+			return nID == v.nID;
+		}
+
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -231,13 +264,19 @@ struct STerrainInfo
 			return 0;
 		}
 	};
+
 	// terraspots part
 	struct STerraSpot
 	{
 		int nID;
 		CVec2i vMin, vMax;
+
 		//
-		bool operator==( const STerraSpot &v ) const { return nID == v.nID; }
+		bool operator==( const STerraSpot &v ) const
+		{
+			return nID == v.nID;
+		}
+
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -247,6 +286,7 @@ struct STerrainInfo
 			return 0;
 		}
 	};
+
 	// precipice node
 	struct SPrecipiceNode
 	{
@@ -260,6 +300,7 @@ struct STerrainInfo
 		float fDepth;
 		float fDepthRand;
 		float fRandX, fRandY;
+
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -277,6 +318,7 @@ struct STerrainInfo
 			return 0;
 		}
 	};
+
 	// precipice
 	struct SPrecipice
 	{
@@ -297,8 +339,13 @@ struct STerrainInfo
 		float fDepthRand;
 		float fRandX, fRandY;
 		bool bHasNotPeak;
+
 		//
-		bool operator==( const SPrecipice &v ) const { return nID == v.nID; }
+		bool operator==( const SPrecipice &v ) const
+		{
+			return nID == v.nID;
+		}
+
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -341,6 +388,7 @@ struct STerrainInfo
 		std::vector<STriangle> triangles;
 		std::vector<CVec3> vertices;
 		std::vector<float> addHeights;
+
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -365,6 +413,7 @@ struct STerrainInfo
 	CArray2D<float> waterHeightCoeffs;
 	CArray2D<float> waterAddHeights;
 	std::vector<uint8_t> waterAddHeightsPacked;
+
 	//////////////////////////////////////////////////////////////////////////
 	//
 	int operator&( IBinSaver &saver )
@@ -404,6 +453,7 @@ struct STerraObjectInfo
 	CVec2 vOrigin;
 	std::string szMaskFileName;
 	std::string szTexFileName;
+
 	//
 	int operator&( IBinSaver &saver )
 	{

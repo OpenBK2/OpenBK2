@@ -13,4 +13,4 @@ bool ConvertToShortName( std::string *pszShortFieldName,
                          NDb::NTypeDef::ETypeType eType,
                          NDb::NTypeDef::SAttributes *pTypeAttributes );
 const std::string GetFieldNameInCode( const NDb::NTypeDef::STypeClass::SField &field );
-}
+} // namespace NHungarian

@@ -5,7 +5,10 @@ struct IXmlSaver;
 class CXmlResource : public CObjectBase
 {
 public:
-	virtual int operator&( IXmlSaver &saver ) { return 0; }
+	virtual int operator&( IXmlSaver &saver )
+	{
+		return 0;
+	}
 };
 
 template <class TYPE>

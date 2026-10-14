@@ -63,6 +63,7 @@ namespace NMetaInfo
 				memset( pData, 0, nSize );
 		}
 	}
+
 	void DestructBinary( uint8_t *pData, NTypeDef::ETypeType eType, int nSize )
 	{
 		switch ( eType )
@@ -195,6 +196,7 @@ namespace NMetaInfo
 			}
 		}
 	}
+
 	// meta-destructor
 	void SStructMetaInfo::DestructStruct( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn )
 	{
@@ -369,6 +371,7 @@ namespace NMetaInfo
 				NI_ASSERT( false, fmt::format( "Unknown terminal type {}", int( eType ) ) );
 		}
 	}
+
 	void SetupSetGetStructFuncs( SStructMetaInfo::SField *pField, NTypeDef::ETypeType eType )
 	{
 		switch ( eType )
@@ -553,6 +556,6 @@ namespace NMetaInfo
 		pStructTypeDef = pType;
 	}
 
-}
+} // namespace NMetaInfo
 
-};
+}; // namespace NDb

@@ -26,6 +26,7 @@ public:
 	CDiplomacy() : nMyNumber( 0 ), bNetGame( false ) {}
 
 	void Load( const std::vector<int> &playerParty );
+
 	void SetNPlayers( const int nPlayers )
 	{
 		playerParty.resize( nPlayers + 1, 0 );
@@ -34,7 +35,10 @@ public:
 
 	void Clear() {}
 
-	const int GetNPlayers() const { return playerParty.size(); }
+	const int GetNPlayers() const
+	{
+		return playerParty.size();
+	}
 
 	const EDiplomacyInfo GetDiplStatus( const uint8_t a, const uint8_t b ) const
 	{
@@ -68,20 +72,53 @@ public:
 		}
 	}
 
-	const uint8_t GetNParty( const uint8_t cPlayer ) const { return playerParty[cPlayer]; }
-	const uint8_t GetMyNumber() const { return nMyNumber; }
-	const uint8_t GetMyParty() const { return GetNParty( GetMyNumber() ); }
-	const bool IsAIPlayer( const uint8_t cPlayer ) const { return !bNetGame && cPlayer != GetMyNumber(); }
-	const uint8_t GetNeutralPlayer() const { return GetNPlayers() - 1; }
+	const uint8_t GetNParty( const uint8_t cPlayer ) const
+	{
+		return playerParty[cPlayer];
+	}
+
+	const uint8_t GetMyNumber() const
+	{
+		return nMyNumber;
+	}
+
+	const uint8_t GetMyParty() const
+	{
+		return GetNParty( GetMyNumber() );
+	}
+
+	const bool IsAIPlayer( const uint8_t cPlayer ) const
+	{
+		return !bNetGame && cPlayer != GetMyNumber();
+	}
+
+	const uint8_t GetNeutralPlayer() const
+	{
+		return GetNPlayers() - 1;
+	}
+
 	// номер нейтральной стороны
-	int GetNeutralParty() const { return 2; }
+	int GetNeutralParty() const
+	{
+		return 2;
+	}
 
-	void SetParty( const uint8_t nPlayer, const uint8_t newParty ) { playerParty[nPlayer] = newParty; }
+	void SetParty( const uint8_t nPlayer, const uint8_t newParty )
+	{
+		playerParty[nPlayer] = newParty;
+	}
 
-	void SetMyNumber( const int nNumber ) { nMyNumber = nNumber; }
+	void SetMyNumber( const int nNumber )
+	{
+		nMyNumber = nNumber;
+	}
+
 	void SetNetGame( bool _bNetGame );
 
-	bool IsNetGame() const { return bNetGame; }
+	bool IsNetGame() const
+	{
+		return bNetGame;
+	}
 
 	//
 	bool IsPlayerExist( const int nPlayer ) const;

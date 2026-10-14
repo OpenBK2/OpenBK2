@@ -55,6 +55,7 @@ namespace
 			{ "normal", 400 },
 			{ "book", 400 },
 		};
+
 		const std::string szLower = ToLower( szStyle );
 		for ( const auto &weight : WEIGHTS )
 		{
@@ -102,7 +103,7 @@ namespace
 		return true;
 	}
 
-}
+} // namespace
 
 std::vector<std::string> GetSystemFontDirectories()
 {
@@ -287,4 +288,4 @@ int SelectFace( const std::vector<uint8_t> &data, int nWeight, bool bItalic )
 	return nBestIndex;
 }
 
-}
+} // namespace NFontRaster

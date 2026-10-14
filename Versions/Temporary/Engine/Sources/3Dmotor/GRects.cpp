@@ -97,5 +97,6 @@ void RenderRect( NGfx::C2DQuadsRenderer *pRes,
 	pRes->AddRect( pPos4, pColors4, pTex, rSrc, fZ );
 }
 
-} // namespace
+} // namespace NGScene
+
 using namespace NGScene;

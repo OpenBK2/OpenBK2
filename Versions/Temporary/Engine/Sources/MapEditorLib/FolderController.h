@@ -49,6 +49,7 @@ public:
 			TYPE_COLOR = 4,
 			TYPE_EXPAND = 6,
 		};
+
 		//
 		std::string szDestination;
 		std::string szSource;
@@ -56,6 +57,7 @@ public:
 		//
 		EType eType;
 	};
+
 	//
 	typedef std::list<SUndoData> CUndoDataList;
 
@@ -69,8 +71,16 @@ protected:
 
 public:
 	// IUndoObject
-	virtual bool IsEmpty() const { return undoDataList.empty(); }
-	virtual bool IsAbsolute() const { return true; }
+	virtual bool IsEmpty() const
+	{
+		return undoDataList.empty();
+	}
+
+	virtual bool IsAbsolute() const
+	{
+		return true;
+	}
+
 	// Helpers
 	bool AddInsertOperation( const std::string &rszObjectName );
 	bool AddRemoveOperation( const std::string &rszObjectName );

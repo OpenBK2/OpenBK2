@@ -28,7 +28,10 @@ class CWindowScrollBar : public CWindow, public ISlider, public IButtonNotify, p
 	void UpdateButtons();
 
 protected:
-	NDb::SWindow *GetInstance() { return pInstance; }
+	NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
 
 public:
 	int operator&( struct IBinSaver &saver );
@@ -44,7 +47,9 @@ public:
 	void Pushed( class CWindow *pWho );
 	void Entered( class CWindow *pWho );
 	void Leaved( class CWindow *pWho );
+
 	void StateChanged( class CWindow *pWho ) {}
+
 	void AllowMouseScrolling( const bool _bAllow );
 
 	bool IsLeverVisible() const;

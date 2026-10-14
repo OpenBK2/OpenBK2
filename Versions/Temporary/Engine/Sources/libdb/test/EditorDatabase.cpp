@@ -635,6 +635,7 @@ struct SReportedField
 	std::string szName;
 	int nType;
 	std::string szTypeName;
+
 	bool operator==( const SReportedField &other ) const
 	{
 		return szName == other.szName && nType == other.nType && szTypeName == other.szTypeName;

@@ -78,4 +78,4 @@ void CollectObjectReferences( std::vector<std::string> *pRes,
 	}
 }
 
-}
+} // namespace NDb

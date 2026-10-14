@@ -16,9 +16,16 @@ namespace NTypeDef
 		std::unordered_set<STypeDef *> nonTerminalTypes;
 
 	public:
-		bool IsTerminalType( STypeDef *pType ) const { return nonTerminalTypes.find( pType ) == nonTerminalTypes.end(); }
-		void SetTypeToNonTerminal( STypeDef *pType ) { nonTerminalTypes.insert( pType ); }
+		bool IsTerminalType( STypeDef *pType ) const
+		{
+			return nonTerminalTypes.find( pType ) == nonTerminalTypes.end();
+		}
+
+		void SetTypeToNonTerminal( STypeDef *pType )
+		{
+			nonTerminalTypes.insert( pType );
+		}
 	};
 
-}
-}
+} // namespace NTypeDef
+} // namespace NDb

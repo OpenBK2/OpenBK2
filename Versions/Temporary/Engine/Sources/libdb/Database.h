@@ -10,7 +10,7 @@ namespace NVFS
 {
 struct IVFS;
 struct IFileCreator;
-}
+} // namespace NVFS
 
 namespace NDb
 {
@@ -19,6 +19,7 @@ struct IObjMan;
 struct IDbObserver;
 struct STypeObjectHeader;
 struct SFullTypeHeader;
+
 namespace NTypeDef
 {
 	struct STypeClass;
@@ -44,6 +45,7 @@ public:
 		oldTypesMap[nTypeID][nRecordID] = dbid;
 		return true;
 	}
+
 	void UnRegisterOldType( const int nTypeID, const int nRecordID )
 	{
 		COldTypesMap::iterator posType = oldTypesMap.find( nTypeID );
@@ -52,6 +54,7 @@ public:
 			posType->second.erase( nRecordID );
 		}
 	}
+
 	const CDBID *GetDBID( const int nTypeID, const int nRecordID ) const
 	{
 		COldTypesMap::const_iterator posType = oldTypesMap.find( nTypeID );
@@ -76,22 +79,33 @@ class CBasicDatabase : public CObjectBase, public CDbObserverContainer
 	bool bDataChanged = false;
 
 protected:
-	NVFS::IFileCreator *GetFileCreator() const { return pFileCreator; }
-	NVFS::IVFS *GetVFS() const { return pVFS; }
+	NVFS::IFileCreator *GetFileCreator() const
+	{
+		return pFileCreator;
+	}
+
+	NVFS::IVFS *GetVFS() const
+	{
+		return pVFS;
+	}
+
 	// read resource header. there is no dbid normalization inside
 	bool ReadResourceHeader( STypeObjectHeader *pHeader, const CDBID &dbid );
 	bool LoadIndex();
 	virtual void RegisterObject( const SFullTypeHeader &hdr ) = 0;
 	virtual void ResetIndexChanged() = 0;
+
 	//
 	void SetFileSystem( NVFS::IVFS *_pVFS, NVFS::IFileCreator *_pFileCreator )
 	{
 		pVFS = _pVFS;
 		pFileCreator = _pFileCreator;
 	}
+
 	//
 public:
 	CBasicDatabase() : bDataChanged( false ) {}
+
 	//
 	virtual bool OpenDatabase( NVFS::IVFS *pVFS, NVFS::IFileCreator *pFileCreator ) = 0;
 	virtual bool RegisterResourceFile( const std::string &szFileName ) = 0;
@@ -123,15 +137,28 @@ public:
 	virtual bool GetObjectsList( std::vector<CDBID> *pRes, const int nClassTypeID ) = 0;
 	// retrieve class type name for requested object
 	virtual std::string GetClassTypeName( const CDBID &dbid ) = 0;
+
 	// changed DB objects - checks and reports
-	void SetDataChanged() { bDataChanged = true; }
+	void SetDataChanged()
+	{
+		bDataChanged = true;
+	}
+
 	void SetDataChanged( const CDBID &dbid )
 	{
 		SetDataChanged();
 		ReportObjectChanged( dbid );
 	}
-	void ResetDataChanged() { bDataChanged = false; }
-	bool HasChangedObjects() const { return bDataChanged; }
+
+	void ResetDataChanged()
+	{
+		bDataChanged = false;
+	}
+
+	bool HasChangedObjects() const
+	{
+		return bDataChanged;
+	}
 };
 
 void NormalizeDBID( CDBID *pRes, const CDBID &dbid );
@@ -145,4 +172,4 @@ public:
 	static void CallPostLoad( CResource *pRes, bool bInEditor );
 };
 
-}
+} // namespace NDb

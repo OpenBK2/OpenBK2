@@ -23,7 +23,7 @@ struct SUIConstsB2;
 struct SMapInfo;
 struct SWeaponRPGStats;
 struct SUnitSpecialAblityDesc;
-}
+} // namespace NDb
 
 enum EActiveControl
 {
@@ -50,6 +50,7 @@ struct SChatMessage
 	ZDATA
 	CPtr<IWindow> pWnd;
 	NTimer::STime nVisibleTime = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pWnd );
@@ -69,6 +70,7 @@ public:
 		ZDATA
 		CPtr<IWindow> pScreen;
 		CPtr<CInterfaceMission> pInterface;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pScreen );
@@ -78,9 +80,15 @@ public:
 
 	public:
 		CReactions() {}
+
 		CReactions( IWindow *_pScreen, CInterfaceMission *_pInterface ) : pScreen( _pScreen ), pInterface( _pInterface ) {}
+
 		//
-		bool NeedFlags() const { return true; }
+		bool NeedFlags() const
+		{
+			return true;
+		}
+
 		bool Execute( const std::string &szSender, const std::string &szReaction, uint16_t wKeyboardFlags );
 	};
 
@@ -96,6 +104,7 @@ private:
 		int nMaxAmmo = {};
 		CPtr<IWindow> pName;
 		CPtr<IWindow> pAmmo;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pWeaponID );
@@ -147,6 +156,7 @@ private:
 		std::wstring wszTooltip;
 		bool bEnabled = {};
 		CPtr<IWindow> pBlinkWnd;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pBtn );
@@ -181,6 +191,7 @@ private:
 		void Enable( bool bEnable );
 		void SetProgress( float fProgress );
 	};
+
 	typedef std::unordered_map<NDb::EUserAction, SNewActionButton, SEnumHash> CNewActionButtons;
 
 	struct SIconSlot
@@ -191,6 +202,7 @@ private:
 		CPtr<IProgressBar> pProgressBar;
 		CPtr<ITextView> pCountView;
 		CPtr<IWindow> pFlagBgWnd;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pBtn );
@@ -219,6 +231,7 @@ private:
 		ESMS_FADING_IN,
 		ESMS_DONE,
 	};
+
 	ESkipMovieState eSkipState = {};
 	NTimer::STime timeSkipProgress = {};
 	float fInitialBrightness = {};
@@ -340,6 +353,7 @@ private:
 		ZSKIP //bool bCrapIgnoreMessage;
 				bool bMultifunctionPanelMinimized = {};
 		bool bTeam = {};
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pPanel );
@@ -524,7 +538,11 @@ protected:
 
 	void RestoreBindSection();
 
-	bool IsShowHelpScreenOnInit() { return false; }
+	bool IsShowHelpScreenOnInit()
+	{
+		return false;
+	}
+
 	void MultifunctionPanelMinimize();
 	void MultifunctionPanelMaximize();
 	void BlinkActionButton( int nButton, bool bOn );
@@ -552,7 +570,11 @@ public:
 	void AfterLoad();
 	//
 	virtual void Freeze( const bool bFreeze );
-	class CWorldClient *GetWorld() { return pWorld; }
+
+	class CWorldClient *GetWorld()
+	{
+		return pWorld;
+	}
 
 	void GetObjectHPs( const CMapObj *pMO, std::vector<float> *pHPs, bool *pIsSquad );
 
@@ -576,12 +598,15 @@ public:
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 	CICMission() : nPlayerForWarFog( -1 ) {}
+
 	CICMission( const NDb::SMapInfo *_pMap, const std::string &_szReplay, bool _bFromInterface )
 			: pMap( _pMap ), szReplayFileName( _szReplay ), bFromInterface( _bFromInterface ), nPlayerForWarFog( -1 )
 	{
 		bReplay = szReplayFileName != "";
 	}
+
 	CICMission( ITransceiver *pTransceiver );
 
 	void Configure( const char *pszConfig );

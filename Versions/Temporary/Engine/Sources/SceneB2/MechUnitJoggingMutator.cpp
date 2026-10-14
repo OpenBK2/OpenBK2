@@ -14,6 +14,7 @@ static float s_fJogAmp1 = 1;
 static float s_fJogPeriod2 = FP_2PI;
 static float s_fJogPhaze2 = 0;
 static float s_fJogAmp2 = 1;
+
 float CMechUnitJoggingMutator::SJoggingParams2::GetValue( const NTimer::STime nDeltaTime ) const
 {
 	if ( s_bJogTweakMode )

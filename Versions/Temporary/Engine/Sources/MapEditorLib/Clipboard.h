@@ -42,4 +42,4 @@ namespace NClipboard
 // False if the clipboard could not be opened or the text not set. Empty
 // text clears the clipboard, as the wx views do.
 MAPEDITORLIB_EXPORT bool SetText( const std::string &rszText );
-}
+} // namespace NClipboard

@@ -29,7 +29,7 @@ uint32_t ToPixel( uint32_t nRed, uint32_t nGreen, uint32_t nBlue )
 {
 	return ( ( nRed & 0xFF ) << 16 ) | ( ( nGreen & 0xFF ) << 8 ) | ( nBlue & 0xFF );
 }
-}
+} // namespace
 
 namespace NMiniMapView
 {
@@ -124,4 +124,4 @@ CVec2 MiniMapToEditor( const SImage &rImage, int nWidth, int nHeight, const CVec
 			Clamp( ( fBitmapX - fBitmapY + (float)rImage.nMapSizeX - 1.0f ) / 2.0f, 0.0f, (float)rImage.nMapSizeY ) *
 					VIS_TILE_SIZE );
 }
-}
+} // namespace NMiniMapView

@@ -19,6 +19,7 @@
 #include "libdb/EditorDb.h"
 
 static int s_nNumCollectedObjects = 0;
+
 int PrintUsage()
 {
 	printf( "Database index build utility\n" );

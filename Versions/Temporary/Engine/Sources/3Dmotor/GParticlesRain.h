@@ -1,16 +1,22 @@
 #pragma once
 #include "System/time.hpp"
 #include "GParticleInfo.h"
+
 namespace NGScene
 {
 
 class IParticleFilter;
+
 class CRainAnimator : public CPtrFuncBase<CParticleEffect>
 {
 	OBJECT_BASIC_METHODS( CRainAnimator );
 
 protected:
-	virtual bool NeedUpdate() { return pCamera.Refresh() | pTime.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pCamera.Refresh() | pTime.Refresh();
+	}
+
 	virtual void Recalc();
 
 private:
@@ -37,9 +43,10 @@ public:
 	}
 
 	CRainAnimator() {}
+
 	CRainAnimator( CFuncBase<STime> *_pTime, CFuncBase<CVec4> *_pCamera, IParticleFilter *_pFilter )
 			: pTime( _pTime ), pCamera( _pCamera ), pFilter( _pFilter ), tStart( 0 )
 	{
 	}
 };
-}
+} // namespace NGScene

@@ -32,8 +32,13 @@ struct IPathFraction : public CAIObjectBase
 	//{ approximate calculations (for aiming)
 	virtual CVec3 GetPoint( const float fDist ) const = 0;
 	virtual CVec3 GetTangent( const float fDist ) const = 0;
+
 	// direction of plane's top (ideal)
-	virtual CVec3 GetNormale( const float fDist ) const { return V3_AXIS_Z; }
+	virtual CVec3 GetNormale( const float fDist ) const
+	{
+		return V3_AXIS_Z;
+	}
+
 	//}
 
 	virtual CVec3 GetPoint() const
@@ -41,19 +46,38 @@ struct IPathFraction : public CAIObjectBase
 		NI_ASSERT( false, "" );
 		return VNULL3;
 	}
+
 	virtual CVec3 GetTangent() const
 	{
 		NI_ASSERT( false, "" );
 		return VNULL3;
 	}
-	virtual CVec3 GetNormale() const { return V3_AXIS_Z; }
+
+	virtual CVec3 GetNormale() const
+	{
+		return V3_AXIS_Z;
+	}
 
 	// returns end point. unlike to GetPoint it works on unsubstituted paths
-	virtual CVec3 GetEndPoint() const { return GetPoint( GetLength() ); }
-	virtual CVec3 GetStartPoint() const { return GetPoint( 0.0f ); }
+	virtual CVec3 GetEndPoint() const
+	{
+		return GetPoint( GetLength() );
+	}
 
-	virtual CVec3 GetEndTangent() const { return GetTangent( GetLength() ); }
-	virtual CVec3 GetStartTangent() const { return GetTangent( 0.0f ); }
+	virtual CVec3 GetStartPoint() const
+	{
+		return GetPoint( 0.0f );
+	}
+
+	virtual CVec3 GetEndTangent() const
+	{
+		return GetTangent( GetLength() );
+	}
+
+	virtual CVec3 GetStartTangent() const
+	{
+		return GetTangent( 0.0f );
+	}
 
 	// adds simple paths to path list.
 	// simple path must have smooth acceleration
@@ -67,6 +91,10 @@ struct IPathFraction : public CAIObjectBase
 		return true;
 	}
 
-	virtual void GetPrevPoints( struct SPrevPathParams *pParams ) const { NI_ASSERT( false, "wrong call" ); }
+	virtual void GetPrevPoints( struct SPrevPathParams *pParams ) const
+	{
+		NI_ASSERT( false, "wrong call" );
+	}
+
 	//virtual void GetPrevPoints( CVec3 *p0, CVec3 *p1, CVec3 *p2, CVec3 *pCur, float *pfSplineProgress  ) const { NI_ASSERT( false, "wrong call" ); }
 };

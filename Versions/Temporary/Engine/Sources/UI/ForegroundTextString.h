@@ -12,6 +12,7 @@ class CForegroundTextString : public IWindowPart
 	CPtr<NDb::SForegroundTextString> pInstance;
 	CObj<IML> pGfxText;
 	CPtr<IWindow> pFontScaleWindow;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &wszCustomText );
@@ -59,6 +60,7 @@ class CPlacedText : public CObjectBase
 	CPtr<IWindow> pFontScaleWindow;
 	CVec2 vScreenRect;
 	float fFadeValue;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &wszText );
@@ -82,7 +84,11 @@ public:
 
 	void Visit( struct IUIVisitor *pVisitor );
 
-	const std::wstring &GetText() const { return wszText; }
+	const std::wstring &GetText() const
+	{
+		return wszText;
+	}
+
 	void SetText( const std::wstring &wszText );
 
 	int GetOptimalWidth() const;

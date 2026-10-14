@@ -34,6 +34,7 @@ struct SForce
 	CVec2 vPosition;
 
 	SForce() : nUnitID( -1 ), vForce( VNULL2 ), vPosition( VNULL2 ) {}
+
 	SForce( const int _nUnitID, const CVec2 &_vPosition ) : nUnitID( _nUnitID ), vForce( VNULL2 ), vPosition( _vPosition )
 	{
 	}
@@ -41,7 +42,10 @@ struct SForce
 
 struct SUnitHash
 {
-	int operator()( CCommonUnit *pUnit ) const { return pUnit->GetUniqueID(); }
+	int operator()( CCommonUnit *pUnit ) const
+	{
+		return pUnit->GetUniqueID();
+	}
 };
 
 static const bool CanBeOneGroup( const CCommonUnit *pUnit1, const CCommonUnit *pUnit2 )

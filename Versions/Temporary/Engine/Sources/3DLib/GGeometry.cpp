@@ -76,6 +76,7 @@ struct SRefTracker
 			temp[k] = -1;
 		}
 	}
+
 	int GetRef( int nIndex, int nPos )
 	{
 		int &nRef = temp[nIndex];
@@ -105,9 +106,15 @@ struct SCompoundPosKey
 	SRealVertexWeight w;
 
 	SCompoundPosKey() {}
+
 	SCompoundPosKey( const CVec3 &_v, const SRealVertexWeight &_w ) : v( _v ), w( _w ) {}
-	bool operator==( const SCompoundPosKey &k ) const { return v == k.v && w == k.w; }
+
+	bool operator==( const SCompoundPosKey &k ) const
+	{
+		return v == k.v && w == k.w;
+	}
 };
+
 struct CalcCompoundKeyHash
 {
 	int operator()( const SCompoundPosKey &k ) const
@@ -116,6 +123,7 @@ struct CalcCompoundKeyHash
 		return v( k.v );
 	}
 };
+
 void CObjectInfo::MergePositions()
 {
 	// merge positions
@@ -245,6 +253,7 @@ void CObjectInfo::CalcAverageTriArea()
 }
 
 static std::vector<uint32_t> emptyAttribute;
+
 const std::vector<uint32_t> &CObjectInfo::GetAttribute( int nID )
 {
 	for ( int k = 0; k < attributes.size(); ++k )
@@ -286,6 +295,7 @@ Shuffle( std::vector<T> *pRes, const std::vector<T> &src, const std::vector<uint
 		}
 	}
 }
+
 void CObjectInfo::Assign( const SData &data, std::vector<STriangle> *pGeom, bool bOptimizeVCache )
 {
 	if ( bOptimizeVCache )
@@ -403,18 +413,24 @@ struct SVertexShift
 {
 	int nVertex;
 	int nXShift, nYShift;
+
 	SVertexShift( int _nVertex, int _nXShift, int _nYShift )
 			: nVertex( _nVertex ), nXShift( _nXShift ), nYShift( _nYShift )
 	{
 	}
 };
+
 inline bool operator==( const SVertexShift &a, const SVertexShift &b )
 {
 	return a.nVertex == b.nVertex && a.nXShift == b.nXShift && a.nYShift == b.nYShift;
 }
+
 struct SVertexShiftHash
 {
-	int operator()( const SVertexShift &a ) const { return a.nVertex ^ ( ( a.nXShift + a.nYShift ) << 16 ); }
+	int operator()( const SVertexShift &a ) const
+	{
+		return a.nVertex ^ ( ( a.nXShift + a.nYShift ) << 16 );
+	}
 };
 
 template <class TGetTex>
@@ -543,12 +559,18 @@ void SplitWrapping( CObjectInfo::SData *pData, TGetTex f )
 
 struct SGetTex
 {
-	CVec2 &GetTex( CObjectInfo::SData *pData, int k ) { return pData->verts[k].tex; }
+	CVec2 &GetTex( CObjectInfo::SData *pData, int k )
+	{
+		return pData->verts[k].tex;
+	}
 };
 
 struct SGetTex2
 {
-	CVec2 &GetTex( CObjectInfo::SData *pData, int k ) { return pData->secondTex[k]; }
+	CVec2 &GetTex( CObjectInfo::SData *pData, int k )
+	{
+		return pData->secondTex[k];
+	}
 };
 
 void SplitWrapping( CObjectInfo::SData *pData )
@@ -568,4 +590,4 @@ void SplitWrapping2( CObjectInfo::SData *pData )
 	}
 	SplitWrapping( pData, SGetTex2() );
 }
-}
+} // namespace NGScene

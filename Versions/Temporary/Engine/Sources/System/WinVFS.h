@@ -12,4 +12,4 @@ SYSTEM_EXPORT IFileCreator *CreateWinFileCreator( const std::string &szBasePath 
 SYSTEM_EXPORT bool GetWinFileStats( struct SFileStats *pStats, const std::string &szPath );
 SYSTEM_EXPORT bool DoesWinFileExist( const std::string &szPath );
 SYSTEM_EXPORT void VFSSegmentProfiler();
-}
+} // namespace NVFS

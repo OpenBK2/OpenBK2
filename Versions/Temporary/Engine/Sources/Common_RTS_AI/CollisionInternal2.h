@@ -17,12 +17,24 @@ class CBasePathUnitHolder : public CAIObjectBase
 
 public:
 	CBasePathUnitHolder() : pUnit( 0 ) {};
+
 	CBasePathUnitHolder( CBasePathUnit *_pUnit ) : pUnit( _pUnit ) {}
 
-	CBasePathUnit *operator->() const { return pUnit; }
-	CBasePathUnit *GetUnit() const { return pUnit; }
+	CBasePathUnit *operator->() const
+	{
+		return pUnit;
+	}
 
-	const int GetUniqueID() const { return pUnit ? pUnit->GetUniqueID() : -1; }
+	CBasePathUnit *GetUnit() const
+	{
+		return pUnit;
+	}
+
+	const int GetUniqueID() const
+	{
+		return pUnit ? pUnit->GetUniqueID() : -1;
+	}
+
 	int operator&( IBinSaver &f )
 	{
 		SerializeBasePathUnit( f, 1, &pUnit );
@@ -38,6 +50,7 @@ class CCollisionsCollector : public ICollisionsCollector
 		CPtr<CBasePathUnitHolder> pUnit;
 		float fDistance = 0.0f;
 		NCollision::ECollideType eCollideType{};
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pUnit );
@@ -45,30 +58,41 @@ class CCollisionsCollector : public ICollisionsCollector
 			f.Add( 4, &eCollideType );
 			return 0;
 		}
+
 		SPusherInfo() : pUnit( 0 ), fDistance( 0.0f ), eCollideType( NCollision::ECT_NONE ) {}
+
 		SPusherInfo( CBasePathUnit *_pUnit, const float _fDistance, const NCollision::ECollideType _eCollideType )
 				: fDistance( _fDistance ), eCollideType( _eCollideType )
 		{
 			pUnit = new CBasePathUnitHolder( _pUnit );
 		}
 	};
+
 	struct SPushersSort
 	{
 		const bool operator()( const SPusherInfo &pusher1, const SPusherInfo &pusher2 ) const;
 	};
+
 	struct SCollision
 	{
 		ZDATA
 		CPtr<CBasePathUnitHolder> pUnit;
 		std::vector<SPusherInfo> pushers;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pUnit );
 			f.Add( 3, &pushers );
 			return 0;
 		}
+
 		SCollision() : pUnit( 0 ) {}
-		SCollision( CBasePathUnit *_pUnit ) { pUnit = new CBasePathUnitHolder( _pUnit ); }
+
+		SCollision( CBasePathUnit *_pUnit )
+		{
+			pUnit = new CBasePathUnitHolder( _pUnit );
+		}
+
 		SCollision( CBasePathUnit *pUnit1,
 		            CBasePathUnit *pUnit2,
 		            const float fDistance,
@@ -77,11 +101,13 @@ class CCollisionsCollector : public ICollisionsCollector
 			pUnit = new CBasePathUnitHolder( pUnit1 );
 			pushers.push_back( SPusherInfo( pUnit2, fDistance, eCollideType ) );
 		}
+
 		void AddPusher( CBasePathUnit *_pUnit, const float fDistance, const NCollision::ECollideType eCollideType )
 		{
 			pushers.push_back( SPusherInfo( _pUnit, fDistance, eCollideType ) );
 		}
 	};
+
 	typedef det_map<int, SCollision> TCollisions; // std::map crashes, so use det_map instead
 	OBJECT_NOCOPY_METHODS( CCollisionsCollector )
 	ZDATA
@@ -133,9 +159,21 @@ private:
 	void OnSerialize( IBinSaver &f );
 
 protected:
-	CBasePathUnit *GetUnit() const { return pUnit; }
-	IPath *GetPath() const { return pPath; }
-	void SetPath( IPath *_pPath ) { pPath = _pPath; }
+	CBasePathUnit *GetUnit() const
+	{
+		return pUnit;
+	}
+
+	IPath *GetPath() const
+	{
+		return pPath;
+	}
+
+	void SetPath( IPath *_pPath )
+	{
+		pPath = _pPath;
+	}
+
 	const bool CanFindCandidates() const;
 
 public:
@@ -143,8 +181,15 @@ public:
 
 	virtual void Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority );
 
-	const int GetPriority() const { return nPriority; }
-	CBasePathUnit *GetPushUnit() const { return pPushUnit; }
+	const int GetPriority() const
+	{
+		return nPriority;
+	}
+
+	CBasePathUnit *GetPushUnit() const
+	{
+		return pPushUnit;
+	}
 
 	void FindCandidates( ICollisionsCollector *pCollisionCollector );
 };
@@ -155,8 +200,13 @@ class CFreeCollision : public CCollisionBase
 	OBJECT_NOCOPY_METHODS( CFreeCollision )
 public:
 	void Segment( const NTimer::STime timeDiff ) {}
+
 	const bool IsSolved() const;
-	const NCollision::ECollisionName GetName() const { return NCollision::ECN_FREE; }
+
+	const NCollision::ECollisionName GetName() const
+	{
+		return NCollision::ECN_FREE;
+	}
 };
 
 // pUnit waits when pPushUnit pass away
@@ -175,11 +225,21 @@ public:
 		f.Add( 3, &timeToWait );
 		return 0;
 	}
+
 	CWaitingCollision() : CCollisionBase(), bIsSolved( false ) {}
+
 	void Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority, const float fDistance );
 	void Segment( const NTimer::STime timeDiff );
-	const bool IsSolved() const { return bIsSolved; }
-	const NCollision::ECollisionName GetName() const { return NCollision::ECN_WAIT; }
+
+	const bool IsSolved() const
+	{
+		return bIsSolved;
+	}
+
+	const NCollision::ECollisionName GetName() const
+	{
+		return NCollision::ECN_WAIT;
+	}
 };
 
 // pUnit gives place for pPushUnit (pPushUnit waits for pUnit !!!)
@@ -192,9 +252,15 @@ public:
 	           const int nPriority,
 	           const CVec2 &vFinishPoint,
 	           const int nTileSize );
+
 	void Segment( const NTimer::STime timeDiff ) {}
+
 	const bool IsSolved() const;
-	const NCollision::ECollisionName GetName() const { return NCollision::ECN_GIVE_PLACE; }
+
+	const NCollision::ECollisionName GetName() const
+	{
+		return NCollision::ECN_GIVE_PLACE;
+	}
 };
 
 // pUnit blocks tiles under itself and waits when pPushUnit gives
@@ -211,9 +277,19 @@ public:
 		f.Add( 2, &timeLeft );
 		return 0;
 	}
+
 	CStopCollision() : CCollisionBase(), timeLeft( 0 ) {}
+
 	void Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority );
 	void Segment( const NTimer::STime timeDiff );
-	const bool IsSolved() const { return timeLeft == 0; }
-	const NCollision::ECollisionName GetName() const { return NCollision::ECN_STOP; }
+
+	const bool IsSolved() const
+	{
+		return timeLeft == 0;
+	}
+
+	const NCollision::ECollisionName GetName() const
+	{
+		return NCollision::ECN_STOP;
+	}
 };

@@ -137,9 +137,15 @@ public:
 		pGrid->SetChangeCallback( [this]() { UpdateOkButton(); } );
 	}
 
-	virtual ~CBuildDataWxDialog() { Unregister(); }
+	virtual ~CBuildDataWxDialog()
+	{
+		Unregister();
+	}
 
-	bool WasPlaced() const { return placement.WasPlaced(); }
+	bool WasPlaced() const
+	{
+		return placement.WasPlaced();
+	}
 
 	// The grid shows the object, and the dialog is CHID_PC_BUILD_DATA_DIALOG
 	// while it does, as CPCBuildDataDialog::OnInitDialog made itself.
@@ -172,13 +178,25 @@ public:
 	}
 
 	// CPCBaseDialog
-	virtual IView *GetView() { return pGrid->GetView(); }
+	virtual IView *GetView()
+	{
+		return pGrid->GetView();
+	}
 
-	virtual ICommandHandler *GetCommandHandler() { return pGrid->GetCommandHandler(); }
+	virtual ICommandHandler *GetCommandHandler()
+	{
+		return pGrid->GetCommandHandler();
+	}
 
-	virtual void CreateTree() { pGrid->BuildTree(); }
+	virtual void CreateTree()
+	{
+		pGrid->BuildTree();
+	}
 
-	virtual void UpdateValues() { pGrid->UpdateValues(); }
+	virtual void UpdateValues()
+	{
+		pGrid->UpdateValues();
+	}
 
 private:
 	void Unregister()
@@ -214,9 +232,12 @@ private:
 		UpdateOkButton();
 	}
 
-	void OnExportChanged( wxCommandEvent & ) { pBuildDataParams->bNeedExport = pExport->GetValue(); }
+	void OnExportChanged( wxCommandEvent & )
+	{
+		pBuildDataParams->bNeedExport = pExport->GetValue();
+	}
 };
-}
+} // namespace
 
 namespace NBuildData
 {
@@ -241,4 +262,4 @@ bool Run( IWidget *pParent,
 	dialog.Close();
 	return bAccepted;
 }
-}
+} // namespace NBuildData

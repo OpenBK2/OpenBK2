@@ -37,6 +37,7 @@ public:
 	bool bEnabled = {};
 	CDBPtr<NDb::SReinforcement> pReinf;
 	int nReinforcementCallsLeft = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -59,6 +60,7 @@ public:
 	bool bEnabled = {};
 	NTimer::STime timeRecycleEnd = {};
 	float fProgress = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );

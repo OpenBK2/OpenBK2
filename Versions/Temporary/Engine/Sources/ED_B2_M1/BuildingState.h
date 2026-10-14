@@ -13,6 +13,7 @@
 //
 
 class CBuildingEditor;
+
 class CBuildingState : public CMultiInputState, public ICommandHandler
 {
 	friend class CBuildingEditor;
@@ -22,7 +23,10 @@ class CBuildingState : public CMultiInputState, public ICommandHandler
 	bool bNeedLoadEnterConfig;
 
 	// Методы общего назначения
-	bool IsMultiInputState( int nStateIndex ) { return ( nStateIndex == IS_POINTS ); }
+	bool IsMultiInputState( int nStateIndex )
+	{
+		return ( nStateIndex == IS_POINTS );
+	}
 
 	void LoadEnterConfig();
 
@@ -37,6 +41,7 @@ public:
 		//
 		IS_COUNT
 	};
+
 	enum EPointsInputSubstates
 	{
 		POINTS_ISS_SMOKE_POINTS = 0,

@@ -362,14 +362,26 @@ public:
 		pTree->Bind( wxEVT_CONTEXT_MENU, &CWxObjectTree::OnContextMenu, this );
 	}
 
-	wxWindow *GetWindow() const { return pTree; }
+	wxWindow *GetWindow() const
+	{
+		return pTree;
+	}
 
-	void EnableEdit( bool bEnable ) { bEnableEdit = bEnable; }
+	void EnableEdit( bool bEnable )
+	{
+		bEnableEdit = bEnable;
+	}
 
 	// IObjectTree
-	virtual bool IsTreeCreated() { return GetViewManipulator() != 0; }
+	virtual bool IsTreeCreated()
+	{
+		return GetViewManipulator() != 0;
+	}
 
-	virtual IView *GetView() { return this; }
+	virtual IView *GetView()
+	{
+		return this;
+	}
 
 	// CTreeGDBBrowserBase::CreateTree.
 	virtual void CreateTree()
@@ -522,7 +534,10 @@ public:
 		return true;
 	}
 
-	virtual void SetStrongSelection() { bStrongSelection = true; }
+	virtual void SetStrongSelection()
+	{
+		bStrongSelection = true;
+	}
 
 	// The selected objects, folders left out.
 	bool GetCurrentObjectSet( SObjectSet *pObjectSet )
@@ -1266,7 +1281,10 @@ private:
 		}
 	}
 
-	static std::string LoadResourceString( UINT nID ) { return NResources::GetString( nID ); }
+	static std::string LoadResourceString( UINT nID )
+	{
+		return NResources::GetString( nID );
+	}
 
 	// Where the frame sends a command: the ranges MapEditorApp registers.
 	// The menu has object and selection commands only.
@@ -1356,7 +1374,10 @@ private:
 	}
 
 	// CTreeGDBBrowser's CanAutoLoadAfterBuildingObject, and the link tree's.
-	bool CanAutoLoad() const { return eKind == IObjectBrowser::KIND_BROWSER; }
+	bool CanAutoLoad() const
+	{
+		return eKind == IObjectBrowser::KIND_BROWSER;
+	}
 
 	// CTreeGDBBrowserBase::New( HTREEITEM ): an object named "New Resource"
 	// under rParent, made by the builder, exported if the builder says so,
@@ -2470,9 +2491,15 @@ private:
 			return pTreeView->DragOver( wxPoint( x, y ), eDefault );
 		}
 
-		virtual void OnLeave() override { pTreeView->ClearDropTarget(); }
+		virtual void OnLeave() override
+		{
+			pTreeView->ClearDropTarget();
+		}
 
-		virtual bool OnDrop( wxCoord, wxCoord ) override { return true; }
+		virtual bool OnDrop( wxCoord, wxCoord ) override
+		{
+			return true;
+		}
 
 		virtual wxDragResult OnData( wxCoord x, wxCoord y, wxDragResult eDefault ) override
 		{
@@ -2769,7 +2796,10 @@ class CWxObjectBrowser : public IObjectBrowser, public ICommandHandler
 	}
 
 public:
-	virtual ~CWxObjectBrowser() { tables.clear(); }
+	virtual ~CWxObjectBrowser()
+	{
+		tables.clear();
+	}
 
 	// NObjectBrowser::CreateWxIn: the contents in a panel of pParent's.
 	bool CreateIn( wxWindow *pParent, IWidget *pOwner, IListener *_pListener, EKind _eKind, int _nGDBBrowserID )
@@ -2787,7 +2817,10 @@ public:
 		return true;
 	}
 
-	wxWindow *GetRoot() const { return pRoot; }
+	wxWindow *GetRoot() const
+	{
+		return pRoot;
+	}
 
 	virtual void Show( bool bShow )
 	{
@@ -2837,9 +2870,15 @@ public:
 		return tables.back().get();
 	}
 
-	virtual int GetTableCount() { return static_cast<int>( tables.size() ); }
+	virtual int GetTableCount()
+	{
+		return static_cast<int>( tables.size() );
+	}
 
-	virtual IObjectTree *GetTable( int nIndex ) { return Table( nIndex ); }
+	virtual IObjectTree *GetTable( int nIndex )
+	{
+		return Table( nIndex );
+	}
 
 	virtual IObjectTree *GetTable( const std::string &rszTableName )
 	{
@@ -2899,7 +2938,10 @@ public:
 		}
 	}
 
-	virtual ICommandHandler *GetObjectStorage() { return this; }
+	virtual ICommandHandler *GetObjectStorage()
+	{
+		return this;
+	}
 
 	// CComboBoxGDBBrowser's ICommandHandler: the chosen table's selection.
 	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
@@ -2934,7 +2976,7 @@ public:
 		}
 	}
 };
-}
+} // namespace
 
 namespace NObjectBrowser
 {
@@ -2956,4 +2998,4 @@ IObjectBrowser *CreateWxIn( wxWindow *pParent,
 	}
 	return pBrowser.release();
 }
-}
+} // namespace NObjectBrowser

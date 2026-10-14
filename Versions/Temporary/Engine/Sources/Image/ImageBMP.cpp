@@ -16,14 +16,17 @@ inline long GetShort( int nOffset, uint8_t *pBuff )
 {
 	return *reinterpret_cast<short *>( pBuff + nOffset );
 }
+
 inline long GetWord( int nOffset, uint8_t *pBuff )
 {
 	return *reinterpret_cast<uint16_t *>( pBuff + nOffset );
 }
+
 inline long GetLong( int nOffset, uint8_t *pBuff )
 {
 	return *reinterpret_cast<long *>( pBuff + nOffset );
 }
+
 inline long GetDWord( int nOffset, uint8_t *pBuff )
 {
 	return *reinterpret_cast<uint32_t *>( pBuff + nOffset );

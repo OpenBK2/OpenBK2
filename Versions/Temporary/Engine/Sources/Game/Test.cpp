@@ -25,6 +25,7 @@ void ConvertParam( bool *pRes, const std::wstring &wszParam )
 {
 	*pRes = !( wszParam[0] == L'0' || wszParam[0] == L'f' || wszParam[0] == L'F' );
 }
+
 void ConvertParam( bool *pRes, const CValue &val )
 {
 	*pRes = val.GetFloat() != 0;
@@ -34,18 +35,22 @@ void ConvertParam( int *pRes, const std::wstring &wszParam )
 {
 	*pRes = NStr::ToInt( NStr::ToMBCS( wszParam ) );
 }
+
 void ConvertParam( int *pRes, const CValue &val )
 {
 	*pRes = val.GetFloat();
 }
+
 void ConvertParam( float *pRes, const std::wstring &wszParam )
 {
 	*pRes = NStr::ToFloat( NStr::ToMBCS( wszParam ) );
 }
+
 void ConvertParam( std::string *pRes, const std::wstring &wszParam )
 {
 	*pRes = NStr::ToMBCS( wszParam );
 }
+
 void ConvertParam( std::wstring *pRes, const std::wstring &wszParam )
 {
 	*pRes = wszParam;
@@ -62,11 +67,13 @@ class CConsoleFunc0 : public IConsoleFunc
 {
 	OBJECT_NOCOPY_METHODS( CConsoleFunc0 );
 	void ( *pfnFunc )();
+
 	//
 	CConsoleFunc0() {}
 
 public:
 	CConsoleFunc0( void ( *_pfnFunc )() ) : pfnFunc( _pfnFunc ) {}
+
 	//
 	bool Execute( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 	{
@@ -88,11 +95,13 @@ class CConsoleFunc1 : public IConsoleFunc
 	void ( *pfnFunc )( T1 p1 );
 	typedef typename NMeta::CTypeTraits<T1>::TStripType TS1;
 	TS1 def1;
+
 	//
 	CConsoleFunc1() {}
 
 public:
 	CConsoleFunc1( void ( *_pfnFunc )( T1 _p1 ), const TS1 &_def1 ) : pfnFunc( _pfnFunc ), def1( _def1 ) {}
+
 	//
 	bool Execute( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 	{
@@ -118,6 +127,7 @@ class CConsoleFunc2 : public IConsoleFunc
 	typedef typename NMeta::CTypeTraits<T2>::TStripType TS2;
 	TS1 def1;
 	TS2 def2;
+
 	//
 	CConsoleFunc2() {}
 
@@ -126,6 +136,7 @@ public:
 			: pfnFunc( _pfnFunc ), def1( _def1 ), def2( _def2 )
 	{
 	}
+
 	//
 	bool Execute( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 	{
@@ -143,4 +154,4 @@ IConsoleFunc *MakeConsoleFunc( void ( *_pfnFunc )( T1 _p1, T2 _p2 ), T1 _p1, T2 
 	return new CConsoleFunc2( _pfnFunc, _p1, _p2 );
 }
 
-}
+} // namespace NGlobal

@@ -93,7 +93,11 @@ class CScriptCameraWxWindow : public CWxHostWindow, public CScriptCameraCommands
 				: pOwner( _pOwner ), nCommandID( _nCommandID )
 		{
 		}
-		virtual void Notify() { pOwner->OnDebounce( nCommandID ); }
+
+		virtual void Notify()
+		{
+			pOwner->OnDebounce( nCommandID );
+		}
 	};
 
 	wxButton *pSave = nullptr;
@@ -340,7 +344,10 @@ protected:
 	// Before the wx side comes down, however it comes down: a debounce
 	// firing after the palette is gone would ask the state to read a box
 	// that no longer exists.
-	virtual void BeforeTearDown() { StopTimers(); }
+	virtual void BeforeTearDown()
+	{
+		StopTimers();
+	}
 
 private:
 	wxTextCtrl *AddManualRow( wxFlexGridSizer *pGrid, const char *pszLabel )
@@ -408,7 +415,10 @@ private:
 		}
 	}
 
-	void OnSave( wxCommandEvent & ) { NotifyHandler( SWindowData::SCA_CAMERA_SAVE ); }
+	void OnSave( wxCommandEvent & )
+	{
+		NotifyHandler( SWindowData::SCA_CAMERA_SAVE );
+	}
 
 	void OnCameraSelected( wxListEvent &rEvent )
 	{
@@ -448,11 +458,22 @@ private:
 		}
 	}
 
-	void OnYawChanged( wxCommandEvent & ) { Restart( yawTimer ); }
-	void OnPitchChanged( wxCommandEvent & ) { Restart( pitchTimer ); }
-	void OnFOVChanged( wxCommandEvent & ) { Restart( fovTimer ); }
+	void OnYawChanged( wxCommandEvent & )
+	{
+		Restart( yawTimer );
+	}
+
+	void OnPitchChanged( wxCommandEvent & )
+	{
+		Restart( pitchTimer );
+	}
+
+	void OnFOVChanged( wxCommandEvent & )
+	{
+		Restart( fovTimer );
+	}
 };
-}
+} // namespace
 
 namespace NScriptCameraView
 {
@@ -470,4 +491,4 @@ IWidget *Create( CPaletteList *pPalettes, IWidget *pPage )
 	}
 	return pWindow;
 }
-}
+} // namespace NScriptCameraView

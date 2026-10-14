@@ -6,7 +6,8 @@ namespace NGfx
 {
 class CRenderContext;
 class CTexture;
-}
+} // namespace NGfx
+
 namespace NGScene
 {
 struct SPerspDirectionalDepthInfo;
@@ -23,6 +24,7 @@ class CCloudMover : public CFuncBase<SHMatrix>
 	CDGPtr<CFuncBase<STime>> pTime;
 	CVec2 vWrapSize;
 	float fAngle, fSpeed; // speed in textures per second
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pTime );
@@ -31,14 +33,20 @@ class CCloudMover : public CFuncBase<SHMatrix>
 		f.Add( 5, &fSpeed );
 		return 0;
 	}
-	bool NeedUpdate() { return pTime.Refresh(); }
+
+	bool NeedUpdate()
+	{
+		return pTime.Refresh();
+	}
+
 	void Recalc();
 
 public:
 	CCloudMover() {}
+
 	CCloudMover( CFuncBase<STime> *_pTime, const CVec2 &_vWrapSize, float _fAngle, float _fSpeed )
 			: pTime( _pTime ), vWrapSize( _vWrapSize ), fAngle( _fAngle ), fSpeed( _fSpeed )
 	{
 	}
 };
-}
+} // namespace NGScene

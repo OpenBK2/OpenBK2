@@ -12,16 +12,19 @@
 		MAPEDITORLIB_EXPORT void StartRegister##TYPE();                                                              \
 	};
 
-#define REGISTER_ME_OBJECT_IN_EXE( TYPE, name, classname )                                                \
-	void StartRegisterHookRegisterMEObject##TYPE##name##classname() {}                                      \
-	static struct SRegister##TYPE##name##classname##AutoMagic                                               \
-	{                                                                                                       \
-		SRegister##TYPE##name##classname##AutoMagic()                                                         \
-		{                                                                                                     \
-			N##TYPE##Factory::StartRegister##TYPE();                                                            \
-			N##TYPE##Factory::Register##TYPE##Type( #name, classname::New##classname );                         \
-		}                                                                                                     \
-		~SRegister##TYPE##name##classname##AutoMagic() { N##TYPE##Factory::UnRegister##TYPE##Type( #name ); } \
+#define REGISTER_ME_OBJECT_IN_EXE( TYPE, name, classname )                        \
+	void StartRegisterHookRegisterMEObject##TYPE##name##classname() {}              \
+	static struct SRegister##TYPE##name##classname##AutoMagic                       \
+	{                                                                               \
+		SRegister##TYPE##name##classname##AutoMagic()                                 \
+		{                                                                             \
+			N##TYPE##Factory::StartRegister##TYPE();                                    \
+			N##TYPE##Factory::Register##TYPE##Type( #name, classname::New##classname ); \
+		}                                                                             \
+		~SRegister##TYPE##name##classname##AutoMagic()                                \
+		{                                                                             \
+			N##TYPE##Factory::UnRegister##TYPE##Type( #name );                          \
+		}                                                                             \
 	} aRegister##TYPE##name##classname##AutoMagic;
 
 void RegisterMapEditorTypeDelayed( const std::string &szType,

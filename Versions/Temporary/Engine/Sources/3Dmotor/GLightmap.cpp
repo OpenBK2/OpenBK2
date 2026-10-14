@@ -35,6 +35,7 @@ bool GetDumpFlag()
 }
 
 class CLightmapTextureCache;
+
 class CLMRegion : public NCache::CGatherElementBase<NCache::CShortPtrAllocator, NCache::CQuadTreeElement, CLMRegion>
 {
 	typedef NCache::CGatherElementBase<NCache::CShortPtrAllocator, NCache::CQuadTreeElement, CLMRegion> CParent;
@@ -59,7 +60,12 @@ class CLightmapTextureCache
 
 public:
 	CLightmapTextureCache() {}
-	CLightmapTextureCache( int nSize ) { InitCache( nSize ); } // RefreshTexture(); }
+
+	CLightmapTextureCache( int nSize )
+	{
+		InitCache( nSize );
+	} // RefreshTexture(); }
+
 	int operator&( CStructureSaver &f )
 	{
 		ASSERT( 0 );
@@ -291,7 +297,8 @@ void CLMGeometryGen::Recalc()
 START_REGISTER( GLightmap )
 REGISTER_VAR_EX( "gfx_lm_chess", NGlobal::VarBoolHandler, &bChessLM, 0, STORAGE_NONE )
 FINISH_REGISTER
-}
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x201183C0, CLightmapTexture )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x20119C00, CLMGeometryGen )

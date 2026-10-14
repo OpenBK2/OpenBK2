@@ -18,4 +18,4 @@ struct IXmlSaxVisitor : public CObjectBase
 
 SYSTEM_EXPORT bool ParseXML( IXmlSaxVisitor *pVisitor, CDataStream *pStream );
 
-}
+} // namespace NLXML

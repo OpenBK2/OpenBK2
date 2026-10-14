@@ -151,4 +151,4 @@ inline wxBitmapBundle LoadIcon( const wxString &rFileName, int nSize )
 {
 	return LoadIconFile( AssetPath( rFileName ), nSize );
 }
-}
+} // namespace NWxImage

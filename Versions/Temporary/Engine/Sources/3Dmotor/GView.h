@@ -10,6 +10,7 @@ struct SRandomSeed;
 class CTransformStack;
 class CMemObject;
 class ILoadingCounter;
+
 namespace NDb
 {
 struct STexture;
@@ -22,16 +23,18 @@ struct SComplexHead;
 struct SSkeleton;
 struct SMaterial;
 struct SParticleInstance;
-}
+} // namespace NDb
+
 namespace NAnimation
 {
 struct ISkeletonAnimator;
 }
+
 namespace NGfx
 {
 struct SPixel8888;
 class CTexture;
-}
+} // namespace NGfx
 class CAnimLight;
 
 namespace NGScene
@@ -62,20 +65,28 @@ struct SRoomInfo
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	ushort nLightFlags = {};
 	short nFloor = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nLightFlags );
 		f.Add( 3, &nFloor );
 		return 0;
 	}
+
 	short nLODFlags = {};
+
 	//
 	SRoomInfo() : nLightFlags( 0 ), nFloor( 0 ), nLODFlags( 0 ) {}
+
 	SRoomInfo( int _nLightFlags, int _nFloor, int _nLODFlags = 0 )
 			: nLightFlags( _nLightFlags ), nFloor( _nFloor ), nLODFlags( _nLODFlags )
 	{
 	}
-	bool operator==( const SRoomInfo &a ) const { return a.nLightFlags == nLightFlags && a.nFloor == nFloor; }
+
+	bool operator==( const SRoomInfo &a ) const
+	{
+		return a.nLightFlags == nLightFlags && a.nFloor == nFloor;
+	}
 };
 
 struct SFullRoomInfo
@@ -84,6 +95,7 @@ struct SFullRoomInfo
 	SRoomInfo room;
 	CPtr<CObjectBase> pUser;
 	int nUserID = {}; // top 8 bits are used for material number
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &room );
@@ -91,9 +103,12 @@ struct SFullRoomInfo
 		f.Add( 4, &nUserID );
 		return 0;
 	}
+
 	//
 	SFullRoomInfo() : nUserID( 0 ) {}
+
 	SFullRoomInfo( int _nFloor, int _nLODFlags = 0 ) : room( 0, _nFloor, _nLODFlags ), nUserID( 0 ) {}
+
 	SFullRoomInfo( const SRoomInfo &_r, CObjectBase *_p, int _nUserID ) : room( _r ), pUser( _p ), nUserID( _nUserID ) {}
 };
 
@@ -104,13 +119,22 @@ class CCreateMeshTransform
 
 public:
 	CCreateMeshTransform( const SFBTransform &_place ) : place( _place ), pTransformer( 0 ) {}
+
 	CCreateMeshTransform( CFuncBase<SFBTransform> *_pTransformer ) : pTransformer( _pTransformer )
 	{
 		Identity( &place.forward );
 		Identity( &place.backward );
 	}
-	const SFBTransform &GetPlace() const { return place; }
-	CFuncBase<SFBTransform> *GetTransformer() const { return pTransformer; }
+
+	const SFBTransform &GetPlace() const
+	{
+		return place;
+	}
+
+	CFuncBase<SFBTransform> *GetTransformer() const
+	{
+		return pTransformer;
+	}
 };
 
 class CCreateMeshBound
@@ -134,23 +158,40 @@ public:
 		Zero( bound );
 		hintBV = MakeLargeHintBound();
 	}
+
 	CCreateMeshBound( const SBound &_bound ) : bound( _bound ), hintBV( _bound ), pBounder( 0 ) {}
+
 	CCreateMeshBound( CFuncBase<SBound> *_pBounder ) : pBounder( _pBounder )
 	{
 		bound.BoxExInit( VNULL3, VNULL3 );
 		hintBV = MakeLargeHintBound();
 	}
+
 	CCreateMeshBound( CFuncBase<NAnimation::SGrannySkeletonPose> *pAnimation, const NDb::SModel *pModel );
-	const SBound &GetBound() const { return bound; }
-	CFuncBase<SBound> *GetBounder() const { return pBounder; }
-	const SBound GetHintBV() const { return hintBV; }
+
+	const SBound &GetBound() const
+	{
+		return bound;
+	}
+
+	CFuncBase<SBound> *GetBounder() const
+	{
+		return pBounder;
+	}
+
+	const SBound GetHintBV() const
+	{
+		return hintBV;
+	}
 
 	void Create( CFuncBase<NAnimation::SGrannySkeletonPose> *pAnimation, const NDb::SModel *pModel );
+
 	void Set( const SBound &_bound )
 	{
 		bound = _bound;
 		hintBV = _bound;
 	}
+
 	void Set( CFuncBase<SBound> *_pBounder )
 	{
 		pBounder = _pBounder;
@@ -171,10 +212,23 @@ public:
 			: pModel( pM ), pAnimation( pA ), pTransparencyAnimations( pTA )
 	{
 	}
+
 	CMeshAnimStuff( void * ) : pModel( 0 ), pAnimation( 0 ), pTransparencyAnimations( 0 ) {}
-	const NDb::SModel *GetModel() const { return pModel; }
-	CFuncBase<NAnimation::SGrannySkeletonPose> *GetAnimation() const { return pAnimation; }
-	std::vector<CPtr<CFuncBase<float>>> *GetTransparencyAnimations() const { return pTransparencyAnimations; }
+
+	const NDb::SModel *GetModel() const
+	{
+		return pModel;
+	}
+
+	CFuncBase<NAnimation::SGrannySkeletonPose> *GetAnimation() const
+	{
+		return pAnimation;
+	}
+
+	std::vector<CPtr<CFuncBase<float>>> *GetTransparencyAnimations() const
+	{
+		return pTransparencyAnimations;
+	}
 };
 
 class IGameView : public CObjectBase
@@ -193,6 +247,7 @@ public:
 		{
 		}
 	};
+
 	struct SPartInfo
 	{
 		ZDATA
@@ -201,6 +256,7 @@ public:
 		int nOrigMeshIndex = {};
 		bool bAnimated = {};
 		bool bWindAffected = {};
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pGeometry );
@@ -210,23 +266,28 @@ public:
 			f.Add( 6, &bWindAffected );
 			return 0;
 		}
+
 		SPartInfo() : nOrigMeshIndex( -1 ), bAnimated( true ), bWindAffected( false ) {}
+
 		SPartInfo( CPtrFuncBase<CObjectInfo> *_pGeom, IMaterial *_pMat, int _nOrigMeshIndex = ( -1 ) )
 				: pGeometry( _pGeom ), pMaterial( _pMat ), nOrigMeshIndex( _nOrigMeshIndex ), bAnimated( true ),
 					bWindAffected( false )
 		{
 		}
 	};
+
 	struct SMeshInfo
 	{
 		ZDATA
 		std::vector<SPartInfo> parts;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &parts );
 			return 0;
 		}
 	};
+
 	virtual IMaterial *CreateMaterial( const NDb::SMaterial *pMaterial ) = 0;
 	virtual IMaterial *CreateMaterial( const CVec4 &vColor, bool bDoesCastShadow = true ) = 0;
 	virtual void CreateMaterialInfo( const NDb::SMaterial *pMaterial, SMaterialCreateInfo *pRes ) = 0;
@@ -348,6 +409,7 @@ public:
 		return res;
 	}
 };
+
 _3DMOTOR_EXPORT IGameView *CreateNewView();
 IGameView *CreateNewFastInterfaceView();
 // wrappers to Gfx to exclude interface on Gfx dependency, realisation in GScene.cpp
@@ -385,4 +447,4 @@ void CreateAnimatedTransparencyChannels( std::vector<CPtr<CFuncBase<float>>> *pR
                                          const IGameView::SMeshInfo &meshInfo,
                                          const NDb::SModel *pModel,
                                          NAnimation::ISkeletonAnimator *pAnimator );
-}
+} // namespace NGScene

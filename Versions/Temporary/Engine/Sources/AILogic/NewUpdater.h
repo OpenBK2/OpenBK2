@@ -20,6 +20,7 @@ public:
 		{
 			virtual SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime ) = 0;
 		};
+
 		class CIdleTrenchUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CIdleTrenchUpdateTransformer );
@@ -27,6 +28,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CParadropStartedTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CParadropStartedTransformer );
@@ -34,6 +36,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CChangeDBIDUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CChangeDBIDUpdateTransformer );
@@ -41,6 +44,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CPlacementUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CPlacementUpdateTransformer );
@@ -48,6 +52,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CRPGUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CRPGUpdateTransformer );
@@ -55,6 +60,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CHitUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CHitUpdateTransformer );
@@ -62,6 +68,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CHTurretTurnUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CHTurretTurnUpdateTransformer );
@@ -69,6 +76,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CVTurretTurnUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CVTurretTurnUpdateTransformer );
@@ -76,6 +84,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CEntranceUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CEntranceUpdateTransformer );
@@ -83,6 +92,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CModifyEntranceUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CModifyEntranceUpdateTransformer );
@@ -90,6 +100,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CDiplomacyUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CDiplomacyUpdateTransformer );
@@ -97,6 +108,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CShootAreaUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CShootAreaUpdateTransformer );
@@ -104,6 +116,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CRangeAreaUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CRangeAreaUpdateTransformer );
@@ -111,6 +124,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CNewProjectileUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CNewProjectileUpdateTransformer );
@@ -118,6 +132,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CDeadUnitUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CDeadUnitUpdateTransformer );
@@ -125,6 +140,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CDisappearUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CDisappearUpdateTransformer );
@@ -132,6 +148,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CNewUnitUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CNewUnitUpdateTransformer );
@@ -139,6 +156,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CNewEntrenchmentUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CNewEntrenchmentUpdateTransformer );
@@ -146,6 +164,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CNewFormationUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CNewFormationUpdateTransformer );
@@ -153,6 +172,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CRevealArtilleryUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CRevealArtilleryUpdateTransformer );
@@ -160,6 +180,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CStructCopierUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CStructCopierUpdateTransformer );
@@ -167,6 +188,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CObjectsUnderConstructionTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CObjectsUnderConstructionTransformer );
@@ -174,6 +196,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CKeyBuildingUpdateTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CKeyBuildingUpdateTransformer );
@@ -181,6 +204,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CScriptCameraRunTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CScriptCameraRunTransformer );
@@ -188,6 +212,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CScriptCameraResetTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CScriptCameraResetTransformer );
@@ -195,6 +220,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CScriptCameraStartMovieTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CScriptCameraStartMovieTransformer );
@@ -202,6 +228,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CScriptCameraStopMovieTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CScriptCameraStopMovieTransformer );
@@ -209,6 +236,7 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CWeatherChangedTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CWeatherChangedTransformer );
@@ -216,30 +244,35 @@ public:
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CChangeVisibilityTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CChangeVisibilityTransformer )
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CPlayEffectTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CPlayEffectTransformer )
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CUpdateStatusTransformer : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CUpdateStatusTransformer )
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CUpdateSuperWeaponControlTransform : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CUpdateSuperWeaponControlTransform )
 		public:
 			SAIBasicUpdate *Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
+
 		class CUpdateSuperWeaponRecycleTransform : public IUpdateTransformer
 		{
 			OBJECT_BASIC_METHODS( CUpdateSuperWeaponRecycleTransform )
@@ -286,6 +319,7 @@ public:
 
 		int operator&( IBinSaver &saver );
 	};
+
 	struct SUpdateDataLessCompare
 	{
 		bool operator()( const CUpdateData *data1, const CUpdateData *data2 ) const
@@ -344,11 +378,16 @@ private:
 
 public:
 	CEventUpdater();
+
 	~CEventUpdater() {}
 
 	void ClearInterpolatable();
 	void Init( const int nStaticMapSizeX, const int nStaticMapSizeY );
-	void Clear() { DestroyContents(); }
+
+	void Clear()
+	{
+		DestroyContents();
+	}
 
 	//send update
 	void AddUpdate( EFeedBack eFeedBack, int nParam = -1, CObjectBase *pParam = 0 );
@@ -367,7 +406,11 @@ public:
 
 	void PrepareUpdates();
 	SAIBasicUpdate *GetUpdate();
-	void RegisterShootAreaUnit( CUpdatableObj *pObj ) { shootGroupUnits.push_back( pObj ); }
+
+	void RegisterShootAreaUnit( CUpdatableObj *pObj )
+	{
+		shootGroupUnits.push_back( pObj );
+	}
 
 	void DumpSizes();
 

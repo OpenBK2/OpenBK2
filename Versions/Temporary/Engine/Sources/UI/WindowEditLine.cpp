@@ -414,7 +414,7 @@ void SetClipboardText( const std::wstring &wszText )
 	SDL_SetClipboardText( szUtf8.c_str() );
 #endif
 }
-}
+} // namespace
 
 void CWindowEditLine::OnPaste( const struct SGameMessage &msg )
 {

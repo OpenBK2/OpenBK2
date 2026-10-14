@@ -7,6 +7,7 @@
 // CONST
 
 #pragma optimize( "p", on )
+
 enum EOper
 {
 	OP_SUB,
@@ -14,6 +15,7 @@ enum EOper
 	OP_UNION,
 	OP_INTERSECTION
 };
+
 const int CLIP_UNKNOWN = 0x00, CLIP_MARK = 0x01, CLIP_SHARED_SAME = 0x02, CLIP_SHARED_TOWARDS = 0x04,
 					CLIP_INSIDE = 0x08, CLIP_OUTSIDE = 0x10, CLIP_DELETE = 0x20;
 
@@ -63,6 +65,7 @@ struct SPlane2
 	CVec2 n;
 	float f;
 };
+
 static void BuildPlane( SPlane2 *pRes, const CVec2 &vFrom, const CVec2 &vTo )
 {
 	SPlane2 &edge = *pRes;
@@ -85,6 +88,7 @@ static void BuildPlane( SPlane2 *pRes, const CVec2 &vFrom, const CVec2 &vTo )
 		edge.f = -vTo.x * edge.n.x - vTo.y * edge.n.y;
 	}
 }
+
 static bool GetCross( const SPlane2 &p1, const SPlane2 &p2, CVec2 *pRes )
 {
 	float fDet = p1.n.x * p2.n.y - p1.n.y * p2.n.x;
@@ -97,14 +101,17 @@ static bool GetCross( const SPlane2 &p1, const SPlane2 &p2, CVec2 *pRes )
 	pRes->y = fDet * ( p2.n.x * p1.f - p1.n.x * p2.f );
 	return true;
 }
+
 float Dot( const CVec2 &a, const CVec2 &b )
 {
 	return a.x * b.x + a.y * b.y;
 }
+
 float CalcSide( const SPlane2 &p, const CVec2 &vPoint )
 {
 	return p.f + Dot( p.n, vPoint );
 }
+
 static bool IsInLine( const CVec2 &b, const CVec2 &e, const CVec2 &v )
 {
 	CVec2 vDir( e - b );
@@ -114,10 +121,12 @@ static bool IsInLine( const CVec2 &b, const CVec2 &e, const CVec2 &v )
 	}
 	return false;
 }
+
 float IsAlmostSame( float a, float b )
 {
 	return fabsf( a - b ) <= 0.0001f * a; //Max( a, b );
 }
+
 static ELineDispos TrueIntersectLines(
 		const CVec2 &vLine1Beg, const CVec2 &vLine1End, const CVec2 &vLine2Beg, const CVec2 &vLine2End, CVec2 *pvRes )
 {
@@ -233,11 +242,13 @@ protected:
 		DIR_FORWARD,
 		DIR_BACKWARD
 	};
+
 	enum EPolygon
 	{
 		POLY_SOURCE,
 		POLY_CLIPPOLY
 	};
+
 	struct SLink
 	{
 		float fAngle;
@@ -245,11 +256,13 @@ protected:
 		CRing<SEdge>::iterator iEdge;
 
 		SLink() : fAngle( 0.0f ) {}
+
 		SLink( float _fAngle, EPolygon _eType, CRing<SEdge>::iterator _iEdge )
 				: fAngle( _fAngle ), eType( _eType ), iEdge( _iEdge )
 		{
 		}
 	};
+
 	struct SPoint
 	{
 		CVec2 vPoint;
@@ -257,6 +270,7 @@ protected:
 
 		SPoint( const CVec2 &_vPoint ) : vPoint( _vPoint ) {}
 	};
+
 	struct SEdge
 	{
 		int nFlags;
@@ -267,6 +281,7 @@ protected:
 
 		SEdge() : nFlags( CLIP_UNKNOWN ) {}
 	};
+
 	struct SPolygon
 	{
 		bool bInverse;
@@ -276,8 +291,12 @@ protected:
 	struct SSortLinks
 	{
 	public:
-		bool operator()( const SLink &sI1, const SLink &sI2 ) const { return ( sI1.fAngle < sI2.fAngle ); }
+		bool operator()( const SLink &sI1, const SLink &sI2 ) const
+		{
+			return ( sI1.fAngle < sI2.fAngle );
+		}
 	};
+
 	struct SLinkSet
 	{
 		float fAngle;
@@ -782,6 +801,7 @@ void CPolyClipper::MakeFlags( SPolygon *psPolygon, std::list<SPolygon> *pContPol
 }
 
 const float F_GRID = 4096;
+
 std::list<CPolyClipper::SPoint>::iterator CPolyClipper::InsertPoint( const CVec2 &_vPoint )
 {
 	CVec2 vPoint( Float2Int( _vPoint.x * F_GRID ) * ( 1 / F_GRID ), Float2Int( _vPoint.y * F_GRID ) * ( 1 / F_GRID ) );
@@ -800,8 +820,13 @@ struct SCrossSort
 	CVec2 vDir;
 
 	SCrossSort( const CVec2 &_vDir ) : vDir( _vDir ) {}
-	bool operator()( const CVec2 &a, const CVec2 &b ) { return Dot( a, vDir ) < Dot( b, vDir ); }
+
+	bool operator()( const CVec2 &a, const CVec2 &b )
+	{
+		return Dot( a, vDir ) < Dot( b, vDir );
+	}
 };
+
 void CPolyClipper::InsertEdge( SPolygon *pResult, const SEdge &_edge, std::vector<CVec2> *pCrossPoints )
 {
 	const CVec2 &vStart = _edge.iBegPoint->vPoint;

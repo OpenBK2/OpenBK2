@@ -3,6 +3,7 @@
 #include "GfxBuffers.h"
 #include "GfxEffects.h"
 #include "Misc/2Darray.h"
+
 namespace NGScene
 {
 
@@ -10,6 +11,7 @@ static CObj<NGfx::CTexture> pSpecularResponse, pUniformBump;
 static CObj<NGfx::CTexture> pBlackTexture, pSpecularResponseR300, pWhiteTexture, pDefaultLightmap;
 static CObj<NGfx::CTexture> pFalloffLookup, pChecker;
 static CObj<NGfx::CTexture> p16bitDepthLookup;
+
 static void InitSolidTexture( CObj<NGfx::CTexture> *pTexture, const NGfx::SPixel8888 &color, int nSize )
 {
 	*pTexture = NGfx::MakeTexture( nSize, nSize, 1, NGfx::SPixel8888::ID, NGfx::REGULAR, NGfx::CLAMP );
@@ -167,12 +169,14 @@ NGfx::CTexture *GetSpecularResponseR300()
 
 static CObj<NGfx::CCubeTexture> pNormalize;
 const int N_CUBE_SIZE = 128;
+
 static float Rnd()
 {
 	static int nA = 23453425;
 	nA = nA * 8923457 + 4937852;
 	return ( ( nA >> 8 ) & 0xffff ) * ( 1.0f / 65535 ) - 0.5f;
 }
+
 static void NormaliseFace( NGfx::CCubeTexture *pTex, NGfx::EFace f )
 {
 	CVec3 n;
@@ -324,5 +328,6 @@ NGfx::CTexture *Get16bitDepthLookup()
 	return p16bitDepthLookup;
 }
 
-}
+} // namespace NGScene
+
 using namespace NGScene;

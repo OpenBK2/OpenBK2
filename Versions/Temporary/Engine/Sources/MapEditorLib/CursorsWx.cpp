@@ -107,7 +107,7 @@ const wxCursor &UpArrow()
 	}();
 	return cursor;
 }
-}
+} // namespace
 
 namespace NCursor
 {
@@ -147,4 +147,4 @@ CTPoint<int> GetPosition()
 	::wxGetMousePosition( &nX, &nY );
 	return CTPoint<int>( nX, nY );
 }
-}
+} // namespace NCursor

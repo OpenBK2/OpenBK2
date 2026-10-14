@@ -6,12 +6,14 @@ namespace NGScene
 {
 class IGameView;
 }
+
 namespace NDb
 {
 struct SModel;
 struct SEffect;
 struct SAttachedLightEffect;
-}
+} // namespace NDb
+
 namespace NAnimation
 {
 struct ISkeletonAnimator;
@@ -68,7 +70,11 @@ class CAttachedLightEffectTransform : public CFuncBase<SFBTransform>
 {
 	OBJECT_NOCOPY_METHODS( CAttachedLightEffectTransform )
 protected:
-	virtual bool NeedUpdate() { return pBaseTransform.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pBaseTransform.Refresh();
+	}
+
 	virtual void Recalc();
 
 public:
@@ -76,6 +82,7 @@ public:
 	CDGPtr<CFuncBase<SFBTransform>> pBaseTransform;
 	SHMatrix mMultiplier;
 	CDGPtr<CCCVec3> pvTranslatePart;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pBaseTransform );
@@ -85,6 +92,7 @@ public:
 	}
 
 	CAttachedLightEffectTransform() : pBaseTransform( 0 ), pvTranslatePart( 0 ) {}
+
 	CAttachedLightEffectTransform( CFuncBase<SFBTransform> *_pBaseTransform, const SHMatrix &_mMultiplier );
 };
 
@@ -99,6 +107,7 @@ class CConstantOffsetTransform : public CFuncBase<SFBTransform>
 	bool bNeedCalcMatrix = {};
 	SHMatrix mMultiplier;
 	CDGPtr<CConstantOffsetTransform> pParentTransform;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pBaseTransform );
@@ -111,11 +120,16 @@ class CConstantOffsetTransform : public CFuncBase<SFBTransform>
 	}
 
 protected:
-	virtual bool NeedUpdate() { return pBaseTransform.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pBaseTransform.Refresh();
+	}
+
 	virtual void Recalc();
 
 public:
 	CConstantOffsetTransform() : pBaseTransform( 0 ), nTargetID( -1 ), bNeedCalcMatrix( true ) {}
+
 	CConstantOffsetTransform( const int _nTargetID,
 	                          const std::string &_szBoneName,
 	                          CFuncBase<SFBTransform> *_pBaseTransform );
@@ -134,6 +148,7 @@ class CCenterOffsetTransform : public CFuncBase<SFBTransform>
 	int nTargetID = {};
 	SHMatrix mMultiplier;
 	SHMatrix mMultiplierInv;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pBaseTransform );
@@ -144,11 +159,16 @@ class CCenterOffsetTransform : public CFuncBase<SFBTransform>
 	}
 
 protected:
-	virtual bool NeedUpdate() { return pBaseTransform.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pBaseTransform.Refresh();
+	}
+
 	virtual void Recalc();
 
 public:
 	CCenterOffsetTransform() : pBaseTransform( 0 ), nTargetID( -1 ) {}
+
 	CCenterOffsetTransform( const int _nTargetID,
 	                        CFuncBase<SFBTransform> *_pBaseTransform,
 	                        const SHMatrix &_mMultiplier );

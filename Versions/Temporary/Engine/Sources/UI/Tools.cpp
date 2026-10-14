@@ -112,4 +112,4 @@ void ApplyPlacement( const NDb::SWindowPlacement &placement, const CTRect<float>
 	pRect->y2 = pRect->y1 + nSizeY;
 }
 
-}
+} // namespace NUITools

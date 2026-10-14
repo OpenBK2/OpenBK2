@@ -19,11 +19,13 @@ void CreateTex( CObj<T> *pRes, int nSize, int nPixelFormatID )
 {
 	ASSERT( 0 );
 }
+
 template <>
 void CreateTex<NGfx::CTexture>( CObj<NGfx::CTexture> *pRes, int nSize, int nPixelFormatID )
 {
 	*pRes = NGfx::MakeTexture( nSize, nSize, 1, nPixelFormatID, NGfx::TARGET, NGfx::CLAMP );
 }
+
 template <>
 void CreateTex<NGfx::CCubeTexture>( CObj<NGfx::CCubeTexture> *pRes, int nSize, int nPixelFormatID )
 {
@@ -39,6 +41,7 @@ class CTexShare
 		int nResolution;
 		int nPixelFormatID;
 	};
+
 	typedef std::unordered_map<std::string, STexInfo> CTexHash;
 	CTexHash textureHash;
 
@@ -69,6 +72,7 @@ public:
 		}
 		return i->second.pTex;
 	}
+
 	void Init( const std::vector<SUserRTInfo::STex> &rtInfo, NGfx::SRenderTargetsInfo::CRTHash *pRes )
 	{
 		textureHash.clear();
@@ -83,6 +87,7 @@ public:
 		}
 	}
 };
+
 static CTexShare<NGfx::CTexture> texShare;
 static CTexShare<NGfx::CCubeTexture> texCubeShare;
 
@@ -111,4 +116,4 @@ void InitRTShare( const SUserRTInfo &rtInfo, NGfx::SRenderTargetsInfo *pRes )
 	texShare.Init( rtInfo.tex, &pRes->targets );
 	texCubeShare.Init( rtInfo.cubeTex, &pRes->cubeTargets );
 }
-}
+} // namespace NGScene

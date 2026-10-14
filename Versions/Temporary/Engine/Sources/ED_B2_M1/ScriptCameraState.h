@@ -36,7 +36,11 @@ class CScriptCameraState : public CDefaultInputState, public ICommandHandler
 	void DeleteScriptCameraMarkers();
 
 	void SetCameraPlacement( const NCamera::CCameraPlacement &camera );
-	CMapInfoEditor *GetMapInfoEditor() { return pMapInfoEditor; }
+
+	CMapInfoEditor *GetMapInfoEditor()
+	{
+		return pMapInfoEditor;
+	}
 
 	void SetMovie( int nMovieIndex );
 	int SelectCameraByMovieParams( int nMovieID, float fTime ) const;

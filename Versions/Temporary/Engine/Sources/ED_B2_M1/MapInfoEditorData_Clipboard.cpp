@@ -104,6 +104,6 @@ void SObjectClipboard::Trace() const
 	DebugTrace(
 			"clipboard, diffPos: ( %g, %g, %g )", vPositionDifference.x, vPositionDifference.y, vPositionDifference.z );
 }
-};
+}; // namespace NMapInfoEditor
 
 // basement storage

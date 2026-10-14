@@ -19,18 +19,27 @@ class CVec2i
 {
 public:
 	int x = 0, y = 0;
+
 	//
 	CVec2i() {}
+
 	CVec2i( const int _x, const int _y ) : x( _x ), y( _y ) {}
+
 	CVec2i( const CVec2i &v ) : x( v.x ), y( v.y ) {}
+
 	//
 	void Set( const int _x, const int _y )
 	{
 		x = _x;
 		y = _y;
 	}
+
 	//
-	bool operator==( const CVec2i &v ) const { return ( x == v.x ) && ( y == v.y ); }
+	bool operator==( const CVec2i &v ) const
+	{
+		return ( x == v.x ) && ( y == v.y );
+	}
+
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -61,14 +70,19 @@ class CVec3Ex // CRAP {not properly connected yet} CRAP
 public:
 	TReal x{}, y{}, z{};
 	uint8_t flag = 0;
+
 	//
 	CVec3Ex() {}
+
 	CVec3Ex( const TReal _x, const TReal _y, const TReal _z, const uint8_t _flag )
 			: x( _x ), y( _y ), z( _z ), flag( _flag )
 	{
 	}
+
 	CVec3Ex( const CVec3 &v, const uint8_t _flag ) : x( v.x ), y( v.y ), z( v.z ), flag( _flag ) {}
+
 	CVec3Ex( const CVec3Ex &v ) : x( v.x ), y( v.y ), z( v.z ), flag( v.flag ) {}
+
 	//
 	void Set( const TReal _x, const TReal _y, const TReal _z, const uint8_t _flag )
 	{
@@ -77,6 +91,7 @@ public:
 		z = _z;
 		flag = _flag;
 	}
+
 	void Set( const CVec3 &v, const uint8_t _flag )
 	{
 		x = v.x;
@@ -84,17 +99,20 @@ public:
 		z = v.z;
 		flag = _flag;
 	}
+
 	//
 	bool operator==( const CVec3Ex &v ) const
 	{
 		return ( ( fabs( x - v.x ) < DEF_EPS ) && ( fabs( y - v.y ) < DEF_EPS ) && ( fabs( z - v.z ) < DEF_EPS ) &&
 		         ( flag == v.flag ) );
 	}
+
 	bool operator!=( const CVec3Ex &v ) const
 	{
 		return ( ( fabs( x - v.x ) >= DEF_EPS ) || ( fabs( y - v.y ) >= DEF_EPS ) || ( fabs( z - v.z ) >= DEF_EPS ) ||
 		         ( flag != v.flag ) );
 	}
+
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -107,20 +125,26 @@ public:
 };
 
 class CVec3dEx;
+
 class CVec3fEx
 {
 public:
 	float x = 0.0f, y = 0.0f, z = 0.0f;
 	uint8_t flag = 0;
+
 	//
 	CVec3fEx() {}
+
 	//
 	CVec3fEx( const float _x, const float _y, const float _z, const uint8_t _flag )
 			: x( _x ), y( _y ), z( _z ), flag( _flag )
 	{
 	}
+
 	CVec3fEx( const CVec3 &v, const uint8_t _flag = 0 ) : x( v.x ), y( v.y ), z( v.z ), flag( _flag ) {}
+
 	CVec3fEx( const CVec3fEx &v ) : x( v.x ), y( v.y ), z( v.z ), flag( v.flag ) {}
+
 	//
 	void Set( const float _x, const float _y, const float _z, const uint8_t _flag )
 	{
@@ -129,6 +153,7 @@ public:
 		z = _z;
 		flag = _flag;
 	}
+
 	void Set( const CVec3 &v, const uint8_t _flag )
 	{
 		x = v.x;
@@ -136,17 +161,20 @@ public:
 		z = v.z;
 		flag = _flag;
 	}
+
 	//
 	bool operator==( const CVec3fEx &v ) const
 	{
 		return ( ( fabs( x - v.x ) < DEF_EPS ) && ( fabs( y - v.y ) < DEF_EPS ) && ( fabs( z - v.z ) < DEF_EPS ) &&
 		         ( flag == v.flag ) );
 	}
+
 	bool operator!=( const CVec3fEx &v ) const
 	{
 		return ( ( fabs( x - v.x ) >= DEF_EPS ) || ( fabs( y - v.y ) >= DEF_EPS ) || ( fabs( z - v.z ) >= DEF_EPS ) ||
 		         ( flag != v.flag ) );
 	}
+
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -156,9 +184,18 @@ public:
 		saver.Add( 4, &flag );
 		return 0;
 	}
+
 	//
-	CVec3 GetVec3() const { return CVec3( x, y, z ); }
-	CVec2 GetVec2() const { return CVec2( x, y ); }
+	CVec3 GetVec3() const
+	{
+		return CVec3( x, y, z );
+	}
+
+	CVec2 GetVec2() const
+	{
+		return CVec2( x, y );
+	}
+
 	CVec3dEx GetVec3dEx() const;
 };
 
@@ -167,15 +204,20 @@ class CVec3dEx
 public:
 	double x = 0.0, y = 0.0, z = 0.0;
 	uint8_t flag = 0;
+
 	//
 	CVec3dEx() {}
+
 	//
 	CVec3dEx( const double _x, const double _y, const double _z, const uint8_t _flag )
 			: x( _x ), y( _y ), z( _z ), flag( _flag )
 	{
 	}
+
 	CVec3dEx( const CVec3 &v, const uint8_t _flag = 0 ) : x( v.x ), y( v.y ), z( v.z ), flag( _flag ) {}
+
 	CVec3dEx( const CVec3fEx &v ) : x( v.x ), y( v.y ), z( v.z ), flag( v.flag ) {}
+
 	//
 	void Set( const double _x, const double _y, const double _z, const uint8_t _flag )
 	{
@@ -184,6 +226,7 @@ public:
 		z = _z;
 		flag = _flag;
 	}
+
 	void Set( const CVec3 &v, const uint8_t _flag )
 	{
 		x = v.x;
@@ -191,17 +234,20 @@ public:
 		z = v.z;
 		flag = _flag;
 	}
+
 	//
 	bool operator==( const CVec3dEx &v ) const
 	{
 		return ( ( fabs( x - v.x ) < DEF_EPS ) && ( fabs( y - v.y ) < DEF_EPS ) && ( fabs( z - v.z ) < DEF_EPS ) &&
 		         ( flag == v.flag ) );
 	}
+
 	bool operator!=( const CVec3dEx &v ) const
 	{
 		return ( ( fabs( x - v.x ) >= DEF_EPS ) || ( fabs( y - v.y ) >= DEF_EPS ) || ( fabs( z - v.z ) >= DEF_EPS ) ||
 		         ( flag != v.flag ) );
 	}
+
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -211,9 +257,18 @@ public:
 		saver.Add( 4, &flag );
 		return 0;
 	}
+
 	//
-	CVec3 GetVec3() const { return CVec3( x, y, z ); }
-	CVec2 GetVec2() const { return CVec2( x, y ); }
+	CVec3 GetVec3() const
+	{
+		return CVec3( x, y, z );
+	}
+
+	CVec2 GetVec2() const
+	{
+		return CVec2( x, y );
+	}
+
 	CVec3fEx GetVec3fEx() const;
 };
 
@@ -221,19 +276,31 @@ struct SIntersectPoint
 {
 	CVec3 vPoint;
 	float fDist = 0.0f;
+
 	//
 	SIntersectPoint() {}
+
 	SIntersectPoint( const SIntersectPoint &p ) : vPoint( p.vPoint ), fDist( p.fDist ) {}
+
 	SIntersectPoint( const CVec3 &_vPoint, const float _fDist ) : vPoint( _vPoint ), fDist( _fDist ) {}
+
 	//
 	void Set( const CVec3 &_vPoint, const float _fDist )
 	{
 		vPoint = _vPoint;
 		fDist = _fDist;
 	}
+
 	//
-	bool operator<( const SIntersectPoint &v ) const { return fDist < v.fDist; }
-	bool operator==( const SIntersectPoint &v ) const { return fabs( fDist - v.fDist ) < DEF_EPS; }
+	bool operator<( const SIntersectPoint &v ) const
+	{
+		return fDist < v.fDist;
+	}
+
+	bool operator==( const SIntersectPoint &v ) const
+	{
+		return fabs( fDist - v.fDist ) < DEF_EPS;
+	}
 };
 
 inline CVec2 GetVec2( const CVec3 &v )
@@ -559,6 +626,7 @@ public:
 	CVec3dEx coeffs[3];
 	//
 	CTriangleEx() {};
+
 	//
 	CTriangleEx( const CVec3fEx &p1, const CVec3fEx &p2, const CVec3fEx &p3 )
 	{
@@ -569,6 +637,7 @@ public:
 		GetLineEq( p2.x, p2.y, p3.x, p3.y, &( coeffs[1].x ), &( coeffs[1].y ), &( coeffs[1].z ) );
 		GetLineEq( p3.x, p3.y, p1.x, p1.y, &( coeffs[2].x ), &( coeffs[2].y ), &( coeffs[2].z ) );
 	}
+
 	//
 	void Set( const CVec3fEx &p1, const CVec3fEx &p2, const CVec3fEx &p3 )
 	{

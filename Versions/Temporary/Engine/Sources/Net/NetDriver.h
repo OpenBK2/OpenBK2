@@ -14,6 +14,7 @@ struct SNetDriverConsts
 	float fServerListTimeout;
 
 	SNetDriverConsts() : fTimeout( 60 ), fServerListTimeout( 20 ) {}
+
 	SNetDriverConsts( const int _nTimeOut ) : fTimeout( _nTimeOut ), fServerListTimeout( 20 ) {}
 };
 
@@ -35,6 +36,7 @@ struct IDriver : public CObjectBase
 		ACTIVE,
 		CONNECTING
 	};
+
 	enum EReject
 	{
 		NONE,
@@ -46,6 +48,7 @@ struct IDriver : public CObjectBase
 		ALREADY_CONNECTED,
 		FORBIDDEN
 	};
+
 	enum EMessage
 	{
 		NEW_CLIENT,
@@ -55,6 +58,7 @@ struct IDriver : public CObjectBase
 		SERVER_DEAD,
 		KICKED,
 	};
+
 	enum EServerGameMode
 	{
 		ESGM_WAIT,          // waiting for players to join
@@ -81,6 +85,7 @@ struct IDriver : public CObjectBase
 		std::string szModVersion;
 
 		CMemoryStream gameSettings;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &wszServerName );
@@ -103,6 +108,7 @@ struct IDriver : public CObjectBase
 		{
 		}
 	};
+
 	//
 	virtual void
 	Init( const APPLICATION_ID nApplicationID, const int nGamePort, bool bClientOnly, ILinksManager *pLinksManager ) = 0;
@@ -146,7 +152,9 @@ struct IDriver : public CObjectBase
 
 	// for debug of lagging net
 	virtual void PauseNet() {}
+
 	virtual void UnpauseNet() {}
+
 	virtual void SetLag( const NTimer::STime period ) {}
 
 	virtual const std::string GetIP( const int nClientID ) = 0;
@@ -160,4 +168,4 @@ NET_EXPORT ILinksManager *CreateServerLinksManager( const int nPort );
 
 NET_EXPORT void GetNOPStream( CMemoryStream *pNOP );
 
-}
+} // namespace NNet

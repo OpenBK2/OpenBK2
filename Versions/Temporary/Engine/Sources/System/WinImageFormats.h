@@ -116,4 +116,4 @@ SYSTEM_EXPORT int SelectImage( const std::vector<SImageInfo> &images, int nDesir
 // False for an index that is out of range, an entry that is compressed, one
 // holding a PNG, or one at a bit depth this does not read.
 SYSTEM_EXPORT bool DecodeImage( SImage *pResult, const uint8_t *pData, size_t nSize, size_t nBase, int nIndex );
-}
+} // namespace NWinImage

@@ -45,8 +45,13 @@ class CNetSaver : public IBinSaver
 	CMemoryStream *pRes;
 	ESaverMode mode;
 
-	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber ) { return true; }
+	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber )
+	{
+		return true;
+	}
+
 	virtual void FinishChunk() {}
+
 	virtual int CountChunks( const chunk_id idChunk )
 	{
 		ASSERT( 0 );
@@ -68,6 +73,7 @@ class CNetSaver : public IBinSaver
 			pRes->Write( pData, nSize );
 		}
 	}
+
 	virtual void DataChunkString( std::string &data )
 	{
 		int nSize;
@@ -94,6 +100,7 @@ class CNetSaver : public IBinSaver
 			}
 		}
 	}
+
 	virtual void DataChunkString( std::wstring &data )
 	{
 		int nSize;
@@ -122,6 +129,7 @@ class CNetSaver : public IBinSaver
 			}
 		}
 	}
+
 	// storing/loading pointers to objects
 	virtual void StoreObject( CObjectBase *pObject )
 	{
@@ -193,9 +201,18 @@ class CNetSaver : public IBinSaver
 	}
 
 public:
-	virtual bool IsReading() { return mode == SAVER_MODE_READ; }
-	virtual int GetVersion() const { return N_SAVELOAD_VERSION; }
+	virtual bool IsReading()
+	{
+		return mode == SAVER_MODE_READ;
+	}
+
+	virtual int GetVersion() const
+	{
+		return N_SAVELOAD_VERSION;
+	}
+
 	CNetSaver() : pRes( 0 ) {}
+
 	CNetSaver( CMemoryStream *_pRes, ESaverMode _mode ) : pRes( _pRes ), mode( _mode ) {}
 };
 

@@ -8,7 +8,7 @@ namespace NDb
 enum EUnitAckType : int;
 struct SComplexSoundDesc;
 struct SClientGameConsts;
-};
+}; // namespace NDb
 
 struct IClientAckManager : public CObjectBase
 {
@@ -17,6 +17,7 @@ struct IClientAckManager : public CObjectBase
 	{
 		tidTypeID = 0x110AE400
 	};
+
 	virtual void AddDeathAcknowledgement( const CVec3 &vPos,
 	                                      const NDb::SComplexSoundDesc *pSound,
 	                                      const unsigned int nTimeSiceStart ) = 0;

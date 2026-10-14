@@ -11,6 +11,7 @@ void Seed( const int nSeed )
 {
 	s_holdrand = nSeed;
 }
+
 int GetSeed()
 {
 	return s_holdrand;
@@ -24,9 +25,10 @@ unsigned int Random()
 }
 
 static SRandomFunc rndFunc;
+
 const SRandomFunc &RndFunc()
 {
 	return rndFunc;
 }
 
-};
+}; // namespace NWin32Random

@@ -158,6 +158,7 @@ static void ReadPtrData( const unsigned char *pData, void *pDst, int &nPos, int 
 	memcpy( pDst, pData + nPos, nSize );
 	nPos += nSize;
 }
+
 // should copy data from start
 // memmove, not memcpy: WriteShortChunk is called with a source inside the very
 // buffer being written, so a chunk whose header turns out to fit the one byte

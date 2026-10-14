@@ -13,6 +13,7 @@ namespace NAI
 const float F_INF = 1e30f;
 const int N_F_INF = 0x7149f2ca; //1e30f//*(const int*)&F_INF;
 struct SConvexHull;
+
 class _3DMOTOR_EXPORT CFastRenderer : public CRasterizer<CFastRenderer>
 {
 public:
@@ -21,11 +22,13 @@ public:
 		union
 		{
 			float fDist[2];
+
 			struct
 			{
 				float fEnter, fExit;
 			};
 		};
+
 		CPtr<CObjectBase> pObject;
 		SResult *pNext;
 	};
@@ -36,7 +39,12 @@ public:
 	CArray2D<int> gridFrames;
 
 	CFastRenderer();
-	bool TestSphere( const CVec3 &ptCenter, float fR ) { return ts.IsIn( SSphere( ptCenter, fR ) ); }
+
+	bool TestSphere( const CVec3 &ptCenter, float fR )
+	{
+		return ts.IsIn( SSphere( ptCenter, fR ) );
+	}
+
 	void GetPoints( std::vector<CVec3> *pEnters, std::vector<CVec3> *pExits ) const;
 	void GetPoints( std::vector<CVec3> *pEnters, std::vector<CVec3> *pExits, int x, int y ) const;
 	void GetDir( CVec3 *pRes, float x, float y ) const;
@@ -68,7 +76,10 @@ private:
 	TPool res;
 	TPool::SIterator objectStart;
 
-	bool DoRenderBackface() const { return true; }
+	bool DoRenderBackface() const
+	{
+		return true;
+	}
 
 	void ClipVertical( int *pnY )
 	{
@@ -82,11 +93,13 @@ private:
 		( *pnFY2 ) = (std::min)( *pnFY2, region.y2 );
 		( *pnFY ) = (std::min)( *pnFY, region.y2 );
 	}
+
 	void ClipHorizontal( int *pnSX, int *pnFX )
 	{
 		( *pnSX ) = (std::max)( *pnSX, region.x1 );
 		( *pnFX ) = (std::min)( *pnFX, region.x2 );
 	}
+
 	SResult *AddResult()
 	{
 		SResult *pRes = res.Alloc();
@@ -96,6 +109,7 @@ private:
 		pRes->pObject = 0;
 		return pRes;
 	}
+
 	void RasterSpan( int nY, int nLeft, int nRight, float fZ, float fDZ, int nBackface )
 	{
 		int y = nY - region.y1;
@@ -160,6 +174,7 @@ private:
 	void CalcDistMul();
 	void SetSource( const SSourceInfo *_pSrc, int _nUserID );
 	void ConvertResults( bool bTerrain );
+
 	int operator&( CStructureSaver &f )
 	{
 		ASSERT( 0 );
@@ -169,4 +184,4 @@ private:
 	friend class CRasterizer<CFastRenderer>;
 };
 
-}
+} // namespace NAI

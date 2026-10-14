@@ -6,6 +6,7 @@ public:
 	//
 	static const CVec3 vShift;       // vis tiles
 	static const float fDefaultDiff; // vis tiles
+
 	//
 	struct SCameraPlacement
 	{
@@ -19,9 +20,17 @@ public:
 		SCameraPlacement();
 		// serializing...
 		int operator&( IXmlSaver &xs );
+
 		//
-		bool IsValid() const { return bValid; }
-		void SetValid( bool _bValid ) { bValid = _bValid; }
+		bool IsValid() const
+		{
+			return bValid;
+		}
+
+		void SetValid( bool _bValid )
+		{
+			bValid = _bValid;
+		}
 	};
 
 	bool bShowToolbar;

@@ -45,15 +45,22 @@ public:
 		f.Add( 12, &bBonusApplied );
 		return 0;
 	}
+
 	void UpdateState();
 	void ApplyBonus( const bool bForward );
 
 public:
 	CExecutorCounterFire( CArtillery *_pUnit );
+
 	CExecutorCounterFire() {}
 
 	virtual int Segment();
 	virtual bool NotifyEvent( const CExecutorEvent &event );
-	virtual bool IsExecutorValid() const { return IsValid( pUnit ); }
+
+	virtual bool IsExecutorValid() const
+	{
+		return IsValid( pUnit );
+	}
+
 	virtual void RegisterOnEvents( IExecutorContainer *pContainer );
 };

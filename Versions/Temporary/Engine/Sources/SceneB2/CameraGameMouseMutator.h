@@ -21,10 +21,16 @@ class CCameraGameMouseMutator : public CCameraBasicMouseMutator
 public:
 	CCameraGameMouseMutator();
 	void SetDistance( float fDistance ) override;
-	bool NeedUpdate() { return true; }
+
+	bool NeedUpdate()
+	{
+		return true;
+	}
+
 	void Recalc();
 
 	int operator&( IBinSaver &saver );
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-}
+} // namespace NCamera

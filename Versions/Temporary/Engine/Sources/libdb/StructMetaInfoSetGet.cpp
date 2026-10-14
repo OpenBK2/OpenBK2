@@ -58,6 +58,7 @@ namespace NMetaInfo
 			pRes->assign( szRefName.begin() + nPos + 1, szRefName.end() );
 		}
 	}
+
 	// CRAP}
 
 	CDBID GetDBIDFromValue( const CVariant &value )
@@ -89,6 +90,7 @@ namespace NMetaInfo
 				return CDBID();
 		}
 	}
+
 	// ************************************************************************************************************************ //
 	// **
 	// ** set-to-struct functions
@@ -103,18 +105,21 @@ namespace NMetaInfo
 		*( (int *)pData ) = (int)value;
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::SetValueToStructFloat( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 	{
 		void *pData = pThis + GetBinaryShift();
 		*( (float *)pData ) = (float)value;
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::SetValueToStructBool( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 	{
 		void *pData = pThis + GetBinaryShift();
 		*( (bool *)pData ) = (bool)value;
 		return true;
 	}
+
 	bool
 	SStructMetaInfo::SField::SetValueToStructString( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 	{
@@ -122,6 +127,7 @@ namespace NMetaInfo
 		*( (std::string *)pData ) = value.GetStr();
 		return true;
 	}
+
 	bool
 	SStructMetaInfo::SField::SetValueToStructWString( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 	{
@@ -129,6 +135,7 @@ namespace NMetaInfo
 		*( (std::wstring *)pData ) = value.GetWStringRecode();
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::SetValueToStructGUID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 	{
 		if ( value.GetBlobSize() != sizeof( boost::uuids::uuid ) )
@@ -139,6 +146,7 @@ namespace NMetaInfo
 		memcpy( pData, value.GetPtr(), sizeof( boost::uuids::uuid ) );
 		return true;
 	}
+
 	bool
 	SStructMetaInfo::SField::SetValueToStructBinary( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 	{
@@ -159,11 +167,13 @@ namespace NMetaInfo
 			return false;
 		}
 	}
+
 	bool SStructMetaInfo::SField::SetValueToStructEnum( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 	{
 		void *pData = pThis + GetBinaryShift();
 		return VariantToEnum( (int *)pData, value, pTypeDef );
 	}
+
 	bool SStructMetaInfo::SField::SetValueToStructDBID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 	{
 		void *pData = pThis + GetBinaryShift();
@@ -223,6 +233,7 @@ namespace NMetaInfo
 		*pValue = *( (int *)pData );
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::GetValueFromStructFloat( CVariant *pValue,
 	                                                       uint8_t *pThis,
 	                                                       const NBind::UValue *ownValues ) const
@@ -231,6 +242,7 @@ namespace NMetaInfo
 		*pValue = *( (float *)pData );
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::GetValueFromStructBool( CVariant *pValue,
 	                                                      uint8_t *pThis,
 	                                                      const NBind::UValue *ownValues ) const
@@ -239,6 +251,7 @@ namespace NMetaInfo
 		*pValue = *( (bool *)pData );
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::GetValueFromStructString( CVariant *pValue,
 	                                                        uint8_t *pThis,
 	                                                        const NBind::UValue *ownValues ) const
@@ -247,6 +260,7 @@ namespace NMetaInfo
 		*pValue = *( (std::string *)pData );
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::GetValueFromStructWString( CVariant *pValue,
 	                                                         uint8_t *pThis,
 	                                                         const NBind::UValue *ownValues ) const
@@ -255,6 +269,7 @@ namespace NMetaInfo
 		*pValue = *( (std::wstring *)pData );
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::GetValueFromStructGUIDorBinary( CVariant *pValue,
 	                                                              uint8_t *pThis,
 	                                                              const NBind::UValue *ownValues ) const
@@ -263,6 +278,7 @@ namespace NMetaInfo
 		*pValue = CVariant( pData, int( main.size ) );
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::GetValueFromStructEnum( CVariant *pValue,
 	                                                      uint8_t *pThis,
 	                                                      const NBind::UValue *ownValues ) const
@@ -270,6 +286,7 @@ namespace NMetaInfo
 		void *pData = pThis + GetBinaryShift();
 		return EnumToVariant( pValue, *( (int *)pData ), pTypeDef );
 	}
+
 	bool SStructMetaInfo::SField::GetValueFromStructDBID( CVariant *pValue,
 	                                                      uint8_t *pThis,
 	                                                      const NBind::UValue *ownValues ) const
@@ -285,6 +302,7 @@ namespace NMetaInfo
 		}
 		return true;
 	}
+
 	bool
 	SStructMetaInfo::SField::GetValueArraySize( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 	{
@@ -307,30 +325,35 @@ namespace NMetaInfo
 		data.nValue = (int)value;
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::SetValueToOwnFloat( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 	{
 		NBind::UValue &data = ownValues[GetOwnValueIndex()];
 		data.fValue = (float)value;
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::SetValueToOwnBool( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 	{
 		NBind::UValue &data = ownValues[GetOwnValueIndex()];
 		data.bValue = (bool)value;
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::SetValueToOwnString( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 	{
 		NBind::UValue &data = ownValues[GetOwnValueIndex()];
 		*data.pString = value.GetStr();
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::SetValueToOwnWString( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 	{
 		NBind::UValue &data = ownValues[GetOwnValueIndex()];
 		*data.pWString = value.GetWStringRecode();
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::SetValueToOwnGUID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 	{
 		if ( value.GetBlobSize() != sizeof( boost::uuids::uuid ) )
@@ -341,6 +364,7 @@ namespace NMetaInfo
 		memcpy( data.pGUID, value.GetPtr(), sizeof( boost::uuids::uuid ) );
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::SetValueToOwnBinary( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 	{
 		const int nBinarySize = checked_cast_ptr<NTypeDef::STypeBinary *>( pTypeDef )->nBinaryObjectSize;
@@ -363,11 +387,13 @@ namespace NMetaInfo
 		}
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::SetValueToOwnEnum( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 	{
 		NBind::UValue &data = ownValues[GetOwnValueIndex()];
 		return VariantToEnum( &data.nValue, value, pTypeDef );
 	}
+
 	bool SStructMetaInfo::SField::SetValueToOwnDBID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues )
 	{
 		NBind::UValue &data = ownValues[GetOwnValueIndex()];
@@ -410,6 +436,7 @@ namespace NMetaInfo
 		*pValue = data.nValue;
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::GetValueFromOwnFloat( CVariant *pValue,
 	                                                    uint8_t *pThis,
 	                                                    const NBind::UValue *ownValues ) const
@@ -418,6 +445,7 @@ namespace NMetaInfo
 		*pValue = data.fValue;
 		return true;
 	}
+
 	bool
 	SStructMetaInfo::SField::GetValueFromOwnBool( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 	{
@@ -425,6 +453,7 @@ namespace NMetaInfo
 		*pValue = data.bValue;
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::GetValueFromOwnString( CVariant *pValue,
 	                                                     uint8_t *pThis,
 	                                                     const NBind::UValue *ownValues ) const
@@ -433,6 +462,7 @@ namespace NMetaInfo
 		*pValue = *data.pString;
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::GetValueFromOwnWString( CVariant *pValue,
 	                                                      uint8_t *pThis,
 	                                                      const NBind::UValue *ownValues ) const
@@ -441,6 +471,7 @@ namespace NMetaInfo
 		*pValue = *data.pWString;
 		return true;
 	}
+
 	bool
 	SStructMetaInfo::SField::GetValueFromOwnGUID( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 	{
@@ -448,6 +479,7 @@ namespace NMetaInfo
 		*pValue = CVariant( data.pGUID, sizeof( boost::uuids::uuid ) );
 		return true;
 	}
+
 	bool SStructMetaInfo::SField::GetValueFromOwnBinary( CVariant *pValue,
 	                                                     uint8_t *pThis,
 	                                                     const NBind::UValue *ownValues ) const
@@ -456,12 +488,14 @@ namespace NMetaInfo
 		*pValue = CVariant( data.pBLOB, int( main.size ) );
 		return true;
 	}
+
 	bool
 	SStructMetaInfo::SField::GetValueFromOwnEnum( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 	{
 		const NBind::UValue &data = ownValues[GetOwnValueIndex()];
 		return EnumToVariant( pValue, data.nValue, pTypeDef );
 	}
+
 	bool
 	SStructMetaInfo::SField::GetValueFromOwnDBID( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 	{
@@ -477,5 +511,5 @@ namespace NMetaInfo
 		return true;
 	}
 
-}
-}
+} // namespace NMetaInfo
+} // namespace NDb

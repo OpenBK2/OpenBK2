@@ -40,6 +40,7 @@ struct SSimpleType
 	ObjectFactoryNewFunc pfnFunc;
 
 	SSimpleType() : pfnFunc( 0 ) {}
+
 	SSimpleType( ObjectFactoryNewFunc _pfnFunc ) : pfnFunc( _pfnFunc ) {}
 };
 
@@ -53,6 +54,7 @@ CObjectBase *NewResource()
 }
 
 static std::unordered_map<std::string, SSimpleType> simpleTypes;
+
 struct SSimpleTypesInit
 {
 	SSimpleTypesInit()
@@ -682,4 +684,4 @@ void CVisitor::Visit( NLang::CNamespace *pNM )
 	}
 }
 
-}
+} // namespace NCompileCLike

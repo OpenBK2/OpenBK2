@@ -11,6 +11,7 @@ namespace NGfx
 {
 enum EPixelFormat : int;
 }
+
 namespace NImage
 {
 
@@ -50,16 +51,24 @@ struct SColor
 		{
 			uint8_t b, g, r, a;
 		};
+
 		uint32_t dwColor;
 	};
+
 	//
 	// Initialize one complete union arm without changing the overlapping byte aliases.
 	SColor() : dwColor( 0 ) {}
+
 	SColor( const uint32_t _dwColor ) : dwColor( _dwColor ) {}
+
 	SColor( const uint8_t _a, const uint8_t _r, const uint8_t _g, const uint8_t _b ) : a( _a ), r( _r ), g( _g ), b( _b )
 	{
 	}
+
 	//
-	operator uint32_t() const { return dwColor; }
+	operator uint32_t() const
+	{
+		return dwColor;
+	}
 };
-}
+} // namespace NImage

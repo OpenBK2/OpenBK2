@@ -45,4 +45,4 @@ bool Compile( std::vector<CObj<NDb::NTypeDef::STypeDef>> *pTypes,
 	return true;
 }
 
-}
+} // namespace NCompileCLike

@@ -35,7 +35,11 @@ class CMariaDbDatabase : public IDatabase
 
 public:
 	CMariaDbDatabase() : pMySQL( 0 ) {}
-	virtual ~CMariaDbDatabase() { Close(); }
+
+	virtual ~CMariaDbDatabase()
+	{
+		Close();
+	}
 
 	virtual bool Connect( const SDbConnection &connection );
 	virtual void Close();
@@ -44,7 +48,11 @@ public:
 	virtual bool Query( const std::string &szQuery, CDbResult *pResult );
 	virtual std::string Escape( const std::string &szValue ) const;
 	virtual std::unordered_set<std::string> GetColumns( const std::string &szTable );
-	virtual std::string GetLastError() const { return szLastError; }
+
+	virtual std::string GetLastError() const
+	{
+		return szLastError;
+	}
 };
 
 bool CMariaDbDatabase::Connect( const SDbConnection &_connection )
@@ -212,7 +220,7 @@ std::unordered_set<std::string> CMariaDbDatabase::GetColumns( const std::string 
 	return columns;
 }
 
-}
+} // namespace
 
 IDatabase *CreateMariaDbDatabase()
 {

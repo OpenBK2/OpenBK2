@@ -11,6 +11,7 @@ class CSpotState : public CMapObjectState
 	friend class CMapObjectMultiState;
 
 	NDb::STerrainSpotInstance terrainSpotInstance;
+
 	void ClearData()
 	{
 		terrainSpotInstance.nSpotID = INVALID_NODE_ID;
@@ -23,6 +24,7 @@ class CSpotState : public CMapObjectState
 	{
 		NI_ASSERT( pParentState != 0, fmt::format( "CSpotState(): pParentState == 0" ) );
 	}
+
 	//
 	bool CanAddSpot();
 	void ModifySpotSquare( NDb::STerrainSpotInstance *pTerrainSpotInstance, const CVec3 &rvPosition, float fDirection );
@@ -30,7 +32,11 @@ class CSpotState : public CMapObjectState
 
 protected:
 	// CMapObjectState
-	bool IsDrawSceneDrawTool() { return true; }
+	bool IsDrawSceneDrawTool()
+	{
+		return true;
+	}
+
 	//
 	void InsertObjectEnter();
 	void InsertObjectLeave();

@@ -9,7 +9,7 @@ namespace NDb
 {
 struct SMedal;
 struct SMultiplayerConsts;
-}
+} // namespace NDb
 
 class CInterfaceMPStatistics : public CInterfaceMPScreenBase, public IProgrammedReactionsAndChecks
 {
@@ -64,6 +64,7 @@ class CInterfaceMPStatistics : public CInterfaceMPScreenBase, public IProgrammed
 	CPtr<IProgressBar> pExpTotalProgress;
 
 	bool bWasLadderGame;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );

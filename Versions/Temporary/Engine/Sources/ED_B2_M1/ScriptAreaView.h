@@ -22,17 +22,21 @@
 struct SScriptAreaWindowData
 {
 	NDb::EScriptAreaTypes eAreaType; // какая радио-кнопка выбрана в диалоге
+
 	//
 	struct SScriptArea // данные для создания row в списке областей
 	{
 		std::string szName;
 		int nScriptAreaID;
 		NDb::EScriptAreaTypes eType;
+
 		//
 		SScriptArea() : nScriptAreaID( INVALID_NODE_ID ), eType( NDb::EAT_CIRCLE ) {}
 	};
+
 	std::vector<SScriptArea> scriptAreaList;        // содержимое лист-контрола
 	std::vector<unsigned> selectedScriptAreaIDList; // ID поселекченных областей
+
 	//
 	enum EChangeMask // что изменилось ( GET ) или что нужно изменить в диалоге ( SET )
 	{
@@ -43,9 +47,15 @@ struct SScriptAreaWindowData
 		CHANGE_AREA_TYPE = 0x00000008, // какая радио-кнопка выбрана в диалоге ( GET + SET )
 		CHANGE_SET_ALL = ( CHANGE_AREAS | CHANGE_SELECTION | CHANGE_AREA_TYPE ),
 	};
+
 	EChangeMask eChangeMask;
+
 	//
-	SScriptAreaWindowData() { Clear(); }
+	SScriptAreaWindowData()
+	{
+		Clear();
+	}
+
 	//
 	void Clear()
 	{
@@ -76,4 +86,4 @@ namespace NScriptAreaView
 // in pPalettes, which owns it from then on, and returns it. Null if it could
 // not be created.
 IWidget *Create( CPaletteList *pPalettes, IWidget *pPage );
-}
+} // namespace NScriptAreaView

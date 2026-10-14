@@ -90,7 +90,11 @@ class CModelWxWindow : public CWxHostWindow, public CModelCommands
 
 	public:
 		CDebounceTimer( CModelWxWindow *_pOwner, unsigned _nFlag ) : pOwner( _pOwner ), nFlag( _nFlag ) {}
-		virtual void Notify() { pOwner->Send( nFlag ); }
+
+		virtual void Notify()
+		{
+			pOwner->Send( nFlag );
+		}
 	};
 
 	wxScrolledWindow *pRoot = nullptr;
@@ -475,14 +479,20 @@ protected:
 	// gone would ask the state to read a box that no longer exists. This was
 	// a WM_DESTROY hook on the host's MFC window, which a host in a wx pane
 	// never had.
-	virtual void BeforeTearDown() { StopTimers(); }
+	virtual void BeforeTearDown()
+	{
+		StopTimers();
+	}
 
 private:
 	// ------------------------------------------------------------------
 	// building
 	// ------------------------------------------------------------------
 
-	wxStaticText *Label( const char *pszText ) { return NWx::Child<wxStaticText>( pRoot, wxID_ANY, pszText ); }
+	wxStaticText *Label( const char *pszText )
+	{
+		return NWx::Child<wxStaticText>( pRoot, wxID_ANY, pszText );
+	}
 
 	// A label as wide as the template's label column, so the controls
 	// after it line up.
@@ -561,7 +571,10 @@ private:
 	// reading and writing
 	// ------------------------------------------------------------------
 
-	static std::string Text( const wxTextCtrl *pEdit ) { return std::string( pEdit->GetValue().utf8_str() ); }
+	static std::string Text( const wxTextCtrl *pEdit )
+	{
+		return std::string( pEdit->GetValue().utf8_str() );
+	}
 
 	// The shape of every combo box exchange: a COUNT flag for the list and
 	// an INDEX flag for the selection, handed to the shared helpers.
@@ -653,8 +666,15 @@ private:
 		}
 	}
 
-	void OnSceneColourButton( wxCommandEvent & ) { PickColour( pSceneColour, MODEL_EP_COLOR ); }
-	void OnTerrainColourButton( wxCommandEvent & ) { PickColour( pTerrainColour, MODEL_EP_TERRAIN_COLOR ); }
+	void OnSceneColourButton( wxCommandEvent & )
+	{
+		PickColour( pSceneColour, MODEL_EP_COLOR );
+	}
+
+	void OnTerrainColourButton( wxCommandEvent & )
+	{
+		PickColour( pTerrainColour, MODEL_EP_TERRAIN_COLOR );
+	}
 
 	// The "..." buttons. The box's colour, or mid grey where it does not
 	// parse, is where the picker starts; a colour picked goes into the box
@@ -683,7 +703,7 @@ private:
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
 	}
 };
-}
+} // namespace
 
 namespace
 {
@@ -699,13 +719,22 @@ public:
 		return bCreated;
 	}
 
-	virtual void Destroy() { window.DestroyHost(); }
+	virtual void Destroy()
+	{
+		window.DestroyHost();
+	}
 
-	virtual void Show( bool bShow ) { window.ShowHost( bShow ); }
+	virtual void Show( bool bShow )
+	{
+		window.ShowHost( bShow );
+	}
 
-	virtual IWidget *GetWidget() { return bCreated ? &window : 0; }
+	virtual IWidget *GetWidget()
+	{
+		return bCreated ? &window : 0;
+	}
 };
-}
+} // namespace
 
 namespace NModelView
 {
@@ -713,4 +742,4 @@ IView *Create()
 {
 	return new CWxModelView();
 }
-}
+} // namespace NModelView

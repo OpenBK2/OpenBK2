@@ -23,4 +23,4 @@ bool Run( IWidget *pParent, CMapInfoEditorSettings::SViewFilterData *pFilter );
 // implementations send the same command the same way.
 void Apply();
 
-}
+} // namespace NMapInfoViewFilter

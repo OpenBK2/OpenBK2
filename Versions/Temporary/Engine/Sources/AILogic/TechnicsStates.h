@@ -21,11 +21,13 @@ class CTankPitLeaveState : public IUnitState
 		TLTPS_ESTIMATING,
 		TLTPS_MOVING,
 	};
+
 	ZDATA
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	ETankLeaveTankPitState eState = {};
 	CPtr<CAIUnit> pUnit;
 	NTimer::STime timeStartLeave = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &eState );
@@ -38,13 +40,21 @@ public:
 	static IUnitState *Instance( class CAIUnit *pTank );
 
 	CTankPitLeaveState() {}
+
 	CTankPitLeaveState( class CAIUnit *pTank );
 
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return CVec2( -1.0f, -1.0f );
+	}
 };
 
 // зарыться в землю ( самостоятельно окопаться )
@@ -100,13 +110,26 @@ public:
 	static IUnitState *Instance( class CAIUnit *pUnit );
 
 	CMechUnitEntrenchSelfState() : pUnit( 0 ) {}
+
 	CMechUnitEntrenchSelfState( class CAIUnit *pUnit );
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
-	EUnitStateNames GetName() { return EUSN_ENTRENCH_SELF; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return CVec2( -1.0f, -1.0f );
+	}
+
+	EUnitStateNames GetName()
+	{
+		return EUSN_ENTRENCH_SELF;
+	}
 };
 
 class CSoldierEnterHoldSectorState : public IUnitState
@@ -115,6 +138,7 @@ class CSoldierEnterHoldSectorState : public IUnitState
 	ZDATA
 	CPtr<CAIUnit> pUnit;
 	NTimer::STime nTimeStart = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pUnit );
@@ -126,16 +150,26 @@ public:
 	static IUnitState *Instance( class CAIUnit *pUnit );
 
 	CSoldierEnterHoldSectorState() : pUnit( 0 ) {}
+
 	CSoldierEnterHoldSectorState( class CAIUnit *_pUnit );
 
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return CVec2( -1.0f, -1.0f );
+	}
 };
 
 class CMilitaryCar;
 class CMechUnitRestOnBoardPath;
+
 class CMechUnitInsideMechUnitState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CMechUnitInsideMechUnitState );
@@ -184,13 +218,26 @@ public:
 
 public:
 	CMechUnitInsideMechUnitState() : pUnit( 0 ) {}
+
 	CMechUnitInsideMechUnitState( class CAIUnit *_pUnit, class CMilitaryCar *pTransport, const bool bImmidiate );
 
 	void AttackTarget( CAIUnit *pEnemy );
 	void Unload( const CVec2 &vPoint );
 	void Segment();
 	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	bool IsAttackingState() const { return false; }
-	const CVec2 GetPurposePoint() const { return vDestination; }
-	EUnitStateNames GetName() { return EUSN_MECHUNIT_REST_ON_BOARD; }
+
+	bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	const CVec2 GetPurposePoint() const
+	{
+		return vDestination;
+	}
+
+	EUnitStateNames GetName()
+	{
+		return EUSN_MECHUNIT_REST_ON_BOARD;
+	}
 };

@@ -24,10 +24,12 @@ class CFileDumper : public ILogDumper
 	OBJECT_BASIC_METHODS( CFileDumper );
 	//
 	const std::string szFullFileName;
+
 	CFileDumper() {}
 
 public:
 	CFileDumper( const std::string &_szFullFileName ) : szFullFileName( _szFullFileName ) {}
+
 	void Dump( const std::wstring &wszString )
 	{
 		if ( FILE *f = fopen( szFullFileName.c_str(), "a" ) )
@@ -42,6 +44,7 @@ public:
 		}
 	}
 };
+
 ILogDumper *CreateFileDumper( const std::string &szFullFileName )
 {
 	return new CFileDumper( szFullFileName );
@@ -50,6 +53,7 @@ ILogDumper *CreateFileDumper( const std::string &szFullFileName )
 class CDebugDumper : public ILogDumper
 {
 	OBJECT_BASIC_METHODS( CDebugDumper );
+
 	void Dump( const std::wstring &wszString )
 	{
 		// no conversion at all now, and no buffer to overrun: the debugger
@@ -75,6 +79,7 @@ class CDebugDumper : public ILogDumper
 #endif
 	}
 };
+
 ILogDumper *CreateDebugDumper()
 {
 	return new CDebugDumper();
@@ -124,6 +129,7 @@ CLogger &CLogger::operator<<( const char cVal )
 	wszLogBuffer += UTF8ToWide( std::string( 1, cVal ) );
 	return *this;
 }
+
 CLogger &CLogger::operator<<( const wchar_t wcVal )
 {
 	wszLogBuffer += wcVal;
@@ -197,7 +203,7 @@ bool CLogger::Dump( const std::string &szLoggerFullName, const std::wstring &wsz
 	return bRes;
 }
 
-}
+} // namespace NLog
 
 NLog::CLogger logDebug( "Debug", 0 );
 NLog::CLogger logInfo( "Info", 0 );

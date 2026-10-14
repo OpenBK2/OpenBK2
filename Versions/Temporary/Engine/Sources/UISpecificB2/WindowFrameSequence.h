@@ -22,6 +22,7 @@ class CWindowFrameSequence : public CWindow, public IWindowFrameSequence
 	int nFrame;
 	bool bRun;
 	int nTime;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CWindow *)this );
@@ -32,10 +33,14 @@ class CWindowFrameSequence : public CWindow, public IWindowFrameSequence
 		f.Add( 6, &nTime );
 		return 0;
 	}
+
 	NTimer::STime timeStart;
 
 protected:
-	NDb::SWindow *GetInstance() { return pInstance; }
+	NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
 
 public:
 	CWindowFrameSequence();

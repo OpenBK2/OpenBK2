@@ -23,11 +23,13 @@ struct SModel
 	bool mirrorX = false;
 	// The Model's separate skeleton wins over the one embedded in Geometry.
 	const granny_skeleton *skeleton = nullptr;
+
 	struct SAIMesh
 	{
 		const granny_mesh *mesh = nullptr;
 		const granny_skeleton *skeleton = nullptr;
 	};
+
 	std::vector<SAIMesh> aiMeshes;
 	std::vector<SClip> clips;
 	std::vector<int> materialQuantities;
@@ -47,4 +49,4 @@ struct SDocument
 
 std::string Quote( const std::string &text );
 void Convert( const SModel &source, SDocument *document );
-}
+} // namespace NGrannyGltf

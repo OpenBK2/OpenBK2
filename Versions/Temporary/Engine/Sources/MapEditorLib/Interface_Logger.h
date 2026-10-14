@@ -10,12 +10,15 @@ struct SLogBuffer
 	ELogOutputType eLogOutputType;
 	std::string szText;
 };
+
 typedef std::list<SLogBuffer> CLogBufferList;
+
 //
 struct ILoggerSink : public CObjectBase
 {
 	virtual ILogger *GetLogger() = 0;
 };
+
 MAPEDITORLIB_EXPORT void SetLogger( ILoggerSink *pLoggerSink );
 //
 MAPEDITORLIB_EXPORT ILogger *GetLogger();
@@ -23,4 +26,4 @@ MAPEDITORLIB_EXPORT ILogger *GetLogger();
 //
 MAPEDITORLIB_EXPORT void Log( ELogOutputType eLogOutputType, const char *pszFormat, ... );
 void ClearLog();
-}
+} // namespace NLog

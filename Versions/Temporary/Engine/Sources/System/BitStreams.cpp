@@ -16,11 +16,13 @@ static void Free( CDataStream *pData, int nShift )
 	int nPos = pData->GetPosition() + nShift;
 	pData->Seek( nPos );
 }
+
 static unsigned char *ReserveR( CDataStream *pData, int nSize )
 {
 	ASSERT( pData->GetSize() - pData->GetPosition() >= nSize );
 	return pData->GetBufferForWrite() + pData->GetPosition();
 }
+
 static unsigned char *ReserveW( CDataStream *pData, int nSize )
 {
 	int nPos = pData->GetPosition();

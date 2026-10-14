@@ -7,6 +7,7 @@ extern "C"
 	{
 		return ::operator new( n );
 	}
+
 	__declspec( dllexport ) void ForeignDelete( void *p )
 	{
 		::operator delete( p );

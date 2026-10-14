@@ -26,7 +26,11 @@ public:
 	}
 
 private:
-	bool IsShown() const { return pTooltip != 0; }
+	bool IsShown() const
+	{
+		return pTooltip != 0;
+	}
+
 	void AdjustTooltipPos( const CVec2 &vMousePos );
 
 public:

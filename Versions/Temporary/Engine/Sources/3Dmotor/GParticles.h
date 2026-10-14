@@ -7,6 +7,7 @@ namespace NDb
 {
 struct SParticleInstance;
 }
+
 namespace NGfx
 {
 class CTexture;
@@ -18,12 +19,17 @@ class CParticleEffect;
 
 class CParticlesInfo;
 class IParticleFilter;
+
 class CParticleAnimator : public CPtrFuncBase<CParticleEffect>
 {
 	OBJECT_BASIC_METHODS( CParticleAnimator );
 
 protected:
-	virtual bool NeedUpdate() { return pTime.Refresh() | pInfo.Refresh() | pPlacement.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pTime.Refresh() | pInfo.Refresh() | pPlacement.Refresh();
+	}
+
 	virtual void Recalc();
 
 private:
@@ -43,6 +49,7 @@ private:
 	CObj<IParticleFilter> pFilter;
 	bool bLeaveParticlesWhereStarted;
 	bool bPerParticleFog;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &stBeginTime );
@@ -59,6 +66,7 @@ private:
 
 public:
 	CParticleAnimator() {}
+
 	CParticleAnimator( const NDb::SParticleInstance *_pInstance,
 	                   STime t,
 	                   IParticleFilter *_pFilter,
@@ -72,7 +80,8 @@ public:
 				bPerParticleFog( _bPerParticleFog )
 	{
 	}
+
 	void StopParticlesGeneration( const STime &tStop );
 };
 
-}
+} // namespace NGScene

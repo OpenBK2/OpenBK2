@@ -44,7 +44,7 @@ CTRect<int> ReadRect( const std::string &rszSection, const std::string &rszEntry
 	}
 	return rect;
 }
-}
+} // namespace
 
 void SMainFrameParams::Load()
 {

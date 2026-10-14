@@ -9,7 +9,10 @@ class CWindowScrollableContainer : public CWindowScrollableContainerBase
 	CPtr<NDb::SWindowScrollableContainer> pInstance;
 
 protected:
-	virtual NDb::SWindow *GetInstance() { return pInstance; }
+	virtual NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
 
 public:
 	int operator&( IBinSaver &saver );

@@ -130,11 +130,20 @@ class SERVER_CLIENT_COMMON_EXPORT CCommands : public CCommandsBase
 	void ParseHelp( std::vector<std::string> &szWords, SCommand *pCmd );
 
 	std::string szErrorMsg;
-	void SetErrorMsg( const std::string &_szMsg ) { szErrorMsg = _szMsg; }
-	const std::string &GetErrorMsg() const { return szErrorMsg; }
+
+	void SetErrorMsg( const std::string &_szMsg )
+	{
+		szErrorMsg = _szMsg;
+	}
+
+	const std::string &GetErrorMsg() const
+	{
+		return szErrorMsg;
+	}
 
 public:
 	CCommands() : bServer( false ) {}
+
 	CCommands( const bool bServer );
 
 	virtual void GetStringCommands( std::vector<std::string> *pCommands );

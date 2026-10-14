@@ -40,26 +40,31 @@ class CTypeTraits
 	{
 		typedef U Type;
 	};
+
 	template <class U>
 	struct SStrip<U *>
 	{
 		typedef U Type;
 	};
+
 	template <class U>
 	struct SStrip<const U>
 	{
 		typedef U Type;
 	};
+
 	template <class U>
 	struct SStrip<const U *>
 	{
 		typedef U Type;
 	};
+
 	template <class U>
 	struct SStrip<U &>
 	{
 		typedef U Type;
 	};
+
 	template <class U>
 	struct SStrip<const U &>
 	{
@@ -70,7 +75,7 @@ public:
 	typedef typename SStrip<T>::Type TStripType;
 };
 
-}
+} // namespace NMeta
 
 //! Calculates, whenever class U derived from class T
 #define SUPERSUBCLASS( T, U ) \

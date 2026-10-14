@@ -88,7 +88,10 @@ inline NGfx::SPixel8888 StringToColor( const std::wstring &wsColor, float fFade 
                                                                                            \
 	private:                                                                                 \
 		ZDATA                                                                                  \
-		ZEND int operator&( IBinSaver &f ) { return 0; }                                       \
+		ZEND int operator&( IBinSaver &f )                                                     \
+		{                                                                                      \
+			return 0;                                                                            \
+		}                                                                                      \
                                                                                            \
 	public:                                                                                  \
 		void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet ) \
@@ -118,7 +121,10 @@ class CBRHandler : public IMLHandler
 
 private:
 	ZDATA
-	ZEND int operator&( IBinSaver &f ) { return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 
 public:
 	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
@@ -135,14 +141,18 @@ struct SFadeValue : public CObjectBase
 	ZDATA
 public:
 	float fFadeValue;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &fFadeValue );
 		return 0;
 	}
+
 	SFadeValue() : fFadeValue( 1.0f ) {}
+
 	SFadeValue( float _fFadeValue ) : fFadeValue( _fFadeValue ) {}
 };
+
 class CCOLORHandler : public IMLHandler
 {
 	OBJECT_BASIC_METHODS( CCOLORHandler );
@@ -150,6 +160,7 @@ class CCOLORHandler : public IMLHandler
 private:
 	ZDATA
 	CPtr<SFadeValue> sFadeValue;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &sFadeValue );
@@ -158,7 +169,9 @@ private:
 
 public:
 	CCOLORHandler() {}
+
 	CCOLORHandler( SFadeValue *pFadeValue ) : sFadeValue( pFadeValue ) {}
+
 	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 	{
 		if ( paramsSet.size() != 3 )
@@ -180,7 +193,10 @@ class CTABHandler : public IMLHandler
 
 private:
 	ZDATA
-	ZEND int operator&( IBinSaver &f ) { return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 
 public:
 	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
@@ -197,7 +213,10 @@ class CFONTHandler : public IMLHandler
 
 private:
 	ZDATA
-	ZEND int operator&( IBinSaver &f ) { return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 
 public:
 	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
@@ -276,7 +295,10 @@ class CIMAGEHandler : public IMLHandler
 
 private:
 	ZDATA
-	ZEND int operator&( IBinSaver &f ) { return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 
 public:
 	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
@@ -347,7 +369,10 @@ class CMINFONTSIZEHandler : public IMLHandler
 
 private:
 	ZDATA
-	ZEND int operator&( IBinSaver &f ) { return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 
 public:
 	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
@@ -393,6 +418,7 @@ class CStateStack : public IMLHandler
 private:
 	ZDATA
 	bool bSave;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &bSave );
@@ -401,7 +427,9 @@ private:
 
 public:
 	CStateStack() {}
+
 	CStateStack( bool _bSave ) : bSave( _bSave ) {}
+
 	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 	{
 		if ( bSave )

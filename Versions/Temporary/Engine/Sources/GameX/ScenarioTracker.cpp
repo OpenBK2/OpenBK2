@@ -2269,7 +2269,7 @@ const NDb::SUnitStatsModifier *CScenarioTracker::GetPlayerChapterModifier( NDb::
 	return ( pChapter->general.eReinforcementType == eReinf ) ? pChapter->general.pStatBonus : 0;
 }
 
-}
+} // namespace NScenarioTracker
 
 static void AddPromotions( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {

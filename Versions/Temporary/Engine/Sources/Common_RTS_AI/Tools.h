@@ -44,8 +44,16 @@ public:
 
 	void Iterate();
 
-	const CVec2 &GetPoint() const { return x; }
-	const CVec2 &GetDX() const { return dx; }
+	const CVec2 &GetPoint() const
+	{
+		return x;
+	}
+
+	const CVec2 &GetDX() const
+	{
+		return dx;
+	}
+
 	const float GetReverseR() const;
 
 	struct SForwardIter
@@ -116,13 +124,31 @@ public:
 		vLastX = CVec2( fRadius * NMath::Cos( fEndPerp ), fRadius * NMath::Sin( fEndPerp ) ) + vCenter;
 	}
 
-	const CVec2 &GetX() const { return vX; }
-	const CVec2 &GetDX() const { return vDX; }
+	const CVec2 &GetX() const
+	{
+		return vX;
+	}
 
-	const CVec2 &GetLastX() const { return vLastX; }
-	const CVec2 &GetLastDX() const { return vLastDX; }
+	const CVec2 &GetDX() const
+	{
+		return vDX;
+	}
 
-	const bool IsForwardDir() const { return bForwardDir; }
+	const CVec2 &GetLastX() const
+	{
+		return vLastX;
+	}
+
+	const CVec2 &GetLastDX() const
+	{
+		return vLastDX;
+	}
+
+	const bool IsForwardDir() const
+	{
+		return bForwardDir;
+	}
+
 	// fLength - длина пути, которую необходимо пройти. Возвращаемое значение, сколько еще можно пройти,
 	// т.е. не нулевое, если завершили идти по этой окружности
 	float Iterate( const float fLength );

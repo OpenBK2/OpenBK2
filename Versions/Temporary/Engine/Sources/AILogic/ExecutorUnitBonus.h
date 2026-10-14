@@ -53,15 +53,31 @@ protected:
 	virtual void ForceActivate();
 
 	// return true if activation is allowed
-	bool ActivateDuringDisable() { return false; }
-	CCommonUnit *GetUnit() { return pUnit.GetPtr(); }
-	CAIUnit *GetAIUnit() { return pUnit.GetPtr(); }
+	bool ActivateDuringDisable()
+	{
+		return false;
+	}
+
+	CCommonUnit *GetUnit()
+	{
+		return pUnit.GetPtr();
+	}
+
+	CAIUnit *GetAIUnit()
+	{
+		return pUnit.GetPtr();
+	}
 
 public:
 	CExecutorUnitBonus( EUnitSpecialAbility eAbility, CAIUnit *_pUnit, EExecutorTypeID eTID = TID_BONUS );
+
 	CExecutorUnitBonus() {}
 
 	void RegisterOnEvents( IExecutorContainer *pContainer );
 	bool NotifyEvent( const CExecutorEvent &event );
-	bool IsExecutorValid() const { return IsValid( pUnit ); }
+
+	bool IsExecutorValid() const
+	{
+		return IsValid( pUnit );
+	}
 };

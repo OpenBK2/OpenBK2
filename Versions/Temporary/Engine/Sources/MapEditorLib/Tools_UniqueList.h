@@ -29,6 +29,7 @@ public:
 		}
 		return false;
 	}
+
 	//
 	void Remove( const TElement &rElement )
 	{
@@ -47,15 +48,28 @@ public:
 			}
 		}
 	}
+
 	//
 	void Clear()
 	{
 		elementMap.clear();
 		elementList.clear();
 	}
+
 	//
-	bool IsExists( const TElement &rElement ) const { return ( elementMap.find( rElement ) != elementMap.end() ); }
+	bool IsExists( const TElement &rElement ) const
+	{
+		return ( elementMap.find( rElement ) != elementMap.end() );
+	}
+
 	//
-	const CElementMap &GetMap() const { return elementMap; }
-	const TList &GetList() const { return elementList; }
+	const CElementMap &GetMap() const
+	{
+		return elementMap;
+	}
+
+	const TList &GetList() const
+	{
+		return elementList;
+	}
 };

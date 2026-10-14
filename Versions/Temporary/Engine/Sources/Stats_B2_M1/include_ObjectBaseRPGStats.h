@@ -4,11 +4,13 @@ virtual void ToAIUnits( bool bInEditor )
 	passability.PostLoad( bInEditor );
 	visibility.PostLoad( bInEditor );
 }
+
 //
 virtual const CVec2 &GetOrigin( const int nIndex = -1 ) const
 {
 	return vOrigin;
 }
+
 virtual const SByteArray2 &GetPassability( const int nIndex = -1 ) const
 {
 	return passability;
@@ -25,6 +27,7 @@ virtual const CVec2 &GetVisOrigin( const int nIndex = -1 ) const
 		return vVisOrigin;
 	}
 }
+
 virtual const SByteArray2 &GetVisibility( const int nIndex = -1 ) const
 {
 	if ( bUsePassabilityForVisibility )

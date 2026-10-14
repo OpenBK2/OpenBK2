@@ -986,7 +986,10 @@ struct SRiverProfile
 
 struct SRiverBottomProfile
 {
-	float operator()( const float x ) const { return 1.0f; }
+	float operator()( const float x ) const
+	{
+		return 1.0f;
+	}
 };
 
 float CTerraGen::GetMaxRiverHeight( const CVec2 &v ) const
@@ -1041,6 +1044,7 @@ float CTerraGen::GetMaxRiverHeight( const CVec2 &v ) const
 }
 
 #define DEF_MAX_UPDATES_COUNT 5
+
 void CTerraGen::UpdateRiversDepthes()
 {
 	CVec2 vBary;
@@ -1389,10 +1393,16 @@ struct SRiverVertsArrOrder
 {
 	int nNumber;
 	float fDist;
+
 	//
 	SRiverVertsArrOrder() {}
+
 	SRiverVertsArrOrder( const int _nNumber, const float _fDist ) : nNumber( _nNumber ), fDist( _fDist ) {}
-	bool operator<( const SRiverVertsArrOrder &v ) const { return fDist < v.fDist; }
+
+	bool operator<( const SRiverVertsArrOrder &v ) const
+	{
+		return fDist < v.fDist;
+	}
 };
 
 inline void

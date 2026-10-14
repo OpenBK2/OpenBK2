@@ -5,6 +5,7 @@
 #include <cstdint>
 
 struct ITransceiver;
+
 class CCommandsSender : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CCommandsSender );
@@ -19,6 +20,7 @@ class CCommandsSender : public CObjectBase
 	NTimer::STime lastCommandTime = {};
 	bool bGroupChanged = {};
 	bool bLastCommandSkipped = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &bHistoryPlaying );
@@ -38,6 +40,7 @@ public:
 				bLastCommandSkipped( false )
 	{
 	}
+
 	CCommandsSender( ITransceiver *_pTransciver );
 
 	void ResetGroup()
@@ -45,6 +48,7 @@ public:
 		lastGroup.clear();
 		bGroupChanged = true;
 	}
+
 	// register group of units to AI
 	virtual int CommandRegisterGroup( const std::vector<int> &vIDs );
 	// unregister group
@@ -59,7 +63,11 @@ public:
 	// Actor-less command
 	virtual void CommandGeneralCommand( const SAIUnitCmd *pCommand );
 
-	bool LastCommandSkipped() const { return bLastCommandSkipped; }
+	bool LastCommandSkipped() const
+	{
+		return bLastCommandSkipped;
+	}
+
 	//
 	void SendCommand( struct IAILogicCommandB2 *pCmd );
 };

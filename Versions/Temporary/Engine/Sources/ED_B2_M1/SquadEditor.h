@@ -45,8 +45,10 @@ struct SSquadMemberInfo
 	int nSceneObjectID;
 	int nMemberIndex;
 	CVec3 pos;
+
 	//
 	SSquadMemberInfo() : nSceneObjectID( -1 ), nMemberIndex( -1 ), pos( VNULL3 ) {}
+
 	bool operator==( const SSquadMemberInfo &rOther )
 	{
 		if ( nSceneObjectID == rOther.nSceneObjectID )
@@ -91,25 +93,44 @@ class CSquadEditor : public CEditorBase, public CDefaultView, ICommandHandler
 	//
 public:
 	//IEditor
-	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
-	IView *GetView() { return this; }
-	IInputState *GetInputState() { return pSquadState; }
+	void GetTemporaryLabel( std::string *pszTemporaryLabel )
+	{
+		pszTemporaryLabel->clear();
+	}
+
+	IView *GetView()
+	{
+		return this;
+	}
+
+	IInputState *GetInputState()
+	{
+		return pSquadState;
+	}
+
 	void GetChildFrameType( std::string *pszChildFrameTypeName )
 	{
 		( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__";
 	}
+
 	void CreateControls();
 	void ResetGUI( bool bActive ) override;
+
 	void PostCreateControls() {}
+
 	void PreDestroyControls() {}
+
 	void DestroyControls();
 	void Create();
 	void Destroy();
+
 	//
 
 	//CDefaultView
 	void Undo( IController *pController ) {}
+
 	void Redo( IController *pController ) {}
+
 	//
 
 	//ICommandHandler

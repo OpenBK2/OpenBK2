@@ -13,6 +13,7 @@ enum EButtonState
 	BS_LEFT_DOWN,
 	BS_RIGHT_DOWN
 };
+
 enum EActionState
 {
 	AS_NONE,
@@ -98,31 +99,61 @@ private:
 protected:
 	bool IsSelected( class CMapObj *pMO ) const;
 
-	bool IsDownTargetMode() const { return bDownTargetMode; }
+	bool IsDownTargetMode() const
+	{
+		return bDownTargetMode;
+	}
 
-	bool IsDownSamePos() const { return bDownSamePos; }
+	bool IsDownSamePos() const
+	{
+		return bDownSamePos;
+	}
+
 	bool IsDownSamePos( const CVec2 &vPos ) const;
-	bool IsDownSameTime() const { return bDownSameTime; }
+
+	bool IsDownSameTime() const
+	{
+		return bDownSameTime;
+	}
+
 	bool IsDownSameTime( const NTimer::STime &curTime ) const;
+
 	//	bool IsCanDoRotate() const { return bCanDoRotate; }
 
-	void RaiseEvent( const char *pszEventName ) { NInput::PostEvent( pszEventName, 0, 0 ); }
-	void RaiseEvent( const char *pszEventName, int nParam ) { NInput::PostEvent( pszEventName, nParam, 0 ); }
+	void RaiseEvent( const char *pszEventName )
+	{
+		NInput::PostEvent( pszEventName, 0, 0 );
+	}
+
+	void RaiseEvent( const char *pszEventName, int nParam )
+	{
+		NInput::PostEvent( pszEventName, nParam, 0 );
+	}
+
 	void RaiseEvent( const char *pszEventName, const CVec2 &vPos )
 	{
 		NInput::PostEvent( pszEventName, PackCoords( vPos ), 0 );
 	}
+
 	void RaiseEventAndFlags( const char *pszEventName, int nParam )
 	{
 		NInput::PostEvent( pszEventName, nParam, GetFlags() );
 	}
+
 	void RaiseEventAndFlags( const char *pszEventName, const CVec2 &vPos )
 	{
 		NInput::PostEvent( pszEventName, PackCoords( vPos ), GetFlags() );
 	}
 
-	EActionState GetActionState() const { return eActionState; }
-	void SetActionState( const EActionState value ) { eActionState = value; }
+	EActionState GetActionState() const
+	{
+		return eActionState;
+	}
+
+	void SetActionState( const EActionState value )
+	{
+		eActionState = value;
+	}
 
 	virtual void OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDirect ) = 0;
 	virtual void OnButtonUp( const CVec2 &vPos ) = 0;
@@ -137,6 +168,7 @@ public:
 	CMouseTranslator( CSelector *_pSelector );
 
 	void DoLButtonDblClk( const CVec2 &vPos, class CMapObj *pMO, bool bTargetMode );
+
 	void DoMouseMove( const CVec2 &vPos, bool bMouseMoveDirect )
 	{
 		if ( eActionState != AS_NONE )
@@ -144,6 +176,7 @@ public:
 			OnMouseMove( vPos, bMouseMoveDirect );
 		}
 	}
+
 	void DoLButtonDown( const CVec2 &vPos, class CMapObj *pMO, bool bTargetMode );
 	void DoLButtonUp( const CVec2 &vPos, class CMapObj *pMO, bool bTargetMode );
 	void DoRButtonDown( const CVec2 &vPos, class CMapObj *pMO, bool bTargetMode );
@@ -154,6 +187,7 @@ public:
 		eButtonState = BS_LEFT_DOWN;
 		OnMinimapLButtonDown( vPos, bTargetMode );
 	}
+
 	void DoMinimapRButtonDown( const CVec2 &vPos, bool bTargetMode )
 	{
 		eButtonState = BS_RIGHT_DOWN;
@@ -166,9 +200,20 @@ public:
 
 	int operator&( IBinSaver &saver );
 
-	bool IsShiftDown() const { return bindShift.IsActive(); }
-	bool IsCtrlDown() const { return bindCtrl.IsActive(); }
-	bool IsAltDown() const { return bindAlt.IsActive(); }
+	bool IsShiftDown() const
+	{
+		return bindShift.IsActive();
+	}
+
+	bool IsCtrlDown() const
+	{
+		return bindCtrl.IsActive();
+	}
+
+	bool IsAltDown() const
+	{
+		return bindAlt.IsActive();
+	}
 };
 
 class CMouseTranslatorB1 : public CMouseTranslator
@@ -206,6 +251,7 @@ public:
 
 private:
 	void InitPrivate();
+
 	void OnSerialize( IBinSaver &f )
 	{
 		if ( f.IsReading() )
@@ -213,6 +259,7 @@ private:
 			ResetState();
 		}
 	}
+
 	void ResetState();
 	void CheckForcedAction();
 
@@ -239,6 +286,7 @@ class CMouseTranslatorB2Game : public CMouseTranslatorB2Base
 {
 	OBJECT_NOCOPY_METHODS( CMouseTranslatorB2Game );
 	ZDATA_( CMouseTranslatorB2Base )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CMouseTranslatorB2Base *)this );
@@ -247,6 +295,7 @@ class CMouseTranslatorB2Game : public CMouseTranslatorB2Base
 
 public:
 	CMouseTranslatorB2Game() {}
+
 	CMouseTranslatorB2Game( CSelector *_pSelector ) : CMouseTranslatorB2Base( _pSelector ) {}
 };
 
@@ -255,6 +304,7 @@ class CMouseTranslatorB2Replay : public CMouseTranslatorB2Base
 	OBJECT_NOCOPY_METHODS( CMouseTranslatorB2Replay );
 
 	ZDATA_( CMouseTranslatorB2Base )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CMouseTranslatorB2Base *)this );
@@ -266,13 +316,18 @@ protected:
 	{
 		CMouseTranslatorB2Base::OnMouseMove( vPos, bMouseMoveDirect );
 	}
+
 	void OnButtonUp( const CVec2 &vPos ) {}
+
 	void OnLButtonDown( const CVec2 &vPos, bool bObject ) {}
+
 	void OnRButtonDown( const CVec2 &vPos, bool bObject ) {}
+
 	void OnMinimapLButtonDown( const CVec2 &vPos, bool bTargetMode )
 	{
 		CMouseTranslatorB2Base::OnMinimapLButtonDown( vPos, bTargetMode );
 	}
+
 	void OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMode )
 	{
 		CMouseTranslatorB2Base::OnMinimapRButtonDown( vPos, bTargetMode );
@@ -280,5 +335,6 @@ protected:
 
 public:
 	CMouseTranslatorB2Replay() {}
+
 	CMouseTranslatorB2Replay( CSelector *_pSelector ) : CMouseTranslatorB2Base( _pSelector ) {}
 };

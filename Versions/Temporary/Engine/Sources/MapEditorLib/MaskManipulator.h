@@ -6,6 +6,7 @@
 #include "MapEditorLib_export.h"
 
 class CMaskManipulatorIterator;
+
 class MAPEDITORLIB_EXPORT CMaskManipulator : public IManipulator
 {
 	friend class CMaskManipulatorIterator;
@@ -31,11 +32,13 @@ private:
 		bool bHidden;       // Скрытое ли поле?
 
 		SProperty() : bFilled( false ), nID( INVALID_NODE_ID ), bHidden( false ) {}
+
 		SProperty( const SProperty &rProperty )
 				: bFilled( rProperty.bFilled ), szName( rProperty.szName ), szType( rProperty.szType ), nID( rProperty.nID ),
 					bHidden( rProperty.bHidden )
 		{
 		}
+
 		SProperty &operator=( const SProperty &rProperty )
 		{
 			if ( &rProperty != this )
@@ -49,6 +52,7 @@ private:
 			return *this;
 		}
 	};
+
 	typedef std::list<std::string> CPropertyList;                    // для хранения порядка следования
 	typedef std::unordered_map<std::string, SProperty> CPropertyMap; // для хранения данных
 	typedef std::unordered_map<int, std::string> CPropertyIDMap;     // для хранения данных
@@ -72,6 +76,7 @@ public:
 	CMaskManipulator( const std::string &rszMask, IManipulator *_pTargetManipulator, EMaskMode _maskMode );
 	// Добавление имен ( имена могут быть длинными, а могут быть короткими, по усмотрению.
 	bool AddName( const std::string &rszName, bool bFilled, const std::string &rszType, unsigned nID, bool bHidden );
+
 	// Установление типа работы (как воспринимаются все имена в методах IManipulator), возвращает старый тип работы
 	inline EMaskMode SetMode( EMaskMode newMaskMode )
 	{
@@ -79,16 +84,25 @@ public:
 		maskMode = newMaskMode;
 		return oldMaskMode;
 	}
+
 	// Получение типа работы (как воспринимаются все имена в методах IManipulator)
-	inline EMaskMode GetMode() const { return maskMode; }
+	inline EMaskMode GetMode() const
+	{
+		return maskMode;
+	}
+
 	// Установление пути
 	inline void SetMask( const std::string &rszMask )
 	{
 		//DebugTrace( "CMaskManipulator::SetMask(): <%s>", rszMask.c_str() );
 		szMask = rszMask;
 	}
+
 	// Получение пути
-	inline void GetMask( std::string *pszMask ) const { ( *pszMask ) = szMask; }
+	inline void GetMask( std::string *pszMask ) const
+	{
+		( *pszMask ) = szMask;
+	}
 
 	// IManipulator
 	IManipulatorIterator *Iterate( bool bShowHidden, ECacheType eCache );
@@ -99,7 +113,12 @@ public:
 	//
 	bool InsertNode( const std::string &szName, int nNodeIndex = NODE_ADD_INDEX );
 	bool RemoveNode( const std::string &szName, int nNodeIndex = NODE_REMOVEALL_INDEX );
-	bool RemoveNodeByID( const std::string &szName, int nNodeID ) { return false; };
+
+	bool RemoveNodeByID( const std::string &szName, int nNodeID )
+	{
+		return false;
+	};
+
 	bool RenameNode( const std::string &szName, const std::string &rszNewName );
 	//
 	bool GetValue( const std::string &szName, CVariant *pValue ) const;
@@ -129,5 +148,9 @@ public:
 	bool GetName( std::string *pszName ) const;
 	bool GetType( std::string *pszType ) const;
 	unsigned GetID() const;
-	bool IsFolder() const { return false; }
+
+	bool IsFolder() const
+	{
+		return false;
+	}
 };

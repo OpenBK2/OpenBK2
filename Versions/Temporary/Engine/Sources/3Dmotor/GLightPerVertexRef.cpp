@@ -307,7 +307,7 @@ namespace
 		}
 	}
 
-}
+} // namespace
 
 const SLightingKernels refLightingKernels = {
 	"ref",
@@ -320,4 +320,4 @@ const SLightingKernels refLightingKernels = {
 	&AddColors,
 	&ScaleColors,
 };
-}
+} // namespace NGScene

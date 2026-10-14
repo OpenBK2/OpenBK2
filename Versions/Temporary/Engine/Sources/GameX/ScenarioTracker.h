@@ -16,6 +16,7 @@ enum EMissionObjectiveState : int;
 class CMapObj;
 
 typedef std::vector<CDBPtr<NDb::SMapInfo>> CMissions;
+
 struct IScenarioTracker : public IAIScenarioTracker
 {
 	enum
@@ -69,6 +70,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 			// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 			EReinforcementState eState = {};
 			CDBPtr<NDb::SReinforcement> pDBReinf;
+
 			ZEND int operator&( IBinSaver &f )
 			{
 				f.Add( 2, &eState );
@@ -82,6 +84,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 		CDBPtr<NDb::SPlayerRank> pNewPlayerRank;
 		std::list<CDBPtr<NDb::SMedal>> medals;
 		std::vector<SOldReinf> oldReinfs;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &bonusReinforcements );
@@ -112,6 +115,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 			int nParty = {};
 			int nIndex = {};
 			int nCountry = {};
+
 			ZEND int operator&( IBinSaver &f )
 			{
 				f.Add( 2, &wszName );
@@ -144,6 +148,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 			CDBPtr<NDb::STexture> pMedal;
 			std::wstring wszMedalName;
 			std::wstring wszMedalDesc;
+
 			ZEND int operator&( IBinSaver &f )
 			{
 				f.Add( 2, &eType );
@@ -162,6 +167,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 		std::wstring wszGameType;
 		ENetMode eNetMode = {};
 		std::vector<SMessage> messages;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &players );
@@ -184,6 +190,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 			int nUnitsKilled = {};
 			int nUnitsLost = {};
 			float fExpDebt = {};
+
 			ZEND int operator&( IBinSaver &f )
 			{
 				f.Add( 2, &nRank );
@@ -196,6 +203,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 
 			SLeaderStatSet() : fExpDebt( 0.0f ) {}
 		};
+
 		ZDATA
 		std::wstring wszName;
 		ZSKIP                        //SLeaderStatSet info;							// Current (in-mission) info
@@ -204,6 +212,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 		SLeaderStatSet storedInfo;   // Info before mission
 		CDBPtr<NDb::STexture> pPicture;
 		SLeaderStatSet lastSeenInfo; // for interface visual effects purpose
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &wszName );
@@ -213,6 +222,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 			f.Add( 8, &lastSeenInfo );
 			return 0;
 		}
+
 		SLeaderInfo() : wszName( L"" ) {}
 	};
 
@@ -236,6 +246,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 		// db info
 		std::wstring wszName;
 		CDBPtr<NDb::STexture> pPicture;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 5, &wszFullName );
@@ -247,6 +258,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 
 		SGenerateLeaderInfo() : nID( -1 ) {}
 	};
+
 	struct SUndoLeaderInfo
 	{
 		ZDATA
@@ -257,6 +269,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 						ZSKIP //int nPictureValue;
 
 				int nValue = {};
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &eReinf );
@@ -271,6 +284,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 		EReinforcementState eState = {};
 		CDBPtr<NDb::SReinforcement> pDBReinf;
 		bool bFromPrevChapter = {};
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &eState );
@@ -286,6 +300,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 		uint32_t dwColor = {};
 		CDBPtr<NDb::SBackground> pUnitFullInfo;
 		int nColorIndex = {}; // индекс цвета хитбара над юнитами на карте
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &dwColor );
@@ -323,10 +338,21 @@ struct IScenarioTracker : public IAIScenarioTracker
 	virtual bool IsMissionWon() const = 0;
 	virtual const NDb::SMapInfo *GetCurrentMission() const = 0;
 	virtual int GetMissionRecommendedReinfCalls() const = 0;
-	virtual bool IsOnlyRecommendedReinfCalls() const { return false; }
+
+	virtual bool IsOnlyRecommendedReinfCalls() const
+	{
+		return false;
+	}
+
 	virtual const NDb::SMapInfo *GetLastMission() const = 0;
-	virtual const SMissionStats *GetMissionStats( const NDb::SMapInfo *pMission ) const { return 0; }
+
+	virtual const SMissionStats *GetMissionStats( const NDb::SMapInfo *pMission ) const
+	{
+		return 0;
+	}
+
 	virtual void GetReinforcementCallsInfo( int nPlayer, std::vector<int> *pCallsByType ) {}
+
 	//{ CRAP - убрать из интерфейса, когда будет известно, что миссия запускается только после инициализации ScenarioTracker
 	virtual void ClearMissionScriptVars() = 0;
 	//}
@@ -394,6 +420,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 	virtual int GetAvailablePromotions() const = 0;
 	virtual void SetAvailablePromotions( int nCount ) = 0;
 };
+
 IScenarioTracker *CreateScenarioTracker();
 IScenarioTracker *CreateScenarioTrackerMultiplayer();
 

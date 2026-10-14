@@ -72,10 +72,20 @@ public:
 		timer.Bind( wxEVT_TIMER, &CRefListWaitWxDialog::OnTimer, this );
 	}
 
-	bool WasPlaced() const { return placement.WasPlaced(); }
-	bool IsComplete() const { return bComplete; }
+	bool WasPlaced() const
+	{
+		return placement.WasPlaced();
+	}
 
-	void SaveState() { placement.Save( this ); }
+	bool IsComplete() const
+	{
+		return bComplete;
+	}
+
+	void SaveState()
+	{
+		placement.Save( this );
+	}
 
 	// CRefListWaitDialog::OnInitDialog: ask once before the dialog is up, and
 	// only start polling if the answer was not already complete. Called from
@@ -89,7 +99,10 @@ public:
 		return bComplete;
 	}
 
-	void StartPolling() { timer.Start( 300 ); }
+	void StartPolling()
+	{
+		timer.Start( 300 );
+	}
 
 private:
 	void OnTimer( wxTimerEvent & )
@@ -201,8 +214,15 @@ public:
 		pEmptyAll->Bind( wxEVT_BUTTON, &CRefListWxDialog::OnEmptyAll, this );
 	}
 
-	bool WasPlaced() const { return placement.WasPlaced(); }
-	void SaveState() { placement.Save( this ); }
+	bool WasPlaced() const
+	{
+		return placement.WasPlaced();
+	}
+
+	void SaveState()
+	{
+		placement.Save( this );
+	}
 
 private:
 	void OnObjectsResized( wxSizeEvent &rEvent )
@@ -276,7 +296,7 @@ private:
 		EndModal( wxID_OK );
 	}
 };
-}
+} // namespace
 
 namespace NRefList
 {
@@ -323,4 +343,4 @@ void Run( IWidget *pParent,
 	dialog.ShowModal();
 	dialog.SaveState();
 }
-}
+} // namespace NRefList

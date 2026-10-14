@@ -17,11 +17,13 @@ public:
 		f.Add( 1, (TParent *)this );
 		return 0;
 	}
+
 	typedef std::list<TStorageType> CDataList;
 	typedef CArray2D<CDataList> CBaseArea;
 
 private:
 	const TCoeffType tCellSize{}; // area map cell size
+
 	// service functional
 	class CObjEqualFunctional
 	{
@@ -29,8 +31,13 @@ private:
 
 	public:
 		explicit CObjEqualFunctional( const TYPE *_pObj ) : pObj( _pObj ) {}
-		bool operator()( const TStorageType &ptr ) const { return ptr == pObj; }
+
+		bool operator()( const TStorageType &ptr ) const
+		{
+			return ptr == pObj;
+		}
 	};
+
 	// add object to the (nX, nY) cell
 	void AddTo( int nX, int nY, TYPE *pObj )
 	{
@@ -41,6 +48,7 @@ private:
 			data.push_back( pObj );
 		}
 	}
+
 	// remove object from the (nX, nY) cell
 	void RemoveFrom( int nX, int nY, TYPE *pObj )
 	{
@@ -63,6 +71,7 @@ public:
 	//CAreaMap& operator=( const CAreaMap &a ) { return *this; }
 
 	explicit CAreaMap( TCoeffType _tCellSize ) : tCellSize( _tCellSize ) {}
+
 	// move object to the new position.
 	// if this is a new object, this will be added to the area map
 	void MoveTo( TYPE *pObj, const TPosition &vNewPos )
@@ -81,6 +90,7 @@ public:
 		// set new position for the object
 		pObj->SetPosition( vNewPos );
 	}
+
 	// add new object
 	void Add( TYPE *pObj )
 	{
@@ -89,6 +99,7 @@ public:
 		const int nY = static_cast<int>( std::nearbyint( vPos.y / tCellSize - 0.5f ) );
 		AddTo( nX, nY, pObj );
 	}
+
 	// remove object from the area map
 	void Remove( TYPE *pObj )
 	{
@@ -113,6 +124,7 @@ public:
 		const int nY = static_cast<int>( std::nearbyint( vPos.y / tCellSize - 0.5f ) );
 		RemoveFrom( nX, nY, pObj );
 	}
+
 	//
 	const bool IsInArea( const TPosition &vPos ) const
 	{
@@ -128,7 +140,11 @@ class CStructAreaMapComparator
 
 public:
 	CStructAreaMapComparator( const TYPE &_obj ) : obj( _obj ) {}
-	const bool operator()( const TYPE &obj2 ) const { return obj == obj2; }
+
+	const bool operator()( const TYPE &obj2 ) const
+	{
+		return obj == obj2;
+	}
 };
 
 template <class TYPE,
@@ -145,11 +161,13 @@ public:
 		f.Add( 1, (TParent *)this );
 		return 0;
 	}
+
 	typedef std::list<TYPE> CDataList;
 	typedef CArray2D<CDataList> CBaseArea;
 
 private:
 	const TCoeffType tCellSize{}; // area map cell size
+
 	// add object to the (nX, nY) cell
 	void AddTo( int nX, int nY, const TYPE &obj )
 	{
@@ -160,6 +178,7 @@ private:
 			data.push_back( obj );
 		}
 	}
+
 	// remove object from the (nX, nY) cell
 	void RemoveFrom( int nX, int nY, const TYPE &obj )
 	{
@@ -174,12 +193,18 @@ private:
 			data.erase( pos );
 		}
 	}
+
 	// diable copy constructor and assignment operator
 	CStructAreaMap( const CStructAreaMap &a ) {}
-	CStructAreaMap &operator=( const CStructAreaMap &a ) { return *this; }
+
+	CStructAreaMap &operator=( const CStructAreaMap &a )
+	{
+		return *this;
+	}
 
 public:
 	explicit CStructAreaMap( TCoeffType _tCellSize ) : tCellSize( _tCellSize ) {}
+
 	// move object to the new position.
 	// if this is a new object, this will be added to the area map
 	void MoveTo( TYPE &obj, const TPosition &vNewPos )
@@ -198,6 +223,7 @@ public:
 		// set new position for the object
 		obj.SetPosition( vNewPos );
 	}
+
 	// add new object
 	void Add( const TYPE &obj )
 	{
@@ -206,6 +232,7 @@ public:
 		const int nY = int( vPos.y / tCellSize );
 		AddTo( nX, nY, obj );
 	}
+
 	// remove object from the area map
 	void Remove( const TYPE &obj )
 	{
@@ -230,6 +257,7 @@ public:
 		const int nY = int( vPos.y / tCellSize );
 		RemoveFrom( nX, nY, obj );
 	}
+
 	//
 	const bool IsInArea( const TPosition &vPos ) const
 	{

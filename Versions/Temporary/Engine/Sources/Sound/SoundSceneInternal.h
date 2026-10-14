@@ -13,6 +13,7 @@
 
 class CSoundCell;
 class CSound;
+
 namespace NDb
 {
 struct SMapSoundInfo;
@@ -57,6 +58,7 @@ public:
 				: substTable( substTable ), sounds( sounds ), cellsWSound( cellsWSound ), muteSounds( muteSounds )
 		{
 		}
+
 		void operator()( int nRadius, const SIntThree &vCell );
 		void operator()( class CSound *sound, bool bHearable = true );
 
@@ -155,7 +157,11 @@ public:
 	void UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, const float fViewRadius );
 
 	void SetSoundSceneMode( const enum ESoundSceneMode eSoundSceneMode );
-	enum ESoundSceneMode GetMode() const { return eSoundSceneMode; };
+
+	enum ESoundSceneMode GetMode() const
+	{
+		return eSoundSceneMode;
+	};
 
 	uint16_t AddSoundToMap( const NDb::SComplexSoundDesc *pDesc, const CVec3 &vPos );
 	void RemoveSoundFromMap( const uint16_t wInstanceID );
@@ -200,6 +206,7 @@ class CSoundScene3D : public ISoundScene
 	}
 
 	void LaunchAfterLoad();
+
 	void OnSerialize( IBinSaver &f )
 	{
 		if ( f.IsReading() )
@@ -211,6 +218,7 @@ class CSoundScene3D : public ISoundScene
 
 public:
 	CSoundScene3D() : bLaunchAfterLoad( false ) {}
+
 	//
 	void Init();
 	//
@@ -247,6 +255,7 @@ class CSoundScene : public ISoundScene
 	ZDATA
 	CPtr<ISoundScene> pScene;
 	ESoundSceneMode eMode;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pScene );
@@ -259,6 +268,7 @@ class CSoundScene : public ISoundScene
 
 public:
 	CSoundScene() {}
+
 	//
 	void Init();
 	//

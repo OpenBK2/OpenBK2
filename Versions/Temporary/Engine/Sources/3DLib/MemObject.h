@@ -11,6 +11,7 @@ class _3DLIB_EXPORT CMemObject : public CObjectBase
 	std::vector<CVec3> resNormals;
 	std::vector<STriangle> resTris;
 	bool bPolyLine = false;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &resPoints );
@@ -22,6 +23,7 @@ class _3DLIB_EXPORT CMemObject : public CObjectBase
 
 public:
 	CMemObject() : bPolyLine( false ) {}
+
 	void Clear();
 	void CreateCube( const CVec3 &base, const CVec3 &size, bool bTwoSided = false );
 	void CreateSphere( const CVec3 &ptCenter, float fRadius, int nSubs = 2 );
@@ -32,9 +34,25 @@ public:
 	void Create( const std::vector<CVec3> &points, const std::vector<STriangle> &tris );
 	void CalcBound( SSphere *pRes ) const;
 	void CalcBound( SBound *pRes ) const;
-	bool IsPolyLine() const { return bPolyLine; }
-	const std::vector<CVec3> &GetPoints() const { return resPoints; }
-	const std::vector<CVec3> &GetNormals() const { return resNormals; }
-	const std::vector<STriangle> &GetTris() const { return resTris; }
+
+	bool IsPolyLine() const
+	{
+		return bPolyLine;
+	}
+
+	const std::vector<CVec3> &GetPoints() const
+	{
+		return resPoints;
+	}
+
+	const std::vector<CVec3> &GetNormals() const
+	{
+		return resNormals;
+	}
+
+	const std::vector<STriangle> &GetTris() const
+	{
+		return resTris;
+	}
 	friend class CMemObjectBuilder;
 };

@@ -21,4 +21,4 @@ namespace NXdbValidation
 // root element's name in *pszRootName, if so; false, with a message for the
 // user in *pszError, if not.
 bool CheckDocument( const char *pData, int nSize, std::string *pszRootName, std::string *pszError );
-}
+} // namespace NXdbValidation

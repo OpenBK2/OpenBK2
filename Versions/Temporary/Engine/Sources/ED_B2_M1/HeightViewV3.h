@@ -66,4 +66,4 @@ void ShowTileProperties( const std::string &rszTileName );
 // not be created.
 IWidget *Create( CPaletteList *pPalettes, IWidget *pPage );
 
-}
+} // namespace NHeightViewV3

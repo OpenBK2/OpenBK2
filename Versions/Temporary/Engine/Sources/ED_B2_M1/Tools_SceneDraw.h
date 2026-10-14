@@ -24,6 +24,7 @@ class CSceneDrawTool
 	// CRAP{ HASH_SET
 	typedef std::unordered_map<int, uint32_t> CModelIDSet;
 	typedef std::unordered_map<int, uint32_t> CPolylineIDSet;
+
 	// CRAP} HASH_SET
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SModelInfo
@@ -32,12 +33,15 @@ class CSceneDrawTool
 		CVec3 vPos;
 		CQuat qRot;
 		CVec3 vScale;
+
 		//
 		SModelInfo() : pModel( 0 ), vPos( VNULL3 ), qRot( QNULL ), vScale( VNULL3 ) {}
+
 		SModelInfo( const SModelInfo &rModelInfo )
 				: pModel( rModelInfo.pModel ), vPos( rModelInfo.vPos ), qRot( rModelInfo.qRot ), vScale( rModelInfo.vScale )
 		{
 		}
+
 		SModelInfo &operator=( const SModelInfo &rModelInfo )
 		{
 			if ( &rModelInfo != this )
@@ -50,7 +54,9 @@ class CSceneDrawTool
 			return *this;
 		}
 	};
+
 	typedef std::list<SModelInfo> CModelInfoList;
+
 	//
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SPolylineInfo
@@ -58,12 +64,15 @@ class CSceneDrawTool
 		std::vector<CVec3> points;
 		CVec3 vColor;
 		bool bDepthCheck;
+
 		//
 		SPolylineInfo() : vColor( VNULL3 ), bDepthCheck( true ) {}
+
 		SPolylineInfo( const SPolylineInfo &rPolylineInfo )
 				: points( rPolylineInfo.points ), vColor( rPolylineInfo.vColor ), bDepthCheck( rPolylineInfo.bDepthCheck )
 		{
 		}
+
 		SPolylineInfo &operator=( const SPolylineInfo &rPolylineInfo )
 		{
 			if ( &rPolylineInfo != this )
@@ -75,6 +84,7 @@ class CSceneDrawTool
 			return *this;
 		}
 	};
+
 	typedef std::list<SPolylineInfo> CPolylineInfoList;
 
 	CModelIDSet modelIDSet;
@@ -105,6 +115,7 @@ public:
 			posNewPolyline->bDepthCheck = bDepthCheck;
 		}
 	}
+
 	//
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	template <class TPoint>
@@ -135,6 +146,7 @@ public:
 		GetVec3FromARGBColor( &( posNewPolyline->vColor ), dwColor );
 		posNewPolyline->bDepthCheck = bDepthCheck;
 	}
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	void Draw3DLine( const CTPoint<int> &rBegin,
 	                 const CTPoint<int> &rEnd,
@@ -207,6 +219,7 @@ public:
 			posNewPolyline->bDepthCheck = bDepthCheck;
 		}
 	}
+
 	//
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	template <class TPointList>
@@ -239,6 +252,7 @@ public:
 		GetVec3FromARGBColor( &( posNewPolyline->vColor ), dwColor );
 		posNewPolyline->bDepthCheck = bDepthCheck;
 	}
+
 	//
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	template <class TPointList>
@@ -273,6 +287,7 @@ public:
 		GetVec3FromARGBColor( &( posNewPolyline->vColor ), dwColor );
 		posNewPolyline->bDepthCheck = bDepthCheck;
 	}
+
 	//
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	template <class TPoint>
@@ -293,6 +308,7 @@ public:
 		GetVec3FromARGBColor( &( posNewPolyline->vColor ), dwColor );
 		posNewPolyline->bDepthCheck = bDepthCheck;
 	}
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	template <class TPoint>
 	void Draw3DCircle( const TPoint &rCenter, float fRadius, int nParts, uint32_t dwColor, bool bDepthCheck )

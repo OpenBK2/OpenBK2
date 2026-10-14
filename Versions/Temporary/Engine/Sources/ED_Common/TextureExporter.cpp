@@ -60,7 +60,7 @@ std::string TextureSourcePath( IManipulator *pManipulator, const std::string &so
 	}
 	return source;
 }
-}
+} // namespace
 
 REGISTER_EXPORTER_IN_DLL( Texture, CTextureExporter )
 

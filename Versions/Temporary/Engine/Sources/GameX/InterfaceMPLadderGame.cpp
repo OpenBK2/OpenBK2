@@ -262,6 +262,7 @@ int CInterfaceMPLadderGame::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
+
 ///////////////////////////////////	///////////////////////////////////////////////////////////////////////////////////////////
 bool CInterfaceMPLadderGame::OnBackReaction( const std::string &szSender )
 {

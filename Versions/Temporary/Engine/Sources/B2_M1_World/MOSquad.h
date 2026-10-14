@@ -11,6 +11,7 @@ class CMOSquad : public IMOSquad
 	ZSKIP //bool bCanCatchArtillery;
 			CPtr<IMOContainer>
 					pContainer;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (IMOSquad *)this );
@@ -34,6 +35,7 @@ public:
 	                        NDb::ESeason eSeason )
 	{
 	}
+
 	virtual IClientUpdatableProcess *
 	AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
 	{
@@ -45,23 +47,44 @@ public:
 	                     NDb::ESeason eSeason,
 	                     const NDb::EDayNight eDayTime,
 	                     bool bInEditor );
+
 	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
 	{
 		return true;
 	}
+
 	//void GetSpecialAbilities( CSpecialAbilities *pAbilities ) const;
 	bool AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update );
 	void GetStatus( SObjectStatus *pStatus ) const;
 	// load unit onboard or unload it
 	bool Load( struct IMOUnit *pUnit, bool bEnter );
-	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter ) { return false; }
+
+	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter )
+	{
+		return false;
+	}
+
 	// show icons of the passangers
 	void UpdatePassangers() {}
+
 	void GetPassangers( std::vector<CMOSelectable *> *pBuffer ) const;
-	int GetPassangersCount() const { return units.size(); }
+
+	int GetPassangersCount() const
+	{
+		return units.size();
+	}
+
 	// get free places
-	int GetFreePlaces() const { return 0; }
-	int GetFreeMechPlaces() const { return 0; }
+	int GetFreePlaces() const
+	{
+		return 0;
+	}
+
+	int GetFreeMechPlaces() const
+	{
+		return 0;
+	}
+
 	// firing... (from container of by himself)
 	void AIUpdateShot( const struct SAINotifyBaseShot &shot,
 	                   const NTimer::STime &currTime,
@@ -69,6 +92,7 @@ public:
 	                   NDb::ESeason eSeason )
 	{
 	}
+
 	//
 	virtual bool NeedShowInterrior() const;
 	virtual void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck );
@@ -84,17 +108,28 @@ public:
 	void SetSelectionGroup( int nSelectionGroup );
 
 	void AIUpdateModifyEntranceState( bool bOpen ) {}
-	bool IsOpen() const { return true; }
+
+	bool IsOpen() const
+	{
+		return true;
+	}
 
 	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
 	                        struct ISoundScene *pSoundScene,
 	                        IClientAckManager *pAckManager );
 	void AIUpdateServedArtillery( IMOUnit *pMOUnit );
 
-	IMOUnit *GetServedGun() const { return pServedGun; }
+	IMOUnit *GetServedGun() const
+	{
+		return pServedGun;
+	}
 
 	bool AIUpdateAction( bool bEnable, EActionCommand eAction );
-	virtual bool IsSquad() const { return true; }
+
+	virtual bool IsSquad() const
+	{
+		return true;
+	}
 
 	float GetVisualHPFraction() const;
 	float GetVisualHPFractionSmooth() const;
@@ -102,8 +137,16 @@ public:
 	bool IsFirstUnit( const IMOUnit *pUnit ) const;
 	void FillIconsInfoForFirstUnit( SSceneObjIconInfo &iconInfo );
 	void UpdateSquadIcons();
-	void SetContainer( IMOContainer *_pContainer ) { pContainer = _pContainer; }
-	IMOContainer *GetContainer() const { return pContainer; }
+
+	void SetContainer( IMOContainer *_pContainer )
+	{
+		pContainer = _pContainer;
+	}
+
+	IMOContainer *GetContainer() const
+	{
+		return pContainer;
+	}
 
 	// Инициализирует параметры, зависящие только от базы.
 	static void InitByDB();

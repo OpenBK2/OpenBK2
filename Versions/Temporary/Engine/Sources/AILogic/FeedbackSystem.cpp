@@ -64,6 +64,7 @@ void CFeedBackSystem::AddFeedBackInternal(
 	cell.objectIDs.push_back( CIDAndParam( nID, nParam ) );
 	cells.push_back( cell );
 }
+
 /*
 
 void CFeedBackSystem::MoveFeedback( int nID, const CVec2 &vCenter, EFeedBack eFeedBack  )
@@ -76,8 +77,13 @@ struct SEqualTo
 {
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nID = {};
+
 	SEqualTo( int _nID ) : nID( _nID ) {}
-	bool operator()( CIDAndParam _nTry ) const { return nID == _nTry.first; }
+
+	bool operator()( CIDAndParam _nTry ) const
+	{
+		return nID == _nTry.first;
+	}
 };
 
 void CFeedBackSystem::RemoveFeedback( int nID, EFeedBack eFeedBack )

@@ -26,6 +26,7 @@ class CPacketProcessorFun : public IPacketProcessorFun
 
 public:
 	CPacketProcessorFun() {}
+
 	CPacketProcessorFun( TObj *_pObj, ProcessFun _pfnProcessFun ) : pObj( _pObj ), pfnProcessFun( _pfnProcessFun ) {}
 
 	virtual bool Process( CNetPacket *pRawPacket )
@@ -67,11 +68,15 @@ public:
 	CNetPacket *GetPacket();
 
 	virtual bool Segment() = 0;
+
 	virtual void ReloadConfig() {}
 };
 
 class CPacketProcessor : virtual public CObjectBase, public CPacketProcessorBase
 {
 public:
-	virtual bool CanBePaused() { return false; }
+	virtual bool CanBePaused()
+	{
+		return false;
+	}
 };

@@ -58,7 +58,7 @@ public:
 		return wxApp::OnExit();
 	}
 };
-}
+} // namespace
 
 // WinMain, wx's. See WxHost.h for why it is no longer MFC's.
 wxIMPLEMENT_APP( CEditorWxApp );

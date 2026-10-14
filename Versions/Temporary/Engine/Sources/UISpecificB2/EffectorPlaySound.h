@@ -4,6 +4,7 @@
 #include "UI/UI.h"
 
 struct IScene;
+
 namespace NDb
 {
 struct SComplexSoundDesc;
@@ -19,13 +20,16 @@ class CEffectorPlaySound : public IUIEffector
 
 public:
 	CEffectorPlaySound() : bFinished( false ) {}
+
 	virtual bool IsFinished() const;
 	virtual void Configure( const NDb::SUIStateBase *_pCmd,
 	                        struct IScreen *pScreen,
 	                        SWindowContext *pContext,
 	                        const std::string &szAnimatedWindow );
 	virtual const int Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward );
+
 	virtual void Visit( struct IUIVisitor *pVisitor ) {}
+
 	virtual void Reverse();
 	int operator&( IBinSaver &saver );
 };

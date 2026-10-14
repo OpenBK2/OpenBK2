@@ -5,7 +5,7 @@ namespace NGfx
 class CRenderContext;
 class CTexture;
 class CCubeTexture;
-}
+} // namespace NGfx
 
 class CTransformStack;
 
@@ -34,4 +34,4 @@ void RenderGf3Fast( CTransformStack *pTS,
                     ETransparentMode trMode,
                     NGfx::CTexture *pParticleLight,
                     NGfx::CCubeTexture *_pSky );
-}
+} // namespace NGScene

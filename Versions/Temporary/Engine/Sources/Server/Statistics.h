@@ -25,4 +25,4 @@ IStatisticsData *CreateAverageValuePerTimeCounter();
 IStatisticsData *CreateAverageValueCounter();
 IStatisticsData *CreateEventsCounter();
 void Reset();
-}
+} // namespace NStatistics

@@ -17,6 +17,7 @@ int nDGCurrentFrame = 100;
 uint32_t nDGIncFrameRnd = 1234567;
 
 static CPool<CObj<CObjectBase>, 64> holdQueue[N_HOLD_TIME];
+
 void SetToHoldQueue( CObjectBase *p, int *pnFrame )
 {
 	//if ( *pnFrame != -1 )

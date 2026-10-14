@@ -14,7 +14,10 @@ public:
 		return 0;
 	}
 
-	bool IsEmpty() { return textMap.empty(); }
+	bool IsEmpty()
+	{
+		return textMap.empty();
+	}
 
 	const char *GetText( const char *pszKey ) const
 	{
@@ -22,5 +25,8 @@ public:
 		return ( iter != textMap.end() ? iter->second.c_str() : pszKey );
 	}
 
-	void SetText( const std::string &szKey, const std::string &szValue ) { textMap[szKey] = szValue; }
+	void SetText( const std::string &szKey, const std::string &szValue )
+	{
+		textMap[szKey] = szValue;
+	}
 };

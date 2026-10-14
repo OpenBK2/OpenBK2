@@ -14,7 +14,9 @@ struct STraceImageFunctor
 {
 	uint32_t dwColor;
 	CArray2D<uint32_t> *pImage;
+
 	STraceImageFunctor( uint32_t _dwColor, CArray2D<uint32_t> *_pImage ) : dwColor( _dwColor ), pImage( _pImage ) {}
+
 	void operator()( int x, int y )
 	{
 		if ( ( x >= 0 ) && ( x < pImage->GetSizeX() ) && ( y >= 0 ) && ( y < pImage->GetSizeY() ) )
@@ -150,6 +152,7 @@ struct SModifyBitFunctional
 	SModifyBitFunctional( const int _nBit, CArray2D<uint32_t> *_pPlaneArray ) : nBit( _nBit ), pPlaneArray( _pPlaneArray )
 	{
 	}
+
 	bool operator()( int nXIndex, int nYIndex )
 	{
 		( *pPlaneArray )[nYIndex][nXIndex] |= ( 1 << nBit );

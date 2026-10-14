@@ -18,11 +18,13 @@ inline void Interpolate( const TValue &v1, const TValue &v2, float f1, float f2,
 {
 	*pRes = v1 * f1 + v2 * f2;
 }
+
 template <>
 inline void Interpolate( const short &v1, const short &v2, float f1, float f2, short *pRes )
 {
 	*pRes = v1;
 }
+
 template <>
 void Interpolate( const uint32_t &v1, const uint32_t &v2, float f1, float f2, uint32_t *pRes );
 
@@ -31,11 +33,13 @@ inline void Scale( const TValue &v, float f, TValue *pRes )
 {
 	*pRes = v * f;
 }
+
 template <>
 inline void Scale( const short &v, float f, short *pRes )
 {
 	*pRes = v;
 }
+
 template <>
 void Scale( const uint32_t &v, float f, uint32_t *pRes );
 
@@ -65,7 +69,11 @@ public:
 		memcpy( &value, valueBytes, sizeof( value ) );
 		return value;
 	}
-	void SetValue( const TValue &value ) { memcpy( valueBytes, &value, sizeof( value ) ); }
+
+	void SetValue( const TValue &value )
+	{
+		memcpy( valueBytes, &value, sizeof( value ) );
+	}
 };
 
 // The key arrays are reinterpreted in place out of a resource blob and a vector
@@ -102,6 +110,7 @@ public:
 		}
 		GetValueBinSearch( fT, 1, pRes );
 	}
+
 	void GetValue( float fT, float fScale, TValue *pRes ) const
 	{
 		if ( nKeys == 1 )
@@ -170,6 +179,7 @@ public:
 		fTEnd = 0;
 		fFrameRate = 1;
 	}
+
 	void CalcBound( SBound *pRes );
 };
 
@@ -180,4 +190,4 @@ class _3DMOTOR_EXPORT CParticlesLoader : public CLazyResourceLoader<int, CPartic
 	virtual void RecalcValue( CFileRequest *p );
 };
 
-}
+} // namespace NGScene

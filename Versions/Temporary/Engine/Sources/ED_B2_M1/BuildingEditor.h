@@ -54,28 +54,53 @@ class CBuildingEditor : public CEditorBase, public CDefaultView, public ICommand
 	CArray2D<uint8_t> modelPassability;
 	//
 	std::string szScreenTitle;
+
 	//
-	bool IsModelValid() const { return pBuilding != 0; }
+	bool IsModelValid() const
+	{
+		return pBuilding != 0;
+	}
+
 	//
 	CBuildingEditor();
 	~CBuildingEditor();
 	//
 public:
 	//IEditor
-	CObj<CMOBuilding> &GetBuildingPtr() { return pBuilding; };
+	CObj<CMOBuilding> &GetBuildingPtr()
+	{
+		return pBuilding;
+	};
+
 	const std::string &GetCurrSeason() const;
 
-	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
-	IView *GetView() { return this; }
-	IInputState *GetInputState() { return reinterpret_cast<IInputState *>( pBuildingState ); }
+	void GetTemporaryLabel( std::string *pszTemporaryLabel )
+	{
+		pszTemporaryLabel->clear();
+	}
+
+	IView *GetView()
+	{
+		return this;
+	}
+
+	IInputState *GetInputState()
+	{
+		return reinterpret_cast<IInputState *>( pBuildingState );
+	}
+
 	void GetChildFrameType( std::string *pszChildFrameTypeName )
 	{
 		( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__";
 	}
+
 	void CreateControls();
 	void ResetGUI( bool bActive ) override;
+
 	void PostCreateControls() {}
+
 	void PreDestroyControls() {}
+
 	void DestroyControls();
 	void Create();
 	void Destroy();
@@ -93,7 +118,12 @@ public:
 	void ReloadTerrain( const std::string &rszMapInfoName, const CVec3 &vLastCameraAnchor );
 	//
 	void DrawPassability( IPaintContext *pPaintContext );
-	void SetDrawPassability( bool bSet ) { bDrawPassability = bSet; }
+
+	void SetDrawPassability( bool bSet )
+	{
+		bDrawPassability = bSet;
+	}
+
 	//
 	void SetScreenTitle( const std::string &rszScreenTitle );
 	//
@@ -101,7 +131,12 @@ public:
 	CVec2 GetBuildingOrigin();
 	CVec3 GetBuildingPos();
 	IManipulator *CreateBuildingManipulator();
-	CVec3 GetLastCameraAnchor() { return vLastCameraAnchor; }
+
+	CVec3 GetLastCameraAnchor()
+	{
+		return vLastCameraAnchor;
+	}
+
 	//
 	void ChangeSeason( const NDb::ESeason eSeason );
 };

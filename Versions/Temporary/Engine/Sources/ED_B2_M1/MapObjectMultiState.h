@@ -53,16 +53,19 @@ public:
 		int nPlayerIndex;
 		float fDirection;
 		bool bThumbnails;
+
 		SEditParameters()
 				: nFlags( MIMOSEP_ALL ), nPlayerIndex( 0 ), eDirectionType( DT_RANDOM ), fDirection( 0.0f ), bThumbnails( true )
 		{
 		}
+
 		SEditParameters( const SEditParameters &rEditParameters )
 				: nFlags( rEditParameters.nFlags ), playerList( rEditParameters.playerList ),
 					nPlayerIndex( rEditParameters.nPlayerIndex ), eDirectionType( rEditParameters.eDirectionType ),
 					fDirection( rEditParameters.fDirection ), bThumbnails( rEditParameters.bThumbnails )
 		{
 		}
+
 		SEditParameters &operator=( const SEditParameters &rEditParameters )
 		{
 			if ( &rEditParameters != this )
@@ -128,8 +131,12 @@ public:
 		SetActiveInputState( IS_SIMPLE_OBJECT, false, false );
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, this );
 	}
+
 	//
-	~CMapObjectMultiState() { Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_MAPOBJECT_MULTI_STATE ); }
+	~CMapObjectMultiState()
+	{
+		Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_MAPOBJECT_MULTI_STATE );
+	}
 
 	void SwitchState( const std::string &rszObjectTypeName );
 	//IInputState interface

@@ -30,6 +30,7 @@ public:
 
 public:
 	CSupportAAGun() : predictedFire( 0, 0 ) {}
+
 	CSupportAAGun( CAIUnit *_pUnit );
 
 	void Segment();

@@ -28,6 +28,7 @@ static void RefreshUniversalRectTrisBuffer()
 }
 
 static CObj<CTexture> pWhiteTexture;
+
 static CTexture *GetWhiteTexture()
 {
 	if ( IsValid( pWhiteTexture ) )
@@ -71,26 +72,45 @@ void MakeQuadTriList( int nRects, STriangleList *pRes )
 // C2DQuadsRenderer
 
 typedef SGeomVecFull SRectVertex;
+
 struct SFakeCPPInitOrder
 {
 	CObj<CGeometry> pGeom;
 };
+
 const int N_RECTS_PER_BUF = 128;
+
 struct S2DRectInfoLock : public SFakeCPPInitOrder
 {
 	int nRects;
 
 	virtual ~S2DRectInfoLock() {}
-	bool IsFull() const { return nRects == N_RECTS_PER_BUF; }
-	int GetRectsNum() const { return nRects; }
+
+	bool IsFull() const
+	{
+		return nRects == N_RECTS_PER_BUF;
+	}
+
+	int GetRectsNum() const
+	{
+		return nRects;
+	}
 };
+
 template <class T>
 struct SRealRectInfoLock : public S2DRectInfoLock
 {
 	CBufferLock<T> data;
 
-	SRealRectInfoLock() : data( &pGeom, N_RECTS_PER_BUF * 4 ) { nRects = 0; }
-	T *AddRect() { return &data[( nRects++ ) * 4]; }
+	SRealRectInfoLock() : data( &pGeom, N_RECTS_PER_BUF * 4 )
+	{
+		nRects = 0;
+	}
+
+	T *AddRect()
+	{
+		return &data[( nRects++ ) * 4];
+	}
 };
 
 C2DQuadsRenderer::C2DQuadsRenderer( const NGfx::CRenderContext &_rc, const CVec2 &vSize, int _dm )
@@ -167,6 +187,7 @@ void C2DQuadsRenderer::SetupRC( const CVec2 &vSize )
 }
 
 const int N_UV_PER_TEXEL_STEPS = 8;
+
 S2DRectInfoLock *C2DQuadsRenderer::GetRectInfoLock( CTexture *pContainer, const STexturePlaceInfo &region )
 {
 	if ( pContainer != pPrevContainer || ( pLock && pLock->IsFull() ) )
@@ -565,4 +586,4 @@ void CCopyShadowsAndCloudsEffect::SetEffect( NGfx::CRenderContext *pRC,
 	//ASSERT ( pCloud );
 	pRC->SetTexture( 1, pCloud, FILTER_POINT );
 }
-}
+} // namespace NGfx

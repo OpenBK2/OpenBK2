@@ -43,6 +43,7 @@ class CScenarioTracker : public IScenarioTracker
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		int nTotalCount = {};
 		int nCurrentCount = {};
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nTotalCount );
@@ -230,13 +231,19 @@ public:
 	void DecreaseReinforcementCallsLeft( int nPlayer, int nCalls );
 	void IncreaseReinforcementCallsLeft( int nPlayer, int nCalls );
 	int GetReinforcementCallsLeftInChapter() const; // Calls left in chapter for player 0, no matter in mission or not
+
 	int GetReinforcementCallsOld() const
 	{
 		return nReinforcementCallsLeftOld;
 	} // Calls left in chapter before last mission, or 0 if just started chapter
+
 	void RegisterReinforcementCall( int nPlayer, NDb::EReinforcementType eType );
 
-	int GetDifficultyLevel() const { return nDifficulty; }
+	int GetDifficultyLevel() const
+	{
+		return nDifficulty;
+	}
+
 	const NDb::SReinforcement *GetReinforcement( int nPlayer, NDb::EReinforcementType eType ) const;
 
 	float GetReinforcementXP( int nPlayer, NDb::EReinforcementType eType ) const;
@@ -246,20 +253,48 @@ public:
 	virtual bool GiveXP( const int nPlayer, NDb::EReinforcementType eReinf, const int nXP ); // Give to reinf and player
 	virtual bool GiveXPToPlayer( const int nPlayer, const int nXP );                         // Give to player only
 
-	bool IsCustomMission() const { return pCampaign == 0; }
-	bool IsCustomCampaign() const { return bIsCustomCampaign; }
+	bool IsCustomMission() const
+	{
+		return pCampaign == 0;
+	}
+
+	bool IsCustomCampaign() const
+	{
+		return bIsCustomCampaign;
+	}
 
 	// mission
 	void MissionStart( const NDb::SMapInfo *_pMission, const int nTechLevel = -1 ); // tech level is ignored
 	void CustomMissionStart( const NDb::SMapInfo *pMission, int nDifficulty, bool bTutorial );
-	bool IsTutorialMission() const { return bIsTutorial; }
+
+	bool IsTutorialMission() const
+	{
+		return bIsTutorial;
+	}
 
 	void MissionCancel();
 	void MissionWin();
-	bool IsMissionActive() const { return GetCurrentMission() != 0; }
-	bool IsMissionWon() const { return bMissionWon; }
-	const NDb::SMapInfo *GetCurrentMission() const { return pMission; }
-	const NDb::SMapInfo *GetLastMission() const { return pLastMission; }
+
+	bool IsMissionActive() const
+	{
+		return GetCurrentMission() != 0;
+	}
+
+	bool IsMissionWon() const
+	{
+		return bMissionWon;
+	}
+
+	const NDb::SMapInfo *GetCurrentMission() const
+	{
+		return pMission;
+	}
+
+	const NDb::SMapInfo *GetLastMission() const
+	{
+		return pLastMission;
+	}
+
 	const SMissionStats *GetMissionStats( const NDb::SMapInfo *pMission ) const;
 	int GetMissionRecommendedReinfCalls() const;
 	bool IsOnlyRecommendedReinfCalls() const;
@@ -270,10 +305,24 @@ public:
 
 	// campaign
 	void CampaignStart( const NDb::SCampaign *_pCampaign, const int _nDifficulty, bool bIsTutorial, bool bCustom );
-	bool IsCampaignActive() const { return !bCampaignFinished && pCampaign != 0; }
-	const NDb::SCampaign *GetCurrentCampaign() const { return pCampaign; }
+
+	bool IsCampaignActive() const
+	{
+		return !bCampaignFinished && pCampaign != 0;
+	}
+
+	const NDb::SCampaign *GetCurrentCampaign() const
+	{
+		return pCampaign;
+	}
+
 	const NDb::SDifficultyLevel *GetDifficultyLevelDB() const;
-	bool IsTutorialCampaign() const { return bIsTutorial; }
+
+	bool IsTutorialCampaign() const
+	{
+		return bIsTutorial;
+	}
+
 	void GetAllMissionStats( std::vector<const SMissionStats *> *pMissions ) const;
 	NDb::EReinforcementType GetFavoriteReinf() const;
 	void MarkFavoriteReinf( NDb::EReinforcementType eType );
@@ -282,11 +331,20 @@ public:
 	std::wstring GetReinfName( NDb::EReinforcementType eType ) const;
 
 	// chapter
-	bool IsChapterActive() const { return !bChapterFinished && pChapter != 0; }
+	bool IsChapterActive() const
+	{
+		return !bChapterFinished && pChapter != 0;
+	}
+
 	void NextChapter();
 	void GetEnabledMissions( CMissions *pMissions );
 	void GetCompletedMissions( CMissions *pMissions );
-	const NDb::SChapter *GetCurrentChapter() const { return pChapter; }
+
+	const NDb::SChapter *GetCurrentChapter() const
+	{
+		return pChapter;
+	}
+
 	int GetMissionToEnableCount() const;
 
 	// check if reinforcement is potentially active
@@ -304,25 +362,60 @@ public:
 
 	virtual const NDb::SPlayerRank *GetPlayerRank() const;
 	virtual int GetPlayerRankIndex() const;
+
 	virtual void AddPlayer( const int nPlayer ) {}
+
 	virtual void RemovePlayer( const int nPlayer ) {}
+
 	virtual bool IsPlayerPresent( const int nPlayer ) const;
-	int GetLocalPlayer() const { return 0; }
-	void SetLocalPlayer( int nPlayer ) { NI_ASSERT( nPlayer == 0, "Wrong local player" ); }
+
+	int GetLocalPlayer() const
+	{
+		return 0;
+	}
+
+	void SetLocalPlayer( int nPlayer )
+	{
+		NI_ASSERT( nPlayer == 0, "Wrong local player" );
+	}
 
 	virtual void KeyBuildingOwnerChange( const int nBuildingLinkID, const int nNewOwnerPlayer ) {}
-	virtual const int GetKeyBuildingOwner( const int nBuildingLinkID ) { return 2; }
-	virtual const std::pair<int, int> GetKeyBuildingSummary() { return std::pair<int, int>( 0, 0 ); }
-	virtual const float GetRecycleSpeedCoeff( const int nSide ) { return 1.0f; }
+
+	virtual const int GetKeyBuildingOwner( const int nBuildingLinkID )
+	{
+		return 2;
+	}
+
+	virtual const std::pair<int, int> GetKeyBuildingSummary()
+	{
+		return std::pair<int, int>( 0, 0 );
+	}
+
+	virtual const float GetRecycleSpeedCoeff( const int nSide )
+	{
+		return 1.0f;
+	}
 
 	int GetStatistics( int nPlayer, EStatisticsKind eKind ) const;
 	void SetStatistics( int nPlayer, EStatisticsKind eKind, int nValue );
+
 	void UpdateStatistics() {}
-	virtual int GetScoreWithUpdate( int nPlayer ) { return 0; }
+
+	virtual int GetScoreWithUpdate( int nPlayer )
+	{
+		return 0;
+	}
+
 	void SetMultiplayerInfo( const SMultiplayerInfo &info ) {}
-	SMultiplayerInfo *GetMultiplayerInfo() { return 0; }
+
+	SMultiplayerInfo *GetMultiplayerInfo()
+	{
+		return 0;
+	}
+
 	bool IsNewReinf( NDb::EReinforcementType eType ) const;
 	const SPlayerColor &GetPlayerColor( int nPlayer ) const;
+
 	void SetPlayerColour( const int nPlayer, const int nNewColour ) {}
 
 	// Changeable sides for MP
@@ -330,7 +423,9 @@ public:
 	{
 		NI_ASSERT( 0, "Wrong call to Scenartio Tracker Single" );
 	}
+
 	virtual const NDb::SPartyDependentInfo *GetPlayerParty( const int nPlayer );
+
 	virtual void SetPlayerSide( const int nPlayer, const int nNewTeam )
 	{
 		NI_ASSERT( 0, "Wrong call to Scenartio Tracker Single" );
@@ -368,6 +463,7 @@ public:
 class CScenarioTrackerMultiplayer : public IScenarioTracker
 {
 	OBJECT_BASIC_METHODS( CScenarioTrackerMultiplayer );
+
 	struct SPlayerInfo
 	{
 		ZDATA
@@ -385,6 +481,7 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 				ZSKIP //CDBPtr<NDb::SBackground> pUnitFullInfoColor;
 						SPlayerColor playerColor;
 		int nReinforcementCallsUsed = {};
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &reinforcementTypes );
@@ -434,6 +531,7 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 	SPlayerColor playerColorNeutral;
 	NTimer::STime timeMissionStart = {};
 	CArray2D<int> reinfCallsByType;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pMission );
@@ -472,6 +570,7 @@ private:
 			f.Add( 16, &nLocalPlayer );
 		}
 	}
+
 	void CalculateScore( const int nPlayer );
 	bool AddReinfExp( float *pExp, const int nPlayer, NDb::EReinforcementType eReinfType );
 	// returns true on levelup, returns rest of exp
@@ -480,8 +579,15 @@ public:
 	CScenarioTrackerMultiplayer();
 
 	//{ IAIScenarioTracker
-	virtual EGameType GetGameType() const { return eType; }
-	virtual void SetGameType( EGameType _eType ) { eType = _eType; }
+	virtual EGameType GetGameType() const
+	{
+		return eType;
+	}
+
+	virtual void SetGameType( EGameType _eType )
+	{
+		eType = _eType;
+	}
 
 	// reinforcements
 	const NDb::SReinforcement *GetReinforcement( int nPlayer, NDb::EReinforcementType eType ) const;
@@ -495,44 +601,93 @@ public:
 	void SetReinforcementXP( int nPlayer, NDb::EReinforcementType eType, float fXP );
 	int GetReinforcementXPLevel( int nPlayer, NDb::EReinforcementType eType ) const;
 	float GetReinforcementXPForLevel( NDb::EReinforcementType eType, int nXPLevel ) const;
+
 	//}
 
-	bool IsCustomMission() const { return false; }
-	bool IsCustomCampaign() const { return false; }
+	bool IsCustomMission() const
+	{
+		return false;
+	}
+
+	bool IsCustomCampaign() const
+	{
+		return false;
+	}
 
 	// objectives
 	// Задания, про которые игрок уже знает
-	int GetKnownObjectiveCount() const { return 0; }
-	// Возвращает ID задания
-	int GetKnownObjectiveID( const int nIndex ) { return -1; }
+	int GetKnownObjectiveCount() const
+	{
+		return 0;
+	}
 
-	int GetObjectiveCount() const { return 0; }
+	// Возвращает ID задания
+	int GetKnownObjectiveID( const int nIndex )
+	{
+		return -1;
+	}
+
+	int GetObjectiveCount() const
+	{
+		return 0;
+	}
 	enum EMissionObjectiveState GetObjectiveState( const int nID ) const;
+
 	// Задание, впервые изменившее состояние из EMOS_WAITING попадает в конец списка известных
 	void SetObjectiveState( const int nID, const EMissionObjectiveState eState ) {}
-	bool GetObjectivePlaces( int nID, std::vector<CVec3> *pPlaces ) const { return false; }
+
+	bool GetObjectivePlaces( int nID, std::vector<CVec3> *pPlaces ) const
+	{
+		return false;
+	}
+
 	void SetObjectiveObjects( int nID, const std::vector<CMapObj *> &objects ) {}
-	bool IsDynamicObjective( int nID ) const { return false; }
+
+	bool IsDynamicObjective( int nID ) const
+	{
+		return false;
+	}
 
 	// mission
 	void MissionStart( const NDb::SMapInfo *pMission, const int _nTechLevel = -1 );
+
 	void CustomMissionStart( const NDb::SMapInfo *pMission, int nDifficulty, bool bTutorial )
 	{
 		NI_ASSERT( false, "wrong call" );
 	}
-	bool IsTutorialMission() const { return false; }
+
+	bool IsTutorialMission() const
+	{
+		return false;
+	}
+
 	void MissionCancel();
 	void MissionWin();
 	bool IsMissionActive() const;
-	bool IsMissionWon() const { return bMissionWon; }
+
+	bool IsMissionWon() const
+	{
+		return bMissionWon;
+	}
+
 	const NDb::SMapInfo *GetCurrentMission() const;
-	const NDb::SMapInfo *GetLastMission() const { return pLastMission; }
+
+	const NDb::SMapInfo *GetLastMission() const
+	{
+		return pLastMission;
+	}
+
 	void ClearMissionScriptVars();
 
 	// mission statistics
 	int GetNPlayers() const;
 	int GetPlayerSide( int nPlayer ) const;
-	int GetMultiplayerTechLevel() const { return nTechLevel; }
+
+	int GetMultiplayerTechLevel() const
+	{
+		return nTechLevel;
+	}
+
 	int GetPlayerMultiplayerNation( int nPlayer ) const
 	{
 		// Neutral or otherwise unassigned map slots do not have an MP nation.
@@ -544,20 +699,45 @@ public:
 	{
 		NI_ASSERT( false, "wrong call" );
 	}
+
 	bool IsCampaignActive() const
 	{
 		NI_ASSERT( false, "wrong call" );
 		return false;
 	}
-	const NDb::SCampaign *GetCurrentCampaign() const { return 0; }
-	const NDb::SDifficultyLevel *GetDifficultyLevelDB() const { return 0; }
-	bool IsTutorialCampaign() const { return false; }
+
+	const NDb::SCampaign *GetCurrentCampaign() const
+	{
+		return 0;
+	}
+
+	const NDb::SDifficultyLevel *GetDifficultyLevelDB() const
+	{
+		return 0;
+	}
+
+	bool IsTutorialCampaign() const
+	{
+		return false;
+	}
+
 	void GetAllMissionStats( std::vector<const SMissionStats *> *pMissions ) const {}
-	NDb::EReinforcementType GetFavoriteReinf() const { return NDb::_RT_NONE; }
+
+	NDb::EReinforcementType GetFavoriteReinf() const
+	{
+		return NDb::_RT_NONE;
+	}
+
 	void MarkFavoriteReinf( NDb::EReinforcementType eType ) {}
+
 	void SetLastVisiblePlayerStatsExp( float fCareer, float fNextRank ) {}
+
 	void GetLastVisiblePlayerStatsExp( float *pCareer, float *pNextRank ) const {}
-	std::wstring GetReinfName( NDb::EReinforcementType eType ) const { return std::wstring(); }
+
+	std::wstring GetReinfName( NDb::EReinforcementType eType ) const
+	{
+		return std::wstring();
+	}
 
 	// chapter
 	bool IsChapterActive() const
@@ -565,39 +745,101 @@ public:
 		NI_ASSERT( false, "wrong call" );
 		return false;
 	}
-	void NextChapter() { NI_ASSERT( false, "wrong call" ); }
-	void GetEnabledMissions( CMissions *pMissions ) { NI_ASSERT( false, "wrong call" ); }
-	void GetCompletedMissions( CMissions *pMissions ) { NI_ASSERT( false, "wrong call" ); }
-	const NDb::SChapter *GetCurrentChapter() const { return 0; }
-	int GetMissionToEnableCount() const { return 0; }
+
+	void NextChapter()
+	{
+		NI_ASSERT( false, "wrong call" );
+	}
+
+	void GetEnabledMissions( CMissions *pMissions )
+	{
+		NI_ASSERT( false, "wrong call" );
+	}
+
+	void GetCompletedMissions( CMissions *pMissions )
+	{
+		NI_ASSERT( false, "wrong call" );
+	}
+
+	const NDb::SChapter *GetCurrentChapter() const
+	{
+		return 0;
+	}
+
+	int GetMissionToEnableCount() const
+	{
+		return 0;
+	}
 
 	virtual EReinforcementState GetReinforcementEnableState( int nPlayer, NDb::EReinforcementType eType )
 	{
 		return ERS_DISABLED;
 	}
-	void GetChapterCurrentReinforcements( std::vector<SChapterReinf> *pReinf, int nPlayer ) const { pReinf->clear(); }
-	int GetReinforcementCallsLeftInChapter() const { return 0; }
-	int GetReinforcementCallsOld() const { return 0; }
+
+	void GetChapterCurrentReinforcements( std::vector<SChapterReinf> *pReinf, int nPlayer ) const
+	{
+		pReinf->clear();
+	}
+
+	int GetReinforcementCallsLeftInChapter() const
+	{
+		return 0;
+	}
+
+	int GetReinforcementCallsOld() const
+	{
+		return 0;
+	}
+
 	virtual bool RegisterUnitKill( const SKillInfo &info );
 	virtual int GetUnitKills( const int nPlayer ) const;
 	virtual int GetUnitKills( const int nPlayer, const int nKilledPlayer ) const;
 	int GetUnitPriceKills( const int nPlayer, const int nKilledPlayer ) const;
-	virtual const NDb::SUnitStatsModifier *GetEnemyDifficultyModifier() { return 0; }
-	virtual const NDb::SUnitStatsModifier *GetPlayerDifficultyModifier() { return 0; }
-	virtual const float GetEnemyDifficultyRCallsModifier() { return 0; }
-	virtual const float GetEnemyDifficultyRTimeModifier() { return 0; }
-	virtual const NDb::SPlayerRank *GetPlayerRank() const { return 0; }
-	virtual int GetPlayerRankIndex() const { return 0; }
+
+	virtual const NDb::SUnitStatsModifier *GetEnemyDifficultyModifier()
+	{
+		return 0;
+	}
+
+	virtual const NDb::SUnitStatsModifier *GetPlayerDifficultyModifier()
+	{
+		return 0;
+	}
+
+	virtual const float GetEnemyDifficultyRCallsModifier()
+	{
+		return 0;
+	}
+
+	virtual const float GetEnemyDifficultyRTimeModifier()
+	{
+		return 0;
+	}
+
+	virtual const NDb::SPlayerRank *GetPlayerRank() const
+	{
+		return 0;
+	}
+
+	virtual int GetPlayerRankIndex() const
+	{
+		return 0;
+	}
 
 	virtual void AddPlayer( const int nPlayer );
 	virtual void RemovePlayer( const int nPlayer );
 	virtual bool IsPlayerPresent( const int nPlayer ) const;
+
 	int GetLocalPlayer() const
 	{
 		NI_VERIFY( nLocalPlayer >= 0, "Wrong local player", return 0; );
 		return nLocalPlayer;
 	}
-	void SetLocalPlayer( int nPlayer ) { nLocalPlayer = nPlayer; }
+
+	void SetLocalPlayer( int nPlayer )
+	{
+		nLocalPlayer = nPlayer;
+	}
 
 	virtual void KeyBuildingOwnerChange( const int nBuildingLinkID, const int nNewOwnerPlayer );
 	virtual const int GetKeyBuildingOwner( const int nBuildingLinkID ); // return side (0..2)
@@ -611,8 +853,17 @@ public:
 	virtual int GetScoreWithUpdate( int nPlayer );
 	void SetMultiplayerInfo( const SMultiplayerInfo &info );
 	SMultiplayerInfo *GetMultiplayerInfo();
-	virtual int GetMissionRecommendedReinfCalls() const { return INFINITE_CALLS; }
-	bool IsNewReinf( NDb::EReinforcementType eType ) const { return false; }
+
+	virtual int GetMissionRecommendedReinfCalls() const
+	{
+		return INFINITE_CALLS;
+	}
+
+	bool IsNewReinf( NDb::EReinforcementType eType ) const
+	{
+		return false;
+	}
+
 	const SPlayerColor &GetPlayerColor( int nPlayer ) const;
 
 	// Changeable sides for MP
@@ -624,23 +875,45 @@ public:
 
 	// Leaders (commanders)
 	const SLeaderInfo *GetLeaderInfo( const NDb::EReinforcementType eReinf ) const;
+
 	void AutoGenerateLeaderInfo( SGenerateLeaderInfo *pInfo ) const {}
+
 	bool AssignLeader( const NDb::EReinforcementType eReinf, const SGenerateLeaderInfo &info, SUndoLeaderInfo *pUndo )
 	{
 		NI_ASSERT( 0, "Wrong call to Scenartio Tracker MP" );
 		return false;
 	}
+
 	void SetLeaderLastSeenInfo( const NDb::EReinforcementType eReinf, const SLeaderInfo::SLeaderStatSet &lastSeenInfo ) {}
-	float GetLeaderRankExp( NDb::EReinforcementType eType, int nLevel ) const { return 0.0f; }
+
+	float GetLeaderRankExp( NDb::EReinforcementType eType, int nLevel ) const
+	{
+		return 0.0f;
+	}
+
 	void UndoAssignLeader( const SUndoLeaderInfo &undo ) {}
-	int GetLeaderLevel( int nPlayer, NDb::EReinforcementType eType ) { return GetReinforcementXPLevel( nPlayer, eType ); }
-	const NDb::SUnitStatsModifier *GetLeaderModifier( int nPlayer, NDb::EReinforcementType eType ) { return 0; }
+
+	int GetLeaderLevel( int nPlayer, NDb::EReinforcementType eType )
+	{
+		return GetReinforcementXPLevel( nPlayer, eType );
+	}
+
+	const NDb::SUnitStatsModifier *GetLeaderModifier( int nPlayer, NDb::EReinforcementType eType )
+	{
+		return 0;
+	}
+
 	const std::wstring &GetLeaderRankName( int nRank ) const
 	{
 		static std::wstring wszEmpty;
 		return wszEmpty;
 	}
-	int GetAvailablePromotions() const { return 0; }
+
+	int GetAvailablePromotions() const
+	{
+		return 0;
+	}
+
 	void SetAvailablePromotions( int nCount ) {}
 
 	void UpdateReinforcements( const int nPlayer ); // Find best reinforcement sets for current map/tech level
@@ -650,8 +923,16 @@ public:
 		float fXP = _nXP;
 		return AddReinfExp( &fXP, nPlayer, eReinf );
 	} // Give to reinf and player
-	virtual bool GiveXPToPlayer( const int nPlayer, const int nXP ) { return false; } // Give to player only
-	const NDb::SUnitStatsModifier *GetPlayerChapterModifier( NDb::EReinforcementType eReinf ) { return 0; }
+
+	virtual bool GiveXPToPlayer( const int nPlayer, const int nXP )
+	{
+		return false;
+	} // Give to player only
+
+	const NDb::SUnitStatsModifier *GetPlayerChapterModifier( NDb::EReinforcementType eReinf )
+	{
+		return 0;
+	}
 };
 
 // END new scenario tracker

@@ -18,7 +18,11 @@ class CFreeGroupIDs
 	int nMaxID = {};
 
 public:
-	int operator&( IBinSaver &f ) { return 0; }
+	int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
+
 	CFreeGroupIDs() : nMaxID( 1 ) {}
 
 	const int Get()
@@ -26,6 +30,7 @@ public:
 		nMaxID += 2;
 		return nMaxID;
 	}
+
 	void Return( const int id ) {}
 };
 
@@ -58,11 +63,13 @@ private:
 		bool bGivenCommandToRestore = {};
 
 		SAmbushInfo() : nUniqueId( -1 ), vAmbushCenter( VNULL2 ), wAmbushDir( 0 ), bGivenCommandToRestore( false ) {}
+
 		SAmbushInfo( const int _nUniqueId )
 				: nUniqueId( _nUniqueId ), vAmbushCenter( -1.0f, -1.0f ), wAmbushDir( 0 ), bGivenCommandToRestore( false )
 		{
 		}
 	};
+
 	typedef std::list<std::list<SAmbushInfo>> CAmbushGroups;
 	CAmbushGroups ambushGroups;
 	det_set<int> ambushUnits;
@@ -95,8 +102,13 @@ private:
 
 public:
 	CGroupLogic() {}
+
 	void Init( ICollisionsCollector *pCollisionsCollector );
-	void Clear() { DestroyContents(); }
+
+	void Clear()
+	{
+		DestroyContents();
+	}
 
 	const uint16_t GenerateGroupNumber();
 	void RegisterGroup( const std::vector<int> &vIDs, const uint16_t wGroup );
@@ -120,10 +132,25 @@ public:
 	void CreateSpecialGroup( const uint16_t wGroup );
 	void UnregisterSpecialGroup( const uint16_t wSpecialGroup );
 
-	int BeginGroup( const int nGroup ) const { return groupUnits.begin( nGroup ); }
-	int EndGroup() const { return groupUnits.end(); }
-	int Next( const int nIter ) const { return groupUnits.GetNext( nIter ); }
-	class CCommonUnit *GetGroupUnit( const int nIter ) const { return groupUnits.GetEl( nIter ); }
+	int BeginGroup( const int nGroup ) const
+	{
+		return groupUnits.begin( nGroup );
+	}
+
+	int EndGroup() const
+	{
+		return groupUnits.end();
+	}
+
+	int Next( const int nIter ) const
+	{
+		return groupUnits.GetNext( nIter );
+	}
+
+	class CCommonUnit *GetGroupUnit( const int nIter ) const
+	{
+		return groupUnits.GetEl( nIter );
+	}
 
 	void AddFollowingUnit( class CCommonUnit *pUnit );
 

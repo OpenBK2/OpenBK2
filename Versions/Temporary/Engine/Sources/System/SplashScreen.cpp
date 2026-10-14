@@ -18,6 +18,7 @@ static const char *pszSplashScreenWindowClass = "SplashScreen_WindowClass_DEFAUL
 class CSplashScreen : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CSplashScreen );
+
 	//
 	class CBitmap
 	{
@@ -34,8 +35,16 @@ class CSplashScreen : public CObjectBase
 
 		bool Load( const std::string &rszImageFileName );
 		bool Draw( HDC *pHDC );
-		int GetSizeX() { return bitmapInfo.bmWidth; }
-		int GetSizeY() { return bitmapInfo.bmHeight; }
+
+		int GetSizeX()
+		{
+			return bitmapInfo.bmWidth;
+		}
+
+		int GetSizeY()
+		{
+			return bitmapInfo.bmHeight;
+		}
 	};
 
 	std::string szImageFileName;
@@ -330,6 +339,7 @@ namespace
 
 	public:
 		CSplashScreen() : pWindow( 0 ), pImage( 0 ) {}
+
 		~CSplashScreen();
 
 		bool Create( const std::string &rszImageFileName, bool bTopMost );
@@ -406,7 +416,7 @@ namespace
 		SDL_PumpEvents();
 		return true;
 	}
-}
+} // namespace
 
 CObjectBase *CreateSplashScreen( const std::string &_szImageFileName, bool bTopMost )
 {
@@ -420,4 +430,4 @@ CObjectBase *CreateSplashScreen( const std::string &_szImageFileName, bool bTopM
 	return pSplash;
 }
 #endif
-}
+} // namespace NSplash

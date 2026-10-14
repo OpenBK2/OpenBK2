@@ -9,7 +9,7 @@ namespace NDb
 struct SWeaponRPGStats;
 struct SHPObjectRPGStats;
 enum EReinforcementType : int;
-}
+} // namespace NDb
 
 // ************************************************************************************************************************ //
 // **
@@ -30,6 +30,7 @@ struct SSuspendedUpdate
 	ZDATA
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nObjUniqueID = {}; // subject to change
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nObjUniqueID );
@@ -38,6 +39,7 @@ struct SSuspendedUpdate
 
 public:
 	SSuspendedUpdate() : nObjUniqueID( 0 ) {}
+
 	SSuspendedUpdate( const int _nObjUniqueID ) : nObjUniqueID( _nObjUniqueID ) {}
 };
 
@@ -48,6 +50,7 @@ struct SChangeDBIDUpdate : public SSuspendedUpdate
 	ZSKIP
 	ZSKIP
 	CDBPtr<NDb::SHPObjectRPGStats> pStats;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SSuspendedUpdate *)this );
@@ -64,6 +67,7 @@ struct SAINotifyAction : public SSuspendedUpdate
 	uint16_t typeID = {}; // action type
 	int nParam = {};
 	NTimer::STime time = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SSuspendedUpdate *)this );
@@ -76,6 +80,7 @@ struct SAINotifyAction : public SSuspendedUpdate
 public:
 	//
 	SAINotifyAction() {}
+
 	SAINotifyAction( const uint8_t _typeID, const int nObjUniqueID )
 			: SSuspendedUpdate( nObjUniqueID ), typeID( _typeID ), nParam( -1 )
 	{
@@ -86,6 +91,7 @@ struct SAINotifyDeadAtAll : public SSuspendedUpdate
 {
 	ZDATA_( SSuspendedUpdate )
 	bool bRot = {}; // true - если потом придёт update на исчезновение
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SSuspendedUpdate *)this );
@@ -104,6 +110,7 @@ struct SAINotifyRPGStats : public SSuspendedUpdate
 		ZDATA
 		CDBPtr<NDb::SWeaponRPGStats> pStats;
 		int nAmmo = {};
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pStats );
@@ -119,6 +126,7 @@ struct SAINotifyRPGStats : public SSuspendedUpdate
 					NTimer::STime time = {};
 	std::vector<SWeaponAmmo> ammo;
 	int nSupply = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SSuspendedUpdate *)this );
@@ -133,6 +141,7 @@ struct SAINotifyRPGStats : public SSuspendedUpdate
 public:
 	//
 	SAINotifyRPGStats() {}
+
 	SAINotifyRPGStats( const int nObjUniqueID, const float _fHitPoints )
 			: SSuspendedUpdate( nObjUniqueID ), fHitPoints( _fHitPoints )
 	{
@@ -144,6 +153,7 @@ struct SAINotifyDiplomacy : public SSuspendedUpdate
 	ZDATA_( SSuspendedUpdate )
 	EDiplomacyInfo eDiplomacy = {};
 	int nPlayer = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SSuspendedUpdate *)this );
@@ -154,6 +164,7 @@ struct SAINotifyDiplomacy : public SSuspendedUpdate
 
 public:
 	SAINotifyDiplomacy() {}
+
 	SAINotifyDiplomacy( EDiplomacyInfo _eDiplomacy, const int nObjUniqueID, const int _nPlayer )
 			: SSuspendedUpdate( nObjUniqueID ), eDiplomacy( _eDiplomacy ), nPlayer( _nPlayer )
 	{
@@ -167,6 +178,7 @@ struct SAINotifyKeyBuilding : public SSuspendedUpdate
 	int nPrevPlayer = {};
 	bool bStorage = {};
 	bool bFriendLost = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SSuspendedUpdate *)this );
@@ -178,6 +190,7 @@ struct SAINotifyKeyBuilding : public SSuspendedUpdate
 
 public:
 	SAINotifyKeyBuilding() {}
+
 	SAINotifyKeyBuilding( const int nObjUniqueID, bool _bStorage, const int _nPlayer, const int _nPrevPlayer )
 			: SSuspendedUpdate( nObjUniqueID ), nPlayer( _nPlayer ), nPrevPlayer( _nPrevPlayer ), bStorage( _bStorage ),
 				bFriendLost( false )
@@ -192,6 +205,7 @@ struct SAINotifyEntranceState
 	int nInfantryUniqueID = {}; // кто входит
 	int nTargetUniqueID = {};   // куда входит
 	bool bEnter = {};           // true - входит, false - выходит
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nInfantryUniqueID );
@@ -202,11 +216,13 @@ struct SAINotifyEntranceState
 
 public:
 	SAINotifyEntranceState() : nInfantryUniqueID( 0 ), nTargetUniqueID( 0 ) {}
+
 	SAINotifyEntranceState( const int _nInfantryUniqueID, const int _nTargetUniqueID, const bool _bEnter )
 			: nInfantryUniqueID( _nInfantryUniqueID ), nTargetUniqueID( _nTargetUniqueID ), bEnter( _bEnter )
 	{
 	}
 };
+
 // placement update
 struct SAINotifyPlacement : public SSuspendedUpdate
 {
@@ -229,6 +245,7 @@ struct SAINotifyPlacement : public SSuspendedUpdate
 	uint8_t cSoil = {};     // параметры почвы: дым из-под колёс, следы и т.д.
 
 	SAINotifyPlacement() : bNewFormat( false ), fWaterCoeff( 0.0f ), cSoil( 0 ) {}
+
 	SAINotifyPlacement(
 			const int nObjUniqueID, const CVec2 &_center, const short _z, const uint16_t _dir, const float _fSpeed )
 			: SSuspendedUpdate( nObjUniqueID ), bNewFormat( false ), center( _center ), z( _z ), dir( _dir ),
@@ -261,6 +278,7 @@ struct SAINotifyPlacement : public SSuspendedUpdate
 		return 0;
 	}
 };
+
 // information about new unit
 struct SNewUnitInfo : public SAINotifyPlacement
 {
@@ -277,6 +295,7 @@ struct SNewUnitInfo : public SAINotifyPlacement
 	int nExpLevel = {};   // XP level of current unit
 	NDb::EReinforcementType eReinfType = {};
 	CDBPtr<NDb::SHPObjectRPGStats> pStats;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAINotifyPlacement *)this );
@@ -318,6 +337,7 @@ struct SAINotifyHitInfo
 	EHitType eHitType = {};               // тип попадани
 	int nVictimUniqueID = {};
 	CVec3 explCoord;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pWeapon );
@@ -331,6 +351,7 @@ struct SAINotifyHitInfo
 
 public:
 	SAINotifyHitInfo() : pWeapon( 0 ) {}
+
 	SAINotifyHitInfo( const NDb::SWeaponRPGStats *_pWeapon,
 	                  const uint16_t _wShell,
 	                  const uint16_t &_wDir,
@@ -349,6 +370,7 @@ public:
 	{
 	}
 };
+
 // aiming: turret turning update
 struct SAINotifyTurretTurn
 {
@@ -357,6 +379,7 @@ struct SAINotifyTurretTurn
 	int nPlantform = {};        // turned platform
 	uint16_t wAngle = {};       // final angle
 	NTimer::STime endTime = {}; // final time
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nObjUniqueID );
@@ -368,6 +391,7 @@ struct SAINotifyTurretTurn
 
 public:
 	SAINotifyTurretTurn() : nObjUniqueID( 0 ) {}
+
 	SAINotifyTurretTurn( const int _nObjUniqueID,
 	                     const int &_nPlantform,
 	                     const uint16_t &_wAngle,
@@ -385,6 +409,7 @@ struct SAINotifyBaseShot
 	uint8_t cShell = {};     // shell number
 	NTimer::STime time = {}; // time, this shot was...
 	CVec3 vDestPos;          // destination point of this shot
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &typeID );
@@ -397,6 +422,7 @@ struct SAINotifyBaseShot
 
 public:
 	SAINotifyBaseShot() : nObjUniqueID( 0 ) {}
+
 	SAINotifyBaseShot( const uint8_t _typeID,
 	                   const int _nObjUniqueID,
 	                   const uint8_t _cShell,
@@ -412,6 +438,7 @@ struct SAINotifyMechShot : public SAINotifyBaseShot
 	ZDATA_( SAINotifyBaseShot )
 	uint8_t cGun = {}; // gun number
 	uint8_t cPlatform = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAINotifyBaseShot *)this );
@@ -422,6 +449,7 @@ struct SAINotifyMechShot : public SAINotifyBaseShot
 
 public:
 	SAINotifyMechShot() {}
+
 	SAINotifyMechShot( const uint8_t _typeID,
 	                   const int _nObjUniqueID,
 	                   const uint8_t _cGun,
@@ -439,6 +467,7 @@ struct SAINotifyInfantryShot : public SAINotifyBaseShot
 	CDBPtr<NDb::SWeaponRPGStats> pWeapon; // оружие
 	// если nSlot >= 0, то стрельбы из объекта, nSlot == -1, то стрельба в открытую
 	int nSlot = {}; // номер слота
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAINotifyBaseShot *)this );
@@ -453,8 +482,10 @@ public:
 	// Потому что мы не умеем другими способами передавать pWeapon
 	int nPlatform = {};
 	int nGun = {};
+
 	// CRAP}
 	SAINotifyInfantryShot() : pWeapon( 0 ), nSlot( -1 ), nPlatform( 0 ), nGun( 0 ) {}
+
 	SAINotifyInfantryShot( const uint8_t _typeID,
 	                       const int nObjUniqueID,
 	                       const int _nSlot,
@@ -472,6 +503,7 @@ struct SAINotifySelections
 	ZDATA
 	int nObjUniqueID = {};
 	bool bSelectable = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nObjUniqueID );
@@ -494,6 +526,7 @@ struct SAINotifyNewProjectile
 
 	CVec3 vAIStartPos;
 	NTimer::STime timeToEqualizePos = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nObjUniqueID );
@@ -508,6 +541,7 @@ struct SAINotifyNewProjectile
 
 public:
 	SAINotifyNewProjectile() : nObjUniqueID( 0 ) {}
+
 	SAINotifyNewProjectile( const int _nObjUniqueID,
 	                        const int _nSourceUniqueID,
 	                        const int _nPlatform,
@@ -531,6 +565,7 @@ struct SAINotifyUpdateLaseMark
 	int nGun = {};
 
 	CVec3 vTarget;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nLaserMarkID );
@@ -543,6 +578,7 @@ struct SAINotifyUpdateLaseMark
 
 public:
 	SAINotifyUpdateLaseMark() : nLaserMarkID( -1 ), nUnitID( -1 ), nPlatform( -1 ), nGun( -1 ), vTarget( VNULL3 ) {}
+
 	SAINotifyUpdateLaseMark(
 			const int _nLaserMarkID, const int _nUnitID, const int _nPlatform, const int _nGun, const CVec3 &_vTarget )
 			: nLaserMarkID( _nLaserMarkID ), nUnitID( _nUnitID ), nPlatform( _nPlatform ), nGun( _nGun ), vTarget( _vTarget )

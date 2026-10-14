@@ -20,6 +20,7 @@ public:
 		f.Add( 3, &fEntrenchTimeCoeff );
 		return 0;
 	}
+
 	// if 0 then ability must be switched off
 	float OnAbilityActive();
 
@@ -40,7 +41,9 @@ public:
 
 public:
 	CExecutorSoldierEntrench( CAIUnit *_pUnit );
+
 	CExecutorSoldierEntrench() : fEntrenchTimeCoeff( 1.0f ) {}
+
 	~CExecutorSoldierEntrench();
 
 	int Segment();

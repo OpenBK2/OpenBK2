@@ -1,6 +1,7 @@
 #pragma once
 class CGeneral;
 struct IGeneralDelayedTask;
+
 namespace NDb
 {
 struct SMapInfo;

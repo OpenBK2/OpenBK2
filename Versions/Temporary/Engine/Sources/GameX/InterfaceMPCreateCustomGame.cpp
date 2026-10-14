@@ -315,6 +315,7 @@ int CInterfaceMPCreateCustomGame::Check( const std::string &szCheckName ) const
 {
 	return 0;
 }
+
 ///////////////////////////////////	///////////////////////////////////////////////////////////////////////////////////////////
 bool CInterfaceMPCreateCustomGame::OnBackReaction( const std::string &szSender )
 {

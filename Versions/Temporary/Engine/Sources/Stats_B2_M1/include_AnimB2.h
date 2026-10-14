@@ -5,14 +5,17 @@ const NFile::CFilePath &GetModelFileRef() const override
 {
 	return szModelFileRef;
 }
+
 const std::string &GetClipName() const override
 {
 	return szClipName;
 }
+
 int GetFirstFrame() const override
 {
 	return nFirstFrame;
 }
+
 int GetLastFrame() const override
 {
 	return nLastFrame;

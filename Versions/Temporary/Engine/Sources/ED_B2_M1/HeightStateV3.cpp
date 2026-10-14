@@ -368,6 +368,7 @@ struct S_SP_CRBB_CHPTL_Functional
 	ITerraManager *pTerraManager;
 	float fAverageHeight;
 	float fLevelRatio;
+
 	//
 	S_SP_CRBB_CHPTL_Functional( CHeightContainer *_pHeightContainer,
 	                            SHeightPattern *_pHeightPattern,
@@ -381,6 +382,7 @@ struct S_SP_CRBB_CHPTL_Functional
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 		NI_ASSERT( pTerraManager != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
+
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
 	{
@@ -404,6 +406,7 @@ struct S_SP_CRBB_CAH_Functional
 	ITerraManager *pTerraManager;
 	float fTotalHeight;
 	int nPointCount;
+
 	//
 	S_SP_CRBB_CAH_Functional( CHeightContainer *_pHeightContainer )
 			: pHeightContainer( _pHeightContainer ), fTotalHeight( 0.0f ), nPointCount( 0 )
@@ -412,6 +415,7 @@ struct S_SP_CRBB_CAH_Functional
 		NI_ASSERT( pHeightContainer != 0, "Wrong parameter: pHeightContainer == 0" );
 		NI_ASSERT( pTerraManager != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
+
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
 	{
@@ -422,8 +426,12 @@ struct S_SP_CRBB_CAH_Functional
 		}
 		return true;
 	}
+
 	//
-	inline float GetAverageHeight() const { return ( ( nPointCount > 0 ) ? ( fTotalHeight / nPointCount ) : 0.0f ); }
+	inline float GetAverageHeight() const
+	{
+		return ( ( nPointCount > 0 ) ? ( fTotalHeight / nPointCount ) : 0.0f );
+	}
 };
 
 void CalculateMatrix(
@@ -458,6 +466,7 @@ struct S_SP_CHPTL_Functional
 	ITerraManager *pTerraManager;
 	float fAverageHeight;
 	float fLevelRatio;
+
 	//
 	S_SP_CHPTL_Functional( SHeightPattern *_pHeightPattern, float _fAverageHeight, float _fLevelRatio )
 			: pHeightPattern( _pHeightPattern ), fAverageHeight( _fAverageHeight ), fLevelRatio( _fLevelRatio )
@@ -466,6 +475,7 @@ struct S_SP_CHPTL_Functional
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 		NI_ASSERT( pTerraManager != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
+
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
 	{
@@ -488,12 +498,14 @@ struct S_SP_CAH_Functional
 	ITerraManager *pTerraManager;
 	float fTotalHeight;
 	int nPointCount;
+
 	//
 	S_SP_CAH_Functional() : fTotalHeight( 0.0f ), nPointCount( 0 )
 	{
 		pTerraManager = EditorScene()->GetTerraManager();
 		NI_ASSERT( pTerraManager != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
+
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
 	{
@@ -504,8 +516,12 @@ struct S_SP_CAH_Functional
 		}
 		return true;
 	}
+
 	//
-	inline float GetAverageHeight() const { return ( ( nPointCount > 0 ) ? ( fTotalHeight / nPointCount ) : 0.0f ); }
+	inline float GetAverageHeight() const
+	{
+		return ( ( nPointCount > 0 ) ? ( fTotalHeight / nPointCount ) : 0.0f );
+	}
 };
 
 // Версии с проверкой на балланс красного и черного c простым уровнем
@@ -522,6 +538,7 @@ struct S_CP_CRBB_CHPTL_Functional
 	ITerraManager *pTerraManager;
 	SDoubleVec3 vPlane;
 	float fLevelRatio;
+
 	//
 	S_CP_CRBB_CHPTL_Functional( CHeightContainer *_pHeightContainer,
 	                            SHeightPattern *_pHeightPattern,
@@ -535,6 +552,7 @@ struct S_CP_CRBB_CHPTL_Functional
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 		NI_ASSERT( pTerraManager != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
+
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
 	{
@@ -560,6 +578,7 @@ struct S_CP_CRBB_CAP_Functional
 	ITerraManager *pTerraManager;
 	CArray2D<double> matrix;
 	SDoubleVec3 vRightSide;
+
 	//
 	S_CP_CRBB_CAP_Functional( CHeightContainer *_pHeightContainer ) : pHeightContainer( _pHeightContainer )
 	{
@@ -575,6 +594,7 @@ struct S_CP_CRBB_CAP_Functional
 		NI_ASSERT( pHeightContainer != 0, "Wrong parameter: pHeightContainer == 0" );
 		NI_ASSERT( pTerraManager != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
+
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
 	{
@@ -584,6 +604,7 @@ struct S_CP_CRBB_CAP_Functional
 		}
 		return true;
 	}
+
 	//
 	inline bool GetPlane( SDoubleVec3 *pvPlane ) const
 	{
@@ -614,6 +635,7 @@ struct S_CP_CHPTL_Functional
 	ITerraManager *pTerraManager;
 	SDoubleVec3 vPlane;
 	float fLevelRatio;
+
 	//
 	S_CP_CHPTL_Functional( SHeightPattern *_pHeightPattern, const SDoubleVec3 &rvPlane, float _fLevelRatio )
 			: pHeightPattern( _pHeightPattern ), vPlane( rvPlane ), fLevelRatio( _fLevelRatio )
@@ -622,6 +644,7 @@ struct S_CP_CHPTL_Functional
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 		NI_ASSERT( pTerraManager != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
+
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
 	{
@@ -646,6 +669,7 @@ struct S_CP_CAP_Functional
 	ITerraManager *pTerraManager;
 	CArray2D<double> matrix;
 	SDoubleVec3 vRightSide;
+
 	//
 	S_CP_CAP_Functional()
 	{
@@ -660,6 +684,7 @@ struct S_CP_CAP_Functional
 		//
 		NI_ASSERT( pTerraManager != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
+
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
 	{
@@ -669,6 +694,7 @@ struct S_CP_CAP_Functional
 		}
 		return true;
 	}
+
 	//
 	inline bool GetPlane( SDoubleVec3 *pvPlane ) const
 	{

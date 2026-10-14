@@ -27,8 +27,17 @@ public:
 	void Sort();
 
 	const CVec2 GetAverageDir() const;
-	void SetDir( const CVec2 &vDir ) { vAverageDir = vDir; }
-	const int GetSize() const { return nUnits; }
+
+	void SetDir( const CVec2 &vDir )
+	{
+		vAverageDir = vDir;
+	}
+
+	const int GetSize() const
+	{
+		return nUnits;
+	}
+
 	const CVec2 GetAABB( const int n ) const;
 	const int GetUnitByOrderNumber( const int n ) const;
 
@@ -70,6 +79,7 @@ public:
 		f.Add( 7, &sortedUnits );
 		return 0;
 	}
+
 	//
 	bool CanPlaceUnitToColumn( const int nColumn, const CVec2 &vAABBUnitSize );
 	void SetUnitCenterByColumn( const int nUnit, const int nColumn );
@@ -86,7 +96,10 @@ public:
 public:
 	CGrid( const CVec2 &vGridCenter, const int nGroup, const CVec2 &vGridDir );
 
-	const CVec2 GetDir() const { return sortedUnits.GetAverageDir(); }
+	const CVec2 GetDir() const
+	{
+		return sortedUnits.GetAverageDir();
+	}
 
 	const int GetNUnitsInGrid() const;
 	const CVec2 GetUnitCenter( const int n ) const;

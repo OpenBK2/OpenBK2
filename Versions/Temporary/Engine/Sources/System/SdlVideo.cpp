@@ -44,7 +44,7 @@ namespace
 		csSystem << "SDL joysticks are unavailable: " << SDL_GetError() << endl;
 		return false;
 	}
-}
+} // namespace
 
 bool EnsureVideo()
 {
@@ -67,4 +67,4 @@ bool EnsureJoystick()
 	static const bool bReady = InitJoystick();
 	return bReady;
 }
-}
+} // namespace NSdl

@@ -88,4 +88,4 @@ const float GetReinforcementExpediency( const NDb::EReinforcementType eMyType,
 	return 0.0f;
 }
 
-}
+} // namespace NReinforcement

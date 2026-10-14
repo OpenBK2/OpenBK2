@@ -5,6 +5,7 @@
 #include "AIUnit.h"
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 extern NTimer::STime curTime;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //*******************************************************************
 //*											SSeverityCountPredicate*
@@ -15,6 +16,7 @@ void SGeneralHelper::SSeverityCountPredicate::operator()( const CCommonUnit *pUn
 	//NI_ASSERT( CalcUnitSeverity( pUnit ) != 0.0f, StrFmt( "useless unit, pUnit" ) );
 	fCount += CalcUnitSeverity( pUnit );
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //*******************************************************************
 //*											SFindBestByEnumeratorPredicate*
@@ -33,6 +35,7 @@ void SGeneralHelper::SFindBestByEnumeratorPredicate::operator()( class CCommonUn
 		}
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //*******************************************************************
 //*											SDeadPredicate															*
@@ -71,6 +74,7 @@ bool SGeneralHelper::IsUnitNearParcel( const CCommonUnit *pUnit, const struct ND
 	const CVec2 vDiff1( ( pUnit->GetCenterPlain() - parcel.vCenter ) );
 	return fabs( vDiff1 ) <= parcel.fRadius + SConsts::SPY_GLASS_RADIUS / 2;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool SGeneralHelper::IsUnitInParcel( const CCommonUnit *pUnit, const struct NDb::SAIGeneralParcel &parcel )
 {
@@ -81,6 +85,7 @@ bool SGeneralHelper::IsUnitInParcel( const CCommonUnit *pUnit, const struct NDb:
 	const CVec2 vDiff( pUnit->GetCenterPlain() - parcel.vCenter );
 	return fabs( vDiff ) <= parcel.fRadius;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float SGeneralHelper::CalcUnitSeverity( const CCommonUnit *pUnit )
 {

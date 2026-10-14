@@ -24,6 +24,7 @@ private:
 	CPtr<IWindow> pLostView;
 	int nSetYawSpeedStep;
 	float fSetYawSpeedTime;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
@@ -73,12 +74,14 @@ class CICWinLooseDialog : public CInterfaceCommandBase<CInterfaceWinLoose>
 
 	ZDATA_( CInterfaceCommandBase<CInterfaceWinLoose> )
 	bool bWin;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceWinLoose> *)this );
 		f.Add( 2, &bWin );
 		return 0;
 	}
+
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );

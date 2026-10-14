@@ -28,6 +28,7 @@ protected:
 
 public:
 	CExecutorCamouflage( CAIUnit *_pUnit );
+
 	CExecutorCamouflage() {}
 
 	virtual int Segment();

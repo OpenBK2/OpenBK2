@@ -27,6 +27,7 @@ class CTrackObjInfo : public CPtrFuncBase<NGScene::CObjectInfo>
 
 protected:
 	void Recalc();
+
 	bool NeedUpdate()
 	{
 		if ( bNeedUpdate )
@@ -36,15 +37,26 @@ protected:
 		pTimer.Refresh();
 		return false;
 	}
+
 	void InitData();
+
 	//
 	CTrackObjInfo() {}
 
 public:
 	CTrackObjInfo( CFuncBase<STime> *_pTimer, CTracksManager *_pTrackManager, const int _nID );
 	void UpdateNode( const NMeshData::SMeshData &meshData );
-	void SetFadingSpeed( const float _fFadingSpeed ) { fFadingSpeed = _fFadingSpeed; }
-	void AttachTimer( CFuncBase<STime> *_pTimer ) { pTimer = _pTimer; }
+
+	void SetFadingSpeed( const float _fFadingSpeed )
+	{
+		fFadingSpeed = _fFadingSpeed;
+	}
+
+	void AttachTimer( CFuncBase<STime> *_pTimer )
+	{
+		pTimer = _pTimer;
+	}
+
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -63,11 +75,13 @@ public:
 };
 
 typedef NMeshData::SPatchHolder<CTrackObjInfo> CTrackObjHolder;
+
 struct STrackObj
 {
 	CVec3 vMin, vMax;
 	CObj<CCSBound> pBound;
 	CTrackObjHolder trackHolder;
+
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, &vMin );
@@ -94,13 +108,19 @@ class B2_M1_TERRAIN_EXPORT CTracksManager : public CObjectBase
 	CTracksMap tracksMap;
 	//
 	CDBPtr<NDb::SMaterial> pTracksMaterial;
+
 	//
 	CTracksManager() {}
 
 public:
 	CTracksManager( CFuncBase<STime> *_pTimer, NGScene::IGameView *_pGScene );
+
 	//
-	void SetTracksMaterial( const NDb::SMaterial *_pTracksMaterial ) { pTracksMaterial = _pTracksMaterial; }
+	void SetTracksMaterial( const NDb::SMaterial *_pTracksMaterial )
+	{
+		pTracksMaterial = _pTracksMaterial;
+	}
+
 	//
 	void AddTrack(
 			const int nID, const float fFadingSpeed, const NMeshData::SMeshData &data, const CVec3 &vMin, const CVec3 &vMax );
@@ -108,6 +128,7 @@ public:
 	void ProcessDelQueue();
 	//
 	void AfterLoad( CFuncBase<STime> *_pTimer, NGScene::IGameView *_pGScene );
+
 	//
 	int operator&( IBinSaver &saver )
 	{

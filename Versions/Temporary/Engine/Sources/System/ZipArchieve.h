@@ -11,6 +11,7 @@ class CZipFile : public CObjectBase
 	struct SZipFileHeader;
 	struct SZipDataDescriptor;
 	struct SZipCentralDirHeader;
+
 	//
 	struct SFileHeader
 	{
@@ -21,9 +22,12 @@ class CZipFile : public CObjectBase
 		uint32_t
 				dwHdrOffset; // relative offset of local header from the start of the first disk, on which this file appears
 		const char *pszFileName; // filename
+
 		//
 		SFileHeader() : pszFileName( 0 ) {}
+
 		SFileHeader( const SZipFileHeader &hdr );
+
 		~SFileHeader()
 		{
 			if ( pszFileName )
@@ -31,10 +35,16 @@ class CZipFile : public CObjectBase
 				delete[] pszFileName;
 			}
 		}
+
 		//
 		void Init( const SZipFileHeader &hdr );
-		bool HasCompression() const { return dwCSize < dwUSize; }
+
+		bool HasCompression() const
+		{
+			return dwCSize < dwUSize;
+		}
 	};
+
 	//
 	std::vector<SFileHeader> papDir;
 	CMMFile mmf;
@@ -46,15 +56,29 @@ class CZipFile : public CObjectBase
 
 public:
 	CZipFile() {}
+
 	CZipFile( const char *pszName );
 
-	bool IsOk() const { return !papDir.empty(); }
+	bool IsOk() const
+	{
+		return !papDir.empty();
+	}
+
 	//! the path this archive was opened from, for reporting where a file came from
-	const std::string &GetArchiveName() const { return mmf.GetFileName(); }
-	int GetNumFiles() const { return papDir.size(); }
+	const std::string &GetArchiveName() const
+	{
+		return mmf.GetFileName();
+	}
+
+	int GetNumFiles() const
+	{
+		return papDir.size();
+	}
+
 	//
 	void GetFileName( int nIndex, std::string *pString ) const;
 	int GetFileLen( int nIndex ) const;
+
 	// The external attributes word is host-system dependent, and for the DOS and
 	// Windows hosts its low byte holds MS-DOS attribute bits, where 0x10 marks a
 	// directory. Win32 inherited that same value as FILE_ATTRIBUTE_DIRECTORY, but
@@ -64,6 +88,7 @@ public:
 	{
 		DOS_ATTR_DIRECTORY = 0x10
 	};
+
 	uint32_t GetFileAttribs( int nIndex ) const;
 	uint32_t GetModDateTime( int nIndex ) const; // high word - date, low word - time
 

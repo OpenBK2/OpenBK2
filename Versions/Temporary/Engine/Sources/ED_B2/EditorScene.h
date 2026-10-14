@@ -7,8 +7,12 @@
 class CEditorScene : public IEditorScene
 {
 	OBJECT_NOCOPY_METHODS( CEditorScene )
+
 	ZDATA
-	ZEND int operator&( IBinSaver &f ) { return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 
 public:
 	virtual void RemoveAllScreens();

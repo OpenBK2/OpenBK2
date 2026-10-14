@@ -147,6 +147,7 @@ public:
 			B_ROUND = 3,
 			B_PLATO = 4,
 		};
+
 		enum EBrushSize
 		{
 			BS_0 = 0,
@@ -155,11 +156,13 @@ public:
 			BS_3 = 3,
 			BS_4 = 4,
 		};
+
 		enum EBrushType
 		{
 			BT_CIRCLE = 0,
 			BT_SQUARE = 1,
 		};
+
 		unsigned nFlags;
 		//
 		EBrush eBrush;
@@ -292,6 +295,7 @@ public:
 		//
 		SetActiveInputState( SEditParameters::B_UP, true, false );
 	}
+
 	//
 	~CHeightStateV3()
 	{

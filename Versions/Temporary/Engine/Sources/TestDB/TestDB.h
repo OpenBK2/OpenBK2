@@ -13,4 +13,4 @@ namespace NTestDB
 // makes the test load this library: the types register themselves with the
 // database when it loads, and nothing else in a test names a symbol from it.
 TESTDB_EXPORT std::string GetDataDir();
-}
+} // namespace NTestDB

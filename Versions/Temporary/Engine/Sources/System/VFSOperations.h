@@ -17,4 +17,4 @@ SYSTEM_EXPORT IFileCreator *GetMainFileCreator();
 SYSTEM_EXPORT std::string GetWritePath( IFileCreator *pCreator, const std::string &szPath );
 SYSTEM_EXPORT bool
 WriteFile( IFileCreator *pCreator, const std::string &szPath, const CDataStream &data, std::string *pError = nullptr );
-}
+} // namespace NVFS

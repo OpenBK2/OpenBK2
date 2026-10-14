@@ -76,7 +76,7 @@ namespace NGameX
 {
 bool Initialize();
 GAMEX_EXPORT void PostStorageInitialize();
-};
+}; // namespace NGameX
 
 // Explicit editor arguments are kept outside profile variables so loading a
 // profile cannot replace the map or mod selected in the editor.
@@ -93,6 +93,7 @@ static std::vector<std::pair<std::string, std::string>> commandLineVars;
 static bool ProcessCommandLine( const std::vector<std::string> &arguments );
 static int RunGame( const std::vector<std::string> &arguments );
 static int RunGameGuarded( const std::vector<std::string> &arguments );
+
 static void StoreBuildInfo()
 {
 	const std::string szVersion =

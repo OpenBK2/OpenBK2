@@ -8,7 +8,7 @@ struct SReinforcement;
 struct SPartyDependentInfo;
 enum EReinforcementType : int;
 struct SObjectBaseRPGStats;
-}
+} // namespace NDb
 
 struct IAIScenarioTracker : public CObjectBase
 {
@@ -43,8 +43,15 @@ struct IAIScenarioTracker : public CObjectBase
 	};
 
 	//virtual bool IsSingleplayer() const { return true; }
-	virtual EGameType GetGameType() const { return EGT_SINGLE; }
-	virtual void SetGameType( EGameType _eType ) { NI_ASSERT( 0, "Illegal call" ); }
+	virtual EGameType GetGameType() const
+	{
+		return EGT_SINGLE;
+	}
+
+	virtual void SetGameType( EGameType _eType )
+	{
+		NI_ASSERT( 0, "Illegal call" );
+	}
 
 	// reinforcements
 	virtual const NDb::SReinforcement *GetReinforcement( int nPlayer, NDb::EReinforcementType eType ) const = 0;
@@ -52,7 +59,9 @@ struct IAIScenarioTracker : public CObjectBase
 	virtual void
 	DecreaseReinforcementCallsLeft( int nPlayer,
 	                                int nCalls ) = 0; // if nCalls==0, then decrease by 1, but register as reinf call
+
 	virtual void IncreaseReinforcementCallsLeft( int nPlayer, int nCalls ) {}
+
 	virtual void RegisterReinforcementCall( int nPlayer, NDb::EReinforcementType eType ) = 0;
 
 	virtual float GetReinforcementXP( int nPlayer, NDb::EReinforcementType eType ) const = 0;
@@ -66,10 +75,19 @@ struct IAIScenarioTracker : public CObjectBase
 
 	virtual const NDb::SUnitStatsModifier *GetEnemyDifficultyModifier() = 0;
 	virtual const NDb::SUnitStatsModifier *GetPlayerDifficultyModifier() = 0;
-	virtual int GetDifficultyLevel() const { return 0; }
+
+	virtual int GetDifficultyLevel() const
+	{
+		return 0;
+	}
+
 	virtual const float GetEnemyDifficultyRCallsModifier() = 0;
 	virtual const float GetEnemyDifficultyRTimeModifier() = 0;
-	virtual const NDb::SReinforcement *GetStartUnits( int nPlayer ) const { return 0; }
+
+	virtual const NDb::SReinforcement *GetStartUnits( int nPlayer ) const
+	{
+		return 0;
+	}
 
 	// Player management - Mainly for multiplayer
 	virtual void AddPlayer( const int nPlayer ) = 0;
@@ -79,9 +97,18 @@ struct IAIScenarioTracker : public CObjectBase
 	virtual void SetLocalPlayer( int nPlayer ) = 0;
 	virtual int GetNPlayers() const = 0;
 	virtual int GetPlayerSide( int nPlayer ) const = 0;
+
 	// Multiplayer-only values exposed to AILogic scripts; single-player trackers keep the invalid default.
-	virtual int GetMultiplayerTechLevel() const { return -1; }
-	virtual int GetPlayerMultiplayerNation( int nPlayer ) const { return -1; }
+	virtual int GetMultiplayerTechLevel() const
+	{
+		return -1;
+	}
+
+	virtual int GetPlayerMultiplayerNation( int nPlayer ) const
+	{
+		return -1;
+	}
+
 	virtual const NDb::SPartyDependentInfo *GetPlayerParty( const int nPlayer ) = 0;
 
 	virtual bool IsMissionActive() const = 0;
@@ -91,7 +118,11 @@ struct IAIScenarioTracker : public CObjectBase
 	virtual const int GetKeyBuildingOwner( const int nBuildingLinkID ) = 0; // return side (0..2)
 	virtual const std::pair<int, int> GetKeyBuildingSummary() = 0; // first = 0th side, second = 1st side buldings
 	virtual const float GetRecycleSpeedCoeff( const int nSide ) = 0;
-	virtual const NDb::SObjectBaseRPGStats *GetKeyBuildingFlagObject( const int nPlayer ) { return 0; }
+
+	virtual const NDb::SObjectBaseRPGStats *GetKeyBuildingFlagObject( const int nPlayer )
+	{
+		return 0;
+	}
 
 	// Leaders (commanders)
 	virtual int GetLeaderLevel( int nPlayer, NDb::EReinforcementType eType ) = 0; // return -1 if no leader
@@ -99,7 +130,10 @@ struct IAIScenarioTracker : public CObjectBase
 	                                                          NDb::EReinforcementType eType ) = 0; // 0 if no leader
 
 	// Debug
-	virtual bool DebugAssignLeader( NDb::EReinforcementType eReinf, const std::wstring &wszName ) { return false; }
+	virtual bool DebugAssignLeader( NDb::EReinforcementType eReinf, const std::wstring &wszName )
+	{
+		return false;
+	}
 
 	virtual bool GiveXP( const int nPlayer,
 	                     NDb::EReinforcementType eReinf,

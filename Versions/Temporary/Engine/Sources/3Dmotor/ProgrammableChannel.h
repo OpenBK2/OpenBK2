@@ -22,6 +22,7 @@ private:
 		STime tStartTime;
 		STime tEndTime;
 		float fValue;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &tStartTime );
@@ -30,10 +31,12 @@ private:
 			return 0;
 		}
 	};
+
 	ZDATA
 	CDGPtr<CFuncBase<STime>> pTime;
 	std::vector<SSegment> segments;
 	float fDefaultValue;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pTime );
@@ -45,7 +48,11 @@ private:
 protected:
 	CProgrammableChannel() : CFuncBase<float>( 0.f ), fDefaultValue( 0.f ) {}
 
-	virtual bool NeedUpdate() { return IsValid( pTime ) && pTime.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return IsValid( pTime ) && pTime.Refresh();
+	}
+
 	virtual void Recalc()
 	{
 		STime time = pTime->GetValue();
@@ -83,6 +90,9 @@ public:
 		Updated();
 	}
 
-	bool HasSegments() { return !segments.empty(); }
+	bool HasSegments()
+	{
+		return !segments.empty();
+	}
 };
-}
+} // namespace NAnimation

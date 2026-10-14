@@ -16,7 +16,10 @@ struct SObjTileInfo;
 template <int N>
 struct SGenericNumber
 {
-	int operator()() const { return N; }
+	int operator()() const
+	{
+		return N;
+	}
 };
 
 class COMMON_RTS_AI_EXPORT CAIMap : public CObjectBase
@@ -28,6 +31,7 @@ class COMMON_RTS_AI_EXPORT CAIMap : public CObjectBase
 	int nTileSize = 0;
 	int nMaxUnitTileRadius = 0;
 	int nMaxMapSize = 0;
+
 	ZONSERIALIZE
 ZEND public : int operator&( IBinSaver &f )
 	{
@@ -97,16 +101,39 @@ private:
 
 public:
 	CAIMap() : nMaxMapSize( 0 ) {}
+
 	CAIMap(
 			const int nSizeX, const int nSizeY, const int nTileSize, const int nMaxUnitTileRadius, const int nMaxMapSize );
 
-	CStaticMapHeights *GetHeights() const { return pHeights; }
-	CTerrain *GetTerrain() const { return pTerrain; }
+	CStaticMapHeights *GetHeights() const
+	{
+		return pHeights;
+	}
 
-	const int GetSizeX() const { return nSizeX; }
-	const int GetSizeY() const { return nSizeY; }
-	const int GetTileSize() const { return nTileSize; }
-	const int GetMaxMapSize() const { return nMaxMapSize; }
+	CTerrain *GetTerrain() const
+	{
+		return pTerrain;
+	}
+
+	const int GetSizeX() const
+	{
+		return nSizeX;
+	}
+
+	const int GetSizeY() const
+	{
+		return nSizeY;
+	}
+
+	const int GetTileSize() const
+	{
+		return nTileSize;
+	}
+
+	const int GetMaxMapSize() const
+	{
+		return nMaxMapSize;
+	}
 
 	bool IsTileInside( const int x, const int y ) const;
 	bool IsTileInside( const SVector &tile ) const;
@@ -114,7 +141,11 @@ public:
 	bool IsPointInside( const CVec2 &point ) const;
 	bool IsRectInside( const SRect &rect ) const;
 
-	const int GetMaxUnitTileRadius() const { return nMaxUnitTileRadius; }
+	const int GetMaxUnitTileRadius() const
+	{
+		return nMaxUnitTileRadius;
+	}
+
 	const SVector GetTile( const float x, const float y ) const;
 	const SVector GetTile( const CVec2 &point ) const;
 	CVec2 GetPointByTile( const int x, const int y ) const;

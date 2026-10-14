@@ -27,7 +27,12 @@ class CTargetMesh : public CPtrFuncBase<NGScene::CObjectInfo>
 
 public:
 	CTargetMesh( float fSizeX, float fSizeY );
-	bool NeedUpdate() { return true; }
+
+	bool NeedUpdate()
+	{
+		return true;
+	}
+
 	void Recalc();
 };
 
@@ -39,15 +44,28 @@ public:
 		Identity( &value.forward );
 		Identity( &value.backward );
 	}
-	bool NeedUpdate() { return true; }
+
+	bool NeedUpdate()
+	{
+		return true;
+	}
+
 	void Recalc() {};
 };
 
 class CTargetMeshBound : public CFuncBase<SBound>
 {
 public:
-	CTargetMeshBound() { value = NGScene::MakeLargeHintBound(); }
-	bool NeedUpdate() { return true; }
+	CTargetMeshBound()
+	{
+		value = NGScene::MakeLargeHintBound();
+	}
+
+	bool NeedUpdate()
+	{
+		return true;
+	}
+
 	void Recalc() {};
 };
 
@@ -120,4 +138,4 @@ void DeleteTargetMesh()
 {
 	pTargetMesh = 0;
 }
-}
+} // namespace NTargetMesh

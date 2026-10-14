@@ -12,7 +12,7 @@ struct SMechUnitRPGStats;
 struct SSquadRPGStats;
 struct SEnemyEntry;
 struct SChapterBonus;
-}
+} // namespace NDb
 struct SChapterReinfUpgrade;
 struct SChapterReinfComposition;
 
@@ -33,11 +33,14 @@ public:
 
 	public:
 		CReactions() {}
+
 		~CReactions() {}
+
 		CReactions( IWindow *_pScreen, CInterfaceChapterMapMenu *_pInterface )
 				: pScreen( _pScreen ), pInterface( _pInterface )
 		{
 		}
+
 		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
 		virtual int Check( const std::string &szCheckName ) const;
 
@@ -57,11 +60,13 @@ private:
 		EMS_COMPLETED,
 		EMS_RECOMMENDED
 	};
+
 	struct SReward
 	{
 		ZDATA
 		CPtr<IButton> pBtn;
 		CPtr<IWindow> pBonusWnd;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pBtn );
@@ -69,6 +74,7 @@ private:
 			return 0;
 		}
 	};
+
 	struct STarget
 	{
 		ZDATA
@@ -90,6 +96,7 @@ private:
 		CPtr<IWindow> pBonusIcon;
 		int nPriority; // Recommended order of missions
 		CVec2 vEndOffset;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pDBInfo );
@@ -113,6 +120,7 @@ private:
 			return 0;
 		}
 	};
+
 	typedef std::vector<STarget> CTargets;
 
 	// Simpler reinf button (for mission bonuses and enemy forces)
@@ -126,6 +134,7 @@ private:
 		CDBPtr<NDb::SSquadRPGStats> pSquad;
 		int nQuantity;
 		CPtr<IWindow> pBonusWnd;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pButton );
@@ -138,6 +147,7 @@ private:
 			return 0;
 		}
 	};
+
 	typedef std::vector<SReinfButtonDesc> CReinfButtonList;
 
 	// More complex reinf button (for active army)
@@ -148,6 +158,7 @@ private:
 		CDBPtr<NDb::STexture> pDisabledTexture;
 		std::wstring wszDefaultTooltip;
 		CPtr<IWindow> pUnknownWnd;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 1, (SReinfButtonDesc *)this );
@@ -158,6 +169,7 @@ private:
 			return 0;
 		}
 	};
+
 	typedef std::vector<SReinfRemapItem> CReinfRemap;
 
 	enum EUIState

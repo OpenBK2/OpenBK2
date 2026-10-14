@@ -285,6 +285,7 @@ TEST( DDSWrite, MipChainSizes )
 		{ 32, 32, NGfx::CF_A8R8G8B8, 1 },
 		{ 16, 16, NGfx::CF_R5G6B5, 5 },
 	};
+
 	for ( const auto &c : cases )
 	{
 		const std::vector<uint8_t> bytes = WriteAndRead( "obk2_dds_chain.dds", MakeImage( c.w, c.h, true ), c.fmt, c.mips );

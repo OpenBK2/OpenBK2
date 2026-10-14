@@ -33,16 +33,23 @@ protected:
 
 public:
 	CStObjIter() : x( 0 ), y( 0 ), downX( 0 ), downY( 0 ), upX( 0 ), upY( 0 ) {}
+
 	CStObjIter( const int downX, const int upX, const int downY, const int upY );
-	~CStObjIter() { theStatObjs.SetIterCreated( false ); }
+
+	~CStObjIter()
+	{
+		theStatObjs.SetIterCreated( false );
+	}
 
 	void Iterate();
 	bool IsFinished() const;
+
 	void Reset()
 	{
 		theStatObjs.SetIterCreated( false );
 		Init( downX, upX, downY, upY );
 	}
+
 	void Init( const int _downX, const int _upX, const int _downY, const int _upY );
 
 	class CExistingObject *operator*();

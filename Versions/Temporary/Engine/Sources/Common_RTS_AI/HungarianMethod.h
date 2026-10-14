@@ -28,8 +28,17 @@ class COMMON_RTS_AI_EXPORT CHungarianMethod
 
 public:
 	CHungarianMethod() : nSize( 0 ) {}
+
 	bool Init( const CArray2D<float> &matrix );
 	void Solve();
-	const int GetSize() const { return nSize; }
-	const int GetResult( const int nIndex ) const { return result[nIndex]; }
+
+	const int GetSize() const
+	{
+		return nSize;
+	}
+
+	const int GetResult( const int nIndex ) const
+	{
+		return result[nIndex];
+	}
 };

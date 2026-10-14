@@ -45,8 +45,16 @@ struct SSkinnedMesh
 		mesh.BoneBindings = bindings;
 	}
 
-	granny_uint8 &Weight( int vertex, int influence ) { return bytes[vertex * 2 * width + influence]; }
-	granny_uint8 &Index( int vertex, int influence ) { return bytes[vertex * 2 * width + width + influence]; }
+	granny_uint8 &Weight( int vertex, int influence )
+	{
+		return bytes[vertex * 2 * width + influence];
+	}
+
+	granny_uint8 &Index( int vertex, int influence )
+	{
+		return bytes[vertex * 2 * width + width + influence];
+	}
+
 	const char *Convert( std::vector<NGScene::SVertexWeight> *result )
 	{
 		return NGScene::ConvertWeightsFromGrannyEx( &skeleton, &mesh, 0, result, vertices.VertexCount );
@@ -139,4 +147,4 @@ TEST( GrannyWeights, RejectsMissingSkeletonBoneWithoutPublishingPastEndIndex )
 	EXPECT_EQ( 0, result[0].cBoneIndices[0] );
 	EXPECT_FLOAT_EQ( 0.0f, result[0].fWeights[0] );
 }
-}
+} // namespace

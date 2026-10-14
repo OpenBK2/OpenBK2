@@ -74,6 +74,6 @@ inline bool HasModifier( intptr_t nLParam, EModifier eModifier )
 {
 	return ( ( nLParam >> 16 ) & eModifier ) != 0;
 }
-}
+} // namespace NSimulatedKey
 
 #endif // BOOST_OS_WINDOWS

@@ -23,16 +23,30 @@ public:
 
 public:
 	CLinkObject();
-	CLinkObject( const int _nLink ) { SetLink( _nLink ); }
+
+	CLinkObject( const int _nLink )
+	{
+		SetLink( _nLink );
+	}
+
 	virtual ~CLinkObject();
 
 	void SetUniqueIdForObjects();
 	void SetUniqueIdForUnits( const int nUniqueID );
 	void SetLink( const int _nLink );
-	const int GetLink() const { return nLink; }
+
+	const int GetLink() const
+	{
+		return nLink;
+	}
+
 	// запомнит ли объект в unitsID2Object
 	void Mem2UniqueIdObjs();
-	const int GetUniqueId() const { return nUniqueID; }
+
+	const int GetUniqueId() const
+	{
+		return nUniqueID;
+	}
 
 	static void Clear();
 	static void ClearLinks();
@@ -70,13 +84,19 @@ struct SLinkObjData
 
 	det_map<int, CObj<CLinkObject>> unitsID2object;
 	int nCurUniqueID = {};
+
 	SLinkObjData() : nCurUniqueID( 0 ) {}
 };
 
 struct SLinkObjDataAutoMagic
 {
 	static SLinkObjData *pLinkObjData;
-	SLinkObjDataAutoMagic() { pLinkObjData = new SLinkObjData; }
+
+	SLinkObjDataAutoMagic()
+	{
+		pLinkObjData = new SLinkObjData;
+	}
+
 	~SLinkObjDataAutoMagic()
 	{
 		delete pLinkObjData;

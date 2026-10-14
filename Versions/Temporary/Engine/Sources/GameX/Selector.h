@@ -34,11 +34,13 @@ public:
 		NI_ASSERT( find( objList.begin(), objList.end(), pMO ) == objList.end(), "Duplicate object" );
 		objList.push_back( pMO );
 	}
+
 	void Remove( CMOSelectable *pMO )
 	{
 		objList.remove( pMO );
 		objListHidden.remove( pMO );
 	}
+
 	void Hide( CMOSelectable *pMO )
 	{
 		if ( !pMO )
@@ -54,6 +56,7 @@ public:
 		objListHidden.remove( pMO ); // avoid duplicate
 		objListHidden.push_back( pMO );
 	}
+
 	void UnHide( CMOSelectable *pMO )
 	{
 		if ( !pMO )
@@ -69,15 +72,33 @@ public:
 		objList.remove( pMO ); // avoid duplicate
 		objList.push_back( pMO );
 	}
+
 	void Clear()
 	{
 		objList.clear();
 		objListHidden.clear();
 	}
-	bool IsEmpty() const { return objList.empty(); }
-	int GetID() const { return nID; }
-	void SetID( int _nID ) { nID = _nID; }
-	const CMapObjectsList &GetList() const { return objList; }
+
+	bool IsEmpty() const
+	{
+		return objList.empty();
+	}
+
+	int GetID() const
+	{
+		return nID;
+	}
+
+	void SetID( int _nID )
+	{
+		nID = _nID;
+	}
+
+	const CMapObjectsList &GetList() const
+	{
+		return objList;
+	}
+
 	bool HasObject( CMOSelectable *pMO ) const
 	{
 		CMapObjectsList::const_iterator it = find( objList.begin(), objList.end(), pMO );
@@ -163,20 +184,29 @@ private:
 						ZSKIP //int nCount;
 								std::vector<CPtr<CMOSelectable>>
 										objects;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 5, &objects );
 			return 0;
 		}
 	};
+
 	typedef std::vector<SSlot> CSlotVector;
 
 	struct SSameSlotCompare
 	{
 		CPtr<CMOSelectable> pSO;
 
-		SSameSlotCompare( CMOSelectable *_pSO ) { pSO = _pSO; }
-		bool operator()( const SSlot &slot ) const { return IsSameType( pSO, slot.objects[0] ); }
+		SSameSlotCompare( CMOSelectable *_pSO )
+		{
+			pSO = _pSO;
+		}
+
+		bool operator()( const SSlot &slot ) const
+		{
+			return IsSameType( pSO, slot.objects[0] );
+		}
 	};
 
 	struct SSlotsSort
@@ -274,14 +304,23 @@ public:
 	CSelector();
 	~CSelector() {};
 	void Segment();
+
 	//
-	int GetSelection() const { return objList.size(); }
+	int GetSelection() const
+	{
+		return objList.size();
+	}
+
 	int GetSelection( std::vector<CMOSelectable *> *pBuffer ) const;
 	// возвращает все объекты, имеющие собственные координаты
 	// на экране (разбивая подразделения на юниты при необходимости)
 	void GetSelectionMembers( std::vector<CMOSelectable *> *pBuffer ) const;
+
 	//
-	bool CanSelect( const CMapObj *pMO ) const { return ( pMO && pMO->CanSelect() ); }
+	bool CanSelect( const CMapObj *pMO ) const
+	{
+		return ( pMO && pMO->CanSelect() );
+	}
 
 	bool Select( CMapObj *pMO, bool bSelect );
 	bool DeSelectDead( CMapObj *pMO );
@@ -292,13 +331,20 @@ public:
 	bool IsActive( const CMOSelectable *pMO ) const;
 	bool IsSuperActive( const CMOSelectable *pMO ) const;
 
-	bool IsUnloadMode() const { return bUnloadMode; }
+	bool IsUnloadMode() const
+	{
+		return bUnloadMode;
+	}
 
 	// update selection by user actions (with mode switching)
 	void DoneSelection( const bool bPreserveGroup, bool bKeepNumbers );
 	// update selection by internal events
 	void UpdateSelection( const bool bPreserveGroup, bool bKeepNumbers );
-	bool IsEmpty() const { return objList.empty(); }
+
+	bool IsEmpty() const
+	{
+		return objList.empty();
+	}
 
 	void SetPreselection( CMapObj *pMO );
 
@@ -345,7 +391,10 @@ public:
 	void DoUpdateSpecialAbility( CMapObj *pMO );
 	void DoUpdateStats( CMapObj *pMO );
 
-	ESelectionState GetSelectionState() const { return eSelectionState; }
+	ESelectionState GetSelectionState() const
+	{
+		return eSelectionState;
+	}
 
 	const CMOSelectable *GetFirstSlotUnit( int nSlot ) const;
 

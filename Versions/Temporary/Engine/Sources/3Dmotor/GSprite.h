@@ -1,6 +1,7 @@
 #pragma once
 
 #include "System/Dg.h"
+
 namespace NGfx
 {
 class CTexture;
@@ -26,6 +27,7 @@ private:
 	CDGPtr<CFuncBase<CVec3>> pPosition;
 	CObj<CPtrFuncBase<NGfx::CTexture>> pTexture;
 	CDGPtr<CFuncBase<CVec2>> pSize;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &sDir );
@@ -40,10 +42,15 @@ private:
 
 protected:
 	virtual void Recalc();
-	virtual bool NeedUpdate() { return pCamera.Refresh() || pPosition.Refresh() || pDir.Refresh() || pSize.Refresh(); }
+
+	virtual bool NeedUpdate()
+	{
+		return pCamera.Refresh() || pPosition.Refresh() || pDir.Refresh() || pSize.Refresh();
+	}
 
 public:
 	CSpriteAnimator() {}
+
 	CSpriteAnimator( IGScene *pScene,
 	                 CFuncBase<CVec3> *pPosition,
 	                 CFuncBase<CVec3> *pDir,
@@ -51,4 +58,4 @@ public:
 	                 CFuncBase<CVec2> *pSize );
 };
 
-} // NAMESPACE
+} // namespace NGScene

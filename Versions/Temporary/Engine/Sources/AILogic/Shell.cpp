@@ -301,7 +301,7 @@ void DumpAreaDamageTrace( FILE *f )
 	}
 	fprintf( f, "\n" );
 }
-}
+} // namespace NAsyncExplosionDebug
 
 //*******************************************************************
 //*														CHitInfo															*
@@ -475,6 +475,7 @@ const float CExplosion::GetRandomDamage() const
 {
 	return weaponDamageModifier.Get( pWeapon->shells[nShellType].GetRandomDamage() );
 }
+
 const float CExplosion::GetArea() const
 {
 	return weaponAreaModifier.Get( pWeapon->shells[nShellType].fArea );
@@ -1372,6 +1373,7 @@ const CVec3 CFakeBallisticTraj::GetCoordinates() const
 
 	return CVec3( point.x + firstPoint.x, point.y + firstPoint.y, point.z + firstPoint.z + A1 * sqr( r ) + A2 * r );
 }
+
 const NDb::SWeaponRPGStats::SShell::ETrajectoryType CFakeBallisticTraj::GetTrajType() const
 {
 	return NDb::SWeaponRPGStats::SShell::TRAJECTORY_CANNON;
@@ -1585,7 +1587,7 @@ bool IsATGMBlockingStaticObject( CExistingObject *pObject )
 	return eType == ESOT_BUILDING || eType == ESOT_ENTR_PART || eType == ESOT_ENTRENCHMENT || eType == ESOT_TERRA ||
 	       eType == ESOT_BRIDGE_SPAN || eType == ESOT_TANKPIT || eType == ESOT_FENCE;
 }
-}
+} // namespace
 
 CATGMTraj::CATGMTraj( const CVec3 &vStart,
                       const CVec3 &vFinish,

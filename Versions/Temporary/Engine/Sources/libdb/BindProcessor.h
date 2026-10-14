@@ -11,10 +11,12 @@ namespace NLXML
 {
 class CXMLNode;
 }
+
 namespace NXml
 {
 class CXmlNode;
 }
+
 namespace NDb
 {
 namespace NBind
@@ -36,24 +38,30 @@ namespace NBind
 			NMetaInfo::SStructMetaInfo *pContained;
 			NTypeDef::STypeArray *pTypeArray;
 			UValue *pUValue;
+
 			SArrayRequisites() : pRawVector( 0 ), pContained( 0 ), pTypeArray( 0 ), pUValue( 0 ) {}
 		};
+
 		struct SArrayCallParams : public SArrayRequisites
 		{
 			std::string szRestName;
 			int nArrayIndex;
+
 			SArrayCallParams() : nArrayIndex( 0 ) {}
 		};
 
 		uint8_t *pThis;
 		UValue *ownValues;
 		NMetaInfo::SStructMetaInfo *pMetaInfo;
+
 		//
 		SBindProcessor() : pThis( 0 ), ownValues( 0 ), pMetaInfo( 0 ) {}
+
 		SBindProcessor( uint8_t *_pThis, UValue *_ownValues, NMetaInfo::SStructMetaInfo *_pMetaInfo )
 				: pThis( _pThis ), ownValues( _ownValues ), pMetaInfo( _pMetaInfo )
 		{
 		}
+
 		//
 		IObjMan *CreateManipulator( const std::string &szName, IObjMan *pParent );
 		IObjManIterator *CreateIterator( const std::string &_szAddName,
@@ -82,8 +90,8 @@ namespace NBind
 		bool SetDefault( const std::string &szAddName, NTypeDef::STypeStructBase *pType );
 	};
 
-}
+} // namespace NBind
 
 const NTypeDef::STypeStructBase::SField *
 FindField( const std::string &szFullFieldName, const int nCurrPos, const NTypeDef::STypeStructBase *pStruct );
-}
+} // namespace NDb

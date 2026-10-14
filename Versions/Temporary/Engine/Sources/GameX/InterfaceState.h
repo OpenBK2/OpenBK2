@@ -10,7 +10,8 @@ namespace NDb
 struct SGameRoot;
 struct SMapInfo;
 struct SUIConstsB2;
-};
+}; // namespace NDb
+
 namespace NGScene
 {
 class CScreenshotTexture;

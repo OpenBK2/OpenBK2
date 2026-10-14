@@ -14,6 +14,7 @@ class CVFSDbObserver : public IDbObserver
 
 public:
 	void ObjectChanged( const CDBID &dbid ) {}
+
 	void ObjectAdded( const CDBID &dbid )
 	{
 		// remove from 'objects2remove' newly added object
@@ -26,13 +27,23 @@ public:
 			}
 		}
 	}
-	void ObjectRemoved( const CDBID &dbid ) { objects2remove.push_back( dbid ); }
+
+	void ObjectRemoved( const CDBID &dbid )
+	{
+		objects2remove.push_back( dbid );
+	}
+
 	void ObjectMoved( const CDBID &dbidSrc, const CDBID &dbidDst )
 	{
 		ObjectRemoved( dbidSrc );
 		ObjectAdded( dbidDst );
 	}
-	void DiscardAllChanges() { objects2remove.clear(); }
+
+	void DiscardAllChanges()
+	{
+		objects2remove.clear();
+	}
+
 	void SaveAllChanges()
 	{
 		// delete all 'objects2remove' from disk
@@ -52,4 +63,4 @@ IDbObserver *CreateVFSDbObserver()
 	return new CVFSDbObserver();
 }
 
-}
+} // namespace NDb

@@ -12,7 +12,7 @@ SYSTEM_EXPORT const std::wstring &GetText( const std::string &szTextFileName );
 SYSTEM_EXPORT void Reload( const std::string &szTextFileName );
 //! load unicode text from stream to wstring
 SYSTEM_EXPORT bool LoadUnicodeText( std::wstring *pwszRes, CDataStream *pStream );
-}
+} // namespace NText
 
 // CRAP{ for transition-to-text-files period only
 //#define CHECK_TEXT_NOT_EMPTY_PRE( pre_name, name ) ( pre_name##p##name != 0 || !pre_name##sz##name##FileRef.empty() )

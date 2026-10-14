@@ -4,6 +4,7 @@
 #include "System/BasicShare.h"
 #include "GSkeleton.h"
 #include "DBScene.h"
+
 namespace NAnimation
 {
 
@@ -45,4 +46,4 @@ const char *GetModelNameOfSkeleton( CGrannyFileInfo *pGrannyFI, const int nModel
 	return 0;
 }
 
-};
+}; // namespace NAnimation

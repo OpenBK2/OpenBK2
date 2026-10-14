@@ -7,13 +7,14 @@
 #include <cstdint>
 
 class CTransformStack;
+
 namespace NGfx
 {
 class CRenderContext;
 class CTexture;
 class CTriList;
 class CCubeTexture;
-}
+} // namespace NGfx
 
 namespace NGScene
 {
@@ -29,10 +30,26 @@ struct SMaterialParams
 	SPerPartVariables vars;
 
 	SMaterialParams() : pMaterial( 0 ) {}
-	bool operator==( const SMaterialParams &a ) const { return a.pMaterial == pMaterial && a.vars == vars; }
-	bool operator!=( const SMaterialParams &a ) const { return !( *this == a ); }
-	void Clear() { pMaterial = 0; }
-	bool IsEmpty() const { return pMaterial == 0; }
+
+	bool operator==( const SMaterialParams &a ) const
+	{
+		return a.pMaterial == pMaterial && a.vars == vars;
+	}
+
+	bool operator!=( const SMaterialParams &a ) const
+	{
+		return !( *this == a );
+	}
+
+	void Clear()
+	{
+		pMaterial = 0;
+	}
+
+	bool IsEmpty() const
+	{
+		return pMaterial == 0;
+	}
 };
 
 struct STransparentObjectInfo
@@ -84,6 +101,7 @@ class CParticlesTriList;
 enum ERenderPath : int;
 struct SLightInfo;
 struct SRenderPathContext;
+
 struct STransparentRenderContext
 {
 	bool bTnLMode;
@@ -147,18 +165,31 @@ class CTransparentRenderer : public CObjectBase, public IParticleOutput
 	AddParticleOverflow( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tPlace, float fDepth );
 	ZDATA
 public:
-	ZEND int operator&( CStructureSaver &f ) { return 0; }
+	ZEND int operator&( CStructureSaver &f )
+	{
+		return 0;
+	}
 
 public:
 	CTransparentRenderer() : nTotalParticles( 0 ), nLitParticles( 0 ) {}
+
 	CTransparentRenderer( const CTransformStack &ts,
 	                      const CTPoint<int> &vLightBuffersize,
 	                      bool bUseFakeLM,
 	                      uint32_t dwLitColor,
 	                      uint32_t dwNormalColor,
 	                      const SPerVertexLightState *_pLightState );
-	virtual const SParticleOrientationInfo &GetOrientationInfo() const { return orientation; }
-	virtual const SParticleLightInfo &GetKernelLightInfo() const { return kernel; }
+
+	virtual const SParticleOrientationInfo &GetOrientationInfo() const
+	{
+		return orientation;
+	}
+
+	virtual const SParticleLightInfo &GetKernelLightInfo() const
+	{
+		return kernel;
+	}
+
 	virtual void AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tex, float fDepth );
 	virtual void SampleWarFog( const std::vector<CVec3> &vPos, std::vector<float> *pRes );
 
@@ -167,10 +198,26 @@ public:
 			SRenderGeometryInfo *pGeometry, IMaterial *pMaterial, const SPerPartVariables &vars, int nIndex, float fDepth );
 	void FinishParticles();
 	void Render( const STransparentRenderContext &trc );
-	int GetTotalParticles() const { return nTotalParticles; }
-	int GetLitParticles() const { return nLitParticles; }
-	void GetBound( SBound *pRes ) { bc.Make( pRes ); }
-	bool IsEmpty() { return bc.IsEmpty(); }
+
+	int GetTotalParticles() const
+	{
+		return nTotalParticles;
+	}
+
+	int GetLitParticles() const
+	{
+		return nLitParticles;
+	}
+
+	void GetBound( SBound *pRes )
+	{
+		bc.Make( pRes );
+	}
+
+	bool IsEmpty()
+	{
+		return bc.IsEmpty();
+	}
 };
 
-}
+} // namespace NGScene

@@ -23,7 +23,10 @@ class SYSTEM_EXPORT CFreeIds
 	int firstEl = 0;
 
 public:
-	CFreeIds( const int nElements = NUM_OF_ELEMENTS ) { Init( nElements ); }
+	CFreeIds( const int nElements = NUM_OF_ELEMENTS )
+	{
+		Init( nElements );
+	}
 
 	void Init( const int nElements );
 	void Clear();

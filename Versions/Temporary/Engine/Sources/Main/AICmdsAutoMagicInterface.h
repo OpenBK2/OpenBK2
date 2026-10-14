@@ -9,4 +9,5 @@ struct IAICmdsAutoMagic : public CObjectBase
 	virtual CObjectBase *MakeCommand( int nID ) = 0;
 	virtual int GetIDSize() const = 0;
 };
+
 IAICmdsAutoMagic *CreateDefaultCmdsCreator();

@@ -237,9 +237,15 @@ public:
 										 } );
 	}
 
-	virtual ~CDBLinkWxDialog() { Unregister(); }
+	virtual ~CDBLinkWxDialog()
+	{
+		Unregister();
+	}
 
-	bool WasPlaced() const { return placement.WasPlaced(); }
+	bool WasPlaced() const
+	{
+		return placement.WasPlaced();
+	}
 
 	// CPCDBLinkDialog::OnInitDialog from where the controls exist: the picker
 	// becomes CHID_PC_DB_LINK_DIALOG, every chosen table is added in the
@@ -319,13 +325,25 @@ public:
 	}
 
 	// CPCBaseDialog
-	virtual IView *GetView() { return pGrid->GetView(); }
+	virtual IView *GetView()
+	{
+		return pGrid->GetView();
+	}
 
-	virtual ICommandHandler *GetCommandHandler() { return pGrid->GetCommandHandler(); }
+	virtual ICommandHandler *GetCommandHandler()
+	{
+		return pGrid->GetCommandHandler();
+	}
 
-	virtual void CreateTree() { pGrid->BuildTree(); }
+	virtual void CreateTree()
+	{
+		pGrid->BuildTree();
+	}
 
-	virtual void UpdateValues() { pGrid->UpdateValues(); }
+	virtual void UpdateValues()
+	{
+		pGrid->UpdateValues();
+	}
 
 	// IObjectBrowser::IListener. CPCDBLinkDialog::OnTabSelected: a table's
 	// tree is pointed at its folder the first time it is chosen, starting on
@@ -534,7 +552,7 @@ private:
 		}
 	}
 };
-}
+} // namespace
 
 namespace NDBLink
 {
@@ -573,4 +591,4 @@ bool Run( IWidget *pParent, const SRequest &rRequest, SResult *pResult )
 	}
 	return bAccepted;
 }
-}
+} // namespace NDBLink

@@ -217,5 +217,5 @@ namespace NCodeGenTool
 		return true;
 	}
 
-}
-}
+} // namespace NCodeGenTool
+} // namespace NDb

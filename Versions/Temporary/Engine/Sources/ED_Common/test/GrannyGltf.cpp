@@ -19,6 +19,7 @@ struct SFixture
 		float normal[3];
 		float uv[2];
 	};
+
 	granny_data_type_definition type[6] = {};
 	SVertex vertices[3] = { { { 0, 0, 2 }, { 255, 0, 0, 0 }, { 0, 255, 255, 255 }, { 0, 0, 1 }, { 0, 0 } },
 	                        { { 1, 0, 2 }, { 128, 127, 0, 0 }, { 0, 1, 255, 255 }, { 0, 0, 1 }, { 1, 0 } },
@@ -221,7 +222,7 @@ std::vector<fastgltf::math::fvec4> SkinnedVertices( fastgltf::Asset &asset, size
 	}
 	return result;
 }
-}
+} // namespace
 
 TEST( GrannyGltf, PreservesBindPoseAndRemapsSkinByBoneName )
 {

@@ -38,7 +38,12 @@ class CCursor : public ICursor
 
 public:
 	CCursor();
-	bool Init() { return true; }
+
+	bool Init()
+	{
+		return true;
+	}
+
 	// cursor mode
 	void RegisterMode( const int nMode, const std::string &szFileName );
 	bool SetMode( const int nMode );

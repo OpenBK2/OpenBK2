@@ -76,6 +76,7 @@ class CProgressHost
 
 public:
 	CProgressHost() : pView( 0 ) {}
+
 	~CProgressHost();
 
 	// pOwner is the frame, and has to outlive the dialog.
@@ -87,4 +88,4 @@ public:
 	void SetPosition( int nPosition );
 	void IteratePosition();
 };
-}
+} // namespace NMainFrameShared

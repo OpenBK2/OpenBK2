@@ -55,11 +55,23 @@ public:
 				vNormale( VNULL3 ), vInitialPoint( VNULL2 )
 	{
 	}
+
 	virtual ~CAviation();
 
-	const CVec2 &GetAppearPoint() const { return vInitialPoint; }
-	bool IsBombsAutocast() const { return bBombsAutocast; }
-	void SetBombAutocast( const bool _bBombsAutocast ) { bBombsAutocast = _bBombsAutocast; }
+	const CVec2 &GetAppearPoint() const
+	{
+		return vInitialPoint;
+	}
+
+	bool IsBombsAutocast() const
+	{
+		return bBombsAutocast;
+	}
+
+	void SetBombAutocast( const bool _bBombsAutocast )
+	{
+		bBombsAutocast = _bBombsAutocast;
+	}
 
 	virtual void Init( const CVec2 &center,
 	                   const int z,
@@ -74,8 +86,13 @@ public:
 	virtual void Segment();
 	virtual void SecondSegment( const NTimer::STime timeDiff );
 
-	virtual const SUnitBaseRPGStats *GetStats() const { return pStats; }
+	virtual const SUnitBaseRPGStats *GetStats() const
+	{
+		return pStats;
+	}
+
 	virtual IStatesFactory *GetStatesFactory() const;
+
 	// для стрельбы
 	virtual void GetShotInfo( struct SAINotifyMechShot *pShotInfo ) const
 	{
@@ -83,46 +100,103 @@ public:
 		pShotInfo->nObjUniqueID = GetUniqueId();
 	}
 
-	virtual const EActionNotify GetShootAction() const { return ACTION_NOTIFY_MECH_SHOOT; }
-	virtual const EActionNotify GetAimAction() const { return ACTION_NOTIFY_AIM; }
-	virtual const EActionNotify GetDieAction() const { return ACTION_NOTIFY_DIE; }
-	virtual const EActionNotify GetIdleAction() const { return ACTION_NOTIFY_IDLE; }
-	virtual const EActionNotify GetMovingAction() const { return ACTION_NOTIFY_MOVE; }
+	virtual const EActionNotify GetShootAction() const
+	{
+		return ACTION_NOTIFY_MECH_SHOOT;
+	}
+
+	virtual const EActionNotify GetAimAction() const
+	{
+		return ACTION_NOTIFY_AIM;
+	}
+
+	virtual const EActionNotify GetDieAction() const
+	{
+		return ACTION_NOTIFY_DIE;
+	}
+
+	virtual const EActionNotify GetIdleAction() const
+	{
+		return ACTION_NOTIFY_IDLE;
+	}
+
+	virtual const EActionNotify GetMovingAction() const
+	{
+		return ACTION_NOTIFY_MOVE;
+	}
 
 	//
-	virtual const bool IsVisible( const uint8_t party ) const { return true; }
+	virtual const bool IsVisible( const uint8_t party ) const
+	{
+		return true;
+	}
 
-	virtual NTimer::STime GetDisappearInterval() const { return 0; }
+	virtual NTimer::STime GetDisappearInterval() const
+	{
+		return 0;
+	}
 
 	// для получения нормали у истребителей.
-	virtual float GetTerrainHeight( const float x, const float y, const NTimer::STime timeDiff ) const { return 0; }
+	virtual float GetTerrainHeight( const float x, const float y, const NTimer::STime timeDiff ) const
+	{
+		return 0;
+	}
 
 	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
 
-	virtual bool IsMech() const { return true; }
-	// Strategic bombers use normal plane movement, but their attacks are forced through horizontal bombing.
-	bool IsStrategicBomber() const { return GetStats()->eDBtype == NDb::DB_RPG_TYPE_AVIA_STRAT_BOMBER; }
-	virtual bool IsHelicopter() const { return false; }
+	virtual bool IsMech() const
+	{
+		return true;
+	}
 
-	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const { return ECT_NONE; }
-	virtual const bool CanGoBackward() const { return false; }
+	// Strategic bombers use normal plane movement, but their attacks are forced through horizontal bombing.
+	bool IsStrategicBomber() const
+	{
+		return GetStats()->eDBtype == NDb::DB_RPG_TYPE_AVIA_STRAT_BOMBER;
+	}
+
+	virtual bool IsHelicopter() const
+	{
+		return false;
+	}
+
+	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const
+	{
+		return ECT_NONE;
+	}
+
+	virtual const bool CanGoBackward() const
+	{
+		return false;
+	}
+
 	virtual const float GetSightRadius() const;
 	virtual void Die( const bool fromExplosion, const float fDamage );
 
 	virtual void Stop() {}
+
 	virtual void Disappear();
 
 	// залокать unit ( если уже был залокана, то старый lock исчезает )
 	virtual void Lock( const CBasicGun *pGun ) {}
+
 	// unlock unit ( если залокан другим gun-ом, то ничего не делается )
 	virtual void Unlock( const CBasicGun *pGun ) {}
+
 	// залокан ли каким-либо gun-ом, не равным pGun
-	virtual bool IsLocked( const CBasicGun *pGun ) const { return true; }
+	virtual bool IsLocked( const CBasicGun *pGun ) const
+	{
+		return true;
+	}
 
 	// plane's formation, to force planes keep parade during flight.
 	void SetPlanesFormation( class CPlanesFormation *pFormation, const CVec3 &vShift );
 	CPlanesFormation *GetPlanesFormation();
-	const CVec3 GetPlaneShift() const { return vPlanesShift; }
+
+	const CVec3 GetPlaneShift() const
+	{
+		return vPlanesShift;
+	}
 
 	const SRect &GetUnitRect() const;
 	virtual const uint16_t GetDir() const;
@@ -146,7 +220,12 @@ public:
 	{
 		NI_ASSERT( false, "wrong call" );
 	}
-	virtual bool IsBeingAttackedB2() { return false; }
+
+	virtual bool IsBeingAttackedB2()
+	{
+		return false;
+	}
+
 	virtual void NotifyAttackedB2( IPlane &attacker, bool bAttack ) {}
 	virtual const class CPlanePreferences &GetPreferencesB2() const;
 
@@ -154,12 +233,35 @@ public:
 	virtual void DecFuel( const bool bEconomyMode );
 	float GetFuel() const;
 
-	virtual class CArtillery *GetTowedArtillery() const { return 0; }
-	virtual const bool CanLockTiles() const { return false; }
+	virtual class CArtillery *GetTowedArtillery() const
+	{
+		return 0;
+	}
 
-	virtual const float GetZ() const { return GetCenter().z; }
-	virtual const EMovementPlane GetMovementPlane() const { return PLANE_AIR; }
+	virtual const bool CanLockTiles() const
+	{
+		return false;
+	}
+
+	virtual const float GetZ() const
+	{
+		return GetCenter().z;
+	}
+
+	virtual const EMovementPlane GetMovementPlane() const
+	{
+		return PLANE_AIR;
+	}
+
 	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats );
-	virtual const bool IsAviation() const { return true; }
-	virtual const float GetVisZ() const { return GetCenter().z; }
+
+	virtual const bool IsAviation() const
+	{
+		return true;
+	}
+
+	virtual const float GetVisZ() const
+	{
+		return GetCenter().z;
+	}
 };

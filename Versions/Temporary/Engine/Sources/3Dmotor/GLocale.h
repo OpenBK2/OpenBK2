@@ -14,10 +14,12 @@ namespace NDb
 {
 struct SFont;
 }
+
 namespace NGfx
 {
 class CTexture;
 };
+
 namespace NGScene
 {
 
@@ -34,6 +36,7 @@ struct SFont
 	bool bHud = false;
 	// A clipped label can use the original size without changing user settings.
 	bool bOriginalScale = false;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &nSize );
@@ -45,6 +48,7 @@ struct SFont
 	}
 
 	SFont() {}
+
 	SFont( int _nSize, const std::string &_szName ) : nSize( _nSize ), szName( _szName ) {}
 };
 
@@ -58,6 +62,7 @@ private:
 	SFont sFont;
 	CObj<CPtrFuncBase<NGfx::CTexture>> pTexture;
 	CDGPtr<CPtrFuncBase<CFontFormatInfo>> pInfo;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &sFont );
@@ -68,20 +73,37 @@ private:
 
 public:
 	CFontInfo() {}
+
 	CFontInfo( const SFont &_sFont, CPtrFuncBase<NGfx::CTexture> *_pTexture, CPtrFuncBase<CFontFormatInfo> *_pInfo )
 			: sFont( _sFont ), pTexture( _pTexture ), pInfo( _pInfo )
 	{
 	}
 
-	const SFont &GetType() const { return sFont; }
-	CPtrFuncBase<NGfx::CTexture> *GetTexture() const { return pTexture; }
-	CPtrFuncBase<CFontFormatInfo> *GetFormatInfo() const { return pInfo; }
+	const SFont &GetType() const
+	{
+		return sFont;
+	}
+
+	CPtrFuncBase<NGfx::CTexture> *GetTexture() const
+	{
+		return pTexture;
+	}
+
+	CPtrFuncBase<CFontFormatInfo> *GetFormatInfo() const
+	{
+		return pInfo;
+	}
+
 	// Called with the text about to be laid out, before its characters are
 	// looked up. A baked font has every glyph it will ever have; a runtime font
 	// (GRuntimeFont.h) rasterises the ones it lacks here.
 	virtual void PrepareGlyphs( const std::wstring &wsText ) {}
+
 	// A runtime font is already rasterised at the requested screen dimensions.
-	virtual bool IsRasterized() const { return false; }
+	virtual bool IsRasterized() const
+	{
+		return false;
+	}
 };
 
 //! Локаль
@@ -93,6 +115,7 @@ private:
 	ZDATA
 	CVec2 vScreenRect;
 	std::vector<CObj<CFontInfo>> fonts;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &vScreenRect );
@@ -144,4 +167,4 @@ inline int FontPointsToPixelWidth( const int nPoints, const float fScreenWidth )
 	return (float)nPoints * fScreenWidth / 1024.0f;
 }
 
-}; // namespace
+}; // namespace NGScene

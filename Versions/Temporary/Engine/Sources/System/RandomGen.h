@@ -58,28 +58,34 @@ SYSTEM_EXPORT void GetDebugState( SDebugState *pState );
 SYSTEM_EXPORT uint64_t GetRandomCallsCounter();
 // get random value
 SYSTEM_EXPORT unsigned Random();
+
 // random w/o checks
 BOOST_FORCEINLINE unsigned int Random( const unsigned int uMax )
 {
 	return Random() % uMax;
 }
+
 BOOST_FORCEINLINE int Random( const int nMin, const int nMax )
 {
 	return nMin + (int)Random( (unsigned int)( nMax - nMin + 1 ) );
 }
+
 BOOST_FORCEINLINE float Random( const float fMin, const float fMax )
 {
 	return fMin + float( double( Random() ) / double( 0xffffffffUL ) * double( fMax - fMin ) );
 }
+
 // random with checks
 BOOST_FORCEINLINE unsigned int RandomCheck( const unsigned int uMax )
 {
 	return uMax == 0 ? 0 : Random( uMax );
 }
+
 BOOST_FORCEINLINE int RandomCheck( const int nMin, const int nMax )
 {
 	return nMax < nMin ? nMin : Random( nMin, nMax );
 }
+
 BOOST_FORCEINLINE int RandomCheck( const float fMin, const float fMax )
 {
 	return fMax < fMin ? fMin : Random( fMin, fMax );
@@ -87,9 +93,13 @@ BOOST_FORCEINLINE int RandomCheck( const float fMin, const float fMax )
 
 struct SRandomFunc
 {
-	float operator()( float fMin, float fMax ) const { return Random( fMin, fMax ); }
+	float operator()( float fMin, float fMax ) const
+	{
+		return Random( fMin, fMax );
+	}
 };
+
 const SRandomFunc &RndFunc();
-};
+}; // namespace NRandom
 
 #define RecordRandomCall() NRandom::RecordCall( __FILE__, __LINE__, __func__ )

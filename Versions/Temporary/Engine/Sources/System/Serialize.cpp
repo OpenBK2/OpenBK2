@@ -8,6 +8,7 @@ namespace NSystem
 struct SSerialize
 {
 	CPtr<IRandomSeed> pRandomSeed;
+
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -15,6 +16,7 @@ struct SSerialize
 		return 0;
 	}
 };
+
 void Serialize( const char chunkID, IBinSaver &saver )
 {
 	// prepare holder
@@ -29,4 +31,4 @@ void Serialize( const char chunkID, IBinSaver &saver )
 	}
 }
 
-};
+}; // namespace NSystem

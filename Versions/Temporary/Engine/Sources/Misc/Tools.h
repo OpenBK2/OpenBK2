@@ -153,10 +153,12 @@ inline float ToRadian( const float angle )
 {
 	return float( angle * ( FP_PI / 180.0f ) );
 }
+
 inline float ToDegree( const float angle )
 {
 	return float( angle * ( 180.0f / FP_PI ) );
 }
+
 inline float NormalizeAngleInDegree( const float angle )
 {
 	float fResult = fmod( double( angle ), 360.0 );
@@ -167,18 +169,22 @@ inline float NormalizeAngleInDegree( const float angle )
 	ASSERT( 0.f <= fResult && fResult < 360.f );
 	return fResult;
 }
+
 inline int NormalizeAngleInDegree( const int angle )
 {
 	return angle % 360;
 }
+
 inline float SignumNormalizeAngleInDegree( const float angle )
 {
 	return float( fmod( angle + 180 * boost::math::sign( angle ), 360 ) - 180 * boost::math::sign( angle ) );
 }
+
 inline float NormalizeAngleInRadian( const float angle )
 {
 	return float( fmod( double( angle ), 2.0 * PI ) + ( double( angle ) < 0 ? 2.0 * PI : 0 ) );
 }
+
 inline float SignumNormalizeAngleInRadian( const float angle )
 {
 	return float( fmod( double( angle ) + PI, 2.0 * PI ) + ( double( angle ) < -PI ? PI : -PI ) );
@@ -234,39 +240,48 @@ inline float fabs2( const float x, const float y, const float z, const float w )
 {
 	return ( x * x + y * y + z * z + w * w );
 }
+
 inline float fabs( const float x, const float y, const float z, const float w )
 {
 	return static_cast<float>( sqrt( fabs2( x, y, z, w ) ) );
 }
+
 inline float fabs2( const float x, const float y, const float z )
 {
 	return ( x * x + y * y + z * z );
 }
+
 inline float fabs( const float x, const float y, const float z )
 {
 	return static_cast<float>( sqrt( fabs2( x, y, z ) ) );
 }
+
 inline float fabs2( const float x, const float y )
 {
 	return ( x * x + y * y );
 }
+
 inline float fabs( const float x, const float y )
 {
 	return static_cast<float>( sqrt( fabs2( x, y ) ) );
 }
+
 inline float fabs2( const float x )
 {
 	return x * x;
 }
+
 // legacy functions to be compatible with A5 and A7
 inline float sqr( const float x )
 {
 	return x * x;
 }
+
 inline float triple( const float x )
 {
 	return x * x * x;
 }
+
 template <class TYPE>
 inline TYPE square( const TYPE x )
 {
@@ -290,6 +305,7 @@ inline bool Normalize( TYPE &x, TYPE &y )
 	y *= u;
 	return true;
 }
+
 template <class TYPE>
 inline bool Normalize( TYPE &x, TYPE &y, TYPE &z )
 {
@@ -308,6 +324,7 @@ inline bool Normalize( TYPE &x, TYPE &y, TYPE &z )
 	z *= u;
 	return true;
 }
+
 template <class TYPE>
 inline bool Normalize( TYPE &x, TYPE &y, TYPE &z, TYPE &w )
 {

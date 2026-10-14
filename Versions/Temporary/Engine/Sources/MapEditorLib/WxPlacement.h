@@ -48,7 +48,10 @@ class CPlacement
 public:
 	// pszStateName is the MFC dialog's class name, which is what
 	// CResizeDialog::GetXMLFilePath answers and so what the file is called.
-	explicit CPlacement( const char *pszStateName ) : pszName( pszStateName ) { NDialogState::Load( pszName, &state ); }
+	explicit CPlacement( const char *pszStateName ) : pszName( pszStateName )
+	{
+		NDialogState::Load( pszName, &state );
+	}
 
 	// Moves the dialog to where it was left; false if nothing was saved yet,
 	// in which case the caller centres it.
@@ -106,14 +109,23 @@ public:
 		return true;
 	}
 
-	bool WasPlaced() const { return bPlaced; }
+	bool WasPlaced() const
+	{
+		return bPlaced;
+	}
 
 	// The rest of the file, for a dialog that keeps parameters of its own in
 	// it -- New Object's checkbox, Open MOD's last choice. Loaded when this
 	// is constructed, and written with the placement by Save.
-	SDialogState &State() { return state; }
+	SDialogState &State()
+	{
+		return state;
+	}
 
-	const SDialogState &State() const { return state; }
+	const SDialogState &State() const
+	{
+		return state;
+	}
 
 	// On the way out, whichever button was used. left + width rather than
 	// GetRight(), which is the last pixel inside where MFC's right is one past.
@@ -131,4 +143,4 @@ public:
 		NDialogState::Save( szName, &state );
 	}
 };
-}
+} // namespace NWxPlacement

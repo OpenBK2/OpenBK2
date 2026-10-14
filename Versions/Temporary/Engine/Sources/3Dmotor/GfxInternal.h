@@ -42,6 +42,7 @@ struct SGeomFormatInfo
 	D3DVERTEXELEMENT9 *pdwVSD;
 	uint32_t dwFVF;
 };
+
 extern SGeomFormatInfo geometryFormatInfo[6];
 
 inline int GetGeomFormatSize( int nFormatID )
@@ -174,6 +175,7 @@ public:
 
 struct S3DTriangle;
 class CTriListWrapper;
+
 class CTriList : virtual public CObjectBase
 {
 public:
@@ -208,4 +210,4 @@ int GetBpp( D3DFORMAT format );
 int GetMaxBufferedFlipsNum();
 void ForceTextureFilterSetup();
 
-} // namespace
+} // namespace NGfx

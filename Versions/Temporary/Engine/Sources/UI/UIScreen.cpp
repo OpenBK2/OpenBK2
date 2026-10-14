@@ -310,6 +310,7 @@ void CWindowScreen::RegisterEffect( const std::string &szEffect,
 	commandSequiences[szEffect].commands = cmds;
 	commandSequiences[szEffect].bReversable = bReversable;
 }
+
 void CWindowScreen::RegisterEffect( const std::string &szEffect, const NDb::SUIStateSequence &cmds )
 {
 	commandSequiences[szEffect] = cmds;

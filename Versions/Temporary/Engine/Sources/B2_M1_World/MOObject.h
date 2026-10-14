@@ -14,11 +14,16 @@ class CMOObject : public CMapObj
 	uint16_t wCycledSound = 0;
 	//uint16_t wAmbientSoundTimed;
 	uint16_t wCycledSoundTimed = 0;
+
 	//
-	const NDb::SObjectRPGStats *GetStatsLocal() const { return checked_cast<const NDb::SObjectRPGStats *>( GetStats() ); }
+	const NDb::SObjectRPGStats *GetStatsLocal() const
+	{
+		return checked_cast<const NDb::SObjectRPGStats *>( GetStats() );
+	}
 
 public:
 	CMOObject() : wAmbientSound( 0 ), wCycledSound( 0 ), wCycledSoundTimed( 0 ) {}
+
 	//
 	virtual bool Create( const int nUniqueID,
 	                     const SAIBasicUpdate *pUpdate,
@@ -35,9 +40,18 @@ public:
 	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;
 	void AIUpdateFall( const SAITreeBrokenUpdate *pUpdate );
 
-	virtual bool IsObject() const { return true; }
+	virtual bool IsObject() const
+	{
+		return true;
+	}
+
 	virtual void GetPassangers( std::vector<IB2MapObj *> *pPassangers ) const {}
-	virtual int GetPassangersCount() const { return 0; }
+
+	virtual int GetPassangersCount() const
+	{
+		return 0;
+	}
+
 	//
 	int operator&( IBinSaver &saver );
 };

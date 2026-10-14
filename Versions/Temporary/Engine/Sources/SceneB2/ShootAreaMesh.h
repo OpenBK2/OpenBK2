@@ -29,8 +29,13 @@ class CShootAreaMesh : public CPtrFuncBase<NGScene::CObjectInfo>
 	static void FillVertexData( NGScene::SVertex &vertex );
 
 protected:
-	bool NeedUpdate() { return pTransform.Refresh(); }
+	bool NeedUpdate()
+	{
+		return pTransform.Refresh();
+	}
+
 	void Recalc();
+
 	CShootAreaMesh() {}
 
 public:

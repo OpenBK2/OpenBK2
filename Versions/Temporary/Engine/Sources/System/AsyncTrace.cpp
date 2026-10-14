@@ -40,7 +40,7 @@ namespace
 		}
 		return pTraceFile;
 	}
-}
+} // namespace
 
 bool IsEnabled()
 {
@@ -84,4 +84,4 @@ void WriteResource( const char *szWhat, const char *szResName, const int nID )
 	}
 	Write( "res", fmt::format( "{} {} id={}", szWhat, szResName != 0 ? szResName : "<none>", nID ) );
 }
-}
+} // namespace NAsyncTrace

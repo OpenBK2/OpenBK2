@@ -12,6 +12,7 @@ class CInterfaceHelp : public CInterfaceScreenBase, public IProgrammedReactionsA
 	CPtr<ITextView> pHeader;
 	CPtr<IScrollableContainer> pDescCont;
 	CPtr<ITextView> pDesc;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
@@ -55,12 +56,14 @@ class CICHelp : public CInterfaceCommandBase<CInterfaceHelp>
 
 	ZDATA_( CInterfaceCommandBase<CInterfaceHelp> )
 	std::string szInterfaceType;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceHelp> *)this );
 		f.Add( 2, &szInterfaceType );
 		return 0;
 	}
+
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );

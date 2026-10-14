@@ -2,6 +2,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CSoldier;
 class CAIUnit;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CRndRunUpToEnemy
 {
@@ -31,18 +32,25 @@ public:
 		f.Add( 8, &bCheck );
 		return 0;
 	}
+
 	void OnSerialize( IBinSaver &saver );
 	//
 	void SendOwnerToRandomRun();
 
 public:
 	CRndRunUpToEnemy() : pOwner( 0 ) {}
+
 	CRndRunUpToEnemy( CAIUnit *pOwner, CAIUnit *pEnemy, bool bCanMove );
 	void Init( CAIUnit *pOwner, CAIUnit *pEnemy, bool bCanMove );
 
-	bool IsRunningToEnemy() const { return bRunningToEnemy; }
+	bool IsRunningToEnemy() const
+	{
+		return bRunningToEnemy;
+	}
+
 	void Segment();
 
 	void Finish();
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

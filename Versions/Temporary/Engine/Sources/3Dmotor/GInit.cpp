@@ -21,14 +21,17 @@ int GetDepthTexResolution()
 {
 	return nDepthTexResolution;
 }
+
 int GetShadowsQuality()
 {
 	return nShadowsQuality;
 }
+
 bool IsUsing16bitShadows()
 {
 	return bIsUsing16bitShadows;
 }
+
 bool CanCalcLM()
 {
 	if ( !bCanCalcLM )
@@ -39,6 +42,7 @@ bool CanCalcLM()
 
 	return bCanCalcLM;
 }
+
 //static void Add( const SUserRTInfo &r )
 //{
 //	for ( int k = 0; k < r.tex.size(); ++k )
@@ -222,6 +226,7 @@ void CommandGfxUpdate( const std::string &szID, const std::vector<std::wstring> 
 {
 	SetModeFromConfig( false, lastUserRTInfo );
 }
+
 void CommandGfxRecreate( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	SetModeFromConfig( true, lastUserRTInfo );
@@ -246,4 +251,4 @@ REGISTER_VAR_EX( "gfx_frame_transition", NGlobal::VarBoolHandler, &bFrameTransit
 REGISTER_VAR_EX( "gfx_16bit_shadows", NGlobal::VarBoolHandler, &b16bitShadows, 0, STORAGE_USER )
 FINISH_REGISTER
 
-}
+} // namespace NGScene

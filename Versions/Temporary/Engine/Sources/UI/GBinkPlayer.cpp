@@ -29,6 +29,7 @@ class CBinkVideoPlayer : public IVideoPlayer
 	bool bNeedUpdate = false; // BinkWait returned 0
 	int nEndFrame = -1;
 	int nFrameSkip = 0;
+
 	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &bForceUpdate );
@@ -289,7 +290,7 @@ void CBinkVideoPlayer::PlayFragment( int nStartFrame, int _nEndFrame, int _nFram
 	Pause( false );
 }
 
-} // namespace
+} // namespace NGScene
 
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( UI, 0xB3320170, CBinkVideoPlayer );

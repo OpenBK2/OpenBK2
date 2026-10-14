@@ -20,6 +20,7 @@ protected:
 	void Recalc();
 	bool NeedUpdate();
 	void OrientToViewer();
+
 	//
 	CVisObjIconInfo() {}
 
@@ -28,10 +29,16 @@ public:
 	CVec3 vCenter;
 	std::vector<CVec2> iconsSizesMin;
 	std::vector<CVec2> iconsSizesMax;
+
 	//
 	CVisObjIconInfo( ICamera *_pCamera ) : pCamera( _pCamera ), bUpdate( true ) {}
+
 	//
-	void ForceUpdate() { bUpdate = true; }
+	void ForceUpdate()
+	{
+		bUpdate = true;
+	}
+
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -54,12 +61,15 @@ struct SVisObjIcons
 		NDb::SIconsSet::SIconType::EIconTypeEnum eType;
 		float fValue;
 		uint8_t cAlpha;
+
 		//
 		SPresentIcon() {}
+
 		SPresentIcon( const NDb::SIconsSet::SIconType::EIconTypeEnum _eType, const float _fValue, const uint8_t _cAlpha )
 				: eType( _eType ), fValue( _fValue ), cAlpha( _cAlpha )
 		{
 		}
+
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -78,6 +88,7 @@ struct SVisObjIcons
 	//
 	void CreateIcons( NGScene::IGameView *pGameView, const NDb::SIconsSet *pIconSet, const CVec3 &vPos );
 	void MoveIcons( const CVec3 &vPos, const float fObjHeight );
+
 	//
 	int operator&( IBinSaver &saver )
 	{

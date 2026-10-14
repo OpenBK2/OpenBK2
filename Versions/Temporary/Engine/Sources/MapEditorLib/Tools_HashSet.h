@@ -68,6 +68,7 @@ TContainerIterator FindIndex( TContainer &rList, int nIndex )
 	}
 	return rList.end();
 }
+
 /**
 
 template<class TContainer, class TElement>

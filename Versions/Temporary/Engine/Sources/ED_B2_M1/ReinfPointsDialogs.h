@@ -52,7 +52,7 @@ void Remove( CReinfPointsState::CTypedTemplateType *pTemplates,
              int nPlayer,
              int nReinfPoint,
              int nSelected );
-}
+} // namespace NReinfPointsTemplates
 
 namespace NReinfPointsAddTemplate
 {
@@ -61,4 +61,4 @@ namespace NReinfPointsAddTemplate
 // in or picked through the database link browser. Both are written through
 // the manipulator on OK, and nothing is written on Cancel.
 bool Run( IWidget *pParent, const std::string &rszNode, CMapInfoEditor *pMapInfoEditor );
-}
+} // namespace NReinfPointsAddTemplate

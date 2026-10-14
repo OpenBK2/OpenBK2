@@ -9,6 +9,7 @@ class CGeometry;
 }
 struct SDiscretePos;
 struct SBoundCalcer;
+
 namespace NGScene
 {
 class CObjectInfo;
@@ -40,6 +41,7 @@ class CMMXAnimationMatrices : public CFuncBase<std::vector<NGfx::SCompactTransfo
 	OBJECT_NOCOPY_METHODS( CMMXAnimationMatrices );
 	ZDATA
 	CDGPtr<CFuncBase<std::vector<SHMatrix>>> pAnimation;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pAnimation );
@@ -47,7 +49,11 @@ class CMMXAnimationMatrices : public CFuncBase<std::vector<NGfx::SCompactTransfo
 	}
 
 protected:
-	virtual bool NeedUpdate() { return pAnimation.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pAnimation.Refresh();
+	}
+
 	virtual void Recalc();
 
 public:
@@ -59,12 +65,25 @@ class CBuffer
 {
 	T *pBuffer;
 	int nSize;
-	CBuffer( const CBuffer & ) { ASSERT( 0 ); }
-	void operator=( const CBuffer & ) { ASSERT( 0 ); }
+
+	CBuffer( const CBuffer & )
+	{
+		ASSERT( 0 );
+	}
+
+	void operator=( const CBuffer & )
+	{
+		ASSERT( 0 );
+	}
 
 public:
 	CBuffer() : pBuffer( 0 ), nSize( 0 ) {}
-	~CBuffer() { delete[] pBuffer; }
+
+	~CBuffer()
+	{
+		delete[] pBuffer;
+	}
+
 	void Clear()
 	{
 		if ( pBuffer )
@@ -74,6 +93,7 @@ public:
 		pBuffer = 0;
 		nSize = 0;
 	}
+
 	void Resize( int n )
 	{
 		if ( nSize == n )
@@ -91,13 +111,23 @@ public:
 			nSize = n;
 		}
 	}
-	int GetSize() const { return nSize; }
-	T *GetData() const { return pBuffer; }
+
+	int GetSize() const
+	{
+		return nSize;
+	}
+
+	T *GetData() const
+	{
+		return pBuffer;
+	}
+
 	T &operator[]( int i )
 	{
 		ASSERT( i >= 0 && i < nSize );
 		return pBuffer[i];
 	}
+
 	const T &operator[]( int i ) const
 	{
 		ASSERT( i >= 0 && i < nSize );
@@ -107,6 +137,7 @@ public:
 
 class CPerMaterialCombiner;
 class CAnimationWatch;
+
 class IPart : public CObjectBase
 {
 	ZDATA
@@ -115,6 +146,7 @@ class IPart : public CObjectBase
 
 public:
 	SCacheLightingInfo cacheLighting;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pCombiner );
@@ -130,31 +162,70 @@ public:
 	float fAverageTriArea;
 
 	IPart() : fAverageTriArea( 0 ) {}
+
 	IPart( CPtrFuncBase<CObjectInfo> *pData, CPerMaterialCombiner *_pCombiner );
 	~IPart();
 	void SetCombiner( CPerMaterialCombiner *_pCombiner );
-	CPerMaterialCombiner *GetCombiner() const { return pCombiner; }
+
+	CPerMaterialCombiner *GetCombiner() const
+	{
+		return pCombiner;
+	}
+
 	bool HasLoadedObjectInfo()
 	{
 		pObjInfo.Refresh();
 		return IsValid( pObjInfo->GetValue() );
 	}
+
 	void RefreshObjectInfo();
-	CObjectInfo *GetObjectInfo() { return pObjInfo->GetValue(); }
-	CPtrFuncBase<CObjectInfo> *GetObjectInfoNode() const { return pObjInfo; }
+
+	CObjectInfo *GetObjectInfo()
+	{
+		return pObjInfo->GetValue();
+	}
+
+	CPtrFuncBase<CObjectInfo> *GetObjectInfoNode() const
+	{
+		return pObjInfo;
+	}
+
 	void SetObjectInfoNode( CPtrFuncBase<CObjectInfo> * ); // for tests, using of this function is not recommended
 	virtual ETransformType GetTransformType() const = 0;
-	virtual const SFBTransform &GetSimplePos() { return *(SFBTransform *)0; }
-	virtual const std::vector<SHMatrix> &GetAnimation() { return *(std::vector<SHMatrix> *)0; }
+
+	virtual const SFBTransform &GetSimplePos()
+	{
+		return *(SFBTransform *)0;
+	}
+
+	virtual const std::vector<SHMatrix> &GetAnimation()
+	{
+		return *(std::vector<SHMatrix> *)0;
+	}
+
 	virtual const std::vector<NGfx::SCompactTransformer> &GetMMXAnimation()
 	{
 		return *(std::vector<NGfx::SCompactTransformer> *)0;
 	}
-	virtual bool Is2Sided() const { return false; }
-	virtual intptr_t GetSortValue() const { return 0; }
+
+	virtual bool Is2Sided() const
+	{
+		return false;
+	}
+
+	virtual intptr_t GetSortValue() const
+	{
+		return 0;
+	}
+
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices ) {}
-	void ResetCachedTransform();                    // for CVBCombiner only
-	void ResetCachedLighting() { gfxData.Clear(); } // for CVBCombiner only
+
+	void ResetCachedTransform(); // for CVBCombiner only
+
+	void ResetCachedLighting()
+	{
+		gfxData.Clear();
+	} // for CVBCombiner only
 };
 
 void TransformPart( IPart *p, std::vector<CVec3> *pRes, std::vector<STriangle> *pTris );
@@ -171,6 +242,7 @@ class CAnimationWatch : public CVersioningBase
 	TWatchSet watch;
 	std::vector<int> indices;
 	bool bAnimationOnly;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pCombiner );
@@ -179,13 +251,20 @@ class CAnimationWatch : public CVersioningBase
 		f.Add( 5, &bAnimationOnly );
 		return 0;
 	}
+
 	bool NeedUpdate();
+
 	void Recalc() {}
 
 public:
 	CAnimationWatch() {}
+
 	CAnimationWatch( TMaterialCombiner *_p, bool _bAnimationOnly ) : pCombiner( _p ), bAnimationOnly( _bAnimationOnly ) {}
-	void AddHandle( CVersioningBase *p ) { watch.push_back( p ); }
+
+	void AddHandle( CVersioningBase *p )
+	{
+		watch.push_back( p );
+	}
 };
 
 class CPerMaterialCombiner : public CFuncBase<std::vector<CPtr<IPart>>>
@@ -199,14 +278,28 @@ class CPerMaterialCombiner : public CFuncBase<std::vector<CPtr<IPart>>>
 
 public:
 	CPerMaterialCombiner() : bHasChanged( false ) {}
+
 	CPerMaterialCombiner( int );
 	// for use with IPart like objects only
 	void AddPart( IPart *pPart );
 	void RemovePart( IPart *pPart );
 	void MarkWasted( IPart *pPart );
-	CVersioningBase *GetAnimationTracker() const { return pAnimation; }
-	CVersioningBase *GetFullChangeTracker() const { return pFullChange; }
-	int GetSize() const { return value.size(); }
+
+	CVersioningBase *GetAnimationTracker() const
+	{
+		return pAnimation;
+	}
+
+	CVersioningBase *GetFullChangeTracker() const
+	{
+		return pFullChange;
+	}
+
+	int GetSize() const
+	{
+		return value.size();
+	}
+
 	int operator&( CStructureSaver &f );
 };
 
@@ -220,6 +313,7 @@ class CVBCombiner : public IVBCombiner
 	ECombinerType ct;
 	CDGPtr<CVersioningBase> pAnimation;
 	CDGPtr<CFuncBase<SPerVertexLightState>> pLightState;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (IVBCombiner *)this );
@@ -229,6 +323,7 @@ class CVBCombiner : public IVBCombiner
 		f.Add( 5, &pLightState );
 		return 0;
 	}
+
 	// NeedXForm reads bNeedXForm to or a fresh result into it, and the default
 	// constructor set none of the three, so the first call read whatever the
 	// allocation held: UBSan reports a bool loaded as 190, which is the fill an
@@ -239,6 +334,7 @@ class CVBCombiner : public IVBCombiner
 
 protected:
 	void XFormPosition();
+
 	bool RealNeedUpdate()
 	{
 		if ( pAnimation )
@@ -247,18 +343,21 @@ protected:
 		}
 		return pCombiner.Refresh();
 	}
+
 	bool NeedXForm()
 	{
 		bool bRes = RealNeedUpdate();
 		bNeedXForm |= bRes;
 		return bNeedXForm;
 	}
+
 	virtual bool NeedUpdate();
 	void DoRecalc();
 	virtual void Recalc();
 
 public:
 	CVBCombiner() {}
+
 	CVBCombiner( CFuncBase<std::vector<CPtr<IPart>>> *_pCombiner,
 	             ECombinerType _ct,
 	             CVersioningBase *_pAnimation,
@@ -266,6 +365,7 @@ public:
 			: pCombiner( _pCombiner ), ct( _ct ), pAnimation( _pAnimation ), pLightState( _pLightState )
 	{
 	}
+
 	virtual const SBound &GetBound()
 	{
 		if ( NeedXForm() )
@@ -274,6 +374,7 @@ public:
 		}
 		return bound;
 	}
+
 	virtual const std::vector<SSphere> &GetBounds()
 	{
 		if ( NeedXForm() )
@@ -282,7 +383,12 @@ public:
 		}
 		return partBVs;
 	}
-	virtual CFuncBase<std::vector<CPtr<IPart>>> *GetCombiner() const { return pCombiner; }
+
+	virtual CFuncBase<std::vector<CPtr<IPart>>> *GetCombiner() const
+	{
+		return pCombiner;
+	}
+
 	virtual void FreeMemory();
 };
 
@@ -293,6 +399,7 @@ enum EIBTargetType
 	IBTT_POSITIONS,
 	IBTT_VERTICES,
 };
+
 class CIBCombiner : public CFuncBase<std::vector<NGfx::STriangleList>>
 {
 	OBJECT_BASIC_METHODS( CIBCombiner );
@@ -300,6 +407,7 @@ class CIBCombiner : public CFuncBase<std::vector<NGfx::STriangleList>>
 	CDGPtr<CFuncBase<std::vector<CPtr<IPart>>>> pCombiner;
 	CDGPtr<CVersioningBase> pAnimation;
 	EIBTargetType ibt;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pCombiner );
@@ -307,6 +415,7 @@ class CIBCombiner : public CFuncBase<std::vector<NGfx::STriangleList>>
 		f.Add( 4, &ibt );
 		return 0;
 	}
+
 	std::vector<STriangle> triBuffer;
 
 protected:
@@ -318,14 +427,16 @@ protected:
 		}
 		return pCombiner.Refresh();
 	}
+
 	virtual void Recalc();
 
 public:
 	CIBCombiner() {}
+
 	CIBCombiner( CFuncBase<std::vector<CPtr<IPart>>> *_pCombiner, CVersioningBase *_pAnimation, EIBTargetType _ibt )
 			: pCombiner( _pCombiner ), pAnimation( _pAnimation ), ibt( _ibt )
 	{
 	}
 };
 
-}
+} // namespace NGScene

@@ -34,8 +34,13 @@ private:
 
 		void ClearCache();
 		void Clear();
-		SChunkLevel() { Clear(); }
+
+		SChunkLevel()
+		{
+			Clear();
+		}
 	};
+
 	// objects descriptors
 	CMemoryStream obj;
 	// objects data
@@ -87,8 +92,15 @@ private:
 	void Start( const std::vector<SBinSaverExternalObject> &ext );
 	void Finish();
 
-	bool IsReading() { return bIsReading; }
-	int GetVersion() const { return nVersion; }
+	bool IsReading()
+	{
+		return bIsReading;
+	}
+
+	int GetVersion() const
+	{
+		return nVersion;
+	}
 
 	void SetMode( const ESaverMode mode )
 	{
@@ -99,6 +111,7 @@ private:
 
 public:
 	CStructureSaver() : pRes( 0 ) {}
+
 	CStructureSaver( CDataStream *_pRes, ESaverMode mode, const std::vector<SBinSaverExternalObject> &ext )
 			: pRes( _pRes )
 	{
@@ -116,5 +129,8 @@ public:
 		Start( ext );
 	}
 
-	~CStructureSaver() { Finish(); }
+	~CStructureSaver()
+	{
+		Finish();
+	}
 };

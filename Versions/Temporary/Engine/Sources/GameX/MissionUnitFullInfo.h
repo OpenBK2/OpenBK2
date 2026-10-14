@@ -6,6 +6,7 @@
 
 struct SObjectStatus;
 class CMapObj;
+
 namespace NDb
 {
 struct SAnimB2;
@@ -34,6 +35,7 @@ class CMissionUnitFullInfo : public CObjectBase
 		CPtr<ITextView> pCount;
 		CPtr<IButton> pIconBtn;
 		CPtr<IWindow> pIcon;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pItem );
@@ -53,6 +55,7 @@ class CMissionUnitFullInfo : public CObjectBase
 		CDBPtr<NDb::SHPObjectRPGStats> pStats;
 		CPtr<CMapObj> pMO;
 		int nPassengerCount;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pStats );
@@ -61,7 +64,10 @@ class CMissionUnitFullInfo : public CObjectBase
 			return 0;
 		}
 
-		bool operator==( const SMember &member ) const { return pStats == member.pStats && pMO == member.pMO; }
+		bool operator==( const SMember &member ) const
+		{
+			return pStats == member.pStats && pMO == member.pMO;
+		}
 	};
 
 	struct SViewMember
@@ -69,6 +75,7 @@ class CMissionUnitFullInfo : public CObjectBase
 		ZDATA
 		CPtr<IButton> pBtn;
 		CPtr<IWindow> pIconWnd;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pBtn );
@@ -82,6 +89,7 @@ class CMissionUnitFullInfo : public CObjectBase
 		ZDATA
 		float fFraction;
 		int nHP;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &fFraction );
@@ -167,6 +175,7 @@ class CMissionUnitFullInfo : public CObjectBase
 
 	std::wstring wszTooltipMemberInTransport;
 	std::wstring wszTooltipMemberInBuilding;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pName );

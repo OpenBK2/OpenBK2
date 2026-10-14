@@ -30,6 +30,7 @@ enum EPacket
 	PKT_ACK,
 	PKT_KICK_ADDR
 };
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CP2PTracker::AddOutputMessage( EOutMessage msg,
                                     const UCID _from,
@@ -100,6 +101,7 @@ void CP2PTracker::AddOutputMessage( EOutMessage msg,
 	}
 #endif // __LOG__
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 bool CP2PTracker::GetMessage( SMessage *pRes )
 {
@@ -111,6 +113,7 @@ bool CP2PTracker::GetMessage( SMessage *pRes )
 	output.pop_front();
 	return true;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 CP2PTracker::SPeer *CP2PTracker::GetClient( UCID addr )
 {
@@ -121,6 +124,7 @@ CP2PTracker::SPeer *CP2PTracker::GetClient( UCID addr )
 	}
 	return 0;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 CP2PTracker::SPeer *CP2PTracker::GetClientByPeerID( PEER_ID id )
 {
@@ -139,6 +143,7 @@ CP2PTracker::SPeer *CP2PTracker::GetClientByPeerID( PEER_ID id )
 	}
 	return 0;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 bool CP2PTracker::IsActive( UCID addr )
 {
@@ -149,6 +154,7 @@ bool CP2PTracker::IsActive( UCID addr )
 	}
 	return pTest->IsActive();
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CP2PTracker::CheckQueuedMessages( const UCID who )
 {
@@ -182,6 +188,7 @@ void CP2PTracker::CheckQueuedMessages( const UCID who )
 	}
 	CheckCorpses();
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 // check if it is time to remove some inactive clients
 void CP2PTracker::CheckCorpses()
@@ -201,6 +208,7 @@ void CP2PTracker::CheckCorpses()
 		clients.erase( *it );
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CP2PTracker::AddKickApprove( UCID victim, UCID kickFrom )
 {
@@ -217,6 +225,7 @@ void CP2PTracker::AddKickApprove( UCID victim, UCID kickFrom )
 		ASSERT( 0 );
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CP2PTracker::ApproveKick( UCID victim, UCID from )
 {
@@ -230,6 +239,7 @@ void CP2PTracker::ApproveKick( UCID victim, UCID from )
 		ASSERT( 0 );
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CP2PTracker::ReceiveDirect( const UCID peer, CMemoryStream &data )
 {
@@ -244,6 +254,7 @@ void CP2PTracker::ReceiveDirect( const UCID peer, CMemoryStream &data )
 	b.bDirect = true;
 	CheckQueuedMessages( peer );
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CP2PTracker::ReceiveBroadcast( const UCID peer, CMemoryStream &data, int nID )
 {
@@ -284,6 +295,7 @@ void CP2PTracker::ReceiveBroadcast( const UCID peer, CMemoryStream &data, int nI
 	}
 	CheckQueuedMessages( peer ); // can be no acks required
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CP2PTracker::ReceiveAck( const UCID from, int nID, PEER_ID id )
 {
@@ -340,6 +352,7 @@ void CP2PTracker::ReceiveAck( const UCID from, int nID, PEER_ID id )
 		ASSERT( !pSender ); // sender was erased too early
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CP2PTracker::ReceiveAddClient(
 		const UCID peer, const UCID clientAddr, PEER_ID id, CMemoryStream &_addrInfo, bool bIsBroadcast )
@@ -384,6 +397,7 @@ void CP2PTracker::ReceiveAddClient(
 	// client is added to peer tracking record
 	pWho->clients.push_back( SPeerClient( clientAddr, id ) );
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CP2PTracker::ReceiveRemoveClient( const UCID peer, const UCID corpse, bool bIsBroadcast )
 {
@@ -454,8 +468,10 @@ void CP2PTracker::ReceiveRemoveClient( const UCID peer, const UCID corpse, bool 
 		ASSERT( !bHadCorpse ); // was removed too early
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 static int nBroadcastID = 1;
+
 void CP2PTracker::SendBroadcast( CMemoryStream &pkt )
 {
 	for ( std::unordered_map<UCID, SPeer>::iterator i = clients.begin(); i != clients.end(); ++i )
@@ -467,6 +483,7 @@ void CP2PTracker::SendBroadcast( CMemoryStream &pkt )
 	}
 	++nBroadcastID;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CP2PTracker::SendDirect( UCID addr, CMemoryStream &data )
 {
@@ -494,11 +511,13 @@ void CP2PTracker::SendDirect( UCID addr, CMemoryStream &data )
 			CONSOLE_STREAM_CONSOLE, fmt::format( "p2p: send direct to {}, msg {}", addr, (int)cMsgID ), 0xffffff00, true );
 #endif
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 CP2PTracker::PEER_ID CP2PTracker::GetUnusedID()
 {
 	return ++maxPeerID;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CP2PTracker::AddNewClient( const UCID addr, CMemoryStream &_addrInfo, bool bIsBroadcast )
 {
@@ -543,6 +562,7 @@ void CP2PTracker::AddNewClient( const UCID addr, CMemoryStream &_addrInfo, bool 
 	clients[res.addr] = res;
 	peersByID[res.id] = res.addr;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 // mark client as corpse and inform everybody about it
 // no messages from this address will be received anymore
@@ -635,6 +655,7 @@ void CP2PTracker::SendBroadcast( const UCID dest, int nID, CMemoryStream &data )
 }
 #endif
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CP2PTracker::SendAck( const UCID addr, int nID, PEER_ID from )
 {
@@ -649,11 +670,13 @@ void CP2PTracker::SendAck( const UCID addr, int nID, PEER_ID from )
 	pkt << from;
 	packets.push_back( SPacket( addr, pkt ) );
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 static void ReadRest( CMemoryStream &src, CMemoryStream *pDst )
 {
 	src.ReadTo( pDst, src.GetSize() - src.GetPosition() );
 }
+
 void CP2PTracker::ProcessPacket( const UCID addr, CMemoryStream &pkt, bool bIsBroadcast )
 {
 	SPeer *pWho = GetClient( addr );
@@ -722,5 +745,6 @@ void CP2PTracker::ProcessPacket( const UCID addr, CMemoryStream &pkt, bool bIsBr
 			break;
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 }

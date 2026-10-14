@@ -44,6 +44,7 @@ struct SLadderStatistics
 
 	std::vector<int> techsPlayed;
 	std::vector<int> mapsPlayed;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nLevel );
@@ -70,6 +71,7 @@ struct SLadderStatistics
 		f.Add( 23, &mapsPlayed );
 		return 0;
 	}
+
 	SLadderStatistics()
 			: nLevel( -1 ), nXP( 0 ), nLevelXP( 0 ), nNextLevelXP( 0 ), nMaxXPEarned( 0 ), nMaxXPLost( 0 ),
 				nFavouriteReinforcement( -1 ), nUnitsKilled( 0 ), nUnitsLost( 0 ), nUnitEff( 0 ), nKeyPointEff( 0 ),

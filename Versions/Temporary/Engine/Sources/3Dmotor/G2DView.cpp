@@ -24,6 +24,7 @@ private:
 	CObj<I2DScene> pScene;
 	CObj<CTextLocaleInfo> pLocale;
 	CVec2 vWindowSize;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &pScene );
@@ -52,8 +53,15 @@ public:
 	                              const CTRect<float> &sClipWindow );
 	CObjectBase *CreateTexture( const NGScene::STextureKey &key );
 
-	CVec2 GetViewportSize() { return NGfx::GetScreenRect(); }
-	CTextLocaleInfo *GetLocaleInfo() const { return pLocale; }
+	CVec2 GetViewportSize()
+	{
+		return NGfx::GetScreenRect();
+	}
+
+	CTextLocaleInfo *GetLocaleInfo() const
+	{
+		return pLocale;
+	}
 
 	void StartNewFrame( NGfx::CTexture *pTarget );
 	void StartNewFrame( EAlphaMode2D _AlphaMode2D );
@@ -150,7 +158,8 @@ I2DGameView *CreateNew2DView()
 	return new C2DGameView;
 }
 
-}
+} // namespace NGScene
+
 using namespace NGScene;
 BASIC_REGISTER_CLASS( _3DMOTOR, I2DGameView );
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0xF1741142, C2DGameView );

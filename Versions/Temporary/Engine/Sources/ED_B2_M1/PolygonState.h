@@ -21,6 +21,7 @@ class CPolygonSelectState : public CDefaultInputState
 	{
 		NI_ASSERT( pParentState != 0, "CPolygonSelectState(): Invalid parameter: pParentState == 0" );
 	}
+
 	CPolygonSelectState( CPolygonState *_pParentState ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CPolygonSelectState(): Invalid parameter: pParentState == 0" );
@@ -44,6 +45,7 @@ class CPolygonEditState : public CDefaultInputState
 	{
 		NI_ASSERT( pParentState != 0, "CPolygonEditState(): Invalid parameter: pParentState == 0" );
 	}
+
 	CPolygonEditState( CPolygonState *_pParentState ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CPolygonEditState(): Invalid parameter: pParentState == 0" );
@@ -69,6 +71,7 @@ class CPolygonAddState : public CDefaultInputState
 	{
 		NI_ASSERT( pParentState != 0, "CPolygonAddState(): Invalid parameter: pParentState == 0" );
 	}
+
 	CPolygonAddState( CPolygonState *_pParentState ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CPolygonAddState(): Invalid parameter: pParentState == 0" );
@@ -90,6 +93,7 @@ class CPolygonState : public CMultiInputState, public ICommandHandler
 	friend class CPolygonSelectState;
 	friend class CPolygonEditState;
 	friend class CPolygonAddState;
+
 	//
 	enum EInputStates
 	{
@@ -119,6 +123,7 @@ public:
 		UT_FINISH = 5,
 		UT_CANCEL = 6,
 	};
+
 	//
 	enum EMoveType
 	{
@@ -126,6 +131,7 @@ public:
 		MT_MULTI = 1,
 		MT_ALL = 2,
 	};
+
 	//
 protected:
 	// Для перекрытия метода Draw
@@ -148,6 +154,7 @@ protected:
 			nSelectedIndex = 0;
 		}
 	}
+
 	inline int GetSelectedPolygonID()
 	{
 		if ( ( nSelectedIndex < 0 ) || ( nSelectedIndex >= pickPolygonIDList.size() ) )
@@ -227,6 +234,7 @@ public:
 
 		SetActiveInputState( IS_SELECT, true, false );
 	}
+
 	//
 	~CPolygonState()
 	{

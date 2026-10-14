@@ -13,6 +13,7 @@ class CDifficultyLevel
 
 		EM_MAX_NUM = 5,
 	};
+
 	ZDATA
 	ZONSERIALIZE
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
@@ -37,17 +38,30 @@ public:
 		f.Add( 7, &partiesNames );
 		return 0;
 	}
+
 	void OnSerialize( IBinSaver &f );
 
 public:
 	CDifficultyLevel() : nLevel( 1 ), nCheatLevel( 255 ) {}
-	void Clear() { nCheatLevel = 255; }
+
+	void Clear()
+	{
+		nCheatLevel = 255;
+	}
 
 	virtual void Init();
 	void SetLevel( const int _nLevel );
-	void SetCheatLevel( const int _nCheatLevel ) { nCheatLevel = _nCheatLevel; }
 
-	const int GetLevel() const { return (std::min)( nLevel, nCheatLevel ); }
+	void SetCheatLevel( const int _nCheatLevel )
+	{
+		nCheatLevel = _nCheatLevel;
+	}
+
+	const int GetLevel() const
+	{
+		return (std::min)( nLevel, nCheatLevel );
+	}
+
 	/*
 	const float GetSmallAABBCoeff( const int nParty ) const		{ return coeff[nParty][GetLevel()][EM_SMALL_AABB]; }
 	const float GetPiercingCoeff( const int nParty ) const		{ return coeff[nParty][GetLevel()][EM_PIERCING]; }

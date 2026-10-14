@@ -63,4 +63,4 @@ wxWeakRef<TWindow> TopLevel( TArgs &&...rArgs )
 {
 	return new TWindow( std::forward<TArgs>( rArgs )... );
 }
-}
+} // namespace NWx

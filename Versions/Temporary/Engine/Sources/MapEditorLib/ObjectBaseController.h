@@ -42,18 +42,21 @@ public:
 			TYPE_CHANGE = 2,
 			TYPE_EXPAND = 3,
 		};
+
 		//
 		struct SArrayData
 		{
 			std::string szName;
 			int nCount;
 		};
+
 		//
 		struct SValueData
 		{
 			std::string szName;
 			CVariant value;
 		};
+
 		//
 		typedef std::list<SArrayData> CArrayDataList;
 		typedef std::list<SValueData> CValueDataList;
@@ -69,6 +72,7 @@ public:
 		bool Undo( IManipulator *pObjectManipulator, const IManipulator::CNameMap *pNameMap ) const;
 		MAPEDITORLIB_EXPORT bool Redo( IManipulator *pObjectManipulator, const IManipulator::CNameMap *pNameMap ) const;
 	};
+
 	//
 	typedef std::list<SUndoData> CUndoDataList;
 
@@ -84,7 +88,11 @@ public:
 	virtual void Trace() const;
 
 	// IController
-	virtual bool IsEmpty() const { return undoDataList.empty(); }
+	virtual bool IsEmpty() const
+	{
+		return undoDataList.empty();
+	}
+
 	virtual bool IsAbsolute() const;
 	virtual void GetDescription( std::string *pszDescription ) const;
 
@@ -94,6 +102,7 @@ public:
 	bool AddExpandOperation( const std::string &rszPropertyName, bool bExpand, IManipulator *pObjectManipulator );
 	bool
 	AddChangeOperation( const std::string &rszPropertyName, const CVariant &rValue, IManipulator *pObjectManipulator );
+
 	//
 	template <class TValue>
 	bool AddChangeValueOperation( const std::string &rszPropertyName,
@@ -115,6 +124,7 @@ public:
 		//
 		return posNewUndoData->Redo( pObjectManipulator, 0 );
 	}
+
 	//
 	template <class TValue, class TFieldType>
 	bool AddChangeVec2Operation( const std::string &rszPropertyName,
@@ -154,6 +164,7 @@ public:
 		}
 		return true;
 	}
+
 	//
 	template <class TValue, class TFieldType>
 	bool AddChangeVec3Operation( const std::string &rszPropertyName,
@@ -205,6 +216,7 @@ public:
 		}
 		return true;
 	}
+
 	//
 	template <class TValue, class TFieldType>
 	bool AddChangeVec4Operation( const std::string &rszPropertyName,
@@ -268,6 +280,7 @@ public:
 		}
 		return true;
 	}
+
 	//
 	//
 	template <class TValue, class TElementType>
@@ -362,6 +375,7 @@ public:
 		}
 		return true;
 	}
+
 	template <class TValue>
 	bool AddChangeValueOperation( const std::string &rszPropertyName,
 	                              const std::vector<TValue> &rNewData,
@@ -369,6 +383,7 @@ public:
 	{
 		return AddChangeArrayOperation<std::vector<TValue>, TValue>( rszPropertyName, rNewData, pObjectManipulator );
 	}
+
 	template <class TValue>
 	bool AddChangeValueOperation( const std::string &rszPropertyName,
 	                              const std::list<TValue> &rNewData,

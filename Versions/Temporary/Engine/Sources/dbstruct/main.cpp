@@ -31,13 +31,18 @@ public:
 		NVFS::SetMainFileCreator( NVFS::CreateWinFileCreator( szCWD ) );
 		bSuccessfullyOpened = NDb::OpenDatabase( NVFS::GetMainVFS(), NVFS::GetMainFileCreator(), eDBMode );
 	}
+
 	~CDatabaseGuard()
 	{
 		NDb::CloseDatabase();
 		NVFS::SetMainFileCreator( 0 );
 		NVFS::SetMainVFS( 0 );
 	}
-	bool IsOk() const { return bSuccessfullyOpened; }
+
+	bool IsOk() const
+	{
+		return bSuccessfullyOpened;
+	}
 };
 
 // The call sites keep their printf spelling, but fmt::sprintf formats it: the
@@ -125,7 +130,10 @@ int LoadAllObjects( ILoadObjectCallback *pCallback )
 
 class CMarkChangedCallback : public ILoadObjectCallback
 {
-	void ObjectLoaded( NDb::IObjMan *pObjMan, const CDBID &dbid ) { NDb::MarkChanged( dbid ); }
+	void ObjectLoaded( NDb::IObjMan *pObjMan, const CDBID &dbid )
+	{
+		NDb::MarkChanged( dbid );
+	}
 };
 
 int UpdateStruct()
@@ -169,7 +177,7 @@ int MakeBin()
 	//		return nRetCode;
 }
 
-}
+} // namespace
 
 int PORT_CDECL main( int argc, char *argv[] )
 {

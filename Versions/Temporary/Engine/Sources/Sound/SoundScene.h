@@ -34,6 +34,7 @@ enum ESoundAddMode
 	SAM_ADD_N_FORGET,   // вернется 0, сцена сама удалит звук.
 };
 struct ISFX;
+
 namespace NDb
 {
 struct SComplexSoundDesc;
@@ -45,6 +46,7 @@ struct ISoundScene : public CObjectBase
 	{
 		tidTypeID = 0x1107C480
 	};
+
 	//
 	virtual void Init() = 0;
 	// set terrain sizes
@@ -84,8 +86,10 @@ struct ISoundScene : public CObjectBase
 	// clear all map sounds.
 	virtual void ClearSounds() = 0;
 };
+
 inline ISoundScene *SoundScene()
 {
 	return Singleton<ISoundScene>();
 }
+
 SOUND_EXPORT ISoundScene *CreateSoundScene();

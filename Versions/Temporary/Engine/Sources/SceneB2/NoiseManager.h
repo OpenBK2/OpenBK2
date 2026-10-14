@@ -42,6 +42,7 @@ class CNoiseManager
 	struct SNoiseStored
 	{
 		std::string szFileName;
+
 		//
 		//
 		int operator&( IXmlSaver &saver )
@@ -49,6 +50,7 @@ class CNoiseManager
 			saver.Add( "FileName", &szFileName );
 			return 0;
 		}
+
 		int operator&( IBinSaver &saver )
 		{
 			saver.Add( 1, &szFileName );

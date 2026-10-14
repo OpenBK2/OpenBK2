@@ -14,6 +14,7 @@ private:
 	ZDATA
 	CDGPtr<CFuncBase<float>> pAnimatedChannel;
 	CDGPtr<CFuncBase<float>> pMasterChannel;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pAnimatedChannel );
@@ -30,6 +31,7 @@ protected:
 		bool bAnimatedChanged = ( IsValid( pAnimatedChannel ) ? pAnimatedChannel.Refresh() : false );
 		return bMasterChanged || bAnimatedChanged;
 	}
+
 	virtual void Recalc()
 	{
 		value = pMasterChannel->GetValue();
@@ -46,4 +48,4 @@ public:
 		ASSERT( IsValid( pMasterChannel ) );
 	}
 };
-}
+} // namespace NAnimation

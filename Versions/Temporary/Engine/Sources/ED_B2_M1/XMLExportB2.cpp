@@ -216,8 +216,9 @@ std::string CXmlExporterB2::MakePathNameOther( const std::string &szObjectName,
 }
 
 static CXmlExporterB2 theExporter;
+
 CXmlExporter *GetExporter()
 {
 	return &theExporter;
 }
-}
+} // namespace NXMLExport

@@ -23,6 +23,7 @@ class CGeometryExporter : public CBasicSceneExporter
 	                           const std::string &szSrcScenePath,
 	                           const std::string &szDestinationPath,
 	                           IManipulator *pManipulator );
+
 	//
 	CGeometryExporter() {}
 };

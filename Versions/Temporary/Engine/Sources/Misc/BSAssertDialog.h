@@ -2,6 +2,7 @@
 #include "BSUtil.h"
 
 struct SCallStackEntry;
+
 namespace NBSU
 {
 EBSUReport ShowAssertionDlg( HINSTANCE hInstance,

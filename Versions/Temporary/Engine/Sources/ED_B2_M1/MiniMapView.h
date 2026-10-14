@@ -60,7 +60,10 @@ struct SImage
 	int nSide = 0;
 	std::vector<uint32_t> pixels;
 
-	bool IsEmpty() const { return nSide <= 0; }
+	bool IsEmpty() const
+	{
+		return nSide <= 0;
+	}
 };
 
 // The picture CMiniMapWindow::LoadMap drew from the scene's terrain. False,
@@ -72,4 +75,4 @@ bool BuildImage( const NDb::STerrain *pTerrainDesc, SImage *pImage );
 CVec2 EditorToMiniMap( const SImage &rImage, int nWidth, int nHeight, const CVec2 &vEditorPos );
 // The ground position under a point of the minimap, clamped to the map.
 CVec2 MiniMapToEditor( const SImage &rImage, int nWidth, int nHeight, const CVec2 &vMiniMapPos );
-}
+} // namespace NMiniMapView

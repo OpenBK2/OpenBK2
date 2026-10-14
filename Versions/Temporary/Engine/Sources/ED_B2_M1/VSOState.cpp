@@ -45,6 +45,7 @@ void DrawVector( CSceneDrawTool *pSceneDrawTool, unsigned uColor, const std::vec
 	}
 	pSceneDrawTool->DrawLine( ( *vPoints.begin() ), ( *itPointPrev ), uColor, false );
 }
+
 //
 void DrawArray( CSceneDrawTool *pSceneDrawTool, unsigned uColor, const CArray2D<float> &array, const float fTileSize )
 {
@@ -66,7 +67,7 @@ void DrawArray( CSceneDrawTool *pSceneDrawTool, unsigned uColor, const CArray2D<
 		}
 	}
 }
-};
+}; // namespace NExtraDraw
 
 void CVSOSelectState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {

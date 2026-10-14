@@ -35,7 +35,12 @@ class CSimpleChecksumLog : public ICheckSumLog
 
 public:
 	CSimpleChecksumLog() : bEntries2( false ) {}
-	void SetEntries2() { bEntries2 = true; }
+
+	void SetEntries2()
+	{
+		bEntries2 = true;
+	}
+
 	virtual bool AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry )
 	{
 		if ( bEntries2 )
@@ -57,6 +62,7 @@ public:
 		return true;
 	}
 };
+
 bool bShowUnderConstruction = false;
 #endif
 

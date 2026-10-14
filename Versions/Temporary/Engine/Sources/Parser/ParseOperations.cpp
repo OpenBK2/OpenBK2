@@ -45,6 +45,7 @@ void AddFile( const NFile::CFileIterator &iter )
 }
 
 static std::string szBaseFileName;
+
 const std::string GetBaseFileName()
 {
 	return szBaseFileName;
@@ -165,6 +166,7 @@ bool Parse( const std::vector<std::string> &files, const std::string &_szBaseFil
 }
 
 static int nStep = 0;
+
 int GetStep()
 {
 	return nStep;
@@ -1155,4 +1157,4 @@ void AddDef( CLangNode *pRawNode )
 	}
 }
 
-}
+} // namespace NLang

@@ -9,7 +9,8 @@ namespace NGfx
 {
 class CGeometry;
 class CTexture;
-}
+} // namespace NGfx
+
 namespace NGScene
 {
 
@@ -41,11 +42,13 @@ struct SParticleLightInfo
 			StopIncrementing();
 		}
 	}
+
 	void StopIncrementing()
 	{
 		vStep.nU = 0;
 		vStep.nV = 0;
 	}
+
 	void ForcedInc()
 	{
 		vStart.nU += vTrueStep.nU;
@@ -54,6 +57,7 @@ struct SParticleLightInfo
 			vStart.nV += vTrueStep.nV;
 		}
 	}
+
 	void Inc()
 	{
 		vStart.nU += vStep.nU;
@@ -78,17 +82,24 @@ struct SParticleOrientationInfo
 struct SRenderGeometryInfo;
 class IMaterial;
 const float F_PARTICLE_OVER = 1e10f;
+
 class IParticleOutput
 {
 public:
 	virtual const SParticleOrientationInfo &GetOrientationInfo() const = 0;
-	const CVec3 &GetDepth() const { return GetOrientationInfo().vDepth; }
+
+	const CVec3 &GetDepth() const
+	{
+		return GetOrientationInfo().vDepth;
+	}
+
 	virtual void
 	AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tex, float fDepth ) = 0;
 	virtual void SampleWarFog( const std::vector<CVec3> &vPos, std::vector<float> *pRes ) = 0;
 };
 
 class IParticleFilter;
+
 class CParticleEffect : public CObjectBase
 {
 public:
@@ -99,7 +110,12 @@ public:
 
 	// function should be const but it is impossible due to DGPtrs presence
 	virtual void AddParticles( IParticleOutput *pRender ) = 0;
-	virtual bool IsEmpty() const { return false; }
+
+	virtual bool IsEmpty() const
+	{
+		return false;
+	}
+
 	virtual void SetFade( float fVal ) {}
 };
 
@@ -141,9 +157,18 @@ public:
 	int nPriority;
 
 	CStandardParticleEffect( int _nPriority ) : fFade( 1.0f ), nPriority( _nPriority ) {}
+
 	void AddParticles( IParticleOutput *pRender );
-	virtual bool IsEmpty() const { return frames.empty(); }
-	void SetFade( float fVal ) { fFade = fVal; }
+
+	virtual bool IsEmpty() const
+	{
+		return frames.empty();
+	}
+
+	void SetFade( float fVal )
+	{
+		fFade = fVal;
+	}
 };
 
 class CRainParticleEffect : public CParticleEffect
@@ -160,4 +185,4 @@ public:
 
 void GetTransparentTexturePlace( STransparentTexturePlace *pRes, NGfx::CTexture *pTex, float fOffset = 0.5f );
 
-}
+} // namespace NGScene

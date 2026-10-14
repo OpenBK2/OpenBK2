@@ -34,6 +34,7 @@ public:
 		f.Add( 8, &vSpeed3 );
 		return 0;
 	}
+
 	void OnSerialize( IBinSaver &f );
 
 public:
@@ -42,6 +43,7 @@ public:
 				bNotInitialized( true ), vSpeed3( VNULL3 )
 	{
 	}
+
 	CArtilleryCrewPath( CBasePathUnit *pUnit,
 	                    const CVec2 &vStartPoint,
 	                    const CVec2 &vEndPoint,
@@ -53,22 +55,62 @@ public:
 	virtual bool IsFinished() const;
 	virtual void Segment( const NTimer::STime timeDiff );
 
-	virtual const CVec2 &GetFinishPoint() const { return vEndPoint; }
+	virtual const CVec2 &GetFinishPoint() const
+	{
+		return vEndPoint;
+	}
+
 	//ненужные функции
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap );
-	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) { return true; }
+
+	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit )
+	{
+		return true;
+	}
+
 	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap );
+
 	virtual void Stop() {}
-	virtual const float GetSpeed() const { return fSpeedLen; }
+
+	virtual const float GetSpeed() const
+	{
+		return fSpeedLen;
+	}
+
 	virtual void NotifyAboutClosestThreat( CBasePathUnit *pCollUnit, const float fDist ) {}
+
 	//	virtual void SlowDown() {}
-	virtual const bool CanGoBackward() const { return false; }
-	virtual const bool CanGoForward() const { return true; }
+	virtual const bool CanGoBackward() const
+	{
+		return false;
+	}
+
+	virtual const bool CanGoForward() const
+	{
+		return true;
+	}
+
 	virtual void GetNextTiles( std::list<SVector> *pTiles ) {}
-	virtual const CVec2 PeekPathPoint( const int nToShift ) const { return VNULL2; };
-	virtual IMemento *CreateMemento() const { return 0; }
-	virtual float GetCurvatureRadius() const { return 0.0f; }
-	virtual bool IsWithFormation() const { return true; }
+
+	virtual const CVec2 PeekPathPoint( const int nToShift ) const
+	{
+		return VNULL2;
+	};
+
+	virtual IMemento *CreateMemento() const
+	{
+		return 0;
+	}
+
+	virtual float GetCurvatureRadius() const
+	{
+		return 0.0f;
+	}
+
+	virtual bool IsWithFormation() const
+	{
+		return true;
+	}
 };
 
 // путь для артиллерии, которую буксируют
@@ -93,11 +135,20 @@ public:
 
 public:
 	CArtilleryBeingTowedPath() : fSpeedLen( 0.0f ), vCurPoint( VNULL3 ), vCurPoint2D( VNULL2 ), vSpeed( VNULL2 ) {}
+
 	CArtilleryBeingTowedPath( const float fSpeedLen, const CVec2 &vCurPoint, const CVec2 &vSpeed );
 	bool Init( float fSpeedLen, const class CVec2 &vCurPoint, const CVec2 &vSpeed );
 
-	virtual const CVec2 &GetFinishPoint() const { return vCurPoint2D; }
-	virtual bool IsFinished() const { return false; }
+	virtual const CVec2 &GetFinishPoint() const
+	{
+		return vCurPoint2D;
+	}
+
+	virtual bool IsFinished() const
+	{
+		return false;
+	}
+
 	virtual void Segment( const NTimer::STime timeDiff ) {}
 
 	//ненужные функции
@@ -106,23 +157,61 @@ public:
 		CPtr<IPath> p = pPath;
 		return true;
 	}
-	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) { return true; }
+
+	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit )
+	{
+		return true;
+	}
+
 	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap )
 	{
 		CPtr<IMemento> p = pMemento;
 		return true;
 	}
+
 	virtual void Stop() {}
-	virtual float &GetSpeedLen() { return fSpeedLen; }
+
+	virtual float &GetSpeedLen()
+	{
+		return fSpeedLen;
+	}
+
 	virtual void NotifyAboutClosestThreat( CBasePathUnit *pCollUnit, const float fDist ) {}
-	virtual const bool CanGoBackward() const { return true; }
-	virtual const bool CanGoForward() const { return true; }
+
+	virtual const bool CanGoBackward() const
+	{
+		return true;
+	}
+
+	virtual const bool CanGoForward() const
+	{
+		return true;
+	}
+
 	virtual void GetNextTiles( std::list<SVector> *pTiles ) {}
-	virtual const CVec2 PeekPathPoint( const int nToShift ) const { return VNULL2; };
-	virtual IMemento *CreateMemento() const { return 0; }
-	virtual float GetCurvatureRadius() const { return 0.0f; }
 
-	virtual bool IsWithFormation() const { return false; }
+	virtual const CVec2 PeekPathPoint( const int nToShift ) const
+	{
+		return VNULL2;
+	};
 
-	virtual void GetSpeed3( CVec3 *pvSpeed ) const { *pvSpeed = CVec3( vSpeed, 0.0f ); }
+	virtual IMemento *CreateMemento() const
+	{
+		return 0;
+	}
+
+	virtual float GetCurvatureRadius() const
+	{
+		return 0.0f;
+	}
+
+	virtual bool IsWithFormation() const
+	{
+		return false;
+	}
+
+	virtual void GetSpeed3( CVec3 *pvSpeed ) const
+	{
+		*pvSpeed = CVec3( vSpeed, 0.0f );
+	}
 };

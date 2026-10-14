@@ -10,7 +10,10 @@ class CObjectRPGStatsExporter : public CObjectBaseRPGStatsExporter
 	CObjectRPGStatsExporter() {}
 
 protected:
-	bool NeedCreatePassability() { return true; }
+	bool NeedCreatePassability()
+	{
+		return true;
+	}
 
 public:
 	EXPORT_RESULT CheckObject( IManipulator *pManipulator,

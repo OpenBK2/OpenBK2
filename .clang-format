@@ -87,13 +87,15 @@ AllowShortCaseLabelsOnASingleLine: false
 # shows up in blame against the line it belongs to.
 AllowShortEnumsOnASingleLine: false
 
-# A one-line accessor declared inside a class stays on one line. There are
-# thousands of them, there is nothing to hide in a body with no control flow,
-# and expanding each to four lines would make the headers harder to read rather
-# than easier. Inline rather than All: a free function keeps its braces on their
-# own lines, where the body is the thing being read rather than an afterthought
-# to a signature.
-AllowShortFunctionsOnASingleLine: Inline
+# A signature goes on its own line and its body below it, accessors included:
+# `int GetID() const { return nID; }` becomes four lines. LLVM and Google both
+# keep that on one line, and it is the one place their answer was rejected on
+# purpose. A one-line body hides where the function ends, and reading a header
+# means reading a column of signatures, not picking them out of a line each.
+#
+# Empty rather than None, so a constructor or an interface stub with nothing in
+# it stays `CThing() {}` instead of spending three lines saying nothing.
+AllowShortFunctionsOnASingleLine: Empty
 
 # The template header goes on its own line, so the signature below it reads the
 # same whether or not the function happens to be a template.
@@ -124,7 +126,18 @@ BreakStringLiterals: false
 # Comments carry Russian text, box drawing, aligned tables and quoted Intel
 # pseudocode, none of which survives being rewrapped.
 ReflowComments: Never
-FixNamespaceComments: false
+
+# A closing brace at the end of a long file says which namespace it closes:
+# `} // namespace NGfx`. The files here run to thousands of lines and nest
+# namespaces, so the alternative is counting braces. LLVM and Google both do
+# this.
+FixNamespaceComments: true
+
+# A blank line between definitions, which is what makes a function's start and
+# end visible without counting braces. Both LLVM and Google leave this to the
+# author, and leaving it to the author is how this tree ended up with screens of
+# definitions packed edge to edge.
+SeparateDefinitionBlocks: Always
 
 # One per line, once it does not fit on one line: arguments, parameters and the
 # elements of a braced list. A packed block of values is dense to read, and an

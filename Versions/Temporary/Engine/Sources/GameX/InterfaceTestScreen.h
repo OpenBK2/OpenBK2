@@ -10,6 +10,7 @@ class CInterfaceTestScreen : public CInterfaceScreenBase, public IProgrammedReac
 
 	ZDATA_( CInterfaceScreenBase )
 	CDBID dbid;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
@@ -19,8 +20,16 @@ class CInterfaceTestScreen : public CInterfaceScreenBase, public IProgrammedReac
 
 protected:
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction ) { return false; }
-	int Check( const std::string &szCheckName ) const { return 0; }
+	bool Execute( const std::string &szSender, const std::string &szReaction )
+	{
+		return false;
+	}
+
+	int Check( const std::string &szCheckName ) const
+	{
+		return 0;
+	}
+
 	//}
 	//{
 	bool StepLocal( bool bAppActive );
@@ -39,6 +48,7 @@ class CICTestScreen : public CInterfaceCommandBase<CInterfaceTestScreen>
 
 	ZDATA_( CInterfaceCommandBase<CInterfaceTestScreen> )
 	CDBID dbid;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceTestScreen> *)this );

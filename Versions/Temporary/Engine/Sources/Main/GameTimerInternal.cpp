@@ -249,7 +249,7 @@ static void PauseGame( const std::string &szID, const std::vector<std::wstring> 
 	Singleton<IGameTimer>()->Pause( true, nType );
 }
 
-}
+} // namespace NGameTimer
 
 IGameTimer *CreateGameTimer( const int nSegmentDuration )
 {

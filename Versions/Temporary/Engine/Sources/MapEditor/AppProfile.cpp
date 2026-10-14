@@ -54,7 +54,7 @@ wxString EntryPath( const std::string &rszSection, const std::string &rszEntry )
 	}
 	return path + "/" + FromNarrow( rszEntry );
 }
-}
+} // namespace
 
 namespace NAppProfile
 {
@@ -86,4 +86,4 @@ void DeleteAll()
 	Profile().DeleteGroup( ProfileRoot() );
 	Profile().Flush();
 }
-}
+} // namespace NAppProfile

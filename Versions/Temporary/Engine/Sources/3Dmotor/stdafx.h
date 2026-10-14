@@ -41,6 +41,7 @@ namespace NTimer
 {
 typedef uint32_t STime;
 }
+
 //
 #include "System/System.h"
 #include "Misc/Tools.h"

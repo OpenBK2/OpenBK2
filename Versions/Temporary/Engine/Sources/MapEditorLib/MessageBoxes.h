@@ -56,4 +56,4 @@ MAPEDITORLIB_EXPORT void Information( const std::string &rszText );
 // import or a registration says which one it was.
 MAPEDITORLIB_EXPORT void Error( const std::string &rszText, const std::string &rszTitle );
 MAPEDITORLIB_EXPORT void Information( const std::string &rszText, const std::string &rszTitle );
-}
+} // namespace NMessage

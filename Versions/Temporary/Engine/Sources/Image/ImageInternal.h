@@ -32,10 +32,12 @@ public:
 	uint32_t dwBShift; // # of bits to shift down to canonical position
 public:
 	SPixelConvertInfo() {}
+
 	SPixelConvertInfo( uint32_t dwABitMask, uint32_t dwRBitMask, uint32_t dwGBitMask, uint32_t dwBBitMask )
 	{
 		InitMaskInfo( dwABitMask, dwRBitMask, dwGBitMask, dwBBitMask );
 	}
+
 	// initialization
 	bool InitMaskInfo( uint32_t dwABitMask, uint32_t dwRBitMask, uint32_t dwGBitMask, uint32_t dwBBitMask );
 	// color composition/decomposition (from ARGB, to ARGB)

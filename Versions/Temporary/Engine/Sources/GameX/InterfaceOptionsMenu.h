@@ -16,13 +16,17 @@ public:
 
 	public:
 		CReactions() {}
+
 		~CReactions() {}
+
 		CReactions( IWindow *_pScreen, CInterfaceOptionsMenu *_pInterface ) : pScreen( _pScreen ), pInterface( _pInterface )
 		{
 		}
+
 		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
 		virtual int Check( const std::string &szCheckName ) const;
 	};
+
 	//
 	void ChangeResolution();
 	//
@@ -51,11 +55,13 @@ private:
 		OPTION_MULTIPLAYER = 1 << 2,
 		OPTION_MPFILTER = 1 << 3
 	};
+
 	enum EScreenModes
 	{
 		MODE_NORMAL,
 		MODE_FILTERS
 	};
+
 	// Associating options with controls and saved values
 	struct SOptionInstance
 	{
@@ -67,12 +73,15 @@ private:
 		std::string szSavedValue;
 		std::string szCurrentValue;
 	};
+
 	typedef std::vector<SOptionInstance> CInstances;
+
 	struct SCategoryInstance
 	{
 		int nCategoryEntry;
 		CPtr<IWindow> pWindow;
 	};
+
 	typedef std::vector<SCategoryInstance> CCategories;
 
 	ZDATA_( CInterfaceScreenBase )
@@ -100,6 +109,7 @@ private:
 	EScreenModes screenMode;
 
 	CPtr<IWindow> pGroupPanel;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
@@ -144,12 +154,14 @@ class CICOptionsMenu : public CInterfaceCommandBase<CInterfaceOptionsMenu>
 	//
 	ZDATA_( CInterfaceCommandBase<CInterfaceOptionsMenu> )
 	std::string szMode;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceOptionsMenu> *)this );
 		f.Add( 2, &szMode );
 		return 0;
 	}
+
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );

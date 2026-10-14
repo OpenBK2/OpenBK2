@@ -25,11 +25,13 @@ protected:
 #ifdef _DEBUG
 	Mode mode{};
 	unsigned char *pReservedEnd = nullptr;
+
 	void CheckCurrentR()
 	{
 		ASSERT( pCurrent <= pReservedEnd );
 		ASSERT( mode == read );
 	}
+
 	void CheckCurrentW()
 	{
 		ASSERT( pCurrent <= pReservedEnd );
@@ -37,13 +39,18 @@ protected:
 	}
 #else
 	void CheckCurrentR() {}
+
 	void CheckCurrentW() {}
 #endif
 
 	inline void Init( unsigned char *pData, Mode _mode, int nSize );
 
 public:
-	CBitStream( void *pData, Mode _mode, int nSize ) { Init( (unsigned char *)pData, _mode, nSize ); }
+	CBitStream( void *pData, Mode _mode, int nSize )
+	{
+		Init( (unsigned char *)pData, _mode, nSize );
+	}
+
 	// result of read/write beyond data range is not determined
 	void Read( void *pDest, unsigned int nSize )
 	{
@@ -51,12 +58,14 @@ public:
 		pCurrent += nSize;
 		CheckCurrentR();
 	}
+
 	void Write( const void *pSrc, unsigned int nSize )
 	{
 		memcpy( pCurrent, pSrc, nSize );
 		pCurrent += nSize;
 		CheckCurrentW();
 	}
+
 	void ReadCString( std::string &res )
 	{
 		int nLeng = strlen( (char *)pCurrent );
@@ -64,6 +73,7 @@ public:
 		pCurrent += nLeng + 1;
 		CheckCurrentR();
 	}
+
 	void WriteCString( const char *pSrc )
 	{
 		int nLeng = strlen( pSrc );
@@ -71,6 +81,7 @@ public:
 		pCurrent += nLeng + 1;
 		CheckCurrentW();
 	}
+
 	void FlushBits()
 	{
 		if ( nBitsCount )
@@ -82,13 +93,19 @@ public:
 			}
 		}
 	}
+
 	// not more then 24 bits per call
 	inline void WriteBits( unsigned int _nBits, unsigned int _nBitsCount );
 	inline void WriteBit( unsigned int _nBits );
 	inline unsigned int ReadBits( unsigned int _nBitsCount );
 	inline unsigned int ReadBit();
+
 	// even more direct access, try to not use it, read only
-	const unsigned char *GetCurrentPtr() const { return pCurrent; }
+	const unsigned char *GetCurrentPtr() const
+	{
+		return pCurrent;
+	}
+
 	// get pointer to place to write to later (not later then this object will be destructed)
 	unsigned char *WriteDelayed( int nSize )
 	{
@@ -97,12 +114,14 @@ public:
 		CheckCurrentW();
 		return pRes;
 	}
+
 	//
 	template <class T>
 	inline void Write( const T &a )
 	{
 		Write( &a, sizeof( a ) );
 	}
+
 	template <class T>
 	inline void Read( T &a )
 	{
@@ -117,6 +136,7 @@ SYSTEM_EXPORT inline void CBitStream::Write<std::string>( const std::string &a )
 {
 	WriteCString( a.c_str() );
 }
+
 template <>
 SYSTEM_EXPORT inline void CBitStream::Read<std::string>( std::string &a )
 {
@@ -127,13 +147,18 @@ SYSTEM_EXPORT inline void CBitStream::Read<std::string>( std::string &a )
 // после того, как с CDataStream начинает работать CBitLocker прямые операции с
 // DataStream приведут к некорректному результату
 class CDataStream;
+
 class SYSTEM_EXPORT CBitLocker : public CBitStream
 {
 	CDataStream *pData = nullptr;
 	unsigned char *pBuffer = nullptr;
 
 public:
-	CBitLocker() : CBitStream( 0, read, 0 ) { pData = 0; }
+	CBitLocker() : CBitStream( 0, read, 0 )
+	{
+		pData = 0;
+	}
+
 	~CBitLocker();
 	// once per life of this object
 	void LockRead( CDataStream &data, unsigned int nSize );
@@ -161,7 +186,11 @@ public:
 				bits( _bits )
 	{
 	}
-	~CBitEmbedded() { bits.pCurrent = pCurrent; }
+
+	~CBitEmbedded()
+	{
+		bits.pCurrent = pCurrent;
+	}
 };
 
 // CBitStream realization

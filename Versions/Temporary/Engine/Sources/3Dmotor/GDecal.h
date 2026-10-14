@@ -6,11 +6,13 @@
 namespace NGScene
 {
 class CDecalTarget;
+
 struct SDecalTargetPart
 {
 	ZDATA
 	CPtr<CObjectBase> pUser;
 	int nUserID;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &pUser );
@@ -19,9 +21,15 @@ struct SDecalTargetPart
 	}
 
 	SDecalTargetPart() : nUserID( 0 ) {}
+
 	SDecalTargetPart( CObjectBase *_pUser, int _nUserID ) : pUser( _pUser ), nUserID( _nUserID ) {}
-	bool operator==( const SDecalTargetPart &a ) const { return pUser == a.pUser && nUserID == a.nUserID; }
+
+	bool operator==( const SDecalTargetPart &a ) const
+	{
+		return pUser == a.pUser && nUserID == a.nUserID;
+	}
 };
+
 struct SDecalTargetPartHash
 {
 	std::size_t operator()( const SDecalTargetPart &p ) const
@@ -36,12 +44,14 @@ struct SDecalTargetPartHash
 		return seed;
 	}
 };
+
 struct SSrcPosInfo
 {
 	ZDATA
 	CPtr<CObjectBase> pUser;
 	int nUserID;
 	CPtr<CObjectBase> pSource;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &pUser );
@@ -51,15 +61,18 @@ struct SSrcPosInfo
 	}
 
 	SSrcPosInfo() : nUserID( 0 ) {}
+
 	SSrcPosInfo( CObjectBase *_pUser, int _nUserID, CObjectBase *_pSource )
 			: pUser( _pUser ), nUserID( _nUserID ), pSource( _pSource )
 	{
 	}
+
 	bool operator==( const SSrcPosInfo &a ) const
 	{
 		return pUser == a.pUser && nUserID == a.nUserID && pSource == a.pSource;
 	}
 };
+
 struct SSrcPosInfoHash
 {
 	std::size_t operator()( const SSrcPosInfo &p ) const
@@ -74,6 +87,7 @@ struct SSrcPosInfoHash
 };
 
 class ISomePart;
+
 class CDecalTarget : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CDecalTarget );
@@ -85,6 +99,7 @@ public:
 	std::vector<SDecalTargetPart> targetParts;
 	std::vector<CPtr<ISomePart>> parts;
 	CSrcPosHash srcPositions;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &mapInfo );
@@ -93,13 +108,16 @@ public:
 		f.Add( 5, &srcPositions );
 		return 0;
 	}
+
 	CDecalTarget() {}
+
 	CDecalTarget( const SDecalMappingInfo &_mapInfo ) : mapInfo( _mapInfo ) {};
 };
 
 class CDecalsManager;
 class IDecalQuery;
 class IMaterial;
+
 class CDecal : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CDecal );
@@ -108,6 +126,7 @@ class CDecal : public CObjectBase
 	CObj<CDecalTarget> pTarget;
 	std::vector<CMObj<CObjectBase>> decals;
 	CObj<IMaterial> pMaterial;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &pOwner );
@@ -119,14 +138,20 @@ class CDecal : public CObjectBase
 
 public:
 	CDecal() {}
+
 	CDecal( CDecalsManager *_pOwner, CDecalTarget *_pTarget, IMaterial *_pMaterial );
 	~CDecal();
 	bool OnCreate( IDecalQuery *pScene, ISomePart *pNew, const SSrcPosInfo &tp );
 	void Walk();
-	std::vector<CMObj<CObjectBase>> &GetDecals() { return decals; }
+
+	std::vector<CMObj<CObjectBase>> &GetDecals()
+	{
+		return decals;
+	}
 };
 
 typedef std::unordered_map<CPtr<CObjectBase>, bool, SPtrHash> CObjectBaseSet;
+
 class IDecalQuery : virtual public CObjectBase
 {
 public:
@@ -156,7 +181,12 @@ public:
 
 public:
 	CDecalsManager( IDecalQuery *_pScene = 0 ) : pScene( _pScene ) {}
-	IDecalQuery *GetScene() const { return pScene; }
+
+	IDecalQuery *GetScene() const
+	{
+		return pScene;
+	}
+
 	void OnCreate( ISomePart *pNew );
 	// CreateDecal should be called right after CreateDecalTarget or some target parts may get removed
 	// and information about them will be lost
@@ -166,4 +196,4 @@ public:
 	void Unregister( CDecal *pDecal, CDecalTarget *pTarget );
 	void Walk();
 };
-}
+} // namespace NGScene

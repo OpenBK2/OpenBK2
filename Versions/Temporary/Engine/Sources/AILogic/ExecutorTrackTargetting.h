@@ -40,14 +40,24 @@ private:
 
 protected:
 	void SetAutocast( const bool _bAutocast );
-	bool GetAutocast() const { return state.bAutocast; }
+
+	bool GetAutocast() const
+	{
+		return state.bAutocast;
+	}
 
 public:
 	CExecutorTrackTargetting( CAIUnit *_pUnit );
+
 	CExecutorTrackTargetting() {}
 
 	void RegisterOnEvents( IExecutorContainer *pContainer );
 	bool NotifyEvent( const CExecutorEvent &event );
-	bool IsExecutorValid() const { return IsValid( pUnit ); }
+
+	bool IsExecutorValid() const
+	{
+		return IsValid( pUnit );
+	}
+
 	int Segment();
 };

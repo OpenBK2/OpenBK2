@@ -28,6 +28,7 @@ private:
 	EMode eMode;
 	CVec4 vCoeff;
 	CArray2D<NGfx::SPixel8888> sScreenShot;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &eMode );
@@ -50,4 +51,4 @@ public:
 	void SetMode( EMode eMode, const CVec4 &vColor );
 };
 
-}
+} // namespace NGScene

@@ -534,7 +534,7 @@ bool PickColourValue( const NPropertyButton::SContext &rContext, const std::stri
 	RemoveSceneInput();
 	return bResult;
 }
-}
+} // namespace
 
 namespace NPropertyButton
 {
@@ -648,4 +648,4 @@ bool Press( EButton eButton, const SContext &rContext, const std::string &rszTex
 			return false;
 	}
 }
-}
+} // namespace NPropertyButton

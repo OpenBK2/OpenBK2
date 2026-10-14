@@ -13,26 +13,46 @@ class CCellsConglomerateContainer
 	{
 		const SIntThree vCenter;
 		CConglomerates *pConglomerates;
+
 		SAddCellEnumerator( const SIntThree &_vCenter ) : vCenter( _vCenter ), pConglomerates( 0 ) {}
+
 		void operator()( const int nCurRank, const int nX, const int nY )
 		{
 			( *pConglomerates )[nCurRank][nY][nX].push_back( vCenter );
 		}
-		int GetSizeX() const { return ( *pConglomerates )[0].GetSizeX(); }
-		int GetSizeY() const { return ( *pConglomerates )[0].GetSizeY(); }
+
+		int GetSizeX() const
+		{
+			return ( *pConglomerates )[0].GetSizeX();
+		}
+
+		int GetSizeY() const
+		{
+			return ( *pConglomerates )[0].GetSizeY();
+		}
 	};
 
 	struct SRemoveCellEnumerator
 	{
 		const SIntThree vCenter;
 		CConglomerates *pConglomerates;
+
 		SRemoveCellEnumerator( const SIntThree &_vCenter ) : vCenter( _vCenter ), pConglomerates( 0 ) {}
+
 		void operator()( const int nCurRank, const int nX, const int nY )
 		{
 			( *pConglomerates )[nCurRank][nY][nX].remove( vCenter );
 		}
-		int GetSizeX() const { return ( *pConglomerates )[0].GetSizeX(); }
-		int GetSizeY() const { return ( *pConglomerates )[0].GetSizeY(); }
+
+		int GetSizeX() const
+		{
+			return ( *pConglomerates )[0].GetSizeX();
+		}
+
+		int GetSizeY() const
+		{
+			return ( *pConglomerates )[0].GetSizeY();
+		}
 	};
 
 	static const int MAX_RANK; // maximum allowed rank
@@ -44,11 +64,16 @@ class CCellsConglomerateContainer
 
 public:
 	CCellsConglomerateContainer() : bInitted( false ) {}
+
 	void Init( const int nMaxX, const int nMaxY, const int nMinZ, const int nMaxZ );
 
 	void AddHearCell( const SIntThree &vSourceCell, const int nRadius );
 	void RemoveHearCell( const SIntThree &vSourceCell, const int nRadius );
-	bool IsInitted() const { return bInitted; }
+
+	bool IsInitted() const
+	{
+		return bInitted;
+	}
 
 	void Clear();
 
@@ -74,5 +99,6 @@ public:
 			}
 		}
 	}
+
 	int operator&( IBinSaver &saver );
 };

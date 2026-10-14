@@ -15,6 +15,7 @@ struct SGeometryCellInfo
 	int nPriority = 0;
 
 	SGeometryCellInfo() : vCellPosition( VNULL2 ), nPriority( -1 ) {}
+
 	SGeometryCellInfo( const CVec2 &_vCellPosition, const int _nPriority )
 			: vCellPosition( _vCellPosition ), nPriority( _nPriority )
 	{
@@ -31,7 +32,9 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 		CVec2 vUnitShift;
 		//! проекция смещения юнита относительно центра формации на направление формации
 		float fUnitProjShift = 0.0f;
+
 		SCellInfo() : vUnitShift( VNULL2 ), fUnitProjShift( 0.0f ) {}
+
 		SCellInfo( const CVec2 &vUnitPosition )
 		{
 			vUnitShift = vUnitPosition ^ CVec2( 0, -1 );
@@ -45,11 +48,13 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 			return 0;
 		}
 	};
+
 	//! набор положений внутри группы
 	typedef std::vector<SCellInfo> CCells;
 	//! связь между набором положений и типом (priority) юнитов
 	typedef std::unordered_map<int, CCells>
 			CPriorityCells; // Using std::unoreded_map is fine here since no iteration is done!
+
 	//
 	struct SGeometry
 	{
@@ -58,6 +63,7 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 		float fRadius = 0.0f;
 
 		SGeometry() : fMaxProjection( 0.0f ), fRadius( 0.0f ) {}
+
 		SGeometry( const CPriorityCells &_geometry, const float _fMaxProjection, const float _fRadius )
 				: geometry( _geometry ), fMaxProjection( _fMaxProjection ), fRadius( _fRadius )
 		{
@@ -72,6 +78,7 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 			return 0;
 		}
 	};
+
 	//
 	struct SUnitInfo
 	{
@@ -80,6 +87,7 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 		int nPriority = 0;
 
 		SUnitInfo() : pUnit( 0 ), nCell( -1 ), nPriority( -1 ) {}
+
 		SUnitInfo( CBasePathUnit *_pUnit, const int _nPriority ) : pUnit( _pUnit ), nCell( -1 ), nPriority( _nPriority ) {}
 
 		int operator&( IBinSaver &saver )
@@ -90,6 +98,7 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 			return 0;
 		}
 	};
+
 	//
 	struct SUnitsInfoSortByPriority
 	{
@@ -105,6 +114,7 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 			}
 		}
 	};
+
 	typedef det_map<int, SUnitInfo> CUnitsMap;
 	//
 	OBJECT_BASIC_METHODS( CGroupSmoothPath )
@@ -116,6 +126,7 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 	int nCellsCount = 0;
 	float fMaxPathShift = 0.0f;
 	float fSpeedCoeff = 0.0f;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CStandartSmoothPathBasis *)this );
@@ -130,7 +141,11 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 	}
 
 protected:
-	const CVec2 GetDirection() const { return GetUnit()->GetDirectionVector(); }
+	const CVec2 GetDirection() const
+	{
+		return GetUnit()->GetDirectionVector();
+	}
+
 	//! получить смещение юнита в формации
 	const CVec2 GetUnitFormationShift( const CBasePathUnit *pUnit ) const;
 	//! получить проекцию смещения юнита в формации
@@ -150,9 +165,20 @@ public:
 
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap );
 
-	void ChangeGeometry( const int nGeometry ) { nCurrentGeometry = nGeometry; }
-	const int GetCurrentGeometry() const { return nCurrentGeometry; }
-	const int GetGeometriesCount() const { return geometries.size(); }
+	void ChangeGeometry( const int nGeometry )
+	{
+		nCurrentGeometry = nGeometry;
+	}
+
+	const int GetCurrentGeometry() const
+	{
+		return nCurrentGeometry;
+	}
+
+	const int GetGeometriesCount() const
+	{
+		return geometries.size();
+	}
 
 	bool AddUnit( CBasePathUnit *pUnit, const int nPriority );
 	bool DeleteUnit( CBasePathUnit *pUnit );
@@ -160,16 +186,45 @@ public:
 	void AddGeometry( const std::vector<SGeometryCellInfo> &cells );
 	void AlignGeometriesToCenter();
 
-	const int GetUnitsCount() const { return nUnitsCount; }
-	const int GetCellsCount() const { return nCellsCount; }
+	const int GetUnitsCount() const
+	{
+		return nUnitsCount;
+	}
 
-	const CVec2 GetCenter() const { return GetUnit()->GetCenterPlain(); }
-	const CVec2 GetFarCenter() const { return PeekPathPoint( SPLINE_STEP ); }
+	const int GetCellsCount() const
+	{
+		return nCellsCount;
+	}
 
-	const float GetMaxPathShift() const { return fMaxPathShift; }
-	const float GetMaxProjection() const { return geometries[GetCurrentGeometry()].fMaxProjection; }
-	const float GetRadius() const { return geometries[GetCurrentGeometry()].fRadius; }
-	void NotifyPathShift( const float fPathShift ) { fMaxPathShift = (std::max)( fPathShift, fMaxPathShift ); }
+	const CVec2 GetCenter() const
+	{
+		return GetUnit()->GetCenterPlain();
+	}
+
+	const CVec2 GetFarCenter() const
+	{
+		return PeekPathPoint( SPLINE_STEP );
+	}
+
+	const float GetMaxPathShift() const
+	{
+		return fMaxPathShift;
+	}
+
+	const float GetMaxProjection() const
+	{
+		return geometries[GetCurrentGeometry()].fMaxProjection;
+	}
+
+	const float GetRadius() const
+	{
+		return geometries[GetCurrentGeometry()].fRadius;
+	}
+
+	void NotifyPathShift( const float fPathShift )
+	{
+		fMaxPathShift = (std::max)( fPathShift, fMaxPathShift );
+	}
 
 	virtual void Segment( const NTimer::STime timeDiff );
 
@@ -178,12 +233,22 @@ public:
 	{
 		return GetDirection() ^ GetUnitFormationShift( pUnit );
 	};
+
 	//! получить текущие координаты юнита
-	virtual const CVec2 GetUnitCenter( const CBasePathUnit *pUnit ) const { return GetCenter() + GetUnitShift( pUnit ); };
+	virtual const CVec2 GetUnitCenter( const CBasePathUnit *pUnit ) const
+	{
+		return GetCenter() + GetUnitShift( pUnit );
+	};
+
 	//! получить центр юнита, где юнит может встать на прямой между центром формации и юнитом
 	virtual const CVec2 GetValidUnitCenter( const CBasePathUnit *pUnit ) const;
+
 	//! получить текущее направление юнита
-	virtual const CVec2 GetUnitDirection( const CBasePathUnit *pUnit ) const { return GetUnit()->GetDirectionVector(); }
+	virtual const CVec2 GetUnitDirection( const CBasePathUnit *pUnit ) const
+	{
+		return GetUnit()->GetDirectionVector();
+	}
+
 	//! получить проекцию позиции юнита на путь (ушел вперед/назад)
 	virtual const float GetUnitPathShift( const CBasePathUnit *pUnit ) const
 	{

@@ -77,6 +77,7 @@ public:
 	int nUnitID = {}; // sets in CUpdateStatusTransformer
 	ZSKIP             //float fTimeToWait; // sets in constructor
 			float fRadius = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
@@ -85,7 +86,9 @@ public:
 		f.Add( 5, &fRadius );
 		return 0;
 	}
+
 	SUnitStatusUpdate() : eStatus( EUS_UNDEFINED ), nUnitID( -1 ), fRadius( 0.0f ) {}
+
 	SUnitStatusUpdate( const EUnitStatus eStatus, const bool bEnabled, const float fRadius );
 };
 

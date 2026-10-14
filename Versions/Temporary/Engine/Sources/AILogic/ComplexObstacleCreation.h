@@ -32,19 +32,33 @@ public:
 		f.Add( 7, &bTmpNonCheatPath );
 		return 0;
 	}
-	const bool IsAntitank( const int _nIndex ) const { return _nIndex < antitanks.size(); }
-	const int GetAntitankIndex( const int _nIndex ) const { return _nIndex; }
-	const int GetWireFenceIndex( const int _nIndex ) const { return _nIndex - antitanks.size(); }
+
+	const bool IsAntitank( const int _nIndex ) const
+	{
+		return _nIndex < antitanks.size();
+	}
+
+	const int GetAntitankIndex( const int _nIndex ) const
+	{
+		return _nIndex;
+	}
+
+	const int GetWireFenceIndex( const int _nIndex ) const
+	{
+		return _nIndex - antitanks.size();
+	}
 
 	void AdvanceToNextIndex();
 
 public:
 	CComplexObstacleCreation() : CLongObjectCreation( -1, false ) {}
+
 	CComplexObstacleCreation( const int _nPlayer, const bool bAllowAIModification )
 			: nCurIndex( 0 ), CLongObjectCreation( _nPlayer, bAllowAIModification ), bTmpNonCheatPath( false ),
 				bCannot( false )
 	{
 	}
+
 	bool PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock );
 	const int GetMaxIndex() const;
 	const int GetCurIndex() const;

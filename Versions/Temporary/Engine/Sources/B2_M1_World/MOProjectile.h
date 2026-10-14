@@ -30,6 +30,7 @@ class CMOProjectile : public CMapObj
 	CObj<CSmokeTrailEffect> pTrailEffect;
 	CDBPtr<NDb::SComplexEffect> pTrajectoryEffect;
 	CVec3 vRotationSpeedRad;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CMapObj *)this );
@@ -70,6 +71,7 @@ public:
 	             const CQuat &qRot,
 	             const NDb::SComplexEffect *_pTrajectoryEffect,
 	             const CVec3 &vRotationSpeedRad );
+
 	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
 	{
 		return true;
@@ -81,13 +83,17 @@ public:
 	                        struct IScene *pScene,
 	                        struct ISoundScene *pSoundScene,
 	                        NDb::ESeason eSeason );
+
 	virtual IClientUpdatableProcess *
 	AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
 	{
 		return 0;
 	}
+
 	virtual void GetActions( CUserActions *pActions, EActionsType eActions ) const {}
+
 	virtual void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const {}
+
 	void Explode( SAINotifyHitInfo::EHitType eHitType, NDb::ESeason eSeason, const CVec3 &vCenter, const CVec3 &vDir );
 
 	void SetM1Info( CMapObj *_pTarget,
@@ -97,5 +103,9 @@ public:
 	                float fDamage );
 
 	virtual void GetPassangers( std::vector<IB2MapObj *> *pPassangers ) const {}
-	virtual int GetPassangersCount() const { return 0; }
+
+	virtual int GetPassangersCount() const
+	{
+		return 0;
+	}
 };

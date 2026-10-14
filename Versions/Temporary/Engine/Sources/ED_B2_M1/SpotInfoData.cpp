@@ -539,6 +539,6 @@ bool SSpotInfo::PasteSelf( CLinkIDMap *pNew2OldLinkIDMap,
 	}
 	return bResult;
 }
-};
+}; // namespace NMapInfoEditor
 
 // basement storage

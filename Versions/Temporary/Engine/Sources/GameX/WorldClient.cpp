@@ -2144,6 +2144,7 @@ struct SObstacleObjectFilter : public SObjectFilter
 	const CWorldClient *pClient;
 
 	SObstacleObjectFilter( CWorldClient *_pClient ) : pClient( _pClient ) {}
+
 	virtual bool operator()( int nID ) const
 	{
 		CMapObj *pMO = pClient->GetMapObj( nID );
@@ -2176,6 +2177,7 @@ struct SCanSelectObjectFilter : public SObjectFilter
 	SCanSelectObjectFilter( CWorldClient *_pClient, CSelector *_pSelector ) : pClient( _pClient ), pSelector( _pSelector )
 	{
 	}
+
 	virtual bool operator()( int nID ) const
 	{
 		CMapObj *pMO = pClient->GetMapObj( nID );
@@ -2188,6 +2190,7 @@ struct SCoveredObjectFilter : public SObjectFilter
 	const CWorldClient *pClient;
 
 	SCoveredObjectFilter( CWorldClient *_pClient ) : pClient( _pClient ) {}
+
 	virtual bool operator()( int nID ) const
 	{
 		CMapObj *pMO = pClient->GetMapObj( nID );

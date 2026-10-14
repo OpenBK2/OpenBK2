@@ -18,6 +18,7 @@ class CCampaignState : public ICampaignState
 	bool bIsCompleted;
 	bool bIsStarted;
 	CDBID dbidCampaign;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 3, &bIsCompleted );
@@ -133,8 +134,15 @@ public:
 	void WriteToMissionConsoleSelected( const std::wstring &wszText );
 	std::wstring GetMissionConsoleMLTag() const;
 
-	bool IsSuppressEnableFocus() const { return bSuppressEnableFocus; }
-	void SetSuppressEnableFocus( bool bSuppress ) { bSuppressEnableFocus = bSuppress; }
+	bool IsSuppressEnableFocus() const
+	{
+		return bSuppressEnableFocus;
+	}
+
+	void SetSuppressEnableFocus( bool bSuppress )
+	{
+		bSuppressEnableFocus = bSuppress;
+	}
 
 	void SendCommandsToBringOnTop( IInterfaceBase *pNewTop );
 	void SendCommandsToCloseAllIncluding( IInterfaceBase *pLastInterfaceToClose );
@@ -146,11 +154,25 @@ public:
 	bool IsTransitEffectFlag() const;
 	void SetTransitEffectFlag( bool bTransit );
 
-	bool IsFirstTimeInChapter() const { return bFirstTimeInChapter; }
-	void SetFirstTimeInChapter( bool bFirstTime ) { bFirstTimeInChapter = bFirstTime; }
+	bool IsFirstTimeInChapter() const
+	{
+		return bFirstTimeInChapter;
+	}
 
-	bool IsAutoShowCommanderScreen() const { return bAutoShowCommanderScreen; }
-	void SetAutoShowCommanderScreen( bool bAutoShow ) { bAutoShowCommanderScreen = bAutoShow; }
+	void SetFirstTimeInChapter( bool bFirstTime )
+	{
+		bFirstTimeInChapter = bFirstTime;
+	}
+
+	bool IsAutoShowCommanderScreen() const
+	{
+		return bAutoShowCommanderScreen;
+	}
+
+	void SetAutoShowCommanderScreen( bool bAutoShow )
+	{
+		bAutoShowCommanderScreen = bAutoShow;
+	}
 
 	const NDb::STexture *GetMenuBackgroundTexture() const;
 

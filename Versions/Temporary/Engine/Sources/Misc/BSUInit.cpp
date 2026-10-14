@@ -8,6 +8,7 @@
 #include <cstdint>
 
 static HINSTANCE g_hInst = NULL;
+
 HINSTANCE GetBSUInstance()
 {
 	return g_hInst;

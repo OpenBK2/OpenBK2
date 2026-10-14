@@ -15,6 +15,7 @@ class CFakeCorpseStaticObject : public CCommonStaticObject
 	EStaticObjType eType = {};
 	CPtr<CObjectProfile> pPassProfile;
 	bool bDestructByTracks = {};
+
 	// Track-crushability affects pathfinding and must survive save/load.
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -36,6 +37,7 @@ class CFakeCorpseStaticObject : public CCommonStaticObject
 	                         const bool bDestructByTracks,
 	                         CUpdatableObj *pDeadObj,
 	                         CObjectProfile *pPassProfile );
+
 	CFakeCorpseStaticObject() : bDestructByTracks( false ) {}
 
 public:
@@ -47,32 +49,56 @@ public:
 	virtual void Init() {}
 
 	virtual const uint8_t GetPlayer() const;
-	virtual const SHPObjectRPGStats *GetStats() const { return 0; }
+
+	virtual const SHPObjectRPGStats *GetStats() const
+	{
+		return 0;
+	}
+
 	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const
 	{
 		return bDestructByTracks && ( eClass & EAC_TRACK );
 	}
+
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
 
 	virtual void GetCoveredTiles( std::list<SVector> *pTiles ) const;
 	virtual void LockTiles();
 	virtual void UnlockTiles();
 	virtual void CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles );
+
 	virtual void SetTransparencies() {}
+
 	virtual void RemoveTransparencies() {}
+
 	virtual void RestoreTransparenciesImmidiately() {}
+
 	virtual bool ProcessAreaDamage( const class CExplosion *pExpl,
 	                                const int nArmorDir,
 	                                const float fRadius,
 	                                const float fSmallRadius );
+
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const {}
 
 	virtual void Delete();
 
-	bool CanFall() { return false; }
+	bool CanFall()
+	{
+		return false;
+	}
 
-	virtual EStaticObjType GetObjectType() const { return eType; }
-	void ChangeType( const EStaticObjType eNewType ) { eType = eNewType; }
+	virtual EStaticObjType GetObjectType() const
+	{
+		return eType;
+	}
 
-	virtual CObjectProfile *GetPassProfile() const { return pPassProfile; }
+	void ChangeType( const EStaticObjType eNewType )
+	{
+		eType = eNewType;
+	}
+
+	virtual CObjectProfile *GetPassProfile() const
+	{
+		return pPassProfile;
+	}
 };

@@ -84,6 +84,7 @@ inline uint64_t pmullw( uint64_t dest, uint64_t src )
 	}
 	return combine64( r );
 }
+
 // Multiply and Add Packed Integers
 /*
 	PMADDWD (With 64-bit Operands)
@@ -549,4 +550,4 @@ inline uint64_t pcmpeqw( uint64_t a, uint64_t b )
 	return result;
 }
 
-}
+} // namespace mmx

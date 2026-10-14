@@ -26,13 +26,16 @@ class CGameLobby : public CPacketProcessor
 		SGameInfo gameInfo;
 		CPtr<class CSpecificGameInfo> pSpecificGameInfo;
 	};
+
 	std::unordered_map<int, SLobbyGameInfo> lobbyGames;
 	int nGamesCounter;
 
 	struct SGetGameInfoFunc
 	{
 		CGameLobby *pThis;
+
 		SGetGameInfoFunc( CGameLobby *_pThis ) : pThis( _pThis ) {}
+
 		const bool operator()( const int nGameID, struct SGameInfo *pInfo ) const
 		{
 			return pThis->GetGameInfo( nGameID, pInfo );
@@ -52,8 +55,15 @@ class CGameLobby : public CPacketProcessor
 	bool KillGame( const int nGameID );
 
 protected:
-	bool IsLobbyClient( const int nID ) const { return lobbyClients.find( nID ) != lobbyClients.end(); }
-	class CClients *GetClients() const { return pClients; }
+	bool IsLobbyClient( const int nID ) const
+	{
+		return lobbyClients.find( nID ) != lobbyClients.end();
+	}
+
+	class CClients *GetClients() const
+	{
+		return pClients;
+	}
 
 	void GameInfoChanged( const int nGameID );
 
@@ -65,7 +75,9 @@ protected:
 	virtual void ClientEnterToLobby( const int nClientID ) = 0;
 	virtual void ClientLeaveLobby( const int nClientID ) = 0;
 	virtual void GetLobbyClients( class CGetLobbyClientsPacket *pPacket ) = 0;
+
 	virtual void GameDead( const int nGameID ) {}
+
 	virtual int CreateGame( const int nMaxPlayers );
 	virtual bool PlayerCanKickPlayer() const = 0;
 	virtual bool PlayerCanSeeGamesList() const = 0;
@@ -74,10 +86,15 @@ protected:
 
 public:
 	CGameLobby() : nGamesCounter( 0 ) {}
+
 	CGameLobby( class CClients *pClients, const std::string &szCfgFile );
 
 	virtual bool Segment();
-	bool CanBePaused() { return false; }
+
+	bool CanBePaused()
+	{
+		return false;
+	}
 
 	virtual void ReloadConfig();
 

@@ -289,5 +289,5 @@ namespace NBind
 		}
 	}
 
-}
-}
+} // namespace NBind
+} // namespace NDb

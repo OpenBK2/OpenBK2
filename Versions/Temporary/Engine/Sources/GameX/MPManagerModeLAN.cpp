@@ -41,6 +41,7 @@ class CLANPasswordPacket : public CNetPacket
 public:
 	ZDATA
 	std::string szPassword;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szPassword );
@@ -48,11 +49,13 @@ public:
 	}
 
 	CLANPasswordPacket() {}
+
 	CLANPasswordPacket( const int nClientID, const std::string &_szPassword )
 			: CNetPacket( nClientID ), szPassword( _szPassword )
 	{
 	}
 };
+
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x19256440, CLANPasswordPacket );
 
 class CRequestLANPasswordPacket : public CNetPacket
@@ -61,11 +64,16 @@ class CRequestLANPasswordPacket : public CNetPacket
 
 public:
 	ZDATA
-	ZEND int operator&( IBinSaver &f ) { return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 
 	CRequestLANPasswordPacket() {}
+
 	CRequestLANPasswordPacket( const int nClientID ) : CNetPacket( nClientID ) {}
 };
+
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x19256441, CRequestLANPasswordPacket );
 
 CMPManagerModeLAN::CMPManagerModeLAN() : wGameUniqueID( 0 ), eCurrentState( EGS_NOT_IN_GAME )

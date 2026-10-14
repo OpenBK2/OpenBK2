@@ -17,6 +17,7 @@ class CBackgroundFrameSequence : public CBackground
 	CDBPtr<NDb::STexture> pTexture;
 	int nFrame;
 	int nTime;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CBackground *)this );

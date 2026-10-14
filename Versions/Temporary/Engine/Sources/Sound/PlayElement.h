@@ -12,4 +12,4 @@ struct IPlayListElement : public CObjectBase
 	virtual void OnResetTimer() = 0;
 };
 
-}
+} // namespace NMusicSystem

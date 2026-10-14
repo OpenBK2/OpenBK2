@@ -5,12 +5,13 @@
 
 class CAICommand;
 struct IUnitState;
+
 namespace NDb
 {
 struct SUnitSpecialAblityDesc;
 enum EUnitSpecialAbility : int;
 enum EUnitAckType : int;
-}
+} // namespace NDb
 
 class CQueueUnit
 {
@@ -60,14 +61,23 @@ public:
 
 	bool IsEmptyCmdQueue() const;
 	CAICommand *GetCurCmd() const;
-	const bool IsCurCmdFinished() const { return bCmdFinished; }
+
+	const bool IsCurCmdFinished() const
+	{
+		return bCmdFinished;
+	}
 
 	static void Clear();
 	static void CheckCmdsSize( const int id );
 	static void DelCmdQueue( const int id );
 
 	virtual struct IStatesFactory *GetStatesFactory() const = 0;
-	virtual IUnitState *GetState() const { return pState; }
+
+	virtual IUnitState *GetState() const
+	{
+		return pState;
+	}
+
 	virtual void SetCurState( struct IUnitState *pState );
 
 	// текущая команда кладётся в голову очереди, а сверху - pCommand
@@ -96,11 +106,18 @@ public:
 	// в очередь перенести текущую команду pUnit и все команды из его очереди
 	void InitWCommands( CQueueUnit *pUnit );
 
-	virtual const NTimer::STime GetNextSegmTime() const { return 0; }
+	virtual const NTimer::STime GetNextSegmTime() const
+	{
+		return 0;
+	}
+
 	// обнулить время, которое проходит между вызовами сегментов у юнита
 	virtual void NullSegmTime() {}
 
-	const NTimer::STime GetLastChangeStateTime() const { return lastChangeStateTime; }
+	const NTimer::STime GetLastChangeStateTime() const
+	{
+		return lastChangeStateTime;
+	}
 
 	virtual void FreezeByState( const bool bFreeze ) = 0;
 
@@ -110,7 +127,10 @@ public:
 	class CAICommand *GetCommand( const int nIter ) const;
 
 	// Get ability desc if the unit has it, 0 if doesn't have it
-	virtual const NDb::SUnitSpecialAblityDesc *GetUnitAbilityDesc( const NDb::EUnitSpecialAbility eType ) { return 0; }
+	virtual const NDb::SUnitSpecialAblityDesc *GetUnitAbilityDesc( const NDb::EUnitSpecialAbility eType )
+	{
+		return 0;
+	}
 
 	friend class CStaticMembers;
 };

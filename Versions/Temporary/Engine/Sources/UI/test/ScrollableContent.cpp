@@ -44,7 +44,7 @@ CWindow *MakeScrollWindow( float width, float height )
 	SetPlacement( &desc->placement, width, height );
 	return CUIFactory::MakeWindow( desc );
 }
-}
+} // namespace
 
 TEST( ScrollableContent, ParentRepositionKeepsTheEntireDescriptionScrollable )
 {

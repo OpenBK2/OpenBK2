@@ -94,6 +94,7 @@ struct SAnimWaterMaterialKey
 	bool bDrawHorses;
 
 	SAnimWaterMaterialKey() {}
+
 	SAnimWaterMaterialKey( CPtrFuncBase<NGfx::CTexture> *_pTex,
 	                       CPtrFuncBase<NGfx::CTexture> *_pSecondTex,
 	                       int _nPriority,
@@ -119,6 +120,7 @@ struct SAnimWaterMaterialKey
 		       ( bAddPlaced == animWaterKey.bAddPlaced ) && ( bDrawHorses == animWaterKey.bDrawHorses );
 	}
 };
+
 static NGScene::CAnimWaterMaterial *GetAnimatedMaterial( const SAnimWaterMaterialKey &animWaterKey )
 {
 	static std::vector<std::pair<SAnimWaterMaterialKey, CPtr<NGScene::CAnimWaterMaterial>>> animMaterials;

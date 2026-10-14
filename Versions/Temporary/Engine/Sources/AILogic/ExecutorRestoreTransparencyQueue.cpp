@@ -17,7 +17,7 @@ namespace NRestoreTranspConsts
 static const int nObjectsPerCalculation = 5;
 static const int nCalcPeriod = 1;
 static const int nCalcPeriodRandom = 2;
-}
+} // namespace NRestoreTranspConsts
 
 using namespace NRestoreTranspConsts;
 

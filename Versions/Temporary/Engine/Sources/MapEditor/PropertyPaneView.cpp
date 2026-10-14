@@ -259,7 +259,7 @@ namespace
 		Singleton<IControllerContainer>()->Add( pController );
 		return true;
 	}
-}
+} // namespace
 
 bool InsertNode( CDefaultView *pView, const std::string &rszArrayName, int nIndex )
 {
@@ -320,4 +320,4 @@ bool PasteValues( CDefaultView *pView, const std::function<bool( const std::stri
 	Singleton<IControllerContainer>()->Add( pController );
 	return true;
 }
-}
+} // namespace NPropertyPane

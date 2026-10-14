@@ -43,18 +43,22 @@ static void MsgCommandExit( const SGameMessage &msg )
 {
 	NMainLoop::Command( CreateICExitGame() );
 }
+
 static void MsgCommandSave( const SGameMessage &msg )
 {
 	NMainLoop::Command( CreateICSave( "quick" ) );
 }
+
 static void MsgCommandLoad( const SGameMessage &msg )
 {
 	NMainLoop::Command( CreateICLoad( "quick" ) );
 }
+
 static void MsgCommandCloseInterface( const SGameMessage &msg )
 {
 	NMainLoop::Command( CreateICCloseInterface() );
 }
+
 static bool ProcessMainLoopCmds( const SGameMessage &msg )
 {
 	static NInput::CGMORegContainer registers;
@@ -131,6 +135,7 @@ void SFLB4_PushInterface( IInterfaceBase *pInterface )
 	interfaces.push_back( pInterface );
 	pInterface->OnGetFocus( true );
 }
+
 void PushInterface( IInterfaceBase *pInterface )
 {
 	SFLB4_PushInterface( pInterface );
@@ -417,7 +422,7 @@ bool StepApp( bool bActive )
 	LimitInterfaceFrameRate( bActive );
 	return true;
 }
-}
+} // namespace NMainLoop
 
 static void CmdLoad( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
@@ -430,6 +435,7 @@ static void CmdLoad( const std::string &szID, const std::vector<std::wstring> &p
 		NMainLoop::Command( CreateICLoad( NStr::ToMBCS( paramsSet[0] ) ) );
 	}
 }
+
 static void CmdSave( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )

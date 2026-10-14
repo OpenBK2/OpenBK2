@@ -15,6 +15,7 @@ struct CWxThumbnailList::SImpl
 		DATA,
 		COLUMNS
 	};
+
 	CWxThumbnailList *owner;
 	GtkListStore *store = gtk_list_store_new( COLUMNS, G_TYPE_STRING, GDK_TYPE_PIXBUF, G_TYPE_INT, G_TYPE_UINT64 );
 	GtkWidget *view = gtk_icon_view_new_with_model( GTK_TREE_MODEL( store ) );
@@ -27,16 +28,19 @@ struct CWxThumbnailList::SImpl
 		// native parent starts destruction before the wx wrapper is released.
 		g_object_ref_sink( view );
 	}
+
 	~SImpl()
 	{
 		g_signal_handlers_disconnect_by_data( view, this );
 		g_object_unref( view );
 		g_object_unref( store );
 	}
+
 	bool Iter( long index, GtkTreeIter *iter ) const
 	{
 		return index >= 0 && gtk_tree_model_iter_nth_child( GTK_TREE_MODEL( store ), iter, nullptr, index );
 	}
+
 	long Selected() const
 	{
 		GList *paths = gtk_icon_view_get_selected_items( GTK_ICON_VIEW( view ) );
@@ -44,6 +48,7 @@ struct CWxThumbnailList::SImpl
 		g_list_free_full( paths, reinterpret_cast<GDestroyNotify>( gtk_tree_path_free ) );
 		return result;
 	}
+
 	void UpdateImage( GtkTreeIter *iter )
 	{
 		int index = -1;
@@ -57,6 +62,7 @@ struct CWxThumbnailList::SImpl
 		// GtkListStore retains the pixbuf, including its alpha or bitmap mask.
 		gtk_list_store_set( store, iter, PIXBUF, bitmap.IsOk() ? bitmap.GetPixbuf() : nullptr, -1 );
 	}
+
 	void UpdateImages()
 	{
 		GtkTreeIter iter;
@@ -66,6 +72,7 @@ struct CWxThumbnailList::SImpl
 			UpdateImage( &iter );
 		}
 	}
+
 	void ContextMenu( const wxPoint &point )
 	{
 		wxContextMenuEvent event( wxEVT_CONTEXT_MENU, owner->GetId(), point );
@@ -216,6 +223,7 @@ bool CWxThumbnailList::DeleteAllItems()
 	gtk_list_store_clear( impl->store );
 	return true;
 }
+
 long CWxThumbnailList::GetItemCount() const
 {
 	return gtk_tree_model_iter_n_children( GTK_TREE_MODEL( impl->store ), nullptr );

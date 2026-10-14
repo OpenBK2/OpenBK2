@@ -24,7 +24,7 @@ void ExpectEmptyIterator( CMultiManipulator *pManipulator )
 		}
 	}
 }
-}
+} // namespace
 
 TEST( MultiManipulator, EmptySelectionHasNoProperties )
 {

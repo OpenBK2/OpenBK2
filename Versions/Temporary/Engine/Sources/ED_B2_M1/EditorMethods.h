@@ -29,6 +29,7 @@ struct STerrain;
 };
 
 struct ITerraManager;
+
 namespace NEditor
 {
 extern const std::string SZ_TERRA_BIN_FILE_NAME;
@@ -39,7 +40,7 @@ void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc );
 bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc );
 bool SaveTerrain( ITerraManager *pTerraManager, std::string *pError = nullptr );
 void LoadBgMap( const std::string &szDesiredSeason, const std::string &rszMapInfoNameLoaded, CVec2 *pBgMapSize );
-};
+}; // namespace NEditor
 
 inline float ADiff( const float a, const float b )
 {
@@ -76,8 +77,10 @@ struct SUnitCommandTypeInfo
 	std::string szName;
 	int nValue;
 	int nNeedTargetUnit;
+
 	///
 	SUnitCommandTypeInfo() : szName( "" ), nValue( -1 ), nNeedTargetUnit( 0 ) {}
+
 	///
 	int operator&( IXmlSaver &saver );
 };

@@ -15,6 +15,7 @@ struct SSector
 	ZDATA
 	SAIAngle wStartAngle;
 	SAIAngle wEndAngle;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &wStartAngle );
@@ -23,6 +24,7 @@ struct SSector
 	}
 
 	SSector() : wStartAngle( 0 ), wEndAngle( 65535 ) {}
+
 	SSector( const uint32_t _wStartAngle, const uint32_t _wEndAngle )
 			: wStartAngle( _wStartAngle ), wEndAngle( _wEndAngle )
 	{
@@ -32,6 +34,7 @@ struct SSector
 	{
 		return ( wStartAngle != sector.wStartAngle || wEndAngle != sector.wEndAngle );
 	}
+
 	bool IsIntersec( const SSector &sector ) const
 	{
 		return IsInTheAngle( sector.wStartAngle, wStartAngle, wEndAngle ) ||
@@ -39,7 +42,11 @@ struct SSector
 		       IsInTheAngle( wStartAngle, sector.wStartAngle, sector.wEndAngle ) ||
 		       IsInTheAngle( wEndAngle, sector.wStartAngle, sector.wEndAngle );
 	}
-	bool IsWholeCircle() const { return ( wEndAngle - wStartAngle == 65535 ); }
+
+	bool IsWholeCircle() const
+	{
+		return ( wEndAngle - wStartAngle == 65535 );
+	}
 };
 
 struct SSpiralPoint
@@ -50,6 +57,7 @@ struct SSpiralPoint
 	int nRadius = {};
 	SSector sector;
 	SAIAngle wAngle;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &vOffset );
@@ -60,6 +68,7 @@ struct SSpiralPoint
 	}
 
 	SSpiralPoint() : vOffset( 0, 0 ), nRadius( 0 ), sector() {}
+
 	SSpiralPoint( const int x, const int y, const int r ) : vOffset( x, y ), nRadius( r )
 	{
 		wAngle = sector.wStartAngle = sector.wEndAngle = GetDirectionByVector( x, y );
@@ -73,6 +82,7 @@ struct SWarFogUnitInfo
 	SSector sector;
 	int nRadius = {};
 	bool bPlane = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &vPos );
@@ -98,6 +108,7 @@ class CGlobalWarFog : public CAIObjectBase
 				{}; // warfog works only with two parties, so if updateFlag is UPD_CHANGE_PARTY new party is 1 - nParty ;-)
 		CArray1Bit visValues;
 		EUpdateWarFogUnitInfoFlag updateFlag = {};
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 1, (SWarFogUnitInfo *)this );
@@ -112,6 +123,7 @@ class CGlobalWarFog : public CAIObjectBase
 		SWarForFullUnitInfo() : SWarFogUnitInfo(), vOldPos( 0, 0 ), nOldRadius( 0 ), nParty( 0 ), updateFlag( UPD_UPDATED )
 		{
 		}
+
 		SWarForFullUnitInfo( const SWarFogUnitInfo &unitInfo, const int nParty, const int nSpiralLength );
 
 		void Update()
@@ -126,6 +138,7 @@ class CGlobalWarFog : public CAIObjectBase
 	{
 		int nVisible = {};
 		int nCloseVisible = {};
+
 		SWarFogTileInfo() : nVisible( 0 ), nCloseVisible( 0 ) {}
 	};
 
@@ -197,37 +210,86 @@ private:
 	void ReInit();
 	void ReInitDefaults();
 
-	const bool IsTileValid( const int x, const int y ) const { return valid.GetData( x, y ); }
-	const bool IsTileValid( const SVector &tile ) const { return IsTileValid( tile.x, tile.y ); }
+	const bool IsTileValid( const int x, const int y ) const
+	{
+		return valid.GetData( x, y );
+	}
+
+	const bool IsTileValid( const SVector &tile ) const
+	{
+		return IsTileValid( tile.x, tile.y );
+	}
 
 	void RemoveTileValid( const int x, const int y );
-	void RemoveTileValid( const SVector &vTile ) { RemoveTileValid( vTile.x, vTile.y ); }
+
+	void RemoveTileValid( const SVector &vTile )
+	{
+		RemoveTileValid( vTile.x, vTile.y );
+	}
 
 	void RecalculateArea( const SVector &vTile );
 
 	void SetTileHeight( const int x, const int y, const float fHeight );
-	void SetTileHeight( const SVector &tile, const float fHeight ) { SetTileHeight( tile.x, tile.y, fHeight ); }
-	const int GetHeight( const SVector &tile ) const { return heights[tile.y][tile.x]; }
-	const int GetUnitHeight() const { return nUnitHeight; }
+
+	void SetTileHeight( const SVector &tile, const float fHeight )
+	{
+		SetTileHeight( tile.x, tile.y, fHeight );
+	}
+
+	const int GetHeight( const SVector &tile ) const
+	{
+		return heights[tile.y][tile.x];
+	}
+
+	const int GetUnitHeight() const
+	{
+		return nUnitHeight;
+	}
 
 	const bool IsTileInside( const int x, const int y ) const
 	{
 		return ( x >= 0 && y >= 0 && x < GetSizeX() && y < GetSizeY() );
 	}
-	const bool IsTileInside( const SVector &tile ) const { return IsTileInside( tile.x, tile.y ); }
+
+	const bool IsTileInside( const SVector &tile ) const
+	{
+		return IsTileInside( tile.x, tile.y );
+	}
 
 	const CArray1Bit &GetVisibleInfoForTile( const SVector &tile );
 
 	void AddVisibleTiles( const int nID, SWarForFullUnitInfo &unitInfo );
 	void RemoveVisibleTiles( const int nID, SWarForFullUnitInfo &unitInfo );
 
-	bool IsOpenBySriptArea( const int x, const int y ) const { return areasOpenTiles.GetData( x, y ); }
-	bool IsOpenBySriptArea( const SVector &tile ) const { return IsOpenBySriptArea( tile.x, tile.y ); }
-	const int GetStaticObjectAtTile( const SVector &vTile ) const { return staticObjects[vTile.y][vTile.x]; }
+	bool IsOpenBySriptArea( const int x, const int y ) const
+	{
+		return areasOpenTiles.GetData( x, y );
+	}
 
-	const int GetSpiralLength() const { return spiral.size(); }
-	const int GetSpiralLength( const int nRadius ) { return lengths[(std::min)( GetMaxRadius(), nRadius )]; }
-	const SSpiralPoint &GetSpiralPoint( const int nIndex ) const { return spiral[nIndex]; }
+	bool IsOpenBySriptArea( const SVector &tile ) const
+	{
+		return IsOpenBySriptArea( tile.x, tile.y );
+	}
+
+	const int GetStaticObjectAtTile( const SVector &vTile ) const
+	{
+		return staticObjects[vTile.y][vTile.x];
+	}
+
+	const int GetSpiralLength() const
+	{
+		return spiral.size();
+	}
+
+	const int GetSpiralLength( const int nRadius )
+	{
+		return lengths[(std::min)( GetMaxRadius(), nRadius )];
+	}
+
+	const SSpiralPoint &GetSpiralPoint( const int nIndex ) const
+	{
+		return spiral[nIndex];
+	}
 
 	void OnTileChangeVisibility( const SVector &vTile, const bool bVisible, const int nParty );
 
@@ -235,16 +297,22 @@ private:
 	{
 		return IsTileVisible( SVector( x, y ), nParty ) ? SAIConsts::VIS_POWER : 0;
 	}
-	const bool IsValidParty( const int nParty ) const { return nParty == 0 || nParty == 1; }
+
+	const bool IsValidParty( const int nParty ) const
+	{
+		return nParty == 0 || nParty == 1;
+	}
 
 public:
 	void Init( const int nSizeX, const int nSizeY, const int nMaxRadius, const float fUnitHeight );
+
 	void FinishInitialization()
 	{
 		bInitialization = false;
 		bHasInvalidTile = true;
 		valid.FillZero();
 	}
+
 	void Clear();
 
 	void AddUnit( const int nID, const SWarFogUnitInfo &unitInfo, const int nParty );
@@ -256,9 +324,20 @@ public:
 
 	bool GetWarForInfo( CArray2D<uint8_t> **pWarFogInfo, const int nParty, const bool bFirstTime );
 
-	int GetSizeX() const { return nSizeX; }
-	int GetSizeY() const { return nSizeY; }
-	int GetMaxRadius() const { return nMaxRadius; }
+	int GetSizeX() const
+	{
+		return nSizeX;
+	}
+
+	int GetSizeY() const
+	{
+		return nSizeY;
+	}
+
+	int GetMaxRadius() const
+	{
+		return nMaxRadius;
+	}
 
 	bool IsTileVisible( const SVector &tile, const int nParty ) const;
 	bool IsUnitVisible( const SVector &tile, const int nParty, bool bCamouflated ) const;

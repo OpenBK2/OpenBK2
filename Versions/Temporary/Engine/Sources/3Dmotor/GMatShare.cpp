@@ -39,6 +39,7 @@ void CSkyAdapter::SetSource( CPtrFuncBase<NGfx::CCubeTexture> *_pTex )
 // CMaterialShare
 
 extern CBasicShare<STextureKey, CFileTexture, STextureKeyHash> shareTextures;
+
 static CPtrFuncBase<NGfx::CTexture> *GetTexture( const NDb::STexture *pTex )
 {
 	if ( !pTex )
@@ -235,7 +236,8 @@ IMaterial *CTransparentMaterialShare::CreateMaterial( const CVec4 &cr, bool bDoe
 	return pRes;
 }
 
-}
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x01671182, CMaterialShare )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x01812140, CSkyAdapter )

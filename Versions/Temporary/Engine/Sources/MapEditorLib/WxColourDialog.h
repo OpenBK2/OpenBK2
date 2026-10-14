@@ -102,4 +102,4 @@ inline bool Pick( IWidget *pOwner, const wxColour &rStart, wxColour *pResult )
 	( *pResult ) = rChosen.GetColour();
 	return true;
 }
-}
+} // namespace NWxColourDialog

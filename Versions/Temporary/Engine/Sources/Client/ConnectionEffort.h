@@ -43,4 +43,4 @@ CConnectionEffort *CreateFirstServerEffort( const int nMyServerID,
                                             CNet *pAcceptGamersNet );
 
 void SetServerInfo( const std::string &szServerIP, const int nServerPort, const int nGameNetVersion );
-}
+} // namespace NEffortsFactory

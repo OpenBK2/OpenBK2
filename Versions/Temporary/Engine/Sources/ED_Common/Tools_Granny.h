@@ -26,6 +26,7 @@ struct ED_COMMON_EXPORT SGrannyBoneAttributes
 	bool GetAttribute( const std::string &rszAttributeName, int *pnValue ) const;
 	bool GetAttribute( const std::string &rszAttributeName, bool *pbValue ) const;
 };
+
 typedef std::vector<SGrannyBoneAttributes> CGrannyBoneAttributesList;
 ED_COMMON_EXPORT bool ReadAttributes( CGrannyBoneAttributesList *pBoneList,
                                       const std::string &rszFileName,
@@ -52,8 +53,20 @@ class ED_COMMON_EXPORT CGrannyFileInfoGuard
 public:
 	CGrannyFileInfoGuard( const std::string &szFileName );
 	~CGrannyFileInfoGuard();
+
 	//
-	granny_file_info *operator->() const { return pInfo; }
-	granny_file_info &operator*() const { return *pInfo; }
-	operator granny_file_info *() const { return pInfo; }
+	granny_file_info *operator->() const
+	{
+		return pInfo;
+	}
+
+	granny_file_info &operator*() const
+	{
+		return *pInfo;
+	}
+
+	operator granny_file_info *() const
+	{
+		return pInfo;
+	}
 };

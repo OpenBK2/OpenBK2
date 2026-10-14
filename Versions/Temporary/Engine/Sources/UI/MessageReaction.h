@@ -29,12 +29,18 @@ class CMessageReactionB2 : public IMessageReactionB2
 
 public:
 	CMessageReactionB2() {}
+
 	virtual bool Execute( struct IScreen *pScreen,
 	                      struct IScriptWrapper *pScript,
 	                      struct IProgrammedReactionsAndChecks *pProg,
 	                      uint16_t wKeyboardFlags ) const;
 	int operator&( IBinSaver &ss );
-	void AddCommonBefore( IMessageReactionB2 *pReaction ) { commonBefore.push_back( pReaction ); }
+
+	void AddCommonBefore( IMessageReactionB2 *pReaction )
+	{
+		commonBefore.push_back( pReaction );
+	}
+
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
 

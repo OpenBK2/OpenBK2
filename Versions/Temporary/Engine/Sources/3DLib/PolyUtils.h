@@ -1,4 +1,5 @@
 #pragma once
+
 enum ELineDispos
 {
 	SAME,
@@ -6,6 +7,7 @@ enum ELineDispos
 	INTERSECT,
 	NOTINTERSECT
 };
+
 typedef std::list<std::vector<CVec2>> TPolygonsList;
 
 bool IsPolygonInverse( const std::vector<CVec2> &vPolygon );

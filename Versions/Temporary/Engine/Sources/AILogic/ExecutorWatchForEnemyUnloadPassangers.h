@@ -16,6 +16,7 @@ public:
 		f.Add( 2, &pUnit );
 		return 0;
 	}
+
 	bool IsExecutorValidInternal() const;
 
 public:
@@ -23,8 +24,18 @@ public:
 			: CExecutor( TID_TRANSPORT_LOOK_FOR_ENEMY_UNLOAD_INFANTRY, 20 ), pUnit( _pUnit )
 	{
 	}
+
 	CExecutorWatchForEnemyUnloadPassangers() {}
+
 	virtual int Segment();
-	virtual bool NotifyEvent( const CExecutorEvent &event ) { return false; }
-	virtual bool IsExecutorValid() const { return IsExecutorValidInternal(); }
+
+	virtual bool NotifyEvent( const CExecutorEvent &event )
+	{
+		return false;
+	}
+
+	virtual bool IsExecutorValid() const
+	{
+		return IsExecutorValidInternal();
+	}
 };

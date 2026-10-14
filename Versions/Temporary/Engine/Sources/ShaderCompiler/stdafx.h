@@ -52,6 +52,7 @@ inline std::ostream &operator<<( std::ostream &a, const string &sz )
 {
 	return a << sz.c_str();
 }
+
 //inline std::ostream &operator<<( std::ostream &a, const char *psz ) { return a << psz; }
 
 using std::cout;

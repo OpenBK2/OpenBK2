@@ -1,6 +1,7 @@
 
 #pragma once
 #include "System/RandomGen.h"
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // равномерно в круге с центром в 0 и радиусом fR
 inline void RandUniformlyInCircle( const float fR, CVec2 *pvRand )
@@ -15,6 +16,7 @@ inline void RandUniformlyInCircle( const float fR, CVec2 *pvRand )
 		RecordRandomCall();
 	} while ( sqr( pvRand->x ) + sqr( pvRand->y ) > sqr( fR ) );
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // равномерно по углу и по радиусу в круге с центром в 0 и радиусом fR
 inline void RandQuadrInCircle( const float fR, CVec2 *pvRand, const float fRatio = 0.0f, CVec2 vTrajLine = VNULL2 )
@@ -34,4 +36,5 @@ inline void RandQuadrInCircle( const float fR, CVec2 *pvRand, const float fRatio
 		*pvRand = vTrajLine * fRandR * dir.x * fRatio + CVec2( -vTrajLine.y, vTrajLine.x ) * fRandR * dir.y;
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

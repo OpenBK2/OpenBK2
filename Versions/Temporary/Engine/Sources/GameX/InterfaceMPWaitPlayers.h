@@ -29,8 +29,12 @@ public:
 	//{ IProgrammedReactionsAndChecks
 	bool Execute( const std::string &szSender, const std::string &szReaction );
 	int Check( const std::string &szCheckName ) const;
+
 	//}
-	int operator&( IBinSaver &f ) { return 0; }
+	int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 };
 
 class CICMPWaitPlayers : public CInterfaceCommandBase<CInterfaceMPWaitPlayers>

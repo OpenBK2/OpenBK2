@@ -14,6 +14,7 @@ class CExecutorFormationFirstAid : public CExecutorUnitBase
 
 	// if 1.0 then ability is ready to on
 	float OnAbilityOff();
+
 	void SwitchingOffEnd() {}
 
 	void SwitchingOffStart();
@@ -28,6 +29,7 @@ class CExecutorFormationFirstAid : public CExecutorUnitBase
 
 public:
 	CExecutorFormationFirstAid( CFormation *_pUnit );
+
 	CExecutorFormationFirstAid() {}
 
 	int Segment();

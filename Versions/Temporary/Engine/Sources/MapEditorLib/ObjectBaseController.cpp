@@ -416,6 +416,7 @@ void CObjectBaseController::GetDescription( std::string *pszDescription ) const
 		}
 	}
 }
+
 //CRAP} PLAIN_TEXT
 
 bool CObjectBaseController::UndoWithoutUpdateViews()

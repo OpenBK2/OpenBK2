@@ -20,7 +20,7 @@ void __fill_tga_header<NGfx::SPixel8888>( STGAFileHeader *pHdr )
 	pHdr->cImageType = TGAIT_TRUE_COLOR;
 	pHdr->imagespec.descriptor.cAlphaChannelBits = 8;
 }
-};
+}; // namespace NImage
 
 void TakeScreenShotMsg( const SGameMessage &msg )
 {

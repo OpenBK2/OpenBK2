@@ -13,6 +13,7 @@ struct SNetGameConsts;
 };
 
 struct IAICmdsAutoMagic;
+
 class CMultiplayerInternal : public IMultiplayer
 {
 	OBJECT_BASIC_METHODS( CMultiplayerInternal );
@@ -23,6 +24,7 @@ class CMultiplayerInternal : public IMultiplayer
 	CMemoryStream pktOutgoing, pktIncoming;
 	int nIncomingPktClientID;
 	CPtr<IAICmdsAutoMagic> pCmdsSerialize;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pNetDriver );
@@ -31,6 +33,7 @@ class CMultiplayerInternal : public IMultiplayer
 		f.Add( 5, &pCmdsSerialize );
 		return 0;
 	}
+
 	//
 	bool CheckConnection();
 	CMultiplayerCommand *ProcessPacket( const int nClientID, CMemoryStream *pPkt );
@@ -52,6 +55,10 @@ public:
 	virtual void SendRecv();
 
 	// CRAP{ only for alpha
-	struct NNet::IDriver *GetNetDriver() const { return pNetDriver; }
+	struct NNet::IDriver *GetNetDriver() const
+	{
+		return pNetDriver;
+	}
+
 	// CRAP}
 };

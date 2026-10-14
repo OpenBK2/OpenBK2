@@ -41,6 +41,7 @@ private:
 			dwHashKey = MakeHashKey();
 		}
 	}
+
 	//
 	BOOST_FORCEINLINE char ConvertChar( const char chr ) const
 	{
@@ -67,6 +68,7 @@ private:
 		}
 		return true;
 	}
+
 	unsigned int MakeHashKey() const
 	{
 		unsigned int __uHashKey = 0;
@@ -76,12 +78,17 @@ private:
 		}
 		return __uHashKey;
 	}
+
 	//
 public:
 	CDBID() : dwHashKey( 0 ) {}
+
 	CDBID( const char *_pszKeyName ) : szKeyName( _pszKeyName ), dwHashKey( MakeHashKey() ) {}
+
 	CDBID( const std::string &_szKeyName ) : szKeyName( _szKeyName ), dwHashKey( MakeHashKey() ) {}
+
 	CDBID( const CDBID &dbid ) : szKeyName( dbid.szKeyName ), dwHashKey( dbid.dwHashKey ) {}
+
 	//
 	const CDBID &operator=( const CDBID &dbid )
 	{
@@ -92,12 +99,18 @@ public:
 		}
 		return *this;
 	}
+
 	//
 	bool operator==( const CDBID &dbid ) const
 	{
 		return dwHashKey == dbid.dwHashKey ? CompareEqual( dbid.szKeyName ) : false;
 	}
-	bool operator!=( const CDBID &dbid ) const { return !( *this == dbid ); }
+
+	bool operator!=( const CDBID &dbid ) const
+	{
+		return !( *this == dbid );
+	}
+
 	bool operator<( const CDBID &dbid ) const
 	{
 		const int nSize1 = szKeyName.size();
@@ -119,10 +132,23 @@ public:
 		}
 		return nSize1 < nSize2;
 	}
+
 	//
-	const std::string &ToString() const { return szKeyName; }
-	unsigned int GetHashKey() const { return dwHashKey; }
-	inline bool IsEmpty() const { return szKeyName.empty(); }
+	const std::string &ToString() const
+	{
+		return szKeyName;
+	}
+
+	unsigned int GetHashKey() const
+	{
+		return dwHashKey;
+	}
+
+	inline bool IsEmpty() const
+	{
+		return szKeyName.empty();
+	}
+
 	inline void Clear()
 	{
 		szKeyName.clear();
@@ -133,7 +159,10 @@ public:
 template <>
 struct std::hash<CDBID>
 {
-	size_t operator()( const CDBID &dbid ) const { return dbid.GetHashKey(); }
+	size_t operator()( const CDBID &dbid ) const
+	{
+		return dbid.GetHashKey();
+	}
 };
 
 namespace NDb
@@ -143,6 +172,7 @@ enum EDBMode
 	DBMODE_GAMEDB,
 	DBMODE_DATABASE
 };
+
 // base class for all GameDatabase resources
 class CResource : public CXmlResource
 {
@@ -158,15 +188,34 @@ protected:
 
 public:
 	CResource() : bLoaded( false ) {}
+
 	CResource( const CResource &res ) : bLoaded( res.bLoaded ) {}
+
 	//
-	bool IsLoaded() const { return bLoaded; }
-	const CDBID &GetDBID() const { return dbid; }
+	bool IsLoaded() const
+	{
+		return bLoaded;
+	}
+
+	const CDBID &GetDBID() const
+	{
+		return dbid;
+	}
+
 	virtual int GetTypeID() const = 0;
-	int GetRecordID() const { return -1; }
+
+	int GetRecordID() const
+	{
+		return -1;
+	}
+
 	//
-	virtual uint32_t CalcCheckSum() const { return 0; }
+	virtual uint32_t CalcCheckSum() const
+	{
+		return 0;
+	}
 };
+
 //
 // database functions
 //
@@ -178,6 +227,7 @@ struct IDBIterator : public CObjectBase
 	virtual CResource *Get() const = 0;
 	virtual void MoveFirst() = 0;
 };
+
 //
 // Same story as GetObject below: defined in libdb, GameDBIterator.cpp. This
 // one never warned only because no libdb header redeclares it.
@@ -205,10 +255,12 @@ void RemoveAllResources();
 LIBDB_EXPORT CResource *(GetObject)( const CDBID &dbid );
 //
 void SetDBMode( EDBMode eMode );
+
 inline const std::string &GetFileName( const CDBID &dbid )
 {
 	return dbid.ToString();
 }
+
 inline std::string GetFolderName( const CDBID &dbid )
 {
 	const std::string &szFileName = NDb::GetFileName( dbid );
@@ -222,11 +274,12 @@ inline std::string GetFolderName( const CDBID &dbid )
 	}
 	return szFileName.substr( 0, nPos );
 }
+
 inline const char *GetResName( const CResource *pRes )
 {
 	return pRes->GetDBID().ToString().c_str();
 }
-};
+}; // namespace NDb
 
 #define BASIC_REGISTER_DATABASE_CLASS( module, classname )                                                  \
 	BASIC_REGISTER_CLASS( module, classname )                                                                 \
@@ -244,6 +297,7 @@ inline const char *GetResName( const CResource *pRes )
 
 template <class TUserObj>
 SYSTEM_EXPORT const NDb::CResource *CastToDBResourceImpl( const TUserObj *p, const void * );
+
 template <class TUserObj>
 const NDb::CResource *CastToDBResourceImpl( const TUserObj *p, const NDb::CResource * )
 {
@@ -251,16 +305,19 @@ const NDb::CResource *CastToDBResourceImpl( const TUserObj *p, const NDb::CResou
 }
 template <class TUserObj>
 const TUserObj *CastToDBUserObjectImpl( const NDb::CResource *p, const TUserObj *, const void * );
+
 template <class TUserObj>
 const TUserObj *CastToDBUserObjectImpl( const NDb::CResource *p, const TUserObj *, const NDb::CResource * )
 {
 	return dynamic_cast<const TUserObj *>( p );
 }
+
 template <class TUserObj>
 inline const NDb::CResource *CastToDBResource( const TUserObj *p )
 {
 	return CastToDBResourceImpl( p, p );
 }
+
 template <class TUserObj>
 inline const TUserObj *CastToDBUserObject( const NDb::CResource *p, const TUserObj *pu )
 {
@@ -275,7 +332,8 @@ inline const T *Get( const CDBID &dbid )
 {
 	return CastToDBUserObject( GetObject( dbid ), (const T *)0 );
 }
-}
+} // namespace NDb
+
 // ************************************************************************************************************************ //
 // **
 // ** database ptr
@@ -289,6 +347,7 @@ class CDBPtr
 {
 	TPtr pObj;
 	mutable bool bLoaded = false;
+
 	//
 	BOOST_FORCEINLINE void LoadObject() const
 	{
@@ -304,8 +363,11 @@ class CDBPtr
 
 public:
 	CDBPtr() : pObj( 0 ), bLoaded( false ) {}
+
 	CDBPtr( const TUserObj *_pObj ) : pObj( const_cast<TUserObj *>( _pObj ) ), bLoaded( false ) {}
+
 	CDBPtr( const CDBPtr<TUserObj, TPtr> &ptr ) : pObj( ptr.pObj ), bLoaded( ptr.bLoaded ) {}
+
 	// assignment operators
 	const CDBPtr<TUserObj, TPtr> &operator=( const TUserObj *_pObj )
 	{
@@ -313,30 +375,54 @@ public:
 		bLoaded = false;
 		return *this;
 	}
+
 	const CDBPtr<TUserObj, TPtr> &operator=( const CDBPtr<TUserObj, TPtr> &ptr )
 	{
 		pObj = ptr.pObj;
 		bLoaded = ptr.bLoaded;
 		return *this;
 	}
+
 	// object access operators (dereference and pointer access)
 	operator const TUserObj *() const
 	{
 		LoadObject();
 		return pObj;
 	}
+
 	const TUserObj *operator->() const
 	{
 		LoadObject();
 		return pObj;
 	}
+
 	// comparison operators
-	bool operator==( const CDBPtr<TUserObj, TPtr> &ptr ) const { return ( pObj == ptr.pObj ); }
-	bool operator==( const TUserObj *_pObj ) const { return ( pObj == _pObj ); }
-	bool operator!=( const CDBPtr<TUserObj, TPtr> &ptr ) const { return ( pObj != ptr.pObj ); }
-	bool operator!=( const TUserObj *_pObj ) const { return ( pObj != _pObj ); }
+	bool operator==( const CDBPtr<TUserObj, TPtr> &ptr ) const
+	{
+		return ( pObj == ptr.pObj );
+	}
+
+	bool operator==( const TUserObj *_pObj ) const
+	{
+		return ( pObj == _pObj );
+	}
+
+	bool operator!=( const CDBPtr<TUserObj, TPtr> &ptr ) const
+	{
+		return ( pObj != ptr.pObj );
+	}
+
+	bool operator!=( const TUserObj *_pObj ) const
+	{
+		return ( pObj != _pObj );
+	}
+
 	// check for empty object
-	bool IsEmpty() const { return ( pObj == 0 ); }
+	bool IsEmpty() const
+	{
+		return ( pObj == 0 );
+	}
+
 	// direct access to the object... ugly functions, but it is necessary,
 	// because C++ can't cast from smartptr to polymorphics of the stored data
 	const TUserObj *GetPtr() const
@@ -344,14 +430,24 @@ public:
 		LoadObject();
 		return pObj;
 	}
+
 	const NDb::CResource *GetBarePtr() const
 	{
 		LoadObject();
 		return CastToDBResource( pObj.GetPtr() );
 	}
+
 	// special functions to access pointer w/o loading data
-	const TUserObj *GetPtrNoLoad() const { return pObj; }
-	const NDb::CResource *GetBarePtrNoLoad() const { return CastToDBResource( pObj.GetPtr() ); }
+	const TUserObj *GetPtrNoLoad() const
+	{
+		return pObj;
+	}
+
+	const NDb::CResource *GetBarePtrNoLoad() const
+	{
+		return CastToDBResource( pObj.GetPtr() );
+	}
+
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -403,7 +499,10 @@ struct SDBPtrHash
 template <typename T>
 struct std::hash<CDBPtr<T>>
 {
-	std::size_t operator()( const CDBPtr<T> &p ) const { return std::hash<const T *>()( p.GetPtr() ); }
+	std::size_t operator()( const CDBPtr<T> &p ) const
+	{
+		return std::hash<const T *>()( p.GetPtr() );
+	}
 };
 
 #define REGISTER_DATABASE_CLASS( module, N, name ) \

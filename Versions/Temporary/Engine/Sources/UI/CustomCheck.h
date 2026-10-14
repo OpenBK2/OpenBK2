@@ -14,6 +14,7 @@ class CCheckRunScript : public IMessageCheck
 
 public:
 	CCheckRunScript() {}
+
 	int operator&( IBinSaver &ss );
 	virtual int Check( struct IScreen *pScreen,
 	                   struct IScriptWrapper *pScript,

@@ -269,6 +269,7 @@ struct SLocalDoorInfo
 	CVec3 vPos;
 	int nDir;
 };
+
 struct SLocalWindowInfo
 {
 	std::string szLocatorName;
@@ -283,6 +284,7 @@ struct SLocalWindowInfo
 
 	bool bSection; // "window" is section (for M1)
 };
+
 typedef std::list<SLocalDoorInfo> CLocalDoors;
 typedef std::list<SLocalWindowInfo> CLocalWindows;
 

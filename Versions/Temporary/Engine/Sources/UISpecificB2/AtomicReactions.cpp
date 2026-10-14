@@ -65,6 +65,7 @@ void CARSetSpecialAbility::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 }
 
 int CRAPTooSmartCompilator_UISpecificB2_2();
+
 int CRAPTooSmartCompilator_UISpecific()
 {
 	return CRAPTooSmartCompilator_UISpecificB2_2();

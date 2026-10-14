@@ -1348,6 +1348,6 @@ void SObjectInfoCollector::Trace()
 	DebugTrace( "SObjectInfoCollector::Trace(): end" );
 	DebugTrace( "" );
 }
-};
+}; // namespace NMapInfoEditor
 
 // basement storage

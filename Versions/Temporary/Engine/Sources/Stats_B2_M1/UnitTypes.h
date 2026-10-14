@@ -6,6 +6,7 @@ namespace NDb
 {
 
 enum EDBUnitRPGType : int;
+
 enum EUnitRPGClass
 {
 	RPG_CLASS_UNKNOWN = 0,
@@ -14,6 +15,7 @@ enum EUnitRPGClass
 	RPG_CLASS_SNIPER = 3,
 	RPG_CLASS_FORCE_DWORD = 0x7fffffff
 };
+
 enum EUnitRPGType : int
 {
 	// main types
@@ -84,4 +86,4 @@ STATS_B2_M1_EXPORT bool IsAviation( EUnitRPGType type );
 STATS_B2_M1_EXPORT bool IsTrain( EUnitRPGType type );
 const EUnitRPGClass GetRPGClass( const EUnitRPGType eType );
 
-}
+} // namespace NDb

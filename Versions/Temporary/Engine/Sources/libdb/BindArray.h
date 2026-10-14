@@ -63,11 +63,13 @@ namespace NBind
 		                        int nIndex,
 		                        void *pRawVector,
 		                        NMetaInfo::SStructMetaInfo *pContained );
+
 		//
 		void AddArrayElementManipulator( IArrayElementManipulator *pArrElMan )
 		{
 			arrayElementManipulators.push_back( pArrElMan );
 		}
+
 		void RemoveArrayElementManipulator( IArrayElementManipulator *pArrElMan );
 	};
 
@@ -83,6 +85,7 @@ namespace NBind
 		int nNumArrayElements;
 		bool bShowHidden;
 		CObj<IObjManIterator> pIterator;
+
 		//
 		CArrayIterator()
 				: bArrayElementLocked( false ), nCurrElementIndex( -1 ), nNumArrayElements( -1 ), bShowHidden( false )
@@ -96,8 +99,13 @@ namespace NBind
 		                NTypeDef::STypeArray *_pTypeArray,
 		                IObjMan *_pParent,
 		                bool _bShowHidden );
+
 		//
-		std::string GetBaseName() const { return pParent->GetFullName(); }
+		std::string GetBaseName() const
+		{
+			return pParent->GetFullName();
+		}
+
 		// goto next field
 		bool Next();
 		// have we reached end?
@@ -108,5 +116,5 @@ namespace NBind
 		const NTypeDef::STypeStructBase::SField *GetDesc() const;
 	};
 
-}
-}
+} // namespace NBind
+} // namespace NDb

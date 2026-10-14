@@ -5,6 +5,7 @@
 
 #include <cstdint>
 class CArtillery;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CArtRocketStatesFactory : public IStatesFactory
 {
@@ -14,7 +15,11 @@ class CArtRocketStatesFactory : public IStatesFactory
 
 public:
 	static IStatesFactory *Instance();
-	int operator&( IBinSaver &saver ) { return 0; }
+
+	int operator&( IBinSaver &saver )
+	{
+		return 0;
+	}
 
 	virtual struct IUnitState *ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
 	virtual struct IUnitState *ProduceRestState( class CQueueUnit *pUnit );
@@ -23,10 +28,12 @@ public:
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CArtRocketAttackGroundState : public IUnitAttackingState
 {
 	OBJECT_BASIC_METHODS( CArtRocketAttackGroundState );
+
 	enum EAttackGroundState
 	{
 		EAGS_ROTATING,
@@ -60,15 +67,31 @@ public:
 	static IUnitState *Instance( class CArtillery *pArtillery, const CVec2 &point );
 
 	CArtRocketAttackGroundState() : pArtillery( 0 ) {}
+
 	CArtRocketAttackGroundState( class CArtillery *pArtillery, const CVec2 &point );
 
 	virtual void Segment();
 	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
-	virtual bool IsAttackingState() const { return true; }
-	virtual const CVec2 GetPurposePoint() const { return point; }
+	virtual bool IsAttackingState() const
+	{
+		return true;
+	}
 
-	virtual bool IsAttacksUnit() const { return false; }
-	virtual class CAIUnit *GetTargetUnit() const { return 0; }
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return point;
+	}
+
+	virtual bool IsAttacksUnit() const
+	{
+		return false;
+	}
+
+	virtual class CAIUnit *GetTargetUnit() const
+	{
+		return 0;
+	}
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

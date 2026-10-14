@@ -9,7 +9,7 @@ struct SMedal;
 struct SReinforcement;
 struct SPlayerRank;
 struct SMapPlayerInfo;
-}
+} // namespace NDb
 struct SChapterReinfUpgrade;
 struct SChapterReinfComposition;
 
@@ -30,6 +30,7 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 		CPtr<ITextView> pKilledView;
 		CPtr<ITextView> pReinfView;
 		bool bHasStatistics;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pWnd );
@@ -42,6 +43,7 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 			return 0;
 		}
 	};
+
 	struct SReinf
 	{
 		ZDATA
@@ -53,6 +55,7 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 						pReinf;
 		CPtr<IButton> pBtn;
 		std::string szButtonName;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pWnd );
@@ -143,6 +146,7 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 	CPtr<ITextView> pCareerExpNAView;
 	CPtr<ITextView> pMissionExpNAView;
 	CPtr<ITextView> pNewReinfLabel;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );

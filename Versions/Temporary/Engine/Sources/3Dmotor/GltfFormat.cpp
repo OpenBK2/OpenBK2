@@ -37,6 +37,7 @@ namespace
 		uint32_t dwModified = 0;
 		bool bHaveStats = false;
 	};
+
 	std::unordered_map<NFile::CFilePath, SCachedFile> fileCache;
 
 	// Weak references on their own would reparse a document between two owners that each drop
@@ -266,7 +267,7 @@ namespace
 		( *pState )[nodeIndex] = 2;
 		return ( *pWorld )[nodeIndex];
 	}
-}
+} // namespace
 
 CGltfFile::CGltfFile( fastgltf::Asset &&_asset, const NFile::CFilePath &_sourcePath )
 		: asset( std::move( _asset ) ), sourcePath( _sourcePath ), nodeParents( asset.nodes.size(), -1 ),
@@ -345,7 +346,7 @@ namespace
 		}
 		return pCache->emplace( accessorIndex, std::move( decoded ) ).first->second;
 	}
-}
+} // namespace
 
 const std::vector<float> &CGltfFile::ScalarAccessor( std::size_t accessorIndex ) const
 {
@@ -834,7 +835,7 @@ namespace
 		}
 		return true;
 	}
-}
+} // namespace
 
 bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pResult )
 {
@@ -945,4 +946,4 @@ bool BuildSkeleton( const TGltfFilePtr &file,
 	return BuildSkeleton( file, skinIndex, pResult );
 }
 
-}
+} // namespace NGltf

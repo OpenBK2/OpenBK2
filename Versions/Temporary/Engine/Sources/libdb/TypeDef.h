@@ -27,9 +27,14 @@ namespace NTypeDef
 	struct SConstraints : public CXmlResource
 	{
 		SConstraints() {}
+
 		virtual bool CheckValueCorrect( const CVariant &value ) const = 0;
+
 		//
-		int operator&( IXmlSaver &saver ) { return 0; }
+		int operator&( IXmlSaver &saver )
+		{
+			return 0;
+		}
 	};
 
 	struct SAttributes : public CObjectBase
@@ -44,9 +49,15 @@ namespace NTypeDef
 		std::map<std::string, CVariant> attributes;
 
 		SAttributes() {}
+
 		SAttributes( const std::map<std::string, CVariant> &_attributes ) : attributes( _attributes ) {}
+
 		//
-		bool HashAttribute( const std::string &szName ) const { return attributes.find( szName ) != attributes.end(); }
+		bool HashAttribute( const std::string &szName ) const
+		{
+			return attributes.find( szName ) != attributes.end();
+		}
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -66,23 +77,42 @@ namespace NTypeDef
 	struct STypeDef : public CXmlResource
 	{
 		ETypeType eType; // type's type :)
+
 		//
 		STypeDef( ETypeType _eType ) : eType( _eType ) {}
+
 		//
-		virtual EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_UNKNOWN; }
+		virtual EEditorType GetDefaultEditorType() const
+		{
+			return EDITOR_TYPE_UNKNOWN;
+		}
+
 		virtual bool IsSimpleType() const = 0;
-		virtual int GetTypeSize() const { return 0; }
+
+		virtual int GetTypeSize() const
+		{
+			return 0;
+		}
+
 		virtual const std::string GetTypeName() const = 0;
+
 		//
 		virtual void ToString( std::string *pRes, const CVariant &value ) const {}
+
 		std::string ToString( const CVariant &value ) const
 		{
 			std::string szRes;
 			ToString( &szRes, value );
 			return szRes;
 		}
+
 		virtual void FromString( CVariant *pRes, const std::string &szValue ) const {}
-		virtual SAttributes *GetAttributes() const { return 0; }
+
+		virtual SAttributes *GetAttributes() const
+		{
+			return 0;
+		}
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -102,10 +132,19 @@ namespace NTypeDef
 	struct STypeSimple : public STypeDef
 	{
 		STypeSimple( ETypeType _eType ) : STypeDef( _eType ) {}
+
 		//
 		virtual CVariant GetDefaultValue() const = 0;
-		int GetTypeSize() const { return 4; }
-		bool IsSimpleType() const { return true; }
+
+		int GetTypeSize() const
+		{
+			return 4;
+		}
+
+		bool IsSimpleType() const
+		{
+			return true;
+		}
 
 		//
 		int operator&( IXmlSaver &saver )
@@ -121,13 +160,27 @@ namespace NTypeDef
 
 	public:
 		STypeInt() : STypeSimple( TYPE_TYPE_INT ) {}
+
 		//
-		CVariant GetDefaultValue() const { return 0; }
-		EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_INT_INPUT; }
-		const std::string GetTypeName() const { return "int"; }
+		CVariant GetDefaultValue() const
+		{
+			return 0;
+		}
+
+		EEditorType GetDefaultEditorType() const
+		{
+			return EDITOR_TYPE_INT_INPUT;
+		}
+
+		const std::string GetTypeName() const
+		{
+			return "int";
+		}
+
 		//
 		void ToString( std::string *pRes, const CVariant &value ) const;
 		void FromString( CVariant *pRes, const std::string &szValue ) const;
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -142,13 +195,27 @@ namespace NTypeDef
 
 	public:
 		STypeFloat() : STypeSimple( TYPE_TYPE_FLOAT ) {}
+
 		//
-		CVariant GetDefaultValue() const { return 0; }
-		EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_FLOAT_INPUT; }
-		const std::string GetTypeName() const { return "float"; }
+		CVariant GetDefaultValue() const
+		{
+			return 0;
+		}
+
+		EEditorType GetDefaultEditorType() const
+		{
+			return EDITOR_TYPE_FLOAT_INPUT;
+		}
+
+		const std::string GetTypeName() const
+		{
+			return "float";
+		}
+
 		//
 		void ToString( std::string *pRes, const CVariant &value ) const;
 		void FromString( CVariant *pRes, const std::string &szValue ) const;
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -163,14 +230,32 @@ namespace NTypeDef
 
 	public:
 		STypeBool() : STypeSimple( TYPE_TYPE_BOOL ) {}
+
 		//
-		CVariant GetDefaultValue() const { return false; }
-		EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_BOOL_COMBO; }
-		int GetTypeSize() const { return 1; }
-		const std::string GetTypeName() const { return "bool"; }
+		CVariant GetDefaultValue() const
+		{
+			return false;
+		}
+
+		EEditorType GetDefaultEditorType() const
+		{
+			return EDITOR_TYPE_BOOL_COMBO;
+		}
+
+		int GetTypeSize() const
+		{
+			return 1;
+		}
+
+		const std::string GetTypeName() const
+		{
+			return "bool";
+		}
+
 		//
 		void ToString( std::string *pRes, const CVariant &value ) const;
 		void FromString( CVariant *pRes, const std::string &szValue ) const;
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -185,14 +270,32 @@ namespace NTypeDef
 
 	public:
 		STypeString() : STypeSimple( TYPE_TYPE_STRING ) {}
+
 		//
-		CVariant GetDefaultValue() const { return ""; }
-		EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_STRING_INPUT; }
-		int GetTypeSize() const { return sizeof( std::string ); }
-		const std::string GetTypeName() const { return "string"; }
+		CVariant GetDefaultValue() const
+		{
+			return "";
+		}
+
+		EEditorType GetDefaultEditorType() const
+		{
+			return EDITOR_TYPE_STRING_INPUT;
+		}
+
+		int GetTypeSize() const
+		{
+			return sizeof( std::string );
+		}
+
+		const std::string GetTypeName() const
+		{
+			return "string";
+		}
+
 		//
 		void ToString( std::string *pRes, const CVariant &value ) const;
 		void FromString( CVariant *pRes, const std::string &szValue ) const;
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -207,14 +310,32 @@ namespace NTypeDef
 
 	public:
 		STypeWString() : STypeSimple( TYPE_TYPE_WSTRING ) {}
+
 		//
-		CVariant GetDefaultValue() const { return L""; }
-		EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_STRING_INPUT; }
-		int GetTypeSize() const { return sizeof( std::wstring ); }
-		const std::string GetTypeName() const { return "wstring"; }
+		CVariant GetDefaultValue() const
+		{
+			return L"";
+		}
+
+		EEditorType GetDefaultEditorType() const
+		{
+			return EDITOR_TYPE_STRING_INPUT;
+		}
+
+		int GetTypeSize() const
+		{
+			return sizeof( std::wstring );
+		}
+
+		const std::string GetTypeName() const
+		{
+			return "wstring";
+		}
+
 		//
 		void ToString( std::string *pRes, const CVariant &value ) const;
 		void FromString( CVariant *pRes, const std::string &szValue ) const;
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -229,14 +350,29 @@ namespace NTypeDef
 
 	public:
 		STypeGUID() : STypeSimple( TYPE_TYPE_GUID ) {}
+
 		//
 		CVariant GetDefaultValue() const;
-		EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_GUID; }
-		int GetTypeSize() const { return sizeof( boost::uuids::uuid ); }
-		const std::string GetTypeName() const { return "GUID"; }
+
+		EEditorType GetDefaultEditorType() const
+		{
+			return EDITOR_TYPE_GUID;
+		}
+
+		int GetTypeSize() const
+		{
+			return sizeof( boost::uuids::uuid );
+		}
+
+		const std::string GetTypeName() const
+		{
+			return "GUID";
+		}
+
 		//
 		void ToString( std::string *pRes, const CVariant &value ) const;
 		void FromString( CVariant *pRes, const std::string &szValue ) const;
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -254,21 +390,42 @@ namespace NTypeDef
 		std::string szTypeName;
 		int nBinaryObjectSize; // size of binary object
 		CObj<SAttributes> pAttributes;
+
 		//
 		STypeBinary() : STypeSimple( TYPE_TYPE_BINARY ), nBinaryObjectSize( 0 ) {}
+
 		STypeBinary( const std::string &_szTypeName )
 				: STypeSimple( TYPE_TYPE_BINARY ), szTypeName( _szTypeName ), nBinaryObjectSize( 0 )
 		{
 		}
+
 		//
 		CVariant GetDefaultValue() const;
-		EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_BIT_FIELD; }
-		int GetTypeSize() const { return nBinaryObjectSize; }
-		const std::string GetTypeName() const { return szTypeName; }
-		virtual SAttributes *GetAttributes() const { return pAttributes; }
+
+		EEditorType GetDefaultEditorType() const
+		{
+			return EDITOR_TYPE_BIT_FIELD;
+		}
+
+		int GetTypeSize() const
+		{
+			return nBinaryObjectSize;
+		}
+
+		const std::string GetTypeName() const
+		{
+			return szTypeName;
+		}
+
+		virtual SAttributes *GetAttributes() const
+		{
+			return pAttributes;
+		}
+
 		//
 		void ToString( std::string *pRes, const CVariant &value ) const;
 		void FromString( CVariant *pRes, const std::string &szValue ) const;
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -290,9 +447,12 @@ namespace NTypeDef
 		{
 			std::string szName;
 			int nVal;
+
 			//
 			SEnumEntry() : nVal( -1 ) {}
+
 			SEnumEntry( const std::string &_szName, int _nVal ) : szName( _szName ), nVal( _nVal ) {}
+
 			//
 			int operator&( IXmlSaver &saver )
 			{
@@ -301,21 +461,46 @@ namespace NTypeDef
 				return 0;
 			}
 		};
+
 		std::string szTypeName;
 		CObj<SAttributes> pAttributes;
 		std::vector<SEnumEntry> entries;
+
 		//
 		STypeEnum() : STypeSimple( TYPE_TYPE_ENUM ) {}
+
 		STypeEnum( const std::string &_szTypeName ) : STypeSimple( TYPE_TYPE_ENUM ), szTypeName( _szTypeName ) {}
+
 		//
-		CVariant GetDefaultValue() const { return entries[0].szName; }
-		EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_STRING_COMBO; }
-		int GetTypeSize() const { return 4; }
-		const std::string GetTypeName() const { return szTypeName; }
+		CVariant GetDefaultValue() const
+		{
+			return entries[0].szName;
+		}
+
+		EEditorType GetDefaultEditorType() const
+		{
+			return EDITOR_TYPE_STRING_COMBO;
+		}
+
+		int GetTypeSize() const
+		{
+			return 4;
+		}
+
+		const std::string GetTypeName() const
+		{
+			return szTypeName;
+		}
+
 		//
 		void ToString( std::string *pRes, const CVariant &value ) const;
 		void FromString( CVariant *pRes, const std::string &szValue ) const;
-		virtual SAttributes *GetAttributes() const { return pAttributes; }
+
+		virtual SAttributes *GetAttributes() const
+		{
+			return pAttributes;
+		}
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -349,14 +534,17 @@ namespace NTypeDef
 			CVariant defaultValue;                       // default value - for simple type fields only!
 
 			CVariant complexDefaultValue;
+
 			//
 			SField() : nChunkID( -1 ) {}
+
 			//
 			bool CheckValueCorrect( const CVariant &value ) const;
 			EEditorType GetEditorType() const;
 			CVariant GetDefaultValue() const;
 			bool HasAttribute( const std::string &szName ) const;
 			const CVariant *GetAttribute( const std::string &szName ) const;
+
 			//
 			int operator&( IXmlSaver &saver )
 			{
@@ -372,6 +560,7 @@ namespace NTypeDef
 				return 0;
 			}
 		};
+
 		//
 		std::string szTypeName;          // complex type user-defined name
 		CObj<SAttributes> pAttributes;   // complex type support attributes
@@ -380,15 +569,29 @@ namespace NTypeDef
 		CNestedTypesList nestedTypes; // all nested types
 		typedef std::vector<SField> CFieldsList;
 		CFieldsList fields; // complex type's fields
+
 		//
 		STypeStructBase( ETypeType _eType, const std::string &_szTypeName ) : STypeDef( _eType ), szTypeName( _szTypeName )
 		{
 		}
+
 		//
-		bool IsSimpleType() const { return false; }
-		const std::string GetTypeName() const { return szTypeName; }
+		bool IsSimpleType() const
+		{
+			return false;
+		}
+
+		const std::string GetTypeName() const
+		{
+			return szTypeName;
+		}
+
 		//
-		EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_UNKNOWN; }
+		EEditorType GetDefaultEditorType() const
+		{
+			return EDITOR_TYPE_UNKNOWN;
+		}
+
 		void AddField( STypeDef *pType,
 		               const std::string &szName,
 		               const int nChunkID,
@@ -396,7 +599,12 @@ namespace NTypeDef
 		               SConstraints *pConstraints,
 		               SAttributes *pAttributes,
 		               const CVariant &_vtDefVal = CVariant() );
-		virtual SAttributes *GetAttributes() const { return pAttributes; }
+
+		virtual SAttributes *GetAttributes() const
+		{
+			return pAttributes;
+		}
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -416,7 +624,9 @@ namespace NTypeDef
 
 	public:
 		STypeStruct() : STypeStructBase( TYPE_TYPE_STRUCT, "" ) {}
+
 		STypeStruct( const std::string &_szTypeName ) : STypeStructBase( TYPE_TYPE_STRUCT, _szTypeName ) {}
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -433,13 +643,17 @@ namespace NTypeDef
 		int nClassTypeID;
 		typedef std::vector<CPtr<STypeClass>> CDerivedTerminalTypesList;
 		CDerivedTerminalTypesList derivedTerminalTypes;
+
 		//
 		STypeClass() : STypeStructBase( TYPE_TYPE_CLASS, "" ), nClassTypeID( -1 ) {}
+
 		STypeClass( const std::string &_szTypeName ) : STypeStructBase( TYPE_TYPE_CLASS, _szTypeName ), nClassTypeID( -1 )
 		{
 		}
+
 		//
 		void RegisterTerminalType( STypeClass *pClass = 0 );
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -463,14 +677,29 @@ namespace NTypeDef
 
 	public:
 		STypeStructBase::SField field;
+
 		//
 		STypeArray() : STypeDef( TYPE_TYPE_ARRAY ) {}
-		STypeArray( STypeDef *pType ) : STypeDef( TYPE_TYPE_ARRAY ) { field.pType = pType; }
+
+		STypeArray( STypeDef *pType ) : STypeDef( TYPE_TYPE_ARRAY )
+		{
+			field.pType = pType;
+		}
+
 		//
-		bool IsSimpleType() const { return false; }
-		const std::string GetTypeName() const { return "array"; }
+		bool IsSimpleType() const
+		{
+			return false;
+		}
+
+		const std::string GetTypeName() const
+		{
+			return "array";
+		}
+
 		void ToString( std::string *pRes, const CVariant &value ) const;
 		void FromString( CVariant *pRes, const std::string &szValue ) const;
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -488,19 +717,39 @@ namespace NTypeDef
 
 	public:
 		CPtr<STypeDef> pRefType;
+
 		//
 		STypeRef() : STypeSimple( TYPE_TYPE_REF ) {}
+
 		STypeRef( STypeDef *_pRefType ) : STypeSimple( TYPE_TYPE_REF ), pRefType( _pRefType ) {}
+
 		//
-		EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_STRING_NEW_MULTI_REF; }
-		virtual CVariant GetDefaultValue() const { return CVariant(); }
-		int GetTypeSize() const { return sizeof( CDBPtr<CResource> ); }
-		const std::string GetTypeName() const { return "ref"; }
+		EEditorType GetDefaultEditorType() const
+		{
+			return EDITOR_TYPE_STRING_NEW_MULTI_REF;
+		}
+
+		virtual CVariant GetDefaultValue() const
+		{
+			return CVariant();
+		}
+
+		int GetTypeSize() const
+		{
+			return sizeof( CDBPtr<CResource> );
+		}
+
+		const std::string GetTypeName() const
+		{
+			return "ref";
+		}
+
 		void ToString( std::string *pRes, const CVariant &value ) const;
 		void FromString( CVariant *pRes, const std::string &szValue ) const;
 		//
 		void GetRefTypesList( std::vector<const STypeClass *> *pTypesList ) const;
 		bool CheckRefType( const int nClassTypeID ) const;
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -523,7 +772,11 @@ namespace NTypeDef
 		OBJECT_NOCOPY_METHODS( SConstraintsUnlimited );
 
 	public:
-		bool CheckValueCorrect( const CVariant &value ) const { return true; }
+		bool CheckValueCorrect( const CVariant &value ) const
+		{
+			return true;
+		}
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -531,6 +784,7 @@ namespace NTypeDef
 			return 0;
 		}
 	};
+
 	// min/max constraint
 	//
 	template <class TYPE>
@@ -540,15 +794,19 @@ namespace NTypeDef
 
 	public:
 		TYPE tMin, tMax;
+
 		//
 		SConstraintsMinMax() : tMin( 0 ), tMax( 0 ) {}
+
 		SConstraintsMinMax( TYPE _tMin, TYPE _tMax ) : tMin( _tMin ), tMax( _tMax ) {}
+
 		//
 		bool CheckValueCorrect( const CVariant &value ) const
 		{
 			TYPE tValue = (TYPE)value;
 			return tValue >= tMin && tValue <= tMax;
 		}
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -558,6 +816,7 @@ namespace NTypeDef
 			return 0;
 		}
 	};
+
 	typedef SConstraintsMinMax<int> SConstraintsMinMaxInt;
 	typedef SConstraintsMinMax<float> SConstraintsMinMaxFloat;
 
@@ -570,14 +829,18 @@ namespace NTypeDef
 
 	public:
 		std::vector<TYPE> values;
+
 		//
 		SConstraintsValuesList() {}
+
 		SConstraintsValuesList( const std::vector<TYPE> &_values ) : values( _values ) {}
+
 		//
 		bool CheckValueCorrect( const CVariant &value ) const
 		{
 			return find( values.begin(), values.end(), (TYPE)value ) != values.end();
 		}
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -586,6 +849,7 @@ namespace NTypeDef
 			return 0;
 		}
 	};
+
 	typedef SConstraintsValuesList<int> SConstraintsValuesListInt;
 	typedef SConstraintsValuesList<float> SConstraintsValuesListFloat;
 
@@ -598,12 +862,15 @@ namespace NTypeDef
 	public:
 		int nMinElements;
 		int nMaxElements;
+
 		//
 		SConstraintsArrayMinMax() : nMinElements( -1 ), nMaxElements( -1 ) {}
+
 		SConstraintsArrayMinMax( int _nMinElements, int _nMaxElements )
 				: nMinElements( _nMinElements ), nMaxElements( _nMaxElements )
 		{
 		}
+
 		//
 		bool CheckValueCorrect( const CVariant &value ) const
 		{
@@ -618,6 +885,7 @@ namespace NTypeDef
 			}
 			return true;
 		}
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -636,6 +904,7 @@ namespace NTypeDef
 
 	public:
 		std::string szRegExp;
+
 		//
 		bool CheckValueCorrect( const CVariant &value ) const
 		{
@@ -646,6 +915,7 @@ namespace NTypeDef
 			//			return true;
 			return true;
 		}
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -662,11 +932,18 @@ namespace NTypeDef
 
 	public:
 		CPtr<STypeDef> pType;
+
 		//
 		SConstraintsTypeRef() {}
+
 		SConstraintsTypeRef( STypeDef *_pType ) : pType( _pType ) {}
+
 		//
-		bool CheckValueCorrect( const CVariant &value ) const { return true; }
+		bool CheckValueCorrect( const CVariant &value ) const
+		{
+			return true;
+		}
+
 		//
 		int operator&( IXmlSaver &saver )
 		{
@@ -676,5 +953,5 @@ namespace NTypeDef
 		}
 	};
 
-}
-}
+} // namespace NTypeDef
+} // namespace NDb

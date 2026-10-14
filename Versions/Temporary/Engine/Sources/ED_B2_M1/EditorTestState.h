@@ -3,6 +3,7 @@
 #include "MapEditorLib/DefaultInputState.h"
 
 class CEditorTestEditor;
+
 class CEditorTestState : public CDefaultInputState
 {
 	// Данные общего назначения

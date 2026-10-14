@@ -36,7 +36,7 @@ namespace
 		pPanel->SetSizer( new wxBoxSizer( wxVERTICAL ) );
 		return pPanel;
 	}
-}
+} // namespace
 
 CAuiManager::CAuiManager() = default;
 
@@ -604,4 +604,4 @@ void CGDBBrowserPane::ShowEmpty( bool bEmpty )
 		LayoutContents();
 	}
 }
-}
+} // namespace NMainFrameWxPanes

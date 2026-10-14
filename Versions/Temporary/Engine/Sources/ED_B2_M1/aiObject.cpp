@@ -376,5 +376,6 @@ void CGeometryInfo::CalcBound()
 	GenerateEdgeList( pRes, tris );
 }*/
 
-} // namespace
+} // namespace NAI
+
 using namespace NAI;

@@ -26,11 +26,13 @@ class CLogViewWx : public ILogView
 	// Registered as the selection command handler when the contents take
 	// focus. Borrowed: the pane outlives this view.
 	ICommandHandler *pSelectionHandler = nullptr;
+
 	struct SStyledRange
 	{
 		long from, to;
 		ELogOutputType type;
 	};
+
 	std::vector<SStyledRange> styledRanges;
 
 	wxTextAttr Style( ELogOutputType type ) const
@@ -62,7 +64,10 @@ public:
 		return true;
 	}
 
-	wxWindow *GetWindow() const { return pText; }
+	wxWindow *GetWindow() const
+	{
+		return pText;
+	}
 
 	void CreateText( wxWindow *pParent )
 	{
@@ -150,7 +155,10 @@ public:
 		return nFrom != nTo;
 	}
 
-	virtual bool IsEmpty() const { return pText == nullptr || pText->IsEmpty(); }
+	virtual bool IsEmpty() const
+	{
+		return pText == nullptr || pText->IsEmpty();
+	}
 
 private:
 	void OnThemeChanged( wxSysColourChangedEvent &event )
@@ -176,7 +184,7 @@ private:
 		}
 	}
 };
-}
+} // namespace
 
 namespace NLogView
 {
@@ -214,4 +222,4 @@ ILogView *CreateWxLogViewIn( wxWindow *pParent, ICommandHandler *pSelectionHandl
 	}
 	return pView;
 }
-}
+} // namespace NLogView

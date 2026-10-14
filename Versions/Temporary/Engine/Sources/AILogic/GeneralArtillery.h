@@ -31,6 +31,7 @@ class CGeneralArtilleryGoToPosition : public CAIObjectBase
 	bool bFinished = {};
 	NTimer::STime timeOfFinish = {};
 	NTimer::STime startTime = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pUnit );
@@ -42,6 +43,7 @@ class CGeneralArtilleryGoToPosition : public CAIObjectBase
 		f.Add( 8, &startTime );
 		return 0;
 	}
+
 	//
 	void StartState();
 	void WaitForTruck();
@@ -50,12 +52,20 @@ class CGeneralArtilleryGoToPosition : public CAIObjectBase
 
 public:
 	CGeneralArtilleryGoToPosition() {}
+
 	CGeneralArtilleryGoToPosition( CAIUnit *pUnit, const CVec2 &vPos, bool bToReservePosition );
 
 	void Segment();
-	bool IsFinished() { return bFinished; }
 
-	bool DoesGoToReservePosition() const { return bToReservePosition; }
+	bool IsFinished()
+	{
+		return bFinished;
+	}
+
+	bool DoesGoToReservePosition() const
+	{
+		return bToReservePosition;
+	}
 };
 
 class CGeneralArtilleryTask
@@ -70,6 +80,7 @@ class CGeneralArtilleryTask
 
 		CPtr<CAIUnit> pUnit;
 		CPtr<CGeneralArtilleryGoToPosition> pGoToPosition;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &vReservePosition );
@@ -81,6 +92,7 @@ class CGeneralArtilleryTask
 
 	public:
 		SBombardmentUnitState() {}
+
 		explicit SBombardmentUnitState( CAIUnit *pUnit );
 	};
 
@@ -151,6 +163,7 @@ public:
 
 public:
 	CGeneralArtilleryTask() : bBombardmentFinished( true ), bIsAntiArtilleryFight( false ) {}
+
 	CGeneralArtilleryTask( CGeneralArtillery *pOwner,
 	                       std::list<CAIUnit *> &givenUnits,
 	                       bool bAntiArtilleryFight,
@@ -160,7 +173,10 @@ public:
 
 	void Segment();
 
-	bool IsTaskFinished() const { return bBombardmentFinished; }
+	bool IsTaskFinished() const
+	{
+		return bBombardmentFinished;
+	}
 };
 
 class CGeneralArtillery : public CAIObjectBase, public IEnemyEnumerator
@@ -185,10 +201,12 @@ public:
 		f.Add( 5, &tasks );
 		return 0;
 	}
+
 	void OnSerialize( IBinSaver &saver );
 
 public:
 	CGeneralArtillery() {}
+
 	CGeneralArtillery( CGeneral *pGeneralOwner );
 
 	// дать генералу юнит для использования в качестве артиллерии
@@ -207,7 +225,10 @@ public:
 	//IEnemyEnumerator
 	virtual bool EnumEnemy( class CAIUnit *pEnemy );
 
-	const int GetNFreeUnits() const { return freeUnits.size(); }
+	const int GetNFreeUnits() const
+	{
+		return freeUnits.size();
+	}
 
 	void SetCellInUse( const int nResistanceCell, bool bInUse );
 };

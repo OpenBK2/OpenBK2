@@ -235,6 +235,7 @@ bool CMapInfoBuilder::IsValidDataBuilder( IManipulator *pBuildDataManipulator,
 	}
 	return true;
 }
+
 //CRAP} PLAIN_TEXT
 
 bool CMapInfoBuilder::IsValidDataCopier( IManipulator *pBuildDataManipulator,

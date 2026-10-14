@@ -1,9 +1,11 @@
 #pragma once
 #include "GRenderCore.h"
+
 namespace NGfx
 {
 struct SEffPointLight;
 }
+
 namespace NGScene
 {
 NGfx::CCubeTexture *GetNormalizeTexture();
@@ -17,4 +19,4 @@ NGfx::CTexture *GetLightFallLookup();
 NGfx::CTexture *GetCheckerTexture();
 NGfx::CTexture *Get16bitDepthLookup();
 
-}
+} // namespace NGScene

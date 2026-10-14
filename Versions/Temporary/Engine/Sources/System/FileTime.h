@@ -18,20 +18,36 @@ struct SWin32Time
 			uint32_t month : 4;   // month(1..12)
 			uint32_t year : 7;    // year (0..119 relative to 1980)
 		};
+
 		struct
 		{
 			uint16_t wTime;
 			uint16_t wDate;
 		};
+
 		// One full-width default also initializes the overlapping date/time bitfields.
 		uint32_t dwFulltime = 0;
 	};
+
 	//
 	SWin32Time() {}
+
 	SWin32Time( const uint32_t _dwFulltime ) : dwFulltime( _dwFulltime ) {}
-	uint16_t GetDate() const { return wDate; }
-	uint16_t GetTime() const { return wTime; }
-	operator uint32_t() const { return dwFulltime; }
+
+	uint16_t GetDate() const
+	{
+		return wDate;
+	}
+
+	uint16_t GetTime() const
+	{
+		return wTime;
+	}
+
+	operator uint32_t() const
+	{
+		return dwFulltime;
+	}
 };
 
 // pack a time_t into the MS-DOS layout above, via local time.
@@ -79,9 +95,11 @@ inline time_t UnpackFileTime( const uint32_t _w32time )
 				uint32_t month : 4;   // month(1..12)
 				uint32_t year : 7;    // year (0..119 relative to 1980)
 			};
+
 			uint32_t dwFullTime = 0;
 		};
 	};
+
 	SConvert w32time;
 	w32time.dwFullTime = _w32time;
 	// compose 'tm' structure. for details you can see a function above

@@ -91,11 +91,13 @@ CTimeCounter::CTimeCounter()
 	RegisterCounter( 67, "general_artillery" );
 	RegisterCounter( 68, "general_intendant" );
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CTimeCounter::RegisterCounter( const int nName, const std::string &szName )
 {
 	names[nName] = szName;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CTimeCounter::Count( const int nName, const bool bStart )
 {
@@ -117,6 +119,7 @@ void CTimeCounter::Count( const int nName, const bool bStart )
 		}
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CTimeCounter::Count( const std::string &szName, const bool bStart )
 {
@@ -142,6 +145,7 @@ void CTimeCounter::Count( const std::string &szName, const bool bStart )
 		}
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CTimeCounter::PrintCounters()
 {
@@ -182,6 +186,7 @@ void CTimeCounter::PrintCounters()
 
 	pConsoleBuffer->WriteASCII( 11, "=================================================", 0, true );
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CTimeCounter::ChangeVar( const int nIndex, const float fChange )
 {
@@ -193,6 +198,7 @@ void CTimeCounter::ChangeVar( const int nIndex, const float fChange )
 	nMaxVar = (std::max)( nIndex, nMaxVar );
 	variables[nIndex] += fChange;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CTimeCounter::SetVar( const int nIndex, const float fValue )
 {
@@ -205,4 +211,4 @@ void CTimeCounter::SetVar( const int nIndex, const float fValue )
 	variables[nIndex] = fValue;
 }
 
-}
+} // namespace NAI

@@ -53,6 +53,7 @@ public:
 		bool bFillObjects;
 		bool bFillHeights;
 		bool bUpdateMap;
+
 		//
 		SEditParameters()
 				: nFlags( MITFEP_ALL ), eMoveType( MT_SINGLE ), nFieldIndex( 0 ), fMinLength( 10.0f ), fWidth( 0.5f ),
@@ -60,6 +61,7 @@ public:
 					bUpdateMap( false )
 		{
 		}
+
 		SEditParameters( const SEditParameters &rEditParameters )
 				: nFlags( rEditParameters.nFlags ), eMoveType( rEditParameters.eMoveType ),
 					fieldList( rEditParameters.fieldList ), nFieldIndex( rEditParameters.nFieldIndex ),
@@ -69,6 +71,7 @@ public:
 					bFillHeights( rEditParameters.bFillHeights ), bUpdateMap( rEditParameters.bUpdateMap )
 		{
 		}
+
 		SEditParameters &operator=( const SEditParameters &rEditParameters )
 		{
 			if ( &rEditParameters != this )
@@ -91,6 +94,7 @@ public:
 
 		int operator&( IXmlSaver &xs );
 	};
+
 	//
 private:
 	class CMapInfoEditor *pMapInfoEditor;
@@ -101,6 +105,7 @@ private:
 
 	typedef std::list<CVec2> CFieldPolygon;
 	typedef std::vector<int> CXPosList;
+
 	// Keyed by the tile a distance was computed for. These maps only memoize
 	// PolygonDistance per tile and are never iterated, so the key has to be
 	// unique and hashable and nothing more. It used to be an LPARAM packed with
@@ -116,6 +121,7 @@ private:
 			return std::hash<int64_t>()( nKey );
 		}
 	};
+
 	typedef std::unordered_map<CTPoint<int>, float, STileDistanceHash> CFieldDistanceMap;
 	typedef NWV::CWeightVector<int, NWV::SClientRandom> CTileSetWeightVector;
 	typedef std::vector<CTileSetWeightVector> CTileSetWeightVectorList;
@@ -156,28 +162,55 @@ public:
 	void Leave();
 
 	// CPolygonState
-	bool SkipEnterAfterInsert() { return false; }
+	bool SkipEnterAfterInsert()
+	{
+		return false;
+	}
+
 	bool CanEdit();
-	bool CanInsertPolygon() { return true; }
-	bool IsClosedPolygon() { return true; }
-	bool IsDrawSceneDrawTool() { return true; }
+
+	bool CanInsertPolygon()
+	{
+		return true;
+	}
+
+	bool IsClosedPolygon()
+	{
+		return true;
+	}
+
+	bool IsDrawSceneDrawTool()
+	{
+		return true;
+	}
+
 	EMoveType GetMoveType();
 	void GetBounds( int *pnMinCount, int *pnMaxCount );
-	CControlPointList *GetControlPoints( int nPolygonID ) { return &controlPointList; }
+
+	CControlPointList *GetControlPoints( int nPolygonID )
+	{
+		return &controlPointList;
+	}
+
 	bool PrepareControlPoints( CControlPointList *pControlPointList );
+
 	void PickPolygon( const CVec3 &rvPos, CPolygonIDList *pPickPolygonIDList ) {}
+
 	void UpdatePolygon( int nPolygonID, EUpdateType eEpdateType );
+
 	unsigned InsertPolygon( const CControlPointList &rControlPointList )
 	{
 		controlPointList = rControlPointList;
 		return 0;
 	}
+
 	void RemovePolygon( int nPolygonID ) {}
 
 	//
 	// ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+
 	//
 	// CFieldState
 	CFieldState() : pMapInfoEditor( 0 )
@@ -185,12 +218,17 @@ public:
 		NI_ASSERT( pMapInfoEditor != 0, "CFieldState(): Invalid parameter: pMapInfoEditor == 0" );
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_TERRAIN_FIELD_STATE, this );
 	}
+
 	CFieldState( CMapInfoEditor *_pMapInfoEditor ) : pMapInfoEditor( _pMapInfoEditor )
 	{
 		NI_ASSERT( pMapInfoEditor != 0, "CFieldState(): Invalid parameter: pMapInfoEditor == 0" );
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_TERRAIN_FIELD_STATE, this );
 	}
-	~CFieldState() { Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_TERRAIN_FIELD_STATE ); }
+
+	~CFieldState()
+	{
+		Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_TERRAIN_FIELD_STATE );
+	}
 };
 
 // CFieldState drives its palette with the two edit-parameter commands, so the

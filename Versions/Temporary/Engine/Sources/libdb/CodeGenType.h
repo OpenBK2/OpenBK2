@@ -8,12 +8,13 @@ namespace NLang
 {
 class CComplexTypeNode;
 class CEnumNode;
-}
+} // namespace NLang
 
 namespace NCodeGen
 {
 
 class CNamespace;
+
 class CTypeDefinition : public ICode
 {
 	OBJECT_NOCOPY_METHODS( CTypeDefinition )
@@ -24,6 +25,7 @@ class CTypeDefinition : public ICode
 
 public:
 	CTypeDefinition() : bTerminal( true ) {}
+
 	CTypeDefinition( NLang::CComplexTypeNode *pComplexTypeNode,
 	                 const CNodes2TypeDefs &nodes2TypeDefs,
 	                 NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
@@ -43,4 +45,4 @@ public:
 	}
 };
 
-}
+} // namespace NCodeGen

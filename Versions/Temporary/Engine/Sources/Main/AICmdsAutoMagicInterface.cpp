@@ -10,10 +10,23 @@ IBinSaver *IAICmdsAutoMagic::MakeCommandSerializer( CMemoryStream *pStream, ESav
 class CDefaultAICmdsAutoMagic : public IAICmdsAutoMagic
 {
 	OBJECT_NOCOPY_METHODS( CDefaultAICmdsAutoMagic );
-	int GetCommandID( CObjectBase *p ) { return NObjectFactory::GetObjectTypeID( p ); }
-	CObjectBase *MakeCommand( int nID ) { return NObjectFactory::MakeObject( nID ); }
-	int GetIDSize() const { return 4; }
+
+	int GetCommandID( CObjectBase *p )
+	{
+		return NObjectFactory::GetObjectTypeID( p );
+	}
+
+	CObjectBase *MakeCommand( int nID )
+	{
+		return NObjectFactory::MakeObject( nID );
+	}
+
+	int GetIDSize() const
+	{
+		return 4;
+	}
 };
+
 IAICmdsAutoMagic *CreateDefaultCmdsCreator()
 {
 	return new CDefaultAICmdsAutoMagic;

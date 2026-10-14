@@ -19,7 +19,11 @@ class CPlaneStatesFactory : public IStatesFactory
 	static CPtr<CPlaneStatesFactory> pFactory;
 
 public:
-	int operator&( IBinSaver &saver ) { return 0; }
+	int operator&( IBinSaver &saver )
+	{
+		return 0;
+	}
+
 	static IStatesFactory *Instance();
 
 	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
@@ -56,7 +60,9 @@ public:
 public:
 	// проверить врагов и начать отстреливаться
 	void AnalyzeBSU();
+
 	CPlaneDeffensiveFire() : pOwner( 0 ), timeLastBSUUpdate( 0 ) {}
+
 	CPlaneDeffensiveFire( class CAviation *pPlane );
 };
 
@@ -84,10 +90,15 @@ public:
 			f.Add( 6, &bModifApplied );
 			return 0;
 		}
-		CAIUnit *GetEnemy() { return pEnemy; }
+
+		CAIUnit *GetEnemy()
+		{
+			return pEnemy;
+		}
 
 	public:
 		CEnemyContainer() : fTakenDamage( 0.0f ), bModifApplied( false ) {}
+
 		CEnemyContainer( CAIUnit *pOwner ) : pOwner( pOwner ), fTakenDamage( 0.0f ), bModifApplied( false ) {}
 
 		bool CanBreakTarget( const bool bBombsAllowed );
@@ -135,8 +146,15 @@ public:
 protected:
 	void InternalSetPoint( const CVec2 &_vPoint, const bool _bAttackState );
 
-	const CVec2 &GetPoint() const { return vPatrolPoints[nCurPointIndex % vPatrolPoints.size()]; }
-	const void ToNextPoint() { ++nCurPointIndex; }
+	const CVec2 &GetPoint() const
+	{
+		return vPatrolPoints[nCurPointIndex % vPatrolPoints.size()];
+	}
+
+	const void ToNextPoint()
+	{
+		++nCurPointIndex;
+	}
 
 	// return true if some enemy found
 	bool TargetScan();
@@ -156,17 +174,34 @@ protected:
 	// was command to attack or drop. not MOVE
 public:
 	CPlanePatrolState() : nCurPointIndex( 0 ), pPlane( 0 ), bEconomyMode( true ), timeNextScan( 0 ) {}
+
 	CPlanePatrolState( CAviation *pPlane );
-	int GetNPoints() const { return vPatrolPoints.size(); }
+
+	int GetNPoints() const
+	{
+		return vPatrolPoints.size();
+	}
+
 	// для добавления точек патрулирования
 	void AddPoint( const CVec2 &vAddPoint );
 	// force plane to move to provided point (patrolling)
 	void SetPoint( const CVec2 &vPoint );
 	void Escape();
 
-	virtual bool IsAttacksUnit() const { return false; }
-	virtual class CAIUnit *GetTargetUnit() const { return 0; }
-	virtual EUnitStateNames GetName() { return EUSN_PLANE_PATROL; }
+	virtual bool IsAttacksUnit() const
+	{
+		return false;
+	}
+
+	virtual class CAIUnit *GetTargetUnit() const
+	{
+		return 0;
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_PLANE_PATROL;
+	}
 };
 
 class CPlaneRestState : public CPlanePatrolState, public CPlaneDeffensiveFire
@@ -174,6 +209,7 @@ class CPlaneRestState : public CPlanePatrolState, public CPlaneDeffensiveFire
 	OBJECT_BASIC_METHODS( CPlaneRestState )
 	ZDATA_( CPlanePatrolState )
 	ZPARENT( CPlaneDeffensiveFire )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CPlanePatrolState *)this );
@@ -183,20 +219,38 @@ class CPlaneRestState : public CPlanePatrolState, public CPlaneDeffensiveFire
 
 public:
 	CPlaneRestState() {}
+
 	CPlaneRestState( CAviation *pUnit );
 
 	virtual void Segment();
 
 	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return GetPoint(); }
-	virtual EUnitStateNames GetName() { return EUSN_REST; }
-	virtual bool IsRestState() const { return true; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return GetPoint();
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_REST;
+	}
+
+	virtual bool IsRestState() const
+	{
+		return true;
+	}
 };
 
 class CPlaneSwarmToState : public CPlanePatrolState, public CPlaneDeffensiveFire
 {
 	OBJECT_BASIC_METHODS( CPlaneSwarmToState )
+
 	enum EPlaneSwarmToState
 	{
 		PSTS_ESTIMATING,
@@ -208,6 +262,7 @@ class CPlaneSwarmToState : public CPlanePatrolState, public CPlaneDeffensiveFire
 	NTimer::STime timeNextScan = 0;
 	EPlaneSwarmToState eState = {};
 	bool bScanForTarget = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CPlanePatrolState *)this );
@@ -220,14 +275,27 @@ class CPlaneSwarmToState : public CPlanePatrolState, public CPlaneDeffensiveFire
 
 public:
 	CPlaneSwarmToState() {}
+
 	CPlaneSwarmToState( CAviation *pUnit, const CVec2 &_vPoint, const bool bScanForTarget );
 
 	virtual void Segment();
 
 	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return GetPoint(); }
-	virtual EUnitStateNames GetName() { return EUSN_SWARM; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return GetPoint();
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_SWARM;
+	}
 };
 
 class CPlaneBombState : public CPlanePatrolState, public CPlaneDeffensiveFire
@@ -255,6 +323,7 @@ class CPlaneBombState : public CPlanePatrolState, public CPlaneDeffensiveFire
 	float fStartAttackDist = {};
 	bool bHaveBombs = {};
 	bool bSingleSalvo = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CPlanePatrolState *)this );
@@ -271,20 +340,34 @@ class CPlaneBombState : public CPlanePatrolState, public CPlaneDeffensiveFire
 
 public:
 	CPlaneBombState() : bSingleSalvo( false ) {}
+
 	CPlaneBombState( CAviation *pUnit, const CVec2 &vPoint, bool bSingleSalvo = false );
 
 	virtual void Segment();
 
 	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return true; }
-	virtual const CVec2 GetPurposePoint() const { return GetPoint(); }
-	virtual EUnitStateNames GetName() { return EUSN_BOMBING; }
+
+	virtual bool IsAttackingState() const
+	{
+		return true;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return GetPoint();
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_BOMBING;
+	}
 };
 
 // for drop paratroopers in specific point
 class CPlaneParaDropState : public CPlanePatrolState, public CPlaneDeffensiveFire
 {
 	OBJECT_BASIC_METHODS( CPlaneParaDropState );
+
 	enum EPlaneParaDropState
 	{
 		PPDS_ESTIMATE,
@@ -302,6 +385,7 @@ class CPlaneParaDropState : public CPlanePatrolState, public CPlaneDeffensiveFir
 	int nDroppingSoldier = {}; // current soldier to drop
 
 	CVec2 vLastDrop; // точка, в которой выброшен последний парашютист
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CPlanePatrolState *)this );
@@ -319,6 +403,7 @@ class CPlaneParaDropState : public CPlanePatrolState, public CPlaneDeffensiveFir
 
 public:
 	CPlaneParaDropState() {}
+
 	CPlaneParaDropState( CAviation *pPlane,
 	                     const enum EActionLeaveParam param,
 	                     const CVec2 &vLandPoint,
@@ -327,7 +412,12 @@ public:
 	virtual void Segment();
 
 	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 
 	// for Saving/Loading of static members
@@ -364,6 +454,7 @@ class CPlaneFighterPatrolState : public CPlanePatrolState, public CPlaneDeffensi
 	NTimer::STime timeLastCheck = {};        // последняя проверка на наличие патронов
 	bool bAmmoRemains = {};
 	NTimer::STime nextPathUpdate = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CPlanePatrolState *)this );
@@ -377,6 +468,7 @@ class CPlaneFighterPatrolState : public CPlanePatrolState, public CPlaneDeffensi
 		f.Add( 10, &nextPathUpdate );
 		return 0;
 	}
+
 	void TryInitPathToEnemie( const bool bNewEnemy );
 
 	bool IsEnemyAlive( CAviation *pEnemie ) const;
@@ -386,13 +478,22 @@ class CPlaneFighterPatrolState : public CPlanePatrolState, public CPlaneDeffensi
 
 public:
 	CPlaneFighterPatrolState() {}
+
 	CPlaneFighterPatrolState( CAviation *_pPlane, const CVec2 &vPoint, CAviation *pTarget );
 
 	virtual void Segment();
 
 	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return true; }
-	virtual const CVec2 GetPurposePoint() const { return CVec2( -1, -1 ); }
+
+	virtual bool IsAttackingState() const
+	{
+		return true;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return CVec2( -1, -1 );
+	}
 
 	virtual bool IsAttacksUnit() const;
 	virtual class CAIUnit *GetTargetUnit() const;
@@ -446,6 +547,7 @@ private:
 	bool bShootedToEnemie = {}; // performed any shooting during dive
 	bool bFirstApproach = {};
 	bool bDiveInProgress = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CPlanePatrolState *)this );
@@ -466,6 +568,7 @@ private:
 		f.Add( 17, &bDiveInProgress );
 		return 0;
 	}
+
 	void TryInitPathToEnemie( const bool bForceNewPath );
 	void TryInitPathToPoint( const CVec3 &vPos, const bool bNewPoint, const bool bToHorisontal );
 
@@ -485,14 +588,23 @@ private:
 
 public:
 	CPlaneShturmovikPatrolState() : pPlane( 0 ) {}
+
 	CPlaneShturmovikPatrolState(
 			CAviation *_pPlane, const CVec2 &vPoint, CAIUnit *pTarget, CBuilding *pBuilding, const bool bMustDropBombs );
 
 	virtual void Segment();
 
 	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return GetPoint(); }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return GetPoint();
+	}
 };
 
 class CPlaneScoutState : public CPlanePatrolState, public CPlaneDeffensiveFire
@@ -509,6 +621,7 @@ class CPlaneScoutState : public CPlanePatrolState, public CPlaneDeffensiveFire
 	ZDATA_( CPlanePatrolState )
 	ZPARENT( CPlaneDeffensiveFire )
 	EPlaneScoutState eState = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CPlanePatrolState *)this );
@@ -519,11 +632,20 @@ class CPlaneScoutState : public CPlanePatrolState, public CPlaneDeffensiveFire
 
 public:
 	CPlaneScoutState() {}
+
 	CPlaneScoutState( CAviation *_pPlane );
 	virtual void Segment();
 	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return GetPoint(); }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return GetPoint();
+	}
 };
 
 //ACTION_MOVE_PLANE_LEAVE
@@ -531,6 +653,7 @@ public:
 class CPlaneLeaveState : public CPlanePatrolState, public CPlaneDeffensiveFire
 {
 	OBJECT_BASIC_METHODS( CPlaneLeaveState );
+
 	enum EPlaneLeaveState
 	{
 		EPLS_STARTING,
@@ -541,6 +664,7 @@ class CPlaneLeaveState : public CPlanePatrolState, public CPlaneDeffensiveFire
 	ZPARENT( CPlaneDeffensiveFire )
 	CPtr<IUnitState> pMoveToExitPoint;
 	EPlaneLeaveState eState = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CPlanePatrolState *)this );
@@ -552,14 +676,24 @@ class CPlaneLeaveState : public CPlanePatrolState, public CPlaneDeffensiveFire
 
 public:
 	CPlaneLeaveState() {}
+
 	CPlaneLeaveState( CAviation *pPlane );
 
 	virtual void Segment();
 
 	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
-	virtual EUnitStateNames GetName() { return EUSN_PLANE_LEAVE; }
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_PLANE_LEAVE;
+	}
 
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
@@ -569,6 +703,7 @@ public:
 class CPlaneFlyDeadState : public CPlanePatrolState
 {
 	OBJECT_BASIC_METHODS( CPlaneFlyDeadState );
+
 	enum EPlaneDeadState
 	{
 		EPDS_START_DIVE,
@@ -584,6 +719,7 @@ class CPlaneFlyDeadState : public CPlanePatrolState
 
 	public:
 		CDeadZone() : fMaxX( 0.0f ), fMinX( 0.0f ), fMaxY( 0.0f ), fMinY( 0.0f ) {}
+
 		void Init();
 		bool IsInZone( const CVec2 &vPoint );
 		void AdjustEscapePoint( CVec2 *pPoint );
@@ -598,6 +734,7 @@ class CPlaneFlyDeadState : public CPlanePatrolState
 	bool bExplodeInstantly = {};  // if false plane will explode after finish dive.
 	NTimer::STime timeStart = {}; // start death time
 	bool bGroundCrash = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CPlanePatrolState *)this );
@@ -610,6 +747,7 @@ class CPlaneFlyDeadState : public CPlanePatrolState
 		f.Add( 8, &bGroundCrash );
 		return 0;
 	}
+
 	void InitPathToNearestPoint();
 	float CalcPath( const uint16_t wCurDir,
 	                const uint8_t nDesiredDir,
@@ -619,26 +757,38 @@ class CPlaneFlyDeadState : public CPlanePatrolState
 
 public:
 	CPlaneFlyDeadState() {}
+
 	CPlaneFlyDeadState( CAviation *_pPlane );
 
 	virtual void Segment();
 
 	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
-	virtual EUnitStateNames GetName() { return EUSN_FLY_DEAD; }
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_FLY_DEAD;
+	}
 };
 
 // самолет самоубийца (V-2)
 class CPlaneSuicideState : public IUnitState
 {
 	OBJECT_NOCOPY_METHODS( CPlaneSuicideState )
+
 	enum EPlaneSuicideState
 	{
 		EPSS_START, //стэйт только начался
 		EPSS_FLY,   //летим к точке самоубийства
 		EPSS_DIVE,  //самоубиваемся
 	};
+
 	ZDATA
 	CPtr<CAviation> pPlane;
 	EPlaneSuicideState eState = {};
@@ -660,13 +810,25 @@ public:
 private:
 public:
 	CPlaneSuicideState() : pPlane( 0 ) {}
+
 	CPlaneSuicideState( CAviation *pPlane, const CVec2 &vTarget );
 
 	void Segment();
 
 	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return vTarget; }
-	virtual EUnitStateNames GetName() { return EUSN_PLANE_SUICIDE; }
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return vTarget;
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_PLANE_SUICIDE;
+	}
 };

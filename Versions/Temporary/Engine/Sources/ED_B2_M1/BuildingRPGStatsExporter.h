@@ -14,6 +14,7 @@ class CBuildingRPGStatsExporter : public CObjectBaseRPGStatsExporter
 		int nEndTime;
 
 		SAnimationInfo() : nStartTime( -1 ), nEndTime( -1 ) {}
+
 		SAnimationInfo( const int _nStartTime, const int _nEndTime ) : nStartTime( _nStartTime ), nEndTime( _nEndTime ) {}
 	};
 
@@ -48,7 +49,10 @@ class CBuildingRPGStatsExporter : public CObjectBaseRPGStatsExporter
 	const bool UpdateSectionMaterials( IManipulator *pManipulator, const std::string &szObjectName );
 
 protected:
-	bool NeedCreatePassability() { return true; }
+	bool NeedCreatePassability()
+	{
+		return true;
+	}
 
 public:
 	EXPORT_RESULT ExportObject( IManipulator *pManipulator,

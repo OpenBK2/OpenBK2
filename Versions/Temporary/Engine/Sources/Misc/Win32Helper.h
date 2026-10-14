@@ -16,6 +16,7 @@ template <class T>
 class com_ptr
 {
 	T *pData = nullptr;
+
 	void Assign( T *_pData )
 	{
 		if ( _pData )
@@ -24,6 +25,7 @@ class com_ptr
 		}
 		pData = _pData;
 	}
+
 	void Free()
 	{
 		if ( pData )
@@ -33,9 +35,21 @@ class com_ptr
 	}
 
 public:
-	com_ptr( T *_pData = 0 ) { Assign( _pData ); }
-	~com_ptr() { Free(); }
-	com_ptr( const com_ptr &a ) { Assign( a.pData ); }
+	com_ptr( T *_pData = 0 )
+	{
+		Assign( _pData );
+	}
+
+	~com_ptr()
+	{
+		Free();
+	}
+
+	com_ptr( const com_ptr &a )
+	{
+		Assign( a.pData );
+	}
+
 	com_ptr &operator=( const com_ptr &a )
 	{
 		if ( pData == a.pData )
@@ -46,6 +60,7 @@ public:
 		Assign( a.pData );
 		return *this;
 	}
+
 	com_ptr &operator=( T *pObj )
 	{
 		if ( pData == pObj )
@@ -56,14 +71,24 @@ public:
 		Assign( pObj );
 		return *this;
 	}
-	operator T *() const { return pData; }
-	T *operator->() const { return pData; }
+
+	operator T *() const
+	{
+		return pData;
+	}
+
+	T *operator->() const
+	{
+		return pData;
+	}
+
 	// not fair play
 	void Create( T *_pData )
 	{
 		Free();
 		pData = _pData;
 	}
+
 	T **GetAddr()
 	{
 		Free();
@@ -82,8 +107,15 @@ class CControl87Guard
 	std::fenv_t prevState;
 
 public:
-	CControl87Guard() { std::fegetenv( &prevState ); }
-	~CControl87Guard() { std::fesetenv( &prevState ); }
+	CControl87Guard()
+	{
+		std::fegetenv( &prevState );
+	}
+
+	~CControl87Guard()
+	{
+		std::fesetenv( &prevState );
+	}
 };
 
 // Precision control is a field of the x87 control word: it says what width
@@ -101,7 +133,12 @@ public:
 		PCM_MEDIUM,
 		PCM_LOW
 	};
-	CPrecisionControl( EPrecisionControlMode mode = PCM_HIGH ) { Set( mode ); }
+
+	CPrecisionControl( EPrecisionControlMode mode = PCM_HIGH )
+	{
+		Set( mode );
+	}
+
 	void Set( EPrecisionControlMode mode )
 	{
 #if BOOST_OS_WINDOWS && BOOST_ARCH_X86_32
@@ -139,8 +176,16 @@ public:
 		RCM_UP = FE_UPWARD,
 		RCM_CHOP = FE_TOWARDZERO
 	};
-	CRoundingControl( ERoundingControlMode mode = RCM_NEAR ) { Set( mode ); }
-	void Set( ERoundingControlMode mode ) { std::fesetround( mode ); }
+
+	CRoundingControl( ERoundingControlMode mode = RCM_NEAR )
+	{
+		Set( mode );
+	}
+
+	void Set( ERoundingControlMode mode )
+	{
+		std::fesetround( mode );
+	}
 };
 
 // Mask every floating point exception, so arithmetic yields Inf or NaN rather
@@ -185,4 +230,4 @@ inline void MaskAllFloatingPointExceptions()
 #endif
 }
 
-}
+} // namespace NWin32Helper

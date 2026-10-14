@@ -6,6 +6,7 @@
 
 const float F_KEEP_ACCEPTED_TIME = 2000;
 const int N_MAX_ACCEPTED_LIST_SIZE = 30;
+
 namespace NNet
 {
 /////////////////////////////////////////////////////////////////////////////////////
@@ -18,6 +19,7 @@ CLoginSupport::CLoginSupport( APPLICATION_ID _applicationID )
 	NHPTimer::GetTime( &time );
 	uniqueServerID = time;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CLoginSupport::WriteLogin( CBitStream *pBits, const CNodeAddressSet &localAddr )
 {
@@ -31,6 +33,7 @@ void CLoginSupport::WriteLogin( CBitStream *pBits, const CNodeAddressSet &localA
 	( *pBits ).Write( nSize );
 	( *pBits ).Write( pwd.GetBuffer(), nSize );
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 bool CLoginSupport::ProcessLogin( const CNodeAddress &addr, CBitStream &bits, SLoginInfo *pRes )
 {
@@ -53,6 +56,7 @@ bool CLoginSupport::ProcessLogin( const CNodeAddress &addr, CBitStream &bits, SL
 	bits.Read( pRes->pwd.GetBufferForWrite(), nSize );
 	return true;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 CLoginSupport::SAcceptedLogin &CLoginSupport::GetAcceptedLogin( const CNodeAddress &addr, const SLoginInfo &info )
 {
@@ -71,6 +75,7 @@ CLoginSupport::SAcceptedLogin &CLoginSupport::GetAcceptedLogin( const CNodeAddre
 	a.nClientID = ++nClientIDTrack;
 	return a;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CLoginSupport::AcceptLogin( const CNodeAddress &addr,
                                  CBitStream *pBits,
@@ -97,6 +102,7 @@ void CLoginSupport::AcceptLogin( const CNodeAddress &addr,
 		}
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CLoginSupport::RejectLogin( const CNodeAddress &addr, CBitStream *pBits, const SLoginInfo &info, int nReason )
 {
@@ -115,6 +121,7 @@ void CLoginSupport::RejectLogin( const CNodeAddress &addr, CBitStream *pBits, co
 		}
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 bool CLoginSupport::HasAccepted( const CNodeAddress &addr, const SLoginInfo &info )
 {
@@ -127,6 +134,7 @@ bool CLoginSupport::HasAccepted( const CNodeAddress &addr, const SLoginInfo &inf
 	}
 	return false;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CLoginSupport::ProcessAccepted( const CNodeAddress &addr, CBitStream &bits )
 {
@@ -157,6 +165,7 @@ void CLoginSupport::ProcessAccepted( const CNodeAddress &addr, CBitStream &bits 
 		}
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CLoginSupport::ProcessRejected( const CNodeAddress &addr, CBitStream &bits )
 {
@@ -181,6 +190,7 @@ void CLoginSupport::ProcessRejected( const CNodeAddress &addr, CBitStream &bits 
 		}
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CLoginSupport::Step( float fDeltaTime )
 {
@@ -209,6 +219,7 @@ void CLoginSupport::Step( float fDeltaTime )
 		}
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CLoginSupport::StartLogin( const CNodeAddress &addr, const CMemoryStream &buf )
 {
@@ -219,5 +230,6 @@ void CLoginSupport::StartLogin( const CNodeAddress &addr, const CMemoryStream &b
 	fLoginInterval = 0.1f;
 	nLoginAttempt = (int)GetCurrentTimeMilliseconds();
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
-}
+} // namespace NNet

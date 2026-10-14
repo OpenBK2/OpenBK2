@@ -80,12 +80,14 @@ class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandH
 	const NDb::SMapInfo *pMapInfo;
 	bool bSaveFailed = false;
 	std::string szSaveError;
+
 	//
 	inline void ClearMapInfoData()
 	{
 		objectInfoCollector.Clear();
 		pMapInfo = 0;
 	}
+
 	// другие переменные
 	unsigned nMapInfoToolsToolbarID;
 	unsigned nMapInfoViewToolbarID;
@@ -115,13 +117,26 @@ class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandH
 	//
 public:
 	//IEditor
-	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
-	IView *GetView() { return this; }
-	IInputState *GetInputState() { return pMapInfoState; }
+	void GetTemporaryLabel( std::string *pszTemporaryLabel )
+	{
+		pszTemporaryLabel->clear();
+	}
+
+	IView *GetView()
+	{
+		return this;
+	}
+
+	IInputState *GetInputState()
+	{
+		return pMapInfoState;
+	}
+
 	void GetChildFrameType( std::string *pszChildFrameTypeName )
 	{
 		( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__";
 	}
+
 	//IEditor
 	void CreateControls();
 	void ResetGUI( bool bActive ) override;
@@ -131,8 +146,16 @@ public:
 	void Create();
 	void Destroy();
 	void Save( bool bSaveChanges );
-	std::string GetSaveError() const override { return szSaveError; }
-	bool ShowProgress() { return false; }
+
+	std::string GetSaveError() const override
+	{
+		return szSaveError;
+	}
+
+	bool ShowProgress()
+	{
+		return false;
+	}
 
 	void GetChangesFromController( CObjectBaseController *pObjectController, bool bRedo );
 
@@ -147,6 +170,7 @@ public:
 		}
 		return pMapInfoController;
 	}
+
 	//CDefaultView
 	void Undo( IController *pController );
 	void Redo( IController *pController );

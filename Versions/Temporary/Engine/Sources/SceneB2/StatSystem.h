@@ -14,4 +14,5 @@ struct IStatSystem : public CObjectBase
 	virtual void
 	UpdateEntry( const std::string &szName, const std::string &szEntry, const uint32_t dwColor = 0xffffffff ) = 0;
 };
+
 SCENEB2_EXPORT IStatSystem *CreateStatSystem();

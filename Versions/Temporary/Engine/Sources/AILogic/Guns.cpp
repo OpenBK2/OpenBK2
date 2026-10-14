@@ -78,7 +78,7 @@ public:
 		}
 	}
 };
-}
+} // namespace
 
 float GetDispByRadius( const float fDispRadius, const float fRangeMax, const float fDist )
 {

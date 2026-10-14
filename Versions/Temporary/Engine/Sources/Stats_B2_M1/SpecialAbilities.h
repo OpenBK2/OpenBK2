@@ -29,9 +29,16 @@ struct SAbilitySwitchState
 			unsigned bAutocast : 8;
 			unsigned crap : 16;
 		};
+
 		uint32_t dwStateValue;
 	};
-	SAbilitySwitchState( const SAbilitySwitchState &src ) { dwStateValue = src.dwStateValue; }
+
+	SAbilitySwitchState( const SAbilitySwitchState &src )
+	{
+		dwStateValue = src.dwStateValue;
+	}
+
 	SAbilitySwitchState( const EAbilitySwitchState _eState ) : eState( _eState ), bAutocast( false ), crap( 0 ) {}
+
 	SAbilitySwitchState() : eState( EASS_READY_TO_ON ), bAutocast( false ), crap( 0 ) {}
 };

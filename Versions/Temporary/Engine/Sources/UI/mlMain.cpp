@@ -46,6 +46,7 @@ private:
 	CObj<IReflowLayout> pLayout;
 	std::unordered_map<std::wstring, CObj<IHandler>> tagsMap;
 	CObj<SFadeValue> sFadeValue;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &text );
@@ -59,7 +60,11 @@ private:
 public:
 	CML();
 
-	void SetText( const std::wstring &_text ) { text = _text; }
+	void SetText( const std::wstring &_text )
+	{
+		text = _text;
+	}
+
 	void SetHandler( const std::wstring &tag, IHandler *pHandler );
 	void SetFade( float fFade, int nWidth );
 
@@ -68,7 +73,10 @@ public:
 	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window );
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window );
 
-	const CTPoint<int> &GetSize() const { return size; }
+	const CTPoint<int> &GetSize() const
+	{
+		return size;
+	}
 };
 
 CML::CML()
@@ -242,7 +250,7 @@ IML *CreateML()
 	return new CML;
 }
 
-} // NAMESPACE
+} // namespace NML
 
 using namespace NML;
 REGISTER_SAVELOAD_CLASS( UI, 0xB5529160, CML )

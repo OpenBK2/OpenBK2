@@ -416,6 +416,6 @@ bool SBridgeInfo::PasteSelf( CLinkIDMap *pNew2OldLinkIDMap,
 	}
 	return false;
 }
-};
+}; // namespace NMapInfoEditor
 
 // basement storage

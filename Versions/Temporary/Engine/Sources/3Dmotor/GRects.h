@@ -7,7 +7,7 @@ namespace NGfx
 {
 class CTexture;
 class C2DQuadsRenderer;
-};
+}; // namespace NGfx
 
 namespace NGScene
 {
@@ -16,6 +16,7 @@ enum ELayoutRenderMode
 	LRM_NORMAL,
 	LRM_CLEAR_RECT
 };
+
 void RenderRectLayout( NGfx::C2DQuadsRenderer *pRes,
                        NGfx::CTexture *pTex,
                        const CRectLayout &sLayout,
@@ -39,4 +40,4 @@ void RenderRect( NGfx::C2DQuadsRenderer *pRes,
                  const NGfx::SPixel8888 *pColors4,
                  const CTRect<float> &rSrc,
                  float fZ = 1.0f );
-}
+} // namespace NGScene

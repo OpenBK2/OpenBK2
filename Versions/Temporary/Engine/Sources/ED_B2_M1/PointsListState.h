@@ -49,63 +49,125 @@ protected:
 	void SetPointMarkers();
 
 public:
-	CPointsListState() { NI_ASSERT( 0, "CPointsListState()" ); }
+	CPointsListState()
+	{
+		NI_ASSERT( 0, "CPointsListState()" );
+	}
+
 	CPointsListState( unsigned nCHID, unsigned nInstanceID, CBuildingEditor *_pBuildingEditor );
 	virtual ~CPointsListState();
 
 	virtual void Draw( IPaintContext *pPaintDC ) {}
+
 	virtual std::string GetPointsArrayFieldName() = 0;
-	virtual std::string GetPositionFieldName() { return "Pos"; }
-	virtual std::string GetDirectionFieldName() { return "Direction"; }
+
+	virtual std::string GetPositionFieldName()
+	{
+		return "Pos";
+	}
+
+	virtual std::string GetDirectionFieldName()
+	{
+		return "Direction";
+	}
+
 	virtual void GetMaskFields( std::vector<std::string> *pMaskFields ) = 0;
-	virtual bool IsOriginInUse() { return false; }
-	virtual EDirMeasure GetDirMeasure() { return DIR_IN_AIGRAD; }
+
+	virtual bool IsOriginInUse()
+	{
+		return false;
+	}
+
+	virtual EDirMeasure GetDirMeasure()
+	{
+		return DIR_IN_AIGRAD;
+	}
+
 	virtual void AddPointSpecificMarker( IManipulator *pManipulator, int nPointIndex ) {}
 };
 
 class CSmokePointsState : public CPointsListState
 {
 public:
-	CSmokePointsState() { NI_ASSERT( 0, "CSmokePointsState()" ); }
+	CSmokePointsState()
+	{
+		NI_ASSERT( 0, "CSmokePointsState()" );
+	}
+
 	CSmokePointsState( CBuildingEditor *_pBuildingEditor )
 			: CPointsListState( CHID_BUILDING_SMOKE_POINTS_STATE, 0, _pBuildingEditor )
 	{
 	}
+
 	virtual ~CSmokePointsState() {}
 
-	virtual std::string GetPointsArrayFieldName() { return "smokePoints"; }
+	virtual std::string GetPointsArrayFieldName()
+	{
+		return "smokePoints";
+	}
+
 	virtual void GetMaskFields( std::vector<std::string> *pMaskFields );
-	virtual bool IsOriginInUse() { return true; }
+
+	virtual bool IsOriginInUse()
+	{
+		return true;
+	}
 };
 
 class CSlotPointsState : public CPointsListState
 {
 public:
-	CSlotPointsState() { NI_ASSERT( 0, "CSlotPointsState()" ); }
+	CSlotPointsState()
+	{
+		NI_ASSERT( 0, "CSlotPointsState()" );
+	}
+
 	CSlotPointsState( CBuildingEditor *_pBuildingEditor )
 			: CPointsListState( CHID_BUILDING_SLOT_POINTS_STATE, 1, _pBuildingEditor )
 	{
 	}
+
 	virtual ~CSlotPointsState() {}
 
-	virtual std::string GetPointsArrayFieldName() { return "slots"; }
+	virtual std::string GetPointsArrayFieldName()
+	{
+		return "slots";
+	}
+
 	virtual void GetMaskFields( std::vector<std::string> *pMaskFields );
-	virtual EDirMeasure GetDirMeasure() { return DIR_IN_DEGREES; }
+
+	virtual EDirMeasure GetDirMeasure()
+	{
+		return DIR_IN_DEGREES;
+	}
 };
 
 class CEntrancePointsState : public CPointsListState
 {
 public:
-	CEntrancePointsState() { NI_ASSERT( 0, "CEntrancePointsState()" ); }
+	CEntrancePointsState()
+	{
+		NI_ASSERT( 0, "CEntrancePointsState()" );
+	}
+
 	CEntrancePointsState( CBuildingEditor *_pBuildingEditor )
 			: CPointsListState( CHID_BUILDING_ENTRANCE_POINTS_STATE, 2, _pBuildingEditor )
 	{
 	}
+
 	virtual ~CEntrancePointsState() {}
 
-	virtual std::string GetPointsArrayFieldName() { return "entrances"; }
+	virtual std::string GetPointsArrayFieldName()
+	{
+		return "entrances";
+	}
+
 	virtual void GetMaskFields( std::vector<std::string> *pMaskFields );
-	virtual std::string GetDirectionFieldName() { return "Dir"; }
+
+	virtual std::string GetDirectionFieldName()
+	{
+		return "Dir";
+	}
 };
 
 class CSurfacePointsState : public CPointsListState
@@ -113,17 +175,31 @@ class CSurfacePointsState : public CPointsListState
 	std::vector<NDb::SHPObjectRPGStats::SModelSurfacePoint> surfPoints;
 
 public:
-	CSurfacePointsState() { NI_ASSERT( 0, "CSurfacePointsState()" ); }
+	CSurfacePointsState()
+	{
+		NI_ASSERT( 0, "CSurfacePointsState()" );
+	}
+
 	CSurfacePointsState( CBuildingEditor *_pBuildingEditor )
 			: CPointsListState( CHID_BUILDING_SURFACE_POINTS_STATE, 3, _pBuildingEditor )
 	{
 	}
+
 	//
 	virtual ~CSurfacePointsState() {}
 
-	virtual std::string GetPointsArrayFieldName() { return "SurfacePoints"; }
+	virtual std::string GetPointsArrayFieldName()
+	{
+		return "SurfacePoints";
+	}
+
 	virtual void GetMaskFields( std::vector<std::string> *pMaskFields );
-	virtual std::string GetDirectionFieldName() { return ""; }
+
+	virtual std::string GetDirectionFieldName()
+	{
+		return "";
+	}
+
 	virtual void Draw( IPaintContext *pPaintDC );
 	virtual void AddPointSpecificMarker( IManipulator *pManipulator, int nPointIndex );
 };
@@ -131,19 +207,36 @@ public:
 class CDamageLevelsState : public CPointsListState
 {
 public:
-	CDamageLevelsState() { NI_ASSERT( 0, "CDamageLevelsState()" ); }
+	CDamageLevelsState()
+	{
+		NI_ASSERT( 0, "CDamageLevelsState()" );
+	}
+
 	CDamageLevelsState( CBuildingEditor *_pBuildingEditor )
 			: CPointsListState( CHID_DAMAGE_LEVELS_STATE, 4, _pBuildingEditor )
 	{
 	}
+
 	//
 	virtual ~CDamageLevelsState() {}
 
-	std::string GetPointsArrayFieldName() { return "DamageLevels"; }
+	std::string GetPointsArrayFieldName()
+	{
+		return "DamageLevels";
+	}
+
 	void GetMaskFields( std::vector<std::string> *pMaskFields );
-	std::string GetDirectionFieldName() { return ""; }
+
+	std::string GetDirectionFieldName()
+	{
+		return "";
+	}
+
 	void Draw( IPaintContext *pPaintDC ) {}
+
 	void RefreshState();
+
 	void SetPointMarkers() {}
+
 	void Leave();
 };

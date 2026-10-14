@@ -13,6 +13,7 @@
 struct ICommandHandler
 {
 	virtual ~ICommandHandler() {}
+
 	//
 	// Обработать команду от User Interface, если вернули false, то команда не обработана
 	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) = 0;
@@ -29,6 +30,7 @@ struct ICommandHandlerContainer : public CObjectBase
 	{
 		tidTypeID = 0x1408A381
 	};
+
 	// Зарегистрироать обработчик в MainFrame ( команды от пользовательского интерфейса )
 	virtual void Register( unsigned nType, unsigned nFirstCommandID, unsigned nLastCommandID ) = 0;
 	// Удалить регистрацию обработчика из Mainframe

@@ -115,6 +115,7 @@ SYSTEM_EXPORT bool ComparePathEq( const int nStart1,
                                   const int nStart2,
                                   const int nLength2,
                                   const std::string &szPath2 );
+
 //! Compare full pathes on equality, ignore case and path separator type.
 //! \return True if pathes are equal and false in other case
 BOOST_FORCEINLINE bool ComparePathEq( const std::string &szPath1, const std::string &szPath2 )
@@ -130,6 +131,7 @@ SYSTEM_EXPORT bool ComparePathLt( const int nStart1,
                                   const int nStart2,
                                   const int nLength2,
                                   const std::string &szPath2 );
+
 //! Compare full pathes on less-then, ignore case and path separator type.
 //! \return True if first path are less then second and false in other case
 BOOST_FORCEINLINE bool ComparePathLt( const std::string &szPath1, const std::string &szPath2 )
@@ -148,6 +150,7 @@ MakeFullPath( std::string *pRes, const std::string &szRelativePath, const std::s
 
 //! Replace all '\' to '/'. One can pass the same string in both parameters
 SYSTEM_EXPORT void NormalizePath( std::string *pRes, const std::string &szFilePath );
+
 BOOST_FORCEINLINE void NormalizePath( std::string *pFilePath )
 {
 	NormalizePath( pFilePath, *pFilePath );
@@ -164,54 +167,76 @@ class CFilePath : public std::string
 {
 public:
 	CFilePath() {}
+
 	CFilePath( const char *_pszFilePath ) : std::string( _pszFilePath ) {}
+
 	CFilePath( const std::string &_szFilePath ) : std::string( _szFilePath ) {}
+
 	CFilePath( const CFilePath &path ) : std::string( path ) {}
+
 	//
 	const CFilePath &operator=( const char *_pszFilePath )
 	{
 		( *(std::string *)this ) = _pszFilePath;
 		return *this;
 	}
+
 	const CFilePath &operator=( const std::string &szFilePath )
 	{
 		( *(std::string *)this ) = szFilePath;
 		return *this;
 	}
+
 	const CFilePath &operator=( const CFilePath &filePath )
 	{
 		( *(std::string *)this ) = filePath;
 		return *this;
 	}
+
 	//
 	bool operator==( const std::string &_szFilePath ) const
 	{
 		return ComparePathEq( 0, this->size(), *this, 0, _szFilePath.size(), _szFilePath );
 	}
+
 	bool operator==( const char *_pszFilePath ) const
 	{
 		return ComparePathEq( 0, this->size(), *this, 0, strlen( _pszFilePath ), _pszFilePath );
 	}
-	bool operator!=( const std::string &_szFilePath ) const { return !operator==( _szFilePath ); }
-	bool operator!=( const char *_pszFilePath ) const { return !operator==( _pszFilePath ); }
+
+	bool operator!=( const std::string &_szFilePath ) const
+	{
+		return !operator==( _szFilePath );
+	}
+
+	bool operator!=( const char *_pszFilePath ) const
+	{
+		return !operator==( _pszFilePath );
+	}
+
 	bool operator<( const std::string &_szFilePath ) const
 	{
 		return ComparePathLt( 0, this->size(), *this, 0, _szFilePath.size(), _szFilePath );
 	}
+
 	bool operator<( const char *_pszFilePath ) const
 	{
 		return ComparePathLt( 0, this->size(), *this, 0, strlen( _pszFilePath ), _pszFilePath );
 	}
+
 	//
 	SYSTEM_EXPORT int MakeHashKey() const;
 	//
 	SYSTEM_EXPORT int operator&( IBinSaver &saver );
 };
 
-}
+} // namespace NFile
 
 template <>
 struct std::hash<NFile::CFilePath>
 {
-	size_t operator()( const NFile::CFilePath &path ) const { return path.MakeHashKey(); }
+	size_t operator()( const NFile::CFilePath &path ) const
+	{
+		return path.MakeHashKey();
+	}
 };

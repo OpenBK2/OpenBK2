@@ -22,6 +22,7 @@ protected:
 
 public:
 	CExecutorSpyMode( CAIUnit *_pUnit );
+
 	CExecutorSpyMode() {}
 
 	void RegisterOnEvents( IExecutorContainer *pContainer );

@@ -33,6 +33,7 @@ struct SGameConnection
 
 	std::unordered_map<int, SAddressInfo> connections;
 };
+
 enum EIgnoreFriendList
 {
 	IGNORE_LIST = 0,
@@ -89,10 +90,16 @@ class CClients : public CObjectBase
 
 public:
 	CClients() {}
+
 	CClients( IDatabase *pDatabase );
 
 	bool IsCriticalBusy() const;
-	float GetQPS() const { return fQueriesPerSecond; }
+
+	float GetQPS() const
+	{
+		return fQueriesPerSecond;
+	}
+
 	void RecalcDBOverload();
 
 	bool IsBadNick( const std::string &szNick );
@@ -127,7 +134,10 @@ public:
 	const bool GetCommonClientInfo( const int nClientID, SCommonClientInfo *pCommonClientInfo ) const;
 	void SetCommonClientInfo( const int nClientID, const SCommonClientInfo &commonClientInfo );
 
-	const std::unordered_map<int, SCommonClientInfo> &GetOnLine() const { return onLine; }
+	const std::unordered_map<int, SCommonClientInfo> &GetOnLine() const
+	{
+		return onLine;
+	}
 
 	void AddIgnoreFriendPair( const int nRecipient, const std::string &szSender, EIgnoreFriendList eList );
 	void DeleteIgnoreFriendPair( const int nRecipient, const std::string &szSender, EIgnoreFriendList eList );
@@ -145,5 +155,8 @@ public:
 	void LockLadderInfo( const std::string &szNick );
 	void UnlockLadderInfo( const std::string &szNick );
 
-	int GetMaxXP() const { return nMaxXP; }
+	int GetMaxXP() const
+	{
+		return nMaxXP;
+	}
 };

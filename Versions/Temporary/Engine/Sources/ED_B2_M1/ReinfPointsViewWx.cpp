@@ -47,9 +47,15 @@ class CReinfPointsWxWindow : public CWxHostWindow, public CReinfPointsCommands
 	SReinfPointsWindowData::EReinfWndLastAction eLastAction = SReinfPointsWindowData::RWA_NO_ACTIONS;
 
 public:
-	CReinfPointsWxWindow() { Singleton<ICommandHandlerContainer>()->Set( CHID_REINF_POINTS_WINDOW, this ); }
+	CReinfPointsWxWindow()
+	{
+		Singleton<ICommandHandlerContainer>()->Set( CHID_REINF_POINTS_WINDOW, this );
+	}
 
-	virtual ~CReinfPointsWxWindow() { Singleton<ICommandHandlerContainer>()->Remove( CHID_REINF_POINTS_WINDOW ); }
+	virtual ~CReinfPointsWxWindow()
+	{
+		Singleton<ICommandHandlerContainer>()->Remove( CHID_REINF_POINTS_WINDOW );
+	}
 
 	bool Build( IWidget *pParent )
 	{
@@ -191,7 +197,10 @@ public:
 	}
 
 private:
-	int PlayerAt( unsigned nPos ) const { return (int)reinterpret_cast<uintptr_t>( pPlayers->GetClientData( nPos ) ); }
+	int PlayerAt( unsigned nPos ) const
+	{
+		return (int)reinterpret_cast<uintptr_t>( pPlayers->GetClientData( nPos ) );
+	}
 
 	void EnablePointButtons( bool bEnable )
 	{
@@ -227,7 +236,10 @@ private:
 		eLastAction = SReinfPointsWindowData::RWA_NO_ACTIONS;
 	}
 
-	void OnPlayerChanged( wxCommandEvent & ) { Notify( SReinfPointsWindowData::RWA_PLAYER_CHANGE ); }
+	void OnPlayerChanged( wxCommandEvent & )
+	{
+		Notify( SReinfPointsWindowData::RWA_PLAYER_CHANGE );
+	}
 
 	void OnPointSelected( wxListEvent &rEvent )
 	{
@@ -240,7 +252,10 @@ private:
 		Notify( SReinfPointsWindowData::RWA_POINT_SEL_CHANGE );
 	}
 
-	void OnPointActivated( wxListEvent & ) { Notify( SReinfPointsWindowData::RWA_POINT_JUMP ); }
+	void OnPointActivated( wxListEvent & )
+	{
+		Notify( SReinfPointsWindowData::RWA_POINT_JUMP );
+	}
 
 	void OnKeyDown( wxKeyEvent &rEvent )
 	{
@@ -271,7 +286,7 @@ private:
 		}
 	}
 };
-}
+} // namespace
 
 namespace NReinfPointsView
 {
@@ -289,4 +304,4 @@ IWidget *Create( CPaletteList *pPalettes, IWidget *pPage )
 	}
 	return pWindow;
 }
-}
+} // namespace NReinfPointsView

@@ -11,7 +11,12 @@ class CSubstSound : public CObjectBase
 
 public:
 	CSubstSound() {}
-	CSubstSound( ISound *pSound ) : pSample( pSound ) { pSFX = Singleton<ISFX>(); }
+
+	CSubstSound( ISound *pSound ) : pSample( pSound )
+	{
+		pSFX = Singleton<ISFX>();
+	}
+
 	virtual ~CSubstSound()
 	{
 		if ( pSFX )
@@ -19,6 +24,11 @@ public:
 			pSFX->StopSample( pSample );
 		}
 	}
-	ISound *GetSound() { return pSample; }
+
+	ISound *GetSound()
+	{
+		return pSample;
+	}
+
 	int operator&( IBinSaver &saver );
 };

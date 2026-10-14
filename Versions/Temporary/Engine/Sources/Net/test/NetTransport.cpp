@@ -40,7 +40,7 @@ struct CNetDriverTestAccess
 		driver.lastTime -= static_cast<NHPTimer::STime>( seconds * NHPTimer::GetClockRate() );
 	}
 };
-}
+} // namespace NNet
 
 namespace
 {
@@ -56,21 +56,32 @@ public:
 		CNodeAddress address;
 		CMemoryStream data;
 	};
+
 	mutable std::deque<Datagram> incoming;
 	mutable std::vector<Datagram> outgoing;
 
-	bool MakeBroadcastAddr( CNodeAddress *, int ) const override { return false; }
-	bool IsLocalAddr( const CNodeAddress & ) const override { return false; }
+	bool MakeBroadcastAddr( CNodeAddress *, int ) const override
+	{
+		return false;
+	}
+
+	bool IsLocalAddr( const CNodeAddress & ) const override
+	{
+		return false;
+	}
+
 	bool GetSelfAddress( CNodeAddressSet *pResult ) const override
 	{
 		pResult->Clear();
 		return true;
 	}
+
 	bool Send( const CNodeAddress &destination, CMemoryStream &packet ) const override
 	{
 		outgoing.push_back( { destination, packet } );
 		return true;
 	}
+
 	bool Recv( CNodeAddress *pSource, CMemoryStream *pPacket ) const override
 	{
 		if ( incoming.empty() )
@@ -178,6 +189,7 @@ std::vector<unsigned char> ReadDirectMessages( CNetDriver &driver )
 }
 
 using DirectMessage = std::pair<int, std::vector<unsigned char>>;
+
 std::vector<DirectMessage> ReadFullDirectMessages( CNetDriver &driver )
 {
 	std::vector<DirectMessage> result;
@@ -194,7 +206,7 @@ std::vector<DirectMessage> ReadFullDirectMessages( CNetDriver &driver )
 	}
 	return result;
 }
-}
+} // namespace
 
 TEST( NetTransport, ShortFinalMessageDoesNotWaitForAnotherPacket )
 {
@@ -287,6 +299,7 @@ TEST( NetTransport, ReliableStreamSurvivesLossReorderingAndSequenceWrap )
 			packet.SetSize( packet.GetPosition() );
 			return packet;
 		}
+
 		bool Receive( CMemoryStream &packet )
 		{
 			CBitStream bits( packet.GetBufferForWrite(), CBitStream::read, packet.GetSize() );
@@ -299,6 +312,7 @@ TEST( NetTransport, ReliableStreamSurvivesLossReorderingAndSequenceWrap )
 			stream.Commit( acknowledged );
 			return true;
 		}
+
 		int Tick()
 		{
 			std::vector<PACKET_ID> rolled, erased;
@@ -308,6 +322,7 @@ TEST( NetTransport, ReliableStreamSurvivesLossReorderingAndSequenceWrap )
 			return static_cast<int>( rolled.size() );
 		}
 	};
+
 	Endpoint sender, receiver;
 	// Exercise a complete 16-bit sequence cycle regardless of the clock seed.
 	// Both directions exchange real ACKs, keeping their send windows bounded.

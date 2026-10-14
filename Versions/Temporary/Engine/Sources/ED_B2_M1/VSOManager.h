@@ -11,6 +11,7 @@
 #include <zconf.h>
 
 typedef std::vector<NDb::SVSOPoint> CVSOPointList;
+
 //
 class CVSOManager
 {
@@ -42,6 +43,7 @@ public:
 	//
 private:
 	CVSOManager() {}
+
 	//
 	struct SVSOCircle : public CCircle
 	{
@@ -56,6 +58,7 @@ private:
 		bool GetTangentPoint( const CVec2 &v, CVec2 *pTangentPoint ) const;
 		bool GetPointsSequence( const CVec2 &v, int nSegmentsCount, std::list<CVec2> *pPointsSequence ) const;
 	};
+
 	//
 public:
 	struct SBackupKeyPoints
@@ -66,12 +69,15 @@ public:
 			float fWidth;
 			float fHeight;
 			float fOpacity;
+
 			//
 			SKeyPoint() : fWidth( DEFAULT_WIDTH ), fHeight( DEFAULT_HEIGHT ), fOpacity( DEFAULT_OPACITY ) {}
+
 			SKeyPoint( const SKeyPoint &rKeyPoint )
 					: fWidth( rKeyPoint.fWidth ), fHeight( rKeyPoint.fHeight ), fOpacity( rKeyPoint.fOpacity )
 			{
 			}
+
 			SKeyPoint &operator=( const SKeyPoint &rKeyPoint )
 			{
 				if ( &rKeyPoint != this )
@@ -83,6 +89,7 @@ public:
 				return *this;
 			}
 		};
+
 		typedef std::list<SKeyPoint> CKeyPointList;
 
 		CKeyPointList keyPointList;
@@ -103,6 +110,7 @@ public:
 		void SetBackOpacity( float fOpacity );
 		void Clear();
 	};
+
 	//
 	struct SVSOSelection
 	{
@@ -115,17 +123,21 @@ public:
 			ST_OPNORMALE = 4,
 			ST_COUNT = 5,
 		};
+
 		ESelectionType eSelectionType;
 		int nIndex;
 		CVec3 vDifference;
 		float fOpacity;
+
 		//
 		SVSOSelection() : eSelectionType( ST_UNKNOWN ), nIndex( 0 ), vDifference( VNULL3 ), fOpacity( 0.0f ) {}
+
 		SVSOSelection( const SVSOSelection &rVSOSelection )
 				: eSelectionType( rVSOSelection.eSelectionType ), nIndex( rVSOSelection.nIndex ),
 					vDifference( rVSOSelection.vDifference ), fOpacity( rVSOSelection.fOpacity )
 		{
 		}
+
 		SVSOSelection &operator=( const SVSOSelection &rVSOSelection )
 		{
 			if ( &rVSOSelection != this )
@@ -137,10 +149,27 @@ public:
 			}
 			return *this;
 		}
-		inline void Invalidate() { eSelectionType = ST_UNKNOWN; }
-		inline bool IsValid() { return ( eSelectionType != ST_UNKNOWN ); }
-		inline bool IsControlPointType() { return ( eSelectionType == ST_CONTROL ); }
-		inline bool IsCenterPointType() { return ( eSelectionType == ST_CENTER ); }
+
+		inline void Invalidate()
+		{
+			eSelectionType = ST_UNKNOWN;
+		}
+
+		inline bool IsValid()
+		{
+			return ( eSelectionType != ST_UNKNOWN );
+		}
+
+		inline bool IsControlPointType()
+		{
+			return ( eSelectionType == ST_CONTROL );
+		}
+
+		inline bool IsCenterPointType()
+		{
+			return ( eSelectionType == ST_CENTER );
+		}
+
 		inline bool IsNormalePointType()
 		{
 			return ( ( eSelectionType == ST_NORMALE ) || ( eSelectionType == ST_OPNORMALE ) );
@@ -153,14 +182,17 @@ public:
 		float fRadius;
 
 		SVSOSelectionParam() : eSelectionType( SVSOSelection::ST_UNKNOWN ), fRadius( 0.0f ) {}
+
 		SVSOSelectionParam( SVSOSelection::ESelectionType _eSelectionType, float _fRadus )
 				: eSelectionType( _eSelectionType ), fRadius( _fRadus )
 		{
 		}
+
 		SVSOSelectionParam( const SVSOSelectionParam &rVSOSelectionParam )
 				: eSelectionType( rVSOSelectionParam.eSelectionType ), fRadius( rVSOSelectionParam.fRadius )
 		{
 		}
+
 		SVSOSelectionParam &operator=( const SVSOSelectionParam &rVSOSelectionParam )
 		{
 			if ( &rVSOSelectionParam != this )
@@ -171,6 +203,7 @@ public:
 			return *this;
 		}
 	};
+
 	typedef std::list<SVSOSelectionParam> CVSOSelectionParamList;
 
 private:
@@ -218,6 +251,7 @@ public:
 		PT_OPNORMALE = 1,
 		PT_BOTH = 2,
 	};
+
 	// Получить выделеннную точку
 	static bool GetVSOSelection(
 			SVSOSelection *pVSOSelection,  // Сюда записывается результат
@@ -280,11 +314,13 @@ public:
 	static bool Merge( NDb::SVSOInstance *pVSO0, bool bVSO0Begin, NDb::SVSOInstance *pVSO1, bool bVSO1Begin );
 	//вернуть первую не нулевую высоту
 	static float GetEdgeHeght( const CVSOPointList &rVSOPointList, bool bBegin, bool bFirst );
+
 	// Необходим для генерации дорог ( используется не правильно )
 	static std::string GetDescriptionName( const std::string &rszBeginVSODesc, const std::string &rszEndVSODesc )
 	{
 		return rszBeginVSODesc;
 	}
+
 	//static bool UpdateZ( NDb::SVSOInstance *pVSO );
 	//
 	struct SVSODrawParams
@@ -296,6 +332,7 @@ public:
 		CVSOManager::SVSOSelection *pCurrSelection;
 		bool bIsClose;
 		bool bIsDrawSceneDrawTool;
+
 		enum EWhoDrawsVSO
 		{
 			BAD_DRAWER,
@@ -303,8 +340,10 @@ public:
 			VSO_IS_EDIT,
 			VSO_IS_ADD
 		};
+
 		EWhoDrawsVSO eDrawer;
 		bool canEditPointList[SVSOSelection::ST_COUNT];
+
 		//
 		SVSODrawParams()
 		{
@@ -318,6 +357,7 @@ public:
 			eDrawer = BAD_DRAWER;
 			memset( canEditPointList, 0, sizeof( canEditPointList ) );
 		}
+
 		//
 		bool SetCanEdit( CVSOManager::SVSOSelection::ESelectionType ePointsType, bool bCanEdit )
 		{
@@ -329,6 +369,7 @@ public:
 			canEditPointList[nIdx] = bCanEdit;
 			return true;
 		}
+
 		//
 		bool CanEditPoints( CVSOManager::SVSOSelection::ESelectionType ePointsType )
 		{
@@ -342,8 +383,10 @@ public:
 				return canEditPointList[nIdx];
 			}
 		}
+
 		//
 	};
+
 	static void DrawVSO( SVSODrawParams *pDrawParams );
 	//
 };

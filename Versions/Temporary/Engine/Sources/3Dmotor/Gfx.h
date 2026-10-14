@@ -25,6 +25,7 @@ struct SVideoMode
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nXSize = {}, nYSize = {}, nBpp = {}, nRefreshRate = {};
 	EFS fullScreen = {};
+
 	SVideoMode()
 	{
 		nXSize = 800, nYSize = 600;
@@ -32,6 +33,7 @@ struct SVideoMode
 		nRefreshRate = 0;
 		fullScreen = WINDOWED;
 	}
+
 	SVideoMode( int _nXSize, int _nYSize, int _nBpp, EFS _fullScreen, int _nRefreshRate = 0 )
 			: nXSize( _nXSize ), nYSize( _nYSize ), nBpp( _nBpp ), nRefreshRate( _nRefreshRate ), fullScreen( _fullScreen )
 	{
@@ -49,16 +51,23 @@ struct SRenderTargetDesc
 	int nResolution = {}, nFormatID = {};
 
 	SRenderTargetDesc() : nResolution( -1 ), nFormatID( -1 ) {}
+
 	SRenderTargetDesc( int _nResolution, int _nFormatID ) : nResolution( _nResolution ), nFormatID( _nFormatID ) {}
+
 	bool operator==( const SRenderTargetDesc &a ) const
 	{
 		return nResolution == a.nResolution && nFormatID == a.nFormatID;
 	}
 };
+
 struct SRTDescHash
 {
-	int operator()( const SRenderTargetDesc &a ) const { return a.nResolution ^ a.nFormatID; }
+	int operator()( const SRenderTargetDesc &a ) const
+	{
+		return a.nResolution ^ a.nFormatID;
+	}
 };
+
 struct SRenderTargetsInfo
 {
 	typedef std::unordered_map<SRenderTargetDesc, int, SRTDescHash> CRTHash;
@@ -66,6 +75,7 @@ struct SRenderTargetsInfo
 	CRTHash cubeTargets; // resolution to number
 	int nRegisters = {};
 	int nFloatRegisters = {};
+
 	SRenderTargetsInfo() : nRegisters( 0 ), nFloatRegisters( 0 ) {}
 
 	void Clear()
@@ -75,6 +85,7 @@ struct SRenderTargetsInfo
 		nRegisters = 0;
 		nFloatRegisters = 0;
 	}
+
 	static void Add( CRTHash *pRes, int nResolution, int nFormatID, int nTargets )
 	{
 		SRenderTargetDesc desc( nResolution, nFormatID );
@@ -87,11 +98,17 @@ struct SRenderTargetsInfo
 			( *pRes )[desc] += nTargets;
 		}
 	}
-	void AddTex( int nResolution, int nFormatID, int nTargets ) { Add( &targets, nResolution, nFormatID, nTargets ); }
+
+	void AddTex( int nResolution, int nFormatID, int nTargets )
+	{
+		Add( &targets, nResolution, nFormatID, nTargets );
+	}
+
 	void AddCube( int nResolution, int nFormatID, int nTargets )
 	{
 		Add( &cubeTargets, nResolution, nFormatID, nTargets );
 	}
+
 	void Add( const SRenderTargetsInfo &a )
 	{
 		for ( CRTHash::const_iterator i = a.targets.begin(); i != a.targets.end(); ++i )
@@ -153,7 +170,9 @@ void D3DASSERT( HRESULT hRes, fmt::string_view fmtStr, const TArgs &...args )
 struct SRenderStats
 {
 	int nVertices = {}, nTris = {}, nDIPs = {};
+
 	SRenderStats() : nVertices( 0 ), nTris( 0 ), nDIPs( 0 ) {}
+
 	void Clear()
 	{
 		nVertices = 0;
@@ -161,5 +180,6 @@ struct SRenderStats
 		nDIPs = 0;
 	}
 };
+
 EXTERNVAR SRenderStats renderStats;
-}
+} // namespace NGfx

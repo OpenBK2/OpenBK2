@@ -436,4 +436,4 @@ bool ConvertAndSaveAsDDS( const std::string &szFileName,
 	return WriteDDS( szFileName, nSubFormat, mips );
 }
 
-}
+} // namespace NImage

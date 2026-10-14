@@ -48,6 +48,7 @@ int SGeneralConsts::TIME_TO_WAIT_SWARM_READY_RANDOM = 10;
 int SGeneralConsts::TIME_SWARM_DURATION;
 int SGeneralConsts::TIME_SWARM_DURATION_RANDOM;
 int SGeneralConsts::MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void SGeneralConsts::Init()
 {
@@ -103,4 +104,5 @@ void SGeneralConsts::Init()
 	TIME_SWARM_DURATION_RANDOM = NGlobal::GetVar( "AI.General.Swarm.IterationDurationRandom", 20 );
 	MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES = NGlobal::GetVar( "AI.General.Gunplanes.MinUnitWeight", 50 );
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

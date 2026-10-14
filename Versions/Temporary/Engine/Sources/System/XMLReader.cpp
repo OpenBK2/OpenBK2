@@ -378,7 +378,7 @@ CXmlReader::CXmlReader( const char *pszBegin, const char *pszEnd )
 	rootNode.Parse( p, &pool );
 }
 
-}
+} // namespace NXml
 
 using namespace NXml;
 REGISTER_SAVELOAD_CLASS( SYSTEM, 0x3023C380, CXmlReader );

@@ -28,4 +28,4 @@ void SetTextureMode( EConfigValue eMode );
 EConfigValue GetFSAAMode();
 void SetFSAAMode( EConfigValue eMode );
 
-} // namespace
+} // namespace NGScene

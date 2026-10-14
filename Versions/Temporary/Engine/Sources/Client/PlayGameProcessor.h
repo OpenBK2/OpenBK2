@@ -40,11 +40,13 @@ class CPlayGameProcessor : public CPacketProcessor
 		uint32_t dwStartTime;
 
 		SWaitingPacket() : dwStartTime( 0 ) {}
+
 		SWaitingPacket( CNetPacket *_pPacket, const uint32_t _dwStartTime )
 				: pPacket( _pPacket ), dwStartTime( _dwStartTime )
 		{
 		}
 	};
+
 	std::list<SWaitingPacket> waitingPackets;
 
 	CPtr<NNet::CGameLinksManager> pLinksManager;
@@ -63,6 +65,7 @@ class CPlayGameProcessor : public CPacketProcessor
 
 public:
 	CPlayGameProcessor() {}
+
 	CPlayGameProcessor(
 			CNet *pNet, const char *pszServerIP, const int nNetGameVersion, const int nServerPort, const int nTimeOut );
 

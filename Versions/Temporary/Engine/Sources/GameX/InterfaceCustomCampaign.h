@@ -20,6 +20,7 @@ class CInterfaceCustomCampaign : public CInterfaceScreenBase, public IProgrammed
 		CPtr<ITextView> pNameView;
 		std::wstring wszName;
 		std::wstring wszDesc;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pCampaignDB );
@@ -46,6 +47,7 @@ class CInterfaceCustomCampaign : public CInterfaceScreenBase, public IProgrammed
 	CPtr<IComboBox> pDifficultyComboBox;
 	CPtr<IButton> pPlayBtn;
 	std::vector<SCampaign> campaigns;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );

@@ -4,6 +4,7 @@
 
 class CAIUnit;
 class CSoldier;
+
 namespace NDb
 {
 struct SInfantryRPGStats;
@@ -23,6 +24,7 @@ class CAnimUnitSoldier : public IAnimUnit
 			EMS_STOPPED_TO_MOVING,
 			EMS_MOVING_TO_STOPPED
 		};
+
 		ZDATA
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		EMovingState state = {};
@@ -35,6 +37,7 @@ class CAnimUnitSoldier : public IAnimUnit
 			f.Add( 3, &timeOfIntentionStart );
 			return 0;
 		}
+
 		SMovingState() : state( EMS_STOPPED ), timeOfIntentionStart( 0 ) {}
 	};
 
@@ -61,10 +64,12 @@ public:
 		f.Add( 8, &movingState );
 		return 0;
 	}
+
 	void OnSerialize( IBinSaver &saver );
 
 public:
 	CAnimUnitSoldier() : pOwner( 0 ) {}
+
 	virtual void Init( CAIUnit *pOwner );
 
 	virtual void AnimationSet( int nAnimation );

@@ -31,5 +31,8 @@ public:
 	}
 
 	// What a dialog opened from this one is given as its owner.
-	IWidget *GetOwnerWidget() { return &owner; }
+	IWidget *GetOwnerWidget()
+	{
+		return &owner;
+	}
 };

@@ -612,7 +612,7 @@ namespace
 		}
 	}
 
-}
+} // namespace
 
 const SLightingKernels sse2LightingKernels = {
 	"sse2",
@@ -625,4 +625,4 @@ const SLightingKernels sse2LightingKernels = {
 	&AddColors,
 	&ScaleColors,
 };
-}
+} // namespace NGScene

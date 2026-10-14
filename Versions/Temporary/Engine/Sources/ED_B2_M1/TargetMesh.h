@@ -4,4 +4,4 @@ namespace NTargetMesh
 {
 void CreateTargetMesh( float fSizeX, float fSizeY );
 void DeleteTargetMesh();
-};
+}; // namespace NTargetMesh

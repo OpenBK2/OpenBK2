@@ -53,4 +53,4 @@ void CDbObserverContainer::ReportDiscardAllChanges()
 	}
 }
 
-}
+} // namespace NDb

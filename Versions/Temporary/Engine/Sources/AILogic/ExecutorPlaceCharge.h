@@ -22,14 +22,21 @@ public:
 		f.Add( 4, &eAbility );
 		return 0;
 	}
+
 	void UpdateState( const EAbilitySwitchState eState );
 
 public:
 	CExecutorPlaceCharge( CAIUnit *_pSoldier, NDb::EUnitSpecialAbility _eAbility );
+
 	CExecutorPlaceCharge() {}
 
 	virtual int Segment();
 	virtual bool NotifyEvent( const CExecutorEvent &event );
-	virtual bool IsExecutorValid() const { return IsValid( pSoldier ); }
+
+	virtual bool IsExecutorValid() const
+	{
+		return IsValid( pSoldier );
+	}
+
 	virtual void RegisterOnEvents( IExecutorContainer *pContainer );
 };

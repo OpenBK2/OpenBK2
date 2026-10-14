@@ -37,6 +37,7 @@ public:
 		std::wstring wszTooltip;
 		CDBPtr<NDb::STexture> pDisabledIcon;
 		int nLevel;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &wszName );
@@ -64,6 +65,7 @@ public:
 	bool bFromPrevChapter;
 	std::wstring wszProfileUnitRank;
 	std::vector<SAbility> abilities;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &eType );
@@ -112,6 +114,7 @@ public:
 		int nCurKilled;
 		int nWaitTime;
 		int fExpStep;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &eState );
@@ -145,6 +148,7 @@ public:
 	int nRank;
 	SLastSeen lastSeen;
 	NDb::EReinforcementType eType;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &wszName );
@@ -756,7 +760,10 @@ struct SDBUnit
 	int nCount;
 	const NDb::SHPObjectRPGStats *pDBStats;
 
-	bool operator==( const NDb::SHPObjectRPGStats *_pDBStats ) const { return pDBStats == _pDBStats; }
+	bool operator==( const NDb::SHPObjectRPGStats *_pDBStats ) const
+	{
+		return pDBStats == _pDBStats;
+	}
 };
 
 void CInterfaceArmyScreen::ShowReinfInfo( bool bEnabled, const CReinfData *pReinf )

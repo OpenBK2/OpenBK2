@@ -71,6 +71,7 @@ enum EXPORT_RESULT
 };
 
 struct IManipulator;
+
 struct IExporter : public CObjectBase
 {
 	// bForce - безусловный экспорт объектов (различные пункты меню)
@@ -126,6 +127,7 @@ struct IExporterContainer : public CObjectBase
 	{
 		tidTypeID = 0x1408A3C1
 	};
+
 	//
 	// Проверить на возможность конвертирования объекта
 	virtual bool CanExportObject( const std::string &rszObjectTypeName ) = 0;

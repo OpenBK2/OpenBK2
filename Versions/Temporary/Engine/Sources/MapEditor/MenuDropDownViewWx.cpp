@@ -90,7 +90,10 @@ private:
 		rEvent.Skip();
 	}
 
-	void OnClose( wxCloseEvent & ) { Hide(); }
+	void OnClose( wxCloseEvent & )
+	{
+		Hide();
+	}
 
 	// Escape is CMDDLDialog::OnCancel, which hides. Enter is its OnOK, which
 	// does nothing, and nothing here claims it.
@@ -132,7 +135,7 @@ public:
 		}
 	}
 };
-}
+} // namespace
 
 namespace NMenuDropDown
 {
@@ -140,4 +143,4 @@ IView *Create( IWidget *pParent )
 {
 	return new CWxMenuDropDown( pParent );
 }
-}
+} // namespace NMenuDropDown

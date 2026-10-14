@@ -45,6 +45,7 @@ bool CBuilderBase::RemoveObject( const std::string &rszObjectTypeName, const std
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	return pFolderCallback->RemoveObject( rszObjectTypeName, rszObjectName, false );
 }
+
 /**
 
 bool HierarchicalDelete( const std::string &szObjectTypeName, const std::string &szObjectName )

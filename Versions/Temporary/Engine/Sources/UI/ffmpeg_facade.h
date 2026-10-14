@@ -72,7 +72,7 @@ static int64_t SeekPacket( void *opaque, int64_t offset, int whence )
 	buffer_data->pos = new_pos;
 	return static_cast<int64_t>( buffer_data->pos );
 }
-}
+} // namespace ffmpeg::utils
 
 struct AVIOContextDeleter
 {
@@ -726,7 +726,10 @@ struct FFmpeg
      * Should the next frame be played?
      * Alternative to BinkWait
      */
-	bool Wait() const { return paused_ || ( std::chrono::steady_clock::now() < next_frame_time_ ); }
+	bool Wait() const
+	{
+		return paused_ || ( std::chrono::steady_clock::now() < next_frame_time_ );
+	}
 
 	/**
      * Pauses the player

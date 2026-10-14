@@ -21,7 +21,10 @@ CPtr<CFileNode> pRootFile;
 
 static struct SCreateRootFile
 {
-	SCreateRootFile() { pRootFile = new CFileNode( "", true ); }
+	SCreateRootFile()
+	{
+		pRootFile = new CFileNode( "", true );
+	}
 } createRootFile;
 
 CFileNode *GetRootFile()
@@ -362,7 +365,7 @@ CEnumEntryNode *CFileNode::FindEnumEntry( const std::string &szEntyrName, bool b
 	return 0;
 }
 
-}
+} // namespace NLang
 
 using namespace NLang;
 BASIC_REGISTER_CLASS( PARSER, CFileNode );

@@ -44,14 +44,20 @@ class CMSRNode : public CFuncBase<SFBTransform>
 	OBJECT_BASIC_METHODS( CMSRNode );
 
 protected:
-	virtual bool NeedUpdate() { return pAncestor.Refresh() | pPos.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pAncestor.Refresh() | pPos.Refresh();
+	}
+
 	virtual void Recalc();
 
 public:
 	CDGPtr<CFuncBase<SFBTransform>> pAncestor;
 	CDGPtr<CFuncBase<SFBTransform>> pPos;
+
 	//
 	CMSRNode() {}
+
 	int operator&( CStructureSaver &f );
 };
 
@@ -62,6 +68,7 @@ class CMNode : public CFuncBase<SFBTransform>
 	ZDATA
 	CDGPtr<CFuncBase<SFBTransform>> pAncestor;
 	CDGPtr<CFuncBase<CVec3>> pMove;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &pAncestor );
@@ -70,11 +77,16 @@ class CMNode : public CFuncBase<SFBTransform>
 	}
 
 protected:
-	virtual bool NeedUpdate() { return pAncestor.Refresh() | pMove.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pAncestor.Refresh() | pMove.Refresh();
+	}
+
 	virtual void Recalc();
 
 public:
 	CMNode() {}
+
 	CMNode( CFuncBase<SFBTransform> *_pA, CFuncBase<CVec3> *_pM ) : pAncestor( _pA ), pMove( _pM ) {}
 };
 
@@ -84,14 +96,20 @@ class CScaleNode : public CFuncBase<CTRect<int>>
 	OBJECT_BASIC_METHODS( CScaleNode );
 
 protected:
-	virtual bool NeedUpdate() { return pSize.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pSize.Refresh();
+	}
+
 	virtual void Recalc();
 
 public:
 	CVec2 vScreenRect;
 	CDGPtr<CFuncBase<CTRect<int>>> pSize;
+
 	//
 	CScaleNode() {}
+
 	int operator&( CStructureSaver &f );
 };
 
@@ -101,7 +119,11 @@ class CMSRConvert : public CFuncBase<SFBTransform>
 	OBJECT_BASIC_METHODS( CMSRConvert );
 
 protected:
-	virtual bool NeedUpdate() { return pMove.Refresh() | pRotate.Refresh() | pScale.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pMove.Refresh() | pRotate.Refresh() | pScale.Refresh();
+	}
+
 	virtual void Recalc();
 
 public:
@@ -117,6 +139,7 @@ class CExtractTranslation : public CFuncBase<CVec3>
 	OBJECT_BASIC_METHODS( CExtractTranslation );
 	ZDATA
 	CDGPtr<CFuncBase<SFBTransform>> pTrans;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &pTrans );
@@ -124,8 +147,15 @@ class CExtractTranslation : public CFuncBase<CVec3>
 	}
 
 protected:
-	virtual bool NeedUpdate() { return pTrans.Refresh(); }
-	virtual void Recalc() { value = pTrans->GetValue().forward.GetTranslation(); }
+	virtual bool NeedUpdate()
+	{
+		return pTrans.Refresh();
+	}
+
+	virtual void Recalc()
+	{
+		value = pTrans->GetValue().forward.GetTranslation();
+	}
 
 public:
 	CExtractTranslation( CFuncBase<SFBTransform> *_p = 0 ) : pTrans( _p ) {}
@@ -136,7 +166,11 @@ class CVec3Convert : public CFuncBase<CVec3>
 	OBJECT_BASIC_METHODS( CVec3Convert );
 
 protected:
-	virtual bool NeedUpdate() { return pX.Refresh() | pY.Refresh() | pZ.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pX.Refresh() | pY.Refresh() | pZ.Refresh();
+	}
+
 	virtual void Recalc();
 
 public:
@@ -153,12 +187,17 @@ class CSinus : public CFuncBase<float>
 	OBJECT_BASIC_METHODS( CSinus );
 
 protected:
-	virtual bool NeedUpdate() { return pTime.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pTime.Refresh();
+	}
+
 	virtual void Recalc();
 
 public:
 	float fpMn, fpFreq, fpAdd;
 	CDGPtr<CFuncBase<STime>> pTime;
+
 	//
 	CSinus()
 	{
@@ -166,7 +205,8 @@ public:
 		fpFreq = 1;
 		fpAdd = 0;
 	}
+
 	int operator&( CStructureSaver &f );
 };
 
-}
+} // namespace NGScene

@@ -195,7 +195,7 @@ namespace
 		return static_cast<int>( nJiffies * 1000 / 60 );
 	}
 
-}
+} // namespace
 
 bool ReadAni( SAniInfo *pInfo, const uint8_t *pData, size_t nSize )
 {
@@ -471,4 +471,4 @@ bool DecodeImage( SImage *pResult, const uint8_t *pData, size_t nSize, size_t nB
 	return true;
 }
 
-}
+} // namespace NWinImage

@@ -1,4 +1,5 @@
 #pragma once
+
 //
 namespace NScript
 {
@@ -14,6 +15,7 @@ public:
 		PT_STRING,
 		PT_UNDEFINED
 	};
+
 	//
 	OBJECT_BASIC_METHODS( CLUACallParam );
 	ZDATA
@@ -23,6 +25,7 @@ public:
 	int nInt;
 	float fFloat;
 	std::string szString;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &type );
@@ -32,11 +35,16 @@ public:
 		f.Add( 6, &szString );
 		return 0;
 	}
+
 	//
 	CLUACallParam() : type( PT_UNDEFINED ) {}
+
 	CLUACallParam( CObjectBase *_pObject ) : type( PT_POINTER ), pObject( _pObject ) {}
+
 	CLUACallParam( const std::string &_szString ) : type( PT_STRING ), szString( _szString ) {}
+
 	CLUACallParam( int _nInt ) : type( PT_INT ), nInt( _nInt ) {}
+
 	CLUACallParam( float _fFloat ) : type( PT_FLOAT ), fFloat( _fFloat ) {}
 };
 
@@ -45,5 +53,6 @@ void luaCallFunction( const std::string &szName, const std::vector<CObj<CLUACall
 void luaMakeCallParamsVector( char *szParams, va_list *pL, std::vector<CObj<CLUACallParam>> *pParams );
 void luaCreateCPtrVar( const std::string &szVarName, CObjectBase *pObj );
 
-}
+} // namespace NScript
+
 //

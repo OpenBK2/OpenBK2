@@ -56,4 +56,4 @@ bool CParticles::Update( CVolumeNode *pVolume )
 	pParticles.Refresh();
 	return !pParticles->GetValue()->bEnd;
 }
-}
+} // namespace NGScene

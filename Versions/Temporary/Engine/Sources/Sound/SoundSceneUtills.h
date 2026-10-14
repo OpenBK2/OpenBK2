@@ -13,6 +13,7 @@ struct SUpdatedCell
 	int nFormerRadius;
 	int nNewRadius;
 	SIntThree vCell;
+
 	SUpdatedCell( const SIntThree &vCell, const int nFormerRadius, const int nNewRadius )
 			: vCell( vCell ), nFormerRadius( nFormerRadius ), nNewRadius( nNewRadius )
 	{
@@ -36,5 +37,6 @@ public:
 	CSoundsWithinDeltaPredicate( NTimer::STime timeBase, NTimer::STime timeDelta ) : timeToCompare( timeBase + timeDelta )
 	{
 	}
+
 	bool operator()( const CSound *sound ) const;
 };

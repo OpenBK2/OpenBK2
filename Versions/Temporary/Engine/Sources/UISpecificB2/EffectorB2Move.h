@@ -12,6 +12,7 @@ public:
 	ZDATA_( SWindowContext )
 	bool bGoOut;
 	float fMaxMoveTime;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SWindowContext *)this );
@@ -71,6 +72,7 @@ class CEffectorB2Move : public IUIEffector
 
 	float fWaitTime;
 	bool bGoOut;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pElement );
@@ -110,12 +112,18 @@ public:
 	{
 	}
 
-	virtual bool IsFinished() const { return bFinished; }
+	virtual bool IsFinished() const
+	{
+		return bFinished;
+	}
+
 	virtual void Configure( const NDb::SUIStateBase *pCmd,
 	                        struct IScreen *pScreen,
 	                        SWindowContext *pContext,
 	                        const std::string &szAnimatedWindow );
 	virtual const int Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward );
+
 	virtual void Visit( struct IUIVisitor *pVisitor ) {}
+
 	virtual void Reverse();
 };

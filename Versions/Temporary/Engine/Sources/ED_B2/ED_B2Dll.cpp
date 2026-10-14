@@ -90,6 +90,7 @@ ED_B2_EXPORT IEditorModule *GetEditorModule3()
 {
 	return 0;
 }
+
 ED_B2_EXPORT IEditorModule *GetEditorModule4()
 {
 	return 0;

@@ -35,18 +35,40 @@ public:
 	// update/reset timer
 	void Update( const NTimer::STime &time );
 	void Reset( const NTimer::STime &time );
+
 	// get timer DG nodes
-	CFuncBase<NTimer::STime> *GetGameTimer() const { return pGameTimer; }
-	CFuncBase<NTimer::STime> *GetAbsTimer() const { return pAbsTimer; }
-	CFuncBase<STime> *GetGameTimerA5() const { return pGameTimerA5; }
-	CFuncBase<STime> *GetAbsTimerA5() const { return pAbsTimerA5; }
+	CFuncBase<NTimer::STime> *GetGameTimer() const
+	{
+		return pGameTimer;
+	}
+
+	CFuncBase<NTimer::STime> *GetAbsTimer() const
+	{
+		return pAbsTimer;
+	}
+
+	CFuncBase<STime> *GetGameTimerA5() const
+	{
+		return pGameTimerA5;
+	}
+
+	CFuncBase<STime> *GetAbsTimerA5() const
+	{
+		return pAbsTimerA5;
+	}
+
 	// get current independent game time
 	const NTimer::STime &GetGameTime() const;
 	// get current independent absolute time
 	const NTimer::STime &GetAbsTime() const;
 	// get current independent segment time
 	const NTimer::STime &GetSegmentTime() const;
-	virtual const float GetSegmentDuration() const { return nSegmentDuration; }
+
+	virtual const float GetSegmentDuration() const
+	{
+		return nSegmentDuration;
+	}
+
 	// get segment number
 	int GetSegment() const;
 	// begin segments block. returns number of segments to process
@@ -68,4 +90,4 @@ public:
 	int operator&( IBinSaver &saver );
 };
 
-}
+} // namespace NGameTimer

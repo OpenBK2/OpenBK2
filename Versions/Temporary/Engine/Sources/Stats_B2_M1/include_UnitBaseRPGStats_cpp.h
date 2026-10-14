@@ -165,4 +165,4 @@ void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 	}
 }
 
-}
+} // namespace NDb

@@ -114,6 +114,7 @@ struct SSquare
 {
 	float a[2][2];
 };
+
 static float CalcIntegral( const SSquare &a, const SSquare &b )
 {
 	float fRes = ( 1 / 36.0f ) *
@@ -338,6 +339,7 @@ static double fResolveCoef[15] = { -0.000114508,
                                    -0.00159489,
                                    0.00042735,
                                    -0.000114508 };
+
 static void MulResolve( std::vector<float> *pRes, const std::vector<float> &s )
 {
 	std::vector<float> &r = *pRes;
@@ -404,6 +406,7 @@ static void FinalResolve( CArray2D<float> *pRes, const CArray2D<float> &src )
 const int N_HALF_REFERENCE = 4; //8;
 const int N_MARGIN = 6;         // in source texels
 const int N_FINAL_MARGIN = 8;
+
 static void
 CalcChannel( CArray2D<float> *pRes, const CArray2D<CVec4> &src, const CVec4 &_conv, bool bWrapX, bool bWrapY )
 {
@@ -550,4 +553,4 @@ void GenerateNormals( CArray2D<CVec4> *pData, const CVec4 &conv, float fMappingS
 	}
 }
 
-}
+} // namespace NImage

@@ -10,11 +10,13 @@ namespace NNet
 // CStreamTracker
 /////////////////////////////////////////////////////////////////////////////////////
 CStreamTracker::CStreamTracker() : nChannelOutputOffset( 0 ), nChannelInputOffset( 0 ) {}
+
 // return true if test offset is before border
 bool CStreamTracker::IsBefore( CHANNEL_DATA_OFFSET border, CHANNEL_DATA_OFFSET test )
 {
 	return ( (CHANNEL_DATA_OFFSET)( test - border ) ) > 0x80000000;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CStreamTracker::WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit )
 {
@@ -87,6 +89,7 @@ void CStreamTracker::WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit
 	block.nPkt = nPkt;
 	pBits->Write( &block, block.GetSendSize() );
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CStreamTracker::ReadMsg( CBitStream &bits )
 {
@@ -109,6 +112,7 @@ void CStreamTracker::ReadMsg( CBitStream &bits )
 	channelInList.push_back( block );
 	PumpIncoming();
 }
+
 //
 void CStreamTracker::PumpIncoming()
 {
@@ -155,6 +159,7 @@ void CStreamTracker::PumpIncoming()
 		}
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CStreamTracker::Rollback( const std::vector<PACKET_ID> &pkts )
 {
@@ -179,6 +184,7 @@ void CStreamTracker::Rollback( const std::vector<PACKET_ID> &pkts )
 		}
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CStreamTracker::Erase( const std::vector<PACKET_ID> &pkts )
 {
@@ -192,6 +198,7 @@ void CStreamTracker::Erase( const std::vector<PACKET_ID> &pkts )
 		}
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 void CStreamTracker::Commit( const std::vector<PACKET_ID> &pkts )
 {
@@ -243,5 +250,6 @@ void CStreamTracker::Commit( const std::vector<PACKET_ID> &pkts )
 		}
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
-}
+} // namespace NNet

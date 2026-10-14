@@ -4,7 +4,7 @@ namespace NDb
 {
 struct SPlayTime;
 struct SMusicTrack;
-}
+} // namespace NDb
 
 namespace NMusicSystem
 {
@@ -23,7 +23,8 @@ public:
 
 public:
 	CPlayTime() {}
+
 	CPlayTime( const NDb::SPlayTime *_PlayTime, const NDb::SMusicTrack *pTrack );
 	NTimer::STime GetPlayTime() const;
 };
-}
+} // namespace NMusicSystem

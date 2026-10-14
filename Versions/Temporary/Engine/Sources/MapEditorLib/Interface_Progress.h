@@ -12,4 +12,4 @@ MAPEDITORLIB_EXPORT void SetMessage( const std::string &rszMessage );
 MAPEDITORLIB_EXPORT void SetRange( int nStart, int nFinish );
 MAPEDITORLIB_EXPORT void SetPosition( int nPosition );
 MAPEDITORLIB_EXPORT void IteratePosition();
-};
+}; // namespace NProgress

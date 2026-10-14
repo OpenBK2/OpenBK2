@@ -251,7 +251,7 @@ namespace
 		return *pCatalog;
 	}
 
-}
+} // namespace
 
 struct CGlyphAtlas::SState
 {
@@ -279,6 +279,7 @@ struct CGlyphAtlas::SState
 };
 
 CGlyphAtlas::CGlyphAtlas() : pRecord( 0 ), nCellHeight( 0 ) {}
+
 CGlyphAtlas::~CGlyphAtlas() {}
 
 // Fits a fallback face to the same cell as the first, by the same characters
@@ -716,7 +717,8 @@ void CRuntimeFontInfo::PrepareGlyphs( const std::wstring &wsText )
 	}
 }
 
-}
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x1E7F0C01, CGlyphAtlas )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x1E7F0C02, CRuntimeFontFormat )

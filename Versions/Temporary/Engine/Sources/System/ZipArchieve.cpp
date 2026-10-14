@@ -33,6 +33,7 @@
 // ************************************************************************************************************************ //
 
 #pragma pack( 1 )
+
 struct CZipFile::SZipLocalFileHeader
 {
 	enum
@@ -41,6 +42,7 @@ struct CZipFile::SZipLocalFileHeader
 		COMP_STORE = 0,
 		COMP_DEFLAT = 8
 	};
+
 	uint32_t dwSignature;  // local file header signature
 	uint16_t version;      // version needed to extract
 	uint16_t flag;         // general purpose bit flag
@@ -52,9 +54,13 @@ struct CZipFile::SZipLocalFileHeader
 	uint32_t dwUSize;      // uncompressed size
 	uint16_t wFileNameLen; // filename length (w/o zero terminator!)
 	uint16_t wExtraLen;    // extra field length
+
 	// here filename follows (wFileNameLen bytes)
 	// here extra field follows (wExtraLen bytes)
-	bool IsDataDescriptorExist() const { return ( flag & 4 ) != 0; }
+	bool IsDataDescriptorExist() const
+	{
+		return ( flag & 4 ) != 0;
+	}
 };
 
 // NOTE: data descriptor exist only, if bit 3 of general purpose flag of the corresponding local file header is set
@@ -73,6 +79,7 @@ struct CZipFile::SZipCentralDirHeader
 	{
 		SIGNATURE = 0x06054b50
 	};
+
 	uint32_t dwSignature;      // end of central dir signature
 	uint16_t wDisk;            // number of this disk
 	uint16_t wStartDisk;       // number of disk with start central dir
@@ -92,6 +99,7 @@ struct CZipFile::SZipFileHeader
 		COMP_STORE = 0,
 		COMP_DEFLAT = 8
 	};
+
 	uint32_t dwSignature;  // central file header signature
 	uint8_t verMade;       // version made by
 	uint8_t os;            // host operating system
@@ -111,13 +119,26 @@ struct CZipFile::SZipFileHeader
 	uint16_t wIntAttr;     // internal file attributes: bit0 == 1 => ASCII or text file, == 0 => binary data
 	uint32_t wExtAttr;     // external file attributes, host system dependent
 	uint32_t dwHdrOffset;  // relative offset of local header from the start of the first disk, on which this file appears
+
 	// filename follows here (wFileNameLen bytes)
 	// extra field follows here (wExtraLen bytes)
 	// file comment follows here (wCommentLen bytes)
-	const char *GetName() const { return (const char *)( this + 1 ); }
-	const char *GetExtra() const { return GetName() + wFileNameLen; }
-	const char *GetComment() const { return GetExtra() + wExtraLen; }
+	const char *GetName() const
+	{
+		return (const char *)( this + 1 );
+	}
+
+	const char *GetExtra() const
+	{
+		return GetName() + wFileNameLen;
+	}
+
+	const char *GetComment() const
+	{
+		return GetExtra() + wExtraLen;
+	}
 };
+
 // host operating system codes
 // 0  - MS-DOS and OS/2 (FAT / VFAT / FAT32 file systems)
 // 1  - Amiga

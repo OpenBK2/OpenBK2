@@ -151,7 +151,7 @@ public:
 		pKey->szKeyParam = std::string( pParam->GetValue().utf8_str() );
 	}
 };
-}
+} // namespace
 
 namespace NMovieSettings
 {
@@ -170,7 +170,7 @@ bool Run( IWidget *pParent, float *pfLength )
 	( *pfLength ) = dialog.GetLength();
 	return true;
 }
-}
+} // namespace NMovieSettings
 
 namespace NMovieKeySettings
 {
@@ -197,4 +197,4 @@ bool Run( IWidget *pParent, NDb::SScriptMovieKeyPos *pKey, const std::string &rs
 	dialog.ReadKey( pKey );
 	return true;
 }
-}
+} // namespace NMovieKeySettings

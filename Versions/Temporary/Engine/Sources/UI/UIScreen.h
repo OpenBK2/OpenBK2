@@ -63,7 +63,11 @@ class CWindowScreen : public CWindow, public IScreen
 	NInput::CBind bindAlt;
 
 protected:
-	virtual NDb::SWindow *GetInstance() { return pInstance; }
+	virtual NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
+
 	uint16_t GetKeyboardFlags() const;
 
 public:
@@ -71,9 +75,16 @@ public:
 	{
 		int nGroupID;
 		CPtr<IWindow> pParent;
+
 		SButtonGroupID() {}
+
 		SButtonGroupID( const int _nGroupID, IWindow *_pParent ) : nGroupID( _nGroupID ), pParent( _pParent ) {}
-		bool operator==( const SButtonGroupID &id ) const { return id.nGroupID == nGroupID && id.pParent == pParent; }
+
+		bool operator==( const SButtonGroupID &id ) const
+		{
+			return id.nGroupID == nGroupID && id.pParent == pParent;
+		}
+
 		int operator&( IBinSaver &saver )
 		{
 			saver.Add( 1, &nGroupID );
@@ -81,6 +92,7 @@ public:
 			return 0;
 		}
 	};
+
 	struct SButtonGroupIDHash
 	{
 		int operator()( const SButtonGroupID &id ) const
@@ -116,14 +128,29 @@ private:
 	bool ActivateNextInTabOrder(); // returns true if activated, otherwise returns false
 public:
 	CWindowScreen();
-	void SetHudFontScale( bool bHud ) override { bHudFontScale = bHud; }
-	bool UsesHudFontScale() const override { return bHudFontScale; }
 
-	static NGScene::I2DGameView *Get2DGameView() { return p2DGameView; }
+	void SetHudFontScale( bool bHud ) override
+	{
+		bHudFontScale = bHud;
+	}
+
+	bool UsesHudFontScale() const override
+	{
+		return bHudFontScale;
+	}
+
+	static NGScene::I2DGameView *Get2DGameView()
+	{
+		return p2DGameView;
+	}
 
 	void
 	SetGView( NGScene::I2DGameView *_p2DGameView, NGScene::IGameView *_pGameView, NGScene::IGameView *_pInterface3DView );
-	NGScene::IGameView *GetInterface3DView() { return pInterface3DView; }
+
+	NGScene::IGameView *GetInterface3DView()
+	{
+		return pInterface3DView;
+	}
 
 	int operator&( struct IBinSaver &saver );
 
@@ -173,14 +200,17 @@ public:
 	void Reposition( IWindow *pWindow = 0 );
 	bool ProcessEvent( const struct SGameMessage &msg );
 	void ProcessUIMessage( const struct SBUIMessage &msg );
+
 	IWindow *GetElement( const std::string &szName, const bool bRecursive = false )
 	{
 		return CWindow::GetChild( szName, bRecursive );
 	}
+
 	IWindow *GetVisibleElement( const std::string &szName, const bool bRecursive = false )
 	{
 		return CWindow::GetVisibleChild( szName, bRecursive );
 	}
+
 	IWindow *AddElement( const struct NDb::SUIDesc *pDesc );
 	void Enable( const bool bEnable );
 

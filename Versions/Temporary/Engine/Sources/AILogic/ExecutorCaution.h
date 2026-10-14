@@ -26,6 +26,7 @@ protected:
 
 public:
 	CExecutorCaution( CAIUnit *_pUnit );
+
 	CExecutorCaution() {}
 
 	void RegisterOnEvents( IExecutorContainer *pContainer );

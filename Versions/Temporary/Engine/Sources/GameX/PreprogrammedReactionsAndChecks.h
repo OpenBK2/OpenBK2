@@ -12,7 +12,9 @@ class CReactionObserver : public CObjectBase
 
 public:
 	CReactionObserver() {}
+
 	CReactionObserver( void ( TObj::*_pfnMemFun )( const std::string & ) ) : pfnMemFun( _pfnMemFun ) {}
+
 	void Execute( CObjectBase *pThis, const std::string &szSender )
 	{
 		if ( pThis )
@@ -30,7 +32,9 @@ class CCheckObserver : public CObjectBase
 
 public:
 	CCheckObserver() {}
+
 	CCheckObserver( int ( TObj::*_pfnMemFun )() const ) : pfnMemFun( _pfnMemFun ) {}
+
 	int Execute( const CObjectBase *pThis ) const
 	{
 		if ( pThis )
@@ -56,10 +60,12 @@ public:
 	{
 		checks[szCheck] = new CCheckObserver<TObj>( _pfnMemFun );
 	}
+
 	void AddReaction( const std::string &szReaction, void ( TObj::*_pfnMemFun )( const std::string & ) )
 	{
 		reactions[szReaction] = new CReactionObserver<TObj>( _pfnMemFun );
 	}
+
 	int Check( const std::string &szCheckName ) const
 	{
 		typename CChecks::const_iterator pos = checks.find( szCheckName );
@@ -69,6 +75,7 @@ public:
 		}
 		return 0;
 	}
+
 	bool Execute( const std::string &szSender, const std::string &szReaction )
 	{
 		typename CReactions::iterator pos = reactions.find( szReaction );

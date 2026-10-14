@@ -20,6 +20,7 @@ class CPathFractionArc3D : public CPathFractionComplexBase
 	float fLength = {};
 	bool bNegative = {};
 	uint16_t nDiff = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CPathFractionComplexBase *)this );
@@ -51,12 +52,20 @@ public:
 	CVec3 GetTangent( const float fDist ) const;
 	CVec3 GetNormale( const float fDist ) const;
 
-	float GetLength() const { return fLength; }
+	float GetLength() const
+	{
+		return fLength;
+	}
+
 	CVec3 GetEndPoint() const;
 	CVec3 GetStartPoint() const;
 	CVec3 GetEndTangent() const;
 	CVec3 GetStartTangent() const;
 
 	void GetSimplePath( CPathList *pPaths );
-	void Negate() { bNegative = true; }
+
+	void Negate()
+	{
+		bNegative = true;
+	}
 };

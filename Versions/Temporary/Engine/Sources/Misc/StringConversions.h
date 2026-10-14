@@ -41,4 +41,4 @@ static std::string RGBA_to_hex( uint32_t bgra, bool includeAlpha = true, bool in
 	return oss.str();
 }
 
-}
+} // namespace string_conversion

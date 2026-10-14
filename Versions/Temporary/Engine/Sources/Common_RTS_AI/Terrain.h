@@ -14,6 +14,7 @@ enum ELockMode
 	ELM_STATIC = 0x00,
 	ELM_ALL = 0x01
 };
+
 enum ETerrainTypes
 {
 	ETT_EARTH_TERRAIN = 0,
@@ -35,8 +36,11 @@ struct SObjTileInfo
 	EAIClasses lockInfo{};
 
 	SObjTileInfo() : tile( 0, 0 ), lockInfo( EAC_ANY ) {}
+
 	SObjTileInfo( const SVector &_tile ) : tile( _tile ), lockInfo( EAC_ANY ) {}
+
 	SObjTileInfo( const SVector &_tile, const uint8_t _lockInfo ) : tile( _tile ), lockInfo( (EAIClasses)_lockInfo ) {}
+
 	SObjTileInfo( const SVector &_tile, const EAIClasses _lockInfo ) : tile( _tile ), lockInfo( _lockInfo ) {}
 };
 
@@ -47,13 +51,20 @@ struct SUnitProfile
 	bool bRect = false;
 	SRect rect;
 	CCircle circle;
+
 	//
-	SUnitProfile() : bRect( false ), circle( VNULL2, 0 ) { rect.InitRect( VNULL2, VNULL2, VNULL2, VNULL2 ); }
+	SUnitProfile() : bRect( false ), circle( VNULL2, 0 )
+	{
+		rect.InitRect( VNULL2, VNULL2, VNULL2, VNULL2 );
+	}
+
 	SUnitProfile( const SRect &_rect ) : bRect( true ), rect( _rect ), circle( VNULL2, 0 ) {}
+
 	SUnitProfile( const CCircle &_circle ) : bRect( false ), circle( _circle ), rect()
 	{
 		rect.InitRect( VNULL2, VNULL2, VNULL2, VNULL2 );
 	}
+
 	SUnitProfile( const CVec2 &vCenter, const float fRadius ) : bRect( false ), circle( vCenter, fRadius ), rect()
 	{
 		rect.InitRect( VNULL2, VNULL2, VNULL2, VNULL2 );
@@ -63,10 +74,12 @@ struct SUnitProfile
 	{
 		return profile.bRect ? IsIntersected( profile.rect ) : IsIntersected( profile.circle );
 	}
+
 	const bool IsIntersected( const SRect &_rect ) const
 	{
 		return bRect ? _rect.IsIntersected( rect ) : _rect.IsIntersectCircle( circle );
 	}
+
 	const bool IsIntersected( const CCircle &_circle ) const
 	{
 		return bRect ? rect.IsIntersectCircle( _circle ) : circle.IsIntersected( _circle );
@@ -77,14 +90,35 @@ struct SUnitProfile
 		return ( bRect ) ? rect.IsPointInside( point ) : ( fabs( circle.center - point ) <= circle.r );
 	}
 
-	const CVec2 GetCenter() const { return ( bRect ) ? rect.center : circle.center; }
+	const CVec2 GetCenter() const
+	{
+		return ( bRect ) ? rect.center : circle.center;
+	}
 
-	const float GetRadius() const { return ( bRect ) ? fabs( GetHalfLength(), GetHalfWidth() ) : circle.r; }
+	const float GetRadius() const
+	{
+		return ( bRect ) ? fabs( GetHalfLength(), GetHalfWidth() ) : circle.r;
+	}
 
-	const float GetHalfLength() const { return ( bRect ) ? ( rect.lengthAhead + rect.lengthBack ) / 2.0f : circle.r; }
-	const float GetHalfWidth() const { return ( bRect ) ? rect.width : circle.r; }
-	const float GetLengthAhead() const { return ( bRect ) ? rect.lengthAhead : circle.r; }
-	const float GetLengthBack() const { return ( bRect ) ? rect.lengthBack : circle.r; }
+	const float GetHalfLength() const
+	{
+		return ( bRect ) ? ( rect.lengthAhead + rect.lengthBack ) / 2.0f : circle.r;
+	}
+
+	const float GetHalfWidth() const
+	{
+		return ( bRect ) ? rect.width : circle.r;
+	}
+
+	const float GetLengthAhead() const
+	{
+		return ( bRect ) ? rect.lengthAhead : circle.r;
+	}
+
+	const float GetLengthBack() const
+	{
+		return ( bRect ) ? rect.lengthBack : circle.r;
+	}
 
 	const void Compress( const float fFactor )
 	{
@@ -98,8 +132,15 @@ struct SUnitProfile
 		}
 	}
 
-	const bool IsCircle() const { return !bRect; }
-	const bool IsRect() const { return bRect; }
+	const bool IsCircle() const
+	{
+		return !bRect;
+	}
+
+	const bool IsRect() const
+	{
+		return bRect;
+	}
 
 	int operator&( IBinSaver &saver )
 	{
@@ -127,7 +168,9 @@ struct SUnitTileInfo
 	bool bWater = false;
 
 	SUnitTileInfo() : bWater(), profile() {}
+
 	SUnitTileInfo( const SRect _rect, const bool _bWater ) : profile( _rect ), bWater( _bWater ) {}
+
 	SUnitTileInfo( const SUnitProfile _profile, const bool _bWater ) : profile( _profile ), bWater( _bWater ) {}
 };
 
@@ -144,6 +187,7 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 		EAIClasses aiClass{};
 
 		STmpLockInfo() : tile( -1, -1 ), nUnitsBuf( -1 ), aiClass( EAC_FORCE_DWORD ) {}
+
 		STmpLockInfo( const SVector &_tile, const int _nUnitsBuf, const EAIClasses _aiClass )
 				: tile( _tile ), nUnitsBuf( _nUnitsBuf ), aiClass( _aiClass )
 		{
@@ -156,8 +200,10 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 		EAIClasses aiClass{};
 
 		STmpLockInfo2() : tile( 0, 0 ), aiClass( EAC_NONE ) {}
+
 		STmpLockInfo2( const SVector &_tile, const EAIClasses _aiClass ) : tile( _tile ), aiClass( _aiClass ) {}
 	};
+
 	typedef std::list<STmpLockInfo2> CTmpLockInfoBuf2;
 	typedef std::list<STmpLockInfo> CTmpLockInfoBuf;
 
@@ -208,8 +254,12 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	bool IsLocked4Class( const int x, const int y, const EAIClasses aiClass ) const;
 	//
 	void AddWaterTiles( const std::list<SVector> &tiles );
+
 	//
-	void SetMode( const ELockMode _eMode ) { eMode = _eMode; }
+	void SetMode( const ELockMode _eMode )
+	{
+		eMode = _eMode;
+	}
 
 	// lock/unlock operations are unsafe without maxes update!
 	void LockTile( const int x, const int y, const EAIClasses aiClass );
@@ -235,7 +285,11 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 
 	const int GetTerrainPassabilityType( const int nX, const int nY ) const;
 
-	const int GetClassIndexFast( const uint8_t aiClass ) const { return classIndices[aiClass]; }
+	const int GetClassIndexFast( const uint8_t aiClass ) const
+	{
+		return classIndices[aiClass];
+	}
+
 	bool IsStaticLockedWOBoundaryCheck( const int x, const int y, const EAIClasses aiClass ) const;
 	bool IsLocked4ClassWOBoundaryCheck( const int x, const int y, const EAIClasses aiClass ) const;
 	bool HasRiverCliffTiles( const SVector &tile, const int nBoundTileRadius ) const;
@@ -323,8 +377,12 @@ public:
 	void UpdateTerrainPassabilityRect( const int nMinX, const int nMinY, const int nMaxX, const int nMaxY, bool bRemove );
 	// локает тайл и проставаляет проходимость в соответствии с terrain nTerrainType,
 	void SetTerrainPassability( const int nX, const int nY, const int nTerrainType );
+
 	// по номеру тайла выдаёт тип terrain
-	const int GetTerrainPassTypeByTileNum( const int nTile ) { return terrSubTypes[nTile]; }
+	const int GetTerrainPassTypeByTileNum( const int nTile )
+	{
+		return terrSubTypes[nTile];
+	}
 
 	const bool CanDigEntrenchment( const int x, const int y ) const;
 	const void AddUndigableTiles( const std::list<SVector> &tiles );
@@ -336,7 +394,11 @@ public:
 
 	uint8_t GetSoilType( const SVector &tile ) const;
 
-	void StartInitMode() { bInitMode = true; }
+	void StartInitMode()
+	{
+		bInitMode = true;
+	}
+
 	void FinishInitMode();
 
 	//void UpdateRiverPassability( const SVectorStripeObject &river, bool bAdd, bool bUpdate );
@@ -346,9 +408,21 @@ public:
 	{
 		return IsLocked( coord.x, coord.y, aiClass );
 	}
-	EAIClasses GetTileLockInfo( const SVector &tile ) const { return GetTileLockInfo( tile.x, tile.y ); }
-	const ETerrainTypes GetTerrainType( const SVector &tile ) const { return GetTerrainType( tile.x, tile.y ); }
-	const float GetPass( const CVec2 &point ) const { return GetPass( point.x, point.y ); }
+
+	EAIClasses GetTileLockInfo( const SVector &tile ) const
+	{
+		return GetTileLockInfo( tile.x, tile.y );
+	}
+
+	const ETerrainTypes GetTerrainType( const SVector &tile ) const
+	{
+		return GetTerrainType( tile.x, tile.y );
+	}
+
+	const float GetPass( const CVec2 &point ) const
+	{
+		return GetPass( point.x, point.y );
+	}
 
 	// debug helpers
 	void GetLockedTiles( std::vector<SVector> *pTiles, const EAIClasses aiClass, const EFreeTileInfo tileInfo );

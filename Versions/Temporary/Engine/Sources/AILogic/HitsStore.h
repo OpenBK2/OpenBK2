@@ -28,7 +28,11 @@ public:
 		EHT_ANY = 0x11
 	};
 
-	CHitsStore() { hits.resize( 2 ); }
+	CHitsStore()
+	{
+		hits.resize( 2 );
+	}
+
 	void Init( const int nMapSizeX, const int nMapSizeY );
 	void Clear();
 	void Segment();
@@ -36,4 +40,5 @@ public:
 	void AddHit( const CVec2 &center, const EHitTypes eHitType );
 	bool WasHit( const CVec2 &center, const float fR, const EHitTypes eHitType ) const;
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

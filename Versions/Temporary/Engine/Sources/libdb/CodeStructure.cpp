@@ -63,7 +63,7 @@ void GenerateCode( CCodeStructure *pCodeStructure, const std::string &szRawRootD
 	pCodeStructure->GenerateCode( szRootDir );
 }
 
-}
+} // namespace NCodeGen
 
 using namespace NCodeGen;
 REGISTER_SAVELOAD_CLASS( LIBDB, 0x301B6D00, CCodeStructure );

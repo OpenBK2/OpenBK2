@@ -3,6 +3,7 @@
 #include "OcTree.h"
 #include "GCombiner.h"
 #include "3DLib/Transform.h"
+
 namespace NGScene
 {
 
@@ -11,6 +12,7 @@ struct SCombinedKey
 	ZDATA
 	CObj<IMaterial> pMaterial;
 	SFullGroupInfo fullGroupInfo;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pMaterial );
@@ -19,6 +21,7 @@ struct SCombinedKey
 	}
 
 	SCombinedKey() {}
+
 	SCombinedKey( IMaterial *_pMaterial, const SFullGroupInfo &_info ) : pMaterial( _pMaterial ), fullGroupInfo( _info )
 	{
 		SGroupInfo &groupInfo = fullGroupInfo.groupInfo;
@@ -39,13 +42,16 @@ struct SCombinedKey
 			groupInfo.nObjectGroup |= N_MASK_IGNOREZ;
 		}
 	}
+
 	//
 	//	bool operator==( const SCombinedKey &k ) const { return pMaterial == k.pMaterial && fullGroupInfo == k.fullGroupInfo; }
 };
+
 struct SFullStaticTrackers
 {
 	ZDATA
 	CObj<CFuncBase<SPerVertexLightState>> pLightState;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pLightState );
@@ -56,6 +62,7 @@ struct SFullStaticTrackers
 class IHZBuffer;
 class CVolumeNode;
 class CCombinedPart;
+
 class ISomePart : public IPart
 {
 	ZDATA_( IPart )
@@ -65,6 +72,7 @@ class ISomePart : public IPart
 public:
 	CPtr<CCombinedPart> pOwner;
 	std::vector<CObj<CObjectBase>> decals;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (IPart *)this );
@@ -81,16 +89,48 @@ private:
 
 public:
 	ISomePart() {}
+
 	ISomePart( CPtrFuncBase<CObjectInfo> *pData, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo );
-	IMaterial *GetMaterial() const { return group.pMaterial; }
-	const SGroupInfo &GetGroupInfo() const { return group.fullGroupInfo.groupInfo; }
-	const SFullGroupInfo &GetFullGroupInfo() const { return group.fullGroupInfo; }
-	virtual bool Is2Sided() const { return group.pMaterial->Is2Sided(); }
-	virtual intptr_t GetSortValue() const { return ( (intptr_t)group.pMaterial.GetPtr() ) + vars.GetSortValue(); }
+
+	IMaterial *GetMaterial() const
+	{
+		return group.pMaterial;
+	}
+
+	const SGroupInfo &GetGroupInfo() const
+	{
+		return group.fullGroupInfo.groupInfo;
+	}
+
+	const SFullGroupInfo &GetFullGroupInfo() const
+	{
+		return group.fullGroupInfo;
+	}
+
+	virtual bool Is2Sided() const
+	{
+		return group.pMaterial->Is2Sided();
+	}
+
+	virtual intptr_t GetSortValue() const
+	{
+		return ( (intptr_t)group.pMaterial.GetPtr() ) + vars.GetSortValue();
+	}
+
 	void SetFade( float _fFade );
-	float GetFade() const { return vars.fFade; }
+
+	float GetFade() const
+	{
+		return vars.fFade;
+	}
+
 	void SetLM( CPtrFuncBase<NGfx::CTexture> *pLM );
-	const SPerPartVariables &GetVars() const { return vars; }
+
+	const SPerPartVariables &GetVars() const
+	{
+		return vars;
+	}
+
 	void SetPriority( int _n );
 };
 
@@ -100,11 +140,16 @@ class CNonePart : public ISomePart
 
 public:
 	CNonePart() {}
+
 	CNonePart( CPtrFuncBase<CObjectInfo> *pData, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo )
 			: ISomePart( pData, _pMaterial, _gInfo )
 	{
 	}
-	virtual ETransformType GetTransformType() const { return TT_NONE; }
+
+	virtual ETransformType GetTransformType() const
+	{
+		return TT_NONE;
+	}
 };
 
 class CSimplePart : public ISomePart
@@ -112,6 +157,7 @@ class CSimplePart : public ISomePart
 	OBJECT_NOCOPY_METHODS( CSimplePart );
 	ZDATA_( ISomePart )
 	SFBTransform pos;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (ISomePart *)this );
@@ -121,6 +167,7 @@ class CSimplePart : public ISomePart
 
 public:
 	CSimplePart() {}
+
 	CSimplePart( CPtrFuncBase<CObjectInfo> *pData,
 	             IMaterial *_pMaterial,
 	             const SFullGroupInfo &_gInfo,
@@ -128,8 +175,16 @@ public:
 			: ISomePart( pData, _pMaterial, _gInfo ), pos( _pos )
 	{
 	}
-	virtual ETransformType GetTransformType() const { return TT_SIMPLE; }
-	virtual const SFBTransform &GetSimplePos() { return pos; }
+
+	virtual ETransformType GetTransformType() const
+	{
+		return TT_SIMPLE;
+	}
+
+	virtual const SFBTransform &GetSimplePos()
+	{
+		return pos;
+	}
 };
 
 // animated in some bounds part
@@ -140,6 +195,7 @@ class CStaticAnimatedPart : public ISomePart
 	CDGPtr<CFuncBase<std::vector<SHMatrix>>> pAnimation;
 	CDGPtr<CFuncBase<std::vector<NGfx::SCompactTransformer>>> pMMXAnimation;
 	SBound bv;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (ISomePart *)this );
@@ -151,24 +207,36 @@ class CStaticAnimatedPart : public ISomePart
 
 public:
 	CStaticAnimatedPart() {}
+
 	CStaticAnimatedPart( CPtrFuncBase<CObjectInfo> *pData,
 	                     CFuncBase<std::vector<SHMatrix>> *pAnim,
 	                     CFuncBase<std::vector<NGfx::SCompactTransformer>> *pMMXAnim,
 	                     const SBound &_bv,
 	                     IMaterial *_pMaterial,
 	                     const SFullGroupInfo &_gInfo );
-	virtual ETransformType GetTransformType() const { return TT_SINGLE_SKIN; }
+
+	virtual ETransformType GetTransformType() const
+	{
+		return TT_SINGLE_SKIN;
+	}
+
 	virtual const std::vector<SHMatrix> &GetAnimation()
 	{
 		pAnimation.Refresh();
 		return pAnimation->GetValue();
 	}
+
 	virtual const std::vector<NGfx::SCompactTransformer> &GetMMXAnimation()
 	{
 		pMMXAnimation.Refresh();
 		return pMMXAnimation->GetValue();
 	}
-	const SBound &GetBound() const { return bv; }
+
+	const SBound &GetBound() const
+	{
+		return bv;
+	}
+
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices )
 	{
 		if ( bVertices )
@@ -202,6 +270,7 @@ public:
 
 public:
 	CGenericDynamicPart() : bt( BT_NONE ) {}
+
 	CGenericDynamicPart( CPtrFuncBase<CObjectInfo> *pData, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo );
 };
 
@@ -214,6 +283,7 @@ private:
 	SBound bound;
 	CDGPtr<CFuncBase<SFBTransform>> pTransform;
 	CDGPtr<CPtrFuncBase<CObjectInfo>> pTrackObjInfo;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CGenericDynamicPart *)this );
@@ -225,13 +295,27 @@ private:
 
 public:
 	CDynamicPart() {}
+
 	CDynamicPart( CPtrFuncBase<CObjectInfo> *pData,
 	              CFuncBase<SFBTransform> *pPos,
 	              IMaterial *_pMaterial,
 	              const SFullGroupInfo &_gInfo );
-	virtual ETransformType GetTransformType() const { return TT_SIMPLE; }
-	virtual const SFBTransform &GetSimplePos() { return pTransform->GetValue(); }
-	CFuncBase<SFBTransform> *GetSimplePosNode() { return pTransform; }
+
+	virtual ETransformType GetTransformType() const
+	{
+		return TT_SIMPLE;
+	}
+
+	virtual const SFBTransform &GetSimplePos()
+	{
+		return pTransform->GetValue();
+	}
+
+	CFuncBase<SFBTransform> *GetSimplePosNode()
+	{
+		return pTransform;
+	}
+
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices )
 	{
 		if ( bVertices )
@@ -239,6 +323,7 @@ public:
 			p->AddHandle( pTransform );
 		}
 	}
+
 	bool Update( CVolumeNode *pVolume, SFullStaticTrackers *pTrackers );
 };
 
@@ -258,6 +343,7 @@ public:
 	}
 
 	CAnimatedBoundPart() {};
+
 	CAnimatedBoundPart( CPtrFuncBase<CObjectInfo> *pData,
 	                    IMaterial *_pMaterial,
 	                    const SFullGroupInfo &_gInfo,
@@ -266,8 +352,13 @@ public:
 			: CGenericDynamicPart( pData, _pMaterial, _gInfo ), pBound( _pBound ), pChanges( pData )
 	{
 	}
+
 	bool Update( CVolumeNode *pVolume, SFullStaticTrackers *pTrackers );
-	CFuncBase<SBound> *GetBound() const { return pBound; }
+
+	CFuncBase<SBound> *GetBound() const
+	{
+		return pBound;
+	}
 };
 
 class CDynamicPartWithAnimatedBound : public CAnimatedBoundPart
@@ -277,6 +368,7 @@ class CDynamicPartWithAnimatedBound : public CAnimatedBoundPart
 private:
 	ZDATA_( CAnimatedBoundPart )
 	CDGPtr<CFuncBase<SFBTransform>> pTransform;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CAnimatedBoundPart *)this );
@@ -286,14 +378,28 @@ private:
 
 public:
 	CDynamicPartWithAnimatedBound() {}
+
 	CDynamicPartWithAnimatedBound( CPtrFuncBase<CObjectInfo> *pData,
 	                               CFuncBase<SFBTransform> *pPos,
 	                               CFuncBase<SBound> *pBound,
 	                               IMaterial *_pMaterial,
 	                               const SFullGroupInfo &_gInfo );
-	virtual ETransformType GetTransformType() const { return TT_SIMPLE; }
-	virtual const SFBTransform &GetSimplePos() { return pTransform->GetValue(); }
-	CFuncBase<SFBTransform> *GetSimplePosNode() { return pTransform; }
+
+	virtual ETransformType GetTransformType() const
+	{
+		return TT_SIMPLE;
+	}
+
+	virtual const SFBTransform &GetSimplePos()
+	{
+		return pTransform->GetValue();
+	}
+
+	CFuncBase<SFBTransform> *GetSimplePosNode()
+	{
+		return pTransform;
+	}
+
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices )
 	{
 		if ( bVertices )
@@ -309,6 +415,7 @@ class CAnimatedPart : public CAnimatedBoundPart
 	ZDATA_( CAnimatedBoundPart )
 	CDGPtr<CFuncBase<std::vector<SHMatrix>>> pAnimation;
 	CDGPtr<CFuncBase<std::vector<NGfx::SCompactTransformer>>> pMMXAnimation;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CAnimatedBoundPart *)this );
@@ -319,25 +426,41 @@ class CAnimatedPart : public CAnimatedBoundPart
 
 public:
 	CAnimatedPart() {}
+
 	CAnimatedPart( CPtrFuncBase<CObjectInfo> *pData,
 	               CFuncBase<std::vector<SHMatrix>> *pAnim,
 	               CFuncBase<std::vector<NGfx::SCompactTransformer>> *pMMXAnim,
 	               CFuncBase<SBound> *_pBound,
 	               IMaterial *_pMaterial,
 	               const SFullGroupInfo &_gInfo );
-	virtual ETransformType GetTransformType() const { return TT_SINGLE_SKIN; }
+
+	virtual ETransformType GetTransformType() const
+	{
+		return TT_SINGLE_SKIN;
+	}
+
 	virtual const std::vector<SHMatrix> &GetAnimation()
 	{
 		pAnimation.Refresh();
 		return pAnimation->GetValue();
 	}
+
 	virtual const std::vector<NGfx::SCompactTransformer> &GetMMXAnimation()
 	{
 		pMMXAnimation.Refresh();
 		return pMMXAnimation->GetValue();
 	}
-	virtual CFuncBase<std::vector<SHMatrix>> *GetAnimationNode() { return pAnimation; }
-	virtual CFuncBase<std::vector<NGfx::SCompactTransformer>> *GetMMXAnimationNode() { return pMMXAnimation; }
+
+	virtual CFuncBase<std::vector<SHMatrix>> *GetAnimationNode()
+	{
+		return pAnimation;
+	}
+
+	virtual CFuncBase<std::vector<NGfx::SCompactTransformer>> *GetMMXAnimationNode()
+	{
+		return pMMXAnimation;
+	}
+
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices )
 	{
 		if ( bVertices )
@@ -355,6 +478,7 @@ class CDynamicGeometryPart : public CGenericDynamicPart
 	CDGPtr<CFuncBase<SBound>> pBound;
 	CDGPtr<CFuncBase<SFBTransform>> pTransform;
 	CChangeTrackPtr pChanges;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CGenericDynamicPart *)this );
@@ -366,14 +490,28 @@ class CDynamicGeometryPart : public CGenericDynamicPart
 
 public:
 	CDynamicGeometryPart() {}
+
 	CDynamicGeometryPart( CPtrFuncBase<CObjectInfo> *pData,
 	                      CFuncBase<SFBTransform> *_pTransform,
 	                      CFuncBase<SBound> *pAnim,
 	                      IMaterial *_pMaterial,
 	                      const SFullGroupInfo &_gInfo );
-	virtual ETransformType GetTransformType() const { return pTransform ? TT_SIMPLE : TT_NONE; }
-	virtual const SFBTransform &GetSimplePos() { return pTransform->GetValue(); }
-	CFuncBase<SFBTransform> *GetSimplePosNode() { return pTransform; }
+
+	virtual ETransformType GetTransformType() const
+	{
+		return pTransform ? TT_SIMPLE : TT_NONE;
+	}
+
+	virtual const SFBTransform &GetSimplePos()
+	{
+		return pTransform->GetValue();
+	}
+
+	CFuncBase<SFBTransform> *GetSimplePosNode()
+	{
+		return pTransform;
+	}
+
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices );
 	bool Update( CVolumeNode *pVolume, SFullStaticTrackers *pTrackers );
 };
@@ -388,6 +526,7 @@ public:
 		ZDATA
 		SGroupInfo groupInfo;
 		int nMaterial;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &groupInfo );
@@ -395,11 +534,13 @@ public:
 			return 0;
 		}
 	};
+
 	struct SMaterialInfo
 	{
 		ZDATA
 		CPtr<IMaterial> pMaterial;
 		SPerPartVariables vars;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pMaterial );
@@ -407,7 +548,10 @@ public:
 			return 0;
 		}
 
-		bool operator==( const SMaterialInfo &a ) const { return a.pMaterial == pMaterial && a.vars == vars; }
+		bool operator==( const SMaterialInfo &a ) const
+		{
+			return a.pMaterial == pMaterial && a.vars == vars;
+		}
 	};
 
 private:
@@ -423,6 +567,7 @@ private:
 	CObj<CFuncBase<SPerVertexLightState>> pPervertexLightState;
 	bool bRecalcPartInfo;
 	bool bIsDynamic;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pCombiner );
@@ -437,27 +582,68 @@ private:
 		f.Add( 11, &bIsDynamic );
 		return 0;
 	}
+
 	void InitGeometry();
 
 public:
 	CCombinedPart() : nIgnoreMark( 0 ), bRecalcPartInfo( false ) {}
+
 	CCombinedPart( SFullStaticTrackers *pTrackers, int _nFloorMask, bool bIsDynamic );
-	CPerMaterialCombiner *GetCombiner() const { return pCombiner; }
-	IVBCombiner *GetVBCombiner() { return GetGeometryInfo()->pVertices; }
+
+	CPerMaterialCombiner *GetCombiner() const
+	{
+		return pCombiner;
+	}
+
+	IVBCombiner *GetVBCombiner()
+	{
+		return GetGeometryInfo()->pVertices;
+	}
+
 	SRenderGeometryInfo *GetGeometryInfo();
 	void SetIgnored( int _nIgnoreMark, const CPartFlags &parts );
-	int GetIgnoreMark() const { return nIgnoreMark; }
-	int GetMaterialsNumber() const { return materials.size(); }
-	int GetFloorMask() const { return nFloorMask; }
-	const SMaterialInfo &GetMaterial( int n ) const { return materials[n]; }
-	const std::vector<SPartInfo> &GetPartsInfo() const { return parts; }
+
+	int GetIgnoreMark() const
+	{
+		return nIgnoreMark;
+	}
+
+	int GetMaterialsNumber() const
+	{
+		return materials.size();
+	}
+
+	int GetFloorMask() const
+	{
+		return nFloorMask;
+	}
+
+	const SMaterialInfo &GetMaterial( int n ) const
+	{
+		return materials[n];
+	}
+
+	const std::vector<SPartInfo> &GetPartsInfo() const
+	{
+		return parts;
+	}
+
 	void UpdatePartInfo();
-	const CPartFlags &GetIgnoredParts() const { return ignoredParts; }
-	void PartHasChanged() { bRecalcPartInfo = true; }
+
+	const CPartFlags &GetIgnoredParts() const
+	{
+		return ignoredParts;
+	}
+
+	void PartHasChanged()
+	{
+		bRecalcPartInfo = true;
+	}
 };
 
 //! node size
 const int N_MINIMAL_OCTREE_NODE = 8; //16;
+
 class CVolumeNode : public COcTreeNode<CVolumeNode, N_MINIMAL_OCTREE_NODE, true>
 {
 	OBJECT_NOCOPY_METHODS( CVolumeNode );
@@ -468,6 +654,7 @@ public:
 		ZDATA
 		std::vector<CObj<CCombinedPart>> transparent, normal;
 		std::vector<CPtr<CCombinedPart>> elements;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &transparent );
@@ -495,6 +682,7 @@ public:
 			elements.push_back( p );
 			return p;
 		}
+
 		CCombinedPart *
 		GetCombinerPartForAdd( IMaterial *pMaterial, SFullStaticTrackers *pTrackers, int nFloorMask, bool bIsDynamic )
 		{
@@ -504,6 +692,7 @@ public:
 			}
 			return AllocCombinerPart( &normal, nFloorMask, pTrackers, bIsDynamic );
 		}
+
 		bool IsEmpty() const
 		{
 			for ( std::vector<CPtr<CCombinedPart>>::const_iterator i = elements.begin(); i != elements.end(); ++i )
@@ -517,6 +706,7 @@ public:
 			return true;
 		}
 	};
+
 	struct SUpdatableObjects
 	{
 		ZDATA
@@ -525,6 +715,7 @@ public:
 		std::vector<CPtr<CAnimatedBoundPart>> animatedParts;
 		std::vector<CPtr<CDynamicPart>> movingParts;
 		std::vector<CPtr<CParticles>> particles;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nLastFrame );
@@ -534,7 +725,9 @@ public:
 			f.Add( 6, &particles );
 			return 0;
 		}
+
 		SUpdatableObjects() : nLastFrame( 0 ) {}
+
 		bool IsEmpty();
 		void Update( int nFrame, CVolumeNode *pVolume, SFullStaticTrackers *pTrackers );
 	};
@@ -543,6 +736,7 @@ public:
 	SPerMaterialHolder staticParts, dynamicParts;
 	std::vector<CPtr<CParticles>> particles;
 	SUpdatableObjects updatable;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CParent *)this );
@@ -561,6 +755,7 @@ public:
 		float fR = sqrt( CalcRadius2( bound, pos.forward ) );
 		return GetNode( ptCenter, fR );
 	}
+
 	virtual bool IsEmpty();
 
 private:
@@ -574,4 +769,4 @@ void PlaceToOctree( ISomePart *pPart,
                     SFullStaticTrackers *pTrackers,
                     bool bIsDynamic );
 CVolumeNode *GetUpdatable( CVolumeNode *pRoot, const SBound &hintBV );
-}
+} // namespace NGScene

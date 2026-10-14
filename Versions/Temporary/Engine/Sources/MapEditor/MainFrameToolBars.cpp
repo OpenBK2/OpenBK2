@@ -84,7 +84,7 @@ namespace
 	{
 		return static_cast<uint32_t>( N );
 	}
-}
+} // namespace
 
 const unsigned TOOLBAR_ID[TOOLBARS_COUNT] = {
 	IDT_MAIN,
@@ -148,4 +148,4 @@ const unsigned *const TOOLBAR_ELEMENTS_ID[TOOLBARS_COUNT] = {
 	TOOLBAR_PC_ELEMENTS_ID,
 	TOOLBAR_VIEW_ELEMENTS_ID,
 };
-}
+} // namespace NMainFrameToolBars

@@ -1,4 +1,5 @@
 #pragma once
+
 // universal bilinear interpolation
 
 template <class T, class TInterp>
@@ -15,6 +16,7 @@ inline typename TInterp::RET GetBilinear( const CArray2D<T> &data, float x, floa
 struct TLinearInterpolate
 {
 	typedef float RET;
+
 	template <class T>
 	float operator()( T a, T b, float f ) const
 	{

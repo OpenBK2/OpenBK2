@@ -553,7 +553,7 @@ namespace
 		*pError = "Unknown game resource type <" + *pTypeName + ">. The file was not registered.";
 		return false;
 	}
-}
+} // namespace
 
 void RegisterXDB( const std::function<void()> &rReloadData )
 {
@@ -842,4 +842,4 @@ void CProgressHost::IteratePosition()
 		pView->IteratePosition();
 	}
 }
-}
+} // namespace NMainFrameShared

@@ -45,4 +45,4 @@ bool RenameNode( const std::string &szOldName, const std::string &szNewName )
 	return bRes;
 }
 
-}
+} // namespace NFolderManipulator

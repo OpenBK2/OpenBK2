@@ -191,4 +191,4 @@ TEST_F( UnicodeEditLine, NumericFieldsStillRestrictInput )
 	Type( sample + L"0123456789" );
 	EXPECT_EQ( std::wstring( edit->GetText() ), L"0123456789" );
 }
-}
+} // namespace

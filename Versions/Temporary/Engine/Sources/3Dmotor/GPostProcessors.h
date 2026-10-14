@@ -20,12 +20,14 @@ struct SVec4Hash
 		return p[0] ^ ( p[1] * 3u ) ^ ( p[2] * 9u ) ^ ( p[3] + 918237461u );
 	}
 };
+
 struct SPostProcessData
 {
 	typedef std::unordered_map<CVec4, std::vector<IPostProcess::SObject>, SVec4Hash> CColorHash;
 	CColorHash postColorer;
 	CColorHash occluded;
 };
+
 void RenderPostProcess( NGfx::CRenderContext *pRC, const SPostProcessData &data );
 
 class CPostColorer : public IPostProcess
@@ -33,6 +35,7 @@ class CPostColorer : public IPostProcess
 	OBJECT_NOCOPY_METHODS( CPostColorer );
 	ZDATA
 	CDGPtr<CFuncBase<CVec4>> pColor;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &pColor );
@@ -41,6 +44,7 @@ class CPostColorer : public IPostProcess
 
 public:
 	CPostColorer( CFuncBase<CVec4> *_p = 0 ) : pColor( _p ) {}
+
 	virtual void Render( SPostProcessData *pDst, const std::vector<SObject> &render );
 };
 
@@ -49,6 +53,7 @@ class _3DMOTOR_EXPORT COccludedColorer : public IPostProcess
 	OBJECT_NOCOPY_METHODS( COccludedColorer );
 	ZDATA
 	CDGPtr<CFuncBase<CVec4>> pColor;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &pColor );
@@ -57,7 +62,8 @@ class _3DMOTOR_EXPORT COccludedColorer : public IPostProcess
 
 public:
 	COccludedColorer( CFuncBase<CVec4> *_p = 0 ) : pColor( _p ) {}
+
 	virtual void Render( SPostProcessData *pDst, const std::vector<SObject> &render );
 };
 
-}
+} // namespace NGScene

@@ -33,9 +33,15 @@ class CUnitStartCmdWxWindow : public CWxHostWindow, public CUnitStartCmdCommands
 	SUnitStartCmdWindowData::EAction eLastAction = SUnitStartCmdWindowData::NO_CMD;
 
 public:
-	CUnitStartCmdWxWindow() { Singleton<ICommandHandlerContainer>()->Set( CHID_UNIT_START_CMD_WINDOW, this ); }
+	CUnitStartCmdWxWindow()
+	{
+		Singleton<ICommandHandlerContainer>()->Set( CHID_UNIT_START_CMD_WINDOW, this );
+	}
 
-	virtual ~CUnitStartCmdWxWindow() { Singleton<ICommandHandlerContainer>()->Remove( CHID_UNIT_START_CMD_WINDOW ); }
+	virtual ~CUnitStartCmdWxWindow()
+	{
+		Singleton<ICommandHandlerContainer>()->Remove( CHID_UNIT_START_CMD_WINDOW );
+	}
 
 	bool Build( IWidget *pParent )
 	{
@@ -175,7 +181,7 @@ private:
 		}
 	}
 };
-}
+} // namespace
 
 namespace NUnitStartCmdView
 {
@@ -193,4 +199,4 @@ IWidget *Create( CPaletteList *pPalettes, IWidget *pPage )
 	}
 	return pWindow;
 }
-}
+} // namespace NUnitStartCmdView

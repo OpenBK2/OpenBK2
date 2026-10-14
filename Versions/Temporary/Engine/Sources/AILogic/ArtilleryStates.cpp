@@ -2016,6 +2016,7 @@ IUnitState *CArtilleryAttackAviationState::Instance( CArtillery *pArtillery, CAv
 {
 	return new CArtilleryAttackAviationState( pArtillery, pPlane );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CArtilleryAttackAviationState::CArtilleryAttackAviationState( CArtillery *_pArtillery, CAviation *pPlane )
 		: pArtillery( _pArtillery ), CSoldierAttackAviationState( _pArtillery, pPlane )

@@ -31,6 +31,7 @@ public:
 		float fPing;
 		CMemoryStream info;
 	};
+
 	struct SMessage
 	{
 		EMessage msg;
@@ -43,6 +44,7 @@ private:
 	SNetDriverConsts consts;
 	bool bIsBroadcast; // used to prevent undesireble broadcast
 	bool bIsClient;    //to determine client or server
+
 	//
 	struct SClientAddressInfo
 	{
@@ -50,11 +52,13 @@ private:
 		CNodeAddressSet localAddress;
 
 		SClientAddressInfo() {}
+
 		SClientAddressInfo( const CNodeAddress &_inetAddress, const CNodeAddressSet &_localAddress )
 				: inetAddress( _inetAddress ), localAddress( _localAddress )
 		{
 		}
 	};
+
 	//
 	struct SPeer
 	{
@@ -65,6 +69,7 @@ private:
 		CStreamTracker data;
 		bool bTryShortcut;
 		float fTimeToSendData;
+
 		SPeer() : fTimeToSendData( 0.0f ) {}
 	};
 
@@ -150,8 +155,13 @@ public:
 	Init( const APPLICATION_ID nApplicationID, const int nGamePort, bool bClientOnly, ILinksManager *pLinksManager );
 	// get current state (active/inactive/connecting)
 	virtual EState GetState() const;
+
 	// get reject reason (then )
-	virtual EReject GetRejectReason() const { return lastReject; }
+	virtual EReject GetRejectReason() const
+	{
+		return lastReject;
+	}
+
 	// connect to the game with particular address
 	virtual void ConnectGame( const CNodeAddress &addr, const CMemoryStream &pwd );
 	// start game (server)
@@ -166,8 +176,10 @@ public:
 	virtual void StopNewPlayerAccept();
 	// get game info (for client)
 	virtual bool GetGameInfo( int nIdx, CNodeAddress *pAddr, bool *pWrongVersion, float *pPing, SGameInfo *pGameInfo );
+
 	// refresh servers list ( for client )
 	virtual void RefreshServersList() {}
+
 	// send broadcast message for all
 	virtual bool SendBroadcast( const CMemoryStream &pkt );
 	// send direct message for client 'nClient'
@@ -182,7 +194,11 @@ public:
 	virtual const float GetTimeSinceLastRecv( const int nClientID );
 	// step net driver
 	virtual void Step();
-	virtual int GetSelfClientID() { return login.GetSelfClientID(); }
+
+	virtual int GetSelfClientID()
+	{
+		return login.GetSelfClientID();
+	}
 
 	virtual const std::string GetIP( const int nClientID );
 	virtual const int GetPort( const int nClientID );
@@ -195,7 +211,11 @@ public:
 	void StartThread();
 	bool CanWork();
 	void FinishThread();
+
 	//
-	int operator&( IBinSaver &saver ) { return 0; }
+	int operator&( IBinSaver &saver )
+	{
+		return 0;
+	}
 };
-}
+} // namespace NNet

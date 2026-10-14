@@ -79,4 +79,4 @@ ICombinerVFS *CreateCombinerVFS( IVFS *pVFS )
 	return new CCombinerVFS( pVFS );
 }
 
-}
+} // namespace NVFS

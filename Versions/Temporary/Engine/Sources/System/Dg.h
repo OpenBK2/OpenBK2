@@ -15,6 +15,7 @@ class CVersioningBase : public CObjectBase
 	OBJECT_BASIC_METHODS( CVersioningBase );
 	int nFrameCalced = 0; // mark of last update frame, used to cut recalc time
 	int nVersion = 0;     // current version number, used to determine if setParam needed
+
 	//
 	void DoUpdate()
 	{
@@ -28,9 +29,20 @@ class CVersioningBase : public CObjectBase
 	}
 
 protected:
-	bool IsFrameMatch() const { return nFrameCalced == nDGCurrentFrame; }
-	virtual bool NeedUpdate() { return false; }
-	virtual void Recalc() { ASSERT( 0 ); }
+	bool IsFrameMatch() const
+	{
+		return nFrameCalced == nDGCurrentFrame;
+	}
+
+	virtual bool NeedUpdate()
+	{
+		return false;
+	}
+
+	virtual void Recalc()
+	{
+		ASSERT( 0 );
+	}
 
 public:
 	CVersioningBase()
@@ -38,13 +50,25 @@ public:
 		nFrameCalced = 0;
 		nVersion = 1;
 	}
-	void Updated() { nVersion++; } // should be called when function recalc its value or value is changed
+
+	void Updated()
+	{
+		nVersion++;
+	} // should be called when function recalc its value or value is changed
+
 	//! returns if node was refreshed on this frame, for information purposes, normally not needed for user
-	bool WasRefreshed() const { return nFrameCalced == nDGCurrentFrame; }
+	bool WasRefreshed() const
+	{
+		return nFrameCalced == nDGCurrentFrame;
+	}
 	friend class CBaseScene;
 	friend class CAccessForDGPtr;
+
 	//
-	virtual int operator&( IBinSaver &f ) { return 0; }
+	virtual int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 };
 
 template <class TResult>
@@ -55,7 +79,9 @@ protected:
 
 public:
 	CFuncBase() {}
+
 	CFuncBase( const TResult &_t ) : value( _t ) {}
+
 	const TResult &GetValue() const
 	{
 		ASSERT( IsFrameMatch() );
@@ -79,7 +105,11 @@ public:
 		}
 		return pValue;
 	}
-	bool HasZeroValue() const { return pValue == 0; }
+
+	bool HasZeroValue() const
+	{
+		return pValue == 0;
+	}
 };
 
 SYSTEM_EXPORT void SetToHoldQueue( CObjectBase *p, int *pnFrame );
@@ -98,6 +128,7 @@ protected:
 			SetToHoldQueue( this, &nDeleteFrame );
 		}
 	}
+
 	virtual bool NeedUpdate()
 	{
 		Touch();
@@ -121,6 +152,7 @@ protected:
 			SetToHoldQueue( this, &nDeleteFrame );
 		}
 	}
+
 	virtual bool NeedUpdate()
 	{
 		Touch();
@@ -131,34 +163,51 @@ public:
 	CHoldedFuncBase() : nDeleteFrame( -1 ) {}
 };
 
-#define DEFINE_DG_CONSTANT_NODE( ClassName, Type )                     \
-	class ClassName : public CFuncBase<Type>                             \
-	{                                                                    \
-		OBJECT_BASIC_METHODS( ClassName );                                 \
-                                                                       \
-	public:                                                              \
-		ClassName() {}                                                     \
-		ClassName( const Type &_t ) : CFuncBase<Type>( _t ) { Updated(); } \
-		const Type &GetValue() const { return value; }                     \
-		void Set( const Type &_t )                                         \
-		{                                                                  \
-			value = _t;                                                      \
-			Updated();                                                       \
-		}                                                                  \
-		int operator&( IBinSaver &f )                                      \
-		{                                                                  \
-			f.Add( 1, &value );                                              \
-			return 0;                                                        \
-		}                                                                  \
+#define DEFINE_DG_CONSTANT_NODE( ClassName, Type )      \
+	class ClassName : public CFuncBase<Type>              \
+	{                                                     \
+		OBJECT_BASIC_METHODS( ClassName );                  \
+                                                        \
+	public:                                               \
+		ClassName() {}                                      \
+		ClassName( const Type &_t ) : CFuncBase<Type>( _t ) \
+		{                                                   \
+			Updated();                                        \
+		}                                                   \
+		const Type &GetValue() const                        \
+		{                                                   \
+			return value;                                     \
+		}                                                   \
+		void Set( const Type &_t )                          \
+		{                                                   \
+			value = _t;                                       \
+			Updated();                                        \
+		}                                                   \
+		int operator&( IBinSaver &f )                       \
+		{                                                   \
+			f.Add( 1, &value );                               \
+			return 0;                                         \
+		}                                                   \
 	};
 
 // for use in CDGPtr only!
 class CAccessForDGPtr
 {
 public:
-	int GetFrameCalced( CVersioningBase *pNode ) const { return pNode->nFrameCalced; }
-	void DoUpdate( CVersioningBase *pNode ) const { pNode->DoUpdate(); }
-	int GetVersion( CVersioningBase *pNode ) const { return pNode->nVersion; }
+	int GetFrameCalced( CVersioningBase *pNode ) const
+	{
+		return pNode->nFrameCalced;
+	}
+
+	void DoUpdate( CVersioningBase *pNode ) const
+	{
+		pNode->DoUpdate();
+	}
+
+	int GetVersion( CVersioningBase *pNode ) const
+	{
+		return pNode->nVersion;
+	}
 };
 
 SYSTEM_EXPORT void MarkNewDGFrame();
@@ -170,31 +219,62 @@ class CDGPtr
 	int nVersion = 0;
 
 public:
-	CDGPtr() { nVersion = 0; }
-	CDGPtr( const CDGPtr<TFunc, CPtrType> &a ) : pNode( a.pNode ) { nVersion = 0; }
-	CDGPtr( TFunc *_pNode ) : pNode( _pNode ) { nVersion = 0; }
+	CDGPtr()
+	{
+		nVersion = 0;
+	}
+
+	CDGPtr( const CDGPtr<TFunc, CPtrType> &a ) : pNode( a.pNode )
+	{
+		nVersion = 0;
+	}
+
+	CDGPtr( TFunc *_pNode ) : pNode( _pNode )
+	{
+		nVersion = 0;
+	}
+
 	CDGPtr &operator=( const CDGPtr<TFunc, CPtrType> &a )
 	{
 		pNode = a.pNode;
 		nVersion = 0;
 		return *this;
 	}
+
 	CDGPtr &operator=( TFunc *_pNode )
 	{
 		pNode = _pNode;
 		nVersion = 0;
 		return *this;
 	}
+
 	//
-	operator TFunc *() const { return pNode; }
-	TFunc *operator->() const { return pNode; }
-	TFunc *Get() const { return pNode; }
-	TFunc *GetPtr() const { return pNode; }
+	operator TFunc *() const
+	{
+		return pNode;
+	}
+
+	TFunc *operator->() const
+	{
+		return pNode;
+	}
+
+	TFunc *Get() const
+	{
+		return pNode;
+	}
+
+	TFunc *GetPtr() const
+	{
+		return pNode;
+	}
+
 	TFunc *Extract()
 	{
 		nVersion = 0;
 		return pNode.Extract();
 	}
+
 	bool Refresh()
 	{
 		ASSERT( IsValid( pNode ) );
@@ -207,17 +287,20 @@ public:
 		nVersion = cppIsWeak.GetVersion( pNode );
 		return bResult;
 	}
+
 	void Sync( const CDGPtr &a )
 	{
 		pNode = a.pNode;
 		nVersion = a.nVersion;
 	}
+
 	int operator&( IBinSaver &f )
 	{
 		f.DoPtr( &pNode );
 		return 0;
 	}
 };
+
 template <class T, typename TPtrType>
 inline bool IsValid( const CDGPtr<T, TPtrType> &p )
 {
@@ -230,6 +313,7 @@ enum EDGNodeChange
 	DG_CHANGE_NONE,
 	DG_CHANGE_CHANGED
 };
+
 class CChangeTrackPtr
 {
 	CPtr<CVersioningBase> p;
@@ -238,8 +322,11 @@ class CChangeTrackPtr
 
 public:
 	CChangeTrackPtr() : nVersion( 0 ), nFrame( 0 ) {}
+
 	CChangeTrackPtr( const CChangeTrackPtr &a ) : p( a.p ), nVersion( 0 ), nFrame( 0 ) {}
+
 	CChangeTrackPtr( CVersioningBase *_p ) : p( _p ), nVersion( 0 ), nFrame( 0 ) {}
+
 	CChangeTrackPtr &operator=( const CChangeTrackPtr &a )
 	{
 		p = a.p;
@@ -247,6 +334,7 @@ public:
 		nFrame = 0;
 		return *this;
 	}
+
 	CChangeTrackPtr &operator=( CVersioningBase *_p )
 	{
 		p = _p;
@@ -277,6 +365,7 @@ public:
 		nVersion = nNodeVersion;
 		return rv;
 	}
+
 	int operator&( IBinSaver &f )
 	{
 		f.DoPtr( &p );

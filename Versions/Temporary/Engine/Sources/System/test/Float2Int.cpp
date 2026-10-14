@@ -31,8 +31,15 @@ class CRoundingModeGuard
 	const int nPrevMode;
 
 public:
-	explicit CRoundingModeGuard( const int nMode ) : nPrevMode( std::fegetround() ) { std::fesetround( nMode ); }
-	~CRoundingModeGuard() { std::fesetround( nPrevMode ); }
+	explicit CRoundingModeGuard( const int nMode ) : nPrevMode( std::fegetround() )
+	{
+		std::fesetround( nMode );
+	}
+
+	~CRoundingModeGuard()
+	{
+		std::fesetround( nPrevMode );
+	}
 };
 
 TEST( Float2Int, NearestRoundsTiesToEven )
@@ -89,4 +96,4 @@ TEST( Float2Int, OutOfRangeIsIntegerIndefinite )
 	EXPECT_EQ( Convert( std::numeric_limits<float>::quiet_NaN() ), INT32_MIN );
 }
 
-}
+} // namespace

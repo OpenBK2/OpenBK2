@@ -612,6 +612,7 @@ struct SUpDownFinder
 		upTile.x = (std::max)( upTile.x, el.tile.x );
 		upTile.y = (std::max)( upTile.y, el.tile.y );
 	}
+
 	void operator()( const SVector &el )
 	{
 		downTile.x = (std::min)( downTile.x, el.x );

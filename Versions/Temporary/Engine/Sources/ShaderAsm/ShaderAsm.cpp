@@ -244,7 +244,10 @@ namespace
 			return false;
 		}
 
-		bool IsPixel() const { return profile.nProfile != VS11; }
+		bool IsPixel() const
+		{
+			return profile.nProfile != VS11;
+		}
 
 		// A register name and number, without modifiers or selector
 		bool ParseRegister( const std::string &sz, int *pnType, int *pnNumber )
@@ -256,6 +259,7 @@ namespace
 				int nNumber;
 				int nProfiles;
 			};
+
 			static const SNamed named[] = {
 				{ "opos", REG_RASTOUT, 0, VS11 },
 				{ "ofog", REG_RASTOUT, 1, VS11 },
@@ -282,6 +286,7 @@ namespace
 				int nType;
 				int nProfiles;
 			};
+
 			static const SNumbered numbered[] = {
 				{ "od", REG_ATTROUT, VS11 },
 				{ "ot", REG_TEXCRDOUT, VS11 },
@@ -887,7 +892,7 @@ namespace
 		}
 	};
 
-}
+} // namespace
 
 bool Assemble( std::string_view source, std::vector<uint32_t> *pTokens, std::string *pszError )
 {
@@ -896,4 +901,4 @@ bool Assemble( std::string_view source, std::vector<uint32_t> *pTokens, std::str
 	return assembler.Run( source, pszError );
 }
 
-}
+} // namespace NShaderAsm

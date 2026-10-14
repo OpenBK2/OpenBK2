@@ -1565,6 +1565,6 @@ void SObjectInfo::Trace() const
 	}
 	DebugTrace( "sceneIDToLinkIDMap: end" );
 }
-};
+}; // namespace NMapInfoEditor
 
 // basement storage

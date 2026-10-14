@@ -9,7 +9,8 @@ namespace NGfx
 {
 struct SGeomVecFull;
 struct SGeomVecT2C1;
-}
+} // namespace NGfx
+
 namespace NGScene
 {
 
@@ -25,11 +26,13 @@ struct SPerVertexLightState
 		int nID;
 
 		SPointLightInfo() {}
+
 		SPointLightInfo( const CVec3 &_vCenter, float _fRadius, const CVec3 &_vColor, int _nID )
 				: vCenter( _vCenter ), fRadius( _fRadius ), vColor( _vColor ), nID( _nID )
 		{
 		}
 	};
+
 	ZDATA
 	NGfx::SMMXWord ambient, lightColor, incidentShadowColor, shadeColor, dirLight, shift;
 	int nDirectionalID;
@@ -43,6 +46,7 @@ struct SPerVertexLightState
 	CVec3 vAmbientColor, vLightColor, vSunDir;
 	ZSKIP
 	CVec3 vDymanicLightsModification;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &ambient );
@@ -82,8 +86,17 @@ struct SPerVertexLightState
 	void SetWarFogBlend( float fBlend );
 	// returns true if need resample
 	bool SetWarFog( const CArray2D<unsigned char> &fog, float fScale );
-	void ResetStaticLights() { staticPointLights.resize( 0 ); }
-	void ResetDynamicLights() { dynamicPointLights.resize( 0 ); }
+
+	void ResetStaticLights()
+	{
+		staticPointLights.resize( 0 );
+	}
+
+	void ResetDynamicLights()
+	{
+		dynamicPointLights.resize( 0 );
+	}
+
 	float GetWarFogBlend() const;
 };
 
@@ -106,6 +119,7 @@ struct SCacheLightingInfo
 	bool bReplaceWithDirectional, bDoNotCacheLighting, bSkipLighting, bSelfIllum;
 	bool bMultiplyOnTransparency, bSkipStaticPointLights, bTranslucent;
 	CVec3 vTranslucentColor;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &bReplaceWithDirectional );
@@ -118,6 +132,7 @@ struct SCacheLightingInfo
 		f.Add( 9, &vTranslucentColor );
 		return 0;
 	}
+
 	std::vector<NGfx::SMMXWord> pointLight;
 	std::vector<int> pointLightIDs;
 	std::vector<uint32_t> colors, shadowColors;
@@ -132,6 +147,7 @@ struct SCacheLightingInfo
 	{
 		Clear();
 	}
+
 	void Clear()
 	{
 		nDirectionalLightID = 0;
@@ -162,4 +178,4 @@ void CalcPerVertexLight( NGfx::SGeomVecT2C1 *pRes,
                          const SBound &bv );
 void SampleWarFog( const std::vector<CVec3> &vPos, const SPerVertexLightState &ls, std::vector<float> *pRes );
 
-}
+} // namespace NGScene

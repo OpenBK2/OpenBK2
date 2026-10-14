@@ -329,4 +329,4 @@ std::string GetMiscString( const std::string &szName )
 	}
 }
 
-}
+} // namespace NEditorOptions

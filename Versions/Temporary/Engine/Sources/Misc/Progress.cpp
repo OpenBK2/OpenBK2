@@ -13,6 +13,7 @@ struct SLockInfo
 	uint32_t dwTime;
 
 	SLockInfo() : nLine( 0 ), dwTime( 0 ) {}
+
 	SLockInfo( const std::string &_szFileName, const int _nLine, const uint32_t _dwTime )
 			: szFileName( _szFileName ), nLine( _nLine ), dwTime( _dwTime )
 	{
@@ -41,4 +42,4 @@ void DebugUnLock( const std::string &szFileName, const int nLine )
 	        nLine );
 }
 
-}
+} // namespace NProgressHook

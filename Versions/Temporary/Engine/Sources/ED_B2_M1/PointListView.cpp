@@ -81,7 +81,7 @@ CPointListDispatch &Dispatch()
 	static CPointListDispatch dispatch;
 	return dispatch;
 }
-}
+} // namespace
 
 namespace NPointListView
 {
@@ -116,4 +116,4 @@ void FollowSeason( IPointList *pSource, NDb::ESeason eSeason )
 		}
 	}
 }
-}
+} // namespace NPointListView

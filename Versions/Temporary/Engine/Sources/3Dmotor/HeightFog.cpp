@@ -20,6 +20,7 @@ class CHeightFogHolder : public CPtrFuncBase<CObjectInfo>
 	CDBPtr<NDb::SHeightFog> pHeightFog;
 	SFBTransform place;
 	CDGPtr<CFuncBase<SFBTransform>> pPlace;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pGeom );
@@ -31,7 +32,12 @@ class CHeightFogHolder : public CPtrFuncBase<CObjectInfo>
 
 protected:
 	CHeightFogHolder() {}
-	bool NeedUpdate() { return pGeom.Refresh() | ( !pPlace || pPlace.Refresh() ); }
+
+	bool NeedUpdate()
+	{
+		return pGeom.Refresh() | ( !pPlace || pPlace.Refresh() );
+	}
+
 	void Recalc();
 
 public:
@@ -39,6 +45,7 @@ public:
 			: pGeom( _pGeom ), pHeightFog( _pHeightFog ), place( _place )
 	{
 	}
+
 	CHeightFogHolder( CPtrFuncBase<CObjectInfo> *_pGeom,
 	                  const NDb::SHeightFog *_pHeightFog,
 	                  CFuncBase<SFBTransform> *_pPlace )

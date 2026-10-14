@@ -112,17 +112,25 @@ class CFrameWindow : public IFrameWindow, public IWxWidget
 public:
 	explicit CFrameWindow( CContentPanel *_pPanel ) : pPanel( _pPanel ) {}
 
-	CContentPanel *GetPanel() const { return pPanel; }
+	CContentPanel *GetPanel() const
+	{
+		return pPanel;
+	}
 
 	// IWxWidget: the panel, which a wx view is made in.
-	virtual wxWindow *GetWxWindow() { return pPanel.get(); }
+	virtual wxWindow *GetWxWindow()
+	{
+		return pPanel.get();
+	}
 
 	// IFrameWindow. Maximize has nothing to do: the panel always fills the
 	// workspace. Focus goes to the panel, as SetFocus on an MDI child left it
 	// on the frame rather than its contents.
 	virtual void *GetNativeWidget();
 	virtual void Show( bool bShow );
+
 	virtual void Maximize() {}
+
 	virtual void Focus();
 	virtual void Destroy();
 };
@@ -143,10 +151,16 @@ public:
 	{
 	}
 
-	CContentPanel *GetPanel() const { return pPanel; }
+	CContentPanel *GetPanel() const
+	{
+		return pPanel;
+	}
 
 	// IWxWidget: the panel, which a wx view is made in.
-	virtual wxWindow *GetWxWindow() { return pPanel.get(); }
+	virtual wxWindow *GetWxWindow()
+	{
+		return pPanel.get();
+	}
 
 	// IDockPanel. Show tells the manager, and the manager lays the frame out
 	// again once the caller has returned (CAuiManager::UpdateLater);
@@ -197,7 +211,10 @@ public:
 	{
 	}
 
-	wxAuiToolBar *GetToolBar() const { return pToolBar; }
+	wxAuiToolBar *GetToolBar() const
+	{
+		return pToolBar;
+	}
 
 	// IToolBar
 	virtual void Show( bool bShow );
@@ -213,8 +230,16 @@ class CLogPane
 public:
 	// Creates the pane in pFrame and adds it to pManager.
 	bool Create( wxWindow *pFrame, wxAuiManager *pManager );
-	wxPanel *GetPanel() const { return pPanel; }
-	CLogPaneContents &GetContents() { return contents; }
+
+	wxPanel *GetPanel() const
+	{
+		return pPanel;
+	}
+
+	CLogPaneContents &GetContents()
+	{
+		return contents;
+	}
 };
 
 // Selection Properties: the wx property pane.
@@ -226,11 +251,17 @@ class CPropertiesPane
 
 public:
 	CPropertiesPane() : pPropertyPane( 0 ) {}
+
 	~CPropertiesPane();
 
 	// pOwner is what the grid's buttons open their dialogs over.
 	bool Create( wxWindow *pFrame, wxAuiManager *pManager, IWidget *pOwner );
-	wxPanel *GetPanel() const { return pPanel; }
+
+	wxPanel *GetPanel() const
+	{
+		return pPanel;
+	}
+
 	void EnableEdit( bool bEnable );
 };
 
@@ -249,12 +280,24 @@ public:
 	// Creates the pane in pFrame, adds it to pManager captioned for its place
 	// in the list, and fills it.
 	bool Create( wxWindow *pFrame, wxAuiManager *pManager, int nWindowIndex );
-	wxPanel *GetPanel() const { return pPanel; }
-	CGDBBrowserContents &GetContents() { return contents; }
+
+	wxPanel *GetPanel() const
+	{
+		return pPanel;
+	}
+
+	CGDBBrowserContents &GetContents()
+	{
+		return contents;
+	}
 
 	// CGDBBrowserContents::IPane
 	virtual void LayoutContents();
 	virtual void ShowEmpty( bool bEmpty );
-	virtual IWidget *GetOwner() { return pOwner; }
+
+	virtual IWidget *GetOwner()
+	{
+		return pOwner;
+	}
 };
-}
+} // namespace NMainFrameWxPanes

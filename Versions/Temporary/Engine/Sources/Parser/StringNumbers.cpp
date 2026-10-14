@@ -120,4 +120,4 @@ bool IsFloat( const std::string &szVal )
 	return true;
 }
 
-}
+} // namespace NStr

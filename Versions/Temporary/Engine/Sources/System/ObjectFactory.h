@@ -48,6 +48,7 @@ private:
 
 public:
 	void RegisterTypeBase( int nTypeID, newFunc func, VFT vft );
+
 	void UnregisterTypeBase( int nTypeID, VFT vft )
 	{
 		typeInfo.erase( nTypeID );
@@ -64,17 +65,20 @@ public:
 			typeIndex.erase( toErase[k] );
 		}
 	}
+
 	template <class TT>
 	void RegisterType( int nTypeID, newFunc func, TT * )
 	{
 		RegisterTypeBase( nTypeID, func, &typeid( TT ) );
 	}
+
 	void RegisterTypeSafe( int nTypeID, newFunc func )
 	{
 		CPtr<T> pObj = func();
 		VFT vft = GetObjectType( pObj );
 		RegisterTypeBase( nTypeID, func, vft );
 	}
+
 	T *CreateObject( int nTypeID )
 	{
 		typename CTypeNewHash::iterator i = typeInfo.find( nTypeID );
@@ -89,9 +93,22 @@ public:
 		}
 		return 0;
 	}
-	bool IsRegistered( int nTypeID ) const { return typeInfo.find( nTypeID ) != typeInfo.end(); }
-	int GetObjectTypeID( T *pObject ) { return VFT2TypeID( GetObjectType( pObject ) ); }
-	int GetObjectTypeID( VFT vft ) { return VFT2TypeID( vft ); }
+
+	bool IsRegistered( int nTypeID ) const
+	{
+		return typeInfo.find( nTypeID ) != typeInfo.end();
+	}
+
+	int GetObjectTypeID( T *pObject )
+	{
+		return VFT2TypeID( GetObjectType( pObject ) );
+	}
+
+	int GetObjectTypeID( VFT vft )
+	{
+		return VFT2TypeID( vft );
+	}
+
 	template <class TT>
 	int GetTypeID( TT *p = 0 )
 	{

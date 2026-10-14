@@ -30,10 +30,16 @@ public:
 
 public:
 	CExecutorThrowGrenade( CAIUnit *_pUnit, NDb::EUnitSpecialAbility _eAbility );
+
 	CExecutorThrowGrenade() {}
 
 	virtual int Segment();
 	virtual bool NotifyEvent( const CExecutorEvent &event );
-	virtual bool IsExecutorValid() const { return IsValid( pUnit ); }
+
+	virtual bool IsExecutorValid() const
+	{
+		return IsValid( pUnit );
+	}
+
 	virtual void RegisterOnEvents( IExecutorContainer *pContainer );
 };

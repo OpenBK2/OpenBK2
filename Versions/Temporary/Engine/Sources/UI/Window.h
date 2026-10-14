@@ -102,14 +102,19 @@ private:
 protected:
 	CDBPtr<NDb::SWindowShared> pShared;
 	virtual NDb::SWindow *GetInstance() = 0;
+
 	//g trick not to create 2 virtual functions.
-	const NDb::SWindow *GetInstance() const { return const_cast<CWindow *>( this )->GetInstance(); }
+	const NDb::SWindow *GetInstance() const
+	{
+		return const_cast<CWindow *>( this )->GetInstance();
+	}
 
 	CWindow();
 
 	void SetTextPlacement( const struct NDb::SWindowPlacement &placement );
 
 	CWindow *PickInternal( const CVec2 &vPos, const bool bRecursive );
+
 	const char *GetPressedName( const int nButton )
 	{
 		if ( pressed.size() > nButton && pressed[nButton] )
@@ -118,6 +123,7 @@ protected:
 		}
 		return 0;
 	}
+
 	int RunAnimationAndCommands( const NDb::SUIStateSequence &seq,
 	                             const std::string &szCommanEffect,
 	                             const bool bWaitOnGraphics,
@@ -140,9 +146,16 @@ protected:
 	virtual const std::wstring &GetDBInstanceText() const;
 	virtual const NDb::SWindowPlacement *GetDBTextPlacement() const;
 	virtual void OnChangeVisibility( bool bShow );
-	virtual bool IsRelatedFocus( IWindow *pWindow ) const { return this == pWindow; }
 
-	float GetTotalFadeValue() const { return fFadeValue * fInternalFadeValue; }
+	virtual bool IsRelatedFocus( IWindow *pWindow ) const
+	{
+		return this == pWindow;
+	}
+
+	float GetTotalFadeValue() const
+	{
+		return fFadeValue * fInternalFadeValue;
+	}
 
 	virtual bool IsActiveArea( const CVec2 &vPos ) const;
 	void VisitText( struct IUIVisitor *pVisitor );
@@ -151,7 +164,11 @@ public:
 	void InitStatic();
 
 	//{ access to flags
-	bool IsTransparent() const { return pShared->flags.bTransparent; }
+	bool IsTransparent() const
+	{
+		return pShared->flags.bTransparent;
+	}
+
 	virtual bool IsPickable() const;
 	//}
 
@@ -171,6 +188,7 @@ public:
 	void RepositionChildren( IWindow *pWindow = 0 );
 	virtual void Reposition( const CTRect<float> &parentRect );
 	virtual void Init();
+
 	// window may want to be notified about finish state sequience, that it launched
 	virtual void NotifyStateSequenceFinished() {}
 
@@ -186,19 +204,36 @@ public:
 	bool IsInside( const CVec2 &vPos ) const;
 	// Gives or removes focus from the current window
 	virtual void SetFocus( const bool bFocus );
-	bool IsFocused() const { return bFocused; }
+
+	bool IsFocused() const
+	{
+		return bFocused;
+	}
 
 	void ShowWindow( const bool bShow );
 	bool IsVisible() const;
-	const NDb::EPositionAllign GetVerAllign() const { return GetInstance()->placement.verAllign.first; }
-	const NDb::EPositionAllign GetHorAllign() const { return GetInstance()->placement.horAllign.first; }
+
+	const NDb::EPositionAllign GetVerAllign() const
+	{
+		return GetInstance()->placement.verAllign.first;
+	}
+
+	const NDb::EPositionAllign GetHorAllign() const
+	{
+		return GetInstance()->placement.horAllign.first;
+	}
+
 	void SetAllign( const NDb::EPositionAllign eHorAllign, const NDb::EPositionAllign eVerAllign )
 	{
 		GetInstance()->placement.horAllign = eHorAllign;
 		GetInstance()->placement.verAllign = eVerAllign;
 	}
 
-	void SetClickNotify( IClickNotify *pNotify ) { pClickNotify = pNotify; }
+	void SetClickNotify( IClickNotify *pNotify )
+	{
+		pClickNotify = pNotify;
+	}
+
 	// children/parent work
 	void AddChild( IWindow *pWnd, bool bDoReposition );
 	// close window (remove it from parent's children stack)
@@ -213,7 +248,11 @@ public:
 	// deep children
 	CWindow *GetDeepChild( const std::string &_szName );
 	virtual void SetParent( CWindow *pParent );
-	CWindow *GetParent() const { return pParent; }
+
+	CWindow *GetParent() const
+	{
+		return pParent;
+	}
 
 	const std::string &GetName() const;
 	void SetName( const std::string &_szName );
@@ -226,8 +265,17 @@ public:
 	// (no message sing exists on the screen - wrong situation or wrong message ID)
 	virtual bool ProcessEvent( const struct SGameMessage &msg );
 	virtual bool ProcessMessage( const struct SBUIMessage &msg );
-	void SetModal( bool _bIsModal ) { bIsModal = _bIsModal; }
-	bool IsModal() const { return bIsModal; }
+
+	void SetModal( bool _bIsModal )
+	{
+		bIsModal = _bIsModal;
+	}
+
+	bool IsModal() const
+	{
+		return bIsModal;
+	}
+
 	//translators of "msg" into "vPos" and "nButton"
 	bool MsgOnLMouseDown( const struct SGameMessage &msg );
 	bool MsgOnLMouseUp( const struct SGameMessage &msg );
@@ -249,9 +297,22 @@ public:
 	const wchar_t *GetTextString() const;
 	virtual std::wstring GetDBText() const;
 	virtual SWindowContext *GetContext();
-	virtual const struct NDb::SUIDesc *GetDesc() const { return pWindowStats; }
-	virtual IWindow *GetParentWindow() const { return pParent; }
-	virtual const struct NDb::SWindowShared *GetSharedDesc() const { return pShared; }
+
+	virtual const struct NDb::SUIDesc *GetDesc() const
+	{
+		return pWindowStats;
+	}
+
+	virtual IWindow *GetParentWindow() const
+	{
+		return pParent;
+	}
+
+	virtual const struct NDb::SWindowShared *GetSharedDesc() const
+	{
+		return pShared;
+	}
+
 	virtual IWindow *GetChild( const int _nTypeID, const int _nID, const bool bRecursive = false );
 	virtual bool IsPointInsideOfChildren( const CVec2 &vPoint );
 
@@ -277,7 +338,11 @@ public:
 
 	//enabled / disabled
 	virtual void Enable( const bool bEnable );
-	virtual bool IsEnabled() const { return GetInstance()->bEnabled; }
+
+	virtual bool IsEnabled() const
+	{
+		return GetInstance()->bEnabled;
+	}
 
 	void SetBackground( IWindowPart *_pBackground );
 	void SetForeground( IWindowPart *_pForeground );

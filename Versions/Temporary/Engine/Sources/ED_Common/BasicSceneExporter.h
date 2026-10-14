@@ -20,6 +20,7 @@ class ED_COMMON_EXPORT CBasicSceneExporter : public CBasicExporter
 	                         const std::string &szDstPath,
 	                         const std::string &szSrcPath,
 	                         IManipulator *pManipulator ) = 0;
+
 	virtual bool ImportInfoToDBBeforeRefs( const std::string &szGeomObjName,
 	                                       const std::string &szSrcScenePath,
 	                                       const std::string &szDstFileName,
@@ -27,6 +28,7 @@ class ED_COMMON_EXPORT CBasicSceneExporter : public CBasicExporter
 	{
 		return true;
 	}
+
 	virtual bool ImportInfoToDBAfterRefs( const std::string &szGeomObjName,
 	                                      const std::string &szSrcScenePath,
 	                                      const std::string &szDstFileName,
@@ -34,6 +36,7 @@ class ED_COMMON_EXPORT CBasicSceneExporter : public CBasicExporter
 	{
 		return true;
 	}
+
 	virtual EXPORT_RESULT CustomCheck( const std::string &szTypeName,
 	                                   const std::string &szObjName,
 	                                   const std::string &szSrcScenePath,
@@ -44,8 +47,16 @@ class ED_COMMON_EXPORT CBasicSceneExporter : public CBasicExporter
 	}
 
 protected:
-	virtual bool ImportGltfInfo( IManipulator *pManipulator ) { return true; }
-	const char *GetScriptTemplate( const char *pszTemplateName ) const { return GetTextTemplate( pszTemplateName ); }
+	virtual bool ImportGltfInfo( IManipulator *pManipulator )
+	{
+		return true;
+	}
+
+	const char *GetScriptTemplate( const char *pszTemplateName ) const
+	{
+		return GetTextTemplate( pszTemplateName );
+	}
+
 	//
 	CBasicSceneExporter() {}
 

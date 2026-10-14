@@ -15,8 +15,11 @@ public:
 
 	public:
 		CReactions() {}
+
 		~CReactions() {}
+
 		CReactions( IWindow *_pScreen, CInterfaceEscMenu *_pInterface ) : pScreen( _pScreen ), pInterface( _pInterface ) {}
+
 		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
 		virtual int Check( const std::string &szCheckName ) const;
 
@@ -50,6 +53,7 @@ private:
 	CPtr<IButton> pEndMissionExitToMainMenuBtn;
 	CPtr<IButton> pEndMissionExitToChapterMapBtn;
 	CPtr<IButton> pLoadBtn;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );

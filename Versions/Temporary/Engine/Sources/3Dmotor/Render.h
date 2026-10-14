@@ -51,6 +51,7 @@ struct SProjectedPoint
 		res.x = src.x * res.z;
 		res.y = src.y * res.z;
 	}
+
 	void Transform( const SHMatrix &xform, const CVec3 &_src )
 	{
 		src.x = xform._11 * _src.x + xform._12 * _src.y + xform._13 * _src.z + xform._14;
@@ -65,6 +66,7 @@ struct SProjectedPoint
 // rasterizers tries to conform DirectX rasterizing standard - points are checked by its centers
 const float F_RASTERIZER_NEAR_PLANE = 0.01f;
 const int N_F_RASTERIZER_NEAR_PLANE = 0x3c23d70a; //0.01f//*(int*)&F_RASTERIZER_NEAR_PLANE;
+
 template <class T>
 class CRasterizer
 {
@@ -73,10 +75,12 @@ class CRasterizer
 		int nSY, nFY;
 		float fDX, fX0;
 	};
+
 	struct SZGradientInfo
 	{
 		float fZ0, fZx, fZy;
 	};
+
 	// sLeft - single edge, sRight - upper edge, sRight2 - lower edge; [nSY;nFY2) - upper edge; [nFY2;nFY) - lower edge
 	void RasterTriangleLow( const SEdgeInfo &sLeft,
 	                        const SEdgeInfo &sRight,
@@ -155,6 +159,7 @@ class CRasterizer
 			pThis->RasterSpan( nY, nLeft, nRight, fZ, zGradient.fZx, nBackface ); // right exclusive
 		}
 	}
+
 	void InitEdge( SEdgeInfo *pRes, const CVec3 &a, const CVec3 &dif, int nSY, int nFY )
 	{
 		float fY1 = 1 / dif.y;
@@ -177,6 +182,7 @@ class CRasterizer
 		pInfo->fZ0 = vA.z - ( vA.x - 0.5f ) * pInfo->fZx - vA.y * pInfo->fZy;
 		return true;
 	}
+
 	void RasterTriangle( const CVec3 &vA, const CVec3 &vB, const CVec3 &vC )
 	{
 		int nA = Float2Int( vA.y ); //+ 0.49999f );
@@ -261,6 +267,7 @@ class CRasterizer
 			RasterTriangleLow( pLeft[0], pRight[0], pRight[0], zGrad, pLeft[0].nSY, pRight[0].nFY, pLeft[0].nFY, nBack );
 		}
 	}
+
 	void Intersect( SProjectedPoint *pRes, const SProjectedPoint &vA, const SProjectedPoint &vB )
 	{
 		float ffA = vA.src.z - F_RASTERIZER_NEAR_PLANE; // - vA.w;
@@ -271,6 +278,7 @@ class CRasterizer
 		pRes->src.z = vA.src.z * fA + vB.src.z * fB;
 		pRes->Project();
 	}
+
 	void RenderClipped1( const SProjectedPoint &v1, const SProjectedPoint &v2, const SProjectedPoint &v3 )
 	{
 		SProjectedPoint vI12;
@@ -279,6 +287,7 @@ class CRasterizer
 		Intersect( &vI13, v1, v3 );
 		RasterTriangle( v1.res, vI12.res, vI13.res );
 	}
+
 	void RenderClipped2( const SProjectedPoint &v1, const SProjectedPoint &v2, const SProjectedPoint &v3 )
 	{
 		SProjectedPoint vI13;
@@ -288,6 +297,7 @@ class CRasterizer
 		RasterTriangle( v1.res, vI23.res, vI13.res );
 		RasterTriangle( v1.res, v2.res, vI23.res );
 	}
+
 	void RasterClipped( const SProjectedPoint &v1, const SProjectedPoint &v2, const SProjectedPoint &v3, int nTemp )
 	{
 		ASSERT( nTemp < 8 );
@@ -344,7 +354,11 @@ public:
 			RasterClipped( v1, v2, v3, nTemp );
 		}
 	}
-	void RasterNoClip( const CVec3 &v1, const CVec3 &v2, const CVec3 &v3 ) { RasterTriangle( v1, v2, v3 ); }
+
+	void RasterNoClip( const CVec3 &v1, const CVec3 &v2, const CVec3 &v3 )
+	{
+		RasterTriangle( v1, v2, v3 );
+	}
 };
 
 // special mapping to conform DirectX mapping standard
@@ -368,13 +382,18 @@ class CArrayRasterizer : public CRasterizer<T>
 {
 public:
 	CArray2D<TElement> res;
+
 	//! set region with exclusive upper borders
 	void SetRegion( const CTRect<int> &_region )
 	{
 		region = _region;
 		res.SetSizes( region.Width(), region.Height() );
 	}
-	void SetTextureMapping( const CVec4 &_ptDU, const CVec4 &_ptDV ) { texMapping.SetGradient( _ptDU, _ptDV ); }
+
+	void SetTextureMapping( const CVec4 &_ptDU, const CVec4 &_ptDV )
+	{
+		texMapping.SetGradient( _ptDU, _ptDV );
+	}
 
 protected:
 	CTRect<int> region; // with exclusive borders
@@ -386,6 +405,7 @@ protected:
 		( *pnFY ) = (std::min)( *pnFY, region.y2 );
 		( *pnFY2 ) = (std::min)( *pnFY2, region.y2 );
 	}
+
 	void ClipHorizontal( int *pnSX, int *pnFX )
 	{
 		( *pnSX ) = (std::max)( *pnSX, region.x1 );

@@ -41,26 +41,31 @@ public:
 		events.push_back( "header " + szVersion + " " + szEncoding + " [" + szStandalone + "]" );
 		return true;
 	}
+
 	bool VisitComment( const std::string &szText ) override
 	{
 		events.push_back( "comment [" + szText + "]" );
 		return true;
 	}
+
 	bool VisitChunkStart( const std::string &szName ) override
 	{
 		events.push_back( "start " + szName );
 		return true;
 	}
+
 	bool VisitAttribute( const std::string &szName, const std::string &szValue ) override
 	{
 		events.push_back( "attr " + szName + "=[" + szValue + "]" );
 		return true;
 	}
+
 	bool VisitText( const std::string &szText ) override
 	{
 		events.push_back( "text [" + szText + "]" );
 		return true;
 	}
+
 	bool VisitChunkFinish( const std::string &szName ) override
 	{
 		events.push_back( "finish " + szName );

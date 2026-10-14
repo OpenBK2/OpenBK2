@@ -10,6 +10,7 @@ public:
 		TID id;
 		TData data;
 	};
+
 	//
 	typedef std::unordered_map<TItem, SControlItemData, TItemHash> CControlItemDataMap;
 	typedef std::unordered_map<TID, TItem, TIDHash> CItemMap;
@@ -32,6 +33,7 @@ public:
 		}
 		return false;
 	}
+
 	//
 	TData *GetDataByItem( const TItem &rItem )
 	{
@@ -42,12 +44,14 @@ public:
 		}
 		return 0;
 	}
+
 	//
 	void Clear()
 	{
 		controlItemDataMap.clear();
 		itemMap.clear();
 	}
+
 	//
 	void Insert( const TItem &rItem, const TID &rID, const TData &rData )
 	{
@@ -63,6 +67,7 @@ public:
 		//
 		itemMap[rID] = rItem;
 	}
+
 	//
 	void Remove( const TItem &rItem )
 	{
@@ -77,6 +82,7 @@ public:
 			controlItemDataMap.erase( posControlItemData );
 		}
 	}
+
 	//
 	TData *GetDataByID( const TID &rID )
 	{
@@ -87,6 +93,7 @@ public:
 		}
 		return 0;
 	}
+
 	//
 	bool GetID( TID *pID, const TItem &rItem ) const
 	{
@@ -102,4 +109,5 @@ public:
 		return false;
 	}
 };
+
 //

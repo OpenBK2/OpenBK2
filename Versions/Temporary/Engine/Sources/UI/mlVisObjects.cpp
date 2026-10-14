@@ -19,6 +19,7 @@ struct SFontInfo
 	CVec2 scale;
 	CPtr<CFontFormatInfo> pInfo;
 	CPtr<NGScene::CFontInfo> pFont;
+
 	int operator&( CStructureSaver &f )
 	{
 		ASSERT( 0 );
@@ -84,6 +85,7 @@ private:
 	CRectLayout normalRects;
 	CRectLayout outlineRects;
 	CObj<CPtrFuncBase<NGfx::CTexture>> pTexture;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nStrSize );
@@ -100,17 +102,28 @@ private:
 
 public:
 	CTextObject() {}
+
 	CTextObject( CMLStream *pStream, int nStart, int nSize );
 
 	void Update( IReflowState *pState );
 
-	const CTPoint<float> &GetPosition() const { return position; }
-	void SetPosition( const CTPoint<float> &_position ) { position = _position; }
+	const CTPoint<float> &GetPosition() const
+	{
+		return position;
+	}
+
+	void SetPosition( const CTPoint<float> &_position )
+	{
+		position = _position;
+	}
 
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window );
 	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window );
 
-	const CTPoint<float> &GetSize() const { return size; }
+	const CTPoint<float> &GetSize() const
+	{
+		return size;
+	}
 };
 
 CTextObject::CTextObject( CMLStream *_pStream, int _nStart, int _nSize )
@@ -224,6 +237,7 @@ private:
 	////
 	CRectLayout rects;
 	CDBPtr<NDb::STexture> pTexture;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nBorder );
@@ -237,17 +251,28 @@ private:
 
 public:
 	CImageObject() {}
+
 	CImageObject( NDb::STexture *pTexture, const CTPoint<int> &size, int nBorder );
 
 	void Update( IReflowState *pState );
 
-	const CTPoint<float> &GetPosition() const { return position; }
-	void SetPosition( const CTPoint<float> &_position ) { position = _position; }
+	const CTPoint<float> &GetPosition() const
+	{
+		return position;
+	}
+
+	void SetPosition( const CTPoint<float> &_position )
+	{
+		position = _position;
+	}
 
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window );
 	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window );
 
-	const CTPoint<float> &GetSize() const { return size; }
+	const CTPoint<float> &GetSize() const
+	{
+		return size;
+	}
 };
 
 CImageObject::CImageObject( NDb::STexture *_pTexture, const CTPoint<int> &_size, int _nBorder )
@@ -309,6 +334,7 @@ private:
 	ZDATA
 	CTPoint<float> size;
 	CTPoint<float> position;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &size );
@@ -321,13 +347,24 @@ public:
 
 	void Update( IReflowState *pState );
 
-	const CTPoint<float> &GetPosition() const { return position; }
-	void SetPosition( const CTPoint<float> &_position ) { position = _position; }
+	const CTPoint<float> &GetPosition() const
+	{
+		return position;
+	}
+
+	void SetPosition( const CTPoint<float> &_position )
+	{
+		position = _position;
+	}
 
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window ) {}
+
 	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window ) {}
 
-	const CTPoint<float> &GetSize() const { return size; }
+	const CTPoint<float> &GetSize() const
+	{
+		return size;
+	}
 };
 
 CTabObject::CTabObject() : size( 0, 0 ) {}
@@ -360,6 +397,7 @@ private:
 	int nSize;
 	CTPoint<float> size;
 	CTPoint<float> position;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nSize );
@@ -370,18 +408,34 @@ private:
 
 public:
 	CSpringObject() {}
+
 	CSpringObject( int nSize );
 
 	void Update( IReflowState *pState );
 
-	const CTPoint<float> &GetPosition() const { return position; }
-	void SetPosition( const CTPoint<float> &_position ) { position = _position; }
+	const CTPoint<float> &GetPosition() const
+	{
+		return position;
+	}
+
+	void SetPosition( const CTPoint<float> &_position )
+	{
+		position = _position;
+	}
 
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window ) {}
+
 	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window ) {}
 
-	bool IsSpace() const { return true; }
-	const CTPoint<float> &GetSize() const { return size; }
+	bool IsSpace() const
+	{
+		return true;
+	}
+
+	const CTPoint<float> &GetSize() const
+	{
+		return size;
+	}
 };
 
 CSpringObject::CSpringObject( int _nSize ) : nSize( _nSize ), size( 0, 0 ) {}
@@ -402,7 +456,7 @@ IVisReflowObject *CreateSpringObject( int nSize )
 	return new CSpringObject( nSize );
 }
 
-} // NAMESPACE
+} // namespace NML
 
 using namespace NML;
 REGISTER_SAVELOAD_CLASS( UI, 0xB5529200, CTextObject )

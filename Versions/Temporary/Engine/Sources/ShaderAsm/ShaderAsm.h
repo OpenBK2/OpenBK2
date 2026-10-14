@@ -28,4 +28,4 @@ namespace NShaderAsm
 // first error, prefixed with its line number, in *pszError.
 bool Assemble( std::string_view source, std::vector<uint32_t> *pTokens, std::string *pszError );
 
-}
+} // namespace NShaderAsm

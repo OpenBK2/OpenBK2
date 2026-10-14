@@ -27,6 +27,7 @@ class CMissionSuperWeapon : public IMissionSuperWeapon
 	bool bDisabledByInterface;
 	CPtr<CMapObj> pMO;
 	CDBPtr<NDb::SHPObjectRPGStats> pDBUnit;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pSuperWeaponBtn );

@@ -17,6 +17,7 @@
 namespace NGfx
 {
 extern SRenderTargetsInfo rtInfo;
+
 class CQuery : public IQuery
 {
 	OBJECT_NOCOPY_METHODS( CQuery );
@@ -24,9 +25,19 @@ class CQuery : public IQuery
 
 public:
 	CQuery() {}
+
 	CQuery( IDirect3DQuery9 *p ) : pQuery( p ) {}
-	virtual void Start() { pQuery->Issue( D3DISSUE_BEGIN ); }
-	virtual void Finish() { pQuery->Issue( D3DISSUE_END ); }
+
+	virtual void Start()
+	{
+		pQuery->Issue( D3DISSUE_BEGIN );
+	}
+
+	virtual void Finish()
+	{
+		pQuery->Issue( D3DISSUE_END );
+	}
+
 	virtual int GetData()
 	{
 		int nRes = 10000;
@@ -40,23 +51,28 @@ public:
 		}
 		return nRes;
 	}
+
 	virtual void Flush()
 	{
 		int nRes;
 		pQuery->GetData( &nRes, sizeof( nRes ), D3DGETDATA_FLUSH );
 	}
 };
+
 static bool operator==( const SFBTransform &a, const SFBTransform &b )
 {
 	return memcmp( &a, &b, sizeof( SFBTransform ) ) == 0;
 }
 template <class T>
 void Apply( const T &a );
+
 template <class T>
 struct SRenderParam
 {
 	T value;
+
 	SRenderParam( const T &_a ) : value( _a ) {}
+
 	void Set( const T &_a )
 	{
 		if ( _a == value )
@@ -66,8 +82,13 @@ struct SRenderParam
 		value = _a;
 		Apply( _a );
 	}
-	void DoApply() { Apply( value ); }
+
+	void DoApply()
+	{
+		Apply( value );
+	}
 };
+
 typedef std::unordered_map<int, NWin32Helper::com_ptr<IDirect3DSurface9>> CDepthHash;
 
 const int N_MAX_REGISTERS = 5;
@@ -912,6 +933,7 @@ void ForceTextureFilterSetup()
 }
 
 static NWin32Helper::com_ptr<IDirect3DSurface9> pCurrentRTTB, pCurrentRTZB;
+
 static void SetRT( IDirect3DSurface9 *pTB, IDirect3DSurface9 *pZB )
 {
 	ASSERT( pTB && pZB );
@@ -951,6 +973,7 @@ static void SetRT( IDirect3DSurface9 *pTB, IDirect3DSurface9 *pZB )
 // CRenderContext
 
 static const CRenderContext *pCurrentRenderContext;
+
 CRenderContext::CRenderContext()
 		: alpha( COMBINE_NONE ), stencil( SStencilMode( STENCIL_NONE ) ), depth( DEPTH_NORMAL ), cull( CULL_CW ),
 			colorWrite( COLORWRITE_ALL ), targetMode( RTM_SCREEN ), fog( FOG_NONE ), pTarget( 0 ), nMipLevel( 0 ),
@@ -1103,6 +1126,7 @@ void CRenderContext::SetVirtualRT()
 
 const int N_REGISTER_MASK = 7;
 const int N_USE_DEPTH_REGISTER = 8;
+
 void CRenderContext::SetRegister( int _nRegister )
 {
 	ASSERT( pOutstandingStream == 0 );
@@ -1738,10 +1762,12 @@ inline bool IsPow2( int n )
 {
 	return GetNextPow2( n ) == n;
 }
+
 inline bool IsPow2( const CTPoint<int> &t )
 {
 	return IsPow2( t.x ) && IsPow2( t.y );
 }
+
 static CVec4 GetRegisterMapScale( const CTPoint<int> &vRegSize )
 {
 	//const CTRect<int> &vp = ptRegisterBufferSize; //rViewport;//ptRegisterSize;
@@ -1851,6 +1877,7 @@ bool IsUingRegisters()
 {
 	return rtInfo.nRegisters > 0;
 }
+
 void DoneRender()
 {
 	HRESULT hr;
@@ -1868,4 +1895,4 @@ START_REGISTER( GfxRender )
 REGISTER_VAR_EX( "gfx_lag", NGlobal::VarIntHandler, &nMaxLag, 1, STORAGE_USER )
 REGISTER_VAR_EX( "gfx_register_resolution", NGlobal::VarFloatHandler, &fRegisterResolution, 1.0f, STORAGE_USER )
 FINISH_REGISTER
-}
+} // namespace NGfx

@@ -27,8 +27,16 @@ class CVisualNotificationsEmpty : public IVisualNotifications
 	OBJECT_NOCOPY_METHODS( CVisualNotificationsEmpty );
 
 public:
-	bool Notify( EVisualNotification eType, int nID, const CVec2 &vPos ) { return true; }
-	bool Notify( EVisualNotification eType, class CMapObj *pMO ) { return true; }
+	bool Notify( EVisualNotification eType, int nID, const CVec2 &vPos )
+	{
+		return true;
+	}
+
+	bool Notify( EVisualNotification eType, class CMapObj *pMO )
+	{
+		return true;
+	}
+
 	void Step( const NTimer::STime nDeltaTime, bool bAppActive ) {}
 };
 

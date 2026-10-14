@@ -23,6 +23,7 @@ public:
 		f.Add( 3, &pLine );
 		return 0;
 	}
+
 	bool TryCircle( const CVec3 &x0, const CVec3 &v0, const CVec3 &x1, const float fR, const int nDir, CVec3 *vT );
 
 public:

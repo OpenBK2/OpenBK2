@@ -28,6 +28,7 @@ struct SStartCommand
 	bool UpdateDB( IManipulator *pManipulator, int nIndex );
 	///
 };
+
 struct SStartCommandList
 {
 	std::vector<SStartCommand> commands;
@@ -38,6 +39,7 @@ struct SStartCommandList
 	bool LoadFromDB( IManipulator *pManipulator );
 	void RemoveCommands( const std::vector<int> &rIndices );
 };
+
 enum EMoveDir
 {
 	MV_UP,
@@ -83,6 +85,7 @@ class CUnitStartCmdState : public CMapObjectState, public NUnitStartCmdDialog::I
 	void FilterCommandsyBySelection();
 	//
 	bool GetLinkIDs( std::vector<int> *pLinkIDs );
+
 	//
 	struct SCmdMarker
 	{
@@ -90,9 +93,11 @@ class CUnitStartCmdState : public CMapObjectState, public NUnitStartCmdDialog::I
 		CVec3 vTargetPos;
 		bool bTargetIsUnit; // false -- target is position
 		bool bTargetSelected;
+
 		//
 		SCmdMarker() : vTargetPos( VNULL3 ), bTargetIsUnit( false ), bTargetSelected( false ) {}
 	};
+
 	std::vector<SCmdMarker> markers;
 	SCmdMarker currentCmdMarker;
 	void DrawCommandMarkers();
@@ -113,16 +118,33 @@ protected:
 
 	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+
 	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
+
 	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
+
 	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
+
 	void OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
+
 	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
 
 	// CMapObjectState
-	bool CanEdit() { return true; }
-	bool CanInsertMapObject() { return false; }
-	bool IsDrawSceneDrawTool() { return false; }
+	bool CanEdit()
+	{
+		return true;
+	}
+
+	bool CanInsertMapObject()
+	{
+		return false;
+	}
+
+	bool IsDrawSceneDrawTool()
+	{
+		return false;
+	}
+
 	//
 	NMapInfoEditor::SObjectInfoCollector *GetObjectInfoCollector();
 	CMapInfoEditor *GetMapInfoEditor();
@@ -144,5 +166,6 @@ public:
 	void EdCmdOK();
 	void EdCmdCancel();
 	void EdCmdClear();
+
 	void EdCmdTypeChange() {}
 };

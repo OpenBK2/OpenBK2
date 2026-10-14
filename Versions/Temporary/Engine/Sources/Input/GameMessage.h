@@ -5,7 +5,10 @@
 // basic interface for GameMessage observer
 struct IGMObserver : public CObjectBase
 {
-	virtual bool Execute( const SGameMessage &msg, CObjectBase *pThis ) { return false; }
+	virtual bool Execute( const SGameMessage &msg, CObjectBase *pThis )
+	{
+		return false;
+	}
 };
 
 // member-function game message observer returning bool
@@ -18,7 +21,9 @@ class CGMMemFunBoolObserver : public IGMObserver
 
 public:
 	CGMMemFunBoolObserver() {}
+
 	CGMMemFunBoolObserver( bool ( TObj::*_pfnMemFun )( const TMsg &_msg ) ) : pfnMemFun( _pfnMemFun ) {}
+
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
 	{
@@ -29,6 +34,7 @@ public:
 		return false;
 	}
 };
+
 template <typename TObj, typename TMsg, typename T1>
 class CGMMemFunBoolObserver1 : public IGMObserver
 {
@@ -38,10 +44,12 @@ class CGMMemFunBoolObserver1 : public IGMObserver
 
 public:
 	CGMMemFunBoolObserver1() {}
+
 	CGMMemFunBoolObserver1( bool ( TObj::*_pfnMemFun )( const TMsg &_msg, T1 _p1 ), T1 _p1 )
 			: pfnMemFun( _pfnMemFun ), p1( _p1 )
 	{
 	}
+
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
 	{
@@ -52,6 +60,7 @@ public:
 		return false;
 	}
 };
+
 template <typename TObj, typename TMsg, typename T1, typename T2>
 class CGMMemFunBoolObserver2 : public IGMObserver
 {
@@ -62,10 +71,12 @@ class CGMMemFunBoolObserver2 : public IGMObserver
 
 public:
 	CGMMemFunBoolObserver2() {}
+
 	CGMMemFunBoolObserver2( void ( TObj::*_pfnMemFun )( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
 			: pfnMemFun( _pfnMemFun ), p1( _p1 ), p2( _p2 )
 	{
 	}
+
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
 	{
@@ -86,7 +97,9 @@ class CGMMemFunObserver : public IGMObserver
 
 public:
 	CGMMemFunObserver() {}
+
 	CGMMemFunObserver( void ( TObj::*_pfnMemFun )( const TMsg &msg ) ) : pfnMemFun( _pfnMemFun ) {}
+
 	//
 	bool Execute( const SGameMessage &msg, CObjectBase *pThis )
 	{
@@ -98,6 +111,7 @@ public:
 		return false;
 	}
 };
+
 template <typename TObj, typename TMsg, typename T1>
 class CGMMemFunObserver1 : public IGMObserver
 {
@@ -107,10 +121,12 @@ class CGMMemFunObserver1 : public IGMObserver
 
 public:
 	CGMMemFunObserver1() {}
+
 	CGMMemFunObserver1( void ( TObj::*_pfnMemFun )( const TMsg &_msg, T1 _p1 ), T1 _p1 )
 			: pfnMemFun( _pfnMemFun ), p1( _p1 )
 	{
 	}
+
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
 	{
@@ -122,6 +138,7 @@ public:
 		return false;
 	}
 };
+
 template <typename TObj, typename TMsg, typename T1, typename T2>
 class CGMMemFunObserver2 : public IGMObserver
 {
@@ -132,10 +149,12 @@ class CGMMemFunObserver2 : public IGMObserver
 
 public:
 	CGMMemFunObserver2() {}
+
 	CGMMemFunObserver2( void ( TObj::*_pfnMemFun )( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
 			: pfnMemFun( _pfnMemFun ), p1( _p1 ), p2( _p2 )
 	{
 	}
+
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
 	{
@@ -157,10 +176,16 @@ class CGMFunBoolObserver : public IGMObserver
 
 public:
 	CGMFunBoolObserver() {}
+
 	CGMFunBoolObserver( bool ( *_pfnFun )( const TMsg &_msg ) ) : pfnFun( _pfnFun ) {}
+
 	//
-	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) { return ( *pfnFun )( _msg ); }
+	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
+	{
+		return ( *pfnFun )( _msg );
+	}
 };
+
 template <typename TMsg, typename T1>
 class CGMFunBoolObserver1 : public IGMObserver
 {
@@ -170,10 +195,16 @@ class CGMFunBoolObserver1 : public IGMObserver
 
 public:
 	CGMFunBoolObserver1() {}
+
 	CGMFunBoolObserver1( bool ( *_pfnFun )( const TMsg &_msg, T1 _p1 ), T1 _p1 ) : pfnFun( _pfnFun ), p1( _p1 ) {}
+
 	//
-	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) { return ( *pfnFun )( _msg, p1 ); }
+	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
+	{
+		return ( *pfnFun )( _msg, p1 );
+	}
 };
+
 template <typename TMsg, typename T1, typename T2>
 class CGMFunBoolObserver2 : public IGMObserver
 {
@@ -184,12 +215,17 @@ class CGMFunBoolObserver2 : public IGMObserver
 
 public:
 	CGMFunBoolObserver2() {}
+
 	CGMFunBoolObserver2( bool ( *_pfnFun )( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
 			: pfnFun( _pfnFun ), p1( _p1 ), p2( _p2 )
 	{
 	}
+
 	//
-	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) { return ( *pfnFun )( _msg, p1, p2 ); }
+	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
+	{
+		return ( *pfnFun )( _msg, p1, p2 );
+	}
 };
 
 // raw function game message observer
@@ -201,7 +237,9 @@ class CGMFunObserver : public IGMObserver
 
 public:
 	CGMFunObserver() {}
+
 	CGMFunObserver( void ( *_pfnFun )( const TMsg &_msg ) ) : pfnFun( _pfnFun ) {}
+
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
 	{
@@ -209,6 +247,7 @@ public:
 		return true;
 	}
 };
+
 template <typename TMsg, typename T1>
 class CGMFunObserver1 : public IGMObserver
 {
@@ -218,7 +257,9 @@ class CGMFunObserver1 : public IGMObserver
 
 public:
 	CGMFunObserver1() {}
+
 	CGMFunObserver1( void ( *_pfnFun )( const TMsg &_msg, T1 _p1 ), T1 _p1 ) : pfnFun( _pfnFun ), p1( _p1 ) {}
+
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
 	{
@@ -226,6 +267,7 @@ public:
 		return true;
 	}
 };
+
 template <typename TMsg, typename T1, typename T2>
 class CGMFunObserver2 : public IGMObserver
 {
@@ -236,10 +278,12 @@ class CGMFunObserver2 : public IGMObserver
 
 public:
 	CGMFunObserver2() {}
+
 	CGMFunObserver2( void ( *_pfnFun )( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
 			: pfnFun( _pfnFun ), p1( _p1 ), p2( _p2 )
 	{
 	}
+
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
 	{
@@ -258,6 +302,7 @@ class CGMOReg
 
 public:
 	CGMOReg( const std::string &szEventName, IGMObserver *_pObserver ) : bind( szEventName ), pObserver( _pObserver ) {}
+
 	bool ProcessEvent( const SGameMessage &event, CObjectBase *pThis )
 	{
 		if ( bind.ProcessEvent( event ) )
@@ -281,12 +326,14 @@ public:
 		CPtr<IGMObserver> pObserver = new CGMMemFunObserver<TObj, TMsg>( _pfnMemFun );
 		AddRawObserver( szMsgName, pObserver );
 	}
+
 	template <typename TObj, typename TMsg, class T1>
 	void AddObserver( const std::string &szMsgName, void ( TObj::*_pfnMemFun )( const TMsg &_msg, T1 _p1 ), T1 _p1 )
 	{
 		CPtr<IGMObserver> pObserver = new CGMMemFunObserver1<TObj, TMsg, T1>( _pfnMemFun, _p1 );
 		AddRawObserver( szMsgName, pObserver );
 	}
+
 	template <typename TObj, typename TMsg, class T1, class T2>
 	void AddObserver( const std::string &szMsgName,
 	                  void ( TObj::*_pfnMemFun )( const TMsg &_msg, T1 _p1, T1 _p2 ),
@@ -296,6 +343,7 @@ public:
 		CPtr<IGMObserver> pObserver = new CGMMemFunObserver2<TObj, TMsg, T1, T2>( _pfnMemFun, _p1, _p2 );
 		AddRawObserver( szMsgName, pObserver );
 	}
+
 	// bool member function observer registration
 	template <typename TObj, typename TMsg>
 	void AddObserver( const std::string &szMsgName, bool ( TObj::*_pfnMemFun )( const TMsg &_msg ) )
@@ -303,12 +351,14 @@ public:
 		CPtr<IGMObserver> pObserver = new CGMMemFunBoolObserver<TObj, TMsg>( _pfnMemFun );
 		AddRawObserver( szMsgName, pObserver );
 	}
+
 	template <typename TObj, typename TMsg, class T1>
 	void AddObserver( const std::string &szMsgName, bool ( TObj::*_pfnMemFun )( const TMsg &_msg, T1 _p1 ), T1 _p1 )
 	{
 		CPtr<IGMObserver> pObserver = new CGMMemFunBoolObserver1<TObj, TMsg, T1>( _pfnMemFun, _p1 );
 		AddRawObserver( szMsgName, pObserver );
 	}
+
 	template <typename TObj, typename TMsg, class T1, class T2>
 	void AddObserver( const std::string &szMsgName,
 	                  bool ( TObj::*_pfnMemFun )( const TMsg &_msg, T1 _p1, T1 _p2 ),
@@ -318,6 +368,7 @@ public:
 		CPtr<IGMObserver> pObserver = new CGMMemFunBoolObserver2<TObj, TMsg, T1, T2>( _pfnMemFun, _p1, _p2 );
 		AddRawObserver( szMsgName, pObserver );
 	}
+
 	// void global function observer registration
 	template <typename TMsg>
 	void AddObserver( const std::string &szMsgName, void ( *_pfnFunc )( const TMsg &msg ) )
@@ -325,12 +376,14 @@ public:
 		CPtr<IGMObserver> pObserver = new CGMFunObserver<TMsg>( _pfnFunc );
 		AddRawObserver( szMsgName, pObserver );
 	}
+
 	template <typename TMsg, class T1>
 	void AddObserver( const std::string &szMsgName, void ( *_pfnFunc )( const TMsg &msg, T1 _p1 ), T1 _p1 )
 	{
 		CPtr<IGMObserver> pObserver = new CGMFunObserver1<TMsg, T1>( _pfnFunc, _p1 );
 		AddRawObserver( szMsgName, pObserver );
 	}
+
 	template <typename TMsg, class T1, class T2>
 	void
 	AddObserver( const std::string &szMsgName, void ( *_pfnFunc )( const TMsg &msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
@@ -338,6 +391,7 @@ public:
 		CPtr<IGMObserver> pObserver = new CGMFunObserver2<TMsg, T1, T2>( _pfnFunc, _p1, _p2 );
 		AddRawObserver( szMsgName, pObserver );
 	}
+
 	// bool global function observer registration
 	template <typename TMsg>
 	void AddObserver( const std::string &szMsgName, bool ( *_pfnFunc )( const TMsg &msg ) )
@@ -345,12 +399,14 @@ public:
 		CPtr<IGMObserver> pObserver = new CGMFunBoolObserver<TMsg>( _pfnFunc );
 		AddRawObserver( szMsgName, pObserver );
 	}
+
 	template <typename TMsg, class T1>
 	void AddObserver( const std::string &szMsgName, bool ( *_pfnFunc )( const TMsg &msg, T1 _p1 ), T1 _p1 )
 	{
 		CPtr<IGMObserver> pObserver = new CGMFunBoolObserver1<TMsg, T1>( _pfnFunc, _p1 );
 		AddRawObserver( szMsgName, pObserver );
 	}
+
 	template <typename TMsg, class T1, class T2>
 	void
 	AddObserver( const std::string &szMsgName, bool ( *_pfnFunc )( const TMsg &msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
@@ -358,10 +414,12 @@ public:
 		CPtr<IGMObserver> pObserver = new CGMFunBoolObserver2<TMsg, T1, T2>( _pfnFunc, _p1, _p2 );
 		AddRawObserver( szMsgName, pObserver );
 	}
+
 	virtual void AddRawObserver( const std::string &szMsgName, IGMObserver *pObserver )
 	{
 		eventRegisters.insert( eventRegisters.begin(), NInput::CGMOReg( szMsgName, pObserver ) );
 	}
+
 	bool ProcessEvent( const SGameMessage &event, CObjectBase *pThis )
 	{
 		for ( int k = 0; k < eventRegisters.size(); ++k )
@@ -373,9 +431,13 @@ public:
 		}
 		return false;
 	}
-	bool IsEmpty() const { return eventRegisters.empty(); }
+
+	bool IsEmpty() const
+	{
+		return eventRegisters.empty();
+	}
 };
-}
+} // namespace NInput
 
 // ************************************************************************************************************************ //
 // **

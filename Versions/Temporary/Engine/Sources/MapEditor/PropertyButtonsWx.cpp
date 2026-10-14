@@ -24,4 +24,4 @@ bool PickColour( IWidget *pOwner, uint32_t nStart, uint32_t *pnResult )
 	( *pnResult ) = static_cast<uint32_t>( chosen.GetRGB() );
 	return true;
 }
-}
+} // namespace NPropertyButton

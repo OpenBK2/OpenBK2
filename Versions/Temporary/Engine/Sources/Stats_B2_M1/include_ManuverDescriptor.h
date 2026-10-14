@@ -3,6 +3,7 @@ const enum EManuverID GetManuverID() const
 {
 	return eManuverID;
 }
+
 enum EManuverDestination GetDestination() const
 {
 	return eDestination;

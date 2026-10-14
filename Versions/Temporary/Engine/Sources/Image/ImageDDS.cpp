@@ -139,4 +139,4 @@ bool LoadImageDDS( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 	return false;
 }
 
-}
+} // namespace NImage

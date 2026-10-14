@@ -142,6 +142,6 @@ bool CheckLinkCapability( const std::string &rszObjectRPGStatsTypeName,
 		/**/
 	return false;
 }
-};
+}; // namespace NMapInfoEditor
 
 // basement storage

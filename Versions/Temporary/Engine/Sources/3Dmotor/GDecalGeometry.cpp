@@ -15,6 +15,7 @@ struct STriangleCreator
 	int nRoot, nPrev;
 
 	STriangleCreator( std::vector<STriangle> *_pDst ) : pDst( _pDst ), nRoot( -1 ), nPrev( -1 ) {}
+
 	void AddVertex( int n )
 	{
 		if ( nRoot == -1 )
@@ -57,6 +58,7 @@ struct SQuadProjection
 		}
 		return true;
 	}
+
 	void Setup( const CVec3 &_vOrigin, const CVec3 &_vNormal, const CVec2 &vSize, float fRotation, const CVec2 &_vShift )
 	{
 		float fCos = cos( fRotation ), fSin = sin( fRotation );
@@ -81,7 +83,11 @@ struct SQuadProjection
 		fV0 = -( _vOrigin * vVecV ) + _vShift.y;
 		vOrigin = _vOrigin;
 	}
-	CVec2 Project( const CVec3 &v ) { return CVec2( fU0 + v * vVecU, fV0 + v * vVecV ); }
+
+	CVec2 Project( const CVec3 &v )
+	{
+		return CVec2( fU0 + v * vVecU, fV0 + v * vVecV );
+	}
 };
 
 struct SSPoint
@@ -105,12 +111,14 @@ class CShadowBuilder
 	float fNormalEdge, fDepthMargin;
 
 	void AddShadowTriangle( SShadowPoly *pTri );
+
 	void GeneratePointPosition( SSPoint *pRes, const CVec3 &pnt )
 	{
 		pRes->point = pnt;
 		//pRes->normal = normal;
 		pRes->uv = projection.Project( pnt );
 	}
+
 	uint16_t AddPoint( SSPoint &pnt );
 
 public:
@@ -119,7 +127,12 @@ public:
 	{
 		info.geometry.resize( 0 );
 	}
-	~CShadowBuilder() { pRes->Assign( &info, false ); }
+
+	~CShadowBuilder()
+	{
+		pRes->Assign( &info, false );
+	}
+
 	void Setup( const CVec3 &vOrigin, const CVec3 &vNormal, const CVec2 &vSize, float fRotation, const CVec2 &_vShift );
 	void AddObject( const CObjectInfo &info, const SDiscretePos &_srcPos );
 };
@@ -184,6 +197,7 @@ static void Split( SShadowPoly *pRes, const SShadowPoly &src, const std::vector<
 }
 
 static std::vector<float> fPlaneOffsets;
+
 static bool DoSplit( SShadowPoly *pRes, const SShadowPoly &src, const CVec3 &vUV )
 {
 	fPlaneOffsets.resize( src.points.size() );
@@ -202,6 +216,7 @@ inline void ProjectNormalized( NGfx::SCompactVector *pRes, const CVec3 &src, con
 	Normalize( &vRes );
 	NGfx::CalcCompactVector( pRes, vRes );
 }
+
 uint16_t CShadowBuilder::AddPoint( SSPoint &pnt )
 {
 	int nRes = info.verts.size();
@@ -219,6 +234,7 @@ uint16_t CShadowBuilder::AddPoint( SSPoint &pnt )
 // clip by planes
 float fClipPlanes[4][3] = { { 1, 0, 0 }, { 0, 1, 0 }, { -1, 0, 1 }, { 0, -1, 1 } };
 static SShadowPoly tBuf;
+
 void CShadowBuilder::AddShadowTriangle( SShadowPoly *pTri )
 {
 	//float fp1 = fpC0 + tri.pnts[0].point * vecC; // clip by front plane
@@ -416,25 +432,37 @@ public:
 	{
 		info = CObjectInfo::SData();
 	}
+
 	struct SPolygon
 	{
 		std::vector<SVertex> polygon;
 		std::vector<int> polygonIndices;
 	};
-	bool HasResIndex( int nIdx ) const { return vertMap[nIdx] >= 0; }
-	int GetResIndex( int nIdx ) const { return vertMap[nIdx]; }
+
+	bool HasResIndex( int nIdx ) const
+	{
+		return vertMap[nIdx] >= 0;
+	}
+
+	int GetResIndex( int nIdx ) const
+	{
+		return vertMap[nIdx];
+	}
+
 	void AddVertex( SPolygon *pRes, int nIdx )
 	{
 		ASSERT( HasResIndex( nIdx ) );
 		pRes->polygon.push_back( info.verts[GetResIndex( nIdx )] );
 		pRes->polygonIndices.push_back( nIdx );
 	}
+
 	void AddVertex( SPolygon *pRes, int nIdx, const SVertex &v )
 	{
 		ASSERT( !HasResIndex( nIdx ) );
 		pRes->polygon.push_back( v );
 		pRes->polygonIndices.push_back( nIdx );
 	}
+
 	bool IsOutside( const SPolygon &poly ) //vector<SVertex> &polygon, const vector<int> &polygonIndices )
 	{
 		bool bXPos = false, bXNeg = false, bYPos = false, bYNeg = false;
@@ -448,6 +476,7 @@ public:
 		}
 		return !bXPos || !bXNeg || !bYPos || !bYNeg;
 	}
+
 	void AddPolygon( const SPolygon &poly )
 	{
 		STriangleCreator tc( &info.geometry );
@@ -666,7 +695,8 @@ void CPerPolyDecalGeometry::Recalc( CObjectInfo::SData *pRes,
 	CPerPolyDecalBuilder ppb( pRes, info, positions, vOrigin, vNormal, vSize, fRotation, vShift );
 }
 
-}
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x00442130, CDecalGeometry )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x004c2170, CExplosionDecalGeometry )

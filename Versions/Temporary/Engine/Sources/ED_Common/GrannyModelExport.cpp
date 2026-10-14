@@ -228,7 +228,7 @@ namespace
 			doc->asset.materials.push_back( std::move( material ) );
 		}
 	};
-}
+} // namespace
 
 bool ExportGrannyModel( IManipulator *resource,
                         const std::string &destination,
@@ -354,4 +354,4 @@ bool ExportGrannyModel( const NDb::SModel *model,
 		return false;
 	}
 }
-}
+} // namespace NEditorGltf

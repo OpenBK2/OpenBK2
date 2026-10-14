@@ -47,6 +47,7 @@ void Put16( std::vector<uint8_t> *pOut, uint16_t n )
 	pOut->push_back( n & 0xff );
 	pOut->push_back( n >> 8 );
 }
+
 void Put32( std::vector<uint8_t> *pOut, uint32_t n )
 {
 	Put16( pOut, n & 0xffff );
@@ -176,4 +177,4 @@ TEST( ZipDataDescriptor, DeflatedEntryOpensWhole )
 	           S_CONTENT );
 }
 
-}
+} // namespace

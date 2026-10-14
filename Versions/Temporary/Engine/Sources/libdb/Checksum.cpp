@@ -19,7 +19,7 @@ namespace
 
 	// One traversal across all DLLs, with no dependence on earlier checksum calls.
 	thread_local SCheckSumTraversal traversal;
-}
+} // namespace
 
 CCheckSumScope::CCheckSumScope( uint32_t &cache )
 {
@@ -54,4 +54,4 @@ uint32_t CalcCheckSum( const uint32_t dwLastCheckSum, const uint8_t *pBuf, const
 {
 	return adler32( dwLastCheckSum, pBuf, nLen );
 }
-}
+} // namespace NDb

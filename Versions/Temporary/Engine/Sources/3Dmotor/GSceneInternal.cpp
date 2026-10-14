@@ -33,6 +33,7 @@
 #include <cstdint>
 
 const int N_SKIP_IGNORED_TEST = -1;
+
 namespace NGScene
 {
 
@@ -42,19 +43,25 @@ static bool bShow2DTextureCache = false, bShowTranspTextureCache = false, bShowP
 //static bool bUseHWHSR = false;
 static int nTotalParts, nTotalElements;
 static float s_fLODSwitchDistance = 300;
+
 enum EShowLinearCache
 {
 	SLC_NONE,
 	SLC_STATIC,
 	SLC_DYNAMIC
 };
+
 static EShowLinearCache showLinearCache = SLC_NONE;
 extern bool bLowRAM;
 
 class CGetTranspCache : public CPtrFuncBase<NGfx::CTexture>
 {
 	OBJECT_NOCOPY_METHODS( CGetTranspCache );
-	void Recalc() { pValue = NGfx::GetTransparentTextureCache(); }
+
+	void Recalc()
+	{
+		pValue = NGfx::GetTransparentTextureCache();
+	}
 };
 
 class CAmbientAnimator : public CFuncBase<CVec3>
@@ -63,18 +70,21 @@ class CAmbientAnimator : public CFuncBase<CVec3>
 	ZDATA
 	CDGPtr<CFuncBase<CVec3>> pAmbient;
 	CDGPtr<CPtrFuncBase<CAnimLight>> pAnim;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pAmbient );
 		f.Add( 3, &pAnim );
 		return 0;
 	}
+
 	bool NeedUpdate()
 	{
 		bool b1 = pAmbient.Refresh();
 		bool b2 = IsValid( pAnim ) ? pAnim.Refresh() : false;
 		return b1 || b2;
 	}
+
 	void Recalc()
 	{
 		if ( IsValid( pAnim ) )
@@ -91,12 +101,20 @@ class CAmbientAnimator : public CFuncBase<CVec3>
 
 public:
 	CAmbientAnimator() {}
+
 	CAmbientAnimator( CPtrFuncBase<CAnimLight> *_pAnim, CFuncBase<CVec3> *pColor ) : pAmbient( pColor ), pAnim( _pAnim )
 	{
 	}
 
-	void SetAmbientAnimation( CPtrFuncBase<CAnimLight> *_pAnim ) { pAnim = _pAnim; }
-	CPtrFuncBase<CAnimLight> *GetAnimation() const { return pAnim; }
+	void SetAmbientAnimation( CPtrFuncBase<CAnimLight> *_pAnim )
+	{
+		pAnim = _pAnim;
+	}
+
+	CPtrFuncBase<CAnimLight> *GetAnimation() const
+	{
+		return pAnim;
+	}
 };
 
 bool GetGeometryObjectInfo( CObjectBase *p,
@@ -205,6 +223,7 @@ void CPolyline::Render( NGfx::CRenderContext *pRC )
 
 const int N_FAKE_LM_SIZEX = 2;
 const int N_FAKE_LM_SIZEY = 1;
+
 void CFakeParticleLMTexture::Recalc()
 {
 	pValue = NGfx::MakeTexture( N_FAKE_LM_SIZEX, N_FAKE_LM_SIZEY, 1, NGfx::SPixel8888::ID, NGfx::REGULAR, NGfx::CLAMP );
@@ -1176,7 +1195,12 @@ struct SPerFloorStuff
 	std::vector<CCombinedPart *> normal;
 
 	SPerFloorStuff( int _n = 0 ) : nFloorMask( _n ) {}
-	void Add( CCombinedPart *p ) { normal.push_back( p ); }
+
+	void Add( CCombinedPart *p )
+	{
+		normal.push_back( p );
+	}
+
 	bool IsValidNormal() const
 	{
 		for ( int k = 0; k < normal.size(); ++k )
@@ -1194,7 +1218,9 @@ struct SLitParticlesAdder : public IReportParticlesGeometry
 {
 	CSceneFragments *pList;
 	CTransformStack *pTS;
+
 	SLitParticlesAdder( CSceneFragments *_pList, CTransformStack *_pTS ) : pList( _pList ), pTS( _pTS ) {}
+
 	virtual void AddParticles( IVBCombiner *pVertices,
 	                           CFuncBase<std::vector<NGfx::STriangleList>> *pTrilists,
 	                           int nPart,
@@ -1319,6 +1345,7 @@ void CGScene::MakeRenderList( CTransformStack *pTS,
 }
 
 static float fPCLow = 0.15f, fPCHigh = 5;
+
 static void AddPCElement( CSceneFragments *pRes, CCombinedPart *p )
 {
 	int nGeometry = pRes->AddGeometry( p, p->GetGeometryInfo(), p->GetVBCombiner()->GetBound(), false );
@@ -1344,6 +1371,7 @@ static void AddPCElement( CSceneFragments *pRes, CCombinedPart *p )
 		pRes->AddElement( nGeometry, pf, m.pMaterial, vars );
 	}
 }
+
 static void AddPCMaterialHolder( const CVolumeNode::SPerMaterialHolder &h, CSceneFragments *pList )
 {
 	for ( int i = 0; i < h.transparent.size(); ++i )
@@ -1355,6 +1383,7 @@ static void AddPCMaterialHolder( const CVolumeNode::SPerMaterialHolder &h, CScen
 		AddPCElement( pList, h.normal[i] );
 	}
 }
+
 void CGScene::MakePolycountRenderList( CTransformStack *pTS, CSceneFragments *pList )
 {
 	std::vector<CVolumeNode *> volumeNodes;
@@ -1696,8 +1725,12 @@ struct SLineDrawIdx
 	CVec4 vColor;
 	bool bCheckDepth;
 
-	bool operator==( const SLineDrawIdx &a ) const { return vColor == a.vColor && bCheckDepth == a.bCheckDepth; }
+	bool operator==( const SLineDrawIdx &a ) const
+	{
+		return vColor == a.vColor && bCheckDepth == a.bCheckDepth;
+	}
 };
+
 struct SLineDrawHash
 {
 	int operator()( const SLineDrawIdx &a ) const
@@ -1706,6 +1739,7 @@ struct SLineDrawHash
 		return ( p[0] + p[1] ) ^ ( p[2] >> 8 );
 	}
 };
+
 void CGScene::DrawLines( NGfx::CRenderContext *pRC )
 {
 	pRC->SetAlphaCombine( NGfx::COMBINE_SMART_ALPHA );
@@ -1930,6 +1964,7 @@ CObjectBase *CGScene::AddDecal( NGScene::CDecalTarget *pTarget, IMaterial *pMate
 }
 
 static CRTPtr pParticleLM( "ParticleLight" );
+
 void CGScene::RefreshParticleLMTarget()
 {
 	if ( IsValid( particleLM.pParticleLMs ) )
@@ -2018,6 +2053,7 @@ static int GetNotLoadedCountInTree( CVolumeNode *p )
 
 	return nRes;
 }
+
 void CGScene::LoadEverything()
 {
 	WalkNotLoadedObjects();
@@ -2354,6 +2390,7 @@ static void CollectAllParts( std::vector<CObjectBase *> *pRes, CCombinedPart *p 
 		pRes->push_back( v[i] );
 	}
 }
+
 static void CollectAllParts( std::vector<CObjectBase *> *pRes, CVolumeNode *p )
 {
 	if ( p == 0 )
@@ -2379,6 +2416,7 @@ static void CollectAllParts( std::vector<CObjectBase *> *pRes, CVolumeNode *p )
 		CollectAllParts( pRes, p->GetNode( k ) );
 	}
 }
+
 void CGScene::CollectAllParts( std::vector<CObjectBase *> *pRes )
 {
 	pRes->resize( 0 );
@@ -2582,6 +2620,7 @@ void SetWireframe( bool bWire )
 {
 	bWireframe = bWire;
 }
+
 bool GetWireframe()
 {
 	return bWireframe;
@@ -2687,7 +2726,8 @@ REGISTER_VAR_EX( "gfx_pc_high", NGlobal::VarFloatHandler, &fPCHigh, 5.0f, STORAG
 REGISTER_VAR_EX( "gfx_lod_switch_distance", NGlobal::VarFloatHandler, &s_fLODSwitchDistance, 300, STORAGE_USER )
 FINISH_REGISTER
 
-}
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x0251100b, CGScene )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x03111000, CPolyline )

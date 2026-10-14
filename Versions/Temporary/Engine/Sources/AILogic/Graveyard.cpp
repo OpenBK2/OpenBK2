@@ -44,6 +44,7 @@ public:
 	bool bRemoveCorpseAfterAnimation = {};
 
 	std::list<SObjTileInfo> lockedTiles; // залоканные тайлы
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pUnit );
@@ -59,11 +60,13 @@ public:
 			: endFogTime( 0 ), timeToEndDieAnimation( 0 ), bAnimFinished( false ), bRemoveCorpseAfterAnimation( false )
 	{
 	}
+
 	SKilledUnit( CAIUnit *_pUnit, const NTimer::STime _timeToEndDieAnimation )
 			: pUnit( _pUnit ), timeToEndDieAnimation( _timeToEndDieAnimation ), endFogTime( 0 ), bAnimFinished( false ),
 				bRemoveCorpseAfterAnimation( false )
 	{
 	}
+
 	SKilledUnit( CAIUnit *_pUnit, const NTimer::STime _timeToEndDieAnimation, const NTimer::STime _endFogTime )
 			: pUnit( _pUnit ), timeToEndDieAnimation( _timeToEndDieAnimation ), endFogTime( _endFogTime ),
 				bAnimFinished( false ), bRemoveCorpseAfterAnimation( false )

@@ -58,12 +58,19 @@ struct SCompareOps
 };
 
 static std::vector<float> geomDepths;
+
 struct SDepthCompare
 {
 	const std::vector<SRenderFragmentInfo::SElement> &elems;
+
 	SDepthCompare( const std::vector<SRenderFragmentInfo::SElement> &_elems ) : elems( _elems ) {}
-	bool operator()( int a, int b ) const { return geomDepths[elems[a].nGeometry] < geomDepths[elems[b].nGeometry]; }
+
+	bool operator()( int a, int b ) const
+	{
+		return geomDepths[elems[a].nGeometry] < geomDepths[elems[b].nGeometry];
+	}
 };
+
 static void InitGeomDepths( NGfx::CRenderContext *pRC, const CSceneFragments &scene )
 {
 	int nGeometries = scene.GetGeometriesNum();
@@ -567,7 +574,8 @@ void Execute( IRender *pRender,
 	ExecOps( pRC, cl.ops, scene, lightInfo );
 }
 
-}
+} // namespace NGScene
+
 //START_REGISTER(GSceneInternal)
 //	REGISTER_VAR( "gfx_depth_sort", NGlobal::VarBoolHandler, &bUseHWHSR, 1, true )
 //FINISH_REGISTER

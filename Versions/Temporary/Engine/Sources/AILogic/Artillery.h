@@ -69,6 +69,7 @@ protected:
 
 public:
 	CArtillery() : bBulletStorageVisible( false ) {}
+
 	virtual void Init( const CVec2 &center,
 	                   const int z,
 	                   const SUnitBaseRPGStats *pStats,
@@ -78,7 +79,11 @@ public:
 	                   ICollisionsCollector *pCollisionsCollector );
 	int operator&( IBinSaver &f );
 
-	virtual const SUnitBaseRPGStats *GetStats() const { return pStats; }
+	virtual const SUnitBaseRPGStats *GetStats() const
+	{
+		return pStats;
+	}
+
 	virtual IStatesFactory *GetStatesFactory() const;
 
 	virtual void Segment();
@@ -87,8 +92,15 @@ public:
 	virtual void SetCamoulfage();
 	virtual void RemoveCamouflage( ECamouflageRemoveReason eReason );
 
-	virtual class CTurret *GetTurret( const int nTurret ) const { return turrets[nTurret]; }
-	virtual const int GetNTurrets() const { return turrets.size(); }
+	virtual class CTurret *GetTurret( const int nTurret ) const
+	{
+		return turrets[nTurret];
+	}
+
+	virtual const int GetNTurrets() const
+	{
+		return turrets.size();
+	}
 
 	virtual void GetShotInfo( struct SAINotifyMechShot *pShotInfo ) const
 	{
@@ -96,11 +108,30 @@ public:
 		pShotInfo->nObjUniqueID = GetUniqueId();
 	}
 
-	virtual const EActionNotify GetShootAction() const { return ACTION_NOTIFY_MECH_SHOOT; }
-	virtual const EActionNotify GetAimAction() const { return ACTION_NOTIFY_AIM; }
-	virtual const EActionNotify GetDieAction() const { return ACTION_NOTIFY_DIE; }
-	virtual const EActionNotify GetIdleAction() const { return ACTION_NOTIFY_IDLE; }
-	virtual const EActionNotify GetMovingAction() const { return ACTION_NOTIFY_MOVE; }
+	virtual const EActionNotify GetShootAction() const
+	{
+		return ACTION_NOTIFY_MECH_SHOOT;
+	}
+
+	virtual const EActionNotify GetAimAction() const
+	{
+		return ACTION_NOTIFY_AIM;
+	}
+
+	virtual const EActionNotify GetDieAction() const
+	{
+		return ACTION_NOTIFY_DIE;
+	}
+
+	virtual const EActionNotify GetIdleAction() const
+	{
+		return ACTION_NOTIFY_IDLE;
+	}
+
+	virtual const EActionNotify GetMovingAction() const
+	{
+		return ACTION_NOTIFY_MOVE;
+	}
 
 	//
 	virtual int GetNGuns() const;
@@ -112,10 +143,12 @@ public:
 	{
 		return bInstalled && eCurInstallAction == ACTION_NOTIFY_NONE && eNextInstallAction == ACTION_NOTIFY_NONE;
 	}
+
 	virtual bool IsUninstalled() const
 	{
 		return !bInstalled && eCurInstallAction == ACTION_NOTIFY_NONE && eNextInstallAction == ACTION_NOTIFY_NONE;
 	}
+
 	bool IsInInstallAction() const
 	{
 		return eCurInstallAction != ACTION_NOTIFY_NONE || eNextInstallAction != ACTION_NOTIFY_NONE;
@@ -127,7 +160,11 @@ public:
 	void ForceInstallAction();
 
 	virtual const bool NeedDeinstall() const;
-	virtual const bool CanShoot() const { return IsInstalled(); }
+
+	virtual const bool CanShoot() const
+	{
+		return IsInstalled();
+	}
 	virtual class CBasicGun *GetFirstArtilleryGun() const;
 	virtual void TakeDamage( const float fDamage,
 	                         const SWeaponRPGStats::SShell *pShell,
@@ -144,7 +181,10 @@ public:
 	virtual float GetMaxFireRange() const;
 	virtual void GetRangeArea( struct SShootAreas *pRangeArea ) const;
 
-	virtual bool IsMech() const { return true; }
+	virtual bool IsMech() const
+	{
+		return true;
+	}
 
 	virtual bool TurnToDir( const uint16_t &newDir, const bool bCanBackward = true, const bool bForward = true );
 	const bool TurnToTarget( const CVec2 &vTarget );
@@ -158,7 +198,12 @@ public:
 	virtual bool HasServeCrew() const;
 	virtual bool MustHaveCrewToOperate() const;
 	virtual class CFormation *GetCrew() const;
-	virtual bool IsOperable() const { return fOperable != 0.0f; }
+
+	virtual bool IsOperable() const
+	{
+		return fOperable != 0.0f;
+	}
+
 	virtual void SetOperable( float fOperable );
 
 	virtual void Disappear();
@@ -167,9 +212,18 @@ public:
 	virtual CVec2 GetTowPoint();
 
 	//CRAP { к майлстоуну заплатка
-	virtual void SetSlaveTransport( class CAIUnit *_pSlaveTransport ) { pSlaveTransport = _pSlaveTransport; }
+	virtual void SetSlaveTransport( class CAIUnit *_pSlaveTransport )
+	{
+		pSlaveTransport = _pSlaveTransport;
+	}
+
 	virtual bool HasSlaveTransport();
-	virtual class CAIUnit *GetSlaveTransport() { return pSlaveTransport; }
+
+	virtual class CAIUnit *GetSlaveTransport()
+	{
+		return pSlaveTransport;
+	}
+
 	//CRAP }
 
 	const CVec3 GetAmmoBoxCoordinates();
@@ -185,7 +239,10 @@ public:
 
 	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const;
 
-	virtual const bool CanGoBackward() const { return GetCrew() == 0; }
+	virtual const bool CanGoBackward() const
+	{
+		return GetCrew() == 0;
+	}
 
 	virtual void Stop();
 	virtual const uint32_t GetNormale( const CVec2 &vCenter ) const;
@@ -193,10 +250,17 @@ public:
 
 	const CVec2 GetHookPoint() const;
 	const CVec3 GetHookPoint3D() const;
-	// The artillery's authored towing point determines the attachment position.
-	bool IsForwardTowed() const { return pStats->pExtendedStats && pStats->pExtendedStats->bForwardTowed; }
 
-	EActionNotify GetCurUninstallAction() const { return eCurrentStateOfInstall; }
+	// The artillery's authored towing point determines the attachment position.
+	bool IsForwardTowed() const
+	{
+		return pStats->pExtendedStats && pStats->pExtendedStats->bForwardTowed;
+	}
+
+	EActionNotify GetCurUninstallAction() const
+	{
+		return eCurrentStateOfInstall;
+	}
 
 	virtual void
 	LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
@@ -204,13 +268,25 @@ public:
 	virtual void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false );
 	virtual void SendAcknowledgement( EUnitAckType ack, bool bForce = false );
 
-	int GetInitialPlayer() const { return nInitialPlayer; }
-	void SetInitialPlayer( const int nPlayer ) { nInitialPlayer = nPlayer; }
+	int GetInitialPlayer() const
+	{
+		return nInitialPlayer;
+	}
+
+	void SetInitialPlayer( const int nPlayer )
+	{
+		nInitialPlayer = nPlayer;
+	}
+
 	virtual const NTimer::STime GetBehUpdateDuration() const;
 	//
 	bool IsBeingCaptured() const;
 	void SetCapturingUnit( CFormation *pFormation );
-	CFormation *GetCapturedUnit() { return pCapturingUnit; }
+
+	CFormation *GetCapturedUnit()
+	{
+		return pCapturingUnit;
+	}
 
 	// to allow only one transport to hook artillery
 	bool IsBeingHooked() const;

@@ -63,7 +63,7 @@ inline wxImage ToWxImage( const CArray2D<uint32_t> &rPixels )
 	}
 	return image;
 }
-}
+} // namespace NWxImageList
 
 class CWxImageList : public IImageList
 {
@@ -85,7 +85,10 @@ public:
 
 	// The collector empties the lists rather than making them again, because
 	// the palettes' list controls are pointed at these objects.
-	bool IsCreated() const { return bCreated; }
+	bool IsCreated() const
+	{
+		return bCreated;
+	}
 
 	// -1 on failure, as CImageList::Add and ImageList_AddMasked answered.
 	int Add( const wxBitmap &rBitmap, const wxColour &rMask )
@@ -94,7 +97,10 @@ public:
 	}
 
 	// DDS thumbnails already have alpha; a colour mask would discard it.
-	int Add( const wxBitmap &bitmap ) { return ( bCreated && bitmap.IsOk() ) ? imageList.Add( bitmap ) : -1; }
+	int Add( const wxBitmap &bitmap )
+	{
+		return ( bCreated && bitmap.IsOk() ) ? imageList.Add( bitmap ) : -1;
+	}
 
 	void RemoveAll()
 	{
@@ -104,8 +110,15 @@ public:
 		}
 	}
 
-	wxImageList *GetList() { return &imageList; }
-	virtual void *GetNativeImageList() { return &imageList; }
+	wxImageList *GetList()
+	{
+		return &imageList;
+	}
+
+	virtual void *GetNativeImageList()
+	{
+		return &imageList;
+	}
 };
 
 // The list behind a widget's image list token, or null for none.

@@ -6,6 +6,7 @@
 #include <cstdint>
 
 class CFullBridge;
+
 // remember in what order bridges applied heigths and ensures heights removal in reverse order.
 class CBridgeHeightRemover
 {
@@ -21,6 +22,7 @@ public:
 		f.Add( 3, &heightToRemove );
 		return 0;
 	}
+
 	void RegisterOrder( const int nHeightID );
 	void RemoveHeight( const int nHeightID );
 	void Segment();
@@ -79,10 +81,14 @@ public:
 	void GetPassability( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> *passability ) const;
 
 protected:
-	virtual int GetHeight() const { return 0; }
+	virtual int GetHeight() const
+	{
+		return 0;
+	}
 
 public:
 	CBridgeSpan() : nScriptID( -1 ) {}
+
 	CBridgeSpan( const SBridgeRPGStats *pStats,
 	             const CVec3 &center,
 	             const float fHP,
@@ -91,8 +97,15 @@ public:
 
 	void Build(); // построить сегмент моста, залокать как положено, послать в мир.
 
-	const SBridgeRPGStats *GetBridgeStats() const { return pStats; }
-	virtual const SHPObjectRPGStats *GetStats() const { return pStats; }
+	const SBridgeRPGStats *GetBridgeStats() const
+	{
+		return pStats;
+	}
+
+	virtual const SHPObjectRPGStats *GetStats() const
+	{
+		return pStats;
+	}
 
 	virtual void LockTiles(); // here we just copy lock info to internal array
 	void RealLockTiles();     // here we real lock tiles
@@ -107,23 +120,49 @@ public:
 
 	virtual void Segment() {}
 
-	virtual EStaticObjType GetObjectType() const { return ESOT_BRIDGE_SPAN; }
+	virtual EStaticObjType GetObjectType() const
+	{
+		return ESOT_BRIDGE_SPAN;
+	}
 
-	virtual bool IsContainer() const { return false; }
-	virtual const int GetNDefenders() const { return 0; }
-	virtual class CSoldier *GetUnit( const int n ) const { return 0; }
+	virtual bool IsContainer() const
+	{
+		return false;
+	}
+
+	virtual const int GetNDefenders() const
+	{
+		return 0;
+	}
+
+	virtual class CSoldier *GetUnit( const int n ) const
+	{
+		return 0;
+	}
 
 	void SetFullBrige( CFullBridge *pFullBridge );
-	CFullBridge *GetFullBridge() { return pFullBridge; }
 
-	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const { return true; }
+	CFullBridge *GetFullBridge()
+	{
+		return pFullBridge;
+	}
+
+	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const
+	{
+		return true;
+	}
+
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
 	virtual void GetCoveredTiles( std::list<SVector> *pTiles ) const;
 	virtual void SetTransparencies();
 	virtual void RemoveTransparencies();
 
-	virtual void SetScriptID( const int _nScriptID ) { nScriptID = _nScriptID; }
+	virtual void SetScriptID( const int _nScriptID )
+	{
+		nScriptID = _nScriptID;
+	}
+
 	void GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
 	void SetHeights();
 	void RemoveHeights();
@@ -159,9 +198,14 @@ public:
 	public:
 		//
 		SSpanLock() : pSpan( 0 ) {}
+
 		SSpanLock( CBridgeSpan *pSpan, const uint16_t wDir );
 		void Unlock();
-		const CBridgeSpan *GetSpan() const { return pSpan; }
+
+		const CBridgeSpan *GetSpan() const
+		{
+			return pSpan;
+		}
 	};
 
 private:
@@ -171,7 +215,10 @@ private:
 	bool bLockingBridge = {};
 
 public:
-	CFullBridge() : bGivingDamage( false ), nSpans( 0 ), bLockingBridge( true ) { SetUniqueIdForObjects(); }
+	CFullBridge() : bGivingDamage( false ), nSpans( 0 ), bLockingBridge( true )
+	{
+		SetUniqueIdForObjects();
+	}
 
 	const float GetHPPercent() const;
 
@@ -197,8 +244,15 @@ public:
 	const int GetNSpans() const;
 	void InitEntireBridge();
 
-	void FinishRepair() { bLockingBridge = true; }
-	void NeedRepair() { bLockingBridge = false; }
+	void FinishRepair()
+	{
+		bLockingBridge = true;
+	}
+
+	void NeedRepair()
+	{
+		bLockingBridge = false;
+	}
 
 	friend class CBridgeCreation;
 };

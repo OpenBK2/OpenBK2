@@ -91,4 +91,4 @@ uint32_t SGameConsts::GetMPDataVersionChecksumWithMap( CDBPtr<NDb::SMultiplayerM
 	return nMPDataVersionChecksumWithMap;
 }
 
-}
+} // namespace NDb

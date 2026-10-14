@@ -561,7 +561,7 @@ namespace
 			}
 		}
 	}
-}
+} // namespace
 
 std::string Quote( const std::string &text )
 {
@@ -720,4 +720,4 @@ void Convert( const SModel &source, SDocument *doc )
 		doc->asset.scenes.push_back( std::move( aiScene ) );
 	}
 }
-}
+} // namespace NGrannyGltf

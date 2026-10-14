@@ -5,6 +5,7 @@ namespace NGfx
 class CRenderContext;
 }
 class CTransformStack;
+
 namespace NGScene
 {
 struct SNLProjectionInfo
@@ -47,4 +48,4 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes,
                        const SBound &sceneBound,
                        float fSceneHeight,
                        SShadowMatrixAlign *pAlign );
-}
+} // namespace NGScene

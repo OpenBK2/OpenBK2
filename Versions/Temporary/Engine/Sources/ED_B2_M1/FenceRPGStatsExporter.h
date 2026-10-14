@@ -10,6 +10,7 @@ class CFenceRPGStatsExporter : public CStaticObjectRPGStatsExporter
 	OBJECT_NOCOPY_METHODS( CFenceRPGStatsExporter );
 
 	CFenceRPGStatsExporter() {}
+
 	bool ExportVisobjs( IManipulator *pManipulator,
 	                    const std::string &rszSegmentsSetName,
 	                    const CArray2D<uint8_t> &rPassabilityArray,

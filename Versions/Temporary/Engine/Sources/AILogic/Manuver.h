@@ -6,6 +6,7 @@ namespace NDb
 {
 enum EManuverDestination : int;
 }
+
 // IManuver will return member data in this struct
 struct SFormationMemberInfo
 {
@@ -35,6 +36,7 @@ public:
 };
 
 extern float g;
+
 /**
  * у кажддого маневра есть ID.
  * @interface
@@ -57,7 +59,12 @@ struct IManuver : public CAIObjectBase
 	// if manuver is used current segment -then it is touched, onterwize not
 	//CRAP{ TO DO USED TRACKING
 	virtual void Used( const bool bUsed ) {}
-	virtual bool IsUsed() { return true; }
+
+	virtual bool IsUsed()
+	{
+		return true;
+	}
+
 	//CARP}
 	// PREDICTION
 	// return approximate point, where plane will be in fT time.
@@ -69,7 +76,12 @@ struct IManuver : public CAIObjectBase
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 	}
-	virtual void GetManuverParams( struct SPrevPathParams *pParams ) const { NI_ASSERT( false, "wron call" ); }
+
+	virtual void GetManuverParams( struct SPrevPathParams *pParams ) const
+	{
+		NI_ASSERT( false, "wron call" );
+	}
+
 	virtual void SetPlane( class CPlanesFormation *pPlane ) = 0;
 
 	virtual bool IsToHorisontal() const = 0;

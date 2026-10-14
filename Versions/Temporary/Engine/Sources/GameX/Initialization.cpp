@@ -39,6 +39,7 @@ namespace NMain
 {
 MAIN_EXPORT bool Initialize();
 }
+
 void ReferenceCheatForReleaseLinkerUISpecificB2() {}
 
 namespace NGameX
@@ -62,6 +63,7 @@ void InitDataDependentSingletons()
 	NSingleton::RegisterSingleton( CreateDebugSingleton(), IDebugSingleton::tidTypeID );
 	NSingleton::RegisterSingleton( CreateAckManager(), IClientAckManager::tidTypeID );
 }
+
 void UnInitDataDependentSingletons()
 {
 	NSingleton::UnRegisterSingleton( IDebugSingleton::tidTypeID );
@@ -180,6 +182,7 @@ const NDb::SGameRoot *GetGameRoot()
 {
 	return GetConsts<NDb::SGameRoot>( "game_root" );
 }
+
 // game consts
 const NDb::SGameConsts *GetGameConsts()
 {
@@ -193,6 +196,7 @@ const NDb::SGameConsts *GetGameConsts()
 	}
 	return 0;
 }
+
 // scene consts
 const NDb::SSceneConsts *GetSceneConsts()
 {
@@ -206,6 +210,7 @@ const NDb::SSceneConsts *GetSceneConsts()
 	}
 	return 0;
 }
+
 // client
 const NDb::SClientGameConsts *GetClientConsts()
 {
@@ -219,6 +224,7 @@ const NDb::SClientGameConsts *GetClientConsts()
 	}
 	return 0;
 }
+
 // UI
 const NDb::SUIConstsB2 *GetUIConsts()
 {
@@ -232,6 +238,7 @@ const NDb::SUIConstsB2 *GetUIConsts()
 	}
 	return 0;
 }
+
 // AI
 const NDb::SAIGameConsts *GetAIConsts()
 {
@@ -245,6 +252,7 @@ const NDb::SAIGameConsts *GetAIConsts()
 	}
 	return 0;
 }
+
 // Net
 const NDb::SNetGameConsts *GetNetConsts()
 {
@@ -258,6 +266,7 @@ const NDb::SNetGameConsts *GetNetConsts()
 	}
 	return 0;
 }
+
 // MP
 const NDb::SMultiplayerConsts *GetMPConsts()
 {
@@ -272,4 +281,4 @@ const NDb::SMultiplayerConsts *GetMPConsts()
 	return 0;
 }
 
-};
+}; // namespace NGameX

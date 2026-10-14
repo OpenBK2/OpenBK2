@@ -35,4 +35,4 @@ MAPEDITORLIB_EXPORT std::string Collect();
 // is not just information -- a Granny version mismatch -- is logged as the
 // error it is, and is so in every front end that calls this.
 MAPEDITORLIB_EXPORT void Log();
-}
+} // namespace NBuildDetails

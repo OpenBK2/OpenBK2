@@ -2,6 +2,7 @@
 
 #include "port/socket.h"
 #include "NetAcks.h"
+
 /////////////////////////////////////////////////////////////////////////////////////
 namespace NNet
 {
@@ -18,8 +19,17 @@ public:
 		nReadPtr = 0;
 		nWritePtr = 0;
 	}
-	int GetSize() const { return ( nWritePtr - nReadPtr + N_SIZE ) % N_SIZE; }
-	int GetBufSize() const { return N_SIZE - 1 - GetSize(); }
+
+	int GetSize() const
+	{
+		return ( nWritePtr - nReadPtr + N_SIZE ) % N_SIZE;
+	}
+
+	int GetBufSize() const
+	{
+		return N_SIZE - 1 - GetSize();
+	}
+
 	int Peek( void *pBuf, int nBufSize )
 	{
 		int nRes = (std::min)( nBufSize, GetSize() );
@@ -35,12 +45,14 @@ public:
 		}
 		return nRes;
 	}
+
 	int Read( void *pBuf, int nBufSize )
 	{
 		int nRes = Peek( pBuf, nBufSize );
 		nReadPtr = ( nReadPtr + nRes ) % N_SIZE;
 		return nRes;
 	}
+
 	int Write( const void *pBuf, int nLength )
 	{
 		ASSERT( GetSize() + nLength < N_SIZE );
@@ -61,12 +73,14 @@ public:
 		return nRes;
 	}
 };
+
 /////////////////////////////////////////////////////////////////////////////////////
 // streamed connection, input/output buffers
 const int N_STREAM_BUFFER = 32768;
 //const int N_STREAM_BUFFER = 128000;
 const int N_MAX_PACKET_SIZE = 1024;      // low level packet size
 const int N_MAX_STREAM_BLOCK_SIZE = 255; // one-byte length in SChannelBlock
+
 class CStreamTracker
 {
 public:
@@ -75,9 +89,18 @@ public:
 	std::list<CMemoryStream> outList;
 
 	CStreamTracker();
-	bool HasOutData() { return !outList.empty() || channelOutBuf.GetSize() != 0 || !channelOutList.empty(); }
+
+	bool HasOutData()
+	{
+		return !outList.empty() || channelOutBuf.GetSize() != 0 || !channelOutList.empty();
+	}
+
 	// A datagram carries at most 255 stream bytes, even with a larger UDP limit.
-	bool CanReadMsg() const { return channelInBuf.GetBufSize() >= N_MAX_STREAM_BLOCK_SIZE; }
+	bool CanReadMsg() const
+	{
+		return channelInBuf.GetBufSize() >= N_MAX_STREAM_BLOCK_SIZE;
+	}
+
 	void WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit );
 	void ReadMsg( CBitStream &bits );
 	void PumpIncoming();
@@ -89,6 +112,7 @@ private:
 	CRingBuffer<N_STREAM_BUFFER> channelOutBuf;
 	typedef unsigned int CHANNEL_DATA_OFFSET;
 #pragma pack( push, 1 )
+
 	struct SChannelBlock
 	{
 		CHANNEL_DATA_OFFSET nOffset;
@@ -96,9 +120,17 @@ private:
 		char cData[256];
 		PACKET_ID nPkt;
 
-		int GetSendSize() const { return sizeof( nOffset ) + sizeof( nLength ) + nLength; }
-		static int GetHeaderSize() { return sizeof( CHANNEL_DATA_OFFSET ) + sizeof( unsigned char ); }
+		int GetSendSize() const
+		{
+			return sizeof( nOffset ) + sizeof( nLength ) + nLength;
+		}
+
+		static int GetHeaderSize()
+		{
+			return sizeof( CHANNEL_DATA_OFFSET ) + sizeof( unsigned char );
+		}
 	};
+
 #pragma pack( pop )
 
 	// streaming data control structures
@@ -110,5 +142,6 @@ private:
 
 	static bool IsBefore( CHANNEL_DATA_OFFSET border, CHANNEL_DATA_OFFSET test );
 };
+
 /////////////////////////////////////////////////////////////////////////////////////
-}
+} // namespace NNet

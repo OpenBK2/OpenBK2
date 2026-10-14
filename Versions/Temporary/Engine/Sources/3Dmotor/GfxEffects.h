@@ -1,4 +1,5 @@
 #pragma once
+
 namespace NGfx
 {
 class CGeometry;
@@ -9,6 +10,7 @@ class CRenderContext;
 const float F_FOG_HEIGHT = 25;
 const float F_FOG_DISTANCE = 500;
 const float F_POINT_FALLOFF = 6;
+
 inline void InitRadius( CVec4 *p, float f )
 {
 	p->x = f;
@@ -16,6 +18,7 @@ inline void InitRadius( CVec4 *p, float f )
 	p->z = 1 / f;
 	p->w = sqr( F_POINT_FALLOFF ) * p->z * p->z;
 }
+
 inline void GetTexMapFromProjection( SHMatrix *p, int nResolution )
 {
 	p->SetX( p->x() * 0.5f + p->w() * ( 0.5f + 0.5f / nResolution ) );
@@ -62,4 +65,4 @@ struct SEffTransparentParticles : public SEffect
 	virtual void Use( CRenderContext *p );
 };
 
-} // namespace
+} // namespace NGfx

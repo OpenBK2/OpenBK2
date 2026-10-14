@@ -46,7 +46,11 @@ class CSqliteDatabase : public IDatabase
 
 public:
 	CSqliteDatabase() : pDb( 0 ) {}
-	virtual ~CSqliteDatabase() { Close(); }
+
+	virtual ~CSqliteDatabase()
+	{
+		Close();
+	}
 
 	virtual bool Connect( const SDbConnection &connection );
 	virtual void Close();
@@ -55,7 +59,11 @@ public:
 	virtual bool Query( const std::string &szQuery, CDbResult *pResult );
 	virtual std::string Escape( const std::string &szValue ) const;
 	virtual std::unordered_set<std::string> GetColumns( const std::string &szTable );
-	virtual std::string GetLastError() const { return szLastError; }
+
+	virtual std::string GetLastError() const
+	{
+		return szLastError;
+	}
 };
 
 bool CSqliteDatabase::Exec( const char *pszSql )
@@ -234,7 +242,7 @@ std::unordered_set<std::string> CSqliteDatabase::GetColumns( const std::string &
 	return columns;
 }
 
-}
+} // namespace
 
 IDatabase *CreateSqliteDatabase()
 {

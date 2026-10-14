@@ -25,10 +25,14 @@ private:
 	bool bRotateParcel;
 	bool bRotatePoint;
 
-	CMapInfoEditor *GetMapInfoEditor() { return pMapInfoEditor; }
+	CMapInfoEditor *GetMapInfoEditor()
+	{
+		return pMapInfoEditor;
+	}
 
 public:
 	CAIGeneralPointsState( CMapInfoEditor *pMapInfoEditor = 0 );
+
 	virtual ~CAIGeneralPointsState() {}
 
 	// IInputStateInterface

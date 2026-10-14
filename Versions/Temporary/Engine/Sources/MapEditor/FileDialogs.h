@@ -28,4 +28,4 @@ bool ChooseFolder( IWidget *pOwner,
                    const std::string &rszTitle,
                    const std::string &rszInitialDir,
                    std::string *pszPath );
-}
+} // namespace NFileDialog

@@ -34,6 +34,7 @@ struct SDDSPixelFormat
 	uint32_t dwBBitMask;    // B bit mask  (for ARGB formats)
 	uint32_t dwABitMask;    // A bit mask  (for ARGB formats)
 };
+
 inline const bool operator==( const SDDSPixelFormat &pf1, const SDDSPixelFormat &pf2 )
 {
 	return memcmp( &pf1, &pf2, sizeof( pf1 ) ) == 0;
@@ -133,6 +134,7 @@ struct SDDSHeader
 	uint32_t dwSurfaceFlags;      // surface flags
 	uint32_t dwCubemapFlags;      // cube map flags
 	uint32_t dwReserved2[3];      //
+
 	//
 	SDDSHeader()
 	{
@@ -140,14 +142,20 @@ struct SDDSHeader
 		dwSize = sizeof( *this );
 	}
 };
+
 struct SDDSFileHeader
 {
 	enum
 	{
 		SIGNATURE = 0x20534444
 	};
+
 	uint32_t dwSignature; // .dds file signature
 	SDDSHeader header;    // header itself
+
 	//
-	SDDSFileHeader() { dwSignature = SDDSFileHeader::SIGNATURE; }
+	SDDSFileHeader()
+	{
+		dwSignature = SDDSFileHeader::SIGNATURE;
+	}
 };

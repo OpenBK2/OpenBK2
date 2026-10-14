@@ -10,7 +10,10 @@ class CNetNewClient : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CNetNewClient );
 
 	ZDATA
-	ZEND int operator&( IBinSaver &f ) { return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 };
 
 class CNetRemoveClient : public CNetPacket
@@ -19,7 +22,10 @@ class CNetRemoveClient : public CNetPacket
 
 public:
 	ZDATA
-	ZEND int operator&( IBinSaver &f ) { return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 
 	CNetRemoveClient() {}
 };
@@ -36,6 +42,7 @@ public:
 		ECS_SUCCESS,
 		ECS_FAILED
 	};
+
 	enum ERejectReason
 	{
 		ERR_UNKNOWN,
@@ -58,6 +65,7 @@ public:
 	ZDATA
 	EConnectionState eConnectionState;
 	ERejectReason eRejectReason;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &eConnectionState );
@@ -66,6 +74,7 @@ public:
 	}
 
 	CConnectServerPacket() {}
+
 	CConnectServerPacket( const EConnectionState _eConnectionState, const ERejectReason _eRejectReason )
 			: eConnectionState( _eConnectionState ), eRejectReason( _eRejectReason ), CNetPacket( 0 )
 	{
@@ -81,6 +90,7 @@ class CMyIDPacket : public CNetPacket
 public:
 	ZDATA
 	int nMyID;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nMyID );
@@ -88,6 +98,7 @@ public:
 	}
 
 	CMyIDPacket() {}
+
 	CMyIDPacket( const int nClientID ) : CNetPacket( nClientID ), nMyID( nClientID ) {}
 };
 
@@ -97,6 +108,7 @@ class CSystemBroadcastPacket : public CNetPacket
 public:
 	ZDATA
 	std::wstring wszText;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &wszText );
@@ -104,6 +116,7 @@ public:
 	}
 
 	CSystemBroadcastPacket() {}
+
 	CSystemBroadcastPacket( const int nClientID, const std::wstring &_wszText )
 			: CNetPacket( nClientID ), wszText( _wszText )
 	{
@@ -119,6 +132,7 @@ class CEnterLobbyPacket : public CNetPacket
 public:
 	ZDATA
 	int nLobbyID;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nLobbyID );
@@ -126,6 +140,7 @@ public:
 	}
 
 	CEnterLobbyPacket() {}
+
 	CEnterLobbyPacket( const int nClientID, const int _nLobbyID ) : CNetPacket( nClientID ), nLobbyID( _nLobbyID ) {}
 };
 
@@ -137,9 +152,13 @@ class CLeaveLobbyPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CLeaveLobbyPacket )
 public:
 	ZDATA
-	ZEND int operator&( IBinSaver &f ) { return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 
 	CLeaveLobbyPacket() {}
+
 	CLeaveLobbyPacket( const int nClientID ) : CNetPacket( nClientID ) {}
 };
 
@@ -150,6 +169,7 @@ class CCommonClientStatePacket : public CNetPacket
 public:
 	ZDATA
 	ECommonClientState eState;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &eState );
@@ -157,6 +177,7 @@ public:
 	}
 
 	CCommonClientStatePacket() {}
+
 	CCommonClientStatePacket( const int nClientID, const ECommonClientState _eState )
 			: CNetPacket( nClientID ), eState( _eState )
 	{
@@ -171,6 +192,7 @@ public:
 	ZDATA
 	/** my latest received version */
 	uint32_t dwVersion;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &dwVersion );
@@ -178,6 +200,7 @@ public:
 	}
 
 	CGetLobbyClientsPacket() {}
+
 	CGetLobbyClientsPacket( const int nClientID, const uint32_t _dwVersion )
 			: CNetPacket( nClientID ), dwVersion( _dwVersion )
 	{
@@ -192,6 +215,7 @@ public:
 	ZDATA
 	/** my latest received version */
 	uint32_t dwVersion;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &dwVersion );
@@ -199,6 +223,7 @@ public:
 	}
 
 	CGetLobbyGamesPacket() {}
+
 	CGetLobbyGamesPacket( const int nClientID, const uint32_t _dwVersion )
 			: CNetPacket( nClientID ), dwVersion( _dwVersion )
 	{
@@ -214,6 +239,7 @@ public:
 	ZDATA
 	int nClient;
 	CPtr<CNetPacket> pPacket;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nClient );
@@ -222,6 +248,7 @@ public:
 	}
 
 	CDirectPacketToClient() {}
+
 	CDirectPacketToClient( const int nClient, const int nClientTo, CNetPacket *_pPacket )
 			: CNetPacket( nClient ), nClient( nClientTo ), pPacket( _pPacket )
 	{
@@ -234,8 +261,12 @@ class CTestDirectPacket : public CNetPacket
 
 public:
 	ZDATA
-	ZEND int operator&( IBinSaver &f ) { return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 
 	CTestDirectPacket() {}
+
 	CTestDirectPacket( const int nClientID ) : CNetPacket( nClientID ) {}
 };

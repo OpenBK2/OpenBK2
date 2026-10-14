@@ -392,6 +392,7 @@ const std::pair<int, int> CScenarioTrackerMultiplayer::GetKeyBuildingSummary()
 
 #define FULL_RECYCLE_TIME 215.0f
 #define MIN_RECYCLE_TIME 95.0f
+
 const float CScenarioTrackerMultiplayer::GetRecycleSpeedCoeff( const int nSide )
 {
 	if ( !pMission || flags.empty() )
@@ -1053,6 +1054,6 @@ const NDb::SObjectBaseRPGStats *CScenarioTrackerMultiplayer::GetKeyBuildingFlagO
 	return 0;
 }
 
-}
+} // namespace NScenarioTracker
 
 REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x1117BB00, CScenarioTrackerMultiplayer, NScenarioTracker );

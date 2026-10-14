@@ -17,7 +17,12 @@ class MAPEDITORLIB_EXPORT CDefaultView : public IView
 
 public:
 	CDefaultView() {}
-	~CDefaultView() { RemoveViewManipulator(); }
+
+	~CDefaultView()
+	{
+		RemoveViewManipulator();
+	}
+
 	//
 	// Функция создания Controller
 	template <class TController>
@@ -40,16 +45,35 @@ public:
 		}
 		return pTYPEObject;
 	}
-	inline const SObjectSet &GetObjectSet() const { return objectSet; }
-	inline const std::string &GetTemporaryLabel() const { return szTemporaryLabel; }
+
+	inline const SObjectSet &GetObjectSet() const
+	{
+		return objectSet;
+	}
+
+	inline const std::string &GetTemporaryLabel() const
+	{
+		return szTemporaryLabel;
+	}
+
 	//
 	virtual void SetViewManipulator( IManipulator *_pViewManipulator,
 	                                 const SObjectSet &rObjectSet,
 	                                 const std::string &rszTemporaryLabel );
-	virtual IManipulator *GetViewManipulator() { return pViewManipulator; }
+
+	virtual IManipulator *GetViewManipulator()
+	{
+		return pViewManipulator;
+	}
+
 	virtual void RemoveViewManipulator();
+
 	//
-	virtual void SetTemporaryLabel( const std::string &rszTemporaryLabel ) { szTemporaryLabel = rszTemporaryLabel; }
+	virtual void SetTemporaryLabel( const std::string &rszTemporaryLabel )
+	{
+		szTemporaryLabel = rszTemporaryLabel;
+	}
+
 	virtual void GetTemporaryLabel( std::string *pszTemporaryLabel )
 	{
 		if ( pszTemporaryLabel )
@@ -57,6 +81,7 @@ public:
 			( *pszTemporaryLabel ) = szTemporaryLabel;
 		}
 	}
+
 	//
 	virtual void GetObjectSet( SObjectSet *pObjectSet )
 	{
@@ -65,6 +90,7 @@ public:
 			( *pObjectSet ) = objectSet;
 		}
 	}
+
 	virtual void Enter();
 	virtual void Leave();
 };

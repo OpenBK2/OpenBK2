@@ -8,16 +8,19 @@ namespace NGfx
 {
 struct SPixel8888;
 class CTexture;
-}
+} // namespace NGfx
+
 namespace NCache
 {
 class CQuadTreeElement;
 }
+
 namespace NGScene
 {
 const int N_LM_TEXTURE_SIZE = 1024;
 
 class CLightmapTextureCache;
+
 class CSingleTexAlloc
 {
 	CObj<CLightmapTextureCache> pCache;
@@ -35,6 +38,7 @@ class CLMAlloc
 		CObj<CLightmapTextureCache> pCache;
 		CArray2D<NGfx::SPixel8888> data;
 	};
+
 	std::vector<STex> textures;
 	std::vector<CObj<CObjectBase>> regions;
 
@@ -45,8 +49,16 @@ class CLMAlloc
 
 public:
 	bool AllocRegion( const CArray2D<NGfx::SPixel8888> &_data, CTPoint<int> *pPos, int *pnTexture );
-	int GetTexturesNum() const { return textures.size(); }
-	const CArray2D<NGfx::SPixel8888> &GetTexture( int k ) const { return textures[k].data; }
+
+	int GetTexturesNum() const
+	{
+		return textures.size();
+	}
+
+	const CArray2D<NGfx::SPixel8888> &GetTexture( int k ) const
+	{
+		return textures[k].data;
+	}
 };
 
 class CLightmapTexture : public CPtrFuncBase<NGfx::CTexture>
@@ -55,22 +67,27 @@ class CLightmapTexture : public CPtrFuncBase<NGfx::CTexture>
 	ZDATA
 	CObj<NGScene::CLightmapsLoader> pLD;
 	int nTex;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pLD );
 		f.Add( 3, &nTex );
 		return 0;
 	}
+
 	void Recalc();
 
 public:
 	CLightmapTexture( CObj<CLightmapsLoader> _pLD, int _nTex ) : pLD( _pLD ), nTex( _nTex ) {};
+
 	CLightmapTexture() {}
+
 	//CLightmapTexture( const CArray2D<NGfx::SPixel8888> &_tex ) : tex(_tex) {}
 	//void SetData( const CArray2D<NGfx::SPixel8888> &_data ) { tex = _data; Updated(); }
 };
 
 class CObjectInfo;
+
 class CLMGeometryGen : public CPtrFuncBase<CObjectInfo>
 {
 	OBJECT_NOCOPY_METHODS( CLMGeometryGen );
@@ -91,11 +108,16 @@ class CLMGeometryGen : public CPtrFuncBase<CObjectInfo>
 		return 0;
 	}
 
-	virtual bool NeedUpdate() { return pSrc.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pSrc.Refresh();
+	}
+
 	virtual void Recalc();
 
 public:
 	CLMGeometryGen() : shift( 0, 0 ), bLMCalc( false ) {}
+
 	CLMGeometryGen( CPtrFuncBase<CObjectInfo> *p,
 	                const CTPoint<int> &_shift,
 	                float _fLMResolution,
@@ -104,9 +126,14 @@ public:
 			: pSrc( p ), shift( _shift ), bLMCalc( _bLMCalc ), fLMResolution( _fLMResolution ), bDump( _bDump )
 	{
 	}
-	CPtrFuncBase<CObjectInfo> *GetSrc() const { return pSrc; }
+
+	CPtrFuncBase<CObjectInfo> *GetSrc() const
+	{
+		return pSrc;
+	}
 };
+
 void EnableLMGeometryDump( bool flag );
 bool GetDumpFlag();
 void SetDumpDirectory( const std::string &szDirectoryName );
-}
+} // namespace NGScene

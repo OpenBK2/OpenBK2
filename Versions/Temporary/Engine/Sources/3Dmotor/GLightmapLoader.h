@@ -6,7 +6,7 @@ namespace NGfx
 {
 struct SPixel8888;
 class CTexture;
-}
+} // namespace NGfx
 
 namespace NGScene
 {
@@ -20,6 +20,7 @@ class CLightmapsLoader : public CObjectBase
 	ZDATA
 	std::string szName;
 	int nUseCount;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szName );
@@ -37,4 +38,4 @@ public:
 	void ReleaseHint();
 };
 
-};
+}; // namespace NGScene

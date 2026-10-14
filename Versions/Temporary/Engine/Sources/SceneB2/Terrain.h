@@ -10,7 +10,7 @@ namespace NGScene
 {
 class IGameView;
 class IMaterial;
-}
+} // namespace NGScene
 
 namespace NDb
 {
@@ -28,8 +28,10 @@ protected:
 
 public:
 	CMeshDataPatch() {}
+
 	CMeshDataPatch( NMeshData::SMeshData *_pInfo ) : pInfo( _pInfo ) {}
 };
+
 typedef SPatchHolder<CMeshDataPatch> SPrecipicePatchHolder;
 
 class CPrecipice
@@ -40,12 +42,22 @@ class CPrecipice
 
 public:
 	CPrecipice() : pInfo( 0 ) {}
+
 	CPrecipice( SPrecipiceGFXInfo *_pInfo, const int _nID ) : pInfo( _pInfo ), nID( _nID ) {}
+
 	//
 	void CreatePatches( NGScene::IGameView *pGView );
-	int GetID() const { return nID; }
+
+	int GetID() const
+	{
+		return nID;
+	}
+
 	//
-	void UpdatePrecipiceGfxInfoPtr( SPrecipiceGFXInfo *_pInfo ) { pInfo = _pInfo; }
+	void UpdatePrecipiceGfxInfoPtr( SPrecipiceGFXInfo *_pInfo )
+	{
+		pInfo = _pInfo;
+	}
 };
 
 // peaks
@@ -59,8 +71,10 @@ protected:
 
 public:
 	CPeakPatch() {}
+
 	CPeakPatch( NMeshData::SMeshDataTex2 *_pInfo ) : pInfo( _pInfo ) {}
 };
+
 typedef SPatchHolder<CPeakPatch> SPeakPatchHolder;
 
 class CPeak
@@ -71,12 +85,22 @@ class CPeak
 
 public:
 	CPeak() : pInfo( 0 ) {}
+
 	CPeak( SPeakGFXInfo *_pInfo, const int _nID ) : pInfo( _pInfo ), nID( _nID ) {}
+
 	//
 	void CreatePatches( NGScene::IGameView *pGView, const NDb::STerrain *pTerraDesc );
-	int GetID() const { return nID; }
+
+	int GetID() const
+	{
+		return nID;
+	}
+
 	//
-	void UpdatePeakGfxInfoPtr( SPeakGFXInfo *_pInfo ) { pInfo = _pInfo; }
+	void UpdatePeakGfxInfoPtr( SPeakGFXInfo *_pInfo )
+	{
+		pInfo = _pInfo;
+	}
 };
 
 // foots
@@ -91,12 +115,22 @@ class CFoot
 
 public:
 	CFoot() : pInfo( 0 ) {}
+
 	CFoot( SFootGFXInfo *_pInfo, const int _nID ) : pInfo( _pInfo ), nID( _nID ) {}
+
 	//
 	void CreatePatches( NGScene::IGameView *pGView, const NDb::STerrain *pTerraDesc );
-	int GetID() const { return nID; }
+
+	int GetID() const
+	{
+		return nID;
+	}
+
 	//
-	void UpdateFootGfxInfoPtr( SFootGFXInfo *_pInfo ) { pInfo = _pInfo; }
+	void UpdateFootGfxInfoPtr( SFootGFXInfo *_pInfo )
+	{
+		pInfo = _pInfo;
+	}
 };
 
 // river
@@ -108,16 +142,22 @@ class CRiverPatch : public CPtrFuncBase<NGScene::CObjectInfo>
 	float fStreamSpeed;
 
 protected:
-	bool NeedUpdate() { return pTimer == 0 ? false : pTimer.Refresh(); }
+	bool NeedUpdate()
+	{
+		return pTimer == 0 ? false : pTimer.Refresh();
+	}
+
 	void Recalc();
 
 public:
 	CRiverPatch() : pInfo( 0 ), fStreamSpeed( 0 ) {}
+
 	CRiverPatch( const NMeshData::SMeshData *_pInfo, float _fStreamSpeed, CFuncBase<STime> *_pTimer )
 			: pInfo( _pInfo ), fStreamSpeed( _fStreamSpeed ), pTimer( _pTimer )
 	{
 	}
 };
+
 typedef SPatchHolder<CRiverPatch> SRiverPatchHolder;
 
 class CRiver
@@ -131,15 +171,25 @@ class CRiver
 
 public:
 	CRiver() : pInfo( 0 ) {}
+
 	CRiver( const SRiverGFXInfo *_pInfo, const int _nID, CFuncBase<STime> *_pTimer )
 			: pInfo( _pInfo ), nID( _nID ), pTimer( _pTimer )
 	{
 	}
+
 	//
 	void CreatePatches( NGScene::IGameView *pGView );
-	int GetID() const { return nID; }
+
+	int GetID() const
+	{
+		return nID;
+	}
+
 	//
-	void UpdateRiverGfxInfoPtr( const SRiverGFXInfo *_pInfo ) { pInfo = _pInfo; }
+	void UpdateRiverGfxInfoPtr( const SRiverGFXInfo *_pInfo )
+	{
+		pInfo = _pInfo;
+	}
 };
 
 // road
@@ -154,12 +204,22 @@ class CRoad
 
 public:
 	CRoad() : pInfo( 0 ) {}
+
 	CRoad( SRoadGFXInfo *_pInfo, const int _nID ) : pInfo( _pInfo ), nID( _nID ) {}
+
 	//
 	void CreatePatches( NGScene::IGameView *pGView );
-	int GetID() const { return nID; }
+
+	int GetID() const
+	{
+		return nID;
+	}
+
 	//
-	void UpdateRoadGfxInfoPtr( SRoadGFXInfo *_pInfo ) { pInfo = _pInfo; }
+	void UpdateRoadGfxInfoPtr( SRoadGFXInfo *_pInfo )
+	{
+		pInfo = _pInfo;
+	}
 };
 
 // terraspot
@@ -174,12 +234,22 @@ class CTerraSpot
 
 public:
 	CTerraSpot() : pInfo( 0 ) {}
+
 	CTerraSpot( STerraSpotGFXInfo *_pInfo, const int _nID ) : pInfo( _pInfo ), nID( _nID ) {}
+
 	//
 	void CreatePatches( NGScene::IGameView *pGView );
-	int GetID() const { return nID; }
+
+	int GetID() const
+	{
+		return nID;
+	}
+
 	//
-	void UpdateTerraSpotGfxInfoPtr( STerraSpotGFXInfo *_pInfo ) { pInfo = _pInfo; }
+	void UpdateTerraSpotGfxInfoPtr( STerraSpotGFXInfo *_pInfo )
+	{
+		pInfo = _pInfo;
+	}
 };
 
 // terrain
@@ -251,6 +321,7 @@ class CSceneTerrain : public ITerraGfxObserver
 	//
 public:
 	CSceneTerrain() {}
+
 	CSceneTerrain( const NDb::STerrain *_pDBDesc, NGScene::IGameView *_pGameView, CFuncBase<STime> *_pAbsTimer );
 	//
 	void HideTerrain( bool bHide );

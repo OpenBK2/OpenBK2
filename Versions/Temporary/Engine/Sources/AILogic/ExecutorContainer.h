@@ -15,6 +15,7 @@
 class CExecutorContainer : public IExecutorContainer
 {
 	OBJECT_NOCOPY_METHODS( CExecutorContainer )
+
 	// executors queue
 
 	struct SExID
@@ -23,6 +24,7 @@ class CExecutorContainer : public IExecutorContainer
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		int nID = {};
 		CPtr<CExecutor> pEx;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nID );
@@ -32,6 +34,7 @@ class CExecutorContainer : public IExecutorContainer
 
 	public:
 		SExID() {}
+
 		SExID( const int _nID, CExecutor *_pEx ) : nID( _nID ), pEx( _pEx ) {}
 	};
 
@@ -85,8 +88,16 @@ public:
 
 	void Clear();
 	void Init();
-	int CreateID() { return executorIDs.Get(); }
-	void ReturnID( const int id ) { executorIDs.Return( id ); }
+
+	int CreateID()
+	{
+		return executorIDs.Get();
+	}
+
+	void ReturnID( const int id )
+	{
+		executorIDs.Return( id );
+	}
 
 	virtual void AddSleeping( CExecutor *pExecutor );
 	virtual void RemoveSleeping( CExecutor *pExecutor );

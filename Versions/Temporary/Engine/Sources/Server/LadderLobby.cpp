@@ -42,7 +42,7 @@ void DropWeakestExcept( const std::unordered_map<int, CPtr<CLadderClient>> &play
 void DropStrongestExcept( const std::unordered_map<int, CPtr<CLadderClient>> &players,
                           std::list<int> *pList,
                           const int nException );
-}
+} // namespace NLadder
 
 class CLadderExperience
 {
@@ -52,6 +52,7 @@ public:
 	std::unordered_map<int, int> winXP;
 	std::unordered_map<int, int> loseXP;
 	std::vector<int> levelXP;
+
 	int operator&( IXmlSaver &f )
 	{
 		f.Add( "NewbieLevel", &nNewbieLevel );
@@ -80,6 +81,7 @@ public:
 	std::vector<float> killedLostMedals;
 	std::vector<int> winsInSeriesMedals;
 	int nFirstPlaceMedalLevel;
+
 	int operator&( IXmlSaver &f )
 	{
 		f.Add( "LevelDelta", &nLevelDelta );
@@ -1041,6 +1043,7 @@ void DropFromListByLevel( const std::unordered_map<int, CPtr<CLadderClient>> &pl
 		}
 	}
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void DropFromListByTeamSize( const std::unordered_map<int, CPtr<CLadderClient>> &players,
                              std::list<int> *pWaitingOrder,
@@ -1058,6 +1061,7 @@ void DropFromListByTeamSize( const std::unordered_map<int, CPtr<CLadderClient>> 
 		}
 	}
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void DropFromListByHistoricityAndChecksum( const std::unordered_map<int, CPtr<CLadderClient>> &players,
                                            std::list<int> *pWaitingOrder,
@@ -1076,6 +1080,7 @@ void DropFromListByHistoricityAndChecksum( const std::unordered_map<int, CPtr<CL
 		}
 	}
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void DropFromListBySide( const std::unordered_map<int, CPtr<CLadderClient>> &players,
                          std::list<int> *pWaitingOrder,
@@ -1093,6 +1098,7 @@ void DropFromListBySide( const std::unordered_map<int, CPtr<CLadderClient>> &pla
 		}
 	}
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float TeamLevel( const std::unordered_map<int, CPtr<CLadderClient>> &players, const std::list<int> &team )
 {
@@ -1104,6 +1110,7 @@ float TeamLevel( const std::unordered_map<int, CPtr<CLadderClient>> &players, co
 	}
 	return fLevel / team.size();
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void RandomizeList( std::list<int> *pList )
 {
@@ -1127,6 +1134,7 @@ void RandomizeList( std::list<int> *pList )
 		pList->push_back( tempVector[i] );
 	}
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void DropWeakestExcept( const std::unordered_map<int, CPtr<CLadderClient>> &players,
                         std::list<int> *pList,
@@ -1146,6 +1154,7 @@ void DropWeakestExcept( const std::unordered_map<int, CPtr<CLadderClient>> &play
 	}
 	pList->remove( nMinID );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void DropStrongestExcept( const std::unordered_map<int, CPtr<CLadderClient>> &players,
                           std::list<int> *pList,
@@ -1165,8 +1174,9 @@ void DropStrongestExcept( const std::unordered_map<int, CPtr<CLadderClient>> &pl
 	}
 	pList->remove( nMaxID );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-}
+} // namespace NLadder
 
 #undef STEP_LENGTH_TIME
 

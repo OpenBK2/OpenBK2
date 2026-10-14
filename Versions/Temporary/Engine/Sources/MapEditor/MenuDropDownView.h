@@ -37,4 +37,4 @@ IView *Create( IWidget *pParent );
 // what a list with nothing selected answers, sends nothing -- the MFC
 // dialog sent it and Undo and Redo ignored it.
 void Choose( unsigned nCommandID, int nIndex );
-}
+} // namespace NMenuDropDown

@@ -85,7 +85,7 @@ void CSpriteAnimator::Recalc()
 	value.sCamera = SafeUnhomogen( pCamera->GetValue() );
 }
 
-} // NAMESPACE
+} // namespace NGScene
 
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0xB4414160, CSpriteEffect )

@@ -23,14 +23,17 @@ public:
 	struct SRSDeployTemplate : public NDb::SDeployTemplate
 	{
 	};
+
 	//
 	struct STypedTemplate
 	{
 		std::string szTemplateType;
 		std::string szTemplate;
 	};
+
 	//
 	typedef std::vector<STypedTemplate> CTypedTemplateType;
+
 	//
 	struct SReinfPoint : public NDb::SReinforcementPosition
 	{
@@ -48,7 +51,9 @@ private:
 
 public:
 	CReinfPointsState( CMapInfoEditor *_pMapInfoEditor = 0 );
+
 	virtual ~CReinfPointsState() {}
+
 	//
 	void Enter();
 	void Leave();

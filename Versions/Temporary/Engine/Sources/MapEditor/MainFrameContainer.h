@@ -13,10 +13,19 @@ class CMainFrameContainer : public IMainFrameContainer
 
 public:
 	CMainFrameContainer() : pMainFrame( 0 ), pMainWindow( 0 ) {}
+
 	~CMainFrameContainer() {}
 
 	// IMainFrameContainer
 	void Set( IMainFrame *_pMainFrame, IWidget *_pMainWindow );
-	IMainFrame *Get() { return pMainFrame; }
-	IWidget *GetMainWindow() { return pMainWindow; }
+
+	IMainFrame *Get()
+	{
+		return pMainFrame;
+	}
+
+	IWidget *GetMainWindow()
+	{
+		return pMainWindow;
+	}
 };

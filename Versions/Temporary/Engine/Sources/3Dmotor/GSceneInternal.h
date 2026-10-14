@@ -24,6 +24,7 @@ private:
 	ZDATA
 	CPtr<ISomePart> pTarget;
 	CPtr<IPostProcess> pPostProcess;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pTarget );
@@ -33,10 +34,19 @@ private:
 
 public:
 	CPostProcessBinder() {}
+
 	bool Initialize( CObjectBase *p, IPostProcess *pPost );
 	void Store( std::vector<IPostProcess::SObject> *pRes, CTransformStack *pTS, const SGroupSelect &mask );
-	bool Update( IGScene *pScene ) { return IsValid( pTarget ); }
-	IPostProcess *GetPostProcessor() const { return pPostProcess; }
+
+	bool Update( IGScene *pScene )
+	{
+		return IsValid( pTarget );
+	}
+
+	IPostProcess *GetPostProcessor() const
+	{
+		return pPostProcess;
+	}
 };
 
 class CPolyline : public CObjectBase
@@ -47,6 +57,7 @@ class CPolyline : public CObjectBase
 	std::vector<unsigned short> indices;
 	CVec4 color;
 	bool bCheckDepth;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pGeometry );
@@ -58,13 +69,23 @@ class CPolyline : public CObjectBase
 
 public:
 	CPolyline() {}
+
 	CPolyline( CPtrFuncBase<NGfx::CGeometry> *_pGeometry,
 	           const std::vector<unsigned short> &_indices,
 	           const CVec4 &_color,
 	           bool _bCheckDepth );
+
 	//
-	bool GetCheckDepth() const { return bCheckDepth; }
-	const CVec4 &GetColor() const { return color; }
+	bool GetCheckDepth() const
+	{
+		return bCheckDepth;
+	}
+
+	const CVec4 &GetColor() const
+	{
+		return color;
+	}
+
 	void Render( NGfx::CRenderContext *pRC );
 };
 
@@ -86,6 +107,7 @@ class CFakeParticleLMTexture : public CPtrFuncBase<NGfx::CTexture>
 	CDGPtr<CFuncBase<CVec3>> pAmbient;
 	CDGPtr<CFuncBase<CVec3>> pColor;
 	uint32_t dwNormalColor, dwParticleColor;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pAmbient );
@@ -94,12 +116,14 @@ class CFakeParticleLMTexture : public CPtrFuncBase<NGfx::CTexture>
 		f.Add( 5, &dwParticleColor );
 		return 0;
 	}
+
 	bool NeedUpdate()
 	{
 		bool b1 = pColor.Refresh();
 		bool b2 = pAmbient.Refresh();
 		return b1 || b2;
 	}
+
 	void Recalc();
 
 public:
@@ -108,9 +132,21 @@ public:
 		pAmbient = _pAmbient;
 		Updated();
 	}
-	void SetColor( CFuncBase<CVec3> *_pColor ) { pColor = _pColor; }
-	uint32_t GetNormalColor() const { return dwNormalColor; }
-	uint32_t GetParticleColor() const { return dwParticleColor; }
+
+	void SetColor( CFuncBase<CVec3> *_pColor )
+	{
+		pColor = _pColor;
+	}
+
+	uint32_t GetNormalColor() const
+	{
+		return dwNormalColor;
+	}
+
+	uint32_t GetParticleColor() const
+	{
+		return dwParticleColor;
+	}
 };
 
 class CDecalsManager;
@@ -121,9 +157,11 @@ class CDirectionalLight;
 class CCVec4;
 class CLightStateNode;
 class CTransparentRenderer;
+
 class CGScene : public IGScene, public IDecalQuery
 {
 	OBJECT_BASIC_METHODS( CGScene );
+
 	enum ERLRequest
 	{
 		RN_STATIC = 1,
@@ -161,6 +199,7 @@ class CGScene : public IGScene, public IDecalQuery
 	float fSunFlareCoeff;
 	CVec3 sunFlareDir;
 	CObj<CCVec3> pParticlesLightColor;
+
 	// Chunk 26 was bIsTwilight, the switch for a post effect that never ran.
 	// Saves written before its removal still carry it, so the id stays retired.
 	ZEND int operator&( IBinSaver &f )
@@ -192,6 +231,7 @@ class CGScene : public IGScene, public IDecalQuery
 		f.Add( 27, &pParticlesLightColor );
 		return 0;
 	}
+
 	int nSlowVolumeWalk;
 	SParticleLMRenderTargetInfo particleLM;
 	SGroupSelect lastMask;
@@ -325,12 +365,14 @@ public:
 	                                   bool bDepthTest );
 	virtual CObjectBase *CreatePostProcessor( CObjectBase *pRenderNode, IPostProcess *pProcessor );
 	virtual void SetAmbientAnimation( CPtrFuncBase<CAnimLight> *pLight );
+
 	virtual void SetSunFlares( const CVec3 &_dir, CSunFlares *_pSunFlares, CFuncBase<STime> *_pSunFlaresTime )
 	{
 		sunFlareDir = _dir;
 		pSunFlares = _pSunFlares;
 		pSunFlaresTime = _pSunFlaresTime;
 	}
+
 	virtual void SetDirectionalLight( CFuncBase<CVec3> *pColor,
 	                                  CFuncBase<CVec3> *pGlossColor,
 	                                  const CVec3 &_vLightDir,
@@ -380,13 +422,32 @@ public:
 	                         EScenePartsSet ps,
 	                         SFullGroupInfo *pGroupInfo,
 	                         CObjectBase **ppPart );
-	virtual SGroupSelect GetLastMask() { return lastMask; }
+
+	virtual SGroupSelect GetLastMask()
+	{
+		return lastMask;
+	}
+
 	virtual int PrecacheMaterials( ILoadingCounter *pCounter );
-	virtual void SetLoadingCounter( ILoadingCounter *pCounter ) { pLoadingCounter = pCounter; }
-	virtual void WaitForLoad( bool bWait = true ) { bWaitForLoad = bWait; }
+
+	virtual void SetLoadingCounter( ILoadingCounter *pCounter )
+	{
+		pLoadingCounter = pCounter;
+	}
+
+	virtual void WaitForLoad( bool bWait = true )
+	{
+		bWaitForLoad = bWait;
+	}
+
 	CFuncBase<SPerVertexLightState> *GetLightState() const;
 	void GetNotLoaded( std::vector<IPart *> *pRes );
-	virtual CFuncBase<CVec3> *GetParticlesLightColor() { return pParticlesLightColor; }
+
+	virtual CFuncBase<CVec3> *GetParticlesLightColor()
+	{
+		return pParticlesLightColor;
+	}
+
 	virtual void CollectAllParts( std::vector<CObjectBase *> *pRes );
 	CTransparentRenderer *CreateTransparentRenderer( CTransformStack *pTS, bool bLitParticles );
 
@@ -400,17 +461,27 @@ class CRenderWrapper : public IRender
 public:
 	CRenderWrapper( CGScene *_pScene ) : pScene( _pScene ) {}
 
-	virtual CFuncBase<SPerVertexLightState> *GetLightState() const { return pScene->GetLightState(); }
+	virtual CFuncBase<SPerVertexLightState> *GetLightState() const
+	{
+		return pScene->GetLightState();
+	}
+
 	virtual void
 	FormPartList( CTransformStack *pTS, std::vector<SRenderPartSet> *pRes, EDepthType dt, const SGroupSelect &mask );
 	virtual void FormDepthList( CTransformStack *pTS, const CVec3 &vDir, EDepthType dt, CSceneFragments *pRes );
 	virtual void FormRenderList( CTransformStack *pTS, CSceneFragments *pRes, CTransparentRenderer *pTransparentRender );
-	virtual void GetNotLoaded( std::vector<IPart *> *pRes ) { pScene->GetNotLoaded( pRes ); }
+
+	virtual void GetNotLoaded( std::vector<IPart *> *pRes )
+	{
+		pScene->GetNotLoaded( pRes );
+	}
+
 	virtual void RenderPostProcess( CTransformStack *pTS, NGfx::CRenderContext *pRC )
 	{
 		pScene->RenderPostProcess( pTS, pRC );
 	}
+
 	virtual CTransparentRenderer *CreateTransparentRenderer( CTransformStack *pTS, bool bLitParticles );
 };
 
-} // namespace
+} // namespace NGScene

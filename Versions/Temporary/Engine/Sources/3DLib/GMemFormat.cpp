@@ -49,6 +49,7 @@ void CMemObjectInfo::Recalc()
 	pValue->Assign( &resData, false );
 }
 
-} // namespace
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DLIB, 0x02911172, CMemObjectInfo )

@@ -9,12 +9,13 @@
 
 class CAIUnit;
 class CObjectProfile;
+
 namespace NDb
 {
 struct SHPObjectRPGStats;
 struct SObjectBaseRPGStats;
 struct SStaticObjectRPGStats;
-}
+} // namespace NDb
 
 enum EStaticObjType : int
 {
@@ -55,8 +56,16 @@ public:
 
 public:
 	CStaticObject() : bTerminateSegmentFlag( false ) {}
-	void SetTerminateExecutorFlag( const bool _bTerminateSegmentFlag ) { bTerminateSegmentFlag = _bTerminateSegmentFlag; }
-	bool IsTerminateExecutors() const { return bTerminateSegmentFlag; }
+
+	void SetTerminateExecutorFlag( const bool _bTerminateSegmentFlag )
+	{
+		bTerminateSegmentFlag = _bTerminateSegmentFlag;
+	}
+
+	bool IsTerminateExecutors() const
+	{
+		return bTerminateSegmentFlag;
+	}
 
 	virtual const SHPObjectRPGStats *GetStats() const = 0;
 
@@ -70,14 +79,22 @@ public:
 
 	// hit points и damage
 	virtual const float GetHitPoints() const = 0;
-	virtual void SetHitPoints( const float fNewHP ) { NI_ASSERT( false, "wrong call,CStaticObject::SetHitPoints" ); }
+
+	virtual void SetHitPoints( const float fNewHP )
+	{
+		NI_ASSERT( false, "wrong call,CStaticObject::SetHitPoints" );
+	}
 
 	virtual void
 	TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit ) = 0;
 
 	// сегмент для обработки некоторой внутренней логики объекта
 	virtual void Segment() = 0;
-	virtual const NTimer::STime GetNextSegmentTime() const { return 0; }
+
+	virtual const NTimer::STime GetNextSegmentTime() const
+	{
+		return 0;
+	}
 
 	virtual EStaticObjType GetObjectType() const = 0;
 	virtual const uint8_t GetPlayer() const;
@@ -115,10 +132,25 @@ class CExistingObjectModifyAI
 	static int bProhibited;
 
 public:
-	CExistingObjectModifyAI() { ++bProhibited; }
-	~CExistingObjectModifyAI() { --bProhibited; }
-	static void Clear() { bProhibited = 0; }
-	static bool IsProhibited() { return bProhibited; }
+	CExistingObjectModifyAI()
+	{
+		++bProhibited;
+	}
+
+	~CExistingObjectModifyAI()
+	{
+		--bProhibited;
+	}
+
+	static void Clear()
+	{
+		bProhibited = 0;
+	}
+
+	static bool IsProhibited()
+	{
+		return bProhibited;
+	}
 };
 
 // объект, реально находящийся на карте
@@ -146,6 +178,7 @@ public:
 		f.Add( 6, &fHP );
 		return 0;
 	}
+
 	static unsigned long globalMark;
 
 	//
@@ -153,9 +186,16 @@ public:
 
 public:
 	virtual void SetNewPlaceWithoutMapUpdate( const CVec3 &center, const uint16_t dir = 0 ) = 0;
-	static void Init() { globalMark = 0; }
+
+	static void Init()
+	{
+		globalMark = 0;
+	}
+
 	static void Clear() {}
+
 	CExistingObject() : bTrampled( false ) {}
+
 	CExistingObject( const int _nFrameIndex, const float _fHP )
 			: nFrameIndex( _nFrameIndex ), fHP( _fHP ), mark( 0 ), burningEnd( 0 ), bTrampled( false )
 	{
@@ -166,14 +206,28 @@ public:
 		}
 	}
 
-	void SetTrampled() { bTrampled = true; }
-	bool IsTrampled() const { return bTrampled; }
+	void SetTrampled()
+	{
+		bTrampled = true;
+	}
+
+	bool IsTrampled() const
+	{
+		return bTrampled;
+	}
 
 	// информация об объекте
-	const int GetFrameIndex() const { return nFrameIndex; }
+	const int GetFrameIndex() const
+	{
+		return nFrameIndex;
+	}
 
 	// hit points и damage
-	const float GetHitPoints() const { return fHP; }
+	const float GetHitPoints() const
+	{
+		return fHP;
+	}
+
 	void SetHitPoints( const float fNewHP )
 	{
 		fHP = fNewHP;
@@ -202,10 +256,18 @@ public:
 	virtual void Delete();
 
 	// для iterator-а
-	virtual bool IsGlobalUpdated() const { return mark == globalMark; }
+	virtual bool IsGlobalUpdated() const
+	{
+		return mark == globalMark;
+	}
+
 	virtual void SetGlobalUpdated();
+
 	// for debug
-	const int GetMark() const { return mark; }
+	const int GetMark() const
+	{
+		return mark;
+	}
 
 	static void UpdateGlobalMark();
 
@@ -213,6 +275,7 @@ public:
 	virtual bool ProcessCumulativeExpl( class CExplosion *pExpl, const int nArmorDir, const bool bFromExpl );
 	virtual bool
 	ProcessBurstExpl( class CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius );
+
 	virtual bool
 	ProcessAreaDamage( const class CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius )
 	{
@@ -223,20 +286,36 @@ public:
 	virtual void BurnSegment();
 	// попадание по объекту с damage (вызывать только после списывания damage)
 	virtual void WasHit();
+
 	// минимальное количество HP для объекта (для всех 0, кроме ключувых зданий)
-	virtual const float GetMinHP() const { return 0.0f; }
+	virtual const float GetMinHP() const
+	{
+		return 0.0f;
+	}
 
 	//if object falls on destruction
-	virtual bool CanFall() { return false; }
+	virtual bool CanFall()
+	{
+		return false;
+	}
+
 	//fall to direction
 	virtual void AnimateFalling( const CVec2 &vFallTo )
 	{
 		NI_ASSERT( false, "Wrong call of CExistingObject::AnimateFalling()!" );
 	}
-	virtual bool HasFallen() { return false; }
+
+	virtual bool HasFallen()
+	{
+		return false;
+	}
 
 	virtual CObjectProfile *GetPassProfile() const = 0;
-	void SetFrameIndex( const int _nFrameIndex ) { nFrameIndex = _nFrameIndex; }
+
+	void SetFrameIndex( const int _nFrameIndex )
+	{
+		nFrameIndex = _nFrameIndex;
+	}
 
 	friend class CStaticMembers;
 };
@@ -280,10 +359,20 @@ protected:
 	virtual void
 	GetPassability( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> *passability ) const;
 
-	void SetPassProfile( CObjectProfile *_pPassProfile ) { pPassProfile = _pPassProfile; }
-	void SetVisProfile( CObjectProfile *_pVisProfile ) { pVisProfile = _pVisProfile; }
+	void SetPassProfile( CObjectProfile *_pPassProfile )
+	{
+		pPassProfile = _pPassProfile;
+	}
 
-	CObjectProfile *GetVisProfile() const { return pVisProfile; }
+	void SetVisProfile( CObjectProfile *_pVisProfile )
+	{
+		pVisProfile = _pVisProfile;
+	}
+
+	CObjectProfile *GetVisProfile() const
+	{
+		return pVisProfile;
+	}
 
 	virtual int GetHeight() const;
 
@@ -291,35 +380,73 @@ protected:
 	void RemoveTransparenciesInt( const int nUniqueID );
 
 public:
-	virtual void SetNewPlaceWithoutMapUpdate( const CVec3 &_center, const uint16_t dir = 0 ) { center = _center; }
+	virtual void SetNewPlaceWithoutMapUpdate( const CVec3 &_center, const uint16_t dir = 0 )
+	{
+		center = _center;
+	}
+
 	CGivenPassabilityStObject() : bTransparencySet( false ) {}
+
 	CGivenPassabilityStObject( const CVec3 &center, const float fHP, const uint16_t wAngle, const int nFrameIndex );
 	virtual void Init();
 	virtual const EAIClasses GetPassabilityClass() const;
 
-	virtual const CVec3 &GetCenter() const { return center; }
+	virtual const CVec3 &GetCenter() const
+	{
+		return center;
+	}
+
 	virtual const CVec2 GetAttackCenter( const CVec2 &vPoint ) const;
-	virtual const uint16_t GetDir() const { return wDir; }
+
+	virtual const uint16_t GetDir() const
+	{
+		return wDir;
+	}
 
 	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats );
 
 	virtual void GetCoveredTiles( std::list<SVector> *pTiles ) const;
-	virtual void GetBoundRect( SRect *pRect ) const { *pRect = boundRect; }
+
+	virtual void GetBoundRect( SRect *pRect ) const
+	{
+		*pRect = boundRect;
+	}
+
 	virtual bool IsPointInside( const CVec2 &point ) const;
 
 	virtual void LockTiles();
 	virtual void UnlockTiles();
 	virtual void CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles );
-	virtual void SetTransparencies() { SetTransparenciesInt( GetUniqueId() ); }
-	virtual void RemoveTransparencies() { RemoveTransparenciesInt( GetUniqueId() ); }
+
+	virtual void SetTransparencies()
+	{
+		SetTransparenciesInt( GetUniqueId() );
+	}
+
+	virtual void RemoveTransparencies()
+	{
+		RemoveTransparenciesInt( GetUniqueId() );
+	}
+
 	virtual void RestoreTransparenciesImmidiately();
 	// true если объект можно добавить в данную точку
 	static bool
 	CheckStaticObject( const SObjectBaseRPGStats *pStats, const CVec2 &vPos, const uint16_t wDir, const int nFrameIndex );
-	virtual const int GetNEntrancePoints() const { return 0; }
-	virtual void GetEntranceData( CVec2 *pvPoint, uint16_t *pwDir, int nIndex ) const { return; }
 
-	virtual CObjectProfile *GetPassProfile() const { return pPassProfile; }
+	virtual const int GetNEntrancePoints() const
+	{
+		return 0;
+	}
+
+	virtual void GetEntranceData( CVec2 *pvPoint, uint16_t *pwDir, int nIndex ) const
+	{
+		return;
+	}
+
+	virtual CObjectProfile *GetPassProfile() const
+	{
+		return pPassProfile;
+	}
 };
 
 //*******************************************************************
@@ -344,6 +471,7 @@ public:
 
 public:
 	CCommonStaticObject() {}
+
 	CCommonStaticObject(
 			const CVec3 &center, const float fHP, const uint16_t wDir, const int nFrameIndex, EStaticObjType _eType )
 			: CGivenPassabilityStObject( center, fHP, wDir, nFrameIndex ), eType( _eType ), bFallen( false )
@@ -357,18 +485,36 @@ public:
 
 	virtual void Segment() {}
 
-	virtual EStaticObjType GetObjectType() const { return eType; }
+	virtual EStaticObjType GetObjectType() const
+	{
+		return eType;
+	}
 
-	virtual bool IsContainer() const { return false; }
-	virtual const int GetNDefenders() const { return 0; }
-	virtual class CSoldier *GetUnit( const int n ) const { return 0; }
+	virtual bool IsContainer() const
+	{
+		return false;
+	}
+
+	virtual const int GetNDefenders() const
+	{
+		return 0;
+	}
+
+	virtual class CSoldier *GetUnit( const int n ) const
+	{
+		return 0;
+	}
 
 	virtual bool ProcessAreaDamage( const class CExplosion *pExpl,
 	                                const int nArmorDir,
 	                                const float fRadius,
 	                                const float fSmallRadius );
 	void AnimateFalling( const CVec2 &vFallTo );
-	bool HasFallen() { return bFallen; }
+
+	bool HasFallen()
+	{
+		return bFallen;
+	}
 };
 
 class CSimpleStaticObject : public CCommonStaticObject
@@ -379,6 +525,7 @@ class CSimpleStaticObject : public CCommonStaticObject
 	int nPlayer = {};
 	bool bDelayedUpdate = {}; // if true then update for new object is delayed
 	SAIAngle wDir;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CCommonStaticObject *)this );
@@ -391,6 +538,7 @@ class CSimpleStaticObject : public CCommonStaticObject
 
 public:
 	CSimpleStaticObject() {}
+
 	CSimpleStaticObject( const SStaticObjectRPGStats *_pStats,
 	                     const CVec3 &center,
 	                     const uint16_t _wDir,
@@ -404,11 +552,24 @@ public:
 	{
 	}
 
-	virtual const uint8_t GetPlayer() const { return nPlayer == -1 ? CCommonStaticObject::GetPlayer() : nPlayer; }
-	virtual const SHPObjectRPGStats *GetStats() const { return pStats; }
+	virtual const uint8_t GetPlayer() const
+	{
+		return nPlayer == -1 ? CCommonStaticObject::GetPlayer() : nPlayer;
+	}
+
+	virtual const SHPObjectRPGStats *GetStats() const
+	{
+		return pStats;
+	}
+
 	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const;
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
-	virtual const uint16_t GetDir() const { return wDir; }
+
+	virtual const uint16_t GetDir() const
+	{
+		return wDir;
+	}
+
 	bool CanFall();
 };
 
@@ -418,6 +579,7 @@ class CTerraMeshStaticObject : public CCommonStaticObject
 	ZDATA_( CCommonStaticObject )
 	CDBPtr<SStaticObjectRPGStats> pStats;
 	SAIAngle wDir;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CCommonStaticObject *)this );
@@ -428,6 +590,7 @@ class CTerraMeshStaticObject : public CCommonStaticObject
 
 public:
 	CTerraMeshStaticObject() {}
+
 	CTerraMeshStaticObject( const SStaticObjectRPGStats *_pStats,
 	                        const CVec3 &center,
 	                        const uint16_t _wDir,
@@ -438,10 +601,17 @@ public:
 	{
 	}
 
-	virtual const SHPObjectRPGStats *GetStats() const { return pStats; }
+	virtual const SHPObjectRPGStats *GetStats() const
+	{
+		return pStats;
+	}
+
 	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const;
 
-	virtual const uint16_t GetDir() const { return wDir; }
+	virtual const uint16_t GetDir() const
+	{
+		return wDir;
+	}
 
 	virtual void SetNewPlacement( const CVec3 &center, const uint16_t dir );
 	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );

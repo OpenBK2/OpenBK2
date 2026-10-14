@@ -2,6 +2,7 @@ virtual const char *GetName() const
 {
 	return "AIExpLevel";
 }
+
 virtual const char *GetParentName() const
 {
 	return szTypeName.c_str();

@@ -18,6 +18,7 @@ struct SLimit
 	float fManualSpeed = {};
 	//
 	bool bCyclic = {};
+
 	//
 	void SetLimit( float _fMin, float _fMax, float _fAve, float _fAuto, float _fMan, bool _bCyclic )
 	{
@@ -36,8 +37,12 @@ struct SLimit
 		bCyclic = _bCyclic;
 	}
 
-	bool IsEmpty() const { return fMin >= fMax; }
+	bool IsEmpty() const
+	{
+		return fMin >= fMax;
+	}
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CCameraBasicMouseMutator : public CCameraPlacement, protected NInput::CGMORegContainer
 {
@@ -71,39 +76,127 @@ class CCameraBasicMouseMutator : public CCameraPlacement, protected NInput::CGMO
 	float fYawSpeed = {};
 
 protected:
-	float GetPitchMouseDelta() { return sliderMousePitch.GetDelta(); }
-	float GetPitchKeyboardDelta() { return sliderPitch.GetDelta(); }
+	float GetPitchMouseDelta()
+	{
+		return sliderMousePitch.GetDelta();
+	}
+
+	float GetPitchKeyboardDelta()
+	{
+		return sliderPitch.GetDelta();
+	}
+
 	//	float GetPitchDelta() { return sliderPitch.GetDelta() + sliderMousePitch.GetDelta(); }
-	float GetYawMouseDelta() { return sliderMouseYaw.GetDelta(); }
-	float GetYawKeyboardDelta() { return sliderYaw.GetDelta(); }
+	float GetYawMouseDelta()
+	{
+		return sliderMouseYaw.GetDelta();
+	}
+
+	float GetYawKeyboardDelta()
+	{
+		return sliderYaw.GetDelta();
+	}
+
 	//	float GetYawDelta() { return sliderYaw.GetDelta() + sliderMouseYaw.GetDelta(); }
-	float GetForwardMouseDelta() { return sliderMouseForward.GetDelta(); }
-	float GetForwardKeyboardDelta() { return sliderFwd.GetDelta(); }
+	float GetForwardMouseDelta()
+	{
+		return sliderMouseForward.GetDelta();
+	}
+
+	float GetForwardKeyboardDelta()
+	{
+		return sliderFwd.GetDelta();
+	}
+
 	//	float GetForwardDelta() { return sliderFwd.GetDelta() + sliderMouseForward.GetDelta(); }
-	float GetStrafeMouseDelta() { return sliderMouseStrafe.GetDelta(); }
-	float GetStrafeKeyboardDelta() { return sliderStrafe.GetDelta(); }
+	float GetStrafeMouseDelta()
+	{
+		return sliderMouseStrafe.GetDelta();
+	}
+
+	float GetStrafeKeyboardDelta()
+	{
+		return sliderStrafe.GetDelta();
+	}
+
 	//	float GetStrafeDelta() { return sliderStrafe.GetDelta() + sliderMouseStrafe.GetDelta(); }
-	float GetZoomMouseDelta() { return sliderMouseZoom.GetDelta(); }
-	float GetZoomKeyboardDelta() { return sliderZoom.GetDelta(); }
+	float GetZoomMouseDelta()
+	{
+		return sliderMouseZoom.GetDelta();
+	}
+
+	float GetZoomKeyboardDelta()
+	{
+		return sliderZoom.GetDelta();
+	}
+
 	//	float GetZoomDelta() { return sliderZoom.GetDelta() + sliderMouseZoom.GetDelta(); }
 	void ClearSliders();
+
 	//
-	const SLimit &GetPitchLimit() const { return pitchLimit; }
-	const SLimit &GetYawLimit() const { return yawLimit; }
-	const SLimit &GetDistanceLimit() const { return distanceLimit; }
-	const CTRect<float> &GetAnchorLimit() const { return rcAnchorLimit; }
+	const SLimit &GetPitchLimit() const
+	{
+		return pitchLimit;
+	}
+
+	const SLimit &GetYawLimit() const
+	{
+		return yawLimit;
+	}
+
+	const SLimit &GetDistanceLimit() const
+	{
+		return distanceLimit;
+	}
+
+	const CTRect<float> &GetAnchorLimit() const
+	{
+		return rcAnchorLimit;
+	}
+
 	//
-	float GetScrollSpeedX() const { return fScrollSpeedX; }
-	float GetScrollSpeedY() const { return fScrollSpeedY; }
+	float GetScrollSpeedX() const
+	{
+		return fScrollSpeedX;
+	}
+
+	float GetScrollSpeedY() const
+	{
+		return fScrollSpeedY;
+	}
+
 	//
-	float GetYawSpeed() const { return fYawSpeed; }
+	float GetYawSpeed() const
+	{
+		return fYawSpeed;
+	}
+
 	//
-	bool HasAutopositioning() const { return bAutoPositioning; }
-	void SetWasUpdated( bool _bWasUpdated ) { bWasUpdated = _bWasUpdated; }
+	bool HasAutopositioning() const
+	{
+		return bAutoPositioning;
+	}
+
+	void SetWasUpdated( bool _bWasUpdated )
+	{
+		bWasUpdated = _bWasUpdated;
+	}
+
 	//
-	uint32_t GetTimeLastUpdate() const { return timeLastUpdate; }
-	void SetTimeLastUpdate( const uint32_t &_timeLastUpdate ) { timeLastUpdate = _timeLastUpdate; }
-	bool IsCameraLocked() const { return !manualLockers.empty(); }
+	uint32_t GetTimeLastUpdate() const
+	{
+		return timeLastUpdate;
+	}
+
+	void SetTimeLastUpdate( const uint32_t &_timeLastUpdate )
+	{
+		timeLastUpdate = _timeLastUpdate;
+	}
+
+	bool IsCameraLocked() const
+	{
+		return !manualLockers.empty();
+	}
 
 public:
 	CCameraBasicMouseMutator();
@@ -117,45 +210,110 @@ public:
 	void SwitchAutoPositioning( const bool bAllowAutoPositioning );
 	void SwitchManualScrolling( const std::string &szLocker, const bool bManualOn );
 	const CVec3 GetListener() const;
-	void SetAnchor( const CVec3 &_vAnchor ) { vAnchor = _vAnchor; }
-	const CVec3 &GetAnchor() const { return vAnchor; }
-	const CVec3 &GetPos() const { return vPosition; }
+
+	void SetAnchor( const CVec3 &_vAnchor )
+	{
+		vAnchor = _vAnchor;
+	}
+
+	const CVec3 &GetAnchor() const
+	{
+		return vAnchor;
+	}
+
+	const CVec3 &GetPos() const
+	{
+		return vPosition;
+	}
+
 	void ResetScrolling()
 	{
 		fScrollSpeedX = 0;
 		fScrollSpeedY = 0;
 	}
-	void SetScrollSpeedX( const float _fSpeed ) { fScrollSpeedX = _fSpeed; }
-	void SetScrollSpeedY( const float _fSpeed ) { fScrollSpeedY = _fSpeed; }
-	void SetYawSpeed( const float _fSpeed ) { fYawSpeed = _fSpeed; }
-	float GetYaw() const { return fYaw; }
-	float GetPitch() const { return fPitch; }
-	float GetFOV() const { return fFOV; }
-	void SetYaw( const float _fYaw ) { fYaw = _fYaw; }
-	void SetPitch( const float _fPitch ) { fPitch = _fPitch; }
-	void SetFOV( float _fFOV ) { fFOV = _fFOV; }
+
+	void SetScrollSpeedX( const float _fSpeed )
+	{
+		fScrollSpeedX = _fSpeed;
+	}
+
+	void SetScrollSpeedY( const float _fSpeed )
+	{
+		fScrollSpeedY = _fSpeed;
+	}
+
+	void SetYawSpeed( const float _fSpeed )
+	{
+		fYawSpeed = _fSpeed;
+	}
+
+	float GetYaw() const
+	{
+		return fYaw;
+	}
+
+	float GetPitch() const
+	{
+		return fPitch;
+	}
+
+	float GetFOV() const
+	{
+		return fFOV;
+	}
+
+	void SetYaw( const float _fYaw )
+	{
+		fYaw = _fYaw;
+	}
+
+	void SetPitch( const float _fPitch )
+	{
+		fPitch = _fPitch;
+	}
+
+	void SetFOV( float _fFOV )
+	{
+		fFOV = _fFOV;
+	}
+
 	void SetPlacement( const float _fDist, const float _fPitch, const float _fYaw )
 	{
 		SetDistance( _fDist );
 		fPitch = _fPitch;
 		fYaw = _fYaw;
 	}
+
 	void GetPlacement( float *pfDist, float *pfPitch, float *pfYaw )
 	{
 		*pfDist = fDistance;
 		*pfPitch = fPitch;
 		*pfYaw = fYaw;
 	}
+
 	// Derived cameras can cancel pending mouse zoom on an external placement.
-	virtual void SetDistance( const float _fDist ) { fDistance = _fDist; }
-	float GetDistance() const { return fDistance; }
+	virtual void SetDistance( const float _fDist )
+	{
+		fDistance = _fDist;
+	}
+
+	float GetDistance() const
+	{
+		return fDistance;
+	}
+
 	//
-	bool WasUpdated() const { return bWasUpdated; }
+	bool WasUpdated() const
+	{
+		return bWasUpdated;
+	}
+
 	//
 	int operator&( IBinSaver &saver );
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float IncrementValue(
 		float fCurrValue, float fAdd, const SLimit &limit, float fTimeDiff, const bool bAutoPositioning, bool bFreeCamera );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-}
+} // namespace NCamera

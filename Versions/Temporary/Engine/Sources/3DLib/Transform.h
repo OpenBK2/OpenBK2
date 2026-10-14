@@ -48,16 +48,33 @@ protected:
 
 public:
 	CBaseMatrixStack() : nCurrentMatrix( -1 ) {}
+
 	//
-	bool IsEmpty() const { return nCurrentMatrix == -1; }
-	void Clear() { nCurrentMatrix = -1; }
+	bool IsEmpty() const
+	{
+		return nCurrentMatrix == -1;
+	}
+
+	void Clear()
+	{
+		nCurrentMatrix = -1;
+	}
+
 	void Pop( int nAmount = 1 )
 	{
 		ASSERT( nCurrentMatrix >= nAmount - 1 );
 		nCurrentMatrix -= nAmount;
 	}
-	const TElement &Get() const { return matrices[nCurrentMatrix]; }
-	void Init( const TElement &matrix ) { matrices[nCurrentMatrix = 0] = matrix; }
+
+	const TElement &Get() const
+	{
+		return matrices[nCurrentMatrix];
+	}
+
+	void Init( const TElement &matrix )
+	{
+		matrices[nCurrentMatrix = 0] = matrix;
+	}
 };
 
 // matrix stack 4x3
@@ -80,6 +97,7 @@ public:
 			Identity( matrices + i );
 		}
 	}
+
 	void Push43( const SHMatrix &matrix );
 	void Push33( const SHMatrix &matrix );
 	void Push( const CVec3 &pos );
@@ -97,6 +115,7 @@ protected:
 	// as above: the base is dependent, so its members have to be named to be found
 	using CBaseMatrixStack<nMaxNumMatrices, SFBTransform>::matrices;
 	using CBaseMatrixStack<nMaxNumMatrices, SFBTransform>::nCurrentMatrix;
+
 	void SetToFirst()
 	{
 		ASSERT( nCurrentMatrix >= 0 );
@@ -105,6 +124,7 @@ protected:
 
 public:
 	CFBMatrixStack() {}
+
 	//
 	void Init( const SHMatrix &matrix )
 	{
@@ -112,12 +132,14 @@ public:
 		matrices[0].forward = matrix;
 		InvertMatrix( &matrices[0].backward, matrix );
 	}
+
 	void Init()
 	{
 		nCurrentMatrix = 0;
 		Identity( &matrices[0].forward );
 		Identity( &matrices[0].backward );
 	}
+
 	//
 	void Push44( const SHMatrix &matrix );
 	void Push43( const SHMatrix &matrix );
@@ -145,6 +167,7 @@ class _3DLIB_EXPORT CTransformStack : public CFBMatrixStack<8>
 
 public:
 	CTransformStack() : nClipFlagsPtr( 0 ), nClipPlanes( 0 ) {}
+
 	void SetCamera( const SHMatrix &pos );
 	// aspect = ysize/xsize
 	// vShift это смещение из расчета того, что несмещенный экран простирается от [-1,1]
@@ -158,12 +181,14 @@ public:
 	void MakeParallel( float fWidth, float fHeight, float fZMin = 0.1f, float fZMax = 1000.0f );
 	void MakeDirect( const CVec2 &screenRect );
 	void Make( const SHMatrix &projection );
+
 	// make clean transform stack
 	void Make()
 	{
 		Init();
 		ASSERT( nClipPlanes == 0 );
 	}
+
 	void AddClipPlane( const CVec4 &v );
 	bool IsIn( const SSphere &s );
 	bool IsIn( const SBound &s );
@@ -171,8 +196,17 @@ public:
 	bool PushClipHint( const SSphere &s );
 	bool PushClipHint( const SBound &s );
 	void PopClipHint();
-	bool IsFullGet() const { return nClipFlags[nClipFlagsPtr] == 0; }
-	const SFBTransform &GetProjection() const { return matrices[0]; }
+
+	bool IsFullGet() const
+	{
+		return nClipFlags[nClipFlagsPtr] == 0;
+	}
+
+	const SFBTransform &GetProjection() const
+	{
+		return matrices[0];
+	}
+
 	bool GetCoverRect( CTRect<float> *pRes, const CVec3 &ptCenter, float fRadius );
 };
 
@@ -385,6 +419,7 @@ inline void CMatrixStack43<nMaxNumMatrices>::Push43( const SHMatrix &matrix )
 	Multiply43( &matrices[nCurrentMatrix + 1], matrices[nCurrentMatrix], matrix );
 	nCurrentMatrix++;
 }
+
 template <int nMaxNumMatrices>
 inline void CMatrixStack43<nMaxNumMatrices>::Push33( const SHMatrix &matrix )
 {
@@ -392,6 +427,7 @@ inline void CMatrixStack43<nMaxNumMatrices>::Push33( const SHMatrix &matrix )
 	Multiply33( &matrices[nCurrentMatrix + 1], matrices[nCurrentMatrix], matrix );
 	nCurrentMatrix++;
 }
+
 template <int nMaxNumMatrices>
 inline void CMatrixStack43<nMaxNumMatrices>::Push( const CVec3 &pos )
 {
@@ -399,6 +435,7 @@ inline void CMatrixStack43<nMaxNumMatrices>::Push( const CVec3 &pos )
 	MultiplyTranslate43( &matrices[nCurrentMatrix + 1], matrices[nCurrentMatrix], pos );
 	nCurrentMatrix++;
 }
+
 template <int nMaxNumMatrices>
 inline void CMatrixStack43<nMaxNumMatrices>::Push( const CQuat &rot )
 {
@@ -406,6 +443,7 @@ inline void CMatrixStack43<nMaxNumMatrices>::Push( const CQuat &rot )
 	rot.DecompEulerMatrix( &matrix );
 	Push33( matrix );
 }
+
 template <int nMaxNumMatrices>
 inline void CMatrixStack43<nMaxNumMatrices>::Push( const CVec3 &pos, const CQuat &rot )
 {
@@ -416,6 +454,7 @@ inline void CMatrixStack43<nMaxNumMatrices>::Push( const CVec3 &pos, const CQuat
 	matrix._34 = pos.z;
 	Push43( matrix );
 }
+
 template <int nMaxNumMatrices>
 inline void CMatrixStack43<nMaxNumMatrices>::PushScale( float x, float y, float z )
 {
@@ -426,6 +465,7 @@ inline void CMatrixStack43<nMaxNumMatrices>::PushScale( float x, float y, float 
 	matrix._33 = z;
 	Push33( matrix );
 }
+
 template <int nMaxNumMatrices>
 inline void CMatrixStack43<nMaxNumMatrices>::PushScale( float val )
 {
@@ -442,6 +482,7 @@ inline void CFBMatrixStack<nMaxNumMatrices>::Push44( const SHMatrix &matrix )
 	InvertMatrix( &matrices[nCurrentMatrix + 1].backward, matrices[nCurrentMatrix + 1].forward );
 	nCurrentMatrix++;
 }
+
 template <int nMaxNumMatrices>
 inline void CFBMatrixStack<nMaxNumMatrices>::Push43( const SHMatrix &matrix )
 {
@@ -450,6 +491,7 @@ inline void CFBMatrixStack<nMaxNumMatrices>::Push43( const SHMatrix &matrix )
 	InvertMatrix( &matrices[nCurrentMatrix + 1].backward, matrices[nCurrentMatrix + 1].forward );
 	nCurrentMatrix++;
 }
+
 template <int nMaxNumMatrices>
 inline void CFBMatrixStack<nMaxNumMatrices>::Push33( const SHMatrix &matrix )
 {
@@ -458,6 +500,7 @@ inline void CFBMatrixStack<nMaxNumMatrices>::Push33( const SHMatrix &matrix )
 	InvertMatrix( &matrices[nCurrentMatrix + 1].backward, matrices[nCurrentMatrix + 1].forward );
 	nCurrentMatrix++;
 }
+
 template <int nMaxNumMatrices>
 inline void CFBMatrixStack<nMaxNumMatrices>::Push33Orthonormal( const SHMatrix &matrix )
 {
@@ -467,6 +510,7 @@ inline void CFBMatrixStack<nMaxNumMatrices>::Push33Orthonormal( const SHMatrix &
 	//MultiplyF33Inv( &matrices[nCurrentMatrix + 1].backward, matrices[nCurrentMatrix].backward, matrix );
 	nCurrentMatrix++;
 }
+
 template <int nMaxNumMatrices>
 inline void CFBMatrixStack<nMaxNumMatrices>::Push33( const SHMatrix &matrix, const SHMatrix &invMatrix )
 {
@@ -476,6 +520,7 @@ inline void CFBMatrixStack<nMaxNumMatrices>::Push33( const SHMatrix &matrix, con
 	//MultiplyF33( &matrices[nCurrentMatrix + 1].backward, matrices[nCurrentMatrix].backward, invMatrix );
 	nCurrentMatrix++;
 }
+
 template <int nMaxNumMatrices>
 inline void CFBMatrixStack<nMaxNumMatrices>::Push( const CVec3 &pos )
 {
@@ -485,6 +530,7 @@ inline void CFBMatrixStack<nMaxNumMatrices>::Push( const CVec3 &pos )
 	//MultiplyInvTranslate( &matrices[nCurrentMatrix + 1].backward, matrices[nCurrentMatrix].backward, pos );
 	nCurrentMatrix++;
 }
+
 template <int nMaxNumMatrices>
 inline void CFBMatrixStack<nMaxNumMatrices>::Push( const CQuat &rot )
 {
@@ -492,6 +538,7 @@ inline void CFBMatrixStack<nMaxNumMatrices>::Push( const CQuat &rot )
 	rot.DecompEulerMatrix( &matrix );
 	Push33Orthonormal( matrix );
 }
+
 template <int nMaxNumMatrices>
 inline void CFBMatrixStack<nMaxNumMatrices>::Push( const CVec3 &pos, const CQuat &rot )
 {
@@ -500,6 +547,7 @@ inline void CFBMatrixStack<nMaxNumMatrices>::Push( const CVec3 &pos, const CQuat
 	Push( pos );
 	Push33Orthonormal( matrix );
 }
+
 template <int nMaxNumMatrices>
 inline void CFBMatrixStack<nMaxNumMatrices>::PushScale( float x, float y, float z )
 {
@@ -509,6 +557,7 @@ inline void CFBMatrixStack<nMaxNumMatrices>::PushScale( float x, float y, float 
 	//MultiplyFScale( &matrices[nCurrentMatrix + 1].backward, matrices[nCurrentMatrix].backward, 1/x, 1/y, 1/z );
 	nCurrentMatrix++;
 }
+
 template <int nMaxNumMatrices>
 inline void CFBMatrixStack<nMaxNumMatrices>::PushScale( float val )
 {

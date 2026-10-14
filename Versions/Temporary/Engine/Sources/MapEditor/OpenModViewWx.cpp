@@ -138,7 +138,10 @@ public:
 	}
 
 	// Whether it opened where it was left last time.
-	bool WasPlaced() const { return placement.WasPlaced(); }
+	bool WasPlaced() const
+	{
+		return placement.WasPlaced();
+	}
 
 	// Called on the way out, whichever button was used: where the dialog
 	// ended up is worth remembering even when the answer was Cancel, which
@@ -173,7 +176,10 @@ public:
 	}
 
 private:
-	void OnNameChosen( wxCommandEvent & ) { UpdateControls(); }
+	void OnNameChosen( wxCommandEvent & )
+	{
+		UpdateControls();
+	}
 
 	void UpdateControls()
 	{
@@ -204,7 +210,7 @@ private:
 		}
 	}
 };
-}
+} // namespace
 
 namespace NOpenMod
 {
@@ -226,4 +232,4 @@ bool Run( IWidget *pParent, NMOD::SMOD *pMod )
 	dialog.SaveState();
 	return bAccepted && dialog.GetMod( pMod );
 }
-}
+} // namespace NOpenMod

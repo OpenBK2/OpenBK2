@@ -384,4 +384,4 @@ static uint64_t pcmpeqw( uint64_t a, uint64_t b )
 	return result;
 }
 
-}
+} // namespace original

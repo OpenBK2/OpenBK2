@@ -8,6 +8,7 @@
 
 const CVec3 CModelEditorSettings::vShift = CVec3( VIS_TILE_SIZE / 8.0f, VIS_TILE_SIZE / 8.0f, VIS_TILE_SIZE / 8.0f );
 const float CModelEditorSettings::fDefaultDiff = VIS_TILE_SIZE / 64;
+
 //
 CModelEditorSettings::SCameraPlacement::SCameraPlacement()
 		: vAnchor( VNULL3 ), fDistance( VIS_TILE_SIZE * 16.0f ), fPitch( 45.0f ), fYaw( 45.0f ), fFOV( 26.0f ),

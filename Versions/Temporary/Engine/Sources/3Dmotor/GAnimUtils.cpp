@@ -21,6 +21,7 @@ void CAddBoneFilter::Recalc()
 }
 
 CAddBoneFilter::~CAddBoneFilter() {}
-}
+} // namespace NAnimation
+
 using namespace NAnimation;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x10441190, CAddBoneFilter )

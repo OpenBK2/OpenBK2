@@ -21,6 +21,7 @@ public:
 		bool bWrongVersion;   // to catch different version
 		CMemoryStream info;
 	};
+
 	typedef std::list<SServerInfo> CServerInfoList;
 
 private:
@@ -34,19 +35,38 @@ private:
 
 public:
 	CServerInfoSupport( APPLICATION_ID _nApplicationID );
+
 	//
-	void Init( APPLICATION_ID _applicationID ) { applicationID = _applicationID; }
+	void Init( APPLICATION_ID _applicationID )
+	{
+		applicationID = _applicationID;
+	}
+
 	//
 	void Step( float fDeltaTime );
-	CServerInfoList &GetServers() { return servers; }
+
+	CServerInfoList &GetServers()
+	{
+		return servers;
+	}
+
 	// requests reply	support
-	bool DoReplyRequest() const { return bDoReply; }
+	bool DoReplyRequest() const
+	{
+		return bDoReply;
+	}
+
 	void StartReply( const CMemoryStream &info )
 	{
 		bDoReply = true;
 		serverInfo = info;
 	}
-	void StopReply() { bDoReply = false; }
+
+	void StopReply()
+	{
+		bDoReply = false;
+	}
+
 	// packets forming
 	void ReplyServerInfoRequest( CBitStream &bits, CBitStream *pDstBits );
 	void ProcessServerInfo( const CNodeAddress &addr, CBitStream &bits, float fServerListTimeout );
@@ -55,4 +75,4 @@ public:
 	bool CanSendRequest( const CNodeAddress &broadcast, std::vector<CNodeAddress> *pDest );
 };
 
-}
+} // namespace NNet

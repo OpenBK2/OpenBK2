@@ -9,7 +9,7 @@ inline float GetCoeffFromSpeed( const int nSpeed )
 {
 	return nSpeed >= 0 ? nSpeed + 1 : 1.0f / fabsf( float( nSpeed - 1 ) );
 }
-};
+}; // namespace NTimer
 
 class CScaleTimer
 {
@@ -21,14 +21,35 @@ class CScaleTimer
 	bool bPaused = {};           // is this timer paused
 public:
 	CScaleTimer() : prevTime( 0 ), currTime( 0 ), fScale( 1 ), fError( 0 ), bPaused( false ) {}
+
 	// scale
-	void SetScale( const float _fScale ) { fScale = _fScale; }
-	float GetScale() const { return fScale; }
+	void SetScale( const float _fScale )
+	{
+		fScale = _fScale;
+	}
+
+	float GetScale() const
+	{
+		return fScale;
+	}
+
 	// pause
-	void SetPause( bool _bPaused ) { bPaused = _bPaused; }
-	bool IsPaused() const { return bPaused; }
+	void SetPause( bool _bPaused )
+	{
+		bPaused = _bPaused;
+	}
+
+	bool IsPaused() const
+	{
+		return bPaused;
+	}
+
 	// get current time value
-	const NTimer::STime &GetTime() const { return currTime; }
+	const NTimer::STime &GetTime() const
+	{
+		return currTime;
+	}
+
 	// reset timer to this time
 	void Reset( const NTimer::STime &time )
 	{
@@ -36,6 +57,7 @@ public:
 		currTime = 0;
 		fError = 0;
 	}
+
 	// update timer with new time
 	void Update( const NTimer::STime &time, const NTimer::STime &timeMaxDelta )
 	{
@@ -53,6 +75,7 @@ public:
 			currTime += dT;
 		}
 	}
+
 	// serialize
 	int operator&( IBinSaver &saver )
 	{
@@ -76,6 +99,7 @@ struct IGameTimer : public CObjectBase
 	{
 		tidTypeID = 0x10075C05
 	};
+
 	// update/reset timer
 	virtual void Update( const NTimer::STime &time ) = 0;
 	virtual void Reset( const NTimer::STime &time ) = 0;
@@ -110,10 +134,12 @@ struct IGameTimer : public CObjectBase
 	virtual int GetMinSpeed() const = 0;
 	virtual int GetMaxSpeed() const = 0;
 };
+
 inline IGameTimer *GameTimer()
 {
 	return Singleton<IGameTimer>();
 }
+
 IGameTimer *CreateGameTimer( const int nSegmentDuration );
 
 enum EPauseType

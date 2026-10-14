@@ -82,9 +82,15 @@ public:
 	// basic capacity
 	// ------------------------------------------------------------
 
-	bool empty() const noexcept { return items_.empty(); }
+	bool empty() const noexcept
+	{
+		return items_.empty();
+	}
 
-	size_type size() const noexcept { return items_.size(); }
+	size_type size() const noexcept
+	{
+		return items_.size();
+	}
 
 	void clear() noexcept
 	{
@@ -96,17 +102,35 @@ public:
 	// iteration: deterministic insertion order
 	// ------------------------------------------------------------
 
-	iterator begin() noexcept { return items_.begin(); }
+	iterator begin() noexcept
+	{
+		return items_.begin();
+	}
 
-	iterator end() noexcept { return items_.end(); }
+	iterator end() noexcept
+	{
+		return items_.end();
+	}
 
-	const_iterator begin() const noexcept { return items_.begin(); }
+	const_iterator begin() const noexcept
+	{
+		return items_.begin();
+	}
 
-	const_iterator end() const noexcept { return items_.end(); }
+	const_iterator end() const noexcept
+	{
+		return items_.end();
+	}
 
-	const_iterator cbegin() const noexcept { return items_.cbegin(); }
+	const_iterator cbegin() const noexcept
+	{
+		return items_.cbegin();
+	}
 
-	const_iterator cend() const noexcept { return items_.cend(); }
+	const_iterator cend() const noexcept
+	{
+		return items_.cend();
+	}
 
 	// ------------------------------------------------------------
 	// lookup
@@ -132,7 +156,10 @@ public:
 		return found->second;
 	}
 
-	bool contains( const Key &key ) const { return index_.find( key ) != index_.end(); }
+	bool contains( const Key &key ) const
+	{
+		return index_.find( key ) != index_.end();
+	}
 
 	T &at( const Key &key )
 	{
@@ -294,13 +321,28 @@ public:
 	// hash-table management
 	// ------------------------------------------------------------
 
-	void reserve( size_type count ) { index_.reserve( count ); }
+	void reserve( size_type count )
+	{
+		index_.reserve( count );
+	}
 
-	size_type bucket_count() const { return index_.bucket_count(); }
+	size_type bucket_count() const
+	{
+		return index_.bucket_count();
+	}
 
-	float load_factor() const { return index_.load_factor(); }
+	float load_factor() const
+	{
+		return index_.load_factor();
+	}
 
-	void max_load_factor( float value ) { index_.max_load_factor( value ); }
+	void max_load_factor( float value )
+	{
+		index_.max_load_factor( value );
+	}
 
-	float max_load_factor() const { return index_.max_load_factor(); }
+	float max_load_factor() const
+	{
+		return index_.max_load_factor();
+	}
 };

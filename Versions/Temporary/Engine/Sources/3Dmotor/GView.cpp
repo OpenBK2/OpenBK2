@@ -90,11 +90,13 @@ private:
 	ZSKIP
 	CDGPtr<CSWTexture> pSWTexture;
 	bool bFakeTexture;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 3, &pSWTexture );
 		return 0;
 	}
+
 	CDGPtr<CFuncBase<CVec3>> pColor;
 
 protected:
@@ -113,6 +115,7 @@ public:
 		pSWTexture = NGScene::GetSWTex( pTex );
 		bFakeTexture = true;
 	}
+
 	void SetColor( CFuncBase<CVec3> *_pColor )
 	{
 		if ( pColor != _pColor )
@@ -246,6 +249,7 @@ void CParticleTexture::Recalc()
 }
 
 class CRenderNode;
+
 class CGameView : public IGameView
 {
 	OBJECT_BASIC_METHODS( CGameView );
@@ -278,6 +282,7 @@ class CGameView : public IGameView
 	CObj<SDepthOfField> pDepthOfField;
 	CObj<ISkyDome> pSkyDome;
 	CArray2D<NGfx::SPixel8888> fogColors;
+
 	// Chunk 29 was bIsTwilight, the switch for a post effect that never ran.
 	// Saves written before its removal still carry it, so the id stays retired.
 	ZEND int operator&( IBinSaver &f )
@@ -351,8 +356,16 @@ class CGameView : public IGameView
 public:
 	CGameView();
 
-	IGScene *GetGScene() const { return pScene; }
-	virtual IMaterial *CreateMaterial( const NDb::SMaterial *pMaterial ) { return CreateMaterialShared( pMaterial ); }
+	IGScene *GetGScene() const
+	{
+		return pScene;
+	}
+
+	virtual IMaterial *CreateMaterial( const NDb::SMaterial *pMaterial )
+	{
+		return CreateMaterialShared( pMaterial );
+	}
+
 	virtual IMaterial *CreateMaterial( const CVec4 &vColor, bool bDoesCastShadow );
 	virtual void CreateMaterialInfo( const NDb::SMaterial *pMaterial, SMaterialCreateInfo *pRes );
 	virtual void CreateMeshInfo(
@@ -395,11 +408,13 @@ public:
 	                                   bool bDepthTest );
 	virtual CObjectBase *Precache( const NDb::SModel *pModel );
 	virtual void Precache( const NDb::SEffect *pEffect );
+
 	virtual void LoadEverything()
 	{
 		WaitForLoad( true );
 		LoadEverythingInt();
 	}
+
 	virtual void Draw( const SDrawInfo &drawInfo );
 	virtual CVec2 GetScreenRect();
 	virtual int GetCutFloor();
@@ -441,13 +456,24 @@ public:
 	virtual void SetWarFogBlend( float fBlend );
 	virtual void SetWarFog( const CArray2D<unsigned char> &fog, float fScale );
 	void SetAmbient( const NDb::SAmbientLight *pLight, bool bSelectGF2, CFuncBase<STime> *pTime );
+
 	virtual void SetAmbient( const NDb::SAmbientLight *pLight, CFuncBase<STime> *pTime )
 	{
 		SetAmbient( pLight, false, pTime );
 	}
+
 	virtual void SetAmbientEffect( const NDb::SEffect *pEffect, STime stBeginTime, CFuncBase<STime> *pTime );
-	virtual void SetDepthOfField( SDepthOfField *pDOFParams ) { pDepthOfField = pDOFParams; }
-	virtual SDepthOfField *GetDepthOfField() { return pDepthOfField; }
+
+	virtual void SetDepthOfField( SDepthOfField *pDOFParams )
+	{
+		pDepthOfField = pDOFParams;
+	}
+
+	virtual SDepthOfField *GetDepthOfField()
+	{
+		return pDepthOfField;
+	}
+
 	virtual ESceneRenderMode GetRenderMode() const;
 	virtual void SetRenderMode( ESceneRenderMode mode );
 	virtual bool TraceScene( const CRay &r,
@@ -458,6 +484,7 @@ public:
 	                         CObjectBase **SFullRoomInfo,
 	                         bool bOpaqueOnly );
 	virtual void MakeHQShot( const SDrawInfo &drawInfo, CArray2D<NGfx::SPixel8888> *pRes );
+
 	virtual void
 	SetLoadingCounter( ILoadingCounter *_pWaitLoading, ILoadingCounter *_pCalcTerrain, ILoadingCounter *pCounter )
 	{
@@ -465,16 +492,37 @@ public:
 		pCalcTerrain = _pCalcTerrain;
 		pScene->SetLoadingCounter( pCounter );
 	}
+
 	virtual void WaitForLoad( bool bWait )
 	{
 		bWaitLoading = bWait;
 		pScene->WaitForLoad( bWait );
 	}
-	void SetHSRMode( EHSRMode m ) { hsrMode = m; }
-	EHSRMode GetHSRMode() const { return hsrMode; }
-	void SetTransparentMode( ETransparentMode m ) { trMode = m; }
-	ETransparentMode GetTransparentMode() const { return trMode; }
-	virtual void SetFreezeMode( bool mode ) { NGScene::bFreeze = mode; };
+
+	void SetHSRMode( EHSRMode m )
+	{
+		hsrMode = m;
+	}
+
+	EHSRMode GetHSRMode() const
+	{
+		return hsrMode;
+	}
+
+	void SetTransparentMode( ETransparentMode m )
+	{
+		trMode = m;
+	}
+
+	ETransparentMode GetTransparentMode() const
+	{
+		return trMode;
+	}
+
+	virtual void SetFreezeMode( bool mode )
+	{
+		NGScene::bFreeze = mode;
+	};
 };
 
 static SGroupInfo GetGroupInfo( const SRoomInfo &r, bool bCastShadows = true, bool bParticles = false )
@@ -491,6 +539,7 @@ GetGroupInfo( const SFullRoomInfo &r, int nPart, bool bCastShadows = true, bool 
 	int nUserID = ( r.nUserID & N_USERID_MASK ) | ( nPart << 24 );
 	return SFullGroupInfo( GetGroupInfo( r.room, bCastShadows, bParticles ), r.pUser, nUserID );
 }
+
 static SFullRoomInfo GetRoomInfo( const SFullGroupInfo &g )
 {
 	SFullRoomInfo res;
@@ -1425,6 +1474,7 @@ class CCountCalcTerrain : public ILoadingCounter
 
 public:
 	CCountCalcTerrain() : pForward( 0 ), nTerrains( 0 ), nTotal( 0 ) {}
+
 	virtual void LeftToLoad( int nCount )
 	{
 		nTerrains = nTotal - nCount;
@@ -1433,6 +1483,7 @@ public:
 			pForward->LeftToLoad( nCount );
 		}
 	}
+
 	virtual void SetTotalCount( int nTotalCount )
 	{
 		nTotal = nTotalCount;
@@ -1441,6 +1492,7 @@ public:
 			pForward->SetTotalCount( nTotalCount );
 		}
 	}
+
 	virtual void Step()
 	{
 		++nTerrains;
@@ -1449,6 +1501,7 @@ public:
 			pForward->Step();
 		}
 	}
+
 	void Forward( ILoadingCounter *_pForward )
 	{
 		nTotal = nTerrains;
@@ -1457,6 +1510,7 @@ public:
 		pForward->SetTotalCount( nTotal );
 	}
 };
+
 void CGameView::LoadEverythingInt()
 {
 	if ( bWaitLoading )
@@ -1972,6 +2026,7 @@ static CVec3 GetLightDir( float fPitch, float fYaw )
 	vLightDir.y = fHor * sin( ToRadian( fYaw ) );
 	return vLightDir;
 }
+
 void CGameView::SetAmbient( const NDb::SAmbientLight *pLight, bool bSelectGF2, CFuncBase<STime> *pTime )
 {
 	//CPtr<NDb::SAmbientLight> pHold(pLight);
@@ -2202,9 +2257,15 @@ static void PerPartFunc( CObjectBase *_p, T f )
 struct SSetFade
 {
 	float f;
+
 	SSetFade( float _f ) : f( _f ) {}
-	void operator()( CObjectBase *p ) const { SetPartFade( p, f ); }
+
+	void operator()( CObjectBase *p ) const
+	{
+		SetPartFade( p, f );
+	}
 };
+
 void SetFade( CObjectBase *_p, float _f )
 {
 	float f = Clamp( _f, 0.0f, 1.0f );
@@ -2214,9 +2275,15 @@ void SetFade( CObjectBase *_p, float _f )
 struct SSetPriority
 {
 	int n;
+
 	SSetPriority( int _n ) : n( _n ) {}
-	void operator()( CObjectBase *p ) const { SetPartPriority( p, n ); }
+
+	void operator()( CObjectBase *p ) const
+	{
+		SetPartPriority( p, n );
+	}
 };
+
 void SetPriority( CObjectBase *_p, int _nPriority )
 {
 	PerPartFunc( _p, SSetPriority( _nPriority ) );
@@ -2225,7 +2292,9 @@ void SetPriority( CObjectBase *_p, int _nPriority )
 struct SStopParticlesGeneration
 {
 	STime tTime;
+
 	SStopParticlesGeneration( STime _t ) : tTime( _t ) {}
+
 	void operator()( CObjectBase *_p ) const
 	{
 		CPtrFuncBase<CParticleEffect> *p = GetParticleAnimator( _p );
@@ -2239,6 +2308,7 @@ struct SStopParticlesGeneration
 		}
 	}
 };
+
 void StopParticlesGeneration( CObjectBase *_p, STime tStop )
 {
 	PerPartFunc( _p, SStopParticlesGeneration( tStop ) );
@@ -2254,6 +2324,7 @@ struct SStopDynamicLighting
 		}
 	}
 };
+
 void StopDynamicLighting( CObjectBase *_p )
 {
 	PerPartFunc( _p, SStopDynamicLighting() );
@@ -2277,14 +2348,17 @@ static void SetShadowsMode( IGameView *p, T take )
 	}
 	p->SetRenderMode( r );
 }
+
 inline bool Fake( ESceneRenderMode m )
 {
 	return true;
 }
+
 void SetNextLightmapViewMode( IGameView *p )
 {
 	SetShadowsMode( p, Fake );
 }
+
 void SetNextTranspRenderMode( IGameView *p )
 {
 	ETransparentMode tr = p->GetTransparentMode();
@@ -2295,6 +2369,7 @@ void SetNextTranspRenderMode( IGameView *p )
 	}
 	p->SetTransparentMode( tr );
 }
+
 void SetNextHSRMode( IGameView *p )
 {
 	EHSRMode r = (EHSRMode)( p->GetHSRMode() + 1 );
@@ -2357,7 +2432,10 @@ void ApplyLightmaps( IGameView *_p, CObjectBase *pUser, CLightmapsHolder *pLight
 class CTransparencyToOpacityFunc
 {
 public:
-	float operator()( float fValue ) { return ( 1.f - Clamp( fValue, 0.f, 1.f ) ); }
+	float operator()( float fValue )
+	{
+		return ( 1.f - Clamp( fValue, 0.f, 1.f ) );
+	}
 };
 
 void CreateAnimatedTransparencyChannels( std::vector<CPtr<CFuncBase<float>>> *pResult,
@@ -2429,7 +2507,8 @@ REGISTER_VAR_EX( "gfx_water_frequence", NGlobal::VarFloatHandler, &s_fWaterWaveF
 
 FINISH_REGISTER
 
-}
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x01741140, CGameView )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x34256C40, CParticleTexture )

@@ -4,7 +4,7 @@ namespace NDb
 {
 enum EPlanesAttitude : int;
 struct SManuverDescriptor;
-};
+}; // namespace NDb
 
 class CManuverStateDesc
 {
@@ -32,7 +32,11 @@ class CManuverStateDesc
 
 public:
 	CManuverStateDesc() {}
-	/*enum EPlanesAttitude*/ const int GetAtt() const { return att; }
+
+	/*enum EPlanesAttitude*/ const int GetAtt() const
+	{
+		return att;
+	}
 
 	// fill parameters according plane's & enemy's state
 	void Init( const enum EPlanesAttitude _att, struct IPlane *pPos, struct IPlane *pEnemy );

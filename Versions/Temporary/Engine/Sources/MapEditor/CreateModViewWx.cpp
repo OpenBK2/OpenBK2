@@ -97,11 +97,17 @@ public:
 	}
 
 	// Whether it opened where it was left last time.
-	bool WasPlaced() const { return placement.WasPlaced(); }
+	bool WasPlaced() const
+	{
+		return placement.WasPlaced();
+	}
 
 	// Called on the way out whichever button was used, as CResizeDialog did:
 	// where the dialog ended up is worth keeping even after Cancel.
-	void SaveState() { placement.Save( this ); }
+	void SaveState()
+	{
+		placement.Save( this );
+	}
 
 	void ReadMod( NCreateMod::SNewMod *pMod ) const
 	{
@@ -111,9 +117,15 @@ public:
 	}
 
 private:
-	std::string FolderName() const { return std::string( pFolder->GetValue().utf8_str() ); }
+	std::string FolderName() const
+	{
+		return std::string( pFolder->GetValue().utf8_str() );
+	}
 
-	void OnFieldChanged( wxCommandEvent & ) { UpdateControls(); }
+	void OnFieldChanged( wxCommandEvent & )
+	{
+		UpdateControls();
+	}
 
 	void UpdateControls()
 	{
@@ -126,7 +138,7 @@ private:
 		}
 	}
 };
-}
+} // namespace
 
 namespace NCreateMod
 {
@@ -150,4 +162,4 @@ bool Run( IWidget *pParent, SNewMod *pMod )
 	dialog.ReadMod( pMod );
 	return !pMod->szFolderPath.empty() && !pMod->wszName.empty();
 }
-}
+} // namespace NCreateMod

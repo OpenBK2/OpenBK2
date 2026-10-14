@@ -35,12 +35,18 @@ public:
 	}
 
 protected:
-	bool NeedUpdate() { return pTimer != 0 ? pTimer.Refresh() : false; }
+	bool NeedUpdate()
+	{
+		return pTimer != 0 ? pTimer.Refresh() : false;
+	}
 
 public:
 	CScriptMovieMutator() {}
 
-	bool IsPaused() { return false; }
+	bool IsPaused()
+	{
+		return false;
+	}
 };
 
 // just direct flight for some time
@@ -67,6 +73,7 @@ protected:
 
 public:
 	CSCamDMoveFlightMutator() {}
+
 	CSCamDMoveFlightMutator( const NCamera::CCameraPlacement &_start,
 	                         const NCamera::CCameraPlacement &_finish,
 	                         NTimer::STime _timeStart,
@@ -121,6 +128,7 @@ protected:
 
 public:
 	CSCamDFollowFlightMutator() {}
+
 	CSCamDFollowFlightMutator( const NCamera::CCameraPlacement &_start,
 	                           const NCamera::CCameraPlacement &_finish,
 	                           NTimer::STime _timeStart,
@@ -164,6 +172,7 @@ protected:
 
 public:
 	CSCamDRotateFlightMutator() {}
+
 	CSCamDRotateFlightMutator( const NCamera::CCameraPlacement &_start,
 	                           const NCamera::CCameraPlacement &_finish,
 	                           NTimer::STime _timeStart,
@@ -211,6 +220,7 @@ protected:
 
 public:
 	CSCamSplineMutator() {}
+
 	CSCamSplineMutator( const NCamera::CCameraPlacement &_start,
 	                    const NCamera::CCameraPlacement &_finish,
 	                    NTimer::STime _timeStart,
@@ -291,10 +301,15 @@ private:
 
 public:
 	CScriptMoviesMutatorHolder() {}
+
 	CScriptMoviesMutatorHolder( const NDb::SScriptMovies &rMoviesData, int _nMovieIndex, CFuncBase<STime> *_pTimer );
 
 	void Recalc();
-	bool NeedUpdate() { return pTimer != 0 ? pTimer.Refresh() : false; }
+
+	bool NeedUpdate()
+	{
+		return pTimer != 0 ? pTimer.Refresh() : false;
+	}
 
 	// controls
 	void JumpFirstKey();
@@ -302,21 +317,57 @@ public:
 	void StepNextKey();
 	void StepPrevKey();
 
-	void Play() { eMode = PM_PLAYING; }
-	void Pause() { eMode = PM_PAUSED; }
+	void Play()
+	{
+		eMode = PM_PLAYING;
+	}
+
+	void Pause()
+	{
+		eMode = PM_PAUSED;
+	}
+
 	void Stop();
 
-	bool IsPlaying() const { return ( eMode == PM_PLAYING ); }
-	bool IsPaused() const { return ( eMode == PM_PAUSED ); }
-	bool IsStopped() const { return ( eMode == PM_STOPPED ); }
-	bool IsFinished() const { return ( eMode == PM_FINISHED ); }
+	bool IsPlaying() const
+	{
+		return ( eMode == PM_PLAYING );
+	}
 
-	void SetSpeed( float _fSpeed ) { fSpeedCoeff = _fSpeed; }
-	void SetLoopMode( bool _bLoopPlayback ) { bLoopPlayback = _bLoopPlayback; }
+	bool IsPaused() const
+	{
+		return ( eMode == PM_PAUSED );
+	}
+
+	bool IsStopped() const
+	{
+		return ( eMode == PM_STOPPED );
+	}
+
+	bool IsFinished() const
+	{
+		return ( eMode == PM_FINISHED );
+	}
+
+	void SetSpeed( float _fSpeed )
+	{
+		fSpeedCoeff = _fSpeed;
+	}
+
+	void SetLoopMode( bool _bLoopPlayback )
+	{
+		bLoopPlayback = _bLoopPlayback;
+	}
+
 	void SetTime( float _fTime );
 
 	const NCamera::CCameraPlacement GetValue() const;
-	float GetTime() const { return fCurrTime; }
+
+	float GetTime() const
+	{
+		return fCurrTime;
+	}
+
 	float GetLength() const;
 	void SetCallbackFuncName( const std::string &_szCallbackFuncName );
 

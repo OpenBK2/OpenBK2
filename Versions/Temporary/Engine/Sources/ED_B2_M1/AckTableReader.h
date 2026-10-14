@@ -39,4 +39,4 @@ struct SAckEntry
 //     doubled quote inside those is one quote. Not backslash escapes.
 bool LoadAcksTable( std::vector<SAckEntry> *pRes, const std::string &szFileName );
 
-}
+} // namespace NAcks

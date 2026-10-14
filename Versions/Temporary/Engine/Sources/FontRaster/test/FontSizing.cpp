@@ -34,7 +34,7 @@ std::shared_ptr<std::vector<uint8_t>> ReadFont( const char *name )
 	return std::make_shared<std::vector<uint8_t>>( std::istreambuf_iterator<char>( file ),
 	                                               std::istreambuf_iterator<char>() );
 }
-}
+} // namespace
 
 TEST( FontSizing, KeepsLegacyCapHeightAndFitsEuropeanAccents )
 {
@@ -50,6 +50,7 @@ TEST( FontSizing, KeepsLegacyCapHeightAndFitsEuropeanAccents )
 		{ "Oswald-Variable.ttf", 700, 13.0 / 20 },
 		{ "LiberationSans-Regular.ttf", 400, 8.0 / 14 },
 	};
+
 	const auto chars = SizingCharacters();
 	for ( const auto &font : fonts )
 	{

@@ -26,6 +26,7 @@ public:
 	struct IPane
 	{
 		virtual ~IPane() {}
+
 		// A table's tree was shown: place the browser in the pane again.
 		virtual void LayoutContents() = 0;
 		// No table is chosen: the pane shows its empty face, not the browser.
@@ -73,10 +74,22 @@ public:
 	// CHID_MAIN, and keeps the chosen tables in the user data.
 	void Stop();
 
-	IObjectBrowser *GetBrowser() const { return pContents; }
+	IObjectBrowser *GetBrowser() const
+	{
+		return pContents;
+	}
+
 	// What answers CHID_OBJECT_STORAGE while this pane has the focus.
-	ICommandHandler *GetObjectStorage() { return ( pContents != 0 ) ? pContents->GetObjectStorage() : 0; }
-	int GetID() const { return nGDBBrowserID; }
+	ICommandHandler *GetObjectStorage()
+	{
+		return ( pContents != 0 ) ? pContents->GetObjectStorage() : 0;
+	}
+
+	int GetID() const
+	{
+		return nGDBBrowserID;
+	}
+
 	void EnableEdit( bool bEnable )
 	{
 		if ( pContents != 0 )

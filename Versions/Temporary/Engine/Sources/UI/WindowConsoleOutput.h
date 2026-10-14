@@ -12,6 +12,7 @@ struct ISound;
 class CWindowConsoleOutput : public CWindow, public IConsoleOutput
 {
 	OBJECT_BASIC_METHODS( CWindowConsoleOutput )
+
 	struct SColorString
 	{
 	public:
@@ -20,6 +21,7 @@ class CWindowConsoleOutput : public CWindow, public IConsoleOutput
 		CPtr<IML> pGfxText;
 
 		SColorString() : dwColor( 0xffffffff ) {}
+
 		SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth, IWindow *pFontScaleWindow );
 		int operator&( IBinSaver &saver );
 	};
@@ -34,7 +36,10 @@ class CWindowConsoleOutput : public CWindow, public IConsoleOutput
 	int nBeginString; //начальная отображаемая строка из списка строк
 										//0 считается самой свежей строчкой
 protected:
-	virtual NDb::SWindow *GetInstance() { return pInstance; }
+	virtual NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
 
 public:
 	CWindowConsoleOutput() : nBeginString( 0 ) {}
@@ -48,10 +53,12 @@ public:
 	void ToBegin();
 	void ToEnd();
 	void Init();
+
 	void ClearContent()
 	{
 		nBeginString = 0;
 		vectorOfStrings.clear();
 	}
+
 	void Segment( const int timeDiff );
 };

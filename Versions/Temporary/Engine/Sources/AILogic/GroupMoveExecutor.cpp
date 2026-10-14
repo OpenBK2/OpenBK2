@@ -44,10 +44,12 @@ inline float GetUnitPosition( const CCommonUnit *pUnit, const CVec2 &vStartPoint
 struct SUnitsSortByDirection
 {
 	CVec2 vStartPoint, vDirection;
+
 	SUnitsSortByDirection( const CVec2 &_vStartPoint, const CVec2 &_vDirection )
 			: vStartPoint( _vStartPoint ), vDirection( _vDirection )
 	{
 	}
+
 	bool operator()( const SUnitListInfo pUnitInfo1, const SUnitListInfo pUnitInfo2 ) const
 	{
 		const float fValue1 = GetUnitPosition( pUnitInfo1.pUnit, vStartPoint, vDirection );

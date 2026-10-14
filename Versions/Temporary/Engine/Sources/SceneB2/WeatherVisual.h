@@ -17,14 +17,14 @@ enum EWeatherState
 	EWS_UNKNOWN
 };
 struct SWeatherDesc;
-}
+} // namespace NDb
 
 namespace NGScene
 {
 class CCVec3;
 class CAnimLightInfo;
 class CAnimLight;
-};
+}; // namespace NGScene
 
 struct IFullScreenFader;
 
@@ -42,9 +42,14 @@ class CWeatherVisual : public CFuncBase<bool>
 
 	public:
 		CWeatherPart() : nNumPart( -1 ) {}
+
 		CWeatherPart( CWeatherVisual *_pWeather, int _nNumPart ) : pWeather( _pWeather ), nNumPart( _nNumPart ) {}
 
-		bool NeedUpdate() { return pWeather.Refresh(); }
+		bool NeedUpdate()
+		{
+			return pWeather.Refresh();
+		}
+
 		void Recalc();
 	};
 
@@ -86,6 +91,7 @@ class CWeatherVisual : public CFuncBase<bool>
 	void UpdateAmbientSound();
 
 	void Recalc();
+
 	bool NeedUpdate()
 	{
 		UpdateAmbientSound();
@@ -102,6 +108,7 @@ class CWeatherVisual : public CFuncBase<bool>
 		return ( ( fabs( vCameraAnchor - Camera()->GetAnchor() ) > FP_EPSILON ) ||
 		         ( fabs( vCameraEye - Camera()->GetPos() ) > FP_EPSILON ) );
 	}
+
 	void UpdateViewNormal()
 	{
 		vCameraAnchor = Camera()->GetAnchor();
@@ -120,6 +127,7 @@ class CWeatherVisual : public CFuncBase<bool>
 
 public:
 	CWeatherVisual() {}
+
 	CWeatherVisual( const NDb::SWeatherDesc *_pWeatherDesc,
 	                CFuncBase<STime> *_pTimer,
 	                IFullScreenFader *pScreenFader,
@@ -135,7 +143,10 @@ public:
 	void Update();
 
 public:
-	std::vector<NGScene::CObjectInfo::SData> *GetVisualData() { return &visualData; }
+	std::vector<NGScene::CObjectInfo::SData> *GetVisualData()
+	{
+		return &visualData;
+	}
 
 	int operator&( IBinSaver &saver );
 };

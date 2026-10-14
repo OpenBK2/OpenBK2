@@ -16,9 +16,18 @@ class CGrannyFileInfo : public CObjectBase
 
 public:
 	CGrannyFileInfo() : pData( 0 ), pFile( 0 ) {}
-	CGrannyFileInfo( granny_file *_pFile ) : pFile( _pFile ) { InitMe(); }
+
+	CGrannyFileInfo( granny_file *_pFile ) : pFile( _pFile )
+	{
+		InitMe();
+	}
+
 	void InitMe();
-	granny_file_info *GetData() { return pData; }
+
+	granny_file_info *GetData()
+	{
+		return pData;
+	}
 };
 
 class CGrannyBaseStuffLoader : public CHoldedPtrFuncBase<CGrannyFileInfo>
@@ -28,6 +37,7 @@ class CGrannyBaseStuffLoader : public CHoldedPtrFuncBase<CGrannyFileInfo>
 	ZDATA
 	CDGPtr<NGScene::CGrannyMemFileLoader> pGrannyFile;
 	std::string szResName;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pGrannyFile );
@@ -39,13 +49,19 @@ class CGrannyBaseStuffLoader : public CHoldedPtrFuncBase<CGrannyFileInfo>
 
 protected:
 	CGrannyBaseStuffLoader() {}
+
 	bool NeedUpdate()
 	{
 		TParent::NeedUpdate();
 		return pGrannyFile.Refresh();
 	}
+
 	void Recalc();
-	virtual bool IsDelayedLoad() const { return true; }
+
+	virtual bool IsDelayedLoad() const
+	{
+		return true;
+	}
 
 public:
 	CGrannyBaseStuffLoader( const std::string &_szResName ) : szResName( _szResName ) {}
@@ -67,7 +83,11 @@ public:
 class CGrannyAnimationLoader : public CGrannyBaseStuffLoader
 {
 	OBJECT_BASIC_METHODS( CGrannyAnimationLoader );
-	virtual bool IsDelayedLoad() const { return false; }
+
+	virtual bool IsDelayedLoad() const
+	{
+		return false;
+	}
 
 public:
 	CGrannyAnimationLoader() : CGrannyBaseStuffLoader( "Animations" ) {}
@@ -76,7 +96,11 @@ public:
 class CGrannyAIGeomLoader : public CGrannyBaseStuffLoader
 {
 	OBJECT_BASIC_METHODS( CGrannyAIGeomLoader );
-	virtual bool IsDelayedLoad() const { return false; }
+
+	virtual bool IsDelayedLoad() const
+	{
+		return false;
+	}
 
 public:
 	CGrannyAIGeomLoader() : CGrannyBaseStuffLoader( "AIGeometries" ) {}
@@ -85,7 +109,11 @@ public:
 class CGrannySkeletonLoader : public CGrannyBaseStuffLoader
 {
 	OBJECT_BASIC_METHODS( CGrannySkeletonLoader );
-	virtual bool IsDelayedLoad() const { return false; }
+
+	virtual bool IsDelayedLoad() const
+	{
+		return false;
+	}
 
 public:
 	CGrannySkeletonLoader() : CGrannyBaseStuffLoader( "Skeletons" ) {}

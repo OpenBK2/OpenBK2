@@ -20,6 +20,7 @@
 // ************************************************************************************************************************ //
 
 static bool s_bLogRandomCalls = false;
+
 namespace NRandom
 {
 SRandData rnd;
@@ -38,6 +39,7 @@ IRandomSeed *CreateRandomSeedCopy();
 void GetDebugState( SDebugState *pState );
 // cheap counter-only accessor for hot-path diagnostics
 uint64_t GetRandomCallsCounter();
+
 // get random value
 unsigned Random()
 {
@@ -134,11 +136,12 @@ void DumpRecords( FILE *f )
 }
 
 static SRandomFunc rndFunc;
+
 const SRandomFunc &RndFunc()
 {
 	return rndFunc;
 }
-};
+}; // namespace NRandom
 
 #define ind( mm, x ) ( *(uint32_t *)( (uint8_t *)( mm ) + ( ( x ) & ( ( RANDSIZ - 1 ) << 2 ) ) ) )
 
@@ -212,6 +215,7 @@ struct SRandomGenAutoMagic
 		NRandom::SetRandomSeed( pSeed );
 	}
 };
+
 SRandomGenAutoMagic automagic;
 
 void NRandom::SetRandomSeed( IRandomSeed *pSeed )
@@ -229,6 +233,7 @@ void NRandom::SetRandomSeed( IRandomSeed *pSeed )
 		NI_ASSERT( false, "Wrong class as a random seed" );
 	}
 }
+
 IRandomSeed *NRandom::CreateRandomSeedCopy()
 {
 	CRandomGenSeed *pSeed = new CRandomGenSeed();

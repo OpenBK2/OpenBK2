@@ -18,9 +18,14 @@ class CControlLobby : public CPacketProcessor
 
 public:
 	CControlLobby() {}
+
 	CControlLobby( class CClients *pClients, class CNet *pNet, const std::string &szCfgFile );
 
-	virtual bool Segment() { return true; }
+	virtual bool Segment()
+	{
+		return true;
+	}
+
 	void ReloadConfig();
 	//
 	bool ProcessNewClient( class CNetNewClient *pPacket );
@@ -33,5 +38,8 @@ public:
 	bool ProcessPingPacket( class CPingPacket *pPacket );
 	bool ProcessForgottenPasswordPacket( class CForgottenPasswordPacket *pPacket );
 
-	bool CanBePaused() { return false; }
+	bool CanBePaused()
+	{
+		return false;
+	}
 };

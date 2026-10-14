@@ -17,7 +17,10 @@ class CWindowProgressBar : public CWindow, public IProgressBar
 	bool bShowFirstElement;
 
 protected:
-	virtual NDb::SWindow *GetInstance() { return pInstance; }
+	virtual NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
 
 public:
 	int operator&( IBinSaver &saver );
@@ -28,7 +31,12 @@ public:
 
 	//IProgressBar{
 	virtual void SetPosition( const float fPos );
-	virtual float GetPosition() const { return pInstance->fProgress; }
+
+	virtual float GetPosition() const
+	{
+		return pInstance->fProgress;
+	}
+
 	void ShowFirstElement( bool bShow );
 	void SetForward( const NDb::SBackground *pForward );
 	//IProgressBar}
@@ -44,7 +52,10 @@ class CWindowMultiTextureProgressBar : public CWindow, public IMultiTextureProgr
 	CDBPtr<NDb::SWindowMultiTextureProgressBarShared> pShared;
 
 protected:
-	virtual NDb::SWindow *GetInstance() { return pInstance; }
+	virtual NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
 
 	int FindStateIndex( float fProgress );
 

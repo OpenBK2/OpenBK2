@@ -9,7 +9,8 @@ namespace NDb
 struct SMapMusic;
 struct SComposition;
 struct SMusicTrack;
-}
+} // namespace NDb
+
 namespace NMusicSystem
 {
 FSOUND_STREAM *OpenTrack( CDataStream *pTrack );
@@ -49,7 +50,10 @@ class CMusicSystem : public IMusicSystem
 	void UpdatePlayListChange();
 
 public:
-	CMusicSystem() { InitDefault(); }
+	CMusicSystem()
+	{
+		InitDefault();
+	}
 
 	bool IsPaused( EStreamType eType ) const;
 	void OnResetTimer();
@@ -63,11 +67,22 @@ public:
 	void ChangePlayList( int _nPlayList );
 	bool CanChangePlayList() const;
 	int GetPlayList() const;
-	int GetNPlayLists() const { return playlists.size(); }
 
-	void SetChannel( int nChannel, EStreamType eType ) { channels[eType] = nChannel; }
-	int GetChannel( EStreamType eType ) const { return channels[eType]; }
+	int GetNPlayLists() const
+	{
+		return playlists.size();
+	}
+
+	void SetChannel( int nChannel, EStreamType eType )
+	{
+		channels[eType] = nChannel;
+	}
+
+	int GetChannel( EStreamType eType ) const
+	{
+		return channels[eType];
+	}
 };
 
 CMusicSystem *GetMusicSystem();
-}
+} // namespace NMusicSystem

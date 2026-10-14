@@ -66,7 +66,11 @@ public:
 	           const int _cTestMode );
 	virtual bool Segment();
 	bool IsActive() const;
-	bool IsCancelled() const { return bCancelled; }
+
+	bool IsCancelled() const
+	{
+		return bCancelled;
+	}
 
 	// Processors
 	bool ProcessConnectServerResult( class CConnectServerPacket *pPacket );

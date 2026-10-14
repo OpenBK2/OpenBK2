@@ -16,12 +16,14 @@ struct SObjectSelectionPart
 				bBackupCreated( false )
 	{
 	}
+
 	SObjectSelectionPart( const SObjectSelectionPart &rObjectSelectionPart )
 			: vPosition( rObjectSelectionPart.vPosition ), fDirection( rObjectSelectionPart.fDirection ),
 				vBackupPosition( rObjectSelectionPart.vBackupPosition ),
 				fBackupDirection( rObjectSelectionPart.fBackupDirection ), bBackupCreated( rObjectSelectionPart.bBackupCreated )
 	{
 	}
+
 	SObjectSelectionPart &operator=( const SObjectSelectionPart &rObjectSelectionPart )
 	{
 		if ( &rObjectSelectionPart != this )
@@ -39,6 +41,7 @@ struct SObjectSelectionPart
 	void BackupPosition();
 	bool RollbackPosition();
 };
+
 typedef std::unordered_map<unsigned, SObjectSelectionPart> CObjectSelectionPartMap;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,6 +55,7 @@ struct SObjectSelection
 		ST_OUT = 3,
 		ST_COUNT = 4,
 	};
+
 	//
 	CObjectSelectionPartMap objectSelectionPartMap;
 	CVec3 vPosition;
@@ -64,12 +68,14 @@ struct SObjectSelection
 	ESelectionType eSelectionType;
 	CVec3 vPositionDifference;
 	float fDirectionDifference;
+
 	//
 	SObjectSelection()
 			: vPosition( VNULL3 ), fDirection( 0.0f ), eSelectionType( ST_UNKNOWN ), vBackupPosition( VNULL3 ),
 				fBackupDirection( 0.0f ), bBackupCreated( false ), vPositionDifference( VNULL3 ), fDirectionDifference( 0.0f )
 	{
 	}
+
 	SObjectSelection( const SObjectSelection &rObjectSelection )
 			: objectSelectionPartMap( rObjectSelection.objectSelectionPartMap ), vPosition( rObjectSelection.vPosition ),
 				fDirection( rObjectSelection.fDirection ), vBackupPosition( rObjectSelection.vBackupPosition ),
@@ -78,6 +84,7 @@ struct SObjectSelection
 				fDirectionDifference( rObjectSelection.fDirectionDifference )
 	{
 	}
+
 	SObjectSelection &operator=( const SObjectSelection &rObjectSelection )
 	{
 		if ( &rObjectSelection != this )
@@ -96,7 +103,10 @@ struct SObjectSelection
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	inline bool IsEmpty() { return objectSelectionPartMap.empty(); }
+	inline bool IsEmpty()
+	{
+		return objectSelectionPartMap.empty();
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	void ResetPickSelection();
@@ -108,4 +118,4 @@ struct SObjectSelection
 	//
 	void Trace() const;
 };
-};
+}; // namespace NMapInfoEditor

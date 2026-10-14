@@ -215,4 +215,4 @@ TFrame GetStepFrame( TCursor hCursor, int nStep )
 }
 
 #endif
-}
+} // namespace NWinCursor

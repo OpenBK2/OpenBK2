@@ -19,4 +19,4 @@ struct IObjManIterator : public CObjectBase
 	virtual const NTypeDef::STypeStructBase::SField *GetDesc() const = 0;
 };
 
-}
+} // namespace NDb

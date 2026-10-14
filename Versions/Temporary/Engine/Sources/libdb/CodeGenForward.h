@@ -19,6 +19,7 @@ class CForwardDefinition : public ICode
 
 public:
 	CForwardDefinition() {}
+
 	CForwardDefinition( NLang::CTypeNode *pTypeNode, const CNodes2TypeDefs &nodes2TypeDefs );
 
 	virtual void GenerateCode( SCodeStreams *pCode,
@@ -33,4 +34,4 @@ public:
 	}
 };
 
-}
+} // namespace NCodeGen

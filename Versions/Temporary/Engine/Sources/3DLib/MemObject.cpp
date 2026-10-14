@@ -12,7 +12,11 @@ struct SMemBuilderVertex
 {
 	CVec3 point;
 	CVec3 normal;
-	bool operator==( const SMemBuilderVertex &a ) const { return point == a.point && fabs2( normal - a.normal ) < 1e-6; }
+
+	bool operator==( const SMemBuilderVertex &a ) const
+	{
+		return point == a.point && fabs2( normal - a.normal ) < 1e-6;
+	}
 };
 
 struct SMemBuilderVertexHash
@@ -32,6 +36,7 @@ class CMemObjectBuilder
 
 public:
 	CMemObjectBuilder( CMemObject *_p ) : p( _p ) {}
+
 	uint16_t GetPointIndex( const CVec3 &point, const CVec3 &normal );
 	void AddSphereTriangle( const CVec3 &a, const CVec3 &b, const CVec3 &c, int nSubs );
 };
@@ -167,6 +172,7 @@ struct SMOTessPoint
 	{
 	}
 };
+
 typedef CVec2 TTriangle[3];
 
 void CMemObject::CreatePolygone( const std::vector<CVec2> &points, float fZ )

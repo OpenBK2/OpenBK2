@@ -9,7 +9,7 @@ namespace NDb
 struct SAnimB2;
 struct SAttachedModelVisObj;
 struct SModel;
-};
+}; // namespace NDb
 
 class CMOUnit : public IMOUnit
 {
@@ -19,6 +19,7 @@ class CMOUnit : public IMOUnit
 		CDBPtr<NDb::SWeaponRPGStats> pWeapon;
 		int nWeaponCount = 0;
 		int nAmmo = 0;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pWeapon );
@@ -27,12 +28,20 @@ class CMOUnit : public IMOUnit
 			return 0;
 		}
 	};
+
 	struct SAmmoCompare
 	{
 		const NDb::SWeaponRPGStats *pWeapon = nullptr;
 
-		SAmmoCompare( const NDb::SWeaponRPGStats *_pWeapon ) { pWeapon = _pWeapon; }
-		bool operator()( const SAmmo &ammo ) { return pWeapon == ammo.pWeapon; }
+		SAmmoCompare( const NDb::SWeaponRPGStats *_pWeapon )
+		{
+			pWeapon = _pWeapon;
+		}
+
+		bool operator()( const SAmmo &ammo )
+		{
+			return pWeapon == ammo.pWeapon;
+		}
 	};
 
 	CAbilityInfo abilityMap;
@@ -56,6 +65,7 @@ private:
 	{
 		return checked_cast<const NDb::SUnitBaseRPGStats *>( GetStats() );
 	}
+
 	void CopyAreas( const std::vector<SShootAreas> &newAreas );
 	bool AreasChanged( const std::vector<SShootAreas> &newAreas ) const;
 
@@ -87,7 +97,12 @@ protected:
 	virtual void ChangeModelToTransportable( const NDb::SModel *pNewModel, const NDb::ESeason eSeason );
 
 	void SetAnimation( const NDb::SAnimB2 *pAnimation, const NTimer::STime startTime );
-	int GetSupply() const { return nSupply; }
+
+	int GetSupply() const
+	{
+		return nSupply;
+	}
+
 	int GetWeaponAmmo( const NDb::SWeaponRPGStats *pWeapon ) const;
 	int GetWeaponAmmoTotal() const;
 	void FillIconsInfo( SSceneObjIconInfo &iconInfo );
@@ -111,8 +126,14 @@ public:
 	int GetAbilityTier( NDb::EUserAction eAction ) const;
 	const NDb::SUnitSpecialAblityDesc *GetAbilityDesc( NDb::EUserAction eAction ) const;
 	void GetAbilityInfo( CAbilityInfo &abilityList ) const;
+
 	void SetSquad( struct IMOSquad *_pSquad ) {}
-	virtual struct IMOSquad *GetSquad() const { return 0; }
+
+	virtual struct IMOSquad *GetSquad() const
+	{
+		return 0;
+	}
+
 	//
 	virtual bool NeedShowInterrior() const;
 
@@ -129,21 +150,39 @@ public:
 	                        IClientAckManager *pAckManager );
 	void AIUpdateShootAreas( const SAIShootAreaUpdate *pUpdate );
 
-	bool IsSelected() const { return ( GetSquad() ) ? ( GetSquad()->IsSelected() ) : ( CMOSelectable::IsSelected() ); }
+	bool IsSelected() const
+	{
+		return ( GetSquad() ) ? ( GetSquad()->IsSelected() ) : ( CMOSelectable::IsSelected() );
+	}
+
 	void GetActions( CUserActions *pActions, EActionsType eActions ) const;
 	void GetPossibleActions( CUserActions *pActions ) const;
 	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;
 
 	void AIUpdateModifyEntranceState( bool bOpen );
-	bool IsOpen() const { return bOpen; }
+
+	bool IsOpen() const
+	{
+		return bOpen;
+	}
 
 	void SetUnitLevel( int nLevel, bool bShowUnitRank );
 	void SetNewAbility( bool bNewAbility );
 
-	NDb::EReinforcementType GetReinfType() const { return eReinfType; }
-	void SetReinfType( NDb::EReinforcementType eType ) { eReinfType = eType; }
+	NDb::EReinforcementType GetReinfType() const
+	{
+		return eReinfType;
+	}
 
-	virtual const CVec3 GetFirePoint( const int nPlatform, const int nGun ) const { return VNULL3; }
+	void SetReinfType( NDb::EReinforcementType eType )
+	{
+		eReinfType = eType;
+	}
+
+	virtual const CVec3 GetFirePoint( const int nPlatform, const int nGun ) const
+	{
+		return VNULL3;
+	}
 
 	void SetPointer( const NDb::SModel *pModel );
 	void ClearPointer();

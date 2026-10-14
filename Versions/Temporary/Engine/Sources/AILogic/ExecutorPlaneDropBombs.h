@@ -17,16 +17,29 @@ protected:
 	void SwitchingOffStart();
 	void SwitchOnEnd();
 	void SwitchOnStart( const class CAICommand *pCommand );
-	bool ActivateDuringDisable() { return false; }
+
+	bool ActivateDuringDisable()
+	{
+		return false;
+	}
+
 	CCommonUnit *GetUnit();
 
 public:
 	CExecutorPlaneDropBombsObject( CAIUnit *_pUnit );
+
 	CExecutorPlaneDropBombsObject() {}
+
 	int Segment();
 	void RegisterOnEvents( IExecutorContainer *pContainer );
-	bool IsExecutorValid() const { return IsExecutorValidInternal(); }
+
+	bool IsExecutorValid() const
+	{
+		return IsExecutorValidInternal();
+	}
+
 	bool NotifyEvent( const CExecutorEvent &event );
+
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, static_cast<CExecutorUnitBase *>( this ) );

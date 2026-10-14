@@ -34,6 +34,7 @@
 #define MODEL_EP_ALL 0xFFFFFFFF
 
 class CModelEditor;
+
 class CModelState : public CDefaultInputState, public ICommandHandler
 {
 	friend class CModelEditor;
@@ -52,11 +53,13 @@ public:
 			AT_CIRCLE = 0,
 			AT_LINE = 1,
 		};
+
 		enum EAIGeometryType
 		{
 			AIGT_TRANSPARENT = 0,
 			AIGT_SOLID = 1,
 		};
+
 		//
 		unsigned nFlags;
 		//

@@ -63,6 +63,7 @@ enum EUnitStateNames
 	EUSN_PLANE_PATROL = 58,
 	EUSN_PLANE_SUICIDE = 59, // самолет совершает самоубийство (для V-2)
 };
+
 /*
 
 inline bool IsRestState( const EUnitStateNames eStateName )
@@ -90,8 +91,17 @@ struct IUnitState : public CAIObjectBase
 {
 public:
 	virtual void Segment() = 0;
-	virtual EUnitStateNames GetName() { return EUSN_ERROR; }
-	virtual bool IsRestState() const { return false; }
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_ERROR;
+	}
+
+	virtual bool IsRestState() const
+	{
+		return false;
+	}
+
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) = 0;
 
 	// state, в котором мы целенаправленно бежим кого-то убивать

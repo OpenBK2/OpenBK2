@@ -18,7 +18,7 @@ namespace NGameX
 void PostStorageInitialize();
 void InitDataDependentSingletons();
 void UnInitDataDependentSingletons();
-}
+} // namespace NGameX
 
 namespace NMOD
 {
@@ -26,6 +26,7 @@ namespace NMOD
 class CICMODPreShutdown : public IInterfaceCommand
 {
 	OBJECT_BASIC_METHODS( CICMODPreShutdown );
+
 	//
 	void Exec()
 	{
@@ -58,6 +59,7 @@ class CICMODPostSetup : public IInterfaceCommand
 	//
 public:
 	CICMODPostSetup() : eMode( NDb::DATABASE_MODE_GAME ) {}
+
 	void Exec()
 	{
 		NDb::OpenDatabase( NVFS::GetMainVFS(), NVFS::GetMainFileCreator(), eMode );
@@ -78,6 +80,7 @@ public:
 			pSoundScene->ClearSounds();
 		}
 	}
+
 	void Configure( const char *pszConfig )
 	{
 		if ( pszConfig != 0 )
@@ -94,7 +97,7 @@ public:
 	}
 };
 
-}
+} // namespace NMOD
 
 using namespace NMOD;
 REGISTER_SAVELOAD_CLASS( GAMEX, MOD_PRE_SHUTDOWN, CICMODPreShutdown );

@@ -10,8 +10,10 @@ namespace NAI
 struct SEdge
 {
 	uint16_t wStart, wFinish;
+
 	//
 	SEdge() {}
+
 	SEdge( uint16_t _wS, uint16_t _wF ) : wStart( _wS ), wFinish( _wF ) {}
 };
 
@@ -23,13 +25,22 @@ public:
 	std::vector<SEdge> edges;
 	std::vector<STriangle> mesh;
 	bool bClosed;
+
 	//
-	CEdgesInfo() { bClosed = true; }
+	CEdgesInfo()
+	{
+		bClosed = true;
+	}
+
 	void BuildTriangleList( std::vector<STriangle> *pRes ) const;
 	void BuildClosedMeshes( std::vector<std::vector<STriangle>> *pMeshes ) const;
 	void GenerateEdgeList( const std::vector<STriangle> &tris, const std::vector<CVec3> &pts );
 	bool IsClosed() const; // checks geometry
-	bool IsEmpty() const { return mesh.empty(); }
+
+	bool IsEmpty() const
+	{
+		return mesh.empty();
+	}
 };
 
 struct SJunction
@@ -38,6 +49,7 @@ struct SJunction
 	bool bGround;
 
 	SJunction() {}
+
 	SJunction( const CVec3 &_pt, bool _bGr = false ) : pt( _pt ), bGround( _bGr ) {}
 };
 
@@ -74,13 +86,18 @@ public:
 	               bool _bClosed = true );
 	//const vector<CPtr<CPrecalcSpheres> > &spheres = vector<CPtr<CPrecalcSpheres> >() );
 	void CalcBound();
+
 	//void PrecalcCollideInfo( bool bTerrain = false );
 	//void SetCollideInfo( const CPrecalcPieces &precalc );
-	bool HasPiece( int nID ) const { return pieces.find( nID ) != pieces.end(); }
+	bool HasPiece( int nID ) const
+	{
+		return pieces.find( nID ) != pieces.end();
+	}
 };
 
 //! structure describing object for different tracers
 struct SSourceInfo;
+
 struct SConvexHull
 {
 	const std::vector<CVec3> &points;
@@ -88,6 +105,7 @@ struct SConvexHull
 	const SHMatrix &trans;
 	const SSourceInfo &src;
 	int nUserID;
+
 	//const vector<CPtr<CBSPTree> > trees;
 	//const vector<CPtr<CPrecalcSpheres> > &precalc;
 	//
@@ -99,6 +117,7 @@ struct SConvexHull
 			: points( _points ), tris( _tris ), trans( _trans ), src( _src ), nUserID( _nUserID )
 	{
 	} //, precalc(_precalc) {}
+
 	// Present so the struct satisfies the serializable shape, never meant to run:
 	// it holds references and cannot be rebuilt from a stream. The ASSERT says
 	// so and compiles to nothing, because _DO_ASSERT_SLOW is not set in this
@@ -117,4 +136,4 @@ struct SHullSet
 	std::vector<SConvexHull> objects, terrain;
 };
 
-}
+} // namespace NAI

@@ -17,6 +17,7 @@ namespace NGScene
 {
 
 std::vector<CPtr<IPrecache>> precacheUpdateList;
+
 void LoadPrecached()
 {
 	for ( int k = 0; k < precacheUpdateList.size(); ++k )
@@ -90,12 +91,15 @@ struct SDoesExistKey
 	SResKey<int> key;
 
 	SDoesExistKey() {}
+
 	SDoesExistKey( const char *_pszRes, const SResKey<int> &_k ) : szRes( _pszRes ), key( _k ) {}
 };
+
 inline bool operator==( const SDoesExistKey &a, const SDoesExistKey &b )
 {
 	return a.szRes == b.szRes && a.key == b.key;
 }
+
 struct SDoesExistKeyHash
 {
 	int operator()( const SDoesExistKey &a ) const
@@ -103,8 +107,10 @@ struct SDoesExistKeyHash
 		return std::hash<std::string>()( a.szRes ) ^ std::hash<SResKey<int>>()( a.key );
 	}
 };
+
 typedef std::unordered_map<SDoesExistKey, bool, SDoesExistKeyHash> TDoesExistHash;
 static TDoesExistHash deh;
+
 bool CResourceFileOpener::DoesExist( const char *pszResName, const SResKey<int> &key )
 {
 	SDoesExistKey k( pszResName, key );
@@ -144,6 +150,7 @@ static std::mutex readResource;
 // all. Atomic, because the two sides cannot be brought under one lock without
 // holding readResource across a file read.
 static std::atomic<bool> bIsFileReading{ false };
+
 void CFileRequest::Read()
 {
 	// Relaxed: this is the only writer of bIsReady, so the guard only has to see
@@ -293,4 +300,4 @@ struct SKillLoaderThread
 		loaderThread.join();
 	}
 } killLoaderThread;
-}
+} // namespace NGScene

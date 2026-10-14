@@ -107,4 +107,4 @@ bool CopyAB( const CArray2D<uint32_t> &src,
 	return true;
 }
 
-}
+} // namespace NImage

@@ -165,11 +165,13 @@ class CICMPGameRoom : public CInterfaceCommandBase<CInterfaceMPGameRoom>
 	//
 	ZDATA
 	std::string str;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &str );
 		return 0;
 	}
+
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
 

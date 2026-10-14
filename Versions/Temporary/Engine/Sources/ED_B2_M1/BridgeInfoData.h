@@ -36,6 +36,7 @@ struct SBridgeInfo : public SObjectInfo
 public:
 	//
 	SBridgeInfo() : nBridgeID( INVALID_NODE_ID ) {}
+
 	static int CreateCenterPoints( CBridgeCenterPointList *pResultList,
 	                               CVec3 *pvDirection,
 	                               const CVec3 &rvStart,
@@ -47,20 +48,47 @@ public:
 	static const NDb::SModel *GetModel( const NDb::SBridgeRPGStats *pBridgeRPGStats, EType type, NDb::ESeason eSeason );
 
 	// SObjectInfo
-	SObjectInfo *CallDuplicate() const { return Duplicate(); }
-	EObjectInfoType GetObjectInfoType() { return OIT_BRIDGE; }
-	bool NeedMakeOrientation() { return false; }
-	bool KeepZeroHeight() { return false; }
-	bool KeepCommonHeight() { return true; }
-	bool NeedProcessEditParameters() { return true; }
+	SObjectInfo *CallDuplicate() const
+	{
+		return Duplicate();
+	}
+
+	EObjectInfoType GetObjectInfoType()
+	{
+		return OIT_BRIDGE;
+	}
+
+	bool NeedMakeOrientation()
+	{
+		return false;
+	}
+
+	bool KeepZeroHeight()
+	{
+		return false;
+	}
+
+	bool KeepCommonHeight()
+	{
+		return true;
+	}
+
+	bool NeedProcessEditParameters()
+	{
+		return true;
+	}
+
 	//
 	bool Load( const SObjectLoadInfo *pObjectLoadInfo, IEditorScene *pEditorScene, IManipulator *pManipulator );
 	bool Create( const SObjectCreateInfo *pObjectCreateInfo,
 	             IEditorScene *pEditorScene,
 	             CObjectBaseController *pObjectController,
 	             IManipulator *pManipulator );
+
 	void FillMaskManipulator( class CMaskManipulator *pMaskManipulator ) {}
+
 	void GetMask( std::string *pszMask ) {}
+
 	bool RemoveFromDB( CObjectBaseController *pObjectController, IManipulator *pManipulator );
 	void Remove( bool bUpdateScene,
 	             IEditorScene *pEditorScene,
@@ -73,4 +101,4 @@ public:
 	                CObjectBaseController *pObjectController,
 	                IManipulator *pManipulator );
 };
-};
+}; // namespace NMapInfoEditor

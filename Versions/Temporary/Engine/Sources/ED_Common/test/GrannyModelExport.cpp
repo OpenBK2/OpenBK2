@@ -36,15 +36,18 @@ TEST( GrannyModelExport, ExportsRepositoryModelsInAllTextureModesWithoutChanging
 	EXPECT_EQ( GetCommandByAction( NDb::USER_ACTION_MOVE ), ACTION_COMMAND_MOVE_TO );
 	CObj<NVFS::IVFS> saved = NVFS::GetMainVFS();
 	NVFS::SetMainVFS( NVFS::CreateWinVFS( dataRoot.generic_u8string() + "/" ) );
+
 	struct SCleanup
 	{
 		NVFS::IVFS *saved;
+
 		~SCleanup()
 		{
 			NDb::CloseDatabase();
 			NVFS::SetMainVFS( saved );
 		}
 	} cleanup{ saved };
+
 	ASSERT_TRUE( NDb::OpenDatabase( NVFS::GetMainVFS(), nullptr, NDb::DATABASE_MODE_EDITOR ) );
 	std::filesystem::create_directories( GRANNY_EXPORT_OUTPUT_DIR );
 	int number = 0;

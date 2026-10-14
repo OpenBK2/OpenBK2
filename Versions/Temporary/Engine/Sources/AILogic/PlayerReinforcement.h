@@ -18,13 +18,16 @@ class CPlayerReinforcement
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		NDb::EReinforcementType eType = {};
 		CVec2 vPoint;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &eType );
 			f.Add( 3, &vPoint );
 			return 0;
 		}
+
 		SCallReinforcementCommand() {}
+
 		SCallReinforcementCommand( NDb::EReinforcementType _eType, const CVec2 &_vPoint )
 				: eType( _eType ), vPoint( _vPoint )
 		{

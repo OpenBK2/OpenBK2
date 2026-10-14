@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "aiTrace.h"
+
 namespace NAI
 {
 
@@ -77,6 +78,7 @@ static CVec3 GetPlanePoint( const CVec3 &a, float f1, const CVec3 &a2, float f2 
 {
 	return ( a2 * f1 - a * f2 ) / ( f1 - f2 );
 }
+
 SInterval::SCrossPoint CTracer::CalcCross( const SRefTriangle &t )
 {
 	const CVec3 &ptOnPlane = t.a;
@@ -125,7 +127,9 @@ inline float Dot( const CVec3 &a, const CVec4 &b )
 {
 	return a.x * b.x + a.y * b.y + a.z * b.z + b.w;
 }
+
 static float fTraceSign[] = { 1, -1 };
+
 void CTracer::TraceEntity( const SConvexHull &e,
                            std::vector<SInterval::SCrossPoint> *pEnter,
                            std::vector<SInterval::SCrossPoint> *pExit )
@@ -205,4 +209,4 @@ void CTracer::TraceEntity( const std::vector<SConvexHull> &hulls, bool bTerrain 
 	}
 }
 
-}
+} // namespace NAI

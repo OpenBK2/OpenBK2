@@ -137,7 +137,11 @@ class CPlayVisitor : public ISFXVisitor
 	//
 public:
 	//
-	void Init( class CSoundEngine *_pSFX ) { pSFX = _pSFX; }
+	void Init( class CSoundEngine *_pSFX )
+	{
+		pSFX = _pSFX;
+	}
+
 	//
 	int VisitSound2D( CSFXSound *pSound )
 	{
@@ -156,6 +160,7 @@ public:
 		pSound->Update( pSFX );
 		return nChannel;
 	}
+
 	int VisitSound3D( CSFXSound *pSound )
 	{
 		FSOUND_SAMPLE *sample = pSound->GetSample()->GetInternalContainer();

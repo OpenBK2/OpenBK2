@@ -36,12 +36,14 @@ class CRPGStatsAutomagic : public IRPGStatsAutomagic
 	//
 public:
 	CRPGStatsAutomagic();
+
 	//
 	virtual const char *ToStr( const int nVal ) const
 	{
 		CI2SMap::const_iterator it = i2s.find( nVal );
 		return it != i2s.end() ? it->second.c_str() : szUnknown.c_str();
 	}
+
 	virtual const int ToInt( const char *pszVal ) const
 	{
 		CS2IMap::const_iterator it = s2i.find( pszVal );

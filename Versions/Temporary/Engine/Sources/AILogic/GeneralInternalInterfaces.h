@@ -17,6 +17,7 @@ enum ETaskName
 	ETN_RESUPPLYCELL,
 	ETN_SWARM_TO_POINT,
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // for defining type of force type
 enum EForceType
@@ -38,23 +39,32 @@ enum EForceType
 	FT_TRUCK_REPAIR_BUILDING, //truck that is able to repair buildings
 	FT_TRUCK_RESUPPLY,
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // через этот интерфейс получают врагов
 struct IEnemyEnumerator
 {
 	// возращает, нужно ли ещё предлагать врагов
 	virtual bool EnumEnemy( class CAIUnit *pEnemy ) = 0;
-	virtual bool EnumResistances( const struct SResistance &resistance ) { return false; }
+
+	virtual bool EnumResistances( const struct SResistance &resistance )
+	{
+		return false;
+	}
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // через этот - выдают
 struct IEnemyContainer
 {
 	virtual void GiveEnemies( IEnemyEnumerator *pEnumerator ) = 0;
+
 	virtual void GiveResistances( IEnemyEnumerator *pEnmumerator ) {}
+
 	virtual void AddResistance( const CVec2 &vCenter, const float fRadius ) = 0;
 	virtual void RemoveResistance( const CVec2 &vCenter ) = 0;
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ****
 // common interface for validating and sorting workers
@@ -68,11 +78,18 @@ struct IWorkerEnumerator
 	virtual bool EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const = 0;
 
 	// if enumerator needs only best units of this kind
-	virtual int NeedNBest( const enum EForceType eType ) const { return 0; }
+	virtual int NeedNBest( const enum EForceType eType ) const
+	{
+		return 0;
+	}
 
 	// return presize avalability of worker for enumerator
-	virtual float EvaluateWorkerRating( CCommonUnit *pUnit, const enum EForceType eType ) const { return 1.0f; }
+	virtual float EvaluateWorkerRating( CCommonUnit *pUnit, const enum EForceType eType ) const
+	{
+		return 1.0f;
+	}
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ****
 // common interface for workers container
@@ -88,7 +105,11 @@ struct ICommander : public CAIObjectBase
 	virtual void Segment() = 0;
 
 	// дать наводку артиллерии или авиации or ask for resupply(repair,heal)(отменить существуюшую)
-	virtual int /*request ID*/ RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType ) { return 0; }
+	virtual int /*request ID*/ RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType )
+	{
+		return 0;
+	}
+
 	virtual void CancelRequest( int nRequestID, enum EForceType eType ) {}
 };
 
@@ -116,12 +137,18 @@ struct IGeneralTask : public CAIObjectBase
 	virtual void CancelTask( ICommander *pManager ) = 0;
 
 	virtual void Segment() = 0;
-	virtual int GetWorkerCount() { return 0; }
+
+	virtual int GetWorkerCount()
+	{
+		return 0;
+	}
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct IGeneralDelayedTask : public CAIObjectBase
 {
 	virtual bool IsTimeToRun() const = 0;
 	virtual void Run() = 0;
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

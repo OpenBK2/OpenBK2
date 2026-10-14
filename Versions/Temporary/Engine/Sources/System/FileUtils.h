@@ -32,20 +32,39 @@ class SYSTEM_EXPORT CFileIterator
 
 public:
 	CFileIterator() {}
-	CFileIterator( const std::string &szFullMask ) { Open( szFullMask ); }
+
+	CFileIterator( const std::string &szFullMask )
+	{
+		Open( szFullMask );
+	}
+
 	// file enumeration
 	const CFileIterator &Next();
-	bool IsEnd() const { return it == std::filesystem::directory_iterator(); }
-	const CFileIterator &operator++() { return Next(); }
+
+	bool IsEnd() const
+	{
+		return it == std::filesystem::directory_iterator();
+	}
+
+	const CFileIterator &operator++()
+	{
+		return Next();
+	}
+
 	bool IsDirectory() const
 	{
 		std::error_code ec;
 		return it->is_directory( ec );
 	}
+
 	// directory_iterator never yields '.' or '..', so the callers that skip them are
 	// asking something that can no longer be true. Kept so those tests still read
 	// correctly rather than being deleted out from under them.
-	bool IsDots() const { return false; }
+	bool IsDots() const
+	{
+		return false;
+	}
+
 	// file time attributes
 	std::time_t GetLastWriteTime() const
 	{
@@ -53,6 +72,7 @@ public:
 		const std::time_t t = boost::filesystem::last_write_time( GetFullName(), ec );
 		return ec ? 0 : t;
 	}
+
 	// file length. still an int, and so still truncating past 2 GB, as the
 	// nFileSizeLow it replaces did
 	int GetLength() const
@@ -60,10 +80,22 @@ public:
 		std::error_code ec;
 		return static_cast<int>( it->file_size( ec ) );
 	}
+
 	// file name (title + ext), full path (absolute path + name)
-	std::string GetFileName() const { return it->path().filename().string(); }
-	std::string GetFullName() const { return it->path().string(); }
-	const std::string &GetBaseMask() const { return szMask; }
+	std::string GetFileName() const
+	{
+		return it->path().filename().string();
+	}
+
+	std::string GetFullName() const
+	{
+		return it->path().string();
+	}
+
+	const std::string &GetBaseMask() const
+	{
+		return szMask;
+	}
 };
 
 // enumerate all files by mask.
@@ -206,13 +238,21 @@ SYSTEM_EXPORT std::string GetCurrDir();
 SYSTEM_EXPORT std::string GetExecutablePath();
 SYSTEM_EXPORT std::string GetNormalizedCurrDir();
 SYSTEM_EXPORT void SetCurrDir( const std::string &szDir );
+
 class CCurrDirHolder
 {
 	std::string szDir;
 
 public:
-	CCurrDirHolder() { szDir = GetCurrDir(); }
-	~CCurrDirHolder() { SetCurrDir( szDir ); }
+	CCurrDirHolder()
+	{
+		szDir = GetCurrDir();
+	}
+
+	~CCurrDirHolder()
+	{
+		SetCurrDir( szDir );
+	}
 };
 
-}
+} // namespace NFile

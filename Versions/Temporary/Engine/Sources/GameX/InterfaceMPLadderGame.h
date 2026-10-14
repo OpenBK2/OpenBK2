@@ -15,6 +15,7 @@ class CInterfaceMPLadderGame : public CInterfaceScreenBase, public IProgrammedRe
 		CPtr<IButton> pSwitch;
 		bool bAllowed;
 		bool bSelected;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pMapDesc );
@@ -25,8 +26,10 @@ class CInterfaceMPLadderGame : public CInterfaceScreenBase, public IProgrammedRe
 		}
 
 		CLadderMapData() {}
+
 		CLadderMapData( const NDb::SMultiplayerMap *_pDesc ) : pMapDesc( _pDesc ), bAllowed( true ), bSelected( true ) {};
 	};
+
 	//--------------
 	class CItemLadderMapListViewer : public IDataViewer
 	{
@@ -34,6 +37,7 @@ class CInterfaceMPLadderGame : public CInterfaceScreenBase, public IProgrammedRe
 	public:
 		void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
 	};
+
 	//--------------
 
 	typedef std::vector<CPtr<CLadderMapData>> CMPMaps;
@@ -49,6 +53,7 @@ class CInterfaceMPLadderGame : public CInterfaceScreenBase, public IProgrammedRe
 	CPtr<IWindow> pPicture;
 	CPtr<IButton> pStartButton;
 	CPtr<IWindow> pChecksumPWL;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );

@@ -29,6 +29,7 @@ namespace NDb
 {
 
 static std::string szLastSaveError;
+
 const std::string &GetLastSaveError()
 {
 	return szLastSaveError;
@@ -48,6 +49,7 @@ struct SEditorDbForceLoadGuard
 	static int s_nForceLoadCounter;
 	static bool s_bForceLoad;
 	bool bOpened;
+
 	SEditorDbForceLoadGuard()
 	{
 		NI_ASSERT( s_nForceLoadCounter >= 0, "Invalid force load counter!" );
@@ -56,11 +58,13 @@ struct SEditorDbForceLoadGuard
 		++s_nForceLoadCounter;
 		bOpened = true;
 	}
+
 	~SEditorDbForceLoadGuard()
 	{
 		Close();
 		NI_ASSERT( s_nForceLoadCounter >= 0, "Invalid force load counter!" );
 	}
+
 	// special for PostLoad call
 	void Close()
 	{
@@ -70,22 +74,33 @@ struct SEditorDbForceLoadGuard
 		}
 		bOpened = false;
 	}
+
 	//
-	static bool IsLoading() { return s_nForceLoadCounter > 0; }
-	static bool CanLoad() { return s_bForceLoad; }
+	static bool IsLoading()
+	{
+		return s_nForceLoadCounter > 0;
+	}
+
+	static bool CanLoad()
+	{
+		return s_bForceLoad;
+	}
 };
+
 int SEditorDbForceLoadGuard::s_nForceLoadCounter = 0;
 bool SEditorDbForceLoadGuard::s_bForceLoad = true;
 
 class CEditorDatabase : public CBasicDatabase
 {
 	OBJECT_NOCOPY_METHODS( CEditorDatabase );
+
 	//
 	struct SElement
 	{
 		STypeObjectHeader typeHeader;
 		CObj<NBind::CBindStruct> pBind;
 	};
+
 	typedef std::unordered_map<CDBID, SElement> CElementsMap;
 	CElementsMap elementsMap; // objects map
 	bool bIndexChanged;       // index was changed during elements manipulation
@@ -115,28 +130,45 @@ class CEditorDatabase : public CBasicDatabase
 	void CollectReferencingObjects( std::vector<std::vector<CDBID>> *pRes, const std::vector<CDBID> &targets );
 	//
 	bool LoadTypesMap();
+
 	//
-	void SetIndexChanged() { bIndexChanged = true; }
-	void ResetIndexChanged() { bIndexChanged = false; }
-	bool IsIndexChanged() const { return bIndexChanged; }
+	void SetIndexChanged()
+	{
+		bIndexChanged = true;
+	}
+
+	void ResetIndexChanged()
+	{
+		bIndexChanged = false;
+	}
+
+	bool IsIndexChanged() const
+	{
+		return bIndexChanged;
+	}
+
 	void RegisterObject( const SFullTypeHeader &hdr );
 
 public:
 	CEditorDatabase() : bIndexChanged( false ) {}
+
 	//
 	bool OpenDatabase( NVFS::IVFS *pVFS, NVFS::IFileCreator *pFileCreator );
 	bool RegisterResourceFile( const std::string &szFileName );
 	virtual bool IsFileRegistered( const std::string &szFileName );
+
 	void SetLoadDepth( int nLoadDepth ){ NI_ASSERT( false, "this functionality are for game only" ) } //
 	IObjMan *GetManipulator( const CDBID &dbid )
 	{
 		return GetObjManInternal( dbid );
 	}
+
 	CResource *GetObject( const CDBID &dbid )
 	{
 		IObjMan *pObjMan = GetObjManInternal( dbid );
 		return pObjMan == 0 ? 0 : pObjMan->GetObject();
 	}
+
 	IObjMan *CreateNewObject( const std::string &szClassTypeName );
 	bool AddNewObject( const std::string &szFilePath, const CDBID &dbid, IObjMan *pObjMan );
 	bool RemoveObject( const CDBID &dbid );
@@ -152,6 +184,7 @@ public:
 	bool GetClassesList( std::vector<NTypeDef::STypeClass *> *pRes );
 	bool GetObjectsList( std::vector<CDBID> *pRes, const std::string &szClassTypeName );
 	bool GetObjectsList( std::vector<CDBID> *pRes, const int nClassTypeID );
+
 	//
 	std::string GetClassTypeName( const CDBID &_dbid )
 	{
@@ -165,6 +198,7 @@ public:
 		}
 	}
 };
+
 CBasicDatabase *CreateEditorDatabase()
 {
 	return new CEditorDatabase();
@@ -283,6 +317,7 @@ bool CEditorDatabase::LoadTypesMap()
 		const char *name;
 		int chunk;
 	};
+
 	const SModelField modelFields[] = { { "Geometry", "ModelFileRef", 12 },
 	                                    { "Geometry", "RootMesh", 13 },
 	                                    { "AIGeometry", "ModelFileRef", 8 },
@@ -998,4 +1033,4 @@ bool CEditorDatabase::GetObjectsList( std::vector<CDBID> *pRes, const std::strin
 	return !pRes->empty();
 }
 
-}
+} // namespace NDb

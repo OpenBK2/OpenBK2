@@ -12,17 +12,20 @@ namespace NMusicSystem
 class CPause : public IPlayListElement
 {
 	OBJECT_BASIC_METHODS( CPause )
+
 	enum EPauseState
 	{
 		EPS_NOT_STARTED,
 		EPS_ACTIVE,
 		EPS_FINISHED,
 	};
+
 	ZDATA
 	NTimer::STime timeToPause;
 	NTimer::STime timeLastCall;
 	NTimer::STime timePaused;
 	EPauseState eState;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &timeToPause );
@@ -34,13 +37,15 @@ class CPause : public IPlayListElement
 
 public:
 	CPause() {}
+
 	CPause( const NDb::SPlayPause &_Pause );
 
 	void Segment();
 	bool IsFinished() const;
+
 	void Stop() {}
 
 	void Play();
 	void OnResetTimer();
 };
-}
+} // namespace NMusicSystem

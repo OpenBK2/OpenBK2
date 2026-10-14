@@ -84,4 +84,4 @@ START_REGISTER(GfxEffects)
 REGISTER_VAR_EX( "gfx_simple_particles", NGlobal::VarBoolHandler, &bSimpleParticles, true, STORAGE_USER )
 FINISH_REGISTER
 */
-}
+} // namespace NGfx

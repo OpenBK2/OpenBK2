@@ -109,7 +109,7 @@ inline void __cdecl PureCall()
 	std::abort();
 }
 #endif
-}
+} // namespace NCrashpadDetail
 
 // Call once on the entry thread, before configuration loading or worker startup.
 // Reporting failure is nonfatal, but must be visible in startup diagnostics.

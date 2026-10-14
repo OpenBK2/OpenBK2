@@ -60,7 +60,7 @@ namespace
 		return nResult;
 	}
 
-}
+} // namespace
 
 bool Rasterise( const SOptions &options,
                 const std::vector<uint32_t> &codePoints,
@@ -196,4 +196,4 @@ bool Rasterise( const SOptions &options,
 	return true;
 }
 
-}
+} // namespace NFontRaster

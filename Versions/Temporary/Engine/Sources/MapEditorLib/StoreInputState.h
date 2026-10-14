@@ -17,6 +17,7 @@ public:
 
 		IST_COUNT = 4,
 	};
+
 	//
 	enum EInputStateEvent
 	{
@@ -44,6 +45,7 @@ public:
 
 		ISE_COUNT = 15,
 	};
+
 	//
 	struct SInputStateEventInfo
 	{
@@ -62,6 +64,7 @@ public:
 					nRepCnt( 0 )
 		{
 		}
+
 		SInputStateEventInfo( const SInputStateEventInfo &rInputStateEventInfo )
 				: nType( rInputStateEventInfo.nType ), nEventType( rInputStateEventInfo.nEventType ),
 					nFlags( rInputStateEventInfo.nFlags ), zDelta( rInputStateEventInfo.zDelta ),
@@ -69,6 +72,7 @@ public:
 					nRepCnt( rInputStateEventInfo.nRepCnt )
 		{
 		}
+
 		SInputStateEventInfo &operator=( const SInputStateEventInfo &rInputStateEventInfo )
 		{
 			if ( &rInputStateEventInfo != this )

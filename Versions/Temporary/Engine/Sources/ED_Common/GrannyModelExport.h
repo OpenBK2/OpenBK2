@@ -3,10 +3,12 @@
 #include <string>
 
 struct IManipulator;
+
 namespace NDb
 {
 struct SModel;
 }
+
 namespace NEditorGltf
 {
 struct SGrannyExportOptions
@@ -27,4 +29,4 @@ ED_COMMON_EXPORT bool ExportGrannyModel( const NDb::SModel *model,
                                          const std::string &destination,
                                          const SGrannyExportOptions &options,
                                          std::string *error );
-}
+} // namespace NEditorGltf

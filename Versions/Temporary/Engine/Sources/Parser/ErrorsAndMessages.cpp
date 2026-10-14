@@ -55,4 +55,4 @@ void ShowErrorNoLine( const std::string &szError )
 	}
 }
 
-}
+} // namespace NErrors

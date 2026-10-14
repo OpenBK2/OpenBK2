@@ -24,6 +24,7 @@ class CMessageReactions
 
 public:
 	CMessageReactions() {}
+
 	void InitByDesc( const NDb::SMessageReactionsDesc &instance );
 	bool Execute( const std::string &szSender,
 	              const std::string &szReactionKey,

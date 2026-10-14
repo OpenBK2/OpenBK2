@@ -38,7 +38,7 @@ enum ECollideType
 	ECT_UNIT_MASK = 0x000000FF,
 	ECT_TYPE_MASK = 0x0000FF00,
 };
-}
+} // namespace NCollision
 
 struct ICollisionOld : public CAIObjectBase
 {

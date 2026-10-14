@@ -15,6 +15,7 @@
 REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x110AE400, CClientAckManager );
 
 CDBPtr<NDb::SClientGameConsts> CClientAckManager::pConsts;
+
 IClientAckManager *AckManager()
 {
 	return Singleton<IClientAckManager>();
@@ -208,6 +209,7 @@ int CClientAckManager::SAck::operator&( IBinSaver &saver )
 	saver.Add( 3, &eAck );
 	return 0;
 }
+
 const NDb::SAckParameter *CClientAckManager::GetParam( const NDb::EUnitAckType eAck ) const
 {
 	return ::GetParam( eAck, acksInfo, pConsts );
@@ -395,6 +397,7 @@ void CClientAckManager::AddAcknowledgement( struct IMOUnit *pUnit,
 			break;
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CClientAckManager::RegisterAck( SUnitAck *ack, const NTimer::STime curTime )
 {

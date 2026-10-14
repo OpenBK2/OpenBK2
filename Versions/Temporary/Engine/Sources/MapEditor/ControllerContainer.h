@@ -22,6 +22,7 @@ class CControllerContainer : public IControllerContainer, public ICommandHandler
 	typedef std::list<CPtr<IController>> CControllerList;
 	CControllerList controllerList;
 	CControllerList redoOperationList;
+
 	// Each modal picker has its own undo/redo history. Keep a separate record
 	// of applied edits as well: clearing the visible history must not make
 	// Cancel forget changes, and nested pickers must restore their parent.
@@ -30,12 +31,14 @@ class CControllerContainer : public IControllerContainer, public ICommandHandler
 		CPtr<IController> pController;
 		bool bApplied = true;
 	};
+
 	struct SEditSession
 	{
 		CControllerList savedUndo;
 		CControllerList savedRedo;
 		std::list<SEditOperation> operations;
 	};
+
 	std::list<SEditSession> editSessions;
 
 	void BeginEditSession();
@@ -63,8 +66,13 @@ public:
 
 	CControllerContainer();
 	~CControllerContainer();
+
 	// IControllerContainer
-	bool IsEditSessionActive() const override { return !editSessions.empty(); }
+	bool IsEditSessionActive() const override
+	{
+		return !editSessions.empty();
+	}
+
 	void Add( IController *pOperation );
 	void Clear();
 	bool CanUndo() const;

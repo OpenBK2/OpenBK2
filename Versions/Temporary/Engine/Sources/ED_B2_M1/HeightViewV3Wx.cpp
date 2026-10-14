@@ -86,7 +86,11 @@ class CHeightWxWindowV3 : public CWxHostWindow, public CHeightCommandsV3
 
 	public:
 		explicit CHeightTimer( CHeightWxWindowV3 *_pOwner ) : pOwner( _pOwner ) {}
-		virtual void Notify() { pOwner->OnHeightTimer(); }
+
+		virtual void Notify()
+		{
+			pOwner->OnHeightTimer();
+		}
 	};
 
 	// Ids for the tile list's context menu; local to it, and never seen by
@@ -177,8 +181,10 @@ public:
 			{ TMITH_ROUND, "Round Terrain Height" },
 			{ TMITH_PLATO, "Make Plato" },
 		};
+
 		static const char *const SIZE_TIPS[SIZE_COUNT] = {
 			"Very Small Brush", "Small Brush", "Medium Brush", "Large Brush", "Very Large Brush" };
+
 		static const struct
 		{
 			int nIcon;
@@ -402,7 +408,10 @@ protected:
 	// window destroyed, or the wx shortcut bar taking its page away. The
 	// timer's only job is to poke the state on the palette's behalf, and a
 	// palette that is going away has nothing to say.
-	virtual void BeforeTearDown() { heightTimer.Stop(); }
+	virtual void BeforeTearDown()
+	{
+		heightTimer.Stop();
+	}
 
 private:
 	// ------------------------------------------------------------------
@@ -749,7 +758,10 @@ private:
 		UpdateSizeButtons( CheckedBrushType() );
 	}
 
-	void OnFixCliffs( wxCommandEvent & ) { Report( MITHV3EP_UPDATE_HEIGHT ); }
+	void OnFixCliffs( wxCommandEvent & )
+	{
+		Report( MITHV3EP_UPDATE_HEIGHT );
+	}
 
 	void OnTileSelected( wxListEvent & )
 	{
@@ -815,7 +827,7 @@ private:
 		}
 	}
 };
-}
+} // namespace
 
 namespace NHeightViewV3
 {
@@ -837,4 +849,4 @@ IWidget *Create( CPaletteList *pPalettes, IWidget *pPage )
 	}
 	return pWindow;
 }
-}
+} // namespace NHeightViewV3

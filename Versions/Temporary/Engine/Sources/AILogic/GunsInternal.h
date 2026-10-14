@@ -19,6 +19,7 @@ class CTurretGun : public CBasicGun
 	bool bTurnByBestWay = {};
 	CPtr<CTurret> pTurret;
 	bool bCircularAttack = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CBasicGun *)this );
@@ -48,14 +49,23 @@ protected:
 
 public:
 	CTurretGun() : bCircularAttack( false ) {}
+
 	CTurretGun( class CAIUnit *pOwner,
 	            const uint8_t nShellType,
 	            SCommonGunInfo *pCommonGunInfo,
 	            const IGunsFactory::EGunTypes eType,
 	            const int nTurret );
 
-	virtual bool IsOnTurret() const { return true; }
-	virtual class CTurret *GetTurret() const { return pTurret; }
+	virtual bool IsOnTurret() const
+	{
+		return true;
+	}
+
+	virtual class CTurret *GetTurret() const
+	{
+		return pTurret;
+	}
+
 	virtual void TraceAim( class CAIUnit *pUnit );
 	virtual void StopTracing();
 
@@ -100,11 +110,14 @@ protected:
 	// можно ли прямо сейчас стрельнуть по point ( не вращая ни turret ни base ), погрешность - угол addAngle
 	virtual bool
 	IsGoodAngle( const CVec2 &point, const uint16_t addAngle, const float z, const uint8_t cDeltaAngle ) const;
+
 	virtual void Rest() {}
+
 	virtual bool AnalyzeTurning();
 
 public:
 	CBaseGun() {}
+
 	CBaseGun( class CAIUnit *pOwner,
 	          const uint8_t nShellType,
 	          SCommonGunInfo *pCommonGunInfo,
@@ -113,21 +126,38 @@ public:
 	{
 	}
 
-	virtual bool IsOnTurret() const { return false; }
-	virtual class CTurret *GetTurret() const { return 0; }
+	virtual bool IsOnTurret() const
+	{
+		return false;
+	}
+
+	virtual class CTurret *GetTurret() const
+	{
+		return 0;
+	}
+
 	virtual void TraceAim( class CAIUnit *pUnit ) {}
+
 	virtual void StopTracing() {}
 
 	virtual void StopFire();
 
 	// куда в данный момент смотрит gun
 	virtual const uint16_t GetGlobalDir() const;
+
 	virtual void TurnToRelativeDir( const uint16_t wAngle ) {}
 
 	virtual const float GetRotateSpeed() const;
 
-	virtual uint16_t GetHorTurnConstraint() const { return 32768; }
-	virtual uint16_t GetVerTurnConstraint() const { return 32768; }
+	virtual uint16_t GetHorTurnConstraint() const
+	{
+		return 32768;
+	}
+
+	virtual uint16_t GetVerTurnConstraint() const
+	{
+		return 32768;
+	}
 
 	void SetCircularAttack( const bool bCanAttack ) {}
 };
@@ -144,7 +174,11 @@ public:
 	{
 	}
 
-	virtual int GetNCommonGun() const { return nCommonGun; }
+	virtual int GetNCommonGun() const
+	{
+		return nCommonGun;
+	}
+
 	virtual CBasicGun *CreateGun( const EGunTypes eType, const int nShell, SCommonGunInfo *pCommonGunInfo ) const
 	{
 		CBasicGun *pGun = 0;

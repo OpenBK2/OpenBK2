@@ -16,7 +16,10 @@ class CMainFrameLoggerSink : public NLog::ILoggerSink
 public:
 	CMainFrameLoggerSink( ILogger *_pLogger ) : pLogger( _pLogger ) {}
 
-	ILogger *GetLogger() { return pLogger; }
+	ILogger *GetLogger()
+	{
+		return pLogger;
+	}
 };
 
 void CMainFrameContainer::Set( IMainFrame *_pMainFrame, IWidget *_pMainWindow )

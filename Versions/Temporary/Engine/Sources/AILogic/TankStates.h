@@ -14,7 +14,11 @@ class CTankStatesFactory : public IStatesFactory
 
 public:
 	static IStatesFactory *Instance();
-	int operator&( IBinSaver &saver ) { return 0; }
+
+	int operator&( IBinSaver &saver )
+	{
+		return 0;
+	}
 
 	virtual struct IUnitState *ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
 	virtual struct IUnitState *ProduceRestState( class CQueueUnit *pUnit );
@@ -35,6 +39,7 @@ class CMechUnitSupportFireState : public IUnitAttackingState, public CStatusUpda
 		ESFS_SHOOT_UNIT,
 		ESFS_SHOOT_OBJECT
 	};
+
 	enum
 	{
 		CHECK_TIME = 2000
@@ -81,15 +86,26 @@ public:
 	static IUnitState *Instance( class CAIUnit *pUnit, class CAIUnit *pFriend );
 
 	CMechUnitSupportFireState() : pUnit( 0 ) {}
+
 	CMechUnitSupportFireState( class CAIUnit *_pUnit, class CAIUnit *_pFriend );
 
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
-	virtual EUnitStateNames GetName() { return EUSN_SUPPORT_FIRE; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_SUPPORT_FIRE;
+	}
 
-	virtual bool IsAttackingState() const { return true; }
-	virtual const CVec2 GetPurposePoint() const { return pFriend->GetCenterPlain(); }
+	virtual bool IsAttackingState() const
+	{
+		return true;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return pFriend->GetCenterPlain();
+	}
 
 	virtual bool IsAttacksUnit() const;
 	virtual class CAIUnit *GetTargetUnit() const;

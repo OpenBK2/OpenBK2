@@ -15,16 +15,19 @@ struct STerrainSpotInstance;
 struct SVSOInstance;
 struct SVSOPoint;
 struct SWater;
-};
+}; // namespace NDb
+
 namespace NMeshData
 {
 struct SMeshData;
 };
+
 namespace NGScene
 {
 class IGameView;
 class IMaterial;
-};
+}; // namespace NGScene
+
 namespace NDebrisBuilder
 {
 enum EMaskSmoothType
@@ -33,12 +36,14 @@ enum EMaskSmoothType
 	MASK_SMOOTH_MEDIUM,
 	MASK_SMOOTH_BLUR
 };
+
 enum EMaskType
 {
 	MASK_STATIC,
 	MASK_DYNAMIC,
 	MASK_AI_PASSABILITY
 };
+
 // Offline exporters share the existing mask algorithm with decoded GLTF meshes.
 SCENEB2_EXPORT bool CreateMask( const std::vector<CVec3> &vertices,
                                 const std::vector<SModelTriangle> &triangles,
@@ -48,7 +53,8 @@ SCENEB2_EXPORT bool CreateMask( const std::vector<CVec3> &vertices,
                                 CVec2 *origin,
                                 EMaskType type,
                                 int smoothRadius );
-};
+}; // namespace NDebrisBuilder
+
 namespace NTerraBrush
 {
 enum ETerraBrushUpdate
@@ -57,7 +63,7 @@ enum ETerraBrushUpdate
 	TERRA_BRUSH_SUB,
 	TERRA_BRUSH_OVERRIDE
 };
-}
+} // namespace NTerraBrush
 struct SRoadGFXInfo;
 struct SCragGFXInfo;
 struct SPeakGFXInfo;
@@ -76,6 +82,7 @@ struct ITerraManager : public CObjectBase
 	{
 		tidTypeID = 0x10096401
 	};
+
 	//
 	//virtual void SetStreamPathes( const string &szDstPath, const string &szSrcPath ) = 0;
 	virtual void Load( const NDb::STerrain *pDesc, CDataStream *pStream ) = 0;
@@ -236,6 +243,6 @@ SCENEB2_EXPORT bool
 LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath );
 SCENEB2_EXPORT bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath );
 SCENEB2_EXPORT bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath, std::string *pError );
-};
+}; // namespace NScene
 
 #define DEF_DEBRIS_SMOOTH_RADIUS 20

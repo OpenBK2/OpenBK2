@@ -19,6 +19,7 @@ enum ETextureUsage : int
 	TRANSPARENT_TEXTURE,
 	DYNAMIC_TEXTURE
 };
+
 enum EAccess
 {
 	READWRITE,
@@ -27,6 +28,7 @@ enum EAccess
 	INPLACE,
 	INPLACE_READONLY
 };
+
 enum EFace : int
 {
 	POSITIVE_X,
@@ -36,6 +38,7 @@ enum EFace : int
 	NEGATIVE_Y,
 	NEGATIVE_Z
 };
+
 enum EWrap : int
 {
 	CLAMP = 0,
@@ -43,6 +46,7 @@ enum EWrap : int
 	WRAP_Y = 2,
 	WRAP = 3,
 };
+
 enum EBufferUsage
 {
 	STATIC,
@@ -57,10 +61,12 @@ struct S3DTriangle
 	{
 		ID = 100
 	};
+
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	uint16_t i1 = {}, i2 = {}, i3 = {};
 
 	S3DTriangle() {}
+
 	S3DTriangle( uint16_t _i1, uint16_t _i2, uint16_t _i3 ) : i1( _i1 ), i2( _i2 ), i3( _i3 ) {}
 };
 
@@ -78,10 +84,12 @@ struct SGeomVecT2C1
 	{
 		ID = 4
 	};
+
 	CVec3 pos;
 	SPixel8888 color;
 	CVec2 tex1, tex2;
 };
+
 //struct SGeomVec
 //{
 //	enum { ID = 0 };
@@ -89,20 +97,24 @@ struct SGeomVecT2C1
 //};
 
 const int N_VEC_FULL_TEX_SIZE = 2048;
+
 inline void CalcTexCoords( SShortTextureUV *pRes, float fU, float fV )
 {
 	pRes->nU = Float2Int( fU * N_VEC_FULL_TEX_SIZE );
 	pRes->nV = Float2Int( fV * N_VEC_FULL_TEX_SIZE );
 }
+
 inline void CalcLMCoords( SShortTextureUV *pRes, float fU, float fV )
 {
 	pRes->nU = (std::min)( Float2Int( fU * 65536 ), 65535 ) - 32768;
 	pRes->nV = (std::min)( Float2Int( fV * 65536 ), 65535 ) - 32768;
 }
+
 inline CVec2 GetTexCoords( const SShortTextureUV &src )
 {
 	return CVec2( src.nU * ( 1.0f / N_VEC_FULL_TEX_SIZE ), src.nV * ( 1.0f / N_VEC_FULL_TEX_SIZE ) );
 }
+
 inline void MakeLMToScreenMatrix( SHMatrix *pM, int nXTargetSize, int nYTargetSize )
 {
 	pM->SetX( CVec4( 2.0f / 65536, 0, 0, 1 - 1 - 1.0f / nXTargetSize ) ); // N_RENDER_TARGET_SIZE
@@ -110,12 +122,14 @@ inline void MakeLMToScreenMatrix( SHMatrix *pM, int nXTargetSize, int nYTargetSi
 	pM->SetZ( CVec4( 0, 0, 1, 0.5f ) ); // since texture is expanded to (u,v,0,1) this works and matrix has inverse
 	pM->SetW( CVec4( 0, 0, 0, 1 ) );
 }
+
 struct SGeomVecFull
 {
 	enum
 	{
 		ID = 5
 	};
+
 	CVec3 pos;
 	SCompactVector normal;
 	SShortTextureUV tex, texLM;
@@ -141,6 +155,7 @@ public:
 };
 
 ILinearBuffer *CreateBuffer( int nFormatID, int nSize, EBufferUsage usage ); // for internal use in BufferLock<>
+
 template <class TElement>
 class CBufferLock
 {
@@ -159,11 +174,28 @@ public:
 		ASSERT( pObj->GetFormatID() == Element::ID );
 		pStart = (TElement *)pObj->Lock();
 	}
-	~CBufferLock() { pObj->Unlock(); }
+
+	~CBufferLock()
+	{
+		pObj->Unlock();
+	}
+
 	//
-	void SetSize( int nSize ) { pObj->SetSize( nSize ); }
-	int GetSize() const { return pObj->GetSize(); }
-	int GetStride() const { return sizeof( TElement ); }
+	void SetSize( int nSize )
+	{
+		pObj->SetSize( nSize );
+	}
+
+	int GetSize() const
+	{
+		return pObj->GetSize();
+	}
+
+	int GetStride() const
+	{
+		return sizeof( TElement );
+	}
+
 	TElement &operator[]( int n ) const
 	{
 		ASSERT( n >= 0 && n < pObj->GetBufSize() );
@@ -177,6 +209,7 @@ class I2DBufferLock
 {
 public:
 	virtual ~I2DBufferLock() {}
+
 	virtual void *GetBuffer() = 0;
 	virtual int GetStride() = 0;
 };
@@ -191,7 +224,11 @@ public:
 	virtual int GetNumMipLevels() const = 0;
 	virtual int GetFrameMRU() const = 0;
 	virtual void UserTouch() = 0;
-	bool IsNP2() const { return GetNextPow2( GetSizeX() ) != GetSizeX() || GetNextPow2( GetSizeY() ) != GetSizeY(); }
+
+	bool IsNP2() const
+	{
+		return GetNextPow2( GetSizeX() ) != GetSizeX() || GetNextPow2( GetSizeY() ) != GetSizeY();
+	}
 };
 
 class ICubeBuffer : public CObjectBase
@@ -212,12 +249,17 @@ class CTextureLock
 	int nXSize = {}, nYSize = {}, nStride = {};
 	typedef TPixel Element;
 
-	CTextureLock( const CTextureLock &a ) { ASSERT( 0 ); }
+	CTextureLock( const CTextureLock &a )
+	{
+		ASSERT( 0 );
+	}
+
 	CTextureLock &operator=( const CTextureLock &a )
 	{
 		ASSERT( 0 );
 		return *this;
 	}
+
 	void InitAccess()
 	{
 		char *pStart = (char *)pLock->GetBuffer();
@@ -241,6 +283,7 @@ public:
 		nStride = pLock->GetStride();
 		InitAccess();
 	}
+
 	CTextureLock( const CDynamicCast<ICubeBuffer> &pObj, EFace face, int nLevel, EAccess access )
 	{
 		ASSERT( IsValid( pObj ) );
@@ -251,12 +294,32 @@ public:
 		nStride = pLock->GetStride();
 		InitAccess();
 	}
-	~CTextureLock() { delete pLock; }
+
+	~CTextureLock()
+	{
+		delete pLock;
+	}
+
 	// get physical size (in physical pixels, for DXT real size / 4 f.e.
-	int GetSizeX() const { return nXSize; }
-	int GetSizeY() const { return nYSize; }
-	int GetStride() const { return nStride; }
-	TPixel *operator[]( int nY ) { return (TPixel *)raws[nY]; }
+	int GetSizeX() const
+	{
+		return nXSize;
+	}
+
+	int GetSizeY() const
+	{
+		return nYSize;
+	}
+
+	int GetStride() const
+	{
+		return nStride;
+	}
+
+	TPixel *operator[]( int nY )
+	{
+		return (TPixel *)raws[nY];
+	}
 };
 
 // place for texture
@@ -265,8 +328,15 @@ struct STexturePlaceInfo
 	CTRect<int> place;
 	CTPoint<int> size;
 
-	bool IsWhole() const { return place.x1 == 0 && place.y1 == 0 && place.x2 == size.x && place.y2 == size.y; }
-	bool IsHolderAPow2Texture() const { return GetNextPow2( size.x ) == size.x && GetNextPow2( size.y ) == size.y; }
+	bool IsWhole() const
+	{
+		return place.x1 == 0 && place.y1 == 0 && place.x2 == size.x && place.y2 == size.y;
+	}
+
+	bool IsHolderAPow2Texture() const
+	{
+		return GetNextPow2( size.x ) == size.x && GetNextPow2( size.y ) == size.y;
+	}
 };
 
 // could not be copied
@@ -306,4 +376,4 @@ _3DMOTOR_EXPORT bool Is16BitTextures();
 void ReplaceTextureSurface( CTexture *pTex, int nLevel, IDirect3DSurface9 *pSurf );
 void FlushQueue();
 
-}
+} // namespace NGfx

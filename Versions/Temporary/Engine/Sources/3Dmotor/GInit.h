@@ -16,4 +16,4 @@ _3DMOTOR_EXPORT bool SetModeFromConfig( bool bReinit, const SUserRTInfo &rtInfo 
 bool CanCalcLM();
 int GetShadowsQuality();
 bool IsUsing16bitShadows();
-}
+} // namespace NGScene

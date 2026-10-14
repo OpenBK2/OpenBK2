@@ -16,10 +16,20 @@ public:
 	TVersionBaseList();
 	void Add( const TData &data );
 	void Remove( const TData &data );
-	const std::list<TData> &GetNow() const { return nowList; }
+
+	const std::list<TData> &GetNow() const
+	{
+		return nowList;
+	}
+
 	const std::list<TData> GetAddDiff( const uint32_t _dwVersion ) const;
 	const std::list<TData> GetRemoveDiff( const uint32_t _dwVersion ) const;
-	const uint32_t GetVersion() const { return dwVersion; }
+
+	const uint32_t GetVersion() const
+	{
+		return dwVersion;
+	}
+
 	inline bool NeedFullUpdate( const uint32_t _dwVersion ) const;
 };
 

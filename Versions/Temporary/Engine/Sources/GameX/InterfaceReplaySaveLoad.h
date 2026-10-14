@@ -17,6 +17,7 @@ private:
 		SSystemTime time;
 		CPtr<IWindow> pItem;
 		SMultiplayerReplayInfo info;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &szName );
@@ -26,6 +27,7 @@ private:
 			return 0;
 		}
 	};
+
 	typedef std::vector<SReplayEntry> CReplayEntries;
 
 	enum EQuestionMode
@@ -56,6 +58,7 @@ private:
 	CPtr<IWindow> pMinimapFlagTemplate;
 	CPtr<IScrollableContainer> pPlayerList;
 	CPtr<IWindow> pPlayerItemTemplate;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &bSaveMode );
@@ -114,12 +117,14 @@ class CICInterfaceReplaySaveLoad : public CInterfaceCommandBase<CInterfaceReplay
 
 	ZDATA_( CInterfaceCommandBase<CInterfaceReplaySaveLoad> )
 	std::string szMode;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceReplaySaveLoad> *)this );
 		f.Add( 2, &szMode );
 		return 0;
 	}
+
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );

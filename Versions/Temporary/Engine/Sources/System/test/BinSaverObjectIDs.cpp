@@ -53,7 +53,7 @@ public:
 	}
 };
 
-}
+} // namespace
 
 // REGISTER_SAVELOAD_CLASS names an export macro after its module argument; a
 // test executable exports nothing
@@ -167,4 +167,4 @@ TEST( BinSaverObjectIDs, DetMapBytesDoNotDependOnBucketCount )
 	EXPECT_EQ( SaveDetMap( 0 ), SaveDetMap( 5000 ) );
 }
 
-}
+} // namespace

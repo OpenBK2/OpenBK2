@@ -51,6 +51,7 @@ struct IObjMan : public CObjectBase
 	{
 		return SetValue( szName, CVariant( value ) );
 	}
+
 	//
 	template <template <typename TYPE> class TContainer, typename TValue>
 	bool SetValue( const std::string &szName, const TContainer<TValue> &container )
@@ -69,6 +70,7 @@ struct IObjMan : public CObjectBase
 		}
 		return true;
 	}
+
 	// 'get' family
 	template <class TYPE>
 	bool GetValue( const std::string &szName, TYPE *pValue )
@@ -81,6 +83,7 @@ struct IObjMan : public CObjectBase
 		*pValue = (TYPE)value;
 		return true;
 	}
+
 	//
 	template <template <typename TYPE> class TContainer, typename TValue>
 	bool GetValue( const std::string &szName, TContainer<TValue> *pContainer )
@@ -113,35 +116,41 @@ inline bool IObjMan::SetValue<CVec2>( const std::string &szName, const CVec2 &va
 {
 	return SetValue( szName + ".x", CVariant( value.x ) ) && SetValue( szName + ".y", CVariant( value.y ) );
 }
+
 template <>
 inline bool IObjMan::SetValue<CVec3>( const std::string &szName, const CVec3 &value )
 {
 	return SetValue( szName + ".x", CVariant( value.x ) ) && SetValue( szName + ".y", CVariant( value.y ) ) &&
 	       SetValue( szName + ".z", CVariant( value.z ) );
 }
+
 template <>
 inline bool IObjMan::SetValue<CVec4>( const std::string &szName, const CVec4 &value )
 {
 	return SetValue( szName + ".x", CVariant( value.x ) ) && SetValue( szName + ".y", CVariant( value.y ) ) &&
 	       SetValue( szName + ".z", CVariant( value.z ) ) && SetValue( szName + ".w", CVariant( value.w ) );
 }
+
 template <>
 inline bool IObjMan::SetValue<CQuat>( const std::string &szName, const CQuat &value )
 {
 	return SetValue( szName, value.GetInternalVector() );
 }
+
 template <>
 inline bool IObjMan::SetValue<std::basic_string, char>( const std::string &szName,
                                                         const std::basic_string<char> &value )
 {
 	return SetValue( szName, CVariant( value ) );
 }
+
 template <>
 inline bool IObjMan::SetValue<std::basic_string, wchar_t>( const std::string &szName,
                                                            const std::basic_string<wchar_t> &value )
 {
 	return SetValue( szName, CVariant( value ) );
 }
+
 template <>
 inline bool IObjMan::GetValue<std::string>( const std::string &szName, std::string *pValue )
 {
@@ -153,6 +162,7 @@ inline bool IObjMan::GetValue<std::string>( const std::string &szName, std::stri
 	*pValue = value.GetStr();
 	return true;
 }
+
 template <>
 inline bool IObjMan::GetValue<std::wstring>( const std::string &szName, std::wstring *pValue )
 {
@@ -164,6 +174,7 @@ inline bool IObjMan::GetValue<std::wstring>( const std::string &szName, std::wst
 	*pValue = value.GetWStr();
 	return true;
 }
+
 template <>
 inline bool IObjMan::GetValue<boost::uuids::uuid>( const std::string &szName, boost::uuids::uuid *pValue )
 {
@@ -178,6 +189,7 @@ inline bool IObjMan::GetValue<boost::uuids::uuid>( const std::string &szName, bo
 	memcpy( pValue, value.GetPtr(), sizeof( boost::uuids::uuid ) );
 	return true;
 }
+
 template <>
 inline bool IObjMan::GetValue<CDBID>( const std::string &szName, CDBID *pValue )
 {
@@ -189,6 +201,7 @@ inline bool IObjMan::GetValue<CDBID>( const std::string &szName, CDBID *pValue )
 	*pValue = value.GetDBID();
 	return true;
 }
+
 template <>
 inline bool IObjMan::GetValue<CVec2>( const std::string &szName, CVec2 *pValue )
 {
@@ -205,6 +218,7 @@ inline bool IObjMan::GetValue<CVec2>( const std::string &szName, CVec2 *pValue )
 	pValue->y = (float)value;
 	return true;
 }
+
 template <>
 inline bool IObjMan::GetValue<CVec3>( const std::string &szName, CVec3 *pValue )
 {
@@ -226,6 +240,7 @@ inline bool IObjMan::GetValue<CVec3>( const std::string &szName, CVec3 *pValue )
 	pValue->z = (float)value;
 	return true;
 }
+
 template <>
 inline bool IObjMan::GetValue<CVec4>( const std::string &szName, CVec4 *pValue )
 {
@@ -252,6 +267,7 @@ inline bool IObjMan::GetValue<CVec4>( const std::string &szName, CVec4 *pValue )
 	pValue->w = (float)value;
 	return true;
 }
+
 template <>
 inline bool IObjMan::GetValue<CQuat>( const std::string &szName, CQuat *pValue )
 {
@@ -263,6 +279,7 @@ inline bool IObjMan::GetValue<CQuat>( const std::string &szName, CQuat *pValue )
 	*pValue = CQuat( vRes );
 	return true;
 }
+
 template <>
 inline bool IObjMan::GetValue<std::basic_string, char>( const std::string &szName, std::basic_string<char> *pValue )
 {
@@ -274,6 +291,7 @@ inline bool IObjMan::GetValue<std::basic_string, char>( const std::string &szNam
 	*pValue = var.GetStr();
 	return true;
 }
+
 template <>
 inline bool IObjMan::GetValue<std::basic_string, wchar_t>( const std::string &szName,
                                                            std::basic_string<wchar_t> *pValue )
@@ -294,4 +312,4 @@ struct IArrayObjMan : public IObjMan
 	virtual int GetSize() const = 0;
 };
 
-}
+} // namespace NDb

@@ -35,6 +35,7 @@
 struct IWidget
 {
 	virtual ~IWidget() {}
+
 	// The front-end's own widget object. Only the front-end that created this
 	// widget may interpret the result.
 	virtual void *GetNativeWidget() = 0;
@@ -45,6 +46,7 @@ struct IWidget
 struct IImage
 {
 	virtual ~IImage() {}
+
 	virtual void *GetNativeImage() = 0;
 };
 
@@ -53,6 +55,7 @@ struct IImage
 struct IImageList
 {
 	virtual ~IImageList() {}
+
 	virtual void *GetNativeImageList() = 0;
 };
 
@@ -68,6 +71,7 @@ struct IImageList
 struct IDockPanel : public IWidget
 {
 	virtual ~IDockPanel() {}
+
 	// Show tells the frame, so the docking layout is recalculated.
 	// ShowWithoutLayout only shows or hides the panel's own window. The
 	// editors do both -- the toggle commands want the first and the creation
@@ -85,6 +89,7 @@ struct IDockPanel : public IWidget
 struct IToolBar
 {
 	virtual ~IToolBar() {}
+
 	virtual void Show( bool bShow ) = 0;
 	virtual bool IsVisible() const = 0;
 };
@@ -96,6 +101,7 @@ struct IToolBar
 struct IFrameWindow : public IWidget
 {
 	virtual ~IFrameWindow() {}
+
 	virtual void Show( bool bShow ) = 0;
 	virtual void Maximize() = 0;
 	virtual void Focus() = 0;

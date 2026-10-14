@@ -26,6 +26,7 @@ public:
 
 public:
 	CAttackPointChecking() {}
+
 	CAttackPointChecking( const float _fRangeMin,
 	                      const float _fRangeMax,
 	                      const SVector &_targetTile,
@@ -62,6 +63,7 @@ public:
 
 public:
 	CAttackSideChecking() {}
+
 	CAttackSideChecking( float _fRangeMin,
 	                     const float _fRangeMax,
 	                     const SVector _targetTile,
@@ -86,6 +88,7 @@ class CGoToDistance : public IPointChecking
 
 public:
 	CGoToDistance() {}
+
 	// дистанция задаётся в тайлах
 	CGoToDistance( const float tileDistance, const SVector &_targetTile )
 			: tileDistance2( sqr( tileDistance ) ), targetTile( _targetTile )
@@ -117,6 +120,7 @@ public:
 
 public:
 	CAttackStObjectChecking() {}
+
 	CAttackStObjectChecking( const float fRangeMin,
 	                         const float fRangeMax,
 	                         class CStaticObject *pObj,

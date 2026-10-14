@@ -38,21 +38,36 @@ class CMPManagerModeNivalNet : public CMPManagerMode
 	bool bAwaitingLadderStatsChange;
 	NTimer::STime timeOutLadderGame;
 
-	virtual const int GetOwnClientID() { return nMyClientID; }
+	virtual const int GetOwnClientID()
+	{
+		return nMyClientID;
+	}
+
 	virtual const bool IsInGameRoom() const
 	{
 		return ( eState == EGS_GAME_ROOM || eState == EGS_JOINING || eState == EGS_LADDER_WAIT_CLIENTS );
 	}
-	virtual const bool IsGameRunning() const { return ( eState == EGS_GAME_STARTED ); }
-	virtual const bool IsGameHost() const { return ( eState == EGS_GAME_ROOM && bHost ); }
+
+	virtual const bool IsGameRunning() const
+	{
+		return ( eState == EGS_GAME_STARTED );
+	}
+
+	virtual const bool IsGameHost() const
+	{
+		return ( eState == EGS_GAME_ROOM && bHost );
+	}
 
 	virtual void UpdateGameList();
 	virtual void TryToCreateGame();
 	virtual void TryToJoinGame( const SNetGameInfo &game );
 	virtual void OnSetMySlotNumber();
 	virtual void OnLeaveGame();
+
 	virtual void OnGameRoomClientAdded() {}
+
 	virtual void OnGameRoomClientRemoved() {}
+
 	virtual void OnGameSpecificInfo();
 	virtual void StartGame();
 	virtual void EndGame();
@@ -116,6 +131,13 @@ public:
 	CMPManagerModeNivalNet();
 	bool Segment();
 
-	virtual const ENetMode GetMode() const { return ENM_NIVAL_NET; }
-	virtual void SetLanTester( class CLANTester *_pLANTester ) { NI_ASSERT( 0, "Wrong call" ) }
+	virtual const ENetMode GetMode() const
+	{
+		return ENM_NIVAL_NET;
+	}
+
+	virtual void SetLanTester( class CLANTester *_pLANTester )
+	{
+		NI_ASSERT( 0, "Wrong call" )
+	}
 };

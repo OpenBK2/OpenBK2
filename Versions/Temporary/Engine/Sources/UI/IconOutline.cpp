@@ -16,7 +16,7 @@ namespace NGScene
 {
 typedef CBasicShare<STextureKey, CFileTexture, STextureKeyHash> CTexShare;
 EXTERNVAR _3DMOTOR_EXPORT CTexShare shareTextures;
-}
+} // namespace NGScene
 
 struct SRLBuilder : public NGScene::ILayoutFakeView
 {
@@ -51,6 +51,7 @@ struct SRLBuilder : public NGScene::ILayoutFakeView
 		}
 		pScene->CreateRects( NGScene::GetSWTex( pTexture ), rl );
 	}
+
 	void CreateDynamicRects( const NDb::STexture *pTexture,
 	                         const CVec2 *pPos4,
 	                         const NGfx::SPixel8888 *pColors4,
@@ -58,6 +59,7 @@ struct SRLBuilder : public NGScene::ILayoutFakeView
 	{
 		NI_ASSERT( 0, "not implemented" );
 	}
+
 	void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *_pTexture,
 	                         const CRectLayout &sLayout,
 	                         const CTPoint<float> &sPosition,
@@ -74,6 +76,7 @@ struct SRLBuilder : public NGScene::ILayoutFakeView
 		}
 		ASSERT( 0 );
 	}
+
 	SRLBuilder( NGScene::ISW2DScene *_pScene ) : pScene( _pScene ) {}
 };
 

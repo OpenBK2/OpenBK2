@@ -33,8 +33,13 @@ public:
 	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;
 	NDb::EUserAction GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const;
 	bool IsPlaceMapCommandAck( NDb::EUserAction eUserAction ) const;
+
 	virtual void GetPassangers( std::vector<IB2MapObj *> *pPassangers ) const {}
-	virtual int GetPassangersCount() const { return 0; }
+
+	virtual int GetPassangersCount() const
+	{
+		return 0;
+	}
 
 	//
 	void FinalizeDeath( NDb::ESeason eSeason );

@@ -7,7 +7,7 @@ namespace NMPSetData
 void SetText( ITextView *pText, const std::wstring &szText );
 void SetNum( ITextView *pWindow, int nText );
 void SetChildText( IListControlItem *pItem, const std::string &szName, const std::wstring &szText );
-};
+}; // namespace NMPSetData
 
 class CColorData : public CObjectBase
 {
@@ -15,6 +15,7 @@ class CColorData : public CObjectBase
 public:
 	ZDATA
 	int nColor;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nColor );
@@ -22,6 +23,7 @@ public:
 	}
 
 	CColorData() {}
+
 	CColorData( int _nColor ) : nColor( _nColor ) {};
 };
 
@@ -47,6 +49,7 @@ class CTextData : public CObjectBase
 public:
 	ZDATA
 	std::wstring wszText;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &wszText );
@@ -54,9 +57,12 @@ public:
 	}
 
 	CTextData() {}
+
 	CTextData( const std::wstring &_wszText ) : wszText( _wszText ) {}
+
 	CTextData( int i );
 };
+
 //--------------
 class CTextDataViewer : public IDataViewer
 {
@@ -72,6 +78,7 @@ public:
 	ZDATA
 	CDBPtr<NDb::STexture> pTexture;
 	std::wstring wszTooltip;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pTexture );
@@ -80,6 +87,7 @@ public:
 	}
 
 	CTextureData() {}
+
 	CTextureData( const NDb::STexture *_pTexture, const std::wstring &_wszTooltip )
 			: pTexture( _pTexture ), wszTooltip( _wszTooltip ) {};
 };

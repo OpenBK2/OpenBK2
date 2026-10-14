@@ -13,8 +13,10 @@ class CDeadHouseAnimations : public IClientUpdatableProcess
 		NTimer::STime nEndTime = 0;
 
 		SAnimationInfo() : nID( -1 ), nEndTime( 0 ) {}
+
 		SAnimationInfo( const int _nID, const NTimer::STime _nEndTime ) : nID( _nID ), nEndTime( _nEndTime ) {}
 	};
+
 	struct SSortAnimationsByTime
 	{
 		bool operator()( const SAnimationInfo &anim1, const SAnimationInfo &anim2 ) const
@@ -22,9 +24,11 @@ class CDeadHouseAnimations : public IClientUpdatableProcess
 			return anim1.nEndTime > anim2.nEndTime;
 		}
 	};
+
 	OBJECT_BASIC_METHODS( CDeadHouseAnimations );
 	ZDATA
 	std::vector<SAnimationInfo> animations;
+
 ZEND public : int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &animations );
@@ -37,5 +41,9 @@ public:
 	void Add( int nObjectID, const NTimer::STime &time, const NDb::SAnimB2 *pAnimation );
 	void Sort();
 	bool Update( const NTimer::STime &time );
-	const bool IsEmpty() const { return animations.empty(); }
+
+	const bool IsEmpty() const
+	{
+		return animations.empty();
+	}
 };

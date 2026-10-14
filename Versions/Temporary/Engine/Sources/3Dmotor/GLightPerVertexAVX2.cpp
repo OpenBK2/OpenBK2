@@ -811,7 +811,7 @@ namespace
 		}
 	}
 
-}
+} // namespace
 
 const SLightingKernels avx2LightingKernels = {
 	"avx2",
@@ -824,4 +824,4 @@ const SLightingKernels avx2LightingKernels = {
 	&AddColors,
 	&ScaleColors,
 };
-}
+} // namespace NGScene

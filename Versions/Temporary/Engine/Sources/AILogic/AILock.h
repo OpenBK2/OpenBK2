@@ -111,4 +111,4 @@ void CreateStaticObjectLockedTilesInfo( std::list<SObjTileInfo> *pTiles,
 		*pTiles = lockInfo.lockedTiles;
 	}
 }
-};
+}; // namespace NLock

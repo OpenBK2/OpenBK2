@@ -6,6 +6,7 @@ namespace NGScene
 const float F_SKY_SINGLE_STRENGTH_MUL = 2.0f;
 struct IGScene;
 struct SPerVertexLightState;
+
 struct SLightStateCalcSeed
 {
 	int nSeed;
@@ -28,28 +29,34 @@ public:
 		float fRadius;
 
 		SSemiPointLight() {}
+
 		SSemiPointLight( const CVec3 &_vColor, const CVec3 &_vCenter, const CVec3 &_vNormal, float _fRadius )
 				: vColor( _vColor ), vCenter( _vCenter ), vNormal( _vNormal ), fRadius( _fRadius )
 		{
 		}
 	};
+
 	struct SPointLight
 	{
 		CVec3 vColor, vCenter;
 		float fRadius;
+
 		//bool bCastShadow;
 
 		SPointLight() {}
+
 		SPointLight( const CVec3 &_vColor, const CVec3 &_vCenter, float _fR ) //, bool _bCastShadow )
 				: vColor( _vColor ), vCenter( _vCenter ), fRadius( _fR )
 		{
 		} //, bCastShadow(_bCastShadow) {}
 	};
+
 	ZDATA
 	std::vector<SSemiPointLight> semiPoints;
 	std::vector<SPointLight> points;
 	std::vector<CVec3> skyDirections;
 	CVec3 vAmbientColor;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &semiPoints );
@@ -65,10 +72,11 @@ public:
 		points.clear();
 		skyDirections.clear();
 	}
+
 	CVec3 GenerateSkyDir( SLightStateCalcSeed *pSeed, int nSkyDirs );
 	void CreateScattered(
 			SLightStateCalcSeed *pSeed, const SSphere &_bounds, const SPerVertexLightState &l, IGScene *pVis, int nSkyDirs );
 	void CreateSimple( SLightStateCalcSeed *pSeed, const SSphere &_bounds, const SPerVertexLightState &l, int nSkyDirs );
 };
 
-}
+} // namespace NGScene

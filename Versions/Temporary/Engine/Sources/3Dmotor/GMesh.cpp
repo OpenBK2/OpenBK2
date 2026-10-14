@@ -28,6 +28,7 @@ int CMeshBound::operator&( CStructureSaver &f )
 	return 0;
 }
 
-} // namespace
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x12061180, CMeshBound )

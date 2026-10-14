@@ -11,6 +11,7 @@ class CFolderCallback : public IFolderCallback
 		std::string szObjectTypeName;
 		std::string szObjectName;
 	};
+
 	typedef std::list<SUndoData> CUndoDataList;
 	CUndoDataList undoDataList;
 
@@ -19,7 +20,11 @@ class CFolderCallback : public IFolderCallback
 
 protected:
 	// IFolderCallback
-	void ClearUndoData() { undoDataList.clear(); }
+	void ClearUndoData()
+	{
+		undoDataList.clear();
+	}
+
 	void UndoChanges();
 	void LockObjects( const SObjectSet &rObjectSet );
 	void UnockObjects( const SObjectSet &rObjectSet );

@@ -60,6 +60,7 @@ public:
 
 public:
 	CUnitGuns() : fMaxFireRange( -1 ), bCanShootToPlanes( false ), nCommonGuns( 0 ), nMainGun( 0 ) {}
+
 	virtual void Init( class CCommonUnit *pCommonUnit ) = 0;
 
 	bool AddGun( const struct IGunsFactory &gunsFactory,
@@ -70,28 +71,51 @@ public:
 	             const int nAmmo );
 	void SetOwner( class CAIUnit *pUnit );
 
-	const uint8_t GetNTotalGuns() const { return guns.size(); }
+	const uint8_t GetNTotalGuns() const
+	{
+		return guns.size();
+	}
+
 	void Segment();
 
 	//
-	virtual int GetNGuns() const { return guns.size(); }
-	virtual class CBasicGun *GetGun( const int n ) const { return guns[n]; }
+	virtual int GetNGuns() const
+	{
+		return guns.size();
+	}
+
+	virtual class CBasicGun *GetGun( const int n ) const
+	{
+		return guns[n];
+	}
 	// если есть пушки, которыми можно пристреливаться, то выдаёт первую из них, иначе 0
 	virtual class CBasicGun *GetFirstArtilleryGun() const = 0;
 
 	class CBasicGun *ChooseGunForStatObj( class CAIUnit *pOwner, class CStaticObject *pObj, NTimer::STime *pTime );
 
-	const bool CanShootToPlanes() const { return bCanShootToPlanes; }
+	const bool CanShootToPlanes() const
+	{
+		return bCanShootToPlanes;
+	}
+
 	float GetMaxFireRange( const class CAIUnit *pOwner ) const;
 
-	const int GetNCommonGuns() const { return nCommonGuns; }
+	const int GetNCommonGuns() const
+	{
+		return nCommonGuns;
+	}
+
 	// Returns the dense common-gun index used by ammo and resupply bookkeeping.
 	int GetCommonGunIndex( const CBasicGun *pGun ) const;
 	const SBaseGunRPGStats &GetCommonGunStats( const int nCommonGun ) const;
 	int GetNAmmo( const int nCommonGun ) const;
 	// nAmmo со знаком
 	void ChangeAmmo( const int nCommonGun, const int nAmmo );
-	bool IsCommonGunFiring( const int nCommonGun ) const { return commonGunsInfo[nCommonGun]->bFiring; }
+
+	bool IsCommonGunFiring( const int nCommonGun ) const
+	{
+		return commonGunsInfo[nCommonGun]->bFiring;
+	}
 
 	// даёт reject reason самого приоритетного gun из тех, кто отказался стрелять
 	const EUnitAckType GetRejectReason() const;
@@ -121,6 +145,7 @@ public:
 
 public:
 	CMechUnitGuns() : nFirstArtGun( -1 ) {}
+
 	virtual void Init( class CCommonUnit *pCommonUnit );
 
 	virtual bool SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType );
@@ -143,8 +168,18 @@ public:
 public:
 	virtual void Init( class CCommonUnit *pCommonUnit );
 
-	virtual class CBasicGun *GetFirstArtilleryGun() const { return 0; }
+	virtual class CBasicGun *GetFirstArtilleryGun() const
+	{
+		return 0;
+	}
 
-	virtual bool SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType ) { return false; }
-	virtual const int GetActiveShellType() const { return NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH; }
+	virtual bool SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType )
+	{
+		return false;
+	}
+
+	virtual const int GetActiveShellType() const
+	{
+		return NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH;
+	}
 };

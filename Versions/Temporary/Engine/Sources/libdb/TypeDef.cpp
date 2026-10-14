@@ -33,6 +33,7 @@ namespace NTypeDef
 	{
 		*pRes = std::to_string( (int)value );
 	}
+
 	void STypeInt::FromString( CVariant *pRes, const std::string &szValue ) const
 	{
 		*pRes = NStr::ToInt( szValue );
@@ -42,6 +43,7 @@ namespace NTypeDef
 	{
 		*pRes = fmt::format( "{:g}", (float)value );
 	}
+
 	void STypeFloat::FromString( CVariant *pRes, const std::string &szValue ) const
 	{
 		*pRes = NStr::ToFloat( szValue );
@@ -51,6 +53,7 @@ namespace NTypeDef
 	{
 		*pRes = (bool)value == false ? "false" : "true";
 	}
+
 	void STypeBool::FromString( CVariant *pRes, const std::string &szValue ) const
 	{
 		if ( szValue.empty() || szValue[0] == '0' || szValue == "false" )
@@ -73,6 +76,7 @@ namespace NTypeDef
 	{
 		*pRes = value.GetStr();
 	}
+
 	void STypeString::FromString( CVariant *pRes, const std::string &szValue ) const
 	{
 		*pRes = szValue;
@@ -82,6 +86,7 @@ namespace NTypeDef
 	{
 		*pRes = WideToUTF8( value.GetWStr() );
 	}
+
 	void STypeWString::FromString( CVariant *pRes, const std::string &szValue ) const
 	{
 		std::wstring wszRes;
@@ -108,6 +113,7 @@ namespace NTypeDef
 		pRes->resize( nSize * 2 );
 		NStr::BinToString( value.GetPtr(), nSize, (char *)pRes->data() );
 	}
+
 	void STypeBinary::FromString( CVariant *pRes, const std::string &szValue ) const
 	{
 		const int nSize = szValue.size() / 2;
@@ -138,6 +144,7 @@ namespace NTypeDef
 		}
 		*pRes = entries.empty() ? "" : entries[0].szName;
 	}
+
 	void STypeEnum::FromString( CVariant *pRes, const std::string &szValue ) const
 	{
 		for ( std::vector<SEnumEntry>::const_iterator it = entries.begin(); it != entries.end(); ++it )
@@ -155,6 +162,7 @@ namespace NTypeDef
 	{
 		*pRes = std::to_string( (int)value );
 	}
+
 	void STypeArray::FromString( CVariant *pRes, const std::string &szValue ) const
 	{
 		*pRes = NStr::ToInt( szValue );
@@ -174,10 +182,12 @@ namespace NTypeDef
 			*pRes = value.GetDBID().ToString();
 		}
 	}
+
 	void STypeRef::FromString( CVariant *pRes, const std::string &szValue ) const
 	{
 		*pRes = CDBID( szValue );
 	}
+
 	void STypeRef::GetRefTypesList( std::vector<const STypeClass *> *pTypesList ) const
 	{
 		if ( const STypeClass *pTypeClass = dynamic_cast_ptr<const STypeClass *>( pRefType ) )
@@ -393,8 +403,8 @@ namespace NTypeDef
 		}
 	}
 
-}
-}
+} // namespace NTypeDef
+} // namespace NDb
 
 using namespace NDb::NTypeDef;
 REGISTER_SAVELOAD_CLASS( LIBDB, 0x1018DAC7, SAttributes );

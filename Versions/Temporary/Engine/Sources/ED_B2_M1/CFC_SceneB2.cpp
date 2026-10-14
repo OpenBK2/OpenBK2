@@ -49,7 +49,7 @@ const float fDefaultDistance = 170.0f;
 const float fDefaultPitch = 45.0f;
 const float fDefaultYaw = 45.0f;
 const float fDefaultFOV = 26.0f;
-};
+}; // namespace
 
 CCFCSceneB2::CCFCSceneB2() {}
 

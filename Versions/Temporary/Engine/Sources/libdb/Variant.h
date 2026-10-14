@@ -43,13 +43,16 @@ private:
 		bool m_bDelete;
 
 		SBlob() : m_ptr( 0 ), m_nSize( 0 ), m_bDelete( false ) {}
+
 		SBlob( void *_ptr ) : m_ptr( _ptr ), m_nSize( 0 ), m_bDelete( false ) {}
+
 		SBlob( const void *_ptr, size_t _nSize, bool _bDelete = true )
 				: m_ptr( new uint8_t[_nSize] ), m_nSize( _nSize ), m_bDelete( _bDelete )
 		{
 			ASSERT( _ptr != 0 );
 			memcpy( m_ptr, _ptr, m_nSize );
 		}
+
 		SBlob( const SBlob &_blob ) : m_nSize( _blob.m_nSize ), m_bDelete( _blob.m_bDelete )
 		{
 			if ( m_bDelete )
@@ -96,6 +99,7 @@ private:
 		CMultiVariantMap *m_pMultiVariantMap;
 
 		SMultiVariant() {}
+
 		SMultiVariant( CMultiVariantMap *_pMultiVariantMap )
 		{
 			ASSERT( _pMultiVariantMap != 0 );
@@ -103,6 +107,7 @@ private:
 			m_pMultiVariantMap = new CMultiVariantMap();
 			*( m_pMultiVariantMap ) = *( _pMultiVariantMap );
 		}
+
 		SMultiVariant( const SMultiVariant &_mvar )
 		{
 			ASSERT( _mvar.m_pMultiVariantMap != 0 );
@@ -137,32 +142,49 @@ private:
 public:
 	//конструкторы
 	CVariant() : m_eType( VT_NULL ), m_pblob( NULL ) {}
+
 	CVariant( const CVariant &var );
 	CVariant &operator=( const CVariant &var );
 	void SetMultiVariant( CMultiVariantMap *pMultiVariantMap,
 	                      bool bDeleteInDestructor = true /* in fact it is true anyway */ );
+
 	void SetDestructorDeleted( bool bDeleteInDestructor, int nBlobSize )
 	{
 		ASSERT( m_eType == VT_POINTER );
 		m_pblob->m_bDelete = bDeleteInDestructor;
 		m_pblob->m_nSize = nBlobSize;
 	}
+
 	//конструкторы с приведением типов
 	CVariant( const int nVal ) : m_eType( VT_INT ), m_int( nVal ) {}
+
 	CVariant( const float fVal ) : m_eType( VT_FLOAT ), m_float( fVal ) {}
+
 	CVariant( const std::string &szVal ) : m_eType( VT_STR ), m_pstr( new std::string( szVal ) ) {}
+
 	CVariant( const char *pszVal ) : m_eType( VT_STR ), m_pstr( new std::string( pszVal ) ) {}
+
 	CVariant( const std::wstring &wszVal ) : m_eType( VT_WSTR ), m_pwstr( new std::wstring( wszVal ) ) {}
+
 	CVariant( const wchar_t *pwszVal ) : m_eType( VT_WSTR ), m_pwstr( new std::wstring( pwszVal ) ) {}
+
 	CVariant( const bool bVal ) : m_eType( VT_BOOL ), m_bool( bVal ) {}
+
 	CVariant( const CDBID &dbid ) : m_eType( VT_DBID ), m_dbid( new CDBID( dbid ) ) {}
+
 	//
 	CVariant( const uint32_t dwVal ) : m_eType( VT_INT ), m_int( dwVal ) {}
+
 	CVariant( const long lVal ) : m_eType( VT_INT ), m_int( lVal ) {}
+
 	CVariant( const uint16_t wVal ) : m_eType( VT_INT ), m_int( wVal ) {}
+
 	CVariant( const short nVal ) : m_eType( VT_INT ), m_int( nVal ) {}
+
 	CVariant( const char cVal ) : m_eType( VT_INT ), m_int( cVal ) {}
+
 	CVariant( const uint8_t cVal ) : m_eType( VT_INT ), m_int( cVal ) {}
+
 	//
 	CVariant( const boost::uuids::uuid &guid )
 			: m_eType( VT_POINTER ), m_pblob( new SBlob( (void *)&guid, sizeof( guid ) ) )
@@ -184,9 +206,18 @@ public:
 	}
 
 	~CVariant();
+
 	//
-	EVariantType GetType() const { return m_eType; }
-	bool IsNull() const { return m_eType == VT_NULL; }
+	EVariantType GetType() const
+	{
+		return m_eType;
+	}
+
+	bool IsNull() const
+	{
+		return m_eType == VT_NULL;
+	}
+
 	//приведение типов
 	operator int() const;
 	operator float() const;

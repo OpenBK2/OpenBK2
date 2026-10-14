@@ -13,6 +13,7 @@ namespace NScene
 {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const std::string SZ_TERRA_BIN_FILE_NAME = "map.b2m";
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath )
 {
@@ -21,6 +22,7 @@ void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, co
 	//CFileStream stream( NVFS::GetMainVFS(), szTerrainBinFileName );
 	pTerraManager->Load( pDesc, 0 );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath )
 {
@@ -35,11 +37,13 @@ bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, cons
 	//
 	return false;
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath )
 {
 	return SaveTerrain( pTerraManager, szMapFilePath, nullptr );
 }
+
 bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath, std::string *pError )
 {
 	try
@@ -65,8 +69,9 @@ bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath
 	//
 	return false;
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-};
+}; // namespace NScene
 
 void CTerrainManager::Setup( NGScene::IGameView *pGView, CFuncBase<STime> *_pTimer )
 {

@@ -29,38 +29,45 @@ static float s_fGameCameraMouseStrafeSensetivity = 1;
 static float s_fGameCameraKeyboardStrafeSensetivity = 1;
 static float s_fGameCameraMouseZoomSensetivity = 1;
 static float s_fGameCameraKeyboardZoomSensetivity = 1;
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CCameraGameMouseMutator::CCameraGameMouseMutator()
 {
 	SetTimeLastUpdate( GetCurrentTimeMilliseconds() );
 }
+
 void CCameraGameMouseMutator::SetDistance( float fDistance )
 {
 	// Explicit placements and camera resets cancel any pending wheel movement.
 	CCameraBasicMouseMutator::SetDistance( fDistance );
 	bSmoothZoomActive = false;
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float CCameraGameMouseMutator::GetPitchDelta()
 {
 	return GetPitchMouseDelta() * s_fGameCameraMousePitchSensetivity +
 	       GetPitchKeyboardDelta() * s_fGameCameraKeyboardPitchSensetivity;
 }
+
 float CCameraGameMouseMutator::GetYawDelta()
 {
 	return GetYawMouseDelta() * s_fGameCameraMouseYawSensetivity +
 	       GetYawKeyboardDelta() * s_fGameCameraKeyboardYawSensetivity;
 }
+
 float CCameraGameMouseMutator::GetForwardDelta()
 {
 	return GetForwardMouseDelta() * s_fGameCameraMouseForwardSensetivity +
 	       GetForwardKeyboardDelta() * s_fGameCameraKeyboardForwardSensetivity;
 }
+
 float CCameraGameMouseMutator::GetStrafeDelta()
 {
 	return GetStrafeMouseDelta() * s_fGameCameraMouseStrafeSensetivity +
 	       GetStrafeKeyboardDelta() * s_fGameCameraKeyboardStrafeSensetivity;
 }
+
 float CCameraGameMouseMutator::GetZoomDistance( float fTimeDiff, float fRealSensetivity )
 {
 	const float fMouseDelta = GetZoomMouseDelta() * s_fGameCameraMouseZoomSensetivity;
@@ -125,6 +132,7 @@ float CCameraGameMouseMutator::GetZoomDistance( float fTimeDiff, float fRealSens
 	}
 	return fDistance;
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CCameraGameMouseMutator::Recalc()
 {
@@ -246,6 +254,7 @@ void CCameraGameMouseMutator::Recalc()
 	SetWasUpdated( ( fabs( fYawOld - fYaw ) > EPS_VALUE ) || ( fabs( fPitchOld - fPitch ) > EPS_VALUE ) ||
 	               ( fabs2( vPositionOld - vPosition ) > EPS_VALUE ) );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int CCameraGameMouseMutator::operator&( IBinSaver &saver )
 {
@@ -257,8 +266,10 @@ int CCameraGameMouseMutator::operator&( IBinSaver &saver )
 	}
 	return 0;
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-}
+} // namespace NCamera
+
 using namespace NCamera;
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x101ACBC0, CCameraGameMouseMutator )
 

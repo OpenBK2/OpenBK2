@@ -9,6 +9,7 @@ using namespace NAnimation;
 class CTreeFallingMutator : public ITreeFallingMutator
 {
 	OBJECT_BASIC_METHODS( CTreeFallingMutator );
+
 	//
 	struct SLeafMutatorData
 	{
@@ -16,6 +17,7 @@ class CTreeFallingMutator : public ITreeFallingMutator
 		float fMaxRotAngle;
 		float fNormalRotAngle;
 	};
+
 	//
 	int nRootBoneIdx;
 	float fEndAngle;
@@ -49,7 +51,12 @@ public:
 	            float fFallCycles,
 	            int nFallDuration,
 	            NTimer::STime timeStart );
-	bool NeedUpdate() { return !bFinished; }
+
+	bool NeedUpdate()
+	{
+		return !bFinished;
+	}
+
 	void MutateSkeletonPose( NAnimation::SSkeletonPose *pPose );
 
 	int operator&( IBinSaver &saver );

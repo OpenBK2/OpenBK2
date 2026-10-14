@@ -22,6 +22,7 @@ namespace NEditorGltf
 namespace
 {
 	namespace fs = std::filesystem;
+
 	std::string Value( IManipulator *resource, const char *field )
 	{
 		std::string value;
@@ -31,6 +32,7 @@ namespace
 		}
 		return value;
 	}
+
 	std::string Source( IManipulator *resource )
 	{
 		const auto *owner = resource->GetObjMan()->GetObject();
@@ -49,6 +51,7 @@ namespace
 		}
 		return source;
 	}
+
 	std::vector<std::byte> Read( const std::string &path )
 	{
 		CFileStream stream( NVFS::GetMainVFS(), path );
@@ -66,6 +69,7 @@ namespace
 	}
 
 	using TExtras = std::unordered_map<size_t, SGrannyBoneAttributes::CAttributeMap>;
+
 	void ParseExtras( simdjson::dom::object *object, size_t index, fastgltf::Category category, void *user )
 	{
 		if ( category != fastgltf::Category::Nodes )
@@ -89,6 +93,7 @@ namespace
 			}
 		}
 	}
+
 	fastgltf::Asset Parse( const std::vector<std::byte> &bytes, TExtras *extras = nullptr )
 	{
 		auto data = fastgltf::GltfDataBuffer::FromBytes( bytes.data(), bytes.size() );
@@ -110,11 +115,13 @@ namespace
 		}
 		return std::move( asset.get() );
 	}
+
 	bool Below( const fs::path &path, const fs::path &root )
 	{
 		const auto relative = path.lexically_relative( root );
 		return !relative.empty() && !relative.is_absolute() && *relative.begin() != "..";
 	}
+
 	std::string CopyPackage( const std::string &objectName, const NGltf::TGltfFilePtr &file )
 	{
 		const std::string source = file->sourcePath;
@@ -223,7 +230,7 @@ namespace
 		}
 		return destination.lexically_relative( dataRoot ).generic_u8string();
 	}
-}
+} // namespace
 
 bool ImportModelFile( const std::string &objectName,
                       const std::string &source,
@@ -260,6 +267,7 @@ bool IsGltfFileName( const std::string &path )
 	NStr::ToLowerASCII( &extension );
 	return extension == ".glb" || extension == ".gltf";
 }
+
 bool IsGltf( IManipulator *resource )
 {
 	if ( !resource )
@@ -269,6 +277,7 @@ bool IsGltf( IManipulator *resource )
 	const std::string ref = Value( resource, "ModelFileRef" );
 	return IsGltfFileName( ref.empty() ? Value( resource, "SrcName" ) : ref );
 }
+
 NGltf::TGltfFilePtr Load( IManipulator *resource )
 {
 	return resource ? NGltf::LoadFile( nullptr, Source( resource ) ) : NGltf::TGltfFilePtr();
@@ -439,7 +448,7 @@ namespace
 		}
 		return true;
 	}
-}
+} // namespace
 
 bool ValidateForExport( IManipulator *resource, const std::string &type )
 {
@@ -640,4 +649,4 @@ bool ReadAttributes( IManipulator *resource, CGrannyBoneAttributesList *attribut
 		return false;
 	}
 }
-}
+} // namespace NEditorGltf

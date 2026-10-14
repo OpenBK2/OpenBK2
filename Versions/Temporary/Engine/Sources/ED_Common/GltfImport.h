@@ -8,4 +8,4 @@ namespace NEditorGltf
 // reference. External models are placed beside the destination XDB resource.
 ED_COMMON_EXPORT bool
 ImportModelFile( const std::string &objectName, const std::string &source, std::string *reference, std::string *error );
-}
+} // namespace NEditorGltf

@@ -22,7 +22,9 @@ struct SPolyhedron
 struct SEdge
 {
 	CVec4 vStart, vEnd;
+
 	SEdge() {}
+
 	SEdge( const CVec4 &_s, const CVec4 &_e ) : vStart( _s ), vEnd( _e ) {}
 };
 
@@ -217,17 +219,22 @@ static SPolygon GetQuad( const CVec4 &a, const CVec4 &b, const CVec4 &c, const C
 struct SHashedHedron
 {
 	std::vector<CVec4> pts;
+
 	struct SEdge
 	{
 		int nStart, nEnd;
+
 		SEdge() {}
+
 		SEdge( int _s, int _e ) : nStart( _s ), nEnd( _e ) {}
 	};
+
 	struct SPolygon
 	{
 		std::vector<int> edges;
 		CVec4 vPlane;
 	};
+
 	std::vector<SEdge> edges;
 	std::vector<SPolygon> polys;
 };
@@ -330,7 +337,8 @@ static void Assign( SPolyhedron *pRes, const SHashedHedron &src )
 	}
 }
 
-}
+} // namespace NGeometry
+
 namespace NGScene
 {
 
@@ -400,6 +408,7 @@ static float Discr( float f, float fStep )
 	int n = Float2Int( f / fStep );
 	return n * fStep;
 }
+
 static CVec3 Discr( const CVec3 &v, float fStep )
 {
 	CVec3 vRes( Discr( v.x, fStep ), Discr( v.y, fStep ), Discr( v.z, fStep ) );
@@ -425,6 +434,7 @@ static float CalcNLP( float f )
 	float fR = 7 + f * f;
 	return f * log( fR ) / log( 2.0f ) / sqrt( fR );
 }
+
 static void SolveNLP( float fMin, float fMax, float *pfA, float *pfB )
 {
 	float a = CalcNLP( fMin );
@@ -450,6 +460,7 @@ static void CalcMinMax( const std::vector<CVec3> &points, const CVec4 &vDir, flo
 	*pfMin = fMin;
 	*pfMax = fMax;
 }
+
 static float CalcRange( const std::vector<CVec3> &points, const CVec4 &vDir )
 {
 	float fMin, fMax;
@@ -469,6 +480,7 @@ struct SAreaCalcInfo
 	CVec3 vXBase, vYBase, vCamera;
 	float fCW; //, fMinimalScale;
 };
+
 static float CalcArea( float fRot, const SAreaCalcInfo &info, CVec4 *pX, CVec4 *pY )
 {
 	float fSin = sin( ToRadian( fRot ) ), fCos = cos( ToRadian( fRot ) );
@@ -784,4 +796,4 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes,
 //	bc.Make( pRes );
 //}
 
-}
+} // namespace NGScene

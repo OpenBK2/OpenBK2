@@ -358,6 +358,7 @@ static void ReorderTransparent( std::vector<STriangle> *pRet,
 }
 
 const int N_UNUSED_SRC_PTR = 0xffffffff & ~N_OVER_SRC_INFO;
+
 class CPreciseTranspRender
 {
 	std::vector<STransparentInfo> &infos;
@@ -385,6 +386,7 @@ class CPreciseTranspRender
 		tris.resize( 0 );
 		nCurrentSrc = N_UNUSED_SRC_PTR;
 	}
+
 	void MarkOverdrawParticles( const std::vector<int> &sorted )
 	{
 		for ( int k = sorted.size() - 1; k >= 0; --k )
@@ -406,6 +408,7 @@ public:
 			: infos( *pInfos ), depths( *pDepths ), sourcePtrs( *pSrcPtrs ), pRC( _pRC )
 	{
 	}
+
 	void Render( const STransparentRenderContext &trc )
 	{
 		SetParticlesEffect( trc );
@@ -483,8 +486,13 @@ public:
 struct SCmpFragments
 {
 	const std::vector<STransparentInfo> &infos;
+
 	SCmpFragments( const std::vector<STransparentInfo> &_infos ) : infos( _infos ) {}
-	bool operator()( int n1, int n2 ) { return infos[n1].fDepth < infos[n2].fDepth; }
+
+	bool operator()( int n1, int n2 )
+	{
+		return infos[n1].fDepth < infos[n2].fDepth;
+	}
 };
 
 void CTransparentRenderer::RealRender( const STransparentRenderContext &trc )
@@ -604,5 +612,6 @@ void CTransparentRenderer::Render( const STransparentRenderContext &trc )
 	infoStartIdx.pop_back();
 }
 
-}
+} // namespace NGScene
+
 using namespace NGScene;

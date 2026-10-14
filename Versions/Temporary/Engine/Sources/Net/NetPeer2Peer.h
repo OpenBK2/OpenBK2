@@ -11,6 +11,7 @@ class CP2PTracker
 {
 public:
 	typedef unsigned int UCID;
+
 	enum EOutMessage
 	{
 		NEW_CIENT,
@@ -18,6 +19,7 @@ public:
 		DIRECT,
 		BROADCAST,
 	};
+
 	struct SMessage
 	{
 		EOutMessage msg;
@@ -25,14 +27,17 @@ public:
 		std::vector<UCID> received;
 		CMemoryStream pkt;
 	};
+
 	struct SPacket
 	{
 		UCID addr;
 		CMemoryStream pkt;
 
 		SPacket() {}
+
 		SPacket( UCID _addr, CMemoryStream &_pkt ) : addr( _addr ), pkt( _pkt ) {}
 	};
+
 	std::vector<SPacket> packets;
 	std::vector<UCID> kicks;
 
@@ -52,6 +57,7 @@ private:
 		UCID addr;
 		bool bAcked;
 	};
+
 	struct SQMessage
 	{
 		int nID;
@@ -59,20 +65,25 @@ private:
 		CMemoryStream msg;
 		std::list<SAck> acks;
 	};
+
 	struct SFastAck
 	{
 		int nID;
 		UCID addr; // broadcast sender address
 	};
+
 	typedef int64_t PEER_ID;
+
 	struct SPeerClient
 	{
 		UCID addr;
 		PEER_ID id;
 
 		SPeerClient() {}
+
 		SPeerClient( UCID _addr, PEER_ID _id ) : addr( _addr ), id( _id ) {}
 	};
+
 	struct SPeer
 	{
 		UCID addr;
@@ -84,7 +95,11 @@ private:
 		PEER_ID id;
 		CMemoryStream addrInfo;
 
-		bool IsActive() const { return bActive; }
+		bool IsActive() const
+		{
+			return bActive;
+		}
+
 		bool HasClient( UCID addr ) const
 		{
 			for ( std::list<SPeerClient>::const_iterator i = clients.begin(); i != clients.end(); ++i )
@@ -96,6 +111,7 @@ private:
 			}
 			return false;
 		}
+
 		const UCID GetAddr( PEER_ID id )
 		{
 			for ( std::list<SPeerClient>::iterator i = clients.begin(); i != clients.end(); ++i )
@@ -108,6 +124,7 @@ private:
 			ASSERT( 0 );
 			return clients.front().addr;
 		}
+
 		void RemoveClient( UCID addr )
 		{
 			for ( std::list<SPeerClient>::iterator i = clients.begin(); i != clients.end(); )
@@ -123,6 +140,7 @@ private:
 			}
 		}
 	};
+
 	std::list<SMessage> output;
 	std::unordered_map<UCID, SPeer> clients;
 	std::unordered_map<PEER_ID, UCID> peersByID;
@@ -148,4 +166,4 @@ private:
 	//void SendDirect( const SPeer &dest, CMemoryStream &pkt );
 	void SendAck( const UCID dest, int nID, PEER_ID id );
 };
-}
+} // namespace NNet

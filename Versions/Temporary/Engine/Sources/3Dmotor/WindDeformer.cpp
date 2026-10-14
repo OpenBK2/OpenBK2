@@ -21,6 +21,7 @@ class CWindDeformer : public CPtrFuncBase<CObjectInfo>
 	CDGPtr<CPtrFuncBase<CObjectInfo>> pGeom;
 	SFBTransform place;
 	CDGPtr<CFuncBase<SFBTransform>> pPlace;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pGeom );
@@ -31,18 +32,28 @@ class CWindDeformer : public CPtrFuncBase<CObjectInfo>
 
 protected:
 	CWindDeformer() {}
-	bool NeedUpdate() { return pGeom.Refresh(); }
+
+	bool NeedUpdate()
+	{
+		return pGeom.Refresh();
+	}
+
 	void Recalc();
 
 public:
 	CWindDeformer( CPtrFuncBase<CObjectInfo> *_pGeom, const SFBTransform &_place ) : pGeom( _pGeom ), place( _place ) {}
+
 	CWindDeformer( CPtrFuncBase<CObjectInfo> *_pGeom, CFuncBase<SFBTransform> *_pPlace )
 			: pGeom( _pGeom ), pPlace( _pPlace )
 	{
 		Identity( &( place.forward ) );
 		Identity( &( place.backward ) );
 	}
-	CPtrFuncBase<CObjectInfo> *GetOriginalGeometry() const { return pGeom; }
+
+	CPtrFuncBase<CObjectInfo> *GetOriginalGeometry() const
+	{
+		return pGeom;
+	}
 };
 
 void CWindDeformer::Recalc()
@@ -118,7 +129,7 @@ CObjectBase *GetWindDeformerSource( CObjectBase *p )
 	return 0;
 }
 
-}
+} // namespace NGScene
 
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x1358BB78, CWindDeformer )

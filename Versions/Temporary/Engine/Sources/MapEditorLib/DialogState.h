@@ -31,6 +31,7 @@ struct MAPEDITORLIB_EXPORT SDialogState
 	std::vector<float> fParameters;
 
 	SDialogState() : rect( 0, 0, 0, 0 ) {}
+
 	virtual ~SDialogState() {}
 
 	virtual int operator&( IBinSaver &bs );
@@ -80,4 +81,4 @@ namespace NDialogState
 {
 MAPEDITORLIB_EXPORT bool Load( const std::string &rszDialogName, SDialogState *pState );
 MAPEDITORLIB_EXPORT bool Save( const std::string &rszDialogName, SDialogState *pState );
-}
+} // namespace NDialogState

@@ -15,7 +15,11 @@ protected:
 	                                   bool *pbNeedExport,
 	                                   bool *pbNeedEdit,
 	                                   IManipulator *pBuildDataManipulator ) = 0;
-	virtual bool NeedBuildDataDialog() const { return true; }
+
+	virtual bool NeedBuildDataDialog() const
+	{
+		return true;
+	}
 
 public:
 	// можно поменять значение по умолчанию для следужщего поля: ( *pbCanChangeObjectName ) = false;

@@ -24,7 +24,11 @@ public:
 
 	protected:
 		void Recalc();
-		bool NeedUpdate() { return bNeedUpdate; }
+
+		bool NeedUpdate()
+		{
+			return bNeedUpdate;
+		}
 
 	public:
 		CArray2D<NGfx::SPixel8888> picture;
@@ -34,6 +38,7 @@ public:
 			f.Add( 1, &picture );
 			return 0;
 		}
+
 		void Set( const CArray2D<NGfx::SPixel8888> &src );
 	};
 
@@ -41,11 +46,24 @@ private:
 	CObj<CTextureData> pData;
 
 public:
-	CBackgroundMutableTexture() { pData = new CTextureData; }
+	CBackgroundMutableTexture()
+	{
+		pData = new CTextureData;
+	}
+
 	virtual void Visit( struct IUIVisitor *pVisitor );
 	virtual int operator&( IBinSaver &ss );
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
-	virtual void Clear() { pData->picture.Clear(); }
-	virtual void SetTexture( const struct NDb::STexture *_pDesc ) { ASSERT( !_pDesc ); }
+
+	virtual void Clear()
+	{
+		pData->picture.Clear();
+	}
+
+	virtual void SetTexture( const struct NDb::STexture *_pDesc )
+	{
+		ASSERT( !_pDesc );
+	}
+
 	void Set( const CArray2D<NGfx::SPixel8888> &src );
 };

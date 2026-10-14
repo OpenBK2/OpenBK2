@@ -4,6 +4,7 @@
 #include "System/det_map.h"
 
 class CAIUnit;
+
 namespace NDb
 {
 enum EUnitAckType : int;

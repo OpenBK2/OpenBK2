@@ -60,4 +60,4 @@ bool IsRegistered( int nObjectTypeID )
 {
 	return pSSClasses ? pSSClasses->IsRegistered( nObjectTypeID ) : false;
 }
-}
+} // namespace NObjectFactory

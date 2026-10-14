@@ -7,6 +7,7 @@
 class CCommandHandlerContainer : public ICommandHandlerContainer
 {
 	OBJECT_NOCOPY_METHODS( CCommandHandlerContainer );
+
 	//
 	struct SCommandRange
 	{
@@ -16,7 +17,9 @@ class CCommandHandlerContainer : public ICommandHandlerContainer
 		CCommandIDSet commandIDSet;
 
 		SCommandRange() {}
+
 		SCommandRange( const SCommandRange &rCommandRange ) : commandIDSet( rCommandRange.commandIDSet ) {}
+
 		SCommandRange &operator=( const SCommandRange &rCommandRange )
 		{
 			if ( &rCommandRange != this )
@@ -26,6 +29,7 @@ class CCommandHandlerContainer : public ICommandHandlerContainer
 			return *this;
 		}
 	};
+
 	//
 	typedef std::unordered_map<unsigned, SCommandRange> CCommandHandlerIDToCommandIDMap;
 	typedef std::unordered_map<unsigned, unsigned> CCommandIDToCommandHandlerIDMap;

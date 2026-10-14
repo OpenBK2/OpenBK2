@@ -39,4 +39,4 @@ ConvertWeights( std::vector<SVertexWeight> *pRes, const std::vector<SLoadVertexW
 	}
 }
 
-} // namespace
+} // namespace NGScene

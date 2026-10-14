@@ -219,4 +219,5 @@ public:
 		}
 	}
 };
+
 static CActionsRemapAutomagic theActionsRemapAutomagic;

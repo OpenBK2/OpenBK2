@@ -23,6 +23,7 @@ enum ETrueBufferUsage
 	TBU_DYNAMIC,
 	TBU_SOFTWARE
 };
+
 inline uint32_t GetUsageFlags( ETrueBufferUsage eUsage )
 {
 	switch ( eUsage )
@@ -38,6 +39,7 @@ inline uint32_t GetUsageFlags( ETrueBufferUsage eUsage )
 	}
 	return 0;
 }
+
 inline D3DPOOL GetPool( ETrueBufferUsage eUsage )
 {
 	switch ( eUsage )
@@ -59,6 +61,7 @@ class CLockable : public CObjectBase
 public:
 	virtual void Free() = 0;
 };
+
 extern bool bWasLinearBufferLock;
 void FreeLinearBuffers();
 
@@ -74,9 +77,19 @@ public:
 	int nSize; // size in bytes
 
 	CRBase() : nLockCount( 0 ), pLocked( 0 ) {}
+
 	CRBase( int _nSize ) : nSize( _nSize ), nLockCount( 0 ), pLocked( 0 ) {}
-	~CRBase() { Free(); }
-	int GetSize() const { return nSize; }
+
+	~CRBase()
+	{
+		Free();
+	}
+
+	int GetSize() const
+	{
+		return nSize;
+	}
+
 	void Lock( uint32_t dwFlags )
 	{
 		ASSERT( nLockCount == 0 || dwFlags == 0 || dwFlags == D3DLOCK_NOOVERWRITE );
@@ -98,11 +111,13 @@ public:
 		// A failed lock must not leave a count that later cleanup tries to release.
 		++nLockCount;
 	}
+
 	void Unlock()
 	{
 		ASSERT( nLockCount > 0 );
 		--nLockCount;
 	}
+
 	virtual void Free()
 	{
 		ASSERT( nLockCount == 0 );
@@ -136,6 +151,7 @@ class CVB : public CRBase<IDirect3DVertexBuffer9>
 
 public:
 	CVB() {}
+
 	// size in bytes
 	CVB( int _nSize, ETrueBufferUsage eUsage ) : CRBase<IDirect3DVertexBuffer9>( _nSize )
 	{
@@ -163,6 +179,7 @@ public:
 	int nSize; // size in bytes
 
 	CIBFast() : pLocked( 0 ) {}
+
 	// size in bytes
 	CIBFast( int _nSize, ETrueBufferUsage eUsage ) : nSize( _nSize )
 	{
@@ -181,6 +198,7 @@ public:
 			TryLockBuffer( this, eUsage );
 		}
 	}
+
 	void Lock( uint32_t dwFlags )
 	{
 		ASSERT( !pLocked );
@@ -196,6 +214,7 @@ public:
 		}
 		pLocked = static_cast<unsigned char *>( pData );
 	}
+
 	void Unlock()
 	{
 		ASSERT( pLocked );
@@ -204,10 +223,11 @@ public:
 		pLocked = 0;
 	}
 };
+
 typedef CIBFast<D3DFMT_INDEX32> CIB32Fast;
 typedef CIBFast<D3DFMT_INDEX16> CIB16Fast;
 
 // 16 bit index buffer
 //class CIB16: public CRBase<IDirect3DIndexBuffer8>
 
-}
+} // namespace NGfx

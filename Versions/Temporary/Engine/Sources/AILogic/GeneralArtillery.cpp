@@ -212,6 +212,7 @@ void CGeneralArtillery::SetCellInUse( const int nResistanceCell, bool bInUse )
 {
 	pOwner->SetCellInUse( nResistanceCell, bInUse );
 }
+
 //*******************************************************************
 //*									CGeneralArtilleryGoToPosition										*
 //*******************************************************************

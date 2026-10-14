@@ -50,7 +50,7 @@ struct SLogColour
 };
 
 SLogColour GetColour( ELogOutputType eLogOutputType );
-}
+} // namespace NLogView
 
 class wxWindow;
 
@@ -62,4 +62,4 @@ namespace NLogView
 // then does what SetBounds does for an MFC pane. Owned by the caller; null
 // on failure.
 ILogView *CreateWxLogViewIn( wxWindow *pParent, ICommandHandler *pSelectionHandler, wxWindow **ppWindow );
-}
+} // namespace NLogView

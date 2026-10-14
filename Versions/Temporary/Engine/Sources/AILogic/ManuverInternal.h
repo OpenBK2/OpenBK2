@@ -9,6 +9,7 @@ struct SPlanesConsts
 	static float MIN_HEIGHT;
 	static float MAX_HEIGHT;
 	static float MIN_HEIGHT_TEMP;
+
 	static float GetMinHeight()
 	{
 		if ( MIN_HEIGHT_TEMP == 0.0f )
@@ -67,6 +68,7 @@ public:
 		f.Add( 13, &bToHorisontal );
 		return 0;
 	}
+
 	void InitInternal( struct IPathFraction *_pPath,
 	                   CPlanesFormation *_pPlane,
 	                   const float fSpeed,
@@ -97,21 +99,45 @@ private:
 	                             CVec3 *pvNewTarget ) const;
 
 public:
-	bool IsToHorisontal() const { return bToHorisontal; }
-	void SetPlane( CPlanesFormation *_pPlane ) { pPlane = _pPlane; }
+	bool IsToHorisontal() const
+	{
+		return bToHorisontal;
+	}
+
+	void SetPlane( CPlanesFormation *_pPlane )
+	{
+		pPlane = _pPlane;
+	}
 
 	// to init next manuver with this params - will be smooth transition between manuvers
 	void GetManuverParams( struct SPrevPathParams *pParams ) const;
 
 	CManuver() : bUsed( false ), fCurTiltSpeed( 0 ), bToHorisontal( 0 ) {}
+
 	//CRAP{ FOR TEST
 	// preferred top direction
-	CVec3 GetTopDirection() const { return CVec3( 0, 0, 1.0f ); }
-	virtual const CVec3 GetEndPoint() const { return pPath->GetEndPoint(); }
+	CVec3 GetTopDirection() const
+	{
+		return CVec3( 0, 0, 1.0f );
+	}
+
+	virtual const CVec3 GetEndPoint() const
+	{
+		return pPath->GetEndPoint();
+	}
+
 	//CRAP}
 
-	CVec3 GetPos() const { return vCenter; }
-	CVec3 GetSpeed() const { return vSpeed; }
+	CVec3 GetPos() const
+	{
+		return vCenter;
+	}
+
+	CVec3 GetSpeed() const
+	{
+		return vSpeed;
+	}
+
 	CVec3 GetNormale() const;
 
 	CVec3 GetProspectivePoint( const NTimer::STime nTime ) const;

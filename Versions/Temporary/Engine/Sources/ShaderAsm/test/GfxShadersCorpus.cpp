@@ -27,12 +27,14 @@ std::vector<SEntry> ReadCorpus( const std::string &szPath )
 {
 	std::ifstream file( szPath, std::ios::binary );
 	std::vector<SEntry> entries;
+
 	enum
 	{
 		OUTSIDE,
 		SOURCE,
 		EXPECT
 	} state = OUTSIDE;
+
 	std::string szLine;
 	while ( std::getline( file, szLine ) )
 	{
@@ -127,4 +129,4 @@ TEST( ShaderAsm, RejectsWhatItDoesNotCover )
 	EXPECT_TRUE( tokens.empty() );
 }
 
-}
+} // namespace

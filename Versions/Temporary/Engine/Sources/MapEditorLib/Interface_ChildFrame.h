@@ -19,6 +19,7 @@ struct IChildFrameContainer : public CObjectBase
 	{
 		tidTypeID = 0x1408B400
 	};
+
 	//
 	// Проверить на возможность создания
 	virtual bool CanCreate( const std::string &rszChildFrameTypeName ) = 0;

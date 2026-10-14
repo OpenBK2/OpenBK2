@@ -40,9 +40,15 @@ class CFormationWxWindow : public CWxHostWindow, public CPaletteCommands<SFormat
 	bool bIsDataSetting = false;
 
 public:
-	CFormationWxWindow() { Singleton<ICommandHandlerContainer>()->Set( CHID_FORMATION_LIST_DIALOG, this ); }
+	CFormationWxWindow()
+	{
+		Singleton<ICommandHandlerContainer>()->Set( CHID_FORMATION_LIST_DIALOG, this );
+	}
 
-	virtual ~CFormationWxWindow() { Singleton<ICommandHandlerContainer>()->Remove( CHID_FORMATION_LIST_DIALOG ); }
+	virtual ~CFormationWxWindow()
+	{
+		Singleton<ICommandHandlerContainer>()->Remove( CHID_FORMATION_LIST_DIALOG );
+	}
 
 	bool Build( IWidget *pParent )
 	{
@@ -166,7 +172,10 @@ private:
 		NotifyHandler();
 	}
 
-	void OnPropMask( wxCommandEvent & ) { NotifyHandler(); }
+	void OnPropMask( wxCommandEvent & )
+	{
+		NotifyHandler();
+	}
 
 	void OnListResized( wxSizeEvent &rEvent )
 	{
@@ -177,7 +186,7 @@ private:
 		}
 	}
 };
-}
+} // namespace
 
 namespace NFormationView
 {
@@ -195,4 +204,4 @@ IWidget *Create( CPaletteList *pPalettes, IWidget *pPage )
 	}
 	return pWindow;
 }
-}
+} // namespace NFormationView

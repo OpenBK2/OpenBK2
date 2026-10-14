@@ -10,7 +10,9 @@ class CUIMessageHandler
 	MESSAGE_HANDLER pH; // message handler to call
 public:
 	CUIMessageHandler() : pH( 0 ) {}
+
 	CUIMessageHandler( MESSAGE_HANDLER _pH ) : pH( _pH ) {}
+
 	bool Execute( const struct SBUIMessage &msg, void *pObj )
 	{
 		NI_ASSERT( pH != 0, "null message handler" );

@@ -19,6 +19,7 @@ class CInterfaceMPCreateCustomGame : public CInterfaceMPScreenBase,
 		int nMapSizeY;
 		int nPlayersMax;
 		CDBPtr<NDb::SMultiplayerMap> pMPMap;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &wszMapName );
@@ -30,6 +31,7 @@ class CInterfaceMPCreateCustomGame : public CInterfaceMPScreenBase,
 			return 0;
 		}
 	};
+
 	//--------------
 	class CCustomGameListData : public CObjectBase
 	{
@@ -37,6 +39,7 @@ class CInterfaceMPCreateCustomGame : public CInterfaceMPScreenBase,
 	public:
 		ZDATA
 		SMPMapInfo info;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &info );
@@ -44,8 +47,10 @@ class CInterfaceMPCreateCustomGame : public CInterfaceMPScreenBase,
 		}
 
 		CCustomGameListData() {}
+
 		CCustomGameListData( SMPMapInfo &_info ) : info( _info ) {};
 	};
+
 	//--------------
 	class CItemCustomGameListViewer : public IDataViewer
 	{
@@ -53,6 +58,7 @@ class CInterfaceMPCreateCustomGame : public CInterfaceMPScreenBase,
 	public:
 		void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
 	};
+
 	//--------------
 
 	typedef std::vector<SMPMapInfo> CMPMaps;

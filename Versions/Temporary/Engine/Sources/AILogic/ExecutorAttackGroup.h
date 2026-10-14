@@ -12,6 +12,7 @@ class CExecutorAttackGroup : public CExecutor
 		EAGS_SWARM,
 		EAGS_END,
 	};
+
 	typedef std::list<CPtr<CCommonUnit>> CAttackGroupUnits;
 	OBJECT_BASIC_METHODS( CExecutorAttackGroup );
 	ZDATA_( CExecutor )
@@ -39,6 +40,7 @@ public:
 	CExecutorAttackGroup( int _nGroupID ) : CExecutor( TID_ATTACKGROUP, 20 ), nGroupID( _nGroupID ), eState( EAGS_BEGIN )
 	{
 	}
+
 	CExecutorAttackGroup() {}
 
 	void RegisterOnEvents( IExecutorContainer *pContainer );

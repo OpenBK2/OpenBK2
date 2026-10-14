@@ -1092,6 +1092,7 @@ bool CWindow::OnMouseMove( const CVec2 &_vPos, const int nMouseState )
 	}
 	return false;
 }
+
 /*
 
 void CWindow::OnChar( const wchar_t chr )

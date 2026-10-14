@@ -5,15 +5,21 @@ template <class T>
 class CSyncSrc;
 template <class T>
 class CSyncDst;
+
 template <class T>
 class CSyncSrcBind
 {
-	CSyncSrcBind( const CSyncSrcBind &a ) { ASSERT( 0 ); }
+	CSyncSrcBind( const CSyncSrcBind &a )
+	{
+		ASSERT( 0 );
+	}
+
 	CSyncSrcBind &operator=( const CSyncSrcBind &a )
 	{
 		ASSERT( 0 );
 		return *this;
 	}
+
 	ZDATA
 	CPtr<CSyncSrc<T>> pSync;
 	int nID = 0;
@@ -25,8 +31,14 @@ public:
 		f.Add( 3, &nID );
 		return 0;
 	}
+
 	CSyncSrcBind() {}
-	~CSyncSrcBind() { Unlink(); }
+
+	~CSyncSrcBind()
+	{
+		Unlink();
+	}
+
 	void Link( CSyncSrc<T> *p, T *pObject )
 	{
 		Unlink();
@@ -36,6 +48,7 @@ public:
 			nID = p->Add( pObject );
 		}
 	}
+
 	void Unlink()
 	{
 		if ( IsValid( pSync ) )
@@ -44,6 +57,7 @@ public:
 		}
 		pSync = 0;
 	}
+
 	void Update()
 	{
 		if ( IsValid( pSync ) )
@@ -61,6 +75,7 @@ class CSyncSrc : public CObjectBase
 		ZDATA
 		CPtr<T> pObject;
 		int nNext = 0, nPrev = 0, nVersion = 0;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pObject );
@@ -71,8 +86,10 @@ class CSyncSrc : public CObjectBase
 		}
 
 		SObject() : nNext( 0 ), nPrev( 0 ), nVersion( 0 ) {}
+
 		explicit SObject( T *_pObject ) : pObject( _pObject ) {}
 	};
+
 	ZDATA
 	std::vector<int> freeIDs;
 	std::vector<SObject> objects;
@@ -99,12 +116,14 @@ private:
 		}
 		return false;
 	}
+
 	void EraseLink( int nID )
 	{
 		const SObject &o = objects[nID];
 		objects[o.nPrev].nNext = o.nNext;
 		objects[o.nNext].nPrev = o.nPrev;
 	}
+
 	void AddHead( int nID )
 	{
 		SObject &f = objects[0];
@@ -115,6 +134,7 @@ private:
 		f.nNext = nID;
 		o.nVersion = ++nVersion;
 	}
+
 	void MoveToHead( int nID )
 	{
 		EraseLink( nID );
@@ -142,17 +162,26 @@ protected:
 		}
 		return nID;
 	}
+
 	void Remove( int nID )
 	{
 		objects[nID].pObject = 0;
 		freeIDs.push_back( nID );
 		MoveToHead( nID );
 	}
-	void Update( int nID ) { MoveToHead( nID ); }
+
+	void Update( int nID )
+	{
+		MoveToHead( nID );
+	}
+
 	virtual void Refresh() {}
 
 public:
-	CSyncSrc() : nVersion( 1 ) { objects.resize( 1 ); }
+	CSyncSrc() : nVersion( 1 )
+	{
+		objects.resize( 1 );
+	}
 	friend class CSyncDst<T>;
 	friend class CSyncSrcBind<T>;
 };
@@ -173,7 +202,11 @@ public:
 	}
 
 protected:
-	CSyncSrc<T> *GetSource() const { return pSource; }
+	CSyncSrc<T> *GetSource() const
+	{
+		return pSource;
+	}
+
 	virtual void VisitObject( int nID, T *p ) = 0;
 
 public:
@@ -193,7 +226,9 @@ public:
 		}
 		nVersion = src.nVersion;
 	}
+
 	CSyncDst( CSyncSrc<T> *_pSrc = 0 ) : pSource( _pSrc ), nVersion( -1 ) {}
+
 	virtual void SetNewSource( CSyncSrc<T> *_pSrc )
 	{
 		pSource = _pSrc;
@@ -211,6 +246,7 @@ class IVisitorBase
 		ASSERT( pStuff );
 		pStuff->push_back( p );
 	}
+
 	void StartNewObject( std::vector<CObj<CObjectBase>> *_pStuff, CObjectBase *_pCurrentObject )
 	{
 		pStuff = _pStuff;
@@ -219,13 +255,19 @@ class IVisitorBase
 
 public:
 	IVisitorBase() : pStuff( 0 ) {}
+
 	template <class TR>
 	TR *Register( TR *p )
 	{
 		RegisterBase( CastToObjectBase( p ) );
 		return p;
 	}
-	CObjectBase *GetCurrentSrcObject() const { return pCurrentObject; }
+
+	CObjectBase *GetCurrentSrcObject() const
+	{
+		return pCurrentObject;
+	}
+
 	const std::vector<CObj<CObjectBase>> &GetCurrentObjects() const
 	{
 		ASSERT( pStuff );
@@ -233,6 +275,7 @@ public:
 	}
 	friend struct SVisitorBaseAccess;
 };
+
 struct SVisitorBaseAccess
 {
 	void StartNewObject( IVisitorBase *p, std::vector<CObj<CObjectBase>> *_pStuff, CObjectBase *_pCurrentObject )
@@ -280,18 +323,28 @@ private:
 
 protected:
 	virtual void PostVisit( int nID, T *pObject ) {}
-	const std::vector<CObj<CObjectBase>> &GetObjects( int nID ) const { return view[nID]; }
+
+	const std::vector<CObj<CObjectBase>> &GetObjects( int nID ) const
+	{
+		return view[nID];
+	}
 
 public:
 	COrdinarySyncDst() : CSyncDst<T>( 0 ) {}
+
 	COrdinarySyncDst( CSyncSrc<T> *p, TVisitor *_pVisitor ) : CSyncDst<T>( p ), pVisitor( _pVisitor ) {}
+
 	virtual void SetNewSource( CSyncSrc<T> *_pSrc, TVisitor *_pVisitor )
 	{
 		TSyncParent::SetNewSource( _pSrc );
 		view.clear();
 		pVisitor = _pVisitor;
 	}
-	TVisitor *GetVisitor() const { return pVisitor; }
+
+	TVisitor *GetVisitor() const
+	{
+		return pVisitor;
+	}
 };
 
 template <class T>
@@ -302,6 +355,7 @@ class CSetSyncSrc : public CSyncSrc<T>
 	typedef std::unordered_map<CPtr<T>, int, SPtrHash> CStuffHash;
 	ZDATA_( TParent )
 	CStuffHash stuff;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (TParent *)this );
@@ -334,6 +388,7 @@ public:
 			Remove( i->second );
 		}
 	}
+
 	void Set( T *p )
 	{
 		typename CStuffHash::iterator k = stuff.find( p );
@@ -394,6 +449,7 @@ private:
 
 public:
 	CBoolSyncDstUtil() {}
+
 	CBoolSyncDstUtil( CSyncSrc<T> *pSrc, TUplink *p, int _nMask ) : CSyncDst<T>( pSrc ), pRes( p ), nMask( _nMask ) {}
 };
 
@@ -402,16 +458,19 @@ class CBoolSyncSrc : public CSyncSrc<T>
 {
 	OBJECT_BASIC_METHODS( CBoolSyncSrc )
 	typedef CBoolSyncSrc<T, TFunc> TThis;
+
 	struct SObjectInfo
 	{
 		int nMask = 0;
 		int nTrackID = 0;
 	};
+
 	typedef std::unordered_map<CPtr<T>, SObjectInfo, SPtrHash> CObjectsHash;
 	typedef CSyncSrc<T> TParent;
 	ZDATA_( TParent )
 	CObjectsHash objects;
 	CBoolSyncDstUtil<T, TThis> syncA, syncB;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (TParent *)this );
@@ -462,6 +521,7 @@ class CBoolSyncSrc : public CSyncSrc<T>
 			}
 		}
 	}
+
 	void BoolUpdate( T *pObject )
 	{
 		typename CObjectsHash::iterator i = objects.find( pObject );
@@ -471,6 +531,7 @@ class CBoolSyncSrc : public CSyncSrc<T>
 			Update( i->second.nTrackID );
 		}
 	}
+
 	virtual void Refresh()
 	{
 		syncA.Sync();
@@ -479,6 +540,7 @@ class CBoolSyncSrc : public CSyncSrc<T>
 
 public:
 	CBoolSyncSrc() {}
+
 	CBoolSyncSrc( CSyncSrc<T> *pA, CSyncSrc<T> *pB ) : syncA( pA, this, 1 ), syncB( pB, this, 2 ) {}
 
 	friend class CBoolSyncDstUtil<T, TThis>;
@@ -487,17 +549,26 @@ public:
 class CUnionFunc
 {
 public:
-	static bool GetResult( int nMask ) { return nMask != 0; }
+	static bool GetResult( int nMask )
+	{
+		return nMask != 0;
+	}
 };
 
 class CIntersectionFunc
 {
 public:
-	static bool GetResult( int nMask ) { return nMask == 3; }
+	static bool GetResult( int nMask )
+	{
+		return nMask == 3;
+	}
 };
 
 class CSubtractFunc
 {
 public:
-	static bool GetResult( int nMask ) { return nMask == 1; }
+	static bool GetResult( int nMask )
+	{
+		return nMask == 1;
+	}
 };

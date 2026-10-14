@@ -1,8 +1,10 @@
 #pragma once
+
 namespace NGfx
 {
 class CTexture;
 }
+
 namespace NGScene
 {
 
@@ -14,6 +16,7 @@ enum ESceneRenderMode
 	SRM_SHOWPOLYCOUNT,
 	SRM_LAST
 };
+
 enum ERenderPath : int
 {
 	RP_TNL,
@@ -30,6 +33,7 @@ enum ERenderPath : int
 	//	RP_R300
 	RP_SHOWPOLYCOUNT,
 };
+
 //inline bool IsUingRegisters( ERenderPath rp ) { return rp >= RP_GF2; }
 //inline bool IsUsingCacheLighting( ERenderPath rp ) { return rp >= RP_UPDATE_CL; }
 inline bool IsUsingShadows( ERenderPath rp )
@@ -44,6 +48,7 @@ enum EHSRMode
 	HSR_DYNAMIC,
 	HSR_LAST
 };
+
 enum ETransparentMode : int
 {
 	TRM_NONE,
@@ -51,12 +56,14 @@ enum ETransparentMode : int
 	TRM_ONLY,
 	TRM_LAST
 };
+
 enum EScenePartsSet
 {
 	SPS_STATIC = 1,
 	SPS_DYNAMIC = 2,
 	SPS_ALL = 3
 };
+
 enum ELightFlags
 {
 	LF_NEVER_STATIC = 1,
@@ -65,15 +72,18 @@ enum ELightFlags
 	LF_SKIP_LIGHTING = 8,
 	LF_DO_NOT_MULTIPLY_ON_TRANSPARENCY = 16
 };
+
 enum EGeometryAttributes
 {
 	GATTR_VERTEX_COLOR = 13
 };
+
 enum EAlphaMode2D : int
 {
 	AM2D_NORMAL,
 	AM2D_PREMUL,
 };
+
 enum ELightmapQuality : int
 {
 	LM_QUALITY_DRAFT,
@@ -96,6 +106,7 @@ struct SRTClearParams
 		CT_ZBUFFER_ONLY,
 		CT_FULL
 	};
+
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	EClearType ct = {};
 	CVec4 vColor;
@@ -109,4 +120,4 @@ inline SBound MakeLargeHintBound()
 	b.SphereInit( CVec3( 0, 0, 0 ), 1e6 );
 	return b;
 }
-}
+} // namespace NGScene

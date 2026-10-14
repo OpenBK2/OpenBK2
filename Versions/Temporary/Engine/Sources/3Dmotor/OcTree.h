@@ -1,4 +1,5 @@
 #pragma once
+
 template <class TFinal, int N_MIN_NODE, bool B_GROW_ROOT = false>
 class COcTreeNode : public CObjectBase
 {
@@ -9,7 +10,11 @@ class COcTreeNode : public CObjectBase
 	CPtr<TFinal> pUpLink;
 
 	//! get multiplier to fSize*sqrt(3) to calc maximal element size
-	float GetMaxElementSize() const { return 0.25f * fSize * sqrt( 3.0f ); }
+	float GetMaxElementSize() const
+	{
+		return 0.25f * fSize * sqrt( 3.0f );
+	}
+
 	// Grow the root in place so references to its update lists and existing nodes
 	// stay valid. Subclasses can preserve cached subtree state on the newly
 	// created parent through InitGrownChild.
@@ -60,7 +65,11 @@ class COcTreeNode : public CObjectBase
 protected:
 	// The default tree has no cached state associated with its child links.
 	virtual void InitGrownChild( TFinal *pChild ) const {}
-	void SetUpLink( TFinal *_p ) { pUpLink = _p; }
+
+	void SetUpLink( TFinal *_p )
+	{
+		pUpLink = _p;
+	}
 
 public:
 	void SetSize( const CVec3 &_ptBase, float _fSize )
@@ -68,7 +77,12 @@ public:
 		ptBase = _ptBase;
 		fSize = _fSize;
 	}
-	float GetSize() const { return fSize; }
+
+	float GetSize() const
+	{
+		return fSize;
+	}
+
 	bool Walk()
 	{
 		bool bRes = IsEmpty();
@@ -88,7 +102,12 @@ public:
 		}
 		return bRes;
 	}
-	virtual bool IsEmpty() { return false; }
+
+	virtual bool IsEmpty()
+	{
+		return false;
+	}
+
 	void GetBound( SSphere *pRes ) const
 	{
 		pRes->ptCenter.x = ptBase.x + fSize * 0.5f;
@@ -96,6 +115,7 @@ public:
 		pRes->ptCenter.z = ptBase.z + fSize * 0.5f;
 		pRes->fRadius = fSize * sqrt( 3.0f ) * 0.5f + GetMaxElementSize();
 	}
+
 	void GetBound( SBound *pRes ) const
 	{
 		float fHalfSize = fSize * 0.5;
@@ -103,12 +123,17 @@ public:
 		pRes->BoxExInit( ptBase + CVec3( fHalfSize, fHalfSize, fHalfSize ), CVec3( fS, fS, fS ) );
 	}
 
-	TFinal *GetUpLink() const { return pUpLink; }
+	TFinal *GetUpLink() const
+	{
+		return pUpLink;
+	}
+
 	TFinal *GetNode( int nIdx )
 	{
 		ASSERT( nIdx >= 0 && nIdx < 8 );
 		return links[nIdx];
 	}
+
 	TFinal *GetNode( const CVec3 &ptCenter, float fRadius )
 	{
 		// Otherwise centers past the initial [-128, 896) extent get assigned to
@@ -164,6 +189,7 @@ public:
 			return links[nIdx]->GetNode( ptCenter, fRadius );
 		}
 	}
+
 	int operator&( CStructureSaver &f )
 	{
 		f.Add( 1, &ptBase );

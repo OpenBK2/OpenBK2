@@ -39,13 +39,15 @@ struct IMOContainer;
 typedef std::list<CPtr<IMOUnit>> CUnitsList;
 
 struct SAIBasicUpdate;
+
 namespace NDb
 {
 struct SHPObjectRPGStats;
 enum EUnitAckType : int;
 struct SAnimB2;
 struct SUnitSpecialAblityDesc;
-}
+} // namespace NDb
+
 namespace NAnimation
 {
 struct ISkeletonAnimator;
@@ -74,6 +76,7 @@ struct B2_M1_WORLD_EXPORT SObjectStatus
 		int nPenetration = 0;
 		int nAmmo = 0;
 		int nMaxAmmo = 0;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pWeaponID );
@@ -87,7 +90,10 @@ struct B2_M1_WORLD_EXPORT SObjectStatus
 			return 0;
 		}
 
-		bool operator==( const SWeapon &weapon ) const { return pWeaponID == weapon.pWeaponID; }
+		bool operator==( const SWeapon &weapon ) const
+		{
+			return pWeaponID == weapon.pWeaponID;
+		}
 	};
 
 	ZDATA
@@ -138,6 +144,7 @@ struct SIconsSetInfo
 	ZDATA
 	float fRaising = 0.0f;
 	float fHPBarLen = 0.0f;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &fRaising );
@@ -146,6 +153,7 @@ struct SIconsSetInfo
 	}
 
 	SIconsSetInfo() {}
+
 	SIconsSetInfo( float _fRaising, float _fHPBarLen ) : fRaising( _fRaising ), fHPBarLen( _fHPBarLen ) {}
 };
 
@@ -153,9 +161,12 @@ struct SAbilityInfo
 {
 	SAbilitySwitchState abilityState;
 	float fParam = 0.0f;
+
 	SAbilityInfo() : abilityState( EASS_READY_TO_ON ), fParam( 0.0f ) {}
+
 	SAbilityInfo( SAbilitySwitchState _abilityState, float _fParam ) : abilityState( _abilityState ), fParam( _fParam ) {}
 };
+
 typedef std::unordered_map<NDb::EUnitSpecialAbility, SAbilityInfo, SEnumHash> CAbilityInfo;
 
 B2_M1_WORLD_EXPORT void
@@ -256,20 +267,48 @@ protected:
 		__EAST_COUNTER__,
 	};
 
-	void SetHasMoveAnimation( bool _bHasMoveAnimation ) { bHasMoveAnimation = _bHasMoveAnimation; }
-	bool HasMoveAnimation() const { return bHasMoveAnimation; }
-	float GetAnimSpeed() const { return fAnimationSpeed; }
-	void SetAnimSpeed( float _fAnimationSpeed ) { fAnimationSpeed = _fAnimationSpeed; }
+	void SetHasMoveAnimation( bool _bHasMoveAnimation )
+	{
+		bHasMoveAnimation = _bHasMoveAnimation;
+	}
+
+	bool HasMoveAnimation() const
+	{
+		return bHasMoveAnimation;
+	}
+
+	float GetAnimSpeed() const
+	{
+		return fAnimationSpeed;
+	}
+
+	void SetAnimSpeed( float _fAnimationSpeed )
+	{
+		fAnimationSpeed = _fAnimationSpeed;
+	}
 
 	int CommonUpdateHP( const float fNewHP,
 	                    const struct SAINotifyRPGStats &stats,
 	                    struct IScene *pScene,
 	                    NDb::ESeason eSeason );
 	const NDb::SVisObj *ChooseVisObjForHP( float fHP );
-	void SetStats( const NDb::SHPObjectRPGStats *_pStats ) { pStats = _pStats; }
-	void SetID( int _nID ) { nID = _nID; }
+
+	void SetStats( const NDb::SHPObjectRPGStats *_pStats )
+	{
+		pStats = _pStats;
+	}
+
+	void SetID( int _nID )
+	{
+		nID = _nID;
+	}
+
 	//
-	void SetModel( const NDb::SModel *_pModel ) { pModel = _pModel; }
+	void SetModel( const NDb::SModel *_pModel )
+	{
+		pModel = _pModel;
+	}
+
 	virtual void ChangeModelToDamaged( const int nDamaged, const NDb::SModel *pNewModel, const NDb::ESeason eSeason );
 	virtual void ChangeModelToUsual( const NDb::SModel *pNewModel, const NDb::ESeason eSeason );
 	virtual void ChangeModelToAnimable( const NDb::SModel *pNewModel, const NDb::ESeason eSeason );
@@ -277,7 +316,11 @@ protected:
 
 	void AttachSound( EAttachedSoundType eType, const NDb::SComplexSoundDesc *pSound, bool bLooped );
 	void DetachSound( EAttachedSoundType eType );
-	bool IsSoundAttached( EAttachedSoundType eType ) const { return attachedSounds[eType] != 0; }
+
+	bool IsSoundAttached( EAttachedSoundType eType ) const
+	{
+		return attachedSounds[eType] != 0;
+	}
 
 	void SetDeathState();
 
@@ -285,7 +328,11 @@ protected:
 	GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const;
 
 	virtual void FillIconsInfo( SSceneObjIconInfo &iconInfo ) {}
-	virtual bool CanShowIcons() const { return false; }
+
+	virtual bool CanShowIcons() const
+	{
+		return false;
+	}
 
 	void UpdateVisibility( bool bForced );
 
@@ -294,7 +341,11 @@ public:
 	virtual ~CMapObj();
 
 private:
-	CMapObj( const CMapObj &a ) { ASSERT( 0 ); }
+	CMapObj( const CMapObj &a )
+	{
+		ASSERT( 0 );
+	}
+
 	const CMapObj &operator=( const CMapObj &a )
 	{
 		ASSERT( 0 );
@@ -310,11 +361,20 @@ public:
 	                     bool bInEditor );
 	virtual bool
 	CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor ) = 0;
-	int GetID() const { return nID; }
+
+	int GetID() const
+	{
+		return nID;
+	}
+
 	//
 	const NDb::SAnimB2 *GetAnimation( const int nAnimation );
+
 	// used in IB2MapObj, virtual
-	virtual int GetUniqueID() const { return GetID(); }
+	virtual int GetUniqueID() const
+	{
+		return GetID();
+	}
 
 	void AfterLoad();
 
@@ -323,14 +383,27 @@ public:
 	void ForceSwitchLightFX( const bool bNewState, const bool bInEditor );
 	void ForceSwitchLightFX( int nEffect, const bool bNewState, const bool bInEditor );
 
-	const NDb::SHPObjectRPGStats *GetStats() const { return pStats; }
-	const NDb::SModel *GetModelDesc() const { return pModel; }
+	const NDb::SHPObjectRPGStats *GetStats() const
+	{
+		return pStats;
+	}
+
+	const NDb::SModel *GetModelDesc() const
+	{
+		return pModel;
+	}
+
 	virtual void SetPlacement( const CVec3 &_vPos, const CQuat &_qRot )
 	{
 		vPos = _vPos;
 		qRot = _qRot;
 	}
-	virtual void SetScale( const CVec3 &_vScale ) { vScale = _vScale; }
+
+	virtual void SetScale( const CVec3 &_vScale )
+	{
+		vScale = _vScale;
+	}
+
 	void GetPlacement( CVec3 *pvPos, CQuat *pqRot, CVec3 *pvScale ) const
 	{
 		*pvPos = vPos;
@@ -338,17 +411,55 @@ public:
 		*pvScale = vScale;
 	}
 
-	const CVec3 &GetCenter() const { return vPos; }
-	const CQuat &GetOrientation() const { return qRot; }
+	const CVec3 &GetCenter() const
+	{
+		return vPos;
+	}
 
-	void SetDiplomacy( const EDiplomacyInfo diplomacy ) { eDiplomacy = diplomacy; }
-	EDiplomacyInfo GetDiplomacy() const { return eDiplomacy; }
-	bool IsEnemy() const { return GetDiplomacy() == EDI_ENEMY; }
-	virtual bool IsFriend() const { return GetDiplomacy() == EDI_FRIEND; }
-	bool IsNeutral() const { return GetDiplomacy() == EDI_NEUTRAL; }
-	int GetTypeID() const { return GetStats()->GetTypeID(); }
-	const CDBID &GetDBID() const { return GetStats()->GetDBID(); }
-	const NDb::STexture *GetIcon() { return GetStats()->pIconTexture; }
+	const CQuat &GetOrientation() const
+	{
+		return qRot;
+	}
+
+	void SetDiplomacy( const EDiplomacyInfo diplomacy )
+	{
+		eDiplomacy = diplomacy;
+	}
+
+	EDiplomacyInfo GetDiplomacy() const
+	{
+		return eDiplomacy;
+	}
+
+	bool IsEnemy() const
+	{
+		return GetDiplomacy() == EDI_ENEMY;
+	}
+
+	virtual bool IsFriend() const
+	{
+		return GetDiplomacy() == EDI_FRIEND;
+	}
+
+	bool IsNeutral() const
+	{
+		return GetDiplomacy() == EDI_NEUTRAL;
+	}
+
+	int GetTypeID() const
+	{
+		return GetStats()->GetTypeID();
+	}
+
+	const CDBID &GetDBID() const
+	{
+		return GetStats()->GetDBID();
+	}
+
+	const NDb::STexture *GetIcon()
+	{
+		return GetStats()->pIconTexture;
+	}
 
 	virtual void AIUpdateState( const int nParam ) {};
 	virtual void AINewUnitInfo( const struct SNewUnitInfo &info,
@@ -359,11 +470,13 @@ public:
 	                                struct IScene *pScene,
 	                                struct ISoundScene *pSoundScene,
 	                                NDb::ESeason eSeason );
+
 	virtual IClientUpdatableProcess *
 	AIUpdateMovement( const NTimer::STime &time, const bool _bMove, IScene *pScene, struct ISoundScene *pSoundScene )
 	{
 		return 0;
 	}
+
 	virtual IClientUpdatableProcess *AIUpdateRPGStats( const struct SAINotifyRPGStats &stats,
 	                                                   struct IClientAckManager *pAckManager,
 	                                                   NDb::ESeason eSeason ) = 0;
@@ -377,78 +490,181 @@ public:
 	{
 		return 0;
 	}
+
 	virtual void AIUpdateTurretTurn( const struct SAINotifyTurretTurn &turn,
 	                                 const NTimer::STime &currTime,
 	                                 IScene *pScene,
 	                                 const bool bHorTurn )
 	{
 	}
+
 	virtual bool AIUpdateDiplomacy( const struct SAINotifyDiplomacy &diplomacy );
-	virtual bool AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update ) { return false; }
+
+	virtual bool AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update )
+	{
+		return false;
+	}
+
 	virtual void AIUpdateAction( const SAIActionUpdate *pUpdate, const NDb::ESeason eSeason ) {}
-	virtual int GetAbilityTier( NDb::EUserAction eAction ) const { return -1; }
-	virtual const NDb::SUnitSpecialAblityDesc *GetAbilityDesc( NDb::EUserAction eAction ) const { return 0; }
+
+	virtual int GetAbilityTier( NDb::EUserAction eAction ) const
+	{
+		return -1;
+	}
+
+	virtual const NDb::SUnitSpecialAblityDesc *GetAbilityDesc( NDb::EUserAction eAction ) const
+	{
+		return 0;
+	}
+
 	void AIUpdateAnimationChanged( const NDb::SAnimB2 *pAnim, const NTimer::STime startTime );
 	// for animations testing
 	// returns: if nAnimation >= number of anims, when -1, else <length of animation, is anim looped>
 	std::pair<int, bool> PlayAnimation( const int nAnimation );
 	// get all actions for unit, so we know visible buttons
 	virtual void GetActions( CUserActions *pActions, EActionsType eActions ) const = 0;
+
 	// get all possible actions for object
-	virtual void GetPossibleActions( CUserActions *pActions ) const { GetActions( pActions, ACTIONS_BY ); }
+	virtual void GetPossibleActions( CUserActions *pActions ) const
+	{
+		GetActions( pActions, ACTIONS_BY );
+	}
+
 	// get actions that currently unaviable, so we know disabled buttons
 	virtual void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const = 0;
 	// get actions that currently available
 	virtual void GetEnabledActions( CUserActions *pActions, EActionsType eActions ) const;
 	NDb::EUserAction GetBestAutoAction( const CUserActions &actionsBy, bool bAltMode ) const;
 	NDb::EUserAction GetBestSelfAction( const CUserActions &actionsBy, bool bAltMode ) const;
-	float GetHP() const { return fHP; } // [0..1]
-	float GetMaxHP() const { return GetStats()->fMaxHP; }
-	virtual float GetVisualHPFraction() const { return fHP; }
-	bool IsAlive() const { return GetHP() > 0; }
+
+	float GetHP() const
+	{
+		return fHP;
+	} // [0..1]
+
+	float GetMaxHP() const
+	{
+		return GetStats()->fMaxHP;
+	}
+
+	virtual float GetVisualHPFraction() const
+	{
+		return fHP;
+	}
+
+	bool IsAlive() const
+	{
+		return GetHP() > 0;
+	}
+
 	//
-	virtual bool CanSelect() const { return false; }
+	virtual bool CanSelect() const
+	{
+		return false;
+	}
 
 	virtual void GetStatus( SObjectStatus *pStatus ) const;
 
 	void UpdateIcons();
 
-	bool HasLoopedAnimation() const { return bLoopedAnimation; }
-	void SetLoopedAnimation( bool bLooped ) { bLoopedAnimation = bLooped; }
+	bool HasLoopedAnimation() const
+	{
+		return bLoopedAnimation;
+	}
+
+	void SetLoopedAnimation( bool bLooped )
+	{
+		bLoopedAnimation = bLooped;
+	}
+
 	//
 	// selection
-	float GetSelectionScale() const { return pStats->fSelectionScale; }
-	NDb::ESelectionType GetSelectionType() const { return pStats->eSelectionType; }
+	float GetSelectionScale() const
+	{
+		return pStats->fSelectionScale;
+	}
+
+	NDb::ESelectionType GetSelectionType() const
+	{
+		return pStats->eSelectionType;
+	}
+
 	virtual void SetVisible( const bool bVisible, const NDb::ESeason eSeason, const bool bIsNight );
-	virtual bool IsVisible() const { return bVisible; }
-	bool IsSilentlyDead() const { return bIsSilentlyDead; }
-	void SetSilentlyDead() { bIsSilentlyDead = true; }
+
+	virtual bool IsVisible() const
+	{
+		return bVisible;
+	}
+
+	bool IsSilentlyDead() const
+	{
+		return bIsSilentlyDead;
+	}
+
+	void SetSilentlyDead()
+	{
+		bIsSilentlyDead = true;
+	}
+
 	//
 	// set fire/put out
 	void ChangeLight( const int nLight, NDb::ESeason eSeason, bool bLight );
 	void AIUpdateHit( const NDb::SComplexEffect *pEffect, uint16_t wDir, NTimer::STime time );
+
 	//
-	int GetKeyObjectPlayer() const { return nKeyObjectPlayer; }
-	bool IsKeyObject() const { return nKeyObjectPlayer != -1; }
+	int GetKeyObjectPlayer() const
+	{
+		return nKeyObjectPlayer;
+	}
+
+	bool IsKeyObject() const
+	{
+		return nKeyObjectPlayer != -1;
+	}
+
 	//
 	virtual void AIUpdateKeyObject( const struct SAINotifyKeyBuilding &update );
+
 	virtual void AIUpdateKeyObjectCaptureProgress( float fProgress, int nColorIndex ) {}
+
 	virtual void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
 	                                struct ISoundScene *pSoundScene,
 	                                struct IClientAckManager *pAckManager );
 
-	void SetParentID( int _nParentID ) { nParentID = _nParentID; }
-	int GetParentID() const { return nParentID; }
+	void SetParentID( int _nParentID )
+	{
+		nParentID = _nParentID;
+	}
 
-	virtual bool IsPlaceMapCommandAck( NDb::EUserAction eUserAction ) const { return false; }
+	int GetParentID() const
+	{
+		return nParentID;
+	}
 
-	virtual bool AIUpdateAction( bool bEnable, EActionCommand eAction ) { return false; }
+	virtual bool IsPlaceMapCommandAck( NDb::EUserAction eUserAction ) const
+	{
+		return false;
+	}
 
-	int GetPlayer() const { return nPlayer; }
-	int GetColorIndex() const { return nColorIndex; }
+	virtual bool AIUpdateAction( bool bEnable, EActionCommand eAction )
+	{
+		return false;
+	}
+
+	int GetPlayer() const
+	{
+		return nPlayer;
+	}
+
+	int GetColorIndex() const
+	{
+		return nColorIndex;
+	}
+
 	void SetColorIndex( int nColorIndex, bool bForceUpdate );
 
 	virtual void UpdateVisualStatus( const struct SUnitStatusUpdate &update ) {}
+
 	//
 	virtual int operator&( IBinSaver &saver );
 };
@@ -477,7 +693,10 @@ protected:
 	void SetIconsHitbar( bool bHitbar, bool bHighlighted );
 	void SetIconsGroup( int nGroup, bool bHighlighted );
 
-	void SetIconsSetInfo( const SIconsSetInfo &info ) { iconsSetInfo = info; }
+	void SetIconsSetInfo( const SIconsSetInfo &info )
+	{
+		iconsSetInfo = info;
+	}
 
 	NDb::EUserAction GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const;
 
@@ -488,26 +707,69 @@ public:
 				bHighlighted( false ), dwVisualStatus( 0 ), fVisualRadius( -1.0f )
 	{
 	}
+
 	//check, is this object selected?
-	virtual bool IsSelected() const { return bSelected; }
+	virtual bool IsSelected() const
+	{
+		return bSelected;
+	}
+
 	virtual void Select( bool bSelect );
 	virtual bool CanSelect() const;
-	virtual void SetCanSelect( bool _bCanSelect ) { bCanSelect = _bCanSelect; }
-	virtual const bool IsMousePicked() const { return bIsMousePicked; }
-	virtual void SetMousePicked( const bool _bIsMousePicked ) { bIsMousePicked = _bIsMousePicked; }
-	int GetSelectionGroup() const { return nSelectionGroup; }
+
+	virtual void SetCanSelect( bool _bCanSelect )
+	{
+		bCanSelect = _bCanSelect;
+	}
+
+	virtual const bool IsMousePicked() const
+	{
+		return bIsMousePicked;
+	}
+
+	virtual void SetMousePicked( const bool _bIsMousePicked )
+	{
+		bIsMousePicked = _bIsMousePicked;
+	}
+
+	int GetSelectionGroup() const
+	{
+		return nSelectionGroup;
+	}
+
 	virtual void SetSelectionGroup( int nSelectionGroup );
+
 	//sends selection acknowlegdement
 	//virtual void SendAcknowledgement( struct IClientAckManager *pAckManager, const EUnitAckType eAckType, const int nSet ) {  }
-	const SIconsSetInfo &GetIconsSetInfo() const { return iconsSetInfo; }
-	float GetIconsRaising() const { return iconsSetInfo.fRaising; }
-	float GetIconsHPBarLen() const { return iconsSetInfo.fHPBarLen; }
+	const SIconsSetInfo &GetIconsSetInfo() const
+	{
+		return iconsSetInfo;
+	}
+
+	float GetIconsRaising() const
+	{
+		return iconsSetInfo.fRaising;
+	}
+
+	float GetIconsHPBarLen() const
+	{
+		return iconsSetInfo.fHPBarLen;
+	}
+
 	void DisableIcons( bool bDisable );
 	bool CanShowIcons() const;
+
 	virtual void GetAbilityInfo( CAbilityInfo &abilityList ) const {}
+
 	void UpdateVisualStatus( const struct SUnitStatusUpdate &update );
-	virtual IMOContainer *GetContainer() const { return 0; }
+
+	virtual IMOContainer *GetContainer() const
+	{
+		return 0;
+	}
+
 	IMOContainer *GetTopContainer() const;
+
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, checked_cast<CMapObj *>( this ) );
@@ -531,11 +793,13 @@ protected:
 
 public:
 	ZDATA_( CMOSelectable )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CMOSelectable *)this );
 		return 0;
 	}
+
 	// load unit onboard or unload it
 	virtual bool Load( struct IMOUnit *pMO, bool bEnter ) = 0;
 	virtual bool LoadSquad( struct IMOSquad *pSquad, bool bEnter ) = 0;
@@ -560,6 +824,7 @@ public:
 	virtual bool NeedShowInterrior() const = 0;
 	virtual void AIUpdateModifyEntranceState( bool bOpen ) = 0;
 	virtual bool IsOpen() const = 0;
+
 	virtual void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck )
 	{
 		NI_ASSERT( false, "wrong call" );
@@ -569,6 +834,7 @@ public:
 struct IMOSquad : public IMOContainer
 {
 	ZDATA_( IMOContainer )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (IMOContainer *)this );
@@ -587,11 +853,13 @@ struct IMOSquad : public IMOContainer
 struct IMOUnit : public IMOContainer
 {
 	ZDATA_( IMOContainer )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (IMOContainer *)this );
 		return 0;
 	}
+
 	//	virtual const bool IsVisible() const = 0;
 	//
 	//	virtual void AssignSelectionGroup( const int nGroupID ) = 0;
@@ -634,6 +902,7 @@ struct IMOUnit : public IMOContainer
 
 	virtual NDb::EReinforcementType GetReinfType() const = 0;
 	virtual void SetReinfType( NDb::EReinforcementType eType ) = 0;
+
 	//
 	virtual IClientUpdatableProcess *AIUpdateStartFinishParadrop( const SParadropStartFinishUpdate *pUpdate,
 	                                                              NDb::ESeason eSeason )

@@ -9,6 +9,7 @@ struct ISound;
 class CWindowStatsSystem : public CWindow, public IStatsSystemWindow
 {
 	OBJECT_BASIC_METHODS( CWindowStatsSystem )
+
 	struct SColorString
 	{
 		std::wstring szString;
@@ -17,7 +18,9 @@ class CWindowStatsSystem : public CWindow, public IStatsSystemWindow
 
 		void Init( const wchar_t *pszStr, uint32_t col, const int nWidth );
 		void SetText( const wchar_t *pszStr, uint32_t col, const int nWidth );
+
 		SColorString() : dwColor( 0xffffffff ) {}
+
 		SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth );
 		int operator&( IBinSaver &saver );
 	};
@@ -29,10 +32,17 @@ class CWindowStatsSystem : public CWindow, public IStatsSystemWindow
 	CEntries entries;
 
 public:
-	virtual NDb::SWindow *GetInstance() { return pInstance; }
+	virtual NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
 
 	// Debug statistics share the console's GUI scale.
-	bool UsesHudFontScale() const override { return false; }
+	bool UsesHudFontScale() const override
+	{
+		return false;
+	}
+
 	void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 	void UpdateEntry( const std::wstring &szEntry, const std::wstring &szValue, const uint32_t dwColor );
 	void Visit( struct IUIVisitor *pVisitor );

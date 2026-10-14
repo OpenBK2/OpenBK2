@@ -25,4 +25,4 @@ IMAGE_EXPORT bool ConvertAndSaveAsDDS( const std::string &szFileName,
                                        bool bWrapX,
                                        bool bWrapY,
                                        float fMappingSize );
-}
+} // namespace NImage

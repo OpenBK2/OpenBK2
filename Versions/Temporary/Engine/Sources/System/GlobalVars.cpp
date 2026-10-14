@@ -42,11 +42,19 @@ template <class TChar, class TBrackets = NStr::SBracketsTest<TChar>>
 class CBracketMulticharSeparator
 {
 	std::vector<TChar> stc; // close brackets stack
+
 	//
-	bool IsSeparator( const TChar tChar ) const { return tChar == ' ' || tChar == '\t' || tChar == '\r'; }
+	bool IsSeparator( const TChar tChar ) const
+	{
+		return tChar == ' ' || tChar == '\t' || tChar == '\r';
+	}
 
 public:
-	CBracketMulticharSeparator( const TChar separator ) { stc.reserve( 32 ); }
+	CBracketMulticharSeparator( const TChar separator )
+	{
+		stc.reserve( 32 );
+	}
+
 	//
 	bool operator()( const TChar chr )
 	{
@@ -72,6 +80,7 @@ public:
 		return false;
 	}
 };
+
 static void SplitStringWithMultipleBrackets( const std::wstring &szString, std::vector<std::wstring> &szVector )
 {
 	for ( NStr::CStringIterator<wchar_t,
@@ -83,6 +92,7 @@ static void SplitStringWithMultipleBrackets( const std::wstring &szString, std::
 		szVector.push_back( it.Get() );
 	}
 }
+
 // TODO}
 
 namespace NGlobal
@@ -96,29 +106,40 @@ struct SRecord
 	int nUniqueID;
 
 	SRecord() : pContext( 0 ), pCmdHandler( 0 ), pVarHandler( 0 ), nUniqueID( -1 ) {}
+
 	SRecord( void *_pCmdContext, CmdHandler _pCmd, int _nID )
 			: pContext( _pCmdContext ), pCmdHandler( _pCmd ), pVarHandler( 0 ), nUniqueID( _nID )
 	{
 	}
+
 	SRecord( void *_pVarContext, VarHandler _pCmd, int _nID )
 			: pContext( _pVarContext ), pCmdHandler( 0 ), pVarHandler( _pCmd ), nUniqueID( _nID )
 	{
 	}
 };
+
 struct SRecordCheck
 {
 	int n;
+
 	SRecordCheck( int _n ) : n( _n ) {}
-	bool operator()( const SRecord &r ) const { return r.nUniqueID == n; }
+
+	bool operator()( const SRecord &r ) const
+	{
+		return r.nUniqueID == n;
+	}
 };
+
 struct SCommandInfo
 {
 	std::vector<SRecord> data;
 	EStorageClass storage;
 	CValue sValue, sDefaultValue;
 	bool bIsRegistered;
+
 	SCommandInfo() : storage( STORAGE_NONE ), bIsRegistered( false ) {}
 };
+
 typedef std::unordered_map<std::string, SCommandInfo> TRecordsMap;
 
 class CRecordsMap : public CObjectBase
@@ -128,8 +149,10 @@ public:
 	TRecordsMap recordsMap;
 	CPtr<CRecordsMap> pHold;
 };
+
 static CRecordsMap *pRecordsMap;
 static int bIsExiting;
+
 struct SKillRecordsMap
 {
 	~SKillRecordsMap()
@@ -142,6 +165,7 @@ struct SKillRecordsMap
 		bIsExiting = true;
 	}
 } killRecordsMap;
+
 static CRecordsMap *GetRecordsMap()
 {
 	if ( bIsExiting )
@@ -160,6 +184,7 @@ static void CmdDefaultHandler( const std::string &szID, const std::vector<std::w
 static void SplitString( const std::wstring &szCmd, std::vector<std::wstring> *pRes );
 
 static int nUniqueVarID = 1;
+
 int RegisterCmd( const std::string &szID, CmdHandler pHandler, void *pContext )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
@@ -266,6 +291,7 @@ const CValue &GetVar( const std::string &szID, const CValue &sDefault )
 }
 
 static EStorageClass eNewVarStorageClass = STORAGE_DONT_CARE;
+
 void SetVar( const std::string &szVar, const CValue &sValue, EStorageClass storage )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
@@ -440,10 +466,15 @@ struct SSaveRecord
 	std::string szName;
 	std::string szValue;
 };
+
 struct SSaveRecordSort
 {
-	bool operator()( const SSaveRecord &s1, const SSaveRecord &s2 ) const { return s1.szName < s2.szName; }
+	bool operator()( const SSaveRecord &s1, const SSaveRecord &s2 ) const
+	{
+		return s1.szName < s2.szName;
+	}
 };
+
 static void SaveConfig( const std::string &szFileName, EStorageClass storage )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
@@ -658,7 +689,7 @@ static void CmdAlias( const std::string &szID, const std::vector<std::wstring> &
 	}
 }
 
-}
+} // namespace NGlobal
 
 START_REGISTER( Commands )
 REGISTER_CMD( "help", NGlobal::CmdPrintHelp )

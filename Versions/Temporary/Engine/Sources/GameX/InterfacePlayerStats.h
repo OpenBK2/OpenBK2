@@ -18,6 +18,7 @@ private:
 		CDBPtr<NDb::STexture> pPicture;
 		std::wstring wszName;
 		std::wstring wszDesc;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pWnd );
@@ -66,6 +67,7 @@ private:
 	NUIElementsHelper::SExpProgressRank expProgressRank;
 	float fLastVisiblePlayerStatsExpCareer;
 	float fLastVisiblePlayerStatsExpNextRank;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );

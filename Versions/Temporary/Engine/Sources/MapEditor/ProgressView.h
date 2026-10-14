@@ -57,4 +57,4 @@ public:
 // The frame's progress view. The caller owns the result and destroys it with
 // delete.
 IView *Create();
-}
+} // namespace NProgressView

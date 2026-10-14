@@ -26,6 +26,7 @@ enum
 	EDM_UPS = 0x00F00000,
 	EDM_ALL = EDM_SAMPS | EDM_RIDGES | EDM_VERTS | EDM_HEIGHTS | EDM_LOWS | EDM_UPS,
 };
+
 const uint32_t EC_SAMPS = 0xFFFF0000;   // RED
 const uint32_t EC_RIDGES = 0xFF00FF00;  // GREEN
 const uint32_t EC_VERTS = 0xFF0000FF;   // BLUE
@@ -34,7 +35,7 @@ const uint32_t EC_LOWS = 0xFF00FFFF;    // CYAN
 const uint32_t EC_UPS = 0xFFFF00FF;     // MAGENTA
 
 void DrawExtraLines( CSceneDrawTool *pSceneDrawTool, unsigned uMode );
-}
+} // namespace NExtraDraw
 
 class CVSOSelectState : public CDefaultInputState
 {
@@ -48,6 +49,7 @@ class CVSOSelectState : public CDefaultInputState
 	{
 		NI_ASSERT( pParentState != 0, "CVSOSelectState(): Invalid parameter: pParentState == 0" );
 	}
+
 	CVSOSelectState( CVSOState *_pParentState ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CVSOSelectState(): Invalid parameter: pParentState == 0" );
@@ -71,6 +73,7 @@ class CVSOEditState : public CDefaultInputState
 	{
 		NI_ASSERT( pParentState != 0, "CVSOEditState(): Invalid parameter: pParentState == 0" );
 	}
+
 	CVSOEditState( CVSOState *_pParentState ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CVSOEditState(): Invalid parameter: pParentState == 0" );
@@ -98,6 +101,7 @@ class CVSOAddState : public CDefaultInputState
 	{
 		NI_ASSERT( pParentState != 0, "CVSOAddState(): Invalid parameter: pParentState == 0" );
 	}
+
 	CVSOAddState( CVSOState *_pParentState ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CVSOAddState(): Invalid parameter: pParentState == 0" );
@@ -124,6 +128,7 @@ private:
 	friend class CVSOEditState;
 	friend class CVSOAddState;
 	friend class CVSOMultiState;
+
 	//
 	enum EInputStates
 	{
@@ -147,6 +152,7 @@ public:
 		UT_FINISH = 5,
 		UT_CANCEL = 6,
 	};
+
 	//
 
 private:
@@ -191,6 +197,7 @@ protected:
 			nSelectedIndex = 0;
 		}
 	}
+
 	inline int GetSelectedVSOID()
 	{
 		if ( ( nSelectedIndex < 0 ) || ( nSelectedIndex >= pickVSOIDList.size() ) )
@@ -202,7 +209,11 @@ protected:
 			return pickVSOIDList[nSelectedIndex];
 		}
 	}
-	inline class CVSOMultiState *GetParentState() { return pParentState; }
+
+	inline class CVSOMultiState *GetParentState()
+	{
+		return pParentState;
+	}
 
 	void ClearSelection();
 
@@ -297,6 +308,7 @@ public:
 
 		SetActiveInputState( IS_SELECT, true, false );
 	}
+
 	//
 	~CVSOState()
 	{

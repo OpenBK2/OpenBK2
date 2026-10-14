@@ -93,6 +93,7 @@ class CVSOWxWindow : public CWxHostWindow, public CVSOCommands
 		std::string szObjectTypeName;
 		CDBID objectDBID;
 	};
+
 	typedef std::unordered_map<int, SObjectListElement> CObjectListElementMap;
 
 	enum EMenuItem
@@ -725,7 +726,10 @@ private:
 		NDialogState::Save( "CVSOWindow", &dialogState );
 	}
 
-	void OnObjectSelected( wxListEvent & ) { UpdateSelection(); }
+	void OnObjectSelected( wxListEvent & )
+	{
+		UpdateSelection();
+	}
 
 	void OnObjectListSize( wxSizeEvent &rEvent )
 	{
@@ -773,7 +777,7 @@ private:
 		}
 	}
 };
-}
+} // namespace
 
 namespace NVSOView
 {
@@ -791,4 +795,4 @@ IWidget *Create( CPaletteList *pPalettes, IWidget *pPage )
 	}
 	return pWindow;
 }
-}
+} // namespace NVSOView

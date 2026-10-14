@@ -7,6 +7,7 @@
 #include "MapEditorLib_export.h"
 
 class CMultiManipulatorIterator;
+
 class MAPEDITORLIB_EXPORT CMultiManipulator : public IManipulator
 {
 	friend class CMultiManipulatorIterator;
@@ -46,16 +47,40 @@ public:
 	bool SetActiveManipulator( const CDBID &rDBID );
 	// установить манипулятор у которого будут опрашивать свойства полей
 	bool SetPropertyDescManipulator( const CDBID &rDBID );
+
 	//
-	int IsEmpty() { return manipulatorMap.empty(); }
+	int IsEmpty()
+	{
+		return manipulatorMap.empty();
+	}
+
 	// вернуть текущий активный манипулятор
-	inline const CDBID &GetActiveDBID() { return activeDBID; }
-	inline IManipulator *GetActiveManipulator() { return pActiveManipulator; }
+	inline const CDBID &GetActiveDBID()
+	{
+		return activeDBID;
+	}
+
+	inline IManipulator *GetActiveManipulator()
+	{
+		return pActiveManipulator;
+	}
+
 	// вернуть текущий активный манипулятор
-	inline const CDBID &GetPropertyDescDBID() { return propertyDescDBID; }
-	inline IManipulator *GetPropertyDescManipulator() { return pPropertyDescManipulator; }
+	inline const CDBID &GetPropertyDescDBID()
+	{
+		return propertyDescDBID;
+	}
+
+	inline IManipulator *GetPropertyDescManipulator()
+	{
+		return pPropertyDescManipulator;
+	}
+
 	// вернуть манипулятор, который определяет ID и прочее (при отсутствии первых двух )
-	inline IManipulator *GetFirstManipulator() { return pFirstManipulator; }
+	inline IManipulator *GetFirstManipulator()
+	{
+		return pFirstManipulator;
+	}
 
 	// IManipulator
 	IManipulatorIterator *Iterate( bool bShowHidden, ECacheType eCache );
@@ -66,7 +91,12 @@ public:
 	//
 	bool InsertNode( const std::string &rszName, int nNodeIndex = NODE_ADD_INDEX );
 	bool RemoveNode( const std::string &rszName, int nNodeIndex = NODE_REMOVEALL_INDEX );
-	bool RemoveNodeByID( const std::string &rszName, int nNodeID ) { return false; };
+
+	bool RemoveNodeByID( const std::string &rszName, int nNodeID )
+	{
+		return false;
+	};
+
 	bool RenameNode( const std::string &rszName, const std::string &rszNewName );
 	//
 	bool GetValue( const std::string &rszName, CVariant *pValue ) const;
@@ -96,5 +126,9 @@ public:
 	bool GetName( std::string *pszName ) const;
 	bool GetType( std::string *pszType ) const;
 	unsigned GetID() const;
-	bool IsFolder() const { return false; }
+
+	bool IsFolder() const
+	{
+		return false;
+	}
 };

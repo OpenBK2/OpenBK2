@@ -44,4 +44,4 @@ void RenderTnL( CTransformStack *pTS,
 		pTransp->Render( trc );
 	}
 }
-}
+} // namespace NGScene

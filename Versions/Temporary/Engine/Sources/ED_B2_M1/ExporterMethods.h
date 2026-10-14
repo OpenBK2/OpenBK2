@@ -23,6 +23,7 @@ namespace NEditorGltf
 {
 struct SMeshData;
 }
+
 bool CreateObjectStaticDebris( const NEditorGltf::SMeshData &mesh,
                                const std::string &imageName,
                                CVec2 *origin,
@@ -79,13 +80,18 @@ struct SSkeletonLocatorInfo
 	SHMatrix mtx;
 	//
 };
+
 struct SLocatorQInfo
 {
 	SSkeletonLocatorInfo inf;
 	int nQIdx;
 
-	bool operator<( const SLocatorQInfo &rOther ) const { return nQIdx < rOther.nQIdx; }
+	bool operator<( const SLocatorQInfo &rOther ) const
+	{
+		return nQIdx < rOther.nQIdx;
+	}
 };
+
 typedef std::vector<SSkeletonLocatorInfo>::const_iterator CLocatorInfoConstIter;
 typedef std::vector<SSkeletonLocatorInfo>::iterator CLocatorInfoIter;
 typedef std::vector<SLocatorQInfo>::const_iterator CLocatorQInfoConstIter;

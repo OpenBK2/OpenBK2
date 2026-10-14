@@ -1,8 +1,10 @@
 #pragma once
+
 namespace NDb
 {
 //struct SRPGArmor;
 }
+
 namespace NAI
 {
 struct SSourceInfo
@@ -12,6 +14,7 @@ struct SSourceInfo
 	CDBPtr<NDb::CResource> pArmor;
 	int nFloor;
 	int nTSFlags;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pUserData );
@@ -22,6 +25,7 @@ struct SSourceInfo
 	}
 
 	SSourceInfo() {}
+
 	SSourceInfo( CObjectBase *_p, const NDb::CResource *_pArmor, int _nFloor, int _nTSFlags )
 			: pUserData( _p ), pArmor( _pArmor ), nFloor( _nFloor ), nTSFlags( _nTSFlags )
 	{
@@ -34,14 +38,18 @@ struct SInterval
 	{
 		float fT;
 		CVec3 ptNormal;
+
 		//
 		SCrossPoint() {}
+
 		SCrossPoint( float _fT, const CVec3 &_ptNormal ) : fT( _fT ), ptNormal( _ptNormal ) {}
 	};
+
 	//
 	SCrossPoint enter, exit;
 	const SSourceInfo *pSrc;
 	int nUserID;
+
 	//
 	SInterval( const SSourceInfo &_src, int _nUserID, const SCrossPoint &_enter, const SCrossPoint &_exit )
 			: pSrc( &_src ), enter( _enter ), exit( _exit ), nUserID( _nUserID )
@@ -75,4 +83,4 @@ void FillIntersectionResults( std::vector<SSimpleInterval> *pRes,
                               const SSourceInfo &_src,
                               int _nUserID,
                               bool bTerrain );
-}
+} // namespace NAI

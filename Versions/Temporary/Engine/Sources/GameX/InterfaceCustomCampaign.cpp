@@ -22,6 +22,7 @@ class CDifficultyData : public CObjectBase
 public:
 	ZDATA
 	std::wstring wszText;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &wszText );
@@ -29,7 +30,11 @@ public:
 	}
 
 	CDifficultyData() {}
-	CDifficultyData( const std::wstring &_wszText ) { wszText = _wszText; }
+
+	CDifficultyData( const std::wstring &_wszText )
+	{
+		wszText = _wszText;
+	}
 };
 
 class CDifficultyTextViewer : public IDataViewer
@@ -60,7 +65,7 @@ void CDifficultyTextViewer::MakeInterior( CObjectBase *pWindow, const CObjectBas
 	pView->SetText( pView->GetDBText() + wszText );
 }
 
-} // namespace - unnamed
+} // namespace
 
 // CInterfaceCustomCampaign
 

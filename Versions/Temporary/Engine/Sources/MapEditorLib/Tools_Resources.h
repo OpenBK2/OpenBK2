@@ -17,7 +17,11 @@ struct SFileStreamHolder
 	CDataStream *pStream;
 
 	SFileStreamHolder() : pStream( 0 ) {}
-	~SFileStreamHolder() { delete pStream; }
+
+	~SFileStreamHolder()
+	{
+		delete pStream;
+	}
 };
 
 MAPEDITORLIB_EXPORT void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rszTextPath );
@@ -175,6 +179,7 @@ struct SEnumFilesInDataStorageParameter
 };
 
 typedef std::unordered_map<std::string, std::unordered_map<std::string, unsigned>> CEnumFolderMap;
+
 struct SEnumFolderStructureParameter
 {
 	int nIgnoreFolderCount;

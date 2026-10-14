@@ -5,6 +5,7 @@
 #include "3Dmotor_export.h"
 
 static CObj<CFBTransform> pIdentity;
+
 static struct SInitDiscretePos
 {
 	SInitDiscretePos()

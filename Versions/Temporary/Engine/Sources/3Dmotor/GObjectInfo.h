@@ -19,7 +19,7 @@ namespace NDb
 {
 struct SGeometry;
 struct SSkeleton;
-}
+} // namespace NDb
 
 namespace NGScene
 {
@@ -34,6 +34,7 @@ struct SPartAndSkeletonKey
 	CDBPtr<NDb::SSkeleton> pSkeleton;
 	int nSkeletonPart = {};
 	int nLightMapped = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pGeometry );
@@ -44,8 +45,10 @@ struct SPartAndSkeletonKey
 		f.Add( 7, &nLightMapped );
 		return 0;
 	}
+
 	//
 	SPartAndSkeletonKey() {}
+
 	SPartAndSkeletonKey( const NDb::SGeometry *_pGeometry,
 	                     int _nGeometryPart,
 	                     int _nMaterialPart,
@@ -56,6 +59,7 @@ struct SPartAndSkeletonKey
 				pSkeleton( _pSkeleton ), nSkeletonPart( _nSkeletonPart ), nLightMapped( _nLightMapped )
 	{
 	}
+
 	bool operator==( const SPartAndSkeletonKey &a ) const
 	{
 		return pGeometry == a.pGeometry && nGeometryPart == a.nGeometryPart && nMaterialPart == a.nMaterialPart &&
@@ -73,8 +77,10 @@ class CGrannyFile : public CObjectBase
 	OBJECT_NOCOPY_METHODS( CGrannyFile )
 public:
 	granny_file *pFile = {};
+
 	//
 	CGrannyFile() : pFile( 0 ) {}
+
 	~CGrannyFile();
 };
 
@@ -84,6 +90,7 @@ struct SGrannyFileLoaderInfo
 	std::string szResName;
 	int nID = {};
 	bool bAllowDelayedLoad = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szResName );
@@ -91,17 +98,21 @@ struct SGrannyFileLoaderInfo
 		f.Add( 4, &bAllowDelayedLoad );
 		return 0;
 	}
+
 	//
 	SGrannyFileLoaderInfo() : nID( -1 ), bAllowDelayedLoad( false ) {}
+
 	SGrannyFileLoaderInfo( const std::string &_szResName, int _nID, bool _bAllowDelayedLoad )
 			: szResName( _szResName ), nID( _nID ), bAllowDelayedLoad( _bAllowDelayedLoad )
 	{
 	}
+
 	bool operator==( const SGrannyFileLoaderInfo &s ) const
 	{
 		return s.nID == nID && s.szResName == szResName && s.bAllowDelayedLoad == bAllowDelayedLoad;
 	}
 };
+
 /*
 struct SGrannyFileLoaderInfo
 {
@@ -128,6 +139,7 @@ struct SGrannyFileLoaderInfoHash
 class CGrannyMemFileLoader : public CLazyResourceLoader<SGrannyFileLoaderInfo, CGrannyFile>
 {
 	OBJECT_BASIC_METHODS( CGrannyMemFileLoader );
+
 	virtual CFileRequest *CreateRequest()
 	{
 		const SResKey<SGrannyFileLoaderInfo> &k = GetKey();
@@ -135,6 +147,7 @@ class CGrannyMemFileLoader : public CLazyResourceLoader<SGrannyFileLoaderInfo, C
 
 		return CreateFileRequiest( k.tKey.szResName.c_str(), SIntResKey( k.uidKey, k.tKey.nID ), k.tKey.bAllowDelayedLoad );
 	}
+
 	//
 	virtual void RecalcValue( CFileRequest *p );
 };
@@ -149,6 +162,7 @@ class CGrannyMeshLoader : public CHoldedPtrFuncBase<CObjectInfo>
 	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo>> pSkeletonFileInfo;
 	std::string sLightMapped;
 	bool bLightMapped = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pGrannyFile );
@@ -165,11 +179,22 @@ protected:
 public:
 	void Recalc();
 
-	bool IsLightMapped() { return bLightMapped; }
-	const std::string &GetString() const { return sLightMapped; }
+	bool IsLightMapped()
+	{
+		return bLightMapped;
+	}
+
+	const std::string &GetString() const
+	{
+		return sLightMapped;
+	}
+
 	CGrannyMeshLoader() {}
 
-	const SPartAndSkeletonKey &GetKey() { return key; }
+	const SPartAndSkeletonKey &GetKey()
+	{
+		return key;
+	}
 
 	void SetKey( const SPartAndSkeletonKey &_key );
 };

@@ -18,6 +18,7 @@ class CAnimUnitMech : public IAnimUnit
 			EMS_STOPPED_TO_MOVING,
 			EMS_MOVING_TO_STOPPED
 		};
+
 		ZDATA
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		EMovingState state = {};
@@ -33,6 +34,7 @@ class CAnimUnitMech : public IAnimUnit
 
 		SMovingState() : state( EMS_STOPPED ), timeOfIntentionStart( 0 ) {}
 	};
+
 	ZDATA
 	CPtr<CAIUnit> pOwner;
 	SMovingState movingState;
@@ -47,6 +49,7 @@ public:
 
 public:
 	CAnimUnitMech() : pOwner( 0 ) {}
+
 	virtual void Init( class CAIUnit *pOwner );
 
 	virtual void AnimationSet( int nAnimation );

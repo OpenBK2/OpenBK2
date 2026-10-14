@@ -51,11 +51,12 @@ namespace NTypeDef
 		EDITOR_TYPE_STRING_NEW_MULTI_REF,
 	};
 
-};
-};
+}; // namespace NTypeDef
+}; // namespace NDb
 
 NDb::NTypeDef::ETypeType StringToEnum_NDb_NTypeDef_ETypeType( const std::string &szName );
 const char *EnumToString_NDb_NTypeDef_ETypeType( NDb::NTypeDef::ETypeType eType );
+
 template <>
 struct SKnownEnum<NDb::NTypeDef::ETypeType>
 {
@@ -63,9 +64,14 @@ struct SKnownEnum<NDb::NTypeDef::ETypeType>
 	{
 		isKnown = 1
 	};
+
 	static NDb::NTypeDef::ETypeType ToEnum( const std::string &szName )
 	{
 		return StringToEnum_NDb_NTypeDef_ETypeType( szName );
 	}
-	static const char *ToString( NDb::NTypeDef::ETypeType eType ) { return EnumToString_NDb_NTypeDef_ETypeType( eType ); }
+
+	static const char *ToString( NDb::NTypeDef::ETypeType eType )
+	{
+		return EnumToString_NDb_NTypeDef_ETypeType( eType );
+	}
 };

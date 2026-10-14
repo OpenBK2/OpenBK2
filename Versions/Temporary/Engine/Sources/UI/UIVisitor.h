@@ -6,14 +6,17 @@
 
 template <class T>
 class CPtrFuncBase;
+
 namespace NGfx
 {
 class CTexture;
 }
+
 namespace NGScene
 {
 class CFileTexture;
 }
+
 namespace NDb
 {
 struct STexture;
@@ -37,11 +40,15 @@ public:
 		}
 		return clip;
 	}
+
 	virtual void ClipSet( const CTRect<float> &rClip ) = 0;
 	virtual void ClipRestore() = 0;
+
 	//
 	virtual void SetLowerLevel() {}
+
 	virtual void SetUpperLevel() {}
+
 	//
 	virtual void VisitZClearRect( const CRectLayout &sLayout,
 	                              const CTPoint<float> &sPosition,
@@ -86,6 +93,7 @@ public:
 		}
 		pVisitor->ClipSet( rNewClip );
 	}
+
 	~CClipStore()
 	{
 		pVisitor->textClip = previousTextClip;

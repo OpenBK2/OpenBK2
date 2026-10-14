@@ -286,6 +286,7 @@ void CMapInfoEditor::CreateControls()
 	                                                        false,
 	                                                        true );
 }
+
 //CRAP} PLAIN_TEXT
 
 void CMapInfoEditor::PostCreateControls()
@@ -1024,6 +1025,7 @@ bool CMapInfoEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 	}
 	return false;
 }
+
 //
 
 void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectController, bool bRedo )

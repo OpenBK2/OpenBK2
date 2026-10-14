@@ -101,4 +101,4 @@ SHMatrix ConvertMatrix( const fastgltf::math::fmat4x4 &value );
 _3DMOTOR_EXPORT SHMatrix MakeLocalMatrix( const NAnimation::SBoneTransform &value );
 _3DMOTOR_EXPORT NAnimation::SBoneTransform MakeBoneTransform( const SHMatrix &value );
 
-}
+} // namespace NGltf

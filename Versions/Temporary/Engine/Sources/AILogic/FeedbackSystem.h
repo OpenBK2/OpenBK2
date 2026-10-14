@@ -10,7 +10,10 @@ struct SAIGameConsts;
 
 struct SEFBHash
 {
-	int operator()( const EFeedBack &eFB ) const { return int( eFB ); }
+	int operator()( const EFeedBack &eFB ) const
+	{
+		return int( eFB );
+	}
 };
 
 typedef std::pair<int, int> CIDAndParam;
@@ -27,6 +30,7 @@ class CFeedBackSystem
 		int nClientID = {}; // id to remove feedback from client
 		NTimer::STime timeToForget = {};
 		std::vector<CIDAndParam> objectIDs;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 3, &timeNextTalk );
@@ -39,10 +43,12 @@ class CFeedBackSystem
 
 	public:
 		SFeedBackCell() : vCenter( -1, -1 ), timeToForget( 0 ), timeNextTalk( 0 ) {}
+
 		SFeedBackCell( const CVec2 &_vCenter ) : vCenter( _vCenter ), nClientID( -1 ), timeToForget( 0 ), timeNextTalk( 0 )
 		{
 		}
 	};
+
 	typedef std::list<SFeedBackCell> CCells;
 	typedef det_map<EFeedBack, CCells, SEFBHash> CFeedbacks;
 
@@ -67,11 +73,13 @@ private:
 
 public:
 	CFeedBackSystem();
+
 	void Clear()
 	{
 		feedbacks.clear();
 		clientIDs.Clear();
 	}
+
 	void AddFeedback( int nID, const CVec2 &vCenter, EFeedBack eFeedBack, int nParam );
 	void RemoveFeedback( int nID, EFeedBack eFeedBack );
 

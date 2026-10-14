@@ -67,47 +67,56 @@ inline const int GetIDFromInfo( const SAIBasicUpdate *_pUpdate )
 	const TUpdate *pUpdate = checked_cast<const TUpdate *>( _pUpdate );
 	return pUpdate->info.nObjUniqueID;
 }
+
 template <class TUpdate>
 inline const int GetID2( const SAIBasicUpdate *_pUpdate )
 {
 	const TUpdate *pUpdate = checked_cast<const TUpdate *>( _pUpdate );
 	return pUpdate->nObjUniqueID;
 }
+
 template <>
 inline const int GetID2<SAISpecialAbilityUpdate>( const SAIBasicUpdate *pUpdate )
 {
 	return GetIDFromInfo<SAISpecialAbilityUpdate>( pUpdate );
 }
+
 template <>
 inline const int GetID2<SAIDiplomacyUpdate>( const SAIBasicUpdate *pUpdate )
 {
 	return GetIDFromInfo<SAIDiplomacyUpdate>( pUpdate );
 }
+
 template <>
 inline const int GetID2<SAIMechShotUpdate>( const SAIBasicUpdate *pUpdate )
 {
 	return GetIDFromInfo<SAIMechShotUpdate>( pUpdate );
 }
+
 template <>
 inline const int GetID2<SAIInfantryShotUpdate>( const SAIBasicUpdate *pUpdate )
 {
 	return GetIDFromInfo<SAIInfantryShotUpdate>( pUpdate );
 }
+
 template <>
 inline const int GetID2<SAITurretUpdate>( const SAIBasicUpdate *pUpdate )
 {
 	return GetIDFromInfo<SAITurretUpdate>( pUpdate );
 }
+
 template <>
 inline const int GetID2<SAIRPGUpdate>( const SAIBasicUpdate *pUpdate )
 {
 	return GetIDFromInfo<SAIRPGUpdate>( pUpdate );
 }
+
 template <>
 inline const int GetID2<SAIPlacementUpdateBase>( const SAIBasicUpdate *pUpdate )
 {
 	return GetIDFromInfo<SAIPlacementUpdateBase>( pUpdate );
 }
+
 template <>
 inline const int GetID2<SAINewUnitUpdate>( const SAIBasicUpdate *pUpdate )
 {
@@ -2570,4 +2579,4 @@ void Register( IClientUpdatableProcess *pProcess )
 {
 	processesToUpdate.push_back( pProcess );
 }
-}
+} // namespace NUpdatableProcess

@@ -414,4 +414,4 @@ TEST( ShaderAsm, MatchesD3DXOnGeneratedShaders )
 	printf( "compared %d cases with D3DX, %d skipped as invalid to D3DX, %d failed\n", nCompared, nSkipped, nFailed );
 }
 
-}
+} // namespace

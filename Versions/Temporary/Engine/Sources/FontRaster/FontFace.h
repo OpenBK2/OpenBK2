@@ -80,4 +80,4 @@ public:
 	bool HasKerning() const;
 };
 
-}
+} // namespace NFontRaster

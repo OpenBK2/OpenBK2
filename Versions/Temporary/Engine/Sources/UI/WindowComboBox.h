@@ -33,6 +33,7 @@ class CWindowComboBox : public CWindow,
 	int nMaxVisibleRows; // use 0 for fixed list size
 	int nListBaseHeight;
 	int nRowHeight;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CWindow *)this );
@@ -59,7 +60,11 @@ private:
 
 protected:
 	//{ CWindow
-	NDb::SWindow *GetInstance() { return pInstance; }
+	NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
+
 	bool IsRelatedFocus( IWindow *pWindow ) const;
 	//}
 
@@ -86,21 +91,37 @@ public:
 	void AddItem( CObjectBase *pData );
 	void RemoveItem( CObjectBase *pData );
 	void RemoveAllItems();
-	int GetItemCount() const { return items.size(); }
+
+	int GetItemCount() const
+	{
+		return items.size();
+	}
+
 	IListControlItem *GetItem( int nIndex ) const;
-	int GetSelectedIndex() const { return nSelected; }
+
+	int GetSelectedIndex() const
+	{
+		return nSelected;
+	}
+
 	void Select( int nIndex );
 
 	void SetViewer( IDataViewer *pViewer );
 	void SetLine( CObjectBase *pData );
+
 	//}
 
 	//{ IButtonNotify
 	void Released( class CWindow *pWho ) {}
+
 	void Pushed( class CWindow *pWho );
+
 	void Entered( class CWindow *pWho ) {}
+
 	void Leaved( class CWindow *pWho ) {}
+
 	void StateChanged( class CWindow *pWho ) {}
+
 	//}
 
 	//{ ISelectNotify
@@ -109,7 +130,9 @@ public:
 
 	//{ IClickNotify
 	void Clicked( struct IWindow *pWho, int nButton );
+
 	void DoubleClicked( struct IWindow *pWho, int nButton ) {}
+
 	//}
 
 	//{ IFocusNotify

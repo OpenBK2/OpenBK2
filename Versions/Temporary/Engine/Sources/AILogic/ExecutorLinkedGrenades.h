@@ -11,6 +11,7 @@ protected:
 
 public:
 	CExecutorLinkedGrenades( CAIUnit *_pUnit );
+
 	CExecutorLinkedGrenades() {}
 
 	int operator&( IBinSaver &saver );

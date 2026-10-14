@@ -6,6 +6,7 @@
 
 class CEntrenchmentPart;
 class CEntrenchment;
+
 namespace NDb
 {
 struct SEntrenchmentRPGStats;
@@ -64,6 +65,7 @@ public:
 		f.Add( 16, &nTermInd );
 		return 0;
 	}
+
 	void OnSerialize( IBinSaver &saver );
 	//
 	bool CanDig( const NDb::SEntrenchmentRPGStats *pRPG, const CVec2 &pt, uint16_t angle, int nFrameIndex );
@@ -78,6 +80,7 @@ public:
 
 public:
 	CEntrenchmentCreation() : CLongObjectCreation( -1, false ) {}
+
 	CEntrenchmentCreation( const int nPlayer, const bool bAllowAIModification );
 
 	static bool SearchTrenches( const CVec2 &vCenter, const SRect &rectToTest );
@@ -85,7 +88,12 @@ public:
 	int GetEntrenchmentID() const;
 
 	bool PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock );
-	virtual CLine2 GetCurLine() { return line; }
+
+	virtual CLine2 GetCurLine()
+	{
+		return line;
+	}
+
 	const int GetMaxIndex() const;
 	const int GetCurIndex() const;
 	const CVec2 GetNextPoint( const int nPlace, const int nMaxPlace ) const;
@@ -101,6 +109,11 @@ public:
 	void LockNext();
 	float GetPrice();
 	void LockCannotBuild();
-	bool CannotFinish() const { return bSayAck; }
+
+	bool CannotFinish() const
+	{
+		return bSayAck;
+	}
+
 	void CreateObjects( SAIObjectsUnderConstructionUpdate *pUpdate );
 };

@@ -7,41 +7,50 @@ uint16_t wTiltAngle = 0;
 std::unordered_map</*enum EManuverID*/ int, bool> manuverMap;
 
 virtual void ToAIUnits( bool bInEditor );
+
 //
 virtual int GetArmor( const int n ) const
 {
 	return ( armors[n].nMin + armors[n].nMax ) / 2;
 }
+
 virtual int GetMinPossibleArmor( const int n ) const
 {
 	return armors[n].nMin;
 }
+
 virtual int GetMaxPossibleArmor( const int n ) const
 {
 	return armors[n].nMax;
 }
+
 virtual int GetRandomArmor( const int n ) const
 {
 	RecordRandomCall();
 	return NRandom::RandomCheck( armors[n].nMin, armors[n].nMax );
 }
+
 //
 bool HasDieselEffect() const
 {
 	return pEffectDiesel != 0;
 }
+
 bool HasSmokeEffect() const
 {
 	return pEffectSmoke != 0;
 }
+
 bool HasMoveStartSound() const
 {
 	return pSoundMoveStart != 0;
 }
+
 bool HasMoveSound() const
 {
 	return pSoundMoveCycle != 0;
 }
+
 bool HasMoveStopSound() const
 {
 	return pSoundMoveStop != 0;
@@ -51,6 +60,7 @@ virtual const float GetTurnRadius() const
 {
 	return fTurnRadius;
 }
+
 //
 const std::vector<CVec2> *GetGunners( const int nMode ) const
 {
@@ -69,9 +79,11 @@ bool HasConfiguredGunners() const
 	}
 	return false;
 }
+
 //
 
 #include "include_constructorinfo.h"
+
 virtual const SMechUnitGun &GetGun( const int nUniqueID, const int nPlatform, const int nGun ) const
 {
 	int nPlatformIdx, nGunIdx;

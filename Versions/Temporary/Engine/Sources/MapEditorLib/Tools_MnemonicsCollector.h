@@ -11,12 +11,15 @@ class CMnemonicsCollector
 public:
 	TValue defaultValue;
 	std::string defaultMnemonic;
+
 	//
 	CMnemonicsCollector() {}
+
 	CMnemonicsCollector( const TValue &rDefaultValue, const std::string &rszDefaultMnemonic )
 			: defaultValue( rDefaultValue ), defaultMnemonic( rszDefaultMnemonic )
 	{
 	}
+
 	//
 	void Clear( const TValue &rDefaultValue, const std::string &rszDefaultMnemonic )
 	{
@@ -26,14 +29,20 @@ public:
 		direct.clear();
 		reverse.clear();
 	}
+
 	//
 	void Insert( const TValue &rValue, const std::string &rszMnemonic )
 	{
 		direct[rValue] = rszMnemonic;
 		reverse[rszMnemonic] = rValue;
 	}
+
 	//
-	int Size() { return direct.size(); }
+	int Size()
+	{
+		return direct.size();
+	}
+
 	//
 	const std::string &GetMnemonic( const TValue &rValue ) const
 	{
@@ -47,6 +56,7 @@ public:
 			return it->second;
 		}
 	}
+
 	//
 	const TValue &GetValue( const std::string &rszMnemonic ) const
 	{
@@ -60,6 +70,7 @@ public:
 			return it->second;
 		}
 	}
+
 	//
 	void Trace() const
 	{

@@ -28,15 +28,22 @@ struct TextVisitor : IUIVisitor
 	CPtr<IML> text;
 	bool clipped = false;
 	int calls = 0;
+
 	void ClipSet( const CTRect<float> & ) override {}
+
 	void ClipRestore() override {}
+
 	void VisitZClearRect( const CRectLayout &, const CTPoint<float> &, const CTRect<float> &, float ) override {}
+
 	void VisitUIRect( const NDb::STexture *, int, const CRectLayout & ) override {}
+
 	void
 	VisitUIRect( const NDb::STexture *, int, const CVec2 *, const NGfx::SPixel8888 *, const CTRect<float> & ) override
 	{
 	}
+
 	void VisitUITextureRect( CPtrFuncBase<NGfx::CTexture> *, int, const CRectLayout & ) override {}
+
 	void VisitUIText( IML *value, const CTPoint<float> &origin, const CTRect<float> &window ) override
 	{
 		text = value;
@@ -60,6 +67,7 @@ class TextVerticalAlignment : public testing::Test
 
 protected:
 	double capRatio = 0;
+
 	void AddHeaderFont()
 	{
 		// The loading advice and menu buttons use Oswald Bold, not numeric.
@@ -73,6 +81,7 @@ protected:
 		header->pTexture = headerTexture;
 		NGScene::GetTextLocaleInfo()->AddFont( header );
 	}
+
 	CObj<IML> MakeText( const std::wstring &content, int width, IWindow *owner = nullptr )
 	{
 		CObj<IML> text = CreateML( owner );
@@ -80,6 +89,7 @@ protected:
 		text->Generate( width );
 		return text;
 	}
+
 	void SetUp() override
 	{
 		ASSERT_TRUE( std::ifstream( std::string( GAME_DATA_DIR ) + "/Fonts/Files/LiberationSans-Regular.ttf" ) );
@@ -122,6 +132,7 @@ protected:
 		NGlobal::SetVar( "ui_font_scale", 1.2f );
 		NGlobal::SetVar( "hud_font_scale", 1.0f );
 	}
+
 	void TearDown() override
 	{
 		NGScene::GetTextLocaleInfo()->ClearAllFonts();
@@ -131,6 +142,7 @@ protected:
 		NGlobal::SetVar( "hud_font_scale", oldHudScale );
 		NVFS::SetMainVFS( oldVFS );
 	}
+
 	IScreen *MakeScreen( bool hud )
 	{
 		CPtr<NDb::SWindowScreenShared> shared = MakeObject<NDb::SWindowScreenShared>( NDb::SWindowScreenShared::typeID );
@@ -148,6 +160,7 @@ protected:
 		screen->SetHudFontScale( hud );
 		return screen;
 	}
+
 	CWindowTextView *
 	MakeLabel( float width, float height, bool resize = false, const NDb::SWindowPlacement *captionPlacement = nullptr )
 	{
@@ -178,6 +191,7 @@ protected:
 		label->Reposition( CTRect<float>( 0, 0, 1024, 768 ) );
 		return label;
 	}
+
 	CPtr<NDb::SWindowSimple> PanelDescription( float width, float height )
 	{
 		CPtr<NDb::SWindowSimpleShared> shared = MakeObject<NDb::SWindowSimpleShared>( NDb::SWindowSimpleShared::typeID );
@@ -193,10 +207,12 @@ protected:
 		desc->placement.upperMargin = VNULL2;
 		return desc;
 	}
+
 	CObj<CWindow> MakePanel( float width, float height )
 	{
 		return CUIFactory::MakeWindow( PanelDescription( width, height ) );
 	}
+
 	CObj<CWindow> MakeScrollPanel( float width, float height )
 	{
 		CPtr<NDb::SWindowSimple> border = PanelDescription( width, height );
@@ -215,7 +231,7 @@ protected:
 		return CUIFactory::MakeWindow( desc );
 	}
 };
-}
+} // namespace
 
 TEST_F( TextVerticalAlignment, FixedHeightUnitStatsKeepTheirDigitsInsideTheClip )
 {
@@ -556,6 +572,7 @@ TEST_F( TextVerticalAlignment, ScrollingViewportDoesNotReduceAutosizedDescriptio
 	struct ScrollVisitor : TextVisitor
 	{
 		bool viewportClipped = false;
+
 		void VisitUIText( IML *text, const CTPoint<float> &origin, const CTRect<float> &window ) override
 		{
 			TextVisitor::VisitUIText( text, origin, window );
@@ -564,6 +581,7 @@ TEST_F( TextVerticalAlignment, ScrollingViewportDoesNotReduceAutosizedDescriptio
 			viewportClipped = text->HasVisibleTextOutside( origin, viewport );
 		}
 	};
+
 	CObj<CWindowTextView> label = MakeLabel( 200, 12, true );
 	label->SetText( L"<font face=numeric size=14>65\n80\n84/84\n3750/3750" );
 	const auto preferredSize = label->GetSize();
@@ -668,12 +686,22 @@ TEST_F( TextVerticalAlignment, LoadingAdviceFitsItsActualParentClipAtEveryResolu
 	AddHeaderFont();
 	const std::wstring style = NText::GetText( "Consts/Game/Tags/h2_Text.txt" );
 	ASSERT_FALSE( style.empty() );
+
 	struct ClippedVisitor : TextVisitor
 	{
 		std::vector<CTRect<float>> clips;
 		bool lettersClipped = false;
-		void ClipSet( const CTRect<float> &clip ) override { clips.push_back( clip ); }
-		void ClipRestore() override { clips.pop_back(); }
+
+		void ClipSet( const CTRect<float> &clip ) override
+		{
+			clips.push_back( clip );
+		}
+
+		void ClipRestore() override
+		{
+			clips.pop_back();
+		}
+
 		void VisitUIText( IML *text, const CTPoint<float> &origin, const CTRect<float> &box ) override
 		{
 			CTRect<float> actualClip = box;
@@ -685,6 +713,7 @@ TEST_F( TextVerticalAlignment, LoadingAdviceFitsItsActualParentClipAtEveryResolu
 			lettersClipped = text->HasVisibleTextOutside( origin, actualClip, false );
 		}
 	};
+
 	for ( auto resolution : { CTPoint<int>( 1024, 768 ), CTPoint<int>( 1920, 1080 ), CTPoint<int>( 2560, 1440 ) } )
 	{
 		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( resolution.x, resolution.y );

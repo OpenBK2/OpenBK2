@@ -259,7 +259,10 @@ static bool bAppAlwaysActive = true;
 
 struct SSaveCursorClip
 {
-	~SSaveCursorClip() { ClipCursor( 0 ); }
+	~SSaveCursorClip()
+	{
+		ClipCursor( 0 );
+	}
 } doSaveCursorClip;
 
 static void Report( const char *pszText, int nVal = -0x7fffffff )
@@ -392,7 +395,7 @@ void SetEditorWnd( HWND _hWnd )
 	bGameWindow = false;
 	nRenderWidth = nRenderHeight = 0;
 }
-}
+} // namespace NWinFrame
 
 void NWinFrame::Exit()
 {
@@ -401,6 +404,7 @@ void NWinFrame::Exit()
 }
 
 static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM lParam );
+
 bool SFLB2_CreateWin( LPCSTR pszApp, LPCSTR pszWnd, unsigned dwWidth, unsigned dwHeight, LPCSTR nIcon )
 {
 	// create and register class style
@@ -743,7 +747,7 @@ void AddText( const char *pszText )
 		AddMsg( SWindowsMsg::CHAR, static_cast<int>( nCodePoint ), 1, 0 );
 	}
 }
-}
+} // namespace
 
 void NWinFrame::Exit()
 {

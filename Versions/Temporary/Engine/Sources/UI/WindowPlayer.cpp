@@ -19,6 +19,7 @@ int CWindowPlayer::SMovie::operator&( IXmlSaver &saver )
 	saver.Add( "SlideShowMode", &bSlideShowMode );
 	return 0;
 }
+
 int CWindowPlayer::SMovie::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &bCanSkipMovie );

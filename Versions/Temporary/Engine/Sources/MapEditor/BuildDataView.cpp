@@ -51,5 +51,6 @@ bool CanAccept( SBuildDataParams *pBuildDataParams,
 	}
 	return bEnableOKButton;
 }
+
 //CRAP} PLAIN_TEXT
-}
+} // namespace NBuildData

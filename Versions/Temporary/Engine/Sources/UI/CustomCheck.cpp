@@ -48,11 +48,13 @@ void CCheckPreprogrammed::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	pDesc = checked_cast<const NDb::SCheckPreprogrammed *>( _pDesc );
 }
+
 int CCheckPreprogrammed::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &pDesc );
 	return 0;
 }
+
 int CCheckPreprogrammed::Check( struct IScreen *pScreen,
                                 struct IScriptWrapper *pScript,
                                 struct IProgrammedReactionsAndChecks *pProg,
@@ -70,11 +72,13 @@ void CCheckIsWindowEnabled::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	pDesc = checked_cast<const NDb::SCheckIsWindowEnabled *>( _pDesc );
 }
+
 int CCheckIsWindowEnabled::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &pDesc );
 	return 0;
 }
+
 int CCheckIsWindowEnabled::Check( struct IScreen *pScreen,
                                   struct IScriptWrapper *pScript,
                                   struct IProgrammedReactionsAndChecks *pProg,

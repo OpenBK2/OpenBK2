@@ -26,6 +26,7 @@ struct SMiniMapUnitInfo
 	uint8_t radius = {}; // tiles
 
 	SMiniMapUnitInfo() : radius( 0 ) {}
+
 	SMiniMapUnitInfo( const uint16_t _x, const uint16_t _y, const float _z, const uint8_t _player, uint8_t _radius )
 			: x( _x ), y( _y ), z( _z ), player( _player ), radius( _radius )
 	{
@@ -40,6 +41,7 @@ struct IMiniMap : virtual public IWindow
 		CVec2 vPos;
 		CDBPtr<NDb::STexture> pTexture;
 		CVec2 vTexturePoint;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &vPos );
@@ -57,6 +59,7 @@ struct IMiniMap : virtual public IWindow
 		float fSize = {};
 		float fAngle = {};
 		NGfx::SPixel8888 color;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &eType );
@@ -127,6 +130,7 @@ struct IWindow3DControl : virtual public IWindow
 		ZDATA
 		CVec2 vPos;
 		CVec2 vSize;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &vPos );
@@ -143,6 +147,7 @@ struct IWindow3DControl : virtual public IWindow
 		CVec2 vPos;
 		CVec2 vSize;
 		CDBPtr<NDb::SAnimB2> pAnim;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nID );

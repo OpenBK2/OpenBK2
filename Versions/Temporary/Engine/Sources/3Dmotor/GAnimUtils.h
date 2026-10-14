@@ -14,6 +14,7 @@ private:
 	CDGPtr<CFuncBase<SSkeletonPose>> pAnimation;
 	NAnimation::SSkeletonHandle skelHandle;
 	int nAddBone;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pAnimation );
@@ -23,15 +24,21 @@ private:
 	}
 
 protected:
-	virtual bool NeedUpdate() { return pAnimation.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pAnimation.Refresh();
+	}
+
 	virtual void Recalc();
 
 public:
 	CAddBoneFilter() : nAddBone( 0 ) {}
+
 	CAddBoneFilter( CFuncBase<SSkeletonPose> *_pAnim, const NAnimation::SSkeletonHandle &_skel, int _nAddBone )
 			: pAnimation( _pAnim ), skelHandle( _skel ), nAddBone( _nAddBone )
 	{
 	}
+
 	~CAddBoneFilter();
 };
-}
+} // namespace NAnimation

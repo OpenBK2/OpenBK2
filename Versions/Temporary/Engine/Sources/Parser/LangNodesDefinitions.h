@@ -16,17 +16,27 @@ class CTypeNode : public CLangNode
 
 public:
 	CTypeNode() : bForward( false ) {}
+
 	CTypeNode( const std::string &szName, const std::string &szFile, int nLine )
 			: CLangNode( szName, szFile, nLine ), bForward( false )
 	{
 	}
+
 	CTypeNode( const std::string &szName, bool _bForward, const std::string &szFile, int nLine )
 			: CLangNode( szName, szFile, nLine ), bForward( _bForward )
 	{
 	}
 
-	bool IsForward() const { return bForward; }
-	CTypeNode *GetRealType() { return bForward ? pRealTypeIfForward.GetPtr() : this; }
+	bool IsForward() const
+	{
+		return bForward;
+	}
+
+	CTypeNode *GetRealType()
+	{
+		return bForward ? pRealTypeIfForward.GetPtr() : this;
+	}
+
 	void SetRealType( CTypeNode *pRealType );
 };
 
@@ -37,16 +47,27 @@ class CAttributeNode : public CLangNode
 
 public:
 	CAttributeNode() {}
+
 	CAttributeNode(
 			const std::string &szName, const std::string &szValue, bool bStringValue, const std::string &szFile, int nLine )
 			: CLangNode( szName, szFile, nLine ), value( szValue, bStringValue )
 	{
 	}
 
-	ESimpleType GetType() const { return value.GetType(); }
-	const CSimpleValue &GetValue() const { return value; }
+	ESimpleType GetType() const
+	{
+		return value.GetType();
+	}
 
-	virtual void Visit( IVisitor *pVisitor ) { pVisitor->Visit( this ); }
+	const CSimpleValue &GetValue() const
+	{
+		return value;
+	}
+
+	virtual void Visit( IVisitor *pVisitor )
+	{
+		pVisitor->Visit( this );
+	}
 };
 
 class PARSER_EXPORT CTypeDefNode : public CTypeNode
@@ -59,6 +80,7 @@ class PARSER_EXPORT CTypeDefNode : public CTypeNode
 
 public:
 	CTypeDefNode() : bPointer( false ) {}
+
 	CTypeDefNode( const std::string &szName,
 	              CNodesList<CAttributeNode> *_pAttrList,
 	              CTypeNode *_pReferencedType,
@@ -77,7 +99,10 @@ public:
 	TAttrIter AttrBegin() const;
 	TAttrIter AttrEnd() const;
 
-	virtual void Visit( IVisitor *pVisitor ) { pVisitor->Visit( this ); }
+	virtual void Visit( IVisitor *pVisitor )
+	{
+		pVisitor->Visit( this );
+	}
 };
 
 class CEnumEntryNode : public CLangNode
@@ -89,17 +114,26 @@ class CEnumEntryNode : public CLangNode
 
 public:
 	CEnumEntryNode() : nValue( -1 ), bValueDefined( false ) {}
+
 	CEnumEntryNode( const std::string &szName, int _nValue, const std::string &szFile, int nLine )
 			: CLangNode( szName, szFile, nLine ), nValue( _nValue ), bValueDefined( true )
 	{
 	}
+
 	CEnumEntryNode( const std::string &szName, const std::string &szFile, int nLine )
 			: CLangNode( szName, szFile, nLine ), nValue( -1 ), bValueDefined( false )
 	{
 	}
 
-	bool IsValueDefined() const { return bValueDefined; }
-	int GetValue() const { return nValue; }
+	bool IsValueDefined() const
+	{
+		return bValueDefined;
+	}
+
+	int GetValue() const
+	{
+		return nValue;
+	}
 
 	void SetValue( const int _nValue )
 	{
@@ -107,7 +141,10 @@ public:
 		bValueDefined = true;
 	}
 
-	virtual void Visit( IVisitor *pVisitor ) { pVisitor->Visit( this ); }
+	virtual void Visit( IVisitor *pVisitor )
+	{
+		pVisitor->Visit( this );
+	}
 };
 
 class PARSER_EXPORT CEnumNode : public CTypeNode
@@ -119,17 +156,22 @@ class PARSER_EXPORT CEnumNode : public CTypeNode
 
 public:
 	CEnumNode() {}
+
 	CEnumNode( const std::string &szFile, int nLine ) : CTypeNode( "", szFile, nLine )
 	{
 		pEntriesList = new CNodesList<CEnumEntryNode>();
 	}
+
 	CEnumNode( const std::string &szName, bool bForward, const std::string &szFile, int nLine )
 			: CTypeNode( szName, bForward, szFile, nLine )
 	{
 		pEntriesList = new CNodesList<CEnumEntryNode>();
 	}
 
-	void AddAttributes( CNodesList<CAttributeNode> *_pAttrList ) { pAttrList = _pAttrList; }
+	void AddAttributes( CNodesList<CAttributeNode> *_pAttrList )
+	{
+		pAttrList = _pAttrList;
+	}
 
 	typedef std::list<CPtr<CEnumEntryNode>>::const_iterator TEntriesIter;
 	TEntriesIter EntriesBegin() const;
@@ -139,12 +181,18 @@ public:
 	TAttrIter AttrBegin() const;
 	TAttrIter AttrEnd() const;
 
-	void AddEnumEntry( CEnumEntryNode *pEnumEntryNode ) { pEntriesList->GetNodes().push_back( pEnumEntryNode ); }
+	void AddEnumEntry( CEnumEntryNode *pEnumEntryNode )
+	{
+		pEntriesList->GetNodes().push_back( pEnumEntryNode );
+	}
 
 	CEnumEntryNode *GetEnumEntry( const std::string &szEntryName ) const;
 	CEnumEntryNode *FindAnyWithCrossedEntries( class CNamespace *pNM ) const;
 
-	virtual void Visit( IVisitor *pVisitor ) { pVisitor->Visit( this ); }
+	virtual void Visit( IVisitor *pVisitor )
+	{
+		pVisitor->Visit( this );
+	}
 };
 
 class PARSER_EXPORT CVariable : public CLangNode
@@ -161,13 +209,21 @@ class PARSER_EXPORT CVariable : public CLangNode
 
 public:
 	CVariable() : bIsPointer( false ), bHasDefault( false ), bHasComplexDefault( false ) {}
+
 	CVariable( const std::string &szName, const std::string &szFile, int nLine )
 			: CLangNode( szName, szFile, nLine ), bIsPointer( false ), bHasDefault( false ), bHasComplexDefault( false )
 	{
 	}
 
-	void SetVarToPointer() { bIsPointer = true; }
-	bool IsPointer() const { return bIsPointer; }
+	void SetVarToPointer()
+	{
+		bIsPointer = true;
+	}
+
+	bool IsPointer() const
+	{
+		return bIsPointer;
+	}
 
 	void SetComplexDefault( const std::string &szValue )
 	{
@@ -193,17 +249,45 @@ public:
 		defaultValue.SetWStrValue( szValue );
 	}
 
-	bool HasDefault() const { return bHasDefault; }
-	ESimpleType GetTypeOfDefault() const { return defaultValue.GetType(); }
-	const CSimpleValue &GetDefault() const { return defaultValue; }
+	bool HasDefault() const
+	{
+		return bHasDefault;
+	}
 
-	bool HasComplexDefault() const { return bHasComplexDefault; }
-	const std::string &GetComplexDefault() const { return szComplexDefaultValue; }
+	ESimpleType GetTypeOfDefault() const
+	{
+		return defaultValue.GetType();
+	}
 
-	void SetAttrList( CNodesList<CAttributeNode> *_pAttrList ) { pAttrList = _pAttrList; }
-	void SetType( CTypeNode *_pType ) { pType = _pType; }
+	const CSimpleValue &GetDefault() const
+	{
+		return defaultValue;
+	}
 
-	CTypeNode *GetType() const { return pType; }
+	bool HasComplexDefault() const
+	{
+		return bHasComplexDefault;
+	}
+
+	const std::string &GetComplexDefault() const
+	{
+		return szComplexDefaultValue;
+	}
+
+	void SetAttrList( CNodesList<CAttributeNode> *_pAttrList )
+	{
+		pAttrList = _pAttrList;
+	}
+
+	void SetType( CTypeNode *_pType )
+	{
+		pType = _pType;
+	}
+
+	CTypeNode *GetType() const
+	{
+		return pType;
+	}
 
 	typedef std::list<CPtr<CAttributeNode>>::const_iterator TAttrIter;
 	TAttrIter AttrBegin() const;
@@ -216,11 +300,15 @@ class CVariableNode : public CVariable
 
 public:
 	CVariableNode() {}
+
 	CVariableNode( const std::string &szName, const std::string &szFile, int nLine ) : CVariable( szName, szFile, nLine )
 	{
 	}
 
-	virtual void Visit( IVisitor *pVisitor ) { pVisitor->Visit( this ); }
+	virtual void Visit( IVisitor *pVisitor )
+	{
+		pVisitor->Visit( this );
+	}
 };
 
 class CVectorNode : public CVariable
@@ -232,15 +320,26 @@ class CVectorNode : public CVariable
 
 public:
 	CVectorNode() {}
+
 	CVectorNode( const std::string &szName, int _nMinAmount, int _nMaxAmount, const std::string &szFile, int nLine )
 			: CVariable( szName, szFile, nLine ), nMinAmount( _nMinAmount ), nMaxAmount( _nMaxAmount )
 	{
 	}
 
-	virtual void Visit( IVisitor *pVisitor ) { pVisitor->Visit( this ); }
+	virtual void Visit( IVisitor *pVisitor )
+	{
+		pVisitor->Visit( this );
+	}
 
-	int GetMinAmount() const { return nMinAmount; }
-	int GetMaxAmount() const { return nMaxAmount; }
+	int GetMinAmount() const
+	{
+		return nMinAmount;
+	}
+
+	int GetMaxAmount() const
+	{
+		return nMaxAmount;
+	}
 };
 
 class CAttributeDefNode : public CTypeNode
@@ -251,14 +350,21 @@ class CAttributeDefNode : public CTypeNode
 
 public:
 	CAttributeDefNode() {}
+
 	CAttributeDefNode( ESimpleType _eNodeType, const std::string &szFile, int nLine )
 			: CTypeNode( "", szFile, nLine ), eNodeType( _eNodeType )
 	{
 	}
 
-	ESimpleType GetType() const { return eNodeType; }
+	ESimpleType GetType() const
+	{
+		return eNodeType;
+	}
 
-	virtual void Visit( IVisitor *pVisitor ) { pVisitor->Visit( this ); }
+	virtual void Visit( IVisitor *pVisitor )
+	{
+		pVisitor->Visit( this );
+	}
 };
 
 class PARSER_EXPORT CNamespace : public CLangNode
@@ -279,6 +385,7 @@ class PARSER_EXPORT CNamespace : public CLangNode
 
 public:
 	CNamespace() {}
+
 	CNamespace( CNodesList<CComplexTypeNode> *_pVisibleTypes, const std::string &szFile, int nLine )
 			: pVisibleTypes( _pVisibleTypes ), CLangNode( "", szFile, nLine )
 	{
@@ -294,7 +401,11 @@ public:
 	void AddInsideDef( CLangNode *pNode );
 
 	CEnumEntryNode *FindEnumEntry( const std::string &szEnumEntry ) const;
-	void AddBadInclude( const std::string &szInclude ) { badIncludes.push_back( szInclude ); }
+
+	void AddBadInclude( const std::string &szInclude )
+	{
+		badIncludes.push_back( szInclude );
+	}
 
 	void ResolveForwards();
 
@@ -303,14 +414,31 @@ public:
 	TLangNodeIter DefsEnd() const;
 
 	typedef std::list<CObj<CLangNode>>::const_iterator TDefsListIter;
-	TDefsListIter DefsListBegin() const { return insideDefList.begin(); }
-	TDefsListIter DefsListEnd() const { return insideDefList.end(); }
 
-	void SetDefsListFrom( CNamespace *pNM ) { insideDefList = pNM->insideDefList; }
+	TDefsListIter DefsListBegin() const
+	{
+		return insideDefList.begin();
+	}
 
-	const std::list<std::string> &GetBadIncludes() const { return badIncludes; }
+	TDefsListIter DefsListEnd() const
+	{
+		return insideDefList.end();
+	}
 
-	virtual void Visit( IVisitor *pVisitor ) { pVisitor->Visit( this ); }
+	void SetDefsListFrom( CNamespace *pNM )
+	{
+		insideDefList = pNM->insideDefList;
+	}
+
+	const std::list<std::string> &GetBadIncludes() const
+	{
+		return badIncludes;
+	}
+
+	virtual void Visit( IVisitor *pVisitor )
+	{
+		pVisitor->Visit( this );
+	}
 };
 
 class PARSER_EXPORT CComplexTypeNode : public CTypeNode
@@ -325,18 +453,36 @@ class PARSER_EXPORT CComplexTypeNode : public CTypeNode
 
 public:
 	CComplexTypeNode() {}
+
 	CComplexTypeNode( const std::string &szName, bool _bClass, bool bForward, const std::string &szFile, int nLine )
 			: CTypeNode( szName, bForward, szFile, nLine ), bClass( _bClass )
 	{
 	}
 
-	bool IsClass() const { return bClass; }
+	bool IsClass() const
+	{
+		return bClass;
+	}
 
-	void AddParents( CNodesList<CComplexTypeNode> *_pParentsList ) { pParentsList = _pParentsList; }
-	void AddAttributes( CNodesList<CAttributeNode> *_pAttrList ) { pAttrList = _pAttrList; }
-	void AddNamespace( CNamespace *_pNamespace ) { pNamespace = _pNamespace; }
+	void AddParents( CNodesList<CComplexTypeNode> *_pParentsList )
+	{
+		pParentsList = _pParentsList;
+	}
 
-	virtual void Visit( IVisitor *pVisitor ) { pVisitor->Visit( this ); }
+	void AddAttributes( CNodesList<CAttributeNode> *_pAttrList )
+	{
+		pAttrList = _pAttrList;
+	}
+
+	void AddNamespace( CNamespace *_pNamespace )
+	{
+		pNamespace = _pNamespace;
+	}
+
+	virtual void Visit( IVisitor *pVisitor )
+	{
+		pVisitor->Visit( this );
+	}
 
 	typedef std::list<CPtr<CAttributeNode>>::const_iterator TAttrIter;
 	TAttrIter AttrBegin() const;
@@ -346,7 +492,10 @@ public:
 	TParentsIter ParentsBegin() const;
 	TParentsIter ParentsEnd() const;
 
-	CNamespace *GetNamespace() const { return pNamespace; }
+	CNamespace *GetNamespace() const
+	{
+		return pNamespace;
+	}
 };
 
 class CBaseTypeNode : public CTypeNode
@@ -357,14 +506,21 @@ class CBaseTypeNode : public CTypeNode
 
 public:
 	CBaseTypeNode() : bClass( false ) {}
+
 	CBaseTypeNode( const std::string &szTypeName, bool _bClass, const std::string &szFile, int nLine )
 			: CTypeNode( szTypeName, szFile, nLine ), bClass( _bClass )
 	{
 	}
 
-	bool IsClass() const { return bClass; }
+	bool IsClass() const
+	{
+		return bClass;
+	}
 
-	virtual void Visit( IVisitor *pVisitor ) { pVisitor->Visit( this ); }
+	virtual void Visit( IVisitor *pVisitor )
+	{
+		pVisitor->Visit( this );
+	}
 };
 
-}
+} // namespace NLang

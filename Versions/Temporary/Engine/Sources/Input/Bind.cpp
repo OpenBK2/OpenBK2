@@ -27,6 +27,7 @@ TActionsMap &GetActions()
 	static TActionsMap actionsMap;
 	return actionsMap;
 }
+
 TCommandsMap &GetCommands()
 {
 	static TCommandsMap commandsMap;
@@ -829,7 +830,7 @@ static void CrossMappings( const SMapping &sBaseSet, SMapping *pSubSet )
 	}
 }
 
-}; // NAMESPACE
+}; // namespace NInput
 
 static void CommandBindInner( const std::string &szID, const std::vector<std::wstring> &_paramsSet )
 {

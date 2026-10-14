@@ -39,13 +39,26 @@ class CModelEditor : public CEditorBase, public CDefaultView, public ICommandHan
 	//
 public:
 	//IEditor
-	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
-	IView *GetView() { return this; }
-	IInputState *GetInputState() { return pModelState; }
+	void GetTemporaryLabel( std::string *pszTemporaryLabel )
+	{
+		pszTemporaryLabel->clear();
+	}
+
+	IView *GetView()
+	{
+		return this;
+	}
+
+	IInputState *GetInputState()
+	{
+		return pModelState;
+	}
+
 	void GetChildFrameType( std::string *pszChildFrameTypeName )
 	{
 		( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__";
 	}
+
 	void CreateControls();
 	void ResetGUI( bool bActive ) override;
 	void PostCreateControls();
@@ -56,6 +69,7 @@ public:
 
 	//CDefaultView
 	void Undo( IController *pController ) {}
+
 	void Redo( IController *pController ) {}
 
 	//ICommandHandler

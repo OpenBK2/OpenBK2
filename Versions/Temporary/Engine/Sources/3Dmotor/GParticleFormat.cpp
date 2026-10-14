@@ -66,6 +66,7 @@ void Interpolate( const uint32_t &v1, const uint32_t &v2, float f1, float f2, ui
 
 	*pRes = out.dwColor;
 }
+
 template <>
 void Scale( const uint32_t &v, float f, uint32_t *pRes )
 {
@@ -155,6 +156,7 @@ void CParticlesLoader::RecalcValue( CFileRequest *pRequest )
 	}
 }
 
-}
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x02541140, CParticlesLoader );

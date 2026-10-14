@@ -45,4 +45,4 @@ bool IsIgnore( const SIgnoresList &ignores, const char *pszFileName, int nLineNu
 	//
 	return false;
 }
-}
+} // namespace NBSU

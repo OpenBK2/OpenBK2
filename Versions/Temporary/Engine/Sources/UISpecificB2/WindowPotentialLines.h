@@ -41,23 +41,39 @@ protected:
 			return false;
 		}
 	}
+
 	void Recalc();
 
 public:
 	CWindowChapterMapLayer() : nLastUpdateTime( 0 ), bNeedUpdate( false ) {};
 	void SetSize( const int nWidth, const int nHeight );
-	int GetWidth() const { return nWidth; }
-	int GetHeight() const { return nHeight; }
+
+	int GetWidth() const
+	{
+		return nWidth;
+	}
+
+	int GetHeight() const
+	{
+		return nHeight;
+	}
+
 	void PutPixel( const int x, const int y, const NGfx::SPixel8888 &color );
 	void SetPixelAlpha( const int x, const int y, const uint8_t &nAlpha );
 	uint8_t GetPixelAlpha( const int x, const int y );
 	const NGfx::SPixel8888 GetPixel( const int x, const int y );
-	void SetNeedUpdate() { bNeedUpdate = true; }
+
+	void SetNeedUpdate()
+	{
+		bNeedUpdate = true;
+	}
+
 	void SetNeedUpdateNow()
 	{
 		bNeedUpdate = true;
 		nLastUpdateTime = 0;
 	}
+
 	void Clear();
 
 	int operator&( IBinSaver &saver );
@@ -141,6 +157,7 @@ class CWindowPotentialLines : public CWindow, public IPotentialLines
 		ZDATA
 		float fValue;
 		EIntersectionType eType;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &fValue );
@@ -148,6 +165,7 @@ class CWindowPotentialLines : public CWindow, public IPotentialLines
 			return 0;
 		}
 	};
+
 	typedef CArray2D<SPointDesc> CPointsArray;
 
 	struct SNodeDesc
@@ -158,6 +176,7 @@ class CWindowPotentialLines : public CWindow, public IPotentialLines
 		float fValue;
 		int nEndOffsetX;
 		int nEndOffsetY;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nX );
@@ -168,6 +187,7 @@ class CWindowPotentialLines : public CWindow, public IPotentialLines
 			return 0;
 		}
 	};
+
 	typedef std::list<SNodeDesc> CNodeList;
 
 	struct SArrowDesc
@@ -177,6 +197,7 @@ class CWindowPotentialLines : public CWindow, public IPotentialLines
 		float fWidth;
 		uint32_t dwColour;
 		CDBPtr<NDb::STexture> pTexture;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pts );
@@ -186,6 +207,7 @@ class CWindowPotentialLines : public CWindow, public IPotentialLines
 			return 0;
 		}
 	};
+
 	typedef std::list<SArrowDesc> CArrowList;
 
 	// This data is generated
@@ -235,7 +257,10 @@ public:
 	}
 
 protected:
-	NDb::SWindow *GetInstance() { return pInstance; }
+	NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
 
 private:
 	enum ENeighbourSide
@@ -274,7 +299,11 @@ public:
 	void SetNode( int nX, int nY, int nEndOffsetX, int nEndOffsetY, float fValue ); // If such node exists, it is altered
 
 	// Arrows management
-	void ClearArrows() { arrows.clear(); }
+	void ClearArrows()
+	{
+		arrows.clear();
+	}
+
 	void AddArrow( const std::vector<CVec2> &arrowTraj,
 	               float fArrowWidth,
 	               const NDb::STexture *pArrowTexture,

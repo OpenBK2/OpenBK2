@@ -17,6 +17,7 @@ struct SExceptionDlgInitParams
 	const char *pszDescription;
 	const std::vector<SCallStackEntry> &entries;
 	const char *pszExtInfo;
+
 	//
 	SExceptionDlgInitParams( const char *pszNewCondition,
 	                         const char *pszNewDescription,
@@ -27,6 +28,7 @@ struct SExceptionDlgInitParams
 	{
 	}
 };
+
 static const SExceptionDlgInitParams *g_pParams = 0;
 
 EBSUReport PORT_CDECL ShowExceptionDlg( HINSTANCE hInstance,
@@ -101,4 +103,4 @@ static BOOL CALLBACK ReportExceptionDlgProc( HWND hwndDlg, unsigned message, WPA
 	return FALSE;
 }
 
-}
+} // namespace NBSU

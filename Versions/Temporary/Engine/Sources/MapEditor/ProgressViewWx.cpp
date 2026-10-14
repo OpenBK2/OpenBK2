@@ -141,7 +141,10 @@ public:
 private:
 	int nRangeStart = 0;
 
-	void OnShowTimer( wxTimerEvent & ) { ShowNow(); }
+	void OnShowTimer( wxTimerEvent & )
+	{
+		ShowNow();
+	}
 };
 
 class CWxProgressView : public NProgressView::IView
@@ -149,7 +152,10 @@ class CWxProgressView : public NProgressView::IView
 	wxWeakRef<CProgressWxDialog> dialog;
 
 public:
-	virtual ~CWxProgressView() { Destroy(); }
+	virtual ~CWxProgressView()
+	{
+		Destroy();
+	}
 
 	// pParent is only used during this call: the window it resolves to
 	// outlives it and wx keeps that as the dialog's parent.
@@ -164,7 +170,10 @@ public:
 		return true;
 	}
 
-	virtual bool IsCreated() const { return dialog != nullptr; }
+	virtual bool IsCreated() const
+	{
+		return dialog != nullptr;
+	}
 
 	virtual void Show()
 	{
@@ -238,7 +247,7 @@ public:
 		}
 	}
 };
-}
+} // namespace
 
 namespace NProgressView
 {
@@ -246,4 +255,4 @@ IView *Create()
 {
 	return new CWxProgressView;
 }
-}
+} // namespace NProgressView

@@ -10,6 +10,7 @@ struct ITreeFallingMutator : public IAnimMutator
 	{
 		typeID = 0x12094B80
 	};
+
 	virtual void Setup( ISkeletonAnimator *pAnimator,
 	                    const CVec2 &vDir,
 	                    float _fEndAngle,
@@ -29,6 +30,7 @@ struct ITreeWindMutator : public IAnimMutator
 	{
 		typeID = 0x19132B40
 	};
+
 	virtual void
 	Setup( ISkeletonAnimator *pAnimator, const CVec3 &_vPos3, const std::vector<std::string> &leafNames ) = 0;
 };
@@ -39,6 +41,7 @@ struct IMechUnitJoggingMutator : public IAnimMutator
 	{
 		typeID = 0x15095B00
 	};
+
 	//
 	struct SJoggingParams
 	{
@@ -47,6 +50,7 @@ struct IMechUnitJoggingMutator : public IAnimMutator
 		float fAmp1 = {}, fAmp2 = {};
 		float fPhaze1 = {}, fPhaze2 = {};
 	};
+
 	//
 	virtual void Setup( const int nBasisBoneIndex, const SJoggingParams &_joggingX, const SJoggingParams &_joggingY ) = 0;
 	// Propeller entries are paired by index; missing entries and unknown model-part names are ignored.
@@ -63,6 +67,7 @@ struct IWingScaleMutator : public IAnimMutator
 	{
 		typeID = 0x3119AB00
 	};
+
 	virtual bool
 	Setup( ISkeletonAnimator *pAnimator, const std::string &szScaledWingPrefix, const std::string &szStaticWingName ) = 0;
 	virtual void SetScale( const float fScale ) = 0;

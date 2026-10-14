@@ -38,14 +38,17 @@ uint32_t random_uint32()
 {
 	return std::uniform_int_distribution<uint32_t>()( rng );
 }
+
 uint16_t random_uint16()
 {
 	return (uint16_t)std::uniform_int_distribution<int>( -32768, 32767 )( rng );
 }
+
 unsigned char random_uint8()
 {
 	return (unsigned char)std::uniform_int_distribution<int>( 0, 255 )( rng );
 }
+
 float random_float()
 {
 	return std::uniform_real_distribution<float>( -1.0f, 1.0f )( rng );
@@ -106,7 +109,7 @@ std::vector<NGfx::SCompactVector> RandomNormals( int n )
 	return v;
 }
 
-}
+} // namespace
 
 TEST( LightingKernels, CalcDirectionalLighting )
 {
@@ -162,6 +165,7 @@ TEST( LightingKernels, SampleWarFogInt )
 	{
 		fogSize = 33
 	}; // GetNextPow2(n-1)+1, as the kernels assert
+
 	for ( const SKernelSet &set : Candidates() )
 	{
 		for ( int n : Counts() )

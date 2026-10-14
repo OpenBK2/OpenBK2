@@ -21,6 +21,7 @@ protected:
 		LOAD_IMAGE_COPY,
 		LOAD_IMAGE_SCALE,
 	};
+
 	//
 	virtual bool GetImages( CArray2D<uint32_t> *pSmallImage,
 	                        CArray2D<uint32_t> *pNormalImage,

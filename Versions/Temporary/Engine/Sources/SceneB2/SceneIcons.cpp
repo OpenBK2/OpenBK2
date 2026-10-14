@@ -173,4 +173,5 @@ void CScene::MoveSceneIcon( const int nID, const CVec3 &vCenter )
 		it->second.pPatch->ForceUpdate();
 	}
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////data[eScene]->data[eScene]->data[eScene]->data[eScene]->data[eScene]->data[eScene]->data[eScene]->

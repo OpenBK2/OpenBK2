@@ -445,6 +445,7 @@ bool CInterfaceNivalNet::OnRecoveryOkReaction( const std::string &szSender )
 
 	return true;
 } //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceNivalNet::ProcessEvent( const SGameMessage &msg )
 {
 	return CInterfaceScreenBase::ProcessEvent( msg );

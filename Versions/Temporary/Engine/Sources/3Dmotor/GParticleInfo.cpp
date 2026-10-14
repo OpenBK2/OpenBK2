@@ -97,6 +97,7 @@ static void InitTexturePlaces( std::vector<STransparentTexturePlace> *pRes,
 const int N_SIN_TABLE_PERIOD = 512;
 const float F_SIN_TABLE_MULT = N_SIN_TABLE_PERIOD / FP_2PI;
 static float fSinTable[N_SIN_TABLE_PERIOD * 2];
+
 struct SSinCosTableInit
 {
 	SSinCosTableInit()
@@ -107,6 +108,7 @@ struct SSinCosTableInit
 		}
 	}
 } sinCosTable;
+
 inline void FastSinCos( float fAngle, float *pfSin, float *pfCos )
 {
 	float fA = fAngle * F_SIN_TABLE_MULT;
@@ -117,6 +119,7 @@ inline void FastSinCos( float fAngle, float *pfSin, float *pfCos )
 	n += N_SIN_TABLE_PERIOD / 4;
 	*pfCos = fSinTable[n] + ( fSinTable[n + 1] - fSinTable[n] ) * fResidual;
 }
+
 void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 {
 	if ( !IsValid( pInfo ) )
@@ -381,6 +384,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 const float FP_DROP_H = 1.75f;  // 0.4f
 const float FP_DROP_W = 0.033f; // 0.033f
 static float fRainDropShifts[4][2] = { { 0, 0 }, { FP_DROP_W, 0 }, { FP_DROP_W, FP_DROP_H }, { 0, FP_DROP_H } };
+
 void CRainParticleEffect::AddParticles( IParticleOutput *pRender )
 {
 	const SParticleOrientationInfo &orientation = pRender->GetOrientationInfo();
@@ -400,7 +404,7 @@ void CRainParticleEffect::AddParticles( IParticleOutput *pRender )
 	}
 }
 
-}
+} // namespace NGScene
 
 using namespace NGScene;
 BASIC_REGISTER_CLASS( _3DMOTOR, CStandardParticleEffect )

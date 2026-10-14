@@ -61,6 +61,7 @@ inline void AssignTex( T **pTex, CDGPtr<CPtrFuncBase<T>> &p )
 		*pTex = p->GetValue();
 	}
 }
+
 inline void AssignTexBlackDefault( NGfx::CTexture **pTex, CDGPtr<CPtrFuncBase<NGfx::CTexture>> &p )
 {
 	AssignTex( pTex, p );
@@ -69,6 +70,7 @@ inline void AssignTexBlackDefault( NGfx::CTexture **pTex, CDGPtr<CPtrFuncBase<NG
 		*pTex = GetBlackTexture();
 	}
 }
+
 inline void AssignTexWhiteDefault( NGfx::CTexture **pTex, CDGPtr<CPtrFuncBase<NGfx::CTexture>> &p )
 {
 	AssignTex( pTex, p );
@@ -77,6 +79,7 @@ inline void AssignTexWhiteDefault( NGfx::CTexture **pTex, CDGPtr<CPtrFuncBase<NG
 		*pTex = GetWhiteTexture();
 	}
 }
+
 template <class T>
 inline void Refresh( CDGPtr<T> *p )
 {
@@ -1805,7 +1808,7 @@ IMaterial *AttachColor( IMaterial *pSrc, CFuncBase<CVec4> *pColor )
 	return pRes;
 }
 
-}
+} // namespace NGScene
 
 START_REGISTER( GfxMaterials )
 REGISTER_VAR_EX( "gfx_fade_priority_boost", NGlobal::VarBoolHandler, &NGScene::bFPB, 0, STORAGE_NONE )

@@ -28,4 +28,4 @@ void RenderPolycount( CTransformStack *pTS, NGfx::CRenderContext *pRC, IRender *
 	}
 	Execute( pRender, pRC, *pTS, lightOps, scene, SLightInfo() );
 }
-}
+} // namespace NGScene

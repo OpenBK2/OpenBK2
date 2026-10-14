@@ -13,6 +13,7 @@ class CHelicopterDeviationProcess : public IClientUpdatableProcess
 
 	ZDATA
 	CPtr<CMOUnitHelicopter> pUnit;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pUnit );
@@ -24,7 +25,10 @@ class CHelicopterDeviationProcess : public IClientUpdatableProcess
 public:
 	CHelicopterDeviationProcess( CMOUnitHelicopter *_pUnit ) : pUnit( _pUnit ) {}
 
-	bool Update( const NTimer::STime &time ) { return IsValid( pUnit ) && pUnit->UpdateStandingDeviation( time ); }
+	bool Update( const NTimer::STime &time )
+	{
+		return IsValid( pUnit ) && pUnit->UpdateStandingDeviation( time );
+	}
 };
 
 // Keep the existing process ID so helicopter hover deviation remains serializable.

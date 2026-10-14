@@ -688,6 +688,7 @@ NAnimation::ISkeletonAnimator *CScene::GetAnimator( const int nID, bool bRefresh
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
 	return pos == data[eScene]->visObjects.end() ? 0 : pos->second->GetAnimator( bRefreshAnimator );
 }
+
 NAnimation::ISkeletonAnimator *CScene::GetInterfaceObjAnimator( IWindow *pScreen, const int nID )
 {
 	SSceneData::CScreensData &screensData = data[eScene]->screensData;

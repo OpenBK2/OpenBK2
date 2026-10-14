@@ -10,7 +10,8 @@ namespace NDb
 {
 enum EDesignUnitType : int;
 struct SUnitTypePriority;
-}
+} // namespace NDb
+
 struct SConsts : public SAIConsts
 {
 private:
@@ -31,6 +32,7 @@ public:
 		static const int SNEAK_ADVANCED_TIMEOUT;
 		static const int SNEAK_ADVANCED_RESET_TIMEOUT;
 	};
+
 	// расстояние, в котором пересчитать туман для юнитов при удалении стат. объекта
 	static const int MAX_DIST_TO_RECALC_FOG;
 
@@ -441,6 +443,7 @@ public:
 		{
 		}
 	};
+
 	static det_map<int, SRevealInfo> REVEAL_INFO;
 
 	// infantry will be healed to full health during this time
@@ -450,6 +453,7 @@ public:
 	static void Load();
 	//
 	static det_map<NDb::EDesignUnitType, int, SEnumHash> PRIORITIES;
+
 	static const int GetUnitPriority( const NDb::EDesignUnitType &unitType )
 	{
 		det_map<NDb::EDesignUnitType, int, SEnumHash>::const_iterator pos = PRIORITIES.find( unitType );
@@ -462,5 +466,6 @@ public:
 			return pos->second;
 		}
 	}
+
 	static void InitPriorities( const std::vector<NDb::SUnitTypePriority> &priorities );
 };

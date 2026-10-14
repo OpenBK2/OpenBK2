@@ -22,4 +22,4 @@ bool Run( IWidget *pParent, const std::string &rszCaption, const std::string &rs
 // The dialog itself, for Run; not for anything else to call. *pszName
 // carries the starting text in and the result out.
 bool RunWx( IWidget *pParent, const std::string &rszCaption, const std::string &rszLabel, std::string *pszName );
-}
+} // namespace NEnterName

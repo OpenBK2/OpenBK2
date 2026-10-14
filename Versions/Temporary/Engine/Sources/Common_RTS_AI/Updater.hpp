@@ -11,11 +11,13 @@ class CUpdater : public IUpdater
 		EUT_SINGLE,
 		EUT_CONTINUOS
 	};
+
 	ZDATA
 	list<CPtr<CObjectBase>> singleUpdates;
 	list<CPtr<IContinuosUpdate>> continuosUpdates;
 	list<CPtr<IContinuosUpdate>> processedContinuosUpdates;
 	list<EUpdateType> updateTypes;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &singleUpdates );

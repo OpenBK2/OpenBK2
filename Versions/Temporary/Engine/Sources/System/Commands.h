@@ -28,4 +28,4 @@ public:
 	void Run( const std::vector<std::wstring> &paramsSet );
 };
 
-}
+} // namespace NGlobal

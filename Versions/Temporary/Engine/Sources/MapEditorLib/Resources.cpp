@@ -73,7 +73,7 @@ const TEntry *Find( unsigned nID )
 	}
 	return nullptr;
 }
-}
+} // namespace
 
 namespace NResources
 {
@@ -189,4 +189,4 @@ std::string GetString( unsigned nID )
 	GetString( nID, &szText );
 	return szText;
 }
-}
+} // namespace NResources

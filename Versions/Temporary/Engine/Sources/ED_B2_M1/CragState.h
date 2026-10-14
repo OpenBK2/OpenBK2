@@ -12,23 +12,61 @@ class CCragState : public CVSOStateEx
 	friend class CVSOMultiState;
 
 	const NDb::SCragDesc *pSelectedCragDesc;
+
 	//конструкторы и операторы присваивания
 	CCragState( class CVSOMultiState *_pParentState = 0 ) : CVSOStateEx( _pParentState ), pSelectedCragDesc( 0 )
 	{
 		NI_ASSERT( _pParentState != 0, "CCragState(): Invalid parameter: _pParentState == 0" );
 	}
+
 	//
 protected:
 	// CVSOState
-	bool IsDrawSceneDrawTool() { return true; }
-	bool EdgesMustBeZero() { return true; }
-	bool IsEdgesMustBeOut() { return false; }
-	bool IsClose() { return false; }
-	bool IsComplete() { return true; }
-	bool NoIntersection() { return false; }
-	bool NoSelfIntersection() { return false; }
-	bool CanUpdateVSO( int nVSOID ) { return true; }
-	bool CanRemoveVSO( int nVSOID ) { return true; }
+	bool IsDrawSceneDrawTool()
+	{
+		return true;
+	}
+
+	bool EdgesMustBeZero()
+	{
+		return true;
+	}
+
+	bool IsEdgesMustBeOut()
+	{
+		return false;
+	}
+
+	bool IsClose()
+	{
+		return false;
+	}
+
+	bool IsComplete()
+	{
+		return true;
+	}
+
+	bool NoIntersection()
+	{
+		return false;
+	}
+
+	bool NoSelfIntersection()
+	{
+		return false;
+	}
+
+	bool CanUpdateVSO( int nVSOID )
+	{
+		return true;
+	}
+
+	bool CanRemoveVSO( int nVSOID )
+	{
+		return true;
+	}
+
 	void GetControlPointBounds( int *pnMinCount, int *pnMaxCount )
 	{
 		if ( pnMinCount )
@@ -40,11 +78,32 @@ protected:
 			( *pnMaxCount ) = INVALID_NODE_ID;
 		}
 	}
-	float GetDefaultStep() { return CVSOManager::DEFAULT_STEP; }
-	float GetDefaultWidth() { return CVSOManager::DEFAULT_WIDTH; }
-	float GetDefaultHeight() { return CVSOManager::DEFAULT_HEIGHT; }
-	float GetDefaultOpacity() { return CVSOManager::DEFAULT_OPACITY; }
-	float GetDefaultStepOut() { return CVSOManager::DEFAULT_STEP / 4.0f; }
+
+	float GetDefaultStep()
+	{
+		return CVSOManager::DEFAULT_STEP;
+	}
+
+	float GetDefaultWidth()
+	{
+		return CVSOManager::DEFAULT_WIDTH;
+	}
+
+	float GetDefaultHeight()
+	{
+		return CVSOManager::DEFAULT_HEIGHT;
+	}
+
+	float GetDefaultOpacity()
+	{
+		return CVSOManager::DEFAULT_OPACITY;
+	}
+
+	float GetDefaultStepOut()
+	{
+		return CVSOManager::DEFAULT_STEP / 4.0f;
+	}
+
 	//
 	bool CanEditPoints( CVSOManager::SVSOSelection::ESelectionType eSelectionType );
 	void PrepareInsertVSO();
@@ -52,14 +111,31 @@ protected:
 
 	//CVSOStateEx
 	//bool CanInsertVSO();
-	bool IsRealtimeUpdate() const { return false; }
-	const std::string GetVSOName() const { return VSO_NAME; }
-	const std::string GetVSOTypeName() const { return VSO_TYPE_NAME; }
-	int GetVSOTypeID() const { return NDb::SCragDesc::typeID; }
+	bool IsRealtimeUpdate() const
+	{
+		return false;
+	}
+
+	const std::string GetVSOName() const
+	{
+		return VSO_NAME;
+	}
+
+	const std::string GetVSOTypeName() const
+	{
+		return VSO_TYPE_NAME;
+	}
+
+	int GetVSOTypeID() const
+	{
+		return NDb::SCragDesc::typeID;
+	}
+
 	const CMapInfoController::SVSOUndoData::EVSOType GetVSOType() const
 	{
 		return CMapInfoController::SVSOUndoData::VSO_CRAG;
 	}
+
 	NMapInfoEditor::CVSOInstanceList *GetVSOList();
 	//
 	void InsertVSOInTerrain( const NDb::SVSOInstance &rVSO );

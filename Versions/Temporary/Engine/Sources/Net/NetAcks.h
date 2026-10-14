@@ -17,10 +17,27 @@ class CAckTracker
 {
 public:
 	CAckTracker();
-	float GetRTT() const { return fAvrgRTT; }
-	float GetRTTDisp() const { return sqrt( fabs( sqr( fAvrgRTT ) - fAvrgRTT2 ) ); }
-	float GetTimeSinceLastRecv() const { return fTimeSinceLastRecv; }
-	const float GetPing() const { return fPing; }
+
+	float GetRTT() const
+	{
+		return fAvrgRTT;
+	}
+
+	float GetRTTDisp() const
+	{
+		return sqrt( fabs( sqr( fAvrgRTT ) - fAvrgRTT2 ) );
+	}
+
+	float GetTimeSinceLastRecv() const
+	{
+		return fTimeSinceLastRecv;
+	}
+
+	const float GetPing() const
+	{
+		return fPing;
+	}
+
 	// if true is returned then packet considered sent and timer corrected accordingly
 	// all packets are considered to be of same size
 	bool CanSend();
@@ -57,6 +74,7 @@ private:
 	float fTimeSinceLastSend;
 	float fTimeSinceLastRecv; // time elapsed since last receive
 	double fCurrentTime;
+
 	//int nUpdateSize;               // recommended update size
 	// bool bHasNewPacketToAck;
 	//
@@ -68,6 +86,7 @@ private:
 		PACKET_ID nPktNumber;
 		bool bOnTheWindowEdge;
 	};
+
 	// info on sent update packets
 	std::list<CUpdate> sentUpdates, rolledUpdates; // unacknowledged updates
 
@@ -78,4 +97,4 @@ private:
 	bool CheckRecvPacketNumber( UPDATE_ID nPkt );
 };
 
-}
+} // namespace NNet

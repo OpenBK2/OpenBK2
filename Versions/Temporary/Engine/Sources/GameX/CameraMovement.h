@@ -24,5 +24,9 @@ public:
 	bool Segment( const NTimer::STime curTime );
 	// move to
 	void SetFinishPoint( const int nPoint, const int nTimeToMove, const NTimer::STime curTime );
-	void FinishMove() { bMovementFinished = true; }
+
+	void FinishMove()
+	{
+		bMovementFinished = true;
+	}
 };

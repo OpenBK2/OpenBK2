@@ -27,6 +27,7 @@ class CMissionReinf : public CObjectBase
 		std::vector<CPtr<IWindow>> chevrons;
 		CPtr<IWindow> pXPBarBg;
 		CPtr<IWindow> pIconEnabledWnd;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pButton );
@@ -43,6 +44,7 @@ class CMissionReinf : public CObjectBase
 
 		void ShowChevron( int nIndex );
 	};
+
 	struct SUnitInfo
 	{
 		ZDATA
@@ -53,6 +55,7 @@ class CMissionReinf : public CObjectBase
 		CDBPtr<NDb::SHPObjectRPGStats> pStats;
 		int nCount;
 		CPtr<IWindow> pFlagBg;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pWnd );
@@ -65,6 +68,7 @@ class CMissionReinf : public CObjectBase
 			return 0;
 		}
 	};
+
 	typedef std::unordered_map<std::string, NDb::EReinforcementType> CNameToTypes;
 	typedef std::unordered_map<NDb::EReinforcementType, SReinfInfo, SEnumHash> CReinfInfos;
 
@@ -122,6 +126,7 @@ class CMissionReinf : public CObjectBase
 	CPtr<IButton> pCallReinfModeBtn;
 	CPtr<IButton> pAutoShowReinfBtn;
 	bool bWasEnabled = false;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pWorld );
@@ -225,7 +230,11 @@ public:
 
 	void Step();
 
-	bool IsOpen() const { return bIsOpen; }
+	bool IsOpen() const
+	{
+		return bIsOpen;
+	}
+
 	void Show();
 	void Select( const std::string &szSender );
 	void SelectDblClick( const std::string &szSender );

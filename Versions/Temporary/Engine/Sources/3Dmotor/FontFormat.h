@@ -3,6 +3,7 @@
 #include <cstdint>
 
 #pragma pack( 4 )
+
 // complete necessary one letter description
 struct STFCharacter
 {
@@ -11,6 +12,7 @@ struct STFCharacter
 	int nBC;            // character's B + C = distance to the next character
 	int nWidth;         // lone character's width (B + (C > 0 ? C : 0))
 };
+
 #pragma pack()
 
 class CFontFormatInfo : public CObjectBase
@@ -47,17 +49,35 @@ public:
 		}
 		return pos->second;
 	}
+
 	// retrieve kerning pair width
 	int GetKern( uint16_t wChar, uint16_t wLastChar ) const
 	{
 		CKernMap::const_iterator pos = kerns.find( ( uint32_t( wLastChar ) << 16 ) | uint32_t( wChar ) );
 		return pos != kerns.end() ? pos->second : 0;
 	}
+
 	//
-	int GetHeight() const { return nHeight; }
-	int GetLineSpace() const { return nHeight + nExternalLeading; }
-	int GetAveCharWidth() const { return nAveCharWidth; }
-	int GetMaxCharWidth() const { return nMaxCharWidth; }
+	int GetHeight() const
+	{
+		return nHeight;
+	}
+
+	int GetLineSpace() const
+	{
+		return nHeight + nExternalLeading;
+	}
+
+	int GetAveCharWidth() const
+	{
+		return nAveCharWidth;
+	}
+
+	int GetMaxCharWidth() const
+	{
+		return nMaxCharWidth;
+	}
+
 	//
 	// For runtime fonts (GRuntimeFont.h), which start empty and gain a character
 	// the first time some text uses it. A baked font is loaded whole and never
@@ -77,9 +97,22 @@ public:
 		cCharSet = _cCharSet;
 		wDefaultChar = _wDefaultChar;
 	}
-	bool HasChar( const uint16_t c ) const { return chars.find( c ) != chars.end(); }
-	void SetChar( const uint16_t c, const STFCharacter &character ) { chars[c] = character; }
-	void SetInkBounds( uint16_t c, const CTRect<int> &bounds ) { inkBounds[c] = bounds; }
+
+	bool HasChar( const uint16_t c ) const
+	{
+		return chars.find( c ) != chars.end();
+	}
+
+	void SetChar( const uint16_t c, const STFCharacter &character )
+	{
+		chars[c] = character;
+	}
+
+	void SetInkBounds( uint16_t c, const CTRect<int> &bounds )
+	{
+		inkBounds[c] = bounds;
+	}
+
 	const CTRect<int> *GetInkBounds( uint16_t c ) const
 	{
 		// Match GetChar's replacement glyph when a character is unavailable.
@@ -90,14 +123,17 @@ public:
 		const auto found = inkBounds.find( c );
 		return found == inkBounds.end() ? nullptr : &found->second;
 	}
+
 	bool HasKern( uint16_t wChar, uint16_t wLastChar ) const
 	{
 		return kerns.find( ( uint32_t( wLastChar ) << 16 ) | uint32_t( wChar ) ) != kerns.end();
 	}
+
 	void SetKern( uint16_t wChar, uint16_t wLastChar, int nKern )
 	{
 		kerns[( uint32_t( wLastChar ) << 16 ) | uint32_t( wChar )] = nKern;
 	}
+
 	//
 	int operator&( CStructureSaver &f );
 };

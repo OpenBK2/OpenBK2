@@ -26,11 +26,13 @@ enum ECharType
 	CHAR_NEWLINE,
 	CHAR_PUNCTUATION
 };
+
 enum ECharStyle
 {
 	STYLE_NORMAL,
 	STYLE_UNDERLINE
 };
+
 enum EAlignStyle
 {
 	ALIGN_LEFT,
@@ -46,6 +48,7 @@ struct SState
 	ZDATA
 	SFont sFont;
 	NGfx::SPixel8888 sColor;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &sFont );
@@ -54,14 +57,17 @@ struct SState
 	}
 
 	SState() {}
+
 	SState( const SFont &_sFont, const NGfx::SPixel8888 &_sColor ) : sFont( _sFont ), sColor( _sColor ) {}
 };
+
 struct SFontInfo
 {
 	ZDATA
 	CVec2 scale;
 	CPtr<CFontInfo> pFont;
 	CPtr<CFontFormatInfo> pInfo;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &scale );
@@ -70,6 +76,7 @@ struct SFontInfo
 		return 0;
 	}
 };
+
 struct SChunk
 {
 	ZDATA
@@ -78,6 +85,7 @@ struct SChunk
 	SState sState;
 	std::wstring wsText;
 	ECharType eType;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &nCount );
@@ -89,10 +97,12 @@ struct SChunk
 	}
 
 	SChunk() {}
+
 	SChunk( ECharType _eType, int _nIndex, const SState &_sState, int _nCount )
 			: eType( _eType ), nIndex( _nIndex ), sState( _sState ), nCount( _nCount )
 	{
 	}
+
 	SChunk( ECharType _eType, int _nIndex, const SState &_sState, const std::wstring &_wsText )
 			: eType( _eType ), nIndex( _nIndex ), sState( _sState ), wsText( _wsText )
 	{
@@ -123,6 +133,7 @@ public:
 	CDGPtr<CFuncBase<CVec2>> pScreenRect;
 	CDGPtr<CFuncBase<std::wstring>> pText;
 	CDGPtr<CFuncBase<CTPoint<int>>> pSize;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &bDynamic );
@@ -155,6 +166,7 @@ protected:
 
 	float fFontScale = 0;
 	void Recalc();
+
 	bool NeedUpdate()
 	{
 		// A scale edit changes metrics even when the text and window are unchanged.
@@ -491,6 +503,7 @@ struct SWString
 	std::wstring wsString;
 
 	SWString() {}
+
 	SWString( ECharType _eType, const std::wstring &_wsString ) : eType( _eType ), wsString( _wsString ) {}
 };
 
@@ -777,6 +790,7 @@ void CTextFormater::GetFontFormatInfo( const SFont &sFont, SFontInfo *pFontInfo 
 	return;
 }
 
-} // namespace
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x02931161, CTextFormater );

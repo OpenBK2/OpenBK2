@@ -29,7 +29,7 @@ LONG WINAPI SwallowHeapCorruption( EXCEPTION_POINTERS *exception )
 	                                                               : EXCEPTION_CONTINUE_SEARCH;
 }
 #endif
-}
+} // namespace
 
 int main( int argc, char **argv )
 {

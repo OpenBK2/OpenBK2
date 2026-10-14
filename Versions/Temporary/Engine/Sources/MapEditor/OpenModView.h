@@ -21,4 +21,4 @@ namespace NOpenMod
 // and accepted, with *pMod set to it; false on cancel, or on OK with nothing
 // valid selected, which the dialog does not allow anyway.
 bool Run( IWidget *pParent, NMOD::SMOD *pMod );
-}
+} // namespace NOpenMod

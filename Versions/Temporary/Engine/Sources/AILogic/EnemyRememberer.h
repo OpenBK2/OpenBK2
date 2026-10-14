@@ -23,9 +23,15 @@ public:
 
 public:
 	CEnemyRememberer() {}
+
 	CEnemyRememberer( const int timeBeforeForget );
 	void SetVisible( const class CCommonUnit *pUnit, const bool bVisible );
 	const CVec2 GetPos( const class CCommonUnit *pUnit ) const;
-	const NTimer::STime GetLastSeen() const { return timeLastSeen; }
+
+	const NTimer::STime GetLastSeen() const
+	{
+		return timeLastSeen;
+	}
+
 	const bool IsTimeToForget() const;
 };

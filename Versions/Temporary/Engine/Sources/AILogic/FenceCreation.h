@@ -7,11 +7,14 @@ class CGivenPassabilityStObject;
 class CFenceCreation : public CLongObjectCreation
 {
 	OBJECT_BASIC_METHODS( CFenceCreation );
+
 	// скопировал у Костика
 	struct APointHelper
 	{
 		std::vector<CVec2> m_points;
+
 		APointHelper() {}
+
 		bool operator()( long x, long y )
 		{
 			m_points.push_back( CVec2( x, y ) );
@@ -55,12 +58,21 @@ private:
 
 public:
 	CFenceCreation() : CLongObjectCreation( -1, false ) {}
+
 	CFenceCreation( const int nPlayer, const bool bAllowAIModification );
 
-	const CVec2 &GetCenter( const int nIndex ) { return vPoints[nIndex]; }
+	const CVec2 &GetCenter( const int nIndex )
+	{
+		return vPoints[nIndex];
+	}
 
 	bool PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock );
-	CLine2 GetCurLine() { return line; }
+
+	CLine2 GetCurLine()
+	{
+		return line;
+	}
+
 	const int GetMaxIndex() const;
 	const int GetCurIndex() const;
 	const CVec2 GetNextPoint( const int nPlace, const int nMaxPlace ) const;
@@ -70,7 +82,12 @@ public:
 	bool CanBuildNext() const;
 	void LockNext();
 	float GetPrice();
-	void LockCannotBuild() { bCannot = true; }
+
+	void LockCannotBuild()
+	{
+		bCannot = true;
+	}
+
 	void CreateObjects( SAIObjectsUnderConstructionUpdate *pUpdate );
 	bool IsCheatPath() const;
 };

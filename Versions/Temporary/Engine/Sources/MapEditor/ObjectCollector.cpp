@@ -337,7 +337,7 @@ wxBitmap LoadResourceBitmap( unsigned nID )
 {
 	return wxBitmap( NWxResourceImages::ReadBitmapResource( nID ) );
 }
-}
+} // namespace
 
 void CObjectCollector::CreateImageLists()
 {

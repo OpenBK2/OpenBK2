@@ -14,6 +14,7 @@
 #include <cstdint>
 
 #define NUM_SYSTEM_CHUNKS 1
+
 namespace NXMLExport
 {
 
@@ -21,11 +22,15 @@ struct SLevelDesc
 {
 	std::string szName;
 	std::string szType;
+
 	//
 	SLevelDesc() {}
+
 	SLevelDesc( const std::string &_szName, const std::string &_szType ) : szName( _szName ), szType( _szType ) {}
 };
+
 typedef std::vector<SLevelDesc> CLevelsList;
+
 inline bool IsInRect( const CLevelsList &levels )
 {
 	if ( levels.size() < 2 )
@@ -902,4 +907,4 @@ void DumpAllObjects()
 	}
 }
 
-}
+} // namespace NXMLExport

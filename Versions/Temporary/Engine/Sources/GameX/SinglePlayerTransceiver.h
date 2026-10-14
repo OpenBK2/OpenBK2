@@ -22,6 +22,7 @@ class CSinglePlayerTransceiver : public ITransceiver
 	int nGameSpeed = {};
 	NTimer::STime nStartCountingTime = {};
 	int nFrames = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pCmdsHistory );
@@ -34,11 +35,13 @@ class CSinglePlayerTransceiver : public ITransceiver
 		f.Add( 9, &nFrames );
 		return 0;
 	}
+
 	void AdjustGameSpeed( const int nDelta );
 
 public:
 	CSinglePlayerTransceiver();
 	CSinglePlayerTransceiver( ICommandsHistory *_pCommandHistory, IAILogic *_pAI );
+
 	~CSinglePlayerTransceiver() {}
 
 	void StartMission( const NDb::SMapInfo *_pMap, IAILogic *pAI );
@@ -50,9 +53,15 @@ public:
 	// client commands
 	void CommandClientTogglePause();
 	void CommandClientSpeed( int nChange );
+
 	void CommandClientDropPlayer( const std::wstring &szPlayerNick ) {}
+
 	void CommandTimeOut( bool bSet ) {}
 
-	ICheckSumLog *GetCheckSumLogger() { return pCmdsHistory; }
+	ICheckSumLog *GetCheckSumLogger()
+	{
+		return pCmdsHistory;
+	}
+
 	const NDb::SMapInfo *GetMap() const;
 };

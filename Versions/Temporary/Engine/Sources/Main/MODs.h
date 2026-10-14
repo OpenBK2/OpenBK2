@@ -8,10 +8,12 @@
 #define MOD_MODE_EDITOR "editor"
 
 struct IXmlSaver;
+
 namespace NDb
 {
 enum EDatabaseMode : int;
 }
+
 namespace NMOD
 {
 
@@ -22,6 +24,7 @@ struct SMOD
 	std::wstring wszDesc;              // MOD long description
 	NFile::CFilePath szFullFolderPath; // full folder path to MOD
 	NFile::CFilePath szRelativePath;   // path, relative to MODs base
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &wszName );
@@ -53,4 +56,4 @@ enum EModSetupClassIDs
 	MOD_POST_SETUP = 0x10278341,
 };
 
-}
+} // namespace NMOD

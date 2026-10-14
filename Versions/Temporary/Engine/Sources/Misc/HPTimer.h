@@ -15,4 +15,4 @@ MISC_EXPORT double GetTimePassed( STime *pTime );
 MISC_EXPORT double GetClockRate();
 // recalc CPU frequency, call regularly to support SpeedStep processors
 void UpdateHPTimerFrequency();
-};
+}; // namespace NHPTimer

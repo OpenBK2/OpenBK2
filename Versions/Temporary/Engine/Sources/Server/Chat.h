@@ -51,9 +51,21 @@ public:
 
 	void Initialize();
 	void ReloadConfig();
-	CChatLobby() { Initialize(); }
-	CChatLobby( CClients *_pClients, const std::string &szCfgFileName );
-	bool CanBePaused() { return true; }
 
-	static void SetWelcomeText( const std::wstring &_wszWelcomeText ) { wszWelcomeText = _wszWelcomeText; }
+	CChatLobby()
+	{
+		Initialize();
+	}
+
+	CChatLobby( CClients *_pClients, const std::string &szCfgFileName );
+
+	bool CanBePaused()
+	{
+		return true;
+	}
+
+	static void SetWelcomeText( const std::wstring &_wszWelcomeText )
+	{
+		wszWelcomeText = _wszWelcomeText;
+	}
 };

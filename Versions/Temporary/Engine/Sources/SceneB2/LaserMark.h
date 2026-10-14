@@ -31,10 +31,15 @@ public:
 
 protected:
 	void Recalc();
-	bool NeedUpdate() { return pTimer != 0 ? pTimer.Refresh() : false; }
+
+	bool NeedUpdate()
+	{
+		return pTimer != 0 ? pTimer.Refresh() : false;
+	}
 
 public:
 	CLaserMarkTrace() {}
+
 	CLaserMarkTrace( const CVec3 &vStart, const CVec3 &vEnd, CFuncBase<STime> *_pTimer )
 			: timeStart( 0 ), pTimer( _pTimer )
 	{

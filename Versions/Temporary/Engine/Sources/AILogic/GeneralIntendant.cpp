@@ -264,7 +264,12 @@ void CGeneralTaskToDefendStorage::Segment()
 struct SEnumStorages : public CStaticObjects::IEnumStoragesPredicate
 {
 	Storages storages;
-	virtual bool OnlyConnected() const { return false; }
+
+	virtual bool OnlyConnected() const
+	{
+		return false;
+	}
+
 	virtual bool AddStorage( class CBuilding *pStorage, const float fPathLenght )
 	{
 		const SBuildingRPGStats *pStats = checked_cast<const SBuildingRPGStats *>( pStorage->GetStats() );

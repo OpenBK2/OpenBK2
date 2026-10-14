@@ -186,34 +186,55 @@ public:
 		rDC.SetLogicalFunction( rState.eLogicalFunction );
 		savedStateStack.pop_back();
 	}
+
 	//
 	virtual void SetPen( EPenStyle ePenStyle, int nWidth, TWidgetColor color )
 	{
 		rDC.SetPen( wxPen( ToColour( color ), nWidth, ToPenStyle( ePenStyle ) ) );
 	}
 
-	virtual void SetBrush( TWidgetColor color ) { rDC.SetBrush( wxBrush( ToColour( color ) ) ); }
+	virtual void SetBrush( TWidgetColor color )
+	{
+		rDC.SetBrush( wxBrush( ToColour( color ) ) );
+	}
 
-	virtual void SetFont( EFontKind eFontKind ) { rDC.SetFont( StockFont( eFontKind ) ); }
+	virtual void SetFont( EFontKind eFontKind )
+	{
+		rDC.SetFont( StockFont( eFontKind ) );
+	}
 
-	virtual void SetDrawMode( EDrawMode eDrawMode ) { rDC.SetLogicalFunction( ToLogicalFunction( eDrawMode ) ); }
+	virtual void SetDrawMode( EDrawMode eDrawMode )
+	{
+		rDC.SetLogicalFunction( ToLogicalFunction( eDrawMode ) );
+	}
 
-	virtual void SetTextColor( TWidgetColor color ) { rDC.SetTextForeground( ToColour( color ) ); }
+	virtual void SetTextColor( TWidgetColor color )
+	{
+		rDC.SetTextForeground( ToColour( color ) );
+	}
 
-	virtual TWidgetColor GetTextColor() const { return FromColour( rDC.GetTextForeground() ); }
+	virtual TWidgetColor GetTextColor() const
+	{
+		return FromColour( rDC.GetTextForeground() );
+	}
 
 	virtual void SetTextBackgroundOpaque( bool bOpaque )
 	{
 		rDC.SetBackgroundMode( bOpaque ? wxBRUSHSTYLE_SOLID : wxBRUSHSTYLE_TRANSPARENT );
 	}
+
 	//
-	virtual void MoveTo( int nX, int nY ) { currentPosition = wxPoint( nX, nY ); }
+	virtual void MoveTo( int nX, int nY )
+	{
+		currentPosition = wxPoint( nX, nY );
+	}
 
 	virtual void LineTo( int nX, int nY )
 	{
 		rDC.DrawLine( currentPosition, wxPoint( nX, nY ) );
 		currentPosition = wxPoint( nX, nY );
 	}
+
 	//
 	virtual void Rectangle( const CTRect<int> &rRect )
 	{
@@ -229,6 +250,7 @@ public:
 	{
 		PaintRectangle( rRect, wxPen( ToColour( color ), 1 ), *wxTRANSPARENT_BRUSH );
 	}
+
 	//
 	virtual void DrawString( int nX, int nY, const std::string &rszText )
 	{

@@ -27,6 +27,7 @@ static const int MAX_MAPBUFINDEX = 254;
 static float fWarFogBoundWidth = 256.0f;
 
 REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, 0x3008B3C0, CCommonPathFinder );
+
 //BASIC_REGISTER_CLASS( COMMON_RTS_AI, CCommonPathFinder );
 void CCommonPathFinder::Init()
 {

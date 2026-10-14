@@ -23,7 +23,10 @@ class CEditorContainer : public IEditorContainer
 	                      const std::string &rszNewChildFrameTypeName );
 
 public:
-	~CEditorContainer() { DestroyActiveEditor( true ); }
+	~CEditorContainer()
+	{
+		DestroyActiveEditor( true );
+	}
 
 	// IEditorContainer
 	bool CanCreate( const std::string &rszObjectTypeName );

@@ -112,6 +112,7 @@ static bool ReadModuleId( std::vector<uint8_t> *pResult, const char *pszModule )
 		uint32_t dwAge;
 		char szPdbFileName[1];
 	};
+
 	const uint32_t CODEVIEW_PDB70 = 0x53445352;
 
 	const IMAGE_DEBUG_DIRECTORY *pDebug = reinterpret_cast<const IMAGE_DEBUG_DIRECTORY *>( pBase + dir.VirtualAddress );
@@ -292,4 +293,4 @@ const std::string &GetSimulationImageId()
 	return szImageId;
 }
 
-}
+} // namespace NBuildStamp

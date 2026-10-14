@@ -23,7 +23,9 @@ class CWindowScrollableContainerBase : public CWindow,
 		std::string szNegativeSelection;
 		bool bSelectable;
 		int nPos; // pChild's position inside control
+
 		SElement() {}
+
 		SElement( CWindow *_pChild, const int _bSelectable, const int _nPos, CWindow *pNegativeSelecion )
 				: szName( _pChild->GetName() ), bSelectable( _bSelectable ), nPos( _nPos )
 		{
@@ -32,6 +34,7 @@ class CWindowScrollableContainerBase : public CWindow,
 				szNegativeSelection = pNegativeSelecion->GetName();
 			}
 		}
+
 		int operator&( IBinSaver &saver )
 		{
 			saver.Add( 1, &szName );
@@ -41,22 +44,27 @@ class CWindowScrollableContainerBase : public CWindow,
 			return 0;
 		}
 	};
+
 	//CRAP{ may be ineficient, it's easy to optimize thou
 	struct SSortPred
 	{
 		CPtr<IWindowSorter> pSorter;
 		CWindow *pContainer;
+
 		SSortPred( IWindowSorter *_pSorter, CWindow *_pContainer ) : pSorter( _pSorter ), pContainer( _pContainer ) {}
+
 		bool operator()( const SElement &e1, const SElement &e2 ) const
 		{
 			return pSorter->Compare( pContainer->GetChild( e1.szName, false ), pContainer->GetChild( e2.szName, false ) );
 		}
+
 		int operator&( IBinSaver &saver )
 		{
 			saver.Add( 1, &pSorter );
 			return 0;
 		}
 	};
+
 	//CRAP}
 
 	CObj<IWindow> pSelected;
@@ -93,6 +101,7 @@ protected:
 
 public:
 	CWindowScrollableContainerBase() : nPosSize( 0 ) {}
+
 	virtual void SliderPosition( const float fPosition, class CWindow *pWho );
 
 	void Segment();
@@ -113,7 +122,12 @@ public:
 
 	virtual void Clicked( struct IWindow *pWho, int nButton );
 	void DoubleClicked( struct IWindow *pWho, int nButton );
-	virtual IWindow *GetSelectedItem() const { return pSelected; }
+
+	virtual IWindow *GetSelectedItem() const
+	{
+		return pSelected;
+	}
+
 	virtual IWindow *GetItem( const std::string &szName );
 	virtual IWindow *GetItem( const int nItem );
 	virtual int GetItemNumber( IWindow *pElement );

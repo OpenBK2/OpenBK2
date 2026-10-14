@@ -11,6 +11,7 @@ class CRegisterEditorsSemiAutoMagic : public CObjectBase
 		std::string szInstance;
 
 		SUIEditor() {}
+
 		SUIEditor( const std::string &_szInstance ) : szInstance( _szInstance ) {}
 
 		int operator&( IXmlSaver &xs );

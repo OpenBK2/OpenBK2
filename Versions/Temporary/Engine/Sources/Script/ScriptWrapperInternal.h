@@ -2,6 +2,7 @@
 //
 #include "ScriptWrapper.h"
 #include "Script/Script.h"
+
 //
 
 namespace NScript
@@ -12,10 +13,18 @@ class CScriptWrapper : public IScriptWrapper
 {
 	Script script;
 	OBJECT_NOCOPY_METHODS( CScriptWrapper );
+
 	//{ implement common files loading here.
-	int RunCommonFiles() { return true; }
+	int RunCommonFiles()
+	{
+		return true;
+	}
+
 	//}
-	Script *GetScript() { return &script; }
+	Script *GetScript()
+	{
+		return &script;
+	}
 
 public:
 	void Init();
@@ -25,6 +34,7 @@ public:
 	int RunScriptFile( const char *szFileName );
 	int RunScriptByID( int nID );
 	int RunScript( const char *pszScriptText );
+
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, &script );
@@ -34,4 +44,4 @@ public:
 	friend Script *GetScript();
 };
 
-} // namespace
+} // namespace NScript

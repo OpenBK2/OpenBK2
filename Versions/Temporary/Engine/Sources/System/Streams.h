@@ -14,7 +14,7 @@ namespace NVFS
 {
 struct IVFS;
 struct IFileCreator;
-}
+} // namespace NVFS
 
 class SYSTEM_EXPORT CDataStream
 {
@@ -40,8 +40,17 @@ protected:
 	void SetBuffer( unsigned char *_pBuffer, int nBufSize, int nPos, int nSize, int _nFlags );
 	bool FixupBuf( int nOldSize );
 	void ReadOverflow( void *pDest, int nSize );
-	unsigned char *GetBufferPtr() const { return data.pBuffer; }
-	int GetBufferSize() const { return data.pBufferEnd - data.pBuffer; }
+
+	unsigned char *GetBufferPtr() const
+	{
+		return data.pBuffer;
+	}
+
+	int GetBufferSize() const
+	{
+		return data.pBufferEnd - data.pBuffer;
+	}
+
 	bool Seek( unsigned char *_p )
 	{
 		ASSERT( _p >= data.pBuffer );
@@ -58,14 +67,29 @@ protected:
 		return true;
 	}
 
-	int GetFlags() const { return data.nFlags; }
-	void SetFlags( int _nFlags ) { data.nFlags = _nFlags; }
+	int GetFlags() const
+	{
+		return data.nFlags;
+	}
+
+	void SetFlags( int _nFlags )
+	{
+		data.nFlags = _nFlags;
+	}
 
 public:
-	CDataStream( int _nFlags ) { data.nFlags = _nFlags; }
+	CDataStream( int _nFlags )
+	{
+		data.nFlags = _nFlags;
+	}
+
 	virtual ~CDataStream() {}
 
-	void SyncWith( const CDataStream &stream ) { data = stream.data; }
+	void SyncWith( const CDataStream &stream )
+	{
+		data = stream.data;
+	}
+
 	virtual void AllocBuf( int nOldFileSize, int nSize ) = 0;
 
 	void Clear()
@@ -74,7 +98,12 @@ public:
 		data.pFileEnd = data.pBuffer;
 		data.pCurrent = data.pBuffer;
 	}
-	bool Seek( int nPos ) { return Seek( data.pBuffer + nPos ); }
+
+	bool Seek( int nPos )
+	{
+		return Seek( data.pBuffer + nPos );
+	}
+
 	void Trunc()
 	{
 		ASSERT( CanWrite() );
@@ -95,6 +124,7 @@ public:
 			data.pCurrent += nSize;
 		}
 	}
+
 	void Write( const void *pSrc, int nSize )
 	{
 		ASSERT( CanWrite() );
@@ -103,9 +133,18 @@ public:
 			memcpy( data.pCurrent - nSize, pSrc, nSize );
 		}
 	}
+
 	//
-	int GetSize() const { return data.pFileEnd - data.pBuffer; }
-	int GetPosition() const { return data.pCurrent - data.pBuffer; }
+	int GetSize() const
+	{
+		return data.pFileEnd - data.pBuffer;
+	}
+
+	int GetPosition() const
+	{
+		return data.pCurrent - data.pBuffer;
+	}
+
 	void SetSize( int nSize )
 	{
 		ASSERT( CanWrite() );
@@ -115,40 +154,63 @@ public:
 		nPos = (std::min)( nPos, nSize );
 		Seek( nPos );
 	}
+
 	// direct buffer access
 	const unsigned char *GetBuffer() const
 	{
 		ASSERT( CanRead() );
 		return ( data.nFlags & F_Broken ) != 0 ? 0 : data.pBuffer;
 	}
+
 	unsigned char *GetBufferForWrite() const
 	{
 		ASSERT( CanWrite() );
 		return ( data.nFlags & F_Broken ) != 0 ? 0 : data.pBuffer;
 	}
+
 	//
 	// стандартные операции ввода/вывода
 	void ReadString( std::string &res, int nMaxSize = -1 );
 	void WriteString( const std::string &res );
+
 	template <class T>
 	CDataStream &operator>>( T &res )
 	{
 		Read( &res, sizeof( res ) );
 		return *this;
 	}
+
 	template <class T>
 	CDataStream &operator<<( const T &res )
 	{
 		Write( &res, sizeof( res ) );
 		return *this;
 	}
-	bool IsOk() const { return ( data.nFlags & F_Broken ) == 0; }
-	bool CanRead() const { return ( data.nFlags & F_CanRead ) != 0; }
-	bool CanWrite() const { return ( data.nFlags & F_CanWrite ) != 0; }
+
+	bool IsOk() const
+	{
+		return ( data.nFlags & F_Broken ) == 0;
+	}
+
+	bool CanRead() const
+	{
+		return ( data.nFlags & F_CanRead ) != 0;
+	}
+
+	bool CanWrite() const
+	{
+		return ( data.nFlags & F_CanWrite ) != 0;
+	}
+
 	virtual void Flush() {}
+
 	void ReadTo( CDataStream *pDst, unsigned int nSize );
 	void WriteFrom( CDataStream &src );
-	void SetBroken() { data.nFlags |= F_Broken; }
+
+	void SetBroken()
+	{
+		data.nFlags |= F_Broken;
+	}
 };
 
 template <>
@@ -157,6 +219,7 @@ inline CDataStream &CDataStream::operator>>( std::string &res )
 	ReadString( res );
 	return *this;
 }
+
 template <>
 inline CDataStream &CDataStream::operator<<( const std::string &res )
 {
@@ -171,7 +234,11 @@ protected:
 	void AllocBuf( int nOldFileSize, int nSize );
 
 public:
-	CMemoryStream() : CDataStream( F_CanRW ) { AllocBuf( 0, 32 ); }
+	CMemoryStream() : CDataStream( F_CanRW )
+	{
+		AllocBuf( 0, 32 );
+	}
+
 	~CMemoryStream();
 	CMemoryStream( const CMemoryStream &src );
 	CMemoryStream &operator=( const CMemoryStream &src );
@@ -181,8 +248,16 @@ public:
 
 class CMappedStream : public CDataStream
 {
-	CMappedStream( const CMappedStream &a ) : CDataStream( 0 ) { ASSERT( 0 ); }
-	void operator=( const CMappedStream &a ) { ASSERT( 0 ); }
+	CMappedStream( const CMappedStream &a ) : CDataStream( 0 )
+	{
+		ASSERT( 0 );
+	}
+
+	void operator=( const CMappedStream &a )
+	{
+		ASSERT( 0 );
+	}
+
 	void AllocBufImpl( int nBufSize, int nPos, int nSize );
 	virtual void AllocBuf( int nOldFileSize, int nSize );
 	void ReleaseBuf();
@@ -195,10 +270,15 @@ protected:
 	virtual void FlushFile( void *p ) = 0;
 
 	void StartAccess( int _nFlags );
-	void FinishAccess() { ReleaseBuf(); }
+
+	void FinishAccess()
+	{
+		ReleaseBuf();
+	}
 
 public:
 	CMappedStream() : CDataStream( 0 ) {}
+
 	void Flush();
 	//void CloseFile();
 };
@@ -237,18 +317,22 @@ class CTextStream
 
 public:
 	typedef CTextStream &( *OpFunc )( CTextStream & );
+
 	CTextStream( CDataStream &_f ) : f( _f ) {}
+
 	CTextStream &operator<<( const char *p )
 	{
 		f.Write( p, strlen( p ) );
 		return *this;
 	}
+
 	CTextStream &operator<<( int n )
 	{
 		std::string tmp = std::to_string( n );
 		f.Write( tmp.c_str(), tmp.length() );
 		return *this;
 	}
+
 	// gcvt is not standard and its decimal point follows LC_NUMERIC. to_chars
 	// ignores the locale; general with a precision of 7 is what gcvt( n, 7 ) did.
 	CTextStream &operator<<( double n )
@@ -269,13 +353,19 @@ public:
 		}
 		return *this;
 	}
+
 	CTextStream &operator<<( const std::string &s )
 	{
 		f.Write( s.c_str(), s.length() );
 		return *this;
 	}
-	CTextStream &operator<<( OpFunc func ) { return func( *this ); }
+
+	CTextStream &operator<<( OpFunc func )
+	{
+		return func( *this );
+	}
 };
+
 inline CTextStream &endl( CTextStream &sStream )
 {
 	sStream << "\n";
@@ -286,13 +376,36 @@ class CStreamHolder
 {
 	CDataStream *pStream = nullptr;
 
-	CStreamHolder( const CStreamHolder &a ) { ASSERT( 0 ); }
-	void operator=( const CStreamHolder &a ) { ASSERT( 0 ); }
+	CStreamHolder( const CStreamHolder &a )
+	{
+		ASSERT( 0 );
+	}
+
+	void operator=( const CStreamHolder &a )
+	{
+		ASSERT( 0 );
+	}
 
 public:
 	CStreamHolder( CDataStream *_pStream ) : pStream( _pStream ) {}
-	~CStreamHolder() { delete pStream; }
-	CDataStream *operator->() { return pStream; }
-	const CDataStream *operator->() const { return pStream; }
-	operator CDataStream *() { return pStream; }
+
+	~CStreamHolder()
+	{
+		delete pStream;
+	}
+
+	CDataStream *operator->()
+	{
+		return pStream;
+	}
+
+	const CDataStream *operator->() const
+	{
+		return pStream;
+	}
+
+	operator CDataStream *()
+	{
+		return pStream;
+	}
 };

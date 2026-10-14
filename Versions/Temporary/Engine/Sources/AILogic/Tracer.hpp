@@ -10,11 +10,25 @@ class CWarFogTracer
 	CGlobalWarFog *pWarFog = {};
 
 protected:
-	const bool IsTileInside( const SVector &vTile ) const { return pWarFog->IsTileInside( vTile ); }
-	const int GetStaticObjectAtTile( const SVector &vTile ) { return pWarFog->GetStaticObjectAtTile( vTile ); }
+	const bool IsTileInside( const SVector &vTile ) const
+	{
+		return pWarFog->IsTileInside( vTile );
+	}
 
-	const int GetHeight( const SVector &vTile ) const { return pWarFog->GetHeight( vTile ); }
-	const int GetUnitHeight() const { return pWarFog->GetUnitHeight(); }
+	const int GetStaticObjectAtTile( const SVector &vTile )
+	{
+		return pWarFog->GetStaticObjectAtTile( vTile );
+	}
+
+	const int GetHeight( const SVector &vTile ) const
+	{
+		return pWarFog->GetHeight( vTile );
+	}
+
+	const int GetUnitHeight() const
+	{
+		return pWarFog->GetUnitHeight();
+	}
 
 public:
 	CWarFogTracer( CGlobalWarFog *_pWarFog ) : pWarFog( _pWarFog ) {}

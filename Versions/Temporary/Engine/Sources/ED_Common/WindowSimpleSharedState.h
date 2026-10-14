@@ -2,6 +2,7 @@
 
 #include "MapEditorLib/DefaultInputState.h"
 struct IWindow;
+
 namespace NDb
 {
 struct SUIDesc;
@@ -19,6 +20,7 @@ private:
 		RCH_X = 0x0002,     // change x only
 		RCH_Y = 0x0004,     // change y only
 	};
+
 	//methods
 	void InsertChild( const CTPoint<int> &rMousePoint );
 	void RemoveChild( IWindow *pWindow );

@@ -6,6 +6,7 @@
 #include "MapEditorLib_export.h"
 
 class CDefaultView;
+
 class MAPEDITORLIB_EXPORT CDefaultController : public IController
 {
 	friend class CDefaultView;
@@ -26,12 +27,22 @@ protected:
 
 public:
 	CDefaultController() {}
+
 	//
-	inline const SObjectSet &GetObjectSet() const { return objectSet; }
-	inline void SetObjectSet( const SObjectSet &rObjectSet ) { objectSet = rObjectSet; }
+	inline const SObjectSet &GetObjectSet() const
+	{
+		return objectSet;
+	}
+
+	inline void SetObjectSet( const SObjectSet &rObjectSet )
+	{
+		objectSet = rObjectSet;
+	}
+
 	//
 	bool Undo( bool bUpdateManipulator, bool bUpdateViews, IView *pViewToExlude );
 	bool Redo( bool bUpdateManipulator, bool bUpdateViews, IView *pViewToExlude );
+
 	//
 	virtual void GetDescription( std::string *pszDescription ) const
 	{
@@ -40,7 +51,12 @@ public:
 			( *pszDescription ) = szDescription;
 		}
 	}
-	virtual void SetDescription( const std::string &rszDescription ) { szDescription = rszDescription; }
+
+	virtual void SetDescription( const std::string &rszDescription )
+	{
+		szDescription = rszDescription;
+	}
+
 	//
 	virtual void GetTemporaryLabel( std::string *pszTemporaryLabel ) const
 	{
@@ -49,10 +65,23 @@ public:
 			( *pszTemporaryLabel ) = szTemporaryLabel;
 		}
 	}
-	virtual void SetTemporaryLabel( const std::string &rszTemporaryLabel ) { szTemporaryLabel = rszTemporaryLabel; }
+
+	virtual void SetTemporaryLabel( const std::string &rszTemporaryLabel )
+	{
+		szTemporaryLabel = rszTemporaryLabel;
+	}
+
 	//
-	virtual IManipulator::CNameMap &GetNameList() { return nameMap; }
-	virtual void SetNameList( const IManipulator::CNameMap &rNameList ) { nameMap = rNameList; }
+	virtual IManipulator::CNameMap &GetNameList()
+	{
+		return nameMap;
+	}
+
+	virtual void SetNameList( const IManipulator::CNameMap &rNameList )
+	{
+		nameMap = rNameList;
+	}
+
 	virtual void GetNameListToUpdate( IManipulator::CNameMap *pNameMap,
 	                                  const IManipulator::CNameMap &rManipulatorNameMap,
 	                                  const std::string &rszName ) const;

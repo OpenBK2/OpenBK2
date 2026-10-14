@@ -13,6 +13,7 @@ public:
 
 		ZDATA_( IProgrammedReactionsAndChecks )
 		CPtr<IWindow> pScreen;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 1, (IProgrammedReactionsAndChecks *)this );
@@ -22,8 +23,11 @@ public:
 
 	public:
 		CReactions() {}
+
 		~CReactions() {}
+
 		CReactions( IWindow *_pScreen ) : pScreen( _pScreen ) {}
+
 		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
 		virtual int Check( const std::string &szCheckName ) const;
 	};
@@ -31,6 +35,7 @@ public:
 private:
 	ZDATA_( CInterfaceScreenBase )
 	CObj<CReactions> pReactions;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
@@ -68,6 +73,7 @@ class CICMessageBox : public CInterfaceCommandBase<CInterfaceMessageBox>
 	ZDATA_( CInterfaceCommandBase<CInterfaceMessageBox> )
 	std::string szMainWindowName;
 	std::wstring szText;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceMessageBox> *)this );
@@ -93,6 +99,7 @@ class CICPreviousMenu : public IInterfaceCommand
 
 	ZDATA_( IInterfaceCommand )
 	std::string szResult; // message for send
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (IInterfaceCommand *)this );
@@ -112,6 +119,7 @@ class CICRemoveInterfacesUpTo : public IInterfaceCommand
 
 	ZDATA_( IInterfaceCommand )
 	std::string szInterfaceID;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (IInterfaceCommand *)this );
@@ -130,6 +138,7 @@ class CICClearInterfaces : public IInterfaceCommand
 	OBJECT_BASIC_METHODS( CICClearInterfaces );
 
 	ZDATA_( IInterfaceCommand )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (IInterfaceCommand *)this );
@@ -145,6 +154,7 @@ class CICSuppressEnableFocus : public IInterfaceCommand
 	OBJECT_BASIC_METHODS( CICSuppressEnableFocus );
 
 	ZDATA_( IInterfaceCommand )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (IInterfaceCommand *)this );
@@ -160,6 +170,7 @@ class CICHideUnfocusedScreen : public IInterfaceCommand
 	OBJECT_BASIC_METHODS( CICHideUnfocusedScreen );
 
 	ZDATA_( IInterfaceCommand )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (IInterfaceCommand *)this );

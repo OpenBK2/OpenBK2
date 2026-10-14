@@ -26,4 +26,4 @@ GetAttribs( const std::string &szFileName, const std::string &szRootMesh, const 
 // NOTE: destination struct size must be at least nNumAttribs*4
 void GetAttributesFromBone( void *pDstData, granny_bone *pBone, const char **ppszAttribNames, const int nNumAttribs );
 
-};
+}; // namespace NMEGeomAttribs

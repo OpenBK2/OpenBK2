@@ -7,10 +7,12 @@
 
 class CMapObj;
 class CMOUnitInfantry;
+
 namespace NDb
 {
 struct SAnimB2;
 }
+
 //
 class CParatrooperAnimationProcess : public IClientUpdatableProcess
 {
@@ -24,6 +26,7 @@ class CParatrooperAnimationProcess : public IClientUpdatableProcess
 	ZSKIP
 	CDBPtr<NDb::SAnimB2> pUnitAnim;
 	CDBPtr<NDb::SAnimB2> pParaAnim;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pInfantry );
@@ -33,6 +36,7 @@ class CParatrooperAnimationProcess : public IClientUpdatableProcess
 		f.Add( 8, &pParaAnim );
 		return 0;
 	}
+
 	//
 	CParatrooperAnimationProcess() {}
 
@@ -46,6 +50,7 @@ public:
 				pParaAnim( _pParaAnim )
 	{
 	}
+
 	bool Update( const NTimer::STime &time );
 };
 
@@ -59,6 +64,7 @@ class CParachuteFinishProcess : public IClientUpdatableProcess
 	ZSKIP
 	NDb::ESeason eSeason{};
 	CDBPtr<NDb::SAnimB2> pIdleAnim;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pInfantry );
@@ -67,6 +73,7 @@ class CParachuteFinishProcess : public IClientUpdatableProcess
 		f.Add( 6, &pIdleAnim );
 		return 0;
 	}
+
 	//
 	CParachuteFinishProcess() {}
 
@@ -78,6 +85,7 @@ public:
 			: pInfantry( _pInfantry ), timeToChange( _timeToChange ), pIdleAnim( _pIdleAnim ), eSeason( _eSeason )
 	{
 	}
+
 	//
 	bool Update( const NTimer::STime &time );
 };

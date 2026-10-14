@@ -26,6 +26,7 @@
 REGISTER_EXPORTER_IN_DLL( Skeleton, CSkeletonExporter )
 
 static const char PARAMS_EXT[] = ".params";
+
 const char *CSkeletonExporter::GetAddPath() const
 {
 	return "bin\\skeletons\\";
@@ -503,7 +504,7 @@ bool ImportGltfMarkers( IManipulator *resource, const NGltf::TGltfFilePtr &file,
 	}
 	return true;
 }
-}
+} // namespace
 
 // Marker objects retain the Maya frame-slice convention. Without an Animations
 // node, named glTF clips use the same animation mnemonics as the old source scenes.

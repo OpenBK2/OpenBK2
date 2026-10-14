@@ -255,7 +255,7 @@ public:
 		pFilter->szGridSize = std::string( pGridSize->GetStringSelection().utf8_str() );
 	}
 };
-}
+} // namespace
 
 namespace NMapInfoViewFilter
 {
@@ -281,4 +281,4 @@ bool Run( IWidget *pParent, CMapInfoEditorSettings::SViewFilterData *pFilter )
 	Apply();
 	return true;
 }
-}
+} // namespace NMapInfoViewFilter

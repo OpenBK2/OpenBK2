@@ -15,7 +15,10 @@ class CTestArmor : public NDb::CResource
 	OBJECT_BASIC_METHODS( CTestArmor );
 
 public:
-	int GetTypeID() const override { return 0; }
+	int GetTypeID() const override
+	{
+		return 0;
+	}
 };
 
 class CTestUnit : public CObjectBase
@@ -32,7 +35,11 @@ class CChangeCounter : public NAI::IAIMapTracker
 
 public:
 	int count = 0;
-	void OnChange() override { ++count; }
+
+	void OnChange() override
+	{
+		++count;
+	}
 };
 
 class LargeMapSelection : public testing::Test
@@ -44,7 +51,10 @@ protected:
 	CObj<CMemObject> geometry = new CMemObject;
 	std::vector<CObj<CTestUnit>> units;
 
-	void SetUp() override { geometry->CreateCube( CVec3( -1, -1, -1 ), CVec3( 2, 2, 2 ) ); }
+	void SetUp() override
+	{
+		geometry->CreateCube( CVec3( -1, -1, -1 ), CVec3( 2, 2, 2 ) );
+	}
 
 	void PlaceUnit( CTestUnit *unit, const CVec3 &center, int mask = 1 )
 	{
@@ -200,4 +210,4 @@ TEST_F( LargeMapSelection, MovingAndRemovingGeometryAcrossBoundary )
 	EXPECT_TRUE( Pick( destination ).empty() );
 	EXPECT_EQ( newTracker->count, 2 );
 }
-}
+} // namespace

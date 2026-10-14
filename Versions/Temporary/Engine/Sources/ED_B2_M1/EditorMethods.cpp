@@ -18,17 +18,20 @@
 #include "System/VFS.h"
 #include "System/VFSOperations.h"
 #include "MapEditorLib/Interface_MOD.h"
+
 //#include "../Stats_B2_M1/TerraAIObserver.h"
 //#include "../SceneB2/TerraGen.h"
 
 namespace NEditor
 {
 const std::string SZ_TERRA_BIN_FILE_NAME = "map.b2m";
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::string MakeMapPath( const CDBID &dbid )
 {
 	return NDb::GetFolderName( dbid ); // + "/" + NScene::SZ_TERRA_BIN_FILE_NAME;
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::string GetTerrainBinFileName( const NDb::STerrain *pDesc )
 {
@@ -42,6 +45,7 @@ std::string GetTerrainBinFileName( const NDb::STerrain *pDesc )
 	// unsuccessfull :(
 	return "";
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc )
 {
@@ -49,6 +53,7 @@ void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc )
 	//
 	return NScene::CreateTerrain( pTerraManager, pDesc, szMapFilePath );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc )
 {
@@ -58,6 +63,7 @@ bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc )
 	//
 	return NScene::LoadTerrain( pTerraManager, pDesc, szMapFilePath );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool SaveTerrain( struct ITerraManager *pTerraManager, std::string *pError )
 {
@@ -69,6 +75,7 @@ bool SaveTerrain( struct ITerraManager *pTerraManager, std::string *pError )
 	}
 	return false;
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void LoadBgMap( const std::string &szDesiredSeason, const std::string &rszMapInfoNameLoaded, CVec2 *pBgMapSize )
 {
@@ -123,7 +130,7 @@ void LoadBgMap( const std::string &szDesiredSeason, const std::string &rszMapInf
 	}
 	Camera()->SetAnchor( vCameraAnchor );
 }
-}
+} // namespace NEditor
 
 //
 //

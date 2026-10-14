@@ -6,7 +6,7 @@ namespace NDb
 {
 struct SDBConstructorProfile;
 struct SHPObjectRPGStats;
-}
+} // namespace NDb
 
 struct SConstructorProfile;
 
@@ -23,6 +23,7 @@ public:
 		std::vector<int> gunIndexes;
 
 		SUnitPlatform() : nPlatformIndex( -1 ) {}
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nPlatformIndex );
@@ -36,6 +37,7 @@ private:
 	std::unordered_map<int, std::vector<SUnitPlatform>> units;
 	std::unordered_map<int, std::vector<int>> slots;
 	std::unordered_map<int, CPtr<CObjectBase>> playerUnits;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &units );

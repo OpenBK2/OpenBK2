@@ -8,10 +8,12 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CAIUnit;
 class CBasicGun;
+
 namespace NDb
 {
 struct SUnitBaseRPGStats;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CTankShootEstimator : public IShootEstimator
 {
@@ -47,6 +49,7 @@ class CTankShootEstimator : public IShootEstimator
 		f.Add( 11, &pMosinStats );
 		return 0;
 	}
+
 	// время, требуемое, чтобы повернуть pGun на pEnemy
 	//const float FindTimeToTurn( CAIUnit *pEnemy, CBasicGun *pGun ) const;
 	// выбрать gun для pEnemy
@@ -57,6 +60,7 @@ class CTankShootEstimator : public IShootEstimator
 
 public:
 	CTankShootEstimator() : pOwner( 0 ) {}
+
 	explicit CTankShootEstimator( class CAIUnit *pOwner );
 
 	virtual void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t dwForbidden );
@@ -65,6 +69,7 @@ public:
 	virtual class CBasicGun *GetBestGun() const;
 	virtual const int GetNumberOfBestGun() const;
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CSoldierShootEstimator : public IShootEstimator
 {
@@ -91,6 +96,7 @@ class CSoldierShootEstimator : public IShootEstimator
 	uint32_t dwForbidden = {};
 
 	CDBPtr<SUnitBaseRPGStats> pMosinStats;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pOwner );
@@ -117,6 +123,7 @@ class CSoldierShootEstimator : public IShootEstimator
 
 public:
 	CSoldierShootEstimator() : pOwner( 0 ) {}
+
 	explicit CSoldierShootEstimator( class CAIUnit *pOwner );
 
 	virtual void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t dwForbidden );
@@ -127,6 +134,7 @@ public:
 	void SetGrenadeAutocast( bool bOn );
 	void SetGrenadeFixed( bool bOn );
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // стрельба из бортовых стрелковых точек для самолетов
 class CPlaneDeffensiveFireShootEstimator : public IShootEstimator
@@ -140,6 +148,7 @@ class CPlaneDeffensiveFireShootEstimator : public IShootEstimator
 	CPtr<CBasicGun> pGun;
 	bool bDamageToCurTargetUpdated = {};
 	float fBestRating = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pOwner );
@@ -150,6 +159,7 @@ class CPlaneDeffensiveFireShootEstimator : public IShootEstimator
 		f.Add( 7, &fBestRating );
 		return 0;
 	}
+
 	void OnSerialize( IBinSaver &f );
 	const float CalcTimeToOpenFire( class CAIUnit *pEnemy, CBasicGun *pGun )
 			const; // время для открытия огня (учитывая поворот оружия и скорость сближения с врагом)
@@ -158,6 +168,7 @@ class CPlaneDeffensiveFireShootEstimator : public IShootEstimator
 
 public:
 	CPlaneDeffensiveFireShootEstimator() : pOwner( 0 ) {}
+
 	explicit CPlaneDeffensiveFireShootEstimator( class CAIUnit *pOwner );
 
 	void SetGun( CBasicGun *_pGun );
@@ -173,6 +184,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // for
 class CBuilding;
+
 class CPlaneShturmovikShootEstimator : public IShootEstimator
 {
 	OBJECT_BASIC_METHODS( CPlaneShturmovikShootEstimator );
@@ -187,6 +199,7 @@ class CPlaneShturmovikShootEstimator : public IShootEstimator
 		SAIAngle wSpeedDiff;
 		SAIAngle wDirToTarget;
 		float fRating = {};
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pTarget );
@@ -209,7 +222,11 @@ class CPlaneShturmovikShootEstimator : public IShootEstimator
 			pTarget = 0;
 			wDirToTarget = 0;
 		}
-		STargetInfo() { Reset(); }
+
+		STargetInfo()
+		{
+			Reset();
+		}
 	};
 
 	typedef det_set<int /*unique id of building*/> CBuildings;
@@ -224,6 +241,7 @@ class CPlaneShturmovikShootEstimator : public IShootEstimator
 
 	CBuildings buildings;
 	CPtr<CBuilding> pBestBuilding;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pOwner );
@@ -245,8 +263,13 @@ class CPlaneShturmovikShootEstimator : public IShootEstimator
 
 public:
 	CPlaneShturmovikShootEstimator() : pOwner( 0 ) {}
+
 	CPlaneShturmovikShootEstimator( class CAIUnit *pOwner );
-	void SetCurCenter( const CVec2 &vNewCenter ) { vCenter = vNewCenter; }
+
+	void SetCurCenter( const CVec2 &vNewCenter )
+	{
+		vCenter = vNewCenter;
+	}
 
 	virtual void Reset( class CAIUnit *pCurEnemy,
 	                    const bool bDamageUpdated,
@@ -255,19 +278,25 @@ public:
 	virtual class CAIUnit *GetBestUnit() const;
 
 	void CalcBestBuilding();
-	class CBuilding *GetBestBuilding() const { return pBestBuilding; }
+
+	class CBuilding *GetBestBuilding() const
+	{
+		return pBestBuilding;
+	}
 
 	virtual class CBasicGun *GetBestGun() const
 	{
 		NI_ASSERT( false, "Wrong call" );
 		return 0;
 	}
+
 	virtual const int GetNumberOfBestGun() const
 	{
 		NI_ASSERT( false, "Wrong call" );
 		return 0;
 	}
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // для стрельбы по препятствиям.
 class CShootEstimatorForObstacles : public IObstacleEnumerator
@@ -276,6 +305,7 @@ class CShootEstimatorForObstacles : public IObstacleEnumerator
 	CPtr<CCommonUnit> pOwner;
 	float fCurRating = {};
 	CPtr<IObstacle> pBest;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pOwner );
@@ -301,6 +331,7 @@ class CShootEstimatorSupportAAGun : public IShootEstimator
 	uint32_t dwForbidden = {};
 	float fBestRating = {};
 	bool bDamageToCurTargetUpdated = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pOwner );
@@ -310,20 +341,27 @@ class CShootEstimatorSupportAAGun : public IShootEstimator
 		f.Add( 6, &bDamageToCurTargetUpdated );
 		return 0;
 	}
+
 	const float CalcRating( CAIUnit *pEnemy, CBasicGun *pGun ) const;
 
 public:
 	CShootEstimatorSupportAAGun() {}
+
 	CShootEstimatorSupportAAGun( class CAIUnit *pOwner );
 	void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t dwForbidden );
 	void AddUnit( class CAIUnit *pEnemy );
-	class CAIUnit *GetBestUnit() const { return pBestTarget; }
+
+	class CAIUnit *GetBestUnit() const
+	{
+		return pBestTarget;
+	}
 
 	virtual class CBasicGun *GetBestGun() const
 	{
 		NI_ASSERT( false, "Wrong call" );
 		return 0;
 	}
+
 	virtual const int GetNumberOfBestGun() const
 	{
 		NI_ASSERT( false, "Wrong call" );

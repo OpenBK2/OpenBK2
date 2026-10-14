@@ -16,20 +16,30 @@ struct SAIGeneralPointsWindowData
 		struct SAIParcel : public NDb::SAIGeneralParcel
 		{
 			int nCurrentPoint;
+
 			SAIParcel()
 			{
 				NDb::SAIGeneralParcel();
 				Clear();
 			}
-			void Clear() { nCurrentPoint = -1; }
+
+			void Clear()
+			{
+				nCurrentPoint = -1;
+			}
 		};
 
 		std::vector<int> mobileScriptIDs;
 		std::vector<SAIParcel> parcels;
 		int nCurrentID;
 		int nCurrentParcel;
+
 		//
-		SAIPlayerInfo() { Clear(); }
+		SAIPlayerInfo()
+		{
+			Clear();
+		}
+
 		void Clear()
 		{
 			mobileScriptIDs.clear();
@@ -38,6 +48,7 @@ struct SAIGeneralPointsWindowData
 			nCurrentParcel = 0;
 		}
 	};
+
 	//
 	enum EAIGenPointsLastAction
 	{
@@ -62,12 +73,32 @@ struct SAIGeneralPointsWindowData
 		Clear();
 		nCurrentPlayer = 0;
 	}
-	void Clear() { players.clear(); }
+
+	void Clear()
+	{
+		players.clear();
+	}
+
 	//
-	int CurrentPlayer() { return nCurrentPlayer; }
-	int CurrentParcel() { return players[CurrentPlayer()].nCurrentParcel; }
-	int CurrentID() { return players[CurrentPlayer()].nCurrentID; }
-	int CurrentPoint() { return players[CurrentPlayer()].parcels[CurrentParcel()].nCurrentPoint; }
+	int CurrentPlayer()
+	{
+		return nCurrentPlayer;
+	}
+
+	int CurrentParcel()
+	{
+		return players[CurrentPlayer()].nCurrentParcel;
+	}
+
+	int CurrentID()
+	{
+		return players[CurrentPlayer()].nCurrentID;
+	}
+
+	int CurrentPoint()
+	{
+		return players[CurrentPlayer()].parcels[CurrentParcel()].nCurrentPoint;
+	}
 };
 
 // CMapInfoState drives this palette with the two window commands every palette

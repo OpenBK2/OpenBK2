@@ -39,16 +39,41 @@ class CLMPart : public IPart
 
 public:
 	CLMPart() {}
+
 	CLMPart( ISomePart *_pPart, CPtrFuncBase<CObjectInfo> *pData, CPerMaterialCombiner *_pCombiner )
 			: IPart( pData, _pCombiner ), pPart( _pPart )
 	{
 	}
-	virtual ETransformType GetTransformType() const { return pPart->GetTransformType(); }
-	virtual const SFBTransform &GetSimplePos() { return pPart->GetSimplePos(); }
-	virtual const std::vector<SHMatrix> &GetAnimation() { return pPart->GetAnimation(); }
-	virtual const std::vector<NGfx::SCompactTransformer> &GetMMXAnimation() { return pPart->GetMMXAnimation(); }
-	virtual bool Is2Sided() const { return pPart->Is2Sided(); }
-	virtual intptr_t GetSortValue() const { return 0; }
+
+	virtual ETransformType GetTransformType() const
+	{
+		return pPart->GetTransformType();
+	}
+
+	virtual const SFBTransform &GetSimplePos()
+	{
+		return pPart->GetSimplePos();
+	}
+
+	virtual const std::vector<SHMatrix> &GetAnimation()
+	{
+		return pPart->GetAnimation();
+	}
+
+	virtual const std::vector<NGfx::SCompactTransformer> &GetMMXAnimation()
+	{
+		return pPart->GetMMXAnimation();
+	}
+
+	virtual bool Is2Sided() const
+	{
+		return pPart->Is2Sided();
+	}
+
+	virtual intptr_t GetSortValue() const
+	{
+		return 0;
+	}
 };
 
 class CLightmapsHolder : public CObjectBase
@@ -62,6 +87,7 @@ public:
 		int nLightmap;
 		CTPoint<int> lmShift;
 		float fLMResolution;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nLightmap );
@@ -71,14 +97,17 @@ public:
 		}
 
 		SLightmap() : nLightmap( -1 ), lmShift( 0, 0 ), fLMResolution( 0.001f ) {}
+
 		SLightmap( int _nLightmap, const CTPoint<int> &_lmShift, float _fLMResolution )
 				: nLightmap( _nLightmap ), lmShift( _lmShift ), fLMResolution( _fLMResolution )
 		{
 		}
 	};
+
 	ZDATA
 	std::unordered_map<int, SLightmap> lightmaps;
 	std::vector<CArray2D<NGfx::SPixel8888>> textures;
+
 	ZONSERIALIZE
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -118,6 +147,7 @@ struct SLMPartCalc
 	std::vector<SLMQuad> lmQuads;
 
 	SLMPartCalc() {}
+
 	SLMPartCalc( ISomePart *_p,
 	             const CTPoint<int> &_lmShift,
 	             const CTPoint<int> &_lmSize,
@@ -129,6 +159,7 @@ struct SLMPartCalc
 	{
 	}
 };
+
 struct SLMGroup
 {
 	std::vector<SLMPartCalc> parts;
@@ -145,6 +176,7 @@ class CLightmapsTempHolder : public CObjectBase
 public:
 	ZDATA
 	std::vector<SLMGroup> lmGroups;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &lmGroups );
@@ -262,6 +294,7 @@ static void DrawBorder( NGfx::CRenderContext *pRC, int nXSize, int nYSize )
 }
 
 static NGfx::EColorWriteMask depthChannels[3] = { NGfx::COLORWRITE_RED, NGfx::COLORWRITE_GREEN, NGfx::COLORWRITE_BLUE };
+
 static void RecalcDepthChannels( IRender *pRender,
                                  NGfx::CTexture *pDepth,
                                  const SSphere &_bound,
@@ -299,6 +332,7 @@ struct SLightmapTargetGeom
 	NGfx::CRenderContext *pRC;
 	CSceneFragments *pGeom;
 	CTransformStack *pTS;
+
 	//	int nTargetRegister;
 
 	SLightmapTargetGeom( CSceneFragments *_pGeom, NGfx::CRenderContext *_pRC, CTransformStack *_pTS )
@@ -889,6 +923,7 @@ CLightmapsHolder *FinalMergeLightmaps( CLightmapsTempHolder *pTmpHolder )
 {
 	return CombineLightmaps( pTmpHolder->lmGroups );
 }
+
 CLightmapsTempHolder *CreateLightmapsTempHolder()
 {
 	return new CLightmapsTempHolder();
@@ -1032,6 +1067,7 @@ void ApplyLightmaps(
 		}
 	}
 }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 const CArray2D<NGfx::SPixel8888> &CLightmapsLoader::GetTexture( int UID )
 {
@@ -1075,7 +1111,8 @@ void CLightmapsLoader::ReleaseHint()
 	}
 }
 
-};
+}; // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x2011EB40, CLightmapsHolder )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x2024BE52, CLightmapsTempHolder )

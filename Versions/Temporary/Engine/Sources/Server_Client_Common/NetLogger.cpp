@@ -99,7 +99,10 @@ static CNetLogger *pLogger = 0;
 
 static struct SNetLoggerLife
 {
-	SNetLoggerLife() { pLogger = new CNetLogger(); }
+	SNetLoggerLife()
+	{
+		pLogger = new CNetLogger();
+	}
 
 	~SNetLoggerLife()
 	{

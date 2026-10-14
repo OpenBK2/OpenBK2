@@ -300,7 +300,7 @@ int CMusicSystem::operator&( IBinSaver &f )
 	}
 	return 0;
 }
-}
+} // namespace NMusicSystem
 
 REGISTER_SAVELOAD_CLASS_NM( SOUND, 0x11181340, CMusicSystem, NMusicSystem );
 

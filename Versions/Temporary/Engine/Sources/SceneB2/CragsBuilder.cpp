@@ -538,7 +538,10 @@ void CTerraGen::UpdateHeightsAfterCrags( const int nTileX1, const int nTileY1, c
 
 struct SRidgeProfile
 {
-	float operator()( const float x ) const { return 1.0f - x * x; }
+	float operator()( const float x ) const
+	{
+		return 1.0f - x * x;
+	}
 };
 
 float CTerraGen::GetMaxCragHeight( const CVec2 &v, const int nExcludeID ) const

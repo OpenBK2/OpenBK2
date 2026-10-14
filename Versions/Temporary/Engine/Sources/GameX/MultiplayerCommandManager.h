@@ -75,6 +75,7 @@ struct SMPUIMessage : public CObjectBase
 	ZDATA
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	EMPUIMessageType eMessageType = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &eMessageType );
@@ -82,6 +83,7 @@ struct SMPUIMessage : public CObjectBase
 	}
 
 	SMPUIMessage() : eMessageType( EMUI_UNKNOWN ) {}
+
 	SMPUIMessage( const EMPUIMessageType _eMessageType ) : eMessageType( _eMessageType ) {}
 };
 
@@ -114,6 +116,7 @@ struct SMPUISimpleMessage : public SMPUIMessage
 
 public:
 	SMPUISimpleMessage() {} // serialize only
+
 	SMPUISimpleMessage( const EMPUIMessageType _eMessageType ) : SMPUIMessage( _eMessageType ) {}
 };
 
@@ -126,6 +129,7 @@ public:
 	std::wstring wszLogin;
 	std::wstring wszPassword;
 	bool bRememberPassword = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -136,6 +140,7 @@ public:
 	}
 
 	SMPUILoginNivalNetMessage() {} // serialization only
+
 	SMPUILoginNivalNetMessage( const std::wstring &_wszLogin, const std::wstring &_wszPassword, const bool _bRemember )
 			: SMPUIMessage( EMUI_LOGIN_NIVAL_NET ), wszLogin( _wszLogin ), wszPassword( _wszPassword ),
 				bRememberPassword( _bRemember )
@@ -151,6 +156,7 @@ public:
 	ZDATA_( SMPUIMessage )
 	int nGameID = {};
 	std::string szPassword;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -160,7 +166,9 @@ public:
 	}
 
 	SMPUIJoinGameMessage() {} // serialization only
+
 	SMPUIJoinGameMessage( int _nGameID ) : SMPUIMessage( EMUI_JOIN_GAME ), nGameID( _nGameID ) {}
+
 	SMPUIJoinGameMessage( int _nGameID, const std::string &_szPassword )
 			: SMPUIMessage( EMUI_JOIN_GAME ), nGameID( _nGameID ), szPassword( _szPassword )
 	{
@@ -181,6 +189,7 @@ struct SUIGameInfo
 	int nSizeY = {};
 	int nGameType = {};
 	int nTechLevel = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nGameID );
@@ -206,6 +215,7 @@ public:
 	bool bSendUpdates = {};
 	std::list<SUIGameInfo> gamesAddChange;
 	std::list<int> gamesRemoved;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -216,6 +226,7 @@ public:
 	}
 
 	SMPUIGameListMessage() : SMPUIMessage( EMUI_UPDATE_GAME_LIST ), bSendUpdates( false ) {}
+
 	SMPUIGameListMessage( const bool _bSendUpdates )
 			: SMPUIMessage( EMUI_UPDATE_GAME_LIST ), bSendUpdates( _bSendUpdates )
 	{
@@ -231,6 +242,7 @@ public:
 	SUIGameInfo info;                 // General info (name, no. of players, etc)
 	SB2GameSpecificData specificInfo; // Specific info
 	std::string szPassword;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -251,6 +263,7 @@ public:
 	ZDATA_( SMPUIMessage )
 	int nSlot = {};
 	SMPSlot info;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -283,6 +296,7 @@ public:
 	std::string szSessionName;
 	int nOwnSlot = {};
 	SB2GameSpecificData specificInfo; // Specific info
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -295,6 +309,7 @@ public:
 	}
 
 	SMPUIGameRoomInitMessage() : SMPUIMessage( EMUI_GAME_ROOM_INIT ) {}
+
 	SMPUIGameRoomInitMessage( const ERejectReason _eResult ) : SMPUIMessage( EMUI_GAME_ROOM_INIT ), eResult( _eResult ) {}
 };
 
@@ -306,6 +321,7 @@ public:
 	ZDATA_( SMPUIMessage )
 	uint32_t dwLaggingPlayers = {};
 	bool bInitialWait = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -315,6 +331,7 @@ public:
 	}
 
 	SMPUILagMessage() : SMPUIMessage( EMUI_WAITING_FOR_PLAYERS ), dwLaggingPlayers( 0 ), bInitialWait( false ) {}
+
 	SMPUILagMessage( const uint32_t dwPlayerMask, const bool bOnStart )
 			: SMPUIMessage( EMUI_WAITING_FOR_PLAYERS ), dwLaggingPlayers( dwPlayerMask ), bInitialWait( bOnStart )
 	{
@@ -331,11 +348,13 @@ public:
 		std::string szName;
 		int nSecondsLeft = {};
 	};
+
 	typedef std::list<SLagItem> CLaggerList;
 	ZDATA_( SMPUIMessage )
 	bool bOwnLag = {}; // It is me who is paused, show Resume button
 	int nOwnTimeLeft = {};
 	CLaggerList lags;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -346,6 +365,7 @@ public:
 	}
 
 	SMPUILagInfoMessage() : SMPUIMessage( EMUI_WAITING_INFO ), bOwnLag( false ) {}
+
 	SMPUILagInfoMessage( const bool _bOwnLag ) : SMPUIMessage( EMUI_WAITING_INFO ), bOwnLag( _bOwnLag ) {}
 };
 
@@ -360,6 +380,7 @@ public:
 	int nTeamSize = {};
 	std::list<int> maps;
 	std::list<int> techLevels;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -382,6 +403,7 @@ public:
 	ZDATA_( SMPUIMessage )
 	bool bSuccess = {};
 	std::string szTextTag;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -391,6 +413,7 @@ public:
 	}
 
 	SMPUIConnectResultMessage() : SMPUIMessage( EMUI_CONNECT_RESULT ), bSuccess( false ) {}
+
 	SMPUIConnectResultMessage( const bool _bSuccess, const std::string &_szTextTag )
 			: SMPUIMessage( EMUI_CONNECT_RESULT ), bSuccess( _bSuccess ), szTextTag( _szTextTag )
 	{
@@ -404,6 +427,7 @@ struct SMPUIServerMessageMessage : public SMPUIMessage
 public:
 	ZDATA_( SMPUIMessage )
 	std::wstring wszText;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -412,6 +436,7 @@ public:
 	}
 
 	SMPUIServerMessageMessage() : SMPUIMessage( EMUI_SERVER_MESSAGE ) {}
+
 	SMPUIServerMessageMessage( const std::wstring &_wszText ) : SMPUIMessage( EMUI_SERVER_MESSAGE ), wszText( _wszText )
 	{
 	}
@@ -426,6 +451,7 @@ public:
 	std::string szName;
 	std::wstring wszText;
 	bool bPrivate = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -436,10 +462,12 @@ public:
 	}
 
 	SMPUIChatMessage() : SMPUIMessage( EMUI_CHAT_MESSAGE ) {} // serialize only
+
 	SMPUIChatMessage( const std::wstring &_wszText )
 			: SMPUIMessage( EMUI_CHAT_MESSAGE ), wszText( _wszText ), bPrivate( false )
 	{
 	}
+
 	SMPUIChatMessage( const std::string &_szName, const std::wstring &_wszText )
 			: SMPUIMessage( EMUI_CHAT_MESSAGE ), szName( _szName ), wszText( _wszText ), bPrivate( true )
 	{
@@ -453,6 +481,7 @@ struct SMPUIJoinChannelMessage : public SMPUIMessage
 public:
 	ZDATA_( SMPUIMessage )
 	std::string szChannel;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -461,6 +490,7 @@ public:
 	}
 
 	SMPUIJoinChannelMessage() : SMPUIMessage( EMUI_JOIN_CHAT_CHANNEL ) {} // serialization only
+
 	SMPUIJoinChannelMessage( const std::string &_szChannel )
 			: SMPUIMessage( EMUI_JOIN_CHAT_CHANNEL ), szChannel( _szChannel )
 	{
@@ -474,6 +504,7 @@ struct SMPUIChatChannelListMessage : public SMPUIMessage
 public:
 	ZDATA_( SMPUIMessage )
 	std::list<std::string> channels;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -498,6 +529,7 @@ public:
 	ZDATA_( SMPUIMessage )
 	std::list<std::string> nicks;
 	EListType eType = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -525,6 +557,7 @@ public:
 	std::string szNick;
 	EMPChatStatus eStatus = {};
 	bool bFriend = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -535,6 +568,7 @@ public:
 	}
 
 	SMPUIChatChannelNicksChangeMessage() : SMPUIMessage( EMUI_CHAT_NICKS_CHANGE ) {} // serialization only
+
 	SMPUIChatChannelNicksChangeMessage( const std::string &_szNick, const EMPChatStatus _eStatus, const bool _bFriend )
 			: SMPUIMessage( EMUI_CHAT_NICKS_CHANGE ), szNick( _szNick ), eStatus( _eStatus ), bFriend( _bFriend )
 	{
@@ -549,6 +583,7 @@ public:
 	ZDATA_( SMPUIMessage )
 	std::string szNick;
 	bool bShort = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -558,6 +593,7 @@ public:
 	}
 
 	SMPUILadderInfoRequestMessage() : SMPUIMessage( EMUI_REQUEST_INFO ) {} // serialization only
+
 	SMPUILadderInfoRequestMessage( const std::string &_szNick, const bool _bShort )
 			: SMPUIMessage( EMUI_REQUEST_INFO ), szNick( _szNick ), bShort( _bShort )
 	{
@@ -572,6 +608,7 @@ public:
 	ZDATA_( SMPUIMessage )
 	int nLevel = {};
 	std::wstring wszRank;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -598,6 +635,7 @@ public:
 	ZDATA_( SMPUIMessage )
 	std::string szNick;
 	EAction eAction = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -607,6 +645,7 @@ public:
 	}
 
 	SMPUIChangeFriendIgnoreStatusMessage() : SMPUIMessage( EMUI_CHANGE_FRIEND_IGNORE ) {} // serialization only
+
 	SMPUIChangeFriendIgnoreStatusMessage( const std::string &_szNick, const EAction _eAction )
 			: SMPUIMessage( EMUI_CHANGE_FRIEND_IGNORE ), szNick( _szNick ), eAction( _eAction )
 	{
@@ -617,6 +656,7 @@ namespace NDb
 {
 struct SMedal;
 }
+
 struct SMPUIGameAftemathMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUIGameAftemathMessage );
@@ -633,6 +673,7 @@ public:
 	int nExpTotal1 = {};
 	int nExpTotal2 = {};
 	std::vector<CDBPtr<NDb::SMedal>> medals;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -650,6 +691,7 @@ public:
 	}
 
 	SMPUIGameAftemathMessage() : SMPUIMessage( EMUI_GAME_AFTERMATH ) {} // serialization only
+
 	SMPUIGameAftemathMessage( const bool &_bIsLadder )
 			: SMPUIMessage( EMUI_GAME_AFTERMATH ), bShowLadderInfo( _bIsLadder )
 	{
@@ -666,6 +708,7 @@ public:
 	std::wstring wszPassword;
 	std::wstring wszCDKey;
 	std::wstring wszEmail;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -677,6 +720,7 @@ public:
 	}
 
 	SMPUIRegisterMessage() : SMPUIMessage( EMUI_REGISTER_NIVAL_NET ) {} // serialization only
+
 	SMPUIRegisterMessage( const std::wstring &_wszName,
 	                      const std::wstring &_wszPassword,
 	                      const std::wstring &_wszCDKey,
@@ -695,6 +739,7 @@ public:
 	ZDATA_( SMPUIMessage )
 	SLadderStatistics info;
 	int nRank = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -704,6 +749,7 @@ public:
 	}
 
 	SMPUILadderStatsMessage() : SMPUIMessage( EMUI_NIVAL_NET_LADDER_STATS ) {} // serialization only
+
 	SMPUILadderStatsMessage( const SLadderStatistics &_info ) : SMPUIMessage( EMUI_NIVAL_NET_LADDER_STATS ), info( _info )
 	{
 	}
@@ -722,6 +768,7 @@ public:
 	};
 	ZDATA_( SMPUIMessage )
 	EState eState = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -730,6 +777,7 @@ public:
 	}
 
 	SMPUILadderStatusChangeMessage() : SMPUIMessage( EMUI_NIVAL_NET_LADDER ) {} // serialization only
+
 	SMPUILadderStatusChangeMessage( const EState _eState )
 			: SMPUIMessage( EMUI_NIVAL_NET_LADDER ), eState( _eState ) {} // serialization only
 };
@@ -742,6 +790,7 @@ public:
 	ZDATA_( SMPUIMessage )
 	std::wstring wszText;
 	bool bTeamOnly = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SMPUIMessage *)this );
@@ -751,6 +800,7 @@ public:
 	}
 
 	SMPUIInGameChatMessage() : SMPUIMessage( EMUI_IN_GAME_CHAT_MESSAGE ) {} // serialize only
+
 	SMPUIInGameChatMessage( const std::wstring &_wszText, bool _bTeamOnly )
 			: SMPUIMessage( EMUI_IN_GAME_CHAT_MESSAGE ), wszText( _wszText ), bTeamOnly( _bTeamOnly )
 	{

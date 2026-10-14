@@ -135,4 +135,4 @@ inline std::vector<wxBitmap> LoadIcons( unsigned nResourceID, int nSize = 16 )
 	}
 	return icons;
 }
-}
+} // namespace NWxResourceImages

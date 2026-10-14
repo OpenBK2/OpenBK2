@@ -9,7 +9,7 @@ namespace NGfx
 // CRBase is instantiated here, so its non-exported bookkeeping flag belongs to
 // the test executable rather than the renderer DLL.
 bool bWasLinearBufferLock = false;
-}
+} // namespace NGfx
 
 namespace
 {
@@ -20,8 +20,11 @@ public:
 	int lockCalls = 0;
 	int unlockCalls = 0;
 	unsigned char data[16] = {};
+
 	void AddRef() {}
+
 	void Release() {}
+
 	HRESULT Lock( UINT, UINT, void **ppData, DWORD )
 	{
 		++lockCalls;
@@ -30,6 +33,7 @@ public:
 		*ppData = data;
 		return result;
 	}
+
 	HRESULT Unlock()
 	{
 		++unlockCalls;
@@ -41,7 +45,7 @@ class CTestVertexBuffer : public NGfx::CRBase<CTestD3DBuffer>
 {
 	OBJECT_NOCOPY_METHODS( CTestVertexBuffer );
 };
-}
+} // namespace
 
 TEST( GfxBufferLocks, FailedLockDoesNotPublishPointerOrIncrementCount )
 {

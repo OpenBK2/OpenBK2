@@ -33,7 +33,10 @@ class CWindowPlayer : public CWindow, public IPlayer
 	CDBPtr<NDb::SWindowPlayerShared> pShared;
 
 protected:
-	virtual NDb::SWindow *GetInstance() { return pInstance; }
+	virtual NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
 
 	uint32_t GetSceneFlags();
 	void UpdatePlayer();

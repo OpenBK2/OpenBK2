@@ -16,6 +16,7 @@ struct SExpProgressCareer
 	float fTotal;
 	float fProgress;
 	float fNewProgress;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &bFinal );
@@ -52,6 +53,7 @@ struct SExpProgressRank
 	float fTargetNextLevelExp;
 	float fProgress;
 	float fNewProgress;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &bFinal );

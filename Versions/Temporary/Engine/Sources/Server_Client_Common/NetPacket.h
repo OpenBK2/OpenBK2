@@ -7,6 +7,7 @@ public:
 	int nClientID = {};
 
 	CNetPacket() {}
+
 	CNetPacket( const int _nClientID ) : nClientID( _nClientID ) {}
 
 	// every net packet should have operator&

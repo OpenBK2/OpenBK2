@@ -12,4 +12,4 @@ INPUT_EXPORT void UpdateHostedKeyboard( SDL_Window *pWindow, const bool *pKeys, 
 // The host's mouse events use SDL's units/button numbering, without posting
 // synthetic events to SDL's global queue or interfering with the toolkit.
 INPUT_EXPORT void ProcessHostedMouse( SDL_Window *pWindow, const SDL_Event &event );
-}
+} // namespace NInput

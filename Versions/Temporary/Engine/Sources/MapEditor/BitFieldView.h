@@ -37,6 +37,7 @@ struct SField
 	int nValue;
 
 	SField() : nValue( -1 ) {}
+
 	int operator&( IXmlSaver &saver );
 };
 
@@ -57,4 +58,4 @@ bool IsSet( const uint8_t *pData, int nSize, int nValue );
 // name, so in a file that gave two fields the same name both of its checks
 // set the later one's bit; no file under Editor/BitFields does.
 void Store( const std::vector<SField> &rFields, const std::vector<bool> &rChecked, uint8_t *pData, int nSize );
-}
+} // namespace NBitField

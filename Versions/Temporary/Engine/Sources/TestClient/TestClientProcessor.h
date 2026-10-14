@@ -26,12 +26,17 @@ class CTestClientProcessor : public CPacketProcessor
 
 public:
 	CTestClientProcessor() {}
+
 	CTestClientProcessor( const std::string &szCfgFile );
 	void SetServerClient( CServerClient *pServerClient );
 
 	virtual bool Segment();
 
-	int GetMyID() const { return nMyID; }
+	int GetMyID() const
+	{
+		return nMyID;
+	}
+
 	// processors
 	bool ProcessConnectServerResult( class CConnectServerPacket *pPacket );
 	//bool ProcessLobbyChatPacket( class CReceiveLobbyChatPacket *pPacket );

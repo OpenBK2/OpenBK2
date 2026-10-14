@@ -28,10 +28,12 @@ SplitStringT( const std::basic_string<T1> &szString, std::vector<std::basic_stri
 												 //
 	} while ( nPos != std::basic_string<T1>::npos );
 }
+
 void SplitString( const std::string &szString, std::vector<std::string> *pVector, const char cSeparator )
 {
 	SplitStringT( szString, pVector, cSeparator );
 }
+
 void SplitString( const std::wstring &szString, std::vector<std::wstring> *pVector, const wchar_t cSeparator )
 {
 	SplitStringT( szString, pVector, cSeparator );
@@ -57,6 +59,7 @@ void SplitStringWithMultipleBrackets( const std::string &szString,
 {
 	SplitStringWithMultipleBracketsT( szString, szVector, cSeparator );
 }
+
 void SplitStringWithMultipleBrackets( const std::wstring &szString,
                                       std::vector<std::wstring> &szVector,
                                       const wchar_t cSeparator )
@@ -80,6 +83,7 @@ void TrimRight( std::string &szString, const char cTrim )
 		szString.erase( nPos + 1, std::string::npos );
 	}
 }
+
 void TrimRight( std::string &szString, const char *pszTrim )
 {
 	size_t nPos = szString.find_last_not_of( pszTrim );
@@ -95,6 +99,7 @@ void TrimRight( std::string &szString, const char *pszTrim )
 		szString.erase( nPos + 1, std::string::npos );
 	}
 }
+
 // вырезать все символы 'cTrim' из строки
 class CSymbolCheckFunctional
 {
@@ -103,6 +108,7 @@ private:
 
 public:
 	explicit CSymbolCheckFunctional( const char *pszNewSymbols ) : pszSymbols( pszNewSymbols ) {}
+
 	bool operator()( const char cSymbol )
 	{
 		for ( const char *p = pszSymbols; *p != 0; ++p )
@@ -115,6 +121,7 @@ public:
 		return false;
 	}
 };
+
 void TrimInside( std::string &szString, const char *pszTrim )
 {
 	szString.erase( remove_if( szString.begin(), szString.end(), CSymbolCheckFunctional( pszTrim ) ), szString.end() );
@@ -134,6 +141,7 @@ static const char *SkipSpace( const char *pszString )
 	}
 	return pszString;
 }
+
 // "%i" picked the radix from the prefix; from_chars needs it spelled out
 static int PickRadix( const char **ppString )
 {
@@ -149,6 +157,7 @@ static int PickRadix( const char **ppString )
 	}
 	return 10;
 }
+
 int ToInt( const char *pszString )
 {
 	const char *p = SkipSpace( pszString );
@@ -166,6 +175,7 @@ int ToInt( const char *pszString )
 	}
 	return bNegative ? -static_cast<int>( nMagnitude ) : static_cast<int>( nMagnitude );
 }
+
 int ToIntDec( const char *pszString )
 {
 	const char *p = SkipSpace( pszString );
@@ -182,6 +192,7 @@ int ToIntDec( const char *pszString )
 	}
 	return bNegative ? -static_cast<int>( nMagnitude ) : static_cast<int>( nMagnitude );
 }
+
 float ToFloat( const char *pszString )
 {
 	const char *p = SkipSpace( pszString );
@@ -208,6 +219,7 @@ float ToFloat( const char *pszString )
 	}
 	return bNegative ? -fNumber : fNumber;
 }
+
 double ToDouble( const char *pszString )
 {
 	const char *p = SkipSpace( pszString );
@@ -234,6 +246,7 @@ double ToDouble( const char *pszString )
 	}
 	return bNegative ? -fNumber : fNumber;
 }
+
 unsigned long ToULong( const char *pszString )
 {
 	const char *p = SkipSpace( pszString );
@@ -273,6 +286,7 @@ bool IsDecNumber( const std::string &szString )
 	}
 	return ( ( i > nFirstDigit ) && ( i == szString.size() ) );
 }
+
 // <[+/-]>[0][oct digit]*
 bool IsOctNumber( const std::string &szString )
 {
@@ -301,6 +315,7 @@ bool IsOctNumber( const std::string &szString )
 	}
 	return ( ( i > nFirstDigit ) && ( i == szString.size() ) );
 }
+
 // <[+/-]>[0x][hex digit]*
 bool IsHexNumber( const std::string &szString )
 {
@@ -343,6 +358,7 @@ const char *BinToString( const void *pData, int nSize, char *pszBuffer )
 	}
 	return pszBuffer;
 }
+
 void *StringToBin( const char *pszData, void *pBuffer, int *pnSize )
 {
 	uint8_t *pData = (uint8_t *)pBuffer;

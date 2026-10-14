@@ -377,6 +377,7 @@ void CAIUnit::IncreaseHitPoints( const float fInc )
 
 int nCntGuns = 0;
 float fRange = 0;
+
 void CAIUnit::Init( const CVec2 &center,
                     const int z,
                     const float fHP,
@@ -645,6 +646,7 @@ void CAIUnit::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime 
 	pPlacement->rotation.DecompEulerAngles( &fYaw, &fIgnoredPitch, &fIgnoredRoll );
 	pPlacement->rotation = CQuat( fYaw, V3_AXIS_Z );
 }
+
 /*
 
 void CAIUnit::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff )
@@ -2898,6 +2900,7 @@ void CAIUnit::NotifyAbilityRun( class CAICommand *pCommand )
 		ProduceEventByAction( eAbility, action, pCommand );
 	}
 }
+
 #include "ExecutorSniperCamouflage.h"
 #include "ExecutorThrowGrenade.h"
 

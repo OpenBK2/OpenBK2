@@ -408,4 +408,4 @@ void CAckTracker::PacketLost( PACKET_ID pktID )
 	ASSERT( bFound );
 }
 
-}
+} // namespace NNet

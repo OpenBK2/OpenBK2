@@ -21,6 +21,7 @@ class B2_M1_WORLD_EXPORT CMOBuilding : public IMOContainer
 		EWS_NIGHT,
 		EWS_DESTROYED
 	};
+
 	std::vector<EWindowState> attachedWindows;
 	typedef std::list<std::pair<int, int>> CAttachedObjIDs;
 	std::vector<CAttachedObjIDs> attachedObjects;
@@ -99,16 +100,31 @@ public:
 	void BreakAllWindows( const NDb::ESeason eSeason );
 	// on/of night windows
 	void ToggleNightWindows( const bool bNightOn, const NDb::ESeason eSeason );
+
 	//
-	bool Load( struct IMOUnit *pMO, bool bEnter ) { return false; }
+	bool Load( struct IMOUnit *pMO, bool bEnter )
+	{
+		return false;
+	}
+
 	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter );
+
 	void UpdatePassangers() {}
+
 	void GetPassangers( std::vector<CMOSelectable *> *pBuffer ) const;
 
-	int GetPassangersCount() const { return vPassangers.size(); }
+	int GetPassangersCount() const
+	{
+		return vPassangers.size();
+	}
 
 	int GetFreePlaces() const;
-	int GetFreeMechPlaces() const { return 0; }
+
+	int GetFreeMechPlaces() const
+	{
+		return 0;
+	}
+
 	void AIUpdateShot( const struct SAINotifyBaseShot &shot,
 	                   const NTimer::STime &currTime,
 	                   IScene *pScene,
@@ -123,15 +139,31 @@ public:
 	virtual void Select( bool bSelect );
 	void SetCanSelect( bool bCanSelect );
 
-	void AIUpdateModifyEntranceState( bool _bOpen ) { bCanEnter = _bOpen; }
+	void AIUpdateModifyEntranceState( bool _bOpen )
+	{
+		bCanEnter = _bOpen;
+	}
+
 	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement,
 	                                struct IScene *pScene,
 	                                struct ISoundScene *pSoundScene,
 	                                NDb::ESeason eSeason );
-	bool IsOpen() const { return true; }
 
-	bool IsStorage() const { return bStorage; }
-	virtual bool IsBuilding() const { return true; }
+	bool IsOpen() const
+	{
+		return true;
+	}
+
+	bool IsStorage() const
+	{
+		return bStorage;
+	}
+
+	virtual bool IsBuilding() const
+	{
+		return true;
+	}
+
 	//
 	int operator&( IBinSaver &saver );
 };

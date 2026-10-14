@@ -56,14 +56,35 @@ class CPathFractionComposite : public CPathFractionComplexBase
 
 public:
 	CPathFractionComposite() : fSplineProgress( 0 ) {}
+
 	CPathFractionComposite( struct IPlane *pPlane, struct IPathFraction *pPath );
 
-	virtual CVec3 GetPoint() const { return vPos; }
-	virtual CVec3 GetTangent() const { return vSpeed; }
-	virtual CVec3 GetNormale() const { return vNormale; }
+	virtual CVec3 GetPoint() const
+	{
+		return vPos;
+	}
+
+	virtual CVec3 GetTangent() const
+	{
+		return vSpeed;
+	}
+
+	virtual CVec3 GetNormale() const
+	{
+		return vNormale;
+	}
+
 	virtual bool Iterate( const float fDist, float *pfDistRemain );
 
-	virtual float GetLength() const { return fPathLenght; }
-	virtual void GetSimplePath( CPathList *paths ) { NI_ASSERT( false, "wrong call" ); }
+	virtual float GetLength() const
+	{
+		return fPathLenght;
+	}
+
+	virtual void GetSimplePath( CPathList *paths )
+	{
+		NI_ASSERT( false, "wrong call" );
+	}
+
 	virtual void GetPrevPoints( struct SPrevPathParams *pParams ) const;
 };

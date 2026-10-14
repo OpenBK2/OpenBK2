@@ -18,7 +18,8 @@ class CTexture;
 class CGeometry;
 class CRenderContext;
 class CCubeTexture;
-}
+} // namespace NGfx
+
 namespace NGScene
 {
 
@@ -39,8 +40,10 @@ struct SGroupSelect
 			: nMaskAny( _nMaskAny ), nMaskEvery( _nMaskEvery )
 	{
 	}
+
 	SGroupSelect() {}
 };
+
 inline bool operator!=( const SGroupSelect &a, const SGroupSelect &b )
 {
 	return a.nMaskAny != b.nMaskAny || a.nMaskEvery != b.nMaskEvery;
@@ -66,13 +69,17 @@ inline SGroupSelect MakeSelectAll()
 struct SGroupInfo
 {
 	unsigned short nLightFlags, nObjectGroup;
+
 	//
 	SGroupInfo() : nLightFlags( 0 ), nObjectGroup( 0xffff ) {}
+
 	SGroupInfo( int _nLG, int _nOG ) : nLightFlags( _nLG ), nObjectGroup( _nOG ) {}
+
 	bool operator==( const SGroupInfo &a ) const
 	{
 		return a.nLightFlags == nLightFlags && a.nObjectGroup == nObjectGroup;
 	}
+
 	bool IsMaskMatch( const SGroupSelect &m ) const
 	{
 		return ( nObjectGroup & m.nMaskAny ) != 0 && ( nObjectGroup & m.nMaskEvery ) == m.nMaskEvery;
@@ -80,12 +87,14 @@ struct SGroupInfo
 };
 
 const int N_USERID_MASK = 0xffffff; // these bits do not depend on part number
+
 struct SFullGroupInfo
 {
 	ZDATA
 	SGroupInfo groupInfo;
 	CPtr<CObjectBase> pUser;
 	int nUserID;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &groupInfo );
@@ -93,7 +102,9 @@ struct SFullGroupInfo
 		f.Add( 4, &nUserID );
 		return 0;
 	}
+
 	SFullGroupInfo() : nUserID( 0 ) {}
+
 	SFullGroupInfo( const SGroupInfo &_g, CObjectBase *_p, int _nUserID )
 			: groupInfo( _g ), pUser( _p ), nUserID( _nUserID )
 	{
@@ -123,6 +134,7 @@ public:
 		float fScale;
 		float fDistance;
 		CDGPtr<CPtrFuncBase<NGfx::CTexture>> pFlare;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &bFade );
@@ -132,10 +144,12 @@ public:
 			return 0;
 		}
 	};
+
 	////
 	ZDATA
 	std::vector<SFlare> flares;
 	CDGPtr<CPtrFuncBase<NGfx::CTexture>> pOverbright;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &flares );
@@ -153,6 +167,7 @@ enum EParticleFlags
 	PF_STATIC = 0,
 	PF_DYNAMIC = 4
 };
+
 enum ELightingOptions
 {
 	LO_NOSHADOWS = 1
@@ -160,6 +175,7 @@ enum ELightingOptions
 
 struct SRenderGeometryInfo;
 struct SPostProcessData;
+
 class IPostProcess : public CObjectBase
 {
 public:
@@ -170,12 +186,14 @@ public:
 
 		SObject( SRenderGeometryInfo *_pInfo, int _nIdx ) : pInfo( _pInfo ), nIdx( _nIdx ) {}
 	};
+
 	virtual void Render( SPostProcessData *pDst, const std::vector<SObject> &render ) = 0;
 };
 
 // hintBV specifies area where object will be moving, if area is not limited just specify very large BV
 struct SDecalMappingInfo;
 class CDecalTarget;
+
 struct IGScene : virtual public CObjectBase
 {
 public:
@@ -293,12 +311,14 @@ _3DMOTOR_EXPORT bool Is3DActive();
 _3DMOTOR_EXPORT void SetWireframe( bool bWire );
 bool GetWireframe();
 _3DMOTOR_EXPORT void ClearScreen( const CVec3 &vColor );
+
 enum ERegisterCopyMode
 {
 	RCM_COPY,
 	RCM_TRANSPARENT,
 	RCM_SHOWALPHA
 };
+
 void CopyRegisterOnScreen( const CTRect<float> &rScreenRect, ERegisterCopyMode mode, int nRegister );
 _3DMOTOR_EXPORT void GetRenderStats( SRenderStats *pStats );
 _3DMOTOR_EXPORT float GetFrameTime();
@@ -327,4 +347,4 @@ CLightmapsHolder *CalcLightmaps( IGScene *pScene,
                                  CLightmapsTempHolder *pTmpHolder );
 void ApplyLightmaps( IGScene *pScene, CObjectBase *pUser, CLightmapsHolder *pLightmaps, CLightmapsLoader *pLD );
 
-}
+} // namespace NGScene

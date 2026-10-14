@@ -11,10 +11,18 @@ class CTerraAIObserverInEditor : public CTerraAIObserver
 	OBJECT_NOCOPY_METHODS( CTerraAIObserverInEditor )
 
 	ZDATA
-	ZEND int operator&( IBinSaver &f ) { return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 
 public:
-	CTerraAIObserverInEditor() { NI_ASSERT( 0, "Default constructor is not allowed!" ); }
+	CTerraAIObserverInEditor()
+	{
+		NI_ASSERT( 0, "Default constructor is not allowed!" );
+	}
+
 	CTerraAIObserverInEditor( const int nAIMapSizeX, const int nAIMapSizeY );
+
 	virtual ~CTerraAIObserverInEditor() {}
 };

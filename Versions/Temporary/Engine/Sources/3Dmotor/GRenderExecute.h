@@ -32,4 +32,4 @@ void StartRenderExecute( NGfx::CRenderContext *pRC, const SLightInfo &light );
 
 void SetupNLShadowsProjection( NGfx::CRenderContext *pRC, const SPerspDirectionalDepthInfo &depthInfo );
 
-}
+} // namespace NGScene

@@ -46,6 +46,7 @@ struct SMaskVisitor
 {
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nMaxRadius = {};
+
 	SMaskVisitor() : nMaxRadius( theWarFog.GetMaxRadius() ) {}
 
 	bool operator()( const SVector &vOffset, const bool bVisible )
@@ -65,12 +66,17 @@ struct SMaskVisitor
 		visit.SetData( nX, nY );
 		return true;
 	}
-	const bool GetReturnValue() const { return true; }
+
+	const bool GetReturnValue() const
+	{
+		return true;
+	}
 };
 
 struct SGetLastVisitor
 {
 	bool bLastVisit = {};
+
 	SGetLastVisitor() : bLastVisit( false ) {}
 
 	bool operator()( const SVector &vOffset, const bool bVisible )
@@ -78,7 +84,11 @@ struct SGetLastVisitor
 		bLastVisit = bVisible;
 		return true;
 	}
-	const bool GetReturnValue() const { return bLastVisit; }
+
+	const bool GetReturnValue() const
+	{
+		return bLastVisit;
+	}
 };
 
 CGlobalWarFog::SWarForFullUnitInfo::SWarForFullUnitInfo( const SWarFogUnitInfo &unitInfo,

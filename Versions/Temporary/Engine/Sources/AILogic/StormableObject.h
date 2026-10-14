@@ -6,6 +6,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CSoldier;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //*******************************************************************
 //*													CStormableObject												*
@@ -64,14 +65,27 @@ public:
 
 	bool Segment();
 
-	bool IsUnitsInside() const { return bAttackers || GetNDefenders() != 0; }
-	const int GetNAttackers( const int nPlayer ) const { return nAttackers[nPlayer]; }
+	bool IsUnitsInside() const
+	{
+		return bAttackers || GetNDefenders() != 0;
+	}
+
+	const int GetNAttackers( const int nPlayer ) const
+	{
+		return nAttackers[nPlayer];
+	}
+
 	const int GetNFriendlyAttackers( const int nPlayer ) const;
-	bool IsAnyAttackers() const { return bAttackers; }
+
+	bool IsAnyAttackers() const
+	{
+		return bAttackers;
+	}
 
 	virtual const int GetNDefenders() const = 0;
 	virtual class CSoldier *GetUnit( const int n ) const = 0;
 	virtual const uint8_t GetPlayer() const = 0;
 	const bool IsAnyInsiderVisible() const;
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

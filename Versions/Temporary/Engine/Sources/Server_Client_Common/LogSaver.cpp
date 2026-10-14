@@ -17,9 +17,17 @@ class CLogSaver : public IBinSaver
 	OBJECT_NOCOPY_METHODS( CLogSaver );
 	std::string *pszLog;
 
-	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber ) { return true; }
+	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber )
+	{
+		return true;
+	}
+
 	virtual void FinishChunk() {}
-	virtual int CountChunks( const chunk_id idChunk ) { return 0; }
+
+	virtual int CountChunks( const chunk_id idChunk )
+	{
+		return 0;
+	}
 
 	virtual void DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber )
 	{
@@ -39,8 +47,17 @@ class CLogSaver : public IBinSaver
 				break;
 		}
 	}
-	virtual void DataChunkString( std::string &data ) { *pszLog += " \"" + data + "\""; }
-	virtual void DataChunkString( std::wstring &data ) { *pszLog += " \"" + NStr::ToMBCS( data ) + "\""; }
+
+	virtual void DataChunkString( std::string &data )
+	{
+		*pszLog += " \"" + data + "\"";
+	}
+
+	virtual void DataChunkString( std::wstring &data )
+	{
+		*pszLog += " \"" + NStr::ToMBCS( data ) + "\"";
+	}
+
 	// storing/loading pointers to objects
 	virtual void StoreObject( CObjectBase *pObject )
 	{
@@ -69,12 +86,24 @@ class CLogSaver : public IBinSaver
 		}
 	}
 
-	virtual CObjectBase *LoadObject() { return 0; }
+	virtual CObjectBase *LoadObject()
+	{
+		return 0;
+	}
 
 public:
-	virtual bool IsReading() { return false; }
-	virtual int GetVersion() const { return N_SAVELOAD_VERSION; }
+	virtual bool IsReading()
+	{
+		return false;
+	}
+
+	virtual int GetVersion() const
+	{
+		return N_SAVELOAD_VERSION;
+	}
+
 	CLogSaver() : pszLog( 0 ) {}
+
 	CLogSaver( std::string *_pszLog ) : pszLog( _pszLog ) {}
 };
 

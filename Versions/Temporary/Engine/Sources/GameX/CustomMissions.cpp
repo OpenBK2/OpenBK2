@@ -44,4 +44,4 @@ void GetMultiplayerMaps( std::vector<CDBID> *pDBIDs )
 	GetObjectsFromFolderByType( pDBIDs, MULTIPLAYER_MAPS_FOLDER, "MultiplayerMap" );
 }
 
-}
+} // namespace NCustom

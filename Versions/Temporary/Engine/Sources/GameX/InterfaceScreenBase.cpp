@@ -625,7 +625,7 @@ static void CmdStartInterface( const std::string &szID, const std::vector<std::w
 	NGlobal::SetVar( "MainMenuDBID", NStr::ToInt( res ) );
 	NGlobal::SetVar( "mainmenu", "1" );
 }
-}
+} // namespace NInterface
 
 START_REGISTER( Interfaces )
 REGISTER_CMD( "start_interface", NInterface::CmdStartInterface )

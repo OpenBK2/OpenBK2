@@ -209,7 +209,7 @@ void CMinFontSizeHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, cons
 	pLayout->AddObject( CreateMinFontSizeObject( nMinFontSize ) );
 }
 
-} // NAMESPACE
+} // namespace NML
 
 using namespace NML;
 REGISTER_SAVELOAD_CLASS( UI, 0xB5529210, CBRHandler )

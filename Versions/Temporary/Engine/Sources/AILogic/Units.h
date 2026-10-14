@@ -14,6 +14,7 @@ class CFormation;
 class CGlobalIter;
 class CPlanesIter;
 class CDeadPlanesIter;
+
 namespace NDb
 {
 struct SUnitStatsModifier;
@@ -33,7 +34,9 @@ private:
 	{
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		int nValue = {};
+
 		SInitializedWord() : nValue( 0 ) {}
+
 		SInitializedWord( int _nValue ) : nValue( _nValue ) {}
 	};
 
@@ -55,20 +58,24 @@ private:
 	CArray2D<uint16_t> nCell;
 	// список юнитов для каждой из ячеек, 0 - not visible for enemy, 1 - visible for enemy
 	std::vector<CListsSet<SInitializedWord>> unitsInCells;
+
 	// позиция юнита в ячейках
 	struct SUnitPosition
 	{
 		int nCellID = {};
 		int nUnitPos = {};
 		SVector cell;
+
 		SUnitPosition() : nCellID( 0 ), nUnitPos( 0 ), cell( 0, 0 ) {}
 	};
+
 	std::vector<SUnitPosition> posUnitInCell;
 
 	enum
 	{
 		N_CELLS_LEVELS = 3
 	};
+
 	CArray2D<uint16_t> numUnits[2][N_CELLS_LEVELS][3][2];
 
 	// для нумерации ячеек
@@ -95,7 +102,11 @@ public:
 	CUnits() {}
 
 	void Init();
-	void Clear() { DestroyContents(); }
+
+	void Clear()
+	{
+		DestroyContents();
+	}
 
 	void AddFormation( class CFormation *pFormation );
 	void DelFormation( class CFormation *pFormation );

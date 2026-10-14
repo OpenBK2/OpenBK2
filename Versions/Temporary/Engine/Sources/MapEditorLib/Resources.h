@@ -154,4 +154,4 @@ MAPEDITORLIB_EXPORT std::string GetString( unsigned nID );
 
 // The same, answering whether the string exists.
 MAPEDITORLIB_EXPORT bool GetString( unsigned nID, std::string *pszText );
-}
+} // namespace NResources

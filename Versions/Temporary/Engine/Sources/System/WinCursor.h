@@ -47,4 +47,4 @@ SYSTEM_EXPORT int GetStepCount( TCursor hCursor );
 SYSTEM_EXPORT int GetStepDelay( TCursor hCursor, int nStep );
 //! What to display at step nStep, to be handed to NWinFrame::SetCursor.
 SYSTEM_EXPORT TFrame GetStepFrame( TCursor hCursor, int nStep );
-}
+} // namespace NWinCursor

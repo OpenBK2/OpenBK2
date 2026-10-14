@@ -1,5 +1,6 @@
 
 #pragma once
+
 namespace NDb
 {
 enum EReinforcementType : int;

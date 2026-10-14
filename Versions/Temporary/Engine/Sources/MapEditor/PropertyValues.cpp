@@ -53,7 +53,10 @@ struct CFloatCompare
 
 struct CStringCompare
 {
-	bool operator()( const std::string &rszText0, const std::string &rszText1 ) { return ( rszText1 > rszText0 ); }
+	bool operator()( const std::string &rszText0, const std::string &rszText1 )
+	{
+		return ( rszText1 > rszText0 );
+	}
 };
 
 bool IntInputString( std::string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc )
@@ -138,7 +141,7 @@ bool ExTextFileValue( CVariant *pValue, const std::string &rszValue, const SProp
 	( *pValue ) = rszValue;
 	return true;
 }
-}
+} // namespace
 
 namespace NPropertyValues
 {
@@ -510,7 +513,7 @@ bool AddVec3ColorChange( const std::string &rszName,
 	}
 	return false;
 }
-}
+} // namespace NPropertyValues
 
 bool GetPCItemStringValue( std::string *pszValue,
                            const CVariant &rValue,

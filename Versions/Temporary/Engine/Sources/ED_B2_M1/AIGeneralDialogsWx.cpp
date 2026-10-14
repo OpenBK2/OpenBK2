@@ -129,7 +129,10 @@ public:
 
 	// OnOK's reading of the combo box: the selected position as the enum,
 	// which is -1 with nothing selected, exactly as GetCurSel is.
-	NDb::EParcelType GetType() const { return static_cast<NDb::EParcelType>( pType->GetSelection() ); }
+	NDb::EParcelType GetType() const
+	{
+		return static_cast<NDb::EParcelType>( pType->GetSelection() );
+	}
 
 	// OnOK's sscanf: what does not parse is 0.
 	float GetImportance() const
@@ -139,7 +142,7 @@ public:
 		return fImportance;
 	}
 };
-}
+} // namespace
 
 namespace NAIGenMobileDialog
 {
@@ -165,7 +168,7 @@ bool Run( IWidget *pParent, int *pMobileID )
 	( *pMobileID ) = dialog.GetMobileID();
 	return true;
 }
-}
+} // namespace NAIGenMobileDialog
 
 namespace NAIGenParcelDialog
 {
@@ -191,4 +194,4 @@ bool Run( IWidget *pParent, NDb::EParcelType *pType, float *pImportance )
 	( *pImportance ) = dialog.GetImportance();
 	return true;
 }
-}
+} // namespace NAIGenParcelDialog

@@ -37,6 +37,7 @@ private:
 	//
 	//
 	typedef bool ( CWorldClient::*USER_ACTION )( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
+
 	struct SActionDesc
 	{
 		enum
@@ -45,6 +46,7 @@ private:
 			FORCED = 0x00000002, // action can be activated only from interface
 			INSTANT = 0x00000004 // action will be instantly performed in the moment of initiation
 		};
+
 		//
 		USER_ACTION pfnAction;
 		uint32_t flags;
@@ -68,6 +70,7 @@ private:
 		bool bPlaced;
 		float fShowTime;
 		CVec3 vPos;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nUniqueID );
@@ -155,6 +158,7 @@ private:
 		ZDATA
 		CPtr<IMOUnit> pMOUnit;
 		float fLastTime;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pMOUnit );
@@ -162,6 +166,7 @@ private:
 			return 0;
 		}
 	};
+
 	typedef det_map<int, SUnitIcon> CUnitIconMap;
 	CUnitIconMap unitIcons;
 
@@ -259,6 +264,7 @@ private:
 		ENP_CAMERA_POS_SIMPLE = 8, // CVec2( LOWORD( pUpdate->info.nParam ), HIWORD( pUpdate->info.nParam )
 		ENP_UNITS = 16,
 	};
+
 	void
 	OnNotifyEvent( const struct SAIFeedbackUpdate *pUpdate, NDb::ENotificationEventType eType, ENotifyParams eParams );
 	void OnObjectiveMoved( const struct SAIFeedbackUpdate *pUpdate );
@@ -269,8 +275,16 @@ private:
 protected:
 	void SetCursor( NDb::EUserAction _eForcedAction );
 	void SetForcedAction( NDb::EUserAction eForcedAction );
-	NDb::EUserAction GetForcedAction() const { return eForcedAction; }
-	bool IsForcedAction() const { return GetForcedAction() != NDb::USER_ACTION_UNKNOWN; }
+
+	NDb::EUserAction GetForcedAction() const
+	{
+		return eForcedAction;
+	}
+
+	bool IsForcedAction() const
+	{
+		return GetForcedAction() != NDb::USER_ACTION_UNKNOWN;
+	}
 
 	NDb::EUserAction DetermineBestAutoAction( CMapObj *_pMO, bool bAltMode );
 	NDb::EUserAction DetermineBestCtrlAction( CMapObj *_pMO );
@@ -289,13 +303,22 @@ protected:
 
 	USER_ACTION GetAction( NDb::EUserAction eUserAction, int nType );
 
-	void ResetFirstCommandPoint() { bFirstCommandPointDef = false; }
+	void ResetFirstCommandPoint()
+	{
+		bFirstCommandPointDef = false;
+	}
+
 	void SetFirstCommandPoint( const CVec2 &vPos )
 	{
 		vFirstCommandPoint = vPos;
 		bFirstCommandPointDef = true;
 	}
-	const bool IsFirstCommandPointDefined() const { return bFirstCommandPointDef; }
+
+	const bool IsFirstCommandPointDefined() const
+	{
+		return bFirstCommandPointDef;
+	}
+
 	const CVec2 GetFirstCommandPoint() const
 	{
 		NI_ASSERT( IsFirstCommandPointDefined(), "Trying recieve first point for command before its defenition." );
@@ -313,7 +336,10 @@ protected:
 
 	//	void SetPlaceInQueue( bool bPlaceInQueue ) { bPlaceCommandInQuery = bPlaceInQueue; }
 	//	bool GetPlaceInQueue() const { return bPlaceCommandInQuery; }
-	bool GetPlaceInQueue() const { return pMouseTranslator->IsShiftDown(); }
+	bool GetPlaceInQueue() const
+	{
+		return pMouseTranslator->IsShiftDown();
+	}
 
 	void MsgResetForcedAction( const SGameMessage &msg );
 
@@ -472,19 +498,38 @@ public:
 	//
 	void OnLeave();
 	void OnEnter();
+
 	//
-	void GetSelectionActions( CUserActions *pActions ) { return pSelector->GetActions( pActions ); }
-	void GetSelectionDisabledActions( CUserActions *pActions ) { return pSelector->GetDisabledActions( pActions ); }
-	void GetSelectionEnabledActions( CUserActions *pActions ) { return pSelector->GetEnabledActions( pActions ); }
+	void GetSelectionActions( CUserActions *pActions )
+	{
+		return pSelector->GetActions( pActions );
+	}
+
+	void GetSelectionDisabledActions( CUserActions *pActions )
+	{
+		return pSelector->GetDisabledActions( pActions );
+	}
+
+	void GetSelectionEnabledActions( CUserActions *pActions )
+	{
+		return pSelector->GetEnabledActions( pActions );
+	}
+
 	void SetMaxUnits( const int nMaxUnitSlots, const int nMaxUnitPerSlot )
 	{
 		pSelector->SetMaxUnits( nMaxUnitSlots, nMaxUnitPerSlot );
 	}
-	int GetAbilityTier( NDb::EUserAction eAction ) const { return pSelector->GetAbilityTier( eAction ); }
+
+	int GetAbilityTier( NDb::EUserAction eAction ) const
+	{
+		return pSelector->GetAbilityTier( eAction );
+	}
+
 	const NDb::SUnitSpecialAblityDesc *GetAbilityDesc( NDb::EUserAction eAction ) const
 	{
 		return pSelector->GetAbilityDesc( eAction );
 	}
+
 	//
 	void ScreenToAI( CVec2 *pvAI, const CVec2 &vScreen );
 	CVec3 ScreenToAI( const CVec2 &vScreen );
@@ -496,22 +541,47 @@ public:
 	void MsgSetForcedAction( const SGameMessage &msg );
 	void MsgSetForcedActionWithParam( const SGameMessage &msg, CObjectBase *pParam );
 
-	bool IsCameraUpdated() const { return bCameraUpdated; }
-	void ResetCameraUpdated() { bCameraUpdated = false; }
+	bool IsCameraUpdated() const
+	{
+		return bCameraUpdated;
+	}
 
-	const bool IsAreasShown() const { return bAreasShown; }
-	void GetAreas( SShootAreas *pAreas ) { pSelector->GetAreas( pAreas ); }
+	void ResetCameraUpdated()
+	{
+		bCameraUpdated = false;
+	}
+
+	const bool IsAreasShown() const
+	{
+		return bAreasShown;
+	}
+
+	void GetAreas( SShootAreas *pAreas )
+	{
+		pSelector->GetAreas( pAreas );
+	}
 
 	void UpdateIcons();
 
 	int operator&( IBinSaver &saver );
 
-	CCommandsSender *GetCommandsSender() const { return pCommandsSender.GetPtr(); }
+	CCommandsSender *GetCommandsSender() const
+	{
+		return pCommandsSender.GetPtr();
+	}
 
-	EActionMode GetActionMode() const { return eActionMode; }
+	EActionMode GetActionMode() const
+	{
+		return eActionMode;
+	}
+
 	void SetActionMode( EActionMode eActionMode );
 
-	bool IsOnMinimap() const { return bOnMinimap; }
+	bool IsOnMinimap() const
+	{
+		return bOnMinimap;
+	}
+
 	void SetOnMinimap( bool bOnMinimap );
 
 	// for sound
@@ -536,7 +606,11 @@ public:
 	void UpdateUnitIcons( float fDeltaTime );
 	void SetMinimapColors( const std::vector<CVec4> &_minimapColors );
 
-	bool IsOwnUnitsPresent() const { return bIsOwnUnitsPresent; }
+	bool IsOwnUnitsPresent() const
+	{
+		return bIsOwnUnitsPresent;
+	}
+
 	void GameResetForcedAction();
 	void OnChangeForcedAction( NDb::EUserAction eOldForcedAction );
 };

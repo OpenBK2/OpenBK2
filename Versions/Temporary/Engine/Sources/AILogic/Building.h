@@ -22,6 +22,7 @@ class CBuilding : public CGivenPassabilityStObject, public ILoadableObject, publ
 	{
 		bool operator()( const CPtr<CSoldier> &a, const CPtr<CSoldier> &b );
 	};
+
 	struct SIllSort
 	{
 		bool operator()( const CPtr<CSoldier> &a, const CPtr<CSoldier> &b );
@@ -34,6 +35,7 @@ class CBuilding : public CGivenPassabilityStObject, public ILoadableObject, publ
 		                 const int nSoldier1Index,
 		                 const int nSoldier2Index );
 	};
+
 	struct SSideInfo
 	{
 		// количество fireSlots на стороне
@@ -222,6 +224,7 @@ protected:
 			: pLockingUnit( 0 ), nextSegmTime( 0 ), nScriptID( -1 ), bKeyBuilding( false ), bNewtralInfantryInside( false )
 	{
 	}
+
 	CBuilding( const SBuildingRPGStats *pStats,
 	           const CVec3 &center,
 	           const uint16_t wDir,
@@ -231,15 +234,27 @@ protected:
 
 public:
 	const int GetNFreePlaces() const;
-	const int GetNOverallPlaces() const { return nOveralPlaces; }
 
-	virtual const SHPObjectRPGStats *GetStats() const { return pStats; }
+	const int GetNOverallPlaces() const
+	{
+		return nOveralPlaces;
+	}
+
+	virtual const SHPObjectRPGStats *GetStats() const
+	{
+		return pStats;
+	}
+
 	virtual void SetHitPoints( const float fNewHP );
 	virtual void
 	TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit );
 	virtual void Die( const float fDamage );
 
-	const int GetNEntrancePoints() const { return pStats->entrances.size(); }
+	const int GetNEntrancePoints() const
+	{
+		return pStats->entrances.size();
+	}
+
 	const CVec2 GetEntrancePoint( const int nEntrance ) const;
 	void GetEntranceData( CVec2 *pvPoint, uint16_t *pwDir, int nIndex ) const;
 	// найти выход, ближайший чтобы идти в точку point
@@ -249,14 +264,25 @@ public:
 	bool IsGoodPointForRunIn( const SVector &point, const int nEntrance, const float fMinDist = 0 ) const;
 
 	virtual void Segment();
-	virtual const NTimer::STime GetNextSegmentTime() const { return nextSegmTime; }
 
-	virtual EStaticObjType GetObjectType() const { return ESOT_BUILDING; }
+	virtual const NTimer::STime GetNextSegmentTime() const
+	{
+		return nextSegmTime;
+	}
+
+	virtual EStaticObjType GetObjectType() const
+	{
+		return ESOT_BUILDING;
+	}
 
 	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats );
 
 	// итерирование по fire slots
-	virtual void StartIterate() { nIterator = 0; }
+	virtual void StartIterate()
+	{
+		nIterator = 0;
+	}
+
 	virtual void Iterate()
 	{
 		if ( nIterator < fire.Size() )
@@ -264,10 +290,18 @@ public:
 			++nIterator;
 		}
 	}
-	virtual bool IsIterateFinished() { return nIterator == fire.Size(); }
+
+	virtual bool IsIterateFinished()
+	{
+		return nIterator == fire.Size();
+	}
 	virtual class CAIUnit *GetIteratedUnit();
 
-	virtual bool IsContainer() const { return true; }
+	virtual bool IsContainer() const
+	{
+		return true;
+	}
+
 	virtual const int GetNDefenders() const;
 	virtual class CSoldier *GetUnit( const int n ) const;
 	virtual const uint8_t GetPlayer() const;
@@ -299,11 +333,23 @@ public:
 	// солдат, сидящий в fireplace, если fireplace пуст, то возвращает 0
 	class CSoldier *GetSoldierInFireplace( const int nFireplace ) const;
 
-	virtual void SetScriptID( const int _nScriptID ) { nScriptID = _nScriptID; }
+	virtual void SetScriptID( const int _nScriptID )
+	{
+		nScriptID = _nScriptID;
+	}
 
-	const NTimer::STime &GetLastLeaveTime( const int nPlayer ) const { return lastLeave[nPlayer]; }
+	const NTimer::STime &GetLastLeaveTime( const int nPlayer ) const
+	{
+		return lastLeave[nPlayer];
+	}
+
 	void SetLastLeaveTime( const int nPlayer );
-	virtual const uint16_t GetDir() const { return wDir; }
+
+	virtual const uint16_t GetDir() const
+	{
+		return wDir;
+	}
+
 	virtual const float GetMinHP() const;
 };
 
@@ -318,6 +364,7 @@ class CBuildingSimple : public CBuilding
 	CPtr<CExistingObject> pNeutralKeyBuildingFlag;
 	int nSideToCapture = {};
 	NTimer::STime timeToChangeOwnerTotal = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CBuilding *)this );
@@ -337,6 +384,7 @@ protected:
 
 public:
 	CBuildingSimple() {}
+
 	CBuildingSimple( const SBuildingRPGStats *pStats,
 	                 const CVec3 &center,
 	                 const uint16_t wDir,

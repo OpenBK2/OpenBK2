@@ -22,6 +22,7 @@ public:
 };
 
 const float F_NEAR_CLIP = 1; //0.2f;
+
 void CPointGlowEffect::AddParticles( IParticleOutput *pRender )
 {
 	pParent->CalcSize();
@@ -133,7 +134,8 @@ void CPointGlowAnimator::Recalc()
 	value.pParent = this;
 }
 
-}
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x114a2180, CPointGlowEffect )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x114a2181, CPointGlowAnimator )

@@ -9,6 +9,7 @@ class CGetLobbyClientsListPacket : public CNetPacket
 public:
 	ZDATA
 	int nLobbyID;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nLobbyID );
@@ -16,6 +17,7 @@ public:
 	}
 
 	CGetLobbyClientsListPacket() : nLobbyID( 0 ) {}
+
 	CGetLobbyClientsListPacket( const int _nLobbyID ) : nLobbyID( _nLobbyID ) {}
 };
 
@@ -26,6 +28,7 @@ class CShowLobbyGamesPacket : public CNetPacket
 public:
 	ZDATA
 	int nLobbyID;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nLobbyID );
@@ -33,5 +36,6 @@ public:
 	}
 
 	CShowLobbyGamesPacket() : nLobbyID( 0 ) {}
+
 	CShowLobbyGamesPacket( const int _nLobbyID ) : nLobbyID( _nLobbyID ) {}
 };

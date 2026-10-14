@@ -20,6 +20,7 @@ struct SGroupPathInfo
 	int nSubGroup = {};
 	uint8_t cTileSize = {};
 	EAIClasses aiClass = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pPath );
@@ -63,6 +64,7 @@ private:
 
 public:
 	CAICommand() : id( 0 ), nFlag( -1 ) {}
+
 	CAICommand( const SAIUnitCmd &unitCmd );
 	CAICommand( const CAICommand &cmd );
 
@@ -72,11 +74,25 @@ public:
 		cmdIds.Clear();
 	}
 
-	SAIUnitCmd &ToUnitCmd() { return unitCmd; }
-	const SAIUnitCmd &ToUnitCmd() const { return unitCmd; }
+	SAIUnitCmd &ToUnitCmd()
+	{
+		return unitCmd;
+	}
 
-	bool IsFromAI() const { return unitCmd.bFromAI; }
-	void SetFromAI( const bool bFromAI ) { unitCmd.bFromAI = bFromAI; }
+	const SAIUnitCmd &ToUnitCmd() const
+	{
+		return unitCmd;
+	}
+
+	bool IsFromAI() const
+	{
+		return unitCmd.bFromAI;
+	}
+
+	void SetFromAI( const bool bFromAI )
+	{
+		unitCmd.bFromAI = bFromAI;
+	}
 
 	~CAICommand()
 	{
@@ -87,13 +103,23 @@ public:
 		}
 	}
 
-	const int GetID() const { return id; }
+	const int GetID() const
+	{
+		return id;
+	}
 
 	CVec2 GetMoveTarget( class CCommonUnit *pUnit );
 	struct IStaticPath *CreateStaticPath( class CCommonUnit *pUnit );
 
-	const int GetFlag() const { return nFlag; }
-	const void SetFlag( const int _nFlag ) { nFlag = _nFlag; }
+	const int GetFlag() const
+	{
+		return nFlag;
+	}
+
+	const void SetFlag( const int _nFlag )
+	{
+		nFlag = _nFlag;
+	}
 
 	void AddUnit( CCommonUnit *pUnit );
 	void DeleteUnit( const int nUnitID );

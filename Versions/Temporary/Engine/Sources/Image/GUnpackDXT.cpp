@@ -38,6 +38,7 @@ struct SDXTAlphaBlock3BitLinear
 
 	uint8_t stuff[6];
 };
+
 // use cast to struct instead of RGBA_MAKE as struct is much
 struct SColor8888
 {
@@ -84,6 +85,7 @@ inline uint8_t Widen5( unsigned nValue )
 {
 	return static_cast<uint8_t>( ( nValue << 3 ) | ( nValue >> 2 ) );
 }
+
 inline uint8_t Widen6( unsigned nValue )
 {
 	return static_cast<uint8_t>( ( nValue << 2 ) | ( nValue >> 4 ) );
@@ -611,4 +613,4 @@ void UnpackDXT( int nDxt, int nXSize, int nYSize, const void *pData, CArray2D<ui
 			break;
 	}
 }
-}
+} // namespace NImage

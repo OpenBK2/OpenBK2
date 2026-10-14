@@ -91,6 +91,7 @@ public:
 	int nCaptureTime = {};
 	EGameType eType = {};
 	bool bRandomPlacement = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pMPMap );
@@ -104,11 +105,13 @@ public:
 		f.Add( 10, &bRandomPlacement );
 		return 0;
 	}
+
 	SB2GameSpecificData()
 			: nPlayers( 0 ), nTimeLimit( 0 ), nGameSpeed( 0 ), nTechLevel( 0 ), bUnitExp( false ), nCaptureTime( 0 ),
 				eType( EGT_FLAG_CONTROL_2 ), bRandomPlacement( true )
 	{
 	}
+
 	SB2GameSpecificData &operator=( const SB2GameSpecificData &src )
 	{
 		pMPMap = src.pMPMap;

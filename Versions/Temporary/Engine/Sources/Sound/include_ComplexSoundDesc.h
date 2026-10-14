@@ -14,6 +14,7 @@ const SSoundStats *GetRandomSound() const
 	}
 	return 0;
 }
+
 virtual void PostLoad( bool bInEditor )
 {
 	if ( bInEditor )

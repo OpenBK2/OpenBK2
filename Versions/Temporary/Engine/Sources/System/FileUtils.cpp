@@ -173,6 +173,7 @@ class CDeleteFiles
 
 public:
 	CDeleteFiles( bool _bDeleteRO, bool _bDeleteDir ) : bDeleteRO( _bDeleteRO ), bDeleteDir( _bDeleteDir ) {}
+
 	//
 	void operator()( const CFileIterator &it )
 	{
@@ -213,6 +214,7 @@ class CDirFileEnum
 	std::list<std::string> *pNames; // store names here
 public:
 	CDirFileEnum( std::list<std::string> *_pNames ) : pNames( _pNames ) {}
+
 	void operator()( const CFileIterator &it )
 	{
 		if ( !it.IsDirectory() )
@@ -221,6 +223,7 @@ public:
 		}
 	}
 };
+
 void GetDirectoryFiles( const char *pszDirName, const char *pszMask, std::list<std::string> *pNames, bool bRecurse )
 {
 	EnumerateFiles( pszDirName, pszMask, CDirFileEnum( pNames ), bRecurse );
@@ -512,7 +515,7 @@ namespace
 		return &( g_FoldedDirs[szDir] = dir );
 	}
 
-}
+} // namespace
 
 bool ResolveDataPathCase( std::string *pRes,
                           const std::string &szBaseDir,
@@ -602,6 +605,7 @@ std::string GetTempPath()
 	}
 	return szRes;
 }
+
 std::string GetTempFileName()
 {
 	const auto guid = boost::uuids::random_generator()();
@@ -673,4 +677,4 @@ void SetCurrDir( const std::string &szDir )
 	std::filesystem::current_path( szDir, ec );
 }
 
-}; // namespace NFile ends
+}; // namespace NFile

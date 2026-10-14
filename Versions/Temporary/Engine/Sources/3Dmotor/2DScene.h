@@ -1,11 +1,13 @@
 #pragma once
 #include "System/Dg.h"
 #include "RectLayout.h"
+
 namespace NGfx
 {
 class CTexture;
 CVec2 GetScreenRect();
-}
+} // namespace NGfx
+
 namespace NGScene
 {
 
@@ -32,4 +34,4 @@ public:
 
 I2DScene *Make2DScene();
 
-}
+} // namespace NGScene

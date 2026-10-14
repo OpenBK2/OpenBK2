@@ -118,8 +118,12 @@ struct SPrecipiceIntersect
 	CVec3 vNorm;
 	float fMinHeight;
 	float fMaxHeight;
+
 	//
-	bool operator<( const SPrecipiceIntersect &v ) const { return fDist < v.fDist; }
+	bool operator<( const SPrecipiceIntersect &v ) const
+	{
+		return fDist < v.fDist;
+	}
 };
 
 inline void SwapPrecipices( STerrainInfo::SPrecipice &prec1, STerrainInfo::SPrecipice &prec2 )

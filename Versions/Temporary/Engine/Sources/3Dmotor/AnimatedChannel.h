@@ -8,7 +8,10 @@ namespace NAnimation
 class CIdentityFunc
 {
 public:
-	float operator()( float fValue ) { return fValue; }
+	float operator()( float fValue )
+	{
+		return fValue;
+	}
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,6 +25,7 @@ private:
 	CDGPtr<ISkeletonAnimator> pAnimator;
 	std::string szChannelName;
 	int nChannelID;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pAnimator );
@@ -30,12 +34,19 @@ private:
 		return 0;
 	}
 
-	bool ChannelBinded() { return ( nChannelID != INVALID_CHANNEL_ID ); }
+	bool ChannelBinded()
+	{
+		return ( nChannelID != INVALID_CHANNEL_ID );
+	}
 
 protected:
 	CAnimatedChannel() : nChannelID( INVALID_CHANNEL_ID ), CFuncBase<float>( 0.f ) {}
 
-	virtual bool NeedUpdate() { return pAnimator.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pAnimator.Refresh();
+	}
+
 	virtual void Recalc()
 	{
 		if ( !ChannelBinded() )
@@ -52,4 +63,4 @@ public:
 	{
 	}
 };
-}
+} // namespace NAnimation

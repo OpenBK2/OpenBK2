@@ -32,13 +32,21 @@ public:
 	CStandartDirPath() : dir( VNULL2 ), startPoint( VNULL2 ), finishPoint( VNULL2 ), curPoint( VNULL2 ), nTileSize( -1 )
 	{
 	}
+
 	CStandartDirPath( const CVec2 &startPoint, const CVec2 &dir, const CVec2 &finishPoint, const int nTileSize );
 	CStandartDirPath( const CVec2 &startPoint, const CVec2 &finishPoint, const int nTileSize );
 
 	virtual bool IsFinished() const;
 
-	virtual const CVec2 &GetStartPoint() const { return startPoint; }
-	virtual const CVec2 &GetFinishPoint() const { return finishPoint; };
+	virtual const CVec2 &GetStartPoint() const
+	{
+		return startPoint;
+	}
+
+	virtual const CVec2 &GetFinishPoint() const
+	{
+		return finishPoint;
+	};
 
 	virtual const CVec2 PeekPoint( const int nShift ) const;
 	virtual void Shift( const int nShift );
@@ -48,8 +56,20 @@ public:
 
 	virtual void InsertTiles( const std::list<SVector> &tiles ) {};
 
-	virtual const bool CanGoBackward( const CBasePathUnit *pUnit ) const { return pUnit->CanGoBackward(); }
-	virtual const bool ShouldCheckTurn() const { return false; }
-	virtual const bool CanBuildComplexTurn() const { return false; }
+	virtual const bool CanGoBackward( const CBasePathUnit *pUnit ) const
+	{
+		return pUnit->CanGoBackward();
+	}
+
+	virtual const bool ShouldCheckTurn() const
+	{
+		return false;
+	}
+
+	virtual const bool CanBuildComplexTurn() const
+	{
+		return false;
+	}
+
 	virtual void MarkPath( const int nID, const NDebugInfo::EColor color ) const;
 };

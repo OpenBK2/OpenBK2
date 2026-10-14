@@ -34,11 +34,13 @@ public:
 	CLogStream &operator<<( const char *szText );
 	CLogStream &operator<<( const wchar_t *szText );
 	CLogStream &operator<<( const std::wstring &szText );
+
 	CLogStream &operator<<( const std::string &szText )
 	{
 		operator<<( szText.c_str() );
 		return *this;
 	}
+
 	CLogStream &operator<<( const EConsoleColor &eColor );
 
 	CLogStream &operator<<( CLogStream &( *Func )( CLogStream &csStream ) );

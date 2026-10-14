@@ -10,6 +10,7 @@
 // CWindow message handlers
 
 IMPLEMENT_HANDLE_MAP( CWindow )
+
 IMPLEMENT_MESSAGE_HANDLER( CWindow, ShowWindow )
 {
 	CWindow *pChild = dynamic_cast<CWindow *>( GetChild( msg.szParam, false ) );

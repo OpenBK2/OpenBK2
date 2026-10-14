@@ -30,4 +30,4 @@ SYSTEM_EXPORT void Write( const char *szCategory, const std::string &szWhat );
 //! Separate from Write so that the resource hooks, which live in a template in
 //! a header, do not drag a formatting library in behind them.
 SYSTEM_EXPORT void WriteResource( const char *szWhat, const char *szResName, const int nID );
-}
+} // namespace NAsyncTrace

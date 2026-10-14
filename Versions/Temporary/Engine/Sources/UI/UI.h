@@ -24,7 +24,8 @@ namespace NGScene
 {
 class I2DGameView;
 class IGameView;
-}
+} // namespace NGScene
+
 namespace NDb
 {
 struct SUIStateBase;
@@ -38,7 +39,7 @@ struct SUIStateSequence;
 struct SText;
 struct STexture;
 struct SBackground;
-}
+} // namespace NDb
 
 enum EWindowPlacementFlags
 {
@@ -83,6 +84,7 @@ struct IUIInitialization : public CObjectBase
 	virtual void Set2DGameView( NGScene::I2DGameView *pView ) = 0;
 	virtual int operator&( IBinSaver &saver ) = 0;
 };
+
 UI_EXPORT IUIInitialization *CreateUIInitialization();
 
 // UI operates in fixed resolution. to draw on screen it cals these functions.
@@ -147,6 +149,7 @@ public:
 	CParam<std::string> szParam;
 	CParam<int> nForwardParam;
 	CParam<int> nBackParam;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &vOffset );
@@ -211,8 +214,10 @@ struct IWindow : virtual public CObjectBase
 	virtual bool IsPointInsideOfChildren( const CVec2 &vPoint ) = 0;
 	// DRAWING
 	virtual void Visit( struct IUIVisitor *pVisitor ) = 0;
+
 	// dynamic behaviour
 	virtual void Segment( const int timeDiff ) {}
+
 	//enabled / disabled
 	virtual void Enable( const bool bEnable ) = 0;
 	virtual bool IsEnabled() const = 0;
@@ -228,17 +233,25 @@ struct IWindow : virtual public CObjectBase
 	virtual void SetPlacement( const CTRect<int> &rc, const uint32_t flags ) = 0;
 	//
 	virtual bool IsInside( const CVec2 &vPos ) const = 0;
+
 	//
 	virtual const std::wstring &GetDBTooltipStr() const
 	{
 		static std::wstring wszEmpty;
 		return wszEmpty;
 	} // old function, need to be removed
+
 	virtual void SetTooltip( const std::wstring &wszTooltip ) {};
 	virtual void SetTooltipIDForMLHandler( int nID ) = 0;
 	virtual int GetTooltipIDForMLHandler() const = 0;
+
 	virtual void SetTooltip( IWindow *pTooltipWindow ) {}
-	virtual IWindow *DemandTooltip() { return 0; }
+
+	virtual IWindow *DemandTooltip()
+	{
+		return 0;
+	}
+
 	//
 	virtual void AddChild( IWindow *pWnd, bool bDoReposition = false ) = 0;
 	virtual int GetNumChildren() = 0;
@@ -252,7 +265,9 @@ struct IWindow : virtual public CObjectBase
 	// after window being created, it must be initialized with data
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc ) = 0;
 	virtual void RegisterObservers() = 0;
+
 	virtual void SetOutline( const CDBID &outlineType = CDBID() ) {}
+
 	virtual void SetTextString( const std::wstring &szText ) = 0;
 	virtual const wchar_t *GetTextString() const = 0;
 	virtual std::wstring GetDBText() const = 0;
@@ -264,13 +279,18 @@ struct IWindow : virtual public CObjectBase
 	virtual CTRect<float> GetWindowRect() const = 0;
 	virtual IWindow *GetParentWindow() const = 0;
 	virtual struct IScreen *GetScreen() = 0;
+
 	// Text follows its owning screen even while another screen has focus.
-	virtual bool UsesHudFontScale() const { return false; }
+	virtual bool UsesHudFontScale() const
+	{
+		return false;
+	}
 	virtual const struct NDb::SWindowShared *GetSharedDesc() const = 0;
 	virtual void RemoveChild( IWindow *_pChild ) = 0;
 	virtual IWindow *GetChild( const int _nTypeID, const int _nID, const bool bRecursive = false ) = 0;
 	virtual const std::string &GetName() const = 0;
 	virtual void SetName( const std::string &szName ) = 0;
+
 	// must be called after load from binary file
 	virtual void AfterLoad() {}
 
@@ -279,6 +299,7 @@ struct IWindow : virtual public CObjectBase
 
 	// fade entire control, fValue[0..1]
 	virtual void SetFadeValue( float fValue ) = 0;
+
 	virtual void SetBackground( struct IWindowPart *_pBackground ) {}
 };
 
@@ -286,6 +307,7 @@ struct IWindow : virtual public CObjectBase
 struct IConsole : virtual public IWindow
 {
 };
+
 // console strings (add to bottom, scroll automatically to the top)
 struct IConsoleOutput : virtual public IWindow
 {
@@ -334,6 +356,7 @@ struct IButton : virtual public IWindow
 	// Returns state index or -1
 	virtual int GetState( const std::string &szName ) = 0;
 };
+
 // edit line
 struct IEditLine : virtual public IWindow
 {
@@ -342,6 +365,7 @@ struct IEditLine : virtual public IWindow
 	virtual void SetSelection( const int nBegin, const int nEnd ) = 0;
 	virtual const wchar_t *GetText() const = 0;
 };
+
 // window that has text must support this
 struct ITextView : virtual public IWindow
 {
@@ -385,9 +409,21 @@ struct ISlider : virtual public IWindow
 struct IProgrammedReactionsAndChecks : virtual public CObjectBase
 {
 	//{ for compatibility with old sources
-	virtual bool NeedFlags() const { return false; }
-	virtual bool Execute( const std::string &szSender, const std::string &szReaction ) { return false; }
-	virtual int Check( const std::string &szCheckName ) const { return 0; }
+	virtual bool NeedFlags() const
+	{
+		return false;
+	}
+
+	virtual bool Execute( const std::string &szSender, const std::string &szReaction )
+	{
+		return false;
+	}
+
+	virtual int Check( const std::string &szCheckName ) const
+	{
+		return 0;
+	}
+
 	//}
 
 	// new method, use it in new code
@@ -395,7 +431,11 @@ struct IProgrammedReactionsAndChecks : virtual public CObjectBase
 	{
 		return false;
 	}
-	virtual int Check( const std::string &szCheckName, uint16_t wKeyboardFlags ) const { return 0; }
+
+	virtual int Check( const std::string &szCheckName, uint16_t wKeyboardFlags ) const
+	{
+		return 0;
+	}
 };
 
 // specific screen funcitonality
@@ -502,6 +542,7 @@ struct IMultiTextureProgressBar : virtual public IWindow
 	virtual void GetPositions( std::vector<float> *pPositions ) const = 0;
 	virtual void SetPositions( const std::vector<float> &positions, bool bSolid ) = 0;
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct ITooltip : virtual public IWindow
 {
@@ -550,19 +591,27 @@ struct IUIEffector : public CObjectBase
 struct IWindowPart : public CObjectBase
 {
 	virtual void SetFontScaleWindow( IWindow *pWindow ) {}
+
 	virtual void Visit( struct IUIVisitor *pVisitor ) = 0;
 
 	// notify background about window position and size change
 	virtual void SetPos( const CVec2 &vPos, const CVec2 &vSize ) = 0;
-	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc ) { NI_ASSERT( false, "" ); }
+
+	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc )
+	{
+		NI_ASSERT( false, "" );
+	}
+
 	virtual void SetTexture( const struct NDb::STexture *_pDesc )
 	{
 		NI_ASSERT( 0, "SetTexture works only with BackgroundSimpleTexture or BackgroundSimpleScalingTexture!!!" );
 	}
+
 	virtual void SetOutline( const CDBID &outlineType )
 	{
 		NI_ASSERT( 0, "OutLine works only with BackgroundSimpleTexture!!!" );
 	}
+
 	virtual void Init() = 0;
 
 	virtual void SetFadeValue( float fValue ) = 0;
@@ -622,6 +671,7 @@ struct IDebugSingleton : public CObjectBase
 	virtual struct IStatsSystemWindow *GetStatsWindow() = 0;
 	virtual int operator&( IBinSaver &saver ) = 0;
 };
+
 UI_EXPORT IDebugSingleton *CreateDebugSingleton();
 
 struct IPlayer : virtual public IWindow

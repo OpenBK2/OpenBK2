@@ -21,6 +21,7 @@ static void SetModeFromConfig()
 {
 	//bShowLuaLog = NGlobal::GetVar( "lua_showlog", 0.0f );
 }
+
 static std::string luaOutUserData( void *pData, bool bWriteToConsole = true );
 
 static void
@@ -145,6 +146,7 @@ static std::string IToA( int n )
 {
 	return std::to_string( n );
 }
+
 static std::string IToA( float f )
 {
 	char buf[128];
@@ -308,6 +310,7 @@ void luaMakeCallParamsVector( char *szParams, va_list *pL, std::vector<CObj<CLUA
 }
 
 static const int N_NO_TOP = -0xFFF;
+
 //
 static bool
 luaPushCallParameters( const std::string &szName, const std::vector<CObj<CLUACallParam>> &params, lua_State *pState )
@@ -474,7 +477,8 @@ void luaCreateCPtrVar( const std::string &szVarName, CObjectBase *pObj )
 START_REGISTER( Script )
 ////
 FINISH_REGISTER
-}
+} // namespace NScript
+
 //
 using namespace NScript;
 REGISTER_SAVELOAD_CLASS( SCRIPT, 0x11061442, CLUACallParam )

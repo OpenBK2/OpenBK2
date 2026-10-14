@@ -10,30 +10,37 @@ EUnitRPGType GetMainType( EUnitRPGType type )
 {
 	return EUnitRPGType( type & 0xffff0000 );
 }
+
 bool IsInfantry( EUnitRPGType type )
 {
 	return ( type & RPG_TYPE_INFANTRY ) != 0;
 }
+
 bool IsTransport( EUnitRPGType type )
 {
 	return ( type & RPG_TYPE_TRANSPORT ) != 0;
 }
+
 bool IsArtillery( EUnitRPGType type )
 {
 	return ( type & RPG_TYPE_ARTILLERY ) != 0;
 }
+
 bool IsSPG( EUnitRPGType type )
 {
 	return ( type & RPG_TYPE_SPG ) != 0;
 }
+
 bool IsArmor( EUnitRPGType type )
 {
 	return ( type & RPG_TYPE_ARMOR ) != 0;
 }
+
 bool IsAviation( EUnitRPGType type )
 {
 	return ( type & RPG_TYPE_AVIATION ) != 0;
 }
+
 bool IsTrain( EUnitRPGType type )
 {
 	return ( type & RPG_TYPE_TRAIN ) != 0;
@@ -125,6 +132,7 @@ enum EUnitRPGType ReMapRPGType( enum EDBUnitRPGType eType )
 	NI_ASSERT( false, fmt::format( "wrong type {}", int( eType ) ) );
 	return RPG_TYPE_INFANTRY;
 };
+
 const EUnitRPGClass GetRPGClass( const EUnitRPGType eType )
 {
 	switch ( eType )
@@ -150,4 +158,4 @@ const EUnitRPGClass GetRPGClass( const EUnitRPGType eType )
 	}
 	return RPG_CLASS_UNKNOWN;
 }
-}
+} // namespace NDb

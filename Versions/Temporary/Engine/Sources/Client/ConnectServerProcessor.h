@@ -27,10 +27,12 @@ class CConnectServerProcessor : public CPacketProcessor
 		ECT_REGISTER,
 		ECT_FORGOT_PASSWORD
 	};
+
 	EConnectType eConnectType;
 
 public:
 	CConnectServerProcessor() : eConnectState( ECS_INACTIVE ) {}
+
 	CConnectServerProcessor( class CNet *pServer, bool bCheckConnect );
 
 	bool Segment();

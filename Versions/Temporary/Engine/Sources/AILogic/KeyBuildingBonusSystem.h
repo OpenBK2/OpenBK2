@@ -29,5 +29,8 @@ public:
 
 	void SendUpdates() const;
 
-	void Clear() { buildingBonuses.clear(); }
+	void Clear()
+	{
+		buildingBonuses.clear();
+	}
 };

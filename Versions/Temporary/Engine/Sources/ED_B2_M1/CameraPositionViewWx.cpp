@@ -40,9 +40,15 @@ class CCameraPositionWxWindow : public CWxHostWindow, public CCameraPositionComm
 	bool bIsDataSetting = false;
 
 public:
-	CCameraPositionWxWindow() { Singleton<ICommandHandlerContainer>()->Set( CHID_CAMERA_POSITION_WINDOW, this ); }
+	CCameraPositionWxWindow()
+	{
+		Singleton<ICommandHandlerContainer>()->Set( CHID_CAMERA_POSITION_WINDOW, this );
+	}
 
-	virtual ~CCameraPositionWxWindow() { Singleton<ICommandHandlerContainer>()->Remove( CHID_CAMERA_POSITION_WINDOW ); }
+	virtual ~CCameraPositionWxWindow()
+	{
+		Singleton<ICommandHandlerContainer>()->Remove( CHID_CAMERA_POSITION_WINDOW );
+	}
 
 	bool Build( IWidget *pParent )
 	{
@@ -139,7 +145,10 @@ public:
 	}
 
 private:
-	int PlayerAt( unsigned nPos ) const { return (int)reinterpret_cast<uintptr_t>( pPlayers->GetClientData( nPos ) ); }
+	int PlayerAt( unsigned nPos ) const
+	{
+		return (int)reinterpret_cast<uintptr_t>( pPlayers->GetClientData( nPos ) );
+	}
 
 	// The same three commands the MFC palette posts, to the same state.
 	void OnPlayerChanged( wxCommandEvent & )
@@ -164,7 +173,7 @@ private:
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_STATE, ID_CPW_PARAM_TYPE_CHANGED, 0 );
 	}
 };
-}
+} // namespace
 
 namespace NCameraPositionView
 {
@@ -186,4 +195,4 @@ IWidget *Create( CPaletteList *pPalettes, IWidget *pPage )
 	}
 	return pWindow;
 }
-}
+} // namespace NCameraPositionView

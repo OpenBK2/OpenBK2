@@ -22,7 +22,7 @@ std::string ToUTF8( const wxString &rText )
 {
 	return std::string( rText.utf8_str() );
 }
-}
+} // namespace
 
 namespace NFileDialog
 {
@@ -76,4 +76,4 @@ bool ChooseFolder( IWidget *pOwner,
 	( *pszPath ) = ToUTF8( dialog.GetPath() );
 	return true;
 }
-}
+} // namespace NFileDialog

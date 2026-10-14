@@ -114,7 +114,7 @@ void CopyValues( IManipulator *pManipulator, const std::vector<std::string> &rNa
 // PasteSelection: every copied value whose field rShown says the view shows,
 // as one controller on the undo list. False when nothing had been copied.
 bool PasteValues( CDefaultView *pView, const std::function<bool( const std::string & )> &rShown );
-}
+} // namespace NPropertyPane
 
 class wxWindow;
 class wxStaticText;
@@ -163,4 +163,4 @@ IGrid *CreateGridWx( wxWindow *pParent, wxStaticText *pStatus, IWidget *pOwner, 
 // and must outlive the contents. Owned by the caller; null on failure.
 IPropertyPane *
 CreateWxIn( wxWindow *pParent, IWidget *pOwner, const std::string &rszOptionsLabel, wxWindow **ppWindow );
-}
+} // namespace NPropertyPane

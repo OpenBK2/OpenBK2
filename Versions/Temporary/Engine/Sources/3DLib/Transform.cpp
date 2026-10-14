@@ -421,6 +421,7 @@ inline float Dot( const CVec4 &a, const CVec4 &b )
 {
 	return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 }
+
 inline float Dot( const CVec3 &a, const CVec4 &b )
 {
 	return a.x * b.x + a.y * b.y + a.z * b.z + b.w;
@@ -455,6 +456,7 @@ static float CalcScale( const CVec4 &vTrans )
 {
 	return sqrt( sqr( vTrans.x ) + sqr( vTrans.y ) + sqr( vTrans.z ) );
 }
+
 bool CTransformStack::GetCoverRect( CTRect<float> *pRes, const CVec3 &_ptCenter, float fRadius )
 {
 	CVec4 ptCenter;
@@ -641,30 +643,48 @@ bool CTransformStack::CheckSphere( const CVec4 &ptCenter, float fRadius, bool *p
 
 static CVec3 ptPolygon[128];
 static int nUnusedVertex;
+
 struct SClipPolygon
 {
 	int n[128];
 	int nSize;
+
 	SClipPolygon() : nSize( 0 ) {}
+
 	void push_back( int _n )
 	{
 		ASSERT( nSize < 128 );
 		n[nSize++] = _n;
 	}
-	int size() const { return nSize; }
+
+	int size() const
+	{
+		return nSize;
+	}
+
 	int &operator[]( int i )
 	{
 		ASSERT( i >= 0 && i < nSize );
 		return n[i];
 	}
+
 	int operator[]( int i ) const
 	{
 		ASSERT( i >= 0 && i < nSize );
 		return n[i];
 	}
-	void resize( int n ) { nSize = n; }
-	bool empty() const { return nSize == 0; }
+
+	void resize( int n )
+	{
+		nSize = n;
+	}
+
+	bool empty() const
+	{
+		return nSize == 0;
+	}
 };
+
 static bool ClipPolygon( const SClipPolygon &pts, const CVec4 &plane, SClipPolygon *pRes )
 {
 	float fRes[128];
@@ -703,6 +723,7 @@ static bool ClipPolygon( const SClipPolygon &pts, const CVec4 &plane, SClipPolyg
 	}
 	return !pRes->empty();
 }
+
 static int nPolygonIndices[6][4] = {
 	{ 3, 2, 1, 0 },
 	{ 4, 5, 6, 7 },

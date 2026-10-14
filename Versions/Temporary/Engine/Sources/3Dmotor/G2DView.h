@@ -7,10 +7,12 @@
 #include "GRenderModes.h"
 
 class CRectLayout;
+
 namespace NGfx
 {
 class CTexture;
 }
+
 namespace NDb
 {
 struct STexture;
@@ -65,4 +67,4 @@ void SetShowSceneInfo( bool bShow );
 _3DMOTOR_EXPORT void Flip();
 _3DMOTOR_EXPORT void ClearScreen( const CVec3 &vColor );
 
-}
+} // namespace NGScene

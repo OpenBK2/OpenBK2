@@ -8,8 +8,13 @@ class CObjectSet : public CObjectBase
 {
 public:
 	std::vector<CObj<T>> parts;
+
 	//
-	void AddPart( T *pPart ) { parts.push_back( pPart ); }
+	void AddPart( T *pPart )
+	{
+		parts.push_back( pPart );
+	}
+
 	int operator&( CStructureSaver &f )
 	{
 		f.Add( 1, &parts );
@@ -23,6 +28,7 @@ class CRenderNode : public CObjectSet<CObjectBase>
 
 public:
 	ZDATA_( CObjectSet<CObjectBase> )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CObjectSet<CObjectBase> *)this );

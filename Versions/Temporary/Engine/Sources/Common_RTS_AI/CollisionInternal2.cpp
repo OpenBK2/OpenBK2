@@ -165,8 +165,14 @@ struct SCheckRect : public SIterateUnitsCallback
 	SRect unitRect;
 	// Defensive defaults preserve explicit constructor values below.
 	int nSkipID = 0;
-	SCheckRect() : nSkipID( -1 ) { unitRect.InitRect( VNULL2, VNULL2, VNULL2, VNULL2 ); }
+
+	SCheckRect() : nSkipID( -1 )
+	{
+		unitRect.InitRect( VNULL2, VNULL2, VNULL2, VNULL2 );
+	}
+
 	SCheckRect( const SRect &_unitRect, const int _nSkipID ) : nSkipID( _nSkipID ), unitRect( _unitRect ) {}
+
 	bool Iterate( CBasePathUnit *pCand ) const
 	{
 		if ( pCand->GetUniqueID() == nSkipID )
@@ -291,6 +297,7 @@ struct SFindCandidates : public SIterateUnitsCallback
 	ICollisionsCollector *pCollisionsCollector = nullptr;
 
 	SFindCandidates() : pUnit( 0 ), pCollisionsCollector( 0 ) {}
+
 	SFindCandidates( CBasePathUnit *_pUnit, ICollisionsCollector *_pCollisionsCollector )
 			: pUnit( _pUnit ), pCollisionsCollector( _pCollisionsCollector )
 	{
@@ -440,8 +447,11 @@ void CStopCollision::Segment( const NTimer::STime timeDiff )
 struct SSortCollisions
 {
 	CPtr<CCollisionsCollector> pCollector;
+
 	SSortCollisions() : pCollector( 0 ) {}
+
 	SSortCollisions( CCollisionsCollector *_pCollector ) : pCollector( _pCollector ) {}
+
 	const bool operator()( const int nIndex1, const int nIndex2 )
 	{
 		CCollisionsCollector::TCollisions::const_iterator pos1 = pCollector->collisions.find( nIndex1 );

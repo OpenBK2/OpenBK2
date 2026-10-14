@@ -2,6 +2,7 @@
 #include "3DLib/Transform.h"
 #include "GRenderExecute.h"
 #include "GLightPerVertex.h"
+
 namespace NGScene
 {
 
@@ -9,7 +10,11 @@ class ILight : public CVersioningBase
 {
 public:
 	//virtual int GetPriority() const = 0;
-	virtual bool CheckCulling( CTransformStack *pTS ) { return true; }
+	virtual bool CheckCulling( CTransformStack *pTS )
+	{
+		return true;
+	}
+
 	virtual void AddToState( SPerVertexLightState *pRes ) = 0;
 };
 
@@ -17,7 +22,9 @@ class CDirectionalLight : public ILight
 {
 	OBJECT_BASIC_METHODS( CDirectionalLight );
 	virtual bool NeedUpdate();
+
 	virtual void Recalc() {}
+
 	ZDATA
 	CDGPtr<CFuncBase<CVec3>> pColor;
 	CDGPtr<CFuncBase<CVec3>> pGlossColor;
@@ -35,6 +42,7 @@ class CDirectionalLight : public ILight
 	float fShadowsMaxDetailLength;
 	ZSKIP
 	CVec3 vDymanicLightsModification;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pColor );
@@ -54,10 +62,12 @@ class CDirectionalLight : public ILight
 		f.Add( 18, &vDymanicLightsModification );
 		return 0;
 	}
+
 	int nVersionID;
 
 public:
 	CDirectionalLight() : nVersionID( 0 ) {}
+
 	CDirectionalLight( CFuncBase<CVec3> *pColor,
 	                   CFuncBase<CVec3> *pGlossColor,
 	                   const CVec3 &_vLightDir,
@@ -72,15 +82,41 @@ public:
 	                   const CVec3 &_vDymanicLightsModification );
 	void AddToState( SPerVertexLightState *pRes );
 	void PrepareLightInfo( SLightInfo *pLightInfo );
-	const CVec3 &GetLightDir() const { return vLightDir; }
-	const CVec3 &GetShadowsLightDir() const { return vShadowsLightDir; }
-	const CVec4 &GetDepth() const { return vDepth; }
-	float GetMaxHeight() const { return fMaxHeight; }
+
+	const CVec3 &GetLightDir() const
+	{
+		return vLightDir;
+	}
+
+	const CVec3 &GetShadowsLightDir() const
+	{
+		return vShadowsLightDir;
+	}
+
+	const CVec4 &GetDepth() const
+	{
+		return vDepth;
+	}
+
+	float GetMaxHeight() const
+	{
+		return fMaxHeight;
+	}
+
 	float GetSmoothedSceneHeight( float f );
-	SShadowMatrixAlign &GetShadowMatrixAlign() { return shadowAlign; }
+
+	SShadowMatrixAlign &GetShadowMatrixAlign()
+	{
+		return shadowAlign;
+	}
+
 	NGfx::CTexture *GetCloudsTexture();
 	void CalcCloudProjection( SHMatrix *pRes );
-	float GetShadowsMDLength() const { return fShadowsMaxDetailLength; }
+
+	float GetShadowsMDLength() const
+	{
+		return fShadowsMaxDetailLength;
+	}
 };
 
 class CPointLight : public ILight
@@ -92,6 +128,7 @@ class CPointLight : public ILight
 	float fRadius;
 	CTransformStack sTransform;
 	CVec3 vColor;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &sBound );
@@ -101,6 +138,7 @@ class CPointLight : public ILight
 		f.Add( 6, &vColor );
 		return 0;
 	}
+
 	int nThisPointLightID;
 
 public:
@@ -111,12 +149,14 @@ public:
 };
 
 class CAnimLight;
+
 class CDynamicPointLight : public ILight
 {
 	OBJECT_BASIC_METHODS( CDynamicPointLight );
 	ZDATA
 	CDGPtr<CPtrFuncBase<CAnimLight>> pLight;
 	bool bIsOn;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pLight );
@@ -126,10 +166,16 @@ class CDynamicPointLight : public ILight
 
 public:
 	CDynamicPointLight() : bIsOn( true ) {}
+
 	CDynamicPointLight( CPtrFuncBase<CAnimLight> *_p ) : pLight( _p ), bIsOn( true ) {}
+
 	virtual bool CheckCulling( CTransformStack *pTS );
 	void AddToState( SPerVertexLightState *pRes );
-	void SwitchLight( bool bMode ) { bIsOn = bMode; }
+
+	void SwitchLight( bool bMode )
+	{
+		bIsOn = bMode;
+	}
 };
 
 class CLightStateNode : public CFuncBase<SPerVertexLightState>
@@ -140,6 +186,7 @@ class CLightStateNode : public CFuncBase<SPerVertexLightState>
 	std::vector<CPtr<ILight>> lights, dynamicLights;
 	bool bForceRecalc;
 	bool bSmthHasChanged;
+
 	ZONSERIALIZE
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -151,9 +198,13 @@ class CLightStateNode : public CFuncBase<SPerVertexLightState>
 		OnSerialize( f );
 		return 0;
 	}
+
 	CTransformStack tsClip;
 
-	void OnSerialize( IBinSaver &f ) { f.Add( 200, &value ); }
+	void OnSerialize( IBinSaver &f )
+	{
+		f.Add( 200, &value );
+	}
 
 protected:
 	virtual bool NeedUpdate();
@@ -161,14 +212,20 @@ protected:
 
 public:
 	CLightStateNode() : bForceRecalc( false ) {}
+
 	//
 	void SetWarFogBlend( float fBlend );
 	void SetWarFog( const CArray2D<unsigned char> &fog, float fScale );
 	void SetDirectional( CDirectionalLight *p );
 	void AddPointLight( CPointLight *p );
 	void AddPointLight( CDynamicPointLight *p );
-	CDirectionalLight *GetDirectional() const { return pDirectionalLight; }
+
+	CDirectionalLight *GetDirectional() const
+	{
+		return pDirectionalLight;
+	}
+
 	void SetClipTS( const CTransformStack &_ts );
 };
 
-}
+} // namespace NGScene

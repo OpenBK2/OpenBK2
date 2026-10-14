@@ -40,12 +40,17 @@ class CBridgeState : public CMapObjectState
 		NI_ASSERT( pParentState != 0, fmt::format( "CBridgeState(): pParentState == 0" ) );
 		ClearData();
 	}
+
 	//
 	bool CanAddBridge();
 
 protected:
 	// CMapObjectState
-	bool IsDrawSceneDrawTool() { return true; }
+	bool IsDrawSceneDrawTool()
+	{
+		return true;
+	}
+
 	//
 	void InsertObjectEnter();
 	void InsertObjectLeave();

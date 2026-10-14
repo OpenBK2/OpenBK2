@@ -17,6 +17,7 @@ class CInterfaceMissionBriefing : public CInterfaceScreenBase, public IProgramme
 		CPtr<IWindow> pWnd;
 		CPtr<ITextView> pNameView;
 		std::vector<CVec2> mapPositions;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pWnd );
@@ -46,6 +47,7 @@ class CInterfaceMissionBriefing : public CInterfaceScreenBase, public IProgramme
 					CPtr<ITextView>
 							pHeaderView;
 	CPtr<ITextView> pObjectivesView;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );

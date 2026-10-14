@@ -10,8 +10,10 @@ class CVisDynamicDebrisPatch : public CPtrFuncBase<NGScene::CObjectInfo>
 
 public:
 	CVisDynamicDebrisPatch() {}
+
 	CVisDynamicDebrisPatch( const NMeshData::SMeshDataTex2 &_data ) : data( _data ) {}
 };
+
 typedef NMeshData::SPatchHolder<CVisDynamicDebrisPatch> CVisDynamicDebrisPatchHolder;
 
 class CDynamicDebrisManager
@@ -22,6 +24,11 @@ class CDynamicDebrisManager
 public:
 	//
 	CDynamicDebrisManager() {}
-	void AttachGameView( NGScene::IGameView *_pGScene ) { pGScene = _pGScene; }
+
+	void AttachGameView( NGScene::IGameView *_pGScene )
+	{
+		pGScene = _pGScene;
+	}
+
 	void AddDynamicDebris( const NMeshData::SMeshDataTex2 &debrisData, const NDb::SMaterial *pMaterial );
 };

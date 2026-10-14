@@ -31,6 +31,7 @@ struct IConsoleBuffer : public CObjectBase
 		bool bPersistent = false;
 		std::wstring szText;
 		uint32_t dwColor = 0;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nStream );
@@ -41,6 +42,7 @@ struct IConsoleBuffer : public CObjectBase
 			return 0;
 		}
 	};
+
 	// write string to console's stream
 	virtual void Write( const int nStreamID,
 	                    const std::wstring &szString,
@@ -65,6 +67,7 @@ enum
 	PIPE_A7_MULTIPLAYER_CHECK = 7,
 	PIPE_CHAT = 4, // chat string
 };
+
 // bPersistentMsg - if pipe dump to console is enabled this parameter will be forwarded to console
 SYSTEM_EXPORT void
 WriteToPipe( int nPipe, const std::string &sz, uint32_t dwColor = 0xffffffff, bool bPersistentMsg = false );

@@ -39,6 +39,7 @@ inline void Clear( CSymString *p )
 		*p = "?";
 	}
 }
+
 bool CSymEngine::GetSymbol(
 		uint32_t dwAddress, CSymString *pszModule, CSymString *pszFile, int *pnLine, CSymString *pszFunc )
 {
@@ -107,6 +108,7 @@ static void Assign( ADDRESS64 *pRes, uint32_t dwSeg, DWORD64 dwOffset )
 	pRes->Offset = dwOffset;
 	pRes->Segment = 0; //dwSeg;
 }
+
 int CollectCallStack( EXCEPTION_POINTERS *pExPtrs, SCallStackEntry *pRes, int nMaxEntries )
 {
 	CSymEngine se;

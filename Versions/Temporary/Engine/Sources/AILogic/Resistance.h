@@ -22,7 +22,11 @@ public:
 	}
 
 public:
-	SResistance() { Clear(); }
+	SResistance()
+	{
+		Clear();
+	}
+
 	SResistance( const int _nCellNumber, const float fWeight, int _nWeightExceed )
 			: nCellNumber( _nCellNumber ), nWeight( fWeight * 100 ), nWeightExceed( _nWeightExceed )
 	{
@@ -33,16 +37,43 @@ public:
 		nCellNumber = -1;
 		nWeight = -1.0f;
 	}
-	const float GetWeight() const { return (float)nWeight / 100.0f; }
-	bool IsWeightExceed() const { return nWeightExceed != 0; }
-	const bool IsInitted() const { return nWeight != -1; }
-	const int GetCellNumber() const { return nCellNumber; }
-	const CVec2 GetResistanceCellCenter() const { return GetResistanceCellCenter( nCellNumber ); }
-	void SetWeight( float fWeight ) { nWeight = fWeight * 100; }
+
+	const float GetWeight() const
+	{
+		return (float)nWeight / 100.0f;
+	}
+
+	bool IsWeightExceed() const
+	{
+		return nWeightExceed != 0;
+	}
+
+	const bool IsInitted() const
+	{
+		return nWeight != -1;
+	}
+
+	const int GetCellNumber() const
+	{
+		return nCellNumber;
+	}
+
+	const CVec2 GetResistanceCellCenter() const
+	{
+		return GetResistanceCellCenter( nCellNumber );
+	}
+
+	void SetWeight( float fWeight )
+	{
+		nWeight = fWeight * 100;
+	}
 
 	static const CVec2 GetResistanceCellCenter( const int nCell );
 
-	bool operator==( const SResistance &res ) const { return nCellNumber == res.nCellNumber; }
+	bool operator==( const SResistance &res ) const
+	{
+		return nCellNumber == res.nCellNumber;
+	}
 };
 
 struct SResistanceCmp
@@ -69,11 +100,13 @@ class CResistancesContainer
 		bool bAllowShoot = {};  // shooting to the cell is allowed
 
 		SSellInfo() : fCellWeight( 0.0f ), bInUse( false ), bAllowShoot( true ) {}
+
 		SSellInfo( const float _fCellWeight, const bool _bInUse, const bool _bAllowShoot )
 				: fCellWeight( _fCellWeight ), bInUse( _bInUse ), bAllowShoot( _bAllowShoot )
 		{
 		}
 	};
+
 	typedef det_map<int, SSellInfo> CCellsWeights;
 
 	typedef det_map<int, int> CCellsWithGoodWeight;
@@ -94,12 +127,14 @@ public:
 		f.Add( 5, &goodWeight );
 		return 0;
 	}
+
 	class CIter
 	{
 		CResistance::iterator iter;
 		CResistancesContainer *pContainter = {};
 
 		CIter() {}
+
 		void IterateToNotInUse();
 
 	public:
@@ -112,7 +147,12 @@ public:
 		}
 
 		void Iterate();
-		bool IsFinished() const { return iter == pContainter->resistances.end(); }
+
+		bool IsFinished() const
+		{
+			return iter == pContainter->resistances.end();
+		}
+
 		const SResistance &operator*() const
 		{
 			NI_ASSERT( !IsFinished(), "Can't call operator *" );
@@ -142,7 +182,10 @@ public:
 	void UnitDied( CAIUnitInfoForGeneral *pInfo );
 	void UnitChangedParty( CAIUnitInfoForGeneral *pInfo );
 
-	bool IsEmpty() const { return resistances.empty(); }
+	bool IsEmpty() const
+	{
+		return resistances.empty();
+	}
 
 	void SetCellInUse( const int nResistanceCellNumber, bool bInUse );
 	bool IsInUse( const int nResistanceCellNumber );
@@ -154,5 +197,8 @@ public:
 	typedef CIter iterator;
 	friend class CIter;
 
-	iterator begin() { return CIter( this ); }
+	iterator begin()
+	{
+		return CIter( this );
+	}
 };

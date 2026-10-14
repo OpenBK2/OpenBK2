@@ -27,6 +27,7 @@ struct IObjMan;
 #define FS_EXLUDE_SYMBOLS \
 	"*?"                    \
 	"<>|" //subject to remove
+
 //
 
 // ************************************************************************************************************************ //
@@ -48,6 +49,7 @@ struct SPropertyDesc : public SIteratorDesc
 	typedef std::list<std::string> CValuesList;
 	// CRAP{ HASH_SET
 	typedef std::unordered_map<std::string, uint32_t> CTypesMap;
+
 	// CRAP} HASH_SET
 	//value checks flags
 	enum EPropertyCheckType
@@ -108,7 +110,9 @@ struct SPropertyDesc : public SIteratorDesc
 				szEnumName( "Unknown" )
 	{
 	}
+
 	virtual ~SPropertyDesc() {}
+
 	//
 };
 
@@ -151,8 +155,13 @@ struct IManipulator : public CObjectBase
 	virtual bool GetType( const std::string &rszName, std::string *pszType ) const = 0;
 	// get item id by name
 	virtual unsigned GetID( const std::string &rszName ) const = 0;
+
 	// get object DBID
-	virtual CDBID GetDBID() const { return CDBID(); }
+	virtual CDBID GetDBID() const
+	{
+		return CDBID();
+	}
+
 	// get item id by name
 	virtual bool GetName( unsigned nID, std::string *pszName ) const = 0;
 	// add one more element to list

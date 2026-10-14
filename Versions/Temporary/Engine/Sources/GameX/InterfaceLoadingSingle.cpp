@@ -99,6 +99,7 @@ class CInterfaceLoadingBase::CReactions : public IProgrammedReactionsAndChecks
 	ZDATA
 	CPtr<IWindow> pScreen;
 	bool bIsEffectFinished;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pScreen );
@@ -114,9 +115,13 @@ public:
 	//{ IProgrammedReactionsAndChecks
 	bool Execute( const std::string &szSender, const std::string &szReaction );
 	int Check( const std::string &szCheckName ) const;
+
 	//}
 
-	bool IsEffectFinished() const { return bIsEffectFinished; }
+	bool IsEffectFinished() const
+	{
+		return bIsEffectFinished;
+	}
 };
 
 // CInterfaceLoadingBase::CLoadingScene

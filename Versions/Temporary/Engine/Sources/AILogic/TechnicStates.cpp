@@ -139,8 +139,12 @@ bool CMechUnitEntrenchSelfState::CheckTrenches( const CAIUnit *pUnit, const SRec
 
 struct SVectorHash
 {
-	int operator()( const SVector &v ) const { return ( v.x * 65535 ) + v.y; }
+	int operator()( const SVector &v ) const
+	{
+		return ( v.x * 65535 ) + v.y;
+	}
 };
+
 typedef det_map<SVector, bool, SVectorHash> CSVectorHash;
 
 void CMechUnitEntrenchSelfState::GetTilesNextToRect( const SRect &rect, const uint16_t wDirExclude )

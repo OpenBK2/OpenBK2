@@ -26,10 +26,12 @@ class CLIENT_EXPORT CServerClient : public IServerClient
 		bool bBroadcast;
 
 		SPausedGamePacket() : bBroadcast( false ) {}
+
 		SPausedGamePacket( class CNetPacket *_pPacket, bool _bBroadcast ) : pPacket( _pPacket ), bBroadcast( _bBroadcast )
 		{
 		}
 	};
+
 	std::list<SPausedGamePacket> pausedGamePackets;
 	int nTimeOut;
 
@@ -38,6 +40,7 @@ class CLIENT_EXPORT CServerClient : public IServerClient
 
 public:
 	CServerClient() {}
+
 	CServerClient( const char *pServerIPAddress, const int nNetGameVersion, const int nServerPort, const int _nTimeOut );
 	~CServerClient();
 

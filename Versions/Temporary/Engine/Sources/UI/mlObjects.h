@@ -20,4 +20,4 @@ IReflowObject *CreateFontObject( int nFlags,
                                  bool bForceFontSize );
 IReflowObject *CreateMinFontSizeObject( int nSize );
 
-} // NAMESPACE
+} // namespace NML

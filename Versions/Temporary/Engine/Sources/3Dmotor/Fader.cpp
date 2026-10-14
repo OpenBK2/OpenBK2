@@ -29,6 +29,7 @@ class CSimpleFader : public IFader
 	int nStartTime;
 	CPtr<CObjectBase> pOwner;
 	bool bForceWOTimer;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pTimer );
@@ -40,10 +41,15 @@ class CSimpleFader : public IFader
 		f.Add( 9, &bForceWOTimer );
 		return 0;
 	}
+
 	bool bNeedUpdate;
 
 protected:
-	bool NeedUpdate() { return bNeedUpdate && ( !pTimer || pTimer.Refresh() || bForceWOTimer ); }
+	bool NeedUpdate()
+	{
+		return bNeedUpdate && ( !pTimer || pTimer.Refresh() || bForceWOTimer );
+	}
+
 	void Recalc()
 	{
 		if ( pTimer && eFadeType == E_FORCE_HIDE )
@@ -104,6 +110,7 @@ protected:
 			bNeedUpdate = false;
 		}
 	}
+
 	void SetStartTime( STime t )
 	{
 		nStartTime = t;
@@ -125,6 +132,7 @@ public:
 	{
 		value = 1;
 	}
+
 	//
 	CSimpleFader( EFadeType _eFadeType, int _nStartTime, float _fLatency, CObjectBase *_pOwner )
 			: expFader( _fLatency, _fLatency, _eFadeType == E_FADE_TO_WHITE ? 0 : 1 ), eFadeType( _eFadeType ),
@@ -133,6 +141,7 @@ public:
 		value = 1;
 		SetStartTime( _nStartTime );
 	}
+
 	//
 	void SetTimer( CFuncBase<STime> *_pTimer )
 	{
@@ -141,6 +150,7 @@ public:
 		SetStartTime( pTimer->GetValue() );
 		bNeedUpdate = true;
 	}
+
 	//
 	void Hide()
 	{
@@ -164,6 +174,7 @@ public:
 			bNeedUpdate = true;
 		}
 	}
+
 	//
 	void Show()
 	{
@@ -187,8 +198,12 @@ public:
 			bNeedUpdate = true;
 		}
 	}
+
 	//
-	CObjectBase *GetOwner() const { return pOwner; }
+	CObjectBase *GetOwner() const
+	{
+		return pOwner;
+	}
 };
 
 IFader *CreateSimpleFader()

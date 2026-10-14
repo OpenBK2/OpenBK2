@@ -14,27 +14,32 @@ inline const TPoint GetPointType( const CVec2 &vec, TPoint *pTargetType )
 {
 	NI_ASSERT( false, "Can convert only to CVec2 and CVec3!" );
 }
+
 template <>
 inline const CVec2 GetPointType<CVec2>( const CVec2 &vec, CVec2 *pVec2 )
 {
 	return vec;
 }
+
 template <>
 inline const CVec3 GetPointType<CVec3>( const CVec2 &vec, CVec3 *pVec3 )
 {
 	return CVec3( vec.x, vec.y, 0.0f );
 }
+
 //
 template <class TPoint>
 inline const TPoint GetPointType( const CVec3 &vec, TPoint *pTargetType )
 {
 	NI_ASSERT( false, "Can convert only to CVec2 and CVec3!" );
 }
+
 template <>
 inline const CVec2 GetPointType<CVec2>( const CVec3 &vec, CVec2 *pVec2 )
 {
 	return CVec2( vec.x, vec.y );
 }
+
 template <>
 inline const CVec3 GetPointType<CVec3>( const CVec3 &vec, CVec3 *pVec3 )
 {
@@ -47,7 +52,9 @@ struct SInRangeFunctional
 {
 	// Defaults cover these geometry helpers; explicit constructor values take precedence.
 	float fRange = 0.0f;
+
 	SInRangeFunctional() : fRange( 0 ) {}
+
 	SInRangeFunctional( float _fRange ) : fRange( _fRange ) {}
 
 	bool operator()( const TElement &rElement1, const TElement &rElement2 ) const
@@ -72,6 +79,7 @@ enum EClassifyEdge
 
 	CE_COUNT = 8,
 };
+
 EXTERNVAR MISC_EXPORT const EClassifyEdge NEGATIVE_CLASSIFY_EDGE[CE_COUNT + 1];
 
 enum EClassifyPolygon
@@ -85,6 +93,7 @@ enum EClassifyPolygon
 
 	CP_COUNT = 5,
 };
+
 EXTERNVAR MISC_EXPORT const EClassifyPolygon NEGATIVE_CLASSIFY_POLYGON[CP_COUNT + 1];
 
 enum EClassifyIntersection
@@ -110,6 +119,7 @@ enum EClassifyRotation
 
 	CR_COUNT = 4,
 };
+
 EXTERNVAR MISC_EXPORT const EClassifyRotation NEGATIVE_CLASSIFY_ROTATION[CR_COUNT + 1];
 
 inline EClassifyEdge GetNegativeClassifyEdge( EClassifyEdge classifyEdge )
@@ -597,6 +607,7 @@ inline CVec2 CreateFromPolarCoord( float r, float a )
 {
 	return CVec2( r * cos( a ), r * sin( a ) );
 }
+
 inline CVec3 CreateFromPolarCoord( float r, float a, float fZ )
 {
 	return CVec3( r * cos( a ), r * sin( a ), fZ );
@@ -657,6 +668,7 @@ inline void RotatePoint( TPoint *pPoint, float a )
 	pPoint->x = ( fX * fCosA ) - ( pPoint->y * fSinA );
 	pPoint->y = ( fX * fSinA ) + ( pPoint->y * fCosA );
 }
+
 template <class TPoint>
 inline void RotatePoint( TPoint *pPoint, float a, const TPoint &rCenterPoint )
 {
@@ -1747,6 +1759,7 @@ struct SModifyTilesFunctional
 	{
 		NI_ASSERT( pLockArray != 0, "Wrong parameter: pLockArray == 0" );
 	}
+
 	bool operator()( int nXIndex, int nYIndex )
 	{
 		( *pLockArray )[nYIndex][nXIndex] = value;
@@ -1767,6 +1780,7 @@ struct SCheckTilesFunctional
 	{
 		NI_ASSERT( pLockArray != 0, "Wrong parameter: pLockArray == 0" );
 	}
+
 	bool operator()( int nXIndex, int nYIndex )
 	{
 		if ( ( *pLockArray )[nYIndex][nXIndex] == value )
@@ -1999,6 +2013,7 @@ bool ApplyTilesInCircle( const CTRect<int> &rRect, //границы примен
 	}
 	return true;
 }
+
 //CRAP}
 
 template <class Type>

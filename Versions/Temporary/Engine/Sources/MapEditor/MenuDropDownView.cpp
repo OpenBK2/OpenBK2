@@ -19,4 +19,4 @@ void Choose( unsigned nCommandID, int nIndex )
 	Singleton<ICommandHandlerContainer>()->HandleCommand(
 			CHID_CONTROLLER_CONTAINER, nCommandID, static_cast<uintptr_t>( nIndex ) );
 }
-}
+} // namespace NMenuDropDown

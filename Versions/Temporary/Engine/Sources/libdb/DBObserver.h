@@ -26,4 +26,4 @@ struct IDbObserver : public CObjectBase
 	virtual void DiscardAllChanges() = 0;
 };
 
-}
+} // namespace NDb

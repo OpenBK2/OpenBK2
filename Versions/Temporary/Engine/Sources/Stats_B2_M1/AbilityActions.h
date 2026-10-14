@@ -10,6 +10,7 @@ struct SSpecialAbilityInfo : public SSuspendedUpdate
 	int nAbilityType = {};     // ability type (NDb::EUnitSpecialAbility)
 	float fCurValue = {};      // value for ability with progress bar
 	SAbilitySwitchState state; // new state for ability
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SSuspendedUpdate *)this );
@@ -30,6 +31,7 @@ private:
 public:
 	ZDATA_( SAIBasicUpdate )
 	SSpecialAbilityInfo info;
+
 ZEND public : int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );

@@ -158,4 +158,4 @@ TEST_F( MPDataChecksum, MapIsHashedOncePerAttemptAndAgainWhenItChanges )
 	pConsts->RecalculateMPDataVersionChecksum();
 	EXPECT_NE( refreshed, pConsts->GetMPDataVersionChecksumWithMap( pFirst ) );
 }
-}
+} // namespace

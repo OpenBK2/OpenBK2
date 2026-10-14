@@ -11,19 +11,23 @@ class CMapInfoStoreInputState : public CStoreInputState
 		CTPoint<int> visTilePos;
 		CTPoint<int> aiTilePos;
 		CTPoint<int> gridPos;
+
 		//
 		SEventInfo() : isValid( false ), vTerrainPos( VNULL3 ), visTilePos( 0, 0 ), aiTilePos( 0, 0 ), gridPos( 0, 0 ) {}
+
 		SEventInfo( const SEventInfo &rTileEventInfo )
 				: SInputStateEventInfo( rTileEventInfo ), isValid( rTileEventInfo.isValid ),
 					vTerrainPos( rTileEventInfo.vTerrainPos ), visTilePos( rTileEventInfo.visTilePos ),
 					aiTilePos( rTileEventInfo.aiTilePos ), gridPos( rTileEventInfo.gridPos )
 		{
 		}
+
 		SEventInfo( const SInputStateEventInfo &rInputStateEventInfo )
 				: SInputStateEventInfo( rInputStateEventInfo ), isValid( false ), vTerrainPos( VNULL3 ), visTilePos( 0, 0 ),
 					aiTilePos( 0, 0 ), gridPos( 0, 0 )
 		{
 		}
+
 		SEventInfo &operator=( const SEventInfo &rTileEventInfo )
 		{
 			if ( &rTileEventInfo != this )
@@ -37,8 +41,13 @@ class CMapInfoStoreInputState : public CStoreInputState
 			}
 			return *this;
 		}
-		inline bool IsValid() { return isValid; }
+
+		inline bool IsValid()
+		{
+			return isValid;
+		}
 	};
+
 	//
 
 protected:
@@ -53,6 +62,7 @@ public:
 	CTPoint<int> visSize;
 
 	CMapInfoStoreInputState() : bFixInvalidPos( false ), visSize( 0, 0 ) {}
+
 	inline void SetSizes( const CTPoint<int> &rVisSize, bool _bFixInvalidPos )
 	{
 		visSize = rVisSize;

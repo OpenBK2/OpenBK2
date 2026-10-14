@@ -192,7 +192,7 @@ SDL_Scancode ScanCode( unsigned nHardwareCode )
 			return SDL_GetScancodeFromKey( gdk_keyval_to_unicode( key ), nullptr );
 	}
 }
-}
+} // namespace
 
 struct CNativeViewport::SImpl
 {

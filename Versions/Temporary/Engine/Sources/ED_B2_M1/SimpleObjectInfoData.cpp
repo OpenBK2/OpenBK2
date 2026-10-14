@@ -282,6 +282,6 @@ bool SSimpleObjectInfo::NeedMakeOrientation( const std::string &rszRPGStatsTypeN
 	}
 	return false;
 }
-};
+}; // namespace NMapInfoEditor
 
 // basement storage

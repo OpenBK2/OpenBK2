@@ -69,9 +69,15 @@ public:
 		pOk->SetFocus();
 	}
 
-	bool WasPlaced() const { return placement.WasPlaced(); }
+	bool WasPlaced() const
+	{
+		return placement.WasPlaced();
+	}
 
-	void SaveState() { placement.Save( this ); }
+	void SaveState()
+	{
+		placement.Save( this );
+	}
 
 	void Store( uint8_t *pData, int nSize ) const
 	{
@@ -83,7 +89,7 @@ public:
 		NBitField::Store( fields, checked, pData, nSize );
 	}
 };
-}
+} // namespace
 
 namespace NBitField
 {
@@ -102,4 +108,4 @@ bool Run( IWidget *pParent, const std::string &rszFieldsFile, uint8_t *pData, in
 	}
 	return bAccepted;
 }
-}
+} // namespace NBitField

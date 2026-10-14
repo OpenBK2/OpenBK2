@@ -13,6 +13,7 @@ int CRegisterEditorsSemiAutoMagic::SUIEditor::operator&( IXmlSaver &xs )
 	xs.Add( "Instance", &szInstance );
 	return 0;
 }
+
 int CRegisterEditorsSemiAutoMagic::operator&( IXmlSaver &xs )
 {
 	xs.Add( "UIEditors", &uiEditors );

@@ -22,7 +22,9 @@ public:
 	std::unordered_set<int> techLevels;
 	std::unordered_set<int> maps;
 	uint64_t nStartTime;
+
 	CLadderClient() {}
+
 	bool CanPlay( int nMapID, int nTechLevel, const CLadderConsts *pConsts );
 };
 
@@ -31,6 +33,7 @@ class CLadderCacheLocker : public CObjectBase
 	OBJECT_NOCOPY_METHODS( CLadderCacheLocker )
 	std::string szNick;
 	CPtr<CClients> pClients;
+
 	CLadderCacheLocker() {}
 
 public:
@@ -61,6 +64,7 @@ struct SLadderGameInfo
 	std::unordered_map<int, int> loseXP;
 	std::unordered_set<int> updatedPlayers;
 	bool bInvalid;
+
 	enum EInvalidReason
 	{
 		OTHER_ERROR = 0,
@@ -73,6 +77,7 @@ struct SLadderGameInfo
 		NEGATIVE_LOST = 7,
 		TOO_MANY_REINFORCEMENTS = 8
 	};
+
 	EInvalidReason eInvalidReason;
 	// for DB logging
 	std::unordered_map<int, int> teamLevels;
@@ -108,22 +113,45 @@ class CLadderLobby : public CGameLobby
 	void SendLadderInfoToPlayer( const int nClientID, const std::string &szClientNick, const bool bFullStatistics );
 
 protected:
-	virtual const int GetLobbyID() const { return ERID_LADDER; }
+	virtual const int GetLobbyID() const
+	{
+		return ERID_LADDER;
+	}
+
 	virtual void ClientEnterToLobby( const int nClientID );
 	virtual void ClientLeaveLobby( const int nClientID );
+
 	virtual void GetLobbyClients( class CGetLobbyClientsPacket *pPacket )
 	{
 		CPtr<CGetLobbyClientsPacket> p = pPacket;
 		return;
 	}
+
 	virtual void GameDead( const int nGameID );
-	virtual bool PlayerCanKickPlayer() const { return false; }
-	virtual bool PlayerCanSeeGamesList() const { return false; }
-	virtual bool PlayerCanUpdateGameInfo() const { return false; }
-	virtual bool PlayerNeedSpecificGameInfo() const { return false; }
+
+	virtual bool PlayerCanKickPlayer() const
+	{
+		return false;
+	}
+
+	virtual bool PlayerCanSeeGamesList() const
+	{
+		return false;
+	}
+
+	virtual bool PlayerCanUpdateGameInfo() const
+	{
+		return false;
+	}
+
+	virtual bool PlayerNeedSpecificGameInfo() const
+	{
+		return false;
+	}
 
 public:
 	CLadderLobby() : CGameLobby() {}
+
 	CLadderLobby( class CClients *_pClients, const std::string &szCfgFile )
 			: CGameLobby( _pClients, szCfgFile ), pClients( _pClients )
 	{

@@ -22,6 +22,11 @@ public:
 	void WriteLog( const std::string &szLog, bool bAppendNL = true );
 	void DumpEntireLog( CDataStream *pOutStream );
 	void SetReferenceChecking( bool bCheck );
-	bool ShouldCheckReferences() const { return bCheckReferences; }
+
+	bool ShouldCheckReferences() const
+	{
+		return bCheckReferences;
+	}
+
 	void Finalize();
 };

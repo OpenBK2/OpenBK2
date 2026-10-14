@@ -255,6 +255,7 @@ CMOUnit::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckMana
 }
 
 #define MIN_DIFFERENCE 0.1f
+
 bool CMOUnit::AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update )
 {
 	NDb::EUnitSpecialAbility eAbility = static_cast<NDb::EUnitSpecialAbility>( update.info.nAbilityType );
@@ -561,6 +562,7 @@ public:
 	const int nDamageLevel = 0;
 
 	SChooseAttachedToDamaged() : nDamageLevel( 0 ) {}
+
 	SChooseAttachedToDamaged( const int _nDamageLevel ) : nDamageLevel( _nDamageLevel ) {}
 
 	virtual const NDb::SVisObj *Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj )

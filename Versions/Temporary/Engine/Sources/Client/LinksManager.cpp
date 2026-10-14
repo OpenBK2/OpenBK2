@@ -25,4 +25,4 @@ void CGameLinksManager::BanAddress( const sockaddr &sockAddr )
 	bannedAddresses.push_back( sockAddr );
 }
 
-}
+} // namespace NNet

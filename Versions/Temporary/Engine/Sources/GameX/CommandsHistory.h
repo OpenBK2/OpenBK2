@@ -49,6 +49,7 @@ struct SReplayCheckSums
 	// things to go looking for. Wrapping is harmless: both sides wrap alike
 	// and only equality is asked.
 	std::vector<uint32_t> rngCalls;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nLightMode );
@@ -65,12 +66,20 @@ struct SReplayCheckSums
 		values.push_back( uValue );
 		rngCalls.push_back( uRngCalls );
 	}
+
 	// A file could carry mismatched lengths; everything reading these should
 	// treat that as no samples rather than index past the shorter one.
-	size_t Size() const { return times.size() == values.size() ? times.size() : 0; }
+	size_t Size() const
+	{
+		return times.size() == values.size() ? times.size() : 0;
+	}
+
 	// Separately, because a replay written before chunk 6 has the samples but
 	// not the counts.
-	bool HasRngCalls() const { return rngCalls.size() == Size() && Size() > 0; }
+	bool HasRngCalls() const
+	{
+		return rngCalls.size() == Size() && Size() > 0;
+	}
 };
 
 struct SMultiplayerReplayInfo
@@ -136,6 +145,7 @@ struct SMultiplayerReplayInfo
 	// sanitizer build is the main thing the harness does, and those two ids
 	// never match however identical the sources are.
 	std::string szConfiguration;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pMap );
@@ -156,12 +166,14 @@ struct SMultiplayerReplayInfo
 		f.Add( 17, &szConfiguration );
 		return 0;
 	}
+
 	SMultiplayerReplayInfo()
 			: nTechLevel( -1 ), nTimeLimit( -1 ), nCaptureTime( -1 ), bUnitExperience( false ), nLastCommandSegment( -1 ),
 				nLastGameSegment( -1 ), nWinningSide( -1 ), bSinglePlayer( false ), nStartKind( 0 ), nDifficulty( 0 ),
 				bIsTutorial( false )
 	{
 	}
+
 	SMultiplayerReplayInfo &operator=( const SMultiplayerReplayInfo &src )
 	{
 		pMap = src.pMap;
@@ -216,6 +228,7 @@ class CCommandsHistory : public ICommandsHistory
 	// Also in the save game, so a mission saved and reloaded does not lose
 	// the samples taken before the save and write a truncated replay.
 	SReplayCheckSums recordedCheckSums;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &loadedHistory );
@@ -248,7 +261,10 @@ public:
 	                 const std::vector<SMPSlot> &slots,
 	                 const int nWinningSide );
 
-	const NDb::SMapInfo *GetMap() const { return replayInfo.pMap; }
+	const NDb::SMapInfo *GetMap() const
+	{
+		return replayInfo.pMap;
+	}
 
 	void AddCommand( const int nSegment, struct IAILogicCommandB2 *pCmd );
 	void ExecuteSegmentCommands( const int nSegment, struct ITransceiver *pTranceiver );
@@ -258,9 +274,22 @@ public:
 	// game time. Returns false once a divergence has been reported, which is
 	// what ICheckSumLog uses to mean "differs from the loaded one".
 	bool VerifyCheckSum( const int nGameTime, const uint32_t uValue );
+
 	// Whether a verification run can claim anything, and what.
-	bool HasCheckSumMismatch() const { return bCheckSumMismatch; }
-	int GetCheckSumsMatched() const { return nCheckSumsMatched; }
-	const unsigned long GetLastChecksum() const { return dwLastCheckSum; }
+	bool HasCheckSumMismatch() const
+	{
+		return bCheckSumMismatch;
+	}
+
+	int GetCheckSumsMatched() const
+	{
+		return nCheckSumsMatched;
+	}
+
+	const unsigned long GetLastChecksum() const
+	{
+		return dwLastCheckSum;
+	}
+
 	CHistory GetCommandsHistory() const;
 };

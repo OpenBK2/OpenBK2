@@ -43,6 +43,7 @@ struct ICombinerVFS : public IVFS
 	virtual const std::vector<CObj<IVFS>> &GetVFSList() const = 0;
 	virtual void SetVFSList( const std::vector<CObj<IVFS>> &vfsList ) = 0;
 };
+
 SYSTEM_EXPORT ICombinerVFS *CreateCombinerVFS( IVFS *pVFS );
 
 struct IFileCreator : public CObjectBase
@@ -53,4 +54,4 @@ struct IFileCreator : public CObjectBase
 	virtual bool RemoveFile( const std::string &szPath ) = 0;
 };
 
-}
+} // namespace NVFS

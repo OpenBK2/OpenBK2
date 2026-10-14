@@ -28,33 +28,78 @@ class CTestLog : public NLog::ILoggerSink, public ILogger
 
 public:
 	std::string messages;
-	ILogger *GetLogger() override { return this; }
-	void Log( ELogOutputType, const std::string &text ) override { messages += text; }
-	void ClearLog() override { messages.clear(); }
+
+	ILogger *GetLogger() override
+	{
+		return this;
+	}
+
+	void Log( ELogOutputType, const std::string &text ) override
+	{
+		messages += text;
+	}
+
+	void ClearLog() override
+	{
+		messages.clear();
+	}
 };
+
 class CTestUserData : public IUserDataContainer
 {
 	OBJECT_NOCOPY_METHODS( CTestUserData );
 
 public:
 	SUserData data;
-	SUserData *Get() override { return &data; }
+
+	SUserData *Get() override
+	{
+		return &data;
+	}
+
 	void Load() override {}
+
 	void Save() override {}
 };
+
 class CTestMod : public IMODContainer
 {
 	OBJECT_NOCOPY_METHODS( CTestMod );
 
 public:
 	std::string folder;
-	bool CanNewMOD() override { return false; }
-	bool CanOpenMOD() override { return false; }
-	bool CanCloseMOD() override { return false; }
-	bool NewMOD() override { return false; }
-	bool OpenMOD() override { return false; }
+
+	bool CanNewMOD() override
+	{
+		return false;
+	}
+
+	bool CanOpenMOD() override
+	{
+		return false;
+	}
+
+	bool CanCloseMOD() override
+	{
+		return false;
+	}
+
+	bool NewMOD() override
+	{
+		return false;
+	}
+
+	bool OpenMOD() override
+	{
+		return false;
+	}
+
 	void CloseMOD() override {}
-	std::string GetDataFolder( SUserData::ENormalizePathType ) override { return folder; }
+
+	std::string GetDataFolder( SUserData::ENormalizePathType ) override
+	{
+		return folder;
+	}
 };
 
 class SkeletonExporter : public testing::Test
@@ -142,6 +187,7 @@ protected:
 		ASSERT_TRUE( skeleton->SetValue( "ModelFileRef", "model.gltf" ) );
 		ASSERT_TRUE( skeleton->SetValue( "RootJoint", "Basis" ) );
 	}
+
 	void TearDown() override
 	{
 		skeleton = nullptr;
@@ -163,11 +209,13 @@ protected:
 		std::error_code error;
 		fs::remove_all( root, error );
 	}
+
 	// Qualify the call so Windows links the DLL that registers the exporter.
 	bool Import()
 	{
 		return static_cast<CSkeletonExporter *>( exporter.GetPtr() )->CSkeletonExporter::ImportGltfInfo( skeleton );
 	}
+
 	template <class T>
 	T Value( IManipulator *resource, const char *field )
 	{
@@ -175,6 +223,7 @@ protected:
 		EXPECT_TRUE( CManipulatorManager::GetValue( &value, resource, field ) );
 		return value;
 	}
+
 	CPtr<IManipulator> Animation( const char *name )
 	{
 		return Singleton<IResourceManager>()->CreateObjectManipulator( "AnimB2", std::string( "Unit/" ) + name );
@@ -307,4 +356,4 @@ TEST_F( SkeletonExporter, SuppliedArtilleryModel )
 	}
 	EXPECT_EQ( files, 12 );
 }
-}
+} // namespace

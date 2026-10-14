@@ -22,7 +22,11 @@ class CVirtualScreenController : public IVirtualScreenController
 public:
 	CVirtualScreenController();
 
-	int operator&( IBinSaver &saver ) { return 0; }
+	int operator&( IBinSaver &saver )
+	{
+		return 0;
+	}
+
 	//{ IVirtualScreenController
 	void GetResolution( int *nSizeX, int *nSizeY );
 	void SetResolution( int nSizeX, int nSizeY );
@@ -33,6 +37,7 @@ public:
 	void ScreenToVirtual( const CVec2 &vPos, CVec2 *pScreenPos );
 	//}
 };
+
 namespace NUIFactory
 {
 EXTERNVAR CDBPtr<NDb::SUIGameConsts> pConsts;
@@ -52,8 +57,16 @@ private:
 	void RegisterMLHandlersInternal( struct IML *pML );
 
 public:
-	static void SetScreenDuringLoad( IScreen *_pScreen ) { pScreenDuringLoad = _pScreen; }
-	static IScreen *GetScreenDuringLoad() { return pScreenDuringLoad; }
+	static void SetScreenDuringLoad( IScreen *_pScreen )
+	{
+		pScreenDuringLoad = _pScreen;
+	}
+
+	static IScreen *GetScreenDuringLoad()
+	{
+		return pScreenDuringLoad;
+	}
+
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, &NUIFactory::pConsts );
@@ -61,9 +74,15 @@ public:
 		saver.Add( 3, &customMLHandlers );
 		return 0;
 	}
+
 	CUIFactory();
+
 	//{ IUIInitialization
-	void SetUIConsts( const struct NDb::SUIGameConsts *_pConsts ) { NUIFactory::pConsts = _pConsts; }
+	void SetUIConsts( const struct NDb::SUIGameConsts *_pConsts )
+	{
+		NUIFactory::pConsts = _pConsts;
+	}
+
 	void SetMLHandler( const std::wstring &wsTAG, struct IMLHandler *pHandler );
 	IWindow *CreateWindowFromDesc( const struct NDb::SUIDesc *pDesc );
 	IWindow *CreateScreenFromDesc( const struct NDb::SUIDesc *pDesc,
@@ -72,11 +91,20 @@ public:
 	                               NGScene::I2DGameView *p2DView,
 	                               NGScene::IGameView *pGView,
 	                               NGScene::IGameView *pInterface3DView );
-	IVirtualScreenController *GetVirtualScreenController() { return pVirtualScreenController; }
+
+	IVirtualScreenController *GetVirtualScreenController()
+	{
+		return pVirtualScreenController;
+	}
+
 	virtual void Set2DGameView( NGScene::I2DGameView *pView );
+
 	// }
 
-	static const NDb::SUIGameConsts *GetConsts() { return NUIFactory::pConsts; }
+	static const NDb::SUIGameConsts *GetConsts()
+	{
+		return NUIFactory::pConsts;
+	}
 
 	static class CWindow *MakeWindow( const struct NDb::SUIDesc *pDesc );
 	static struct IWindowPart *MakeWindowPart( const struct NDb::SUIDesc *pDesc );

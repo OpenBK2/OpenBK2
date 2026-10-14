@@ -277,7 +277,7 @@ namespace NBind
 		return value.pArray;
 	}
 
-}
+} // namespace NBind
 
 const NTypeDef::STypeStructBase::SField *
 FindField( const std::string &szFullFieldName, const int nCurrPos, const NTypeDef::STypeStructBase *pStruct )
@@ -336,4 +336,4 @@ FindField( const std::string &szFullFieldName, const int nCurrPos, const NTypeDe
 	return 0;
 }
 
-}
+} // namespace NDb

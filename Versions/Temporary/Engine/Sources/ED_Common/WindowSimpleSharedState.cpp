@@ -26,6 +26,7 @@
 namespace
 {
 const char WINDOW_SIMPLE_SHARED_TYPE_NAME[] = "WindowSimpleShared";
+
 const struct
 {
 	const char *szInstanceName;
@@ -50,10 +51,11 @@ const struct
                       //
                       0,
                       0 };
+
 const char *tblPushableTypes[] = { "WindowSimpleShared",
                                    //"WindowMSButtonShared",
                                    0 };
-};
+}; // namespace
 
 CWindowSimpleSharedState::CWindowSimpleSharedState( CWindowSimpleSharedEditor *_pEditor )
 		: pEditor( _pEditor ), pScreen( 0 ), pMainWindow( 0 ), pPickedWindow( 0 ), bDragging( false )
@@ -434,7 +436,7 @@ void DrawHandle( IPaintContext *pPaintContext, int nX, int nY, int nHalfSize, TW
 {
 	pPaintContext->FillRect( CTRect<int>( nX - nHalfSize, nY - nHalfSize, nX + nHalfSize, nY + nHalfSize ), color );
 }
-}
+} // namespace
 
 void CWindowSimpleSharedState::PostDraw( IPaintContext *pPaintDC )
 {

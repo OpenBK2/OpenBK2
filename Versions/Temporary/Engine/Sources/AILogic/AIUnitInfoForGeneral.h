@@ -38,6 +38,7 @@ public:
 
 public:
 	CAIUnitInfoForGeneral() : pOwner( 0 ), fWeight( 0 ), vLastRegisteredGeneralPos( VNULL2 ) {}
+
 	CAIUnitInfoForGeneral( class CAIUnit *pOwner );
 
 	void Segment();
@@ -47,19 +48,44 @@ public:
 
 	void Die();
 
-	class CAIUnit *GetOwner() const { return pOwner; }
+	class CAIUnit *GetOwner() const
+	{
+		return pOwner;
+	}
 
-	void SetWeight( const float _fWeight ) { fWeight = int( _fWeight * 100 ) / 100.0f; }
-	const float GetWeight() const { return fWeight; }
-	void SetRegisteredPos( const CVec2 &vPos ) { vLastRegisteredGeneralPos = vPos; }
-	const CVec2 &GetRegisteredPos() const { return vLastRegisteredGeneralPos; }
+	void SetWeight( const float _fWeight )
+	{
+		fWeight = int( _fWeight * 100 ) / 100.0f;
+	}
 
-	const NTimer::STime GetLastTimeOfVisibility() const { return (std::max)( lastVisibleAntiArtTime, lastVisibleTime ); }
+	const float GetWeight() const
+	{
+		return fWeight;
+	}
+
+	void SetRegisteredPos( const CVec2 &vPos )
+	{
+		vLastRegisteredGeneralPos = vPos;
+	}
+
+	const CVec2 &GetRegisteredPos() const
+	{
+		return vLastRegisteredGeneralPos;
+	}
+
+	const NTimer::STime GetLastTimeOfVisibility() const
+	{
+		return (std::max)( lastVisibleAntiArtTime, lastVisibleTime );
+	}
+
 	void SetLastVisibleTime( const NTimer::STime time )
 	{
 		lastVisibleTime = time;
 		lastVisibleAntiArtTime = time;
 	}
 
-	bool IsLastVisibleAntiArt() const { return lastVisibleAntiArtTime > lastVisibleTime; }
+	bool IsLastVisibleAntiArt() const
+	{
+		return lastVisibleAntiArtTime > lastVisibleTime;
+	}
 };

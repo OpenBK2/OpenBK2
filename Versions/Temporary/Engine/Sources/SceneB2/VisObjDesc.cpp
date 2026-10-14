@@ -21,6 +21,7 @@ class CAnimObjBounder : public CFuncBase<SBound>
 	ZDATA
 	SBound modelBound;
 	CDGPtr<CFuncBase<SFBTransform>> pPosition;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &modelBound );
@@ -28,7 +29,11 @@ class CAnimObjBounder : public CFuncBase<SBound>
 		return 0;
 	}
 
-	virtual bool NeedUpdate() { return pPosition.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pPosition.Refresh();
+	}
+
 	virtual void Recalc();
 	CAnimObjBounder();
 
@@ -591,11 +596,13 @@ void SStaticEffectVisObj::UpdatePlacement( NGScene::IGameView *pGScene,
 {
 	MakeMatrix( &transform, vScale, vPos, qRot );
 }
+
 void SStaticEffectVisObj::UpdatePlacement( NGScene::IGameView *pGScene, const SHMatrix &mPlace )
 {
 	transform.forward = mPlace;
 	Invert( &transform.backward, mPlace );
 }
+
 void SStaticEffectVisObj::ReCreateObject( NGScene::IGameView *pGView,
                                           CSyncSrc<IVisObj> *pSyncSrc,
                                           CCSTime *pTimer,
@@ -624,6 +631,7 @@ void SDynamicEffectVisObj::UpdatePlacement( NGScene::IGameView *pGScene,
 		pTransform->Set( transform );
 	}
 }
+
 void SDynamicEffectVisObj::UpdatePlacement( NGScene::IGameView *pGScene, const SHMatrix &mPlace )
 {
 	SFBTransform transform;
@@ -638,6 +646,7 @@ void SDynamicEffectVisObj::UpdatePlacement( NGScene::IGameView *pGScene, const S
 		pTransform->Set( transform );
 	}
 }
+
 void SDynamicEffectVisObj::ReCreateObject( NGScene::IGameView *pGView,
                                            CSyncSrc<IVisObj> *pSyncSrc,
                                            CCSTime *pTimer,

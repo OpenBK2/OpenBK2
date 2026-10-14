@@ -15,6 +15,7 @@ class CSimpleObjectState : public CMapObjectState
 		CVec3 vPosition;
 		float fDirection;
 	};
+
 	typedef std::list<SSceneObject> CSceneObjectList;
 	CSceneObjectList sceneObjectlist;
 	std::string szRPGStatsTypeName;
@@ -28,12 +29,17 @@ class CSimpleObjectState : public CMapObjectState
 		NI_ASSERT( pParentState != 0, fmt::format( "CSimpleObjectState(): pParentState == 0" ) );
 		ClearData();
 	}
+
 	//
 	bool CanAddSimpleObject();
 
 protected:
 	// CMapObjectState
-	bool IsDrawSceneDrawTool() { return true; }
+	bool IsDrawSceneDrawTool()
+	{
+		return true;
+	}
+
 	//
 	void InsertObjectEnter();
 	void InsertObjectLeave();

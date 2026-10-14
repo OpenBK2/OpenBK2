@@ -4,7 +4,8 @@ namespace NDb
 {
 struct SNetGameConsts;
 struct SMapInfo;
-};
+}; // namespace NDb
+
 namespace NNet
 {
 struct IDriver;
@@ -13,6 +14,7 @@ struct IDriver;
 struct IAILogic;
 struct ICheckSumLog;
 struct IAICmdsAutoMagic;
+
 struct ITransceiver : public CObjectBase
 {
 	virtual void StartMission( const NDb::SMapInfo *pMap, IAILogic *pAI ) = 0;
@@ -37,7 +39,10 @@ struct SReplayInfo
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	bool bDoReplay = {};
 	std::string szReplayName;
+
 	SReplayInfo() : bDoReplay( false ) {}
+
 	SReplayInfo( const std::string &_sz ) : bDoReplay( true ), szReplayName( _sz ) {}
 };
+
 ITransceiver *CreateSinglePlayerTransceiver( const SReplayInfo &replay, IAILogic *pAI );

@@ -8,6 +8,7 @@
 class CMapInfoExporter : public IExporter, public ICommandHandler
 {
 	OBJECT_NOCOPY_METHODS( CMapInfoExporter );
+
 	//
 	struct SReGenerateGeometry
 	{
@@ -25,15 +26,23 @@ class CMapInfoExporter : public IExporter, public ICommandHandler
 public:
 	// IExporter
 	bool StartExport( const std::string &rszObjectTypeName, bool bForce );
+
 	void FinishExport( const std::string &rszObjectTypeName, bool bForce ) {}
+
 	EXPORT_RESULT ExportObject( IManipulator *pManipulator,
 	                            const std::string &rszObjectTypeName,
 	                            const std::string &rszObjectName,
 	                            bool bForce,
 	                            EXPORT_TYPE exportType );
+
 	//
-	bool StartCheck( const std::string &rszObjectTypeName, bool bExport ) { return true; }
+	bool StartCheck( const std::string &rszObjectTypeName, bool bExport )
+	{
+		return true;
+	}
+
 	void FinishCheck( const std::string &rszObjectTypeName, bool bExport ) {}
+
 	EXPORT_RESULT CheckObject( IManipulator *pManipulator,
 	                           const std::string &rszObjectTypeName,
 	                           const std::string &rszObjectName,

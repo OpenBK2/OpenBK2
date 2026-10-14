@@ -92,4 +92,4 @@ struct SLuaStyle
 // keywords the lexer's set 0 is given.
 const std::vector<SLuaStyle> &LuaStyles();
 const char *LuaReservedWords();
-}
+} // namespace NTextEditor

@@ -12,6 +12,7 @@
 #include <cstdint>
 
 struct SGameMessage;
+
 namespace NDb
 {
 struct SModel;
@@ -21,12 +22,14 @@ struct SMaterial;
 struct SSceneConsts;
 struct SWeatherDesc;
 enum ESelectionType : int;
-};
+}; // namespace NDb
+
 namespace NGScene
 {
 class I2DGameView;
 class CRTPtr;
-};
+}; // namespace NGScene
+
 namespace NAnimation
 {
 struct ISkeletonAnimator;
@@ -40,7 +43,7 @@ class CDebugCircle;
 class CDebugMarker;
 
 enum EColor : int;
-};
+}; // namespace NAIVisInfo
 
 struct IVisObj;
 template <class T>
@@ -81,7 +84,10 @@ struct IFullScreenFader;
 
 struct SObjectFilter
 {
-	virtual bool operator()( int ) const { return false; };
+	virtual bool operator()( int ) const
+	{
+		return false;
+	};
 };
 
 struct IScene : public CObjectBase
@@ -90,6 +96,7 @@ struct IScene : public CObjectBase
 	{
 		tidTypeID = 0x10073C40
 	};
+
 	//
 	enum EPickObjects
 	{
@@ -97,12 +104,14 @@ struct IScene : public CObjectBase
 		PO_CENTER_INSIDE = 0,
 		PO_WHOLE_INSIDE = -1,
 	};
+
 	//
 	enum EPickObjectsClass
 	{
 		EPOC_OBJECTS,
 		EPOC_ICONS
 	};
+
 	//
 	virtual void Init() = 0;
 	virtual void SwitchScene( const EScene eScene ) = 0;
@@ -394,10 +403,12 @@ struct IScene : public CObjectBase
 
 	virtual bool ToggleGetSizeFromTarget( bool bGetSizesFromTarget ) = 0;
 };
+
 inline IScene *Scene()
 {
 	return Singleton<IScene>();
 }
+
 SCENEB2_EXPORT IScene *CreateScene();
 
 DEFINE_DG_CONSTANT_NODE( CCSFBTransform, SFBTransform );
@@ -405,9 +416,11 @@ DEFINE_DG_CONSTANT_NODE( CCCVec3, CVec3 );
 DEFINE_DG_CONSTANT_NODE( CCSBound, SBound );
 
 struct IAIVisitor;
+
 struct IVisObj : virtual public CObjectBase
 {
 	//	virtual void Visit( IRenderVisitor* ) {}
 	virtual void Visit( IAIVisitor * ) {}
+
 	//	virtual void Visit( ISoundVisitor* ) {}
 };

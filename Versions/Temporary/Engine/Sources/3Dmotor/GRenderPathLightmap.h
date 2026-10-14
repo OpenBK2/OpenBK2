@@ -5,6 +5,7 @@ namespace NGfx
 class CRenderContext;
 }
 class CTransformStack;
+
 namespace NGScene
 {
 class IRender;
@@ -13,4 +14,4 @@ void RenderShowLightmap( CTransformStack *pTS,
                          NGfx::CRenderContext *pRC,
                          IRender *pRender,
                          const CSceneFragments &scene );
-}
+} // namespace NGScene

@@ -209,4 +209,4 @@ const std::string GetFieldNameInCode( const NDb::NTypeDef::STypeClass::SField &f
 	}
 }
 
-}
+} // namespace NHungarian

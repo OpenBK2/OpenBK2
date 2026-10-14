@@ -85,6 +85,7 @@ static float fSinTable[ N_SIN_TABLE_PERIOD + 1 ] =
 	0
 };
 // clang-format on
+
 // CKO 1e-5
 float Sin( float fAngle )
 {
@@ -175,6 +176,7 @@ static float fASinTable[ N_SIN_TABLE_PERIOD + 2 ] =
 	1.5708f, 1.5708f,
 };
 // clang-format on
+
 // CKO 0.0005
 float ASin( float f )
 {
@@ -270,4 +272,4 @@ float Sqrt( float n )
 	return n;
 }
 
-}
+} // namespace NMath

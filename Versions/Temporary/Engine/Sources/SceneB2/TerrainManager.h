@@ -15,6 +15,7 @@ class CTerrainManager : public ITerraManager
 	CDBPtr<NDb::STerrain> pDesc;
 	CPtr<NGScene::IGameView> pGameView;
 	CDGPtr<CFuncBase<STime>> pTimer;
+
 	//
 	void InitTerragen()
 	{
@@ -28,16 +29,27 @@ class CTerrainManager : public ITerraManager
 			pTerraGen->AttachTimer( pTimer );
 		}
 	}
+
 	//
 public:
 	CTerrainManager() {}
+
 	//
 	void Setup( NGScene::IGameView *pGView, CFuncBase<STime> *pTimer );
 	void Load( const NDb::STerrain *pDesc, CDataStream *pStream );
-	const NDb::STerrain *GetDesc() const { return pDesc; }
+
+	const NDb::STerrain *GetDesc() const
+	{
+		return pDesc;
+	}
+
 	void SetAIObserver( struct ITerraAIObserver *pObserver );
 	virtual struct ITerraAIObserver *GetAIObserver();
-	void UpdateAIInfo() { pTerraGen->UpdateAIInfo(); }
+
+	void UpdateAIInfo()
+	{
+		pTerraGen->UpdateAIInfo();
+	}
 
 	//
 	void ReGenerate()
@@ -45,6 +57,7 @@ public:
 		NI_ASSERT( pDesc != 0, "Load terrain desc first!" );
 		pTerraGen->ReGenerate();
 	}
+
 	//
 	void Save( CDataStream *pStream );
 	// road
@@ -101,11 +114,13 @@ public:
 	float GetRealTerraHeight( const float x, const float y ) const;
 	float GetTerraHeightFast( const int nTileX, const int nTileY ) const;
 	float GetRealTerraHeightFast( const int nTileX, const int nTileY ) const;
+
 	//
 	bool GetCragPrecVerts( std::vector<CVec3> *pVerts, int nVSOId )
 	{
 		return pTerraGen->GetCragPrecVerts( pVerts, nVSOId );
 	}
+
 	//
 	void UpdateRiversDepthes();
 	//
@@ -146,10 +161,23 @@ public:
 	virtual void InitHeights4Editor( int nSizeX, int nSizeY );
 	//
 	void SetRainyWaters( CDBPtr<NDb::SWater> pRainyWater );
+
 	//
-	virtual int GetTilesCountX() const { return pTerraGen->GetTilesCountX(); }
-	virtual int GetTilesCountY() const { return pTerraGen->GetTilesCountY(); }
-	virtual const STerrainInfo *const GetTerraInfo() const { return pTerraGen->GetTerraInfo(); }
+	virtual int GetTilesCountX() const
+	{
+		return pTerraGen->GetTilesCountX();
+	}
+
+	virtual int GetTilesCountY() const
+	{
+		return pTerraGen->GetTilesCountY();
+	}
+
+	virtual const STerrainInfo *const GetTerraInfo() const
+	{
+		return pTerraGen->GetTerraInfo();
+	}
+
 	//
 	int operator&( IBinSaver &saver );
 };

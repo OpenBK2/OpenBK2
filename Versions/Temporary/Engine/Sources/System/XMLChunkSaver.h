@@ -11,7 +11,8 @@ namespace NXml
 {
 class CXmlReader;
 class CXmlNode;
-}
+} // namespace NXml
+
 using namespace NLXML;
 
 class CXMLChunkSaver : public IXmlSaver
@@ -66,7 +67,12 @@ class CXMLChunkSaver : public IXmlSaver
 	void ReportCurrentObject( const CDBID &dbid );
 	void PushCurrentObject( const CDBID &dbid );
 	void PopCurrentObject();
-	const std::string &GetCurrObjectPath() const { return szCurrObjectPath; }
+
+	const std::string &GetCurrObjectPath() const
+	{
+		return szCurrObjectPath;
+	}
+
 	//
 	bool AddAttribute( const chunk_id attrName, bool *pData );
 	bool AddAttribute( const chunk_id attrName, int *pData );
@@ -88,7 +94,15 @@ public:
 		NI_ASSERT( pStream != 0, "" );
 		Start( pStream, bRead );
 	}
-	~CXMLChunkSaver() { Finish(); }
+
+	~CXMLChunkSaver()
+	{
+		Finish();
+	}
+
 	//
-	bool IsReading() const { return bReading; }
+	bool IsReading() const
+	{
+		return bReading;
+	}
 };

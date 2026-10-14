@@ -31,6 +31,7 @@ class CExporterContainer : public IExporterContainer
 
 public:
 	CExporterContainer() {}
+
 	~CExporterContainer() {}
 
 	// IExporterContainer

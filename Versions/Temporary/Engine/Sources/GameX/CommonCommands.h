@@ -20,14 +20,19 @@ public:
 
 public:
 	CControlSumCheckCommand() {}
+
 	CControlSumCheckCommand( const int _nPlayer, const unsigned long _ulCheckSum )
 			: nPlayer( _nPlayer ), ulCheckSum( _ulCheckSum )
 	{
 	}
 
 	void Execute();
+
 	//
-	bool NeedToBeStored() const { return false; }
+	bool NeedToBeStored() const
+	{
+		return false;
+	}
 
 	static void Check( const int nOurNumber, struct IAILogic *pAI );
 	static void Init( const uint16_t wMask );
@@ -51,14 +56,19 @@ public:
 
 public:
 	CControlSumHistoryCommand() {}
+
 	CControlSumHistoryCommand( const int _nPlayer, const int _nSegment, const unsigned long _ulCheckSum )
 			: nPlayer( _nPlayer ), nSegment( _nSegment ), ulCheckSum( _ulCheckSum )
 	{
 	}
 
 	void Execute();
+
 	//
-	bool NeedToBeStored() const { return false; }
+	bool NeedToBeStored() const
+	{
+		return false;
+	}
 
 	// only if CheckSum on nStartSegment is different, check other segments
 	static void Check( const int nOurNumber, const int nStartSegment, struct IAILogic *pAI );
@@ -77,6 +87,7 @@ class CDropPlayerCommand : public IAILogicCommandB2
 
 	ZDATA
 	int nPlayerToDrop = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nPlayerToDrop );
@@ -85,11 +96,16 @@ class CDropPlayerCommand : public IAILogicCommandB2
 
 public:
 	CDropPlayerCommand() : nPlayerToDrop( -1 ) {}
+
 	explicit CDropPlayerCommand( int _nPlayerToDrop ) : nPlayerToDrop( _nPlayerToDrop ) {}
 
 	//
 	void Execute();
+
 	//
 	// нужно ли сохранять в истории команд
-	bool NeedToBeStored() const { return true; }
+	bool NeedToBeStored() const
+	{
+		return true;
+	}
 };

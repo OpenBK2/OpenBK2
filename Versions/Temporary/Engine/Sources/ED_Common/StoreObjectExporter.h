@@ -8,7 +8,10 @@ class CStoreObjectExporter : public IExporter
 	SObjectSet objectSet;
 
 public:
-	inline const SObjectSet &GetObjectSet() const { return objectSet; }
+	inline const SObjectSet &GetObjectSet() const
+	{
+		return objectSet;
+	}
 
 	// IExporter
 	virtual bool StartExport( const std::string &rszObjectTypeName, bool bForce )
@@ -17,6 +20,7 @@ public:
 		objectSet.objectNameSet.clear();
 		return true;
 	}
+
 	virtual EXPORT_RESULT ExportObject( IManipulator *pManipulator,
 	                                    const std::string &rszObjectTypeName,
 	                                    const std::string &rszObjectName,
@@ -31,9 +35,15 @@ public:
 		InsertHashSetElement( &( objectSet.objectNameSet ), CDBID( rszObjectName ) );
 		return ER_SUCCESS;
 	}
+
 	//
-	virtual bool StartCheck( const std::string &rszObjectTypeName, bool bExport ) { return true; }
+	virtual bool StartCheck( const std::string &rszObjectTypeName, bool bExport )
+	{
+		return true;
+	}
+
 	virtual void FinishCheck( const std::string &rszObjectTypeName, bool bExport ) {}
+
 	virtual EXPORT_RESULT CheckObject( IManipulator *pManipulator,
 	                                   const std::string &rszObjectTypeName,
 	                                   const std::string &rszObjectName,

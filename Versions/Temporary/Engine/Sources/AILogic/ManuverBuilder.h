@@ -14,6 +14,7 @@ struct SAIGameConsts;
 
 typedef std::list<int> CManuverIndices;
 typedef det_map<int /*EPlanesAttitude*/, CManuverIndices> CManuvers;
+
 class CManuverBuilder
 {
 	static CManuverStateDesc state; // temprorary value, used inside CreateManuver()
@@ -27,6 +28,7 @@ class CManuverBuilder
 		int nMaxAttakers = {};
 		SAIAngle wStartAngle;
 		std::vector<int> attackers;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nMaxAttakers );
@@ -34,13 +36,19 @@ class CManuverBuilder
 			f.Add( 4, &attackers );
 			return 0;
 		}
-		uint16_t GetAngle( int nAttacker ) const { return wStartAngle + 65535 / nMaxAttakers * nAttacker; }
+
+		uint16_t GetAngle( int nAttacker ) const
+		{
+			return wStartAngle + 65535 / nMaxAttakers * nAttacker;
+		}
 		struct IManuver *CreateManuver( class CPlanesFormation *pPos, const CVec3 &vPos, int nAttacker );
+
 		void IncreaseMaxAttackers()
 		{
 			nMaxAttakers += 2;
 			attackers.resize( nMaxAttakers, 0 );
 		}
+
 		SGRoundAttackTarget() : nMaxAttakers( 9 ), attackers( nMaxAttakers, 0 ), wStartAngle( NRandom::Random( 65535 ) )
 		{
 			RecordRandomCall();
@@ -64,6 +72,7 @@ public:
 		f.Add( 4, &groundAttacks );
 		return 0;
 	}
+
 	// manuvers
 
 	// choose maneuver to perform. return 0 if none chosen
@@ -80,6 +89,7 @@ public:
 
 public:
 	void Init( const NDb::SAIGameConsts *pConsts );
+
 	void Clear()
 	{
 		attacks.clear();

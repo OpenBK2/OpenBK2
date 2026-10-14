@@ -472,7 +472,7 @@ bool DeleteReplay( const std::string &szFileName )
 	return bResult1 && bResult2;
 }
 
-} //NSaveLoad
+} // namespace NSaveLoad
 
 START_REGISTER( SaveLoad )
 

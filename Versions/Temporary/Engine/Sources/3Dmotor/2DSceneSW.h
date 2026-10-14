@@ -7,12 +7,14 @@ namespace NDb
 {
 struct STexture;
 };
+
 namespace NGfx
 {
 class CTexture;
 }
 
 class CRectLayout;
+
 namespace NGScene
 {
 class CSWTextureData;
@@ -37,4 +39,4 @@ public:
 
 _3DMOTOR_EXPORT ISW2DScene *Make2DSWScene();
 
-} // NAMESPACE
+} // namespace NGScene

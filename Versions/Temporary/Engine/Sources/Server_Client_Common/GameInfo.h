@@ -4,6 +4,7 @@
 
 /** information about game */
 typedef unsigned char uchar;
+
 struct SGameInfo : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( SGameInfo )
@@ -23,6 +24,7 @@ public:
 	bool bHasPassword = {};
 	/** empty when this packet came from server */
 	std::string szPassword;
+
 	//		/** some specific information */
 	//		CPtr<class CNetPacket> pSpecificInfo;
 	ZEND int operator&( IBinSaver &f )
@@ -43,6 +45,7 @@ public:
 	}
 
 	SGameInfo() : bCanConnect( true ), nPlayers( 0 ), nMaxPlayers( 0 ), bHasPassword( false ) {}
+
 	SGameInfo( const int _nID )
 			: nID( _nID ), szName( "" ), nPlayers( 0 ), nMaxPlayers( 0 ), bCanConnect( true ), bHasPassword( false )
 	{

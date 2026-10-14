@@ -5,13 +5,14 @@
 #include "GameX_export.h"
 
 struct IWindow;
+
 namespace NDb
 {
 struct SChapter;
 struct SMapInfo;
 struct STexture;
 struct SCampaign;
-}
+} // namespace NDb
 
 struct GAMEX_EXPORT SChapterMapMenuHelper : public CObjectBase
 {
@@ -30,6 +31,7 @@ public:
 						rcBounds;
 		int nID;
 		CVec2 vDelta;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &points );
@@ -62,6 +64,7 @@ public:
 		int nIndex;
 		int nObjectIndex;
 		CVec2 vEndOffset;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 4, &arrows );
@@ -83,6 +86,7 @@ public:
 	CVec2 vDetailsCoeff;
 	CDBPtr<NDb::SMapInfo> pDetailsMap;
 	CDBPtr<NDb::SChapter> pChapter;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &vMainStrike );
@@ -94,6 +98,7 @@ public:
 	}
 
 	SChapterMapMenuHelper() {}
+
 	SChapterMapMenuHelper( const NDb::SChapter *pChapter, IWindow *pChapterMap );
 
 	CVec2 Map2Screen( const CVec3 &vMapPos ) const;

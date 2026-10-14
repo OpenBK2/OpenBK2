@@ -530,6 +530,7 @@ static void GenerateBaseStructCPPFile( ICode::SCodeStreams *pCode,
 }
 
 static std::unordered_map<std::string, std::string> defaultValues;
+
 struct SSetDefaultValues
 {
 	SSetDefaultValues()
@@ -880,7 +881,7 @@ void CTypeDefinition::GenerateCode( SCodeStreams *pCode,
 	}
 }
 
-}
+} // namespace NCodeGen
 
 using namespace NCodeGen;
 REGISTER_SAVELOAD_CLASS( LIBDB, 0x301B6D02, CTypeDefinition );

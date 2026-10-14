@@ -154,6 +154,6 @@ void SObjectSelection::Trace() const
 	            vPositionDifference.z,
 	            fDirectionDifference );
 }
-};
+}; // namespace NMapInfoEditor
 
 // basement storage

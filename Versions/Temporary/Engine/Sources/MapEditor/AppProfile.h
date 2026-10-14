@@ -34,4 +34,4 @@ bool WriteString( const std::string &rszSection, const std::string &rszEntry, co
 // version this build does not understand. This is what SHDeleteKey over
 // the profile key did.
 void DeleteAll();
-}
+} // namespace NAppProfile

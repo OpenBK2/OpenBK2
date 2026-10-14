@@ -22,6 +22,7 @@ struct SAISkinKey
 	ZDATA
 	CDBPtr<NDb::SAIGeometry> pGeometry;
 	NAnimation::SSkeletonHandle skeletonH;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pGeometry );
@@ -30,10 +31,12 @@ struct SAISkinKey
 	}
 
 	SAISkinKey() {}
+
 	SAISkinKey( const NDb::SAIGeometry *_pGeometry, const NAnimation::SSkeletonHandle &_skeletonH )
 			: pGeometry( _pGeometry ), skeletonH( _skeletonH )
 	{
 	}
+
 	bool operator==( const SAISkinKey &other ) const
 	{
 		return pGeometry == other.pGeometry && skeletonH.pSkeleton == other.skeletonH.pSkeleton &&
@@ -62,12 +65,14 @@ class CLoadAIGeometryFromGranny : public CHoldedPtrFuncBase<CGeometryInfo>
 	ZDATA
 	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo>> pData;
 	CDBPtr<NDb::SAIGeometry> pGeometry;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pData );
 		f.Add( 3, &pGeometry );
 		return 0;
 	}
+
 	bool NeedUpdate();
 	void Recalc();
 
@@ -91,11 +96,13 @@ class CMemGeometryInfo : public CPtrFuncBase<CGeometryInfo>
 protected:
 	ZDATA
 	CPtr<CMemObject> pMemObject;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pMemObject );
 		return 0;
 	}
+
 	virtual void Recalc();
 
 public:
@@ -109,12 +116,14 @@ class CFileSkinPoints : public CObjectBase
 public:
 	std::vector<SMassSphere> spheres;
 	CVec3 massCenter;
+
 	struct SBodypart
 	{
 		std::vector<CVec3> points;
 		CEdgesInfo edges;
 		std::vector<NGScene::SVertexWeight> weights;
 	};
+
 	typedef std::unordered_map<int, SBodypart> CBodypartsHash;
 	CBodypartsHash parts;
 };
@@ -136,6 +145,7 @@ class CFileSkinPointsLoadFromGranny : public CHoldedPtrFuncBase<CFileSkinPoints>
 	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo>> pData;
 	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo>> pSkeletonData;
 	SAISkinKey key;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pData );
@@ -143,6 +153,7 @@ class CFileSkinPointsLoadFromGranny : public CHoldedPtrFuncBase<CFileSkinPoints>
 		f.Add( 4, &key );
 		return 0;
 	}
+
 	bool NeedUpdate();
 	void Recalc();
 
@@ -158,6 +169,7 @@ class CSkinner : public CPtrFuncBase<CGeometryInfo>
 	ZDATA
 	CDGPtr<CFuncBase<NGScene::SSkeletonMatrices>> pAnimation;
 	CDGPtr<CPtrFuncBase<CFileSkinPoints>> pSkin;
+
 	//bool bDoPrecalc;
 	//CPrecalcPieces setTrees;
 	ZEND int operator&( IBinSaver &f )
@@ -168,19 +180,25 @@ class CSkinner : public CPtrFuncBase<CGeometryInfo>
 	}
 
 protected:
-	virtual bool NeedUpdate() { return pAnimation.Refresh() | pSkin.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pAnimation.Refresh() | pSkin.Refresh();
+	}
+
 	virtual void Recalc();
 
 public:
 	CSkinner() {}
+
 	CSkinner( CPtrFuncBase<CFileSkinPoints> *_pSkin, CFuncBase<NGScene::SSkeletonMatrices> *_pAnimation )
 			: pSkin( _pSkin ), pAnimation( _pAnimation )
 	{
 	} //, bDoPrecalc(false) {}
+
 	//void CreatePrecalcInfo() { bDoPrecalc = true; }
 	//void SetPrecalcInfo( const CPrecalcPieces &trees ) { bDoPrecalc = false; setTrees = trees; }
 };
 
 // create cube hull
 //void MakeCube( CConvexHull *pRes, const CVec3 &base, const CVec3 &size );
-}
+} // namespace NAI

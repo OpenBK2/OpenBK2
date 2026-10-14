@@ -9,7 +9,7 @@ namespace NDb
 struct SCampaign;
 struct SChapter;
 struct SMapInfo;
-}
+} // namespace NDb
 
 class CInterfaceSaveLoadMenu : public CInterfaceScreenBase
 {
@@ -23,6 +23,7 @@ public:
 		ZDATA
 		CPtr<IWindow> pScreen;
 		CPtr<CInterfaceSaveLoadMenu> pInterface;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pScreen );
@@ -32,10 +33,12 @@ public:
 
 	public:
 		CReactions() {}
+
 		CReactions( IWindow *_pScreen, CInterfaceSaveLoadMenu *_pInterface )
 				: pScreen( _pScreen ), pInterface( _pInterface )
 		{
 		}
+
 		~CReactions() {}
 
 		bool Execute( const std::string &szSender, const std::string &szReaction );
@@ -70,6 +73,7 @@ private:
 	{
 		bool operator()( const NSaveLoad::SSavegameEntry &save1, const NSaveLoad::SSavegameEntry &save2 );
 	};
+
 	struct SSortByDate
 	{
 		bool operator()( const NSaveLoad::SSavegameEntry &save1, const NSaveLoad::SSavegameEntry &save2 );
@@ -125,6 +129,7 @@ private:
 
 	NSaveLoad::SSaveInfo startSaveInfo;
 	bool bLoadMode;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
@@ -219,12 +224,14 @@ class CICInterfaceSaveLoad : public CInterfaceCommandBase<CInterfaceSaveLoadMenu
 
 	ZDATA_( CInterfaceCommandBase<CInterfaceSaveLoadMenu> )
 	std::string szMode;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceSaveLoadMenu> *)this );
 		f.Add( 2, &szMode );
 		return 0;
 	}
+
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );

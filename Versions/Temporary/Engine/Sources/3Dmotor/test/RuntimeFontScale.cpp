@@ -32,7 +32,7 @@ int CellHeight( NGScene::CFontInfo *font )
 	format.Refresh();
 	return format->GetValue()->GetHeight();
 }
-}
+} // namespace
 
 TEST_F( RuntimeFontScale, ConsoleAndSetVarChangeTheUserSetting )
 {

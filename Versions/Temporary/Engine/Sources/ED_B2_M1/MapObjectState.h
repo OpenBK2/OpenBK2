@@ -32,6 +32,7 @@ class CMapObjectSelectState : public CDefaultInputState
 	{
 		NI_ASSERT( pParentState != 0, "CMapObjectSelectState(): Invalid parameter: pParentState == 0" );
 	}
+
 	CMapObjectSelectState( CMapObjectState *_pParentState ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CMapObjectSelectState(): Invalid parameter: pParentState == 0" );
@@ -63,6 +64,7 @@ class CMapObjectEditState : public CDefaultInputState
 	{
 		NI_ASSERT( pParentState != 0, "CMapObjectEditState(): Invalid parameter: pParentState == 0" );
 	}
+
 	CMapObjectEditState( CMapObjectState *_pParentState ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CMapObjectEditState(): Invalid parameter: pParentState == 0" );
@@ -93,6 +95,7 @@ class CMapObjectAddState : public CDefaultInputState
 	{
 		NI_ASSERT( pParentState != 0, "CMapObjectAddState(): Invalid parameter: pParentState == 0" );
 	}
+
 	CMapObjectAddState( CMapObjectState *_pParentState ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CMapObjectAddState(): Invalid parameter: pParentState == 0" );
@@ -130,6 +133,7 @@ class CMapObjectPasteState : public CDefaultInputState
 	{
 		NI_ASSERT( pParentState != 0, "CMapObjectPasteState(): Invalid parameter: pParentState == 0" );
 	}
+
 	CMapObjectPasteState( CMapObjectState *_pParentState ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CMapObjectPasteState(): Invalid parameter: pParentState == 0" );
@@ -175,12 +179,14 @@ protected:
 		CVec3 vTerrainPos0;
 		CVec3 vTerrainPos1;
 		bool bValid;
+
 		//
 		SSelector()
 				: bTerrainSelector( true ), frameRect( 0, 0, 0, 0 ), vTerrainPos0( VNULL3 ), vTerrainPos1( VNULL3 ),
 					bValid( false )
 		{
 		}
+
 		inline void Clear()
 		{
 			bTerrainSelector = true;
@@ -192,8 +198,16 @@ protected:
 			vTerrainPos1 = VNULL3;
 			bValid = false;
 		}
-		inline bool IsValid() { return bValid; }
-		inline bool IsTerrainSelector() { return bTerrainSelector; }
+
+		inline bool IsValid()
+		{
+			return bValid;
+		}
+
+		inline bool IsTerrainSelector()
+		{
+			return bTerrainSelector;
+		}
 	};
 
 	unsigned nSelectedSceneID;
@@ -231,26 +245,86 @@ protected:
 	virtual void MoveSelection( const CVec3 &rvPosition, bool bExactPosition, bool bIgnoreDifference, bool bSave );
 	// Повернуть объект, используя указаную точку на карте
 	virtual void RotateSelection( const CVec3 &rvPosition, bool bExactDirection, bool bIgnoreDifference, bool bSave );
+
 	// Вызывается из стейта добавления объекта ( если вернули true, переключится в IS_SELECT и автоматически обновится сцена )
 	virtual void InsertObjectEnter() {}
+
 	virtual void InsertObjectLeave() {}
+
 	virtual void InsertObjectDraw( IPaintContext *pPaintDC ) {}
+
 	//
-	virtual bool InsertObjectSetFocus( IWidget *pNewWnd ) { return false; }
-	virtual bool InsertObjectKillFocus( IWidget *pOldWnd ) { return false; }
+	virtual bool InsertObjectSetFocus( IWidget *pNewWnd )
+	{
+		return false;
+	}
+
+	virtual bool InsertObjectKillFocus( IWidget *pOldWnd )
+	{
+		return false;
+	}
+
 	//
-	virtual bool InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectLButtonDown( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectLButtonDblClk( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectRButtonDown( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectRButtonDblClk( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectMButtonDown( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectMButtonUp( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectMButtonDblClk( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
-	virtual bool InsertObjectKeyUp( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
+	virtual bool InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainPos )
+	{
+		return false;
+	}
+
+	virtual bool InsertObjectLButtonDown( unsigned nFlags, const CVec3 &rTerrainPos )
+	{
+		return false;
+	}
+
+	virtual bool InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rTerrainPos )
+	{
+		return false;
+	}
+
+	virtual bool InsertObjectLButtonDblClk( unsigned nFlags, const CVec3 &rTerrainPos )
+	{
+		return false;
+	}
+
+	virtual bool InsertObjectRButtonDown( unsigned nFlags, const CVec3 &rTerrainPos )
+	{
+		return false;
+	}
+
+	virtual bool InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainPos )
+	{
+		return false;
+	}
+
+	virtual bool InsertObjectRButtonDblClk( unsigned nFlags, const CVec3 &rTerrainPos )
+	{
+		return false;
+	}
+
+	virtual bool InsertObjectMButtonDown( unsigned nFlags, const CVec3 &rTerrainPos )
+	{
+		return false;
+	}
+
+	virtual bool InsertObjectMButtonUp( unsigned nFlags, const CVec3 &rTerrainPos )
+	{
+		return false;
+	}
+
+	virtual bool InsertObjectMButtonDblClk( unsigned nFlags, const CVec3 &rTerrainPos )
+	{
+		return false;
+	}
+
+	virtual bool InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos )
+	{
+		return false;
+	}
+
+	virtual bool InsertObjectKeyUp( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos )
+	{
+		return false;
+	}
+
 	//
 	//virtual void DrawShootAreas() {}
 public:
@@ -290,6 +364,7 @@ public:
 
 		SetActiveInputState( IS_SELECT, true, false );
 	}
+
 	//
 	~CMapObjectState()
 	{
@@ -300,7 +375,10 @@ public:
 		pStoreInputState = 0;
 	}
 
-	inline class CMapObjectMultiState *GetParentState() { return pParentState; }
+	inline class CMapObjectMultiState *GetParentState()
+	{
+		return pParentState;
+	}
 
 	void SwitchToAddState();
 	//

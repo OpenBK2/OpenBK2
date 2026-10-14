@@ -14,6 +14,7 @@ struct SLogEntry
 	bool bLooped;
 	int nStartPos;
 	unsigned long nStartTime;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szName );
@@ -38,6 +39,7 @@ class CPlayLog
 
 	ESFXOutputType eOutput;
 	int nFrequ;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &log );
@@ -64,6 +66,7 @@ typedef std::unordered_map<int, CPtr<ISound>> CChannelSoundMap;
 class CSoundEngine : public ISFX
 {
 	OBJECT_NOCOPY_METHODS( CSoundEngine );
+
 	//
 	struct SDriverInfo
 	{
@@ -73,6 +76,7 @@ class CSoundEngine : public ISFX
 		bool supportReverb;           // this driver supports EAX2/A3D3 reverb
 		bool supportEAX3;             // this driver supports EAX3
 	};
+
 	// initialization info - drivers
 	typedef std::vector<SDriverInfo> CDriversInfo;
 	CDriversInfo drivers; // [0] is default driver
@@ -113,6 +117,7 @@ public:
 	// init and close sound system
 	virtual bool IsInitialized();
 	virtual bool Init( HWND hWnd, int nDriver, ESFXOutputType output, int nMixRate, int nMaxChannels );
+
 	//
 	// enable SFXes and streaming
 	virtual void EnableSFX( bool bEnable )
@@ -120,7 +125,12 @@ public:
 		bEnableSFX = bEnable;
 		ReEnableSounds();
 	}
-	virtual bool IsSFXEnabled() const { return bEnableSFX && bSoundCardPresent; }
+
+	virtual bool IsSFXEnabled() const
+	{
+		return bEnableSFX && bSoundCardPresent;
+	}
+
 	//
 	// setup
 	virtual void SetDistanceFactor( float fFactor );
@@ -142,4 +152,5 @@ public:
 	unsigned int GetCurrentPosition( ISound *pSound );
 	virtual void SetCurrentPosition( ISound *pSound, unsigned int pos );
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

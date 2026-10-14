@@ -14,6 +14,7 @@ class CAllowFakeObjToCrushExecutor : public CExecutor
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	NTimer::STime changeTypeTime = {};
 	EStaticObjType eNewType = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CExecutor *)this );
@@ -30,5 +31,9 @@ public:
 	virtual bool IsExecutorValid() const;
 
 	virtual int Segment();
-	virtual bool NotifyEvent( const CExecutorEvent &event ) { return false; }
+
+	virtual bool NotifyEvent( const CExecutorEvent &event )
+	{
+		return false;
+	}
 };

@@ -44,6 +44,7 @@ public:
 		rcClip.y2 = vScreenSize.y;
 		bClipApplied = false;
 	}
+
 	void VisitZClearRect( const CRectLayout &_sLayout,
 	                      const CTPoint<float> &sPosition,
 	                      const CTRect<float> &sClipWindow,
@@ -59,11 +60,13 @@ public:
 		// recalc to new size
 		p2DView->CreateDynamicRects( pTexture, rects, CTPoint<float>( 0, 0 ), rcClip );
 	}
+
 	void
 	VisitUITextureRect( CPtrFuncBase<NGfx::CTexture> *pTexture, const int nShadingEffect, const class CRectLayout &rects )
 	{
 		p2DView->CreateDynamicRects( pTexture, rects, CTPoint<float>( 0, 0 ), rcClip );
 	}
+
 	void VisitUIRect( const NDb::STexture *pTexture,
 	                  const int nShadingEffect,
 	                  const CVec2 *pPos4,
@@ -72,6 +75,7 @@ public:
 	{
 		ASSERT( 0 ); // not implemented
 	}
+
 	void VisitUIText( IML *pML, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 	{
 		if ( bClipApplied )

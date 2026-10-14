@@ -19,11 +19,13 @@ class COMMON_RTS_AI_EXPORT CStaticMapHeights : public CObjectBase
 		CArray2D<float> heights;
 
 		SOldHeights() : nX1( -1 ), nY1( -1 ) {}
+
 		SOldHeights( const int _nX1, const int _nY1, const CArray2D<float> &_heights )
 				: nX1( _nX1 ), nY1( _nY1 ), heights( _heights )
 		{
 		}
 	};
+
 	typedef std::unordered_map<int, SOldHeights> CHeightsMap;
 
 	// высоты по узлам визуальной сетки
@@ -74,16 +76,44 @@ public:
 
 	const float GetVisZ( float x, float y ) const;
 	const void UpdateVisZ( CVec3 *pVec ) const;
-	inline const float GetZ( float x, float y ) const { return GetVisZ( x, y ); }
-	inline const float GetZ( const CVec2 &vPos ) const { return GetVisZ( vPos.x, vPos.y ); }
-	inline const void UpdateZ( CVec3 *pVec ) const { UpdateVisZ( pVec ); }
-	const uint32_t GetNormal( const CVec2 &vPoint ) const { return GetNormal( vPoint.x, vPoint.y ); }
+
+	inline const float GetZ( float x, float y ) const
+	{
+		return GetVisZ( x, y );
+	}
+
+	inline const float GetZ( const CVec2 &vPos ) const
+	{
+		return GetVisZ( vPos.x, vPos.y );
+	}
+
+	inline const void UpdateZ( CVec3 *pVec ) const
+	{
+		UpdateVisZ( pVec );
+	}
+
+	const uint32_t GetNormal( const CVec2 &vPoint ) const
+	{
+		return GetNormal( vPoint.x, vPoint.y );
+	}
+
 	const uint32_t GetNormal( const float x, const float y ) const;
 	const float GetTileHeight( const int nTileX, const int nTileY ) const;
 	//const float GetVisHeight( const int nVisTileX, const int nVisTileY ) const;
 	void SetHeightForPatternApplying( const int nX, const int nY, const float fHeight );
 
-	const CVec3 Get3DPoint( const CVec2 &vPoint ) const { return CVec3( vPoint, GetZ( vPoint ) ); }
-	const CVec3 GetGroundPoint( const CVec3 &vPoint ) { return CVec3( vPoint.x, vPoint.y, GetZ( vPoint.x, vPoint.y ) ); }
-	const float GetZ( const CVec3 &vPoint ) const { return GetZ( vPoint.x, vPoint.y ); }
+	const CVec3 Get3DPoint( const CVec2 &vPoint ) const
+	{
+		return CVec3( vPoint, GetZ( vPoint ) );
+	}
+
+	const CVec3 GetGroundPoint( const CVec3 &vPoint )
+	{
+		return CVec3( vPoint.x, vPoint.y, GetZ( vPoint.x, vPoint.y ) );
+	}
+
+	const float GetZ( const CVec3 &vPoint ) const
+	{
+		return GetZ( vPoint.x, vPoint.y );
+	}
 };

@@ -17,13 +17,14 @@ bool IsSSEPresent()
 	cpuid( cpuinfo, 1 );
 	return 0 != ( cpuinfo[3] & CPUID_SSE_FEATURE_PRESENT );
 }
-}
+} // namespace
 
 bool bIsSSEPresent = IsSSEPresent();
 
 short nNormalizeTable[16384];
 NGfx::SMMXWord mmxWeights[512];
 unsigned char nCubicRoot[32768];
+
 static struct SNormalizeInit
 {
 	SNormalizeInit()

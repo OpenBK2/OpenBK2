@@ -66,4 +66,4 @@ void SMechUnitRPGStats::ToAIUnits( bool bInEditor )
 	}
 }
 
-}
+} // namespace NDb

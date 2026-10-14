@@ -35,9 +35,14 @@ public:
 	// Takes the GPOS table's bytes, which it keeps; an empty or unreadable
 	// table gives no kerning at all
 	explicit CGposKerning( std::vector<uint8_t> _table );
-	bool IsEmpty() const { return lookups.empty(); }
+
+	bool IsEmpty() const
+	{
+		return lookups.empty();
+	}
+
 	// The adjustment to nLeft's advance when nRight follows it, in font units
 	int GetAdjustment( uint16_t nLeft, uint16_t nRight ) const;
 };
 
-}
+} // namespace NFontRaster

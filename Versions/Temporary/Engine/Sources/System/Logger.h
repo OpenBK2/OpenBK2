@@ -7,6 +7,7 @@ struct ILogDumper : public CObjectBase
 {
 	virtual void Dump( const std::wstring &wszString ) = 0;
 };
+
 ILogDumper *CreateFileDumper( const std::string &szFullFileName );
 ILogDumper *CreateDebugDumper();
 ILogDumper *CreateAssertDumper();
@@ -18,14 +19,28 @@ class CLogger
 	CDumpersList dumpers;
 	std::wstring wszLogBuffer;
 	CLogger *pParent;
+
 	//
-	CLogger *GetParent() const { return pParent; }
-	const std::string &GetLoggerLocalName() const { return szLoggerName; }
+	CLogger *GetParent() const
+	{
+		return pParent;
+	}
+
+	const std::string &GetLoggerLocalName() const
+	{
+		return szLoggerName;
+	}
+
 	std::string GetLoggerFullName() const;
 
 public:
 	CLogger( const std::string &_szLoggerName, CLogger *_pParent ) : szLoggerName( _szLoggerName ), pParent( _pParent ) {}
-	~CLogger() { Dump(); }
+
+	~CLogger()
+	{
+		Dump();
+	}
+
 	//
 	CLogger &operator<<( const int nVal );
 	CLogger &operator<<( const long lVal );
@@ -37,20 +52,30 @@ public:
 	CLogger &operator<<( const std::string &szText );
 	CLogger &operator<<( const wchar_t *pwszText );
 	CLogger &operator<<( const std::wstring &wszText );
+
 	//
-	CLogger &operator<<( CLogger &( *Func )( CLogger &logStream ) ) { return Func( *this ); }
+	CLogger &operator<<( CLogger &( *Func )( CLogger &logStream ) )
+	{
+		return Func( *this );
+	}
+
 	CLogger &Dump();
 	bool Dump( const std::string &szChildLoggerFullName, const std::wstring &wszString );
+
 	//
-	void AddDumper( ILogDumper *pDumper ) { dumpers.push_back( pDumper ); }
+	void AddDumper( ILogDumper *pDumper )
+	{
+		dumpers.push_back( pDumper );
+	}
 };
 
-}
+} // namespace NLog
 
 NLog::CLogger &endl( NLog::CLogger &logStream )
 {
 	return logStream << L"\n";
 }
+
 NLog::CLogger &dump( NLog::CLogger &logStream )
 {
 	return logStream.Dump();

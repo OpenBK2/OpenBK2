@@ -2,6 +2,7 @@
 #pragma once
 
 #include "InterfaceScreenBase.h"
+
 //#include "..\Scene\Scene.h"
 
 class CPlayMovieInterface : public CInterfaceScreenBase
@@ -18,6 +19,7 @@ class CPlayMovieInterface : public CInterfaceScreenBase
 	std::string szFileName;
 	CPtr<IWindow> pBackground;
 	float fFadeIn;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
@@ -56,8 +58,10 @@ class CICPlayMovie : public CInterfaceCommandBase<CPlayMovieInterface>
 	//
 	std::string szSequenceName;
 	std::string szNextCommand;
+
 	//
 	void PreCreate() {}
+
 	void PostCreate( IInterface *pInterface );
 
 public:

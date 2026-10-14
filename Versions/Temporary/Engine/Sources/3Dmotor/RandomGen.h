@@ -12,7 +12,9 @@ struct SRand
 	SRandomSeed seed;
 
 	SRand();
+
 	SRand( const SRandomSeed &rseed ) : seed( rseed ) {}
+
 	int Get( int nMax );
 	float GetFloat( float fpMin, float fpMax );
 };
@@ -23,9 +25,15 @@ class CRoulette
 
 public:
 	CRoulette() : m_aSectors( 1, 0.0f ) {}
+
 	void AddSector( float fValue );
 	int GetRandomSector( SRand *pRand ) const;
-	float GetSectorValue( int nIndex ) const { return m_aSectors[nIndex + 1] - m_aSectors[nIndex]; }
+
+	float GetSectorValue( int nIndex ) const
+	{
+		return m_aSectors[nIndex + 1] - m_aSectors[nIndex];
+	}
+
 	int operator&( CStructureSaver &f );
 };
 
@@ -51,17 +59,35 @@ private:
 	unsigned int randc;
 
 public:
-	CRandomGenerator() { Init(); }
+	CRandomGenerator()
+	{
+		Init();
+	}
+
 	unsigned int Get();
+
 	unsigned int Get( unsigned int nMax )
 	{
 		ASSERT( nMax != 0 );
 		return Get() % nMax;
 	}
-	unsigned int Get( unsigned int nMin, unsigned int nMax ) { return Get( nMax - nMin ) + nMin; }
+
+	unsigned int Get( unsigned int nMin, unsigned int nMax )
+	{
+		return Get( nMax - nMin ) + nMin;
+	}
+
 	float GetFloat( float fpMin, float fpMax );
-	bool Check( int nCheck, int nRange = 100 ) { return Get( nRange ) < nCheck; }
-	bool NegCheck( int nCheck, int nRange = 100 ) { return Get( nRange ) >= nCheck; }
+
+	bool Check( int nCheck, int nRange = 100 )
+	{
+		return Get( nRange ) < nCheck;
+	}
+
+	bool NegCheck( int nCheck, int nRange = 100 )
+	{
+		return Get( nRange ) >= nCheck;
+	}
 
 private:
 	void Init();

@@ -35,6 +35,7 @@ public:
 	CVec3 vLastPos;
 
 	CFenceDesignTool() : bEnabled( false ) {}
+
 	//
 	void SetUp( bool bFitToAIGrd, const NDb::SFenceRPGStats *pStats );
 	void Clear();
@@ -45,13 +46,19 @@ public:
 	bool ProcessMovePoint( const CVec3 &p );
 	//
 	bool IsComplete();
-	float GetCurSectionLen() { return fSectionLen; }
+
+	float GetCurSectionLen()
+	{
+		return fSectionLen;
+	}
+
 	///
 	struct SFenceSectionInfo
 	{
 		CVec3 vPosition;
 		float fDirection;
 	};
+
 	void GetSectionsInfo( std::vector<SFenceSectionInfo> *pSectionInfo,
 	                      NDb::SFenceRPGStats::EFencePlacementMode ePlacementMode );
 	///
@@ -73,6 +80,7 @@ class CFenceState : public CMapObjectState
 	//
 	void InsertFence();
 	void ClearData();
+
 	//
 	// выбранный для постановки забор
 	struct SSelectedFenceInfo
@@ -80,8 +88,10 @@ class CFenceState : public CMapObjectState
 		std::string szRPGStatsTypeName;
 		CDBID rpgStatsDBID;
 		const NDb::SFenceRPGStats *pFenceRPGStats;
+
 		SSelectedFenceInfo() : pFenceRPGStats( 0 ) {}
 	};
+
 	SSelectedFenceInfo selectedFenceInfo;
 	void RefreshSelectedFenceInfo();
 	//
@@ -99,8 +109,13 @@ public:
 		NI_ASSERT( pParentState != 0, fmt::format( "CFenceState(): pParentState == 0" ) );
 		ClearData();
 	}
+
 	//
-	bool IsDrawSceneDrawTool() { return true; }
+	bool IsDrawSceneDrawTool()
+	{
+		return true;
+	}
+
 	//
 	void InsertObjectEnter();
 	void InsertObjectLeave();

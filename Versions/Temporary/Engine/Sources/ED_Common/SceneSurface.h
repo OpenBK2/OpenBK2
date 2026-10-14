@@ -67,4 +67,4 @@ namespace NSceneSurface
 {
 // The surface this session uses. Owned by the caller.
 ISceneSurface *Create();
-}
+} // namespace NSceneSurface

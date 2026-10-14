@@ -20,6 +20,7 @@ class CModelVFS : public NVFS::IVFS
 
 public:
 	std::map<std::string, std::vector<std::byte>> files;
+
 	CDataStream *OpenFile( const std::string &path ) override
 	{
 		const auto found = files.find( path );
@@ -32,8 +33,17 @@ public:
 		stream->Seek( 0 );
 		return stream;
 	}
-	bool DoesFileExist( const std::string &path ) override { return files.count( path ) != 0; }
-	bool GetFileStats( NVFS::SFileStats *, const std::string & ) override { return false; }
+
+	bool DoesFileExist( const std::string &path ) override
+	{
+		return files.count( path ) != 0;
+	}
+
+	bool GetFileStats( NVFS::SFileStats *, const std::string & ) override
+	{
+		return false;
+	}
+
 	void GetAllFileNames( std::vector<std::string> *, const std::string & ) override {}
 };
 
@@ -45,8 +55,16 @@ class CTestAnimation : public NDb::SAnimBase
 
 public:
 	NFile::CFilePath path;
-	int GetTypeID() const override { return 0; }
-	const NFile::CFilePath &GetModelFileRef() const override { return path; }
+
+	int GetTypeID() const override
+	{
+		return 0;
+	}
+
+	const NFile::CFilePath &GetModelFileRef() const override
+	{
+		return path;
+	}
 };
 
 struct SModel
@@ -177,10 +195,18 @@ class GltfMirror : public testing::TestWithParam<std::tuple<bool, bool, fastgltf
 
 protected:
 	CObj<CModelVFS> vfs = new CModelVFS;
-	void SetUp() override { NVFS::SetMainVFS( vfs ); }
-	void TearDown() override { NVFS::SetMainVFS( savedVFS ); }
+
+	void SetUp() override
+	{
+		NVFS::SetMainVFS( vfs );
+	}
+
+	void TearDown() override
+	{
+		NVFS::SetMainVFS( savedVFS );
+	}
 };
-}
+} // namespace
 
 TEST_P( GltfMirror, ReflectsBoundsBindPoseAndAnimatedVertices )
 {

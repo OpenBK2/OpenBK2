@@ -20,12 +20,14 @@ enum EDiplomacyInfo
 };
 
 #pragma pack( 1 )
+
 struct SSegment2Trench
 {
 	ZDATA
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nSegmentID = {};  // маленький кусочек
 	int nEntrenchID = {}; // весь окоп
+
 ZEND public : int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nSegmentID );
@@ -36,16 +38,19 @@ ZEND public : int operator&( IBinSaver &f )
 private:
 public:
 	SSegment2Trench() : nSegmentID( 0 ), nEntrenchID( 0 ) {}
+
 	SSegment2Trench( const int _nSegmentID, const int _nEntrenchID )
 			: nSegmentID( _nSegmentID ), nEntrenchID( _nEntrenchID )
 	{
 	}
 };
+
 struct SSoldier2Formation
 {
 	ZDATA
 	int nSoldierID = {};
 	int nFormationID = {};
+
 ZEND public : int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nSoldierID );
@@ -56,11 +61,13 @@ ZEND public : int operator&( IBinSaver &f )
 private:
 public:
 	SSoldier2Formation() : nSoldierID( 0 ), nFormationID( 0 ) {}
+
 	SSoldier2Formation( const int _nSoldierID, const int _nFormationID )
 			: nSoldierID( _nSoldierID ), nFormationID( _nFormationID )
 	{
 	}
 };
+
 struct SShootArea
 {
 	enum EShootAreaType
@@ -138,4 +145,5 @@ struct SShootAreas
 		return 0;
 	}
 };
+
 #pragma pack()

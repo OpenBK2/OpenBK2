@@ -47,54 +47,65 @@ MISC_EXPORT void SplitStringWithMultipleBrackets( const std::string &szString,
 MISC_EXPORT void SplitStringWithMultipleBrackets( const std::wstring &szString,
                                                   std::vector<std::wstring> &szVector,
                                                   const wchar_t cSeparator );
+
 // отрезать все символы 'cTrim'
 // отрезать все 'cTrim' слева
 inline void TrimLeft( std::string &szString, const char cTrim )
 {
 	szString.erase( 0, szString.find_first_not_of( cTrim ) );
 }
+
 // отрезать все 'pszTrim' слева
 inline void TrimLeft( std::string &szString, const char *pszTrim )
 {
 	szString.erase( 0, szString.find_first_not_of( pszTrim ) );
 }
+
 // отрезать все whitespaces слева
 inline void TrimLeft( std::string &szString )
 {
 	TrimLeft( szString, " \t\n\r" );
 }
+
 // отрезать все 'pszTrim' справа
 MISC_EXPORT void TrimRight( std::string &szString, const char *pszTrim );
 // отрезать все 'cTrim' справа
 MISC_EXPORT void TrimRight( std::string &szString, const char cTrim );
+
 // отрезать все whitespaces справа
 inline void TrimRight( std::string &szString )
 {
 	TrimRight( szString, " \t\n\r" );
 }
+
 // отрезать все 'pszTrim' с обоих концов
 inline void TrimBoth( std::string &szString, const char *pszTrim )
 {
 	TrimLeft( szString, pszTrim );
 	TrimRight( szString, pszTrim );
 }
+
 // отрезать все 'cTrim' с обоих концов
 inline void TrimBoth( std::string &szString, const char cTrim )
 {
 	TrimLeft( szString, cTrim );
 	TrimRight( szString, cTrim );
 }
+
 // отрезать все whitespaces с обоих концов
 inline void TrimBoth( std::string &szString )
 {
 	TrimBoth( szString, " \t\n\r" );
 }
+
 // вырезать все символы 'cTrim' из строки
 void TrimInside( std::string &szString, const char *pszTrim );
+
 inline void TrimInside( std::string &szString, const char cTrim )
 {
 	szString.erase( remove( szString.begin(), szString.end(), cTrim ), szString.end() );
 }
+
 inline void TrimInside( std::string &szString )
 {
 	TrimInside( szString, " \t\n\r" );
@@ -209,23 +220,28 @@ inline int MSVCMustDie_tolower( int a )
 {
 	return tolower( a );
 }
+
 inline int MSVCMustDie_toupper( int a )
 {
 	return toupper( a );
 }
+
 inline void ToLower( std::string *pRes )
 {
 	std::transform( pRes->begin(), pRes->end(), pRes->begin(), MSVCMustDie_tolower );
 }
+
 inline void ToLower( std::string *pRes, const std::string &szString )
 {
 	pRes->resize( szString.size() );
 	std::transform( szString.begin(), szString.end(), pRes->begin(), MSVCMustDie_tolower );
 }
+
 inline void ToUpper( std::string *pRes )
 {
 	std::transform( pRes->begin(), pRes->end(), pRes->begin(), MSVCMustDie_toupper );
 }
+
 inline void ToUpper( std::string *pRes, const std::string &szString )
 {
 	pRes->resize( szString.size() );
@@ -243,6 +259,7 @@ BOOST_FORCEINLINE char ASCII_tolower( const char chr )
 {
 	return chr - ( ( 'A' - 'a' ) & ( ( ( 'A' - chr - 1 ) & ( chr - 'Z' - 1 ) ) >> 7 ) );
 }
+
 inline void ToLowerASCII( std::string *pRes )
 {
 	for ( std::string::iterator it = pRes->begin(); it != pRes->end(); ++it )
@@ -250,6 +267,7 @@ inline void ToLowerASCII( std::string *pRes )
 		*it = ASCII_tolower( *it );
 	}
 }
+
 inline void ToLowerASCII( std::string *pRes, const std::string &szString )
 {
 	const int nSize = szString.size();
@@ -262,36 +280,46 @@ inline void ToLowerASCII( std::string *pRes, const std::string &szString )
 
 // convert 'string', which represents integer value in any radix (oct, dec, hex) to 'int'
 MISC_EXPORT int ToInt( const char *pszString );
+
 inline int ToInt( const std::string &szString )
 {
 	return ToInt( szString.c_str() );
 }
+
 unsigned long ToULong( const char *pszString );
+
 inline unsigned long ToULong( const std::string &szString )
 {
 	return ToULong( szString.c_str() );
 }
+
 // Decimal only, which is what atol and _wtol did. Deliberately not ToInt above:
 // that reads the radix from a prefix, so "010" is 8 there and 10 here. Markup and
 // configuration values are written by hand and a leading zero in them is padding,
 // not a base.
 MISC_EXPORT int ToIntDec( const char *pszString );
+
 inline int ToIntDec( const std::string &szString )
 {
 	return ToIntDec( szString.c_str() );
 }
+
 // markup parameters arrive wide, and a number in them is ASCII either way
 inline int ToIntDec( const std::wstring &wszString )
 {
 	return ToIntDec( WideToUTF8( wszString ) );
 }
+
 // convert 'string', which represents FP value to 'float' and 'double'
 MISC_EXPORT float ToFloat( const char *pszString );
+
 inline float ToFloat( const std::string &szString )
 {
 	return ToFloat( szString.c_str() );
 }
+
 double ToDouble( const char *pszString );
+
 inline double ToDouble( const std::string &szString )
 {
 	return ToDouble( szString.c_str() );
@@ -302,23 +330,28 @@ inline bool IsBinDigit( const char cChar )
 {
 	return ( ( cChar == '0' ) && ( cChar == '1' ) );
 }
+
 inline bool IsOctDigit( const char cChar )
 {
 	return ( ( cChar >= '0' ) && ( cChar <= '7' ) );
 }
+
 inline bool IsDecDigit( const char cChar )
 {
 	return ( ( cChar >= '0' ) && ( cChar <= '9' ) );
 }
+
 inline bool IsHexDigit( const char cChar )
 {
 	return ( ( cChar >= '0' ) && ( cChar <= '9' ) ) || ( ( cChar >= 'a' ) && ( cChar <= 'f' ) ) ||
 	       ( ( cChar >= 'A' ) && ( cChar <= 'F' ) );
 }
+
 inline bool IsSign( const char cChar )
 {
 	return ( ( cChar == '-' ) || ( cChar == '+' ) );
 }
+
 MISC_EXPORT bool IsDecNumber( const std::string &szString );
 bool IsOctNumber( const std::string &szString );
 MISC_EXPORT bool IsHexNumber( const std::string &szString );
@@ -327,10 +360,12 @@ MISC_EXPORT bool IsHexNumber( const std::string &szString );
 // NOTE: BinToString() doesn't attach '\0' at the end!!!
 MISC_EXPORT void *StringToBin( const char *pszData, void *pBuffer, int *pnSize );
 MISC_EXPORT const char *BinToString( const void *pData, int nSize, char *pszBuffer );
+
 BOOST_FORCEINLINE char HalfByteToHexSymbol( const unsigned char chr )
 {
 	return chr >= 10 ? 'a' + ( chr - 10 ) : '0' + chr;
 }
+
 BOOST_FORCEINLINE unsigned char HexSymbolToHalfByte( const char chr )
 {
 	if ( chr >= 'a' )
@@ -346,6 +381,7 @@ BOOST_FORCEINLINE unsigned char HexSymbolToHalfByte( const char chr )
 		return chr - '0';
 	}
 }
+
 inline std::string ToHex( int number )
 {
 	std::stringstream stream;
@@ -361,14 +397,17 @@ inline void ToMBCS( std::string *pRes, const std::wstring &szSrc )
 {
 	*pRes = WideToUTF8( szSrc );
 }
+
 inline std::string ToMBCS( const std::wstring &szSrc )
 {
 	return WideToUTF8( szSrc );
 }
+
 inline void ToUnicode( std::wstring *pRes, const std::string &szSrc )
 {
 	*pRes = UTF8ToWide( szSrc );
 }
+
 inline std::wstring ToUnicode( const std::string &szSrc )
 {
 	return UTF8ToWide( szSrc );
@@ -401,14 +440,26 @@ class CCharSeparator
 
 public:
 	CCharSeparator( const TChar chr ) : tChr( chr ) {}
-	bool operator()( const TChar tSymbol ) const { return tSymbol == tChr; }
+
+	bool operator()( const TChar tSymbol ) const
+	{
+		return tSymbol == tChr;
+	}
 };
 
 template <class TChar>
 struct SQuoteTest
 {
-	static BOOST_FORCEINLINE bool IsOpen( const TChar chr ) { return ( chr == TChar( '\"' ) ); }
-	static BOOST_FORCEINLINE bool IsClose( const TChar chr ) { return ( chr == TChar( '\"' ) ); }
+	static BOOST_FORCEINLINE bool IsOpen( const TChar chr )
+	{
+		return ( chr == TChar( '\"' ) );
+	}
+
+	static BOOST_FORCEINLINE bool IsClose( const TChar chr )
+	{
+		return ( chr == TChar( '\"' ) );
+	}
+
 	static BOOST_FORCEINLINE TChar GetClose( const TChar chr )
 	{
 		return chr == TChar( '\"' ) ? TChar( '\"' ) : TChar( -1 );
@@ -422,10 +473,12 @@ struct SBracketsTest
 	{
 		return ( chr == TChar( '(' ) ) || ( chr == TChar( '[' ) ) || ( chr == TChar( '{' ) ) || ( chr == TChar( '<' ) );
 	}
+
 	static BOOST_FORCEINLINE bool IsClose( const TChar chr )
 	{
 		return ( chr == TChar( ')' ) ) || ( chr == TChar( ']' ) ) || ( chr == TChar( '}' ) ) || ( chr == TChar( '>' ) );
 	}
+
 	static BOOST_FORCEINLINE TChar GetClose( const TChar chr )
 	{
 		switch ( chr )
@@ -451,11 +504,13 @@ struct SBracketsQuoteTest
 		return ( chr == TChar( '(' ) ) || ( chr == TChar( '[' ) ) || ( chr == TChar( '{' ) ) || ( chr == TChar( '<' ) ) ||
 		       ( chr == TChar( '\"' ) ) || ( chr == TChar( '\'' ) );
 	}
+
 	static BOOST_FORCEINLINE bool IsClose( const char chr )
 	{
 		return ( chr == TChar( ')' ) ) || ( chr == TChar( ']' ) ) || ( chr == TChar( '}' ) ) || ( chr == TChar( '>' ) ) ||
 		       ( chr == TChar( '\"' ) ) || ( chr == TChar( '\'' ) );
 	}
+
 	static BOOST_FORCEINLINE TChar GetClose( const char chr )
 	{
 		switch ( chr )
@@ -483,7 +538,11 @@ class CBracketSeparator
 	const TChar cSeparator{}; // separator char
 	std::vector<TChar> stc;   // close brackets stack
 public:
-	CBracketSeparator( const TChar _chr ) : cSeparator( _chr ) { stc.reserve( 32 ); }
+	CBracketSeparator( const TChar _chr ) : cSeparator( _chr )
+	{
+		stc.reserve( 32 );
+	}
+
 	//
 	bool operator()( const TChar chr )
 	{
@@ -523,11 +582,13 @@ public:
 	{
 		Next();
 	}
+
 	CStringIterator( const std::basic_string<TChar> &szString, const TChar cSeparator )
 			: szInput( szString ), nPrevPos( -1 ), nCurrPos( -1 ), separator( cSeparator )
 	{
 		Next();
 	}
+
 	// iterate to next tag position
 	void Next()
 	{
@@ -542,10 +603,19 @@ public:
 		}
 		nCurrPos = szInput.size();
 	}
+
 	// are we finished iteration?
-	bool IsEnd() const { return nPrevPos > nCurrPos; }
+	bool IsEnd() const
+	{
+		return nPrevPos > nCurrPos;
+	}
+
 	//
-	std::basic_string<TChar> Get() const { return szInput.substr( nPrevPos, nCurrPos - nPrevPos ); }
+	std::basic_string<TChar> Get() const
+	{
+		return szInput.substr( nPrevPos, nCurrPos - nPrevPos );
+	}
+
 	void Get( std::basic_string<TChar> *pString )
 	{
 		if ( nCurrPos > nPrevPos )
@@ -558,8 +628,16 @@ public:
 			pString->clear();
 		}
 	}
-	int GetPrevPos() const { return nPrevPos; }
-	int GetCurrPos() const { return nCurrPos; }
+
+	int GetPrevPos() const
+	{
+		return nPrevPos;
+	}
+
+	int GetCurrPos() const
+	{
+		return nCurrPos;
+	}
 };
 
 namespace NImplementation
@@ -599,9 +677,14 @@ namespace NImplementation
 		std::vector<int> sizes;
 
 		SPrefixesArray( const int _nSampleSize ) : nSampleSize( _nSampleSize ), sizes( nSampleSize + 2, 0 ) {}
-		int &operator[]( const int nIndex ) { return nIndex <= nSampleSize ? sizes[nIndex] : sizes[nSampleSize + 1]; }
+
+		int &operator[]( const int nIndex )
+		{
+			return nIndex <= nSampleSize ? sizes[nIndex] : sizes[nSampleSize + 1];
+		}
 	};
-}
+} // namespace NImplementation
+
 template <class T>
 void FastSearch( const char *pszBegin,
                  const int nSize,

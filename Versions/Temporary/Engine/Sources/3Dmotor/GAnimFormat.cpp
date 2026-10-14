@@ -41,6 +41,7 @@ void CGrannyBaseStuffLoader::Recalc()
 }
 
 } // namespace NAnimation
+
 using namespace NAnimation;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x13173BC2, CGrannyBaseStuffLoader )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x70683130, CGrannyAnimationLoader )

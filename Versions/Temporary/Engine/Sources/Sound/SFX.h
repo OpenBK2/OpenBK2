@@ -58,6 +58,7 @@ struct ISFX : public CObjectBase
 	{
 		tidTypeID = 0x110BDC40
 	};
+
 	//
 	virtual CObjectBase *QI( int nInterfaceTypeID ) = 0;
 	// Init and close sound system

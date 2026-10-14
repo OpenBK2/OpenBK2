@@ -9,6 +9,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //class CAIUnit;
 class CBasicGun;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CTurret : public CLinkObject
 {
@@ -66,15 +67,31 @@ private:
 
 protected:
 	virtual void CheckAlive() = 0;
-	virtual const bool IsBackGunsDirection() const { return false; }
-	virtual const CVec2 &GetPlatformOffset() const { return VNULL2; }
+
+	virtual const bool IsBackGunsDirection() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 &GetPlatformOffset() const
+	{
+		return VNULL2;
+	}
 
 public:
 	CTurret() {}
+
 	CTurret( const uint16_t wHorRotationSpeed, const uint16_t wVerRotationSpeed, bool bReturnToNULLVerAngle );
 
-	const float GetHorRotationSpeed() const { return hor.wRotationSpeed; }
-	const float GetVerRotationSpeed() const { return ver.wRotationSpeed; }
+	const float GetHorRotationSpeed() const
+	{
+		return hor.wRotationSpeed;
+	}
+
+	const float GetVerRotationSpeed() const
+	{
+		return ver.wRotationSpeed;
+	}
 
 	virtual void Turn( const uint16_t wHorAngle, const uint16_t wVerAngle, const bool bInstantly = false );
 	// возвращает - был произведён поворот, или turret уже в нужном положении
@@ -85,34 +102,87 @@ public:
 	void StopTurning();
 	void StopHorTurning();
 	void StopVerTurning();
+
 	// закончен ли поворот
-	bool IsFinished() const { return hor.bFinished && ver.bFinished; }
-	bool IsHorFinished() const { return hor.bFinished; }
-	bool IsVerFinished() const { return ver.bFinished; }
+	bool IsFinished() const
+	{
+		return hor.bFinished && ver.bFinished;
+	}
+
+	bool IsHorFinished() const
+	{
+		return hor.bFinished;
+	}
+
+	bool IsVerFinished() const
+	{
+		return ver.bFinished;
+	}
+
 	// можно вернуть пушку к нулевому углу поворота
 	void SetCanReturn();
 
-	uint16_t GetHorCurAngle() const { return GetCurAngle( hor ); }
-	uint16_t GetVerCurAngle() const { return GetCurAngle( ver ); }
+	uint16_t GetHorCurAngle() const
+	{
+		return GetCurAngle( hor );
+	}
 
-	uint16_t GetHorFinalAngle() const { return hor.wFinalAngle; }
-	uint16_t GetVerFinalAngle() const { return ver.wFinalAngle; }
+	uint16_t GetVerCurAngle() const
+	{
+		return GetCurAngle( ver );
+	}
 
-	const NTimer::STime &GetHorEndTime() const { return hor.endTime; }
-	const NTimer::STime &GetVerEndTime() const { return ver.endTime; }
-	const NTimer::STime GetEndTurnTime() const { return (std::max)( GetHorEndTime(), GetVerEndTime() ); }
+	uint16_t GetHorFinalAngle() const
+	{
+		return hor.wFinalAngle;
+	}
+
+	uint16_t GetVerFinalAngle() const
+	{
+		return ver.wFinalAngle;
+	}
+
+	const NTimer::STime &GetHorEndTime() const
+	{
+		return hor.endTime;
+	}
+
+	const NTimer::STime &GetVerEndTime() const
+	{
+		return ver.endTime;
+	}
+
+	const NTimer::STime GetEndTurnTime() const
+	{
+		return (std::max)( GetHorEndTime(), GetVerEndTime() );
+	}
 
 	void Segment();
 
 	// сопровождать пушкой врага
 	void TraceAim( class CAIUnit *pUnit, class CBasicGun *pGun );
-	class CAIUnit *GetTracedUnit() { return pTracedUnit; }
+
+	class CAIUnit *GetTracedUnit()
+	{
+		return pTracedUnit;
+	}
+
 	void StopTracing();
 
-	const float GetHorRotateSpeed() const { return hor.wRotationSpeed; }
-	const float GetVerRotateSpeed() const { return ver.wRotationSpeed; }
+	const float GetHorRotateSpeed() const
+	{
+		return hor.wRotationSpeed;
+	}
 
-	bool DoesRotateVert() const { return ver.wRotationSpeed != 0; }
+	const float GetVerRotateSpeed() const
+	{
+		return ver.wRotationSpeed;
+	}
+
+	bool DoesRotateVert() const
+	{
+		return ver.wRotationSpeed != 0;
+	}
 
 	virtual CVec2 GetOwnerCenter() = 0;
 	virtual uint16_t GetOwnerFrontDir() = 0;
@@ -134,19 +204,42 @@ public:
 	// залокана ли каким-либо gun-ом, не равным pGun
 	bool IsLocked( const class CBasicGun *pGun );
 
-	void SetDefaultHorAngle( const uint16_t wHorAngle ) { wDefaultHorAngle = wHorAngle; }
-	const uint16_t GetDefaultHorAngle() const { return wDefaultHorAngle; }
+	void SetDefaultHorAngle( const uint16_t wHorAngle )
+	{
+		wDefaultHorAngle = wHorAngle;
+	}
+
+	const uint16_t GetDefaultHorAngle() const
+	{
+		return wDefaultHorAngle;
+	}
 
 	virtual bool IsOwnerOperable() const = 0;
 
-	virtual const bool IsVisible( const uint8_t cParty ) const { return true; }
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const { pTiles->clear(); }
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const { return false; }
+	virtual const bool IsVisible( const uint8_t cParty ) const
+	{
+		return true;
+	}
+
+	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const
+	{
+		pTiles->clear();
+	}
+
+	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const
+	{
+		return false;
+	}
 
 	// можно/нельзя вращать
 	virtual void SetRotateTurretState( bool bCanRotate ) {}
-	virtual bool GetRotateTurretState() const { return true; }
+
+	virtual bool GetRotateTurretState() const
+	{
+		return true;
+	}
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CUnitTurret : public CTurret
 {
@@ -179,13 +272,20 @@ public:
 	}
 
 private:
-	void CheckAlive() { SetAlive( pOwner && pOwner->IsAlive() ); }
+	void CheckAlive()
+	{
+		SetAlive( pOwner && pOwner->IsAlive() );
+	}
 
 protected:
-	const bool IsBackGunsDirection() const { return bBuckGunsDirection; }
+	const bool IsBackGunsDirection() const
+	{
+		return bBuckGunsDirection;
+	}
 
 public:
 	CUnitTurret() {}
+
 	CUnitTurret( class CAIUnit *pOwner,
 	             const int nPlatform,
 	             const uint16_t wHorRotationSpeed,
@@ -208,16 +308,35 @@ public:
 	virtual const int GetOwnerParty() const;
 
 	virtual uint16_t GetHorTurnConstraint() const;
-	virtual uint16_t GetVerTurnConstraint() const { return wVerConstraint; }
 
-	virtual void SetHorTurnConstraint( const uint16_t wLimit ) { wHorConstraint = wLimit; }
-	virtual void ResetHorTurnConstraint() { wHorConstraint = wOldHorConstraint; }
+	virtual uint16_t GetVerTurnConstraint() const
+	{
+		return wVerConstraint;
+	}
+
+	virtual void SetHorTurnConstraint( const uint16_t wLimit )
+	{
+		wHorConstraint = wLimit;
+	}
+
+	virtual void ResetHorTurnConstraint()
+	{
+		wHorConstraint = wOldHorConstraint;
+	}
 
 	virtual bool IsOwnerOperable() const;
 
-	virtual void SetRotateTurretState( bool bCanRotate ) { bCanRotateTurret = bCanRotate; }
-	virtual bool GetRotateTurretState() const { return bCanRotateTurret; }
+	virtual void SetRotateTurretState( bool bCanRotate )
+	{
+		bCanRotateTurret = bCanRotate;
+	}
+
+	virtual bool GetRotateTurretState() const
+	{
+		return bCanRotateTurret;
+	}
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CMountedTurret : public CTurret
 {
@@ -245,26 +364,54 @@ public:
 	}
 
 private:
-	void CheckAlive() { SetAlive( IsValidObj( pBuilding ) ); }
+	void CheckAlive()
+	{
+		SetAlive( IsValidObj( pBuilding ) );
+	}
 
 public:
 	CMountedTurret() {}
+
 	CMountedTurret( CBuilding *_pBuilding, const int _nSlot );
 
 	virtual void GetHorTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) {}
+
 	virtual void GetVerTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) {}
 
-	virtual CVec2 GetOwnerCenter() { return center; }
-	virtual uint16_t GetOwnerFrontDir() { return dir; }
-	virtual float GetOwnerZ() { return 0; }
+	virtual CVec2 GetOwnerCenter()
+	{
+		return center;
+	}
+
+	virtual uint16_t GetOwnerFrontDir()
+	{
+		return dir;
+	}
+
+	virtual float GetOwnerZ()
+	{
+		return 0;
+	}
+
 	virtual const int GetOwnerParty() const;
 
 	virtual uint16_t GetHorTurnConstraint() const;
 	virtual uint16_t GetVerTurnConstraint() const;
 
-	virtual void SetHorTurnConstraint( const uint16_t wLimit ) { wHorTurnConstraint = wLimit; }
-	virtual void ResetHorTurnConstraint() { wHorTurnConstraint = wOldHorConstraint; }
+	virtual void SetHorTurnConstraint( const uint16_t wLimit )
+	{
+		wHorTurnConstraint = wLimit;
+	}
 
-	virtual bool IsOwnerOperable() const { return true; }
+	virtual void ResetHorTurnConstraint()
+	{
+		wHorTurnConstraint = wOldHorConstraint;
+	}
+
+	virtual bool IsOwnerOperable() const
+	{
+		return true;
+	}
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -20,6 +20,7 @@ class CArray2D;
 template <class TUserObj, typename TPtr>
 class CDBPtr;
 class CDBID;
+
 namespace NFile
 {
 class CFilePath;
@@ -38,37 +39,47 @@ struct IXmlSaver : public CObjectBase
 	typedef const char *chunk_id;
 
 private:
-	char PORT_CDECL TestDataPath( ... ) { return 0; }
+	char PORT_CDECL TestDataPath( ... )
+	{
+		return 0;
+	}
+
 	template <class T1>
 	int PORT_CDECL TestDataPath( CArray2D<T1> * )
 	{
 		return 0;
 	}
+
 	template <class T1>
 	int PORT_CDECL TestDataPath( std::basic_string<T1> * )
 	{
 		return 0;
 	}
+
 	template <class T1>
 	int PORT_CDECL TestDataPath( std::vector<T1> * )
 	{
 		return 0;
 	}
+
 	template <class T1>
 	int PORT_CDECL TestDataPath( std::list<T1> * )
 	{
 		return 0;
 	}
+
 	template <class T1, class T2, class T3>
 	int PORT_CDECL TestDataPath( std::unordered_map<T1, T2, T3> * )
 	{
 		return 0;
 	}
+
 	template <class T1, class T2, class T3, class T4>
 	int PORT_CDECL TestDataPath( std::map<T1, T2, T3, T4> * )
 	{
 		return 0;
 	}
+
 	// add boolean built-in type
 	template <class TYPE>
 	void AddBoolData( chunk_id idChunk, TYPE *pData, int nChunkNumber )
@@ -80,6 +91,7 @@ private:
 			*pData = TYPE( bData );
 		}
 	}
+
 	// add integer built-in types
 	template <class TYPE>
 	void AddIntData( chunk_id idChunk, TYPE *pData, int nChunkNumber )
@@ -91,6 +103,7 @@ private:
 			*pData = TYPE( nData );
 		}
 	}
+
 	// add fp built-in types
 	template <class TYPE>
 	void AddFPData( chunk_id idChunk, TYPE *pData, int nChunkNumber )
@@ -102,6 +115,7 @@ private:
 			*pData = TYPE( fData );
 		}
 	}
+
 	//
 	template <class T>
 	void PORT_CDECL CallObjectSerialize( const chunk_id idChunk, int nChunkNumber, T *p, ... )
@@ -113,6 +127,7 @@ private:
 		p->operator&( *this );
 		FinishChunk();
 	}
+
 	// enum or raw object?
 	template <class T>
 	void PORT_CDECL CallRawObjectSerialize( const chunk_id idChunk, int nChunkNumber, T *p, SInt2Type<1> *pp )
@@ -133,11 +148,13 @@ private:
 			FinishChunk();
 		}
 	}
+
 	template <class T>
 	void PORT_CDECL CallRawObjectSerialize( const chunk_id idChunk, int nChunkNumber, T *p, SInt2Type<0> *pp )
 	{
 		DataChunk( idChunk, p, sizeof( T ), nChunkNumber );
 	}
+
 	template <class T>
 	void PORT_CDECL CallObjectSerialize( const chunk_id idChunk, int nChunkNumber, T *p, SInt2Type<1> *pp )
 	{
@@ -145,6 +162,7 @@ private:
 		SInt2Type<N_KNOWN_ENUM> separator;
 		CallRawObjectSerialize( idChunk, nChunkNumber, p, &separator );
 	}
+
 	//
 	template <class T>
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, ... )
@@ -153,6 +171,7 @@ private:
 		SInt2Type<N_HAS_SERIALIZE_TEST> separator;
 		CallObjectSerialize( idChunk, nChunkNumber, p, &separator );
 	}
+
 	// file path reference (must be before string due to it is derived from it)
 	template <class T>
 	void AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, NFile::CFilePath *pData )
@@ -164,6 +183,7 @@ private:
 		DataChunkFilePath( pData );
 		FinishChunk();
 	}
+
 	template <class T, class T1>
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::basic_string<T1> *pStr )
 	{
@@ -174,6 +194,7 @@ private:
 		DataChunkString( *pStr );
 		FinishChunk();
 	}
+
 	template <class T, class T1>
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, CArray2D<T1> *pArr )
 	{
@@ -191,6 +212,7 @@ private:
 		}
 		FinishChunk();
 	}
+
 	template <class T, class T1>
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::vector<T1> *pVec )
 	{
@@ -206,6 +228,7 @@ private:
 		DoVector( *p );
 		FinishChunk();
 	}
+
 	template <class T, class T1>
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::list<T1> *pList )
 	{
@@ -226,6 +249,7 @@ private:
 		}
 		FinishChunk();
 	}
+
 	template <class T, class T1, class T2, class T3>
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::unordered_map<T1, T2, T3> *pHash )
 	{
@@ -236,6 +260,7 @@ private:
 		DoHashMap( *pHash );
 		FinishChunk();
 	}
+
 	template <class T, class T1, class T2, class T3, class T4>
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::map<T1, T2, T3, T4> *pMap )
 	{
@@ -246,6 +271,7 @@ private:
 		DoMap( *pMap );
 		FinishChunk();
 	}
+
 	template <class T, class T1, class T2>
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::unordered_set<T1, T2> *pHash )
 	{
@@ -256,6 +282,7 @@ private:
 		DoHashSet( *pHash );
 		FinishChunk();
 	}
+
 	template <class T, class T1, class T2>
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::pair<T1, T2> *pData )
 	{
@@ -267,6 +294,7 @@ private:
 		Add( "Second", &( pData->second ) );
 		FinishChunk();
 	}
+
 	template <class T>
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, CVec2 *pData )
 	{
@@ -278,6 +306,7 @@ private:
 		Add( "y", &( pData->y ) );
 		FinishChunk();
 	}
+
 	template <class T>
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, CVec3 *pData )
 	{
@@ -290,6 +319,7 @@ private:
 		Add( "z", &( pData->z ) );
 		FinishChunk();
 	}
+
 	template <class T>
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, CVec4 *pData )
 	{
@@ -303,11 +333,13 @@ private:
 		Add( "w", &( pData->w ) );
 		FinishChunk();
 	}
+
 	template <class T>
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, CQuat *pData )
 	{
 		AddInternal( idChunk, nChunkNumber, p, const_cast<CVec4 *>( &pData->GetInternalVector() ) );
 	}
+
 	template <class T, class T1>
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, CTRect<T1> *pData )
 	{
@@ -321,6 +353,7 @@ private:
 		Add( "y2", &( pData->y2 ) );
 		FinishChunk();
 	}
+
 	template <class T, class T1>
 	void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, CTPoint<T1> *pData )
 	{
@@ -332,6 +365,7 @@ private:
 		Add( "y", &( pData->y ) );
 		FinishChunk();
 	}
+
 	// smart pointers specialization
 	// general smart ptr/obj
 	template <class T, class T1, class T2>
@@ -353,6 +387,7 @@ private:
 		//
 		FinishChunk();
 	}
+
 	// database ptr
 	template <class T, class T1, class T2>
 	void AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, CDBPtr<T1, T2> *pData )
@@ -378,6 +413,7 @@ private:
 		}
 		FinishChunk();
 	}
+
 	// database DBID
 	template <class T>
 	void AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, CDBID *pData )
@@ -389,6 +425,7 @@ private:
 		DataChunkDBID( pData );
 		FinishChunk();
 	}
+
 	// vector
 	template <class T>
 	void DoVector( std::vector<T> &data )
@@ -408,6 +445,7 @@ private:
 			Add( "Item", &data[i], i + 1 );
 		}
 	}
+
 	template <class T>
 	void DoDataVector( std::vector<T> &data )
 	{
@@ -423,6 +461,7 @@ private:
 			DataChunk( "Data", &data[0], sizeof( T ) * nSize, 0 );
 		}
 	}
+
 	template <class T1, class T2>
 	void DoHashSet( std::unordered_set<T1, T2> &data )
 	{
@@ -440,6 +479,7 @@ private:
 			DoDataVector( vectorData );
 		}
 	}
+
 	// hash_map
 	template <class T1, class T2, class T3>
 	void DoHashMap( std::unordered_map<T1, T2, T3> &data )
@@ -475,6 +515,7 @@ private:
 			}
 		}
 	}
+
 	// std::map: the same Item/Key/Data layout as a hash map, so either container
 	// reads what the other wrote, but written in key order. A hash map is written
 	// in its iteration order, which differs between standard libraries.
@@ -511,6 +552,7 @@ private:
 			}
 		}
 	}
+
 	// 2D Array
 	template <class T>
 	void Do2DArray( CArray2D<T> &a )
@@ -532,6 +574,7 @@ private:
 			FinishChunk();
 		}
 	}
+
 	template <class T>
 	void Do2DArrayData( CArray2D<T> &a )
 	{
@@ -547,6 +590,7 @@ private:
 			DataChunk( "Data", &a[0][0], sizeof( T ) * nSizeX * nSizeY, 0 );
 		}
 	}
+
 	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber ) = 0;
 	virtual void FinishChunk() = 0;
 	virtual int CountChunks() = 0;
@@ -575,17 +619,20 @@ public:
 	virtual bool AddAttribute( const chunk_id attrName, float *pData ) = 0;
 	virtual bool AddAttribute( const chunk_id attrName, std::string *pData ) = 0;
 	virtual bool AddAttribute( const chunk_id attrName, std::wstring *pData ) = 0;
+
 	// add raw data of specified size (in bytes)
 	void AddRawData( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber = 0 )
 	{
 		DataChunk( idChunk, pData, nSize, nChunkNumber );
 	}
+
 	// main add function - add all structures/classes/datas through it
 	template <class T>
 	void Add( const chunk_id idChunk, T *p, int nChunkNumber = 0 )
 	{
 		AddInternal( idChunk, nChunkNumber, p, p );
 	}
+
 	// adding typed super class - use it only for super class members serialization
 	template <class T>
 	void AddTypedSuper( T *pData )
@@ -597,6 +644,7 @@ public:
 		pData->T::operator&( *this );
 		FinishChunk();
 	}
+
 	template <class T>
 	void AddPolymorphicBase( const chunk_id idChunk, T *pData, int nChunkNumber = 0 )
 	{
@@ -607,6 +655,7 @@ public:
 		pData->operator&( *this );
 		FinishChunk();
 	}
+
 	template <class TUserObj, class TRef>
 	void AddInPlace( const chunk_id idChunk, CPtrBase<TUserObj, TRef> *pData, int nChunkNumber = 0 )
 	{
@@ -649,18 +698,21 @@ inline void PORT_CDECL IXmlSaver::CallObjectSerialize<boost::uuids::uuid>( const
 {
 	DataChunk( idChunk, pData, nChunkNumber );
 }
+
 template <>
 inline void PORT_CDECL
 IXmlSaver::CallObjectSerialize<bool>( const chunk_id idChunk, int nChunkNumber, bool *pData, SInt2Type<1> *pp )
 {
 	AddBoolData( idChunk, pData, nChunkNumber );
 }
+
 template <>
 inline void PORT_CDECL
 IXmlSaver::CallObjectSerialize<char>( const chunk_id idChunk, int nChunkNumber, char *pData, SInt2Type<1> *pp )
 {
 	AddIntData( idChunk, pData, nChunkNumber );
 }
+
 template <>
 inline void PORT_CDECL IXmlSaver::CallObjectSerialize<signed char>( const chunk_id idChunk,
                                                                     int nChunkNumber,
@@ -669,6 +721,7 @@ inline void PORT_CDECL IXmlSaver::CallObjectSerialize<signed char>( const chunk_
 {
 	AddIntData( idChunk, pData, nChunkNumber );
 }
+
 template <>
 inline void PORT_CDECL IXmlSaver::CallObjectSerialize<unsigned char>( const chunk_id idChunk,
                                                                       int nChunkNumber,
@@ -677,12 +730,14 @@ inline void PORT_CDECL IXmlSaver::CallObjectSerialize<unsigned char>( const chun
 {
 	AddIntData( idChunk, pData, nChunkNumber );
 }
+
 template <>
 inline void PORT_CDECL
 IXmlSaver::CallObjectSerialize<short>( const chunk_id idChunk, int nChunkNumber, short *pData, SInt2Type<1> *pp )
 {
 	AddIntData( idChunk, pData, nChunkNumber );
 }
+
 template <>
 inline void PORT_CDECL IXmlSaver::CallObjectSerialize<unsigned short>( const chunk_id idChunk,
                                                                        int nChunkNumber,
@@ -691,12 +746,14 @@ inline void PORT_CDECL IXmlSaver::CallObjectSerialize<unsigned short>( const chu
 {
 	AddIntData( idChunk, pData, nChunkNumber );
 }
+
 template <>
 inline void PORT_CDECL
 IXmlSaver::CallObjectSerialize<long>( const chunk_id idChunk, int nChunkNumber, long *pData, SInt2Type<1> *pp )
 {
 	AddIntData( idChunk, pData, nChunkNumber );
 }
+
 template <>
 inline void PORT_CDECL IXmlSaver::CallObjectSerialize<unsigned long>( const chunk_id idChunk,
                                                                       int nChunkNumber,
@@ -705,12 +762,14 @@ inline void PORT_CDECL IXmlSaver::CallObjectSerialize<unsigned long>( const chun
 {
 	AddIntData( idChunk, pData, nChunkNumber );
 }
+
 template <>
 inline void PORT_CDECL
 IXmlSaver::CallObjectSerialize<int>( const chunk_id idChunk, int nChunkNumber, int *pData, SInt2Type<1> *pp )
 {
 	AddIntData( idChunk, pData, nChunkNumber );
 }
+
 template <>
 inline void PORT_CDECL IXmlSaver::CallObjectSerialize<unsigned int>( const chunk_id idChunk,
                                                                      int nChunkNumber,
@@ -719,12 +778,14 @@ inline void PORT_CDECL IXmlSaver::CallObjectSerialize<unsigned int>( const chunk
 {
 	AddIntData( idChunk, pData, nChunkNumber );
 }
+
 template <>
 inline void PORT_CDECL
 IXmlSaver::CallObjectSerialize<float>( const chunk_id idChunk, int nChunkNumber, float *pData, SInt2Type<1> *pp )
 {
 	AddFPData( idChunk, pData, nChunkNumber );
 }
+
 template <>
 inline void PORT_CDECL
 IXmlSaver::CallObjectSerialize<double>( const chunk_id idChunk, int nChunkNumber, double *pData, SInt2Type<1> *pp )
@@ -742,4 +803,5 @@ namespace NXml
 {
 struct SPool;
 }
+
 SYSTEM_EXPORT IXmlSaver *CreateXmlSaver( CDataStream *pStream, ESaverMode mode );

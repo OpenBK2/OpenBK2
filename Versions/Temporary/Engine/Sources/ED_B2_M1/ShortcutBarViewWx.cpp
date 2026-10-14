@@ -150,7 +150,10 @@ protected:
 	}
 
 public:
-	virtual ~CWxShortcutBarView() { Destroy(); }
+	virtual ~CWxShortcutBarView()
+	{
+		Destroy();
+	}
 
 	// IView
 	virtual bool Create( IWidget *pPane, unsigned nControlID )
@@ -173,9 +176,15 @@ public:
 		nOpenBar = -1;
 	}
 
-	virtual IWidget *GetWidget() { return this; }
+	virtual IWidget *GetWidget()
+	{
+		return this;
+	}
 
-	virtual void Show( bool bShow ) { ShowHost( bShow ); }
+	virtual void Show( bool bShow )
+	{
+		ShowHost( bShow );
+	}
 
 	virtual int BeginBar( unsigned nTabCommandHandlerID, unsigned nTabCommandID )
 	{
@@ -260,7 +269,7 @@ public:
 		nCommandID = _nCommandID;
 	}
 };
-}
+} // namespace
 
 namespace NShortcutBar
 {
@@ -268,4 +277,4 @@ IView *Create()
 {
 	return new CWxShortcutBarView();
 }
-}
+} // namespace NShortcutBar

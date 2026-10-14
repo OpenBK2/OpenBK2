@@ -69,7 +69,7 @@ void LoadFilters()
 		NLog::GetLogger()->Log( LT_ERROR, "Can't load object filters\n" );
 	}
 }
-}
+} // namespace
 
 class CEditorModuleB2M1 : public IEditorModule
 {

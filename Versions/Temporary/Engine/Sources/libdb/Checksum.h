@@ -28,7 +28,11 @@ class CCheckSum
 	uint32_t dwCheckSum = 0;
 	IBinSaver *p = nullptr;
 
-	char PORT_CDECL TestType( ... ) { return 0; }
+	char PORT_CDECL TestType( ... )
+	{
+		return 0;
+	}
+
 	// Vector elements are const here; recognize strings/nested vectors instead
 	// of hashing their implementation storage (including allocation addresses).
 	template <class T1>
@@ -36,8 +40,16 @@ class CCheckSum
 	{
 		return 0;
 	}
-	int PORT_CDECL TestType( const std::string * ) { return 0; }
-	int PORT_CDECL TestType( const std::wstring * ) { return 0; }
+
+	int PORT_CDECL TestType( const std::string * )
+	{
+		return 0;
+	}
+
+	int PORT_CDECL TestType( const std::wstring * )
+	{
+		return 0;
+	}
 
 	template <class T>
 	void DataCheckSum( T *p, const int nLen )
@@ -124,10 +136,13 @@ public:
 		return *this;
 	}
 
-	uint32_t GetCheckSum() const { return dwCheckSum; }
+	uint32_t GetCheckSum() const
+	{
+		return dwCheckSum;
+	}
 };
 
-}
+} // namespace NDb
 
 template <class TUserObj, typename TPtr>
 uint32_t CDBPtr<TUserObj, TPtr>::CalcCheckSum() const

@@ -19,7 +19,10 @@ public:
 	virtual bool ProcessEvent( const struct SGameMessage &msg );
 
 	// methods
-	uint32_t GetTime() const { return dwTime; }
+	uint32_t GetTime() const
+	{
+		return dwTime;
+	}
 
 	// members
 protected:

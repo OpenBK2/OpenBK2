@@ -54,15 +54,26 @@ struct SScreenEntryEqual
 {
 	std::string szName;
 
-	SScreenEntryEqual( const std::string &_szName ) { szName = _szName; }
-	bool operator()( const NDb::SUIScreenEntry &value ) const { return szName == value.szType; }
+	SScreenEntryEqual( const std::string &_szName )
+	{
+		szName = _szName;
+	}
+
+	bool operator()( const NDb::SUIScreenEntry &value ) const
+	{
+		return szName == value.szType;
+	}
 };
 
 struct STextEntryEqual
 {
 	std::string szTextID;
 
-	STextEntryEqual( const std::string &_szTextID ) { szTextID = _szTextID; }
+	STextEntryEqual( const std::string &_szTextID )
+	{
+		szTextID = _szTextID;
+	}
+
 	bool operator()( const CDBPtr<NDb::STextEntry> &value ) const
 	{
 		NI_VERIFY( value, "NULL text entry find", return false );
@@ -74,24 +85,45 @@ struct STagEntryEqual
 {
 	std::string szName;
 
-	STagEntryEqual( const std::string &_szName ) { szName = _szName; }
-	bool operator()( const NDb::SMLTag &value ) const { return szName == value.szName; }
+	STagEntryEqual( const std::string &_szName )
+	{
+		szName = _szName;
+	}
+
+	bool operator()( const NDb::SMLTag &value ) const
+	{
+		return szName == value.szName;
+	}
 };
 
 struct SSoundEntryEqual
 {
 	std::string szTextID;
 
-	SSoundEntryEqual( const std::string &_szTextID ) { szTextID = _szTextID; }
-	bool operator()( const NDb::SUISoundEntry &value ) const { return szTextID == value.szType; }
+	SSoundEntryEqual( const std::string &_szTextID )
+	{
+		szTextID = _szTextID;
+	}
+
+	bool operator()( const NDb::SUISoundEntry &value ) const
+	{
+		return szTextID == value.szType;
+	}
 };
 
 struct STextureEntryEqual
 {
 	std::string szID;
 
-	STextureEntryEqual( const std::string &_szID ) { szID = _szID; }
-	bool operator()( const NDb::SUITextureEntry &value ) const { return szID == value.szTextID; }
+	STextureEntryEqual( const std::string &_szID )
+	{
+		szID = _szID;
+	}
+
+	bool operator()( const NDb::SUITextureEntry &value ) const
+	{
+		return szID == value.szTextID;
+	}
 };
 
 // CCampaignState
@@ -506,6 +538,7 @@ struct SVar
 	ZDATA
 	std::string szName;
 	NGlobal::CValue value;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szName );
@@ -514,6 +547,7 @@ struct SVar
 	}
 
 	SVar() {}
+
 	SVar( const std::string &_szName, const NGlobal::CValue &_value ) : szName( _szName ), value( _value ) {}
 };
 

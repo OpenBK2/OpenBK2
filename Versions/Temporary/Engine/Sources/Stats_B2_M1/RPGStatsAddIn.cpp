@@ -16,6 +16,7 @@ PCConstructorInfo &ConstructorInfo()
 
 template <int N>
 struct SUserActionsChecker;
+
 template <>
 struct SUserActionsChecker<0>
 {
@@ -121,14 +122,17 @@ const bool NDb::SUnitBaseRPGStats::HasCommand( const int nCmd ) const
 	           ? true
 	           : ( nCmd < GetActions()->availCommands.GetSize() ? GetActions()->availCommands.GetData( nCmd ) : false );
 }
+
 void NDb::SUnitBaseRPGStats::GetUserActions( CUserActions *pActions ) const
 {
 	this->pActions->availUserActions.GetActions( pActions );
 }
+
 const bool NDb::SUnitBaseRPGStats::HasUserAction( const int nAction ) const
 {
 	return pActions->availUserActions.HasAction( nAction );
 }
+
 const CUserActions *NDb::SUnitBaseRPGStats::GetUserActions( bool bActionsBy ) const
 {
 	return bActionsBy ? &( pActions->availUserActions ) : &( pActions->availUserExposures );

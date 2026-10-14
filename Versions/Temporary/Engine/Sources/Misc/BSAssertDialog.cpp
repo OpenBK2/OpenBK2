@@ -35,6 +35,7 @@ struct SAssertionDlgParams
 	const std::vector<SCallStackEntry> &entries;
 	SIgnoresList &ignores;
 	const char *pszExtInfo;
+
 	//
 	SAssertionDlgParams( const char *pszNewFileName,
 	                     int nNewLineNumber,
@@ -282,4 +283,4 @@ bool ReportAssertionDlgProcCommand( HWND hwndDlg, uint16_t wCtrlID, uint16_t wNo
 	return false;
 }
 
-}
+} // namespace NBSU

@@ -14,6 +14,7 @@ extern CVec2 vScreenRect;
 extern CVec2 vScreenOrg;
 IScreen *CUIFactory::pScreenDuringLoad = 0;
 NInput::CGMORegContainer CUIFactory::registeredMessages;
+
 bool OnKnownMessage( const struct SGameMessage &msg )
 {
 	return true;

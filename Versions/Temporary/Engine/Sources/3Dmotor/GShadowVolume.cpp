@@ -29,6 +29,7 @@ static CVec3 vCamDirs[6] = {
 static std::vector<CObj<CObjectBase>> nodes;
 
 const zbuf_type N_HZ_MAX = 65535;
+
 class CHZBuffer : public IHZBuffer
 {
 	OBJECT_BASIC_METHODS( CHZBuffer );
@@ -54,7 +55,12 @@ public:
 			depthBuffer[k].SetSizes( nX, nY );
 		}
 	}
-	CArray2D<zbuf_type> &GetDepthBuffer() { return depthBuffer[0]; }
+
+	CArray2D<zbuf_type> &GetDepthBuffer()
+	{
+		return depthBuffer[0];
+	}
+
 	void BuildHZ()
 	{
 		for ( int k = 1; k < depthBuffer.size(); ++k )
@@ -132,6 +138,7 @@ public:
 			}
 		}
 	}
+
 	bool IsVisible( const CTRect<float> &r, zbuf_type nCheck ) const
 	{
 		int nX1 = Float2Int( ( r.x1 + 1 ) * 0.5f * depthBuffer[0].GetSizeX() - 0.5f );
@@ -160,6 +167,7 @@ public:
 		}
 		return false;
 	}
+
 	bool IsVisible( const SSphere &s, CTransformStack *pTS ) const
 	{
 		CTRect<float> r;
@@ -181,7 +189,11 @@ public:
 		}
 		return IsVisible( r, fCheck );
 	}
-	void SetBaseZ( int x, int y, zbuf_type n ) { depthBuffer[0][y][x] = n; }
+
+	void SetBaseZ( int x, int y, zbuf_type n )
+	{
+		depthBuffer[0][y][x] = n;
+	}
 };
 
 // Visible part generator
@@ -192,6 +204,7 @@ int BOOST_FORCEINLINE Float2IntScale( const float fpVar, const float fpScale )
 }
 
 class CPartsRender;
+
 class CPartsRender : public CRasterizer<CPartsRender>
 {
 	zbuf_type *pDepthBufferBase;
@@ -203,7 +216,10 @@ class CPartsRender : public CRasterizer<CPartsRender>
 	CArray2D<unsigned short> indexBuffer;
 	std::vector<int> refCount;
 
-	bool DoRenderBackface() const { return false; }
+	bool DoRenderBackface() const
+	{
+		return false;
+	}
 
 	void ClipVertical( int *pnY )
 	{
@@ -217,6 +233,7 @@ class CPartsRender : public CRasterizer<CPartsRender>
 		( *pnFY2 ) = (std::min)( *pnFY2, nHeight ); //N_OCCLUDE_BUFFER_HEIGHT );
 		( *pnFY ) = (std::min)( *pnFY, nHeight );   //N_OCCLUDE_BUFFER_HEIGHT );
 	}
+
 	void ClipHorizontal( int *pnSX, int *pnFX )
 	{
 		( *pnSX ) = (std::max)( *pnSX, 0 );
@@ -263,8 +280,17 @@ public:
 		pDepthBufferBase = &pHZBuffer->GetDepthBuffer()[0][0];
 		pIndexBufferBase = &indexBuffer[0][0];
 	}
-	int GetWidth() const { return nWidth; }
-	int GetHeight() const { return nHeight; }
+
+	int GetWidth() const
+	{
+		return nWidth;
+	}
+
+	int GetHeight() const
+	{
+		return nHeight;
+	}
+
 	void InitZBuffer( const SHMatrix &proj, float fRadius )
 	{
 		CArray2D<zbuf_type> &depthBuffer = pHZBuffer->GetDepthBuffer();
@@ -286,20 +312,34 @@ public:
 			}
 		}
 	}
+
 	void FastInitZBuffer()
 	{
 		CArray2D<zbuf_type> &depthBuffer = pHZBuffer->GetDepthBuffer();
 		depthBuffer.FillZero();
 		indexBuffer.FillZero();
 	}
-	void SetCurrentID( int n ) { nCurrentID = n; }
+
+	void SetCurrentID( int n )
+	{
+		nCurrentID = n;
+	}
+
 	void InitRefs( int n )
 	{
 		refCount.resize( 0 );
 		refCount.resize( n, 0 );
 	}
-	int GetRefs( int n ) { return refCount[n]; }
-	CHZBuffer *GetHZBuffer() const { return pHZBuffer; }
+
+	int GetRefs( int n )
+	{
+		return refCount[n];
+	}
+
+	CHZBuffer *GetHZBuffer() const
+	{
+		return pHZBuffer;
+	}
 	friend class CRasterizer<CPartsRender>;
 };
 
@@ -316,7 +356,9 @@ static int CountParts( const std::vector<SRenderPartSet> &l )
 struct SCompareRPS
 {
 	CVec3 vZ;
+
 	SCompareRPS( const CVec4 &_vZ ) : vZ( _vZ.x, _vZ.y, _vZ.z ) {}
+
 	bool operator()( const SRenderPartSet &a, const SRenderPartSet &b ) const
 	{
 		if ( a.nFloorMask > b.nFloorMask )
@@ -330,6 +372,7 @@ struct SCompareRPS
 		return false;
 	}
 };
+
 static void RenderStuff( CPartsRender &pr,
                          IRender *pRender,
                          CTransformStack *pTS,
@@ -635,14 +678,24 @@ class CShadowVolumeBuilder
 	{
 		N_MAX_POINTS = 10
 	};
+
 	struct SPoly
 	{
 		CVec3 points[N_MAX_POINTS];
 		int nSize;
 
 		SPoly() : nSize( 0 ) {}
-		int GetSize() const { return nSize; }
-		bool IsEmpty() const { return GetSize() < 3; }
+
+		int GetSize() const
+		{
+			return nSize;
+		}
+
+		bool IsEmpty() const
+		{
+			return GetSize() < 3;
+		}
+
 		void AddVertex( const CVec3 &v )
 		{
 			ASSERT( nSize < N_MAX_POINTS );
@@ -676,9 +729,14 @@ public:
 		resPoints.resize( 0 );
 		resTris.resize( 0 );
 	}
+
 	void AddTriangle( const CVec3 &p1, const CVec3 &p2, const CVec3 &p3 );
 	void BuildResult();
-	float GetHullRadius() const { return fHullRadius; }
+
+	float GetHullRadius() const
+	{
+		return fHullRadius;
+	}
 };
 
 int CShadowVolumeBuilder::AddPoint( const CVec3 &a )
@@ -819,14 +877,20 @@ struct SEdge
 
 	SEdge( int _nStart, int _nFinish ) : nStart( _nStart ), nFinish( _nFinish ) {}
 };
+
 inline bool operator==( const SEdge &a, const SEdge &b )
 {
 	return a.nStart == b.nStart && a.nFinish == b.nFinish;
 }
+
 struct SEdgeHash
 {
-	int operator()( const SEdge &a ) const { return ( a.nStart << 10 ) ^ a.nFinish; }
+	int operator()( const SEdge &a ) const
+	{
+		return ( a.nStart << 10 ) ^ a.nFinish;
+	}
 };
+
 typedef std::unordered_map<SEdge, int, SEdgeHash> CEdgesHash;
 
 struct SEdgeTracker
@@ -1004,6 +1068,7 @@ void MakeShadowVolumes( IRender *pRender,
 	*pHullRadius = shadowBuilder.GetHullRadius();
 }
 
-}
+} // namespace NGScene
+
 using namespace NGScene;
 BASIC_REGISTER_CLASS( _3DMOTOR, CHZBuffer )

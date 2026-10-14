@@ -23,15 +23,23 @@ class CSimpleConnection : public IConnection
 
 public:
 	CSimpleConnection() {}
+
 	CSimpleConnection(
 			CNet *pNet, bool bAsClient, const int nClientServerID, const int nClientLocalID, const int nMyServerID );
 	virtual bool IsAlive() const;
 
-	virtual CNet *GetNet() { return pNet; }
+	virtual CNet *GetNet()
+	{
+		return pNet;
+	}
 
 	virtual void SendGamePacket( CNetPacket *pPacket );
 	virtual bool ProcessPacketFromPlayersNet( CNetPacket *pPacket );
-	virtual bool ProcessPacketFromServer( CNetPacket *pPacket ) { return false; }
+
+	virtual bool ProcessPacketFromServer( CNetPacket *pPacket )
+	{
+		return false;
+	}
 
 	virtual CNetPacket *GetPacket();
 
@@ -51,17 +59,29 @@ class CThroughServerConnection : public IConnection
 
 public:
 	CThroughServerConnection() {}
+
 	CThroughServerConnection( const int nClientServerID, CNet *pNet );
 
-	virtual CNet *GetNet() { return pNet; }
+	virtual CNet *GetNet()
+	{
+		return pNet;
+	}
 
 	virtual void SendGamePacket( CNetPacket *pPacket );
-	virtual bool ProcessPacketFromPlayersNet( CNetPacket *pPacket ) { return false; }
+
+	virtual bool ProcessPacketFromPlayersNet( CNetPacket *pPacket )
+	{
+		return false;
+	}
+
 	virtual bool ProcessPacketFromServer( CNetPacket *pPacket );
 
 	virtual CNetPacket *GetPacket();
 
-	virtual bool IsAlive() const { return true; }
+	virtual bool IsAlive() const
+	{
+		return true;
+	}
 
 	virtual void TogglePauseNet( const bool bPause ) const;
 };

@@ -28,6 +28,7 @@ namespace NMapInfoEditor
 //  v0                            v1
 //
 typedef std::vector<CVec2> CSpotSquare;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SSpotLoadInfo : public SObjectLoadInfo
 {
@@ -51,6 +52,7 @@ public:
 	unsigned nLinkID;
 	CSpotSquare spotSquare;
 	CVec3 vAdditionalPosition;
+
 	//
 	void MakeAbsoluteSpotSquare()
 	{
@@ -61,6 +63,7 @@ public:
 			( *itSpotPoint ) += vMassCenter;
 		}
 	}
+
 	//
 	void MakeRelativeSpotSquare( bool bDirection )
 	{
@@ -77,20 +80,30 @@ public:
 			fDirection = GetPolarAngle( spotSquare[1] - spotSquare[0] );
 		}
 	}
-	void ClearAdditionalPosition( bool bUpdateSceneElements ) { vAdditionalPosition = VNULL3; }
+
+	void ClearAdditionalPosition( bool bUpdateSceneElements )
+	{
+		vAdditionalPosition = VNULL3;
+	}
+
 	//
 	// если присутствует объект возвращает true
 	bool Pick( const CVec3 &rvPos );
 	bool Pick( const CSelectionSquare &rSelectionSquare );
 	// рисует объект
 	bool Draw( CSceneDrawTool *pSceneDrawTool );
+
 	//
 	// вспомогательные методы
 	void UpdateSceneElements( bool bModel, bool bPosition, bool bDirection, float fAdditionalDirection ) {}
+
 	//
 	void FitToGrid( bool bUpdateSceneElements ) {}
+
 	void RotateTo90Degree( bool bUpdateSceneElements ) {}
+
 	void SetCommonHeight( bool bUpdateSceneElements ) {}
+
 	void FixInvalidPos( bool bUpdateSceneElements );
 
 	// абстрактные методы
@@ -101,13 +114,38 @@ public:
 	                                 uint32_t *pdwMainObject )
 	{
 	}
-	bool NeedMakeOrientation() { return false; }
-	bool KeepZeroHeight() { return false; }
-	bool KeepCommonHeight() { return false; }
-	bool NeedProcessEditParameters() { return true; }
+
+	bool NeedMakeOrientation()
+	{
+		return false;
+	}
+
+	bool KeepZeroHeight()
+	{
+		return false;
+	}
+
+	bool KeepCommonHeight()
+	{
+		return false;
+	}
+
+	bool NeedProcessEditParameters()
+	{
+		return true;
+	}
+
 	// процедуры
-	SObjectInfo *CallDuplicate() const { return Duplicate(); }
-	EObjectInfoType GetObjectInfoType() { return OIT_SPOT; }
+	SObjectInfo *CallDuplicate() const
+	{
+		return Duplicate();
+	}
+
+	EObjectInfoType GetObjectInfoType()
+	{
+		return OIT_SPOT;
+	}
+
 	// загружаем объект из базы
 	bool Load( const SObjectLoadInfo *pObjectLoadInfo, IEditorScene *pEditorScene, IManipulator *pManipulator );
 	// создаем объект
@@ -115,14 +153,22 @@ public:
 	             IEditorScene *pEditorScene,
 	             CObjectBaseController *pObjectController,
 	             IManipulator *pManipulator );
+
 	// заполнить свойствами MaskManipulator
 	void InsertMaskManipulators( class CMultiManipulator *pPropertyManipulator, IManipulator *pManipulator ) {}
+
 	void FillMaskManipulator( class CMaskManipulator *pMaskManipulator ) {}
+
 	void GetMask( std::string *pszMask ) {}
+
 	//
 	// методы имеющие реализацию поумолчанию
 	// заполняет данные объекта, которые можно загрузить когда все объекты загружены
-	bool PostLoad( IEditorScene *pEditorScene, IManipulator *pManipulator ) { return true; }
+	bool PostLoad( IEditorScene *pEditorScene, IManipulator *pManipulator )
+	{
+		return true;
+	}
+
 	// изменяет положение объекта
 	bool Move( const SObjectEditInfo *pObjectEditInfo,
 	           const CVec3 &rvNewPosition,
@@ -145,14 +191,24 @@ public:
 	bool UpdateScene( IEditorScene *pEditorScene );
 	// обновляет позиции в базе данных
 	bool UpdateDB( bool bUpdateLinkedObjects, CObjectBaseController *pObjectController, IManipulator *pManipulator );
-	bool RemoveFromDB( CObjectBaseController *pObjectController, IManipulator *pManipulator ) { return true; }
+
+	bool RemoveFromDB( CObjectBaseController *pObjectController, IManipulator *pManipulator )
+	{
+		return true;
+	}
+
 	void Remove( bool bUpdateScene,
 	             IEditorScene *pEditorScene,
 	             bool bUpdateDB,
 	             CObjectBaseController *pObjectController,
 	             IManipulator *pManipulator );
+
 	// проверить на возможность создания линка для этого объекта
-	bool CheckLinkCapability( unsigned nSceneObjectIDLinkTo ) { return false; }
+	bool CheckLinkCapability( unsigned nSceneObjectIDLinkTo )
+	{
+		return false;
+	}
+
 	// добавить линк на указанный объект
 	bool InsertLink( bool bUpdateDB,
 	                 unsigned nSceneObjectIDLinkTo,
@@ -161,6 +217,7 @@ public:
 	{
 		return true;
 	}
+
 	// Удалить линки у объектов на этоот объкт, которые ссылаются на объект, после вызова этого метода на объект никто не ссылается
 	bool RemoveLinks( bool bUpdateLinkedObjects,
 	                  bool bUpdateDB,
@@ -169,16 +226,19 @@ public:
 	{
 		return true;
 	}
+
 	// Удалить линки у объекта, после вызова этого метода объект ни накого не ссылается
 	bool RemoveLinkTo( bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator )
 	{
 		return true;
 	}
+
 	//
 	void UpdateByController( unsigned nSpotID, unsigned nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator );
 	//
 	void CreateSceneObjects( IEditorScene *pEditorScene, IManipulator *pManipulator, bool bUpdateParentStructure );
 	void RemoveFromScene( IEditorScene *pEditorScene, bool bUpdateParentStructure );
+
 	void SetSceneObjectOpacity( IEditorScene *pEditorScene, const float fOpacity ) {}
 
 	void CopySelf();
@@ -189,4 +249,4 @@ public:
 	                CObjectBaseController *pObjectController,
 	                IManipulator *pManipulator );
 };
-};
+}; // namespace NMapInfoEditor

@@ -5,6 +5,7 @@
 #include <cstdint>
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CMountedTurret;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CCommonMountedGun
 {
@@ -20,18 +21,27 @@ private:
 
 public:
 	CCommonMountedGun() {}
+
 	CCommonMountedGun( class CBuilding *pObject, class CMountedTurret *pTurret, const int nSlot );
 
-	class CBuilding *GetBuilding() const { return pBuilding; };
+	class CBuilding *GetBuilding() const
+	{
+		return pBuilding;
+	};
 
 	virtual const SBaseGunRPGStats &GetGun() const;
 	virtual const SWeaponRPGStats *GetWeapon() const;
-	virtual bool IsOnTurret() const { return true; }
+
+	virtual bool IsOnTurret() const
+	{
+		return true;
+	}
 
 	virtual class CTurret *GetTurret() const;
 
 	virtual void GetInfantryShotInfo( SAINotifyInfantryShot *pInfantryShotInfo, const NTimer::STime &time ) const;
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // new saveload & CObjectBase system doesn't support templated ptr
 //template< class T >
@@ -41,6 +51,7 @@ class CMountedToBaseGun : public CBaseGun, public CCommonMountedGun
 	OBJECT_NOCOPY_METHODS( CMountedToBaseGun );
 	ZDATA_( CBaseGun )
 	ZPARENT( CCommonMountedGun )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CBaseGun *)this );
@@ -61,15 +72,34 @@ public:
 	{
 	}
 
-	virtual const SBaseGunRPGStats &GetGun() const { return CCommonMountedGun::GetGun(); }
-	virtual const SWeaponRPGStats *GetWeapon() const { return CCommonMountedGun::GetWeapon(); }
-	virtual bool IsOnTurret() const { return CCommonMountedGun::IsOnTurret(); }
+	virtual const SBaseGunRPGStats &GetGun() const
+	{
+		return CCommonMountedGun::GetGun();
+	}
 
-	virtual class CTurret *GetTurret() const { return CCommonMountedGun::GetTurret(); }
-	virtual class CBuilding *GetMountBuilding() const { return CCommonMountedGun::GetBuilding(); }
+	virtual const SWeaponRPGStats *GetWeapon() const
+	{
+		return CCommonMountedGun::GetWeapon();
+	}
+
+	virtual bool IsOnTurret() const
+	{
+		return CCommonMountedGun::IsOnTurret();
+	}
+
+	virtual class CTurret *GetTurret() const
+	{
+		return CCommonMountedGun::GetTurret();
+	}
+
+	virtual class CBuilding *GetMountBuilding() const
+	{
+		return CCommonMountedGun::GetBuilding();
+	}
 
 	virtual void GetInfantryShotInfo( SAINotifyInfantryShot *pInfantryShotInfo, const NTimer::STime &time ) const;
 };
+
 /*
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<class T>
@@ -103,8 +133,12 @@ public:
 	{
 	}
 
-	virtual int GetNCommonGun() const { return nCommonGun; }
+	virtual int GetNCommonGun() const
+	{
+		return nCommonGun;
+	}
 
 	virtual class CBasicGun *CreateGun( const EGunTypes eType, const int nShell, SCommonGunInfo *pCommonGunInfo ) const;
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -52,4 +52,4 @@ bool Translate( int nCharset, uint8_t nByte, uint32_t *pnCodePoint );
 // size their cell by
 std::vector<uint32_t> GetPrintableCodePoints( int nCharset );
 
-}
+} // namespace NCodePages

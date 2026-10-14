@@ -51,4 +51,4 @@ bool CanAccept( SBuildDataParams *pBuildDataParams, const std::string &rszTypedN
 
 // The caption, which names the type: IDS_PC_BD_DIALOG_TITLE.
 std::string Title( const SBuildDataParams *pBuildDataParams );
-}
+} // namespace NNewObject

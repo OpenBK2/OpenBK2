@@ -20,6 +20,7 @@ struct SVertex
 };
 
 const int N_VERTEX_TEX_SIZE = 2048;
+
 struct SUVInfo
 {
 	NGfx::SShortTextureUV tex, texLM;
@@ -30,7 +31,11 @@ struct SVertexWeight
 {
 	float fWeights[4]{};
 	uint8_t cBoneIndices[4]{};
-	bool operator==( const SVertexWeight &v ) const { return memcmp( this, &v, sizeof( *this ) ) == 0; }
+
+	bool operator==( const SVertexWeight &v ) const
+	{
+		return memcmp( this, &v, sizeof( *this ) ) == 0;
+	}
 };
 
 struct SRealVertexWeight
@@ -38,10 +43,15 @@ struct SRealVertexWeight
 	float fWeights[4]{};
 	uint8_t nWeights[4]{};
 	uint8_t cBoneIndices[4]{};
-	bool operator==( const SRealVertexWeight &v ) const { return memcmp( this, &v, sizeof( *this ) ) == 0; }
+
+	bool operator==( const SRealVertexWeight &v ) const
+	{
+		return memcmp( this, &v, sizeof( *this ) ) == 0;
+	}
 };
 
 #pragma warning( disable : 4701 )
+
 inline SVertexWeight GetWeight( const SRealVertexWeight &a )
 {
 	SVertexWeight res;
@@ -52,6 +62,7 @@ inline SVertexWeight GetWeight( const SRealVertexWeight &a )
 	}
 	return res;
 }
+
 #pragma warning( default : 4701 )
 
 class _3DLIB_EXPORT CObjectInfo : public CObjectBase
@@ -64,6 +75,7 @@ public:
 		ZDATA
 		int nID = 0;
 		std::vector<uint32_t> data;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nID );
@@ -71,6 +83,7 @@ public:
 			return 0;
 		}
 	};
+
 	struct SData
 	{
 		ZDATA
@@ -79,6 +92,7 @@ public:
 		std::vector<SVertexWeight> weights;
 		std::vector<CVec2> secondTex;
 		std::vector<SStream> attributes;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &verts );
@@ -89,6 +103,7 @@ public:
 			return 0;
 		}
 	};
+
 	struct SBinData
 	{
 		ZDATA
@@ -102,6 +117,7 @@ public:
 		int nTris = 0;
 		float fAverageTriArea = 0.0f;
 		bool bIsLightmappable = false;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &positions );
@@ -150,6 +166,7 @@ public:
 		fAverageTriArea = pData->fAverageTriArea;
 		bIsLightmappable = pData->bIsLightmappable;
 	}
+
 	void AssignTo( SBinData *pData )
 	{
 		pData->positions = positions;
@@ -163,35 +180,79 @@ public:
 		pData->fAverageTriArea = fAverageTriArea;
 		pData->bIsLightmappable = bIsLightmappable;
 	}
+
 	CObjectInfo() : nTris( 0 ), bIsLightmappable( true ) {}
+
 	void Assign( const SData &data, bool bOptimizeVCache );
 	// will modify pData
 	void Assign( SData *pData, bool bOptimizeVCache );
 	void AssignFast( SData *pData );
-	const std::vector<CVec3> &GetPositions() const { return positions; }
-	const std::vector<SUVInfo> &GetVertices() const { return verts; }
-	const std::vector<SRealVertexWeight> &GetWeights() const { return weights; }
-	const std::vector<uint16_t> &GetPositionIndices() const { return posIndices; }
-	const std::vector<STriangle> &GetGeometry() const { return geometry; }
+
+	const std::vector<CVec3> &GetPositions() const
+	{
+		return positions;
+	}
+
+	const std::vector<SUVInfo> &GetVertices() const
+	{
+		return verts;
+	}
+
+	const std::vector<SRealVertexWeight> &GetWeights() const
+	{
+		return weights;
+	}
+
+	const std::vector<uint16_t> &GetPositionIndices() const
+	{
+		return posIndices;
+	}
+
+	const std::vector<STriangle> &GetGeometry() const
+	{
+		return geometry;
+	}
+
 	const std::vector<uint32_t> &GetAttribute( int nID );
 
 	void SetAttribute( int nID, const std::vector<uint32_t> &attr );
 
 	void GetVxPositionTriangles( std::vector<STriangle> *pRes ) const;
 	void GetPosTriangles( std::vector<STriangle> *pRes ) const; // over positions[]
-	int GetTrisCount() { return nTris; }
-	float GetAverageTriArea() { return fAverageTriArea; }
-	bool IsLightmappable() const { return bIsLightmappable; }
-	void SetLightmappable( bool _b ) { bIsLightmappable = _b; }
 
-	bool IsEmpty() { return nTris == 0; }
+	int GetTrisCount()
+	{
+		return nTris;
+	}
+
+	float GetAverageTriArea()
+	{
+		return fAverageTriArea;
+	}
+
+	bool IsLightmappable() const
+	{
+		return bIsLightmappable;
+	}
+
+	void SetLightmappable( bool _b )
+	{
+		bIsLightmappable = _b;
+	}
+
+	bool IsEmpty()
+	{
+		return nTris == 0;
+	}
+
 	void CalcBound( SBound *pRes );
 	void CalcBound( SSphere *pRes );
 	friend class CSquarePacker;
 };
+
 void FilterTrinagles( std::vector<STriangle> *pRes, const std::vector<uint16_t> &filter );
 void MergePositions( std::vector<uint16_t> *pMatches, std::vector<CVec3> *pPositions );
 _3DLIB_EXPORT void SplitWrapping( CObjectInfo::SData *pData );
 void SplitWrapping2( CObjectInfo::SData *pData );
 
-}
+} // namespace NGScene

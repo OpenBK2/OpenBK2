@@ -12,6 +12,7 @@ class CMechUnitRPGStatsExporter : public CHPObjectRPGStatsExporter
 	void ProcessAttachedObjects( IManipulator *pUnitManipulator );
 
 	bool ProcessAABB( IManipulator *pItUnit );
+
 	//
 	CMechUnitRPGStatsExporter() {}
 

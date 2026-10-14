@@ -15,16 +15,21 @@ class CGroupMover : public CAIObjectBase
 			ZDATA
 			CPtr<CCommonUnit> pUnit;
 			CVec2 vPosition;
+
 			ZEND int operator&( IBinSaver &f )
 			{
 				f.Add( 2, &pUnit );
 				f.Add( 3, &vPosition );
 				return 0;
 			}
+
 			SSubGroupUnitInfo() : vPosition( VNULL2 ) {}
+
 			SSubGroupUnitInfo( CCommonUnit *_pUnit ) : pUnit( _pUnit ), vPosition( VNULL2 ) {}
 		};
+
 		typedef det_map<int, SSubGroupUnitInfo> TSubGroupUnits;
+
 		struct SSubGroupPathInfo
 		{
 			ZDATA
@@ -34,6 +39,7 @@ class CGroupMover : public CAIObjectBase
 			CVec2 vStartPoint;
 			CVec2 vFinishPoint;
 			int nBoundTileRadius = {};
+
 			ZEND int operator&( IBinSaver &f )
 			{
 				f.Add( 2, &pStaticPath );
@@ -43,13 +49,17 @@ class CGroupMover : public CAIObjectBase
 				f.Add( 6, &nBoundTileRadius );
 				return 0;
 			}
+
 			SSubGroupPathInfo() : timeCalced( 0 ), vStartPoint( VNULL2 ), vFinishPoint( VNULL2 ), nBoundTileRadius( 0 ) {}
+
 			IStaticPath *CreateStaticPath( CCommonUnit *pUnit, const CVec2 &vPoint );
 		};
+
 		typedef det_map<EAIClasses, SSubGroupPathInfo, SEnumHash> TSubGroupsPaths;
 		ZDATA
 		TSubGroupUnits units; // units's ID -> SSubGroupUnitInfo
 		TSubGroupsPaths paths;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &units );
@@ -58,10 +68,16 @@ class CGroupMover : public CAIObjectBase
 		}
 
 		SSubGroup() {}
+
 		void Add( CCommonUnit *pUnit );
 		void Delete( const int nUnitID );
 		void BalanceGroup( const CVec2 &vPoisiton );
-		const bool IsEmpty() const { return units.empty(); }
+
+		const bool IsEmpty() const
+		{
+			return units.empty();
+		}
+
 		IStaticPath *CreateStaticPath( CCommonUnit *pUnit, const CVec2 &vDefaultPoint );
 	};
 
@@ -90,6 +106,7 @@ private:
 
 public:
 	CGroupMover() : vPosition( VNULL2 ), bNeedCalcPositions( true ) {}
+
 	CGroupMover( const CVec2 &_vPosition ) : vPosition( _vPosition ), bNeedCalcPositions( true ) {}
 
 	void AddUnit( CCommonUnit *pUnit );

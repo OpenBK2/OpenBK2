@@ -76,7 +76,7 @@ CacheFileName( const SUserData *pUserData, const std::string &rszObjectTypeName,
 	return NFile::JoinPath(
 			pUserData->constUserData.szStartFolder, "Editor", "IconCache", rszObjectTypeName, szObjectPath );
 }
-}
+} // namespace
 
 bool CBasicDataExtractor::LoadImagesFromCache( CArray2D<uint32_t> *pNormalImage,
                                                CArray2D<uint32_t> *pSmallImage,

@@ -16,6 +16,6 @@ public:
 };
 
 void DumpStats();
-}
+} // namespace NProfiler
 
 #define PROFILE_BLOCK NProfiler::CProfiler profiler( __FILE__, __LINE__ );

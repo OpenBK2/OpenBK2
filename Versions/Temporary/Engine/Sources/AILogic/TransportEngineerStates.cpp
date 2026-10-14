@@ -176,7 +176,12 @@ CBuilding *CTransportLoadRuState::FindNearestSource()
 
 	public:
 		CFindNearestConnected() : fPathLength( 0 ) {}
-		virtual bool OnlyConnected() const { return true; }
+
+		virtual bool OnlyConnected() const
+		{
+			return true;
+		}
+
 		// true - закончить, то, что нужно уже нашлось
 		virtual bool AddStorage( class CBuilding *pStorage, const float _fPathLength )
 		{
@@ -187,7 +192,11 @@ CBuilding *CTransportLoadRuState::FindNearestSource()
 			}
 			return false;
 		}
-		class CBuilding *GetNearest() { return pNearest; };
+
+		class CBuilding *GetNearest()
+		{
+			return pNearest;
+		};
 	};
 
 	CFindNearestConnected pred;
@@ -1090,6 +1099,7 @@ IUnitState *CTransportBuildEntrenchmentState::Instance( class CAITransportUnit *
 {
 	return new CTransportBuildEntrenchmentState( pTransport, vStartPoint );
 }
+
 void CTransportBuildEntrenchmentState::PreCreate()
 {
 	NLongObjectCreation::PreCreate<CEntrenchmentCreation>( vEndPoint, &pCreation, true );
@@ -1238,6 +1248,7 @@ bool CTransportPlaceMineState::IsEndPointNeeded() const
 {
 	return false;
 }
+
 CTransportPlaceMineState::CTransportPlaceMineState( class CAITransportUnit *pTransport, const class CVec2 &vDestPoint )
 		: CTransportBuildState( pTransport, vDestPoint ), bWorkDone( false ), bTransportSent( false ),
 			eCurrType( MT_TECHNICS ), nSqI( 0 ), nSqJ( 0 ), nSquareSize( 2 )

@@ -30,8 +30,16 @@ public:
 	std::vector<CArray2D<SBumpPixel>> bumpMips;
 
 	void PrepareBump();
-	int GetSizeX() const { return mips[0].GetSizeX(); }
-	int GetSizeY() const { return mips[0].GetSizeY(); }
+
+	int GetSizeX() const
+	{
+		return mips[0].GetSizeX();
+	}
+
+	int GetSizeY() const
+	{
+		return mips[0].GetSizeY();
+	}
 };
 
 class CSWTexture : public CResourceLoader<CDBPtr<NDb::STexture>, CSWTextureData>
@@ -46,6 +54,7 @@ protected:
 
 public:
 	CSWTexture() : bIsReady( false ) {}
+
 	bool IsReady();
 };
 
@@ -55,6 +64,7 @@ class CBilinearTexture : public CPtrFuncBase<CSWTextureData>
 	ZDATA
 	CArray2D<NGfx::SPixel8888> pic;
 	int nXSize, nYSize;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &pic );
@@ -68,10 +78,11 @@ protected:
 
 public:
 	CBilinearTexture() {}
+
 	CBilinearTexture( const CArray2D<NGfx::SPixel8888> &_data, int _nXSize, int _nYSize )
 			: pic( _data ), nXSize( _nXSize ), nYSize( _nYSize )
 	{
 	}
 };
 
-} // namespace
+} // namespace NGScene

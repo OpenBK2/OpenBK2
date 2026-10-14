@@ -154,4 +154,4 @@ bool ClearAll( const std::vector<SReferenceObject> &rObjects,
 	}
 	return bSuccess;
 }
-}
+} // namespace NRefList

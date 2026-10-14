@@ -9,7 +9,9 @@ namespace NRectPacker
 struct SRectOrder
 {
 	const std::vector<SRect> &s;
+
 	SRectOrder( const std::vector<SRect> &_s ) : s( _s ) {}
+
 	bool operator()( int a, int b )
 	{
 		return s[a].nYSize > s[b].nYSize || ( s[a].nYSize == s[b].nYSize && s[a].nXSize > s[b].nXSize );
@@ -39,6 +41,7 @@ struct SStripeBuilder
 		}
 		std::sort( indices.begin(), indices.end(), SRectOrder( res ) );
 	}
+
 	void FillStripe( SStripe *pRes, int nStartFrom )
 	{
 		ASSERT( pRes->rects.size() == 1 );
@@ -90,6 +93,7 @@ struct SStripeBuilder
 			}
 		}
 	}
+
 	bool BuildStripe( int nXShift, int nYShift, int nHeight, int nStartFrom )
 	{
 		ASSERT( nYShift >= 0 );
@@ -124,6 +128,7 @@ struct SStripeBuilder
 		}
 		return false;
 	}
+
 	void Pack( int _nWidth )
 	{
 		nWidth = _nWidth;
@@ -221,4 +226,4 @@ void PackRects( std::vector<SRect> *pRes, CTPoint<int> *pSize )
 	pSize->y = sb.nTotalHeight;
 }
 
-}
+} // namespace NRectPacker

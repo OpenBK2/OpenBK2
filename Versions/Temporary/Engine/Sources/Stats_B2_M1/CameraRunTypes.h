@@ -10,4 +10,4 @@ enum EScriptCameraRunType
 	SCRT_SPLINE,
 	SCRT_ERROR,
 };
-};
+}; // namespace NDb

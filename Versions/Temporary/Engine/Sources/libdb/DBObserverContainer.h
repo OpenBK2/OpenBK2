@@ -18,7 +18,10 @@ protected:
 	void ReportDiscardAllChanges();
 
 public:
-	void AddDbObserver( IDbObserver *pObserver ) { observers.push_back( pObserver ); }
+	void AddDbObserver( IDbObserver *pObserver )
+	{
+		observers.push_back( pObserver );
+	}
 };
 
-}
+} // namespace NDb

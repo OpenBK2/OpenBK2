@@ -7,8 +7,10 @@ struct SViewFilterData
 	{
 		std::string szObjTypeName;
 		bool bShow;
+
 		///
 		SObjTypeFilter() : bShow( false ) {}
+
 		///
 		int operator&( IXmlSaver &xs )
 		{
@@ -17,6 +19,7 @@ struct SViewFilterData
 			return 0;
 		}
 	};
+
 	std::vector<SObjTypeFilter> objTypeFilter; // показывать или нет объекты (units, buildings, static ...)
 	bool bShowGrid;                            // отображать сетку
 	std::string szGridSize;                    // тип(размер) сетки
@@ -28,6 +31,7 @@ struct SViewFilterData
 	bool bShowStats;                           // показывать статистику
 	bool bMipmap;                              // отображать уровни текстур
 	bool bOverdraw;                            // отображать число перерисовок пикселов
+
 	///
 	SViewFilterData()
 			: bShowGrid( false ), szGridSize( RCSTR( "Visual tile" ) ), bShowBBoxes( false ), bWireFrame( false ),
@@ -44,8 +48,13 @@ struct SViewFilterData
 			objTypeFilter.push_back( tf );
 		}
 	}
+
 	///
-	void SetDefault() { *this = SViewFilterData(); }
+	void SetDefault()
+	{
+		*this = SViewFilterData();
+	}
+
 	///
 	void GetObjectTypesForFiltering( std::vector<std::string> *pObjTypes )
 	{
@@ -71,6 +80,7 @@ struct SViewFilterData
 			pObjTypes->push_back( pszObjTypeNames[i] );
 		}
 	}
+
 	///
 	int operator&( IXmlSaver &xs )
 	{

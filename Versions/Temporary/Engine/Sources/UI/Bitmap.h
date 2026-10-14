@@ -12,13 +12,26 @@ class CBitmap : public CPtrFuncBase<NGfx::CTexture>
 	bool bNeedUpdate;
 
 protected:
-	bool NeedUpdate() { return bNeedUpdate; }
+	bool NeedUpdate()
+	{
+		return bNeedUpdate;
+	}
+
 	void Recalc();
 
 public:
 	void SetSize( const int nWidth, const int nHeight );
-	int GetWidth() const { return nWidth; }
-	int GetHeight() const { return nHeight; }
+
+	int GetWidth() const
+	{
+		return nWidth;
+	}
+
+	int GetHeight() const
+	{
+		return nHeight;
+	}
+
 	void PutPixel( const int x, const int y, const NGfx::SPixel8888 &color );
 	const NGfx::SPixel8888 GetPixel( const int x, const int y ) const;
 	void Fill( const NGfx::SPixel8888 &color );
@@ -37,9 +50,18 @@ public:
 	virtual void Visit( struct IUIVisitor *pVisitor );
 	virtual int operator&( struct IBinSaver &saver );
 
-	const CVec2 GetPos() const { return vPos; }
+	const CVec2 GetPos() const
+	{
+		return vPos;
+	}
+
 	void SetPos( const CVec2 &vPos );
-	const CVec2 GetSize() const { return vSize; }
+
+	const CVec2 GetSize() const
+	{
+		return vSize;
+	}
+
 	void SetSize( const CVec2 &vSize );
 
 	void PutPixel( const CVec2 &vPos, const NGfx::SPixel8888 &color );

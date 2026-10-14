@@ -66,4 +66,4 @@ unsigned int GetMarkTimes( std::vector<float> *pResult,
 	}
 	return 0;
 }
-}
+} // namespace NAnimation

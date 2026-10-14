@@ -34,6 +34,7 @@ extern bool bNewShadows;
 
 static CVec3 vParticleLMShadowTestLight[2]; //[0] - Full, [1] - Shadowed
 bool bNoDepthRender;
+
 static void
 RenderParticleShadowTest( COpGenContext &op, const SPerspDirectionalDepthInfo &depthInfo, NGfx::CTexture *pDepthTex )
 {
@@ -815,4 +816,4 @@ REGISTER_VAR_EX( "gfx_noshadows", NGlobal::VarBoolHandler, &bNoDepthRender, 0, S
 REGISTER_VAR_EX( "gfx_freeze_shadows", NGlobal::VarBoolHandler, &bFreeze, 0, STORAGE_USER )
 
 FINISH_REGISTER
-}
+} // namespace NGScene

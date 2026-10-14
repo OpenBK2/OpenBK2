@@ -1,8 +1,10 @@
 #pragma once
+
 namespace NGfx
 {
 class CTexture;
 }
+
 namespace NGScene
 {
 

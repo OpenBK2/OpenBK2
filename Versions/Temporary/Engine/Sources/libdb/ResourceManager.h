@@ -11,6 +11,7 @@ struct LIBDB_EXPORT IResourceManager : CObjectBase
 	{
 		tidTypeID = 0x10074AC0
 	};
+
 	//
 	struct SDBConfig
 	{

@@ -45,15 +45,29 @@ protected:
 	CObj<IScreen> pScreen;
 
 protected:
-	bool IsInFocus() const { return bInFocus; }
+	bool IsInFocus() const
+	{
+		return bInFocus;
+	}
+
 	// Выводит экран помощи при выполнении всех условий показа
 	bool CheckedShowHelpScreen( bool bForced );
+
 	//
-	virtual bool IsShowHelpScreenOnInit() { return true; }
+	virtual bool IsShowHelpScreenOnInit()
+	{
+		return true;
+	}
+
 	//
 	bool ChangeResolution();
+
 	//
-	virtual bool StepLocal( bool bAppActive ) { return bAppActive; }
+	virtual bool StepLocal( bool bAppActive )
+	{
+		return bAppActive;
+	}
+
 	// update statistics
 	void ShowVersionInfo();
 
@@ -67,11 +81,19 @@ protected:
 	// Пауза вне игры, обусловленная интерфейсом
 	void PauseIntermission( bool bPause );
 
-	const std::string &GetBindSection() const { return szBindSection; }
+	const std::string &GetBindSection() const
+	{
+		return szBindSection;
+	}
+
 	virtual void RestoreBindSection();
 
 	void AddScreen( struct IProgrammedReactionsAndChecks *pReactions );
-	IScreen *GetScreen() { return pScreen; }
+
+	IScreen *GetScreen()
+	{
+		return pScreen;
+	}
 
 	template <typename TObj, typename TMsg>
 	void AddImportantObserver( const std::string &szMsgName, bool ( TObj::*_pfnMemFun )( const TMsg &_msg ) )
@@ -93,20 +115,31 @@ public:
 	CInterfaceScreenBase( const std::string &_szInterfaceType, const std::string &_szBindSection );
 	//
 	virtual bool Init();
-	virtual bool Init( struct ITransceiver *pTransceiver ) { return CInterfaceScreenBase::Init(); }
+
+	virtual bool Init( struct ITransceiver *pTransceiver )
+	{
+		return CInterfaceScreenBase::Init();
+	}
 
 	void Step( bool bAppActive );
 	bool ShouldLimitFrameRate() const;
 	virtual void OnGetFocus( bool bFocus );
 	virtual void StartInterface();
 	virtual int operator&( IBinSaver &saver );
-	bool IsTransparent() const { return bIsTransparent; }
+
+	bool IsTransparent() const
+	{
+		return bIsTransparent;
+	}
 
 	// call this function after load is complete
 	virtual void AfterLoad();
 	virtual void Draw( NGScene::CRTPtr *pTexture = 0 );
 
-	const std::string &GetInterfaceType() const { return szInterfaceType; }
+	const std::string &GetInterfaceType() const
+	{
+		return szInterfaceType;
+	}
 
 	virtual void HideUnfocusedScreen();
 };
@@ -116,12 +149,22 @@ class CInterfaceCommandBase : public IInterfaceCommand
 {
 protected:
 	typedef TInterfaceScreen IInterface;
+
 	//
 	CInterfaceCommandBase() {}
+
 	virtual ~CInterfaceCommandBase() {}
+
 	//
-	virtual void PreCreate() { NMainLoop::ResetStack(); }
-	virtual void PostCreate( IInterface *pInterface ) { NMainLoop::PushInterface( pInterface ); }
+	virtual void PreCreate()
+	{
+		NMainLoop::ResetStack();
+	}
+
+	virtual void PostCreate( IInterface *pInterface )
+	{
+		NMainLoop::PushInterface( pInterface );
+	}
 
 public:
 	void Exec()

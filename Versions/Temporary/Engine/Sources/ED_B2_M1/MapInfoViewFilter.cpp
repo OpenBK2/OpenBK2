@@ -15,4 +15,4 @@ void Apply()
 {
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_EDITOR, ID_VIEW_APPLY_MI_FILTER, 0 );
 }
-}
+} // namespace NMapInfoViewFilter

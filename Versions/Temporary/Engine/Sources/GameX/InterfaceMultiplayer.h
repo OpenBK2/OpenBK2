@@ -8,6 +8,7 @@ class CInterfaceMultiplayer : public CInterfaceScreenBase, public IProgrammedRea
 	OBJECT_NOCOPY_METHODS( CInterfaceMultiplayer );
 
 	ZDATA_( CInterfaceScreenBase )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );

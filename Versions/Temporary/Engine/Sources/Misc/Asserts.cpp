@@ -31,6 +31,7 @@ namespace NBSU
 {
 
 static SIgnoresList ignores;
+
 EBSUReport PORT_STDCALL ReportAssert( const char *pszCondition,
                                       const char *pszDescription,
                                       const char *pszFileName,
@@ -59,4 +60,4 @@ EBSUReport PORT_STDCALL ReportAssert( const char *pszCondition,
 
 	return eRetCode;
 }
-}
+} // namespace NBSU

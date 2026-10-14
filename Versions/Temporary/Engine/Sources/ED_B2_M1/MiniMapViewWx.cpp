@@ -45,7 +45,10 @@ class CMiniMapWxWindow : public CWxHostWindow, public ICommandHandler
 	bool bRegistered = false;
 
 public:
-	virtual ~CMiniMapWxWindow() { Unregister(); }
+	virtual ~CMiniMapWxWindow()
+	{
+		Unregister();
+	}
 
 	// CMiniMapWindow::Create: the handler first, then the window.
 	bool Build( IWidget *pPane )
@@ -275,7 +278,10 @@ class CWxMiniMapView : public NMiniMapView::IView
 	bool bCreated = false;
 
 public:
-	virtual ~CWxMiniMapView() { Destroy(); }
+	virtual ~CWxMiniMapView()
+	{
+		Destroy();
+	}
 
 	virtual bool Create( IWidget *pPane )
 	{
@@ -301,17 +307,32 @@ public:
 		}
 	}
 
-	virtual IWidget *GetWidget() { return bCreated ? &window : 0; }
+	virtual IWidget *GetWidget()
+	{
+		return bCreated ? &window : 0;
+	}
 
-	virtual void LoadMap( const NDb::STerrain *pTerrainDesc ) { window.LoadMap( pTerrainDesc ); }
+	virtual void LoadMap( const NDb::STerrain *pTerrainDesc )
+	{
+		window.LoadMap( pTerrainDesc );
+	}
 
-	virtual void SetMapInfoEditorSize( int nSizeX, int nSizeY ) { window.SetMapInfoEditorSize( nSizeX, nSizeY ); }
+	virtual void SetMapInfoEditorSize( int nSizeX, int nSizeY )
+	{
+		window.SetMapInfoEditorSize( nSizeX, nSizeY );
+	}
 
-	virtual void Redraw() { window.Redraw(); }
+	virtual void Redraw()
+	{
+		window.Redraw();
+	}
 
-	virtual void Update() { window.Update(); }
+	virtual void Update()
+	{
+		window.Update();
+	}
 };
-}
+} // namespace
 
 namespace NMiniMapView
 {
@@ -319,4 +340,4 @@ IView *Create()
 {
 	return new CWxMiniMapView;
 }
-}
+} // namespace NMiniMapView

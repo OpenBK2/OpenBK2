@@ -42,6 +42,7 @@ static bool operator==( const SSphere &a, const SSphere &b )
 {
 	return memcmp( &a, &b, sizeof( a ) ) == 0;
 }
+
 bool CAnimatedBound::NeedUpdate()
 {
 	// discretisation step
@@ -86,7 +87,8 @@ void DiscretisizeBoundSphere( SSphere *pResult, const CVec3 &ptCenter, const flo
 	pResult->fRadius = fDiscrRadius;
 }
 
-} // namespace
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x12041162, CBind )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x2013BC80, CAnimatedBound )

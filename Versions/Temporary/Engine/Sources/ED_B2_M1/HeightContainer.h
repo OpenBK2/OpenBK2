@@ -46,10 +46,12 @@ public:
 	//
 	void Clear();
 	void SetSize( const int x, const int y, bool _bTraceToImage );
+
 	inline bool IsValid()
 	{
 		return ( fTileSize > 0.0f ) && ( nStackCount > 0 ) && ( planeSize.x > 0 ) && ( planeSize.y > 0 );
 	}
+
 	//
 	void Mark( const int x, const int y );    // сохранить точку
 	bool Compare( const int x, const int y ); // true - identical, false - not identical

@@ -77,6 +77,7 @@ class CICSave : public CICSaveBase
 
 public:
 	CICSave() {}
+
 	CICSave( const std::string &szFileName ) : CICSaveBase( szFileName ) {}
 
 #ifndef _FINALRELEASE
@@ -113,6 +114,7 @@ class CICLoad : public CICLoadBase
 
 public:
 	CICLoad() {}
+
 	CICLoad( const std::string &szFileName ) : CICLoadBase( szFileName ) {}
 
 #ifndef _FINALRELEASE
@@ -137,7 +139,10 @@ class CICCloseInterface : public IInterfaceCommand
 	OBJECT_BASIC_METHODS( CICCloseInterface );
 
 public:
-	void Exec() { NMainLoop::PopInterface(); }
+	void Exec()
+	{
+		NMainLoop::PopInterface();
+	}
 };
 
 // CICLoadBase
@@ -217,18 +222,22 @@ IInterfaceCommand *CreateICExitGame()
 {
 	return new CICExitGame;
 }
+
 IInterfaceCommand *CreateICLoad( const std::string &szName )
 {
 	return new CICLoad( szName );
 }
+
 IInterfaceCommand *CreateICSave( const std::string &szName )
 {
 	return new CICSave( szName );
 }
+
 IInterfaceCommand *CreateICCloseInterface()
 {
 	return new CICCloseInterface();
 }
+
 IInterfaceCommand *CreateICFinalExitGame()
 {
 	return new CICFinalExitGame();

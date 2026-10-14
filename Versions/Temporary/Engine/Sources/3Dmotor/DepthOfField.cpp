@@ -23,6 +23,7 @@ public:
 			: pColor( _pColor ), pDepth( _pDepth ), nWidth( _nWidth ), nHeight( _nHeight )
 	{
 	}
+
 	virtual void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV );
 };
 

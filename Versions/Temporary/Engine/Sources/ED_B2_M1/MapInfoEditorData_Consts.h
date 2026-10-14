@@ -99,11 +99,14 @@ struct SControllerChangeInfo
 	unsigned nFlags;
 
 	SControllerChangeInfo() : nIndex( INVALID_NODE_ID ), nFlags( 0 ) {}
+
 	SControllerChangeInfo( int _nIndex ) : nIndex( _nIndex ), nFlags( 0 ) {}
+
 	SControllerChangeInfo( const SControllerChangeInfo &rControllerChangeInfo )
 			: nIndex( rControllerChangeInfo.nIndex ), nFlags( rControllerChangeInfo.nFlags )
 	{
 	}
+
 	SControllerChangeInfo &operator=( const SControllerChangeInfo &rControllerChangeInfo )
 	{
 		if ( &rControllerChangeInfo != this )
@@ -114,6 +117,7 @@ struct SControllerChangeInfo
 		return *this;
 	}
 };
+
 typedef std::list<NMapInfoEditor::SControllerChangeInfo> CControllerChangeInfoList;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -132,6 +136,7 @@ struct SObjectLoadInfo
 	unsigned nFrameIndex;
 	unsigned nPlayer;
 	float fHP;
+
 	//
 	SObjectLoadInfo()
 			: nObjectIndex( INVALID_NODE_ID ), nLinkID( INVALID_NODE_ID ), nLinkWith( INVALID_NODE_ID ),
@@ -141,6 +146,7 @@ struct SObjectLoadInfo
 				fHP( 1.0f )
 	{
 	}
+
 	virtual ~SObjectLoadInfo() {}
 };
 
@@ -159,6 +165,7 @@ struct SObjectCreateInfo
 	//
 	bool bFitToGrid;
 	bool bRotateTo90Degree;
+
 	//
 	SObjectCreateInfo()
 			: vPosition( VNULL3 ), fDirection( 0.0f ),
@@ -177,12 +184,14 @@ struct SObjectEditInfo
 {
 	bool bFitToGrid;
 	bool bRotateTo90Degree;
+
 	//
 	virtual ~SObjectEditInfo() {}
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 typedef std::vector<NDb::SVSOInstance> CVSOInstanceList;
+
 struct SVSOCollector
 {
 	CVSOInstanceList roadList;
@@ -193,6 +202,7 @@ struct SVSOCollector
 	CVec3 vCoastMidPoint;
 	//
 	NDb::SVSOInstance coast;
+
 	//
 	void Load( const NDb::SMapInfo *pMapInfo )
 	{
@@ -207,6 +217,7 @@ struct SVSOCollector
 			vCoastMidPoint = pMapInfo->vCoastMidPoint;
 		}
 	}
+
 	//
 	CVSOInstanceList *GetVSOList( CMapInfoController::SVSOUndoData::EVSOType eVSOType )
 	{
@@ -223,6 +234,7 @@ struct SVSOCollector
 		}
 		return 0;
 	}
+
 	//
 	bool InsertVSO( CMapInfoController::SVSOUndoData::EVSOType eVSOType,
 	                const NDb::SVSOInstance &rNewVSO,
@@ -241,6 +253,7 @@ struct SVSOCollector
 		}
 		return false;
 	}
+
 	//
 	bool UpdateVSO( CMapInfoController::SVSOUndoData::EVSOType eVSOType,
 	                const NDb::SVSOInstance &rNewVSO,
@@ -265,6 +278,7 @@ struct SVSOCollector
 		}
 		return false;
 	}
+
 	//
 	bool RemoveVSO( CMapInfoController::SVSOUndoData::EVSOType eVSOType, int nVSOID )
 	{
@@ -300,4 +314,4 @@ bool CheckLinkCapability( const std::string &rszObjectRPGStatsTypeName,
                           const std::string &rszLinkToObjectRPGStatsTypeName,
                           const CDBID &rLinkToObjectRPGStatsID,
                           unsigned nLinkToFrameIndex );
-};
+}; // namespace NMapInfoEditor

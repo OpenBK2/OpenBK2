@@ -7,6 +7,7 @@
 #include <cstdint>
 
 class CVariant;
+
 namespace NDb
 {
 namespace NMetaInfo
@@ -27,9 +28,11 @@ namespace NMetaInfo
 			{
 				uint32_t type : 8;
 				uint32_t size : 24;
+
 				//
 				STypeSize() : type( 0 ), size( 0 ) {}
 			};
+
 			//
 			int nShift;                       // binary field shift
 			STypeSize main;                   // main data type & size
@@ -45,12 +48,26 @@ namespace NMetaInfo
 			typedef bool ( SField::*GetValue )( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
 			SetValue pfnSetValue;
 			GetValue pfnGetValue;
+
 			//
 			SField() : nShift( 0x0000ffff ), pfnSetValue( 0 ), pfnGetValue( 0 ) {}
+
 			//
-			NTypeDef::ETypeType GetType() const { return NTypeDef::ETypeType( main.type ); }
-			int GetOwnValueIndex() const { return ( nShift & 0x80000000 ) != 0 ? uint32_t( nShift & 0x7fff0000 ) >> 16 : -1; }
-			int GetBinaryShift() const { return nShift & 0x0000ffff; }
+			NTypeDef::ETypeType GetType() const
+			{
+				return NTypeDef::ETypeType( main.type );
+			}
+
+			int GetOwnValueIndex() const
+			{
+				return ( nShift & 0x80000000 ) != 0 ? uint32_t( nShift & 0x7fff0000 ) >> 16 : -1;
+			}
+
+			int GetBinaryShift() const
+			{
+				return nShift & 0x0000ffff;
+			}
+
 			//
 			void ConstructBinary( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn ) const;
 			void DestructBinary( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn ) const;
@@ -99,6 +116,7 @@ namespace NMetaInfo
 			//
 			void MakeDeepCopy( SField *pRes ) const;
 		};
+
 		//
 		typedef std::unordered_map<std::string, SField> CFieldsMap;
 		CFieldsMap fields;
@@ -108,8 +126,10 @@ namespace NMetaInfo
 		int nNumCodeValues;
 		const SArrayOperations *pArrayOperations = nullptr; // operations on the containing vector, for array elements
 		CPtr<NTypeDef::STypeStructBase> pStructTypeDef;
+
 		//
 		SStructMetaInfo() : nStructSize( 0 ), nNumOwnValues( 0 ), nNumCodeValues( 0 ) {}
+
 		//
 		void AddField( const std::string &szName, int nShift, int nSize, NTypeDef::ETypeType eType );
 		void AddField( const std::string &szName,
@@ -128,5 +148,5 @@ namespace NMetaInfo
 		void MakeDeepCopy( SStructMetaInfo *pRes ) const;
 	};
 
-}
-}
+} // namespace NMetaInfo
+} // namespace NDb

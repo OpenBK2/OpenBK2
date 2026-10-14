@@ -12,6 +12,7 @@
 //
 
 class CSquadEditor;
+
 class CSquadState : public CMultiInputState, public ICommandHandler
 {
 	friend class CSquadEditor;
@@ -35,6 +36,7 @@ public:
 		//
 		IS_COUNT
 	};
+
 	enum EFormationInputSubstates
 	{
 		FORMATION_ISS_FORMATION = 0,

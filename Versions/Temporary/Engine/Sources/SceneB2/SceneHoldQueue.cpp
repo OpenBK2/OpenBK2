@@ -91,14 +91,17 @@ void GetSceneHoldedObjects( std::list<CObjectBase *> *pObjects, bool bSerializea
 struct SSceneHoldQueueSerializer
 {
 	std::vector<std::list<CObj<CObjectBase>>> data;
+
 	//
 	SSceneHoldQueueSerializer() : data( N_HOLD_TIME ) {}
+
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, &data );
 		return 0;
 	}
 };
+
 //
 void SerializeSceneHoldQueue( IBinSaver::chunk_id chunkID, IBinSaver &saver )
 {

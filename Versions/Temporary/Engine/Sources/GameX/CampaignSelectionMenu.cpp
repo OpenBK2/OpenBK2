@@ -29,6 +29,7 @@ class CTextData : public CObjectBase
 public:
 	ZDATA
 	std::wstring szText;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szText );
@@ -36,7 +37,11 @@ public:
 	}
 
 	CTextData() {}
-	CTextData( const std::wstring &_szText ) { szText = _szText; }
+
+	CTextData( const std::wstring &_szText )
+	{
+		szText = _szText;
+	}
 };
 
 class CListItemTextViewer : public IDataViewer

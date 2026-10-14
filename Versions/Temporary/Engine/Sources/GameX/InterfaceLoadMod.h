@@ -15,6 +15,7 @@ class CInterfaceLoadMod : public CInterfaceScreenBase, public IProgrammedReactio
 		std::wstring wszName;
 		std::wstring wszDesc;
 		NFile::CFilePath szFullFolderPath;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pWnd );
@@ -46,6 +47,7 @@ class CInterfaceLoadMod : public CInterfaceScreenBase, public IProgrammedReactio
 	std::wstring wszModDefaultDesc;
 	CPtr<IWindow> pPrevCheckedWnd;
 	int nInitialMod;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );

@@ -4,8 +4,9 @@ namespace NGfx
 {
 class CRenderContext;
 class CCubeTexture;
-}
+} // namespace NGfx
 class CTransformStack;
+
 namespace NGScene
 {
 class IRender;
@@ -23,4 +24,4 @@ void RenderTnL( CTransformStack *pTS,
                 CTransparentRenderer *pTransp,
                 ETransparentMode trMode,
                 NGfx::CCubeTexture *_pSky );
-}
+} // namespace NGScene

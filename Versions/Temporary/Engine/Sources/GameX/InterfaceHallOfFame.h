@@ -8,6 +8,7 @@ struct SHallOfFameEntry
 	ZDATA
 	int nScore;
 	std::wstring wszName;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nScore );
@@ -20,6 +21,7 @@ class CHallOfFame
 {
 	ZDATA
 	std::vector<SHallOfFameEntry> entries;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &entries );
@@ -28,6 +30,7 @@ class CHallOfFame
 
 public:
 	CHallOfFame();
+
 	void AddRecord( const std::wstring &wszName, int nScore )
 	{
 		SHallOfFameEntry val;
@@ -44,13 +47,24 @@ public:
 		CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
 		operator&( *pSaver.GetPtr() );
 	}
-	int GetNRecords() const { return entries.size(); }
-	const SHallOfFameEntry &GetEntry( int i ) const { return entries[i]; }
+
+	int GetNRecords() const
+	{
+		return entries.size();
+	}
+
+	const SHallOfFameEntry &GetEntry( int i ) const
+	{
+		return entries[i];
+	}
 };
 
 struct SHallOfFameEntryCompare
 {
-	bool operator()( const SHallOfFameEntry &s1, const SHallOfFameEntry &s2 ) const { return s1.nScore > s2.nScore; }
+	bool operator()( const SHallOfFameEntry &s1, const SHallOfFameEntry &s2 ) const
+	{
+		return s1.nScore > s2.nScore;
+	}
 };
 
 class CInterfaceHallOfFame : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
@@ -58,12 +72,14 @@ class CInterfaceHallOfFame : public CInterfaceScreenBase, public IProgrammedReac
 	OBJECT_NOCOPY_METHODS( CInterfaceHallOfFame );
 	ZDATA_( CInterfaceScreenBase )
 	CPtr<IWindow> pMain;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &pMain );
 		return 0;
 	}
+
 	void MakeInterior();
 
 public:
@@ -77,7 +93,12 @@ public:
 
 	//{ IProgrammedReactionsAndChecks
 	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const { return 0; }
+
+	int Check( const std::string &szCheckName ) const
+	{
+		return 0;
+	}
+
 	//}
 };
 

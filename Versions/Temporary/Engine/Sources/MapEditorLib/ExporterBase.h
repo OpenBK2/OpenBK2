@@ -11,6 +11,7 @@ class MAPEDITORLIB_EXPORT CExporterBase : public IExporter
 	typedef std::unordered_map<std::string, std::string> CExportObjectTypeNameMap;
 	typedef CUniqueList<std::list<std::string>, std::string> CObjectTypeNameList;
 	typedef std::unordered_map<std::string, EXPORT_RESULT> CResultMap;
+
 	//
 	struct SInvalidLink
 	{
@@ -18,6 +19,7 @@ class MAPEDITORLIB_EXPORT CExporterBase : public IExporter
 		std::string szObjectName;
 		std::string szPropertyName;
 	};
+
 	typedef std::list<SInvalidLink> CInvalidLinkList;
 	//
 	// типы подвергнувшиеся StartExport ( их необходимо будет пропустить через FinishExport )

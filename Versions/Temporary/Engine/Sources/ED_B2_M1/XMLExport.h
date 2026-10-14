@@ -27,7 +27,11 @@ private:
 	                        const std::string &szFieldName );
 
 protected:
-	const SObjStackEntry *GetFrontObject() { return objectsStack.empty() ? 0 : &( objectsStack.front() ); }
+	const SObjStackEntry *GetFrontObject()
+	{
+		return objectsStack.empty() ? 0 : &( objectsStack.front() );
+	}
+
 	//
 	virtual std::string MakePathName( const std::string &szObjectName,
 	                                  const std::string &szClassTypeName,
@@ -44,4 +48,4 @@ public:
 void DumpAllObjects();
 CXmlExporter *GetExporter();
 
-}
+} // namespace NXMLExport

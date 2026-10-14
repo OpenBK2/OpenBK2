@@ -3,6 +3,7 @@
 #include "port/cdecl.h"
 
 struct SCallStackEntry;
+
 namespace NBSU
 {
 EBSUReport PORT_CDECL ShowExceptionDlg( HINSTANCE hInstance,

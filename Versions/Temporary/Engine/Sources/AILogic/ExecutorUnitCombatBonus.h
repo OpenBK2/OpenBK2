@@ -36,6 +36,7 @@ protected:
 
 public:
 	CExecutorUnitCombatBonus( EUnitSpecialAbility eAbility, CAIUnit *_pUnit, EExecutorTypeID eTID );
+
 	CExecutorUnitCombatBonus() {}
 
 	int Segment();

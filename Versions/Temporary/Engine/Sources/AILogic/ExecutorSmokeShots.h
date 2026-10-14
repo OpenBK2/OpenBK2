@@ -11,6 +11,7 @@ protected:
 
 public:
 	CExecutorSmokeShots( CAIUnit *_pUnit );
+
 	CExecutorSmokeShots() {}
 
 	int operator&( IBinSaver &saver );

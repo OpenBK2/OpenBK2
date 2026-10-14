@@ -22,10 +22,12 @@ namespace
 			throw std::runtime_error( "Unsupported or incomplete DDS texture" );
 		}
 	}
+
 	uint32_t U32( const std::byte *p )
 	{
 		return uint32_t( p[0] ) | ( uint32_t( p[1] ) << 8 ) | ( uint32_t( p[2] ) << 16 ) | ( uint32_t( p[3] ) << 24 );
 	}
+
 	uint8_t Channel( uint32_t pixel, uint32_t mask, uint8_t missing )
 	{
 		if ( !mask )
@@ -40,7 +42,7 @@ namespace
 		Check( ( uint64_t( mask ) & ( uint64_t( mask ) + 1 ) ) == 0 );
 		return static_cast<uint8_t>( ( uint64_t( pixel & mask ) * 255 + mask / 2 ) / mask );
 	}
-}
+} // namespace
 
 std::vector<std::byte> DdsPreview( const std::vector<std::byte> &dds, bool tga )
 {
@@ -151,4 +153,4 @@ void SaveGlb( const std::string &path, const std::vector<std::byte> &bytes )
 {
 	SaveExportFiles( { { path, bytes } } );
 }
-}
+} // namespace NGrannyGltf

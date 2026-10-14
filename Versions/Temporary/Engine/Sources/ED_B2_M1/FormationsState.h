@@ -14,6 +14,7 @@
 
 class CSquadEditor;
 class CMaskManipulator;
+
 class CFormationsState : public CDefaultInputState, public ICommandHandler
 {
 	CSquadEditor *pSquadEditor;
@@ -29,6 +30,7 @@ class CFormationsState : public CDefaultInputState, public ICommandHandler
 	//IInputState interface
 	void Enter();
 	void Leave();
+
 	void Draw( IPaintContext *pPaintDC ) {}
 
 	void PostDraw( IPaintContext *pPaintDC );
@@ -47,6 +49,7 @@ class CFormationsState : public CDefaultInputState, public ICommandHandler
 
 public:
 	CFormationsState( CSquadEditor *_pSquadEditor = 0 );
+
 	virtual ~CFormationsState() {}
 
 	int LoadModel( const NDb::SModel *pModel, const CVec3 &rvPosition );

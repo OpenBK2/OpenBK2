@@ -60,6 +60,7 @@ struct IVisualNotifications : public CObjectBase
 		ZDATA
 		std::wstring wszHeader;
 		std::wstring wszDesc;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &wszHeader );
@@ -76,6 +77,7 @@ struct IVisualNotifications : public CObjectBase
 		std::vector<CVec2> positions;
 		std::vector<int> ids; // misc info
 		std::vector<CPtr<CMapObj>> objects;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nID );
@@ -88,12 +90,18 @@ struct IVisualNotifications : public CObjectBase
 	};
 
 	virtual bool Notify( EVisualNotification eType, int nID, const CVec2 &vPos ) = 0;
-	virtual bool Notify( EVisualNotification eType, class CMapObj *pMO ) { return false; }
+
+	virtual bool Notify( EVisualNotification eType, class CMapObj *pMO )
+	{
+		return false;
+	}
+
 	virtual void Step( const NTimer::STime nDeltaTime, bool bAppActive ) = 0;
 
 	virtual void OnBtn( const std::string &szSender, bool bRightBtn ) {}
 
 	virtual void OnEvent( const SEventParams &params ) {}
+
 	virtual void OnRemoveEvent( NDb::ENotificationEventType eEventType, int nID ) {}
 
 	virtual void PlaceMarker( const CVec2 &vPos ) {}

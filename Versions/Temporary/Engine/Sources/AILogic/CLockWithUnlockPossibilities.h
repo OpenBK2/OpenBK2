@@ -6,6 +6,7 @@
 // и сохраняет его.
 // после этого есть возможность восстановить начальное состояние залоченности
 class CAIUnit;
+
 class CLockWithUnlockPossibilities
 {
 
@@ -48,6 +49,7 @@ public:
 		bLocked = TryLockAlongTheWay( true, _bAIClass );
 		return bLocked;
 	}
+
 	void UnlockIfLocked()
 	{
 		if ( bLocked )

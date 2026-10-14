@@ -31,6 +31,7 @@ public:
 
 public:
 	CGlobalIter() : parties( 3 /*SAIConsts::MAX_NUM_OF_PARTIES*/ ) {}
+
 	CGlobalIter( const uint8_t cStartDipl, const uint8_t cFilter ) : parties( 3 /*SAIConsts::MAX_NUM_OF_PARTIES*/ )
 	{
 		Init( cStartDipl, cFilter );
@@ -40,7 +41,11 @@ public:
 
 	void Iterate();
 	CAIUnit *operator*() const;
-	const bool IsFinished() const { return iter == 0; }
+
+	const bool IsFinished() const
+	{
+		return iter == 0;
+	}
 };
 
 class CPlanesIter

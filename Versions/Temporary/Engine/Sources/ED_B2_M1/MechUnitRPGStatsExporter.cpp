@@ -127,6 +127,7 @@ void CopyVector2D( IManipulator *pSrc, IManipulator *pDst, const std::string &sz
 	pSrc->GetValue( szSrc + ".y", &var );
 	pDst->SetValue( szDst + ".y", var );
 }
+
 void CopyAABB2D( IManipulator *pSrc, IManipulator *pDst, const std::string &szSrc, const std::string &szDst )
 {
 	CopyVector2D( pSrc, pDst, szSrc + ".Center", szDst + ".Center" );
@@ -153,9 +154,10 @@ struct SGunInfo
 														 // MAYA: в родительский  трансформ с именем GunCarriage??
 
 	std::string szPlatform; // платформа, к которой прикреплена пушка
-													// MAYA: родительский трансформ
-													//		 имя платформы может быть только
-													//		 Basis, Basis_a, Basis_A, Turret, Turret00, Turret01 и т.п.
+
+	// MAYA: родительский трансформ
+	//		 имя платформы может быть только
+	//		 Basis, Basis_a, Basis_A, Turret, Turret00, Turret01 и т.п.
 
 	SGunInfo()
 	{
@@ -294,6 +296,7 @@ struct SPlatformInfo
 															 // именно этот rot_limit_X и кладется в constraintVertical
 
 	std::vector<SGunInfo> guns;
+
 	//
 	//
 	SPlatformInfo()
@@ -304,6 +307,7 @@ struct SPlatformInfo
 		constraintVertical[1] = 0;
 		szRotatePoint = "<<< ERROR: bad locator >>>";
 	}
+
 	//
 	bool operator<( const SPlatformInfo &rOther )
 	{
@@ -335,6 +339,7 @@ struct SPlatformInfo
 		return false;
 	}
 };
+
 //
 typedef std::vector<SPlatformInfo>::const_iterator CPlatformsInfoConstIter;
 typedef std::vector<SPlatformInfo>::iterator CPlatformsInfoIter;

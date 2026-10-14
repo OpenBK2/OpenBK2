@@ -17,8 +17,11 @@ class CTerraAIObserverInGame : public CTerraAIObserver
 
 public:
 	CTerraAIObserverInGame() {}
+
 	CTerraAIObserverInGame( bool bOnlyForRiversInit ) {} //cheat
+
 	CTerraAIObserverInGame( const int nSizeX, const int nSizeY );
+
 	virtual ~CTerraAIObserverInGame() {}
 
 	virtual void

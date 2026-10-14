@@ -8,7 +8,7 @@ namespace NDb
 {
 struct SModel;
 //	struct SRPGArmor;
-}
+} // namespace NDb
 struct IVisObj;
 class CTransformStack;
 
@@ -29,7 +29,12 @@ protected:
 
 public:
 	CFloorsSet() {}
-	CFloorsSet( int nFloor ) { floors.push_back( nFloor ); }
+
+	CFloorsSet( int nFloor )
+	{
+		floors.push_back( nFloor );
+	}
+
 	CFloorsSet( int nFloor1, int nFloor2 )
 	{
 		floors.push_back( nFloor1 );
@@ -38,6 +43,7 @@ public:
 			floors.push_back( nFloor2 );
 		}
 	}
+
 	CFloorsSet( const std::vector<int> &_floors ) : floors( _floors ) {}
 };
 
@@ -57,6 +63,7 @@ public:
 };
 
 class CBSPTree;
+
 struct IAIMap : public CObjectBase, public IAIVisitor
 {
 public:
@@ -65,22 +72,26 @@ public:
 		STH_SPLIT_TERR_HG,
 		STH_UNION_TERR_HG
 	};
+
 	enum ESort
 	{
 		STH_NOSORT,
 		STH_SORT_INTERVALS,
 		STH_SORT_AND_REDUCE_TERRAIN
 	};
+
 	enum ESyncType
 	{
 		ST_FAST,
 		ST_NORMAL
 	};
+
 	struct SSelectedObject
 	{
 		CObjectBase *pUserData;
 		int nUserID;
 	};
+
 	virtual void Sync( ESyncType st = ST_NORMAL ) = 0;
 	virtual void GetEntities( std::vector<SObjectInfo> *pRes, int nMask, const CFloorsSet &hg = CFloorsSet() ) = 0;
 	virtual void Trace( const CRay &,
@@ -105,6 +116,7 @@ public:
 	SelectHullPointers( std::vector<CPtr<CObjectBase>> *pRes, const SBound &b, int nMaskOr, int nMaskNot ) = 0;
 	//virtual void DebugInformTrackers( const SBound &b ) = 0;
 };
+
 void GetGeometry( std::vector<SObjectInfo> *pRes,
                   std::vector<SMassSphere> *pSpheres,
                   const NDb::SAIGeometry *pAIGeom,
@@ -114,4 +126,4 @@ void GetSpheres( const NDb::SModel *pModel, std::vector<SMassSphere> *pRes, CVec
 _3DMOTOR_EXPORT IAIMap *CreateAIMap();
 
 void FindClosePositionOnSurface( IAIMap *pMap, const CVec3 &ptPos, CVec3 *pRes, int nFlags );
-} // namespace
+} // namespace NAI

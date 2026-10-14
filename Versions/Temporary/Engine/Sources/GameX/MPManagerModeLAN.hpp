@@ -24,6 +24,7 @@ class CMPManagerModeLAN : public CMPManagerMode
 		CDBPtr<NDb::SMultiplayerMap> pMPMap;
 		int nGameType;
 		int nTechLevel;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pMPMap );
@@ -31,6 +32,7 @@ class CMPManagerModeLAN : public CMPManagerMode
 			f.Add( 4, &nTechLevel );
 			return 0;
 		}
+
 		SGameSettings() : nGameType( 0 ), nTechLevel( 0 ) {}
 	};
 
@@ -50,12 +52,28 @@ class CMPManagerModeLAN : public CMPManagerMode
 
 	bool OnLANPassword( class CLANPasswordPacket *pPacket );
 	bool OnRequestLANPassword( class CRequestLANPasswordPacket *pPacket );
+
 	//}
 
-	virtual const int GetOwnClientID() { return pLANClient->GetOwnClientID(); }
-	virtual const bool IsInGameRoom() const { return ( eCurrentState == EGS_HOST || eCurrentState == EGS_CLIENT ); }
-	virtual const bool IsGameRunning() const { return ( eCurrentState == EGS_GAME_STARTED ); }
-	virtual const bool IsGameHost() const { return ( eCurrentState == EGS_HOST ); }
+	virtual const int GetOwnClientID()
+	{
+		return pLANClient->GetOwnClientID();
+	}
+
+	virtual const bool IsInGameRoom() const
+	{
+		return ( eCurrentState == EGS_HOST || eCurrentState == EGS_CLIENT );
+	}
+
+	virtual const bool IsGameRunning() const
+	{
+		return ( eCurrentState == EGS_GAME_STARTED );
+	}
+
+	virtual const bool IsGameHost() const
+	{
+		return ( eCurrentState == EGS_HOST );
+	}
 
 	virtual void UpdateGameList();
 	virtual void TryToCreateGame();
@@ -78,6 +96,13 @@ public:
 
 	bool Segment();
 
-	virtual const ENetMode GetMode() const { return ENM_LAN; }
-	virtual void SetLanTester( CLANTester *_pLANTester ) { pLanTester = _pLANTester; }
+	virtual const ENetMode GetMode() const
+	{
+		return ENM_LAN;
+	}
+
+	virtual void SetLanTester( CLANTester *_pLANTester )
+	{
+		pLanTester = _pLANTester;
+	}
 };

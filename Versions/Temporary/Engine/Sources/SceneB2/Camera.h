@@ -14,7 +14,7 @@ namespace NDb
 {
 struct SCameraLimits;
 //
-};
+}; // namespace NDb
 struct SGameMessage;
 class CScriptMoviesMutatorHolder;
 
@@ -26,11 +26,13 @@ enum ELimitsType
 	CAMERA_LIMITS_PITCH,
 	CAMERA_LIMITS_DISTANCE
 };
+
 enum EMode
 {
 	CAM_MODE_VIEW,
 	CAM_MODE_MOVIE
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SCameraLimits
 {
@@ -46,12 +48,14 @@ struct SCameraLimits
 	SCameraLimits() : fMin( 0.0f ), fMax( 0.0f ), fAve( 0.0f ), fAutoSpeed( 0.0f ), fManualSpeed( 0.0f ), bCyclic( false )
 	{
 	}
+
 	SCameraLimits(
 			const float _fMin, const float _fMax, const float _fAve, const float _fAutoSpeed, const float _fManualSpeed )
 			: fMin( _fMin ), fMax( _fMax ), fAve( _fAve ), fAutoSpeed( _fAutoSpeed ), fManualSpeed( _fManualSpeed ),
 				bCyclic( false )
 	{
 	}
+
 	SCameraLimits( const float _fMin,
 	               const float _fMax,
 	               const float _fAve,
@@ -63,6 +67,7 @@ struct SCameraLimits
 	{
 	}
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CCameraPlacement : public NDb::SScriptCameraPlacement, public CVersioningBase
 {
@@ -74,6 +79,7 @@ public:
 	//	fFOV - in Degrees
 	//
 	float fRoll = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (NDb::SScriptCameraPlacement *)this );
@@ -90,6 +96,7 @@ public:
 		fFOV = DEF_FOV;
 		fRoll = DEF_ROLL;
 	}
+
 	CCameraPlacement( const CVec3 &_vAnchor, float _fYaw, float _fPitch, float _fFOV, float _fRoll )
 	{
 		szName = "";
@@ -107,25 +114,41 @@ public:
 		              -cos( ToRadian( this->fYaw ) ) * cos( ToRadian( this->fPitch ) ),
 		              sin( ToRadian( this->fPitch ) ) );
 	}
+
 	const float GetDistance() const
 	{
 		const CVec3 vDir = GetDirection();
 		NI_VERIFY( fabs( vDir.z ) > FP_EPSILON, "Unable to calculate camera distance", return 0.0f );
 		return fabs( vPosition.z / vDir.z );
 	}
-	const CVec3 GetAnchor() const { return vPosition - GetDirection() * GetDistance(); }
 
-	const float &GetFOV() const { return fFOV; }
+	const CVec3 GetAnchor() const
+	{
+		return vPosition - GetDirection() * GetDistance();
+	}
+
+	const float &GetFOV() const
+	{
+		return fFOV;
+	}
+
 	//const CVec3 GetPos() const { return vPosition; }
 
 	//const float GetYaw() const { return ToRadian(fYaw); }
 	//const float GetPitch() const { return ToRadian(fPitch); }
 	//const float GetRoll() const { return fRoll; }
 
-	virtual bool ProcessEvent( const SGameMessage &msg ) { return false; }
-	const CCameraPlacement &GetValue() const { return *this; }
+	virtual bool ProcessEvent( const SGameMessage &msg )
+	{
+		return false;
+	}
+
+	const CCameraPlacement &GetValue() const
+	{
+		return *this;
+	}
 };
-};
+}; // namespace NCamera
 
 struct ICamera : public CObjectBase
 {
@@ -187,7 +210,11 @@ struct ICamera : public CObjectBase
 	virtual void SwitchManualScrolling( const std::string &szLocker, const bool bManualOn ) = 0;
 
 	// for listener positioning
-	virtual const CVec3 GetListener() const { return GetPos(); }
+	virtual const CVec3 GetListener() const
+	{
+		return GetPos();
+	}
+
 	// border scrolling
 	virtual void ResetScrolling() = 0;
 	virtual void SetScrollSpeedX( const float _fSpeed ) = 0;
@@ -215,6 +242,7 @@ struct ICamera : public CObjectBase
 };
 
 SCENEB2_EXPORT ICamera *CreateCamera();
+
 inline ICamera *Camera()
 {
 	return Singleton<ICamera>();

@@ -59,4 +59,4 @@ void VarStrHandler( const std::string &szID, const NGlobal::CValue &sValue, void
 	*pValue = NStr::ToMBCS( sValue.GetString() );
 }
 
-}
+} // namespace NGlobal

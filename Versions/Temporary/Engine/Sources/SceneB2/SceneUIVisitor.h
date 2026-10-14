@@ -18,9 +18,14 @@ class CClipSetCmd : public IUIVisitorCmd
 
 public:
 	CClipSetCmd() {}
+
 	CClipSetCmd( const CTRect<float> &_rClip ) : rClip( _rClip ) {}
+
 	//
-	void Visit( IUIVisitor *pVisitor ) { pVisitor->ClipSet( rClip ); }
+	void Visit( IUIVisitor *pVisitor )
+	{
+		pVisitor->ClipSet( rClip );
+	}
 };
 
 class CClipRestoreCmd : public IUIVisitorCmd
@@ -28,8 +33,12 @@ class CClipRestoreCmd : public IUIVisitorCmd
 	OBJECT_NOCOPY_METHODS( CClipRestoreCmd )
 public:
 	CClipRestoreCmd() {}
+
 	//
-	void Visit( IUIVisitor *pVisitor ) { pVisitor->ClipRestore(); }
+	void Visit( IUIVisitor *pVisitor )
+	{
+		pVisitor->ClipRestore();
+	}
 };
 
 class CVisitZClearRectCmd : public IUIVisitorCmd
@@ -43,6 +52,7 @@ class CVisitZClearRectCmd : public IUIVisitorCmd
 
 public:
 	CVisitZClearRectCmd() {}
+
 	CVisitZClearRectCmd( const CRectLayout &_sLayout,
 	                     const CTPoint<float> &_sPosition,
 	                     const CTRect<float> &_sClipWindow,
@@ -50,8 +60,12 @@ public:
 			: sLayout( _sLayout ), sPosition( _sPosition ), sClipWindow( _sClipWindow ), fZ( _fZ )
 	{
 	}
+
 	//
-	void Visit( IUIVisitor *pVisitor ) { pVisitor->VisitZClearRect( sLayout, sPosition, sClipWindow, fZ ); }
+	void Visit( IUIVisitor *pVisitor )
+	{
+		pVisitor->VisitZClearRect( sLayout, sPosition, sClipWindow, fZ );
+	}
 };
 
 class CVisitUIRectCmd : public IUIVisitorCmd
@@ -64,12 +78,17 @@ class CVisitUIRectCmd : public IUIVisitorCmd
 
 public:
 	CVisitUIRectCmd() {}
+
 	CVisitUIRectCmd( const NDb::STexture *_pTexture, const int _nShadingEffect, const class CRectLayout &_rects )
 			: pTexture( _pTexture ), nShadingEffect( _nShadingEffect ), rects( _rects )
 	{
 	}
+
 	//
-	void Visit( IUIVisitor *pVisitor ) { pVisitor->VisitUIRect( pTexture, nShadingEffect, rects ); }
+	void Visit( IUIVisitor *pVisitor )
+	{
+		pVisitor->VisitUIRect( pTexture, nShadingEffect, rects );
+	}
 };
 
 class CVisitUIRect2Cmd : public IUIVisitorCmd
@@ -84,6 +103,7 @@ class CVisitUIRect2Cmd : public IUIVisitorCmd
 
 public:
 	CVisitUIRect2Cmd() {}
+
 	CVisitUIRect2Cmd( const NDb::STexture *_pTexture,
 	                  const int _nShadingEffect,
 	                  const CVec2 *_pPos4,
@@ -94,6 +114,7 @@ public:
 		memcpy( pPos4, _pPos4, 4 * sizeof( pPos4[0] ) );
 		memcpy( pColors4, _pColors4, 4 * sizeof( pColors4[0] ) );
 	}
+
 	//
 	void Visit( IUIVisitor *pVisitor )
 	{
@@ -111,14 +132,19 @@ class CVisitUITextureRectCmd : public IUIVisitorCmd
 
 public:
 	CVisitUITextureRectCmd() {}
+
 	CVisitUITextureRectCmd( CPtrFuncBase<NGfx::CTexture> *_pTexture,
 	                        const int _nShadingEffect,
 	                        const class CRectLayout &_rects )
 			: pTexture( _pTexture ), nShadingEffect( _nShadingEffect ), rects( _rects )
 	{
 	}
+
 	//
-	void Visit( IUIVisitor *pVisitor ) { pVisitor->VisitUITextureRect( pTexture, nShadingEffect, rects ); }
+	void Visit( IUIVisitor *pVisitor )
+	{
+		pVisitor->VisitUITextureRect( pTexture, nShadingEffect, rects );
+	}
 };
 
 class CVisitUITextCmd : public IUIVisitorCmd
@@ -131,12 +157,17 @@ class CVisitUITextCmd : public IUIVisitorCmd
 
 public:
 	CVisitUITextCmd() {}
+
 	CVisitUITextCmd( IML *_pML, const CTPoint<float> &_sPosition, const CTRect<float> &_sWindow )
 			: pML( _pML ), sPosition( _sPosition ), sWindow( _sWindow )
 	{
 	}
+
 	//
-	void Visit( IUIVisitor *pVisitor ) { pVisitor->VisitUIText( pML, sPosition, sWindow ); }
+	void Visit( IUIVisitor *pVisitor )
+	{
+		pVisitor->VisitUIText( pML, sPosition, sWindow );
+	}
 };
 
 // ************************************************************************************************************************ //
@@ -158,6 +189,7 @@ class CUIVisitor : public IUIVisitor
 	//
 	typedef std::list<CPtr<IUIVisitorCmd>> CCommandsList;
 	CCommandsList upperLevelCommands;
+
 	//
 	virtual void ClipRestore()
 	{
@@ -171,6 +203,7 @@ class CUIVisitor : public IUIVisitor
 		rcStoredClip.pop_back();
 		bClipApplied = !rcStoredClip.empty();
 	}
+
 	//
 	virtual void ClipSet( const CTRect<float> &_rClip )
 	{
@@ -186,10 +219,27 @@ class CUIVisitor : public IUIVisitor
 
 public:
 	CUIVisitor() : rcClip( 0, 0, 1024, 768 ), bClipApplied( false ), bLowerLevel( true ) {}
-	CUIVisitor( NGScene::I2DGameView *p2D ) : bLowerLevel( true ) { SetGView( p2D ); }
-	void ClearCommandsList() { upperLevelCommands.clear(); }
-	void SetLowerLevel() { bLowerLevel = true; }
-	void SetUpperLevel() { bLowerLevel = false; }
+
+	CUIVisitor( NGScene::I2DGameView *p2D ) : bLowerLevel( true )
+	{
+		SetGView( p2D );
+	}
+
+	void ClearCommandsList()
+	{
+		upperLevelCommands.clear();
+	}
+
+	void SetLowerLevel()
+	{
+		bLowerLevel = true;
+	}
+
+	void SetUpperLevel()
+	{
+		bLowerLevel = false;
+	}
+
 	void FlushUpperLevelData()
 	{
 		bool bStoredLowerLevel = bLowerLevel;
@@ -203,6 +253,7 @@ public:
 		//
 		bLowerLevel = bStoredLowerLevel;
 	}
+
 	//
 	void SetGView( NGScene::I2DGameView *_p2D )
 	{
@@ -214,6 +265,7 @@ public:
 		rcClip.y2 = vScreenSize.y;
 		bClipApplied = false;
 	}
+
 	//
 	void VisitZClearRect( const CRectLayout &_sLayout,
 	                      const CTPoint<float> &sPosition,
@@ -235,6 +287,7 @@ public:
 		sLayout.fZ = fZ;
 		pGFX->CreateDynamicClearRects( sLayout, sPosition, sClipWindow );
 	}
+
 	//
 	void VisitUIRect( const NDb::STexture *pTexture, const int nShadingEffect, const class CRectLayout &rects )
 	{
@@ -250,6 +303,7 @@ public:
 		}
 		pGFX->CreateDynamicRects( pTexture, rects, CTPoint<float>( 0, 0 ), rcClip );
 	}
+
 	//
 	void VisitUIRect( const NDb::STexture *pTexture,
 	                  const int nShadingEffect,
@@ -269,6 +323,7 @@ public:
 		}
 		pGFX->CreateDynamicRects( pTexture, pPos4, pColors4, rectTexture );
 	}
+
 	//
 	void
 	VisitUITextureRect( CPtrFuncBase<NGfx::CTexture> *pTexture, const int nShadingEffect, const class CRectLayout &rects )
@@ -284,6 +339,7 @@ public:
 		}
 		pGFX->CreateDynamicRects( pTexture, rects, CTPoint<float>( 0, 0 ), rcClip );
 	}
+
 	//
 	void VisitUIText( IML *pML, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 	{

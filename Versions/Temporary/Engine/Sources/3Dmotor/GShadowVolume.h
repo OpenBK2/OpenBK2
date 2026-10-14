@@ -1,5 +1,6 @@
 #pragma once
 #include "GRenderCore.h"
+
 namespace NDb
 {
 struct SMaterial;
@@ -46,4 +47,4 @@ void MakeInvisibleElementsList( IRender *pRender,
                                 CIgnorePartsHash *pIgnore,
                                 CObj<IHZBuffer> *pHZBuffer );
 
-} // namespace
+} // namespace NGScene

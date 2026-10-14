@@ -11,6 +11,7 @@ class CUIRunModeInterface : public CRunModeInterfaceBase
 public:
 	// lifecycle
 	CUIRunModeInterface() {}
+
 	CUIRunModeInterface( const std::string &rszTypeName,
 	                     const CDBID &rDBID,
 	                     const CDBID &rTemplateWindowDBID,

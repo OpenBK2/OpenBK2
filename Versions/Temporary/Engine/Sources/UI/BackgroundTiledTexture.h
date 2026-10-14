@@ -18,7 +18,7 @@ namespace NDb
 {
 struct SBackgroundTiledTexture;
 struct SSubRect;
-}
+} // namespace NDb
 
 class CBackgroundTiledTexture : public CBackground
 {

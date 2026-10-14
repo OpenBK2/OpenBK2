@@ -22,6 +22,7 @@ struct SChapterReinfBase : public CObjectBase
 		std::vector<int> armors;
 		int nHP;
 		std::vector<IWindow3DControl::SObject> objects3D;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pMechUnit );
@@ -35,8 +36,12 @@ struct SChapterReinfBase : public CObjectBase
 			return 0;
 		}
 
-		bool operator()( const SUnitData &data ) const { return pMechUnit == data.pMechUnit && pSquad == data.pSquad; }
+		bool operator()( const SUnitData &data ) const
+		{
+			return pMechUnit == data.pMechUnit && pSquad == data.pSquad;
+		}
 	};
+
 	struct SUnit : public CObjectBase
 	{
 		OBJECT_NOCOPY_METHODS( SUnit );
@@ -61,6 +66,7 @@ struct SChapterReinfBase : public CObjectBase
 		CPtr<IWindow3DControl> p3DCtrl;
 		int nBaseIndex;
 		CPtr<IProgressBar> pHPBar;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pWnd );
@@ -99,6 +105,7 @@ struct SChapterReinfBase : public CObjectBase
 		void SetNone();
 		void SetUnit( const SUnitData &data );
 	};
+
 	struct SUnitWeapon
 	{
 		ZDATA
@@ -108,6 +115,7 @@ struct SChapterReinfBase : public CObjectBase
 		CPtr<ITextView> pDamageView;
 		CPtr<ITextView> pPenetrationView;
 		CPtr<ITextView> pAmmoView;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pWnd );
@@ -125,6 +133,7 @@ struct SChapterReinfBase : public CObjectBase
 	std::vector<SUnitWeapon> weapons;
 	CPtr<ITextView> pUnitSupplyLabel;
 	CPtr<ITextView> pUnitSupplyView;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pUnitNameView );
@@ -151,6 +160,7 @@ public:
 		CPtr<IWindow> pWnd;
 		CObj<SUnit> pUnit1;
 		CObj<SUnit> pUnit2;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pWnd );
@@ -170,6 +180,7 @@ public:
 
 	std::vector<SUpgradeLine> lines;
 	CPtr<SUnit> pSelectedUnit;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SChapterReinfBase *)this );
@@ -207,6 +218,7 @@ public:
 
 	std::vector<CObj<SUnit>> units;
 	CPtr<SUnit> pSelectedUnit;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (SChapterReinfBase *)this );
@@ -241,6 +253,7 @@ public:
 	CPtr<ITextView> pDescView;
 	CPtr<ITextView> pDescHeader;
 	CPtr<IWindow> pItemGeneral;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pBaseWnd );
@@ -270,6 +283,7 @@ public:
 	CPtr<ITextView> pNameView;
 	CPtr<ITextView> pDifficultyView;
 	CPtr<ITextView> pWeatherView;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pBaseWnd );

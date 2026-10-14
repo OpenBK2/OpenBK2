@@ -14,6 +14,7 @@ enum ETGAImageType
 };
 
 #pragma pack( 1 )
+
 // describe the color map (if any) used for the image
 struct SColorMapSpecification
 {
@@ -23,6 +24,7 @@ struct SColorMapSpecification
 	uint8_t
 			cColorMapEntrySize; // Establishes the number of bits per entry. Typically 15, 16, 24 or 32-bit values are used
 };
+
 //
 struct SImageDescriptor
 {
@@ -31,6 +33,7 @@ struct SImageDescriptor
 	uint8_t cTopToBottomOrder : 1; // top-to-bottom ordering
 	uint8_t cUnused : 2;           // Must be zero to insure future compatibility
 };
+
 // describe the image screen location, size and pixel depth
 struct SImageSpecification
 {
@@ -44,6 +47,7 @@ struct SImageSpecification
 			cPixelDepth; // number of bits per pixel. This number includes the Attribute or Alpha channel bits. Common values are 8, 16, 24 and 32 but other pixel depths could be used.
 	SImageDescriptor descriptor; //
 };
+
 struct STGAFileHeader
 {
 	uint8_t cIDLength;     // identifies the number of bytes contained in Field 6, the Image ID Field
@@ -53,6 +57,7 @@ struct STGAFileHeader
 	SColorMapSpecification colormap; //
 	SImageSpecification imagespec;   //
 };
+
 struct STGAFileFooter
 {
 	uint32_t dwExtensionAreaOffset;      // offset from the beginning of the file to the start of the Extension  Area
@@ -61,4 +66,5 @@ struct STGAFileFooter
 	uint8_t cReservedCharacter;          // must be '.'
 	uint8_t cBinaryZeroStringTerminator; // '\0'
 };
+
 #pragma pack()

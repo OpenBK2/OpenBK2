@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "HashMapConvertor.h"
+
 namespace NHashMapConvertor
 {
 
@@ -63,4 +64,4 @@ void ConvertVector( std::unordered_map<std::string, int> *pHashMap,
 	}
 }
 
-}
+} // namespace NHashMapConvertor

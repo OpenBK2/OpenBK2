@@ -48,18 +48,21 @@ SYSTEM_EXPORT int GetObjectTypeID( const std::type_info &rtti );
 SYSTEM_EXPORT bool IsRegistered( int nObjectTypeID );
 // start register type
 SYSTEM_EXPORT void StartRegister();
+
 //
 template <class TT>
 void RegisterTypeName( int nTypeID, ObjectFactoryNewFunc func, TT * )
 {
 	NObjectFactory::RegisterType( nTypeID, func, &typeid( TT ) );
 }
+
 template <class TT>
 void UnRegisterTypeName( int nTypeID, TT * )
 {
 	NObjectFactory::UnRegisterType( nTypeID, &typeid( TT ) );
 }
-};
+}; // namespace NObjectFactory
+
 // MACROses to register class
 #define REGISTER_CLASS( N, name )                                      \
 	{                                                                    \
@@ -81,12 +84,14 @@ void UnRegisterTypeName( int nTypeID, TT * )
 		NObjectFactory::RegisterTypeName( N, nmspace::name::New##name, (nmspace::name *)0 ); \
 	}
 #define UNREGISTER_CLASS_NM( N, name, nmspace ) NObjectFactory::UnRegisterTypeName( N, (nmspace::name *)0 );
+
 // make object by TypeID from objects factory
 template <class TYPE>
 inline TYPE *MakeObject( int nTypeID )
 {
 	return checked_cast<TYPE *>( NObjectFactory::MakeObject( nTypeID ) );
 }
+
 template <class TYPE>
 inline TYPE *MakeObjectVirtual( int nTypeID )
 {
@@ -109,7 +114,8 @@ SYSTEM_EXPORT void UnRegisterSingleton( const int nTypeID );
 SYSTEM_EXPORT void DoneSingletons();
 SYSTEM_EXPORT void Serialize( const char chunkID, IBinSaver &saver );
 SYSTEM_EXPORT void GetAllSingletonIDs( std::vector<int> *pRes );
-};
+}; // namespace NSingleton
+
 // получить singleton по ID из глобального хранилища.
 // singleton должен иметь enum с одним полем 'tidTypeID', которое содержит его константу
 // и под этой константой он уже зарегистрирован в глобальном хранилище

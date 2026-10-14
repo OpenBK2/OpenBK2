@@ -69,24 +69,29 @@ const SElementRPGStats &GetElementStats( const int nIndex ) const
 	}
 	return end;
 }
+
 virtual const CVec2 &GetOrigin( const int nIndex = -1 ) const
 {
 	return GetElementStats( nIndex ).vOrigin;
 }
+
 virtual const SByteArray2 &GetPassability( const int nIndex = -1 ) const
 {
 	return GetElementStats( nIndex ).passability;
 }
+
 virtual const CVec2 &GetVisOrigin( const int nIndex = -1 ) const
 {
 	return GetOrigin( nIndex );
 }
+
 virtual const SByteArray2 &GetVisibility( const int nIndex = -1 ) const
 {
 	static SByteArray2 ar;
 	return ar;
 	//	return GetElementStats( nIndex ).passability;
 }
+
 virtual const SPassProfile &GetPassProfile( const int nIndex = -1 ) const
 {
 	static SPassProfile emptyProfile;
@@ -112,6 +117,7 @@ virtual void ToAIUnits( bool bInEditor )
 	center.passability.PostLoad( bInEditor );
 	end.passability.PostLoad( bInEditor );
 } //
+
 /*
 
 const int GetTypeFromIndex( const int nIndex, const int nDamageState ) const

@@ -7,11 +7,16 @@ class CMOFence : public CMapObj
 {
 	OBJECT_NOCOPY_METHODS( CMOFence );
 	int nSceneID = 0; // object ID in scene
+
 	//
-	const NDb::SFenceRPGStats *GetStatsLocal() const { return checked_cast<const NDb::SFenceRPGStats *>( GetStats() ); }
+	const NDb::SFenceRPGStats *GetStatsLocal() const
+	{
+		return checked_cast<const NDb::SFenceRPGStats *>( GetStats() );
+	}
 
 public:
 	CMOFence() : nSceneID( -1 ) {}
+
 	bool Create( const int nUniqueID,
 	             const SAIBasicUpdate *pUpdate,
 	             NDb::ESeason eSeason,
@@ -26,8 +31,14 @@ public:
 	void GetActions( CUserActions *pActions, EActionsType eActions ) const;
 	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;
 	NDb::EUserAction GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const;
+
 	virtual void GetPassangers( std::vector<IB2MapObj *> *pPassangers ) const {}
-	virtual int GetPassangersCount() const { return 0; }
+
+	virtual int GetPassangersCount() const
+	{
+		return 0;
+	}
+
 	//
 	int operator&( IBinSaver &saver );
 };

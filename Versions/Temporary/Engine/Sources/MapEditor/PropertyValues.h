@@ -57,4 +57,4 @@ bool AddVec3ColorChange( const std::string &rszName,
                          const int nColor,
                          CObjectBaseController *pObjectController,
                          IManipulator *pManipulator );
-}
+} // namespace NPropertyValues

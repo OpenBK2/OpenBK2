@@ -10,7 +10,7 @@ struct ILinksManager;
 struct IDriver;
 class CNodeAddress;
 struct SNetDriverConsts;
-}
+} // namespace NNet
 
 class SERVER_CLIENT_COMMON_EXPORT CNet : public CObjectBase
 {
@@ -32,6 +32,7 @@ class SERVER_CLIENT_COMMON_EXPORT CNet : public CObjectBase
 
 public:
 	CNet() {}
+
 	CNet( const int nApplicationID, const int nServerPort, const int nTimeout );
 
 	bool InitAsServer();

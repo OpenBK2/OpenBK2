@@ -29,4 +29,4 @@ extern const bool TOOLBAR_SHOW[TOOLBARS_COUNT];
 // and how many there are.
 extern const uint32_t TOOLBAR_ELEMENTS_COUNT[TOOLBARS_COUNT];
 extern const unsigned *const TOOLBAR_ELEMENTS_ID[TOOLBARS_COUNT];
-}
+} // namespace NMainFrameToolBars

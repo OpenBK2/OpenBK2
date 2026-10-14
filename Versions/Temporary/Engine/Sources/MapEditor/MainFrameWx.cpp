@@ -680,7 +680,10 @@ public:
 		return GetHandle();
 	}
 
-	virtual wxWindow *GetWxWindow() { return this; }
+	virtual wxWindow *GetWxWindow()
+	{
+		return this;
+	}
 
 	// IMainFrame
 	// As CMainFrame's: the button under the mouse, then the button in the
@@ -1018,19 +1021,40 @@ public:
 		return NMainFrameShared::BrowseForObject( pObjectDBID, pszObjectTypeName, bEnableEdit, bEnableEmpty );
 	}
 
-	virtual void CreateProgressDialog() { progress.Create( this ); }
+	virtual void CreateProgressDialog()
+	{
+		progress.Create( this );
+	}
 
-	virtual void DestroyProgressDialog() { progress.Destroy(); }
+	virtual void DestroyProgressDialog()
+	{
+		progress.Destroy();
+	}
 
-	virtual void SetProgressDialogTitle( const std::string &rszTitle ) { progress.SetTitle( rszTitle ); }
+	virtual void SetProgressDialogTitle( const std::string &rszTitle )
+	{
+		progress.SetTitle( rszTitle );
+	}
 
-	virtual void SetProgressDialogMessage( const std::string &rszMessage ) { progress.SetMessage( rszMessage ); }
+	virtual void SetProgressDialogMessage( const std::string &rszMessage )
+	{
+		progress.SetMessage( rszMessage );
+	}
 
-	virtual void SetProgressDialogRange( int nStart, int nFinish ) { progress.SetRange( nStart, nFinish ); }
+	virtual void SetProgressDialogRange( int nStart, int nFinish )
+	{
+		progress.SetRange( nStart, nFinish );
+	}
 
-	virtual void SetProgressDialogPosition( int nPosition ) { progress.SetPosition( nPosition ); }
+	virtual void SetProgressDialogPosition( int nPosition )
+	{
+		progress.SetPosition( nPosition );
+	}
 
-	virtual void IterateProgressDialogPosition() { progress.IteratePosition(); }
+	virtual void IterateProgressDialogPosition()
+	{
+		progress.IteratePosition();
+	}
 
 	// ICommandHandler, as CHID_VIEW.
 	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
@@ -1086,12 +1110,18 @@ private:
 		}
 	}
 
-	static wxString PaneName( unsigned nID ) { return wxString::Format( "Pane%u", nID ); }
+	static wxString PaneName( unsigned nID )
+	{
+		return wxString::Format( "Pane%u", nID );
+	}
 
 	// Where the layout is kept: beside the MFC frame's bar state, in the
 	// application's registry key, but a section of its own, since the two
 	// frames' layouts are nothing alike.
-	static std::string LayoutSection() { return NResources::GetString( IDS_REGISTRY_KEY_WINDOWBAR ) + "-wx"; }
+	static std::string LayoutSection()
+	{
+		return NResources::GetString( IDS_REGISTRY_KEY_WINDOWBAR ) + "-wx";
+	}
 
 	void SaveLayout()
 	{
@@ -1518,7 +1548,10 @@ private:
 		pLogPane.reset();
 	}
 
-	bool IsPaneShown( wxWindow *pPanel ) { return ( pPanel != nullptr ) && auiManager.GetPane( pPanel ).IsShown(); }
+	bool IsPaneShown( wxWindow *pPanel )
+	{
+		return ( pPanel != nullptr ) && auiManager.GetPane( pPanel ).IsShown();
+	}
 
 	void ShowPane( wxWindow *pPanel, bool bShow )
 	{
@@ -1893,7 +1926,7 @@ private:
 
 // wx owns the frame and destroys it when it closes; this goes null then.
 wxWeakRef<CWxMainFrame> s_pFrame;
-}
+} // namespace
 
 namespace NMainFrameWx
 {
@@ -1914,4 +1947,4 @@ void Show()
 		s_pFrame->ShowFrame();
 	}
 }
-}
+} // namespace NMainFrameWx

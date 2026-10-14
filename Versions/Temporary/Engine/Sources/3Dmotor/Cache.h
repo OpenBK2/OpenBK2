@@ -30,6 +30,7 @@ class CShortPtrAllocator
 {
 public:
 	typedef uint32_t pointer;
+
 	enum EPointer
 	{
 		NIL = 0xffffffff
@@ -50,7 +51,12 @@ public:
 	}
 
 	CShortPtrAllocator() : nFree( NIL ), nLast( 0 ) {}
-	T &operator()( pointer p ) { return buffer[p]; }
+
+	T &operator()( pointer p )
+	{
+		return buffer[p];
+	}
+
 	pointer alloc()
 	{
 		if ( nFree != NIL )
@@ -66,6 +72,7 @@ public:
 		}
 		return nLast++;
 	}
+
 	void free( pointer p )
 	{
 		ASSERT( !IsValid( buffer[p].pUser ) );
@@ -110,7 +117,11 @@ protected:
 			pTracker = 0;
 		}
 	}
-	CTracker *GetTracker() const { return pTracker; }
+
+	CTracker *GetTracker() const
+	{
+		return pTracker;
+	}
 
 public:
 	virtual bool Touch()
@@ -122,6 +133,7 @@ public:
 		}
 		return false;
 	}
+
 	MRU_TYPE GetMRU() const
 	{
 		if ( pTracker.IsValid() )
@@ -140,6 +152,7 @@ class CGatheringCache : public CObjectBase
 	struct SElement;
 	typedef TAlloc<SElement> Alloc;
 	typedef typename Alloc::pointer pointer;
+
 	struct SElement
 	{
 		ZDATA
@@ -149,6 +162,7 @@ class CGatheringCache : public CObjectBase
 		pointer pUp, pDown;
 		MRU_TYPE nRU;
 		CMObj<TUser> pUser;
+
 		ZEND int operator&( CStructureSaver &f )
 		{
 			f.Add( 2, &elem );
@@ -162,6 +176,7 @@ class CGatheringCache : public CObjectBase
 			return 0;
 		}
 	};
+
 	ZDATA
 	Alloc alloc;
 	MRU_TYPE nCurrentRU, nLatestAllocRU;
@@ -190,6 +205,7 @@ private:
 		MakeFreeLeaf( pNode );
 		alloc.free( pNode );
 	}
+
 	// erase all children & user objects tied to node pNode
 	void MakeFreeLeaf( pointer pNode )
 	{
@@ -221,6 +237,7 @@ private:
 			node.pUser = 0;
 		}
 	}
+
 	void Link( pointer pBefore, pointer pThis )
 	{
 		SElement &before = alloc( pBefore );
@@ -232,6 +249,7 @@ private:
 		before.pNext = pThis;
 		subj.pPrev = pBefore;
 	}
+
 	void Unlink( pointer p )
 	{
 		SElement &subj = alloc( p );
@@ -239,11 +257,14 @@ private:
 		alloc( subj.pPrev ).pNext = subj.pNext;
 		subj.pNext = subj.pPrev = p;
 	}
+
 	struct SSplitter
 	{
 		CGatheringCache *pThis;
 		pointer pLast, pUp;
+
 		SSplitter( CGatheringCache *_pThis, pointer _pUp ) : pLast( Alloc::NIL ), pThis( _pThis ), pUp( _pUp ) {}
+
 		void operator()( const TElement &_e, typename TElement::ESplitType t )
 		{
 			pointer p = pThis->alloc.alloc();
@@ -264,6 +285,7 @@ private:
 			}
 		}
 	};
+
 	void Split( pointer p, typename TElement::ESplitType t )
 	{
 		SSplitter split( this, p );
@@ -271,6 +293,7 @@ private:
 		e.Split( t, split );
 		alloc( p ).pDown = split.pLast;
 	}
+
 	// subdivides p until reach elem size, returns pointer to node of _elem size
 	pointer GetAllocNode( pointer p, const TElement &_elem )
 	{
@@ -293,6 +316,7 @@ private:
 		ASSERT( 0 ); // trouble happened - Split()/Up() for TElement are not reversible
 		return p;
 	}
+
 	pointer AddRootNode( const TElement &elem )
 	{
 		pointer pNode = alloc.alloc();
@@ -354,6 +378,7 @@ private:
 		}
 		*/
 	}
+
 	void RecalcRU( pointer pNode )
 	{
 		if ( pNode == Alloc::NIL )
@@ -375,6 +400,7 @@ private:
 		PlaceNodeSorted( pNode );
 		RecalcRU( node.pUp );
 	}
+
 	void SplitOnUsable( pointer pNode )
 	{
 		typename TElement::ESplitType t = alloc( pNode ).elem.GetUsableSplit();
@@ -383,6 +409,7 @@ private:
 			Split( pNode, t );
 		}
 	}
+
 	// to be called only from ~CCacheElement
 	void Free( pointer pNode )
 	{
@@ -434,7 +461,12 @@ public:
 			: nCurrentRU( _nCurrentRU ), nLatestAllocRU( 0 ), bThrashing( false )
 	{
 	}
-	~CGatheringCache() { Clear(); }
+
+	~CGatheringCache()
+	{
+		Clear();
+	}
+
 	void Clear()
 	{
 		for ( int k = nodes.size() - 1; k >= 0; --k )
@@ -445,6 +477,7 @@ public:
 			}
 		}
 	}
+
 	void AddRoot( TElement root )
 	{
 		int nPrevSize = nodes.size(), nHash = root.GetHash();
@@ -461,7 +494,12 @@ public:
 		}
 		SplitOnUsable( AddRootNode( root ) );
 	}
-	bool IsThrashing() const { return bThrashing; }
+
+	bool IsThrashing() const
+	{
+		return bThrashing;
+	}
+
 	void CalcStats( SStats *pStats )
 	{
 		pStats->nCurrentRU = nCurrentRU;
@@ -490,12 +528,14 @@ public:
 			}
 		}
 	}
+
 	void AdvanceFrameCounter()
 	{
 		bThrashing = nLatestAllocRU == nCurrentRU;
 		++nCurrentRU;
 		nLatestAllocRU = 0;
 	}
+
 	bool GetPlace( const TElement &_elem, SCachePlace *pRes )
 	{
 		if ( nodes.empty() )
@@ -534,7 +574,12 @@ public:
 		pRes->requestSize = _elem;
 		return true;
 	}
-	MRU_TYPE GetCurrentRU() const { return nCurrentRU; }
+
+	MRU_TYPE GetCurrentRU() const
+	{
+		return nCurrentRU;
+	}
+
 	void PerformAlloc( TUser *pRes, SCachePlace *pPlace )
 	{
 		nLatestAllocRU = (std::max)( nLatestAllocRU, pPlace->nMRU );
@@ -548,7 +593,12 @@ public:
 		pPlace->resPlace = nRes.elem;
 		Touch( pNode );
 	}
-	MRU_TYPE GetMRU( pointer p ) { return alloc( p ).nRU; }
+
+	MRU_TYPE GetMRU( pointer p )
+	{
+		return alloc( p ).nRU;
+	}
+
 	struct SStatePlace
 	{
 		TElement place;
@@ -556,8 +606,10 @@ public:
 		MRU_TYPE nMRU;
 
 		SStatePlace() {}
+
 		SStatePlace( const TElement &_e, TUser *_p, MRU_TYPE _nMRU ) : place( _e ), pUser( _p ), nMRU( _nMRU ) {}
 	};
+
 	void GetState( std::vector<SStatePlace> *pState )
 	{
 		for ( int k = 0; k < nodes.size(); ++k )
@@ -588,6 +640,7 @@ public:
 		XSPLIT,
 		YSPLIT
 	};
+
 	int nXSize, nYSize; // log2 of dimension, nXSize >= nYSize
 	int nShiftX, nShiftY;
 
@@ -602,6 +655,7 @@ public:
 			return nYSize * ( nYSize + 1 ) + nXSize * 2 + 1;
 		}
 	}
+
 	ESplitType Up()
 	{
 		if ( nYSize < nXSize )
@@ -618,6 +672,7 @@ public:
 		++nYSize;
 		return QUAD;
 	}
+
 	ESplitType GetUsableSplit() const
 	{
 		if ( nXSize > nYSize )
@@ -630,8 +685,17 @@ public:
 		}
 		return NONE;
 	}
-	bool SameSize( const CQuadTreeElement &a ) const { return nXSize == a.nXSize && nYSize == a.nYSize; }
-	int GetSize() const { return 1 << ( nXSize + nYSize ); }
+
+	bool SameSize( const CQuadTreeElement &a ) const
+	{
+		return nXSize == a.nXSize && nYSize == a.nYSize;
+	}
+
+	int GetSize() const
+	{
+		return 1 << ( nXSize + nYSize );
+	}
+
 	template <class TOutput>
 	void Split( ESplitType t, TOutput &out )
 	{
@@ -670,7 +734,9 @@ public:
 				break;
 		}
 	}
+
 	CQuadTreeElement() {}
+
 	CQuadTreeElement( int _nXSize, int _nYSize, int _nShiftX, int _nShiftY )
 			: nXSize( _nXSize ), nYSize( _nYSize ), nShiftX( _nShiftX ), nShiftY( _nShiftY )
 	{
@@ -679,11 +745,13 @@ public:
 
 const int N_MAX_FIB = 64;
 extern int nFibbonachiSeries[N_MAX_FIB];
+
 inline int fib( int nDepth )
 {
 	ASSERT( nDepth < N_MAX_FIB );
 	return nFibbonachiSeries[nDepth];
 }
+
 inline int GetMajorFib( int _n )
 {
 	int k = 0;
@@ -701,18 +769,36 @@ public:
 	{
 		NONE
 	};
+
 	int nSize;
 	int nShift;
 
-	int GetHash() const { return nSize; }
+	int GetHash() const
+	{
+		return nSize;
+	}
+
 	ESplitType Up()
 	{
 		++nSize;
 		return NONE;
 	}
-	ESplitType GetUsableSplit() const { return NONE; }
-	bool SameSize( const CFibElement &a ) const { return nSize == a.nSize; }
-	int GetSize() const { return fib( nSize ); }
+
+	ESplitType GetUsableSplit() const
+	{
+		return NONE;
+	}
+
+	bool SameSize( const CFibElement &a ) const
+	{
+		return nSize == a.nSize;
+	}
+
+	int GetSize() const
+	{
+		return fib( nSize );
+	}
+
 	template <class TOutput>
 	void Split( ESplitType t, TOutput &out )
 	{
@@ -720,8 +806,10 @@ public:
 		out( CFibElement( nSize - 1, nShift ), NONE );
 		out( CFibElement( (std::max)( 0, nSize - 2 ), nShift + fib( nSize - 1 ) ), NONE );
 	}
+
 	CFibElement() {}
+
 	CFibElement( int _nSize, int _nShift ) : nSize( _nSize ), nShift( _nShift ) {}
 };
 
-}
+} // namespace NCache

@@ -19,25 +19,53 @@ class CTerrainEditor : public CEditorBase, public CDefaultView, public ICommandH
 	//
 public:
 	//IEditor
-	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
-	IView *GetView() { return this; }
-	IInputState *GetInputState() { return pTerrainState; }
+	void GetTemporaryLabel( std::string *pszTemporaryLabel )
+	{
+		pszTemporaryLabel->clear();
+	}
+
+	IView *GetView()
+	{
+		return this;
+	}
+
+	IInputState *GetInputState()
+	{
+		return pTerrainState;
+	}
+
 	void GetChildFrameType( std::string *pszChildFrameTypeName )
 	{
 		( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__";
 	}
+
 	void CreateControls() {}
+
 	void PostCreateControls() {}
+
 	void PreDestroyControls() {}
-	void DestroyControls() { Destroy(); }
+
+	void DestroyControls()
+	{
+		Destroy();
+	}
+
 	void Create();
 	void Destroy();
 
 	//CDefaultView
 	void Undo( IController *pController ) {}
+
 	void Redo( IController *pController ) {}
 
 	//ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) { return false; }
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) { return false; }
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
+	{
+		return false;
+	}
+
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
+	{
+		return false;
+	}
 };

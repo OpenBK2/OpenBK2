@@ -37,7 +37,7 @@ namespace
 // serve the call from user space and every reading becomes a syscall, which
 // is exactly the cost this timer exists to avoid.
 using CRefClock = std::chrono::steady_clock;
-}
+} // namespace
 
 double NHPTimer::GetSeconds( const NHPTimer::STime &a )
 {
@@ -115,6 +115,10 @@ static void InitHPTimer()
 // это вспомогательная структура для автоматической инициализации HP timer'а
 struct SHPTimerInit
 {
-	SHPTimerInit() { InitHPTimer(); }
+	SHPTimerInit()
+	{
+		InitHPTimer();
+	}
 };
+
 static SHPTimerInit hptInit;

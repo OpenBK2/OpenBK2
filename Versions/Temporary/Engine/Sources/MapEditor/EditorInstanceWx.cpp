@@ -94,7 +94,7 @@ public:
 };
 
 std::unique_ptr<CInstanceServer> g_pServer;
-}
+} // namespace
 
 namespace NEditorInstance
 {
@@ -153,4 +153,4 @@ void Release()
 	g_pChecker.reset();
 	g_pfnOpen = nullptr;
 }
-}
+} // namespace NEditorInstance

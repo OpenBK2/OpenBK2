@@ -64,6 +64,7 @@ struct SSkeletonPose
 	{
 		return nBone >= 0 && nBone < static_cast<int>( localPose.size() ) ? &localPose[nBone] : 0;
 	}
+
 	const SBoneTransform *GetBone( int nBone ) const
 	{
 		return nBone >= 0 && nBone < static_cast<int>( localPose.size() ) ? &localPose[nBone] : 0;
@@ -75,6 +76,7 @@ struct SSkeletonHandle
 	ZDATA
 	CDBPtr<NDb::SSkeleton> pSkeleton;
 	int nModelInFile = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pSkeleton );
@@ -83,6 +85,7 @@ struct SSkeletonHandle
 	}
 
 	SSkeletonHandle() : nModelInFile( 0 ) {}
+
 	SSkeletonHandle( const NDb::SSkeleton *_pSkeleton, int _nModelInFile )
 			: pSkeleton( _pSkeleton ), nModelInFile( _nModelInFile )
 	{
@@ -105,4 +108,4 @@ struct IGetBone
 	virtual void GetBoneNames( std::vector<std::string> *pBoneNames ) = 0;
 };
 
-}
+} // namespace NAnimation

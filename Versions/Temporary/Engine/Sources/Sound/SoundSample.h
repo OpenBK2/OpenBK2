@@ -14,12 +14,19 @@ class CSoundSample : public CObjectBase
 	void SetSample( FSOUND_SAMPLE *_sample );
 
 public:
-	static void Set3DMode( bool b3DMode ) { b3DSoundShare = b3DMode; }
+	static void Set3DMode( bool b3DMode )
+	{
+		b3DSoundShare = b3DMode;
+	}
+
 	CSoundSample();
 	~CSoundSample();
 	int operator&( IBinSaver &saver );
 #if !defined( _FINALRELEASE )
-	std::string GetName() const { return dbidSound.ToString(); }
+	std::string GetName() const
+	{
+		return dbidSound.ToString();
+	}
 #endif
 	//
 	FSOUND_SAMPLE *GetInternalContainer();

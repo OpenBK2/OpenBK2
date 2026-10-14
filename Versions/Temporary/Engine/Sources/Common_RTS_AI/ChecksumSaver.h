@@ -5,6 +5,7 @@
 #include <zconf.h>
 
 struct ICheckSumLog;
+
 class CCheckSumSaver : public IBinSaver
 {
 	OBJECT_NOCOPY_METHODS( CCheckSumSaver );
@@ -25,7 +26,11 @@ class CCheckSumSaver : public IBinSaver
 	int nCount = 0;
 	NTimer::STime nSegment = 0;
 
-	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber ) { return true; }
+	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber )
+	{
+		return true;
+	}
+
 	virtual void FinishChunk() {}
 
 	virtual void DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber );
@@ -40,14 +45,28 @@ class CCheckSumSaver : public IBinSaver
 		return 0;
 	}
 
-	virtual int CountChunks( const chunk_id idChunk ) { return 0; }
+	virtual int CountChunks( const chunk_id idChunk )
+	{
+		return 0;
+	}
 
 public:
 	CCheckSumSaver();
 	CCheckSumSaver( uLong *pCheckSum, struct ICheckSumLog *pLog, const NTimer::STime segmentTime );
 	~CCheckSumSaver();
 
-	virtual bool IsReading() { return false; }
-	virtual int GetVersion() const { return 0; }
-	virtual bool IsChecksum() { return true; }
+	virtual bool IsReading()
+	{
+		return false;
+	}
+
+	virtual int GetVersion() const
+	{
+		return 0;
+	}
+
+	virtual bool IsChecksum()
+	{
+		return true;
+	}
 };

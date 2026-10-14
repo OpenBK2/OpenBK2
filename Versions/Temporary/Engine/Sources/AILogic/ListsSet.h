@@ -21,6 +21,7 @@ private:
 	T value = {};
 
 	SElInfo() {}
+
 	SElInfo( const int _id, const T &_value ) : id( _id ), value( _value ) {}
 };
 
@@ -45,6 +46,7 @@ private:
 
 	//
 	int GetFreePos();
+
 	void AddToFree( int pos )
 	{
 		NI_ASSERT( pos < nexts.size(), fmt::format( "Wrong pos ({})", pos ) );
@@ -53,8 +55,15 @@ private:
 	}
 
 public:
-	CListsSet() { Init( SConsts::AI_START_VECTOR_SIZE ); }
-	explicit CListsSet( const int nLists ) { Init( nLists ); }
+	CListsSet()
+	{
+		Init( SConsts::AI_START_VECTOR_SIZE );
+	}
+
+	explicit CListsSet( const int nLists )
+	{
+		Init( nLists );
+	}
 
 	void Init( const int nFronts );
 	void Clear();
@@ -79,7 +88,11 @@ public:
 			sizes.resize( nSize * 1.5, 0 );
 		}
 	}
-	const int GetListsNum() const { return fronts.size(); }
+
+	const int GetListsNum() const
+	{
+		return fronts.size();
+	}
 
 	typedef int tEnumerator;
 	const int Add( const int listNum, const T &value );
@@ -100,9 +113,21 @@ public:
 			return fronts[listNum];
 		}
 	}
-	const int end() const { return 0; }
-	const int GetNext( const tEnumerator pos ) const { return nexts[pos]; }
-	const int GetPred( const tEnumerator pos ) const { return preds[pos]; }
+
+	const int end() const
+	{
+		return 0;
+	}
+
+	const int GetNext( const tEnumerator pos ) const
+	{
+		return nexts[pos];
+	}
+
+	const int GetPred( const tEnumerator pos ) const
+	{
+		return preds[pos];
+	}
 
 	T &GetEl( int pos )
 	{
@@ -360,13 +385,23 @@ protected:
 	std::vector<int> currentPos;
 
 public:
-	CQueuesSet() { Init( SConsts::AI_START_VECTOR_SIZE ); }
-	explicit CQueuesSet( const int queuesNum ) { Init( queuesNum ); }
+	CQueuesSet()
+	{
+		Init( SConsts::AI_START_VECTOR_SIZE );
+	}
+
+	explicit CQueuesSet( const int queuesNum )
+	{
+		Init( queuesNum );
+	}
 
 	void Init( const int nQueues );
 	void Clear();
 
-	const int GetSize( const int nQueueNum ) const { return cListsSet.GetSize( nQueueNum ); }
+	const int GetSize( const int nQueueNum ) const
+	{
+		return cListsSet.GetSize( nQueueNum );
+	}
 
 	void IncreaseQueuesNum( const int nSize )
 	{
@@ -377,7 +412,11 @@ public:
 			currentPos.resize( cListsSet.GetListsNum(), 0 );
 		}
 	}
-	const int GetQueuesNum() const { return cListsSet.GetListsNum(); }
+
+	const int GetQueuesNum() const
+	{
+		return cListsSet.GetListsNum();
+	}
 
 	// возвращает итератор в очереди
 	inline int Push( const int queueNum, const T &el );
@@ -388,8 +427,16 @@ public:
 	inline void Erase( const int queueNum, const int nPos );
 
 	inline const T &Peek( const int queueNum ) const;
-	const T &GetEl( const int nPos ) const { return cListsSet.GetEl( nPos ); }
-	T &GetEl( const int nPos ) { return cListsSet.GetEl( nPos ); }
+
+	const T &GetEl( const int nPos ) const
+	{
+		return cListsSet.GetEl( nPos );
+	}
+
+	T &GetEl( const int nPos )
+	{
+		return cListsSet.GetEl( nPos );
+	}
 
 	inline const bool IsLast( const int queueNum ) const;
 	inline const bool IsEmpty( const int queueNum ) const;
@@ -397,11 +444,30 @@ public:
 	inline void DelQueue( const int queueNum );
 
 	// begin - голова очереди, end - хвост
-	const int begin( const int queueNum ) const { return IsEmpty( queueNum ) ? end() : currentPos[queueNum]; }
-	const int end() const { return 0; }
-	const int last( const int queueNum ) const { return cListsSet.begin( queueNum ); }
-	const int GetNext( const int id ) const { return cListsSet.GetPred( id ); }
-	const int GetPred( const int id ) const { return cListsSet.GetNext( id ); }
+	const int begin( const int queueNum ) const
+	{
+		return IsEmpty( queueNum ) ? end() : currentPos[queueNum];
+	}
+
+	const int end() const
+	{
+		return 0;
+	}
+
+	const int last( const int queueNum ) const
+	{
+		return cListsSet.begin( queueNum );
+	}
+
+	const int GetNext( const int id ) const
+	{
+		return cListsSet.GetPred( id );
+	}
+
+	const int GetPred( const int id ) const
+	{
+		return cListsSet.GetNext( id );
+	}
 };
 
 template <class T>
@@ -517,15 +583,33 @@ private:
 	;
 
 public:
-	CDecksSet() { Init( SConsts::AI_START_VECTOR_SIZE ); }
-	explicit CDecksSet( const int decksNum ) { Init( decksNum ); }
+	CDecksSet()
+	{
+		Init( SConsts::AI_START_VECTOR_SIZE );
+	}
+
+	explicit CDecksSet( const int decksNum )
+	{
+		Init( decksNum );
+	}
 
 	void Init( const int nDecks );
 	void Clear();
 
-	void IncreaseDecksNum( const int nSize ) { this->IncreaseQueuesNum( nSize ); }
-	const int GetDecksNum() const { return this->GetQueuesNum(); }
-	void DelDeck( const int deckNum ) { this->DelQueue( deckNum ); }
+	void IncreaseDecksNum( const int nSize )
+	{
+		this->IncreaseQueuesNum( nSize );
+	}
+
+	const int GetDecksNum() const
+	{
+		return this->GetQueuesNum();
+	}
+
+	void DelDeck( const int deckNum )
+	{
+		this->DelQueue( deckNum );
+	}
 
 	void PushFront( const int deckNum, const T &el );
 

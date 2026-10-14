@@ -291,4 +291,4 @@ REGISTER_VAR_EX( "ft_quads_group2_max_z",
 //
 FINISH_REGISTER
 
-}
+} // namespace NGScene

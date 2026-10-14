@@ -26,6 +26,7 @@ void MakeVertex( NGScene::SVertex *pRes, const CVec2 &vAIPoint, const CVec2 &vTe
 	;
 	AI2Vis( &( pRes->pos ) );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ************************************************************************************************************************ //
 // * CEngineInfo
@@ -43,6 +44,7 @@ void CEngineInfo::InitEngineInfo( const NDb::SMaterial *pColor )
 	NGScene::IGameView *pGView = Scene()->GetGView();
 	pMesh = pGView->CreateMesh( pGView->MakeMeshInfo( this, pColor ), placement, 0, 0 );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CEngineInfo::Recalc()
 {
@@ -69,6 +71,7 @@ void CEngineInfo::Recalc()
 	//
 	pValue->Assign( &objData, false );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CEngineInfo::Invalidate()
 {
@@ -76,6 +79,7 @@ void CEngineInfo::Invalidate()
 	pMaterial = 0;
 	bNeedUpdate = true;
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ************************************************************************************************************************ //
 // * CDebugSegment
@@ -83,12 +87,14 @@ void CEngineInfo::Invalidate()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const float CDebugSegment::F_MIN_AI_THICKNESS = float( AI_TILE_SIZE ) / 8.0f;
 const float CDebugSegment::F_AI_SPLICE_LEN = float( AI_TILE_SIZE ) / 10;
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CDebugSegment::Init( const CSegment &aiSegment, const int nThickness )
 {
 	fThick = F_MIN_AI_THICKNESS * nThickness / 2.0f;
 	SetPosition( aiSegment );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CDebugSegment::SetPosition( const CSegment &aiSegment )
 {
@@ -150,6 +156,7 @@ void CDebugSegment::SetPosition( const CSegment &aiSegment )
 	SetVerts( aiVerts );
 	SetTris( tris );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ************************************************************************************************************************ //
 // * CDebugCircle
@@ -158,11 +165,13 @@ void CDebugSegment::SetPosition( const CSegment &aiSegment )
 const int CDebugCircle::N_SPLICE = 32;
 const float CDebugCircle::F_AI_TURN_X = cos( 2 * PI / N_SPLICE );
 const float CDebugCircle::F_AI_TURN_Y = sin( 2 * PI / N_SPLICE );
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CDebugCircle::Init( const CCircle &aiCircle )
 {
 	SetPosition( aiCircle );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CDebugCircle::SetPosition( const CCircle &aiCircle )
 {
@@ -192,6 +201,7 @@ void CDebugCircle::SetPosition( const CCircle &aiCircle )
 	SetVerts( aiVerts );
 	SetTris( tris );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ************************************************************************************************************************ //
 // * CDebugMarker
@@ -201,6 +211,7 @@ void CDebugMarker::Init( const std::vector<SVector> &tiles, const int nStart, co
 {
 	SetPosition( tiles, nStart, nEnd );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CDebugMarker::SetPosition( const std::vector<SVector> &tiles, const int nStart, const int nEnd )
 {
@@ -233,6 +244,7 @@ void CDebugMarker::SetPosition( const std::vector<SVector> &tiles, const int nSt
 	SetVerts( aiVerts );
 	SetTris( tris );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ************************************************************************************************************************ //
 // * CDebugMarkers
@@ -242,6 +254,7 @@ void CDebugMarkers::Init( const std::vector<SVector> &tiles )
 {
 	SetPosition( tiles );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CDebugMarkers::SetPosition( const std::vector<SVector> &tiles )
 {
@@ -269,6 +282,7 @@ void CDebugMarkers::SetPosition( const std::vector<SVector> &tiles )
 		}
 	}
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CDebugMarkers::SetColor( const NDb::SMaterial *pColor )
 {
@@ -278,5 +292,6 @@ void CDebugMarkers::SetColor( const NDb::SMaterial *pColor )
 		pMarker->SetColor( pColor );
 	}
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-}
+} // namespace NAIVisInfo

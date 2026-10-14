@@ -33,6 +33,7 @@ public:
 		f.Add( 9, &pUnit );
 		return 0;
 	}
+
 	void FindFreeTile();
 	void Init();
 
@@ -44,14 +45,23 @@ public:
 
 	virtual void GetSpeed3( CVec3 *vSpeed ) const;
 
-	virtual const CVec2 &GetFinishPoint() const { return vFinishPoint2D; }
+	virtual const CVec2 &GetFinishPoint() const
+	{
+		return vFinishPoint2D;
+	}
+
 	//ненужные функции
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap )
 	{
 		CPtr<IPath> p = pPath;
 		return true;
 	}
-	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) { return true; }
+
+	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit )
+	{
+		return true;
+	}
+
 	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap )
 	{
 		CPtr<IMemento> p = pMemento;
@@ -59,17 +69,50 @@ public:
 	}
 
 	virtual void Stop() {}
-	virtual float &GetSpeedLen() { return fSpeedLen; }
-	virtual const float GetSpeed() const { return fSpeedLen; }
-	virtual void NotifyAboutClosestThreat( CBasePathUnit *pCollUnit, const float fDist ) {}
-	virtual const bool CanGoBackward() const { return false; }
-	virtual const bool CanGoForward() const { return true; }
-	virtual void GetNextTiles( std::list<SVector> *pTiles ) {}
-	virtual const CVec2 PeekPathPoint( const int nToShift ) const { return CVec2( 0, 0 ); }
-	virtual IMemento *CreateMemento() const { return 0; }
-	virtual float GetCurvatureRadius() const { return 0.0f; }
 
-	virtual bool IsWithFormation() const { return true; }
+	virtual float &GetSpeedLen()
+	{
+		return fSpeedLen;
+	}
+
+	virtual const float GetSpeed() const
+	{
+		return fSpeedLen;
+	}
+
+	virtual void NotifyAboutClosestThreat( CBasePathUnit *pCollUnit, const float fDist ) {}
+
+	virtual const bool CanGoBackward() const
+	{
+		return false;
+	}
+
+	virtual const bool CanGoForward() const
+	{
+		return true;
+	}
+
+	virtual void GetNextTiles( std::list<SVector> *pTiles ) {}
+
+	virtual const CVec2 PeekPathPoint( const int nToShift ) const
+	{
+		return CVec2( 0, 0 );
+	}
+
+	virtual IMemento *CreateMemento() const
+	{
+		return 0;
+	}
+
+	virtual float GetCurvatureRadius() const
+	{
+		return 0.0f;
+	}
+
+	virtual bool IsWithFormation() const
+	{
+		return true;
+	}
 
 	static float CalcFallTime( const float fZ );
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Script.h"
+
 //
 //class CDBRecord;
 //
@@ -60,5 +61,6 @@ template < class T > bool luaIsDBPtr( const Script::Object &o )
 		return false;
 }*/
 
-}
+} // namespace NScript
+
 //

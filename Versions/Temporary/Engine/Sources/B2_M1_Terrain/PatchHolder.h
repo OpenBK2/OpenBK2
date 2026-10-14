@@ -7,15 +7,18 @@ namespace NMeshData
 struct SMeshData
 {
 	SMeshData() {}
+
 	SMeshData( const int nVertsReserve, const int nTrgsReserve )
 	{
 		vertices.reserve( nVertsReserve );
 		triangles.reserve( nTrgsReserve );
 	}
+
 	//
 	std::vector<NGScene::SVertex> vertices;
 	std::vector<STriangle> triangles;
 	std::vector<NGScene::CObjectInfo::SStream> attributes;
+
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -24,6 +27,7 @@ struct SMeshData
 		saver.Add( 3, &attributes );
 		return 0;
 	}
+
 	void Clear()
 	{
 		vertices.clear();
@@ -35,17 +39,20 @@ struct SMeshData
 struct SMeshDataTex2
 {
 	SMeshDataTex2() {}
+
 	SMeshDataTex2( const int nVertsReserve, const int nTrgsReserve, const int nSecondTexReserve )
 	{
 		vertices.reserve( nVertsReserve );
 		triangles.reserve( nTrgsReserve );
 		secondTex.reserve( nSecondTexReserve );
 	}
+
 	//
 	std::vector<NGScene::SVertex> vertices;
 	std::vector<STriangle> triangles;
 	std::vector<CVec2> secondTex;
 	std::vector<NGScene::CObjectInfo::SStream> attributes;
+
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -55,6 +62,7 @@ struct SMeshDataTex2
 		saver.Add( 4, &attributes );
 		return 0;
 	}
+
 	void Clear()
 	{
 		vertices.clear();
@@ -69,6 +77,7 @@ struct SPatchHolder
 {
 	CObj<T> pPatch;
 	CObj<CObjectBase> pHolder;
+
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -78,4 +87,4 @@ struct SPatchHolder
 	}
 };
 
-}
+} // namespace NMeshData

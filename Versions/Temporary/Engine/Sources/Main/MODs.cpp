@@ -19,7 +19,7 @@ namespace NGameX
 void PostStorageInitialize();
 void InitDataDependentSingletons();
 void UnInitDataDependentSingletons();
-}
+} // namespace NGameX
 
 namespace NMOD
 {
@@ -128,6 +128,7 @@ class CICAttachMOD : public IInterfaceCommand
 	//
 	NFile::CFilePath szFullFolderPath;
 	NDb::EDatabaseMode eMode;
+
 	//
 	CICAttachMOD() : eMode( NDb::DATABASE_MODE_GAME ) {}
 
@@ -143,6 +144,7 @@ public:
 			szFullFolderPath += "/";
 		}
 	}
+
 	//
 	void Exec()
 	{
@@ -234,6 +236,7 @@ bool GetAttachedMOD( SMOD *pMOD )
 	return !pMOD->szFullFolderPath.empty();
 }
 
-}
+} // namespace NMOD
+
 using namespace NMOD;
 REGISTER_SAVELOAD_CLASS( MAIN, MOD_ATTACH_COMMAND, CICAttachMOD );

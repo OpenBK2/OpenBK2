@@ -10,23 +10,32 @@
 
 #include "port/cdecl.h"
 
-#define REGISTER_SAVELOAD_CLASS( module, N, name )    \
-	BASIC_REGISTER_CLASS( module, name )                \
-	static struct name##Register##N                     \
-	{                                                   \
-		name##Register##N() { REGISTER_CLASS( N, name ) } \
+#define REGISTER_SAVELOAD_CLASS( module, N, name ) \
+	BASIC_REGISTER_CLASS( module, name )             \
+	static struct name##Register##N                  \
+	{                                                \
+		name##Register##N()                            \
+		{                                              \
+			REGISTER_CLASS( N, name )                    \
+		}                                              \
 	} init##name##N;
-#define REGISTER_SAVELOAD_TEMPL_CLASS( module, N, name, className )         \
-	BASIC_REGISTER_CLASS( module, name )                                      \
-	static struct className##Register##N                                      \
-	{                                                                         \
-		className##Register##N() { REGISTER_TEMPL_CLASS( N, name, className ) } \
+#define REGISTER_SAVELOAD_TEMPL_CLASS( module, N, name, className ) \
+	BASIC_REGISTER_CLASS( module, name )                              \
+	static struct className##Register##N                              \
+	{                                                                 \
+		className##Register##N()                                        \
+		{                                                               \
+			REGISTER_TEMPL_CLASS( N, name, className )                    \
+		}                                                               \
 	} init##className##N;
-#define REGISTER_SAVELOAD_CLASS_NM( module, N, name, nmspace )    \
-	BASIC_REGISTER_CLASS( module, nmspace::name )                   \
-	static struct name##Register##N                                 \
-	{                                                               \
-		name##Register##N() { REGISTER_CLASS_NM( N, name, nmspace ) } \
+#define REGISTER_SAVELOAD_CLASS_NM( module, N, name, nmspace ) \
+	BASIC_REGISTER_CLASS( module, nmspace::name )                \
+	static struct name##Register##N                              \
+	{                                                            \
+		name##Register##N()                                        \
+		{                                                          \
+			REGISTER_CLASS_NM( N, name, nmspace )                    \
+		}                                                          \
 	} init##name##N;
 #define START_REGISTER( a )      \
 	void StartRegisterHook##a() {} \
@@ -79,60 +88,86 @@ public:
 	typedef std::wstring stdWString;
 
 private:
-	char PORT_CDECL TestDataPath( ... ) { return 0; }
-	int PORT_CDECL TestDataPath( stdString * ) { return 0; }
-	int PORT_CDECL TestDataPath( stdWString * ) { return 0; }
-	int PORT_CDECL TestDataPath( CMemoryStream * ) { return 0; }
+	char PORT_CDECL TestDataPath( ... )
+	{
+		return 0;
+	}
+
+	int PORT_CDECL TestDataPath( stdString * )
+	{
+		return 0;
+	}
+
+	int PORT_CDECL TestDataPath( stdWString * )
+	{
+		return 0;
+	}
+
+	int PORT_CDECL TestDataPath( CMemoryStream * )
+	{
+		return 0;
+	}
+
 	template <class T1>
 	int PORT_CDECL TestDataPath( CArray2D<T1> * )
 	{
 		return 0;
 	}
+
 	template <class T1>
 	int PORT_CDECL TestDataPath( std::vector<T1> * )
 	{
 		return 0;
 	}
+
 	template <class T1>
 	int PORT_CDECL TestDataPath( std::list<T1> * )
 	{
 		return 0;
 	}
+
 	template <class T1, class T2, class T3>
 	int PORT_CDECL TestDataPath( std::unordered_map<T1, T2, T3> * )
 	{
 		return 0;
 	}
+
 	template <class T1, class T2>
 	int PORT_CDECL TestDataPath( std::unordered_set<T1, T2> * )
 	{
 		return 0;
 	}
+
 	template <class T1, class T2, class T3, class T4>
 	int PORT_CDECL TestDataPath( det_map<T1, T2, T3, T4> * )
 	{
 		return 0;
 	}
+
 	template <class T1, class T2, class T3>
 	int PORT_CDECL TestDataPath( det_set<T1, T2, T3> * )
 	{
 		return 0;
 	}
+
 	template <class T1, class T2, class T3>
 	int PORT_CDECL TestDataPath( std::priority_queue<T1, T2, T3> * )
 	{
 		return 0;
 	}
+
 	template <class T1, class T2>
 	int PORT_CDECL TestDataPath( std::set<T1, T2> * )
 	{
 		return 0;
 	}
+
 	template <class T1, class T2>
 	int PORT_CDECL TestDataPath( std::pair<T1, T2> * )
 	{
 		return 0;
 	}
+
 	//
 	template <class T>
 	void PORT_CDECL CallObjectSerialize( const chunk_id idChunk, int nChunkNumber, T *p, ... )
@@ -144,11 +179,13 @@ private:
 		p->T::operator&( *this );
 		FinishChunk();
 	}
+
 	template <class T>
 	void PORT_CDECL CallObjectSerialize( const chunk_id idChunk, int nChunkNumber, T *p, SInt2Type<1> *pp )
 	{
 		DataChunk( idChunk, p, sizeof( T ), nChunkNumber );
 	}
+
 	//
 	// vector
 	template <class T>
@@ -178,6 +215,7 @@ private:
 			Add( 1, &data[i], i + 1 );
 		}
 	}
+
 	template <class T>
 	void DoDataVector( std::vector<T> &data )
 	{
@@ -193,6 +231,7 @@ private:
 			DataChunk( 2, &data[0], sizeof( T ) * nSize, 1 );
 		}
 	}
+
 	// hash_map
 	template <class T1, class T2, class T3>
 	void DoHashMap( std::unordered_map<T1, T2, T3> &data )
@@ -395,6 +434,7 @@ private:
 			Add( 1, &vectorData );
 		}
 	}
+
 	template <class T>
 	void Do2DArray( CArray2D<T> &a )
 	{
@@ -410,6 +450,7 @@ private:
 			Add( 3, &a[i / nXSize][i % nXSize], i + 1 );
 		}
 	}
+
 	template <class T>
 	void Do2DArrayData( CArray2D<T> &a )
 	{
@@ -425,6 +466,7 @@ private:
 			DataChunk( 3, &a[0][0], sizeof( T ) * nXSize * nYSize, 1 );
 		}
 	}
+
 	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber ) = 0;
 	virtual void FinishChunk() = 0;
 	virtual int CountChunks( const chunk_id idChunk ) = 0;
@@ -438,13 +480,20 @@ private:
 
 public:
 	virtual bool IsReading() = 0;
-	virtual bool IsChecksum() { return false; }
+
+	virtual bool IsChecksum()
+	{
+		return false;
+	}
+
 	virtual int GetVersion() const = 0;
+
 	//
 	void AddRawData( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber = 1 )
 	{
 		DataChunk( idChunk, pData, nSize, nChunkNumber );
 	}
+
 	//
 	template <class T>
 	void Add( const chunk_id idChunk, T *p, int nChunkNumber = 1 )
@@ -453,6 +502,7 @@ public:
 		SInt2Type<N_HAS_SERIALIZE_TEST> separator;
 		CallObjectSerialize( idChunk, nChunkNumber, p, &separator );
 	}
+
 	void Add( const chunk_id idChunk, stdString *pStr, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
@@ -462,6 +512,7 @@ public:
 		DataChunkString( *pStr );
 		FinishChunk();
 	}
+
 	void Add( const chunk_id idChunk, stdWString *pStr, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
@@ -471,6 +522,7 @@ public:
 		DataChunkString( *pStr );
 		FinishChunk();
 	}
+
 	void Add( const chunk_id idChunk, CMemoryStream *pStr, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
@@ -492,6 +544,7 @@ public:
 		FinishChunk();
 		FinishChunk();
 	}
+
 	template <class T1>
 	void Add( const chunk_id idChunk, std::vector<T1> *pVec, int nChunkNumber = 1 )
 	{
@@ -509,6 +562,7 @@ public:
 		}
 		FinishChunk();
 	}
+
 	template <class T1, class T2, class T3>
 	void Add( const chunk_id idChunk, std::unordered_map<T1, T2, T3> *pHash, int nChunkNumber = 1 )
 	{
@@ -519,6 +573,7 @@ public:
 		DoHashMap( *pHash );
 		FinishChunk();
 	}
+
 	template <class T1, class T2>
 	void Add( const chunk_id idChunk, std::unordered_set<T1, T2> *pHash, int nChunkNumber = 1 )
 	{
@@ -529,6 +584,7 @@ public:
 		DoHashSet( *pHash );
 		FinishChunk();
 	}
+
 	template <class T1, class T2, class T3, class T4>
 	void Add( const chunk_id idChunk, det_map<T1, T2, T3, T4> *pMap, int nChunkNumber = 1 )
 	{
@@ -539,6 +595,7 @@ public:
 		DoDetMap( *pMap );
 		FinishChunk();
 	}
+
 	template <class T1, class T2, class T3>
 	void Add( const chunk_id idChunk, det_set<T1, T2, T3> *pSet, int nChunkNumber = 1 )
 	{
@@ -549,6 +606,7 @@ public:
 		DoDetSet( *pSet );
 		FinishChunk();
 	}
+
 	template <class T1, class T2, class T3>
 	void Add( const chunk_id idChunk, std::priority_queue<T1, T2, T3> *pQueue, int nChunkNumber = 1 )
 	{
@@ -579,6 +637,7 @@ public:
 		DoSet( *pSet );
 		FinishChunk();
 	}
+
 	template <class T1>
 	void Add( const chunk_id idChunk, CArray2D<T1> *pArr, int nChunkNumber = 1 )
 	{
@@ -596,6 +655,7 @@ public:
 		}
 		FinishChunk();
 	}
+
 	template <class T1>
 	void Add( const chunk_id idChunk, std::list<T1> *pList, int nChunkNumber = 1 )
 	{
@@ -630,6 +690,7 @@ public:
 		}
 		FinishChunk();
 	}
+
 	template <class T1, class T2>
 	void Add( const chunk_id idChunk, std::pair<T1, T2> *pData, int nChunkNumber = 1 )
 	{
@@ -641,6 +702,7 @@ public:
 		Add( 2, &( pData->second ) );
 		FinishChunk();
 	}
+
 	void AddPolymorphicBase( chunk_id idChunk, CObjectBase *pObject, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
@@ -650,6 +712,7 @@ public:
 		( *pObject ) & ( *this );
 		FinishChunk();
 	}
+
 	//
 	template <class T1, class T2>
 	void DoPtr( CPtrBase<T1, T2> *pData )
@@ -677,6 +740,7 @@ private:
 	{
 		ASSERT( 0 && "Hash table iterator can't be serialized" );
 	}
+
 	template <class T>
 	void Add( const chunk_id idChunk, T **pData, int nChunkNumber = 1 )
 	{
@@ -695,6 +759,7 @@ inline char operator&( T &c, IBinSaver &ss )
 {
 	return 0;
 }
+
 // realisation of forward declared serialisation operator
 template <class TUserObj, class TRef>
 int CPtrBase<TUserObj, TRef>::operator&( IBinSaver &f )
@@ -711,6 +776,7 @@ struct SBinSaverExternalObject
 	CObjectBase *pObj = nullptr;
 
 	SBinSaverExternalObject() {}
+
 	SBinSaverExternalObject( int _nID, CObjectBase *_pObj ) : nID( _nID ), pObj( _pObj ) {}
 };
 

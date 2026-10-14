@@ -31,7 +31,10 @@ private:
 
 public:
 	// Class Constructor
-	CReadPSD( CDataStream *pStream ) { pPSDfile = pStream; } // End of Constructor definition
+	CReadPSD( CDataStream *pStream )
+	{
+		pPSDfile = pStream;
+	} // End of Constructor definition
 
 	// Some default wrappers
 	bool Seek( long offset, EStreamSeek origin )
@@ -239,6 +242,7 @@ int RecognizeFormatPSD( CDataStream *pStream )
 	// Ok, then!
 	return 1;
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool LoadImagePSD( CArray2D<uint32_t> &pRes, CDataStream *pStream )
 {
@@ -307,4 +311,4 @@ bool LoadImagePSD( CArray2D<uint32_t> &pRes, CDataStream *pStream )
 	return true;
 }
 
-}
+} // namespace NImage

@@ -160,7 +160,7 @@ namespace
 		return 0;
 	}
 
-}
+} // namespace
 
 CGposKerning::CGposKerning( std::vector<uint8_t> _table ) : table( std::move( _table ) )
 {
@@ -379,4 +379,4 @@ int CGposKerning::GetAdjustment( const uint16_t nLeft, const uint16_t nRight ) c
 	return nTotal;
 }
 
-}
+} // namespace NFontRaster

@@ -15,14 +15,16 @@ struct SEarthQuake
 	float fAttenuation = {};
 	float fDuration = {};
 	float fTime = {};
+
 	//
 	SEarthQuake() {}
+
 	SEarthQuake( float _fAmplitude, float _fAttenuation, float _fDuration )
 			: fAmplitude( _fAmplitude ), fAttenuation( _fAttenuation ), fDuration( _fDuration ), fTime( 0 )
 	{
 	}
 };
-}
+} // namespace NCamera
 
 class CCamera : public ICamera, protected NInput::CGMORegContainer
 {
@@ -76,6 +78,7 @@ public:
 	const CVec3 GetListener() const;
 
 	void GetPlacement( float *pfDist, float *pfPitch, float *pfYaw );
+
 	void GetCameraParams( float *pfNear, float *pfFar, float *pfFOV ) const
 	{
 		( *pfNear ) = fNearClipPlane;
@@ -95,7 +98,11 @@ public:
 	{
 		pScriptMutatorsHolder = _pScriptMutatorsHolder;
 	}
-	CScriptMoviesMutatorHolder *GetScriptMutatorsHolder() { return pScriptMutatorsHolder; }
+
+	CScriptMoviesMutatorHolder *GetScriptMutatorsHolder()
+	{
+		return pScriptMutatorsHolder;
+	}
 
 	bool IsScriptHolderActive() const
 	{
@@ -125,30 +132,60 @@ public:
 	float GetFOV() const;
 	void SetFOV( float fFOV );
 
-	float GetRoll() const { return DEF_ROLL; }
+	float GetRoll() const
+	{
+		return DEF_ROLL;
+	}
+
 	void SetRoll( float _Roll ) {}
 
 	void SetHandleType( bool _bMayaHandleType );
-	bool GetHandleType() { return bMayaHandleType; }
+
+	bool GetHandleType()
+	{
+		return bMayaHandleType;
+	}
+
 	//
 	// get view volume planes
 	// get transform matrices: result transform, projection, viewport
-	const SHMatrix &GetViewMatrix() const { return matView; }
-	const SHMatrix &GetProjectiveMatrix() const { return matProj; }
-	class CTransformStack &GetTransform() { return transformStack; }
+	const SHMatrix &GetViewMatrix() const
+	{
+		return matView;
+	}
+
+	const SHMatrix &GetProjectiveMatrix() const
+	{
+		return matProj;
+	}
+
+	class CTransformStack &GetTransform()
+	{
+		return transformStack;
+	}
+
 	// projective ray
 	void GetProjectiveRay( CVec3 *pvOrig, CVec3 *pvDir, const CVec2 &vScreenPos ) const;
 	void GetProjectiveRayPoints( CVec3 *pvNear, CVec3 *pvFar, const CVec2 &vScreenPos ) const;
 	// msg processing
 	virtual bool ProcessEvent( const SGameMessage &msg );
+
 	// updates checking
-	bool WasUpdated() { return bWasUpdated; };
+	bool WasUpdated()
+	{
+		return bWasUpdated;
+	};
+
 	// earthquakes
 	void AddEarthquake( const CVec3 &vPos, float fPower );
 	void ClearEarthquakes();
 
 	virtual void SetCameraPosition( const CQuat &quat ) {}
-	virtual const CQuat GetCameraPosition() { return CQuat( 0.0f, 0.0f, 0.0f, 0.0f ); }
+
+	virtual const CQuat GetCameraPosition()
+	{
+		return CQuat( 0.0f, 0.0f, 0.0f, 0.0f );
+	}
 
 	int operator&( IBinSaver &saver );
 };

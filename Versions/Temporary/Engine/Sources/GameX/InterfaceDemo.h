@@ -14,6 +14,7 @@ class CInterfaceDemo : public CInterfaceScreenBase, public IProgrammedReactionsA
 		ZDATA
 		std::string szFileName;
 		float fDelay;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &szFileName );
@@ -32,6 +33,7 @@ class CInterfaceDemo : public CInterfaceScreenBase, public IProgrammedReactionsA
 	CObj<CBackgroundMutableTexture> pPictureTexture;
 	int nNextPicture;
 	bool bFinal;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
@@ -73,6 +75,7 @@ class CICInterfaceDemo : public CInterfaceCommandBase<CInterfaceDemo>
 
 	ZDATA_( CInterfaceCommandBase<CInterfaceDemo> )
 	bool bFinal;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceDemo> *)this );

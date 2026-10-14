@@ -26,7 +26,7 @@ std::string Lower( const std::string &rszText )
 	NStr::ToLower( &szLower );
 	return szLower;
 }
-}
+} // namespace
 
 namespace NNewObject
 {
@@ -80,4 +80,4 @@ std::string Title( const SBuildDataParams *pBuildDataParams )
 	std::string strFormat = NResources::GetString( IDS_PC_BD_DIALOG_TITLE );
 	return fmt::sprintf( strFormat.c_str(), pBuildDataParams->szObjectTypeName.c_str() );
 }
-}
+} // namespace NNewObject

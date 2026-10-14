@@ -1,6 +1,7 @@
 
 #pragma once
 class CSoldier;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CRotatingFireplacesObject
 {
@@ -20,6 +21,7 @@ class CRotatingFireplacesObject
 			f.Add( 4, &lastFireplaceChange );
 			return 0;
 		}
+
 		SUnitInfo() : pSoldier( 0 ), nLastFireplace( 0 ), lastFireplaceChange( 0 ) {}
 	};
 
@@ -32,6 +34,7 @@ public:
 		f.Add( 2, &units );
 		return 0;
 	}
+
 	//
 	bool IsBetterToGoToFireplace( class CSoldier *pSoldier, const int nFireplace ) const;
 
@@ -54,4 +57,5 @@ public:
 	// солдат, сидящий в fireplace, если fireplace пуст, то возвращает 0
 	virtual class CSoldier *GetSoldierInFireplace( const int nFireplace ) const = 0;
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

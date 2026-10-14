@@ -56,4 +56,4 @@ bool IsFolderNameFree( const std::string &rszFolderName )
 	}
 	return true;
 }
-}
+} // namespace NCreateMod

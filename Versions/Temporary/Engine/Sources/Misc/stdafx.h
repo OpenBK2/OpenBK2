@@ -42,6 +42,7 @@ namespace NTimer
 {
 typedef uint32_t STime;
 }
+
 //
 #include "Misc/Tools.h"
 #include "Misc/Geom.h"

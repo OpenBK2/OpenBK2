@@ -4,6 +4,7 @@
 #include "GfxBuffers.h"
 #include "GfxShaders.h"
 #include "GRenderCore.h"
+
 //#include "GRenderFactor.h"
 
 namespace NGScene
@@ -13,6 +14,7 @@ static NGfx::STriangleList cloudTris;
 static std::vector<STriangle> cloudTrisBuf;
 
 const int N_GRID_SIZE = 64;
+
 static void RefreshGeometry()
 {
 	if ( IsValid( pCloudGrid ) )
@@ -110,6 +112,7 @@ void CCloudMover::Recalc()
 	value.SetX( CVec4( 1 / vWrapSize.x, 0, 0, fDeltaX ) );
 	value.SetY( CVec4( 0, 1 / vWrapSize.y, 0, fDeltaY ) );
 }
-}
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x20162300, CCloudMover )

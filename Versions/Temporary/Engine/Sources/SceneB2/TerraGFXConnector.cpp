@@ -136,8 +136,10 @@ struct SPushAlphaTriangle
 {
 	int nID;
 	uint8_t cAlpha1, cAlpha2, cAlpha3;
+
 	//
 	SPushAlphaTriangle() {}
+
 	SPushAlphaTriangle( const int _nID, const uint8_t a1, const uint8_t a2, const uint8_t a3 )
 			: nID( _nID ), cAlpha1( a1 ), cAlpha2( a2 ), cAlpha3( a3 )
 	{

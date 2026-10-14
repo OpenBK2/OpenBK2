@@ -25,16 +25,31 @@ public:
 	CMiniMapLayer() : nWidth( 0 ), nHeight( 0 ), bNeedUpdate( false ), nLastUpdateTime( 0 ) {}
 
 	void SetSize( const int nWidth, const int nHeight );
-	int GetWidth() const { return nWidth; }
-	int GetHeight() const { return nHeight; }
+
+	int GetWidth() const
+	{
+		return nWidth;
+	}
+
+	int GetHeight() const
+	{
+		return nHeight;
+	}
+
 	void PutPixel( const int x, const int y, const NGfx::SPixel8888 &color );
 	const NGfx::SPixel8888 GetPixel( const int x, const int y );
-	void SetNeedUpdate() { bNeedUpdate = true; }
+
+	void SetNeedUpdate()
+	{
+		bNeedUpdate = true;
+	}
+
 	void SetNeedUpdateNow()
 	{
 		bNeedUpdate = true;
 		nLastUpdateTime = 0;
 	}
+
 	void Clear();
 
 	int operator&( IBinSaver &saver );
@@ -79,6 +94,7 @@ class CWindowMiniMap : public CWindow, public IMiniMap
 		float fCos;
 		CVec2 vSize;
 		CVec2 vCenter;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &fSin );
@@ -105,11 +121,17 @@ class CWindowMiniMap : public CWindow, public IMiniMap
 			return CVec2( ( fCos * vPos.x + fSin * vPos.y ) * vSize.x, -( -fSin * vPos.x + fCos * vPos.y ) * vSize.y ) +
 			       vCenter;
 		}
+
 		CVec2 RotateBackgroundPos( const CVec2 &vPos ) const
 		{
 			return CVec2( ( fCos * vPos.x - fSin * vPos.y ), ( fSin * vPos.x + fCos * vPos.y ) );
 		}
-		float TransformRadius( float fRadius ) const { return fRadius * ( vSize.x + vSize.y ) * 0.5f; }
+
+		float TransformRadius( float fRadius ) const
+		{
+			return fRadius * ( vSize.x + vSize.y ) * 0.5f;
+		}
+
 		CVec2 TransformBack( const CVec2 &_vPos ) const
 		{
 			CVec2 vPos( _vPos - vCenter );
@@ -193,7 +215,10 @@ private:
 	void SetBaseRotableParams();
 
 protected:
-	virtual NDb::SWindow *GetInstance() { return pInstance; }
+	virtual NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
 
 	bool MsgMouseMoveEmit( const SGameMessage &msg );
 

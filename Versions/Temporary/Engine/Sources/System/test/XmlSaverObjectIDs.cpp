@@ -56,7 +56,7 @@ public:
 	}
 };
 
-}
+} // namespace
 
 // REGISTER_SAVELOAD_CLASS names an export macro after its module argument; a
 // test executable exports nothing
@@ -136,4 +136,4 @@ TEST( XmlSaverObjectIDs, SharedAndCyclicReferencesLoadBack )
 	pMiddle->pSecond = 0;
 }
 
-}
+} // namespace

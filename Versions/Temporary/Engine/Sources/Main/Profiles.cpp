@@ -33,6 +33,7 @@ static std::string GetProfileRootDir()
 // default player name should be specified in global.cfg (then during first run settings will be loaded
 // from szDefaultProfileName and then will be saved to normal profile dir)
 static std::string szDefaultProfileName = "default_profile";
+
 static bool IsDefaultProfileName( const std::string &szName )
 {
 	std::string szLowName;
@@ -259,4 +260,4 @@ REGISTER_CMD( "remove_profile", RemoveProfile );
 REGISTER_CMD( "change_profile", ChangeProfile );
 REGISTER_VAR( "profile_name", 0, "default", STORAGE_GLOBAL )
 FINISH_REGISTER
-}
+} // namespace NProfile

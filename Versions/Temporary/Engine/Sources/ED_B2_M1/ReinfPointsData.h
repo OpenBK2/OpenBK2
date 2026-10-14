@@ -17,9 +17,11 @@ struct SReinfPointsWindowData
 		NDb::EReinforcementType reinfType;
 		std::string szTemplate;
 	};
+
 	//
 	int nPlayerIndex;
 	int nPlayerCount;
+
 	//
 	struct SReinfPoint
 	{
@@ -30,6 +32,7 @@ struct SReinfPointsWindowData
 		int nNumPoints;
 		std::string szDeployTemplate;
 		std::vector<STypedTemplate> typedTemplates;
+
 		//
 		SReinfPoint()
 				: vPosition( VNULL2 ), eType( NDb::EReinforcementType( -1 ) ), bIsDefault( false ), nNumPoints( 0 ),
@@ -37,9 +40,11 @@ struct SReinfPointsWindowData
 		{
 		}
 	};
+
 	std::vector<SReinfPoint> reinfPoints;
 	int nSelectedPoint;
 	bool bAviationPointSelected;
+
 	//
 	enum EReinfWndLastAction
 	{
@@ -53,13 +58,16 @@ struct SReinfPointsWindowData
 		RWA_POINT_SEL_CHANGE,
 		RWA_PLAYER_CHANGE
 	};
+
 	EReinfWndLastAction eLastAction;
+
 	//
 	SReinfPointsWindowData()
 			: nPlayerIndex( -1 ), nPlayerCount( 0 ), nSelectedPoint( -1 ), bAviationPointSelected( false ),
 				eLastAction( RWA_NO_ACTIONS )
 	{
 	}
+
 	//
 	void Clear()
 	{

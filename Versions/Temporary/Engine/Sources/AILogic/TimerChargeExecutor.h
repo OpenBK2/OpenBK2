@@ -22,9 +22,15 @@ public:
 
 public:
 	CTimerChargeExecutor( CMineStaticObject *_pObj, int nOffset );
+
 	CTimerChargeExecutor() {}
 
 	virtual int Segment();
-	virtual bool NotifyEvent( const CExecutorEvent &event ) { return false; }
+
+	virtual bool NotifyEvent( const CExecutorEvent &event )
+	{
+		return false;
+	}
+
 	virtual bool IsExecutorValid() const;
 };

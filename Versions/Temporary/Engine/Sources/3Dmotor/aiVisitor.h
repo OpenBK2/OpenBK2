@@ -7,14 +7,16 @@ namespace NDb
 //	struct SRPGArmor;
 struct SAIGeometry;
 struct SSkeleton;
-}
+} // namespace NDb
 class CMemObject;
+
 struct IAIVisitor : public IVisitorBase
 {
 	struct SPieceMap
 	{
 		int nPieceID, nUserID;
 	};
+
 	virtual CObjectBase *AddHull(
 			const NDb::SAIGeometry *pAIGeom, const SHMatrix &pos, const NDb::CResource *pArmor, int nFloor, int nMask ) = 0;
 	// if pArmor is 0 then adding terrain part

@@ -16,6 +16,7 @@ class CProgressHookHelper : public IProgressHookB2
 
 	ZDATA
 	std::vector<SRange> ranges;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &ranges );
@@ -67,8 +68,15 @@ protected:
 	void UpdateInterior();
 	void Draw();
 
-	bool IsInitialized() const { return bInitialized; }
-	IScreen *GetScreen() const { return pScreen; }
+	bool IsInitialized() const
+	{
+		return bInitialized;
+	}
+
+	IScreen *GetScreen() const
+	{
+		return pScreen;
+	}
 
 	void PlayOnEnterTransitEffect();
 
@@ -87,6 +95,7 @@ public:
 
 	// IProgressHookB2
 	void RunFinishScreen() {}
+
 	//}
 
 	int operator&( IBinSaver &saver );
@@ -141,6 +150,7 @@ class CInterfaceLoadingSingleFinished : public CInterfaceScreenBase, public IPro
 	std::wstring wszPressKeyFormat1;
 	std::wstring wszPressKeyFormat2;
 	bool bFormat1;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
@@ -173,9 +183,13 @@ public:
 	//{ IProgrammedReactionsAndChecks
 	bool Execute( const std::string &szSender, const std::string &szReaction );
 	int Check( const std::string &szCheckName ) const;
+
 	//}
 
-	bool IsModal() { return false; }
+	bool IsModal()
+	{
+		return false;
+	}
 };
 
 class CICLoadingSingleFinished : public CInterfaceCommandBase<CInterfaceLoadingSingleFinished>

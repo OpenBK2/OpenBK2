@@ -22,6 +22,7 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase, public IProgrammed
 		int nSizeY;
 		int nGameType;
 		int nTechLevel;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nServerID );
@@ -38,6 +39,7 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase, public IProgrammed
 			return 0;
 		}
 	};
+
 	//--------------
 	class CCustomGameListData : public CObjectBase
 	{
@@ -45,6 +47,7 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase, public IProgrammed
 	public:
 		ZDATA
 		SMPGameInfo info;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &info );
@@ -52,8 +55,10 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase, public IProgrammed
 		}
 
 		CCustomGameListData() {}
+
 		CCustomGameListData( SMPGameInfo &_info ) : info( _info ) {};
 	};
+
 	//--------------
 	class CItemCustomGameListViewer : public IDataViewer
 	{
@@ -61,6 +66,7 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase, public IProgrammed
 	public:
 		void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
 	};
+
 	//--------------
 	struct SFilterData
 	{
@@ -68,6 +74,7 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase, public IProgrammed
 		int nPlayers;
 		int nGameType;
 		int nTechLevel;
+
 		SFilterData() : nMapSize( 0 ), nPlayers( 0 ), nGameType( 0 ), nTechLevel( 0 ) {}
 	};
 
@@ -76,6 +83,7 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase, public IProgrammed
 		CPtr<IListControlItem> pItem;
 		SMPGameInfo info;
 	};
+
 	typedef std::unordered_map<int /*serverID*/, SGameEntry> CMPGameListItems;
 
 	CPtr<IWindow> pMain;

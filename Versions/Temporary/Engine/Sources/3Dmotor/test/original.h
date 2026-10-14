@@ -780,4 +780,4 @@ static void ScaleColors( std::vector<uint32_t> *pRes,
 	__asm emms
 }
 
-}
+} // namespace original

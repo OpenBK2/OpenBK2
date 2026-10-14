@@ -36,7 +36,7 @@ namespace
 		return nullptr;
 	}
 
-}
+} // namespace
 
 int GetCodePage( int nCharset )
 {
@@ -94,4 +94,4 @@ std::vector<uint32_t> GetPrintableCodePoints( int nCharset )
 	return codePoints;
 }
 
-}
+} // namespace NCodePages

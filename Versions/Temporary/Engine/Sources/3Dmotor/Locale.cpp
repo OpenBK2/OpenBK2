@@ -17,4 +17,4 @@ CTextLocaleInfo *GetTextLocaleInfo()
 	return pRes;
 }
 
-}
+} // namespace NGScene

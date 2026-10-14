@@ -30,4 +30,4 @@ MAIN_EXPORT bool Initialize()
 	return true;
 }
 
-}
+} // namespace NMain

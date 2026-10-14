@@ -20,6 +20,7 @@ class CExecutorTransportReinforcement : public CExecutor
 		CPtr<CAIUnit> pUnit;
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		ETransportStates eState = {};
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pUnit );
@@ -27,6 +28,7 @@ class CExecutorTransportReinforcement : public CExecutor
 			return 0;
 		}
 	};
+
 	typedef std::vector<STransportInfo> CTransportList;
 
 	ZDATA_( CExecutor )
@@ -49,12 +51,21 @@ public:
 	}
 
 	CExecutorTransportReinforcement() {}
+
 	CExecutorTransportReinforcement( std::list<CAIUnit *> *pTransports,
 	                                 const NDb::SReinforcement *_pReinf,
 	                                 const CVec2 &_vStart,
 	                                 const CVec2 &_vUnload,
 	                                 const CVec2 &_vTarget );
 	virtual int Segment();
-	virtual bool NotifyEvent( const CExecutorEvent &event ) { return false; }
-	virtual bool IsExecutorValid() const { return true; }
+
+	virtual bool NotifyEvent( const CExecutorEvent &event )
+	{
+		return false;
+	}
+
+	virtual bool IsExecutorValid() const
+	{
+		return true;
+	}
 };

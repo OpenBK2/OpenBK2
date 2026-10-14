@@ -12,7 +12,7 @@ namespace NDb
 struct SCampaign;
 struct SChapter;
 struct SMapInfo;
-}
+} // namespace NDb
 
 namespace NSaveLoad
 {
@@ -100,13 +100,37 @@ struct SSaveInfo
 	void Rename( const std::string &szFullFileName, const std::wstring &wszNewSaveName );
 	const NDb::STexture *GetPlayerIcon( const NDb::SMapInfo *pMapInfo, int nPlayer ) const;
 	void GenerateInfo();
+
 	//
-	const std::wstring &GetCampaignName() const { return wszCampaignName; }
-	const std::wstring &GetChapterName() const { return wszChapterName; }
-	const std::wstring &GetChapterDesc() const { return wszChapterDesc; }
-	const std::wstring &GetMissionName() const { return wszMissionName; }
-	const std::wstring &GetMissionDesc() const { return wszMissionDesc; }
-	const std::wstring &GetMissionLoadingDesc() const { return wszMissionLoadingDesc; }
+	const std::wstring &GetCampaignName() const
+	{
+		return wszCampaignName;
+	}
+
+	const std::wstring &GetChapterName() const
+	{
+		return wszChapterName;
+	}
+
+	const std::wstring &GetChapterDesc() const
+	{
+		return wszChapterDesc;
+	}
+
+	const std::wstring &GetMissionName() const
+	{
+		return wszMissionName;
+	}
+
+	const std::wstring &GetMissionDesc() const
+	{
+		return wszMissionDesc;
+	}
+
+	const std::wstring &GetMissionLoadingDesc() const
+	{
+		return wszMissionLoadingDesc;
+	}
 
 	//
 
@@ -124,6 +148,7 @@ struct SSavegameEntry
 	CPtr<IWindow> pWindow;
 	SSaveInfo info;
 	int nID = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &wszName );
@@ -147,6 +172,7 @@ struct SWaitLoadData
 			std::wstring wszDesc;
 	bool bChapter = {};
 	CDBID dbidMinimap;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 3, &wszDesc );
@@ -175,6 +201,7 @@ struct SReplayInfo
 	std::string szFileName;
 	SSystemTime timeFile;
 	SMultiplayerReplayInfo replayInfo;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szFileName );
@@ -193,4 +220,4 @@ bool SerializeReplayInfo( SMultiplayerReplayInfo *pMultiplayerReplayInfo,
 void GetReplayList( CReplays *pReplays );
 bool DeleteReplay( const std::string &szFileName );
 
-} //NSaveLoad
+} // namespace NSaveLoad

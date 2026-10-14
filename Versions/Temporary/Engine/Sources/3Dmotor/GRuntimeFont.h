@@ -84,7 +84,9 @@ protected:
 
 public:
 	CRuntimeFontFormat() {}
+
 	explicit CRuntimeFontFormat( CGlyphAtlas *_pAtlas ) : pAtlas( _pAtlas ) {}
+
 	int operator&( IBinSaver &saver );
 };
 
@@ -98,9 +100,14 @@ class CRuntimeFontInfo : public CFontInfo
 
 public:
 	CRuntimeFontInfo() {}
+
 	CRuntimeFontInfo( const SFont &sFont, CGlyphAtlas *pAtlas );
 	void PrepareGlyphs( const std::wstring &wsText ) override;
-	bool IsRasterized() const override { return true; }
+
+	bool IsRasterized() const override
+	{
+		return true;
+	}
 };
 
-}
+} // namespace NGScene

@@ -57,6 +57,7 @@ void DrawLine( CArray2D<uint32_t> *pImage,
                const struct SVector &vStart,
                const struct SVector &vEnd,
                const struct SColor &color );
+
 //
 
 template <class TFunctuinal, class TWBCFunctional>
@@ -154,6 +155,7 @@ struct SApplyFilterFunctional
 		filterHalfSize.x = pFilter->GetSizeX() / 2;
 		filterHalfSize.y = pFilter->GetSizeY() / 2;
 	}
+
 	//
 	void operator()( int nXIndex, int nYIndex )
 	{
@@ -218,6 +220,7 @@ struct SWBCApplyFilterFunctional
 		filterHalfSize.x = pFilter->GetSizeX() / 2;
 		filterHalfSize.y = pFilter->GetSizeY() / 2;
 	}
+
 	//
 	void operator()( int nXIndex, int nYIndex )
 	{
@@ -275,6 +278,7 @@ struct SMarkOutsideEdgeFunctional
 		               ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
 		           "Destination and source images must have same sizes." );
 	}
+
 	//
 	void operator()( int nXIndex, int nYIndex )
 	{
@@ -319,6 +323,7 @@ struct SWBCMarkOutsideEdgeFunctional
 		size.x = pSourceImage->GetSizeX();
 		size.y = pSourceImage->GetSizeY();
 	}
+
 	//
 	void operator()( int nXIndex, int nYIndex )
 	{
@@ -363,6 +368,7 @@ struct SMarkInsideEdgeFunctional
 		               ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
 		           "Destination and source images must have same sizes." );
 	}
+
 	//
 	void operator()( int nXIndex, int nYIndex )
 	{
@@ -407,6 +413,7 @@ struct SWBCMarkInsideEdgeFunctional
 		size.x = pSourceImage->GetSizeX();
 		size.y = pSourceImage->GetSizeY();
 	}
+
 	//
 	void operator()( int nXIndex, int nYIndex )
 	{
@@ -446,6 +453,7 @@ struct SEraseEdgeFunctional
 		               ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
 		           "Destination and source images must have same sizes." );
 	}
+
 	//
 	void operator()( int nXIndex, int nYIndex )
 	{
@@ -486,6 +494,7 @@ struct SWBCEraseEdgeFunctional
 		size.x = pSourceImage->GetSizeX();
 		size.y = pSourceImage->GetSizeY();
 	}
+
 	//
 	void operator()( int nXIndex, int nYIndex )
 	{
@@ -511,4 +520,4 @@ struct SWBCEraseEdgeFunctional
 	}
 };
 
-}
+} // namespace NImage

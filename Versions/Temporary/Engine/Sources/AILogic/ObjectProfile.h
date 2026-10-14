@@ -17,6 +17,7 @@ class CObjectProfile : public CObjectBase
 	CTRect<float> aabbRect;
 	det_set<SVector, STilesHash> tilesUnder; // for check
 	std::vector<SVector> tilesUnderVector;   // for get tiles
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &profile );
@@ -34,6 +35,7 @@ class CObjectProfile : public CObjectBase
 
 public:
 	CObjectProfile() {}
+
 	CObjectProfile( const NDb::SPassProfile &profile,
 	                const CVec3 &vCenter3D,
 	                const uint16_t wDir,
@@ -44,6 +46,13 @@ public:
 	bool IsPointInside( const CVec2 &vPoint ) const;
 	bool IsWeakIntersected( const struct SRect &unitRect ) const;
 
-	const std::vector<SVector> &GetTilesUnder() const { return tilesUnderVector; }
-	const CTRect<float> &GetAABBRect() const { return aabbRect; }
+	const std::vector<SVector> &GetTilesUnder() const
+	{
+		return tilesUnderVector;
+	}
+
+	const CTRect<float> &GetAABBRect() const
+	{
+		return aabbRect;
+	}
 };

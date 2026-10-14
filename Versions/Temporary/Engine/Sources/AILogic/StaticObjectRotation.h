@@ -14,7 +14,10 @@ class CRotatedArray2D
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nRotation = {};
 
-	int operator&( IBinSaver &saver ) { return 0; } // dissalow serialize
+	int operator&( IBinSaver &saver )
+	{
+		return 0;
+	} // dissalow serialize
 public:
 	CRotatedArray2D( TArray2D &_array, const int _nRotation ) : array( _array ), nRotation( _nRotation ) {}
 
@@ -119,6 +122,7 @@ public:
 		NI_ASSERT( false, fmt::format( "wrong rotation {}", nRotation ) );
 		return array[0][0];
 	}
+
 	int GetSizeX() const
 	{
 		if ( nRotation == 0 || nRotation == 2 )
@@ -127,6 +131,7 @@ public:
 		}
 		return array.GetSizeY();
 	}
+
 	int GetSizeY() const
 	{
 		if ( nRotation == 0 || nRotation == 2 )
@@ -163,10 +168,12 @@ class CSmoothRotatedArray2D
 public:
 	// array - passability/visibility
 	CSmoothRotatedArray2D() {}
+
 	CSmoothRotatedArray2D( TArray2D &_array, const uint16_t _wAngle, const CVec2 &_vOrigin, const CVec2 &_vCenter )
 	{
 		Init( _array, _wAngle, _vOrigin, _vCenter );
 	}
+
 	void Init( TArray2D &_array, const uint16_t _wAngle, const CVec2 &_vOrigin, const CVec2 &_vCenter )
 	{
 		array = &_array;
@@ -206,10 +213,25 @@ public:
 	}
 
 	// get Min-Max X-Y return AI wolrd points
-	int GetMinX() const { return nMinX; }
-	int GetMinY() const { return nMinY; }
-	int GetMaxX() const { return nMaxX; }
-	int GetMaxY() const { return nMaxY; }
+	int GetMinX() const
+	{
+		return nMinX;
+	}
+
+	int GetMinY() const
+	{
+		return nMinY;
+	}
+
+	int GetMaxX() const
+	{
+		return nMaxX;
+	}
+
+	int GetMaxY() const
+	{
+		return nMaxY;
+	}
 
 	// point is in AI world coordinates
 	TCont GetVal( const CVec2 &vPoint ) const

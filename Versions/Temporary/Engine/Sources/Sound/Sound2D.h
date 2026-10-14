@@ -18,19 +18,33 @@ class CSFXSound : public ISound
 
 protected:
 	virtual void Init();
-	int GetChannel() const { return nChannel; }
+
+	int GetChannel() const
+	{
+		return nChannel;
+	}
 
 public:
 	int operator&( IBinSaver &saver );
+
 	CSFXSound( const NDb::SSoundDesc *_pDesc, const bool _bLooped )
 			: pDesc( _pDesc ), bLooped( _bLooped ), nVolumeType( 2 )
 	{
 	}
+
 	CSFXSound() : nChannel( -1 ), bLooped( false ) {}
+
 	virtual ~CSFXSound() {}
 
-	void SetVolumeType( int _nVolumeType ) { nVolumeType = _nVolumeType; }
-	int GetVolumeType() const { return nVolumeType; }
+	void SetVolumeType( int _nVolumeType )
+	{
+		nVolumeType = _nVolumeType;
+	}
+
+	int GetVolumeType() const
+	{
+		return nVolumeType;
+	}
 
 	void SetSample( CSoundSample *_pSample );
 	CSoundSample *GetSample();
@@ -55,6 +69,7 @@ public:
 	int operator&( IBinSaver &saver );
 
 	CSound2D( const NDb::SSoundDesc *pDesc, const bool bLooped );
+
 	CSound2D() : fVolume( 0.0f ), fPan( 0.0f ) {}
 
 	int Visit( struct ISFXVisitor *pVisitor );
@@ -66,24 +81,49 @@ public:
 		NI_ASSERT( fVolume != -4.3160208e+008, "unitialized!" );
 		fVolume = _fVolume;
 	}
-	float GetVolume() const { return fVolume; }
-	void SetPan( float _fPan ) { fPan = _fPan; }
-	float GetPan() const { return fPan; }
+
+	float GetVolume() const
+	{
+		return fVolume;
+	}
+
+	void SetPan( float _fPan )
+	{
+		fPan = _fPan;
+	}
+
+	float GetPan() const
+	{
+		return fPan;
+	}
 
 	// 3D
-	void SetMinMax( const float fMinDist, const float fMaxDist ) { NI_ASSERT( false, "WRONG CALL" ); }
+	void SetMinMax( const float fMinDist, const float fMaxDist )
+	{
+		NI_ASSERT( false, "WRONG CALL" );
+	}
+
 	CVec3 GetPos() const
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		return VNULL3;
 	}
-	void SetPos( const CVec3 &vPos ) { NI_ASSERT( false, "WRONG CALL" ); }
+
+	void SetPos( const CVec3 &vPos )
+	{
+		NI_ASSERT( false, "WRONG CALL" );
+	}
+
 	CVec3 GetSpeed() const
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		return VNULL3;
 	}
-	void SetSpeed( const CVec3 &vSpeed ) { NI_ASSERT( false, "WRONG CALL" ); }
+
+	void SetSpeed( const CVec3 &vSpeed )
+	{
+		NI_ASSERT( false, "WRONG CALL" );
+	}
 };
 
 class CSound3D : public CSFXSound
@@ -95,6 +135,7 @@ class CSound3D : public CSFXSound
 	float fMin;
 	float fMax;
 	float fVolume;
+
 	ZONSERIALIZE
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -107,6 +148,7 @@ class CSound3D : public CSFXSound
 		OnSerialize( f );
 		return 0;
 	}
+
 	void Init();
 
 public:
@@ -119,6 +161,7 @@ public:
 	}
 
 	CSound3D( const NDb::SSoundDesc *pDesc, const bool bLooped );
+
 	CSound3D() : vPos( VNULL3 ), vSpeed( VNULL3 ), fVolume( 1.0f ) {}
 
 	int Visit( struct ISFXVisitor *pVisitor );
@@ -131,15 +174,42 @@ public:
 		fMax = fMaxDist;
 	}
 
-	CVec3 GetPos() const { return vPos; }
-	void SetPos( const CVec3 &_vPos ) { vPos = _vPos; }
-	CVec3 GetSpeed() const { return vSpeed; }
-	void SetSpeed( const CVec3 &_vSpeed ) { vSpeed = _vSpeed; }
+	CVec3 GetPos() const
+	{
+		return vPos;
+	}
+
+	void SetPos( const CVec3 &_vPos )
+	{
+		vPos = _vPos;
+	}
+
+	CVec3 GetSpeed() const
+	{
+		return vSpeed;
+	}
+
+	void SetSpeed( const CVec3 &_vSpeed )
+	{
+		vSpeed = _vSpeed;
+	}
 
 	// 2D
-	void SetVolume( float _fVolume ) { fVolume = _fVolume; }
-	float GetVolume() const { return fVolume; }
-	void SetPan( float _fPan ) { NI_ASSERT( false, "WRONG CALL" ); }
+	void SetVolume( float _fVolume )
+	{
+		fVolume = _fVolume;
+	}
+
+	float GetVolume() const
+	{
+		return fVolume;
+	}
+
+	void SetPan( float _fPan )
+	{
+		NI_ASSERT( false, "WRONG CALL" );
+	}
+
 	float GetPan() const
 	{
 		NI_ASSERT( false, "WRONG CALL" );

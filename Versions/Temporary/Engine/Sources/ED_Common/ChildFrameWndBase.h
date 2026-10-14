@@ -81,7 +81,11 @@ protected:
 	CTRect<int> rectBorder1, rectBorder2, rectWindow, rectMain;
 
 	// The window, between OnCreate and OnDestroy; null outside them.
-	ISceneSurface *Surface() const { return pSurface; }
+	ISceneSurface *Surface() const
+	{
+		return pSurface;
+	}
+
 	// Invalidate, erase and paint the window now, if there is one.
 	void Redraw();
 
@@ -89,11 +93,22 @@ public:
 	CChildFrameWndBase();
 	virtual ~CChildFrameWndBase();
 
-	bool IsSceneUpdateEnabled() { return bEnableSceneUpdate; }
-	bool IsScrollEnabled() const { return bEnableScroll; }
+	bool IsSceneUpdateEnabled()
+	{
+		return bEnableSceneUpdate;
+	}
+
+	bool IsScrollEnabled() const
+	{
+		return bEnableScroll;
+	}
+
 	// While the window is moving itself to keep the game's aspect: the size
 	// and paint messages that causes are not the viewport's to act on.
-	bool IsSettingUp() const { return bIsSettingUp; }
+	bool IsSettingUp() const
+	{
+		return bIsSettingUp;
+	}
 
 	// From the surface. OnCreate is called while the window is being made and
 	// refuses it by returning false; OnDestroy while it is being destroyed.

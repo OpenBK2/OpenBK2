@@ -256,6 +256,7 @@ inline void CVisObjIconsManager::RegenerateIconRects( CVisObjIconsManager::SObjI
 }
 
 static std::vector<CVisObjIconsManager::SObjIcon> regenIcons( 256 );
+
 void CVisObjIconsManager::RegenerateAllIconsRects()
 {
 	rectLayout.rects.resize( 0 );

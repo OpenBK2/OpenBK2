@@ -28,12 +28,14 @@ IStatesFactory *CInTransportStatesFactory::Instance()
 
 	return pFactory;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CInTransportStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
 	return ( cmdType == ACTION_COMMAND_DIE || cmdType == ACTION_COMMAND_DISAPPEAR );
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 IUnitState *CInTransportStatesFactory::ProduceState( class CQueueUnit *pUnit, CAICommand *pCommand )
 {
@@ -54,12 +56,14 @@ IUnitState *CInTransportStatesFactory::ProduceState( class CQueueUnit *pUnit, CA
 
 	return pResult;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 IUnitState *CInTransportStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 {
 	NI_ASSERT( dynamic_cast<CSoldier *>( pUnit ) != 0, "Wrong unit type" );
 	return CSoldierRestOnBoardState::Instance( checked_cast<CSoldier *>( pUnit ), 0 );
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //*******************************************************************
 //*											CSoldierRestOnBoardState										*
@@ -69,6 +73,7 @@ IUnitState *CSoldierRestOnBoardState::Instance( CSoldier *pSoldier, CMilitaryCar
 {
 	return new CSoldierRestOnBoardState( pSoldier, pTransport );
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CSoldierRestOnBoardState::CSoldierRestOnBoardState( CSoldier *_pSoldier, CMilitaryCar *pTransport )
 		: pSoldier( _pSoldier )
@@ -91,14 +96,17 @@ CSoldierRestOnBoardState::CSoldierRestOnBoardState( CSoldier *_pSoldier, CMilita
 		NI_ASSERT( pSoldier->IsInTransport(), "Wrong unit state" );
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CSoldierRestOnBoardState::Segment() {}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ETryStateInterruptResult CSoldierRestOnBoardState::TryInterruptState( class CAICommand *pCommand )
 {
 	pSoldier->SetCommandFinished();
 	return TSIR_YES_IMMIDIATELY;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const CVec2 CSoldierRestOnBoardState::GetPurposePoint() const
 {
@@ -111,4 +119,5 @@ const CVec2 CSoldierRestOnBoardState::GetPurposePoint() const
 		return CVec2( -1.0f, -1.0f );
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

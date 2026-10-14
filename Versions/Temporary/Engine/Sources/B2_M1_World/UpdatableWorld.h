@@ -26,10 +26,12 @@ class CCombatMusic
 		ESSS_COMBAT,
 		ESSS_TO_IDLE,
 	};
+
 	ZDATA
 	NTimer::STime timeLastCombatNotify = 0;
 	ECombatMusicState eState{};
 	NTimer::STime combatPlayWONotify = 0;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &timeLastCombatNotify );
@@ -225,22 +227,42 @@ protected:
 	void RemoveMapObj( int nID, bool bGlobalRemove );
 
 	virtual void OnNewMapObj( int nID, CMapObj *pMO ) {}
+
 	virtual void OnDeadOrRemoveMapObj( int nID ) {}
+
 	//
-	const NDb::ESeason GetSeason() const { return eSeason; }
-	const NDb::EDayNight GetDayTime() const { return eDayTime; }
+	const NDb::ESeason GetSeason() const
+	{
+		return eSeason;
+	}
+
+	const NDb::EDayNight GetDayTime() const
+	{
+		return eDayTime;
+	}
+
 	//
 	virtual void PlayerObjectiveChanged( const int nObjective, const enum EMissionObjectiveState eState ) = 0;
-	IVisualNotifications *GetNotifications() const { return pNotifications; }
+
+	IVisualNotifications *GetNotifications() const
+	{
+		return pNotifications;
+	}
 
 	virtual void OnUpdateNotifyFeedback( const struct SAIFeedbackUpdate *pUpdate ) {}
+
 	virtual void OnUpdateNewUnit( const SAINewUnitUpdate *pUpdate, CMapObj *pMO ) {}
+
 	virtual void OnUpdateDiplomacy( CMapObj *pMO, const int nNewPlayer ) = 0;
+
 	virtual void OnUpdateKeyObjectProgress( CMapObj *pMO, float fProgress, int nPlayer ) {}
+
 	virtual void OnUpdateVisualStatus( const SUnitStatusUpdate *pUpdate, CMapObj *pMO ) {}
 
 	virtual void OnUpdateSuperWeaponControl( const struct SSuperWeaponControl &update ) {}
+
 	virtual void OnUpdateSuperWeaponRecycle( const struct SSuperWeaponRecycle &update ) {}
+
 	virtual void OnReplaceSelectionGroup( CMOSelectable *pMOPattern, CMOSelectable *pMO ) {}
 
 	void ObjectPlayAttachedEffect( const SAIBasicUpdate *_pUpdate );
@@ -253,28 +275,39 @@ protected:
 
 public:
 	bool bEditor = false;
+
 	void SetSeason( const NDb::ESeason _eSeason, const NDb::EDayNight _eDayTime )
 	{
 		eSeason = _eSeason;
 		eDayTime = _eDayTime;
 	}
+
 	void AfterLoad();
 
 	virtual void Update();
+
 	//
 	CMapObj *GetMapObj( int nID ) const
 	{
 		CMapObjMap::const_iterator pos = objects.find( nID );
 		return pos == objects.end() ? 0 : pos->second;
 	}
+
 	//
 	virtual void Select( CMapObj *pMapObj ) = 0;
 	virtual void DeSelect( CMapObj *pMapObj ) = 0;
 	virtual void DeSelectDead( CMapObj *pMapObj ) = 0;
 	virtual void RemoveFromSelectionGroup( CMapObj *pMopObj ) = 0;
-	virtual void HideFromSelectionGroup( CMapObj *pMapObj ) { RemoveFromSelectionGroup( pMapObj ); }
+
+	virtual void HideFromSelectionGroup( CMapObj *pMapObj )
+	{
+		RemoveFromSelectionGroup( pMapObj );
+	}
+
 	virtual void UnHideFromSelectionGroup( CMapObj *pMapObj ) {}
+
 	virtual void UpdateSpecialSelection( int nID, CMapObj *pMO ) {}
+
 	virtual bool IsActive( CMapObj *pMopObj ) = 0;
 	virtual bool IsSuperActive( CMapObj *pMopObj ) = 0;
 	virtual void DoUpdateSpecialAbility( CMapObj *pMO ) = 0;
@@ -312,8 +345,11 @@ public:
 	virtual void ProcessUpdate( const struct SMoneyChangedUpdate *pUpdate );
 	virtual void ProcessUpdate( const struct SObjectiveChanged *pUpdate );
 	virtual void ProcessUpdate( const struct SEnableAirStrike *pUpdate );
+
 	virtual void ProcessUpdate( const struct SMemCameraPos *pUpdate ) {}
+
 	virtual void ProcessUpdate( const struct SSetCameraToMemPos *pUpdate ) {}
+
 	virtual void ProcessUpdate( const struct SChatClear *pUpdate );
 
 	void RegisterProcess( IClientUpdatableProcess *pProcess );
@@ -321,18 +357,50 @@ public:
 	void PerformUpdate( CObjectBase *pRawUpdate );
 
 	// reinforcements
-	const CEnabledReinforcements &GetEnabledReinfs() const { return enabledReinforcements; }
-	const CReinforcementPositions &GetReinfPositions() const { return reinforcementPositions; }
-	bool IsReinfEnabled() const { return bReinfEnabled; }
-	const float GetReinfRecycleProgress() const { return fReinfRecycleProgress; }
-	NTimer::STime GetReinfRecycleEnd() const { return reinfTimeRecycleEnd; }
-	int GetReinfCallsLeft() const { return nReinfCallsLeft; }
-	const CKeyBuildings &GetKeyBuildings() const { return keyBuildings; }
+	const CEnabledReinforcements &GetEnabledReinfs() const
+	{
+		return enabledReinforcements;
+	}
+
+	const CReinforcementPositions &GetReinfPositions() const
+	{
+		return reinforcementPositions;
+	}
+
+	bool IsReinfEnabled() const
+	{
+		return bReinfEnabled;
+	}
+
+	const float GetReinfRecycleProgress() const
+	{
+		return fReinfRecycleProgress;
+	}
+
+	NTimer::STime GetReinfRecycleEnd() const
+	{
+		return reinfTimeRecycleEnd;
+	}
+
+	int GetReinfCallsLeft() const
+	{
+		return nReinfCallsLeft;
+	}
+
+	const CKeyBuildings &GetKeyBuildings() const
+	{
+		return keyBuildings;
+	}
 
 	// script cameras
 	virtual void GetCameraByName( NCamera::CCameraPlacement *pCamera, const std::string &rszName ) const {}
+
 	virtual void GetObjectPosByScriptID( CVec3 *pObjPos, int nScriptID ) const {}
-	virtual bool GetMoviesData( NDb::SScriptMovies *pMoviesData ) const { return false; }
+
+	virtual bool GetMoviesData( NDb::SScriptMovies *pMoviesData ) const
+	{
+		return false;
+	}
 
 	void GetObjects( std::list<int> *pObjects ) const;
 	void GetObjects( std::vector<IB2MapObj *> *pObjects ) const;

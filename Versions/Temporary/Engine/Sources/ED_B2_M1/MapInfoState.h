@@ -7,6 +7,7 @@
 #include <cstdint>
 
 class CMapInfoEditor;
+
 class CMapInfoState : public CMultiInputState, public ICommandHandler
 {
 	friend class CMapInfoEditor;
@@ -36,6 +37,7 @@ public:
 		IS_SCRIPT = 3,
 		IS_COUNT = 4,
 	};
+
 	enum ETerrainInputSubstates
 	{
 		//TERRAIN_ISS_TILE							= 0,
@@ -45,12 +47,14 @@ public:
 		TERRAIN_ISS_FIELD = 1,
 		TERRAIN_ISS_COUNT = 2,
 	};
+
 	enum EObjectInputSubstates
 	{
 		OBJECT_ISS_MAP_OBJECT = 0,
 		OBJECT_ISS_VSO = 1,
 		OBJECT_ISS_COUNT = 2,
 	};
+
 	enum EGameplayInputSubstates
 	{
 		GAMEPLAY_ISS_REINF_POINTS = 0,
@@ -59,12 +63,14 @@ public:
 		GAMEPLAY_ISS_UNIT_START_CMD = 3,
 		GAMEPLAY_ISS_COUNT = 4,
 	};
+
 	enum EScriptInputSubstates
 	{
 		SCRIPT_ISS_SCRIPT_AREAS = 0,
 		SCRIPT_ISS_SCRIPT_MOVIES = 1,
 		SCRIPT_ISS_COUNT = 2,
 	};
+
 	//enum EMovEditorInputSubstates
 	//{
 	//	MOV_EDITOR_ISS_EDITOR					= 0,
@@ -95,7 +101,12 @@ public:
 
 	void CancelSelection();
 	void ToggleScriptPathPoints();
-	bool IsCreatingScriptPathPoints() { return GetActiveInputStateIndex() == nScriptPathInputState; }
+
+	bool IsCreatingScriptPathPoints()
+	{
+		return GetActiveInputStateIndex() == nScriptPathInputState;
+	}
+
 	//ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );

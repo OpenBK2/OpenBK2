@@ -24,6 +24,7 @@ enum ELayerType
 	LAYER_TERRAIN = 10,
 	LAYER_COUNT = 11,
 };
+
 //
 struct SLayerType
 {
@@ -56,6 +57,7 @@ struct SLayerType
 		minimap2ndbMap[LAYER_OCEAN] = NDb::LAYER_OCEAN;
 		minimap2ndbMap[LAYER_TERRAIN] = NDb::LAYER_TERRAIN;
 	}
+
 	int GetMinimapLayer( NDb::EMinimapLayerType eMinimapLayerType ) const
 	{
 		std::unordered_map<int, int>::const_iterator it = ndb2minimapMap.find( eMinimapLayerType );
@@ -68,6 +70,7 @@ struct SLayerType
 			return -1;
 		}
 	}
+
 	int GetNDbLayer( ELayerType eLayerType ) const
 	{
 		std::unordered_map<int, int>::const_iterator it = minimap2ndbMap.find( eLayerType );
@@ -99,6 +102,7 @@ struct SScaleType
 		ndb2imageMap[NDb::IMAGE_SCALE_METHOD_LANCZOS3] = NImage::IMAGE_SCALE_METHOD_LANCZOS3;
 		ndb2imageMap[NDb::IMAGE_SCALE_METHOD_MITCHELL] = NImage::IMAGE_SCALE_METHOD_MITCHELL;
 	}
+
 	NImage::EImageScaleMethod GetImageScaleMethod( NDb::EImageScaleMethod eScaleMethod ) const
 	{
 		std::unordered_map<int, int>::const_iterator it = ndb2imageMap.find( eScaleMethod );
@@ -121,6 +125,7 @@ enum ERoadType
 	ROAD_ROAD = 1,
 	ROAD_COUNT = 2,
 };
+
 //
 struct SRoadType
 {
@@ -131,6 +136,7 @@ struct SRoadType
 		ndb2roadMap[0] = ROAD_RAILROAD;
 		ndb2roadMap[1] = ROAD_ROAD;
 	}
+
 	ERoadType GetRoadType( int nRoadType ) const
 	{
 		std::unordered_map<int, int>::const_iterator it = ndb2roadMap.find( nRoadType );
@@ -153,6 +159,7 @@ enum ELakeType
 	LAKE_SWAMP = 1,
 	LAKE_COUNT = 2,
 };
+
 //
 struct SLakeType
 {
@@ -163,6 +170,7 @@ struct SLakeType
 		ndb2lakeMap[0] = LAKE_LAKE;
 		ndb2lakeMap[1] = LAKE_SWAMP;
 	}
+
 	ELakeType GetLakeType( int nLakeType ) const
 	{
 		std::unordered_map<int, int>::const_iterator it = ndb2lakeMap.find( nLakeType );
@@ -181,6 +189,7 @@ extern const SLakeType typeLakeType;
 
 typedef std::list<CVec2> CLakePointList;
 typedef std::list<const CLakePointList *> CLakePointListPtrList;
+
 struct SLakeInfo
 {
 	const NDb::SLakeDesc *pDescriptor;
@@ -188,11 +197,13 @@ struct SLakeInfo
 	CLakePointListPtrList islandPointListPtrList;
 
 	SLakeInfo() : pDescriptor( 0 ) {}
+
 	SLakeInfo( const SLakeInfo &rLakeInfo )
 			: pDescriptor( rLakeInfo.pDescriptor ), pointList( rLakeInfo.pointList ),
 				islandPointListPtrList( rLakeInfo.islandPointListPtrList )
 	{
 	}
+
 	SLakeInfo &operator=( const SLakeInfo &rLakeInfo )
 	{
 		if ( &rLakeInfo != this )
@@ -204,22 +215,27 @@ struct SLakeInfo
 		return *this;
 	}
 };
+
 typedef std::list<SLakeInfo> CLakeList;
 
 struct SCreateParameter
 {
 	std::string szImageFileName;
 	CTPoint<int> size;
+
 	//
 	SCreateParameter() : size( 0, 0 ) {}
+
 	SCreateParameter( const std::string &rszImageFileName, const CTPoint<int> &rSize )
 			: szImageFileName( rszImageFileName ), size( rSize )
 	{
 	}
+
 	SCreateParameter( const SCreateParameter &rCreateParameter )
 			: szImageFileName( rCreateParameter.szImageFileName ), size( rCreateParameter.size )
 	{
 	}
+
 	SCreateParameter &operator=( const SCreateParameter &rCreateParameter )
 	{
 		if ( &rCreateParameter != this )
@@ -230,6 +246,7 @@ struct SCreateParameter
 		return *this;
 	}
 };
+
 typedef std::vector<SCreateParameter> CCreateParameterList;
 
 const NDb::SMinimapLayer *GetMinimapLayer( ELayerType eLayerType, const NDb::SMinimap *pMinimap );
@@ -289,4 +306,4 @@ bool Create( const NDb::SMapInfo *pMapInfo,
              const NDb::SMinimap *pMinimap,
              const CCreateParameterList &rCreateParameterList,
              std::string *pError = nullptr );
-}
+} // namespace NMinimapImage

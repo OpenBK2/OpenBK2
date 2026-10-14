@@ -1,6 +1,7 @@
 #pragma once
 
 class CMapObj;
+
 namespace NDb
 {
 struct SHPObjectRPGStats;

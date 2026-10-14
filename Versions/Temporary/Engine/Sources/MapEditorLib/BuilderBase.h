@@ -19,6 +19,7 @@ public:
 	virtual bool
 	RenameObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource );
 	virtual bool RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName );
+
 	virtual void GetDefaultFolder( const std::string &rszObjectTypeName, std::string *pszDefaultFolder )
 	{
 		if ( pszDefaultFolder )

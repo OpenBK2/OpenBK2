@@ -116,4 +116,4 @@ INSTANTIATE_TEST_SUITE_P( ArtilleryTrajectories,
                           testing::Values( Shell::TRAJECTORY_CANNON,
                                            Shell::TRAJECTORY_HOWITZER,
                                            Shell::TRAJECTORY_GRENADE ) );
-}
+} // namespace

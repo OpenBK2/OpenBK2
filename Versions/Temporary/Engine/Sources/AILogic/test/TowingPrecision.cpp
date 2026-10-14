@@ -14,15 +14,44 @@ class CFinishedApproach : public ISmoothPath
 	OBJECT_BASIC_METHODS( CFinishedApproach );
 
 public:
-	bool Init( CBasePathUnit *, IPath *, bool, bool, CAIMap * ) override { return true; }
-	bool Init( IMemento *, CBasePathUnit *, CAIMap * ) override { return true; }
-	bool IsFinished() const override { return true; }
+	bool Init( CBasePathUnit *, IPath *, bool, bool, CAIMap * ) override
+	{
+		return true;
+	}
+
+	bool Init( IMemento *, CBasePathUnit *, CAIMap * ) override
+	{
+		return true;
+	}
+
+	bool IsFinished() const override
+	{
+		return true;
+	}
+
 	void Stop() override {}
+
 	void Segment( NTimer::STime ) override {}
-	const bool CanGoBackward() const override { return true; }
-	const bool CanGoForward() const override { return true; }
-	const CVec2 PeekPathPoint( int ) const override { return VNULL2; }
-	IMemento *CreateMemento() const override { return nullptr; }
+
+	const bool CanGoBackward() const override
+	{
+		return true;
+	}
+
+	const bool CanGoForward() const override
+	{
+		return true;
+	}
+
+	const CVec2 PeekPathPoint( int ) const override
+	{
+		return VNULL2;
+	}
+
+	IMemento *CreateMemento() const override
+	{
+		return nullptr;
+	}
 };
 
 class CTestTruck : public CBasePathUnit
@@ -32,34 +61,125 @@ class CTestTruck : public CBasePathUnit
 
 protected:
 	void UpdatePlacement( const CVec3 &, uint16_t, bool ) override {}
+
 	void UpdateTile() override {}
+
 	void CheckForDestroyedObjects( const CVec2 & ) const override {}
+
 	void NullSegmTime() override {}
-	ISmoothPath *CreateSmoothPath() override { return new CFinishedApproach; }
+
+	ISmoothPath *CreateSmoothPath() override
+	{
+		return new CFinishedApproach;
+	}
 
 public:
-	const int GetUniqueID() const override { return 1; }
-	const float GetMaxPossibleSpeed() const override { return 1.0f; }
-	const EAIClasses GetAIPassabilityClass() const override { return EAC_WHELL; }
-	const float GetTurnRadius() const override { return 0.0f; }
-	const float GetTurnSpeed() const override { return 32.0f; }
-	const SUnitProfile &GetUnitProfile() const override { return profile; }
-	const SRect &GetUnitRect() const override { return profile.rect; }
-	const CVec2 &GetAABBHalfSize() const override { return halfSize; }
-	const CVec2 GetCenterShift() const override { return VNULL2; }
-	const bool CanGoBackward() const override { return true; }
-	const bool CanTurnRound() const override { return true; }
-	const bool IsRound() const override { return true; }
-	const int GetBoundTileRadius() const override { return 1; }
-	const float GetSmoothTurnThreshold() const override { return 0.0f; }
-	const float GetPassability() const override { return 1.0f; }
-	const bool CanGoToPoint( const CVec2 & ) const override { return true; }
+	const int GetUniqueID() const override
+	{
+		return 1;
+	}
+
+	const float GetMaxPossibleSpeed() const override
+	{
+		return 1.0f;
+	}
+
+	const EAIClasses GetAIPassabilityClass() const override
+	{
+		return EAC_WHELL;
+	}
+
+	const float GetTurnRadius() const override
+	{
+		return 0.0f;
+	}
+
+	const float GetTurnSpeed() const override
+	{
+		return 32.0f;
+	}
+
+	const SUnitProfile &GetUnitProfile() const override
+	{
+		return profile;
+	}
+
+	const SRect &GetUnitRect() const override
+	{
+		return profile.rect;
+	}
+
+	const CVec2 &GetAABBHalfSize() const override
+	{
+		return halfSize;
+	}
+
+	const CVec2 GetCenterShift() const override
+	{
+		return VNULL2;
+	}
+
+	const bool CanGoBackward() const override
+	{
+		return true;
+	}
+
+	const bool CanTurnRound() const override
+	{
+		return true;
+	}
+
+	const bool IsRound() const override
+	{
+		return true;
+	}
+
+	const int GetBoundTileRadius() const override
+	{
+		return 1;
+	}
+
+	const float GetSmoothTurnThreshold() const override
+	{
+		return 0.0f;
+	}
+
+	const float GetPassability() const override
+	{
+		return 1.0f;
+	}
+
+	const bool CanGoToPoint( const CVec2 & ) const override
+	{
+		return true;
+	}
+
 	void UnitTrampled( const CBasePathUnit * ) override {}
-	const bool CanUnitTrampled( const CBasePathUnit * ) const override { return false; }
-	const bool IsDangerousDirExist() const override { return false; }
-	const uint16_t GetDangerousDir() const override { return 0; }
-	const bool IterateUnits( const CVec2 &, float, bool, const SIterateUnitsCallback & ) const override { return false; }
-	const bool IsStaticUnit() const override { return false; }
+
+	const bool CanUnitTrampled( const CBasePathUnit * ) const override
+	{
+		return false;
+	}
+
+	const bool IsDangerousDirExist() const override
+	{
+		return false;
+	}
+
+	const uint16_t GetDangerousDir() const override
+	{
+		return 0;
+	}
+
+	const bool IterateUnits( const CVec2 &, float, bool, const SIterateUnitsCallback & ) const override
+	{
+		return false;
+	}
+
+	const bool IsStaticUnit() const override
+	{
+		return false;
+	}
 };
 
 TEST( TowingPrecision, FinalApproachTurnsToOneStableReverseHeading )
@@ -117,12 +237,22 @@ TEST( TowingPrecision, AtDestinationFinishesFacingTheTruckDirection )
 TEST( TowingPrecision, FullApproachReachesAuthoredFrontAndRearHookPoints )
 {
 	CObj<CAIMap> map = new CAIMap( 32, 32, 64, 2, 32 );
+
 	struct SMapScope
 	{
 		CAIMap *previous = GetAIMap();
-		explicit SMapScope( CAIMap *map ) { SetAIMap( map ); }
-		~SMapScope() { SetAIMap( previous ); }
+
+		explicit SMapScope( CAIMap *map )
+		{
+			SetAIMap( map );
+		}
+
+		~SMapScope()
+		{
+			SetAIMap( previous );
+		}
 	} mapScope( map );
+
 	for ( const bool forwardTowed : { false, true } )
 	{
 		const CVec2 artilleryCenter( 1000, 1000 );
@@ -151,4 +281,4 @@ TEST( TowingPrecision, FullApproachReachesAuthoredFrontAndRearHookPoints )
 		EXPECT_LT( fabs( artilleryHook - truckHook ), 0.1f );
 	}
 }
-}
+} // namespace

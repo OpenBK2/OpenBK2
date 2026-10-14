@@ -23,16 +23,19 @@ class IGameView;
 class CPolyline;
 class CObjectInfo;
 class CRTPtr;
-};
+}; // namespace NGScene
+
 namespace NDb
 {
 struct SModel;
 struct SAmbientLight;
-};
+}; // namespace NDb
+
 namespace NAIVisInfo
 {
 class CDebugObject;
 };
+
 namespace NDebugInfo
 {
 struct SDebugInfoObject;
@@ -44,7 +47,7 @@ struct SDebugInfoLine;
 struct SDebugInfoRect;
 struct SDebugInfoDeleteObject;
 struct SDebugInfoDeleteLine;
-};
+}; // namespace NDebugInfo
 class CTerrainManager;
 class CTracksManager;
 class CVisObjIconsManager;
@@ -73,8 +76,11 @@ public:
 		f.Add( 2, &dst );
 		return 0;
 	}
+
 	CAIMapVisitor() {}
+
 	CAIMapVisitor( CSyncSrc<IVisObj> *pSrc, NAI::IAIMap *pAIMap ) : dst( pSrc, pAIMap ) {}
+
 	void Sync( NAI::IAIMap::ESyncType st = NAI::IAIMap::ST_NORMAL )
 	{
 		dst.Sync();
@@ -102,11 +108,13 @@ protected:
 	void Recalc();
 	bool NeedUpdate();
 	void OrientToViewer();
+
 	//
 	CSceneIconInfo() {}
 
 public:
 	CSceneIconInfo( ICamera *_pCamera ) : pCamera( _pCamera ), bUpdate( true ) {}
+
 	//
 	void CreateIcon( const int _nID,
 	                 const CVec3 &_vCenter,
@@ -118,26 +126,42 @@ public:
 	                 CSyncSrc<CSceneIconInfo> *pSyncSrc );
 	//
 	void MoveIcon( const CVec3 &_vCenter );
+
 	//
 	void ForceUpdate()
 	{
 		srcBind.Update();
 		bUpdate = true;
 	}
+
 	//
-	int GetID() const { return nID; }
+	int GetID() const
+	{
+		return nID;
+	}
+
 	//
-	CCSBound *GetBound() { return pBound; }
+	CCSBound *GetBound()
+	{
+		return pBound;
+	}
+
 	//
-	const NDb::SMaterial *GetMaterial() const { return pMaterial; }
+	const NDb::SMaterial *GetMaterial() const
+	{
+		return pMaterial;
+	}
+
 	//
 	void Visit( IAIVisitor *pVisitor );
+
 	//
 	void AttachSyncSrc( CSyncSrc<CSceneIconInfo> *pSyncSrc )
 	{
 		srcBind.Link( pSyncSrc, this );
 		srcBind.Update();
 	}
+
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -169,15 +193,30 @@ class CVisObjReflectionInfo : public CPtrFuncBase<NGScene::CObjectInfo>
 
 protected:
 	void Recalc();
-	bool NeedUpdate() { return !bWasUpdate && pGeometry.Refresh(); }
+
+	bool NeedUpdate()
+	{
+		return !bWasUpdate && pGeometry.Refresh();
+	}
 
 public:
 	CPtr<NGScene::IMaterial> pMaterial;
+
 	//
 	CVisObjReflectionInfo() : bWasUpdate( false ) {}
+
 	CVisObjReflectionInfo( CTerrainManager *_pTerraManager ) : pTerraManager( _pTerraManager ), bWasUpdate( false ) {}
-	void SetGeometry( CPtrFuncBase<NGScene::CObjectInfo> *_pGeometry ) { pGeometry = _pGeometry; }
-	void SetTransform( const SHMatrix &_matr ) { matr = _matr; }
+
+	void SetGeometry( CPtrFuncBase<NGScene::CObjectInfo> *_pGeometry )
+	{
+		pGeometry = _pGeometry;
+	}
+
+	void SetTransform( const SHMatrix &_matr )
+	{
+		matr = _matr;
+	}
+
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -209,8 +248,11 @@ public:
 		f.Add( 2, &dst );
 		return 0;
 	}
+
 	CIconAIMapVisitor() {}
+
 	CIconAIMapVisitor( CSyncSrc<CSceneIconInfo> *pSrc, NAI::IAIMap *pAIMap ) : dst( pSrc, pAIMap ) {}
+
 	void Sync( NAI::IAIMap::ESyncType st = NAI::IAIMap::ST_NORMAL )
 	{
 		dst.Sync();
@@ -235,6 +277,7 @@ public:
 		ZDATA
 		CObj<IWindow> pScreen;
 		CVisObjectsMap interfaceVisObjects; // 3D interface objects
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pScreen );
@@ -245,13 +288,22 @@ public:
 		CObj<NGScene::IGameView> p3DView; // 3D part of interface
 
 		SScreenData() {}
+
 		SScreenData( IWindow *_pScreen );
 
 		void SetSceneConsts( const NDb::SSceneConsts *pSceneConsts );
 
-		bool operator==( const SScreenData &data ) const { return pScreen == data.pScreen; }
-		bool operator==( const IWindow *_pScreen ) const { return pScreen == _pScreen; }
+		bool operator==( const SScreenData &data ) const
+		{
+			return pScreen == data.pScreen;
+		}
+
+		bool operator==( const IWindow *_pScreen ) const
+		{
+			return pScreen == _pScreen;
+		}
 	};
+
 	typedef std::list<SScreenData> CScreensData;
 
 	enum EAIGeomMode
@@ -290,6 +342,7 @@ public:
 	ZSKIP //CObj<CObjectBase> pPostEffect;
 			ZSKIP CObj<IFullScreenFader>
 					pScreenFader;
+
 	ZONSERIALIZE
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -381,8 +434,17 @@ public:
 	SSceneData();
 
 	void Init();
-	NGScene::IGameView *GetGScene() { return bIsInternal ? pInterfaceView : pGScene; }
-	void SetGScene( NGScene::IGameView *_pGScene ) { pGScene = _pGScene; };
+
+	NGScene::IGameView *GetGScene()
+	{
+		return bIsInternal ? pInterfaceView : pGScene;
+	}
+
+	void SetGScene( NGScene::IGameView *_pGScene )
+	{
+		pGScene = _pGScene;
+	};
+
 	bool SetGSceneInternal( bool _bIsInternal )
 	{
 		bool bTmp = bIsInternal;
@@ -434,12 +496,18 @@ protected:
 	void OnSerialize( IBinSaver &saver );
 	//
 	void CreateGScene();
+
 	int GetNextFreeID()
 	{
 		data[eScene]->nLastFreeID += 1;
 		return data[eScene]->nLastFreeID | 0x80000000;
 	}
-	int GetID( int nID ) { return nID == OBJECT_ID_GENERATE ? GetNextFreeID() : nID; }
+
+	int GetID( int nID )
+	{
+		return nID == OBJECT_ID_GENERATE ? GetNextFreeID() : nID;
+	}
+
 	//
 	bool CheckObjExist( int nID ) const;
 	int AddStaticObject( const int nID,
@@ -563,7 +631,12 @@ public:
 	virtual void SwitchSceneAfterLoad( const EScene eScene );
 
 	bool SetupMode( ESceneMode eMode, bool bEditorMode );
-	bool IsEditorMode() { return bEditorMode; }
+
+	bool IsEditorMode()
+	{
+		return bEditorMode;
+	}
+
 	bool ToggleShow( ESceneShow eShow );
 	bool IsShowOn( ESceneShow eShow );
 	bool ToggleAIGeometryMode();
@@ -575,7 +648,12 @@ public:
 	void ClearScene( const EScene eScene2Clear );
 	//
 	struct ITerraManager *GetTerraManager();
-	bool DoesTerraManagerExist() const { return data[eScene]->pTerraManager != 0; }
+
+	bool DoesTerraManagerExist() const
+	{
+		return data[eScene]->pTerraManager != 0;
+	}
+
 	// add object to scene. returns new ID
 	int AddObject( const int nID,
 	               const NDb::SModel *pModel,
@@ -804,7 +882,11 @@ public:
 	void RemoveSceneIcon( const int nID );
 	void MoveSceneIcon( const int nID, const CVec3 &vCenter );
 
-	CWindController *GetWindController() { return data[eScene]->pWindController; }
+	CWindController *GetWindController()
+	{
+		return data[eScene]->pWindController;
+	}
+
 	//
 	bool MakeMapShot( const SGameMessage &msg );
 
@@ -816,7 +898,10 @@ public:
 	virtual bool GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
 	virtual void InitHeights4Editor( int nSizeX, int nSizeY );
 
-	virtual NAI::IAIMap *GetAIMap() const { return data[eScene]->pAIMap; }
+	virtual NAI::IAIMap *GetAIMap() const
+	{
+		return data[eScene]->pAIMap;
+	}
 
 	virtual void AddAttachedMapping( int nAttachObjID, int nMapObjID );
 	virtual void RemoveAttachedMapping( int nAttachObjID );

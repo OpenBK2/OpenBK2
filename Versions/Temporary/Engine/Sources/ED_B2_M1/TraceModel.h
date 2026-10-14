@@ -4,6 +4,7 @@ struct STriangleForTrace
 {
 	CVec3 vertices[3];
 	std::string szBodyPart;
+
 	//
 	STriangleForTrace()
 	{
@@ -18,6 +19,7 @@ struct SModelSurfacePoint
 	CVec3 vPos;
 	CVec3 vNormal;
 	std::string szBodyPart;
+
 	//
 	SModelSurfacePoint() : vPos( VNULL3 ), vNormal( VNULL3 ) {}
 };

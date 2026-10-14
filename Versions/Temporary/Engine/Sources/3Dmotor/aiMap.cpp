@@ -27,6 +27,7 @@ CBasicShare<CDBPtr<NDb::SAIGeometry>, CLoadAIGeometryFromGranny, SDBPtrHash>
 		shareAIModel( 107 ); // используется также в MakeBuilding для определения какие куски присутсвуют в геометрии
 CBasicShare<CDBPtr<NDb::SAIGeometry>, CFileSkinPointsLoadFromGranny, SDBPtrHash> shareSkinPoints( 108 );
 CBasicShare<SAISkinKey, CFileSkinPointsLoadFromGranny, SAISkinKeyHash> shareGltfSkinPoints( 121 );
+
 //CBasicShare<int, CLoadTwoBSPTrees> shareBSPTrees(117);
 
 static bool DoesAIGeometryExist( const NDb::SAIGeometry *pGeometry )
@@ -48,12 +49,14 @@ static CPtrFuncBase<CFileSkinPoints> *GetSkinPoints( const NDb::SAIGeometry *pGe
 }
 
 class CConvexHull;
+
 class CUserHullsTracker : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CUserHullsTracker );
 	typedef std::unordered_map<CPtr<CObjectBase>, std::vector<CPtr<CConvexHull>>> SUserHash;
 	ZDATA
 	SUserHash data;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &data );
@@ -61,7 +64,11 @@ class CUserHullsTracker : public CObjectBase
 	}
 
 public:
-	void AddHull( CObjectBase *pUser, CConvexHull *pHull ) { data[pUser].push_back( pHull ); }
+	void AddHull( CObjectBase *pUser, CConvexHull *pHull )
+	{
+		data[pUser].push_back( pHull );
+	}
+
 	void RemoveHull( CObjectBase *pUser, CConvexHull *pHull )
 	{
 		SUserHash::iterator i = data.find( pUser );
@@ -84,15 +91,19 @@ public:
 };
 
 class CVolumeNode;
+
 class CConvexHull : public CObjectBase
 {
 public:
 	struct SMap
 	{
 		int nPieceID, nUserID;
+
 		SMap() {}
+
 		SMap( int _nPieceID, int _nUserID ) : nPieceID( _nPieceID ), nUserID( _nUserID ) {}
 	};
+
 	ZDATA
 	CPtr<CVolumeNode> pNode;
 	CDGPtr<CPtrFuncBase<CGeometryInfo>> pGeometry;
@@ -101,6 +112,7 @@ public:
 	SSourceInfo src;
 	int nIndexInNode;
 	CPtr<CUserHullsTracker> pUserHulls;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &pNode );
@@ -112,8 +124,10 @@ public:
 		f.Add( 8, &pUserHulls );
 		return 0;
 	}
+
 	//
 	CConvexHull() {}
+
 	CConvexHull( CUserHullsTracker *_pUserHulls,
 	             CPtrFuncBase<CGeometryInfo> *_pGeometry,
 	             const SHMatrix &_pos,
@@ -128,6 +142,7 @@ public:
 			pUserHulls->AddHull( _pSrc, this );
 		}
 	}
+
 	~CConvexHull();
 	bool SetNode( CVolumeNode *_p, const SBound &_bound );
 	const SBound &GetLinkedBound();
@@ -142,6 +157,7 @@ class CStaticConvexHull : public CConvexHull
 
 public:
 	CStaticConvexHull() {}
+
 	CStaticConvexHull( CUserHullsTracker *_pUserHulls,
 	                   CPtrFuncBase<CGeometryInfo> *_pGeometry,
 	                   const SHMatrix &_pos,
@@ -152,6 +168,7 @@ public:
 			: CConvexHull( _pUserHulls, _pGeometry, _pos, _pArmor, _pSrc, _nMask, _nFloor )
 	{
 	}
+
 	//	~CStaticConvexHull();
 };
 
@@ -163,6 +180,7 @@ public:
 	ZDATA_( CConvexHull )
 	CDGPtr<CFuncBase<SBound>> pBound;
 	CDGPtr<CFuncBase<NAnimation::SGrannySkeletonPose>> pAnimationTracker;
+
 	//SBound linkedBound;
 	ZEND int operator&( CStructureSaver &f )
 	{
@@ -171,8 +189,10 @@ public:
 		f.Add( 3, &pAnimationTracker );
 		return 0;
 	}
+
 	//
 	CDynamicConvexHull() {}
+
 	CDynamicConvexHull( CUserHullsTracker *_pUserHulls,
 	                    CPtrFuncBase<CGeometryInfo> *_pGeometry,
 	                    const SHMatrix &_pos,
@@ -186,6 +206,7 @@ public:
 				pAnimationTracker( _pAnimation )
 	{
 	}
+
 	//	~CDynamicConvexHull();
 };
 
@@ -269,7 +290,10 @@ static void SelectPieces( SHullSet *pRes, const TTest &f, CConvexHull *pHull, co
 
 struct SAlwaysTrue
 {
-	BOOST_FORCEINLINE bool operator()( const CVec3 &p, float f, bool b ) const { return true; }
+	BOOST_FORCEINLINE bool operator()( const CVec3 &p, float f, bool b ) const
+	{
+		return true;
+	}
 };
 
 void GetGeometry( std::vector<SObjectInfo> *pRes,
@@ -364,10 +388,12 @@ struct SFloorsSelector
 
 //! node size
 const int N_MINIMAL_OCTREE_NODE = 4;
+
 class CVolumeNode : public COcTreeNode<CVolumeNode, N_MINIMAL_OCTREE_NODE, true>
 {
 	OBJECT_BASIC_METHODS( CVolumeNode );
 	typedef COcTreeNode<CVolumeNode, N_MINIMAL_OCTREE_NODE, true> CParent;
+
 	void InitGrownChild( CVolumeNode *pChild ) const override
 	{
 		// CallCachedInforms skips a subtree when its parent's mask is zero.
@@ -379,6 +405,7 @@ class CVolumeNode : public COcTreeNode<CVolumeNode, N_MINIMAL_OCTREE_NODE, true>
 			pChild->nInformMask = nInformMask;
 		}
 	}
+
 	void InformLowerTrackers( const SBound &b, int nMask, bool bDoorFlipped );
 	void InformCurrentTrackers( const SBound &b, int nMask, bool bDoorFlipped );
 
@@ -390,6 +417,7 @@ public:
 		SBound bound;
 		int nMask;
 		bool bInformOnDoorFlip;
+
 		ZEND int operator&( CStructureSaver &f )
 		{
 			f.Add( 2, &pTracker );
@@ -398,17 +426,21 @@ public:
 			f.Add( 5, &bInformOnDoorFlip );
 			return 0;
 		}
+
 		STrackerDescr() {}
+
 		STrackerDescr( IAIMapTracker *_p, const SBound &_b, int _nMask, bool _bInform )
 				: pTracker( _p ), bound( _b ), nMask( _nMask ), bInformOnDoorFlip( _bInform )
 		{
 		}
 	};
+
 	struct SElementInfo
 	{
 		ZDATA
 		CPtr<CConvexHull> pHull;
 		int nFlags, nFloor;
+
 		ZEND int operator&( CStructureSaver &f )
 		{
 			f.Add( 2, &pHull );
@@ -417,6 +449,7 @@ public:
 			return 0;
 		}
 	};
+
 	typedef std::vector<SElementInfo> CElemList;
 	ZDATA_( CParent )
 	//CElemList hulls;
@@ -426,6 +459,7 @@ public:
 	int nFree;
 	SBound bInform;
 	int nInformMask;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 1, (CParent *)this );
@@ -439,6 +473,7 @@ public:
 	}
 
 	CVolumeNode() : nFree( -1 ), nInformMask( 0 ) {}
+
 	int AddHull( CConvexHull *pHull, const SBound &bound );
 	void RemoveHull( int nIndex ); //CConvexHull *pHull );
 	void SetLinkedBound( int nIndex, const SBound &b );
@@ -467,6 +502,7 @@ class CAIMap : public IAIMap
 	int nMaxFloor;
 	//CPtr<IStabilityTrackers> pStability;
 	CObj<CUserHullsTracker> pUserHullsTracker;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &pRoot );
@@ -476,6 +512,7 @@ class CAIMap : public IAIMap
 		f.Add( 6, &pUserHullsTracker );
 		return 0;
 	}
+
 	//
 	CVolumeNode *GetNode( const CVec3 &ptCenter, float fRadius );
 	CVolumeNode *GetNode( CConvexHull *pHull, SBound *pBound );
@@ -495,6 +532,7 @@ class CAIMap : public IAIMap
 	                              int nFloor,
 	                              int nMask );
 	void AssignUserID( CObjectBase *p, int _nUserID );
+
 	//
 	template <class TTest>
 	void SelectHulls( SHullSet *pRes,
@@ -535,6 +573,7 @@ class CAIMap : public IAIMap
 			SelectHulls( pRes, f, pNode->GetNode( i ), fSelect, nMask, bSelect2DoorHulls );
 		}
 	}
+
 	template <class TTest>
 	void SelectFloorSet( SHullSet *pRes, const CFloorsSet &fs, int nMask, const TTest &f, bool bSelect2DoorHulls = false )
 	{
@@ -545,6 +584,7 @@ class CAIMap : public IAIMap
 		}
 		SelectHulls( pRes, f, pRoot, fSelect, nMask, bSelect2DoorHulls );
 	}
+
 	void
 	FlipDoorWindow( CObjectBase *pWhat, bool bOpen, CVolumeNode *pNode, std::vector<CConvexHull *> *pCallInformForThem );
 	void SelectHullPointers(
@@ -552,6 +592,7 @@ class CAIMap : public IAIMap
 
 public:
 	CAIMap() : nMaxFloor( 0 ), nAllTrackersMask( 0 ) {}
+
 	CAIMap( int );
 	virtual void Sync( ESyncType st );
 	virtual void GetEntities( std::vector<SObjectInfo> *pRes, int nMask, const CFloorsSet &fs );
@@ -1110,8 +1151,13 @@ template <class T>
 struct STestSphere
 {
 	T *p;
+
 	STestSphere( T *_p ) : p( _p ) {}
-	bool operator()( const CVec3 &ptCenter, float fRadius, bool ) const { return p->TestSphere( ptCenter, fRadius ); }
+
+	bool operator()( const CVec3 &ptCenter, float fRadius, bool ) const
+	{
+		return p->TestSphere( ptCenter, fRadius );
+	}
 };
 
 template <class T>
@@ -1164,7 +1210,9 @@ struct SFrustrumSelect
 {
 	CTransformStack &ts;
 	float fRadiusKoef;
+
 	SFrustrumSelect( CTransformStack &_ts, float _f ) : ts( _ts ), fRadiusKoef( _f ) {}
+
 	bool operator()( const CVec3 &ptCenter, float fRadius, bool bCheckPiece ) const
 	{
 		if ( bCheckPiece )
@@ -1177,6 +1225,7 @@ struct SFrustrumSelect
 		}
 	}
 };
+
 static void AddObjects( std::vector<IAIMap::SSelectedObject> *pRes, const std::vector<SConvexHull> &objects )
 {
 	for ( int k = 0; k < objects.size(); ++k )
@@ -1187,6 +1236,7 @@ static void AddObjects( std::vector<IAIMap::SSelectedObject> *pRes, const std::v
 		r.nUserID = c.nUserID;
 	}
 }
+
 void CAIMap::Select(
 		std::vector<SSelectedObject> *pRes, const CTransformStack &_ts, float fRadiusKoef, int nMask, const CFloorsSet &fs )
 {
@@ -1226,6 +1276,7 @@ struct SSphereSphere
 	float fRadius;
 
 	SSphereSphere( const CVec3 &_ptCenter, float _fRadius ) : ptCenter( _ptCenter ), fRadius( _fRadius ) {}
+
 	bool operator()( const CVec3 &_ptCenter, float _fRadius, bool ) const
 	{
 		return fabs2( ptCenter - _ptCenter ) < sqr( fRadius + _fRadius );
@@ -1352,7 +1403,8 @@ void FindClosePositionOnSurface( IAIMap *pMap, const CVec3 &ptPos, CVec3 *pRes, 
 	}
 }
 
-} // namespace
+} // namespace NAI
+
 using namespace NAI;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x02911000, CAIMap )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x01071140, CVolumeNode )

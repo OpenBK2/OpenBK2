@@ -2,6 +2,7 @@
 #include "System/Dg.h"
 #include "DiscretePos.h"
 #include "3DLib/GGeometry.h"
+
 namespace NGScene
 {
 class CObjectInfo;
@@ -35,11 +36,16 @@ public:
 	}
 
 protected:
-	virtual bool NeedUpdate() { return pSource.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pSource.Refresh();
+	}
+
 	virtual void Recalc();
 
 public:
 	CDecalGeometry() {}
+
 	// srcPos transforms source geometry to space where _vOrigin, _vNormal are specified
 	// rotation is in radians
 	CDecalGeometry( CPtrFuncBase<CObjectInfo> *p,
@@ -54,6 +60,7 @@ public:
 };
 
 class IPart;
+
 class CPerPolyDecal : public CPtrFuncBase<CObjectInfo>
 {
 	ZDATA
@@ -76,6 +83,7 @@ protected:
 
 public:
 	CPerPolyDecal() {}
+
 	CPerPolyDecal( IPart *pPart, const std::vector<CVec3> &_srcPositions );
 };
 
@@ -101,6 +109,7 @@ protected:
 
 public:
 	CExplosionDecalGeometry() {}
+
 	CExplosionDecalGeometry(
 			IPart *_pPart, const std::vector<CVec3> &positions, const CVec3 &_vOrigin, float _fSize, float _fRotation )
 			: CPerPolyDecal( _pPart, positions ), vOrigin( _vOrigin ), fSize( _fSize ), fRotation( _fRotation )
@@ -134,6 +143,7 @@ protected:
 
 public:
 	CPerPolyDecalGeometry() {}
+
 	CPerPolyDecalGeometry( IPart *_pPart,
 	                       const std::vector<CVec3> &positions,
 	                       const CVec3 &_vOrigin,
@@ -147,4 +157,4 @@ public:
 	}
 };
 
-}
+} // namespace NGScene

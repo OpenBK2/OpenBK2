@@ -16,4 +16,4 @@ void SInfantryRPGStats::ToAIUnits( bool bInEditor )
 	FOR_EACH_VAL( guns, ToAIUnits, bInEditor );
 }
 
-}
+} // namespace NDb

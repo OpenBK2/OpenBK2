@@ -50,6 +50,7 @@ extern int g_nTimeStatLevel;
 //
 
 class CTerrainManager;
+
 class CTerraGen : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CTerraGen )
@@ -86,6 +87,7 @@ class CTerraGen : public CObjectBase
 		CVec2 vMin;
 		CVec2 vMax;
 		CDBPtr<NDb::SMaterial> pMaterial;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &vMin );
@@ -94,13 +96,16 @@ class CTerraGen : public CObjectBase
 			return 0;
 		}
 	};
+
 	std::vector<SExplosionHistory> explosionsHistory;
+
 	//
 	struct SEntrenchmentHistory
 	{
 		ZDATA
 		std::vector<CVec2> ctrlPoints;
 		float fWidth;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &ctrlPoints );
@@ -108,6 +113,7 @@ class CTerraGen : public CObjectBase
 			return 0;
 		}
 	};
+
 	std::vector<SEntrenchmentHistory> entrenchmentsHistory;
 	//
 	std::vector<CArray2D<uint8_t>> tileTerraMasks;
@@ -119,14 +125,20 @@ class CTerraGen : public CObjectBase
 	CVec2i vGeomModAreaMin, vGeomModAreaMax;
 
 	std::vector<NWaterStuff::SWaterParams> waterParams;
+
 	//
 	struct STileOrder
 	{
 		int nPrevNum;
 		int nPriority;
+
 		//
-		bool operator<( const STileOrder &v ) const { return nPriority < v.nPriority; }
+		bool operator<( const STileOrder &v ) const
+		{
+			return nPriority < v.nPriority;
+		}
 	};
+
 	std::vector<STileOrder> tilesOrder;
 
 	bool LoadTerrainInfo( CDataStream *pStream );
@@ -135,8 +147,16 @@ class CTerraGen : public CObjectBase
 	void OptimizeTerrainInfo();
 	void RestoreTerrainInfoAfterOptimizing();
 
-	inline float Tile2Vis( const int nGridValue ) const { return (float)nGridValue * DEF_TILE_SIZE; }
-	inline int Vis2Tile( const float fVisValue ) const { return fVisValue / DEF_TILE_SIZE; }
+	inline float Tile2Vis( const int nGridValue ) const
+	{
+		return (float)nGridValue * DEF_TILE_SIZE;
+	}
+
+	inline int Vis2Tile( const float fVisValue ) const
+	{
+		return fVisValue / DEF_TILE_SIZE;
+	}
+
 	inline bool IsPointOnMap( const CVec2 &vPoint ) const
 	{
 		const float f1 = Tile2Vis( GetTilesCountX() );
@@ -482,6 +502,7 @@ class CTerraGen : public CObjectBase
 
 public:
 	CTerraGen();
+
 	virtual ~CTerraGen() {}
 
 	void SetGfxObserver( ITerraGfxObserver *_pGfxObserver );
@@ -589,13 +610,31 @@ public:
 	void CreateSelection( NMeshData::SMeshData *pData, const CVec3 &vMin, const CVec3 &vMax, CTerrainManager *pManager );
 
 	//
-	int GetNumPatchesX() const { return terrainInfo.nNumPatchesX; }
-	int GetNumPatchesY() const { return terrainInfo.nNumPatchesY; }
-	//
-	int GetTilesCountX() const { return terrainInfo.tiles.GetSizeX(); }
-	int GetTilesCountY() const { return terrainInfo.tiles.GetSizeY(); }
+	int GetNumPatchesX() const
+	{
+		return terrainInfo.nNumPatchesX;
+	}
 
-	const STerrainInfo *const GetTerraInfo() const { return &terrainInfo; }
+	int GetNumPatchesY() const
+	{
+		return terrainInfo.nNumPatchesY;
+	}
+
+	//
+	int GetTilesCountX() const
+	{
+		return terrainInfo.tiles.GetSizeX();
+	}
+
+	int GetTilesCountY() const
+	{
+		return terrainInfo.tiles.GetSizeY();
+	}
+
+	const STerrainInfo *const GetTerraInfo() const
+	{
+		return &terrainInfo;
+	}
 
 	int operator&( IBinSaver &saver );
 };

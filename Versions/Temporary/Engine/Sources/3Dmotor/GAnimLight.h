@@ -3,11 +3,12 @@
 
 #include "System/time.hpp"
 #include "GParticleFormat.h"
+
 namespace NDb
 {
 struct SLightInstance;
 struct SAnimLight;
-}
+} // namespace NDb
 
 namespace NGScene
 {
@@ -18,11 +19,13 @@ class TKeyVector
 public:
 	ZDATA
 	std::vector<TKey<TValue>> keys;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &keys );
 		return 0;
 	}
+
 	void GetValue( float fT, TValue *pRes ) const
 	{
 		int nKeys = keys.size();
@@ -83,12 +86,17 @@ class _3DMOTOR_EXPORT CLightLoader : public CLazyResourceLoader<CDBPtr<NDb::SAni
 };
 
 class CAnimLight;
+
 class _3DMOTOR_EXPORT CLightAnimator : public CPtrFuncBase<CAnimLight>
 {
 	OBJECT_BASIC_METHODS( CLightAnimator );
 
 protected:
-	virtual bool NeedUpdate() { return pTime.Refresh() | pInfo.Refresh() | pPlacement.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		return pTime.Refresh() | pInfo.Refresh() | pPlacement.Refresh();
+	}
+
 	virtual void Recalc();
 
 private:
@@ -101,6 +109,7 @@ public:
 	CDGPtr<CFuncBase<STime>> pTime;
 	CDGPtr<CFuncBase<SFBTransform>> pPlacement;
 	CDGPtr<CPtrFuncBase<CAnimLightInfo>> pInfo;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &fScale );
@@ -113,10 +122,11 @@ public:
 	}
 
 	CLightAnimator() {}
+
 	CLightAnimator( const NDb::SLightInstance *_pInstance, STime t, float _fScale )
 			: pInstance( _pInstance ), stBeginTime( t ), fScale( _fScale )
 	{
 	}
 };
 
-}
+} // namespace NGScene

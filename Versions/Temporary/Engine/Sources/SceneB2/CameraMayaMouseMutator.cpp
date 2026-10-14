@@ -15,27 +15,33 @@ static float s_fMayaCameraPitchSensetivity = 1;
 static float s_fMayaCameraYawSensetivity = 1;
 static float s_fMayaCameraZoomSensetivity = 1;
 static bool s_bMayaFreeCamera = false;
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float CCameraMayaMouseMutator::GetPitchDelta()
 {
 	return GetPitchMouseDelta() + GetPitchKeyboardDelta();
 }
+
 float CCameraMayaMouseMutator::GetYawDelta()
 {
 	return GetYawMouseDelta() + GetYawKeyboardDelta();
 }
+
 float CCameraMayaMouseMutator::GetForwardDelta()
 {
 	return GetForwardMouseDelta() + GetForwardKeyboardDelta();
 }
+
 float CCameraMayaMouseMutator::GetStrafeDelta()
 {
 	return GetStrafeMouseDelta() + GetStrafeKeyboardDelta();
 }
+
 float CCameraMayaMouseMutator::GetZoomDelta()
 {
 	return GetZoomMouseDelta() + GetZoomKeyboardDelta();
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CCameraMayaMouseMutator::Recalc()
 {
@@ -109,14 +115,17 @@ void CCameraMayaMouseMutator::Recalc()
 	SetWasUpdated( ( fabs( fYawOld - fYaw ) > EPS_VALUE ) || ( fabs( fPitchOld - fPitch ) > EPS_VALUE ) ||
 	               ( fabs2( vPositionOld - vPosition ) > EPS_VALUE ) );
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int CCameraMayaMouseMutator::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CCameraBasicMouseMutator *>( this ) );
 	return 0;
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-}
+} // namespace NCamera
+
 using namespace NCamera;
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x101ACBC1, CCameraMayaMouseMutator )
 

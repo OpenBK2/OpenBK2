@@ -44,6 +44,7 @@ public:
 
 public:
 	CFence() {}
+
 	CFence( const SFenceRPGStats *pStats,
 	        const CVec3 &center,
 	        const float fHP,
@@ -52,11 +53,20 @@ public:
 	        const int nFrameIndex );
 	virtual void Init();
 
-	virtual const uint8_t GetPlayer() const { return nCreator; }
+	virtual const uint8_t GetPlayer() const
+	{
+		return nCreator;
+	}
 
-	const struct SHPObjectRPGStats *GetStats() const { return pStats; }
+	const struct SHPObjectRPGStats *GetStats() const
+	{
+		return pStats;
+	}
 
-	virtual EStaticObjType GetObjectType() const { return ESOT_FENCE; }
+	virtual EStaticObjType GetObjectType() const
+	{
+		return ESOT_FENCE;
+	}
 
 	virtual void Die( const float fDamage );
 	virtual void Delete();

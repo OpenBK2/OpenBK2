@@ -53,7 +53,11 @@ class CUpdateTimer : public wxTimer
 
 public:
 	explicit CUpdateTimer( std::function<void()> _tick ) : tick( std::move( _tick ) ) {}
-	virtual void Notify() { tick(); }
+
+	virtual void Notify()
+	{
+		tick();
+	}
 };
 
 // The MK_ mask a Win32 mouse message carried in its wParam: which buttons
@@ -460,7 +464,10 @@ class CWxSceneSurface : public CWxHostWindow, public ISceneSurface
 	int scrollMax[2] = { 0, 0 };
 	int scrollPos[2] = { 0, 0 };
 
-	static int ScrollIndex( bool bVertical ) { return bVertical ? 1 : 0; }
+	static int ScrollIndex( bool bVertical )
+	{
+		return bVertical ? 1 : 0;
+	}
 
 	void ApplyScrollBar( bool bVertical )
 	{
@@ -574,7 +581,10 @@ public:
 		return true;
 	}
 
-	virtual IWidget *GetWidget() { return this; }
+	virtual IWidget *GetWidget()
+	{
+		return this;
+	}
 
 	virtual HWND GetHandle() const
 	{
@@ -601,7 +611,10 @@ public:
 		}
 	}
 
-	virtual bool HasFocus() const { return ( pWindow != nullptr ) && pWindow->HasFocus(); }
+	virtual bool HasFocus() const
+	{
+		return ( pWindow != nullptr ) && pWindow->HasFocus();
+	}
 
 	virtual void Focus()
 	{
@@ -698,9 +711,15 @@ public:
 		}
 	}
 
-	virtual bool StartUpdateTimer( int nInterval ) { return updateTimer.Start( nInterval ); }
+	virtual bool StartUpdateTimer( int nInterval )
+	{
+		return updateTimer.Start( nInterval );
+	}
 
-	virtual void StopUpdateTimer() { updateTimer.Stop(); }
+	virtual void StopUpdateTimer()
+	{
+		updateTimer.Stop();
+	}
 
 	// The scroll bars are the window's own, as WS_HSCROLL and WS_VSCROLL made
 	// them, but wx puts them there now rather than the style bits.
@@ -795,7 +814,7 @@ public:
 		}
 	}
 };
-}
+} // namespace
 
 namespace NSceneSurface
 {
@@ -803,4 +822,4 @@ ISceneSurface *Create()
 {
 	return new CWxSceneSurface();
 }
-}
+} // namespace NSceneSurface

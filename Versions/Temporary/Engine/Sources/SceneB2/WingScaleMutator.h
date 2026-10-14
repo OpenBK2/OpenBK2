@@ -27,7 +27,16 @@ public:
 
 	bool
 	Setup( ISkeletonAnimator *pAnimator, const std::string &szScaledWingPrefix, const std::string &szStaticWingName );
-	void SetScale( const float _fScale ) { fScale = _fScale; }
-	void ShowStatic( const bool bShow ) { bShowStatic = bShow; }
+
+	void SetScale( const float _fScale )
+	{
+		fScale = _fScale;
+	}
+
+	void ShowStatic( const bool bShow )
+	{
+		bShowStatic = bShow;
+	}
+
 	void MutateSkeletonPose( NAnimation::SSkeletonPose *pPose );
 };

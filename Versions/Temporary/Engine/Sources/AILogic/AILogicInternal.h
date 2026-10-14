@@ -12,7 +12,7 @@ namespace NDb
 struct SMapInfo;
 struct SAIGameConsts;
 struct STerrain;
-}
+} // namespace NDb
 
 class CCommonUnit;
 class CAIUnit;
@@ -126,16 +126,26 @@ public:
 	CAILogic();
 	~CAILogic();
 
-	int GetScriptID( class CUpdatableObj *pObj ) const { return scripts.GetScriptID( pObj ); }
+	int GetScriptID( class CUpdatableObj *pObj ) const
+	{
+		return scripts.GetScriptID( pObj );
+	}
 
-	IAIScenarioTracker *GetScenarioTracker() { return pScenarioTracker; }
+	IAIScenarioTracker *GetScenarioTracker()
+	{
+		return pScenarioTracker;
+	}
 
 	virtual void WriteDetailedChecksumInfo( const char *szFileName );
 
 	void ToGarbage( class CCommonUnit *pUnit );
 	virtual void Suspend();
 	virtual void Resume();
-	virtual bool IsSuspended() const { return bSuspended; }
+
+	virtual bool IsSuspended() const
+	{
+		return bSuspended;
+	}
 
 	void SetProgressHook( IProgressHook *pProgress );
 	virtual void Init( ICheckSumLog *_pCheckSumLog,
@@ -197,13 +207,19 @@ public:
 	void InitStartCommands( const LinkInfo &linksInfo, det_map<int, int> &old2NewLinks );
 	void InitReservePositions( det_map<int, int> &old2NewLinks );
 
-	bool IsSegment() const { return bSegment; }
+	bool IsSegment() const
+	{
+		return bSegment;
+	}
 
 	// difficuly levels
 	virtual void SetDifficultyLevel( const int nLevel );
 	virtual void SetCheatDifficultyLevel( const int nCheatLevel );
 
-	const bool IsFirstTime() const { return bFirstTime; }
+	const bool IsFirstTime() const
+	{
+		return bFirstTime;
+	}
 
 	virtual void SendAcknowlegdementForced( CObjectBase *pObj, const EUnitAckType eAck );
 
@@ -240,20 +256,41 @@ public:
 	                          const CVec2 &vEnd,
 	                          bool bFinished = false );
 
-	virtual bool IsMissionLoaded() const { return bMissionLoaded; }
+	virtual bool IsMissionLoaded() const
+	{
+		return bMissionLoaded;
+	}
 
 	virtual void SetGlobeScriptHandler( IGlobeScriptHandler *pHandler );
 
-	class CAIMap *GetAIMap() const { return pAIMap; }
+	class CAIMap *GetAIMap() const
+	{
+		return pAIMap;
+	}
 	virtual class CStaticMapHeights *GetHeights() const;
 
 	virtual const int GetPlayerDiplomacy( const int nPlayer ) const;
 
-	void SetNeedNewGroupNumber() { bNeedNewGroupNumber = true; }
-	const bool NeedNewGroupNumber() const { return bNeedNewGroupNumber; }
-	void ResetNeedNewGroupNumber() { bNeedNewGroupNumber = false; }
+	void SetNeedNewGroupNumber()
+	{
+		bNeedNewGroupNumber = true;
+	}
 
-	virtual const NDb::SAIGameConsts *GetAIConsts() const { return pConsts; }
+	const bool NeedNewGroupNumber() const
+	{
+		return bNeedNewGroupNumber;
+	}
+
+	void ResetNeedNewGroupNumber()
+	{
+		bNeedNewGroupNumber = false;
+	}
+
+	virtual const NDb::SAIGameConsts *GetAIConsts() const
+	{
+		return pConsts;
+	}
+
 	virtual const int GetUnitCount( const int nPlayer ) const;
 	virtual const bool HasPlayerNoUnits( const int nPlayer ) const;
 	virtual void DumpAfterAssinc() const;

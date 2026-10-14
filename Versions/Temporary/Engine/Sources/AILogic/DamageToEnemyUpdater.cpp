@@ -28,6 +28,7 @@ void CDamageToEnemyUpdater::SetDamageToEnemy( CAIUnit *pOwner, CAIUnit *pEnemy, 
 		NI_ASSERT( std::isfinite( fTakenDamagePower ), "Wrong fTakenDamagePower" );
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CDamageToEnemyUpdater::SetDamageToEnemy( CAIUnit *pOwner, CAIUnit *pEnemy, CBasicGun *pGun )
 {
@@ -61,6 +62,7 @@ void CDamageToEnemyUpdater::SetDamageToEnemy( CAIUnit *pOwner, CAIUnit *pEnemy, 
 		nTakenDamageUpdated = 0;
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CDamageToEnemyUpdater::UnsetDamageFromEnemy( CAIUnit *pEnemy )
 {

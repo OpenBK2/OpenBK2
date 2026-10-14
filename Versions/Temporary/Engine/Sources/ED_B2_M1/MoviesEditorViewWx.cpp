@@ -103,6 +103,7 @@ class ITimelineHost
 {
 public:
 	virtual ~ITimelineHost() {}
+
 	// CMoviesEditorWindow::NotifyHandler( eAction ).
 	virtual void Notify( SScriptMovieEditorData::EMoviesEditorLastAction eAction ) = 0;
 	// Whether there is a movie to edit, and whether it is running.
@@ -162,73 +163,132 @@ public:
 		data.fStartTime = fStartTime;
 		Refresh();
 	}
+
 	void SetLength( float fLength )
 	{
 		data.fLength = fLength;
 		Refresh();
 	}
+
 	void SetCursorPos( float fCursorTime )
 	{
 		data.SetCursorPos( fCursorTime );
 		Refresh();
 	}
+
 	void ResetSelection()
 	{
 		data.ResetSelection();
 		Refresh();
 	}
+
 	void UpdateSelection()
 	{
 		data.UpdateSelection();
 		Refresh();
 	}
+
 	void SetSelectionStart( float fStart )
 	{
 		data.fSelectionStart = fStart;
 		Refresh();
 	}
+
 	void SetSelectionLength( float fLen )
 	{
 		data.fSelectionLength = fLen;
 		Refresh();
 	}
+
 	void SetMoveFrom( float fMoveFrom )
 	{
 		data.fMoveFromValue = fMoveFrom;
 		Refresh();
 	}
+
 	void SetMoveTo( float fMoveTo )
 	{
 		data.fMoveToValue = fMoveTo;
 		Refresh();
 	}
+
 	void SetScale( float fScale )
 	{
 		data.fScale = fScale;
 		Refresh();
 	}
+
 	void ClearControl()
 	{
 		data.Clear();
 		Refresh();
 	}
 
-	float GetLength() const { return data.fLength; }
-	float GetScale() const { return data.fScale; }
-	float GetCursorPos() const { return data.GetCursorPos(); }
-	float GetSelectionStart() const { return data.fSelectionStart; }
-	float GetMoveOffset() const { return data.fMoveToValue - data.fMoveFromValue; }
-	float GetFirstKeyTime() const { return data.GetFirstKeyTime(); }
-	float GetLastKeyTime() const { return data.GetLastKeyTime(); }
-	float GetPrevKeyTime() const { return data.GetPrevKeyTime(); }
-	float GetNextKeyTime() const { return data.GetNextKeyTime(); }
-	bool HasActiveKeys() const { return data.HasActiveKeys(); }
-	bool HasSingleActiveKey() const { return data.HasSingleActiveKey(); }
+	float GetLength() const
+	{
+		return data.fLength;
+	}
 
-	void RefreshSpacing() { fSpacing = CalcTimeSliderSpacing( data.fLength, data.fScale, GetClientSize().x ); }
+	float GetScale() const
+	{
+		return data.fScale;
+	}
+
+	float GetCursorPos() const
+	{
+		return data.GetCursorPos();
+	}
+
+	float GetSelectionStart() const
+	{
+		return data.fSelectionStart;
+	}
+
+	float GetMoveOffset() const
+	{
+		return data.fMoveToValue - data.fMoveFromValue;
+	}
+
+	float GetFirstKeyTime() const
+	{
+		return data.GetFirstKeyTime();
+	}
+
+	float GetLastKeyTime() const
+	{
+		return data.GetLastKeyTime();
+	}
+
+	float GetPrevKeyTime() const
+	{
+		return data.GetPrevKeyTime();
+	}
+
+	float GetNextKeyTime() const
+	{
+		return data.GetNextKeyTime();
+	}
+
+	bool HasActiveKeys() const
+	{
+		return data.HasActiveKeys();
+	}
+
+	bool HasSingleActiveKey() const
+	{
+		return data.HasSingleActiveKey();
+	}
+
+	void RefreshSpacing()
+	{
+		fSpacing = CalcTimeSliderSpacing( data.fLength, data.fScale, GetClientSize().x );
+	}
 
 private:
-	bool HasSelection() const { return data.IsSelectionValid(); }
+	bool HasSelection() const
+	{
+		return data.IsSelectionValid();
+	}
 
 	int GetClientX( float fTime ) const
 	{
@@ -548,7 +608,10 @@ public:
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MOVIES_EDITOR_WINDOW, this );
 	}
 
-	virtual ~CMoviesEditorWxWindow() { Singleton<ICommandHandlerContainer>()->Remove( CHID_MOVIES_EDITOR_WINDOW ); }
+	virtual ~CMoviesEditorWxWindow()
+	{
+		Singleton<ICommandHandlerContainer>()->Remove( CHID_MOVIES_EDITOR_WINDOW );
+	}
 
 	bool Build( IWidget *pPane )
 	{
@@ -758,8 +821,15 @@ public:
 		eLastAction = SScriptMovieEditorData::ME_NO_ACTIONS;
 	}
 
-	virtual bool IsTimelineEnabled() const { return bIsSliderEnabled; }
-	virtual bool IsPlaying() const { return bIsPlaying; }
+	virtual bool IsTimelineEnabled() const
+	{
+		return bIsSliderEnabled;
+	}
+
+	virtual bool IsPlaying() const
+	{
+		return bIsPlaying;
+	}
 
 	virtual void ShowTimelineMenu( wxWindow *pOver, const wxPoint &rAt )
 	{
@@ -946,12 +1016,30 @@ private:
 
 	//	the transport
 
-	void OnTimerTick( wxTimerEvent & ) { UpdateDialogData(); }
+	void OnTimerTick( wxTimerEvent & )
+	{
+		UpdateDialogData();
+	}
 
-	void OnJumpFirstKey( wxCommandEvent & ) { JumpTo( pTimeline->GetFirstKeyTime() ); }
-	void OnJumpLastKey( wxCommandEvent & ) { JumpTo( pTimeline->GetLastKeyTime() ); }
-	void OnStepPrevKey( wxCommandEvent & ) { JumpTo( pTimeline->GetPrevKeyTime() ); }
-	void OnStepNextKey( wxCommandEvent & ) { JumpTo( pTimeline->GetNextKeyTime() ); }
+	void OnJumpFirstKey( wxCommandEvent & )
+	{
+		JumpTo( pTimeline->GetFirstKeyTime() );
+	}
+
+	void OnJumpLastKey( wxCommandEvent & )
+	{
+		JumpTo( pTimeline->GetLastKeyTime() );
+	}
+
+	void OnStepPrevKey( wxCommandEvent & )
+	{
+		JumpTo( pTimeline->GetPrevKeyTime() );
+	}
+
+	void OnStepNextKey( wxCommandEvent & )
+	{
+		JumpTo( pTimeline->GetNextKeyTime() );
+	}
 
 	void JumpTo( float fTime )
 	{
@@ -961,8 +1049,15 @@ private:
 		Notify( SScriptMovieEditorData::ME_SELECT_CAMERA );
 	}
 
-	void OnAddSeq( wxCommandEvent & ) { Notify( SScriptMovieEditorData::ME_ADD_SEQ ); }
-	void OnDelSeq( wxCommandEvent & ) { Notify( SScriptMovieEditorData::ME_DEL_SEQ ); }
+	void OnAddSeq( wxCommandEvent & )
+	{
+		Notify( SScriptMovieEditorData::ME_ADD_SEQ );
+	}
+
+	void OnDelSeq( wxCommandEvent & )
+	{
+		Notify( SScriptMovieEditorData::ME_DEL_SEQ );
+	}
 
 	void OnStopMovie( wxCommandEvent & )
 	{
@@ -1016,7 +1111,10 @@ private:
 		Notify( SScriptMovieEditorData::ME_MOVIE_SWITCH );
 	}
 
-	void OnSpeedChanged( wxCommandEvent & ) { Notify( SScriptMovieEditorData::ME_CHANGE_SPEED ); }
+	void OnSpeedChanged( wxCommandEvent & )
+	{
+		Notify( SScriptMovieEditorData::ME_CHANGE_SPEED );
+	}
 
 	// OnHScroll: both sliders arrive here, as they do in MFC.
 	void OnSliderScroll( wxCommandEvent & )
@@ -1048,7 +1146,10 @@ class CWxMoviesEditorView : public NMoviesEditorView::IView
 	bool bCreated = false;
 
 public:
-	virtual ~CWxMoviesEditorView() { Destroy(); }
+	virtual ~CWxMoviesEditorView()
+	{
+		Destroy();
+	}
 
 	virtual bool Create( IWidget *pPane )
 	{
@@ -1074,9 +1175,12 @@ public:
 		}
 	}
 
-	virtual IWidget *GetWidget() { return bCreated ? &window : 0; }
+	virtual IWidget *GetWidget()
+	{
+		return bCreated ? &window : 0;
+	}
 };
-}
+} // namespace
 
 namespace NMoviesEditorView
 {
@@ -1084,4 +1188,4 @@ IView *Create()
 {
 	return new CWxMoviesEditorView;
 }
-}
+} // namespace NMoviesEditorView

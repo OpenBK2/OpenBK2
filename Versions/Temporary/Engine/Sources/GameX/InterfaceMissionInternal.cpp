@@ -115,6 +115,7 @@ static void SetRawWarfog( uint8_t value )
 }
 
 MEMORYLIB_EXPORT void DumpMemoryStats();
+
 static void MsgDumpMemoryStats( const SGameMessage &msg )
 {
 	DumpMemoryStats();
@@ -160,9 +161,13 @@ private:
 
 public:
 	CDrawProgress() {}
+
 	CDrawProgress( IProgressHookB2 *pProgress );
 
-	CLoadingCounter *GetTextures() const { return pTextures; }
+	CLoadingCounter *GetTextures() const
+	{
+		return pTextures;
+	}
 
 	void OnTotalCount( ECounter eCounter, int nTotalCount );
 	void OnCount( ECounter eCounter, int nCount );
@@ -178,6 +183,7 @@ class CDrawProgress::CLoadingCounter : public ILoadingCounter
 
 public:
 	CLoadingCounter() {}
+
 	CLoadingCounter( CDrawProgress *pOwner, CDrawProgress::ECounter eCounter );
 
 	//{ ILoadingCounter
@@ -195,6 +201,7 @@ class CICLoadB2 : public CICLoadBase
 
 public:
 	CICLoadB2() {}
+
 	CICLoadB2( const std::string &szFileName );
 
 	void OnProgress( EStage eStage );
@@ -205,6 +212,7 @@ class CICSaveB2 : public CICSaveBase
 	OBJECT_NOCOPY_METHODS( CICSaveB2 );
 
 	ZDATA_( CICSaveBase )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CICSaveBase *)this );
@@ -213,6 +221,7 @@ class CICSaveB2 : public CICSaveBase
 
 public:
 	CICSaveB2() {}
+
 	CICSaveB2( const std::string &szFileName );
 
 	void OnProgress( EStage eStage );
@@ -5019,7 +5028,12 @@ class CSimpleChecksumLog : public ICheckSumLog
 
 public:
 	CSimpleChecksumLog() : bEntries2( false ) {}
-	void SetEntries2() { bEntries2 = true; }
+
+	void SetEntries2()
+	{
+		bEntries2 = true;
+	}
+
 	virtual bool AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry )
 	{
 		if ( bEntries2 )

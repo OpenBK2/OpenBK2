@@ -24,7 +24,10 @@ static struct SWSAInit
 		ASSERT( bRv );
 	}
 
-	~SWSAInit() { WSACleanup(); }
+	~SWSAInit()
+	{
+		WSACleanup();
+	}
 } wsaInit;
 #endif
 
@@ -202,6 +205,7 @@ extern int nTrafficTotalSize;
 #ifdef NET_TEST_APPLICATION
 bool bEmulateWeakNetwork = false;
 float fLostRate = 0.7f;
+
 struct SPacket
 {
 	CNodeAddress addr;
@@ -312,7 +316,7 @@ ILinksManager *CreateServerLinksManager( const int nPort )
 	return bSuccess ? pManager.Extract() : 0;
 }
 
-}
+} // namespace NNet
 
 BASIC_REGISTER_CLASS( NET, NNet::ILinksManager )
 BASIC_REGISTER_CLASS( NET, NNet::CLinksManager )

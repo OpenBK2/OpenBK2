@@ -8,6 +8,7 @@
 extern NTimer::STime curTime;
 extern CDiplomacy theDipl;
 extern CSupremeBeing theSupremeBeing;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //*******************************************************************
 //*											CAIUnitInfoForGeneral												*
@@ -23,6 +24,7 @@ CAIUnitInfoForGeneral::CAIUnitInfoForGeneral( CAIUnit *_pOwner )
 	nextTimeToReportGeneral = curTime + NRandom::Random( 2000, 5000 );
 	RecordRandomCall();
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CAIUnitInfoForGeneral::Segment()
 {
@@ -51,12 +53,14 @@ void CAIUnitInfoForGeneral::Segment()
 		}
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CAIUnitInfoForGeneral::UpdateVisibility( bool _bVisible )
 {
 	lastVisibleTime = curTime;
 	vLastVisiblePosition = pOwner->GetCenterPlain();
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CAIUnitInfoForGeneral::UpdateAntiArtFire( const NTimer::STime lastHeardTime, const CVec2 &vAntiArtCenter )
 {
@@ -67,6 +71,7 @@ void CAIUnitInfoForGeneral::UpdateAntiArtFire( const NTimer::STime lastHeardTime
 		fDistToLastVisibleAntiArt = fabs( vAntiArtCenter - pOwner->GetCenterPlain() );
 	}
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CAIUnitInfoForGeneral::Die()
 {

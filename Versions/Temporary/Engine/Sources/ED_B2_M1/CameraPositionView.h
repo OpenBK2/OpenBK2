@@ -19,4 +19,4 @@ namespace NCameraPositionView
 // in pPalettes, which owns it from then on, and returns it. Null if it could
 // not be created.
 IWidget *Create( CPaletteList *pPalettes, IWidget *pPage );
-}
+} // namespace NCameraPositionView

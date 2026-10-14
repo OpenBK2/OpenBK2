@@ -62,4 +62,4 @@ struct SResult
 // Runs the picker modally over pParent. True on OK or Set Empty, with what
 // was selected in *pResult.
 bool Run( IWidget *pParent, const SRequest &rRequest, SResult *pResult );
-}
+} // namespace NDBLink

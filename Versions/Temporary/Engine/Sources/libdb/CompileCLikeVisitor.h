@@ -13,7 +13,7 @@ class CLangNode;
 class CVariable;
 class CAttributeNode;
 class CTerminalTypesDescriptor;
-}
+} // namespace NLang
 
 namespace NCompileCLike
 {
@@ -54,6 +54,7 @@ class CVisitor : public NLang::IVisitor
 
 public:
 	CVisitor() : pTypes( 0 ), bFailed( false ) {}
+
 	CVisitor( std::vector<CObj<NDb::NTypeDef::STypeDef>> *pTypes,
 	          NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
 
@@ -68,9 +69,15 @@ public:
 	virtual void Visit( NLang::CAttributeDefNode *pAttrDefNode );
 	virtual void Visit( NLang::CNamespace *pNM );
 
-	const CNodes2TypeDefs &GetNodes2TypeDefs() const { return nodes2TypeDefs; }
+	const CNodes2TypeDefs &GetNodes2TypeDefs() const
+	{
+		return nodes2TypeDefs;
+	}
 
-	bool IsFailed() const { return bFailed; }
+	bool IsFailed() const
+	{
+		return bFailed;
+	}
 };
 
-}
+} // namespace NCompileCLike

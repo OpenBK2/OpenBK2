@@ -88,6 +88,7 @@ void CMessageReactions::RunScriptText( const std::string &szScriptBody )
 		pScript = 0;
 	}
 }
+
 void CMessageReactions::InitScript( const std::string &szScriptFileName )
 {
 	pScript = 0;

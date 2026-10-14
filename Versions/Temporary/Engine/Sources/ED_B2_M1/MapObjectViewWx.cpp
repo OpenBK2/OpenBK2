@@ -86,6 +86,7 @@ class CMapObjectWxWindow : public CWxHostWindow, public CMapObjectCommands
 		std::string szObjectTypeName;
 		CDBID objectDBID;
 	};
+
 	typedef std::unordered_map<unsigned, SObjectListElement> CObjectListElementMap;
 
 	enum EMenuItem
@@ -640,9 +641,20 @@ private:
 		NDialogState::Save( "CMapObjectWindow", &dialogState );
 	}
 
-	void OnDirectionType( wxCommandEvent & ) { Report( MIMOSEP_DIRECTION_TYPE ); }
-	void OnDirectionChanged( wxCommandEvent & ) { Report( MIMOSEP_DIRECTION ); }
-	void OnObjectSelected( wxListEvent & ) { UpdateSelection(); }
+	void OnDirectionType( wxCommandEvent & )
+	{
+		Report( MIMOSEP_DIRECTION_TYPE );
+	}
+
+	void OnDirectionChanged( wxCommandEvent & )
+	{
+		Report( MIMOSEP_DIRECTION );
+	}
+
+	void OnObjectSelected( wxListEvent & )
+	{
+		UpdateSelection();
+	}
 
 	void OnObjectListSize( wxSizeEvent &rEvent )
 	{
@@ -694,7 +706,7 @@ private:
 		}
 	}
 };
-}
+} // namespace
 
 namespace NMapObjectView
 {
@@ -712,4 +724,4 @@ IWidget *Create( CPaletteList *pPalettes, IWidget *pPage )
 	}
 	return pWindow;
 }
-}
+} // namespace NMapObjectView

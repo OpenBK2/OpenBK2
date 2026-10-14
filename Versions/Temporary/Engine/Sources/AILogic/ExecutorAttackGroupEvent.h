@@ -12,8 +12,13 @@ public:
 			: nUnitID( _nUnitID ), CExecutorEvent( param )
 	{
 	}
+
 	CExecutorAttackGroupAddUnitEvent() {}
-	int GetUnitID() const { return nUnitID; }
+
+	int GetUnitID() const
+	{
+		return nUnitID;
+	}
 };
 
 class CExecutorEventAttackGroupAttackPoint : public CExecutorEvent
@@ -41,7 +46,19 @@ public:
 			: nGroupID( _nGroupID ), CExecutorEvent( _param ), vPoint( _vPoint ), fRange( _fRange )
 	{
 	}
-	int GetID() const { return nGroupID; }
-	const CVec2 &GetPoint() const { return vPoint; }
-	float GetRange() const { return fRange; }
+
+	int GetID() const
+	{
+		return nGroupID;
+	}
+
+	const CVec2 &GetPoint() const
+	{
+		return vPoint;
+	}
+
+	float GetRange() const
+	{
+		return fRange;
+	}
 };

@@ -289,7 +289,7 @@ private:
 		}
 	}
 };
-}
+} // namespace
 
 namespace NReinfPointsTemplates
 {
@@ -312,7 +312,7 @@ bool Run( IWidget *pParent,
 	dialog.ReadTemplates();
 	return true;
 }
-}
+} // namespace NReinfPointsTemplates
 
 namespace NReinfPointsAddTemplate
 {
@@ -331,4 +331,4 @@ bool Run( IWidget *pParent, const std::string &rszNode, CMapInfoEditor *pMapInfo
 	dialog.Store();
 	return true;
 }
-}
+} // namespace NReinfPointsAddTemplate

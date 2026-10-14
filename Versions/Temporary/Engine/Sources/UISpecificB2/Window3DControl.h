@@ -23,6 +23,7 @@ class CWindow3DControl : public CWindow, public IWindow3DControl
 	bool bIsObjectsVisible;
 	CTRect<float> rectPrev;
 	int nBaseID3D;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CWindow *)this );
@@ -40,7 +41,11 @@ private:
 	void UpdateObjects( bool bForced );
 
 protected:
-	NDb::SWindow *GetInstance() { return pInstance; }
+	NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
+
 	void OnChangeVisibility( bool bShow );
 
 public:

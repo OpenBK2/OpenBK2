@@ -11,7 +11,7 @@ struct SAIGameConsts;
 struct SMapInfo;
 struct SMapPlayerInfo;
 enum EReinforcementType : int;
-};
+}; // namespace NDb
 struct ICollisionsCollector;
 
 // для унификации создания самолетов
@@ -33,7 +33,11 @@ class CPlaneCreation : public IPlaneCreation
 
 public:
 	CPlaneCreation( const CVec2 &vDestPoint ) : vDestPoint( vDestPoint ) {}
-	virtual const CVec2 &GetDestPoint() const { return vDestPoint; }
+
+	virtual const CVec2 &GetDestPoint() const
+	{
+		return vDestPoint;
+	}
 };
 
 // для создания маленьких самолетов
@@ -41,6 +45,7 @@ class CLightPlaneCreation : public CPlaneCreation
 {
 public:
 	CLightPlaneCreation( const CVec2 &vDestPoint ) : CPlaneCreation( vDestPoint ) {}
+
 	virtual void CalcPositions( const int nMax,
 	                            const CVec2 &vAABBbox,
 	                            const CVec2 &vDirection,
@@ -60,6 +65,7 @@ public:
 			: CPlaneCreation( vDestPoint ), bNeedFormation( _bNeedFormation )
 	{
 	}
+
 	virtual void CalcPositions( const int nMax,
 	                            const CVec2 &vAABBbox,
 	                            const CVec2 &vDirection,
@@ -74,15 +80,18 @@ struct SLocalInGameUnitCreationInfo
 	ZDATA
 	CDBPtr<SSquadRPGStats> pParatrooper; // название парашютистов
 	std::string szPartyName;             // название страны
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pParatrooper );
 		f.Add( 3, &szPartyName );
 		return 0;
 	}
+
 	SLocalInGameUnitCreationInfo &operator=( const struct SMapPlayerInfo &rSUnitCreation );
 	SLocalInGameUnitCreationInfo( const struct SMapPlayerInfo &rSUnitCreation );
 	void Copy( const struct SMapPlayerInfo &rSUnitCreation );
+
 	SLocalInGameUnitCreationInfo() {}
 };
 
@@ -92,8 +101,10 @@ public:
 	struct SFeedBack
 	{
 		int eEnable = {}, eDisable = {};
+
 		SFeedBack( const int eEnable, const int eDisable ) : eEnable( eEnable ), eDisable( eDisable ) {}
 	};
+
 	std::vector<SFeedBack> feedbacks;
 
 private:
@@ -208,7 +219,10 @@ public:
 	const NDb::SStaticObjectRPGStats *GetShellBox() const;
 	const NDb::SAIExpLevel *GetExpLevels( const enum EUnitRPGType eType );
 
-	const NDb::SMapInfo *GetMap() const { return pCurrentMap; }
+	const NDb::SMapInfo *GetMap() const
+	{
+		return pCurrentMap;
+	}
 
 	void ApplyWeatherModifier( const bool bForward );
 };

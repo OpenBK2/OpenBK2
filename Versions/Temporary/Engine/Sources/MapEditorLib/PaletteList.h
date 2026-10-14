@@ -33,5 +33,8 @@ public:
 		return pPalette;
 	}
 
-	void Clear() { palettes.clear(); }
+	void Clear()
+	{
+		palettes.clear();
+	}
 };

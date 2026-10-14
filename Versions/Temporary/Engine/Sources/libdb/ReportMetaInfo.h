@@ -53,45 +53,55 @@ namespace NMetaInfo
 	{
 		return NTypeDef::TYPE_TYPE_INT;
 	}
+
 	inline NTypeDef::ETypeType GetSimpleTypeDef( float * )
 	{
 		return NTypeDef::TYPE_TYPE_FLOAT;
 	}
+
 	inline NTypeDef::ETypeType GetSimpleTypeDef( bool * )
 	{
 		return NTypeDef::TYPE_TYPE_BOOL;
 	}
+
 	inline NTypeDef::ETypeType GetSimpleTypeDef( std::string * )
 	{
 		return NTypeDef::TYPE_TYPE_STRING;
 	}
+
 	inline NTypeDef::ETypeType GetSimpleTypeDef( std::wstring * )
 	{
 		return NTypeDef::TYPE_TYPE_WSTRING;
 	}
+
 	inline NTypeDef::ETypeType GetSimpleTypeDef( boost::uuids::uuid * )
 	{
 		return NTypeDef::TYPE_TYPE_GUID;
 	}
+
 	inline NTypeDef::ETypeType GetSimpleTypeDef( NFile::CFilePath * )
 	{
 		return NTypeDef::TYPE_TYPE_STRING;
 	}
+
 	//
 	template <class TYPE>
 	inline NTypeDef::ETypeType GetSimpleTypeDef( CDBPtr<TYPE> * )
 	{
 		return NTypeDef::TYPE_TYPE_REF;
 	}
+
 	//
 	inline NTypeDef::ETypeType GetSimpleTypeDefEnumOrBinary( SInt2Type<0> * )
 	{
 		return NTypeDef::TYPE_TYPE_BINARY;
 	}
+
 	inline NTypeDef::ETypeType GetSimpleTypeDefEnumOrBinary( SInt2Type<1> * )
 	{
 		return NTypeDef::TYPE_TYPE_ENUM;
 	}
+
 	template <class TYPE>
 	inline NTypeDef::ETypeType GetSimpleTypeDef( TYPE * )
 	{
@@ -124,6 +134,7 @@ namespace NMetaInfo
 		NMetaInfo::ReportMetaInfo(
 				szName + "y", (uint8_t *)&pField->y - pThis, sizeof( pField->y ), NTypeDef::TYPE_TYPE_FLOAT );
 	}
+
 	template <>
 	inline void ReportStructMetaInfo<CVec3>( const std::string &_szName, const CVec3 *pField, uint8_t *pThis )
 	{
@@ -135,6 +146,7 @@ namespace NMetaInfo
 		NMetaInfo::ReportMetaInfo(
 				szName + "z", (uint8_t *)&pField->z - pThis, sizeof( pField->z ), NTypeDef::TYPE_TYPE_FLOAT );
 	}
+
 	template <>
 	inline void ReportStructMetaInfo<CVec4>( const std::string &_szName, const CVec4 *pField, uint8_t *pThis )
 	{
@@ -148,6 +160,7 @@ namespace NMetaInfo
 		NMetaInfo::ReportMetaInfo(
 				szName + "w", (uint8_t *)&pField->w - pThis, sizeof( pField->w ), NTypeDef::TYPE_TYPE_FLOAT );
 	}
+
 	template <>
 	inline void ReportStructMetaInfo<CQuat>( const std::string &szName, const CQuat *pField, uint8_t *pThis )
 	{
@@ -167,6 +180,7 @@ namespace NMetaInfo
 	{
 		NMetaInfo::ReportMetaInfo( _szName, (uint8_t *)pField - pThis, sizeof( *pField ), GetSimpleTypeDef( (TYPE *)0 ) );
 	}
+
 	template <>
 	inline void ReportFirstParamPairElement<CVec2>( const std::string &_szName, const CVec2 *pField, uint8_t *pThis )
 	{
@@ -175,6 +189,7 @@ namespace NMetaInfo
 		NMetaInfo::ReportMetaInfo(
 				_szName + ".y", (uint8_t *)&pField->y - pThis, sizeof( pField->y ), NTypeDef::TYPE_TYPE_FLOAT );
 	}
+
 	template <>
 	inline void ReportFirstParamPairElement<CVec3>( const std::string &_szName, const CVec3 *pField, uint8_t *pThis )
 	{
@@ -185,6 +200,7 @@ namespace NMetaInfo
 		NMetaInfo::ReportMetaInfo(
 				_szName + ".z", (uint8_t *)&pField->z - pThis, sizeof( pField->z ), NTypeDef::TYPE_TYPE_FLOAT );
 	}
+
 	template <class TYPE, template <class T1> class TParam>
 	inline void ReportStructMetaInfo( const std::string &_szName, const TParam<TYPE> *pField, uint8_t *pThis )
 	{
@@ -193,6 +209,7 @@ namespace NMetaInfo
 		NMetaInfo::ReportMetaInfo(
 				szName + "Second", (uint8_t *)&pField->second - pThis, sizeof( pField->second ), NTypeDef::TYPE_TYPE_BOOL );
 	}
+
 	template <>
 	inline void
 	ReportStructMetaInfo<float, CTPoint>( const std::string &_szName, const CTPoint<float> *pField, uint8_t *pThis )
@@ -203,6 +220,7 @@ namespace NMetaInfo
 		NMetaInfo::ReportMetaInfo(
 				szName + "y", (uint8_t *)&pField->y - pThis, sizeof( pField->y ), NTypeDef::TYPE_TYPE_FLOAT );
 	}
+
 	template <>
 	inline void
 	ReportStructMetaInfo<float, CTRect>( const std::string &_szName, const CTRect<float> *pField, uint8_t *pThis )
@@ -275,5 +293,5 @@ namespace NMetaInfo
 		~STerminalClassReporter();
 	};
 
-}
-}
+} // namespace NMetaInfo
+} // namespace NDb

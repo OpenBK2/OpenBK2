@@ -47,4 +47,4 @@ bool CanAccept( SBuildDataParams *pBuildDataParams,
                 IBuildDataCallback *pBuildDataCallback,
                 IView *pView,
                 std::string *pszErrorMessage );
-}
+} // namespace NBuildData

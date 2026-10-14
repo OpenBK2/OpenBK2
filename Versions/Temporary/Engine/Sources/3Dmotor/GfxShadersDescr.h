@@ -21,12 +21,14 @@ struct SRenderState
 	D3DRENDERSTATETYPE state;
 	uint32_t dwVal;
 };
+
 struct STextureStageState
 {
 	int nStage;
 	D3DTEXTURESTAGESTATETYPE state;
 	uint32_t dwVal;
 };
+
 struct SPShader
 {
 	int nID;

@@ -41,4 +41,4 @@ std::string MakeFolderPath( const std::string &rszFolderName );
 // left to the caller because it is one test on a different field.
 bool IsFolderNameFree( const std::string &rszFolderName );
 
-}
+} // namespace NCreateMod

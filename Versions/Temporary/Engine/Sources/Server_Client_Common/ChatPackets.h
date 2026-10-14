@@ -15,6 +15,7 @@ public:
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nID = {};
 	bool bIsBroadcast = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &wszMessage );
@@ -25,6 +26,7 @@ public:
 	}
 
 	CChatPacket() {}
+
 	CChatPacket( const int nClientID,
 	             const std::wstring &_wszMessage,
 	             const std::string &_szNick,
@@ -42,9 +44,13 @@ class CChatAFKPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CChatAFKPacket )
 public:
 	ZDATA
-	ZEND int operator&( IBinSaver &f ) { return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 
 	CChatAFKPacket() {}
+
 	CChatAFKPacket( const int nClientID ) : CNetPacket( nClientID ) {}
 };
 
@@ -54,6 +60,7 @@ class CChatAFKResponsePacket : public CNetPacket
 public:
 	ZDATA
 	std::string szAFKNick;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szAFKNick );
@@ -61,6 +68,7 @@ public:
 	}
 
 	CChatAFKResponsePacket() {}
+
 	CChatAFKResponsePacket( const int nClientID, const std::string &_szAFKNick )
 			: CNetPacket( nClientID ), szAFKNick( _szAFKNick )
 	{
@@ -74,6 +82,7 @@ class CChatChannelPacket : public CNetPacket
 public:
 	ZDATA
 	std::string szChannelName;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szChannelName );
@@ -81,6 +90,7 @@ public:
 	}
 
 	CChatChannelPacket() {}
+
 	CChatChannelPacket( const int nClientID, const std::string &_szChannelName )
 			: CNetPacket( nClientID ), szChannelName( _szChannelName )
 	{
@@ -94,6 +104,7 @@ struct SIDNickPair
 	ZDATA
 	int nID = {};
 	std::string szNick;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nID );
@@ -108,6 +119,7 @@ class CChatChannelClientsListPacket : public CNetPacket
 public:
 	ZDATA
 	std::list<SIDNickPair> clientsList;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &clientsList );
@@ -115,6 +127,7 @@ public:
 	}
 
 	CChatChannelClientsListPacket() {}
+
 	CChatChannelClientsListPacket( const int nClientID, const std::list<SIDNickPair> &_clientsList )
 			: CNetPacket( nClientID ), clientsList( _clientsList )
 	{
@@ -130,6 +143,7 @@ public:
 	int nID = {};
 	std::string szNick;
 	bool bJoined = {}; // true for joining clients, false for leaving
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nID );
@@ -139,6 +153,7 @@ public:
 	}
 
 	CChatClientListChangeNotifyPacket() {}
+
 	CChatClientListChangeNotifyPacket( const int nClientID, const int _nID, const std::string &_szNick, bool _bJoined )
 			: CNetPacket( nClientID ), nID( _nID ), szNick( _szNick ), bJoined( _bJoined )
 	{
@@ -151,6 +166,7 @@ class CChatChannelsListRequestPacket : public CNetPacket
 public:
 	ZDATA
 	uint32_t dwVersion = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &dwVersion );
@@ -158,6 +174,7 @@ public:
 	}
 
 	CChatChannelsListRequestPacket() {}
+
 	CChatChannelsListRequestPacket( const int nClientID, const uint32_t _dwVersion )
 			: CNetPacket( nClientID ), dwVersion( _dwVersion )
 	{
@@ -173,6 +190,7 @@ public:
 	std::list<std::string> added;
 	std::list<std::string> removed;
 	bool bIsFullUpdate = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &dwVersion );
@@ -183,6 +201,7 @@ public:
 	}
 
 	CChatChannelsListPacket() {}
+
 	CChatChannelsListPacket( const int nClientID,
 	                         const uint32_t _dwVersion,
 	                         const std::list<std::string> &_added,
@@ -206,9 +225,11 @@ public:
 		REMOVE_IGNORE,
 		REMOVE_FRIEND
 	};
+
 	ZDATA
 	std::string szPlayer;
 	EFriendIgnore eChange = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szPlayer );
@@ -217,6 +238,7 @@ public:
 	}
 
 	CChatModifyIgnoreFriendListPacket() {}
+
 	CChatModifyIgnoreFriendListPacket( const int nClientID, const std::string &_szPlayer, const EFriendIgnore _eChange )
 			: CNetPacket( nClientID ), szPlayer( _szPlayer ), eChange( _eChange )
 	{
@@ -230,6 +252,7 @@ public:
 	ZDATA
 	std::list<std::string> ignoreList;
 	std::list<std::string> friendList;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &ignoreList );
@@ -238,6 +261,7 @@ public:
 	}
 
 	CChatIgnoreFriendListPacket() {}
+
 	CChatIgnoreFriendListPacket( const int nClientID,
 	                             const std::list<std::string> &_ignoreList,
 	                             const std::list<std::string> &_friendList )
@@ -251,9 +275,13 @@ class CChatGetIgnoreFriendListPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CChatGetIgnoreFriendListPacket )
 public:
 	ZDATA
-	ZEND int operator&( IBinSaver &f ) { return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 
 	CChatGetIgnoreFriendListPacket() {}
+
 	CChatGetIgnoreFriendListPacket( const int nClientID ) : CNetPacket( nClientID ) {}
 };
 
@@ -271,6 +299,7 @@ public:
 	ZDATA
 	std::string szNick;
 	char cChatStatus = {}; // см. EChatStatus
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szNick );
@@ -279,6 +308,7 @@ public:
 	}
 
 	CChatFriendNotifyPacket() {}
+
 	CChatFriendNotifyPacket( const int nClientID, const std::string &_szNick, const char _cStatus )
 			: CNetPacket( nClientID ), szNick( _szNick ), cChatStatus( _cStatus )
 	{
@@ -292,13 +322,16 @@ public:
 	ZDATA
 	std::string szNick;
 	std::string szChannel;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szNick );
 		f.Add( 3, &szChannel );
 		return 0;
 	}
+
 	CChatChannelByNickPacket() {}
+
 	CChatChannelByNickPacket( const int nClientID, const std::string &_szNick, const std::string &_szChannel )
 			: CNetPacket( nClientID ), szNick( _szNick ), szChannel( _szChannel )
 	{

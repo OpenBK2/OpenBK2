@@ -29,26 +29,33 @@ struct SSetColorFunctional
 {
 	CArray2D<uint32_t> *pDestImage;
 	uint32_t dwColor;
+
 	//
 	SSetColorFunctional( CArray2D<uint32_t> *_pDestImage, uint32_t _dwColor )
 			: pDestImage( _pDestImage ), dwColor( _dwColor )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 	}
+
 	//
-	void operator()( int nXIndex, int nYIndex ) { ( *pDestImage )[nYIndex][nXIndex] = dwColor; }
+	void operator()( int nXIndex, int nYIndex )
+	{
+		( *pDestImage )[nYIndex][nXIndex] = dwColor;
+	}
 };
 
 struct SBooleanSetColorFunctional
 {
 	CArray2D<uint32_t> *pDestImage;
 	uint32_t dwColor;
+
 	//
 	SBooleanSetColorFunctional( CArray2D<uint32_t> *_pDestImage, uint32_t _dwColor )
 			: pDestImage( _pDestImage ), dwColor( _dwColor )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 	}
+
 	//
 	bool operator()( int nXIndex, int nYIndex )
 	{
@@ -63,6 +70,7 @@ struct SWBCSetColorFunctional
 	CArray2D<uint32_t> *pDestImage;
 	uint32_t dwColor;
 	CTPoint<int> size;
+
 	//
 	SWBCSetColorFunctional( CArray2D<uint32_t> *_pDestImage, uint32_t _dwColor )
 			: pDestImage( _pDestImage ), dwColor( _dwColor )
@@ -71,6 +79,7 @@ struct SWBCSetColorFunctional
 		size.x = pDestImage->GetSizeX();
 		size.y = pDestImage->GetSizeY();
 	}
+
 	//
 	void operator()( int nXIndex, int nYIndex )
 	{
@@ -1384,7 +1393,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 	return bSuccess;
 }
 
-}
+} // namespace NMinimapImage
 
 // basement storage
 

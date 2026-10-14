@@ -28,6 +28,7 @@ struct SInputs
 		{
 			count = 1024
 		};
+
 		src.resize( count );
 		transform.resize( count );
 		weight.resize( count );
@@ -46,7 +47,7 @@ const SInputs &Inputs()
 	return inputs;
 }
 
-}
+} // namespace
 
 static void BM_original( benchmark::State &state )
 {

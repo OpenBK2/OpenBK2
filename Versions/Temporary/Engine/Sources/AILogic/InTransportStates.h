@@ -4,6 +4,7 @@
 #include "UnitStates.h"
 #include "StatesFactory.h"
 class CSoldier;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CInTransportStatesFactory : public IStatesFactory
 {
@@ -13,7 +14,11 @@ class CInTransportStatesFactory : public IStatesFactory
 
 public:
 	static IStatesFactory *Instance();
-	int operator&( IBinSaver &saver ) { return 0; }
+
+	int operator&( IBinSaver &saver )
+	{
+		return 0;
+	}
 
 	virtual struct IUnitState *ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
 	virtual struct IUnitState *ProduceRestState( class CQueueUnit *pUnit );
@@ -22,6 +27,7 @@ public:
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CSoldierRestOnBoardState : public IUnitState
 {
@@ -40,18 +46,32 @@ public:
 	static IUnitState *Instance( class CSoldier *pSoldier, class CMilitaryCar *pTransport );
 
 	CSoldierRestOnBoardState() : pSoldier( 0 ) {}
+
 	CSoldierRestOnBoardState( class CSoldier *pSoldier, class CMilitaryCar *pTransport );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
-	virtual EUnitStateNames GetName() { return EUSN_REST_ON_BOARD; }
-	virtual bool IsRestState() const { return true; }
-	virtual bool IsAttackingState() const { return false; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_REST_ON_BOARD;
+	}
+
+	virtual bool IsRestState() const
+	{
+		return true;
+	}
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

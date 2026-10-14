@@ -15,6 +15,7 @@ class CRegisterGroupCommand : public IAILogicCommandB2
 	std::vector<int> unitsIDs; // IDs of all obejcts in group
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	uint16_t nID = {}; // ID of the group
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &unitsIDs );
@@ -24,12 +25,17 @@ class CRegisterGroupCommand : public IAILogicCommandB2
 
 public:
 	CRegisterGroupCommand() {}
+
 	CRegisterGroupCommand( const std::vector<int> &vIDs, const int nID );
 	//	CRegisterGroupCommand( CObjectBase **pUnitsBuffer, const int nLen, const uint16_t wID, IAILogic *pAILogic );
 	//
 	void Execute();
+
 	//
-	bool NeedToBeStored() const { return true; }
+	bool NeedToBeStored() const
+	{
+		return true;
+	}
 #ifndef _FINALRELEASE
 	virtual std::string GetDebugInfo() const
 	{
@@ -50,6 +56,7 @@ class CUnregisterGroupCommand : public IAILogicCommandB2
 	//
 	ZDATA
 	int nGroup = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nGroup );
@@ -58,13 +65,21 @@ class CUnregisterGroupCommand : public IAILogicCommandB2
 
 public:
 	CUnregisterGroupCommand() {}
+
 	CUnregisterGroupCommand( const int nGroup );
 	//
 	void Execute();
+
 	//
-	bool NeedToBeStored() const { return true; }
+	bool NeedToBeStored() const
+	{
+		return true;
+	}
 #ifndef _FINALRELEASE
-	virtual std::string GetDebugInfo() const { return fmt::format( "UnregisterGroup {}", nGroup ); }
+	virtual std::string GetDebugInfo() const
+	{
+		return fmt::format( "UnregisterGroup {}", nGroup );
+	}
 #endif
 };
 
@@ -76,6 +91,7 @@ class CB2GroupCommand : public IAILogicCommandB2
 	SAIUnitCmd command;      // command itself
 	uint16_t wGroup = {};    // group ID, this command for
 	bool bPlaceInQueue = {}; // do we need place this command in the group's queue
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &command );
@@ -86,12 +102,21 @@ class CB2GroupCommand : public IAILogicCommandB2
 
 public:
 	CB2GroupCommand() {}
+
 	CB2GroupCommand( const SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue );
 	//
 	void Execute();
+
 	//
-	bool NeedToBeStored() const { return true; }
-	SAIUnitCmd *GetCommand() { return &command; }
+	bool NeedToBeStored() const
+	{
+		return true;
+	}
+
+	SAIUnitCmd *GetCommand()
+	{
+		return &command;
+	}
 #ifndef _FINALRELEASE
 	virtual std::string GetDebugInfo() const
 	{
@@ -112,6 +137,7 @@ class CUnitCommand : public IAILogicCommandB2
 	SAIUnitCmd command; // command itself
 	uint16_t wID = {};  // group ID - result of this command :)
 	int nPlayer = {};   // player number
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &command );
@@ -122,12 +148,21 @@ class CUnitCommand : public IAILogicCommandB2
 
 public:
 	CUnitCommand() {}
+
 	CUnitCommand( const struct SAIUnitCmd *pCommand, const uint16_t wID, const int nPlayer );
 	//
 	void Execute();
+
 	//
-	bool NeedToBeStored() const { return true; }
-	SAIUnitCmd *GetCommand() { return &command; }
+	bool NeedToBeStored() const
+	{
+		return true;
+	}
+
+	SAIUnitCmd *GetCommand()
+	{
+		return &command;
+	}
 #ifndef _FINALRELEASE
 	virtual std::string GetDebugInfo() const
 	{

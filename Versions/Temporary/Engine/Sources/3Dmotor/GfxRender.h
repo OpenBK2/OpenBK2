@@ -10,6 +10,7 @@
 
 struct SPShader;
 struct SVShader;
+
 //
 namespace NGfx
 {
@@ -38,6 +39,7 @@ enum EAlphaCombineMode
 	COMBINE_SMART_ALPHA,
 	COMBINE_ADD_SRC_ALPHA_MUL,
 };
+
 enum EStencilMode
 {
 	STENCIL_NONE,
@@ -57,6 +59,7 @@ enum EStencilMode
 	STENCIL_TEST_REPLACE,
 	STENCIL_GREATER
 };
+
 enum EDepthMode
 {
 	DEPTH_NONE,
@@ -68,12 +71,14 @@ enum EDepthMode
 	DEPTH_GREATEEQTEST,
 	DEPTH_NORMAL_NOTEQ
 };
+
 enum ECullMode
 {
 	CULL_NONE,
 	CULL_CW,
 	CULL_CCW
 };
+
 enum EColorWriteMask
 {
 	COLORWRITE_NONE = 0,
@@ -84,22 +89,26 @@ enum EColorWriteMask
 	COLORWRITE_COLOR = 7,
 	COLORWRITE_ALL = 15
 };
+
 enum EWireframe
 {
 	WIREFRAME_OFF,
 	WIREFRAME_ON
 };
+
 enum EDithering
 {
 	DITHER_OFF,
 	DITHER_ON
 };
+
 enum EFogMode
 {
 	FOG_NONE,
 	FOG_BLACK,
 	FOG_NORMAL
 };
+
 enum EFilterMode
 {
 	// The cached per stage filter is reset to minus one to mean "nothing set
@@ -113,18 +122,25 @@ enum EFilterMode
 	FILTER_BUMP,
 	FILTER_BEST
 };
+
 struct SStencilMode
 {
 	EStencilMode mode;
 	int nVal, nMask;
 
 	SStencilMode() {}
+
 	SStencilMode( EStencilMode _mode, int _nVal = 0, int _nMask = 0xffffffff )
 			: mode( _mode ), nVal( _nVal ), nMask( _nMask )
 	{
 	}
-	bool operator==( const SStencilMode &m ) const { return mode == m.mode && nVal == m.nVal && nMask == m.nMask; }
+
+	bool operator==( const SStencilMode &m ) const
+	{
+		return mode == m.mode && nVal == m.nVal && nMask == m.nMask;
+	}
 };
+
 struct SFogParams
 {
 	CVec3 vColor;
@@ -132,10 +148,12 @@ struct SFogParams
 	float fMinZDis, fMaxZDis;
 
 	SFogParams() : vColor( 0, 0, 0 ), fMinDist( 0 ), fMaxDist( 1e20f ), fMinZDis( -10000 ), fMaxZDis( -100001 ) {}
+
 	SFogParams( const CVec3 &_vColor, float _fMinDist, float _fMaxDist, float _fMinZDis, float _fMaxZDis )
 			: vColor( _vColor ), fMinDist( _fMinDist ), fMaxDist( _fMaxDist ), fMinZDis( _fMinZDis ), fMaxZDis( _fMaxZDis )
 	{
 	}
+
 	bool operator==( const SFogParams &m ) const
 	{
 		return vColor == m.vColor && fMinDist == m.fMinDist && fMaxDist == m.fMaxDist;
@@ -176,6 +194,7 @@ class _3DMOTOR_EXPORT CRenderContext
 		RTM_REGISTERS,
 		RTM_CUBETEXTURE
 	};
+
 	SFBTransform transform;
 	EAlphaCombineMode alpha;
 	SStencilMode stencil;
@@ -203,17 +222,27 @@ public:
 	void SetTransform( const SFBTransform &_transform );
 	void SetAlphaCombine( EAlphaCombineMode mode );
 	void SetStencil( const SStencilMode &m );
+
 	void SetStencil( EStencilMode m, int nVal = 0, int nMask = 0xffffffff )
 	{
 		SetStencil( SStencilMode( m, nVal, nMask ) );
 	}
+
 	void SetDepth( EDepthMode mode );
 	void SetCulling( ECullMode mode );
 	void SetColorWrite( EColorWriteMask mode );
 	void SetFogParams( const SFogParams &mode );
 	void SetFog( EFogMode mode );
-	const SFogParams &GetFogParams() const { return fogParams; }
-	const EFogMode GetFogMode() const { return fog; }
+
+	const SFogParams &GetFogParams() const
+	{
+		return fogParams;
+	}
+
+	const EFogMode GetFogMode() const
+	{
+		return fog;
+	}
 
 	//
 	void SetScreenRT();
@@ -225,8 +254,13 @@ public:
 	void ClearBuffers( uint32_t dwColor = 0x808080 );
 	void ClearTarget( uint32_t dwColor = 0x808080 );
 	void ClearZBuffer();
+
 	//
-	bool HasRegisters() const { return targetMode == RTM_REGISTERS; }
+	bool HasRegisters() const
+	{
+		return targetMode == RTM_REGISTERS;
+	}
+
 	// functions to be used in effect initialisation
 	void SetPixelShader( const SPShader &pShader );
 	void SetVertexShader( const SVShader &pShader );
@@ -234,36 +268,55 @@ public:
 	void SetVertexShader( ETnLVS shader );
 	void SetVSConst( int nReg, const CVec4 *pData, int nSize ) const;
 	void SetVSConst( int nReg, const CVec3 &a ) const;
-	void SetVSConst( int nReg, const CVec4 &a ) const { SetVSConst( nReg, &a, 1 ); }
+
+	void SetVSConst( int nReg, const CVec4 &a ) const
+	{
+		SetVSConst( nReg, &a, 1 );
+	}
+
 	void SetTnlVertexColor( const CVec4 &a );
 	void SetTnlTexTransform( const SHMatrix &m );
 	void SetPSConst( int nReg, const CVec4 *pData, int nSize );
 	void SetPSConst( int nReg, const CVec3 &a );
-	void SetPSConst( int nReg, const CVec4 &a ) { SetPSConst( nReg, &a, 1 ); }
+
+	void SetPSConst( int nReg, const CVec4 &a )
+	{
+		SetPSConst( nReg, &a, 1 );
+	}
+
 	void SetAlphaRef( int nRef );
 	void SetTexture( int nStage, CTexture *pTex, EFilterMode filter );
 	void SetTexture( int nStage, CCubeTexture *pTex );
 	void Use() const;
+
 	template <class T>
 	void SetEffect( T *p )
 	{
 		Use();
 		p->Use( this );
 	}
+
 	//
-	const SFBTransform &GetTransform() const { return transform; }
+	const SFBTransform &GetTransform() const
+	{
+		return transform;
+	}
+
 	//
 	void DrawPrimitive( CGeometry *pGeom, CTriList *pTris, int nStartVertex, int nVertices );
+
 	void DrawPrimitive( CGeometry *pGeom, CTriList *pTris )
 	{
 		AddPrimitive( pGeom, pTris );
 		Flush();
 	}
+
 	void DrawPrimitive( CGeometry *pGeom, const STriangleList &tris )
 	{
 		AddPrimitive( pGeom, tris );
 		Flush();
 	}
+
 	//void DrawPrimitive( CGeometry *pGeom, const vector<STriangle> &tris ) { AddPrimitive( pGeom, tris ); Flush(); }
 	void AddPrimitive( CGeometry *pGeom, CTriList *pTris );
 	//void AddPrimitive( CGeometry *pGeom, const vector<STriangle> &tris );
@@ -284,4 +337,4 @@ bool IsNVidiaNP2Bug();
 bool DoesSupportOcclusionQueries();
 void SetDithering( EDithering a );
 
-}
+} // namespace NGfx

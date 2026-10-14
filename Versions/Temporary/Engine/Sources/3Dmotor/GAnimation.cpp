@@ -1217,7 +1217,8 @@ ISkeletonAnimator *CreateSkeletonAnimator( const SSkeletonHandle &modelH, CFuncB
 	//	return new CSkeletonAnimator( modelH, _pTime );
 }
 
-} // namespace
+} // namespace NAnimation
+
 using namespace NAnimation;
 BASIC_REGISTER_CLASS( _3DMOTOR, IAnimMutator )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x01321150, CSkeletonAnimator )

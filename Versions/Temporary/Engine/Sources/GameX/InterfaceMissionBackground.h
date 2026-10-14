@@ -9,6 +9,7 @@ class CInterfaceMissionBackground : public CInterfaceMissionBase
 
 	ZDATA_( CInterfaceMissionBase )
 	CObj<IScenarioTracker> pScenarioTracker;
+
 	ZONSERIALIZE
 	ZEND int operator&( IBinSaver &f )
 	{

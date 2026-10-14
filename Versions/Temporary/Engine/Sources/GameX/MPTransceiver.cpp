@@ -53,6 +53,7 @@ public:
 	int nSegment = {};
 	ulong ulCheckSum = {};
 	std::list<CMPTransceiver::SRawCommand> aiCommands;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nSegment );
@@ -76,6 +77,7 @@ public:
 
 	ZDATA
 	EType eType = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &eType );
@@ -83,6 +85,7 @@ public:
 	}
 
 	CTransciverCommonPacket() {}
+
 	CTransciverCommonPacket( EType _eType ) : CNetPacket( 0 ), eType( _eType ) {}
 };
 

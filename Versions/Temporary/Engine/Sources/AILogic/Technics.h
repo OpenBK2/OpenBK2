@@ -70,8 +70,17 @@ private:
 
 protected:
 	virtual void InitGuns();
-	virtual const class CUnitGuns *GetGuns() const { return pGuns; }
-	virtual class CUnitGuns *GetGuns() { return pGuns; }
+
+	virtual const class CUnitGuns *GetGuns() const
+	{
+		return pGuns;
+	}
+
+	virtual class CUnitGuns *GetGuns()
+	{
+		return pGuns;
+	}
+
 	virtual void PrepareToDelete();
 	// soldier doesn't have anti aircraft guns yet
 	virtual uint32_t InitSupportAntiAircraftGuns();
@@ -88,17 +97,38 @@ public:
 
 	virtual const CVec2 GetGunCenter( const int nGun ) const;
 	void Lock( class CFormation *_pLockingUnit );
-	bool IsLocked() const { return pLockingUnit != 0; }
-	void Unlock() { pLockingUnit = 0; }
 
-	virtual const SUnitBaseRPGStats *GetStats() const { return pStats; }
+	bool IsLocked() const
+	{
+		return pLockingUnit != 0;
+	}
+
+	void Unlock()
+	{
+		pLockingUnit = 0;
+	}
+
+	virtual const SUnitBaseRPGStats *GetStats() const
+	{
+		return pStats;
+	}
+
 	virtual IStatesFactory *GetStatesFactory() const = 0;
 
 	// расстояние от центра до точки, откуда можно напрямую бежать к entrance point
 	virtual float GetDistanceToLandPoint() const;
 	const bool IsIdle() const;
-	virtual uint8_t GetNAvailableSeats() const { return pStats->nPassangers - pass.size(); }
-	virtual uint8_t GetNPassengers() const { return pass.size(); }
+
+	virtual uint8_t GetNAvailableSeats() const
+	{
+		return pStats->nPassangers - pass.size();
+	}
+
+	virtual uint8_t GetNPassengers() const
+	{
+		return pass.size();
+	}
+
 	virtual void AddPassenger( class CSoldier *pUnit );
 	virtual class CSoldier *GetPassenger( const int n );
 
@@ -111,8 +141,15 @@ public:
 
 	virtual void Segment();
 
-	virtual CTurret *GetTurret( const int nTurret ) const { return turrets[nTurret]; }
-	virtual const int GetNTurrets() const { return turrets.size(); }
+	virtual CTurret *GetTurret( const int nTurret ) const
+	{
+		return turrets[nTurret];
+	}
+
+	virtual const int GetNTurrets() const
+	{
+		return turrets.size();
+	}
 
 	virtual void GetShotInfo( struct SAINotifyMechShot *pShotInfo ) const
 	{
@@ -120,11 +157,30 @@ public:
 		pShotInfo->nObjUniqueID = GetUniqueId();
 	}
 
-	virtual const EActionNotify GetShootAction() const { return ACTION_NOTIFY_MECH_SHOOT; }
-	virtual const EActionNotify GetAimAction() const { return ACTION_NOTIFY_AIM; }
-	virtual const EActionNotify GetDieAction() const { return ACTION_NOTIFY_DIE; }
-	virtual const EActionNotify GetIdleAction() const { return ACTION_NOTIFY_IDLE; }
-	virtual const EActionNotify GetMovingAction() const { return ACTION_NOTIFY_MOVE; }
+	virtual const EActionNotify GetShootAction() const
+	{
+		return ACTION_NOTIFY_MECH_SHOOT;
+	}
+
+	virtual const EActionNotify GetAimAction() const
+	{
+		return ACTION_NOTIFY_AIM;
+	}
+
+	virtual const EActionNotify GetDieAction() const
+	{
+		return ACTION_NOTIFY_DIE;
+	}
+
+	virtual const EActionNotify GetIdleAction() const
+	{
+		return ACTION_NOTIFY_IDLE;
+	}
+
+	virtual const EActionNotify GetMovingAction() const
+	{
+		return ACTION_NOTIFY_MOVE;
+	}
 
 	virtual const bool CanShootToPlanes() const;
 
@@ -137,12 +193,18 @@ public:
 	virtual class CBasicGun *ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime );
 	virtual float GetMaxFireRange() const;
 
-	virtual bool IsMech() const { return true; }
+	virtual bool IsMech() const
+	{
+		return true;
+	}
 
 	virtual void GetRangeArea( struct SShootAreas *pRangeArea ) const;
 	virtual class CArtillery *GetTowedArtillery() const = 0;
 
-	virtual const bool CanGoBackward() const { return GetTowedArtillery() == 0 && GetMovementPlane() == PLANE_TERRAIN; }
+	virtual const bool CanGoBackward() const
+	{
+		return GetTowedArtillery() == 0 && GetMovementPlane() == PLANE_TERRAIN;
+	}
 
 	const CVec2 GetHookPoint() const;
 	const CVec3 GetHookPoint3D() const;
@@ -154,9 +216,17 @@ public:
 	virtual void
 	LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
 
-	virtual bool HasTowedArtilleryCrew() const { return false; }
+	virtual bool HasTowedArtilleryCrew() const
+	{
+		return false;
+	}
+
 	virtual void SetTowedArtilleryCrew( class CFormation *pFormation ) {}
-	virtual CFormation *GetTowedArtilleryCrew() { return 0; }
+
+	virtual CFormation *GetTowedArtilleryCrew()
+	{
+		return 0;
+	}
 
 	// return true if pUnit can board (this unit is at shore line and have free spots)
 	const bool CanBoard( CAIUnit *pUnit ) const;
@@ -165,8 +235,16 @@ public:
 	void SetOnBoard( CAIUnit *pUnit, const bool bOnBoard );
 	const uint16_t GetBoardedDirection( CAIUnit *pUnit, const NTimer::STime timeDiff ) const;
 	const CVec3 GetBoardedPosition( CAIUnit *pUnit, const NTimer::STime timeDiff ) const;
-	int GetNBoarded() const { return onBoard.size(); }
-	CAIUnit *GetBoarded( const int nIndex ) { return onBoard[nIndex]; }
+
+	int GetNBoarded() const
+	{
+		return onBoard.size();
+	}
+
+	CAIUnit *GetBoarded( const int nIndex )
+	{
+		return onBoard[nIndex];
+	}
 
 	virtual const int GetUnitPriority() const
 	{
@@ -198,6 +276,7 @@ class CTank : public CMilitaryCar
 
 	SAIAngle wDangerousDirUnderFire;
 	float fDangerousDamageUnderFire = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CMilitaryCar *)this );
@@ -211,6 +290,7 @@ class CTank : public CMilitaryCar
 		f.Add( 9, &fDangerousDamageUnderFire );
 		return 0;
 	}
+
 	//
 	void ScanForDangerousDir();
 
@@ -224,7 +304,11 @@ public:
 	                   ICollisionsCollector *pCollisionsCollector );
 	virtual IStatesFactory *GetStatesFactory() const;
 
-	bool IsTrackDamaged() const { return bTrackDamaged; }
+	bool IsTrackDamaged() const
+	{
+		return bTrackDamaged;
+	}
+
 	void RepairTrack(); // починили гусеницу
 
 	virtual void TakeDamage( const float fDamage,
@@ -236,9 +320,15 @@ public:
 	virtual const bool CanRotate() const;
 	virtual bool CanTurnToFrontDir( const uint16_t wDir );
 
-	virtual const bool NeedDeinstall() const { return bTrackDamaged; }
+	virtual const bool NeedDeinstall() const
+	{
+		return bTrackDamaged;
+	}
 
-	virtual class CArtillery *GetTowedArtillery() const { return 0; }
+	virtual class CArtillery *GetTowedArtillery() const
+	{
+		return 0;
+	}
 
 	virtual const NTimer::STime GetBehUpdateDuration() const
 	{
@@ -251,8 +341,16 @@ public:
 
 	virtual void Segment();
 
-	virtual const bool IsDangerousDirExist() const { return bDangerousDirSetInertia; }
-	virtual const uint16_t GetDangerousDir() const { return wDangerousDir; }
+	virtual const bool IsDangerousDirExist() const
+	{
+		return bDangerousDirSetInertia;
+	}
+
+	virtual const uint16_t GetDangerousDir() const
+	{
+		return wDangerousDir;
+	}
+
 	virtual void Grazed( CAIUnit *pUnit );
 
 	virtual bool CanMoveAfterUserCommand() const;
@@ -271,6 +369,7 @@ class CAITransportUnit : public CMilitaryCar
 	CPtr<CAIUnit> pMustTow;               // artillery, that this truck must tow (for general intendant)
 	CExternLoaders externLoaders;         // дошоняющие гранспорт грузчики
 	CPtr<CFormation> pTowedArtilleryCrew; // when artillery is attached the crew.
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CMilitaryCar *)this );
@@ -281,6 +380,7 @@ class CAITransportUnit : public CMilitaryCar
 		f.Add( 6, &pTowedArtilleryCrew );
 		return 0;
 	}
+
 	// для группового подцепления артиллерии,
 	// выбирает юнит из нашей группы, ближайший к артиллерии и возвращает его nUniqueId
 	const int GetNUnitToTakeArtillery( bool bPlaceInQueue, CAIUnit *pUnitToTake );
@@ -295,13 +395,22 @@ public:
 	           ICollisionsCollector *pCollisionsCollector );
 
 	// для процесса ремонта. грузчики расходуют RU в процессе починки и перезарядки
-	float GetResursUnitsLeft() const { return fResursUnits; }
+	float GetResursUnitsLeft() const
+	{
+		return fResursUnits;
+	}
+
 	void SetResursUnitsLeft( float _fResursUnits );
 	void DecResursUnitsLeft( float dRU );
 
 	// буксировка
 	virtual bool IsTowing() const;
-	virtual class CArtillery *GetTowedArtillery() const { return pTowedArtillery; }
+
+	virtual class CArtillery *GetTowedArtillery() const
+	{
+		return pTowedArtillery;
+	}
+
 	void SetTowedArtillery( class CArtillery *pTowedArtillery );
 
 	virtual IStatesFactory *GetStatesFactory() const;

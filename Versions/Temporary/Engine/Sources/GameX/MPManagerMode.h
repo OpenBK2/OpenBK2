@@ -10,11 +10,12 @@
 
 struct IServerClient;
 class CLANTester;
+
 namespace NDb
 {
 struct SMultiplayerMap;
 struct SMultiplayerConsts;
-}
+} // namespace NDb
 class CMPTransceiver;
 class CCommandsHistory;
 
@@ -38,8 +39,11 @@ protected:
 		NTimer::STime timeNextUpdate;
 		NTimer::STime timeUpdatePeriod;
 		uint32_t dwVersion;
+
 		SAutoUpdate() : bUpdating( false ), timeNextUpdate( 0 ), timeUpdatePeriod( 1000 ), dwVersion( 0 ) {}
+
 		bool CheckNeedUpdate();
+
 		int operator&( IBinSaver &saver )
 		{
 			NI_ASSERT( 0, "should not be serialized" );
@@ -63,6 +67,7 @@ protected:
 		int nTechLevel;
 		bool bPasswordRequired;
 	};
+
 	typedef std::list<SNetGameInfo> CNetGameList;
 
 	struct SLagInfo
@@ -70,8 +75,10 @@ protected:
 		NTimer::STime timeStartLag; // Start of last lag
 		int nLagLeft;               // Remaining lag time
 		uint32_t dwHatedBy;         // They want him kicked already
+
 		SLagInfo() : timeStartLag( 0 ), nLagLeft( 0 ), dwHatedBy( 0 ) {}
 	};
+
 	typedef std::vector<SLagInfo> CLaggerList;
 
 	// General MP state
@@ -124,9 +131,13 @@ protected:
 private:
 	//{ Messages
 	bool OnCreateGameMessage( SMPUICreateGameMessage *pMsg );
+
 	virtual void TryToCreateGame() {}
+
 	bool OnJoinGameMessage( SMPUIJoinGameMessage *pMsg );
+
 	virtual void TryToJoinGame( const SNetGameInfo &game ) {}
+
 	bool OnLeaveGameMessage( SMPUIMessage *pMsg );
 	bool OnInterruptMessage( SMPUIMessage *pMsg );
 	bool OnStartGameMessage( SMPUIMessage *pMsg );
@@ -178,13 +189,16 @@ protected:
 	bool IsGameControlHost();
 	int GetReplacementHostClientID( int nRemovedClientID );
 	void PromoteGameControlHostAfterRemoval( int nRemovedClientID );
+
 	virtual void OnGameControlHostChanged( int nOldHostClientID, int nNewHostClientID, int nRemovedClientID ) {}
+
 	bool IsAuthoritativeDropPacket( const class CB2DropPlayerAtSegmentPacket *pPacket );
 	virtual void BroadcastGameControlPacket( CNetPacket *pPacket );
 	void BroadcastSynchronizedPlayerDrop( int nSlot, int nSegment, const char *szReason );
 	void SendStartGamePacket();
 	void AddGameInfoForUI( std::list<SUIGameInfo> *pList, const SNetGameInfo &game );
 	void UpdateMyConnectivityMask();
+
 	virtual void CheckJoinGameConditions() {}
 
 	void WinGame();
@@ -214,6 +228,7 @@ protected:
 	virtual void OnSetMySlotNumber() = 0;
 	virtual void OnGameSpecificInfo() = 0;
 	virtual void KickPlayerFromSlot( const int nSlot ) = 0;
+
 	virtual void OnSurrender() {}
 
 	void OnCriticalNetworkError( const std::wstring &wszMessage );
@@ -242,6 +257,7 @@ public:
 	ZDATA
 	int nSlot;
 	uint32_t ulCheckSum;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nSlot );
@@ -250,6 +266,7 @@ public:
 	}
 
 	CSlotNumberPacket() {}
+
 	CSlotNumberPacket( const int nClientID, const int _nSlot, const unsigned long _ulCheckSum )
 			: CNetPacket( nClientID ), nSlot( _nSlot ), ulCheckSum( _ulCheckSum )
 	{
@@ -264,6 +281,7 @@ public:
 	ZDATA
 	int nGameID;
 	int nSegment;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nGameID );
@@ -272,6 +290,7 @@ public:
 	}
 
 	CB2GameLostPacket() {}
+
 	CB2GameLostPacket( const int nClientID, const int _nGameID, const int _nSegment )
 			: CNetPacket( nClientID ), nGameID( _nGameID ), nSegment( _nSegment )
 	{

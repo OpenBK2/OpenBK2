@@ -28,7 +28,11 @@ class CLocomotiveStatesFactory : public IStatesFactory
 	static CPtr<CLocomotiveStatesFactory> pFactory;
 
 public:
-	int operator&( IBinSaver &saver ) { return 0; }
+	int operator&( IBinSaver &saver )
+	{
+		return 0;
+	}
+
 	static IStatesFactory *Instance();
 
 	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
@@ -49,7 +53,11 @@ class CTrainCarStatesFactory : public IStatesFactory
 	static CPtr<CTrainCarStatesFactory> pFactory;
 
 public:
-	int operator&( IBinSaver &saver ) { return 0; }
+	int operator&( IBinSaver &saver )
+	{
+		return 0;
+	}
+
 	static IStatesFactory *Instance();
 
 	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
@@ -64,6 +72,7 @@ public:
 //	CTrainLocomotive
 
 class CTrainCar;
+
 class CTrainLocomotive : public CMilitaryCar
 {
 	OBJECT_NOCOPY_METHODS( CTrainLocomotive );
@@ -107,27 +116,62 @@ public:
 	                   const uint16_t dir,
 	                   const uint8_t player,
 	                   ICollisionsCollector *pCollisionsCollector );
-	virtual IStatesFactory *GetStatesFactory() const { return CLocomotiveStatesFactory::Instance(); }
+
+	virtual IStatesFactory *GetStatesFactory() const
+	{
+		return CLocomotiveStatesFactory::Instance();
+	}
 
 	virtual void TakeDamage( const float fDamage,
 	                         const SWeaponRPGStats::SShell *pShell,
 	                         const int nPlayerOfShoot,
 	                         CAIUnit *pShotUnit );
-	virtual const bool CanRotate() const { return false; }
-	virtual bool CanTurnToFrontDir( const uint16_t wDir ) { return false; }
-	virtual const bool CanShootInMovement() { return true; }
 
-	virtual const bool NeedDeinstall() const { return false; }
+	virtual const bool CanRotate() const
+	{
+		return false;
+	}
 
-	virtual class CArtillery *GetTowedArtillery() const { return 0; }
+	virtual bool CanTurnToFrontDir( const uint16_t wDir )
+	{
+		return false;
+	}
+
+	virtual const bool CanShootInMovement()
+	{
+		return true;
+	}
+
+	virtual const bool NeedDeinstall() const
+	{
+		return false;
+	}
+
+	virtual class CArtillery *GetTowedArtillery() const
+	{
+		return 0;
+	}
 
 	virtual void Segment();
 
 	// Train-specific
 	const SRailRoadSystem::SRRInstance *GetTrack() const;
-	float GetTrackPos() const { return fTrackPos; }
-	float GetTrackLimit() const { return fTrackLimit; }
-	const bool IsBackwards() const { return bBackward; }
+
+	float GetTrackPos() const
+	{
+		return fTrackPos;
+	}
+
+	float GetTrackLimit() const
+	{
+		return fTrackLimit;
+	}
+
+	const bool IsBackwards() const
+	{
+		return bBackward;
+	}
+
 	void SetToTrackPos( float fPos );
 	virtual void SetCollision( ICollision *pCollision, IPath *pPath );
 	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const;
@@ -195,27 +239,62 @@ public:
 	                   const uint16_t dir,
 	                   const uint8_t player,
 	                   ICollisionsCollector *pCollisionsCollector );
-	virtual IStatesFactory *GetStatesFactory() const { return CTrainCarStatesFactory::Instance(); }
+
+	virtual IStatesFactory *GetStatesFactory() const
+	{
+		return CTrainCarStatesFactory::Instance();
+	}
 
 	virtual void TakeDamage( const float fDamage,
 	                         const SWeaponRPGStats::SShell *pShell,
 	                         const int nPlayerOfShoot,
 	                         CAIUnit *pShotUnit );
-	virtual const bool CanRotate() const { return false; }
-	virtual bool CanTurnToFrontDir( const uint16_t wDir ) { return false; }
-	virtual const bool CanShootInMovement() { return true; }
 
-	virtual const bool NeedDeinstall() const { return false; }
+	virtual const bool CanRotate() const
+	{
+		return false;
+	}
 
-	virtual class CArtillery *GetTowedArtillery() const { return 0; }
+	virtual bool CanTurnToFrontDir( const uint16_t wDir )
+	{
+		return false;
+	}
+
+	virtual const bool CanShootInMovement()
+	{
+		return true;
+	}
+
+	virtual const bool NeedDeinstall() const
+	{
+		return false;
+	}
+
+	virtual class CArtillery *GetTowedArtillery() const
+	{
+		return 0;
+	}
 
 	virtual void Segment();
 
 	// Train-specific
 	const SRailRoadSystem::SRRInstance *GetTrack() const;
-	float GetTrackPos() const { return fTrackPos; }
-	float GetTrackLimit() const { return fTrackLimit; }
-	const bool IsBackwards() const { return bBackward; }
+
+	float GetTrackPos() const
+	{
+		return fTrackPos;
+	}
+
+	float GetTrackLimit() const
+	{
+		return fTrackLimit;
+	}
+
+	const bool IsBackwards() const
+	{
+		return bBackward;
+	}
+
 	void SetToTrackPos( float fPos );
 	virtual void SetCollision( ICollision *pCollision, IPath *pPath );
 	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const;
@@ -223,13 +302,37 @@ public:
 	virtual void Die( const bool fromExplosion, const float fDamage );
 
 	// Train car-specific
-	CTrainLocomotive *GetLocomotive() const { return pLocomotive; }
-	CTrainCar *GetFrontCar() const { return pLinkFront; }
-	CTrainCar *GetBackCar() const { return pLinkBack; }
+	CTrainLocomotive *GetLocomotive() const
+	{
+		return pLocomotive;
+	}
+
+	CTrainCar *GetFrontCar() const
+	{
+		return pLinkFront;
+	}
+
+	CTrainCar *GetBackCar() const
+	{
+		return pLinkBack;
+	}
+
 	void LinkToCar( CMilitaryCar *pLinkTo );
-	const float GetFrontLink() const { return fFrontLink; }
-	const float GetBackLink() const { return fBackLink; }
-	const float GetLength() const { return fFrontLink + fBackLink; }
+
+	const float GetFrontLink() const
+	{
+		return fFrontLink;
+	}
+
+	const float GetBackLink() const
+	{
+		return fBackLink;
+	}
+
+	const float GetLength() const
+	{
+		return fFrontLink + fBackLink;
+	}
 };
 
 //	CLocomotivePath
@@ -255,11 +358,21 @@ public:
 		f.Add( 6, &pUnit );
 		return 0;
 	}
+
 	CLocomotivePath() {}
+
 	bool Init( CBasePathUnit *_pUnit, const CVec2 &_vTargetPoint );
 
-	virtual const CVec2 &GetFinishPoint() const { return vEndPoint; }
-	virtual bool IsFinished() const { return bFinished; }
+	virtual const CVec2 &GetFinishPoint() const
+	{
+		return vEndPoint;
+	}
+
+	virtual bool IsFinished() const
+	{
+		return bFinished;
+	}
+
 	virtual void Segment( const NTimer::STime timeDiff );
 
 	// ненужные функции ?
@@ -267,19 +380,41 @@ public:
 	{
 		return false;
 	}
+
 	virtual bool Init( IMemento *pMemento, CBasePathUnit *_pUnit, CAIMap *pAIMap );
-	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) { return false; }
+
+	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit )
+	{
+		return false;
+	}
+
 	virtual void Stop()
 	{
 		fEndPos = fCurPos;
 		bFinished = true;
 	}
 
-	virtual const bool CanGoBackward() const { return ( fCurPos >= fEndPos ); }
-	virtual const bool CanGoForward() const { return ( fCurPos <= fEndPos ); }
-	virtual const CVec2 PeekPathPoint( const int nToShift ) const { return pUnit->GetCenterPlain(); }
+	virtual const bool CanGoBackward() const
+	{
+		return ( fCurPos >= fEndPos );
+	}
+
+	virtual const bool CanGoForward() const
+	{
+		return ( fCurPos <= fEndPos );
+	}
+
+	virtual const CVec2 PeekPathPoint( const int nToShift ) const
+	{
+		return pUnit->GetCenterPlain();
+	}
+
 	virtual IMemento *CreateMemento() const;
-	virtual const float GetSpeed() const { return bFinished ? 0 : pUnit->GetSpeed(); }
+
+	virtual const float GetSpeed() const
+	{
+		return bFinished ? 0 : pUnit->GetSpeed();
+	}
 };
 
 //	CTrainCarPath
@@ -291,6 +426,7 @@ class CTrainCarPath : public ISmoothPath
 	ZDATA
 	CPtr<CTrainCar> pUnit;
 	CPtr<CLocomotivePath> pOwner;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pUnit );
@@ -300,10 +436,19 @@ class CTrainCarPath : public ISmoothPath
 
 public:
 	CTrainCarPath() {}
+
 	bool Init( CBasePathUnit *_pUnit, CLocomotivePath *pOwnerPath );
 
-	virtual const CVec2 &GetFinishPoint() const { return pOwner->GetFinishPoint(); }
-	virtual bool IsFinished() const { return pOwner->IsFinished(); }
+	virtual const CVec2 &GetFinishPoint() const
+	{
+		return pOwner->GetFinishPoint();
+	}
+
+	virtual bool IsFinished() const
+	{
+		return pOwner->IsFinished();
+	}
+
 	virtual void Segment( const NTimer::STime timeDiff ) {}
 
 	// ненужные функции ?
@@ -311,15 +456,43 @@ public:
 	{
 		return false;
 	}
-	virtual bool Init( IMemento *pMemento, CBasePathUnit *_pUnit, CAIMap *pAIMap ) { return false; }
-	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) { return false; }
+
+	virtual bool Init( IMemento *pMemento, CBasePathUnit *_pUnit, CAIMap *pAIMap )
+	{
+		return false;
+	}
+
+	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit )
+	{
+		return false;
+	}
+
 	virtual void Stop() {}
 
-	virtual const bool CanGoBackward() const { return pOwner->CanGoBackward(); }
-	virtual const bool CanGoForward() const { return pOwner->CanGoForward(); }
-	virtual const CVec2 PeekPathPoint( const int nToShift ) const { return pUnit->GetCenterPlain(); }
-	virtual IMemento *CreateMemento() const { return 0; }
-	virtual const float GetSpeed() const { return pOwner->GetSpeed(); }
+	virtual const bool CanGoBackward() const
+	{
+		return pOwner->CanGoBackward();
+	}
+
+	virtual const bool CanGoForward() const
+	{
+		return pOwner->CanGoForward();
+	}
+
+	virtual const CVec2 PeekPathPoint( const int nToShift ) const
+	{
+		return pUnit->GetCenterPlain();
+	}
+
+	virtual IMemento *CreateMemento() const
+	{
+		return 0;
+	}
+
+	virtual const float GetSpeed() const
+	{
+		return pOwner->GetSpeed();
+	}
 };
 
 //	SLocomotivePathMemento
@@ -333,6 +506,7 @@ public:
 	float fCurPos = {};
 	float fEndPos = {};
 	CVec2 vEndPoint;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &fCurPos );
@@ -358,19 +532,36 @@ public:
 		f.Add( 2, &pUnit );
 		return 0;
 	}
+
 	static IUnitState *Instance( CAIUnit *_pUnit );
 
 	CTrainRestState() : pUnit( 0 ) {}
+
 	CTrainRestState( CAIUnit *_pUnit );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return VNULL2; }
-	virtual bool IsRestState() const { return true; }
 
-	virtual EUnitStateNames GetName() { return EUSN_REST; }
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return VNULL2;
+	}
+
+	virtual bool IsRestState() const
+	{
+		return true;
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_REST;
+	}
 };
 
 //	CLocomotiveMoveState
@@ -397,20 +588,36 @@ public:
 		f.Add( 6, &pPath );
 		return 0;
 	}
+
 	static IUnitState *Instance( CAIUnit *_pUnit, const CVec2 &_point );
 
 	CLocomotiveMoveState() : pUnit( 0 ) {}
+
 	CLocomotiveMoveState( CTrainLocomotive *_pUnit, const CVec2 &point );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return point; }
 
-	virtual EUnitStateNames GetName() { return EUSN_MOVE; }
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
 
-	CLocomotivePath *GetPath() { return pPath; }
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return point;
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_MOVE;
+	}
+
+	CLocomotivePath *GetPath()
+	{
+		return pPath;
+	}
 };
 
 //	CLocomotiveAttackUnitState
@@ -454,20 +661,42 @@ public:
 	static IUnitState *Instance( CAIUnit *_pUnit, CAIUnit *_pTarget );
 
 	CLocomotiveAttackUnitState() : pUnit( 0 ) {}
+
 	CLocomotiveAttackUnitState( CTrainLocomotive *_pUnit, CAIUnit *_pTarget );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return true; }
-	virtual const CVec2 GetPurposePoint() const { return IsValid( pTarget ) ? pTarget->GetCenterPlain() : VNULL2; }
 
-	virtual bool IsAttacksUnit() const { return true; }
-	virtual class CAIUnit *GetTargetUnit() const { return pTarget; }
+	virtual bool IsAttackingState() const
+	{
+		return true;
+	}
 
-	virtual EUnitStateNames GetName() { return EUSN_ATTACK_UNIT; }
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return IsValid( pTarget ) ? pTarget->GetCenterPlain() : VNULL2;
+	}
 
-	CLocomotivePath *GetPath() { return pPath; }
+	virtual bool IsAttacksUnit() const
+	{
+		return true;
+	}
+
+	virtual class CAIUnit *GetTargetUnit() const
+	{
+		return pTarget;
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_ATTACK_UNIT;
+	}
+
+	CLocomotivePath *GetPath()
+	{
+		return pPath;
+	}
 };
 
 //	CLocomotiveAttackObjState
@@ -511,22 +740,52 @@ public:
 	static IUnitState *Instance( CAIUnit *_pUnit, CStaticObject *_pTarget );
 
 	CLocomotiveAttackObjState() : pUnit( 0 ) {}
+
 	CLocomotiveAttackObjState( CTrainLocomotive *_pUnit, CStaticObject *_pTarget );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return true; }
-	virtual const CVec2 GetPurposePoint() const { return IsValid( pTarget ) ? GetTargetCenter() : VNULL2; }
 
-	virtual bool IsAttacksUnit() const { return true; }
-	CStaticObject *GetTarget() const { return pTarget; }
-	const CVec2 GetTargetCenter() const { return CVec2( pTarget->GetCenter().x, pTarget->GetCenter().y ); }
-	virtual CAIUnit *GetTargetUnit() const { return 0; }
+	virtual bool IsAttackingState() const
+	{
+		return true;
+	}
 
-	virtual EUnitStateNames GetName() { return EUSN_ATTACK_STAT_OBJECT; }
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return IsValid( pTarget ) ? GetTargetCenter() : VNULL2;
+	}
 
-	CLocomotivePath *GetPath() { return pPath; }
+	virtual bool IsAttacksUnit() const
+	{
+		return true;
+	}
+
+	CStaticObject *GetTarget() const
+	{
+		return pTarget;
+	}
+
+	const CVec2 GetTargetCenter() const
+	{
+		return CVec2( pTarget->GetCenter().x, pTarget->GetCenter().y );
+	}
+
+	virtual CAIUnit *GetTargetUnit() const
+	{
+		return 0;
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_ATTACK_STAT_OBJECT;
+	}
+
+	CLocomotivePath *GetPath()
+	{
+		return pPath;
+	}
 };
 
 //	CTrainCarMoveToState
@@ -549,18 +808,31 @@ public:
 		f.Add( 4, &pPath );
 		return 0;
 	}
+
 	static IUnitState *Instance( CAIUnit *_pUnit );
 
 	CTrainCarMoveToState() : pUnit( 0 ) {}
+
 	CTrainCarMoveToState( CTrainCar *_pUnit );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return pUnit->GetLocomotive()->GetState()->GetPurposePoint(); }
 
-	virtual EUnitStateNames GetName() { return EUSN_MOVE; }
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return pUnit->GetLocomotive()->GetState()->GetPurposePoint();
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_MOVE;
+	}
 };
 
 //	CTrainCarAttackUnitState
@@ -592,20 +864,41 @@ public:
 		f.Add( 5, &pTarget );
 		return 0;
 	}
+
 	static IUnitState *Instance( CAIUnit *_pUnit, CAIUnit *_pTarget );
 
 	CTrainCarAttackUnitState() : pUnit( 0 ) {}
+
 	CTrainCarAttackUnitState( CTrainCar *_pUnit, CAIUnit *_pTarget );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual const CVec2 GetPurposePoint() const { return IsValid( pTarget ) ? pTarget->GetCenterPlain() : VNULL2; }
-	virtual bool IsAttackingState() const { return true; }
-	virtual bool IsAttacksUnit() const { return true; }
-	virtual class CAIUnit *GetTargetUnit() const { return pTarget; }
 
-	virtual EUnitStateNames GetName() { return EUSN_ATTACK_UNIT; }
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return IsValid( pTarget ) ? pTarget->GetCenterPlain() : VNULL2;
+	}
+
+	virtual bool IsAttackingState() const
+	{
+		return true;
+	}
+
+	virtual bool IsAttacksUnit() const
+	{
+		return true;
+	}
+
+	virtual class CAIUnit *GetTargetUnit() const
+	{
+		return pTarget;
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_ATTACK_UNIT;
+	}
 
 	// TrainCar-specific
 	const bool TryFiring();
@@ -640,23 +933,51 @@ public:
 		f.Add( 5, &pTarget );
 		return 0;
 	}
+
 	static IUnitState *Instance( CAIUnit *_pUnit, CStaticObject *_pTarget );
 
 	CTrainCarAttackObjectState() : pUnit( 0 ) {}
+
 	CTrainCarAttackObjectState( CTrainCar *_pUnit, CStaticObject *_pTarget );
 
 	virtual void Segment();
 
-	virtual const CVec2 GetPurposePoint() const { return IsValid( pTarget ) ? GetTargetCenter() : VNULL2; }
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return IsValid( pTarget ) ? GetTargetCenter() : VNULL2;
+	}
 
-	virtual bool IsAttacksUnit() const { return true; }
-	CStaticObject *GetTarget() const { return pTarget; }
-	const CVec2 GetTargetCenter() const { return CVec2( pTarget->GetCenter().x, pTarget->GetCenter().y ); }
-	virtual CAIUnit *GetTargetUnit() const { return 0; }
+	virtual bool IsAttacksUnit() const
+	{
+		return true;
+	}
+
+	CStaticObject *GetTarget() const
+	{
+		return pTarget;
+	}
+
+	const CVec2 GetTargetCenter() const
+	{
+		return CVec2( pTarget->GetCenter().x, pTarget->GetCenter().y );
+	}
+
+	virtual CAIUnit *GetTargetUnit() const
+	{
+		return 0;
+	}
+
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return true; }
 
-	virtual EUnitStateNames GetName() { return EUSN_ATTACK_UNIT; }
+	virtual bool IsAttackingState() const
+	{
+		return true;
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_ATTACK_UNIT;
+	}
 
 	// TrainCar-specific
 	const bool TryFiring();

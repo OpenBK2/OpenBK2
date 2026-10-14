@@ -19,12 +19,18 @@ class CLineBreakObject : public IReflowObject
 	OBJECT_BASIC_METHODS( CLineBreakObject )
 private:
 	ZDATA
-	ZEND int operator&( IBinSaver &f ) { return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 
 public:
 	CLineBreakObject() {}
 
-	void Update( IReflowState *pState ) { pState->CreateLine( true ); }
+	void Update( IReflowState *pState )
+	{
+		pState->CreateLine( true );
+	}
 };
 
 IReflowObject *CreateLineBreakObject()
@@ -40,6 +46,7 @@ class CColorObject : public IReflowObject
 private:
 	ZDATA
 	NGfx::SPixel8888 color;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &color );
@@ -48,6 +55,7 @@ private:
 
 public:
 	CColorObject() {}
+
 	CColorObject( const NGfx::SPixel8888 &_color ) : color( _color ) {}
 
 	void Update( IReflowState *pState );
@@ -73,6 +81,7 @@ class CHAlignObject : public IReflowObject
 private:
 	ZDATA
 	EHAlign nAlign;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nAlign );
@@ -81,6 +90,7 @@ private:
 
 public:
 	CHAlignObject() {}
+
 	CHAlignObject( EHAlign _nAlign ) : nAlign( _nAlign ) {}
 
 	void Update( IReflowState *pState );
@@ -106,6 +116,7 @@ class CVAlignObject : public IReflowObject
 private:
 	ZDATA
 	EVAlign nAlign;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nAlign );
@@ -114,6 +125,7 @@ private:
 
 public:
 	CVAlignObject() {}
+
 	CVAlignObject( EVAlign _nAlign ) : nAlign( _nAlign ) {}
 
 	void Update( IReflowState *pState );
@@ -143,6 +155,7 @@ private:
 	bool bForceFontSize;
 	NGScene::SFont font;
 	NGfx::SPixel8888 outlineColor;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nFlags );
@@ -155,6 +168,7 @@ private:
 
 public:
 	CFontObject() {}
+
 	CFontObject( int _nFlags,
 	             const NGScene::SFont &_font,
 	             const NGfx::SPixel8888 &_outlineColor,
@@ -213,6 +227,7 @@ class CMinFontSizeObject : public IReflowObject
 private:
 	ZDATA
 	int nSize;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nSize );
@@ -221,6 +236,7 @@ private:
 
 public:
 	CMinFontSizeObject() {}
+
 	CMinFontSizeObject( int _nSize ) : nSize( _nSize ) {}
 
 	void Update( IReflowState *pState );
@@ -238,7 +254,7 @@ IReflowObject *CreateMinFontSizeObject( int nSize )
 	return new CMinFontSizeObject( nSize );
 }
 
-} // NAMESPACE
+} // namespace NML
 
 using namespace NML;
 REGISTER_SAVELOAD_CLASS( UI, 0xB5529190, CLineBreakObject )

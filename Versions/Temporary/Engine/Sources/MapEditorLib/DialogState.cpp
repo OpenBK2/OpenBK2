@@ -59,7 +59,7 @@ bool GetStatePath( const std::string &rszDialogName, std::string *pszPath )
 			pContainer->Get()->constUserData.szStartFolder, "Editor", RESIZE_DIALOG_OPTIONS_FOLDER, rszDialogName );
 	return true;
 }
-}
+} // namespace
 
 namespace NDialogState
 {
@@ -82,4 +82,4 @@ bool Save( const std::string &rszDialogName, SDialogState *pState )
 	}
 	return SaveXMLResource( szPath, ".xml", rszDialogName, *pState );
 }
-}
+} // namespace NDialogState

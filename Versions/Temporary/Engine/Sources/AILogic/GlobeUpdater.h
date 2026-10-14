@@ -5,6 +5,7 @@ class CUpdates2Globe : public CObjectBase
 	OBJECT_NOCOPY_METHODS( CUpdates2Globe );
 	ZDATA
 	std::list<CPtr<CObjectBase>> singleUpdates;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &singleUpdates );
@@ -18,6 +19,7 @@ public:
 	};
 
 	CUpdates2Globe() {}
+
 	void Segment();
 
 	void AddUpdate( CObjectBase *pUpdate );

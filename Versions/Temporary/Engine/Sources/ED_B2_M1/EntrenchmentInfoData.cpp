@@ -525,6 +525,7 @@ bool SEntrenchmentInfo::Create( const SObjectCreateInfo *pObjectCreateInfo,
 	return bResult;
 	//
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool SEntrenchmentInfo::GetEntrenchmentSegInfoByMapObjElement( SEntrenchmentSegInfo *pSegInfo,
                                                                const SObjectInfo *pMOI,
@@ -626,6 +627,6 @@ bool SEntrenchmentInfo::PasteSelf( CLinkIDMap *pNew2OldLinkIDMap,
 	}
 	return bResult;
 }
-}
+} // namespace NMapInfoEditor
 
 // basement storage

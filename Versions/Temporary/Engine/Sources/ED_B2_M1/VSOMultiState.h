@@ -51,6 +51,7 @@ public:
 			STATS_DEFAULT = 0,
 			STATS_CUSTOM = 1,
 		};
+
 		//
 		unsigned nFlags;
 		EPointNumber ePointNumber;
@@ -59,12 +60,14 @@ public:
 		float fOpacity;
 		float fHeight;
 		bool bThumbnails;
+
 		//
 		SEditParameters()
 				: nFlags( 0 ), ePointNumber( PN_SINGLE ), eStatsType( STATS_CUSTOM ), fWidth( CVSOManager::DEFAULT_WIDTH ),
 					fOpacity( CVSOManager::DEFAULT_OPACITY ), fHeight( CVSOManager::DEFAULT_HEIGHT ), bThumbnails( true )
 		{
 		}
+
 		SEditParameters( const SEditParameters &rEditParameters )
 				: nFlags( rEditParameters.nFlags ), ePointNumber( rEditParameters.ePointNumber ),
 					eStatsType( rEditParameters.eStatsType ), fWidth( rEditParameters.fWidth ),
@@ -72,6 +75,7 @@ public:
 					bThumbnails( rEditParameters.bThumbnails )
 		{
 		}
+
 		SEditParameters &operator=( const SEditParameters &rEditParameters )
 		{
 			if ( &rEditParameters != this )
@@ -86,6 +90,7 @@ public:
 			}
 			return *this;
 		}
+
 		int operator&( IXmlSaver &xs );
 	};
 
@@ -133,8 +138,12 @@ public:
 		SetActiveInputState( IS_ROAD, false, false );
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_VSO_MULTI_STATE, this );
 	}
+
 	//
-	~CVSOMultiState() { Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_VSO_MULTI_STATE ); }
+	~CVSOMultiState()
+	{
+		Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_VSO_MULTI_STATE );
+	}
 
 	void SwitchState( const std::string &rszObjectTypeName );
 	//IInputState interface

@@ -14,7 +14,7 @@ struct SAIGameConsts;
 struct SNetGameConsts;
 struct SMultiplayerConsts;
 
-}
+} // namespace NDb
 
 namespace NGameX
 {
@@ -31,4 +31,4 @@ const NDb::SAIGameConsts *GetAIConsts();
 const NDb::SNetGameConsts *GetNetConsts();
 const NDb::SMultiplayerConsts *GetMPConsts();
 
-}
+} // namespace NGameX

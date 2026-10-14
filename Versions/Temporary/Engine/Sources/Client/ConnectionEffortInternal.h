@@ -9,7 +9,7 @@ namespace NNet
 {
 class CGameLinksManager;
 class CNodeAddress;
-}
+} // namespace NNet
 
 class CSimpleClientEffort : public CConnectionEffort
 {
@@ -26,6 +26,7 @@ class CSimpleClientEffort : public CConnectionEffort
 		ECONNECT_SERVER,
 		ECONNECT_CLIENT
 	};
+
 	ESubState eSubState;
 
 	EState eState;
@@ -41,6 +42,7 @@ class CSimpleClientEffort : public CConnectionEffort
 
 public:
 	CSimpleClientEffort() {}
+
 	CSimpleClientEffort( const int nMyServerID,
 	                     const int nClientServerID,
 	                     CNet *pNet,
@@ -49,8 +51,15 @@ public:
 	                     const int nGameNetVersion,
 	                     const int nTimeOut );
 
-	virtual const EState GetState() const { return eState; }
-	virtual const int GetClientServerID() const { return nClientServerID; }
+	virtual const EState GetState() const
+	{
+		return eState;
+	}
+
+	virtual const int GetClientServerID() const
+	{
+		return nClientServerID;
+	}
 
 	virtual struct IConnection *CreateConnection() const;
 
@@ -87,6 +96,7 @@ class CSimpleServerEffort : public CConnectionEffort
 
 public:
 	CSimpleServerEffort() {}
+
 	CSimpleServerEffort( const int nMyServerID,
 	                     const int nClientServerID,
 	                     const std::string &szClientIP,
@@ -94,8 +104,15 @@ public:
 	                     CNet *pNet,
 	                     CNet *pAcceptGamersNet );
 
-	virtual const EState GetState() const { return eState; }
-	virtual const int GetClientServerID() const { return nClientServerID; }
+	virtual const EState GetState() const
+	{
+		return eState;
+	}
+
+	virtual const int GetClientServerID() const
+	{
+		return nClientServerID;
+	}
 
 	virtual struct IConnection *CreateConnection() const;
 	virtual bool Segment();
@@ -118,13 +135,28 @@ class CThroughServerEffort : public CConnectionEffort
 
 public:
 	CThroughServerEffort() {}
+
 	CThroughServerEffort( const int nClientServerID, const int nMyServerID, const int nOurGameID, CNet *pNet );
 
-	virtual const EState GetState() const { return ES_SUCCESS; }
-	virtual const int GetClientServerID() const { return nClientServerID; }
+	virtual const EState GetState() const
+	{
+		return ES_SUCCESS;
+	}
 
-	virtual bool Segment() { return true; }
+	virtual const int GetClientServerID() const
+	{
+		return nClientServerID;
+	}
+
+	virtual bool Segment()
+	{
+		return true;
+	}
 
 	virtual struct IConnection *CreateConnection() const;
-	class CConnectionEffort *CreateNextEffort( const int nOurGameID ) { return 0; }
+
+	class CConnectionEffort *CreateNextEffort( const int nOurGameID )
+	{
+		return 0;
+	}
 };

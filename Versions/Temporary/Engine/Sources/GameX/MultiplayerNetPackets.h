@@ -14,6 +14,7 @@ public:
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nSlot = {};
 	SMPSlot info;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nSlot );
@@ -22,6 +23,7 @@ public:
 	}
 
 	CB2SlotInfoPacket() {}
+
 	CB2SlotInfoPacket( int nClientID, int _nSlot, const SMPSlot &_info ) : CNetPacket( nClientID ), nSlot( _nSlot )
 	{
 		info = _info;
@@ -35,6 +37,7 @@ class CB2GameSpecificInfoPacket : public CNetPacket
 public:
 	ZDATA
 	SB2GameSpecificData info;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &info );
@@ -54,6 +57,7 @@ public:
 		ZDATA
 		uint8_t nCountry = {};
 		uint8_t nTeam = {};
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nCountry );
@@ -61,9 +65,11 @@ public:
 			return 0;
 		}
 	};
+
 	ZDATA
 	std::vector<SShortSlotInfo> slots;
 	std::vector<uint8_t> slotRehash;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &slots );
@@ -72,6 +78,7 @@ public:
 	}
 
 	CB2GameRoomStartGamePacket() {}
+
 	CB2GameRoomStartGamePacket( int nClientID ) : CNetPacket( nClientID ) {}
 };
 
@@ -82,6 +89,7 @@ class CB2SuggestKickPacket : public CNetPacket
 public:
 	ZDATA
 	uint8_t nSlotToKick = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nSlotToKick );
@@ -89,6 +97,7 @@ public:
 	}
 
 	CB2SuggestKickPacket() {}
+
 	CB2SuggestKickPacket( int nClientID, int nSlot ) : CNetPacket( nClientID ), nSlotToKick( nSlot ) {}
 };
 
@@ -100,6 +109,7 @@ public:
 	ZDATA
 	int nPlayer = {};
 	int nTimeLeft = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nPlayer );
@@ -108,6 +118,7 @@ public:
 	}
 
 	CB2LagTimeUpdatePacket() {}
+
 	CB2LagTimeUpdatePacket( int nClientID, int _nPlayer, int _nTimeLeft )
 			: CNetPacket( nClientID ), nPlayer( _nPlayer ), nTimeLeft( _nTimeLeft )
 	{
@@ -121,6 +132,7 @@ class CB2UserPausePacket : public CNetPacket
 public:
 	ZDATA
 	bool bPaused = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &bPaused );
@@ -128,6 +140,7 @@ public:
 	}
 
 	CB2UserPausePacket() : bPaused( false ) {}
+
 	CB2UserPausePacket( int nClientID, bool _bPaused ) : CNetPacket( nClientID ), bPaused( _bPaused ) {}
 };
 
@@ -143,6 +156,7 @@ public:
 	ZDATA
 	uint8_t nSlotToDrop = {};
 	int nSegment = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nSlotToDrop );
@@ -151,6 +165,7 @@ public:
 	}
 
 	CB2DropPlayerAtSegmentPacket() : nSlotToDrop( 0 ), nSegment( 0 ) {}
+
 	CB2DropPlayerAtSegmentPacket( int nClientID, int _nSlotToDrop, int _nSegment )
 			: CNetPacket( nClientID ), nSlotToDrop( uint8_t( _nSlotToDrop ) ), nSegment( _nSegment )
 	{

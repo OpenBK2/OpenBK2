@@ -31,6 +31,7 @@ struct SScriptMovieEditorData
 		ME_DRAW_MARKERS,
 		ME_SELECT_CAMERA
 	};
+
 	EMoviesEditorLastAction eLastAction;
 
 	float fTimeLinePercentage;
@@ -47,7 +48,11 @@ struct SScriptMovieEditorData
 	float fNewLength;
 	float fMoveValue;
 
-	SScriptMovieEditorData() { Clear(); }
+	SScriptMovieEditorData()
+	{
+		Clear();
+	}
+
 	//
 	void Clear()
 	{
@@ -65,8 +70,16 @@ struct SScriptMovieEditorData
 
 		activeKeysList.SetSize( 0 );
 	}
+
 	//
-	void Reset() { eLastAction = ME_NO_ACTIONS; }
+	void Reset()
+	{
+		eLastAction = ME_NO_ACTIONS;
+	}
+
 	//
-	void SetLastAction( EMoviesEditorLastAction eAction ) { eLastAction = eAction; }
+	void SetLastAction( EMoviesEditorLastAction eAction )
+	{
+		eLastAction = eAction;
+	}
 };

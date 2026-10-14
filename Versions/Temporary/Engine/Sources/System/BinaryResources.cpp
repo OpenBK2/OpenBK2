@@ -39,4 +39,4 @@ GetExistentBinaryFileName( const std::string &rszDirPrefix, const int nRecordID,
 	return fmt::format( "{}\\{}", szDirPrefix, nRecordID );
 }
 
-}
+} // namespace NBinResources

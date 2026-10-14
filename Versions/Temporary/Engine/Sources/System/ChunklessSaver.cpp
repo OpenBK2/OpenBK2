@@ -37,12 +37,18 @@ class CChunklessSerializer : public IBinSaver
 		}
 #endif
 	}
+
 	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber )
 	{
 		CheckChunk( idChunk, nChunkNumber );
 		return true;
 	}
-	virtual void FinishChunk() { CheckChunk( 0, -1 ); }
+
+	virtual void FinishChunk()
+	{
+		CheckChunk( 0, -1 );
+	}
+
 	virtual int CountChunks( const chunk_id idChunk )
 	{
 		ASSERT( 0 );
@@ -80,6 +86,7 @@ class CChunklessSerializer : public IBinSaver
 			pRes->Write( pData, nSize );
 		}
 	}
+
 	virtual void DataChunkString( std::string &data )
 	{
 		int nSize;
@@ -106,6 +113,7 @@ class CChunklessSerializer : public IBinSaver
 			}
 		}
 	}
+
 	virtual void DataChunkString( std::wstring &data )
 	{
 		int nSize;
@@ -134,6 +142,7 @@ class CChunklessSerializer : public IBinSaver
 			}
 		}
 	}
+
 	// storing/loading pointers to objects
 	virtual void StoreObject( CObjectBase *pObject )
 	{
@@ -151,6 +160,7 @@ class CChunklessSerializer : public IBinSaver
 			pRes->Write( &nID, 4 );
 		}
 	}
+
 	virtual CObjectBase *LoadObject()
 	{
 		ASSERT( IsValid( pTracker ) );
@@ -165,9 +175,18 @@ class CChunklessSerializer : public IBinSaver
 	}
 
 public:
-	virtual bool IsReading() { return mode == SAVER_MODE_READ; }
-	virtual int GetVersion() const { return N_SAVELOAD_VERSION; }
+	virtual bool IsReading()
+	{
+		return mode == SAVER_MODE_READ;
+	}
+
+	virtual int GetVersion() const
+	{
+		return N_SAVELOAD_VERSION;
+	}
+
 	CChunklessSerializer() : pRes( 0 ) {}
+
 	CChunklessSerializer( IPointerSerialization *_pTracker, CMemoryStream *_pRes, ESaverMode _mode )
 			: pTracker( _pTracker ), pRes( _pRes ), mode( _mode )
 	{

@@ -230,7 +230,7 @@ int CFile::operator&( IXmlSaver &saver )
 	return 0;
 }
 
-}
+} // namespace NCodeGen
 
 using namespace NCodeGen;
 REGISTER_SAVELOAD_CLASS( LIBDB, 0x301B6D05, CFile );

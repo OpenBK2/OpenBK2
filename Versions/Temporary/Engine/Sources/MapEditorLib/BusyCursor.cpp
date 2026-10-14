@@ -6,7 +6,7 @@ namespace
 {
 CBusyCursor::TCursorHandler s_pfnBegin = nullptr;
 CBusyCursor::TCursorHandler s_pfnEnd = nullptr;
-}
+} // namespace
 
 CBusyCursor::CBusyCursor()
 {

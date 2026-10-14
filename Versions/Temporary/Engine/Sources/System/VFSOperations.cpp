@@ -37,4 +37,4 @@ void SetMainFileCreator( IFileCreator *pFileCreator )
 	pMainFileCreator = pFileCreator;
 }
 
-}
+} // namespace NVFS

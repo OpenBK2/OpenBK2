@@ -14,11 +14,12 @@ class CMineStaticObject;
 class CAITransportUnit;
 enum EActionCommand : int;
 struct ICollisionsCollector;
+
 namespace NDb
 {
 struct SUnitBaseRPGStats;
 struct SSquadRPGStats;
-}
+} // namespace NDb
 
 class CFormation : public CCommonUnit
 {
@@ -46,7 +47,11 @@ class CFormation : public CCommonUnit
 
 	public:
 		CCarryedMortar() : bHasMortar( false ), fHP( 0.0f ) {}
-		bool HasMortar() const { return bHasMortar; }
+
+		bool HasMortar() const
+		{
+			return bHasMortar;
+		}
 		class CAIUnit *CreateMortar( class CFormation *pOwner );
 		void Init( const class CAIUnit *pArt );
 	};
@@ -57,6 +62,7 @@ class CFormation : public CCommonUnit
 		int nUnitGun = {};
 
 		SGunInfo() : nUnit( -1 ), nUnitGun( -1 ) {}
+
 		SGunInfo( const int _nUnit, const int _nUnitGun ) : nUnit( _nUnit ), nUnitGun( _nUnitGun ) {}
 	};
 
@@ -74,12 +80,14 @@ class CFormation : public CCommonUnit
 		ZDATA
 		CPtr<CSoldier> pSoldier;
 		int nSlotInStats = {};
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pSoldier );
 			f.Add( 3, &nSlotInStats );
 			return 0;
 		}
+
 		SVirtualUnit() : pSoldier( 0 ) {}
 	};
 
@@ -163,15 +171,28 @@ public:
 		f.Add( 30, &dwCatchArtFlag );
 		return 0;
 	}
+
 	//
 	void InitGeometries();
 	void PrepareToDelete();
 
 	bool IsMemberResting( class CSoldier *pSoldier ) const;
 
-	void SetMaxSpeed( const float _fMaxSpeed ) { fMaxSpeed = _fMaxSpeed; }
-	void SetBoundTileRadius( const int _nBoundTileRadius ) { nBoundTileRadius = _nBoundTileRadius; }
-	void SetAABBHalfSize( const CVec2 &_vAABBHalfSize ) { vAABBHalfSize = _vAABBHalfSize; }
+	void SetMaxSpeed( const float _fMaxSpeed )
+	{
+		fMaxSpeed = _fMaxSpeed;
+	}
+
+	void SetBoundTileRadius( const int _nBoundTileRadius )
+	{
+		nBoundTileRadius = _nBoundTileRadius;
+	}
+
+	void SetAABBHalfSize( const CVec2 &_vAABBHalfSize )
+	{
+		vAABBHalfSize = _vAABBHalfSize;
+	}
+
 	void UpdateStats( class CSoldier *pUnit, const int nPos );
 
 protected:
@@ -190,7 +211,10 @@ public:
 	const int GetGeometriesCount() const;
 	const int GetCurrentGeometry() const;
 
-	const NDb::SSquadRPGStats *GetStats() const { return pStats; }
+	const NDb::SSquadRPGStats *GetStats() const
+	{
+		return pStats;
+	}
 
 	// добавить новый юнит в формацию, порядковый номер его в статах - nSlot, местоположение юнита инициализируется
 	void AddNewUnitToSlot( class CSoldier *pUnit, const bool bSendToWorld );
@@ -201,23 +225,37 @@ public:
 
 	// возвращает позицию в статах формации для юнита с порядковым номером cSlot в массиве units
 	const int GetUnitSlotInStats( const uint8_t cSlot ) const;
-	virtual const float GetPassability() const { return fPass; }
+
+	virtual const float GetPassability() const
+	{
+		return fPass;
+	}
 
 	virtual void Segment();
 
 	virtual const bool IsIdle() const;
-	virtual const bool IsTurning() const { return false; }
+
+	virtual const bool IsTurning() const
+	{
+		return false;
+	}
+
 	// все ли юниты находятся в rest состоянии?
 	bool IsEveryUnitResting() const;
 	bool IsAnyUnitResting() const;
 	bool IsEveryUnitInTransport() const;
 	virtual void Stop();
 	virtual void StopTurning();
+
 	virtual void ForceGoByRightDir() {}
 
 	virtual struct IStatesFactory *GetStatesFactory() const;
 
-	const int Size() const { return soldiers.size(); }
+	const int Size() const
+	{
+		return soldiers.size();
+	}
+
 	class CSoldier *operator[]( const int n ) const
 	{
 		NI_ASSERT( ( n >= 0 && n < Size() ), "Wrong unit number" );
@@ -230,12 +268,20 @@ public:
 
 	//
 	virtual const bool CanShootToPlanes() const;
-	virtual int GetNGuns() const { return guns.size(); }
+
+	virtual int GetNGuns() const
+	{
+		return guns.size();
+	}
 	virtual class CBasicGun *GetGun( const int n ) const;
 
 	virtual class CBasicGun *ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime );
 
-	virtual const uint8_t GetPlayer() const { return cPlayer; }
+	virtual const uint8_t GetPlayer() const
+	{
+		return cPlayer;
+	}
+
 	virtual void ChangePlayer( const uint8_t cPlayer );
 
 	virtual void SetSelectable( bool bSelectable, bool bSendToWorld );
@@ -243,9 +289,20 @@ public:
 	virtual const float GetSightRadius() const;
 
 	//
-	void SetToWaitingState() { bWaiting = true; }
-	void UnsetFromWaitingState() { bWaiting = false; }
-	const bool IsInWaitingState() const { return bWaiting; }
+	void SetToWaitingState()
+	{
+		bWaiting = true;
+	}
+
+	void UnsetFromWaitingState()
+	{
+		bWaiting = false;
+	}
+
+	const bool IsInWaitingState() const
+	{
+		return bWaiting;
+	}
 
 	virtual const bool IsVisible( const uint8_t party ) const;
 
@@ -260,9 +317,20 @@ public:
 
 	virtual void UpdateArea( const EActionNotify eAction );
 
-	virtual class CTurret *GetTurret( const int nTurret ) const { return 0; }
-	virtual const int GetNTurrets() const { return 0; }
-	virtual bool IsMech() const { return false; }
+	virtual class CTurret *GetTurret( const int nTurret ) const
+	{
+		return 0;
+	}
+
+	virtual const int GetNTurrets() const
+	{
+		return 0;
+	}
+
+	virtual bool IsMech() const
+	{
+		return false;
+	}
 
 	virtual void Disappear();
 	virtual void Die( const bool fromExplosion, const float fDamage );
@@ -274,14 +342,33 @@ public:
 
 	void Disable();
 	void Enable();
-	bool IsDisabled() const { return bDisabled; }
+
+	bool IsDisabled() const
+	{
+		return bDisabled;
+	}
 
 	virtual void UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand );
 
-	bool IsFree() const { return eInsideType == EOIO_NONE; }
-	bool IsInBuilding() const { return eInsideType == EOIO_BUILDING; }
-	bool IsInEntrenchment() const { return eInsideType == EOIO_ENTRENCHMENT; }
-	bool IsInTransport() const { return eInsideType == EOIO_TRANSPORT; }
+	bool IsFree() const
+	{
+		return eInsideType == EOIO_NONE;
+	}
+
+	bool IsInBuilding() const
+	{
+		return eInsideType == EOIO_BUILDING;
+	}
+
+	bool IsInEntrenchment() const
+	{
+		return eInsideType == EOIO_ENTRENCHMENT;
+	}
+
+	bool IsInTransport() const
+	{
+		return eInsideType == EOIO_TRANSPORT;
+	}
 
 	void SetFree();
 	void SetInBuilding( class CBuilding *pBuilding );
@@ -294,32 +381,84 @@ public:
 
 	virtual void GetNewUnitInfo( struct SNewUnitInfo *pNewUnitInfo );
 
-	virtual bool IsFormation() const { return true; }
-	virtual const bool IsInfantry() const { return true; }
+	virtual bool IsFormation() const
+	{
+		return true;
+	}
+
+	virtual const bool IsInfantry() const
+	{
+		return true;
+	}
 
 	virtual void SendAcknowledgement( EUnitAckType ack, bool bForce = false );
 	virtual void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false );
 	// установить центр формации в центр тяжести юнитов
 	void BalanceCenter();
 
-	virtual const int GetMinArmor() const { return 0; }
-	virtual const int GetMaxArmor() const { return 0; }
-	virtual const int GetMinPossibleArmor( const int nSide ) const { return 0; }
-	virtual const int GetMaxPossibleArmor( const int nSide ) const { return 0; }
-	virtual const int GetArmor( const int nSide ) const { return 0; }
-	virtual const int GetRandomArmor( const int nSide ) const { return 0; }
+	virtual const int GetMinArmor() const
+	{
+		return 0;
+	}
 
-	virtual float GetMaxFireRange() const { return fMaxFireRange; }
-	void AddAvailCmd( const EActionCommand &eCmd ) { availCommands.SetData( eCmd ); }
+	virtual const int GetMaxArmor() const
+	{
+		return 0;
+	}
+
+	virtual const int GetMinPossibleArmor( const int nSide ) const
+	{
+		return 0;
+	}
+
+	virtual const int GetMaxPossibleArmor( const int nSide ) const
+	{
+		return 0;
+	}
+
+	virtual const int GetArmor( const int nSide ) const
+	{
+		return 0;
+	}
+
+	virtual const int GetRandomArmor( const int nSide ) const
+	{
+		return 0;
+	}
+
+	virtual float GetMaxFireRange() const
+	{
+		return fMaxFireRange;
+	}
+
+	void AddAvailCmd( const EActionCommand &eCmd )
+	{
+		availCommands.SetData( eCmd );
+	}
 
 	virtual EUnitAckType GetGunsRejectReason() const;
 
 	// используется только для отложенных updates
-	virtual const bool IsVisible( const int nParty ) const { return true; }
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const { pTiles->clear(); }
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const { return false; }
+	virtual const bool IsVisible( const int nParty ) const
+	{
+		return true;
+	}
 
-	const int VirtualUnitsSize() const { return nVirtualUnits; }
+	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const
+	{
+		pTiles->clear();
+	}
+
+	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const
+	{
+		return false;
+	}
+
+	const int VirtualUnitsSize() const
+	{
+		return nVirtualUnits;
+	}
+
 	const int GetVirtualUnitSlotInStats( const int nVirtualUnit ) const;
 	void AddVirtualUnit( class CSoldier *pSoldier, const int nSlotInStats );
 	void MakeVirtualUnitReal( class CSoldier *pSoldier );
@@ -346,18 +485,41 @@ public:
 	virtual void
 	LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
 
-	virtual bool CanMoveForGuard() const { return CanMove(); }
-	virtual float GetPriceMax() const;
-	virtual const NTimer::STime GetBehUpdateDuration() const { return SConsts::BEH_UPDATE_DURATION; }
-	//to protect from human resupply formation in some states
-	virtual bool IsResupplyable() const { return bCanBeResupplied; }
-	virtual void SetResupplyable( const bool _bCanBeResupplied ) { bCanBeResupplied = _bCanBeResupplied; }
+	virtual bool CanMoveForGuard() const
+	{
+		return CanMove();
+	}
 
-	virtual const bool IsWithMoraleOfficer() const { return bWithMoraleOfficer; }
+	virtual float GetPriceMax() const;
+
+	virtual const NTimer::STime GetBehUpdateDuration() const
+	{
+		return SConsts::BEH_UPDATE_DURATION;
+	}
+
+	//to protect from human resupply formation in some states
+	virtual bool IsResupplyable() const
+	{
+		return bCanBeResupplied;
+	}
+
+	virtual void SetResupplyable( const bool _bCanBeResupplied )
+	{
+		bCanBeResupplied = _bCanBeResupplied;
+	}
+
+	virtual const bool IsWithMoraleOfficer() const
+	{
+		return bWithMoraleOfficer;
+	}
 
 	virtual void FreezeByState( const bool bFreeze );
 
-	bool HasCharge() { return !bUsedCharge; }
+	bool HasCharge()
+	{
+		return !bUsedCharge;
+	}
+
 	void UsedCharge();
 	void AttachCharge( CMineStaticObject *pMine );
 	void DetonateCharge();
@@ -365,13 +527,24 @@ public:
 	// slow working
 	virtual const float GetTargetScanRadius();
 
-	virtual bool CanMoveAfterUserCommand() const { return CanMove(); }
+	virtual bool CanMoveAfterUserCommand() const
+	{
+		return CanMove();
+	}
+
 	virtual void NotifyAbilityRun( class CAICommand *pCommand );
 
 	bool ThrowGrenade();
 
-	void SetInUnitsID( const int nID ) { nInUnitsID = nID; }
-	const int GetInUnitsID() const { return nInUnitsID; }
+	void SetInUnitsID( const int nID )
+	{
+		nInUnitsID = nID;
+	}
+
+	const int GetInUnitsID() const
+	{
+		return nInUnitsID;
+	}
 
 	// доступ к положениям отдельных юнитов
 	const CVec2 GetUnitCoord( const CBasePathUnit *pSoldier ) const;
@@ -385,39 +558,113 @@ public:
 	void MoveGeometries2Center();
 
 	virtual const SRect &GetUnitRect() const;
+
 	// от нового CBasePathUnit
-	virtual const EAIClasses GetAIPassabilityClass() const { return EAC_HUMAN; }
-	virtual const float GetTurnRadius() const { return 0.0f; }
-	virtual const bool IsRound() const { return true; }
-	virtual const bool IsDangerousDirExist() const { return false; }
-	virtual const uint16_t GetDangerousDir() const { return 0; }
-	virtual const float GetMaxPossibleSpeed() const { return fMaxSpeed / fSpeedCoeff; }
-	virtual const CVec2 &GetAABBHalfSize() const { return vAABBHalfSize; }
-	virtual const CVec2 GetCenterShift() const { return VNULL2; }
-	virtual const float GetTurnSpeed() const { return 0; }
+	virtual const EAIClasses GetAIPassabilityClass() const
+	{
+		return EAC_HUMAN;
+	}
+
+	virtual const float GetTurnRadius() const
+	{
+		return 0.0f;
+	}
+
+	virtual const bool IsRound() const
+	{
+		return true;
+	}
+
+	virtual const bool IsDangerousDirExist() const
+	{
+		return false;
+	}
+
+	virtual const uint16_t GetDangerousDir() const
+	{
+		return 0;
+	}
+
+	virtual const float GetMaxPossibleSpeed() const
+	{
+		return fMaxSpeed / fSpeedCoeff;
+	}
+
+	virtual const CVec2 &GetAABBHalfSize() const
+	{
+		return vAABBHalfSize;
+	}
+
+	virtual const CVec2 GetCenterShift() const
+	{
+		return VNULL2;
+	}
+
+	virtual const float GetTurnSpeed() const
+	{
+		return 0;
+	}
+
 	virtual const SUnitProfile &GetUnitProfile() const;
-	virtual const bool CanGoBackward() const { return false; }
-	virtual const bool CanTurnRound() const { return true; }
-	virtual const bool CanRotate() const { return true; }
-	virtual const float GetSmoothTurnThreshold() const { return 0.6f; }
-	virtual const int GetBoundTileRadius() const { return nBoundTileRadius; }
+
+	virtual const bool CanGoBackward() const
+	{
+		return false;
+	}
+
+	virtual const bool CanTurnRound() const
+	{
+		return true;
+	}
+
+	virtual const bool CanRotate() const
+	{
+		return true;
+	}
+
+	virtual const float GetSmoothTurnThreshold() const
+	{
+		return 0.6f;
+	}
+
+	virtual const int GetBoundTileRadius() const
+	{
+		return nBoundTileRadius;
+	}
 
 	// возвращает - поехал или нет
 	virtual const bool SendAlongPath( struct IStaticPath *pStaticPath, const CVec2 &vShift, const bool bSmoothTurn );
 	virtual const bool SendAlongPath( IPath *pPath );
 
 	// from previous B2 CFormation and CFormationCenter
-	virtual const bool IsTrain() const { return false; }
+	virtual const bool IsTrain() const
+	{
+		return false;
+	}
+
 	bool IsInTankPit() const;
+
 	void WarFogChanged() {}
 
-	virtual const bool CanUnitTrampled( const CBasePathUnit *pUnit ) const { return false; }
+	virtual const bool CanUnitTrampled( const CBasePathUnit *pUnit ) const
+	{
+		return false;
+	}
 
 	virtual const NDb::SUnitSpecialAblityDesc *GetUnitAbilityDesc( const NDb::EUnitSpecialAbility eType );
-	const bool IsStaticUnit() const { return false; }
+
+	const bool IsStaticUnit() const
+	{
+		return false;
+	}
 
 	const bool CanCatchArtillery( const CArtillery *pArtillery ) const;
 	void ResetCatchArtTimer();
-	void SetCatchArtFlag( const uint32_t _dwCatchArtFlag ) { dwCatchArtFlag = _dwCatchArtFlag; }
+
+	void SetCatchArtFlag( const uint32_t _dwCatchArtFlag )
+	{
+		dwCatchArtFlag = _dwCatchArtFlag;
+	}
+
 	void QuickLoadToMechUnit( CAITransportUnit *pTransport );
 };

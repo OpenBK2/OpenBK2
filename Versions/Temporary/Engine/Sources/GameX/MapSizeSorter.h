@@ -21,7 +21,12 @@ public:
 
 	virtual bool Compare( IWindow *pSubItem1, IWindow *pSubItem2 );
 	virtual void SetDirection( const bool bAscending );
-	virtual void SetColumn( const int _nColumn ) { nColumn = _nColumn; }
+
+	virtual void SetColumn( const int _nColumn )
+	{
+		nColumn = _nColumn;
+	}
+
 	//
 	virtual bool IsAscending() const;
 };

@@ -9,6 +9,7 @@ struct SStoredPiece
 	std::vector<NGScene::SLoadVertexWeight> weights;
 	float fVolume;
 	std::vector<NAI::SJunction> juncs;
+
 	//vector<CPtr<NAI::CPrecalcSpheres> > precalc;
 
 	int operator&( CStructureSaver &f )

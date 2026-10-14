@@ -121,6 +121,7 @@ GetExternalTangentPoints( const CCircle &c1, const CCircle &c2, CVec2 *v11, CVec
 
 	return true;
 }
+
 // returns points on from & to circles
 // return false if there are no tangens
 bool GetDirectedCirclesTangentPoints( const CDirectedCircle &from, const CDirectedCircle &to, CVec2 *v1, CVec2 *v2 )

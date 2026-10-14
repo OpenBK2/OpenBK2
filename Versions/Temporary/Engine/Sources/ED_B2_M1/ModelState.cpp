@@ -54,7 +54,12 @@ class CEffectPreviewTime : public CFuncBase<NTimer::STime>
 	NTimer::STime start = 0;
 	NTimer::STime duration = 1;
 	bool started = false;
-	bool NeedUpdate() override { return clock.Refresh(); }
+
+	bool NeedUpdate() override
+	{
+		return clock.Refresh();
+	}
+
 	void Recalc() override
 	{
 		const NTimer::STime now = clock->GetValue();
@@ -68,12 +73,13 @@ class CEffectPreviewTime : public CFuncBase<NTimer::STime>
 
 public:
 	CEffectPreviewTime() {}
+
 	CEffectPreviewTime( CFuncBase<NTimer::STime> *source, float seconds ) : clock( source )
 	{
 		duration = static_cast<NTimer::STime>( Clamp( seconds, 0.1f, 3600.0f ) * 1000 );
 	}
 };
-}
+} // namespace
 
 CModelState::CModelState( CModelEditor *_pModelEditor )
 		: nModelSceneID( INVALID_NODE_ID ), pModelEditor( _pModelEditor ), pMutableModel( 0 ), eModelEditorType( ET_MODEL )

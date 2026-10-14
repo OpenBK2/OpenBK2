@@ -21,6 +21,7 @@ class CNamespace : public ICode
 
 public:
 	CNamespace() {}
+
 	CNamespace( NLang::CNamespace *pNM,
 	            const CNodes2TypeDefs &nodes2TypeDefs,
 	            NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
@@ -38,4 +39,4 @@ public:
 	}
 };
 
-}
+} // namespace NCodeGen

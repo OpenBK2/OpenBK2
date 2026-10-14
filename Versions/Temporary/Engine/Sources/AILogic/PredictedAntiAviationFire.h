@@ -17,13 +17,35 @@ class CPredictedAntiAviationFire
 
 	public:
 		SPredict() {}
+
 		SPredict( const CVec3 &pt, const float _fRange, const NTimer::STime _timeToFire, CAIUnit *pOwner );
-		uint16_t GetHor() const { return wHor; }
-		uint16_t GetVer() const { return wVer; }
-		float GetRange() const { return fRange; }
-		const CVec3 GetPt() const { return vPt; }
-		const NTimer::STime GetFireTime() const { return timeToFire; }
+
+		uint16_t GetHor() const
+		{
+			return wHor;
+		}
+
+		uint16_t GetVer() const
+		{
+			return wVer;
+		}
+
+		float GetRange() const
+		{
+			return fRange;
+		}
+
+		const CVec3 GetPt() const
+		{
+			return vPt;
+		}
+
+		const NTimer::STime GetFireTime() const
+		{
+			return timeToFire;
+		}
 	};
+
 	enum ESoldierAttackAviationState
 	{
 		SAAS_ESITMATING,
@@ -70,6 +92,7 @@ public:
 		f.Add( 9, &nGuns );
 		return 0;
 	}
+
 	void OnSerialize( IBinSaver &saver );
 
 private:
@@ -86,11 +109,29 @@ public:
 	{
 	}
 
-	void AddGunNumber( const int _nGun ) { nGuns.push_back( _nGun ); }
+	void AddGunNumber( const int _nGun )
+	{
+		nGuns.push_back( _nGun );
+	}
+
 	void SetTarget( CAviation *pPlane );
-	CAviation *GetPlane() const { return pPlane; }
-	CAIUnit *GetUnit() const { return pUnit; }
+
+	CAviation *GetPlane() const
+	{
+		return pPlane;
+	}
+
+	CAIUnit *GetUnit() const
+	{
+		return pUnit;
+	}
+
 	void Segment();
-	bool IsFinishedTask() const { return eState == SAAS_FINISHED_TASK; }
+
+	bool IsFinishedTask() const
+	{
+		return eState == SAAS_FINISHED_TASK;
+	}
+
 	void Stop();
 };

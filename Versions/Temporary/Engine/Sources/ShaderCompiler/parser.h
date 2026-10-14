@@ -5,7 +5,9 @@ struct SLexem
 	string szData;
 
 	SLexem() {}
+
 	SLexem( const string &_szData ) : szData( _szData ) {}
+
 	SLexem( const char *pStart, const char *pFinish ) : szData( pStart, pFinish ) {}
 };
 

@@ -11,6 +11,7 @@ void CPlanePreferences::Init( const SMechUnitRPGStats *_pStats, bool _bCanViolat
 	bCanViolateHeghtLimits = _bCanViolateHeghtLimits;
 	pStats = _pStats;
 }
+
 uint16_t CPlanePreferences::GetDivingAngle() const
 {
 	return pStats->wDivingAngle;

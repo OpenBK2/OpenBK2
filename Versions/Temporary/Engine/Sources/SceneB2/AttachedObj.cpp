@@ -84,6 +84,7 @@ void CAttachedObject::Destroy( const NTimer::STime time )
 {
 	pHolder = 0;
 }
+
 void CAttachedObject::Clear( const NTimer::STime time )
 {
 	pHolder = 0;

@@ -27,7 +27,10 @@ class CDbRow
 public:
 	explicit CDbRow( const std::vector<std::string> &values ) : pValues( &values ) {}
 
-	const std::string &operator[]( const int nColumn ) const { return ( *pValues )[nColumn]; }
+	const std::string &operator[]( const int nColumn ) const
+	{
+		return ( *pValues )[nColumn];
+	}
 };
 
 //! One fully read result set.
@@ -56,13 +59,30 @@ public:
 	}
 
 	//! Called by a backend as it reads a result set in.
-	void SetColumnNames( std::vector<std::string> names ) { columnNames = std::move( names ); }
-	void AddRow( std::vector<std::string> row ) { rows.push_back( std::move( row ) ); }
+	void SetColumnNames( std::vector<std::string> names )
+	{
+		columnNames = std::move( names );
+	}
 
-	int GetRowCount() const { return static_cast<int>( rows.size() ); }
-	int GetColumnCount() const { return static_cast<int>( columnNames.size() ); }
+	void AddRow( std::vector<std::string> row )
+	{
+		rows.push_back( std::move( row ) );
+	}
 
-	const std::string &GetColumnName( const int nColumn ) const { return columnNames[nColumn]; }
+	int GetRowCount() const
+	{
+		return static_cast<int>( rows.size() );
+	}
+
+	int GetColumnCount() const
+	{
+		return static_cast<int>( columnNames.size() );
+	}
+
+	const std::string &GetColumnName( const int nColumn ) const
+	{
+		return columnNames[nColumn];
+	}
 
 	//! The value at a cell.
 	//!
@@ -71,9 +91,15 @@ public:
 	//! std::string without checking, so a NULL was undefined behaviour rather
 	//! than a value they handled. SELECT MAX(xp) on an empty gamestats is the
 	//! case that reaches it.
-	const std::string &Get( const int nRow, const int nColumn ) const { return rows[nRow][nColumn]; }
+	const std::string &Get( const int nRow, const int nColumn ) const
+	{
+		return rows[nRow][nColumn];
+	}
 
-	CDbRow Row( const int nRow ) const { return CDbRow( rows[nRow] ); }
+	CDbRow Row( const int nRow ) const
+	{
+		return CDbRow( rows[nRow] );
+	}
 };
 
 //! Where to connect. Ignored by an embedded backend apart from the database

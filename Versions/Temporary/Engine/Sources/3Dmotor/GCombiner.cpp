@@ -302,6 +302,7 @@ inline void CalcPerVertexLight( T *pRes,
 }
 
 static std::vector<NGfx::SCompactVector> xformedNormals;
+
 template <class TParam>
 struct STGenericTransformer
 {
@@ -309,10 +310,12 @@ struct STGenericTransformer
 	{
 		PASS_MMX_BLENDS = 1
 	};
+
 	typedef TParam TRes;
 	const SPerVertexLightState &ls;
 
 	STGenericTransformer( const SPerVertexLightState &_ls ) : ls( _ls ) {}
+
 	void CopyTransform( CObjectInfo *pObjInfo,
 	                    const SUVInfo *pSrc,
 	                    int nVertices,
@@ -327,6 +330,7 @@ struct STGenericTransformer
 		}
 		CalcPerVertexLight( pRes, pObjInfo, pObjInfo->GetPositions(), pSrc, xformedNormals, ls, pCache, bv );
 	}
+
 	void SimpleTransform( CObjectInfo *pObjInfo,
 	                      const std::vector<CVec3> &transformed,
 	                      const SUVInfo *pSrc,
@@ -348,6 +352,7 @@ struct STGenericTransformer
 
 		CalcPerVertexLight( pRes, pObjInfo, transformed, pSrc, xformedNormals, ls, pCache, bv );
 	}
+
 	void SingleSkinTransform( CObjectInfo *pObjInfo,
 	                          const std::vector<CVec3> &transformed,
 	                          const SUVInfo *_pSrc,
@@ -403,6 +408,7 @@ struct STGenericTransformer
 struct SGenericPosTransformer
 {
 	typedef CVec3 TRes;
+
 	enum E
 	{
 		PASS_MMX_BLENDS = 0
@@ -417,6 +423,7 @@ struct SGenericPosTransformer
 			pRes[k] = srcPos[k];
 		}
 	}
+
 	void SimpleTransform( CObjectInfo *pObjInfo,
 	                      const std::vector<CVec3> &_fake,
 	                      const SUVInfo *pSrc,
@@ -429,6 +436,7 @@ struct SGenericPosTransformer
 		const std::vector<CVec3> &srcPos = pObjInfo->GetPositions();
 		TransformPosition( srcPos, pRes, trans.forward );
 	}
+
 	void SingleSkinTransform( CObjectInfo *pObjInfo,
 	                          const std::vector<CVec3> &_fake,
 	                          const SUVInfo *pSrc,
@@ -454,7 +462,9 @@ template <class T>
 struct SPartTransformer : public T
 {
 	SPartTransformer() {}
+
 	SPartTransformer( const SPerVertexLightState &_ls ) : T( _ls ) {}
+
 	int DoTransform( IPart *p, typename T::TRes *pRes, const std::vector<CVec3> &transformed )
 	{
 		CObjectInfo *pObjInfo = p->GetObjectInfo();
@@ -528,6 +538,7 @@ struct STGfxCacheTransformer : public SPartTransformer<STGenericTransformer<TVer
 			: TParent( _ls ), geom( pGeom, nTotal, usage ), nVert( 0 )
 	{
 	}
+
 	void Transform( IPart *p, const std::vector<CVec3> &transformed )
 	{
 		CObjectInfo *pObjInfo = p->GetObjectInfo();
@@ -561,6 +572,7 @@ struct STGfxCacheTransformer : public SPartTransformer<STGenericTransformer<TVer
 		ASSERT( nVert <= geom.GetSize() );
 	}
 };
+
 typedef STGfxCacheTransformer<SGfxVertex> SGfxCacheTransformer;
 typedef STGfxCacheTransformer<STnLVertex> STnlCacheTransformer;
 
@@ -839,7 +851,8 @@ void CIBCombiner::Recalc()
 	ASSERT( pFill <= &triBuffer[triBuffer.size() - 1] );
 }
 
-}
+} // namespace NGScene
+
 using namespace NGScene;
 BASIC_REGISTER_CLASS( _3DMOTOR, IPart )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x02741133, CPerMaterialCombiner )

@@ -31,7 +31,11 @@ public:
 	// The view the pane made. It is created by the pane with this as its
 	// selection handler.
 	void SetView( ILogView *pView );
-	ILogView *GetView() const { return pLogView; }
+
+	ILogView *GetView() const
+	{
+		return pLogView;
+	}
 
 	void Log( ELogOutputType eLogOutputType, const std::string &szText );
 	void ClearLog();

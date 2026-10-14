@@ -23,23 +23,45 @@ class CWindowSimpleSharedController : public CObjectBaseController
 	OBJECT_NOCOPY_METHODS( CWindowSimpleSharedController );
 
 public:
-	CObjectController *GetInternalController() { return &internalController; }
-	static const std::string GetTemporaryLabel() { return "CWindowSimpleSharedController::TEMPORARY_LABEL"; }
+	CObjectController *GetInternalController()
+	{
+		return &internalController;
+	}
+
+	static const std::string GetTemporaryLabel()
+	{
+		return "CWindowSimpleSharedController::TEMPORARY_LABEL";
+	}
+
 	//
 	// IController
-	virtual bool IsEmpty() const { return internalController.IsEmpty(); }
+	virtual bool IsEmpty() const
+	{
+		return internalController.IsEmpty();
+	}
+
 	virtual void GetDescription( std::string *pszDescription ) const
 	{
 		internalController.GetDescription( pszDescription );
 	}
+
 	//
 	void SetChildDesc( const std::string &szTypeName, const CDBID &rDBID )
 	{
 		szChildTypeName = szTypeName;
 		dbid = rDBID;
 	}
-	inline const std::string &GetChildTypeName() const { return szChildTypeName; }
-	inline const CDBID &GetChildID() const { return dbid; }
+
+	inline const std::string &GetChildTypeName() const
+	{
+		return szChildTypeName;
+	}
+
+	inline const CDBID &GetChildID() const
+	{
+		return dbid;
+	}
+
 	//
 private:
 	CObjectController internalController;
@@ -75,17 +97,37 @@ public:
 	CWindowSimpleSharedEditorSettings editorSettings;
 
 	//IEditor
-	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
-	IView *GetView() { return this; }
-	IInputState *GetInputState() { return states.back().pState; }
+	void GetTemporaryLabel( std::string *pszTemporaryLabel )
+	{
+		pszTemporaryLabel->clear();
+	}
+
+	IView *GetView()
+	{
+		return this;
+	}
+
+	IInputState *GetInputState()
+	{
+		return states.back().pState;
+	}
+
 	void GetChildFrameType( std::string *pszChildFrameTypeName )
 	{
 		( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__";
 	}
+
 	void CreateControls() {}
+
 	void PostCreateControls() {}
+
 	void PreDestroyControls() {}
-	void DestroyControls() { Destroy(); }
+
+	void DestroyControls()
+	{
+		Destroy();
+	}
+
 	void Create();
 	void Destroy();
 
@@ -104,8 +146,15 @@ public:
 	void Redo( IController *pController );
 
 	//ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) { return false; }
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) { return false; }
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
+	{
+		return false;
+	}
+
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
+	{
+		return false;
+	}
 
 	// methods
 	bool UOBegin( IManipulator *pManipulator, const std::string &rObjectTypeName, const CDBID &rDBID );
@@ -118,8 +167,17 @@ public:
 
 	void PushState( const SObjectSet &_objectSet, CDefaultInputState *pState, bool bCallEnterLeave = true );
 	void PopState();
-	bool HasPushedStates() const { return !states.empty(); }
-	bool HasMoreThanOnePushedStates() const { return states.size() > 1; }
+
+	bool HasPushedStates() const
+	{
+		return !states.empty();
+	}
+
+	bool HasMoreThanOnePushedStates() const
+	{
+		return states.size() > 1;
+	}
+
 	bool SetupState( const SObjectSet &_objectSet );
 
 	void PushRunModeState( const std::string &rszEditorTypeName, const CDBID &rDBID );

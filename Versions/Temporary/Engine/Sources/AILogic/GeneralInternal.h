@@ -94,6 +94,7 @@ public:
 		f.Add( 23, &nMaxAllowedMobileTanks );
 		return 0;
 	}
+
 	void OnSerialize( IBinSaver &saver );
 	// сегмент принятия решения - начинать арт. обстрел / бомбардировку или нет
 	void BombardmentSegment();
@@ -103,6 +104,7 @@ public:
 	//Checks for reinforcement and calls if available
 	void CheckAvailableReinforcement();
 	void InitRearManager(); //do map-dependent calculations
+
 	enum EBalanceAction
 	{
 		BA_ADD_ENEMY,
@@ -110,6 +112,7 @@ public:
 		BA_ADD_OWN,
 		BA_REMOVE_OWN
 	};
+
 	void BalanceUpdate( EBalanceAction eAction, CCommonUnit *_pUnit );
 
 	void EraseLastSeen();
@@ -125,6 +128,7 @@ public:
 	{
 		curProcessed = enemys.end();
 	}
+
 	CGeneral( const int _nParty )
 			: nParty( _nParty ), lastBombardmentCheck( 0 ), timeNextUpdate( 1000 ), nAirReinfTurnCounter( 0 )
 	{
@@ -150,14 +154,22 @@ public:
 	virtual void RemoveResistance( const CVec2 &vCenter );
 
 	//ICommander
-	virtual float GetMeanSeverity() const { return 0; }
+	virtual float GetMeanSeverity() const
+	{
+		return 0;
+	}
+
 	virtual void EnumWorkers( const EForceType eType, IWorkerEnumerator *pEnumerator );
 	virtual void GiveResistances( IEnemyEnumerator *pEnmumerator );
 
 	// при получении подкрепления его нужно отдать в управление генералу.
 	// забирает работника назад
 	void Give( CCommonUnit *pWorker, bool bFromReinforcement );
-	void Give( CCommonUnit *pWorker ) { Give( pWorker, true ); }
+
+	void Give( CCommonUnit *pWorker )
+	{
+		Give( pWorker, true );
+	}
 
 	void Segment();
 
@@ -181,5 +193,9 @@ public:
 
 	void SetCellInUse( const int nResistanceCellNumber, bool bInUse );
 	bool IsInResistanceCircle( const CVec2 &vPoint ) const;
-	int GetParty() const { return nParty; }
+
+	int GetParty() const
+	{
+		return nParty;
+	}
 };

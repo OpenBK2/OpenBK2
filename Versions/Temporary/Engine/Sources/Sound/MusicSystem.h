@@ -6,7 +6,8 @@ namespace NDb
 {
 struct SVoice;
 struct SMapMusic;
-}
+} // namespace NDb
+
 enum EMusicSystemVolume
 {
 	EMS_MASTER, // master volume

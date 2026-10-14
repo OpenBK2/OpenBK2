@@ -43,7 +43,7 @@ bool ApplyRemove( CMapInfoEditor *pMapInfoEditor, const std::string &rszNode, in
 	Singleton<IControllerContainer>()->Add( pObjectController );
 	return true;
 }
-}
+} // namespace
 
 namespace NReinfPointsTemplates
 {
@@ -113,4 +113,4 @@ void Remove( CReinfPointsState::CTypedTemplateType *pTemplates,
 	ApplyRemove( pMapInfoEditor, TemplatesNode( nPlayer, nReinfPoint ), nSelected );
 	pTemplates->erase( pTemplates->begin() + nSelected );
 }
-}
+} // namespace NReinfPointsTemplates

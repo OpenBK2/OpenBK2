@@ -33,7 +33,7 @@ inline void __fill_tga_header<NImage::SColor>( STGAFileHeader *pHdr )
 	pHdr->cImageType = TGAIT_TRUE_COLOR;
 	pHdr->imagespec.descriptor.cAlphaChannelBits = 8;
 }
-};
+}; // namespace NImage
 
 bool CMapInfoEditor::CreateMinimapImage()
 {

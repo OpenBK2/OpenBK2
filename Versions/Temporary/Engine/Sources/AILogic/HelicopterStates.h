@@ -16,7 +16,11 @@ class CHelicopterStatesFactory : public IStatesFactory
 	static CPtr<CHelicopterStatesFactory> pFactory;
 
 public:
-	int operator&( IBinSaver &saver ) { return 0; }
+	int operator&( IBinSaver &saver )
+	{
+		return 0;
+	}
+
 	static IStatesFactory *Instance();
 
 	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
@@ -38,18 +42,34 @@ public:
 		f.Add( 2, &pHelicopter );
 		return 0;
 	}
+
 	CHelicopterBaseState() : pHelicopter( 0 ) {}
+
 	CHelicopterBaseState( CHelicopter *pUnit ) : pHelicopter( pUnit ) {}
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
-	virtual bool IsAttacksUnit() const { return false; }
-	virtual CAIUnit *GetTargetUnit() const { return 0; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual bool IsAttacksUnit() const
+	{
+		return false;
+	}
+
+	virtual CAIUnit *GetTargetUnit() const
+	{
+		return 0;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 
 protected:
 	bool ShouldLeaveMap() const;
 	void Finish();
+
 	virtual void OnFinish() {}
 };
 
@@ -57,6 +77,7 @@ class CHelicopterRestState : public CHelicopterBaseState
 {
 	OBJECT_BASIC_METHODS( CHelicopterRestState );
 	ZDATA_( CHelicopterBaseState )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CHelicopterBaseState *)this );
@@ -65,10 +86,20 @@ class CHelicopterRestState : public CHelicopterBaseState
 
 public:
 	CHelicopterRestState() {}
+
 	CHelicopterRestState( CHelicopter *pUnit ) : CHelicopterBaseState( pUnit ) {}
+
 	virtual void Segment();
-	virtual bool IsRestState() const { return true; }
-	virtual EUnitStateNames GetName() { return EUSN_REST; }
+
+	virtual bool IsRestState() const
+	{
+		return true;
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_REST;
+	}
 };
 
 class CHelicopterMoveState : public CHelicopterBaseState
@@ -78,6 +109,7 @@ class CHelicopterMoveState : public CHelicopterBaseState
 	CVec2 vTarget;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	bool bScanTargets = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CHelicopterBaseState *)this );
@@ -88,10 +120,19 @@ class CHelicopterMoveState : public CHelicopterBaseState
 
 public:
 	CHelicopterMoveState() : vTarget( VNULL2 ), bScanTargets( false ) {}
+
 	CHelicopterMoveState( CHelicopter *pUnit, const CVec2 &_vTarget, const bool _bScanTargets );
 	virtual void Segment();
-	virtual const CVec2 GetPurposePoint() const { return vTarget; }
-	virtual EUnitStateNames GetName() { return bScanTargets ? EUSN_SWARM : EUSN_MOVE; }
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return vTarget;
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return bScanTargets ? EUSN_SWARM : EUSN_MOVE;
+	}
 };
 
 // Release one soldier at a time; finish the active squad before obeying a new order.
@@ -107,6 +148,7 @@ class CHelicopterUnloadState : public CHelicopterBaseState
 	std::vector<CVec3> dropPoints;
 	int nNextPassenger = {};
 	bool bFinishAfterSquad = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CHelicopterBaseState *)this );
@@ -120,6 +162,7 @@ class CHelicopterUnloadState : public CHelicopterBaseState
 		f.Add( 9, &bFinishAfterSquad );
 		return 0;
 	}
+
 	bool IsPassengerAboard( CSoldier *pSoldier ) const;
 	CFormation *GetNextSquad() const;
 	bool FindDropPoint( const CVec2 &vPreferred, CVec3 *pDropPoint ) const;
@@ -131,11 +174,20 @@ public:
 				bFinishAfterSquad( false )
 	{
 	}
+
 	CHelicopterUnloadState( CHelicopter *pUnit, const CVec2 &_vTarget, CFormation *_pUnload );
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual const CVec2 GetPurposePoint() const { return vTarget; }
-	virtual EUnitStateNames GetName() { return EUSN_LAND; }
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return vTarget;
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_LAND;
+	}
 };
 
 class CHelicopterRotateState : public CHelicopterBaseState
@@ -143,6 +195,7 @@ class CHelicopterRotateState : public CHelicopterBaseState
 	OBJECT_BASIC_METHODS( CHelicopterRotateState );
 	ZDATA_( CHelicopterBaseState )
 	CVec2 vTarget;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CHelicopterBaseState *)this );
@@ -152,10 +205,19 @@ class CHelicopterRotateState : public CHelicopterBaseState
 
 public:
 	CHelicopterRotateState() : vTarget( VNULL2 ) {}
+
 	CHelicopterRotateState( CHelicopter *pUnit, const CVec2 &_vTarget );
 	virtual void Segment();
-	virtual const CVec2 GetPurposePoint() const { return vTarget; }
-	virtual EUnitStateNames GetName() { return EUSN_TURN_TO_POINT; }
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return vTarget;
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_TURN_TO_POINT;
+	}
 };
 
 class CHelicopterAttackUnitState : public CHelicopterBaseState
@@ -167,6 +229,7 @@ class CHelicopterAttackUnitState : public CHelicopterBaseState
 	bool bSwarmAttack = {};
 	bool bAirModifierApplied = {};
 	CDamageToEnemyUpdater damageUpdater;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CHelicopterBaseState *)this );
@@ -177,6 +240,7 @@ class CHelicopterAttackUnitState : public CHelicopterBaseState
 		f.Add( 6, &damageUpdater );
 		return 0;
 	}
+
 	void ApplyAirModifier( const bool bApply );
 	bool IsGunCompatible( CBasicGun *pCheckGun ) const;
 	bool RefreshGun();
@@ -185,6 +249,7 @@ class CHelicopterAttackUnitState : public CHelicopterBaseState
 
 public:
 	CHelicopterAttackUnitState() : pTarget( 0 ), pGun( 0 ), bSwarmAttack( false ), bAirModifierApplied( false ) {}
+
 	CHelicopterAttackUnitState( CHelicopter *pUnit, CAIUnit *pTarget, const bool _bSwarmAttack );
 
 	//virtual ~CHelicopterAttackUnitState();
@@ -192,11 +257,28 @@ public:
 
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return true; }
+
+	virtual bool IsAttackingState() const
+	{
+		return true;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
-	virtual bool IsAttacksUnit() const { return true; }
-	virtual CAIUnit *GetTargetUnit() const { return pTarget; }
-	virtual EUnitStateNames GetName() { return EUSN_ATTACK_UNIT; }
+
+	virtual bool IsAttacksUnit() const
+	{
+		return true;
+	}
+
+	virtual CAIUnit *GetTargetUnit() const
+	{
+		return pTarget;
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_ATTACK_UNIT;
+	}
 };
 
 class CHelicopterLeaveState : public CHelicopterBaseState
@@ -205,6 +287,7 @@ class CHelicopterLeaveState : public CHelicopterBaseState
 	ZDATA_( CHelicopterBaseState )
 	CVec2 vTarget;
 	bool bScanTargets = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CHelicopterBaseState *)this );
@@ -215,14 +298,24 @@ class CHelicopterLeaveState : public CHelicopterBaseState
 
 public:
 	CHelicopterLeaveState() : vTarget( VNULL2 ), bScanTargets( false ) {}
+
 	CHelicopterLeaveState( CHelicopter *pUnit, const CVec2 &_vTarget, const bool _bScanTargets );
 	virtual void Segment();
-	virtual const CVec2 GetPurposePoint() const { return vTarget; }
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return vTarget;
+	}
+
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand )
 	{
 		return TSIR_NO_COMMAND_INCOMPATIBLE;
 	}
-	virtual EUnitStateNames GetName() { return EUSN_PLANE_LEAVE; }
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_PLANE_LEAVE;
+	}
 };
 
 class CHelicopterFlyDeadState : public CHelicopterBaseState
@@ -230,6 +323,7 @@ class CHelicopterFlyDeadState : public CHelicopterBaseState
 	OBJECT_BASIC_METHODS( CHelicopterFlyDeadState );
 	ZDATA_( CHelicopterBaseState )
 	bool bStarted = {};
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CHelicopterBaseState *)this );
@@ -239,11 +333,17 @@ class CHelicopterFlyDeadState : public CHelicopterBaseState
 
 public:
 	CHelicopterFlyDeadState() : bStarted( false ) {}
+
 	CHelicopterFlyDeadState( CHelicopter *pUnit );
 	virtual void Segment();
+
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand )
 	{
 		return TSIR_NO_COMMAND_INCOMPATIBLE;
 	}
-	virtual EUnitStateNames GetName() { return EUSN_FLY_DEAD; }
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_FLY_DEAD;
+	}
 };

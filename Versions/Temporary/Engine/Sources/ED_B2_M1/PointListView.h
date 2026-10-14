@@ -49,4 +49,4 @@ void FollowSeason( IPointList *pSource, NDb::ESeason eSeason );
 // rows: "<label>   0", "<label>   1", ... Null if it could not be created.
 IWidget *Create( CPaletteList *pPalettes, IWidget *pPage, unsigned nInstanceID, const std::string &rszLabel );
 
-}
+} // namespace NPointListView

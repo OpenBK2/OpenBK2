@@ -26,46 +26,56 @@ int GetIndexLocal( int nIndex, const std::vector<int> &indices, const char *pszN
 		return indices[nIndex];
 	}
 }
+
 //
 int GetLineIndex( int nIndex = -1 ) const
 {
 	return GetIndexLocal( nIndex, lines, "line", 0 );
 }
+
 int GetFirePlaceIndex( int nIndex = -1 ) const
 {
 	return GetIndexLocal( nIndex, fireplaces, "fireplace", 0 );
 }
+
 int GetTerminatorIndex( int nIndex = -1 ) const
 {
 	return GetIndexLocal( nIndex, terminators, "terminator", 0 );
 }
+
 int GetArcIndex( int nIndex = -1 ) const
 {
 	return GetIndexLocal( nIndex, arcs, "arc", 0 );
 }
+
 //
 int GetLineIndex( int *pCurRandomSeed ) const
 {
 	return GetIndexLocal( -1, lines, "line", pCurRandomSeed );
 }
+
 int GetFirePlaceIndex( int *pCurRandomSeed ) const
 {
 	return GetIndexLocal( -1, fireplaces, "fireplace", pCurRandomSeed );
 }
+
 int GetTerminatorIndex( int *pCurRandomSeed ) const
 {
 	return GetIndexLocal( -1, terminators, "terminator", pCurRandomSeed );
 }
+
 int GetArcIndex( int *pCurRandomSeed ) const
 {
 	return GetIndexLocal( -1, arcs, "arc", pCurRandomSeed );
 }
+
 //
 const SEntrenchSegmentRPGStats &GetSegmentStats( const int nIndex ) const
 {
 	NI_ASSERT( nIndex >= 0 && nIndex < segments.size(), "Invalid segment index" );
 	return segments[nIndex];
 }
+
 //
 virtual void ToAIUnits( bool bInEditor )
 {
@@ -73,6 +83,7 @@ virtual void ToAIUnits( bool bInEditor )
 	SHPObjectRPGStats::ToAIUnits( bInEditor );
 	FOR_EACH_VAL( segments, ToAIUnits, bInEditor );
 }
+
 //
 
 virtual const int GetTypeFromIndex( const int nIndex ) const
@@ -113,4 +124,5 @@ virtual const int GetIndexFromType( const int nType, int *pCurRandomSeed ) const
 	NI_ASSERT( false, fmt::format( "Wrong type {} in entrenchment \"{}\"", nType, szParentName ) );
 	return -1;
 }
+
 //

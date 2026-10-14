@@ -17,6 +17,7 @@
 #define REFINFO_CHECK_EMPTY 0x00000010
 #define REFINFO_CHECK_VALID 0x00000020
 #define REFINFO_ALL 0xFFffFFff
+
 //
 
 class MAPEDITORLIB_EXPORT CManipulatorManager
@@ -34,12 +35,14 @@ public:
 		bool isValid;
 
 		SReferenceInfo() : nFlags( 0x00000000 ), isEmpty( true ), isValid( true ) {}
+
 		SReferenceInfo( const SReferenceInfo &rReferenceInfo )
 				: nFlags( rReferenceInfo.nFlags ), szName( rReferenceInfo.szName ),
 					szObjectTypeName( rReferenceInfo.szObjectTypeName ), szObjectName( rReferenceInfo.szObjectName ),
 					isEmpty( rReferenceInfo.isEmpty ), isValid( rReferenceInfo.isValid )
 		{
 		}
+
 		SReferenceInfo &operator=( const SReferenceInfo &rReferenceInfo )
 		{
 			if ( &rReferenceInfo != this )
@@ -54,6 +57,7 @@ public:
 			return *this;
 		}
 	};
+
 	typedef std::list<SReferenceInfo> CReferenceInfoList;
 
 	// Скопировать значения из одного манипулятора в другой
@@ -116,6 +120,7 @@ public:
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetValue(): pManipulator == 0" );
 		return pManipulator->SetValue( rszName, CVariant( rData ) );
 	}
+
 	//
 	// The typed SetValue and GetValue below were explicit specializations of the
 	// templates, written inside the class, which MSVC accepts and C++17 does not
@@ -128,6 +133,7 @@ public:
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetValue(): pManipulator == 0" );
 		return pManipulator->SetValue( rszName, rData );
 	}
+
 	//
 	static bool
 	SetValue( const std::string &rszData, struct IManipulator *pManipulator, const std::string &rszName, bool bReference )
@@ -142,6 +148,7 @@ public:
 			return pManipulator->SetValue( rszName, CVariant( rszData ) );
 		}
 	}
+
 	//
 	template <class TValue>
 	static bool SetVec2( const TValue &rvData, struct IManipulator *pManipulator, const std::string &rszName )
@@ -154,6 +161,7 @@ public:
 		                                             CVariant( rvData.y ) );
 		return bResult;
 	}
+
 	//
 	template <class TValue>
 	static bool SetVec3( const TValue &rvData, struct IManipulator *pManipulator, const std::string &rszName )
@@ -168,6 +176,7 @@ public:
 		                                             CVariant( rvData.z ) );
 		return bResult;
 	}
+
 	//
 	template <class TValue>
 	static bool SetVec4( const TValue &rvData, struct IManipulator *pManipulator, const std::string &rszName )
@@ -184,19 +193,23 @@ public:
 		                                             CVariant( rvData.w ) );
 		return bResult;
 	}
+
 	//
 	static bool SetValue( const CVec2 &rData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		return SetVec2<CVec2>( rData, pManipulator, rszName );
 	}
+
 	static bool SetValue( const CVec3 &rData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		return SetVec3<CVec3>( rData, pManipulator, rszName );
 	}
+
 	static bool SetValue( const CVec4 &rData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		return SetVec4<CVec4>( rData, pManipulator, rszName );
 	}
+
 	//
 	template <class TValue>
 	static bool SetArray( const TValue &rData, struct IManipulator *pManipulator, const std::string &rszName )
@@ -241,6 +254,7 @@ public:
 		}
 		return bResult;
 	}
+
 	//
 	template <class TValue>
 	static bool Set2DArray( const TValue &rData, struct IManipulator *pManipulator, const std::string &rszName )
@@ -325,6 +339,7 @@ public:
 		}
 		return bResult;
 	}
+
 	//
 	template <class TValue>
 	static bool GetValue( TValue *pData, struct IManipulator *pManipulator, const std::string &rszName )
@@ -340,6 +355,7 @@ public:
 		}
 		return bResult;
 	}
+
 	//
 	static bool GetValue( CVariant *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
@@ -347,6 +363,7 @@ public:
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
 		return pManipulator->GetValue( rszName, pData );
 	}
+
 	//
 	static bool GetValue( std::string *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
@@ -367,6 +384,7 @@ public:
 		}
 		return bResult;
 	}
+
 	//
 	static bool GetValue( unsigned *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
@@ -381,6 +399,7 @@ public:
 		}
 		return bResult;
 	}
+
 	//
 	static bool GetValue( uint16_t *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
@@ -395,6 +414,7 @@ public:
 		}
 		return bResult;
 	}
+
 	//
 	template <class TValue, class TFieldType>
 	static bool GetVec2( TValue *pvData, struct IManipulator *pManipulator, const std::string &rszName )
@@ -417,6 +437,7 @@ public:
 		}
 		return bResult;
 	}
+
 	//
 	template <class TValue, class TFieldType>
 	static bool GetVec3( TValue *pvData, struct IManipulator *pManipulator, const std::string &rszName )
@@ -444,6 +465,7 @@ public:
 		}
 		return bResult;
 	}
+
 	//
 	template <class TValue, class TFieldType>
 	static bool GetVec4( TValue *pvData, struct IManipulator *pManipulator, const std::string &rszName )
@@ -476,19 +498,23 @@ public:
 		}
 		return bResult;
 	}
+
 	//
 	static bool GetValue( CVec2 *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		return GetVec2<CVec2, float>( pData, pManipulator, rszName );
 	}
+
 	static bool GetValue( CVec3 *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		return GetVec3<CVec3, float>( pData, pManipulator, rszName );
 	}
+
 	static bool GetValue( CVec4 *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		return GetVec4<CVec4, float>( pData, pManipulator, rszName );
 	}
+
 	//
 	static bool GetValue( boost::uuids::uuid *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
@@ -509,6 +535,7 @@ public:
 		}
 		return bResult;
 	}
+
 	static bool GetGUIDAsString( std::string *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
@@ -521,6 +548,7 @@ public:
 		}
 		return false;
 	}
+
 	//
 	template <class TValue, class TElementType>
 	static bool GetArray( TValue *pvData, struct IManipulator *pManipulator, const std::string &rszName )
@@ -552,6 +580,7 @@ public:
 		}
 		return bResult;
 	}
+
 	template <class TValue, class TElementType>
 	static bool GetVec2Array( TValue *pvData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
@@ -582,6 +611,7 @@ public:
 		}
 		return bResult;
 	}
+
 	template <class TValue, class TElementType>
 	static bool GetVec3Array( TValue *pvData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
@@ -612,6 +642,7 @@ public:
 		}
 		return bResult;
 	}
+
 	//
 	template <class TValue, class TElementType>
 	static bool Get2DArray( TValue *pvData,
@@ -696,6 +727,7 @@ public:
 		}
 		return bResult;
 	}
+
 	//
 	static bool Remove2DArray( struct IManipulator *pManipulator, const std::string &rszName );
 };

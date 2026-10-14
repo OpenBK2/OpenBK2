@@ -69,6 +69,7 @@ bool CAnimationBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator,
 	}
 	return true;
 }
+
 //CRAP} PLAIN_TEXT
 
 bool CAnimationBuilder::IsUniqueObjectName( const std::string &szObjectType, const std::string &szObjectName )

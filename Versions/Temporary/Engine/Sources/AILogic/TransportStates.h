@@ -14,6 +14,7 @@ class CArtillery;
 struct IStaticPath;
 class CMilitaryCar;
 class CAITransportUnit;
+
 namespace NDb
 {
 enum EMineType : int;
@@ -26,7 +27,11 @@ class CTransportStatesFactory : public IStatesFactory
 	static CPtr<CTransportStatesFactory> pFactory;
 
 public:
-	int operator&( IBinSaver &saver ) { return 0; }
+	int operator&( IBinSaver &saver )
+	{
+		return 0;
+	}
+
 	static IStatesFactory *Instance();
 	virtual struct IUnitState *ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
 	virtual struct IUnitState *ProduceRestState( class CQueueUnit *pUnit );
@@ -55,13 +60,22 @@ public:
 	static IUnitState *Instance( class CMilitaryCar *pTransport, class CFormation *pFormation );
 
 	CTransportWaitPassengerState() : pTransport( 0 ) {}
+
 	CTransportWaitPassengerState( class CMilitaryCar *pTransport, class CFormation *pFormation );
 
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
-	virtual EUnitStateNames GetName() { return EUSN_WAIT_FOR_PASSENGER; }
-	virtual bool IsAttackingState() const { return false; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_WAIT_FOR_PASSENGER;
+	}
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 
 	void AddFormationToWait( class CFormation *pFormation );
@@ -108,6 +122,7 @@ private:
 
 public:
 	CTransportLandState() : pTransport( 0 ) {}
+
 	CTransportLandState( class CMilitaryCar *pTransport,
 	                     const enum EActionLeaveParam param,
 	                     const CVec2 &vLandPoint,
@@ -116,14 +131,23 @@ public:
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
-	virtual EUnitStateNames GetName() { return EUSN_LAND; }
-	virtual bool IsAttackingState() const { return false; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_LAND;
+	}
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 };
 
 class CTransportLoadRuState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CTransportLoadRuState );
+
 	enum ETransportLoadRuState
 	{
 		ETLRS_SEARCH_FOR_STORAGE,
@@ -167,15 +191,27 @@ public:
 	Instance( class CAITransportUnit *pTransport, const bool bSubState = false, CBuilding *_pPreferredStorage = 0 );
 
 	CTransportLoadRuState() : pTransport( 0 ) {}
+
 	CTransportLoadRuState( class CAITransportUnit *pTransport, const bool bSubState, CBuilding *_pPreferredStorage );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
 
-	bool IsSubStateFinished() const { return eState == ETLRS_SUBSTATE_FINISHED; }
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return CVec2( -1.0f, -1.0f );
+	}
+
+	bool IsSubStateFinished() const
+	{
+		return eState == ETLRS_SUBSTATE_FINISHED;
+	}
 };
 
 class CTransportServeState : public IUnitState, public CStatusUpdatesHelper
@@ -196,6 +232,7 @@ class CTransportServeState : public IUnitState, public CStatusUpdatesHelper
 		ETRS_WAIT_FOR_LOADERS,
 		ETRS_WAIT_FOR_UNIT_TO_SERVE,
 	};
+
 	void CreateSquad();
 
 	ZDATA_( CStatusUpdatesHelper )
@@ -231,6 +268,7 @@ public:
 		f.Add( 12, &bSendFinishFeedback );
 		return 0;
 	}
+
 	virtual bool FindUnitToServe( bool *pIsNotEnoughRU ) = 0;
 
 	virtual void SendLoaders() = 0;
@@ -239,13 +277,22 @@ public:
 
 public:
 	CTransportServeState() : pTransport( 0 ), bUpdatedActionsBegin( false ) {}
+
 	CTransportServeState( class CAITransportUnit *pTransport, const CVec2 &_vServePoint, CAIUnit *_pPreferredUnit );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return vServePoint; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return vServePoint;
+	}
 };
 
 class CTransportResupplyState : public CTransportServeState
@@ -269,12 +316,23 @@ public:
 	Instance( class CAITransportUnit *pTransport, const CVec2 &_vServePoint, CAIUnit *_pPreferredUnit );
 
 	CTransportResupplyState() {}
+
 	CTransportResupplyState( class CAITransportUnit *pTransport, const CVec2 &_vServePoint, CAIUnit *_pPreferredUnit );
 
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
 
-	virtual EUnitStateNames GetName() { return EUSN_RESUPPLY_UNIT; }
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return CVec2( -1.0f, -1.0f );
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_RESUPPLY_UNIT;
+	}
 };
 
 class CTransportRepairState : public CTransportServeState
@@ -298,12 +356,23 @@ public:
 	Instance( class CAITransportUnit *pTransport, const CVec2 &_vServePoint, CAIUnit *_pPreferredUnit );
 
 	CTransportRepairState() {}
+
 	CTransportRepairState( class CAITransportUnit *pTransport, const CVec2 &_vServePoint, CAIUnit *_pPreferredUnit );
 
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
 
-	virtual EUnitStateNames GetName() { return EUSN_REPAIR_UNIT; }
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return CVec2( -1.0f, -1.0f );
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_REPAIR_UNIT;
+	}
 };
 
 // погрузка пушки
@@ -364,6 +433,7 @@ public:
 	Instance( class CAITransportUnit *pTransport, class CArtillery *pArtillery, const CVec2 &vHookPoint );
 
 	CTransportHookArtilleryState() {}
+
 	CTransportHookArtilleryState( class CAITransportUnit *pTransport,
 	                              class CArtillery *pArtillery,
 	                              const CVec2 &vHookPoint );
@@ -371,10 +441,18 @@ public:
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
 	virtual const CVec2 GetPurposePoint() const;
 
-	virtual EUnitStateNames GetName() { return EUSN_HOOK_ARTILLERY; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_HOOK_ARTILLERY;
+	}
 };
 
 // отцепление ариллерии
@@ -419,13 +497,22 @@ public:
 	static IUnitState *Instance( class CAITransportUnit *pTransport, const class CVec2 &vDestPoint, const bool bNow );
 
 	CTransportUnhookArtilleryState() {}
+
 	CTransportUnhookArtilleryState( class CAITransportUnit *pTransport, const class CVec2 &vDestPoint, const bool bNow );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return vDestPoint; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return vDestPoint;
+	}
 };
 
 class CTransportBuildState : public IUnitState, public CStatusUpdatesHelper
@@ -481,21 +568,39 @@ protected:
 	virtual bool IsEnoughResources() const = 0;
 	// все ли инженеры построили
 	virtual bool IsWorkDone() const = 0;
-	virtual bool MustSayNegative() const { return false; }
+
+	virtual bool MustSayNegative() const
+	{
+		return false;
+	}
+
 	virtual void NotifyGoToStorage() {}
 
 	CTransportBuildState() {}
+
 	CTransportBuildState( class CAITransportUnit *pTransport, const class CVec2 &vDestPoint );
 
 public:
 	virtual void Segment();
 
-	void SetStartPoint( const CVec2 &_vStartPoint ) { vStartPoint = _vStartPoint; }
+	void SetStartPoint( const CVec2 &_vStartPoint )
+	{
+		vStartPoint = _vStartPoint;
+	}
+
 	virtual void SetEndPoint( const CVec2 &_vEndPoint );
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return vStartPoint; }
+
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return vStartPoint;
+	}
 };
 class CLongObjectCreation;
 
@@ -522,9 +627,13 @@ protected:
 	virtual void PreCreate() = 0;
 	void SendEngineers();
 
-	virtual bool IsEndPointNeeded() const { return true; }
+	virtual bool IsEndPointNeeded() const
+	{
+		return true;
+	}
 
 	CTransportBuildLongObjectState() {}
+
 	CTransportBuildLongObjectState( class CAITransportUnit *pTransport,
 	                                const class CVec2 &vDestPoint,
 	                                class CLongObjectCreation *pCreation );
@@ -548,9 +657,14 @@ public:
 	static IUnitState *Instance( class CAITransportUnit *pTransport, const class CVec2 &vStartPoint );
 
 	CTransportBuildFenceState() {}
+
 	CTransportBuildFenceState( class CAITransportUnit *pTransport, const class CVec2 &vStartPoint );
 
-	virtual EUnitStateNames GetName() { return EUSN_BUILD_FENCE; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_BUILD_FENCE;
+	}
+
 	void PreCreate();
 };
 
@@ -570,9 +684,13 @@ public:
 	void PreCreate();
 
 	CTransportBuildEntrenchmentState() {}
+
 	CTransportBuildEntrenchmentState( class CAITransportUnit *pTransport, const class CVec2 &vStartPoint );
 
-	virtual EUnitStateNames GetName() { return EUSN_BUILD_ENTRENCHMENT; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_BUILD_ENTRENCHMENT;
+	}
 };
 
 class CTransportClearMineState : public CTransportBuildState
@@ -605,9 +723,13 @@ public:
 	static IUnitState *Instance( class CAITransportUnit *pTransport, const class CVec2 &vStartPoint );
 
 	CTransportClearMineState() {}
+
 	CTransportClearMineState( class CAITransportUnit *pTransport, const class CVec2 &vDestPoint );
 
-	virtual EUnitStateNames GetName() { return EUSN_CLEAR_MINE; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_CLEAR_MINE;
+	}
 };
 
 class CTransportPlaceMineState : public CTransportBuildState
@@ -649,9 +771,13 @@ public:
 	static IUnitState *Instance( class CAITransportUnit *pTransport, const class CVec2 &vStartPoint );
 
 	CTransportPlaceMineState() {}
+
 	CTransportPlaceMineState( class CAITransportUnit *pTransport, const class CVec2 &vDestPoint );
 
-	virtual EUnitStateNames GetName() { return EUSN_PLACE_MINE; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_PLACE_MINE;
+	}
 };
 
 class CTransportPlaceAntitankState : public CTransportBuildState
@@ -683,13 +809,18 @@ public:
 	static IUnitState *Instance( class CAITransportUnit *pTransport, const class CVec2 &vStartPoint );
 
 	CTransportPlaceAntitankState() {}
+
 	CTransportPlaceAntitankState( class CAITransportUnit *pTransport, const class CVec2 &vDestPoint );
 
-	virtual EUnitStateNames GetName() { return EUSN_PLACE_ANTITANK; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_PLACE_ANTITANK;
+	}
 };
 
 class CFullBridge;
 class CBridgeSpan;
+
 class CTransportRepairBridgeState : public CTransportBuildState
 {
 	OBJECT_BASIC_METHODS( CTransportRepairBridgeState );
@@ -716,18 +847,27 @@ protected:
 	virtual bool IsWorkDone() const;
 	void SendEngineers();
 	virtual bool IsEndPointNeeded() const;
-	virtual void NotifyGoToStorage() { bSentToBuildPoint = false; }
+
+	virtual void NotifyGoToStorage()
+	{
+		bSentToBuildPoint = false;
+	}
 
 public:
 	static IUnitState *Instance( class CAITransportUnit *pTransport, class CBridgeSpan *pFullBridge );
 
 	CTransportRepairBridgeState() {}
+
 	CTransportRepairBridgeState( class CAITransportUnit *pTransport, class CBridgeSpan *pFullBridge );
 
-	virtual EUnitStateNames GetName() { return EUSN_REPAIR_BRIDGE; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_REPAIR_BRIDGE;
+	}
 };
 
 class CBridgeCreation;
+
 class CTransportBuildBridgeState : public CTransportBuildState
 {
 	OBJECT_BASIC_METHODS( CTransportBuildBridgeState );
@@ -754,18 +894,27 @@ protected:
 	virtual bool IsWorkDone() const;
 	void SendEngineers();
 	virtual bool IsEndPointNeeded() const;
-	virtual void NotifyGoToStorage() { bTransportSent = false; }
+
+	virtual void NotifyGoToStorage()
+	{
+		bTransportSent = false;
+	}
 
 public:
 	static IUnitState *Instance( class CAITransportUnit *pTransport, class CFullBridge *pFullBridge );
 
 	CTransportBuildBridgeState() {}
+
 	CTransportBuildBridgeState( class CAITransportUnit *pTransport, class CFullBridge *pFullBridge );
 
-	virtual EUnitStateNames GetName() { return EUSN_BUILD_BRIDGE; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_BUILD_BRIDGE;
+	}
 };
 
 class CBuilding;
+
 class CTransportRepairBuildingState : public CTransportBuildState
 {
 	OBJECT_BASIC_METHODS( CTransportRepairBuildingState );
@@ -791,15 +940,23 @@ protected:
 	virtual bool IsWorkDone() const;
 	void SendEngineers();
 	virtual bool IsEndPointNeeded() const;
-	virtual void NotifyGoToStorage() { bSentToBuildPoint = false; }
+
+	virtual void NotifyGoToStorage()
+	{
+		bSentToBuildPoint = false;
+	}
 
 public:
 	static IUnitState *Instance( class CAITransportUnit *pTransport, class CBuilding *pBuilding );
 
 	CTransportRepairBuildingState() {}
+
 	CTransportRepairBuildingState( class CAITransportUnit *pTransport, class CBuilding *pBuilding );
 
-	virtual EUnitStateNames GetName() { return EUSN_REPAIR_BUILDING; }
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_REPAIR_BUILDING;
+	}
 };
 
 class CMoveToPointNotPresize : public IUnitState
@@ -827,15 +984,27 @@ public:
 	static IUnitState *Instance( class CAIUnit *pTransport, const CVec2 &vGeneralCell, const float fRadius );
 
 	CMoveToPointNotPresize() {}
+
 	CMoveToPointNotPresize( class CAIUnit *pTransport, const CVec2 &vGeneralCell, const float fRadius );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return vPurposePoint; }
-	virtual EUnitStateNames GetName() { return EUSN_MOVE_TO_RESUPPLY_CELL; }
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return vPurposePoint;
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_MOVE_TO_RESUPPLY_CELL;
+	}
 };
 
 class CTransportWaitForUnload : public IUnitState
@@ -858,13 +1027,25 @@ public:
 	static IUnitState *Instance( class CAIUnit *_pTransport, const CVec2 &vTarget );
 
 	CTransportWaitForUnload() {}
+
 	CTransportWaitForUnload( class CMilitaryCar *_pTransport, const CVec2 &vTarget );
 
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
-	virtual bool IsAttackingState() const { return false; }
-	virtual const CVec2 GetPurposePoint() const { return vPurposePoint; }
-	virtual EUnitStateNames GetName() { return EUSN_LAND; }
+	virtual bool IsAttackingState() const
+	{
+		return false;
+	}
+
+	virtual const CVec2 GetPurposePoint() const
+	{
+		return vPurposePoint;
+	}
+
+	virtual EUnitStateNames GetName()
+	{
+		return EUSN_LAND;
+	}
 };

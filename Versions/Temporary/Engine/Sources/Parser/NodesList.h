@@ -15,10 +15,20 @@ class CNodesList : public CLangNode
 public:
 	CNodesList() {}
 
-	void AddNode( T *pNode ) { nodesList.push_back( pNode ); }
+	void AddNode( T *pNode )
+	{
+		nodesList.push_back( pNode );
+	}
 
-	const std::list<CPtr<T>> &GetNodes() const { return nodesList; }
-	std::list<CPtr<T>> &GetNodes() { return nodesList; }
+	const std::list<CPtr<T>> &GetNodes() const
+	{
+		return nodesList;
+	}
+
+	std::list<CPtr<T>> &GetNodes()
+	{
+		return nodesList;
+	}
 };
 
-}
+} // namespace NLang

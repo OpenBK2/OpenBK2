@@ -50,7 +50,10 @@ class CWindowSlider : public CWindow, public ISlider
 	bool NeedHandleMouseScrolling() const;
 
 protected:
-	virtual NDb::SWindow *GetInstance() { return pInstance; }
+	virtual NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
 
 public:
 	CWindowSlider()
@@ -60,7 +63,10 @@ public:
 	{
 	}
 
-	virtual bool IsHorisontal() const { return pShared->bHorisontal; }
+	virtual bool IsHorisontal() const
+	{
+		return pShared->bHorisontal;
+	}
 
 	// message sinks
 	void OnKeyUp( const struct SGameMessage &msg );
@@ -82,7 +88,12 @@ public:
 	void GetRange( float *pMax, float *pMin ) const;
 	void SetPos( const float _nCur );
 	float GetPos() const;
-	void SetNotifySink( struct ISliderNotify *_pNotifySink ) { pNotifySink = _pNotifySink; }
+
+	void SetNotifySink( struct ISliderNotify *_pNotifySink )
+	{
+		pNotifySink = _pNotifySink;
+	}
+
 	bool IsLeverVisible() const;
 	void AllowMouseScrolling( const bool _bAllow );
 	//ISlider}

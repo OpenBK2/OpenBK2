@@ -52,6 +52,7 @@ inline unsigned int GetSafe( unsigned int uiOrder )
 	static unsigned int aiSafe[] = { 0, 1, 2, 0 };
 	return ( aiSafe[uiOrder & 0x3] );
 }
+
 inline unsigned int GetNext( unsigned int uiOrder )
 {
 	static unsigned int aiNext[] = { 1, 2, 0, 1 };

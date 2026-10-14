@@ -26,12 +26,14 @@ public:
 		std::string szName;
 		CPolygonState::CControlPointList cpList; // (2шт. макс.)
 		bool bSelected;
+
 		//
 		enum
 		{
 			CLR_NORMAL_AREA = 0x0000FF00,
 			CLR_SELECTED_AREA = 0xFFFFFF00
 		};
+
 		//
 		SScriptArea();
 		//
@@ -41,6 +43,7 @@ public:
 		void Draw( IPaintContext *pPaintDC, CSceneDrawTool *pSceneDrawTool ) const;
 		bool Pick( const CVec3 &rPoint ) const;
 	};
+
 	typedef std::unordered_map<unsigned, SScriptArea> CScriptAreaMap;
 	//
 private:
@@ -70,6 +73,7 @@ private:
 
 public:
 	CScriptAreaState( CMapInfoEditor *pMapInfoEditor = 0 );
+
 	virtual ~CScriptAreaState() {}
 
 	// IInputStateInterface
@@ -79,11 +83,31 @@ public:
 	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
 
 	// CPolygonState
-	virtual bool SkipEnterAfterInsert() { return true; }
-	virtual bool CanEdit() { return true; }
-	virtual bool CanInsertPolygon() { return true; }
-	virtual bool IsClosedPolygon() { return false; }
-	virtual bool IsDrawSceneDrawTool() { return false; }
+	virtual bool SkipEnterAfterInsert()
+	{
+		return true;
+	}
+
+	virtual bool CanEdit()
+	{
+		return true;
+	}
+
+	virtual bool CanInsertPolygon()
+	{
+		return true;
+	}
+
+	virtual bool IsClosedPolygon()
+	{
+		return false;
+	}
+
+	virtual bool IsDrawSceneDrawTool()
+	{
+		return false;
+	}
+
 	virtual EMoveType GetMoveType();
 	virtual void GetBounds( int *pnMinCount, int *pnMaxCount );
 	virtual CControlPointList *GetControlPoints( int nPolygonID );

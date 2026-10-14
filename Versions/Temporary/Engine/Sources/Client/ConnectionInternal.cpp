@@ -73,6 +73,7 @@ class CTestConnectionPacket : public CNetPacket
 public:
 	ZDATA
 	int nClientServerID;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nClientServerID );
@@ -80,6 +81,7 @@ public:
 	}
 
 	CTestConnectionPacket() {}
+
 	CTestConnectionPacket( const int nClientID, const int _nClientServerID )
 			: CNetPacket( nClientID ), nClientServerID( _nClientServerID )
 	{

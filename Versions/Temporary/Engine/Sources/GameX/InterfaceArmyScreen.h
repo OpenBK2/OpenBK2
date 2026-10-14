@@ -22,6 +22,7 @@ private:
 		CDBPtr<NDb::SHPObjectRPGStats> pDBStats;
 		CPtr<ITextView> pCountView;
 		CPtr<IWindow> pBgWnd;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &szBtnName );
@@ -45,6 +46,7 @@ private:
 		CPtr<ITextView> pRankView;
 		CPtr<ITextView> pNameView;
 		CPtr<ITextView> pRankLabel;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 4, &pWnd );
@@ -154,6 +156,7 @@ private:
 	CPtr<IWindow> pUndoAllPromotionsDlg;
 	std::wstring wszChangedValueTag;
 	CPtr<ITextView> pLeaderRankLabel;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );

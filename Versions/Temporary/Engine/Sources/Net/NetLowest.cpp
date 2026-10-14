@@ -33,4 +33,4 @@ int CNodeAddress::GetPort()
 	return (int)ntohs( nameRemote.sin_port );
 }
 
-}
+} // namespace NNet

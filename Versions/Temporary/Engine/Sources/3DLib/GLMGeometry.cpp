@@ -25,13 +25,18 @@ struct SEdgeInfo
 {
 	int nU, nV, nXSize, nYSize;
 };
+
 inline bool operator==( const SEdgeInfo &a, const SEdgeInfo &b )
 {
 	return memcmp( &a, &b, sizeof( a ) ) == 0;
 }
+
 struct SEdgeInfoHash
 {
-	int operator()( const SEdgeInfo &e ) const { return e.nU ^ e.nV ^ e.nXSize ^ e.nYSize; }
+	int operator()( const SEdgeInfo &e ) const
+	{
+		return e.nU ^ e.nV ^ e.nXSize ^ e.nYSize;
+	}
 };
 
 class CSquarePacker
@@ -42,13 +47,16 @@ class CSquarePacker
 		bool bInverse, bInverse1;
 		char nFirst, nFirst1;
 		uint16_t nXSize, nYSize;
+
 		STriInfo() {}
+
 		STriInfo( int _n1, int _n2, int _n3, bool _bInverse, char _nFirst, uint16_t _nXSize, uint16_t _nYSize )
 				: n1( _n1 ), n2( _n2 ), n3( _n3 ), bInverse( _bInverse ), nFirst( _nFirst ), nFirst1( 0 ), bInverse1( false ),
 					nXSize( _nXSize ), nYSize( _nYSize )
 		{
 		}
 	};
+
 	std::vector<STriInfo> squares;
 	const CObjectInfo::SData &info;
 	float fTexelsPerMeter;
@@ -63,6 +71,7 @@ public:
 			: info( _info ), fTexelsPerMeter( _fTexelPerMeter ), nMaxSize( _nMaxSize )
 	{
 	}
+
 	void AddTriangle( int n1, int n2, int n3 );
 	void Build( SLMLOD *pLMLOD, std::vector<SLightmapInfo> *pLMaps );
 };
@@ -446,4 +455,4 @@ void MakeSData( CObjectInfo::SData *pRes, const CObjectInfo &src )
 		memcpy( vw.fWeights, w.fWeights, sizeof( vw.fWeights ) );
 	}
 }
-}
+} // namespace NGScene

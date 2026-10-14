@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GParts.h"
 #include "GPartParticles.h"
+
 namespace NGScene
 {
 extern bool bFreeze;
@@ -234,6 +235,7 @@ CAnimatedPart::CAnimatedPart( CPtrFuncBase<CObjectInfo> *pData,
 }
 
 const float F_MAX_DISTANCE_TO_BONE = 0.5f;
+
 bool CAnimatedBoundPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pTrackers )
 {
 	if ( !HasLoadedObjectInfo() )
@@ -484,6 +486,7 @@ inline void UpdateVector( std::vector<TElem> *a, TParam *p1, TParam2 *p2 )
 	}
 	a->resize( nSize );
 }
+
 template <class TElem, class TParam>
 inline void UpdateVector( std::vector<TElem> *a, TParam *p )
 {
@@ -564,7 +567,8 @@ CObjectBase *GetPartGeometry( CObjectBase *_pA )
 	}
 	return pA->GetObjectInfoNode();
 }
-}
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x02662160, CNonePart )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x02662161, CSimplePart )

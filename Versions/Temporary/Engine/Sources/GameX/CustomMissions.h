@@ -11,4 +11,4 @@ void GetCustomMissions( std::vector<CDBID> *pDBIDs );
 void GetCustomCampaigns( std::vector<CDBID> *pDBIDs );
 void GetMultiplayerMaps( std::vector<CDBID> *pDBIDs );
 
-}
+} // namespace NCustom

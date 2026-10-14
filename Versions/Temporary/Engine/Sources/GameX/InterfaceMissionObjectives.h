@@ -18,11 +18,14 @@ public:
 
 	public:
 		CReactions() {}
+
 		~CReactions() {}
+
 		CReactions( IWindow *_pScreen, CInterfaceMissionObjectives *_pInterface )
 				: pScreen( _pScreen ), pInterface( _pInterface )
 		{
 		}
+
 		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
 		virtual int Check( const std::string &szCheckName ) const;
 
@@ -48,6 +51,7 @@ private:
 		std::wstring wszDescBrief;
 		std::wstring wszDescFull;
 		int nButtonIndex;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pWnd );
@@ -126,12 +130,14 @@ class CICMissionObjectives : public CInterfaceCommandBase<CInterfaceMissionObjec
 
 	ZDATA_( CInterfaceCommandBase<CInterfaceMissionObjectives> )
 	int nID;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceMissionObjectives> *)this );
 		f.Add( 2, &nID );
 		return 0;
 	}
+
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );

@@ -18,4 +18,4 @@ public:
 	void BanAddress( const sockaddr &sockAddr );
 };
 
-}
+} // namespace NNet

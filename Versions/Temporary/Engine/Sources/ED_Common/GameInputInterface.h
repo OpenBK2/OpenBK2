@@ -12,6 +12,8 @@ public:
 
 	// IInterfaceBase
 	virtual void OnGetFocus( bool bFocus ) {}
+
 	virtual void Step( bool bAppActive ) {}
+
 	virtual bool ProcessEvent( const struct SGameMessage &msg );
 };

@@ -11,7 +11,7 @@ struct SAnimB2;
 struct SModel;
 enum ESeason : int;
 struct SVisObj;
-}
+} // namespace NDb
 class CUserActions;
 
 namespace NUnitFullInfo
@@ -52,6 +52,7 @@ struct SWeapon
 	int nPenetration;
 	int nAmmo;
 	int nMaxAmmo;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pWeapon );
@@ -65,7 +66,10 @@ struct SWeapon
 		return 0;
 	}
 
-	bool operator==( const SWeapon &weapon ) const { return pWeapon == weapon.pWeapon; }
+	bool operator==( const SWeapon &weapon ) const
+	{
+		return pWeapon == weapon.pWeapon;
+	}
 };
 
 struct SWeaponsSort
@@ -80,6 +84,7 @@ struct SHP
 	ZDATA
 	float fFraction;
 	int nHP;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &fFraction );

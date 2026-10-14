@@ -7,7 +7,7 @@ namespace NGScene
 {
 class IGameView;
 class CObjectInfo;
-};
+}; // namespace NGScene
 
 namespace NDb
 {
@@ -21,6 +21,7 @@ class CExplosionObjInfo : public CPtrFuncBase<NGScene::CObjectInfo>
 
 public:
 	CExplosionObjInfo() {}
+
 	CExplosionObjInfo( const NMeshData::SMeshData &_data ) : data( _data ) {}
 };
 
@@ -30,8 +31,12 @@ struct SExplosionObj
 {
 	int nID;
 	CExplosionObjHolder explosionHolder;
+
 	//
-	bool operator==( const SExplosionObj &v ) const { return v.nID == nID; }
+	bool operator==( const SExplosionObj &v ) const
+	{
+		return v.nID == nID;
+	}
 };
 
 class CExplosionsManager
@@ -42,7 +47,12 @@ class CExplosionsManager
 	//
 public:
 	CExplosionsManager() : nLastID( 0 ) {}
+
 	int AddExplosion( const NMeshData::SMeshData &_data, const NDb::SMaterial *pMaterial );
 	void RemoveExplosion( const int nID );
-	void AttachGameView( NGScene::IGameView *_pGScene ) { pGScene = _pGScene; }
+
+	void AttachGameView( NGScene::IGameView *_pGScene )
+	{
+		pGScene = _pGScene;
+	}
 };

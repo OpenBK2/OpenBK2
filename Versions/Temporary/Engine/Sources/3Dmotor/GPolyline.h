@@ -16,6 +16,7 @@ class CMemGeometry : public CPtrFuncBase<NGfx::CGeometry>
 	OBJECT_BASIC_METHODS( CMemGeometry );
 	ZDATA
 	std::vector<CVec3> points;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &points );
@@ -27,6 +28,7 @@ protected:
 
 public:
 	CMemGeometry() {}
+
 	CMemGeometry( const std::vector<CVec3> &points );
 };
-}
+} // namespace NGScene

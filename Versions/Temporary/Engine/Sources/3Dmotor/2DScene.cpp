@@ -27,6 +27,7 @@ class C2DScene : public I2DScene
 
 public:
 	C2DScene() : pLastQR( 0 ) {}
+
 	void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture,
 	                         const CRectLayout &sLayout,
 	                         const CTPoint<float> &sPosition,
@@ -120,6 +121,7 @@ I2DScene *Make2DScene()
 	return new C2DScene;
 }
 
-} // NAMESOACE
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0xF2005171, C2DScene );

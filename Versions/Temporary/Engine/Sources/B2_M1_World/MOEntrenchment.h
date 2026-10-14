@@ -13,6 +13,7 @@ class CMOEntrenchmentPart : public CMOSelectable
 	OBJECT_NOCOPY_METHODS( CMOEntrenchmentPart );
 
 	CPtr<CMOEntrenchment> pParent;
+
 	// Cached transformation
 	struct SCachedInfo
 	{
@@ -62,21 +63,52 @@ public:
 	{
 		return 0;
 	}
+
 	//
-	void SetParent( CMOEntrenchment *pTrench ) { pParent = pTrench; }
-	CMOEntrenchment *GetParent() { return pParent; }
+	void SetParent( CMOEntrenchment *pTrench )
+	{
+		pParent = pTrench;
+	}
+
+	CMOEntrenchment *GetParent()
+	{
+		return pParent;
+	}
+
 	//
 	void GetHoleParams( CVec2 *pStart, CVec2 *pEnd, float *pWidth );
 	//
 	void GetActions( CUserActions *pActions, EActionsType eActions ) const;
 	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;
+
 	//
-	virtual bool IsSelected() const { return false; }
-	virtual void Select( bool bSelect ) { NI_ASSERT( !bSelect, "Selecting entrenchment!" ); }
-	virtual bool CanSelect() const { return false; }
-	virtual void SetCanSelect( bool _bCanSelect ) { NI_ASSERT( !_bCanSelect, "Selecting entrenchment!" ); }
+	virtual bool IsSelected() const
+	{
+		return false;
+	}
+
+	virtual void Select( bool bSelect )
+	{
+		NI_ASSERT( !bSelect, "Selecting entrenchment!" );
+	}
+
+	virtual bool CanSelect() const
+	{
+		return false;
+	}
+
+	virtual void SetCanSelect( bool _bCanSelect )
+	{
+		NI_ASSERT( !_bCanSelect, "Selecting entrenchment!" );
+	}
+
 	virtual void GetPassangers( std::vector<IB2MapObj *> *pPassangers ) const {}
-	virtual int GetPassangersCount() const { return 0; }
+
+	virtual int GetPassangersCount() const
+	{
+		return 0;
+	}
+
 	//
 	int operator&( IBinSaver &saver );
 };
@@ -92,12 +124,16 @@ public:
 	CMOEntrenchment() {};
 	~CMOEntrenchment();
 
-	void SetEntrenchmentStats( const NDb::SEntrenchmentRPGStats *pStats ) { SetStats( pStats ); }
+	void SetEntrenchmentStats( const NDb::SEntrenchmentRPGStats *pStats )
+	{
+		SetStats( pStats );
+	}
 
 	virtual void
 	AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, NDb::ESeason eSeason )
 	{
 	}
+
 	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement,
 	                                struct IScene *pScene,
 	                                struct ISoundScene *pSoundScene,
@@ -116,10 +152,12 @@ public:
 	                     NDb::ESeason eSeason,
 	                     const NDb::EDayNight eDayTime,
 	                     bool bInEditor );
+
 	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
 	{
 		return true;
 	}
+
 	//
 	void AddPart( CMOEntrenchmentPart *pPart, const bool bLast = false, const bool bDigBySegment = false );
 	//
@@ -128,15 +166,37 @@ public:
 	void GetActions( CUserActions *pActions, EActionsType eActions ) const;
 	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;
 	NDb::EUserAction GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const;
+
 	//
-	virtual bool IsSelected() const { return false; }
-	virtual void Select( bool bSelect ) { NI_ASSERT( !bSelect, "Selecting entrenchment!" ); }
-	virtual bool CanSelect() const { return false; }
-	virtual void SetCanSelect( bool _bCanSelect ) { NI_ASSERT( !_bCanSelect, "Selecting entrenchment!" ); }
+	virtual bool IsSelected() const
+	{
+		return false;
+	}
+
+	virtual void Select( bool bSelect )
+	{
+		NI_ASSERT( !bSelect, "Selecting entrenchment!" );
+	}
+
+	virtual bool CanSelect() const
+	{
+		return false;
+	}
+
+	virtual void SetCanSelect( bool _bCanSelect )
+	{
+		NI_ASSERT( !_bCanSelect, "Selecting entrenchment!" );
+	}
 
 	bool IsPlaceMapCommandAck( NDb::EUserAction eUserAction ) const;
+
 	virtual void GetPassangers( std::vector<IB2MapObj *> *pPassangers ) const {}
-	virtual int GetPassangersCount() const { return 0; }
+
+	virtual int GetPassangersCount() const
+	{
+		return 0;
+	}
+
 	//
 	int operator&( IBinSaver &saver );
 	//

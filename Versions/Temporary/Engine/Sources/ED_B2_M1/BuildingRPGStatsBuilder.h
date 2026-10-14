@@ -9,6 +9,7 @@ class CBuildingRPGStatsBuilder : public CBuildDataBuilder
 	OBJECT_NOCOPY_METHODS( CBuildingRPGStatsBuilder );
 
 	std::string szPreviousDBType;
+
 	CBuildingRPGStatsBuilder() {}
 
 protected:
@@ -16,7 +17,11 @@ protected:
 	bool IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView );
 
 	//CBuildDataBuilder
-	const std::string &GetBuildDataTypeName() { return BUILD_DATA_TYPE_NAME; }
+	const std::string &GetBuildDataTypeName()
+	{
+		return BUILD_DATA_TYPE_NAME;
+	}
+
 	bool InternalInsertObject( std::string *pszObjectTypeName,
 	                           std::string *pszUniqueObjectName,
 	                           bool bFromMainMenu,

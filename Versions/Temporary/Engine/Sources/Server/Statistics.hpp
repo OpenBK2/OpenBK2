@@ -21,25 +21,37 @@ class CStatisticsCollector : public IStatisticsCollector
 
 public:
 	CStatisticsCollector() {}
+
 	CStatisticsCollector( const std::string &szCollectorName ) : szSpecificName( szCollectorName )
 	{
 		collectors[szCollectorName] = this;
 		nStartTime = GetLongTickCount();
 	}
-	virtual void SetSpecific( const std::string &szName, IStatisticsData *pData ) { specificData[szName] = pData; }
+
+	virtual void SetSpecific( const std::string &szName, IStatisticsData *pData )
+	{
+		specificData[szName] = pData;
+	}
+
 	virtual IStatisticsData *operator[]( const std::string &szName )
 	{
 		NI_ASSERT( specificData.find( szName ) != specificData.end(),
 		           fmt::format( "Statistics counter {} for collector {} is not set", szName, szSpecificName ) )
 		return specificData[szName];
 	}
+
 	static IStatisticsData *GetGlobal( const std::string &szName )
 	{
 		NI_ASSERT( globalData.find( szName ) != globalData.end(),
 		           fmt::format( "Global statistics counter {} is not set", szName ) );
 		return globalData[szName];
 	}
-	static void SetGlobal( const std::string &szName, IStatisticsData *pData ) { globalData[szName] = pData; }
+
+	static void SetGlobal( const std::string &szName, IStatisticsData *pData )
+	{
+		globalData[szName] = pData;
+	}
+
 	static void Reset();
 	static std::string DumpToString();
 	static void DumpToNameValueVectors( std::vector<std::string> *pNames, std::vector<float> *pValues );
@@ -53,8 +65,10 @@ class CAverageTimeBetweenEvents : public IStatisticsData
 
 public:
 	CAverageTimeBetweenEvents() : nStartTime( 0ULL ), nEvents( 0ULL ) {}
+
 	virtual float GetValue() const;
 	virtual void Add( const float &fValue );
+
 	virtual void Reset()
 	{
 		nStartTime = 0ULL;
@@ -71,8 +85,10 @@ class CAverageValuePerTime : public IStatisticsData
 
 public:
 	CAverageValuePerTime() : nStartTime( 0ULL ), fEventsSum( 0 ) {}
+
 	virtual float GetValue() const;
 	virtual void Add( const float &fValue );
+
 	virtual void Reset()
 	{
 		fEventsSum = 0.0f;
@@ -88,12 +104,18 @@ class CAverageValue : public IStatisticsData
 
 public:
 	CAverageValue() : fSum( 0.0f ), nEvents( 0U ) {}
-	virtual float GetValue() const { return nEvents == 0U ? -1.0f : fSum / float( nEvents ); }
+
+	virtual float GetValue() const
+	{
+		return nEvents == 0U ? -1.0f : fSum / float( nEvents );
+	}
+
 	virtual void Add( const float &fValue )
 	{
 		fSum += fValue;
 		++nEvents;
 	}
+
 	virtual void Reset()
 	{
 		fSum = 0.0f;
@@ -108,9 +130,21 @@ class CEventsCount : public IStatisticsData
 
 public:
 	CEventsCount() : nEvents( 0U ) {}
-	virtual float GetValue() const { return (float)nEvents; }
-	virtual void Add( const float &fValue ) { nEvents += fValue; }
-	virtual void Reset() { nEvents = 0U; }
+
+	virtual float GetValue() const
+	{
+		return (float)nEvents;
+	}
+
+	virtual void Add( const float &fValue )
+	{
+		nEvents += fValue;
+	}
+
+	virtual void Reset()
+	{
+		nEvents = 0U;
+	}
 };
 
 namespace NStatistics
@@ -119,40 +153,49 @@ IStatisticsCollector *CreateCollector( const std::string &szCollectorName )
 {
 	return new CStatisticsCollector( szCollectorName );
 }
+
 void SetGlobalCounter( const std::string &szName, IStatisticsData *pData )
 {
 	CStatisticsCollector::SetGlobal( szName, pData );
 }
+
 IStatisticsData *CreateAverageTimePerEventCounter()
 {
 	return new CAverageTimeBetweenEvents();
 }
+
 IStatisticsData *CreateAverageValuePerTimeCounter()
 {
 	return new CAverageValuePerTime();
 }
+
 IStatisticsData *CreateAverageValueCounter()
 {
 	return new CAverageValue();
 }
+
 IStatisticsData *CreateEventsCounter()
 {
 	return new CEventsCount();
 }
+
 IStatisticsData *GetGlobal( const std::string &szName )
 {
 	return CStatisticsCollector::GetGlobal( szName );
 }
+
 void Reset()
 {
 	CStatisticsCollector::Reset();
 }
+
 std::string DumpToString()
 {
 	return CStatisticsCollector::DumpToString();
 }
+
 void DumpToNameValueVectors( std::vector<std::string> *pNames, std::vector<float> *pValues )
 {
 	CStatisticsCollector::DumpToNameValueVectors( pNames, pValues );
 }
-}
+} // namespace NStatistics

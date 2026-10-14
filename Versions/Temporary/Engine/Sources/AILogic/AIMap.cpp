@@ -4,6 +4,7 @@
 #include "Common_RTS_AI/AIMap.h"
 
 static CAIMap *pAIMap;
+
 void SetAIMap( class CAIMap *_pAIMap )
 {
 	pAIMap = _pAIMap;

@@ -51,7 +51,7 @@ void AddRiverCliffBankTiles( std::list<SVector> *pTiles,
 		}
 	}
 }
-}
+} // namespace
 
 bool CTerraGen::IsPointOnBridge( float x, float y ) const
 {

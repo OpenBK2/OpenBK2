@@ -29,9 +29,18 @@ class CRandomGenSeed : public IRandomSeed
 public:
 	void Init();
 	void InitByZeroSeed();
+
 	//
-	const SRandData &GetRandData() const { return rnd; }
-	void SetRandData( const SRandData &_rnd ) { rnd = _rnd; }
+	const SRandData &GetRandData() const
+	{
+		return rnd;
+	}
+
+	void SetRandData( const SRandData &_rnd )
+	{
+		rnd = _rnd;
+	}
+
 	//
 	void Store( CDataStream *pStream );
 	void Restore( CDataStream *pStream );

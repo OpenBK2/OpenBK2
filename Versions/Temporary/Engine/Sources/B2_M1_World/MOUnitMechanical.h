@@ -12,6 +12,7 @@ namespace NAnimation
 {
 struct ISkeletonAnimator;
 }
+
 namespace NDb
 {
 enum EAnimationType : int;
@@ -72,14 +73,17 @@ public:
 		f.Add( 21, &bAmphibianWaterEffectsActive );
 		return 0;
 	}
+
 	void OnSerialize( IBinSaver &f );
 
 private:
 	bool IsInside( const int nID );
+
 	const NDb::SMechUnitRPGStats *GetStatsLocal() const
 	{
 		return checked_cast<const NDb::SMechUnitRPGStats *>( GetStats() );
 	}
+
 	int GetMechPassangersCount() const;
 	IClientUpdatableProcess *CreateIdleEffectProcess() const;
 	void SetJoggingMode( const int nMode, const bool bPlay );
@@ -113,7 +117,12 @@ protected:
 	IMechUnitJoggingMutator *GetOrCreateJoggingMutator();
 	virtual void SetupSpecialAnimationMutator( NAnimation::ISkeletonAnimator *pAnimator );
 	virtual void AdjustVisualPlacement( struct SAINotifyPlacement *pPlacement );
-	bool HasMoved() const { return bMoved; }
+
+	bool HasMoved() const
+	{
+		return bMoved;
+	}
+
 	virtual void InitAttached( const NDb::ESeason eSeason, IChooseAttached *pChooseFunc );
 	void FillIconsInfo( SSceneObjIconInfo &iconInfo );
 
@@ -128,9 +137,16 @@ public:
 	//
 	bool Load( struct IMOUnit *pMO, bool bEnter );
 	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter );
+
 	void UpdatePassangers() {}
+
 	void GetPassangers( std::vector<CMOSelectable *> *pBuffer ) const;
-	int GetPassangersCount() const { return vPassangers.size(); }
+
+	int GetPassangersCount() const
+	{
+		return vPassangers.size();
+	}
+
 	int GetFreePlaces() const;
 	int GetFreeMechPlaces() const;
 
@@ -172,7 +188,12 @@ public:
 
 	//
 	virtual void Select( bool bSelect );
-	virtual bool IsMechUnit() const { return true; }
+
+	virtual bool IsMechUnit() const
+	{
+		return true;
+	}
+
 	//
 	virtual bool NeedShowInterrior() const;
 
@@ -184,7 +205,18 @@ public:
 	                   IScene *pScene );
 	void SetDiveSound( bool bDive );
 
-	bool IsVisible() const { return CMOUnit::IsVisible() && pTransport == 0; }
-	IMOContainer *GetContainer() const { return pTransport; }
-	void SetCrewSoldier( IMOUnit *pCrewSoldier ) { pOneFromCrew = pCrewSoldier; }
+	bool IsVisible() const
+	{
+		return CMOUnit::IsVisible() && pTransport == 0;
+	}
+
+	IMOContainer *GetContainer() const
+	{
+		return pTransport;
+	}
+
+	void SetCrewSoldier( IMOUnit *pCrewSoldier )
+	{
+		pOneFromCrew = pCrewSoldier;
+	}
 };

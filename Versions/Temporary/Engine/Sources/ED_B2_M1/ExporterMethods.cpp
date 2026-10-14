@@ -942,6 +942,7 @@ namespace NExportFilesList
 struct SEntry
 {
 	std::string szFileName;
+
 	//
 	int operator&( IXmlSaver &saver )
 	{
@@ -958,6 +959,7 @@ struct SEntry
 		return 0;
 	}
 };
+
 //
 bool LoadFilesList( std::vector<SEntry> *pFiles, const std::string &szFileName, const char *pszBase )
 {
@@ -970,7 +972,7 @@ bool LoadFilesList( std::vector<SEntry> *pFiles, const std::string &szFileName, 
 	pSaver->Add( pszBase, pFiles );
 	return true;
 }
-};
+}; // namespace NExportFilesList
 
 bool ExportFilesList( const std::string &szFilesListFileName, bool bForce, const char *pszBase )
 {

@@ -120,4 +120,4 @@ void WriteChoice( wxChoice *pChoice, const TList &rList, int nIndex, bool bCount
 		}
 	}
 }
-}
+} // namespace NWxEditParameter

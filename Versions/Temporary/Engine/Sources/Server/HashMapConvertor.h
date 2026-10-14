@@ -10,4 +10,4 @@ void ConvertVector( std::unordered_map<std::string, int> *pHashMap,
                     const std::string &szPrefix,
                     std::vector<int> *pValue,
                     const bool bRead );
-};
+}; // namespace NHashMapConvertor

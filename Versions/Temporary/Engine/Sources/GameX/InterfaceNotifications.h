@@ -6,6 +6,7 @@
 
 class CMapObj;
 struct IAILogic;
+
 namespace NDb
 {
 struct SMissionObjective;
@@ -29,6 +30,7 @@ class CVisualNotifications : public IVisualNotifications
 		float fTimeRemain;
 		float fSpeed;
 		float fRotationSpeed;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nID );
@@ -49,6 +51,7 @@ class CVisualNotifications : public IVisualNotifications
 		ZDATA
 		CVec2 vPos;
 		bool bSelected;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &vPos );
@@ -72,6 +75,7 @@ public:
 		int nID;
 		std::vector<CPtr<CMapObj>> objects;
 		std::wstring wszText;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pItemWnd );
@@ -94,6 +98,7 @@ private:
 		CDBPtr<NDb::SModel> pModel;
 		CVec3 vPos;
 		bool bPlaced;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &nUniqueID );
@@ -110,6 +115,7 @@ private:
 		void Remove();
 		void Move( const CVec3 &vPos );
 	};
+
 	typedef std::vector<SMapPointer> SMapPointers;
 
 	ZDATA
@@ -150,6 +156,7 @@ private:
 	std::vector<int> freeIDs;
 	std::unordered_map<int, SMapPointers> pointers;
 	CPtr<IAILogic> pAI;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pMiniMap );

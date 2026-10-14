@@ -29,9 +29,20 @@ extern CFeedBackSystem theFeedBackSystem;
 class CTerrainAccess
 {
 public:
-	bool IsTileInside( const SVector &vPos ) const { return GetAIMap()->IsTileInside( vPos ); }
-	SVector GetTile( const CVec2 &vPos ) const { return AICellsTiles::GetTile( vPos ); }
-	EAIClasses GetTileLockInfo( const SVector &tile ) const { return GetTerrain()->GetTileLockInfo( tile ); }
+	bool IsTileInside( const SVector &vPos ) const
+	{
+		return GetAIMap()->IsTileInside( vPos );
+	}
+
+	SVector GetTile( const CVec2 &vPos ) const
+	{
+		return AICellsTiles::GetTile( vPos );
+	}
+
+	EAIClasses GetTileLockInfo( const SVector &tile ) const
+	{
+		return GetTerrain()->GetTileLockInfo( tile );
+	}
 };
 
 EXTERNVAR CExecutorContainer theExecutorContainer;
@@ -325,6 +336,7 @@ void CGivenPassabilityStObject::RotateFence( const CVec3 &vNewCenter )
 	center = vNewCenter;
 	wDir += 65536 / 2;
 }
+
 //DEBUG{
 //DEBUG}
 
@@ -391,6 +403,7 @@ int CGivenPassabilityStObject::GetHeight() const
 		return 32;
 	}
 }
+
 const EAIClasses CGivenPassabilityStObject::GetPassabilityClass() const
 {
 	const SStaticObjectRPGStats *pStats = checked_cast<const SStaticObjectRPGStats *>( GetStats() );

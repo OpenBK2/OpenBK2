@@ -10,6 +10,7 @@ namespace NGScene
 class CGenericMaterial : public IMaterial
 {
 	OBJECT_BASIC_METHODS( CGenericMaterial );
+
 	enum EMaterialType
 	{
 		NORMAL,
@@ -18,6 +19,7 @@ class CGenericMaterial : public IMaterial
 		DECAL_ZWRITE,
 		MT_TRANSPARENT
 	};
+
 	enum ERenderOps
 	{
 		RO_G3_DIFFUSE_SPEC_LM = RO_USER,
@@ -30,6 +32,7 @@ class CGenericMaterial : public IMaterial
 		RO_GLOSSED_MIRROR,
 		RO_G3_TRASPARENT
 	};
+
 	ZDATA
 	bool bDoesCastShadow;
 	CVec4 vAvrgTexColor;
@@ -62,6 +65,7 @@ class CGenericMaterial : public IMaterial
 	bool bReceiveShadows;
 	float fAngVel;
 	EDynamicType eType;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &bDoesCastShadow );
@@ -115,7 +119,12 @@ class CGenericMaterial : public IMaterial
 			nDecalDepthTest = DPM_TESTONLY;
 		}
 	}
-	char GetDecalDepthTest() const { return nDecalDepthTest; }
+
+	char GetDecalDepthTest() const
+	{
+		return nDecalDepthTest;
+	}
+
 	bool SetRenderMode( NGfx::CRenderContext *pRC,
 	                    const SLightInfo &lightInfo,
 	                    int nROP,
@@ -131,12 +140,29 @@ public:
 				bWindAffected( false ), bReceiveShadows( true ), fAngVel( 0 )
 	{
 	}
-	virtual bool DoesCastShadow() const { return bDoesCastShadow; }
 
-	virtual bool IsOpaque() const { return !IsAlphaTest() && mt == NORMAL; }
-	virtual bool IsAlphaTest() const { return bAlphaTest; }
+	virtual bool DoesCastShadow() const
+	{
+		return bDoesCastShadow;
+	}
+
+	virtual bool IsOpaque() const
+	{
+		return !IsAlphaTest() && mt == NORMAL;
+	}
+
+	virtual bool IsAlphaTest() const
+	{
+		return bAlphaTest;
+	}
+
 	virtual NGfx::CTexture *GetAlphaTestTex();
-	virtual bool IsTransparent() const { return mt == MT_TRANSPARENT; }
+
+	virtual bool IsTransparent() const
+	{
+		return mt == MT_TRANSPARENT;
+	}
+
 	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo );
 	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC );
 	virtual void AddCustomOperation( COpGenContext *pOp,
@@ -149,61 +175,169 @@ public:
 	                                       const SPerPartVariables &vars,
 	                                       const SLightInfo &lightInfo,
 	                                       SRenderPathContext *pRPC );
-	virtual bool Is2Sided() const { return b2Sided; }
-	virtual bool IsSelfIllum() const { return bSelfIllum; }
+
+	virtual bool Is2Sided() const
+	{
+		return b2Sided;
+	}
+
+	virtual bool IsSelfIllum() const
+	{
+		return bSelfIllum;
+	}
+
 	virtual void Precache();
-	virtual CVec3 GetTranslucentColor() const { return vTranslucentColor; }
-	virtual bool IsProjectOnTerrain() const { return bProjectOnTerrain; }
-	virtual bool DoesSupportLightmaps() const { return true; }
-	virtual bool DoesIgnoreZ() const { return bIgnoreZ; }
-	virtual bool DoesBackFaceCastShadow() const { return bBackFaceCastShadow; }
-	EDynamicType GetDynamicType() { return eType; };
-	void SetDynamicType( EDynamicType _eType ) { eType = _eType; };
-	void SetAlphaTest( bool _b ) { bAlphaTest = _b; }
-	void SetDiffuseColor( CFuncBase<CVec4> *_p ) { pDiffuseColor = _p; }
+
+	virtual CVec3 GetTranslucentColor() const
+	{
+		return vTranslucentColor;
+	}
+
+	virtual bool IsProjectOnTerrain() const
+	{
+		return bProjectOnTerrain;
+	}
+
+	virtual bool DoesSupportLightmaps() const
+	{
+		return true;
+	}
+
+	virtual bool DoesIgnoreZ() const
+	{
+		return bIgnoreZ;
+	}
+
+	virtual bool DoesBackFaceCastShadow() const
+	{
+		return bBackFaceCastShadow;
+	}
+
+	EDynamicType GetDynamicType()
+	{
+		return eType;
+	};
+
+	void SetDynamicType( EDynamicType _eType )
+	{
+		eType = _eType;
+	};
+
+	void SetAlphaTest( bool _b )
+	{
+		bAlphaTest = _b;
+	}
+
+	void SetDiffuseColor( CFuncBase<CVec4> *_p )
+	{
+		pDiffuseColor = _p;
+	}
+
 	void SetDiffuseTex( CPtrFuncBase<NGfx::CTexture> *_p, const CVec4 &_vAvrgTexColor )
 	{
 		vAvrgTexColor = _vAvrgTexColor;
 		pDiffuseTex = _p;
 	}
+
 	void SetExactDecal()
 	{
 		SetMT( EXACT_DECAL );
 		bDoesCastShadow = false;
 	}
+
 	void SetDecal()
 	{
 		SetMT( DECAL );
 		bDoesCastShadow = false;
 	}
-	void SetDecalZWrite() { SetMT( DECAL_ZWRITE ); }
-	void SetTransparent() { SetMT( MT_TRANSPARENT ); }
+
+	void SetDecalZWrite()
+	{
+		SetMT( DECAL_ZWRITE );
+	}
+
+	void SetTransparent()
+	{
+		SetMT( MT_TRANSPARENT );
+	}
+
 	void SetReflectionInfo( CPtrFuncBase<NGfx::CCubeTexture> *_pSky,
 	                        CPtrFuncBase<NGfx::CTexture> *_pMirror,
 	                        float _fDielMirror,
 	                        float _fMetalMirror );
-	void SetSelfIllum( bool _b ) { bSelfIllum = _b; }
-	void SetDiffuseTex2( CPtrFuncBase<NGfx::CTexture> *_p ) { pDiffuseTex2 = _p; }
+
+	void SetSelfIllum( bool _b )
+	{
+		bSelfIllum = _b;
+	}
+
+	void SetDiffuseTex2( CPtrFuncBase<NGfx::CTexture> *_p )
+	{
+		pDiffuseTex2 = _p;
+	}
+
 	void SetDetail( CPtrFuncBase<NGfx::CTexture> *_p, float _fDetailScale )
 	{
 		pDetailTex = _p;
 		fDetailScale = _fDetailScale;
 	}
-	void SetPriority( int _nPriority ) { nPriority = _nPriority; }
+
+	void SetPriority( int _nPriority )
+	{
+		nPriority = _nPriority;
+	}
+
 	void SetSpecular( CPtrFuncBase<NGfx::CTexture> *_pSpec, float _fPower )
 	{
 		pSpecularTex = _pSpec;
 		fSpecPower = _fPower;
 	}
-	void SetTranslucentColor( const CVec3 &vColor ) { vTranslucentColor = vColor; }
-	void SetProjectOnTerrain( bool _bProjectOnTerrain ) { bProjectOnTerrain = _bProjectOnTerrain; }
-	void SetAngVel( float _fVel ) { fAngVel = _fVel; }
-	void Set2Sided( bool _b ) { b2Sided = _b; }
-	void SetFogApplying( bool _bApplyFog ) { bApplyFog = _bApplyFog; }
-	void SetAddPlacing( bool _bAddPlaced ) { bAddPlaced = _bAddPlaced; }
-	void SetUsageZBuffer( bool _bIgnoreZ ) { bIgnoreZ = _bIgnoreZ; }
-	void SetReceiveShadows( bool _bReceiveShadows ) { bReceiveShadows = _bReceiveShadows; }
-	void Check() { ASSERT( !bAlphaTest || pDiffuseTex ); }
+
+	void SetTranslucentColor( const CVec3 &vColor )
+	{
+		vTranslucentColor = vColor;
+	}
+
+	void SetProjectOnTerrain( bool _bProjectOnTerrain )
+	{
+		bProjectOnTerrain = _bProjectOnTerrain;
+	}
+
+	void SetAngVel( float _fVel )
+	{
+		fAngVel = _fVel;
+	}
+
+	void Set2Sided( bool _b )
+	{
+		b2Sided = _b;
+	}
+
+	void SetFogApplying( bool _bApplyFog )
+	{
+		bApplyFog = _bApplyFog;
+	}
+
+	void SetAddPlacing( bool _bAddPlaced )
+	{
+		bAddPlaced = _bAddPlaced;
+	}
+
+	void SetUsageZBuffer( bool _bIgnoreZ )
+	{
+		bIgnoreZ = _bIgnoreZ;
+	}
+
+	void SetReceiveShadows( bool _bReceiveShadows )
+	{
+		bReceiveShadows = _bReceiveShadows;
+	}
+
+	void Check()
+	{
+		ASSERT( !bAlphaTest || pDiffuseTex );
+	}
+
 	IMaterial *GetExactDecal();
 	virtual IMaterial *GetWindAffected();
 	virtual IMaterial *GetNoReceiveShadows();
@@ -217,6 +351,7 @@ class CWaterMaterial : public IMaterial
 	int nPriority;
 	bool bApplyFog;
 	bool bAddPlaced;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pTex );
@@ -226,11 +361,13 @@ class CWaterMaterial : public IMaterial
 		f.Add( 6, &bAddPlaced );
 		return 0;
 	}
+
 	enum ERenderOps
 	{
 		RO_BLEND2TEX_COLOR = RO_USER,
 		RO_G3_DIFFUSE_TEX,
 	};
+
 	bool SetRenderMode( NGfx::CRenderContext *pRC,
 	                    const SLightInfo &lightInfo,
 	                    int nROP,
@@ -239,6 +376,7 @@ class CWaterMaterial : public IMaterial
 
 public:
 	CWaterMaterial() {}
+
 	CWaterMaterial( CPtrFuncBase<NGfx::CTexture> *_pTex,
 	                CPtrFuncBase<NGfx::CTexture> *_pSecondTex,
 	                int _nPriority,
@@ -248,11 +386,29 @@ public:
 				bAddPlaced( _bAddPlaced )
 	{
 	}
-	virtual bool DoesCastShadow() const { return false; }
-	virtual bool IsOpaque() const { return false; }
-	virtual bool IsAlphaTest() const { return false; }
-	virtual bool IsTransparent() const { return false; }
+
+	virtual bool DoesCastShadow() const
+	{
+		return false;
+	}
+
+	virtual bool IsOpaque() const
+	{
+		return false;
+	}
+
+	virtual bool IsAlphaTest() const
+	{
+		return false;
+	}
+
+	virtual bool IsTransparent() const
+	{
+		return false;
+	}
+
 	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) {}
+
 	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC );
 	virtual void AddCustomOperation( COpGenContext *pOp,
 	                                 const ERenderOperation &op,
@@ -260,8 +416,17 @@ public:
 	                                 int nSBM,
 	                                 char nDestRegister,
 	                                 CRenderCmdList::UParameter p = CRenderCmdList::UParameter() );
-	virtual bool Is2Sided() const { return false; }
-	virtual bool IsSelfIllum() const { return false; }
+
+	virtual bool Is2Sided() const
+	{
+		return false;
+	}
+
+	virtual bool IsSelfIllum() const
+	{
+		return false;
+	}
+
 	virtual void Precache();
 };
 
@@ -278,6 +443,7 @@ class _3DMOTOR_EXPORT CAnimWaterMaterial : public IMaterial
 	bool bApplyFog;
 	bool bAddPlaced;
 	bool bDrawHorses;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pTex );
@@ -294,6 +460,7 @@ class _3DMOTOR_EXPORT CAnimWaterMaterial : public IMaterial
 		f.Add( 13, &bDrawHorses );
 		return 0;
 	}
+
 	bool SetRenderMode( NGfx::CRenderContext *pRC,
 	                    const SLightInfo &lightInfo,
 	                    int nROP,
@@ -302,6 +469,7 @@ class _3DMOTOR_EXPORT CAnimWaterMaterial : public IMaterial
 
 public:
 	CAnimWaterMaterial() {}
+
 	CAnimWaterMaterial( CPtrFuncBase<NGfx::CTexture> *_pTex,
 	                    CPtrFuncBase<NGfx::CTexture> *_pSecondTex,
 	                    int _nPriority,
@@ -312,11 +480,29 @@ public:
 	                    bool _bApplyFog,
 	                    bool _bAddPlaced,
 	                    bool _bDrawHorses );
-	virtual bool DoesCastShadow() const { return false; }
-	virtual bool IsOpaque() const { return false; }
-	virtual bool IsAlphaTest() const { return false; }
-	virtual bool IsTransparent() const { return false; }
+
+	virtual bool DoesCastShadow() const
+	{
+		return false;
+	}
+
+	virtual bool IsOpaque() const
+	{
+		return false;
+	}
+
+	virtual bool IsAlphaTest() const
+	{
+		return false;
+	}
+
+	virtual bool IsTransparent() const
+	{
+		return false;
+	}
+
 	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) {}
+
 	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC );
 	virtual void AddCustomOperation( COpGenContext *pOp,
 	                                 const ERenderOperation &op,
@@ -324,10 +510,23 @@ public:
 	                                 int nSBM,
 	                                 char nDestRegister,
 	                                 CRenderCmdList::UParameter p = CRenderCmdList::UParameter() );
-	virtual bool Is2Sided() const { return false; }
-	virtual bool IsSelfIllum() const { return false; }
+
+	virtual bool Is2Sided() const
+	{
+		return false;
+	}
+
+	virtual bool IsSelfIllum() const
+	{
+		return false;
+	}
+
 	virtual void Precache();
-	virtual bool IsProjectOnTerrain() const { return bProjectOnTerrain; }
+
+	virtual bool IsProjectOnTerrain() const
+	{
+		return bProjectOnTerrain;
+	}
 };
 
 class CSurfMaterial : public IMaterial
@@ -339,6 +538,7 @@ class CSurfMaterial : public IMaterial
 	CDGPtr<CFuncBase<STime>> pTime;
 	bool bApplyFog;
 	bool bAddPlaced;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pTex );
@@ -349,6 +549,7 @@ class CSurfMaterial : public IMaterial
 		f.Add( 7, &bAddPlaced );
 		return 0;
 	}
+
 	bool SetRenderMode( NGfx::CRenderContext *pRC,
 	                    const SLightInfo &lightInfo,
 	                    int nROP,
@@ -357,6 +558,7 @@ class CSurfMaterial : public IMaterial
 
 public:
 	CSurfMaterial() {}
+
 	CSurfMaterial( CPtrFuncBase<NGfx::CTexture> *_pTex,
 	               CPtrFuncBase<NGfx::CTexture> *_pSecondTex,
 	               int _nPriority,
@@ -367,11 +569,29 @@ public:
 				bAddPlaced( _bAddPlaced )
 	{
 	}
-	virtual bool DoesCastShadow() const { return false; }
-	virtual bool IsOpaque() const { return false; }
-	virtual bool IsAlphaTest() const { return false; }
-	virtual bool IsTransparent() const { return false; }
+
+	virtual bool DoesCastShadow() const
+	{
+		return false;
+	}
+
+	virtual bool IsOpaque() const
+	{
+		return false;
+	}
+
+	virtual bool IsAlphaTest() const
+	{
+		return false;
+	}
+
+	virtual bool IsTransparent() const
+	{
+		return false;
+	}
+
 	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) {}
+
 	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC );
 	virtual void AddCustomOperation( COpGenContext *pOp,
 	                                 const ERenderOperation &op,
@@ -379,8 +599,17 @@ public:
 	                                 int nSBM,
 	                                 char nDestRegister,
 	                                 CRenderCmdList::UParameter p = CRenderCmdList::UParameter() );
-	virtual bool Is2Sided() const { return false; }
-	virtual bool IsSelfIllum() const { return false; }
+
+	virtual bool Is2Sided() const
+	{
+		return false;
+	}
+
+	virtual bool IsSelfIllum() const
+	{
+		return false;
+	}
+
 	virtual void Precache();
 };
 
@@ -426,6 +655,7 @@ class CReflectWaterMaterial : public IMaterial
 
 public:
 	CReflectWaterMaterial() {}
+
 	CReflectWaterMaterial( CPtrFuncBase<NGfx::CTexture> *_pTex,
 	                       CPtrFuncBase<NGfx::CTexture> *_pBump,
 	                       int _nPriority,
@@ -439,11 +669,29 @@ public:
 				fDielMirror( _fDielMirror ), fMetalMirror( _fMetalMirror ), pSky( _pSky ), fReflectionZ( _fReflectionZ )
 	{
 	}
-	virtual bool DoesCastShadow() const { return false; }
-	virtual bool IsOpaque() const { return false; }
-	virtual bool IsAlphaTest() const { return false; }
-	virtual bool IsTransparent() const { return false; }
+
+	virtual bool DoesCastShadow() const
+	{
+		return false;
+	}
+
+	virtual bool IsOpaque() const
+	{
+		return false;
+	}
+
+	virtual bool IsAlphaTest() const
+	{
+		return false;
+	}
+
+	virtual bool IsTransparent() const
+	{
+		return false;
+	}
+
 	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) {}
+
 	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC );
 	virtual void AddCustomOperation( COpGenContext *pOp,
 	                                 const ERenderOperation &op,
@@ -451,12 +699,28 @@ public:
 	                                 int nSBM,
 	                                 char nDestRegister,
 	                                 CRenderCmdList::UParameter p = CRenderCmdList::UParameter() );
-	virtual bool Is2Sided() const { return false; }
-	virtual bool IsSelfIllum() const { return false; }
-	virtual void Precache();
-	virtual float GetReflectionZ() const { return fReflectionZ; }
 
-	virtual bool IsUsingWaterReflection() const { return true; }
+	virtual bool Is2Sided() const
+	{
+		return false;
+	}
+
+	virtual bool IsSelfIllum() const
+	{
+		return false;
+	}
+
+	virtual void Precache();
+
+	virtual float GetReflectionZ() const
+	{
+		return fReflectionZ;
+	}
+
+	virtual bool IsUsingWaterReflection() const
+	{
+		return true;
+	}
 };
 
 class CTracksMaterial : public IMaterial
@@ -467,6 +731,7 @@ class CTracksMaterial : public IMaterial
 	int nPriority;
 	bool bApplyFog;
 	bool bAddPlaced;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pTex );
@@ -475,6 +740,7 @@ class CTracksMaterial : public IMaterial
 		f.Add( 5, &bAddPlaced );
 		return 0;
 	}
+
 	bool SetRenderMode( NGfx::CRenderContext *pRC,
 	                    const SLightInfo &lightInfo,
 	                    int nROP,
@@ -483,15 +749,34 @@ class CTracksMaterial : public IMaterial
 
 public:
 	CTracksMaterial() {}
+
 	CTracksMaterial( CPtrFuncBase<NGfx::CTexture> *_pTex, int _nPriority, bool _bApplyFog, bool _bAddPlaced )
 			: pTex( _pTex ), bApplyFog( _bApplyFog ), bAddPlaced( _bAddPlaced )
 	{
 	}
-	virtual bool DoesCastShadow() const { return false; }
-	virtual bool IsOpaque() const { return false; }
-	virtual bool IsAlphaTest() const { return false; }
-	virtual bool IsTransparent() const { return false; }
+
+	virtual bool DoesCastShadow() const
+	{
+		return false;
+	}
+
+	virtual bool IsOpaque() const
+	{
+		return false;
+	}
+
+	virtual bool IsAlphaTest() const
+	{
+		return false;
+	}
+
+	virtual bool IsTransparent() const
+	{
+		return false;
+	}
+
 	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) {}
+
 	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC );
 	virtual void AddCustomOperation( COpGenContext *pOp,
 	                                 const ERenderOperation &op,
@@ -499,8 +784,17 @@ public:
 	                                 int nSBM,
 	                                 char nDestRegister,
 	                                 CRenderCmdList::UParameter p = CRenderCmdList::UParameter() );
-	virtual bool Is2Sided() const { return false; }
-	virtual bool IsSelfIllum() const { return false; }
+
+	virtual bool Is2Sided() const
+	{
+		return false;
+	}
+
+	virtual bool IsSelfIllum() const
+	{
+		return false;
+	}
+
 	virtual void Precache();
 };
 
@@ -514,6 +808,7 @@ class CTerrainMaterial : public IMaterial
 	bool bAddPlaced;
 	bool bCastShadow;
 	bool bBackFaceCastShadow;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pTex );
@@ -525,11 +820,13 @@ class CTerrainMaterial : public IMaterial
 		f.Add( 8, &bBackFaceCastShadow );
 		return 0;
 	}
+
 	enum ERenderOps
 	{
 		RO_TERRAIN = RO_USER,
 		RO_TERRAIN_GF2,
 	};
+
 	bool SetRenderMode( NGfx::CRenderContext *pRC,
 	                    const SLightInfo &lightInfo,
 	                    int nROP,
@@ -538,6 +835,7 @@ class CTerrainMaterial : public IMaterial
 
 public:
 	CTerrainMaterial() {}
+
 	CTerrainMaterial( CPtrFuncBase<NGfx::CTexture> *_pTex,
 	                  CPtrFuncBase<NGfx::CTexture> *_pMask,
 	                  int _nPriority,
@@ -549,11 +847,29 @@ public:
 				bCastShadow( _bCastShadow ), bBackFaceCastShadow( _bBackFaceCastShadow )
 	{
 	}
-	virtual bool DoesCastShadow() const { return bCastShadow; }
-	virtual bool IsOpaque() const { return true; }
-	virtual bool IsAlphaTest() const { return true; }
-	virtual bool IsTransparent() const { return false; }
+
+	virtual bool DoesCastShadow() const
+	{
+		return bCastShadow;
+	}
+
+	virtual bool IsOpaque() const
+	{
+		return true;
+	}
+
+	virtual bool IsAlphaTest() const
+	{
+		return true;
+	}
+
+	virtual bool IsTransparent() const
+	{
+		return false;
+	}
+
 	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) {}
+
 	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC );
 	virtual void AddCustomOperation( COpGenContext *pOp,
 	                                 const ERenderOperation &op,
@@ -561,11 +877,25 @@ public:
 	                                 int nSBM,
 	                                 char nDestRegister,
 	                                 CRenderCmdList::UParameter p = CRenderCmdList::UParameter() );
-	virtual bool Is2Sided() const { return false; }
-	virtual bool IsSelfIllum() const { return false; }
+
+	virtual bool Is2Sided() const
+	{
+		return false;
+	}
+
+	virtual bool IsSelfIllum() const
+	{
+		return false;
+	}
+
 	virtual void Precache();
-	virtual bool DoesBackFaceCastShadow() const { return bBackFaceCastShadow; }
+
+	virtual bool DoesBackFaceCastShadow() const
+	{
+		return bBackFaceCastShadow;
+	}
 };
+
 class CCloudsH5Material : public IMaterial
 {
 	OBJECT_BASIC_METHODS( CCloudsH5Material );
@@ -579,6 +909,7 @@ public:
 	bool bAddPlaced;
 	bool bDoesCastShadow;
 	bool bProjectOnTerrain;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pClouds );
@@ -590,6 +921,7 @@ public:
 		f.Add( 8, &bProjectOnTerrain );
 		return 0;
 	}
+
 	bool SetRenderMode( NGfx::CRenderContext *pRC,
 	                    const SLightInfo &lightInfo,
 	                    int nROP,
@@ -599,6 +931,7 @@ public:
 
 public:
 	CCloudsH5Material() {}
+
 	CCloudsH5Material( CPtrFuncBase<NGfx::CTexture> *_pTex,
 	                   int _nPriority,
 	                   float _fWrapsPerSecond,
@@ -610,12 +943,34 @@ public:
 				bAddPlaced( _bAddPlaced ), bDoesCastShadow( _bDoesCastShadow ), bProjectOnTerrain( _bProjectOnTerrain )
 	{
 	}
-	virtual bool DoesCastShadow() const { return bDoesCastShadow; }
-	virtual bool IsProjectOnTerrain() const { return bProjectOnTerrain; }
-	virtual bool IsOpaque() const { return false; }
-	virtual bool IsAlphaTest() const { return false; }
-	virtual bool IsTransparent() const { return false; }
+
+	virtual bool DoesCastShadow() const
+	{
+		return bDoesCastShadow;
+	}
+
+	virtual bool IsProjectOnTerrain() const
+	{
+		return bProjectOnTerrain;
+	}
+
+	virtual bool IsOpaque() const
+	{
+		return false;
+	}
+
+	virtual bool IsAlphaTest() const
+	{
+		return false;
+	}
+
+	virtual bool IsTransparent() const
+	{
+		return false;
+	}
+
 	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) {}
+
 	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC );
 	virtual void AddCustomOperation( COpGenContext *pOp,
 	                                 const ERenderOperation &op,
@@ -623,8 +978,17 @@ public:
 	                                 int nSBM,
 	                                 char nDestRegister,
 	                                 CRenderCmdList::UParameter p = CRenderCmdList::UParameter() );
-	virtual bool Is2Sided() const { return false; }
-	virtual bool IsSelfIllum() const { return false; }
+
+	virtual bool Is2Sided() const
+	{
+		return false;
+	}
+
+	virtual bool IsSelfIllum() const
+	{
+		return false;
+	}
+
 	virtual void Precache();
 };
 
@@ -639,6 +1003,7 @@ public:
 	bool bApplyFog;
 	float fFOVZoom;
 	bool bAddPlaced;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pTex );
@@ -648,6 +1013,7 @@ public:
 		f.Add( 6, &bAddPlaced );
 		return 0;
 	}
+
 	bool SetRenderMode( NGfx::CRenderContext *pRC,
 	                    const SLightInfo &lightInfo,
 	                    int nROP,
@@ -656,17 +1022,36 @@ public:
 
 public:
 	CSimpleSkyMaterial() {}
+
 	CSimpleSkyMaterial(
 			CPtrFuncBase<NGfx::CTexture> *_pTex, int _nPriority, bool _bApplyFog, float _fFOVZoom, bool _bAddPlaced )
 			: pTex( _pTex ), nPriority( _nPriority ), bApplyFog( _bApplyFog ), fFOVZoom( _fFOVZoom ),
 				bAddPlaced( _bAddPlaced )
 	{
 	}
-	virtual bool DoesCastShadow() const { return false; }
-	virtual bool IsOpaque() const { return true; }
-	virtual bool IsAlphaTest() const { return false; }
-	virtual bool IsTransparent() const { return false; }
+
+	virtual bool DoesCastShadow() const
+	{
+		return false;
+	}
+
+	virtual bool IsOpaque() const
+	{
+		return true;
+	}
+
+	virtual bool IsAlphaTest() const
+	{
+		return false;
+	}
+
+	virtual bool IsTransparent() const
+	{
+		return false;
+	}
+
 	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) {}
+
 	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC );
 	virtual void AddCustomOperation( COpGenContext *pOp,
 	                                 const ERenderOperation &op,
@@ -674,10 +1059,23 @@ public:
 	                                 int nSBM,
 	                                 char nDestRegister,
 	                                 CRenderCmdList::UParameter p = CRenderCmdList::UParameter() );
-	virtual bool Is2Sided() const { return false; }
-	virtual bool IsSelfIllum() const { return false; }
-	virtual bool DoesIgnoreZ() const { return true; }
+
+	virtual bool Is2Sided() const
+	{
+		return false;
+	}
+
+	virtual bool IsSelfIllum() const
+	{
+		return false;
+	}
+
+	virtual bool DoesIgnoreZ() const
+	{
+		return true;
+	}
+
 	virtual void Precache();
 };
 
-}
+} // namespace NGScene

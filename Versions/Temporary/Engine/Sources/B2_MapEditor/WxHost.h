@@ -23,4 +23,4 @@ namespace NWxHost
 {
 // The one editor application object, which main.cpp makes.
 CEditorApp &GetEditorApp();
-}
+} // namespace NWxHost

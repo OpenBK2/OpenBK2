@@ -23,6 +23,7 @@ class CBridgeRPGStatsExporter : public CStaticObjectRPGStatsExporter
 		AIG_BORDER = 2,
 		AIG_COUNT = 3,
 	};
+
 	//
 	typedef std::unordered_map<std::string, std::string> CTempNamesMap;
 	CTempNamesMap tempNamesMap;
@@ -45,7 +46,11 @@ class CBridgeRPGStatsExporter : public CStaticObjectRPGStatsExporter
 	void ExportAdditionalInfo( IManipulator *pManipulator, const std::string &rszObjectName, const CDBID &rDBID );
 
 protected:
-	bool NeedCreatePassability() { return false; }
+	bool NeedCreatePassability()
+	{
+		return false;
+	}
+
 	//
 	CBridgeRPGStatsExporter() {}
 

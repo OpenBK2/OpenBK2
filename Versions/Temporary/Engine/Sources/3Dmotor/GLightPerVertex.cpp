@@ -33,6 +33,7 @@ inline bool operator==( const CArray2D<T> &a, const CArray2D<T> &b )
 }
 
 static int nWarFogID;
+
 namespace NGScene
 {
 
@@ -47,6 +48,7 @@ static void ConvertColor( NGfx::SMMXWord *p, const CVec3 &v )
 	p->nX = Float2Int( v.x * 0x4000 );
 	p->nW = 0;
 }
+
 void SPerVertexLightState::SetDirectional( const CVec3 &_vAmbient,
                                            const CVec3 &_vLightColor,
                                            const CVec3 &_vShadeColor,
@@ -70,30 +72,37 @@ void SPerVertexLightState::SetDirectional( const CVec3 &_vAmbient,
 	vSunDir = _vDir;
 	vDymanicLightsModification = _vDymanicLightsModification;
 }
+
 static float Lin( float f )
 {
 	return f * f * f;
 }
+
 static float Outp( float f )
 {
 	return exp( log( f ) / 3 );
 }
+
 static CVec3 GetLinearColor( const CVec3 &a )
 {
 	return CVec3( Lin( a.x ), Lin( a.y ), Lin( a.z ) );
 }
+
 static CVec4 GetLinearColor( const CVec4 &a )
 {
 	return CVec4( Lin( a.x ), Lin( a.y ), Lin( a.z ), Lin( a.w ) );
 }
+
 static CVec3 GetOutputColor( const CVec3 &a )
 {
 	return CVec3( Outp( a.x ), Outp( a.y ), Outp( a.z ) );
 }
+
 static CVec4 GetOutputColor( const CVec4 &a )
 {
 	return CVec4( Outp( a.x ), Outp( a.y ), Outp( a.z ), Outp( a.w ) );
 }
+
 void SPerVertexLightState::AddPointLight( const CVec3 &_vCenter, float _fRadius, const CVec3 &_vColor )
 {
 	CVec3 vLightColor( _vColor.x * vDymanicLightsModification.x,
@@ -101,6 +110,7 @@ void SPerVertexLightState::AddPointLight( const CVec3 &_vCenter, float _fRadius,
 	                   _vColor.z * vDymanicLightsModification.z );
 	dynamicPointLights.push_back( SPointLightInfo( _vCenter, _fRadius, GetLinearColor( vLightColor ), 0 ) );
 }
+
 void SPerVertexLightState::AddPointLight( const CVec3 &_vCenter, float _fRadius, const CVec3 &_vColor, int nPointID )
 {
 	CVec3 vLightColor( _vColor.x * vDymanicLightsModification.x,
@@ -108,10 +118,12 @@ void SPerVertexLightState::AddPointLight( const CVec3 &_vCenter, float _fRadius,
 	                   _vColor.z * vDymanicLightsModification.z );
 	staticPointLights.push_back( SPointLightInfo( _vCenter, _fRadius, GetLinearColor( vLightColor ), nPointID ) );
 }
+
 static bool CmpPL( const SPerVertexLightState::SPointLightInfo &a, const SPerVertexLightState::SPointLightInfo &b )
 {
 	return a.nID < b.nID;
 }
+
 void SPerVertexLightState::SortPointLights()
 {
 	std::sort( staticPointLights.begin(), staticPointLights.end(), CmpPL );
@@ -775,4 +787,4 @@ void CalcPerVertexLight( NGfx::SGeomVecT2C1 *pRes,
 		res.tex2 = NGfx::GetTexCoords( pSrc->texLM );
 	}
 }
-}
+} // namespace NGScene

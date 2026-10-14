@@ -23,6 +23,7 @@ class CInterfaceCustomMissions : public CInterfaceScreenBase, public IProgrammed
 		std::wstring wszSize;
 		std::wstring wszSeason;
 		std::wstring wszDesc;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pMapInfo );
@@ -57,6 +58,7 @@ class CInterfaceCustomMissions : public CInterfaceScreenBase, public IProgrammed
 	CPtr<IWindow> pMissionDescItemHeader;
 	CPtr<ITextView> pMissionDescItemNameView;
 	CPtr<ITextView> pMissionDescItemSeasonView;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );

@@ -54,6 +54,7 @@ public:
 		f.Add( 18, &eAbilityType );
 		return 0;
 	}
+
 	bool IsExecutorValidInternal() const;
 	int UpdateCamoflage( const EUnitSpecialAbility eAbility );
 	void UpdateState( const EAbilitySwitchState eState, const float fParam );
@@ -64,10 +65,16 @@ public:
 
 public:
 	CExecutorSniperCamouflage( CAIUnit *_pUnit, bool _bAdvanced );
+
 	CExecutorSniperCamouflage() {}
 
 	virtual int Segment();
 	virtual bool NotifyEvent( const CExecutorEvent &event );
-	virtual bool IsExecutorValid() const { return IsExecutorValidInternal(); }
+
+	virtual bool IsExecutorValid() const
+	{
+		return IsExecutorValidInternal();
+	}
+
 	virtual void RegisterOnEvents( IExecutorContainer *pContainer );
 };

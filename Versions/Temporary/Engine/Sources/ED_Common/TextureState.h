@@ -8,6 +8,7 @@ class CTextureState : public CDefaultInputState, public CObjectBase
 public:
 	//Life-cycle
 	CTextureState() {}
+
 	CTextureState( class CTextureEditor *_pEditor );
 	virtual ~CTextureState();
 

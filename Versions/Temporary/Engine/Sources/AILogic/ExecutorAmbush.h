@@ -14,6 +14,7 @@ protected:
 
 public:
 	CExecutorAmbush( CAIUnit *_pUnit );
+
 	CExecutorAmbush() {}
 
 	int operator&( IBinSaver &saver );

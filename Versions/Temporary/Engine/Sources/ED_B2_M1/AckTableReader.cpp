@@ -130,7 +130,7 @@ namespace
 		static const std::string szEmpty;
 		return ( ( nColumn >= 0 ) && ( nColumn < static_cast<int>( rFields.size() ) ) ) ? rFields[nColumn] : szEmpty;
 	}
-}
+} // namespace
 
 bool LoadAcksTable( std::vector<SAckEntry> *pRes, const std::string &szFileName )
 {
@@ -218,4 +218,4 @@ bool LoadAcksTable( std::vector<SAckEntry> *pRes, const std::string &szFileName 
 	return true;
 }
 
-}
+} // namespace NAcks

@@ -14,7 +14,10 @@ public:
 
 	CFreezeSegments() : pUnit( 0 ) {}
 
-	bool ShouldBeUnregistered() const { return false; }
+	bool ShouldBeUnregistered() const
+	{
+		return false;
+	}
 
 	void SetSegmentObject( CCommonUnit *pUnit );
 	bool Check();
@@ -49,7 +52,10 @@ public:
 
 	CFirstPathSegments() : pUnit( 0 ) {}
 
-	bool ShouldBeUnregistered() const { return false; }
+	bool ShouldBeUnregistered() const
+	{
+		return false;
+	}
 
 	void SetSegmentObject( CAIUnit *pUnit );
 	bool Check();
@@ -65,7 +71,10 @@ public:
 
 	CSecondPathSegments() : pUnit( 0 ) {}
 
-	bool ShouldBeUnregistered() const { return false; }
+	bool ShouldBeUnregistered() const
+	{
+		return false;
+	}
 
 	void SetSegmentObject( CAIUnit *pUnit );
 	bool Check();

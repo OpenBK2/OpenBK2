@@ -91,17 +91,22 @@ private:
 
 public:
 	CGeneralAirForce() {}
+
 	CGeneralAirForce( const int nPlayer, IEnemyContainer *pEnemyContainer );
 
 	void Segment();
 	void Give( CCommonUnit *pWorker );
+
 	void EnumWorkers( const EForceType eType, IWorkerEnumerator *pEnumerator ) {}
 
 	int /*request ID*/
 	RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType, int nResistanceCellNumber = -1 );
 	void CancelRequest( int nRequestID, enum EForceType eType );
 
-	void SetEnemyContainer( IEnemyContainer *_pEnemyConatainer ) { pEnemyContainer = _pEnemyConatainer; }
+	void SetEnemyContainer( IEnemyContainer *_pEnemyConatainer )
+	{
+		pEnemyContainer = _pEnemyConatainer;
+	}
 
 	void SetAAVisible( class CAIUnit *pUnit, const bool bVisible );
 	void DeleteAA( class CAIUnit *pUnit );

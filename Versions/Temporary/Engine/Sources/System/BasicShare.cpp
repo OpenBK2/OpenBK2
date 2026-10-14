@@ -4,6 +4,7 @@
 // CBasicShareBase
 
 static CBasicShareBase *pList;
+
 void RegisterBasicShareBase( CBasicShareBase *pBase )
 {
 	for ( CBasicShareBase *pTest = pList; pTest; pTest = pTest->pNext )

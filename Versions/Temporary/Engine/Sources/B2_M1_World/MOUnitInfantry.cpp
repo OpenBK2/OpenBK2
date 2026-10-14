@@ -64,6 +64,7 @@ bool CMOUnitInfantry::Create( const int nUniqueID,
 }
 
 static bool s_bTestDrawWeapon = true;
+
 bool CMOUnitInfantry::CreateSceneObject( const int nUniqueID,
                                          const SAINewUnitUpdate *pUpdate,
                                          NDb::ESeason eSeason,

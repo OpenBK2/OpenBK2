@@ -11,22 +11,28 @@ namespace NImage
 {
 
 #pragma pack( 1 )
+
 struct SARGB
 {
 	uint8_t a, r, g, b;
 };
+
 #pragma pack()
+
 struct CONTRIB
 {
 	int pixel;
 	double weight;
+
 	//
 	CONTRIB() : pixel( 0 ), weight( 0 ) {}
 };
+
 struct CLIST
 {
 	int n;      /* number of contributors */
 	CONTRIB *p; /* pointer to list of contributions */
+
 	//
 	CLIST() : n( 0 ), p( 0 ) {}
 };
@@ -498,4 +504,4 @@ void Scale( CArray2D<uint32_t> *pDst, const CArray2D<uint32_t> &src, const EImag
 	}
 }
 
-}
+} // namespace NImage

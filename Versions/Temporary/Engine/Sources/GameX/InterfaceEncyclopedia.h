@@ -42,6 +42,7 @@ class CInterfaceEncyclopedia : public CInterfaceScreenBase, public IProgrammedRe
 		ZDATA
 		CPtr<IButton> pBtn;
 		std::string szBtnName;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pBtn );
@@ -59,6 +60,7 @@ public:
 		ZDATA
 		CDBPtr<NDb::SUnitBaseRPGStats> pStats;
 		std::wstring wszBriefDesc;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pStats );
@@ -66,7 +68,10 @@ public:
 			return 0;
 		}
 
-		bool operator==( const CUnitData &data ) const { return pStats == data.pStats; }
+		bool operator==( const CUnitData &data ) const
+		{
+			return pStats == data.pStats;
+		}
 	};
 
 	class CDataViewer : public IDataViewer
@@ -84,6 +89,7 @@ private:
 		CPtr<CUnitData> pData;
 		EFilterCountries eCountry;
 		EFilterUnitTypes eUnitType;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pData );
@@ -98,6 +104,7 @@ private:
 		ZDATA
 		CPtr<IListControl> pUnitListCont;
 		std::vector<CPtr<CUnitData>> filteredUnits;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pUnitListCont );
@@ -138,6 +145,7 @@ private:
 	int nEffectCounter;
 	bool bEffectBorder;
 	int nLoading;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
@@ -213,6 +221,7 @@ class CInterfaceEncyclopediaWait : public CInterfaceScreenBase, public IProgramm
 
 	ZDATA_( CInterfaceScreenBase )
 	int nLoading;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );

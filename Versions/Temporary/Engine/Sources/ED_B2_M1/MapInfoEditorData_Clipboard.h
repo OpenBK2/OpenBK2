@@ -6,6 +6,7 @@
 namespace NMapInfoEditor
 {
 typedef std::vector<CPtr<SObjectInfo>> CObjectClipboardPartList;
+
 struct SObjectClipboard
 {
 	CObjectClipboardPartList objectClipboardPartlist;
@@ -21,12 +22,14 @@ struct SObjectClipboard
 			: vPosition( VNULL3 ), vBackupPosition( VNULL3 ), bBackupCreated( false ), vPositionDifference( VNULL3 )
 	{
 	}
+
 	SObjectClipboard( const SObjectClipboard &rObjectClipboard )
 			: objectClipboardPartlist( rObjectClipboard.objectClipboardPartlist ), vPosition( rObjectClipboard.vPosition ),
 				vBackupPosition( rObjectClipboard.vBackupPosition ), bBackupCreated( rObjectClipboard.bBackupCreated ),
 				vPositionDifference( rObjectClipboard.vPositionDifference )
 	{
 	}
+
 	SObjectClipboard &operator=( const SObjectClipboard &rObjectClipboard )
 	{
 		if ( &rObjectClipboard != this )
@@ -41,9 +44,21 @@ struct SObjectClipboard
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	inline bool IsEmpty() { return objectClipboardPartlist.empty(); }
-	inline void Clear() { objectClipboardPartlist.clear(); }
-	inline int Size() { return objectClipboardPartlist.size(); }
+	inline bool IsEmpty()
+	{
+		return objectClipboardPartlist.empty();
+	}
+
+	inline void Clear()
+	{
+		objectClipboardPartlist.clear();
+	}
+
+	inline int Size()
+	{
+		return objectClipboardPartlist.size();
+	}
+
 	void Insert( const SObjectInfo *pObjectInfo );
 
 	//
@@ -55,4 +70,4 @@ struct SObjectClipboard
 	//
 	void Trace() const;
 };
-};
+}; // namespace NMapInfoEditor

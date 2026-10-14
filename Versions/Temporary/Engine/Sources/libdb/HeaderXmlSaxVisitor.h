@@ -16,14 +16,25 @@ class CObjectHeaderXmlSaxVisitor : public NLXML::IXmlSaxVisitor
 
 public:
 	CObjectHeaderXmlSaxVisitor() : bNeedMoreChunks( true ), pHeader( 0 ) {}
+
 	CObjectHeaderXmlSaxVisitor( STypeObjectHeader *_pHeader ) : bNeedMoreChunks( true ), pHeader( _pHeader ) {}
+
 	//
 	bool VisitHeader( const std::string &szVersion, const std::string &szEncoding, const std::string &szStandalone )
 	{
 		return true;
 	}
-	bool VisitComment( const std::string &szText ) { return bNeedMoreChunks; }
-	bool VisitAttribute( const std::string &szName, const std::string &szValue ) { return true; }
+
+	bool VisitComment( const std::string &szText )
+	{
+		return bNeedMoreChunks;
+	}
+
+	bool VisitAttribute( const std::string &szName, const std::string &szValue )
+	{
+		return true;
+	}
+
 	bool VisitChunkStart( const std::string &szName )
 	{
 		if ( bNeedMoreChunks )
@@ -33,9 +44,17 @@ public:
 		bNeedMoreChunks = false;
 		return true;
 	}
-	bool VisitText( const std::string &szText ) { return bNeedMoreChunks; }
+
+	bool VisitText( const std::string &szText )
+	{
+		return bNeedMoreChunks;
+	}
+
 	// finish visiting in the case of header end
-	bool VisitChunkFinish( const std::string &szName ) { return bNeedMoreChunks; }
+	bool VisitChunkFinish( const std::string &szName )
+	{
+		return bNeedMoreChunks;
+	}
 };
 
-}
+} // namespace NDb

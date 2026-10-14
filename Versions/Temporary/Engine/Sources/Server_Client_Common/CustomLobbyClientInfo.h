@@ -10,6 +10,7 @@ struct SCustomLobbyClientInfo
 	ECommonClientState eState;
 	bool bWant2ReceiveChat;
 	int nGameID;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nID );

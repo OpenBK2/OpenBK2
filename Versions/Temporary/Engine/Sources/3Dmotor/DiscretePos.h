@@ -7,6 +7,7 @@ class CFBTransform : public CObjectBase
 public:
 	ZDATA
 	SFBTransform pos;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &pos );
@@ -14,9 +15,18 @@ public:
 	}
 
 	CFBTransform() {}
+
 	CFBTransform( const SFBTransform &_pos ) : pos( _pos ) {}
-	const SFBTransform &GetValue() const { return pos; }
-	void Set( const SFBTransform &_pos ) { pos = _pos; }
+
+	const SFBTransform &GetValue() const
+	{
+		return pos;
+	}
+
+	void Set( const SFBTransform &_pos )
+	{
+		pos = _pos;
+	}
 };
 
 struct SDiscretePos
@@ -29,10 +39,12 @@ struct SDiscretePos
 		TURN_270 = 3,
 		FLIP = 4,
 	};
+
 	ZDATA
 	CVec3 ptMove;
 	int nRotation;
 	CObj<CFBTransform> pTransform;
+
 	ZEND int operator&( CStructureSaver &f )
 	{
 		f.Add( 2, &ptMove );
@@ -42,10 +54,12 @@ struct SDiscretePos
 	}
 
 	SDiscretePos() {}
+
 	SDiscretePos( CFBTransform *_pTransform, const CVec3 &_ptMove, int nRotationID )
 			: ptMove( _ptMove ), nRotation( nRotationID ), pTransform( _pTransform )
 	{
 	}
+
 	void MakeMatrix( SFBTransform *pRes ) const;
 	void MoveAndRotate( CVec3 *pPoint ) const;
 	void InvMoveAndRotate( CVec3 *pPoint ) const;

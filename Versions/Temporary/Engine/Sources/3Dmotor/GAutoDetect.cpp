@@ -364,6 +364,7 @@ EConfigValue GetFSAAMode()
 {
 	return FindCfgMode( fsaaConfig, std::size( fsaaConfig ) );
 }
+
 void SetFSAAMode( EConfigValue eMode )
 {
 	ApplyCfgValues( fsaaConfig, std::size( fsaaConfig ), eMode );
@@ -378,4 +379,4 @@ START_REGISTER( GAutoDetect )
 REGISTER_CMD( "gfx_autodetect", CommandGfxAutodetect )
 FINISH_REGISTER
 
-} // namespace
+} // namespace NGScene

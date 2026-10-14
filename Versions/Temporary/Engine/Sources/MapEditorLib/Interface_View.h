@@ -14,6 +14,7 @@
 struct IView
 {
 	virtual ~IView() {}
+
 	//
 	//	Выполнить операции View после начала редактирования
 	virtual void Enter() = 0;
@@ -38,6 +39,7 @@ struct IView
 
 // CRAP{ HASH_SET
 typedef std::unordered_map<IView *, uint32_t> CViewSet;
+
 // CRAP} HASH_SET
 
 // Хранилище View
@@ -50,6 +52,7 @@ struct IViewContainer : public CObjectBase
 	{
 		tidTypeID = 0x1408A380
 	};
+
 	// Добавить target
 	virtual void Add( IView *pView, const SObjectSet &rObjectSet ) = 0;
 	// Удалить target

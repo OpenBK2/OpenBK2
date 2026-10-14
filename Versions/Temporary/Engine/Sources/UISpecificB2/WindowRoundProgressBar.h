@@ -41,7 +41,10 @@ public:
 	}
 
 protected:
-	NDb::SWindow *GetInstance() { return pInstance; }
+	NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
 
 public:
 	CWindowRoundProgressBar();
@@ -55,7 +58,10 @@ public:
 	void SetAngles( float _fStartAngle, float _fFinishAngle );
 	void SetPosition( const float );
 	float GetPosition() const;
+
 	void ShowFirstElement( bool bShow ) {}
+
 	void SetForward( const NDb::SBackground *pForward ) {}
+
 	//}
 };

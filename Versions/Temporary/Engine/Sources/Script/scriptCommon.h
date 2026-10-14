@@ -3,6 +3,7 @@
 #include "Script.h"
 //
 union ULuaParams;
+
 //
 //
 namespace NScript
@@ -33,5 +34,6 @@ bool luaGetBool( const Script::Object &o );
 void luaPushBool( lua_State *pState, bool bValue );
 void ScriptWarning( const std::string &message );
 void ScriptError( const std::string &message );
-}
+} // namespace NScript
+
 //

@@ -26,6 +26,7 @@ public:
 
 public:
 	SUnitListInfo() : pUnit( 0 ), bCanGo( false ), bGoAway( false ), bAtPlace( false ), nCell( -1 ) {}
+
 	SUnitListInfo( CCommonUnit *_pUnit )
 			: pUnit( _pUnit ), bCanGo( false ), bGoAway( false ), bAtPlace( false ), nCell( -1 )
 	{
@@ -52,7 +53,9 @@ public:
 
 public:
 	SPriorityGroupPosition() : nCount( 0 ), vUnitSize( VNULL2 ) {}
+
 	SPriorityGroupPosition( const CVec2 &_vUnitSize ) : nCount( 1 ), vUnitSize( _vUnitSize ) {}
+
 	SPriorityGroupPosition( const float x, const float y ) : nCount( 1 ), vUnitSize( x, y ) {}
 };
 
@@ -75,12 +78,16 @@ public:
 
 public:
 	CGroupMoveExecutorEvent() : nUnitID( -1 ) {}
+
 	CGroupMoveExecutorEvent( const SExecutorEventParam &_param, const int _nUnitID )
 			: nUnitID( _nUnitID ), CExecutorEvent( _param )
 	{
 	}
 
-	const int GetUnitID() const { return nUnitID; }
+	const int GetUnitID() const
+	{
+		return nUnitID;
+	}
 };
 
 class CGroupMoveExecutor : public CExecutor
@@ -161,7 +168,11 @@ public:
 
 	const bool Init( const std::vector<CCommonUnit *> &units, const struct SAIUnitCmd &cmd );
 
-	virtual bool IsExecutorValid() const { return true; }
+	virtual bool IsExecutorValid() const
+	{
+		return true;
+	}
+
 	virtual int Segment();
 	virtual bool NotifyEvent( const CExecutorEvent &event );
 	void RegisterOnEvents( IExecutorContainer *pContainer );

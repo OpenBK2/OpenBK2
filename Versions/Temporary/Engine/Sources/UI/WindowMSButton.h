@@ -18,7 +18,10 @@ public:
 	void Init( const NDb::SButtonVisualSubState &substate );
 	void SetupTextString( const NDb::SForegroundTextString *pTextString );
 
-	bool IsValid() const { return pBackground || pForeground || pTextString; }
+	bool IsValid() const
+	{
+		return pBackground || pForeground || pTextString;
+	}
 
 	int operator&( IBinSaver &saver )
 	{
@@ -41,6 +44,7 @@ public:
 	NDb::EButtonSubstateType eSubState;
 
 	CButtonState() : eSubState( NDb::BST_NORMAL ) {}
+
 	void Init( const NDb::SButtonVisualState &state )
 	{
 		normal.Init( state.normal );
@@ -65,6 +69,7 @@ public:
 			rightButtonDown.Init( state.normal );
 		}
 	}
+
 	void SetupTextString( const NDb::SForegroundTextString *pTextString )
 	{
 		if ( pTextString )
@@ -87,6 +92,7 @@ public:
 		saver.Add( 6, &rightButtonDown );
 		return 0;
 	}
+
 	CButtonSubStateVisual &Substates( const NDb::EButtonSubstateType _eSubState )
 	{
 		switch ( _eSubState )
@@ -105,6 +111,7 @@ public:
 				return normal;
 		}
 	}
+
 	CButtonSubStateVisual &Substates( const int _eSubState )
 	{
 		return Substates( static_cast<const NDb::EButtonSubstateType>( _eSubState ) );
@@ -153,7 +160,11 @@ private:
 
 	void OnRightClick();
 
-	int GetNStates() const { return states.size(); }
+	int GetNStates() const
+	{
+		return states.size();
+	}
+
 	void SwitchSubState( const NDb::EButtonSubstateType eSubState );
 	void SwitchSubStatePrivate();
 
@@ -162,7 +173,10 @@ private:
 	void ApplySubstateText( const CButtonSubStateVisual &substate );
 
 protected:
-	NDb::SWindow *GetInstance() { return pInstance; }
+	NDb::SWindow *GetInstance()
+	{
+		return pInstance;
+	}
 
 	//{ overrided
 	const std::wstring &GetDBFormatText() const;
@@ -183,21 +197,32 @@ public:
 	bool OnButtonUp( const CVec2 &vPos, const int nButton );
 	bool OnButtonDblClk( const CVec2 &vPos, const int nButton );
 
-	void SetNotifySink( struct IButtonNotify *pNotify ) { pButtonNotify = pNotify; }
+	void SetNotifySink( struct IButtonNotify *pNotify )
+	{
+		pButtonNotify = pNotify;
+	}
 
 	int operator&( struct IBinSaver &saver );
 	void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
 	void NotifyStateSequenceFinished();
 	void Init();
-	bool IsPushed() const { return states[pInstance->nState].eSubState == NDb::BST_PUSHED_DEEP; }
+
+	bool IsPushed() const
+	{
+		return states[pInstance->nState].eSubState == NDb::BST_PUSHED_DEEP;
+	}
 
 	// void Enable( const bool bEnable );
 
 	void SetNextState();
 	void SetState( const int nState );
 	void SetStateWithVisual( const int nState );
-	int GetState() const { return pInstance->nState; }
+
+	int GetState() const
+	{
+		return pInstance->nState;
+	}
 	class CButtonGroup *GetButtonGroup();
 	void SetButtonGroup( const int nGroup );
 	void SetEffectSubState( const NDb::EButtonSubstateType eSubState, bool bEffect );

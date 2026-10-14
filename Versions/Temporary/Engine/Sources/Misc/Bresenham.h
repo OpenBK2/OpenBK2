@@ -17,6 +17,7 @@ public:
 				xerr( 0 ), yerr( 0 )
 	{
 	}
+
 	//
 	void Next()
 	{
@@ -33,12 +34,25 @@ public:
 			y1 += yinc, yerr -= len;
 		}
 	}
+
 	// check for line's end
-	bool IsEnd() const { return ( x1 == x2 ) && ( y1 == y2 ); }
+	bool IsEnd() const
+	{
+		return ( x1 == x2 ) && ( y1 == y2 );
+	}
+
 	// coords access
-	int GetX() const { return x1; }
-	int GetY() const { return y1; }
+	int GetX() const
+	{
+		return x1;
+	}
+
+	int GetY() const
+	{
+		return y1;
+	}
 };
+
 template <class TFunctional>
 void MakeLine2( int x1, int y1, int x2, int y2, TFunctional &func )
 {
@@ -52,6 +66,7 @@ void MakeLine2( int x1, int y1, int x2, int y2, TFunctional &func )
 		func( line.GetX(), line.GetY() );
 	}
 }
+
 template <class TFunctional>
 void ScanLine2( int x1, int y1, int x2, int y2, TFunctional &func )
 {
@@ -83,6 +98,7 @@ class CBres
 	int xinc = 0, yinc = 0;
 
 	SVector dir;
+
 	//
 	void Initialize()
 	{
@@ -165,5 +181,8 @@ public:
 		}
 	}
 
-	const SVector &GetDirection() const { return dir; }
+	const SVector &GetDirection() const
+	{
+		return dir;
+	}
 };

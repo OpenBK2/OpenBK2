@@ -8,6 +8,7 @@ class CBridgeSpan;
 class CBridgeCreation : public CLongObjectCreation
 {
 	OBJECT_BASIC_METHODS( CBridgeCreation );
+
 	// для сортировки
 	struct SBridgeSpanSort
 	{
@@ -35,11 +36,13 @@ public:
 		f.Add( 7, &wDir );
 		return 0;
 	}
+
 	void UnlockTiles();
 	void LockTiles();
 
 public:
 	CBridgeCreation() : CLongObjectCreation( -1, false ) {}
+
 	CBridgeCreation( class CFullBridge *pBridge, class CCommonUnit *pUnit, const bool bAllowAIModification );
 
 	static CVec2 SortBridgeSpans( std::vector<CObj<CBridgeSpan>> *spans, class CCommonUnit *pUnit );
@@ -57,11 +60,29 @@ public:
 	float GetPrice();
 
 	//
-	bool IsAnyUnitPrevent() const { return false; }
-	bool CanBuildNext() const { return true; }
+	bool IsAnyUnitPrevent() const
+	{
+		return false;
+	}
+
+	bool CanBuildNext() const
+	{
+		return true;
+	}
+
 	void LockNext() {}
+
 	void LockCannotBuild() {}
-	bool PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock ) { return true; }
+
+	bool PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock )
+	{
+		return true;
+	}
+
 	void GetUnitsPreventing( std::list<CPtr<CAIUnit>> *units ) {}
-	virtual bool IsCheatPath() const { return true; }
+
+	virtual bool IsCheatPath() const
+	{
+		return true;
+	}
 };

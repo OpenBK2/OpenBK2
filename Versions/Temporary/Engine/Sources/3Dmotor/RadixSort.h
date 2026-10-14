@@ -6,6 +6,7 @@ enum ERadixFetch
 	RF_BACK,
 	RF_FLOAT
 };
+
 inline void RadixSortStage( int shift, const int *pDepths, std::vector<int> *pRes, ERadixFetch fetch )
 {
 	int lists[256];
@@ -60,6 +61,7 @@ inline void RadixSortStage( int shift, const int *pDepths, std::vector<int> *pRe
 			break;
 	}
 }
+
 // lowest first
 inline void DoRadixSort( const float *pSrc, int nSize, std::vector<int> *pRes )
 {

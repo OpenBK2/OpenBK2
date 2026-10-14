@@ -75,6 +75,7 @@ class CTestClient : virtual public CObjectBase
 
 public:
 	CTestClient() {}
+
 	CTestClient( CCommands *pCommands, const std::string &szCfgFile );
 
 	void Segment();

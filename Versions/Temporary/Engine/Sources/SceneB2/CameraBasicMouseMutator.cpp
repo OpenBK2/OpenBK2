@@ -268,4 +268,4 @@ int CCameraBasicMouseMutator::operator&( IBinSaver &saver )
 	return 0;
 }
 
-}
+} // namespace NCamera

@@ -266,7 +266,7 @@ namespace
 		}
 		( *pState )[boneIndex] = 2;
 	}
-}
+} // namespace
 
 CGltfSkeletonAnimator::SAnimationHolder::SAnimationHolder()
 		: tStartTime( 0 ), tEndTime( -1 ), tFadeStart( 0 ), tFadeDuration( 0 ), fSpeed( 1.0f ), fWeight( 1.0f ),
@@ -1232,7 +1232,7 @@ void CGltfSkeletonAnimator::CheckJustLoaded()
 	bJustLoaded = false;
 }
 
-}
+} // namespace NAnimation
 
 using namespace NAnimation;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x71321150, CGltfSkeletonAnimator )

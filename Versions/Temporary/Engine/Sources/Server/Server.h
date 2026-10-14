@@ -41,6 +41,7 @@ class CGameServer : public CObjectBase
 
 public:
 	CGameServer() {}
+
 	// szBackend selects the database: "mysql" for a MariaDB or MySQL daemon,
 	// "sqlite" for a file. Empty takes what server.xml says, and what that says
 	// by default is mysql, which is what the shipped configuration expects.
@@ -50,7 +51,11 @@ public:
 	             const std::string &szBackend = std::string(),
 	             const std::string &szDatabaseFile = std::string() );
 	virtual ~CGameServer();
-	class CClients *GetClients() { return pClients; }
+
+	class CClients *GetClients()
+	{
+		return pClients;
+	}
 
 	void AddLobby( CPacketProcessor *pLobby );
 

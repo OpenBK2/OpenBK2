@@ -346,6 +346,7 @@ public:
 	// MSVC left values benign enough to survive it, and GCC at -O0 handed over
 	// a two terabyte length, which mimalloc then tried to zero.
 	CProfiler( const std::string &_szPath ) : szPath( _szPath ), dwStartTime( GetCurrentTimeMilliseconds() ) {}
+
 	~CProfiler()
 	{
 		const uint32_t dwLoadTimeMs = GetCurrentTimeMilliseconds() - dwStartTime;
@@ -624,4 +625,4 @@ IFileCreator *CreateWinFileCreator( const std::string &szBasePath )
 	return new CWinFileCreator( szBasePath );
 }
 
-}
+} // namespace NVFS

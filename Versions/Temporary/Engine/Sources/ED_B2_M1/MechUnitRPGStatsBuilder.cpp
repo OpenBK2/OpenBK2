@@ -48,7 +48,10 @@ struct SPropellerInfo
 	{
 	}
 
-	const bool IsDefined() const { return bScaledDefined && bDynamicDefined; }
+	const bool IsDefined() const
+	{
+		return bScaledDefined && bDynamicDefined;
+	}
 };
 
 // сделать копию модели, если szOldModelName и szNewModelName совпадают, просто очистить модель от анимации, прописать новые RootMesh и RootJoint, поправить текстуры

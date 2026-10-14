@@ -126,6 +126,7 @@ public:
 			: pScript( _pScript ), pArea( _pArea ), nUnits( 0 )
 	{
 	}
+
 	bool AddUnit( CAIUnit *pUnit )
 	{
 		if ( pUnit->IsInfantry() && pUnit->GetFormation() )
@@ -145,9 +146,18 @@ public:
 		}
 		return false;
 	}
+
 	void Done() {}
-	const NDb::SScriptArea &GetArea() const { return *pArea; }
-	const int GetNUnits() const { return nUnits; }
+
+	const NDb::SScriptArea &GetArea() const
+	{
+		return *pArea;
+	}
+
+	const int GetNUnits() const
+	{
+		return nUnits;
+	}
 };
 
 class CIsSomeUnitInScriptAreaEnumerator : public IScriptAreaEnumerator
@@ -161,13 +171,22 @@ public:
 			: pScript( _pScript ), pArea( _pArea ), bPresent( false )
 	{
 	}
+
 	bool AddUnit( CAIUnit *pUnit )
 	{
 		bPresent = true;
 		return true;
 	}
-	void Done() { pScript->PushNumber( bPresent ); }
-	const NDb::SScriptArea &GetArea() const { return *pArea; }
+
+	void Done()
+	{
+		pScript->PushNumber( bPresent );
+	}
+
+	const NDb::SScriptArea &GetArea() const
+	{
+		return *pArea;
+	}
 };
 
 int CScripts::GlobeCommand( struct lua_State *pState )
@@ -1472,6 +1491,7 @@ int CScripts::GetNUnitsInCircle( struct lua_State *state )
 
 	return 1;
 }
+
 /*
 
 int CScripts::StopSound( struct lua_State *pState )
@@ -1945,6 +1965,7 @@ class CUnitsEnumerator : public IEnumerator
 
 public:
 	CUnitsEnumerator( Script *_pScript ) : pScript( _pScript ), nResult( 0 ) {}
+
 	bool AddUnit( CAIUnit *pUnit )
 	{
 		if ( pUnit->IsInfantry() && pUnit->GetFormation() )
@@ -1963,7 +1984,10 @@ public:
 		return false;
 	}
 
-	void Done() { pScript->PushNumber( nResult ); }
+	void Done()
+	{
+		pScript->PushNumber( nResult );
+	}
 };
 
 class CUnitsInScriptAreaCounter : public IScriptAreaEnumerator
@@ -1975,9 +1999,21 @@ public:
 	CUnitsInScriptAreaCounter( Script *_pScript, const NDb::SScriptArea &_area ) : enumerator( _pScript ), area( _area )
 	{
 	}
-	const NDb::SScriptArea &GetArea() const { return area; }
-	bool AddUnit( CAIUnit *pUnit ) { return enumerator.AddUnit( pUnit ); }
-	void Done() { enumerator.Done(); }
+
+	const NDb::SScriptArea &GetArea() const
+	{
+		return area;
+	}
+
+	bool AddUnit( CAIUnit *pUnit )
+	{
+		return enumerator.AddUnit( pUnit );
+	}
+
+	void Done()
+	{
+		enumerator.Done();
+	}
 };
 
 bool CScripts::IsUnitInCirlceArea( CAIUnit *pUnit, const CVec2 &vCenter, const int fR, const int nPlayer )
@@ -2617,6 +2653,7 @@ int CScripts::IsSomeUnitInParty( struct lua_State *state )
 
 	return 1;
 }
+
 inline CVec2 ToCVec2( const CVec3 &v3 )
 {
 	return CVec2( v3.x, v3.y );
@@ -3639,7 +3676,10 @@ int CScripts::GetNMinesInScriptArea( struct lua_State *pState )
 	class CMinesCheck : public ICheckObjects
 	{
 	public:
-		virtual bool IsGoodObj( CExistingObject *pObj ) const { return pObj->GetObjectType() == ESOT_MINE; }
+		virtual bool IsGoodObj( CExistingObject *pObj ) const
+		{
+			return pObj->GetObjectType() == ESOT_MINE;
+		}
 	};
 
 	CMinesCheck minesCheck;
@@ -3664,7 +3704,10 @@ int CScripts::GetNTrenchesInScriptArea( struct lua_State *pState )
 	class CTrenchesCheck : public ICheckObjects
 	{
 	public:
-		virtual bool IsGoodObj( CExistingObject *pObj ) const { return pObj->GetObjectType() == ESOT_ENTR_PART; }
+		virtual bool IsGoodObj( CExistingObject *pObj ) const
+		{
+			return pObj->GetObjectType() == ESOT_ENTR_PART;
+		}
 	};
 
 	CTrenchesCheck trenchesCheck;
@@ -3689,7 +3732,10 @@ int CScripts::GetNFencesInScriptArea( struct lua_State *pState )
 	class CFencesCheck : public ICheckObjects
 	{
 	public:
-		virtual bool IsGoodObj( CExistingObject *pObj ) const { return pObj->GetObjectType() == ESOT_FENCE; }
+		virtual bool IsGoodObj( CExistingObject *pObj ) const
+		{
+			return pObj->GetObjectType() == ESOT_FENCE;
+		}
 	};
 
 	CFencesCheck fencesCheck;
@@ -3714,7 +3760,10 @@ int CScripts::GetNAntitankInScriptArea( struct lua_State *pState )
 	class CAntiTankCheck : public ICheckObjects
 	{
 	public:
-		virtual bool IsGoodObj( CExistingObject *pObj ) const { return theUnitCreation.IsAntiTank( pObj->GetStats() ); }
+		virtual bool IsGoodObj( CExistingObject *pObj ) const
+		{
+			return theUnitCreation.IsAntiTank( pObj->GetStats() );
+		}
 	};
 
 	CAntiTankCheck antitankCheck;
@@ -3739,7 +3788,10 @@ int CScripts::GetNAPFencesInScriptArea( struct lua_State *pState )
 	class CAntiTankCheck : public ICheckObjects
 	{
 	public:
-		virtual bool IsGoodObj( CExistingObject *pObj ) const { return theUnitCreation.IsAPFence( pObj->GetStats() ); }
+		virtual bool IsGoodObj( CExistingObject *pObj ) const
+		{
+			return theUnitCreation.IsAPFence( pObj->GetStats() );
+		}
 	};
 
 	CAntiTankCheck antitankCheck;
@@ -4013,7 +4065,9 @@ int CScripts::GetObjectList( struct lua_State *state )
 struct SArtillerySort
 {
 	CVec2 vCenter;
+
 	SArtillerySort() : vCenter( VNULL2 ) {}
+
 	SArtillerySort( const CVec2 &_vCenter ) : vCenter( _vCenter ) {}
 
 	bool operator()( const CArtillery *pArt1, const CArtillery *pArt2 ) const
@@ -4268,6 +4322,7 @@ int CScripts::GiveUnitQCommand( struct lua_State *state )
 	ProcessCommand( state, true, false );
 	return 1;
 }
+
 /*
 
 int CScripts::StartSequence( struct lua_State *pState )
@@ -4306,6 +4361,7 @@ int CScripts::HideMovieBorder( struct lua_State *pState )
 	//	NInput::PostEvent( "end_script_movie_sequence", 2, 0 );
 	return 1;
 }
+
 /*
 
 int CScripts::CameraMove( struct lua_State *pState )

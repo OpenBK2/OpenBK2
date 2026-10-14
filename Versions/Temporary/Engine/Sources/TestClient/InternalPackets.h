@@ -8,7 +8,10 @@ class CEnteredLobby : public CNetPacket
 
 public:
 	ZDATA
-	ZEND int operator&( IBinSaver &f ) { return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 
 	CEnteredLobby() {}
 };
@@ -19,7 +22,10 @@ class CTestShowGameClients : public CNetPacket
 
 public:
 	ZDATA
-	ZEND int operator&( IBinSaver &f ) { return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		return 0;
+	}
 };
 
 class CTestSpecGameInfo : public CNetPacket
@@ -29,6 +35,7 @@ class CTestSpecGameInfo : public CNetPacket
 public:
 	ZDATA
 	std::string szMapName;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szMapName );
@@ -36,5 +43,6 @@ public:
 	}
 
 	CTestSpecGameInfo() {}
+
 	CTestSpecGameInfo( const std::string &_szMapName ) : szMapName( _szMapName ) {}
 };

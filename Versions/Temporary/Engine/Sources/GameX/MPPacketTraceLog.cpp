@@ -15,6 +15,7 @@ namespace
 	{
 		int nScheduledSegment;
 		int nAppliedSegment;
+
 		SDropTrace() : nScheduledSegment( -1 ), nAppliedSegment( -1 ) {}
 	};
 
@@ -128,7 +129,7 @@ namespace
 			         slot.bPresent ? 1 : 0 );
 		}
 	}
-}
+} // namespace
 
 void MatchPacketTrace_Reset()
 {
@@ -321,4 +322,4 @@ void MatchPacketTrace_Flush( const char *szReason )
 	const int nCloseResult = fclose( file );
 	g_trace.bFlushed = !bWriteFailed && nCloseResult == 0;
 }
-}
+} // namespace NGameX

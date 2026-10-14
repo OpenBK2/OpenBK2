@@ -56,9 +56,15 @@ class CScriptAreaWxWindow : public CWxHostWindow, public CScriptAreaCommands
 	SScriptAreaWindowData dialogData;
 
 public:
-	CScriptAreaWxWindow() { Singleton<ICommandHandlerContainer>()->Set( CHID_SCRIPT_AREA_WINDOW, this ); }
+	CScriptAreaWxWindow()
+	{
+		Singleton<ICommandHandlerContainer>()->Set( CHID_SCRIPT_AREA_WINDOW, this );
+	}
 
-	virtual ~CScriptAreaWxWindow() { Singleton<ICommandHandlerContainer>()->Remove( CHID_SCRIPT_AREA_WINDOW ); }
+	virtual ~CScriptAreaWxWindow()
+	{
+		Singleton<ICommandHandlerContainer>()->Remove( CHID_SCRIPT_AREA_WINDOW );
+	}
 
 	bool Build( IWidget *pParent )
 	{
@@ -121,7 +127,10 @@ public:
 	}
 
 	//	CScriptAreaCommands
-	virtual void GetDialogData( SScriptAreaWindowData *pData ) { ( *pData ) = dialogData; }
+	virtual void GetDialogData( SScriptAreaWindowData *pData )
+	{
+		( *pData ) = dialogData;
+	}
 
 	virtual void SetDialogData( const SScriptAreaWindowData *pData )
 	{
@@ -245,7 +254,10 @@ private:
 		NotifyHandler();
 	}
 
-	void OnAreaSelectionChanged( wxListEvent & ) { UpdateControls(); }
+	void OnAreaSelectionChanged( wxListEvent & )
+	{
+		UpdateControls();
+	}
 
 	// The 80/19 split the original computes once in OnInitDialog, applied
 	// every time the list changes width instead.
@@ -260,7 +272,7 @@ private:
 		}
 	}
 };
-}
+} // namespace
 
 namespace NScriptAreaView
 {
@@ -278,4 +290,4 @@ IWidget *Create( CPaletteList *pPalettes, IWidget *pPage )
 	}
 	return pWindow;
 }
-}
+} // namespace NScriptAreaView

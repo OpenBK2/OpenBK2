@@ -51,23 +51,40 @@ struct SLine
 	int a = {}, b = {}, c = {};
 
 	SLine() {};
+
 	SLine( int _a, int _b, int _c ) : a( _a ), b( _b ), c( _c ) {}
+
 	SLine( const SVector &ptStart, const SVector &ptFinish )
 			: a( ptFinish.y - ptStart.y ), b( ptStart.x - ptFinish.x ), c( ptFinish.x * ptStart.y - ptStart.x * ptFinish.y )
 	{
 	}
 
-	bool IsPointOnLine( const SVector &point ) const { return a * point.x + b * point.y + c == 0; }
-	const int GetHPLineSign( const SVector &point ) const { return boost::math::sign( a * point.x + b * point.y + c ); }
+	bool IsPointOnLine( const SVector &point ) const
+	{
+		return a * point.x + b * point.y + c == 0;
+	}
+
+	const int GetHPLineSign( const SVector &point ) const
+	{
+		return boost::math::sign( a * point.x + b * point.y + c );
+	}
+
 	bool IsSegmIntersectLine( const SVector &ptStart, const SVector &ptFinish ) const
 	{
 		const int t1 = boost::math::sign( GetHPLineSign( ptStart ) );
 		const int t2 = boost::math::sign( GetHPLineSign( ptFinish ) );
 		return ( t1 >= 0 ) && ( t2 <= 0 ) || ( t1 <= 0 ) && ( t2 >= 0 );
 	}
-	const SLine GetPerpendicular( const SVector &point ) const { return SLine( -b, a, b * point.x - a * point.y ); }
 
-	const SVector GetDirVector() const { return SVector( -b, a ); }
+	const SLine GetPerpendicular( const SVector &point ) const
+	{
+		return SLine( -b, a, b * point.x - a * point.y );
+	}
+
+	const SVector GetDirVector() const
+	{
+		return SVector( -b, a );
+	}
 };
 
 //*******************************************************************
@@ -158,8 +175,15 @@ public:
 		}
 	}
 
-	const SVector &GetPoint() const { return dir; }
-	const int GetZ() const { return z; }
+	const SVector &GetPoint() const
+	{
+		return dir;
+	}
+
+	const int GetZ() const
+	{
+		return z;
+	}
 };
 
 // минимальное расстояние от точки до отрезка

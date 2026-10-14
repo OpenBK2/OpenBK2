@@ -186,4 +186,4 @@ inline std::vector<std::string> FindLuaFunctions( const std::string &source )
 	}
 	return { names.begin(), names.end() };
 }
-}
+} // namespace NTextEditor

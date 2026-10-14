@@ -205,7 +205,8 @@ CFontInfo *CTextLocaleInfo::GetFont( const SFont &sFont )
 	return pResFontInfo;
 }
 
-} // namespace
+} // namespace NGScene
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x02931162, CTextLocaleInfo )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x020c1140, CFontInfo )

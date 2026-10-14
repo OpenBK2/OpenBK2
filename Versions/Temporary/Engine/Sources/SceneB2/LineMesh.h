@@ -15,6 +15,7 @@ class CLineMesh : public CPtrFuncBase<NGScene::CObjectInfo>
 
 protected:
 	void Recalc();
+
 	CLineMesh() {}
 
 public:

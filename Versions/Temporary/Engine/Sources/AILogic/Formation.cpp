@@ -825,7 +825,10 @@ struct SEdge
 
 	SEdge() : pFormation( 0 ), pCmd( 0 ), fDist( 0.0f ) {}
 
-	operator float() const { return fDist; }
+	operator float() const
+	{
+		return fDist;
+	}
 };
 
 void CFormation::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand )
@@ -994,6 +997,7 @@ const int CFormation::GetVirtualUnitSlotInStats( const int nVirtualUnit ) const
 								 "Wrong number of virtual unit ({}), size of virtual units ({})", nVirtualUnit, VirtualUnitsSize() ) );
 	return virtualUnits[nVirtualUnit].nSlotInStats;
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////v
 void CFormation::AddVirtualUnit( CSoldier *pSoldier, const int nSlotInStats )
 {

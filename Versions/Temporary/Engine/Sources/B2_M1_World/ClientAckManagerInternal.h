@@ -16,7 +16,7 @@ enum EAckPosition : int;
 struct SAckParameter;
 struct SClientGameConsts;
 struct SComplexSoundDesc;
-}
+} // namespace NDb
 
 typedef std::unordered_map<int /*AckType*/, int /*index in consts*/> CUnitAcksInfo;
 
@@ -37,14 +37,22 @@ class CClientAckManager : public IClientAckManager
 	public:
 		int operator&( IBinSaver &save );
 		CBoredUnitsContainer();
+
 		CBoredUnitsContainer operator=( const CBoredUnitsContainer &cp )
 		{
 			Copy( cp );
 			return *this;
 		}
-		CBoredUnitsContainer( const CBoredUnitsContainer &cp ) { Copy( cp ); }
 
-		int GetCount() const { return nCounter; }
+		CBoredUnitsContainer( const CBoredUnitsContainer &cp )
+		{
+			Copy( cp );
+		}
+
+		int GetCount() const
+		{
+			return nCounter;
+		}
 
 		void AddUnit( struct IMOUnit *pUnit );
 		void DelUnit( struct IMOUnit *pUnit );
@@ -62,14 +70,21 @@ class CClientAckManager : public IClientAckManager
 	{
 		NDb::EUnitAckType eAck{};
 		CDBPtr<NDb::SComplexSoundDesc> pSound;
+
 		enum ESoundMixType eMixType
 		{
 		};
 
 		int operator&( IBinSaver &saver );
-		bool operator==( const SAck &ack ) const { return eAck == ack.eAck; }
+
+		bool operator==( const SAck &ack ) const
+		{
+			return eAck == ack.eAck;
+		}
 	};
+
 	typedef std::list<SAck> CAcks;
+
 	//
 	struct SUnitAck
 	{
@@ -78,8 +93,10 @@ class CClientAckManager : public IClientAckManager
 		uint16_t wSoundID = 0;                // этот звук играет
 		int /*EUnitAckType*/ eCurrentAck = 0; // этот  Ack сейчас играет
 		NTimer::STime timeRun = 0;            // время когда можно проиграть AckPisitive
+
 		SUnitAck() : wSoundID( 0 ), eCurrentAck( -1 ), timeRun( 0 ) {}
 	};
+
 	// acknowledgement of dead unit
 	struct SDeathAck
 	{
@@ -87,12 +104,15 @@ class CClientAckManager : public IClientAckManager
 		CDBPtr<NDb::SComplexSoundDesc> pSound;
 		CVec3 vPos;
 		NTimer::STime timeSinceStart = 0;
+
 		SDeathAck() {}
+
 		SDeathAck( const CVec3 &_vPos, const NDb::SComplexSoundDesc *_pSound, const unsigned int nTimeSinceStart )
 				: vPos( _vPos ), pSound( _pSound ), timeSinceStart( nTimeSinceStart )
 		{
 		}
 	};
+
 	//
 	typedef std::unordered_map<int, NTimer::STime> CUnitAcksPresence;
 	typedef std::unordered_map<CPtr<IMOUnit>, SUnitAck> CUnitsAcks;
@@ -110,6 +130,7 @@ class CClientAckManager : public IClientAckManager
 				: acksInfo( _acksInfo ), eType( _eType ), pConsts( _pConsts )
 		{
 		}
+
 		bool operator()( const SAck &a );
 	};
 

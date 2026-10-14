@@ -36,6 +36,7 @@ public:
 			bActive = true;
 		}
 	}
+
 	void Deactivate( uint32_t _dwTime )
 	{
 		nPower = 0;
@@ -60,7 +61,11 @@ public:
 			return nTemp;
 		}
 	}
-	void Reset() { bActive = false; }
+
+	void Reset()
+	{
+		bActive = false;
+	}
 };
 
 // При значении меньше данного CDoubleAccumulator считает что LimAxis вернулась в нулевое положение
@@ -104,6 +109,7 @@ public:
 			bActive = true;
 		}
 	}
+
 	void Deactivate( uint32_t _dwTime )
 	{
 		if ( !bActive )
@@ -115,6 +121,7 @@ public:
 		nPower = 0;
 		bActive = false;
 	}
+
 	int64_t Sample( uint32_t _dwTime )
 	{
 		int nTemp = nValue;
@@ -126,7 +133,11 @@ public:
 
 		return nTemp;
 	}
-	void Reset() { bActive = false; }
+
+	void Reset()
+	{
+		bActive = false;
+	}
 };
 
 class CAxisAccumulator
@@ -137,11 +148,13 @@ protected:
 
 public:
 	CAxisAccumulator() : nValue( 0 ), dwActivationTime( 0 ) {}
+
 	void Add( int nPoint, uint32_t dwTime )
 	{
 		dwActivationTime = dwTime;
 		nValue += nPoint;
 	}
+
 	int64_t Sample( uint32_t dwTime )
 	{
 		int64_t nTemp = nValue;
@@ -162,6 +175,7 @@ struct SAccumulator
 		return sKeyAccumulator.Sample( dwTime ) + sPOVAccumulator.Sample( dwTime ) + sLimAxisAccumulator.Sample( dwTime ) +
 		       sAxisAccumulator.Sample( dwTime );
 	}
+
 	void Reset()
 	{
 		sKeyAccumulator.Reset();
@@ -176,6 +190,7 @@ enum EActionState
 	STATE_INITIALIZED,
 	STATE_CONFIGPRESET
 };
+
 struct SActionInfo
 {
 	EActionState eState;
@@ -217,4 +232,4 @@ struct SCommand
 	SCommand() : bActive( false ), fCoeff( 1.0f ), fDelta( 0.0f ), fSpeed( 0.0f ), dwTime( 0 ) {}
 };
 
-};
+}; // namespace NInput

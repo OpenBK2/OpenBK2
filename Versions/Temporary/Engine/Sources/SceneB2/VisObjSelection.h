@@ -15,14 +15,20 @@ class CCSBound;
 struct SSelectionInfo
 {
 	CVec3 vMin, vMax;
+
 	//
 	SSelectionInfo() {}
+
 	SSelectionInfo( const CVec3 &_vCenter, const CVec3 &_vSize )
 	{
 		vMin = _vCenter - _vSize;
 		vMax = _vCenter + _vSize;
 	}
-	void MakeBound( SBound *pRes ) { pRes->BoxInit( vMin, vMax ); }
+
+	void MakeBound( SBound *pRes )
+	{
+		pRes->BoxInit( vMin, vMax );
+	}
 };
 
 inline bool operator==( const SSelectionInfo &a, const SSelectionInfo &b )
@@ -42,17 +48,33 @@ class CVisObjSelectionInfo : public CPtrFuncBase<NGScene::CObjectInfo>
 
 protected:
 	void Recalc();
-	bool NeedUpdate() { return bUpdate; }
+
+	bool NeedUpdate()
+	{
+		return bUpdate;
+	}
 
 public:
 	NMeshData::SMeshData data;
+
 	//
 	CVisObjSelectionInfo() {}
+
 	CVisObjSelectionInfo( CTerrainManager *_pTerraManager ) : pTerraManager( _pTerraManager ), bUpdate( true ) {}
+
 	//
 	void SetInfo( const SSelectionInfo &_info );
-	void SetSelectionType( const NDb::ESelectionType _eSelType ) { eSelType = _eSelType; }
-	void ForceUpdate() { bUpdate = true; }
+
+	void SetSelectionType( const NDb::ESelectionType _eSelType )
+	{
+		eSelType = _eSelType;
+	}
+
+	void ForceUpdate()
+	{
+		bUpdate = true;
+	}
+
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -77,6 +99,7 @@ struct SVisObjSelection
 	NDb::ESelectionType eSelType = {};
 	CVisObjSelectionHolder selHolder;
 	CVec3 vSelCenter;
+
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -118,6 +141,7 @@ public:
 	NTimer::STime timeStart = {};
 	int nFadeIn = {};  // msec
 	int nFadeOut = {}; // msec
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nID );

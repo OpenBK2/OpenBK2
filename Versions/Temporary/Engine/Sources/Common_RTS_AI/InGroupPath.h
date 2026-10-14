@@ -14,13 +14,22 @@ class CInGroupPathMemento : public IMemento
 
 public:
 	CInGroupPathMemento() : pGroupSmoothPath() {}
+
 	CInGroupPathMemento( CGroupSmoothPath *_pGroupSmoothPath, ISmoothPath *_pUnitOwnPath )
 			: pGroupSmoothPath( _pGroupSmoothPath ), pUnitOwnPath( _pUnitOwnPath )
 	{
 	}
 
-	CGroupSmoothPath *GetSmoothGroupPath() const { return pGroupSmoothPath; }
-	ISmoothPath *GetUnitOwnPath() const { return pUnitOwnPath; }
+	CGroupSmoothPath *GetSmoothGroupPath() const
+	{
+		return pGroupSmoothPath;
+	}
+
+	ISmoothPath *GetUnitOwnPath() const
+	{
+		return pUnitOwnPath;
+	}
+
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, &pGroupSmoothPath );
@@ -100,11 +109,25 @@ public:
 
 	virtual void Segment( const NTimer::STime timeDiff );
 
-	virtual const bool CanGoBackward() const { return false; }
-	virtual const bool CanGoForward() const { return true; }
+	virtual const bool CanGoBackward() const
+	{
+		return false;
+	}
 
-	virtual const CVec2 PeekPathPoint( const int nShift ) const { return pUnit->GetCenterPlain(); }
-	virtual IMemento *CreateMemento() const { return new CInGroupPathMemento( pSmoothGroupPath, pUnitOwnPath ); }
+	virtual const bool CanGoForward() const
+	{
+		return true;
+	}
+
+	virtual const CVec2 PeekPathPoint( const int nShift ) const
+	{
+		return pUnit->GetCenterPlain();
+	}
+
+	virtual IMemento *CreateMemento() const
+	{
+		return new CInGroupPathMemento( pSmoothGroupPath, pUnitOwnPath );
+	}
 };
 
 class CInGroupPath : public CInGroupPathBasis
@@ -112,6 +135,7 @@ class CInGroupPath : public CInGroupPathBasis
 	OBJECT_NOCOPY_METHODS( CInGroupPath );
 
 	ZDATA_( CInGroupPathBasis )
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInGroupPathBasis *)this );

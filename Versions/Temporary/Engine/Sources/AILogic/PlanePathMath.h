@@ -8,10 +8,12 @@ inline CVec3 ToVec3( const CVec2 &v )
 {
 	return CVec3( v, 0 );
 }
+
 inline CVec3 ToVec3( const CVec3 &v )
 {
 	return v;
 }
+
 extern const float nOrientation;
 
 //	CAnalyticBSpline3
@@ -24,8 +26,14 @@ class CAnalyticBSpline3
 
 public:
 	CAnalyticBSpline3() {}
-	CAnalyticBSpline3( const CVec3 &p0, const CVec3 &p1, const CVec3 &p2, const CVec3 &p3 ) { Setup( p0, p1, p2, p3 ); }
+
+	CAnalyticBSpline3( const CVec3 &p0, const CVec3 &p1, const CVec3 &p2, const CVec3 &p3 )
+	{
+		Setup( p0, p1, p2, p3 );
+	}
+
 	CAnalyticBSpline3( const CAnalyticBSpline3 &bs ) : x( bs.x ), y( bs.y ), z( bs.z ) {}
+
 	//
 	void Setup( const CVec3 &p0, const CVec3 &p1, const CVec3 &p2, const CVec3 &p3 )
 	{
@@ -33,10 +41,26 @@ public:
 		y.Setup( p0.y, p1.y, p2.y, p3.y );
 		z.Setup( p0.z, p1.z, p2.z, p3.z );
 	}
-	const CVec3 Get( const float t ) const { return CVec3( x( t ), y( t ), z( t ) ); }
-	const CVec3 operator()( const float t ) const { return Get( t ); }
-	const CVec3 GetDiff1( const float t ) const { return CVec3( x.GetDiff1( t ), y.GetDiff1( t ), z.GetDiff1( t ) ); }
-	const CVec3 GetDiff2( const float t ) const { return CVec3( x.GetDiff2( t ), y.GetDiff2( t ), z.GetDiff2( t ) ); }
+
+	const CVec3 Get( const float t ) const
+	{
+		return CVec3( x( t ), y( t ), z( t ) );
+	}
+
+	const CVec3 operator()( const float t ) const
+	{
+		return Get( t );
+	}
+
+	const CVec3 GetDiff1( const float t ) const
+	{
+		return CVec3( x.GetDiff1( t ), y.GetDiff1( t ), z.GetDiff1( t ) );
+	}
+
+	const CVec3 GetDiff2( const float t ) const
+	{
+		return CVec3( x.GetDiff2( t ), y.GetDiff2( t ), z.GetDiff2( t ) );
+	}
 
 	const float GetLength( const int nPres = 100 ) const
 	{
@@ -76,6 +100,7 @@ public:
 		const float fTNeg = 1 - fT;
 		return p0 * fTNeg * fTNeg * fTNeg + p1 * fT * fTNeg * fTNeg + p2 * fT * fT * fTNeg + p3 * fT * fT * fT;
 	}
+
 	TVEC GetDiff1( const float fT ) const
 	{
 		const float fTNeg = 1 - fT;
@@ -92,6 +117,7 @@ struct CDirectedCircle : public CCircle
 	int nDir = {}; // direction of circle rotation
 
 	CDirectedCircle() : nDir( 0 ) {}
+
 	CDirectedCircle( const CVec2 &_center, const float _r, const int _nDir ) : CCircle( _center, _r ), nDir( _nDir ) {}
 };
 
@@ -121,6 +147,14 @@ public:
 		c = v0;
 		d = x0;
 	}
-	TVEC Get( const float fT ) const { return fT * fT * fT * a + fT * fT * b + fT * c + d; }
-	TVEC GetDiff1( const float fT ) const { return 3 * fT * fT * a + 2 * fT * b + c; }
+
+	TVEC Get( const float fT ) const
+	{
+		return fT * fT * fT * a + fT * fT * b + fT * c + d;
+	}
+
+	TVEC GetDiff1( const float fT ) const
+	{
+		return 3 * fT * fT * a + 2 * fT * b + c;
+	}
 };

@@ -52,4 +52,4 @@ inline bool IsDown( unsigned nVirtualKey )
 	NI_ASSERT( false, "NWxKey::IsDown(): no wx key code for this virtual key" );
 	return false;
 }
-}
+} // namespace NWxKey

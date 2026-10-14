@@ -15,20 +15,35 @@ public:
 		ROTATE_180,
 		ROTATE_270
 	};
+
 	struct STextureCoord
 	{
 		ERectOrient eOrient;
 		CTRect<short> rcTexRect;
 
 		STextureCoord() {}
+
 		STextureCoord( const CTRect<short> &_rcTexRect, ERectOrient _eOrient = NORMAL )
 				: eOrient( _eOrient ), rcTexRect( _rcTexRect )
 		{
 		}
-		bool IsSwap() const { return eOrient == ROTATE_90 || eOrient == ROTATE_270; }
-		int GetWidth() const { return IsSwap() ? rcTexRect.Height() : rcTexRect.Width(); }
-		int GetHeight() const { return IsSwap() ? rcTexRect.Width() : rcTexRect.Height(); }
+
+		bool IsSwap() const
+		{
+			return eOrient == ROTATE_90 || eOrient == ROTATE_270;
+		}
+
+		int GetWidth() const
+		{
+			return IsSwap() ? rcTexRect.Height() : rcTexRect.Width();
+		}
+
+		int GetHeight() const
+		{
+			return IsSwap() ? rcTexRect.Width() : rcTexRect.Height();
+		}
 	};
+
 	struct SRect
 	{
 		short nX, nY;
@@ -36,17 +51,21 @@ public:
 		NGfx::SPixel8888 sColor;
 
 		SRect() {}
+
 		SRect(
 				short _nX, short _nY, const STextureCoord &_sTex, const STextureCoord &_sMask, const NGfx::SPixel8888 &_sColor )
 				: nX( _nX ), nY( _nY ), sTex( _sTex ), sMask( _sMask ), sColor( _sColor )
 		{
 		}
 	};
+
 	//
 	CTPoint<float> scale;
 	std::vector<SRect> rects;
+
 	//
 	CSWRectLayout() : scale( 1, 1 ) {}
+
 	void AddRect( short nScreenX,
 	              short nScreenY,
 	              const STextureCoord &sTex,
@@ -54,6 +73,7 @@ public:
 	{
 		rects.push_back( SRect( nScreenX, nScreenY, sTex, sTex, color ) );
 	}
+
 	void AddRect( short nScreenX,
 	              short nScreenY,
 	              const STextureCoord &sTex,
@@ -62,6 +82,7 @@ public:
 	{
 		rects.push_back( SRect( nScreenX, nScreenY, sTex, sMask, color ) );
 	}
+
 	int operator&( CStructureSaver &f )
 	{
 		f.Add( 1, &scale );
@@ -134,4 +155,4 @@ inline void ApplyRectOrient( CSWRectLayout::ERectOrient eOrient, const CTRect<T>
 }
 
 DEFINE_DG_CONSTANT_NODE( CCSWRectLayout, CSWRectLayout );
-}
+} // namespace NGScene

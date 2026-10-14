@@ -17,14 +17,17 @@ class CReflowState : public IReflowState
 {
 private:
 	typedef std::list<CPtr<IVisReflowObject>> TVisObjects;
+
 	struct SRange
 	{
 		float fValue;
 		float fHeight;
 
 		SRange() {}
+
 		SRange( float _fValue, float _fHeight ) : fValue( _fValue ), fHeight( _fHeight ) {}
 	};
+
 	struct SLine
 	{
 		float fY;
@@ -37,6 +40,7 @@ private:
 		TVisObjects line;
 
 		SLine() {}
+
 		SLine( float _fLeft,
 		       float _fRight,
 		       float _fY,
@@ -69,15 +73,29 @@ protected:
 public:
 	CReflowState( NGScene::ILayoutFakeView *pView, float fWidth );
 
-	const SState &GetState() const { return state; }
-	void SetState( const SState &_state ) { state = _state; }
+	const SState &GetState() const
+	{
+		return state;
+	}
+
+	void SetState( const SState &_state )
+	{
+		state = _state;
+	}
 
 	void AddObject( IVisReflowObject *pObject );
 	void CreateLine( bool bEndBlock );
 	void Finalize();
 
-	const CTPoint<float> &GetSize() const { return size; }
-	NGScene::ILayoutFakeView *GetScene() const { return pView; }
+	const CTPoint<float> &GetSize() const
+	{
+		return size;
+	}
+
+	NGScene::ILayoutFakeView *GetScene() const
+	{
+		return pView;
+	}
 };
 
 CReflowState::CReflowState( NGScene::ILayoutFakeView *_pView, float _fWidth )
@@ -297,6 +315,7 @@ private:
 	ZDATA
 	TObjects objects;
 	CTPoint<float> size;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &objects );
@@ -314,7 +333,10 @@ public:
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window );
 	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window );
 
-	const CTPoint<float> &GetSize() const { return size; }
+	const CTPoint<float> &GetSize() const
+	{
+		return size;
+	}
 };
 
 CReflowLayout::CReflowLayout() : size( 0, 0 ) {}
@@ -380,7 +402,7 @@ IReflowLayout *CreateReflowLayout()
 	return new CReflowLayout();
 }
 
-} // NAMESPACE
+} // namespace NML
 
 using namespace NML;
 REGISTER_SAVELOAD_CLASS( UI, 0xB5529180, CReflowLayout )

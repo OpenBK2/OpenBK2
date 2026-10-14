@@ -57,4 +57,4 @@ inline const CVec2 GetPointByTile( const SVector &tile )
 	return GetPointByTile( tile.x, tile.y );
 }
 
-}
+} // namespace AICellsTiles

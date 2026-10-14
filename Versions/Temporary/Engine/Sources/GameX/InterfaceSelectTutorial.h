@@ -20,6 +20,7 @@ private:
 		CPtr<IWindow> pWnd;
 		CPtr<ITextView> pNameView;
 		CPtr<ITextView> pDifficultyView;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &pMapInfo );
@@ -46,6 +47,7 @@ private:
 	CPtr<ITextView> pMissionDescView;
 	std::vector<SMapInfo> maps;
 	CPtr<IWindow> pMissionDescItemBlock;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );

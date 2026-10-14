@@ -11,6 +11,7 @@ public:
 	{
 		ZDATA
 		CTRect<float> rcTexRect;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &rcTexRect );
@@ -18,7 +19,9 @@ public:
 		}
 
 		STextureCoord() {}
+
 		STextureCoord( const CTRect<float> &_rcTexRect ) : rcTexRect( _rcTexRect ) {}
+
 		STextureCoord( float fx, float fy, float fw, float fh )
 		{
 			rcTexRect.x1 = fx;
@@ -26,9 +29,18 @@ public:
 			rcTexRect.x2 = fx + fw;
 			rcTexRect.y2 = fy + fh;
 		}
-		int GetWidth() const { return rcTexRect.Width(); }
-		int GetHeight() const { return rcTexRect.Height(); }
+
+		int GetWidth() const
+		{
+			return rcTexRect.Width();
+		}
+
+		int GetHeight() const
+		{
+			return rcTexRect.Height();
+		}
 	};
+
 	struct SRect
 	{
 		ZDATA
@@ -36,6 +48,7 @@ public:
 		float fSizeX, fSizeY;
 		STextureCoord sTex;
 		NGfx::SPixel8888 sColor;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &fX );
@@ -48,6 +61,7 @@ public:
 		}
 
 		SRect() {}
+
 		SRect( float _fX,
 		       float _fY,
 		       float _fSizeX,
@@ -58,17 +72,21 @@ public:
 		{
 		}
 	};
+
 	ZDATA
 	std::vector<SRect> rects;
 	float fZ;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &rects );
 		f.Add( 3, &fZ );
 		return 0;
 	}
+
 	//
 	CRectLayout() : fZ( 0 ) {}
+
 	CRectLayout( float fScrX,
 	             float fScrY,
 	             float fScrW,
@@ -82,6 +100,7 @@ public:
 		AddRect( fScrX, fScrY, fScrW, fScrH, STextureCoord( fTxtX, fTxtY, fTxtW, fTxtH ), dwColor );
 		fZ = 0;
 	}
+
 	void AddRect( float fX,
 	              float fY,
 	              float fSizeX,
@@ -91,8 +110,16 @@ public:
 	{
 		rects.push_back( SRect( fX, fY, fSizeX, fSizeY, sTex, color ) );
 	}
-	void AddRect( const SRect &rect ) { rects.push_back( rect ); }
-	void RemoveAllRects() { rects.clear(); }
+
+	void AddRect( const SRect &rect )
+	{
+		rects.push_back( rect );
+	}
+
+	void RemoveAllRects()
+	{
+		rects.clear();
+	}
 };
 
 inline CRectLayout MakeLayout( float fScrX,

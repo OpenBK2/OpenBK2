@@ -7,6 +7,7 @@
 namespace NCache
 {
 int nFibbonachiSeries[N_MAX_FIB];
+
 struct SCacheInit
 {
 	SCacheInit()
@@ -32,4 +33,4 @@ struct SCacheInit
 		}
 	}
 } init;
-}
+} // namespace NCache

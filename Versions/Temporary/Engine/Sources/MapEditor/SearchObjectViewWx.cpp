@@ -72,9 +72,12 @@ public:
 		pText->SelectAll();
 	}
 
-	std::string GetText() const { return std::string( pText->GetValue().utf8_str() ); }
+	std::string GetText() const
+	{
+		return std::string( pText->GetValue().utf8_str() );
+	}
 };
-}
+} // namespace
 
 namespace NSearchObject
 {
@@ -93,4 +96,4 @@ bool Run( IWidget *pParent, std::string *pszText )
 	( *pszText ) = dialog.GetText();
 	return true;
 }
-}
+} // namespace NSearchObject

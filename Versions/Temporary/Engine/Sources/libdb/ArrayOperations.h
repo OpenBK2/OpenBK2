@@ -36,5 +36,5 @@ namespace NMetaInfo
 			} };
 		return &operations;
 	}
-}
-}
+} // namespace NMetaInfo
+} // namespace NDb

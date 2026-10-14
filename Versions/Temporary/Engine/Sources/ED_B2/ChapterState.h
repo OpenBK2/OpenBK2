@@ -11,6 +11,7 @@ class CMaskManipulator;
 struct IView;
 struct IButton;
 struct ITextView;
+
 namespace NDb
 {
 struct SWindowMSButton;

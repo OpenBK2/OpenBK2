@@ -34,7 +34,8 @@ namespace NGameX
 {
 bool Initialize();
 GAMEX_EXPORT void PostStorageInitialize();
-};
+}; // namespace NGameX
+
 ED_B2_M1_EXPORT IEditorModule *GetEditorModule1();
 ED_B2_EXPORT IEditorModule *GetEditorModule2();
 ED_B2_EXPORT IEditorModule *GetEditorModule3();
@@ -50,7 +51,12 @@ public:
 	void LoadMapEditorModule( const std::string &szModuleName );
 	void UnloadMapEditorModule();
 	const std::vector<IEditorModule *> &GetEditorModules();
-	bool GameXInitialize() { return NGameX::Initialize(); }
+
+	bool GameXInitialize()
+	{
+		return NGameX::Initialize();
+	}
+
 	void GameXPostStorageInitialize()
 	{
 		NGameX::PostStorageInitialize();
@@ -59,6 +65,7 @@ public:
 			NDb::AddDbObserver( NDb::CreateVFSDbObserver() );
 		}
 	}
+
 	void CreateMenus( IMainFrame *pMainFrame ) const;
 };
 

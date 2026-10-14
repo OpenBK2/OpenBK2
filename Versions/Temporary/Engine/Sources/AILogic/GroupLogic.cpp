@@ -1054,6 +1054,7 @@ void CGroupLogic::ProcessGridCommand( const CVec2 &vGridCenter,
 		UnitCommand( moveToCmd, pUnit, bPlaceInQueue );
 	}
 }
+
 #include "Common_RTS_AI/Checksums.h"
 #include "SimpleChecksumCalc.h"
 

@@ -23,8 +23,9 @@ struct SAIUnitCmd
 	float fNumber = {};
 	int nNumber = {};
 	bool bFromAI = {}; // если true, то команда пришла от клиента или от генерала
-										 // CRAP{ may be here we can act in other way - our goal is to get rid of old int-ids
-										 // CDBPtr<NDb::SHPObjectRPGStats> pTarget;
+
+	// CRAP{ may be here we can act in other way - our goal is to get rid of old int-ids
+	// CDBPtr<NDb::SHPObjectRPGStats> pTarget;
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nCmdType );
@@ -49,6 +50,7 @@ public:
 				bFromExplosion( 0 ), nNumber( 0 )
 	{
 	}
+
 	explicit SAIUnitCmd( const EActionCommand &_nCmdType )
 			: nCmdType( _nCmdType ), vPos( -1, -1 ), fNumber( 0 ), bFromExplosion( false ), bFromAI( true ), nObjectID( 0 ),
 				nNumber( 0 )
@@ -72,6 +74,7 @@ public:
 				nNumber( 0 )
 	{
 	}
+
 	SAIUnitCmd( const EActionCommand &_nCmdType, const float x, const float y )
 			: nCmdType( _nCmdType ), vPos( x, y ), fNumber( 0 ), bFromExplosion( false ), bFromAI( true ), nObjectID( 0 ),
 				nNumber( 0 )
@@ -113,6 +116,7 @@ public:
 				nObjectID(), nNumber( 0 )
 	{
 	}
+
 	//
 	int operator&( IXmlSaver &saver )
 	{

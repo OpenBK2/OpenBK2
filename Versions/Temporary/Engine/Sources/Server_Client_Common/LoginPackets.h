@@ -12,6 +12,7 @@ public:
 	ZDATA
 	std::string szNick;
 	std::string szPassword;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szNick );
@@ -20,6 +21,7 @@ public:
 	}
 
 	CLoginPacket() {}
+
 	CLoginPacket( const int nClient, const std::string &_szNick, const std::string &_szPassword )
 			: CNetPacket( nClient ), szNick( _szNick ), szPassword( _szPassword )
 	{
@@ -35,6 +37,7 @@ public:
 	std::string szPassword;
 	std::string szCDKey;
 	std::string szEmail;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szNick );
@@ -45,6 +48,7 @@ public:
 	}
 
 	CRegisterPacket() {}
+
 	CRegisterPacket( const int nClient,
 	                 const std::string &_szNick,
 	                 const std::string &_szPassword,
@@ -62,6 +66,7 @@ public:
 	ZDATA
 	std::string szNick;
 	std::string szEMail;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &szNick );
@@ -70,6 +75,7 @@ public:
 	}
 
 	CForgottenPasswordPacket() {}
+
 	CForgottenPasswordPacket( const std::string &_szNick, const std::string &_szEMail )
 			: CNetPacket( 0 ), szNick( _szNick ), szEMail( _szEMail )
 	{
@@ -87,8 +93,10 @@ public:
 		INVALID_EMAIL = 2,
 		SORRY_SERVICE_IS_NOT_IMPLEMENTED_YET = 255
 	};
+
 	ZDATA
 	EAnswer eAnswer;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &eAnswer );
@@ -96,6 +104,7 @@ public:
 	}
 
 	CForgottenPasswordAnswerPacket() {}
+
 	CForgottenPasswordAnswerPacket( const int nClient, const EAnswer _eAnswer )
 			: CNetPacket( nClient ), eAnswer( _eAnswer )
 	{
@@ -110,6 +119,7 @@ class CCheckConnectPacket : public CNetPacket
 public:
 	ZDATA
 	int64_t nNumber;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nNumber );
@@ -117,6 +127,7 @@ public:
 	}
 
 	CCheckConnectPacket() {}
+
 	CCheckConnectPacket( const int64_t _nNumber ) : nNumber( _nNumber ) {}
 };
 
@@ -129,6 +140,7 @@ public:
 		ECT_LOGIN,
 		ECT_REGISTER
 	};
+
 	ZDATA
 	int nPrime1, nPrime2;
 	std::string szNick;
@@ -136,6 +148,7 @@ public:
 	std::string szCDKey;
 	std::string szEmail;
 	EConnectType eConnectType;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &nPrime1 );
@@ -149,6 +162,7 @@ public:
 	}
 
 	CCheckConnectAnswerPacket() {}
+
 	CCheckConnectAnswerPacket( const int _nPrime1,
 	                           const int _nPrime2,
 	                           const EConnectType _eConnectType,

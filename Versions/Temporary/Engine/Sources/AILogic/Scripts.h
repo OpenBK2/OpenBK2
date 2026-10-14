@@ -51,6 +51,7 @@ private:
 		int nRepetitions = {};
 
 		std::string szName;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &period );
@@ -76,19 +77,23 @@ private:
 		ZDATA
 		SMapObjectInfo mapObject;
 		CDBPtr<SHPObjectRPGStats> pStats;
+
 		ZEND int operator&( IBinSaver &f )
 		{
 			f.Add( 2, &mapObject );
 			f.Add( 3, &pStats );
 			return 0;
 		}
+
 		SReinforcementObject() {}
+
 		SReinforcementObject( const SMapObjectInfo &_mapObject,
 		                      const SHPObjectRPGStats *_pStats /*, IScenarioUnit *_pScenarioUnit*/ )
 				: mapObject( _mapObject ), pStats( _pStats ) /*, pScenarioUnit( _pScenarioUnit ) */
 		{
 		}
 	};
+
 	typedef std::list<SReinforcementObject> CReinfList;
 	det_map<int, CReinfList> reinforcs;
 	// отложенные (некуда поставить) подкрепления
@@ -133,11 +138,13 @@ private:
 	// return false if command is invalid
 	static bool ParseCommand( struct SAIUnitCmd *pCmd, Script &sctipt, bool bIDsAreScriptIDs );
 	static int ProcessCommand( struct lua_State *state, const bool bPlaceInQueue, const bool b2NdParamIsScriptID );
+
 	//
 	struct ICheckObjects
 	{
 		virtual bool IsGoodObj( class CExistingObject *pObj ) const = 0;
 	};
+
 	int GetCheckObjectsInScriptArea( const NDb::SScriptArea &area, const struct ICheckObjects &check );
 
 	void SendShowReinoforcementPlacementFeedback( std::list<CVec2> *pCenters );
@@ -177,8 +184,15 @@ public:
 
 	void CallScriptFunction( const char *pszCommand );
 
-	void SetGlobeScriptHandler( IGlobeScriptHandler *pHandler ) { pGlobeScriptHandler = pHandler; }
-	IGlobeScriptHandler *GetGlobeScriptHandler() const { return pGlobeScriptHandler; }
+	void SetGlobeScriptHandler( IGlobeScriptHandler *pHandler )
+	{
+		pGlobeScriptHandler = pHandler;
+	}
+
+	IGlobeScriptHandler *GetGlobeScriptHandler() const
+	{
+		return pGlobeScriptHandler;
+	}
 
 	//
 	// script functions

@@ -107,6 +107,7 @@ struct SSSEResultVertex
 	CVec3 vRes, vSrc;
 	int nPad1, nPad2;
 };
+
 inline void SSETransformAndProject( const SHMatrix &m, const CVec3 *vin, SSSEResultVertex *vout, int len )
 {
 	if ( len <= 0 )

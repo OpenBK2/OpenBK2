@@ -18,6 +18,7 @@ namespace NGfx
 {
 const int N_GRID_SIZE = 100;
 const int N_FILL_PASSES = 200;
+
 struct STestData
 {
 	CObj<CGeometry> pGeom;
@@ -42,6 +43,7 @@ struct STestData
 			}
 		}
 	}
+
 	void Init()
 	{
 		CBufferLock<SGeomVecFull> g( &pGeom, ( N_GRID_SIZE + 1 ) * ( N_GRID_SIZE + 1 ) );
@@ -89,11 +91,13 @@ struct STestData
 		FillTex( &pTex, 8, 2 );
 		FillTex( &pDepth, 8, 1 );
 	}
+
 	void ClearTex()
 	{
 		pTex = 0;
 		pDepth = 0;
 	}
+
 	void InitFullSizeTex()
 	{
 		FillTex( &pTex, 512, 7 ); //FillTex( &pTex, 1024, 5 );
@@ -125,6 +129,7 @@ static float TimeRender( NGfx::CRenderContext &rc, int nPasses, CGeometry *pGeom
 }
 
 static SPerformanceInfo perf;
+
 //extern NWin32Helper::com_ptr<IDirect3DDevice9> pDevice;
 void PerformBenchmark()
 {
@@ -209,4 +214,4 @@ const SPerformanceInfo &GetPerformanceInfo()
 {
 	return perf;
 }
-}
+} // namespace NGfx

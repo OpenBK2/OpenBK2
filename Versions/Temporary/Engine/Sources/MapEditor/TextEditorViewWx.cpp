@@ -144,6 +144,7 @@ class IFindTarget
 {
 public:
 	virtual ~IFindTarget() {}
+
 	virtual void FindNext( const std::string &rszText, bool bWholeWord, bool bMatchCase ) = 0;
 	virtual void ReplaceSelection( const std::string &rszWith ) = 0;
 	virtual void
@@ -204,8 +205,15 @@ private:
 		pTarget->FindNext( ToUtf8( pText->GetValue() ), pWholeWord->GetValue(), pMatchCase->GetValue() );
 	}
 
-	void OnHide( wxCommandEvent & ) { Hide(); }
-	void OnCloseBox( wxCloseEvent & ) { Hide(); }
+	void OnHide( wxCommandEvent & )
+	{
+		Hide();
+	}
+
+	void OnCloseBox( wxCloseEvent & )
+	{
+		Hide();
+	}
 };
 
 // "Replace", IDD_REPLACETEXT. Modeless like Find, and hidden rather than
@@ -278,8 +286,15 @@ private:
 				ToUtf8( pFind->GetValue() ), ToUtf8( pWith->GetValue() ), pWholeWord->GetValue(), pMatchCase->GetValue() );
 	}
 
-	void OnHide( wxCommandEvent & ) { Hide(); }
-	void OnCloseBox( wxCloseEvent & ) { Hide(); }
+	void OnHide( wxCommandEvent & )
+	{
+		Hide();
+	}
+
+	void OnCloseBox( wxCloseEvent & )
+	{
+		Hide();
+	}
 };
 
 // "Script Editor", IDD_SCRIPT_EDITOR: CScriptEditor and the CLuaEditor in it.
@@ -368,9 +383,20 @@ public:
 		pOk->SetFocus();
 	}
 
-	bool WasPlaced() const { return placement.WasPlaced(); }
-	void SaveState() { placement.Save( this ); }
-	std::string GetEditorText() const { return ToUtf8( pEditor->GetText() ); }
+	bool WasPlaced() const
+	{
+		return placement.WasPlaced();
+	}
+
+	void SaveState()
+	{
+		placement.Save( this );
+	}
+
+	std::string GetEditorText() const
+	{
+		return ToUtf8( pEditor->GetText() );
+	}
 
 private:
 	// CLuaEditor::InitScintilla and SetEditorMargins.
@@ -799,11 +825,22 @@ public:
 		pOk->SetFocus();
 	}
 
-	bool WasPlaced() const { return placement.WasPlaced(); }
-	void SaveState() { placement.Save( this ); }
-	std::string GetEditorText() const { return ToUtf8( pEditor->GetText() ); }
+	bool WasPlaced() const
+	{
+		return placement.WasPlaced();
+	}
+
+	void SaveState()
+	{
+		placement.Save( this );
+	}
+
+	std::string GetEditorText() const
+	{
+		return ToUtf8( pEditor->GetText() );
+	}
 };
-}
+} // namespace
 
 namespace NTextEditor
 {
@@ -857,4 +894,4 @@ bool RunText( IWidget *pParent,
 	( *pszNewText ) = dialog.GetEditorText();
 	return true;
 }
-}
+} // namespace NTextEditor

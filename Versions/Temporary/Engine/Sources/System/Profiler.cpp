@@ -79,7 +79,7 @@ CProfiler::~CProfiler()
 		DbgTrc( "%s(%d) : can't measure", szFile.c_str(), nLine );
 	}
 }
-}
+} // namespace NProfiler
 
 static void Profile( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
