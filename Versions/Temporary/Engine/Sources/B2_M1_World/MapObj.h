@@ -461,7 +461,8 @@ public:
 		return GetStats()->pIconTexture;
 	}
 
-	virtual void AIUpdateState( const int nParam ) {};
+	virtual void AIUpdateState( const int nParam ) {}
+
 	virtual void AINewUnitInfo( const struct SNewUnitInfo &info,
 	                            struct IScene *pScene,
 	                            struct ISoundScene *pSoundScene,

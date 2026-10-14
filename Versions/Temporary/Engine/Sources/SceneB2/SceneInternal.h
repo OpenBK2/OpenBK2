@@ -443,14 +443,14 @@ public:
 	void SetGScene( NGScene::IGameView *_pGScene )
 	{
 		pGScene = _pGScene;
-	};
+	}
 
 	bool SetGSceneInternal( bool _bIsInternal )
 	{
 		bool bTmp = bIsInternal;
 		bIsInternal = _bIsInternal;
 		return bTmp;
-	};
+	}
 
 	SVisObjSelectionHandler *GetNewSelection();
 };

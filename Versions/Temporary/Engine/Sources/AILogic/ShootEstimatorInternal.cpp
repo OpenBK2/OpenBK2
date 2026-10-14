@@ -934,7 +934,7 @@ void CPlaneDeffensiveFireShootEstimator::AddUnit( class CAIUnit *pEnemy )
 class CAIUnit *CPlaneDeffensiveFireShootEstimator::GetBestUnit() const
 {
 	return pCurTarget;
-};
+}
 
 CBasicGun *CPlaneDeffensiveFireShootEstimator::GetBestGun() const
 {
@@ -1062,7 +1062,7 @@ class CAIUnit *CPlaneShturmovikShootEstimator::GetBestUnit() const
 	{
 		return bestAviation.pTarget;
 	}
-};
+}
 
 void CPlaneShturmovikShootEstimator::CalcBestBuilding()
 {

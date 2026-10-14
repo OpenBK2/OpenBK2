@@ -50,7 +50,7 @@ struct SLine
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int a = {}, b = {}, c = {};
 
-	SLine() {};
+	SLine() {}
 
 	SLine( int _a, int _b, int _c ) : a( _a ), b( _b ), c( _c ) {}
 

@@ -50,7 +50,7 @@ public:
 	{
 		NI_ASSERT( false, "Wrong call of IsSelectable" );
 		return false;
-	};
+	}
 
 	virtual int GetMovingType() const
 	{

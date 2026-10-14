@@ -78,7 +78,7 @@ class CLightmapTexture : public CPtrFuncBase<NGfx::CTexture>
 	void Recalc();
 
 public:
-	CLightmapTexture( CObj<CLightmapsLoader> _pLD, int _nTex ) : pLD( _pLD ), nTex( _nTex ) {};
+	CLightmapTexture( CObj<CLightmapsLoader> _pLD, int _nTex ) : pLD( _pLD ), nTex( _nTex ) {}
 
 	CLightmapTexture() {}
 

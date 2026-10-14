@@ -131,7 +131,7 @@ enum EUnitRPGType ReMapRPGType( enum EDBUnitRPGType eType )
 	}
 	NI_ASSERT( false, fmt::format( "wrong type {}", int( eType ) ) );
 	return RPG_TYPE_INFANTRY;
-};
+}
 
 const EUnitRPGClass GetRPGClass( const EUnitRPGType eType )
 {

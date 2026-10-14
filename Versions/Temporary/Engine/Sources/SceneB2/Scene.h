@@ -87,7 +87,7 @@ struct SObjectFilter
 	virtual bool operator()( int ) const
 	{
 		return false;
-	};
+	}
 };
 
 struct IScene : public CObjectBase

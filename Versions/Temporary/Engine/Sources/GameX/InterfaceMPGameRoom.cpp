@@ -461,12 +461,12 @@ bool CInterfaceMPGameRoom::OnChatEnter()
 		}
 	}
 	return true;
-};
+}
 
 bool CInterfaceMPGameRoom::OnChatEscape()
 {
 	return true;
-};
+}
 
 bool CInterfaceMPGameRoom::OnChatMessage( SMPUIChatMessage *pMsg )
 {
@@ -486,7 +486,7 @@ bool CInterfaceMPGameRoom::OnChatMessage( SMPUIChatMessage *pMsg )
 	NWinFrame::FlashTaskbarIfInactive();
 
 	return true;
-};
+}
 
 void CInterfaceMPGameRoom::SetTimeLimit( int nTimeLimit )
 {
@@ -872,7 +872,7 @@ bool CInterfaceMPGameRoom::OnInterruptReaction()
 	Singleton<IMPToUIManager>()->AddUIMessage( pMsg );
 
 	return true;
-};
+}
 
 void CInterfaceMPGameRoom::OpenCloseEmptySlot( const int nSlot, const bool bClosed )
 {

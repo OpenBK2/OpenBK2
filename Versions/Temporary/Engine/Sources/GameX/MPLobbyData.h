@@ -25,8 +25,9 @@ public:
 
 	CClientListData() {}
 
-	CClientListData( const std::string &_szName, const EMPChatStatus _eStatus )
-			: szName( _szName ), eStatus( _eStatus ) {};
+	CClientListData( const std::string &_szName, const EMPChatStatus _eStatus ) : szName( _szName ), eStatus( _eStatus )
+	{
+	}
 };
 
 class CClientListViewer : public IDataViewer
@@ -42,8 +43,10 @@ public:
 		return 0;
 	}
 
-	CClientListViewer() {};
-	CClientListViewer( class CInterfaceMPLobby *_pInterface ) : pInterface( _pInterface ) {};
+	CClientListViewer() {}
+
+	CClientListViewer( class CInterfaceMPLobby *_pInterface ) : pInterface( _pInterface ) {}
+
 	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
 	void SetData( CObjectBase *pWindow, const CObjectBase *pData ) const;
 };

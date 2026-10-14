@@ -12,7 +12,7 @@ PCConstructorInfo &ConstructorInfo()
 {
 	static CConstructorInfo *pInfo = 0;
 	return pInfo;
-};
+}
 
 template <int N>
 struct SUserActionsChecker;

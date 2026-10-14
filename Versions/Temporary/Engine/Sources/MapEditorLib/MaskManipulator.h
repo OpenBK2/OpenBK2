@@ -117,7 +117,7 @@ public:
 	bool RemoveNodeByID( const std::string &szName, int nNodeID )
 	{
 		return false;
-	};
+	}
 
 	bool RenameNode( const std::string &szName, const std::string &rszNewName );
 	//

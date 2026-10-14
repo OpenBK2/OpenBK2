@@ -56,7 +56,7 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase, public IProgrammed
 
 		CCustomGameListData() {}
 
-		CCustomGameListData( SMPGameInfo &_info ) : info( _info ) {};
+		CCustomGameListData( SMPGameInfo &_info ) : info( _info ) {}
 	};
 
 	//--------------

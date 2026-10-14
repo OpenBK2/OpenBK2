@@ -90,7 +90,7 @@ void CSCamDMoveFlightMutator::Recalc()
 	this->fPitch = ToRadian( 180.0f ) + ToRadian( 90.0f - this->fPitch );
 	this->fYaw = ToRadian( this->fYaw );
 	AI2Vis( &this->vPosition );
-};
+}
 
 void CSCamDFollowFlightMutator::Recalc()
 {
@@ -143,7 +143,7 @@ void CSCamDFollowFlightMutator::Recalc()
 	this->fPitch = ToRadian( 180.0f ) + ToRadian( 90.0f - this->fPitch );
 	this->fYaw = ToRadian( this->fYaw );
 	AI2Vis( &this->vPosition );
-};
+}
 
 void CSCamDRotateFlightMutator::Recalc()
 {
@@ -208,7 +208,7 @@ void CSCamDRotateFlightMutator::Recalc()
 	this->fPitch = ToRadian( 180.0f ) + ToRadian( 90.0f - this->fPitch );
 	this->fYaw = ToRadian( this->fYaw );
 	AI2Vis( &this->vPosition );
-};
+}
 
 void CSCamSplineMutator::Recalc()
 {
@@ -271,7 +271,7 @@ void CSCamSplineMutator::Recalc()
 	this->fPitch = ToRadian( 180.0f ) + ToRadian( 90.0f - this->fPitch );
 	this->fYaw = ToRadian( this->fYaw );
 	AI2Vis( &this->vPosition );
-};
+}
 
 CScriptMoviesMutatorHolder::CScriptMoviesMutatorHolder( const NDb::SScriptMovies &rMoviesData,
                                                         int _nMovieIndex,

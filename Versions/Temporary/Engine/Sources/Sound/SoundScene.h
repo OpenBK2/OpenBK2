@@ -72,7 +72,7 @@ struct ISoundScene : public CObjectBase
 	                           int nVolumeType )
 	{
 		return 0;
-	};
+	}
 
 	virtual void RemoveSound( const uint16_t wID ) = 0;
 	// sound management (vPos in AI pixels)

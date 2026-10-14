@@ -319,7 +319,7 @@ inline uint8_t saturate_signed_word_to_unsigned_byte( int16_t w )
 inline int16_t saturate_signed_double_word_to_signed_word( int32_t v )
 {
 	return static_cast<int16_t>( std::clamp<int32_t>( v, -32768, 32767 ) );
-};
+}
 
 // Pack With Unsigned Saturation
 /*

@@ -182,9 +182,12 @@ struct ICamera : public CObjectBase
 	virtual void GetPlacement( float *pfDist, float *pfPitch, float *pfYaw ) = 0;
 	virtual void ResetToDefault() = 0;
 
-	virtual void GetCameraState( CVec3 *pvPos, float *pfYaw, float *pfPitch, float *pfRoll, float *pfFOV ) const {};
+	virtual void GetCameraState( CVec3 *pvPos, float *pfYaw, float *pfPitch, float *pfRoll, float *pfFOV ) const {}
+
 	virtual void
-	SetCameraState( const CVec3 &vPos, const float fYaw, const float fPitch, const float fRoll, const float fFOV ) {};
+	SetCameraState( const CVec3 &vPos, const float fYaw, const float fPitch, const float fRoll, const float fFOV )
+	{
+	}
 
 	// for script movies engine
 	virtual void FinishMovie( bool bSmoothEnd = false ) = 0;

@@ -230,8 +230,9 @@ protected:
 	void OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMode );
 
 public:
-	CMouseTranslatorB1() : CMouseTranslator( 0 ) {};
-	CMouseTranslatorB1( CSelector *_pSelector ) : CMouseTranslator( _pSelector ) {};
+	CMouseTranslatorB1() : CMouseTranslator( 0 ) {}
+
+	CMouseTranslatorB1( CSelector *_pSelector ) : CMouseTranslator( _pSelector ) {}
 };
 
 class CMouseTranslatorB2Base : public CMouseTranslator

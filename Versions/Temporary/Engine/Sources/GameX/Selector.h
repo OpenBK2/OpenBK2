@@ -302,7 +302,9 @@ public:
 
 public:
 	CSelector();
-	~CSelector() {};
+
+	~CSelector() {}
+
 	void Segment();
 
 	//

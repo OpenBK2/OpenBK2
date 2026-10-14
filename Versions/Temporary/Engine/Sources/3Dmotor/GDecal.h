@@ -111,7 +111,7 @@ public:
 
 	CDecalTarget() {}
 
-	CDecalTarget( const SDecalMappingInfo &_mapInfo ) : mapInfo( _mapInfo ) {};
+	CDecalTarget( const SDecalMappingInfo &_mapInfo ) : mapInfo( _mapInfo ) {}
 };
 
 class CDecalsManager;

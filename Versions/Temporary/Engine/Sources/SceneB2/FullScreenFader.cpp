@@ -59,7 +59,7 @@ public:
 	virtual bool IsInProgress()
 	{
 		return fDuration != 0.0f;
-	};
+	}
 
 	virtual void Draw( const NTimer::STime &time, bool bAfterDrawingInterfaces );
 

@@ -112,7 +112,8 @@ public:
 	                const bool _bUseNoise,
 	                const float _fNoiseCoeff,
 	                const uint8_t _nParamInd );
-	~CVisWaterPatch() {};
+
+	~CVisWaterPatch() {}
 };
 
 typedef NMeshData::SPatchHolder<CVisWaterPatch> CVisWaterPatchHolder;

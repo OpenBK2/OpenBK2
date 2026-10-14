@@ -490,7 +490,7 @@ const bool CCollisionsCollector::SPushersSort::operator()( const SPusherInfo &pu
 		return pusher1.pUnit->GetUniqueID() > pusher2.pUnit->GetUniqueID();
 	}
 	return (int)pusher1.eCollideType < (int)pusher2.eCollideType;
-};
+}
 
 // CCollsionsCollector
 

@@ -327,13 +327,20 @@ public:
 	virtual void ProcessUpdate( const struct SAIDeadProjectileUpdate *pUpdate );
 	//	virtual void ProcessUpdate( const struct SAINewProjectileM1 *pUpdate );
 	virtual void ProcessUpdate( const struct SExplodeProjectileUpdate *pUpdate );
-	virtual void ProcessUpdate( const struct SScriptCameraRunUpdate *pUpdate ) {};
-	virtual void ProcessUpdate( const struct SScriptCameraResetUpdate *pUpdate ) {};
-	virtual void ProcessUpdate( const struct SScriptCameraStartMovieUpdate *pUpdate ) {};
-	virtual void ProcessUpdate( const struct SScriptCameraStopMovieUpdate *pUpdate ) {};
+
+	virtual void ProcessUpdate( const struct SScriptCameraRunUpdate *pUpdate ) {}
+
+	virtual void ProcessUpdate( const struct SScriptCameraResetUpdate *pUpdate ) {}
+
+	virtual void ProcessUpdate( const struct SScriptCameraStartMovieUpdate *pUpdate ) {}
+
+	virtual void ProcessUpdate( const struct SScriptCameraStopMovieUpdate *pUpdate ) {}
+
 	virtual void ProcessUpdate( const struct SClientUpdateButtonsUpdate *pUpdate );
 	virtual void ProcessUpdate( const struct SClientUpdateSingleUnitUpdate *pUpdate );
-	virtual void ProcessUpdate( const struct SWeatherChangedUpdate *pUpdate ) {};
+
+	virtual void ProcessUpdate( const struct SWeatherChangedUpdate *pUpdate ) {}
+
 	virtual void ProcessUpdate( const struct SLaserMarkUpdate *pUpdate );
 	virtual void ProcessUpdate( const struct SChatMessageUpdate *pUpdate );
 	virtual void ProcessUpdate( const struct SWinLoseUpdate *pUpdate );

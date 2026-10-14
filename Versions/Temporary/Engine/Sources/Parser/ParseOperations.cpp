@@ -195,7 +195,7 @@ bool CheckEnumEntryNotExist( const std::string &szEnumEntryName )
 	        return false );
 
 	return true;
-};
+}
 
 //*******************************************************************
 //*												Variables                                 *

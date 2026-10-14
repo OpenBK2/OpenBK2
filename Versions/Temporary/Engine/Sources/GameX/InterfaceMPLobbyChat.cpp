@@ -154,7 +154,7 @@ bool CInterfaceMPLobby::OnChatMessage( SMPUIChatMessage *pMsg )
 	NWinFrame::FlashTaskbarIfInactive();
 
 	return true;
-};
+}
 
 bool CInterfaceMPLobby::OnChatChannelsListMessage( struct SMPUIChatChannelListMessage *pMsg )
 {

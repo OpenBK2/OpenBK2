@@ -574,7 +574,7 @@ public:
 	{
 		//array.FillEvery( unsigned int(-1) );
 		memset( &( array[0][0] ), static_cast<unsigned int>( -1 ), array.GetSizeX() * array.GetSizeY() );
-	};
+	}
 
 	int GetSizeX() const
 	{

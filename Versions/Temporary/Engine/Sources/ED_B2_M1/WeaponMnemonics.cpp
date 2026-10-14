@@ -40,7 +40,7 @@ CWeaponMnemonics::CWeaponMnemonics() : CMnemonicsCollector<int>( NDb::SWeaponRPG
 	Insert( NDb::SWeaponRPGStats::WEAPON_STEN, "WEAPON_STEN" );
 	Insert( NDb::SWeaponRPGStats::WEAPON_PANZERFAUST, "WEAPON_PANZERFAUST" );
 	Insert( NDb::SWeaponRPGStats::WEAPON_LUFTFAUST, "WEAPON_LUFTFAUST" );
-};
+}
 
 CMayaWeaponMnemonics typeMayaWeaponMnemonics;
 CWeaponMnemonics typeWeaponMnemonics;

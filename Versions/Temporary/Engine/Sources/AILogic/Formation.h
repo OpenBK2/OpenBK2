@@ -197,7 +197,8 @@ public:
 
 protected:
 	virtual ISmoothPath *CreateSmoothPath();
-	virtual void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate ) {};
+
+	virtual void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate ) {}
 
 public:
 	CFormation();

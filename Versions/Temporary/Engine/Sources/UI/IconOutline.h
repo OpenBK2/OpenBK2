@@ -178,7 +178,7 @@ public:
 	const CTPoint<int> &GetSize()
 	{
 		return size;
-	};
+	}
 
 	void SetFormat( const SFormattingInfo &_fmt );
 

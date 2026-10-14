@@ -54,7 +54,7 @@ public:
 	float &operator[]( int i )
 	{
 		return m[i];
-	};
+	}
 
 	const float &operator[]( int i ) const
 	{
@@ -300,7 +300,7 @@ public:
 	float &operator[]( int i )
 	{
 		return m[i];
-	};
+	}
 
 	const float &operator[]( int i ) const
 	{
@@ -570,7 +570,7 @@ public:
 	float &operator[]( int i )
 	{
 		return m[i];
-	};
+	}
 
 	const float &operator[]( int i ) const
 	{

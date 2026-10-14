@@ -2166,7 +2166,7 @@ struct SObstacleObjectFilter : public SObjectFilter
 			return false;
 		}
 		return true;
-	};
+	}
 };
 
 struct SCanSelectObjectFilter : public SObjectFilter
@@ -2182,7 +2182,7 @@ struct SCanSelectObjectFilter : public SObjectFilter
 	{
 		CMapObj *pMO = pClient->GetMapObj( nID );
 		return pMO && pSelector->CanSelect( pMO ) && dynamic_cast<IMOUnit *>( pMO );
-	};
+	}
 };
 
 struct SCoveredObjectFilter : public SObjectFilter
@@ -2195,7 +2195,7 @@ struct SCoveredObjectFilter : public SObjectFilter
 	{
 		CMapObj *pMO = pClient->GetMapObj( nID );
 		return pMO && dynamic_cast<IMOUnit *>( pMO ) && pMO->IsAlive() && pMO->IsVisible() && !pMO->IsNeutral();
-	};
+	}
 };
 
 void CWorldClient::UpdateCursorObjects( const CVec2 &vPos )

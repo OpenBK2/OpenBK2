@@ -42,12 +42,12 @@ void CMinesIter::IterateToNextMine()
 class CMineStaticObject *CMinesIter::operator->()
 {
 	return checked_cast<CMineStaticObject *>( CStObjCircleIter<false>::operator*() );
-};
+}
 
 class CMineStaticObject *CMinesIter::operator*()
 {
 	return checked_cast<CMineStaticObject *>( CStObjCircleIter<false>::operator*() );
-};
+}
 
 bool CMinesIter::IsFinished() const
 {

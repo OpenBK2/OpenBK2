@@ -216,12 +216,12 @@ public:
 	EDynamicType GetDynamicType()
 	{
 		return eType;
-	};
+	}
 
 	void SetDynamicType( EDynamicType _eType )
 	{
 		eType = _eType;
-	};
+	}
 
 	void SetAlphaTest( bool _b )
 	{

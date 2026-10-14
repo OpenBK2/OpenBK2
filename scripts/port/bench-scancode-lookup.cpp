@@ -186,6 +186,7 @@ __attribute__( ( noinline ) ) int ScanLinear( SDL_Scancode scancode )
 struct SForwardTable
 {
 	uint8_t nKey[SDL_SCANCODE_COUNT];
+
 	constexpr SForwardTable() : nKey()
 	{
 		for ( int i = 0; i < COUNT; ++i )
@@ -194,6 +195,7 @@ struct SForwardTable
 		}
 	}
 };
+
 constexpr SForwardTable forwardTable;
 
 __attribute__( ( noinline ) ) int ScanDirect( SDL_Scancode scancode )

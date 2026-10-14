@@ -134,7 +134,7 @@ class CCopyShadowsAndCloudsEffect : public I2DEffect
 	CVec4 vMAD;
 
 public:
-	CCopyShadowsAndCloudsEffect() {};
+	CCopyShadowsAndCloudsEffect() {}
 
 	CCopyShadowsAndCloudsEffect( NGfx::CTexture *_pCloud, const CVec4 &_vMAD ) : pCloud( _pCloud ), vMAD( _vMAD ) {}
 

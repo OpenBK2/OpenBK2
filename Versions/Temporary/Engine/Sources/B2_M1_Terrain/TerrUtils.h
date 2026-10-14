@@ -624,8 +624,9 @@ class CTriangleEx
 public:
 	CVec3dEx points[3];
 	CVec3dEx coeffs[3];
+
 	//
-	CTriangleEx() {};
+	CTriangleEx() {}
 
 	//
 	CTriangleEx( const CVec3fEx &p1, const CVec3fEx &p2, const CVec3fEx &p3 )

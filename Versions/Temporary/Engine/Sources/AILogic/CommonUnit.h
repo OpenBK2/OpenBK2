@@ -100,7 +100,8 @@ protected:
 		return pShootEstimator;
 	}
 
-	virtual void NullSegmTime() {};
+	virtual void NullSegmTime() {}
+
 	virtual void CheckForDestroyedObjects( const CVec2 &vCenter ) const;
 	virtual void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate );
 	virtual void UpdateTile();
@@ -362,7 +363,7 @@ public:
 	virtual struct IObstacle *LookForObstacle()
 	{
 		return 0;
-	};
+	}
 
 	// нужно ли пытаться подъезать близко к точке, которую охраняет (н-р, для поездов не нужно)
 	virtual bool CanMoveForGuard() const = 0;

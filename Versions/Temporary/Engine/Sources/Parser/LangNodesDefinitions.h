@@ -241,7 +241,7 @@ public:
 	{
 		bHasDefault = true;
 		defaultValue.SetToEnum( szValue );
-	};
+	}
 
 	void SetDefaultWStr( const std::string &szValue )
 	{

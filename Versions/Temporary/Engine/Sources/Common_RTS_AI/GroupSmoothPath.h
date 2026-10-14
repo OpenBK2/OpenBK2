@@ -232,13 +232,13 @@ public:
 	virtual const CVec2 GetUnitShift( const CBasePathUnit *pUnit ) const
 	{
 		return GetDirection() ^ GetUnitFormationShift( pUnit );
-	};
+	}
 
 	//! получить текущие координаты юнита
 	virtual const CVec2 GetUnitCenter( const CBasePathUnit *pUnit ) const
 	{
 		return GetCenter() + GetUnitShift( pUnit );
-	};
+	}
 
 	//! получить центр юнита, где юнит может встать на прямой между центром формации и юнитом
 	virtual const CVec2 GetValidUnitCenter( const CBasePathUnit *pUnit ) const;

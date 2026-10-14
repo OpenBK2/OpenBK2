@@ -55,7 +55,7 @@ void CColorBackground::Visit( struct IUIVisitor *pVisitor )
 	VirtualToScreen( &rects );
 
 	pVisitor->VisitUIRect( 0, 3, rects );
-};
+}
 
 void CColorViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const
 {

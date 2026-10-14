@@ -32,9 +32,13 @@ class CLightmapsLoader : public CObjectBase
 
 public:
 	const CArray2D<NGfx::SPixel8888> &GetTexture( int UID );
-	CLightmapsLoader() {};
+
+	CLightmapsLoader() {}
+
 	CLightmapsHolder *GetHolder();
-	CLightmapsLoader( const std::string &_szName ) : szName( _szName ) {};
+
+	CLightmapsLoader( const std::string &_szName ) : szName( _szName ) {}
+
 	void ReleaseHint();
 };
 

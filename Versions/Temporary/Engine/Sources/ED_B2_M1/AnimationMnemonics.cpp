@@ -49,7 +49,7 @@ CMayaAnimationMnemonics::CMayaAnimationMnemonics() : CMnemonicsCollector<int>( N
 	Insert( NDb::ANIMATION_UNINSTALL_ROT, "UNINSTALL_ROTATE" );
 	Insert( NDb::ANIMATION_INSTALL_PUSH, "INSTALL_PUSH" );
 	Insert( NDb::ANIMATION_UNINSTALL_PUSH, "UNINSTALL_PUSH" );
-};
+}
 
 CAnimationMnemonics::CAnimationMnemonics() : CMnemonicsCollector<int>( NDb::ANIMATION_UNKNOWN, "" )
 {
@@ -95,7 +95,7 @@ CAnimationMnemonics::CAnimationMnemonics() : CMnemonicsCollector<int>( NDb::ANIM
 	Insert( NDb::ANIMATION_UNINSTALL_ROT, "ANIMATION_UNINSTALL_ROT" );
 	Insert( NDb::ANIMATION_INSTALL_PUSH, "ANIMATION_INSTALL_PUSH" );
 	Insert( NDb::ANIMATION_UNINSTALL_PUSH, "ANIMATION_UNINSTALL_PUSH" );
-};
+}
 
 NDb::EAnimationType
 CMayaAnimationMnemonics::Get( const std::string &rszMnemonicType, std::string *pszMnemonicLabel, unsigned *pnNumber )

@@ -150,6 +150,12 @@ SeparateDefinitionBlocks: Always
 # are wrapped in clang-format off: the sine and arcsine tables in
 # System/FastMath.cpp, the bit mask table in System/BitStreams.cpp and the
 # embedded cursor in MapEditorLib/CursorsWx.cpp.
+# A semicolon after a function body closes nothing: `void f() {};` is the body
+# followed by an empty declaration. 114 of them had accumulated. Removing one
+# cannot change behaviour, and leaving them teaches the next reader that the
+# semicolon belongs there.
+RemoveSemicolon: true
+
 BinPackArguments: false
 BinPackParameters: OnePerLine
 BinPackLongBracedList: false

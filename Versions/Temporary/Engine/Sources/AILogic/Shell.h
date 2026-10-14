@@ -299,7 +299,8 @@ class CBombBallisticTraj : public IBallisticTraj
 	}
 
 public:
-	CBombBallisticTraj() {};
+	CBombBallisticTraj() {}
+
 	CBombBallisticTraj( const CVec3 &point, const CVec3 &v, const NTimer::STime &explTime, const CVec2 &vRandAcc );
 
 	virtual const NTimer::STime &GetExplTime() const

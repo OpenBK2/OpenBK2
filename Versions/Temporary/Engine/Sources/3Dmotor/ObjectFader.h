@@ -32,7 +32,7 @@ public:
 	const CPtr<CObjectBase> &getObj()
 	{
 		return pObj;
-	};
+	}
 };
 
 } // namespace NGScene

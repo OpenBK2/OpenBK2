@@ -106,8 +106,9 @@ UI_EXPORT CVec2 ScreenToVirtual( const CVec2 &vPos );
 // window notify about being clicked
 struct IClickNotify : virtual public CObjectBase
 {
-	virtual void Clicked( struct IWindow *pWho, int nButton ) {};
-	virtual void DoubleClicked( struct IWindow *pWho, int nButton ) {};
+	virtual void Clicked( struct IWindow *pWho, int nButton ) {}
+
+	virtual void DoubleClicked( struct IWindow *pWho, int nButton ) {}
 };
 
 struct SWindowAnimationContext : public CObjectBase
@@ -241,7 +242,8 @@ struct IWindow : virtual public CObjectBase
 		return wszEmpty;
 	} // old function, need to be removed
 
-	virtual void SetTooltip( const std::wstring &wszTooltip ) {};
+	virtual void SetTooltip( const std::wstring &wszTooltip ) {}
+
 	virtual void SetTooltipIDForMLHandler( int nID ) = 0;
 	virtual int GetTooltipIDForMLHandler() const = 0;
 

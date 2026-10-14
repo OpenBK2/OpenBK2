@@ -27,7 +27,7 @@ class CInterfaceMPLadderGame : public CInterfaceScreenBase, public IProgrammedRe
 
 		CLadderMapData() {}
 
-		CLadderMapData( const NDb::SMultiplayerMap *_pDesc ) : pMapDesc( _pDesc ), bAllowed( true ), bSelected( true ) {};
+		CLadderMapData( const NDb::SMultiplayerMap *_pDesc ) : pMapDesc( _pDesc ), bAllowed( true ), bSelected( true ) {}
 	};
 
 	//--------------

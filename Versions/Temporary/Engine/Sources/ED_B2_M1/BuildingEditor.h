@@ -70,7 +70,7 @@ public:
 	CObj<CMOBuilding> &GetBuildingPtr()
 	{
 		return pBuilding;
-	};
+	}
 
 	const std::string &GetCurrSeason() const;
 

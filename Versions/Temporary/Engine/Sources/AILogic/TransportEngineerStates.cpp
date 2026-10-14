@@ -196,7 +196,7 @@ CBuilding *CTransportLoadRuState::FindNearestSource()
 		class CBuilding *GetNearest()
 		{
 			return pNearest;
-		};
+		}
 	};
 
 	CFindNearestConnected pred;

@@ -179,8 +179,10 @@ struct IManipulator : public CObjectBase
 	virtual bool IsNameExists( const std::string &rszName ) const = 0;
 	//
 	virtual void GetNameList( CNameMap *pNameMap ) const = 0;
+
 	//
-	virtual void ClearCache() {};
+	virtual void ClearCache() {}
+
 	// check value (still out of order)
 	virtual bool CheckValue( const std::string &rszName, const CVariant &rValue, bool *pResult ) const = 0;
 	//

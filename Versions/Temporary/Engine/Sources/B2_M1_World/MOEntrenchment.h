@@ -44,7 +44,7 @@ public:
 		cached.vHoleStart.Set( 0, 0 );
 		cached.vHoleEnd.Set( 0, 0 );
 		cached.fHoleWidth = 0;
-	};
+	}
 
 	virtual bool Create( const int nUniqueID,
 	                     const SAIBasicUpdate *pUpdate,
@@ -121,7 +121,8 @@ class CMOEntrenchment : public CMOSelectable
 	CPartsList parts;
 
 public:
-	CMOEntrenchment() {};
+	CMOEntrenchment() {}
+
 	~CMOEntrenchment();
 
 	void SetEntrenchmentStats( const NDb::SEntrenchmentRPGStats *pStats )

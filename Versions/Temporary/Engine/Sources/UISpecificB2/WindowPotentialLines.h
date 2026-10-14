@@ -45,7 +45,8 @@ protected:
 	void Recalc();
 
 public:
-	CWindowChapterMapLayer() : nLastUpdateTime( 0 ), bNeedUpdate( false ) {};
+	CWindowChapterMapLayer() : nLastUpdateTime( 0 ), bNeedUpdate( false ) {}
+
 	void SetSize( const int nWidth, const int nHeight );
 
 	int GetWidth() const

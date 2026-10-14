@@ -16,7 +16,7 @@ class CBasePathUnitHolder : public CAIObjectBase
 	CBasePathUnit *pUnit = nullptr;
 
 public:
-	CBasePathUnitHolder() : pUnit( 0 ) {};
+	CBasePathUnitHolder() : pUnit( 0 ) {}
 
 	CBasePathUnitHolder( CBasePathUnit *_pUnit ) : pUnit( _pUnit ) {}
 

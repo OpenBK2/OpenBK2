@@ -27,7 +27,7 @@ static struct SInitTypeNames
 		typeToName[EST_DWORD] = "DWORD";
 		typeToName[EST_ENUM] = "enum";
 		typeToName[EST_WSTRING] = "wstring";
-	};
+	}
 } initTypeNames;
 
 const char *GetTypeName( ESimpleType eType )

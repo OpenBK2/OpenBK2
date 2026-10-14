@@ -21,7 +21,7 @@ public:
 		return 777;
 	}
 
-	virtual void SetPriority( int n ) {};
+	virtual void SetPriority( int n ) {}
 
 	bool ProcessEvent( const struct SGameMessage &msg )
 	{
@@ -145,7 +145,7 @@ public:
 	virtual std::wstring GetDBText() const
 	{
 		return std::wstring();
-	};
+	}
 
 	SWindowContext *GetContext()
 	{

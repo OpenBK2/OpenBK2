@@ -522,7 +522,7 @@ public:
 	virtual void SetFreezeMode( bool mode )
 	{
 		NGScene::bFreeze = mode;
-	};
+	}
 };
 
 static SGroupInfo GetGroupInfo( const SRoomInfo &r, bool bCastShadows = true, bool bParticles = false )

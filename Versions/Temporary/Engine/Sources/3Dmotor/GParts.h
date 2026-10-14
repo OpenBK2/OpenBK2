@@ -342,7 +342,7 @@ public:
 		return 0;
 	}
 
-	CAnimatedBoundPart() {};
+	CAnimatedBoundPart() {}
 
 	CAnimatedBoundPart( CPtrFuncBase<CObjectInfo> *pData,
 	                    IMaterial *_pMaterial,

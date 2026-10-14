@@ -174,7 +174,7 @@ public:
 	bool WasUpdated()
 	{
 		return bWasUpdated;
-	};
+	}
 
 	// earthquakes
 	void AddEarthquake( const CVec3 &vPos, float fPower );

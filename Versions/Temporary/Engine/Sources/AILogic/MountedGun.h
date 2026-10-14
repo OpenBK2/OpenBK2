@@ -27,7 +27,7 @@ public:
 	class CBuilding *GetBuilding() const
 	{
 		return pBuilding;
-	};
+	}
 
 	virtual const SBaseGunRPGStats &GetGun() const;
 	virtual const SWeaponRPGStats *GetWeapon() const;

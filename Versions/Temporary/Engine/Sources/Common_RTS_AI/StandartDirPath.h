@@ -46,7 +46,7 @@ public:
 	virtual const CVec2 &GetFinishPoint() const
 	{
 		return finishPoint;
-	};
+	}
 
 	virtual const CVec2 PeekPoint( const int nShift ) const;
 	virtual void Shift( const int nShift );
@@ -54,7 +54,7 @@ public:
 	virtual void RecalcPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &lastKnownGoodTile );
 	virtual void RecoverPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &lastKnownGoodTile );
 
-	virtual void InsertTiles( const std::list<SVector> &tiles ) {};
+	virtual void InsertTiles( const std::list<SVector> &tiles ) {}
 
 	virtual const bool CanGoBackward( const CBasePathUnit *pUnit ) const
 	{

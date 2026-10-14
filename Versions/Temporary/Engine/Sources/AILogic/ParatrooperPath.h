@@ -38,7 +38,8 @@ public:
 	void Init();
 
 public:
-	CParatrooperPath() {};
+	CParatrooperPath() {}
+
 	CParatrooperPath( const CVec3 &startPoint, CAIUnit *pUnit );
 	virtual bool IsFinished() const;
 	virtual void Segment( const NTimer::STime timeDiff );

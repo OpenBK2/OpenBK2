@@ -1050,19 +1050,19 @@ public:
 	virtual IMaterial *GetWindAffected()
 	{
 		return 0;
-	};
+	}
 
 	virtual IMaterial *GetNoReceiveShadows()
 	{
 		return 0;
-	};
+	}
 
-	virtual void SetPriority( int nP ) {};
+	virtual void SetPriority( int nP ) {}
 
 	virtual EDynamicType GetDynamicType()
 	{
 		return DT_DONT_CARE;
-	};
+	}
 };
 
 struct SParticleLMRenderTargetInfo

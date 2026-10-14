@@ -10,7 +10,7 @@
 		MAPEDITORLIB_EXPORT I##TYPE *Create##TYPE( const std::string &szName );                                      \
 		MAPEDITORLIB_EXPORT bool CanCreate##TYPE( const std::string &szName );                                       \
 		MAPEDITORLIB_EXPORT void StartRegister##TYPE();                                                              \
-	};
+	}
 
 #define REGISTER_ME_OBJECT_IN_EXE( TYPE, name, classname )                        \
 	void StartRegisterHookRegisterMEObject##TYPE##name##classname() {}              \

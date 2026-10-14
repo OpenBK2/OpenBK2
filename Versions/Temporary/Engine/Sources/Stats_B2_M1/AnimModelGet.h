@@ -34,4 +34,4 @@ static std::vector<const NDb::SAnimB2 *> GetVisObjAnimsFromModel( const NDb::SVi
 	}
 
 	return wanted_anims;
-};
+}

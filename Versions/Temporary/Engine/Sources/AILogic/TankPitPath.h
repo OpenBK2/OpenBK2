@@ -81,7 +81,7 @@ public:
 	virtual const CVec2 PeekPathPoint( const int nToShift ) const
 	{
 		return VNULL2;
-	};
+	}
 
 	virtual IMemento *CreateMemento() const
 	{

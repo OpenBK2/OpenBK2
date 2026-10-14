@@ -116,7 +116,7 @@ void CBackgroundSimpleTexture::SetOutline( const CDBID &nOutlineType )
 		pIcon = new CIconOutliner( nOutlineType );
 		pIcon->SetTexture( pTexture );
 	}
-};
+}
 
 int CBackgroundSimpleTexture::operator&( struct IBinSaver &saver )
 {

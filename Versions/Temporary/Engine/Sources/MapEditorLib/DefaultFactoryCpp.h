@@ -85,4 +85,4 @@ bool CanCreate( const std::string &szName )
 		{                                                                                       \
 			return pNewFuncs != 0 ? ( pNewFuncs->find( szName ) != pNewFuncs->end() ) : false;    \
 		}                                                                                       \
-	};
+	}

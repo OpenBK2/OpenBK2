@@ -13,8 +13,10 @@ public:
 	}
 
 public:
-	CClientGameConsts() {};
-	~CClientGameConsts() {};
+	CClientGameConsts() {}
+
+	~CClientGameConsts() {}
+
 	virtual const NDb::SClientGameConsts *GetClientGameConsts();
 };
 

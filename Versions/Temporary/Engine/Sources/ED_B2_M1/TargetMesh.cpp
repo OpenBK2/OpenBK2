@@ -50,7 +50,7 @@ public:
 		return true;
 	}
 
-	void Recalc() {};
+	void Recalc() {}
 };
 
 class CTargetMeshBound : public CFuncBase<SBound>
@@ -66,7 +66,7 @@ public:
 		return true;
 	}
 
-	void Recalc() {};
+	void Recalc() {}
 };
 
 CTargetMesh::CTargetMesh( float fSizeX, float fSizeY )
