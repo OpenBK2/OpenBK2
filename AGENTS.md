@@ -43,13 +43,20 @@ const float GetDistance( const CVec2 &vStart, const CVec2 &vEnd )
 	{
 		return 0.0f;
 	}
+}
 
+// A blank line between definitions, so where one ends and the next begins does
+// not have to be worked out from the braces.
+inline float Lerp( const float a, const float b, const float t )
+{
 	// One statement per line. Never if ( x ) { f(); } on one line, and never a
 	// one-line loop.
 	for ( int i = 0; i < nCount; ++i )
 	{
 		Use( i );
 	}
+
+	return a + ( b - a ) * t;
 }
 
 // One enumerator per line, so adding one is a one-line diff.
@@ -66,8 +73,14 @@ class CThing
 	float fGain; // in a column of spaces rather than tabs
 
 public:
-	// A one-line accessor inside a class stays on one line.
-	int GetID() const { return nID; }
+	// An empty body stays empty, and that is the only thing that stays on one line.
+	CThing() {}
+
+	// A signature goes on its own line and the body below it, accessors included.
+	int GetID() const
+	{
+		return nID;
+	}
 };
 ```
 
@@ -78,6 +91,10 @@ your code if you do not:
 - put one argument, parameter or list element per line once they do not fit on one line,
   so a long call and an array both read as a single column
 - put a `template <...>` header on its own line
+- put a blank line between definitions, and `} // namespace NFoo` on a namespace that
+  closes far from where it opened
+- move a one-line function body below its signature, and drop a semicolon that follows a
+  body (`void f() {};`), which closes nothing
 - leave your includes and `using` declarations in the order you wrote them, since
   `stdafx.h` has to come first; it never sorts them
 - leave comments alone: it does not rewrap them, and it does not split a long string

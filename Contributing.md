@@ -514,6 +514,14 @@ not chosen to leave the old layout alone: it is chosen for code that is easy to 
 easy to maintain and hard to make a mistake in, which is why the commit that introduced
 it touched nearly every source.
 
+it is not a style invented here either. of the 179 settings clang-format exposes, 134
+already agree with both the LLVM and the Google style. what differs is this tree's own
+identity (allman braces, `f( a )` spacing, tabs, 120 columns), four cases where their
+default would break something here (include order, `using` order, comment rewrapping and
+string splitting), and a short list chosen to be stricter than both: braces inserted on
+every control statement, one element per line, and a body below its signature. each of
+those carries its reason in a comment next to it.
+
 what it does, in the parts worth knowing before you write a line:
 
 - allman braces; `void Foo( int n )` and `if ( x )`, with spaces inside the parentheses
@@ -525,7 +533,12 @@ what it does, in the parts worth knowing before you write a line:
 - one statement per line: no `if ( x ) { f(); }` on one line, no one-line loops
 - one argument, parameter, list element and enumerator per line once they do not fit on
   one line. enums and arrays therefore read as a single column
-- a one-line accessor inside a class stays on one line; a free function does not
+- a body goes below its signature, accessors included, so
+  `int GetID() const { return nID; }` is four lines. an empty body stays empty:
+  `CThing() {}`
+- a blank line between definitions, and `} // namespace NFoo` where a namespace closes
+  far from where it opened. these two are what keep a file from reading as one block
+- a semicolon after a function body is removed, since `void f() {};` closes nothing
 - includes and `using` declarations are never reordered, since `stdafx.h` has to come
   first and several headers need a type an earlier include declared
 - comments are never rewrapped, and a long string is never split into adjacent literals
