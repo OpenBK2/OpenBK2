@@ -34,12 +34,12 @@ protected:
 public:
 	CBackground();
 
-	virtual void SetPos( const CVec2 &vPos, const CVec2 &vSize );
-	virtual int operator&( struct IBinSaver &ss );
+	void SetPos( const CVec2 &vPos, const CVec2 &vSize ) override;
+	int operator&( struct IBinSaver &ss ) override;
 
-	virtual void Init() {}
+	void Init() override {}
 
-	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 
 	// return true if pixel under vPos is visible (alpha is not full)
 	virtual bool IsVisiblePixel( const CVec2 &vPos ) const
@@ -47,7 +47,7 @@ public:
 		return true;
 	}
 
-	void SetFadeValue( float fValue )
+	void SetFadeValue( float fValue ) override
 	{
 		fFadeValue = fValue;
 	}

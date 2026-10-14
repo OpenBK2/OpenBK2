@@ -15,7 +15,7 @@ class CAttackPointChecking : public IPointChecking
 	bool bIgnoreObstacles = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &fRangeMin );
 		f.Add( 3, &fRangeMax );
@@ -38,7 +38,7 @@ public:
 	{
 	}
 
-	virtual bool IsGoodTile( const SVector &curTile ) const;
+	bool IsGoodTile( const SVector &curTile ) const override;
 };
 
 class CAttackSideChecking : public IPointChecking
@@ -52,7 +52,7 @@ class CAttackSideChecking : public IPointChecking
 	bool bIgnoreObstacles = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &wAttackDir );
 		f.Add( 3, &wHalfAngle );
@@ -81,7 +81,7 @@ public:
 	{
 	}
 
-	virtual bool IsGoodTile( const SVector &curTile ) const;
+	bool IsGoodTile( const SVector &curTile ) const override;
 };
 
 class CGoToDistance : public IPointChecking
@@ -101,7 +101,7 @@ public:
 	{
 	}
 
-	virtual bool IsGoodTile( const SVector &curTile ) const;
+	bool IsGoodTile( const SVector &curTile ) const override;
 };
 class CStaticObject;
 
@@ -115,7 +115,7 @@ class CAttackStObjectChecking : public IPointChecking
 	bool bIgnoreObstacles = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &fRangeMin );
 		f.Add( 3, &fRangeMax );
@@ -132,5 +132,5 @@ public:
 	                         class CStaticObject *pObj,
 	                         const bool _bIgnoreObstacles );
 
-	virtual bool IsGoodTile( const SVector &curTile ) const;
+	bool IsGoodTile( const SVector &curTile ) const override;
 };

@@ -12,7 +12,7 @@ class CTankPitPath : public ISmoothPath
 	OBJECT_BASIC_METHODS( CTankPitPath );
 
 public:
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 
 private:
 	;
@@ -31,8 +31,8 @@ public:
 	}
 
 	CTankPitPath( CBasePathUnit *pUnit, const class CVec2 &vStartPoint, const class CVec2 &vEndPoint );
-	virtual bool IsFinished() const;
-	virtual void Segment( const NTimer::STime timeDiff );
+	bool IsFinished() const override;
+	void Segment( const NTimer::STime timeDiff ) override;
 
 	virtual const CVec2 &GetFinishPoint() const
 	{
@@ -40,26 +40,26 @@ public:
 	}
 
 	//ненужные функции
-	virtual bool Init( CBasePathUnit *_pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap )
+	bool Init( CBasePathUnit *_pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) override
 	{
 		pUnit = _pUnit;
 		CPtr<IPath> p = pPath;
 		return true;
 	}
 
-	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit )
+	bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) override
 	{
 		return true;
 	}
 
-	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *_pUnit, CAIMap *pAIMap )
+	bool Init( struct IMemento *pMemento, CBasePathUnit *_pUnit, CAIMap *pAIMap ) override
 	{
 		pUnit = _pUnit;
 		CPtr<IMemento> p = pMemento;
 		return true;
 	}
 
-	virtual void Stop() {}
+	void Stop() override {}
 
 	virtual float &GetSpeedLen()
 	{
@@ -69,24 +69,24 @@ public:
 	virtual void NotifyAboutClosestThreat( CBasePathUnit *pCollUnit, const float fDist ) {}
 
 	//virtual void SlowDown() {}
-	virtual const bool CanGoBackward() const
+	const bool CanGoBackward() const override
 	{
 		return false;
 	}
 
-	virtual const bool CanGoForward() const
+	const bool CanGoForward() const override
 	{
 		return true;
 	}
 
 	virtual void GetNextTiles( std::list<SVector> *pTiles ) {}
 
-	virtual const CVec2 PeekPathPoint( const int nToShift ) const
+	const CVec2 PeekPathPoint( const int nToShift ) const override
 	{
 		return VNULL2;
 	}
 
-	virtual IMemento *CreateMemento() const
+	IMemento *CreateMemento() const override
 	{
 		return 0;
 	}

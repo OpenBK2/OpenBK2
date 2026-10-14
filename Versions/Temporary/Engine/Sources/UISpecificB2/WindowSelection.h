@@ -20,7 +20,7 @@ class CWindowSelection : public CWindow, public ISelection
 	CVec2 vSelectionFirstPoint;
 
 protected:
-	virtual NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
@@ -28,14 +28,14 @@ protected:
 	CPtr<CBackground> pSelectorRect;
 
 public:
-	void RegisterObservers();
+	void RegisterObservers() override;
 
 	bool MsgUpdateSelection( const SGameMessage &msg );
 	bool MsgStartSelection( const SGameMessage &msg );
 	bool MsgEndSelection( const SGameMessage &msg );
 	bool MsgCancelSelection( const SGameMessage &msg );
 
-	virtual int operator&( IBinSaver &saver );
-	virtual void Visit( struct IUIVisitor *pVisitor );
-	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	int operator&( IBinSaver &saver ) override;
+	void Visit( struct IUIVisitor *pVisitor ) override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 };

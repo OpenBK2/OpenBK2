@@ -25,7 +25,7 @@ class CExecutorAttackGroup : public CExecutor
 	EAttackGroupState eState = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CExecutor *)this );
 		f.Add( 2, &nGroupID );
@@ -46,8 +46,8 @@ public:
 
 	CExecutorAttackGroup() {}
 
-	void RegisterOnEvents( IExecutorContainer *pContainer );
-	virtual int Segment();
-	virtual bool NotifyEvent( const CExecutorEvent &event );
-	virtual bool IsExecutorValid() const;
+	void RegisterOnEvents( IExecutorContainer *pContainer ) override;
+	int Segment() override;
+	bool NotifyEvent( const CExecutorEvent &event ) override;
+	bool IsExecutorValid() const override;
 };

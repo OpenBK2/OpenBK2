@@ -221,7 +221,7 @@ struct SObjectInfo : public CObjectBase
 	CSceneIDToLinkIDMap sceneIDToLinkIDMap; // Пересчет визуальных составляющих в элементы объекта
 
 	//
-	virtual ~SObjectInfo() {}
+	~SObjectInfo() override {}
 
 	//
 	void MakeAbsolute();

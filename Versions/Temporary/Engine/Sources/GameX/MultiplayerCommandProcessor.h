@@ -32,7 +32,7 @@ public:
 	{
 	}
 
-	bool HandleMessage( SMPUIMessage *_pMsg )
+	bool HandleMessage( SMPUIMessage *_pMsg ) override
 	{
 		TMessage *pMsg = dynamic_cast<TMessage *>( _pMsg );
 		NI_VERIFY( pMsg, "Wrong message class", return false );

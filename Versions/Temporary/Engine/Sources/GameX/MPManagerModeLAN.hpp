@@ -59,37 +59,37 @@ class CMPManagerModeLAN : public CMPManagerMode
 
 	//}
 
-	virtual const int GetOwnClientID()
+	const int GetOwnClientID() override
 	{
 		return pLANClient->GetOwnClientID();
 	}
 
-	virtual const bool IsInGameRoom() const
+	const bool IsInGameRoom() const override
 	{
 		return ( eCurrentState == EGS_HOST || eCurrentState == EGS_CLIENT );
 	}
 
-	virtual const bool IsGameRunning() const
+	const bool IsGameRunning() const override
 	{
 		return ( eCurrentState == EGS_GAME_STARTED );
 	}
 
-	virtual const bool IsGameHost() const
+	const bool IsGameHost() const override
 	{
 		return ( eCurrentState == EGS_HOST );
 	}
 
-	virtual void UpdateGameList();
-	virtual void TryToCreateGame();
-	virtual void TryToJoinGame( const SNetGameInfo &game );
-	virtual void StartGame();
-	virtual void EndGame();
-	virtual void OnLeaveGame();
-	virtual void OnGameRoomClientAdded();
-	virtual void OnGameRoomClientRemoved();
-	virtual void OnSetMySlotNumber();
-	virtual void OnGameSpecificInfo();
-	virtual void KickPlayerFromSlot( const int nSlot );
+	void UpdateGameList() override;
+	void TryToCreateGame() override;
+	void TryToJoinGame( const SNetGameInfo &game ) override;
+	void StartGame() override;
+	void EndGame() override;
+	void OnLeaveGame() override;
+	void OnGameRoomClientAdded() override;
+	void OnGameRoomClientRemoved() override;
+	void OnSetMySlotNumber() override;
+	void OnGameSpecificInfo() override;
+	void KickPlayerFromSlot( const int nSlot ) override;
 
 	void StartNewLANDriver();
 	void CompileAndSendLANServerInfo();
@@ -98,14 +98,14 @@ class CMPManagerModeLAN : public CMPManagerMode
 public:
 	CMPManagerModeLAN();
 
-	bool Segment();
+	bool Segment() override;
 
-	virtual const ENetMode GetMode() const
+	const ENetMode GetMode() const override
 	{
 		return ENM_LAN;
 	}
 
-	virtual void SetLanTester( CLANTester *_pLANTester )
+	void SetLanTester( CLANTester *_pLANTester ) override
 	{
 		pLanTester = _pLANTester;
 	}

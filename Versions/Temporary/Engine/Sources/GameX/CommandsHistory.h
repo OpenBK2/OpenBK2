@@ -237,7 +237,7 @@ class CCommandsHistory : public ICommandsHistory
 	// the samples taken before the save and write a truncated replay.
 	SReplayCheckSums recordedCheckSums;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &loadedHistory );
 		f.Add( 3, &bFinishedHistory );
@@ -262,22 +262,22 @@ class CCommandsHistory : public ICommandsHistory
 public:
 	CCommandsHistory();
 
-	void StartNewGame( const NDb::SMapInfo *_pMap );
+	void StartNewGame( const NDb::SMapInfo *_pMap ) override;
 	bool LoadHistory( const std::string &szFileName );
 	bool SaveReplay( const std::string &szFileName,
 	                 const SB2GameSpecificData &gameDesc,
 	                 const std::vector<SMPSlot> &slots,
 	                 const int nWinningSide );
 
-	const NDb::SMapInfo *GetMap() const
+	const NDb::SMapInfo *GetMap() const override
 	{
 		return replayInfo.pMap;
 	}
 
-	void AddCommand( const int nSegment, struct IAILogicCommandB2 *pCmd );
-	void ExecuteSegmentCommands( const int nSegment, struct ITransceiver *pTranceiver );
+	void AddCommand( const int nSegment, struct IAILogicCommandB2 *pCmd ) override;
+	void ExecuteSegmentCommands( const int nSegment, struct ITransceiver *pTranceiver ) override;
 
-	bool AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry );
+	bool AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry ) override;
 	// Compare one playback sample against what the replay recorded for the same
 	// game time. Returns false once a divergence has been reported, which is
 	// what ICheckSumLog uses to mean "differs from the loaded one".
@@ -294,10 +294,10 @@ public:
 		return nCheckSumsMatched;
 	}
 
-	const unsigned long GetLastChecksum() const
+	const unsigned long GetLastChecksum() const override
 	{
 		return dwLastCheckSum;
 	}
 
-	CHistory GetCommandsHistory() const;
+	CHistory GetCommandsHistory() const override;
 };

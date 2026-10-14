@@ -11,7 +11,7 @@ class CTerraAIObserverInEditor : public CTerraAIObserver
 	OBJECT_NOCOPY_METHODS( CTerraAIObserverInEditor )
 
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
@@ -24,5 +24,5 @@ public:
 
 	CTerraAIObserverInEditor( const int nAIMapSizeX, const int nAIMapSizeY );
 
-	virtual ~CTerraAIObserverInEditor() {}
+	~CTerraAIObserverInEditor() override {}
 };

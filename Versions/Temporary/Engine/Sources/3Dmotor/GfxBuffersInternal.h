@@ -89,7 +89,7 @@ public:
 	{
 	}
 
-	~CRBase()
+	~CRBase() override
 	{
 		Free();
 	}
@@ -127,7 +127,7 @@ public:
 		--nLockCount;
 	}
 
-	virtual void Free()
+	void Free() override
 	{
 		ASSERT( nLockCount == 0 );
 		if ( pLocked )

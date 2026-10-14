@@ -98,25 +98,25 @@ public:
 	};
 
 	//IInputState interface
-	virtual void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	virtual bool OnMouseWheel( unsigned nFlags, short zDelta, CTPoint<int> &rMousePoint );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	bool OnMouseWheel( unsigned nFlags, short zDelta, CTPoint<int> &rMousePoint ) override;
 	//
-	virtual void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	virtual void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	virtual void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 	//
-	virtual void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	virtual void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	virtual void OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 	//
-	virtual void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	virtual void OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	virtual void OnMButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 	//
-	virtual void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	virtual void OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
+	void OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
 	//
-	virtual void OnContextMenu( const CTPoint<int> &rMousePoint );
+	void OnContextMenu( const CTPoint<int> &rMousePoint ) override;
 
 protected:
 	//CStoreInputState

@@ -15,7 +15,7 @@ private:
 	NAnimation::SSkeletonHandle skelHandle;
 	int nAddBone;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pAnimation );
 		f.Add( 3, &skelHandle );
@@ -24,12 +24,12 @@ private:
 	}
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pAnimation.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CAddBoneFilter()
@@ -44,6 +44,6 @@ public:
 	{
 	}
 
-	~CAddBoneFilter();
+	~CAddBoneFilter() override;
 };
 } // namespace NAnimation

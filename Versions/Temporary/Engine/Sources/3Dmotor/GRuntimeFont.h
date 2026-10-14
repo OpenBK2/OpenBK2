@@ -54,12 +54,12 @@ class CGlyphAtlas : public CPtrFuncBase<NGfx::CTexture>
 	bool AddGlyph( uint16_t wChar );
 
 protected:
-	bool NeedUpdate();
-	void Recalc();
+	bool NeedUpdate() override;
+	void Recalc() override;
 
 public:
 	CGlyphAtlas();
-	~CGlyphAtlas();
+	~CGlyphAtlas() override;
 
 	// Matches the baked font's visible dimensions at the requested pixel size;
 	// the raster cell can be taller to retain the replacement's accents.
@@ -70,7 +70,7 @@ public:
 	void Prepare( const std::wstring &wsText );
 	CFontFormatInfo *GetFormat();
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 // The atlas's metrics as the node CFontInfo reads them from
@@ -80,7 +80,7 @@ class CRuntimeFontFormat : public CPtrFuncBase<CFontFormatInfo>
 	CObj<CGlyphAtlas> pAtlas;
 
 protected:
-	void Recalc();
+	void Recalc() override;
 
 public:
 	CRuntimeFontFormat() {}
@@ -90,7 +90,7 @@ public:
 	{
 	}
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 // A CFontInfo whose glyphs are made on demand. Never saved: CTextLocaleInfo

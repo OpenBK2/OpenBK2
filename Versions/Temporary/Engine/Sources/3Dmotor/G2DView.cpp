@@ -26,7 +26,7 @@ private:
 	CObj<CTextLocaleInfo> pLocale;
 	CVec2 vWindowSize;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &pScene );
 		f.Add( 3, &pLocale );
@@ -40,34 +40,34 @@ public:
 	void CreateDynamicRects( const NDb::STexture *pTexture,
 	                         const CRectLayout &sLayout,
 	                         const CTPoint<float> &sPosition,
-	                         const CTRect<float> &sWindow );
+	                         const CTRect<float> &sWindow ) override;
 	void CreateDynamicRects( const NDb::STexture *pTexture,
 	                         const CVec2 *pPos4,
 	                         const NGfx::SPixel8888 *pColors4,
-	                         const CTRect<float> &rectTexture );
+	                         const CTRect<float> &rectTexture ) override;
 	void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture,
 	                         const CRectLayout &sLayout,
 	                         const CTPoint<float> &sPosition,
-	                         const CTRect<float> &sWindow );
+	                         const CTRect<float> &sWindow ) override;
 	void CreateDynamicClearRects( const CRectLayout &sLayout,
 	                              const CTPoint<float> &sPosition,
-	                              const CTRect<float> &sClipWindow );
-	CObjectBase *CreateTexture( const NGScene::STextureKey &key );
+	                              const CTRect<float> &sClipWindow ) override;
+	CObjectBase *CreateTexture( const NGScene::STextureKey &key ) override;
 
-	CVec2 GetViewportSize()
+	CVec2 GetViewportSize() override
 	{
 		return NGfx::GetScreenRect();
 	}
 
-	CTextLocaleInfo *GetLocaleInfo() const
+	CTextLocaleInfo *GetLocaleInfo() const override
 	{
 		return pLocale;
 	}
 
-	void StartNewFrame( NGfx::CTexture *pTarget );
-	void StartNewFrame( EAlphaMode2D _AlphaMode2D );
-	void Flush();
-	void SetWindowSize( const CVec2 &_vSize );
+	void StartNewFrame( NGfx::CTexture *pTarget ) override;
+	void StartNewFrame( EAlphaMode2D _AlphaMode2D ) override;
+	void Flush() override;
+	void SetWindowSize( const CVec2 &_vSize ) override;
 };
 
 // C2DGameView

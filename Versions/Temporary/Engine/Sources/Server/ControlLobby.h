@@ -21,12 +21,12 @@ public:
 
 	CControlLobby( class CClients *pClients, class CNet *pNet, const std::string &szCfgFile );
 
-	virtual bool Segment()
+	bool Segment() override
 	{
 		return true;
 	}
 
-	void ReloadConfig();
+	void ReloadConfig() override;
 	//
 	bool ProcessNewClient( class CNetNewClient *pPacket );
 	bool ProcessCheckConnectAnswer( class CCheckConnectAnswerPacket *pPacket );
@@ -38,7 +38,7 @@ public:
 	bool ProcessPingPacket( class CPingPacket *pPacket );
 	bool ProcessForgottenPasswordPacket( class CForgottenPasswordPacket *pPacket );
 
-	bool CanBePaused()
+	bool CanBePaused() override
 	{
 		return false;
 	}

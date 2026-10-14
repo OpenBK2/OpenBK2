@@ -63,7 +63,7 @@ class CSoldier : public CAIUnit
 	bool bBeingHealed = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CAIUnit *)this );
 		OnSerialize( f );
@@ -105,22 +105,22 @@ public:
 	const bool NeedReturnToFormation() const;
 
 protected:
-	virtual void PrepareToDelete();
+	void PrepareToDelete() override;
 
-	virtual void InitGuns();
+	void InitGuns() override;
 	// показывает все мины, которые попали в радиус обнаружения этого инженера
 	//
 	virtual void RevealNearestMines( const bool bIncludingAP );
 
-	virtual bool CalculateUnitVisibility4Party( const uint8_t cParty );
+	bool CalculateUnitVisibility4Party( const uint8_t cParty ) override;
 
 	// soldier doesn't have anti aircraft guns yet
-	virtual uint32_t InitSupportAntiAircraftGuns()
+	uint32_t InitSupportAntiAircraftGuns() override
 	{
 		return 0;
 	}
 
-	virtual void AdjustSpeed();
+	void AdjustSpeed() override;
 
 public:
 	CSoldier()
@@ -137,26 +137,26 @@ public:
 	{
 	}
 
-	virtual ~CSoldier();
-	virtual void Init( const CVec2 &center,
-	                   const int z,
-	                   const SUnitBaseRPGStats *pStats,
-	                   const float fHP,
-	                   const uint16_t dir,
-	                   const uint8_t player,
-	                   ICollisionsCollector *pCollisionsCollector );
+	~CSoldier() override;
+	void Init( const CVec2 &center,
+	           const int z,
+	           const SUnitBaseRPGStats *pStats,
+	           const float fHP,
+	           const uint16_t dir,
+	           const uint8_t player,
+	           ICollisionsCollector *pCollisionsCollector ) override;
 
 	void SetRememberedStats( const NDb::SInfantryRPGStats *_pRememberedStats )
 	{
 		pRememberedStats = pRememberedStats;
 	}
 
-	virtual const SUnitBaseRPGStats *GetStats() const
+	const SUnitBaseRPGStats *GetStats() const override
 	{
 		return pStats;
 	}
 
-	virtual IStatesFactory *GetStatesFactory() const;
+	IStatesFactory *GetStatesFactory() const override;
 
 	virtual void SetDirection( const uint16_t newDir );
 
@@ -179,11 +179,11 @@ public:
 	void SetFree();
 	void SetMasterOfStreetsBonus( EObjectInsideOf eNewInsideType );
 
-	virtual bool IsInSolidPlace() const;
-	virtual bool IsInFirePlace() const;
+	bool IsInSolidPlace() const override;
+	bool IsInFirePlace() const override;
 	void SetToFirePlace();
 	void SetToSolidPlace();
-	virtual bool IsFree() const;
+	bool IsFree() const override;
 
 	void SetNSlot( const int nSlot ); // { slotInfo.nSlot = nSlot; }
 
@@ -232,8 +232,8 @@ public:
 	}
 
 	bool IsAngleLimited() const;
-	virtual const uint32_t GetNormale() const;
-	virtual const uint32_t GetNormale( const CVec2 &vCenter ) const;
+	const uint32_t GetNormale() const override;
+	const uint32_t GetNormale( const CVec2 &vCenter ) const override;
 
 	bool IsInBuilding() const
 	{
@@ -251,30 +251,30 @@ public:
 	}
 
 	// для стрельбы  - заполняются поля typeID, pUnit и номер слота, если нужно
-	virtual void GetShotInfo( struct SAINotifyInfantryShot *pShotInfo ) const;
+	void GetShotInfo( struct SAINotifyInfantryShot *pShotInfo ) const override;
 	// для бросания гранат - заполняются поля typeID, pUnit и номер слота, если нужно
 	void GetThrowInfo( struct SAINotifyInfantryShot *pThrowInfo ) const;
-	void GetEntranceStateInfo( struct SAINotifyEntranceState *pInfo ) const;
+	void GetEntranceStateInfo( struct SAINotifyEntranceState *pInfo ) const override;
 
-	virtual const EActionNotify GetAimAction() const;
-	virtual const EActionNotify GetShootAction() const;
+	const EActionNotify GetAimAction() const override;
+	const EActionNotify GetShootAction() const override;
 	virtual const EActionNotify GetThrowAction() const;
-	virtual const EActionNotify GetDieAction() const;
-	virtual const EActionNotify GetIdleAction() const;
-	virtual const EActionNotify GetMovingAction() const;
+	const EActionNotify GetDieAction() const override;
+	const EActionNotify GetIdleAction() const override;
+	const EActionNotify GetMovingAction() const override;
 
 	//
-	virtual const bool CanMove() const
+	const bool CanMove() const override
 	{
 		return !IsBeingHealed() && IsFree() && GetBehaviourMoving() != SBehaviour::EMHoldPos && !IsInTankPit();
 	}
 
-	virtual const bool CanMoveCritical() const
+	const bool CanMoveCritical() const override
 	{
 		return IsFree() && !IsInTankPit();
 	}
 
-	virtual bool InVisCone( const CVec2 &point ) const;
+	bool InVisCone( const CVec2 &point ) const override;
 
 	void SetOwnSightRadius( const float _fOwnSightRadius )
 	{
@@ -286,7 +286,7 @@ public:
 		fOwnSightRadius = -1;
 	}
 
-	virtual const float GetSightRadius() const
+	const float GetSightRadius() const override
 	{
 		if ( bInSolidPlace )
 		{
@@ -296,7 +296,7 @@ public:
 	}
 
 	// вероятность, с которой нанесётся damage при попадании
-	virtual const float GetCover() const;
+	const float GetCover() const override;
 
 	bool IsLying() const
 	{
@@ -307,56 +307,56 @@ public:
 	void LieDownForce(); // run statnding to lie ground animation
 	void StandUp();
 
-	virtual void Segment();
-	virtual void FreezeSegment();
+	void Segment() override;
+	void FreezeSegment() override;
 
 	// формация
 	void SetFormation( class CFormation *pFormation );
 
-	virtual bool IsInFormation() const
+	bool IsInFormation() const override
 	{
 		return pFormation != 0;
 	}
 
-	virtual class CFormation *GetFormation() const
+	class CFormation *GetFormation() const override
 	{
 		return pFormation;
 	}
 
-	virtual const CVec2 GetUnitPointInFormation() const;
+	const CVec2 GetUnitPointInFormation() const override;
 	//	virtual const int GetFormationSlot() const { return cFormSlot; }
-	virtual const bool CanShootToPlanes() const;
+	const bool CanShootToPlanes() const override;
 
 	//
-	virtual int GetNGuns() const;
-	virtual class CBasicGun *GetGun( const int n ) const;
-	virtual class CTurret *GetTurret( const int nTurret ) const;
-	virtual const int GetNTurrets() const;
-	virtual int GetNAmmo( const int nCommonGun ) const;
-	virtual void Fired( const float fGunRadius, const int nGun );
+	int GetNGuns() const override;
+	class CBasicGun *GetGun( const int n ) const override;
+	class CTurret *GetTurret( const int nTurret ) const override;
+	const int GetNTurrets() const override;
+	int GetNAmmo( const int nCommonGun ) const override;
+	void Fired( const float fGunRadius, const int nGun ) override;
 	// nAmmo со знаком
-	virtual void ChangeAmmo( const int nCommonGun, const int nAmmo );
-	virtual bool IsCommonGunFiring( const int nCommonGun ) const;
+	void ChangeAmmo( const int nCommonGun, const int nAmmo ) override;
+	bool IsCommonGunFiring( const int nCommonGun ) const override;
 
-	virtual class CBasicGun *ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime );
+	class CBasicGun *ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime ) override;
 
-	virtual void GetFogInfo( SWarFogUnitInfo *pInfo ) const;
-	virtual void WarFogChanged();
+	void GetFogInfo( SWarFogUnitInfo *pInfo ) const override;
+	void WarFogChanged() override;
 
-	virtual void GetShootAreas( struct SShootAreas *pShootAreas, int *pnAreas ) const;
-	virtual float GetMaxFireRange() const;
+	void GetShootAreas( struct SShootAreas *pShootAreas, int *pnAreas ) const override;
+	float GetMaxFireRange() const override;
 
-	virtual bool IsMech() const
+	bool IsMech() const override
 	{
 		return false;
 	}
 
-	virtual bool IsNoticableByUnit( class CCommonUnit *pUnit, const float fNoticeRadius );
+	bool IsNoticableByUnit( class CCommonUnit *pUnit, const float fNoticeRadius ) override;
 
-	virtual bool ProcessAreaDamage( const class CExplosion *pExpl,
-	                                const int nArmorDir,
-	                                const float fRadius,
-	                                const float fSmallRadius );
+	bool ProcessAreaDamage( const class CExplosion *pExpl,
+	                        const int nArmorDir,
+	                        const float fRadius,
+	                        const float fSmallRadius ) override;
 
 	virtual void MemCurFormation();
 
@@ -379,63 +379,65 @@ public:
 
 	void MemorizeFormation();
 
-	virtual const int GetMinArmor() const;
-	virtual const int GetMaxArmor() const;
-	virtual const int GetMinPossibleArmor( const int nSide ) const;
-	virtual const int GetMaxPossibleArmor( const int nSide ) const;
-	virtual const int GetArmor( const int nSide ) const;
-	virtual const int GetRandomArmor( const int nSide ) const;
+	const int GetMinArmor() const override;
+	const int GetMaxArmor() const override;
+	const int GetMinPossibleArmor( const int nSide ) const override;
+	const int GetMaxPossibleArmor( const int nSide ) const override;
+	const int GetArmor( const int nSide ) const override;
+	const int GetRandomArmor( const int nSide ) const override;
 
-	virtual const bool CanGoBackward() const
+	const bool CanGoBackward() const override
 	{
 		return false;
 	}
 
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
+	void GetTilesForVisibility( CTilesSet *pTiles ) const override;
+	bool ShouldSuspendAction( const EActionNotify &eAction ) const override;
 	virtual bool CanJoinToFormation() const;
 
 	// поискать цель, текущая цель для атаки - pCurTarget
-	virtual void
-	LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
-	virtual void TakeDamage( const float fDamage,
-	                         const SWeaponRPGStats::SShell *pShell,
-	                         const int nPlayerOfShoot,
-	                         CAIUnit *pShotUnit );
+	void LookForTarget( CAIUnit *pCurTarget,
+	                    const bool bDamageUpdated,
+	                    CAIUnit **pBestTarget,
+	                    class CBasicGun **pGun ) override;
+	void TakeDamage( const float fDamage,
+	                 const SWeaponRPGStats::SShell *pShell,
+	                 const int nPlayerOfShoot,
+	                 CAIUnit *pShotUnit ) override;
 
-	virtual const NTimer::STime GetNextSegmTime() const
+	const NTimer::STime GetNextSegmTime() const override
 	{
 		return nextSegmTime;
 	}
 
-	virtual void NullSegmTime()
+	void NullSegmTime() override
 	{
 		timeBWSegments = 0;
 	}
 
-	virtual void FirstSegment( const NTimer::STime timeDiff );
+	void FirstSegment( const NTimer::STime timeDiff ) override;
 
-	virtual const NTimer::STime GetNextPathSegmTime() const
+	const NTimer::STime GetNextPathSegmTime() const override
 	{
 		return nextPathSegmTime;
 	}
 
 	// количество сегментнов, прошедшее с прошлого вызова SecondSegment
-	virtual const float GetPathSegmentsPeriod() const;
+	const float GetPathSegmentsPeriod() const override;
 
-	virtual const NTimer::STime GetBehUpdateDuration() const
+	const NTimer::STime GetBehUpdateDuration() const override
 	{
 		return SConsts::SOLDIER_BEH_UPDATE_DURATION;
 	}
 
-	virtual class CArtillery *GetArtilleryIfCrew() const;
+	class CArtillery *GetArtilleryIfCrew() const override;
 
-	virtual const CUnitGuns *GetGuns() const
+	const CUnitGuns *GetGuns() const override
 	{
 		return pGuns;
 	}
 
-	virtual CUnitGuns *GetGuns()
+	CUnitGuns *GetGuns() override
 	{
 		return pGuns;
 	}
@@ -444,9 +446,9 @@ public:
 	virtual void SetGrenadeAutocast( bool bOn );
 	virtual void SetGrenadeFixed( bool bOn );
 
-	virtual void FreezeByState( const bool bFreeze );
+	void FreezeByState( const bool bFreeze ) override;
 
-	void Die( const bool fromExplosion, const float fDamage );
+	void Die( const bool fromExplosion, const float fDamage ) override;
 
 	void DetonateCharges();
 	void UsedCharge( NDb::EUnitSpecialAbility eType, CMineStaticObject *pMine );
@@ -463,16 +465,16 @@ public:
 		return bBeingHealed;
 	}
 
-	virtual const bool CanUnitTrampled( const CBasePathUnit *pTramplerUnit ) const;
+	const bool CanUnitTrampled( const CBasePathUnit *pTramplerUnit ) const override;
 
-	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const;
+	const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const override;
 
-	virtual const bool ShouldScatter() const
+	const bool ShouldScatter() const override
 	{
 		return true;
 	}
 
-	virtual const bool CanTurnInstant() const
+	const bool CanTurnInstant() const override
 	{
 		return true;
 	}
@@ -482,7 +484,7 @@ public:
 		return true;
 	}
 
-	virtual const bool IsRound() const
+	const bool IsRound() const override
 	{
 		return true;
 	}
@@ -493,7 +495,7 @@ class CInfantry : public CSoldier
 	OBJECT_BASIC_METHODS( CInfantry );
 	ZDATA_( CSoldier )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CSoldier *)this );
 		return 0;
@@ -516,7 +518,7 @@ class CSniper : public CSoldier
 	// вероятность снять камуфляж при выстреле, если находимся в sneak mode
 	float fCamouflageRemoveWhenShootProbability = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CSoldier *)this );
 		f.Add( 2, &lastVisibilityCheck );
@@ -527,7 +529,7 @@ class CSniper : public CSoldier
 	}
 
 protected:
-	virtual bool CalculateUnitVisibility4Party( const uint8_t cParty );
+	bool CalculateUnitVisibility4Party( const uint8_t cParty ) override;
 
 public:
 	CSniper()
@@ -537,15 +539,15 @@ public:
 	{
 	}
 
-	virtual void Init( const CVec2 &center,
-	                   const int z,
-	                   const SUnitBaseRPGStats *pStats,
-	                   const float fHP,
-	                   const uint16_t dir,
-	                   const uint8_t player,
-	                   ICollisionsCollector *pCollisionsCollector );
+	void Init( const CVec2 &center,
+	           const int z,
+	           const SUnitBaseRPGStats *pStats,
+	           const float fHP,
+	           const uint16_t dir,
+	           const uint8_t player,
+	           ICollisionsCollector *pCollisionsCollector ) override;
 
-	virtual void Segment();
+	void Segment() override;
 
 	void SetVisible()
 	{
@@ -555,7 +557,7 @@ public:
 	//virtual void RemoveCamouflage( ECamouflageRemoveReason eReason );
 	//void SetSneak( const bool bSneakMode );
 
-	virtual void Fired( const float fGunRadius, const int nGun );
+	void Fired( const float fGunRadius, const int nGun ) override;
 };
 
 /*

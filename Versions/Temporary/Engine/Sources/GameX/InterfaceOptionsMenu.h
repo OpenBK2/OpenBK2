@@ -17,7 +17,7 @@ public:
 	public:
 		CReactions() {}
 
-		~CReactions() {}
+		~CReactions() override {}
 
 		CReactions( IWindow *_pScreen, CInterfaceOptionsMenu *_pInterface )
 			: pScreen( _pScreen )
@@ -25,29 +25,29 @@ public:
 		{
 		}
 
-		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
-		virtual int Check( const std::string &szCheckName ) const;
+		bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+		int Check( const std::string &szCheckName ) const override;
 	};
 
 	//
 	void ChangeResolution();
 	//
-	~CInterfaceOptionsMenu();
+	~CInterfaceOptionsMenu() override;
 
 public:
 	CInterfaceOptionsMenu();
 
-	bool Init();
+	bool Init() override;
 
-	void OnGetFocus( bool bFocus );
+	void OnGetFocus( bool bFocus ) override;
 
 	void SetMode( const std::string &szMode );
 
 	void FillScreen();
 
-	void SliderPosition( const float fPosition, CWindow *pWho );
+	void SliderPosition( const float fPosition, CWindow *pWho ) override;
 
-	bool ProcessEvent( const SGameMessage &msg );
+	bool ProcessEvent( const SGameMessage &msg ) override;
 
 private:
 	enum EOptionModes
@@ -112,7 +112,7 @@ private:
 
 	CPtr<IWindow> pGroupPanel;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &pReactions );
@@ -147,7 +147,7 @@ protected:
 	void RestoreDefaultValues();
 
 public:
-	bool StepLocal( bool bAppActive );
+	bool StepLocal( bool bAppActive ) override;
 };
 
 class CICOptionsMenu : public CInterfaceCommandBase<CInterfaceOptionsMenu>
@@ -157,7 +157,7 @@ class CICOptionsMenu : public CInterfaceCommandBase<CInterfaceOptionsMenu>
 	ZDATA_( CInterfaceCommandBase<CInterfaceOptionsMenu> )
 	std::string szMode;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceOptionsMenu> *)this );
 		f.Add( 2, &szMode );
@@ -165,9 +165,9 @@ class CICOptionsMenu : public CInterfaceCommandBase<CInterfaceOptionsMenu>
 	}
 
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

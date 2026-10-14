@@ -19,7 +19,7 @@ class CCampaignState : public ICampaignState
 	bool bIsStarted;
 	CDBID dbidCampaign;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 3, &bIsCompleted );
 		f.Add( 4, &bIsStarted );
@@ -36,13 +36,13 @@ protected:
 public:
 	void Init( const CDBID &_dbid );
 
-	const CDBID &GetDBID() const;
+	const CDBID &GetDBID() const override;
 
-	bool IsCompleted() const;
-	void SetCompleted( const bool bValue );
+	bool IsCompleted() const override;
+	void SetCompleted( const bool bValue ) override;
 
-	bool IsStarted() const;
-	void SetStarted( const bool bValue );
+	bool IsStarted() const override;
+	void SetStarted( const bool bValue ) override;
 };
 
 class CInterfaceState : public IInterfaceState
@@ -74,7 +74,7 @@ class CInterfaceState : public IInterfaceState
 	bool bAutoShowCommanderScreen;
 
 	ZONSERIALIZE
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 5, &nDifficulty );
 		f.Add( 6, &dwMissionChatColor );
@@ -108,87 +108,88 @@ private:
 public:
 	void Init();
 
-	const NDb::SGameRoot *GetGameRoot() const;
-	const NDb::SUIConstsB2 *GetUIConsts() const;
+	const NDb::SGameRoot *GetGameRoot() const override;
+	const NDb::SUIConstsB2 *GetUIConsts() const override;
 
-	CDBID GetScreenEntryDBID( const std::string &szName ) const;
-	const NDb::SUIScreenEntry *GetScreenEntry( const std::string &szName ) const;
-	const std::wstring &GetTextEntry( const std::string &szTextID ) const;
-	const NDb::SComplexSoundDesc *GetSoundEntry( const std::string &szName ) const;
-	const NDb::STexture *GetTextureEntry( const std::string &szID ) const;
-	const std::wstring &GetMPGameType( enum NDb::EMPGameType eType ) const;
-	std::wstring GetSeasonName( enum NDb::ESeason eSeason ) const;
-	std::wstring GetMapSizeName( const NDb::SMapInfo *pMapInfo ) const;
+	CDBID GetScreenEntryDBID( const std::string &szName ) const override;
+	const NDb::SUIScreenEntry *GetScreenEntry( const std::string &szName ) const override;
+	const std::wstring &GetTextEntry( const std::string &szTextID ) const override;
+	const NDb::SComplexSoundDesc *GetSoundEntry( const std::string &szName ) const override;
+	const NDb::STexture *GetTextureEntry( const std::string &szID ) const override;
+	const std::wstring &GetMPGameType( enum NDb::EMPGameType eType ) const override;
+	std::wstring GetSeasonName( enum NDb::ESeason eSeason ) const override;
+	std::wstring GetMapSizeName( const NDb::SMapInfo *pMapInfo ) const override;
 
-	NGScene::CScreenshotTexture *GetScreenShotTexture();
+	NGScene::CScreenshotTexture *GetScreenShotTexture() override;
 
-	int GetDifficulty() const;
-	void SetDifficulty( int nDifficulty );
+	int GetDifficulty() const override;
+	void SetDifficulty( int nDifficulty ) override;
 
-	ICampaignState *GetCampaign( const CDBID &dbidCampaign );
+	ICampaignState *GetCampaign( const CDBID &dbidCampaign ) override;
 
-	void StartSingleMission( const CDBID &dbidCampaign, int nChapterNumber, int nMissionNumber, int nDifficulty );
+	void
+	StartSingleMission( const CDBID &dbidCampaign, int nChapterNumber, int nMissionNumber, int nDifficulty ) override;
 
-	void SetMissionConsoleColor( uint32_t dwColor );
-	void WriteToMissionConsole( const std::wstring &wszText );
-	void WriteToMissionConsoleSelected( const std::wstring &wszText );
-	std::wstring GetMissionConsoleMLTag() const;
+	void SetMissionConsoleColor( uint32_t dwColor ) override;
+	void WriteToMissionConsole( const std::wstring &wszText ) override;
+	void WriteToMissionConsoleSelected( const std::wstring &wszText ) override;
+	std::wstring GetMissionConsoleMLTag() const override;
 
-	bool IsSuppressEnableFocus() const
+	bool IsSuppressEnableFocus() const override
 	{
 		return bSuppressEnableFocus;
 	}
 
-	void SetSuppressEnableFocus( bool bSuppress )
+	void SetSuppressEnableFocus( bool bSuppress ) override
 	{
 		bSuppressEnableFocus = bSuppress;
 	}
 
 	void SendCommandsToBringOnTop( IInterfaceBase *pNewTop );
-	void SendCommandsToCloseAllIncluding( IInterfaceBase *pLastInterfaceToClose );
-	void SendCommandsToCloseAllIncluding( const std::string &szInterfaceID );
+	void SendCommandsToCloseAllIncluding( IInterfaceBase *pLastInterfaceToClose ) override;
+	void SendCommandsToCloseAllIncluding( const std::string &szInterfaceID ) override;
 
-	void MakeScenarioTracker( EScenarioTrackerType eType );
-	void VerifyScenarioTracker( EScenarioTrackerType eType ) const; // sanity check
+	void MakeScenarioTracker( EScenarioTrackerType eType ) override;
+	void VerifyScenarioTracker( EScenarioTrackerType eType ) const override; // sanity check
 
-	bool IsTransitEffectFlag() const;
-	void SetTransitEffectFlag( bool bTransit );
+	bool IsTransitEffectFlag() const override;
+	void SetTransitEffectFlag( bool bTransit ) override;
 
-	bool IsFirstTimeInChapter() const
+	bool IsFirstTimeInChapter() const override
 	{
 		return bFirstTimeInChapter;
 	}
 
-	void SetFirstTimeInChapter( bool bFirstTime )
+	void SetFirstTimeInChapter( bool bFirstTime ) override
 	{
 		bFirstTimeInChapter = bFirstTime;
 	}
 
-	bool IsAutoShowCommanderScreen() const
+	bool IsAutoShowCommanderScreen() const override
 	{
 		return bAutoShowCommanderScreen;
 	}
 
-	void SetAutoShowCommanderScreen( bool bAutoShow )
+	void SetAutoShowCommanderScreen( bool bAutoShow ) override
 	{
 		bAutoShowCommanderScreen = bAutoShow;
 	}
 
-	const NDb::STexture *GetMenuBackgroundTexture() const;
+	const NDb::STexture *GetMenuBackgroundTexture() const override;
 
-	std::wstring GetRandomCitation();
+	std::wstring GetRandomCitation() override;
 
-	int GetAndRegisterIDForMLHandler( const std::vector<std::pair<std::wstring, std::wstring>> &params );
-	void UnregisterIDForMLHandler( int nID );
-	const std::wstring &ExpandMLTag( const std::wstring &wszTag, int nIDForHandler ) const;
+	int GetAndRegisterIDForMLHandler( const std::vector<std::pair<std::wstring, std::wstring>> &params ) override;
+	void UnregisterIDForMLHandler( int nID ) override;
+	const std::wstring &ExpandMLTag( const std::wstring &wszTag, int nIDForHandler ) const override;
 
-	void AddMPChatMessage( const std::wstring &wszText );
-	std::wstring GetMPChatMessage();
-	void ClearMPChatMessages();
+	void AddMPChatMessage( const std::wstring &wszText ) override;
+	std::wstring GetMPChatMessage() override;
+	void ClearMPChatMessages() override;
 
-	std::wstring FilterMPChatText( const std::wstring &wszText );
+	std::wstring FilterMPChatText( const std::wstring &wszText ) override;
 
-	int GetTutorialRecommendedMission() const;
-	void MarkTutorialRecommendedMission( int nMission );
-	void ApplyTutorialRecommendedMission();
+	int GetTutorialRecommendedMission() const override;
+	void MarkTutorialRecommendedMission( int nMission ) override;
+	void ApplyTutorialRecommendedMission() override;
 };

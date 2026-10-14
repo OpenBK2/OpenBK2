@@ -4,7 +4,7 @@
 uint16_t wDeltaAngle = 0;
 int nAimingTime = 0;
 
-virtual void ToAIUnits( bool bInEditor )
+void ToAIUnits( bool bInEditor ) override
 {
 	SCommonRPGStats::ToAIUnits( bInEditor );
 	// секунды <=> ticks

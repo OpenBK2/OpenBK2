@@ -34,7 +34,7 @@ class CWindowComboBox : public CWindow,
 	int nListBaseHeight;
 	int nRowHeight;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CWindow *)this );
 		f.Add( 2, &pShared );
@@ -60,12 +60,12 @@ private:
 
 protected:
 	//{ CWindow
-	NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
 
-	bool IsRelatedFocus( IWindow *pWindow ) const;
+	bool IsRelatedFocus( IWindow *pWindow ) const override;
 	//}
 
 	bool OnEscape( const SGameMessage &msg );
@@ -78,64 +78,64 @@ public:
 	CWindowComboBox();
 
 	//{ CWindow
-	void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 
-	void Init();
+	void Init() override;
 
-	void Reposition( const CTRect<float> &parentRect );
+	void Reposition( const CTRect<float> &parentRect ) override;
 
-	bool OnButtonDown( const CVec2 &vPos, const int nButton );
+	bool OnButtonDown( const CVec2 &vPos, const int nButton ) override;
 	//}
 
 	//{ IComboBox
-	void AddItem( CObjectBase *pData );
-	void RemoveItem( CObjectBase *pData );
-	void RemoveAllItems();
+	void AddItem( CObjectBase *pData ) override;
+	void RemoveItem( CObjectBase *pData ) override;
+	void RemoveAllItems() override;
 
-	int GetItemCount() const
+	int GetItemCount() const override
 	{
 		return items.size();
 	}
 
-	IListControlItem *GetItem( int nIndex ) const;
+	IListControlItem *GetItem( int nIndex ) const override;
 
-	int GetSelectedIndex() const
+	int GetSelectedIndex() const override
 	{
 		return nSelected;
 	}
 
-	void Select( int nIndex );
+	void Select( int nIndex ) override;
 
-	void SetViewer( IDataViewer *pViewer );
-	void SetLine( CObjectBase *pData );
+	void SetViewer( IDataViewer *pViewer ) override;
+	void SetLine( CObjectBase *pData ) override;
 
 	//}
 
 	//{ IButtonNotify
-	void Released( class CWindow *pWho ) {}
+	void Released( class CWindow *pWho ) override {}
 
-	void Pushed( class CWindow *pWho );
+	void Pushed( class CWindow *pWho ) override;
 
-	void Entered( class CWindow *pWho ) {}
+	void Entered( class CWindow *pWho ) override {}
 
-	void Leaved( class CWindow *pWho ) {}
+	void Leaved( class CWindow *pWho ) override {}
 
-	void StateChanged( class CWindow *pWho ) {}
+	void StateChanged( class CWindow *pWho ) override {}
 
 	//}
 
 	//{ ISelectNotify
-	void OnSelectData( CObjectBase *pData );
+	void OnSelectData( CObjectBase *pData ) override;
 	//}
 
 	//{ IClickNotify
-	void Clicked( struct IWindow *pWho, int nButton );
+	void Clicked( struct IWindow *pWho, int nButton ) override;
 
-	void DoubleClicked( struct IWindow *pWho, int nButton ) {}
+	void DoubleClicked( struct IWindow *pWho, int nButton ) override {}
 
 	//}
 
 	//{ IFocusNotify
-	void OnFocus( const bool bFocus );
+	void OnFocus( const bool bFocus ) override;
 	//}
 };

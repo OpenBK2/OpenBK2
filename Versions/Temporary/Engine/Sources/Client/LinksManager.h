@@ -12,7 +12,7 @@ class CGameLinksManager : public CLinksManagerCommon
 	std::list<sockaddr> bannedAddresses;
 
 protected:
-	virtual bool IsGoodAddress( const sockaddr &addr ) const;
+	bool IsGoodAddress( const sockaddr &addr ) const override;
 
 public:
 	void BanAddress( const sockaddr &sockAddr );

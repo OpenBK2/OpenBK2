@@ -38,7 +38,7 @@ class CLadderCacheLocker : public CObjectBase
 
 public:
 	CLadderCacheLocker( CClients *_pClients, const std::string &_szNick );
-	~CLadderCacheLocker();
+	~CLadderCacheLocker() override;
 };
 
 struct SLadderGameInfo
@@ -113,38 +113,38 @@ class CLadderLobby : public CGameLobby
 	void SendLadderInfoToPlayer( const int nClientID, const std::string &szClientNick, const bool bFullStatistics );
 
 protected:
-	virtual const int GetLobbyID() const
+	const int GetLobbyID() const override
 	{
 		return ERID_LADDER;
 	}
 
-	virtual void ClientEnterToLobby( const int nClientID );
-	virtual void ClientLeaveLobby( const int nClientID );
+	void ClientEnterToLobby( const int nClientID ) override;
+	void ClientLeaveLobby( const int nClientID ) override;
 
-	virtual void GetLobbyClients( class CGetLobbyClientsPacket *pPacket )
+	void GetLobbyClients( class CGetLobbyClientsPacket *pPacket ) override
 	{
 		CPtr<CGetLobbyClientsPacket> p = pPacket;
 		return;
 	}
 
-	virtual void GameDead( const int nGameID );
+	void GameDead( const int nGameID ) override;
 
-	virtual bool PlayerCanKickPlayer() const
+	bool PlayerCanKickPlayer() const override
 	{
 		return false;
 	}
 
-	virtual bool PlayerCanSeeGamesList() const
+	bool PlayerCanSeeGamesList() const override
 	{
 		return false;
 	}
 
-	virtual bool PlayerCanUpdateGameInfo() const
+	bool PlayerCanUpdateGameInfo() const override
 	{
 		return false;
 	}
 
-	virtual bool PlayerNeedSpecificGameInfo() const
+	bool PlayerNeedSpecificGameInfo() const override
 	{
 		return false;
 	}
@@ -162,8 +162,8 @@ public:
 		Initialize( szCfgFile );
 	}
 
-	virtual bool Segment();
-	void ReloadConfig();
+	bool Segment() override;
+	void ReloadConfig() override;
 
 	void CreateLadderGame( const SLadderGameInfo &gameInfo );
 	// Packet Processors

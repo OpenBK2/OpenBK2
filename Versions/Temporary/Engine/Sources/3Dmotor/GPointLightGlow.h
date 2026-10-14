@@ -17,12 +17,12 @@ class CPointGlowAnimator : public CPtrFuncBase<CParticleEffect>
 	OBJECT_BASIC_METHODS( CPointGlowAnimator );
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pTime.Refresh() | pPlacement.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 private:
 	ZDATA
@@ -37,7 +37,7 @@ private:
 	STime tNextCheck;
 	bool bIsVisible;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTime );
 		f.Add( 3, &pPlacement );

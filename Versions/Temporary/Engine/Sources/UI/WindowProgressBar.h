@@ -17,28 +17,28 @@ class CWindowProgressBar : public CWindow, public IProgressBar
 	bool bShowFirstElement;
 
 protected:
-	virtual NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
 
 public:
-	int operator&( IBinSaver &saver );
-	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
-	virtual void Reposition( const CTRect<float> &parentRect );
+	int operator&( IBinSaver &saver ) override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
+	void Reposition( const CTRect<float> &parentRect ) override;
 
-	virtual void Visit( struct IUIVisitor *pVisitor );
+	void Visit( struct IUIVisitor *pVisitor ) override;
 
 	//IProgressBar{
-	virtual void SetPosition( const float fPos );
+	void SetPosition( const float fPos ) override;
 
-	virtual float GetPosition() const
+	float GetPosition() const override
 	{
 		return pInstance->fProgress;
 	}
 
-	void ShowFirstElement( bool bShow );
-	void SetForward( const NDb::SBackground *pForward );
+	void ShowFirstElement( bool bShow ) override;
+	void SetForward( const NDb::SBackground *pForward ) override;
 	//IProgressBar}
 };
 
@@ -52,7 +52,7 @@ class CWindowMultiTextureProgressBar : public CWindow, public IMultiTextureProgr
 	CDBPtr<NDb::SWindowMultiTextureProgressBarShared> pShared;
 
 protected:
-	virtual NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
@@ -60,15 +60,15 @@ protected:
 	int FindStateIndex( float fProgress );
 
 public:
-	int operator&( IBinSaver &saver );
-	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
-	virtual void Reposition( const CTRect<float> &parentRect );
+	int operator&( IBinSaver &saver ) override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
+	void Reposition( const CTRect<float> &parentRect ) override;
 
-	virtual void Visit( struct IUIVisitor *pVisitor );
+	void Visit( struct IUIVisitor *pVisitor ) override;
 
 	//IMultiTextureProgressBar{
-	virtual bool IsSolid() const;
-	virtual void GetPositions( std::vector<float> *pPositions ) const;
-	virtual void SetPositions( const std::vector<float> &positions, bool bSolid );
+	bool IsSolid() const override;
+	void GetPositions( std::vector<float> *pPositions ) const override;
+	void SetPositions( const std::vector<float> &positions, bool bSolid ) override;
 	//IMultiTextureProgressBar}
 };

@@ -9,7 +9,7 @@ class CInterfaceMultiplayer : public CInterfaceScreenBase, public IProgrammedRea
 
 	ZDATA_( CInterfaceScreenBase )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		return 0;
@@ -26,20 +26,20 @@ private:
 	bool OnProfileManagerMenu();
 	//}
 protected:
-	~CInterfaceMultiplayer();
+	~CInterfaceMultiplayer() override;
 
 public:
 	CInterfaceMultiplayer();
 
-	bool Init();
-	void OnGetFocus( bool bFocus );
-	bool ProcessEvent( const SGameMessage &msg );
-	void AfterLoad();
-	bool StepLocal( bool bAppActive );
+	bool Init() override;
+	void OnGetFocus( bool bFocus ) override;
+	bool ProcessEvent( const SGameMessage &msg ) override;
+	void AfterLoad() override;
+	bool StepLocal( bool bAppActive ) override;
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 	//}
 };
 
@@ -48,10 +48,10 @@ class CICMultiplayer : public CInterfaceCommandBase<CInterfaceMultiplayer>
 {
 	OBJECT_BASIC_METHODS( CICMultiplayer );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };
 #endif // _SINGLE_DEMO

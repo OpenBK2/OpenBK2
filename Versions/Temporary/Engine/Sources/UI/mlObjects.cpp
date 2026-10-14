@@ -20,7 +20,7 @@ class CLineBreakObject : public IReflowObject
 	OBJECT_BASIC_METHODS( CLineBreakObject )
 private:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
@@ -28,7 +28,7 @@ private:
 public:
 	CLineBreakObject() {}
 
-	void Update( IReflowState *pState )
+	void Update( IReflowState *pState ) override
 	{
 		pState->CreateLine( true );
 	}
@@ -48,7 +48,7 @@ private:
 	ZDATA
 	NGfx::SPixel8888 color;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &color );
 		return 0;
@@ -62,7 +62,7 @@ public:
 	{
 	}
 
-	void Update( IReflowState *pState );
+	void Update( IReflowState *pState ) override;
 };
 
 void CColorObject::Update( IReflowState *pState )
@@ -86,7 +86,7 @@ private:
 	ZDATA
 	EHAlign nAlign;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nAlign );
 		return 0;
@@ -100,7 +100,7 @@ public:
 	{
 	}
 
-	void Update( IReflowState *pState );
+	void Update( IReflowState *pState ) override;
 };
 
 void CHAlignObject::Update( IReflowState *pState )
@@ -124,7 +124,7 @@ private:
 	ZDATA
 	EVAlign nAlign;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nAlign );
 		return 0;
@@ -138,7 +138,7 @@ public:
 	{
 	}
 
-	void Update( IReflowState *pState );
+	void Update( IReflowState *pState ) override;
 };
 
 void CVAlignObject::Update( IReflowState *pState )
@@ -166,7 +166,7 @@ private:
 	NGScene::SFont font;
 	NGfx::SPixel8888 outlineColor;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nFlags );
 		f.Add( 3, &nOutlineSize );
@@ -192,7 +192,7 @@ public:
 	{
 	}
 
-	void Update( IReflowState *pState );
+	void Update( IReflowState *pState ) override;
 };
 
 void CFontObject::Update( IReflowState *pState )
@@ -241,7 +241,7 @@ private:
 	ZDATA
 	int nSize;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nSize );
 		return 0;
@@ -255,7 +255,7 @@ public:
 	{
 	}
 
-	void Update( IReflowState *pState );
+	void Update( IReflowState *pState ) override;
 };
 
 void CMinFontSizeObject::Update( IReflowState *pState )

@@ -175,24 +175,24 @@ class CClientAckManager : public IClientAckManager
 	const NDb::SAckParameter *GetParam( const NDb::EUnitAckType eAck ) const;
 
 public:
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 	CClientAckManager();
 
-	void Init();
+	void Init() override;
 	void Clear();
-	bool IsNegative( const NDb::EUnitAckType eAck );
+	bool IsNegative( const NDb::EUnitAckType eAck ) override;
 
-	void SetClientConsts( const NDb::SClientGameConsts *pConsts );
+	void SetClientConsts( const NDb::SClientGameConsts *pConsts ) override;
 	void AddDeathAcknowledgement( const CVec3 &vPos,
 	                              const NDb::SComplexSoundDesc *pSound,
-	                              const unsigned int nTimeSinceStart );
+	                              const unsigned int nTimeSinceStart ) override;
 	void AddAcknowledgement( struct IMOUnit *pUnit,
 	                         const NDb::EUnitAckType eAck,
 	                         const NDb::SComplexSoundDesc *pSound,
 	                         const int nSet,
-	                         const unsigned int nTimeSinceStart );
-	void UnitDead( struct IMOUnit *pUnit, struct ISoundScene *pSoundScene );
-	void Update( struct ISoundScene *pSoundScene );
-	void RegisterAsBored( const NDb::EUnitAckType eBored, struct IMOUnit *pObject );
-	void UnRegisterAsBored( const NDb::EUnitAckType eBored, struct IMOUnit *pObject );
+	                         const unsigned int nTimeSinceStart ) override;
+	void UnitDead( struct IMOUnit *pUnit, struct ISoundScene *pSoundScene ) override;
+	void Update( struct ISoundScene *pSoundScene ) override;
+	void RegisterAsBored( const NDb::EUnitAckType eBored, struct IMOUnit *pObject ) override;
+	void UnRegisterAsBored( const NDb::EUnitAckType eBored, struct IMOUnit *pObject ) override;
 };

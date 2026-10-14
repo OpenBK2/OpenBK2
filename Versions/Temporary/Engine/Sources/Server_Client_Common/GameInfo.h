@@ -27,7 +27,7 @@ public:
 
 	//		/** some specific information */
 	//		CPtr<class CNetPacket> pSpecificInfo;
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nID );
 		f.Add( 3, &szName );

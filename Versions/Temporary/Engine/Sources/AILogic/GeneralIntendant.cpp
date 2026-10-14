@@ -269,12 +269,12 @@ struct SEnumStorages : public CStaticObjects::IEnumStoragesPredicate
 {
 	Storages storages;
 
-	virtual bool OnlyConnected() const
+	bool OnlyConnected() const override
 	{
 		return false;
 	}
 
-	virtual bool AddStorage( class CBuilding *pStorage, const float fPathLenght )
+	bool AddStorage( class CBuilding *pStorage, const float fPathLenght ) override
 	{
 		const SBuildingRPGStats *pStats = checked_cast<const SBuildingRPGStats *>( pStorage->GetStats() );
 		if ( TYPE_TEMP_RU_STORAGE == pStats->etype )

@@ -361,7 +361,7 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	void AddLockInfo( const int nUnitID, const bool bLock, const SUnitProfile &profile );
 #endif
 
-	int operator&( IBinSaver &f )
+	int operator&( IBinSaver &f ) override
 	{
 		NI_ASSERT( false, "Can't serialize CTerrain, should be restored after load" );
 		return 0;

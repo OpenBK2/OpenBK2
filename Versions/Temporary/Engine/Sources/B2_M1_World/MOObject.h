@@ -30,19 +30,22 @@ public:
 	}
 
 	//
-	virtual bool Create( const int nUniqueID,
-	                     const SAIBasicUpdate *pUpdate,
-	                     NDb::ESeason eSeason,
-	                     const NDb::EDayNight eDayTime,
-	                     bool bInEditor );
-	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor );
-	void GetStatus( SObjectStatus *pStatus ) const;
+	bool Create( const int nUniqueID,
+	             const SAIBasicUpdate *pUpdate,
+	             NDb::ESeason eSeason,
+	             const NDb::EDayNight eDayTime,
+	             bool bInEditor ) override;
+	bool CreateSceneObject( const int nUniqueID,
+	                        const SAINewUnitUpdate *pUpdate,
+	                        NDb::ESeason eSeason,
+	                        bool bInEditor ) override;
+	void GetStatus( SObjectStatus *pStatus ) const override;
 	IClientUpdatableProcess *AIUpdateRPGStats( const struct SAINotifyRPGStats &stats,
 	                                           struct IClientAckManager *pAckManager,
-	                                           NDb::ESeason eSeason );
+	                                           NDb::ESeason eSeason ) override;
 	//
-	void GetActions( CUserActions *pActions, EActionsType eActions ) const;
-	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;
+	void GetActions( CUserActions *pActions, EActionsType eActions ) const override;
+	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const override;
 	void AIUpdateFall( const SAITreeBrokenUpdate *pUpdate );
 
 	virtual bool IsObject() const
@@ -58,5 +61,5 @@ public:
 	}
 
 	//
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

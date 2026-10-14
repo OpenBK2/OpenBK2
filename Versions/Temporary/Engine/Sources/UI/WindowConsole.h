@@ -60,7 +60,7 @@ class CWindowConsole : public CWindow, public IConsole
 	int nBeginCommand; //текущая команда из лога команд
 	int nConsoleSequenceID;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CWindow *)this );
 		f.Add( 2, &pShared );
@@ -82,7 +82,7 @@ class CWindowConsole : public CWindow, public IConsole
 	void ReadConsoleStrings();
 
 protected:
-	virtual NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
@@ -94,12 +94,12 @@ public:
 		return false;
 	}
 
-	virtual bool ProcessEvent( const struct SGameMessage &msg );
+	bool ProcessEvent( const struct SGameMessage &msg ) override;
 
 	CWindowConsole(); // : currTime( 0 ), nBeginCommand( 0 ), nBeginString( 0 ) {  }
-	virtual void NotifyStateSequenceFinished();
-	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
-	virtual void SetParent( CWindow *_pParent );
+	void NotifyStateSequenceFinished() override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
+	void SetParent( CWindow *_pParent ) override;
 
 	bool OnUp( const struct SGameMessage &msg );
 	bool OnDown( const struct SGameMessage &msg );
@@ -113,13 +113,13 @@ public:
 
 	bool OnShowConsole( const struct SGameMessage &msg );
 
-	virtual void Reposition( const CTRect<float> &rcParent );
+	void Reposition( const CTRect<float> &rcParent ) override;
 
-	virtual void Visit( struct IUIVisitor *pVisitor );
-	virtual void Segment( const int timeDiff );
+	void Visit( struct IUIVisitor *pVisitor ) override;
+	void Segment( const int timeDiff ) override;
 	//virtual void RegisterObservers();
 
-	virtual void Init();
+	void Init() override;
 
 	//virtual int operator&( IBinSaver &saver );
 };
@@ -142,7 +142,7 @@ public:
 	{
 	}
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, &pConsole );
 		saver.Add( 2, &pDebugInfo );
@@ -150,10 +150,10 @@ public:
 		saver.Add( 4, &bDebugShown );
 		return 0;
 	}
-	struct IWindow *GetConsole();
-	struct IWindow *GetDebug();
-	struct IWindow *GetDebugInfoWindow( const int nWindow );
-	void ShowDebugInfo( const bool bShow );
-	void ShowStatsWindow( const bool bShow );
-	struct IStatsSystemWindow *GetStatsWindow();
+	struct IWindow *GetConsole() override;
+	struct IWindow *GetDebug() override;
+	struct IWindow *GetDebugInfoWindow( const int nWindow ) override;
+	void ShowDebugInfo( const bool bShow ) override;
+	void ShowStatsWindow( const bool bShow ) override;
+	struct IStatsSystemWindow *GetStatsWindow() override;
 };

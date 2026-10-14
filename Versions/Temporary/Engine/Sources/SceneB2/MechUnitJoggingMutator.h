@@ -43,7 +43,7 @@ class CMechUnitJoggingMutator : public IMechUnitJoggingMutator
 	std::vector<CVec3> propellerSpeedsRad;
 	NTimer::STime nPropellerStartTime;
 
-	bool NeedUpdate();
+	bool NeedUpdate() override;
 
 public:
 	CMechUnitJoggingMutator()
@@ -55,14 +55,14 @@ public:
 	{
 	}
 
-	void Setup( const int nBasisBoneIndex, const SJoggingParams &_joggingX, const SJoggingParams &_joggingY );
+	void Setup( const int nBasisBoneIndex, const SJoggingParams &_joggingX, const SJoggingParams &_joggingY ) override;
 	void SetupPropellers( ISkeletonAnimator *pAnimator,
 	                      const std::vector<std::string> &propellerObjects,
-	                      const std::vector<CVec3> &propellerSpeedsRad );
-	void Play();
-	void Stop();
+	                      const std::vector<CVec3> &propellerSpeedsRad ) override;
+	void Play() override;
+	void Stop() override;
 
-	void MutateSkeletonPose( NAnimation::SSkeletonPose *pPose );
+	void MutateSkeletonPose( NAnimation::SSkeletonPose *pPose ) override;
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

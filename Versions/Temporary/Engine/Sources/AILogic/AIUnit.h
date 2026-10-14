@@ -151,7 +151,7 @@ protected:
 	// for delayed units fade
 	virtual bool UpdateUnitVisibilityForParty( const uint8_t party, const bool bVisibility );
 
-	virtual void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate );
+	void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate ) override;
 
 	// return | of guns, that are used for anti-aviation fire and should be excluded from ordinary target scan
 	virtual uint32_t InitSupportAntiAircraftGuns()
@@ -186,7 +186,7 @@ public:
 	                   ICollisionsCollector *pCollisionsCollector ) = 0;
 	void InitSpecialAbilities( int nFromLevel = 0 ); // Parameter is used on level-up
 	static CAIUnit *GetUnitByUniqueID( const int nUniqueID );
-	int operator&( IBinSaver &f );
+	int operator&( IBinSaver &f ) override;
 
 	virtual void PrepareToDelete();
 
@@ -196,11 +196,11 @@ public:
 	}
 
 	// для updater-а
-	virtual void GetNewUnitInfo( struct SNewUnitInfo *pNewUnitInfo );
-	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats );
-	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
+	void GetNewUnitInfo( struct SNewUnitInfo *pNewUnitInfo ) override;
+	void GetRPGStats( struct SAINotifyRPGStats *pStats ) override;
+	void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff ) override;
 
-	virtual const NTimer::STime GetTimeOfDeath() const
+	const NTimer::STime GetTimeOfDeath() const override
 	{
 		return timeToDeath;
 	}
@@ -241,7 +241,7 @@ public:
 	}
 
 	//
-	virtual const SUnitBaseRPGStats *GetStats() const = 0;
+	const SUnitBaseRPGStats *GetStats() const override = 0;
 
 	// в месте, где его никто не видит и он никого не видит
 	virtual bool IsInSolidPlace() const
@@ -254,25 +254,25 @@ public:
 		return false;
 	}
 
-	virtual bool IsFree() const
+	bool IsFree() const override
 	{
 		return true;
 	}
 
 	// обработка команд
-	virtual void Segment();
-	virtual void FreezeSegment();
+	void Segment() override;
+	void FreezeSegment() override;
 
 	bool IsPossibleChangeAction() const
 	{
 		return IsAlive();
 	}
 
-	virtual void Die( const bool fromExplosion, const float fDamage );
-	virtual void Disappear();
+	void Die( const bool fromExplosion, const float fDamage ) override;
+	void Disappear() override;
 
 	// виден ли данной дипломатической стороной
-	virtual const bool IsVisible( const uint8_t party ) const;
+	const bool IsVisible( const uint8_t party ) const override;
 
 	void SetVisibility( uint8_t party, bool bVisible )
 	{
@@ -280,15 +280,15 @@ public:
 	}
 
 	// для отложенных updates
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
-	virtual const uint32_t GetNormale( const CVec2 &vCenter ) const;
+	void GetTilesForVisibility( CTilesSet *pTiles ) const override;
+	bool ShouldSuspendAction( const EActionNotify &eAction ) const override;
+	const uint32_t GetNormale( const CVec2 &vCenter ) const override;
 	virtual const uint32_t GetNormale() const;
 
 	// CBasePathUnit
-	virtual const float GetTurnSpeed() const;
+	const float GetTurnSpeed() const override;
 
-	virtual const float GetMaxPossibleSpeed() const
+	const float GetMaxPossibleSpeed() const override
 	{
 		float speed = GetStatsModifier()->speed.Get( GetStats()->fSpeed );
 		if ( !IsGoForward() && CanGoBackward() && IsMech() )
@@ -301,30 +301,30 @@ public:
 	}
 
 	// Group forward move should use the "forward cap" and ignore temporary reverse-direction state.
-	virtual const float GetMaxPossibleForwardSpeed() const
+	const float GetMaxPossibleForwardSpeed() const override
 	{
 		return GetStatsModifier()->speed.Get( GetStats()->fSpeed );
 	}
 
 	// Group reverse move should use the reverse cap even before the path switches direction.
-	virtual const float GetMaxPossibleBackwardSpeed() const
+	const float GetMaxPossibleBackwardSpeed() const override
 	{
 		const float speed = GetMaxPossibleForwardSpeed();
 		return IsMech() && CanGoBackward() ? speed * GetStats()->fReverseSpeedModifier : speed;
 	}
 
-	virtual const float GetPassability() const;
+	const float GetPassability() const override;
 
-	virtual const int GetBoundTileRadius() const
+	const int GetBoundTileRadius() const override
 	{
 		return GetStats()->nBoundTileRadius;
 	}
 
-	virtual const bool CanMoveBetweenTiles( const SVector &fromTile, const SVector &toTile ) const;
+	const bool CanMoveBetweenTiles( const SVector &fromTile, const SVector &toTile ) const override;
 
 	//virtual struct IStaticPath* ( const CVec2 &vStartPoint, const CVec2 &vFinishPoint, struct IPointChecking *pPointChecking );
 
-	virtual const CVec2 &GetAABBHalfSize() const
+	const CVec2 &GetAABBHalfSize() const override
 	{
 		return GetStats()->vAABBHalfSize;
 	}
@@ -338,7 +338,7 @@ public:
 		return false;
 	}
 
-	virtual const bool IsTrain() const;
+	const bool IsTrain() const override;
 
 	//
 	const float GetHitPoints() const
@@ -366,7 +366,7 @@ public:
 	virtual const float GetCover() const;
 	virtual bool IsSavedByCover() const;
 
-	virtual class CTurret *GetTurret( const int nTurret ) const
+	class CTurret *GetTurret( const int nTurret ) const override
 	{
 		NI_ASSERT( false, "Wrong call of get turret" );
 		return 0;
@@ -385,19 +385,19 @@ public:
 
 	virtual const EActionNotify GetShootAction() const = 0;
 	virtual const EActionNotify GetAimAction() const = 0;
-	virtual const EActionNotify GetDieAction() const = 0;
+	const EActionNotify GetDieAction() const override = 0;
 	virtual const EActionNotify GetIdleAction() const = 0;
 	// для Move есть типы
 	virtual const EActionNotify GetMovingAction() const = 0;
 
-	virtual const bool CanMove() const;
-	virtual const bool CanMoveCritical() const;
+	const bool CanMove() const override;
+	const bool CanMoveCritical() const override;
 	// может ли повернуться в принципе (может быть, понадобиться деинсталляция)
-	virtual const bool CanRotate() const;
+	const bool CanRotate() const override;
 
-	virtual void SetCamoulfage();
+	void SetCamoulfage() override;
 	const float GetCamouflage() const;
-	virtual void RemoveCamouflage( ECamouflageRemoveReason eReason );
+	void RemoveCamouflage( ECamouflageRemoveReason eReason ) override;
 
 	virtual bool IsCamoulflated() const
 	{
@@ -415,17 +415,17 @@ public:
 	bool IsInWater() const;
 	const float GetAmphibianWaterCoeff( const CVec2 &point ) const;
 
-	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
-	virtual bool CanCommandBeExecutedByStats( class CAICommand *pCommand );
-	virtual bool CanCommandBeExecutedByStats( int nCmd ) const;
+	bool CanCommandBeExecuted( class CAICommand *pCommand ) override;
+	bool CanCommandBeExecutedByStats( class CAICommand *pCommand ) override;
+	bool CanCommandBeExecutedByStats( int nCmd ) const override;
 
-	virtual const uint8_t GetPlayer() const
+	const uint8_t GetPlayer() const override
 	{
 		return player;
 	}
 
 	// сменить дипломатию с корректным update в units
-	virtual void ChangePlayer( const uint8_t cPlayer );
+	void ChangePlayer( const uint8_t cPlayer ) override;
 
 	// просто поставить другую дипломатию
 	void SetPlayer( const uint8_t cPlayer )
@@ -438,20 +438,20 @@ public:
 		return true;
 	}
 
-	virtual const float GetSightRadius() const;
+	const float GetSightRadius() const override;
 	float GetRemissiveCoeff() const;
 
-	virtual const int GetNAIGroup() const
+	const int GetNAIGroup() const override
 	{
 		return GetNGroup();
 	}
 
-	virtual const NTimer::STime GetTimeToCamouflage() const;
+	const NTimer::STime GetTimeToCamouflage() const override;
 	virtual void AnalyzeCamouflage();
 	virtual void StartCamouflating();
 
 	void CreateAntiArtillery( const float fMaxRevealRadius );
-	virtual void Fired( const float fGunRadius, const int nGun );
+	void Fired( const float fGunRadius, const int nGun ) override;
 	virtual NTimer::STime GetDisappearInterval() const;
 
 	// бонусы
@@ -478,13 +478,13 @@ public:
 	virtual void RemoveAmbush();
 
 	virtual void GetFogInfo( struct SWarFogUnitInfo *pInfo ) const;
-	virtual void GetShootAreas( struct SShootAreas *pShootAreas, int *pnAreas ) const;
-	virtual void WarFogChanged();
+	void GetShootAreas( struct SShootAreas *pShootAreas, int *pnAreas ) const override;
+	void WarFogChanged() override;
 
 	// update изображения shoot area или range area
-	virtual void UpdateArea( const EActionNotify eAction );
+	void UpdateArea( const EActionNotify eAction ) override;
 
-	virtual const EAIClasses GetAIPassabilityClass() const
+	const EAIClasses GetAIPassabilityClass() const override
 	{
 		return (EAIClasses)GetStats()->nAIPassabilityClass;
 	}
@@ -498,7 +498,7 @@ public:
 	virtual void ChangeAmmo( const int nCommonGun, const int nAmmo );
 	virtual bool IsCommonGunFiring( const int nCommonGun ) const;
 
-	virtual const float GetSmoothTurnThreshold() const
+	const float GetSmoothTurnThreshold() const override
 	{
 		return 0.3f;
 	}
@@ -510,19 +510,19 @@ public:
 
 	void NullCollisions();
 
-	virtual void SendAcknowledgement( EUnitAckType ack, bool bForce = false );
+	void SendAcknowledgement( EUnitAckType ack, bool bForce = false ) override;
 	// ack для команды pCommand
-	virtual void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false );
+	void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false ) override;
 
 	// коллизится ли с движущимися объектами
-	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const;
+	const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const override;
 
-	virtual const int GetMinArmor() const;
-	virtual const int GetMaxArmor() const;
-	virtual const int GetMinPossibleArmor( const int nSide ) const;
-	virtual const int GetMaxPossibleArmor( const int nSide ) const;
-	virtual const int GetArmor( const int nSide ) const;
-	virtual const int GetRandomArmor( const int nSide ) const;
+	const int GetMinArmor() const override;
+	const int GetMaxArmor() const override;
+	const int GetMinPossibleArmor( const int nSide ) const override;
+	const int GetMaxPossibleArmor( const int nSide ) const override;
+	const int GetArmor( const int nSide ) const override;
+	const int GetRandomArmor( const int nSide ) const override;
 
 	//CRAP{ until SuspendedPoint unrealized in new Pathfinding
 	virtual bool HasSuspendedPoint() const
@@ -533,12 +533,12 @@ public:
 	//CRAP}
 
 	//for bored condition
-	virtual void UnRegisterAsBored( const enum EUnitAckType eBoredType );
-	virtual void RegisterAsBored( const enum EUnitAckType eBoredType );
+	void UnRegisterAsBored( const enum EUnitAckType eBoredType ) override;
+	void RegisterAsBored( const enum EUnitAckType eBoredType ) override;
 
 	virtual class CUnitGuns *GetGuns() = 0;
 	virtual const class CUnitGuns *GetGuns() const = 0;
-	virtual EUnitAckType GetGunsRejectReason() const;
+	EUnitAckType GetGunsRejectReason() const override;
 	bool DoesExistRejectGunsReason( const EUnitAckType &ackType ) const;
 
 	// целеразрешение
@@ -546,7 +546,7 @@ public:
 	const float GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 &vCenter, CBasicGun *pGun ) const;
 	const float GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 &vCenter, const uint32_t dwGuns ) const;
 	// скорость убийства юнита из наилучшего gun
-	virtual const float GetKillSpeed( class CAIUnit *pEnemy ) const;
+	const float GetKillSpeed( class CAIUnit *pEnemy ) const override;
 	// скорость убийства юнита из pGun
 	virtual const float GetKillSpeed( class CAIUnit *pEnemy, class CBasicGun *pGun ) const;
 	// скорость убийства юнита из набора Gun, номера задаются маской
@@ -559,27 +559,29 @@ public:
 	}
 
 	// обнулить время для периодов сканирования
-	virtual void ResetTargetScan();
+	void ResetTargetScan() override;
 	// просканировать, если пора; если нашли цель, то атаковать
 	// возвращает: в младшем бите - была ли найдена цель, во втором бите - было ли произведено сканирование
-	virtual uint8_t AnalyzeTargetScan( CAIUnit *pCurTarget,
-	                                   const bool bDamageUpdated,
-	                                   const bool bScanForObstacles,
-	                                   CObjectBase *pCheckBuilding = 0 );
+	uint8_t AnalyzeTargetScan( CAIUnit *pCurTarget,
+	                           const bool bDamageUpdated,
+	                           const bool bScanForObstacles,
+	                           CObjectBase *pCheckBuilding = 0 ) override;
 	uint8_t AnalyzeTargetScanWithoutMoving( CAIUnit *pCurTarget,
 	                                        const bool bDamageUpdated,
 	                                        const bool bScanForObstacles,
 	                                        CObjectBase *pCheckBuilding = 0 );
 	// поискать цель, текущая цель для атаки - pCurTarget
-	virtual void
-	LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
+	void LookForTarget( CAIUnit *pCurTarget,
+	                    const bool bDamageUpdated,
+	                    CAIUnit **pBestTarget,
+	                    class CBasicGun **pGun ) override;
 	// поискать цель вдалеке для артиллерийского обстрела, текущая цель для атаки - pCurTarget
 	virtual void
 	LookForFarTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
 	// для того, чтобы искать врагов не только в секторе атаки, а во всём круге
 	void SetCircularAttack( const bool bCanAttack );
 	// поискать препятствие.
-	virtual struct IObstacle *LookForObstacle();
+	struct IObstacle *LookForObstacle() override;
 
 	void UpdateNAttackingGrenages( const int nUpdate )
 	{
@@ -599,7 +601,7 @@ public:
 
 	void EnemyKilled( CAIUnit *pEnemy );
 
-	virtual bool CanMoveForGuard() const
+	bool CanMoveForGuard() const override
 	{
 		return CanMove() && !GetStats()->IsTrain();
 	}
@@ -610,7 +612,7 @@ public:
 	void SetLastVisibleTime( const NTimer::STime time );
 
 	// радиус, в котром сканируются цели
-	virtual const float GetTargetScanRadius();
+	const float GetTargetScanRadius() override;
 
 	// юнит находиться в свободном поиске целей
 	virtual bool IsFreeEnemySearch() const
@@ -624,11 +626,11 @@ public:
 		return 1.0f;
 	}
 
-	virtual float GetPriceMax() const;
+	float GetPriceMax() const override;
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 
-	virtual const NTimer::STime GetBehUpdateDuration() const;
+	const NTimer::STime GetBehUpdateDuration() const override;
 
 	// killed: this unit + all units inside
 	virtual void SendNTotalKilledUnits( const int nPlayerOfShoot,
@@ -637,20 +639,20 @@ public:
 
 	//	const SAIExpLevel::SLevel& GetExpLevel() const;
 
-	virtual void UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand );
+	void UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand ) override;
 
 	//для посылки генералу информации о видимых врагах, а также посылки update о видимости юнита
 	void CalcVisibility( const bool bIgnoreTime );
 	// клиент зависима!
-	virtual const bool IsVisibleByPlayer();
+	const bool IsVisibleByPlayer() override;
 	bool CalculateUnitVisibility4PartyInner( const uint8_t party ) const;
 
 	// залокать unit ( если уже был залокана, то старый lock исчезает )
-	virtual void Lock( const CBasicGun *pGun );
+	void Lock( const CBasicGun *pGun ) override;
 	// unlock unit ( если залокан другим gun-ом, то ничего не делается )
-	virtual void Unlock( const CBasicGun *pGun );
+	void Unlock( const CBasicGun *pGun ) override;
 	// залокан ли каким-либо gun-ом, не равным pGun
-	virtual bool IsLocked( const CBasicGun *pGun ) const;
+	bool IsLocked( const CBasicGun *pGun ) const override;
 
 	// смена текущего типа патронов.
 	void SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType );
@@ -670,8 +672,8 @@ public:
 		return true;
 	}
 
-	virtual void AnimationSet( int nAnimation );
-	virtual void AnimationSegment();
+	void AnimationSet( int nAnimation ) override;
+	void AnimationSegment() override;
 	void Moved();
 	void Stopped();
 	void StopCurAnimation();
@@ -686,7 +688,7 @@ public:
 	void WantedToReveal( CAIUnit *pWhoRevealed );
 	bool IsRevealed() const;
 
-	virtual const bool IsInfantry() const;
+	const bool IsInfantry() const override;
 
 	virtual bool IsHelicopter() const
 	{
@@ -711,8 +713,8 @@ public:
 		nVisIndexInUnits = _nVisIndexInUnits;
 	}
 
-	virtual bool CanMoveAfterUserCommand() const;
-	virtual void NotifyAbilityRun( class CAICommand *pCommand );
+	bool CanMoveAfterUserCommand() const override;
+	void NotifyAbilityRun( class CAICommand *pCommand ) override;
 
 	bool IsHoldingSector() const
 	{
@@ -736,11 +738,12 @@ public:
 		return eReinforcementType;
 	}
 
-	void GetEntranceStateInfo( struct SAINotifyEntranceState *pInfo ) const;
+	void GetEntranceStateInfo( struct SAINotifyEntranceState *pInfo ) const override;
 	bool IsRestInside() const;
 	void SetRestInside( const bool bInside, CAIUnit *pTransport );
 
-	const bool CanShootInMovement(); // For aviation and ShootInMovement special ability (shoot from priority-0 guns)
+	const bool
+	CanShootInMovement() override; // For aviation and ShootInMovement special ability (shoot from priority-0 guns)
 	const int GetXPLevel();
 	const int GetAbilityLevel(); // Introduced for leaders
 	/*
@@ -765,20 +768,20 @@ public:
 		return nMultipleShots;
 	}
 
-	virtual const SUnitProfile &GetUnitProfile() const;
-	const SRect &GetUnitRect() const;
+	const SUnitProfile &GetUnitProfile() const override;
+	const SRect &GetUnitRect() const override;
 
-	virtual const float GetTurnRadius() const
+	const float GetTurnRadius() const override
 	{
 		return GetStats()->GetTurnRadius();
 	}
 
 	// CBasePathUnit
 	void SetDirection( const uint16_t wDirection );
-	virtual const CVec2 GetCenterShift() const;
-	virtual const bool IsRound() const;
-	virtual void UnitTrampled( const CBasePathUnit *pTramplerUnit );
-	const bool CanTurnRound() const;
+	const CVec2 GetCenterShift() const override;
+	const bool IsRound() const override;
+	void UnitTrampled( const CBasePathUnit *pTramplerUnit ) override;
+	const bool CanTurnRound() const override;
 
 	bool IsTrampled() const
 	{
@@ -788,15 +791,15 @@ public:
 	//
 	void UpdateVisibilityForced();
 
-	const bool IsStaticUnit() const
+	const bool IsStaticUnit() const override
 	{
 		return GetStats()->fSpeed == 0.0f &&
 		       (std::max)( GetStats()->vAABBHalfSize.x, GetStats()->vAABBHalfSize.y ) > 128.0f;
 	}
 
 	// real implementation of the method
-	const NDb::SUnitSpecialAblityDesc *GetUnitAbilityDesc( const NDb::EUnitSpecialAbility eType );
-	virtual const bool CanLockTiles() const;
+	const NDb::SUnitSpecialAblityDesc *GetUnitAbilityDesc( const NDb::EUnitSpecialAbility eType ) override;
+	const bool CanLockTiles() const override;
 	void UpdateCrewAndTruckVisibility( uint8_t party, bool bNewVisibility );
 	void CheckAmmoStatus();
 };

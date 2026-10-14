@@ -130,17 +130,18 @@ private:
 	void PlaySubstSound( struct ISound *pSubstSound, unsigned int nStartSample, unsigned int nSoundLenght, bool bLooped );
 
 	void InitConsts();
-	~CSoundScene2D();
+	~CSoundScene2D() override;
 
 public:
 	CSoundScene2D();
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 	//
-	virtual void Init();
+	void Init() override;
 	//
 
 	// must be called when new terrain was loaded
-	void Init( const int _nMaxX, const int _nMaxY, const int _nMinZ, const int _nMaxZ, const int _VIS_TILE_SIZE );
+	void
+	Init( const int _nMaxX, const int _nMaxY, const int _nMinZ, const int _nMaxZ, const int _VIS_TILE_SIZE ) override;
 	void SetTerrain( struct ITerrainSounds *pTerrain );
 
 	// если начался или идет бой - то вызывать эу функцию
@@ -150,25 +151,25 @@ public:
 	                   const enum ESoundMixType eMixMode,
 	                   const enum ESoundAddMode eAddMode,
 	                   const unsigned int nTimeAfterStart,
-	                   int nVolumeType );
+	                   int nVolumeType ) override;
 
 	//удаляет звук из сцены. ID становится инвалидным
-	void RemoveSound( const uint16_t wID );
+	void RemoveSound( const uint16_t wID ) override;
 	// задает новую позицию звуку.
-	void SetSoundPos( const uint16_t wID, const class CVec3 &vPos );
-	bool IsSoundFinished( const uint16_t wID ) const;
-	void UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, const float fViewRadius );
+	void SetSoundPos( const uint16_t wID, const class CVec3 &vPos ) override;
+	bool IsSoundFinished( const uint16_t wID ) const override;
+	void UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, const float fViewRadius ) override;
 
-	void SetSoundSceneMode( const enum ESoundSceneMode eSoundSceneMode );
+	void SetSoundSceneMode( const enum ESoundSceneMode eSoundSceneMode ) override;
 
 	enum ESoundSceneMode GetMode() const
 	{
 		return eSoundSceneMode;
 	}
 
-	uint16_t AddSoundToMap( const NDb::SComplexSoundDesc *pDesc, const CVec3 &vPos );
-	void RemoveSoundFromMap( const uint16_t wInstanceID );
-	void ClearSounds();
+	uint16_t AddSoundToMap( const NDb::SComplexSoundDesc *pDesc, const CVec3 &vPos ) override;
+	void RemoveSoundFromMap( const uint16_t wInstanceID ) override;
+	void ClearSounds() override;
 };
 
 class CSoundScene3D : public ISoundScene
@@ -194,7 +195,7 @@ class CSoundScene3D : public ISoundScene
 	bool bLaunchAfterLoad;
 
 	ZONSERIALIZE
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pSFX );
 		f.Add( 3, &pGameTimer );
@@ -226,31 +227,32 @@ public:
 	}
 
 	//
-	void Init();
+	void Init() override;
 	//
 
 	// must be called when new terrain was loaded
-	void Init( const int _nMaxX, const int _nMaxY, const int _nMinZ, const int _nMaxZ, const int _VIS_TILE_SIZE );
+	void
+	Init( const int _nMaxX, const int _nMaxY, const int _nMinZ, const int _nMaxZ, const int _VIS_TILE_SIZE ) override;
 
 	uint16_t AddSound( const NDb::SComplexSoundDesc *pStats,
 	                   const CVec3 &vPos,
 	                   const enum ESoundMixType eMixMode,
 	                   const enum ESoundAddMode eAddMode,
 	                   const unsigned int nTimeAfterStart,
-	                   int nVolumeType );
+	                   int nVolumeType ) override;
 	// удаляет звук из сцены. ID становится инвалидным
-	void RemoveSound( const uint16_t wID );
+	void RemoveSound( const uint16_t wID ) override;
 	// задает новую позицию звуку.
-	void SetSoundPos( const uint16_t wID, const class CVec3 &vPos );
-	bool IsSoundFinished( const uint16_t wID ) const;
-	void UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, const float fViewRadius );
+	void SetSoundPos( const uint16_t wID, const class CVec3 &vPos ) override;
+	bool IsSoundFinished( const uint16_t wID ) const override;
+	void UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, const float fViewRadius ) override;
 
-	void SetSoundSceneMode( const enum ESoundSceneMode eSoundSceneMode );
+	void SetSoundSceneMode( const enum ESoundSceneMode eSoundSceneMode ) override;
 	enum ESoundSceneMode GetMode() const;
 
-	uint16_t AddSoundToMap( const NDb::SComplexSoundDesc *pDesc, const CVec3 &vPos );
-	void RemoveSoundFromMap( const uint16_t wInstanceID );
-	void ClearSounds();
+	uint16_t AddSoundToMap( const NDb::SComplexSoundDesc *pDesc, const CVec3 &vPos ) override;
+	void RemoveSoundFromMap( const uint16_t wInstanceID ) override;
+	void ClearSounds() override;
 };
 
 class CSoundScene : public ISoundScene
@@ -262,7 +264,7 @@ class CSoundScene : public ISoundScene
 	CPtr<ISoundScene> pScene;
 	ESoundSceneMode eMode;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pScene );
 		f.Add( 3, &eMode );
@@ -276,39 +278,40 @@ public:
 	CSoundScene() {}
 
 	//
-	void Init();
+	void Init() override;
 	//
 
 	// must be called when new terrain was loaded
-	void Init( const int _nMaxX, const int _nMaxY, const int _nMinZ, const int _nMaxZ, const int _VIS_TILE_SIZE );
+	void
+	Init( const int _nMaxX, const int _nMaxY, const int _nMinZ, const int _nMaxZ, const int _VIS_TILE_SIZE ) override;
 
 	uint16_t AddSound( const NDb::SComplexSoundDesc *pStats,
 	                   const CVec3 &vPos,
 	                   const enum ESoundMixType eMixMode,
 	                   const enum ESoundAddMode eAddMode,
 	                   const unsigned int nTimeAfterStart,
-	                   int nVolumeType );
+	                   int nVolumeType ) override;
 
 	uint16_t AddSound( const NDb::SComplexSoundDesc *pStats,
 	                   CFuncBase<CVec3> *pPos, // AI pixels
 	                   const enum ESoundMixType eMixMode,
 	                   const enum ESoundAddMode eAddMode,
 	                   const unsigned int nTimeAfterStart,
-	                   int nVolumeType );
+	                   int nVolumeType ) override;
 
 	//удаляет звук из сцены. ID становится инвалидным
-	void RemoveSound( const uint16_t wID );
+	void RemoveSound( const uint16_t wID ) override;
 	// задает новую позицию звуку.
-	void SetSoundPos( const uint16_t wID, const class CVec3 &vPos );
-	bool IsSoundFinished( const uint16_t wID ) const;
-	void UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, const float fViewRadius );
+	void SetSoundPos( const uint16_t wID, const class CVec3 &vPos ) override;
+	bool IsSoundFinished( const uint16_t wID ) const override;
+	void UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, const float fViewRadius ) override;
 
-	void SetSoundSceneMode( const enum ESoundSceneMode eSoundSceneMode );
+	void SetSoundSceneMode( const enum ESoundSceneMode eSoundSceneMode ) override;
 	enum ESoundSceneMode GetMode() const;
 
-	uint16_t AddSoundToMap( const NDb::SComplexSoundDesc *pDesc, const CVec3 &vPos );
-	void RemoveSoundFromMap( const uint16_t wInstanceID );
-	void ClearSounds();
+	uint16_t AddSoundToMap( const NDb::SComplexSoundDesc *pDesc, const CVec3 &vPos ) override;
+	void RemoveSoundFromMap( const uint16_t wInstanceID ) override;
+	void ClearSounds() override;
 
 	static bool Is3D();
 };

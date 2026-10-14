@@ -14,7 +14,7 @@ class CObjectFader : public CObjectBase
 	CPtr<CObjectBase> pObj;
 	std::vector<CDGPtr<CFuncBase<float>>> transpChannels;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFader );
 		f.Add( 3, &pObj );

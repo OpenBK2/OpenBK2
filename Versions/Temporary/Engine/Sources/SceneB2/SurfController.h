@@ -26,9 +26,9 @@ class CVisSurfPatch : public CPtrFuncBase<NGScene::CObjectInfo>
 
 protected:
 	void UpdateGeomData();
-	void Recalc();
+	void Recalc() override;
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pTimer == 0 ? bUpdate : pTimer.Refresh();
 	}

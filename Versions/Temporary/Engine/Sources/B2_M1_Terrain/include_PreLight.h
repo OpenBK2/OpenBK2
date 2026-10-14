@@ -1,4 +1,4 @@
-void PostLoad( bool bInEditor )
+void PostLoad( bool bInEditor ) override
 {
 	vLightColor -= vAmbientColor;
 	vShadeColor -= vShadeAmbientColor;

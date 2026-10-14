@@ -43,7 +43,7 @@ public:
 		Singleton<ICommandHandlerContainer>()->Set( CHID_FORMATION_LIST_DIALOG, this );
 	}
 
-	virtual ~CFormationWxWindow()
+	~CFormationWxWindow() override
 	{
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_FORMATION_LIST_DIALOG );
 	}
@@ -93,7 +93,7 @@ public:
 	}
 
 	//	CPaletteCommands
-	virtual void GetDialogData( SFormationWindowDialogData *pData )
+	void GetDialogData( SFormationWindowDialogData *pData ) override
 	{
 		if ( pData == 0 )
 		{
@@ -118,7 +118,7 @@ public:
 		pData->bChkPropmask = pPropMask->GetValue();
 	}
 
-	virtual void SetDialogData( const SFormationWindowDialogData *pData )
+	void SetDialogData( const SFormationWindowDialogData *pData ) override
 	{
 		if ( pData == 0 )
 		{

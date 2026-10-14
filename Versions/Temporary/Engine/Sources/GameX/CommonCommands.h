@@ -27,10 +27,10 @@ public:
 	{
 	}
 
-	void Execute();
+	void Execute() override;
 
 	//
-	bool NeedToBeStored() const
+	bool NeedToBeStored() const override
 	{
 		return false;
 	}
@@ -39,7 +39,7 @@ public:
 	static void Init( const uint16_t wMask );
 	static void SetMask( const uint16_t wMask );
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 class CControlSumHistoryCommand : public IAILogicCommandB2
@@ -65,10 +65,10 @@ public:
 	{
 	}
 
-	void Execute();
+	void Execute() override;
 
 	//
-	bool NeedToBeStored() const
+	bool NeedToBeStored() const override
 	{
 		return false;
 	}
@@ -81,7 +81,7 @@ public:
 
 	static unsigned long GetValue( const int _nPlayer, const int _nSegment );
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 class CDropPlayerCommand : public IAILogicCommandB2
@@ -91,7 +91,7 @@ class CDropPlayerCommand : public IAILogicCommandB2
 	ZDATA
 	int nPlayerToDrop = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nPlayerToDrop );
 		return 0;
@@ -109,11 +109,11 @@ public:
 	}
 
 	//
-	void Execute();
+	void Execute() override;
 
 	//
 	// нужно ли сохранять в истории команд
-	bool NeedToBeStored() const
+	bool NeedToBeStored() const override
 	{
 		return true;
 	}

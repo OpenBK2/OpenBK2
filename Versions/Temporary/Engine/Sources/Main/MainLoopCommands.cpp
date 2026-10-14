@@ -11,7 +11,7 @@ class CICExitGame : public IInterfaceCommand
 	OBJECT_BASIC_METHODS( CICExitGame );
 
 public:
-	void Exec()
+	void Exec() override
 	{
 		std::wstring wszCommand = NGlobal::GetVar( "main_loop_on_exit_command", L"" );
 		if ( !wszCommand.empty() )
@@ -31,7 +31,7 @@ class CICFinalExitGame : public IInterfaceCommand
 	OBJECT_BASIC_METHODS( CICFinalExitGame );
 
 public:
-	void Exec()
+	void Exec() override
 	{
 		NMainLoop::ResetStack();
 		NMainLoop::Command( 0 );
@@ -85,7 +85,7 @@ public:
 	}
 
 #ifndef _FINALRELEASE
-	void OnProgress( EStage eStage )
+	void OnProgress( EStage eStage ) override
 	{
 		switch ( eStage )
 		{
@@ -105,7 +105,7 @@ public:
 	}
 #endif //_FINALRELEASE
 	//
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, static_cast<CICSaveBase *>( this ) );
 		return 0;
@@ -125,7 +125,7 @@ public:
 	}
 
 #ifndef _FINALRELEASE
-	void OnProgress( EStage eStage )
+	void OnProgress( EStage eStage ) override
 	{
 		switch ( eStage )
 		{
@@ -146,7 +146,7 @@ class CICCloseInterface : public IInterfaceCommand
 	OBJECT_BASIC_METHODS( CICCloseInterface );
 
 public:
-	void Exec()
+	void Exec() override
 	{
 		NMainLoop::PopInterface();
 	}

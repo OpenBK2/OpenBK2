@@ -240,7 +240,7 @@ public:
 	{
 	}
 
-	virtual int OnCompareItems( const wxTreeItemId &rItem0, const wxTreeItemId &rItem1 ) override
+	int OnCompareItems( const wxTreeItemId &rItem0, const wxTreeItemId &rItem1 ) override
 	{
 		const CRowData *const pData0 = dynamic_cast<const CRowData *>( GetItemData( rItem0 ) );
 		const CRowData *const pData1 = dynamic_cast<const CRowData *>( GetItemData( rItem1 ) );
@@ -324,7 +324,7 @@ public:
 		buildTimer.Bind( wxEVT_TIMER, [this]( wxTimerEvent & ) { BuildBatch(); } );
 	}
 
-	virtual ~CWxObjectTree()
+	~CWxObjectTree() override
 	{
 		wxTreeCtrl *const pWindow = pTree;
 		StopTree();
@@ -377,18 +377,18 @@ public:
 	}
 
 	// IObjectTree
-	virtual bool IsTreeCreated()
+	bool IsTreeCreated() override
 	{
 		return GetViewManipulator() != 0;
 	}
 
-	virtual IView *GetView()
+	IView *GetView() override
 	{
 		return this;
 	}
 
 	// CTreeGDBBrowserBase::CreateTree.
-	virtual void CreateTree()
+	void CreateTree() override
 	{
 		if ( pTree == nullptr )
 		{
@@ -444,7 +444,7 @@ public:
 	}
 
 	// CTreeGDBBrowserBase::UpdateSelectionManipulator.
-	virtual void UpdateSelectionManipulator( bool bUpdate )
+	void UpdateSelectionManipulator( bool bUpdate ) override
 	{
 		std::string szCurrentObject;
 		GetCurrentTreeItemName( &szCurrentObject );
@@ -479,7 +479,7 @@ public:
 		}
 	}
 
-	virtual void SetPCDialogCommandHandlerID( unsigned _nPCDialogCommandHandlerID, bool bUpdate )
+	void SetPCDialogCommandHandlerID( unsigned _nPCDialogCommandHandlerID, bool bUpdate ) override
 	{
 		if ( nPCDialogCommandHandlerID != INVALID_COMMAND_HANDLER_ID )
 		{
@@ -498,7 +498,7 @@ public:
 		}
 	}
 
-	virtual bool GetCurrentTreeItemName( std::string *pszName )
+	bool GetCurrentTreeItemName( std::string *pszName ) override
 	{
 		if ( pTree == nullptr )
 		{
@@ -516,7 +516,7 @@ public:
 		return true;
 	}
 
-	virtual bool SetCurrentTreeItemName( const std::string &rszName, bool bUpdateSelection )
+	bool SetCurrentTreeItemName( const std::string &rszName, bool bUpdateSelection ) override
 	{
 		if ( !bUpdateSelection )
 		{
@@ -538,7 +538,7 @@ public:
 		return true;
 	}
 
-	virtual void SetStrongSelection()
+	void SetStrongSelection() override
 	{
 		bStrongSelection = true;
 	}
@@ -588,7 +588,7 @@ public:
 
 	// ICommandHandler, registered as CHID_OBJECT and CHID_SELECTION while the
 	// tree has the focus: CTreeGDBBrowserBase::HandleCommand.
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override
 	{
 		if ( pTree == nullptr )
 		{
@@ -722,7 +722,7 @@ public:
 		}
 	}
 
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override
 	{
 		if ( ( pbEnable == 0 ) || ( pbCheck == 0 ) || ( pTree == nullptr ) )
 		{
@@ -811,9 +811,9 @@ public:
 	// controller's changes, made by this tree or anything else on the table.
 	// Undo changes nothing here, as the MFC tree's did not: folder
 	// controllers are absolute.
-	virtual void Undo( IController *pController ) {}
+	void Undo( IController *pController ) override {}
 
-	virtual void Redo( IController *pController )
+	void Redo( IController *pController ) override
 	{
 		CFolderController *const pFolderController = dynamic_cast<CFolderController *>( pController );
 		if ( ( pFolderController == 0 ) || ( GetViewManipulator() == 0 ) || ( pTree == nullptr ) || pBuildIterator )
@@ -2491,22 +2491,22 @@ private:
 		{
 		}
 
-		virtual wxDragResult OnDragOver( wxCoord x, wxCoord y, wxDragResult eDefault ) override
+		wxDragResult OnDragOver( wxCoord x, wxCoord y, wxDragResult eDefault ) override
 		{
 			return pTreeView->DragOver( wxPoint( x, y ), eDefault );
 		}
 
-		virtual void OnLeave() override
+		void OnLeave() override
 		{
 			pTreeView->ClearDropTarget();
 		}
 
-		virtual bool OnDrop( wxCoord, wxCoord ) override
+		bool OnDrop( wxCoord, wxCoord ) override
 		{
 			return true;
 		}
 
-		virtual wxDragResult OnData( wxCoord x, wxCoord y, wxDragResult eDefault ) override
+		wxDragResult OnData( wxCoord x, wxCoord y, wxDragResult eDefault ) override
 		{
 			if ( !GetData() )
 			{
@@ -2801,7 +2801,7 @@ class CWxObjectBrowser : public IObjectBrowser, public ICommandHandler
 	}
 
 public:
-	virtual ~CWxObjectBrowser()
+	~CWxObjectBrowser() override
 	{
 		tables.clear();
 	}
@@ -2827,7 +2827,7 @@ public:
 		return pRoot;
 	}
 
-	virtual void Show( bool bShow )
+	void Show( bool bShow ) override
 	{
 		if ( ( pRoot != nullptr ) && ( pRoot->IsShown() != bShow ) )
 		{
@@ -2840,7 +2840,7 @@ public:
 		}
 	}
 
-	virtual void EnableEdit( bool bEnable )
+	void EnableEdit( bool bEnable ) override
 	{
 		bEnableEdit = bEnable;
 		for ( size_t nTable = 0; nTable < tables.size(); ++nTable )
@@ -2849,7 +2849,7 @@ public:
 		}
 	}
 
-	virtual void RemoveAllTables()
+	void RemoveAllTables() override
 	{
 		if ( pChoice != nullptr )
 		{
@@ -2858,7 +2858,7 @@ public:
 		tables.clear();
 	}
 
-	virtual IObjectTree *AddTable( const std::string &rszTableName )
+	IObjectTree *AddTable( const std::string &rszTableName ) override
 	{
 		if ( ( pChoice == nullptr ) || ( pRoot == nullptr ) )
 		{
@@ -2875,17 +2875,17 @@ public:
 		return tables.back().get();
 	}
 
-	virtual int GetTableCount()
+	int GetTableCount() override
 	{
 		return static_cast<int>( tables.size() );
 	}
 
-	virtual IObjectTree *GetTable( int nIndex )
+	IObjectTree *GetTable( int nIndex ) override
 	{
 		return Table( nIndex );
 	}
 
-	virtual IObjectTree *GetTable( const std::string &rszTableName )
+	IObjectTree *GetTable( const std::string &rszTableName ) override
 	{
 		const int nChoice = pChoice->FindString( FromNarrow( rszTableName ), true );
 		return ( nChoice != wxNOT_FOUND ) ? Table( IndexOfChoice( nChoice ) ) : nullptr;
@@ -2893,7 +2893,7 @@ public:
 
 	// CComboBoxGDBBrowser::ActivateTab, which sent the pane WM_GDB_BROWSER
 	// straight away.
-	virtual bool ActivateTable( IObjectTree *pTree )
+	bool ActivateTable( IObjectTree *pTree ) override
 	{
 		for ( unsigned nChoice = 0; nChoice < pChoice->GetCount(); ++nChoice )
 		{
@@ -2910,13 +2910,13 @@ public:
 		return false;
 	}
 
-	virtual IObjectTree *GetActiveTable()
+	IObjectTree *GetActiveTable() override
 	{
 		const int nChoice = ( pChoice != nullptr ) ? pChoice->GetSelection() : wxNOT_FOUND;
 		return ( nChoice != wxNOT_FOUND ) ? Table( IndexOfChoice( nChoice ) ) : nullptr;
 	}
 
-	virtual bool GetActiveTableName( std::string *pszTableName )
+	bool GetActiveTableName( std::string *pszTableName ) override
 	{
 		const int nChoice = ( pChoice != nullptr ) ? pChoice->GetSelection() : wxNOT_FOUND;
 		if ( nChoice == wxNOT_FOUND )
@@ -2930,7 +2930,7 @@ public:
 		return true;
 	}
 
-	virtual void ShowActiveTable()
+	void ShowActiveTable() override
 	{
 		const IObjectTree *const pActive = GetActiveTable();
 		for ( size_t nTable = 0; nTable < tables.size(); ++nTable )
@@ -2943,13 +2943,13 @@ public:
 		}
 	}
 
-	virtual ICommandHandler *GetObjectStorage()
+	ICommandHandler *GetObjectStorage() override
 	{
 		return this;
 	}
 
 	// CComboBoxGDBBrowser's ICommandHandler: the chosen table's selection.
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override
 	{
 		CWxObjectTree *const pTable = dynamic_cast<CWxObjectTree *>( GetActiveTable() );
 		if ( ( pTable == nullptr ) || !pTable->IsTreeCreated() )
@@ -2967,7 +2967,7 @@ public:
 		}
 	}
 
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override
 	{
 		switch ( nCommandID )
 		{

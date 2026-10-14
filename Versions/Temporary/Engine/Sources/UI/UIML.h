@@ -174,7 +174,7 @@ public:
 	void GetString( int nStart, int nSize, std::wstring *pRes );
 	void InsertString( const std::wstring &wsText );
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, &nPos );
 		saver.Add( 2, &wsText );

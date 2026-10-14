@@ -15,7 +15,7 @@ struct SFadeValue : public CObjectBase
 public:
 	float fFadeValue;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &fFadeValue );
 		return 0;
@@ -37,13 +37,13 @@ class CBRHandler : public IHandler
 	OBJECT_BASIC_METHODS( CBRHandler )
 private:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
 
 public:
-	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet );
+	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet ) override;
 };
 
 // CTabHandler
@@ -53,13 +53,13 @@ class CTabHandler : public IHandler
 	OBJECT_BASIC_METHODS( CTabHandler )
 private:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
 
 public:
-	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet );
+	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet ) override;
 };
 
 // CColorHandler
@@ -71,7 +71,7 @@ private:
 	ZDATA
 	CPtr<SFadeValue> sFadeValue;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &sFadeValue );
 		return 0;
@@ -85,7 +85,7 @@ public:
 	{
 	}
 
-	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet );
+	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet ) override;
 };
 
 // CFontHandler
@@ -95,13 +95,13 @@ class CFontHandler : public IHandler
 	OBJECT_BASIC_METHODS( CFontHandler )
 private:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
 
 public:
-	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet );
+	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet ) override;
 };
 
 // CMinFontSizeHandler
@@ -111,13 +111,13 @@ class CMinFontSizeHandler : public IHandler
 	OBJECT_BASIC_METHODS( CMinFontSizeHandler )
 private:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
 
 public:
-	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet );
+	void Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::vector<std::wstring> &paramsSet ) override;
 };
 
 #define DECALRE_SIMPLE_HANDLER( Name, Fnc, Value )                                                      \

@@ -82,7 +82,7 @@ struct IUIInitialization : public CObjectBase
 	virtual IVirtualScreenController *GetVirtualScreenController() = 0;
 
 	virtual void Set2DGameView( NGScene::I2DGameView *pView ) = 0;
-	virtual int operator&( IBinSaver &saver ) = 0;
+	int operator&( IBinSaver &saver ) override = 0;
 };
 
 UI_EXPORT IUIInitialization *CreateUIInitialization();
@@ -118,7 +118,7 @@ struct SWindowAnimationContext : public CObjectBase
 	CParam<std::string> szAnimatedWindow;
 
 public:
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, &szAnimatedWindow );
 		// Every other serializer in the tree ends this way. Falling off the end
@@ -151,7 +151,7 @@ public:
 	CParam<int> nForwardParam;
 	CParam<int> nBackParam;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &vOffset );
 		f.Add( 3, &fMoveTime );
@@ -172,7 +172,7 @@ struct SWindowContextCommon : public SWindowContext
 	OBJECT_BASIC_METHODS( SWindowContextCommon );
 
 public:
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		//{ for compability with old saves
 		/*		saver.Add( 1, &szElementToMove );
@@ -346,14 +346,14 @@ struct IButton : virtual public IWindow
 {
 	virtual void SetNotifySink( struct IButtonNotify *pNotify ) = 0;
 	virtual bool IsPushed() const = 0;
-	virtual void Enable( const bool bEnable ) = 0;
+	void Enable( const bool bEnable ) override = 0;
 	virtual void SetNextState() = 0;
 	virtual void SetState( const int nState ) = 0;
 	virtual void SetStateWithVisual( const int nState ) = 0;
 	virtual int GetState() const = 0;
 	virtual class CButtonGroup *GetButtonGroup() = 0;
 	virtual void SetButtonGroup( const int nGroup ) = 0;
-	virtual void SetOutline( const CDBID &outlineType ) = 0;
+	void SetOutline( const CDBID &outlineType ) override = 0;
 	virtual void SetEffectSubState( const NDb::EButtonSubstateType eSubState, bool bEffect ) = 0;
 	// Returns state index or -1
 	virtual int GetState( const std::string &szName ) = 0;
@@ -671,7 +671,7 @@ struct IDebugSingleton : public CObjectBase
 	virtual void ShowStatsWindow( const bool bShow ) = 0;
 	virtual struct IWindow *GetDebugInfoWindow( const int nWindow ) = 0;
 	virtual struct IStatsSystemWindow *GetStatsWindow() = 0;
-	virtual int operator&( IBinSaver &saver ) = 0;
+	int operator&( IBinSaver &saver ) override = 0;
 };
 
 UI_EXPORT IDebugSingleton *CreateDebugSingleton();

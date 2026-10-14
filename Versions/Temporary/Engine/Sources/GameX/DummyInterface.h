@@ -9,7 +9,7 @@ class CDummyInterface : public CInterfaceScreenBase
 
 public:
 	CDummyInterface();
-	virtual ~CDummyInterface();
+	~CDummyInterface() override;
 	//
 };
 

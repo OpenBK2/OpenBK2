@@ -51,18 +51,18 @@ class CWxHostWindow : public IWidget, public IWxWidget
 
 public:
 	// IWidget. The panel's handle.
-	virtual void *GetNativeWidget()
+	void *GetNativeWidget() override
 	{
 		return pPanel ? pPanel->GetHandle() : nullptr;
 	}
 
 	// IWxWidget. The panel, which is what the parent lays out.
-	virtual wxWindow *GetWxWindow()
+	wxWindow *GetWxWindow() override
 	{
 		return pPanel.get();
 	}
 
-	virtual ~CWxHostWindow()
+	~CWxHostWindow() override
 	{
 		TearDownWx();
 	}

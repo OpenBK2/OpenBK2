@@ -183,13 +183,13 @@ CBuilding *CTransportLoadRuState::FindNearestSource()
 		{
 		}
 
-		virtual bool OnlyConnected() const
+		bool OnlyConnected() const override
 		{
 			return true;
 		}
 
 		// true - закончить, то, что нужно уже нашлось
-		virtual bool AddStorage( class CBuilding *pStorage, const float _fPathLength )
+		bool AddStorage( class CBuilding *pStorage, const float _fPathLength ) override
 		{
 			if ( pStorage->IsAlive() && ( !pNearest || fPathLength > _fPathLength ) )
 			{

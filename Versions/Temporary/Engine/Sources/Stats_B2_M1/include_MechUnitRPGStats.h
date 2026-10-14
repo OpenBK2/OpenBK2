@@ -6,25 +6,25 @@ uint16_t wClimbingAngle = 0;
 uint16_t wTiltAngle = 0;
 std::unordered_map</*enum EManuverID*/ int, bool> manuverMap;
 
-virtual void ToAIUnits( bool bInEditor );
+void ToAIUnits( bool bInEditor ) override;
 
 //
-virtual int GetArmor( const int n ) const
+int GetArmor( const int n ) const override
 {
 	return ( armors[n].nMin + armors[n].nMax ) / 2;
 }
 
-virtual int GetMinPossibleArmor( const int n ) const
+int GetMinPossibleArmor( const int n ) const override
 {
 	return armors[n].nMin;
 }
 
-virtual int GetMaxPossibleArmor( const int n ) const
+int GetMaxPossibleArmor( const int n ) const override
 {
 	return armors[n].nMax;
 }
 
-virtual int GetRandomArmor( const int n ) const
+int GetRandomArmor( const int n ) const override
 {
 	RecordRandomCall();
 	return NRandom::RandomCheck( armors[n].nMin, armors[n].nMax );
@@ -56,7 +56,7 @@ bool HasMoveStopSound() const
 	return pSoundMoveStop != 0;
 }
 
-virtual const float GetTurnRadius() const
+const float GetTurnRadius() const override
 {
 	return fTurnRadius;
 }
@@ -84,14 +84,14 @@ bool HasConfiguredGunners() const
 
 #include "include_constructorinfo.h"
 
-virtual const SMechUnitGun &GetGun( const int nUniqueID, const int nPlatform, const int nGun ) const
+const SMechUnitGun &GetGun( const int nUniqueID, const int nPlatform, const int nGun ) const override
 {
 	int nPlatformIdx, nGunIdx;
 	GetGunPlatformIndex( nUniqueID, nPlatform, nGun, &nPlatformIdx, &nGunIdx );
 	return platforms[nPlatformIdx].guns[nGunIdx];
 }
 
-virtual const int GetGunsSize( const int nUniqueID, const int nPlatform ) const
+const int GetGunsSize( const int nUniqueID, const int nPlatform ) const override
 {
 	if ( ConstructorInfo() )
 	{

@@ -49,17 +49,17 @@ class CScriptCameraState : public CDefaultInputState, public ICommandHandler
 
 protected:
 	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 
 	// IInputState interface
-	virtual void Enter();
-	virtual void Leave();
-	virtual void Draw( IPaintContext *pPaintDC );
-	virtual void PostDraw( IPaintContext *pPaintDC );
-	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void Enter() override;
+	void Leave() override;
+	void Draw( IPaintContext *pPaintDC ) override;
+	void PostDraw( IPaintContext *pPaintDC ) override;
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 
 	bool IsCameraPlacementInDB( int nCamera );
 	void GetCameraPlacementByID( NCamera::CCameraPlacement *pCamera, int nID );
@@ -85,5 +85,5 @@ protected:
 public:
 	CScriptCameraState( CMapInfoEditor *_pMapInfoEditor = 0 );
 
-	virtual ~CScriptCameraState() {}
+	~CScriptCameraState() override {}
 };

@@ -37,7 +37,7 @@ struct SEffConstLight : public SEffect
 {
 	CVec4 color;
 	//
-	virtual void Use( CRenderContext *p );
+	void Use( CRenderContext *p ) override;
 };
 
 struct SEffColoredTexture : public SEffect
@@ -45,24 +45,24 @@ struct SEffColoredTexture : public SEffect
 	CTexture *pTex;
 	CVec4 vColor;
 
-	virtual void Use( CRenderContext *p );
+	void Use( CRenderContext *p ) override;
 };
 
 struct SEffTnLParticles : public SEffect
 {
-	virtual void Use( CRenderContext *p );
+	void Use( CRenderContext *p ) override;
 };
 
 struct SEffPureGeometry : public SEffect
 {
-	virtual void Use( CRenderContext *p );
+	void Use( CRenderContext *p ) override;
 };
 
 struct SEffTransparentParticles : public SEffect
 {
 	CTexture *pLight;
 	//
-	virtual void Use( CRenderContext *p );
+	void Use( CRenderContext *p ) override;
 };
 
 } // namespace NGfx

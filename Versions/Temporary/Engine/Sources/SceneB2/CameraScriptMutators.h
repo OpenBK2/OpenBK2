@@ -23,7 +23,7 @@ protected:
 	bool bSmoothEnd = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &placementStart );
 		f.Add( 3, &placementFinish );
@@ -35,7 +35,7 @@ public:
 	}
 
 protected:
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pTimer != 0 ? pTimer.Refresh() : false;
 	}
@@ -59,7 +59,7 @@ class CSCamDMoveFlightMutator : public CScriptMovieMutator
 	float fLengStart = {}, fLengFinish = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &vAnchorStart );
 		f.Add( 3, &vAnchorDir );
@@ -69,7 +69,7 @@ public:
 	}
 
 protected:
-	void Recalc();
+	void Recalc() override;
 
 public:
 	CSCamDMoveFlightMutator() {}
@@ -116,7 +116,7 @@ class CSCamDFollowFlightMutator : public CScriptMovieMutator
 	int nTargetID = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pBaseFlight );
 		f.Add( 3, &nTargetID );
@@ -124,7 +124,7 @@ public:
 	}
 
 protected:
-	void Recalc();
+	void Recalc() override;
 
 public:
 	CSCamDFollowFlightMutator() {}
@@ -159,7 +159,7 @@ class CSCamDRotateFlightMutator : public CScriptMovieMutator
 	float fAngle = {}, fStartYaw = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pBaseFlight );
 		f.Add( 3, &fAngle );
@@ -168,7 +168,7 @@ public:
 	}
 
 protected:
-	void Recalc();
+	void Recalc() override;
 
 public:
 	CSCamDRotateFlightMutator() {}
@@ -203,7 +203,7 @@ class CSCamSplineMutator : public CScriptMovieMutator
 	float fLengStart = {}, fLengFinish = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &vAnchorStart );
 		f.Add( 3, &vAnchorFinish );
@@ -216,7 +216,7 @@ public:
 	}
 
 protected:
-	void Recalc();
+	void Recalc() override;
 
 public:
 	CSCamSplineMutator() {}
@@ -294,7 +294,7 @@ private:
 	std::string szCallbackFuncName;
 
 public:
-	ZEND int operator&( IBinSaver &f );
+	ZEND int operator&( IBinSaver &f ) override;
 
 private:
 	void ScriptCallback( int nKeyID );
@@ -304,9 +304,9 @@ public:
 
 	CScriptMoviesMutatorHolder( const NDb::SScriptMovies &rMoviesData, int _nMovieIndex, CFuncBase<STime> *_pTimer );
 
-	void Recalc();
+	void Recalc() override;
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pTimer != 0 ? pTimer.Refresh() : false;
 	}

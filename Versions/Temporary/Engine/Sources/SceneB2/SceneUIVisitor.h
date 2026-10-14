@@ -25,7 +25,7 @@ public:
 	}
 
 	//
-	void Visit( IUIVisitor *pVisitor )
+	void Visit( IUIVisitor *pVisitor ) override
 	{
 		pVisitor->ClipSet( rClip );
 	}
@@ -38,7 +38,7 @@ public:
 	CClipRestoreCmd() {}
 
 	//
-	void Visit( IUIVisitor *pVisitor )
+	void Visit( IUIVisitor *pVisitor ) override
 	{
 		pVisitor->ClipRestore();
 	}
@@ -68,7 +68,7 @@ public:
 	}
 
 	//
-	void Visit( IUIVisitor *pVisitor )
+	void Visit( IUIVisitor *pVisitor ) override
 	{
 		pVisitor->VisitZClearRect( sLayout, sPosition, sClipWindow, fZ );
 	}
@@ -93,7 +93,7 @@ public:
 	}
 
 	//
-	void Visit( IUIVisitor *pVisitor )
+	void Visit( IUIVisitor *pVisitor ) override
 	{
 		pVisitor->VisitUIRect( pTexture, nShadingEffect, rects );
 	}
@@ -126,7 +126,7 @@ public:
 	}
 
 	//
-	void Visit( IUIVisitor *pVisitor )
+	void Visit( IUIVisitor *pVisitor ) override
 	{
 		pVisitor->VisitUIRect( pTexture, nShadingEffect, pPos4, pColors4, rectTexture );
 	}
@@ -153,7 +153,7 @@ public:
 	}
 
 	//
-	void Visit( IUIVisitor *pVisitor )
+	void Visit( IUIVisitor *pVisitor ) override
 	{
 		pVisitor->VisitUITextureRect( pTexture, nShadingEffect, rects );
 	}
@@ -178,7 +178,7 @@ public:
 	}
 
 	//
-	void Visit( IUIVisitor *pVisitor )
+	void Visit( IUIVisitor *pVisitor ) override
 	{
 		pVisitor->VisitUIText( pML, sPosition, sWindow );
 	}
@@ -205,7 +205,7 @@ class CUIVisitor : public IUIVisitor
 	CCommandsList upperLevelCommands;
 
 	//
-	virtual void ClipRestore()
+	void ClipRestore() override
 	{
 		if ( !bLowerLevel )
 		{
@@ -219,7 +219,7 @@ class CUIVisitor : public IUIVisitor
 	}
 
 	//
-	virtual void ClipSet( const CTRect<float> &_rClip )
+	void ClipSet( const CTRect<float> &_rClip ) override
 	{
 		if ( !bLowerLevel )
 		{
@@ -250,12 +250,12 @@ public:
 		upperLevelCommands.clear();
 	}
 
-	void SetLowerLevel()
+	void SetLowerLevel() override
 	{
 		bLowerLevel = true;
 	}
 
-	void SetUpperLevel()
+	void SetUpperLevel() override
 	{
 		bLowerLevel = false;
 	}
@@ -290,7 +290,7 @@ public:
 	void VisitZClearRect( const CRectLayout &_sLayout,
 	                      const CTPoint<float> &sPosition,
 	                      const CTRect<float> &sClipWindow,
-	                      float fZ = 1.0f )
+	                      float fZ = 1.0f ) override
 	{
 		if ( !bLowerLevel )
 		{
@@ -309,7 +309,7 @@ public:
 	}
 
 	//
-	void VisitUIRect( const NDb::STexture *pTexture, const int nShadingEffect, const class CRectLayout &rects )
+	void VisitUIRect( const NDb::STexture *pTexture, const int nShadingEffect, const class CRectLayout &rects ) override
 	{
 		if ( !bLowerLevel )
 		{
@@ -329,7 +329,7 @@ public:
 	                  const int nShadingEffect,
 	                  const CVec2 *pPos4,
 	                  const NGfx::SPixel8888 *pColors4,
-	                  const CTRect<float> &rectTexture )
+	                  const CTRect<float> &rectTexture ) override
 	{
 		if ( !bLowerLevel )
 		{
@@ -345,8 +345,9 @@ public:
 	}
 
 	//
-	void
-	VisitUITextureRect( CPtrFuncBase<NGfx::CTexture> *pTexture, const int nShadingEffect, const class CRectLayout &rects )
+	void VisitUITextureRect( CPtrFuncBase<NGfx::CTexture> *pTexture,
+	                         const int nShadingEffect,
+	                         const class CRectLayout &rects ) override
 	{
 		if ( !bLowerLevel )
 		{
@@ -361,7 +362,7 @@ public:
 	}
 
 	//
-	void VisitUIText( IML *pML, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
+	void VisitUIText( IML *pML, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) override
 	{
 		if ( !bLowerLevel )
 		{

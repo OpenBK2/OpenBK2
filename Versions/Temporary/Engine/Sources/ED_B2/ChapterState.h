@@ -58,12 +58,12 @@ public:
 	void UpdateView();
 
 	//IInputState
-	void Enter();
-	void Leave();
-	void PostDraw( IPaintContext *pPaintDC );
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void Enter() override;
+	void Leave() override;
+	void PostDraw( IPaintContext *pPaintDC ) override;
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
 };

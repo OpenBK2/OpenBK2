@@ -14,9 +14,9 @@ class CVFSDbObserver : public IDbObserver
 	CObjectsList objects2remove;
 
 public:
-	void ObjectChanged( const CDBID &dbid ) {}
+	void ObjectChanged( const CDBID &dbid ) override {}
 
-	void ObjectAdded( const CDBID &dbid )
+	void ObjectAdded( const CDBID &dbid ) override
 	{
 		// remove from 'objects2remove' newly added object
 		for ( CObjectsList::iterator it = objects2remove.begin(); it != objects2remove.end(); ++it )
@@ -29,23 +29,23 @@ public:
 		}
 	}
 
-	void ObjectRemoved( const CDBID &dbid )
+	void ObjectRemoved( const CDBID &dbid ) override
 	{
 		objects2remove.push_back( dbid );
 	}
 
-	void ObjectMoved( const CDBID &dbidSrc, const CDBID &dbidDst )
+	void ObjectMoved( const CDBID &dbidSrc, const CDBID &dbidDst ) override
 	{
 		ObjectRemoved( dbidSrc );
 		ObjectAdded( dbidDst );
 	}
 
-	void DiscardAllChanges()
+	void DiscardAllChanges() override
 	{
 		objects2remove.clear();
 	}
 
-	void SaveAllChanges()
+	void SaveAllChanges() override
 	{
 		// delete all 'objects2remove' from disk
 		if ( NVFS::IFileCreator *pCreator = NVFS::GetMainFileCreator() )

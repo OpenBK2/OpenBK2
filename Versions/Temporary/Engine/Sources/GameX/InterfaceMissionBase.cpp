@@ -24,17 +24,17 @@ class CVisualNotificationsEmpty : public IVisualNotifications
 	OBJECT_NOCOPY_METHODS( CVisualNotificationsEmpty );
 
 public:
-	bool Notify( EVisualNotification eType, int nID, const CVec2 &vPos )
+	bool Notify( EVisualNotification eType, int nID, const CVec2 &vPos ) override
 	{
 		return true;
 	}
 
-	bool Notify( EVisualNotification eType, class CMapObj *pMO )
+	bool Notify( EVisualNotification eType, class CMapObj *pMO ) override
 	{
 		return true;
 	}
 
-	void Step( const NTimer::STime nDeltaTime, bool bAppActive ) {}
+	void Step( const NTimer::STime nDeltaTime, bool bAppActive ) override {}
 };
 
 // CInterfaceMissionBase

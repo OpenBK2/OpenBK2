@@ -132,8 +132,8 @@ struct SVectorStripeObject : SVectorStripeObjectDesc
 
 	//----------------------------------------------------------------------------------------------------
 
-	virtual int operator&( IXmlSaver &saver );
-	virtual int operator&( IBinSaver &saver );
+	int operator&( IXmlSaver &saver ) override;
+	int operator&( IBinSaver &saver ) override;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

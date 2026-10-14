@@ -71,7 +71,7 @@ public:
 	{
 	}
 
-	virtual ~CXMLAttribute() {}
+	~CXMLAttribute() override {}
 
 	//
 	bool operator==( const CXMLAttribute &attr ) const
@@ -138,7 +138,7 @@ protected:
 	std::string szValue; // node value
 public:
 	CXMLNode( const EType _eType );
-	virtual ~CXMLNode();
+	~CXMLNode() override;
 
 	//
 	EType GetType() const
@@ -212,9 +212,9 @@ public:
 	{
 	}
 
-	virtual ~CXMLMultiNode();
+	~CXMLMultiNode() override;
 	//
-	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention ) const;
+	void Store( NLXML_STREAM &stream, const std::string &szIndention ) const override;
 
 	//
 	iterator begin()
@@ -279,10 +279,10 @@ class CXMLComment : public CXMLNode
 {
 public:
 	CXMLComment();
-	virtual ~CXMLComment();
+	~CXMLComment() override;
 	//
-	virtual const char *Parse( const char *pszBegin, const char *pszEnd );
-	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention ) const;
+	const char *Parse( const char *pszBegin, const char *pszEnd ) override;
+	void Store( NLXML_STREAM &stream, const std::string &szIndention ) const override;
 };
 
 // ************************************************************************************************************************ //
@@ -297,10 +297,10 @@ class CXMLText : public CXMLNode
 {
 public:
 	CXMLText();
-	virtual ~CXMLText();
+	~CXMLText() override;
 	//
-	virtual const char *Parse( const char *pszBegin, const char *pszEnd );
-	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention ) const;
+	const char *Parse( const char *pszBegin, const char *pszEnd ) override;
+	void Store( NLXML_STREAM &stream, const std::string &szIndention ) const override;
 
 	//
 	bool IsBlank() const
@@ -336,10 +336,10 @@ class SYSTEM_EXPORT CXMLDeclaration : public CXMLNode
 
 public:
 	CXMLDeclaration();
-	virtual ~CXMLDeclaration();
+	~CXMLDeclaration() override;
 	//
-	virtual const char *Parse( const char *pszBegin, const char *pszEnd );
-	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention ) const;
+	const char *Parse( const char *pszBegin, const char *pszEnd ) override;
+	void Store( NLXML_STREAM &stream, const std::string &szIndention ) const override;
 
 	//
 	void SetVersion( const std::string &szValue )
@@ -385,10 +385,10 @@ class CXMLUnknown : public CXMLNode
 {
 public:
 	CXMLUnknown();
-	virtual ~CXMLUnknown();
+	~CXMLUnknown() override;
 	//
-	virtual const char *Parse( const char *pszBegin, const char *pszEnd );
-	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention ) const;
+	const char *Parse( const char *pszBegin, const char *pszEnd ) override;
+	void Store( NLXML_STREAM &stream, const std::string &szIndention ) const override;
 };
 
 // ************************************************************************************************************************ //
@@ -413,10 +413,10 @@ class SYSTEM_EXPORT CXMLElement : public CXMLMultiNode
 
 public:
 	CXMLElement();
-	virtual ~CXMLElement();
+	~CXMLElement() override;
 	//
-	virtual const char *Parse( const char *pszBegin, const char *pszEnd );
-	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention ) const;
+	const char *Parse( const char *pszBegin, const char *pszEnd ) override;
+	void Store( NLXML_STREAM &stream, const std::string &szIndention ) const override;
 	// attributes
 	void SetAttribute( const CXMLAttribute &attribute );
 	void SetAttribute( const std::string &szName, const CToStringConvertor &value );
@@ -463,10 +463,10 @@ class SYSTEM_EXPORT CXMLDocument : public CXMLMultiNode
 {
 public:
 	CXMLDocument();
-	virtual ~CXMLDocument();
+	~CXMLDocument() override;
 	//
-	virtual const char *Parse( const char *pszBegin, const char *pszEnd );
-	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention = "" ) const;
+	const char *Parse( const char *pszBegin, const char *pszEnd ) override;
+	void Store( NLXML_STREAM &stream, const std::string &szIndention = "" ) const override;
 	//
 	CXMLElement *GetRootElement();
 };

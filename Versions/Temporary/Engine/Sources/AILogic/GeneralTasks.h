@@ -38,7 +38,7 @@ class CGeneralTaskToDefendPatch : public IGeneralTask, public IWorkerEnumerator,
 
 	CommonUnits newTanks; // to take tanks not 1 by 1
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pOwner );
 		f.Add( 3, &patchInfo );
@@ -70,22 +70,22 @@ public:
 	void Init( const struct NDb::SAIGeneralParcel &_patchInfo, class CGeneral *pOwner );
 
 	//ITask
-	virtual ETaskName GetName() const;
-	virtual void AskForWorker( ICommander *pManager, const float _fMaxSeverity, const bool bInit = false );
-	virtual void ReleaseWorker( ICommander *pManager, const float _fMinSeverity );
-	virtual float GetSeverity() const;
-	virtual bool IsFinished() const;
-	virtual void CancelTask( ICommander *pManager );
-	virtual void Segment();
+	ETaskName GetName() const override;
+	void AskForWorker( ICommander *pManager, const float _fMaxSeverity, const bool bInit = false ) override;
+	void ReleaseWorker( ICommander *pManager, const float _fMinSeverity ) override;
+	float GetSeverity() const override;
+	bool IsFinished() const override;
+	void CancelTask( ICommander *pManager ) override;
+	void Segment() override;
 
 	//IEnumerator
-	virtual bool EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType );
-	virtual bool EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const;
+	bool EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType ) override;
+	bool EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const override;
 
 	//IEnemyEnumerator
-	virtual bool EnumEnemy( class CAIUnit *pEnemy );
+	bool EnumEnemy( class CAIUnit *pEnemy ) override;
 
-	int GetWorkerCount();
+	int GetWorkerCount() override;
 };
 
 // ****
@@ -103,7 +103,7 @@ class CGeneralTaskToHoldReinforcement : public IGeneralTask, public IWorkerEnume
 	float fSeverity = {}; // current severity of this task
 	int nCurReinforcePoint = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &tanksFree );
 		f.Add( 3, &patchInfo );
@@ -124,32 +124,32 @@ public:
 	}
 
 	//ITask
-	virtual ETaskName GetName() const
+	ETaskName GetName() const override
 	{
 		return ETN_HOLD_REINFORCEMENT;
 	}
 
-	virtual void AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit = false );
-	virtual void ReleaseWorker( ICommander *pManager, const float fMinSeverity );
-	virtual float GetSeverity() const;
+	void AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit = false ) override;
+	void ReleaseWorker( ICommander *pManager, const float fMinSeverity ) override;
+	float GetSeverity() const override;
 
-	virtual bool IsFinished() const
+	bool IsFinished() const override
 	{
 		return false;
 	}
 
-	virtual void CancelTask( ICommander *pManager );
-	virtual void Segment();
+	void CancelTask( ICommander *pManager ) override;
+	void Segment() override;
 
-	virtual int NeedNBest( const enum EForceType eType ) const
+	int NeedNBest( const enum EForceType eType ) const override
 	{
 		return true;
 	}
 
 	//IEnumerator
-	virtual bool EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType );
-	virtual bool EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const;
-	int GetWorkerCount();
+	bool EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType ) override;
+	bool EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const override;
+	int GetWorkerCount() override;
 };
 
 class CGeneralTaskRecaptureStorage : public IGeneralTask, public IWorkerEnumerator
@@ -162,7 +162,7 @@ class CGeneralTaskRecaptureStorage : public IGeneralTask, public IWorkerEnumerat
 
 	bool bFinished = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &tanksFree );
 		f.Add( 3, &vReinforcePoint );
@@ -177,26 +177,26 @@ public:
 	CGeneralTaskRecaptureStorage( const CVec2 &vReinforcePoint );
 
 	//ITask
-	virtual ETaskName GetName() const
+	ETaskName GetName() const override
 	{
 		return ETN_HOLD_REINFORCEMENT;
 	}
 
-	virtual void AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit = false );
-	virtual void ReleaseWorker( ICommander *pManager, const float fMinSeverity );
+	void AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit = false ) override;
+	void ReleaseWorker( ICommander *pManager, const float fMinSeverity ) override;
 
-	virtual float GetSeverity() const
+	float GetSeverity() const override
 	{
 		return fSeverity;
 	}
 
-	virtual bool IsFinished() const;
-	virtual void CancelTask( ICommander *pManager );
-	virtual void Segment();
+	bool IsFinished() const override;
+	void CancelTask( ICommander *pManager ) override;
+	void Segment() override;
 
 	//IEnumerator
-	virtual bool EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType );
-	virtual bool EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const;
+	bool EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType ) override;
+	bool EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const override;
 };
 
 class CGeneralTaskToSwarmToPoint : public IGeneralTask, public IWorkerEnumerator, public IEnemyEnumerator
@@ -234,7 +234,7 @@ class CGeneralTaskToSwarmToPoint : public IGeneralTask, public IWorkerEnumerator
 	CVec2 vTanksPosition;    // center of tanks formation
 	float fCurDistance = {}; // distance to nearest resistansce ( during enumeration )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eState );
 		f.Add( 3, &vPrepearCenter );
@@ -264,38 +264,38 @@ public:
 	CGeneralTaskToSwarmToPoint( class CGeneral *pOwner );
 
 	//ITask
-	virtual ETaskName GetName() const
+	ETaskName GetName() const override
 	{
 		return ETN_SWARM_TO_POINT;
 	}
 
-	virtual void AskForWorker( ICommander *pManager, const float _fMaxSeverity, const bool bInit = false );
-	virtual void ReleaseWorker( ICommander *pManager, const float fMinSeverity );
-	virtual float GetSeverity() const;
-	virtual bool IsFinished() const;
-	virtual void CancelTask( ICommander *pManager );
-	virtual void Segment();
+	void AskForWorker( ICommander *pManager, const float _fMaxSeverity, const bool bInit = false ) override;
+	void ReleaseWorker( ICommander *pManager, const float fMinSeverity ) override;
+	float GetSeverity() const override;
+	bool IsFinished() const override;
+	void CancelTask( ICommander *pManager ) override;
+	void Segment() override;
 
 	//IEnumerator
-	virtual bool EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType );
-	virtual bool EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const;
+	bool EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType ) override;
+	bool EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const override;
 
-	virtual int NeedNBest( const enum EForceType eType ) const
+	int NeedNBest( const enum EForceType eType ) const override
 	{
 		return 10000;
 	}
 
-	virtual float EvaluateWorkerRating( CCommonUnit *pUnit, const enum EForceType eType ) const;
+	float EvaluateWorkerRating( CCommonUnit *pUnit, const enum EForceType eType ) const override;
 
-	virtual bool EnumResistances( const struct SResistance &resistance );
+	bool EnumResistances( const struct SResistance &resistance ) override;
 
-	virtual bool EnumEnemy( class CAIUnit *pEnemy )
+	bool EnumEnemy( class CAIUnit *pEnemy ) override
 	{
 		NI_ASSERT( false, "didn't asked to" );
 		return false;
 	}
 
-	int GetWorkerCount();
+	int GetWorkerCount() override;
 
 	friend class CGeneralSwarmWaitForReady;
 };
@@ -307,7 +307,7 @@ class CGeneralSwarmWaitForReady : public IGeneralDelayedTask
 	ZDATA
 	CPtr<CGeneralTaskToSwarmToPoint> pGeneralTask;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pGeneralTask );
 		return 0;
@@ -321,12 +321,12 @@ public:
 	{
 	}
 
-	virtual bool IsTimeToRun() const
+	bool IsTimeToRun() const override
 	{
 		return pGeneralTask->IsTimeToRun();
 	}
 
-	virtual void Run()
+	void Run() override
 	{
 		pGeneralTask->Run();
 	}

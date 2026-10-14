@@ -20,52 +20,52 @@ class CLakeState : public CVSOStateEx
 
 protected:
 	// CVSOState
-	bool IsDrawSceneDrawTool()
+	bool IsDrawSceneDrawTool() override
 	{
 		return true;
 	}
 
-	bool EdgesMustBeZero()
+	bool EdgesMustBeZero() override
 	{
 		return false;
 	}
 
-	bool IsEdgesMustBeOut()
+	bool IsEdgesMustBeOut() override
 	{
 		return false;
 	}
 
-	bool IsClose()
+	bool IsClose() override
 	{
 		return true;
 	}
 
-	bool IsComplete()
+	bool IsComplete() override
 	{
 		return false;
 	}
 
-	bool NoIntersection()
+	bool NoIntersection() override
 	{
 		return true;
 	}
 
-	bool NoSelfIntersection()
+	bool NoSelfIntersection() override
 	{
 		return true;
 	}
 
-	bool CanUpdateVSO( int nVSOID )
+	bool CanUpdateVSO( int nVSOID ) override
 	{
 		return true;
 	}
 
-	bool CanRemoveVSO( int nVSOID )
+	bool CanRemoveVSO( int nVSOID ) override
 	{
 		return true;
 	}
 
-	void GetControlPointBounds( int *pnMinCount, int *pnMaxCount )
+	void GetControlPointBounds( int *pnMinCount, int *pnMaxCount ) override
 	{
 		if ( pnMinCount )
 		{
@@ -77,69 +77,69 @@ protected:
 		}
 	}
 
-	float GetDefaultStep()
+	float GetDefaultStep() override
 	{
 		return CVSOManager::DEFAULT_STEP * 8.0f;
 	}
 
-	float GetDefaultWidth()
+	float GetDefaultWidth() override
 	{
 		return CVSOManager::DEFAULT_WIDTH;
 	}
 
-	float GetDefaultHeight()
+	float GetDefaultHeight() override
 	{
 		return CVSOManager::DEFAULT_HEIGHT;
 	}
 
-	float GetDefaultOpacity()
+	float GetDefaultOpacity() override
 	{
 		return CVSOManager::DEFAULT_OPACITY;
 	}
 
-	float GetDefaultStepOut()
+	float GetDefaultStepOut() override
 	{
 		return CVSOManager::DEFAULT_STEP / 4.0f;
 	}
 
 	//
-	bool CanEditPoints( CVSOManager::SVSOSelection::ESelectionType eSelectionType );
+	bool CanEditPoints( CVSOManager::SVSOSelection::ESelectionType eSelectionType ) override;
 
-	void PrepareInsertVSO() {}
+	void PrepareInsertVSO() override {}
 
 	//
-	virtual void PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList );
+	void PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList ) override;
 
 	//CVSOStateEx
 	//bool CanInsertVSO();
-	bool IsRealtimeUpdate() const
+	bool IsRealtimeUpdate() const override
 	{
 		return false;
 	}
 
-	const std::string GetVSOName() const
+	const std::string GetVSOName() const override
 	{
 		return VSO_NAME;
 	}
 
-	const std::string GetVSOTypeName() const
+	const std::string GetVSOTypeName() const override
 	{
 		return VSO_TYPE_NAME;
 	}
 
-	int GetVSOTypeID() const
+	int GetVSOTypeID() const override
 	{
 		return NDb::SLakeDesc::typeID;
 	}
 
-	const CMapInfoController::SVSOUndoData::EVSOType GetVSOType() const
+	const CMapInfoController::SVSOUndoData::EVSOType GetVSOType() const override
 	{
 		return CMapInfoController::SVSOUndoData::VSO_LAKE;
 	}
 
-	NMapInfoEditor::CVSOInstanceList *GetVSOList();
+	NMapInfoEditor::CVSOInstanceList *GetVSOList() override;
 	//
-	void InsertVSOInTerrain( const NDb::SVSOInstance &rVSO );
-	void RemoveVSOFromTerrain( int nVSOID );
-	void UpdateVSOInTerrain( int nVSOID );
+	void InsertVSOInTerrain( const NDb::SVSOInstance &rVSO ) override;
+	void RemoveVSOFromTerrain( int nVSOID ) override;
+	void UpdateVSOInTerrain( int nVSOID ) override;
 };

@@ -28,7 +28,7 @@ public:
 	}
 
 	//
-	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
+	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) override
 	{
 		if ( pThis )
 		{
@@ -55,7 +55,7 @@ public:
 	}
 
 	//
-	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
+	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) override
 	{
 		if ( pThis )
 		{
@@ -84,7 +84,7 @@ public:
 	}
 
 	//
-	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
+	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) override
 	{
 		if ( pThis )
 		{
@@ -110,7 +110,7 @@ public:
 	}
 
 	//
-	bool Execute( const SGameMessage &msg, CObjectBase *pThis )
+	bool Execute( const SGameMessage &msg, CObjectBase *pThis ) override
 	{
 		if ( pThis )
 		{
@@ -138,7 +138,7 @@ public:
 	}
 
 	//
-	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
+	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) override
 	{
 		if ( pThis )
 		{
@@ -168,7 +168,7 @@ public:
 	}
 
 	//
-	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
+	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) override
 	{
 		if ( pThis )
 		{
@@ -195,7 +195,7 @@ public:
 	}
 
 	//
-	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
+	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) override
 	{
 		return ( *pfnFun )( _msg );
 	}
@@ -218,7 +218,7 @@ public:
 	}
 
 	//
-	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
+	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) override
 	{
 		return ( *pfnFun )( _msg, p1 );
 	}
@@ -243,7 +243,7 @@ public:
 	}
 
 	//
-	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
+	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) override
 	{
 		return ( *pfnFun )( _msg, p1, p2 );
 	}
@@ -265,7 +265,7 @@ public:
 	}
 
 	//
-	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
+	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) override
 	{
 		( *pfnFun )( _msg );
 		return true;
@@ -289,7 +289,7 @@ public:
 	}
 
 	//
-	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
+	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) override
 	{
 		( *pfnFun )( _msg, p1 );
 		return true;
@@ -315,7 +315,7 @@ public:
 	}
 
 	//
-	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
+	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) override
 	{
 		( *pfnFun )( _msg, p1, p2 );
 		return true;

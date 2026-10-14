@@ -14,7 +14,7 @@ public:
 		tidTypeID = 0x30134C00
 	};
 
-	~CNetLogger();
+	~CNetLogger() override;
 
 	void OpenLogFile( const std::string &szNick );
 	void CloseLogFile( const std::string &szNick );

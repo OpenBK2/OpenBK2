@@ -5,7 +5,7 @@
 class CMapInfoInterface : public CEditorInterfaceBase
 {
 	OBJECT_NOCOPY_METHODS( CMapInfoInterface );
-	void ToggleCameraControl( const SGameMessage &msg, bool bEnableCameraControl );
+	void ToggleCameraControl( const SGameMessage &msg, bool bEnableCameraControl ) override;
 
 	class CMapInfoState *pMapInfoState;
 

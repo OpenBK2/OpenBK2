@@ -24,7 +24,7 @@ class CExecutorExactShot : public CExecutor
 	CPtr<CAIUnit> pUnit;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CExecutor *)this );
 		f.Add( 2, &timeLastUpdate );
@@ -51,13 +51,13 @@ public:
 
 	CExecutorExactShot() {}
 
-	void RegisterOnEvents( IExecutorContainer *pContainer );
-	bool NotifyEvent( const CExecutorEvent &event );
+	void RegisterOnEvents( IExecutorContainer *pContainer ) override;
+	bool NotifyEvent( const CExecutorEvent &event ) override;
 
-	bool IsExecutorValid() const
+	bool IsExecutorValid() const override
 	{
 		return IsValid( pUnit );
 	}
 
-	int Segment();
+	int Segment() override;
 };

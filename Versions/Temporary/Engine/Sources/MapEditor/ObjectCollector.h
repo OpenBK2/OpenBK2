@@ -79,8 +79,8 @@ class CObjectFilterCollector : public IObjectFilterCollector
 		                const std::string &szOperationType ) const;
 
 		//IObjectFilter
-		int GetObjectCollection( CObjectCollection *pObjectCollection ) const;
-		bool Match( const std::string &szObjectTypeName, const std::string &szObjectName ) const;
+		int GetObjectCollection( CObjectCollection *pObjectCollection ) const override;
+		bool Match( const std::string &szObjectTypeName, const std::string &szObjectName ) const override;
 	};
 
 	typedef std::vector<SObjectFilter> CObjectFilterList;
@@ -92,16 +92,16 @@ class CObjectFilterCollector : public IObjectFilterCollector
 
 protected:
 	// IObjectFilterCollector
-	bool Load( CDataStream *pStream );
-	bool Save( CDataStream *pStream );
+	bool Load( CDataStream *pStream ) override;
+	bool Save( CDataStream *pStream ) override;
 	//
-	int GetFilterList( CFilterList *pFilterList, const std::string &rszFilterType ) const;
+	int GetFilterList( CFilterList *pFilterList, const std::string &rszFilterType ) const override;
 	//
-	bool IsSeparator( const std::string &rszFilterType, const int nFilterIndex ) const;
-	const IObjectFilter *Get( const std::string &rszFilterType, const int nFilterIndex ) const;
+	bool IsSeparator( const std::string &rszFilterType, const int nFilterIndex ) const override;
+	const IObjectFilter *Get( const std::string &rszFilterType, const int nFilterIndex ) const override;
 
-	int ShowFilterSelectionDialog( IWidget *pParentWidget, std::string *pszFilterType, int *pnFilterIndex );
-	int ShowFilterCreationDialog( IWidget *pParentWidget, std::string *pszFilterType, int *pnFilterIndex );
+	int ShowFilterSelectionDialog( IWidget *pParentWidget, std::string *pszFilterType, int *pnFilterIndex ) override;
+	int ShowFilterCreationDialog( IWidget *pParentWidget, std::string *pszFilterType, int *pnFilterIndex ) override;
 };
 
 class CObjectCollector : public IObjectCollector
@@ -154,20 +154,20 @@ class CObjectCollector : public IObjectCollector
 
 protected:
 	// IObjectCollector
-	bool Load( CDataStream *pStream );
-	bool Save( CDataStream *pStream );
+	bool Load( CDataStream *pStream ) override;
+	bool Save( CDataStream *pStream ) override;
 
-	void RegisterDataExtractor( IObjectDataExtractor *pDataExtractor );
-	void RegisterDataExtractor( const std::string &rszDataExtractorType, IObjectDataExtractor *pDataExtractor );
+	void RegisterDataExtractor( IObjectDataExtractor *pDataExtractor ) override;
+	void RegisterDataExtractor( const std::string &rszDataExtractorType, IObjectDataExtractor *pDataExtractor ) override;
 	//
 	// возвращает общее количество объектов
-	int ApplyFilter( CObjectCollection *pObjectCollection, const std::string &rszObjectTypeName );
-	int ApplyFilter( CObjectCollection *pObjectCollection, const IObjectFilter *pObjectFilter );
+	int ApplyFilter( CObjectCollection *pObjectCollection, const std::string &rszObjectTypeName ) override;
+	int ApplyFilter( CObjectCollection *pObjectCollection, const IObjectFilter *pObjectFilter ) override;
 	bool GetObjectParams( SObjectParams *pObjectParams,
 	                      const std::string &rszObjectTypeName,
-	                      const std::string &rszObjectName );
+	                      const std::string &rszObjectName ) override;
 	//
-	IImageList *GetImageList( int nImageListType );
+	IImageList *GetImageList( int nImageListType ) override;
 
 public:
 	CObjectCollector()

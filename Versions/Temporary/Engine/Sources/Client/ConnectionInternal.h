@@ -26,24 +26,24 @@ public:
 
 	CSimpleConnection(
 			CNet *pNet, bool bAsClient, const int nClientServerID, const int nClientLocalID, const int nMyServerID );
-	virtual bool IsAlive() const;
+	bool IsAlive() const override;
 
-	virtual CNet *GetNet()
+	CNet *GetNet() override
 	{
 		return pNet;
 	}
 
-	virtual void SendGamePacket( CNetPacket *pPacket );
-	virtual bool ProcessPacketFromPlayersNet( CNetPacket *pPacket );
+	void SendGamePacket( CNetPacket *pPacket ) override;
+	bool ProcessPacketFromPlayersNet( CNetPacket *pPacket ) override;
 
-	virtual bool ProcessPacketFromServer( CNetPacket *pPacket )
+	bool ProcessPacketFromServer( CNetPacket *pPacket ) override
 	{
 		return false;
 	}
 
-	virtual CNetPacket *GetPacket();
+	CNetPacket *GetPacket() override;
 
-	virtual void TogglePauseNet( const bool bPause ) const;
+	void TogglePauseNet( const bool bPause ) const override;
 };
 
 class CThroughServerConnection : public IConnection
@@ -62,26 +62,26 @@ public:
 
 	CThroughServerConnection( const int nClientServerID, CNet *pNet );
 
-	virtual CNet *GetNet()
+	CNet *GetNet() override
 	{
 		return pNet;
 	}
 
-	virtual void SendGamePacket( CNetPacket *pPacket );
+	void SendGamePacket( CNetPacket *pPacket ) override;
 
-	virtual bool ProcessPacketFromPlayersNet( CNetPacket *pPacket )
+	bool ProcessPacketFromPlayersNet( CNetPacket *pPacket ) override
 	{
 		return false;
 	}
 
-	virtual bool ProcessPacketFromServer( CNetPacket *pPacket );
+	bool ProcessPacketFromServer( CNetPacket *pPacket ) override;
 
-	virtual CNetPacket *GetPacket();
+	CNetPacket *GetPacket() override;
 
-	virtual bool IsAlive() const
+	bool IsAlive() const override
 	{
 		return true;
 	}
 
-	virtual void TogglePauseNet( const bool bPause ) const;
+	void TogglePauseNet( const bool bPause ) const override;
 };

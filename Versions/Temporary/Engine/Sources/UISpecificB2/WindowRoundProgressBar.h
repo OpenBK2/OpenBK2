@@ -27,7 +27,7 @@ class CWindowRoundProgressBar : public CWindow, public IWindowRoundProgressBar
 	float fPosition;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CWindow *)this );
 		f.Add( 2, &pInstance );
@@ -41,7 +41,7 @@ public:
 	}
 
 protected:
-	NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
@@ -50,18 +50,18 @@ public:
 	CWindowRoundProgressBar();
 
 	//{ CWindow
-	void Visit( struct IUIVisitor *pVisitor );
-	void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	void Visit( struct IUIVisitor *pVisitor ) override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 	//}
 
 	//{ IWindowRoundProgressBar
-	void SetAngles( float _fStartAngle, float _fFinishAngle );
-	void SetPosition( const float );
-	float GetPosition() const;
+	void SetAngles( float _fStartAngle, float _fFinishAngle ) override;
+	void SetPosition( const float ) override;
+	float GetPosition() const override;
 
-	void ShowFirstElement( bool bShow ) {}
+	void ShowFirstElement( bool bShow ) override {}
 
-	void SetForward( const NDb::SBackground *pForward ) {}
+	void SetForward( const NDb::SBackground *pForward ) override {}
 
 	//}
 };

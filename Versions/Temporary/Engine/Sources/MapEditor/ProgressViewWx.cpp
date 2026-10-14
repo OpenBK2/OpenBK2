@@ -152,14 +152,14 @@ class CWxProgressView : public NProgressView::IView
 	wxWeakRef<CProgressWxDialog> dialog;
 
 public:
-	virtual ~CWxProgressView()
+	~CWxProgressView() override
 	{
 		Destroy();
 	}
 
 	// pParent is only used during this call: the window it resolves to
 	// outlives it and wx keeps that as the dialog's parent.
-	virtual bool Create( IWidget *pParent )
+	bool Create( IWidget *pParent ) override
 	{
 		Destroy();
 		dialog = NWx::TopLevel<CProgressWxDialog>( ToWxOwnerWindow( pParent ) );
@@ -170,12 +170,12 @@ public:
 		return true;
 	}
 
-	virtual bool IsCreated() const
+	bool IsCreated() const override
 	{
 		return dialog != nullptr;
 	}
 
-	virtual void Show()
+	void Show() override
 	{
 		if ( dialog )
 		{
@@ -183,7 +183,7 @@ public:
 		}
 	}
 
-	virtual void Destroy()
+	void Destroy() override
 	{
 		if ( dialog )
 		{
@@ -207,7 +207,7 @@ public:
 		}
 	}
 
-	virtual void SetTitle( const std::string &rszTitle )
+	void SetTitle( const std::string &rszTitle ) override
 	{
 		if ( dialog )
 		{
@@ -215,7 +215,7 @@ public:
 		}
 	}
 
-	virtual void SetMessage( const std::string &rszMessage )
+	void SetMessage( const std::string &rszMessage ) override
 	{
 		if ( dialog )
 		{
@@ -223,7 +223,7 @@ public:
 		}
 	}
 
-	virtual void SetRange( int nStart, int nFinish )
+	void SetRange( int nStart, int nFinish ) override
 	{
 		if ( dialog )
 		{
@@ -231,7 +231,7 @@ public:
 		}
 	}
 
-	virtual void SetPosition( int nPosition )
+	void SetPosition( int nPosition ) override
 	{
 		if ( dialog )
 		{
@@ -239,7 +239,7 @@ public:
 		}
 	}
 
-	virtual void IteratePosition()
+	void IteratePosition() override
 	{
 		if ( dialog )
 		{

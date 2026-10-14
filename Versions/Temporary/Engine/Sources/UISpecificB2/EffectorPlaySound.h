@@ -24,15 +24,15 @@ public:
 	{
 	}
 
-	virtual bool IsFinished() const;
-	virtual void Configure( const NDb::SUIStateBase *_pCmd,
-	                        struct IScreen *pScreen,
-	                        SWindowContext *pContext,
-	                        const std::string &szAnimatedWindow );
-	virtual const int Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward );
+	bool IsFinished() const override;
+	void Configure( const NDb::SUIStateBase *_pCmd,
+	                struct IScreen *pScreen,
+	                SWindowContext *pContext,
+	                const std::string &szAnimatedWindow ) override;
+	const int Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward ) override;
 
-	virtual void Visit( struct IUIVisitor *pVisitor ) {}
+	void Visit( struct IUIVisitor *pVisitor ) override {}
 
-	virtual void Reverse();
-	int operator&( IBinSaver &saver );
+	void Reverse() override;
+	int operator&( IBinSaver &saver ) override;
 };

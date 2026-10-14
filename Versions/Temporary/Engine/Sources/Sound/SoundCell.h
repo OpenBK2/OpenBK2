@@ -18,7 +18,7 @@ class CSoundCell : public CObjectBase
 public:
 	CSoundCell();
 	void Clear();
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 
 	int GetRadius() const
 	{

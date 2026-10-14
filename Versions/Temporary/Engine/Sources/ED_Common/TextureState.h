@@ -10,11 +10,11 @@ public:
 	CTextureState() {}
 
 	CTextureState( class CTextureEditor *_pEditor );
-	virtual ~CTextureState();
+	~CTextureState() override;
 
 	//IInputState
-	void Enter();
-	void Leave();
+	void Enter() override;
+	void Leave() override;
 
 	// methods
 protected:

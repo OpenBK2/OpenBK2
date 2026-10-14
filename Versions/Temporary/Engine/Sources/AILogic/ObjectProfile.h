@@ -18,7 +18,7 @@ class CObjectProfile : public CObjectBase
 	det_set<SVector, STilesHash> tilesUnder; // for check
 	std::vector<SVector> tilesUnderVector;   // for get tiles
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &profile );
 		f.Add( 3, &vCenter );

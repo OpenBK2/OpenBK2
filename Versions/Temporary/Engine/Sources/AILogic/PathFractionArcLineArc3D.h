@@ -18,7 +18,7 @@ class CPahtFractionArcLineArc3D : public CPathFractionComplexBase
 	CPtr<CPathFractionArcLine3D> pFinish;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CPathFractionComplexBase *)this );
 		f.Add( 2, &pStart );
@@ -35,5 +35,5 @@ public:
 	           const CVec3 &v1, // directions
 	           const float r0,
 	           const float r1 ); // turn radii
-	virtual void GetSimplePath( CPathList *pPaths );
+	void GetSimplePath( CPathList *pPaths ) override;
 };

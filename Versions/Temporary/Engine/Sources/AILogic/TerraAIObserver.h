@@ -13,7 +13,7 @@ class CTerraAIObserverInGame : public CTerraAIObserver
 	static CRiverSounds riverSounds;
 
 	void InitSizes( const int nSizeX, const int nSizeY );
-	virtual void AddVSO( const NDb::SVSOInstance *pVSO );
+	void AddVSO( const NDb::SVSOInstance *pVSO ) override;
 
 public:
 	CTerraAIObserverInGame() {}
@@ -22,16 +22,16 @@ public:
 
 	CTerraAIObserverInGame( const int nSizeX, const int nSizeY );
 
-	virtual ~CTerraAIObserverInGame() {}
+	~CTerraAIObserverInGame() override {}
 
-	virtual void
-	UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &heights );
-	virtual void
-	UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<uint8_t> &types );
+	void
+	UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &heights ) override;
+	void
+	UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<uint8_t> &types ) override;
 
-	void AddRiver( const NDb::SVSOInstance *pInstance );
-	virtual void FinalizeUpdates();
+	void AddRiver( const NDb::SVSOInstance *pInstance ) override;
+	void FinalizeUpdates() override;
 
 	static void InitInGame();
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

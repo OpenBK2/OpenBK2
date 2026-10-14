@@ -30,14 +30,14 @@ protected:
 	CSceneDrawTool drawTool;
 
 	// IInputState interface
-	void Enter();
-	void Leave();
-	void PostDraw( IPaintContext *pPaintDC );
-	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void Enter() override;
+	void Leave() override;
+	void PostDraw( IPaintContext *pPaintDC ) override;
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
 
 	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 
 	// CPointsListState
 	bool GetPointListDialogData( SPointListDialogData *pData );
@@ -55,9 +55,9 @@ public:
 	}
 
 	CPointsListState( unsigned nCHID, unsigned nInstanceID, CBuildingEditor *_pBuildingEditor );
-	virtual ~CPointsListState();
+	~CPointsListState() override;
 
-	virtual void Draw( IPaintContext *pPaintDC ) {}
+	void Draw( IPaintContext *pPaintDC ) override {}
 
 	virtual std::string GetPointsArrayFieldName() = 0;
 
@@ -99,16 +99,16 @@ public:
 	{
 	}
 
-	virtual ~CSmokePointsState() {}
+	~CSmokePointsState() override {}
 
-	virtual std::string GetPointsArrayFieldName()
+	std::string GetPointsArrayFieldName() override
 	{
 		return "smokePoints";
 	}
 
-	virtual void GetMaskFields( std::vector<std::string> *pMaskFields );
+	void GetMaskFields( std::vector<std::string> *pMaskFields ) override;
 
-	virtual bool IsOriginInUse()
+	bool IsOriginInUse() override
 	{
 		return true;
 	}
@@ -127,16 +127,16 @@ public:
 	{
 	}
 
-	virtual ~CSlotPointsState() {}
+	~CSlotPointsState() override {}
 
-	virtual std::string GetPointsArrayFieldName()
+	std::string GetPointsArrayFieldName() override
 	{
 		return "slots";
 	}
 
-	virtual void GetMaskFields( std::vector<std::string> *pMaskFields );
+	void GetMaskFields( std::vector<std::string> *pMaskFields ) override;
 
-	virtual EDirMeasure GetDirMeasure()
+	EDirMeasure GetDirMeasure() override
 	{
 		return DIR_IN_DEGREES;
 	}
@@ -155,16 +155,16 @@ public:
 	{
 	}
 
-	virtual ~CEntrancePointsState() {}
+	~CEntrancePointsState() override {}
 
-	virtual std::string GetPointsArrayFieldName()
+	std::string GetPointsArrayFieldName() override
 	{
 		return "entrances";
 	}
 
-	virtual void GetMaskFields( std::vector<std::string> *pMaskFields );
+	void GetMaskFields( std::vector<std::string> *pMaskFields ) override;
 
-	virtual std::string GetDirectionFieldName()
+	std::string GetDirectionFieldName() override
 	{
 		return "Dir";
 	}
@@ -186,22 +186,22 @@ public:
 	}
 
 	//
-	virtual ~CSurfacePointsState() {}
+	~CSurfacePointsState() override {}
 
-	virtual std::string GetPointsArrayFieldName()
+	std::string GetPointsArrayFieldName() override
 	{
 		return "SurfacePoints";
 	}
 
-	virtual void GetMaskFields( std::vector<std::string> *pMaskFields );
+	void GetMaskFields( std::vector<std::string> *pMaskFields ) override;
 
-	virtual std::string GetDirectionFieldName()
+	std::string GetDirectionFieldName() override
 	{
 		return "";
 	}
 
-	virtual void Draw( IPaintContext *pPaintDC );
-	virtual void AddPointSpecificMarker( IManipulator *pManipulator, int nPointIndex );
+	void Draw( IPaintContext *pPaintDC ) override;
+	void AddPointSpecificMarker( IManipulator *pManipulator, int nPointIndex ) override;
 };
 
 class CDamageLevelsState : public CPointsListState
@@ -218,25 +218,25 @@ public:
 	}
 
 	//
-	virtual ~CDamageLevelsState() {}
+	~CDamageLevelsState() override {}
 
-	std::string GetPointsArrayFieldName()
+	std::string GetPointsArrayFieldName() override
 	{
 		return "DamageLevels";
 	}
 
-	void GetMaskFields( std::vector<std::string> *pMaskFields );
+	void GetMaskFields( std::vector<std::string> *pMaskFields ) override;
 
-	std::string GetDirectionFieldName()
+	std::string GetDirectionFieldName() override
 	{
 		return "";
 	}
 
-	void Draw( IPaintContext *pPaintDC ) {}
+	void Draw( IPaintContext *pPaintDC ) override {}
 
-	void RefreshState();
+	void RefreshState() override;
 
 	void SetPointMarkers() {}
 
-	void Leave();
+	void Leave() override;
 };

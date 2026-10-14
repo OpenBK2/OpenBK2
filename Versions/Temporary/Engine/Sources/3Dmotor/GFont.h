@@ -10,7 +10,7 @@ class CFileFont : public CResourceLoader<int, CFontFormatInfo>
 	OBJECT_BASIC_METHODS( CFileFont );
 
 protected:
-	virtual void Recalc();
+	void Recalc() override;
 };
 
 }; // namespace NGScene

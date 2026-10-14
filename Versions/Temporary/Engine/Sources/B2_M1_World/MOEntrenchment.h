@@ -48,20 +48,24 @@ public:
 		cached.fHoleWidth = 0;
 	}
 
-	virtual bool Create( const int nUniqueID,
-	                     const SAIBasicUpdate *pUpdate,
-	                     NDb::ESeason eSeason,
-	                     const NDb::EDayNight eDayTime,
-	                     bool bInEditor );
-	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor );
-	void GetStatus( SObjectStatus *pStatus ) const;
-	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement,
-	                                struct IScene *pScene,
-	                                struct ISoundScene *pSoundScene,
-	                                NDb::ESeason eSeason );
+	bool Create( const int nUniqueID,
+	             const SAIBasicUpdate *pUpdate,
+	             NDb::ESeason eSeason,
+	             const NDb::EDayNight eDayTime,
+	             bool bInEditor ) override;
+	bool CreateSceneObject( const int nUniqueID,
+	                        const SAINewUnitUpdate *pUpdate,
+	                        NDb::ESeason eSeason,
+	                        bool bInEditor ) override;
+	void GetStatus( SObjectStatus *pStatus ) const override;
+	void AIUpdatePlacement( const struct SAINotifyPlacement &placement,
+	                        struct IScene *pScene,
+	                        struct ISoundScene *pSoundScene,
+	                        NDb::ESeason eSeason ) override;
 
-	IClientUpdatableProcess *
-	AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
+	IClientUpdatableProcess *AIUpdateRPGStats( const struct SAINotifyRPGStats &stats,
+	                                           struct IClientAckManager *pAckManager,
+	                                           NDb::ESeason eSeason ) override
 	{
 		return 0;
 	}
@@ -80,26 +84,26 @@ public:
 	//
 	void GetHoleParams( CVec2 *pStart, CVec2 *pEnd, float *pWidth );
 	//
-	void GetActions( CUserActions *pActions, EActionsType eActions ) const;
-	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;
+	void GetActions( CUserActions *pActions, EActionsType eActions ) const override;
+	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const override;
 
 	//
-	virtual bool IsSelected() const
+	bool IsSelected() const override
 	{
 		return false;
 	}
 
-	virtual void Select( bool bSelect )
+	void Select( bool bSelect ) override
 	{
 		NI_ASSERT( !bSelect, "Selecting entrenchment!" );
 	}
 
-	virtual bool CanSelect() const
+	bool CanSelect() const override
 	{
 		return false;
 	}
 
-	virtual void SetCanSelect( bool _bCanSelect )
+	void SetCanSelect( bool _bCanSelect ) override
 	{
 		NI_ASSERT( !_bCanSelect, "Selecting entrenchment!" );
 	}
@@ -112,7 +116,7 @@ public:
 	}
 
 	//
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 class CMOEntrenchment : public CMOSelectable
@@ -125,7 +129,7 @@ class CMOEntrenchment : public CMOSelectable
 public:
 	CMOEntrenchment() {}
 
-	~CMOEntrenchment();
+	~CMOEntrenchment() override;
 
 	void SetEntrenchmentStats( const NDb::SEntrenchmentRPGStats *pStats )
 	{
@@ -137,26 +141,30 @@ public:
 	{
 	}
 
-	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement,
-	                                struct IScene *pScene,
-	                                struct ISoundScene *pSoundScene,
-	                                NDb::ESeason eSeason )
+	void AIUpdatePlacement( const struct SAINotifyPlacement &placement,
+	                        struct IScene *pScene,
+	                        struct ISoundScene *pSoundScene,
+	                        NDb::ESeason eSeason ) override
 	{
 	}
 
-	virtual IClientUpdatableProcess *
-	AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
+	IClientUpdatableProcess *AIUpdateRPGStats( const struct SAINotifyRPGStats &stats,
+	                                           struct IClientAckManager *pAckManager,
+	                                           NDb::ESeason eSeason ) override
 	{
 		return 0;
 	}
 
-	virtual bool Create( const int nUniqueID,
-	                     const SAIBasicUpdate *_pUpdate,
-	                     NDb::ESeason eSeason,
-	                     const NDb::EDayNight eDayTime,
-	                     bool bInEditor );
+	bool Create( const int nUniqueID,
+	             const SAIBasicUpdate *_pUpdate,
+	             NDb::ESeason eSeason,
+	             const NDb::EDayNight eDayTime,
+	             bool bInEditor ) override;
 
-	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
+	bool CreateSceneObject( const int nUniqueID,
+	                        const SAINewUnitUpdate *pUpdate,
+	                        NDb::ESeason eSeason,
+	                        bool bInEditor ) override
 	{
 		return true;
 	}
@@ -164,34 +172,35 @@ public:
 	//
 	void AddPart( CMOEntrenchmentPart *pPart, const bool bLast = false, const bool bDigBySegment = false );
 	//
-	void GetStatus( SObjectStatus *pStatus ) const;
+	void GetStatus( SObjectStatus *pStatus ) const override;
 	//
-	void GetActions( CUserActions *pActions, EActionsType eActions ) const;
-	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;
-	NDb::EUserAction GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const;
+	void GetActions( CUserActions *pActions, EActionsType eActions ) const override;
+	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const override;
+	NDb::EUserAction
+	GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const override;
 
 	//
-	virtual bool IsSelected() const
+	bool IsSelected() const override
 	{
 		return false;
 	}
 
-	virtual void Select( bool bSelect )
+	void Select( bool bSelect ) override
 	{
 		NI_ASSERT( !bSelect, "Selecting entrenchment!" );
 	}
 
-	virtual bool CanSelect() const
+	bool CanSelect() const override
 	{
 		return false;
 	}
 
-	virtual void SetCanSelect( bool _bCanSelect )
+	void SetCanSelect( bool _bCanSelect ) override
 	{
 		NI_ASSERT( !_bCanSelect, "Selecting entrenchment!" );
 	}
 
-	bool IsPlaceMapCommandAck( NDb::EUserAction eUserAction ) const;
+	bool IsPlaceMapCommandAck( NDb::EUserAction eUserAction ) const override;
 
 	virtual void GetPassangers( std::vector<IB2MapObj *> *pPassangers ) const {}
 
@@ -201,6 +210,6 @@ public:
 	}
 
 	//
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 	//
 };

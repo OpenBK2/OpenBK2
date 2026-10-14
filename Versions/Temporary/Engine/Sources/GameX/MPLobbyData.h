@@ -14,7 +14,7 @@ public:
 	CPtr<IListControlItem> pListItem;
 	CPtr<IButton> pStatusIcon;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szName );
 		f.Add( 3, &eStatus );
@@ -39,7 +39,7 @@ public:
 	ZDATA
 	CPtr<class CInterfaceMPLobby> pInterface;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pInterface );
 		return 0;
@@ -52,7 +52,7 @@ public:
 	{
 	}
 
-	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
+	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const override;
 	void SetData( CObjectBase *pWindow, const CObjectBase *pData ) const;
 };
 
@@ -60,5 +60,5 @@ class CChannelListViewer : public IDataViewer
 {
 	OBJECT_NOCOPY_METHODS( CChannelListViewer )
 public:
-	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
+	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const override;
 };

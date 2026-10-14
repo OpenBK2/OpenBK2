@@ -65,7 +65,7 @@ class CExecutorContainer : public IExecutorContainer
 	CEvents events;
 
 public:
-	int operator&( IBinSaver &f )
+	int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &executors );
 		f.Add( 3, &nCurTime );
@@ -88,29 +88,29 @@ public:
 
 public:
 	CExecutorContainer();
-	~CExecutorContainer();
+	~CExecutorContainer() override;
 
 	void Clear();
 	void Init();
 
-	int CreateID()
+	int CreateID() override
 	{
 		return executorIDs.Get();
 	}
 
-	void ReturnID( const int id )
+	void ReturnID( const int id ) override
 	{
 		executorIDs.Return( id );
 	}
 
-	virtual void AddSleeping( CExecutor *pExecutor );
+	void AddSleeping( CExecutor *pExecutor ) override;
 	virtual void RemoveSleeping( CExecutor *pExecutor );
-	virtual void Add( CExecutor *pExecutor );
-	virtual void RegisterOnEvent( CExecutor *pExecutor, const SExecutorEventParam &ev );
+	void Add( CExecutor *pExecutor ) override;
+	void RegisterOnEvent( CExecutor *pExecutor, const SExecutorEventParam &ev ) override;
 	//CRAP{ UNTILL EXECUTOR'S STRUCTURE IMPROVEMENT
-	virtual void RaiseEvent( const CExecutorEvent &event );
-	virtual void RaiseEvent( const SExecutorEventParam &param );
+	void RaiseEvent( const CExecutorEvent &event ) override;
+	void RaiseEvent( const SExecutorEventParam &param ) override;
 	//CRAP}
 
-	virtual void Segment();
+	void Segment() override;
 };

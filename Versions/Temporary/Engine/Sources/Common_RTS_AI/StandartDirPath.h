@@ -17,7 +17,7 @@ class COMMON_RTS_AI_EXPORT CStandartDirPath : public IPath
 	int nTileSize = 0;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &dir );
 		f.Add( 3, &startPoint );
@@ -41,40 +41,40 @@ public:
 	CStandartDirPath( const CVec2 &startPoint, const CVec2 &dir, const CVec2 &finishPoint, const int nTileSize );
 	CStandartDirPath( const CVec2 &startPoint, const CVec2 &finishPoint, const int nTileSize );
 
-	virtual bool IsFinished() const;
+	bool IsFinished() const override;
 
-	virtual const CVec2 &GetStartPoint() const
+	const CVec2 &GetStartPoint() const override
 	{
 		return startPoint;
 	}
 
-	virtual const CVec2 &GetFinishPoint() const
+	const CVec2 &GetFinishPoint() const override
 	{
 		return finishPoint;
 	}
 
-	virtual const CVec2 PeekPoint( const int nShift ) const;
-	virtual void Shift( const int nShift );
+	const CVec2 PeekPoint( const int nShift ) const override;
+	void Shift( const int nShift ) override;
 
-	virtual void RecalcPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &lastKnownGoodTile );
-	virtual void RecoverPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &lastKnownGoodTile );
+	void RecalcPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &lastKnownGoodTile ) override;
+	void RecoverPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &lastKnownGoodTile ) override;
 
-	virtual void InsertTiles( const std::list<SVector> &tiles ) {}
+	void InsertTiles( const std::list<SVector> &tiles ) override {}
 
-	virtual const bool CanGoBackward( const CBasePathUnit *pUnit ) const
+	const bool CanGoBackward( const CBasePathUnit *pUnit ) const override
 	{
 		return pUnit->CanGoBackward();
 	}
 
-	virtual const bool ShouldCheckTurn() const
+	const bool ShouldCheckTurn() const override
 	{
 		return false;
 	}
 
-	virtual const bool CanBuildComplexTurn() const
+	const bool CanBuildComplexTurn() const override
 	{
 		return false;
 	}
 
-	virtual void MarkPath( const int nID, const NDebugInfo::EColor color ) const;
+	void MarkPath( const int nID, const NDebugInfo::EColor color ) const override;
 };

@@ -20,7 +20,7 @@ class CCommonStaticPath : public IStaticPath
 	CVec2 finishPoint;
 	CPtr<CAIMap> pAIMap;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &path );
 		f.Add( 3, &nLen );
@@ -43,39 +43,39 @@ public:
 	CCommonStaticPath( class CCommonPathFinder *pStaticPathFinder, CAIMap *pAIMap );
 
 	// передвинуть начальный тайл на path[nStart]
-	void MoveStartTileTo( const int nStart );
+	void MoveStartTileTo( const int nStart ) override;
 	// сделать конечным тайл на path[nFinish - 1]
-	void MoveFinishTileTo( const int nFinish );
+	void MoveFinishTileTo( const int nFinish ) override;
 	// передвинуть конечную точку на vMove
-	void MoveFinishPointBy( const CVec2 &vMove );
+	void MoveFinishPointBy( const CVec2 &vMove ) override;
 
-	const int GetLength() const
+	const int GetLength() const override
 	{
 		return nLen;
 	}
 
-	virtual const SVector GetTile( const int n ) const
+	const SVector GetTile( const int n ) const override
 	{
 		NI_ASSERT( n >= 0 && n < nLen, "Wrong point number" );
 		return path[n];
 	}
 
-	const SVector GetStartTile() const
+	const SVector GetStartTile() const override
 	{
 		return startTile;
 	}
 
-	const SVector GetFinishTile() const
+	const SVector GetFinishTile() const override
 	{
 		return finishTile;
 	}
 
-	const CVec2 &GetFinishPoint() const
+	const CVec2 &GetFinishPoint() const override
 	{
 		return finishPoint;
 	}
 
-	bool MergePath( IStaticPath *pAppendant, const int nStartTile );
+	bool MergePath( IStaticPath *pAppendant, const int nStartTile ) override;
 
-	int MarkStaticPath( const int nID, const NDebugInfo::EColor color ) const;
+	int MarkStaticPath( const int nID, const NDebugInfo::EColor color ) const override;
 };

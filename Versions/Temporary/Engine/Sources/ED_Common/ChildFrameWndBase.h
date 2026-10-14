@@ -91,7 +91,7 @@ protected:
 
 public:
 	CChildFrameWndBase();
-	virtual ~CChildFrameWndBase();
+	~CChildFrameWndBase() override;
 
 	bool IsSceneUpdateEnabled()
 	{
@@ -157,8 +157,8 @@ public:
 	void OnVScroll( EScrollAction eAction, unsigned nPos );
 
 	// ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 
 	// methods
 	virtual bool OnCreateChildFrameWnd() = 0;

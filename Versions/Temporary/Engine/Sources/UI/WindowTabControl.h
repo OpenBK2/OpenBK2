@@ -29,7 +29,7 @@ class CWindowTabControl : public CWindow, public ITabControl, public IButtonNoti
 	void AddTab( const std::wstring &szButtonName, CWindow *pTab );
 
 protected:
-	NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
@@ -41,39 +41,39 @@ public:
 	{
 	}
 
-	void Reposition( const CTRect<float> &rcParent );
-	void Init();
-	void InitByDesc( const struct NDb::SUIDesc *pDesc );
-	void AfterLoad();
+	void Reposition( const CTRect<float> &rcParent ) override;
+	void Init() override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
+	void AfterLoad() override;
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 
 	//IButtonNotify{
-	void Pushed( class CWindow *pWho ) {}
+	void Pushed( class CWindow *pWho ) override {}
 
-	void Entered( class CWindow *pWho ) {}
+	void Entered( class CWindow *pWho ) override {}
 
-	void Leaved( class CWindow *pWho ) {}
+	void Leaved( class CWindow *pWho ) override {}
 
-	void Released( class CWindow *pWho ) {}
+	void Released( class CWindow *pWho ) override {}
 
-	void StateChanged( class CWindow *pWho );
+	void StateChanged( class CWindow *pWho ) override;
 	//IButtonNotify}
 
 	//ITabControl{
-	int GetNTabs() const;
+	int GetNTabs() const override;
 
-	void SetActive( const int nTab )
+	void SetActive( const int nTab ) override
 	{
 		SetActive( nTab, true );
 	}
 
-	int GetActive() const
+	int GetActive() const override
 	{
 		return nActiveTab;
 	}
 
-	void AddTab( const std::wstring &szButtonName );
-	void AddElement( const int nTab, IWindow *pWnd );
+	void AddTab( const std::wstring &szButtonName ) override;
+	void AddElement( const int nTab, IWindow *pWnd ) override;
 	//ITabControl}
 };

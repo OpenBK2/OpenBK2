@@ -73,7 +73,7 @@ public:
 	CVSOUndoDataList vsoUndoDataList;
 
 	// IManipulator
-	virtual bool IsEmpty() const
+	bool IsEmpty() const override
 	{
 		return ( CObjectBaseController::IsEmpty() && tileUndoDataList.empty() && heightUndoDataList.empty() &&
 		         vsoUndoDataList.empty() );

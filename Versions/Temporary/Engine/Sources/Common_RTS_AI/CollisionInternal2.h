@@ -41,7 +41,7 @@ public:
 		return pUnit ? pUnit->GetUniqueID() : -1;
 	}
 
-	int operator&( IBinSaver &f )
+	int operator&( IBinSaver &f ) override
 	{
 		SerializeBasePathUnit( f, 1, &pUnit );
 		return 0;
@@ -129,7 +129,7 @@ class CCollisionsCollector : public ICollisionsCollector
 	TCollisions collisions;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &collisions );
 		return 0;
@@ -144,8 +144,8 @@ public:
 	void AddCollision( CBasePathUnit *pUnit,
 	                   CBasePathUnit *pPusher,
 	                   const float fDistance,
-	                   const NCollision::ECollideType eCollideType );
-	void HandOutCollisions( CAIMap *pAIMap );
+	                   const NCollision::ECollideType eCollideType ) override;
+	void HandOutCollisions( CAIMap *pAIMap ) override;
 
 	friend struct SSortCollisions;
 };
@@ -162,7 +162,7 @@ class CCollisionBase : public ICollision
 	CPtr<IPath> pPath;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		OnSerialize( f );
 		f.Add( 4, &nPriority );
@@ -200,19 +200,19 @@ public:
 	{
 	}
 
-	virtual void Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority );
+	void Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority ) override;
 
-	const int GetPriority() const
+	const int GetPriority() const override
 	{
 		return nPriority;
 	}
 
-	CBasePathUnit *GetPushUnit() const
+	CBasePathUnit *GetPushUnit() const override
 	{
 		return pPushUnit;
 	}
 
-	void FindCandidates( ICollisionsCollector *pCollisionCollector );
+	void FindCandidates( ICollisionsCollector *pCollisionCollector ) override;
 };
 
 // no collision
@@ -220,11 +220,11 @@ class CFreeCollision : public CCollisionBase
 {
 	OBJECT_NOCOPY_METHODS( CFreeCollision )
 public:
-	void Segment( const NTimer::STime timeDiff ) {}
+	void Segment( const NTimer::STime timeDiff ) override {}
 
-	const bool IsSolved() const;
+	const bool IsSolved() const override;
 
-	const NCollision::ECollisionName GetName() const
+	const NCollision::ECollisionName GetName() const override
 	{
 		return NCollision::ECN_FREE;
 	}
@@ -239,7 +239,7 @@ class CWaitingCollision : public CCollisionBase
 	NTimer::STime timeToWait = 0;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CCollisionBase *)this );
 		f.Add( 2, &bIsSolved );
@@ -254,14 +254,14 @@ public:
 	}
 
 	void Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority, const float fDistance );
-	void Segment( const NTimer::STime timeDiff );
+	void Segment( const NTimer::STime timeDiff ) override;
 
-	const bool IsSolved() const
+	const bool IsSolved() const override
 	{
 		return bIsSolved;
 	}
 
-	const NCollision::ECollisionName GetName() const
+	const NCollision::ECollisionName GetName() const override
 	{
 		return NCollision::ECN_WAIT;
 	}
@@ -278,11 +278,11 @@ public:
 	           const CVec2 &vFinishPoint,
 	           const int nTileSize );
 
-	void Segment( const NTimer::STime timeDiff ) {}
+	void Segment( const NTimer::STime timeDiff ) override {}
 
-	const bool IsSolved() const;
+	const bool IsSolved() const override;
 
-	const NCollision::ECollisionName GetName() const
+	const NCollision::ECollisionName GetName() const override
 	{
 		return NCollision::ECN_GIVE_PLACE;
 	}
@@ -296,7 +296,7 @@ class CStopCollision : public CCollisionBase
 	NTimer::STime timeLeft = 0;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CCollisionBase *)this );
 		f.Add( 2, &timeLeft );
@@ -309,15 +309,15 @@ public:
 	{
 	}
 
-	void Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority );
-	void Segment( const NTimer::STime timeDiff );
+	void Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority ) override;
+	void Segment( const NTimer::STime timeDiff ) override;
 
-	const bool IsSolved() const
+	const bool IsSolved() const override
 	{
 		return timeLeft == 0;
 	}
 
-	const NCollision::ECollisionName GetName() const
+	const NCollision::ECollisionName GetName() const override
 	{
 		return NCollision::ECN_STOP;
 	}

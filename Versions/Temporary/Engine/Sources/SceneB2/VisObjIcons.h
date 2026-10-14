@@ -17,8 +17,8 @@ class CVisObjIconInfo : public CPtrFuncBase<NGScene::CObjectInfo>
 	bool bUpdate;
 
 protected:
-	void Recalc();
-	bool NeedUpdate();
+	void Recalc() override;
+	bool NeedUpdate() override;
 	void OrientToViewer();
 
 	//
@@ -44,7 +44,7 @@ public:
 	}
 
 	//
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, &pCamera );
 		saver.Add( 2, &bUpdate );

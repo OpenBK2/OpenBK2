@@ -349,7 +349,7 @@ namespace
 		{
 		}
 
-		~CSplashScreen();
+		~CSplashScreen() override;
 
 		bool Create( const std::string &rszImageFileName, bool bTopMost );
 	};

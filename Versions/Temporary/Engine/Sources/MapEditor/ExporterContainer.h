@@ -32,33 +32,35 @@ class CExporterContainer : public IExporterContainer
 public:
 	CExporterContainer() {}
 
-	~CExporterContainer() {}
+	~CExporterContainer() override {}
 
 	// IExporterContainer
-	bool CanExportObject( const std::string &rszObjectTypeName );
-	IExporter *GetExporter( const std::string &rszObjectTypeName );
+	bool CanExportObject( const std::string &rszObjectTypeName ) override;
+	IExporter *GetExporter( const std::string &rszObjectTypeName ) override;
 	//
-	void Create( const std::string &rszObjectTypeName );
-	void Destroy( const std::string &rszObjectTypeName );
+	void Create( const std::string &rszObjectTypeName ) override;
+	void Destroy( const std::string &rszObjectTypeName ) override;
 	//
-	void RegisterExportTool( IExportTool *pExportTool );
-	void UnRegisterExportTool( IExportTool *pExportTool );
+	void RegisterExportTool( IExportTool *pExportTool ) override;
+	void UnRegisterExportTool( IExportTool *pExportTool ) override;
 	//
-	bool StartExport( const std::string &rszObjectTypeName, bool bForce, bool bStartTools, bool bExportReferences );
-	void FinishExport( const std::string &rszObjectTypeName, bool bForce, bool bFinishTools, bool bExportReferences );
+	bool
+	StartExport( const std::string &rszObjectTypeName, bool bForce, bool bStartTools, bool bExportReferences ) override;
+	void
+	FinishExport( const std::string &rszObjectTypeName, bool bForce, bool bFinishTools, bool bExportReferences ) override;
 	EXPORT_RESULT ExportObject( IManipulator *pManipulator,
 	                            const std::string &rszObjectTypeName,
 	                            const std::string &rszObjectName,
 	                            bool bForce,
-	                            bool bExportReferences );
+	                            bool bExportReferences ) override;
 	//
-	bool StartCheck( const std::string &rszObjectTypeName, bool bStartTools, bool bCheckReferences );
-	void FinishCheck( const std::string &rszObjectTypeName, bool bFinishTools, bool bCheckReferences );
+	bool StartCheck( const std::string &rszObjectTypeName, bool bStartTools, bool bCheckReferences ) override;
+	void FinishCheck( const std::string &rszObjectTypeName, bool bFinishTools, bool bCheckReferences ) override;
 	EXPORT_RESULT CheckObject( IManipulator *pManipulator,
 	                           const std::string &rszObjectTypeName,
 	                           const std::string &rszObjectName,
-	                           bool bCheckReferences );
+	                           bool bCheckReferences ) override;
 	//
-	EXPORT_RESULT GetExportResult( const std::string &rszObjectRefName );
-	EXPORT_RESULT GetExportResult( const std::string &rszObjectTypeName, const std::string &rszObjectName );
+	EXPORT_RESULT GetExportResult( const std::string &rszObjectRefName ) override;
+	EXPORT_RESULT GetExportResult( const std::string &rszObjectTypeName, const std::string &rszObjectName ) override;
 };

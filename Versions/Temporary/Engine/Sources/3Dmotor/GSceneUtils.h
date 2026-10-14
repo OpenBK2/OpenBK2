@@ -44,12 +44,12 @@ class CMSRNode : public CFuncBase<SFBTransform>
 	OBJECT_BASIC_METHODS( CMSRNode );
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pAncestor.Refresh() | pPos.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CDGPtr<CFuncBase<SFBTransform>> pAncestor;
@@ -58,7 +58,7 @@ public:
 	//
 	CMSRNode() {}
 
-	int operator&( CStructureSaver &f );
+	int operator&( CStructureSaver &f ) override;
 };
 
 // hierarchy forming node
@@ -69,7 +69,7 @@ class CMNode : public CFuncBase<SFBTransform>
 	CDGPtr<CFuncBase<SFBTransform>> pAncestor;
 	CDGPtr<CFuncBase<CVec3>> pMove;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &pAncestor );
 		f.Add( 3, &pMove );
@@ -77,12 +77,12 @@ class CMNode : public CFuncBase<SFBTransform>
 	}
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pAncestor.Refresh() | pMove.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CMNode() {}
@@ -100,12 +100,12 @@ class CScaleNode : public CFuncBase<CTRect<int>>
 	OBJECT_BASIC_METHODS( CScaleNode );
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pSize.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CVec2 vScreenRect;
@@ -114,7 +114,7 @@ public:
 	//
 	CScaleNode() {}
 
-	int operator&( CStructureSaver &f );
+	int operator&( CStructureSaver &f ) override;
 };
 
 // parameters 2 MSR converter
@@ -123,19 +123,19 @@ class CMSRConvert : public CFuncBase<SFBTransform>
 	OBJECT_BASIC_METHODS( CMSRConvert );
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pMove.Refresh() | pRotate.Refresh() | pScale.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CDGPtr<CFuncBase<CVec3>> pMove;
 	CDGPtr<CFuncBase<CVec3>> pRotate;
 	CDGPtr<CFuncBase<CVec3>> pScale;
 	//
-	int operator&( CStructureSaver &f );
+	int operator&( CStructureSaver &f ) override;
 };
 
 class CExtractTranslation : public CFuncBase<CVec3>
@@ -144,19 +144,19 @@ class CExtractTranslation : public CFuncBase<CVec3>
 	ZDATA
 	CDGPtr<CFuncBase<SFBTransform>> pTrans;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &pTrans );
 		return 0;
 	}
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pTrans.Refresh();
 	}
 
-	virtual void Recalc()
+	void Recalc() override
 	{
 		value = pTrans->GetValue().forward.GetTranslation();
 	}
@@ -173,19 +173,19 @@ class CVec3Convert : public CFuncBase<CVec3>
 	OBJECT_BASIC_METHODS( CVec3Convert );
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pX.Refresh() | pY.Refresh() | pZ.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CDGPtr<CFuncBase<float>> pX;
 	CDGPtr<CFuncBase<float>> pY;
 	CDGPtr<CFuncBase<float>> pZ;
 	//
-	int operator&( CStructureSaver &f );
+	int operator&( CStructureSaver &f ) override;
 };
 
 // testing dynamics node only
@@ -194,12 +194,12 @@ class CSinus : public CFuncBase<float>
 	OBJECT_BASIC_METHODS( CSinus );
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pTime.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	float fpMn, fpFreq, fpAdd;
@@ -213,7 +213,7 @@ public:
 		fpAdd = 0;
 	}
 
-	int operator&( CStructureSaver &f );
+	int operator&( CStructureSaver &f ) override;
 };
 
 } // namespace NGScene

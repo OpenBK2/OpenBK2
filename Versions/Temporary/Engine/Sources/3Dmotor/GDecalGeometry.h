@@ -21,7 +21,7 @@ class CDecalGeometry : public CPtrFuncBase<CObjectInfo>
 	float fNormalEdge, fDepthMargin;
 
 public:
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &pSource );
 		f.Add( 3, &vOrigin );
@@ -36,12 +36,12 @@ public:
 	}
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pSource.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CDecalGeometry() {}
@@ -69,7 +69,7 @@ class CPerPolyDecal : public CPtrFuncBase<CObjectInfo>
 	std::vector<CVec3> srcPositions;
 
 public:
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &pPart );
 		f.Add( 3, &data );
@@ -78,7 +78,7 @@ public:
 	}
 
 protected:
-	virtual void Recalc();
+	void Recalc() override;
 	virtual void Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const std::vector<CVec3> &positions ) = 0;
 
 public:
@@ -95,7 +95,7 @@ class CExplosionDecalGeometry : public CPerPolyDecal
 	float fSize, fRotation;
 
 public:
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 1, (CPerPolyDecal *)this );
 		f.Add( 2, &vOrigin );
@@ -105,7 +105,7 @@ public:
 	}
 
 protected:
-	virtual void Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const std::vector<CVec3> &positions );
+	void Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const std::vector<CVec3> &positions ) override;
 
 public:
 	CExplosionDecalGeometry() {}
@@ -130,7 +130,7 @@ class CPerPolyDecalGeometry : public CPerPolyDecal
 	CVec2 vShift;
 
 public:
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 1, (CPerPolyDecal *)this );
 		f.Add( 2, &vOrigin );
@@ -142,7 +142,7 @@ public:
 	}
 
 protected:
-	virtual void Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const std::vector<CVec3> &positions );
+	void Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const std::vector<CVec3> &positions ) override;
 
 public:
 	CPerPolyDecalGeometry() {}

@@ -16,7 +16,7 @@ class CUIVisitor : public IUIVisitor
 	std::list<CTRect<float>> rcStoredClip;
 	bool bClipApplied;
 
-	virtual void ClipRestore()
+	void ClipRestore() override
 	{
 		NI_ASSERT( !rcStoredClip.empty(), "restore empty clip" );
 		rcClip = rcStoredClip.back();
@@ -24,7 +24,7 @@ class CUIVisitor : public IUIVisitor
 		bClipApplied = !rcStoredClip.empty();
 	}
 
-	virtual void ClipSet( const CTRect<float> &_rClip )
+	void ClipSet( const CTRect<float> &_rClip ) override
 	{
 		rcStoredClip.push_back( rcClip );
 		rcClip.Intersect( _rClip );
@@ -48,21 +48,22 @@ public:
 	void VisitZClearRect( const CRectLayout &_sLayout,
 	                      const CTPoint<float> &sPosition,
 	                      const CTRect<float> &sClipWindow,
-	                      float fZ = 1.0f )
+	                      float fZ = 1.0f ) override
 	{
 		CRectLayout sLayout = _sLayout;
 		sLayout.fZ = fZ;
 		p2DView->CreateDynamicClearRects( sLayout, sPosition, sClipWindow );
 	}
 
-	void VisitUIRect( const NDb::STexture *pTexture, const int nShadingEffect, const class CRectLayout &rects )
+	void VisitUIRect( const NDb::STexture *pTexture, const int nShadingEffect, const class CRectLayout &rects ) override
 	{
 		// recalc to new size
 		p2DView->CreateDynamicRects( pTexture, rects, CTPoint<float>( 0, 0 ), rcClip );
 	}
 
-	void
-	VisitUITextureRect( CPtrFuncBase<NGfx::CTexture> *pTexture, const int nShadingEffect, const class CRectLayout &rects )
+	void VisitUITextureRect( CPtrFuncBase<NGfx::CTexture> *pTexture,
+	                         const int nShadingEffect,
+	                         const class CRectLayout &rects ) override
 	{
 		p2DView->CreateDynamicRects( pTexture, rects, CTPoint<float>( 0, 0 ), rcClip );
 	}
@@ -71,12 +72,12 @@ public:
 	                  const int nShadingEffect,
 	                  const CVec2 *pPos4,
 	                  const NGfx::SPixel8888 *pColors4,
-	                  const CTRect<float> &rectTexture )
+	                  const CTRect<float> &rectTexture ) override
 	{
 		ASSERT( 0 ); // not implemented
 	}
 
-	void VisitUIText( IML *pML, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
+	void VisitUIText( IML *pML, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) override
 	{
 		if ( bClipApplied )
 		{

@@ -8,7 +8,7 @@ public:
 	ZDATA
 	SFBTransform pos;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &pos );
 		return 0;

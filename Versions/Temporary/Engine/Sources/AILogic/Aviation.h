@@ -33,7 +33,7 @@ protected:
 	NTimer::STime timeNextGroundScan = 0;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CMilitaryCar *)this );
 		f.Add( 2, &pStats );
@@ -61,7 +61,7 @@ public:
 	{
 	}
 
-	virtual ~CAviation();
+	~CAviation() override;
 
 	const CVec2 &GetAppearPoint() const
 	{
@@ -78,78 +78,78 @@ public:
 		bBombsAutocast = _bBombsAutocast;
 	}
 
-	virtual void Init( const CVec2 &center,
-	                   const int z,
-	                   const SUnitBaseRPGStats *pStats,
-	                   const float fHP,
-	                   const uint16_t dir,
-	                   const uint8_t player,
-	                   ICollisionsCollector *pCollisionsCollector );
+	void Init( const CVec2 &center,
+	           const int z,
+	           const SUnitBaseRPGStats *pStats,
+	           const float fHP,
+	           const uint16_t dir,
+	           const uint8_t player,
+	           ICollisionsCollector *pCollisionsCollector ) override;
 
-	virtual void GetSpeed3( CVec3 *pSpeed ) const;
+	void GetSpeed3( CVec3 *pSpeed ) const override;
 
-	virtual void Segment();
-	virtual void SecondSegment( const NTimer::STime timeDiff );
+	void Segment() override;
+	void SecondSegment( const NTimer::STime timeDiff ) override;
 
-	virtual const SUnitBaseRPGStats *GetStats() const
+	const SUnitBaseRPGStats *GetStats() const override
 	{
 		return pStats;
 	}
 
-	virtual IStatesFactory *GetStatesFactory() const;
+	IStatesFactory *GetStatesFactory() const override;
 
 	// для стрельбы
-	virtual void GetShotInfo( struct SAINotifyMechShot *pShotInfo ) const
+	void GetShotInfo( struct SAINotifyMechShot *pShotInfo ) const override
 	{
 		pShotInfo->typeID = GetShootAction();
 		pShotInfo->nObjUniqueID = GetUniqueId();
 	}
 
-	virtual const EActionNotify GetShootAction() const
+	const EActionNotify GetShootAction() const override
 	{
 		return ACTION_NOTIFY_MECH_SHOOT;
 	}
 
-	virtual const EActionNotify GetAimAction() const
+	const EActionNotify GetAimAction() const override
 	{
 		return ACTION_NOTIFY_AIM;
 	}
 
-	virtual const EActionNotify GetDieAction() const
+	const EActionNotify GetDieAction() const override
 	{
 		return ACTION_NOTIFY_DIE;
 	}
 
-	virtual const EActionNotify GetIdleAction() const
+	const EActionNotify GetIdleAction() const override
 	{
 		return ACTION_NOTIFY_IDLE;
 	}
 
-	virtual const EActionNotify GetMovingAction() const
+	const EActionNotify GetMovingAction() const override
 	{
 		return ACTION_NOTIFY_MOVE;
 	}
 
 	//
-	virtual const bool IsVisible( const uint8_t party ) const
+	const bool IsVisible( const uint8_t party ) const override
 	{
 		return true;
 	}
 
-	virtual NTimer::STime GetDisappearInterval() const
+	NTimer::STime GetDisappearInterval() const override
 	{
 		return 0;
 	}
 
 	// для получения нормали у истребителей.
-	virtual float GetTerrainHeight( const float x, const float y, const NTimer::STime timeDiff ) const
+	float GetTerrainHeight( const float x, const float y, const NTimer::STime timeDiff ) const override
 	{
 		return 0;
 	}
 
-	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
+	void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff ) override;
 
-	virtual bool IsMech() const
+	bool IsMech() const override
 	{
 		return true;
 	}
@@ -160,36 +160,36 @@ public:
 		return GetStats()->eDBtype == NDb::DB_RPG_TYPE_AVIA_STRAT_BOMBER;
 	}
 
-	virtual bool IsHelicopter() const
+	bool IsHelicopter() const override
 	{
 		return false;
 	}
 
-	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const
+	const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const override
 	{
 		return ECT_NONE;
 	}
 
-	virtual const bool CanGoBackward() const
+	const bool CanGoBackward() const override
 	{
 		return false;
 	}
 
-	virtual const float GetSightRadius() const;
-	virtual void Die( const bool fromExplosion, const float fDamage );
+	const float GetSightRadius() const override;
+	void Die( const bool fromExplosion, const float fDamage ) override;
 
-	virtual void Stop() {}
+	void Stop() override {}
 
-	virtual void Disappear();
+	void Disappear() override;
 
 	// залокать unit ( если уже был залокана, то старый lock исчезает )
-	virtual void Lock( const CBasicGun *pGun ) {}
+	void Lock( const CBasicGun *pGun ) override {}
 
 	// unlock unit ( если залокан другим gun-ом, то ничего не делается )
-	virtual void Unlock( const CBasicGun *pGun ) {}
+	void Unlock( const CBasicGun *pGun ) override {}
 
 	// залокан ли каким-либо gun-ом, не равным pGun
-	virtual bool IsLocked( const CBasicGun *pGun ) const
+	bool IsLocked( const CBasicGun *pGun ) const override
 	{
 		return true;
 	}
@@ -203,69 +203,69 @@ public:
 		return vPlanesShift;
 	}
 
-	const SRect &GetUnitRect() const;
+	const SRect &GetUnitRect() const override;
 	virtual const uint16_t GetDir() const;
 	virtual const CVec2 GetDirVector() const;
 	virtual const float GetSpeed() const;
 
-	const NTimer::STime GetNextSecondPathSegmTime() const;
+	const NTimer::STime GetNextSecondPathSegmTime() const override;
 
 	// IPlane implementation
-	virtual CVec3 GetSpeedB2() const;
-	virtual CVec3 GetPosB2() const;
-	virtual CVec3 GetNormalB2() const;
-	virtual const struct IManuver *GetManuver() const;
+	CVec3 GetSpeedB2() const override;
+	CVec3 GetPosB2() const override;
+	CVec3 GetNormalB2() const override;
+	const struct IManuver *GetManuver() const override;
 
 	// next calculated position
-	virtual CVec3 GetPosNext() const;
-	virtual CVec3 GetSpeedNext() const;
-	virtual CVec3 GetNormalNext() const;
+	CVec3 GetPosNext() const override;
+	CVec3 GetSpeedNext() const override;
+	CVec3 GetNormalNext() const override;
 
-	virtual void SetB2( const CVec3 &_vPos, const CVec3 &_vSpeed, const CVec3 &_vNormal )
+	void SetB2( const CVec3 &_vPos, const CVec3 &_vSpeed, const CVec3 &_vNormal ) override
 	{
 		NI_ASSERT( false, "wrong call" );
 	}
 
-	virtual bool IsBeingAttackedB2()
+	bool IsBeingAttackedB2() override
 	{
 		return false;
 	}
 
-	virtual void NotifyAttackedB2( IPlane &attacker, bool bAttack ) {}
-	virtual const class CPlanePreferences &GetPreferencesB2() const;
+	void NotifyAttackedB2( IPlane &attacker, bool bAttack ) override {}
+	const class CPlanePreferences &GetPreferencesB2() const override;
 
 	// fuel control
 	virtual void DecFuel( const bool bEconomyMode );
 	float GetFuel() const;
 
-	virtual class CArtillery *GetTowedArtillery() const
+	class CArtillery *GetTowedArtillery() const override
 	{
 		return 0;
 	}
 
-	virtual const bool CanLockTiles() const
+	const bool CanLockTiles() const override
 	{
 		return false;
 	}
 
-	virtual const float GetZ() const
+	const float GetZ() const override
 	{
 		return GetCenter().z;
 	}
 
-	virtual const EMovementPlane GetMovementPlane() const
+	const EMovementPlane GetMovementPlane() const override
 	{
 		return PLANE_AIR;
 	}
 
-	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats );
+	void GetRPGStats( struct SAINotifyRPGStats *pStats ) override;
 
-	virtual const bool IsAviation() const
+	const bool IsAviation() const override
 	{
 		return true;
 	}
 
-	virtual const float GetVisZ() const
+	const float GetVisZ() const override
 	{
 		return GetCenter().z;
 	}

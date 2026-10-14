@@ -137,7 +137,7 @@ public:
 
 	CXmlReader( const char *pszBegin, const char *pszEnd );
 
-	~CXmlReader()
+	~CXmlReader() override
 	{
 		if ( buf )
 		{

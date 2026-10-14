@@ -77,7 +77,7 @@ const SEntrenchSegmentRPGStats &GetSegmentStats( const int nIndex ) const
 }
 
 //
-virtual void ToAIUnits( bool bInEditor )
+void ToAIUnits( bool bInEditor ) override
 {
 	eGameType = SGVOGT_ENTRENCHMENT;
 	SHPObjectRPGStats::ToAIUnits( bInEditor );

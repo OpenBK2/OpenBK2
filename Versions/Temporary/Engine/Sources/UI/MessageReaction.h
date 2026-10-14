@@ -30,18 +30,18 @@ class CMessageReactionB2 : public IMessageReactionB2
 public:
 	CMessageReactionB2() {}
 
-	virtual bool Execute( struct IScreen *pScreen,
-	                      struct IScriptWrapper *pScript,
-	                      struct IProgrammedReactionsAndChecks *pProg,
-	                      uint16_t wKeyboardFlags ) const;
-	int operator&( IBinSaver &ss );
+	bool Execute( struct IScreen *pScreen,
+	              struct IScriptWrapper *pScript,
+	              struct IProgrammedReactionsAndChecks *pProg,
+	              uint16_t wKeyboardFlags ) const override;
+	int operator&( IBinSaver &ss ) override;
 
 	void AddCommonBefore( IMessageReactionB2 *pReaction )
 	{
 		commonBefore.push_back( pReaction );
 	}
 
-	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
+	void InitByDesc( const struct NDb::SUIDesc *_pDesc ) override;
 };
 
 // Atom EMART_SET_GLOBAL_VAR
@@ -52,12 +52,12 @@ class CARSetGlobalVar : public IMessageReactionB2
 	CDBPtr<NDb::SARSetGlobalVar> pDesc;
 
 public:
-	int operator&( IBinSaver &ss );
-	virtual bool Execute( struct IScreen *pScreen,
-	                      struct IScriptWrapper *pScript,
-	                      struct IProgrammedReactionsAndChecks *pProg,
-	                      uint16_t wKeyboardFlags ) const;
-	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
+	int operator&( IBinSaver &ss ) override;
+	bool Execute( struct IScreen *pScreen,
+	              struct IScriptWrapper *pScript,
+	              struct IProgrammedReactionsAndChecks *pProg,
+	              uint16_t wKeyboardFlags ) const override;
+	void InitByDesc( const struct NDb::SUIDesc *_pDesc ) override;
 };
 
 // Atom EMART_REMOVE_GLOBAL_VAR
@@ -68,12 +68,12 @@ class CARRemoveGlobalVar : public IMessageReactionB2
 	CDBPtr<NDb::SARRemoveGlobalVar> pDesc;
 
 public:
-	int operator&( IBinSaver &ss );
-	virtual bool Execute( struct IScreen *pScreen,
-	                      struct IScriptWrapper *pScript,
-	                      struct IProgrammedReactionsAndChecks *pProg,
-	                      uint16_t wKeyboardFlags ) const;
-	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
+	int operator&( IBinSaver &ss ) override;
+	bool Execute( struct IScreen *pScreen,
+	              struct IScriptWrapper *pScript,
+	              struct IProgrammedReactionsAndChecks *pProg,
+	              uint16_t wKeyboardFlags ) const override;
+	void InitByDesc( const struct NDb::SUIDesc *_pDesc ) override;
 };
 
 class CARSendUIMessage : public IMessageReactionB2
@@ -82,12 +82,12 @@ class CARSendUIMessage : public IMessageReactionB2
 	CDBPtr<NDb::SARSendUIMessage> pDesc;
 
 public:
-	int operator&( IBinSaver &ss );
-	virtual bool Execute( struct IScreen *pScreen,
-	                      struct IScriptWrapper *pScript,
-	                      struct IProgrammedReactionsAndChecks *pProg,
-	                      uint16_t wKeyboardFlags ) const;
-	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
+	int operator&( IBinSaver &ss ) override;
+	bool Execute( struct IScreen *pScreen,
+	              struct IScriptWrapper *pScript,
+	              struct IProgrammedReactionsAndChecks *pProg,
+	              uint16_t wKeyboardFlags ) const override;
+	void InitByDesc( const struct NDb::SUIDesc *_pDesc ) override;
 };
 
 class CARSendGameMessage : public IMessageReactionB2
@@ -96,12 +96,12 @@ class CARSendGameMessage : public IMessageReactionB2
 	CDBPtr<NDb::SARSendGameMessage> pDesc;
 
 public:
-	int operator&( IBinSaver &ss );
-	virtual bool Execute( struct IScreen *pScreen,
-	                      struct IScriptWrapper *pScript,
-	                      struct IProgrammedReactionsAndChecks *pProg,
-	                      uint16_t wKeyboardFlags ) const;
-	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
+	int operator&( IBinSaver &ss ) override;
+	bool Execute( struct IScreen *pScreen,
+	              struct IScriptWrapper *pScript,
+	              struct IProgrammedReactionsAndChecks *pProg,
+	              uint16_t wKeyboardFlags ) const override;
+	void InitByDesc( const struct NDb::SUIDesc *_pDesc ) override;
 };
 
 class CARSiwtchTab : public IMessageReactionB2
@@ -110,10 +110,10 @@ class CARSiwtchTab : public IMessageReactionB2
 	CDBPtr<NDb::SARSwitchTab> pDesc;
 
 public:
-	int operator&( IBinSaver &ss );
-	virtual bool Execute( struct IScreen *pScreen,
-	                      struct IScriptWrapper *pScript,
-	                      struct IProgrammedReactionsAndChecks *pProg,
-	                      uint16_t wKeyboardFlags ) const;
-	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
+	int operator&( IBinSaver &ss ) override;
+	bool Execute( struct IScreen *pScreen,
+	              struct IScriptWrapper *pScript,
+	              struct IProgrammedReactionsAndChecks *pProg,
+	              uint16_t wKeyboardFlags ) const override;
+	void InitByDesc( const struct NDb::SUIDesc *_pDesc ) override;
 };

@@ -88,7 +88,7 @@ class CHeightWxWindowV3 : public CWxHostWindow, public CHeightCommandsV3
 		{
 		}
 
-		virtual void Notify()
+		void Notify() override
 		{
 			pOwner->OnHeightTimer();
 		}
@@ -142,7 +142,7 @@ public:
 				CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_LIST, ID_MITHV3_PROPERTIES );
 	}
 
-	virtual ~CHeightWxWindowV3()
+	~CHeightWxWindowV3() override
 	{
 		heightTimer.Stop();
 		Singleton<ICommandHandlerContainer>()->UnRegister( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3 );
@@ -260,7 +260,7 @@ public:
 	}
 
 	//	CHeightCommandsV3
-	virtual bool GetEditParameters( SEditParams *pEditParameters )
+	bool GetEditParameters( SEditParams *pEditParameters ) override
 	{
 		if ( pEditParameters == 0 )
 		{
@@ -297,7 +297,7 @@ public:
 		return true;
 	}
 
-	virtual bool SetEditParameters( const SEditParams &rEditParameters )
+	bool SetEditParameters( const SEditParams &rEditParameters ) override
 	{
 		bCreateControls = true;
 		if ( rEditParameters.nFlags & MITHV3EP_BRUSH )
@@ -338,7 +338,7 @@ public:
 	// The five commands this palette answers beyond the edit-parameter
 	// pair: the two the state drives its timer with, and the tile list's
 	// three context menu items, which the main frame's menu can also send.
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override
 	{
 		switch ( nCommandID )
 		{
@@ -369,7 +369,7 @@ public:
 		return false;
 	}
 
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override
 	{
 		NI_ASSERT( pbEnable != 0, "CHeightWxWindowV3::UpdateCommand(), pbEnable == 0" );
 		NI_ASSERT( pbCheck != 0, "CHeightWxWindowV3::UpdateCommand(), pbCheck == 0" );
@@ -410,7 +410,7 @@ protected:
 	// window destroyed, or the wx shortcut bar taking its page away. The
 	// timer's only job is to poke the state on the palette's behalf, and a
 	// palette that is going away has nothing to say.
-	virtual void BeforeTearDown()
+	void BeforeTearDown() override
 	{
 		heightTimer.Stop();
 	}

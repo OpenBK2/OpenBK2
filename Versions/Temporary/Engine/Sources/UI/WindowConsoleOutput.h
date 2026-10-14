@@ -39,7 +39,7 @@ class CWindowConsoleOutput : public CWindow, public IConsoleOutput
 	int nBeginString; //начальная отображаемая строка из списка строк
 										//0 считается самой свежей строчкой
 protected:
-	virtual NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
@@ -50,21 +50,21 @@ public:
 	{
 	}
 
-	int operator&( IBinSaver &saver );
-	void InitByDesc( const struct NDb::SUIDesc *_pDesc );
-	void Visit( struct IUIVisitor *pVisitor );
+	int operator&( IBinSaver &saver ) override;
+	void InitByDesc( const struct NDb::SUIDesc *_pDesc ) override;
+	void Visit( struct IUIVisitor *pVisitor ) override;
 
-	void AddString( const std::wstring &szString, const uint32_t color );
-	void Scroll( const int bUp );
-	void ToBegin();
-	void ToEnd();
-	void Init();
+	void AddString( const std::wstring &szString, const uint32_t color ) override;
+	void Scroll( const int bUp ) override;
+	void ToBegin() override;
+	void ToEnd() override;
+	void Init() override;
 
-	void ClearContent()
+	void ClearContent() override
 	{
 		nBeginString = 0;
 		vectorOfStrings.clear();
 	}
 
-	void Segment( const int timeDiff );
+	void Segment( const int timeDiff ) override;
 };

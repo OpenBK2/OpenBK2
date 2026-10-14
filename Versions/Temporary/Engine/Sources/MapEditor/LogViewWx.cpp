@@ -41,7 +41,7 @@ class CLogViewWx : public ILogView
 	}
 
 public:
-	virtual ~CLogViewWx()
+	~CLogViewWx() override
 	{
 		if ( pText )
 		{
@@ -86,7 +86,7 @@ public:
 		pText->Bind( wxEVT_SYS_COLOUR_CHANGED, &CLogViewWx::OnThemeChanged, this );
 	}
 
-	virtual void Append( ELogOutputType eLogOutputType, const std::string &rszText )
+	void Append( ELogOutputType eLogOutputType, const std::string &rszText ) override
 	{
 		if ( pText == nullptr )
 		{
@@ -109,7 +109,7 @@ public:
 		}
 	}
 
-	virtual void Clear()
+	void Clear() override
 	{
 		styledRanges.clear();
 		if ( pText != nullptr )
@@ -118,7 +118,7 @@ public:
 		}
 	}
 
-	virtual void Redraw()
+	void Redraw() override
 	{
 		if ( pText != nullptr )
 		{
@@ -126,7 +126,7 @@ public:
 		}
 	}
 
-	virtual void Copy()
+	void Copy() override
 	{
 		if ( pText != nullptr )
 		{
@@ -134,7 +134,7 @@ public:
 		}
 	}
 
-	virtual void SelectAll()
+	void SelectAll() override
 	{
 		if ( pText != nullptr )
 		{
@@ -142,7 +142,7 @@ public:
 		}
 	}
 
-	virtual bool HasSelection() const
+	bool HasSelection() const override
 	{
 		if ( pText == nullptr )
 		{
@@ -154,7 +154,7 @@ public:
 		return nFrom != nTo;
 	}
 
-	virtual bool IsEmpty() const
+	bool IsEmpty() const override
 	{
 		return pText == nullptr || pText->IsEmpty();
 	}

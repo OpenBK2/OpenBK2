@@ -22,19 +22,19 @@ class CAnimObjBounder : public CFuncBase<SBound>
 	SBound modelBound;
 	CDGPtr<CFuncBase<SFBTransform>> pPosition;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &modelBound );
 		f.Add( 3, &pPosition );
 		return 0;
 	}
 
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pPosition.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 	CAnimObjBounder();
 
 public:

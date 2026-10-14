@@ -8,12 +8,12 @@
 class ED_COMMON_EXPORT CGameInputInterface : public IInterfaceBase, protected NInput::CGMORegContainer
 {
 public:
-	virtual ~CGameInputInterface() {}
+	~CGameInputInterface() override {}
 
 	// IInterfaceBase
-	virtual void OnGetFocus( bool bFocus ) {}
+	void OnGetFocus( bool bFocus ) override {}
 
-	virtual void Step( bool bAppActive ) {}
+	void Step( bool bAppActive ) override {}
 
-	virtual bool ProcessEvent( const struct SGameMessage &msg );
+	bool ProcessEvent( const struct SGameMessage &msg ) override;
 };

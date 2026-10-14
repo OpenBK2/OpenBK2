@@ -47,7 +47,7 @@ class CMOUnitMechanical : public CMOUnit
 	CPtr<IMOUnit> pOneFromCrew;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CMOUnit *)this );
 		OnSerialize( f );
@@ -123,71 +123,71 @@ protected:
 		return bMoved;
 	}
 
-	virtual void InitAttached( const NDb::ESeason eSeason, IChooseAttached *pChooseFunc );
-	void FillIconsInfo( SSceneObjIconInfo &iconInfo );
+	void InitAttached( const NDb::ESeason eSeason, IChooseAttached *pChooseFunc ) override;
+	void FillIconsInfo( SSceneObjIconInfo &iconInfo ) override;
 
 public:
-	virtual bool Create( const int nUniqueID,
-	                     const SAIBasicUpdate *pUpdate,
-	                     NDb::ESeason eSeason,
-	                     const NDb::EDayNight eDayTime,
-	                     bool bInEditor );
+	bool Create( const int nUniqueID,
+	             const SAIBasicUpdate *pUpdate,
+	             NDb::ESeason eSeason,
+	             const NDb::EDayNight eDayTime,
+	             bool bInEditor ) override;
 
-	void GetStatus( SObjectStatus *pStatus ) const;
+	void GetStatus( SObjectStatus *pStatus ) const override;
 	//
-	bool Load( struct IMOUnit *pMO, bool bEnter );
-	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter );
+	bool Load( struct IMOUnit *pMO, bool bEnter ) override;
+	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter ) override;
 
-	void UpdatePassangers() {}
+	void UpdatePassangers() override {}
 
-	void GetPassangers( std::vector<CMOSelectable *> *pBuffer ) const;
+	void GetPassangers( std::vector<CMOSelectable *> *pBuffer ) const override;
 
-	int GetPassangersCount() const
+	int GetPassangersCount() const override
 	{
 		return vPassangers.size();
 	}
 
-	int GetFreePlaces() const;
-	int GetFreeMechPlaces() const;
+	int GetFreePlaces() const override;
+	int GetFreeMechPlaces() const override;
 
-	const CVec3 GetFirePoint( const int nPlatform, const int nGun ) const;
+	const CVec3 GetFirePoint( const int nPlatform, const int nGun ) const override;
 
-	void AIUpdateState( const int nParam );
+	void AIUpdateState( const int nParam ) override;
 	void AIUpdateShot( const struct SAINotifyBaseShot &shot,
 	                   const NTimer::STime &currTime,
 	                   IScene *pScene,
-	                   NDb::ESeason eSeason );
+	                   NDb::ESeason eSeason ) override;
 	IClientUpdatableProcess *
-	AIUpdateMovement( const NTimer::STime &time, const bool _bMove, IScene *pScene, ISoundScene *pSoundScene );
+	AIUpdateMovement( const NTimer::STime &time, const bool _bMove, IScene *pScene, ISoundScene *pSoundScene ) override;
 	void AIUpdateTurretTurn( const struct SAINotifyTurretTurn &turn,
 	                         const NTimer::STime &currTime,
 	                         IScene *pScene,
-	                         const bool bHorTurn );
+	                         const bool bHorTurn ) override;
 	void AIUpdatePlacement( const struct SAINotifyPlacement &placement,
 	                        struct IScene *pScene,
 	                        struct ISoundScene *pSoundScene,
-	                        NDb::ESeason eSeason );
+	                        NDb::ESeason eSeason ) override;
 
 	//
-	virtual void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck );
-	void GetActions( CUserActions *pActions, EActionsType eActions ) const;
-	void GetPossibleActions( CUserActions *pActions ) const;
-	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;
+	void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck ) override;
+	void GetActions( CUserActions *pActions, EActionsType eActions ) const override;
+	void GetPossibleActions( CUserActions *pActions ) const override;
+	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const override;
 	void AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate,
 	                       const NDb::ESeason eSeason,
 	                       const bool bIsNight,
 	                       struct ISoundScene *pSoundScene,
-	                       struct IClientAckManager *pAckManager );
+	                       struct IClientAckManager *pAckManager ) override;
 	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
 	                        struct ISoundScene *pSoundScene,
-	                        IClientAckManager *pAckManager );
-	void AIUpdateAction( const SAIActionUpdate *pUpdate, const NDb::ESeason eSeason );
-	virtual class CMOProjectile *LaunchProjectile( const SAINewProjectileUpdate *pUpdate );
+	                        IClientAckManager *pAckManager ) override;
+	void AIUpdateAction( const SAIActionUpdate *pUpdate, const NDb::ESeason eSeason ) override;
+	class CMOProjectile *LaunchProjectile( const SAINewProjectileUpdate *pUpdate ) override;
 	void SetTransport( IMOContainer *_pTransport );
 	void AIUpdateDeadPlane( const SAIActionUpdate *pUpdate );
 
 	//
-	virtual void Select( bool bSelect );
+	void Select( bool bSelect ) override;
 
 	virtual bool IsMechUnit() const
 	{
@@ -195,7 +195,7 @@ public:
 	}
 
 	//
-	virtual bool NeedShowInterrior() const;
+	bool NeedShowInterrior() const override;
 
 	virtual void SetTrackBroken( const bool bNewValue );
 	void AddShotTrace( const CDBPtr<NDb::SWeaponRPGStats> pWeapon,
@@ -205,12 +205,12 @@ public:
 	                   IScene *pScene );
 	void SetDiveSound( bool bDive );
 
-	bool IsVisible() const
+	bool IsVisible() const override
 	{
 		return CMOUnit::IsVisible() && pTransport == 0;
 	}
 
-	IMOContainer *GetContainer() const
+	IMOContainer *GetContainer() const override
 	{
 		return pTransport;
 	}

@@ -31,7 +31,7 @@ class CSimpleFader : public IFader
 	CPtr<CObjectBase> pOwner;
 	bool bForceWOTimer;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTimer );
 		f.Add( 3, &expFader );
@@ -46,12 +46,12 @@ class CSimpleFader : public IFader
 	bool bNeedUpdate;
 
 protected:
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return bNeedUpdate && ( !pTimer || pTimer.Refresh() || bForceWOTimer );
 	}
 
-	void Recalc()
+	void Recalc() override
 	{
 		if ( pTimer && eFadeType == E_FORCE_HIDE )
 		{
@@ -157,7 +157,7 @@ public:
 	}
 
 	//
-	void SetTimer( CFuncBase<STime> *_pTimer )
+	void SetTimer( CFuncBase<STime> *_pTimer ) override
 	{
 		pTimer = _pTimer;
 		pTimer.Refresh();
@@ -166,7 +166,7 @@ public:
 	}
 
 	//
-	void Hide()
+	void Hide() override
 	{
 		if ( pTimer )
 		{
@@ -190,7 +190,7 @@ public:
 	}
 
 	//
-	void Show()
+	void Show() override
 	{
 		if ( pTimer )
 		{
@@ -214,7 +214,7 @@ public:
 	}
 
 	//
-	CObjectBase *GetOwner() const
+	CObjectBase *GetOwner() const override
 	{
 		return pOwner;
 	}

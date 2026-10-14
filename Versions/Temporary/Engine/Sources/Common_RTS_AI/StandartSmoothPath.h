@@ -31,7 +31,7 @@ public:
 		return pPath;
 	}
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, &pPath );
 		return 0;
@@ -59,7 +59,7 @@ class COMMON_RTS_AI_EXPORT CStandartSmoothPathBasis : public ISmoothPath
 	CPtr<CAIMap> pAIMap;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		OnSerialize( f );
 		f.Add( 3, &pPath );
@@ -178,31 +178,31 @@ public:
 	}
 
 	// возвращает - пошёл юнит по пути или нет
-	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap );
-	virtual bool Init( IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap );
+	bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) override;
+	bool Init( IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap ) override;
 
-	virtual bool IsFinished() const
+	bool IsFinished() const override
 	{
 		return ( GetPath() == 0 || bFinished );
 	}
 
-	virtual void Stop();
+	void Stop() override;
 
-	virtual void Segment( const NTimer::STime timeDiff );
+	void Segment( const NTimer::STime timeDiff ) override;
 
-	virtual const bool CanGoBackward() const
+	const bool CanGoBackward() const override
 	{
 		return true;
 	}
 
-	virtual const bool CanGoForward() const
+	const bool CanGoForward() const override
 	{
 		return true;
 	}
 
-	virtual const CVec2 PeekPathPoint( const int nShift ) const;
+	const CVec2 PeekPathPoint( const int nShift ) const override;
 
-	virtual IMemento *CreateMemento() const
+	IMemento *CreateMemento() const override
 	{
 		return new CStandartSmoothPathMemento( GetPath() );
 	}
@@ -224,7 +224,7 @@ class CStandartSmoothPath : public CStandartSmoothPathBasis
 
 	ZDATA_( CStandartSmoothPathBasis )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStandartSmoothPathBasis *)this );
 		return 0;

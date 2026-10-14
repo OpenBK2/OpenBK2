@@ -10,41 +10,41 @@ class CResourceManagerWrapper : public IResourceManager
 
 public:
 	CResourceManagerWrapper();
-	~CResourceManagerWrapper();
+	~CResourceManagerWrapper() override;
 
 	// IResourceManager
-	IManipulator *CreateTableManipulator();
-	IManipulator *CreateFolderManipulator( const std::string &szName );
-	IManipulator *CreateFolderManipulator( int nID );
-	IManipulator *CreateObjectManipulator( const std::string &szTypeName, const std::string &szObjectName );
+	IManipulator *CreateTableManipulator() override;
+	IManipulator *CreateFolderManipulator( const std::string &szName ) override;
+	IManipulator *CreateFolderManipulator( int nID ) override;
+	IManipulator *CreateObjectManipulator( const std::string &szTypeName, const std::string &szObjectName ) override;
 	IManipulator *CreateObjectManipulator( const std::string &szTypeName, int nID );
 	IManipulator *CreateObjectManipulator( int nTypeID, int nID );
-	IManipulator *CreateObjectManipulator( const std::string &szTypeName, const CDBID &rCDBID );
-	IManipulator *CreateObjectManipulator( const std::string &szObjectName );
-	IManipulator *CreateObjectManipulator( const CDBID &rCDBID );
+	IManipulator *CreateObjectManipulator( const std::string &szTypeName, const CDBID &rCDBID ) override;
+	IManipulator *CreateObjectManipulator( const std::string &szObjectName ) override;
+	IManipulator *CreateObjectManipulator( const CDBID &rCDBID ) override;
 
 	bool SerializeObject( CDataStream *pStream, int nTypeID, int nObjectID );
 	void SerializeObjects( const std::string &szFile );
 	void SerializeObjects( const std::string &szFile, const std::string &szTypeName, const std::string &szRootObject );
 
-	void SetConfig( const SDBConfig &config );
+	void SetConfig( const SDBConfig &config ) override;
 
 	void SetDefControls( const std::string &szFileName );
 	void FillReferencingObjects( bool *pServiceIsReady,
 	                             const std::string &szTypeName,
 	                             const std::string &szObjectName,
-	                             std::list<std::string> &results );
+	                             std::list<std::string> &results ) override;
 	bool HasReferencingObjects( bool *pServiceIsReady, const std::string &szTypeName, int nObjectID );
-	void ResetCache();
+	void ResetCache() override;
 
-	virtual void SetDataDir( const std::string &szDataDir );
+	void SetDataDir( const std::string &szDataDir ) override;
 
-	virtual void SyncDB();
-	virtual bool CanSyncDB();
+	void SyncDB() override;
+	bool CanSyncDB() override;
 
-	virtual bool CheckIn();
-	virtual bool CheckOut();
-	virtual bool GetLatest();
+	bool CheckIn() override;
+	bool CheckOut() override;
+	bool GetLatest() override;
 
-	virtual bool InitializeVersionControl();
+	bool InitializeVersionControl() override;
 };

@@ -13,12 +13,12 @@ class CSkyDomeTransferer : public CFuncBase<SFBTransform>
 	bool bUpdate;
 
 protected:
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return bUpdate;
 	}
 
-	void Recalc()
+	void Recalc() override
 	{
 		bUpdate = false;
 	}
@@ -50,7 +50,7 @@ class CSkyDome : public ISkyDome
 	CObj<CSkyDomeTransferer> pTransferer;
 	CObj<CObjectBase> pSkyDomeMesh;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTransferer );
 		f.Add( 3, &pSkyDomeMesh );
@@ -70,7 +70,7 @@ public:
 	}
 
 	//
-	virtual void SetCameraPos( const CVec3 &vCamPos )
+	void SetCameraPos( const CVec3 &vCamPos ) override
 	{
 		pTransferer->SetCameraPos( vCamPos );
 	}

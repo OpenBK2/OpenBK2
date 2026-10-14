@@ -37,18 +37,18 @@ class CSimpleObjectState : public CMapObjectState
 
 protected:
 	// CMapObjectState
-	bool IsDrawSceneDrawTool()
+	bool IsDrawSceneDrawTool() override
 	{
 		return true;
 	}
 
 	//
-	void InsertObjectEnter();
-	void InsertObjectLeave();
-	void InsertObjectDraw( IPaintContext *pPaintDC );
+	void InsertObjectEnter() override;
+	void InsertObjectLeave() override;
+	void InsertObjectDraw( IPaintContext *pPaintDC ) override;
 	//
-	bool InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainPos );
-	bool InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rTerrainPos );
-	bool InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainPos );
-	bool InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos );
+	bool InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainPos ) override;
+	bool InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rTerrainPos ) override;
+	bool InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainPos ) override;
+	bool InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos ) override;
 };

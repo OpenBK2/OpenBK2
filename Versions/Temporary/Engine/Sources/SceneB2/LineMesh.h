@@ -14,14 +14,14 @@ class CLineMesh : public CPtrFuncBase<NGScene::CObjectInfo>
 	void BuildLine( std::vector<NGScene::SVertex> &verts, std::vector<STriangle> &tris );
 
 protected:
-	void Recalc();
+	void Recalc() override;
 
 	CLineMesh() {}
 
 public:
 	CLineMesh( const CVec2 &vStart, const CVec2 &vEnd, CTerrainManager *_pTerraManager );
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 2, &vStart );
 		saver.Add( 3, &vEnd );

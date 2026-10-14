@@ -14,7 +14,7 @@ class CKillCorpseExecutor : public CExecutor
 	NTimer::STime killTime = {};
 
 	// Keep the original expiry time when resuming a saved simulation.
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CExecutor *)this );
 		f.Add( 2, &pObject );
@@ -30,11 +30,11 @@ public:
 
 	CKillCorpseExecutor( CFakeCorpseStaticObject *pObject );
 
-	virtual bool IsExecutorValid() const;
+	bool IsExecutorValid() const override;
 
-	virtual int Segment();
+	int Segment() override;
 
-	virtual bool NotifyEvent( const CExecutorEvent &event )
+	bool NotifyEvent( const CExecutorEvent &event ) override
 	{
 		return false;
 	}

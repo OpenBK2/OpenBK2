@@ -92,7 +92,7 @@ class CScriptCameraWxWindow : public CWxHostWindow, public CScriptCameraCommands
 		{
 		}
 
-		virtual void Notify()
+		void Notify() override
 		{
 			pOwner->OnDebounce( nCommandID );
 		}
@@ -126,7 +126,7 @@ public:
 		Singleton<ICommandHandlerContainer>()->Set( CHID_SCRIPT_CAMERA_WINDOW, this );
 	}
 
-	virtual ~CScriptCameraWxWindow()
+	~CScriptCameraWxWindow() override
 	{
 		StopTimers();
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_SCRIPT_CAMERA_WINDOW );
@@ -202,7 +202,7 @@ public:
 	}
 
 	//	CScriptCameraCommands
-	virtual void GetDialogData( SWindowData *pData )
+	void GetDialogData( SWindowData *pData ) override
 	{
 		if ( pData == 0 )
 		{
@@ -219,7 +219,7 @@ public:
 		pData->eLastAction = dialogData.eLastAction;
 	}
 
-	virtual void SetDialogData( const SWindowData *pData )
+	void SetDialogData( const SWindowData *pData ) override
 	{
 		if ( pData == 0 )
 		{
@@ -261,7 +261,7 @@ public:
 	}
 
 	//	ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override
 	{
 		// The original's NI_VERIFY, which refuses every command with a zero
 		// dwData before looking at which command it is; see the note at the
@@ -308,7 +308,7 @@ public:
 		return false;
 	}
 
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override
 	{
 		NI_ASSERT( pbEnable != 0, "CScriptCameraWxWindow::UpdateCommand(), pbEnable == 0" );
 		NI_ASSERT( pbCheck != 0, "CScriptCameraWxWindow::UpdateCommand(), pbCheck == 0" );
@@ -343,7 +343,7 @@ protected:
 	// Before the wx side comes down, however it comes down: a debounce
 	// firing after the palette is gone would ask the state to read a box
 	// that no longer exists.
-	virtual void BeforeTearDown()
+	void BeforeTearDown() override
 	{
 		StopTimers();
 	}

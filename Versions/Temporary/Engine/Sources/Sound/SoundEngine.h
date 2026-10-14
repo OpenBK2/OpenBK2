@@ -103,54 +103,54 @@ class CSoundEngine : public ISFX
 	//
 	void ReEnableSounds();
 	//
-	~CSoundEngine();
+	~CSoundEngine() override;
 
 public:
 	CSoundEngine();
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 
-	void Set3DMode( bool _b3DMode );
+	void Set3DMode( bool _b3DMode ) override;
 	// internal-use service functions
 	void MapSound( ISound *pSound, int nChannel );
 	//
-	virtual CObjectBase *QI( int nInterfaceTypeID );
+	CObjectBase *QI( int nInterfaceTypeID ) override;
 	// init and close sound system
-	virtual bool IsInitialized();
-	virtual bool Init( HWND hWnd, int nDriver, ESFXOutputType output, int nMixRate, int nMaxChannels );
+	bool IsInitialized() override;
+	bool Init( HWND hWnd, int nDriver, ESFXOutputType output, int nMixRate, int nMaxChannels ) override;
 
 	//
 	// enable SFXes and streaming
-	virtual void EnableSFX( bool bEnable )
+	void EnableSFX( bool bEnable ) override
 	{
 		bEnableSFX = bEnable;
 		ReEnableSounds();
 	}
 
-	virtual bool IsSFXEnabled() const
+	bool IsSFXEnabled() const override
 	{
 		return bEnableSFX && bSoundCardPresent;
 	}
 
 	//
 	// setup
-	virtual void SetDistanceFactor( float fFactor );
-	virtual void SetRolloffFactor( float fFactor );
+	void SetDistanceFactor( float fFactor ) override;
+	void SetRolloffFactor( float fFactor ) override;
 	//
 	// sample sounds
-	int PlaySample( ISound *pSound, bool bLooped = false, unsigned int nStartPos = 0 );
-	void StopSample( ISound *pSound );
-	void UpdateSample( ISound *pSound );
-	void StopChannel( int nChannel );
+	int PlaySample( ISound *pSound, bool bLooped = false, unsigned int nStartPos = 0 ) override;
+	void StopSample( ISound *pSound ) override;
+	void UpdateSample( ISound *pSound ) override;
+	void StopChannel( int nChannel ) override;
 
 	// Update sounds ( that is needed for 3D sounds )
-	virtual void Update( const CVec3 &vListener, const CVec3 &vCameraDir, NTimer::STime timeDiff );
+	void Update( const CVec3 &vListener, const CVec3 &vCameraDir, NTimer::STime timeDiff ) override;
 	//
-	virtual bool Pause( bool bPause );
-	virtual bool IsPaused();
-	virtual bool IsPlaying( ISound *pSound );
+	bool Pause( bool bPause ) override;
+	bool IsPaused() override;
+	bool IsPlaying( ISound *pSound ) override;
 
-	unsigned int GetCurrentPosition( ISound *pSound );
-	virtual void SetCurrentPosition( ISound *pSound, unsigned int pos );
+	unsigned int GetCurrentPosition( ISound *pSound ) override;
+	void SetCurrentPosition( ISound *pSound, unsigned int pos ) override;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

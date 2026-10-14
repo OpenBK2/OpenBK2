@@ -50,7 +50,7 @@ public:
 	             const std::string &szCfgFile,
 	             const std::string &szBackend = std::string(),
 	             const std::string &szDatabaseFile = std::string() );
-	virtual ~CGameServer();
+	~CGameServer() override;
 
 	class CClients *GetClients()
 	{

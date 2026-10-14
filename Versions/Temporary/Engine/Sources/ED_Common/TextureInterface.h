@@ -9,7 +9,7 @@ class CTextureInterface : public CRunModeInterfaceBase
 public:
 	// life-cycle
 	CTextureInterface();
-	virtual ~CTextureInterface();
+	~CTextureInterface() override;
 };
 
 INTERFACE_COMMAND_DECLARE( CTexturelIC, CTextureInterface )

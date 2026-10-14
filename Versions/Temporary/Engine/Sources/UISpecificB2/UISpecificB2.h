@@ -88,7 +88,7 @@ struct IMiniMap : virtual public IWindow
 	virtual void SetMarkers( const std::vector<SMarker> &markers ) = 0;
 	virtual void SetFigures( const std::vector<SFigure> &figures ) = 0;
 	virtual void SetMaterial( CDBPtr<NDb::SMaterial> pMaterial ) = 0;
-	virtual void SetTexture( const NDb::STexture *pTexture ) = 0;
+	void SetTexture( const NDb::STexture *pTexture ) override = 0;
 	virtual void SetPlayerColor( const int nPlayer, const NGfx::SPixel8888 &color ) = 0;
 	virtual void SetAdditionalScale( float fAdditionalScale ) = 0;
 

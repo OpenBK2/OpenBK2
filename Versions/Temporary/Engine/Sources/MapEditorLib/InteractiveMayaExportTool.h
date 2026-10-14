@@ -10,9 +10,9 @@ class CInteractiveMayaExportTool : public IExportTool
 	OBJECT_NOCOPY_METHODS( CInteractiveMayaExportTool );
 
 public:
-	virtual void StartExportTool() {}
+	void StartExportTool() override {}
 
-	virtual void FinishExportTool()
+	void FinishExportTool() override
 	{
 		CInteractiveMaya *pMayaProcess = CInteractiveMaya::Get();
 		if ( pMayaProcess->IsStarted() )

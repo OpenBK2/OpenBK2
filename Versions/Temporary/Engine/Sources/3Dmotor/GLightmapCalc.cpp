@@ -47,32 +47,32 @@ public:
 	{
 	}
 
-	virtual ETransformType GetTransformType() const
+	ETransformType GetTransformType() const override
 	{
 		return pPart->GetTransformType();
 	}
 
-	virtual const SFBTransform &GetSimplePos()
+	const SFBTransform &GetSimplePos() override
 	{
 		return pPart->GetSimplePos();
 	}
 
-	virtual const std::vector<SHMatrix> &GetAnimation()
+	const std::vector<SHMatrix> &GetAnimation() override
 	{
 		return pPart->GetAnimation();
 	}
 
-	virtual const std::vector<NGfx::SCompactTransformer> &GetMMXAnimation()
+	const std::vector<NGfx::SCompactTransformer> &GetMMXAnimation() override
 	{
 		return pPart->GetMMXAnimation();
 	}
 
-	virtual bool Is2Sided() const
+	bool Is2Sided() const override
 	{
 		return pPart->Is2Sided();
 	}
 
-	virtual intptr_t GetSortValue() const
+	intptr_t GetSortValue() const override
 	{
 		return 0;
 	}
@@ -118,7 +118,7 @@ public:
 	std::vector<CArray2D<NGfx::SPixel8888>> textures;
 
 	ZONSERIALIZE
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &lightmaps );
 		f.Add( 3, &textures );
@@ -194,7 +194,7 @@ public:
 	ZDATA
 	std::vector<SLMGroup> lmGroups;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &lmGroups );
 		return 0;

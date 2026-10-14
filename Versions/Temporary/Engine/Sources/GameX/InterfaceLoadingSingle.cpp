@@ -75,7 +75,7 @@ class CInterfaceLoadingBase::CLoadingScene : public CObjectBase
 	CPtr<IWindow> pScreen;
 
 protected:
-	~CLoadingScene();
+	~CLoadingScene() override;
 
 public:
 	CLoadingScene();
@@ -84,7 +84,7 @@ public:
 
 	void Draw( NGfx::CTexture *pTexture = 0 );
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		NI_ASSERT( 0, "Can't be saved/loaded" );
 		return 0;
@@ -101,7 +101,7 @@ class CInterfaceLoadingBase::CReactions : public IProgrammedReactionsAndChecks
 	CPtr<IWindow> pScreen;
 	bool bIsEffectFinished;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pScreen );
 		f.Add( 3, &bIsEffectFinished );
@@ -111,11 +111,11 @@ class CInterfaceLoadingBase::CReactions : public IProgrammedReactionsAndChecks
 public:
 	CReactions();
 	CReactions( IWindow *pScreen );
-	~CReactions();
+	~CReactions() override;
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 
 	//}
 

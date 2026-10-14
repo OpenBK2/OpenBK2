@@ -28,7 +28,7 @@ class CTankPitLeaveState : public IUnitState
 	CPtr<CAIUnit> pUnit;
 	NTimer::STime timeStartLeave = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eState );
 		f.Add( 3, &pUnit );
@@ -43,15 +43,15 @@ public:
 
 	CTankPitLeaveState( class CAIUnit *pTank );
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1.0f, -1.0f );
 	}
@@ -85,7 +85,7 @@ class CMechUnitEntrenchSelfState : public IUnitState, public CStatusUpdatesHelpe
 	float fOldProgress = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStatusUpdatesHelper *)this );
 		f.Add( 2, &pUnit );
@@ -115,21 +115,21 @@ public:
 	}
 
 	CMechUnitEntrenchSelfState( class CAIUnit *pUnit );
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1.0f, -1.0f );
 	}
 
-	EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_ENTRENCH_SELF;
 	}
@@ -142,7 +142,7 @@ class CSoldierEnterHoldSectorState : public IUnitState
 	CPtr<CAIUnit> pUnit;
 	NTimer::STime nTimeStart = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		f.Add( 3, &nTimeStart );
@@ -159,15 +159,15 @@ public:
 
 	CSoldierEnterHoldSectorState( class CAIUnit *_pUnit );
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1.0f, -1.0f );
 	}
@@ -201,7 +201,7 @@ class CMechUnitInsideMechUnitState : public IUnitState
 	NTimer::STime timeNextCheck = {};
 	CVec2 vDestination; // Final destination to send the unit to, after leaving transport
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		OnSerialize( f );
 		f.Add( 3, &eState );
@@ -232,20 +232,20 @@ public:
 
 	void AttackTarget( CAIUnit *pEnemy );
 	void Unload( const CVec2 &vPoint );
-	void Segment();
-	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return vDestination;
 	}
 
-	EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_MECHUNIT_REST_ON_BOARD;
 	}

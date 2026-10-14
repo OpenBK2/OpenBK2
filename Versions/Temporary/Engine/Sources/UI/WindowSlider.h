@@ -50,7 +50,7 @@ class CWindowSlider : public CWindow, public ISlider
 	bool NeedHandleMouseScrolling() const;
 
 protected:
-	virtual NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
@@ -71,7 +71,7 @@ public:
 	{
 	}
 
-	virtual bool IsHorisontal() const
+	bool IsHorisontal() const override
 	{
 		return pShared->bHorisontal;
 	}
@@ -90,36 +90,36 @@ public:
 	void OnKeyEnd( const struct SGameMessage &msg );
 	// end message sinks
 
-	bool ProcessEvent( const struct SGameMessage &msg );
+	bool ProcessEvent( const struct SGameMessage &msg ) override;
 	//ISlider{
-	void SetRange( const float _fMin, const float _fMax, const float _fPageSize );
-	void GetRange( float *pMax, float *pMin ) const;
-	void SetPos( const float _nCur );
-	float GetPos() const;
+	void SetRange( const float _fMin, const float _fMax, const float _fPageSize ) override;
+	void GetRange( float *pMax, float *pMin ) const override;
+	void SetPos( const float _nCur ) override;
+	float GetPos() const override;
 
-	void SetNotifySink( struct ISliderNotify *_pNotifySink )
+	void SetNotifySink( struct ISliderNotify *_pNotifySink ) override
 	{
 		pNotifySink = _pNotifySink;
 	}
 
-	bool IsLeverVisible() const;
-	void AllowMouseScrolling( const bool _bAllow );
+	bool IsLeverVisible() const override;
+	void AllowMouseScrolling( const bool _bAllow ) override;
 	//ISlider}
 
 	// IWindow & CWindow
-	int operator&( struct IBinSaver &saver );
-	void Reposition( const CTRect<float> &parentRect );
-	void InitByDesc( const struct NDb::SUIDesc *_pDesc );
+	int operator&( struct IBinSaver &saver ) override;
+	void Reposition( const CTRect<float> &parentRect ) override;
+	void InitByDesc( const struct NDb::SUIDesc *_pDesc ) override;
 
-	void Segment( const int timeDiff );
+	void Segment( const int timeDiff ) override;
 
-	bool OnMouseMove( const CVec2 &vPos, const int nButton );
-	bool OnButtonDown( const CVec2 &vPos, const int nButton );
-	bool OnButtonUp( const CVec2 &vPos, const int nButton );
+	bool OnMouseMove( const CVec2 &vPos, const int nButton ) override;
+	bool OnButtonDown( const CVec2 &vPos, const int nButton ) override;
+	bool OnButtonUp( const CVec2 &vPos, const int nButton ) override;
 
-	int GetNSpecialPositions();
-	void SetNSpecialPositions( int nPositions );
-	void SetSpecialPosition( int nPosition );
+	int GetNSpecialPositions() override;
+	void SetNSpecialPositions( int nPositions ) override;
+	void SetSpecialPosition( int nPosition ) override;
 
-	int GetCurrentSpecialPosition() const;
+	int GetCurrentSpecialPosition() const override;
 };

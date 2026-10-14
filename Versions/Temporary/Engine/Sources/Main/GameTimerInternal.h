@@ -33,61 +33,61 @@ public:
 	CGameTimer();
 	CGameTimer( const int nSegmentDuration );
 	// update/reset timer
-	void Update( const NTimer::STime &time );
-	void Reset( const NTimer::STime &time );
+	void Update( const NTimer::STime &time ) override;
+	void Reset( const NTimer::STime &time ) override;
 
 	// get timer DG nodes
-	CFuncBase<NTimer::STime> *GetGameTimer() const
+	CFuncBase<NTimer::STime> *GetGameTimer() const override
 	{
 		return pGameTimer;
 	}
 
-	CFuncBase<NTimer::STime> *GetAbsTimer() const
+	CFuncBase<NTimer::STime> *GetAbsTimer() const override
 	{
 		return pAbsTimer;
 	}
 
-	CFuncBase<STime> *GetGameTimerA5() const
+	CFuncBase<STime> *GetGameTimerA5() const override
 	{
 		return pGameTimerA5;
 	}
 
-	CFuncBase<STime> *GetAbsTimerA5() const
+	CFuncBase<STime> *GetAbsTimerA5() const override
 	{
 		return pAbsTimerA5;
 	}
 
 	// get current independent game time
-	const NTimer::STime &GetGameTime() const;
+	const NTimer::STime &GetGameTime() const override;
 	// get current independent absolute time
-	const NTimer::STime &GetAbsTime() const;
+	const NTimer::STime &GetAbsTime() const override;
 	// get current independent segment time
-	const NTimer::STime &GetSegmentTime() const;
+	const NTimer::STime &GetSegmentTime() const override;
 
-	virtual const float GetSegmentDuration() const
+	const float GetSegmentDuration() const override
 	{
 		return nSegmentDuration;
 	}
 
 	// get segment number
-	int GetSegment() const;
+	int GetSegment() const override;
 	// begin segments block. returns number of segments to process
-	int BeginSegments();
+	int BeginSegments() override;
 
-	bool CanStartNextSegment() const;
+	bool CanStartNextSegment() const override;
 	// increment for next segment. return false if can't increment for next segment
-	bool NextSegment();
+	bool NextSegment() override;
 	// pause
-	void Pause( const bool bPause, const int nType = 0 );
-	int GetPauseType() const;
-	bool HasPause( const int nType ) const;
+	void Pause( const bool bPause, const int nType = 0 ) override;
+	int GetPauseType() const override;
+	bool HasPause( const int nType ) const override;
 	// time speed increase/decrease
-	int SetSpeed( const int nSpeed );
-	int GetSpeed() const;
-	int GetMinSpeed() const;
-	int GetMaxSpeed() const;
+	int SetSpeed( const int nSpeed ) override;
+	int GetSpeed() const override;
+	int GetMinSpeed() const override;
+	int GetMaxSpeed() const override;
 	//
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 } // namespace NGameTimer

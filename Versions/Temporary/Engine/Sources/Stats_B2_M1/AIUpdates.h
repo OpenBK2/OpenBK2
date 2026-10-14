@@ -66,7 +66,7 @@ struct SAIBasicUpdate : public CObjectBase
 	EActionNotify eUpdateType = {};
 	NTimer::STime nUpdateTime = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eUpdateType );
 		f.Add( 3, &nUpdateTime );
@@ -102,7 +102,7 @@ public:
 	int nObjUniqueID = {};
 	int nParam = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nObjUniqueID );
@@ -128,7 +128,7 @@ struct SAIPlacementUpdateBase : public SAIBasicUpdate
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyPlacement info;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
@@ -142,7 +142,7 @@ private:
 	OBJECT_BASIC_METHODS( SAIPlacementUpdate )
 	ZDATA_( SAIPlacementUpdateBase )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIPlacementUpdateBase *)this );
 		return 0;
@@ -159,7 +159,7 @@ public:
 	ZDATA_( SAIPlacementUpdateBase )
 	bool bVisible = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIPlacementUpdateBase *)this );
 		f.Add( 2, &bVisible );
@@ -175,7 +175,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyRPGStats info;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
@@ -191,7 +191,7 @@ public:
 	int nAtomObjectID = {};
 	int nParentID = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nAtomObjectID );
@@ -224,7 +224,7 @@ public:
 	float fDamage = {};
 	CVec3 vExplosionPos;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nObjUniqueID );
@@ -262,7 +262,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyMechShot info;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
@@ -278,7 +278,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyInfantryShot info;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
@@ -294,7 +294,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyHitInfo info;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
@@ -310,7 +310,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyTurretTurn info;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
@@ -326,7 +326,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyEntranceState info;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
@@ -342,7 +342,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyDiplomacy info;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
@@ -358,7 +358,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyKeyBuilding info;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
@@ -377,7 +377,7 @@ public:
 	int nNewSide = {};
 	float fProgress = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nObjUniqueID );
@@ -397,7 +397,7 @@ public:
 	std::vector<SShootAreas> info;
 	int nObjID = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
@@ -414,7 +414,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	SNewUnitInfo info;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
@@ -436,7 +436,7 @@ public:
 	SAINotifyPlacement placement;
 	bool bVisibleWhenDie = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &dieAnimation );
@@ -459,7 +459,7 @@ public:
 	int nDissapearObjID = {};
 	bool bShowEffects = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nDissapearObjID );
@@ -483,7 +483,7 @@ public:
 	bool bLast = {};
 	bool bDigBySegment = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
@@ -506,7 +506,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	SSoldier2Formation info;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
@@ -525,7 +525,7 @@ public:
 	CCircle info;
 	int nParam = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
@@ -543,7 +543,7 @@ public:
 	SChangeDBIDUpdate info;
 	int nObjUniqueID = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
@@ -565,7 +565,7 @@ public:
 	CDBPtr<NDb::SVisObj> pNewSoldierVisObj;
 	CDBPtr<NDb::SVisObj> pParachuteVisObj;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &bStart );
@@ -586,7 +586,7 @@ public:
 	float fTg = {};
 	int nObjUniqueID = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &vDir );
@@ -604,7 +604,7 @@ public:
 	int nObjUniqueID = {};
 	bool bOpen = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nObjUniqueID );
@@ -635,7 +635,7 @@ public:
 	int nPointLight = {};
 	bool bLight = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nObjUniqueID );
@@ -670,7 +670,7 @@ public:
 	int nHeadLight = {};
 	bool bLight = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nObjUniqueID );
@@ -705,7 +705,7 @@ public:
 	int nObjUniqueID = {};
 	bool bNightOn = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nObjUniqueID );
@@ -737,7 +737,7 @@ public:
 	int nObjUniqueID = {};
 	int nWindow = {}; // if -1, when break all windows of the object
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nObjUniqueID );
@@ -768,7 +768,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyNewProjectile info;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
@@ -796,7 +796,7 @@ public:
 	int nWeaponID = {};
 	CVec2 vDirection;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
@@ -840,7 +840,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	int nProjectileUnqiueID = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nProjectileUnqiueID );
@@ -871,7 +871,7 @@ public:
 	CVec3 vExplDir;
 	int nProjectileID = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &eHitType );
@@ -918,7 +918,7 @@ public:
 	float fSpline2 = {};
 	NDb::EScriptCameraRunType eRunType = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &szStartCam );
@@ -953,7 +953,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	NDb::EScriptCameraRunType eRunType = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &eRunType );
@@ -975,7 +975,7 @@ public:
 	bool bLoopPlayback = {};
 	std::string szCallbackFuncName;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nMovieIndex );
@@ -1007,7 +1007,7 @@ public:
 	bool bActive = {};
 	int nTimeTo = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &bActive );
@@ -1054,7 +1054,7 @@ public:
 	bool bCanBuild = {};
 
 public:
-	int operator&( IBinSaver &f )
+	int operator&( IBinSaver &f ) override
 	{
 		if ( !f.IsChecksum() )
 		{
@@ -1086,7 +1086,7 @@ struct SClientUpdateButtonsUpdate : public SAIBasicUpdate
 	OBJECT_NOCOPY_METHODS( SClientUpdateButtonsUpdate );
 	ZDATA_( SAIBasicUpdate )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		return 0;
@@ -1104,7 +1104,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	int nUnitID = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nUnitID );
@@ -1135,7 +1135,7 @@ public:
 	CVec3 vPos;
 	CDBPtr<NDb::SComplexEffect> pEffect;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &vPos );
@@ -1161,7 +1161,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	SAINotifyUpdateLaseMark info;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );
@@ -1192,7 +1192,7 @@ public:
 	uint32_t dwColor = {};
 	bool bAnotherChat = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &wszMessage );
@@ -1221,7 +1221,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	bool bWin = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &bWin );
@@ -1245,7 +1245,7 @@ struct SMoneyChangedUpdate : public SAIBasicUpdate
 public:
 	ZDATA_( SAIBasicUpdate )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		return 0;
@@ -1264,7 +1264,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	bool bStart = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &bStart );
@@ -1291,7 +1291,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	int nVoiceID = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nVoiceID );
@@ -1316,7 +1316,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	int nPlayList = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nPlayList );
@@ -1342,7 +1342,7 @@ public:
 	int nVolumeType = {};
 	float fVolume = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nVolumeType );
@@ -1370,7 +1370,7 @@ public:
 	int nVolumeType = {};
 	bool bPause = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nVolumeType );
@@ -1398,7 +1398,7 @@ public:
 	int nObjectiveNumber = {};
 	int nStatus = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nObjectiveNumber );
@@ -1425,7 +1425,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	bool bEnable = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &bEnable );
@@ -1449,7 +1449,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	int nPos = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nPos );
@@ -1476,7 +1476,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	int nPos = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nPos );
@@ -1502,7 +1502,7 @@ struct SChatClear : public SAIBasicUpdate
 public:
 	ZDATA_( SAIBasicUpdate )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		return 0;

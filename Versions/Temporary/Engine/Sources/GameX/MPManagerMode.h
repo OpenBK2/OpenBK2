@@ -248,11 +248,11 @@ protected:
 
 public:
 	CMPManagerMode();
-	~CMPManagerMode();
+	~CMPManagerMode() override;
 	virtual const ENetMode GetMode() const = 0;
 
 	//{ CPacketProcessor
-	bool Segment();
+	bool Segment() override;
 	//}
 
 	const bool SaveReplay( const std::string &szFileName );
@@ -269,7 +269,7 @@ public:
 	int nSlot;
 	uint32_t ulCheckSum;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nSlot );
 		f.Add( 3, &ulCheckSum );
@@ -295,7 +295,7 @@ public:
 	int nGameID;
 	int nSegment;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nGameID );
 		f.Add( 3, &nSegment );

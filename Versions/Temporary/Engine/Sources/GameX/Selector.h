@@ -303,7 +303,7 @@ public:
 public:
 	CSelector();
 
-	~CSelector() {}
+	~CSelector() override {}
 
 	void Segment();
 
@@ -406,5 +406,5 @@ public:
 
 	void AfterLoad();
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

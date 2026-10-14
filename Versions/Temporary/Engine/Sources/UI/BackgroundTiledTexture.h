@@ -35,9 +35,9 @@ class CBackgroundTiledTexture : public CBackground
 
 public:
 	CBackgroundTiledTexture();
-	virtual void Visit( struct IUIVisitor *pVisitor );
-	virtual int operator&( IBinSaver &ss );
-	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	void Visit( struct IUIVisitor *pVisitor ) override;
+	int operator&( IBinSaver &ss ) override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 
-	virtual void SetPos( const CVec2 &vPos, const CVec2 &vSize );
+	void SetPos( const CVec2 &vPos, const CVec2 &vSize ) override;
 };

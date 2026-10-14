@@ -56,7 +56,7 @@ namespace NBind
 		}
 
 		CBindStruct( CResource *_pStruct, NMetaInfo::SStructMetaInfo *_pMetaInfo );
-		~CBindStruct();
+		~CBindStruct() override;
 
 		//
 		NMetaInfo::SStructMetaInfo *GetMetaInfo() const
@@ -104,7 +104,7 @@ namespace NBind
 		//
 		void SetDBID( const CDBID &_dbid );
 		//
-		void SetChanged();
+		void SetChanged() override;
 		void ResetChanged();
 		bool IsPropertyModified( const std::string &szName );
 
@@ -114,66 +114,66 @@ namespace NBind
 		}
 
 		//
-		IObjMan *CreateManipulator( const std::string &szName )
+		IObjMan *CreateManipulator( const std::string &szName ) override
 		{
 			return bindProcessor.CreateManipulator( szName, this );
 		}
 
-		IObjManIterator *CreateIterator( bool bShowHidden )
+		IObjManIterator *CreateIterator( bool bShowHidden ) override
 		{
 			return bindProcessor.CreateIterator( "", pMetaInfo->pStructTypeDef, this, bShowHidden );
 		}
 
-		std::string GetFullName() const
+		std::string GetFullName() const override
 		{
 			return "";
 		}
 
 		//
-		bool SetValue( const std::string &szName, const CVariant &value )
+		bool SetValue( const std::string &szName, const CVariant &value ) override
 		{
 			SetChanged();
 			return bindProcessor.SetValue( szName, value );
 		}
 
-		bool GetValue( const std::string &szName, CVariant *pValue )
+		bool GetValue( const std::string &szName, CVariant *pValue ) override
 		{
 			return bindProcessor.GetValue( szName, pValue );
 		}
 
 		//
-		bool Insert( const std::string &szName, const int nPos, const int nAmount = 1, bool bSetDefault = false )
+		bool Insert( const std::string &szName, const int nPos, const int nAmount = 1, bool bSetDefault = false ) override
 		{
 			SetChanged();
 			return bindProcessor.Insert( szName, nPos, nAmount, bSetDefault );
 		}
 
-		bool Remove( const std::string &szName, const int nPos, const int nAmount = 1 )
+		bool Remove( const std::string &szName, const int nPos, const int nAmount = 1 ) override
 		{
 			SetChanged();
 			return bindProcessor.Remove( szName, nPos, nAmount );
 		}
 
 		// get property field descriptor by name
-		const NTypeDef::STypeStructBase::SField *GetDesc( const std::string &szFullFieldName ) const
+		const NTypeDef::STypeStructBase::SField *GetDesc( const std::string &szFullFieldName ) const override
 		{
 			return FindField( szFullFieldName, 0, pMetaInfo->pStructTypeDef );
 		}
 
 		//
-		CResource *GetObject()
+		CResource *GetObject() override
 		{
 			return const_cast<CResource *>( pStruct.GetPtr() );
 		}
 
-		const CDBID &GetDBID() const
+		const CDBID &GetDBID() const override
 		{
 			return dbidMain;
 		}
 
 		// additional custom attributes
-		std::wstring GetAttribute( const std::string &szName ) const;
-		void SetAttribute( const std::string &szName, const std::wstring &szValue );
+		std::wstring GetAttribute( const std::string &szName ) const override;
+		void SetAttribute( const std::string &szName, const std::wstring &szValue ) override;
 
 		//
 		CBindArray *GetBindArray( const std::string &szName )
@@ -182,21 +182,21 @@ namespace NBind
 		}
 
 		//
-		bool LoadXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pNode )
+		bool LoadXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pNode ) override
 		{
 			bool bRes = bindProcessor.LoadXML( szAddName, pType, pNode, this );
 			SetLoaded();
 			return bRes;
 		}
 
-		bool SaveXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode )
+		bool SaveXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode ) override
 		{
 			// Building an XML tree is not a disk save. The database clears the dirty
 			// state only after successfully committing the serialized file.
 			return bindProcessor.SaveXML( szAddName, pType, pNode, this );
 		}
 
-		bool SetDefault( const std::string &szAddName, NTypeDef::STypeStructBase *pType )
+		bool SetDefault( const std::string &szAddName, NTypeDef::STypeStructBase *pType ) override
 		{
 			SetChanged();
 			return bindProcessor.SetDefault( szAddName, pType );
@@ -258,28 +258,28 @@ namespace NBind
 		}
 
 		//
-		std::string GetBaseName() const
+		std::string GetBaseName() const override
 		{
 			return pObjMan->GetFullName();
 		}
 
 		// goto next field
-		bool Next();
+		bool Next() override;
 
 		// have we reached end?
-		bool IsEnd() const
+		bool IsEnd() const override
 		{
 			return levels.empty();
 		}
 
 		// get current field's (full) name
-		std::string GetName() const
+		std::string GetName() const override
 		{
 			return levels.empty() ? "" : levels.back().GetName();
 		}
 
 		// get current field descriptor
-		const NTypeDef::STypeStructBase::SField *GetDesc() const
+		const NTypeDef::STypeStructBase::SField *GetDesc() const override
 		{
 			return levels.empty() ? 0 : levels.back().GetDesc();
 		}

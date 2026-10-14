@@ -28,7 +28,7 @@ private:
 
 public:
 	CRegisterEditorsSemiAutoMagic();
-	~CRegisterEditorsSemiAutoMagic();
+	~CRegisterEditorsSemiAutoMagic() override;
 
 	void Load();
 	void Save();

@@ -22,12 +22,12 @@ public:
 
 	CForwardDefinition( NLang::CTypeNode *pTypeNode, const CNodes2TypeDefs &nodes2TypeDefs );
 
-	virtual void GenerateCode( SCodeStreams *pCode,
-	                           const std::string &szTabs,
-	                           NDb::NTypeDef::STypeDef *pParentType,
-	                           const std::string &szQualifiedName );
+	void GenerateCode( SCodeStreams *pCode,
+	                   const std::string &szTabs,
+	                   NDb::NTypeDef::STypeDef *pParentType,
+	                   const std::string &szQualifiedName ) override;
 
-	int operator&( IXmlSaver &saver )
+	int operator&( IXmlSaver &saver ) override
 	{
 		saver.Add( "Type", &pType );
 		return 0;

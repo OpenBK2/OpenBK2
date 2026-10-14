@@ -27,7 +27,7 @@ class CExecutorUnitBase : public CExecutor
 	float fOldProgress = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CExecutor *)this );
 		f.Add( 2, &eAbility );
@@ -115,10 +115,10 @@ protected:
 	CExecutorUnitBase() {}
 
 public:
-	bool NotifyEvent(
-			const CExecutorEvent &event ); // !!!! only events that is for this executor must go here (no checks inside)
+	bool NotifyEvent( const CExecutorEvent &event )
+			override; // !!!! only events that is for this executor must go here (no checks inside)
 
-	int Segment();
+	int Segment() override;
 
 	const EAbilitySwitchState GetState() const
 	{

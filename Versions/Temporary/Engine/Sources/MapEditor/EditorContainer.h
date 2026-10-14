@@ -23,30 +23,31 @@ class CEditorContainer : public IEditorContainer
 	                      const std::string &rszNewChildFrameTypeName );
 
 public:
-	~CEditorContainer()
+	~CEditorContainer() override
 	{
 		DestroyActiveEditor( true );
 	}
 
 	// IEditorContainer
-	bool CanCreate( const std::string &rszObjectTypeName );
+	bool CanCreate( const std::string &rszObjectTypeName ) override;
 	//
-	void Create( const std::string &rszObjectTypeName );
-	void AddExtendObjectType( const std::string &rszBaseObjectTypeName, const std::string &rszExtendObjectTypeName );
-	void Destroy( const std::string &rszObjectTypeName, bool bDestroyChildFrame );
+	void Create( const std::string &rszObjectTypeName ) override;
+	void AddExtendObjectType( const std::string &rszBaseObjectTypeName,
+	                          const std::string &rszExtendObjectTypeName ) override;
+	void Destroy( const std::string &rszObjectTypeName, bool bDestroyChildFrame ) override;
 	//
-	IEditor *Create( IManipulator *_pManipulator, const SObjectSet &rObjectSet );
-	void DestroyActiveEditor( bool bDestroyChildFrame );
-	void ReloadActiveEditor( bool bClearResources );
-	IEditor *GetActiveEditor();
-	IInputState *GetActiveInputState();
+	IEditor *Create( IManipulator *_pManipulator, const SObjectSet &rObjectSet ) override;
+	void DestroyActiveEditor( bool bDestroyChildFrame ) override;
+	void ReloadActiveEditor( bool bClearResources ) override;
+	IEditor *GetActiveEditor() override;
+	IInputState *GetActiveInputState() override;
 	//
-	void CreateControls();
-	void PostCreateControls();
+	void CreateControls() override;
+	void PostCreateControls() override;
 	void ResetGUI() override;
-	void PreDestroyControls();
-	void DestroyControls();
+	void PreDestroyControls() override;
+	void DestroyControls() override;
 	//
-	void Save( bool bSaveChanges );
-	bool IsModified();
+	void Save( bool bSaveChanges ) override;
+	bool IsModified() override;
 };

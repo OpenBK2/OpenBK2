@@ -15,7 +15,7 @@ class CAllowFakeObjToCrushExecutor : public CExecutor
 	NTimer::STime changeTypeTime = {};
 	EStaticObjType eNewType = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CExecutor *)this );
 		f.Add( 2, &pObject );
@@ -28,11 +28,11 @@ public:
 	CAllowFakeObjToCrushExecutor();
 	CAllowFakeObjToCrushExecutor( CFakeCorpseStaticObject *pObject, const int nTimeDelta, const EStaticObjType eType );
 
-	virtual bool IsExecutorValid() const;
+	bool IsExecutorValid() const override;
 
-	virtual int Segment();
+	int Segment() override;
 
-	virtual bool NotifyEvent( const CExecutorEvent &event )
+	bool NotifyEvent( const CExecutorEvent &event ) override
 	{
 		return false;
 	}

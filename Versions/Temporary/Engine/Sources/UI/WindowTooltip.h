@@ -16,7 +16,7 @@ class CWindowTooltip : public CWindow, public ITooltip
 	int nDesiredYPos;
 	std::wstring wszText;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CWindow *)this );
 		f.Add( 2, &pShared );
@@ -29,7 +29,7 @@ class CWindowTooltip : public CWindow, public ITooltip
 	}
 
 protected:
-	virtual NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
@@ -50,16 +50,16 @@ public:
 	// CRAP}
 
 	// return position on screen
-	virtual void InitTooltip( const CVec2 &vPos,
-	                          const CTRect<float> &wndRect,
-	                          const std::wstring &szText,
-	                          IScreen *pScreen,
-	                          const int nTooltipWidth,
-	                          const float fHorisontalToVerticalRatio,
-	                          int nIDForMLHandler );
+	void InitTooltip( const CVec2 &vPos,
+	                  const CTRect<float> &wndRect,
+	                  const std::wstring &szText,
+	                  IScreen *pScreen,
+	                  const int nTooltipWidth,
+	                  const float fHorisontalToVerticalRatio,
+	                  int nIDForMLHandler ) override;
 	void AdjustPosByMousePos( const CVec2 &vMousePos );
 
-	void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 
 	const std::wstring &GetText() const
 	{

@@ -48,7 +48,7 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase, public IProgrammed
 		ZDATA
 		SMPGameInfo info;
 
-		ZEND int operator&( IBinSaver &f )
+		ZEND int operator&( IBinSaver &f ) override
 		{
 			f.Add( 2, &info );
 			return 0;
@@ -67,7 +67,7 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase, public IProgrammed
 	{
 		OBJECT_NOCOPY_METHODS( CItemCustomGameListViewer )
 	public:
-		void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
+		void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const override;
 	};
 
 	//--------------
@@ -140,19 +140,19 @@ private:
 	bool OnPasswordCancel( const std::string &szSender );
 	//}
 protected:
-	~CInterfaceMPCustomGame();
+	~CInterfaceMPCustomGame() override;
 
 public:
 	CInterfaceMPCustomGame();
 
-	bool Init();
-	void OnGetFocus( bool bFocus );
-	bool ProcessEvent( const SGameMessage &msg );
-	void AfterLoad();
+	bool Init() override;
+	void OnGetFocus( bool bFocus ) override;
+	bool ProcessEvent( const SGameMessage &msg ) override;
+	void AfterLoad() override;
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 	//}
 	void SetFiltersData();
 };
@@ -161,9 +161,9 @@ class CICMPCustomGame : public CInterfaceCommandBase<CInterfaceMPCustomGame>
 {
 	OBJECT_BASIC_METHODS( CICMPCustomGame );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

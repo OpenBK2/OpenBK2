@@ -38,7 +38,7 @@ class CAllAnimationsPlayer : public CObjectBase
 	std::unordered_map<int, SAnimationInfo> playingAnimations;
 	bool bSwitchToNextAnimation = false;
 
-ZEND public : int operator&( IBinSaver &f )
+ZEND public : int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &objects );
 		f.Add( 3, &playingAnimations );

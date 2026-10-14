@@ -133,7 +133,7 @@ struct SPropertyDesc : public SIteratorDesc
 	{
 	}
 
-	virtual ~SPropertyDesc() {}
+	~SPropertyDesc() override {}
 
 	//
 };

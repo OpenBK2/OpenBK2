@@ -66,7 +66,7 @@ class CGeneral : public CCommander, public IEnemyContainer
 	int nMaxAllowedMobileTanks = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CCommander *)this );
 		OnSerialize( f );
@@ -155,32 +155,32 @@ public:
 	void SetAAVisible( class CAIUnit *pUnit, const bool bVisible );
 
 	//IEnemyContainer
-	void GiveEnemies( IEnemyEnumerator *pEnumerator );
-	virtual void AddResistance( const CVec2 &vCenter, const float fRadius );
-	virtual void RemoveResistance( const CVec2 &vCenter );
+	void GiveEnemies( IEnemyEnumerator *pEnumerator ) override;
+	void AddResistance( const CVec2 &vCenter, const float fRadius ) override;
+	void RemoveResistance( const CVec2 &vCenter ) override;
 
 	//ICommander
-	virtual float GetMeanSeverity() const
+	float GetMeanSeverity() const override
 	{
 		return 0;
 	}
 
-	virtual void EnumWorkers( const EForceType eType, IWorkerEnumerator *pEnumerator );
-	virtual void GiveResistances( IEnemyEnumerator *pEnmumerator );
+	void EnumWorkers( const EForceType eType, IWorkerEnumerator *pEnumerator ) override;
+	void GiveResistances( IEnemyEnumerator *pEnmumerator ) override;
 
 	// при получении подкрепления его нужно отдать в управление генералу.
 	// забирает работника назад
 	void Give( CCommonUnit *pWorker, bool bFromReinforcement );
 
-	void Give( CCommonUnit *pWorker )
+	void Give( CCommonUnit *pWorker ) override
 	{
 		Give( pWorker, true );
 	}
 
-	void Segment();
+	void Segment() override;
 
-	virtual void CancelRequest( int nRequestID, enum EForceType eType );
-	virtual int /*request ID*/ RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType );
+	void CancelRequest( int nRequestID, enum EForceType eType ) override;
+	int /*request ID*/ RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType ) override;
 
 	// для очагов сопротивления
 	void UpdateEnemyUnitInfo( class CAIUnitInfoForGeneral *pInfo,

@@ -29,12 +29,12 @@ class CShootAreaMesh : public CPtrFuncBase<NGScene::CObjectInfo>
 	static void FillVertexData( NGScene::SVertex &vertex );
 
 protected:
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pTransform.Refresh();
 	}
 
-	void Recalc();
+	void Recalc() override;
 
 	CShootAreaMesh() {}
 
@@ -54,7 +54,7 @@ public:
 	                CTerrainManager *_pTerraManager,
 	                float fWidth = 1.0f );
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 2, &pTerraManager );
 		saver.Add( 3, &pTransform );

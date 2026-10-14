@@ -17,38 +17,38 @@ public:
 
 	//
 	// SObjectInfo
-	SObjectInfo *CallDuplicate() const
+	SObjectInfo *CallDuplicate() const override
 	{
 		return Duplicate();
 	}
 
-	EObjectInfoType GetObjectInfoType()
+	EObjectInfoType GetObjectInfoType() override
 	{
 		return OIT_SIMPLE_OBJECT;
 	}
 
-	virtual bool NeedMakeOrientation();
-	virtual bool KeepZeroHeight();
+	bool NeedMakeOrientation() override;
+	bool KeepZeroHeight() override;
 
-	virtual bool KeepCommonHeight()
+	bool KeepCommonHeight() override
 	{
 		return false;
 	}
 
-	virtual bool NeedProcessEditParameters()
+	bool NeedProcessEditParameters() override
 	{
 		return true;
 	}
 
 	//
-	virtual bool Load( const SObjectLoadInfo *pObjectLoadInfo, IEditorScene *pScene, IManipulator *pManipulator );
-	virtual bool Create( const SObjectCreateInfo *pObjectCreateInfo,
-	                     IEditorScene *pScene,
-	                     CObjectBaseController *pObjectController,
-	                     IManipulator *pManipulator );
+	bool Load( const SObjectLoadInfo *pObjectLoadInfo, IEditorScene *pScene, IManipulator *pManipulator ) override;
+	bool Create( const SObjectCreateInfo *pObjectCreateInfo,
+	             IEditorScene *pScene,
+	             CObjectBaseController *pObjectController,
+	             IManipulator *pManipulator ) override;
 
-	virtual void FillMaskManipulator( class CMaskManipulator *pMaskManipulator ) {}
+	void FillMaskManipulator( class CMaskManipulator *pMaskManipulator ) override {}
 
-	virtual void GetMask( std::string *pszMask ) {}
+	void GetMask( std::string *pszMask ) override {}
 };
 }; // namespace NMapInfoEditor

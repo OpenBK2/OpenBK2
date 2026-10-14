@@ -50,23 +50,23 @@ class CXMLChunkSaver : public IXmlSaver
 	void PushReadChunkLevel( const NXml::CXmlNode *pNode );
 	void PopReadChunkLevel();
 
-	bool StartChunk( const chunk_id idChunk, int nChunkNumber );
-	void FinishChunk();
-	int CountChunks();
+	bool StartChunk( const chunk_id idChunk, int nChunkNumber ) override;
+	void FinishChunk() override;
+	int CountChunks() override;
 
-	bool DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber );
-	bool DataChunk( const chunk_id idChunk, int *pnData, int nChunkNumber );
-	bool DataChunk( const chunk_id idChunk, float *pfData, int nChunkNumber );
-	bool DataChunk( const chunk_id idChunk, bool *pData, int nChunkNumber );
-	bool DataChunk( const chunk_id idChunk, boost::uuids::uuid *pgData, int nChunkNumber );
-	bool DataChunkDBID( CDBID *pDBID );
-	bool DataChunkFilePath( NFile::CFilePath *pFilePath );
-	bool DataChunkString( std::string &data );
-	bool DataChunkString( std::wstring &data );
+	bool DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber ) override;
+	bool DataChunk( const chunk_id idChunk, int *pnData, int nChunkNumber ) override;
+	bool DataChunk( const chunk_id idChunk, float *pfData, int nChunkNumber ) override;
+	bool DataChunk( const chunk_id idChunk, bool *pData, int nChunkNumber ) override;
+	bool DataChunk( const chunk_id idChunk, boost::uuids::uuid *pgData, int nChunkNumber ) override;
+	bool DataChunkDBID( CDBID *pDBID ) override;
+	bool DataChunkFilePath( NFile::CFilePath *pFilePath ) override;
+	bool DataChunkString( std::string &data ) override;
+	bool DataChunkString( std::wstring &data ) override;
 	//
-	void ReportCurrentObject( const CDBID &dbid );
-	void PushCurrentObject( const CDBID &dbid );
-	void PopCurrentObject();
+	void ReportCurrentObject( const CDBID &dbid ) override;
+	void PushCurrentObject( const CDBID &dbid ) override;
+	void PopCurrentObject() override;
 
 	const std::string &GetCurrObjectPath() const
 	{
@@ -74,14 +74,14 @@ class CXMLChunkSaver : public IXmlSaver
 	}
 
 	//
-	bool AddAttribute( const chunk_id attrName, bool *pData );
-	bool AddAttribute( const chunk_id attrName, int *pData );
-	bool AddAttribute( const chunk_id attrName, float *pData );
-	bool AddAttribute( const chunk_id attrName, std::string *pData );
-	bool AddAttribute( const chunk_id attrName, std::wstring *pData );
+	bool AddAttribute( const chunk_id attrName, bool *pData ) override;
+	bool AddAttribute( const chunk_id attrName, int *pData ) override;
+	bool AddAttribute( const chunk_id attrName, float *pData ) override;
+	bool AddAttribute( const chunk_id attrName, std::string *pData ) override;
+	bool AddAttribute( const chunk_id attrName, std::wstring *pData ) override;
 	//
-	void StoreObject( CObjectBase *pObject );
-	CObjectBase *LoadObject();
+	void StoreObject( CObjectBase *pObject ) override;
+	CObjectBase *LoadObject() override;
 	//
 	void Start( CDataStream *pStream, bool bRead );
 	void Finish();
@@ -95,13 +95,13 @@ public:
 		Start( pStream, bRead );
 	}
 
-	~CXMLChunkSaver()
+	~CXMLChunkSaver() override
 	{
 		Finish();
 	}
 
 	//
-	bool IsReading() const
+	bool IsReading() const override
 	{
 		return bReading;
 	}

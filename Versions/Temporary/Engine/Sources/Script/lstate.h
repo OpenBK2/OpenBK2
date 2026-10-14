@@ -135,7 +135,7 @@ public:
 	std::string name;
 	int errorHookRef;
 //	CPtr<CThreadGroup> pGroup;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&top); f.Add(3,&Cbase); f.Add(4,&stack); f.Add(5,&executedCalls); f.Add(6,&thisThreadIsSleeping); f.Add(7,&bErrorInThread); f.Add(8,&name); f.Add(9,&errorHookRef); return 0; }
+	ZEND int operator&( IBinSaver &f ) override { f.Add(2,&top); f.Add(3,&Cbase); f.Add(4,&stack); f.Add(5,&executedCalls); f.Add(6,&thisThreadIsSleeping); f.Add(7,&bErrorInThread); f.Add(8,&name); f.Add(9,&errorHookRef); return 0; }
 
 	lua_State *L;
 
@@ -146,7 +146,7 @@ protected:
 	CLuaThread();
 public:
 	CLuaThread( lua_State *L, const char *name );
-	~CLuaThread();
+	~CLuaThread() override;
 
 	bool HasValidTop() const { return top >= 0 && top < stack.size(); }
 };

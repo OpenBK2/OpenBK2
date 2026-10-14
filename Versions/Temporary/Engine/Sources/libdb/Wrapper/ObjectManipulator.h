@@ -22,35 +22,35 @@ public:
 	}
 
 	// IManipulator
-	IManipulatorIterator *Iterate( bool bShowHidden, ECacheType eCache );
-	const SIteratorDesc *GetDesc( const std::string &szName ) const;
-	bool GetType( const std::string &rszName, std::string *pszType ) const;
-	unsigned GetID( const std::string &rszName ) const;
-	CDBID GetDBID() const;
-	bool GetName( unsigned nID, std::string *pszName ) const;
-	bool GetValue( const std::string &szName, CVariant *pValue ) const;
-	bool SetValue( const std::string &szName, const CVariant &value );
-	bool CheckValue( const std::string &szName, const CVariant &value, bool *pResult ) const;
+	IManipulatorIterator *Iterate( bool bShowHidden, ECacheType eCache ) override;
+	const SIteratorDesc *GetDesc( const std::string &szName ) const override;
+	bool GetType( const std::string &rszName, std::string *pszType ) const override;
+	unsigned GetID( const std::string &rszName ) const override;
+	CDBID GetDBID() const override;
+	bool GetName( unsigned nID, std::string *pszName ) const override;
+	bool GetValue( const std::string &szName, CVariant *pValue ) const override;
+	bool SetValue( const std::string &szName, const CVariant &value ) override;
+	bool CheckValue( const std::string &szName, const CVariant &value, bool *pResult ) const override;
 
-	NDb::IObjMan *GetObjMan()
+	NDb::IObjMan *GetObjMan() override
 	{
 		return pObjMan;
 	}
 
-	bool InsertNode( const std::string &szName, int nNodeIndex = NODE_ADD_INDEX );
-	bool RemoveNode( const std::string &szName, int nNodeIndex = NODE_REMOVEALL_INDEX );
-	bool RemoveNodeByID( const std::string &szName, int nNodeID );
+	bool InsertNode( const std::string &szName, int nNodeIndex = NODE_ADD_INDEX ) override;
+	bool RemoveNode( const std::string &szName, int nNodeIndex = NODE_REMOVEALL_INDEX ) override;
+	bool RemoveNodeByID( const std::string &szName, int nNodeID ) override;
 
-	bool RenameNode( const std::string &szName, const std::string &szNewName )
+	bool RenameNode( const std::string &szName, const std::string &szNewName ) override
 	{
 		return false;
 	}
 
-	bool IsNameExists( const std::string &rszName ) const;
+	bool IsNameExists( const std::string &rszName ) const override;
 
-	void GetNameList( CNameMap *pNameMap ) const {}
+	void GetNameList( CNameMap *pNameMap ) const override {}
 
-	void ClearCache();
+	void ClearCache() override;
 };
 
 class CObjectManipulatorIteratorWrapper : public IManipulatorIterator
@@ -69,18 +69,18 @@ public:
 	}
 
 	//interface functions
-	bool Next();
-	bool IsEnd() const;
-	const SIteratorDesc *GetDesc() const;
-	bool GetType( std::string *pszType ) const;
-	bool GetName( std::string *pszName ) const;
+	bool Next() override;
+	bool IsEnd() const override;
+	const SIteratorDesc *GetDesc() const override;
+	bool GetType( std::string *pszType ) const override;
+	bool GetName( std::string *pszName ) const override;
 
-	unsigned GetID() const
+	unsigned GetID() const override
 	{
 		return INVALID_NODE_ID;
 	}
 
-	bool IsFolder() const
+	bool IsFolder() const override
 	{
 		return false;
 	}

@@ -88,7 +88,7 @@ public:
 	{
 	}
 
-	~CGrannyFile();
+	~CGrannyFile() override;
 };
 
 struct SGrannyFileLoaderInfo
@@ -153,7 +153,7 @@ class CGrannyMemFileLoader : public CLazyResourceLoader<SGrannyFileLoaderInfo, C
 {
 	OBJECT_BASIC_METHODS( CGrannyMemFileLoader );
 
-	virtual CFileRequest *CreateRequest()
+	CFileRequest *CreateRequest() override
 	{
 		const SResKey<SGrannyFileLoaderInfo> &k = GetKey();
 		static const char *str;
@@ -162,7 +162,7 @@ class CGrannyMemFileLoader : public CLazyResourceLoader<SGrannyFileLoaderInfo, C
 	}
 
 	//
-	virtual void RecalcValue( CFileRequest *p );
+	void RecalcValue( CFileRequest *p ) override;
 };
 
 class CGrannyMeshLoader : public CHoldedPtrFuncBase<CObjectInfo>
@@ -176,7 +176,7 @@ class CGrannyMeshLoader : public CHoldedPtrFuncBase<CObjectInfo>
 	std::string sLightMapped;
 	bool bLightMapped = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pGrannyFile );
 		f.Add( 3, &key );
@@ -187,10 +187,10 @@ class CGrannyMeshLoader : public CHoldedPtrFuncBase<CObjectInfo>
 	}
 
 protected:
-	bool NeedUpdate();
+	bool NeedUpdate() override;
 
 public:
-	void Recalc();
+	void Recalc() override;
 
 	bool IsLightMapped()
 	{

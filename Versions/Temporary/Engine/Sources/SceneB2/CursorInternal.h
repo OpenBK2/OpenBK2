@@ -33,32 +33,32 @@ class CCursor : public ICursor
 	//! Free every registered cursor and forget the current one.
 	void ClearModes();
 	//
-	~CCursor();
+	~CCursor() override;
 
 public:
 	CCursor();
 
-	bool Init()
+	bool Init() override
 	{
 		return true;
 	}
 
 	// cursor mode
-	void RegisterMode( const int nMode, const std::string &szFileName );
-	bool SetMode( const int nMode );
-	void OnSetCursor();
-	void Step();
+	void RegisterMode( const int nMode, const std::string &szFileName ) override;
+	bool SetMode( const int nMode ) override;
+	void OnSetCursor() override;
+	void Step() override;
 	// show/hide cursor
-	void Show( const bool bShow );
+	void Show( const bool bShow ) override;
 	// set movement bounds
-	void SetBounds( const int x1, const int y1, const int x2, const int y2 );
+	void SetBounds( const int x1, const int y1, const int x2, const int y2 ) override;
 	// acquire control over cursor
-	void Acquire( const bool bAcquire );
+	void Acquire( const bool bAcquire ) override;
 	// direct set cursor position
-	void SetPos( const int nX, const int nY );
+	void SetPos( const int nX, const int nY ) override;
 	// get current (!) cursor position
-	const CVec2 GetPos() const;
-	virtual void CanShow( const bool bCanShow );
+	const CVec2 GetPos() const override;
+	void CanShow( const bool bCanShow ) override;
 	//
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

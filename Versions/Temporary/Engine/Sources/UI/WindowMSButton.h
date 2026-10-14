@@ -176,20 +176,20 @@ private:
 	void ApplySubstateText( const CButtonSubStateVisual &substate );
 
 protected:
-	NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
 
 	//{ overrided
-	const std::wstring &GetDBFormatText() const;
-	const std::wstring &GetDBInstanceText() const;
-	const NDb::SWindowPlacement *GetDBTextPlacement() const;
+	const std::wstring &GetDBFormatText() const override;
+	const std::wstring &GetDBInstanceText() const override;
+	const NDb::SWindowPlacement *GetDBTextPlacement() const override;
 	//}
 public:
-	void SetTextString( const std::wstring &wszText );
-	void SetOutline( const CDBID &outlineType );
-	void Visit( struct IUIVisitor *pVisitor );
+	void SetTextString( const std::wstring &wszText ) override;
+	void SetOutline( const CDBID &outlineType ) override;
+	void Visit( struct IUIVisitor *pVisitor ) override;
 
 	void OnActivatePushedState( const SGameMessage &msg );
 
@@ -201,47 +201,47 @@ public:
 	{
 	}
 
-	bool OnMouseMove( const CVec2 &vPos, const int nButton );
-	bool OnButtonDown( const CVec2 &vPos, const int nButton );
-	bool OnButtonUp( const CVec2 &vPos, const int nButton );
-	bool OnButtonDblClk( const CVec2 &vPos, const int nButton );
+	bool OnMouseMove( const CVec2 &vPos, const int nButton ) override;
+	bool OnButtonDown( const CVec2 &vPos, const int nButton ) override;
+	bool OnButtonUp( const CVec2 &vPos, const int nButton ) override;
+	bool OnButtonDblClk( const CVec2 &vPos, const int nButton ) override;
 
-	void SetNotifySink( struct IButtonNotify *pNotify )
+	void SetNotifySink( struct IButtonNotify *pNotify ) override
 	{
 		pButtonNotify = pNotify;
 	}
 
-	int operator&( struct IBinSaver &saver );
-	void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	int operator&( struct IBinSaver &saver ) override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 
-	void NotifyStateSequenceFinished();
-	void Init();
+	void NotifyStateSequenceFinished() override;
+	void Init() override;
 
-	bool IsPushed() const
+	bool IsPushed() const override
 	{
 		return states[pInstance->nState].eSubState == NDb::BST_PUSHED_DEEP;
 	}
 
 	// void Enable( const bool bEnable );
 
-	void SetNextState();
-	void SetState( const int nState );
-	void SetStateWithVisual( const int nState );
+	void SetNextState() override;
+	void SetState( const int nState ) override;
+	void SetStateWithVisual( const int nState ) override;
 
-	int GetState() const
+	int GetState() const override
 	{
 		return pInstance->nState;
 	}
-	class CButtonGroup *GetButtonGroup();
-	void SetButtonGroup( const int nGroup );
-	void SetEffectSubState( const NDb::EButtonSubstateType eSubState, bool bEffect );
-	int GetState( const std::string &szName );
-	void SetTexture( const struct NDb::STexture *pDesc );
+	class CButtonGroup *GetButtonGroup() override;
+	void SetButtonGroup( const int nGroup ) override;
+	void SetEffectSubState( const NDb::EButtonSubstateType eSubState, bool bEffect ) override;
+	int GetState( const std::string &szName ) override;
+	void SetTexture( const struct NDb::STexture *pDesc ) override;
 
 	//enabled / disabled
-	void Enable( const bool bEnable );
+	void Enable( const bool bEnable ) override;
 	// bool IsEnabled() const = 0;
-	void AfterLoad();
+	void AfterLoad() override;
 
-	void Reposition( const CTRect<float> &parentRect );
+	void Reposition( const CTRect<float> &parentRect ) override;
 };

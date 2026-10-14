@@ -20,16 +20,16 @@ protected:
 	CPathFractionComplexBase() {}
 
 public:
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, &substitute );
 		return 0;
 	}
 
-	virtual float GetLength() const;
-	virtual CVec3 GetPoint( const float fDist ) const;
-	virtual CVec3 GetTangent( const float fDist ) const;
-	virtual CVec3 GetNormale( const float fDist ) const;
+	float GetLength() const override;
+	CVec3 GetPoint( const float fDist ) const override;
+	CVec3 GetTangent( const float fDist ) const override;
+	CVec3 GetNormale( const float fDist ) const override;
 };
 
 // CPathFractionComplex
@@ -46,12 +46,12 @@ public:
 	{
 	}
 
-	virtual void GetSimplePath( CPathList *paths )
+	void GetSimplePath( CPathList *paths ) override
 	{
 		NI_ASSERT( false, "wrong call" );
 	}
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, static_cast<CPathFractionComplexBase *>( this ) );
 		return 0;

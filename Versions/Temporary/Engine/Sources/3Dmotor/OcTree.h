@@ -190,7 +190,7 @@ public:
 		}
 	}
 
-	int operator&( CStructureSaver &f )
+	int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 1, &ptBase );
 		f.Add( 2, &fSize );

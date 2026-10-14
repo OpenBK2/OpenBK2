@@ -47,13 +47,13 @@ public:
 	CServerClient() {}
 
 	CServerClient( const char *pServerIPAddress, const int nNetGameVersion, const int nServerPort, const int _nTimeOut );
-	~CServerClient();
+	~CServerClient() override;
 
-	virtual class CNetPacket *GetPacket();
-	virtual void SendPacket( class CNetPacket *pPacket );
-	virtual void SendGamePacket( class CNetPacket *pPacket, bool bBroadcast );
+	class CNetPacket *GetPacket() override;
+	void SendPacket( class CNetPacket *pPacket ) override;
+	void SendGamePacket( class CNetPacket *pPacket, bool bBroadcast ) override;
 
-	virtual void Segment();
+	void Segment() override;
 
 	// debug functions
 	void TogglePause( bool bPause );

@@ -56,7 +56,7 @@ private:
 	int nSelectedBranch;
 	int nLeftBranch;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &pMainWnd );
@@ -84,12 +84,12 @@ private:
 public:
 	CInterfaceArmyBranchDlg();
 
-	bool Init();
+	bool Init() override;
 	void SetParams( const std::vector<CInterfaceArmyBranchDlg::SBranch> &branches );
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 	//}
 };
 
@@ -100,7 +100,7 @@ class CICArmyBranchDlg : public CInterfaceCommandBase<CInterfaceArmyBranchDlg>
 	ZDATA_( CInterfaceCommandBase<CInterfaceArmyBranchDlg> )
 	std::vector<CInterfaceArmyBranchDlg::SBranch> branches;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceArmyBranchDlg> *)this );
 		f.Add( 2, &branches );
@@ -108,13 +108,13 @@ class CICArmyBranchDlg : public CInterfaceCommandBase<CInterfaceArmyBranchDlg>
 	}
 
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
 	CICArmyBranchDlg() {}
 
 	CICArmyBranchDlg( const std::vector<CInterfaceArmyBranchDlg::SBranch> &branches );
 
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

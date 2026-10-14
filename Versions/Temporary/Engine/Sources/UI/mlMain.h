@@ -17,7 +17,7 @@ private:
 	std::wstring wsText;
 	int nSize;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nPos );
 		f.Add( 3, &wsText );

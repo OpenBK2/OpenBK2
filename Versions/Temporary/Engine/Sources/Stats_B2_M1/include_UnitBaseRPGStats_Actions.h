@@ -13,7 +13,7 @@ inline void RemValue( CUserCommands &array, int nBit )
 
 void ToAIUnits( bool bInEditor );
 
-virtual void PostLoad( bool bInEditor )
+void PostLoad( bool bInEditor ) override
 {
 	ToAIUnits( bInEditor );
 }

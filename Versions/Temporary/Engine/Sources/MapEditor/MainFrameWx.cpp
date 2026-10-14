@@ -121,7 +121,7 @@ protected:
 	// system border above and below, and the control bar's two-pixel top
 	// border. wx's own is the font's height and four borders, which came out
 	// four pixels taller.
-	virtual wxSize DoGetBestSize() const override
+	wxSize DoGetBestSize() const override
 	{
 		wxSize size = wxStatusBar::DoGetBestSize();
 		wxClientDC dc( const_cast<CClassicStatusBar *>( this ) );
@@ -558,7 +558,7 @@ public:
 		Bind( wxEVT_AUITOOLBAR_TOOL_DROPDOWN, &CWxMainFrame::OnToolDropDown, this );
 	}
 
-	virtual ~CWxMainFrame()
+	~CWxMainFrame() override
 	{
 		auiManager.UnInit();
 		DetachMenuBar();
@@ -576,7 +576,7 @@ public:
 		wxTheApp->ExitMainLoop();
 	}
 
-	virtual wxStatusBar *OnCreateStatusBar( int nNumber, long nStyle, wxWindowID id, const wxString &rName ) override
+	wxStatusBar *OnCreateStatusBar( int nNumber, long nStyle, wxWindowID id, const wxString &rName ) override
 	{
 		CClassicStatusBar *const pStatusBar = NWx::Child<CClassicStatusBar>( this, id, nStyle, rName );
 		pStatusBar->SetFieldsCount( nNumber );
@@ -669,14 +669,14 @@ public:
 
 	// IWidget and IWxWidget: what dialogs, message boxes and popup menus are
 	// owned by.
-	virtual void *GetNativeWidget()
+	void *GetNativeWidget() override
 	{
 		// GetHandle rather than GetHWND: the same handle on Windows, and the
 		// spelling that exists everywhere. See WxWidget.h, which says the same.
 		return GetHandle();
 	}
 
-	virtual wxWindow *GetWxWindow()
+	wxWindow *GetWxWindow() override
 	{
 		return this;
 	}
@@ -684,8 +684,9 @@ public:
 	// IMainFrame
 	// As CMainFrame's: the button under the mouse, then the button in the
 	// first shown toolbar that has it -- in screen coordinates.
-	virtual bool
-	GetToolBarButtonLeftBottomPos( const CTPoint<int> &rMousePoint, unsigned nButtonID, CTPoint<int> *pLeftBottomPos )
+	bool GetToolBarButtonLeftBottomPos( const CTPoint<int> &rMousePoint,
+	                                    unsigned nButtonID,
+	                                    CTPoint<int> *pLeftBottomPos ) override
 	{
 		const wxPoint point( rMousePoint.x, rMousePoint.y );
 		for ( int nPass = 0; nPass < 2; ++nPass )
@@ -720,7 +721,7 @@ public:
 		return false;
 	}
 
-	virtual IFrameWindow *CreateChildFrame( unsigned nResource )
+	IFrameWindow *CreateChildFrame( unsigned nResource ) override
 	{
 		if ( pWorkspace == nullptr )
 		{
@@ -734,7 +735,7 @@ public:
 		return frameWindows.back().get();
 	}
 
-	virtual bool SetChildFrameWindowContents( IFrameWindow *pChildFrame, IWidget *pContents )
+	bool SetChildFrameWindowContents( IFrameWindow *pChildFrame, IWidget *pContents ) override
 	{
 		NMainFrameWxPanes::CFrameWindow *const pHandle = static_cast<NMainFrameWxPanes::CFrameWindow *>( pChildFrame );
 		if ( ( pHandle == 0 ) || ( pHandle->GetPanel() == nullptr ) )
@@ -751,12 +752,12 @@ public:
 		return false;
 	}
 
-	virtual IDockPanel *CreateControlBar( unsigned *pnID,
-	                                      const std::string &rszTitle,
-	                                      const unsigned nStyle,
-	                                      const unsigned nPlace,
-	                                      const float fRate,
-	                                      const int nWidth )
+	IDockPanel *CreateControlBar( unsigned *pnID,
+	                              const std::string &rszTitle,
+	                              const unsigned nStyle,
+	                              const unsigned nPlace,
+	                              const float fRate,
+	                              const int nWidth ) override
 	{
 		NI_ASSERT( pnID != 0, "CWxMainFrame::CreateControlBar() pnID == 0" );
 		// The id made unique among the panes, as SECControlBar::GetUniqueBarID
@@ -777,7 +778,7 @@ public:
 		return dockPanels.back().get();
 	}
 
-	virtual bool SetControlBarWindowContents( IDockPanel *pDockPanel, IWidget *pContents )
+	bool SetControlBarWindowContents( IDockPanel *pDockPanel, IWidget *pContents ) override
 	{
 		NMainFrameWxPanes::CDockPanel *const pHandle = static_cast<NMainFrameWxPanes::CDockPanel *>( pDockPanel );
 		if ( ( pHandle == 0 ) || ( pHandle->GetPanel() == nullptr ) )
@@ -793,7 +794,7 @@ public:
 		return false;
 	}
 
-	virtual bool AddMenuResources( std::vector<unsigned> &rMenuIDList )
+	bool AddMenuResources( std::vector<unsigned> &rMenuIDList ) override
 	{
 		if ( rMenuIDList.empty() )
 		{
@@ -816,7 +817,7 @@ public:
 		return true;
 	}
 
-	virtual void ShowMenu( const unsigned nResourceID )
+	void ShowMenu( const unsigned nResourceID ) override
 	{
 		const std::map<unsigned, wxMenuBar *>::const_iterator posMenuBar = menuBars.find( nResourceID );
 		if ( posMenuBar != menuBars.end() )
@@ -827,22 +828,22 @@ public:
 	}
 
 	// The large pictures were never used: the toolbars are small.
-	virtual bool AddToolBarResource( const unsigned nStandartResourceID, const unsigned nLargeResourceID )
+	bool AddToolBarResource( const unsigned nStandartResourceID, const unsigned nLargeResourceID ) override
 	{
 		return toolBarImages.AddToolBarResource( nStandartResourceID );
 	}
 
 	// SECToolBarManager::DefineDefaultToolBar, docked along the top where
 	// nStyle says, next to the toolbar made before it.
-	virtual void CreateToolBar( unsigned *pnID,
-	                            const std::string &rszTitle,
-	                            const unsigned nButtonCount,
-	                            const unsigned *pButtonIDMap,
-	                            const uint32_t dwAlignment,
-	                            const unsigned nStyle,
-	                            const bool bDocked,
-	                            const bool bVisible,
-	                            const bool bMainToolBar )
+	void CreateToolBar( unsigned *pnID,
+	                    const std::string &rszTitle,
+	                    const unsigned nButtonCount,
+	                    const unsigned *pButtonIDMap,
+	                    const uint32_t dwAlignment,
+	                    const unsigned nStyle,
+	                    const bool bDocked,
+	                    const bool bVisible,
+	                    const bool bMainToolBar ) override
 	{
 		NI_ASSERT( pnID != 0, "CWxMainFrame::CreateToolBar() pnID == 0" );
 		if ( ( *pnID ) == 0xFFFFFFFF )
@@ -917,14 +918,14 @@ public:
 				new NMainFrameWxPanes::CToolBar( &auiManager, pToolBar, &bLaidOut ) );
 	}
 
-	virtual IToolBar *GetToolBar( unsigned nID )
+	IToolBar *GetToolBar( unsigned nID ) override
 	{
 		const std::map<unsigned, std::unique_ptr<NMainFrameWxPanes::CToolBar>>::const_iterator posToolBar =
 				toolBars.find( nID );
 		return ( posToolBar != toolBars.end() ) ? posToolBar->second.get() : 0;
 	}
 
-	virtual void SetStatusBarText( int nPaneIndex, const std::string &szText )
+	void SetStatusBarText( int nPaneIndex, const std::string &szText ) override
 	{
 		if ( ( nPaneIndex >= 0 ) && ( nPaneIndex < N_STATUSBAR_PANES ) )
 		{
@@ -932,7 +933,7 @@ public:
 		}
 	}
 
-	virtual void SetWindowTitle( const SSWTParams &rSWTParams )
+	void SetWindowTitle( const SSWTParams &rSWTParams ) override
 	{
 		std::string szTitle;
 		if ( NMainFrameShared::UpdateTitle( &currentSWTParams, rSWTParams, &szTitle ) )
@@ -944,12 +945,12 @@ public:
 	// The menu event the command's item would send, queued: OnMenu answers
 	// it after the caller returns, as it answered the WM_COMMAND the callers
 	// posted to the main window before (ToCommandID maps both back).
-	virtual void PostCommand( unsigned nCommandID )
+	void PostCommand( unsigned nCommandID ) override
 	{
 		QueueEvent( new wxCommandEvent( wxEVT_MENU, ToWxID( nCommandID ) ) );
 	}
 
-	virtual bool PopupResourceMenu( unsigned nMenuID, size_t nSubMenu, int nScreenX, int nScreenY )
+	bool PopupResourceMenu( unsigned nMenuID, size_t nSubMenu, int nScreenX, int nScreenY ) override
 	{
 		const NResources::SMenuItem *pItems = nullptr;
 		size_t nCount = 0;
@@ -970,7 +971,7 @@ public:
 	}
 
 	// ILogger
-	virtual void Log( ELogOutputType eLogOutputType, const std::string &szText )
+	void Log( ELogOutputType eLogOutputType, const std::string &szText ) override
 	{
 		if ( pLogPane )
 		{
@@ -978,7 +979,7 @@ public:
 		}
 	}
 
-	virtual void ClearLog()
+	void ClearLog() override
 	{
 		if ( pLogPane )
 		{
@@ -986,14 +987,14 @@ public:
 		}
 	}
 
-	virtual void SaveObjectStorage( int nGDBBrowserID )
+	void SaveObjectStorage( int nGDBBrowserID ) override
 	{
 		Singleton<IUserDataContainer>()->Get()->nFocusedGDBBrowserID = nGDBBrowserID;
 		RestoreObjectStorage();
 	}
 
 	// The focused Game Database pane answers CHID_OBJECT_STORAGE and CHID_MAIN.
-	virtual void RestoreObjectStorage()
+	void RestoreObjectStorage() override
 	{
 		if ( NMainFrameWxPanes::CGDBBrowserPane *const pPane =
 		         FindGDBBrowserPane( Singleton<IUserDataContainer>()->Get()->nFocusedGDBBrowserID ) )
@@ -1002,58 +1003,58 @@ public:
 		}
 	}
 
-	virtual bool BrowseLink( std::string *pszResult,
-	                         const std::string &rszInitialValue,
-	                         const SPropertyDesc *pPropertyDesc,
-	                         bool bMultiRef,
-	                         bool bEnableEdit )
+	bool BrowseLink( std::string *pszResult,
+	                 const std::string &rszInitialValue,
+	                 const SPropertyDesc *pPropertyDesc,
+	                 bool bMultiRef,
+	                 bool bEnableEdit ) override
 	{
 		return NMainFrameShared::BrowseLink( pszResult, rszInitialValue, pPropertyDesc, bMultiRef, bEnableEdit );
 	}
 
-	virtual bool
-	BrowseForObject( CDBID *pObjectDBID, std::string *pszObjectTypeName, bool bEnableEdit, bool bEnableEmpty )
+	bool
+	BrowseForObject( CDBID *pObjectDBID, std::string *pszObjectTypeName, bool bEnableEdit, bool bEnableEmpty ) override
 	{
 		return NMainFrameShared::BrowseForObject( pObjectDBID, pszObjectTypeName, bEnableEdit, bEnableEmpty );
 	}
 
-	virtual void CreateProgressDialog()
+	void CreateProgressDialog() override
 	{
 		progress.Create( this );
 	}
 
-	virtual void DestroyProgressDialog()
+	void DestroyProgressDialog() override
 	{
 		progress.Destroy();
 	}
 
-	virtual void SetProgressDialogTitle( const std::string &rszTitle )
+	void SetProgressDialogTitle( const std::string &rszTitle ) override
 	{
 		progress.SetTitle( rszTitle );
 	}
 
-	virtual void SetProgressDialogMessage( const std::string &rszMessage )
+	void SetProgressDialogMessage( const std::string &rszMessage ) override
 	{
 		progress.SetMessage( rszMessage );
 	}
 
-	virtual void SetProgressDialogRange( int nStart, int nFinish )
+	void SetProgressDialogRange( int nStart, int nFinish ) override
 	{
 		progress.SetRange( nStart, nFinish );
 	}
 
-	virtual void SetProgressDialogPosition( int nPosition )
+	void SetProgressDialogPosition( int nPosition ) override
 	{
 		progress.SetPosition( nPosition );
 	}
 
-	virtual void IterateProgressDialogPosition()
+	void IterateProgressDialogPosition() override
 	{
 		progress.IteratePosition();
 	}
 
 	// ICommandHandler, as CHID_VIEW.
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override
 	{
 		switch ( nCommandID )
 		{
@@ -1079,7 +1080,7 @@ public:
 		}
 	}
 
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override
 	{
 		switch ( nCommandID )
 		{

@@ -15,7 +15,7 @@ public:
 	int nPointID = {};
 	NDb::SReinforcementPosition position;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &bEnable );
@@ -41,7 +41,7 @@ public:
 	CDBPtr<NDb::SReinforcement> pReinf;
 	int nReinforcementCallsLeft = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &bEnabled );
@@ -68,7 +68,7 @@ public:
 	NTimer::STime timeRecycleEnd = {};
 	float fProgress = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &bEnabled );

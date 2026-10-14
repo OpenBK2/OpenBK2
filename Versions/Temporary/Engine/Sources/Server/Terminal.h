@@ -26,7 +26,7 @@ public:
 	CTerminal() {}
 
 	CTerminal( CCommands *_pCommands, const int _nPort );
-	~CTerminal();
+	~CTerminal() override;
 	void Segment();
 	void OutString( const std::string &szString );
 

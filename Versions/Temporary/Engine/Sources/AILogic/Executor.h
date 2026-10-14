@@ -413,7 +413,7 @@ struct IExecutor : public CAIObjectBase
 	// if return false then this executor is to be deleted from any list
 	virtual bool IsExecutorValid() const = 0;
 
-	virtual int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		return 0;
 	}
@@ -429,7 +429,7 @@ class CExecutor : public IExecutor
 	int nID = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eTypeID );
 		f.Add( 3, &bActive );
@@ -447,7 +447,7 @@ protected:
 
 	CExecutor( const EExecutorTypeID _eTypeID, const int _nNextTime );
 	CExecutor();
-	virtual ~CExecutor();
+	~CExecutor() override;
 
 public:
 	void IncID()

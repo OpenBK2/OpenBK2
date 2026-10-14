@@ -18,8 +18,8 @@ class CMiniMapLayer : public CPtrFuncBase<NGfx::CTexture>
 	int nLastUpdateTime;
 
 protected:
-	bool NeedUpdate();
-	void Recalc();
+	bool NeedUpdate() override;
+	void Recalc() override;
 
 public:
 	CMiniMapLayer()
@@ -58,7 +58,7 @@ public:
 
 	void Clear();
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 class CDrawMiniMapPixelFunctional
@@ -223,7 +223,7 @@ private:
 	void SetBaseRotableParams();
 
 protected:
-	virtual NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
@@ -231,38 +231,38 @@ protected:
 	bool MsgMouseMoveEmit( const SGameMessage &msg );
 
 	//{ CWindow
-	bool IsActiveArea( const CVec2 &vPos ) const;
+	bool IsActiveArea( const CVec2 &vPos ) const override;
 	//}
 public:
 	CWindowMiniMap();
-	void LoadMap( const int nWidth, const int nHeight, const int nWarFogLevel );
-	void SetLoadingMapParams( int nWidth, int nHeight );
-	CVec2 GetAIToScreen( const CVec2 &vPos ) const;
+	void LoadMap( const int nWidth, const int nHeight, const int nWarFogLevel ) override;
+	void SetLoadingMapParams( int nWidth, int nHeight ) override;
+	CVec2 GetAIToScreen( const CVec2 &vPos ) const override;
 
-	void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 
-	void Visit( struct IUIVisitor *pVisitor );
+	void Visit( struct IUIVisitor *pVisitor ) override;
 
-	bool OnButtonDown( const CVec2 &vPos, const int nButton );
-	bool OnButtonUp( const CVec2 &vPos, const int nButton );
-	bool OnMouseMove( const CVec2 &vPos, const int nButton );
+	bool OnButtonDown( const CVec2 &vPos, const int nButton ) override;
+	bool OnButtonUp( const CVec2 &vPos, const int nButton ) override;
+	bool OnMouseMove( const CVec2 &vPos, const int nButton ) override;
 
-	void SetUnits( const std::vector<SMiniMapUnitInfo> &vUnits );
-	void SetViewport( const std::vector<CVec2> &vPoints );
-	void SetWarFog( const CArray2D<uint8_t> *pWarFogInfo );
-	void SetMarkers( const std::vector<SMarker> &markers );
-	void SetFigures( const std::vector<SFigure> &figures );
+	void SetUnits( const std::vector<SMiniMapUnitInfo> &vUnits ) override;
+	void SetViewport( const std::vector<CVec2> &vPoints ) override;
+	void SetWarFog( const CArray2D<uint8_t> *pWarFogInfo ) override;
+	void SetMarkers( const std::vector<SMarker> &markers ) override;
+	void SetFigures( const std::vector<SFigure> &figures ) override;
 
-	void SetPlayerColor( const int nPlayer, const NGfx::SPixel8888 &color );
+	void SetPlayerColor( const int nPlayer, const NGfx::SPixel8888 &color ) override;
 
-	virtual void SetRangeInfo( const int nUnitID, const SShootAreas &rangeInfo );
-	virtual void RemoveAllRangeInfo();
+	void SetRangeInfo( const int nUnitID, const SShootAreas &rangeInfo ) override;
+	void RemoveAllRangeInfo() override;
 
-	virtual void SetMaterial( CDBPtr<NDb::SMaterial> pMaterial );
-	void SetTexture( const NDb::STexture *pTexture );
+	void SetMaterial( CDBPtr<NDb::SMaterial> pMaterial ) override;
+	void SetTexture( const NDb::STexture *pTexture ) override;
 
-	void SetAdditionalScale( float fAdditionalScale );
-	virtual void AfterLoad();
-	void SetNortDirectionTexture( const NDb::STexture *pTexture );
-	int operator&( IBinSaver &saver );
+	void SetAdditionalScale( float fAdditionalScale ) override;
+	void AfterLoad() override;
+	void SetNortDirectionTexture( const NDb::STexture *pTexture ) override;
+	int operator&( IBinSaver &saver ) override;
 };

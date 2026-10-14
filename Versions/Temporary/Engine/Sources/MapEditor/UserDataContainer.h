@@ -9,18 +9,18 @@ class CUserDataContainer : public IUserDataContainer
 
 public:
 	CUserDataContainer();
-	~CUserDataContainer();
+	~CUserDataContainer() override;
 
 	void GetXMLFilePath( std::string *pszXMLFilePath );
 	void GetConstXMLFilePath( std::string *pszConstXMLFilePath );
 
 	// IUserDataContainer
-	SUserData *Get()
+	SUserData *Get() override
 	{
 		return &userData;
 	}
 
 	//
-	void Load();
-	void Save();
+	void Load() override;
+	void Save() override;
 };

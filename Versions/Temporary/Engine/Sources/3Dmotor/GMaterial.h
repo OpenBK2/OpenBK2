@@ -66,7 +66,7 @@ class CGenericMaterial : public IMaterial
 	float fAngVel;
 	EDynamicType eType;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &bDoesCastShadow );
 		f.Add( 3, &vAvrgTexColor );
@@ -129,7 +129,7 @@ class CGenericMaterial : public IMaterial
 	                    const SLightInfo &lightInfo,
 	                    int nROP,
 	                    CRenderCmdList::UParameter p1,
-	                    CRenderCmdList::UParameter p2 );
+	                    CRenderCmdList::UParameter p2 ) override;
 
 public:
 	CGenericMaterial( bool _bDoesCastShadow = true, bool _bBackFaceCastShadow = false )
@@ -156,79 +156,79 @@ public:
 	{
 	}
 
-	virtual bool DoesCastShadow() const
+	bool DoesCastShadow() const override
 	{
 		return bDoesCastShadow;
 	}
 
-	virtual bool IsOpaque() const
+	bool IsOpaque() const override
 	{
 		return !IsAlphaTest() && mt == NORMAL;
 	}
 
-	virtual bool IsAlphaTest() const
+	bool IsAlphaTest() const override
 	{
 		return bAlphaTest;
 	}
 
-	virtual NGfx::CTexture *GetAlphaTestTex();
+	NGfx::CTexture *GetAlphaTestTex() override;
 
-	virtual bool IsTransparent() const
+	bool IsTransparent() const override
 	{
 		return mt == MT_TRANSPARENT;
 	}
 
-	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo );
-	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC );
-	virtual void AddCustomOperation( COpGenContext *pOp,
-	                                 const ERenderOperation &op,
-	                                 unsigned char nPass,
-	                                 int nSBM,
-	                                 char nDestRegister,
-	                                 CRenderCmdList::UParameter p = CRenderCmdList::UParameter() );
-	virtual void SetTransparentRenderMode( NGfx::CRenderContext *pRC,
-	                                       const SPerPartVariables &vars,
-	                                       const SLightInfo &lightInfo,
-	                                       SRenderPathContext *pRPC );
+	void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) override;
+	void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC ) override;
+	void AddCustomOperation( COpGenContext *pOp,
+	                         const ERenderOperation &op,
+	                         unsigned char nPass,
+	                         int nSBM,
+	                         char nDestRegister,
+	                         CRenderCmdList::UParameter p = CRenderCmdList::UParameter() ) override;
+	void SetTransparentRenderMode( NGfx::CRenderContext *pRC,
+	                               const SPerPartVariables &vars,
+	                               const SLightInfo &lightInfo,
+	                               SRenderPathContext *pRPC ) override;
 
-	virtual bool Is2Sided() const
+	bool Is2Sided() const override
 	{
 		return b2Sided;
 	}
 
-	virtual bool IsSelfIllum() const
+	bool IsSelfIllum() const override
 	{
 		return bSelfIllum;
 	}
 
-	virtual void Precache();
+	void Precache() override;
 
-	virtual CVec3 GetTranslucentColor() const
+	CVec3 GetTranslucentColor() const override
 	{
 		return vTranslucentColor;
 	}
 
-	virtual bool IsProjectOnTerrain() const
+	bool IsProjectOnTerrain() const override
 	{
 		return bProjectOnTerrain;
 	}
 
-	virtual bool DoesSupportLightmaps() const
+	bool DoesSupportLightmaps() const override
 	{
 		return true;
 	}
 
-	virtual bool DoesIgnoreZ() const
+	bool DoesIgnoreZ() const override
 	{
 		return bIgnoreZ;
 	}
 
-	virtual bool DoesBackFaceCastShadow() const
+	bool DoesBackFaceCastShadow() const override
 	{
 		return bBackFaceCastShadow;
 	}
 
-	EDynamicType GetDynamicType()
+	EDynamicType GetDynamicType() override
 	{
 		return eType;
 	}
@@ -297,7 +297,7 @@ public:
 		fDetailScale = _fDetailScale;
 	}
 
-	void SetPriority( int _nPriority )
+	void SetPriority( int _nPriority ) override
 	{
 		nPriority = _nPriority;
 	}
@@ -354,8 +354,8 @@ public:
 	}
 
 	IMaterial *GetExactDecal();
-	virtual IMaterial *GetWindAffected();
-	virtual IMaterial *GetNoReceiveShadows();
+	IMaterial *GetWindAffected() override;
+	IMaterial *GetNoReceiveShadows() override;
 };
 
 class CWaterMaterial : public IMaterial
@@ -367,7 +367,7 @@ class CWaterMaterial : public IMaterial
 	bool bApplyFog;
 	bool bAddPlaced;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTex );
 		f.Add( 3, &pSecondTex );
@@ -387,7 +387,7 @@ class CWaterMaterial : public IMaterial
 	                    const SLightInfo &lightInfo,
 	                    int nROP,
 	                    CRenderCmdList::UParameter p1,
-	                    CRenderCmdList::UParameter p2 );
+	                    CRenderCmdList::UParameter p2 ) override;
 
 public:
 	CWaterMaterial() {}
@@ -405,47 +405,47 @@ public:
 	{
 	}
 
-	virtual bool DoesCastShadow() const
+	bool DoesCastShadow() const override
 	{
 		return false;
 	}
 
-	virtual bool IsOpaque() const
+	bool IsOpaque() const override
 	{
 		return false;
 	}
 
-	virtual bool IsAlphaTest() const
+	bool IsAlphaTest() const override
 	{
 		return false;
 	}
 
-	virtual bool IsTransparent() const
+	bool IsTransparent() const override
 	{
 		return false;
 	}
 
-	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) {}
+	void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) override {}
 
-	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC );
-	virtual void AddCustomOperation( COpGenContext *pOp,
-	                                 const ERenderOperation &op,
-	                                 unsigned char nPass,
-	                                 int nSBM,
-	                                 char nDestRegister,
-	                                 CRenderCmdList::UParameter p = CRenderCmdList::UParameter() );
+	void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC ) override;
+	void AddCustomOperation( COpGenContext *pOp,
+	                         const ERenderOperation &op,
+	                         unsigned char nPass,
+	                         int nSBM,
+	                         char nDestRegister,
+	                         CRenderCmdList::UParameter p = CRenderCmdList::UParameter() ) override;
 
-	virtual bool Is2Sided() const
+	bool Is2Sided() const override
 	{
 		return false;
 	}
 
-	virtual bool IsSelfIllum() const
+	bool IsSelfIllum() const override
 	{
 		return false;
 	}
 
-	virtual void Precache();
+	void Precache() override;
 };
 
 class _3DMOTOR_EXPORT CAnimWaterMaterial : public IMaterial
@@ -462,7 +462,7 @@ class _3DMOTOR_EXPORT CAnimWaterMaterial : public IMaterial
 	bool bAddPlaced;
 	bool bDrawHorses;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTex );
 		f.Add( 3, &pSecondTex );
@@ -483,7 +483,7 @@ class _3DMOTOR_EXPORT CAnimWaterMaterial : public IMaterial
 	                    const SLightInfo &lightInfo,
 	                    int nROP,
 	                    CRenderCmdList::UParameter p1,
-	                    CRenderCmdList::UParameter p2 );
+	                    CRenderCmdList::UParameter p2 ) override;
 
 public:
 	CAnimWaterMaterial() {}
@@ -499,49 +499,49 @@ public:
 	                    bool _bAddPlaced,
 	                    bool _bDrawHorses );
 
-	virtual bool DoesCastShadow() const
+	bool DoesCastShadow() const override
 	{
 		return false;
 	}
 
-	virtual bool IsOpaque() const
+	bool IsOpaque() const override
 	{
 		return false;
 	}
 
-	virtual bool IsAlphaTest() const
+	bool IsAlphaTest() const override
 	{
 		return false;
 	}
 
-	virtual bool IsTransparent() const
+	bool IsTransparent() const override
 	{
 		return false;
 	}
 
-	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) {}
+	void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) override {}
 
-	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC );
-	virtual void AddCustomOperation( COpGenContext *pOp,
-	                                 const ERenderOperation &op,
-	                                 unsigned char nPass,
-	                                 int nSBM,
-	                                 char nDestRegister,
-	                                 CRenderCmdList::UParameter p = CRenderCmdList::UParameter() );
+	void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC ) override;
+	void AddCustomOperation( COpGenContext *pOp,
+	                         const ERenderOperation &op,
+	                         unsigned char nPass,
+	                         int nSBM,
+	                         char nDestRegister,
+	                         CRenderCmdList::UParameter p = CRenderCmdList::UParameter() ) override;
 
-	virtual bool Is2Sided() const
+	bool Is2Sided() const override
 	{
 		return false;
 	}
 
-	virtual bool IsSelfIllum() const
+	bool IsSelfIllum() const override
 	{
 		return false;
 	}
 
-	virtual void Precache();
+	void Precache() override;
 
-	virtual bool IsProjectOnTerrain() const
+	bool IsProjectOnTerrain() const override
 	{
 		return bProjectOnTerrain;
 	}
@@ -557,7 +557,7 @@ class CSurfMaterial : public IMaterial
 	bool bApplyFog;
 	bool bAddPlaced;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTex );
 		f.Add( 3, &pSecondTex );
@@ -572,7 +572,7 @@ class CSurfMaterial : public IMaterial
 	                    const SLightInfo &lightInfo,
 	                    int nROP,
 	                    CRenderCmdList::UParameter p1,
-	                    CRenderCmdList::UParameter p2 );
+	                    CRenderCmdList::UParameter p2 ) override;
 
 public:
 	CSurfMaterial() {}
@@ -592,47 +592,47 @@ public:
 	{
 	}
 
-	virtual bool DoesCastShadow() const
+	bool DoesCastShadow() const override
 	{
 		return false;
 	}
 
-	virtual bool IsOpaque() const
+	bool IsOpaque() const override
 	{
 		return false;
 	}
 
-	virtual bool IsAlphaTest() const
+	bool IsAlphaTest() const override
 	{
 		return false;
 	}
 
-	virtual bool IsTransparent() const
+	bool IsTransparent() const override
 	{
 		return false;
 	}
 
-	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) {}
+	void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) override {}
 
-	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC );
-	virtual void AddCustomOperation( COpGenContext *pOp,
-	                                 const ERenderOperation &op,
-	                                 unsigned char nPass,
-	                                 int nSBM,
-	                                 char nDestRegister,
-	                                 CRenderCmdList::UParameter p = CRenderCmdList::UParameter() );
+	void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC ) override;
+	void AddCustomOperation( COpGenContext *pOp,
+	                         const ERenderOperation &op,
+	                         unsigned char nPass,
+	                         int nSBM,
+	                         char nDestRegister,
+	                         CRenderCmdList::UParameter p = CRenderCmdList::UParameter() ) override;
 
-	virtual bool Is2Sided() const
+	bool Is2Sided() const override
 	{
 		return false;
 	}
 
-	virtual bool IsSelfIllum() const
+	bool IsSelfIllum() const override
 	{
 		return false;
 	}
 
-	virtual void Precache();
+	void Precache() override;
 };
 
 class CReflectWaterMaterial : public IMaterial
@@ -655,7 +655,7 @@ class CReflectWaterMaterial : public IMaterial
 	CDGPtr<CPtrFuncBase<NGfx::CCubeTexture>> pSky;
 	float fReflectionZ;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTex );
 		f.Add( 3, &nPriority );
@@ -673,7 +673,7 @@ class CReflectWaterMaterial : public IMaterial
 	                    const SLightInfo &lightInfo,
 	                    int nROP,
 	                    CRenderCmdList::UParameter p1,
-	                    CRenderCmdList::UParameter p2 );
+	                    CRenderCmdList::UParameter p2 ) override;
 
 public:
 	CReflectWaterMaterial() {}
@@ -699,54 +699,54 @@ public:
 	{
 	}
 
-	virtual bool DoesCastShadow() const
+	bool DoesCastShadow() const override
 	{
 		return false;
 	}
 
-	virtual bool IsOpaque() const
+	bool IsOpaque() const override
 	{
 		return false;
 	}
 
-	virtual bool IsAlphaTest() const
+	bool IsAlphaTest() const override
 	{
 		return false;
 	}
 
-	virtual bool IsTransparent() const
+	bool IsTransparent() const override
 	{
 		return false;
 	}
 
-	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) {}
+	void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) override {}
 
-	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC );
-	virtual void AddCustomOperation( COpGenContext *pOp,
-	                                 const ERenderOperation &op,
-	                                 unsigned char nPass,
-	                                 int nSBM,
-	                                 char nDestRegister,
-	                                 CRenderCmdList::UParameter p = CRenderCmdList::UParameter() );
+	void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC ) override;
+	void AddCustomOperation( COpGenContext *pOp,
+	                         const ERenderOperation &op,
+	                         unsigned char nPass,
+	                         int nSBM,
+	                         char nDestRegister,
+	                         CRenderCmdList::UParameter p = CRenderCmdList::UParameter() ) override;
 
-	virtual bool Is2Sided() const
+	bool Is2Sided() const override
 	{
 		return false;
 	}
 
-	virtual bool IsSelfIllum() const
+	bool IsSelfIllum() const override
 	{
 		return false;
 	}
 
-	virtual void Precache();
+	void Precache() override;
 
-	virtual float GetReflectionZ() const
+	float GetReflectionZ() const override
 	{
 		return fReflectionZ;
 	}
 
-	virtual bool IsUsingWaterReflection() const
+	bool IsUsingWaterReflection() const override
 	{
 		return true;
 	}
@@ -761,7 +761,7 @@ class CTracksMaterial : public IMaterial
 	bool bApplyFog;
 	bool bAddPlaced;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTex );
 		f.Add( 3, &nPriority );
@@ -774,7 +774,7 @@ class CTracksMaterial : public IMaterial
 	                    const SLightInfo &lightInfo,
 	                    int nROP,
 	                    CRenderCmdList::UParameter p1,
-	                    CRenderCmdList::UParameter p2 );
+	                    CRenderCmdList::UParameter p2 ) override;
 
 public:
 	CTracksMaterial() {}
@@ -786,47 +786,47 @@ public:
 	{
 	}
 
-	virtual bool DoesCastShadow() const
+	bool DoesCastShadow() const override
 	{
 		return false;
 	}
 
-	virtual bool IsOpaque() const
+	bool IsOpaque() const override
 	{
 		return false;
 	}
 
-	virtual bool IsAlphaTest() const
+	bool IsAlphaTest() const override
 	{
 		return false;
 	}
 
-	virtual bool IsTransparent() const
+	bool IsTransparent() const override
 	{
 		return false;
 	}
 
-	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) {}
+	void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) override {}
 
-	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC );
-	virtual void AddCustomOperation( COpGenContext *pOp,
-	                                 const ERenderOperation &op,
-	                                 unsigned char nPass,
-	                                 int nSBM,
-	                                 char nDestRegister,
-	                                 CRenderCmdList::UParameter p = CRenderCmdList::UParameter() );
+	void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC ) override;
+	void AddCustomOperation( COpGenContext *pOp,
+	                         const ERenderOperation &op,
+	                         unsigned char nPass,
+	                         int nSBM,
+	                         char nDestRegister,
+	                         CRenderCmdList::UParameter p = CRenderCmdList::UParameter() ) override;
 
-	virtual bool Is2Sided() const
+	bool Is2Sided() const override
 	{
 		return false;
 	}
 
-	virtual bool IsSelfIllum() const
+	bool IsSelfIllum() const override
 	{
 		return false;
 	}
 
-	virtual void Precache();
+	void Precache() override;
 };
 
 class CTerrainMaterial : public IMaterial
@@ -840,7 +840,7 @@ class CTerrainMaterial : public IMaterial
 	bool bCastShadow;
 	bool bBackFaceCastShadow;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTex );
 		f.Add( 3, &pMask );
@@ -862,7 +862,7 @@ class CTerrainMaterial : public IMaterial
 	                    const SLightInfo &lightInfo,
 	                    int nROP,
 	                    CRenderCmdList::UParameter p1,
-	                    CRenderCmdList::UParameter p2 );
+	                    CRenderCmdList::UParameter p2 ) override;
 
 public:
 	CTerrainMaterial() {}
@@ -884,49 +884,49 @@ public:
 	{
 	}
 
-	virtual bool DoesCastShadow() const
+	bool DoesCastShadow() const override
 	{
 		return bCastShadow;
 	}
 
-	virtual bool IsOpaque() const
+	bool IsOpaque() const override
 	{
 		return true;
 	}
 
-	virtual bool IsAlphaTest() const
+	bool IsAlphaTest() const override
 	{
 		return true;
 	}
 
-	virtual bool IsTransparent() const
+	bool IsTransparent() const override
 	{
 		return false;
 	}
 
-	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) {}
+	void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) override {}
 
-	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC );
-	virtual void AddCustomOperation( COpGenContext *pOp,
-	                                 const ERenderOperation &op,
-	                                 unsigned char nPass,
-	                                 int nSBM,
-	                                 char nDestRegister,
-	                                 CRenderCmdList::UParameter p = CRenderCmdList::UParameter() );
+	void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC ) override;
+	void AddCustomOperation( COpGenContext *pOp,
+	                         const ERenderOperation &op,
+	                         unsigned char nPass,
+	                         int nSBM,
+	                         char nDestRegister,
+	                         CRenderCmdList::UParameter p = CRenderCmdList::UParameter() ) override;
 
-	virtual bool Is2Sided() const
+	bool Is2Sided() const override
 	{
 		return false;
 	}
 
-	virtual bool IsSelfIllum() const
+	bool IsSelfIllum() const override
 	{
 		return false;
 	}
 
-	virtual void Precache();
+	void Precache() override;
 
-	virtual bool DoesBackFaceCastShadow() const
+	bool DoesBackFaceCastShadow() const override
 	{
 		return bBackFaceCastShadow;
 	}
@@ -946,7 +946,7 @@ public:
 	bool bDoesCastShadow;
 	bool bProjectOnTerrain;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pClouds );
 		f.Add( 3, &nPriority );
@@ -962,7 +962,7 @@ public:
 	                    const SLightInfo &lightInfo,
 	                    int nROP,
 	                    CRenderCmdList::UParameter p1,
-	                    CRenderCmdList::UParameter p2 );
+	                    CRenderCmdList::UParameter p2 ) override;
 	CVec3 CalcShift();
 
 public:
@@ -985,52 +985,52 @@ public:
 	{
 	}
 
-	virtual bool DoesCastShadow() const
+	bool DoesCastShadow() const override
 	{
 		return bDoesCastShadow;
 	}
 
-	virtual bool IsProjectOnTerrain() const
+	bool IsProjectOnTerrain() const override
 	{
 		return bProjectOnTerrain;
 	}
 
-	virtual bool IsOpaque() const
+	bool IsOpaque() const override
 	{
 		return false;
 	}
 
-	virtual bool IsAlphaTest() const
+	bool IsAlphaTest() const override
 	{
 		return false;
 	}
 
-	virtual bool IsTransparent() const
+	bool IsTransparent() const override
 	{
 		return false;
 	}
 
-	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) {}
+	void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) override {}
 
-	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC );
-	virtual void AddCustomOperation( COpGenContext *pOp,
-	                                 const ERenderOperation &op,
-	                                 unsigned char nPass,
-	                                 int nSBM,
-	                                 char nDestRegister,
-	                                 CRenderCmdList::UParameter p = CRenderCmdList::UParameter() );
+	void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC ) override;
+	void AddCustomOperation( COpGenContext *pOp,
+	                         const ERenderOperation &op,
+	                         unsigned char nPass,
+	                         int nSBM,
+	                         char nDestRegister,
+	                         CRenderCmdList::UParameter p = CRenderCmdList::UParameter() ) override;
 
-	virtual bool Is2Sided() const
+	bool Is2Sided() const override
 	{
 		return false;
 	}
 
-	virtual bool IsSelfIllum() const
+	bool IsSelfIllum() const override
 	{
 		return false;
 	}
 
-	virtual void Precache();
+	void Precache() override;
 };
 
 class CSimpleSkyMaterial : public IMaterial
@@ -1045,7 +1045,7 @@ public:
 	float fFOVZoom;
 	bool bAddPlaced;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTex );
 		f.Add( 3, &nPriority );
@@ -1059,7 +1059,7 @@ public:
 	                    const SLightInfo &lightInfo,
 	                    int nROP,
 	                    CRenderCmdList::UParameter p1,
-	                    CRenderCmdList::UParameter p2 );
+	                    CRenderCmdList::UParameter p2 ) override;
 
 public:
 	CSimpleSkyMaterial() {}
@@ -1074,52 +1074,52 @@ public:
 	{
 	}
 
-	virtual bool DoesCastShadow() const
+	bool DoesCastShadow() const override
 	{
 		return false;
 	}
 
-	virtual bool IsOpaque() const
+	bool IsOpaque() const override
 	{
 		return true;
 	}
 
-	virtual bool IsAlphaTest() const
+	bool IsAlphaTest() const override
 	{
 		return false;
 	}
 
-	virtual bool IsTransparent() const
+	bool IsTransparent() const override
 	{
 		return false;
 	}
 
-	virtual void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) {}
+	void AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo ) override {}
 
-	virtual void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC );
-	virtual void AddCustomOperation( COpGenContext *pOp,
-	                                 const ERenderOperation &op,
-	                                 unsigned char nPass,
-	                                 int nSBM,
-	                                 char nDestRegister,
-	                                 CRenderCmdList::UParameter p = CRenderCmdList::UParameter() );
+	void AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC ) override;
+	void AddCustomOperation( COpGenContext *pOp,
+	                         const ERenderOperation &op,
+	                         unsigned char nPass,
+	                         int nSBM,
+	                         char nDestRegister,
+	                         CRenderCmdList::UParameter p = CRenderCmdList::UParameter() ) override;
 
-	virtual bool Is2Sided() const
+	bool Is2Sided() const override
 	{
 		return false;
 	}
 
-	virtual bool IsSelfIllum() const
+	bool IsSelfIllum() const override
 	{
 		return false;
 	}
 
-	virtual bool DoesIgnoreZ() const
+	bool DoesIgnoreZ() const override
 	{
 		return true;
 	}
 
-	virtual void Precache();
+	void Precache() override;
 };
 
 } // namespace NGScene

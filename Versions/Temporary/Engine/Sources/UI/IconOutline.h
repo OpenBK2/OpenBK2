@@ -182,7 +182,7 @@ class CIconOutliner : public CPtrFuncBase<NGfx::CTexture>
 	CDBID nOutlineType;
 	CTPoint<int> fixedSize, size;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &fmt );
 		f.Add( 3, &fmtProcessed );
@@ -195,8 +195,8 @@ class CIconOutliner : public CPtrFuncBase<NGfx::CTexture>
 		return 0;
 	}
 
-	bool NeedUpdate();
-	void Recalc();
+	bool NeedUpdate() override;
+	void Recalc() override;
 
 public:
 	CIconOutliner( CDBID nOutlineType = CDBID(),

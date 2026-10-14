@@ -29,7 +29,7 @@ class CICMODPreShutdown : public IInterfaceCommand
 	OBJECT_BASIC_METHODS( CICMODPreShutdown );
 
 	//
-	void Exec()
+	void Exec() override
 	{
 		NMainLoop::ResetStack();
 		//
@@ -64,7 +64,7 @@ public:
 	{
 	}
 
-	void Exec()
+	void Exec() override
 	{
 		NDb::OpenDatabase( NVFS::GetMainVFS(), NVFS::GetMainFileCreator(), eMode );
 		NGameX::InitDataDependentSingletons();
@@ -85,7 +85,7 @@ public:
 		}
 	}
 
-	void Configure( const char *pszConfig )
+	void Configure( const char *pszConfig ) override
 	{
 		if ( pszConfig != 0 )
 		{

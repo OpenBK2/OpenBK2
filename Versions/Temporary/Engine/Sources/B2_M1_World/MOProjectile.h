@@ -31,7 +31,7 @@ class CMOProjectile : public CMapObj
 	CDBPtr<NDb::SComplexEffect> pTrajectoryEffect;
 	CVec3 vRotationSpeedRad;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CMapObj *)this );
 		f.Add( 2, &vPosDiff );
@@ -56,7 +56,7 @@ class CMOProjectile : public CMapObj
 	void CreateAttachedEffect();
 	void InitSmokyExhaustInfo( const CVec3 &vVisPos, const CQuat &qRot, NTimer::STime currTime );
 	//
-	~CMOProjectile();
+	~CMOProjectile() override;
 
 public:
 	CMOProjectile()
@@ -76,27 +76,31 @@ public:
 	             const NDb::SComplexEffect *_pTrajectoryEffect,
 	             const CVec3 &vRotationSpeedRad );
 
-	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
+	bool CreateSceneObject( const int nUniqueID,
+	                        const SAINewUnitUpdate *pUpdate,
+	                        NDb::ESeason eSeason,
+	                        bool bInEditor ) override
 	{
 		return true;
 	}
 
-	void GetStatus( SObjectStatus *pStatus ) const;
+	void GetStatus( SObjectStatus *pStatus ) const override;
 
 	void AIUpdatePlacement( const struct SAINotifyPlacement &placement,
 	                        struct IScene *pScene,
 	                        struct ISoundScene *pSoundScene,
-	                        NDb::ESeason eSeason );
+	                        NDb::ESeason eSeason ) override;
 
-	virtual IClientUpdatableProcess *
-	AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
+	IClientUpdatableProcess *AIUpdateRPGStats( const struct SAINotifyRPGStats &stats,
+	                                           struct IClientAckManager *pAckManager,
+	                                           NDb::ESeason eSeason ) override
 	{
 		return 0;
 	}
 
-	virtual void GetActions( CUserActions *pActions, EActionsType eActions ) const {}
+	void GetActions( CUserActions *pActions, EActionsType eActions ) const override {}
 
-	virtual void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const {}
+	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const override {}
 
 	void Explode( SAINotifyHitInfo::EHitType eHitType, NDb::ESeason eSeason, const CVec3 &vCenter, const CVec3 &vDir );
 

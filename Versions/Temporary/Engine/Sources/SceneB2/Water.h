@@ -34,12 +34,12 @@ class CWaterPatchLayer : public CPtrFuncBase<NGScene::CObjectInfo>
 	CDGPtr<CWaterPatch, CPtr<CWaterPatch>> pPatch;
 
 protected:
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pPatch.Refresh();
 	}
 
-	void Recalc() {}
+	void Recalc() override {}
 
 public:
 	CWaterPatchLayer() {}
@@ -58,7 +58,7 @@ public:
 	}
 
 	//
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 typedef NMeshData::SPatchHolder<CWaterPatchLayer> SWaterPatchLayerHolder;
@@ -164,12 +164,12 @@ class CWaterPatch : public CVersioningBase
 	CVec2 vWaterOffset;
 	//
 protected:
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pTimer.Refresh();
 	}
 
-	void Recalc();
+	void Recalc() override;
 	//
 	void ProcessWaveDistribution( const int nWaveNum );
 	float GetPhase( const int x, const int y, const int curw );
@@ -188,7 +188,7 @@ public:
 	//
 	void Create( NGScene::IGameView *pGView );
 	//
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 typedef NMeshData::SPatchHolder<CWaterPatch> SWaterPatchHolder;
@@ -212,5 +212,5 @@ public:
 
 	void Create( NGScene::IGameView *pGView, const int nPatchesX, const int nPatchesY );
 	//
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

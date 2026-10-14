@@ -51,26 +51,26 @@ public:
 	                     const int nGameNetVersion,
 	                     const int nTimeOut );
 
-	virtual const EState GetState() const
+	const EState GetState() const override
 	{
 		return eState;
 	}
 
-	virtual const int GetClientServerID() const
+	const int GetClientServerID() const override
 	{
 		return nClientServerID;
 	}
 
-	virtual struct IConnection *CreateConnection() const;
+	struct IConnection *CreateConnection() const override;
 
-	virtual bool Segment();
+	bool Segment() override;
 	void ProcessConnectServerPacket( class CConnectServerPacket *pPacket );
 
 	//
 	bool ProcessClientAccepted( class CGameConnectingClientAccepted *pPacket );
 	bool ProcessClientConnectInfo( class CClientGameConnectInfo *pPacket );
 
-	CConnectionEffort *CreateNextEffort( const int nOurGameID );
+	CConnectionEffort *CreateNextEffort( const int nOurGameID ) override;
 
 	//
 	bool ProcessClientIdentity( class CIndentityPacket *pPacket );
@@ -104,23 +104,23 @@ public:
 	                     CNet *pNet,
 	                     CNet *pAcceptGamersNet );
 
-	virtual const EState GetState() const
+	const EState GetState() const override
 	{
 		return eState;
 	}
 
-	virtual const int GetClientServerID() const
+	const int GetClientServerID() const override
 	{
 		return nClientServerID;
 	}
 
-	virtual struct IConnection *CreateConnection() const;
-	virtual bool Segment();
+	struct IConnection *CreateConnection() const override;
+	bool Segment() override;
 
 	//
 	bool ProcessClientIdentity( class CIndentityPacket *pPacket );
 
-	CConnectionEffort *CreateNextEffort( const int nOurGameID );
+	CConnectionEffort *CreateNextEffort( const int nOurGameID ) override;
 };
 
 class CThroughServerEffort : public CConnectionEffort
@@ -138,24 +138,24 @@ public:
 
 	CThroughServerEffort( const int nClientServerID, const int nMyServerID, const int nOurGameID, CNet *pNet );
 
-	virtual const EState GetState() const
+	const EState GetState() const override
 	{
 		return ES_SUCCESS;
 	}
 
-	virtual const int GetClientServerID() const
+	const int GetClientServerID() const override
 	{
 		return nClientServerID;
 	}
 
-	virtual bool Segment()
+	bool Segment() override
 	{
 		return true;
 	}
 
-	virtual struct IConnection *CreateConnection() const;
+	struct IConnection *CreateConnection() const override;
 
-	class CConnectionEffort *CreateNextEffort( const int nOurGameID )
+	class CConnectionEffort *CreateNextEffort( const int nOurGameID ) override
 	{
 		return 0;
 	}

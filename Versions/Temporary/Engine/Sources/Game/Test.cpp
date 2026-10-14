@@ -78,7 +78,7 @@ public:
 	}
 
 	//
-	bool Execute( const std::string &szID, const std::vector<std::wstring> &paramsSet )
+	bool Execute( const std::string &szID, const std::vector<std::wstring> &paramsSet ) override
 	{
 		const int nNumParams = paramsSet.size();
 		( *pfnFunc )();
@@ -110,7 +110,7 @@ public:
 	}
 
 	//
-	bool Execute( const std::string &szID, const std::vector<std::wstring> &paramsSet )
+	bool Execute( const std::string &szID, const std::vector<std::wstring> &paramsSet ) override
 	{
 		const int nNumParams = paramsSet.size();
 		MAKE_PARAMETER( 1, nNumParams );
@@ -147,7 +147,7 @@ public:
 	}
 
 	//
-	bool Execute( const std::string &szID, const std::vector<std::wstring> &paramsSet )
+	bool Execute( const std::string &szID, const std::vector<std::wstring> &paramsSet ) override
 	{
 		const int nNumParams = paramsSet.size();
 		MAKE_PARAMETER( 1, nNumParams );

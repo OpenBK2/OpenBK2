@@ -33,7 +33,7 @@ public:
 
 	SAINotifyHitInfo::EHitType eHitType = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CLinkObject *)this );
 		f.Add( 2, &pWeapon );
@@ -83,19 +83,19 @@ public:
 	          const enum SAINotifyHitInfo::EHitType &eHitType,
 	          const CVec3 &explCoord );
 
-	virtual void GetHitInfo( struct SAINotifyHitInfo *pHitInfo ) const;
+	void GetHitInfo( struct SAINotifyHitInfo *pHitInfo ) const override;
 
-	virtual const bool IsVisible( const uint8_t party ) const
+	const bool IsVisible( const uint8_t party ) const override
 	{
 		return true;
 	}
 
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const
+	void GetTilesForVisibility( CTilesSet *pTiles ) const override
 	{
 		pTiles->clear();
 	}
 
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const
+	bool ShouldSuspendAction( const EActionNotify &eAction ) const override
 	{
 		return false;
 	}
@@ -158,7 +158,7 @@ class AILOGIC_EXPORT CBallisticTraj : public IBallisticTraj
 	NDb::SWeaponRPGStats::SShell::ETrajectoryType eType = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &vStart3D );
 		f.Add( 3, &fVx );
@@ -184,27 +184,27 @@ public:
 	                float fMaxRange,
 	                float fVerticalOffsetAngleRad = 0.0f );
 
-	virtual const NTimer::STime &GetExplTime() const
+	const NTimer::STime &GetExplTime() const override
 	{
 		return explTime;
 	}
 
-	virtual const NTimer::STime &GetStartTime() const
+	const NTimer::STime &GetStartTime() const override
 	{
 		return startTime;
 	}
 
-	virtual const CVec3 &GetStartPoint() const
+	const CVec3 &GetStartPoint() const override
 	{
 		return vStart3D;
 	}
 
-	virtual const uint16_t GetStart2DDir() const
+	const uint16_t GetStart2DDir() const override
 	{
 		return wDir;
 	}
 
-	virtual const CVec3 GetCoordinates() const;
+	const CVec3 GetCoordinates() const override;
 	const CVec3 GetCoordinatesAtTime( NTimer::STime time ) const;
 
 	const CVec3 GetInitialVelocity() const
@@ -218,7 +218,7 @@ public:
 	                                     uint16_t wMaxAngle,
 	                                     float fMaxRange );
 
-	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const
+	const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const override
 	{
 		return eType;
 	}
@@ -236,7 +236,7 @@ class CFakeBallisticTraj : public IBallisticTraj
 	float A1 = {}, A2 = {};
 	SAIAngle wDir;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &startTime );
 		f.Add( 3, &explTime );
@@ -254,27 +254,27 @@ public:
 	CFakeBallisticTraj(
 			const CVec3 &point, const CVec3 &v, const NTimer::STime &explTime, const float A1, const float A2 );
 
-	virtual const NTimer::STime &GetExplTime() const
+	const NTimer::STime &GetExplTime() const override
 	{
 		return explTime;
 	}
 
-	virtual const NTimer::STime &GetStartTime() const
+	const NTimer::STime &GetStartTime() const override
 	{
 		return startTime;
 	}
 
-	virtual const CVec3 &GetStartPoint() const
+	const CVec3 &GetStartPoint() const override
 	{
 		return point;
 	}
 
-	virtual const uint16_t GetStart2DDir() const
+	const uint16_t GetStart2DDir() const override
 	{
 		return wDir;
 	}
 
-	virtual const CVec3 GetCoordinates() const;
+	const CVec3 GetCoordinates() const override;
 
 	static uint16_t
 	GetTrajectoryZAngle( const CVec3 &vToAim, float fV, const NDb::SWeaponRPGStats::SShell::ETrajectoryType eType )
@@ -282,7 +282,7 @@ public:
 		return 0;
 	}
 
-	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const;
+	const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const override;
 };
 
 class CBombBallisticTraj : public IBallisticTraj
@@ -296,7 +296,7 @@ class CBombBallisticTraj : public IBallisticTraj
 	SAIAngle wDir;
 	NTimer::STime startTime = {}, explTime = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &point );
 		f.Add( 3, &v );
@@ -312,29 +312,29 @@ public:
 
 	CBombBallisticTraj( const CVec3 &point, const CVec3 &v, const NTimer::STime &explTime, const CVec2 &vRandAcc );
 
-	virtual const NTimer::STime &GetExplTime() const
+	const NTimer::STime &GetExplTime() const override
 	{
 		return explTime;
 	}
 
-	virtual const NTimer::STime &GetStartTime() const
+	const NTimer::STime &GetStartTime() const override
 	{
 		return startTime;
 	}
 
-	virtual const CVec3 &GetStartPoint() const
+	const CVec3 &GetStartPoint() const override
 	{
 		return point;
 	}
 
-	virtual const uint16_t GetStart2DDir() const
+	const uint16_t GetStart2DDir() const override
 	{
 		return wDir;
 	}
 
-	virtual const CVec3 GetCoordinates() const;
+	const CVec3 GetCoordinates() const override;
 
-	const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const
+	const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const override
 	{
 		return NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB;
 	}
@@ -365,7 +365,7 @@ class CAARocketTraj : public IBallisticTraj
 	NTimer::STime startTime = {}, explTime = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &vStart3D );
 		f.Add( 3, &wDir );
@@ -380,29 +380,29 @@ public:
 
 	CAARocketTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV );
 
-	virtual const NTimer::STime &GetExplTime() const
+	const NTimer::STime &GetExplTime() const override
 	{
 		return explTime;
 	}
 
-	virtual const NTimer::STime &GetStartTime() const
+	const NTimer::STime &GetStartTime() const override
 	{
 		return startTime;
 	}
 
-	virtual const CVec3 &GetStartPoint() const
+	const CVec3 &GetStartPoint() const override
 	{
 		return vStart3D;
 	}
 
-	virtual const uint16_t GetStart2DDir() const
+	const uint16_t GetStart2DDir() const override
 	{
 		return wDir;
 	}
 
-	virtual const CVec3 GetCoordinates() const;
+	const CVec3 GetCoordinates() const override;
 
-	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const
+	const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const override
 	{
 		return NDb::SWeaponRPGStats::SShell::TRAJECTORY_ROCKET;
 	}
@@ -435,7 +435,7 @@ class CATGMTraj : public IBallisticTraj
 	bool bFinished = {};
 	bool bAirBurst = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &vStart3D );
 		f.Add( 3, &vCenter );
@@ -497,49 +497,49 @@ public:
 	           NDb::SWeaponRPGStats::SShell::ETrajectoryType eTrajectoryType,
 	           const NDb::SMissleParams *pParams );
 
-	virtual const NTimer::STime &GetExplTime() const
+	const NTimer::STime &GetExplTime() const override
 	{
 		return explTime;
 	}
 
-	virtual const NTimer::STime &GetStartTime() const
+	const NTimer::STime &GetStartTime() const override
 	{
 		return startTime;
 	}
 
-	virtual const CVec3 &GetStartPoint() const
+	const CVec3 &GetStartPoint() const override
 	{
 		return vStart3D;
 	}
 
-	virtual const uint16_t GetStart2DDir() const
+	const uint16_t GetStart2DDir() const override
 	{
 		return wStartDir;
 	}
 
-	virtual const CVec3 GetCoordinates() const
+	const CVec3 GetCoordinates() const override
 	{
 		return vCenter;
 	}
 
-	virtual const CVec3 GetVelocity() const
+	const CVec3 GetVelocity() const override
 	{
 		return vVelocity;
 	}
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual bool IsFinished( const NTimer::STime &time ) const
+	bool IsFinished( const NTimer::STime &time ) const override
 	{
 		return bFinished;
 	}
 
-	virtual bool IsAirBurst() const
+	bool IsAirBurst() const override
 	{
 		return bAirBurst;
 	}
 
-	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const
+	const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const override
 	{
 		return eTrajectoryType;
 	}
@@ -569,7 +569,7 @@ protected:
 	bool bForceAirEffect = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nShellType );
 		f.Add( 3, &pWeapon );
@@ -735,7 +735,7 @@ class CBurstExpl : public CExplosion
 	int nArmorDir = {};
 	bool bShowEffect = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CExplosion *)this );
 		f.Add( 2, &nArmorDir );
@@ -767,7 +767,7 @@ public:
 	            const int ArmorDir,
 	            const bool bShowEffect );
 
-	virtual void Explode();
+	void Explode() override;
 };
 
 class CCumulativeExpl : public CExplosion
@@ -776,7 +776,7 @@ class CCumulativeExpl : public CExplosion
 	ZDATA_( CExplosion )
 	int nArmorDir = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CExplosion *)this );
 		f.Add( 2, &nArmorDir );
@@ -793,7 +793,7 @@ public:
 	                 const uint8_t nShellType,
 	                 const bool bRandomize = true );
 
-	virtual void Explode();
+	void Explode() override;
 };
 
 class CFlameThrowerExpl : public CExplosion
@@ -811,14 +811,14 @@ ZEND public :
 	{
 	}
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 	CFlameThrowerExpl( CAIUnit *pUnit,
 	                   const class CBasicGun *pGun,
 	                   const CVec3 &explCoord,
 	                   const CVec3 &attackerPos,
 	                   const uint8_t nShellType,
 	                   const bool bRandomize = true );
-	void Explode();
+	void Explode() override;
 };
 
 //*******************************************************************
@@ -955,7 +955,7 @@ class CInvisShell : public CAIObjectBase, public CShell
 	ZDATA_( CShell )
 	int nOrder = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CShell *)this );
 		f.Add( 2, &nOrder );
@@ -991,7 +991,7 @@ class CVisShell : public CLinkObject, public CShell
 	OBJECT_BASIC_METHODS( CVisShell );
 
 public:
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 
 private:
 	CPtr<IBallisticTraj> pTraj;
@@ -1026,14 +1026,14 @@ public:
 		return pTraj->IsFinished( time );
 	}
 
-	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
+	void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff ) override;
 
-	virtual void GetSpeed3( CVec3 *pSpeed ) const
+	void GetSpeed3( CVec3 *pSpeed ) const override
 	{
 		*pSpeed = speed;
 	}
 
-	virtual void GetProjectileInfo( struct SAINotifyNewProjectile *pProjectileInfo );
+	void GetProjectileInfo( struct SAINotifyNewProjectile *pProjectileInfo ) override;
 
 	void Segment();
 
@@ -1042,19 +1042,19 @@ public:
 		return pTraj->GetCoordinates();
 	}
 
-	virtual float GetTerrainHeight( const float x, const float y, const NTimer::STime timeDiff ) const;
+	float GetTerrainHeight( const float x, const float y, const NTimer::STime timeDiff ) const override;
 
-	virtual const bool IsVisible( const uint8_t party ) const
+	const bool IsVisible( const uint8_t party ) const override
 	{
 		return true;
 	}
 
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const
+	void GetTilesForVisibility( CTilesSet *pTiles ) const override
 	{
 		pTiles->clear();
 	}
 
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const
+	bool ShouldSuspendAction( const EActionNotify &eAction ) const override
 	{
 		return false;
 	}

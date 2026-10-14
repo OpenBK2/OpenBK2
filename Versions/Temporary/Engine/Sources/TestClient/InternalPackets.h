@@ -8,7 +8,7 @@ class CEnteredLobby : public CNetPacket
 
 public:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
@@ -22,7 +22,7 @@ class CTestShowGameClients : public CNetPacket
 
 public:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
@@ -36,7 +36,7 @@ public:
 	ZDATA
 	std::string szMapName;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szMapName );
 		return 0;

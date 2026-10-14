@@ -43,7 +43,7 @@ class B2_M1_WORLD_EXPORT CMOBuilding : public IMOContainer
 
 private:
 	bool IsInside( const int nID );
-	const NDb::SBuildingRPGStats *GetStats() const;
+	const NDb::SBuildingRPGStats *GetStats() const override;
 
 	const NDb::SVisObj *GetWindowObj( const int nWindow, const EWindowState eState );
 	void DetachWindow( const int nWindow, const NDb::ESeason eSeason );
@@ -66,34 +66,41 @@ private:
 	bool IsHitbarVisible() const;
 
 protected:
-	void FillIconsInfo( SSceneObjIconInfo &iconInfo );
-	NDb::EUserAction GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const;
+	void FillIconsInfo( SSceneObjIconInfo &iconInfo ) override;
+	NDb::EUserAction
+	GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const override;
 
 public:
 	CMOBuilding();
 	//
-	virtual bool Create( const int nUniqueID,
-	                     const SAIBasicUpdate *pUpdate,
-	                     NDb::ESeason eSeason,
-	                     const NDb::EDayNight eDayTime,
-	                     bool bInEditor );
-	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor );
-	void GetStatus( SObjectStatus *pStatus ) const;
-	IClientUpdatableProcess *
-	AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason );
+	bool Create( const int nUniqueID,
+	             const SAIBasicUpdate *pUpdate,
+	             NDb::ESeason eSeason,
+	             const NDb::EDayNight eDayTime,
+	             bool bInEditor ) override;
+	bool CreateSceneObject( const int nUniqueID,
+	                        const SAINewUnitUpdate *pUpdate,
+	                        NDb::ESeason eSeason,
+	                        bool bInEditor ) override;
+	void GetStatus( SObjectStatus *pStatus ) const override;
+	IClientUpdatableProcess *AIUpdateRPGStats( const SAINotifyRPGStats &stats,
+	                                           struct IClientAckManager *pAckManager,
+	                                           NDb::ESeason eSeason ) override;
 
-	virtual IClientUpdatableProcess *AIUpdateDamage( int nProjectileID,
-	                                                 float fDamage,
-	                                                 const std::list<int> &probableHitAttached,
-	                                                 struct IScene *pScene,
-	                                                 NDb::ESeason eSeason,
-	                                                 bool bFromAIUpdate );
-	void AIUpdateKeyObject( const struct SAINotifyKeyBuilding &update );
-	void AIUpdateKeyObjectCaptureProgress( float fProgress, int nColorIndex );
+	IClientUpdatableProcess *AIUpdateDamage( int nProjectileID,
+	                                         float fDamage,
+	                                         const std::list<int> &probableHitAttached,
+	                                         struct IScene *pScene,
+	                                         NDb::ESeason eSeason,
+	                                         bool bFromAIUpdate ) override;
+	void AIUpdateKeyObject( const struct SAINotifyKeyBuilding &update ) override;
+	void AIUpdateKeyObjectCaptureProgress( float fProgress, int nColorIndex ) override;
 
 	// Create day/night dependent stuff (windows)
-	virtual void
-	SwitchLightFX( const bool bNewState, const NDb::ESeason eSeason, const bool bIsNight, const bool bInEditor = false );
+	void SwitchLightFX( const bool bNewState,
+	                    const NDb::ESeason eSeason,
+	                    const bool bIsNight,
+	                    const bool bInEditor = false ) override;
 
 	// break window
 	const int BreakWindow( const int nWindow, const NDb::ESeason eSeason );
@@ -102,25 +109,25 @@ public:
 	void ToggleNightWindows( const bool bNightOn, const NDb::ESeason eSeason );
 
 	//
-	bool Load( struct IMOUnit *pMO, bool bEnter )
+	bool Load( struct IMOUnit *pMO, bool bEnter ) override
 	{
 		return false;
 	}
 
-	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter );
+	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter ) override;
 
-	void UpdatePassangers() {}
+	void UpdatePassangers() override {}
 
-	void GetPassangers( std::vector<CMOSelectable *> *pBuffer ) const;
+	void GetPassangers( std::vector<CMOSelectable *> *pBuffer ) const override;
 
-	int GetPassangersCount() const
+	int GetPassangersCount() const override
 	{
 		return vPassangers.size();
 	}
 
-	int GetFreePlaces() const;
+	int GetFreePlaces() const override;
 
-	int GetFreeMechPlaces() const
+	int GetFreeMechPlaces() const override
 	{
 		return 0;
 	}
@@ -128,28 +135,28 @@ public:
 	void AIUpdateShot( const struct SAINotifyBaseShot &shot,
 	                   const NTimer::STime &currTime,
 	                   IScene *pScene,
-	                   NDb::ESeason eSeason );
+	                   NDb::ESeason eSeason ) override;
 	//
-	virtual bool NeedShowInterrior() const;
+	bool NeedShowInterrior() const override;
 	//
-	void GetActions( CUserActions *pActions, EActionsType eActions ) const;
-	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;
+	void GetActions( CUserActions *pActions, EActionsType eActions ) const override;
+	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const override;
 	//void GetSpecialAbilities( CSpecialAbilities *pAbilities ) const {}
 	//
-	virtual void Select( bool bSelect );
-	void SetCanSelect( bool bCanSelect );
+	void Select( bool bSelect ) override;
+	void SetCanSelect( bool bCanSelect ) override;
 
-	void AIUpdateModifyEntranceState( bool _bOpen )
+	void AIUpdateModifyEntranceState( bool _bOpen ) override
 	{
 		bCanEnter = _bOpen;
 	}
 
-	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement,
-	                                struct IScene *pScene,
-	                                struct ISoundScene *pSoundScene,
-	                                NDb::ESeason eSeason );
+	void AIUpdatePlacement( const struct SAINotifyPlacement &placement,
+	                        struct IScene *pScene,
+	                        struct ISoundScene *pSoundScene,
+	                        NDb::ESeason eSeason ) override;
 
-	bool IsOpen() const
+	bool IsOpen() const override
 	{
 		return true;
 	}
@@ -165,5 +172,5 @@ public:
 	}
 
 	//
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

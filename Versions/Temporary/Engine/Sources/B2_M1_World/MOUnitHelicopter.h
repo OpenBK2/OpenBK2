@@ -27,7 +27,7 @@ class CMOUnitHelicopter : public CMOUnitMechanical
 	bool bStandingDeviationActive = false;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CMOUnitMechanical *)this );
 		f.Add( 2, &vStandingDeviationBasePlacement );
@@ -47,13 +47,13 @@ private:
 	bool UpdateStandingDeviation( const NTimer::STime &time );
 
 protected:
-	virtual void SetupSpecialAnimationMutator( NAnimation::ISkeletonAnimator *pAnimator );
-	virtual void AdjustVisualPlacement( struct SAINotifyPlacement *pPlacement );
+	void SetupSpecialAnimationMutator( NAnimation::ISkeletonAnimator *pAnimator ) override;
+	void AdjustVisualPlacement( struct SAINotifyPlacement *pPlacement ) override;
 
 public:
-	virtual bool Create( const int nUniqueID,
-	                     const SAIBasicUpdate *pUpdate,
-	                     NDb::ESeason eSeason,
-	                     const NDb::EDayNight eDayTime,
-	                     bool bInEditor );
+	bool Create( const int nUniqueID,
+	             const SAIBasicUpdate *pUpdate,
+	             NDb::ESeason eSeason,
+	             const NDb::EDayNight eDayTime,
+	             bool bInEditor ) override;
 };

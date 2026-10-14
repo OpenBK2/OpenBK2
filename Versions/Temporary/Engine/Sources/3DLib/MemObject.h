@@ -12,7 +12,7 @@ class _3DLIB_EXPORT CMemObject : public CObjectBase
 	std::vector<STriangle> resTris;
 	bool bPolyLine = false;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &resPoints );
 		f.Add( 3, &resNormals );

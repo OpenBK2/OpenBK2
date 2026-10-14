@@ -84,15 +84,15 @@ class CGameDatabase : public CBasicDatabase
 	//
 	bool ReallyRegisterResourceFile( const CDBID &dbid );
 	CResource *GetRawObject( const CDBID &dbid );
-	bool DoesObjectExist( const CDBID &dbid );
+	bool DoesObjectExist( const CDBID &dbid ) override;
 
 	//
-	void ResetIndexChanged()
+	void ResetIndexChanged() override
 	{
 		bIndexChanged = false;
 	}
 
-	void RegisterObject( const SFullTypeHeader &hdr );
+	void RegisterObject( const SFullTypeHeader &hdr ) override;
 	bool LoadTypesMap();
 
 public:
@@ -102,89 +102,89 @@ public:
 	}
 
 	//
-	bool OpenDatabase( NVFS::IVFS *pVFS, NVFS::IFileCreator *pFileCreator );
-	bool SaveChangedIndex();
-	bool RegisterResourceFile( const std::string &szFileName );
-	bool IsFileRegistered( const std::string &szFileName );
+	bool OpenDatabase( NVFS::IVFS *pVFS, NVFS::IFileCreator *pFileCreator ) override;
+	bool SaveChangedIndex() override;
+	bool RegisterResourceFile( const std::string &szFileName ) override;
+	bool IsFileRegistered( const std::string &szFileName ) override;
 
-	void SetLoadDepth( int nLoadDepth )
+	void SetLoadDepth( int nLoadDepth ) override
 	{
 		s_nMaxLoadDepth = nLoadDepth;
 	}
 
 	//
-	CResource *GetObject( const CDBID &dbid );
+	CResource *GetObject( const CDBID &dbid ) override;
 
 	// editor-specific functionality
-	IObjMan *GetManipulator( const CDBID &dbid )
+	IObjMan *GetManipulator( const CDBID &dbid ) override
 	{
 		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
 		return 0;
 	}
 
-	IObjMan *CreateNewObject( const std::string &szClassTypeName )
+	IObjMan *CreateNewObject( const std::string &szClassTypeName ) override
 	{
 		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
 		return 0;
 	}
 
-	bool AddNewObject( const std::string &szFilePath, const CDBID &dbid, IObjMan *pObjMan )
+	bool AddNewObject( const std::string &szFilePath, const CDBID &dbid, IObjMan *pObjMan ) override
 	{
 		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
 		return false;
 	}
 
-	bool RemoveObject( const CDBID &dbid )
+	bool RemoveObject( const CDBID &dbid ) override
 	{
 		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
 		return false;
 	}
 
-	bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew )
+	bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew ) override
 	{
 		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
 		return false;
 	}
 
-	bool RenameObjects( const std::vector<std::pair<CDBID, CDBID>> &renames )
+	bool RenameObjects( const std::vector<std::pair<CDBID, CDBID>> &renames ) override
 	{
 		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
 		return false;
 	}
 
-	bool GetReferencingObjects( std::vector<CDBID> *pRes, const CDBID &dbid )
+	bool GetReferencingObjects( std::vector<CDBID> *pRes, const CDBID &dbid ) override
 	{
 		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
 		return false;
 	}
 
-	void MarkChanged( const CDBID &dbid )
+	void MarkChanged( const CDBID &dbid ) override
 	{
 		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
 	}
 
-	void SaveChanges();
+	void SaveChanges() override;
 
-	void DropCachedResources()
+	void DropCachedResources() override
 	{
 		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
 	}
 
-	bool GetClassesList( std::vector<NTypeDef::STypeClass *> *pRes )
-	{
-		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
-		return false;
-	}
-
-	bool GetObjectsList( std::vector<CDBID> *pRes, const std::string &szClassTypeName )
+	bool GetClassesList( std::vector<NTypeDef::STypeClass *> *pRes ) override
 	{
 		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
 		return false;
 	}
 
-	bool GetObjectsList( std::vector<CDBID> *pRes, const int nClassTypeID );
+	bool GetObjectsList( std::vector<CDBID> *pRes, const std::string &szClassTypeName ) override
+	{
+		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
+		return false;
+	}
 
-	std::string GetClassTypeName( const CDBID &_dbid )
+	bool GetObjectsList( std::vector<CDBID> *pRes, const int nClassTypeID ) override;
+
+	std::string GetClassTypeName( const CDBID &_dbid ) override
 	{
 		if ( const SElement *pElement = GetElement( _dbid ) )
 		{

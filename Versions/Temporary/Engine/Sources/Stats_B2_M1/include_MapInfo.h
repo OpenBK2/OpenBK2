@@ -1,4 +1,4 @@
-virtual void PostLoad( bool bInEditor )
+void PostLoad( bool bInEditor ) override
 {
 	// check if players has diplomacy sides != -1
 	// if they all do, alternate diplomacy

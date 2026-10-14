@@ -349,7 +349,7 @@ protected:
 
 public:
 	CMapObj();
-	virtual ~CMapObj();
+	~CMapObj() override;
 
 private:
 	CMapObj( const CMapObj &a )
@@ -382,7 +382,7 @@ public:
 	const NDb::SAnimB2 *GetAnimation( const int nAnimation );
 
 	// used in IB2MapObj, virtual
-	virtual int GetUniqueID() const
+	int GetUniqueID() const override
 	{
 		return GetID();
 	}
@@ -394,7 +394,7 @@ public:
 	void ForceSwitchLightFX( const bool bNewState, const bool bInEditor );
 	void ForceSwitchLightFX( int nEffect, const bool bNewState, const bool bInEditor );
 
-	const NDb::SHPObjectRPGStats *GetStats() const
+	const NDb::SHPObjectRPGStats *GetStats() const override
 	{
 		return pStats;
 	}
@@ -577,7 +577,7 @@ public:
 
 	virtual void GetStatus( SObjectStatus *pStatus ) const;
 
-	void UpdateIcons();
+	void UpdateIcons() override;
 
 	bool HasLoopedAnimation() const
 	{
@@ -678,7 +678,7 @@ public:
 	virtual void UpdateVisualStatus( const struct SUnitStatusUpdate &update ) {}
 
 	//
-	virtual int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 class B2_M1_WORLD_EXPORT CMOSelectable : public CMapObj
@@ -701,7 +701,7 @@ private:
 	void ClearVisualGroup( enum EUnitStatus eGroup );
 
 protected:
-	void FillIconsInfo( SSceneObjIconInfo &iconInfo );
+	void FillIconsInfo( SSceneObjIconInfo &iconInfo ) override;
 	void SetIconsHitbar( bool bHitbar, bool bHighlighted );
 	void SetIconsGroup( int nGroup, bool bHighlighted );
 
@@ -710,7 +710,8 @@ protected:
 		iconsSetInfo = info;
 	}
 
-	NDb::EUserAction GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const;
+	NDb::EUserAction
+	GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const override;
 
 public:
 	CMOSelectable()
@@ -728,13 +729,13 @@ public:
 	}
 
 	//check, is this object selected?
-	virtual bool IsSelected() const
+	bool IsSelected() const override
 	{
 		return bSelected;
 	}
 
-	virtual void Select( bool bSelect );
-	virtual bool CanSelect() const;
+	void Select( bool bSelect ) override;
+	bool CanSelect() const override;
 
 	virtual void SetCanSelect( bool _bCanSelect )
 	{
@@ -746,7 +747,7 @@ public:
 		return bIsMousePicked;
 	}
 
-	virtual void SetMousePicked( const bool _bIsMousePicked )
+	void SetMousePicked( const bool _bIsMousePicked ) override
 	{
 		bIsMousePicked = _bIsMousePicked;
 	}
@@ -756,7 +757,7 @@ public:
 		return nSelectionGroup;
 	}
 
-	virtual void SetSelectionGroup( int nSelectionGroup );
+	void SetSelectionGroup( int nSelectionGroup ) override;
 
 	//sends selection acknowlegdement
 	//virtual void SendAcknowledgement( struct IClientAckManager *pAckManager, const EUnitAckType eAckType, const int nSet ) {  }
@@ -776,11 +777,11 @@ public:
 	}
 
 	void DisableIcons( bool bDisable );
-	bool CanShowIcons() const;
+	bool CanShowIcons() const override;
 
 	virtual void GetAbilityInfo( CAbilityInfo &abilityList ) const {}
 
-	void UpdateVisualStatus( const struct SUnitStatusUpdate &update );
+	void UpdateVisualStatus( const struct SUnitStatusUpdate &update ) override;
 
 	virtual IMOContainer *GetContainer() const
 	{
@@ -789,7 +790,7 @@ public:
 
 	IMOContainer *GetTopContainer() const;
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, checked_cast<CMapObj *>( this ) );
 		saver.Add( 2, &bSelected );
@@ -808,12 +809,12 @@ public:
 struct IMOContainer : public CMOSelectable
 {
 protected:
-	void FillIconsInfo( SSceneObjIconInfo &iconInfo );
+	void FillIconsInfo( SSceneObjIconInfo &iconInfo ) override;
 
 public:
 	ZDATA_( CMOSelectable )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CMOSelectable *)this );
 		return 0;
@@ -840,11 +841,11 @@ public:
 	                           IScene *pScene,
 	                           NDb::ESeason eSeason ) = 0;
 	// нужно ли показывать пассажиров
-	virtual bool NeedShowInterrior() const = 0;
+	bool NeedShowInterrior() const override = 0;
 	virtual void AIUpdateModifyEntranceState( bool bOpen ) = 0;
 	virtual bool IsOpen() const = 0;
 
-	virtual void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck )
+	void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck ) override
 	{
 		NI_ASSERT( false, "wrong call" );
 	}
@@ -854,7 +855,7 @@ struct IMOSquad : public IMOContainer
 {
 	ZDATA_( IMOContainer )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (IMOContainer *)this );
 		return 0;
@@ -866,14 +867,14 @@ struct IMOSquad : public IMOContainer
 	virtual void FillIconsInfoForFirstUnit( SSceneObjIconInfo &iconInfo ) = 0;
 	virtual void UpdateSquadIcons() = 0;
 	virtual void SetContainer( IMOContainer *_pContainer ) = 0;
-	virtual IMOContainer *GetContainer() const = 0;
+	IMOContainer *GetContainer() const override = 0;
 };
 
 struct IMOUnit : public IMOContainer
 {
 	ZDATA_( IMOContainer )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (IMOContainer *)this );
 		return 0;
@@ -898,7 +899,7 @@ struct IMOUnit : public IMOContainer
 	//	virtual void AddAnimation( const SUnitBaseRPGStats::SAnimDesc *pDesc ) = 0;
 	// CRAP}
 	// for acks
-	virtual void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck ) = 0;
+	void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck ) override = 0;
 	virtual void
 	AIUpdateAcknowledgement( const NDb::EUnitAckType eAck, struct IClientAckManager *pAckManager, const int nSet ) = 0;
 	virtual void AIUpdateBoredAcknowledgement( const struct SAIBoredAcknowledgement &ack,
@@ -911,9 +912,9 @@ struct IMOUnit : public IMOContainer
 	                               const bool bIsNight,
 	                               struct ISoundScene *pSoundScene,
 	                               struct IClientAckManager *pAckManager ) = 0;
-	virtual void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
-	                                struct ISoundScene *pSoundScene,
-	                                IClientAckManager *pAckManager ) = 0;
+	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
+	                        struct ISoundScene *pSoundScene,
+	                        IClientAckManager *pAckManager ) override = 0;
 	virtual class CMOProjectile *LaunchProjectile( const SAINewProjectileUpdate *pUpdate ) = 0;
 
 	virtual void SetUnitLevel( int nLevel, bool bShowUnitRank ) = 0;

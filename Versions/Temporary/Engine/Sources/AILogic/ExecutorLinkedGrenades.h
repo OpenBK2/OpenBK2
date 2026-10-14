@@ -6,13 +6,13 @@ class CExecutorLinkedGrenades : public CExecutorUnitBonus
 	OBJECT_BASIC_METHODS( CExecutorLinkedGrenades );
 
 protected:
-	void SwitchingOffEnd();
-	void SwitchOnEnd();
+	void SwitchingOffEnd() override;
+	void SwitchOnEnd() override;
 
 public:
 	CExecutorLinkedGrenades( CAIUnit *_pUnit );
 
 	CExecutorLinkedGrenades() {}
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

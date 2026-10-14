@@ -55,7 +55,7 @@ class CBridgeSpan : public CGivenPassabilityStObject
 	std::vector<CPtr<CObjectBase>> segments;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CGivenPassabilityStObject *)this );
 		f.Add( 2, &pStats );
@@ -77,11 +77,12 @@ public:
 	//DEBUG}
 
 	void GetTilesForVisibilityInternal( CTilesSet *pTiles ) const;
-	void GetVisibility( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> *visibity ) const;
-	void GetPassability( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> *passability ) const;
+	void GetVisibility( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> *visibity ) const override;
+	void
+	GetPassability( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> *passability ) const override;
 
 protected:
-	virtual int GetHeight() const
+	int GetHeight() const override
 	{
 		return 0;
 	}
@@ -105,40 +106,40 @@ public:
 		return pStats;
 	}
 
-	virtual const SHPObjectRPGStats *GetStats() const
+	const SHPObjectRPGStats *GetStats() const override
 	{
 		return pStats;
 	}
 
-	virtual void LockTiles(); // here we just copy lock info to internal array
-	void RealLockTiles();     // here we real lock tiles
-	virtual void UnlockTiles();
-	virtual void CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles );
+	void LockTiles() override; // here we just copy lock info to internal array
+	void RealLockTiles();      // here we real lock tiles
+	void UnlockTiles() override;
+	void CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles ) override;
 
-	virtual void
-	TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit );
-	virtual bool IsPointInside( const CVec2 &point ) const;
-	virtual void Die( const float fDamage );
-	virtual void SetHitPoints( const float fNewHP );
+	void
+	TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit ) override;
+	bool IsPointInside( const CVec2 &point ) const override;
+	void Die( const float fDamage ) override;
+	void SetHitPoints( const float fNewHP ) override;
 
-	virtual void Segment() {}
+	void Segment() override {}
 
-	virtual EStaticObjType GetObjectType() const
+	EStaticObjType GetObjectType() const override
 	{
 		return ESOT_BRIDGE_SPAN;
 	}
 
-	virtual bool IsContainer() const
+	bool IsContainer() const override
 	{
 		return false;
 	}
 
-	virtual const int GetNDefenders() const
+	const int GetNDefenders() const override
 	{
 		return 0;
 	}
 
-	virtual class CSoldier *GetUnit( const int n ) const
+	class CSoldier *GetUnit( const int n ) const override
 	{
 		return 0;
 	}
@@ -150,23 +151,23 @@ public:
 		return pFullBridge;
 	}
 
-	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const
+	bool CanUnitGoThrough( const EAIClasses &eClass ) const override
 	{
 		return true;
 	}
 
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
-	virtual void GetCoveredTiles( std::list<SVector> *pTiles ) const;
-	virtual void SetTransparencies();
-	virtual void RemoveTransparencies();
+	void GetTilesForVisibility( CTilesSet *pTiles ) const override;
+	bool ShouldSuspendAction( const EActionNotify &eAction ) const override;
+	void GetCoveredTiles( std::list<SVector> *pTiles ) const override;
+	void SetTransparencies() override;
+	void RemoveTransparencies() override;
 
-	virtual void SetScriptID( const int _nScriptID )
+	void SetScriptID( const int _nScriptID ) override
 	{
 		nScriptID = _nScriptID;
 	}
 
-	void GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
+	void GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff ) override;
 	void SetHeights();
 	void RemoveHeights();
 	friend class CFullBridge;
@@ -177,7 +178,7 @@ class CFullBridge : public CLinkObject
 	OBJECT_BASIC_METHODS( CFullBridge );
 
 public:
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 
 private:
 	std::list<CBridgeSpan *> spans;          // построенные части моста
@@ -191,7 +192,7 @@ public:
 		OBJECT_BASIC_METHODS( SSpanLock );
 
 	public:
-		int operator&( IBinSaver &saver );
+		int operator&( IBinSaver &saver ) override;
 
 	private:
 		std::list<SVector> tiles;
@@ -242,8 +243,8 @@ public:
 	                  CAIUnit *pShotUnit );
 
 	void EnumSpans( std::vector<CObj<CBridgeSpan>> *pSpans );
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
-	const bool IsVisible( const uint8_t cParty ) const;
+	void GetTilesForVisibility( CTilesSet *pTiles ) const override;
+	const bool IsVisible( const uint8_t cParty ) const override;
 
 	void LockSpan( CBridgeSpan *pSpan, const uint16_t wDir );
 	void UnlockSpan( CBridgeSpan *pSpan );

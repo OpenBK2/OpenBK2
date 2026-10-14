@@ -12,12 +12,12 @@ class CBitmap : public CPtrFuncBase<NGfx::CTexture>
 	bool bNeedUpdate;
 
 protected:
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return bNeedUpdate;
 	}
 
-	void Recalc();
+	void Recalc() override;
 
 public:
 	void SetSize( const int nWidth, const int nHeight );
@@ -36,7 +36,7 @@ public:
 	const NGfx::SPixel8888 GetPixel( const int x, const int y ) const;
 	void Fill( const NGfx::SPixel8888 &color );
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 class CBitmapWindow : public CObjectBase
@@ -48,7 +48,7 @@ class CBitmapWindow : public CObjectBase
 
 public:
 	virtual void Visit( struct IUIVisitor *pVisitor );
-	virtual int operator&( struct IBinSaver &saver );
+	int operator&( struct IBinSaver &saver ) override;
 
 	const CVec2 GetPos() const
 	{

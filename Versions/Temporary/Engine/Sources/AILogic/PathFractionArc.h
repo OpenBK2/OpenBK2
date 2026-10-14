@@ -17,7 +17,7 @@ class CPathFractionArc : public CPathFractionComplexBase
 	float fZ = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CPathFractionComplexBase *)this );
 		f.Add( 2, &circle );
@@ -31,16 +31,16 @@ public:
 public:
 	void Init( const CDirectedCircle &_circle, const CVec2 &_x0, const CVec2 &_x1, const float _fZ );
 
-	virtual CVec3 GetPoint( const float fDist ) const;
-	virtual CVec3 GetTangent( const float fDist ) const;
-	virtual CVec3 GetNormale( const float fDist ) const;
+	CVec3 GetPoint( const float fDist ) const override;
+	CVec3 GetTangent( const float fDist ) const override;
+	CVec3 GetNormale( const float fDist ) const override;
 
-	virtual float GetLength() const
+	float GetLength() const override
 	{
 		return fLength;
 	}
 
-	virtual void GetSimplePath( CPathList *pPaths )
+	void GetSimplePath( CPathList *pPaths ) override
 	{
 		NI_ASSERT( false, "wrong call" );
 	}

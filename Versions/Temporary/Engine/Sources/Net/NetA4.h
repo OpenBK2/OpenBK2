@@ -152,63 +152,65 @@ private:
 public:
 	CNetDriver();
 	CNetDriver( const SNetDriverConsts &_consts, bool _bIsBroadcast );
-	~CNetDriver();
+	~CNetDriver() override;
 	//
-	virtual void
-	Init( const APPLICATION_ID nApplicationID, const int nGamePort, bool bClientOnly, ILinksManager *pLinksManager );
+	void Init( const APPLICATION_ID nApplicationID,
+	           const int nGamePort,
+	           bool bClientOnly,
+	           ILinksManager *pLinksManager ) override;
 	// get current state (active/inactive/connecting)
-	virtual EState GetState() const;
+	EState GetState() const override;
 
 	// get reject reason (then )
-	virtual EReject GetRejectReason() const
+	EReject GetRejectReason() const override
 	{
 		return lastReject;
 	}
 
 	// connect to the game with particular address
-	virtual void ConnectGame( const CNodeAddress &addr, const CMemoryStream &pwd );
+	void ConnectGame( const CNodeAddress &addr, const CMemoryStream &pwd ) override;
 	// start game (server)
-	virtual void StartGame();
+	void StartGame() override;
 	// start sending game info (for server), should be compatible with gamespy
-	virtual void StartGameInfoSend( const SGameInfo &gameInfo );
+	void StartGameInfoSend( const SGameInfo &gameInfo ) override;
 	// stop sending game info (for server)
-	virtual void StopGameInfoSend();
+	void StopGameInfoSend() override;
 	// start accepting new players (for server)
-	virtual void StartNewPlayerAccept();
+	void StartNewPlayerAccept() override;
 	// stop accepting new players (for server)
-	virtual void StopNewPlayerAccept();
+	void StopNewPlayerAccept() override;
 	// get game info (for client)
-	virtual bool GetGameInfo( int nIdx, CNodeAddress *pAddr, bool *pWrongVersion, float *pPing, SGameInfo *pGameInfo );
+	bool GetGameInfo( int nIdx, CNodeAddress *pAddr, bool *pWrongVersion, float *pPing, SGameInfo *pGameInfo ) override;
 
 	// refresh servers list ( for client )
-	virtual void RefreshServersList() {}
+	void RefreshServersList() override {}
 
 	// send broadcast message for all
-	virtual bool SendBroadcast( const CMemoryStream &pkt );
+	bool SendBroadcast( const CMemoryStream &pkt ) override;
 	// send direct message for client 'nClient'
-	virtual bool SendDirect( int nClient, const CMemoryStream &pkt );
+	bool SendDirect( int nClient, const CMemoryStream &pkt ) override;
 	// kick player 'nClient'
-	virtual void Kick( int nClient );
+	void Kick( int nClient ) override;
 	// get next message
-	virtual bool GetMessage( EMessage *pMsg, int *pClientID, std::vector<int> *pReceived, CMemoryStream *pPkt );
+	bool GetMessage( EMessage *pMsg, int *pClientID, std::vector<int> *pReceived, CMemoryStream *pPkt ) override;
 	// ping of the client, -1 if client doesn't exist
-	virtual const float GetPing( const int nClientID );
+	const float GetPing( const int nClientID ) override;
 	// time since last message was received from this client
-	virtual const float GetTimeSinceLastRecv( const int nClientID );
+	const float GetTimeSinceLastRecv( const int nClientID ) override;
 	// step net driver
-	virtual void Step();
+	void Step() override;
 
-	virtual int GetSelfClientID()
+	int GetSelfClientID() override
 	{
 		return login.GetSelfClientID();
 	}
 
-	virtual const std::string GetIP( const int nClientID );
-	virtual const int GetPort( const int nClientID );
+	const std::string GetIP( const int nClientID ) override;
+	const int GetPort( const int nClientID ) override;
 
-	virtual void PauseNet();
-	virtual void UnpauseNet();
-	virtual void SetLag( const NTimer::STime period );
+	void PauseNet() override;
+	void UnpauseNet() override;
+	void SetLag( const NTimer::STime period ) override;
 
 	// thread functions for internal use only
 	void StartThread();
@@ -216,7 +218,7 @@ public:
 	void FinishThread();
 
 	//
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		return 0;
 	}

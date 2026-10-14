@@ -140,20 +140,20 @@ public:
 	}
 
 	//
-	~CMapObjectMultiState()
+	~CMapObjectMultiState() override
 	{
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_MAPOBJECT_MULTI_STATE );
 	}
 
 	void SwitchState( const std::string &rszObjectTypeName );
 	//IInputState interface
-	virtual void Enter();
-	virtual void Leave();
+	void Enter() override;
+	void Leave() override;
 
 public:
 	//ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 };
 
 // The palette's half of the exchange above, whichever toolkit draws it. Beside

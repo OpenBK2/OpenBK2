@@ -14,7 +14,7 @@ class CDeadHouseAnimation : public IClientUpdatableProcess
 	NTimer::STime nEndTime = 0;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nID );
 		f.Add( 3, &nEndTime );
@@ -24,5 +24,5 @@ public:
 private:
 public:
 	void Init( int nObjectID, const NTimer::STime &time, const NDb::SAnimB2 *pAnimation );
-	bool Update( const NTimer::STime &time );
+	bool Update( const NTimer::STime &time ) override;
 };

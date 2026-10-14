@@ -30,7 +30,7 @@ struct SCheckTurnIterateUnitsCallback : public SIterateUnitsCallback
 	}
 
 	//
-	bool Iterate( CBasePathUnit *unit ) const
+	bool Iterate( CBasePathUnit *unit ) const override
 	{
 		const bool bCanPush =
 				unit->ShouldScatter() /* && unit's collision's priority is greater or less than owner collision's priority */;

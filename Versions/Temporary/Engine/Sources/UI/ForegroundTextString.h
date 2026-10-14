@@ -13,7 +13,7 @@ class CForegroundTextString : public IWindowPart
 	CObj<IML> pGfxText;
 	CPtr<IWindow> pFontScaleWindow;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &wszCustomText );
 		f.Add( 3, &rcParent );
@@ -29,7 +29,7 @@ private:
 public:
 	CForegroundTextString() {}
 
-	virtual void Init();
+	void Init() override;
 	void SetFontScaleWindow( IWindow *pWindow ) override;
 	void SetText( const std::wstring &_szText );
 	int GetOptimalWidth() const;
@@ -39,10 +39,10 @@ public:
 	const NDb::SWindowPlacement *GetPlacement() const;
 
 	//IWindowPart{
-	virtual void Visit( struct IUIVisitor *pVisitor );
-	virtual void SetPos( const CVec2 &vPos, const CVec2 &vSize );
-	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
-	void SetFadeValue( float fValue );
+	void Visit( struct IUIVisitor *pVisitor ) override;
+	void SetPos( const CVec2 &vPos, const CVec2 &vSize ) override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
+	void SetFadeValue( float fValue ) override;
 	void SetInternalFadeValue( float fValue );
 	//IWindowPart}
 };
@@ -61,7 +61,7 @@ class CPlacedText : public CObjectBase
 	CVec2 vScreenRect;
 	float fFadeValue;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &wszText );
 		f.Add( 3, &placement );

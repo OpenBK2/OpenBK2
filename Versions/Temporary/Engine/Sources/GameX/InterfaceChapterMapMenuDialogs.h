@@ -67,7 +67,7 @@ struct SChapterReinfBase : public CObjectBase
 		int nBaseIndex;
 		CPtr<IProgressBar> pHPBar;
 
-		ZEND int operator&( IBinSaver &f )
+		ZEND int operator&( IBinSaver &f ) override
 		{
 			f.Add( 2, &pWnd );
 			f.Add( 3, &szBtnName );
@@ -97,7 +97,7 @@ struct SChapterReinfBase : public CObjectBase
 		void Make3DInfo( const NDb::SHPObjectRPGStats *pStats );
 
 	public:
-		~SUnit();
+		~SUnit() override;
 
 		void InitControls( IWindow *pWnd, const std::string &szBtnName, int nBaseIndex );
 		void ShowSelection( bool bShow );
@@ -134,7 +134,7 @@ struct SChapterReinfBase : public CObjectBase
 	CPtr<ITextView> pUnitSupplyLabel;
 	CPtr<ITextView> pUnitSupplyView;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnitNameView );
 		f.Add( 3, &weapons );
@@ -181,7 +181,7 @@ public:
 	std::vector<SUpgradeLine> lines;
 	CPtr<SUnit> pSelectedUnit;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SChapterReinfBase *)this );
 		f.Add( 2, &pBaseWnd );
@@ -219,7 +219,7 @@ public:
 	std::vector<CObj<SUnit>> units;
 	CPtr<SUnit> pSelectedUnit;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SChapterReinfBase *)this );
 		f.Add( 2, &pBaseWnd );
@@ -254,7 +254,7 @@ public:
 	CPtr<ITextView> pDescHeader;
 	CPtr<IWindow> pItemGeneral;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pBaseWnd );
 		f.Add( 3, &pPanel );
@@ -284,7 +284,7 @@ public:
 	CPtr<ITextView> pDifficultyView;
 	CPtr<ITextView> pWeatherView;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pBaseWnd );
 		f.Add( 3, &pPanel );

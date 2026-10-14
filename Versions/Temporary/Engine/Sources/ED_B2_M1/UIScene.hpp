@@ -9,12 +9,12 @@ class CUISceneB2 : public IUIScene
 	// members
 public:
 	CUISceneB2();
-	virtual ~CUISceneB2();
+	~CUISceneB2() override;
 	// IUIScene
-	void Create();
-	void Clear();
-	void AddWindow( IWindow *pWindow );
-	void RemoveWindow( IWindow *pWindow );
-	void Draw();
-	NGScene::I2DGameView *GetG2DView();
+	void Create() override;
+	void Clear() override;
+	void AddWindow( IWindow *pWindow ) override;
+	void RemoveWindow( IWindow *pWindow ) override;
+	void Draw() override;
+	NGScene::I2DGameView *GetG2DView() override;
 };

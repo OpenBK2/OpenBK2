@@ -164,7 +164,7 @@ public:
 	std::vector<SFlare> flares;
 	CDGPtr<CPtrFuncBase<NGfx::CTexture>> pOverbright;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &flares );
 		f.Add( 3, &pOverbright );

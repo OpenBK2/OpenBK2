@@ -35,17 +35,17 @@ public:
 	void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture,
 	                         const CRectLayout &sLayout,
 	                         const CTPoint<float> &sPosition,
-	                         const CTRect<float> &sClipWindow );
+	                         const CTRect<float> &sClipWindow ) override;
 	void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture,
 	                         const CVec2 *pPos4,
 	                         const NGfx::SPixel8888 *pColors4,
-	                         const CTRect<float> &rectTexture );
+	                         const CTRect<float> &rectTexture ) override;
 	void CreateDynamicClearRects( const CRectLayout &sLayout,
 	                              const CTPoint<float> &sPosition,
-	                              const CTRect<float> &sClipWindow );
+	                              const CTRect<float> &sClipWindow ) override;
 
-	void StartNewFrame( NGfx::CTexture *pTarget, const CVec2 &vSize, EAlphaMode2D _AlphaMode2D );
-	void Flush();
+	void StartNewFrame( NGfx::CTexture *pTarget, const CVec2 &vSize, EAlphaMode2D _AlphaMode2D ) override;
+	void Flush() override;
 };
 
 void C2DScene::CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture,

@@ -51,57 +51,57 @@ public:
 	static const NDb::SModel *GetModel( const NDb::SBridgeRPGStats *pBridgeRPGStats, EType type, NDb::ESeason eSeason );
 
 	// SObjectInfo
-	SObjectInfo *CallDuplicate() const
+	SObjectInfo *CallDuplicate() const override
 	{
 		return Duplicate();
 	}
 
-	EObjectInfoType GetObjectInfoType()
+	EObjectInfoType GetObjectInfoType() override
 	{
 		return OIT_BRIDGE;
 	}
 
-	bool NeedMakeOrientation()
+	bool NeedMakeOrientation() override
 	{
 		return false;
 	}
 
-	bool KeepZeroHeight()
+	bool KeepZeroHeight() override
 	{
 		return false;
 	}
 
-	bool KeepCommonHeight()
+	bool KeepCommonHeight() override
 	{
 		return true;
 	}
 
-	bool NeedProcessEditParameters()
+	bool NeedProcessEditParameters() override
 	{
 		return true;
 	}
 
 	//
-	bool Load( const SObjectLoadInfo *pObjectLoadInfo, IEditorScene *pEditorScene, IManipulator *pManipulator );
+	bool Load( const SObjectLoadInfo *pObjectLoadInfo, IEditorScene *pEditorScene, IManipulator *pManipulator ) override;
 	bool Create( const SObjectCreateInfo *pObjectCreateInfo,
 	             IEditorScene *pEditorScene,
 	             CObjectBaseController *pObjectController,
-	             IManipulator *pManipulator );
+	             IManipulator *pManipulator ) override;
 
-	void FillMaskManipulator( class CMaskManipulator *pMaskManipulator ) {}
+	void FillMaskManipulator( class CMaskManipulator *pMaskManipulator ) override {}
 
-	void GetMask( std::string *pszMask ) {}
+	void GetMask( std::string *pszMask ) override {}
 
-	bool RemoveFromDB( CObjectBaseController *pObjectController, IManipulator *pManipulator );
+	bool RemoveFromDB( CObjectBaseController *pObjectController, IManipulator *pManipulator ) override;
 	void Remove( bool bUpdateScene,
 	             IEditorScene *pEditorScene,
 	             bool bUpdateDB,
 	             CObjectBaseController *pObjectController,
-	             IManipulator *pManipulator );
+	             IManipulator *pManipulator ) override;
 	bool PasteSelf( CLinkIDMap *pNew2OldLinkIDMap,
 	                CLinkIDMap *pOld2NewLinkIDMap,
 	                IEditorScene *pEditorScene,
 	                CObjectBaseController *pObjectController,
-	                IManipulator *pManipulator );
+	                IManipulator *pManipulator ) override;
 };
 }; // namespace NMapInfoEditor

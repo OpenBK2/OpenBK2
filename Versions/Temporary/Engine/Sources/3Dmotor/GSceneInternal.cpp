@@ -60,7 +60,7 @@ class CGetTranspCache : public CPtrFuncBase<NGfx::CTexture>
 {
 	OBJECT_NOCOPY_METHODS( CGetTranspCache );
 
-	void Recalc()
+	void Recalc() override
 	{
 		pValue = NGfx::GetTransparentTextureCache();
 	}
@@ -73,21 +73,21 @@ class CAmbientAnimator : public CFuncBase<CVec3>
 	CDGPtr<CFuncBase<CVec3>> pAmbient;
 	CDGPtr<CPtrFuncBase<CAnimLight>> pAnim;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pAmbient );
 		f.Add( 3, &pAnim );
 		return 0;
 	}
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		bool b1 = pAmbient.Refresh();
 		bool b2 = IsValid( pAnim ) ? pAnim.Refresh() : false;
 		return b1 || b2;
 	}
 
-	void Recalc()
+	void Recalc() override
 	{
 		if ( IsValid( pAnim ) )
 		{
@@ -1253,11 +1253,11 @@ struct SLitParticlesAdder : public IReportParticlesGeometry
 	{
 	}
 
-	virtual void AddParticles( IVBCombiner *pVertices,
-	                           CFuncBase<std::vector<NGfx::STriangleList>> *pTrilists,
-	                           int nPart,
-	                           int nParticles,
-	                           const SBound &bv )
+	void AddParticles( IVBCombiner *pVertices,
+	                   CFuncBase<std::vector<NGfx::STriangleList>> *pTrilists,
+	                   int nPart,
+	                   int nParticles,
+	                   const SBound &bv ) override
 	{
 		if ( nParticles )
 		{

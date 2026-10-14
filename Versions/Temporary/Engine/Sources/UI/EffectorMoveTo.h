@@ -20,20 +20,20 @@ class CEffectorMoveTo : public IUIEffector
 	const std::pair<CVec2, int> GetCur() const;
 
 public:
-	virtual int operator&( IBinSaver &ss );
+	int operator&( IBinSaver &ss ) override;
 
-	virtual bool IsFinished() const
+	bool IsFinished() const override
 	{
 		return bFinished;
 	}
 
-	virtual void Configure( const NDb::SUIStateBase *pCmd,
-	                        struct IScreen *pScreen,
-	                        SWindowContext *pContext,
-	                        const std::string &szAnimatedWindow );
-	virtual const int Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward );
+	void Configure( const NDb::SUIStateBase *pCmd,
+	                struct IScreen *pScreen,
+	                SWindowContext *pContext,
+	                const std::string &szAnimatedWindow ) override;
+	const int Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward ) override;
 
-	virtual void Visit( struct IUIVisitor *pVisitor ) {}
+	void Visit( struct IUIVisitor *pVisitor ) override {}
 
-	virtual void Reverse();
+	void Reverse() override;
 };

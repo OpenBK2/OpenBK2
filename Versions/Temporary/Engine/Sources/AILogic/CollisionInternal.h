@@ -11,34 +11,34 @@ class CPlaneCollision : public ICollision
 	OBJECT_BASIC_METHODS( CPlaneCollision );
 
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
 
 public:
-	void Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority ) {}
+	void Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority ) override {}
 
-	const int GetPriority() const
+	const int GetPriority() const override
 	{
 		return 0;
 	}
 
-	CBasePathUnit *GetPushUnit() const
+	CBasePathUnit *GetPushUnit() const override
 	{
 		return 0;
 	}
 
-	const bool IsSolved() const
+	const bool IsSolved() const override
 	{
 		return false;
 	}
 
-	void Segment( const NTimer::STime timeDiff ) {}
+	void Segment( const NTimer::STime timeDiff ) override {}
 
-	void FindCandidates( ICollisionsCollector *pCollisionCollector ) {}
+	void FindCandidates( ICollisionsCollector *pCollisionCollector ) override {}
 
-	const NCollision::ECollisionName GetName() const
+	const NCollision::ECollisionName GetName() const override
 	{
 		return NCollision::ECN_FREE;
 	}

@@ -15,7 +15,7 @@ class CStandartDirectPath : public IPath
 	CVec2 vFinishPoint;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nCurrentTile );
 		f.Add( 3, &tiles );
@@ -42,56 +42,56 @@ public:
 
 	void Init( const std::vector<SVector> &tiles, const int nTileSize );
 
-	bool IsFinished() const
+	bool IsFinished() const override
 	{
 		return nCurrentTile == tiles.size();
 	}
 
-	const CVec2 PeekPoint( const int nShift ) const
+	const CVec2 PeekPoint( const int nShift ) const override
 	{
 		return GetPoint( tiles[(std::min<int>)( nCurrentTile + nShift, tiles.size() - 1 )] );
 	}
 
-	void Shift( const int nShift )
+	void Shift( const int nShift ) override
 	{
 		nCurrentTile = (std::min<int>)( nCurrentTile + nShift, tiles.size() );
 	}
 
-	const CVec2 &GetFinishPoint() const
+	const CVec2 &GetFinishPoint() const override
 	{
 		return vFinishPoint;
 	}
 
-	const CVec2 &GetStartPoint() const
+	const CVec2 &GetStartPoint() const override
 	{
 		return vStartPoint;
 	}
 
 	//! восстановить путь из новой точки ( vPoint )
-	void RecoverPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &vLastKnownGoodTile ) {}
+	void RecoverPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &vLastKnownGoodTile ) override {}
 
 	//! пересчитать путь из новой точки ( vPoint )
-	void RecalcPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &vLastKnownGoodTile ) {}
+	void RecalcPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &vLastKnownGoodTile ) override {}
 
 	//! добавить тайлы в начало пути
-	void InsertTiles( const std::list<SVector> &tiles );
+	void InsertTiles( const std::list<SVector> &tiles ) override;
 
 	//! можно ли проехать весь путь задом
-	const bool CanGoBackward( const CBasePathUnit *pUnit ) const
+	const bool CanGoBackward( const CBasePathUnit *pUnit ) const override
 	{
 		return true;
 	}
 
-	const bool ShouldCheckTurn() const
+	const bool ShouldCheckTurn() const override
 	{
 		return false;
 	}
 
 	//! можно ли для этого пути построить сложный разворот
-	const bool CanBuildComplexTurn() const
+	const bool CanBuildComplexTurn() const override
 	{
 		return false;
 	}
 
-	void MarkPath( const int nID, const NDebugInfo::EColor color ) const;
+	void MarkPath( const int nID, const NDebugInfo::EColor color ) const override;
 };

@@ -19,7 +19,7 @@ class CEditorModuleRegistrator : public IEditorModuleRegistrator
 
 public:
 	//
-	void RegisterTypes( const std::string &szType, RegisterEditorType pfnRegistrator ) const
+	void RegisterTypes( const std::string &szType, RegisterEditorType pfnRegistrator ) const override
 	{
 		CMapEditorFactoryNewFuncsMap::const_iterator posList = newFuncs.find( szType );
 		if ( posList == newFuncs.end() )
@@ -33,7 +33,7 @@ public:
 		}
 	}
 
-	void UnRegisterTypes( const std::string &szType, UnRegisterEditorType pfnUnRegistrator ) const
+	void UnRegisterTypes( const std::string &szType, UnRegisterEditorType pfnUnRegistrator ) const override
 	{
 		CMapEditorFactoryNewFuncsMap::const_iterator posList = newFuncs.find( szType );
 		if ( posList == newFuncs.end() )

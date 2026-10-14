@@ -34,7 +34,7 @@ public:
 		return pUnitOwnPath;
 	}
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, &pGroupSmoothPath );
 		saver.Add( 2, &pUnitOwnPath );
@@ -60,7 +60,7 @@ class COMMON_RTS_AI_EXPORT CInGroupPathBasis : public ISmoothPath
 	CPtr<CAIMap> pAIMap;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		OnSerialize( f );
 		f.Add( 4, &pSmoothGroupPath );
@@ -84,20 +84,20 @@ protected:
 	const CVec2 MoveUnit( const NTimer::STime timeDiff, const float fSpeed );
 
 public:
-	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *_pAIMap )
+	bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *_pAIMap ) override
 	{
 		pAIMap = _pAIMap;
 		return false;
 	}
 
-	virtual bool Init( IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap );
+	bool Init( IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap ) override;
 	virtual bool Init( CBasePathUnit *pUnit,
 	                   CGroupSmoothPath *pGroupSmoothPath,
 	                   const bool bSmoothTurn,
 	                   const bool bCheckTurn,
 	                   CAIMap *pAIMap );
 
-	virtual bool IsFinished() const
+	bool IsFinished() const override
 	{
 		if ( bGoByOwnPath )
 		{
@@ -109,26 +109,26 @@ public:
 		}
 	}
 
-	virtual void Stop();
+	void Stop() override;
 
-	virtual void Segment( const NTimer::STime timeDiff );
+	void Segment( const NTimer::STime timeDiff ) override;
 
-	virtual const bool CanGoBackward() const
+	const bool CanGoBackward() const override
 	{
 		return false;
 	}
 
-	virtual const bool CanGoForward() const
+	const bool CanGoForward() const override
 	{
 		return true;
 	}
 
-	virtual const CVec2 PeekPathPoint( const int nShift ) const
+	const CVec2 PeekPathPoint( const int nShift ) const override
 	{
 		return pUnit->GetCenterPlain();
 	}
 
-	virtual IMemento *CreateMemento() const
+	IMemento *CreateMemento() const override
 	{
 		return new CInGroupPathMemento( pSmoothGroupPath, pUnitOwnPath );
 	}
@@ -140,7 +140,7 @@ class CInGroupPath : public CInGroupPathBasis
 
 	ZDATA_( CInGroupPathBasis )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInGroupPathBasis *)this );
 		return 0;

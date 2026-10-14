@@ -55,14 +55,15 @@ class CVisObjBuilder : public CBuildDataBuilder, public ICommandHandler
 	bool RemoveModel( const std::string &rszObjectTypeName, const std::string &rszObjectName );
 	//
 	CVisObjBuilder();
-	~CVisObjBuilder();
+	~CVisObjBuilder() override;
 
 protected:
 	// IBuildDataCallback
-	bool IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView );
+	bool
+	IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView ) override;
 
 	//CBuildDataBuilder
-	const std::string &GetBuildDataTypeName()
+	const std::string &GetBuildDataTypeName() override
 	{
 		return BUILD_DATA_TYPE_NAME;
 	}
@@ -73,11 +74,11 @@ protected:
 	                           bool *pbCanChangeObjectName,
 	                           bool *pbNeedExport,
 	                           bool *pbNeedEdit,
-	                           IManipulator *pBuildDataManipulator );
+	                           IManipulator *pBuildDataManipulator ) override;
 	//CBuilderBase
-	bool RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName );
+	bool RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName ) override;
 
 	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 };

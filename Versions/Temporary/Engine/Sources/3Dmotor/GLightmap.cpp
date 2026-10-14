@@ -42,7 +42,7 @@ class CLMRegion : public NCache::CGatherElementBase<NCache::CShortPtrAllocator, 
 	OBJECT_NOCOPY_METHODS( CLMRegion );
 
 public:
-	int operator&( CStructureSaver &f )
+	int operator&( CStructureSaver &f ) override
 	{
 		ASSERT( 0 );
 		return 0;
@@ -66,7 +66,7 @@ public:
 		InitCache( nSize );
 	} // RefreshTexture(); }
 
-	int operator&( CStructureSaver &f )
+	int operator&( CStructureSaver &f ) override
 	{
 		ASSERT( 0 );
 		return 0;

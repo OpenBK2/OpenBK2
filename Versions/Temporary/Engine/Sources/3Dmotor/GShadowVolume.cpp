@@ -169,7 +169,7 @@ public:
 		return false;
 	}
 
-	bool IsVisible( const SSphere &s, CTransformStack *pTS ) const
+	bool IsVisible( const SSphere &s, CTransformStack *pTS ) const override
 	{
 		CTRect<float> r;
 		if ( !pTS->GetCoverRect( &r, s.ptCenter, s.fRadius ) )

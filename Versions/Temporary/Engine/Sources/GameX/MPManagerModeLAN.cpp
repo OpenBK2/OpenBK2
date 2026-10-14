@@ -40,7 +40,7 @@ public:
 	ZDATA
 	std::string szPassword;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szPassword );
 		return 0;
@@ -63,7 +63,7 @@ class CRequestLANPasswordPacket : public CNetPacket
 
 public:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}

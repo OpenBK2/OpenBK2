@@ -21,9 +21,9 @@ class CTreeWindMutator : public ITreeWindMutator
 public:
 	CTreeWindMutator() {}
 
-	void Setup( ISkeletonAnimator *pAnimator, const CVec3 &_vPos3, const std::vector<std::string> &leafNames );
+	void Setup( ISkeletonAnimator *pAnimator, const CVec3 &_vPos3, const std::vector<std::string> &leafNames ) override;
 
-	bool NeedUpdate();
-	void MutateSkeletonPose( NAnimation::SSkeletonPose *pPose );
-	int operator&( IBinSaver &saver );
+	bool NeedUpdate() override;
+	void MutateSkeletonPose( NAnimation::SSkeletonPose *pPose ) override;
+	int operator&( IBinSaver &saver ) override;
 };

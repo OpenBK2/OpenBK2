@@ -23,7 +23,7 @@ struct SVisObjDescBase : public IVisObj
 	int nID = {};
 	bool bHidden = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nID );
 		f.Add( 3, &bHidden );
@@ -38,7 +38,7 @@ struct SVisObjDescBase : public IVisObj
 	{
 	}
 
-	virtual ~SVisObjDescBase()
+	~SVisObjDescBase() override
 	{
 		ClearObject();
 	}
@@ -120,7 +120,7 @@ struct SModelVisObjDesc : public SVisObjDescBase
 	CDBPtr<NDb::SModel> pLowLevelModel;
 	CObj<CObjectBase> pCircle;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SVisObjDescBase *)this );
 		f.Add( 2, &pModel );
@@ -146,19 +146,19 @@ struct SModelVisObjDesc : public SVisObjDescBase
 		n2Attach.resize( __ESSOT_COUNTER, 0 );
 	}
 
-	void SetFade( float _fFade )
+	void SetFade( float _fFade ) override
 	{
 		fFade = _fFade;
 	}
 
 	void FillBBPoints( std::vector<CVec3> &bbPoints, std::vector<uint16_t> &bbIndices );
 	void UpdateBBPolyLine( NGScene::IGameView *pGScene );
-	void UpdateSrcBind();
+	void UpdateSrcBind() override;
 	//
-	virtual void Visit( IAIVisitor *pVisitor );
+	void Visit( IAIVisitor *pVisitor ) override;
 
 	//
-	virtual void ClearObject()
+	void ClearObject() override
 	{
 		SVisObjDescBase::ClearObject();
 		pObjLowLevel = 0;
@@ -168,7 +168,7 @@ struct SModelVisObjDesc : public SVisObjDescBase
 
 	void ClearAttached( const ESceneSubObjType eType );
 	//
-	void UpdateStuff( class CVisObjIconsManager *pVOIM );
+	void UpdateStuff( class CVisObjIconsManager *pVOIM ) override;
 };
 
 // static object in game
@@ -179,7 +179,7 @@ public:
 	ZDATA_( SModelVisObjDesc )
 	SFBTransform transform;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SModelVisObjDesc *)this );
 		f.Add( 2, &transform );
@@ -187,16 +187,17 @@ public:
 	}
 
 	//
-	void UpdatePlacement( NGScene::IGameView *pGScene, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale );
-	void UpdatePlacement( NGScene::IGameView *pGScene, const SHMatrix &mPlace );
+	void
+	UpdatePlacement( NGScene::IGameView *pGScene, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale ) override;
+	void UpdatePlacement( NGScene::IGameView *pGScene, const SHMatrix &mPlace ) override;
 	void MoveAfterUpdatePlacement( NGScene::IGameView *pGScene );
 
-	const SFBTransform &GetPlacement() const
+	const SFBTransform &GetPlacement() const override
 	{
 		return transform;
 	}
 
-	CCSFBTransform *GetTransform() const
+	CCSFBTransform *GetTransform() const override
 	{
 		return 0;
 	}
@@ -205,10 +206,11 @@ public:
 	                  CCSTime *pGameTimer,
 	                  NGScene::IGameView *pGScene,
 	                  CSyncSrc<IVisObj> *pSyncSrc,
-	                  bool bShowBB );
-	void ReCreateObject( NGScene::IGameView *pGScene, CSyncSrc<IVisObj> *pSyncSrc, CCSTime *pTimer, bool bShowBB );
+	                  bool bShowBB ) override;
+	void
+	ReCreateObject( NGScene::IGameView *pGScene, CSyncSrc<IVisObj> *pSyncSrc, CCSTime *pTimer, bool bShowBB ) override;
 
-	CFuncBase<SBound> *GetBounder()
+	CFuncBase<SBound> *GetBounder() override
 	{
 		return 0;
 	}
@@ -222,7 +224,7 @@ public:
 	ZDATA_( SModelVisObjDesc )
 	CObj<CCSFBTransform> pTransform;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SModelVisObjDesc *)this );
 		f.Add( 2, &pTransform );
@@ -230,20 +232,22 @@ public:
 	}
 
 	//
-	void UpdatePlacement( NGScene::IGameView *pGScene, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale );
-	void UpdatePlacement( NGScene::IGameView *pGScene, const SHMatrix &mPlace );
+	void
+	UpdatePlacement( NGScene::IGameView *pGScene, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale ) override;
+	void UpdatePlacement( NGScene::IGameView *pGScene, const SHMatrix &mPlace ) override;
 
-	const SFBTransform &GetPlacement() const
+	const SFBTransform &GetPlacement() const override
 	{
 		return pTransform->GetValue();
 	}
 
-	CCSFBTransform *GetTransform() const
+	CCSFBTransform *GetTransform() const override
 	{
 		return pTransform;
 	}
 
-	void ReCreateObject( NGScene::IGameView *pGScene, CSyncSrc<IVisObj> *pSyncSrc, CCSTime *pTimer, bool bShowBB );
+	void
+	ReCreateObject( NGScene::IGameView *pGScene, CSyncSrc<IVisObj> *pSyncSrc, CCSTime *pTimer, bool bShowBB ) override;
 };
 
 // animated object
@@ -255,7 +259,7 @@ struct SAnimatedVisObjDescBase : public SModelVisObjDesc
 	CObj<CCSFBTransform> pTransform;
 	CDGPtr<CFuncBase<SBound>> pBounder;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SModelVisObjDesc *)this );
 		f.Add( 2, &pAnimator );
@@ -267,20 +271,21 @@ struct SAnimatedVisObjDescBase : public SModelVisObjDesc
 	//
 	SAnimatedVisObjDescBase();
 	//
-	void UpdatePlacement( NGScene::IGameView *pGScene, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale );
-	void UpdatePlacement( NGScene::IGameView *pGScene, const SHMatrix &mPlace );
+	void
+	UpdatePlacement( NGScene::IGameView *pGScene, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale ) override;
+	void UpdatePlacement( NGScene::IGameView *pGScene, const SHMatrix &mPlace ) override;
 
-	const SFBTransform &GetPlacement() const
+	const SFBTransform &GetPlacement() const override
 	{
 		return pTransform->GetValue();
 	}
 
-	CCSFBTransform *GetTransform() const
+	CCSFBTransform *GetTransform() const override
 	{
 		return pTransform;
 	}
 
-	NAnimation::ISkeletonAnimator *GetAnimator( bool bRefreshAnimator )
+	NAnimation::ISkeletonAnimator *GetAnimator( bool bRefreshAnimator ) override
 	{
 		if ( bRefreshAnimator )
 		{
@@ -289,20 +294,21 @@ struct SAnimatedVisObjDescBase : public SModelVisObjDesc
 		return pAnimator;
 	}
 
-	CFuncBase<SBound> *GetBounder()
+	CFuncBase<SBound> *GetBounder() override
 	{
 		pBounder.Refresh();
 		return pBounder;
 	}
 
-	void ClearObject();
-	void ReCreateObject( NGScene::IGameView *pGScene, CSyncSrc<IVisObj> *pSyncSrc, CCSTime *pTimer, bool bShowBB );
+	void ClearObject() override;
+	void
+	ReCreateObject( NGScene::IGameView *pGScene, CSyncSrc<IVisObj> *pSyncSrc, CCSTime *pTimer, bool bShowBB ) override;
 	//
 	void ChangeModel( const NDb::SModel *pNewModel,
 	                  CCSTime *pGameTimer,
 	                  NGScene::IGameView *pGScene,
 	                  CSyncSrc<IVisObj> *pSyncSrc,
-	                  bool bShowBB );
+	                  bool bShowBB ) override;
 	virtual CObjectBase *CreateAnimatedMesh( NGScene::IGameView *pGScene,
 	                                         const NDb::SModel *pModel,
 	                                         NGScene::IGameView::SMeshInfo *pMeshInfoPassed ) = 0;
@@ -314,7 +320,7 @@ struct SAnimatedVisObjDesc : public SAnimatedVisObjDescBase
 public:
 	ZDATA_( SAnimatedVisObjDescBase )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAnimatedVisObjDescBase *)this );
 		return 0;
@@ -323,7 +329,7 @@ public:
 	//
 	CObjectBase *CreateAnimatedMesh( NGScene::IGameView *pGScene,
 	                                 const NDb::SModel *pModel,
-	                                 NGScene::IGameView::SMeshInfo *pMeshInfoPassed );
+	                                 NGScene::IGameView::SMeshInfo *pMeshInfoPassed ) override;
 };
 
 struct SAnimatedStaticVisObjDesc : public SAnimatedVisObjDescBase
@@ -332,7 +338,7 @@ struct SAnimatedStaticVisObjDesc : public SAnimatedVisObjDescBase
 public:
 	ZDATA_( SAnimatedVisObjDescBase )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAnimatedVisObjDescBase *)this );
 		return 0;
@@ -341,7 +347,7 @@ public:
 	//
 	CObjectBase *CreateAnimatedMesh( NGScene::IGameView *pGScene,
 	                                 const NDb::SModel *pModel,
-	                                 NGScene::IGameView::SMeshInfo *pMeshInfoPassed );
+	                                 NGScene::IGameView::SMeshInfo *pMeshInfoPassed ) override;
 };
 
 // effect vis obj
@@ -351,7 +357,7 @@ struct SEffectVisObjBase : public SVisObjDescBase
 	CDBPtr<NDb::SEffect> pEffect;
 	NTimer::STime timeStart = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SVisObjDescBase *)this );
 		f.Add( 2, &pEffect );
@@ -367,7 +373,7 @@ public:
 	ZDATA_( SEffectVisObjBase )
 	SFBTransform transform;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SEffectVisObjBase *)this );
 		f.Add( 2, &transform );
@@ -375,21 +381,23 @@ public:
 	}
 
 	//
-	void UpdatePlacement( NGScene::IGameView *pGScene, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale );
-	void UpdatePlacement( NGScene::IGameView *pGScene, const SHMatrix &mPlace );
+	void
+	UpdatePlacement( NGScene::IGameView *pGScene, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale ) override;
+	void UpdatePlacement( NGScene::IGameView *pGScene, const SHMatrix &mPlace ) override;
 
 	//
-	const SFBTransform &GetPlacement() const
+	const SFBTransform &GetPlacement() const override
 	{
 		return transform;
 	}
 
-	CCSFBTransform *GetTransform() const
+	CCSFBTransform *GetTransform() const override
 	{
 		return 0;
 	}
 
-	void ReCreateObject( NGScene::IGameView *pGView, CSyncSrc<IVisObj> *pSyncSrc, CCSTime *pTimer, bool bShowBB );
+	void
+	ReCreateObject( NGScene::IGameView *pGView, CSyncSrc<IVisObj> *pSyncSrc, CCSTime *pTimer, bool bShowBB ) override;
 };
 
 struct SDynamicEffectVisObj : public SEffectVisObjBase
@@ -399,7 +407,7 @@ public:
 	ZDATA_( SEffectVisObjBase )
 	CObj<CCSFBTransform> pTransform;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SEffectVisObjBase *)this );
 		f.Add( 2, &pTransform );
@@ -407,19 +415,21 @@ public:
 	}
 
 	//
-	void UpdatePlacement( NGScene::IGameView *pGScene, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale );
-	void UpdatePlacement( NGScene::IGameView *pGScene, const SHMatrix &mPlace );
+	void
+	UpdatePlacement( NGScene::IGameView *pGScene, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale ) override;
+	void UpdatePlacement( NGScene::IGameView *pGScene, const SHMatrix &mPlace ) override;
 
 	//
-	const SFBTransform &GetPlacement() const
+	const SFBTransform &GetPlacement() const override
 	{
 		return pTransform->GetValue();
 	}
 
-	CCSFBTransform *GetTransform() const
+	CCSFBTransform *GetTransform() const override
 	{
 		return pTransform;
 	}
 
-	void ReCreateObject( NGScene::IGameView *pGView, CSyncSrc<IVisObj> *pSyncSrc, CCSTime *pTimer, bool bShowBB );
+	void
+	ReCreateObject( NGScene::IGameView *pGView, CSyncSrc<IVisObj> *pSyncSrc, CCSTime *pTimer, bool bShowBB ) override;
 };

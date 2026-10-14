@@ -64,7 +64,7 @@ class CWindowEditLine : public CWindow, public IEditLine
 	void SetTextToGfx( const std::wstring &szText );
 	//bool ProcessEvent( const struct SGameMessage &msg );
 protected:
-	NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
@@ -72,10 +72,10 @@ protected:
 public:
 	CWindowEditLine();
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 
 	//{ CWindow
-	void SetFocus( const bool bFocus );
+	void SetFocus( const bool bFocus ) override;
 
 	//}
 	void SetFocusNotify( IFocusNotify *_pNotify )
@@ -83,33 +83,33 @@ public:
 		pFocusNotify = _pNotify;
 	}
 
-	void Init();
-	void InitByDesc( const struct NDb::SUIDesc *pDesc );
-	void AfterLoad();
+	void Init() override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
+	void AfterLoad() override;
 
 	// IWindow
-	void Visit( struct IUIVisitor *pVisitor );
-	void Segment( const int timeDiff );
+	void Visit( struct IUIVisitor *pVisitor ) override;
+	void Segment( const int timeDiff ) override;
 
-	bool OnMouseMove( const CVec2 &_vPos, const int nButton );
-	bool OnButtonDown( const CVec2 &_vPos, const int nButton );
-	bool OnButtonUp( const CVec2 &_vPos, const int nButton );
+	bool OnMouseMove( const CVec2 &_vPos, const int nButton ) override;
+	bool OnButtonDown( const CVec2 &_vPos, const int nButton ) override;
+	bool OnButtonUp( const CVec2 &_vPos, const int nButton ) override;
 
-	void Reposition( const CTRect<float> &rcParent );
+	void Reposition( const CTRect<float> &rcParent ) override;
 
 	// IEditLine
-	void SetCursor( const int nPos );
-	void SetSelection( const int nBegin, const int nEnd );
-	void SetText( const wchar_t *pszText );
+	void SetCursor( const int nPos ) override;
+	void SetSelection( const int nBegin, const int nEnd ) override;
+	void SetText( const wchar_t *pszText ) override;
 
-	const wchar_t *GetText() const
+	const wchar_t *GetText() const override
 	{
 		return wszFullText.c_str();
 	}
 
-	void RegisterObservers();
+	void RegisterObservers() override;
 
-	bool ProcessEvent( const struct SGameMessage &msg );
+	bool ProcessEvent( const struct SGameMessage &msg ) override;
 
 	//begin message sinks
 	bool OnReturn();

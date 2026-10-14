@@ -83,18 +83,18 @@ protected:
 public:
 	CReflowState( NGScene::ILayoutFakeView *pView, float fWidth );
 
-	const SState &GetState() const
+	const SState &GetState() const override
 	{
 		return state;
 	}
 
-	void SetState( const SState &_state )
+	void SetState( const SState &_state ) override
 	{
 		state = _state;
 	}
 
-	void AddObject( IVisReflowObject *pObject );
-	void CreateLine( bool bEndBlock );
+	void AddObject( IVisReflowObject *pObject ) override;
+	void CreateLine( bool bEndBlock ) override;
 	void Finalize();
 
 	const CTPoint<float> &GetSize() const
@@ -102,7 +102,7 @@ public:
 		return size;
 	}
 
-	NGScene::ILayoutFakeView *GetScene() const
+	NGScene::ILayoutFakeView *GetScene() const override
 	{
 		return pView;
 	}
@@ -331,7 +331,7 @@ private:
 	TObjects objects;
 	CTPoint<float> size;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &objects );
 		f.Add( 3, &size );
@@ -341,14 +341,15 @@ private:
 public:
 	CReflowLayout();
 
-	void AddObject( IReflowObject *pObject );
+	void AddObject( IReflowObject *pObject ) override;
 
-	void Generate( NGScene::ILayoutFakeView *pView, float fWidth );
+	void Generate( NGScene::ILayoutFakeView *pView, float fWidth ) override;
 
-	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window );
-	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window );
+	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window ) override;
+	void
+	Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window ) override;
 
-	const CTPoint<float> &GetSize() const
+	const CTPoint<float> &GetSize() const override
 	{
 		return size;
 	}

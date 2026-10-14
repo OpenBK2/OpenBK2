@@ -27,16 +27,16 @@ class CTransportStatesFactory : public IStatesFactory
 	static CPtr<CTransportStatesFactory> pFactory;
 
 public:
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		return 0;
 	}
 
 	static IStatesFactory *Instance();
-	virtual struct IUnitState *ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
-	virtual struct IUnitState *ProduceRestState( class CQueueUnit *pUnit );
+	struct IUnitState *ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand ) override;
+	struct IUnitState *ProduceRestState( class CQueueUnit *pUnit ) override;
 
-	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
+	bool CanCommandBeExecuted( class CAICommand *pCommand ) override;
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
@@ -49,7 +49,7 @@ class CTransportWaitPassengerState : public IUnitState
 	std::list<CPtr<CFormation>> formationsToWait;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTransport );
 		f.Add( 3, &formationsToWait );
@@ -66,20 +66,20 @@ public:
 
 	CTransportWaitPassengerState( class CMilitaryCar *pTransport, class CFormation *pFormation );
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_WAIT_FOR_PASSENGER;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 
 	void AddFormationToWait( class CFormation *pFormation );
 };
@@ -107,7 +107,7 @@ class CTransportLandState : public IUnitState, public CStatusUpdatesHelper
 	CVec2 vLandPoint;
 	CPtr<CFormation> pUnload; // if unloading single formation
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStatusUpdatesHelper *)this );
 		f.Add( 2, &state );
@@ -134,20 +134,20 @@ public:
 	                     const CVec2 &vLandPoint,
 	                     CFormation *pUnload );
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_LAND;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 };
 
 class CTransportLoadRuState : public IUnitState, public CStatusUpdatesHelper
@@ -174,7 +174,7 @@ class CTransportLoadRuState : public IUnitState, public CStatusUpdatesHelper
 	int nEntrance = {};
 	bool bSubState = {}; // является ли этот стейт сабстейтом
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStatusUpdatesHelper *)this );
 		f.Add( 2, &eState );
@@ -203,16 +203,16 @@ public:
 
 	CTransportLoadRuState( class CAITransportUnit *pTransport, const bool bSubState, CBuilding *_pPreferredStorage );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1.0f, -1.0f );
 	}
@@ -261,7 +261,7 @@ protected:
 	bool bSendFinishFeedback = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStatusUpdatesHelper *)this );
 		f.Add( 2, &eState );
@@ -293,16 +293,16 @@ public:
 
 	CTransportServeState( class CAITransportUnit *pTransport, const CVec2 &_vServePoint, CAIUnit *_pPreferredUnit );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return vServePoint;
 	}
@@ -313,16 +313,16 @@ class CTransportResupplyState : public CTransportServeState
 	OBJECT_BASIC_METHODS( CTransportResupplyState );
 	ZDATA_( CTransportServeState )
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CTransportServeState *)this );
 		return 0;
 	}
 
 protected:
-	bool FindUnitToServe( bool *pIsNotEnoughRU );
-	virtual void SendLoaders();
-	virtual void UpdateActionBegin();
+	bool FindUnitToServe( bool *pIsNotEnoughRU ) override;
+	void SendLoaders() override;
+	void UpdateActionBegin() override;
 
 public:
 	static IUnitState *
@@ -332,17 +332,17 @@ public:
 
 	CTransportResupplyState( class CAITransportUnit *pTransport, const CVec2 &_vServePoint, CAIUnit *_pPreferredUnit );
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1.0f, -1.0f );
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_RESUPPLY_UNIT;
 	}
@@ -353,16 +353,16 @@ class CTransportRepairState : public CTransportServeState
 	OBJECT_BASIC_METHODS( CTransportRepairState );
 	ZDATA_( CTransportServeState )
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CTransportServeState *)this );
 		return 0;
 	}
 
 protected:
-	virtual bool FindUnitToServe( bool *pIsNotEnoughRU );
-	void SendLoaders();
-	void UpdateActionBegin();
+	bool FindUnitToServe( bool *pIsNotEnoughRU ) override;
+	void SendLoaders() override;
+	void UpdateActionBegin() override;
 
 public:
 	static IUnitState *
@@ -372,17 +372,17 @@ public:
 
 	CTransportRepairState( class CAITransportUnit *pTransport, const CVec2 &_vServePoint, CAIUnit *_pPreferredUnit );
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1.0f, -1.0f );
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_REPAIR_UNIT;
 	}
@@ -420,7 +420,7 @@ class CTransportHookArtilleryState : public IUnitState, public CStatusUpdatesHel
 
 	SAIAngle wDesiredTransportDir; // куда бдет направлен транспорт при погрузке
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStatusUpdatesHelper *)this );
 		f.Add( 2, &pTransport );
@@ -451,18 +451,18 @@ public:
 	                              class CArtillery *pArtillery,
 	                              const CVec2 &vHookPoint );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_HOOK_ARTILLERY;
 	}
@@ -491,7 +491,7 @@ class CTransportUnhookArtilleryState : public IUnitState, public CStatusUpdatesH
 	bool bInterrupted = {};
 	bool bNow = {}; // unhook gun right at the current place
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStatusUpdatesHelper *)this );
 		f.Add( 2, &eState );
@@ -513,16 +513,16 @@ public:
 
 	CTransportUnhookArtilleryState( class CAITransportUnit *pTransport, const class CVec2 &vDestPoint, const bool bNow );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return vDestPoint;
 	}
@@ -560,7 +560,7 @@ protected:
 	CPtr<CFormation> pEngineers;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStatusUpdatesHelper *)this );
 		f.Add( 2, &pUnit );
@@ -594,7 +594,7 @@ protected:
 	CTransportBuildState( class CAITransportUnit *pTransport, const class CVec2 &vDestPoint );
 
 public:
-	virtual void Segment();
+	void Segment() override;
 
 	void SetStartPoint( const CVec2 &_vStartPoint )
 	{
@@ -603,14 +603,14 @@ public:
 
 	virtual void SetEndPoint( const CVec2 &_vEndPoint );
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return vStartPoint;
 	}
@@ -624,7 +624,7 @@ protected:
 	CObj<CLongObjectCreation> pCreation;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CTransportBuildState *)this );
 		f.Add( 2, &pCreation );
@@ -632,15 +632,15 @@ public:
 	}
 
 protected:
-	virtual void SendTransportToBuildPoint();
-	virtual bool HaveToSendEngeneersNow();
-	virtual bool IsEnoughResources() const;
-	virtual bool IsWorkDone() const;
-	virtual bool MustSayNegative() const;
+	void SendTransportToBuildPoint() override;
+	bool HaveToSendEngeneersNow() override;
+	bool IsEnoughResources() const override;
+	bool IsWorkDone() const override;
+	bool MustSayNegative() const override;
 	virtual void PreCreate() = 0;
-	void SendEngineers();
+	void SendEngineers() override;
 
-	virtual bool IsEndPointNeeded() const
+	bool IsEndPointNeeded() const override
 	{
 		return true;
 	}
@@ -652,7 +652,7 @@ protected:
 	                                class CLongObjectCreation *pCreation );
 
 public:
-	virtual void SetEndPoint( const CVec2 &_vEndPoint );
+	void SetEndPoint( const CVec2 &_vEndPoint ) override;
 };
 
 class CTransportBuildFenceState : public CTransportBuildLongObjectState
@@ -660,7 +660,7 @@ class CTransportBuildFenceState : public CTransportBuildLongObjectState
 	OBJECT_BASIC_METHODS( CTransportBuildFenceState );
 	ZDATA_( CTransportBuildLongObjectState )
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CTransportBuildLongObjectState *)this );
 		return 0;
@@ -673,12 +673,12 @@ public:
 
 	CTransportBuildFenceState( class CAITransportUnit *pTransport, const class CVec2 &vStartPoint );
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_BUILD_FENCE;
 	}
 
-	void PreCreate();
+	void PreCreate() override;
 };
 
 class CTransportBuildEntrenchmentState : public CTransportBuildLongObjectState
@@ -686,7 +686,7 @@ class CTransportBuildEntrenchmentState : public CTransportBuildLongObjectState
 	OBJECT_BASIC_METHODS( CTransportBuildEntrenchmentState );
 	ZDATA_( CTransportBuildLongObjectState )
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CTransportBuildLongObjectState *)this );
 		return 0;
@@ -694,13 +694,13 @@ public:
 
 public:
 	static IUnitState *Instance( class CAITransportUnit *pTransport, const class CVec2 &vStartPoint );
-	void PreCreate();
+	void PreCreate() override;
 
 	CTransportBuildEntrenchmentState() {}
 
 	CTransportBuildEntrenchmentState( class CAITransportUnit *pTransport, const class CVec2 &vStartPoint );
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_BUILD_ENTRENCHMENT;
 	}
@@ -715,7 +715,7 @@ class CTransportClearMineState : public CTransportBuildState
 	bool bWorkDone = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CTransportBuildState *)this );
 		f.Add( 2, &timeCheckPeriod );
@@ -725,12 +725,12 @@ public:
 	}
 
 protected:
-	virtual void SendTransportToBuildPoint();
-	virtual bool HaveToSendEngeneersNow();
-	virtual bool IsEnoughResources() const;
-	virtual bool IsWorkDone() const;
-	void SendEngineers();
-	virtual bool IsEndPointNeeded() const;
+	void SendTransportToBuildPoint() override;
+	bool HaveToSendEngeneersNow() override;
+	bool IsEnoughResources() const override;
+	bool IsWorkDone() const override;
+	void SendEngineers() override;
+	bool IsEndPointNeeded() const override;
 
 public:
 	static IUnitState *Instance( class CAITransportUnit *pTransport, const class CVec2 &vStartPoint );
@@ -739,7 +739,7 @@ public:
 
 	CTransportClearMineState( class CAITransportUnit *pTransport, const class CVec2 &vDestPoint );
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_CLEAR_MINE;
 	}
@@ -758,7 +758,7 @@ class CTransportPlaceMineState : public CTransportBuildState
 	int nSquareSize = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CTransportBuildState *)this );
 		f.Add( 2, &bWorkDone );
@@ -772,13 +772,13 @@ public:
 	}
 
 protected:
-	virtual void SendTransportToBuildPoint();
-	virtual bool HaveToSendEngeneersNow();
-	virtual bool IsEnoughResources() const;
-	virtual bool IsWorkDone() const;
-	void SendEngineers();
+	void SendTransportToBuildPoint() override;
+	bool HaveToSendEngeneersNow() override;
+	bool IsEnoughResources() const override;
+	bool IsWorkDone() const override;
+	void SendEngineers() override;
 
-	virtual bool IsEndPointNeeded() const;
+	bool IsEndPointNeeded() const override;
 
 public:
 	static IUnitState *Instance( class CAITransportUnit *pTransport, const class CVec2 &vStartPoint );
@@ -787,7 +787,7 @@ public:
 
 	CTransportPlaceMineState( class CAITransportUnit *pTransport, const class CVec2 &vDestPoint );
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_PLACE_MINE;
 	}
@@ -802,7 +802,7 @@ class CTransportPlaceAntitankState : public CTransportBuildState
 	bool bSent = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CTransportBuildState *)this );
 		f.Add( 2, &bWorkFinished );
@@ -811,12 +811,12 @@ public:
 	}
 
 protected:
-	virtual void SendTransportToBuildPoint();
-	virtual bool HaveToSendEngeneersNow();
-	virtual bool IsEnoughResources() const;
-	virtual bool IsWorkDone() const;
-	void SendEngineers();
-	virtual bool IsEndPointNeeded() const;
+	void SendTransportToBuildPoint() override;
+	bool HaveToSendEngeneersNow() override;
+	bool IsEnoughResources() const override;
+	bool IsWorkDone() const override;
+	void SendEngineers() override;
+	bool IsEndPointNeeded() const override;
 
 public:
 	static IUnitState *Instance( class CAITransportUnit *pTransport, const class CVec2 &vStartPoint );
@@ -825,7 +825,7 @@ public:
 
 	CTransportPlaceAntitankState( class CAITransportUnit *pTransport, const class CVec2 &vDestPoint );
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_PLACE_ANTITANK;
 	}
@@ -844,7 +844,7 @@ class CTransportRepairBridgeState : public CTransportBuildState
 	bool bSentToBuildPoint = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CTransportBuildState *)this );
 		f.Add( 3, &pBridgeToRepair );
@@ -854,14 +854,14 @@ public:
 
 private:
 protected:
-	virtual void SendTransportToBuildPoint();
-	virtual bool HaveToSendEngeneersNow();
-	virtual bool IsEnoughResources() const;
-	virtual bool IsWorkDone() const;
-	void SendEngineers();
-	virtual bool IsEndPointNeeded() const;
+	void SendTransportToBuildPoint() override;
+	bool HaveToSendEngeneersNow() override;
+	bool IsEnoughResources() const override;
+	bool IsWorkDone() const override;
+	void SendEngineers() override;
+	bool IsEndPointNeeded() const override;
 
-	virtual void NotifyGoToStorage()
+	void NotifyGoToStorage() override
 	{
 		bSentToBuildPoint = false;
 	}
@@ -873,7 +873,7 @@ public:
 
 	CTransportRepairBridgeState( class CAITransportUnit *pTransport, class CBridgeSpan *pFullBridge );
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_REPAIR_BRIDGE;
 	}
@@ -890,7 +890,7 @@ class CTransportBuildBridgeState : public CTransportBuildState
 	CPtr<CBridgeCreation> pCreation;
 	bool bTransportSent = {}; // transport saw sent to build point
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CTransportBuildState *)this );
 		f.Add( 2, &pFullBridge );
@@ -901,14 +901,14 @@ public:
 
 private:
 protected:
-	virtual void SendTransportToBuildPoint();
-	virtual bool HaveToSendEngeneersNow();
-	virtual bool IsEnoughResources() const;
-	virtual bool IsWorkDone() const;
-	void SendEngineers();
-	virtual bool IsEndPointNeeded() const;
+	void SendTransportToBuildPoint() override;
+	bool HaveToSendEngeneersNow() override;
+	bool IsEnoughResources() const override;
+	bool IsWorkDone() const override;
+	void SendEngineers() override;
+	bool IsEndPointNeeded() const override;
 
-	virtual void NotifyGoToStorage()
+	void NotifyGoToStorage() override
 	{
 		bTransportSent = false;
 	}
@@ -920,7 +920,7 @@ public:
 
 	CTransportBuildBridgeState( class CAITransportUnit *pTransport, class CFullBridge *pFullBridge );
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_BUILD_BRIDGE;
 	}
@@ -937,7 +937,7 @@ class CTransportRepairBuildingState : public CTransportBuildState
 	bool bSentToBuildPoint = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CTransportBuildState *)this );
 		f.Add( 2, &pBuilding );
@@ -947,14 +947,14 @@ public:
 
 private:
 protected:
-	virtual void SendTransportToBuildPoint();
-	virtual bool HaveToSendEngeneersNow();
-	virtual bool IsEnoughResources() const;
-	virtual bool IsWorkDone() const;
-	void SendEngineers();
-	virtual bool IsEndPointNeeded() const;
+	void SendTransportToBuildPoint() override;
+	bool HaveToSendEngeneersNow() override;
+	bool IsEnoughResources() const override;
+	bool IsWorkDone() const override;
+	void SendEngineers() override;
+	bool IsEndPointNeeded() const override;
 
-	virtual void NotifyGoToStorage()
+	void NotifyGoToStorage() override
 	{
 		bSentToBuildPoint = false;
 	}
@@ -966,7 +966,7 @@ public:
 
 	CTransportRepairBuildingState( class CAITransportUnit *pTransport, class CBuilding *pBuilding );
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_REPAIR_BUILDING;
 	}
@@ -982,7 +982,7 @@ class CMoveToPointNotPresize : public IUnitState
 	float fRadius = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTransport );
 		f.Add( 3, &vPurposePoint );
@@ -1000,21 +1000,21 @@ public:
 
 	CMoveToPointNotPresize( class CAIUnit *pTransport, const CVec2 &vGeneralCell, const float fRadius );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return vPurposePoint;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_MOVE_TO_RESUPPLY_CELL;
 	}
@@ -1029,7 +1029,7 @@ class CTransportWaitForUnload : public IUnitState
 	CVec2 vPurposePoint;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTransport );
 		f.Add( 3, &vPurposePoint );
@@ -1043,21 +1043,21 @@ public:
 
 	CTransportWaitForUnload( class CMilitaryCar *_pTransport, const CVec2 &vTarget );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return vPurposePoint;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_LAND;
 	}

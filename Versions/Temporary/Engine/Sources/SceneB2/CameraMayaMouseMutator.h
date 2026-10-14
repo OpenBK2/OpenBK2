@@ -16,14 +16,14 @@ class CCameraMayaMouseMutator : public CCameraBasicMouseMutator
 	float GetZoomDelta();
 
 public:
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return true;
 	}
 
-	void Recalc();
+	void Recalc() override;
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

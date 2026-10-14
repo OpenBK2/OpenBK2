@@ -1,4 +1,4 @@
-void PostLoad( bool bInEditor )
+void PostLoad( bool bInEditor ) override
 {
 	for ( std::vector<SLeaderExpLevel>::iterator it = leaderRanks.begin(); it != leaderRanks.end(); ++it )
 	{

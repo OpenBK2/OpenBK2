@@ -2146,7 +2146,7 @@ struct SObstacleObjectFilter : public SObjectFilter
 	{
 	}
 
-	virtual bool operator()( int nID ) const
+	bool operator()( int nID ) const override
 	{
 		CMapObj *pMO = pClient->GetMapObj( nID );
 		if ( !pMO )
@@ -2181,7 +2181,7 @@ struct SCanSelectObjectFilter : public SObjectFilter
 	{
 	}
 
-	virtual bool operator()( int nID ) const
+	bool operator()( int nID ) const override
 	{
 		CMapObj *pMO = pClient->GetMapObj( nID );
 		return pMO && pSelector->CanSelect( pMO ) && dynamic_cast<IMOUnit *>( pMO );
@@ -2197,7 +2197,7 @@ struct SCoveredObjectFilter : public SObjectFilter
 	{
 	}
 
-	virtual bool operator()( int nID ) const
+	bool operator()( int nID ) const override
 	{
 		CMapObj *pMO = pClient->GetMapObj( nID );
 		return pMO && dynamic_cast<IMOUnit *>( pMO ) && pMO->IsAlive() && pMO->IsVisible() && !pMO->IsNeutral();

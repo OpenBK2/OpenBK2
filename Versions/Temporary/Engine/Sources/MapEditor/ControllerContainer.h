@@ -65,7 +65,7 @@ public:
 	};
 
 	CControllerContainer();
-	~CControllerContainer();
+	~CControllerContainer() override;
 
 	// IControllerContainer
 	bool IsEditSessionActive() const override
@@ -73,18 +73,18 @@ public:
 		return !editSessions.empty();
 	}
 
-	void Add( IController *pOperation );
-	void Clear();
-	bool CanUndo() const;
-	bool CanRedo() const;
-	bool Undo( int nCount );
-	bool Redo( int nCount );
+	void Add( IController *pOperation ) override;
+	void Clear() override;
+	bool CanUndo() const override;
+	bool CanRedo() const override;
+	bool Undo( int nCount ) override;
+	bool Redo( int nCount ) override;
 	bool UndoArrow();
 	bool RedoArrow();
-	int GetDescriptionList( CDescriptionList *pDescriptionList, bool bUndoList ) const;
-	int RemoveTemporaryControllers( const std::string &rszTemporaryLabel );
+	int GetDescriptionList( CDescriptionList *pDescriptionList, bool bUndoList ) const override;
+	int RemoveTemporaryControllers( const std::string &rszTemporaryLabel ) override;
 
 	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 };

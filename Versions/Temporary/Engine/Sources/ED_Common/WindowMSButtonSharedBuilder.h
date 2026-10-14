@@ -17,10 +17,11 @@ class CWindowMSButtonSharedBuilder : public CBuildDataBuilder
 
 protected:
 	// IBuildDataCallback
-	bool IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView );
+	bool
+	IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView ) override;
 
 	//CBuildDataBuilder
-	const std::string &GetBuildDataTypeName()
+	const std::string &GetBuildDataTypeName() override
 	{
 		return BUILD_DATA_TYPE_NAME;
 	}
@@ -31,7 +32,7 @@ protected:
 	                           bool *pbCanChangeObjectName,
 	                           bool *pbNeedExport,
 	                           bool *pbNeedEdit,
-	                           IManipulator *pBuildDataManipulator );
+	                           IManipulator *pBuildDataManipulator ) override;
 
 private:
 	bool CreateVisualState( const std::string &rszUniqueObjectName,

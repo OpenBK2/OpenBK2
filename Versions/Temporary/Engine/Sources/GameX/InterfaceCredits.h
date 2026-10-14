@@ -16,7 +16,7 @@ public:
 	public:
 		CReactions() {}
 
-		~CReactions() {}
+		~CReactions() override {}
 
 		CReactions( IWindow *_pScreen, CInterfaceCredits *_pInterface )
 			: pScreen( _pScreen )
@@ -24,10 +24,10 @@ public:
 		{
 		}
 
-		bool Execute( const std::string &szSender, const std::string &szReaction );
-		int Check( const std::string &szCheckName ) const;
+		bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+		int Check( const std::string &szCheckName ) const override;
 
-		int operator&( IBinSaver &saver )
+		int operator&( IBinSaver &saver ) override
 		{
 			saver.Add( 1, &pScreen );
 			saver.Add( 2, &pInterface );
@@ -35,7 +35,7 @@ public:
 		}
 	};
 
-	~CInterfaceCredits();
+	~CInterfaceCredits() override;
 
 private:
 	ZDATA_( CInterfaceScreenBase )
@@ -44,7 +44,7 @@ private:
 	NTimer::STime timeLastMove;
 	bool bClosed;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &pReactions );
@@ -61,18 +61,18 @@ public:
 	{
 	}
 
-	bool Init();
-	bool StepLocal( bool bAppActive );
+	bool Init() override;
+	bool StepLocal( bool bAppActive ) override;
 
-	bool ProcessEvent( const SGameMessage &msg );
+	bool ProcessEvent( const SGameMessage &msg ) override;
 };
 
 class CICInterfaceCredist : public CInterfaceCommandBase<CInterfaceCredits>
 {
 	OBJECT_BASIC_METHODS( CICInterfaceCredist );
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

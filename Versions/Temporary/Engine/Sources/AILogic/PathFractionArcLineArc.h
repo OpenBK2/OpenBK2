@@ -19,7 +19,7 @@ class CPahtFractionArcLineArc : public CPathFractionComplexBase
 	CPtr<CPathFractionLine> pLine;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CPathFractionComplexBase *)this );
 		f.Add( 2, &pStart );
@@ -60,6 +60,6 @@ public:
 	// from vStart2 to vFinish1 plane travels by line
 	CPahtFractionArcLineArc() {}
 
-	virtual float GetLength() const;
-	virtual void GetSimplePath( CPathList *pPaths );
+	float GetLength() const override;
+	void GetSimplePath( CPathList *pPaths ) override;
 };

@@ -10,7 +10,7 @@ class CExecutorStaticObjectSegment : public CExecutor
 	CPtr<CStaticObject> pObject;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CExecutor *)this );
 		f.Add( 2, &pObject );
@@ -24,14 +24,14 @@ public:
 
 	CExecutorStaticObjectSegment() {}
 
-	virtual int Segment();
+	int Segment() override;
 
-	virtual bool NotifyEvent( const CExecutorEvent &event )
+	bool NotifyEvent( const CExecutorEvent &event ) override
 	{
 		return false;
 	}
 
-	virtual bool IsExecutorValid() const
+	bool IsExecutorValid() const override
 	{
 		return IsExecutorValidInternal();
 	}

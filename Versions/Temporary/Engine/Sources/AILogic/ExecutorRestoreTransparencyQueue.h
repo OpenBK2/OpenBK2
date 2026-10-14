@@ -17,7 +17,7 @@ class CExecutorRestoreTransparencyQueue : public CExecutor
 	CObjectsQueue objectQueue;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CExecutor *)this );
 		f.Add( 2, &objectsToAskAround );
@@ -32,13 +32,13 @@ public:
 	{
 	}
 
-	int Segment();
-	bool NotifyEvent( const CExecutorEvent &event );
+	int Segment() override;
+	bool NotifyEvent( const CExecutorEvent &event ) override;
 
-	bool IsExecutorValid() const
+	bool IsExecutorValid() const override
 	{
 		return true;
 	}
 
-	void RegisterOnEvents( IExecutorContainer *pContainer );
+	void RegisterOnEvents( IExecutorContainer *pContainer ) override;
 };

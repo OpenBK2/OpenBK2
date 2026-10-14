@@ -23,7 +23,7 @@ public:
 		tidTypeID = 0x3008B3C0
 	};
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 
 private:
 	CPtr<IPointChecking> pChecking;

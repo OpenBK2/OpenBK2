@@ -58,7 +58,7 @@ public:
 	};
 
 protected:
-	~CInterfaceMPLoading2D();
+	~CInterfaceMPLoading2D() override;
 
 	void MakeInterior( const SParams &params );
 

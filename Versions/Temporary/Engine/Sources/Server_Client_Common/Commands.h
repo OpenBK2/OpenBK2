@@ -149,6 +149,6 @@ public:
 
 	CCommands( const bool bServer );
 
-	virtual void GetStringCommands( std::vector<std::string> *pCommands );
-	virtual bool LineEntered( const std::string &szLine, std::string *pszErr );
+	void GetStringCommands( std::vector<std::string> *pCommands ) override;
+	bool LineEntered( const std::string &szLine, std::string *pszErr ) override;
 };

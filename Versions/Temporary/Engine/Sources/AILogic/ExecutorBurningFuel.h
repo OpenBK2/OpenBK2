@@ -16,7 +16,7 @@ class CExecutorBurningFuel : public CExecutor
 	NTimer::STime timeBurn = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CExecutor *)this );
 		f.Add( 2, &vPos );
@@ -30,14 +30,14 @@ public:
 
 	CExecutorBurningFuel() {}
 
-	virtual int Segment();
+	int Segment() override;
 
-	virtual bool NotifyEvent( const CExecutorEvent &event )
+	bool NotifyEvent( const CExecutorEvent &event ) override
 	{
 		return false;
 	}
 
-	virtual bool IsExecutorValid() const
+	bool IsExecutorValid() const override
 	{
 		return true;
 	}

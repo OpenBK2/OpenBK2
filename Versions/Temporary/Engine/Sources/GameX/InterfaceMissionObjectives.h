@@ -19,7 +19,7 @@ public:
 	public:
 		CReactions() {}
 
-		~CReactions() {}
+		~CReactions() override {}
 
 		CReactions( IWindow *_pScreen, CInterfaceMissionObjectives *_pInterface )
 			: pScreen( _pScreen )
@@ -27,10 +27,10 @@ public:
 		{
 		}
 
-		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
-		virtual int Check( const std::string &szCheckName ) const;
+		bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+		int Check( const std::string &szCheckName ) const override;
 
-		int operator&( IBinSaver &saver )
+		int operator&( IBinSaver &saver ) override
 		{
 			saver.Add( 1, &pScreen );
 			saver.Add( 2, &pInterface );
@@ -113,18 +113,18 @@ protected:
 	void MakeObjectives();
 	void UpdateObjectives( int nSelected );
 	int GetButtonIndex( enum EMissionObjectiveState eState );
-	~CInterfaceMissionObjectives();
+	~CInterfaceMissionObjectives() override;
 
 public:
 	CInterfaceMissionObjectives();
 
-	bool Init();
+	bool Init() override;
 
-	bool StepLocal( bool bAppActive );
+	bool StepLocal( bool bAppActive ) override;
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 
-	bool IsModal();
+	bool IsModal() override;
 
 	void SetStartID( int nID );
 };
@@ -136,7 +136,7 @@ class CICMissionObjectives : public CInterfaceCommandBase<CInterfaceMissionObjec
 	ZDATA_( CInterfaceCommandBase<CInterfaceMissionObjectives> )
 	int nID;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceMissionObjectives> *)this );
 		f.Add( 2, &nID );
@@ -144,9 +144,9 @@ class CICMissionObjectives : public CInterfaceCommandBase<CInterfaceMissionObjec
 	}
 
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

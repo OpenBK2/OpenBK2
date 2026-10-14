@@ -16,7 +16,7 @@ public:
 	public:
 		CReactions() {}
 
-		~CReactions() {}
+		~CReactions() override {}
 
 		CReactions( IWindow *_pScreen, CInterfaceEscMenu *_pInterface )
 			: pScreen( _pScreen )
@@ -24,10 +24,10 @@ public:
 		{
 		}
 
-		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
-		virtual int Check( const std::string &szCheckName ) const;
+		bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+		int Check( const std::string &szCheckName ) const override;
 
-		int operator&( IBinSaver &saver )
+		int operator&( IBinSaver &saver ) override
 		{
 			saver.Add( 1, &pScreen );
 			saver.Add( 2, &pInterface );
@@ -58,7 +58,7 @@ private:
 	CPtr<IButton> pEndMissionExitToChapterMapBtn;
 	CPtr<IButton> pLoadBtn;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &pReactions );
@@ -100,29 +100,29 @@ private:
 	void GoChapterMap();
 
 protected:
-	~CInterfaceEscMenu();
+	~CInterfaceEscMenu() override;
 
 public:
 	CInterfaceEscMenu();
 
-	bool Init();
+	bool Init() override;
 
-	void OnGetFocus( bool bFocus );
+	void OnGetFocus( bool bFocus ) override;
 
-	bool ProcessEvent( const SGameMessage &msg );
+	bool ProcessEvent( const SGameMessage &msg ) override;
 
-	bool StepLocal( bool bAppActive );
+	bool StepLocal( bool bAppActive ) override;
 };
 
 class CICEscMenu : public CInterfaceCommandBase<CInterfaceEscMenu>
 {
 	OBJECT_BASIC_METHODS( CICEscMenu );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };
 
 //INTERFACE_COMMAND_DECLARE( CICEscMenu, CInterfaceEscMenu );

@@ -12,33 +12,33 @@ public:
 		bEditor = true;
 	}
 
-	~CEditorUpdatableWorld() {}
+	~CEditorUpdatableWorld() override {}
 
-	void PlayerObjectiveChanged( const int nObjective, const enum EMissionObjectiveState eState ) {}
+	void PlayerObjectiveChanged( const int nObjective, const enum EMissionObjectiveState eState ) override {}
 
-	void Select( CMapObj *pMapObj ) {}
+	void Select( CMapObj *pMapObj ) override {}
 
-	void DeSelect( CMapObj *pMapObj ) {}
+	void DeSelect( CMapObj *pMapObj ) override {}
 
-	void DeSelectDead( CMapObj *pMapObj ) {}
+	void DeSelectDead( CMapObj *pMapObj ) override {}
 
-	void RemoveFromSelectionGroup( CMapObj *pMopObj ) {}
+	void RemoveFromSelectionGroup( CMapObj *pMopObj ) override {}
 
-	bool IsActive( CMapObj *pMopObj )
+	bool IsActive( CMapObj *pMopObj ) override
 	{
 		return false;
 	}
 
-	bool IsSuperActive( CMapObj *pMopObj )
+	bool IsSuperActive( CMapObj *pMopObj ) override
 	{
 		return false;
 	}
 
-	void DoUpdateSpecialAbility( CMapObj *pMO ) {}
+	void DoUpdateSpecialAbility( CMapObj *pMO ) override {}
 
-	void DoUpdateObjectStats( CMapObj *pMO ) {}
+	void DoUpdateObjectStats( CMapObj *pMO ) override {}
 
-	virtual void OnUpdateDiplomacy( CMapObj *pMO, const int nNewPlayer ) {}
+	void OnUpdateDiplomacy( CMapObj *pMO, const int nNewPlayer ) override {}
 
 	virtual void ProcessEditorUpdate( struct SAIBasicUpdate *pEditorUpdate )
 	{

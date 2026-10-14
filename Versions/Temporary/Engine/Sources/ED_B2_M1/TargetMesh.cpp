@@ -25,12 +25,12 @@ class CTargetMesh : public CPtrFuncBase<NGScene::CObjectInfo>
 public:
 	CTargetMesh( float fSizeX, float fSizeY );
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return true;
 	}
 
-	void Recalc();
+	void Recalc() override;
 };
 
 class CTargetMeshTransform : public CFuncBase<SFBTransform>
@@ -42,12 +42,12 @@ public:
 		Identity( &value.backward );
 	}
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return true;
 	}
 
-	void Recalc() {}
+	void Recalc() override {}
 };
 
 class CTargetMeshBound : public CFuncBase<SBound>
@@ -58,12 +58,12 @@ public:
 		value = NGScene::MakeLargeHintBound();
 	}
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return true;
 	}
 
-	void Recalc() {}
+	void Recalc() override {}
 };
 
 CTargetMesh::CTargetMesh( float fSizeX, float fSizeY )

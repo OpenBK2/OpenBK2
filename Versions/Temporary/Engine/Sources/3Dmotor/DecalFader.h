@@ -22,7 +22,7 @@ class CDecalFader : public CObjectBase
 	bool bFrozen;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pDecal );
 		f.Add( 3, &pTime );

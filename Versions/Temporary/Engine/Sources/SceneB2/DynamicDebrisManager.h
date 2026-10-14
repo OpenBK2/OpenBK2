@@ -6,7 +6,7 @@
 class CVisDynamicDebrisPatch : public CPtrFuncBase<NGScene::CObjectInfo>
 {
 	NMeshData::SMeshDataTex2 data;
-	void Recalc();
+	void Recalc() override;
 
 public:
 	CVisDynamicDebrisPatch() {}

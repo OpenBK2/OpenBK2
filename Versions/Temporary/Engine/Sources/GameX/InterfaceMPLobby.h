@@ -49,7 +49,7 @@ class CInterfaceMPLobby : public CInterfaceMPScreenBase, public IProgrammedReact
 	CPtr<IButton> pPostMessage;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceMPScreenBase *)this );
 		f.Add( 2, &pMain );
@@ -118,15 +118,15 @@ private:
 
 protected:
 	//{ IProgrammedReactonsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 	//}
 
 public:
 	CInterfaceMPLobby();
-	bool Init();
+	bool Init() override;
 
-	bool StepLocal( bool bAppActive );
+	bool StepLocal( bool bAppActive ) override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -135,11 +135,11 @@ class CICMPLobby : public CInterfaceCommandBase<CInterfaceMPLobby>
 {
 	OBJECT_BASIC_METHODS( CICMPLobby );
 
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };
 #endif // _SINGLE_DEMO
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

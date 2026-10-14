@@ -11,7 +11,7 @@ class CInterfaceTestScreen : public CInterfaceScreenBase, public IProgrammedReac
 	ZDATA_( CInterfaceScreenBase )
 	CDBID dbid;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &dbid );
@@ -20,24 +20,24 @@ class CInterfaceTestScreen : public CInterfaceScreenBase, public IProgrammedReac
 
 protected:
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction )
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override
 	{
 		return false;
 	}
 
-	int Check( const std::string &szCheckName ) const
+	int Check( const std::string &szCheckName ) const override
 	{
 		return 0;
 	}
 
 	//}
 	//{
-	bool StepLocal( bool bAppActive );
+	bool StepLocal( bool bAppActive ) override;
 	//}
 public:
 	CInterfaceTestScreen();
 
-	bool Init();
+	bool Init() override;
 
 	void SetScreen( const CDBID &dbid );
 };
@@ -49,16 +49,16 @@ class CICTestScreen : public CInterfaceCommandBase<CInterfaceTestScreen>
 	ZDATA_( CInterfaceCommandBase<CInterfaceTestScreen> )
 	CDBID dbid;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceTestScreen> *)this );
 		f.Add( 2, &dbid );
 		return 0;
 	}
 
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

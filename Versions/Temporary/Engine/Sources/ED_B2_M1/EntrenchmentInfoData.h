@@ -42,32 +42,32 @@ public:
 	}
 
 	// SObjectInfo
-	SObjectInfo *CallDuplicate() const
+	SObjectInfo *CallDuplicate() const override
 	{
 		return Duplicate();
 	}
 
-	EObjectInfoType GetObjectInfoType()
+	EObjectInfoType GetObjectInfoType() override
 	{
 		return OIT_ENTRENCHMENT;
 	}
 
-	bool NeedMakeOrientation()
+	bool NeedMakeOrientation() override
 	{
 		return true;
 	}
 
-	bool KeepZeroHeight()
+	bool KeepZeroHeight() override
 	{
 		return true;
 	}
 
-	bool KeepCommonHeight()
+	bool KeepCommonHeight() override
 	{
 		return false;
 	}
 
-	bool NeedProcessEditParameters()
+	bool NeedProcessEditParameters() override
 	{
 		return false;
 	}
@@ -80,15 +80,15 @@ public:
 	const NDb::SEntrenchmentRPGStats::SEntrenchSegmentRPGStats *
 	GetSegmentInfo( const NDb::SEntrenchmentRPGStats *pEntrenchmentRPGStats, int nFrameIndex );
 
-	bool Load( const SObjectLoadInfo *pObjectLoadInfo, IEditorScene *pEditorScene, IManipulator *pManipulator );
+	bool Load( const SObjectLoadInfo *pObjectLoadInfo, IEditorScene *pEditorScene, IManipulator *pManipulator ) override;
 	bool Create( const SObjectCreateInfo *pObjectCreateInfo,
 	             IEditorScene *pEditorScene,
 	             CObjectBaseController *pObjectController,
-	             IManipulator *pManipulator );
+	             IManipulator *pManipulator ) override;
 
-	void FillMaskManipulator( class CMaskManipulator *pMaskManipulator ) {}
+	void FillMaskManipulator( class CMaskManipulator *pMaskManipulator ) override {}
 
-	void GetMask( std::string *pszMask ) {}
+	void GetMask( std::string *pszMask ) override {}
 
 	static bool GetEntrenchmentSegmentPositionOnTerrain( CVec3 *pPos,
 	                                                     CQuat *pQuat,
@@ -102,10 +102,10 @@ public:
 	             IEditorScene *pEditorScene,
 	             bool bUpdateDB,
 	             CObjectBaseController *pObjectController,
-	             IManipulator *pManipulator );
-	bool RemoveFromDB( CObjectBaseController *pObjectController, IManipulator *pManipulator );
-	virtual void
-	CreateSceneObjects( IEditorScene *pEditorScene, IManipulator *pManipulator, bool bUpdateParentStructure );
+	             IManipulator *pManipulator ) override;
+	bool RemoveFromDB( CObjectBaseController *pObjectController, IManipulator *pManipulator ) override;
+	void
+	CreateSceneObjects( IEditorScene *pEditorScene, IManipulator *pManipulator, bool bUpdateParentStructure ) override;
 	static bool GetEntrenchmentSegInfoByMapObjElement( SEntrenchmentSegInfo *pSegInfo,
 	                                                   const SObjectInfo *pMOI,
 	                                                   const NDb::SEntrenchmentRPGStats *pEntrenchmentStats,
@@ -114,7 +114,7 @@ public:
 	                CLinkIDMap *pOld2NewLinkIDMap,
 	                IEditorScene *pEditorScene,
 	                CObjectBaseController *pObjectController,
-	                IManipulator *pManipulator );
+	                IManipulator *pManipulator ) override;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -70,8 +70,7 @@ class CInstanceConnection : public wxConnection
 public:
 	// The path arrives as the Execute data. wxConnection hands it over as
 	// bytes and a size, which is what WM_COPYDATA did.
-	virtual bool
-	OnExecute( const wxString &WXUNUSED( topic ), const void *pData, size_t nSize, wxIPCFormat eFormat ) override
+	bool OnExecute( const wxString &WXUNUSED( topic ), const void *pData, size_t nSize, wxIPCFormat eFormat ) override
 	{
 		RaiseMainFrame();
 		const wxString path = GetTextFromData( pData, nSize, eFormat );
@@ -86,7 +85,7 @@ public:
 class CInstanceServer : public wxServer
 {
 public:
-	virtual wxConnectionBase *OnAcceptConnection( const wxString &rTopic ) override
+	wxConnectionBase *OnAcceptConnection( const wxString &rTopic ) override
 	{
 		return ( rTopic == TOPIC ) ? new CInstanceConnection() : nullptr;
 	}

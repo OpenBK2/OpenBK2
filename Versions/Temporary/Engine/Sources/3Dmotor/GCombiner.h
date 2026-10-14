@@ -42,19 +42,19 @@ class CMMXAnimationMatrices : public CFuncBase<std::vector<NGfx::SCompactTransfo
 	ZDATA
 	CDGPtr<CFuncBase<std::vector<SHMatrix>>> pAnimation;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pAnimation );
 		return 0;
 	}
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pAnimation.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CMMXAnimationMatrices( CFuncBase<std::vector<SHMatrix>> *p = 0 )
@@ -154,7 +154,7 @@ class IPart : public CObjectBase
 public:
 	SCacheLightingInfo cacheLighting;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pCombiner );
 		f.Add( 3, &pObjInfo );
@@ -174,7 +174,7 @@ public:
 	}
 
 	IPart( CPtrFuncBase<CObjectInfo> *pData, CPerMaterialCombiner *_pCombiner );
-	~IPart();
+	~IPart() override;
 	void SetCombiner( CPerMaterialCombiner *_pCombiner );
 
 	CPerMaterialCombiner *GetCombiner() const
@@ -253,7 +253,7 @@ class CAnimationWatch : public CVersioningBase
 	std::vector<int> indices;
 	bool bAnimationOnly;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pCombiner );
 		f.Add( 3, &watch );
@@ -262,9 +262,9 @@ class CAnimationWatch : public CVersioningBase
 		return 0;
 	}
 
-	bool NeedUpdate();
+	bool NeedUpdate() override;
 
-	void Recalc() {}
+	void Recalc() override {}
 
 public:
 	CAnimationWatch() {}
@@ -287,8 +287,8 @@ class CPerMaterialCombiner : public CFuncBase<std::vector<CPtr<IPart>>>
 	bool bHasChanged;
 	CObj<CAnimationWatch> pAnimation, pFullChange;
 
-	virtual bool NeedUpdate();
-	virtual void Recalc();
+	bool NeedUpdate() override;
+	void Recalc() override;
 
 public:
 	CPerMaterialCombiner()
@@ -317,7 +317,7 @@ public:
 		return value.size();
 	}
 
-	int operator&( CStructureSaver &f );
+	int operator&( CStructureSaver &f ) override;
 };
 
 // CVBCombiner
@@ -331,7 +331,7 @@ class CVBCombiner : public IVBCombiner
 	CDGPtr<CVersioningBase> pAnimation;
 	CDGPtr<CFuncBase<SPerVertexLightState>> pLightState;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (IVBCombiner *)this );
 		f.Add( 2, &pCombiner );
@@ -368,9 +368,9 @@ protected:
 		return bNeedXForm;
 	}
 
-	virtual bool NeedUpdate();
+	bool NeedUpdate() override;
 	void DoRecalc();
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CVBCombiner() {}
@@ -386,7 +386,7 @@ public:
 	{
 	}
 
-	virtual const SBound &GetBound()
+	const SBound &GetBound() override
 	{
 		if ( NeedXForm() )
 		{
@@ -395,7 +395,7 @@ public:
 		return bound;
 	}
 
-	virtual const std::vector<SSphere> &GetBounds()
+	const std::vector<SSphere> &GetBounds() override
 	{
 		if ( NeedXForm() )
 		{
@@ -404,12 +404,12 @@ public:
 		return partBVs;
 	}
 
-	virtual CFuncBase<std::vector<CPtr<IPart>>> *GetCombiner() const
+	CFuncBase<std::vector<CPtr<IPart>>> *GetCombiner() const override
 	{
 		return pCombiner;
 	}
 
-	virtual void FreeMemory();
+	void FreeMemory() override;
 };
 
 // CIBCombiner
@@ -428,7 +428,7 @@ class CIBCombiner : public CFuncBase<std::vector<NGfx::STriangleList>>
 	CDGPtr<CVersioningBase> pAnimation;
 	EIBTargetType ibt;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pCombiner );
 		f.Add( 3, &pAnimation );
@@ -439,7 +439,7 @@ class CIBCombiner : public CFuncBase<std::vector<NGfx::STriangleList>>
 	std::vector<STriangle> triBuffer;
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		if ( pAnimation )
 		{
@@ -448,7 +448,7 @@ protected:
 		return pCombiner.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CIBCombiner() {}

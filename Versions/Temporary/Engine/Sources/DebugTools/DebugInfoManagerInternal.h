@@ -43,7 +43,7 @@ struct SDebugInfoObject : public SDebugInfoUpdate
 {
 	EColor color;
 
-	virtual const EDebugInfoUpdate GetDebugInfoUpdateID() const
+	const EDebugInfoUpdate GetDebugInfoUpdateID() const override
 	{
 		return DEBUG_INFO_UNKNOWN;
 	}
@@ -68,7 +68,7 @@ struct SDebugInfoMarker : public SDebugInfoObject
 public:
 	std::vector<SVector> tiles;
 
-	virtual const EDebugInfoUpdate GetDebugInfoUpdateID() const
+	const EDebugInfoUpdate GetDebugInfoUpdateID() const override
 	{
 		return DEBUG_INFO_MARKER;
 	}
@@ -92,7 +92,7 @@ struct SDebugInfoCircle : public SDebugInfoObject
 public:
 	CCircle circle;
 
-	virtual const EDebugInfoUpdate GetDebugInfoUpdateID() const
+	const EDebugInfoUpdate GetDebugInfoUpdateID() const override
 	{
 		return DEBUG_INFO_CIRCLE;
 	}
@@ -117,7 +117,7 @@ public:
 	CSegment segment;
 	int nThickness;
 
-	virtual const EDebugInfoUpdate GetDebugInfoUpdateID() const
+	const EDebugInfoUpdate GetDebugInfoUpdateID() const override
 	{
 		return DEBUG_INFO_SEGMENT;
 	}
@@ -146,7 +146,7 @@ public:
 	CVec4 vColor;
 	bool bDepthCheck;
 
-	virtual const EDebugInfoUpdate GetDebugInfoUpdateID() const
+	const EDebugInfoUpdate GetDebugInfoUpdateID() const override
 	{
 		return DEBUG_INFO_LINE;
 	}
@@ -181,7 +181,7 @@ public:
 	float fZ;
 	bool bDepthCheck;
 
-	virtual const EDebugInfoUpdate GetDebugInfoUpdateID() const
+	const EDebugInfoUpdate GetDebugInfoUpdateID() const override
 	{
 		return DEBUG_INFO_RECT;
 	}
@@ -209,7 +209,7 @@ struct SDebugInfoDeleteObject : public SDebugInfoUpdate
 	OBJECT_NOCOPY_METHODS( SDebugInfoDeleteObject );
 
 public:
-	virtual const EDebugInfoUpdate GetDebugInfoUpdateID() const
+	const EDebugInfoUpdate GetDebugInfoUpdateID() const override
 	{
 		return DEBUG_INFO_DELETE;
 	}
@@ -230,7 +230,7 @@ struct SDebugInfoDeleteLine : public SDebugInfoUpdate
 	OBJECT_NOCOPY_METHODS( SDebugInfoDeleteLine );
 
 public:
-	virtual const EDebugInfoUpdate GetDebugInfoUpdateID() const
+	const EDebugInfoUpdate GetDebugInfoUpdateID() const override
 	{
 		return DEBUG_INFO_DELETE_LINE;
 	}
@@ -269,35 +269,39 @@ public:
 
 	void Reset();
 
-	int CreateMarker( const int nID, const std::vector<SVector> &tiles, const NDebugInfo::EColor eColor );
-	int CreateCircle( const int nID, const CCircle &circle, const NDebugInfo::EColor eColor );
-	int CreateSegment( const int nID, const CSegment &segment, const int nThickness, const NDebugInfo::EColor eColor );
-	void DeleteObject( const int nID );
+	int CreateMarker( const int nID, const std::vector<SVector> &tiles, const NDebugInfo::EColor eColor ) override;
+	int CreateCircle( const int nID, const CCircle &circle, const NDebugInfo::EColor eColor ) override;
+	int CreateSegment( const int nID,
+	                   const CSegment &segment,
+	                   const int nThickness,
+	                   const NDebugInfo::EColor eColor ) override;
+	void DeleteObject( const int nID ) override;
 
 	int DrawLine( const int nID,
 	              const NDebugInfo::SArrowHead &arrowStart,
 	              const NDebugInfo::SArrowHead &arrowEnd,
 	              const CVec4 &vColor,
-	              const bool bDepthCheck );
+	              const bool bDepthCheck ) override;
 	int DrawLine( const int nID,
 	              const NDebugInfo::SArrowHead &arrowStart,
 	              const NDebugInfo::SArrowHead &arrowEnd,
-	              const NDebugInfo::EColor eColor );
+	              const NDebugInfo::EColor eColor ) override;
 	int DrawLine( const int nID,
 	              const CVec2 &vStart,
 	              const CVec2 &vEnd,
 	              const bool bArrowEnd,
 	              const float fZ,
-	              const CVec4 &vColor );
-	int DrawRect( const int nID, const SRect &rect, const float fZ, const CVec4 &vColor, const bool bDepthCheck );
-	int DrawRect( const int nID, const SRect &rect, const float fZ, const NDebugInfo::EColor eColor );
-	void RemoveLine( const int nID );
+	              const CVec4 &vColor ) override;
+	int DrawRect(
+			const int nID, const SRect &rect, const float fZ, const CVec4 &vColor, const bool bDepthCheck ) override;
+	int DrawRect( const int nID, const SRect &rect, const float fZ, const NDebugInfo::EColor eColor ) override;
+	void RemoveLine( const int nID ) override;
 
 	//показать оси из точки (0; 0; 0), Красная - X, Зеленая - Y, Синяя - Z
-	void ShowAxes( const bool bShow );
+	void ShowAxes( const bool bShow ) override;
 
 	//возвращает последовательно цвета: Красный, Синий, Зеленый, Красный ...
-	NDebugInfo::EColor GetCycleColor();
+	NDebugInfo::EColor GetCycleColor() override;
 
 	const NDebugInfo::SDebugInfoUpdate *GetUpdate() const;
 	const bool PopUpdate();

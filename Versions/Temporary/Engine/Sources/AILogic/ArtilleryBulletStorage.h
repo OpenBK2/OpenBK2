@@ -18,7 +18,7 @@ class CArtilleryBulletStorage : public CGivenPassabilityStObject
 	CPtr<CAIUnit> pOwner;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CGivenPassabilityStObject *)this );
 		f.Add( 2, &pStats );
@@ -38,43 +38,43 @@ public:
 	                         const int nFrameIndex,
 	                         CAIUnit *pOwner );
 
-	virtual const SHPObjectRPGStats *GetStats() const
+	const SHPObjectRPGStats *GetStats() const override
 	{
 		return pStats;
 	}
 
-	virtual void
-	TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit )
+	void
+	TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit ) override
 	{
 	}
 
-	virtual void Die( const float fDamage ) {}
+	void Die( const float fDamage ) override {}
 
-	virtual void Segment() {}
+	void Segment() override {}
 
 	void MoveTo( const CVec3 &newCenter );
 
-	virtual EStaticObjType GetObjectType() const
+	EStaticObjType GetObjectType() const override
 	{
 		return ESOT_ARTILLERY_BULLET_STORAGE;
 	}
 
-	virtual bool IsContainer() const
+	bool IsContainer() const override
 	{
 		return false;
 	}
 
-	virtual const int GetNDefenders() const
+	const int GetNDefenders() const override
 	{
 		return 0;
 	}
 
-	virtual class CSoldier *GetUnit( const int n ) const
+	class CSoldier *GetUnit( const int n ) const override
 	{
 		return 0;
 	}
 
-	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const
+	bool CanUnitGoThrough( const EAIClasses &eClass ) const override
 	{
 		return true;
 	}

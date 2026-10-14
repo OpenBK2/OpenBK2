@@ -20,7 +20,7 @@ class CPacketsConvertor : public CPacketProcessor
 public:
 	CPacketsConvertor();
 
-	virtual bool Segment()
+	bool Segment() override
 	{
 		return true;
 	}

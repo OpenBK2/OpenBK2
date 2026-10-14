@@ -16,7 +16,7 @@ class CViewContainer : public IViewContainer
 	bool GetViewSet( CViewSet *pViewSet, const std::string &rszObjectTypeName, const CDBID &rObjectDBID ) const;
 
 public:
-	void Add( IView *pView, const SObjectSet &rObjectSet );
-	void Remove( IView *pView, const SObjectSet &rObjectSet );
-	bool GetViewSet( CViewSet *pViewSet, const SObjectSet &rObjectSet, IView *pViewToExlude ) const;
+	void Add( IView *pView, const SObjectSet &rObjectSet ) override;
+	void Remove( IView *pView, const SObjectSet &rObjectSet ) override;
+	bool GetViewSet( CViewSet *pViewSet, const SObjectSet &rObjectSet, IView *pViewToExlude ) const override;
 };

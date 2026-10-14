@@ -1,4 +1,4 @@
-virtual void ToAIUnits( bool bInEditor )
+void ToAIUnits( bool bInEditor ) override
 {
 	SStaticObjectRPGStats::ToAIUnits( bInEditor );
 	passability.PostLoad( bInEditor );
@@ -6,17 +6,17 @@ virtual void ToAIUnits( bool bInEditor )
 }
 
 //
-virtual const CVec2 &GetOrigin( const int nIndex = -1 ) const
+const CVec2 &GetOrigin( const int nIndex = -1 ) const override
 {
 	return vOrigin;
 }
 
-virtual const SByteArray2 &GetPassability( const int nIndex = -1 ) const
+const SByteArray2 &GetPassability( const int nIndex = -1 ) const override
 {
 	return passability;
 }
 
-virtual const CVec2 &GetVisOrigin( const int nIndex = -1 ) const
+const CVec2 &GetVisOrigin( const int nIndex = -1 ) const override
 {
 	if ( bUsePassabilityForVisibility )
 	{
@@ -28,7 +28,7 @@ virtual const CVec2 &GetVisOrigin( const int nIndex = -1 ) const
 	}
 }
 
-virtual const SByteArray2 &GetVisibility( const int nIndex = -1 ) const
+const SByteArray2 &GetVisibility( const int nIndex = -1 ) const override
 {
 	if ( bUsePassabilityForVisibility )
 	{
@@ -40,12 +40,12 @@ virtual const SByteArray2 &GetVisibility( const int nIndex = -1 ) const
 	}
 }
 
-virtual const SPassProfile &GetPassProfile( const int nIndex = -1 ) const
+const SPassProfile &GetPassProfile( const int nIndex = -1 ) const override
 {
 	return passProfile;
 }
 
-virtual const SPassProfile &GetVisProfile( const int nIndex = -1 ) const
+const SPassProfile &GetVisProfile( const int nIndex = -1 ) const override
 {
 	if ( bUsePassabilityForVisibility )
 	{

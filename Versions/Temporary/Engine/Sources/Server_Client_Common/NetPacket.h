@@ -14,7 +14,7 @@ public:
 	}
 
 	// every net packet should have operator&
-	virtual int operator&( IBinSaver &f ) = 0;
+	int operator&( IBinSaver &f ) override = 0;
 };
 
 // id of not parced packet stored as a raw memory stream

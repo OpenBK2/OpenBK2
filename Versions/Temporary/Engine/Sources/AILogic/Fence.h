@@ -19,7 +19,7 @@ class CFence : public CCommonStaticObject
 	bool bSuspendAppear = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CCommonStaticObject *)this );
 		f.Add( 2, &pStats );
@@ -37,10 +37,11 @@ public:
 	void AnalyzeConnection( CFence *pFence );
 	void DamagePartially( CFence *pDestroyedFence );
 
-	void GetVisibility( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> *visibity ) const;
-	void GetPassability( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> *passability ) const;
+	void GetVisibility( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> *visibity ) const override;
+	void
+	GetPassability( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> *passability ) const override;
 
-	int GetHeight() const;
+	int GetHeight() const override;
 
 public:
 	CFence() {}
@@ -51,28 +52,28 @@ public:
 	        const uint16_t wDir,
 	        const int nDiplomacy,
 	        const int nFrameIndex );
-	virtual void Init();
+	void Init() override;
 
-	virtual const uint8_t GetPlayer() const
+	const uint8_t GetPlayer() const override
 	{
 		return nCreator;
 	}
 
-	const struct SHPObjectRPGStats *GetStats() const
+	const struct SHPObjectRPGStats *GetStats() const override
 	{
 		return pStats;
 	}
 
-	virtual EStaticObjType GetObjectType() const
+	EStaticObjType GetObjectType() const override
 	{
 		return ESOT_FENCE;
 	}
 
-	virtual void Die( const float fDamage );
-	virtual void Delete();
+	void Die( const float fDamage ) override;
+	void Delete() override;
 
-	void GetNewUnitInfo( SNewUnitInfo *pNewUnitInfo );
+	void GetNewUnitInfo( SNewUnitInfo *pNewUnitInfo ) override;
 
-	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const;
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
+	bool CanUnitGoThrough( const EAIClasses &eClass ) const override;
+	bool ShouldSuspendAction( const EActionNotify &eAction ) const override;
 };

@@ -41,11 +41,11 @@ class CHelicopter : public CAviation
 	bool bDesiredDirectionSet = {};
 
 protected:
-	virtual void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate );
+	void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate ) override;
 	bool AdvanceDesiredDirection( const NTimer::STime timeDiff );
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CAviation *)this );
 		f.Add( 2, &vHeliNextPos );
@@ -84,123 +84,123 @@ public:
 
 	CHelicopter();
 
-	virtual void Init( const CVec2 &center,
-	                   const int z,
-	                   const SUnitBaseRPGStats *pStats,
-	                   const float fHP,
-	                   const uint16_t dir,
-	                   const uint8_t player,
-	                   ICollisionsCollector *pCollisionsCollector );
-	virtual IStatesFactory *GetStatesFactory() const;
+	void Init( const CVec2 &center,
+	           const int z,
+	           const SUnitBaseRPGStats *pStats,
+	           const float fHP,
+	           const uint16_t dir,
+	           const uint8_t player,
+	           ICollisionsCollector *pCollisionsCollector ) override;
+	IStatesFactory *GetStatesFactory() const override;
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual void FirstSegment( const NTimer::STime timeDiff ) {}
+	void FirstSegment( const NTimer::STime timeDiff ) override {}
 
-	virtual void SecondSegment( const NTimer::STime timeDiff );
-	virtual void Stop();
+	void SecondSegment( const NTimer::STime timeDiff ) override;
+	void Stop() override;
 
-	virtual void StopTurning()
+	void StopTurning() override
 	{
 		CBasePathUnit::StopTurning();
 		bDesiredDirectionSet = false;
 	}
 
-	virtual void SetDirection( const uint16_t wDirection, const bool bNeedUpdate = true );
-	virtual const bool TurnToDirection( const uint16_t wDirection, const bool bCanBackward, const bool bCanForward );
+	void SetDirection( const uint16_t wDirection, const bool bNeedUpdate = true ) override;
+	const bool TurnToDirection( const uint16_t wDirection, const bool bCanBackward, const bool bCanForward ) override;
 
-	virtual bool IsHelicopter() const
+	bool IsHelicopter() const override
 	{
 		return true;
 	}
 
 	// Unlike planes, a hovering helicopter can rotate its whole body to bring fixed guns onto a target.
-	virtual bool IsLocked( const CBasicGun *pGun ) const
+	bool IsLocked( const CBasicGun *pGun ) const override
 	{
 		return false;
 	}
 
-	virtual const bool IsIdle() const
+	const bool IsIdle() const override
 	{
 		return !bMoveTargetSet && !bDeadSpiralStarted;
 	}
 
-	virtual const bool IsMoving() const
+	const bool IsMoving() const override
 	{
 		return bMoveTargetSet || fabs( vHeliNextSpeed ) > 0.001f;
 	}
 
 	// Fast aircraft can cross a target's visible area during the normal ground-unit scan delay.
-	virtual const NTimer::STime GetBehUpdateDuration() const
+	const NTimer::STime GetBehUpdateDuration() const override
 	{
 		return SConsts::AA_BEH_UPDATE_DURATION;
 	}
 
-	virtual const NTimer::STime GetNextSecondPathSegmTime() const
+	const NTimer::STime GetNextSecondPathSegmTime() const override
 	{
 		return 0;
 	}
 
-	virtual const uint16_t GetDir() const
+	const uint16_t GetDir() const override
 	{
 		return GetFrontDirection();
 	}
 
-	virtual const CVec2 GetDirVector() const
+	const CVec2 GetDirVector() const override
 	{
 		return GetFrontDirectionVector();
 	}
 
-	virtual const float GetSpeed() const
+	const float GetSpeed() const override
 	{
 		return fabs( CVec2( vHeliNextSpeed.x, vHeliNextSpeed.y ) );
 	}
 
-	virtual void GetSpeed3( CVec3 *pSpeed ) const
+	void GetSpeed3( CVec3 *pSpeed ) const override
 	{
 		*pSpeed = vHeliNextSpeed;
 	}
 
-	virtual CVec3 GetSpeedB2() const
+	CVec3 GetSpeedB2() const override
 	{
 		return vHeliNextSpeed;
 	}
 
-	virtual CVec3 GetPosB2() const
+	CVec3 GetPosB2() const override
 	{
 		return vHeliNextPos;
 	}
 
-	virtual CVec3 GetNormalB2() const
+	CVec3 GetNormalB2() const override
 	{
 		return vHeliNextNormal;
 	}
 
-	virtual CVec3 GetPosNext() const
+	CVec3 GetPosNext() const override
 	{
 		return vHeliNextPos;
 	}
 
-	virtual CVec3 GetSpeedNext() const
+	CVec3 GetSpeedNext() const override
 	{
 		return vHeliNextSpeed;
 	}
 
-	virtual CVec3 GetNormalNext() const
+	CVec3 GetNormalNext() const override
 	{
 		return vHeliNextNormal;
 	}
 
-	virtual const IManuver *GetManuver() const
+	const IManuver *GetManuver() const override
 	{
 		return 0;
 	}
 
-	virtual void SetB2( const CVec3 &_vPos, const CVec3 &_vSpeed, const CVec3 &_vNormal );
+	void SetB2( const CVec3 &_vPos, const CVec3 &_vSpeed, const CVec3 &_vNormal ) override;
 
-	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
-	virtual void DecFuel( const bool bEconomyMode );
-	virtual void Die( const bool fromExplosion, const float fDamage );
+	void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff ) override;
+	void DecFuel( const bool bEconomyMode ) override;
+	void Die( const bool fromExplosion, const float fDamage ) override;
 
 	void BeginMoveTo( const CVec2 &vTarget );
 	void BeginHover();
@@ -226,7 +226,7 @@ public:
 	const NDb::SHelicopterStats *GetHelicopterStats() const;
 	float GetFlightZ( const CVec2 &vPoint ) const;
 
-	virtual CArtillery *GetTowedArtillery() const
+	CArtillery *GetTowedArtillery() const override
 	{
 		return 0;
 	}

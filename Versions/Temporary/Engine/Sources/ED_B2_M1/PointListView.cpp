@@ -27,7 +27,7 @@ public:
 	// a given instance ID is ever asked, and there is one of each.
 	std::vector<NPointListView::IPointList *> lists;
 
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override
 	{
 		SPointListDialogData *pData = reinterpret_cast<SPointListDialogData *>( dwData );
 		// Not guarded in the original, which read nInstanceID through it
@@ -56,7 +56,7 @@ public:
 		return false;
 	}
 
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override
 	{
 		NI_ASSERT( pbEnable != 0, "CPointListDispatch::UpdateCommand(), pbEnable == 0" );
 		NI_ASSERT( pbCheck != 0, "CPointListDispatch::UpdateCommand(), pbCheck == 0" );

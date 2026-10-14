@@ -51,7 +51,7 @@ public:
 	//
 
 	SMarkerSet( const CVec3 &rvBuildingPos, const CVec2 &rvBuildingOrigin );
-	~SMarkerSet();
+	~SMarkerSet() override;
 	//
 	void AttachToScene();
 	void DetachFromScene();

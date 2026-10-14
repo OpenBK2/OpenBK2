@@ -28,7 +28,7 @@ private:
 	EUnitStatus eStatus = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CExecutorUnitBase *)this );
 		f.Add( 2, &pUnit );
@@ -40,25 +40,25 @@ public:
 	}
 
 protected:
-	float OnAbilityActive();
+	float OnAbilityActive() override;
 
-	float OnAbilityOff();
+	float OnAbilityOff() override;
 
-	void SwitchingOffEnd();
-	void SwitchingOffStart();
+	void SwitchingOffEnd() override;
+	void SwitchingOffStart() override;
 
-	void SwitchOnEnd();
-	void SwitchOnStart( const class CAICommand *pCommand );
+	void SwitchOnEnd() override;
+	void SwitchOnStart( const class CAICommand *pCommand ) override;
 
-	virtual void ForceActivate();
+	void ForceActivate() override;
 
 	// return true if activation is allowed
-	bool ActivateDuringDisable()
+	bool ActivateDuringDisable() override
 	{
 		return false;
 	}
 
-	CCommonUnit *GetUnit()
+	CCommonUnit *GetUnit() override
 	{
 		return pUnit.GetPtr();
 	}
@@ -73,10 +73,10 @@ public:
 
 	CExecutorUnitBonus() {}
 
-	void RegisterOnEvents( IExecutorContainer *pContainer );
-	bool NotifyEvent( const CExecutorEvent &event );
+	void RegisterOnEvents( IExecutorContainer *pContainer ) override;
+	bool NotifyEvent( const CExecutorEvent &event ) override;
 
-	bool IsExecutorValid() const
+	bool IsExecutorValid() const override
 	{
 		return IsValid( pUnit );
 	}

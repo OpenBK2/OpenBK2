@@ -102,7 +102,7 @@ class CWindowScrollableContainerBase : public CWindow,
 protected:
 	CWindow *GetElement( const std::string &szName );
 	void Resort( IWindowSorter *pSorter );
-	void RemoveItems();
+	void RemoveItems() override;
 	bool IsHorisontal() const;
 
 public:
@@ -111,39 +111,39 @@ public:
 	{
 	}
 
-	virtual void SliderPosition( const float fPosition, class CWindow *pWho );
+	void SliderPosition( const float fPosition, class CWindow *pWho ) override;
 
 	void Segment();
-	virtual void InsertAfter( IWindow *pElement, IWindow *pInsert, const bool bSelectable );
-	virtual void Remove( IWindow *pRemove );
-	virtual void PushBack( IWindow *pElement, const bool bSelectable );
+	void InsertAfter( IWindow *pElement, IWindow *pInsert, const bool bSelectable ) override;
+	void Remove( IWindow *pRemove ) override;
+	void PushBack( IWindow *pElement, const bool bSelectable ) override;
 	// call it after remove or insertafterr
-	virtual void Update();
-	virtual void Reposition( const CTRect<float> &parentRect );
-	virtual void Init();
-	virtual void Select( IWindow *pElement );
-	void AfterLoad();
-	bool OnMouseMove( const CVec2 &vPos, const int nButton );
+	void Update() override;
+	void Reposition( const CTRect<float> &parentRect ) override;
+	void Init() override;
+	void Select( IWindow *pElement ) override;
+	void AfterLoad() override;
+	bool OnMouseMove( const CVec2 &vPos, const int nButton ) override;
 
-	virtual int operator&( IBinSaver &saver );
-	virtual void Visit( struct IUIVisitor *pVisitor );
-	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	int operator&( IBinSaver &saver ) override;
+	void Visit( struct IUIVisitor *pVisitor ) override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 
-	virtual void Clicked( struct IWindow *pWho, int nButton );
-	void DoubleClicked( struct IWindow *pWho, int nButton );
+	void Clicked( struct IWindow *pWho, int nButton ) override;
+	void DoubleClicked( struct IWindow *pWho, int nButton ) override;
 
-	virtual IWindow *GetSelectedItem() const
+	IWindow *GetSelectedItem() const override
 	{
 		return pSelected;
 	}
 
-	virtual IWindow *GetItem( const std::string &szName );
+	IWindow *GetItem( const std::string &szName ) override;
 	virtual IWindow *GetItem( const int nItem );
-	virtual int GetItemNumber( IWindow *pElement );
-	virtual void EnsureElementVisible( IWindow *pElement );
+	int GetItemNumber( IWindow *pElement ) override;
+	void EnsureElementVisible( IWindow *pElement ) override;
 
 	int GetBaseHeight() const;
 
-	void ResetScroller();
-	void SetDiscreteScroll( int nVisibleSlots );
+	void ResetScroller() override;
+	void SetDiscreteScroll( int nVisibleSlots ) override;
 };

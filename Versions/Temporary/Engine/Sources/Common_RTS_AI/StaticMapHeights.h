@@ -48,7 +48,7 @@ class COMMON_RTS_AI_EXPORT CStaticMapHeights : public CObjectBase
 	void Init( const int nSizeXInTiles, const int nSizeYInTiles, const int nTileSize );
 	const float GetHeight( const int x, const int y ) const;
 
-	int operator&( IBinSaver &f )
+	int operator&( IBinSaver &f ) override
 	{
 		NI_ASSERT( false, "Can't serialize CStaticMapHeights, should be restored after load" );
 		return 0;

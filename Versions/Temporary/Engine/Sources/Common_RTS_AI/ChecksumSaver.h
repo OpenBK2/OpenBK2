@@ -26,26 +26,26 @@ class CCheckSumSaver : public IBinSaver
 	int nCount = 0;
 	NTimer::STime nSegment = 0;
 
-	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber )
+	bool StartChunk( const chunk_id idChunk, int nChunkNumber ) override
 	{
 		return true;
 	}
 
-	virtual void FinishChunk() {}
+	void FinishChunk() override {}
 
-	virtual void DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber );
-	virtual void DataChunkString( std::string &data );
-	virtual void DataChunkString( std::wstring &data );
+	void DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber ) override;
+	void DataChunkString( std::string &data ) override;
+	void DataChunkString( std::wstring &data ) override;
 	// storing/loading pointers to objects
-	virtual void StoreObject( CObjectBase *pObject );
+	void StoreObject( CObjectBase *pObject ) override;
 
-	virtual CObjectBase *LoadObject()
+	CObjectBase *LoadObject() override
 	{
 		NI_ASSERT( false, "wrong call" );
 		return 0;
 	}
 
-	virtual int CountChunks( const chunk_id idChunk )
+	int CountChunks( const chunk_id idChunk ) override
 	{
 		return 0;
 	}
@@ -53,19 +53,19 @@ class CCheckSumSaver : public IBinSaver
 public:
 	CCheckSumSaver();
 	CCheckSumSaver( uLong *pCheckSum, struct ICheckSumLog *pLog, const NTimer::STime segmentTime );
-	~CCheckSumSaver();
+	~CCheckSumSaver() override;
 
-	virtual bool IsReading()
+	bool IsReading() override
 	{
 		return false;
 	}
 
-	virtual int GetVersion() const
+	int GetVersion() const override
 	{
 		return 0;
 	}
 
-	virtual bool IsChecksum()
+	bool IsChecksum() override
 	{
 		return true;
 	}

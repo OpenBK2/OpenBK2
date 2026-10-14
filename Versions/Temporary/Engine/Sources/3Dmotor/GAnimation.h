@@ -218,64 +218,67 @@ class CSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 protected:
 	CSkeletonAnimator();
 
-	virtual bool NeedUpdate();
-	virtual void Recalc();
+	bool NeedUpdate() override;
+	void Recalc() override;
 
 public:
 	CSkeletonAnimator( const SSkeletonHandle &modelH, CFuncBase<STime> *_pTime );
-	~CSkeletonAnimator();
+	~CSkeletonAnimator() override;
 
-	int operator&( CStructureSaver &f );
+	int operator&( CStructureSaver &f ) override;
 
 	// IGetBone
-	virtual int GetBoneIndex( const char *pszName );
-	virtual void GetBoneNames( std::vector<std::string> *pBoneNames );
+	int GetBoneIndex( const char *pszName ) override;
+	void GetBoneNames( std::vector<std::string> *pBoneNames ) override;
 
 	// IChannelAnimator -- arbitrary scalar channel animation support
-	virtual int GetChannelCount();
-	virtual int GetChannelIndex( const std::string &szName );
-	virtual float GetChannelValue( int nChannelIndex );
+	int GetChannelCount() override;
+	int GetChannelIndex( const std::string &szName ) override;
+	float GetChannelValue( int nChannelIndex ) override;
 
 	// ISkeletonAnimator
-	virtual SAnimID AddAnimation( STime tStartTime,
-	                              const SAnimHandle &h,
-	                              bool bLoop,
-	                              float fSpeed = 1.0f,
-	                              float fWeight = 1.0f,
-	                              STime tEndTime = -1 );
+	SAnimID AddAnimation( STime tStartTime,
+	                      const SAnimHandle &h,
+	                      bool bLoop,
+	                      float fSpeed = 1.0f,
+	                      float fWeight = 1.0f,
+	                      STime tEndTime = -1 ) override;
 
-	virtual void ClearAllAnimations();
-	virtual void FadeIn( const STime &tDuration, SAnimID whatFadeIn );
-	virtual void FadeOut( const STime &tDuration, SAnimID whatFadeOut );
-	virtual void FadeOutAllAnimations( const STime &tDuration );
-	virtual void SetSpeedFactorForAllAnimations( const STime &tCurrent, float fSpeed );
-	virtual float GetDuration( const SAnimID animID );
-	virtual unsigned int GetMarkTimes( std::vector<float> *pResult, const SAnimID animID, const std::string &szMarkName );
-	virtual unsigned int EnumMarks( std::vector<std::string> *pResult, const SAnimID animID );
-	virtual void SetSpeedFactor( const SAnimID animID, float fSpeed );
-	virtual void SetLocalTime( const SAnimID animID, const STime tTime );
-	virtual void SetEndTime( const SAnimID animID, const STime tEndTime );
-	virtual void SetLoopCount( const SAnimID animID, const int nLoopCount );
-	virtual void SetGlobalAnimTransit( const STime tDuration );
+	void ClearAllAnimations() override;
+	void FadeIn( const STime &tDuration, SAnimID whatFadeIn ) override;
+	void FadeOut( const STime &tDuration, SAnimID whatFadeOut ) override;
+	void FadeOutAllAnimations( const STime &tDuration ) override;
+	void SetSpeedFactorForAllAnimations( const STime &tCurrent, float fSpeed ) override;
+	float GetDuration( const SAnimID animID ) override;
+	unsigned int
+	GetMarkTimes( std::vector<float> *pResult, const SAnimID animID, const std::string &szMarkName ) override;
+	unsigned int EnumMarks( std::vector<std::string> *pResult, const SAnimID animID ) override;
+	void SetSpeedFactor( const SAnimID animID, float fSpeed ) override;
+	void SetLocalTime( const SAnimID animID, const STime tTime ) override;
+	void SetEndTime( const SAnimID animID, const STime tEndTime ) override;
+	void SetLoopCount( const SAnimID animID, const int nLoopCount ) override;
+	void SetGlobalAnimTransit( const STime tDuration ) override;
 
-	virtual void SetGlobalPosition( const SHMatrix &pos );
-	virtual void SetGlobalTransform( CFuncBase<SFBTransform> *pTransform );
-	virtual void SetGlobMoveAnimation( const SAnimID animID, const float fMovementSpeed );
+	void SetGlobalPosition( const SHMatrix &pos ) override;
+	void SetGlobalTransform( CFuncBase<SFBTransform> *pTransform ) override;
+	void SetGlobMoveAnimation( const SAnimID animID, const float fMovementSpeed ) override;
 
-	virtual void
-	SetBoneMutator( const char *pszBoneName, const STime &tStart, const std::vector<SDesiredBoneMove> &boneMutation );
-	virtual void
-	SetBoneMutator( const int nBoneIndex, const STime &tStart, const std::vector<SDesiredBoneMove> &boneMutation );
-	virtual void SetSpecialMutator( IAnimMutator *pMutator );
+	void SetBoneMutator( const char *pszBoneName,
+	                     const STime &tStart,
+	                     const std::vector<SDesiredBoneMove> &boneMutation ) override;
+	void SetBoneMutator( const int nBoneIndex,
+	                     const STime &tStart,
+	                     const std::vector<SDesiredBoneMove> &boneMutation ) override;
+	void SetSpecialMutator( IAnimMutator *pMutator ) override;
 
-	virtual bool GetBonePosition( const char *pszBoneName, CVec3 *pResTranslation );
-	virtual bool GetBonePosition( int nBoneIndex, CVec3 *pResTranslation );
-	virtual bool GetBonePosition( const char *pszBoneName, SHMatrix *pRes );
-	virtual bool GetBonePosition( int nBoneIndex, SHMatrix *pRes );
-	virtual bool GetLocalBonePosition( const char *pszBoneName, SHMatrix *pLocalPos );
+	bool GetBonePosition( const char *pszBoneName, CVec3 *pResTranslation ) override;
+	bool GetBonePosition( int nBoneIndex, CVec3 *pResTranslation ) override;
+	bool GetBonePosition( const char *pszBoneName, SHMatrix *pRes ) override;
+	bool GetBonePosition( int nBoneIndex, SHMatrix *pRes ) override;
+	bool GetLocalBonePosition( const char *pszBoneName, SHMatrix *pLocalPos ) override;
 
-	virtual CFuncBase<SFBTransform> *CreateTransform( const std::string &szBoneName );
-	virtual CFuncBase<SFBTransform> *CreateTransform( int nBoneIndex );
+	CFuncBase<SFBTransform> *CreateTransform( const std::string &szBoneName ) override;
+	CFuncBase<SFBTransform> *CreateTransform( int nBoneIndex ) override;
 
 	bool HasSkeleton() const
 	{

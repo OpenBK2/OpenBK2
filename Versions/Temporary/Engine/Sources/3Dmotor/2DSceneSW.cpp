@@ -268,7 +268,7 @@ class CSWRects : public ISWRects
 	CRectLayout layout;
 
 	//float fGain;
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTexture );
 		f.Add( 3, &layout );
@@ -318,17 +318,17 @@ public:
 	{
 	}
 
-	void Draw( CTrueColorRender *pRes )
+	void Draw( CTrueColorRender *pRes ) override
 	{
 		DrawRect( pRes );
 	}
 
-	void Draw( CBumpRender *pRes )
+	void Draw( CBumpRender *pRes ) override
 	{
 		DrawRect( pRes );
 	}
 
-	void Draw( CFogRender *pRes )
+	void Draw( CFogRender *pRes ) override
 	{
 		DrawRect( pRes );
 	}
@@ -344,7 +344,7 @@ class CSWSpot : public ISWRects
 	float fAngle;
 	CVec2 ptPos, ptSize;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTexture );
 		f.Add( 3, &fAngle );
@@ -399,17 +399,17 @@ public:
 	{
 	}
 
-	void Draw( CTrueColorRender *pRes )
+	void Draw( CTrueColorRender *pRes ) override
 	{
 		DrawSpot( pRes );
 	}
 
-	void Draw( CBumpRender *pRes )
+	void Draw( CBumpRender *pRes ) override
 	{
 		DrawSpot( pRes );
 	}
 
-	void Draw( CFogRender *pRes )
+	void Draw( CFogRender *pRes ) override
 	{
 		DrawSpot( pRes );
 	}
@@ -423,7 +423,7 @@ class C2DPostFilter : public ISWRects
 	int nCenterX, nCenterY;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pMask );
 		f.Add( 3, &nCenterX );
@@ -440,7 +440,7 @@ public:
 	{
 	}
 
-	void Draw( CTrueColorRender *pRes )
+	void Draw( CTrueColorRender *pRes ) override
 	{
 		CSWTextureData *pTextureData;
 		pMask.Refresh();
@@ -516,12 +516,12 @@ public:
 		}
 	}
 
-	void Draw( CBumpRender *pRes )
+	void Draw( CBumpRender *pRes ) override
 	{
 		ASSERT( 0 );
 	}
 
-	void Draw( CFogRender *pRes )
+	void Draw( CFogRender *pRes ) override
 	{
 		ASSERT( 0 );
 	}
@@ -534,7 +534,7 @@ class CGrayingFilter : public ISWRects
 	CVec4 vConvolution;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &vConvolution );
 		return 0;
@@ -547,7 +547,7 @@ public:
 	{
 	}
 
-	void Draw( CTrueColorRender *pRes )
+	void Draw( CTrueColorRender *pRes ) override
 	{
 		CArray2D<NGfx::SPixel8888> &res = pRes->res;
 		int nXSize = res.GetSizeX(), nYSize = res.GetSizeY();
@@ -564,12 +564,12 @@ public:
 		}
 	}
 
-	void Draw( CBumpRender *pRes )
+	void Draw( CBumpRender *pRes ) override
 	{
 		ASSERT( 0 );
 	}
 
-	void Draw( CFogRender *pRes )
+	void Draw( CFogRender *pRes ) override
 	{
 		ASSERT( 0 );
 	}
@@ -585,7 +585,7 @@ private:
 	ZDATA
 	std::vector<CPtr<ISWRects>> rects;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &rects );
 		return 0;
@@ -626,14 +626,16 @@ private:
 	}
 
 public:
-	CObjectBase *CreateRects( CPtrFuncBase<CSWTextureData> *pTexture, const CRectLayout &layout );
-	CObjectBase *
-	CreateSpot( CPtrFuncBase<CSWTextureData> *pTexture, const CVec2 &_ptPos, const CVec2 &_ptSize, float _fAngle );
-	void AddPostFilter( CPtrFuncBase<CSWTextureData> *pTexture, int _nCenterX, int _nCenterY );
-	void AddGrayingFilter( const CVec4 &vConvolution );
-	void Draw( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, bool bClear );
-	void DrawFog( CArray2D<int> *pFogMap, const CTPoint<int> &vViewport );
-	void DrawBump( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, float fScale );
+	CObjectBase *CreateRects( CPtrFuncBase<CSWTextureData> *pTexture, const CRectLayout &layout ) override;
+	CObjectBase *CreateSpot( CPtrFuncBase<CSWTextureData> *pTexture,
+	                         const CVec2 &_ptPos,
+	                         const CVec2 &_ptSize,
+	                         float _fAngle ) override;
+	void AddPostFilter( CPtrFuncBase<CSWTextureData> *pTexture, int _nCenterX, int _nCenterY ) override;
+	void AddGrayingFilter( const CVec4 &vConvolution ) override;
+	void Draw( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, bool bClear ) override;
+	void DrawFog( CArray2D<int> *pFogMap, const CTPoint<int> &vViewport ) override;
+	void DrawBump( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, float fScale ) override;
 };
 
 // Create scene

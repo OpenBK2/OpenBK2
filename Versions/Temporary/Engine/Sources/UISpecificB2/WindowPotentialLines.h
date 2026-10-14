@@ -28,7 +28,7 @@ class CWindowChapterMapLayer : public CPtrFuncBase<NGfx::CTexture>
 	int nLastUpdateTime;
 
 protected:
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		int nTime = Singleton<IGameTimer>()->GetAbsTime();
 		if ( bNeedUpdate /*&& ( nTime - nLastUpdateTime - 100 ) > 0*/ )
@@ -42,7 +42,7 @@ protected:
 		}
 	}
 
-	void Recalc();
+	void Recalc() override;
 
 public:
 	CWindowChapterMapLayer()
@@ -81,7 +81,7 @@ public:
 
 	void Clear();
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 class CDrawMapPixelFunctional
@@ -245,7 +245,7 @@ class CWindowPotentialLines : public CWindow, public IPotentialLines
 
 	ZONSERIALIZE
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CWindow *)this );
 		f.Add( 2, &pInstance );
@@ -265,7 +265,7 @@ public:
 	}
 
 protected:
-	NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
@@ -292,22 +292,23 @@ public:
 	CWindowPotentialLines();
 
 	//{ CWindow
-	void Visit( struct IUIVisitor *pVisitor );
-	void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	void Visit( struct IUIVisitor *pVisitor ) override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 	//}
 
 	void SetParams( const std::string &szMask,
 	                const std::string &szDiffColourMap,
 	                const CVec2 &_vMainStrike,
 	                const uint32_t _dwBorderColour1,
-	                const uint32_t _dwBorderColour2 );
+	                const uint32_t _dwBorderColour2 ) override;
 
 	// Nodes management
-	void ClearNodes();
-	void SetNode( int nX, int nY, int nEndOffsetX, int nEndOffsetY, float fValue ); // If such node exists, it is altered
+	void ClearNodes() override;
+	void SetNode(
+			int nX, int nY, int nEndOffsetX, int nEndOffsetY, float fValue ) override; // If such node exists, it is altered
 
 	// Arrows management
-	void ClearArrows()
+	void ClearArrows() override
 	{
 		arrows.clear();
 	}
@@ -315,5 +316,5 @@ public:
 	void AddArrow( const std::vector<CVec2> &arrowTraj,
 	               float fArrowWidth,
 	               const NDb::STexture *pArrowTexture,
-	               uint32_t dwArrowColour );
+	               uint32_t dwArrowColour ) override;
 };

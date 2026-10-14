@@ -20,13 +20,13 @@ protected:
 
 public:
 	CLinksManagerCommon();
-	~CLinksManagerCommon();
+	~CLinksManagerCommon() override;
 	bool Init( const int nPort );
 
-	virtual bool MakeBroadcastAddr( class CNodeAddress *pRes, int nPort ) const;
-	virtual bool IsLocalAddr( const CNodeAddress &test ) const;
-	virtual bool Send( const CNodeAddress &dst, CMemoryStream &pkt ) const;
-	virtual bool Recv( class CNodeAddress *pSrc, CMemoryStream *pPkt ) const;
-	virtual bool GetSelfAddress( class CNodeAddressSet *pRes ) const;
+	bool MakeBroadcastAddr( class CNodeAddress *pRes, int nPort ) const override;
+	bool IsLocalAddr( const CNodeAddress &test ) const override;
+	bool Send( const CNodeAddress &dst, CMemoryStream &pkt ) const override;
+	bool Recv( class CNodeAddress *pSrc, CMemoryStream *pPkt ) const override;
+	bool GetSelfAddress( class CNodeAddressSet *pRes ) const override;
 };
 } // namespace NNet

@@ -28,22 +28,23 @@ public:
 	}
 
 	//
-	bool VisitHeader( const std::string &szVersion, const std::string &szEncoding, const std::string &szStandalone )
+	bool
+	VisitHeader( const std::string &szVersion, const std::string &szEncoding, const std::string &szStandalone ) override
 	{
 		return true;
 	}
 
-	bool VisitComment( const std::string &szText )
+	bool VisitComment( const std::string &szText ) override
 	{
 		return bNeedMoreChunks;
 	}
 
-	bool VisitAttribute( const std::string &szName, const std::string &szValue )
+	bool VisitAttribute( const std::string &szName, const std::string &szValue ) override
 	{
 		return true;
 	}
 
-	bool VisitChunkStart( const std::string &szName )
+	bool VisitChunkStart( const std::string &szName ) override
 	{
 		if ( bNeedMoreChunks )
 		{
@@ -53,13 +54,13 @@ public:
 		return true;
 	}
 
-	bool VisitText( const std::string &szText )
+	bool VisitText( const std::string &szText ) override
 	{
 		return bNeedMoreChunks;
 	}
 
 	// finish visiting in the case of header end
-	bool VisitChunkFinish( const std::string &szName )
+	bool VisitChunkFinish( const std::string &szName ) override
 	{
 		return bNeedMoreChunks;
 	}

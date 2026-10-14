@@ -5,47 +5,47 @@ class CMPManagerModeNoNet : public CMPManagerMode
 {
 	OBJECT_BASIC_METHODS( CMPManagerModeNoNet );
 
-	virtual const int GetOwnClientID()
+	const int GetOwnClientID() override
 	{
 		return -1;
 	}
 
-	virtual const bool IsInGameRoom() const
+	const bool IsInGameRoom() const override
 	{
 		return false;
 	}
 
-	virtual const bool IsGameRunning() const
+	const bool IsGameRunning() const override
 	{
 		return false;
 	}
 
-	virtual const bool IsGameHost() const
+	const bool IsGameHost() const override
 	{
 		return false;
 	}
 
-	virtual void UpdateGameList() {}
+	void UpdateGameList() override {}
 
-	virtual void OnLeaveGame() {}
+	void OnLeaveGame() override {}
 
-	virtual void OnGameRoomClientAdded() {}
+	void OnGameRoomClientAdded() override {}
 
-	virtual void OnGameRoomClientRemoved() {}
+	void OnGameRoomClientRemoved() override {}
 
-	virtual void OnSetMySlotNumber() {}
+	void OnSetMySlotNumber() override {}
 
-	virtual void OnGameSpecificInfo() {}
+	void OnGameSpecificInfo() override {}
 
-	virtual void KickPlayerFromSlot( const int nSlot ) {}
+	void KickPlayerFromSlot( const int nSlot ) override {}
 
 public:
-	virtual const ENetMode GetMode() const
+	const ENetMode GetMode() const override
 	{
 		return ENM_NONE;
 	}
 
-	virtual void SetLanTester( class CLANTester *_pLANTester )
+	void SetLanTester( class CLANTester *_pLANTester ) override
 	{
 		NI_ASSERT( 0, "Wrong call" )
 	}

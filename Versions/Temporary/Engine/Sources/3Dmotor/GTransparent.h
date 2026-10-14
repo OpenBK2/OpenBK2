@@ -173,7 +173,7 @@ class CTransparentRenderer : public CObjectBase, public IParticleOutput
 	AddParticleOverflow( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tPlace, float fDepth );
 	ZDATA
 public:
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		return 0;
 	}
@@ -192,7 +192,7 @@ public:
 	                      uint32_t dwNormalColor,
 	                      const SPerVertexLightState *_pLightState );
 
-	virtual const SParticleOrientationInfo &GetOrientationInfo() const
+	const SParticleOrientationInfo &GetOrientationInfo() const override
 	{
 		return orientation;
 	}
@@ -202,8 +202,8 @@ public:
 		return kernel;
 	}
 
-	virtual void AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tex, float fDepth );
-	virtual void SampleWarFog( const std::vector<CVec3> &vPos, std::vector<float> *pRes );
+	void AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tex, float fDepth ) override;
+	void SampleWarFog( const std::vector<CVec3> &vPos, std::vector<float> *pRes ) override;
 
 	void AddParticles( IParticles *pParticles, bool bIsLit, const SBound &bv, IReportParticlesGeometry *pStore );
 	void AddElement(

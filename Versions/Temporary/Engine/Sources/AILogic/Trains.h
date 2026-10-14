@@ -28,17 +28,17 @@ class CLocomotiveStatesFactory : public IStatesFactory
 	static CPtr<CLocomotiveStatesFactory> pFactory;
 
 public:
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		return 0;
 	}
 
 	static IStatesFactory *Instance();
 
-	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
+	bool CanCommandBeExecuted( class CAICommand *pCommand ) override;
 
-	virtual struct IUnitState *ProduceState( class CQueueUnit *pObj, class CAICommand *pCommand );
-	virtual struct IUnitState *ProduceRestState( class CQueueUnit *pUnit );
+	struct IUnitState *ProduceState( class CQueueUnit *pObj, class CAICommand *pCommand ) override;
+	struct IUnitState *ProduceRestState( class CQueueUnit *pUnit ) override;
 
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
@@ -53,17 +53,17 @@ class CTrainCarStatesFactory : public IStatesFactory
 	static CPtr<CTrainCarStatesFactory> pFactory;
 
 public:
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		return 0;
 	}
 
 	static IStatesFactory *Instance();
 
-	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
+	bool CanCommandBeExecuted( class CAICommand *pCommand ) override;
 
-	virtual struct IUnitState *ProduceState( class CQueueUnit *pObj, class CAICommand *pCommand );
-	virtual struct IUnitState *ProduceRestState( class CQueueUnit *pUnit );
+	struct IUnitState *ProduceState( class CQueueUnit *pObj, class CAICommand *pCommand ) override;
+	struct IUnitState *ProduceRestState( class CQueueUnit *pUnit ) override;
 
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
@@ -94,7 +94,7 @@ class CTrainLocomotive : public CMilitaryCar
 	float fBackLink = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CMilitaryCar *)this );
 		f.Add( 2, &cars );
@@ -109,25 +109,25 @@ public:
 		return 0;
 	}
 
-	virtual void Init( const CVec2 &center,
-	                   const int z,
-	                   const SUnitBaseRPGStats *pStats,
-	                   const float fHP,
-	                   const uint16_t dir,
-	                   const uint8_t player,
-	                   ICollisionsCollector *pCollisionsCollector );
+	void Init( const CVec2 &center,
+	           const int z,
+	           const SUnitBaseRPGStats *pStats,
+	           const float fHP,
+	           const uint16_t dir,
+	           const uint8_t player,
+	           ICollisionsCollector *pCollisionsCollector ) override;
 
-	virtual IStatesFactory *GetStatesFactory() const
+	IStatesFactory *GetStatesFactory() const override
 	{
 		return CLocomotiveStatesFactory::Instance();
 	}
 
-	virtual void TakeDamage( const float fDamage,
-	                         const SWeaponRPGStats::SShell *pShell,
-	                         const int nPlayerOfShoot,
-	                         CAIUnit *pShotUnit );
+	void TakeDamage( const float fDamage,
+	                 const SWeaponRPGStats::SShell *pShell,
+	                 const int nPlayerOfShoot,
+	                 CAIUnit *pShotUnit ) override;
 
-	virtual const bool CanRotate() const
+	const bool CanRotate() const override
 	{
 		return false;
 	}
@@ -137,22 +137,22 @@ public:
 		return false;
 	}
 
-	virtual const bool CanShootInMovement()
+	const bool CanShootInMovement() override
 	{
 		return true;
 	}
 
-	virtual const bool NeedDeinstall() const
+	const bool NeedDeinstall() const override
 	{
 		return false;
 	}
 
-	virtual class CArtillery *GetTowedArtillery() const
+	class CArtillery *GetTowedArtillery() const override
 	{
 		return 0;
 	}
 
-	virtual void Segment();
+	void Segment() override;
 
 	// Train-specific
 	const SRailRoadSystem::SRRInstance *GetTrack() const;
@@ -173,17 +173,17 @@ public:
 	}
 
 	void SetToTrackPos( float fPos );
-	virtual void SetCollision( ICollision *pCollision, IPath *pPath );
-	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const;
+	void SetCollision( ICollision *pCollision, IPath *pPath ) override;
+	const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const override;
 
-	virtual void Die( const bool fromExplosion, const float fDamage );
+	void Die( const bool fromExplosion, const float fDamage ) override;
 
 	// Locomotive-specific
 	void AddCar( CTrainCar *pNewCar );             // Add car to the end of the list
 	void PassCommandToAll( CAICommand *pCommand ); // Pass command to all cars
 	const float GetTrainLength();
 	const bool TryFiringAll();
-	virtual void Stop(); // Stop all cars
+	void Stop() override; // Stop all cars
 	CAIUnit *GetLastCar();
 	void SetMovingTileLocks( bool bMoving );
 };
@@ -211,7 +211,7 @@ class CTrainCar : public CMilitaryCar
 	float fBackLink = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CMilitaryCar *)this );
 		f.Add( 2, &pLocomotive );
@@ -232,25 +232,25 @@ private:
 	void LinkToLocomotive( CTrainLocomotive *pLinkTo );
 
 public:
-	virtual void Init( const CVec2 &center,
-	                   const int z,
-	                   const SUnitBaseRPGStats *pStats,
-	                   const float fHP,
-	                   const uint16_t dir,
-	                   const uint8_t player,
-	                   ICollisionsCollector *pCollisionsCollector );
+	void Init( const CVec2 &center,
+	           const int z,
+	           const SUnitBaseRPGStats *pStats,
+	           const float fHP,
+	           const uint16_t dir,
+	           const uint8_t player,
+	           ICollisionsCollector *pCollisionsCollector ) override;
 
-	virtual IStatesFactory *GetStatesFactory() const
+	IStatesFactory *GetStatesFactory() const override
 	{
 		return CTrainCarStatesFactory::Instance();
 	}
 
-	virtual void TakeDamage( const float fDamage,
-	                         const SWeaponRPGStats::SShell *pShell,
-	                         const int nPlayerOfShoot,
-	                         CAIUnit *pShotUnit );
+	void TakeDamage( const float fDamage,
+	                 const SWeaponRPGStats::SShell *pShell,
+	                 const int nPlayerOfShoot,
+	                 CAIUnit *pShotUnit ) override;
 
-	virtual const bool CanRotate() const
+	const bool CanRotate() const override
 	{
 		return false;
 	}
@@ -260,22 +260,22 @@ public:
 		return false;
 	}
 
-	virtual const bool CanShootInMovement()
+	const bool CanShootInMovement() override
 	{
 		return true;
 	}
 
-	virtual const bool NeedDeinstall() const
+	const bool NeedDeinstall() const override
 	{
 		return false;
 	}
 
-	virtual class CArtillery *GetTowedArtillery() const
+	class CArtillery *GetTowedArtillery() const override
 	{
 		return 0;
 	}
 
-	virtual void Segment();
+	void Segment() override;
 
 	// Train-specific
 	const SRailRoadSystem::SRRInstance *GetTrack() const;
@@ -296,10 +296,10 @@ public:
 	}
 
 	void SetToTrackPos( float fPos );
-	virtual void SetCollision( ICollision *pCollision, IPath *pPath );
-	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const;
+	void SetCollision( ICollision *pCollision, IPath *pPath ) override;
+	const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const override;
 
-	virtual void Die( const bool fromExplosion, const float fDamage );
+	void Die( const bool fromExplosion, const float fDamage ) override;
 
 	// Train car-specific
 	CTrainLocomotive *GetLocomotive() const
@@ -349,7 +349,7 @@ class CLocomotivePath : public ISmoothPath
 	CPtr<CTrainLocomotive> pUnit;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &vEndPoint );
 		f.Add( 3, &fCurPos );
@@ -368,50 +368,50 @@ public:
 		return vEndPoint;
 	}
 
-	virtual bool IsFinished() const
+	bool IsFinished() const override
 	{
 		return bFinished;
 	}
 
-	virtual void Segment( const NTimer::STime timeDiff );
+	void Segment( const NTimer::STime timeDiff ) override;
 
 	// ненужные функции ?
-	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap )
+	bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) override
 	{
 		return false;
 	}
 
-	virtual bool Init( IMemento *pMemento, CBasePathUnit *_pUnit, CAIMap *pAIMap );
+	bool Init( IMemento *pMemento, CBasePathUnit *_pUnit, CAIMap *pAIMap ) override;
 
-	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit )
+	bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) override
 	{
 		return false;
 	}
 
-	virtual void Stop()
+	void Stop() override
 	{
 		fEndPos = fCurPos;
 		bFinished = true;
 	}
 
-	virtual const bool CanGoBackward() const
+	const bool CanGoBackward() const override
 	{
 		return ( fCurPos >= fEndPos );
 	}
 
-	virtual const bool CanGoForward() const
+	const bool CanGoForward() const override
 	{
 		return ( fCurPos <= fEndPos );
 	}
 
-	virtual const CVec2 PeekPathPoint( const int nToShift ) const
+	const CVec2 PeekPathPoint( const int nToShift ) const override
 	{
 		return pUnit->GetCenterPlain();
 	}
 
-	virtual IMemento *CreateMemento() const;
+	IMemento *CreateMemento() const override;
 
-	virtual const float GetSpeed() const
+	const float GetSpeed() const override
 	{
 		return bFinished ? 0 : pUnit->GetSpeed();
 	}
@@ -427,7 +427,7 @@ class CTrainCarPath : public ISmoothPath
 	CPtr<CTrainCar> pUnit;
 	CPtr<CLocomotivePath> pOwner;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		f.Add( 3, &pOwner );
@@ -444,52 +444,52 @@ public:
 		return pOwner->GetFinishPoint();
 	}
 
-	virtual bool IsFinished() const
+	bool IsFinished() const override
 	{
 		return pOwner->IsFinished();
 	}
 
-	virtual void Segment( const NTimer::STime timeDiff ) {}
+	void Segment( const NTimer::STime timeDiff ) override {}
 
 	// ненужные функции ?
-	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap )
+	bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) override
 	{
 		return false;
 	}
 
-	virtual bool Init( IMemento *pMemento, CBasePathUnit *_pUnit, CAIMap *pAIMap )
+	bool Init( IMemento *pMemento, CBasePathUnit *_pUnit, CAIMap *pAIMap ) override
 	{
 		return false;
 	}
 
-	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit )
+	bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) override
 	{
 		return false;
 	}
 
-	virtual void Stop() {}
+	void Stop() override {}
 
-	virtual const bool CanGoBackward() const
+	const bool CanGoBackward() const override
 	{
 		return pOwner->CanGoBackward();
 	}
 
-	virtual const bool CanGoForward() const
+	const bool CanGoForward() const override
 	{
 		return pOwner->CanGoForward();
 	}
 
-	virtual const CVec2 PeekPathPoint( const int nToShift ) const
+	const CVec2 PeekPathPoint( const int nToShift ) const override
 	{
 		return pUnit->GetCenterPlain();
 	}
 
-	virtual IMemento *CreateMemento() const
+	IMemento *CreateMemento() const override
 	{
 		return 0;
 	}
 
-	virtual const float GetSpeed() const
+	const float GetSpeed() const override
 	{
 		return pOwner->GetSpeed();
 	}
@@ -507,7 +507,7 @@ public:
 	float fEndPos = {};
 	CVec2 vEndPoint;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &fCurPos );
 		f.Add( 3, &fEndPos );
@@ -526,7 +526,7 @@ class CTrainRestState : public IUnitState, public CFreeFireManager
 	CPtr<CAIUnit> pUnit;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CFreeFireManager *)this );
 		f.Add( 2, &pUnit );
@@ -542,26 +542,26 @@ public:
 
 	CTrainRestState( CAIUnit *_pUnit );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return VNULL2;
 	}
 
-	virtual bool IsRestState() const
+	bool IsRestState() const override
 	{
 		return true;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_REST;
 	}
@@ -581,7 +581,7 @@ class CLocomotiveMoveState : public IUnitState, public CFreeFireManager
 	CPtr<CLocomotivePath> pPath;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CFreeFireManager *)this );
 		f.Add( 2, &startTime );
@@ -601,21 +601,21 @@ public:
 
 	CLocomotiveMoveState( CTrainLocomotive *_pUnit, const CVec2 &point );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return point;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_MOVE;
 	}
@@ -651,7 +651,7 @@ class CLocomotiveAttackUnitState : public IUnitAttackingState
 	CPtr<CLocomotivePath> pPath;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		f.Add( 3, &pTarget );
@@ -673,31 +673,31 @@ public:
 
 	CLocomotiveAttackUnitState( CTrainLocomotive *_pUnit, CAIUnit *_pTarget );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return true;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return IsValid( pTarget ) ? pTarget->GetCenterPlain() : VNULL2;
 	}
 
-	virtual bool IsAttacksUnit() const
+	bool IsAttacksUnit() const override
 	{
 		return true;
 	}
 
-	virtual class CAIUnit *GetTargetUnit() const
+	class CAIUnit *GetTargetUnit() const override
 	{
 		return pTarget;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_ATTACK_UNIT;
 	}
@@ -733,7 +733,7 @@ class CLocomotiveAttackObjState : public IUnitAttackingState
 	CPtr<CLocomotivePath> pPath;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		f.Add( 3, &pTarget );
@@ -755,21 +755,21 @@ public:
 
 	CLocomotiveAttackObjState( CTrainLocomotive *_pUnit, CStaticObject *_pTarget );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return true;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return IsValid( pTarget ) ? GetTargetCenter() : VNULL2;
 	}
 
-	virtual bool IsAttacksUnit() const
+	bool IsAttacksUnit() const override
 	{
 		return true;
 	}
@@ -784,12 +784,12 @@ public:
 		return CVec2( pTarget->GetCenter().x, pTarget->GetCenter().y );
 	}
 
-	virtual CAIUnit *GetTargetUnit() const
+	CAIUnit *GetTargetUnit() const override
 	{
 		return 0;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_ATTACK_STAT_OBJECT;
 	}
@@ -812,7 +812,7 @@ class CTrainCarMoveToState : public IUnitState, public CFreeFireManager
 	CPtr<CTrainCarPath> pPath;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CFreeFireManager *)this );
 		f.Add( 2, &pUnit );
@@ -830,21 +830,21 @@ public:
 
 	CTrainCarMoveToState( CTrainCar *_pUnit );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return pUnit->GetLocomotive()->GetState()->GetPurposePoint();
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_MOVE;
 	}
@@ -871,7 +871,7 @@ class CTrainCarAttackUnitState : public IUnitState
 	CPtr<CAIUnit> pTarget;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		f.Add( 3, &eState );
@@ -889,16 +889,16 @@ public:
 
 	CTrainCarAttackUnitState( CTrainCar *_pUnit, CAIUnit *_pTarget );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return IsValid( pTarget ) ? pTarget->GetCenterPlain() : VNULL2;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return true;
 	}
@@ -913,7 +913,7 @@ public:
 		return pTarget;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_ATTACK_UNIT;
 	}
@@ -943,7 +943,7 @@ class CTrainCarAttackObjectState : public IUnitState
 	CPtr<CStaticObject> pTarget;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		f.Add( 3, &eState );
@@ -961,9 +961,9 @@ public:
 
 	CTrainCarAttackObjectState( CTrainCar *_pUnit, CStaticObject *_pTarget );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return IsValid( pTarget ) ? GetTargetCenter() : VNULL2;
 	}
@@ -988,14 +988,14 @@ public:
 		return 0;
 	}
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return true;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_ATTACK_UNIT;
 	}

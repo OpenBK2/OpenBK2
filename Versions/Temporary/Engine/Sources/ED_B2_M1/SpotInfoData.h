@@ -81,90 +81,90 @@ public:
 		}
 	}
 
-	void ClearAdditionalPosition( bool bUpdateSceneElements )
+	void ClearAdditionalPosition( bool bUpdateSceneElements ) override
 	{
 		vAdditionalPosition = VNULL3;
 	}
 
 	//
 	// если присутствует объект возвращает true
-	bool Pick( const CVec3 &rvPos );
-	bool Pick( const CSelectionSquare &rSelectionSquare );
+	bool Pick( const CVec3 &rvPos ) override;
+	bool Pick( const CSelectionSquare &rSelectionSquare ) override;
 	// рисует объект
-	bool Draw( CSceneDrawTool *pSceneDrawTool );
+	bool Draw( CSceneDrawTool *pSceneDrawTool ) override;
 
 	//
 	// вспомогательные методы
-	void UpdateSceneElements( bool bModel, bool bPosition, bool bDirection, float fAdditionalDirection ) {}
+	void UpdateSceneElements( bool bModel, bool bPosition, bool bDirection, float fAdditionalDirection ) override {}
 
 	//
-	void FitToGrid( bool bUpdateSceneElements ) {}
+	void FitToGrid( bool bUpdateSceneElements ) override {}
 
-	void RotateTo90Degree( bool bUpdateSceneElements ) {}
+	void RotateTo90Degree( bool bUpdateSceneElements ) override {}
 
-	void SetCommonHeight( bool bUpdateSceneElements ) {}
+	void SetCommonHeight( bool bUpdateSceneElements ) override {}
 
-	void FixInvalidPos( bool bUpdateSceneElements );
+	void FixInvalidPos( bool bUpdateSceneElements ) override;
 
 	// абстрактные методы
 	// настройщики
 	void GetDrawSelectionParameters( uint32_t *pdwSceneObject,
 	                                 uint32_t *pdwObject,
 	                                 uint32_t *pdwObjectLink,
-	                                 uint32_t *pdwMainObject )
+	                                 uint32_t *pdwMainObject ) override
 	{
 	}
 
-	bool NeedMakeOrientation()
-	{
-		return false;
-	}
-
-	bool KeepZeroHeight()
+	bool NeedMakeOrientation() override
 	{
 		return false;
 	}
 
-	bool KeepCommonHeight()
+	bool KeepZeroHeight() override
 	{
 		return false;
 	}
 
-	bool NeedProcessEditParameters()
+	bool KeepCommonHeight() override
+	{
+		return false;
+	}
+
+	bool NeedProcessEditParameters() override
 	{
 		return true;
 	}
 
 	// процедуры
-	SObjectInfo *CallDuplicate() const
+	SObjectInfo *CallDuplicate() const override
 	{
 		return Duplicate();
 	}
 
-	EObjectInfoType GetObjectInfoType()
+	EObjectInfoType GetObjectInfoType() override
 	{
 		return OIT_SPOT;
 	}
 
 	// загружаем объект из базы
-	bool Load( const SObjectLoadInfo *pObjectLoadInfo, IEditorScene *pEditorScene, IManipulator *pManipulator );
+	bool Load( const SObjectLoadInfo *pObjectLoadInfo, IEditorScene *pEditorScene, IManipulator *pManipulator ) override;
 	// создаем объект
 	bool Create( const SObjectCreateInfo *pObjectCreateInfo,
 	             IEditorScene *pEditorScene,
 	             CObjectBaseController *pObjectController,
-	             IManipulator *pManipulator );
+	             IManipulator *pManipulator ) override;
 
 	// заполнить свойствами MaskManipulator
-	void InsertMaskManipulators( class CMultiManipulator *pPropertyManipulator, IManipulator *pManipulator ) {}
+	void InsertMaskManipulators( class CMultiManipulator *pPropertyManipulator, IManipulator *pManipulator ) override {}
 
-	void FillMaskManipulator( class CMaskManipulator *pMaskManipulator ) {}
+	void FillMaskManipulator( class CMaskManipulator *pMaskManipulator ) override {}
 
-	void GetMask( std::string *pszMask ) {}
+	void GetMask( std::string *pszMask ) override {}
 
 	//
 	// методы имеющие реализацию поумолчанию
 	// заполняет данные объекта, которые можно загрузить когда все объекты загружены
-	bool PostLoad( IEditorScene *pEditorScene, IManipulator *pManipulator )
+	bool PostLoad( IEditorScene *pEditorScene, IManipulator *pManipulator ) override
 	{
 		return true;
 	}
@@ -177,7 +177,7 @@ public:
 	           IEditorScene *pEditorScene,
 	           bool bUpdateDB,
 	           CObjectBaseController *pObjectController,
-	           IManipulator *pManipulator );
+	           IManipulator *pManipulator ) override;
 	// изменяет угол объекта
 	bool Rotate( const SObjectEditInfo *pObjectEditInfo,
 	             float fNewDirection,
@@ -186,13 +186,14 @@ public:
 	             IEditorScene *pEditorScene,
 	             bool bUpdateDB,
 	             CObjectBaseController *pObjectController,
-	             IManipulator *pManipulator );
+	             IManipulator *pManipulator ) override;
 	// обновляет позиции в сцене
-	bool UpdateScene( IEditorScene *pEditorScene );
+	bool UpdateScene( IEditorScene *pEditorScene ) override;
 	// обновляет позиции в базе данных
-	bool UpdateDB( bool bUpdateLinkedObjects, CObjectBaseController *pObjectController, IManipulator *pManipulator );
+	bool
+	UpdateDB( bool bUpdateLinkedObjects, CObjectBaseController *pObjectController, IManipulator *pManipulator ) override;
 
-	bool RemoveFromDB( CObjectBaseController *pObjectController, IManipulator *pManipulator )
+	bool RemoveFromDB( CObjectBaseController *pObjectController, IManipulator *pManipulator ) override
 	{
 		return true;
 	}
@@ -201,7 +202,7 @@ public:
 	             IEditorScene *pEditorScene,
 	             bool bUpdateDB,
 	             CObjectBaseController *pObjectController,
-	             IManipulator *pManipulator );
+	             IManipulator *pManipulator ) override;
 
 	// проверить на возможность создания линка для этого объекта
 	bool CheckLinkCapability( unsigned nSceneObjectIDLinkTo )
@@ -213,7 +214,7 @@ public:
 	bool InsertLink( bool bUpdateDB,
 	                 unsigned nSceneObjectIDLinkTo,
 	                 CObjectBaseController *pObjectController,
-	                 IManipulator *pManipulator )
+	                 IManipulator *pManipulator ) override
 	{
 		return true;
 	}
@@ -222,31 +223,35 @@ public:
 	bool RemoveLinks( bool bUpdateLinkedObjects,
 	                  bool bUpdateDB,
 	                  CObjectBaseController *pObjectController,
-	                  IManipulator *pManipulator )
+	                  IManipulator *pManipulator ) override
 	{
 		return true;
 	}
 
 	// Удалить линки у объекта, после вызова этого метода объект ни накого не ссылается
-	bool RemoveLinkTo( bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator )
+	bool RemoveLinkTo( bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator ) override
 	{
 		return true;
 	}
 
 	//
-	void UpdateByController( unsigned nSpotID, unsigned nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator );
+	void UpdateByController( unsigned nSpotID,
+	                         unsigned nFlags,
+	                         IEditorScene *pEditorScene,
+	                         IManipulator *pManipulator ) override;
 	//
-	void CreateSceneObjects( IEditorScene *pEditorScene, IManipulator *pManipulator, bool bUpdateParentStructure );
-	void RemoveFromScene( IEditorScene *pEditorScene, bool bUpdateParentStructure );
+	void
+	CreateSceneObjects( IEditorScene *pEditorScene, IManipulator *pManipulator, bool bUpdateParentStructure ) override;
+	void RemoveFromScene( IEditorScene *pEditorScene, bool bUpdateParentStructure ) override;
 
-	void SetSceneObjectOpacity( IEditorScene *pEditorScene, const float fOpacity ) {}
+	void SetSceneObjectOpacity( IEditorScene *pEditorScene, const float fOpacity ) override {}
 
-	void CopySelf();
-	void PasteLinkIDList( CLinkIDMap *pNew2OldLinkIDMap, CLinkIDMap *pOld2NewLinkIDMap );
+	void CopySelf() override;
+	void PasteLinkIDList( CLinkIDMap *pNew2OldLinkIDMap, CLinkIDMap *pOld2NewLinkIDMap ) override;
 	bool PasteSelf( CLinkIDMap *pNew2OldLinkIDMap,
 	                CLinkIDMap *pOld2NewLinkIDMap,
 	                IEditorScene *pEditorScene,
 	                CObjectBaseController *pObjectController,
-	                IManipulator *pManipulator );
+	                IManipulator *pManipulator ) override;
 };
 }; // namespace NMapInfoEditor

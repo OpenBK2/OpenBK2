@@ -125,9 +125,9 @@ class CTempAttributesTool : public IExportTool
 	}
 
 public:
-	void StartExportTool() {}
+	void StartExportTool() override {}
 
-	void FinishExportTool()
+	void FinishExportTool() override
 	{
 		descsMap.clear();
 	}

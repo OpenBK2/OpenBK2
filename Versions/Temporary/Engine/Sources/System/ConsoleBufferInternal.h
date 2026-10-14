@@ -41,7 +41,7 @@ class CConsoleBuffer : public IConsoleBuffer
 	std::unordered_map<int, SPipeChannel> pipes;
 	int nSlowCompress;
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		if ( saver.IsChecksum() )
 		{
@@ -56,7 +56,7 @@ class CConsoleBuffer : public IConsoleBuffer
 		return 0;
 	}
 
-	~CConsoleBuffer()
+	~CConsoleBuffer() override
 	{
 		DumpLog();
 	}
@@ -75,19 +75,19 @@ public:
 	void Write( const int nStreamID,
 	            const std::wstring &szString,
 	            const uint32_t color = 0xffffffff,
-	            const bool bPersistentMsg = false );
+	            const bool bPersistentMsg = false ) override;
 	// write string to console's stream. doesn't support any locales - just for english text
 	void WriteASCII( const int nStreamID,
 	                 const char *pszString,
 	                 const uint32_t color = 0xffffffff,
-	                 const bool bPersistentMsg = false );
+	                 const bool bPersistentMsg = false ) override;
 
-	void SetLogfile( const char *pszFilename )
+	void SetLogfile( const char *pszFilename ) override
 	{
 		szLogFileName = pszFilename;
 	}
 
-	bool GetNextLine( SConsoleLine *pRes, int *pSequenceID );
+	bool GetNextLine( SConsoleLine *pRes, int *pSequenceID ) override;
 
 	SPipeChannel &GetPipeChannel( int n )
 	{

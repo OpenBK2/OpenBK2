@@ -11,7 +11,7 @@ private:
 protected:
 	CInterfaceMPScreenBase( const std::string &szInterfaceType, const std::string &szBindSection );
 
-	bool StepLocal( bool bAppActive );
+	bool StepLocal( bool bAppActive ) override;
 
 public:
 };

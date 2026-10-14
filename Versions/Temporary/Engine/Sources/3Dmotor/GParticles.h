@@ -25,12 +25,12 @@ class CParticleAnimator : public CPtrFuncBase<CParticleEffect>
 	OBJECT_BASIC_METHODS( CParticleAnimator );
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pTime.Refresh() | pInfo.Refresh() | pPlacement.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 private:
 	float GetRealTime( const STime &time );
@@ -50,7 +50,7 @@ private:
 	bool bLeaveParticlesWhereStarted;
 	bool bPerParticleFog;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &stBeginTime );
 		f.Add( 3, &pInstance );

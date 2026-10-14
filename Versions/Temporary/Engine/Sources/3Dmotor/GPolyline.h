@@ -17,14 +17,14 @@ class CMemGeometry : public CPtrFuncBase<NGfx::CGeometry>
 	ZDATA
 	std::vector<CVec3> points;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &points );
 		return 0;
 	}
 
 protected:
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CMemGeometry() {}

@@ -39,7 +39,7 @@ protected:
 	void NotifyFriends( const int nClientID, const EChatStatus eStatus, const bool bNewClient );
 
 public:
-	bool Segment();
+	bool Segment() override;
 
 	bool ProcessChatPacket( class CChatPacket *pPacket );
 	bool ProcessChatAFKPacket( class CChatAFKPacket *pPacket );
@@ -50,7 +50,7 @@ public:
 	bool ProcessChatChannelByNickPacket( class CChatChannelByNickPacket *pPacket );
 
 	void Initialize();
-	void ReloadConfig();
+	void ReloadConfig() override;
 
 	CChatLobby()
 	{
@@ -59,7 +59,7 @@ public:
 
 	CChatLobby( CClients *_pClients, const std::string &szCfgFileName );
 
-	bool CanBePaused()
+	bool CanBePaused() override
 	{
 		return true;
 	}

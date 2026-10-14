@@ -50,8 +50,8 @@ public:
 	        const NDb::ESoundType eCombatType,
 	        float fMinRadius,
 	        float fMaxRadius );
-	~CSound();
-	int operator&( IBinSaver &saver );
+	~CSound() override;
+	int operator&( IBinSaver &saver ) override;
 
 	// сктолько самплов уже отыграло
 	unsigned int GetSamplesPassed();

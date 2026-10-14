@@ -607,7 +607,7 @@ public:
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MOVIES_EDITOR_WINDOW, this );
 	}
 
-	virtual ~CMoviesEditorWxWindow()
+	~CMoviesEditorWxWindow() override
 	{
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_MOVIES_EDITOR_WINDOW );
 	}
@@ -726,7 +726,7 @@ public:
 
 	//	ICommandHandler -- the channel everything else reaches this window by
 
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override
 	{
 		switch ( nCommandID )
 		{
@@ -782,7 +782,7 @@ public:
 		return false;
 	}
 
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override
 	{
 		NI_ASSERT( pbEnable != 0, "CMoviesEditorWxWindow::UpdateCommand(), pbEnable == 0" );
 		NI_ASSERT( pbCheck != 0, "CMoviesEditorWxWindow::UpdateCommand(), pbCheck == 0" );
@@ -808,7 +808,7 @@ public:
 
 	//	ITimelineHost
 
-	virtual void Notify( SScriptMovieEditorData::EMoviesEditorLastAction eAction )
+	void Notify( SScriptMovieEditorData::EMoviesEditorLastAction eAction ) override
 	{
 		eLastAction = eAction;
 		if ( !bIsDataSetting )
@@ -820,17 +820,17 @@ public:
 		eLastAction = SScriptMovieEditorData::ME_NO_ACTIONS;
 	}
 
-	virtual bool IsTimelineEnabled() const
+	bool IsTimelineEnabled() const override
 	{
 		return bIsSliderEnabled;
 	}
 
-	virtual bool IsPlaying() const
+	bool IsPlaying() const override
 	{
 		return bIsPlaying;
 	}
 
-	virtual void ShowTimelineMenu( wxWindow *pOver, const wxPoint &rAt )
+	void ShowTimelineMenu( wxWindow *pOver, const wxPoint &rAt ) override
 	{
 		// IDM_MAPINFO_CONTEXT_MENU's MI_MOVIES_EDITOR popup, as a wxMenu. The
 		// MFC window tracks the resource menu with the frame as its owner, so
@@ -1145,18 +1145,18 @@ class CWxMoviesEditorView : public NMoviesEditorView::IView
 	bool bCreated = false;
 
 public:
-	virtual ~CWxMoviesEditorView()
+	~CWxMoviesEditorView() override
 	{
 		Destroy();
 	}
 
-	virtual bool Create( IWidget *pPane )
+	bool Create( IWidget *pPane ) override
 	{
 		bCreated = window.Build( pPane );
 		return bCreated;
 	}
 
-	virtual void Destroy()
+	void Destroy() override
 	{
 		if ( bCreated )
 		{
@@ -1166,7 +1166,7 @@ public:
 		}
 	}
 
-	virtual void Show( bool bShow )
+	void Show( bool bShow ) override
 	{
 		if ( bCreated )
 		{
@@ -1174,7 +1174,7 @@ public:
 		}
 	}
 
-	virtual IWidget *GetWidget()
+	IWidget *GetWidget() override
 	{
 		return bCreated ? &window : 0;
 	}

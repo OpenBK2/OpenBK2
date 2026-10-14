@@ -70,12 +70,12 @@ class CAttachedLightEffectTransform : public CFuncBase<SFBTransform>
 {
 	OBJECT_NOCOPY_METHODS( CAttachedLightEffectTransform )
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pBaseTransform.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	ZDATA
@@ -83,7 +83,7 @@ public:
 	SHMatrix mMultiplier;
 	CDGPtr<CCCVec3> pvTranslatePart;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pBaseTransform );
 		f.Add( 3, &mMultiplier );
@@ -112,7 +112,7 @@ class CConstantOffsetTransform : public CFuncBase<SFBTransform>
 	SHMatrix mMultiplier;
 	CDGPtr<CConstantOffsetTransform> pParentTransform;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pBaseTransform );
 		f.Add( 3, &nTargetID );
@@ -124,12 +124,12 @@ class CConstantOffsetTransform : public CFuncBase<SFBTransform>
 	}
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pBaseTransform.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CConstantOffsetTransform()
@@ -158,7 +158,7 @@ class CCenterOffsetTransform : public CFuncBase<SFBTransform>
 	SHMatrix mMultiplier;
 	SHMatrix mMultiplierInv;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pBaseTransform );
 		f.Add( 3, &nTargetID );
@@ -168,12 +168,12 @@ class CCenterOffsetTransform : public CFuncBase<SFBTransform>
 	}
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pBaseTransform.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CCenterOffsetTransform()

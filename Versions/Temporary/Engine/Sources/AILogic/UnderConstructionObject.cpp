@@ -45,7 +45,7 @@ public:
 		bEntries2 = true;
 	}
 
-	virtual bool AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry )
+	bool AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry ) override
 	{
 		if ( bEntries2 )
 		{

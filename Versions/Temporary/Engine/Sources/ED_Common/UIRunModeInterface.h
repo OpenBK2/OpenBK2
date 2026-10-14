@@ -16,11 +16,11 @@ public:
 	                     const CDBID &rDBID,
 	                     const CDBID &rTemplateWindowDBID,
 	                     const CDBID &rTemplateScreenDBID );
-	virtual ~CUIRunModeInterface();
+	~CUIRunModeInterface() override;
 
 	// IInterfaceBase
-	bool ProcessEvent( const struct SGameMessage &msg );
-	void Step( bool bAppActive );
+	bool ProcessEvent( const struct SGameMessage &msg ) override;
+	void Step( bool bAppActive ) override;
 
 	// methods
 protected:

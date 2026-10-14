@@ -65,8 +65,8 @@ class CFileTexture : public CResourceLoader<STextureKey, NGfx::CTexture>
 	CObj<CFileRequest> pRequest;
 
 protected:
-	virtual void Recalc();
-	virtual bool NeedUpdate();
+	void Recalc() override;
+	bool NeedUpdate() override;
 
 public:
 	CFileTexture()
@@ -87,7 +87,7 @@ class CFileCubeTexture : public CResourceLoader<CDBPtr<NDb::SCubeTexture>, NGfx:
 	OBJECT_BASIC_METHODS( CFileCubeTexture );
 
 protected:
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	void CreateChecker();
@@ -99,14 +99,14 @@ class CColorTexture : public CPtrFuncBase<NGfx::CTexture>
 	ZDATA
 	CVec4 vColor;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &vColor );
 		return 0;
 	}
 
 protected:
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CColorTexture() {}

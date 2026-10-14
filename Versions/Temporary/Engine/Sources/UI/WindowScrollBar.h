@@ -28,42 +28,42 @@ class CWindowScrollBar : public CWindow, public ISlider, public IButtonNotify, p
 	void UpdateButtons();
 
 protected:
-	NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
 
 public:
-	int operator&( struct IBinSaver &saver );
-	void Reposition( const CTRect<float> &parentRect );
-	void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	int operator&( struct IBinSaver &saver ) override;
+	void Reposition( const CTRect<float> &parentRect ) override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 
-	void Init();
-	void Segment( const int timeDiff );
-	void AfterLoad();
+	void Init() override;
+	void Segment( const int timeDiff ) override;
+	void AfterLoad() override;
 
 	//IButtonNotify
-	void Released( class CWindow *pWho );
-	void Pushed( class CWindow *pWho );
-	void Entered( class CWindow *pWho );
-	void Leaved( class CWindow *pWho );
+	void Released( class CWindow *pWho ) override;
+	void Pushed( class CWindow *pWho ) override;
+	void Entered( class CWindow *pWho ) override;
+	void Leaved( class CWindow *pWho ) override;
 
-	void StateChanged( class CWindow *pWho ) {}
+	void StateChanged( class CWindow *pWho ) override {}
 
-	void AllowMouseScrolling( const bool _bAllow );
+	void AllowMouseScrolling( const bool _bAllow ) override;
 
-	bool IsLeverVisible() const;
+	bool IsLeverVisible() const override;
 
-	void SetRange( const float fMin, const float fMax, const float fPageSize );
-	void GetRange( float *pMax, float *pMin ) const;
-	void SetPos( const float fCur );
-	float GetPos() const;
-	void SetNotifySink( struct ISliderNotify *pNotify );
-	bool IsHorisontal() const;
-	void SliderPosition( const float fPosition, class CWindow *pWho );
+	void SetRange( const float fMin, const float fMax, const float fPageSize ) override;
+	void GetRange( float *pMax, float *pMin ) const override;
+	void SetPos( const float fCur ) override;
+	float GetPos() const override;
+	void SetNotifySink( struct ISliderNotify *pNotify ) override;
+	bool IsHorisontal() const override;
+	void SliderPosition( const float fPosition, class CWindow *pWho ) override;
 
-	virtual int GetNSpecialPositions();
-	virtual int GetCurrentSpecialPosition() const;
-	void SetNSpecialPositions( int nPositions );
-	void SetSpecialPosition( int nPosition );
+	int GetNSpecialPositions() override;
+	int GetCurrentSpecialPosition() const override;
+	void SetNSpecialPositions( int nPositions ) override;
+	void SetSpecialPosition( int nPosition ) override;
 };

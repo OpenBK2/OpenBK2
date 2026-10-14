@@ -139,22 +139,25 @@ public:
 		return bIncludeOutline ? sInkBounds : sLetterBounds;
 	}
 
-	void Generate();
+	void Generate() override;
 
-	void DynamicGenerate( const SReflowInfo &sInfo ) {}
+	void DynamicGenerate( const SReflowInfo &sInfo ) override {}
 
-	const CTPoint<float> &GetSize() const;
+	const CTPoint<float> &GetSize() const override;
 
-	const SState &GetState() const;
-	void SetState( const SState &sState );
+	const SState &GetState() const override;
+	void SetState( const SState &sState ) override;
 
-	const CTPoint<float> &GetPosition() const;
-	void SetPosition( const CTPoint<float> &sPosition );
+	const CTPoint<float> &GetPosition() const override;
+	void SetPosition( const CTPoint<float> &sPosition ) override;
 
-	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow );
-	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
+	void Render( std::list<CTRect<float>> *pRender,
+	             const CTPoint<float> &sGlobalPosition,
+	             const CTRect<float> &sWindow ) override;
+	void
+	Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) override;
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 IMLObject *CreateIMLTextObject( CMLStream *pStream, int nStart, int nSize )
@@ -386,22 +389,25 @@ public:
 
 	CMLImageObject( NDb::STexture *pTexture, SState::EHORAlign eAlign, int nBorder, int nWidth, int nHeight );
 
-	void Generate();
+	void Generate() override;
 
-	void DynamicGenerate( const SReflowInfo &sInfo ) {}
+	void DynamicGenerate( const SReflowInfo &sInfo ) override {}
 
-	const CTPoint<float> &GetSize() const;
+	const CTPoint<float> &GetSize() const override;
 
-	const SState &GetState() const;
-	void SetState( const SState &sState );
+	const SState &GetState() const override;
+	void SetState( const SState &sState ) override;
 
-	const CTPoint<float> &GetPosition() const;
-	void SetPosition( const CTPoint<float> &sPosition );
+	const CTPoint<float> &GetPosition() const override;
+	void SetPosition( const CTPoint<float> &sPosition ) override;
 
-	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow );
-	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
+	void Render( std::list<CTRect<float>> *pRender,
+	             const CTPoint<float> &sGlobalPosition,
+	             const CTRect<float> &sWindow ) override;
+	void
+	Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) override;
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 IMLObject *
@@ -523,25 +529,29 @@ private:
 public:
 	CMLTabObject();
 
-	void Generate() {}
+	void Generate() override {}
 
-	void DynamicGenerate( const SReflowInfo &sInfo );
+	void DynamicGenerate( const SReflowInfo &sInfo ) override;
 
-	const CTPoint<float> &GetSize() const;
+	const CTPoint<float> &GetSize() const override;
 
-	const SState &GetState() const;
-	void SetState( const SState &sState );
+	const SState &GetState() const override;
+	void SetState( const SState &sState ) override;
 
-	const CTPoint<float> &GetPosition() const;
-	void SetPosition( const CTPoint<float> &sPosition );
+	const CTPoint<float> &GetPosition() const override;
+	void SetPosition( const CTPoint<float> &sPosition ) override;
 
-	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow )
+	void Render( std::list<CTRect<float>> *pRender,
+	             const CTPoint<float> &sGlobalPosition,
+	             const CTRect<float> &sWindow ) override
 	{
 	}
 
-	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) {}
+	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) override
+	{
+	}
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 IMLObject *CreateIMLTabObject()
@@ -642,15 +652,15 @@ protected:
 public:
 	CMLLayout();
 
-	void AddObject( IMLObject *pObject );
-	void AddCommand( ECommand eCommand, IMLObject *pObject = 0 );
+	void AddObject( IMLObject *pObject ) override;
+	void AddCommand( ECommand eCommand, IMLObject *pObject = 0 ) override;
 
-	const CTPoint<float> &GetSize() const;
+	const CTPoint<float> &GetSize() const override;
 
-	const SState &GetState();
-	void SetState( const SState &sState );
-	void PushState();
-	void PopState();
+	const SState &GetState() override;
+	void SetState( const SState &sState ) override;
+	void PushState() override;
+	void PopState() override;
 
 	bool IsSingleLine() const
 	{
@@ -662,12 +672,14 @@ public:
 		return bIncludeOutline ? sInkBounds : sLetterBounds;
 	}
 
-	void Generate( float fWidth );
+	void Generate( float fWidth ) override;
 
-	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
-	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
+	void
+	Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) override;
+	void
+	Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) override;
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 CMLLayout::CMLLayout()
@@ -1070,18 +1082,18 @@ public:
 		pFontScaleWindow = pWindow;
 	}
 
-	void SetText( const std::wstring &wsText, int nFlags );
-	void SetHandler( const std::wstring &wsTAG, IMLHandler *pHandler );
-	void SetIDForHandler( int nID );
-	int GetIDForHandler() const;
-	void SetFade( float fFade );
+	void SetText( const std::wstring &wsText, int nFlags ) override;
+	void SetHandler( const std::wstring &wsTAG, IMLHandler *pHandler ) override;
+	void SetIDForHandler( int nID ) override;
+	int GetIDForHandler() const override;
+	void SetFade( float fFade ) override;
 
-	CMLStream *GetStream()
+	CMLStream *GetStream() override
 	{
 		return pStream;
 	}
 
-	const CTPoint<int> &GetSize();
+	const CTPoint<int> &GetSize() override;
 
 	CTPoint<int> GetPreferredSize() override
 	{
@@ -1089,17 +1101,19 @@ public:
 		return sPreferredSize;
 	}
 
-	bool IsSingleLine();
+	bool IsSingleLine() override;
 	CTPoint<float> FitToBox( const CTRect<float> &sBox, bool bCenterSingleLine, const CTRect<float> *pClip ) override;
 	bool
 	HasVisibleTextOutside( const CTPoint<float> &sPosition, const CTRect<float> &sBox, bool bIncludeOutline ) override;
 
-	void Generate( int nWidth );
+	void Generate( int nWidth ) override;
 
-	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
-	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
+	void
+	Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) override;
+	void
+	Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) override;
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 CML::CML()

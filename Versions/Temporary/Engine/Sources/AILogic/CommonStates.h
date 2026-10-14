@@ -71,7 +71,7 @@ protected:
 	bool bFinish = {};
 	bool bAllowMove = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CFreeFireManager *)this );
 		f.Add( 2, (CStandartBehaviour *)this );
@@ -133,33 +133,33 @@ public:
 
 	CMechAttackUnitState( class CAIUnit *pOwner, class CAIUnit *pEnemy, bool bAim, const bool bSwarmAttack );
 
-	virtual void Segment();
+	void Segment() override;
 
 	class CAIUnit *GetTarget() const
 	{
 		return pEnemy;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return true;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttacksUnit() const
+	bool IsAttacksUnit() const override
 	{
 		return true;
 	}
 
-	class CAIUnit *GetTargetUnit() const
+	class CAIUnit *GetTargetUnit() const override
 	{
 		return GetTarget();
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_ATTACK_UNIT;
 	}
@@ -190,7 +190,7 @@ protected:
 	bool bSwarmAttack = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CFreeFireManager *)this );
 		f.Add( 2, &eState );
@@ -226,26 +226,26 @@ public:
 	                                  bool bAim,
 	                                  const bool bSwarmAttack );
 
-	virtual void Segment();
+	void Segment() override;
 
 	CSoldier *GetTarget() const
 	{
 		return pTarget;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return true;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 
-	virtual bool IsAttacksUnit() const
+	bool IsAttacksUnit() const override
 	{
 		return true;
 	}
 
-	CAIUnit *GetTargetUnit() const;
+	CAIUnit *GetTargetUnit() const override;
 };
 
 class CCommonAttackCommonStatObjState : public IUnitAttackingState, public CFreeFireManager
@@ -267,7 +267,7 @@ protected:
 	bool bSwarmAttack = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CFreeFireManager *)this );
 		f.Add( 2, &nStartObjParty );
@@ -291,31 +291,31 @@ public:
 
 	CCommonAttackCommonStatObjState( class CAIUnit *pOwner, class CStaticObject *pObj, bool bSwarmAttack );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_ATTACK_STAT_OBJECT;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return true;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 
 	class CStaticObject *GetTarget() const
 	{
 		return pObj;
 	}
 
-	virtual bool IsAttacksUnit() const
+	bool IsAttacksUnit() const override
 	{
 		return true;
 	}
 
-	virtual class CAIUnit *GetTargetUnit() const
+	class CAIUnit *GetTargetUnit() const override
 	{
 		return 0;
 	}
@@ -341,7 +341,7 @@ class CCommonRestState : public IUnitState, public CStandartBehaviour
 	NTimer::STime timeToFinishState = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStandartBehaviour *)this );
 		f.Add( 2, &pUnit );
@@ -363,22 +363,22 @@ public:
 
 	CCommonRestState( const CVec2 &guardPoint, const uint16_t wDir, CCommonUnit *pUnit, const float fTimeToWait );
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_REST;
 	}
 
-	virtual bool IsRestState() const;
+	bool IsRestState() const override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return guardPoint;
 	}
@@ -410,7 +410,7 @@ class CMechUnitRestState : public CCommonRestState
 	bool bFinishWhenCanMove = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CCommonRestState *)this );
 		f.Add( 2, &pUnit );
@@ -438,15 +438,15 @@ public:
 	                    const bool bFinishWnenCanMove,
 	                    const float fTimeToWait );
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_REST;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
@@ -481,7 +481,7 @@ private:
 	CPtr<CBasicGun> pGun;
 	CPtr<CAIUnit> pTarget;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStandartBehaviour *)this );
 		f.Add( 2, &pUnit );
@@ -505,20 +505,20 @@ public:
 
 	CCommonAmbushState( class CCommonUnit *pUnit );
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_AMBUSH;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 
 	CAIUnit *GetTarget() const
 	{
@@ -540,7 +540,7 @@ class CFollowState : public IUnitState, public CStandartBehaviour
 	CVec2 lastHeadUnitPos;
 	NTimer::STime lastCheck = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStandartBehaviour *)this );
 		f.Add( 2, &pUnit );
@@ -557,15 +557,15 @@ public:
 
 	CFollowState( class CCommonUnit *pUnit, class CCommonUnit *pHeadUnit );
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 };
 
 class CCommonSwarmState : public IUnitState, public CStatusUpdatesHelper
@@ -593,7 +593,7 @@ class CCommonSwarmState : public IUnitState, public CStatusUpdatesHelper
 	bool bContinue = {};
 	SAIAngle wDirToPoint;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStatusUpdatesHelper *)this );
 		f.Add( 2, &state );
@@ -615,20 +615,20 @@ public:
 
 	CCommonSwarmState( class CAIUnit *pUnit, const CVec2 &point, const float fContinue );
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_SWARM;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return point;
 	}
@@ -652,7 +652,7 @@ class CCommonMoveToGridState : public IUnitState
 
 	EStates eState = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		f.Add( 3, &vPoint );
@@ -673,21 +673,21 @@ public:
 
 	CCommonMoveToGridState( class CCommonUnit *pUnit, const CVec2 &vPoint, const CVec2 &vDir );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_MOVE_TO_GRID;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return vPoint;
 	}
@@ -702,7 +702,7 @@ class CMoveByFormationState : public IUnitState
 	int nExecutorID = {};
 	bool bNeedIdleNotification = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		f.Add( 3, &nExecutorID );
@@ -722,21 +722,21 @@ public:
 
 	CMoveByFormationState( CCommonUnit *pUnit, const int nExecutorID );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_MOVE_BY_FORMATION;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return VNULL2;
 	}
@@ -785,29 +785,29 @@ public:
 
 	CCommonPatrolState() {}
 
-	virtual void Segment() {}
+	void Segment() override {}
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand )
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override
 	{
 		return TSIR_YES_IMMIDIATELY;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_PATROL;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return VNULL2;
 	}
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		return 0;
 	}

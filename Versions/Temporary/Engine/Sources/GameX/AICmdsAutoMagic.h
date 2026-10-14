@@ -12,7 +12,7 @@ class CAICmdsAutomagic : public IAICmdsAutoMagic
 	std::unordered_map<int, uint8_t> msg2byte;
 	std::vector<int> byte2msg;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &msg2byte );
 		f.Add( 3, &byte2msg );
@@ -21,10 +21,10 @@ class CAICmdsAutomagic : public IAICmdsAutoMagic
 
 public:
 	CAICmdsAutomagic();
-	virtual int GetCommandID( CObjectBase *p );
-	virtual CObjectBase *MakeCommand( int nID );
+	int GetCommandID( CObjectBase *p ) override;
+	CObjectBase *MakeCommand( int nID ) override;
 
-	virtual int GetIDSize() const
+	int GetIDSize() const override
 	{
 		return 1;
 	}

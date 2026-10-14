@@ -28,19 +28,19 @@ class CFormationsState : public CDefaultInputState, public ICommandHandler
 	void ClearMaskManipulator();
 
 	//IInputState interface
-	void Enter();
-	void Leave();
+	void Enter() override;
+	void Leave() override;
 
-	void Draw( IPaintContext *pPaintDC ) {}
+	void Draw( IPaintContext *pPaintDC ) override {}
 
-	void PostDraw( IPaintContext *pPaintDC );
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void PostDraw( IPaintContext *pPaintDC ) override;
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 
 	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 
 	// CFormationsState
 	bool GetFormationWindowDialogData( SFormationWindowDialogData *pData );
@@ -50,7 +50,7 @@ class CFormationsState : public CDefaultInputState, public ICommandHandler
 public:
 	CFormationsState( CSquadEditor *_pSquadEditor = 0 );
 
-	virtual ~CFormationsState() {}
+	~CFormationsState() override {}
 
 	int LoadModel( const NDb::SModel *pModel, const CVec3 &rvPosition );
 	void RefreshState( bool bForce );

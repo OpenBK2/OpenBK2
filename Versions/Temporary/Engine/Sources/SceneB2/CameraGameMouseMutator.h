@@ -22,14 +22,14 @@ public:
 	CCameraGameMouseMutator();
 	void SetDistance( float fDistance ) override;
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return true;
 	}
 
-	void Recalc();
+	void Recalc() override;
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -65,7 +65,7 @@ class CInterfaceMPStatistics : public CInterfaceMPScreenBase, public IProgrammed
 
 	bool bWasLadderGame;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &pMPConsts );
@@ -118,11 +118,11 @@ private:
 public:
 	CInterfaceMPStatistics();
 
-	bool Init();
+	bool Init() override;
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 	//}
 };
 
@@ -130,9 +130,9 @@ class CICMPStatistics : public CInterfaceCommandBase<CInterfaceMPStatistics>
 {
 	OBJECT_BASIC_METHODS( CICMPStatistics );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

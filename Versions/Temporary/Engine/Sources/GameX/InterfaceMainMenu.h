@@ -13,7 +13,7 @@ class CInterfaceMainMenu : public CInterfaceScreenBase, public CProgrammedReacti
 	CPtr<IButton> pTutorialBtn;
 	CPtr<IButton> pLoadGameBtn;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &pMainWnd );
@@ -48,14 +48,14 @@ public:
 	CInterfaceMainMenu();
 
 	//
-	bool Init();
+	bool Init() override;
 
-	void OnGetFocus( bool bFocus );
-	bool StepLocal( bool bAppActive );
+	void OnGetFocus( bool bFocus ) override;
+	bool StepLocal( bool bAppActive ) override;
 
 	void RegisterObservers();
 
-	bool IsModal();
+	bool IsModal() override;
 };
 
 class CICMainMenu : public CInterfaceCommandBase<CInterfaceMainMenu>
@@ -65,7 +65,7 @@ class CICMainMenu : public CInterfaceCommandBase<CInterfaceMainMenu>
 	ZDATA_( CInterfaceCommandBase<CInterfaceMainMenu> )
 	std::string szConfig;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceMainMenu> *)this );
 		f.Add( 2, &szConfig );
@@ -73,11 +73,11 @@ class CICMainMenu : public CInterfaceCommandBase<CInterfaceMainMenu>
 	}
 
 private:
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };
 
 //INTERFACE_COMMAND_DECLARE( CICMainMenu, CInterfaceMainMenu );

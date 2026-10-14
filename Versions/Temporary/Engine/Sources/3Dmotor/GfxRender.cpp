@@ -32,17 +32,17 @@ public:
 	{
 	}
 
-	virtual void Start()
+	void Start() override
 	{
 		pQuery->Issue( D3DISSUE_BEGIN );
 	}
 
-	virtual void Finish()
+	void Finish() override
 	{
 		pQuery->Issue( D3DISSUE_END );
 	}
 
-	virtual int GetData()
+	int GetData() override
 	{
 		int nRes = 10000;
 		for ( ;; )
@@ -56,7 +56,7 @@ public:
 		return nRes;
 	}
 
-	virtual void Flush()
+	void Flush() override
 	{
 		int nRes;
 		pQuery->GetData( &nRes, sizeof( nRes ), D3DGETDATA_FLUSH );

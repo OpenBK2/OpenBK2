@@ -37,8 +37,8 @@ class CHeightTileStateV3 : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 };
 
 class CHeightUpStateV3 : public CDefaultInputState
@@ -55,10 +55,10 @@ class CHeightUpStateV3 : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 };
 
 class CHeightDownStateV3 : public CDefaultInputState
@@ -75,10 +75,10 @@ class CHeightDownStateV3 : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 };
 
 class CHeightRoundStateV3 : public CDefaultInputState
@@ -95,10 +95,10 @@ class CHeightRoundStateV3 : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 };
 
 class CHeightPlatoStateV3 : public CDefaultInputState
@@ -115,10 +115,10 @@ class CHeightPlatoStateV3 : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 };
 
 class CHeightStateV3 : public CMultiInputState, public ICommandHandler
@@ -240,23 +240,23 @@ private:
 
 protected:
 	//IInputState interface
-	void Enter();
-	void Leave();
-	void Draw( IPaintContext *pPaintDC );
+	void Enter() override;
+	void Leave() override;
+	void Draw( IPaintContext *pPaintDC ) override;
 	//
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	void OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
+	void OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
 
 	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 
 public:
 	CHeightStateV3( CMapInfoEditor *_pMapInfoEditor = 0 )
@@ -312,7 +312,7 @@ public:
 	}
 
 	//
-	~CHeightStateV3()
+	~CHeightStateV3() override
 	{
 		if ( pStoreInputState )
 		{

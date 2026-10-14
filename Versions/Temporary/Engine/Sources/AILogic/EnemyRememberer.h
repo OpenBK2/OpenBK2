@@ -13,7 +13,7 @@ class CEnemyRememberer : public CAIObjectBase
 	int timeBeforeForget = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &vPosition );
 		f.Add( 3, &timeLastSeen );

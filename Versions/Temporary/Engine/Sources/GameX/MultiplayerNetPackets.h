@@ -15,7 +15,7 @@ public:
 	int nSlot = {};
 	SMPSlot info;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nSlot );
 		f.Add( 3, &info );
@@ -40,7 +40,7 @@ public:
 	ZDATA
 	SB2GameSpecificData info;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &info );
 		return 0;
@@ -72,7 +72,7 @@ public:
 	std::vector<SShortSlotInfo> slots;
 	std::vector<uint8_t> slotRehash;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &slots );
 		f.Add( 3, &slotRehash );
@@ -95,7 +95,7 @@ public:
 	ZDATA
 	uint8_t nSlotToKick = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nSlotToKick );
 		return 0;
@@ -119,7 +119,7 @@ public:
 	int nPlayer = {};
 	int nTimeLeft = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nPlayer );
 		f.Add( 3, &nTimeLeft );
@@ -144,7 +144,7 @@ public:
 	ZDATA
 	bool bPaused = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &bPaused );
 		return 0;
@@ -175,7 +175,7 @@ public:
 	uint8_t nSlotToDrop = {};
 	int nSegment = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nSlotToDrop );
 		f.Add( 3, &nSegment );

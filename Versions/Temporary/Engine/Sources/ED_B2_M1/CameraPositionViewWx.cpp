@@ -43,7 +43,7 @@ public:
 		Singleton<ICommandHandlerContainer>()->Set( CHID_CAMERA_POSITION_WINDOW, this );
 	}
 
-	virtual ~CCameraPositionWxWindow()
+	~CCameraPositionWxWindow() override
 	{
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_CAMERA_POSITION_WINDOW );
 	}
@@ -95,7 +95,7 @@ public:
 	}
 
 	//	CCameraPositionCommands
-	virtual void GetDialogData( SCameraPositionWindowData *pData )
+	void GetDialogData( SCameraPositionWindowData *pData ) override
 	{
 		if ( bIsDataSetting || pData == 0 )
 		{
@@ -110,7 +110,7 @@ public:
 		pData->bAllParams = pAllParams->GetValue();
 	}
 
-	virtual void SetDialogData( const SCameraPositionWindowData *pData )
+	void SetDialogData( const SCameraPositionWindowData *pData ) override
 	{
 		if ( pData == 0 )
 		{

@@ -76,7 +76,7 @@ struct SMPUIMessage : public CObjectBase
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	EMPUIMessageType eMessageType = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eMessageType );
 		return 0;
@@ -139,7 +139,7 @@ public:
 	std::wstring wszPassword;
 	bool bRememberPassword = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &wszLogin );
@@ -168,7 +168,7 @@ public:
 	int nGameID = {};
 	std::string szPassword;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &nGameID );
@@ -233,7 +233,7 @@ public:
 	std::list<SUIGameInfo> gamesAddChange;
 	std::list<int> gamesRemoved;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &bSendUpdates );
@@ -265,7 +265,7 @@ public:
 	SB2GameSpecificData specificInfo; // Specific info
 	std::string szPassword;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &info );
@@ -289,7 +289,7 @@ public:
 	int nSlot = {};
 	SMPSlot info;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &nSlot );
@@ -326,7 +326,7 @@ public:
 	int nOwnSlot = {};
 	SB2GameSpecificData specificInfo; // Specific info
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &eResult );
@@ -358,7 +358,7 @@ public:
 	uint32_t dwLaggingPlayers = {};
 	bool bInitialWait = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &dwLaggingPlayers );
@@ -398,7 +398,7 @@ public:
 	int nOwnTimeLeft = {};
 	CLaggerList lags;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &bOwnLag );
@@ -432,7 +432,7 @@ public:
 	std::list<int> maps;
 	std::list<int> techLevels;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &nCountry );
@@ -458,7 +458,7 @@ public:
 	bool bSuccess = {};
 	std::string szTextTag;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &bSuccess );
@@ -488,7 +488,7 @@ public:
 	ZDATA_( SMPUIMessage )
 	std::wstring wszText;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &wszText );
@@ -517,7 +517,7 @@ public:
 	std::wstring wszText;
 	bool bPrivate = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &szName );
@@ -555,7 +555,7 @@ public:
 	ZDATA_( SMPUIMessage )
 	std::string szChannel;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &szChannel );
@@ -582,7 +582,7 @@ public:
 	ZDATA_( SMPUIMessage )
 	std::list<std::string> channels;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &channels );
@@ -610,7 +610,7 @@ public:
 	std::list<std::string> nicks;
 	EListType eType = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &nicks );
@@ -641,7 +641,7 @@ public:
 	EMPChatStatus eStatus = {};
 	bool bFriend = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &szNick );
@@ -673,7 +673,7 @@ public:
 	std::string szNick;
 	bool bShort = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &szNick );
@@ -703,7 +703,7 @@ public:
 	int nLevel = {};
 	std::wstring wszRank;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &nLevel );
@@ -733,7 +733,7 @@ public:
 	std::string szNick;
 	EAction eAction = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &szNick );
@@ -776,7 +776,7 @@ public:
 	int nExpTotal2 = {};
 	std::vector<CDBPtr<NDb::SMedal>> medals;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &bShowLadderInfo );
@@ -815,7 +815,7 @@ public:
 	std::wstring wszCDKey;
 	std::wstring wszEmail;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &wszName );
@@ -852,7 +852,7 @@ public:
 	SLadderStatistics info;
 	int nRank = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &info );
@@ -886,7 +886,7 @@ public:
 	ZDATA_( SMPUIMessage )
 	EState eState = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &eState );
@@ -914,7 +914,7 @@ public:
 	std::wstring wszText;
 	bool bTeamOnly = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SMPUIMessage *)this );
 		f.Add( 2, &wszText );

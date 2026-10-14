@@ -20,7 +20,7 @@ class SCENEB2_EXPORT CLaserMarkTrace : public CPtrFuncBase<NGScene::CObjectInfo>
 	CDGPtr<CFuncBase<STime>> pTimer;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &vStart );
 		f.Add( 3, &vEnd );
@@ -30,9 +30,9 @@ public:
 	}
 
 protected:
-	void Recalc();
+	void Recalc() override;
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pTimer != 0 ? pTimer.Refresh() : false;
 	}

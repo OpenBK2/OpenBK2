@@ -25,7 +25,7 @@ public:
 	         const int &_nPort,
 	         const int &_nNetVersion );
 
-	bool Segment();
+	bool Segment() override;
 
 	bool ProcessConnectServerResult( class CConnectServerPacket *pPacket );
 };

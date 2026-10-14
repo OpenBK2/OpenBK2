@@ -112,7 +112,7 @@ public:
 	std::vector<CPtr<ISomePart>> parts;
 	CSrcPosHash srcPositions;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &mapInfo );
 		f.Add( 3, &targetParts );
@@ -142,7 +142,7 @@ class CDecal : public CObjectBase
 	std::vector<CMObj<CObjectBase>> decals;
 	CObj<IMaterial> pMaterial;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &pOwner );
 		f.Add( 3, &pTarget );
@@ -155,7 +155,7 @@ public:
 	CDecal() {}
 
 	CDecal( CDecalsManager *_pOwner, CDecalTarget *_pTarget, IMaterial *_pMaterial );
-	~CDecal();
+	~CDecal() override;
 	bool OnCreate( IDecalQuery *pScene, ISomePart *pNew, const SSrcPosInfo &tp );
 	void Walk();
 
@@ -187,7 +187,7 @@ class CDecalsManager : public CObjectBase
 	CPerUserHash decalsPerUser;
 
 public:
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &pScene );
 		f.Add( 3, &decalsPerUser );

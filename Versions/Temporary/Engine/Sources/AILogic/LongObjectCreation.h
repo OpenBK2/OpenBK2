@@ -15,7 +15,7 @@ class CLongObjectCreation : public CLinkObject
 	int nPlayer = {};
 	bool bAllowAIModification = {}; // if false, then class must not change anything in AI.
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CLinkObject *)this );
 		f.Add( 2, &fWorkAccumulated );
@@ -25,7 +25,7 @@ public:
 	}
 
 protected:
-	const uint8_t GetPlayer() const
+	const uint8_t GetPlayer() const override
 	{
 		return nPlayer;
 	}

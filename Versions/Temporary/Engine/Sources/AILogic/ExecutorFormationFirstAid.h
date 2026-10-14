@@ -10,20 +10,20 @@ class CExecutorFormationFirstAid : public CExecutorUnitBase
 	CPtr<CFormation> pFormation;
 
 	// if 0 then ability must be switched off
-	float OnAbilityActive();
+	float OnAbilityActive() override;
 
 	// if 1.0 then ability is ready to on
-	float OnAbilityOff();
+	float OnAbilityOff() override;
 
-	void SwitchingOffEnd() {}
+	void SwitchingOffEnd() override {}
 
-	void SwitchingOffStart();
+	void SwitchingOffStart() override;
 
-	void SwitchOnEnd();
-	void SwitchOnStart( const class CAICommand *pCommand );
-	bool ActivateDuringDisable();
+	void SwitchOnEnd() override;
+	void SwitchOnStart( const class CAICommand *pCommand ) override;
+	bool ActivateDuringDisable() override;
 
-	CCommonUnit *GetUnit();
+	CCommonUnit *GetUnit() override;
 
 	const bool IsValidInternal() const;
 
@@ -32,9 +32,9 @@ public:
 
 	CExecutorFormationFirstAid() {}
 
-	int Segment();
-	bool NotifyEvent( const CExecutorEvent &event );
-	bool IsExecutorValid() const;
-	void RegisterOnEvents( IExecutorContainer *pContainer );
-	int operator&( IBinSaver &saver );
+	int Segment() override;
+	bool NotifyEvent( const CExecutorEvent &event ) override;
+	bool IsExecutorValid() const override;
+	void RegisterOnEvents( IExecutorContainer *pContainer ) override;
+	int operator&( IBinSaver &saver ) override;
 };

@@ -16,7 +16,7 @@ class CRegisterGroupCommand : public IAILogicCommandB2
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	uint16_t nID = {}; // ID of the group
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &unitsIDs );
 		f.Add( 3, &nID );
@@ -29,15 +29,15 @@ public:
 	CRegisterGroupCommand( const std::vector<int> &vIDs, const int nID );
 	//	CRegisterGroupCommand( CObjectBase **pUnitsBuffer, const int nLen, const uint16_t wID, IAILogic *pAILogic );
 	//
-	void Execute();
+	void Execute() override;
 
 	//
-	bool NeedToBeStored() const
+	bool NeedToBeStored() const override
 	{
 		return true;
 	}
 #ifndef _FINALRELEASE
-	virtual std::string GetDebugInfo() const
+	std::string GetDebugInfo() const override
 	{
 		std::string szDebug;
 		szDebug = fmt::format( "GroupID = {}, UnitIDs: ", nID );
@@ -57,7 +57,7 @@ class CUnregisterGroupCommand : public IAILogicCommandB2
 	ZDATA
 	int nGroup = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nGroup );
 		return 0;
@@ -68,15 +68,15 @@ public:
 
 	CUnregisterGroupCommand( const int nGroup );
 	//
-	void Execute();
+	void Execute() override;
 
 	//
-	bool NeedToBeStored() const
+	bool NeedToBeStored() const override
 	{
 		return true;
 	}
 #ifndef _FINALRELEASE
-	virtual std::string GetDebugInfo() const
+	std::string GetDebugInfo() const override
 	{
 		return fmt::format( "UnregisterGroup {}", nGroup );
 	}
@@ -92,7 +92,7 @@ class CB2GroupCommand : public IAILogicCommandB2
 	uint16_t wGroup = {};    // group ID, this command for
 	bool bPlaceInQueue = {}; // do we need place this command in the group's queue
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &command );
 		f.Add( 3, &wGroup );
@@ -105,10 +105,10 @@ public:
 
 	CB2GroupCommand( const SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue );
 	//
-	void Execute();
+	void Execute() override;
 
 	//
-	bool NeedToBeStored() const
+	bool NeedToBeStored() const override
 	{
 		return true;
 	}
@@ -118,7 +118,7 @@ public:
 		return &command;
 	}
 #ifndef _FINALRELEASE
-	virtual std::string GetDebugInfo() const
+	std::string GetDebugInfo() const override
 	{
 		return fmt::format( "GroupCommand CmdID {}, GroupID {}, ({:f},{:f})",
 		                    int( command.nCmdType ),
@@ -138,7 +138,7 @@ class CUnitCommand : public IAILogicCommandB2
 	uint16_t wID = {};  // group ID - result of this command :)
 	int nPlayer = {};   // player number
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &command );
 		f.Add( 3, &wID );
@@ -151,10 +151,10 @@ public:
 
 	CUnitCommand( const struct SAIUnitCmd *pCommand, const uint16_t wID, const int nPlayer );
 	//
-	void Execute();
+	void Execute() override;
 
 	//
-	bool NeedToBeStored() const
+	bool NeedToBeStored() const override
 	{
 		return true;
 	}
@@ -164,7 +164,7 @@ public:
 		return &command;
 	}
 #ifndef _FINALRELEASE
-	virtual std::string GetDebugInfo() const
+	std::string GetDebugInfo() const override
 	{
 		return fmt::format( "UnitCommand CmdID {}, Player {}, ({:f},{:f})",
 		                    int( command.nCmdType ),

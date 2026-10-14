@@ -68,14 +68,14 @@ class CLightmapTexture : public CPtrFuncBase<NGfx::CTexture>
 	CObj<NGScene::CLightmapsLoader> pLD;
 	int nTex;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pLD );
 		f.Add( 3, &nTex );
 		return 0;
 	}
 
-	void Recalc();
+	void Recalc() override;
 
 public:
 	CLightmapTexture( CObj<CLightmapsLoader> _pLD, int _nTex )
@@ -102,7 +102,7 @@ class CLMGeometryGen : public CPtrFuncBase<CObjectInfo>
 	float fLMResolution;
 	bool bDump;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pSrc );
 		f.Add( 3, &bLMCalc );
@@ -112,12 +112,12 @@ class CLMGeometryGen : public CPtrFuncBase<CObjectInfo>
 		return 0;
 	}
 
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pSrc.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CLMGeometryGen()

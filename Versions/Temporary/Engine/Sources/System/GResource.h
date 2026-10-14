@@ -78,7 +78,7 @@ public:
 		key = _key;
 	}
 
-	int operator&( IBinSaver &f )
+	int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, &key );
 		return 0;
@@ -100,7 +100,7 @@ class CResourcePrecache : public IPrecache
 	OBJECT_NOCOPY_METHODS( CResourcePrecache );
 	CDGPtr<T> pStuff;
 
-	int operator&( IBinSaver &f )
+	int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pStuff );
 		if ( f.IsReading() )
@@ -118,12 +118,12 @@ public:
 		TryUpdate();
 	}
 
-	~CResourcePrecache()
+	~CResourcePrecache() override
 	{
 		TryUpdate();
 	}
 
-	bool TryUpdate()
+	bool TryUpdate() override
 	{
 		bool bRes = true;
 		if ( IsValid( pStuff ) )
@@ -134,7 +134,7 @@ public:
 		return bRes;
 	}
 
-	void ForceUpdate()
+	void ForceUpdate() override
 	{
 		if ( IsValid( pStuff ) )
 		{
@@ -324,7 +324,7 @@ protected:
 	virtual CFileRequest *CreateRequest() = 0;
 	virtual void RecalcValue( CFileRequest *p ) = 0;
 
-	virtual void Recalc()
+	void Recalc() override
 	{
 		if ( IsValid( pRequest ) )
 		{
@@ -361,7 +361,7 @@ protected:
 		}
 	}
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		TParent::NeedUpdate();
 		if ( !IsValid( this->pValue ) && IsValid( pRequest ) && pRequest->IsReady() )

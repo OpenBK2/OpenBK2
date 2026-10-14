@@ -59,7 +59,7 @@ class CInterfaceCustomMissions : public CInterfaceScreenBase, public IProgrammed
 	CPtr<ITextView> pMissionDescItemNameView;
 	CPtr<ITextView> pMissionDescItemSeasonView;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &pMainWnd );
@@ -99,14 +99,14 @@ private:
 public:
 	CInterfaceCustomMissions();
 
-	bool Init();
+	bool Init() override;
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 
 public:
-	bool StepLocal( bool bAppActive );
+	bool StepLocal( bool bAppActive ) override;
 
 	//}
 };
@@ -116,10 +116,10 @@ class CICCustomMissions : public CInterfaceCommandBase<CInterfaceCustomMissions>
 {
 	OBJECT_BASIC_METHODS( CICCustomMissions );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };
 #endif // !defined(_SINGLE_DEMO) || defined(_MP_DEMO)

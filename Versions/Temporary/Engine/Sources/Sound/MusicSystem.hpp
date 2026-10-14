@@ -43,7 +43,7 @@ class CMusicSystem : public IMusicSystem
 	int nDesiredPlayList;
 	EPlayListSwitchState eState;
 	CDBPtr<NDb::SMapMusic> pCurrentMapMusic;
-	int operator&( IBinSaver &f );
+	int operator&( IBinSaver &f ) override;
 	void InitDefault();
 
 	void UpdatePlayListChange();
@@ -54,20 +54,20 @@ public:
 		InitDefault();
 	}
 
-	bool IsPaused( EStreamType eType ) const;
-	void OnResetTimer();
-	void Update();
-	void Clear();
-	void SetVolume( EMusicSystemVolume eType, float fVolume );
-	float GetVolume( EMusicSystemVolume eType ) const;
-	void PauseMusic( EMusicSystemVolume eType, bool bPause );
-	void PlayVoice( const NDb::SVoice *pVoice );
-	void Init( const NDb::SMapMusic *pMapMusic, int nActivePlayList );
-	void ChangePlayList( int _nPlayList );
-	bool CanChangePlayList() const;
-	int GetPlayList() const;
+	bool IsPaused( EStreamType eType ) const override;
+	void OnResetTimer() override;
+	void Update() override;
+	void Clear() override;
+	void SetVolume( EMusicSystemVolume eType, float fVolume ) override;
+	float GetVolume( EMusicSystemVolume eType ) const override;
+	void PauseMusic( EMusicSystemVolume eType, bool bPause ) override;
+	void PlayVoice( const NDb::SVoice *pVoice ) override;
+	void Init( const NDb::SMapMusic *pMapMusic, int nActivePlayList ) override;
+	void ChangePlayList( int _nPlayList ) override;
+	bool CanChangePlayList() const override;
+	int GetPlayList() const override;
 
-	int GetNPlayLists() const
+	int GetNPlayLists() const override
 	{
 		return playlists.size();
 	}

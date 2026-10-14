@@ -143,7 +143,7 @@ class CScenarioTracker : public IScenarioTracker
 	bool bIsCustomCampaign = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &playerChapter );
 		f.Add( 3, &enemyChapter );
@@ -214,246 +214,249 @@ private:
 
 public:
 	CScenarioTracker();
-	~CScenarioTracker();
+	~CScenarioTracker() override;
 
 	// objectives
 	// Задания, про которые игрок уже знает
-	int GetKnownObjectiveCount() const;
+	int GetKnownObjectiveCount() const override;
 	// Возвращает ID задания
-	int GetKnownObjectiveID( const int nIndex );
+	int GetKnownObjectiveID( const int nIndex ) override;
 
-	int GetObjectiveCount() const;
-	enum EMissionObjectiveState GetObjectiveState( const int nID ) const;
+	int GetObjectiveCount() const override;
+	enum EMissionObjectiveState GetObjectiveState( const int nID ) const override;
 	// Задание, впервые изменившее состояние из EMOS_WAITING попадает в конец списка известных
-	void SetObjectiveState( const int nID, const EMissionObjectiveState eState );
-	bool GetObjectivePlaces( int nID, std::vector<CVec3> *pPlaces ) const;
-	void SetObjectiveObjects( int nID, const std::vector<CMapObj *> &objects );
-	bool IsDynamicObjective( int nID ) const;
+	void SetObjectiveState( const int nID, const EMissionObjectiveState eState ) override;
+	bool GetObjectivePlaces( int nID, std::vector<CVec3> *pPlaces ) const override;
+	void SetObjectiveObjects( int nID, const std::vector<CMapObj *> &objects ) override;
+	bool IsDynamicObjective( int nID ) const override;
 
 	// reinforcements
-	int GetReinforcementCallsLeft( int nPlayer );
-	void DecreaseReinforcementCallsLeft( int nPlayer, int nCalls );
-	void IncreaseReinforcementCallsLeft( int nPlayer, int nCalls );
-	int GetReinforcementCallsLeftInChapter() const; // Calls left in chapter for player 0, no matter in mission or not
+	int GetReinforcementCallsLeft( int nPlayer ) override;
+	void DecreaseReinforcementCallsLeft( int nPlayer, int nCalls ) override;
+	void IncreaseReinforcementCallsLeft( int nPlayer, int nCalls ) override;
+	int GetReinforcementCallsLeftInChapter()
+			const override; // Calls left in chapter for player 0, no matter in mission or not
 
-	int GetReinforcementCallsOld() const
+	int GetReinforcementCallsOld() const override
 	{
 		return nReinforcementCallsLeftOld;
 	} // Calls left in chapter before last mission, or 0 if just started chapter
 
-	void RegisterReinforcementCall( int nPlayer, NDb::EReinforcementType eType );
+	void RegisterReinforcementCall( int nPlayer, NDb::EReinforcementType eType ) override;
 
-	int GetDifficultyLevel() const
+	int GetDifficultyLevel() const override
 	{
 		return nDifficulty;
 	}
 
-	const NDb::SReinforcement *GetReinforcement( int nPlayer, NDb::EReinforcementType eType ) const;
+	const NDb::SReinforcement *GetReinforcement( int nPlayer, NDb::EReinforcementType eType ) const override;
 
-	float GetReinforcementXP( int nPlayer, NDb::EReinforcementType eType ) const;
-	void SetReinforcementXP( int nPlayer, NDb::EReinforcementType eType, float fXP );
-	int GetReinforcementXPLevel( int nPlayer, NDb::EReinforcementType eType ) const;
-	float GetReinforcementXPForLevel( NDb::EReinforcementType eType, int nXPLevel ) const;
-	virtual bool GiveXP( const int nPlayer, NDb::EReinforcementType eReinf, const int nXP ); // Give to reinf and player
-	virtual bool GiveXPToPlayer( const int nPlayer, const int nXP );                         // Give to player only
+	float GetReinforcementXP( int nPlayer, NDb::EReinforcementType eType ) const override;
+	void SetReinforcementXP( int nPlayer, NDb::EReinforcementType eType, float fXP ) override;
+	int GetReinforcementXPLevel( int nPlayer, NDb::EReinforcementType eType ) const override;
+	float GetReinforcementXPForLevel( NDb::EReinforcementType eType, int nXPLevel ) const override;
+	bool GiveXP( const int nPlayer, NDb::EReinforcementType eReinf, const int nXP ) override; // Give to reinf and player
+	bool GiveXPToPlayer( const int nPlayer, const int nXP ) override;                         // Give to player only
 
-	bool IsCustomMission() const
+	bool IsCustomMission() const override
 	{
 		return pCampaign == 0;
 	}
 
-	bool IsCustomCampaign() const
+	bool IsCustomCampaign() const override
 	{
 		return bIsCustomCampaign;
 	}
 
 	// mission
-	void MissionStart( const NDb::SMapInfo *_pMission, const int nTechLevel = -1 ); // tech level is ignored
-	void CustomMissionStart( const NDb::SMapInfo *pMission, int nDifficulty, bool bTutorial );
+	void MissionStart( const NDb::SMapInfo *_pMission, const int nTechLevel = -1 ) override; // tech level is ignored
+	void CustomMissionStart( const NDb::SMapInfo *pMission, int nDifficulty, bool bTutorial ) override;
 
-	bool IsTutorialMission() const
+	bool IsTutorialMission() const override
 	{
 		return bIsTutorial;
 	}
 
-	void MissionCancel();
-	void MissionWin();
+	void MissionCancel() override;
+	void MissionWin() override;
 
-	bool IsMissionActive() const
+	bool IsMissionActive() const override
 	{
 		return GetCurrentMission() != 0;
 	}
 
-	bool IsMissionWon() const
+	bool IsMissionWon() const override
 	{
 		return bMissionWon;
 	}
 
-	const NDb::SMapInfo *GetCurrentMission() const
+	const NDb::SMapInfo *GetCurrentMission() const override
 	{
 		return pMission;
 	}
 
-	const NDb::SMapInfo *GetLastMission() const
+	const NDb::SMapInfo *GetLastMission() const override
 	{
 		return pLastMission;
 	}
 
-	const SMissionStats *GetMissionStats( const NDb::SMapInfo *pMission ) const;
-	int GetMissionRecommendedReinfCalls() const;
-	bool IsOnlyRecommendedReinfCalls() const;
-	void ClearMissionScriptVars();
+	const SMissionStats *GetMissionStats( const NDb::SMapInfo *pMission ) const override;
+	int GetMissionRecommendedReinfCalls() const override;
+	bool IsOnlyRecommendedReinfCalls() const override;
+	void ClearMissionScriptVars() override;
 	// mission statistics
-	int GetNPlayers() const;
-	int GetPlayerSide( int nPlayer ) const;
+	int GetNPlayers() const override;
+	int GetPlayerSide( int nPlayer ) const override;
 
 	// campaign
-	void CampaignStart( const NDb::SCampaign *_pCampaign, const int _nDifficulty, bool bIsTutorial, bool bCustom );
+	void
+	CampaignStart( const NDb::SCampaign *_pCampaign, const int _nDifficulty, bool bIsTutorial, bool bCustom ) override;
 
-	bool IsCampaignActive() const
+	bool IsCampaignActive() const override
 	{
 		return !bCampaignFinished && pCampaign != 0;
 	}
 
-	const NDb::SCampaign *GetCurrentCampaign() const
+	const NDb::SCampaign *GetCurrentCampaign() const override
 	{
 		return pCampaign;
 	}
 
-	const NDb::SDifficultyLevel *GetDifficultyLevelDB() const;
+	const NDb::SDifficultyLevel *GetDifficultyLevelDB() const override;
 
-	bool IsTutorialCampaign() const
+	bool IsTutorialCampaign() const override
 	{
 		return bIsTutorial;
 	}
 
-	void GetAllMissionStats( std::vector<const SMissionStats *> *pMissions ) const;
-	NDb::EReinforcementType GetFavoriteReinf() const;
-	void MarkFavoriteReinf( NDb::EReinforcementType eType );
-	void SetLastVisiblePlayerStatsExp( float fCareer, float fNextRank );
-	void GetLastVisiblePlayerStatsExp( float *pCareer, float *pNextRank ) const;
-	std::wstring GetReinfName( NDb::EReinforcementType eType ) const;
+	void GetAllMissionStats( std::vector<const SMissionStats *> *pMissions ) const override;
+	NDb::EReinforcementType GetFavoriteReinf() const override;
+	void MarkFavoriteReinf( NDb::EReinforcementType eType ) override;
+	void SetLastVisiblePlayerStatsExp( float fCareer, float fNextRank ) override;
+	void GetLastVisiblePlayerStatsExp( float *pCareer, float *pNextRank ) const override;
+	std::wstring GetReinfName( NDb::EReinforcementType eType ) const override;
 
 	// chapter
-	bool IsChapterActive() const
+	bool IsChapterActive() const override
 	{
 		return !bChapterFinished && pChapter != 0;
 	}
 
-	void NextChapter();
-	void GetEnabledMissions( CMissions *pMissions );
-	void GetCompletedMissions( CMissions *pMissions );
+	void NextChapter() override;
+	void GetEnabledMissions( CMissions *pMissions ) override;
+	void GetCompletedMissions( CMissions *pMissions ) override;
 
-	const NDb::SChapter *GetCurrentChapter() const
+	const NDb::SChapter *GetCurrentChapter() const override
 	{
 		return pChapter;
 	}
 
-	int GetMissionToEnableCount() const;
+	int GetMissionToEnableCount() const override;
 
 	// check if reinforcement is potentially active
-	virtual EReinforcementState GetReinforcementEnableState( int nPlayer, NDb::EReinforcementType eType );
-	void GetChapterCurrentReinforcements( std::vector<SChapterReinf> *pReinf, int nPlayer ) const;
+	EReinforcementState GetReinforcementEnableState( int nPlayer, NDb::EReinforcementType eType ) override;
+	void GetChapterCurrentReinforcements( std::vector<SChapterReinf> *pReinf, int nPlayer ) const override;
 
-	virtual bool RegisterUnitKill( const SKillInfo &info );
-	virtual int GetUnitKills( const int nPlayer ) const;
-	virtual int GetUnitKills( const int nPlayer, const int nKilledPlayer ) const;
+	bool RegisterUnitKill( const SKillInfo &info ) override;
+	int GetUnitKills( const int nPlayer ) const override;
+	int GetUnitKills( const int nPlayer, const int nKilledPlayer ) const override;
 	int GetUnitPriceKills( const int nPlayer, const int nKilledPlayer ) const;
-	virtual const NDb::SUnitStatsModifier *GetEnemyDifficultyModifier();
-	virtual const NDb::SUnitStatsModifier *GetPlayerDifficultyModifier();
-	virtual const float GetEnemyDifficultyRCallsModifier();
-	virtual const float GetEnemyDifficultyRTimeModifier();
+	const NDb::SUnitStatsModifier *GetEnemyDifficultyModifier() override;
+	const NDb::SUnitStatsModifier *GetPlayerDifficultyModifier() override;
+	const float GetEnemyDifficultyRCallsModifier() override;
+	const float GetEnemyDifficultyRTimeModifier() override;
 
-	virtual const NDb::SPlayerRank *GetPlayerRank() const;
-	virtual int GetPlayerRankIndex() const;
+	const NDb::SPlayerRank *GetPlayerRank() const override;
+	int GetPlayerRankIndex() const override;
 
-	virtual void AddPlayer( const int nPlayer ) {}
+	void AddPlayer( const int nPlayer ) override {}
 
-	virtual void RemovePlayer( const int nPlayer ) {}
+	void RemovePlayer( const int nPlayer ) override {}
 
-	virtual bool IsPlayerPresent( const int nPlayer ) const;
+	bool IsPlayerPresent( const int nPlayer ) const override;
 
-	int GetLocalPlayer() const
+	int GetLocalPlayer() const override
 	{
 		return 0;
 	}
 
-	void SetLocalPlayer( int nPlayer )
+	void SetLocalPlayer( int nPlayer ) override
 	{
 		NI_ASSERT( nPlayer == 0, "Wrong local player" );
 	}
 
-	virtual void KeyBuildingOwnerChange( const int nBuildingLinkID, const int nNewOwnerPlayer ) {}
+	void KeyBuildingOwnerChange( const int nBuildingLinkID, const int nNewOwnerPlayer ) override {}
 
-	virtual const int GetKeyBuildingOwner( const int nBuildingLinkID )
+	const int GetKeyBuildingOwner( const int nBuildingLinkID ) override
 	{
 		return 2;
 	}
 
-	virtual const std::pair<int, int> GetKeyBuildingSummary()
+	const std::pair<int, int> GetKeyBuildingSummary() override
 	{
 		return std::pair<int, int>( 0, 0 );
 	}
 
-	virtual const float GetRecycleSpeedCoeff( const int nSide )
+	const float GetRecycleSpeedCoeff( const int nSide ) override
 	{
 		return 1.0f;
 	}
 
-	int GetStatistics( int nPlayer, EStatisticsKind eKind ) const;
-	void SetStatistics( int nPlayer, EStatisticsKind eKind, int nValue );
+	int GetStatistics( int nPlayer, EStatisticsKind eKind ) const override;
+	void SetStatistics( int nPlayer, EStatisticsKind eKind, int nValue ) override;
 
-	void UpdateStatistics() {}
+	void UpdateStatistics() override {}
 
-	virtual int GetScoreWithUpdate( int nPlayer )
+	int GetScoreWithUpdate( int nPlayer ) override
 	{
 		return 0;
 	}
 
-	void SetMultiplayerInfo( const SMultiplayerInfo &info ) {}
+	void SetMultiplayerInfo( const SMultiplayerInfo &info ) override {}
 
-	SMultiplayerInfo *GetMultiplayerInfo()
+	SMultiplayerInfo *GetMultiplayerInfo() override
 	{
 		return 0;
 	}
 
-	bool IsNewReinf( NDb::EReinforcementType eType ) const;
-	const SPlayerColor &GetPlayerColor( int nPlayer ) const;
+	bool IsNewReinf( NDb::EReinforcementType eType ) const override;
+	const SPlayerColor &GetPlayerColor( int nPlayer ) const override;
 
-	void SetPlayerColour( const int nPlayer, const int nNewColour ) {}
+	void SetPlayerColour( const int nPlayer, const int nNewColour ) override {}
 
 	// Changeable sides for MP
-	virtual void SetPlayerParty( const int nPlayer, const int nNewSide )
+	void SetPlayerParty( const int nPlayer, const int nNewSide ) override
 	{
 		NI_ASSERT( 0, "Wrong call to Scenartio Tracker Single" );
 	}
 
-	virtual const NDb::SPartyDependentInfo *GetPlayerParty( const int nPlayer );
+	const NDb::SPartyDependentInfo *GetPlayerParty( const int nPlayer ) override;
 
-	virtual void SetPlayerSide( const int nPlayer, const int nNewTeam )
+	void SetPlayerSide( const int nPlayer, const int nNewTeam ) override
 	{
 		NI_ASSERT( 0, "Wrong call to Scenartio Tracker Single" );
 	}
 
 	// Leaders (commanders)
-	const SLeaderInfo *GetLeaderInfo( const NDb::EReinforcementType eReinf ) const;
-	void AutoGenerateLeaderInfo( SGenerateLeaderInfo *pInfo ) const;
+	const SLeaderInfo *GetLeaderInfo( const NDb::EReinforcementType eReinf ) const override;
+	void AutoGenerateLeaderInfo( SGenerateLeaderInfo *pInfo ) const override;
 	bool AssignLeader( const NDb::EReinforcementType eReinf,
 	                   const SGenerateLeaderInfo &info,
-	                   SUndoLeaderInfo *pUndo ); // Return true if successful
-	void SetLeaderLastSeenInfo( const NDb::EReinforcementType eReinf, const SLeaderInfo::SLeaderStatSet &lastSeenInfo );
-	float GetLeaderRankExp( NDb::EReinforcementType eType, int nLevel ) const;
-	void UndoAssignLeader( const SUndoLeaderInfo &undo );
-	int GetLeaderLevel( int nPlayer, NDb::EReinforcementType eType );
-	const NDb::SUnitStatsModifier *GetLeaderModifier( int nPlayer, NDb::EReinforcementType eType );
-	const std::wstring &GetLeaderRankName( int nRank ) const;
-	int GetAvailablePromotions() const;
-	void SetAvailablePromotions( int nCount );
+	                   SUndoLeaderInfo *pUndo ) override; // Return true if successful
+	void SetLeaderLastSeenInfo( const NDb::EReinforcementType eReinf,
+	                            const SLeaderInfo::SLeaderStatSet &lastSeenInfo ) override;
+	float GetLeaderRankExp( NDb::EReinforcementType eType, int nLevel ) const override;
+	void UndoAssignLeader( const SUndoLeaderInfo &undo ) override;
+	int GetLeaderLevel( int nPlayer, NDb::EReinforcementType eType ) override;
+	const NDb::SUnitStatsModifier *GetLeaderModifier( int nPlayer, NDb::EReinforcementType eType ) override;
+	const std::wstring &GetLeaderRankName( int nRank ) const override;
+	int GetAvailablePromotions() const override;
+	void SetAvailablePromotions( int nCount ) override;
 
-	const NDb::SUnitStatsModifier *GetPlayerChapterModifier( NDb::EReinforcementType eReinf );
+	const NDb::SUnitStatsModifier *GetPlayerChapterModifier( NDb::EReinforcementType eReinf ) override;
 
 	// Debug
-	bool DebugAssignLeader( NDb::EReinforcementType eReinf, const std::wstring &wszName )
+	bool DebugAssignLeader( NDb::EReinforcementType eReinf, const std::wstring &wszName ) override
 	{
 		SGenerateLeaderInfo info;
 		info.wszFullName = wszName;
@@ -541,7 +544,7 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 	NTimer::STime timeMissionStart = {};
 	CArray2D<int> reinfCallsByType;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pMission );
 		f.Add( 3, &players );
@@ -588,357 +591,361 @@ public:
 	CScenarioTrackerMultiplayer();
 
 	//{ IAIScenarioTracker
-	virtual EGameType GetGameType() const
+	EGameType GetGameType() const override
 	{
 		return eType;
 	}
 
-	virtual void SetGameType( EGameType _eType )
+	void SetGameType( EGameType _eType ) override
 	{
 		eType = _eType;
 	}
 
 	// reinforcements
-	const NDb::SReinforcement *GetReinforcement( int nPlayer, NDb::EReinforcementType eType ) const;
-	int GetReinforcementCallsLeft( int nPlayer );
-	void DecreaseReinforcementCallsLeft( int nPlayer, int nCalls );
-	void IncreaseReinforcementCallsLeft( int nPlayer, int nCalls );
-	void RegisterReinforcementCall( int nPlayer, NDb::EReinforcementType eType );
-	void GetReinforcementCallsInfo( int nPlayer, std::vector<int> *pCallsByType );
+	const NDb::SReinforcement *GetReinforcement( int nPlayer, NDb::EReinforcementType eType ) const override;
+	int GetReinforcementCallsLeft( int nPlayer ) override;
+	void DecreaseReinforcementCallsLeft( int nPlayer, int nCalls ) override;
+	void IncreaseReinforcementCallsLeft( int nPlayer, int nCalls ) override;
+	void RegisterReinforcementCall( int nPlayer, NDb::EReinforcementType eType ) override;
+	void GetReinforcementCallsInfo( int nPlayer, std::vector<int> *pCallsByType ) override;
 
-	float GetReinforcementXP( int nPlayer, NDb::EReinforcementType eType ) const;
-	void SetReinforcementXP( int nPlayer, NDb::EReinforcementType eType, float fXP );
-	int GetReinforcementXPLevel( int nPlayer, NDb::EReinforcementType eType ) const;
-	float GetReinforcementXPForLevel( NDb::EReinforcementType eType, int nXPLevel ) const;
+	float GetReinforcementXP( int nPlayer, NDb::EReinforcementType eType ) const override;
+	void SetReinforcementXP( int nPlayer, NDb::EReinforcementType eType, float fXP ) override;
+	int GetReinforcementXPLevel( int nPlayer, NDb::EReinforcementType eType ) const override;
+	float GetReinforcementXPForLevel( NDb::EReinforcementType eType, int nXPLevel ) const override;
 
 	//}
 
-	bool IsCustomMission() const
+	bool IsCustomMission() const override
 	{
 		return false;
 	}
 
-	bool IsCustomCampaign() const
+	bool IsCustomCampaign() const override
 	{
 		return false;
 	}
 
 	// objectives
 	// Задания, про которые игрок уже знает
-	int GetKnownObjectiveCount() const
+	int GetKnownObjectiveCount() const override
 	{
 		return 0;
 	}
 
 	// Возвращает ID задания
-	int GetKnownObjectiveID( const int nIndex )
+	int GetKnownObjectiveID( const int nIndex ) override
 	{
 		return -1;
 	}
 
-	int GetObjectiveCount() const
+	int GetObjectiveCount() const override
 	{
 		return 0;
 	}
-	enum EMissionObjectiveState GetObjectiveState( const int nID ) const;
+	enum EMissionObjectiveState GetObjectiveState( const int nID ) const override;
 
 	// Задание, впервые изменившее состояние из EMOS_WAITING попадает в конец списка известных
-	void SetObjectiveState( const int nID, const EMissionObjectiveState eState ) {}
+	void SetObjectiveState( const int nID, const EMissionObjectiveState eState ) override {}
 
-	bool GetObjectivePlaces( int nID, std::vector<CVec3> *pPlaces ) const
+	bool GetObjectivePlaces( int nID, std::vector<CVec3> *pPlaces ) const override
 	{
 		return false;
 	}
 
-	void SetObjectiveObjects( int nID, const std::vector<CMapObj *> &objects ) {}
+	void SetObjectiveObjects( int nID, const std::vector<CMapObj *> &objects ) override {}
 
-	bool IsDynamicObjective( int nID ) const
+	bool IsDynamicObjective( int nID ) const override
 	{
 		return false;
 	}
 
 	// mission
-	void MissionStart( const NDb::SMapInfo *pMission, const int _nTechLevel = -1 );
+	void MissionStart( const NDb::SMapInfo *pMission, const int _nTechLevel = -1 ) override;
 
-	void CustomMissionStart( const NDb::SMapInfo *pMission, int nDifficulty, bool bTutorial )
+	void CustomMissionStart( const NDb::SMapInfo *pMission, int nDifficulty, bool bTutorial ) override
 	{
 		NI_ASSERT( false, "wrong call" );
 	}
 
-	bool IsTutorialMission() const
+	bool IsTutorialMission() const override
 	{
 		return false;
 	}
 
-	void MissionCancel();
-	void MissionWin();
-	bool IsMissionActive() const;
+	void MissionCancel() override;
+	void MissionWin() override;
+	bool IsMissionActive() const override;
 
-	bool IsMissionWon() const
+	bool IsMissionWon() const override
 	{
 		return bMissionWon;
 	}
 
-	const NDb::SMapInfo *GetCurrentMission() const;
+	const NDb::SMapInfo *GetCurrentMission() const override;
 
-	const NDb::SMapInfo *GetLastMission() const
+	const NDb::SMapInfo *GetLastMission() const override
 	{
 		return pLastMission;
 	}
 
-	void ClearMissionScriptVars();
+	void ClearMissionScriptVars() override;
 
 	// mission statistics
-	int GetNPlayers() const;
-	int GetPlayerSide( int nPlayer ) const;
+	int GetNPlayers() const override;
+	int GetPlayerSide( int nPlayer ) const override;
 
-	int GetMultiplayerTechLevel() const
+	int GetMultiplayerTechLevel() const override
 	{
 		return nTechLevel;
 	}
 
-	int GetPlayerMultiplayerNation( int nPlayer ) const
+	int GetPlayerMultiplayerNation( int nPlayer ) const override
 	{
 		// Neutral or otherwise unassigned map slots do not have an MP nation.
 		return nPlayer >= 0 && nPlayer < players.size() ? players[nPlayer].nMultiplayerSide : -1;
 	}
 
 	// campaign
-	void CampaignStart( const NDb::SCampaign *pCampaign, const int _nDifficulty, bool bIsTutorial, bool bCustom )
+	void CampaignStart( const NDb::SCampaign *pCampaign, const int _nDifficulty, bool bIsTutorial, bool bCustom ) override
 	{
 		NI_ASSERT( false, "wrong call" );
 	}
 
-	bool IsCampaignActive() const
+	bool IsCampaignActive() const override
 	{
 		NI_ASSERT( false, "wrong call" );
 		return false;
 	}
 
-	const NDb::SCampaign *GetCurrentCampaign() const
+	const NDb::SCampaign *GetCurrentCampaign() const override
 	{
 		return 0;
 	}
 
-	const NDb::SDifficultyLevel *GetDifficultyLevelDB() const
+	const NDb::SDifficultyLevel *GetDifficultyLevelDB() const override
 	{
 		return 0;
 	}
 
-	bool IsTutorialCampaign() const
+	bool IsTutorialCampaign() const override
 	{
 		return false;
 	}
 
-	void GetAllMissionStats( std::vector<const SMissionStats *> *pMissions ) const {}
+	void GetAllMissionStats( std::vector<const SMissionStats *> *pMissions ) const override {}
 
-	NDb::EReinforcementType GetFavoriteReinf() const
+	NDb::EReinforcementType GetFavoriteReinf() const override
 	{
 		return NDb::_RT_NONE;
 	}
 
-	void MarkFavoriteReinf( NDb::EReinforcementType eType ) {}
+	void MarkFavoriteReinf( NDb::EReinforcementType eType ) override {}
 
-	void SetLastVisiblePlayerStatsExp( float fCareer, float fNextRank ) {}
+	void SetLastVisiblePlayerStatsExp( float fCareer, float fNextRank ) override {}
 
-	void GetLastVisiblePlayerStatsExp( float *pCareer, float *pNextRank ) const {}
+	void GetLastVisiblePlayerStatsExp( float *pCareer, float *pNextRank ) const override {}
 
-	std::wstring GetReinfName( NDb::EReinforcementType eType ) const
+	std::wstring GetReinfName( NDb::EReinforcementType eType ) const override
 	{
 		return std::wstring();
 	}
 
 	// chapter
-	bool IsChapterActive() const
+	bool IsChapterActive() const override
 	{
 		NI_ASSERT( false, "wrong call" );
 		return false;
 	}
 
-	void NextChapter()
+	void NextChapter() override
 	{
 		NI_ASSERT( false, "wrong call" );
 	}
 
-	void GetEnabledMissions( CMissions *pMissions )
+	void GetEnabledMissions( CMissions *pMissions ) override
 	{
 		NI_ASSERT( false, "wrong call" );
 	}
 
-	void GetCompletedMissions( CMissions *pMissions )
+	void GetCompletedMissions( CMissions *pMissions ) override
 	{
 		NI_ASSERT( false, "wrong call" );
 	}
 
-	const NDb::SChapter *GetCurrentChapter() const
+	const NDb::SChapter *GetCurrentChapter() const override
 	{
 		return 0;
 	}
 
-	int GetMissionToEnableCount() const
+	int GetMissionToEnableCount() const override
 	{
 		return 0;
 	}
 
-	virtual EReinforcementState GetReinforcementEnableState( int nPlayer, NDb::EReinforcementType eType )
+	EReinforcementState GetReinforcementEnableState( int nPlayer, NDb::EReinforcementType eType ) override
 	{
 		return ERS_DISABLED;
 	}
 
-	void GetChapterCurrentReinforcements( std::vector<SChapterReinf> *pReinf, int nPlayer ) const
+	void GetChapterCurrentReinforcements( std::vector<SChapterReinf> *pReinf, int nPlayer ) const override
 	{
 		pReinf->clear();
 	}
 
-	int GetReinforcementCallsLeftInChapter() const
+	int GetReinforcementCallsLeftInChapter() const override
 	{
 		return 0;
 	}
 
-	int GetReinforcementCallsOld() const
+	int GetReinforcementCallsOld() const override
 	{
 		return 0;
 	}
 
-	virtual bool RegisterUnitKill( const SKillInfo &info );
-	virtual int GetUnitKills( const int nPlayer ) const;
-	virtual int GetUnitKills( const int nPlayer, const int nKilledPlayer ) const;
+	bool RegisterUnitKill( const SKillInfo &info ) override;
+	int GetUnitKills( const int nPlayer ) const override;
+	int GetUnitKills( const int nPlayer, const int nKilledPlayer ) const override;
 	int GetUnitPriceKills( const int nPlayer, const int nKilledPlayer ) const;
 
-	virtual const NDb::SUnitStatsModifier *GetEnemyDifficultyModifier()
+	const NDb::SUnitStatsModifier *GetEnemyDifficultyModifier() override
 	{
 		return 0;
 	}
 
-	virtual const NDb::SUnitStatsModifier *GetPlayerDifficultyModifier()
+	const NDb::SUnitStatsModifier *GetPlayerDifficultyModifier() override
 	{
 		return 0;
 	}
 
-	virtual const float GetEnemyDifficultyRCallsModifier()
+	const float GetEnemyDifficultyRCallsModifier() override
 	{
 		return 0;
 	}
 
-	virtual const float GetEnemyDifficultyRTimeModifier()
+	const float GetEnemyDifficultyRTimeModifier() override
 	{
 		return 0;
 	}
 
-	virtual const NDb::SPlayerRank *GetPlayerRank() const
+	const NDb::SPlayerRank *GetPlayerRank() const override
 	{
 		return 0;
 	}
 
-	virtual int GetPlayerRankIndex() const
+	int GetPlayerRankIndex() const override
 	{
 		return 0;
 	}
 
-	virtual void AddPlayer( const int nPlayer );
-	virtual void RemovePlayer( const int nPlayer );
-	virtual bool IsPlayerPresent( const int nPlayer ) const;
+	void AddPlayer( const int nPlayer ) override;
+	void RemovePlayer( const int nPlayer ) override;
+	bool IsPlayerPresent( const int nPlayer ) const override;
 
-	int GetLocalPlayer() const
+	int GetLocalPlayer() const override
 	{
 		NI_VERIFY( nLocalPlayer >= 0, "Wrong local player", return 0; );
 		return nLocalPlayer;
 	}
 
-	void SetLocalPlayer( int nPlayer )
+	void SetLocalPlayer( int nPlayer ) override
 	{
 		nLocalPlayer = nPlayer;
 	}
 
-	virtual void KeyBuildingOwnerChange( const int nBuildingLinkID, const int nNewOwnerPlayer );
-	virtual const int GetKeyBuildingOwner( const int nBuildingLinkID ); // return side (0..2)
-	virtual const std::pair<int, int> GetKeyBuildingSummary();
-	virtual const float GetRecycleSpeedCoeff( const int nSide );
-	virtual const NDb::SObjectBaseRPGStats *GetKeyBuildingFlagObject( const int nPlayer );
+	void KeyBuildingOwnerChange( const int nBuildingLinkID, const int nNewOwnerPlayer ) override;
+	const int GetKeyBuildingOwner( const int nBuildingLinkID ) override; // return side (0..2)
+	const std::pair<int, int> GetKeyBuildingSummary() override;
+	const float GetRecycleSpeedCoeff( const int nSide ) override;
+	const NDb::SObjectBaseRPGStats *GetKeyBuildingFlagObject( const int nPlayer ) override;
 
-	int GetStatistics( int nPlayer, EStatisticsKind eKind ) const;
-	void SetStatistics( int nPlayer, EStatisticsKind eKind, int nValue );
-	void UpdateStatistics();
-	virtual int GetScoreWithUpdate( int nPlayer );
-	void SetMultiplayerInfo( const SMultiplayerInfo &info );
-	SMultiplayerInfo *GetMultiplayerInfo();
+	int GetStatistics( int nPlayer, EStatisticsKind eKind ) const override;
+	void SetStatistics( int nPlayer, EStatisticsKind eKind, int nValue ) override;
+	void UpdateStatistics() override;
+	int GetScoreWithUpdate( int nPlayer ) override;
+	void SetMultiplayerInfo( const SMultiplayerInfo &info ) override;
+	SMultiplayerInfo *GetMultiplayerInfo() override;
 
-	virtual int GetMissionRecommendedReinfCalls() const
+	int GetMissionRecommendedReinfCalls() const override
 	{
 		return INFINITE_CALLS;
 	}
 
-	bool IsNewReinf( NDb::EReinforcementType eType ) const
+	bool IsNewReinf( NDb::EReinforcementType eType ) const override
 	{
 		return false;
 	}
 
-	const SPlayerColor &GetPlayerColor( int nPlayer ) const;
+	const SPlayerColor &GetPlayerColor( int nPlayer ) const override;
 
 	// Changeable sides for MP
-	virtual void SetPlayerParty( const int nPlayer, const int nNewSide );
-	virtual const NDb::SPartyDependentInfo *GetPlayerParty( const int nPlayer );
-	virtual void SetPlayerSide( const int nPlayer, const int nNewTeam );
-	virtual const NDb::SReinforcement *GetStartUnits( int nPlayer ) const;
-	virtual void SetPlayerColour( const int nPlayer, const int nNewColour );
+	void SetPlayerParty( const int nPlayer, const int nNewSide ) override;
+	const NDb::SPartyDependentInfo *GetPlayerParty( const int nPlayer ) override;
+	void SetPlayerSide( const int nPlayer, const int nNewTeam ) override;
+	const NDb::SReinforcement *GetStartUnits( int nPlayer ) const override;
+	void SetPlayerColour( const int nPlayer, const int nNewColour ) override;
 
 	// Leaders (commanders)
-	const SLeaderInfo *GetLeaderInfo( const NDb::EReinforcementType eReinf ) const;
+	const SLeaderInfo *GetLeaderInfo( const NDb::EReinforcementType eReinf ) const override;
 
-	void AutoGenerateLeaderInfo( SGenerateLeaderInfo *pInfo ) const {}
+	void AutoGenerateLeaderInfo( SGenerateLeaderInfo *pInfo ) const override {}
 
-	bool AssignLeader( const NDb::EReinforcementType eReinf, const SGenerateLeaderInfo &info, SUndoLeaderInfo *pUndo )
+	bool
+	AssignLeader( const NDb::EReinforcementType eReinf, const SGenerateLeaderInfo &info, SUndoLeaderInfo *pUndo ) override
 	{
 		NI_ASSERT( 0, "Wrong call to Scenartio Tracker MP" );
 		return false;
 	}
 
-	void SetLeaderLastSeenInfo( const NDb::EReinforcementType eReinf, const SLeaderInfo::SLeaderStatSet &lastSeenInfo ) {}
+	void SetLeaderLastSeenInfo( const NDb::EReinforcementType eReinf,
+	                            const SLeaderInfo::SLeaderStatSet &lastSeenInfo ) override
+	{
+	}
 
-	float GetLeaderRankExp( NDb::EReinforcementType eType, int nLevel ) const
+	float GetLeaderRankExp( NDb::EReinforcementType eType, int nLevel ) const override
 	{
 		return 0.0f;
 	}
 
-	void UndoAssignLeader( const SUndoLeaderInfo &undo ) {}
+	void UndoAssignLeader( const SUndoLeaderInfo &undo ) override {}
 
-	int GetLeaderLevel( int nPlayer, NDb::EReinforcementType eType )
+	int GetLeaderLevel( int nPlayer, NDb::EReinforcementType eType ) override
 	{
 		return GetReinforcementXPLevel( nPlayer, eType );
 	}
 
-	const NDb::SUnitStatsModifier *GetLeaderModifier( int nPlayer, NDb::EReinforcementType eType )
+	const NDb::SUnitStatsModifier *GetLeaderModifier( int nPlayer, NDb::EReinforcementType eType ) override
 	{
 		return 0;
 	}
 
-	const std::wstring &GetLeaderRankName( int nRank ) const
+	const std::wstring &GetLeaderRankName( int nRank ) const override
 	{
 		static std::wstring wszEmpty;
 		return wszEmpty;
 	}
 
-	int GetAvailablePromotions() const
+	int GetAvailablePromotions() const override
 	{
 		return 0;
 	}
 
-	void SetAvailablePromotions( int nCount ) {}
+	void SetAvailablePromotions( int nCount ) override {}
 
 	void UpdateReinforcements( const int nPlayer ); // Find best reinforcement sets for current map/tech level
 
-	virtual bool GiveXP( const int nPlayer, NDb::EReinforcementType eReinf, const int _nXP )
+	bool GiveXP( const int nPlayer, NDb::EReinforcementType eReinf, const int _nXP ) override
 	{
 		float fXP = _nXP;
 		return AddReinfExp( &fXP, nPlayer, eReinf );
 	} // Give to reinf and player
 
-	virtual bool GiveXPToPlayer( const int nPlayer, const int nXP )
+	bool GiveXPToPlayer( const int nPlayer, const int nXP ) override
 	{
 		return false;
 	} // Give to player only
 
-	const NDb::SUnitStatsModifier *GetPlayerChapterModifier( NDb::EReinforcementType eReinf )
+	const NDb::SUnitStatsModifier *GetPlayerChapterModifier( NDb::EReinforcementType eReinf ) override
 	{
 		return 0;
 	}

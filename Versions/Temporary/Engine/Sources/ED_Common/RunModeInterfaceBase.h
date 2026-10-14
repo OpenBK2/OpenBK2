@@ -11,12 +11,12 @@ class CRunModeInterfaceBase : public IInterfaceBase, protected NInput::CGMORegCo
 public:
 	// lifecycle
 	CRunModeInterfaceBase( CTimeCounter *pTimer = 0 );
-	virtual ~CRunModeInterfaceBase();
+	~CRunModeInterfaceBase() override;
 
 	// IInterfaceBase
-	virtual void OnGetFocus( bool bFocus );
-	virtual void Step( bool bAppActive );
-	virtual bool ProcessEvent( const struct SGameMessage &msg );
+	void OnGetFocus( bool bFocus ) override;
+	void Step( bool bAppActive ) override;
+	bool ProcessEvent( const struct SGameMessage &msg ) override;
 
 	// methods
 	uint32_t GetTime() const

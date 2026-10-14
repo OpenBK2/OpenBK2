@@ -57,7 +57,7 @@ class CBuildingRPGStatsExporter : public CObjectBaseRPGStatsExporter
 	const bool UpdateSectionMaterials( IManipulator *pManipulator, const std::string &szObjectName );
 
 protected:
-	bool NeedCreatePassability()
+	bool NeedCreatePassability() override
 	{
 		return true;
 	}
@@ -67,5 +67,5 @@ public:
 	                            const std::string &rszObjectTypeName,
 	                            const std::string &rszObjectName,
 	                            bool bForce,
-	                            EXPORT_TYPE exportType );
+	                            EXPORT_TYPE exportType ) override;
 };

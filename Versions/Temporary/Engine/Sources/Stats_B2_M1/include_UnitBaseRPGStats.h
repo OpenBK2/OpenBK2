@@ -19,7 +19,7 @@ inline void RemValue( CUserCommands &array, int nBit )
 
 const NDb::SUnitSpecialAblityDesc *GetAbilityDescByCmd( const int nCmdType ) const;
 
-void ToAIUnits( bool bInEditor );
+void ToAIUnits( bool bInEditor ) override;
 
 int GetAnimTime( int nAnim ) const
 {
@@ -113,10 +113,10 @@ int IsTrain() const
 	return NDb::IsTrain( etype );
 }
 
-virtual int GetArmor( const int n ) const = 0;
-virtual int GetMinPossibleArmor( const int n ) const = 0;
-virtual int GetMaxPossibleArmor( const int n ) const = 0;
-virtual int GetRandomArmor( const int n ) const = 0;
+int GetArmor( const int n ) const override = 0;
+int GetMinPossibleArmor( const int n ) const override = 0;
+int GetMaxPossibleArmor( const int n ) const override = 0;
+int GetRandomArmor( const int n ) const override = 0;
 virtual const SBaseGunRPGStats &GetGun( const int nUniqueID, const int nPlatform, const int nGun ) const = 0;
 virtual const int GetGunsSize( const int nUniqueID, const int nPlatform ) const = 0;
 //
@@ -141,7 +141,7 @@ const std::vector<SAnimDesc> *GetAnims( const int netype ) const
 }
 
 //
-virtual const CUserActions *GetUserActions( bool bActionsBy ) const;
+const CUserActions *GetUserActions( bool bActionsBy ) const override;
 
 //
 const SUnitActions *GetActions() const

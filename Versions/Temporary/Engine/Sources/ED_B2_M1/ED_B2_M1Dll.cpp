@@ -73,15 +73,15 @@ void LoadFilters()
 
 class CEditorModuleB2M1 : public IEditorModule
 {
-	void ModuleStartup();
-	void ModuleShutdown();
-	void ModuleCreate();
-	void ModuleDestroy();
-	void ModuleCreateControls();
-	void ModulePostCreateControls();
-	void ModulePreDestroyControls();
-	void ModuleDestroyControls();
-	void ModulePostCreateMainFrame();
+	void ModuleStartup() override;
+	void ModuleShutdown() override;
+	void ModuleCreate() override;
+	void ModuleDestroy() override;
+	void ModuleCreateControls() override;
+	void ModulePostCreateControls() override;
+	void ModulePreDestroyControls() override;
+	void ModuleDestroyControls() override;
+	void ModulePostCreateMainFrame() override;
 };
 
 void CEditorModuleB2M1::ModuleStartup()

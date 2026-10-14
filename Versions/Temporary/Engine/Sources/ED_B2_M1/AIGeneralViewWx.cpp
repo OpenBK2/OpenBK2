@@ -51,7 +51,7 @@ public:
 		Singleton<ICommandHandlerContainer>()->Set( CHID_AIGEN_POINTS_WINDOW, this );
 	}
 
-	virtual ~CAIGeneralWxWindow()
+	~CAIGeneralWxWindow() override
 	{
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_AIGEN_POINTS_WINDOW );
 	}
@@ -110,7 +110,7 @@ public:
 	}
 
 	//	CPaletteCommands
-	virtual void GetDialogData( SAIGeneralPointsWindowData *pData )
+	void GetDialogData( SAIGeneralPointsWindowData *pData ) override
 	{
 		// Unusual among these palettes, and worth reading twice: this does not
 		// report the whole of its state. The caller passes in the data it
@@ -147,7 +147,7 @@ public:
 		}
 	}
 
-	virtual void SetDialogData( const SAIGeneralPointsWindowData *pData )
+	void SetDialogData( const SAIGeneralPointsWindowData *pData ) override
 	{
 		// No copy of the whole struct. The MFC version makes one only so it
 		// can call CurrentPlayer(), CurrentID() and CurrentParcel(), which are

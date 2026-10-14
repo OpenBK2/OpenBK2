@@ -32,34 +32,34 @@ class CCustomLobby : public CGameLobby
 	const bool GetClientInfo( const int nClientID, struct SCustomLobbyClientInfo *pInfo ) const;
 
 protected:
-	virtual const int GetLobbyID() const
+	const int GetLobbyID() const override
 	{
 		return nLobbyID;
 	}
 
-	virtual void ClientEnterToLobby( const int nClientID );
-	virtual void ClientLeaveLobby( const int nClientID );
+	void ClientEnterToLobby( const int nClientID ) override;
+	void ClientLeaveLobby( const int nClientID ) override;
 
-	virtual void GetLobbyClients( class CGetLobbyClientsPacket *pPacket );
-	virtual int CreateGame( const int nMaxPlayers );
-	virtual void GameDead( const int nGameID );
+	void GetLobbyClients( class CGetLobbyClientsPacket *pPacket ) override;
+	int CreateGame( const int nMaxPlayers ) override;
+	void GameDead( const int nGameID ) override;
 
-	virtual bool PlayerCanKickPlayer() const
+	bool PlayerCanKickPlayer() const override
 	{
 		return true;
 	}
 
-	virtual bool PlayerCanSeeGamesList() const
+	bool PlayerCanSeeGamesList() const override
 	{
 		return true;
 	}
 
-	virtual bool PlayerCanUpdateGameInfo() const
+	bool PlayerCanUpdateGameInfo() const override
 	{
 		return true;
 	}
 
-	virtual bool PlayerNeedSpecificGameInfo() const
+	bool PlayerNeedSpecificGameInfo() const override
 	{
 		return true;
 	}
@@ -69,7 +69,7 @@ public:
 
 	CCustomLobby( class CClients *pClients, const std::string &szCfgFile );
 
-	virtual bool Segment();
+	bool Segment() override;
 
 	friend struct SGetClientInfoFunc;
 };

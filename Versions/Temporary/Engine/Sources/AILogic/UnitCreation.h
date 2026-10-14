@@ -37,7 +37,7 @@ public:
 	{
 	}
 
-	virtual const CVec2 &GetDestPoint() const
+	const CVec2 &GetDestPoint() const override
 	{
 		return vDestPoint;
 	}
@@ -52,12 +52,12 @@ public:
 	{
 	}
 
-	virtual void CalcPositions( const int nMax,
-	                            const CVec2 &vAABBbox,
-	                            const CVec2 &vDirection,
-	                            std::vector<CVec2> *positions,
-	                            CVec2 *pvOffset,
-	                            const bool bRandom = false );
+	void CalcPositions( const int nMax,
+	                    const CVec2 &vAABBbox,
+	                    const CVec2 &vDirection,
+	                    std::vector<CVec2> *positions,
+	                    CVec2 *pvOffset,
+	                    const bool bRandom = false ) override;
 };
 
 // для создания тяжелых самолетов
@@ -73,12 +73,12 @@ public:
 	{
 	}
 
-	virtual void CalcPositions( const int nMax,
-	                            const CVec2 &vAABBbox,
-	                            const CVec2 &vDirection,
-	                            std::vector<CVec2> *positions,
-	                            CVec2 *pvOffset,
-	                            const bool bRandom = false );
+	void CalcPositions( const int nMax,
+	                    const CVec2 &vAABBbox,
+	                    const CVec2 &vDirection,
+	                    std::vector<CVec2> *positions,
+	                    CVec2 *pvOffset,
+	                    const bool bRandom = false ) override;
 };
 
 //

@@ -35,7 +35,7 @@ class CTankShootEstimator : public IShootEstimator
 
 	CDBPtr<SUnitBaseRPGStats> pMosinStats;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pOwner );
 		f.Add( 3, &pBestUnit );
@@ -66,11 +66,11 @@ public:
 
 	explicit CTankShootEstimator( class CAIUnit *pOwner );
 
-	virtual void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t dwForbidden );
-	virtual void AddUnit( class CAIUnit *pEnemy );
-	virtual class CAIUnit *GetBestUnit() const;
-	virtual class CBasicGun *GetBestGun() const;
-	virtual const int GetNumberOfBestGun() const;
+	void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t dwForbidden ) override;
+	void AddUnit( class CAIUnit *pEnemy ) override;
+	class CAIUnit *GetBestUnit() const override;
+	class CBasicGun *GetBestGun() const override;
+	const int GetNumberOfBestGun() const override;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,7 +100,7 @@ class CSoldierShootEstimator : public IShootEstimator
 
 	CDBPtr<SUnitBaseRPGStats> pMosinStats;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pOwner );
 		f.Add( 3, &pBestUnit );
@@ -132,11 +132,11 @@ public:
 
 	explicit CSoldierShootEstimator( class CAIUnit *pOwner );
 
-	virtual void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t dwForbidden );
-	virtual void AddUnit( class CAIUnit *pEnemy );
-	virtual class CAIUnit *GetBestUnit() const;
-	virtual class CBasicGun *GetBestGun() const;
-	virtual const int GetNumberOfBestGun() const;
+	void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t dwForbidden ) override;
+	void AddUnit( class CAIUnit *pEnemy ) override;
+	class CAIUnit *GetBestUnit() const override;
+	class CBasicGun *GetBestGun() const override;
+	const int GetNumberOfBestGun() const override;
 	void SetGrenadeAutocast( bool bOn );
 	void SetGrenadeFixed( bool bOn );
 };
@@ -155,7 +155,7 @@ class CPlaneDeffensiveFireShootEstimator : public IShootEstimator
 	bool bDamageToCurTargetUpdated = {};
 	float fBestRating = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pOwner );
 		f.Add( 3, &pBestUnit );
@@ -182,13 +182,13 @@ public:
 
 	void SetGun( CBasicGun *_pGun );
 
-	virtual void Reset( class CAIUnit *pCurEnemy,
-	                    const bool bDamageUpdated,
-	                    const uint32_t dwForbidden ); //dwFirbidden is ignored
-	virtual void AddUnit( class CAIUnit *pEnemy );
-	virtual class CAIUnit *GetBestUnit() const;
-	virtual class CBasicGun *GetBestGun() const;
-	virtual const int GetNumberOfBestGun() const;
+	void Reset( class CAIUnit *pCurEnemy,
+	            const bool bDamageUpdated,
+	            const uint32_t dwForbidden ) override; //dwFirbidden is ignored
+	void AddUnit( class CAIUnit *pEnemy ) override;
+	class CAIUnit *GetBestUnit() const override;
+	class CBasicGun *GetBestGun() const override;
+	const int GetNumberOfBestGun() const override;
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // for
@@ -251,7 +251,7 @@ class CPlaneShturmovikShootEstimator : public IShootEstimator
 	CBuildings buildings;
 	CPtr<CBuilding> pBestBuilding;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pOwner );
 		f.Add( 3, &pCurEnemy );
@@ -283,11 +283,11 @@ public:
 		vCenter = vNewCenter;
 	}
 
-	virtual void Reset( class CAIUnit *pCurEnemy,
-	                    const bool bDamageUpdated,
-	                    const uint32_t dwForbidden ); //dwFirbidden is ignored
-	virtual void AddUnit( class CAIUnit *pEnemy );
-	virtual class CAIUnit *GetBestUnit() const;
+	void Reset( class CAIUnit *pCurEnemy,
+	            const bool bDamageUpdated,
+	            const uint32_t dwForbidden ) override; //dwFirbidden is ignored
+	void AddUnit( class CAIUnit *pEnemy ) override;
+	class CAIUnit *GetBestUnit() const override;
 
 	void CalcBestBuilding();
 
@@ -296,13 +296,13 @@ public:
 		return pBestBuilding;
 	}
 
-	virtual class CBasicGun *GetBestGun() const
+	class CBasicGun *GetBestGun() const override
 	{
 		NI_ASSERT( false, "Wrong call" );
 		return 0;
 	}
 
-	virtual const int GetNumberOfBestGun() const
+	const int GetNumberOfBestGun() const override
 	{
 		NI_ASSERT( false, "Wrong call" );
 		return 0;
@@ -333,7 +333,7 @@ public:
 	{
 	}
 
-	virtual bool AddObstacle( IObstacle *pObstacle );
+	bool AddObstacle( IObstacle *pObstacle ) override;
 	virtual struct IObstacle *GetBest() const;
 };
 
@@ -348,7 +348,7 @@ class CShootEstimatorSupportAAGun : public IShootEstimator
 	float fBestRating = {};
 	bool bDamageToCurTargetUpdated = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pOwner );
 		f.Add( 3, &pBestTarget );
@@ -364,21 +364,21 @@ public:
 	CShootEstimatorSupportAAGun() {}
 
 	CShootEstimatorSupportAAGun( class CAIUnit *pOwner );
-	void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t dwForbidden );
-	void AddUnit( class CAIUnit *pEnemy );
+	void Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const uint32_t dwForbidden ) override;
+	void AddUnit( class CAIUnit *pEnemy ) override;
 
-	class CAIUnit *GetBestUnit() const
+	class CAIUnit *GetBestUnit() const override
 	{
 		return pBestTarget;
 	}
 
-	virtual class CBasicGun *GetBestGun() const
+	class CBasicGun *GetBestGun() const override
 	{
 		NI_ASSERT( false, "Wrong call" );
 		return 0;
 	}
 
-	virtual const int GetNumberOfBestGun() const
+	const int GetNumberOfBestGun() const override
 	{
 		NI_ASSERT( false, "Wrong call" );
 		return 0;

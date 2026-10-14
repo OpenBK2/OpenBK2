@@ -22,12 +22,12 @@ class CEngineInfo : public CPtrFuncBase<NGScene::CObjectInfo>
 	bool bNeedUpdate;
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return bNeedUpdate;
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	void InitEngineInfo( const NDb::SMaterial *pColor );
@@ -110,7 +110,7 @@ public:
 	void Init( const CSegment &aiSegment, const int nThickness );
 	void SetPosition( const CSegment &aiSegment );
 
-	void SetColor( const NDb::SMaterial *pColor )
+	void SetColor( const NDb::SMaterial *pColor ) override
 	{
 		InitEngineInfo( pColor );
 	}
@@ -129,7 +129,7 @@ public:
 	void Init( const CCircle &aiCircle );
 	void SetPosition( const CCircle &aiCircle );
 
-	void SetColor( const NDb::SMaterial *pColor )
+	void SetColor( const NDb::SMaterial *pColor ) override
 	{
 		InitEngineInfo( pColor );
 	}
@@ -149,7 +149,7 @@ public:
 	void Init( const std::vector<SVector> &tiles, const int nStart, const int nEnd );
 	void SetPosition( const std::vector<SVector> &tiles, const int nStart, const int nEnd );
 
-	void SetColor( const NDb::SMaterial *pColor )
+	void SetColor( const NDb::SMaterial *pColor ) override
 	{
 		InitEngineInfo( pColor );
 	}
@@ -167,7 +167,7 @@ public:
 	void Init( const std::vector<SVector> &tiles );
 	void SetPosition( const std::vector<SVector> &tiles );
 
-	void SetColor( const NDb::SMaterial *pColor );
+	void SetColor( const NDb::SMaterial *pColor ) override;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

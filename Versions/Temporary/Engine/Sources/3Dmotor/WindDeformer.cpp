@@ -23,7 +23,7 @@ class CWindDeformer : public CPtrFuncBase<CObjectInfo>
 	SFBTransform place;
 	CDGPtr<CFuncBase<SFBTransform>> pPlace;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pGeom );
 		f.Add( 3, &place );
@@ -34,12 +34,12 @@ class CWindDeformer : public CPtrFuncBase<CObjectInfo>
 protected:
 	CWindDeformer() {}
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pGeom.Refresh();
 	}
 
-	void Recalc();
+	void Recalc() override;
 
 public:
 	CWindDeformer( CPtrFuncBase<CObjectInfo> *_pGeom, const SFBTransform &_place )

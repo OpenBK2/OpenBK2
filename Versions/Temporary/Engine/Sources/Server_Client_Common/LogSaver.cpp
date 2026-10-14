@@ -17,19 +17,19 @@ class CLogSaver : public IBinSaver
 	OBJECT_NOCOPY_METHODS( CLogSaver );
 	std::string *pszLog;
 
-	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber )
+	bool StartChunk( const chunk_id idChunk, int nChunkNumber ) override
 	{
 		return true;
 	}
 
-	virtual void FinishChunk() {}
+	void FinishChunk() override {}
 
-	virtual int CountChunks( const chunk_id idChunk )
+	int CountChunks( const chunk_id idChunk ) override
 	{
 		return 0;
 	}
 
-	virtual void DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber )
+	void DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber ) override
 	{
 		switch ( nSize )
 		{
@@ -48,18 +48,18 @@ class CLogSaver : public IBinSaver
 		}
 	}
 
-	virtual void DataChunkString( std::string &data )
+	void DataChunkString( std::string &data ) override
 	{
 		*pszLog += " \"" + data + "\"";
 	}
 
-	virtual void DataChunkString( std::wstring &data )
+	void DataChunkString( std::wstring &data ) override
 	{
 		*pszLog += " \"" + NStr::ToMBCS( data ) + "\"";
 	}
 
 	// storing/loading pointers to objects
-	virtual void StoreObject( CObjectBase *pObject )
+	void StoreObject( CObjectBase *pObject ) override
 	{
 		if ( pObject )
 		{
@@ -86,18 +86,18 @@ class CLogSaver : public IBinSaver
 		}
 	}
 
-	virtual CObjectBase *LoadObject()
+	CObjectBase *LoadObject() override
 	{
 		return 0;
 	}
 
 public:
-	virtual bool IsReading()
+	bool IsReading() override
 	{
 		return false;
 	}
 
-	virtual int GetVersion() const
+	int GetVersion() const override
 	{
 		return N_SAVELOAD_VERSION;
 	}

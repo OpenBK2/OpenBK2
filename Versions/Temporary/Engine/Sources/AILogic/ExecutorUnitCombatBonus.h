@@ -39,6 +39,6 @@ public:
 
 	CExecutorUnitCombatBonus() {}
 
-	int Segment();
-	int operator&( IBinSaver &saver );
+	int Segment() override;
+	int operator&( IBinSaver &saver ) override;
 };

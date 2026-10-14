@@ -10,32 +10,32 @@ class CTGNoiseExporter : public IExporter
 
 public:
 	// IExporter
-	bool StartExport( const std::string &rszObjectTypeName, bool bForce )
+	bool StartExport( const std::string &rszObjectTypeName, bool bForce ) override
 	{
 		return true;
 	}
 
-	void FinishExport( const std::string &rszObjectTypeName, bool bForce ) {}
+	void FinishExport( const std::string &rszObjectTypeName, bool bForce ) override {}
 
 	EXPORT_RESULT ExportObject( IManipulator *pManipulator,
 	                            const std::string &rszObjectTypeName,
 	                            const std::string &rszObjectName,
 	                            bool bForce,
-	                            EXPORT_TYPE exportType );
+	                            EXPORT_TYPE exportType ) override;
 
 	//
-	bool StartCheck( const std::string &rszObjectTypeName, bool bExport )
+	bool StartCheck( const std::string &rszObjectTypeName, bool bExport ) override
 	{
 		return true;
 	}
 
-	void FinishCheck( const std::string &rszObjectTypeName, bool bExport ) {}
+	void FinishCheck( const std::string &rszObjectTypeName, bool bExport ) override {}
 
 	EXPORT_RESULT CheckObject( IManipulator *pManipulator,
 	                           const std::string &rszObjectTypeName,
 	                           const std::string &rszObjectName,
 	                           bool bExport,
-	                           EXPORT_TYPE exportType )
+	                           EXPORT_TYPE exportType ) override
 	{
 		return ER_SUCCESS;
 	}

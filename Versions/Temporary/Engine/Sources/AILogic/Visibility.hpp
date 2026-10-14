@@ -51,7 +51,7 @@ public:
 	{
 	}
 
-	const bool IsVisible( const SVector &vTile, const int nSpiralIndex ) const
+	const bool IsVisible( const SVector &vTile, const int nSpiralIndex ) const override
 	{
 		return IsTileInside( vTile );
 	}
@@ -75,7 +75,7 @@ public:
 	{
 	}
 
-	virtual const bool IsVisible( const SVector &vTile, const int nSpiralIndex ) const
+	const bool IsVisible( const SVector &vTile, const int nSpiralIndex ) const override
 	{
 		return pVisibleInfo && pVisibleInfo->GetData( nSpiralIndex ) > 0;
 	}
@@ -116,7 +116,7 @@ public:
 	{
 	}
 
-	const bool IsVisible( const SVector &vTile, const int nSpiralIndex ) const
+	const bool IsVisible( const SVector &vTile, const int nSpiralIndex ) const override
 	{
 		if ( GetSpiralPoint( nSpiralIndex ).sector.IsIntersec( sector ) )
 		{

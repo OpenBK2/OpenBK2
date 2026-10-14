@@ -87,7 +87,7 @@ public:
 	CDBPtr<NDb::SMapInfo> pDetailsMap;
 	CDBPtr<NDb::SChapter> pChapter;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &vMainStrike );
 		f.Add( 3, &missions );

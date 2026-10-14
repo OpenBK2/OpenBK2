@@ -14,19 +14,19 @@ public:
 	{
 	}
 
-	virtual void Save( bool bSaveChanges )
+	void Save( bool bSaveChanges ) override
 	{
 		SetModified( false );
 	}
 
-	virtual bool IsModified()
+	bool IsModified() override
 	{
 		return bEditorBaseModified;
 	}
 
-	virtual void SetModified( bool _bModified );
+	void SetModified( bool _bModified ) override;
 
-	virtual bool ShowProgress()
+	bool ShowProgress() override
 	{
 		return true;
 	}

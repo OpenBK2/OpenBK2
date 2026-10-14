@@ -71,7 +71,7 @@ public:
 		CPtr<IWindow> pScreen;
 		CPtr<CInterfaceMission> pInterface;
 
-		ZEND int operator&( IBinSaver &f )
+		ZEND int operator&( IBinSaver &f ) override
 		{
 			f.Add( 2, &pScreen );
 			f.Add( 3, &pInterface );
@@ -88,12 +88,12 @@ public:
 		}
 
 		//
-		bool NeedFlags() const
+		bool NeedFlags() const override
 		{
 			return true;
 		}
 
-		bool Execute( const std::string &szSender, const std::string &szReaction, uint16_t wKeyboardFlags );
+		bool Execute( const std::string &szSender, const std::string &szReaction, uint16_t wKeyboardFlags ) override;
 	};
 
 private:
@@ -382,7 +382,7 @@ private:
 	void UpdateInterfacePause();
 
 	void RegisterObservers();
-	bool StepLocal( bool bAppActive );
+	bool StepLocal( bool bAppActive ) override;
 
 	bool IsScreenControl( const CVec2 &vPos ) const;
 
@@ -441,11 +441,11 @@ private:
 	void CloseChatInput();
 
 protected:
-	void OnMouseMove( const CVec2 &vPos );
+	void OnMouseMove( const CVec2 &vPos ) override;
 	void CheckMouseBorder( const CVec2 &vPos, const bool bAllowScroll );
-	void OnButtonDown( const CVec2 &vPos, int nButton );
-	void OnButtonUp( const CVec2 &vPos, int nButton );
-	void OnButtonDblClk( const CVec2 &vPos, int nButton );
+	void OnButtonDown( const CVec2 &vPos, int nButton ) override;
+	void OnButtonUp( const CVec2 &vPos, int nButton ) override;
+	void OnButtonDblClk( const CVec2 &vPos, int nButton ) override;
 
 	void MsgWinLoose( const SGameMessage &msg );
 	void MsgEscMenu( const SGameMessage &msg );
@@ -538,11 +538,11 @@ protected:
 	bool OnFullInfoWeaponOverOn( const std::string &szSender );
 	bool OnFullInfoWeaponOverOff( const std::string &szSender );
 
-	bool ProcessEvent( const struct SGameMessage &msg );
+	bool ProcessEvent( const struct SGameMessage &msg ) override;
 
-	void RestoreBindSection();
+	void RestoreBindSection() override;
 
-	bool IsShowHelpScreenOnInit()
+	bool IsShowHelpScreenOnInit() override
 	{
 		return false;
 	}
@@ -551,15 +551,15 @@ protected:
 	void MultifunctionPanelMaximize();
 	void BlinkActionButton( int nButton, bool bOn );
 
-	~CInterfaceMission();
+	~CInterfaceMission() override;
 
 public:
 	CInterfaceMission();
 	//
-	bool Init();
-	void OnGetFocus( bool bFocus );
+	bool Init() override;
+	void OnGetFocus( bool bFocus ) override;
 	// переход к этому интерфейсу из другого полноэкранного
-	void StartInterface();
+	void StartInterface() override;
 	//
 	void NewMission( const NDb::SMapInfo *_pMap,
 	                 struct ITransceiver *pTransceiver,
@@ -571,7 +571,7 @@ public:
 	//
 	void SetWarForVisibility( const bool bShowWarFog );
 	//
-	void AfterLoad();
+	void AfterLoad() override;
 	//
 	virtual void Freeze( const bool bFreeze );
 
@@ -582,10 +582,10 @@ public:
 
 	void GetObjectHPs( const CMapObj *pMO, std::vector<float> *pHPs, bool *pIsSquad );
 
-	virtual void Draw( NGScene::CRTPtr *pTexture = 0 );
+	void Draw( NGScene::CRTPtr *pTexture = 0 ) override;
 
 	//
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 class CICMission : public CInterfaceCommandBase<CInterfaceMission>
@@ -600,8 +600,8 @@ public:
 	CPtr<ITransceiver> pTrans;
 	int nPlayerForWarFog = {};
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 	CICMission()
 		: nPlayerForWarFog( -1 )
@@ -619,5 +619,5 @@ public:
 
 	CICMission( ITransceiver *pTransceiver );
 
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

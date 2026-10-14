@@ -94,7 +94,7 @@ public:
 	//
 	float fRoll = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (NDb::SScriptCameraPlacement *)this );
 		f.Add( 2, &fRoll );

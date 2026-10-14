@@ -64,16 +64,16 @@ public:
 	CVisitor( std::vector<CObj<NDb::NTypeDef::STypeDef>> *pTypes,
 	          NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
 
-	virtual void Visit( NLang::CBaseTypeNode *pBaseTypeNode );
-	virtual void Visit( NLang::CComplexTypeNode *pComplexTypeNode );
-	virtual void Visit( NLang::CAttributeNode *pAttributeNode );
-	virtual void Visit( NLang::CTypeDefNode *pTypeDefNode );
-	virtual void Visit( NLang::CEnumNode *pEnumNode );
-	virtual void Visit( NLang::CEnumEntryNode *pEnumEntryNode );
-	virtual void Visit( NLang::CVariableNode *pVariableNode );
-	virtual void Visit( NLang::CVectorNode *pVectorNode );
-	virtual void Visit( NLang::CAttributeDefNode *pAttrDefNode );
-	virtual void Visit( NLang::CNamespace *pNM );
+	void Visit( NLang::CBaseTypeNode *pBaseTypeNode ) override;
+	void Visit( NLang::CComplexTypeNode *pComplexTypeNode ) override;
+	void Visit( NLang::CAttributeNode *pAttributeNode ) override;
+	void Visit( NLang::CTypeDefNode *pTypeDefNode ) override;
+	void Visit( NLang::CEnumNode *pEnumNode ) override;
+	void Visit( NLang::CEnumEntryNode *pEnumEntryNode ) override;
+	void Visit( NLang::CVariableNode *pVariableNode ) override;
+	void Visit( NLang::CVectorNode *pVectorNode ) override;
+	void Visit( NLang::CAttributeDefNode *pAttrDefNode ) override;
+	void Visit( NLang::CNamespace *pNM ) override;
 
 	const CNodes2TypeDefs &GetNodes2TypeDefs() const
 	{

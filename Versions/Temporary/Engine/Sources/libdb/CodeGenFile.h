@@ -45,7 +45,7 @@ public:
 	}
 
 	void GenerateCode( const std::string &szRootDir );
-	int operator&( IXmlSaver &saver );
+	int operator&( IXmlSaver &saver ) override;
 };
 
 } // namespace NCodeGen

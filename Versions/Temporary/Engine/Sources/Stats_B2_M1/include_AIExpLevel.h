@@ -16,7 +16,7 @@ enum EUnitRPGType eType
 // преобразовать из человеческих единиц в AI
 void ToAIUnits( bool bInEditor ) {}
 
-virtual void PostLoad( bool bInEditor )
+void PostLoad( bool bInEditor ) override
 {
 	//eType = NDb::ReMapRPGType( eDBType );
 }

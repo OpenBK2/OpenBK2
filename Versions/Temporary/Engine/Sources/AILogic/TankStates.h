@@ -15,15 +15,15 @@ class CTankStatesFactory : public IStatesFactory
 public:
 	static IStatesFactory *Instance();
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		return 0;
 	}
 
-	virtual struct IUnitState *ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
-	virtual struct IUnitState *ProduceRestState( class CQueueUnit *pUnit );
+	struct IUnitState *ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand ) override;
+	struct IUnitState *ProduceRestState( class CQueueUnit *pUnit ) override;
 
-	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
+	bool CanCommandBeExecuted( class CAICommand *pCommand ) override;
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
@@ -61,7 +61,7 @@ class CMechUnitSupportFireState : public IUnitAttackingState, public CStatusUpda
 	CPtr<CFormation> pFriendFormation;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStatusUpdatesHelper *)this );
 		f.Add( 2, &pUnit );
@@ -92,24 +92,24 @@ public:
 
 	CMechUnitSupportFireState( class CAIUnit *_pUnit, class CAIUnit *_pFriend );
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_SUPPORT_FIRE;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return true;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return pFriend->GetCenterPlain();
 	}
 
-	virtual bool IsAttacksUnit() const;
-	virtual class CAIUnit *GetTargetUnit() const;
+	bool IsAttacksUnit() const override;
+	class CAIUnit *GetTargetUnit() const override;
 };

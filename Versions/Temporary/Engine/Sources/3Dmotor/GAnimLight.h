@@ -81,8 +81,8 @@ public:
 class _3DMOTOR_EXPORT CLightLoader : public CLazyResourceLoader<CDBPtr<NDb::SAnimLight>, CAnimLightInfo>
 {
 	OBJECT_BASIC_METHODS( CLightLoader );
-	virtual CFileRequest *CreateRequest();
-	virtual void RecalcValue( CFileRequest *p );
+	CFileRequest *CreateRequest() override;
+	void RecalcValue( CFileRequest *p ) override;
 };
 
 class CAnimLight;
@@ -92,12 +92,12 @@ class _3DMOTOR_EXPORT CLightAnimator : public CPtrFuncBase<CAnimLight>
 	OBJECT_BASIC_METHODS( CLightAnimator );
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pTime.Refresh() | pInfo.Refresh() | pPlacement.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 private:
 	ZDATA
@@ -110,7 +110,7 @@ public:
 	CDGPtr<CFuncBase<SFBTransform>> pPlacement;
 	CDGPtr<CPtrFuncBase<CAnimLightInfo>> pInfo;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &fScale );
 		f.Add( 3, &stBeginTime );

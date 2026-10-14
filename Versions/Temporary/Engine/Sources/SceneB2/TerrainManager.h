@@ -36,55 +36,55 @@ public:
 
 	//
 	void Setup( NGScene::IGameView *pGView, CFuncBase<STime> *pTimer );
-	void Load( const NDb::STerrain *pDesc, CDataStream *pStream );
+	void Load( const NDb::STerrain *pDesc, CDataStream *pStream ) override;
 
-	const NDb::STerrain *GetDesc() const
+	const NDb::STerrain *GetDesc() const override
 	{
 		return pDesc;
 	}
 
-	void SetAIObserver( struct ITerraAIObserver *pObserver );
-	virtual struct ITerraAIObserver *GetAIObserver();
+	void SetAIObserver( struct ITerraAIObserver *pObserver ) override;
+	struct ITerraAIObserver *GetAIObserver() override;
 
-	void UpdateAIInfo()
+	void UpdateAIInfo() override
 	{
 		pTerraGen->UpdateAIInfo();
 	}
 
 	//
-	void ReGenerate()
+	void ReGenerate() override
 	{
 		NI_ASSERT( pDesc != 0, "Load terrain desc first!" );
 		pTerraGen->ReGenerate();
 	}
 
 	//
-	void Save( CDataStream *pStream );
+	void Save( CDataStream *pStream ) override;
 	// road
-	void AddRoad( const NDb::SVSOInstance *pInstance );
-	void UpdateRoad( const int nVSOID );
-	void RemoveRoad( const int nVSOID );
+	void AddRoad( const NDb::SVSOInstance *pInstance ) override;
+	void UpdateRoad( const int nVSOID ) override;
+	void RemoveRoad( const int nVSOID ) override;
 	// crag
-	void AddCrag( const NDb::SVSOInstance *pInstance );
-	void UpdateCrag( const int nVSOID );
-	void RemoveCrag( const int nVSOID );
+	void AddCrag( const NDb::SVSOInstance *pInstance ) override;
+	void UpdateCrag( const int nVSOID ) override;
+	void RemoveCrag( const int nVSOID ) override;
 	// river
-	void AddRiver( const NDb::SVSOInstance *pInstance );
-	void UpdateRiver( const int nVSOID );
-	void RemoveRiver( const int nVSOID );
+	void AddRiver( const NDb::SVSOInstance *pInstance ) override;
+	void UpdateRiver( const int nVSOID ) override;
+	void RemoveRiver( const int nVSOID ) override;
 	// terra spot
-	void AddTerraSpot( const NDb::STerrainSpotInstance *pInstance );
-	void UpdateTerraSpot( const int nSpotID );
-	void RemoveTerraSpot( const int nSpotID );
+	void AddTerraSpot( const NDb::STerrainSpotInstance *pInstance ) override;
+	void UpdateTerraSpot( const int nSpotID ) override;
+	void RemoveTerraSpot( const int nSpotID ) override;
 	//
-	void AddEntrenchment( const std::vector<CVec2> &_ctrlPoints, const float _fWidth );
+	void AddEntrenchment( const std::vector<CVec2> &_ctrlPoints, const float _fWidth ) override;
 	//
 	void CreateDebris( const std::string &szFileName,
 	                   CArray2D<uint8_t> *pImage,
 	                   CVec2 *pOrigin,
 	                   const NDebrisBuilder::EMaskType maskType,
 	                   const int nSmoothRadius,
-	                   const NDebrisBuilder::EMaskSmoothType smoothType );
+	                   const NDebrisBuilder::EMaskSmoothType smoothType ) override;
 	// selection
 	void CreateSelection( NMeshData::SMeshData *pData, const CVec3 &vMin, const CVec3 &vMax );
 	// tracks
@@ -105,32 +105,32 @@ public:
 	                                 const int nVisTileY,
 	                                 bool bCenter,
 	                                 const CArray2D<float> &brush,
-	                                 const NTerraBrush::ETerraBrushUpdate terraBrushUpdate );
+	                                 const NTerraBrush::ETerraBrushUpdate terraBrushUpdate ) override;
 	//
-	void GetTerraGeometryUpdateDifferences( int *pOffsX, int *pOffsY, CArray2D<float> *pDiffs );
-	void UpdateAllObjectsInGeomModifyingArea();
-	void UpdateWater();
-	float GetTerraHeight( const float x, const float y ) const;
-	float GetRealTerraHeight( const float x, const float y ) const;
-	float GetTerraHeightFast( const int nTileX, const int nTileY ) const;
-	float GetRealTerraHeightFast( const int nTileX, const int nTileY ) const;
+	void GetTerraGeometryUpdateDifferences( int *pOffsX, int *pOffsY, CArray2D<float> *pDiffs ) override;
+	void UpdateAllObjectsInGeomModifyingArea() override;
+	void UpdateWater() override;
+	float GetTerraHeight( const float x, const float y ) const override;
+	float GetRealTerraHeight( const float x, const float y ) const override;
+	float GetTerraHeightFast( const int nTileX, const int nTileY ) const override;
+	float GetRealTerraHeightFast( const int nTileX, const int nTileY ) const override;
 
 	//
-	bool GetCragPrecVerts( std::vector<CVec3> *pVerts, int nVSOId )
+	bool GetCragPrecVerts( std::vector<CVec3> *pVerts, int nVSOId ) override
 	{
 		return pTerraGen->GetCragPrecVerts( pVerts, nVSOId );
 	}
 
 	//
-	void UpdateRiversDepthes();
+	void UpdateRiversDepthes() override;
 	//
 	void AddDynamicDebris( const CVec2 &vPos,
 	                       const CVec2 &vSize,
 	                       const float fAngle,
 	                       const int nSmoothRad,
-	                       const NDb::SMaterial *pMaterial );
-	void ApplyBridgeTerraForm( const CVec2 &_p1, const CVec2 &_p2, const float fWidth, const float fHeight );
-	void ApplyObjectTerraForm( const CVec2 &_p1, const CVec2 &_p2, const CVec2 &_p3, const CVec2 &_p4 );
+	                       const NDb::SMaterial *pMaterial ) override;
+	void ApplyBridgeTerraForm( const CVec2 &_p1, const CVec2 &_p2, const float fWidth, const float fHeight ) override;
+	void ApplyObjectTerraForm( const CVec2 &_p1, const CVec2 &_p2, const CVec2 &_p3, const CVec2 &_p4 ) override;
 	//
 	void RestoreFromHistory();
 	//
@@ -139,45 +139,47 @@ public:
 	void UpdateTileAreaType( const float fXo,
 	                         const float fYo,
 	                         const CArray2D<uint8_t> &mask,
-	                         const NTerraBrush::ETerraBrushUpdate terraBrushUpdate );
+	                         const NTerraBrush::ETerraBrushUpdate terraBrushUpdate ) override;
 	//
-	void GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArray2D<uint8_t> *pDiffs );
+	void GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArray2D<uint8_t> *pDiffs ) override;
 	//
-	void FinalizeTexModifying();
+	void FinalizeTexModifying() override;
 	//
-	void ClampUnderRivers( NMeshData::SMeshData *pData );
+	void ClampUnderRivers( NMeshData::SMeshData *pData ) override;
 	//
-	void GetAreaTileTypes( CArray2D<uint8_t> *pAreaTypes, const int nX1, const int nY1, const int nX2, const int nY2 );
-	void GetAreaHeights( CArray2D<float> *pAreaHeights, const int nX1, const int nY1, const int nX2, const int nY2 );
+	void GetAreaTileTypes(
+			CArray2D<uint8_t> *pAreaTypes, const int nX1, const int nY1, const int nX2, const int nY2 ) override;
+	void
+	GetAreaHeights( CArray2D<float> *pAreaHeights, const int nX1, const int nY1, const int nX2, const int nY2 ) override;
 	//
-	void UpdateAfterTilesModifying();
+	void UpdateAfterTilesModifying() override;
 	//
-	virtual float GetZ( float x, float y ) const;
-	float GetTileHeight( int nX, int nY ) const;
-	virtual void UpdateZ( CVec3 *pvPos );
-	virtual uint32_t GetNormal( const CVec2 &vPoint ) const;
-	virtual bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
-	virtual bool GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
-	virtual void InitHeights4Editor( int nSizeX, int nSizeY );
+	float GetZ( float x, float y ) const override;
+	float GetTileHeight( int nX, int nY ) const override;
+	void UpdateZ( CVec3 *pvPos ) override;
+	uint32_t GetNormal( const CVec2 &vPoint ) const override;
+	bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const override;
+	bool GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const override;
+	void InitHeights4Editor( int nSizeX, int nSizeY ) override;
 	//
 	void SetRainyWaters( CDBPtr<NDb::SWater> pRainyWater );
 
 	//
-	virtual int GetTilesCountX() const
+	int GetTilesCountX() const override
 	{
 		return pTerraGen->GetTilesCountX();
 	}
 
-	virtual int GetTilesCountY() const
+	int GetTilesCountY() const override
 	{
 		return pTerraGen->GetTilesCountY();
 	}
 
-	virtual const STerrainInfo *const GetTerraInfo() const
+	const STerrainInfo *const GetTerraInfo() const override
 	{
 		return pTerraGen->GetTerraInfo();
 	}
 
 	//
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

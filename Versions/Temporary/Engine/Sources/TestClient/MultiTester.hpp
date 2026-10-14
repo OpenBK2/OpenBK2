@@ -63,11 +63,11 @@ public:
 	           const std::string &_szName,
 	           const std::string &_szPassword,
 	           const std::string &_szCDKey,
-	           const int _cTestMode );
-	virtual bool Segment();
-	bool IsActive() const;
+	           const int _cTestMode ) override;
+	bool Segment() override;
+	bool IsActive() const override;
 
-	bool IsCancelled() const
+	bool IsCancelled() const override
 	{
 		return bCancelled;
 	}

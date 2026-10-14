@@ -276,7 +276,7 @@ protected:
 	std::vector<SSphere> partBVs;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &bound );
 		f.Add( 3, &partBVs );

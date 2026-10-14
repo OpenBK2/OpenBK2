@@ -1,29 +1,29 @@
-virtual void ToAIUnits( bool bInEditor );
+void ToAIUnits( bool bInEditor ) override;
 
 //
-virtual int GetArmor( const int n ) const
+int GetArmor( const int n ) const override
 {
 	return 0;
 }
 
-virtual int GetMinPossibleArmor( const int n ) const
+int GetMinPossibleArmor( const int n ) const override
 {
 	return 0;
 }
 
-virtual int GetMaxPossibleArmor( const int n ) const
+int GetMaxPossibleArmor( const int n ) const override
 {
 	return 0;
 }
 
-virtual int GetRandomArmor( const int n ) const
+int GetRandomArmor( const int n ) const override
 {
 	return 0;
 }
 
 #include "include_constructorinfo.h"
 
-virtual const SInfantryGun &GetGun( const int nUniqueID, const int nPlatform, const int nGun ) const
+const SInfantryGun &GetGun( const int nUniqueID, const int nPlatform, const int nGun ) const override
 {
 	int nPlatformIdx, nGunIdx;
 	GetGunPlatformIndex( nUniqueID, nPlatform, nGun, &nPlatformIdx, &nGunIdx );
@@ -38,7 +38,7 @@ virtual const SInfantryGun &GetGun( const int nUniqueID, const int nPlatform, co
 	}
 }
 
-virtual const int GetGunsSize( const int nUniqueID, const int nPlatform ) const
+const int GetGunsSize( const int nUniqueID, const int nPlatform ) const override
 {
 	const std::vector<CConstructorInfo::SUnitPlatform> *pPlatforms = 0;
 	return ConstructorInfo() && ConstructorInfo()->GetUnitPlatforms( nUniqueID, &pPlatforms )

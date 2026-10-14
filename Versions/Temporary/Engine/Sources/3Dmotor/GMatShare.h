@@ -49,14 +49,14 @@ class CSkyAdapter : public CPtrFuncBase<NGfx::CCubeTexture>
 	ZDATA
 	CDGPtr<CPtrFuncBase<NGfx::CCubeTexture>> pTex;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &pTex );
 		return 0;
 	}
 
-	virtual bool NeedUpdate();
-	virtual void Recalc();
+	bool NeedUpdate() override;
+	void Recalc() override;
 
 public:
 	void SetSource( CPtrFuncBase<NGfx::CCubeTexture> *_pTex );
@@ -76,7 +76,7 @@ class CMaterialShare : public CObjectBase
 	CObj<CSkyAdapter> pSky;
 	CObj<IMaterial> pOccluder;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &materials );
 		f.Add( 3, &pSky );

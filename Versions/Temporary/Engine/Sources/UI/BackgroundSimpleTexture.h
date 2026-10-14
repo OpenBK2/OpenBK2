@@ -13,10 +13,10 @@ class CBackgroundSimpleTexture : public CBackground
 	CObj<CIconOutliner> pIcon;
 
 public:
-	virtual void Visit( struct IUIVisitor *pVisitor );
-	virtual int operator&( struct IBinSaver &ss );
-	virtual void SetPos( const CVec2 &vPos, const CVec2 &vSize );
-	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
-	virtual void SetTexture( const struct NDb::STexture *_pDesc );
-	virtual void SetOutline( const CDBID &outlineType );
+	void Visit( struct IUIVisitor *pVisitor ) override;
+	int operator&( struct IBinSaver &ss ) override;
+	void SetPos( const CVec2 &vPos, const CVec2 &vSize ) override;
+	void InitByDesc( const struct NDb::SUIDesc *_pDesc ) override;
+	void SetTexture( const struct NDb::STexture *_pDesc ) override;
+	void SetOutline( const CDBID &outlineType ) override;
 };

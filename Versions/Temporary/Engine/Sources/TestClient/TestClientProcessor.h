@@ -30,7 +30,7 @@ public:
 	CTestClientProcessor( const std::string &szCfgFile );
 	void SetServerClient( CServerClient *pServerClient );
 
-	virtual bool Segment();
+	bool Segment() override;
 
 	int GetMyID() const
 	{

@@ -13,7 +13,7 @@ struct IScriptWrapper : public CObjectBase
 	virtual int RunScriptFile( const char *szFileName ) = 0;
 	virtual int RunScriptByID( int nID ) = 0;
 	virtual int RunScript( const char *pszScriptText ) = 0;
-	virtual int operator&( IBinSaver &saver ) = 0;
+	int operator&( IBinSaver &saver ) override = 0;
 };
 
 SCRIPT_EXPORT IScriptWrapper *CreateScriptWrapper();

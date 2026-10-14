@@ -6,7 +6,7 @@ virtual const SPassProfile &GetPassProfile( const int nIndex = -1 ) const = 0;
 virtual const SPassProfile &GetVisProfile( const int nIndex = -1 ) const = 0;
 
 //
-virtual void ToAIUnits( bool bInEditor )
+void ToAIUnits( bool bInEditor ) override
 {
 	SHPObjectRPGStats::ToAIUnits( bInEditor );
 }

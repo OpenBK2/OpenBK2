@@ -13,7 +13,7 @@ class CExecutorSoldierEntrench : public CExecutorUnitBase
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	float fEntrenchTimeCoeff = {}; //Used for Mobile Fortress ability
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CExecutorUnitBase *)this );
 		f.Add( 2, &pUnit );
@@ -22,19 +22,19 @@ public:
 	}
 
 	// if 0 then ability must be switched off
-	float OnAbilityActive();
+	float OnAbilityActive() override;
 
 	// if 1.0 then ability is ready to on
-	float OnAbilityOff();
+	float OnAbilityOff() override;
 
-	void SwitchingOffEnd();
-	void SwitchingOffStart();
+	void SwitchingOffEnd() override;
+	void SwitchingOffStart() override;
 
-	void SwitchOnEnd();
-	void SwitchOnStart( const class CAICommand *pCommand );
-	bool ActivateDuringDisable();
+	void SwitchOnEnd() override;
+	void SwitchOnStart( const class CAICommand *pCommand ) override;
+	bool ActivateDuringDisable() override;
 
-	CCommonUnit *GetUnit();
+	CCommonUnit *GetUnit() override;
 
 	const bool IsEntrenchAllowed() const;
 	const bool IsValidInternal() const;
@@ -47,10 +47,10 @@ public:
 	{
 	}
 
-	~CExecutorSoldierEntrench();
+	~CExecutorSoldierEntrench() override;
 
-	int Segment();
-	bool NotifyEvent( const CExecutorEvent &event );
-	bool IsExecutorValid() const;
-	void RegisterOnEvents( IExecutorContainer *pContainer );
+	int Segment() override;
+	bool NotifyEvent( const CExecutorEvent &event ) override;
+	bool IsExecutorValid() const override;
+	void RegisterOnEvents( IExecutorContainer *pContainer ) override;
 };

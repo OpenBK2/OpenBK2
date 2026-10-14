@@ -172,58 +172,58 @@ private:
 
 public:
 	//IInputState interface
-	void Enter();
-	void Leave();
+	void Enter() override;
+	void Leave() override;
 
 	// CPolygonState
-	bool SkipEnterAfterInsert()
+	bool SkipEnterAfterInsert() override
 	{
 		return false;
 	}
 
-	bool CanEdit();
+	bool CanEdit() override;
 
-	bool CanInsertPolygon()
+	bool CanInsertPolygon() override
 	{
 		return true;
 	}
 
-	bool IsClosedPolygon()
+	bool IsClosedPolygon() override
 	{
 		return true;
 	}
 
-	bool IsDrawSceneDrawTool()
+	bool IsDrawSceneDrawTool() override
 	{
 		return true;
 	}
 
-	EMoveType GetMoveType();
-	void GetBounds( int *pnMinCount, int *pnMaxCount );
+	EMoveType GetMoveType() override;
+	void GetBounds( int *pnMinCount, int *pnMaxCount ) override;
 
-	CControlPointList *GetControlPoints( int nPolygonID )
+	CControlPointList *GetControlPoints( int nPolygonID ) override
 	{
 		return &controlPointList;
 	}
 
-	bool PrepareControlPoints( CControlPointList *pControlPointList );
+	bool PrepareControlPoints( CControlPointList *pControlPointList ) override;
 
-	void PickPolygon( const CVec3 &rvPos, CPolygonIDList *pPickPolygonIDList ) {}
+	void PickPolygon( const CVec3 &rvPos, CPolygonIDList *pPickPolygonIDList ) override {}
 
-	void UpdatePolygon( int nPolygonID, EUpdateType eEpdateType );
+	void UpdatePolygon( int nPolygonID, EUpdateType eEpdateType ) override;
 
-	unsigned InsertPolygon( const CControlPointList &rControlPointList )
+	unsigned InsertPolygon( const CControlPointList &rControlPointList ) override
 	{
 		controlPointList = rControlPointList;
 		return 0;
 	}
 
-	void RemovePolygon( int nPolygonID ) {}
+	void RemovePolygon( int nPolygonID ) override {}
 
 	//
 	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 
 	//
 	// CFieldState
@@ -241,7 +241,7 @@ public:
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_TERRAIN_FIELD_STATE, this );
 	}
 
-	~CFieldState()
+	~CFieldState() override
 	{
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_TERRAIN_FIELD_STATE );
 	}

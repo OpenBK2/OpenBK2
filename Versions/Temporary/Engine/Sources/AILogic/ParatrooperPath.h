@@ -21,7 +21,7 @@ class CParatrooperPath : public ISmoothPath
 	CPtr<CAIUnit> pUnit;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &lastPathUpdateTime );
 		f.Add( 3, &vStartPoint );
@@ -41,8 +41,8 @@ public:
 	CParatrooperPath() {}
 
 	CParatrooperPath( const CVec3 &startPoint, CAIUnit *pUnit );
-	virtual bool IsFinished() const;
-	virtual void Segment( const NTimer::STime timeDiff );
+	bool IsFinished() const override;
+	void Segment( const NTimer::STime timeDiff ) override;
 
 	virtual void GetSpeed3( CVec3 *vSpeed ) const;
 
@@ -52,55 +52,55 @@ public:
 	}
 
 	//ненужные функции
-	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap )
+	bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) override
 	{
 		CPtr<IPath> p = pPath;
 		return true;
 	}
 
-	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit )
+	bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) override
 	{
 		return true;
 	}
 
-	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap )
+	bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap ) override
 	{
 		CPtr<IMemento> p = pMemento;
 		return true;
 	}
 
-	virtual void Stop() {}
+	void Stop() override {}
 
 	virtual float &GetSpeedLen()
 	{
 		return fSpeedLen;
 	}
 
-	virtual const float GetSpeed() const
+	const float GetSpeed() const override
 	{
 		return fSpeedLen;
 	}
 
 	virtual void NotifyAboutClosestThreat( CBasePathUnit *pCollUnit, const float fDist ) {}
 
-	virtual const bool CanGoBackward() const
+	const bool CanGoBackward() const override
 	{
 		return false;
 	}
 
-	virtual const bool CanGoForward() const
+	const bool CanGoForward() const override
 	{
 		return true;
 	}
 
 	virtual void GetNextTiles( std::list<SVector> *pTiles ) {}
 
-	virtual const CVec2 PeekPathPoint( const int nToShift ) const
+	const CVec2 PeekPathPoint( const int nToShift ) const override
 	{
 		return CVec2( 0, 0 );
 	}
 
-	virtual IMemento *CreateMemento() const
+	IMemento *CreateMemento() const override
 	{
 		return 0;
 	}

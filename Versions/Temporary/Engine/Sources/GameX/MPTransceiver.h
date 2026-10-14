@@ -134,7 +134,7 @@ private:
 	std::vector<int> playerRemovalSegments;
 
 private:
-	bool Segment()
+	bool Segment() override
 	{
 		return false;
 	}
@@ -167,19 +167,19 @@ private:
 public:
 	CMPTransceiver();
 
-	void StartMission( const NDb::SMapInfo *pMap, IAILogic *pAI ) {}
+	void StartMission( const NDb::SMapInfo *pMap, IAILogic *pAI ) override {}
 
 	void StartMission();
-	void DoSegments();
-	void SendCommand( struct IAILogicCommandB2 *pCommand );
-	ICheckSumLog *GetCheckSumLogger();
-	const NDb::SMapInfo *GetMap() const;
+	void DoSegments() override;
+	void SendCommand( struct IAILogicCommandB2 *pCommand ) override;
+	ICheckSumLog *GetCheckSumLogger() override;
+	const NDb::SMapInfo *GetMap() const override;
 	void EndGame();
 	void PlayerRemoved( int nPlayer );
 	void SchedulePlayerRemoval( int nPlayer, int nSegment );
 	static const bool IsGamePacket( const CNetPacket *pPacket );
 
-	int operator&( IBinSaver &f )
+	int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
@@ -187,13 +187,13 @@ public:
 	void Init( IServerClient *_pClient, const SB2StartGameParams &params, int nMySlot );
 
 	// client commands
-	void CommandClientTogglePause() {}
+	void CommandClientTogglePause() override {}
 
-	void CommandClientSpeed( int nChange ) {}
+	void CommandClientSpeed( int nChange ) override {}
 
-	void CommandClientDropPlayer( const std::wstring &szPlayerNick ) {}
+	void CommandClientDropPlayer( const std::wstring &szPlayerNick ) override {}
 
-	void CommandTimeOut( bool bSet );
+	void CommandTimeOut( bool bSet ) override;
 
 	bool IsGameEnded()
 	{

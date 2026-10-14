@@ -6,7 +6,7 @@ class CLANTester : public CObjectBase
 	ZDATA
 	ZONSERIALIZE
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		OnSerialize( f );
 		return 0;

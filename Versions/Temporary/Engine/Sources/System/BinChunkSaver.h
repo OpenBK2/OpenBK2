@@ -74,30 +74,30 @@ private:
 	bool GetShortChunk( SChunkLevel &src, chunk_id dwID, SChunkLevel &res, int nNumber );
 	int CountShortChunks( SChunkLevel &src, chunk_id dwID );
 	//
-	bool StartChunk( const chunk_id idChunk, int nChunkNumber );
-	void FinishChunk();
+	bool StartChunk( const chunk_id idChunk, int nChunkNumber ) override;
+	void FinishChunk() override;
 	void AlignDataFileSize();
-	int CountChunks( const chunk_id idChunk );
+	int CountChunks( const chunk_id idChunk ) override;
 	//
-	void DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber );
+	void DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber ) override;
 	void RawData( void *pData, int nSize );
 	void WriteRawData( const void *pData, int nSize );
-	void DataChunkString( stdString &data );
-	void DataChunkString( stdWString &data );
+	void DataChunkString( stdString &data ) override;
+	void DataChunkString( stdWString &data ) override;
 	// storing/loading pointers to objects
-	void StoreObject( CObjectBase *pObject );
-	CObjectBase *LoadObject();
+	void StoreObject( CObjectBase *pObject ) override;
+	CObjectBase *LoadObject() override;
 	void RegisterExternalObject( CObjectBase *pObject, int nID );
 	//
 	void Start( const std::vector<SBinSaverExternalObject> &ext );
 	void Finish();
 
-	bool IsReading()
+	bool IsReading() override
 	{
 		return bIsReading;
 	}
 
-	int GetVersion() const
+	int GetVersion() const override
 	{
 		return nVersion;
 	}
@@ -134,7 +134,7 @@ public:
 		Start( ext );
 	}
 
-	~CStructureSaver()
+	~CStructureSaver() override
 	{
 		Finish();
 	}

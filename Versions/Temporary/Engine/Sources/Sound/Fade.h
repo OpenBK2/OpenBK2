@@ -31,7 +31,7 @@ class CFade : public IPlayListElement
 	NTimer::STime timeFaded;
 	NTimer::STime timeLastCall;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFade );
 		f.Add( 3, &eVolumeType );
@@ -50,11 +50,11 @@ public:
 
 	// if fade have to be at the end of track, then track is given
 	CFade( const NDb::SFade *_pFade, EMusicSystemVolume _eVolumeType, class CTrack *_pTrackToEnd );
-	void Segment();
-	bool IsFinished() const;
-	void Stop();
-	void Play();
-	void OnResetTimer();
+	void Segment() override;
+	bool IsFinished() const override;
+	void Stop() override;
+	void Play() override;
+	void OnResetTimer() override;
 };
 
 class CFades : public std::list<CPtr<CFade>>

@@ -10,7 +10,7 @@ class CObstacle : public IObstacle
 	float fFirePower = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &fFirePower );
 		return 0;
@@ -22,12 +22,12 @@ public:
 	{
 	}
 
-	virtual void UpdateTakenDamagePower( const float fUpdate )
+	void UpdateTakenDamagePower( const float fUpdate ) override
 	{
 		fFirePower += fUpdate;
 	}
 
-	virtual const float GetTakenDamagePower() const
+	const float GetTakenDamagePower() const override
 	{
 		return fFirePower;
 	}
@@ -42,7 +42,7 @@ class CObstacleStaticObject : public CObstacle
 	CPtr<CStaticObject> pObj;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CObstacle *)this );
 		f.Add( 2, &pObj );
@@ -57,15 +57,15 @@ public:
 	{
 	}
 
-	virtual class CBasicGun *ChooseGunToShootToSelf( class CCommonUnit *pUnit, NTimer::STime *pTime );
-	virtual int GetPlayer() const;
-	virtual float GetHPPercent() const;
-	const CVec3 GetCenter() const;
-	virtual bool IsAlive() const;
-	virtual void IssueUnitAttackCommand( class CCommonUnit *pUnit );
+	class CBasicGun *ChooseGunToShootToSelf( class CCommonUnit *pUnit, NTimer::STime *pTime ) override;
+	int GetPlayer() const override;
+	float GetHPPercent() const override;
+	const CVec3 GetCenter() const override;
+	bool IsAlive() const override;
+	void IssueUnitAttackCommand( class CCommonUnit *pUnit ) override;
 
-	virtual bool CanDeleteByMovingOver( class CAIUnit *pUnit );
-	class CUpdatableObj *GetObject() const;
+	bool CanDeleteByMovingOver( class CAIUnit *pUnit ) override;
+	class CUpdatableObj *GetObject() const override;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -22,7 +22,7 @@ class CAIUnitInfoForGeneral : public CAIObjectBase
 	CVec2 vLastRegisteredGeneralPos;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pOwner );
 		f.Add( 3, &lastVisibleTime );

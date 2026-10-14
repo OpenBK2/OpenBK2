@@ -48,7 +48,7 @@ class CInterfaceNivalNet : public CInterfaceMPScreenBase, public IProgrammedReac
 	EState eState;
 	CPtr<IButton> pRememberPassword;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceMPScreenBase *)this );
 		f.Add( 2, &pMain );
@@ -108,19 +108,19 @@ private:
 	bool OnRecoveryCancelReaction( const std::string &szSender );
 	//}
 protected:
-	~CInterfaceNivalNet();
+	~CInterfaceNivalNet() override;
 
 public:
 	CInterfaceNivalNet();
 
-	bool Init();
-	void OnGetFocus( bool bFocus );
-	bool ProcessEvent( const SGameMessage &msg );
-	void AfterLoad();
+	bool Init() override;
+	void OnGetFocus( bool bFocus ) override;
+	bool ProcessEvent( const SGameMessage &msg ) override;
+	void AfterLoad() override;
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 	//}
 };
 
@@ -129,10 +129,10 @@ class CICNivalNet : public CInterfaceCommandBase<CInterfaceNivalNet>
 {
 	OBJECT_BASIC_METHODS( CICNivalNet );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };
 #endif // _SINGLE_DEMO

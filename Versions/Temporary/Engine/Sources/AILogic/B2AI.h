@@ -52,13 +52,13 @@ struct IAILogic : public ICommonB2M1AI
 	virtual const bool GetMiniMapUnitsInfo( std::vector<SMiniMapUnitInfo> &vUnits ) = 0;
 	virtual bool GetMiniMapWarForInfo( CArray2D<uint8_t> **pWarFogInfo, bool bFirstTime ) = 0;
 
-	virtual bool UpdateAcknowledgment( SAIAcknowledgment &pAck ) = 0;
-	virtual bool UpdateAcknowledgment( SAIBoredAcknowledgement &pAck ) = 0;
+	bool UpdateAcknowledgment( SAIAcknowledgment &pAck ) override = 0;
+	bool UpdateAcknowledgment( SAIBoredAcknowledgement &pAck ) override = 0;
 
-	virtual bool IsCombatSituation() = 0;
+	bool IsCombatSituation() override = 0;
 
-	virtual void PrepareUpdates() = 0;
-	virtual CObjectBase *GetUpdate() = 0;
+	void PrepareUpdates() override = 0;
+	CObjectBase *GetUpdate() override = 0;
 
 	virtual float GetZ( const CVec2 &vPoint ) const = 0;
 	virtual const bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const = 0;

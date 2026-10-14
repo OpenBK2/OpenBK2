@@ -11,8 +11,8 @@ class CBackgroundSimpleScallingTexture : public CBackground
 
 	CVec2 vSize; // real size of texture (mainly for n^2-aligned textures)
 public:
-	virtual void Visit( struct IUIVisitor *pVisitor );
-	virtual int operator&( IBinSaver &ss );
-	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
-	virtual void SetTexture( const struct NDb::STexture *_pDesc );
+	void Visit( struct IUIVisitor *pVisitor ) override;
+	int operator&( IBinSaver &ss ) override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
+	void SetTexture( const struct NDb::STexture *_pDesc ) override;
 };

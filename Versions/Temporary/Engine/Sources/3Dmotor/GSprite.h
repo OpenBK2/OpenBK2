@@ -28,7 +28,7 @@ private:
 	CObj<CPtrFuncBase<NGfx::CTexture>> pTexture;
 	CDGPtr<CFuncBase<CVec2>> pSize;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &sDir );
 		f.Add( 4, &pScene );
@@ -41,9 +41,9 @@ private:
 	}
 
 protected:
-	virtual void Recalc();
+	void Recalc() override;
 
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pCamera.Refresh() || pPosition.Refresh() || pDir.Refresh() || pSize.Refresh();
 	}

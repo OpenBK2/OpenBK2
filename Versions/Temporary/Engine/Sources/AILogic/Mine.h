@@ -28,7 +28,7 @@ class CMineStaticObject : public CGivenPassabilityStObject
 			bool bAlive = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CGivenPassabilityStObject *)this );
 		f.Add( 2, &pStats );
@@ -59,16 +59,16 @@ public:
 	CMineStaticObject();
 	CMineStaticObject(
 			const SMineRPGStats *_pStats, const CVec3 &center, const float fHP, const int nFrameIndex, int player );
-	virtual void Init();
+	void Init() override;
 
-	virtual const SHPObjectRPGStats *GetStats() const
+	const SHPObjectRPGStats *GetStats() const override
 	{
 		return pStats;
 	}
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual const NTimer::STime GetNextSegmentTime() const
+	const NTimer::STime GetNextSegmentTime() const override
 	{
 		return nextSegmTime;
 	}
@@ -78,16 +78,16 @@ public:
 
 	// сдетонировать, если при наезде данного юнита мина взрывается; true - если сдетонировала
 	bool CheckToDetonate( class CAIUnit *pUnit );
-	virtual void
-	TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit );
-	virtual void Die( const float fDamage );
+	void
+	TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit ) override;
+	void Die( const float fDamage ) override;
 
-	virtual EStaticObjType GetObjectType() const
+	EStaticObjType GetObjectType() const override
 	{
 		return ESOT_MINE;
 	}
 
-	virtual const bool IsVisible( const uint8_t nParty ) const;
+	const bool IsVisible( const uint8_t nParty ) const override;
 	void SetVisible( int nParty, bool bVis = true );
 
 	// для удаления инженерами
@@ -103,25 +103,25 @@ public:
 
 	void ClearVisibleStatus();
 
-	virtual bool IsContainer() const
+	bool IsContainer() const override
 	{
 		return false;
 	}
 
-	virtual const int GetNDefenders() const
+	const int GetNDefenders() const override
 	{
 		return 0;
 	}
 
-	virtual class CSoldier *GetUnit( const int n ) const
+	class CSoldier *GetUnit( const int n ) const override
 	{
 		return 0;
 	}
 
-	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const
+	bool CanUnitGoThrough( const EAIClasses &eClass ) const override
 	{
 		return true;
 	}
 
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
+	bool ShouldSuspendAction( const EActionNotify &eAction ) const override;
 };

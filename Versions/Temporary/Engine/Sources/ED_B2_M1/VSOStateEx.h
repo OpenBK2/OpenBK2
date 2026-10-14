@@ -21,18 +21,18 @@ class CVSOStateEx : public CVSOState
 
 protected:
 	// CVSOState
-	virtual bool CanEdit();
+	bool CanEdit() override;
 	//
-	virtual void PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList );
-	virtual bool CanInsertVSO();
-	virtual NDb::SVSOInstance *GetVSO( int nVSOID, int *pnVSOIndex );
+	void PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList ) override;
+	bool CanInsertVSO() override;
+	NDb::SVSOInstance *GetVSO( int nVSOID, int *pnVSOIndex ) override;
 	virtual int GetFreeVSOID();
-	virtual void UpdateVSO( int nVSOID,
-	                        EUpdateType eEpdateType,
-	                        CVSOManager::SVSOSelection::ESelectionType eSelectionType,
-	                        unsigned nFlags );
-	virtual int InsertVSO( const std::vector<CVec3> &rControlPointList );
-	virtual void RemoveVSO( int nVSOID );
+	void UpdateVSO( int nVSOID,
+	                EUpdateType eEpdateType,
+	                CVSOManager::SVSOSelection::ESelectionType eSelectionType,
+	                unsigned nFlags ) override;
+	int InsertVSO( const std::vector<CVec3> &rControlPointList ) override;
+	void RemoveVSO( int nVSOID ) override;
 
 	virtual bool
 	InsertVSOToBase( class CObjectBaseController *pObjectController, int nVSOIndex, const NDb::SVSOInstance &rVSO );

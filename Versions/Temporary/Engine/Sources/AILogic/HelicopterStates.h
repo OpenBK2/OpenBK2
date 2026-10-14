@@ -16,16 +16,16 @@ class CHelicopterStatesFactory : public IStatesFactory
 	static CPtr<CHelicopterStatesFactory> pFactory;
 
 public:
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		return 0;
 	}
 
 	static IStatesFactory *Instance();
 
-	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
-	virtual struct IUnitState *ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
-	virtual struct IUnitState *ProduceRestState( class CQueueUnit *pUnit );
+	bool CanCommandBeExecuted( class CAICommand *pCommand ) override;
+	struct IUnitState *ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand ) override;
+	struct IUnitState *ProduceRestState( class CQueueUnit *pUnit ) override;
 
 	friend class CStaticMembers;
 };
@@ -37,7 +37,7 @@ protected:
 	CPtr<CHelicopter> pHelicopter;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pHelicopter );
 		return 0;
@@ -53,24 +53,24 @@ public:
 	{
 	}
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual bool IsAttacksUnit() const
+	bool IsAttacksUnit() const override
 	{
 		return false;
 	}
 
-	virtual CAIUnit *GetTargetUnit() const
+	CAIUnit *GetTargetUnit() const override
 	{
 		return 0;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 
 protected:
 	bool ShouldLeaveMap() const;
@@ -84,7 +84,7 @@ class CHelicopterRestState : public CHelicopterBaseState
 	OBJECT_BASIC_METHODS( CHelicopterRestState );
 	ZDATA_( CHelicopterBaseState )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CHelicopterBaseState *)this );
 		return 0;
@@ -98,14 +98,14 @@ public:
 	{
 	}
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual bool IsRestState() const
+	bool IsRestState() const override
 	{
 		return true;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_REST;
 	}
@@ -119,7 +119,7 @@ class CHelicopterMoveState : public CHelicopterBaseState
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	bool bScanTargets = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CHelicopterBaseState *)this );
 		f.Add( 2, &vTarget );
@@ -135,14 +135,14 @@ public:
 	}
 
 	CHelicopterMoveState( CHelicopter *pUnit, const CVec2 &_vTarget, const bool _bScanTargets );
-	virtual void Segment();
+	void Segment() override;
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return vTarget;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return bScanTargets ? EUSN_SWARM : EUSN_MOVE;
 	}
@@ -162,7 +162,7 @@ class CHelicopterUnloadState : public CHelicopterBaseState
 	int nNextPassenger = {};
 	bool bFinishAfterSquad = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CHelicopterBaseState *)this );
 		f.Add( 2, &vTarget );
@@ -193,15 +193,15 @@ public:
 	}
 
 	CHelicopterUnloadState( CHelicopter *pUnit, const CVec2 &_vTarget, CFormation *_pUnload );
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return vTarget;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_LAND;
 	}
@@ -213,7 +213,7 @@ class CHelicopterRotateState : public CHelicopterBaseState
 	ZDATA_( CHelicopterBaseState )
 	CVec2 vTarget;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CHelicopterBaseState *)this );
 		f.Add( 2, &vTarget );
@@ -227,14 +227,14 @@ public:
 	}
 
 	CHelicopterRotateState( CHelicopter *pUnit, const CVec2 &_vTarget );
-	virtual void Segment();
+	void Segment() override;
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return vTarget;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_TURN_TO_POINT;
 	}
@@ -250,7 +250,7 @@ class CHelicopterAttackUnitState : public CHelicopterBaseState
 	bool bAirModifierApplied = {};
 	CDamageToEnemyUpdater damageUpdater;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CHelicopterBaseState *)this );
 		f.Add( 2, &pTarget );
@@ -281,27 +281,27 @@ public:
 	//virtual ~CHelicopterAttackUnitState();
 	void OnFinish() override;
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return true;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 
-	virtual bool IsAttacksUnit() const
+	bool IsAttacksUnit() const override
 	{
 		return true;
 	}
 
-	virtual CAIUnit *GetTargetUnit() const
+	CAIUnit *GetTargetUnit() const override
 	{
 		return pTarget;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_ATTACK_UNIT;
 	}
@@ -314,7 +314,7 @@ class CHelicopterLeaveState : public CHelicopterBaseState
 	CVec2 vTarget;
 	bool bScanTargets = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CHelicopterBaseState *)this );
 		f.Add( 2, &vTarget );
@@ -330,19 +330,19 @@ public:
 	}
 
 	CHelicopterLeaveState( CHelicopter *pUnit, const CVec2 &_vTarget, const bool _bScanTargets );
-	virtual void Segment();
+	void Segment() override;
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return vTarget;
 	}
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand )
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override
 	{
 		return TSIR_NO_COMMAND_INCOMPATIBLE;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_PLANE_LEAVE;
 	}
@@ -354,7 +354,7 @@ class CHelicopterFlyDeadState : public CHelicopterBaseState
 	ZDATA_( CHelicopterBaseState )
 	bool bStarted = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CHelicopterBaseState *)this );
 		f.Add( 2, &bStarted );
@@ -368,14 +368,14 @@ public:
 	}
 
 	CHelicopterFlyDeadState( CHelicopter *pUnit );
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand )
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override
 	{
 		return TSIR_NO_COMMAND_INCOMPATIBLE;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_FLY_DEAD;
 	}

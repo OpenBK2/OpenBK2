@@ -130,13 +130,13 @@ const int N_PG_IMAGE_BEFORE = 4;
 class CEllipsisRenderer : public wxPGDefaultRenderer
 {
 public:
-	virtual bool Render( wxDC &rDC,
-	                     const wxRect &rRect,
-	                     const wxPropertyGrid *pGrid,
-	                     wxPGProperty *pProperty,
-	                     int nColumn,
-	                     int nItem,
-	                     int nFlags ) const override
+	bool Render( wxDC &rDC,
+	             const wxRect &rRect,
+	             const wxPropertyGrid *pGrid,
+	             wxPGProperty *pProperty,
+	             int nColumn,
+	             int nItem,
+	             int nFlags ) const override
 	{
 		// wx leaves the selected value cell white even when it has no editor.
 		// Carry the selection through arrays, folders and other display-only
@@ -191,7 +191,7 @@ class CEllipsized : public TProperty
 public:
 	using TProperty::TProperty;
 
-	virtual wxPGCellRenderer *GetCellRenderer( int nColumn ) const override
+	wxPGCellRenderer *GetCellRenderer( int nColumn ) const override
 	{
 		return EllipsisRenderer();
 	}
@@ -224,7 +224,7 @@ public:
 		return buttons;
 	}
 
-	virtual wxPGCellRenderer *GetCellRenderer( int nColumn ) const override
+	wxPGCellRenderer *GetCellRenderer( int nColumn ) const override
 	{
 		return EllipsisRenderer();
 	}
@@ -260,15 +260,15 @@ template <class TEditor>
 class CValueEditor : public TEditor
 {
 public:
-	virtual wxString GetName() const override
+	wxString GetName() const override
 	{
 		return wxS( "OBK2Value" ) + TEditor::GetName();
 	}
 
-	virtual wxPGWindowList CreateControls( wxPropertyGrid *pGrid,
-	                                       wxPGProperty *pProperty,
-	                                       const wxPoint &rPosition,
-	                                       const wxSize &rSize ) const override
+	wxPGWindowList CreateControls( wxPropertyGrid *pGrid,
+	                               wxPGProperty *pProperty,
+	                               const wxPoint &rPosition,
+	                               const wxSize &rSize ) const override
 	{
 		// ReadOnly alone creates a read-only text box in wx; NoEditor only
 		// suppresses it on rows with children, so it misses empty arrays.
@@ -312,15 +312,15 @@ wxPGEditor *ValueEditor()
 class CButtonEditor : public CValueEditor<wxPGTextCtrlEditor>
 {
 public:
-	virtual wxString GetName() const override
+	wxString GetName() const override
 	{
 		return wxS( "OBK2PropertyButtons" );
 	}
 
-	virtual wxPGWindowList CreateControls( wxPropertyGrid *pGrid,
-	                                       wxPGProperty *pProperty,
-	                                       const wxPoint &rPosition,
-	                                       const wxSize &rSize ) const override
+	wxPGWindowList CreateControls( wxPropertyGrid *pGrid,
+	                               wxPGProperty *pProperty,
+	                               const wxPoint &rPosition,
+	                               const wxSize &rSize ) const override
 	{
 		const CButtonProperty *const pButtonProperty = dynamic_cast<const CButtonProperty *>( pProperty );
 		if ( ( pButtonProperty == nullptr ) || pButtonProperty->GetButtons().empty() )
@@ -341,8 +341,7 @@ public:
 		return windows;
 	}
 
-	virtual bool
-	OnEvent( wxPropertyGrid *pGrid, wxPGProperty *pProperty, wxWindow *pPrimary, wxEvent &rEvent ) const override
+	bool OnEvent( wxPropertyGrid *pGrid, wxPGProperty *pProperty, wxWindow *pPrimary, wxEvent &rEvent ) const override
 	{
 		if ( rEvent.GetEventType() == wxEVT_BUTTON )
 		{
@@ -540,7 +539,7 @@ private:
 	static const int IN_CELL_BUTTON_X_ADJUST = 2;
 
 protected:
-	virtual void DrawExpanderButton( wxDC &rDC, const wxRect &rRect, wxPGProperty *pProperty ) const override
+	void DrawExpanderButton( wxDC &rDC, const wxRect &rRect, wxPGProperty *pProperty ) const override
 	{
 		// The tree's box was 9 pixels square, centred in the margin the grid
 		// gives the button; the grid's own button is the native one's size.
@@ -565,7 +564,7 @@ public:
 	}
 
 protected:
-	virtual wxPropertyGrid *CreatePropertyGrid() const override
+	wxPropertyGrid *CreatePropertyGrid() const override
 	{
 		return new CClassicPropertyGrid();
 	}
@@ -633,7 +632,7 @@ class CPropertyGridView : public CDefaultView, public ICommandHandler
 	EExpandMode eExpandMode = EXPAND_USER_DEFINED;
 
 public:
-	virtual ~CPropertyGridView()
+	~CPropertyGridView() override
 	{
 		ICommandHandlerContainer *const pContainer = Singleton<ICommandHandlerContainer>();
 		pContainer->Remove( CHID_PROPERTY_CONTROL, this );
@@ -784,19 +783,19 @@ public:
 	}
 
 	// IView, through CDefaultView.
-	virtual void Undo( IController *pController )
+	void Undo( IController *pController ) override
 	{
 		Replay( pController, true );
 	}
 
-	virtual void Redo( IController *pController )
+	void Redo( IController *pController ) override
 	{
 		Replay( pController, false );
 	}
 
 	// ICommandHandler, registered as CHID_PROPERTY_CONTROL and CHID_SELECTION
 	// when the grid takes the focus, as the tree registered itself.
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override
 	{
 		if ( GetViewManipulator() == 0 || pManager == nullptr )
 		{
@@ -924,7 +923,7 @@ public:
 		}
 	}
 
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override
 	{
 		if ( GetViewManipulator() == 0 || pManager == nullptr || pbEnable == 0 || pbCheck == 0 )
 		{
@@ -2360,7 +2359,7 @@ class CWxPropertyPane : public IPropertyPane, public CPCBaseDialog
 	bool bRegistered = false;
 
 public:
-	virtual ~CWxPropertyPane()
+	~CWxPropertyPane() override
 	{
 		if ( bRegistered )
 		{
@@ -2413,28 +2412,28 @@ public:
 		bRegistered = true;
 	}
 
-	virtual void EnableEdit( bool bEnable )
+	void EnableEdit( bool bEnable ) override
 	{
 		view.EnableEdit( bEnable );
 	}
 
 	// CPCBaseDialog
-	virtual IView *GetView()
+	IView *GetView() override
 	{
 		return &view;
 	}
 
-	virtual ICommandHandler *GetCommandHandler()
+	ICommandHandler *GetCommandHandler() override
 	{
 		return &view;
 	}
 
-	virtual void CreateTree()
+	void CreateTree() override
 	{
 		view.BuildTree();
 	}
 
-	virtual void UpdateValues()
+	void UpdateValues() override
 	{
 		view.UpdateValues();
 	}
@@ -2451,47 +2450,47 @@ public:
 		view.Attach( CreateGridManager( pParent ), pStatus, pOwner, rszOptionsLabel );
 	}
 
-	virtual wxWindow *GetWindow()
+	wxWindow *GetWindow() override
 	{
 		return view.GetManager();
 	}
 
-	virtual CDefaultView *GetView()
+	CDefaultView *GetView() override
 	{
 		return &view;
 	}
 
-	virtual ICommandHandler *GetCommandHandler()
+	ICommandHandler *GetCommandHandler() override
 	{
 		return &view;
 	}
 
-	virtual void BuildTree()
+	void BuildTree() override
 	{
 		view.BuildTree();
 	}
 
-	virtual void UpdateValues()
+	void UpdateValues() override
 	{
 		view.UpdateValues();
 	}
 
-	virtual void EnableEdit( bool bEnable )
+	void EnableEdit( bool bEnable ) override
 	{
 		view.EnableEdit( bEnable );
 	}
 
-	virtual void SetChangeCallback( const std::function<void()> &rCallback )
+	void SetChangeCallback( const std::function<void()> &rCallback ) override
 	{
 		view.SetChangeCallback( rCallback );
 	}
 
-	virtual void SetSelectionCallback( const std::function<void( const std::string & )> &rCallback )
+	void SetSelectionCallback( const std::function<void( const std::string & )> &rCallback ) override
 	{
 		view.SetSelectionCallback( rCallback );
 	}
 
-	virtual bool GetColumnWidths( int *pnWidths ) const
+	bool GetColumnWidths( int *pnWidths ) const override
 	{
 		return view.GetColumnWidths( pnWidths );
 	}

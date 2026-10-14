@@ -80,7 +80,7 @@ protected:
 	{
 		OBJECT_NOCOPY_METHODS( SChooseAttachedByDefault )
 	public:
-		virtual const NDb::SVisObj *Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj );
+		const NDb::SVisObj *Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj ) override;
 	};
 
 	virtual void InitAttached( const NDb::ESeason eSeason, IChooseAttached *pChooseFunc ) = 0;
@@ -91,10 +91,10 @@ protected:
 	                  const ESceneSubObjType eType,
 	                  const int nNumber );
 
-	virtual void ChangeModelToDamaged( const int nDamaged, const NDb::SModel *pNewModel, const NDb::ESeason eSeason );
-	virtual void ChangeModelToUsual( const NDb::SModel *pNewModel, const NDb::ESeason eSeason );
-	virtual void ChangeModelToAnimable( const NDb::SModel *pNewModel, const NDb::ESeason eSeason );
-	virtual void ChangeModelToTransportable( const NDb::SModel *pNewModel, const NDb::ESeason eSeason );
+	void ChangeModelToDamaged( const int nDamaged, const NDb::SModel *pNewModel, const NDb::ESeason eSeason ) override;
+	void ChangeModelToUsual( const NDb::SModel *pNewModel, const NDb::ESeason eSeason ) override;
+	void ChangeModelToAnimable( const NDb::SModel *pNewModel, const NDb::ESeason eSeason ) override;
+	void ChangeModelToTransportable( const NDb::SModel *pNewModel, const NDb::ESeason eSeason ) override;
 
 	void SetAnimation( const NDb::SAnimB2 *pAnimation, const NTimer::STime startTime );
 
@@ -105,7 +105,7 @@ protected:
 
 	int GetWeaponAmmo( const NDb::SWeaponRPGStats *pWeapon ) const;
 	int GetWeaponAmmoTotal() const;
-	void FillIconsInfo( SSceneObjIconInfo &iconInfo );
+	void FillIconsInfo( SSceneObjIconInfo &iconInfo ) override;
 
 public:
 	typedef std::list<SAbilityInfo> CAbilityInfoList;
@@ -114,67 +114,73 @@ public:
 	             const SAIBasicUpdate *_pUpdate,
 	             NDb::ESeason eSeason,
 	             const NDb::EDayNight eDayTime,
-	             bool bInEditor );
-	virtual bool
-	CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor );
+	             bool bInEditor ) override;
+	bool CreateSceneObject( const int nUniqueID,
+	                        const SAINewUnitUpdate *pUpdate,
+	                        NDb::ESeason eSeason,
+	                        bool bInEditor ) override;
 
-	void GetStatus( SObjectStatus *pStatus ) const;
+	void GetStatus( SObjectStatus *pStatus ) const override;
 
-	IClientUpdatableProcess *
-	AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason );
-	bool AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update );
-	int GetAbilityTier( NDb::EUserAction eAction ) const;
-	const NDb::SUnitSpecialAblityDesc *GetAbilityDesc( NDb::EUserAction eAction ) const;
-	void GetAbilityInfo( CAbilityInfo &abilityList ) const;
+	IClientUpdatableProcess *AIUpdateRPGStats( const SAINotifyRPGStats &stats,
+	                                           struct IClientAckManager *pAckManager,
+	                                           NDb::ESeason eSeason ) override;
+	bool AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update ) override;
+	int GetAbilityTier( NDb::EUserAction eAction ) const override;
+	const NDb::SUnitSpecialAblityDesc *GetAbilityDesc( NDb::EUserAction eAction ) const override;
+	void GetAbilityInfo( CAbilityInfo &abilityList ) const override;
 
-	void SetSquad( struct IMOSquad *_pSquad ) {}
+	void SetSquad( struct IMOSquad *_pSquad ) override {}
 
-	virtual struct IMOSquad *GetSquad() const
+	struct IMOSquad *GetSquad() const override
 	{
 		return 0;
 	}
 
 	//
-	virtual bool NeedShowInterrior() const;
+	bool NeedShowInterrior() const override;
 
-	virtual void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck );
-	void AIUpdateAcknowledgement( const NDb::EUnitAckType eAck, struct IClientAckManager *pAckManager, const int nSet );
-	void AIUpdateBoredAcknowledgement( const struct SAIBoredAcknowledgement &ack, struct IClientAckManager *pAckManager );
+	void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck ) override;
+	void AIUpdateAcknowledgement( const NDb::EUnitAckType eAck,
+	                              struct IClientAckManager *pAckManager,
+	                              const int nSet ) override;
+	void AIUpdateBoredAcknowledgement( const struct SAIBoredAcknowledgement &ack,
+	                                   struct IClientAckManager *pAckManager ) override;
 	void AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate,
 	                       const NDb::ESeason eSeason,
 	                       const bool bIsNight,
 	                       ISoundScene *pSoundScene,
-	                       IClientAckManager *pAckManager );
+	                       IClientAckManager *pAckManager ) override;
 	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
 	                        struct ISoundScene *pSoundScene,
-	                        IClientAckManager *pAckManager );
+	                        IClientAckManager *pAckManager ) override;
 	void AIUpdateShootAreas( const SAIShootAreaUpdate *pUpdate );
 
-	bool IsSelected() const
+	bool IsSelected() const override
 	{
 		return ( GetSquad() ) ? ( GetSquad()->IsSelected() ) : ( CMOSelectable::IsSelected() );
 	}
 
-	void GetActions( CUserActions *pActions, EActionsType eActions ) const;
-	void GetPossibleActions( CUserActions *pActions ) const;
-	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;
+	void GetActions( CUserActions *pActions, EActionsType eActions ) const override;
+	void GetPossibleActions( CUserActions *pActions ) const override;
+	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const override;
 
-	void AIUpdateModifyEntranceState( bool bOpen );
+	void AIUpdateModifyEntranceState( bool bOpen ) override;
 
-	bool IsOpen() const
+	bool IsOpen() const override
 	{
 		return bOpen;
 	}
 
-	void SetUnitLevel( int nLevel, bool bShowUnitRank );
-	void SetNewAbility( bool bNewAbility );
+	void SetUnitLevel( int nLevel, bool bShowUnitRank ) override;
+	void SetNewAbility( bool bNewAbility ) override;
 
-	NDb::EReinforcementType GetReinfType() const
+	NDb::EReinforcementType GetReinfType() const override
 	{
 		return eReinfType;
 	}
 
-	void SetReinfType( NDb::EReinforcementType eType )
+	void SetReinfType( NDb::EReinforcementType eType ) override
 	{
 		eReinfType = eType;
 	}
@@ -184,9 +190,9 @@ public:
 		return VNULL3;
 	}
 
-	void SetPointer( const NDb::SModel *pModel );
-	void ClearPointer();
+	void SetPointer( const NDb::SModel *pModel ) override;
+	void ClearPointer() override;
 
 	//
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

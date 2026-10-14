@@ -12,12 +12,12 @@ class CRainAnimator : public CPtrFuncBase<CParticleEffect>
 	OBJECT_BASIC_METHODS( CRainAnimator );
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pCamera.Refresh() | pTime.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 private:
 	ZDATA
@@ -32,7 +32,7 @@ private:
 	STime tStart;
 
 public:
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &pTime );
 		f.Add( 3, &pCamera );

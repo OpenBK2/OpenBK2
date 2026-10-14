@@ -349,7 +349,7 @@ public:
 	{
 	}
 
-	~CLinearBufferElement()
+	~CLinearBufferElement() override
 	{
 		while ( nLocked-- )
 		{
@@ -357,28 +357,28 @@ public:
 		}
 	}
 
-	virtual int GetFormatID() const
+	int GetFormatID() const override
 	{
 		return pBuffer->GetFormatID();
 	}
 
-	virtual void SetSize( int _nSize )
+	void SetSize( int _nSize ) override
 	{
 		ASSERT( _nSize <= nBufSize );
 		nSize = _nSize;
 	}
 
-	virtual int GetSize() const
+	int GetSize() const override
 	{
 		return nSize;
 	}
 
-	virtual int GetBufSize() const
+	int GetBufSize() const override
 	{
 		return nBufSize;
 	}
 
-	virtual void *Lock()
+	void *Lock() override
 	{
 		unsigned char *pData = pBuffer->Lock();
 		// Match the lower-level lock only after it succeeds, including during unwind.
@@ -386,7 +386,7 @@ public:
 		return pData + pBuffer->GetStride() * nStart;
 	}
 
-	virtual void Unlock()
+	void Unlock() override
 	{
 		if ( nLocked == 0 )
 		{
@@ -411,22 +411,22 @@ public:
 	{
 	}
 
-	virtual void *GetVertexStream()
+	void *GetVertexStream() override
 	{
 		return pBuffer;
 	}
 
-	virtual int GetVBStart() const
+	int GetVBStart() const override
 	{
 		return nStart;
 	}
 
-	virtual int GetVBSize() const
+	int GetVBSize() const override
 	{
 		return nSize;
 	}
 
-	virtual void DoTouch()
+	void DoTouch() override
 	{
 		ASSERT( IsValid( this ) );
 		if ( Touch() )
@@ -435,13 +435,13 @@ public:
 		}
 	}
 
-	virtual void SetVertexStream()
+	void SetVertexStream() override
 	{
 		ASSERT( IsValid( this ) );
 		RealSetVertexStream( pBuffer->GetBuffer()->obj, pBuffer->GetStride() );
 	}
 
-	virtual int GetGeometryFormatID()
+	int GetGeometryFormatID() override
 	{
 		return GetFormatID();
 	}
@@ -479,50 +479,50 @@ public:
 	{
 	}
 
-	virtual int GetFormatID() const
+	int GetFormatID() const override
 	{
 		return S3DTriangle::ID;
 	}
 
-	virtual void SetSize( int _nSize )
+	void SetSize( int _nSize ) override
 	{
 		ASSERT( _nSize <= data.size() );
 		nSize = _nSize;
 	}
 
-	virtual int GetSize() const
+	int GetSize() const override
 	{
 		return nSize;
 	}
 
-	virtual int GetBufSize() const
+	int GetBufSize() const override
 	{
 		return data.size();
 	}
 
-	virtual void *Lock()
+	void *Lock() override
 	{
 		return &data[0];
 	}
 
-	virtual void Unlock() {}
+	void Unlock() override {}
 
-	virtual const std::vector<S3DTriangle> &GetTris() const
+	const std::vector<S3DTriangle> &GetTris() const override
 	{
 		return data;
 	}
 
-	virtual int GetTrisNumber() const
+	int GetTrisNumber() const override
 	{
 		return GetSize();
 	}
 
-	virtual CTriListWrapper *CreateWrapper( int nTris )
+	CTriListWrapper *CreateWrapper( int nTris ) override
 	{
 		return NewWrapper( this, nTris );
 	}
 
-	void DrawPrimitive( int nVBStart, int nMinIndex, int nMaxIndex )
+	void DrawPrimitive( int nVBStart, int nMinIndex, int nMaxIndex ) override
 	{
 		ASSERT( 0 );
 	}
@@ -578,45 +578,45 @@ public:
 	{
 	}
 
-	virtual const std::vector<S3DTriangle> &GetTris() const
+	const std::vector<S3DTriangle> &GetTris() const override
 	{
 		return dynamic_cast<CTriList *>( pParent.GetPtr() )->GetTris();
 	}
 
-	virtual int GetTrisNumber() const
+	int GetTrisNumber() const override
 	{
 		return nTris;
 	}
 
-	int GetFormatID() const
+	int GetFormatID() const override
 	{
 		ASSERT( IsValid( pParent ) );
 		return pParent->GetFormatID();
 	}
 
-	void SetSize( int _nSize )
+	void SetSize( int _nSize ) override
 	{
 		ASSERT( IsValid( pParent ) && _nSize <= pParent->GetSize() );
 		nTris = _nSize;
 	}
 
-	int GetSize() const
+	int GetSize() const override
 	{
 		return nTris;
 	}
 
-	int GetBufSize() const
+	int GetBufSize() const override
 	{
 		ASSERT( IsValid( pParent ) );
 		return pParent->GetBufSize();
 	}
 
-	virtual CTriListWrapper *CreateWrapper( int nTris )
+	CTriListWrapper *CreateWrapper( int nTris ) override
 	{
 		return dynamic_cast<CTriListCore *>( pParent.GetPtr() )->CreateWrapper( nTris );
 	}
 
-	virtual void DrawPrimitive( int nVBStart, int nMinIndex, int nMaxIndex )
+	void DrawPrimitive( int nVBStart, int nMinIndex, int nMaxIndex ) override
 	{
 		ASSERT( 0 );
 	} //dynamic_cast<CTriListCore16*>(pParent.GetPtr())->RealDrawPrimitive( nVBStart, nMinIndex, nMaxIndex, nTris ); }
@@ -863,14 +863,14 @@ public:
 	                EAccess _access,
 	                D3DFORMAT format,
 	                IDirect3DTexture9 *_pTexture );
-	~CTextureLocker();
+	~CTextureLocker() override;
 
-	virtual void *GetBuffer()
+	void *GetBuffer() override
 	{
 		return buf.pBits;
 	}
 
-	virtual int GetStride()
+	int GetStride() override
 	{
 		return buf.Pitch;
 	}
@@ -1008,7 +1008,7 @@ public:
 	bool bPointFiltered;
 
 	//
-	bool Touch()
+	bool Touch() override
 	{
 		bool bRes = CBase::Touch();
 		nFrameUsed = nCurrentFrame;
@@ -1030,34 +1030,34 @@ public:
 	}
 
 	//CTexture( int _nXSize, int _nYSize, int nLevels, D3DFORMAT _format, uint32_t dwUsage );
-	virtual int GetPixelID()
+	int GetPixelID() override
 	{
 		return D3DFormat2PixelID( pTB->GetFormat() );
 	}
 
-	virtual I2DBufferLock *Lock( int nLevel, EAccess access );
+	I2DBufferLock *Lock( int nLevel, EAccess access ) override;
 
-	virtual int GetSizeX() const
+	int GetSizeX() const override
 	{
 		return region.Width();
 	} ///pTB->GetSizeX(); }
 
-	virtual int GetSizeY() const
+	int GetSizeY() const override
 	{
 		return region.Height();
 	} //pTB->GetSizeY(); }
 
-	virtual int GetNumMipLevels() const
+	int GetNumMipLevels() const override
 	{
 		return pTB->GetNumMipLevels();
 	}
 
-	virtual int GetFrameMRU() const
+	int GetFrameMRU() const override
 	{
 		return nFrameUsed;
 	}
 
-	virtual void UserTouch()
+	void UserTouch() override
 	{
 		Touch();
 	}
@@ -1191,19 +1191,19 @@ public:
 		return pTB;
 	}
 
-	virtual int GetPixelID()
+	int GetPixelID() override
 	{
 		return D3DFormat2PixelID( pTB->GetFormat() );
 	}
 
-	virtual I2DBufferLock *Lock( EFace face, int nLevel, EAccess access );
+	I2DBufferLock *Lock( EFace face, int nLevel, EAccess access ) override;
 
-	virtual int GetSize() const
+	int GetSize() const override
 	{
 		return pTB->GetSize();
 	}
 
-	virtual int GetNumMipLevels() const
+	int GetNumMipLevels() const override
 	{
 		return pTB->GetNumMipLevels();
 	}
@@ -1486,7 +1486,7 @@ public:
 		}
 	}
 
-	virtual CTexture *CreateHandle( CTB *pTB )
+	CTexture *CreateHandle( CTB *pTB ) override
 	{
 		return new CTexture( pTB, CLAMP );
 	}
@@ -1505,7 +1505,7 @@ public:
 		}
 	}
 
-	virtual CCubeTexture *CreateHandle( CCubeTB *pTB )
+	CCubeTexture *CreateHandle( CCubeTB *pTB ) override
 	{
 		return new CCubeTexture( pTB );
 	}
@@ -1579,7 +1579,7 @@ public:
 		N_MIN_BATCH_SIZE = 500
 	};
 
-	virtual void Init()
+	void Init() override
 	{
 		TBase::Init();
 		nMaxVBIndex = 0;

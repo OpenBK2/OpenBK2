@@ -63,7 +63,7 @@ class CWindowScreen : public CWindow, public IScreen
 	NInput::CBind bindAlt;
 
 protected:
-	virtual NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
@@ -148,78 +148,79 @@ public:
 		return p2DGameView;
 	}
 
-	void
-	SetGView( NGScene::I2DGameView *_p2DGameView, NGScene::IGameView *_pGameView, NGScene::IGameView *_pInterface3DView );
+	void SetGView( NGScene::I2DGameView *_p2DGameView,
+	               NGScene::IGameView *_pGameView,
+	               NGScene::IGameView *_pInterface3DView ) override;
 
-	NGScene::IGameView *GetInterface3DView()
+	NGScene::IGameView *GetInterface3DView() override
 	{
 		return pInterface3DView;
 	}
 
-	int operator&( struct IBinSaver &saver );
+	int operator&( struct IBinSaver &saver ) override;
 
-	bool OnButtonDown( const CVec2 &vPos, const int nButton );
-	bool OnButtonUp( const CVec2 &vPos, const int nButton );
-	bool OnButtonDblClk( const CVec2 &vPos, const int nButton );
-	bool OnMouseMove( const CVec2 &vPos, const int nMouseState );
+	bool OnButtonDown( const CVec2 &vPos, const int nButton ) override;
+	bool OnButtonUp( const CVec2 &vPos, const int nButton ) override;
+	bool OnButtonDblClk( const CVec2 &vPos, const int nButton ) override;
+	bool OnMouseMove( const CVec2 &vPos, const int nMouseState ) override;
 	bool OnKey( const SGameMessage &msg );
 
-	CButtonGroup *CreateButtonGroup( const int nID, IWindow *pButton, IWindow *pParent );
+	CButtonGroup *CreateButtonGroup( const int nID, IWindow *pButton, IWindow *pParent ) override;
 
 	// run animation sequience on provided window. return ID of animation.
-	int /*AnimationID*/ RunAnimationSequienceForward( const NDb::SUIStateSequence &seq, class CWindow *pWindow );
-	void RunAnimationSequienceBack( const int nAnimationID );
+	int /*AnimationID*/ RunAnimationSequienceForward( const NDb::SUIStateSequence &seq, class CWindow *pWindow ) override;
+	void RunAnimationSequienceBack( const int nAnimationID ) override;
 	// run szCmdSeq effect. if nAnimationToWait provided, then wait untill animation is finished, then run szCmdSeq.
 	void RunStateCommandSequience( const std::string &szCmdSeq,
 	                               struct IWindow *pSequenceParent,
 	                               SWindowContext *pContext,
 	                               const bool bForward,
-	                               const int nAnimationToWait = 0 );
+	                               const int nAnimationToWait = 0 ) override;
 	// instantly undo command sequence (run in backward direction)
-	void UndoStateCommandSequence( const std::string &szCmdSeq );
-	void InitByDesc( const struct NDb::SUIDesc *pDesc );
-	void AfterLoad();
+	void UndoStateCommandSequence( const std::string &szCmdSeq ) override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
+	void AfterLoad() override;
 
-	bool RunReaction( const std::string &szSender, const std::string &szReactionName );
-	bool RunReaction( const std::string &szSender, const NDb::SUIDesc *pReaction );
-	void SetGView( NGScene::I2DGameView *_p2DGameView );
-	void Load( const struct NDb::SUIDesc *pDesc, IProgrammedReactionsAndChecks *pReactionsAndChecks );
-	void SetReactionsAndChecks( IProgrammedReactionsAndChecks *pReactionsAndChecks );
-	void Segment( const int timeDiff );
-	void UpdateResolution();
-	void SetWindowText( const std::string &szWindowName, const std::wstring &szText );
-	void RegisterEffect( const std::string &szEffect, const NDb::SUIStateSequence &cmds );
+	bool RunReaction( const std::string &szSender, const std::string &szReactionName ) override;
+	bool RunReaction( const std::string &szSender, const NDb::SUIDesc *pReaction ) override;
+	void SetGView( NGScene::I2DGameView *_p2DGameView ) override;
+	void Load( const struct NDb::SUIDesc *pDesc, IProgrammedReactionsAndChecks *pReactionsAndChecks ) override;
+	void SetReactionsAndChecks( IProgrammedReactionsAndChecks *pReactionsAndChecks ) override;
+	void Segment( const int timeDiff ) override;
+	void UpdateResolution() override;
+	void SetWindowText( const std::string &szWindowName, const std::wstring &szText ) override;
+	void RegisterEffect( const std::string &szEffect, const NDb::SUIStateSequence &cmds ) override;
 	void RegisterEffect( const std::string &szEffect,
 	                     const std::vector<CDBPtr<NDb::SUIStateBase>> &cmds,
-	                     const bool bReversable );
-	void RegisterReaction( const std::string &szReactionKey, struct IMessageReactionB2 *pReaction );
-	void RegisterToSegment( struct IWindow *pWnd, const bool bRegister );
-	bool IsRegisteredToSegment( struct IWindow *pWnd ) const;
-	void SetScreenSize( const CTRect<float> &rcScreen );
+	                     const bool bReversable ) override;
+	void RegisterReaction( const std::string &szReactionKey, struct IMessageReactionB2 *pReaction ) override;
+	void RegisterToSegment( struct IWindow *pWnd, const bool bRegister ) override;
+	bool IsRegisteredToSegment( struct IWindow *pWnd ) const override;
+	void SetScreenSize( const CTRect<float> &rcScreen ) override;
 	//virtual void OnMouseMove( const CVec2 &vPos, const int );
-	IWindow *Pick( const CVec2 &vPos, const bool bRecursive );
-	void OnGetFocus( const bool bFocus );
-	void SetTooltipContext( const int nContext );
-	virtual IWindow *CreateTooltipWindow( const std::wstring &wszTooltipText, IWindow *pTooltipOwner );
-	void Reposition( IWindow *pWindow = 0 );
-	bool ProcessEvent( const struct SGameMessage &msg );
-	void ProcessUIMessage( const struct SBUIMessage &msg );
+	IWindow *Pick( const CVec2 &vPos, const bool bRecursive ) override;
+	void OnGetFocus( const bool bFocus ) override;
+	void SetTooltipContext( const int nContext ) override;
+	IWindow *CreateTooltipWindow( const std::wstring &wszTooltipText, IWindow *pTooltipOwner ) override;
+	void Reposition( IWindow *pWindow = 0 ) override;
+	bool ProcessEvent( const struct SGameMessage &msg ) override;
+	void ProcessUIMessage( const struct SBUIMessage &msg ) override;
 
-	IWindow *GetElement( const std::string &szName, const bool bRecursive = false )
+	IWindow *GetElement( const std::string &szName, const bool bRecursive = false ) override
 	{
 		return CWindow::GetChild( szName, bRecursive );
 	}
 
-	IWindow *GetVisibleElement( const std::string &szName, const bool bRecursive = false )
+	IWindow *GetVisibleElement( const std::string &szName, const bool bRecursive = false ) override
 	{
 		return CWindow::GetVisibleChild( szName, bRecursive );
 	}
 
-	IWindow *AddElement( const struct NDb::SUIDesc *pDesc );
-	void Enable( const bool bEnable );
+	IWindow *AddElement( const struct NDb::SUIDesc *pDesc ) override;
+	void Enable( const bool bEnable ) override;
 
 	static void Set2DGView( NGScene::I2DGameView *p2DGameView );
 
-	virtual const std::wstring &GetTextEntry( const std::string &szName ) const;
+	const std::wstring &GetTextEntry( const std::string &szName ) const override;
 	void RegisterTabOrder( IWindow *pWindow, int nTabOrder );
 };

@@ -13,17 +13,17 @@ class CAIGeometryExporter : public CBasicSceneExporter
 	                 const std::string &szObjName,
 	                 const std::string &szDstPath,
 	                 const std::string &szSrcPath,
-	                 IManipulator *pManipulator );
+	                 IManipulator *pManipulator ) override;
 	bool ImportInfoToDBBeforeRefs( const std::string &szGeomObjName,
 	                               const std::string &szSrcScenePath,
 	                               const std::string &szDstFileName,
-	                               IManipulator *pManipulator );
+	                               IManipulator *pManipulator ) override;
 	EXPORT_RESULT CustomCheck( const std::string &szTypeName,
 	                           const std::string &szObjName,
 	                           const std::string &szSrcScenePath,
 	                           const std::string &szDestinationPath,
-	                           IManipulator *pManipulator );
-	const char *GetAddPath() const;
+	                           IManipulator *pManipulator ) override;
+	const char *GetAddPath() const override;
 
 	CAIGeometryExporter() {}
 };

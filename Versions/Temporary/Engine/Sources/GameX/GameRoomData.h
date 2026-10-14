@@ -16,7 +16,7 @@ public:
 	ZDATA
 	int nColor;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nColor );
 		return 0;
@@ -34,7 +34,7 @@ class CColorViewer : public IDataViewer
 {
 	OBJECT_NOCOPY_METHODS( CColorViewer )
 public:
-	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
+	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const override;
 };
 
 class CColorBackground : public CBackground
@@ -43,7 +43,7 @@ class CColorBackground : public CBackground
 
 public:
 	int nColor;
-	virtual void Visit( struct IUIVisitor *pVisitor );
+	void Visit( struct IUIVisitor *pVisitor ) override;
 };
 
 class CTextData : public CObjectBase
@@ -53,7 +53,7 @@ public:
 	ZDATA
 	std::wstring wszText;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &wszText );
 		return 0;
@@ -74,7 +74,7 @@ class CTextDataViewer : public IDataViewer
 {
 	OBJECT_NOCOPY_METHODS( CTextDataViewer )
 public:
-	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
+	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const override;
 };
 
 class CTextureData : public CObjectBase
@@ -85,7 +85,7 @@ public:
 	CDBPtr<NDb::STexture> pTexture;
 	std::wstring wszTooltip;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTexture );
 		f.Add( 3, &wszTooltip );
@@ -105,5 +105,5 @@ class CTextureViewer : public IDataViewer
 {
 	OBJECT_NOCOPY_METHODS( CTextureViewer )
 public:
-	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
+	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const override;
 };

@@ -152,7 +152,7 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 	float fMaxPathShift = 0.0f;
 	float fSpeedCoeff = 0.0f;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStandartSmoothPathBasis *)this );
 		f.Add( 2, &geometries );
@@ -192,7 +192,7 @@ public:
 	{
 	}
 
-	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap );
+	bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) override;
 
 	void ChangeGeometry( const int nGeometry )
 	{
@@ -255,7 +255,7 @@ public:
 		fMaxPathShift = (std::max)( fPathShift, fMaxPathShift );
 	}
 
-	virtual void Segment( const NTimer::STime timeDiff );
+	void Segment( const NTimer::STime timeDiff ) override;
 
 	//! получить смещение юнита относительно текущего центра формации, с учетом текущего направления формации
 	virtual const CVec2 GetUnitShift( const CBasePathUnit *pUnit ) const

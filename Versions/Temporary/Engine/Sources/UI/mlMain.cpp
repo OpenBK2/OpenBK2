@@ -48,7 +48,7 @@ private:
 	std::unordered_map<std::wstring, CObj<IHandler>> tagsMap;
 	CObj<SFadeValue> sFadeValue;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &text );
 		f.Add( 3, &size );
@@ -61,20 +61,21 @@ private:
 public:
 	CML();
 
-	void SetText( const std::wstring &_text )
+	void SetText( const std::wstring &_text ) override
 	{
 		text = _text;
 	}
 
-	void SetHandler( const std::wstring &tag, IHandler *pHandler );
+	void SetHandler( const std::wstring &tag, IHandler *pHandler ) override;
 	void SetFade( float fFade, int nWidth );
 
-	void Generate( NGScene::ILayoutFakeView *pView, int nWidth );
+	void Generate( NGScene::ILayoutFakeView *pView, int nWidth ) override;
 
-	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window );
-	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window );
+	void
+	Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window ) override;
+	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window ) override;
 
-	const CTPoint<int> &GetSize() const
+	const CTPoint<int> &GetSize() const override
 	{
 		return size;
 	}

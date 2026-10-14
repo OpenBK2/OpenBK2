@@ -43,7 +43,7 @@ class CGrannyBaseStuffLoader : public CHoldedPtrFuncBase<CGrannyFileInfo>
 	CDGPtr<NGScene::CGrannyMemFileLoader> pGrannyFile;
 	std::string szResName;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pGrannyFile );
 		f.Add( 3, &szResName );
@@ -55,13 +55,13 @@ class CGrannyBaseStuffLoader : public CHoldedPtrFuncBase<CGrannyFileInfo>
 protected:
 	CGrannyBaseStuffLoader() {}
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		TParent::NeedUpdate();
 		return pGrannyFile.Refresh();
 	}
 
-	void Recalc();
+	void Recalc() override;
 
 	virtual bool IsDelayedLoad() const
 	{
@@ -92,7 +92,7 @@ class CGrannyAnimationLoader : public CGrannyBaseStuffLoader
 {
 	OBJECT_BASIC_METHODS( CGrannyAnimationLoader );
 
-	virtual bool IsDelayedLoad() const
+	bool IsDelayedLoad() const override
 	{
 		return false;
 	}
@@ -108,7 +108,7 @@ class CGrannyAIGeomLoader : public CGrannyBaseStuffLoader
 {
 	OBJECT_BASIC_METHODS( CGrannyAIGeomLoader );
 
-	virtual bool IsDelayedLoad() const
+	bool IsDelayedLoad() const override
 	{
 		return false;
 	}
@@ -124,7 +124,7 @@ class CGrannySkeletonLoader : public CGrannyBaseStuffLoader
 {
 	OBJECT_BASIC_METHODS( CGrannySkeletonLoader );
 
-	virtual bool IsDelayedLoad() const
+	bool IsDelayedLoad() const override
 	{
 		return false;
 	}

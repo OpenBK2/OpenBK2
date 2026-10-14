@@ -231,7 +231,7 @@ public:
 	}
 
 	//
-	virtual uint32_t CalcCheckSum() const
+	uint32_t CalcCheckSum() const override
 	{
 		return 0;
 	}

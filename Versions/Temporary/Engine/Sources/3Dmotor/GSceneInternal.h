@@ -26,7 +26,7 @@ private:
 	CPtr<ISomePart> pTarget;
 	CPtr<IPostProcess> pPostProcess;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTarget );
 		f.Add( 3, &pPostProcess );
@@ -59,7 +59,7 @@ class CPolyline : public CObjectBase
 	CVec4 color;
 	bool bCheckDepth;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pGeometry );
 		f.Add( 3, &indices );
@@ -113,7 +113,7 @@ class CFakeParticleLMTexture : public CPtrFuncBase<NGfx::CTexture>
 	CDGPtr<CFuncBase<CVec3>> pColor;
 	uint32_t dwNormalColor, dwParticleColor;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pAmbient );
 		f.Add( 3, &pColor );
@@ -122,14 +122,14 @@ class CFakeParticleLMTexture : public CPtrFuncBase<NGfx::CTexture>
 		return 0;
 	}
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		bool b1 = pColor.Refresh();
 		bool b2 = pAmbient.Refresh();
 		return b1 || b2;
 	}
 
-	void Recalc();
+	void Recalc() override;
 
 public:
 	void SetAmbient( CFuncBase<CVec3> *_pAmbient )
@@ -207,7 +207,7 @@ class CGScene : public IGScene, public IDecalQuery
 
 	// Chunk 26 was bIsTwilight, the switch for a post effect that never ran.
 	// Saves written before its removal still carry it, so the id stays retired.
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &trackers );
 		f.Add( 3, &pVolume );
@@ -305,7 +305,7 @@ class CGScene : public IGScene, public IDecalQuery
 	CObjectBase *CreateDecal( ISomePart *pTarget,
 	                          const std::vector<CVec3> &srcPositions,
 	                          const SDecalMappingInfo &_info,
-	                          IMaterial *pMaterial );
+	                          IMaterial *pMaterial ) override;
 	CObjectBase *CreateStaticDecal( ISomePart *pTarget,
 	                                CPtrFuncBase<CObjectInfo> *pDecal,
 	                                IMaterial *pMaterial,
@@ -314,133 +314,134 @@ class CGScene : public IGScene, public IDecalQuery
 	                                 CPtrFuncBase<CObjectInfo> *pDecal,
 	                                 IMaterial *pMaterial,
 	                                 const SFullGroupInfo &fg );
-	void
-	GetPartsList( const SDecalMappingInfo &_info, const CObjectBaseSet &targets, std::vector<CPtr<ISomePart>> *pRes );
+	void GetPartsList( const SDecalMappingInfo &_info,
+	                   const CObjectBaseSet &targets,
+	                   std::vector<CPtr<ISomePart>> *pRes ) override;
 
 public:
 	CGScene();
 	CGScene( int );
 	// outer space integration
-	virtual CObjectBase *
-	CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat, const SFullGroupInfo &_ginfo );
-	virtual CObjectBase *CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo,
-	                                     IMaterial *pMat,
-	                                     const SFBTransform &trans,
-	                                     const SFullGroupInfo &_ginfo );
-	virtual CObjectBase *CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo,
-	                                     IMaterial *pMat,
-	                                     CFuncBase<SFBTransform> *pPlacement,
-	                                     const SBound &hintBV,
-	                                     const SFullGroupInfo &_ginfo );
-	virtual CObjectBase *CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo,
-	                                     IMaterial *pMat,
-	                                     CFuncBase<SFBTransform> *pPlacement,
-	                                     CFuncBase<SBound> *_pBound,
-	                                     const SBound &hintBV,
-	                                     const SFullGroupInfo &_ginfo );
-	virtual CObjectBase *CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo,
-	                                     IMaterial *pMat,
-	                                     CFuncBase<std::vector<SHMatrix>> *pPlacement,
-	                                     CFuncBase<std::vector<NGfx::SCompactTransformer>> *_pMMXAnim,
-	                                     CFuncBase<SBound> *_pBound,
-	                                     const SBound &hintBV,
-	                                     const SFullGroupInfo &_ginfo );
-	virtual CObjectBase *CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo,
-	                                     IMaterial *pMat,
-	                                     CFuncBase<std::vector<SHMatrix>> *pPlacement,
-	                                     CFuncBase<std::vector<NGfx::SCompactTransformer>> *_pMMXAnim,
-	                                     const SBound &_bv,
-	                                     const SFullGroupInfo &_ginfo );
-	virtual CObjectBase *CreateDynamicGeometry( CPtrFuncBase<CObjectInfo> *pInfo,
-	                                            CFuncBase<SFBTransform> *pPlacement,
-	                                            IMaterial *pMat,
-	                                            CFuncBase<SBound> *pBound,
-	                                            const SBound &hintBV,
-	                                            const SFullGroupInfo &_ginfo );
+	CObjectBase *
+	CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat, const SFullGroupInfo &_ginfo ) override;
+	CObjectBase *CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo,
+	                             IMaterial *pMat,
+	                             const SFBTransform &trans,
+	                             const SFullGroupInfo &_ginfo ) override;
+	CObjectBase *CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo,
+	                             IMaterial *pMat,
+	                             CFuncBase<SFBTransform> *pPlacement,
+	                             const SBound &hintBV,
+	                             const SFullGroupInfo &_ginfo ) override;
+	CObjectBase *CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo,
+	                             IMaterial *pMat,
+	                             CFuncBase<SFBTransform> *pPlacement,
+	                             CFuncBase<SBound> *_pBound,
+	                             const SBound &hintBV,
+	                             const SFullGroupInfo &_ginfo ) override;
+	CObjectBase *CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo,
+	                             IMaterial *pMat,
+	                             CFuncBase<std::vector<SHMatrix>> *pPlacement,
+	                             CFuncBase<std::vector<NGfx::SCompactTransformer>> *_pMMXAnim,
+	                             CFuncBase<SBound> *_pBound,
+	                             const SBound &hintBV,
+	                             const SFullGroupInfo &_ginfo ) override;
+	CObjectBase *CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo,
+	                             IMaterial *pMat,
+	                             CFuncBase<std::vector<SHMatrix>> *pPlacement,
+	                             CFuncBase<std::vector<NGfx::SCompactTransformer>> *_pMMXAnim,
+	                             const SBound &_bv,
+	                             const SFullGroupInfo &_ginfo ) override;
+	CObjectBase *CreateDynamicGeometry( CPtrFuncBase<CObjectInfo> *pInfo,
+	                                    CFuncBase<SFBTransform> *pPlacement,
+	                                    IMaterial *pMat,
+	                                    CFuncBase<SBound> *pBound,
+	                                    const SBound &hintBV,
+	                                    const SFullGroupInfo &_ginfo ) override;
 	//
-	virtual CObjectBase *CreateParticles( CPtrFuncBase<CParticleEffect> *pInfo,
-	                                      CFuncBase<SFBTransform> *pPlacement,
-	                                      const SBound &bound,
-	                                      const SBound &hintBV,
-	                                      const SGroupInfo &_ginfo,
-	                                      int nPFlags );
-	virtual CPolyline *CreatePolyline( CPtrFuncBase<NGfx::CGeometry> *pGeometry,
-	                                   const std::vector<unsigned short> &indices,
-	                                   const CVec4 &color,
-	                                   bool bDepthTest );
-	virtual CObjectBase *CreatePostProcessor( CObjectBase *pRenderNode, IPostProcess *pProcessor );
-	virtual void SetAmbientAnimation( CPtrFuncBase<CAnimLight> *pLight );
+	CObjectBase *CreateParticles( CPtrFuncBase<CParticleEffect> *pInfo,
+	                              CFuncBase<SFBTransform> *pPlacement,
+	                              const SBound &bound,
+	                              const SBound &hintBV,
+	                              const SGroupInfo &_ginfo,
+	                              int nPFlags ) override;
+	CPolyline *CreatePolyline( CPtrFuncBase<NGfx::CGeometry> *pGeometry,
+	                           const std::vector<unsigned short> &indices,
+	                           const CVec4 &color,
+	                           bool bDepthTest ) override;
+	CObjectBase *CreatePostProcessor( CObjectBase *pRenderNode, IPostProcess *pProcessor ) override;
+	void SetAmbientAnimation( CPtrFuncBase<CAnimLight> *pLight ) override;
 
-	virtual void SetSunFlares( const CVec3 &_dir, CSunFlares *_pSunFlares, CFuncBase<STime> *_pSunFlaresTime )
+	void SetSunFlares( const CVec3 &_dir, CSunFlares *_pSunFlares, CFuncBase<STime> *_pSunFlaresTime ) override
 	{
 		sunFlareDir = _dir;
 		pSunFlares = _pSunFlares;
 		pSunFlaresTime = _pSunFlaresTime;
 	}
 
-	virtual void SetDirectionalLight( CFuncBase<CVec3> *pColor,
-	                                  CFuncBase<CVec3> *pGlossColor,
-	                                  const CVec3 &_vLightDir,
-	                                  const CVec3 &_vShadowsLightDir,
-	                                  float fMaxHeight,
-	                                  float fShadowsMaxDetailLength,
-	                                  float fBlurShift,
-	                                  CFuncBase<CVec3> *_pAmbient,
-	                                  CFuncBase<CVec3> *_pShadeColor,
-	                                  CFuncBase<CVec3> *_pIncidentShadeColor,
-	                                  const CVec3 &vParticlesColor,
-	                                  CPtrFuncBase<NGfx::CTexture> *_pClouds,
-	                                  CFuncBase<SHMatrix> *_pCloudsProjection,
-	                                  const CVec3 &vDymanicLightsModifications );
-	virtual CObjectBase *AddPointLight( const CVec3 &_vColor, const CVec3 &ptOrigin, float fR );
-	virtual CObjectBase *AddPointLight( CPtrFuncBase<CAnimLight> *pLight );
-	virtual CObjectBase *AddSpotLight( CFuncBase<CVec3> *pColor,
-	                                   const CVec3 &ptOrigin,
-	                                   const CVec3 &ptDir,
-	                                   float fFOV,
-	                                   float fRadius,
-	                                   CPtrFuncBase<NGfx::CTexture> *pMask,
-	                                   bool bLightmapOnly );
-	virtual CDecalTarget *CreateDecalTarget( const std::vector<CObjectBase *> &targets, const SDecalMappingInfo &_info );
-	virtual CObjectBase *AddDecal( NGScene::CDecalTarget *pTarget, IMaterial *pMaterial );
-	virtual void SetWarFogBlend( float fBlend );
-	virtual void SetWarFog( const CArray2D<unsigned char> &fog, float fScale );
+	void SetDirectionalLight( CFuncBase<CVec3> *pColor,
+	                          CFuncBase<CVec3> *pGlossColor,
+	                          const CVec3 &_vLightDir,
+	                          const CVec3 &_vShadowsLightDir,
+	                          float fMaxHeight,
+	                          float fShadowsMaxDetailLength,
+	                          float fBlurShift,
+	                          CFuncBase<CVec3> *_pAmbient,
+	                          CFuncBase<CVec3> *_pShadeColor,
+	                          CFuncBase<CVec3> *_pIncidentShadeColor,
+	                          const CVec3 &vParticlesColor,
+	                          CPtrFuncBase<NGfx::CTexture> *_pClouds,
+	                          CFuncBase<SHMatrix> *_pCloudsProjection,
+	                          const CVec3 &vDymanicLightsModifications ) override;
+	CObjectBase *AddPointLight( const CVec3 &_vColor, const CVec3 &ptOrigin, float fR ) override;
+	CObjectBase *AddPointLight( CPtrFuncBase<CAnimLight> *pLight ) override;
+	CObjectBase *AddSpotLight( CFuncBase<CVec3> *pColor,
+	                           const CVec3 &ptOrigin,
+	                           const CVec3 &ptDir,
+	                           float fFOV,
+	                           float fRadius,
+	                           CPtrFuncBase<NGfx::CTexture> *pMask,
+	                           bool bLightmapOnly ) override;
+	CDecalTarget *CreateDecalTarget( const std::vector<CObjectBase *> &targets, const SDecalMappingInfo &_info ) override;
+	CObjectBase *AddDecal( NGScene::CDecalTarget *pTarget, IMaterial *pMaterial ) override;
+	void SetWarFogBlend( float fBlend ) override;
+	void SetWarFog( const CArray2D<unsigned char> &fog, float fScale ) override;
 	void RenderPostProcess( CTransformStack *pTS, NGfx::CRenderContext *pRC );
-	virtual void LoadEverything();
-	virtual void Draw( CTransformStack *pTS,
-	                   CTransformStack *pClipTS,
-	                   NGfx::CRenderContext *pRC,
-	                   const SGroupSelect &mask,
-	                   ERenderPath rp,
-	                   const SRTClearParams &rtClear,
-	                   EHSRMode hsrMode,
-	                   ETransparentMode trMode,
-	                   NGfx::CCubeTexture *pSky,
-	                   SDepthOfField *pDOF,
-	                   int nLightOptions );
-	virtual CVec2 GetScreenRect();
-	virtual CFuncBase<CVec4> *GetCamera();
-	virtual bool TraceScene( const SGroupSelect &mask,
-	                         const CRay &r,
-	                         float *pfT,
-	                         CVec3 *pNormal,
-	                         EScenePartsSet ps,
-	                         SFullGroupInfo *pGroupInfo,
-	                         CObjectBase **ppPart );
+	void LoadEverything() override;
+	void Draw( CTransformStack *pTS,
+	           CTransformStack *pClipTS,
+	           NGfx::CRenderContext *pRC,
+	           const SGroupSelect &mask,
+	           ERenderPath rp,
+	           const SRTClearParams &rtClear,
+	           EHSRMode hsrMode,
+	           ETransparentMode trMode,
+	           NGfx::CCubeTexture *pSky,
+	           SDepthOfField *pDOF,
+	           int nLightOptions ) override;
+	CVec2 GetScreenRect() override;
+	CFuncBase<CVec4> *GetCamera() override;
+	bool TraceScene( const SGroupSelect &mask,
+	                 const CRay &r,
+	                 float *pfT,
+	                 CVec3 *pNormal,
+	                 EScenePartsSet ps,
+	                 SFullGroupInfo *pGroupInfo,
+	                 CObjectBase **ppPart ) override;
 
-	virtual SGroupSelect GetLastMask()
+	SGroupSelect GetLastMask() override
 	{
 		return lastMask;
 	}
 
-	virtual int PrecacheMaterials( ILoadingCounter *pCounter );
+	int PrecacheMaterials( ILoadingCounter *pCounter ) override;
 
-	virtual void SetLoadingCounter( ILoadingCounter *pCounter )
+	void SetLoadingCounter( ILoadingCounter *pCounter ) override
 	{
 		pLoadingCounter = pCounter;
 	}
 
-	virtual void WaitForLoad( bool bWait = true )
+	void WaitForLoad( bool bWait = true ) override
 	{
 		bWaitForLoad = bWait;
 	}
@@ -448,12 +449,12 @@ public:
 	CFuncBase<SPerVertexLightState> *GetLightState() const;
 	void GetNotLoaded( std::vector<IPart *> *pRes );
 
-	virtual CFuncBase<CVec3> *GetParticlesLightColor()
+	CFuncBase<CVec3> *GetParticlesLightColor() override
 	{
 		return pParticlesLightColor;
 	}
 
-	virtual void CollectAllParts( std::vector<CObjectBase *> *pRes );
+	void CollectAllParts( std::vector<CObjectBase *> *pRes ) override;
 	CTransparentRenderer *CreateTransparentRenderer( CTransformStack *pTS, bool bLitParticles );
 
 	friend class CRenderWrapper;
@@ -469,27 +470,29 @@ public:
 	{
 	}
 
-	virtual CFuncBase<SPerVertexLightState> *GetLightState() const
+	CFuncBase<SPerVertexLightState> *GetLightState() const override
 	{
 		return pScene->GetLightState();
 	}
 
-	virtual void
-	FormPartList( CTransformStack *pTS, std::vector<SRenderPartSet> *pRes, EDepthType dt, const SGroupSelect &mask );
-	virtual void FormDepthList( CTransformStack *pTS, const CVec3 &vDir, EDepthType dt, CSceneFragments *pRes );
-	virtual void FormRenderList( CTransformStack *pTS, CSceneFragments *pRes, CTransparentRenderer *pTransparentRender );
+	void FormPartList( CTransformStack *pTS,
+	                   std::vector<SRenderPartSet> *pRes,
+	                   EDepthType dt,
+	                   const SGroupSelect &mask ) override;
+	void FormDepthList( CTransformStack *pTS, const CVec3 &vDir, EDepthType dt, CSceneFragments *pRes ) override;
+	void FormRenderList( CTransformStack *pTS, CSceneFragments *pRes, CTransparentRenderer *pTransparentRender ) override;
 
-	virtual void GetNotLoaded( std::vector<IPart *> *pRes )
+	void GetNotLoaded( std::vector<IPart *> *pRes ) override
 	{
 		pScene->GetNotLoaded( pRes );
 	}
 
-	virtual void RenderPostProcess( CTransformStack *pTS, NGfx::CRenderContext *pRC )
+	void RenderPostProcess( CTransformStack *pTS, NGfx::CRenderContext *pRC ) override
 	{
 		pScene->RenderPostProcess( pTS, pRC );
 	}
 
-	virtual CTransparentRenderer *CreateTransparentRenderer( CTransformStack *pTS, bool bLitParticles );
+	CTransparentRenderer *CreateTransparentRenderer( CTransformStack *pTS, bool bLitParticles ) override;
 };
 
 } // namespace NGScene

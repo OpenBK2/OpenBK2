@@ -13,7 +13,7 @@ public:
 	std::string szNick;
 	std::string szPassword;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szNick );
 		f.Add( 3, &szPassword );
@@ -40,7 +40,7 @@ public:
 	std::string szCDKey;
 	std::string szEmail;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szNick );
 		f.Add( 3, &szPassword );
@@ -73,7 +73,7 @@ public:
 	std::string szNick;
 	std::string szEMail;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szNick );
 		f.Add( 3, &szEMail );
@@ -105,7 +105,7 @@ public:
 	ZDATA
 	EAnswer eAnswer;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eAnswer );
 		return 0;
@@ -129,7 +129,7 @@ public:
 	ZDATA
 	int64_t nNumber;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nNumber );
 		return 0;
@@ -161,7 +161,7 @@ public:
 	std::string szEmail;
 	EConnectType eConnectType;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nPrime1 );
 		f.Add( 3, &nPrime2 );

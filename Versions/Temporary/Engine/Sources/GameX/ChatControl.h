@@ -16,7 +16,7 @@ class CChatControlWrapper : public CObjectBase
 	std::list<CPtr<IWindow>> items;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pList );
 		f.Add( 3, &pItem );

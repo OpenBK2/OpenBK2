@@ -115,42 +115,42 @@ class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandH
 	//
 public:
 	//IEditor
-	void GetTemporaryLabel( std::string *pszTemporaryLabel )
+	void GetTemporaryLabel( std::string *pszTemporaryLabel ) override
 	{
 		pszTemporaryLabel->clear();
 	}
 
-	IView *GetView()
+	IView *GetView() override
 	{
 		return this;
 	}
 
-	IInputState *GetInputState()
+	IInputState *GetInputState() override
 	{
 		return pMapInfoState;
 	}
 
-	void GetChildFrameType( std::string *pszChildFrameTypeName )
+	void GetChildFrameType( std::string *pszChildFrameTypeName ) override
 	{
 		( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__";
 	}
 
 	//IEditor
-	void CreateControls();
+	void CreateControls() override;
 	void ResetGUI( bool bActive ) override;
-	void PostCreateControls();
-	void PreDestroyControls();
-	void DestroyControls();
-	void Create();
-	void Destroy();
-	void Save( bool bSaveChanges );
+	void PostCreateControls() override;
+	void PreDestroyControls() override;
+	void DestroyControls() override;
+	void Create() override;
+	void Destroy() override;
+	void Save( bool bSaveChanges ) override;
 
 	std::string GetSaveError() const override
 	{
 		return szSaveError;
 	}
 
-	bool ShowProgress()
+	bool ShowProgress() override
 	{
 		return false;
 	}
@@ -170,12 +170,12 @@ public:
 	}
 
 	//CDefaultView
-	void Undo( IController *pController );
-	void Redo( IController *pController );
+	void Undo( IController *pController ) override;
+	void Redo( IController *pController ) override;
 
 	//ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 
 	////////////////////////////
 	bool CreateMinimapImage();

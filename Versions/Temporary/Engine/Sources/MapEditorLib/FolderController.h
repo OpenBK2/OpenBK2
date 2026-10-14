@@ -66,17 +66,17 @@ public:
 
 protected:
 	// CUndoObject
-	virtual bool UndoWithoutUpdateViews();
-	virtual bool RedoWithoutUpdateViews();
+	bool UndoWithoutUpdateViews() override;
+	bool RedoWithoutUpdateViews() override;
 
 public:
 	// IUndoObject
-	virtual bool IsEmpty() const
+	bool IsEmpty() const override
 	{
 		return undoDataList.empty();
 	}
 
-	virtual bool IsAbsolute() const
+	bool IsAbsolute() const override
 	{
 		return true;
 	}

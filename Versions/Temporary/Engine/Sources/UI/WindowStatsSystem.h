@@ -35,7 +35,7 @@ class CWindowStatsSystem : public CWindow, public IStatsSystemWindow
 	CEntries entries;
 
 public:
-	virtual NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
@@ -46,11 +46,11 @@ public:
 		return false;
 	}
 
-	void InitByDesc( const struct NDb::SUIDesc *_pDesc );
-	void UpdateEntry( const std::wstring &szEntry, const std::wstring &szValue, const uint32_t dwColor );
-	void Visit( struct IUIVisitor *pVisitor );
+	void InitByDesc( const struct NDb::SUIDesc *_pDesc ) override;
+	void UpdateEntry( const std::wstring &szEntry, const std::wstring &szValue, const uint32_t dwColor ) override;
+	void Visit( struct IUIVisitor *pVisitor ) override;
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, (CWindow *)this );
 		saver.Add( 2, &pShared );

@@ -36,7 +36,7 @@ enum EMouseStateB2
 class UI_EXPORT CUIMORegConttainer : public NInput::CGMORegContainer
 {
 public:
-	virtual void AddRawObserver( const std::string &szMsgName, IGMObserver *pObserver );
+	void AddRawObserver( const std::string &szMsgName, IGMObserver *pObserver ) override;
 };
 
 const int WINDOW_TOP_PRIORITY = 0x01000000;
@@ -172,46 +172,48 @@ public:
 	virtual bool IsPickable() const;
 	//}
 
-	int GetPriority() const;
-	void SetPriority( int n ); // works only before insertion into parent due to there is no children resort provided
+	int GetPriority() const override;
+	void
+	SetPriority( int n ) override; // works only before insertion into parent due to there is no children resort provided
 
 	// serializing...
-	void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 
-	int operator&( IBinSaver &ss );
+	int operator&( IBinSaver &ss ) override;
 
 	// fills rect with on-screen coordinates
-	void FillWindowRect( CTRect<float> *pRect ) const;
-	CTRect<float> GetWindowRect() const;
+	void FillWindowRect( CTRect<float> *pRect ) const override;
+	CTRect<float> GetWindowRect() const override;
 	// if child window provieed, then reposition only that window.
 	// otherwize reposition all child windows
 	void RepositionChildren( IWindow *pWindow = 0 );
 	virtual void Reposition( const CTRect<float> &parentRect );
-	virtual void Init();
+	void Init() override;
 
 	// window may want to be notified about finish state sequience, that it launched
 	virtual void NotifyStateSequenceFinished() {}
 
 	// placement flags = OR of number EWindowPlacementFlags
-	virtual void GetPlacement( int *pX, int *pY, int *pSizeX, int *pSizeY ) const;
-	virtual void SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const uint32_t flags );
-	CTRect<int> GetPlacement() const;
-	virtual void SetPlacement( const CTRect<int> &rc, const uint32_t flags );
+	void GetPlacement( int *pX, int *pY, int *pSizeX, int *pSizeY ) const override;
+	void
+	SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const uint32_t flags ) override;
+	CTRect<int> GetPlacement() const override;
+	void SetPlacement( const CTRect<int> &rc, const uint32_t flags ) override;
 
-	struct IScreen *GetScreen();
+	struct IScreen *GetScreen() override;
 	bool UsesHudFontScale() const override;
 	// is point (in screen coordinates) inside control
-	bool IsInside( const CVec2 &vPos ) const;
+	bool IsInside( const CVec2 &vPos ) const override;
 	// Gives or removes focus from the current window
-	virtual void SetFocus( const bool bFocus );
+	void SetFocus( const bool bFocus ) override;
 
-	bool IsFocused() const
+	bool IsFocused() const override
 	{
 		return bFocused;
 	}
 
-	void ShowWindow( const bool bShow );
-	bool IsVisible() const;
+	void ShowWindow( const bool bShow ) override;
+	bool IsVisible() const override;
 
 	const NDb::EPositionAllign GetVerAllign() const
 	{
@@ -235,16 +237,16 @@ public:
 	}
 
 	// children/parent work
-	void AddChild( IWindow *pWnd, bool bDoReposition );
+	void AddChild( IWindow *pWnd, bool bDoReposition ) override;
 	// close window (remove it from parent's children stack)
 	void Close();
 	// immidiate window children
-	int GetNumChildren();
-	IWindow *GetChild( int nIndex );
-	void RemoveChild( IWindow *_pChild );
+	int GetNumChildren() override;
+	IWindow *GetChild( int nIndex ) override;
+	void RemoveChild( IWindow *_pChild ) override;
 	void RemoveChild( const std::string &szChildName );
-	IWindow *GetChild( const std::string &_szName, const bool bRecursive );
-	IWindow *GetVisibleChild( const std::string &_szName, const bool bRecursive );
+	IWindow *GetChild( const std::string &_szName, const bool bRecursive ) override;
+	IWindow *GetVisibleChild( const std::string &_szName, const bool bRecursive ) override;
 	// deep children
 	CWindow *GetDeepChild( const std::string &_szName );
 	virtual void SetParent( CWindow *pParent );
@@ -254,8 +256,8 @@ public:
 		return pParent;
 	}
 
-	const std::string &GetName() const;
-	void SetName( const std::string &_szName );
+	const std::string &GetName() const override;
+	void SetName( const std::string &_szName ) override;
 	// return minimal width that text is displayed properly
 	int GetOptimalWidth() const;
 
@@ -263,15 +265,15 @@ public:
 	// return true if message is processed and don't need to process it anymore
 	// generally, if Screen returns false, that means something wriong with this message
 	// (no message sing exists on the screen - wrong situation or wrong message ID)
-	virtual bool ProcessEvent( const struct SGameMessage &msg );
-	virtual bool ProcessMessage( const struct SBUIMessage &msg );
+	bool ProcessEvent( const struct SGameMessage &msg ) override;
+	bool ProcessMessage( const struct SBUIMessage &msg ) override;
 
-	void SetModal( bool _bIsModal )
+	void SetModal( bool _bIsModal ) override
 	{
 		bIsModal = _bIsModal;
 	}
 
-	bool IsModal() const
+	bool IsModal() const override
 	{
 		return bIsModal;
 	}
@@ -286,69 +288,69 @@ public:
 	bool MsgOnMouseMove( const struct SGameMessage &msg );
 	//void MsgOnChar( const struct SGameMessage &msg );
 	// IWindow implementation
-	virtual bool OnButtonDown( const CVec2 &vPos, const int nButton );
-	virtual bool OnButtonUp( const CVec2 &vPos, const int nButton );
-	virtual bool OnButtonDblClk( const CVec2 &vPos, const int nButton );
-	virtual bool OnMouseMove( const CVec2 &vPos, const int nMouseState );
+	bool OnButtonDown( const CVec2 &vPos, const int nButton ) override;
+	bool OnButtonUp( const CVec2 &vPos, const int nButton ) override;
+	bool OnButtonDblClk( const CVec2 &vPos, const int nButton ) override;
+	bool OnMouseMove( const CVec2 &vPos, const int nMouseState ) override;
 	//virtual void OnChar( const wchar_t chr );
-	virtual IWindow *Pick( const CVec2 &vPos, const bool bRecursive );
-	virtual void SetOutline( const CDBID &outlineType = CDBID() );
-	virtual void SetTextString( const std::wstring &szText );
-	const wchar_t *GetTextString() const;
-	virtual std::wstring GetDBText() const;
-	virtual SWindowContext *GetContext();
+	IWindow *Pick( const CVec2 &vPos, const bool bRecursive ) override;
+	void SetOutline( const CDBID &outlineType = CDBID() ) override;
+	void SetTextString( const std::wstring &szText ) override;
+	const wchar_t *GetTextString() const override;
+	std::wstring GetDBText() const override;
+	SWindowContext *GetContext() override;
 
-	virtual const struct NDb::SUIDesc *GetDesc() const
+	const struct NDb::SUIDesc *GetDesc() const override
 	{
 		return pWindowStats;
 	}
 
-	virtual IWindow *GetParentWindow() const
+	IWindow *GetParentWindow() const override
 	{
 		return pParent;
 	}
 
-	virtual const struct NDb::SWindowShared *GetSharedDesc() const
+	const struct NDb::SWindowShared *GetSharedDesc() const override
 	{
 		return pShared;
 	}
 
-	virtual IWindow *GetChild( const int _nTypeID, const int _nID, const bool bRecursive = false );
-	virtual bool IsPointInsideOfChildren( const CVec2 &vPoint );
+	IWindow *GetChild( const int _nTypeID, const int _nID, const bool bRecursive = false ) override;
+	bool IsPointInsideOfChildren( const CVec2 &vPoint ) override;
 
 	// game message sink
 	void GameMessageSink( const struct SGameMessage &msg, int nMessageType );
 
 	//get manipulator for editor functionality
 	// help context
-	const std::wstring &GetDBTooltipStr() const; // old function, need to be removed
-	virtual IWindow *DemandTooltip();
+	const std::wstring &GetDBTooltipStr() const override; // old function, need to be removed
+	IWindow *DemandTooltip() override;
 	//
-	virtual void SetTooltip( const std::wstring &wszTooltip );
-	void SetTooltipIDForMLHandler( int nID );
-	int GetTooltipIDForMLHandler() const;
-	virtual void SetTooltip( IWindow *pTooltipWindow );
+	void SetTooltip( const std::wstring &wszTooltip ) override;
+	void SetTooltipIDForMLHandler( int nID ) override;
+	int GetTooltipIDForMLHandler() const override;
+	void SetTooltip( IWindow *pTooltipWindow ) override;
 
 	// DRAWING
-	virtual void Visit( struct IUIVisitor *pVisitor );
-	virtual void RegisterObservers();
+	void Visit( struct IUIVisitor *pVisitor ) override;
+	void RegisterObservers() override;
 	// friends
 	friend struct SWindowCompare;
 	friend class CUIMessageHandler;
 
 	//enabled / disabled
-	virtual void Enable( const bool bEnable );
+	void Enable( const bool bEnable ) override;
 
-	virtual bool IsEnabled() const
+	bool IsEnabled() const override
 	{
 		return GetInstance()->bEnabled;
 	}
 
-	void SetBackground( IWindowPart *_pBackground );
+	void SetBackground( IWindowPart *_pBackground ) override;
 	void SetForeground( IWindowPart *_pForeground );
-	void CopyBackground( const IWindow *pSrcWnd );
-	void SetTexture( const struct NDb::STexture *pDesc );
-	void AfterLoad();
-	void SetFadeValue( float fValue );
+	void CopyBackground( const IWindow *pSrcWnd ) override;
+	void SetTexture( const struct NDb::STexture *pDesc ) override;
+	void AfterLoad() override;
+	void SetFadeValue( float fValue ) override;
 	void SetInternalFadeValue( float fValue );
 };

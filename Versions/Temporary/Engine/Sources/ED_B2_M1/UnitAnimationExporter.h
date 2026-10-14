@@ -20,16 +20,16 @@ class CInfantryExporter : public CBasicExporter
 
 public:
 	// IExporter
-	void FinishExport( const std::string &rszObjectTypeName, bool bForce );
+	void FinishExport( const std::string &rszObjectTypeName, bool bForce ) override;
 	EXPORT_RESULT ExportObject( IManipulator *pManipulator,
 	                            const std::string &rszObjectTypeName,
 	                            const std::string &rszObjectName,
 	                            bool bForce,
-	                            EXPORT_TYPE exportType );
+	                            EXPORT_TYPE exportType ) override;
 	// check infantry unit
 	EXPORT_RESULT CheckObject( IManipulator *pManipulator,
 	                           const std::string &rszObjectTypeName,
 	                           const std::string &rszObjectName,
 	                           bool bExport,
-	                           EXPORT_TYPE exportType );
+	                           EXPORT_TYPE exportType ) override;
 };

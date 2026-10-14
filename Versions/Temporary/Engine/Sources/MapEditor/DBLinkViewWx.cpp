@@ -236,7 +236,7 @@ public:
 										 } );
 	}
 
-	virtual ~CDBLinkWxDialog()
+	~CDBLinkWxDialog() override
 	{
 		Unregister();
 	}
@@ -324,22 +324,22 @@ public:
 	}
 
 	// CPCBaseDialog
-	virtual IView *GetView()
+	IView *GetView() override
 	{
 		return pGrid->GetView();
 	}
 
-	virtual ICommandHandler *GetCommandHandler()
+	ICommandHandler *GetCommandHandler() override
 	{
 		return pGrid->GetCommandHandler();
 	}
 
-	virtual void CreateTree()
+	void CreateTree() override
 	{
 		pGrid->BuildTree();
 	}
 
-	virtual void UpdateValues()
+	void UpdateValues() override
 	{
 		pGrid->UpdateValues();
 	}
@@ -348,7 +348,7 @@ public:
 	// tree is pointed at its folder the first time it is chosen, starting on
 	// the object the picker opened on; after that it hands its selection to
 	// the grid again.
-	virtual void OnTableSelected()
+	void OnTableSelected() override
 	{
 		if ( bCreateControls || !pBrowser )
 		{
@@ -382,7 +382,7 @@ public:
 	}
 
 	// OnMessageTreeGDBBrowser's TREE_GDB_BROWSER_CHANGE_SELECTION.
-	virtual void OnTreeSelectionChanged( IObjectTree *pTree )
+	void OnTreeSelectionChanged( IObjectTree *pTree ) override
 	{
 		std::string szName;
 		if ( !pBrowser || !pTree->GetCurrentTreeItemName( &szName ) )
@@ -397,7 +397,7 @@ public:
 	}
 
 	// And its TREE_GDB_BROWSER_LOAD: OK.
-	virtual void OnTreeLoad( IObjectTree *pTree )
+	void OnTreeLoad( IObjectTree *pTree ) override
 	{
 		if ( IsModal() )
 		{

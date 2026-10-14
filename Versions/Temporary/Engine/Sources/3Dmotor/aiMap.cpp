@@ -58,7 +58,7 @@ class CUserHullsTracker : public CObjectBase
 	ZDATA
 	SUserHash data;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &data );
 		return 0;
@@ -118,7 +118,7 @@ public:
 	int nIndexInNode;
 	CPtr<CUserHullsTracker> pUserHulls;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &pNode );
 		f.Add( 3, &pGeometry );
@@ -151,7 +151,7 @@ public:
 		}
 	}
 
-	~CConvexHull();
+	~CConvexHull() override;
 	bool SetNode( CVolumeNode *_p, const SBound &_bound );
 	const SBound &GetLinkedBound();
 	void SetLinkedBound( const SBound &b );
@@ -190,7 +190,7 @@ public:
 	CDGPtr<CFuncBase<NAnimation::SGrannySkeletonPose>> pAnimationTracker;
 
 	//SBound linkedBound;
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 1, (CConvexHull *)this );
 		f.Add( 2, &pBound );
@@ -472,7 +472,7 @@ public:
 	SBound bInform;
 	int nInformMask;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 1, (CParent *)this );
 		f.Add( 2, &hulls );
@@ -497,7 +497,7 @@ public:
 	void AddInform( const SBound &b, int nMask, bool bTraverseUp = true );
 	void CallCachedInforms();
 	void AddTracker( IAIMapTracker *_pTracker, const SBound &_bound, int nMask, bool bInformOnDoorFlip );
-	virtual bool IsEmpty();
+	bool IsEmpty() override;
 };
 
 inline static bool IsValidInCurrentState( int nFlags )
@@ -519,7 +519,7 @@ class CAIMap : public IAIMap
 	//CPtr<IStabilityTrackers> pStability;
 	CObj<CUserHullsTracker> pUserHullsTracker;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &pRoot );
 		f.Add( 3, &dynamicHulls );
@@ -538,16 +538,20 @@ class CAIMap : public IAIMap
 	void CallInform( CConvexHull *pHull, const SBound &b, bool bDoorFlipped = false );
 	//
 	// adding new hull
+	CObjectBase *AddHull( const NDb::SAIGeometry *pAIGeom,
+	                      const SHMatrix &pos,
+	                      const NDb::CResource *pArmor,
+	                      int nFloor,
+	                      int nMask ) override;
 	CObjectBase *
-	AddHull( const NDb::SAIGeometry *pAIGeom, const SHMatrix &pos, const NDb::CResource *pArmor, int nFloor, int nMask );
-	CObjectBase *AddHull( CMemObject *pAIGeom, const SHMatrix &pos, const NDb::CResource *pArmor, int nFloor, int nMask );
+	AddHull( CMemObject *pAIGeom, const SHMatrix &pos, const NDb::CResource *pArmor, int nFloor, int nMask ) override;
 	CObjectBase *AddAnimatedHull( const NDb::SAIGeometry *pAIGeom,
 	                              const NAnimation::SGrannySkeletonHandle &skeletonH,
 	                              CFuncBase<NAnimation::SGrannySkeletonPose> *pAnimation,
 	                              const NDb::CResource *pArmor,
 	                              int nFloor,
-	                              int nMask );
-	void AssignUserID( CObjectBase *p, int _nUserID );
+	                              int nMask ) override;
+	void AssignUserID( CObjectBase *p, int _nUserID ) override;
 
 	//
 	template <class TTest>
@@ -614,23 +618,26 @@ public:
 	}
 
 	CAIMap( int );
-	virtual void Sync( ESyncType st );
-	virtual void GetEntities( std::vector<SObjectInfo> *pRes, int nMask, const CFloorsSet &fs );
-	virtual void Trace(
-			const CRay &, std::vector<SInterval> *pIntersections, int nMask, const CFloorsSet &fs, ESplitTerrainHGroups shg );
-	virtual void TraceGrid( CFastRenderer *pRes,
-	                        int nMask,
-	                        ESort sort,
-	                        const CFloorsSet &fs = CFloorsSet(),
-	                        ESplitTerrainHGroups shg = STH_UNION_TERR_HG );
-	virtual void Select( std::vector<SSelectedObject> *pRes,
-	                     const CTransformStack &ts,
-	                     float fRadiusKoef,
-	                     int nMask,
-	                     const CFloorsSet &hg );
-	virtual bool CalcIntersection( const CVec3 &ptCenter, float fRadius, int s, CObjectBase *pIgnoreUser );
-	virtual void AddTracker( IAIMapTracker *pTracker, const SBound &b, int nMask, bool bInformOnDoorFlip = false );
-	virtual void SelectHullPointers( std::vector<CPtr<CObjectBase>> *pRes, const SBound &b, int nMaskOr, int nMaskNot );
+	void Sync( ESyncType st ) override;
+	void GetEntities( std::vector<SObjectInfo> *pRes, int nMask, const CFloorsSet &fs ) override;
+	void Trace( const CRay &,
+	            std::vector<SInterval> *pIntersections,
+	            int nMask,
+	            const CFloorsSet &fs,
+	            ESplitTerrainHGroups shg ) override;
+	void TraceGrid( CFastRenderer *pRes,
+	                int nMask,
+	                ESort sort,
+	                const CFloorsSet &fs = CFloorsSet(),
+	                ESplitTerrainHGroups shg = STH_UNION_TERR_HG ) override;
+	void Select( std::vector<SSelectedObject> *pRes,
+	             const CTransformStack &ts,
+	             float fRadiusKoef,
+	             int nMask,
+	             const CFloorsSet &hg ) override;
+	bool CalcIntersection( const CVec3 &ptCenter, float fRadius, int s, CObjectBase *pIgnoreUser ) override;
+	void AddTracker( IAIMapTracker *pTracker, const SBound &b, int nMask, bool bInformOnDoorFlip = false ) override;
+	void SelectHullPointers( std::vector<CPtr<CObjectBase>> *pRes, const SBound &b, int nMaskOr, int nMaskNot ) override;
 };
 
 // CConvexHull

@@ -69,12 +69,12 @@ class CPlanesFormation : public CAIObjectBase, public IPlane, public CBasePathUn
 	int nID = {};
 
 public:
-	ZEND int operator&( IBinSaver &f );
+	ZEND int operator&( IBinSaver &f ) override;
 
 protected:
-	virtual void NullSegmTime() {}
+	void NullSegmTime() override {}
 
-	virtual void CheckForDestroyedObjects( const CVec2 &vCenter ) const {}
+	void CheckForDestroyedObjects( const CVec2 &vCenter ) const override {}
 
 public:
 	CPlanesFormation()
@@ -88,7 +88,7 @@ public:
 		existence[nID] = true;
 	}
 
-	~CPlanesFormation()
+	~CPlanesFormation() override
 	{
 		existence.erase( nID );
 	}
@@ -113,60 +113,60 @@ public:
 
 	//{ IPlane interface
 	// current speed
-	virtual CVec3 GetSpeedB2() const
+	CVec3 GetSpeedB2() const override
 	{
 		return vSpeed;
 	}
 
 	// current position
-	virtual CVec3 GetPosB2() const
+	CVec3 GetPosB2() const override
 	{
 		return vPos;
 	}
 
 	// current vertical direction
-	virtual CVec3 GetNormalB2() const
+	CVec3 GetNormalB2() const override
 	{
 		return vNormal;
 	}
 
-	virtual const struct IManuver *GetManuver() const
+	const struct IManuver *GetManuver() const override
 	{
 		return pathHistory.GetCurManuver();
 	}
 
 	// next calculated position
-	virtual CVec3 GetPosNext() const
+	CVec3 GetPosNext() const override
 	{
 		return vNewPos;
 	}
 
-	virtual CVec3 GetSpeedNext() const
+	CVec3 GetSpeedNext() const override
 	{
 		return vNewSpeed;
 	}
 
-	virtual CVec3 GetNormalNext() const
+	CVec3 GetNormalNext() const override
 	{
 		return vNewNormal;
 	}
 
 	//CRAP{
-	virtual void SetB2( const CVec3 &vPos, const CVec3 &vSpeed, const CVec3 &vNormal ) {}
+	void SetB2( const CVec3 &vPos, const CVec3 &vSpeed, const CVec3 &vNormal ) override {}
 
 	//CRAP}
 
 	// текущий самолет уже находится под атакой.
-	virtual bool IsBeingAttackedB2()
+	bool IsBeingAttackedB2() override
 	{
 		return false;
 	}
 
 	// когда враг уже готовится стрелять в самолет. нужно для того, чтобы за 1 самолетом не гонялось несколько.
-	virtual void NotifyAttackedB2( IPlane &attacker, bool bAttack ) {}
+	void NotifyAttackedB2( IPlane &attacker, bool bAttack ) override {}
 
 	// access to plane's preferences
-	virtual const class CPlanePreferences &GetPreferencesB2() const
+	const class CPlanePreferences &GetPreferencesB2() const override
 	{
 		return preferences;
 	}
@@ -186,7 +186,7 @@ public:
 	void AddProcessed();
 	void AddAlive();
 	bool IsAllProcessed() const;
-	void SecondSegment( const NTimer::STime timeDiff );
+	void SecondSegment( const NTimer::STime timeDiff ) override;
 
 	void Init( const NDb::SMechUnitRPGStats *pStats,
 	           const CVec3 &vCenter,
@@ -208,7 +208,7 @@ public:
 		NI_ASSERT( false, "WRONG CALL" );
 	}
 
-	virtual const bool SendAlongPath( struct IPath *pPath )
+	const bool SendAlongPath( struct IPath *pPath ) override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		return false;
@@ -256,12 +256,12 @@ public:
 		return 0;
 	}
 
-	virtual void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate )
+	void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate ) override
 	{
 		NI_ASSERT( false, "Illegal call of CBasePathUnit::UpdatePlacement" );
 	}
 
-	virtual void UpdateTile()
+	void UpdateTile() override
 	{
 		NI_ASSERT( false, "Illegal call of CBasePathUnit::UpdateTile" );
 	}
@@ -273,7 +273,7 @@ public:
 		return 0;
 	}
 
-	virtual const float GetTurnSpeed() const
+	const float GetTurnSpeed() const override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		return 0;
@@ -285,37 +285,37 @@ public:
 		return 0;
 	}
 
-	virtual const float GetMaxPossibleSpeed() const
+	const float GetMaxPossibleSpeed() const override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		return 0;
 	}
 
-	virtual const float GetPassability() const
+	const float GetPassability() const override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		return 0;
 	}
 
-	virtual const bool CanMove() const
+	const bool CanMove() const override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		return true;
 	}
 
-	virtual const bool CanMoveCritical() const
+	const bool CanMoveCritical() const override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		return true;
 	}
 
-	virtual const int GetBoundTileRadius() const
+	const int GetBoundTileRadius() const override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		return 1;
 	}
 
-	virtual const CVec2 &GetAABBHalfSize() const
+	const CVec2 &GetAABBHalfSize() const override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		static CVec2 v;
@@ -338,7 +338,7 @@ public:
 		return SRect();
 	}
 
-	virtual const SRect &GetUnitRect() const
+	const SRect &GetUnitRect() const override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		static SRect r;
@@ -357,21 +357,21 @@ public:
 		return false;
 	}
 
-	virtual const bool IsIdle() const
+	const bool IsIdle() const override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		return false;
 	}
 
-	virtual const bool IsTurning() const
+	const bool IsTurning() const override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		return false;
 	}
 
-	virtual void Stop() {}
+	void Stop() override {}
 
-	virtual void StopTurning()
+	void StopTurning() override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 	}
@@ -381,7 +381,7 @@ public:
 		NI_ASSERT( false, "WRONG CALL" );
 	}
 
-	virtual const bool SendAlongPath( struct IStaticPath *pStaticPath, const CVec2 &vShift, const bool bSmoothTurn )
+	const bool SendAlongPath( struct IStaticPath *pStaticPath, const CVec2 &vShift, const bool bSmoothTurn ) override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		return false;
@@ -443,13 +443,13 @@ public:
 		return 0;
 	}
 
-	virtual const bool CanGoToPoint( const CVec2 &point ) const
+	const bool CanGoToPoint( const CVec2 &point ) const override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		return false;
 	}
 
-	virtual const float GetSmoothTurnThreshold() const
+	const float GetSmoothTurnThreshold() const override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		return 0;
@@ -476,13 +476,13 @@ public:
 		NI_ASSERT( false, "WRONG CALL" );
 	}
 
-	virtual const bool CanGoBackward() const
+	const bool CanGoBackward() const override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		return false;
 	}
 
-	virtual const bool CanTurnRound() const
+	const bool CanTurnRound() const override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		return false;
@@ -506,8 +506,9 @@ public:
 		return true;
 	}
 
-	virtual IStaticPath *
-	CreateBigStaticPath( const CVec2 &vStartPoint, const CVec2 &vFinishPoint, struct IPointChecking *pPointChecking )
+	IStaticPath *CreateBigStaticPath( const CVec2 &vStartPoint,
+	                                  const CVec2 &vFinishPoint,
+	                                  struct IPointChecking *pPointChecking ) override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		return 0;
@@ -531,71 +532,71 @@ public:
 		return SVector( 0, 0 );
 	}
 
-	virtual const bool IsDangerousDirExist() const
+	const bool IsDangerousDirExist() const override
 	{
 		return false;
 	}
 
-	virtual const uint16_t GetDangerousDir() const
+	const uint16_t GetDangerousDir() const override
 	{
 		return 0;
 	}
 
-	virtual const SUnitProfile &GetUnitProfile() const
+	const SUnitProfile &GetUnitProfile() const override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		static SUnitProfile unitProfile;
 		return unitProfile;
 	}
 
-	virtual const float GetTurnRadius() const
+	const float GetTurnRadius() const override
 	{
 		NI_ASSERT( false, "WRONG CALL" );
 		return 0.0f;
 	}
 
 	// for CBasePathUnit
-	virtual const int GetUniqueID() const
+	const int GetUniqueID() const override
 	{
 		return -1;
 	}
 
-	virtual const EAIClasses GetAIPassabilityClass() const
+	const EAIClasses GetAIPassabilityClass() const override
 	{
 		return EAC_ANY;
 	}
 
-	virtual const CVec2 GetCenterShift() const
+	const CVec2 GetCenterShift() const override
 	{
 		return VNULL2;
 	}
 
-	virtual const bool IsRound() const
+	const bool IsRound() const override
 	{
 		return true;
 	}
 
-	virtual const bool IsInfantry() const
+	const bool IsInfantry() const override
 	{
 		return false;
 	}
 
-	virtual void UnitTrampled( const CBasePathUnit * ) {}
+	void UnitTrampled( const CBasePathUnit * ) override {}
 
-	virtual const bool CanUnitTrampled( const CBasePathUnit * ) const
+	const bool CanUnitTrampled( const CBasePathUnit * ) const override
 	{
 		return false;
 	}
 
-	virtual const bool IterateUnits( const CVec2 &vCenter,
-	                                 const float fRadius,
-	                                 const bool bOnlyMech,
-	                                 const SIterateUnitsCallback &callback ) const
+	const bool IterateUnits( const CVec2 &vCenter,
+	                         const float fRadius,
+	                         const bool bOnlyMech,
+	                         const SIterateUnitsCallback &callback ) const override
 	{
 		return false;
 	}
 
-	const bool IsStaticUnit() const
+	const bool IsStaticUnit() const override
 	{
 		return false;
 	}

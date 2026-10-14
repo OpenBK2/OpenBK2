@@ -29,12 +29,12 @@ public:
 		nStartTime = GetLongTickCount();
 	}
 
-	virtual void SetSpecific( const std::string &szName, IStatisticsData *pData )
+	void SetSpecific( const std::string &szName, IStatisticsData *pData ) override
 	{
 		specificData[szName] = pData;
 	}
 
-	virtual IStatisticsData *operator[]( const std::string &szName )
+	IStatisticsData *operator[]( const std::string &szName ) override
 	{
 		NI_ASSERT( specificData.find( szName ) != specificData.end(),
 		           fmt::format( "Statistics counter {} for collector {} is not set", szName, szSpecificName ) )
@@ -71,10 +71,10 @@ public:
 	{
 	}
 
-	virtual float GetValue() const;
-	virtual void Add( const float &fValue );
+	float GetValue() const override;
+	void Add( const float &fValue ) override;
 
-	virtual void Reset()
+	void Reset() override
 	{
 		nStartTime = 0ULL;
 		nEvents = 0ULL;
@@ -95,10 +95,10 @@ public:
 	{
 	}
 
-	virtual float GetValue() const;
-	virtual void Add( const float &fValue );
+	float GetValue() const override;
+	void Add( const float &fValue ) override;
 
-	virtual void Reset()
+	void Reset() override
 	{
 		fEventsSum = 0.0f;
 		nStartTime = 0ULL;
@@ -118,18 +118,18 @@ public:
 	{
 	}
 
-	virtual float GetValue() const
+	float GetValue() const override
 	{
 		return nEvents == 0U ? -1.0f : fSum / float( nEvents );
 	}
 
-	virtual void Add( const float &fValue )
+	void Add( const float &fValue ) override
 	{
 		fSum += fValue;
 		++nEvents;
 	}
 
-	virtual void Reset()
+	void Reset() override
 	{
 		fSum = 0.0f;
 		nEvents = 0U;
@@ -147,17 +147,17 @@ public:
 	{
 	}
 
-	virtual float GetValue() const
+	float GetValue() const override
 	{
 		return (float)nEvents;
 	}
 
-	virtual void Add( const float &fValue )
+	void Add( const float &fValue ) override
 	{
 		nEvents += fValue;
 	}
 
-	virtual void Reset()
+	void Reset() override
 	{
 		nEvents = 0U;
 	}

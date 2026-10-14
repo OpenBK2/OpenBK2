@@ -177,7 +177,7 @@ struct SCheckRect : public SIterateUnitsCallback
 	{
 	}
 
-	bool Iterate( CBasePathUnit *pCand ) const
+	bool Iterate( CBasePathUnit *pCand ) const override
 	{
 		if ( pCand->GetUniqueID() == nSkipID )
 		{
@@ -313,7 +313,7 @@ struct SFindCandidates : public SIterateUnitsCallback
 		unitRect = GetUnitRect( pUnit, 1.0f );
 	}
 
-	bool Iterate( CBasePathUnit *pCand ) const
+	bool Iterate( CBasePathUnit *pCand ) const override
 	{
 		if ( !pCand->IsLockingTiles() && pCand->GetCollidingType( pUnit ) != ECT_NONE &&
 		     ( pCand->IsInfantry() || pCand->GetUniqueID() > pUnit->GetUniqueID() ) )

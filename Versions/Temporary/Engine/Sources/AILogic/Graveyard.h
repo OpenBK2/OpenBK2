@@ -24,7 +24,7 @@ class CDeadUnit : public CLinkObject
 	SVector tileCenter;
 	bool bVisibleWhenDie = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CLinkObject *)this );
 		f.Add( 2, &pDieObj );
@@ -53,13 +53,13 @@ public:
 	           bool bPutMud,
 	           const int _nDeathAnimType );
 
-	virtual void GetDyingInfo( struct SAINotifyAction *pDyingInfo, bool *pbVisibleWhenDie );
+	void GetDyingInfo( struct SAINotifyAction *pDyingInfo, bool *pbVisibleWhenDie ) override;
 
-	virtual const bool IsVisible( const uint8_t cParty ) const;
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
+	const bool IsVisible( const uint8_t cParty ) const override;
+	void GetTilesForVisibility( CTilesSet *pTiles ) const override;
+	bool ShouldSuspendAction( const EActionNotify &eAction ) const override;
 
-	virtual CUpdatableObj *GetDieObject() const;
+	CUpdatableObj *GetDieObject() const override;
 };
 
 class CGraveyard

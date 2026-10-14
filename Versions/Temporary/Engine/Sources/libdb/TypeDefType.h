@@ -17,7 +17,7 @@ namespace NTypeDef
 		CObj<SAttributes> pAttributes;
 		std::string szName;
 
-		ZEND int operator&( IBinSaver &f )
+		ZEND int operator&( IBinSaver &f ) override
 		{
 			f.Add( 2, &pRealType );
 			f.Add( 3, &pAttributes );
@@ -36,33 +36,33 @@ namespace NTypeDef
 		{
 		}
 
-		virtual bool IsSimpleType() const
+		bool IsSimpleType() const override
 		{
 			return false;
 		}
 
-		virtual int GetTypeSize() const
+		int GetTypeSize() const override
 		{
 			return 0;
 		}
 
-		virtual const std::string GetTypeName() const
+		const std::string GetTypeName() const override
 		{
 			return szName;
 		}
 
 		//
-		virtual void ToString( std::string *pRes, const CVariant &value ) const {}
+		void ToString( std::string *pRes, const CVariant &value ) const override {}
 
-		virtual void FromString( CVariant *pRes, const std::string &szValue ) const {}
+		void FromString( CVariant *pRes, const std::string &szValue ) const override {}
 
-		virtual SAttributes *GetAttributes() const
+		SAttributes *GetAttributes() const override
 		{
 			return pAttributes;
 		}
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<STypeDef *>( this ) );
 			saver.AddInPlace( "RealType", &pRealType );

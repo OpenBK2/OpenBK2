@@ -57,7 +57,7 @@ class CAnimUnitSoldier : public IAnimUnit
 	SMovingState movingState;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pOwner );
 		f.Add( 3, &pOwnerStats );
@@ -77,14 +77,14 @@ public:
 	{
 	}
 
-	virtual void Init( CAIUnit *pOwner );
+	void Init( CAIUnit *pOwner ) override;
 
-	virtual void AnimationSet( int nAnimation );
+	void AnimationSet( int nAnimation ) override;
 
-	virtual void Moved();
-	virtual void Stopped();
+	void Moved() override;
+	void Stopped() override;
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual void StopCurAnimation();
+	void StopCurAnimation() override;
 };

@@ -42,15 +42,15 @@ class CFormationStatesFactory : public IStatesFactory
 public:
 	static CFormationStatesFactory *Instance();
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		return 0;
 	}
 
-	virtual struct IUnitState *ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
-	virtual struct IUnitState *ProduceRestState( class CQueueUnit *pUnit );
+	struct IUnitState *ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand ) override;
+	struct IUnitState *ProduceRestState( class CQueueUnit *pUnit ) override;
 
-	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
+	bool CanCommandBeExecuted( class CAICommand *pCommand ) override;
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
@@ -61,7 +61,7 @@ class CFormationRestState : public CCommonRestState
 	ZDATA_( CCommonRestState )
 	CPtr<CFormation> pFormation;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CCommonRestState *)this );
 		f.Add( 2, &pFormation );
@@ -85,19 +85,19 @@ public:
 	                     const uint16_t wDir,
 	                     const float fTimeToWait );
 
-	void Segment();
+	void Segment() override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_REST;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 };
 
 class CFormationMoveToState : public IUnitState
@@ -124,7 +124,7 @@ class CFormationMoveToState : public IUnitState
 	NTimer::STime startTime = {};
 	bool bWaiting = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eMoveToState );
 		f.Add( 3, &pFormation );
@@ -147,21 +147,21 @@ public:
 
 	CFormationMoveToState( class CFormation *pFormation, const CVec2 &point );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1.0f, -1.0f );
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_MOVE;
 	}
@@ -181,7 +181,7 @@ class CFormationParaDropState : public IUnitState
 	EParadropState eState = {};
 	CPtr<CFormation> pFormation;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eState );
 		f.Add( 3, &pFormation );
@@ -198,18 +198,18 @@ public:
 
 	CFormationParaDropState( class CFormation *pFormation );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_PARTROOP;
 	}
@@ -235,7 +235,7 @@ class CFormationEnterBuildingState : public IUnitState, public CStatusUpdatesHel
 	int nEntrance = {};
 	NTimer::STime timeSent = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStatusUpdatesHelper *)this );
 		f.Add( 2, &state );
@@ -261,18 +261,18 @@ public:
 
 	CFormationEnterBuildingState( class CFormation *pFormation, class CBuilding *pBuilding );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_ENTER;
 	}
@@ -296,7 +296,7 @@ class CFormationEnterEntrenchmentState : public IUnitState, public CStatusUpdate
 	CPtr<CEntrenchment> pEntrenchment;
 	NTimer::STime timeToWait = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStatusUpdatesHelper *)this );
 		f.Add( 2, &state );
@@ -321,18 +321,18 @@ public:
 
 	CFormationEnterEntrenchmentState( class CFormation *pFormation, class CEntrenchment *pEntrenchment );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_ENTER_ENTRENCHMENT;
 	}
@@ -345,7 +345,7 @@ class CFormationIdleBuildingState : public IUnitState
 	CPtr<CFormation> pFormation;
 	CPtr<CBuilding> pBuilding;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFormation );
 		f.Add( 3, &pBuilding );
@@ -362,15 +362,15 @@ public:
 
 	CFormationIdleBuildingState( class CFormation *pFormation, class CBuilding *pBuilding );
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_REST_IN_BUILDING;
 	}
 
-	virtual bool IsRestState() const
+	bool IsRestState() const override
 	{
 		return true;
 	}
@@ -380,12 +380,12 @@ public:
 		return pBuilding;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 };
 
 class CFormationIdleEntrenchmentState : public IUnitState
@@ -395,7 +395,7 @@ class CFormationIdleEntrenchmentState : public IUnitState
 	CPtr<CFormation> pFormation;
 	CPtr<CEntrenchment> pEntrenchment;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFormation );
 		f.Add( 3, &pEntrenchment );
@@ -412,25 +412,25 @@ public:
 
 	CFormationIdleEntrenchmentState( class CFormation *pFormation, class CEntrenchment *pEntrenchment );
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_REST_ENTRENCHMENT;
 	}
 
-	virtual bool IsRestState() const
+	bool IsRestState() const override
 	{
 		return true;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 
 	class CEntrenchment *GetEntrenchment() const
 	{
@@ -446,7 +446,7 @@ class CFormationLeaveBuildingState : public IUnitState, public CStatusUpdatesHel
 	CPtr<CBuilding> pBuilding;
 	CVec2 point;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStatusUpdatesHelper *)this );
 		f.Add( 2, &pFormation );
@@ -471,21 +471,21 @@ public:
 	                              const enum EActionLeaveParam param,
 	                              const CVec2 &point );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return point;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_GO_OUT;
 	}
@@ -500,7 +500,7 @@ class CFormationLeaveEntrenchmentState : public IUnitState, public CStatusUpdate
 	CPtr<CEntrenchment> pEntrenchment;
 	CVec2 point;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStatusUpdatesHelper *)this );
 		f.Add( 2, &pFormation );
@@ -525,21 +525,21 @@ public:
 	                                  const enum EActionLeaveParam param,
 	                                  const CVec2 &point );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return point;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_GO_OUT_ENTRENCHMENT;
 	}
@@ -566,7 +566,7 @@ class CFormationPlaceMine : public IEngineerFormationState
 	CVec2 point;
 	int eType = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eState );
 		f.Add( 3, &pHomeTransport );
@@ -586,21 +586,21 @@ public:
 
 	CFormationPlaceMine( class CFormation *pFormation, const CVec2 &point, const EMineType nType );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return point;
 	}
 
-	virtual void SetHomeTransport( class CAITransportUnit *pTransport );
+	void SetHomeTransport( class CAITransportUnit *pTransport ) override;
 };
 
 class CFormationClearMine : public IUnitState
@@ -619,7 +619,7 @@ class CFormationClearMine : public IUnitState
 	CPtr<CFormation> pFormation;
 	CVec2 point;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eState );
 		f.Add( 3, &pFormation );
@@ -637,21 +637,21 @@ public:
 
 	CFormationClearMine( class CFormation *pFormation, const CVec2 &point );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_CLEAR_MINE;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return point;
 	}
@@ -675,7 +675,7 @@ class CFormationAttackUnitState : public IUnitAttackingState
 	bool bSwarmAttack = {};
 	int nEnemyParty = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eState );
 		f.Add( 3, &pFormation );
@@ -696,28 +696,28 @@ public:
 
 	CFormationAttackUnitState( class CFormation *pFormation, class CAIUnit *pEnemy, const bool bSwarmAttack );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return true;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 
-	virtual bool IsAttacksUnit() const
+	bool IsAttacksUnit() const override
 	{
 		return true;
 	}
 
-	virtual class CAIUnit *GetTargetUnit() const
+	class CAIUnit *GetTargetUnit() const override
 	{
 		return 0;
 	}
 
-	virtual EUnitStateNames GetName();
+	EUnitStateNames GetName() override;
 };
 
 class CFormationAttackCommonStatObjState : public IUnitAttackingState
@@ -737,7 +737,7 @@ class CFormationAttackCommonStatObjState : public IUnitAttackingState
 	CPtr<CFormation> pFormation;
 	CPtr<CStaticObject> pObj;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eState );
 		f.Add( 3, &pFormation );
@@ -755,28 +755,28 @@ public:
 
 	CFormationAttackCommonStatObjState( class CFormation *pFormation, class CStaticObject *pObj );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return true;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 
-	virtual bool IsAttacksUnit() const
+	bool IsAttacksUnit() const override
 	{
 		return false;
 	}
 
-	virtual class CAIUnit *GetTargetUnit() const
+	class CAIUnit *GetTargetUnit() const override
 	{
 		return 0;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_ATTACK_STAT_OBJECT;
 	}
@@ -789,7 +789,7 @@ class CFormationRotateState : public IUnitState
 	ZDATA
 	CPtr<CFormation> pFormation;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFormation );
 		return 0;
@@ -802,16 +802,16 @@ public:
 
 	CFormationRotateState( class CFormation *pFormation, const uint16_t wDir );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 };
 
 class CFormationEnterTransportState : public IUnitState, public CStatusUpdatesHelper
@@ -841,7 +841,7 @@ class CFormationEnterTransportState : public IUnitState, public CStatusUpdatesHe
 	CVec2 lastTransportPos;
 	SAIAngle lastTransportDir;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStatusUpdatesHelper *)this );
 		f.Add( 2, &eState );
@@ -868,20 +868,20 @@ public:
 
 	CFormationEnterTransportState( class CFormation *pFormation, class CMilitaryCar *pTransport );
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_ENTER_TRANSPORT;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 };
 
 class CFormationIdleTransportState : public IUnitState
@@ -891,7 +891,7 @@ class CFormationIdleTransportState : public IUnitState
 	CPtr<CFormation> pFormation;
 	CPtr<CMilitaryCar> pTransport;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFormation );
 		f.Add( 3, &pTransport );
@@ -908,25 +908,25 @@ public:
 
 	CFormationIdleTransportState( class CFormation *pFormation, class CMilitaryCar *pTransport );
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_REST_ON_BOARD;
 	}
 
-	virtual bool IsRestState() const
+	bool IsRestState() const override
 	{
 		return true;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 };
 
 class CFormationEnterTransportNowState : public IUnitState
@@ -936,7 +936,7 @@ class CFormationEnterTransportNowState : public IUnitState
 	CPtr<CFormation> pFormation;
 	CPtr<CMilitaryCar> pTransport;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFormation );
 		f.Add( 3, &pTransport );
@@ -953,15 +953,15 @@ public:
 
 	CFormationEnterTransportNowState( class CFormation *pFormation, class CMilitaryCar *pTransport );
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 };
 
 class CFormationEnterTransportByCheatPathState : public IUnitState
@@ -971,7 +971,7 @@ class CFormationEnterTransportByCheatPathState : public IUnitState
 	CPtr<CFormation> pFormation;
 	CPtr<CMilitaryCar> pTransport;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFormation );
 		f.Add( 3, &pTransport );
@@ -988,15 +988,15 @@ public:
 
 	CFormationEnterTransportByCheatPathState( class CFormation *pFormation, class CMilitaryCar *pTransport );
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 };
 
 // общий код для Repear, Resupply
@@ -1030,18 +1030,18 @@ public:
 		{
 		}
 
-		virtual bool HasUnit()
+		bool HasUnit() override
 		{
 			return pUnit;
 		}
 
-		virtual bool SetUnit( class CAIUnit *_pUnit, const float fMissedHP, const float fDist )
+		bool SetUnit( class CAIUnit *_pUnit, const float fMissedHP, const float fDist ) override
 		{
 			pUnit = _pUnit;
 			return true;
 		}
 
-		virtual void SetNotEnoughRu()
+		void SetNotEnoughRu() override
 		{
 			bNotEnoughtRu = true;
 		}
@@ -1066,12 +1066,12 @@ public:
 		{
 		}
 
-		virtual bool HasUnit()
+		bool HasUnit() override
 		{
 			return pUnit;
 		}
 
-		virtual bool SetUnit( class CAIUnit *_pUnit, const float fMissedHP, const float fDist )
+		bool SetUnit( class CAIUnit *_pUnit, const float fMissedHP, const float fDist ) override
 		{
 			const float fWeight = CalcWeight( fMissedHP, fDist );
 			if ( fCurWeight < fWeight )
@@ -1082,7 +1082,7 @@ public:
 			return false;
 		}
 
-		virtual void SetNotEnoughRu()
+		void SetNotEnoughRu() override
 		{
 			bNotEnoughtRu = true;
 		}
@@ -1120,7 +1120,7 @@ protected:
 	CPtr<CAIUnit> pPreferredUnit;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eState );
 		f.Add( 3, &pHomeTransport );
@@ -1139,14 +1139,14 @@ public:
 	{
 	}
 
-	virtual void SetHomeTransport( class CAITransportUnit *pTransport );
+	void SetHomeTransport( class CAITransportUnit *pTransport ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1.0f, -1.0f );
 	}
@@ -1167,7 +1167,7 @@ class CFormationRepairUnitState : public CFormationServeUnitState
 	float fRepCost = {};
 	bool bNearTruck = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CFormationServeUnitState *)this );
 		f.Add( 2, &pUnit );
@@ -1202,12 +1202,12 @@ public:
 		{
 		}
 
-		virtual bool OnlyConnected() const
+		bool OnlyConnected() const override
 		{
 			return false;
 		}
 
-		virtual bool AddStorage( class CBuilding *pStorage, const float fPathLenght );
+		bool AddStorage( class CBuilding *pStorage, const float fPathLenght ) override;
 
 		bool HasStorage() const
 		{
@@ -1237,21 +1237,21 @@ public:
 
 	CFormationRepairUnitState( class CFormation *pUnit, CAIUnit *_pPreferredUnit );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1.0f, -1.0f );
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_REPAIR_UNIT;
 	}
@@ -1271,7 +1271,7 @@ class CFormationResupplyUnitState : public CFormationServeUnitState
 	bool bSayAck = {};                 // unit being resupplied must say ack when being resupplied
 	bool bNearTruck = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CFormationServeUnitState *)this );
 		f.Add( 2, &pUnit );
@@ -1302,16 +1302,16 @@ public:
 
 	CFormationResupplyUnitState( class CFormation *pUnit, CAIUnit *pPreferredUnit );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1.0f, -1.0f );
 	}
@@ -1323,7 +1323,7 @@ public:
 	                             CFormationServeUnitState::CFindUnitPredicate *pPred,
 	                             CAIUnit *_pPreferredUnit );
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_RESUPPLY_UNIT;
 	}
@@ -1343,7 +1343,7 @@ class CFormationLoadRuState : public CFormationServeUnitState
 	NTimer::STime lastResupplyTime = {};
 	int nEntrance = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CFormationServeUnitState *)this );
 		f.Add( 2, &pUnit );
@@ -1366,16 +1366,16 @@ public:
 
 	CFormationLoadRuState( class CFormation *pUnit, class CBuilding *pStorage );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1.0f, -1.0f );
 	}
@@ -1403,7 +1403,7 @@ class CFormationCatchTransportState : public IUnitState
 	float fResursPerSoldier = {}; // солдаты, забегая в транспорт могут принести ресурсы
 	ECatchState eState = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		f.Add( 3, &pTransportToCatch );
@@ -1429,16 +1429,16 @@ public:
 
 	CFormationCatchTransportState( class CFormation *pUnit, class CAITransportUnit *pTransport, float fResursPerSoldier );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 };
 
 // кладут противотанковый еж
@@ -1467,7 +1467,7 @@ class CFormationPlaceAntitankState : public IEngineerFormationState
 	float fWorkAccumulator = {};
 	NTimer::STime timeBuild = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		f.Add( 3, &eState );
@@ -1489,21 +1489,21 @@ public:
 
 	CFormationPlaceAntitankState( class CFormation *pUnit, const CVec2 &vDesiredPoint );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return vDesiredPoint;
 	}
 
-	virtual void SetHomeTransport( class CAITransportUnit *pTransport );
+	void SetHomeTransport( class CAITransportUnit *pTransport ) override;
 };
 
 class CLongObjectCreation;
@@ -1541,7 +1541,7 @@ class CFormationBuildLongObjectState : public IEngineerFormationState
 	float fCompletion = {}; // степень готовности данного сегмента
 	int nCurrentSegment = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		f.Add( 3, &eState );
@@ -1567,23 +1567,23 @@ public:
 
 	CFormationBuildLongObjectState( class CFormation *pUnit, class CLongObjectCreation *pCreation );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1, -1 );
 	}
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual void SetHomeTransport( class CAITransportUnit *pTransport );
+	void SetHomeTransport( class CAITransportUnit *pTransport ) override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_BUILD_LONGOBJECT;
 	}
@@ -1619,7 +1619,7 @@ class CFormationBuildEntrenchmentState : public IUnitState
 	CVec2 vEndPoint;
 	int nMaxIndex = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFormation );
 		f.Add( 3, &eState );
@@ -1647,21 +1647,21 @@ public:
 
 	CFormationBuildEntrenchmentState( CFormation *pUnit, CLongObjectCreation *pCreation, const CVec2 &vStartPoint );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1, -1 );
 	}
 
-	virtual ETryStateInterruptResult TryInterruptState( CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( CAICommand *pCommand ) override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_BUILD_ENTRENCHMENT;
 	}
@@ -1687,7 +1687,7 @@ class CFormationCaptureArtilleryState : public IUnitState, public CStatusUpdates
 	CPtr<CArtillery> pArtillery;
 	std::vector<CPtr<CAIUnit>> usedSoldiers;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStatusUpdatesHelper *)this );
 		f.Add( 2, &eState );
@@ -1704,21 +1704,21 @@ public:
 
 	CFormationCaptureArtilleryState( class CFormation *_pUnit, CArtillery *pArtillery, const bool bUseFormationPart );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1.0f, -1.0f );
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_GUN_CAPTURE;
 	}
@@ -1851,7 +1851,7 @@ class CFormationGunCrewState : public IUnitState
 	int nFormationSize = {};
 	CVec2 vGunPos;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		f.Add( 3, &nReloadPhaze );
@@ -1907,18 +1907,18 @@ public:
 
 	CFormationGunCrewState( class CFormation *pUnit, CArtillery *pArtillery );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_GUN_CREW_STATE;
 	}
@@ -1939,7 +1939,7 @@ class CFormationInstallMortarState : public IUnitState
 	CPtr<CArtillery> pArt;
 	int nStage = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		f.Add( 3, &timeInstall );
@@ -1957,15 +1957,15 @@ public:
 	}
 
 	CFormationInstallMortarState( class CFormation *pUnit );
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1, -1 );
 	}
@@ -1977,7 +1977,7 @@ class CFormationUseSpyglassState : public IUnitState
 	ZDATA
 	CPtr<CFormation> pFormation;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFormation );
 		return 0;
@@ -1993,18 +1993,18 @@ public:
 
 	CFormationUseSpyglassState( class CFormation *pFormation, const CVec2 &point );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_USE_SPYGLASS;
 	}
@@ -2020,7 +2020,7 @@ class CFormationAttackFormationState : public IUnitAttackingState
 	bool bSwarmAttack = {};
 	int nEnemyParty = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		f.Add( 3, &pTarget );
@@ -2039,23 +2039,23 @@ public:
 
 	CFormationAttackFormationState( class CFormation *pFormation, class CFormation *pTarget, const bool bSwarmAttack );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return true;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 
-	virtual bool IsAttacksUnit() const
+	bool IsAttacksUnit() const override
 	{
 		return true;
 	}
 
-	virtual class CAIUnit *GetTargetUnit() const
+	class CAIUnit *GetTargetUnit() const override
 	{
 		return 0;
 	}
@@ -2069,7 +2069,7 @@ class CFormationParadeState : public IUnitState
 	CPtr<CFormation> pFormation;
 	NTimer::STime startTime = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFormation );
 		f.Add( 3, &startTime );
@@ -2086,18 +2086,18 @@ public:
 
 	CFormationParadeState( class CFormation *pFormation, const int nType );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_PARADE;
 	}
@@ -2109,7 +2109,7 @@ class CFormationDisbandState : public IUnitState
 	ZDATA
 	CPtr<CFormation> pFormation;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFormation );
 		return 0;
@@ -2125,16 +2125,16 @@ public:
 
 	CFormationDisbandState( class CFormation *pFormation );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 };
 
 class CFormationFormState : public IUnitState
@@ -2143,7 +2143,7 @@ class CFormationFormState : public IUnitState
 	ZDATA
 	CPtr<CFormation> pFormation;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFormation );
 		return 0;
@@ -2159,16 +2159,16 @@ public:
 
 	CFormationFormState( class CFormation *pFormation );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 };
 
 class CFormationWaitToFormState : public IUnitState
@@ -2181,7 +2181,7 @@ class CFormationWaitToFormState : public IUnitState
 	bool bMain = {};
 	NTimer::STime startTime = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFormation );
 		f.Add( 3, &pFormFormation );
@@ -2205,20 +2205,20 @@ public:
 
 	CFormationWaitToFormState( class CFormation *pFormation, const float fMain, class CSoldier *pMainSoldier );
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_WAIT_TO_FORM;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 };
 
 class CCatchFormationState : public IUnitState
@@ -2248,7 +2248,7 @@ class CCatchFormationState : public IUnitState
 	// время для периодических проверок состояния формации
 	NTimer::STime lastUpdateTime = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pCatchingFormation );
 		f.Add( 3, &eState );
@@ -2280,16 +2280,16 @@ public:
 
 	CCatchFormationState( class CFormation *pCatchingFormation, class CFormation *pFormation );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1.0f, -1.0f );
 	}
@@ -2320,7 +2320,7 @@ class CFormationSwarmState : public IUnitAttackingState
 	NTimer::STime startTime = {};
 	bool bContinue = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &state );
 		f.Add( 3, &pFormation );
@@ -2343,30 +2343,30 @@ public:
 
 	CFormationSwarmState( class CFormation *pFormation, const CVec2 &point, const float fContinue );
 
-	virtual void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_SWARM;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return true;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return point;
 	}
 
-	virtual bool IsAttacksUnit() const
+	bool IsAttacksUnit() const override
 	{
 		return false;
 	}
 
-	virtual class CAIUnit *GetTargetUnit() const
+	class CAIUnit *GetTargetUnit() const override
 	{
 		return 0;
 	}
@@ -2399,7 +2399,7 @@ class CFormationRepairBridgeState : public IEngineerFormationState
 	float fWorkDone = {};
 	NTimer::STime timeLastCheck = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		f.Add( 3, &eState );
@@ -2422,23 +2422,23 @@ public:
 
 	CFormationRepairBridgeState( class CFormation *pFormation, class CBridgeSpan *pBridge );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1, -1 );
 	}
 
-	virtual void SetHomeTransport( class CAITransportUnit *pTransport );
+	void SetHomeTransport( class CAITransportUnit *pTransport ) override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_REPAIR_BRIDGE;
 	}
@@ -2468,7 +2468,7 @@ class CFormationRepairBuildingState : public IEngineerFormationState
 	float fWorkLeft = {};
 	NTimer::STime lastRepearTime = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		f.Add( 3, &eState );
@@ -2492,26 +2492,26 @@ public:
 
 	CFormationRepairBuildingState( class CFormation *pFormation, class CBuilding *pBuilding );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1, -1 );
 	}
 
-	virtual void SetHomeTransport( class CAITransportUnit *pTransport );
+	void SetHomeTransport( class CAITransportUnit *pTransport ) override;
 
 	// returns nearest entrance
 	static int SendToNearestEntrance( CCommonUnit *pTransport, CBuilding *pStorage );
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_REPAIR_BUILDING;
 	}
@@ -2523,7 +2523,7 @@ class CFormationEnterBuildingNowState : public IUnitState
 	ZDATA
 	CPtr<CFormation> pFormation;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFormation );
 		return 0;
@@ -2539,16 +2539,16 @@ public:
 
 	CFormationEnterBuildingNowState( class CFormation *pFormation, class CBuilding *pBuilding );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1.0f, -1.0f );
 	}
@@ -2560,7 +2560,7 @@ class CFormationEnterEntrenchmentNowState : public IUnitState
 	ZDATA
 	CPtr<CFormation> pFormation;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFormation );
 		return 0;
@@ -2576,16 +2576,16 @@ public:
 
 	CFormationEnterEntrenchmentNowState( class CFormation *pFormation, class CEntrenchment *pEntrenchment );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1.0f, -1.0f );
 	}
@@ -2612,7 +2612,7 @@ class CFormationPlaceChargeState : public IUnitState, public CStatusUpdatesHelpe
 	int nBeginAnimTime = {};
 	NDb::EUnitSpecialAbility eChargeType = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStatusUpdatesHelper *)this );
 		f.Add( 2, &pFormation );
@@ -2643,16 +2643,16 @@ public:
 	                            NDb::EUnitSpecialAbility _eChargeType,
 	                            int nTimeOffset );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return true;
 	}
 
-	virtual const CVec2 GetPurposePoint() const;
+	const CVec2 GetPurposePoint() const override;
 };
 
 class CFormationDetonateChargeState : public IUnitState
@@ -2664,7 +2664,7 @@ class CFormationDetonateChargeState : public IUnitState
 	std::list<CPtr<CSoldier>> sappers;
 	int nBeginAnimTime = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFormation );
 		f.Add( 3, &sappers );
@@ -2682,16 +2682,16 @@ public:
 
 	CFormationDetonateChargeState( class CFormation *pUnit );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return true;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return CVec2( -1.0f, -1.0f );
 	}
@@ -2732,7 +2732,7 @@ class CFormationThrowGrenadeState : public IUnitState
 	CPtr<CFormation> pFormation;
 	std::vector<SThrowInfo> vSoldiers;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFormation );
 		f.Add( 3, &vSoldiers );
@@ -2749,21 +2749,21 @@ public:
 
 	CFormationThrowGrenadeState( class CFormation *pUnit );
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return true;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return VNULL2;
 	}
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_FORM_THROW_GRENADE;
 	}
@@ -2780,7 +2780,7 @@ class CFormationEntrenchSelfState : public IUnitState, public CStatusUpdatesHelp
 	bool bWaitForSoldiers = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStatusUpdatesHelper *)this );
 		f.Add( 2, &pFormation );
@@ -2797,15 +2797,15 @@ public:
 
 	CFormationEntrenchSelfState( class CFormation *_pFormation );
 
-	void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return VNULL2;
 	}
@@ -2818,7 +2818,7 @@ class CFormationLeaveSelfEntrenchState : public IUnitState
 	CPtr<CFormation> pFormation;
 	NTimer::STime timeStart = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFormation );
 		f.Add( 3, &timeStart );
@@ -2832,15 +2832,15 @@ public:
 	}
 
 	CFormationLeaveSelfEntrenchState( class CFormation *_pFormation );
-	void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return VNULL2;
 	}
@@ -2893,7 +2893,7 @@ class CFormationFirstAidState : public IUnitState
 	NTimer::STime timeNextCheck = {};
 	CVec2 vStartPoint; // point to heal around
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pFormation );
 		f.Add( 3, &pHealeadFormation );
@@ -2919,15 +2919,15 @@ public:
 
 	static bool IsAnyNeedHealing( const int nParty, const CVec3 &vCenter );
 
-	void Segment();
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override;
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return false;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return VNULL2;
 	}

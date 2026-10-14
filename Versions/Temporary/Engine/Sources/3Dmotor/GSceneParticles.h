@@ -61,7 +61,7 @@ protected:
 	SBoundCalcer bc, bcPart;
 
 public:
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &orientation );
 		f.Add( 3, &effects );
@@ -121,7 +121,7 @@ public:
 
 	virtual void FreeWriteBuffer() = 0;
 
-	virtual void SampleWarFog( const std::vector<CVec3> &vPos, std::vector<float> *pRes )
+	void SampleWarFog( const std::vector<CVec3> &vPos, std::vector<float> *pRes ) override
 	{
 		if ( pRootOutput )
 		{
@@ -133,7 +133,7 @@ public:
 		}
 	}
 
-	virtual const SParticleOrientationInfo &GetOrientationInfo() const
+	const SParticleOrientationInfo &GetOrientationInfo() const override
 	{
 		return orientation;
 	}
@@ -146,7 +146,7 @@ class CParticlesGeometry : public CBaseParticlesGeometry
 protected:
 	ZDATA_( CBaseParticlesGeometry )
 public:
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 1, (CBaseParticlesGeometry *)this );
 		return 0;
@@ -168,7 +168,7 @@ protected:
 	SWriteBuffer *pWriteBuffer;
 
 protected:
-	void Recalc()
+	void Recalc() override
 	{
 		if ( pWriteBuffer )
 		{
@@ -205,8 +205,11 @@ public:
 	{
 	}
 
-	virtual void Start(
-			CParticleEffect *pEffect, int nStartParticle, const SBound &bv, const SParticleLightInfo &lm, uint32_t dwPColor )
+	void Start( CParticleEffect *pEffect,
+	            int nStartParticle,
+	            const SBound &bv,
+	            const SParticleLightInfo &lm,
+	            uint32_t dwPColor ) override
 	{
 		ASSERT( ( effects.empty() && pWriteBuffer == 0 ) || ( !effects.empty() && pWriteBuffer != 0 ) );
 		if ( !pWriteBuffer )
@@ -216,7 +219,7 @@ public:
 		RealStart( pEffect, nStartParticle, bv, lm, dwPColor, pWriteBuffer->nTarget );
 	}
 
-	void FreeWriteBuffer()
+	void FreeWriteBuffer() override
 	{
 		ASSERT( !bIsAddingPart );
 		if ( pWriteBuffer )
@@ -234,7 +237,7 @@ class CShaderParticlesGeometry : public CParticlesGeometry<NGfx::SGeomVecFull>
 	ZDATA_( CParticlesGeometry<NGfx::SGeomVecFull> )
 	NGfx::SCompactVector vNormal;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 1, (CParticlesGeometry<NGfx::SGeomVecFull> *)this );
 		f.Add( 2, &vNormal );
@@ -273,7 +276,8 @@ public:
 		pRes->texV.dw = 0;
 	}
 
-	void AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tPlace, float fDepth )
+	void
+	AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tPlace, float fDepth ) override
 	{
 		if ( --nSkipParticles < 0 && pWriteBuffer->nTarget < N_PARTICLES_BUFFER_SIZE )
 		{
@@ -325,7 +329,8 @@ public:
 		pRes->tex2.y = 0;
 	}
 
-	void AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tPlace, float fDepth )
+	void
+	AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tPlace, float fDepth ) override
 	{
 		if ( --nSkipParticles < 0 && pWriteBuffer->nTarget < N_PARTICLES_BUFFER_SIZE )
 		{
@@ -374,7 +379,7 @@ class CParticlesTriList : public CFuncBase<std::vector<NGfx::STriangleList>>
 	ZDATA
 	std::vector<int> particles;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &particles );
 		return 0;
@@ -383,9 +388,9 @@ class CParticlesTriList : public CFuncBase<std::vector<NGfx::STriangleList>>
 	bool bNeedUpdate;
 
 protected:
-	void Recalc();
+	void Recalc() override;
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return bNeedUpdate;
 	}

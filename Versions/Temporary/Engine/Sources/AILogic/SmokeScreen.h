@@ -20,7 +20,7 @@ class CSmokeScreen : public CExistingObject
 	bool bTransparencySet = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CExistingObject *)this );
 		f.Add( 2, &vCenter );
@@ -39,7 +39,7 @@ public:
 	void Trace( const bool bAdd );
 
 protected:
-	virtual void SetNewPlaceWithoutMapUpdate( const CVec3 &center, const uint16_t dir = 0 ) {}
+	void SetNewPlaceWithoutMapUpdate( const CVec3 &center, const uint16_t dir = 0 ) override {}
 
 public:
 	CSmokeScreen()
@@ -50,94 +50,94 @@ public:
 	CSmokeScreen( const CVec3 &vCenter, const float fRadius, const int nTransparency, const int nTime );
 	virtual void Init();
 
-	virtual const SHPObjectRPGStats *GetStats() const
+	const SHPObjectRPGStats *GetStats() const override
 	{
 		return 0;
 	}
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual const NTimer::STime GetNextSegmentTime() const
+	const NTimer::STime GetNextSegmentTime() const override
 	{
 		return nextSegmTime;
 	}
 
 	// сдетонировать, если при наезде данного юнита мина взрывается; true - если сдетонировала
-	virtual void
-	TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit )
+	void
+	TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit ) override
 	{
 	}
 
-	virtual void Die( const float fDamage ) {}
+	void Die( const float fDamage ) override {}
 
-	virtual EStaticObjType GetObjectType() const
+	EStaticObjType GetObjectType() const override
 	{
 		return ESOT_SMOKE_SCREEN;
 	}
 
-	virtual bool IsContainer() const
+	bool IsContainer() const override
 	{
 		return false;
 	}
 
-	virtual const int GetNDefenders() const
+	const int GetNDefenders() const override
 	{
 		return 0;
 	}
 
-	virtual class CSoldier *GetUnit( const int n ) const
+	class CSoldier *GetUnit( const int n ) const override
 	{
 		return 0;
 	}
 
-	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const
+	bool CanUnitGoThrough( const EAIClasses &eClass ) const override
 	{
 		return true;
 	}
 
-	virtual void LockTiles() {}
+	void LockTiles() override {}
 
-	virtual void UnlockTiles() {}
+	void UnlockTiles() override {}
 
-	virtual void CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles )
+	void CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles ) override
 	{
 		pTiles->clear();
 	}
 
-	virtual void SetTransparencies();
-	virtual void RemoveTransparencies();
-	virtual void RestoreTransparenciesImmidiately();
+	void SetTransparencies() override;
+	void RemoveTransparencies() override;
+	void RestoreTransparenciesImmidiately() override;
 
-	virtual void GetCoveredTiles( std::list<SVector> *pTiles ) const;
+	void GetCoveredTiles( std::list<SVector> *pTiles ) const override;
 
-	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats ) {}
+	void GetRPGStats( struct SAINotifyRPGStats *pStats ) override {}
 
-	virtual const CVec3 &GetCenter() const
+	const CVec3 &GetCenter() const override
 	{
 		return vCenter;
 	}
 
-	virtual const CVec2 GetAttackCenter( const CVec2 &vPoint ) const
+	const CVec2 GetAttackCenter( const CVec2 &vPoint ) const override
 	{
 		return CVec2( vCenter.x, vCenter.y );
 	}
 
-	virtual void GetBoundRect( SRect *pRect ) const
+	void GetBoundRect( SRect *pRect ) const override
 	{
 		pRect->InitRect( CVec2( GetCenter().x, GetCenter().y ), CVec2( 1.0f, 1.0f ), 0.0f, 0.0f );
 	}
 
-	virtual bool IsPointInside( const CVec2 &point ) const
+	bool IsPointInside( const CVec2 &point ) const override
 	{
 		return false;
 	}
 
-	virtual const uint16_t GetDir() const
+	const uint16_t GetDir() const override
 	{
 		return 0;
 	}
 
-	virtual CObjectProfile *GetPassProfile() const
+	CObjectProfile *GetPassProfile() const override
 	{
 		return 0;
 	}

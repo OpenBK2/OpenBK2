@@ -25,15 +25,15 @@ public:
 	{
 	}
 
-	~CLANClient();
+	~CLANClient() override;
 
 	static CLANClient *Create( const int nNetGameVersion, const int nGamePort, const int _nTimeOut );
 
-	class CNetPacket *GetPacket();
-	void SendPacket( class CNetPacket *pPacket );
-	void SendGamePacket( class CNetPacket *pPacket, bool bBroadcast );
+	class CNetPacket *GetPacket() override;
+	void SendPacket( class CNetPacket *pPacket ) override;
+	void SendGamePacket( class CNetPacket *pPacket, bool bBroadcast ) override;
 
-	virtual void Segment();
+	void Segment() override;
 
 	// Access to NetDriver
 	bool GetGameInfo(

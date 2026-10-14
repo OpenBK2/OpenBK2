@@ -59,7 +59,7 @@ public:
 		Singleton<ICommandHandlerContainer>()->Set( CHID_SCRIPT_AREA_WINDOW, this );
 	}
 
-	virtual ~CScriptAreaWxWindow()
+	~CScriptAreaWxWindow() override
 	{
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_SCRIPT_AREA_WINDOW );
 	}
@@ -125,12 +125,12 @@ public:
 	}
 
 	//	CScriptAreaCommands
-	virtual void GetDialogData( SScriptAreaWindowData *pData )
+	void GetDialogData( SScriptAreaWindowData *pData ) override
 	{
 		( *pData ) = dialogData;
 	}
 
-	virtual void SetDialogData( const SScriptAreaWindowData *pData )
+	void SetDialogData( const SScriptAreaWindowData *pData ) override
 	{
 		bIsDataBeginSet = true;
 		dialogData = *pData;

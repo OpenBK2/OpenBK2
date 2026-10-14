@@ -16,7 +16,7 @@ public:
 	int nID = {};
 	bool bIsBroadcast = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &wszMessage );
 		f.Add( 3, &szNick );
@@ -47,7 +47,7 @@ class CChatAFKPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CChatAFKPacket )
 public:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
@@ -67,7 +67,7 @@ public:
 	ZDATA
 	std::string szAFKNick;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szAFKNick );
 		return 0;
@@ -90,7 +90,7 @@ public:
 	ZDATA
 	std::string szChannelName;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szChannelName );
 		return 0;
@@ -128,7 +128,7 @@ public:
 	ZDATA
 	std::list<SIDNickPair> clientsList;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &clientsList );
 		return 0;
@@ -153,7 +153,7 @@ public:
 	std::string szNick;
 	bool bJoined = {}; // true for joining clients, false for leaving
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nID );
 		f.Add( 3, &szNick );
@@ -179,7 +179,7 @@ public:
 	ZDATA
 	uint32_t dwVersion = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &dwVersion );
 		return 0;
@@ -204,7 +204,7 @@ public:
 	std::list<std::string> removed;
 	bool bIsFullUpdate = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &dwVersion );
 		f.Add( 3, &added );
@@ -246,7 +246,7 @@ public:
 	std::string szPlayer;
 	EFriendIgnore eChange = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szPlayer );
 		f.Add( 3, &eChange );
@@ -271,7 +271,7 @@ public:
 	std::list<std::string> ignoreList;
 	std::list<std::string> friendList;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &ignoreList );
 		f.Add( 3, &friendList );
@@ -295,7 +295,7 @@ class CChatGetIgnoreFriendListPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CChatGetIgnoreFriendListPacket )
 public:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
@@ -323,7 +323,7 @@ public:
 	std::string szNick;
 	char cChatStatus = {}; // см. EChatStatus
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szNick );
 		f.Add( 3, &cChatStatus );
@@ -348,7 +348,7 @@ public:
 	std::string szNick;
 	std::string szChannel;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szNick );
 		f.Add( 3, &szChannel );

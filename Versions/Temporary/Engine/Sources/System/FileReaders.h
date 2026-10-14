@@ -74,12 +74,12 @@ class SYSTEM_EXPORT CMemoryMappedFile : public CMappedStream
 	CMMFile file;
 	boost::interprocess::mapped_region region;
 
-	int GetFileSize()
+	int GetFileSize() override
 	{
 		return file.GetFileSize();
 	}
 
-	void SetFileSize( int nSize )
+	void SetFileSize( int nSize ) override
 	{
 		ASSERT( CanWrite() );
 		if ( !CanWrite() )
@@ -89,9 +89,9 @@ class SYSTEM_EXPORT CMemoryMappedFile : public CMappedStream
 		file.SetFileSize( nSize );
 	}
 
-	void *MapFile( int nSize );
-	void UnmapFile( void *p );
-	void FlushFile( void *p );
+	void *MapFile( int nSize ) override;
+	void UnmapFile( void *p ) override;
+	void FlushFile( void *p ) override;
 
 public:
 	CMemoryMappedFile( const CMemoryMappedFile & ) = delete;
@@ -117,7 +117,7 @@ public:
 		}
 	}
 
-	~CMemoryMappedFile()
+	~CMemoryMappedFile() override
 	{
 		FinishAccess();
 	}
@@ -138,19 +138,19 @@ class SYSTEM_EXPORT CMemoryMappedFileFragment : public CMappedStream
 	//! instead, in which case the buffer is owned rather than borrowed.
 	unsigned char *pOwnedBuffer = nullptr;
 
-	virtual int GetFileSize()
+	int GetFileSize() override
 	{
 		return nSize;
 	}
 
-	virtual void SetFileSize( int nSize )
+	void SetFileSize( int nSize ) override
 	{
 		ASSERT( 0 );
 	}
 
-	virtual void *MapFile( int nSize );
-	virtual void UnmapFile( void *p );
-	virtual void FlushFile( void *p );
+	void *MapFile( int nSize ) override;
+	void UnmapFile( void *p ) override;
+	void FlushFile( void *p ) override;
 
 public:
 	CMemoryMappedFileFragment( CMMFile *_pFile, int _nOffset, int _nSize )
@@ -161,7 +161,7 @@ public:
 		StartAccess( F_CanRead );
 	}
 
-	~CMemoryMappedFileFragment()
+	~CMemoryMappedFileFragment() override
 	{
 		FinishAccess();
 	}

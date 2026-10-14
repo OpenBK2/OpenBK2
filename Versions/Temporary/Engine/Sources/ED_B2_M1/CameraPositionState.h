@@ -53,18 +53,18 @@ class CCameraPositionState : public CDefaultInputState, public ICommandHandler
 
 public:
 	//	CDefaultInputState
-	void Enter();
-	void Leave();
-	void Draw( IPaintContext *pPaintDC );
-	void PostDraw( IPaintContext *pPaintDC );
+	void Enter() override;
+	void Leave() override;
+	void Draw( IPaintContext *pPaintDC ) override;
+	void PostDraw( IPaintContext *pPaintDC ) override;
 
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 
 	//	ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 
 	//	CCameraPositionState
 	CCameraPositionState( CMapInfoEditor *_pMapInfoEditor = 0 );

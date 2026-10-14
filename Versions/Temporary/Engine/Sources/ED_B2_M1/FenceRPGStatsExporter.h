@@ -26,6 +26,6 @@ public:
 	                            const std::string &rszObjectTypeName,
 	                            const std::string &rszObjectName,
 	                            bool bForce,
-	                            EXPORT_TYPE exportType );
+	                            EXPORT_TYPE exportType ) override;
 	//
 };

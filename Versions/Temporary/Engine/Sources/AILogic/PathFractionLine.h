@@ -14,7 +14,7 @@ class CPathFractionLine : public IPathFraction
 	float fLength = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &x0 );
 		f.Add( 3, &x1 );
@@ -33,22 +33,22 @@ public:
 	void Init( const CVec2 &_x0, const CVec2 &_x1, const float _fZ );
 	void Init( const CVec3 &_x0, const CVec3 &_x1 );
 
-	virtual float GetLength() const
+	float GetLength() const override
 	{
 		return fLength;
 	}
 
-	virtual CVec3 GetPoint( const float fDist ) const
+	CVec3 GetPoint( const float fDist ) const override
 	{
 		return x0 + v0 * fDist;
 	}
 
-	virtual CVec3 GetTangent( const float fDist ) const
+	CVec3 GetTangent( const float fDist ) const override
 	{
 		return v0;
 	}
 
-	virtual CVec3 GetNormale( const float fDist ) const
+	CVec3 GetNormale( const float fDist ) const override
 	{
 		const CVec3 vXY = CVec3( -v0.y, v0.x, 0 );
 		CVec3 vNorm( v0 ^ vXY );
@@ -58,27 +58,27 @@ public:
 		return vNorm;
 	}
 
-	virtual CVec3 GetStartPoint() const
+	CVec3 GetStartPoint() const override
 	{
 		return x0;
 	}
 
-	virtual CVec3 GetStartTangent() const
+	CVec3 GetStartTangent() const override
 	{
 		return v0;
 	}
 
-	virtual CVec3 GetEndPoint() const
+	CVec3 GetEndPoint() const override
 	{
 		return x1;
 	}
 
-	virtual CVec3 GetEndTangent() const
+	CVec3 GetEndTangent() const override
 	{
 		return v0;
 	}
 
-	virtual void GetSimplePath( CPathList *pPaths )
+	void GetSimplePath( CPathList *pPaths ) override
 	{
 		NI_ASSERT( false, "wrong call" );
 	}

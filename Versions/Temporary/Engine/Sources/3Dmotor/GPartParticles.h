@@ -19,7 +19,7 @@ class CParticles : public IParticles
 	int nFlags;
 	SBound transformedBound;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &bound );
 		f.Add( 3, &pParticles );
@@ -57,9 +57,9 @@ public:
 		return transformedBound;
 	}
 
-	CParticleEffect *GetEffect();
-	void Unlink();
-	void SetFade( float fVal );
+	CParticleEffect *GetEffect() override;
+	void Unlink() override;
+	void SetFade( float fVal ) override;
 	bool Update( CVolumeNode *pVolume );
 
 	bool IsLit() const

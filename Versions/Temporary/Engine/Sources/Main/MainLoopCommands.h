@@ -28,12 +28,12 @@ public:
 	CICLoadBase();
 	CICLoadBase( const std::string &szFileName );
 
-	void Configure( const char *pszConfig );
-	void Exec();
+	void Configure( const char *pszConfig ) override;
+	void Exec() override;
 
 	virtual void OnProgress( EStage eStage ) {}
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		NI_ASSERT( 0, "Wrong call" );
 		return 0;
@@ -47,7 +47,7 @@ class MAIN_EXPORT CICSaveBase : public IInterfaceCommand
 	std::string szFileName;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szTitleName );
 		f.Add( 3, &szFileName );
@@ -72,8 +72,8 @@ public:
 	CICSaveBase();
 	CICSaveBase( const std::string &szFileName );
 
-	void Configure( const char *pszConfig );
-	void Exec();
+	void Configure( const char *pszConfig ) override;
+	void Exec() override;
 
 	virtual void OnProgress( EStage eStage ) {}
 };

@@ -24,14 +24,14 @@ private:
 public:
 	CInterfaceMPWaitPlayers();
 
-	bool Init();
+	bool Init() override;
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 
 	//}
-	int operator&( IBinSaver &f )
+	int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
@@ -41,9 +41,9 @@ class CICMPWaitPlayers : public CInterfaceCommandBase<CInterfaceMPWaitPlayers>
 {
 	OBJECT_BASIC_METHODS( CICMPWaitPlayers );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

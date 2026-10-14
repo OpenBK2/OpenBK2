@@ -26,7 +26,7 @@ class CPause : public IPlayListElement
 	NTimer::STime timePaused;
 	EPauseState eState;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &timeToPause );
 		f.Add( 3, &timeLastCall );
@@ -40,12 +40,12 @@ public:
 
 	CPause( const NDb::SPlayPause &_Pause );
 
-	void Segment();
-	bool IsFinished() const;
+	void Segment() override;
+	bool IsFinished() const override;
 
-	void Stop() {}
+	void Stop() override {}
 
-	void Play();
-	void OnResetTimer();
+	void Play() override;
+	void OnResetTimer() override;
 };
 } // namespace NMusicSystem

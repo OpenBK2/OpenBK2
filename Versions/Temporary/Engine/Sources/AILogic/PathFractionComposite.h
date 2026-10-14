@@ -30,7 +30,7 @@ class CPathFractionComposite : public CPathFractionComplexBase
 	CVec3 vSpeedLastPoint;
 	CVec3 vNormaleLastPoint;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CPathFractionComplexBase *)this );
 		f.Add( 2, &points );
@@ -62,32 +62,32 @@ public:
 
 	CPathFractionComposite( struct IPlane *pPlane, struct IPathFraction *pPath );
 
-	virtual CVec3 GetPoint() const
+	CVec3 GetPoint() const override
 	{
 		return vPos;
 	}
 
-	virtual CVec3 GetTangent() const
+	CVec3 GetTangent() const override
 	{
 		return vSpeed;
 	}
 
-	virtual CVec3 GetNormale() const
+	CVec3 GetNormale() const override
 	{
 		return vNormale;
 	}
 
-	virtual bool Iterate( const float fDist, float *pfDistRemain );
+	bool Iterate( const float fDist, float *pfDistRemain ) override;
 
-	virtual float GetLength() const
+	float GetLength() const override
 	{
 		return fPathLenght;
 	}
 
-	virtual void GetSimplePath( CPathList *paths )
+	void GetSimplePath( CPathList *paths ) override
 	{
 		NI_ASSERT( false, "wrong call" );
 	}
 
-	virtual void GetPrevPoints( struct SPrevPathParams *pParams ) const;
+	void GetPrevPoints( struct SPrevPathParams *pParams ) const override;
 };

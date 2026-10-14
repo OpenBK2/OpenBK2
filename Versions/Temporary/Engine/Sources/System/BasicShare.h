@@ -39,7 +39,7 @@ private:
 	CDataHash data;
 
 	//
-	virtual void CreateHolder( std::list<CObj<CObjectBase>> *pHolder )
+	void CreateHolder( std::list<CObj<CObjectBase>> *pHolder ) override
 	{
 		for ( typename CDataHash::const_iterator i = data.begin(); i != data.end(); ++i )
 		{
@@ -90,7 +90,7 @@ public:
 		return data;
 	}
 
-	int operator&( IBinSaver &f )
+	int operator&( IBinSaver &f ) override
 	{
 		if ( !bKeepData )
 		{

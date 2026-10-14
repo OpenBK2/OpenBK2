@@ -14,6 +14,6 @@ class CTerrainState : public CDefaultInputState
 public:
 	CTerrainState( CTerrainEditor *_pCTerrainEditor );
 	//IInputState
-	void Enter();
-	void Leave();
+	void Enter() override;
+	void Leave() override;
 };

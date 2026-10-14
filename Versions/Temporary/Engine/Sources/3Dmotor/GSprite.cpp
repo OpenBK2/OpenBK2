@@ -20,7 +20,7 @@ public:
 	CVec2 sSize;
 	CVec3 sCamera;
 	////
-	void AddParticles( IParticleOutput *pRender );
+	void AddParticles( IParticleOutput *pRender ) override;
 };
 
 void CSpriteEffect::AddParticles( IParticleOutput *pRender )

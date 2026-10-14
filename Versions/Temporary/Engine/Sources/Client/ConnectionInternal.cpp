@@ -20,7 +20,7 @@ class CFinishConnectionFilter : public CPacketProcessor
 
 public:
 	CFinishConnectionFilter();
-	virtual bool Segment();
+	bool Segment() override;
 
 	//
 	bool ProcessRemoveClient( class CNetRemoveClient *pPacket );
@@ -75,7 +75,7 @@ public:
 	ZDATA
 	int nClientServerID;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nClientServerID );
 		return 0;

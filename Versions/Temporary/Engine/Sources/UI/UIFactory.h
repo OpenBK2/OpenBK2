@@ -22,19 +22,19 @@ class CVirtualScreenController : public IVirtualScreenController
 public:
 	CVirtualScreenController();
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		return 0;
 	}
 
 	//{ IVirtualScreenController
-	void GetResolution( int *nSizeX, int *nSizeY );
-	void SetResolution( int nSizeX, int nSizeY );
-	void SetOrigin( int nOrgX, int nOrgY );
-	void GetOrigin( int *pOrgX, int *pOrgY );
-	void VirtualToScreen( const CTRect<float> &src, CTRect<float> *pRes );
-	void VirtualToScreen( class CRectLayout *pRects );
-	void ScreenToVirtual( const CVec2 &vPos, CVec2 *pScreenPos );
+	void GetResolution( int *nSizeX, int *nSizeY ) override;
+	void SetResolution( int nSizeX, int nSizeY ) override;
+	void SetOrigin( int nOrgX, int nOrgY ) override;
+	void GetOrigin( int *pOrgX, int *pOrgY ) override;
+	void VirtualToScreen( const CTRect<float> &src, CTRect<float> *pRes ) override;
+	void VirtualToScreen( class CRectLayout *pRects ) override;
+	void ScreenToVirtual( const CVec2 &vPos, CVec2 *pScreenPos ) override;
 	//}
 };
 
@@ -67,7 +67,7 @@ public:
 		return pScreenDuringLoad;
 	}
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, &NUIFactory::pConsts );
 		saver.Add( 2, &pVirtualScreenController );
@@ -78,26 +78,26 @@ public:
 	CUIFactory();
 
 	//{ IUIInitialization
-	void SetUIConsts( const struct NDb::SUIGameConsts *_pConsts )
+	void SetUIConsts( const struct NDb::SUIGameConsts *_pConsts ) override
 	{
 		NUIFactory::pConsts = _pConsts;
 	}
 
-	void SetMLHandler( const std::wstring &wsTAG, struct IMLHandler *pHandler );
-	IWindow *CreateWindowFromDesc( const struct NDb::SUIDesc *pDesc );
+	void SetMLHandler( const std::wstring &wsTAG, struct IMLHandler *pHandler ) override;
+	IWindow *CreateWindowFromDesc( const struct NDb::SUIDesc *pDesc ) override;
 	IWindow *CreateScreenFromDesc( const struct NDb::SUIDesc *pDesc,
 	                               const NDb::SUIGameConsts *pConsts,
 	                               struct IProgrammedReactionsAndChecks *pReactionsAndChecks,
 	                               NGScene::I2DGameView *p2DView,
 	                               NGScene::IGameView *pGView,
-	                               NGScene::IGameView *pInterface3DView );
+	                               NGScene::IGameView *pInterface3DView ) override;
 
-	IVirtualScreenController *GetVirtualScreenController()
+	IVirtualScreenController *GetVirtualScreenController() override
 	{
 		return pVirtualScreenController;
 	}
 
-	virtual void Set2DGameView( NGScene::I2DGameView *pView );
+	void Set2DGameView( NGScene::I2DGameView *pView ) override;
 
 	// }
 

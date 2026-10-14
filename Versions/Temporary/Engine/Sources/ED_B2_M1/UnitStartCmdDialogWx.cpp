@@ -315,7 +315,7 @@ public:
 		}
 	}
 
-	~CWxUnitStartCmdDialog()
+	~CWxUnitStartCmdDialog() override
 	{
 		if ( dialog )
 		{
@@ -328,7 +328,7 @@ public:
 		return dialog != nullptr;
 	}
 
-	virtual void Show( bool bShow )
+	void Show( bool bShow ) override
 	{
 		if ( dialog )
 		{
@@ -336,7 +336,7 @@ public:
 		}
 	}
 
-	virtual void SetDialogData( const NUnitStartCmdDialog::SData *pData )
+	void SetDialogData( const NUnitStartCmdDialog::SData *pData ) override
 	{
 		if ( dialog )
 		{
@@ -344,7 +344,7 @@ public:
 		}
 	}
 
-	virtual void GetDialogData( NUnitStartCmdDialog::SData *pData )
+	void GetDialogData( NUnitStartCmdDialog::SData *pData ) override
 	{
 		if ( dialog )
 		{
@@ -352,7 +352,7 @@ public:
 		}
 	}
 
-	virtual void UpdateTarget( const std::string &rszTarget )
+	void UpdateTarget( const std::string &rszTarget ) override
 	{
 		if ( dialog )
 		{
@@ -360,7 +360,7 @@ public:
 		}
 	}
 
-	virtual int GetSelectedCommandType()
+	int GetSelectedCommandType() override
 	{
 		return dialog ? dialog->GetSelectedCommandType() : 0;
 	}

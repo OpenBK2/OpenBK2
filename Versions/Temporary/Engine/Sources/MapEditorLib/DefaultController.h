@@ -40,11 +40,11 @@ public:
 	}
 
 	//
-	bool Undo( bool bUpdateManipulator, bool bUpdateViews, IView *pViewToExlude );
-	bool Redo( bool bUpdateManipulator, bool bUpdateViews, IView *pViewToExlude );
+	bool Undo( bool bUpdateManipulator, bool bUpdateViews, IView *pViewToExlude ) override;
+	bool Redo( bool bUpdateManipulator, bool bUpdateViews, IView *pViewToExlude ) override;
 
 	//
-	virtual void GetDescription( std::string *pszDescription ) const
+	void GetDescription( std::string *pszDescription ) const override
 	{
 		if ( pszDescription )
 		{
@@ -58,7 +58,7 @@ public:
 	}
 
 	//
-	virtual void GetTemporaryLabel( std::string *pszTemporaryLabel ) const
+	void GetTemporaryLabel( std::string *pszTemporaryLabel ) const override
 	{
 		if ( pszTemporaryLabel )
 		{

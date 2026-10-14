@@ -148,7 +148,7 @@ class CGroupMoveExecutor : public CExecutor
 	CCellsMap cells;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CExecutor *)this );
 		f.Add( 2, &vFinishPoint );
@@ -198,12 +198,12 @@ public:
 
 	const bool Init( const std::vector<CCommonUnit *> &units, const struct SAIUnitCmd &cmd );
 
-	virtual bool IsExecutorValid() const
+	bool IsExecutorValid() const override
 	{
 		return true;
 	}
 
-	virtual int Segment();
-	virtual bool NotifyEvent( const CExecutorEvent &event );
-	void RegisterOnEvents( IExecutorContainer *pContainer );
+	int Segment() override;
+	bool NotifyEvent( const CExecutorEvent &event ) override;
+	void RegisterOnEvents( IExecutorContainer *pContainer ) override;
 };

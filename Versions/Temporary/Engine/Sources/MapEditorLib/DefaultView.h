@@ -18,7 +18,7 @@ class MAPEDITORLIB_EXPORT CDefaultView : public IView
 public:
 	CDefaultView() {}
 
-	~CDefaultView()
+	~CDefaultView() override
 	{
 		RemoveViewManipulator();
 	}
@@ -57,16 +57,16 @@ public:
 	}
 
 	//
-	virtual void SetViewManipulator( IManipulator *_pViewManipulator,
-	                                 const SObjectSet &rObjectSet,
-	                                 const std::string &rszTemporaryLabel );
+	void SetViewManipulator( IManipulator *_pViewManipulator,
+	                         const SObjectSet &rObjectSet,
+	                         const std::string &rszTemporaryLabel ) override;
 
-	virtual IManipulator *GetViewManipulator()
+	IManipulator *GetViewManipulator() override
 	{
 		return pViewManipulator;
 	}
 
-	virtual void RemoveViewManipulator();
+	void RemoveViewManipulator() override;
 
 	//
 	virtual void SetTemporaryLabel( const std::string &rszTemporaryLabel )
@@ -83,7 +83,7 @@ public:
 	}
 
 	//
-	virtual void GetObjectSet( SObjectSet *pObjectSet )
+	void GetObjectSet( SObjectSet *pObjectSet ) override
 	{
 		if ( pObjectSet != 0 )
 		{
@@ -91,6 +91,6 @@ public:
 		}
 	}
 
-	virtual void Enter();
-	virtual void Leave();
+	void Enter() override;
+	void Leave() override;
 };

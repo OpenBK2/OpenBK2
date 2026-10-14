@@ -43,27 +43,27 @@ class CWindow1LvlTreeControl : public CWindowScrollableContainerBase, public IBu
 	void Collapse( SItem *pContainer );
 
 protected:
-	NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
 
 public:
-	IWindow *AddItem();
-	IWindow *AddSubItem( IWindow *pItem );
-	void Init();
-	void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	IWindow *AddItem() override;
+	IWindow *AddSubItem( IWindow *pItem ) override;
+	void Init() override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 
 	// IButtonNotify
-	void Released( class CWindow *pWho );
+	void Released( class CWindow *pWho ) override;
 
-	void Pushed( class CWindow *pWho ) {}
+	void Pushed( class CWindow *pWho ) override {}
 
-	void Entered( class CWindow *pWho ) {}
+	void Entered( class CWindow *pWho ) override {}
 
-	void Leaved( class CWindow *pWho ) {}
+	void Leaved( class CWindow *pWho ) override {}
 
-	void StateChanged( class CWindow *pWho ) {}
+	void StateChanged( class CWindow *pWho ) override {}
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

@@ -31,7 +31,7 @@ class CMPManager : public IMPToUIManager, public CMPUIMessageProcessor
 
 public:
 	CMPManager();
-	~CMPManager();
+	~CMPManager() override;
 
 	void SetLanTester( CLANTester *_pLANTester )
 	{
@@ -39,18 +39,18 @@ public:
 	}
 
 	//{ IMPToUIManager
-	virtual void AddUIMessage( SMPUIMessage *pMsg );
-	virtual void AddUIMessage( EMPUIMessageType eMessageType );
-	virtual SMPUIMessage *GetUIMessage();
-	virtual SMPUIMessage *PeekUIMessage();
-	virtual void MPUISegment();
+	void AddUIMessage( SMPUIMessage *pMsg ) override;
+	void AddUIMessage( EMPUIMessageType eMessageType ) override;
+	SMPUIMessage *GetUIMessage() override;
+	SMPUIMessage *PeekUIMessage() override;
+	void MPUISegment() override;
 	//}
 
 	//{ CPacketProcessor
 	bool Segment();
 
 	//}
-	bool SaveReplay( const std::string &szFileName )
+	bool SaveReplay( const std::string &szFileName ) override
 	{
 		return pCurrentNetMode->SaveReplay( szFileName );
 	}

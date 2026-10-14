@@ -10,7 +10,7 @@ class CObjectRPGStatsExporter : public CObjectBaseRPGStatsExporter
 	CObjectRPGStatsExporter() {}
 
 protected:
-	bool NeedCreatePassability()
+	bool NeedCreatePassability() override
 	{
 		return true;
 	}
@@ -20,5 +20,5 @@ public:
 	                           const std::string &rszObjectTypeName,
 	                           const std::string &rszObjectName,
 	                           bool bExport,
-	                           EXPORT_TYPE exportType );
+	                           EXPORT_TYPE exportType ) override;
 };

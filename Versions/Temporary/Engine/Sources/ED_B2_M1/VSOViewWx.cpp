@@ -128,7 +128,7 @@ public:
 				CHID_MAPINFO_VSO_WINDOW, ID_MIVSOOLCM_LIST, ID_MIVSOOLCM_PROPERTIES );
 	}
 
-	virtual ~CVSOWxWindow()
+	~CVSOWxWindow() override
 	{
 		Singleton<ICommandHandlerContainer>()->UnRegister( CHID_MAPINFO_VSO_WINDOW );
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_VSO_WINDOW );
@@ -232,7 +232,7 @@ public:
 	}
 
 	//	CVSOCommands
-	virtual bool GetEditParameters( SEditParams *pEditParameters )
+	bool GetEditParameters( SEditParams *pEditParameters ) override
 	{
 		if ( pEditParameters == 0 )
 		{
@@ -350,7 +350,7 @@ public:
 		return true;
 	}
 
-	virtual bool SetEditParameters( const SEditParams &rEditParameters )
+	bool SetEditParameters( const SEditParams &rEditParameters ) override
 	{
 		// No bCreateControls here, as in the original -- and it costs
 		// nothing, because none of the four controls it writes has a change
@@ -389,7 +389,7 @@ public:
 	}
 
 	//	ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override
 	{
 		switch ( nCommandID )
 		{
@@ -423,7 +423,7 @@ public:
 		return false;
 	}
 
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override
 	{
 		NI_ASSERT( pbEnable != 0, "CVSOWxWindow::UpdateCommand(), pbEnable == 0" );
 		NI_ASSERT( pbCheck != 0, "CVSOWxWindow::UpdateCommand(), pbCheck == 0" );

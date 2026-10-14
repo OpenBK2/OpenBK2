@@ -37,7 +37,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	SSpecialAbilityInfo info;
 
-ZEND public : int operator&( IBinSaver &f )
+ZEND public : int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );

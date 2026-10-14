@@ -21,7 +21,7 @@ class CResupplyCellInfo : public CAIObjectBase
 	SVector vCell;                     // coordinates of the cell ( in GetGeneralCell )
 	NTimer::STime timeLastDanger = {}; // time when last truck was killed near this cell
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &resupplyInfo );
 		f.Add( 3, &resupplyCount );
@@ -134,7 +134,7 @@ public:
 		CPtr<CBuilding> pStorage;
 		int nParty = {};
 
-		ZEND int operator&( IBinSaver &f )
+		ZEND int operator&( IBinSaver &f ) override
 		{
 			f.Add( 2, &pMainTask );
 			f.Add( 3, &pStorage );
@@ -146,8 +146,8 @@ public:
 		CWaitForChangePlayer() {}
 
 		CWaitForChangePlayer( CBuilding *pStorage, CGeneralTaskToDefendStorage *pMainTask, const int nParty );
-		virtual bool IsTimeToRun() const;
-		virtual void Run();
+		bool IsTimeToRun() const override;
+		void Run() override;
 	};
 
 private:
@@ -171,7 +171,7 @@ private:
 	CPtr<CCommonUnit> pRepairTransport;
 	SAIAngle wRequestID;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eState );
 		f.Add( 3, &fSeverity );
@@ -189,31 +189,31 @@ public:
 
 	CGeneralTaskToDefendStorage( CBuilding *pStorage, const int nParty );
 
-	virtual ETaskName GetName() const
+	ETaskName GetName() const override
 	{
 		return ENT_DEFEND_ESTORAGE;
 	}
 
-	virtual void AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit = false );
-	virtual void ReleaseWorker( ICommander *pManager, const float fMinSeverity );
-	virtual void CancelTask( ICommander *pManager );
-	virtual void Segment();
+	void AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit = false ) override;
+	void ReleaseWorker( ICommander *pManager, const float fMinSeverity ) override;
+	void CancelTask( ICommander *pManager ) override;
+	void Segment() override;
 
-	virtual float GetSeverity() const
+	float GetSeverity() const override
 	{
 		return fSeverity;
 	}
 
-	virtual bool IsFinished() const
+	bool IsFinished() const override
 	{
 		return eState == TS_FINISHED;
 	}
 
 	//IWorkerEnumerator
-	virtual bool EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType );
-	virtual bool EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const;
-	virtual int NeedNBest( const enum EForceType eType ) const;
-	virtual float EvaluateWorkerRating( CCommonUnit *pUnit, const enum EForceType eType ) const;
+	bool EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType ) override;
+	bool EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const override;
+	int NeedNBest( const enum EForceType eType ) const override;
+	float EvaluateWorkerRating( CCommonUnit *pUnit, const enum EForceType eType ) const override;
 
 	friend class CWaitForChangePlayer;
 };
@@ -235,7 +235,7 @@ class CGeneralTaskToResupplyCell : public IGeneralTask, public IWorkerEnumerator
 	NTimer::STime timeNextCheck = {};
 	EResupplyType eResupplyType = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		OnSerialize( f );
 		f.Add( 3, &pCell );
@@ -262,31 +262,31 @@ public:
 	                            const enum EResupplyType eType,
 	                            class CGeneralIntendant *pCells );
 
-	virtual ETaskName GetName() const
+	ETaskName GetName() const override
 	{
 		return ETN_RESUPPLYCELL;
 	}
 
-	virtual void AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit = false );
-	virtual void ReleaseWorker( ICommander *pManager, const float fMinSeverity );
-	virtual void CancelTask( ICommander *pManager );
-	virtual void Segment();
+	void AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit = false ) override;
+	void ReleaseWorker( ICommander *pManager, const float fMinSeverity ) override;
+	void CancelTask( ICommander *pManager ) override;
+	void Segment() override;
 
-	virtual float GetSeverity() const
+	float GetSeverity() const override
 	{
 		return fSeverity;
 	}
 
-	virtual bool IsFinished() const
+	bool IsFinished() const override
 	{
 		return bFinished;
 	}
 
 	//IWorkerEnumerator
-	virtual bool EnumWorker( CCommonUnit *pUnit, const enum EForceType eType );
-	virtual bool EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const;
-	virtual int NeedNBest( const enum EForceType eType ) const;
-	virtual float EvaluateWorkerRating( CCommonUnit *pUnit, const enum EForceType eType ) const;
+	bool EnumWorker( CCommonUnit *pUnit, const enum EForceType eType ) override;
+	bool EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const override;
+	int NeedNBest( const enum EForceType eType ) const override;
+	float EvaluateWorkerRating( CCommonUnit *pUnit, const enum EForceType eType ) const override;
 };
 
 class CGeneralTaskCheckCellDanger : public IGeneralDelayedTask
@@ -299,7 +299,7 @@ class CGeneralTaskCheckCellDanger : public IGeneralDelayedTask
 	EResupplyType eResupplyType = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTask );
 		f.Add( 3, &pCell );
@@ -322,12 +322,12 @@ public:
 	{
 	}
 
-	virtual bool IsTimeToRun() const
+	bool IsTimeToRun() const override
 	{
 		return !pTask || pTask->IsFinished() || pCell->IsDangerous() || pCell->GetNNeeded( eResupplyType ) == 0;
 	}
 
-	virtual void Run()
+	void Run() override
 	{
 		if ( pTask )
 		{
@@ -378,7 +378,7 @@ class CFreeArtilleryHolder : public CAIObjectBase
 	TArtilleries artilleries;
 	ZONSERIALIZE
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &artilleries );
 		OnSerialize( f );
@@ -453,7 +453,7 @@ private:
 	int nParty = {};
 	CFreeArtilleryHolder freeArtilleryHolder;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CCommander *)this );
 		f.Add( 2, &pGeneral );
@@ -485,18 +485,18 @@ public:
 	void AddReiforcePositions( const struct NDb::SAIGeneralParcel &_patchInfo );
 	void AddReiforcePosition( const CVec2 &vPos, const uint16_t wDirection );
 
-	virtual void Give( CCommonUnit *pWorker );
+	void Give( CCommonUnit *pWorker ) override;
 
-	virtual float GetMeanSeverity() const
+	float GetMeanSeverity() const override
 	{
 		return 0;
 	}
 
-	virtual void EnumWorkers( const EForceType eType, IWorkerEnumerator *pEnumerator );
-	virtual void Segment();
+	void EnumWorkers( const EForceType eType, IWorkerEnumerator *pEnumerator ) override;
+	void Segment() override;
 
-	virtual int RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType );
-	virtual void CancelRequest( int nRequestID, enum EForceType eType );
+	int RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType ) override;
+	void CancelRequest( int nRequestID, enum EForceType eType ) override;
 
 	void UnitDead( class CCommonUnit *pUnit );
 	void UnitChangedPosition( class CCommonUnit *pUnit, const CVec2 &vNewPos );

@@ -135,5 +135,5 @@ public:
 	}
 
 	//
-	int operator&( CStructureSaver &f );
+	int operator&( CStructureSaver &f ) override;
 };

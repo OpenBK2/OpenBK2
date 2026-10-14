@@ -136,7 +136,7 @@ public:
 		pGrid->SetChangeCallback( [this]() { UpdateOkButton(); } );
 	}
 
-	virtual ~CBuildDataWxDialog()
+	~CBuildDataWxDialog() override
 	{
 		Unregister();
 	}
@@ -177,22 +177,22 @@ public:
 	}
 
 	// CPCBaseDialog
-	virtual IView *GetView()
+	IView *GetView() override
 	{
 		return pGrid->GetView();
 	}
 
-	virtual ICommandHandler *GetCommandHandler()
+	ICommandHandler *GetCommandHandler() override
 	{
 		return pGrid->GetCommandHandler();
 	}
 
-	virtual void CreateTree()
+	void CreateTree() override
 	{
 		pGrid->BuildTree();
 	}
 
-	virtual void UpdateValues()
+	void UpdateValues() override
 	{
 		pGrid->UpdateValues();
 	}

@@ -65,7 +65,7 @@ public:
 	friend class CAccessForDGPtr;
 
 	//
-	virtual int operator&( IBinSaver &f )
+	int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
@@ -132,7 +132,7 @@ protected:
 		}
 	}
 
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		Touch();
 		return false;

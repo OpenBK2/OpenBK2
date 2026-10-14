@@ -52,21 +52,21 @@ private:
 public:
 	CReinfPointsState( CMapInfoEditor *_pMapInfoEditor = 0 );
 
-	virtual ~CReinfPointsState() {}
+	~CReinfPointsState() override {}
 
 	//
-	void Enter();
-	void Leave();
-	virtual void OnSetFocus( IWidget *pNewWnd );
-	void Draw( IPaintContext *pPaintDC );
-	void PostDraw( IPaintContext *pPaintDC );
+	void Enter() override;
+	void Leave() override;
+	void OnSetFocus( IWidget *pNewWnd ) override;
+	void Draw( IPaintContext *pPaintDC ) override;
+	void PostDraw( IPaintContext *pPaintDC ) override;
 
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
-	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 
 	void RefreshReinfPointsWindow();
 	bool EditPointDeployTemplate();

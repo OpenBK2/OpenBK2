@@ -9,20 +9,20 @@ class CMODContainer : public IMODContainer
 public:
 	CMODContainer() {}
 
-	~CMODContainer() {}
+	~CMODContainer() override {}
 
 	// IMODContainer
-	bool CanNewMOD();
-	bool CanOpenMOD();
-	bool CanCloseMOD();
+	bool CanNewMOD() override;
+	bool CanOpenMOD() override;
+	bool CanCloseMOD() override;
 	//
-	bool NewMOD();
-	bool OpenMOD();
-	void CloseMOD();
+	bool NewMOD() override;
+	bool OpenMOD() override;
+	void CloseMOD() override;
 	//
 	/**
 	bool IsValidFolder( const std::string &rszFolder );
 	bool IsValidPath( const std::string &rszPath );
 	/**/
-	std::string GetDataFolder( SUserData::ENormalizePathType eNormalizePathType );
+	std::string GetDataFolder( SUserData::ENormalizePathType eNormalizePathType ) override;
 };

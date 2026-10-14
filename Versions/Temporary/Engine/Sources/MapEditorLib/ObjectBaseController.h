@@ -83,20 +83,20 @@ public:
 
 protected:
 	// CController
-	virtual bool UndoWithoutUpdateViews();
-	virtual bool RedoWithoutUpdateViews();
+	bool UndoWithoutUpdateViews() override;
+	bool RedoWithoutUpdateViews() override;
 
 public:
 	virtual void Trace() const;
 
 	// IController
-	virtual bool IsEmpty() const
+	bool IsEmpty() const override
 	{
 		return undoDataList.empty();
 	}
 
-	virtual bool IsAbsolute() const;
-	virtual void GetDescription( std::string *pszDescription ) const;
+	bool IsAbsolute() const override;
+	void GetDescription( std::string *pszDescription ) const override;
 
 	// Helpers
 	bool AddInsertOperation( const std::string &rszArrayName, const int nIndex, IManipulator *pObjectManipulator );

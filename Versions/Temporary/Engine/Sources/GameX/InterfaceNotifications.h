@@ -76,7 +76,7 @@ public:
 		std::vector<CPtr<CMapObj>> objects;
 		std::wstring wszText;
 
-		ZEND int operator&( IBinSaver &f )
+		ZEND int operator&( IBinSaver &f ) override
 		{
 			f.Add( 2, &pItemWnd );
 			f.Add( 3, &pDBEvent );
@@ -157,7 +157,7 @@ private:
 	std::unordered_map<int, SMapPointers> pointers;
 	CPtr<IAILogic> pAI;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pMiniMap );
 		f.Add( 3, &vMapSize );
@@ -260,15 +260,15 @@ public:
 	CVisualNotifications( IWindow *pParent, IMiniMap *pMiniMap, const CVec2 &vMapSize, IAILogic *pAI );
 
 	//{ IVisualNotifications
-	bool Notify( EVisualNotification eType, int nID, const CVec2 &vPos );
-	bool Notify( EVisualNotification eType, CMapObj *pMO );
-	void Step( const NTimer::STime nDeltaGameTime, bool bAppActive );
+	bool Notify( EVisualNotification eType, int nID, const CVec2 &vPos ) override;
+	bool Notify( EVisualNotification eType, CMapObj *pMO ) override;
+	void Step( const NTimer::STime nDeltaGameTime, bool bAppActive ) override;
 
-	void OnBtn( const std::string &szSender, bool bRightBtn );
+	void OnBtn( const std::string &szSender, bool bRightBtn ) override;
 
-	void OnEvent( const SEventParams &params );
-	void OnRemoveEvent( NDb::ENotificationEventType eEventType, int nID );
+	void OnEvent( const SEventParams &params ) override;
+	void OnRemoveEvent( NDb::ENotificationEventType eEventType, int nID ) override;
 
-	void PlaceMarker( const CVec2 &vPos );
+	void PlaceMarker( const CVec2 &vPos ) override;
 	//}
 };

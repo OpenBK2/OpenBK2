@@ -39,24 +39,24 @@ class CChunklessSerializer : public IBinSaver
 #endif
 	}
 
-	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber )
+	bool StartChunk( const chunk_id idChunk, int nChunkNumber ) override
 	{
 		CheckChunk( idChunk, nChunkNumber );
 		return true;
 	}
 
-	virtual void FinishChunk()
+	void FinishChunk() override
 	{
 		CheckChunk( 0, -1 );
 	}
 
-	virtual int CountChunks( const chunk_id idChunk )
+	int CountChunks( const chunk_id idChunk ) override
 	{
 		ASSERT( 0 );
 		return 0;
 	}
 
-	virtual void DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber )
+	void DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber ) override
 	{
 		CheckChunk( idChunk, nChunkNumber );
 		if ( mode == SAVER_MODE_READ )
@@ -88,7 +88,7 @@ class CChunklessSerializer : public IBinSaver
 		}
 	}
 
-	virtual void DataChunkString( std::string &data )
+	void DataChunkString( std::string &data ) override
 	{
 		int nSize;
 		if ( mode == SAVER_MODE_READ )
@@ -115,7 +115,7 @@ class CChunklessSerializer : public IBinSaver
 		}
 	}
 
-	virtual void DataChunkString( std::wstring &data )
+	void DataChunkString( std::wstring &data ) override
 	{
 		int nSize;
 		if ( mode == SAVER_MODE_READ )
@@ -145,7 +145,7 @@ class CChunklessSerializer : public IBinSaver
 	}
 
 	// storing/loading pointers to objects
-	virtual void StoreObject( CObjectBase *pObject )
+	void StoreObject( CObjectBase *pObject ) override
 	{
 #ifndef TRACK_OBJECTS_STATISTICS
 		ASSERT( pObject == 0 || IsValid( pObject ) );
@@ -162,7 +162,7 @@ class CChunklessSerializer : public IBinSaver
 		}
 	}
 
-	virtual CObjectBase *LoadObject()
+	CObjectBase *LoadObject() override
 	{
 		ASSERT( IsValid( pTracker ) );
 		if ( !IsValid( pTracker ) )
@@ -176,12 +176,12 @@ class CChunklessSerializer : public IBinSaver
 	}
 
 public:
-	virtual bool IsReading()
+	bool IsReading() override
 	{
 		return mode == SAVER_MODE_READ;
 	}
 
-	virtual int GetVersion() const
+	int GetVersion() const override
 	{
 		return N_SAVELOAD_VERSION;
 	}

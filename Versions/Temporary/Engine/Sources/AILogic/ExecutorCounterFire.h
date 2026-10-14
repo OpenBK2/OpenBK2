@@ -29,7 +29,7 @@ class CExecutorCounterFire : public CExecutor
 	bool bBonusApplied = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CExecutor *)this );
 		f.Add( 2, &pUnit );
@@ -54,13 +54,13 @@ public:
 
 	CExecutorCounterFire() {}
 
-	virtual int Segment();
-	virtual bool NotifyEvent( const CExecutorEvent &event );
+	int Segment() override;
+	bool NotifyEvent( const CExecutorEvent &event ) override;
 
-	virtual bool IsExecutorValid() const
+	bool IsExecutorValid() const override
 	{
 		return IsValid( pUnit );
 	}
 
-	virtual void RegisterOnEvents( IExecutorContainer *pContainer );
+	void RegisterOnEvents( IExecutorContainer *pContainer ) override;
 };

@@ -36,7 +36,7 @@ class CPostColorer : public IPostProcess
 	ZDATA
 	CDGPtr<CFuncBase<CVec4>> pColor;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &pColor );
 		return 0;
@@ -48,7 +48,7 @@ public:
 	{
 	}
 
-	virtual void Render( SPostProcessData *pDst, const std::vector<SObject> &render );
+	void Render( SPostProcessData *pDst, const std::vector<SObject> &render ) override;
 };
 
 class _3DMOTOR_EXPORT COccludedColorer : public IPostProcess
@@ -57,7 +57,7 @@ class _3DMOTOR_EXPORT COccludedColorer : public IPostProcess
 	ZDATA
 	CDGPtr<CFuncBase<CVec4>> pColor;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &pColor );
 		return 0;
@@ -69,7 +69,7 @@ public:
 	{
 	}
 
-	virtual void Render( SPostProcessData *pDst, const std::vector<SObject> &render );
+	void Render( SPostProcessData *pDst, const std::vector<SObject> &render ) override;
 };
 
 } // namespace NGScene

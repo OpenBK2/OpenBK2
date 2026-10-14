@@ -31,7 +31,7 @@ public:
 	ZDATA
 	std::wstring szText;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szText );
 		return 0;
@@ -49,7 +49,7 @@ class CListItemTextViewer : public IDataViewer
 {
 	OBJECT_NOCOPY_METHODS( CListItemTextViewer )
 public:
-	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
+	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const override;
 };
 
 // CListItemTextViewer

@@ -109,7 +109,7 @@ public:
 		NPointListView::Register( this );
 	}
 
-	virtual ~CPointListWxWindow()
+	~CPointListWxWindow() override
 	{
 		NPointListView::Unregister( this );
 	}
@@ -167,12 +167,12 @@ public:
 	}
 
 	//	NPointListView::IPointList
-	virtual unsigned GetInstanceID() const
+	unsigned GetInstanceID() const override
 	{
 		return nInstanceID;
 	}
 
-	virtual void GetDialogData( SPointListDialogData *pData )
+	void GetDialogData( SPointListDialogData *pData ) override
 	{
 		// A list whose Build failed stays registered in the tab list and
 		// here, with no controls; it answers nothing.
@@ -195,7 +195,7 @@ public:
 		}
 	}
 
-	virtual void SetDialogData( const SPointListDialogData *pData )
+	void SetDialogData( const SPointListDialogData *pData ) override
 	{
 		// The dispatch only hands a list its own data; the MFC list asserted
 		// this and returned, leaving its guard flag set for good. Returning
@@ -246,7 +246,7 @@ public:
 
 	// By name, as the MFC loop set the other lists: an unknown season names
 	// the default mnemonic, and whichever entry has that name is selected.
-	virtual void FollowSeason( NDb::ESeason eSeason )
+	void FollowSeason( NDb::ESeason eSeason ) override
 	{
 		if ( pSeason == nullptr )
 		{

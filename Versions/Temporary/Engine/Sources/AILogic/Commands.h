@@ -54,7 +54,7 @@ class CAICommand : public CObjectBase
 	CObj<CGroupMover> pMover;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &unitCmd );
 		f.Add( 3, &id );
@@ -103,7 +103,7 @@ public:
 		unitCmd.bFromAI = bFromAI;
 	}
 
-	~CAICommand()
+	~CAICommand() override
 	{
 		if ( id != 0 )
 		{

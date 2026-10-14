@@ -16,17 +16,17 @@ class CExecutorSpyMode : public CExecutorUnitCombatBonus
 
 protected:
 	CExecutorUnitCombatBonus::EAbilityCombatReaction OnModeChange( const uint16_t oldModeFlags,
-	                                                               const uint16_t newModeFlags );
-	void SwitchingOffEnd();
-	void SwitchOnEnd();
+	                                                               const uint16_t newModeFlags ) override;
+	void SwitchingOffEnd() override;
+	void SwitchOnEnd() override;
 
 public:
 	CExecutorSpyMode( CAIUnit *_pUnit );
 
 	CExecutorSpyMode() {}
 
-	void RegisterOnEvents( IExecutorContainer *pContainer );
-	bool NotifyEvent( const CExecutorEvent &event );
+	void RegisterOnEvents( IExecutorContainer *pContainer ) override;
+	bool NotifyEvent( const CExecutorEvent &event ) override;
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

@@ -113,7 +113,7 @@ private:
 	bool bNewtralInfantryInside = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CGivenPassabilityStObject *)this );
 		f.Add( 2, (CStormableObject *)this );
@@ -221,9 +221,9 @@ public:
 	void KillAllInsiders();
 
 protected:
-	virtual void AddSoldier( class CSoldier *pUnit );
-	virtual void DelSoldier( class CSoldier *pUnit, const bool bFillEmptyFireplace );
-	void SoldierDamaged( class CSoldier *pUnit );
+	void AddSoldier( class CSoldier *pUnit ) override;
+	void DelSoldier( class CSoldier *pUnit, const bool bFillEmptyFireplace ) override;
+	void SoldierDamaged( class CSoldier *pUnit ) override;
 
 	CBuilding()
 		: pLockingUnit( 0 )
@@ -249,50 +249,50 @@ public:
 		return nOveralPlaces;
 	}
 
-	virtual const SHPObjectRPGStats *GetStats() const
+	const SHPObjectRPGStats *GetStats() const override
 	{
 		return pStats;
 	}
 
-	virtual void SetHitPoints( const float fNewHP );
-	virtual void
-	TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit );
-	virtual void Die( const float fDamage );
+	void SetHitPoints( const float fNewHP ) override;
+	void
+	TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit ) override;
+	void Die( const float fDamage ) override;
 
-	const int GetNEntrancePoints() const
+	const int GetNEntrancePoints() const override
 	{
 		return pStats->entrances.size();
 	}
 
 	const CVec2 GetEntrancePoint( const int nEntrance ) const;
-	void GetEntranceData( CVec2 *pvPoint, uint16_t *pwDir, int nIndex ) const;
+	void GetEntranceData( CVec2 *pvPoint, uint16_t *pwDir, int nIndex ) const override;
 	// найти выход, ближайший чтобы идти в точку point
 	bool ChooseEntrance( class CCommonUnit *pUnit, const CVec2 &vPoint, int *pnEntrance ) const;
 
 	void GoOutFromEntrance( const int nEntrance, class CSoldier *pUnit );
 	bool IsGoodPointForRunIn( const SVector &point, const int nEntrance, const float fMinDist = 0 ) const;
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual const NTimer::STime GetNextSegmentTime() const
+	const NTimer::STime GetNextSegmentTime() const override
 	{
 		return nextSegmTime;
 	}
 
-	virtual EStaticObjType GetObjectType() const
+	EStaticObjType GetObjectType() const override
 	{
 		return ESOT_BUILDING;
 	}
 
-	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats );
+	void GetRPGStats( struct SAINotifyRPGStats *pStats ) override;
 
 	// итерирование по fire slots
-	virtual void StartIterate()
+	void StartIterate() override
 	{
 		nIterator = 0;
 	}
 
-	virtual void Iterate()
+	void Iterate() override
 	{
 		if ( nIterator < fire.Size() )
 		{
@@ -300,20 +300,20 @@ public:
 		}
 	}
 
-	virtual bool IsIterateFinished()
+	bool IsIterateFinished() override
 	{
 		return nIterator == fire.Size();
 	}
-	virtual class CAIUnit *GetIteratedUnit();
+	class CAIUnit *GetIteratedUnit() override;
 
-	virtual bool IsContainer() const
+	bool IsContainer() const override
 	{
 		return true;
 	}
 
-	virtual const int GetNDefenders() const;
-	virtual class CSoldier *GetUnit( const int n ) const;
-	virtual const uint8_t GetPlayer() const;
+	const int GetNDefenders() const override;
+	class CSoldier *GetUnit( const int n ) const override;
+	const uint8_t GetPlayer() const override;
 
 	void Lock( class CCommonUnit *pUnit );
 	bool IsLocked( const int nPlayer ) const;
@@ -328,10 +328,10 @@ public:
 
 	bool IsSoldierVisible( const int nParty, const CVec2 &center, bool bCamouflated, const float fCamouflage ) const;
 
-	virtual bool IsSelectable() const;
-	virtual const bool IsVisibleForDiplomacyUpdate();
+	bool IsSelectable() const override;
+	const bool IsVisibleForDiplomacyUpdate() override;
 
-	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const;
+	bool CanUnitGoThrough( const EAIClasses &eClass ) const override;
 
 	// можно ли менять слот у этого слодата
 	virtual bool CanRotateSoldier( class CSoldier *pSoldier ) const;
@@ -342,7 +342,7 @@ public:
 	// солдат, сидящий в fireplace, если fireplace пуст, то возвращает 0
 	class CSoldier *GetSoldierInFireplace( const int nFireplace ) const;
 
-	virtual void SetScriptID( const int _nScriptID )
+	void SetScriptID( const int _nScriptID ) override
 	{
 		nScriptID = _nScriptID;
 	}
@@ -354,12 +354,12 @@ public:
 
 	void SetLastLeaveTime( const int nPlayer );
 
-	virtual const uint16_t GetDir() const
+	const uint16_t GetDir() const override
 	{
 		return wDir;
 	}
 
-	virtual const float GetMinHP() const;
+	const float GetMinHP() const override;
 };
 
 // простое здание
@@ -374,7 +374,7 @@ class CBuildingSimple : public CBuilding
 	int nSideToCapture = {};
 	NTimer::STime timeToChangeOwnerTotal = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CBuilding *)this );
 		f.Add( 2, &nPlayer );
@@ -389,7 +389,7 @@ class CBuildingSimple : public CBuilding
 	void RaisePlayerFlag( int nNewPlayer );
 
 protected:
-	virtual void AddSoldier( CSoldier *pUnit );
+	void AddSoldier( CSoldier *pUnit ) override;
 
 public:
 	CBuildingSimple() {}
@@ -402,14 +402,14 @@ public:
 	                 int nPlayerIndex,
 	                 int nLinkID );
 
-	virtual void Segment();
-	virtual const uint8_t GetPlayer() const;
+	void Segment() override;
+	const uint8_t GetPlayer() const override;
 	void ChangePlayer( const int nPlayer );
-	virtual void
-	TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit );
-	virtual void Die( const float fDamage );
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
+	void
+	TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit ) override;
+	void Die( const float fDamage ) override;
+	bool ShouldSuspendAction( const EActionNotify &eAction ) const override;
 	void SetPartyFlag( CExistingObject *_pKeyBuildingFlag );
-	virtual void SetHitPoints( const float fNewHP );
+	void SetHitPoints( const float fNewHP ) override;
 	void CheckHitPoints();
 };

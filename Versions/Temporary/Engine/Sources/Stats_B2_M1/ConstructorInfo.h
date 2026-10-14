@@ -41,7 +41,7 @@ private:
 	std::unordered_map<int, std::vector<int>> slots;
 	std::unordered_map<int, CPtr<CObjectBase>> playerUnits;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &units );
 		f.Add( 3, &slots );

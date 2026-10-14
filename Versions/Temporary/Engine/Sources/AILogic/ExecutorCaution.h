@@ -11,7 +11,7 @@ class CExecutorCaution : public CExecutorUnitCombatBonus
 	ZDATA_( CExecutorUnitCombatBonus )
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CExecutorUnitCombatBonus *)this );
 		return 0;
@@ -19,16 +19,16 @@ public:
 
 protected:
 	CExecutorUnitCombatBonus::EAbilityCombatReaction OnModeChange( const uint16_t oldModeFlags,
-	                                                               const uint16_t newModeFlags );
+	                                                               const uint16_t newModeFlags ) override;
 
-	void SwitchingOffEnd(); // Used to change formations
-	void SwitchOnEnd();     //
+	void SwitchingOffEnd() override; // Used to change formations
+	void SwitchOnEnd() override;     //
 
 public:
 	CExecutorCaution( CAIUnit *_pUnit );
 
 	CExecutorCaution() {}
 
-	void RegisterOnEvents( IExecutorContainer *pContainer );
-	bool NotifyEvent( const CExecutorEvent &event );
+	void RegisterOnEvents( IExecutorContainer *pContainer ) override;
+	bool NotifyEvent( const CExecutorEvent &event ) override;
 };

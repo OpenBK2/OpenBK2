@@ -128,7 +128,7 @@ int LoadAllObjects( ILoadObjectCallback *pCallback )
 
 class CMarkChangedCallback : public ILoadObjectCallback
 {
-	void ObjectLoaded( NDb::IObjMan *pObjMan, const CDBID &dbid )
+	void ObjectLoaded( NDb::IObjMan *pObjMan, const CDBID &dbid ) override
 	{
 		NDb::MarkChanged( dbid );
 	}
@@ -162,7 +162,7 @@ int UpdateStruct()
 
 class CMakeBinCallback : public ILoadObjectCallback
 {
-	void ObjectLoaded( NDb::IObjMan *pObjMan, const CDBID &dbid ) {}
+	void ObjectLoaded( NDb::IObjMan *pObjMan, const CDBID &dbid ) override {}
 };
 
 int MakeBin()

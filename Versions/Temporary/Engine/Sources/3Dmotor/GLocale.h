@@ -67,7 +67,7 @@ private:
 	CObj<CPtrFuncBase<NGfx::CTexture>> pTexture;
 	CDGPtr<CPtrFuncBase<CFontFormatInfo>> pInfo;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &sFont );
 		f.Add( 3, &pTexture );
@@ -122,7 +122,7 @@ private:
 	CVec2 vScreenRect;
 	std::vector<CObj<CFontInfo>> fonts;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &vScreenRect );
 		f.Add( 3, &fonts );

@@ -89,15 +89,15 @@ public:
 	static const unsigned DEFAULT_INPUT_SUBSTATE[IS_COUNT];
 
 	//CMultiInputState
-	void Enter();
+	void Enter() override;
 	void Enter2();
-	void Leave();
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void Leave() override;
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 
 	void CancelSelection();
 	void ToggleScriptPathPoints();
@@ -108,6 +108,6 @@ public:
 	}
 
 	//ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 };

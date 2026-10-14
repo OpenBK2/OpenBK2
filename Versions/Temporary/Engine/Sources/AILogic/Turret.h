@@ -61,7 +61,7 @@ class CTurret : public CLinkObject
 	bool bReturnToNULLVerAngle = {};
 
 public:
-	ZEND int operator&( IBinSaver &f );
+	ZEND int operator&( IBinSaver &f ) override;
 
 private:
 	static void SerializeRotation( IBinSaver &saver, const int nChunk, SRotating &rotation );
@@ -199,8 +199,8 @@ public:
 	virtual void ResetHorTurnConstraint() = 0;
 	virtual uint16_t GetVerTurnConstraint() const = 0;
 
-	virtual void GetHorTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) = 0;
-	virtual void GetVerTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) = 0;
+	void GetHorTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) override = 0;
+	void GetVerTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) override = 0;
 
 	// залокать turret gun-ом ( если уже была залокана, то старый lock исчезает )
 	void Lock( const class CBasicGun *pGun );
@@ -221,17 +221,17 @@ public:
 
 	virtual bool IsOwnerOperable() const = 0;
 
-	virtual const bool IsVisible( const uint8_t cParty ) const
+	const bool IsVisible( const uint8_t cParty ) const override
 	{
 		return true;
 	}
 
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const
+	void GetTilesForVisibility( CTilesSet *pTiles ) const override
 	{
 		pTiles->clear();
 	}
 
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const
+	bool ShouldSuspendAction( const EActionNotify &eAction ) const override
 	{
 		return false;
 	}
@@ -263,7 +263,7 @@ class CUnitTurret : public CTurret
 	bool bBuckGunsDirection = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CTurret *)this );
 		f.Add( 2, &pOwner );
@@ -277,13 +277,13 @@ public:
 	}
 
 private:
-	void CheckAlive()
+	void CheckAlive() override
 	{
 		SetAlive( pOwner && pOwner->IsAlive() );
 	}
 
 protected:
-	const bool IsBackGunsDirection() const
+	const bool IsBackGunsDirection() const override
 	{
 		return bBuckGunsDirection;
 	}
@@ -300,43 +300,43 @@ public:
 	             const bool bBuckGunsDirection );
 
 	// возвращает - был произведён поворот, или turret уже в нужном положении
-	virtual bool TurnHor( const uint16_t wHorAngle, const bool bInstantly = false );
+	bool TurnHor( const uint16_t wHorAngle, const bool bInstantly = false ) override;
 	// возвращает - был произведён поворот, или turret уже в нужном положении
-	virtual bool TurnVer( const uint16_t wVerAngle, const bool bInstantly = false );
+	bool TurnVer( const uint16_t wVerAngle, const bool bInstantly = false ) override;
 
-	virtual void GetHorTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn );
-	virtual void GetVerTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn );
+	void GetHorTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) override;
+	void GetVerTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) override;
 
-	virtual CVec2 GetOwnerCenter();
-	virtual uint16_t GetOwnerFrontDir();
-	virtual float GetOwnerZ();
-	virtual const int GetOwnerParty() const;
+	CVec2 GetOwnerCenter() override;
+	uint16_t GetOwnerFrontDir() override;
+	float GetOwnerZ() override;
+	const int GetOwnerParty() const override;
 
-	virtual uint16_t GetHorTurnConstraint() const;
+	uint16_t GetHorTurnConstraint() const override;
 
-	virtual uint16_t GetVerTurnConstraint() const
+	uint16_t GetVerTurnConstraint() const override
 	{
 		return wVerConstraint;
 	}
 
-	virtual void SetHorTurnConstraint( const uint16_t wLimit )
+	void SetHorTurnConstraint( const uint16_t wLimit ) override
 	{
 		wHorConstraint = wLimit;
 	}
 
-	virtual void ResetHorTurnConstraint()
+	void ResetHorTurnConstraint() override
 	{
 		wHorConstraint = wOldHorConstraint;
 	}
 
-	virtual bool IsOwnerOperable() const;
+	bool IsOwnerOperable() const override;
 
-	virtual void SetRotateTurretState( bool bCanRotate )
+	void SetRotateTurretState( bool bCanRotate ) override
 	{
 		bCanRotateTurret = bCanRotate;
 	}
 
-	virtual bool GetRotateTurretState() const
+	bool GetRotateTurretState() const override
 	{
 		return bCanRotateTurret;
 	}
@@ -356,7 +356,7 @@ class CMountedTurret : public CTurret
 	SAIAngle wOldHorConstraint;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CTurret *)this );
 		f.Add( 2, &pBuilding );
@@ -369,7 +369,7 @@ public:
 	}
 
 private:
-	void CheckAlive()
+	void CheckAlive() override
 	{
 		SetAlive( IsValidObj( pBuilding ) );
 	}
@@ -379,41 +379,41 @@ public:
 
 	CMountedTurret( CBuilding *_pBuilding, const int _nSlot );
 
-	virtual void GetHorTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) {}
+	void GetHorTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) override {}
 
-	virtual void GetVerTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) {}
+	void GetVerTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) override {}
 
-	virtual CVec2 GetOwnerCenter()
+	CVec2 GetOwnerCenter() override
 	{
 		return center;
 	}
 
-	virtual uint16_t GetOwnerFrontDir()
+	uint16_t GetOwnerFrontDir() override
 	{
 		return dir;
 	}
 
-	virtual float GetOwnerZ()
+	float GetOwnerZ() override
 	{
 		return 0;
 	}
 
-	virtual const int GetOwnerParty() const;
+	const int GetOwnerParty() const override;
 
-	virtual uint16_t GetHorTurnConstraint() const;
-	virtual uint16_t GetVerTurnConstraint() const;
+	uint16_t GetHorTurnConstraint() const override;
+	uint16_t GetVerTurnConstraint() const override;
 
-	virtual void SetHorTurnConstraint( const uint16_t wLimit )
+	void SetHorTurnConstraint( const uint16_t wLimit ) override
 	{
 		wHorTurnConstraint = wLimit;
 	}
 
-	virtual void ResetHorTurnConstraint()
+	void ResetHorTurnConstraint() override
 	{
 		wHorTurnConstraint = wOldHorConstraint;
 	}
 
-	virtual bool IsOwnerOperable() const
+	bool IsOwnerOperable() const override
 	{
 		return true;
 	}

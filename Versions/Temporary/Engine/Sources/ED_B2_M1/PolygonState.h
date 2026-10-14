@@ -31,9 +31,9 @@ class CPolygonSelectState : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 };
 
 class CPolygonEditState : public CDefaultInputState
@@ -57,11 +57,11 @@ class CPolygonEditState : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
 };
 
 class CPolygonAddState : public CDefaultInputState
@@ -87,11 +87,11 @@ class CPolygonAddState : public CDefaultInputState
 	void InsertPolygon();
 
 	//IInputState interface
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
 };
 
 class CPolygonState : public CMultiInputState, public ICommandHandler
@@ -177,10 +177,10 @@ protected:
 	void OnDelete();
 
 	//IInputState interface
-	virtual void Enter();
-	virtual void Leave();
-	virtual void Draw( IPaintContext *pPaintDC );
-	virtual void OnSetFocus( IWidget *pNewWnd );
+	void Enter() override;
+	void Leave() override;
+	void Draw( IPaintContext *pPaintDC ) override;
+	void OnSetFocus( IWidget *pNewWnd ) override;
 
 	//virtual void OnSetFocus( IWidget* pNewWnd );
 	// CPolygonState
@@ -245,7 +245,7 @@ public:
 	}
 
 	//
-	~CPolygonState()
+	~CPolygonState() override
 	{
 		if ( pStoreInputState )
 		{
@@ -255,6 +255,6 @@ public:
 	}
 
 	//ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 };

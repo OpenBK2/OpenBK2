@@ -8,7 +8,7 @@ class CInFormationPath : public CInGroupPathBasis
 
 	ZDATA_( CInGroupPathBasis )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInGroupPathBasis *)this );
 		return 0;

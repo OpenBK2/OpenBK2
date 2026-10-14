@@ -16,7 +16,7 @@ class CPathFractionArcLine3D : public CPathFractionComplexBase
 	CPtr<CPathFractionLine> pLine;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CPathFractionComplexBase *)this );
 		f.Add( 2, &pArc );
@@ -32,10 +32,10 @@ public:
 	void Init( const SPrevPathParams &prevPath, const CVec3 &x1, const float fR /*circle radius*/ );
 	void Init( const CVec3 &x0, const CVec3 &_v0, const CVec3 &x1, const float fR /*circle radius*/ );
 
-	virtual float GetLength() const;
+	float GetLength() const override;
 
 	// access to inner path portions without substitute.
 	CPathFractionArc3D *GetArc();
 	IPathFraction *GetLine();
-	virtual void GetSimplePath( CPathList *pPaths );
+	void GetSimplePath( CPathList *pPaths ) override;
 };

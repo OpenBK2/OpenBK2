@@ -78,7 +78,7 @@ public:
 	ZSKIP             //float fTimeToWait; // sets in constructor
 			float fRadius = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &eStatus );

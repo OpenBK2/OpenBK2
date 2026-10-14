@@ -152,7 +152,7 @@ public:
 		rDC.SetBackgroundMode( wxBRUSHSTYLE_SOLID );
 	}
 
-	virtual ~CWxPaintContext()
+	~CWxPaintContext() override
 	{
 		// Anything a state left on the stack is put back, as the MFC context does.
 		while ( !savedStateStack.empty() )
@@ -162,7 +162,7 @@ public:
 	}
 
 	// IPaintContext
-	virtual void SaveState()
+	void SaveState() override
 	{
 		SSavedState state;
 		state.pen = rDC.GetPen();
@@ -174,7 +174,7 @@ public:
 		savedStateStack.push_back( state );
 	}
 
-	virtual void RestoreState()
+	void RestoreState() override
 	{
 		if ( savedStateStack.empty() )
 		{
@@ -191,76 +191,76 @@ public:
 	}
 
 	//
-	virtual void SetPen( EPenStyle ePenStyle, int nWidth, TWidgetColor color )
+	void SetPen( EPenStyle ePenStyle, int nWidth, TWidgetColor color ) override
 	{
 		rDC.SetPen( wxPen( ToColour( color ), nWidth, ToPenStyle( ePenStyle ) ) );
 	}
 
-	virtual void SetBrush( TWidgetColor color )
+	void SetBrush( TWidgetColor color ) override
 	{
 		rDC.SetBrush( wxBrush( ToColour( color ) ) );
 	}
 
-	virtual void SetFont( EFontKind eFontKind )
+	void SetFont( EFontKind eFontKind ) override
 	{
 		rDC.SetFont( StockFont( eFontKind ) );
 	}
 
-	virtual void SetDrawMode( EDrawMode eDrawMode )
+	void SetDrawMode( EDrawMode eDrawMode ) override
 	{
 		rDC.SetLogicalFunction( ToLogicalFunction( eDrawMode ) );
 	}
 
-	virtual void SetTextColor( TWidgetColor color )
+	void SetTextColor( TWidgetColor color ) override
 	{
 		rDC.SetTextForeground( ToColour( color ) );
 	}
 
-	virtual TWidgetColor GetTextColor() const
+	TWidgetColor GetTextColor() const override
 	{
 		return FromColour( rDC.GetTextForeground() );
 	}
 
-	virtual void SetTextBackgroundOpaque( bool bOpaque )
+	void SetTextBackgroundOpaque( bool bOpaque ) override
 	{
 		rDC.SetBackgroundMode( bOpaque ? wxBRUSHSTYLE_SOLID : wxBRUSHSTYLE_TRANSPARENT );
 	}
 
 	//
-	virtual void MoveTo( int nX, int nY )
+	void MoveTo( int nX, int nY ) override
 	{
 		currentPosition = wxPoint( nX, nY );
 	}
 
-	virtual void LineTo( int nX, int nY )
+	void LineTo( int nX, int nY ) override
 	{
 		rDC.DrawLine( currentPosition, wxPoint( nX, nY ) );
 		currentPosition = wxPoint( nX, nY );
 	}
 
 	//
-	virtual void Rectangle( const CTRect<int> &rRect )
+	void Rectangle( const CTRect<int> &rRect ) override
 	{
 		rDC.DrawRectangle( rRect.left, rRect.top, rRect.Width(), rRect.Height() );
 	}
 
-	virtual void FillRect( const CTRect<int> &rRect, TWidgetColor color )
+	void FillRect( const CTRect<int> &rRect, TWidgetColor color ) override
 	{
 		PaintRectangle( rRect, *wxTRANSPARENT_PEN, wxBrush( ToColour( color ) ) );
 	}
 
-	virtual void FrameRect( const CTRect<int> &rRect, TWidgetColor color )
+	void FrameRect( const CTRect<int> &rRect, TWidgetColor color ) override
 	{
 		PaintRectangle( rRect, wxPen( ToColour( color ), 1 ), *wxTRANSPARENT_BRUSH );
 	}
 
 	//
-	virtual void DrawString( int nX, int nY, const std::string &rszText )
+	void DrawString( int nX, int nY, const std::string &rszText ) override
 	{
 		rDC.DrawText( wxString::FromUTF8( rszText.c_str() ), nX, nY );
 	}
 
-	virtual CTRect<int> MeasureText( const std::string &rszText ) const
+	CTRect<int> MeasureText( const std::string &rszText ) const override
 	{
 		wxCoord nWidth = 0;
 		wxCoord nHeight = 0;

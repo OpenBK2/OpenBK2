@@ -45,7 +45,7 @@ class CEntrenchmentCreation : public CLongObjectCreation
 	int nTermInd = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CLongObjectCreation *)this );
 		f.Add( 2, &nStartIndex );
@@ -90,33 +90,33 @@ public:
 
 	int GetEntrenchmentID() const;
 
-	bool PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock );
+	bool PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock ) override;
 
-	virtual CLine2 GetCurLine()
+	CLine2 GetCurLine() override
 	{
 		return line;
 	}
 
-	const int GetMaxIndex() const;
-	const int GetCurIndex() const;
-	const CVec2 GetNextPoint( const int nPlace, const int nMaxPlace ) const;
+	const int GetMaxIndex() const override;
+	const int GetCurIndex() const override;
+	const CVec2 GetNextPoint( const int nPlace, const int nMaxPlace ) const override;
 	const CVec2 GetBuildPointForIndex( const int nPlace, const int nMaxPlace, const int _nIndex ) const;
-	void BuildNext();
+	void BuildNext() override;
 	void BuildAll( const int _nMinIndex, const int _nMaxIndex );
-	void GetUnitsPreventing( std::list<CPtr<CAIUnit>> *units );
+	void GetUnitsPreventing( std::list<CPtr<CAIUnit>> *units ) override;
 	void GetUnitsPreventingByIndex( std::list<CPtr<CAIUnit>> *units, const int _nIndex );
-	bool IsAnyUnitPrevent() const;
+	bool IsAnyUnitPrevent() const override;
 	bool IsAnyUnitPreventByIndex( const int _nIndex ) const;
-	bool CanBuildNext() const;
+	bool CanBuildNext() const override;
 	bool CanBuildByIndexSlow( const int _nIndex ) const;
-	void LockNext();
-	float GetPrice();
-	void LockCannotBuild();
+	void LockNext() override;
+	float GetPrice() override;
+	void LockCannotBuild() override;
 
-	bool CannotFinish() const
+	bool CannotFinish() const override
 	{
 		return bSayAck;
 	}
 
-	void CreateObjects( SAIObjectsUnderConstructionUpdate *pUpdate );
+	void CreateObjects( SAIObjectsUnderConstructionUpdate *pUpdate ) override;
 };

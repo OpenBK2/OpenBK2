@@ -147,7 +147,7 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 	CPtr<ITextView> pMissionExpNAView;
 	CPtr<ITextView> pNewReinfLabel;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &pMain );
@@ -237,13 +237,13 @@ private:
 public:
 	CInterfaceSingleStatistic();
 
-	bool Init();
-	bool StepLocal( bool bAppActive );
-	void OnGetFocus( bool bFocus );
+	bool Init() override;
+	bool StepLocal( bool bAppActive ) override;
+	void OnGetFocus( bool bFocus ) override;
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 	//}
 };
 
@@ -251,9 +251,9 @@ class CICSingleStatistic : public CInterfaceCommandBase<CInterfaceSingleStatisti
 {
 	OBJECT_BASIC_METHODS( CICSingleStatistic );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

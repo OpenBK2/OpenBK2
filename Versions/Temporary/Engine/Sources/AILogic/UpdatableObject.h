@@ -23,7 +23,7 @@ class CUpdatableObj : public CAIObjectBase
 	bool bIsAliveSet = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &bIsAlive );
 		f.Add( 3, &bIsAliveSet );

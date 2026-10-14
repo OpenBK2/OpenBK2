@@ -14,7 +14,7 @@ struct IMessageReactionB2 : public CObjectBase
 	                      struct IScriptWrapper *pScript,
 	                      struct IProgrammedReactionsAndChecks *pProg,
 	                      uint16_t wKeyboardFlags ) const = 0;
-	virtual int operator&( IBinSaver &ss ) = 0;
+	int operator&( IBinSaver &ss ) override = 0;
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc ) = 0;
 };
 

@@ -1,6 +1,6 @@
 #pragma once
 
-void PostLoad( bool bInEditor )
+void PostLoad( bool bInEditor ) override
 {
 	// CRAP, to emulate non zero default values
 	if ( vParticlesColor == VNULL3 )

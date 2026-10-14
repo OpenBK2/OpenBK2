@@ -19,7 +19,7 @@ public:
 	{
 	}
 
-	ILogger *GetLogger()
+	ILogger *GetLogger() override
 	{
 		return pLogger;
 	}

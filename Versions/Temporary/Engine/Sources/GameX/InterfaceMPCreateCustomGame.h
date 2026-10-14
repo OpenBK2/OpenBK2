@@ -40,7 +40,7 @@ class CInterfaceMPCreateCustomGame : public CInterfaceMPScreenBase,
 		ZDATA
 		SMPMapInfo info;
 
-		ZEND int operator&( IBinSaver &f )
+		ZEND int operator&( IBinSaver &f ) override
 		{
 			f.Add( 2, &info );
 			return 0;
@@ -59,7 +59,7 @@ class CInterfaceMPCreateCustomGame : public CInterfaceMPScreenBase,
 	{
 		OBJECT_NOCOPY_METHODS( CItemCustomGameListViewer )
 	public:
-		void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
+		void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const override;
 	};
 
 	//--------------
@@ -91,7 +91,7 @@ class CInterfaceMPCreateCustomGame : public CInterfaceMPScreenBase,
 	CPtr<IEditLine> pAdvancedPassword;
 	CPtr<IWindow> pChecksumPWL;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceMPScreenBase *)this );
 		f.Add( 2, &pMain );
@@ -123,7 +123,7 @@ private:
 	void UpdateMapName();
 	void SetControls();
 	void UpdateInterior();
-	void SliderPosition( const float fPosition, CWindow *pWho );
+	void SliderPosition( const float fPosition, CWindow *pWho ) override;
 
 	//{
 	bool OnBackReaction( const std::string &szSender );
@@ -135,19 +135,19 @@ private:
 	bool CheckEnableCreateButton();
 	//}
 protected:
-	~CInterfaceMPCreateCustomGame();
+	~CInterfaceMPCreateCustomGame() override;
 
 public:
 	CInterfaceMPCreateCustomGame();
 
-	bool Init();
-	void OnGetFocus( bool bFocus );
-	bool ProcessEvent( const SGameMessage &msg );
-	void AfterLoad();
+	bool Init() override;
+	void OnGetFocus( bool bFocus ) override;
+	bool ProcessEvent( const SGameMessage &msg ) override;
+	void AfterLoad() override;
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 	void FillMapData();
 	//}
 };
@@ -156,9 +156,9 @@ class CICMPCreateCustomGame : public CInterfaceCommandBase<CInterfaceMPCreateCus
 {
 	OBJECT_BASIC_METHODS( CICMPCreateCustomGame );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

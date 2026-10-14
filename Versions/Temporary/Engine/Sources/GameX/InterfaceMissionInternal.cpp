@@ -178,9 +178,9 @@ public:
 	CLoadingCounter( CDrawProgress *pOwner, CDrawProgress::ECounter eCounter );
 
 	//{ ILoadingCounter
-	void LeftToLoad( int nLeftCount );
-	void SetTotalCount( int nTotalCount );
-	void Step();
+	void LeftToLoad( int nLeftCount ) override;
+	void SetTotalCount( int nTotalCount ) override;
+	void Step() override;
 	//}
 };
 
@@ -195,7 +195,7 @@ public:
 
 	CICLoadB2( const std::string &szFileName );
 
-	void OnProgress( EStage eStage );
+	void OnProgress( EStage eStage ) override;
 };
 
 class CICSaveB2 : public CICSaveBase
@@ -204,7 +204,7 @@ class CICSaveB2 : public CICSaveBase
 
 	ZDATA_( CICSaveBase )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CICSaveBase *)this );
 		return 0;
@@ -215,7 +215,7 @@ public:
 
 	CICSaveB2( const std::string &szFileName );
 
-	void OnProgress( EStage eStage );
+	void OnProgress( EStage eStage ) override;
 };
 
 // ************************************************************************************************************************ //
@@ -5053,7 +5053,7 @@ public:
 		bEntries2 = true;
 	}
 
-	virtual bool AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry )
+	bool AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry ) override
 	{
 		if ( bEntries2 )
 		{

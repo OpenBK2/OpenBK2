@@ -32,7 +32,7 @@ class CUnitGuns : public CAIObjectBase
 	int nMainGun = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &fMaxFireRange );
 		f.Add( 3, &bCanShootToPlanes );
@@ -142,7 +142,7 @@ class CMechUnitGuns : public CUnitGuns
 	int nFirstArtGun = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CUnitGuns *)this );
 		f.Add( 2, &nFirstArtGun );
@@ -155,12 +155,12 @@ public:
 	{
 	}
 
-	virtual void Init( class CCommonUnit *pCommonUnit );
+	void Init( class CCommonUnit *pCommonUnit ) override;
 
-	virtual bool SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType );
-	virtual const int GetActiveShellType() const;
+	bool SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType ) override;
+	const int GetActiveShellType() const override;
 
-	virtual class CBasicGun *GetFirstArtilleryGun() const;
+	class CBasicGun *GetFirstArtilleryGun() const override;
 };
 
 class CInfantryGuns : public CUnitGuns
@@ -168,26 +168,26 @@ class CInfantryGuns : public CUnitGuns
 	OBJECT_BASIC_METHODS( CInfantryGuns );
 	ZDATA_( CUnitGuns )
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CUnitGuns *)this );
 		return 0;
 	}
 
 public:
-	virtual void Init( class CCommonUnit *pCommonUnit );
+	void Init( class CCommonUnit *pCommonUnit ) override;
 
-	virtual class CBasicGun *GetFirstArtilleryGun() const
+	class CBasicGun *GetFirstArtilleryGun() const override
 	{
 		return 0;
 	}
 
-	virtual bool SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType )
+	bool SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType ) override
 	{
 		return false;
 	}
 
-	virtual const int GetActiveShellType() const
+	const int GetActiveShellType() const override
 	{
 		return NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH;
 	}

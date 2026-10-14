@@ -32,22 +32,22 @@ private:
 public:
 	CAIGeneralPointsState( CMapInfoEditor *pMapInfoEditor = 0 );
 
-	virtual ~CAIGeneralPointsState() {}
+	~CAIGeneralPointsState() override {}
 
 	// IInputStateInterface
-	virtual void Enter();
-	virtual void Leave();
-	virtual void OnSetFocus( IWidget *pNewWnd );
-	virtual void Draw( IPaintContext *pPaintDC );
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void Enter() override;
+	void Leave() override;
+	void OnSetFocus( IWidget *pNewWnd ) override;
+	void Draw( IPaintContext *pPaintDC ) override;
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
 
 	// ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 
 	void GetDataFromDB();
 	void SaveDataToDB();

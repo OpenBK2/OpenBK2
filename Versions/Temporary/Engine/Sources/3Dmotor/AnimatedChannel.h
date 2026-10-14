@@ -26,7 +26,7 @@ private:
 	std::string szChannelName;
 	int nChannelID;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pAnimator );
 		f.Add( 3, &szChannelName );
@@ -46,12 +46,12 @@ protected:
 	{
 	}
 
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pAnimator.Refresh();
 	}
 
-	virtual void Recalc()
+	void Recalc() override
 	{
 		if ( !ChannelBinded() )
 		{

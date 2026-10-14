@@ -32,7 +32,7 @@ public:
 	{
 	}
 
-	void Dump( const std::wstring &wszString )
+	void Dump( const std::wstring &wszString ) override
 	{
 		if ( FILE *f = fopen( szFullFileName.c_str(), "a" ) )
 		{
@@ -56,7 +56,7 @@ class CDebugDumper : public ILogDumper
 {
 	OBJECT_BASIC_METHODS( CDebugDumper );
 
-	void Dump( const std::wstring &wszString )
+	void Dump( const std::wstring &wszString ) override
 	{
 		// no conversion at all now, and no buffer to overrun: the debugger
 		// takes wide text directly

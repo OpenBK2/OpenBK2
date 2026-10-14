@@ -29,12 +29,12 @@ void AppendToVector( std::vector<STriangle> &dst, const std::vector<STriangle> &
 
 struct SRadianHeightFunctor : public SLinearHeightFunctor
 {
-	float GetHeight( float x )
+	float GetHeight( float x ) override
 	{
 		return 4.0f * ( x + sqrt( 1.0f - x ) - 1.0f );
 	}
 
-	float GetGrid( float t )
+	float GetGrid( float t ) override
 	{
 		if ( t < 0.5f )
 		{
@@ -46,12 +46,12 @@ struct SRadianHeightFunctor : public SLinearHeightFunctor
 
 struct SCircleHeightFunctor : public SLinearHeightFunctor
 {
-	float GetHeight( float x )
+	float GetHeight( float x ) override
 	{
 		return 1.0f - sqr( 1.0f - sqrt( 1.0f - 4.0f * sqr( x - 0.5f ) ) );
 	}
 
-	float GetGrid( float t )
+	float GetGrid( float t ) override
 	{
 		if ( t < 0.5f )
 		{

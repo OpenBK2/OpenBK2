@@ -87,7 +87,7 @@ private:
 	CRectLayout outlineRects;
 	CObj<CPtrFuncBase<NGfx::CTexture>> pTexture;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nStrSize );
 		f.Add( 3, &nStrStart );
@@ -106,22 +106,23 @@ public:
 
 	CTextObject( CMLStream *pStream, int nStart, int nSize );
 
-	void Update( IReflowState *pState );
+	void Update( IReflowState *pState ) override;
 
-	const CTPoint<float> &GetPosition() const
+	const CTPoint<float> &GetPosition() const override
 	{
 		return position;
 	}
 
-	void SetPosition( const CTPoint<float> &_position )
+	void SetPosition( const CTPoint<float> &_position ) override
 	{
 		position = _position;
 	}
 
-	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window );
-	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window );
+	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window ) override;
+	void
+	Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window ) override;
 
-	const CTPoint<float> &GetSize() const
+	const CTPoint<float> &GetSize() const override
 	{
 		return size;
 	}
@@ -241,7 +242,7 @@ private:
 	CRectLayout rects;
 	CDBPtr<NDb::STexture> pTexture;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nBorder );
 		f.Add( 3, &imageSize );
@@ -257,22 +258,23 @@ public:
 
 	CImageObject( NDb::STexture *pTexture, const CTPoint<int> &size, int nBorder );
 
-	void Update( IReflowState *pState );
+	void Update( IReflowState *pState ) override;
 
-	const CTPoint<float> &GetPosition() const
+	const CTPoint<float> &GetPosition() const override
 	{
 		return position;
 	}
 
-	void SetPosition( const CTPoint<float> &_position )
+	void SetPosition( const CTPoint<float> &_position ) override
 	{
 		position = _position;
 	}
 
-	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window );
-	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window );
+	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window ) override;
+	void
+	Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window ) override;
 
-	const CTPoint<float> &GetSize() const
+	const CTPoint<float> &GetSize() const override
 	{
 		return size;
 	}
@@ -340,7 +342,7 @@ private:
 	CTPoint<float> size;
 	CTPoint<float> position;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &size );
 		f.Add( 3, &position );
@@ -350,23 +352,27 @@ private:
 public:
 	CTabObject();
 
-	void Update( IReflowState *pState );
+	void Update( IReflowState *pState ) override;
 
-	const CTPoint<float> &GetPosition() const
+	const CTPoint<float> &GetPosition() const override
 	{
 		return position;
 	}
 
-	void SetPosition( const CTPoint<float> &_position )
+	void SetPosition( const CTPoint<float> &_position ) override
 	{
 		position = _position;
 	}
 
-	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window ) {}
+	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window ) override
+	{
+	}
 
-	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window ) {}
+	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window ) override
+	{
+	}
 
-	const CTPoint<float> &GetSize() const
+	const CTPoint<float> &GetSize() const override
 	{
 		return size;
 	}
@@ -406,7 +412,7 @@ private:
 	CTPoint<float> size;
 	CTPoint<float> position;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nSize );
 		f.Add( 3, &size );
@@ -419,28 +425,32 @@ public:
 
 	CSpringObject( int nSize );
 
-	void Update( IReflowState *pState );
+	void Update( IReflowState *pState ) override;
 
-	const CTPoint<float> &GetPosition() const
+	const CTPoint<float> &GetPosition() const override
 	{
 		return position;
 	}
 
-	void SetPosition( const CTPoint<float> &_position )
+	void SetPosition( const CTPoint<float> &_position ) override
 	{
 		position = _position;
 	}
 
-	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window ) {}
+	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window ) override
+	{
+	}
 
-	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window ) {}
+	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window ) override
+	{
+	}
 
-	bool IsSpace() const
+	bool IsSpace() const override
 	{
 		return true;
 	}
 
-	const CTPoint<float> &GetSize() const
+	const CTPoint<float> &GetSize() const override
 	{
 		return size;
 	}

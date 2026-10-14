@@ -17,7 +17,7 @@ class CIdleMechProcess : public IClientUpdatableProcess
 	bool bRandomLocator = false;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nID );
 		f.Add( 3, &bones );
@@ -40,5 +40,5 @@ public:
 	                  const std::vector<std::string> &effectBones,
 	                  const NDb::SComplexEffect *pComplexEffect,
 	                  const bool _bRandomLocator = false );
-	bool Update( const NTimer::STime &time );
+	bool Update( const NTimer::STime &time ) override;
 };

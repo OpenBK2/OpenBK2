@@ -19,7 +19,7 @@ public:
 	int nTypeID;
 
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		NI_ASSERT( false, "can't serialize unknown packet" );
 		return 0;
@@ -44,20 +44,20 @@ class CNetSaver : public IBinSaver
 	CMemoryStream *pRes;
 	ESaverMode mode;
 
-	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber )
+	bool StartChunk( const chunk_id idChunk, int nChunkNumber ) override
 	{
 		return true;
 	}
 
-	virtual void FinishChunk() {}
+	void FinishChunk() override {}
 
-	virtual int CountChunks( const chunk_id idChunk )
+	int CountChunks( const chunk_id idChunk ) override
 	{
 		ASSERT( 0 );
 		return 0;
 	}
 
-	virtual void DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber )
+	void DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber ) override
 	{
 		if ( mode == SAVER_MODE_READ )
 		{
@@ -73,7 +73,7 @@ class CNetSaver : public IBinSaver
 		}
 	}
 
-	virtual void DataChunkString( std::string &data )
+	void DataChunkString( std::string &data ) override
 	{
 		int nSize;
 		if ( mode == SAVER_MODE_READ )
@@ -100,7 +100,7 @@ class CNetSaver : public IBinSaver
 		}
 	}
 
-	virtual void DataChunkString( std::wstring &data )
+	void DataChunkString( std::wstring &data ) override
 	{
 		int nSize;
 		if ( mode == SAVER_MODE_READ )
@@ -130,7 +130,7 @@ class CNetSaver : public IBinSaver
 	}
 
 	// storing/loading pointers to objects
-	virtual void StoreObject( CObjectBase *pObject )
+	void StoreObject( CObjectBase *pObject ) override
 	{
 		ASSERT( pObject == 0 || IsValid( pObject ) );
 		if ( !pRes )
@@ -167,7 +167,7 @@ class CNetSaver : public IBinSaver
 		}
 	}
 
-	virtual CObjectBase *LoadObject()
+	CObjectBase *LoadObject() override
 	{
 		TPACKET_ID cTypeID;
 		pRes->Read( &cTypeID, sizeof( cTypeID ) );
@@ -200,12 +200,12 @@ class CNetSaver : public IBinSaver
 	}
 
 public:
-	virtual bool IsReading()
+	bool IsReading() override
 	{
 		return mode == SAVER_MODE_READ;
 	}
 
-	virtual int GetVersion() const
+	int GetVersion() const override
 	{
 		return N_SAVELOAD_VERSION;
 	}

@@ -104,19 +104,19 @@ namespace NBind
 		                bool _bShowHidden );
 
 		//
-		std::string GetBaseName() const
+		std::string GetBaseName() const override
 		{
 			return pParent->GetFullName();
 		}
 
 		// goto next field
-		bool Next();
+		bool Next() override;
 		// have we reached end?
-		bool IsEnd() const;
+		bool IsEnd() const override;
 		// get current field's (full) name
-		std::string GetName() const;
+		std::string GetName() const override;
 		// get current field descriptor
-		const NTypeDef::STypeStructBase::SField *GetDesc() const;
+		const NTypeDef::STypeStructBase::SField *GetDesc() const override;
 	};
 
 } // namespace NBind

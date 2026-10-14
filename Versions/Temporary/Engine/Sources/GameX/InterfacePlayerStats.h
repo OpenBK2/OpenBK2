@@ -68,7 +68,7 @@ private:
 	float fLastVisiblePlayerStatsExpCareer;
 	float fLastVisiblePlayerStatsExpNextRank;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &pMain );
@@ -116,12 +116,12 @@ private:
 public:
 	CInterfacePlayerStats();
 
-	bool Init();
-	bool StepLocal( bool bAppActive );
+	bool Init() override;
+	bool StepLocal( bool bAppActive ) override;
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 	//}
 };
 
@@ -129,9 +129,9 @@ class CICPlayerStats : public CInterfaceCommandBase<CInterfacePlayerStats>
 {
 	OBJECT_BASIC_METHODS( CICPlayerStats );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

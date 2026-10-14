@@ -44,7 +44,7 @@ public:
 	CPtr<CNode> pFirst;
 	CPtr<CNode> pSecond;
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, &nValue );
 		saver.Add( 2, &pFirst );

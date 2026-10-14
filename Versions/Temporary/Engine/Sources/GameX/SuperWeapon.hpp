@@ -28,7 +28,7 @@ class CMissionSuperWeapon : public IMissionSuperWeapon
 	CPtr<CMapObj> pMO;
 	CDBPtr<NDb::SHPObjectRPGStats> pDBUnit;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pSuperWeaponBtn );
 		f.Add( 3, &pSuperWeaponProgress );
@@ -55,8 +55,8 @@ public:
 	void Init( IWindow *pScr, CWorldClient *pWorld, NDb::ESeason eSeason );
 
 	//{ IMissionSuperWeapon
-	void OnUpdateSuperWeaponControl( CMapObj *pMO, const NDb::SHPObjectRPGStats *pDBUnit, bool bExist );
-	void OnUpdateSuperWeaponRecycle( float fProgress );
+	void OnUpdateSuperWeaponControl( CMapObj *pMO, const NDb::SHPObjectRPGStats *pDBUnit, bool bExist ) override;
+	void OnUpdateSuperWeaponRecycle( float fProgress ) override;
 	//}
 
 	void Call( const CVec2 &vPos );

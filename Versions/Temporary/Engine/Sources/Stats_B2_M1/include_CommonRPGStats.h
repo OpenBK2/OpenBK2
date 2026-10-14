@@ -19,7 +19,7 @@ virtual bool Validate()
 }
 
 //
-virtual void PostLoad( bool bInEditor )
+void PostLoad( bool bInEditor ) override
 {
 	ToAIUnits( bInEditor );
 }

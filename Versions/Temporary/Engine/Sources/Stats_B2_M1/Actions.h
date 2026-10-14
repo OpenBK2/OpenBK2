@@ -327,7 +327,7 @@ struct SNewUnitInfo : public SAINotifyPlacement
 	NDb::EReinforcementType eReinfType = {};
 	CDBPtr<NDb::SHPObjectRPGStats> pStats;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAINotifyPlacement *)this );
 		f.Add( 2, &fResize );

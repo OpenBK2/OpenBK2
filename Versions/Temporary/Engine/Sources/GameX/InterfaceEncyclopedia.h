@@ -61,7 +61,7 @@ public:
 		CDBPtr<NDb::SUnitBaseRPGStats> pStats;
 		std::wstring wszBriefDesc;
 
-		ZEND int operator&( IBinSaver &f )
+		ZEND int operator&( IBinSaver &f ) override
 		{
 			f.Add( 2, &pStats );
 			f.Add( 3, &wszBriefDesc );
@@ -79,7 +79,7 @@ public:
 		OBJECT_NOCOPY_METHODS( CDataViewer );
 
 	public:
-		void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
+		void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const override;
 	};
 
 private:
@@ -146,7 +146,7 @@ private:
 	bool bEffectBorder;
 	int nLoading;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &pUnitNameView );
@@ -201,15 +201,15 @@ private:
 
 public:
 	CInterfaceEncyclopedia();
-	~CInterfaceEncyclopedia();
+	~CInterfaceEncyclopedia() override;
 
-	bool Init();
+	bool Init() override;
 
-	bool StepLocal( bool bAppActive );
+	bool StepLocal( bool bAppActive ) override;
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 	//}
 public:
 	static bool RunWithUnit( const NDb::SUnitBaseRPGStats *pStats );
@@ -222,7 +222,7 @@ class CInterfaceEncyclopediaWait : public CInterfaceScreenBase, public IProgramm
 	ZDATA_( CInterfaceScreenBase )
 	int nLoading;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &nLoading );
@@ -232,13 +232,13 @@ class CInterfaceEncyclopediaWait : public CInterfaceScreenBase, public IProgramm
 public:
 	CInterfaceEncyclopediaWait();
 
-	bool Init();
+	bool Init() override;
 
-	bool StepLocal( bool bAppActive );
+	bool StepLocal( bool bAppActive ) override;
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 	//}
 };
 
@@ -246,20 +246,20 @@ class CICEncyclopedia : public CInterfaceCommandBase<CInterfaceEncyclopedia>
 {
 	OBJECT_BASIC_METHODS( CICEncyclopedia );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };
 
 class CICEncyclopediaWait : public CInterfaceCommandBase<CInterfaceEncyclopediaWait>
 {
 	OBJECT_BASIC_METHODS( CICEncyclopediaWait );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

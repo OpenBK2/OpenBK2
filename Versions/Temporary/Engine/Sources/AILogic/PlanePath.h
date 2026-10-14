@@ -17,7 +17,7 @@ class CPlaneInFormationSmoothPath : public CBasePlaneSmoothPath
 	OBJECT_BASIC_METHODS( CPlaneInFormationSmoothPath );
 
 public:
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 
 private:
 	;
@@ -34,26 +34,26 @@ public:
 
 	void Init( class CAviation *_pOwner );
 
-	virtual bool IsFinished() const;
-	virtual void Segment( const NTimer::STime timeDiff );
+	bool IsFinished() const override;
+	void Segment( const NTimer::STime timeDiff ) override;
 
 	// need to correct work of CBasePathUnit
-	virtual bool const CanGoBackward() const;
+	bool const CanGoBackward() const override;
 
 	// empty functions
-	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap )
+	bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) override
 	{
 		NI_ASSERT( false, "wrong call" );
 		return false;
 	}
 
-	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap )
+	bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap ) override
 	{
 		NI_ASSERT( false, "wrong call" );
 		return false;
 	}
 
-	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit )
+	bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) override
 	{
 		NI_ASSERT( false, "wrong call" );
 		return false;
@@ -64,7 +64,7 @@ public:
 		NI_ASSERT( false, "wrong call" );
 	}
 
-	virtual bool const CanGoForward() const
+	bool const CanGoForward() const override
 	{
 		NI_ASSERT( false, "wrong call" );
 		return true;
@@ -75,13 +75,13 @@ public:
 		NI_ASSERT( false, "wrong call" );
 	}
 
-	virtual const CVec2 PeekPathPoint( const int nToShift ) const
+	const CVec2 PeekPathPoint( const int nToShift ) const override
 	{
 		NI_ASSERT( false, "wrong call" );
 		return VNULL2;
 	}
 
-	virtual IMemento *CreateMemento() const
+	IMemento *CreateMemento() const override
 	{
 		NI_ASSERT( false, "wrong call" );
 		return 0;
@@ -93,7 +93,7 @@ public:
 		return true;
 	}
 
-	virtual void Stop()
+	void Stop() override
 	{
 		NI_ASSERT( false, "wrong call" );
 	}

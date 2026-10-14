@@ -55,7 +55,7 @@ class CZipFile : public CObjectBase
 	//
 	CDataStream *OpenFile( const SFileHeader &hdr );
 	//
-	~CZipFile();
+	~CZipFile() override;
 
 public:
 	CZipFile() {}

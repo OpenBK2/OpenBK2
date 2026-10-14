@@ -145,7 +145,7 @@ public:
 	CDGPtr<CFuncBase<std::wstring>> pText;
 	CDGPtr<CFuncBase<CTPoint<int>>> pSize;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &bDynamic );
 		f.Add( 3, &fLineWidth );
@@ -176,9 +176,9 @@ protected:
 	void ProcessTAG( const std::wstring &wsTag );
 
 	float fFontScale = 0;
-	void Recalc();
+	void Recalc() override;
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		// A scale edit changes metrics even when the text and window are unchanged.
 		return pText.Refresh() | pSize.Refresh() | pScreenRect.Refresh() | ( fFontScale != GetRuntimeFontScale() );

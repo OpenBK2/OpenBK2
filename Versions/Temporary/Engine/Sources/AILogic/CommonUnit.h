@@ -108,11 +108,11 @@ protected:
 		return pShootEstimator;
 	}
 
-	virtual void NullSegmTime() {}
+	void NullSegmTime() override {}
 
-	virtual void CheckForDestroyedObjects( const CVec2 &vCenter ) const;
-	virtual void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate );
-	virtual void UpdateTile();
+	void CheckForDestroyedObjects( const CVec2 &vCenter ) const override;
+	void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate ) override;
+	void UpdateTile() override;
 	void ProduceEventByAction( const NDb::EUnitSpecialAbility eAbility,
 	                           const NDb::ESpecialAbilityParam action,
 	                           class CAICommand *pCommand );
@@ -124,14 +124,14 @@ public:
 	{
 	}
 
-	int operator&( IBinSaver &f );
+	int operator&( IBinSaver &f ) override;
 
-	virtual int GetMovingType() const
+	int GetMovingType() const override
 	{
 		return 0;
 	}
 
-	virtual bool IsSelectable() const
+	bool IsSelectable() const override
 	{
 		return bSelectable;
 	}
@@ -147,7 +147,7 @@ public:
 		return GetUniqueId();
 	}
 
-	const int GetUniqueIdQU() const
+	const int GetUniqueIdQU() const override
 	{
 		return GetUniqueId();
 	}
@@ -161,7 +161,7 @@ public:
 
 	virtual void SetSelectable( bool bSelectable, bool bSendToWorld );
 
-	virtual const uint8_t GetPlayer() const = 0;
+	const uint8_t GetPlayer() const override = 0;
 	const uint8_t GetParty() const;
 	virtual void ChangePlayer( const uint8_t cPlayer ) = 0;
 
@@ -197,7 +197,7 @@ public:
 		return lastBehTime;
 	}
 
-	virtual const bool IsVisible( const uint8_t party ) const = 0;
+	const bool IsVisible( const uint8_t party ) const override = 0;
 
 	virtual const bool NeedDeinstall() const
 	{
@@ -231,7 +231,7 @@ public:
 	// про updat-ить область range/пристрелки
 	virtual void UpdateArea( const EActionNotify eAction ) = 0;
 	virtual const uint32_t GetNormale( const CVec2 &vCenter ) const;
-	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
+	void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff ) override;
 	// залокать unit ( если уже был залокана, то старый lock исчезает )
 	virtual void Lock( const CBasicGun *pGun );
 	// unlock unit ( если залокан другим gun-ом, то ничего не делается )
@@ -280,14 +280,14 @@ public:
 		return false;
 	}
 
-	virtual const bool IsInfantry() const
+	const bool IsInfantry() const override
 	{
 		return false;
 	}
 
-	virtual void SendAcknowledgement( EUnitAckType ack, bool bForce = false ) = 0;
+	void SendAcknowledgement( EUnitAckType ack, bool bForce = false ) override = 0;
 	// ack для команды pCommand
-	virtual void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false ) = 0;
+	void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false ) override = 0;
 
 	//virtual const float GetMaxSpeedHere( const CVec2 &point, bool bAdjust = true ) const;
 	virtual void SetDesirableSpeed( const float fDesirableSpeed );
@@ -381,7 +381,7 @@ public:
 	virtual bool CanMoveForGuard() const = 0;
 
 	virtual bool CanCommandBeExecutedByStats( int nCmd ) const = 0;
-	virtual void NotifyAbilityRun( class CAICommand *pCommand ) = 0;
+	void NotifyAbilityRun( class CAICommand *pCommand ) override = 0;
 
 	virtual const NTimer::STime GetNextPathSegmTime() const
 	{
@@ -400,7 +400,7 @@ public:
 
 	bool CanBeFrozen() const;
 	bool IsFrozenByState() const;
-	virtual void FreezeByState( const bool bFreeze );
+	void FreezeByState( const bool bFreeze ) override;
 
 	virtual bool CanHookUnit( class CAIUnit *pUnitToHook ) const
 	{
@@ -429,7 +429,7 @@ public:
 		return VNULL2;
 	}
 
-	virtual const CVec2 &GetAABBHalfSize() const = 0;
+	const CVec2 &GetAABBHalfSize() const override = 0;
 
 	virtual const int GetUnitPriority() const
 	{
@@ -448,36 +448,36 @@ public:
 	}
 
 	virtual const float GetSpeedForFollowing();
-	virtual const bool CanGoToPoint( const CVec2 &point ) const;
-	virtual const bool CanRotate() const = 0;
+	const bool CanGoToPoint( const CVec2 &point ) const override;
+	const bool CanRotate() const override = 0;
 
-	virtual const EAIClasses GetAIPassabilityClass() const
+	const EAIClasses GetAIPassabilityClass() const override
 	{
 		return EAC_ANY;
 	}
 
-	virtual const bool IsDangerousDirExist() const
+	const bool IsDangerousDirExist() const override
 	{
 		return false;
 	}
 
-	virtual const uint16_t GetDangerousDir() const
+	const uint16_t GetDangerousDir() const override
 	{
 		return 0;
 	}
 
-	virtual const int GetUniqueID() const
+	const int GetUniqueID() const override
 	{
 		return CLinkObject::GetUniqueId();
 	}
 
-	virtual void UnitTrampled( const CBasePathUnit *pUnit ) {}
+	void UnitTrampled( const CBasePathUnit *pUnit ) override {}
 
-	virtual const bool CanUnitTrampled( const CBasePathUnit *pUnit ) const = 0;
-	virtual const bool IterateUnits( const CVec2 &vCenter,
-	                                 const float fRadius,
-	                                 const bool bOnlyMech,
-	                                 const SIterateUnitsCallback &callback ) const;
+	const bool CanUnitTrampled( const CBasePathUnit *pUnit ) const override = 0;
+	const bool IterateUnits( const CVec2 &vCenter,
+	                         const float fRadius,
+	                         const bool bOnlyMech,
+	                         const SIterateUnitsCallback &callback ) const override;
 	virtual const bool IsTrain() const = 0;
 
 	//старый PathFinder

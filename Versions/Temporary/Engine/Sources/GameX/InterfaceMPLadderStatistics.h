@@ -30,7 +30,7 @@ class CInterfaceMPLadderStatistics : public CInterfaceScreenBase, public IProgra
 	CPtr<IWindow> pMedalPopup;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &pMain );
@@ -57,16 +57,16 @@ private:
 	bool OnShowMedal( const std::string &szSender );
 
 protected:
-	~CInterfaceMPLadderStatistics();
+	~CInterfaceMPLadderStatistics() override;
 
 public:
 	CInterfaceMPLadderStatistics();
-	bool Init();
-	bool StepLocal( bool bAppActive );
+	bool Init() override;
+	bool StepLocal( bool bAppActive ) override;
 	void RequestInfo( const std::string &szNick );
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 	//}
 };
 
@@ -75,9 +75,9 @@ class CICMPLadderStatistics : public CInterfaceCommandBase<CInterfaceMPLadderSta
 	OBJECT_BASIC_METHODS( CICMPLadderStatistics );
 	//
 	std::string szNick;
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

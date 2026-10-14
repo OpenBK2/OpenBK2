@@ -47,9 +47,9 @@ class CVisObjSelectionInfo : public CPtrFuncBase<NGScene::CObjectInfo>
 	NDb::ESelectionType eSelType = {};
 
 protected:
-	void Recalc();
+	void Recalc() override;
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return bUpdate;
 	}
@@ -80,7 +80,7 @@ public:
 	}
 
 	//
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, static_cast<CPtrFuncBase<NGScene::CObjectInfo> *>( this ) );
 		saver.Add( 2, &pTerraManager );
@@ -146,7 +146,7 @@ public:
 	int nFadeIn = {};  // msec
 	int nFadeOut = {}; // msec
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nID );
 		f.Add( 3, &eState );

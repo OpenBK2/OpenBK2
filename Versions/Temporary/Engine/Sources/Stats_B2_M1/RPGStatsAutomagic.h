@@ -38,24 +38,24 @@ public:
 	CRPGStatsAutomagic();
 
 	//
-	virtual const char *ToStr( const int nVal ) const
+	const char *ToStr( const int nVal ) const override
 	{
 		CI2SMap::const_iterator it = i2s.find( nVal );
 		return it != i2s.end() ? it->second.c_str() : szUnknown.c_str();
 	}
 
-	virtual const int ToInt( const char *pszVal ) const
+	const int ToInt( const char *pszVal ) const override
 	{
 		CS2IMap::const_iterator it = s2i.find( pszVal );
 		return it != s2i.end() ? it->second : -1;
 	}
 
-	virtual const char *GetFirstStr() const;
-	virtual const int GetFirstInt() const;
-	virtual bool IsLastStr( const char *pszVal ) const;
-	virtual bool IsLastInt( const int nVal ) const;
-	virtual const char *GetNextStr( const char *pszVal );
-	virtual const int GetNextInt( const int nVal );
+	const char *GetFirstStr() const override;
+	const int GetFirstInt() const override;
+	bool IsLastStr( const char *pszVal ) const override;
+	bool IsLastInt( const int nVal ) const override;
+	const char *GetNextStr( const char *pszVal ) override;
+	const int GetNextInt( const int nVal ) override;
 };
 
 STATS_B2_M1_EXPORT int StatsB2M1LinkCheatFunction();

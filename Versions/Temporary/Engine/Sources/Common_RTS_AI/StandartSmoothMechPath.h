@@ -27,7 +27,7 @@ class CStandartSmoothMechPath : public CStandartSmoothPathBasis
 	NTimer::STime lastCheckToRightTurn = 0;
 	SVector vLastStopPosition;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStandartSmoothPathBasis *)this );
 		f.Add( 2, &vLastValidatedPoint );
@@ -67,8 +67,8 @@ class CStandartSmoothMechPath : public CStandartSmoothPathBasis
 	bool UpdateDirection();
 
 protected:
-	virtual const CVec2 MoveUnit( const NTimer::STime timeDiff, const float fSpeed );
-	virtual const bool ValidateCurrentPath( const CVec2 &vCenter, const CVec2 &vNewPoint );
+	const CVec2 MoveUnit( const NTimer::STime timeDiff, const float fSpeed ) override;
+	const bool ValidateCurrentPath( const CVec2 &vCenter, const CVec2 &vNewPoint ) override;
 
 public:
 	CStandartSmoothMechPath()
@@ -83,16 +83,16 @@ public:
 	{
 	}
 
-	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap );
+	bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) override;
 
-	virtual void Stop();
+	void Stop() override;
 
-	virtual const bool CanGoBackward() const;
+	const bool CanGoBackward() const override;
 
-	virtual const bool CanGoForward() const
+	const bool CanGoForward() const override
 	{
 		return bCanGoForward;
 	}
 
-	virtual void SetForceGoBackward( const bool bForce );
+	void SetForceGoBackward( const bool bForce ) override;
 };

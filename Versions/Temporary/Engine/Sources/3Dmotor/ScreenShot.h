@@ -29,7 +29,7 @@ private:
 	CVec4 vCoeff;
 	CArray2D<NGfx::SPixel8888> sScreenShot;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &eMode );
 		f.Add( 3, &vCoeff );
@@ -38,7 +38,7 @@ private:
 	}
 
 protected:
-	void Recalc();
+	void Recalc() override;
 
 public:
 	CScreenshotTexture();

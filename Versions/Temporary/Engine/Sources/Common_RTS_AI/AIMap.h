@@ -33,7 +33,7 @@ class COMMON_RTS_AI_EXPORT CAIMap : public CObjectBase
 	int nMaxMapSize = 0;
 
 	ZONSERIALIZE
-ZEND public : int operator&( IBinSaver &f )
+ZEND public : int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nSizeX );
 		f.Add( 3, &nSizeY );

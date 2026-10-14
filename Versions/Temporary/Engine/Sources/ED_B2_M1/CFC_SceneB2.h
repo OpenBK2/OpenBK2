@@ -15,19 +15,19 @@ class CCFCSceneB2 : public CChildFrameWndBase
 protected:
 public:
 	CCFCSceneB2();
-	virtual ~CCFCSceneB2();
+	~CCFCSceneB2() override;
 
 	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 
 	// CChildFrameWndBase
-	bool OnCreateChildFrameWnd();
-	void OnDestroyChildFrameWnd();
-	void OnPreDrawChildFrameWnd();
-	void OnDrawChildFrameWnd();
-	void OnResizeChildFrameWnd( int cx, int cy );
-	void DrawFocus( IPaintContext *pPaintContext );
-	void DrawStatistic( IPaintContext *pPaintContext );
-	void DrawFrameBorders( IPaintContext *pPaintContext );
+	bool OnCreateChildFrameWnd() override;
+	void OnDestroyChildFrameWnd() override;
+	void OnPreDrawChildFrameWnd() override;
+	void OnDrawChildFrameWnd() override;
+	void OnResizeChildFrameWnd( int cx, int cy ) override;
+	void DrawFocus( IPaintContext *pPaintContext ) override;
+	void DrawStatistic( IPaintContext *pPaintContext ) override;
+	void DrawFrameBorders( IPaintContext *pPaintContext ) override;
 };

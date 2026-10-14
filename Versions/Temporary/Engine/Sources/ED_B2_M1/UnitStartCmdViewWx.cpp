@@ -36,7 +36,7 @@ public:
 		Singleton<ICommandHandlerContainer>()->Set( CHID_UNIT_START_CMD_WINDOW, this );
 	}
 
-	virtual ~CUnitStartCmdWxWindow()
+	~CUnitStartCmdWxWindow() override
 	{
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_UNIT_START_CMD_WINDOW );
 	}
@@ -86,7 +86,7 @@ public:
 	}
 
 	//	CPaletteCommands
-	virtual void GetDialogData( SUnitStartCmdWindowData *pData )
+	void GetDialogData( SUnitStartCmdWindowData *pData ) override
 	{
 		pData->Clear();
 		// commands is not filled on the way out; nothing reads it there.
@@ -100,7 +100,7 @@ public:
 		}
 	}
 
-	virtual void SetDialogData( const SUnitStartCmdWindowData *pData )
+	void SetDialogData( const SUnitStartCmdWindowData *pData ) override
 	{
 		bIsDataBeginSet = true;
 		eLastAction = SUnitStartCmdWindowData::NO_CMD;

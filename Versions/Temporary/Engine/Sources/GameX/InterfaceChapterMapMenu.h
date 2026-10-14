@@ -34,7 +34,7 @@ public:
 	public:
 		CReactions() {}
 
-		~CReactions() {}
+		~CReactions() override {}
 
 		CReactions( IWindow *_pScreen, CInterfaceChapterMapMenu *_pInterface )
 			: pScreen( _pScreen )
@@ -42,10 +42,10 @@ public:
 		{
 		}
 
-		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
-		virtual int Check( const std::string &szCheckName ) const;
+		bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+		int Check( const std::string &szCheckName ) const override;
 
-		int operator&( IBinSaver &saver )
+		int operator&( IBinSaver &saver ) override
 		{
 			saver.Add( 1, &pScreen );
 			saver.Add( 2, &pInterface );
@@ -320,7 +320,7 @@ private:
 	bool bRequestAutoSave;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &pReactions );
@@ -477,21 +477,21 @@ protected:
 
 	void ProceedInitialDialogs();
 
-	~CInterfaceChapterMapMenu();
+	~CInterfaceChapterMapMenu() override;
 
 public:
 	CInterfaceChapterMapMenu();
 
-	bool Init();
+	bool Init() override;
 
 	//{ IInterfaceBase
-	void OnGetFocus( bool bFocus );
-	bool ProcessEvent( const SGameMessage &msg );
-	void AfterLoad();
+	void OnGetFocus( bool bFocus ) override;
+	bool ProcessEvent( const SGameMessage &msg ) override;
+	void AfterLoad() override;
 
-	bool StepLocal( bool bAppActive );
+	bool StepLocal( bool bAppActive ) override;
 
-	void Draw( NGScene::CRTPtr *pTexture );
+	void Draw( NGScene::CRTPtr *pTexture ) override;
 	//}
 };
 
@@ -500,10 +500,10 @@ class CICChapterMapMenu : public CInterfaceCommandBase<CInterfaceChapterMapMenu>
 {
 	OBJECT_BASIC_METHODS( CICChapterMapMenu );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };
 #endif // !defined(_SINGLE_DEMO) || defined(_MP_DEMO)

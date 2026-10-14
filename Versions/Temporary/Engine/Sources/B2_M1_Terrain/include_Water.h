@@ -1,6 +1,6 @@
 #define DEF_WAVES_PHASE_OFFSET_VAR 0.2f
 
-void PostLoad( bool bInEditor )
+void PostLoad( bool bInEditor ) override
 {
 	float fPhaseOffset = 0.0f;
 	for ( std::vector<SWaterWaveType>::iterator it = waves.begin(); it != waves.end(); ++it )

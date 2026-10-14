@@ -53,7 +53,7 @@ protected:
 	bool bShowPassability = false;
 
 public:
-	ZEND int operator&( IBinSaver &f );
+	ZEND int operator&( IBinSaver &f ) override;
 
 	virtual void AddVSO( const NDb::SVSOInstance *pVSO );
 	virtual void GetTilesUnderVSO( const NDb::SVSOInstance *pVSO,
@@ -70,42 +70,42 @@ public:
 public:
 	CTerraAIObserver();
 
-	virtual ~CTerraAIObserver() {}
+	~CTerraAIObserver() override {}
 
-	virtual void AddCrag( const NDb::SVSOInstance *pInstance );
-	virtual void AddRoad( const NDb::SVSOInstance *pInstance );
-	virtual void AddRiver( const NDb::SVSOInstance *pInstance );
+	void AddCrag( const NDb::SVSOInstance *pInstance ) override;
+	void AddRoad( const NDb::SVSOInstance *pInstance ) override;
+	void AddRiver( const NDb::SVSOInstance *pInstance ) override;
 
-	virtual void AddWaterLine( const NDb::SVSOInstance *pInstance, const bool bIsLake );
-	virtual void ClearRiverCliffTiles();
-	virtual void AddRiverCliffTiles( const std::list<SVector> &tiles );
+	void AddWaterLine( const NDb::SVSOInstance *pInstance, const bool bIsLake ) override;
+	void ClearRiverCliffTiles() override;
+	void AddRiverCliffTiles( const std::list<SVector> &tiles ) override;
 	//
-	virtual void UpdateZ( CVec3 *pvPos );
-	virtual void SetTerraTypes( const std::vector<NDb::STerrainAIProperties> &params );
-	virtual void
-	UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<uint8_t> &types );
-	virtual void
-	UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &heights );
+	void UpdateZ( CVec3 *pvPos ) override;
+	void SetTerraTypes( const std::vector<NDb::STerrainAIProperties> &params ) override;
+	void
+	UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<uint8_t> &types ) override;
+	void
+	UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &heights ) override;
 
-	virtual float GetZ( float x, float y ) const;
-	virtual float GetTileHeight( int nX, int nY ) const;
-	virtual uint32_t GetNormal( const CVec2 &vPoint ) const;
+	float GetZ( float x, float y ) const override;
+	float GetTileHeight( int nX, int nY ) const override;
+	uint32_t GetNormal( const CVec2 &vPoint ) const override;
 
-	virtual bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
-	virtual bool GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
-	virtual void InitHeights4Editor( int nSizeX, int nSizeY );
+	bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const override;
+	bool GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const override;
+	void InitHeights4Editor( int nSizeX, int nSizeY ) override;
 
-	virtual void FinalizeUpdates();
+	void FinalizeUpdates() override;
 
-	virtual void DrawPassabilities() const;
-	virtual void ToggleShowPassability();
-	virtual void SetPassMarkers( const int color, const int aiClass, const int freeClass, const int nBoundTileRadius );
-	virtual void DumpMaxes( const std::string &szFileName, const int aiClass );
+	void DrawPassabilities() const override;
+	void ToggleShowPassability() override;
+	void SetPassMarkers( const int color, const int aiClass, const int freeClass, const int nBoundTileRadius ) override;
+	void DumpMaxes( const std::string &szFileName, const int aiClass ) override;
 
-	virtual bool IsPassabilityOn() const
+	bool IsPassabilityOn() const override
 	{
 		return bShowPassability;
 	}
 
-	virtual bool IsBridge( const int nX, const int nY ) const;
+	bool IsBridge( const int nX, const int nY ) const override;
 };

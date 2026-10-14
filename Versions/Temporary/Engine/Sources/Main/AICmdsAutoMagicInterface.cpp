@@ -12,17 +12,17 @@ class CDefaultAICmdsAutoMagic : public IAICmdsAutoMagic
 {
 	OBJECT_NOCOPY_METHODS( CDefaultAICmdsAutoMagic );
 
-	int GetCommandID( CObjectBase *p )
+	int GetCommandID( CObjectBase *p ) override
 	{
 		return NObjectFactory::GetObjectTypeID( p );
 	}
 
-	CObjectBase *MakeCommand( int nID )
+	CObjectBase *MakeCommand( int nID ) override
 	{
 		return NObjectFactory::MakeObject( nID );
 	}
 
-	int GetIDSize() const
+	int GetIDSize() const override
 	{
 		return 4;
 	}

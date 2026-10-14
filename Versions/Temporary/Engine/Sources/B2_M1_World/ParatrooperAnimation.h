@@ -27,7 +27,7 @@ class CParatrooperAnimationProcess : public IClientUpdatableProcess
 	CDBPtr<NDb::SAnimB2> pUnitAnim;
 	CDBPtr<NDb::SAnimB2> pParaAnim;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pInfantry );
 		f.Add( 3, &timeToChange );
@@ -54,7 +54,7 @@ public:
 	{
 	}
 
-	bool Update( const NTimer::STime &time );
+	bool Update( const NTimer::STime &time ) override;
 };
 
 class CParachuteFinishProcess : public IClientUpdatableProcess
@@ -68,7 +68,7 @@ class CParachuteFinishProcess : public IClientUpdatableProcess
 	NDb::ESeason eSeason{};
 	CDBPtr<NDb::SAnimB2> pIdleAnim;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pInfantry );
 		f.Add( 3, &timeToChange );
@@ -93,5 +93,5 @@ public:
 	}
 
 	//
-	bool Update( const NTimer::STime &time );
+	bool Update( const NTimer::STime &time ) override;
 };

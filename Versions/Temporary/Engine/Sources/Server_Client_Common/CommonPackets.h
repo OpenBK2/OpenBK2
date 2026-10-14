@@ -10,7 +10,7 @@ class CNetNewClient : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CNetNewClient );
 
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
@@ -22,7 +22,7 @@ class CNetRemoveClient : public CNetPacket
 
 public:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
@@ -66,7 +66,7 @@ public:
 	EConnectionState eConnectionState;
 	ERejectReason eRejectReason;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eConnectionState );
 		f.Add( 3, &eRejectReason );
@@ -93,7 +93,7 @@ public:
 	ZDATA
 	int nMyID;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nMyID );
 		return 0;
@@ -115,7 +115,7 @@ public:
 	ZDATA
 	std::wstring wszText;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &wszText );
 		return 0;
@@ -140,7 +140,7 @@ public:
 	ZDATA
 	int nLobbyID;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nLobbyID );
 		return 0;
@@ -163,7 +163,7 @@ class CLeaveLobbyPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CLeaveLobbyPacket )
 public:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
@@ -184,7 +184,7 @@ public:
 	ZDATA
 	ECommonClientState eState;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eState );
 		return 0;
@@ -208,7 +208,7 @@ public:
 	/** my latest received version */
 	uint32_t dwVersion;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &dwVersion );
 		return 0;
@@ -232,7 +232,7 @@ public:
 	/** my latest received version */
 	uint32_t dwVersion;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &dwVersion );
 		return 0;
@@ -257,7 +257,7 @@ public:
 	int nClient;
 	CPtr<CNetPacket> pPacket;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nClient );
 		f.Add( 3, &pPacket );
@@ -280,7 +280,7 @@ class CTestDirectPacket : public CNetPacket
 
 public:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}

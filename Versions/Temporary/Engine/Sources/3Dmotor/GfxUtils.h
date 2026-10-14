@@ -91,7 +91,7 @@ private:
 	void SetupRC( const CVec2 &vSize );
 	S2DRectInfoLock *GetRectInfoLock( CTexture *pContainer, const STexturePlaceInfo &region );
 
-	virtual void NewTextureWasAllocated()
+	void NewTextureWasAllocated() override
 	{
 		Flush();
 	}
@@ -111,7 +111,7 @@ class CShowAlphaEffect : public I2DEffect
 	OBJECT_NOCOPY_METHODS( CShowAlphaEffect );
 
 public:
-	virtual void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV );
+	void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV ) override;
 };
 
 class CLinearToGammaEffect : public I2DEffect
@@ -119,7 +119,7 @@ class CLinearToGammaEffect : public I2DEffect
 	OBJECT_NOCOPY_METHODS( CLinearToGammaEffect );
 
 public:
-	virtual void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV );
+	void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV ) override;
 };
 
 class CShadow16toAlphaEffect : public I2DEffect
@@ -127,7 +127,7 @@ class CShadow16toAlphaEffect : public I2DEffect
 	OBJECT_NOCOPY_METHODS( CShadow16toAlphaEffect );
 
 public:
-	virtual void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV );
+	void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV ) override;
 };
 
 class CCopyShadowsAndCloudsEffect : public I2DEffect
@@ -145,7 +145,7 @@ public:
 	{
 	}
 
-	virtual void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV );
+	void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV ) override;
 };
 
 /*class CCLAmbientMulDiffuseEffect : public I2DEffect

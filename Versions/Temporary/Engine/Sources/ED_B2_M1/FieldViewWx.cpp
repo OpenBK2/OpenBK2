@@ -59,7 +59,7 @@ public:
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_TERRAIN_FIELD_WINDOW, this );
 	}
 
-	virtual ~CFieldWxWindow()
+	~CFieldWxWindow() override
 	{
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_TERRAIN_FIELD_WINDOW );
 	}
@@ -151,7 +151,7 @@ public:
 	}
 
 	//	CFieldCommands
-	virtual bool GetEditParameters( CFieldState::SEditParameters *pEditParameters )
+	bool GetEditParameters( CFieldState::SEditParameters *pEditParameters ) override
 	{
 		if ( pEditParameters == 0 )
 		{
@@ -207,7 +207,7 @@ public:
 		return true;
 	}
 
-	virtual bool SetEditParameters( const CFieldState::SEditParameters &rEditParameters )
+	bool SetEditParameters( const CFieldState::SEditParameters &rEditParameters ) override
 	{
 		bCreateControls = true;
 		if ( rEditParameters.nFlags & MITFEP_MOVE_TYPE )

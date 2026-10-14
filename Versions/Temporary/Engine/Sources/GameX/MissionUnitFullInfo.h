@@ -176,7 +176,7 @@ class CMissionUnitFullInfo : public CObjectBase
 	std::wstring wszTooltipMemberInTransport;
 	std::wstring wszTooltipMemberInBuilding;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pName );
 		f.Add( 11, &weaponItems );
@@ -269,7 +269,7 @@ private:
 
 public:
 	CMissionUnitFullInfo();
-	~CMissionUnitFullInfo();
+	~CMissionUnitFullInfo() override;
 
 	void InitByReinf( IWindow *pInfo, IWindow *pAppearanceWnd, NDb::ESeason eSeason );
 	void InitByMission( IWindow *pInfo, IWindow *pAppearanceWnd, NDb::ESeason eSeason );

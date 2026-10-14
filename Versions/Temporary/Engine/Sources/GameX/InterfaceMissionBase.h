@@ -28,15 +28,15 @@ protected:
 	void StartNewMap( const NDb::SMapInfo *_pMap, ITransceiver *_pTransceiver, IScenarioTracker *pScenarioTracker );
 	void Unload();
 
-	~CInterfaceMissionBase();
+	~CInterfaceMissionBase() override;
 
 public:
 	CInterfaceMissionBase( const std::string &szInterfaceType, const std::string &szBindSection );
 
-	void OnGetFocus( bool bFocus );
-	bool StepLocal( bool bAppActive );
+	void OnGetFocus( bool bFocus ) override;
+	bool StepLocal( bool bAppActive ) override;
 	void Freeze( const bool bFreeze );
-	void AfterLoad();
+	void AfterLoad() override;
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

@@ -48,16 +48,16 @@ class CEditorAppSpecific : public CEditorApp
 public:
 	bool Initialize( const std::vector<std::string> &rArgs ) override;
 
-	void LoadMapEditorModule( const std::string &szModuleName );
-	void UnloadMapEditorModule();
-	const std::vector<IEditorModule *> &GetEditorModules();
+	void LoadMapEditorModule( const std::string &szModuleName ) override;
+	void UnloadMapEditorModule() override;
+	const std::vector<IEditorModule *> &GetEditorModules() override;
 
-	bool GameXInitialize()
+	bool GameXInitialize() override
 	{
 		return NGameX::Initialize();
 	}
 
-	void GameXPostStorageInitialize()
+	void GameXPostStorageInitialize() override
 	{
 		NGameX::PostStorageInitialize();
 		if ( NGlobal::GetVar( "delete_removed_object", 0 ) != 0 )
@@ -66,7 +66,7 @@ public:
 		}
 	}
 
-	void CreateMenus( IMainFrame *pMainFrame ) const;
+	void CreateMenus( IMainFrame *pMainFrame ) const override;
 };
 
 void CEditorAppSpecific::LoadMapEditorModule( const std::string &szModuleName ) // "c:\\b2\\system\\b2.dle"

@@ -22,7 +22,7 @@ public:
 		posCurrent = dbids.empty() ? dbids.end() : dbids.begin();
 	}
 
-	bool MoveNext()
+	bool MoveNext() override
 	{
 		if ( IsEnd() )
 		{
@@ -32,17 +32,17 @@ public:
 		return !IsEnd();
 	}
 
-	bool IsEnd() const
+	bool IsEnd() const override
 	{
 		return posCurrent == dbids.end();
 	}
 
-	CResource *Get() const
+	CResource *Get() const override
 	{
 		return IsEnd() ? 0 : NDb::GetObject( *posCurrent );
 	}
 
-	void MoveFirst()
+	void MoveFirst() override
 	{
 		posCurrent = dbids.empty() ? dbids.end() : dbids.begin();
 	}

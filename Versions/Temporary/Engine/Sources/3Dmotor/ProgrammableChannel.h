@@ -37,7 +37,7 @@ private:
 	std::vector<SSegment> segments;
 	float fDefaultValue;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTime );
 		f.Add( 3, &segments );
@@ -52,12 +52,12 @@ protected:
 	{
 	}
 
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return IsValid( pTime ) && pTime.Refresh();
 	}
 
-	virtual void Recalc()
+	void Recalc() override
 	{
 		STime time = pTime->GetValue();
 		for ( int i = 0; i < segments.size(); ++i )

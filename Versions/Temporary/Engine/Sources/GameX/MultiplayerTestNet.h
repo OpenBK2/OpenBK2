@@ -15,13 +15,13 @@ public:
 	CEmptyServerClient() {}
 
 	//{
-	CNetPacket *GetPacket();
-	void SendPacket( CNetPacket *pPacket );
+	CNetPacket *GetPacket() override;
+	void SendPacket( CNetPacket *pPacket ) override;
 
 	CNetPacket *GetGamePacket();
-	void SendGamePacket( CNetPacket *pPacket, bool bBroadcast );
+	void SendGamePacket( CNetPacket *pPacket, bool bBroadcast ) override;
 
-	void Segment();
+	void Segment() override;
 	//}
 };
 

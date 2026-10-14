@@ -23,7 +23,7 @@ class CWindowFrameSequence : public CWindow, public IWindowFrameSequence
 	bool bRun;
 	int nTime;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CWindow *)this );
 		f.Add( 2, &pInstance );
@@ -37,22 +37,22 @@ class CWindowFrameSequence : public CWindow, public IWindowFrameSequence
 	NTimer::STime timeStart;
 
 protected:
-	NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
 
 public:
 	CWindowFrameSequence();
-	~CWindowFrameSequence();
+	~CWindowFrameSequence() override;
 
 	//{ CWindow
-	void Visit( struct IUIVisitor *pVisitor );
-	void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	void Visit( struct IUIVisitor *pVisitor ) override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 	//}
 
 	//{ IWindowFrameSequence
-	void Run( bool bRun );
-	void Reset();
+	void Run( bool bRun ) override;
+	void Reset() override;
 	//}
 };

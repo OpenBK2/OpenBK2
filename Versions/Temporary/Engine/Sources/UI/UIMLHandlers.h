@@ -119,13 +119,13 @@ class CBRHandler : public IMLHandler
 
 private:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
 
 public:
-	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
+	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet ) override
 	{
 		pLayout->AddCommand( CMD_BREAKLINE );
 	}
@@ -140,7 +140,7 @@ struct SFadeValue : public CObjectBase
 public:
 	float fFadeValue;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &fFadeValue );
 		return 0;
@@ -165,7 +165,7 @@ private:
 	ZDATA
 	CPtr<SFadeValue> sFadeValue;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &sFadeValue );
 		return 0;
@@ -179,7 +179,7 @@ public:
 	{
 	}
 
-	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
+	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet ) override
 	{
 		if ( paramsSet.size() != 3 )
 		{
@@ -200,13 +200,13 @@ class CTABHandler : public IMLHandler
 
 private:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
 
 public:
-	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
+	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet ) override
 	{
 		pLayout->AddObject( CreateIMLTabObject() );
 	}
@@ -220,13 +220,13 @@ class CFONTHandler : public IMLHandler
 
 private:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
 
 public:
-	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
+	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet ) override
 	{
 		SState sState = pLayout->GetState();
 		if ( paramsSet.size() > 1 )
@@ -302,13 +302,13 @@ class CIMAGEHandler : public IMLHandler
 
 private:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
 
 public:
-	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
+	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet ) override
 	{
 		int nWidth = -1, nHeight = -1;
 		int nBorder = 0;
@@ -376,13 +376,13 @@ class CMINFONTSIZEHandler : public IMLHandler
 
 private:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
 
 public:
-	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
+	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet ) override
 	{
 		SState sState = pLayout->GetState();
 		if ( paramsSet.size() > 1 )
@@ -426,7 +426,7 @@ private:
 	ZDATA
 	bool bSave;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &bSave );
 		return 0;
@@ -440,7 +440,7 @@ public:
 	{
 	}
 
-	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
+	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet ) override
 	{
 		if ( bSave )
 		{

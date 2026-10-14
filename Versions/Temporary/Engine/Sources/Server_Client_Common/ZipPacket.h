@@ -12,7 +12,7 @@ public:
 	uLongf nUnzippedSize;
 	CMemoryStream buffer;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nUnzippedSize );
 		f.Add( 3, &buffer );

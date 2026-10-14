@@ -1079,7 +1079,7 @@ class CShaderWater : public CPtrFuncBase<NGScene::CObjectInfo>
 	float fRadius;
 	int nNumFramesX;
 	int nNumFramesY;
-	ZEND void Recalc();
+	ZEND void Recalc() override;
 
 protected:
 	CShaderWater() {}

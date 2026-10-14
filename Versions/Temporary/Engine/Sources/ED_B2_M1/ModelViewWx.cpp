@@ -92,7 +92,7 @@ class CModelWxWindow : public CWxHostWindow, public CModelCommands
 		{
 		}
 
-		virtual void Notify()
+		void Notify() override
 		{
 			pOwner->Send( nFlag );
 		}
@@ -142,7 +142,7 @@ public:
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MODEL_WINDOW, this );
 	}
 
-	virtual ~CModelWxWindow()
+	~CModelWxWindow() override
 	{
 		StopTimers();
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_MODEL_WINDOW );
@@ -272,7 +272,7 @@ public:
 	}
 
 	//	CModelCommands
-	virtual bool GetEditParameters( SEditParams *pEditParameters )
+	bool GetEditParameters( SEditParams *pEditParameters ) override
 	{
 		if ( pEditParameters == 0 )
 		{
@@ -377,7 +377,7 @@ public:
 		return true;
 	}
 
-	virtual bool SetEditParameters( const SEditParams &rEditParameters )
+	bool SetEditParameters( const SEditParams &rEditParameters ) override
 	{
 		bCreateControls = true;
 		const unsigned nFlags = rEditParameters.nFlags;
@@ -482,7 +482,7 @@ protected:
 	// gone would ask the state to read a box that no longer exists. This was
 	// a WM_DESTROY hook on the host's MFC window, which a host in a wx pane
 	// never had.
-	virtual void BeforeTearDown()
+	void BeforeTearDown() override
 	{
 		StopTimers();
 	}
@@ -716,23 +716,23 @@ class CWxModelView : public NModelView::IView
 	bool bCreated = false;
 
 public:
-	virtual bool Create( IWidget *pPane )
+	bool Create( IWidget *pPane ) override
 	{
 		bCreated = window.Build( pPane );
 		return bCreated;
 	}
 
-	virtual void Destroy()
+	void Destroy() override
 	{
 		window.DestroyHost();
 	}
 
-	virtual void Show( bool bShow )
+	void Show( bool bShow ) override
 	{
 		window.ShowHost( bShow );
 	}
 
-	virtual IWidget *GetWidget()
+	IWidget *GetWidget() override
 	{
 		return bCreated ? &window : 0;
 	}

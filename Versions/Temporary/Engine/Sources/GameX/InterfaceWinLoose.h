@@ -25,7 +25,7 @@ private:
 	int nSetYawSpeedStep;
 	float fSetYawSpeedTime;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &bWin );
@@ -43,7 +43,7 @@ private:
 private:
 	void MakeInterior();
 
-	bool StepLocal( bool bAppActive );
+	bool StepLocal( bool bAppActive ) override;
 	void InterfaceStateStep( float fTime );
 
 	void NextScreen();
@@ -57,14 +57,14 @@ private:
 public:
 	CInterfaceWinLoose();
 
-	bool Init();
-	bool ProcessEvent( const SGameMessage &msg );
+	bool Init() override;
+	bool ProcessEvent( const SGameMessage &msg ) override;
 
 	void SetMode( bool bWin );
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 	//}
 };
 
@@ -75,7 +75,7 @@ class CICWinLooseDialog : public CInterfaceCommandBase<CInterfaceWinLoose>
 	ZDATA_( CInterfaceCommandBase<CInterfaceWinLoose> )
 	bool bWin;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceWinLoose> *)this );
 		f.Add( 2, &bWin );
@@ -83,9 +83,9 @@ class CICWinLooseDialog : public CInterfaceCommandBase<CInterfaceWinLoose>
 	}
 
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

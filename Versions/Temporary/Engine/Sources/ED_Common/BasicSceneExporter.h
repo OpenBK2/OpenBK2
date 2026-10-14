@@ -66,11 +66,11 @@ public:
 	                            const std::string &rszObjectTypeName,
 	                            const std::string &rszObjectName,
 	                            bool bForce,
-	                            EXPORT_TYPE exportType );
+	                            EXPORT_TYPE exportType ) override;
 	// checker
 	EXPORT_RESULT CheckObject( IManipulator *pManipulator,
 	                           const std::string &rszObjectTypeName,
 	                           const std::string &rszObjectName,
 	                           bool bExport,
-	                           EXPORT_TYPE exportType );
+	                           EXPORT_TYPE exportType ) override;
 };

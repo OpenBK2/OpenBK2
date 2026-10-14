@@ -25,7 +25,7 @@ class CBridgeCreation : public CLongObjectCreation
 	SAIAngle wDir;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CLongObjectCreation *)this );
 		f.Add( 2, &pFullBridge );
@@ -55,36 +55,36 @@ public:
 	bool IsFirstSegmentBuilt() const;
 
 	// common
-	CLine2 GetCurLine();
-	const int GetMaxIndex() const;
-	const int GetCurIndex() const;
-	const CVec2 GetNextPoint( const int nPlace, const int nMaxPlace ) const;
-	void BuildNext();
-	float GetPrice();
+	CLine2 GetCurLine() override;
+	const int GetMaxIndex() const override;
+	const int GetCurIndex() const override;
+	const CVec2 GetNextPoint( const int nPlace, const int nMaxPlace ) const override;
+	void BuildNext() override;
+	float GetPrice() override;
 
 	//
-	bool IsAnyUnitPrevent() const
+	bool IsAnyUnitPrevent() const override
 	{
 		return false;
 	}
 
-	bool CanBuildNext() const
+	bool CanBuildNext() const override
 	{
 		return true;
 	}
 
-	void LockNext() {}
+	void LockNext() override {}
 
-	void LockCannotBuild() {}
+	void LockCannotBuild() override {}
 
-	bool PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock )
+	bool PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock ) override
 	{
 		return true;
 	}
 
-	void GetUnitsPreventing( std::list<CPtr<CAIUnit>> *units ) {}
+	void GetUnitsPreventing( std::list<CPtr<CAIUnit>> *units ) override {}
 
-	virtual bool IsCheatPath() const
+	bool IsCheatPath() const override
 	{
 		return true;
 	}

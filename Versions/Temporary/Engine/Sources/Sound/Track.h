@@ -38,7 +38,7 @@ class CTrack : public IPlayListElement
 	void OpenTrack();
 
 public:
-	int operator&( IBinSaver &f );
+	int operator&( IBinSaver &f ) override;
 
 public:
 	CTrack()
@@ -59,13 +59,13 @@ public:
 	{
 	}
 
-	~CTrack();
+	~CTrack() override;
 
 	void NotifyTrackFinished();
 
-	void Segment();
-	bool IsFinished() const;
-	void Stop();
+	void Segment() override;
+	bool IsFinished() const override;
+	void Stop() override;
 
 	const CPlayTime &GetPlayTime() const
 	{
@@ -73,7 +73,7 @@ public:
 	}
 
 	bool IsTimeToEndFade( NTimer::STime timeEndFade );
-	void Play();
-	void OnResetTimer();
+	void Play() override;
+	void OnResetTimer() override;
 };
 } // namespace NMusicSystem

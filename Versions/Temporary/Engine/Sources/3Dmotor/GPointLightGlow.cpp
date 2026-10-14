@@ -19,7 +19,7 @@ public:
 	int nAlpha;
 	CPtr<CPointGlowAnimator> pParent;
 
-	void AddParticles( IParticleOutput *pRender );
+	void AddParticles( IParticleOutput *pRender ) override;
 };
 
 const float F_NEAR_CLIP = 1; //0.2f;

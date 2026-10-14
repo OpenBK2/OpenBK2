@@ -66,7 +66,7 @@ class CInterfaceMPGameRoom : public CInterfaceMPScreenBase, public IProgrammedRe
 	CPtr<ITextView> pCantStartColour;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceMPScreenBase *)this );
 		f.Add( 2, &pSessionName );
@@ -137,24 +137,24 @@ private:
 	void TryInitThisPlayerSideAndColor();
 
 protected:
-	~CInterfaceMPGameRoom();
+	~CInterfaceMPGameRoom() override;
 
 public:
 	CInterfaceMPGameRoom();
 
-	bool Init();
-	void OnGetFocus( bool bFocus );
-	bool ProcessEvent( const SGameMessage &msg );
-	void AfterLoad();
+	bool Init() override;
+	void OnGetFocus( bool bFocus ) override;
+	bool ProcessEvent( const SGameMessage &msg ) override;
+	void AfterLoad() override;
 	void FillMapData();
 
 	void SetOwner( bool _bCreator );
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
 	int SelectionIndexToNationIndex( int nSelectionIndex );
 	int NationIndexToSelectionIndex( int nCountryIndex );
-	int Check( const std::string &szCheckName ) const;
+	int Check( const std::string &szCheckName ) const override;
 	//}
 };
 
@@ -166,16 +166,16 @@ class CICMPGameRoom : public CInterfaceCommandBase<CInterfaceMPGameRoom>
 	ZDATA
 	std::string str;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &str );
 		return 0;
 	}
 
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };
 #endif // _SINGLE_DEMO

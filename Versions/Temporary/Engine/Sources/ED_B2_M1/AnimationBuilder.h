@@ -12,17 +12,18 @@ class CAnimationBuilder : public CDefaultBuilderBase, public IBuildDataCallback,
 	OBJECT_NOCOPY_METHODS( CAnimationBuilder );
 
 	CAnimationBuilder();
-	~CAnimationBuilder();
+	~CAnimationBuilder() override;
 
 	bool UpdateAminations( const std::string &rszAnimationFolder );
 
 protected:
 	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 	// IBuildDataCallback
-	bool IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView );
-	bool IsUniqueObjectName( const std::string &szObjectType, const std::string &szObjectName );
+	bool
+	IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView ) override;
+	bool IsUniqueObjectName( const std::string &szObjectType, const std::string &szObjectName ) override;
 
 	// methods
 	uint32_t GetWeaponBits( const SGrannyBoneAttributes &gba ) const;

@@ -152,7 +152,7 @@ class CFormation : public CCommonUnit
 	uint32_t dwCatchArtFlag = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CCommonUnit *)this );
 		f.Add( 2, &fPass );
@@ -211,9 +211,9 @@ public:
 	void UpdateStats( class CSoldier *pUnit, const int nPos );
 
 protected:
-	virtual ISmoothPath *CreateSmoothPath();
+	ISmoothPath *CreateSmoothPath() override;
 
-	virtual void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate ) {}
+	void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate ) override {}
 
 public:
 	CFormation();
@@ -227,7 +227,7 @@ public:
 	const int GetGeometriesCount() const;
 	const int GetCurrentGeometry() const;
 
-	const NDb::SSquadRPGStats *GetStats() const
+	const NDb::SSquadRPGStats *GetStats() const override
 	{
 		return pStats;
 	}
@@ -242,16 +242,16 @@ public:
 	// возвращает позицию в статах формации для юнита с порядковым номером cSlot в массиве units
 	const int GetUnitSlotInStats( const uint8_t cSlot ) const;
 
-	virtual const float GetPassability() const
+	const float GetPassability() const override
 	{
 		return fPass;
 	}
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual const bool IsIdle() const;
+	const bool IsIdle() const override;
 
-	virtual const bool IsTurning() const
+	const bool IsTurning() const override
 	{
 		return false;
 	}
@@ -260,12 +260,12 @@ public:
 	bool IsEveryUnitResting() const;
 	bool IsAnyUnitResting() const;
 	bool IsEveryUnitInTransport() const;
-	virtual void Stop();
-	virtual void StopTurning();
+	void Stop() override;
+	void StopTurning() override;
 
 	virtual void ForceGoByRightDir() {}
 
-	virtual struct IStatesFactory *GetStatesFactory() const;
+	struct IStatesFactory *GetStatesFactory() const override;
 
 	const int Size() const
 	{
@@ -278,31 +278,31 @@ public:
 		return soldiers[n];
 	}
 
-	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
-	virtual bool CanCommandBeExecutedByStats( class CAICommand *pCommand );
-	virtual bool CanCommandBeExecutedByStats( int nCmd ) const;
+	bool CanCommandBeExecuted( class CAICommand *pCommand ) override;
+	bool CanCommandBeExecutedByStats( class CAICommand *pCommand ) override;
+	bool CanCommandBeExecutedByStats( int nCmd ) const override;
 
 	//
-	virtual const bool CanShootToPlanes() const;
+	const bool CanShootToPlanes() const override;
 
-	virtual int GetNGuns() const
+	int GetNGuns() const override
 	{
 		return guns.size();
 	}
-	virtual class CBasicGun *GetGun( const int n ) const;
+	class CBasicGun *GetGun( const int n ) const override;
 
-	virtual class CBasicGun *ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime );
+	class CBasicGun *ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime ) override;
 
-	virtual const uint8_t GetPlayer() const
+	const uint8_t GetPlayer() const override
 	{
 		return cPlayer;
 	}
 
-	virtual void ChangePlayer( const uint8_t cPlayer );
+	void ChangePlayer( const uint8_t cPlayer ) override;
 
-	virtual void SetSelectable( bool bSelectable, bool bSendToWorld );
+	void SetSelectable( bool bSelectable, bool bSendToWorld ) override;
 
-	virtual const float GetSightRadius() const;
+	const float GetSightRadius() const override;
 
 	//
 	void SetToWaitingState()
@@ -320,36 +320,36 @@ public:
 		return bWaiting;
 	}
 
-	virtual const bool IsVisible( const uint8_t party ) const;
+	const bool IsVisible( const uint8_t party ) const override;
 
 	//
 	void WasHitNearUnit();
 
-	virtual void Fired( const float fGunRadius, const int nGun ) {}
+	void Fired( const float fGunRadius, const int nGun ) override {}
 
-	virtual const NTimer::STime GetTimeToCamouflage() const;
-	virtual void SetCamoulfage();
-	virtual void RemoveCamouflage( ECamouflageRemoveReason eReason );
+	const NTimer::STime GetTimeToCamouflage() const override;
+	void SetCamoulfage() override;
+	void RemoveCamouflage( ECamouflageRemoveReason eReason ) override;
 
-	virtual void UpdateArea( const EActionNotify eAction );
+	void UpdateArea( const EActionNotify eAction ) override;
 
-	virtual class CTurret *GetTurret( const int nTurret ) const
+	class CTurret *GetTurret( const int nTurret ) const override
 	{
 		return 0;
 	}
 
-	virtual const int GetNTurrets() const
+	const int GetNTurrets() const override
 	{
 		return 0;
 	}
 
-	virtual bool IsMech() const
+	bool IsMech() const override
 	{
 		return false;
 	}
 
-	virtual void Disappear();
-	virtual void Die( const bool fromExplosion, const float fDamage );
+	void Disappear() override;
+	void Die( const bool fromExplosion, const float fDamage ) override;
 
 	const float GetSightMultiplier() const;
 
@@ -364,9 +364,9 @@ public:
 		return bDisabled;
 	}
 
-	virtual void UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand );
+	void UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand ) override;
 
-	bool IsFree() const
+	bool IsFree() const override
 	{
 		return eInsideType == EOIO_NONE;
 	}
@@ -395,54 +395,54 @@ public:
 	class CEntrenchment *GetEntrenchment() const;
 	class CMilitaryCar *GetTransportUnit() const;
 
-	virtual void GetNewUnitInfo( struct SNewUnitInfo *pNewUnitInfo );
+	void GetNewUnitInfo( struct SNewUnitInfo *pNewUnitInfo ) override;
 
-	virtual bool IsFormation() const
+	bool IsFormation() const override
 	{
 		return true;
 	}
 
-	virtual const bool IsInfantry() const
+	const bool IsInfantry() const override
 	{
 		return true;
 	}
 
-	virtual void SendAcknowledgement( EUnitAckType ack, bool bForce = false );
-	virtual void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false );
+	void SendAcknowledgement( EUnitAckType ack, bool bForce = false ) override;
+	void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false ) override;
 	// установить центр формации в центр тяжести юнитов
 	void BalanceCenter();
 
-	virtual const int GetMinArmor() const
+	const int GetMinArmor() const override
 	{
 		return 0;
 	}
 
-	virtual const int GetMaxArmor() const
+	const int GetMaxArmor() const override
 	{
 		return 0;
 	}
 
-	virtual const int GetMinPossibleArmor( const int nSide ) const
+	const int GetMinPossibleArmor( const int nSide ) const override
 	{
 		return 0;
 	}
 
-	virtual const int GetMaxPossibleArmor( const int nSide ) const
+	const int GetMaxPossibleArmor( const int nSide ) const override
 	{
 		return 0;
 	}
 
-	virtual const int GetArmor( const int nSide ) const
+	const int GetArmor( const int nSide ) const override
 	{
 		return 0;
 	}
 
-	virtual const int GetRandomArmor( const int nSide ) const
+	const int GetRandomArmor( const int nSide ) const override
 	{
 		return 0;
 	}
 
-	virtual float GetMaxFireRange() const
+	float GetMaxFireRange() const override
 	{
 		return fMaxFireRange;
 	}
@@ -452,7 +452,7 @@ public:
 		availCommands.SetData( eCmd );
 	}
 
-	virtual EUnitAckType GetGunsRejectReason() const;
+	EUnitAckType GetGunsRejectReason() const override;
 
 	// используется только для отложенных updates
 	virtual const bool IsVisible( const int nParty ) const
@@ -460,12 +460,12 @@ public:
 		return true;
 	}
 
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const
+	void GetTilesForVisibility( CTilesSet *pTiles ) const override
 	{
 		pTiles->clear();
 	}
 
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const
+	bool ShouldSuspendAction( const EActionNotify &eAction ) const override
 	{
 		return false;
 	}
@@ -481,8 +481,8 @@ public:
 	void DelVirtualUnit( class CSoldier *pSoldier );
 
 	// for bored condition
-	virtual void UnRegisterAsBored( const enum EUnitAckType eBoredType );
-	virtual void RegisterAsBored( const enum EUnitAckType eBoredType );
+	void UnRegisterAsBored( const enum EUnitAckType eBoredType ) override;
+	void RegisterAsBored( const enum EUnitAckType eBoredType ) override;
 
 	// устанавливает солдату бонусы от формации
 	void SetGeometryPropertiesToSoldier( class CSoldier *pSoldier, const bool bChangeWarFog );
@@ -492,23 +492,25 @@ public:
 	bool HasMortar() const; // true when formation carryes a mortar
 	CAIUnit *InstallCarryedMortar();
 
-	virtual void ResetTargetScan();
+	void ResetTargetScan() override;
 	// просканировать, если пора; если нашли цель, то атаковать
-	virtual uint8_t AnalyzeTargetScan( CAIUnit *pCurTarget,
-	                                   const bool bDamageUpdated,
-	                                   const bool bScanForObstacles,
-	                                   CObjectBase *pCheckBuilding );
-	virtual void
-	LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
+	uint8_t AnalyzeTargetScan( CAIUnit *pCurTarget,
+	                           const bool bDamageUpdated,
+	                           const bool bScanForObstacles,
+	                           CObjectBase *pCheckBuilding ) override;
+	void LookForTarget( CAIUnit *pCurTarget,
+	                    const bool bDamageUpdated,
+	                    CAIUnit **pBestTarget,
+	                    class CBasicGun **pGun ) override;
 
-	virtual bool CanMoveForGuard() const
+	bool CanMoveForGuard() const override
 	{
 		return CanMove();
 	}
 
-	virtual float GetPriceMax() const;
+	float GetPriceMax() const override;
 
-	virtual const NTimer::STime GetBehUpdateDuration() const
+	const NTimer::STime GetBehUpdateDuration() const override
 	{
 		return SConsts::BEH_UPDATE_DURATION;
 	}
@@ -529,7 +531,7 @@ public:
 		return bWithMoraleOfficer;
 	}
 
-	virtual void FreezeByState( const bool bFreeze );
+	void FreezeByState( const bool bFreeze ) override;
 
 	bool HasCharge()
 	{
@@ -541,14 +543,14 @@ public:
 	void DetonateCharge();
 
 	// slow working
-	virtual const float GetTargetScanRadius();
+	const float GetTargetScanRadius() override;
 
-	virtual bool CanMoveAfterUserCommand() const
+	bool CanMoveAfterUserCommand() const override
 	{
 		return CanMove();
 	}
 
-	virtual void NotifyAbilityRun( class CAICommand *pCommand );
+	void NotifyAbilityRun( class CAICommand *pCommand ) override;
 
 	bool ThrowGrenade();
 
@@ -573,103 +575,103 @@ public:
 
 	void MoveGeometries2Center();
 
-	virtual const SRect &GetUnitRect() const;
+	const SRect &GetUnitRect() const override;
 
 	// от нового CBasePathUnit
-	virtual const EAIClasses GetAIPassabilityClass() const
+	const EAIClasses GetAIPassabilityClass() const override
 	{
 		return EAC_HUMAN;
 	}
 
-	virtual const float GetTurnRadius() const
+	const float GetTurnRadius() const override
 	{
 		return 0.0f;
 	}
 
-	virtual const bool IsRound() const
+	const bool IsRound() const override
 	{
 		return true;
 	}
 
-	virtual const bool IsDangerousDirExist() const
+	const bool IsDangerousDirExist() const override
 	{
 		return false;
 	}
 
-	virtual const uint16_t GetDangerousDir() const
+	const uint16_t GetDangerousDir() const override
 	{
 		return 0;
 	}
 
-	virtual const float GetMaxPossibleSpeed() const
+	const float GetMaxPossibleSpeed() const override
 	{
 		return fMaxSpeed / fSpeedCoeff;
 	}
 
-	virtual const CVec2 &GetAABBHalfSize() const
+	const CVec2 &GetAABBHalfSize() const override
 	{
 		return vAABBHalfSize;
 	}
 
-	virtual const CVec2 GetCenterShift() const
+	const CVec2 GetCenterShift() const override
 	{
 		return VNULL2;
 	}
 
-	virtual const float GetTurnSpeed() const
+	const float GetTurnSpeed() const override
 	{
 		return 0;
 	}
 
-	virtual const SUnitProfile &GetUnitProfile() const;
+	const SUnitProfile &GetUnitProfile() const override;
 
-	virtual const bool CanGoBackward() const
+	const bool CanGoBackward() const override
 	{
 		return false;
 	}
 
-	virtual const bool CanTurnRound() const
+	const bool CanTurnRound() const override
 	{
 		return true;
 	}
 
-	virtual const bool CanRotate() const
+	const bool CanRotate() const override
 	{
 		return true;
 	}
 
-	virtual const float GetSmoothTurnThreshold() const
+	const float GetSmoothTurnThreshold() const override
 	{
 		return 0.6f;
 	}
 
-	virtual const int GetBoundTileRadius() const
+	const int GetBoundTileRadius() const override
 	{
 		return nBoundTileRadius;
 	}
 
 	// возвращает - поехал или нет
-	virtual const bool SendAlongPath( struct IStaticPath *pStaticPath, const CVec2 &vShift, const bool bSmoothTurn );
-	virtual const bool SendAlongPath( IPath *pPath );
+	const bool SendAlongPath( struct IStaticPath *pStaticPath, const CVec2 &vShift, const bool bSmoothTurn ) override;
+	const bool SendAlongPath( IPath *pPath ) override;
 
 	// from previous B2 CFormation and CFormationCenter
-	virtual const bool IsTrain() const
+	const bool IsTrain() const override
 	{
 		return false;
 	}
 
 	bool IsInTankPit() const;
 
-	void WarFogChanged() {}
+	void WarFogChanged() override {}
 
-	virtual const bool CanUnitTrampled( const CBasePathUnit *pUnit ) const
+	const bool CanUnitTrampled( const CBasePathUnit *pUnit ) const override
 	{
 		return false;
 	}
 
-	virtual const NDb::SUnitSpecialAblityDesc *GetUnitAbilityDesc( const NDb::EUnitSpecialAbility eType );
+	const NDb::SUnitSpecialAblityDesc *GetUnitAbilityDesc( const NDb::EUnitSpecialAbility eType ) override;
 
-	const bool IsStaticUnit() const
+	const bool IsStaticUnit() const override
 	{
 		return false;
 	}

@@ -141,18 +141,18 @@ private:
 
 public:
 	CModelState( CModelEditor *_pCModelEditor );
-	~CModelState();
+	~CModelState() override;
 
 	//IInputState
-	void Enter();
-	void Leave();
-	void OnContextMenu( const CTPoint<int> &rMousePoint );
-	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	void OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void Enter() override;
+	void Leave() override;
+	void OnContextMenu( const CTPoint<int> &rMousePoint ) override;
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
+	void OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
 
 	//ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 };
 
 // The palette's half of the exchange above, whichever toolkit draws it.

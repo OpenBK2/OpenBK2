@@ -45,13 +45,13 @@ class CMapObjectSelectState : public CDefaultInputState
 
 	void UpdateSelectionBySelector( bool bShiftPressed );
 	//IInputState interface
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
 };
 
 class CMapObjectEditState : public CDefaultInputState
@@ -78,13 +78,13 @@ class CMapObjectEditState : public CDefaultInputState
 	void OperateSelection( unsigned nFlags, const CTPoint<int> &rMousePoint, bool bSave );
 
 	//IInputState interface
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
 };
 
 class CMapObjectAddState : public CDefaultInputState
@@ -108,23 +108,23 @@ class CMapObjectAddState : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnSetFocus( IWidget *pNewWnd );
-	void OnKillFocus( IWidget *pOldWnd );
+	void OnSetFocus( IWidget *pNewWnd ) override;
+	void OnKillFocus( IWidget *pOldWnd ) override;
 	//
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 	//
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnMButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnMButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 	//
-	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	void OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
+	void OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
 };
 
 class CMapObjectPasteState : public CDefaultInputState
@@ -148,13 +148,13 @@ class CMapObjectPasteState : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void Enter();
-	void Leave();
+	void Enter() override;
+	void Leave() override;
 
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
 };
 
 class CMapObjectState : public CMultiInputState, public ICommandHandler
@@ -230,12 +230,12 @@ protected:
 	int GetNextSceneID( int nSceneID, std::list<int> *pSceneIDList );
 
 	//IInputState interface
-	virtual void Enter();
-	virtual void Leave();
-	virtual void Draw( IPaintContext *pPaintDC );
-	virtual void PostDraw( IPaintContext *pPaintDC );
+	void Enter() override;
+	void Leave() override;
+	void Draw( IPaintContext *pPaintDC ) override;
+	void PostDraw( IPaintContext *pPaintDC ) override;
 
-	virtual void OnSetFocus( IWidget *pNewWnd );
+	void OnSetFocus( IWidget *pNewWnd ) override;
 
 	// CMapObjectState
 	// Возможно какое либо редактирование
@@ -379,7 +379,7 @@ public:
 	}
 
 	//
-	~CMapObjectState()
+	~CMapObjectState() override
 	{
 		if ( pStoreInputState )
 		{
@@ -399,6 +399,6 @@ public:
 	virtual CMapInfoEditor *GetMapInfoEditor();
 
 	// ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 };

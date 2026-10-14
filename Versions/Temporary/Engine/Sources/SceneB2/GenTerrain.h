@@ -503,7 +503,7 @@ class CTerraGen : public CObjectBase
 public:
 	CTerraGen();
 
-	virtual ~CTerraGen() {}
+	~CTerraGen() override {}
 
 	void SetGfxObserver( ITerraGfxObserver *_pGfxObserver );
 	void SetAIObserver( ITerraAIObserver *_pAIObserver );
@@ -636,5 +636,5 @@ public:
 		return &terrainInfo;
 	}
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

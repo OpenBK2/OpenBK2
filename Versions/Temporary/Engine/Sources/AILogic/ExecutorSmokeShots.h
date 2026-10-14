@@ -6,13 +6,13 @@ class CExecutorSmokeShots : public CExecutorUnitBonus
 	OBJECT_BASIC_METHODS( CExecutorSmokeShots );
 
 protected:
-	void SwitchingOffEnd();
-	void SwitchOnEnd();
+	void SwitchingOffEnd() override;
+	void SwitchOnEnd() override;
 
 public:
 	CExecutorSmokeShots( CAIUnit *_pUnit );
 
 	CExecutorSmokeShots() {}
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

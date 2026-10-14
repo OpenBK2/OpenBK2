@@ -58,9 +58,9 @@ class CVSOSelectState : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 };
 
 class CVSOEditState : public CDefaultInputState
@@ -84,13 +84,13 @@ class CVSOEditState : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
 };
 
 class CVSOAddState : public CDefaultInputState
@@ -116,14 +116,14 @@ class CVSOAddState : public CDefaultInputState
 	bool InsertVSO();
 
 	//IInputState interface
-	void OnSetFocus( IWidget *pNewWnd );
-	void OnKillFocus( IWidget *pOldWnd );
+	void OnSetFocus( IWidget *pNewWnd ) override;
+	void OnKillFocus( IWidget *pOldWnd ) override;
 
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override;
 };
 
 class CVSOState : public CMultiInputState, public ICommandHandler
@@ -224,11 +224,11 @@ protected:
 	void ClearSelection();
 
 	//IInputState interface
-	virtual void Enter();
-	virtual void Leave();
-	virtual void Draw( IPaintContext *pPaintDC );
+	void Enter() override;
+	void Leave() override;
+	void Draw( IPaintContext *pPaintDC ) override;
 
-	virtual void OnSetFocus( IWidget *pNewWnd );
+	void OnSetFocus( IWidget *pNewWnd ) override;
 
 	// CVSOState
 	// При постановке нового VSO необходимо использовать эту функуцию
@@ -318,7 +318,7 @@ public:
 	}
 
 	//
-	~CVSOState()
+	~CVSOState() override
 	{
 		if ( pStoreInputState )
 		{
@@ -335,6 +335,6 @@ public:
 	bool PickOtherVSO( unsigned nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos );
 	void EmulateSelectLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos );
 	// ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 };

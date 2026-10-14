@@ -29,7 +29,7 @@ public:
 	int nGun = {};
 	int nPlatform = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &bFiring );
 		f.Add( 3, &nAmmo );
@@ -80,7 +80,7 @@ protected:
 	CDBPtr<SWeaponRPGStats> pWeapon;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CLinkObject *)this );
 		f.Add( 2, &pWeapon );
@@ -158,7 +158,7 @@ private:
 	bool bCanShootToUnitWOMove = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CBasicGunCRAPSaver *)this );
 		f.Add( 3, &shootState );
@@ -264,8 +264,8 @@ public:
 		return bGrenade;
 	}
 
-	virtual void GetMechShotInfo( SAINotifyMechShot *pMechShotInfo, const NTimer::STime &time ) const;
-	virtual void GetInfantryShotInfo( SAINotifyInfantryShot *pInfantryShotInfo, const NTimer::STime &time ) const;
+	void GetMechShotInfo( SAINotifyMechShot *pMechShotInfo, const NTimer::STime &time ) const override;
+	void GetInfantryShotInfo( SAINotifyInfantryShot *pInfantryShotInfo, const NTimer::STime &time ) const override;
 
 	virtual bool InFireRange( class CAIUnit *pTarget ) const;
 	virtual bool InFireRange( const CVec3 &vPoint ) const;
@@ -418,17 +418,17 @@ public:
 
 	virtual void SetRejectReason( const EUnitAckType &eReason );
 
-	virtual const bool IsVisible( const uint8_t party ) const
+	const bool IsVisible( const uint8_t party ) const override
 	{
 		return true;
 	}
 
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const
+	void GetTilesForVisibility( CTilesSet *pTiles ) const override
 	{
 		pTiles->clear();
 	}
 
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const
+	bool ShouldSuspendAction( const EActionNotify &eAction ) const override
 	{
 		return false;
 	}

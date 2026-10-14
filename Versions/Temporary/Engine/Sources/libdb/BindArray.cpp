@@ -55,23 +55,23 @@ namespace NBind
 			pBindArray->AddArrayElementManipulator( this );
 		}
 
-		~CArrayElementManipulator()
+		~CArrayElementManipulator() override
 		{
 			pBindArray->RemoveArrayElementManipulator( this );
 		}
 
 		// position-in-array functions
-		void SetIndex( const int _nIndex )
+		void SetIndex( const int _nIndex ) override
 		{
 			nIndex = _nIndex;
 		}
 
-		int GetIndex() const
+		int GetIndex() const override
 		{
 			return nIndex;
 		}
 
-		int GetSize() const
+		int GetSize() const override
 		{
 			int nSize = 0;
 			if ( pParent->GetValue( szAddName, &nSize ) != false )
@@ -84,7 +84,7 @@ namespace NBind
 			}
 		}
 
-		void ReportArrayInsert( int nPos, int nAmount )
+		void ReportArrayInsert( int nPos, int nAmount ) override
 		{
 			if ( nIndex >= nPos )
 			{
@@ -92,7 +92,7 @@ namespace NBind
 			}
 		}
 
-		void ReportArrayRemove( int nPos, int nAmount )
+		void ReportArrayRemove( int nPos, int nAmount ) override
 		{
 			// A manipulator for an erased element must never refer to its successor.
 			if ( nIndex >= nPos && nIndex < nPos + nAmount )
@@ -106,19 +106,19 @@ namespace NBind
 		}
 
 		//
-		IObjManIterator *CreateIterator( bool bShowHidden )
+		IObjManIterator *CreateIterator( bool bShowHidden ) override
 		{
 			return new CArrayIterator( nIndex, "", pTypeArray, this, bShowHidden );
 		}
 
 		//
-		void SetChanged()
+		void SetChanged() override
 		{
 			pParent->SetChanged();
 		}
 
 		//
-		IObjMan *CreateManipulator( const std::string &szName )
+		IObjMan *CreateManipulator( const std::string &szName ) override
 		{
 			if ( szName.empty() )
 			{
@@ -135,7 +135,7 @@ namespace NBind
 			}
 		}
 
-		std::string GetFullName() const
+		std::string GetFullName() const override
 		{
 			std::string szFullName = pParent->GetFullName();
 			if ( !szFullName.empty() )
@@ -154,7 +154,7 @@ namespace NBind
 		}
 
 		// main fields manipulation functions
-		bool SetValue( const std::string &szName, const CVariant &value )
+		bool SetValue( const std::string &szName, const CVariant &value ) override
 		{
 			SetChanged();
 			SBindProcessor bindProcessor;
@@ -168,7 +168,7 @@ namespace NBind
 			}
 		}
 
-		bool GetValue( const std::string &szName, CVariant *pValue )
+		bool GetValue( const std::string &szName, CVariant *pValue ) override
 		{
 			SBindProcessor bindProcessor;
 			if ( pBindArray->InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
@@ -182,7 +182,7 @@ namespace NBind
 		}
 
 		// array-specific functions
-		bool Insert( const std::string &szName, const int nPos, const int nAmount = 1, bool bSetDefault = false )
+		bool Insert( const std::string &szName, const int nPos, const int nAmount = 1, bool bSetDefault = false ) override
 		{
 			SetChanged();
 			if ( szName.empty() )
@@ -203,7 +203,7 @@ namespace NBind
 			}
 		}
 
-		bool Remove( const std::string &szName, const int nPos, const int nAmount = 1 )
+		bool Remove( const std::string &szName, const int nPos, const int nAmount = 1 ) override
 		{
 			SetChanged();
 			if ( szName.empty() )
@@ -225,7 +225,7 @@ namespace NBind
 		}
 
 		// get property field descriptor by name
-		const NTypeDef::STypeStructBase::SField *GetDesc( const std::string &szFullFieldName ) const
+		const NTypeDef::STypeStructBase::SField *GetDesc( const std::string &szFullFieldName ) const override
 		{
 			if ( szFullFieldName.empty() )
 			{
@@ -239,29 +239,29 @@ namespace NBind
 		}
 
 		// direct access to embedded struct (if it is)
-		CResource *GetObject()
+		CResource *GetObject() override
 		{
 			return pParent->GetObject();
 		}
 
-		const CDBID &GetDBID() const
+		const CDBID &GetDBID() const override
 		{
 			return pParent->GetDBID();
 		}
 
 		// additional custom attributes
-		std::wstring GetAttribute( const std::string &szName ) const
+		std::wstring GetAttribute( const std::string &szName ) const override
 		{
 			return pParent->GetAttribute( szName );
 		}
 
-		void SetAttribute( const std::string &szName, const std::wstring &szValue )
+		void SetAttribute( const std::string &szName, const std::wstring &szValue ) override
 		{
 			pParent->SetAttribute( szName, szValue );
 		}
 
 		//
-		bool LoadXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pNode )
+		bool LoadXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pNode ) override
 		{
 			SBindProcessor bindProcessor;
 			if ( pBindArray->InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
@@ -274,7 +274,7 @@ namespace NBind
 			}
 		}
 
-		bool SaveXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode )
+		bool SaveXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode ) override
 		{
 			SBindProcessor bindProcessor;
 			if ( pBindArray->InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
@@ -287,7 +287,7 @@ namespace NBind
 			}
 		}
 
-		bool SetDefault( const std::string &szAddName, NTypeDef::STypeStructBase *pType )
+		bool SetDefault( const std::string &szAddName, NTypeDef::STypeStructBase *pType ) override
 		{
 			SetChanged();
 			SBindProcessor bindProcessor;

@@ -14,7 +14,7 @@ public:
 		ZDATA_( IProgrammedReactionsAndChecks )
 		CPtr<IWindow> pScreen;
 
-		ZEND int operator&( IBinSaver &f )
+		ZEND int operator&( IBinSaver &f ) override
 		{
 			f.Add( 1, (IProgrammedReactionsAndChecks *)this );
 			f.Add( 2, &pScreen );
@@ -24,22 +24,22 @@ public:
 	public:
 		CReactions() {}
 
-		~CReactions() {}
+		~CReactions() override {}
 
 		CReactions( IWindow *_pScreen )
 			: pScreen( _pScreen )
 		{
 		}
 
-		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
-		virtual int Check( const std::string &szCheckName ) const;
+		bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+		int Check( const std::string &szCheckName ) const override;
 	};
 
 private:
 	ZDATA_( CInterfaceScreenBase )
 	CObj<CReactions> pReactions;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &pReactions );
@@ -56,17 +56,17 @@ protected:
 
 public:
 	CInterfaceMessageBox();
-	~CInterfaceMessageBox();
+	~CInterfaceMessageBox() override;
 
-	bool Init();
+	bool Init() override;
 
 	void SetParams( const std::string &szName, const std::wstring &szText );
 
-	void OnGetFocus( bool bFocus );
+	void OnGetFocus( bool bFocus ) override;
 
-	bool ProcessEvent( const SGameMessage &msg );
+	bool ProcessEvent( const SGameMessage &msg ) override;
 
-	bool StepLocal( bool bAppActive );
+	bool StepLocal( bool bAppActive ) override;
 };
 
 class CICMessageBox : public CInterfaceCommandBase<CInterfaceMessageBox>
@@ -77,7 +77,7 @@ class CICMessageBox : public CInterfaceCommandBase<CInterfaceMessageBox>
 	std::string szMainWindowName;
 	std::wstring szText;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceMessageBox> *)this );
 		f.Add( 2, &szMainWindowName );
@@ -86,11 +86,11 @@ class CICMessageBox : public CInterfaceCommandBase<CInterfaceMessageBox>
 	}
 
 private:
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 
 public:
 	static std::string MakeConfigString( const std::string &MessageBoxType, const std::wstring &szText );
@@ -103,7 +103,7 @@ class CICPreviousMenu : public IInterfaceCommand
 	ZDATA_( IInterfaceCommand )
 	std::string szResult; // message for send
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (IInterfaceCommand *)this );
 		f.Add( 2, &szResult );
@@ -111,8 +111,8 @@ class CICPreviousMenu : public IInterfaceCommand
 	}
 
 public:
-	void Exec();
-	void Configure( const char *pszConfig ); // message for send
+	void Exec() override;
+	void Configure( const char *pszConfig ) override; // message for send
 };
 
 // clears all interfaces that are on top of provided interface
@@ -123,7 +123,7 @@ class CICRemoveInterfacesUpTo : public IInterfaceCommand
 	ZDATA_( IInterfaceCommand )
 	std::string szInterfaceID;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (IInterfaceCommand *)this );
 		f.Add( 2, &szInterfaceID );
@@ -131,8 +131,8 @@ class CICRemoveInterfacesUpTo : public IInterfaceCommand
 	}
 
 public:
-	void Exec();
-	void Configure( const char *pszConfig );
+	void Exec() override;
+	void Configure( const char *pszConfig ) override;
 };
 
 // use carefully, mainly for manual console commands
@@ -142,14 +142,14 @@ class CICClearInterfaces : public IInterfaceCommand
 
 	ZDATA_( IInterfaceCommand )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (IInterfaceCommand *)this );
 		return 0;
 	}
 
 public:
-	void Exec();
+	void Exec() override;
 };
 
 class CICSuppressEnableFocus : public IInterfaceCommand
@@ -158,14 +158,14 @@ class CICSuppressEnableFocus : public IInterfaceCommand
 
 	ZDATA_( IInterfaceCommand )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (IInterfaceCommand *)this );
 		return 0;
 	}
 
 public:
-	void Exec();
+	void Exec() override;
 };
 
 class CICHideUnfocusedScreen : public IInterfaceCommand
@@ -174,12 +174,12 @@ class CICHideUnfocusedScreen : public IInterfaceCommand
 
 	ZDATA_( IInterfaceCommand )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (IInterfaceCommand *)this );
 		return 0;
 	}
 
 public:
-	void Exec();
+	void Exec() override;
 };

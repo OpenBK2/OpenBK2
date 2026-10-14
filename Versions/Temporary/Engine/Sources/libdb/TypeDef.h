@@ -31,7 +31,7 @@ namespace NTypeDef
 		virtual bool CheckValueCorrect( const CVariant &value ) const = 0;
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			return 0;
 		}
@@ -120,7 +120,7 @@ namespace NTypeDef
 		}
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.Add( "Type", &eType );
 			return 0;
@@ -145,18 +145,18 @@ namespace NTypeDef
 		//
 		virtual CVariant GetDefaultValue() const = 0;
 
-		int GetTypeSize() const
+		int GetTypeSize() const override
 		{
 			return 4;
 		}
 
-		bool IsSimpleType() const
+		bool IsSimpleType() const override
 		{
 			return true;
 		}
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<STypeDef *>( this ) );
 			return 0;
@@ -174,27 +174,27 @@ namespace NTypeDef
 		}
 
 		//
-		CVariant GetDefaultValue() const
+		CVariant GetDefaultValue() const override
 		{
 			return 0;
 		}
 
-		EEditorType GetDefaultEditorType() const
+		EEditorType GetDefaultEditorType() const override
 		{
 			return EDITOR_TYPE_INT_INPUT;
 		}
 
-		const std::string GetTypeName() const
+		const std::string GetTypeName() const override
 		{
 			return "int";
 		}
 
 		//
-		void ToString( std::string *pRes, const CVariant &value ) const;
-		void FromString( CVariant *pRes, const std::string &szValue ) const;
+		void ToString( std::string *pRes, const CVariant &value ) const override;
+		void FromString( CVariant *pRes, const std::string &szValue ) const override;
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<STypeSimple *>( this ) );
 			return 0;
@@ -212,27 +212,27 @@ namespace NTypeDef
 		}
 
 		//
-		CVariant GetDefaultValue() const
+		CVariant GetDefaultValue() const override
 		{
 			return 0;
 		}
 
-		EEditorType GetDefaultEditorType() const
+		EEditorType GetDefaultEditorType() const override
 		{
 			return EDITOR_TYPE_FLOAT_INPUT;
 		}
 
-		const std::string GetTypeName() const
+		const std::string GetTypeName() const override
 		{
 			return "float";
 		}
 
 		//
-		void ToString( std::string *pRes, const CVariant &value ) const;
-		void FromString( CVariant *pRes, const std::string &szValue ) const;
+		void ToString( std::string *pRes, const CVariant &value ) const override;
+		void FromString( CVariant *pRes, const std::string &szValue ) const override;
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<STypeSimple *>( this ) );
 			return 0;
@@ -250,32 +250,32 @@ namespace NTypeDef
 		}
 
 		//
-		CVariant GetDefaultValue() const
+		CVariant GetDefaultValue() const override
 		{
 			return false;
 		}
 
-		EEditorType GetDefaultEditorType() const
+		EEditorType GetDefaultEditorType() const override
 		{
 			return EDITOR_TYPE_BOOL_COMBO;
 		}
 
-		int GetTypeSize() const
+		int GetTypeSize() const override
 		{
 			return 1;
 		}
 
-		const std::string GetTypeName() const
+		const std::string GetTypeName() const override
 		{
 			return "bool";
 		}
 
 		//
-		void ToString( std::string *pRes, const CVariant &value ) const;
-		void FromString( CVariant *pRes, const std::string &szValue ) const;
+		void ToString( std::string *pRes, const CVariant &value ) const override;
+		void FromString( CVariant *pRes, const std::string &szValue ) const override;
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<STypeSimple *>( this ) );
 			return 0;
@@ -293,32 +293,32 @@ namespace NTypeDef
 		}
 
 		//
-		CVariant GetDefaultValue() const
+		CVariant GetDefaultValue() const override
 		{
 			return "";
 		}
 
-		EEditorType GetDefaultEditorType() const
+		EEditorType GetDefaultEditorType() const override
 		{
 			return EDITOR_TYPE_STRING_INPUT;
 		}
 
-		int GetTypeSize() const
+		int GetTypeSize() const override
 		{
 			return sizeof( std::string );
 		}
 
-		const std::string GetTypeName() const
+		const std::string GetTypeName() const override
 		{
 			return "string";
 		}
 
 		//
-		void ToString( std::string *pRes, const CVariant &value ) const;
-		void FromString( CVariant *pRes, const std::string &szValue ) const;
+		void ToString( std::string *pRes, const CVariant &value ) const override;
+		void FromString( CVariant *pRes, const std::string &szValue ) const override;
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<STypeSimple *>( this ) );
 			return 0;
@@ -336,32 +336,32 @@ namespace NTypeDef
 		}
 
 		//
-		CVariant GetDefaultValue() const
+		CVariant GetDefaultValue() const override
 		{
 			return L"";
 		}
 
-		EEditorType GetDefaultEditorType() const
+		EEditorType GetDefaultEditorType() const override
 		{
 			return EDITOR_TYPE_STRING_INPUT;
 		}
 
-		int GetTypeSize() const
+		int GetTypeSize() const override
 		{
 			return sizeof( std::wstring );
 		}
 
-		const std::string GetTypeName() const
+		const std::string GetTypeName() const override
 		{
 			return "wstring";
 		}
 
 		//
-		void ToString( std::string *pRes, const CVariant &value ) const;
-		void FromString( CVariant *pRes, const std::string &szValue ) const;
+		void ToString( std::string *pRes, const CVariant &value ) const override;
+		void FromString( CVariant *pRes, const std::string &szValue ) const override;
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<STypeSimple *>( this ) );
 			return 0;
@@ -379,29 +379,29 @@ namespace NTypeDef
 		}
 
 		//
-		CVariant GetDefaultValue() const;
+		CVariant GetDefaultValue() const override;
 
-		EEditorType GetDefaultEditorType() const
+		EEditorType GetDefaultEditorType() const override
 		{
 			return EDITOR_TYPE_GUID;
 		}
 
-		int GetTypeSize() const
+		int GetTypeSize() const override
 		{
 			return sizeof( boost::uuids::uuid );
 		}
 
-		const std::string GetTypeName() const
+		const std::string GetTypeName() const override
 		{
 			return "GUID";
 		}
 
 		//
-		void ToString( std::string *pRes, const CVariant &value ) const;
-		void FromString( CVariant *pRes, const std::string &szValue ) const;
+		void ToString( std::string *pRes, const CVariant &value ) const override;
+		void FromString( CVariant *pRes, const std::string &szValue ) const override;
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<STypeSimple *>( this ) );
 			return 0;
@@ -433,34 +433,34 @@ namespace NTypeDef
 		}
 
 		//
-		CVariant GetDefaultValue() const;
+		CVariant GetDefaultValue() const override;
 
-		EEditorType GetDefaultEditorType() const
+		EEditorType GetDefaultEditorType() const override
 		{
 			return EDITOR_TYPE_BIT_FIELD;
 		}
 
-		int GetTypeSize() const
+		int GetTypeSize() const override
 		{
 			return nBinaryObjectSize;
 		}
 
-		const std::string GetTypeName() const
+		const std::string GetTypeName() const override
 		{
 			return szTypeName;
 		}
 
-		virtual SAttributes *GetAttributes() const
+		SAttributes *GetAttributes() const override
 		{
 			return pAttributes;
 		}
 
 		//
-		void ToString( std::string *pRes, const CVariant &value ) const;
-		void FromString( CVariant *pRes, const std::string &szValue ) const;
+		void ToString( std::string *pRes, const CVariant &value ) const override;
+		void FromString( CVariant *pRes, const std::string &szValue ) const override;
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<STypeSimple *>( this ) );
 			saver.Add( "TypeName", &szTypeName );
@@ -519,37 +519,37 @@ namespace NTypeDef
 		}
 
 		//
-		CVariant GetDefaultValue() const
+		CVariant GetDefaultValue() const override
 		{
 			return entries[0].szName;
 		}
 
-		EEditorType GetDefaultEditorType() const
+		EEditorType GetDefaultEditorType() const override
 		{
 			return EDITOR_TYPE_STRING_COMBO;
 		}
 
-		int GetTypeSize() const
+		int GetTypeSize() const override
 		{
 			return 4;
 		}
 
-		const std::string GetTypeName() const
+		const std::string GetTypeName() const override
 		{
 			return szTypeName;
 		}
 
 		//
-		void ToString( std::string *pRes, const CVariant &value ) const;
-		void FromString( CVariant *pRes, const std::string &szValue ) const;
+		void ToString( std::string *pRes, const CVariant &value ) const override;
+		void FromString( CVariant *pRes, const std::string &szValue ) const override;
 
-		virtual SAttributes *GetAttributes() const
+		SAttributes *GetAttributes() const override
 		{
 			return pAttributes;
 		}
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<STypeSimple *>( this ) );
 			saver.Add( "TypeName", &szTypeName );
@@ -628,18 +628,18 @@ namespace NTypeDef
 		}
 
 		//
-		bool IsSimpleType() const
+		bool IsSimpleType() const override
 		{
 			return false;
 		}
 
-		const std::string GetTypeName() const
+		const std::string GetTypeName() const override
 		{
 			return szTypeName;
 		}
 
 		//
-		EEditorType GetDefaultEditorType() const
+		EEditorType GetDefaultEditorType() const override
 		{
 			return EDITOR_TYPE_UNKNOWN;
 		}
@@ -652,13 +652,13 @@ namespace NTypeDef
 		               SAttributes *pAttributes,
 		               const CVariant &_vtDefVal = CVariant() );
 
-		virtual SAttributes *GetAttributes() const
+		SAttributes *GetAttributes() const override
 		{
 			return pAttributes;
 		}
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<STypeDef *>( this ) );
 			saver.Add( "TypeName", &szTypeName );
@@ -686,7 +686,7 @@ namespace NTypeDef
 		}
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<STypeStructBase *>( this ) );
 			return 0;
@@ -719,7 +719,7 @@ namespace NTypeDef
 		void RegisterTerminalType( STypeClass *pClass = 0 );
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<STypeStructBase *>( this ) );
 			saver.Add( "TypeID", &nClassTypeID );
@@ -755,21 +755,21 @@ namespace NTypeDef
 		}
 
 		//
-		bool IsSimpleType() const
+		bool IsSimpleType() const override
 		{
 			return false;
 		}
 
-		const std::string GetTypeName() const
+		const std::string GetTypeName() const override
 		{
 			return "array";
 		}
 
-		void ToString( std::string *pRes, const CVariant &value ) const;
-		void FromString( CVariant *pRes, const std::string &szValue ) const;
+		void ToString( std::string *pRes, const CVariant &value ) const override;
+		void FromString( CVariant *pRes, const std::string &szValue ) const override;
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<STypeDef *>( this ) );
 			saver.Add( "Field", &field );
@@ -799,34 +799,34 @@ namespace NTypeDef
 		}
 
 		//
-		EEditorType GetDefaultEditorType() const
+		EEditorType GetDefaultEditorType() const override
 		{
 			return EDITOR_TYPE_STRING_NEW_MULTI_REF;
 		}
 
-		virtual CVariant GetDefaultValue() const
+		CVariant GetDefaultValue() const override
 		{
 			return CVariant();
 		}
 
-		int GetTypeSize() const
+		int GetTypeSize() const override
 		{
 			return sizeof( CDBPtr<CResource> );
 		}
 
-		const std::string GetTypeName() const
+		const std::string GetTypeName() const override
 		{
 			return "ref";
 		}
 
-		void ToString( std::string *pRes, const CVariant &value ) const;
-		void FromString( CVariant *pRes, const std::string &szValue ) const;
+		void ToString( std::string *pRes, const CVariant &value ) const override;
+		void FromString( CVariant *pRes, const std::string &szValue ) const override;
 		//
 		void GetRefTypesList( std::vector<const STypeClass *> *pTypesList ) const;
 		bool CheckRefType( const int nClassTypeID ) const;
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<STypeSimple *>( this ) );
 			saver.Add( "RefType", &pRefType );
@@ -847,13 +847,13 @@ namespace NTypeDef
 		OBJECT_NOCOPY_METHODS( SConstraintsUnlimited );
 
 	public:
-		bool CheckValueCorrect( const CVariant &value ) const
+		bool CheckValueCorrect( const CVariant &value ) const override
 		{
 			return true;
 		}
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<SConstraints *>( this ) );
 			return 0;
@@ -884,14 +884,14 @@ namespace NTypeDef
 		}
 
 		//
-		bool CheckValueCorrect( const CVariant &value ) const
+		bool CheckValueCorrect( const CVariant &value ) const override
 		{
 			TYPE tValue = (TYPE)value;
 			return tValue >= tMin && tValue <= tMax;
 		}
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<SConstraints *>( this ) );
 			saver.Add( "Min", &tMin );
@@ -922,13 +922,13 @@ namespace NTypeDef
 		}
 
 		//
-		bool CheckValueCorrect( const CVariant &value ) const
+		bool CheckValueCorrect( const CVariant &value ) const override
 		{
 			return find( values.begin(), values.end(), (TYPE)value ) != values.end();
 		}
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<SConstraints *>( this ) );
 			saver.Add( "Values", &values );
@@ -963,7 +963,7 @@ namespace NTypeDef
 		}
 
 		//
-		bool CheckValueCorrect( const CVariant &value ) const
+		bool CheckValueCorrect( const CVariant &value ) const override
 		{
 			int nNumElements = (int)value;
 			if ( nMinElements >= 0 && nNumElements < nMinElements )
@@ -978,7 +978,7 @@ namespace NTypeDef
 		}
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<SConstraints *>( this ) );
 			saver.Add( "MinElements", &nMinElements );
@@ -997,7 +997,7 @@ namespace NTypeDef
 		std::string szRegExp;
 
 		//
-		bool CheckValueCorrect( const CVariant &value ) const
+		bool CheckValueCorrect( const CVariant &value ) const override
 		{
 			//		string szValue = value.GetStr();
 			//		if ( szRegExp.empty() )
@@ -1008,7 +1008,7 @@ namespace NTypeDef
 		}
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<SConstraints *>( this ) );
 			saver.Add( "RegExp", &szRegExp );
@@ -1033,13 +1033,13 @@ namespace NTypeDef
 		}
 
 		//
-		bool CheckValueCorrect( const CVariant &value ) const
+		bool CheckValueCorrect( const CVariant &value ) const override
 		{
 			return true;
 		}
 
 		//
-		int operator&( IXmlSaver &saver )
+		int operator&( IXmlSaver &saver ) override
 		{
 			saver.AddTypedSuper( static_cast<SConstraints *>( this ) );
 			saver.Add( "Type", &pType );

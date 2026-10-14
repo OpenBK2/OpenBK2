@@ -12,7 +12,7 @@ class CMemObjectInfo : public CPtrFuncBase<CObjectInfo>
 	std::vector<CVec3> points, normals;
 	std::vector<STriangle> tris;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &points );
 		f.Add( 3, &normals );
@@ -21,7 +21,7 @@ class CMemObjectInfo : public CPtrFuncBase<CObjectInfo>
 	}
 
 protected:
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CMemObjectInfo() {}

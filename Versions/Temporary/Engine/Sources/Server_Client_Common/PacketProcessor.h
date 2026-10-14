@@ -33,7 +33,7 @@ public:
 	{
 	}
 
-	virtual bool Process( CNetPacket *pRawPacket )
+	bool Process( CNetPacket *pRawPacket ) override
 	{
 		if ( pRawPacket )
 		{

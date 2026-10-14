@@ -17,7 +17,7 @@ class CProgressHookHelper : public IProgressHookB2
 	ZDATA
 	std::vector<SRange> ranges;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &ranges );
 		return 0;
@@ -33,11 +33,11 @@ public:
 	CProgressHookHelper();
 
 	//{ IProgressHook
-	void SetNumSteps( const int nNumSteps );
-	void LockRange( const int nLength );
-	void UnlockRange();
-	void Step();
-	void SetCurrentStep( int nCurrentStep );
+	void SetNumSteps( const int nNumSteps ) override;
+	void LockRange( const int nLength ) override;
+	void UnlockRange() override;
+	void Step() override;
+	void SetCurrentStep( int nCurrentStep ) override;
 	//}
 };
 
@@ -60,7 +60,7 @@ private:
 	float fCurrProgress;
 
 protected:
-	~CInterfaceLoadingBase();
+	~CInterfaceLoadingBase() override;
 
 	void InitInternal( const std::string &szScreenName );
 
@@ -87,18 +87,18 @@ public:
 	CInterfaceLoadingBase();
 
 	//{ IProgressHook
-	void SetNumSteps( const int nNumSteps );
-	void LockRange( const int nLength );
-	void UnlockRange();
-	void Step();
-	void SetCurrentStep( int nCurrentStep );
+	void SetNumSteps( const int nNumSteps ) override;
+	void LockRange( const int nLength ) override;
+	void UnlockRange() override;
+	void Step() override;
+	void SetCurrentStep( int nCurrentStep ) override;
 
 	// IProgressHookB2
-	void RunFinishScreen() {}
+	void RunFinishScreen() override {}
 
 	//}
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 // Special "2D-interface" (not a descendant of CInterfaceScreenBase)
@@ -112,7 +112,7 @@ private:
 	CPtr<IWindow> pCitation;
 
 protected:
-	~CInterfaceLoadingSingle2D();
+	~CInterfaceLoadingSingle2D() override;
 
 	void MakeInterior( const NDb::STexture *pTexture,
 	                   const std::wstring &wszDesc,
@@ -128,7 +128,7 @@ public:
 	                           bool bChapter );
 
 	//{ IProgressHookB2
-	void RunFinishScreen();
+	void RunFinishScreen() override;
 	//}
 };
 
@@ -151,7 +151,7 @@ class CInterfaceLoadingSingleFinished : public CInterfaceScreenBase, public IPro
 	std::wstring wszPressKeyFormat2;
 	bool bFormat1;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &eUIState );
@@ -164,7 +164,7 @@ class CInterfaceLoadingSingleFinished : public CInterfaceScreenBase, public IPro
 
 	NTimer::STime timeAbs; // don't save
 private:
-	bool ProcessEvent( const struct SGameMessage &msg );
+	bool ProcessEvent( const struct SGameMessage &msg ) override;
 
 	void MoveOutInfoPanel();
 	void StartTransitToMission();
@@ -174,19 +174,19 @@ private:
 public:
 	CInterfaceLoadingSingleFinished();
 
-	bool Init();
+	bool Init() override;
 
-	void Draw( NGScene::CRTPtr *pTarget );
+	void Draw( NGScene::CRTPtr *pTarget ) override;
 
-	bool StepLocal( bool bAppActive );
+	bool StepLocal( bool bAppActive ) override;
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 
 	//}
 
-	bool IsModal()
+	bool IsModal() override
 	{
 		return false;
 	}
@@ -196,9 +196,9 @@ class CICLoadingSingleFinished : public CInterfaceCommandBase<CInterfaceLoadingS
 {
 	OBJECT_BASIC_METHODS( CICLoadingSingleFinished );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

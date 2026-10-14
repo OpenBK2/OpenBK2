@@ -13,7 +13,7 @@ public:
 	int nUniqueID = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CUpdatableObj *)this );
 		f.Add( 2, &nLink );
@@ -29,7 +29,7 @@ public:
 		SetLink( _nLink );
 	}
 
-	virtual ~CLinkObject();
+	~CLinkObject() override;
 
 	void SetUniqueIdForObjects();
 	void SetUniqueIdForUnits( const int nUniqueID );
@@ -43,7 +43,7 @@ public:
 	// запомнит ли объект в unitsID2Object
 	void Mem2UniqueIdObjs();
 
-	const int GetUniqueId() const
+	const int GetUniqueId() const override
 	{
 		return nUniqueID;
 	}

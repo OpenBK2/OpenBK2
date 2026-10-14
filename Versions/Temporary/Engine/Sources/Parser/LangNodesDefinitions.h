@@ -70,7 +70,7 @@ public:
 		return value;
 	}
 
-	virtual void Visit( IVisitor *pVisitor )
+	void Visit( IVisitor *pVisitor ) override
 	{
 		pVisitor->Visit( this );
 	}
@@ -110,7 +110,7 @@ public:
 	TAttrIter AttrBegin() const;
 	TAttrIter AttrEnd() const;
 
-	virtual void Visit( IVisitor *pVisitor )
+	void Visit( IVisitor *pVisitor ) override
 	{
 		pVisitor->Visit( this );
 	}
@@ -160,7 +160,7 @@ public:
 		bValueDefined = true;
 	}
 
-	virtual void Visit( IVisitor *pVisitor )
+	void Visit( IVisitor *pVisitor ) override
 	{
 		pVisitor->Visit( this );
 	}
@@ -209,7 +209,7 @@ public:
 	CEnumEntryNode *GetEnumEntry( const std::string &szEntryName ) const;
 	CEnumEntryNode *FindAnyWithCrossedEntries( class CNamespace *pNM ) const;
 
-	virtual void Visit( IVisitor *pVisitor )
+	void Visit( IVisitor *pVisitor ) override
 	{
 		pVisitor->Visit( this );
 	}
@@ -334,7 +334,7 @@ public:
 	{
 	}
 
-	virtual void Visit( IVisitor *pVisitor )
+	void Visit( IVisitor *pVisitor ) override
 	{
 		pVisitor->Visit( this );
 	}
@@ -357,7 +357,7 @@ public:
 	{
 	}
 
-	virtual void Visit( IVisitor *pVisitor )
+	void Visit( IVisitor *pVisitor ) override
 	{
 		pVisitor->Visit( this );
 	}
@@ -393,7 +393,7 @@ public:
 		return eNodeType;
 	}
 
-	virtual void Visit( IVisitor *pVisitor )
+	void Visit( IVisitor *pVisitor ) override
 	{
 		pVisitor->Visit( this );
 	}
@@ -468,7 +468,7 @@ public:
 		return badIncludes;
 	}
 
-	virtual void Visit( IVisitor *pVisitor )
+	void Visit( IVisitor *pVisitor ) override
 	{
 		pVisitor->Visit( this );
 	}
@@ -513,7 +513,7 @@ public:
 		pNamespace = _pNamespace;
 	}
 
-	virtual void Visit( IVisitor *pVisitor )
+	void Visit( IVisitor *pVisitor ) override
 	{
 		pVisitor->Visit( this );
 	}
@@ -555,7 +555,7 @@ public:
 		return bClass;
 	}
 
-	virtual void Visit( IVisitor *pVisitor )
+	void Visit( IVisitor *pVisitor ) override
 	{
 		pVisitor->Visit( this );
 	}

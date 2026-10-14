@@ -141,7 +141,7 @@ public:
 	{
 	}
 
-	void Configure( const char *pszConfig )
+	void Configure( const char *pszConfig ) override
 	{
 		szFullFolderPath = pszConfig == 0 ? "" : pszConfig;
 		if ( szFullFolderPath.size() > 1 && szFullFolderPath[szFullFolderPath.size() - 1] != '/' &&
@@ -152,7 +152,7 @@ public:
 	}
 
 	//
-	void Exec()
+	void Exec() override
 	{
 		// A trailing separator, because CWinVFS and CWinFileCreator build a full
 		// path by concatenating this with the name they are asked for. JoinPath

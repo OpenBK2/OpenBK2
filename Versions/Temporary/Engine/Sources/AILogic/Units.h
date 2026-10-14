@@ -27,7 +27,7 @@ class CUnits : public CAIObjectBase
 	OBJECT_NOCOPY_METHODS( CUnits );
 
 public:
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 
 private:
 	struct SInitializedWord

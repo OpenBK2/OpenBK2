@@ -43,7 +43,7 @@ class CMiniMapWxWindow : public CWxHostWindow, public ICommandHandler
 	bool bRegistered = false;
 
 public:
-	virtual ~CMiniMapWxWindow()
+	~CMiniMapWxWindow() override
 	{
 		Unregister();
 	}
@@ -142,7 +142,7 @@ public:
 	}
 
 	// ICommandHandler: CMiniMapWindow's, which passes the one command on.
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override
 	{
 		if ( nCommandID == ID_MIMCO_GENERATE_MINIMAP_IMAGE )
 		{
@@ -152,7 +152,7 @@ public:
 		return false;
 	}
 
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override
 	{
 		if ( ( nCommandID == ID_MIMCO_GENERATE_MINIMAP_IMAGE ) && ( pbEnable != 0 ) && ( pbCheck != 0 ) )
 		{
@@ -276,18 +276,18 @@ class CWxMiniMapView : public NMiniMapView::IView
 	bool bCreated = false;
 
 public:
-	virtual ~CWxMiniMapView()
+	~CWxMiniMapView() override
 	{
 		Destroy();
 	}
 
-	virtual bool Create( IWidget *pPane )
+	bool Create( IWidget *pPane ) override
 	{
 		bCreated = window.Build( pPane );
 		return bCreated;
 	}
 
-	virtual void Destroy()
+	void Destroy() override
 	{
 		window.Unregister();
 		if ( bCreated )
@@ -297,7 +297,7 @@ public:
 		}
 	}
 
-	virtual void Show( bool bShow )
+	void Show( bool bShow ) override
 	{
 		if ( bCreated )
 		{
@@ -305,27 +305,27 @@ public:
 		}
 	}
 
-	virtual IWidget *GetWidget()
+	IWidget *GetWidget() override
 	{
 		return bCreated ? &window : 0;
 	}
 
-	virtual void LoadMap( const NDb::STerrain *pTerrainDesc )
+	void LoadMap( const NDb::STerrain *pTerrainDesc ) override
 	{
 		window.LoadMap( pTerrainDesc );
 	}
 
-	virtual void SetMapInfoEditorSize( int nSizeX, int nSizeY )
+	void SetMapInfoEditorSize( int nSizeX, int nSizeY ) override
 	{
 		window.SetMapInfoEditorSize( nSizeX, nSizeY );
 	}
 
-	virtual void Redraw()
+	void Redraw() override
 	{
 		window.Redraw();
 	}
 
-	virtual void Update()
+	void Update() override
 	{
 		window.Update();
 	}

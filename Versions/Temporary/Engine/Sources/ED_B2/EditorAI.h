@@ -8,5 +8,5 @@ class CEditorAI : public IEditorAI
 	//
 public:
 	// IEditorAI
-	struct ITerraAIObserver *CreateTerraAIObserver( const int nAIMapSizeX, const int nAIMapSizeY );
+	struct ITerraAIObserver *CreateTerraAIObserver( const int nAIMapSizeX, const int nAIMapSizeY ) override;
 };

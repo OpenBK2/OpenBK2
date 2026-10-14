@@ -198,7 +198,7 @@ public:
 
 	virtual void OnGetFocus( bool bFocus );
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 
 	bool IsShiftDown() const
 	{
@@ -222,12 +222,12 @@ class CMouseTranslatorB1 : public CMouseTranslator
 	bool bUpdateDir;
 
 protected:
-	void OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDirect );
-	void OnButtonUp( const CVec2 &vPos );
-	void OnLButtonDown( const CVec2 &vPos, bool bObject );
-	void OnRButtonDown( const CVec2 &vPos, bool bObject );
-	void OnMinimapLButtonDown( const CVec2 &vPos, bool bTargetMode );
-	void OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMode );
+	void OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDirect ) override;
+	void OnButtonUp( const CVec2 &vPos ) override;
+	void OnLButtonDown( const CVec2 &vPos, bool bObject ) override;
+	void OnRButtonDown( const CVec2 &vPos, bool bObject ) override;
+	void OnMinimapLButtonDown( const CVec2 &vPos, bool bTargetMode ) override;
+	void OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMode ) override;
 
 public:
 	CMouseTranslatorB1()
@@ -248,7 +248,7 @@ class CMouseTranslatorB2Base : public CMouseTranslator
 	bool bWasForcedAction;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CMouseTranslator *)this );
 		OnSerialize( f );
@@ -271,18 +271,18 @@ private:
 	void CheckForcedAction();
 
 protected:
-	void OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDirect );
-	void OnButtonUp( const CVec2 &vPos );
-	void OnLButtonDown( const CVec2 &vPos, bool bObject );
-	void OnRButtonDown( const CVec2 &vPos, bool bObject );
-	void OnMinimapLButtonDown( const CVec2 &vPos, bool bTargetMode );
-	void OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMode );
+	void OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDirect ) override;
+	void OnButtonUp( const CVec2 &vPos ) override;
+	void OnLButtonDown( const CVec2 &vPos, bool bObject ) override;
+	void OnRButtonDown( const CVec2 &vPos, bool bObject ) override;
+	void OnMinimapLButtonDown( const CVec2 &vPos, bool bTargetMode ) override;
+	void OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMode ) override;
 
-	void CancelAction();
+	void CancelAction() override;
 
 	void MsgNotifyForcedAction( const SGameMessage &msg );
 
-	bool ProcessEvent( const SGameMessage &event );
+	bool ProcessEvent( const SGameMessage &event ) override;
 
 public:
 	CMouseTranslatorB2Base();
@@ -294,7 +294,7 @@ class CMouseTranslatorB2Game : public CMouseTranslatorB2Base
 	OBJECT_NOCOPY_METHODS( CMouseTranslatorB2Game );
 	ZDATA_( CMouseTranslatorB2Base )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CMouseTranslatorB2Base *)this );
 		return 0;
@@ -315,30 +315,30 @@ class CMouseTranslatorB2Replay : public CMouseTranslatorB2Base
 
 	ZDATA_( CMouseTranslatorB2Base )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CMouseTranslatorB2Base *)this );
 		return 0;
 	}
 
 protected:
-	void OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDirect )
+	void OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDirect ) override
 	{
 		CMouseTranslatorB2Base::OnMouseMove( vPos, bMouseMoveDirect );
 	}
 
-	void OnButtonUp( const CVec2 &vPos ) {}
+	void OnButtonUp( const CVec2 &vPos ) override {}
 
-	void OnLButtonDown( const CVec2 &vPos, bool bObject ) {}
+	void OnLButtonDown( const CVec2 &vPos, bool bObject ) override {}
 
-	void OnRButtonDown( const CVec2 &vPos, bool bObject ) {}
+	void OnRButtonDown( const CVec2 &vPos, bool bObject ) override {}
 
-	void OnMinimapLButtonDown( const CVec2 &vPos, bool bTargetMode )
+	void OnMinimapLButtonDown( const CVec2 &vPos, bool bTargetMode ) override
 	{
 		CMouseTranslatorB2Base::OnMinimapLButtonDown( vPos, bTargetMode );
 	}
 
-	void OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMode )
+	void OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMode ) override
 	{
 		CMouseTranslatorB2Base::OnMinimapRButtonDown( vPos, bTargetMode );
 	}

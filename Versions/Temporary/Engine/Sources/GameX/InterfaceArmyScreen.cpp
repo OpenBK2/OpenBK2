@@ -67,7 +67,7 @@ public:
 	std::wstring wszProfileUnitRank;
 	std::vector<SAbility> abilities;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eType );
 		f.Add( 3, &pDBReinf );
@@ -153,7 +153,7 @@ public:
 	SLastSeen lastSeen;
 	NDb::EReinforcementType eType;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &wszName );
 		f.Add( 3, &pIcon );
@@ -176,7 +176,7 @@ class CInterfaceArmyScreen::CReinfViewer : public IDataViewer
 
 public:
 	//{ IDataViewer
-	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
+	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const override;
 	//}
 };
 

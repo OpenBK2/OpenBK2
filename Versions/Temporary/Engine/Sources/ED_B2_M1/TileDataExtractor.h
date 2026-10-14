@@ -12,5 +12,5 @@ class CTileDataExtractor : public CBasicDataExtractor
 	                CArray2D<uint32_t> *pNormalImage,
 	                const std::string &rszObjectTypeName,
 	                const std::string &rszObjectName,
-	                IManipulator *pObjectManipulator );
+	                IManipulator *pObjectManipulator ) override;
 };

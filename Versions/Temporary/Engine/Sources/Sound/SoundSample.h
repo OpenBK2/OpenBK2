@@ -20,8 +20,8 @@ public:
 	}
 
 	CSoundSample();
-	~CSoundSample();
-	int operator&( IBinSaver &saver );
+	~CSoundSample() override;
+	int operator&( IBinSaver &saver ) override;
 #if !defined( _FINALRELEASE )
 	std::string GetName() const
 	{

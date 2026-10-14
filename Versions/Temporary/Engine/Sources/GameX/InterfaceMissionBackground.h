@@ -11,7 +11,7 @@ class CInterfaceMissionBackground : public CInterfaceMissionBase
 	CObj<IScenarioTracker> pScenarioTracker;
 
 	ZONSERIALIZE
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceMissionBase *)this );
 		f.Add( 2, &pScenarioTracker );
@@ -28,27 +28,27 @@ protected:
 	void OnSerialize( IBinSaver &saver );
 
 public:
-	bool StepLocal( bool bAppActive );
+	bool StepLocal( bool bAppActive ) override;
 
-	~CInterfaceMissionBackground();
+	~CInterfaceMissionBackground() override;
 
 public:
 	CInterfaceMissionBackground();
 
-	bool Init();
+	bool Init() override;
 };
 
 class CICMissionBackground : public CInterfaceCommandBase<CInterfaceMissionBackground>
 {
 	OBJECT_BASIC_METHODS( CICMissionBackground );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, (CInterfaceCommandBase<CInterfaceMissionBackground> *)( this ) );
 

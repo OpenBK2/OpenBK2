@@ -9,13 +9,13 @@ class CWindowScrollableContainer : public CWindowScrollableContainerBase
 	CPtr<NDb::SWindowScrollableContainer> pInstance;
 
 protected:
-	virtual NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
 
 public:
-	int operator&( IBinSaver &saver );
-	void InitByDesc( const struct NDb::SUIDesc *_pDesc );
-	virtual void Select( IWindow *pElement );
+	int operator&( IBinSaver &saver ) override;
+	void InitByDesc( const struct NDb::SUIDesc *_pDesc ) override;
+	void Select( IWindow *pElement ) override;
 };

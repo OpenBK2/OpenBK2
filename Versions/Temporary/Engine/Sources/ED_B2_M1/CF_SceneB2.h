@@ -8,5 +8,5 @@ class CCFSceneB2 : public CChildFrameBase
 
 public:
 	CCFSceneB2();
-	virtual ~CCFSceneB2();
+	~CCFSceneB2() override;
 };

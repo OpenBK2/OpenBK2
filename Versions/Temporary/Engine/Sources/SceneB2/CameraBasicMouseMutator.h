@@ -201,7 +201,7 @@ protected:
 public:
 	CCameraBasicMouseMutator();
 
-	bool ProcessEvent( const SGameMessage &msg );
+	bool ProcessEvent( const SGameMessage &msg ) override;
 	//
 	void ResetToDefault();
 	void SetLimits( const NCamera::ELimitsType eLimitsType, const NCamera::SCameraLimits &limits );
@@ -309,7 +309,7 @@ public:
 	}
 
 	//
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

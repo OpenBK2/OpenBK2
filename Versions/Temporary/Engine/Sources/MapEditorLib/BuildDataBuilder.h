@@ -23,12 +23,12 @@ protected:
 
 public:
 	// можно поменять значение по умолчанию для следужщего поля: ( *pbCanChangeObjectName ) = false;
-	virtual bool InsertObject( std::string *pszObjectTypeName,
-	                           std::string *pszUniqueObjectName,
-	                           bool bFromMainMenu,
-	                           bool *pbCanChangeObjectName,
-	                           bool *pbNeedExport,
-	                           bool *pbNeedEdit );
+	bool InsertObject( std::string *pszObjectTypeName,
+	                   std::string *pszUniqueObjectName,
+	                   bool bFromMainMenu,
+	                   bool *pbCanChangeObjectName,
+	                   bool *pbNeedExport,
+	                   bool *pbNeedEdit ) override;
 
-	bool IsUniqueObjectName( const std::string &szObjectType, const std::string &szObjectName );
+	bool IsUniqueObjectName( const std::string &szObjectType, const std::string &szObjectName ) override;
 };

@@ -70,7 +70,7 @@ class CAIMapVisitor : public CObjectBase
 	COrdinarySyncDst<IVisObj, NAI::IAIMap> dst;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &dst );
 		return 0;
@@ -107,8 +107,8 @@ class CSceneIconInfo : public CPtrFuncBase<NGScene::CObjectInfo>
 	CDBPtr<NDb::SAIGeometry> pAIGeometry;
 
 protected:
-	void Recalc();
-	bool NeedUpdate();
+	void Recalc() override;
+	bool NeedUpdate() override;
 	void OrientToViewer();
 
 	//
@@ -169,7 +169,7 @@ public:
 	}
 
 	//
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, &pCamera );
 		saver.Add( 2, &bUpdate );
@@ -198,9 +198,9 @@ class CVisObjReflectionInfo : public CPtrFuncBase<NGScene::CObjectInfo>
 	bool bWasUpdate;
 
 protected:
-	void Recalc();
+	void Recalc() override;
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return !bWasUpdate && pGeometry.Refresh();
 	}
@@ -231,7 +231,7 @@ public:
 	}
 
 	//
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, &pGeometry );
 		saver.Add( 2, &matr );
@@ -256,7 +256,7 @@ class CIconAIMapVisitor : public CObjectBase
 	COrdinarySyncDst<CSceneIconInfo, NAI::IAIMap> dst;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &dst );
 		return 0;
@@ -360,7 +360,7 @@ public:
 					pScreenFader;
 
 	ZONSERIALIZE
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pAbsTimer );
 		f.Add( 3, &pGameTimer );
@@ -488,7 +488,7 @@ class CScene : public IScene
 	ZONSERIALIZE
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &data );
 		f.Add( 3, &eScene );
@@ -507,7 +507,7 @@ private:
 protected:
 	CVec4 vBackgroundColor;
 
-	~CScene();
+	~CScene() override;
 
 	void OnSerialize( IBinSaver &saver );
 	//
@@ -561,27 +561,30 @@ protected:
 	                       NGScene::IGameView::SMeshInfo *pMeshInfo,
 	                       const bool bHasReflection );
 	//
-	void AddInterfaceObject(
-			IWindow *pScreen, int nID, const NDb::SModel *pModel, const CVec2 &vScreenPos, const CVec2 &vElementSize );
-	void RemoveInterfaceObject( IWindow *pScreen, const int nID );
+	void AddInterfaceObject( IWindow *pScreen,
+	                         int nID,
+	                         const NDb::SModel *pModel,
+	                         const CVec2 &vScreenPos,
+	                         const CVec2 &vElementSize ) override;
+	void RemoveInterfaceObject( IWindow *pScreen, const int nID ) override;
 	//
 	void CalcAverageOverdrawMsg( const SGameMessage &msg );
 	void ToggleShowMsg( const SGameMessage &msg, ESceneShow eShow );
 	void ShowTerrainGrid( ESceneShow eShow );
-	void UpdateGrid( int nMinX, int nMinY, int nMaxX, int nMaxY ); // interface for next function
-	void UpdateGrid( int nMinX, int nMinY, int nMaxX, int nMaxY, bool bAIGrid );
+	void UpdateGrid( int nMinX, int nMinY, int nMaxX, int nMaxY ) override; // interface for next function
+	void UpdateGrid( int nMinX, int nMinY, int nMaxX, int nMaxY, bool bAIGrid ) override;
 	//
 	void FadeObject( int nID, bool bFade );
 	void FadeObject( int nID, float fFade );
 	//
-	virtual void GetCoveredObjects( std::list<int> *pCoveredObjects,
-	                                const SObjectFilter &canBeCovered,
-	                                const SObjectFilter &canBeObstacle );
-	virtual void GetObstacleObjects( std::list<int> *pObstacleObjects,
-	                                 const CVec2 &vScreenPos1,
-	                                 const CVec2 &vScreenPos2,
-	                                 const SObjectFilter &canBeCovered,
-	                                 const SObjectFilter &canBeObstacle );
+	void GetCoveredObjects( std::list<int> *pCoveredObjects,
+	                        const SObjectFilter &canBeCovered,
+	                        const SObjectFilter &canBeObstacle ) override;
+	void GetObstacleObjects( std::list<int> *pObstacleObjects,
+	                         const CVec2 &vScreenPos1,
+	                         const CVec2 &vScreenPos2,
+	                         const SObjectFilter &canBeCovered,
+	                         const SObjectFilter &canBeObstacle ) override;
 	//
 	void AddReflectionFromObject( const NGScene::IGameView::SMeshInfo *pMeshInfo,
 	                              const NDb::SModel *pModel,
@@ -641,31 +644,31 @@ protected:
 public:
 	CScene();
 
-	void Init();
-	virtual void SwitchScene( const EScene eScene );
-	virtual const EScene GetCurrentScene() const;
-	virtual void SwitchSceneAfterLoad( const EScene eScene );
+	void Init() override;
+	void SwitchScene( const EScene eScene ) override;
+	const EScene GetCurrentScene() const override;
+	void SwitchSceneAfterLoad( const EScene eScene ) override;
 
-	bool SetupMode( ESceneMode eMode, bool bEditorMode );
+	bool SetupMode( ESceneMode eMode, bool bEditorMode ) override;
 
-	bool IsEditorMode()
+	bool IsEditorMode() override
 	{
 		return bEditorMode;
 	}
 
-	bool ToggleShow( ESceneShow eShow );
-	bool IsShowOn( ESceneShow eShow );
-	bool ToggleAIGeometryMode();
+	bool ToggleShow( ESceneShow eShow ) override;
+	bool IsShowOn( ESceneShow eShow ) override;
+	bool ToggleAIGeometryMode() override;
 	bool ToggleShowPassability();
 
-	void SetSceneConsts( const NDb::SSceneConsts *_pSceneConsts );
-	const NDb::SSceneConsts *GetSceneConsts();
+	void SetSceneConsts( const NDb::SSceneConsts *_pSceneConsts ) override;
+	const NDb::SSceneConsts *GetSceneConsts() override;
 	//
-	void ClearScene( const EScene eScene2Clear );
+	void ClearScene( const EScene eScene2Clear ) override;
 	//
-	struct ITerraManager *GetTerraManager();
+	struct ITerraManager *GetTerraManager() override;
 
-	bool DoesTerraManagerExist() const
+	bool DoesTerraManagerExist() const override
 	{
 		return data[eScene]->pTerraManager != 0;
 	}
@@ -679,100 +682,105 @@ public:
 	               ESceneObjAnimMode eAnimMode,
 	               NGScene::IGameView::SMeshInfo *pMeshInfo,
 	               const NDb::SModel *pLowLevelModel,
-	               const bool bHasReflection );
+	               const bool bHasReflection ) override;
 	//	AddObject with client-calculated matrix
 	int AddObject( const int nID,
 	               const NDb::SModel *pModel,
 	               const SHMatrix &mPlace,
 	               ESceneObjAnimMode eAnimMode,
 	               NGScene::IGameView::SMeshInfo *pMeshInfo,
-	               const bool bNeedReflection );
+	               const bool bNeedReflection ) override;
 
-	bool ChangeModel( const int nObjectID, const NDb::SModel *pModel );
-	virtual NAnimation::ISkeletonAnimator *GetAnimator( const int nID, bool bRefreshAnimator = true );
-	virtual NAnimation::ISkeletonAnimator *GetInterfaceObjAnimator( IWindow *pScreen, const int nID );
-	virtual NAnimation::ISkeletonAnimator *GetAnimator( const int nTargetID, const std::string &szBoneName );
-	virtual void AttachSubModel( const int nTargetID,
-	                             ESceneSubObjType eType,
-	                             const std::string &szBoneName,
-	                             const NDb::SModel *pSubModel,
-	                             ESceneAttachMode eMode,
-	                             const int nNumber,
-	                             bool bForceAnimated,
-	                             const bool bConstantOffset );
-	virtual void AttachSubModel( const int nTargetID,
-	                             ESceneSubObjType eType,
-	                             const NDb::SModel *pSubModel,
-	                             ESceneAttachMode eMode,
-	                             const int nNumber,
-	                             bool bForceAnimated,
-	                             const CVec3 &vOffset );
-	virtual struct IAttachedObject *GetAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber );
+	bool ChangeModel( const int nObjectID, const NDb::SModel *pModel ) override;
+	NAnimation::ISkeletonAnimator *GetAnimator( const int nID, bool bRefreshAnimator = true ) override;
+	NAnimation::ISkeletonAnimator *GetInterfaceObjAnimator( IWindow *pScreen, const int nID ) override;
+	NAnimation::ISkeletonAnimator *GetAnimator( const int nTargetID, const std::string &szBoneName ) override;
+	void AttachSubModel( const int nTargetID,
+	                     ESceneSubObjType eType,
+	                     const std::string &szBoneName,
+	                     const NDb::SModel *pSubModel,
+	                     ESceneAttachMode eMode,
+	                     const int nNumber,
+	                     bool bForceAnimated,
+	                     const bool bConstantOffset ) override;
+	void AttachSubModel( const int nTargetID,
+	                     ESceneSubObjType eType,
+	                     const NDb::SModel *pSubModel,
+	                     ESceneAttachMode eMode,
+	                     const int nNumber,
+	                     bool bForceAnimated,
+	                     const CVec3 &vOffset ) override;
+	struct IAttachedObject *GetAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber ) override;
 
-	virtual void RemoveAllAttached( const int nTargetID, ESceneSubObjType eType );
-	virtual void RemoveAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber );
+	void RemoveAllAttached( const int nTargetID, ESceneSubObjType eType ) override;
+	void RemoveAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber ) override;
 
-	virtual void AttachEffect( const int nTargetID,
-	                           ESceneSubObjType eType,
-	                           const std::string &szBoneName,
-	                           const NDb::SEffect *pEffect,
-	                           NTimer::STime timeStart,
-	                           ESceneAttachMode eMode,
-	                           bool bVertical = false );
-	virtual void AttachEffect( const int nTargetID,
-	                           ESceneSubObjType eType,
-	                           CFuncBase<SFBTransform> *pTransform,
-	                           const NDb::SEffect *pEffect,
-	                           NTimer::STime timeStart,
-	                           ESceneAttachMode eMode,
-	                           const int nBoneIndex = -1,
-	                           bool bVertical = false );
-	virtual void AttachEffect( const int nTargetID,
-	                           ESceneSubObjType eType,
-	                           const std::string &szBoneName,
-	                           const SHMatrix &mOffset,
-	                           const NDb::SEffect *pEffect,
-	                           NTimer::STime timeStart,
-	                           ESceneAttachMode eMode );
+	void AttachEffect( const int nTargetID,
+	                   ESceneSubObjType eType,
+	                   const std::string &szBoneName,
+	                   const NDb::SEffect *pEffect,
+	                   NTimer::STime timeStart,
+	                   ESceneAttachMode eMode,
+	                   bool bVertical = false ) override;
+	void AttachEffect( const int nTargetID,
+	                   ESceneSubObjType eType,
+	                   CFuncBase<SFBTransform> *pTransform,
+	                   const NDb::SEffect *pEffect,
+	                   NTimer::STime timeStart,
+	                   ESceneAttachMode eMode,
+	                   const int nBoneIndex = -1,
+	                   bool bVertical = false ) override;
+	void AttachEffect( const int nTargetID,
+	                   ESceneSubObjType eType,
+	                   const std::string &szBoneName,
+	                   const SHMatrix &mOffset,
+	                   const NDb::SEffect *pEffect,
+	                   NTimer::STime timeStart,
+	                   ESceneAttachMode eMode ) override;
 	// Attach light FX: to animated (with bone name) and to static objects (without bone name)
-	virtual void AttachLightEffect( const int nTargetID,
-	                                const NDb::SAttachedLightEffect *pLight,
-	                                NTimer::STime timeStart,
-	                                ESceneAttachMode eMode,
-	                                const bool bInEditor = false,
-	                                int nHoldID = -1 );
+	void AttachLightEffect( const int nTargetID,
+	                        const NDb::SAttachedLightEffect *pLight,
+	                        NTimer::STime timeStart,
+	                        ESceneAttachMode eMode,
+	                        const bool bInEditor = false,
+	                        int nHoldID = -1 ) override;
 
 	// add effect to scene. returns new ID
-	int AddEffect(
-			const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, const CQuat &qRot );
-	int AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace );
+	int AddEffect( const int nID,
+	               const NDb::SEffect *pEffect,
+	               NTimer::STime timeStart,
+	               const CVec3 &vPos,
+	               const CQuat &qRot ) override;
+	int AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace ) override;
 	void AddEffect( const int nID,
 	                const std::string &szBoneName,
 	                const NDb::SEffect *pEffect,
 	                NTimer::STime timeStart,
-	                const SHMatrix &mPlace );
+	                const SHMatrix &mPlace ) override;
 
-	void StopEffectGeneration( const int nID, NTimer::STime time );
+	void StopEffectGeneration( const int nID, NTimer::STime time ) override;
 
-	int AddPointLight( const int nID, const CVec3 &ptColor, const CVec3 &ptOrigin, float fR );
-	bool GetVisObjPlacement( const int nID, SFBTransform *pTransform ) const;
+	int AddPointLight( const int nID, const CVec3 &ptColor, const CVec3 &ptOrigin, float fR ) override;
+	bool GetVisObjPlacement( const int nID, SFBTransform *pTransform ) const override;
 	// remove object from scene by ID, returned by AddObject()
-	void RemoveObjectPickability( const int nID );
-	void RemoveObject( const int nID );
+	void RemoveObjectPickability( const int nID ) override;
+	void RemoveObject( const int nID ) override;
 	// move object
-	bool MoveObject( const int nID, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale = CVec3( 1, 1, 1 ) );
-	bool MoveObject( const int nID, const SHMatrix &mPlace );
+	bool
+	MoveObject( const int nID, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale = CVec3( 1, 1, 1 ) ) override;
+	bool MoveObject( const int nID, const SHMatrix &mPlace ) override;
 	// selection operations
-	void SelectObject( const int nID, const CVec3 &vPos, const float fSelScale, const NDb::ESelectionType eSelType );
-	void UnselectObject( const int nID );
+	void
+	SelectObject( const int nID, const CVec3 &vPos, const float fSelScale, const NDb::ESelectionType eSelType ) override;
+	void UnselectObject( const int nID ) override;
 	int AddSelection( int nID,
 	                  const CVec3 &vPos,
 	                  float fSelScale,
 	                  NDb::ESelectionType eSelType,
 	                  float fFadeInTime,
-	                  float fFadeOutTime );
-	void RemoveSelection( int nID );
-	void ClearSelection();
+	                  float fFadeOutTime ) override;
+	void RemoveSelection( int nID ) override;
+	void ClearSelection() override;
 	// tracks operations
 	void AddTrack( const int nID,
 	               const float fFadingSpeed,
@@ -782,26 +790,26 @@ public:
 	               const CVec2 &_v4,
 	               const CVec2 &vNorm,
 	               const float _fWidth,
-	               const float fAplha );
+	               const float fAplha ) override;
 	// traces
 	void AddShotTrace( const CVec3 &_vStart,
 	                   const CVec3 &_vEnd,
 	                   NTimer::STime _timeStart,
-	                   const NDb::SWeaponRPGStats::SShell *pShell );
+	                   const NDb::SWeaponRPGStats::SShell *pShell ) override;
 	// Weather (if pWeatherDesc is 0, switch off)
-	virtual void SwitchWeather( bool bActive, NTimer::STime timeLength );
+	void SwitchWeather( bool bActive, NTimer::STime timeLength ) override;
 	// explosions
-	void AddExplosion( const CVec2 &_vMin, const CVec2 &_vMax, const NDb::SMaterial *pMaterial );
-	void
-	AddDebris( const CVec2 &vSize, const CVec2 &vCenter, float fAngle, float fWidth, const NDb::SMaterial *pMaterial );
+	void AddExplosion( const CVec2 &_vMin, const CVec2 &_vMax, const NDb::SMaterial *pMaterial ) override;
+	void AddDebris(
+			const CVec2 &vSize, const CVec2 &vCenter, float fAngle, float fWidth, const NDb::SMaterial *pMaterial ) override;
 	// polyline
-	int AddPolyline( const int nID, const std::vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck );
+	int AddPolyline( const int nID, const std::vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck ) override;
 	int AddIndexedPolyline( const int nID,
 	                        const std::vector<CVec3> &points,
 	                        const std::vector<uint16_t> &indices,
 	                        const CVec4 &vColor,
-	                        bool bDepthCheck );
-	void RemovePolyline( const int nID );
+	                        bool bDepthCheck ) override;
+	void RemovePolyline( const int nID ) override;
 
 	// shoot areas
 	void AddShootArea( int nID,
@@ -810,63 +818,64 @@ public:
 	                   float fMinRadius,
 	                   float fMaxRadius,
 	                   const CVec3 &vColor,
-	                   const CVec2 &vCenter );
+	                   const CVec2 &vCenter ) override;
 
-	void AddKeyPointArea( const CVec2 &vCenter, float fRadius, const CVec3 &vColor );
-	void ClearKeyPointAreas();
+	void AddKeyPointArea( const CVec2 &vCenter, float fRadius, const CVec3 &vColor ) override;
+	void ClearKeyPointAreas() override;
 
-	void SetCircle( int nID, float fRadius, const CVec3 &vColor, float fWidth );
+	void SetCircle( int nID, float fRadius, const CVec3 &vColor, float fWidth ) override;
 
-	void AddLineMarker( int nID, const CVec2 &vStart, const CVec2 &vEnd, const CVec3 &vColor );
-	void ClearMarkers( ESceneMarkerType eType, int nID );
+	void AddLineMarker( int nID, const CVec2 &vStart, const CVec2 &vEnd, const CVec3 &vColor ) override;
+	void ClearMarkers( ESceneMarkerType eType, int nID ) override;
 	// picks
-	void PickTerrain( CVec3 *pvPos, const CVec2 &vScreenPos );
-	void PickZeroHeight( CVec3 *pvPos, const CVec2 &vScreenPos );
+	void PickTerrain( CVec3 *pvPos, const CVec2 &vScreenPos ) override;
+	void PickZeroHeight( CVec3 *pvPos, const CVec2 &vScreenPos ) override;
 	// pick objects; if objects is attached to CMOObj, then returns CMOObj ID
-	void PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos, const EPickObjectsClass ePickObjsClass );
+	void
+	PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos, const EPickObjectsClass ePickObjsClass ) override;
 	void PickObjects( std::list<int> &pickObjects,
 	                  const CVec2 &vScreenPos1,
 	                  const CVec2 &vScreenPos2,
 	                  EPickObjects eRadiusCoeff,
-	                  const EPickObjectsClass ePickObjsClass );
+	                  const EPickObjectsClass ePickObjsClass ) override;
 
-	virtual void PickAllObjects( const CVec3 &vAIPos1,
-	                             const CVec3 &vAIPos2,
-	                             std::list<SPickObjInfo> *pPickedObjects,
-	                             std::list<int> *pPickedAttached );
+	void PickAllObjects( const CVec3 &vAIPos1,
+	                     const CVec3 &vAIPos2,
+	                     std::list<SPickObjInfo> *pPickedObjects,
+	                     std::list<int> *pPickedAttached ) override;
 
 	// set scene light (re-light all scene)
-	void SetLight( const NDb::SAmbientLight *pLight );
+	void SetLight( const NDb::SAmbientLight *pLight ) override;
 	//
-	void Draw( NGScene::CRTPtr *pTarget );
+	void Draw( NGScene::CRTPtr *pTarget ) override;
 	// sound scene
 	void SetSoundSceneMode( const enum ESoundSceneMode eMode );
 
 	// UI screen manipulation
-	void AddScreen( struct IWindow *pScreen );
-	void RemoveScreen( struct IWindow *pScreen );
-	void RemoveAllScreens();
-	NGScene::I2DGameView *GetG2DView();
-	NGScene::IGameView *GetGView();
-	NGScene::IGameView *GetInterfaceView();
+	void AddScreen( struct IWindow *pScreen ) override;
+	void RemoveScreen( struct IWindow *pScreen ) override;
+	void RemoveAllScreens() override;
+	NGScene::I2DGameView *GetG2DView() override;
+	NGScene::IGameView *GetGView() override;
+	NGScene::IGameView *GetInterfaceView() override;
 
-	CCSTime *GetAbsTimer();
-	CCSTime *GetGameTimer();
-	void ResetTimer( const NTimer::STime &time );
+	CCSTime *GetAbsTimer() override;
+	CCSTime *GetGameTimer() override;
+	void ResetTimer( const NTimer::STime &time ) override;
 
-	IFullScreenFader *GetScreenFader();
+	IFullScreenFader *GetScreenFader() override;
 
 	//
-	CVec2 GetScreenRect();
-	void ShowObject( const int nID, const bool bShow );
-	void SetFadedObjects( const std::list<int> &objects );
-	void SetFadedObjects( const std::list<int> &objects, float fFade );
+	CVec2 GetScreenRect() override;
+	void ShowObject( const int nID, const bool bShow ) override;
+	void SetFadedObjects( const std::list<int> &objects ) override;
+	void SetFadedObjects( const std::list<int> &objects, float fFade ) override;
 	void GetObstacleObjects( std::list<int> *pObstacles, const std::list<int> &objects, const CVec2 &vScreenPos );
-	void ClearPostEffectObjects();
-	void AddPostEffectObjects( const std::list<int> &objects, const CVec4 &vColor );
+	void ClearPostEffectObjects() override;
+	void AddPostEffectObjects( const std::list<int> &objects, const CVec4 &vColor ) override;
 
 	// msg processing
-	virtual bool ProcessEvent( const SGameMessage &msg );
+	bool ProcessEvent( const SGameMessage &msg ) override;
 
 	// AI debug info
 	/*
@@ -880,25 +889,25 @@ public:
 	virtual void SetMarkerPosition( CObjectBase *pMarker, const list<CVec2> &tiles );
 	*/
 	// warfog
-	void SetWarFog( const CArray2D<unsigned char> &fog, float fScale );
-	void SetWarFogBlend( const float fBlend );
+	void SetWarFog( const CArray2D<unsigned char> &fog, float fScale ) override;
+	void SetWarFogBlend( const float fBlend ) override;
 
-	void AfterLoad();
+	void AfterLoad() override;
 
 	// icons
-	void SetIcon( const SSceneObjIconInfo &iconInfo );
-	void RemoveIcon( const int nID );
+	void SetIcon( const SSceneObjIconInfo &iconInfo ) override;
+	void RemoveIcon( const int nID ) override;
 	//
 	int AddSceneIcon( const int nID,
 	                  const CVec3 &vCenter,
 	                  const CVec2 &vSize,
 	                  const CVec2 &vTexMin,
 	                  const CVec2 &vTexMax,
-	                  const NDb::SMaterial *pMaterial );
-	void RemoveSceneIcon( const int nID );
-	void MoveSceneIcon( const int nID, const CVec3 &vCenter );
+	                  const NDb::SMaterial *pMaterial ) override;
+	void RemoveSceneIcon( const int nID ) override;
+	void MoveSceneIcon( const int nID, const CVec3 &vCenter ) override;
 
-	CWindController *GetWindController()
+	CWindController *GetWindController() override
 	{
 		return data[eScene]->pWindController;
 	}
@@ -906,28 +915,28 @@ public:
 	//
 	bool MakeMapShot( const SGameMessage &msg );
 
-	virtual float GetZ( float x, float y ) const;
-	float GetTileHeight( int nX, int nY ) const;
-	virtual void UpdateZ( CVec3 *pvPos );
-	virtual uint32_t GetNormal( const CVec2 &vPoint ) const;
-	virtual bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
-	virtual bool GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
-	virtual void InitHeights4Editor( int nSizeX, int nSizeY );
+	float GetZ( float x, float y ) const override;
+	float GetTileHeight( int nX, int nY ) const override;
+	void UpdateZ( CVec3 *pvPos ) override;
+	uint32_t GetNormal( const CVec2 &vPoint ) const override;
+	bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const override;
+	bool GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const override;
+	void InitHeights4Editor( int nSizeX, int nSizeY ) override;
 
-	virtual NAI::IAIMap *GetAIMap() const
+	NAI::IAIMap *GetAIMap() const override
 	{
 		return data[eScene]->pAIMap;
 	}
 
-	virtual void AddAttachedMapping( int nAttachObjID, int nMapObjID );
-	virtual void RemoveAttachedMapping( int nAttachObjID );
+	void AddAttachedMapping( int nAttachObjID, int nMapObjID ) override;
+	void RemoveAttachedMapping( int nAttachObjID ) override;
 
-	virtual CSyncSrc<IVisObj> *GetSyncSrc() const;
+	CSyncSrc<IVisObj> *GetSyncSrc() const override;
 
-	bool SetGSceneInternal( bool bIsInternal );
+	bool SetGSceneInternal( bool bIsInternal ) override;
 	//
-	virtual void SetBackgroundColor( const CVec3 &rvBackgroundColor );
-	virtual CVec4 SetBackgroundColor( const CVec4 &rvBackgroundColor );
+	void SetBackgroundColor( const CVec3 &rvBackgroundColor ) override;
+	CVec4 SetBackgroundColor( const CVec4 &rvBackgroundColor ) override;
 
-	virtual bool ToggleGetSizeFromTarget( bool bGetSizesFromTarget );
+	bool ToggleGetSizeFromTarget( bool bGetSizesFromTarget ) override;
 };

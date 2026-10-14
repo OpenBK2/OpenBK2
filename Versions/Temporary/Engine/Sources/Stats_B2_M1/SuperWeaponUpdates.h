@@ -20,7 +20,7 @@ public:
 	CDBPtr<NDb::SHPObjectRPGStats> pUnit; // use this unit for superweapon stats
 	bool bEnabled = {};                   // this player has super weapon, show button (if its me)
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nPlayer );
@@ -59,7 +59,7 @@ public:
 	int nPlayer = {};
 	float fPartComplete = {}; // for recycle time, from 0.0 to 1.0
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &nPlayer );

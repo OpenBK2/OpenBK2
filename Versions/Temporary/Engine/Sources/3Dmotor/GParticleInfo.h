@@ -165,14 +165,14 @@ public:
 	{
 	}
 
-	void AddParticles( IParticleOutput *pRender );
+	void AddParticles( IParticleOutput *pRender ) override;
 
-	virtual bool IsEmpty() const
+	bool IsEmpty() const override
 	{
 		return frames.empty();
 	}
 
-	void SetFade( float fVal )
+	void SetFade( float fVal ) override
 	{
 		fFade = fVal;
 	}
@@ -181,7 +181,7 @@ public:
 class CRainParticleEffect : public CParticleEffect
 {
 	OBJECT_BASIC_METHODS( CRainParticleEffect );
-	void AddParticles( IParticleOutput *pRender );
+	void AddParticles( IParticleOutput *pRender ) override;
 
 public:
 	std::vector<CVec3> positions;

@@ -18,7 +18,7 @@ public:
 		pSFX = Singleton<ISFX>();
 	}
 
-	virtual ~CSubstSound()
+	~CSubstSound() override
 	{
 		if ( pSFX )
 		{
@@ -31,5 +31,5 @@ public:
 		return pSample;
 	}
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

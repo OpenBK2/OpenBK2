@@ -13,207 +13,209 @@ class CUIWindow : public IWindow
 public:
 	CUIWindow();
 	CUIWindow( int x, int y, int w, int h, uint32_t _color, const NDb::STexture *_pTexture );
-	virtual ~CUIWindow();
+	~CUIWindow() override;
 
 	// IWindow
-	virtual int GetPriority() const
+	int GetPriority() const override
 	{
 		return 777;
 	}
 
-	virtual void SetPriority( int n ) {}
+	void SetPriority( int n ) override {}
 
-	bool ProcessEvent( const struct SGameMessage &msg )
+	bool ProcessEvent( const struct SGameMessage &msg ) override
 	{
 		return false;
 	}
 
-	bool ProcessMessage( const struct SBUIMessage &msg )
+	bool ProcessMessage( const struct SBUIMessage &msg ) override
 	{
 		return false;
 	}
 
-	void SetModal( bool _bIsModal ) {}
+	void SetModal( bool _bIsModal ) override {}
 
-	bool IsModal() const
+	bool IsModal() const override
 	{
 		return false;
 	}
 
-	bool OnButtonDown( const CVec2 &vPos, const int nButton )
+	bool OnButtonDown( const CVec2 &vPos, const int nButton ) override
 	{
 		return false;
 	}
 
-	bool OnButtonUp( const CVec2 &vPos, const int nButton )
+	bool OnButtonUp( const CVec2 &vPos, const int nButton ) override
 	{
 		return false;
 	}
 
-	bool OnButtonDblClk( const CVec2 &vPos, const int nButton )
+	bool OnButtonDblClk( const CVec2 &vPos, const int nButton ) override
 	{
 		return false;
 	}
 
-	bool OnMouseMove( const CVec2 &vPos, const int nMouseState )
+	bool OnMouseMove( const CVec2 &vPos, const int nMouseState ) override
 	{
 		return false;
 	}
 
-	IWindow *Pick( const CVec2 &vPos, const bool bRecursive )
+	IWindow *Pick( const CVec2 &vPos, const bool bRecursive ) override
 	{
 		return 0;
 	}
 
-	bool IsPointInsideOfChildren( const CVec2 &vPoint )
+	bool IsPointInsideOfChildren( const CVec2 &vPoint ) override
 	{
 		return false;
 	}
 
-	void Visit( struct IUIVisitor *pVisitor );
+	void Visit( struct IUIVisitor *pVisitor ) override;
 
 	//void Segment( const int timeDiff ) { }
-	bool IsInside( const CVec2 &vPos ) const
+	bool IsInside( const CVec2 &vPos ) const override
 	{
 		return true;
 	}
 
-	void Enable( const bool bEnable ) {}
+	void Enable( const bool bEnable ) override {}
 
-	bool IsEnabled() const
+	bool IsEnabled() const override
 	{
 		return true;
 	}
 
-	void ShowWindow( const bool bShow ) {}
+	void ShowWindow( const bool bShow ) override {}
 
-	bool IsVisible() const
+	bool IsVisible() const override
 	{
 		return true;
 	}
 
-	void GetPlacement( int *pX, int *pY, int *pSizeX, int *pSizeY ) const {}
+	void GetPlacement( int *pX, int *pY, int *pSizeX, int *pSizeY ) const override {}
 
-	void SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const uint32_t flags ) {}
+	void SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const uint32_t flags ) override
+	{
+	}
 
-	CTRect<int> GetPlacement() const
+	CTRect<int> GetPlacement() const override
 	{
 		return CTRect<int>( 0, 0, 0, 0 );
 	}
 
-	void SetPlacement( const CTRect<int> &rc, const uint32_t flags ) {}
+	void SetPlacement( const CTRect<int> &rc, const uint32_t flags ) override {}
 
-	void AddChild( IWindow *pWnd, bool bDoReposition = false ) {}
+	void AddChild( IWindow *pWnd, bool bDoReposition = false ) override {}
 
-	int GetNumChildren()
+	int GetNumChildren() override
 	{
 		return 0;
 	}
 
-	IWindow *GetChild( int nIndex )
+	IWindow *GetChild( int nIndex ) override
 	{
 		return 0;
 	}
 
-	IWindow *GetChild( const std::string &_szName, const bool bRecursive = false )
+	IWindow *GetChild( const std::string &_szName, const bool bRecursive = false ) override
 	{
 		return 0;
 	}
 
-	IWindow *GetVisibleChild( const std::string &_szName, const bool bRecursive = false )
+	IWindow *GetVisibleChild( const std::string &_szName, const bool bRecursive = false ) override
 	{
 		return 0;
 	}
 
-	void CopyBackground( const IWindow *pSrcWnd ) {}
+	void CopyBackground( const IWindow *pSrcWnd ) override {}
 
-	void SetTexture( const struct NDb::STexture *pDesc ) {}
+	void SetTexture( const struct NDb::STexture *pDesc ) override {}
 
-	void InitByDesc( const struct NDb::SUIDesc *pDesc ) {}
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override {}
 
-	void RegisterObservers() {}
+	void RegisterObservers() override {}
 
 	void SetOutline( int eOutlineType ) {}
 
-	void SetTextString( const std::wstring &szText ) {}
+	void SetTextString( const std::wstring &szText ) override {}
 
-	const wchar_t *GetTextString() const
+	const wchar_t *GetTextString() const override
 	{
 		return 0;
 	}
 
-	virtual std::wstring GetDBText() const
+	std::wstring GetDBText() const override
 	{
 		return std::wstring();
 	}
 
-	SWindowContext *GetContext()
+	SWindowContext *GetContext() override
 	{
 		return 0;
 	}
 
-	void Init() {}
+	void Init() override {}
 
-	const struct NDb::SUIDesc *GetDesc() const
+	const struct NDb::SUIDesc *GetDesc() const override
 	{
 		return 0;
 	}
 
-	void FillWindowRect( CTRect<float> *pRect ) const {}
+	void FillWindowRect( CTRect<float> *pRect ) const override {}
 
-	CTRect<float> GetWindowRect() const
+	CTRect<float> GetWindowRect() const override
 	{
 		return CTRect<float>( 0, 0, 0, 0 );
 	}
 
-	IWindow *GetParentWindow() const
+	IWindow *GetParentWindow() const override
 	{
 		return 0;
 	}
 
-	struct IScreen *GetScreen()
+	struct IScreen *GetScreen() override
 	{
 		return 0;
 	}
 
-	const struct NDb::SWindowShared *GetSharedDesc() const
+	const struct NDb::SWindowShared *GetSharedDesc() const override
 	{
 		return 0;
 	}
 
-	void RemoveChild( IWindow *_pChild ) {}
+	void RemoveChild( IWindow *_pChild ) override {}
 
-	IWindow *GetChild( const int _nTypeID, const int _nID, const bool bRecursive = false )
+	IWindow *GetChild( const int _nTypeID, const int _nID, const bool bRecursive = false ) override
 	{
 		return 0;
 	}
 
-	const std::string &GetName() const
+	const std::string &GetName() const override
 	{
 		return szFakeName;
 	}
 
-	void SetName( const std::string &szName ) {}
+	void SetName( const std::string &szName ) override {}
 
 	// help context
-	void SetTooltipIDForMLHandler( int nID ) {}
+	void SetTooltipIDForMLHandler( int nID ) override {}
 
-	int GetTooltipIDForMLHandler() const
+	int GetTooltipIDForMLHandler() const override
 	{
 		return -1;
 	}
 
-	virtual void SetFocus( const bool bFocus )
+	void SetFocus( const bool bFocus ) override
 	{
 		return;
 	}
 
-	bool IsFocused() const
+	bool IsFocused() const override
 	{
 		return false;
 	}
 
-	void SetFadeValue( float fValue ) {}
+	void SetFadeValue( float fValue ) override {}
 
 	// methods
 

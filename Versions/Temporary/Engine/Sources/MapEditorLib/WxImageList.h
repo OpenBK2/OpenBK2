@@ -115,7 +115,7 @@ public:
 		return &imageList;
 	}
 
-	virtual void *GetNativeImageList()
+	void *GetNativeImageList() override
 	{
 		return &imageList;
 	}

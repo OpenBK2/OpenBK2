@@ -15,7 +15,7 @@ public:
 		parts.push_back( pPart );
 	}
 
-	int operator&( CStructureSaver &f )
+	int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 1, &parts );
 		return 0;
@@ -29,7 +29,7 @@ class CRenderNode : public CObjectSet<CObjectBase>
 public:
 	ZDATA_( CObjectSet<CObjectBase> )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CObjectSet<CObjectBase> *)this );
 		return 0;

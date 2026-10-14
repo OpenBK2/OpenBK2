@@ -38,7 +38,7 @@ class CWindowPlayer : public CWindow, public IPlayer
 	CDBPtr<NDb::SWindowPlayerShared> pShared;
 
 protected:
-	virtual NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
@@ -47,26 +47,26 @@ protected:
 	void UpdatePlayer();
 
 public:
-	int operator&( IBinSaver &saver );
-	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
-	virtual void Reposition( const CTRect<float> &parentRect );
+	int operator&( IBinSaver &saver ) override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
+	void Reposition( const CTRect<float> &parentRect ) override;
 
-	virtual void Visit( struct IUIVisitor *pVisitor );
+	void Visit( struct IUIVisitor *pVisitor ) override;
 
 	//IPlayer{
-	virtual void SetSequence( const std::string &szFileName );
-	virtual void Play();
-	virtual bool Stop();
-	virtual bool Pause( bool bPause );
-	virtual bool IsPlaying() const;
-	virtual bool IsPaused() const;
-	virtual void SkipMovie();
-	virtual void SkipSequence();
+	void SetSequence( const std::string &szFileName ) override;
+	void Play() override;
+	bool Stop() override;
+	bool Pause( bool bPause ) override;
+	bool IsPlaying() const override;
+	bool IsPaused() const override;
+	void SkipMovie() override;
+	void SkipSequence() override;
 
-	int GetCurrentFrame() const;
-	void SetCurrentFrame( int nFrame );
-	int GetNumFrames() const;
+	int GetCurrentFrame() const override;
+	void SetCurrentFrame( int nFrame ) override;
+	int GetNumFrames() const override;
 
-	virtual void PlayFragment( int nStartFrame, int nEndFrame, int nFrameSkip = 0 );
+	void PlayFragment( int nStartFrame, int nEndFrame, int nFrameSkip = 0 ) override;
 	//IPlayer}
 };

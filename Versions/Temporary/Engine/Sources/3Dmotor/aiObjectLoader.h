@@ -55,7 +55,7 @@ class CLoadAIGeometryFromA5Exporter : public NGScene::CResourceLoader<int, CGeom
 	OBJECT_BASIC_METHODS( CLoadAIGeometryFromA5Exporter );
 
 protected:
-	virtual void Recalc();
+	void Recalc() override;
 };
 
 class CLoadAIGeometryFromGranny : public CHoldedPtrFuncBase<CGeometryInfo>
@@ -67,15 +67,15 @@ class CLoadAIGeometryFromGranny : public CHoldedPtrFuncBase<CGeometryInfo>
 	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo>> pData;
 	CDBPtr<NDb::SAIGeometry> pGeometry;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pData );
 		f.Add( 3, &pGeometry );
 		return 0;
 	}
 
-	bool NeedUpdate();
-	void Recalc();
+	bool NeedUpdate() override;
+	void Recalc() override;
 
 public:
 	void SetKey( const NDb::SAIGeometry *pGeometry );
@@ -98,13 +98,13 @@ protected:
 	ZDATA
 	CPtr<CMemObject> pMemObject;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pMemObject );
 		return 0;
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CMemGeometryInfo( CMemObject *p = 0 )
@@ -137,7 +137,7 @@ class CFileSkinPointsLoadFromA5Exporter : public NGScene::CResourceLoader<int, C
 	OBJECT_BASIC_METHODS( CFileSkinPointsLoadFromA5Exporter );
 
 protected:
-	virtual void Recalc();
+	void Recalc() override;
 };
 
 class CFileSkinPointsLoadFromGranny : public CHoldedPtrFuncBase<CFileSkinPoints>
@@ -150,7 +150,7 @@ class CFileSkinPointsLoadFromGranny : public CHoldedPtrFuncBase<CFileSkinPoints>
 	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo>> pSkeletonData;
 	SAISkinKey key;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pData );
 		f.Add( 3, &pSkeletonData );
@@ -158,8 +158,8 @@ class CFileSkinPointsLoadFromGranny : public CHoldedPtrFuncBase<CFileSkinPoints>
 		return 0;
 	}
 
-	bool NeedUpdate();
-	void Recalc();
+	bool NeedUpdate() override;
+	void Recalc() override;
 
 public:
 	// Legacy Granny cache key overload retained for save/replay compatibility.
@@ -176,7 +176,7 @@ class CSkinner : public CPtrFuncBase<CGeometryInfo>
 
 	//bool bDoPrecalc;
 	//CPrecalcPieces setTrees;
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pAnimation );
 		f.Add( 3, &pSkin );
@@ -184,12 +184,12 @@ class CSkinner : public CPtrFuncBase<CGeometryInfo>
 	}
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pAnimation.Refresh() | pSkin.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CSkinner() {}

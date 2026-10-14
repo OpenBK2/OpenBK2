@@ -23,11 +23,11 @@ protected:
 
 public:
 	CChildFrameBase();
-	virtual ~CChildFrameBase();
+	~CChildFrameBase() override;
 
 	//IChildFrame interface
-	virtual bool Create();
-	virtual void Destroy();
-	virtual void Enter();
-	virtual void Leave();
+	bool Create() override;
+	void Destroy() override;
+	void Enter() override;
+	void Leave() override;
 };

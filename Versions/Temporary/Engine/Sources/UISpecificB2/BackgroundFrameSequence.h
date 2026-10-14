@@ -18,7 +18,7 @@ class CBackgroundFrameSequence : public CBackground
 	int nFrame;
 	int nTime;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CBackground *)this );
 		f.Add( 2, &pStats );
@@ -34,8 +34,8 @@ public:
 	CBackgroundFrameSequence();
 
 	//{ IWindowPart
-	void InitByDesc( const struct NDb::SUIDesc *pDesc );
-	void Visit( struct IUIVisitor *pVisitor );
-	void SetTexture( const struct NDb::STexture *pDesc );
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
+	void Visit( struct IUIVisitor *pVisitor ) override;
+	void SetTexture( const struct NDb::STexture *pDesc ) override;
 	//}
 };

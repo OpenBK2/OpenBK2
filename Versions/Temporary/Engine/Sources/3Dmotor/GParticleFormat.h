@@ -186,8 +186,8 @@ public:
 class _3DMOTOR_EXPORT CParticlesLoader : public CLazyResourceLoader<int, CParticlesInfo>
 {
 	OBJECT_BASIC_METHODS( CParticlesLoader );
-	virtual CFileRequest *CreateRequest();
-	virtual void RecalcValue( CFileRequest *p );
+	CFileRequest *CreateRequest() override;
+	void RecalcValue( CFileRequest *p ) override;
 };
 
 } // namespace NGScene

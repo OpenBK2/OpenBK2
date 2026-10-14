@@ -570,7 +570,7 @@ public:
 	{
 	}
 
-	virtual const NDb::SVisObj *Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj )
+	const NDb::SVisObj *Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj ) override
 	{
 		const std::vector<NDb::SAttachedModelVisObj::SSDamageLevel> &damageLevels = pAttachedVisObj->damageLevels;
 		return damageLevels.size() > nDamageLevel && damageLevels[nDamageLevel].pVisObj ? damageLevels[nDamageLevel].pVisObj
@@ -583,7 +583,7 @@ struct SChooseAttachedToAnimable : public CMOUnit::IChooseAttached
 	OBJECT_NOCOPY_METHODS( SChooseAttachedToAnimable );
 
 public:
-	virtual const NDb::SVisObj *Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj )
+	const NDb::SVisObj *Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj ) override
 	{
 		return pAttachedVisObj->pAnimableModel;
 	}
@@ -594,7 +594,7 @@ struct SChooseAttachedToTransportable : public CMOUnit::IChooseAttached
 	OBJECT_NOCOPY_METHODS( SChooseAttachedToTransportable );
 
 public:
-	virtual const NDb::SVisObj *Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj )
+	const NDb::SVisObj *Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj ) override
 	{
 		return pAttachedVisObj->pTransportableModel;
 	}

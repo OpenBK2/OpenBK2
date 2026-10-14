@@ -216,7 +216,7 @@ class CGlobalWarFog : public CAIObjectBase
 	CUpdateUnitContainer updateUnitList;
 	ZONSERIALIZE
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nSizeX );
 		f.Add( 3, &nSizeY );

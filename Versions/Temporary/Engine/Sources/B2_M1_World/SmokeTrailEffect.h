@@ -23,7 +23,7 @@ class CSmokeTrailEffect : public CObjectBase
 	float fTimeLastUpdate = 0.0f;
 	CVec3 vLastVisPos;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pEffect );
 		f.Add( 3, &fInterval );

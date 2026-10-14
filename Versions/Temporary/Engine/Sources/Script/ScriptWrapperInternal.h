@@ -27,15 +27,15 @@ class CScriptWrapper : public IScriptWrapper
 	}
 
 public:
-	void Init();
-	void AddRegFunctions( const SRegFunction *pRegList );
-	void Segment();
-	int CallScriptFunction( const char *pszFunction, const bool bLogToConsole = false );
-	int RunScriptFile( const char *szFileName );
-	int RunScriptByID( int nID );
-	int RunScript( const char *pszScriptText );
+	void Init() override;
+	void AddRegFunctions( const SRegFunction *pRegList ) override;
+	void Segment() override;
+	int CallScriptFunction( const char *pszFunction, const bool bLogToConsole = false ) override;
+	int RunScriptFile( const char *szFileName ) override;
+	int RunScriptByID( int nID ) override;
+	int RunScript( const char *pszScriptText ) override;
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, &script );
 		return 0;

@@ -9,7 +9,7 @@ class CWindowSimple : public CWindow
 	bool bScrollViewport = false;
 
 protected:
-	virtual NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
@@ -21,7 +21,7 @@ public:
 		bScrollViewport = true;
 	}
 
-	virtual int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, static_cast<CWindow *>( this ) );
 		saver.Add( 2, &pInstance );
@@ -29,9 +29,9 @@ public:
 		return 0;
 	}
 
-	virtual void Visit( struct IUIVisitor *pVisitor );
+	void Visit( struct IUIVisitor *pVisitor ) override;
 
-	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc )
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override
 	{
 		pInstance = checked_cast<const NDb::SWindowSimple *>( pDesc )->Duplicate();
 		CWindow::InitByDesc( pDesc );

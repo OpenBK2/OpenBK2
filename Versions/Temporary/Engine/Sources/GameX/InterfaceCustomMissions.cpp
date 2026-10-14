@@ -23,7 +23,7 @@ public:
 	ZDATA
 	std::wstring wszText;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &wszText );
 		return 0;
@@ -41,7 +41,7 @@ class CDifficultyTextViewer : public IDataViewer
 {
 	OBJECT_NOCOPY_METHODS( CDifficultyTextViewer )
 public:
-	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
+	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const override;
 };
 
 // CDifficultyTextViewer

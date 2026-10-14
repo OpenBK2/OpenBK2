@@ -14,7 +14,7 @@ public:
 	ZDATA
 	CPtr<SGameInfo> pInitialGameInfo;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pInitialGameInfo );
 		return 0;
@@ -44,7 +44,7 @@ public:
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nGameID = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nGameID );
 		return 0;
@@ -66,7 +66,7 @@ public:
 	ZDATA
 	int nGameID = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nGameID );
 		return 0;
@@ -89,7 +89,7 @@ public:
 	ZDATA
 	int nGameID = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nGameID );
 		return 0;
@@ -113,7 +113,7 @@ public:
 	int nGameID = {};
 	std::string szPassword;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nGameID );
 		f.Add( 3, &szPassword );
@@ -139,7 +139,7 @@ public:
 	ZDATA
 	int nGameID = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nGameID );
 		return 0;
@@ -162,7 +162,7 @@ public:
 	ZDATA
 	int nGameID = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nGameID );
 		return 0;
@@ -193,7 +193,7 @@ public:
 	ZDATA
 	EReason eReason = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eReason );
 		return 0;
@@ -220,7 +220,7 @@ public:
 	ZDATA
 	int nGame = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nGame );
 		return 0;
@@ -241,7 +241,7 @@ class CGameClientRemoved : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CGameClientRemoved )
 public:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
@@ -260,7 +260,7 @@ class CNewGameClient : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CNewGameClient )
 public:
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
@@ -282,7 +282,7 @@ public:
 	int nKicked = {};
 	int nGameID = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nKicked );
 		f.Add( 3, &nGameID );
@@ -308,7 +308,7 @@ public:
 	ZDATA
 	int nKicked = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nKicked );
 		return 0;
@@ -331,7 +331,7 @@ public:
 	ZDATA
 	SGameInfo gameInfo;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &gameInfo );
 		return 0;
@@ -355,7 +355,7 @@ public:
 	int nGameID = {};
 	CPtr<CNetPacket> pInfo;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nGameID );
 		f.Add( 3, &pInfo );
@@ -384,7 +384,7 @@ public:
 	std::list<SGameInfo> added;
 	std::list<SGameInfo> changed;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &dwVersion );
 		f.Add( 3, &bFullUpdate );
@@ -411,7 +411,7 @@ public:
 	int nNumber = {};
 	std::string szStr;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nNumber );
 		f.Add( 3, &szStr );
@@ -436,7 +436,7 @@ public:
 	int nNumber = {};
 	std::string szStr;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nNumber );
 		f.Add( 3, &szStr );
@@ -463,7 +463,7 @@ public:
 	int nServerID = {};
 	int nConnection = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nServerID );
 		f.Add( 3, &nConnection );
@@ -488,7 +488,7 @@ public:
 	ZDATA
 	int nConnection = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nConnection );
 		return 0;
@@ -512,7 +512,7 @@ public:
 	int nClient2Connect = {};
 	int nMyConnect = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nClient2Connect );
 		f.Add( 3, &nMyConnect );
@@ -537,7 +537,7 @@ public:
 	ZDATA
 	std::list<int> clients;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &clients );
 		return 0;
@@ -561,7 +561,7 @@ public:
 	int nPort = {};
 	int nClient2Connect = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szIP );
 		f.Add( 3, &nPort );
@@ -590,7 +590,7 @@ public:
 	int nPort = {};
 	int nWantedClient = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szIP );
 		f.Add( 3, &nPort );
@@ -617,7 +617,7 @@ public:
 	ZDATA
 	int nServerID = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nServerID );
 		return 0;
@@ -640,7 +640,7 @@ public:
 	int nClientWith = {};
 	int nGameID = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nClientWith );
 		f.Add( 3, &nGameID );
@@ -664,7 +664,7 @@ public:
 	ZDATA
 	int nDeadClient = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nDeadClient );
 		return 0;
@@ -688,7 +688,7 @@ public:
 	int nClient = {};
 	CPtr<CNetPacket> pGamePacket;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nClient );
 		f.Add( 3, &pGamePacket );
@@ -714,7 +714,7 @@ public:
 	int nSendTime = {};
 	int nFromID = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nSendTime );
 		f.Add( 3, &nFromID );

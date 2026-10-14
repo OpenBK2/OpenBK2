@@ -38,45 +38,45 @@ class CMPManagerModeNivalNet : public CMPManagerMode
 	bool bAwaitingLadderStatsChange;
 	NTimer::STime timeOutLadderGame;
 
-	virtual const int GetOwnClientID()
+	const int GetOwnClientID() override
 	{
 		return nMyClientID;
 	}
 
-	virtual const bool IsInGameRoom() const
+	const bool IsInGameRoom() const override
 	{
 		return ( eState == EGS_GAME_ROOM || eState == EGS_JOINING || eState == EGS_LADDER_WAIT_CLIENTS );
 	}
 
-	virtual const bool IsGameRunning() const
+	const bool IsGameRunning() const override
 	{
 		return ( eState == EGS_GAME_STARTED );
 	}
 
-	virtual const bool IsGameHost() const
+	const bool IsGameHost() const override
 	{
 		return ( eState == EGS_GAME_ROOM && bHost );
 	}
 
-	virtual void UpdateGameList();
-	virtual void TryToCreateGame();
-	virtual void TryToJoinGame( const SNetGameInfo &game );
-	virtual void OnSetMySlotNumber();
-	virtual void OnLeaveGame();
+	void UpdateGameList() override;
+	void TryToCreateGame() override;
+	void TryToJoinGame( const SNetGameInfo &game ) override;
+	void OnSetMySlotNumber() override;
+	void OnLeaveGame() override;
 
-	virtual void OnGameRoomClientAdded() {}
+	void OnGameRoomClientAdded() override {}
 
-	virtual void OnGameRoomClientRemoved() {}
+	void OnGameRoomClientRemoved() override {}
 
-	virtual void OnGameSpecificInfo();
-	virtual void StartGame();
-	virtual void EndGame();
-	virtual void KickPlayerFromSlot( const int nSlot );
-	virtual void OnSurrender();
+	void OnGameSpecificInfo() override;
+	void StartGame() override;
+	void EndGame() override;
+	void KickPlayerFromSlot( const int nSlot ) override;
+	void OnSurrender() override;
 	void BroadcastGameControlPacket( CNetPacket *pPacket ) override;
-	virtual void OnGameControlHostChanged( int nOldHostClientID, int nNewHostClientID, int nRemovedClientID );
+	void OnGameControlHostChanged( int nOldHostClientID, int nNewHostClientID, int nRemovedClientID ) override;
 
-	void CheckJoinGameConditions();
+	void CheckJoinGameConditions() override;
 	void SetServerGameInfo( struct SGameInfo *pInfo );
 	bool ShouldSendHeartbeatNow();
 	void RefreshServerGameKeepalive( bool bUpdateGameInfo, const char *szReason, int nRemovedClientID );
@@ -129,14 +129,14 @@ class CMPManagerModeNivalNet : public CMPManagerMode
 	//}
 public:
 	CMPManagerModeNivalNet();
-	bool Segment();
+	bool Segment() override;
 
-	virtual const ENetMode GetMode() const
+	const ENetMode GetMode() const override
 	{
 		return ENM_NIVAL_NET;
 	}
 
-	virtual void SetLanTester( class CLANTester *_pLANTester )
+	void SetLanTester( class CLANTester *_pLANTester ) override
 	{
 		NI_ASSERT( 0, "Wrong call" )
 	}

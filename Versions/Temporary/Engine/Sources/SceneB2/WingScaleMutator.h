@@ -12,7 +12,7 @@ class CWingScaleMutator : public IWingScaleMutator
 	int nStaticWing;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &fScale );
 		f.Add( 3, &bShowStatic );
@@ -30,18 +30,19 @@ public:
 	{
 	}
 
-	bool
-	Setup( ISkeletonAnimator *pAnimator, const std::string &szScaledWingPrefix, const std::string &szStaticWingName );
+	bool Setup( ISkeletonAnimator *pAnimator,
+	            const std::string &szScaledWingPrefix,
+	            const std::string &szStaticWingName ) override;
 
-	void SetScale( const float _fScale )
+	void SetScale( const float _fScale ) override
 	{
 		fScale = _fScale;
 	}
 
-	void ShowStatic( const bool bShow )
+	void ShowStatic( const bool bShow ) override
 	{
 		bShowStatic = bShow;
 	}
 
-	void MutateSkeletonPose( NAnimation::SSkeletonPose *pPose );
+	void MutateSkeletonPose( NAnimation::SSkeletonPose *pPose ) override;
 };

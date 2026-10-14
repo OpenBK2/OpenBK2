@@ -76,7 +76,7 @@ protected:
 	virtual void OnButtonUp( const CVec2 &vPos, int nButton );
 	virtual void OnButtonDblClk( const CVec2 &vPos, int nButton );
 
-	bool ProcessEvent( const struct SGameMessage &msg );
+	bool ProcessEvent( const struct SGameMessage &msg ) override;
 
 	// Пауза вне игры, обусловленная интерфейсом
 	void PauseIntermission( bool bPause );
@@ -109,7 +109,7 @@ protected:
 	void SetMainWindowTexture( IWindow *pMainWindow, const NDb::STexture *pTexture );
 
 	// disable explicit destruction
-	~CInterfaceScreenBase();
+	~CInterfaceScreenBase() override;
 
 public:
 	CInterfaceScreenBase( const std::string &_szInterfaceType, const std::string &_szBindSection );
@@ -121,11 +121,11 @@ public:
 		return CInterfaceScreenBase::Init();
 	}
 
-	void Step( bool bAppActive );
-	bool ShouldLimitFrameRate() const;
-	virtual void OnGetFocus( bool bFocus );
-	virtual void StartInterface();
-	virtual int operator&( IBinSaver &saver );
+	void Step( bool bAppActive ) override;
+	bool ShouldLimitFrameRate() const override;
+	void OnGetFocus( bool bFocus ) override;
+	void StartInterface() override;
+	int operator&( IBinSaver &saver ) override;
 
 	bool IsTransparent() const
 	{
@@ -133,7 +133,7 @@ public:
 	}
 
 	// call this function after load is complete
-	virtual void AfterLoad();
+	void AfterLoad() override;
 	virtual void Draw( NGScene::CRTPtr *pTexture = 0 );
 
 	const std::string &GetInterfaceType() const
@@ -153,7 +153,7 @@ protected:
 	//
 	CInterfaceCommandBase() {}
 
-	virtual ~CInterfaceCommandBase() {}
+	~CInterfaceCommandBase() override {}
 
 	//
 	virtual void PreCreate()
@@ -167,7 +167,7 @@ protected:
 	}
 
 public:
-	void Exec()
+	void Exec() override
 	{
 		PreCreate();
 		//

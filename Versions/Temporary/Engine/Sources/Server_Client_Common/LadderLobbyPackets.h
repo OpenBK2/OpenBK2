@@ -16,7 +16,7 @@ public:
 	std::list<int> maps;
 	unsigned uCheckSum;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nSide );
 		f.Add( 3, &bHistoricity );
@@ -71,7 +71,7 @@ public:
 	std::unordered_map<int, int> playerUnitEff;
 	std::unordered_map<int, int> playerKeyPointEff;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nGameID );
 		f.Add( 3, &winners );
@@ -131,7 +131,7 @@ public:
 	std::list<int> team1; // If Historicity is OFF, these are not Germans
 	std::list<int> team2; // If Historicity is ON, these are Germans
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nGameID );
 		f.Add( 3, &nMapID );
@@ -175,7 +175,7 @@ public:
 	std::string szNick;
 	bool bSendFullStatistics;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szNick );
 		f.Add( 3, &bSendFullStatistics );
@@ -200,7 +200,7 @@ public:
 	std::string szNick;
 	SLadderStatistics info;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szNick );
 		f.Add( 3, &info );
@@ -226,7 +226,7 @@ public:
 	int nLevel;
 	int nRace;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szNick );
 		f.Add( 3, &nLevel );
@@ -252,7 +252,7 @@ class CLadderSurrenderPacket : public CNetPacket
 public:
 	int nGameID;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nGameID );
 		return 0;
@@ -275,7 +275,7 @@ public:
 	int nGameID;
 	int nReason;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nGameID );
 		f.Add( 3, &nReason );

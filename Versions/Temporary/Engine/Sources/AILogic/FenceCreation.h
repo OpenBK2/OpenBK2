@@ -36,7 +36,7 @@ class CFenceCreation : public CLongObjectCreation
 	bool bSayAck = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CLongObjectCreation *)this );
 		f.Add( 2, &fenceSegements );
@@ -69,28 +69,28 @@ public:
 		return vPoints[nIndex];
 	}
 
-	bool PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock );
+	bool PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock ) override;
 
-	CLine2 GetCurLine()
+	CLine2 GetCurLine() override
 	{
 		return line;
 	}
 
-	const int GetMaxIndex() const;
-	const int GetCurIndex() const;
-	const CVec2 GetNextPoint( const int nPlace, const int nMaxPlace ) const;
-	void BuildNext();
-	void GetUnitsPreventing( std::list<CPtr<CAIUnit>> *units );
-	bool IsAnyUnitPrevent() const;
-	bool CanBuildNext() const;
-	void LockNext();
-	float GetPrice();
+	const int GetMaxIndex() const override;
+	const int GetCurIndex() const override;
+	const CVec2 GetNextPoint( const int nPlace, const int nMaxPlace ) const override;
+	void BuildNext() override;
+	void GetUnitsPreventing( std::list<CPtr<CAIUnit>> *units ) override;
+	bool IsAnyUnitPrevent() const override;
+	bool CanBuildNext() const override;
+	void LockNext() override;
+	float GetPrice() override;
 
-	void LockCannotBuild()
+	void LockCannotBuild() override
 	{
 		bCannot = true;
 	}
 
-	void CreateObjects( SAIObjectsUnderConstructionUpdate *pUpdate );
-	bool IsCheatPath() const;
+	void CreateObjects( SAIObjectsUnderConstructionUpdate *pUpdate ) override;
+	bool IsCheatPath() const override;
 };

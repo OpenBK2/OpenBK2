@@ -49,7 +49,7 @@ public:
 		Singleton<ICommandHandlerContainer>()->Set( CHID_REINF_POINTS_WINDOW, this );
 	}
 
-	virtual ~CReinfPointsWxWindow()
+	~CReinfPointsWxWindow() override
 	{
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_REINF_POINTS_WINDOW );
 	}
@@ -126,7 +126,7 @@ public:
 	}
 
 	//	CPaletteCommands
-	virtual void GetDialogData( SReinfPointsWindowData *pData )
+	void GetDialogData( SReinfPointsWindowData *pData ) override
 	{
 		pData->Clear();
 		pData->nPlayerCount = pPlayers->GetCount();
@@ -144,7 +144,7 @@ public:
 		pData->eLastAction = eLastAction;
 	}
 
-	virtual void SetDialogData( const SReinfPointsWindowData *pData )
+	void SetDialogData( const SReinfPointsWindowData *pData ) override
 	{
 		nSelectedIndex = pData->nSelectedPoint;
 		if ( pData->bAviationPointSelected )

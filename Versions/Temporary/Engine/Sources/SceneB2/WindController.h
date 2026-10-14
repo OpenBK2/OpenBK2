@@ -50,5 +50,5 @@ public:
 
 	float GetWindCoeff( const CVec2 &vPos );
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

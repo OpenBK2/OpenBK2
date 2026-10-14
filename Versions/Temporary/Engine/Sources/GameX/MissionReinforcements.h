@@ -127,7 +127,7 @@ class CMissionReinf : public CObjectBase
 	CPtr<IButton> pAutoShowReinfBtn;
 	bool bWasEnabled = false;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pWorld );
 		f.Add( 3, &pNotifications );
@@ -221,7 +221,7 @@ private:
 
 public:
 	CMissionReinf();
-	~CMissionReinf();
+	~CMissionReinf() override;
 
 	void Init( IScreen *pScr, CWorldClient *pWorld, IVisualNotifications *pNotifications, NDb::ESeason eSeason );
 

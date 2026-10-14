@@ -105,7 +105,7 @@ private:
 	CPtr<CTracker> pTracker;
 
 public:
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &p );
 		f.Add( 3, &pTracker );
@@ -113,7 +113,7 @@ public:
 	}
 
 protected:
-	~CGatherElementBase()
+	~CGatherElementBase() override
 	{
 		if ( IsValid( pTracker ) )
 		{
@@ -188,7 +188,7 @@ class CGatheringCache : public CObjectBase
 	std::vector<pointer> nodes;
 
 public:
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &alloc );
 		f.Add( 3, &nCurrentRU );
@@ -473,7 +473,7 @@ public:
 	{
 	}
 
-	~CGatheringCache()
+	~CGatheringCache() override
 	{
 		Clear();
 	}

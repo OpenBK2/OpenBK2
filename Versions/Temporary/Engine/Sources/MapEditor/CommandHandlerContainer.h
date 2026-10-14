@@ -44,14 +44,14 @@ class CCommandHandlerContainer : public ICommandHandlerContainer
 
 public:
 	// ICommandHandlerContainer
-	void Register( unsigned nType, unsigned nFirstCommandID, unsigned nLastCommandID );
-	void UnRegister( unsigned nType );
-	void Set( unsigned nType, ICommandHandler *pCommandHandler );
-	void Remove( unsigned nType, ICommandHandler *pCommandHandler );
-	void Remove( unsigned nType );
-	ICommandHandler *Get( unsigned nType );
-	bool HandleCommand( unsigned nType, unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nType, unsigned nCommandID, bool *pbEnable, bool *pbCheck );
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	void Register( unsigned nType, unsigned nFirstCommandID, unsigned nLastCommandID ) override;
+	void UnRegister( unsigned nType ) override;
+	void Set( unsigned nType, ICommandHandler *pCommandHandler ) override;
+	void Remove( unsigned nType, ICommandHandler *pCommandHandler ) override;
+	void Remove( unsigned nType ) override;
+	ICommandHandler *Get( unsigned nType ) override;
+	bool HandleCommand( unsigned nType, unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nType, unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 };

@@ -1,4 +1,4 @@
-virtual void ToAIUnits( bool bInEditor )
+void ToAIUnits( bool bInEditor ) override
 {
 	SCommonRPGStats::ToAIUnits( bInEditor );
 }

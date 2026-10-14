@@ -123,7 +123,7 @@ struct SDbConnection
 
 struct IDatabase : public CObjectBase
 {
-	virtual ~IDatabase() {}
+	~IDatabase() override {}
 
 	virtual bool Connect( const SDbConnection &connection ) = 0;
 	virtual void Close() = 0;

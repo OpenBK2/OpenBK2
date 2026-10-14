@@ -23,9 +23,9 @@ public:
 		bool bNeedUpdate = {};
 
 	protected:
-		void Recalc();
+		void Recalc() override;
 
-		bool NeedUpdate()
+		bool NeedUpdate() override
 		{
 			return bNeedUpdate;
 		}
@@ -33,7 +33,7 @@ public:
 	public:
 		CArray2D<NGfx::SPixel8888> picture;
 
-		int operator&( CStructureSaver &f )
+		int operator&( CStructureSaver &f ) override
 		{
 			f.Add( 1, &picture );
 			return 0;
@@ -51,16 +51,16 @@ public:
 		pData = new CTextureData;
 	}
 
-	virtual void Visit( struct IUIVisitor *pVisitor );
-	virtual int operator&( IBinSaver &ss );
-	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	void Visit( struct IUIVisitor *pVisitor ) override;
+	int operator&( IBinSaver &ss ) override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 
 	virtual void Clear()
 	{
 		pData->picture.Clear();
 	}
 
-	virtual void SetTexture( const struct NDb::STexture *_pDesc )
+	void SetTexture( const struct NDb::STexture *_pDesc ) override
 	{
 		ASSERT( !_pDesc );
 	}

@@ -12,22 +12,22 @@ class CSkeletonExporter : public CBasicSceneExporter
 	// CRAP} HASH_SET
 	CAnimationRefMap animations;
 	//
-	const char *GetAddPath() const;
+	const char *GetAddPath() const override;
 	bool FormScript( std::string *pScriptText,
 	                 const std::string &szTypeName,
 	                 const std::string &szObjName,
 	                 const std::string &szDstPath,
 	                 const std::string &szSrcPath,
-	                 IManipulator *pManipulator );
+	                 IManipulator *pManipulator ) override;
 	bool ImportInfoToDBBeforeRefs( const std::string &szGeomObjName,
 	                               const std::string &szSrcScenePath,
 	                               const std::string &szDstFileName,
-	                               IManipulator *pManipulator );
+	                               IManipulator *pManipulator ) override;
 	EXPORT_RESULT CustomCheck( const std::string &szTypeName,
 	                           const std::string &szObjName,
 	                           const std::string &szSrcScenePath,
 	                           const std::string &szDestinationPath,
-	                           IManipulator *pManipulator );
+	                           IManipulator *pManipulator ) override;
 
 	CSkeletonExporter() {}
 

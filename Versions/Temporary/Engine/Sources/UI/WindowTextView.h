@@ -32,11 +32,11 @@ class UI_EXPORT CWindowTextView : public CWindow, public ITextView
 private:
 	bool InitText();
 	//{ overrided
-	const std::wstring &GetDBFormatText() const;
-	const std::wstring &GetDBInstanceText() const;
+	const std::wstring &GetDBFormatText() const override;
+	const std::wstring &GetDBInstanceText() const override;
 	//}
 protected:
-	virtual NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
@@ -48,33 +48,34 @@ public:
 	{
 	}
 
-	virtual void Visit( struct IUIVisitor *pVisitor );
-	virtual int operator&( struct IBinSaver &saver );
-	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	void Visit( struct IUIVisitor *pVisitor ) override;
+	int operator&( struct IBinSaver &saver ) override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 
-	virtual std::wstring GetDBText() const;
-	virtual const std::wstring &GetText() const;
+	std::wstring GetDBText() const override;
+	const std::wstring &GetText() const override;
 	// return true if height of window is updated
-	virtual bool SetText( const std::wstring &szText );
-	virtual void SetWidth( const int nWidth );
+	bool SetText( const std::wstring &szText ) override;
+	void SetWidth( const int nWidth ) override;
 
 	// do nothing (use SetText & GetText)
-	void SetTextString( const std::wstring &szText ) {}
+	void SetTextString( const std::wstring &szText ) override {}
 
-	virtual const CTPoint<int> GetSize() const;
+	const CTPoint<int> GetSize() const override;
 
-	virtual void SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const uint32_t flags );
-	virtual void Reposition( const CTRect<float> &parentRect );
+	void
+	SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const uint32_t flags ) override;
+	void Reposition( const CTRect<float> &parentRect ) override;
 
-	virtual void Init()
+	void Init() override
 	{
 		CWindow::Init();
 		InitText();
 	}
 
-	void SetIDForMLHandler( int nID );
+	void SetIDForMLHandler( int nID ) override;
 
-	int GetIDForMLHandler() const
+	int GetIDForMLHandler() const override
 	{
 		return nIDForMLHandler;
 	}

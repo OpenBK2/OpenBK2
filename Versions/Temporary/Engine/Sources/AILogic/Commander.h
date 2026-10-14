@@ -11,7 +11,7 @@ class CCommonUnit;
 class CCommander : public ICommander
 {
 public:
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 
 private:
 	;
@@ -125,8 +125,8 @@ protected:
 
 public:
 	CCommander();
-	virtual float GetMeanSeverity() const;
-	virtual void Segment();
+	float GetMeanSeverity() const override;
+	void Segment() override;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

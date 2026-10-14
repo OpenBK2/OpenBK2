@@ -12,6 +12,6 @@ class CEditorTestState : public CDefaultInputState
 public:
 	CEditorTestState( CEditorTestEditor *_pCEditorTestEditor );
 	//IInputState
-	void Enter();
-	void Leave();
+	void Enter() override;
+	void Leave() override;
 };

@@ -6,7 +6,7 @@ class CUpdates2Globe : public CObjectBase
 	ZDATA
 	std::list<CPtr<CObjectBase>> singleUpdates;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &singleUpdates );
 		return 0;

@@ -102,7 +102,7 @@ class CVisWaterPatch : public CPtrFuncBase<NGScene::CObjectInfo>
 
 protected:
 	void UpdateGeomData();
-	void Recalc();
+	void Recalc() override;
 	//bool NeedUpdate() { return false; }
 public:
 	NMeshData::SMeshDataTex2 data;
@@ -120,7 +120,7 @@ public:
 	                const float _fNoiseCoeff,
 	                const uint8_t _nParamInd );
 
-	~CVisWaterPatch() {}
+	~CVisWaterPatch() override {}
 };
 
 typedef NMeshData::SPatchHolder<CVisWaterPatch> CVisWaterPatchHolder;

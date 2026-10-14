@@ -33,7 +33,7 @@ public:
 	virtual void SetDialogData( const TDialogData *pData ) = 0;
 
 	//	ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override
 	{
 		TDialogData *pData = reinterpret_cast<TDialogData *>( dwData );
 		// The unit start commands palette guarded this and the others did not,
@@ -60,7 +60,7 @@ public:
 		return false;
 	}
 
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override
 	{
 		NI_ASSERT( pbEnable != 0, "CPaletteCommands::UpdateCommand(), pbEnable == 0" );
 		NI_ASSERT( pbCheck != 0, "CPaletteCommands::UpdateCommand(), pbCheck == 0" );
@@ -101,7 +101,7 @@ public:
 	virtual bool SetEditParameters( const TEditParameters &rEditParameters ) = 0;
 
 	//	ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override
 	{
 		// Every one of the five checked this before dereferencing, and rightly:
 		// a null here means the caller passed no struct, and there is nothing to
@@ -122,7 +122,7 @@ public:
 		return false;
 	}
 
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override
 	{
 		NI_ASSERT( pbEnable != 0, "CEditParameterCommands::UpdateCommand(), pbEnable == 0" );
 		NI_ASSERT( pbCheck != 0, "CEditParameterCommands::UpdateCommand(), pbCheck == 0" );

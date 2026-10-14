@@ -11,36 +11,36 @@ class CExecutorPlaneDropBombsObject : public CExecutorUnitBase
 	bool IsExecutorValidInternal() const;
 
 protected:
-	float OnAbilityActive();
-	float OnAbilityOff();
-	void SwitchingOffEnd();
-	void SwitchingOffStart();
-	void SwitchOnEnd();
-	void SwitchOnStart( const class CAICommand *pCommand );
+	float OnAbilityActive() override;
+	float OnAbilityOff() override;
+	void SwitchingOffEnd() override;
+	void SwitchingOffStart() override;
+	void SwitchOnEnd() override;
+	void SwitchOnStart( const class CAICommand *pCommand ) override;
 
-	bool ActivateDuringDisable()
+	bool ActivateDuringDisable() override
 	{
 		return false;
 	}
 
-	CCommonUnit *GetUnit();
+	CCommonUnit *GetUnit() override;
 
 public:
 	CExecutorPlaneDropBombsObject( CAIUnit *_pUnit );
 
 	CExecutorPlaneDropBombsObject() {}
 
-	int Segment();
-	void RegisterOnEvents( IExecutorContainer *pContainer );
+	int Segment() override;
+	void RegisterOnEvents( IExecutorContainer *pContainer ) override;
 
-	bool IsExecutorValid() const
+	bool IsExecutorValid() const override
 	{
 		return IsExecutorValidInternal();
 	}
 
-	bool NotifyEvent( const CExecutorEvent &event );
+	bool NotifyEvent( const CExecutorEvent &event ) override;
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, static_cast<CExecutorUnitBase *>( this ) );
 		saver.Add( 2, &pUnit );

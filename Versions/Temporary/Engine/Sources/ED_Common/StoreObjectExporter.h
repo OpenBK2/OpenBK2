@@ -14,18 +14,18 @@ public:
 	}
 
 	// IExporter
-	virtual bool StartExport( const std::string &rszObjectTypeName, bool bForce )
+	bool StartExport( const std::string &rszObjectTypeName, bool bForce ) override
 	{
 		objectSet.szObjectTypeName = rszObjectTypeName;
 		objectSet.objectNameSet.clear();
 		return true;
 	}
 
-	virtual EXPORT_RESULT ExportObject( IManipulator *pManipulator,
-	                                    const std::string &rszObjectTypeName,
-	                                    const std::string &rszObjectName,
-	                                    bool bForce,
-	                                    EXPORT_TYPE exportType )
+	EXPORT_RESULT ExportObject( IManipulator *pManipulator,
+	                            const std::string &rszObjectTypeName,
+	                            const std::string &rszObjectName,
+	                            bool bForce,
+	                            EXPORT_TYPE exportType ) override
 	{
 		if ( ( exportType != ET_BEFORE_REF ) && ( exportType != ET_NO_REF ) )
 		{
@@ -37,18 +37,18 @@ public:
 	}
 
 	//
-	virtual bool StartCheck( const std::string &rszObjectTypeName, bool bExport )
+	bool StartCheck( const std::string &rszObjectTypeName, bool bExport ) override
 	{
 		return true;
 	}
 
-	virtual void FinishCheck( const std::string &rszObjectTypeName, bool bExport ) {}
+	void FinishCheck( const std::string &rszObjectTypeName, bool bExport ) override {}
 
-	virtual EXPORT_RESULT CheckObject( IManipulator *pManipulator,
-	                                   const std::string &rszObjectTypeName,
-	                                   const std::string &rszObjectName,
-	                                   bool bExport,
-	                                   EXPORT_TYPE exportType )
+	EXPORT_RESULT CheckObject( IManipulator *pManipulator,
+	                           const std::string &rszObjectTypeName,
+	                           const std::string &rszObjectName,
+	                           bool bExport,
+	                           EXPORT_TYPE exportType ) override
 	{
 		return ER_SUCCESS;
 	}

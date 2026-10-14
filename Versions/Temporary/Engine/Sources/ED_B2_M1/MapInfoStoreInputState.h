@@ -66,7 +66,7 @@ class CMapInfoStoreInputState : public CStoreInputState
 
 protected:
 	//CStoreInputState
-	void OnInputStateEvent( const SInputStateEventInfo &rInputStateEventInfo );
+	void OnInputStateEvent( const SInputStateEventInfo &rInputStateEventInfo ) override;
 
 public:
 	bool bFixInvalidPos;

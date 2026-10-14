@@ -26,7 +26,7 @@ class CLogPaneContents : public ICommandHandler
 public:
 	// Registers as CHID_LOG, as CDWLog did from its constructor.
 	CLogPaneContents();
-	virtual ~CLogPaneContents();
+	~CLogPaneContents() override;
 
 	// The view the pane made. It is created by the pane with this as its
 	// selection handler.
@@ -41,6 +41,6 @@ public:
 	void ClearLog();
 
 	// ICommandHandler: CHID_LOG, and CHID_SELECTION while the view has focus.
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 };

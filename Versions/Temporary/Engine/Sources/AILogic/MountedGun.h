@@ -52,7 +52,7 @@ class CMountedToBaseGun : public CBaseGun, public CCommonMountedGun
 	ZDATA_( CBaseGun )
 	ZPARENT( CCommonMountedGun )
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CBaseGun *)this );
 		f.Add( 2, (CCommonMountedGun *)this );
@@ -73,32 +73,32 @@ public:
 	{
 	}
 
-	virtual const SBaseGunRPGStats &GetGun() const
+	const SBaseGunRPGStats &GetGun() const override
 	{
 		return CCommonMountedGun::GetGun();
 	}
 
-	virtual const SWeaponRPGStats *GetWeapon() const
+	const SWeaponRPGStats *GetWeapon() const override
 	{
 		return CCommonMountedGun::GetWeapon();
 	}
 
-	virtual bool IsOnTurret() const
+	bool IsOnTurret() const override
 	{
 		return CCommonMountedGun::IsOnTurret();
 	}
 
-	virtual class CTurret *GetTurret() const
+	class CTurret *GetTurret() const override
 	{
 		return CCommonMountedGun::GetTurret();
 	}
 
-	virtual class CBuilding *GetMountBuilding() const
+	class CBuilding *GetMountBuilding() const override
 	{
 		return CCommonMountedGun::GetBuilding();
 	}
 
-	virtual void GetInfantryShotInfo( SAINotifyInfantryShot *pInfantryShotInfo, const NTimer::STime &time ) const;
+	void GetInfantryShotInfo( SAINotifyInfantryShot *pInfantryShotInfo, const NTimer::STime &time ) const override;
 };
 
 /*
@@ -136,12 +136,12 @@ public:
 	{
 	}
 
-	virtual int GetNCommonGun() const
+	int GetNCommonGun() const override
 	{
 		return nCommonGun;
 	}
 
-	virtual class CBasicGun *CreateGun( const EGunTypes eType, const int nShell, SCommonGunInfo *pCommonGunInfo ) const;
+	class CBasicGun *CreateGun( const EGunTypes eType, const int nShell, SCommonGunInfo *pCommonGunInfo ) const override;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

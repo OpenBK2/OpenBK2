@@ -1,4 +1,4 @@
-virtual void ToAIUnits( bool bInEditor )
+void ToAIUnits( bool bInEditor ) override
 {
 	eGameType = SGVOGT_SQUAD;
 	SHPObjectRPGStats::ToAIUnits( bInEditor );
@@ -69,7 +69,7 @@ virtual void ToAIUnits( bool bInEditor )
 }
 
 //
-virtual const CUserActions *GetUserActions( bool bActionsBy ) const
+const CUserActions *GetUserActions( bool bActionsBy ) const override
 {
 	return bActionsBy ? &availUserActions : &availUserExposures;
 }

@@ -7,7 +7,7 @@ class CClientGameConsts : public IClientGameConsts
 	OBJECT_NOCOPY_METHODS( CClientGameConsts )
 	ZDATA
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
@@ -15,9 +15,9 @@ public:
 public:
 	CClientGameConsts() {}
 
-	~CClientGameConsts() {}
+	~CClientGameConsts() override {}
 
-	virtual const NDb::SClientGameConsts *GetClientGameConsts();
+	const NDb::SClientGameConsts *GetClientGameConsts() override;
 };
 
 IClientGameConsts *CreateClientGameConsts();

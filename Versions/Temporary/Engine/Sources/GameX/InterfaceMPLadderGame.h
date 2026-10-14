@@ -16,7 +16,7 @@ class CInterfaceMPLadderGame : public CInterfaceScreenBase, public IProgrammedRe
 		bool bAllowed;
 		bool bSelected;
 
-		ZEND int operator&( IBinSaver &f )
+		ZEND int operator&( IBinSaver &f ) override
 		{
 			f.Add( 2, &pMapDesc );
 			f.Add( 3, &pSwitch );
@@ -40,7 +40,7 @@ class CInterfaceMPLadderGame : public CInterfaceScreenBase, public IProgrammedRe
 	{
 		OBJECT_NOCOPY_METHODS( CItemLadderMapListViewer )
 	public:
-		void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
+		void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const override;
 	};
 
 	//--------------
@@ -59,7 +59,7 @@ class CInterfaceMPLadderGame : public CInterfaceScreenBase, public IProgrammedRe
 	CPtr<IButton> pStartButton;
 	CPtr<IWindow> pChecksumPWL;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &pMain );
@@ -90,17 +90,17 @@ private:
 	bool OnChangeMapStatusReaction();
 
 protected:
-	~CInterfaceMPLadderGame();
+	~CInterfaceMPLadderGame() override;
 
 public:
 	CInterfaceMPLadderGame();
-	bool Init();
-	void AfterLoad();
-	bool StepLocal( bool bAppActive );
+	bool Init() override;
+	void AfterLoad() override;
+	bool StepLocal( bool bAppActive ) override;
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 	void FillMapData();
 	//}
 };
@@ -109,9 +109,9 @@ class CICMPLadderGame : public CInterfaceCommandBase<CInterfaceMPLadderGame>
 {
 	OBJECT_BASIC_METHODS( CICMPLadderGame );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

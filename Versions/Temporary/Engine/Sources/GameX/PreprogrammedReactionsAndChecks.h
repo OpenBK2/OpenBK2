@@ -72,7 +72,7 @@ public:
 		reactions[szReaction] = new CReactionObserver<TObj>( _pfnMemFun );
 	}
 
-	int Check( const std::string &szCheckName ) const
+	int Check( const std::string &szCheckName ) const override
 	{
 		typename CChecks::const_iterator pos = checks.find( szCheckName );
 		if ( pos != checks.end() )
@@ -82,7 +82,7 @@ public:
 		return 0;
 	}
 
-	bool Execute( const std::string &szSender, const std::string &szReaction )
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override
 	{
 		typename CReactions::iterator pos = reactions.find( szReaction );
 		if ( pos != reactions.end() )

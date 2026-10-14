@@ -52,7 +52,7 @@ public:
 	int Pop();
 	bool IsEmpty();
 
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, &updateLists );
 		saver.Add( 2, &f2MaxRadius );

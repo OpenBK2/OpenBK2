@@ -239,7 +239,7 @@ class SYSTEM_EXPORT CMemoryStream : public CDataStream
 {
 protected:
 	void CopyMemoryStream( const CMemoryStream &src );
-	void AllocBuf( int nOldFileSize, int nSize );
+	void AllocBuf( int nOldFileSize, int nSize ) override;
 
 public:
 	CMemoryStream()
@@ -248,7 +248,7 @@ public:
 		AllocBuf( 0, 32 );
 	}
 
-	~CMemoryStream();
+	~CMemoryStream() override;
 	CMemoryStream( const CMemoryStream &src );
 	CMemoryStream &operator=( const CMemoryStream &src );
 	// old contents of memory stream are not preserved, current position is reset to start
@@ -269,7 +269,7 @@ class CMappedStream : public CDataStream
 	}
 
 	void AllocBufImpl( int nBufSize, int nPos, int nSize );
-	virtual void AllocBuf( int nOldFileSize, int nSize );
+	void AllocBuf( int nOldFileSize, int nSize ) override;
 	void ReleaseBuf();
 
 protected:
@@ -292,7 +292,7 @@ public:
 	{
 	}
 
-	void Flush();
+	void Flush() override;
 	//void CloseFile();
 };
 
@@ -319,9 +319,9 @@ public:
 	CFileStream( NVFS::IFileCreator *pFileCreator, const std::string &szFileName );
 	// open/create win file
 	CFileStream( const std::string &szFileName, const EWinMode eWinMode );
-	virtual ~CFileStream();
-	virtual void AllocBuf( int nOldFileSize, int nSize );
-	virtual void Flush();
+	~CFileStream() override;
+	void AllocBuf( int nOldFileSize, int nSize ) override;
+	void Flush() override;
 };
 
 class CTextStream

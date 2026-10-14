@@ -47,7 +47,7 @@ class CStaticObject : public CLinkObject
 	bool bTerminateSegmentFlag = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CLinkObject *)this );
 		f.Add( 2, &bTerminateSegmentFlag );
@@ -70,7 +70,7 @@ public:
 		return bTerminateSegmentFlag;
 	}
 
-	virtual const SHPObjectRPGStats *GetStats() const = 0;
+	const SHPObjectRPGStats *GetStats() const override = 0;
 
 	// расположение объекта
 	virtual const CVec3 &GetCenter() const = 0;
@@ -100,16 +100,16 @@ public:
 	}
 
 	virtual EStaticObjType GetObjectType() const = 0;
-	virtual const uint8_t GetPlayer() const;
+	const uint8_t GetPlayer() const override;
 
 	virtual bool IsContainer() const = 0;
 	virtual const int GetNDefenders() const = 0;
 	virtual class CSoldier *GetUnit( const int n ) const = 0;
 
 	// для suspended updates
-	virtual const bool IsVisible( const uint8_t cParty ) const;
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
+	const bool IsVisible( const uint8_t cParty ) const override;
+	void GetTilesForVisibility( CTilesSet *pTiles ) const override;
+	bool ShouldSuspendAction( const EActionNotify &eAction ) const override;
 
 	// может ли юнит класса eClass проехать сквозь объект
 	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const = 0;
@@ -171,7 +171,7 @@ protected:
 	float fHP = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CStaticObject *)this );
 		f.Add( 2, &mark );
@@ -233,12 +233,12 @@ public:
 	}
 
 	// hit points и damage
-	const float GetHitPoints() const
+	const float GetHitPoints() const override
 	{
 		return fHP;
 	}
 
-	void SetHitPoints( const float fNewHP )
+	void SetHitPoints( const float fNewHP ) override
 	{
 		fHP = fNewHP;
 		SetAlive( fHP > 0.0f );
@@ -259,9 +259,9 @@ public:
 	virtual void RestoreTransparenciesImmidiately() = 0;
 
 	// для updater-а
-	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
-	virtual void GetNewUnitInfo( struct SNewUnitInfo *pNewUnitInfo );
-	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats ) = 0;
+	void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff ) override;
+	void GetNewUnitInfo( struct SNewUnitInfo *pNewUnitInfo ) override;
+	void GetRPGStats( struct SAINotifyRPGStats *pStats ) override = 0;
 
 	virtual void Delete();
 
@@ -348,7 +348,7 @@ class CGivenPassabilityStObject : public CExistingObject
 	std::list<SObjTileInfo> lockedTiles;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CExistingObject *)this );
 		f.Add( 2, &center );
@@ -390,7 +390,7 @@ protected:
 	void RemoveTransparenciesInt( const int nUniqueID );
 
 public:
-	virtual void SetNewPlaceWithoutMapUpdate( const CVec3 &_center, const uint16_t dir = 0 )
+	void SetNewPlaceWithoutMapUpdate( const CVec3 &_center, const uint16_t dir = 0 ) override
 	{
 		center = _center;
 	}
@@ -404,44 +404,44 @@ public:
 	virtual void Init();
 	virtual const EAIClasses GetPassabilityClass() const;
 
-	virtual const CVec3 &GetCenter() const
+	const CVec3 &GetCenter() const override
 	{
 		return center;
 	}
 
-	virtual const CVec2 GetAttackCenter( const CVec2 &vPoint ) const;
+	const CVec2 GetAttackCenter( const CVec2 &vPoint ) const override;
 
-	virtual const uint16_t GetDir() const
+	const uint16_t GetDir() const override
 	{
 		return wDir;
 	}
 
-	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats );
+	void GetRPGStats( struct SAINotifyRPGStats *pStats ) override;
 
-	virtual void GetCoveredTiles( std::list<SVector> *pTiles ) const;
+	void GetCoveredTiles( std::list<SVector> *pTiles ) const override;
 
-	virtual void GetBoundRect( SRect *pRect ) const
+	void GetBoundRect( SRect *pRect ) const override
 	{
 		*pRect = boundRect;
 	}
 
-	virtual bool IsPointInside( const CVec2 &point ) const;
+	bool IsPointInside( const CVec2 &point ) const override;
 
-	virtual void LockTiles();
-	virtual void UnlockTiles();
-	virtual void CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles );
+	void LockTiles() override;
+	void UnlockTiles() override;
+	void CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles ) override;
 
-	virtual void SetTransparencies()
+	void SetTransparencies() override
 	{
 		SetTransparenciesInt( GetUniqueId() );
 	}
 
-	virtual void RemoveTransparencies()
+	void RemoveTransparencies() override
 	{
 		RemoveTransparenciesInt( GetUniqueId() );
 	}
 
-	virtual void RestoreTransparenciesImmidiately();
+	void RestoreTransparenciesImmidiately() override;
 	// true если объект можно добавить в данную точку
 	static bool
 	CheckStaticObject( const SObjectBaseRPGStats *pStats, const CVec2 &vPos, const uint16_t wDir, const int nFrameIndex );
@@ -456,7 +456,7 @@ public:
 		return;
 	}
 
-	virtual CObjectProfile *GetPassProfile() const
+	CObjectProfile *GetPassProfile() const override
 	{
 		return pPassProfile;
 	}
@@ -474,7 +474,7 @@ class CCommonStaticObject : public CGivenPassabilityStObject
 	bool bFallen = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CGivenPassabilityStObject *)this );
 		f.Add( 2, &eType );
@@ -494,39 +494,39 @@ public:
 		//CLinkObject::SetUniqueIdForObjects();
 	}
 
-	virtual void
-	TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit );
-	virtual void Die( const float fDamage );
+	void
+	TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit ) override;
+	void Die( const float fDamage ) override;
 
-	virtual void Segment() {}
+	void Segment() override {}
 
-	virtual EStaticObjType GetObjectType() const
+	EStaticObjType GetObjectType() const override
 	{
 		return eType;
 	}
 
-	virtual bool IsContainer() const
+	bool IsContainer() const override
 	{
 		return false;
 	}
 
-	virtual const int GetNDefenders() const
+	const int GetNDefenders() const override
 	{
 		return 0;
 	}
 
-	virtual class CSoldier *GetUnit( const int n ) const
+	class CSoldier *GetUnit( const int n ) const override
 	{
 		return 0;
 	}
 
-	virtual bool ProcessAreaDamage( const class CExplosion *pExpl,
-	                                const int nArmorDir,
-	                                const float fRadius,
-	                                const float fSmallRadius );
-	void AnimateFalling( const CVec2 &vFallTo );
+	bool ProcessAreaDamage( const class CExplosion *pExpl,
+	                        const int nArmorDir,
+	                        const float fRadius,
+	                        const float fSmallRadius ) override;
+	void AnimateFalling( const CVec2 &vFallTo ) override;
 
-	bool HasFallen()
+	bool HasFallen() override
 	{
 		return bFallen;
 	}
@@ -541,7 +541,7 @@ class CSimpleStaticObject : public CCommonStaticObject
 	bool bDelayedUpdate = {}; // if true then update for new object is delayed
 	SAIAngle wDir;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CCommonStaticObject *)this );
 		f.Add( 2, &pStats );
@@ -570,25 +570,25 @@ public:
 	{
 	}
 
-	virtual const uint8_t GetPlayer() const
+	const uint8_t GetPlayer() const override
 	{
 		return nPlayer == -1 ? CCommonStaticObject::GetPlayer() : nPlayer;
 	}
 
-	virtual const SHPObjectRPGStats *GetStats() const
+	const SHPObjectRPGStats *GetStats() const override
 	{
 		return pStats;
 	}
 
-	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const;
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
+	bool CanUnitGoThrough( const EAIClasses &eClass ) const override;
+	bool ShouldSuspendAction( const EActionNotify &eAction ) const override;
 
-	virtual const uint16_t GetDir() const
+	const uint16_t GetDir() const override
 	{
 		return wDir;
 	}
 
-	bool CanFall();
+	bool CanFall() override;
 };
 
 class CTerraMeshStaticObject : public CCommonStaticObject
@@ -598,7 +598,7 @@ class CTerraMeshStaticObject : public CCommonStaticObject
 	CDBPtr<SStaticObjectRPGStats> pStats;
 	SAIAngle wDir;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CCommonStaticObject *)this );
 		f.Add( 2, &pStats );
@@ -621,19 +621,19 @@ public:
 	{
 	}
 
-	virtual const SHPObjectRPGStats *GetStats() const
+	const SHPObjectRPGStats *GetStats() const override
 	{
 		return pStats;
 	}
 
-	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const;
+	bool CanUnitGoThrough( const EAIClasses &eClass ) const override;
 
-	virtual const uint16_t GetDir() const
+	const uint16_t GetDir() const override
 	{
 		return wDir;
 	}
 
-	virtual void SetNewPlacement( const CVec3 &center, const uint16_t dir );
-	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
-	bool CanFall();
+	void SetNewPlacement( const CVec3 &center, const uint16_t dir ) override;
+	void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff ) override;
+	bool CanFall() override;
 };

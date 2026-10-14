@@ -125,7 +125,7 @@ public:
 	{
 	}
 
-	bool AddUnit( CAIUnit *pUnit )
+	bool AddUnit( CAIUnit *pUnit ) override
 	{
 		if ( pUnit->IsInfantry() && pUnit->GetFormation() )
 		{
@@ -145,9 +145,9 @@ public:
 		return false;
 	}
 
-	void Done() {}
+	void Done() override {}
 
-	const NDb::SScriptArea &GetArea() const
+	const NDb::SScriptArea &GetArea() const override
 	{
 		return *pArea;
 	}
@@ -172,18 +172,18 @@ public:
 	{
 	}
 
-	bool AddUnit( CAIUnit *pUnit )
+	bool AddUnit( CAIUnit *pUnit ) override
 	{
 		bPresent = true;
 		return true;
 	}
 
-	void Done()
+	void Done() override
 	{
 		pScript->PushNumber( bPresent );
 	}
 
-	const NDb::SScriptArea &GetArea() const
+	const NDb::SScriptArea &GetArea() const override
 	{
 		return *pArea;
 	}
@@ -1970,7 +1970,7 @@ public:
 	{
 	}
 
-	bool AddUnit( CAIUnit *pUnit )
+	bool AddUnit( CAIUnit *pUnit ) override
 	{
 		if ( pUnit->IsInfantry() && pUnit->GetFormation() )
 		{
@@ -1988,7 +1988,7 @@ public:
 		return false;
 	}
 
-	void Done()
+	void Done() override
 	{
 		pScript->PushNumber( nResult );
 	}
@@ -2006,17 +2006,17 @@ public:
 	{
 	}
 
-	const NDb::SScriptArea &GetArea() const
+	const NDb::SScriptArea &GetArea() const override
 	{
 		return area;
 	}
 
-	bool AddUnit( CAIUnit *pUnit )
+	bool AddUnit( CAIUnit *pUnit ) override
 	{
 		return enumerator.AddUnit( pUnit );
 	}
 
-	void Done()
+	void Done() override
 	{
 		enumerator.Done();
 	}
@@ -3682,7 +3682,7 @@ int CScripts::GetNMinesInScriptArea( struct lua_State *pState )
 	class CMinesCheck : public ICheckObjects
 	{
 	public:
-		virtual bool IsGoodObj( CExistingObject *pObj ) const
+		bool IsGoodObj( CExistingObject *pObj ) const override
 		{
 			return pObj->GetObjectType() == ESOT_MINE;
 		}
@@ -3710,7 +3710,7 @@ int CScripts::GetNTrenchesInScriptArea( struct lua_State *pState )
 	class CTrenchesCheck : public ICheckObjects
 	{
 	public:
-		virtual bool IsGoodObj( CExistingObject *pObj ) const
+		bool IsGoodObj( CExistingObject *pObj ) const override
 		{
 			return pObj->GetObjectType() == ESOT_ENTR_PART;
 		}
@@ -3738,7 +3738,7 @@ int CScripts::GetNFencesInScriptArea( struct lua_State *pState )
 	class CFencesCheck : public ICheckObjects
 	{
 	public:
-		virtual bool IsGoodObj( CExistingObject *pObj ) const
+		bool IsGoodObj( CExistingObject *pObj ) const override
 		{
 			return pObj->GetObjectType() == ESOT_FENCE;
 		}
@@ -3766,7 +3766,7 @@ int CScripts::GetNAntitankInScriptArea( struct lua_State *pState )
 	class CAntiTankCheck : public ICheckObjects
 	{
 	public:
-		virtual bool IsGoodObj( CExistingObject *pObj ) const
+		bool IsGoodObj( CExistingObject *pObj ) const override
 		{
 			return theUnitCreation.IsAntiTank( pObj->GetStats() );
 		}
@@ -3794,7 +3794,7 @@ int CScripts::GetNAPFencesInScriptArea( struct lua_State *pState )
 	class CAntiTankCheck : public ICheckObjects
 	{
 	public:
-		virtual bool IsGoodObj( CExistingObject *pObj ) const
+		bool IsGoodObj( CExistingObject *pObj ) const override
 		{
 			return theUnitCreation.IsAPFence( pObj->GetStats() );
 		}

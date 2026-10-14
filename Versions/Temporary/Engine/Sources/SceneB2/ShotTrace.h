@@ -19,7 +19,7 @@ class CShotTraceObj : public CPtrFuncBase<NGScene::CObjectInfo>
 	CVec3 vDir;
 	CVec3 vCameraAnchor, vCameraEye, vViewNormal;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &vStart );
 		f.Add( 3, &vEnd );
@@ -29,9 +29,9 @@ class CShotTraceObj : public CPtrFuncBase<NGScene::CObjectInfo>
 		return 0;
 	}
 
-	void Recalc();
+	void Recalc() override;
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pTimer != 0 ? pTimer.Refresh() : false;
 	}

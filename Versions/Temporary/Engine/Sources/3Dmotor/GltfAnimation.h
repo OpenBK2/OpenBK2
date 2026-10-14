@@ -109,7 +109,7 @@ public:
 		return !skeleton.boneNames.empty();
 	}
 
-	int operator&( CStructureSaver &f );
+	int operator&( CStructureSaver &f ) override;
 
 	int GetBoneIndex( const char *pszName ) override;
 	void GetBoneNames( std::vector<std::string> *pBoneNames ) override;

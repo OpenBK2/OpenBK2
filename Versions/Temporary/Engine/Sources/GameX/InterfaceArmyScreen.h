@@ -157,7 +157,7 @@ private:
 	std::wstring wszChangedValueTag;
 	CPtr<ITextView> pLeaderRankLabel;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &pMain );
@@ -241,15 +241,15 @@ private:
 
 public:
 	CInterfaceArmyScreen();
-	~CInterfaceArmyScreen();
+	~CInterfaceArmyScreen() override;
 
-	bool Init();
+	bool Init() override;
 
-	bool StepLocal( bool bAppActive );
+	bool StepLocal( bool bAppActive ) override;
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 	//}
 };
 
@@ -257,9 +257,9 @@ class CICArmyScreen : public CInterfaceCommandBase<CInterfaceArmyScreen>
 {
 	OBJECT_BASIC_METHODS( CICArmyScreen );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

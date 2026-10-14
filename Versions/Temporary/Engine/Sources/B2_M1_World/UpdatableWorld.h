@@ -270,7 +270,7 @@ protected:
 	//
 	CUpdatableWorld();
 	CUpdatableWorld( IVisualNotifications *pNotifications, ICommonB2M1AI *pAI );
-	~CUpdatableWorld();
+	~CUpdatableWorld() override;
 
 public:
 	bool bEditor = false;
@@ -313,50 +313,50 @@ public:
 	virtual void DoUpdateObjectStats( CMapObj *pMO ) = 0;
 
 	//
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 
 	void PlayAllObjectsAnimations();
 	//
 	// updates
-	virtual void ProcessUpdate( const struct SAIPointLightUpdate *pUpdate );
-	virtual void ProcessUpdate( const struct SAIHeadLightUpdate *pUpdate );
-	virtual void ProcessUpdate( const struct SAIToggleDayNightWindowsUpdate *pUpdate );
-	virtual void ProcessUpdate( const struct SAIBreakWindowUpdate *pUpdate );
-	virtual void ProcessUpdate( const struct SAINewProjectileUpdate *pUpdate );
-	virtual void ProcessUpdate( const struct SAIDeadProjectileUpdate *pUpdate );
+	void ProcessUpdate( const struct SAIPointLightUpdate *pUpdate ) override;
+	void ProcessUpdate( const struct SAIHeadLightUpdate *pUpdate ) override;
+	void ProcessUpdate( const struct SAIToggleDayNightWindowsUpdate *pUpdate ) override;
+	void ProcessUpdate( const struct SAIBreakWindowUpdate *pUpdate ) override;
+	void ProcessUpdate( const struct SAINewProjectileUpdate *pUpdate ) override;
+	void ProcessUpdate( const struct SAIDeadProjectileUpdate *pUpdate ) override;
 	//	virtual void ProcessUpdate( const struct SAINewProjectileM1 *pUpdate );
-	virtual void ProcessUpdate( const struct SExplodeProjectileUpdate *pUpdate );
+	void ProcessUpdate( const struct SExplodeProjectileUpdate *pUpdate ) override;
 
-	virtual void ProcessUpdate( const struct SScriptCameraRunUpdate *pUpdate ) {}
+	void ProcessUpdate( const struct SScriptCameraRunUpdate *pUpdate ) override {}
 
-	virtual void ProcessUpdate( const struct SScriptCameraResetUpdate *pUpdate ) {}
+	void ProcessUpdate( const struct SScriptCameraResetUpdate *pUpdate ) override {}
 
-	virtual void ProcessUpdate( const struct SScriptCameraStartMovieUpdate *pUpdate ) {}
+	void ProcessUpdate( const struct SScriptCameraStartMovieUpdate *pUpdate ) override {}
 
-	virtual void ProcessUpdate( const struct SScriptCameraStopMovieUpdate *pUpdate ) {}
+	void ProcessUpdate( const struct SScriptCameraStopMovieUpdate *pUpdate ) override {}
 
-	virtual void ProcessUpdate( const struct SClientUpdateButtonsUpdate *pUpdate );
-	virtual void ProcessUpdate( const struct SClientUpdateSingleUnitUpdate *pUpdate );
+	void ProcessUpdate( const struct SClientUpdateButtonsUpdate *pUpdate ) override;
+	void ProcessUpdate( const struct SClientUpdateSingleUnitUpdate *pUpdate ) override;
 
-	virtual void ProcessUpdate( const struct SWeatherChangedUpdate *pUpdate ) {}
+	void ProcessUpdate( const struct SWeatherChangedUpdate *pUpdate ) override {}
 
-	virtual void ProcessUpdate( const struct SLaserMarkUpdate *pUpdate );
-	virtual void ProcessUpdate( const struct SChatMessageUpdate *pUpdate );
-	virtual void ProcessUpdate( const struct SWinLoseUpdate *pUpdate );
-	virtual void ProcessUpdate( const struct SStartStopSequenceUpdate *pUpdate );
-	virtual void ProcessUpdate( const struct SMSChangePlaylistUpdate *pUpdate );
+	void ProcessUpdate( const struct SLaserMarkUpdate *pUpdate ) override;
+	void ProcessUpdate( const struct SChatMessageUpdate *pUpdate ) override;
+	void ProcessUpdate( const struct SWinLoseUpdate *pUpdate ) override;
+	void ProcessUpdate( const struct SStartStopSequenceUpdate *pUpdate ) override;
+	void ProcessUpdate( const struct SMSChangePlaylistUpdate *pUpdate ) override;
 	//	virtual void ProcessUpdate( const struct SMSPlayVoiceUpdate *pUpdate );
-	virtual void ProcessUpdate( const struct SMSSetVolumeUpdate *pUpdate );
-	virtual void ProcessUpdate( const struct SMSPauseMusicUpdate *pUpdate );
-	virtual void ProcessUpdate( const struct SMoneyChangedUpdate *pUpdate );
-	virtual void ProcessUpdate( const struct SObjectiveChanged *pUpdate );
-	virtual void ProcessUpdate( const struct SEnableAirStrike *pUpdate );
+	void ProcessUpdate( const struct SMSSetVolumeUpdate *pUpdate ) override;
+	void ProcessUpdate( const struct SMSPauseMusicUpdate *pUpdate ) override;
+	void ProcessUpdate( const struct SMoneyChangedUpdate *pUpdate ) override;
+	void ProcessUpdate( const struct SObjectiveChanged *pUpdate ) override;
+	void ProcessUpdate( const struct SEnableAirStrike *pUpdate ) override;
 
-	virtual void ProcessUpdate( const struct SMemCameraPos *pUpdate ) {}
+	void ProcessUpdate( const struct SMemCameraPos *pUpdate ) override {}
 
-	virtual void ProcessUpdate( const struct SSetCameraToMemPos *pUpdate ) {}
+	void ProcessUpdate( const struct SSetCameraToMemPos *pUpdate ) override {}
 
-	virtual void ProcessUpdate( const struct SChatClear *pUpdate );
+	void ProcessUpdate( const struct SChatClear *pUpdate ) override;
 
 	void RegisterProcess( IClientUpdatableProcess *pProcess );
 

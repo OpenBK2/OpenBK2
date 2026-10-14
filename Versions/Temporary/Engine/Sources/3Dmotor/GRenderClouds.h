@@ -25,7 +25,7 @@ class CCloudMover : public CFuncBase<SHMatrix>
 	CVec2 vWrapSize;
 	float fAngle, fSpeed; // speed in textures per second
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTime );
 		f.Add( 3, &vWrapSize );
@@ -34,12 +34,12 @@ class CCloudMover : public CFuncBase<SHMatrix>
 		return 0;
 	}
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pTime.Refresh();
 	}
 
-	void Recalc();
+	void Recalc() override;
 
 public:
 	CCloudMover() {}

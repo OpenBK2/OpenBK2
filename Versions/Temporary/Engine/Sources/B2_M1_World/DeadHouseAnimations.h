@@ -37,7 +37,7 @@ class CDeadHouseAnimations : public IClientUpdatableProcess
 	ZDATA
 	std::vector<SAnimationInfo> animations;
 
-ZEND public : int operator&( IBinSaver &f )
+ZEND public : int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &animations );
 		return 0;
@@ -48,7 +48,7 @@ private:
 public:
 	void Add( int nObjectID, const NTimer::STime &time, const NDb::SAnimB2 *pAnimation );
 	void Sort();
-	bool Update( const NTimer::STime &time );
+	bool Update( const NTimer::STime &time ) override;
 
 	const bool IsEmpty() const
 	{

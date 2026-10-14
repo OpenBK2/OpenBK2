@@ -19,17 +19,17 @@ class CTorpedoStatesFactory : public IStatesFactory
 	static CPtr<CTorpedoStatesFactory> pFactory;
 
 public:
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		return 0;
 	}
 
 	static IStatesFactory *Instance();
 
-	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
+	bool CanCommandBeExecuted( class CAICommand *pCommand ) override;
 
-	virtual struct IUnitState *ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
-	virtual struct IUnitState *ProduceRestState( class CQueueUnit *pUnit );
+	struct IUnitState *ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand ) override;
+	struct IUnitState *ProduceRestState( class CQueueUnit *pUnit ) override;
 
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
@@ -49,7 +49,7 @@ class CUnitTorpedo : public CAIUnit
 	CVec2 vContactPoint;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CAIUnit *)this );
 		f.Add( 2, &pShooterStats );
@@ -62,14 +62,14 @@ public:
 	}
 
 protected:
-	virtual void InitGuns() {}
+	void InitGuns() override {}
 
-	virtual const class CUnitGuns *GetGuns() const
+	const class CUnitGuns *GetGuns() const override
 	{
 		return 0;
 	}
 
-	virtual class CUnitGuns *GetGuns()
+	class CUnitGuns *GetGuns() override
 	{
 		return 0;
 	}
@@ -96,22 +96,22 @@ public:
 	                   ICollisionsCollector *pCollisionsCollector );
 
 	// This Init() does nothing
-	virtual void Init( const CVec2 &center,
-	                   const int z,
-	                   const SUnitBaseRPGStats *_pStats,
-	                   const float fHP,
-	                   const uint16_t dir,
-	                   const uint8_t player,
-	                   ICollisionsCollector *pCollisionsCollector )
+	void Init( const CVec2 &center,
+	           const int z,
+	           const SUnitBaseRPGStats *_pStats,
+	           const float fHP,
+	           const uint16_t dir,
+	           const uint8_t player,
+	           ICollisionsCollector *pCollisionsCollector ) override
 	{
 	}
 
-	virtual const SUnitBaseRPGStats *GetStats() const
+	const SUnitBaseRPGStats *GetStats() const override
 	{
 		return pTorpedoStats;
 	}
 
-	virtual IStatesFactory *GetStatesFactory() const
+	IStatesFactory *GetStatesFactory() const override
 	{
 		return CTorpedoStatesFactory::Instance();
 	}
@@ -121,7 +121,7 @@ public:
 		return fSpeed;
 	}
 
-	virtual void Die( const bool fromExplosion, const float fDamage );
+	void Die( const bool fromExplosion, const float fDamage ) override;
 
 	virtual const uint8_t GetParty()
 	{
@@ -129,97 +129,97 @@ public:
 	}
 
 	// Inherited from AIUnit
-	virtual const EActionNotify GetShootAction() const
+	const EActionNotify GetShootAction() const override
 	{
 		return ACTION_NOTIFY_MECH_SHOOT;
 	}
 
-	virtual const EActionNotify GetAimAction() const
+	const EActionNotify GetAimAction() const override
 	{
 		return ACTION_NOTIFY_AIM;
 	}
 
-	virtual const EActionNotify GetDieAction() const
+	const EActionNotify GetDieAction() const override
 	{
 		return ACTION_NOTIFY_DIE;
 	}
 
-	virtual const EActionNotify GetIdleAction() const
+	const EActionNotify GetIdleAction() const override
 	{
 		return ACTION_NOTIFY_IDLE;
 	}
 
-	virtual const EActionNotify GetMovingAction() const
+	const EActionNotify GetMovingAction() const override
 	{
 		return ACTION_NOTIFY_MOVE;
 	}
 
-	virtual const bool CanUnitTrampled( const CBasePathUnit *pTramplerUnit ) const
+	const bool CanUnitTrampled( const CBasePathUnit *pTramplerUnit ) const override
 	{
 		return false;
 	}
 
-	virtual const bool CanGoBackward() const
+	const bool CanGoBackward() const override
 	{
 		return false;
 	}
 
-	virtual class CBasicGun *ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime )
+	class CBasicGun *ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime ) override
 	{
 		return 0;
 	}
 
-	virtual float GetMaxFireRange() const
+	float GetMaxFireRange() const override
 	{
 		return 0.0f;
 	}
 
-	virtual bool IsMech() const
+	bool IsMech() const override
 	{
 		return true;
 	}
 
-	virtual const bool CanShootToPlanes() const
+	const bool CanShootToPlanes() const override
 	{
 		return false;
 	}
 
-	virtual int GetNGuns() const
+	int GetNGuns() const override
 	{
 		return 0;
 	}
 
-	virtual const int GetNTurrets() const
+	const int GetNTurrets() const override
 	{
 		return 0;
 	}
 
-	virtual class CBasicGun *GetGun( const int n ) const
+	class CBasicGun *GetGun( const int n ) const override
 	{
 		return 0;
 	}
 
-	virtual const bool IsInfantry() const
+	const bool IsInfantry() const override
 	{
 		return true;
 	}
 
-	virtual const bool IterateUnits( const CVec2 &vCenter,
-	                                 const float fRadius,
-	                                 const bool bOnlyMech,
-	                                 const SIterateUnitsCallback &callback ) const;
+	const bool IterateUnits( const CVec2 &vCenter,
+	                         const float fRadius,
+	                         const bool bOnlyMech,
+	                         const SIterateUnitsCallback &callback ) const override;
 
-	const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const
+	const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const override
 	{
 		return ECT_NONE;
 	}
 
-	const bool CanLockTiles() const
+	const bool CanLockTiles() const override
 	{
 		return false;
 	}
 
-	virtual void Segment();
+	void Segment() override;
 };
 
 class CTorpedoPath : public ISmoothPath
@@ -241,50 +241,50 @@ public:
 		return VNULL2;
 	}
 
-	virtual bool IsFinished() const
+	bool IsFinished() const override
 	{
 		return false;
 	}
 
-	virtual void Segment( const NTimer::STime timeDiff );
-	int operator&( IBinSaver &saver );
+	void Segment( const NTimer::STime timeDiff ) override;
+	int operator&( IBinSaver &saver ) override;
 
 	//ненужные функции
-	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap )
+	bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) override
 	{
 		return false;
 	}
 
-	virtual bool Init( IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap )
+	bool Init( IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap ) override
 	{
 		return false;
 	}
 
-	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit )
+	bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) override
 	{
 		return false;
 	}
 
-	virtual void Stop() {}
+	void Stop() override {}
 
-	virtual const bool CanGoBackward() const
+	const bool CanGoBackward() const override
 	{
 		return true;
 	}
 
-	virtual const bool CanGoForward() const
+	const bool CanGoForward() const override
 	{
 		return true;
 	}
 
-	virtual const CVec2 PeekPathPoint( const int nToShift ) const;
+	const CVec2 PeekPathPoint( const int nToShift ) const override;
 
-	virtual IMemento *CreateMemento() const
+	IMemento *CreateMemento() const override
 	{
 		return 0;
 	}
 
-	virtual const float GetSpeed() const
+	const float GetSpeed() const override
 	{
 		return -1.0f;
 	}
@@ -299,7 +299,7 @@ class CTorpedoAttackState : public IUnitState
 	CPtr<CTorpedoPath> pPath;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTorpedo );
 		f.Add( 3, &pPath );
@@ -311,29 +311,29 @@ public:
 
 	CTorpedoAttackState() {}
 
-	virtual void Segment();
+	void Segment() override;
 
-	virtual EUnitStateNames GetName()
+	EUnitStateNames GetName() override
 	{
 		return EUSN_SWARM;
 	}
 
-	virtual bool IsRestState() const
+	bool IsRestState() const override
 	{
 		return false;
 	}
 
-	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand )
+	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand ) override
 	{
 		return TSIR_NO_COMMAND_INCOMPATIBLE;
 	}
 
-	virtual bool IsAttackingState() const
+	bool IsAttackingState() const override
 	{
 		return true;
 	}
 
-	virtual const CVec2 GetPurposePoint() const
+	const CVec2 GetPurposePoint() const override
 	{
 		return VNULL2;
 	}

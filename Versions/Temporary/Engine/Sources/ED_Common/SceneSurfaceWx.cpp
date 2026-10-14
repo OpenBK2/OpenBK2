@@ -56,7 +56,7 @@ public:
 	{
 	}
 
-	virtual void Notify()
+	void Notify() override
 	{
 		tick();
 	}
@@ -497,7 +497,7 @@ protected:
 	// The window's destruction, however it comes: the timer stops and the
 	// core lets go while the window is still there, as the MFC view's
 	// OnDestroy did before its handle went.
-	virtual void BeforeTearDown()
+	void BeforeTearDown() override
 	{
 		updateTimer.Stop();
 		if ( bCoreHasWindow )
@@ -524,7 +524,7 @@ public:
 	{
 	}
 
-	virtual ~CWxSceneSurface()
+	~CWxSceneSurface() override
 	{
 		// Here and not only in the base destructor, where BeforeTearDown is
 		// no longer this class's.
@@ -532,7 +532,7 @@ public:
 	}
 
 	// ISceneSurface
-	virtual bool Create( IFrameWindow *pFrame, CChildFrameWndBase *_pCore )
+	bool Create( IFrameWindow *pFrame, CChildFrameWndBase *_pCore ) override
 	{
 		pCore = _pCore;
 		if ( !CreateHost( pFrame ) || ( Root() == nullptr ) )
@@ -583,19 +583,19 @@ public:
 		return true;
 	}
 
-	virtual IWidget *GetWidget()
+	IWidget *GetWidget() override
 	{
 		return this;
 	}
 
-	virtual HWND GetHandle() const
+	HWND GetHandle() const override
 	{
 		// An HWND on Windows and an SDL_Window off it, which is what DXVK
 		// means by HWND there. NativeViewport.h has the whole of it.
 		return static_cast<HWND>( nativeViewport.GetHandle() );
 	}
 
-	virtual void Redraw()
+	void Redraw() override
 	{
 		if ( pWindow != nullptr )
 		{
@@ -604,7 +604,7 @@ public:
 		}
 	}
 
-	virtual void RedrawWithoutErase()
+	void RedrawWithoutErase() override
 	{
 		if ( pWindow != nullptr )
 		{
@@ -613,12 +613,12 @@ public:
 		}
 	}
 
-	virtual bool HasFocus() const
+	bool HasFocus() const override
 	{
 		return ( pWindow != nullptr ) && pWindow->HasFocus();
 	}
 
-	virtual void Focus()
+	void Focus() override
 	{
 		if ( pWindow != nullptr )
 		{
@@ -626,14 +626,14 @@ public:
 		}
 	}
 
-	virtual bool IsShown() const
+	bool IsShown() const override
 	{
 		// Visible on screen, every parent shown -- IsWindowVisible, which the
 		// renderer asks the same window before resizing its back buffer.
 		return ( pWindow != nullptr ) && pWindow->IsShownOnScreen();
 	}
 
-	virtual bool IsInActiveWindow() const
+	bool IsInActiveWindow() const override
 	{
 		if ( pWindow == nullptr )
 		{
@@ -647,7 +647,7 @@ public:
 		return ( pTopLevel != nullptr ) && static_cast<wxTopLevelWindow *>( pTopLevel )->IsActive();
 	}
 
-	virtual void DiscardPendingInput()
+	void DiscardPendingInput() override
 	{
 #if BOOST_OS_WINDOWS
 		// The two PeekMessage calls this replaces, which threw away whatever
@@ -663,7 +663,7 @@ public:
 		// the cost of not doing it is that the click is acted on.
 	}
 
-	virtual CTPoint<int> GetClientSize() const
+	CTPoint<int> GetClientSize() const override
 	{
 		if ( pWindow == nullptr )
 		{
@@ -673,7 +673,7 @@ public:
 		return CTPoint<int>( size.x, size.y );
 	}
 
-	virtual void Place( const CTRect<int> &rRect )
+	void Place( const CTRect<int> &rRect ) override
 	{
 		if ( pWindow != nullptr )
 		{
@@ -681,7 +681,7 @@ public:
 		}
 	}
 
-	virtual void Fill( const CTRect<int> &rRect, TWidgetColor color )
+	void Fill( const CTRect<int> &rRect, TWidgetColor color ) override
 	{
 		if ( pWindow != nullptr )
 		{
@@ -692,7 +692,7 @@ public:
 		}
 	}
 
-	virtual void SetMouseCapture( bool bCapture )
+	void SetMouseCapture( bool bCapture ) override
 	{
 		if ( pWindow == nullptr )
 		{
@@ -713,12 +713,12 @@ public:
 		}
 	}
 
-	virtual bool StartUpdateTimer( int nInterval )
+	bool StartUpdateTimer( int nInterval ) override
 	{
 		return updateTimer.Start( nInterval );
 	}
 
-	virtual void StopUpdateTimer()
+	void StopUpdateTimer() override
 	{
 		updateTimer.Stop();
 	}
@@ -731,7 +731,7 @@ public:
 	// чобы показать изменения сразу" -- because changing a window's style
 	// does not recompute its frame and this was how the view forced it. wx
 	// adds and removes the bar itself, so there is nothing to force.
-	virtual void ShowScrollBars( bool bShow )
+	void ShowScrollBars( bool bShow ) override
 	{
 		bScrollShown = bShow;
 		ApplyScrollBar( false );
@@ -739,7 +739,7 @@ public:
 		Redraw();
 	}
 
-	virtual void SetScrollBarRange( bool bVertical, int nMin, int nMax )
+	void SetScrollBarRange( bool bVertical, int nMin, int nMax ) override
 	{
 		const int nIndex = ScrollIndex( bVertical );
 		scrollMin[nIndex] = nMin;
@@ -748,7 +748,7 @@ public:
 		ApplyScrollBar( bVertical );
 	}
 
-	virtual void GetScrollBarState( bool bVertical, int *pnMin, int *pnMax, int *pnPos ) const
+	void GetScrollBarState( bool bVertical, int *pnMin, int *pnMax, int *pnPos ) const override
 	{
 		const int nIndex = ScrollIndex( bVertical );
 		( *pnMin ) = scrollMin[nIndex];
@@ -756,7 +756,7 @@ public:
 		( *pnPos ) = scrollPos[nIndex];
 	}
 
-	virtual void SetScrollBarPos( bool bVertical, int nPos )
+	void SetScrollBarPos( bool bVertical, int nPos ) override
 	{
 		const int nIndex = ScrollIndex( bVertical );
 		scrollPos[nIndex] = (std::min)( (std::max)( nPos, scrollMin[nIndex] ), scrollMax[nIndex] );

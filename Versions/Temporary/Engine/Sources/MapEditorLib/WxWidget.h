@@ -65,12 +65,12 @@ public:
 	{
 	}
 
-	virtual void *GetNativeWidget()
+	void *GetNativeWidget() override
 	{
 		return ( pWindow != nullptr ) ? pWindow->GetHandle() : nullptr;
 	}
 
-	virtual wxWindow *GetWxWindow()
+	wxWindow *GetWxWindow() override
 	{
 		return pWindow;
 	}

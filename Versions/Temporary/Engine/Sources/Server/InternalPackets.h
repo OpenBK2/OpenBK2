@@ -10,7 +10,7 @@ public:
 	ZDATA
 	int nLobbyID;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nLobbyID );
 		return 0;
@@ -35,7 +35,7 @@ public:
 	ZDATA
 	int nLobbyID;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nLobbyID );
 		return 0;

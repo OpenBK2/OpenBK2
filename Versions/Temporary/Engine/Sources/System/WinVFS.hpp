@@ -71,8 +71,8 @@ class CWinVFS : public IVFS
 		{
 		}
 
-		CDataStream *OpenStream( const std::string &szPathName );
-		bool GetStats( SFileStats *pStats, const std::string &szPathName ) const;
+		CDataStream *OpenStream( const std::string &szPathName ) override;
+		bool GetStats( SFileStats *pStats, const std::string &szPathName ) const override;
 	};
 
 	class CZipFileEntry : public CFileEntry
@@ -87,12 +87,12 @@ class CWinVFS : public IVFS
 		{
 		}
 
-		CDataStream *OpenStream( const std::string &szPathName )
+		CDataStream *OpenStream( const std::string &szPathName ) override
 		{
 			return zipfile.OpenFile( nIndex );
 		}
 
-		bool GetStats( SFileStats *pStats, const std::string &szPathName ) const
+		bool GetStats( SFileStats *pStats, const std::string &szPathName ) const override
 		{
 			if ( pStats == 0 )
 			{
@@ -170,12 +170,12 @@ class CWinVFS : public IVFS
 
 public:
 	CWinVFS( const std::string &szBasePath );
-	~CWinVFS();
+	~CWinVFS() override;
 	//
-	CDataStream *OpenFile( const std::string &szPath );
-	bool DoesFileExist( const std::string &szPath );
-	bool GetFileStats( SFileStats *pStats, const std::string &szPath );
-	void GetAllFileNames( std::vector<std::string> *pFileNames, const std::string &rszFolder );
+	CDataStream *OpenFile( const std::string &szPath ) override;
+	bool DoesFileExist( const std::string &szPath ) override;
+	bool GetFileStats( SFileStats *pStats, const std::string &szPath ) override;
+	void GetAllFileNames( std::vector<std::string> *pFileNames, const std::string &rszFolder ) override;
 
 	void GetFileFullName( const std::string &szPath );
 };
@@ -192,8 +192,8 @@ public:
 	CWinFileCreator( const std::string &szBasePath );
 	std::string GetFullPath( const std::string &szPath ) const;
 
-	CDataStream *CreateFile( const std::string &szPath );
-	bool RemoveFile( const std::string &szPath );
+	CDataStream *CreateFile( const std::string &szPath ) override;
+	bool RemoveFile( const std::string &szPath ) override;
 };
 
 } // namespace NVFS

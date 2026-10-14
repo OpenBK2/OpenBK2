@@ -26,9 +26,9 @@ class CTrackObjInfo : public CPtrFuncBase<NGScene::CObjectInfo>
 	bool bFirstUpdate = false;
 
 protected:
-	void Recalc();
+	void Recalc() override;
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		if ( bNeedUpdate )
 		{
@@ -58,7 +58,7 @@ public:
 	}
 
 	//
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, &pTrackManager );
 		saver.Add( 2, &nID );
@@ -130,7 +130,7 @@ public:
 	void AfterLoad( CFuncBase<STime> *_pTimer, NGScene::IGameView *_pGScene );
 
 	//
-	int operator&( IBinSaver &saver )
+	int operator&( IBinSaver &saver ) override
 	{
 		saver.Add( 1, &freeTracks );
 		saver.Add( 2, &tracks );

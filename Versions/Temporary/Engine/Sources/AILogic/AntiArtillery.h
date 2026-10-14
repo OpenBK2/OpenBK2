@@ -12,7 +12,7 @@ class CRevealCircle : public CLinkObject
 	CCircle circle;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CLinkObject *)this );
 		f.Add( 2, &circle );
@@ -34,22 +34,22 @@ public:
 		SetUniqueIdForObjects();
 	}
 
-	virtual void GetRevealCircle( CCircle *pCircle ) const
+	void GetRevealCircle( CCircle *pCircle ) const override
 	{
 		*pCircle = circle;
 	}
 
-	virtual const bool IsVisible( const uint8_t party ) const
+	const bool IsVisible( const uint8_t party ) const override
 	{
 		return true;
 	}
 
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const
+	void GetTilesForVisibility( CTilesSet *pTiles ) const override
 	{
 		pTiles->clear();
 	}
 
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const
+	bool ShouldSuspendAction( const EActionNotify &eAction ) const override
 	{
 		return false;
 	}
@@ -78,7 +78,7 @@ class CAntiArtillery : public CLinkObject
 	CPtr<CAIUnit> pOwner;
 
 public:
-	int operator&( IBinSaver &f )
+	int operator&( IBinSaver &f ) override
 	{
 		if ( !f.IsChecksum() )
 		{
@@ -126,17 +126,17 @@ public:
 	}
 
 	//
-	virtual const bool IsVisible( const uint8_t party ) const
+	const bool IsVisible( const uint8_t party ) const override
 	{
 		return true;
 	}
 
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const
+	void GetTilesForVisibility( CTilesSet *pTiles ) const override
 	{
 		pTiles->clear();
 	}
 
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const
+	bool ShouldSuspendAction( const EActionNotify &eAction ) const override
 	{
 		return false;
 	}

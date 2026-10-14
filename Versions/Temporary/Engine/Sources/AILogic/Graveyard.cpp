@@ -45,7 +45,7 @@ public:
 
 	std::list<SObjTileInfo> lockedTiles; // залоканные тайлы
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		f.Add( 3, &endFogTime );

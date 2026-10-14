@@ -24,7 +24,7 @@ class CMeshDataPatch : public CPtrFuncBase<NGScene::CObjectInfo>
 	NMeshData::SMeshData *pInfo;
 
 protected:
-	void Recalc();
+	void Recalc() override;
 
 public:
 	CMeshDataPatch() {}
@@ -77,7 +77,7 @@ class CPeakPatch : public CPtrFuncBase<NGScene::CObjectInfo>
 	NMeshData::SMeshDataTex2 *pInfo;
 
 protected:
-	void Recalc();
+	void Recalc() override;
 
 public:
 	CPeakPatch() {}
@@ -169,12 +169,12 @@ class CRiverPatch : public CPtrFuncBase<NGScene::CObjectInfo>
 	float fStreamSpeed;
 
 protected:
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pTimer == 0 ? false : pTimer.Refresh();
 	}
 
-	void Recalc();
+	void Recalc() override;
 
 public:
 	CRiverPatch()
@@ -334,42 +334,42 @@ class CSceneTerrain : public ITerraGfxObserver
 	void UpdateRoadGfxInfoPtr();
 	//
 	// terrain itself
-	void UpdatePatchGeometry( std::vector<NMeshData::SMeshData> *pMeshData, const int nPatchInd );
-	void UpdateBorderGeometry( std::vector<NMeshData::SMeshData> *pMeshData, const int nBorderID );
+	void UpdatePatchGeometry( std::vector<NMeshData::SMeshData> *pMeshData, const int nPatchInd ) override;
+	void UpdateBorderGeometry( std::vector<NMeshData::SMeshData> *pMeshData, const int nBorderID ) override;
 	// road
-	void AddRoad( SRoadGFXInfo *pRoadGfxInfo );
-	bool UpdateRoad( const int nVSOID );
-	void RemoveRoad( const int nVSOID );
-	void RemoveAllRoads();
+	void AddRoad( SRoadGFXInfo *pRoadGfxInfo ) override;
+	bool UpdateRoad( const int nVSOID ) override;
+	void RemoveRoad( const int nVSOID ) override;
+	void RemoveAllRoads() override;
 	// crag
 	//void AddCrag( const SCragGFXInfo *pCragGfxInfo );
 	//bool UpdateCrag( const int nVSOID );
 	//void RemoveCrag( const int nVSOID );
 	// peak
-	void AddPeak( SPeakGFXInfo *pPeakGfxInfo );
-	bool UpdatePeak( const int nVSOID );
-	void RemovePeak( const int nVSOID );
-	void RemoveAllPeaks();
+	void AddPeak( SPeakGFXInfo *pPeakGfxInfo ) override;
+	bool UpdatePeak( const int nVSOID ) override;
+	void RemovePeak( const int nVSOID ) override;
+	void RemoveAllPeaks() override;
 	// peak
-	void AddFoot( SFootGFXInfo *pFootGfxInfo );
-	bool UpdateFoot( const int nVSOID );
-	void RemoveFoot( const int nVSOID );
-	void RemoveAllFoots();
+	void AddFoot( SFootGFXInfo *pFootGfxInfo ) override;
+	bool UpdateFoot( const int nVSOID ) override;
+	void RemoveFoot( const int nVSOID ) override;
+	void RemoveAllFoots() override;
 	// river
-	void AddRiver( const SRiverGFXInfo *pRiverGfxInfo );
-	bool UpdateRiver( const int nVSOID );
-	void RemoveRiver( const int nVSOID );
-	void RemoveAllRivers();
+	void AddRiver( const SRiverGFXInfo *pRiverGfxInfo ) override;
+	bool UpdateRiver( const int nVSOID ) override;
+	void RemoveRiver( const int nVSOID ) override;
+	void RemoveAllRivers() override;
 	// terraspots
-	void AddTerraSpot( STerraSpotGFXInfo *pTerraSpotGfxInfo );
-	bool UpdateTerraSpot( const int nVSOID );
-	void RemoveTerraSpot( const int nVSOID );
-	void RemoveAllTerraSpots();
+	void AddTerraSpot( STerraSpotGFXInfo *pTerraSpotGfxInfo ) override;
+	bool UpdateTerraSpot( const int nVSOID ) override;
+	void RemoveTerraSpot( const int nVSOID ) override;
+	void RemoveAllTerraSpots() override;
 	// precipice
-	void AddPrecipice( SPrecipiceGFXInfo *pPrecipiceGfxInfo );
-	bool UpdatePrecipice( const int nVSOID );
-	void RemovePrecipice( const int nVSOID );
-	void RemoveAllPrecipices();
+	void AddPrecipice( SPrecipiceGFXInfo *pPrecipiceGfxInfo ) override;
+	bool UpdatePrecipice( const int nVSOID ) override;
+	void RemovePrecipice( const int nVSOID ) override;
+	void RemoveAllPrecipices() override;
 	//
 public:
 	CSceneTerrain() {}
@@ -378,5 +378,5 @@ public:
 	//
 	void HideTerrain( bool bHide );
 	//
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

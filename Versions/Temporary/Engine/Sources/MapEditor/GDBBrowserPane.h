@@ -64,7 +64,7 @@ private:
 
 public:
 	CGDBBrowserContents( IPane *_pPane, int _nGDBBrowserID );
-	virtual ~CGDBBrowserContents();
+	~CGDBBrowserContents() override;
 
 	// Takes the browser the pane made and created with this as its listener,
 	// reads the tables the user chose for this pane, and fills it.
@@ -98,9 +98,9 @@ public:
 	}
 
 	// IObjectBrowser::IListener
-	virtual void OnTableSelected();
+	void OnTableSelected() override;
 
 	// ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 };

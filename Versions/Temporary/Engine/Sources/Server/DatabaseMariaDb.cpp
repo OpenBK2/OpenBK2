@@ -39,20 +39,20 @@ public:
 	{
 	}
 
-	virtual ~CMariaDbDatabase()
+	~CMariaDbDatabase() override
 	{
 		Close();
 	}
 
-	virtual bool Connect( const SDbConnection &connection );
-	virtual void Close();
-	virtual bool IsAlive();
-	virtual bool Execute( const std::string &szStatement );
-	virtual bool Query( const std::string &szQuery, CDbResult *pResult );
-	virtual std::string Escape( const std::string &szValue ) const;
-	virtual std::unordered_set<std::string> GetColumns( const std::string &szTable );
+	bool Connect( const SDbConnection &connection ) override;
+	void Close() override;
+	bool IsAlive() override;
+	bool Execute( const std::string &szStatement ) override;
+	bool Query( const std::string &szQuery, CDbResult *pResult ) override;
+	std::string Escape( const std::string &szValue ) const override;
+	std::unordered_set<std::string> GetColumns( const std::string &szTable ) override;
 
-	virtual std::string GetLastError() const
+	std::string GetLastError() const override
 	{
 		return szLastError;
 	}

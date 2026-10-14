@@ -25,7 +25,7 @@ public:
 	}
 
 	// ILogger
-	void Log( ELogOutputType eLogOutputType, const std::string &szText )
+	void Log( ELogOutputType eLogOutputType, const std::string &szText ) override
 	{
 		CLogBufferList::iterator posLogBuffer = logBufferList.insert( logBufferList.end(), SLogBuffer() );
 		posLogBuffer->eLogOutputType = eLogOutputType;
@@ -36,7 +36,7 @@ public:
 		}
 	}
 
-	void ClearLog()
+	void ClearLog() override
 	{
 		logBufferList.clear();
 	}
@@ -52,7 +52,7 @@ class CDefaultLoggerSink : public ILoggerSink
 public:
 	CDefaultLoggerSink() {}
 
-	ILogger *GetLogger()
+	ILogger *GetLogger() override
 	{
 		return &logger;
 	}

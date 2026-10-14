@@ -36,7 +36,7 @@ class CFullScreenFader : public IFullScreenFader
 	float fEndValue;
 	bool bFadeInterfaces;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &startTime );
 		f.Add( 3, &fDuration );
@@ -59,17 +59,17 @@ public:
 	}
 
 	// IFullScreenFader
-	virtual void Start( float _fDuration, float _fStartValue, float _fEndValue, bool bFadeInterfaces = true );
+	void Start( float _fDuration, float _fStartValue, float _fEndValue, bool bFadeInterfaces = true ) override;
 
-	virtual void AddColorModificator( CFuncBase<CVec3> *pvColor, bool bModifyInterfaces );
-	virtual void RemoveColorModificator( CFuncBase<CVec3> *pvColor );
+	void AddColorModificator( CFuncBase<CVec3> *pvColor, bool bModifyInterfaces ) override;
+	void RemoveColorModificator( CFuncBase<CVec3> *pvColor ) override;
 
-	virtual bool IsInProgress()
+	bool IsInProgress() override
 	{
 		return fDuration != 0.0f;
 	}
 
-	virtual void Draw( const NTimer::STime &time, bool bAfterDrawingInterfaces );
+	void Draw( const NTimer::STime &time, bool bAfterDrawingInterfaces ) override;
 
 private:
 	float GetValue( const NTimer::STime &_time );

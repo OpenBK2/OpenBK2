@@ -21,7 +21,7 @@ class CComplexObstacleCreation : public CLongObjectCreation
 	std::list<SVector> tilesUnder;
 	bool bTmpNonCheatPath = {}; // if skipped 1 or more objects - move to another without cheat path
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CLongObjectCreation *)this );
 		f.Add( 2, &antitanks );
@@ -64,21 +64,21 @@ public:
 	{
 	}
 
-	bool PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock );
-	const int GetMaxIndex() const;
-	const int GetCurIndex() const;
-	const CVec2 GetNextPoint( const int nPlace, const int nMaxPlace ) const;
-	void BuildNext();
-	void GetUnitsPreventing( std::list<CPtr<CAIUnit>> *units );
-	bool IsAnyUnitPrevent() const;
-	bool CanBuildNext() const;
-	void LockCannotBuild();
-	void LockNext();
-	CLine2 GetCurLine();
-	float GetPrice();
-	bool IsCheatPath() const;
-	bool CannotFinish() const;
-	void AddWork( const float fAdd );
-	float GetWorkDone() const;
-	void CreateObjects( SAIObjectsUnderConstructionUpdate *pUpdate );
+	bool PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock ) override;
+	const int GetMaxIndex() const override;
+	const int GetCurIndex() const override;
+	const CVec2 GetNextPoint( const int nPlace, const int nMaxPlace ) const override;
+	void BuildNext() override;
+	void GetUnitsPreventing( std::list<CPtr<CAIUnit>> *units ) override;
+	bool IsAnyUnitPrevent() const override;
+	bool CanBuildNext() const override;
+	void LockCannotBuild() override;
+	void LockNext() override;
+	CLine2 GetCurLine() override;
+	float GetPrice() override;
+	bool IsCheatPath() const override;
+	bool CannotFinish() const override;
+	void AddWork( const float fAdd ) override;
+	float GetWorkDone() const override;
+	void CreateObjects( SAIObjectsUnderConstructionUpdate *pUpdate ) override;
 };

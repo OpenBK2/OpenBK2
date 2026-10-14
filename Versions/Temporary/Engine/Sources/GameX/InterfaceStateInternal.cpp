@@ -36,7 +36,7 @@ class CCustomMLHandler : public IMLHandler
 	OBJECT_BASIC_METHODS( CCustomMLHandler );
 
 public:
-	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet );
+	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet ) override;
 };
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x300C8D43, CCampaignState )

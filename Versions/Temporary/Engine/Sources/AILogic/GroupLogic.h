@@ -41,7 +41,7 @@ class CGroupLogic : public CAIObjectBase
 	OBJECT_NOCOPY_METHODS( CGroupLogic );
 
 public:
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 
 private:
 	CFreeGroupIDs groupIds;

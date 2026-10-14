@@ -66,7 +66,7 @@ class CBuildingEditor : public CEditorBase, public CDefaultView, public ICommand
 
 	//
 	CBuildingEditor();
-	~CBuildingEditor();
+	~CBuildingEditor() override;
 	//
 public:
 	//IEditor
@@ -77,44 +77,44 @@ public:
 
 	const std::string &GetCurrSeason() const;
 
-	void GetTemporaryLabel( std::string *pszTemporaryLabel )
+	void GetTemporaryLabel( std::string *pszTemporaryLabel ) override
 	{
 		pszTemporaryLabel->clear();
 	}
 
-	IView *GetView()
+	IView *GetView() override
 	{
 		return this;
 	}
 
-	IInputState *GetInputState()
+	IInputState *GetInputState() override
 	{
 		return reinterpret_cast<IInputState *>( pBuildingState );
 	}
 
-	void GetChildFrameType( std::string *pszChildFrameTypeName )
+	void GetChildFrameType( std::string *pszChildFrameTypeName ) override
 	{
 		( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__";
 	}
 
-	void CreateControls();
+	void CreateControls() override;
 	void ResetGUI( bool bActive ) override;
 
-	void PostCreateControls() {}
+	void PostCreateControls() override {}
 
-	void PreDestroyControls() {}
+	void PreDestroyControls() override {}
 
-	void DestroyControls();
-	void Create();
-	void Destroy();
+	void DestroyControls() override;
+	void Create() override;
+	void Destroy() override;
 
 	//CDefaultView
-	void Undo( IController *pController );
-	void Redo( IController *pController );
+	void Undo( IController *pController ) override;
+	void Redo( IController *pController ) override;
 
 	//ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 
 	//CBuildingEditor
 	void ReloadModel( NDb::ESeason eSeason );

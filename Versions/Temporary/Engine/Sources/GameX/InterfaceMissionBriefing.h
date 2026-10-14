@@ -48,7 +48,7 @@ class CInterfaceMissionBriefing : public CInterfaceScreenBase, public IProgramme
 							pHeaderView;
 	CPtr<ITextView> pObjectivesView;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &pMainWnd );
@@ -77,11 +77,11 @@ private:
 public:
 	CInterfaceMissionBriefing();
 
-	bool Init();
+	bool Init() override;
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 	//}
 };
 
@@ -89,9 +89,9 @@ class CICMissionBriefing : public CInterfaceCommandBase<CInterfaceMissionBriefin
 {
 	OBJECT_BASIC_METHODS( CICMissionBriefing );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

@@ -13,7 +13,7 @@ class CHelicopterDeviationProcess : public IClientUpdatableProcess
 	ZDATA
 	CPtr<CMOUnitHelicopter> pUnit;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		return 0;
@@ -27,7 +27,7 @@ public:
 	{
 	}
 
-	bool Update( const NTimer::STime &time )
+	bool Update( const NTimer::STime &time ) override
 	{
 		return IsValid( pUnit ) && pUnit->UpdateStandingDeviation( time );
 	}

@@ -23,7 +23,7 @@ class CAttachedObject : public IAttachedObject
 	CDGPtr<CFuncBase<SBound>> pBounder;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTransform );
 		f.Add( 3, &nBoneIndex );
@@ -63,12 +63,12 @@ protected:
 	}
 
 public:
-	CFuncBase<SFBTransform> *GetTransform() const
+	CFuncBase<SFBTransform> *GetTransform() const override
 	{
 		return pTransform;
 	}
 
-	virtual void SetTransform( CFuncBase<SFBTransform> *_pTransform )
+	void SetTransform( CFuncBase<SFBTransform> *_pTransform ) override
 	{
 		pTransform = _pTransform;
 	}
@@ -79,13 +79,13 @@ public:
 	}
 
 	// remove this object from scene
-	virtual void Destroy( const NTimer::STime time );
-	virtual void Clear( const NTimer::STime time );
+	void Destroy( const NTimer::STime time ) override;
+	void Clear( const NTimer::STime time ) override;
 	// create object at scene
-	virtual void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer ) = 0;
+	void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer ) override = 0;
 
 	// get bone to which attached
-	virtual const int GetBoneIndex() const
+	const int GetBoneIndex() const override
 	{
 		return nBoneIndex;
 	}
@@ -99,7 +99,7 @@ struct CStaticAttachedObj : public CAttachedObject
 	CDBPtr<NDb::SModel> pModel;
 	bool bUseLOD;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CAttachedObject *)this );
 		f.Add( 2, &pModel );
@@ -121,15 +121,15 @@ public:
 	{
 	}
 
-	virtual const NDb::SModel *GetModel() const;
+	const NDb::SModel *GetModel() const override;
 
-	virtual NAnimation::ISkeletonAnimator *GetAnimator() const
+	NAnimation::ISkeletonAnimator *GetAnimator() const override
 	{
 		return 0;
 	}
 
-	virtual void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer );
-	virtual void Visit( IAIVisitor *pAIVisitor );
+	void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer ) override;
+	void Visit( IAIVisitor *pAIVisitor ) override;
 };
 
 struct CAnimatedAttachedObj : public CAttachedObject
@@ -140,7 +140,7 @@ struct CAnimatedAttachedObj : public CAttachedObject
 	CDBPtr<NDb::SModel> pModel;
 	CObj<NAnimation::ISkeletonAnimator> pAnimator;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CAttachedObject *)this );
 		f.Add( 2, &pModel );
@@ -162,15 +162,15 @@ public:
 	{
 	}
 
-	virtual const NDb::SModel *GetModel() const;
+	const NDb::SModel *GetModel() const override;
 
-	virtual NAnimation::ISkeletonAnimator *GetAnimator() const
+	NAnimation::ISkeletonAnimator *GetAnimator() const override
 	{
 		return pAnimator;
 	}
 
-	virtual void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer );
-	virtual void Visit( IAIVisitor *pAIVisitor );
+	void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer ) override;
+	void Visit( IAIVisitor *pAIVisitor ) override;
 };
 
 struct CAttachedEffect : public CAttachedObject
@@ -181,7 +181,7 @@ struct CAttachedEffect : public CAttachedObject
 	CDBPtr<NDb::SEffect> pEffect;
 	NTimer::STime nStartTime;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CAttachedObject *)this );
 		f.Add( 2, &pEffect );
@@ -202,21 +202,21 @@ public:
 	{
 	}
 
-	~CAttachedEffect();
+	~CAttachedEffect() override;
 
-	const NDb::SModel *GetModel() const
+	const NDb::SModel *GetModel() const override
 	{
 		return 0;
 	}
 
-	NAnimation::ISkeletonAnimator *GetAnimator() const
+	NAnimation::ISkeletonAnimator *GetAnimator() const override
 	{
 		return 0;
 	}
 
-	void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer );
-	void Destroy( const NTimer::STime time );
-	void Clear( const NTimer::STime time );
+	void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer ) override;
+	void Destroy( const NTimer::STime time ) override;
+	void Clear( const NTimer::STime time ) override;
 };
 
 // A transform that removes the rotational part from the transform
@@ -224,19 +224,19 @@ class CAlwaysVerticalTransform : public CFuncBase<SFBTransform>
 {
 	OBJECT_NOCOPY_METHODS( CAlwaysVerticalTransform )
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pBaseTransform.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	ZDATA
 	CDGPtr<CFuncBase<SFBTransform>> pBaseTransform;
 	bool bKeepVertical;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pBaseTransform );
 		f.Add( 3, &bKeepVertical );
@@ -261,7 +261,7 @@ private:
 	CDGPtr<CFuncBase<SFBTransform>> pTransform;
 	SHMatrix mAddTransform;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTransform );
 		f.Add( 3, &mAddTransform );
@@ -269,9 +269,9 @@ private:
 	}
 
 protected:
-	virtual void Recalc();
+	void Recalc() override;
 
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pTransform.Refresh();
 	}
@@ -293,19 +293,19 @@ private:
 	ZDATA
 	CDGPtr<CFuncBase<SFBTransform>> pTransform;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTransform );
 		return 0;
 	}
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pTransform.Refresh();
 	}
 
-	virtual void Recalc()
+	void Recalc() override
 	{
 		Vis2AI( &value, pTransform->GetValue().forward.GetTrans3() );
 	}
@@ -328,16 +328,16 @@ private:
 	ZDATA
 	CDGPtr<CFuncBase<SFBTransform>> pTransform;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTransform );
 		return 0;
 	}
 
 protected:
-	virtual void Recalc();
+	void Recalc() override;
 
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pTransform.Refresh();
 	}
@@ -361,7 +361,7 @@ struct CAttachedLightEffect : public CAttachedObject
 	bool bInEditor;
 
 	ZONSERIALIZE
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CAttachedObject *)this );
 		f.Add( 2, &lightEffect );
@@ -403,18 +403,18 @@ public:
 	                      const int nBoneIndex,
 	                      const bool _bInEditor = false );
 
-	virtual const NDb::SModel *GetModel() const
+	const NDb::SModel *GetModel() const override
 	{
 		return 0;
 	}
 
-	virtual NAnimation::ISkeletonAnimator *GetAnimator() const
+	NAnimation::ISkeletonAnimator *GetAnimator() const override
 	{
 		return 0;
 	}
 
-	virtual void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer );
-	virtual void Destroy( const NTimer::STime time );
+	void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer ) override;
+	void Destroy( const NTimer::STime time ) override;
 };
 
 struct CAttachedStaticLightEffect : public CAttachedObject
@@ -431,7 +431,7 @@ struct CAttachedStaticLightEffect : public CAttachedObject
 	bool bInEditor;
 
 	ZONSERIALIZE
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CAttachedObject *)this );
 		f.Add( 2, &nObjectUniqueID );
@@ -467,16 +467,16 @@ public:
 	                            const NTimer::STime _nStartTime,
 	                            const bool _bInEditor = false );
 
-	virtual const NDb::SModel *GetModel() const
+	const NDb::SModel *GetModel() const override
 	{
 		return 0;
 	}
 
-	virtual NAnimation::ISkeletonAnimator *GetAnimator() const
+	NAnimation::ISkeletonAnimator *GetAnimator() const override
 	{
 		return 0;
 	}
 
-	virtual void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer );
-	virtual void Destroy( const NTimer::STime time );
+	void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer ) override;
+	void Destroy( const NTimer::STime time ) override;
 };

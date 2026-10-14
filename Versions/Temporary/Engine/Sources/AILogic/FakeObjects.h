@@ -17,7 +17,7 @@ class CFakeCorpseStaticObject : public CCommonStaticObject
 	bool bDestructByTracks = {};
 
 	// Track-crushability affects pathfinding and must survive save/load.
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CCommonStaticObject *)this );
 		f.Add( 2, &tilesToLock );
@@ -49,48 +49,48 @@ public:
 	                                          const std::list<SObjTileInfo> &tiles,
 	                                          const bool bCantCrushForSomeTime );
 
-	virtual void Init() {}
+	void Init() override {}
 
-	virtual const uint8_t GetPlayer() const;
+	const uint8_t GetPlayer() const override;
 
-	virtual const SHPObjectRPGStats *GetStats() const
+	const SHPObjectRPGStats *GetStats() const override
 	{
 		return 0;
 	}
 
-	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const
+	bool CanUnitGoThrough( const EAIClasses &eClass ) const override
 	{
 		return bDestructByTracks && ( eClass & EAC_TRACK );
 	}
 
-	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
+	bool ShouldSuspendAction( const EActionNotify &eAction ) const override;
 
-	virtual void GetCoveredTiles( std::list<SVector> *pTiles ) const;
-	virtual void LockTiles();
-	virtual void UnlockTiles();
-	virtual void CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles );
+	void GetCoveredTiles( std::list<SVector> *pTiles ) const override;
+	void LockTiles() override;
+	void UnlockTiles() override;
+	void CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles ) override;
 
-	virtual void SetTransparencies() {}
+	void SetTransparencies() override {}
 
-	virtual void RemoveTransparencies() {}
+	void RemoveTransparencies() override {}
 
-	virtual void RestoreTransparenciesImmidiately() {}
+	void RestoreTransparenciesImmidiately() override {}
 
-	virtual bool ProcessAreaDamage( const class CExplosion *pExpl,
-	                                const int nArmorDir,
-	                                const float fRadius,
-	                                const float fSmallRadius );
+	bool ProcessAreaDamage( const class CExplosion *pExpl,
+	                        const int nArmorDir,
+	                        const float fRadius,
+	                        const float fSmallRadius ) override;
 
-	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const {}
+	void GetTilesForVisibility( CTilesSet *pTiles ) const override {}
 
-	virtual void Delete();
+	void Delete() override;
 
-	bool CanFall()
+	bool CanFall() override
 	{
 		return false;
 	}
 
-	virtual EStaticObjType GetObjectType() const
+	EStaticObjType GetObjectType() const override
 	{
 		return eType;
 	}
@@ -100,7 +100,7 @@ public:
 		eType = eNewType;
 	}
 
-	virtual CObjectProfile *GetPassProfile() const
+	CObjectProfile *GetPassProfile() const override
 	{
 		return pPassProfile;
 	}

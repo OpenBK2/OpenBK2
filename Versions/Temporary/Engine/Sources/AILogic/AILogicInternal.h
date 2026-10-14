@@ -29,7 +29,7 @@ class CAILogic : public IAILogic
 	OBJECT_NOCOPY_METHODS( CAILogic );
 
 public:
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 
 private:
 	;
@@ -124,7 +124,7 @@ private:
 
 public:
 	CAILogic();
-	~CAILogic();
+	~CAILogic() override;
 
 	int GetScriptID( class CUpdatableObj *pObj ) const
 	{
@@ -136,48 +136,48 @@ public:
 		return pScenarioTracker;
 	}
 
-	virtual void WriteDetailedChecksumInfo( const char *szFileName );
+	void WriteDetailedChecksumInfo( const char *szFileName ) override;
 
 	void ToGarbage( class CCommonUnit *pUnit );
-	virtual void Suspend();
-	virtual void Resume();
+	void Suspend() override;
+	void Resume() override;
 
-	virtual bool IsSuspended() const
+	bool IsSuspended() const override
 	{
 		return bSuspended;
 	}
 
-	void SetProgressHook( IProgressHook *pProgress );
-	virtual void Init( ICheckSumLog *_pCheckSumLog,
-	                   const struct NDb::SMapInfo *pMapInfo,
-	                   const NDb::SAIGameConsts *_pConsts,
-	                   IAIScenarioTracker *_pScenarioTracker );
-	virtual void LogCheckSum( ICheckSumLog *pCheckSumLog );
-	virtual void InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo /*, IProgressHook * pProgress = 0 */ );
-	virtual void PostMapLoad();
-	virtual void ClearAI();
+	void SetProgressHook( IProgressHook *pProgress ) override;
+	void Init( ICheckSumLog *_pCheckSumLog,
+	           const struct NDb::SMapInfo *pMapInfo,
+	           const NDb::SAIGameConsts *_pConsts,
+	           IAIScenarioTracker *_pScenarioTracker ) override;
+	void LogCheckSum( ICheckSumLog *pCheckSumLog ) override;
+	void InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo /*, IProgressHook * pProgress = 0 */ ) override;
+	void PostMapLoad() override;
+	void ClearAI() override;
 
-	virtual void UnitCommand( SAIUnitCmd *pCommand, const uint16_t wGroupID, const int nPlayer );
+	void UnitCommand( SAIUnitCmd *pCommand, const uint16_t wGroupID, const int nPlayer ) override;
 
-	virtual const int GenerateGroupNumber();
-	virtual void RegisterGroup( const std::vector<int> &vIDs, const int nGroup );
+	const int GenerateGroupNumber() override;
+	void RegisterGroup( const std::vector<int> &vIDs, const int nGroup ) override;
 	virtual void RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const uint16_t wGroup );
-	virtual void UnregisterGroup( const int nGroup );
-	virtual void GroupCommand( SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue );
+	void UnregisterGroup( const int nGroup ) override;
+	void GroupCommand( SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue ) override;
 
-	virtual void ShowAreas( const std::vector<int> &units, enum EActionNotify &eType, bool bShow );
-	virtual void GetShootAreas( int nUnitID, SShootAreas *pAreas );
+	void ShowAreas( const std::vector<int> &units, enum EActionNotify &eType, bool bShow ) override;
+	void GetShootAreas( int nUnitID, SShootAreas *pAreas ) override;
 
-	virtual const bool GetMiniMapUnitsInfo( std::vector<SMiniMapUnitInfo> &vUnits );
-	virtual bool GetMiniMapWarForInfo( CArray2D<uint8_t> **pWarFogInfo, bool bFirstTime );
-	virtual int GetMiniMapWarFogSizeX() const;
-	virtual int GetMiniMapWarFogSizeY() const;
+	const bool GetMiniMapUnitsInfo( std::vector<SMiniMapUnitInfo> &vUnits ) override;
+	bool GetMiniMapWarForInfo( CArray2D<uint8_t> **pWarFogInfo, bool bFirstTime ) override;
+	int GetMiniMapWarFogSizeX() const override;
+	int GetMiniMapWarFogSizeY() const override;
 	virtual void CallScriptFunction( const char *pszCommand );
 
 	virtual int GetUniqueIDOfObject( CObjectBase *pObj );
 	virtual CObjectBase *GetObjByUniqueID( const int id );
 
-	virtual void Segment();
+	void Segment() override;
 
 	CObjectBase *AddObject( const int nUniqueID,
 	                        const SMapObjectInfo &object,
@@ -190,20 +190,20 @@ public:
 	void LoadEntrenchments( const std::vector<struct SEntrenchmentInfo> &entrenchments );
 	void LoadBridges( const std::vector<NDb::SIntArray> &bridgesInfo );
 
-	virtual void SetMyDiplomacyInfo( const int nParty, const int nNumber );
-	virtual void SetNPlayers( const int nPlayers );
-	virtual void SetNetGame( const bool bNetGame );
+	void SetMyDiplomacyInfo( const int nParty, const int nNumber ) override;
+	void SetNPlayers( const int nPlayers ) override;
+	void SetNetGame( const bool bNetGame ) override;
 
-	bool UpdateAcknowledgment( SAIAcknowledgment &pAck );
-	bool UpdateAcknowledgment( SAIBoredAcknowledgement &pAck );
+	bool UpdateAcknowledgment( SAIAcknowledgment &pAck ) override;
+	bool UpdateAcknowledgment( SAIBoredAcknowledgement &pAck ) override;
 
-	virtual float GetZ( const CVec2 &vPoint ) const;
-	virtual const uint32_t GetNormal( const CVec2 &vPoint ) const;
-	virtual const bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
+	float GetZ( const CVec2 &vPoint ) const override;
+	const uint32_t GetNormal( const CVec2 &vPoint ) const override;
+	const bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const override;
 
 	virtual bool ToggleShow( const int nShowType );
 
-	virtual bool IsCombatSituation();
+	bool IsCombatSituation() override;
 	void InitStartCommands( const LinkInfo &linksInfo, det_map<int, int> &old2NewLinks );
 	void InitReservePositions( det_map<int, int> &old2NewLinks );
 
@@ -227,12 +227,12 @@ public:
 	virtual int GetUniqueID( CObjectBase *pObj );
 
 	// при игре в multiplayer: все игроки загрузились и игра стартовала
-	virtual void NetGameStarted();
-	virtual bool IsNetGameStarted() const;
+	void NetGameStarted() override;
+	bool IsNetGameStarted() const override;
 
 	virtual const class CDifficultyLevel *GetDifficultyLevel() const;
 
-	virtual void NeutralizePlayer( const int nPlayer );
+	void NeutralizePlayer( const int nPlayer ) override;
 
 	virtual CObjectBase *GetUnitState( CObjectBase *pObj );
 	virtual bool IsFrozen( CObjectBase *pObj ) const;
@@ -240,58 +240,58 @@ public:
 
 	virtual void GetGridUnitsCoordinates( const int nGroup, const CVec2 &vGridCenter, CVec2 **pCoord, int *pnLen );
 
-	virtual CObjectBase *GetUpdate();
-	virtual void PrepareUpdates();
-	virtual void ToggleWarFog( const bool bWarFog );
-	struct ITerraAIObserver *CreateTerraAIObserver( const int nSizeX, const int nSizeY );
+	CObjectBase *GetUpdate() override;
+	void PrepareUpdates() override;
+	void ToggleWarFog( const bool bWarFog ) override;
+	struct ITerraAIObserver *CreateTerraAIObserver( const int nSizeX, const int nSizeY ) override;
 
-	virtual void PickedObj( const int nObjID );
-	virtual void PickEmpty();
+	void PickedObj( const int nObjID ) override;
+	void PickEmpty() override;
 
-	virtual const int WAR_FOG_FULL_UPDATE() const;
-	virtual const int VIS_POWER() const;
+	const int WAR_FOG_FULL_UPDATE() const override;
+	const int VIS_POWER() const override;
 
 	void RequestBuildPreview( const EActionCommand eBuildCommand,
 	                          const CVec2 &vStart,
 	                          const CVec2 &vEnd,
-	                          bool bFinished = false );
+	                          bool bFinished = false ) override;
 
-	virtual bool IsMissionLoaded() const
+	bool IsMissionLoaded() const override
 	{
 		return bMissionLoaded;
 	}
 
-	virtual void SetGlobeScriptHandler( IGlobeScriptHandler *pHandler );
+	void SetGlobeScriptHandler( IGlobeScriptHandler *pHandler ) override;
 
 	class CAIMap *GetAIMap() const
 	{
 		return pAIMap;
 	}
-	virtual class CStaticMapHeights *GetHeights() const;
+	class CStaticMapHeights *GetHeights() const override;
 
-	virtual const int GetPlayerDiplomacy( const int nPlayer ) const;
+	const int GetPlayerDiplomacy( const int nPlayer ) const override;
 
-	void SetNeedNewGroupNumber()
+	void SetNeedNewGroupNumber() override
 	{
 		bNeedNewGroupNumber = true;
 	}
 
-	const bool NeedNewGroupNumber() const
+	const bool NeedNewGroupNumber() const override
 	{
 		return bNeedNewGroupNumber;
 	}
 
-	void ResetNeedNewGroupNumber()
+	void ResetNeedNewGroupNumber() override
 	{
 		bNeedNewGroupNumber = false;
 	}
 
-	virtual const NDb::SAIGameConsts *GetAIConsts() const
+	const NDb::SAIGameConsts *GetAIConsts() const override
 	{
 		return pConsts;
 	}
 
-	virtual const int GetUnitCount( const int nPlayer ) const;
-	virtual const bool HasPlayerNoUnits( const int nPlayer ) const;
-	virtual void DumpAfterAssinc() const;
+	const int GetUnitCount( const int nPlayer ) const override;
+	const bool HasPlayerNoUnits( const int nPlayer ) const override;
+	void DumpAfterAssinc() const override;
 };

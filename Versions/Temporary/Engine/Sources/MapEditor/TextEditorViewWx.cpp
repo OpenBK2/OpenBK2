@@ -676,7 +676,7 @@ private:
 
 	// IFindTarget -- CLuaEditor::FindNext, Replace and ReplaceAll. Positions
 	// are bytes, as Scintilla's are, so lengths are taken in UTF-8.
-	virtual void FindNext( const std::string &rszText, bool bWholeWord, bool bMatchCase )
+	void FindNext( const std::string &rszText, bool bWholeWord, bool bMatchCase ) override
 	{
 		szLastTextToFind = rszText;
 		bLastMatchCase = bMatchCase;
@@ -704,7 +704,7 @@ private:
 		}
 	}
 
-	virtual void ReplaceSelection( const std::string &rszWith )
+	void ReplaceSelection( const std::string &rszWith ) override
 	{
 		if ( pEditor->GetSelectionStart() == pEditor->GetSelectionEnd() )
 		{
@@ -713,7 +713,7 @@ private:
 		pEditor->ReplaceSelection( wxString::FromUTF8( rszWith.c_str() ) );
 	}
 
-	virtual void ReplaceAll( const std::string &rszText, const std::string &rszWith, bool bWholeWord, bool bMatchCase )
+	void ReplaceAll( const std::string &rszText, const std::string &rszWith, bool bWholeWord, bool bMatchCase ) override
 	{
 		szLastTextToFind = rszText;
 		bLastMatchCase = bMatchCase;

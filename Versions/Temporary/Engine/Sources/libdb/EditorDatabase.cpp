@@ -119,7 +119,7 @@ class CEditorDatabase : public CBasicDatabase
 	//! get struct meta info, linked with type defs (link if necessary)
 	NMetaInfo::SStructMetaInfo *GetStructMetaInfo( const std::string &szTypeName );
 	//! check object exist (register it from storage if necessary)
-	bool DoesObjectExist( const CDBID &dbid );
+	bool DoesObjectExist( const CDBID &dbid ) override;
 	//
 	void RemoveObjectInternal( const CDBID &dbid );
 	void AddNewObjectInternal( const CDBID &_dbid, IObjMan *pObjMan );
@@ -135,7 +135,7 @@ class CEditorDatabase : public CBasicDatabase
 		bIndexChanged = true;
 	}
 
-	void ResetIndexChanged()
+	void ResetIndexChanged() override
 	{
 		bIndexChanged = false;
 	}
@@ -145,7 +145,7 @@ class CEditorDatabase : public CBasicDatabase
 		return bIndexChanged;
 	}
 
-	void RegisterObject( const SFullTypeHeader &hdr );
+	void RegisterObject( const SFullTypeHeader &hdr ) override;
 
 public:
 	CEditorDatabase()
@@ -154,40 +154,40 @@ public:
 	}
 
 	//
-	bool OpenDatabase( NVFS::IVFS *pVFS, NVFS::IFileCreator *pFileCreator );
-	bool RegisterResourceFile( const std::string &szFileName );
-	virtual bool IsFileRegistered( const std::string &szFileName );
+	bool OpenDatabase( NVFS::IVFS *pVFS, NVFS::IFileCreator *pFileCreator ) override;
+	bool RegisterResourceFile( const std::string &szFileName ) override;
+	bool IsFileRegistered( const std::string &szFileName ) override;
 
-	void SetLoadDepth( int nLoadDepth ){ NI_ASSERT( false, "this functionality are for game only" ) } //
-	IObjMan *GetManipulator( const CDBID &dbid )
+	void SetLoadDepth( int nLoadDepth ) override{ NI_ASSERT( false, "this functionality are for game only" ) } //
+	IObjMan *GetManipulator( const CDBID &dbid ) override
 	{
 		return GetObjManInternal( dbid );
 	}
 
-	CResource *GetObject( const CDBID &dbid )
+	CResource *GetObject( const CDBID &dbid ) override
 	{
 		IObjMan *pObjMan = GetObjManInternal( dbid );
 		return pObjMan == 0 ? 0 : pObjMan->GetObject();
 	}
 
-	IObjMan *CreateNewObject( const std::string &szClassTypeName );
-	bool AddNewObject( const std::string &szFilePath, const CDBID &dbid, IObjMan *pObjMan );
-	bool RemoveObject( const CDBID &dbid );
-	bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew );
-	bool RenameObjects( const std::vector<std::pair<CDBID, CDBID>> &renames );
-	bool GetReferencingObjects( std::vector<CDBID> *pRes, const CDBID &dbid );
+	IObjMan *CreateNewObject( const std::string &szClassTypeName ) override;
+	bool AddNewObject( const std::string &szFilePath, const CDBID &dbid, IObjMan *pObjMan ) override;
+	bool RemoveObject( const CDBID &dbid ) override;
+	bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew ) override;
+	bool RenameObjects( const std::vector<std::pair<CDBID, CDBID>> &renames ) override;
+	bool GetReferencingObjects( std::vector<CDBID> *pRes, const CDBID &dbid ) override;
 	//
-	void MarkChanged( const CDBID &dbid );
-	void SaveChanges();
-	bool SaveChangedIndex();
-	void DropCachedResources();
+	void MarkChanged( const CDBID &dbid ) override;
+	void SaveChanges() override;
+	bool SaveChangedIndex() override;
+	void DropCachedResources() override;
 	//
-	bool GetClassesList( std::vector<NTypeDef::STypeClass *> *pRes );
-	bool GetObjectsList( std::vector<CDBID> *pRes, const std::string &szClassTypeName );
-	bool GetObjectsList( std::vector<CDBID> *pRes, const int nClassTypeID );
+	bool GetClassesList( std::vector<NTypeDef::STypeClass *> *pRes ) override;
+	bool GetObjectsList( std::vector<CDBID> *pRes, const std::string &szClassTypeName ) override;
+	bool GetObjectsList( std::vector<CDBID> *pRes, const int nClassTypeID ) override;
 
 	//
-	std::string GetClassTypeName( const CDBID &_dbid )
+	std::string GetClassTypeName( const CDBID &_dbid ) override
 	{
 		if ( const SElement *pElement = GetElement( _dbid ) )
 		{

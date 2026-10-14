@@ -63,9 +63,9 @@ class CArtillery : public CAIUnit
 	bool ShouldSendInstallAction( const EActionNotify &eAction ) const;
 
 protected:
-	virtual void InitGuns();
-	virtual const CUnitGuns *GetGuns() const;
-	virtual CUnitGuns *GetGuns();
+	void InitGuns() override;
+	const CUnitGuns *GetGuns() const override;
+	CUnitGuns *GetGuns() override;
 
 public:
 	CArtillery()
@@ -73,81 +73,81 @@ public:
 	{
 	}
 
-	virtual void Init( const CVec2 &center,
-	                   const int z,
-	                   const SUnitBaseRPGStats *pStats,
-	                   const float fHP,
-	                   const uint16_t _dir,
-	                   const uint8_t player,
-	                   ICollisionsCollector *pCollisionsCollector );
-	int operator&( IBinSaver &f );
+	void Init( const CVec2 &center,
+	           const int z,
+	           const SUnitBaseRPGStats *pStats,
+	           const float fHP,
+	           const uint16_t _dir,
+	           const uint8_t player,
+	           ICollisionsCollector *pCollisionsCollector ) override;
+	int operator&( IBinSaver &f ) override;
 
-	virtual const SUnitBaseRPGStats *GetStats() const
+	const SUnitBaseRPGStats *GetStats() const override
 	{
 		return pStats;
 	}
 
-	virtual IStatesFactory *GetStatesFactory() const;
+	IStatesFactory *GetStatesFactory() const override;
 
-	virtual void Segment();
-	virtual void SetSelectable( bool bSelectable, bool bSendToWorld );
+	void Segment() override;
+	void SetSelectable( bool bSelectable, bool bSendToWorld ) override;
 
-	virtual void SetCamoulfage();
-	virtual void RemoveCamouflage( ECamouflageRemoveReason eReason );
+	void SetCamoulfage() override;
+	void RemoveCamouflage( ECamouflageRemoveReason eReason ) override;
 
-	virtual class CTurret *GetTurret( const int nTurret ) const
+	class CTurret *GetTurret( const int nTurret ) const override
 	{
 		return turrets[nTurret];
 	}
 
-	virtual const int GetNTurrets() const
+	const int GetNTurrets() const override
 	{
 		return turrets.size();
 	}
 
-	virtual void GetShotInfo( struct SAINotifyMechShot *pShotInfo ) const
+	void GetShotInfo( struct SAINotifyMechShot *pShotInfo ) const override
 	{
 		pShotInfo->typeID = GetShootAction();
 		pShotInfo->nObjUniqueID = GetUniqueId();
 	}
 
-	virtual const EActionNotify GetShootAction() const
+	const EActionNotify GetShootAction() const override
 	{
 		return ACTION_NOTIFY_MECH_SHOOT;
 	}
 
-	virtual const EActionNotify GetAimAction() const
+	const EActionNotify GetAimAction() const override
 	{
 		return ACTION_NOTIFY_AIM;
 	}
 
-	virtual const EActionNotify GetDieAction() const
+	const EActionNotify GetDieAction() const override
 	{
 		return ACTION_NOTIFY_DIE;
 	}
 
-	virtual const EActionNotify GetIdleAction() const
+	const EActionNotify GetIdleAction() const override
 	{
 		return ACTION_NOTIFY_IDLE;
 	}
 
-	virtual const EActionNotify GetMovingAction() const
+	const EActionNotify GetMovingAction() const override
 	{
 		return ACTION_NOTIFY_MOVE;
 	}
 
 	//
-	virtual int GetNGuns() const;
-	virtual class CBasicGun *GetGun( const int n ) const;
+	int GetNGuns() const override;
+	class CBasicGun *GetGun( const int n ) const override;
 
-	virtual class CBasicGun *ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime );
+	class CBasicGun *ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime ) override;
 
-	virtual bool IsInstalled() const
+	bool IsInstalled() const override
 	{
 		return bInstalled && eCurInstallAction == ACTION_NOTIFY_NONE && eNextInstallAction == ACTION_NOTIFY_NONE;
 	}
 
-	virtual bool IsUninstalled() const
+	bool IsUninstalled() const override
 	{
 		return !bInstalled && eCurInstallAction == ACTION_NOTIFY_NONE && eNextInstallAction == ACTION_NOTIFY_NONE;
 	}
@@ -158,58 +158,58 @@ public:
 	}
 
 	void InstallBack( bool bAlreadyDone ); // инсталлировать артиллерию обратно, если она не деинсталлирована - то ошибка.
-	virtual void InstallAction( const EActionNotify eInstallAction, bool bAlreadyDone = false );
+	void InstallAction( const EActionNotify eInstallAction, bool bAlreadyDone = false ) override;
 	// проинсталлировать прямо сейчас
 	void ForceInstallAction();
 
-	virtual const bool NeedDeinstall() const;
+	const bool NeedDeinstall() const override;
 
-	virtual const bool CanShoot() const
+	const bool CanShoot() const override
 	{
 		return IsInstalled();
 	}
-	virtual class CBasicGun *GetFirstArtilleryGun() const;
-	virtual void TakeDamage( const float fDamage,
-	                         const SWeaponRPGStats::SShell *pShell,
-	                         const int nPlayerOfShoot,
-	                         CAIUnit *pShotUnit );
+	class CBasicGun *GetFirstArtilleryGun() const override;
+	void TakeDamage( const float fDamage,
+	                 const SWeaponRPGStats::SShell *pShell,
+	                 const int nPlayerOfShoot,
+	                 CAIUnit *pShotUnit ) override;
 
 	bool IsLightGun() const;
-	virtual const bool CanShootToPlanes() const;
+	const bool CanShootToPlanes() const override;
 
-	virtual const bool IsIdle() const;
-	virtual const bool SendAlongPath( IStaticPath *pStaticPath, const CVec2 &vShift, const bool bSmoothTurn );
-	virtual const bool SendAlongPath( IPath *pPath );
+	const bool IsIdle() const override;
+	const bool SendAlongPath( IStaticPath *pStaticPath, const CVec2 &vShift, const bool bSmoothTurn ) override;
+	const bool SendAlongPath( IPath *pPath ) override;
 
-	virtual float GetMaxFireRange() const;
-	virtual void GetRangeArea( struct SShootAreas *pRangeArea ) const;
+	float GetMaxFireRange() const override;
+	void GetRangeArea( struct SShootAreas *pRangeArea ) const override;
 
-	virtual bool IsMech() const
+	bool IsMech() const override
 	{
 		return true;
 	}
 
 	virtual bool TurnToDir( const uint16_t &newDir, const bool bCanBackward = true, const bool bForward = true );
-	const bool TurnToTarget( const CVec2 &vTarget );
+	const bool TurnToTarget( const CVec2 &vTarget ) override;
 
 	virtual bool TurnToUnit( const CVec2 &targCenter );
 
 	// обслуживание пушки артиллеристами
-	virtual void ChangePlayer( const uint8_t cPlayer );
+	void ChangePlayer( const uint8_t cPlayer ) override;
 	virtual void SetCrew( class CFormation *_pCrew, const bool bCapture = true );
 	virtual void DelCrew();
 	virtual bool HasServeCrew() const;
 	virtual bool MustHaveCrewToOperate() const;
 	virtual class CFormation *GetCrew() const;
 
-	virtual bool IsOperable() const
+	bool IsOperable() const override
 	{
 		return fOperable != 0.0f;
 	}
 
 	virtual void SetOperable( float fOperable );
 
-	virtual void Disappear();
+	void Disappear() override;
 
 	//для буксировки
 	virtual CVec2 GetTowPoint();
@@ -240,16 +240,16 @@ public:
 	// у всех пушек очищает флаг на ожидание перезарядки
 	virtual void ClearWaitForReload();
 
-	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const;
+	const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const override;
 
-	virtual const bool CanGoBackward() const
+	const bool CanGoBackward() const override
 	{
 		return GetCrew() == 0;
 	}
 
-	virtual void Stop();
-	virtual const uint32_t GetNormale( const CVec2 &vCenter ) const;
-	virtual const uint32_t GetNormale() const;
+	void Stop() override;
+	const uint32_t GetNormale( const CVec2 &vCenter ) const override;
+	const uint32_t GetNormale() const override;
 
 	const CVec2 GetHookPoint() const;
 	const CVec3 GetHookPoint3D() const;
@@ -265,11 +265,13 @@ public:
 		return eCurrentStateOfInstall;
 	}
 
-	virtual void
-	LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
+	void LookForTarget( CAIUnit *pCurTarget,
+	                    const bool bDamageUpdated,
+	                    CAIUnit **pBestTarget,
+	                    class CBasicGun **pGun ) override;
 
-	virtual void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false );
-	virtual void SendAcknowledgement( EUnitAckType ack, bool bForce = false );
+	void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false ) override;
+	void SendAcknowledgement( EUnitAckType ack, bool bForce = false ) override;
 
 	int GetInitialPlayer() const
 	{
@@ -281,7 +283,7 @@ public:
 		nInitialPlayer = nPlayer;
 	}
 
-	virtual const NTimer::STime GetBehUpdateDuration() const;
+	const NTimer::STime GetBehUpdateDuration() const override;
 	//
 	bool IsBeingCaptured() const;
 	void SetCapturingUnit( CFormation *pFormation );
@@ -298,12 +300,12 @@ public:
 
 	void UpdateAmmoBoxVisibility( const bool bVisibilityChanged, const bool bVisible );
 	EActionNotify GetFinishInstallUpdate( EActionNotify eAction );
-	virtual const float GetMaxPossibleSpeed() const;
+	const float GetMaxPossibleSpeed() const override;
 	// Keep forward-speed queries consistent with hooked-artillery speed delegation.
-	virtual const float GetMaxPossibleForwardSpeed() const;
+	const float GetMaxPossibleForwardSpeed() const override;
 
 	//
-	virtual const bool CanUnitTrampled( const CBasePathUnit *pTramplerUnit ) const;
+	const bool CanUnitTrampled( const CBasePathUnit *pTramplerUnit ) const override;
 	const bool CanHook() const;
 	//virtual const bool CanLockTiles() const { return false; }
 };

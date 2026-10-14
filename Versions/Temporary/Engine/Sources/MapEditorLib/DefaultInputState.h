@@ -6,54 +6,54 @@ class CDefaultInputState : public IInputState
 {
 public:
 	//IInputState interface
-	virtual void Enter() {}
+	void Enter() override {}
 
-	virtual void Leave() {}
-
-	//
-	virtual void Draw( IPaintContext *pPaintDC ) {}
-
-	virtual void PostDraw( IPaintContext *pPaintDC ) {}
+	void Leave() override {}
 
 	//
-	virtual void OnSetFocus( IWidget *pNewWnd ) {}
+	void Draw( IPaintContext *pPaintDC ) override {}
 
-	virtual void OnKillFocus( IWidget *pOldWnd ) {}
+	void PostDraw( IPaintContext *pPaintDC ) override {}
 
 	//
-	virtual void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
+	void OnSetFocus( IWidget *pNewWnd ) override {}
 
-	virtual bool OnMouseWheel( unsigned nFlags, short zDelta, CTPoint<int> &rMousePoint )
+	void OnKillFocus( IWidget *pOldWnd ) override {}
+
+	//
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override {}
+
+	bool OnMouseWheel( unsigned nFlags, short zDelta, CTPoint<int> &rMousePoint ) override
 	{
 		return true;
 	}
 
 	//
-	virtual void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override {}
 
-	virtual void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override {}
 
-	virtual void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
-
-	//
-	virtual void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
-
-	virtual void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
-
-	virtual void OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
+	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) override {}
 
 	//
-	virtual void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override {}
 
-	virtual void OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override {}
 
-	virtual void OnMButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
-
-	//
-	virtual void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) {}
-
-	virtual void OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) {}
+	void OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) override {}
 
 	//
-	virtual void OnContextMenu( const CTPoint<int> &rMousePoint ) {}
+	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override {}
+
+	void OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override {}
+
+	void OnMButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) override {}
+
+	//
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override {}
+
+	void OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) override {}
+
+	//
+	void OnContextMenu( const CTPoint<int> &rMousePoint ) override {}
 };

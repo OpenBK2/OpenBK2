@@ -104,7 +104,7 @@ public:
 	CVec2 vCenterCamera;
 	int nParam = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &unitIDs );
 		f.Add( 3, &nUpdateID );
@@ -173,7 +173,7 @@ public:
 	ZDATA_( SAIBasicUpdate )
 	SAIFeedBack info;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (SAIBasicUpdate *)this );
 		f.Add( 2, &info );

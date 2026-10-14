@@ -53,14 +53,14 @@ public:
 	            float _fEffectHeight,
 	            float fFallCycles,
 	            int nFallDuration,
-	            NTimer::STime timeStart );
+	            NTimer::STime timeStart ) override;
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return !bFinished;
 	}
 
-	void MutateSkeletonPose( NAnimation::SSkeletonPose *pPose );
+	void MutateSkeletonPose( NAnimation::SSkeletonPose *pPose ) override;
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

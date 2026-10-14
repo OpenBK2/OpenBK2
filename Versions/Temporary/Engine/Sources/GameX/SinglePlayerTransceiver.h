@@ -23,7 +23,7 @@ class CSinglePlayerTransceiver : public ITransceiver
 	NTimer::STime nStartCountingTime = {};
 	int nFrames = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pCmdsHistory );
 		f.Add( 3, &nCommonSegment );
@@ -42,26 +42,26 @@ public:
 	CSinglePlayerTransceiver();
 	CSinglePlayerTransceiver( ICommandsHistory *_pCommandHistory, IAILogic *_pAI );
 
-	~CSinglePlayerTransceiver() {}
+	~CSinglePlayerTransceiver() override {}
 
-	void StartMission( const NDb::SMapInfo *_pMap, IAILogic *pAI );
+	void StartMission( const NDb::SMapInfo *_pMap, IAILogic *pAI ) override;
 	// perform segments for AI
-	void DoSegments();
+	void DoSegments() override;
 
-	void SendCommand( struct IAILogicCommandB2 *pCommand );
+	void SendCommand( struct IAILogicCommandB2 *pCommand ) override;
 
 	// client commands
-	void CommandClientTogglePause();
-	void CommandClientSpeed( int nChange );
+	void CommandClientTogglePause() override;
+	void CommandClientSpeed( int nChange ) override;
 
-	void CommandClientDropPlayer( const std::wstring &szPlayerNick ) {}
+	void CommandClientDropPlayer( const std::wstring &szPlayerNick ) override {}
 
-	void CommandTimeOut( bool bSet ) {}
+	void CommandTimeOut( bool bSet ) override {}
 
-	ICheckSumLog *GetCheckSumLogger()
+	ICheckSumLog *GetCheckSumLogger() override
 	{
 		return pCmdsHistory;
 	}
 
-	const NDb::SMapInfo *GetMap() const;
+	const NDb::SMapInfo *GetMap() const override;
 };

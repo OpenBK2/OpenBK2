@@ -59,7 +59,7 @@ private:
 	CPtr<IScrollableContainer> pPlayerList;
 	CPtr<IWindow> pPlayerItemTemplate;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &bSaveMode );
 		f.Add( 3, &replays );
@@ -102,12 +102,12 @@ private:
 
 public:
 	CInterfaceReplaySaveLoad();
-	bool Init();
+	bool Init() override;
 	void SetMode( const std::string &szMode );
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int Check( const std::string &szCheckName ) const;
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
+	int Check( const std::string &szCheckName ) const override;
 	//}
 };
 
@@ -118,7 +118,7 @@ class CICInterfaceReplaySaveLoad : public CInterfaceCommandBase<CInterfaceReplay
 	ZDATA_( CInterfaceCommandBase<CInterfaceReplaySaveLoad> )
 	std::string szMode;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceCommandBase<CInterfaceReplaySaveLoad> *)this );
 		f.Add( 2, &szMode );
@@ -126,9 +126,9 @@ class CICInterfaceReplaySaveLoad : public CInterfaceCommandBase<CInterfaceReplay
 	}
 
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

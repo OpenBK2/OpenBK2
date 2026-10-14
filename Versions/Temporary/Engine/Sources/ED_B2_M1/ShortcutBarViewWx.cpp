@@ -137,7 +137,7 @@ class CWxShortcutBarView : public CWxHostWindow, public NShortcutBar::IView
 protected:
 	// The palettes' wx side goes before the bar's does: their timers still
 	// run, and they are not the bar's windows' to destroy in any order.
-	virtual void BeforeTearDown()
+	void BeforeTearDown() override
 	{
 		for ( std::unique_ptr<SBar> &rpBar : bars )
 		{
@@ -149,13 +149,13 @@ protected:
 	}
 
 public:
-	virtual ~CWxShortcutBarView()
+	~CWxShortcutBarView() override
 	{
 		Destroy();
 	}
 
 	// IView
-	virtual bool Create( IWidget *pPane, unsigned nControlID )
+	bool Create( IWidget *pPane, unsigned nControlID ) override
 	{
 		if ( !CreateHost( pPane ) || ( Root() == nullptr ) )
 		{
@@ -167,7 +167,7 @@ public:
 		return true;
 	}
 
-	virtual void Destroy()
+	void Destroy() override
 	{
 		DestroyHost();
 		// The owners delete the palettes, whose wx side is already gone.
@@ -175,17 +175,17 @@ public:
 		nOpenBar = -1;
 	}
 
-	virtual IWidget *GetWidget()
+	IWidget *GetWidget() override
 	{
 		return this;
 	}
 
-	virtual void Show( bool bShow )
+	void Show( bool bShow ) override
 	{
 		ShowHost( bShow );
 	}
 
-	virtual int BeginBar( unsigned nTabCommandHandlerID, unsigned nTabCommandID )
+	int BeginBar( unsigned nTabCommandHandlerID, unsigned nTabCommandID ) override
 	{
 		if ( Root() == nullptr )
 		{
@@ -205,7 +205,7 @@ public:
 		return nBar;
 	}
 
-	virtual bool AddTab( int nBar, const std::string &rszLabel, const NShortcutBar::TPaletteFactory &rFactory )
+	bool AddTab( int nBar, const std::string &rszLabel, const NShortcutBar::TPaletteFactory &rFactory ) override
 	{
 		SBar *const pBar = Bar( nBar );
 		if ( pBar == nullptr )
@@ -230,7 +230,7 @@ public:
 		return true;
 	}
 
-	virtual void ActivateTab( int nBar, int nTab )
+	void ActivateTab( int nBar, int nTab ) override
 	{
 		SBar *const pBar = Bar( nBar );
 		if ( ( pBar != nullptr ) && ( nTab >= 0 ) && ( nTab < static_cast<int>( pBar->pTabs->GetPageCount() ) ) )
@@ -239,7 +239,7 @@ public:
 		}
 	}
 
-	virtual void EndBar( int nBar, const std::string &rszLabel )
+	void EndBar( int nBar, const std::string &rszLabel ) override
 	{
 		SBar *const pBar = Bar( nBar );
 		if ( ( pBar == nullptr ) || pBar->bBuilt )
@@ -254,7 +254,7 @@ public:
 		Open( ( nOpenBar >= 0 ) ? nOpenBar : nBar );
 	}
 
-	virtual void SelectBar( int nBar )
+	void SelectBar( int nBar ) override
 	{
 		if ( Bar( nBar ) != nullptr )
 		{
@@ -262,7 +262,7 @@ public:
 		}
 	}
 
-	virtual void SetCommandHandlerID( unsigned _nCommandHandlerID, unsigned _nCommandID )
+	void SetCommandHandlerID( unsigned _nCommandHandlerID, unsigned _nCommandID ) override
 	{
 		nCommandHandlerID = _nCommandHandlerID;
 		nCommandID = _nCommandID;

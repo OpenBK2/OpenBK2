@@ -70,7 +70,7 @@ struct IImageList
 // there.
 struct IDockPanel : public IWidget
 {
-	virtual ~IDockPanel() {}
+	~IDockPanel() override {}
 
 	// Show tells the frame, so the docking layout is recalculated.
 	// ShowWithoutLayout only shows or hides the panel's own window. The
@@ -100,7 +100,7 @@ struct IToolBar
 // the window itself.
 struct IFrameWindow : public IWidget
 {
-	virtual ~IFrameWindow() {}
+	~IFrameWindow() override {}
 
 	virtual void Show( bool bShow ) = 0;
 	virtual void Maximize() = 0;

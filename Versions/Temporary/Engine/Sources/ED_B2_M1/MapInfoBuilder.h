@@ -23,10 +23,11 @@ class CMapInfoBuilder : public CBuildDataBuilder
 
 protected:
 	// IBuildDataCallback
-	bool IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView );
+	bool
+	IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView ) override;
 
 	// CBuildDataBuilder
-	const std::string &GetBuildDataTypeName()
+	const std::string &GetBuildDataTypeName() override
 	{
 		return BUILD_DATA_TYPE_NAME;
 	}
@@ -37,19 +38,20 @@ protected:
 	                           bool *pbCanChangeObjectName,
 	                           bool *pbNeedExport,
 	                           bool *pbNeedEdit,
-	                           IManipulator *pBuildDataManipulator );
+	                           IManipulator *pBuildDataManipulator ) override;
 
 	// IBuilder
-	void GetDefaultFolder( const std::string &rszObjectTypeName, std::string *pszDefaultFolder );
+	void GetDefaultFolder( const std::string &rszObjectTypeName, std::string *pszDefaultFolder ) override;
 	bool InsertObject( std::string *pszObjectTypeName,
 	                   std::string *pszUniqueObjectName,
 	                   bool bFromMainMenu,
 	                   bool *pbCanChangeObjectName,
 	                   bool *pbNeedExport,
-	                   bool *pbNeedEdit );
-	bool
-	CopyObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource );
-	bool RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName );
+	                   bool *pbNeedEdit ) override;
+	bool CopyObject( const std::string &rszObjectTypeName,
+	                 const std::string &rszDestination,
+	                 const std::string &rszSource ) override;
+	bool RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName ) override;
 
 	// members
 	bool IsValidDataBuilder( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView );

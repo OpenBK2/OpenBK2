@@ -20,7 +20,7 @@ class CPlayMovieInterface : public CInterfaceScreenBase
 	CPtr<IWindow> pBackground;
 	float fFadeIn;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &szNextCommand );
@@ -36,11 +36,11 @@ class CPlayMovieInterface : public CInterfaceScreenBase
 
 private:
 	void StartNextInterface();
-	bool StepLocal( bool bAppActive );
+	bool StepLocal( bool bAppActive ) override;
 	// messages processing
 	void MsgSkipSequence( const struct SGameMessage &msg );
 	void MsgSkipMovie( const struct SGameMessage &msg );
-	~CPlayMovieInterface();
+	~CPlayMovieInterface() override;
 
 public:
 	CPlayMovieInterface();
@@ -48,8 +48,8 @@ public:
 	void LoadMovieSequence( const std::string &szFileName );
 	void SetNextInterface( const std::string &szNextCommand );
 	//
-	bool Init();
-	void OnGetFocus( bool bFocus );
+	bool Init() override;
+	void OnGetFocus( bool bFocus ) override;
 };
 
 class CICPlayMovie : public CInterfaceCommandBase<CPlayMovieInterface>
@@ -60,12 +60,12 @@ class CICPlayMovie : public CInterfaceCommandBase<CPlayMovieInterface>
 	std::string szNextCommand;
 
 	//
-	void PreCreate() {}
+	void PreCreate() override {}
 
-	void PostCreate( IInterface *pInterface );
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	virtual void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 	//
-	virtual int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

@@ -43,7 +43,7 @@ class CWindowListHeader : public CWindow, public IButtonNotify
 	void UpdateSortButton();
 
 protected:
-	NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
@@ -57,17 +57,17 @@ public:
 	{
 	}
 
-	int operator&( IBinSaver &saver );
-	void Reposition( const CTRect<float> &parentRect );
-	void Init();
-	void AfterLoad();
+	int operator&( IBinSaver &saver ) override;
+	void Reposition( const CTRect<float> &parentRect ) override;
+	void Init() override;
+	void AfterLoad() override;
 
 	void SetNotify( IHeaderNotify *_pHeaderNotify )
 	{
 		pHeaderNotify = _pHeaderNotify;
 	}
 
-	void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 	void MakeInterior();
 
 	const std::vector<int> &GetSizes() const
@@ -90,21 +90,21 @@ public:
 	void SetColumnSize( const int nColumn, const int nWidth );
 
 	//{ IButtonNotify
-	void Released( class CWindow *pWho );
+	void Released( class CWindow *pWho ) override;
 
-	void Pushed( class CWindow *pWho ) {}
+	void Pushed( class CWindow *pWho ) override {}
 
-	void Entered( class CWindow *pWho ) {}
+	void Entered( class CWindow *pWho ) override {}
 
-	void Leaved( class CWindow *pWho ) {}
+	void Leaved( class CWindow *pWho ) override {}
 
-	void StateChanged( class CWindow *pWho ) {}
+	void StateChanged( class CWindow *pWho ) override {}
 
 	//}
-	bool OnMouseMove( const CVec2 &vPos, const int nButton );
-	bool OnButtonDown( const CVec2 &vPos, const int nButton );
-	bool OnButtonUp( const CVec2 &vPos, const int nButton );
-	bool OnButtonDblClk( const CVec2 &vPos, const int nButton );
+	bool OnMouseMove( const CVec2 &vPos, const int nButton ) override;
+	bool OnButtonDown( const CVec2 &vPos, const int nButton ) override;
+	bool OnButtonUp( const CVec2 &vPos, const int nButton ) override;
+	bool OnButtonDblClk( const CVec2 &vPos, const int nButton ) override;
 };
 
 // CWindowListItem
@@ -120,26 +120,26 @@ class CWindowListItem : public CWindow, public IListControlItem
 	CPtr<CObjectBase> pUserData;
 
 protected:
-	virtual NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
 
 public:
-	virtual int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 	void MakeInterior( const int nColumns );
 	void SetColumnSizes( const std::vector<int> &sizes );
-	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 
 	//{ struct IListControlItem
-	IWindow *GetSubItem( const int nSubItem );
+	IWindow *GetSubItem( const int nSubItem ) override;
 
-	CObjectBase *GetUserData() const
+	CObjectBase *GetUserData() const override
 	{
 		return pUserData;
 	}
 
-	void SetUserData( CObjectBase *pData )
+	void SetUserData( CObjectBase *pData ) override
 	{
 		pUserData = pData;
 	}
@@ -171,13 +171,13 @@ private:
 	IListControlItem *AddItemInternal();
 
 protected:
-	virtual NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
 
 	//{ CWindowScrollableContainerBase
-	void Select( IWindow *pElement );
+	void Select( IWindow *pElement ) override;
 	//}
 public:
 	CWindowListCtrl()
@@ -187,35 +187,35 @@ public:
 	}
 
 	//{ CWindow
-	virtual int operator&( IBinSaver &saver );
-	virtual void Reposition( const CTRect<float> &parentRect );
-	virtual void Init();
-	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
-	void AfterLoad();
-	void SetFocus( const bool bFocus );
+	int operator&( IBinSaver &saver ) override;
+	void Reposition( const CTRect<float> &parentRect ) override;
+	void Init() override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
+	void AfterLoad() override;
+	void SetFocus( const bool bFocus ) override;
 	//}
 
 	//{ IListControl
-	IListControlItem *AddItem();
-	IListControlItem *AddItem( CObjectBase *pData );
-	void RemoveItem( IListControlItem *pItem );
+	IListControlItem *AddItem() override;
+	IListControlItem *AddItem( CObjectBase *pData ) override;
+	void RemoveItem( IListControlItem *pItem ) override;
 
-	void Resort( const int nColumn = -1, const bool bAscending = true );
-	void SetSorter( IWindowSorter *pSorter, const int nColumn );
+	void Resort( const int nColumn = -1, const bool bAscending = true ) override;
+	void SetSorter( IWindowSorter *pSorter, const int nColumn ) override;
 
-	void SetViewer( IDataViewer *pViewer );
-	void RemoveAllElements();
+	void SetViewer( IDataViewer *pViewer ) override;
+	void RemoveAllElements() override;
 
-	const int GetNColumns() const
+	const int GetNColumns() const override
 	{
 		return pHeader->GetNColumns();
 	}
 
-	int GetItemCount() const;
-	IListControlItem *GetSelectedListItem() const;
-	void SelectItem( CObjectBase *pData );
+	int GetItemCount() const override;
+	IListControlItem *GetSelectedListItem() const override;
+	void SelectItem( CObjectBase *pData ) override;
 
-	void Update()
+	void Update() override
 	{
 		CWindowScrollableContainerBase::Update();
 	}
@@ -223,9 +223,9 @@ public:
 	//}
 
 	//{ IHeaderNotify
-	virtual void ColumnsResized( const std::vector<int> &sizes );
-	virtual void ColumnResort( IWindowSorter *pSorter );
-	virtual void SetOptimalWidth( const int nColumn );
+	void ColumnsResized( const std::vector<int> &sizes ) override;
+	void ColumnResort( IWindowSorter *pSorter ) override;
+	void SetOptimalWidth( const int nColumn ) override;
 
 	//}
 

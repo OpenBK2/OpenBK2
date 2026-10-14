@@ -90,7 +90,7 @@ private:
 	CDGPtr<CSWTexture> pSWTexture;
 	bool bFakeTexture;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 3, &pSWTexture );
 		return 0;
@@ -99,8 +99,8 @@ private:
 	CDGPtr<CFuncBase<CVec3>> pColor;
 
 protected:
-	virtual bool NeedUpdate();
-	virtual void Recalc();
+	bool NeedUpdate() override;
+	void Recalc() override;
 
 public:
 	void SetKey( const CDBPtr<NDb::STexture> &key )
@@ -284,7 +284,7 @@ class CGameView : public IGameView
 
 	// Chunk 29 was bIsTwilight, the switch for a post effect that never ran.
 	// Saves written before its removal still carry it, so the id stays retired.
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pScene );
 		f.Add( 3, &nodes );
@@ -360,165 +360,172 @@ public:
 		return pScene;
 	}
 
-	virtual IMaterial *CreateMaterial( const NDb::SMaterial *pMaterial )
+	IMaterial *CreateMaterial( const NDb::SMaterial *pMaterial ) override
 	{
 		return CreateMaterialShared( pMaterial );
 	}
 
-	virtual IMaterial *CreateMaterial( const CVec4 &vColor, bool bDoesCastShadow );
-	virtual void CreateMaterialInfo( const NDb::SMaterial *pMaterial, SMaterialCreateInfo *pRes );
-	virtual void CreateMeshInfo(
-			const NDb::SModel *pModel, SMeshInfo *pRes, bool bWholeAnimated, int nPlayer = 0, bool bIsLightmapped = false );
-	virtual CObjectBase *CreateMesh( const SMeshInfo &meshInfo,
-	                                 const CCreateMeshTransform &meshTransform,
-	                                 const CCreateMeshBound &meshBound,
-	                                 const CMeshAnimStuff &animStuff,
-	                                 const SFullRoomInfo &_g,
-	                                 IFader *pFader = 0 );
-	virtual CObjectBase *CreateDynamicMesh( const SMeshInfo &meshInfo,
-	                                        CFuncBase<SFBTransform> *pPlacement,
-	                                        CFuncBase<SBound> *pBound,
-	                                        const SBound &hintBV,
-	                                        const SFullRoomInfo &_g,
-	                                        IFader *pFader = 0 );
-	virtual CObjectBase *CreateParticles( const NDb::SEffect *pEffect,
-	                                      STime stBeginTime,
-	                                      CFuncBase<STime> *pTime,
-	                                      CFuncBase<SFBTransform> *pPlacement,
-	                                      const SRoomInfo &_g,
-	                                      IFader *pFader,
-	                                      CFuncBase<NAnimation::SGrannySkeletonPose> *pScAnim,
-	                                      NAnimation::SGrannySkeletonHandle *pSkeletonH,
-	                                      IParticleFilter *pFilter );
-	virtual CObjectBase *CreateParticles( const NDb::SEffect *pEffect,
-	                                      STime stBeginTime,
-	                                      CFuncBase<STime> *pTime,
-	                                      const SFBTransform &place,
-	                                      const SRoomInfo &_g,
-	                                      IFader *pFader,
-	                                      IParticleFilter *pFilter );
-	virtual CObjectBase *CreateRain( const NDb::SParticleInstance *pInstance,
-	                                 CFuncBase<STime> *pTime,
-	                                 IParticleFilter *pFilter,
-	                                 const SRoomInfo &_g );
-	virtual CPolyline *CreatePolyline( const std::vector<CVec3> &points,
-	                                   const std::vector<unsigned short> &indices,
-	                                   const CVec4 &color,
-	                                   bool bDepthTest );
-	virtual CObjectBase *Precache( const NDb::SModel *pModel );
-	virtual void Precache( const NDb::SEffect *pEffect );
+	IMaterial *CreateMaterial( const CVec4 &vColor, bool bDoesCastShadow ) override;
+	void CreateMaterialInfo( const NDb::SMaterial *pMaterial, SMaterialCreateInfo *pRes ) override;
+	void CreateMeshInfo( const NDb::SModel *pModel,
+	                     SMeshInfo *pRes,
+	                     bool bWholeAnimated,
+	                     int nPlayer = 0,
+	                     bool bIsLightmapped = false ) override;
+	CObjectBase *CreateMesh( const SMeshInfo &meshInfo,
+	                         const CCreateMeshTransform &meshTransform,
+	                         const CCreateMeshBound &meshBound,
+	                         const CMeshAnimStuff &animStuff,
+	                         const SFullRoomInfo &_g,
+	                         IFader *pFader = 0 ) override;
+	CObjectBase *CreateDynamicMesh( const SMeshInfo &meshInfo,
+	                                CFuncBase<SFBTransform> *pPlacement,
+	                                CFuncBase<SBound> *pBound,
+	                                const SBound &hintBV,
+	                                const SFullRoomInfo &_g,
+	                                IFader *pFader = 0 ) override;
+	CObjectBase *CreateParticles( const NDb::SEffect *pEffect,
+	                              STime stBeginTime,
+	                              CFuncBase<STime> *pTime,
+	                              CFuncBase<SFBTransform> *pPlacement,
+	                              const SRoomInfo &_g,
+	                              IFader *pFader,
+	                              CFuncBase<NAnimation::SGrannySkeletonPose> *pScAnim,
+	                              NAnimation::SGrannySkeletonHandle *pSkeletonH,
+	                              IParticleFilter *pFilter ) override;
+	CObjectBase *CreateParticles( const NDb::SEffect *pEffect,
+	                              STime stBeginTime,
+	                              CFuncBase<STime> *pTime,
+	                              const SFBTransform &place,
+	                              const SRoomInfo &_g,
+	                              IFader *pFader,
+	                              IParticleFilter *pFilter ) override;
+	CObjectBase *CreateRain( const NDb::SParticleInstance *pInstance,
+	                         CFuncBase<STime> *pTime,
+	                         IParticleFilter *pFilter,
+	                         const SRoomInfo &_g ) override;
+	CPolyline *CreatePolyline( const std::vector<CVec3> &points,
+	                           const std::vector<unsigned short> &indices,
+	                           const CVec4 &color,
+	                           bool bDepthTest ) override;
+	CObjectBase *Precache( const NDb::SModel *pModel ) override;
+	void Precache( const NDb::SEffect *pEffect ) override;
 
-	virtual void LoadEverything()
+	void LoadEverything() override
 	{
 		WaitForLoad( true );
 		LoadEverythingInt();
 	}
 
-	virtual void Draw( const SDrawInfo &drawInfo );
-	virtual CVec2 GetScreenRect();
-	virtual int GetCutFloor();
-	virtual void SetCutFloor( int nFloor );
-	virtual CObjectBase *AddPointLight( const CVec3 &ptColor, const CVec3 &ptOrigin, float fR );
-	virtual CObjectBase *AddPointLight( CPtrFuncBase<CAnimLight> *pLight );
-	virtual CObjectBase *AddFlare( CFuncBase<CVec3> *pOrigin,
-	                               CFuncBase<STime> *pTime,
-	                               int nFloor,
-	                               float fFlareRadius,
-	                               const NDb::STexture *pFlareTexture,
-	                               float fOnTime,
-	                               float fOffTime );
-	virtual CObjectBase *AddDirFlare( CFuncBase<CVec3> *pPos,
-	                                  CFuncBase<CVec3> *pDir,
-	                                  CFuncBase<CVec2> *pSize,
-	                                  const CVec2 &vMaxSize,
-	                                  const NDb::STexture *pTexture,
-	                                  int nFloor );
-	virtual CObjectBase *AddDirFlare(
-			CFuncBase<CVec3> *pPos, CFuncBase<CVec3> *pDir, const CVec2 &sSize, const NDb::STexture *pTexture, int nFloor );
-	virtual CObjectBase *AddPostFilter( const std::vector<CObjectBase *> &target, IPostProcess *pEffect );
-	virtual CObjectBase *AddSpotLight( const CVec3 &ptColor,
-	                                   const CVec3 &ptOrigin,
-	                                   const CVec3 &ptDir,
-	                                   float fFOV,
-	                                   float fRadius,
-	                                   const NDb::STexture *pMask,
-	                                   bool bLightmapOnly );
-	virtual CDecalTarget *CreateDecalTarget( const std::vector<CObjectBase *> &targets, const SDecalMappingInfo &_info );
-	virtual CObjectBase *AddDecal( NGScene::CDecalTarget *pTarget, const NDb::SMaterial *pMaterial );
-	virtual CDecalFader *AddDecal( NGScene::CDecalTarget *pTarget,
-	                               const NDb::SMaterial *pMaterial,
-	                               STime tFadeInStart,
-	                               STime tFadeInEnd,
-	                               STime tFadeOutStart,
-	                               STime tFadeOutEnd,
-	                               CFuncBase<STime> *pTime );
-	virtual void SetWarFogBlend( float fBlend );
-	virtual void SetWarFog( const CArray2D<unsigned char> &fog, float fScale );
+	void Draw( const SDrawInfo &drawInfo ) override;
+	CVec2 GetScreenRect() override;
+	int GetCutFloor() override;
+	void SetCutFloor( int nFloor ) override;
+	CObjectBase *AddPointLight( const CVec3 &ptColor, const CVec3 &ptOrigin, float fR ) override;
+	CObjectBase *AddPointLight( CPtrFuncBase<CAnimLight> *pLight ) override;
+	CObjectBase *AddFlare( CFuncBase<CVec3> *pOrigin,
+	                       CFuncBase<STime> *pTime,
+	                       int nFloor,
+	                       float fFlareRadius,
+	                       const NDb::STexture *pFlareTexture,
+	                       float fOnTime,
+	                       float fOffTime ) override;
+	CObjectBase *AddDirFlare( CFuncBase<CVec3> *pPos,
+	                          CFuncBase<CVec3> *pDir,
+	                          CFuncBase<CVec2> *pSize,
+	                          const CVec2 &vMaxSize,
+	                          const NDb::STexture *pTexture,
+	                          int nFloor ) override;
+	CObjectBase *AddDirFlare( CFuncBase<CVec3> *pPos,
+	                          CFuncBase<CVec3> *pDir,
+	                          const CVec2 &sSize,
+	                          const NDb::STexture *pTexture,
+	                          int nFloor ) override;
+	CObjectBase *AddPostFilter( const std::vector<CObjectBase *> &target, IPostProcess *pEffect ) override;
+	CObjectBase *AddSpotLight( const CVec3 &ptColor,
+	                           const CVec3 &ptOrigin,
+	                           const CVec3 &ptDir,
+	                           float fFOV,
+	                           float fRadius,
+	                           const NDb::STexture *pMask,
+	                           bool bLightmapOnly ) override;
+	CDecalTarget *CreateDecalTarget( const std::vector<CObjectBase *> &targets, const SDecalMappingInfo &_info ) override;
+	CObjectBase *AddDecal( NGScene::CDecalTarget *pTarget, const NDb::SMaterial *pMaterial ) override;
+	CDecalFader *AddDecal( NGScene::CDecalTarget *pTarget,
+	                       const NDb::SMaterial *pMaterial,
+	                       STime tFadeInStart,
+	                       STime tFadeInEnd,
+	                       STime tFadeOutStart,
+	                       STime tFadeOutEnd,
+	                       CFuncBase<STime> *pTime ) override;
+	void SetWarFogBlend( float fBlend ) override;
+	void SetWarFog( const CArray2D<unsigned char> &fog, float fScale ) override;
 	void SetAmbient( const NDb::SAmbientLight *pLight, bool bSelectGF2, CFuncBase<STime> *pTime );
 
-	virtual void SetAmbient( const NDb::SAmbientLight *pLight, CFuncBase<STime> *pTime )
+	void SetAmbient( const NDb::SAmbientLight *pLight, CFuncBase<STime> *pTime ) override
 	{
 		SetAmbient( pLight, false, pTime );
 	}
 
-	virtual void SetAmbientEffect( const NDb::SEffect *pEffect, STime stBeginTime, CFuncBase<STime> *pTime );
+	void SetAmbientEffect( const NDb::SEffect *pEffect, STime stBeginTime, CFuncBase<STime> *pTime ) override;
 
-	virtual void SetDepthOfField( SDepthOfField *pDOFParams )
+	void SetDepthOfField( SDepthOfField *pDOFParams ) override
 	{
 		pDepthOfField = pDOFParams;
 	}
 
-	virtual SDepthOfField *GetDepthOfField()
+	SDepthOfField *GetDepthOfField() override
 	{
 		return pDepthOfField;
 	}
 
-	virtual ESceneRenderMode GetRenderMode() const;
-	virtual void SetRenderMode( ESceneRenderMode mode );
-	virtual bool TraceScene( const CRay &r,
-	                         float *pfT,
-	                         CVec3 *pNormal,
-	                         EScenePartsSet ps,
-	                         SFullRoomInfo *pRoomInfo,
-	                         CObjectBase **SFullRoomInfo,
-	                         bool bOpaqueOnly );
-	virtual void MakeHQShot( const SDrawInfo &drawInfo, CArray2D<NGfx::SPixel8888> *pRes );
+	ESceneRenderMode GetRenderMode() const override;
+	void SetRenderMode( ESceneRenderMode mode ) override;
+	bool TraceScene( const CRay &r,
+	                 float *pfT,
+	                 CVec3 *pNormal,
+	                 EScenePartsSet ps,
+	                 SFullRoomInfo *pRoomInfo,
+	                 CObjectBase **SFullRoomInfo,
+	                 bool bOpaqueOnly ) override;
+	void MakeHQShot( const SDrawInfo &drawInfo, CArray2D<NGfx::SPixel8888> *pRes ) override;
 
-	virtual void
-	SetLoadingCounter( ILoadingCounter *_pWaitLoading, ILoadingCounter *_pCalcTerrain, ILoadingCounter *pCounter )
+	void SetLoadingCounter( ILoadingCounter *_pWaitLoading,
+	                        ILoadingCounter *_pCalcTerrain,
+	                        ILoadingCounter *pCounter ) override
 	{
 		pWaitLoading = _pWaitLoading;
 		pCalcTerrain = _pCalcTerrain;
 		pScene->SetLoadingCounter( pCounter );
 	}
 
-	virtual void WaitForLoad( bool bWait )
+	void WaitForLoad( bool bWait ) override
 	{
 		bWaitLoading = bWait;
 		pScene->WaitForLoad( bWait );
 	}
 
-	void SetHSRMode( EHSRMode m )
+	void SetHSRMode( EHSRMode m ) override
 	{
 		hsrMode = m;
 	}
 
-	EHSRMode GetHSRMode() const
+	EHSRMode GetHSRMode() const override
 	{
 		return hsrMode;
 	}
 
-	void SetTransparentMode( ETransparentMode m )
+	void SetTransparentMode( ETransparentMode m ) override
 	{
 		trMode = m;
 	}
 
-	ETransparentMode GetTransparentMode() const
+	ETransparentMode GetTransparentMode() const override
 	{
 		return trMode;
 	}
 
-	virtual void SetFreezeMode( bool mode )
+	void SetFreezeMode( bool mode ) override
 	{
 		NGScene::bFreeze = mode;
 	}
@@ -1479,7 +1486,7 @@ public:
 	{
 	}
 
-	virtual void LeftToLoad( int nCount )
+	void LeftToLoad( int nCount ) override
 	{
 		nTerrains = nTotal - nCount;
 		if ( pForward )
@@ -1488,7 +1495,7 @@ public:
 		}
 	}
 
-	virtual void SetTotalCount( int nTotalCount )
+	void SetTotalCount( int nTotalCount ) override
 	{
 		nTotal = nTotalCount;
 		if ( pForward )
@@ -1497,7 +1504,7 @@ public:
 		}
 	}
 
-	virtual void Step()
+	void Step() override
 	{
 		++nTerrains;
 		if ( pForward )

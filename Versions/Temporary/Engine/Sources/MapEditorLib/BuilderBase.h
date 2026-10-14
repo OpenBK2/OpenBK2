@@ -8,19 +8,21 @@ class MAPEDITORLIB_EXPORT CBuilderBase : public IBuilder
 {
 public:
 	// IBuilder
-	virtual bool InsertObject( std::string *pszObjectTypeName,
-	                           std::string *pszUniqueObjectName,
-	                           bool bFromMainMenu,
-	                           bool *pbCanChangeObjectName,
-	                           bool *pbNeedExport,
-	                           bool *pbNeedEdit );
-	virtual bool
-	CopyObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource );
-	virtual bool
-	RenameObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource );
-	virtual bool RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName );
+	bool InsertObject( std::string *pszObjectTypeName,
+	                   std::string *pszUniqueObjectName,
+	                   bool bFromMainMenu,
+	                   bool *pbCanChangeObjectName,
+	                   bool *pbNeedExport,
+	                   bool *pbNeedEdit ) override;
+	bool CopyObject( const std::string &rszObjectTypeName,
+	                 const std::string &rszDestination,
+	                 const std::string &rszSource ) override;
+	bool RenameObject( const std::string &rszObjectTypeName,
+	                   const std::string &rszDestination,
+	                   const std::string &rszSource ) override;
+	bool RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName ) override;
 
-	virtual void GetDefaultFolder( const std::string &rszObjectTypeName, std::string *pszDefaultFolder )
+	void GetDefaultFolder( const std::string &rszObjectTypeName, std::string *pszDefaultFolder ) override
 	{
 		if ( pszDefaultFolder )
 		{

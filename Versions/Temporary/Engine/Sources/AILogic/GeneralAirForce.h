@@ -55,7 +55,7 @@ class CGeneralAirForce : public CCommander
 	bool bOurTurn = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CCommander *)this );
 		f.Add( 2, &nParty );
@@ -98,14 +98,14 @@ public:
 
 	CGeneralAirForce( const int nPlayer, IEnemyContainer *pEnemyContainer );
 
-	void Segment();
-	void Give( CCommonUnit *pWorker );
+	void Segment() override;
+	void Give( CCommonUnit *pWorker ) override;
 
-	void EnumWorkers( const EForceType eType, IWorkerEnumerator *pEnumerator ) {}
+	void EnumWorkers( const EForceType eType, IWorkerEnumerator *pEnumerator ) override {}
 
 	int /*request ID*/
 	RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType, int nResistanceCellNumber = -1 );
-	void CancelRequest( int nRequestID, enum EForceType eType );
+	void CancelRequest( int nRequestID, enum EForceType eType ) override;
 
 	void SetEnemyContainer( IEnemyContainer *_pEnemyConatainer )
 	{

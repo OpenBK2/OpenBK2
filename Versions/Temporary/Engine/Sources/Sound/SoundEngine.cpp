@@ -141,7 +141,7 @@ public:
 	}
 
 	//
-	int VisitSound2D( CSFXSound *pSound )
+	int VisitSound2D( CSFXSound *pSound ) override
 	{
 		FSOUND_SAMPLE *sample = pSound->GetSample()->GetInternalContainer();
 		if ( sample == 0 )
@@ -159,7 +159,7 @@ public:
 		return nChannel;
 	}
 
-	int VisitSound3D( CSFXSound *pSound )
+	int VisitSound3D( CSFXSound *pSound ) override
 	{
 		FSOUND_SAMPLE *sample = pSound->GetSample()->GetInternalContainer();
 		if ( sample == 0 )

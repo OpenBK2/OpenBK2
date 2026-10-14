@@ -17,7 +17,7 @@ struct SMaterial;
 class CExplosionObjInfo : public CPtrFuncBase<NGScene::CObjectInfo>
 {
 	NMeshData::SMeshData data;
-	void Recalc();
+	void Recalc() override;
 
 public:
 	CExplosionObjInfo() {}

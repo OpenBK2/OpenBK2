@@ -15,7 +15,7 @@ private:
 	CDGPtr<CFuncBase<float>> pAnimatedChannel;
 	CDGPtr<CFuncBase<float>> pMasterChannel;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pAnimatedChannel );
 		f.Add( 3, &pMasterChannel );
@@ -28,14 +28,14 @@ protected:
 	{
 	}
 
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		bool bMasterChanged = pMasterChannel.Refresh();
 		bool bAnimatedChanged = ( IsValid( pAnimatedChannel ) ? pAnimatedChannel.Refresh() : false );
 		return bMasterChanged || bAnimatedChanged;
 	}
 
-	virtual void Recalc()
+	void Recalc() override
 	{
 		value = pMasterChannel->GetValue();
 		if ( IsValid( pAnimatedChannel ) )

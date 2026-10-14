@@ -173,8 +173,9 @@ class CXmlExporterB2 : public CXmlExporter
 	                               const std::string &szClassTypeName,
 	                               const std::string &szFieldName );
 	//
-	std::string
-	MakePathName( const std::string &szObjectName, const std::string &szClassTypeName, const std::string &szFieldName );
+	std::string MakePathName( const std::string &szObjectName,
+	                          const std::string &szClassTypeName,
+	                          const std::string &szFieldName ) override;
 };
 
 std::string CXmlExporterB2::MakePathName( const std::string &szObjectName,

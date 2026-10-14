@@ -70,42 +70,42 @@ const SElementRPGStats &GetElementStats( const int nIndex ) const
 	return end;
 }
 
-virtual const CVec2 &GetOrigin( const int nIndex = -1 ) const
+const CVec2 &GetOrigin( const int nIndex = -1 ) const override
 {
 	return GetElementStats( nIndex ).vOrigin;
 }
 
-virtual const SByteArray2 &GetPassability( const int nIndex = -1 ) const
+const SByteArray2 &GetPassability( const int nIndex = -1 ) const override
 {
 	return GetElementStats( nIndex ).passability;
 }
 
-virtual const CVec2 &GetVisOrigin( const int nIndex = -1 ) const
+const CVec2 &GetVisOrigin( const int nIndex = -1 ) const override
 {
 	return GetOrigin( nIndex );
 }
 
-virtual const SByteArray2 &GetVisibility( const int nIndex = -1 ) const
+const SByteArray2 &GetVisibility( const int nIndex = -1 ) const override
 {
 	static SByteArray2 ar;
 	return ar;
 	//	return GetElementStats( nIndex ).passability;
 }
 
-virtual const SPassProfile &GetPassProfile( const int nIndex = -1 ) const
+const SPassProfile &GetPassProfile( const int nIndex = -1 ) const override
 {
 	static SPassProfile emptyProfile;
 	return emptyProfile;
 }
 
-virtual const SPassProfile &GetVisProfile( const int nIndex = -1 ) const
+const SPassProfile &GetVisProfile( const int nIndex = -1 ) const override
 {
 	static SPassProfile emptyProfile;
 	return emptyProfile;
 }
 
 //
-virtual void ToAIUnits( bool bInEditor )
+void ToAIUnits( bool bInEditor ) override
 {
 	eGameType = SGVOGT_BRIDGE;
 	SStaticObjectRPGStats::ToAIUnits( bInEditor );

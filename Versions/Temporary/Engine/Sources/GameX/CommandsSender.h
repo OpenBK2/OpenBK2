@@ -21,7 +21,7 @@ class CCommandsSender : public CObjectBase
 	bool bGroupChanged = {};
 	bool bLastCommandSkipped = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &bHistoryPlaying );
 		f.Add( 3, &pTransciver );

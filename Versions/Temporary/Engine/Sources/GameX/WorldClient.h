@@ -347,21 +347,21 @@ protected:
 
 	void InitPrivate();
 
-	virtual void PlayerObjectiveChanged( const int nObjective, const EMissionObjectiveState eState );
-	virtual void OnUpdateNotifyFeedback( const struct SAIFeedbackUpdate *pUpdate );
-	void OnUpdateNewUnit( const SAINewUnitUpdate *pUpdate, CMapObj *pMO );
-	void OnUpdateDiplomacy( CMapObj *pMO, const int nNewPlayer );
-	void OnUpdateKeyObjectProgress( CMapObj *pMO, float fProgress, int nPlayer );
+	void PlayerObjectiveChanged( const int nObjective, const EMissionObjectiveState eState ) override;
+	void OnUpdateNotifyFeedback( const struct SAIFeedbackUpdate *pUpdate ) override;
+	void OnUpdateNewUnit( const SAINewUnitUpdate *pUpdate, CMapObj *pMO ) override;
+	void OnUpdateDiplomacy( CMapObj *pMO, const int nNewPlayer ) override;
+	void OnUpdateKeyObjectProgress( CMapObj *pMO, float fProgress, int nPlayer ) override;
 	int GetHPBarColorIndex( const CMapObj *pMO, const int nPlayer );
-	void OnUpdateVisualStatus( const SUnitStatusUpdate *pUpdate, CMapObj *pMO );
+	void OnUpdateVisualStatus( const SUnitStatusUpdate *pUpdate, CMapObj *pMO ) override;
 
-	void OnUpdateSuperWeaponControl( const struct SSuperWeaponControl &update );
-	void OnUpdateSuperWeaponRecycle( const struct SSuperWeaponRecycle &update );
-	void OnReplaceSelectionGroup( CMOSelectable *pMOPattern, CMOSelectable *pMO );
+	void OnUpdateSuperWeaponControl( const struct SSuperWeaponControl &update ) override;
+	void OnUpdateSuperWeaponRecycle( const struct SSuperWeaponRecycle &update ) override;
+	void OnReplaceSelectionGroup( CMOSelectable *pMOPattern, CMOSelectable *pMO ) override;
 
 	//{ CUpdatableWorld
-	void OnNewMapObj( int nID, CMapObj *pMO );
-	void OnDeadOrRemoveMapObj( int nID );
+	void OnNewMapObj( int nID, CMapObj *pMO ) override;
+	void OnDeadOrRemoveMapObj( int nID ) override;
 	//}
 public:
 	CWorldClient();
@@ -370,9 +370,9 @@ public:
 	              IAILogic *pAI,
 	              IScenarioTracker *pScenarioTracker,
 	              IMissionSuperWeapon *pSuperWeapon );
-	~CWorldClient();
+	~CWorldClient() override;
 
-	void Update();
+	void Update() override;
 	//
 	bool ProcessEvent( const struct SGameMessage &msg );
 	bool PickMapObj( const CVec2 &vPos, std::list<int> *pPickObjects );
@@ -385,18 +385,18 @@ public:
 	void ClampToAIMap( CVec2 &vPos );
 
 	//
-	void Select( CMapObj *pMapObj );
-	void DeSelect( CMapObj *pMapObj );
-	void DeSelectDead( CMapObj *pMapObj );
-	bool IsActive( CMapObj *pMopObj );
-	bool IsSuperActive( CMapObj *pMopObj );
-	void DoUpdateSpecialAbility( CMapObj *pMO );
-	void DoUpdateObjectStats( CMapObj *pMO );
+	void Select( CMapObj *pMapObj ) override;
+	void DeSelect( CMapObj *pMapObj ) override;
+	void DeSelectDead( CMapObj *pMapObj ) override;
+	bool IsActive( CMapObj *pMopObj ) override;
+	bool IsSuperActive( CMapObj *pMopObj ) override;
+	void DoUpdateSpecialAbility( CMapObj *pMO ) override;
+	void DoUpdateObjectStats( CMapObj *pMO ) override;
 
-	void RemoveFromSelectionGroup( CMapObj *pMopObj );
-	void HideFromSelectionGroup( CMapObj *pMopObj );
-	void UnHideFromSelectionGroup( CMapObj *pMopObj );
-	void UpdateSpecialSelection( int nID, CMapObj *pMO );
+	void RemoveFromSelectionGroup( CMapObj *pMopObj ) override;
+	void HideFromSelectionGroup( CMapObj *pMopObj ) override;
+	void UnHideFromSelectionGroup( CMapObj *pMopObj ) override;
+	void UpdateSpecialSelection( int nID, CMapObj *pMO ) override;
 	//
 	bool ActionMove( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
 	bool ActionReverse( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
@@ -565,7 +565,7 @@ public:
 
 	void UpdateIcons();
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 
 	CCommandsSender *GetCommandsSender() const
 	{
@@ -587,10 +587,10 @@ public:
 	void SetOnMinimap( bool bOnMinimap );
 
 	// for sound
-	const NDb::SComplexSoundDesc *GetTerrainSound( int nTerrainType );
-	const NDb::SComplexSoundDesc *GetTerrainCycleSound( int nTerrainType );
-	void GetTerrainMassData( std::vector<SSoundTerrainInfo> *pData, int nMaxSize );
-	float GetSoundVolume( int nTerrainType ) const;
+	const NDb::SComplexSoundDesc *GetTerrainSound( int nTerrainType ) override;
+	const NDb::SComplexSoundDesc *GetTerrainCycleSound( int nTerrainType ) override;
+	void GetTerrainMassData( std::vector<SSoundTerrainInfo> *pData, int nMaxSize ) override;
+	float GetSoundVolume( int nTerrainType ) const override;
 
 	void OnClickMultiSelectUnit( int nSlot, uint16_t wKeyboardFlags );
 
@@ -601,9 +601,9 @@ public:
 	bool IsActiveOwnAvia() const;
 	void GetOwnAvia( std::vector<CMapObj *> *pObjects ) const;
 
-	void GetCameraByName( NCamera::CCameraPlacement *pCamera, const std::string &rszName ) const;
-	void GetObjectPosByScriptID( CVec3 *pObjPos, int nScriptID ) const;
-	bool GetMoviesData( NDb::SScriptMovies *pMoviesData ) const;
+	void GetCameraByName( NCamera::CCameraPlacement *pCamera, const std::string &rszName ) const override;
+	void GetObjectPosByScriptID( CVec3 *pObjPos, int nScriptID ) const override;
+	bool GetMoviesData( NDb::SScriptMovies *pMoviesData ) const override;
 
 	void UpdateUnitIcons( float fDeltaTime );
 	void SetMinimapColors( const std::vector<CVec4> &_minimapColors );

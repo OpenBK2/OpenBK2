@@ -38,7 +38,7 @@ class AILOGIC_EXPORT CPresizePath : public ISmoothPath
 	float fSpeedLen = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		OnSerialize( f );
 		f.Add( 3, &eState );
@@ -74,17 +74,17 @@ public:
 		return vEndPoint;
 	}
 
-	virtual bool IsFinished() const;
-	virtual void Segment( const NTimer::STime timeDiff );
+	bool IsFinished() const override;
+	void Segment( const NTimer::STime timeDiff ) override;
 
-	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap );
-	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit );
-	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap );
-	virtual void Stop();
-	virtual const bool CanGoBackward() const;
-	virtual const bool CanGoForward() const;
-	virtual const CVec2 PeekPathPoint( const int nToShift ) const;
-	virtual IMemento *CreateMemento() const;
+	bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) override;
+	bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) override;
+	bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap ) override;
+	void Stop() override;
+	const bool CanGoBackward() const override;
+	const bool CanGoForward() const override;
+	const CVec2 PeekPathPoint( const int nToShift ) const override;
+	IMemento *CreateMemento() const override;
 
 	virtual float GetCurvatureRadius() const
 	{
@@ -113,7 +113,7 @@ class CMechUnitRestOnBoardPath : public ISmoothPath
 	CVec3 vCurrentPlacement;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		OnSerialize( f );
 		f.Add( 3, &pTransport );
@@ -134,7 +134,7 @@ public:
 	CMechUnitRestOnBoardPath( CBasePathUnit *pUnit, CMilitaryCar *pTransport );
 
 	virtual const CVec3 GetPoint( NTimer::STime timeDiff );
-	virtual void Segment( const NTimer::STime timeDiff );
+	void Segment( const NTimer::STime timeDiff ) override;
 
 	virtual void GetSpeed3( CVec3 *vSpeed ) const;
 	void Advance();
@@ -145,46 +145,46 @@ public:
 		return vFinish;
 	}
 
-	virtual bool IsFinished() const
+	bool IsFinished() const override
 	{
 		return false;
 	}
 
-	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap )
+	bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) override
 	{
 		return false;
 	}
 
-	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit )
+	bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) override
 	{
 		return false;
 	}
 
-	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap )
+	bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap ) override
 	{
 		return false;
 	}
 
-	virtual void Stop() {}
+	void Stop() override {}
 
-	virtual const bool CanGoBackward() const
+	const bool CanGoBackward() const override
 	{
 		return false;
 	}
 
-	virtual const bool CanGoForward() const
+	const bool CanGoForward() const override
 	{
 		return true;
 	}
 
 	virtual void GetNextTiles( std::list<SVector> *pTiles ) {}
 
-	virtual const CVec2 PeekPathPoint( const int nToShift ) const
+	const CVec2 PeekPathPoint( const int nToShift ) const override
 	{
 		return VNULL2;
 	}
 
-	virtual IMemento *CreateMemento() const
+	IMemento *CreateMemento() const override
 	{
 		return 0;
 	}

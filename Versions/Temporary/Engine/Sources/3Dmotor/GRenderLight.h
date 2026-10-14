@@ -21,9 +21,9 @@ public:
 class CDirectionalLight : public ILight
 {
 	OBJECT_BASIC_METHODS( CDirectionalLight );
-	virtual bool NeedUpdate();
+	bool NeedUpdate() override;
 
-	virtual void Recalc() {}
+	void Recalc() override {}
 
 	ZDATA
 	CDGPtr<CFuncBase<CVec3>> pColor;
@@ -43,7 +43,7 @@ class CDirectionalLight : public ILight
 	ZSKIP
 	CVec3 vDymanicLightsModification;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pColor );
 		f.Add( 3, &pGlossColor );
@@ -83,7 +83,7 @@ public:
 	                   CFuncBase<SHMatrix> *_pCloudsProjection,
 	                   float _fShadowsMaxDetailLength,
 	                   const CVec3 &_vDymanicLightsModification );
-	void AddToState( SPerVertexLightState *pRes );
+	void AddToState( SPerVertexLightState *pRes ) override;
 	void PrepareLightInfo( SLightInfo *pLightInfo );
 
 	const CVec3 &GetLightDir() const
@@ -132,7 +132,7 @@ class CPointLight : public ILight
 	CTransformStack sTransform;
 	CVec3 vColor;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &sBound );
 		f.Add( 3, &vCenter );
@@ -147,8 +147,8 @@ class CPointLight : public ILight
 public:
 	CPointLight();
 	CPointLight( const CVec3 &_vColor, const CVec3 &ptCenter, float fRadius );
-	virtual bool CheckCulling( CTransformStack *pTS );
-	void AddToState( SPerVertexLightState *pRes );
+	bool CheckCulling( CTransformStack *pTS ) override;
+	void AddToState( SPerVertexLightState *pRes ) override;
 };
 
 class CAnimLight;
@@ -160,7 +160,7 @@ class CDynamicPointLight : public ILight
 	CDGPtr<CPtrFuncBase<CAnimLight>> pLight;
 	bool bIsOn;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pLight );
 		f.Add( 3, &bIsOn );
@@ -179,8 +179,8 @@ public:
 	{
 	}
 
-	virtual bool CheckCulling( CTransformStack *pTS );
-	void AddToState( SPerVertexLightState *pRes );
+	bool CheckCulling( CTransformStack *pTS ) override;
+	void AddToState( SPerVertexLightState *pRes ) override;
 
 	void SwitchLight( bool bMode )
 	{
@@ -198,7 +198,7 @@ class CLightStateNode : public CFuncBase<SPerVertexLightState>
 	bool bSmthHasChanged;
 
 	ZONSERIALIZE
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pDirectionalLight );
 		f.Add( 3, &lights );
@@ -217,8 +217,8 @@ class CLightStateNode : public CFuncBase<SPerVertexLightState>
 	}
 
 protected:
-	virtual bool NeedUpdate();
-	virtual void Recalc();
+	bool NeedUpdate() override;
+	void Recalc() override;
 
 public:
 	CLightStateNode()

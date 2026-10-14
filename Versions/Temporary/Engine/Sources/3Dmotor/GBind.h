@@ -12,7 +12,7 @@ class CBind : public CFuncBase<SSkeletonMatrices>
 	CDGPtr<CFuncBase<NAnimation::SSkeletonPose>> pAnimation;
 	NAnimation::SSkeletonHandle skeletonH;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pAnimation );
 		f.Add( 3, &skeletonH );
@@ -20,13 +20,13 @@ class CBind : public CFuncBase<SSkeletonMatrices>
 	}
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pAnimation.Refresh();
 	}
 
-	virtual void Recalc();
-	~CBind();
+	void Recalc() override;
+	~CBind() override;
 
 public:
 	CBind() {}
@@ -42,7 +42,7 @@ class CAnimatedBound : public CFuncBase<SBound>
 	SBound bv;
 	CDGPtr<CFuncBase<NAnimation::SSkeletonPose>> pAnimation;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &bv );
 		f.Add( 3, &pAnimation );
@@ -52,8 +52,8 @@ class CAnimatedBound : public CFuncBase<SBound>
 	SSphere prevValue;
 
 protected:
-	virtual bool NeedUpdate();
-	virtual void Recalc();
+	bool NeedUpdate() override;
+	void Recalc() override;
 
 public:
 	CAnimatedBound()

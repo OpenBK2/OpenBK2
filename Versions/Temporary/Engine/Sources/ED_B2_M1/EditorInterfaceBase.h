@@ -10,6 +10,6 @@ public:
 	//
 	virtual void ToggleCameraControl( const SGameMessage &msg, bool bEnableCameraControl );
 	// IInterfaceBase
-	virtual bool ProcessEvent( const struct SGameMessage &msg );
-	virtual void Step( bool bAppActive );
+	bool ProcessEvent( const struct SGameMessage &msg ) override;
+	void Step( bool bAppActive ) override;
 };

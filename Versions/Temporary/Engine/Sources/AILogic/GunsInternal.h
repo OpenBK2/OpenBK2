@@ -20,7 +20,7 @@ class CTurretGun : public CBasicGun
 	CPtr<CTurret> pTurret;
 	bool bCircularAttack = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CBasicGun *)this );
 		f.Add( 2, &wBestWayDir );
@@ -40,12 +40,12 @@ class CTurretGun : public CBasicGun
 	uint16_t CalcVerticalAngle( const class CVec3 &pt ) const;
 
 protected:
-	virtual bool TurnGunToEnemy( const CVec2 &vEnemyCenter, const float zDiff );
+	bool TurnGunToEnemy( const CVec2 &vEnemyCenter, const float zDiff ) override;
 	// можно ли прямо сейчас стрельнуть по point ( не вращая ни turret ни base ), погрешность - угол addAngle
-	virtual bool
-	IsGoodAngle( const CVec2 &point, const uint16_t addAngle, const float z, const uint8_t cDeltaAngle ) const;
-	virtual void Rest();
-	virtual bool AnalyzeTurning();
+	bool
+	IsGoodAngle( const CVec2 &point, const uint16_t addAngle, const float z, const uint8_t cDeltaAngle ) const override;
+	void Rest() override;
+	bool AnalyzeTurning() override;
 
 public:
 	CTurretGun()
@@ -59,41 +59,41 @@ public:
 	            const IGunsFactory::EGunTypes eType,
 	            const int nTurret );
 
-	virtual bool IsOnTurret() const
+	bool IsOnTurret() const override
 	{
 		return true;
 	}
 
-	virtual class CTurret *GetTurret() const
+	class CTurret *GetTurret() const override
 	{
 		return pTurret;
 	}
 
-	virtual void TraceAim( class CAIUnit *pUnit );
-	virtual void StopTracing();
+	void TraceAim( class CAIUnit *pUnit ) override;
+	void StopTracing() override;
 
-	virtual void StopFire();
+	void StopFire() override;
 
 	// можно ли дострельнуть по высоте
-	virtual bool CanShootByHeight( class CAIUnit *pTarget ) const;
+	bool CanShootByHeight( class CAIUnit *pTarget ) const override;
 
 	// куда в данный момент смотрит gun
-	virtual const uint16_t GetGlobalDir() const;
-	virtual void TurnToRelativeDir( const uint16_t wAngle );
+	const uint16_t GetGlobalDir() const override;
+	void TurnToRelativeDir( const uint16_t wAngle ) override;
 
-	virtual const float GetRotateSpeed() const;
+	const float GetRotateSpeed() const override;
 
-	virtual uint16_t GetHorTurnConstraint() const;
-	virtual uint16_t GetVerTurnConstraint() const;
+	uint16_t GetHorTurnConstraint() const override;
+	uint16_t GetVerTurnConstraint() const override;
 
-	void SetCircularAttack( const bool bCanAttack );
+	void SetCircularAttack( const bool bCanAttack ) override;
 
-	virtual void StartPointBurst( const CVec3 &target, bool bReAim );
-	virtual void StartPointBurst( const CVec2 &target, bool bReAim, bool bStartParallelGuns = true );
-	virtual void StartEnemyBurst( class CAIUnit *pEnemy, bool bReAim );
+	void StartPointBurst( const CVec3 &target, bool bReAim ) override;
+	void StartPointBurst( const CVec2 &target, bool bReAim, bool bStartParallelGuns = true ) override;
+	void StartEnemyBurst( class CAIUnit *pEnemy, bool bReAim ) override;
 
-	virtual const NTimer::STime GetTimeToShootToPoint( const CVec3 &vPoint ) const;
-	virtual const NTimer::STime GetTimeToShoot( const CVec3 &vPoint ) const;
+	const NTimer::STime GetTimeToShootToPoint( const CVec3 &vPoint ) const override;
+	const NTimer::STime GetTimeToShoot( const CVec3 &vPoint ) const override;
 };
 
 // пушка на базовой платформе
@@ -102,21 +102,21 @@ class CBaseGun : public CBasicGun
 	OBJECT_BASIC_METHODS( CBaseGun );
 	ZDATA_( CBasicGun )
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CBasicGun *)this );
 		return 0;
 	}
 
 protected:
-	virtual bool TurnGunToEnemy( const CVec2 &vEnemyCenter, const float zDiff );
+	bool TurnGunToEnemy( const CVec2 &vEnemyCenter, const float zDiff ) override;
 	// можно ли прямо сейчас стрельнуть по point ( не вращая ни turret ни base ), погрешность - угол addAngle
-	virtual bool
-	IsGoodAngle( const CVec2 &point, const uint16_t addAngle, const float z, const uint8_t cDeltaAngle ) const;
+	bool
+	IsGoodAngle( const CVec2 &point, const uint16_t addAngle, const float z, const uint8_t cDeltaAngle ) const override;
 
-	virtual void Rest() {}
+	void Rest() override {}
 
-	virtual bool AnalyzeTurning();
+	bool AnalyzeTurning() override;
 
 public:
 	CBaseGun() {}
@@ -129,40 +129,40 @@ public:
 	{
 	}
 
-	virtual bool IsOnTurret() const
+	bool IsOnTurret() const override
 	{
 		return false;
 	}
 
-	virtual class CTurret *GetTurret() const
+	class CTurret *GetTurret() const override
 	{
 		return 0;
 	}
 
-	virtual void TraceAim( class CAIUnit *pUnit ) {}
+	void TraceAim( class CAIUnit *pUnit ) override {}
 
-	virtual void StopTracing() {}
+	void StopTracing() override {}
 
-	virtual void StopFire();
+	void StopFire() override;
 
 	// куда в данный момент смотрит gun
-	virtual const uint16_t GetGlobalDir() const;
+	const uint16_t GetGlobalDir() const override;
 
-	virtual void TurnToRelativeDir( const uint16_t wAngle ) {}
+	void TurnToRelativeDir( const uint16_t wAngle ) override {}
 
-	virtual const float GetRotateSpeed() const;
+	const float GetRotateSpeed() const override;
 
-	virtual uint16_t GetHorTurnConstraint() const
+	uint16_t GetHorTurnConstraint() const override
 	{
 		return 32768;
 	}
 
-	virtual uint16_t GetVerTurnConstraint() const
+	uint16_t GetVerTurnConstraint() const override
 	{
 		return 32768;
 	}
 
-	void SetCircularAttack( const bool bCanAttack ) {}
+	void SetCircularAttack( const bool bCanAttack ) override {}
 };
 
 class CUnitsGunsFactory : public IGunsFactory
@@ -179,12 +179,12 @@ public:
 	{
 	}
 
-	virtual int GetNCommonGun() const
+	int GetNCommonGun() const override
 	{
 		return nCommonGun;
 	}
 
-	virtual CBasicGun *CreateGun( const EGunTypes eType, const int nShell, SCommonGunInfo *pCommonGunInfo ) const
+	CBasicGun *CreateGun( const EGunTypes eType, const int nShell, SCommonGunInfo *pCommonGunInfo ) const override
 	{
 		CBasicGun *pGun = 0;
 		if ( nTurret != -1 )

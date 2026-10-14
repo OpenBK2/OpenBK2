@@ -32,7 +32,7 @@ class CGeneralArtilleryGoToPosition : public CAIObjectBase
 	NTimer::STime timeOfFinish = {};
 	NTimer::STime startTime = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pUnit );
 		f.Add( 3, &eState );
@@ -197,7 +197,7 @@ class CGeneralArtillery : public CAIObjectBase, public IEnemyEnumerator
 	std::list<CGeneralArtilleryTask> tasks;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pOwner );
 		f.Add( 3, &freeUnits );
@@ -227,7 +227,7 @@ public:
 	void SetEnemyContainer( IEnemyContainer *pEnemyContainer );
 
 	//IEnemyEnumerator
-	virtual bool EnumEnemy( class CAIUnit *pEnemy );
+	bool EnumEnemy( class CAIUnit *pEnemy ) override;
 
 	const int GetNFreeUnits() const
 	{

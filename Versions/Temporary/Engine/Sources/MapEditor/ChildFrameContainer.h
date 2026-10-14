@@ -9,13 +9,13 @@ class CChildFrameContainer : public IChildFrameContainer
 	std::string szActiveChildFrameTypeName;
 	//
 public:
-	~CChildFrameContainer();
+	~CChildFrameContainer() override;
 
 	// IChildFrameContainer
-	bool CanCreate( const std::string &rszChildFrameTypeName );
-	bool IsActive( const std::string &rszChildFrameTypeName );
-	bool Create( const std::string &rszChildFrameTypeName );
-	void Destroy();
-	void Enter();
-	void Leave();
+	bool CanCreate( const std::string &rszChildFrameTypeName ) override;
+	bool IsActive( const std::string &rszChildFrameTypeName ) override;
+	bool Create( const std::string &rszChildFrameTypeName ) override;
+	void Destroy() override;
+	void Enter() override;
+	void Leave() override;
 };

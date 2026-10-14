@@ -10,12 +10,12 @@ class CMeshBound : public CFuncBase<SBound>
 	CDGPtr<CFuncBase<SSkeletonMatrices>> pAnimation;
 
 protected:
-	virtual bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		return pAnimation.Refresh();
 	}
 
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CMeshBound( CFuncBase<SSkeletonMatrices> *_pAnimation = 0 )
@@ -23,7 +23,7 @@ public:
 	{
 	}
 
-	int operator&( CStructureSaver &f );
+	int operator&( CStructureSaver &f ) override;
 };
 
 } // namespace NGScene

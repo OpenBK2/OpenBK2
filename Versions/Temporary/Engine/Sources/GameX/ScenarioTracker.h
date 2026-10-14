@@ -215,7 +215,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 		CDBPtr<NDb::STexture> pPicture;
 		SLeaderStatSet lastSeenInfo; // for interface visual effects purpose
 
-		ZEND int operator&( IBinSaver &f )
+		ZEND int operator&( IBinSaver &f ) override
 		{
 			f.Add( 2, &wszName );
 			f.Add( 5, &info );

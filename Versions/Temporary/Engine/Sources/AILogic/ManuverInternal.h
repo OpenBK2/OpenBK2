@@ -52,7 +52,7 @@ class CManuver : public IManuver
 	bool bToHorisontal = {};
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pPlane );
 		f.Add( 3, &pPath );
@@ -99,18 +99,18 @@ private:
 	                             CVec3 *pvNewTarget ) const;
 
 public:
-	bool IsToHorisontal() const
+	bool IsToHorisontal() const override
 	{
 		return bToHorisontal;
 	}
 
-	void SetPlane( CPlanesFormation *_pPlane )
+	void SetPlane( CPlanesFormation *_pPlane ) override
 	{
 		pPlane = _pPlane;
 	}
 
 	// to init next manuver with this params - will be smooth transition between manuvers
-	void GetManuverParams( struct SPrevPathParams *pParams ) const;
+	void GetManuverParams( struct SPrevPathParams *pParams ) const override;
 
 	CManuver()
 		: bUsed( false )
@@ -121,32 +121,32 @@ public:
 
 	//CRAP{ FOR TEST
 	// preferred top direction
-	CVec3 GetTopDirection() const
+	CVec3 GetTopDirection() const override
 	{
 		return CVec3( 0, 0, 1.0f );
 	}
 
-	virtual const CVec3 GetEndPoint() const
+	const CVec3 GetEndPoint() const override
 	{
 		return pPath->GetEndPoint();
 	}
 
 	//CRAP}
 
-	CVec3 GetPos() const
+	CVec3 GetPos() const override
 	{
 		return vCenter;
 	}
 
-	CVec3 GetSpeed() const
+	CVec3 GetSpeed() const override
 	{
 		return vSpeed;
 	}
 
-	CVec3 GetNormale() const;
+	CVec3 GetNormale() const override;
 
-	CVec3 GetProspectivePoint( const NTimer::STime nTime ) const;
-	CVec3 GetProspectiveSpeed( NTimer::STime nTime ) const;
+	CVec3 GetProspectivePoint( const NTimer::STime nTime ) const override;
+	CVec3 GetProspectiveSpeed( NTimer::STime nTime ) const override;
 
 	// helper functions
 	static const CVec3 CalcPredictedPoint( class CPlanesFormation *pPos, class CPlanesFormation *pEnemy );
@@ -160,7 +160,7 @@ class CManuverGeneric : public CManuver
 	OBJECT_BASIC_METHODS( CManuverGeneric );
 	ZDATA_( CManuver )
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CManuver *)this );
 		return 0;
@@ -168,7 +168,7 @@ public:
 
 public:
 	void Init( CPlanesFormation *pPos, const CVec3 &vPos );
-	virtual bool Advance( const NTimer::STime timeDiff );
+	bool Advance( const NTimer::STime timeDiff ) override;
 };
 
 class CManuverToHorisontal : public CManuver
@@ -176,7 +176,7 @@ class CManuverToHorisontal : public CManuver
 	OBJECT_BASIC_METHODS( CManuverToHorisontal )
 	ZDATA_( CManuver )
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CManuver *)this );
 		return 0;
@@ -184,7 +184,7 @@ public:
 
 public:
 	void Init( CPlanesFormation *pPos, const CVec3 &vPos );
-	virtual bool Advance( const NTimer::STime timeDiff );
+	bool Advance( const NTimer::STime timeDiff ) override;
 };
 
 class CManuverPrepareGroundAttack : public CManuver
@@ -192,7 +192,7 @@ class CManuverPrepareGroundAttack : public CManuver
 	OBJECT_BASIC_METHODS( CManuverPrepareGroundAttack )
 	ZDATA_( CManuver )
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CManuver *)this );
 		return 0;
@@ -200,7 +200,7 @@ public:
 
 public:
 	void Init( CPlanesFormation *pPos, const CVec3 &vPos, const CVec3 &vDirection );
-	virtual bool Advance( const NTimer::STime timeDiff );
+	bool Advance( const NTimer::STime timeDiff ) override;
 };
 
 //	CManuverSteepClimb
@@ -212,7 +212,7 @@ class CManuverSteepClimb : public CManuver
 	OBJECT_BASIC_METHODS( CManuverSteepClimb );
 	ZDATA_( CManuver )
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CManuver *)this );
 		return 0;
@@ -222,6 +222,6 @@ public:
 	CManuverSteepClimb() {}
 
 	void Init( CPlanesFormation *pPos );
-	virtual bool Advance( const NTimer::STime timeDiff );
+	bool Advance( const NTimer::STime timeDiff ) override;
 	virtual void Init( const NDb::EManuverDestination dest, CPlanesFormation *pPlane, CPlanesFormation *pEnemy = 0 );
 };

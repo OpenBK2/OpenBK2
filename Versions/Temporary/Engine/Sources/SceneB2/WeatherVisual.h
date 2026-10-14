@@ -52,12 +52,12 @@ class CWeatherVisual : public CFuncBase<bool>
 		{
 		}
 
-		bool NeedUpdate()
+		bool NeedUpdate() override
 		{
 			return pWeather.Refresh();
 		}
 
-		void Recalc();
+		void Recalc() override;
 	};
 
 	NTimer::STime timeStart = {};
@@ -97,9 +97,9 @@ class CWeatherVisual : public CFuncBase<bool>
 
 	void UpdateAmbientSound();
 
-	void Recalc();
+	void Recalc() override;
 
-	bool NeedUpdate()
+	bool NeedUpdate() override
 	{
 		UpdateAmbientSound();
 		return ( pTimer != 0 ? pTimer.Refresh() : false ) || WasCameraMoved();
@@ -155,5 +155,5 @@ public:
 		return &visualData;
 	}
 
-	int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver ) override;
 };

@@ -21,7 +21,7 @@ class CLightmapsLoader : public CObjectBase
 	std::string szName;
 	int nUseCount;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &szName );
 		f.Add( 3, &nUseCount );

@@ -25,7 +25,7 @@ class CMultiplayerInternal : public IMultiplayer
 	int nIncomingPktClientID;
 	CPtr<IAICmdsAutoMagic> pCmdsSerialize;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pNetDriver );
 		f.Add( 3, &pConsts );
@@ -44,15 +44,15 @@ public:
 	void CreateAsHost();
 	bool CreateAsClient( const char *pszIPAddress );
 
-	virtual void SendAICommand( CObjectBase *pCommand );
-	virtual void SendDirect( int nPlayer, CObjectBase *pCommand );
-	virtual CMultiplayerCommand *GetCommand();
-	virtual void FinishSegment();
-	virtual int GetSelfPlayerNum();
-	virtual EConnectionState GetState();
-	float GetPing( int nPlayer );
+	void SendAICommand( CObjectBase *pCommand ) override;
+	void SendDirect( int nPlayer, CObjectBase *pCommand ) override;
+	CMultiplayerCommand *GetCommand() override;
+	void FinishSegment() override;
+	int GetSelfPlayerNum() override;
+	EConnectionState GetState() override;
+	float GetPing( int nPlayer ) override;
 
-	virtual void SendRecv();
+	void SendRecv() override;
 
 	// CRAP{ only for alpha
 	struct NNet::IDriver *GetNetDriver() const

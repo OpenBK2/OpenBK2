@@ -73,11 +73,11 @@ public:
 	CPlayGameProcessor(
 			CNet *pNet, const char *pszServerIP, const int nNetGameVersion, const int nServerPort, const int nTimeOut );
 
-	virtual bool Segment();
+	bool Segment() override;
 	void SendGamePacket( CNetPacket *pPacket, bool bBroadcast );
 	void ProcessConnectServerPacket( class CConnectServerPacket *pPacket );
 
-	virtual bool ProcessPacket( CNetPacket *pPacket );
+	bool ProcessPacket( CNetPacket *pPacket ) override;
 
 	//
 	bool ProcessCreateGame( class CCreateGamePacket *pPacket );

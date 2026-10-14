@@ -69,7 +69,7 @@ class CUnitStartCmdState : public CMapObjectState, public NUnitStartCmdDialog::I
 	CUnitStartCmdState( CMapInfoEditor *_pMapInfoEditor = 0 );
 	// The dialog is owned here, plainly: it is made on the first Enter and
 	// destroyed with the state, which destroys its window.
-	virtual ~CUnitStartCmdState();
+	~CUnitStartCmdState() override;
 	//
 	typedef int CMapObjID;
 	std::vector<CMapObjID> currCmdUnits;
@@ -117,25 +117,25 @@ class CUnitStartCmdState : public CMapObjectState, public NUnitStartCmdDialog::I
 
 protected:
 	// IInputState
-	virtual void Enter();
-	virtual void Leave();
-	virtual void Draw( IPaintContext *pDC );
+	void Enter() override;
+	void Leave() override;
+	void Draw( IPaintContext *pDC ) override;
 
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 
-	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
+	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) override {}
 
-	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override {}
 
-	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint ) override {}
 
-	void OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) {}
+	void OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint ) override {}
 
-	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 
 	// CMapObjectState
-	bool CanEdit()
+	bool CanEdit() override
 	{
 		return true;
 	}
@@ -145,22 +145,22 @@ protected:
 		return false;
 	}
 
-	bool IsDrawSceneDrawTool()
+	bool IsDrawSceneDrawTool() override
 	{
 		return false;
 	}
 
 	//
-	NMapInfoEditor::SObjectInfoCollector *GetObjectInfoCollector();
-	CMapInfoEditor *GetMapInfoEditor();
+	NMapInfoEditor::SObjectInfoCollector *GetObjectInfoCollector() override;
+	CMapInfoEditor *GetMapInfoEditor() override;
 
 	// ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 
 public:
 	// NUnitStartCmdDialog::IListener
-	virtual void OnUnitStartCmdDialogEvent( NUnitStartCmdDialog::EEvent eEvent );
+	void OnUnitStartCmdDialogEvent( NUnitStartCmdDialog::EEvent eEvent ) override;
 	//
 	void UsrEvtAddCmd( const SUnitStartCmdWindowData &data );
 	void UsrEvtDelCmd( const SUnitStartCmdWindowData &data );

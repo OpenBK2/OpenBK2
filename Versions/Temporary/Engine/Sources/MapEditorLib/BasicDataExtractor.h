@@ -45,5 +45,5 @@ public:
 	                        std::string *pszLabel,
 	                        const std::string &rszObjectTypeName,
 	                        const std::string &rszObjectName,
-	                        const std::string &rszDataExtractorType );
+	                        const std::string &rszDataExtractorType ) override;
 };

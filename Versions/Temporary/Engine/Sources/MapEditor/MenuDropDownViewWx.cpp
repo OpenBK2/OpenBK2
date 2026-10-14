@@ -118,7 +118,7 @@ public:
 		window = NWx::TopLevel<CMenuDropDownWxWindow>( ToWxOwnerWindow( pParent ) );
 	}
 
-	virtual ~CWxMenuDropDown()
+	~CWxMenuDropDown() override
 	{
 		if ( window )
 		{
@@ -126,7 +126,7 @@ public:
 		}
 	}
 
-	virtual void Show( int nX, int nY, unsigned nCommandID, const std::list<std::string> &rEntries )
+	void Show( int nX, int nY, unsigned nCommandID, const std::list<std::string> &rEntries ) override
 	{
 		if ( window )
 		{

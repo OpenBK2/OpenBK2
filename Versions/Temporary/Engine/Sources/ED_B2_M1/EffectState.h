@@ -14,6 +14,6 @@ class CEffectState : public CDefaultInputState
 public:
 	CEffectState( CEffectEditor *_pCEffectEditor );
 	//IInputState
-	void Enter();
-	void Leave();
+	void Enter() override;
+	void Leave() override;
 };

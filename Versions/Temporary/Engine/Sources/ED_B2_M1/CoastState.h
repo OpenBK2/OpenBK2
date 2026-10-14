@@ -29,46 +29,46 @@ class CCoastState : public CVSOState
 
 protected:
 	// CVSOState
-	bool CanEdit();
+	bool CanEdit() override;
 
-	bool IsDrawSceneDrawTool()
+	bool IsDrawSceneDrawTool() override
 	{
 		return true;
 	}
 
-	bool CanEditPoints( CVSOManager::SVSOSelection::ESelectionType eSelectionType );
+	bool CanEditPoints( CVSOManager::SVSOSelection::ESelectionType eSelectionType ) override;
 
-	bool EdgesMustBeZero()
+	bool EdgesMustBeZero() override
 	{
 		return false;
 	}
 
-	bool IsEdgesMustBeOut()
+	bool IsEdgesMustBeOut() override
 	{
 		return true;
 	}
 
-	bool IsClose()
+	bool IsClose() override
 	{
 		return false;
 	}
 
-	bool IsComplete()
+	bool IsComplete() override
 	{
 		return true;
 	}
 
-	bool NoIntersection()
+	bool NoIntersection() override
 	{
 		return true;
 	}
 
-	bool NoSelfIntersection()
+	bool NoSelfIntersection() override
 	{
 		return true;
 	}
 
-	void GetControlPointBounds( int *pnMinCount, int *pnMaxCount )
+	void GetControlPointBounds( int *pnMinCount, int *pnMaxCount ) override
 	{
 		if ( pnMinCount )
 		{
@@ -80,55 +80,55 @@ protected:
 		}
 	}
 
-	float GetDefaultStep()
+	float GetDefaultStep() override
 	{
 		return CVSOManager::DEFAULT_STEP * 8.0f;
 	}
 
-	float GetDefaultWidth()
+	float GetDefaultWidth() override
 	{
 		return CVSOManager::DEFAULT_WIDTH;
 	}
 
-	float GetDefaultHeight()
+	float GetDefaultHeight() override
 	{
 		return CVSOManager::DEFAULT_HEIGHT;
 	}
 
-	float GetDefaultOpacity()
+	float GetDefaultOpacity() override
 	{
 		return CVSOManager::DEFAULT_OPACITY;
 	}
 
-	float GetDefaultStepOut()
+	float GetDefaultStepOut() override
 	{
 		return CVSOManager::DEFAULT_STEP / 4.0f;
 	}
 
 	//
-	void PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList );
-	bool CanInsertVSO();
+	void PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList ) override;
+	bool CanInsertVSO() override;
 
-	bool CanUpdateVSO( int nVSOID )
+	bool CanUpdateVSO( int nVSOID ) override
 	{
 		return false;
 	}
 
-	bool CanRemoveVSO( int nVSOID )
+	bool CanRemoveVSO( int nVSOID ) override
 	{
 		return false;
 	}
 
-	NDb::SVSOInstance *GetVSO( int nVSOID, int *pnVSOIndex );
+	NDb::SVSOInstance *GetVSO( int nVSOID, int *pnVSOIndex ) override;
 	void UpdateVSO( int nVSOID,
 	                EUpdateType eEpdateType,
 	                CVSOManager::SVSOSelection::ESelectionType eSelectionType,
-	                unsigned nFlags );
+	                unsigned nFlags ) override;
 
-	void PrepareInsertVSO() {}
+	void PrepareInsertVSO() override {}
 
-	int InsertVSO( const std::vector<CVec3> &rControlPointList );
-	void RemoveVSO( int nVSOID );
+	int InsertVSO( const std::vector<CVec3> &rControlPointList ) override;
+	void RemoveVSO( int nVSOID ) override;
 
 	//
 	const CMapInfoController::SVSOUndoData::EVSOType GetVSOType() const

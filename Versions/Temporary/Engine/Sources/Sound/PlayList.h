@@ -39,7 +39,7 @@ class CPlayList : public CObjectBase
 	EPlayListState eState;
 	CPtr<CFade> pPlaylistFade; // for fading whole playlist
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pList );
 		f.Add( 3, &nStillSong );

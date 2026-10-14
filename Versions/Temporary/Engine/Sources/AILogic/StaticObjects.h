@@ -127,7 +127,7 @@ private:
 	det_set<int> burningObjects;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &obstacles );
 		f.Add( 3, &obstacleObjects );

@@ -74,52 +74,52 @@ private:
 public:
 	CScriptAreaState( CMapInfoEditor *pMapInfoEditor = 0 );
 
-	virtual ~CScriptAreaState() {}
+	~CScriptAreaState() override {}
 
 	// IInputStateInterface
-	void Enter();
-	void Leave();
-	void Draw( IPaintContext *pPaintDC );
-	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void Enter() override;
+	void Leave() override;
+	void Draw( IPaintContext *pPaintDC ) override;
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint ) override;
 
 	// CPolygonState
-	virtual bool SkipEnterAfterInsert()
+	bool SkipEnterAfterInsert() override
 	{
 		return true;
 	}
 
-	virtual bool CanEdit()
+	bool CanEdit() override
 	{
 		return true;
 	}
 
-	virtual bool CanInsertPolygon()
+	bool CanInsertPolygon() override
 	{
 		return true;
 	}
 
-	virtual bool IsClosedPolygon()
+	bool IsClosedPolygon() override
 	{
 		return false;
 	}
 
-	virtual bool IsDrawSceneDrawTool()
+	bool IsDrawSceneDrawTool() override
 	{
 		return false;
 	}
 
-	virtual EMoveType GetMoveType();
-	virtual void GetBounds( int *pnMinCount, int *pnMaxCount );
-	virtual CControlPointList *GetControlPoints( int nPolygonID );
-	virtual bool PrepareControlPoints( CControlPointList *pControlPointList );
-	virtual void PickPolygon( const CVec3 &rvPos, CPolygonIDList *pPickPolygonIDList );
-	virtual void UpdatePolygon( int nPolygonID, EUpdateType eEpdateType );
-	virtual unsigned InsertPolygon( const CControlPointList &rControlPointList );
-	virtual void RemovePolygon( int nPolygonID );
+	EMoveType GetMoveType() override;
+	void GetBounds( int *pnMinCount, int *pnMaxCount ) override;
+	CControlPointList *GetControlPoints( int nPolygonID ) override;
+	bool PrepareControlPoints( CControlPointList *pControlPointList ) override;
+	void PickPolygon( const CVec3 &rvPos, CPolygonIDList *pPickPolygonIDList ) override;
+	void UpdatePolygon( int nPolygonID, EUpdateType eEpdateType ) override;
+	unsigned InsertPolygon( const CControlPointList &rControlPointList ) override;
+	void RemovePolygon( int nPolygonID ) override;
 
 	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 	//
-	void PostDraw( IPaintContext *pPaintDC );
+	void PostDraw( IPaintContext *pPaintDC ) override;
 };

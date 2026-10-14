@@ -22,18 +22,18 @@ public:
 	}
 
 	//
-	CDataStream *OpenFile( const std::string &szPath );
-	bool DoesFileExist( const std::string &szPath );
-	bool GetFileStats( SFileStats *pStats, const std::string &szPath );
-	void GetAllFileNames( std::vector<std::string> *pFileNames, const std::string &rszFolder );
+	CDataStream *OpenFile( const std::string &szPath ) override;
+	bool DoesFileExist( const std::string &szPath ) override;
+	bool GetFileStats( SFileStats *pStats, const std::string &szPath ) override;
+	void GetAllFileNames( std::vector<std::string> *pFileNames, const std::string &rszFolder ) override;
 
 	//
-	const std::vector<CObj<IVFS>> &GetVFSList() const
+	const std::vector<CObj<IVFS>> &GetVFSList() const override
 	{
 		return vfses;
 	}
 
-	void SetVFSList( const std::vector<CObj<IVFS>> &vfsList );
+	void SetVFSList( const std::vector<CObj<IVFS>> &vfsList ) override;
 };
 
 } // namespace NVFS

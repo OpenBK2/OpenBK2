@@ -121,7 +121,7 @@ public:
 	}
 
 	// IWxWidget: the panel, which a wx view is made in.
-	virtual wxWindow *GetWxWindow()
+	wxWindow *GetWxWindow() override
 	{
 		return pPanel.get();
 	}
@@ -129,13 +129,13 @@ public:
 	// IFrameWindow. Maximize has nothing to do: the panel always fills the
 	// workspace. Focus goes to the panel, as SetFocus on an MDI child left it
 	// on the frame rather than its contents.
-	virtual void *GetNativeWidget();
-	virtual void Show( bool bShow );
+	void *GetNativeWidget() override;
+	void Show( bool bShow ) override;
 
-	virtual void Maximize() {}
+	void Maximize() override {}
 
-	virtual void Focus();
-	virtual void Destroy();
+	void Focus() override;
+	void Destroy() override;
 };
 
 // The IDockPanel an editor gets: a CContentPanel in the frame's wxAUI manager.
@@ -162,7 +162,7 @@ public:
 	}
 
 	// IWxWidget: the panel, which a wx view is made in.
-	virtual wxWindow *GetWxWindow()
+	wxWindow *GetWxWindow() override
 	{
 		return pPanel.get();
 	}
@@ -173,13 +173,13 @@ public:
 	// manager's next layout has the last word -- as a hide ShowControlBar
 	// delays had over a later ShowWindow on the bar, which is what the editors
 	// do when they make their panes.
-	virtual void *GetNativeWidget();
-	virtual void Show( bool bShow );
-	virtual void ShowWithoutLayout( bool bShow );
-	virtual bool IsVisible() const;
-	virtual bool IsAlive() const;
-	virtual void Destroy();
-	virtual void Redraw();
+	void *GetNativeWidget() override;
+	void Show( bool bShow ) override;
+	void ShowWithoutLayout( bool bShow ) override;
+	bool IsVisible() const override;
+	bool IsAlive() const override;
+	void Destroy() override;
+	void Redraw() override;
 };
 
 // Every toolbar button picture the frame knows, by command -- the pool
@@ -224,8 +224,8 @@ public:
 	}
 
 	// IToolBar
-	virtual void Show( bool bShow );
-	virtual bool IsVisible() const;
+	void Show( bool bShow ) override;
+	bool IsVisible() const override;
 };
 
 // Log: CLogPaneContents around the wx log view.
@@ -306,10 +306,10 @@ public:
 	}
 
 	// CGDBBrowserContents::IPane
-	virtual void LayoutContents();
-	virtual void ShowEmpty( bool bEmpty );
+	void LayoutContents() override;
+	void ShowEmpty( bool bEmpty ) override;
 
-	virtual IWidget *GetOwner()
+	IWidget *GetOwner() override
 	{
 		return pOwner;
 	}

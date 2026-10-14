@@ -73,7 +73,7 @@ class CInterfaceHallOfFame : public CInterfaceScreenBase, public IProgrammedReac
 	ZDATA_( CInterfaceScreenBase )
 	CPtr<IWindow> pMain;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CInterfaceScreenBase *)this );
 		f.Add( 2, &pMain );
@@ -85,16 +85,16 @@ class CInterfaceHallOfFame : public CInterfaceScreenBase, public IProgrammedReac
 public:
 	CInterfaceHallOfFame();
 
-	bool Init();
-	bool StepLocal( bool bAppActive );
-	void OnGetFocus( bool bFocus );
+	bool Init() override;
+	bool StepLocal( bool bAppActive ) override;
+	void OnGetFocus( bool bFocus ) override;
 
 	void MsgBack( const SGameMessage &msg );
 
 	//{ IProgrammedReactionsAndChecks
-	bool Execute( const std::string &szSender, const std::string &szReaction );
+	bool Execute( const std::string &szSender, const std::string &szReaction ) override;
 
-	int Check( const std::string &szCheckName ) const
+	int Check( const std::string &szCheckName ) const override
 	{
 		return 0;
 	}
@@ -106,9 +106,9 @@ class CICHallOfFame : public CInterfaceCommandBase<CInterfaceHallOfFame>
 {
 	OBJECT_BASIC_METHODS( CICHallOfFame );
 	//
-	void PreCreate();
-	void PostCreate( IInterface *pInterface );
+	void PreCreate() override;
+	void PostCreate( IInterface *pInterface ) override;
 
 public:
-	void Configure( const char *pszConfig );
+	void Configure( const char *pszConfig ) override;
 };

@@ -50,7 +50,7 @@ class CSWTexture : public CResourceLoader<CDBPtr<NDb::STexture>, CSWTextureData>
 	void LoadTexture();
 
 protected:
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CSWTexture()
@@ -68,7 +68,7 @@ class CBilinearTexture : public CPtrFuncBase<CSWTextureData>
 	CArray2D<NGfx::SPixel8888> pic;
 	int nXSize, nYSize;
 
-	ZEND int operator&( CStructureSaver &f )
+	ZEND int operator&( CStructureSaver &f ) override
 	{
 		f.Add( 2, &pic );
 		f.Add( 3, &nXSize );
@@ -77,7 +77,7 @@ class CBilinearTexture : public CPtrFuncBase<CSWTextureData>
 	}
 
 protected:
-	virtual void Recalc();
+	void Recalc() override;
 
 public:
 	CBilinearTexture() {}

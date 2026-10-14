@@ -35,7 +35,7 @@ class COMMON_RTS_AI_EXPORT CPassMarkersDraw : public CObjectBase
 public:
 	CPassMarkersDraw();
 
-	virtual ~CPassMarkersDraw() {}
+	~CPassMarkersDraw() override {}
 
 	void Init( CAIMap *_pAIMap );
 	void Clear();

@@ -22,7 +22,7 @@ public:
 	/** changed clients */
 	std::list<SCustomLobbyClientInfo> changed;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &dwVersion );
 		f.Add( 3, &bFullUpdate );

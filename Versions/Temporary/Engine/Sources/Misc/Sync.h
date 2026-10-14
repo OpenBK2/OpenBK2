@@ -104,7 +104,7 @@ class CSyncSrc : public CObjectBase
 	int nVersion = 0;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &freeIDs );
 		f.Add( 3, &objects );
@@ -319,7 +319,7 @@ public:
 	}
 
 private:
-	void VisitObject( int nID, T *pObject )
+	void VisitObject( int nID, T *pObject ) override
 	{
 		if ( view.size() < nID + 1 )
 		{

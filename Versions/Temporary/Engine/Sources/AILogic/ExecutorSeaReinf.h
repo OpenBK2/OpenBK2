@@ -39,7 +39,7 @@ class CExecutorTransportReinforcement : public CExecutor
 	CVec2 vTarget;
 
 public:
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CExecutor *)this );
 		f.Add( 2, &transports );
@@ -57,14 +57,14 @@ public:
 	                                 const CVec2 &_vStart,
 	                                 const CVec2 &_vUnload,
 	                                 const CVec2 &_vTarget );
-	virtual int Segment();
+	int Segment() override;
 
-	virtual bool NotifyEvent( const CExecutorEvent &event )
+	bool NotifyEvent( const CExecutorEvent &event ) override
 	{
 		return false;
 	}
 
-	virtual bool IsExecutorValid() const
+	bool IsExecutorValid() const override
 	{
 		return true;
 	}

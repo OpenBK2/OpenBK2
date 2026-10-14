@@ -9,82 +9,85 @@ class CEditorScene : public IEditorScene
 	OBJECT_NOCOPY_METHODS( CEditorScene )
 
 	ZDATA
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		return 0;
 	}
 
 public:
-	virtual void RemoveAllScreens();
-	virtual void AddScreen( struct IWindow *pScreen );
-	virtual void RemoveScreen( struct IWindow *pScreen );
+	void RemoveAllScreens() override;
+	void AddScreen( struct IWindow *pScreen ) override;
+	void RemoveScreen( struct IWindow *pScreen ) override;
 
-	virtual NGScene::I2DGameView *GetG2DView();
-	virtual NGScene::IGameView *GetGView();
-	virtual CVec2 GetScreenRect();
-	virtual class CCSTime *GetGameTimer();
-	virtual uint32_t GetNormal( const CVec2 &vPoint ) const;
-	virtual void ClearMarkers( ESceneMarkerType eType, int nID );
-	virtual void AddShootArea( int nID,
-	                           float fStartAngle,
-	                           float fEndAngle,
-	                           float fMinRadius,
-	                           float fMaxRadius,
-	                           const CVec3 &vColor,
-	                           const CVec2 &vCenter );
-	virtual void SwitchScene( const EScene eScene );
+	NGScene::I2DGameView *GetG2DView() override;
+	NGScene::IGameView *GetGView() override;
+	CVec2 GetScreenRect() override;
+	class CCSTime *GetGameTimer() override;
+	uint32_t GetNormal( const CVec2 &vPoint ) const override;
+	void ClearMarkers( ESceneMarkerType eType, int nID ) override;
+	void AddShootArea( int nID,
+	                   float fStartAngle,
+	                   float fEndAngle,
+	                   float fMinRadius,
+	                   float fMaxRadius,
+	                   const CVec3 &vColor,
+	                   const CVec2 &vCenter ) override;
+	void SwitchScene( const EScene eScene ) override;
 
-	virtual int AddObject( const int nID,
-	                       const NDb::SModel *pModel,
-	                       const CVec3 &vPos,
-	                       const CQuat &qRot,
-	                       const CVec3 &vScale,
-	                       ESceneObjAnimMode eAnimMode,
-	                       NGScene::IGameView::SMeshInfo *pMeshInfo,
-	                       const bool bHasReflection = false );
-	virtual bool
-	MoveObject( const int nID, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale = CVec3( 1, 1, 1 ) );
-	virtual void RemoveObject( const int nID );
-	virtual void SetFadedObjects( const std::list<int> &objects );
-	virtual void SetFadedObjects( const std::list<int> &objects, float fFade );
-	virtual int AddEffect(
-			const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, const CQuat &qRot );
+	int AddObject( const int nID,
+	               const NDb::SModel *pModel,
+	               const CVec3 &vPos,
+	               const CQuat &qRot,
+	               const CVec3 &vScale,
+	               ESceneObjAnimMode eAnimMode,
+	               NGScene::IGameView::SMeshInfo *pMeshInfo,
+	               const bool bHasReflection = false ) override;
+	bool
+	MoveObject( const int nID, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale = CVec3( 1, 1, 1 ) ) override;
+	void RemoveObject( const int nID ) override;
+	void SetFadedObjects( const std::list<int> &objects ) override;
+	void SetFadedObjects( const std::list<int> &objects, float fFade ) override;
+	int AddEffect( const int nID,
+	               const NDb::SEffect *pEffect,
+	               NTimer::STime timeStart,
+	               const CVec3 &vPos,
+	               const CQuat &qRot ) override;
 
-	virtual int AddPolyline( const int nID, const std::vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck );
-	virtual int AddIndexedPolyline( const int nID,
-	                                const std::vector<CVec3> &points,
-	                                const std::vector<uint16_t> &indices,
-	                                const CVec4 &vColor,
-	                                bool bDepthCheck );
-	virtual void RemovePolyline( const int nID );
-	virtual bool ToggleShow( ESceneShow eShow );
-	virtual bool ToggleAIGeometryMode();
-	virtual bool IsShowOn( ESceneShow eShow );
+	int AddPolyline( const int nID, const std::vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck ) override;
+	int AddIndexedPolyline( const int nID,
+	                        const std::vector<CVec3> &points,
+	                        const std::vector<uint16_t> &indices,
+	                        const CVec4 &vColor,
+	                        bool bDepthCheck ) override;
+	void RemovePolyline( const int nID ) override;
+	bool ToggleShow( ESceneShow eShow ) override;
+	bool ToggleAIGeometryMode() override;
+	bool IsShowOn( ESceneShow eShow ) override;
 
-	virtual ITerraManager *GetTerraManager();
-	virtual bool GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
-	virtual float GetZ( float x, float y ) const;
-	virtual float GetTileHeight( int nX, int nY ) const;
-	virtual void UpdateZ( CVec3 *pvPos );
+	ITerraManager *GetTerraManager() override;
+	bool GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const override;
+	float GetZ( float x, float y ) const override;
+	float GetTileHeight( int nX, int nY ) const override;
+	void UpdateZ( CVec3 *pvPos ) override;
 
-	virtual bool SetupMode( ESceneMode eMode, bool bEditorMode );
-	virtual void SetLight( const NDb::SAmbientLight *pLight );
-	virtual void SetBackgroundColor( const CVec3 &rvBackgroundColor );
-	virtual CVec4 SetBackgroundColor( const CVec4 &rvBackgroundColor );
-	virtual void ClearScene( const EScene eScene2Clear );
-	virtual void Draw( NGScene::CRTPtr *pTarget );
+	bool SetupMode( ESceneMode eMode, bool bEditorMode ) override;
+	void SetLight( const NDb::SAmbientLight *pLight ) override;
+	void SetBackgroundColor( const CVec3 &rvBackgroundColor ) override;
+	CVec4 SetBackgroundColor( const CVec4 &rvBackgroundColor ) override;
+	void ClearScene( const EScene eScene2Clear ) override;
+	void Draw( NGScene::CRTPtr *pTarget ) override;
 
-	virtual void PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos );
-	virtual void PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2 );
-	virtual void InitHeights4Editor( int nSizeX, int nSizeY );
+	void PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos ) override;
+	void PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2 ) override;
+	void InitHeights4Editor( int nSizeX, int nSizeY ) override;
 
-	virtual void ShowObject( const int nID, const bool bShow );
-	virtual bool DoesTerraManagerExist() const;
+	void ShowObject( const int nID, const bool bShow ) override;
+	bool DoesTerraManagerExist() const override;
 
-	virtual NAnimation::ISkeletonAnimator *GetAnimator( const int nID );
+	NAnimation::ISkeletonAnimator *GetAnimator( const int nID ) override;
 
-	virtual bool ToggleGetSizeFromTarget( bool bGetSizesFromTarget );
+	bool ToggleGetSizeFromTarget( bool bGetSizesFromTarget ) override;
 
-	virtual void SetWarFog( const CArray2D<unsigned char> &fog, float fScale );
-	virtual void SetWarFogBlend( const float fBlend );
+	void SetWarFog( const CArray2D<unsigned char> &fog, float fScale ) override;
+	void SetWarFogBlend( const float fBlend ) override;
 };

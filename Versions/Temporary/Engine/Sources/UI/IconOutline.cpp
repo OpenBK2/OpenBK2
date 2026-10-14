@@ -25,7 +25,7 @@ struct SRLBuilder : public NGScene::ILayoutFakeView
 	void CreateDynamicRects( const NDb::STexture *pTexture,
 	                         const CRectLayout &sLayout,
 	                         const CTPoint<float> &sPosition,
-	                         const CTRect<float> &sWindow )
+	                         const CTRect<float> &sWindow ) override
 	{
 		CRectLayout rl;
 		for ( int nTemp = 0; nTemp < sLayout.rects.size(); nTemp++ )
@@ -55,7 +55,7 @@ struct SRLBuilder : public NGScene::ILayoutFakeView
 	void CreateDynamicRects( const NDb::STexture *pTexture,
 	                         const CVec2 *pPos4,
 	                         const NGfx::SPixel8888 *pColors4,
-	                         const CTRect<float> &rectTexture )
+	                         const CTRect<float> &rectTexture ) override
 	{
 		NI_ASSERT( 0, "not implemented" );
 	}
@@ -63,7 +63,7 @@ struct SRLBuilder : public NGScene::ILayoutFakeView
 	void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *_pTexture,
 	                         const CRectLayout &sLayout,
 	                         const CTPoint<float> &sPosition,
-	                         const CTRect<float> &sWindow )
+	                         const CTRect<float> &sWindow ) override
 	{
 		const NGScene::CTexShare::CDataHash &allTex = NGScene::shareTextures.GetAll();
 		for ( NGScene::CTexShare::CDataHash::const_iterator i = allTex.begin(); i != allTex.end(); ++i )

@@ -27,8 +27,8 @@ class CRandomGenSeed : public IRandomSeed
 	void SFLB0_InitVariables();
 
 public:
-	void Init();
-	void InitByZeroSeed();
+	void Init() override;
+	void InitByZeroSeed() override;
 
 	//
 	const SRandData &GetRandData() const
@@ -42,9 +42,9 @@ public:
 	}
 
 	//
-	void Store( CDataStream *pStream );
-	void Restore( CDataStream *pStream );
+	void Store( CDataStream *pStream ) override;
+	void Restore( CDataStream *pStream ) override;
 	//
-	int operator&( IBinSaver &saver );
-	int operator&( IXmlSaver &saver );
+	int operator&( IBinSaver &saver ) override;
+	int operator&( IXmlSaver &saver ) override;
 };

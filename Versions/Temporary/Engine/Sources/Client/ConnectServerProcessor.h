@@ -38,7 +38,7 @@ public:
 
 	CConnectServerProcessor( class CNet *pServer, bool bCheckConnect );
 
-	bool Segment();
+	bool Segment() override;
 
 	//
 	bool ProcessCheckConnect( class CCheckConnectPacket *pCheckConnectPacket );

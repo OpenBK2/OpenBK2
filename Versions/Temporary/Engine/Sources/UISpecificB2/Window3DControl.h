@@ -24,7 +24,7 @@ class CWindow3DControl : public CWindow, public IWindow3DControl
 	CTRect<float> rectPrev;
 	int nBaseID3D;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 1, (CWindow *)this );
 		f.Add( 2, &pInstance );
@@ -41,25 +41,25 @@ private:
 	void UpdateObjects( bool bForced );
 
 protected:
-	NDb::SWindow *GetInstance()
+	NDb::SWindow *GetInstance() override
 	{
 		return pInstance;
 	}
 
-	void OnChangeVisibility( bool bShow );
+	void OnChangeVisibility( bool bShow ) override;
 
 public:
 	CWindow3DControl();
-	~CWindow3DControl();
+	~CWindow3DControl() override;
 
 	//{ CWindow
-	void Visit( struct IUIVisitor *pVisitor );
-	void InitByDesc( const struct NDb::SUIDesc *pDesc );
+	void Visit( struct IUIVisitor *pVisitor ) override;
+	void InitByDesc( const struct NDb::SUIDesc *pDesc ) override;
 	//}
 
 	//{ IWindow3DControl
-	void SetObjects( const std::vector<SObject> &objects );
-	SParam GetDBObjectParam( int nIndex ) const;
-	void SetBaseID3D( int nID );
+	void SetObjects( const std::vector<SObject> &objects ) override;
+	SParam GetDBObjectParam( int nIndex ) const override;
+	void SetBaseID3D( int nID ) override;
 	//}
 };

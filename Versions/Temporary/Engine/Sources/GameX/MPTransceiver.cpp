@@ -52,7 +52,7 @@ public:
 	ulong ulCheckSum = {};
 	std::list<CMPTransceiver::SRawCommand> aiCommands;
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &nSegment );
 		f.Add( 3, &ulCheckSum );
@@ -79,7 +79,7 @@ public:
 	ZDATA
 	EType eType = {};
 
-	ZEND int operator&( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &eType );
 		return 0;

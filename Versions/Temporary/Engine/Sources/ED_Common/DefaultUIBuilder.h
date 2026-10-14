@@ -12,13 +12,14 @@ class CDefaultUIBuilder : public CBaseUIBuilder
 
 protected:
 	// IBuildDataCallback
-	bool IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView )
+	bool
+	IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView ) override
 	{
 		return false;
 	}
 
 	//CBuildDataBuilder
-	const std::string &GetBuildDataTypeName()
+	const std::string &GetBuildDataTypeName() override
 	{
 		return DEFAULT_BUILD_DATA_TYPE_NAME;
 	}
@@ -29,12 +30,12 @@ protected:
 	                           bool *pbCanChangeObjectName,
 	                           bool *pbNeedExport,
 	                           bool *pbNeedEdit,
-	                           IManipulator *pBuildDataManipulator )
+	                           IManipulator *pBuildDataManipulator ) override
 	{
 		return false;
 	}
 
-	bool NeedBuildDataDialog() const
+	bool NeedBuildDataDialog() const override
 	{
 		return false;
 	}

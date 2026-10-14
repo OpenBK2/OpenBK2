@@ -95,14 +95,14 @@ public:
 
 	CGameLobby( class CClients *pClients, const std::string &szCfgFile );
 
-	virtual bool Segment();
+	bool Segment() override;
 
-	bool CanBePaused()
+	bool CanBePaused() override
 	{
 		return false;
 	}
 
-	virtual void ReloadConfig();
+	void ReloadConfig() override;
 
 	//
 	bool ProcessCommonClientStatePacket( class CCommonClientStatePacket *pPacket );

@@ -40,7 +40,7 @@ public:
 
 	void GenerateCode( const std::string &szRootDir );
 
-	int operator&( IXmlSaver &saver )
+	int operator&( IXmlSaver &saver ) override
 	{
 		saver.Add( "Files", &files );
 		return 0;

@@ -18,17 +18,17 @@ public:
 	{
 	}
 
-	~CMainFrameContainer() {}
+	~CMainFrameContainer() override {}
 
 	// IMainFrameContainer
-	void Set( IMainFrame *_pMainFrame, IWidget *_pMainWindow );
+	void Set( IMainFrame *_pMainFrame, IWidget *_pMainWindow ) override;
 
-	IMainFrame *Get()
+	IMainFrame *Get() override
 	{
 		return pMainFrame;
 	}
 
-	IWidget *GetMainWindow()
+	IWidget *GetMainWindow() override
 	{
 		return pMainWindow;
 	}

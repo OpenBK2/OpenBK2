@@ -49,10 +49,10 @@ public:
 	static const unsigned FORMATION_INPUT_SUSBSTATE_LABEL_ID[FORMATION_ISS_COUNT];
 
 	//CMultiInputState
-	void Enter();
-	void Leave();
+	void Enter() override;
+	void Leave() override;
 
 	//ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) override;
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) override;
 };

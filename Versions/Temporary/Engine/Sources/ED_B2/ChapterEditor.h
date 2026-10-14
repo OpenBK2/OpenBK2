@@ -22,45 +22,45 @@ class CChapterEditor : public CEditorBase, public CDefaultView
 	CChapterState *pChapterState;
 	//
 	CChapterEditor();
-	~CChapterEditor();
+	~CChapterEditor() override;
 	//
 public:
 	//IEditor
-	void GetTemporaryLabel( std::string *pszTemporaryLabel )
+	void GetTemporaryLabel( std::string *pszTemporaryLabel ) override
 	{
 		pszTemporaryLabel->clear();
 	}
 
-	IView *GetView()
+	IView *GetView() override
 	{
 		return this;
 	}
 
-	IInputState *GetInputState()
+	IInputState *GetInputState() override
 	{
 		return pChapterState;
 	}
 
-	void GetChildFrameType( std::string *pszChildFrameTypeName )
+	void GetChildFrameType( std::string *pszChildFrameTypeName ) override
 	{
 		( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__";
 	}
 
-	void CreateControls() {}
+	void CreateControls() override {}
 
-	void PostCreateControls() {}
+	void PostCreateControls() override {}
 
-	void PreDestroyControls() {}
+	void PreDestroyControls() override {}
 
-	void DestroyControls() {}
+	void DestroyControls() override {}
 
-	void Create();
-	void Destroy();
+	void Create() override;
+	void Destroy() override;
 
 	//CDefaultView
-	void Undo( IController *pController ) {}
+	void Undo( IController *pController ) override {}
 
-	void Redo( IController *pController );
+	void Redo( IController *pController ) override;
 
 	const CChapterEditorSettings GetEditorSettings() const
 	{
